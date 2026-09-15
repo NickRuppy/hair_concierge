@@ -178,28 +178,35 @@ test("saveUserFacts throws UserFactsWriteError on transport error, invalid_input
     data: { status: "invalid_input", reason: "unknown_domain" },
     error: null,
   })
-  await assert.rejects(
-    () =>
-      saveUserFacts(invalidInputDb as never, {
-        userId: "user-1",
-        domain: "quiz_context",
-        patch: {},
-        provenance: VALID_PROVENANCE,
-      }),
-    UserFactsWriteError,
-  )
+  try {
+    await saveUserFacts(invalidInputDb as never, {
+      userId: "user-1",
+      domain: "quiz_context",
+      patch: {},
+      provenance: VALID_PROVENANCE,
+    })
+    assert.fail("expected saveUserFacts to throw for invalid_input")
+  } catch (thrown) {
+    assert.ok(thrown instanceof UserFactsWriteError)
+    // Fix round 1: invalid_input carries the RPC's own reason as a structured field.
+    assert.equal(thrown.reason, "unknown_domain")
+  }
 
   const unknownStatusDb = new FakeSupabase({ data: { status: "surprising" }, error: null })
-  await assert.rejects(
-    () =>
-      saveUserFacts(unknownStatusDb as never, {
-        userId: "user-1",
-        domain: "quiz_context",
-        patch: {},
-        provenance: VALID_PROVENANCE,
-      }),
-    UserFactsWriteError,
-  )
+  try {
+    await saveUserFacts(unknownStatusDb as never, {
+      userId: "user-1",
+      domain: "quiz_context",
+      patch: {},
+      provenance: VALID_PROVENANCE,
+    })
+    assert.fail("expected saveUserFacts to throw for an unrecognised payload")
+  } catch (thrown) {
+    assert.ok(thrown instanceof UserFactsWriteError)
+    // Fix round 1: the raw payload is a structured field, not JSON-stringified into the message.
+    assert.deepEqual(thrown.payload, { status: "surprising" })
+    assert.equal(thrown.message.includes("surprising"), false)
+  }
 })
 
 test("saveUserFacts forwards a null-clearing patch unchanged after validation", async () => {

@@ -15,7 +15,12 @@ import { canonicalizePersonalPlanAnswers } from "../src/lib/personal-plan-quiz/p
 import type { QuizAnswers } from "../src/lib/quiz/types"
 import { projectArtifactToFacts } from "../src/lib/user-facts/project-artifact"
 import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
-import { UnsupportedUserFactsSourceError } from "../src/lib/user-facts/schema"
+import {
+  UnsupportedUserFactsSourceError,
+  UserFactsIncompleteError,
+  type DiagnosticsV1,
+  type QuizContextV1,
+} from "../src/lib/user-facts/schema"
 import { toStage1Source } from "../src/lib/user-facts/stage1-source"
 
 /** Hashes a raw Stage-1 source exactly the way `stage1-service.ts:166-170` does, so the test's
@@ -457,4 +462,113 @@ test("toStage1Source throws UnsupportedUserFactsSourceError for a legacy_columns
       }),
     UnsupportedUserFactsSourceError,
   )
+})
+
+// ---------------------------------------------------------------------------
+// 8. Incomplete diagnostics on an EDITED emission (task 4 fix round 1): completeness is
+// enforced exactly at this boundary, for both the v3-promotion and legacy-quiz branches. The
+// unedited (raw re-emission) path needs no completeness at all.
+// ---------------------------------------------------------------------------
+
+const COMPLETE_V3_QUIZ_CONTEXT: QuizContextV1 = {
+  routineClarity: "partial",
+  resultReliability: "sometimes",
+  adaptationConfidence: "partly",
+  previousAttempts: "some_steps_helped",
+  blockers: ["product_fit"],
+  routineStyle: "simple_reliable",
+  meaningfulMoment: "everyday",
+}
+
+// A v3-sourced, otherwise-complete diagnostics record missing `texture` — legal to STORE
+// (ruling 2026-09-15), but not enough for an edited native emission.
+const V3_DIAGNOSTICS_MISSING_TEXTURE: DiagnosticsV1 = {
+  thickness: "fine",
+  density: "medium",
+  hairLength: "long",
+  hairSurface: "rough",
+  elasticResponse: "stretches_stays",
+  chemicalTreatments: ["colored"],
+  scalpOiliness: "balanced",
+  scalpConcerns: ["irritated"],
+  goals: ["moisture"],
+  currentConcerns: ["dry_lengths"],
+  source: {
+    kind: "personal_plan_v3",
+    version: 3,
+    leadId: "lead-incomplete-v3",
+    artifactId: "artifact-incomplete-v3",
+    raw: { kind: "personal_plan", version: 3, answers: {} },
+  },
+}
+
+test("toStage1Source throws UserFactsIncompleteError for an edited v3-sourced record missing texture", () => {
+  assert.throws(
+    () =>
+      toStage1Source({
+        diagnostics: V3_DIAGNOSTICS_MISSING_TEXTURE,
+        quizContext: COMPLETE_V3_QUIZ_CONTEXT,
+        editedAt: "2026-09-16T00:00:00.000Z",
+      }),
+    (error: unknown) => {
+      assert.ok(error instanceof UserFactsIncompleteError)
+      assert.deepEqual(error.missingFields, ["texture"])
+      return true
+    },
+  )
+})
+
+// A legacy-sourced, otherwise-complete diagnostics record missing `scalpConcerns`. No
+// quizContext is passed, so (once past the completeness gate in a complete case) this would
+// take the legacy-quiz branch, not the v3-promotion branch.
+const LEGACY_DIAGNOSTICS_MISSING_SCALP_CONCERNS: DiagnosticsV1 = {
+  texture: "wavy",
+  thickness: "fine",
+  density: "medium",
+  hairLength: "long",
+  hairSurface: "rough",
+  elasticResponse: "stretches_stays",
+  chemicalTreatments: ["colored"],
+  scalpOiliness: "balanced",
+  goals: ["moisture"],
+  currentConcerns: ["dry_lengths"],
+  source: {
+    kind: "legacy_quiz",
+    version: 1,
+    leadId: "lead-incomplete-legacy",
+    raw: {
+      kind: "legacy_quiz",
+      version: 1,
+      leadId: "lead-incomplete-legacy",
+      answers: {},
+    },
+  },
+}
+
+test("toStage1Source throws UserFactsIncompleteError for an edited legacy record missing scalpConcerns", () => {
+  assert.throws(
+    () =>
+      toStage1Source({
+        diagnostics: LEGACY_DIAGNOSTICS_MISSING_SCALP_CONCERNS,
+        editedAt: "2026-09-16T00:00:00.000Z",
+      }),
+    (error: unknown) => {
+      assert.ok(error instanceof UserFactsIncompleteError)
+      assert.deepEqual(error.missingFields, ["scalpConcerns"])
+      return true
+    },
+  )
+})
+
+test("toStage1Source unedited path still returns raw for the same partial (missing texture) diagnostics", () => {
+  const raw = toStage1Source({ diagnostics: V3_DIAGNOSTICS_MISSING_TEXTURE, editedAt: null })
+  assert.deepEqual(raw, V3_DIAGNOSTICS_MISSING_TEXTURE.source.raw)
+})
+
+test("toStage1Source unedited path still returns raw for the same partial (missing scalpConcerns) legacy diagnostics", () => {
+  const raw = toStage1Source({
+    diagnostics: LEGACY_DIAGNOSTICS_MISSING_SCALP_CONCERNS,
+    editedAt: undefined,
+  })
+  assert.deepEqual(raw, LEGACY_DIAGNOSTICS_MISSING_SCALP_CONCERNS.source.raw)
 })

@@ -1,6 +1,11 @@
 import { canonicalizePersonalPlanAnswers } from "@/lib/personal-plan-quiz/persistence"
 
-import { UnsupportedUserFactsSourceError, type DiagnosticsV1, type QuizContextV1 } from "./schema"
+import {
+  UnsupportedUserFactsSourceError,
+  UserFactsIncompleteError,
+  type DiagnosticsV1,
+  type QuizContextV1,
+} from "./schema"
 
 export type ToStage1SourceInput = {
   diagnostics: DiagnosticsV1
@@ -27,6 +32,32 @@ function hasCompleteV3QuizContext(
 ): context is CompleteQuizContext {
   if (!context) return false
   return REQUIRED_V3_QUIZ_CONTEXT_FIELDS.every((field) => context[field] !== undefined)
+}
+
+/** The 11 diagnostic fields (7 scalars + 4 arrays) a native EDITED emission requires —
+ * `diagnosticsV1Schema` made every one of these OPTIONAL for STORED diagnostics (controller
+ * ruling 2026-09-15), so this is where completeness for an edited emission is checked instead
+ * (task 4 fix round 1). `concernRecurrence`/`currentConcernsOtherText`/`source` stay excluded:
+ * they were already optional before that ruling. */
+const REQUIRED_STAGE1_DIAGNOSTIC_FIELDS = [
+  "texture",
+  "thickness",
+  "density",
+  "hairLength",
+  "hairSurface",
+  "elasticResponse",
+  "scalpOiliness",
+  "chemicalTreatments",
+  "scalpConcerns",
+  "goals",
+  "currentConcerns",
+] as const
+
+type CompleteDiagnostics = DiagnosticsV1 &
+  Required<Pick<DiagnosticsV1, (typeof REQUIRED_STAGE1_DIAGNOSTIC_FIELDS)[number]>>
+
+function findMissingDiagnosticFields(diagnostics: DiagnosticsV1): string[] {
+  return REQUIRED_STAGE1_DIAGNOSTIC_FIELDS.filter((field) => diagnostics[field] === undefined)
 }
 
 /**
@@ -59,29 +90,36 @@ export function toStage1Source(input: ToStage1SourceInput): unknown {
 
   const { diagnostics, quizContext } = input
 
+  // Completeness for an EDITED emission is enforced here, before either branch below: raw
+  // re-emission (above) needs no completeness, but synthesising a native envelope does, and
+  // this is the exact boundary the controller ruling names (task 4 fix round 1).
+  const missingFields = findMissingDiagnosticFields(diagnostics)
+  if (missingFields.length > 0) {
+    throw new UserFactsIncompleteError(
+      `toStage1Source: diagnostics are missing required field(s) for an edited emission: ${missingFields.join(", ")}`,
+      missingFields,
+    )
+  }
+  const completeDiagnostics = diagnostics as CompleteDiagnostics
+
   if (hasCompleteV3QuizContext(quizContext)) {
-    // `!` on the scalar/array diagnostic fields below: this v3-promotion branch is only ever
-    // reached for diagnostics that originated from a personal-plan artifact (v2/v3) — the same
-    // completeness guarantee `project-artifact.ts:baseDiagnosticFields` already asserts through.
-    // Task-4 ruling 2026-09-15 made these OPTIONAL on `DiagnosticsV1` for STORED (possibly
-    // partial) diagnostics; that does not change what a real v2/v3-sourced record carries here.
     const answers = {
-      texture: diagnostics.texture!,
-      thickness: diagnostics.thickness!,
-      density: diagnostics.density!,
-      goals: diagnostics.goals!,
-      currentConcerns: diagnostics.currentConcerns!,
-      ...(diagnostics.concernRecurrence
-        ? { concernRecurrence: { ...diagnostics.concernRecurrence } }
+      texture: completeDiagnostics.texture,
+      thickness: completeDiagnostics.thickness,
+      density: completeDiagnostics.density,
+      goals: completeDiagnostics.goals,
+      currentConcerns: completeDiagnostics.currentConcerns,
+      ...(completeDiagnostics.concernRecurrence
+        ? { concernRecurrence: { ...completeDiagnostics.concernRecurrence } }
         : {}),
-      hairLength: diagnostics.hairLength!,
-      hairSurface: diagnostics.hairSurface!,
-      elasticResponse: diagnostics.elasticResponse!,
-      chemicalTreatments: diagnostics.chemicalTreatments!,
-      scalpOiliness: diagnostics.scalpOiliness!,
-      scalpConcerns: diagnostics.scalpConcerns!,
-      ...(diagnostics.currentConcernsOtherText
-        ? { currentConcernsOtherText: diagnostics.currentConcernsOtherText }
+      hairLength: completeDiagnostics.hairLength,
+      hairSurface: completeDiagnostics.hairSurface,
+      elasticResponse: completeDiagnostics.elasticResponse,
+      chemicalTreatments: completeDiagnostics.chemicalTreatments,
+      scalpOiliness: completeDiagnostics.scalpOiliness,
+      scalpConcerns: completeDiagnostics.scalpConcerns,
+      ...(completeDiagnostics.currentConcernsOtherText
+        ? { currentConcernsOtherText: completeDiagnostics.currentConcernsOtherText }
         : {}),
       routineClarity: quizContext.routineClarity,
       resultReliability: quizContext.resultReliability,
@@ -100,26 +138,24 @@ export function toStage1Source(input: ToStage1SourceInput): unknown {
     return canonicalizePersonalPlanAnswers(answers)
   }
 
-  // Legacy lead: no reflective quiz context to promote into a v3 envelope. `!`/non-empty-array
-  // access below: this branch is only reached for diagnostics sourced from a legacy lead, which
-  // `project-legacy-lead.ts` already guarantees are complete for a fresh projection (see its
-  // `REQUIRED_LEGACY_SCALAR_FIELDS` check) — see the comment on the v3 branch above.
+  // Legacy lead: no reflective quiz context to promote into a v3 envelope. `completeDiagnostics`
+  // is already verified complete by the guard above, so no `!` assertions are needed here.
   return {
     kind: "legacy_quiz" as const,
     version: 1 as const,
     leadId: diagnostics.source.leadId,
     answers: {
-      texture: diagnostics.texture!,
-      thickness: diagnostics.thickness!,
-      density: diagnostics.density!,
-      goals: [...diagnostics.goals!].sort(),
-      currentConcerns: [...diagnostics.currentConcerns!].sort(),
-      hairLength: diagnostics.hairLength!,
-      hairSurface: diagnostics.hairSurface!,
-      elasticResponse: diagnostics.elasticResponse!,
-      chemicalTreatments: [...diagnostics.chemicalTreatments!].sort(),
-      scalpOiliness: diagnostics.scalpOiliness!,
-      scalpConcerns: [...diagnostics.scalpConcerns!].sort(),
+      texture: completeDiagnostics.texture,
+      thickness: completeDiagnostics.thickness,
+      density: completeDiagnostics.density,
+      goals: [...completeDiagnostics.goals].sort(),
+      currentConcerns: [...completeDiagnostics.currentConcerns].sort(),
+      hairLength: completeDiagnostics.hairLength,
+      hairSurface: completeDiagnostics.hairSurface,
+      elasticResponse: completeDiagnostics.elasticResponse,
+      chemicalTreatments: [...completeDiagnostics.chemicalTreatments].sort(),
+      scalpOiliness: completeDiagnostics.scalpOiliness,
+      scalpConcerns: [...completeDiagnostics.scalpConcerns].sort(),
     },
   }
 }

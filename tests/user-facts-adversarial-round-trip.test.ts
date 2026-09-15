@@ -242,7 +242,9 @@ test("case 7: v2 duplicate legacy concerns mapping to the same v3 value dedupe n
     "frizz_flyaways",
   ])
   assert.deepEqual(
-    [...facts.diagnostics.currentConcerns].sort(),
+    // `!`: a real v2/v3 envelope projection always populates currentConcerns; `DiagnosticsV1`
+    // only made it optional for STORED (possibly partial) diagnostics (ruling 2026-09-15).
+    [...facts.diagnostics.currentConcerns!].sort(),
     ["frizz_flyaways", "split_ends"],
     "native model must dedupe the v2->v3 mapped duplicate (spec rule 4)",
   )

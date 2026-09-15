@@ -34,14 +34,21 @@ export class UserFactsValidationError extends Error {
 }
 
 /** Transport failure calling `user_facts_save_v1`, an `invalid_input` result (itself a caller
- * bug the RPC detected), or a result payload this client does not recognise. */
+ * bug the RPC detected), or a result payload this client does not recognise.
+ * `reason` carries the RPC's own `invalid_input` reason string (task 4 fix round 1); `payload`
+ * carries the raw, unrecognised RPC response for an unrecognised-payload error, kept as a
+ * structured field rather than serialised into the message. */
 export class UserFactsWriteError extends Error {
-  constructor(
-    message: string,
-    readonly cause?: unknown,
-  ) {
+  readonly cause?: unknown
+  readonly reason?: string
+  readonly payload?: unknown
+
+  constructor(message: string, options?: { cause?: unknown; reason?: string; payload?: unknown }) {
     super(message)
     this.name = "UserFactsWriteError"
+    this.cause = options?.cause
+    this.reason = options?.reason
+    this.payload = options?.payload
   }
 }
 
@@ -162,20 +169,23 @@ export async function saveUserFacts(
   })
 
   if (error) {
-    throw new UserFactsWriteError(`user_facts_save_v1 transport error: ${error.message}`, error)
+    throw new UserFactsWriteError(`user_facts_save_v1 transport error: ${error.message}`, {
+      cause: error,
+    })
   }
 
   const parsed = rpcResultSchema.safeParse(data)
   if (!parsed.success) {
-    throw new UserFactsWriteError(
-      `user_facts_save_v1 returned an unrecognised payload: ${JSON.stringify(data)}`,
-      parsed.error,
-    )
+    throw new UserFactsWriteError("user_facts_save_v1 returned an unrecognised payload", {
+      cause: parsed.error,
+      payload: data,
+    })
   }
 
   if (parsed.data.status === "invalid_input") {
     throw new UserFactsWriteError(
       `user_facts_save_v1 rejected the call (invalid_input: ${parsed.data.reason})`,
+      { reason: parsed.data.reason },
     )
   }
 

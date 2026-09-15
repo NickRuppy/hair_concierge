@@ -47,6 +47,21 @@ export class UnsupportedUserFactsSourceError extends Error {
   }
 }
 
+/** Thrown by `toStage1Source` (task 4 fix round 1) when an EDITED emission is requested for
+ * diagnostics missing one or more of the 11 fields a native envelope requires. Stored
+ * diagnostics may be partial (controller ruling 2026-09-15), but an edited emission has to
+ * synthesize a full envelope from native fields, so completeness is enforced at exactly this
+ * boundary rather than silently omitting keys. */
+export class UserFactsIncompleteError extends Error {
+  constructor(
+    message: string,
+    readonly missingFields: string[],
+  ) {
+    super(message)
+    this.name = "UserFactsIncompleteError"
+  }
+}
+
 /** Generic array de-duplication check, mirroring `stringArray`'s dedupe rule in
  * `src/lib/personal-plan-quiz/persistence.ts` without retyping any vocabulary (the element
  * schema is always passed in by the caller). */
