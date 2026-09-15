@@ -148,6 +148,12 @@ test("formats German plain-text blocks with profile identity, actual amount, can
   )
   assert.ok(longName)
   assert.match(JSON.stringify(longName.blocks), /mia@example.com/)
+  const quarterly = formatSlackGrowthNotification(
+    input({ event: event({ payload: { value: 29.99, currency: "EUR", interval: "quarter" } }) }),
+  )
+  assert.ok(quarterly)
+  assert.match(quarterly.text, /Quartalsabo/)
+  assert.match(JSON.stringify(quarterly.blocks), /Quartalsabo/)
 })
 
 test("requires production flag, validated active cutoff, and a strict Slack webhook before posting", async () => {

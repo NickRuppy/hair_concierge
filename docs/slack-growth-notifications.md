@@ -2,7 +2,7 @@
 
 Der private Slack-Kanal ist `#growth` (`C0C24GFBUGL`) im Workspace `T0BK66ADN4X`. Die App **Chaarlie Events** (`A0C1WM80HMK`) wurde dort mit dem Scope `incoming-webhook` installiert. Drei ausdrücklich als fiktiv markierte Testnachrichten für Trial-Start, Konvertierung und Neukauf wurden am 15.09.2026 über den echten Webhook gesendet und im Kanal bestätigt. Das [App-Manifest](../plans/slack-growth-app-manifest.json) dokumentiert die vorgesehene Minimalkonfiguration.
 
-Der Backend-Code ist lokal geprüft; automatische Produktionszustellungen sind noch nicht aktiviert. Die Webhook-Verbindung allein aktiviert sie nicht.
+Den aktuellen Produktionszustand zeigt `select public.read_slack_growth_notification_state();`. Die Webhook-Verbindung allein aktiviert automatische Zustellungen nicht.
 
 Die Benachrichtigungen enthalten Name und E-Mail-Adresse. Der Incoming-Webhook gehört ausschließlich als serverseitiges Secret in `SLACK_GROWTH_WEBHOOK_URL`; er darf weder in Tickets noch in Logs, Tests oder Client-Code erscheinen.
 

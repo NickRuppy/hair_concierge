@@ -240,6 +240,7 @@ function accountLabel(profile: BillingAnalyticsDeliveryInput["profile"], userId:
 
 function planLabel(value: unknown) {
   if (value === "month") return "Monatsabo"
+  if (value === "quarter") return "Quartalsabo"
   if (value === "year") return "Jahresabo"
   if (value === "one_time") return "Einmaliger Haarplan"
   return "Haarplan"
