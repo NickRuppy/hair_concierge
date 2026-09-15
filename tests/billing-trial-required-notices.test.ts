@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { renderCustomerIoTriggerTemplate } from "./helpers/customerio-liquid"
 import { buildTrialRequiredNoticeMessage } from "../src/lib/billing/trial-required-notices"
 import {
   dispatchTrialRequiredNotices,
@@ -236,7 +237,8 @@ test("inline required notice keeps arbitrary declaration content as escaped data
     await import("../src/lib/customerio/trial-required-notices")
   const message = {
     subject: "Bestätigung",
-    receipt_text: "<img src=x onerror=alert(1)> {{ customer.email }} & Text",
+    receipt_text:
+      'Kündigung bestätigt: 69,99 €\nhttps://chaarlie.de/kuendigen\n<img src=x onerror=alert(1)> {{ customer.email }} & "Text"',
   }
   const payload = buildRequiredNoticeEmail({
     email: "owner@example.test",
@@ -245,7 +247,25 @@ test("inline required notice keeps arbitrary declaration content as escaped data
     message,
   })
   assert.equal(payload.inlineContent?.subject, "{{ trigger.subject }}")
-  assert.match(payload.inlineContent!.htmlBody, /receipt_text \| escape/)
+  const rendered = renderCustomerIoTriggerTemplate(
+    payload.inlineContent!.htmlBody,
+    payload.messageData,
+  )
+  assert.match(rendered, /Kündigung bestätigt: 69,99 €\nhttps:\/\/chaarlie.de\/kuendigen/)
+  assert.match(rendered, /&lt;img src=x onerror=alert\(1\)&gt;/)
+  assert.match(rendered, /\{\{ customer.email \}\} &amp; &quot;Text&quot;/)
+  assert.doesNotMatch(rendered, /<img|%20|%0A|%C3/)
+  assert.match(rendered, /style="margin:0;background:#fff"/)
+  assert.match(rendered, /max-width:560px/)
+  assert.match(
+    rendered,
+    /font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#2d1b46;white-space:pre-wrap;overflow-wrap:anywhere/,
+  )
+  assert.match(rendered, /href="\{% unsubscribe_url %\}" class="untracked"/)
+  assert.match(rendered, /Abmelden.*Impressum.*Datenschutz/)
+  assert.equal((rendered.match(/<html/g) ?? []).length, 1)
+  assert.equal((rendered.match(/<body/g) ?? []).length, 1)
+  assert.equal(rendered, previewRequiredNoticeHtml(message))
   assert.doesNotMatch(payload.inlineContent!.htmlBody, /onerror|customer.email/)
   assert.equal(payload.messageData.receipt_text, message.receipt_text)
   assert.equal(payload.inlineContent?.tracked, false)

@@ -17,6 +17,26 @@ There is no proven provider receipt substitution in this implementation. Merchan
 
 ### Transport and template payload
 
+Trial messages 16 (required notices, `chaarlie_required_contract_notice_v1`) and 15 (reminder) use the dedicated
+**Chaarlie trial emails — API HTML passthrough** layout (workspace 219516, layout 2).
+Its source is exactly `{{content}}`. API bodies contain the complete HTML document,
+explicit typography and aligned footer links. Do not assign the shared Empty Layout
+or another HTML-document wrapper to these complete bodies: that nests documents.
+Do not edit the shared Empty Layout to repair a trial message.
+
+Release ordering: deploy the body-with-footer code first, then assign layout 2 to
+both messages. Rollback ordering: restore both messages to Empty Layout (id 1)
+before reverting to code without a footer. Preserve message IDs, no-tracking and
+no-retention flags, enrollment and the immutable reminder cutoff. Verify each
+layout assignment in the editor plus an actual delivered message; UI test sends
+are separate from a production webhook/API E2E send.
+
+HTML trigger values use Customer.io `htmlencode`, including reminder URL attributes.
+Its legacy `escape` filter percent-encodes the entire value. Local previews and
+handwritten Liquid test doubles cannot prove provider rendering: verify delivered
+HTML for readable German, working destinations, and escaped user-supplied markup.
+See [the encoding repair receipt](../plans/2026-09-15-trial-email-encoding.md).
+
 Existing Customer.io EU App API transport and API key are reused. Existing sender verified by the parent from live workspace `219516`, transactional message `14`: `Chaarlie <info@chaarlie.de>` ([existing template](https://fly.customer.io/workspaces/219516/journeys/transactional/14/overview)). Parent observed three sends and 100% delivery on that existing message; this is sender evidence, not proof of this new receipt's delivery.
 
 The default trigger name is `chaarlie_required_contract_notice_v1`. Optional overrides are `CUSTOMERIO_TRIAL_REQUIRED_NOTICE_TRANSACTIONAL_MESSAGE_ID` and `CUSTOMERIO_REQUIRED_NOTICE_FROM`. Only the existing `CUSTOMERIO_APP_API_KEY` is mandatory; no new secret or manually created template is necessary. On the first required send, `auto_create: true` creates the named transactional metrics record if absent. It does not create a campaign.
@@ -28,7 +48,7 @@ The default trigger name is `chaarlie_required_contract_notice_v1`. Optional ove
   "identifiers": { "email": "<same recipient>" },
   "from": "Chaarlie <info@chaarlie.de>",
   "subject": "{{ trigger.subject }}",
-  "body": "<div style=\"white-space:pre-wrap\">{{ trigger.receipt_text | escape }}</div>",
+  "body": "<div style=\"white-space:pre-wrap\">{{ trigger.receipt_text | htmlencode }}</div>",
   "body_plain": "{{ trigger.receipt_text }}",
   "message_data": { "subject": "<German required notice subject>", "receipt_text": "<complete durable confirmation>" },
   "auto_create": true,
@@ -38,7 +58,7 @@ The default trigger name is `chaarlie_required_contract_notice_v1`. Optional ove
 }
 ```
 
-The actual builder includes the German HTML document shell and font/line-height styles. Both HTML and plaintext are supplied. Untrusted public-declaration text enters `message_data`; it is not interpolated into Liquid source. HTML uses the escape filter. Open/click tracking is disabled. Existing callers without `inlineContent` retain their original transport payload unchanged. [Customer.io API contract](https://docs.customer.io/integrations/api/app/tag/send-messages/sendemail/) and [inline examples](https://docs.customer.io/messaging/send/transactional/api-examples/), and [transactional trigger-variable semantics](https://docs.customer.io/messaging/send/transactional/api/#trigger-data-and-content-variables).
+The actual builder includes the German HTML document shell and font/line-height styles. Both HTML and plaintext are supplied. Untrusted public-declaration text enters `message_data`; it is not interpolated into Liquid source. HTML uses Customer.io’s `htmlencode` filter. Open/click tracking is disabled. Existing callers without `inlineContent` retain their original transport payload unchanged. [Customer.io API contract](https://docs.customer.io/integrations/api/app/tag/send-messages/sendemail/) and [inline examples](https://docs.customer.io/messaging/send/transactional/api-examples/), and [transactional trigger-variable semantics](https://docs.customer.io/messaging/send/transactional/api/#trigger-data-and-content-variables).
 
 ### Queue and scheduler
 

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { renderCustomerIoTriggerTemplate } from "./helpers/customerio-liquid"
 
 import { buildTrialReminderMessage } from "../src/lib/billing/trial-reminders"
 import {
@@ -45,21 +46,25 @@ test("builds the stored Customer.io transactional message with privacy-preservin
   assert.equal(request.body.subject, "{{ trigger.subject }}")
   assert.equal(request.body.auto_create, false)
   assert.equal(request.body.tracked, false)
-  assert.match(request.body.body!, /\{\{ trigger\.trial_end_date \| escape \}\}/)
   assert.match(request.body.body!, /1111B S Governors Ave # 84075/)
+  assert.match(request.body.body!, /href="\{% unsubscribe_url %\}" class="untracked"/)
+  assert.match(request.body.body!, /https:\/\/chaarlie\.de\/impressum/)
+  assert.match(request.body.body!, /https:\/\/chaarlie\.de\/datenschutz/)
+  assert.match(request.body.body!, /style="background:#f7f4f9"/)
+  assert.match(request.body.body!, /font-family:Arial,sans-serif;color:#2d1b46/)
   assert.doesNotMatch(request.body.body!, /99,99|owner@example\.test/)
   assert.deepEqual(request.body.message_data, message.messageData)
 
-  const rendered = request.body.body!.replace(
-    /\{\{ trigger\.([a-z_]+) \| escape \}\}/g,
-    (_match, key: keyof typeof message.messageData) =>
-      message.messageData[key]
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;"),
-  )
+  const rendered = renderCustomerIoTriggerTemplate(request.body.body!, request.body.message_data)
+  assert.match(rendered, /21\. September 2026 um 12:00 Uhr MESZ/)
+  assert.match(rendered, /99,99 €/)
+  assert.match(rendered, /href="https:\/\/chaarlie.de\/profile"/)
+  assert.match(rendered, /href="https:\/\/chaarlie.de\/kuendigen"/)
+  assert.match(rendered, /href="\{% unsubscribe_url %\}" class="untracked"/)
+  assert.match(rendered, /Abmelden.*Impressum.*Datenschutz/)
+  assert.doesNotMatch(rendered, /%20|%C3|https%3A|\{\{ trigger/)
+  assert.equal((rendered.match(/<html/g) ?? []).length, 1)
+  assert.equal((rendered.match(/<body/g) ?? []).length, 1)
   assert.equal(rendered, message.htmlBody)
 })
 
