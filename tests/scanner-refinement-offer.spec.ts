@@ -6,6 +6,15 @@ const labEnabled = process.env.CI_SCANNER_REFINEMENT_LAB_ENABLED === "true"
 test.describe("scanner refinement offer lab", () => {
   test.skip(labEnabled === false, "requires CI_SCANNER_REFINEMENT_LAB_ENABLED=true")
 
+  test.beforeAll(async ({ request }) => {
+    // Compile the shared dev routes before interaction: compiling the quiz in
+    // parallel can otherwise reload the lab and reset its selected plan.
+    for (const path of ["/lp/scan", "/labs/scanner-refinement", "/api/funnel/session"]) {
+      const response = await request.get(`${baseUrl}${path}`)
+      expect(response.ok()).toBe(true)
+    }
+  })
+
   for (const viewport of [
     { name: "320px", width: 320, height: 700 },
     { name: "390px", width: 390, height: 844 },
@@ -65,16 +74,12 @@ test.describe("scanner refinement offer lab", () => {
       expect(dockGeometry.separate).toBe(true)
       expect(dockGeometry.dockTop - dockGeometry.whatsappBottom).toBeCloseTo(12, 0)
 
-      const whatsapp = page.getByRole("button", { name: "Frage per WhatsApp stellen" })
+      const whatsapp = page.getByRole("link", { name: "Frage per WhatsApp stellen" })
       await expect(whatsapp).toHaveCount(1)
-      await whatsapp.click()
-      const contactDialog = page.getByRole("dialog", {
-        name: "WhatsApp-Kontakt noch nicht verfügbar",
-      })
-      await expect(contactDialog).toBeVisible()
-      await page.keyboard.press("Escape")
-      await expect(contactDialog).toBeHidden()
-      await expect(whatsapp).toBeFocused()
+      await expect(whatsapp).toHaveAttribute("href", "https://wa.me/message/NIQW4GQHV7UTD1")
+      await expect(whatsapp).toHaveAttribute("target", "_blank")
+      await expect(whatsapp).toHaveAttribute("rel", "noopener")
+      await expect(page.getByText("WhatsApp-Kontakt noch nicht verfügbar")).toHaveCount(0)
 
       const zoom = page.getByRole("button", {
         name: "Scan-Ergebnis für ein Beispielprofil vergrößern",

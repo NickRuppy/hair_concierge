@@ -129,8 +129,12 @@ export default function DatenschutzPage() {
                 Vertragsdaten und den Versandstatus. Rechtsgrundlagen sind Vertragserfüllung (Art. 6
                 Abs. 1 lit. b DSGVO) und gesetzliche Informationspflichten (Art. 6 Abs. 1 lit. c
                 DSGVO). Diese Mitteilungen enthalten keine Werbung und benötigen keine
-                Marketing-Einwilligung. Zum kostenlosen Test gibt es keine zusätzliche freiwillige
-                Erinnerungs-E-Mail.
+                Marketing-Einwilligung. Wenn wir dir beim Abschluss des kostenlosen Tests eine
+                Erinnerung ankündigen, senden wir dir vor der ersten Zahlung eine einmalige E-Mail
+                mit Testende, vereinbartem Betrag und Kündigungsmöglichkeit. Dafür verwenden wir
+                deine bestätigte Konto-E-Mail-Adresse, die erforderlichen Vertragsdaten und den
+                Versandstatus. Die Erinnerung enthält keine Werbung; Öffnungen und Klicks werden
+                nicht nachverfolgt.
               </p>
             </section>
 

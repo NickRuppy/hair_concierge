@@ -14,6 +14,7 @@ import { scannerRefinedStyles } from "./scanner-refined-styles"
 const images = "/images/funnels/scan-refinement"
 const videos = "/videos/funnels/scan-refinement"
 const exampleImage = `${images}/ogx-production-scan-390x844.jpg`
+const whatsappHref = "https://wa.me/message/NIQW4GQHV7UTD1"
 const benefits = [
   [
     "tour-scanner.png",
@@ -108,7 +109,6 @@ export function ScannerRefinedOffer(props: FunnelOfferVariantProps) {
   const input = adaptLegacyQuizAnswersForAssessment(quizAnswers)
   const rows = buildPersonalPlanAssessmentRows(assessPersonalPlanHair(input), input)
   const dock = useRef<HTMLDivElement>(null)
-  const contact = useRef<HTMLDialogElement>(null)
   const example = useRef<HTMLDialogElement>(null)
   const tour = useRef<HTMLUListElement>(null)
   const pricing = useRef<HTMLElement>(null)
@@ -173,9 +173,6 @@ export function ScannerRefinedOffer(props: FunnelOfferVariantProps) {
       behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
     })
   }
-  const openContact = (event: MouseEvent<HTMLButtonElement>) =>
-    showDialog(contact.current, event.currentTarget)
-
   return (
     <OfferTrackingProvider
       entryContext={entryContext}
@@ -372,9 +369,9 @@ export function ScannerRefinedOffer(props: FunnelOfferVariantProps) {
                 </li>
               </ol>
               {pricingSlot}
-              <button type="button" className="sr-contact-inline" onClick={openContact}>
+              <a className="sr-contact-inline" href={whatsappHref} target="_blank" rel="noopener">
                 Fragen? Schreib uns auf WhatsApp
-              </button>
+              </a>
             </div>
           </section>
           <section className="sr-section sr-benefits" data-offer-section="product_tour">
@@ -443,17 +440,18 @@ export function ScannerRefinedOffer(props: FunnelOfferVariantProps) {
             ))}
           </section>
           <div className="sr-footer-contact">
-            <button type="button" className="sr-contact-inline" onClick={openContact}>
+            <a className="sr-contact-inline" href={whatsappHref} target="_blank" rel="noopener">
               Fragen? Schreib uns auf WhatsApp
-            </button>
+            </a>
           </div>
           <SiteFooter className="sr-footer" />
-          <button
-            type="button"
+          <a
             className="sr-whatsapp"
             aria-label="Frage per WhatsApp stellen"
             title="WhatsApp"
-            onClick={openContact}
+            href={whatsappHref}
+            target="_blank"
+            rel="noopener"
           >
             <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
               <path
@@ -467,7 +465,7 @@ export function ScannerRefinedOffer(props: FunnelOfferVariantProps) {
                 d="M11 9c-1 0-2 2-1 5 1 4 5 7 8 8 3 1 5-1 5-2l-4-3-2 2c-2-1-4-3-5-5l2-2-2-3Z"
               />
             </svg>
-          </button>
+          </a>
           <div className="sr-dock" ref={dock}>
             <a
               href="#pricing"
@@ -479,20 +477,6 @@ export function ScannerRefinedOffer(props: FunnelOfferVariantProps) {
               {days} Tage kostenlos testen <span aria-hidden="true">→</span>
             </a>
           </div>
-          <dialog
-            ref={contact}
-            className="sr-dialog sr-contact-dialog"
-            aria-labelledby="scanner-contact-title"
-          >
-            <h2 id="scanner-contact-title">WhatsApp-Kontakt noch nicht verfügbar</h2>
-            <p>
-              Unser WhatsApp-Kontakt wird noch eingerichtet. Hier kannst du momentan keine Nachricht
-              senden.
-            </p>
-            <button type="button" onClick={() => contact.current?.close()}>
-              Schließen
-            </button>
-          </dialog>
           <dialog
             ref={example}
             className="sr-dialog sr-example-dialog"

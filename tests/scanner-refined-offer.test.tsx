@@ -126,7 +126,7 @@ test("approved section sequence has one authoritative pricing slot directly afte
     assert.match(html, new RegExp(`>${label}</a>`))
 })
 
-test("example, contact, captions and carousel expose labeled native controls", () => {
+test("example, WhatsApp contact, captions and carousel expose labeled native controls", () => {
   const html = renderToStaticMarkup(<ScannerRefinedOffer {...propsFor()} />)
   assert.match(
     html,
@@ -134,9 +134,15 @@ test("example, contact, captions and carousel expose labeled native controls", (
   )
   assert.match(html, /<dialog[^>]*aria-labelledby="scanner-example-title"/)
   assert.match(html, /aria-label="Vergrößerte Ansicht schließen"/)
-  assert.match(html, /<dialog[^>]*aria-labelledby="scanner-contact-title"/)
-  assert.match(html, /WhatsApp-Kontakt noch nicht verfügbar/)
-  assert.doesNotMatch(html, /href="https:\/\/(wa\.me|api\.whatsapp)/)
+  const whatsappHref = "https://wa.me/message/NIQW4GQHV7UTD1"
+  const whatsappLinks = [...html.matchAll(new RegExp(`<a[^>]*href="${whatsappHref}"[^>]*>`, "g"))]
+  assert.equal(whatsappLinks.length, 3)
+  for (const [link] of whatsappLinks) {
+    assert.match(link, /target="_blank"/)
+    assert.match(link, /rel="noopener"/)
+  }
+  assert.match(html, /aria-label="Frage per WhatsApp stellen"/)
+  assert.doesNotMatch(html, /scanner-contact-title|WhatsApp-Kontakt noch nicht verfügbar/)
   assert.match(html, /<video controls="" playsInline=""/)
   assert.match(html, /<track kind="captions" srcLang="de" label="Deutsch"[^>]*default=""/)
   assert.match(html, /aria-label="Weitere Vorteile" aria-controls="scanner-benefits"/)
