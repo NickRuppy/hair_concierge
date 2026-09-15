@@ -1,5 +1,6 @@
 import { assertPayPalPaidRecoveryPlan } from "./trial-paid-recovery"
 import { readTrialEffectiveContract } from "../billing/trial-effective-contract"
+import { resolveLegacyQuizFuturePurchaseEligibility } from "../personal-plan/legacy-cutover-eligibility"
 import { loadPayPalTrialPlanCatalog } from "./trial-checkout-attempt"
 import "server-only"
 import { activateTrialAdmission, releaseTrialAdmission } from "../billing/trial-admission"
@@ -199,6 +200,12 @@ export async function ensurePayPalTrialCheckoutAccount(
     await markPayPalCheckoutIntentActivated(deps.supabase, intent.token)
     return {
       ...identity,
+      legacyQuizFuturePurchaseEligible: await resolvePayPalTrialCohortEligibility(
+        deps,
+        identity.userId,
+        intent.lead_id,
+        authorizationAt,
+      ),
       trialEnrollmentId: enrollment.id,
       authorizationSucceededAt: authorizationAt.toISOString(),
       trialEndAt: trialEnd,
@@ -320,11 +327,34 @@ export async function ensurePayPalTrialCheckoutAccount(
   await markPayPalCheckoutIntentActivated(deps.supabase, intent.token)
   return {
     ...identity,
+    legacyQuizFuturePurchaseEligible: await resolvePayPalTrialCohortEligibility(
+      deps,
+      identity.userId,
+      intent.lead_id,
+      authorizationAt,
+    ),
     providerSubscriberEmail: subscription.subscriber?.email_address ?? null,
     trialEnrollmentId: enrollment.id,
     authorizationSucceededAt: authorizationAt.toISOString(),
     trialEndAt: trialEnd,
   }
+}
+
+// A trial has no payment yet; its verified authorization time is the cohort
+// timestamp that decides the first-time destination cutover. Runs after
+// finishPayPalTrialProjection so the lead is already linked to the account.
+function resolvePayPalTrialCohortEligibility(
+  deps: { supabase: Parameters<typeof resolveLegacyQuizFuturePurchaseEligibility>[0] },
+  userId: string,
+  leadId: string | null,
+  authorizationAt: Date,
+): Promise<boolean> {
+  return resolveLegacyQuizFuturePurchaseEligibility(deps.supabase, {
+    userId,
+    leadId,
+    paidAt: authorizationAt.toISOString(),
+    provider: "paypal",
+  })
 }
 
 async function blockPayPalTrialAgreement(

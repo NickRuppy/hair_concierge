@@ -460,3 +460,34 @@ test("accepted trial callbacks use configured runtime even when new enrollment i
     }
   }
 })
+
+test("trial authorization timestamp qualifies a legacy-quiz lead for the plan destination cutover", async () => {
+  const leadId = "00000000-0000-4000-8000-0000000000aa"
+  const values = {
+    PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED: "true",
+    // Cutoff sits between subscription creation and trial authorization, so a
+    // regression to the subscription-created timestamp turns eligibility false.
+    PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF: "2026-09-01T00:00:00Z",
+  }
+  const previous = Object.fromEntries(Object.keys(values).map((key) => [key, process.env[key]]))
+  try {
+    Object.assign(process.env, values)
+    const f = fixture()
+    f.subscription.created = Date.parse("2026-08-20T12:00:00Z") / 1000
+    f.session.metadata.lead_id = leadId
+    // The lead is linked by the activation itself; a resolver that runs before
+    // linking sees no owned lead and must come back ineligible.
+    f.tables.leads = [{ id: leadId, user_id: null, quiz_kind: "legacy" }]
+    f.deps.linkQuizToProfile = async () => {
+      f.tables.leads[0].user_id = userId
+    }
+    const result = await ensureCheckoutAccount(f.session, f.deps)
+    assert.equal(result.trialEnrollmentId, enrollmentId)
+    assert.equal(result.legacyQuizFuturePurchaseEligible, true)
+  } finally {
+    for (const [key, value] of Object.entries(previous)) {
+      if (value === undefined) delete process.env[key]
+      else process.env[key] = value
+    }
+  }
+})
