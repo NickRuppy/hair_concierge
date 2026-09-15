@@ -6,6 +6,15 @@ const labEnabled = process.env.CI_SCANNER_REFINEMENT_LAB_ENABLED === "true"
 test.describe("scanner refinement offer lab", () => {
   test.skip(labEnabled === false, "requires CI_SCANNER_REFINEMENT_LAB_ENABLED=true")
 
+  test.beforeAll(async ({ request }) => {
+    // Compile the shared dev routes before interaction: compiling the quiz in
+    // parallel can otherwise reload the lab and reset its selected plan.
+    for (const path of ["/lp/scan", "/labs/scanner-refinement", "/api/funnel/session"]) {
+      const response = await request.get(`${baseUrl}${path}`)
+      expect(response.ok()).toBe(true)
+    }
+  })
+
   for (const viewport of [
     { name: "320px", width: 320, height: 700 },
     { name: "390px", width: 390, height: 844 },
