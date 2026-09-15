@@ -121,7 +121,7 @@ Gmail desktop inbox; nickrupprechter+trial3@gmail.com remains the primary test i
 
 - Keep existing wording, rates, deadlines, destinations and privacy flags.
 - Keep full-document API bodies. Assign a new dedicated classic Customer.io layout
-  containing only `{{content}}` to messages 14 and 15; never edit shared Empty Layout.
+  containing only `{{content}}` to messages 16 and 15; never edit shared Empty Layout.
 - Put the existing Abmelden/Impressum/Datenschutz links inside each API HTML document,
   centered within the content width, with explicit Arial and readable #655471 text.
   Preserve the provider unsubscribe URL variable; do not turn it into cancellation.
@@ -157,7 +157,7 @@ Ordered execution and proof:
    Use it on inactive message 17 for actual received HTML and Gmail inspection.
 4. Review/publish/merge/deploy body-with-footer first. The old shared layout may
    briefly duplicate footer links, but none disappear. Verify deployed source SHA.
-5. Assign the dedicated layout separately to 14 and 15 and read back both choices.
+5. Assign the dedicated layout separately to 16 and 15 and read back both choices.
    Save the exact API body as each template fallback, preserving envelope/settings.
 6. On layout failure, restore that message's Empty Layout (id 1); do not edit the
    shared layout. On code rollback, restore both assignments to id 1 FIRST, then
@@ -205,3 +205,10 @@ Source: https://docs.customer.io/messaging/liquid/tag-list/#unsubscribe_url
   one html/body, one footer, real unsubscribe/legal URLs and no unresolved Liquid.
   Decoded receipt content equals the generated receipt byte-for-byte (all terms
   and newlines). Delivered HTML inspected in browser in its centered padded column.
+
+Live preflight correction: required notices are auto-created message **16**, trigger
+`chaarlie_required_contract_notice_v1` (no production environment override); message
+14 is `partner_access_account_ready` and is only historical sender evidence. It
+must remain untouched. Message 16 needs its exact API body saved as a Code-editor
+fallback before assigning layout 2; keep API-owned subject/data and privacy flags.
+The earlier assumed message ID was corrected before any live message mutation.

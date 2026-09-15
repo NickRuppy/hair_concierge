@@ -17,7 +17,7 @@ There is no proven provider receipt substitution in this implementation. Merchan
 
 ### Transport and template payload
 
-Trial messages 14 (required notices) and 15 (reminder) use the dedicated
+Trial messages 16 (required notices, `chaarlie_required_contract_notice_v1`) and 15 (reminder) use the dedicated
 **Chaarlie trial emails — API HTML passthrough** layout (workspace 219516, layout 2).
 Its source is exactly `{{content}}`. API bodies contain the complete HTML document,
 explicit typography and aligned footer links. Do not assign the shared Empty Layout
