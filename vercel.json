@@ -15,6 +15,10 @@
       "schedule": "* * * * *"
     },
     {
+      "path": "/api/billing/slack-notifications/reconcile",
+      "schedule": "* * * * *"
+    },
+    {
       "path": "/api/billing/public-contract-declaration-receipts/reconcile",
       "schedule": "* * * * *"
     },
