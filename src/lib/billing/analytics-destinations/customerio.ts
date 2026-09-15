@@ -66,8 +66,12 @@ function customerIoTraits(input: BillingAnalyticsDeliveryInput) {
 export async function deliverBillingAnalyticsToCustomerIo(
   input: BillingAnalyticsDeliveryInput,
 ): Promise<BillingAnalyticsDeliveryResult> {
-  if (input.event.event_name === "trial_started") {
-    return { ok: false, permanent: true, error: "trial_started is restricted to PostHog" }
+  if (input.event.event_name.startsWith("trial_")) {
+    return {
+      ok: false,
+      permanent: true,
+      error: "Trial lifecycle events are not sent to Customer.io",
+    }
   }
   const identifyMessageId = `billing:${input.event.event_key}:identify`
   const identifyResult = await identifyCustomerIoServerPerson({

@@ -86,3 +86,17 @@ test("scanner presentation propagates pending state and selected dynamic monthly
     /dann 9,99.*Monat/i,
   )
 })
+
+test("scanner trial continue is the pricing CTA and carries the selected interval", () => {
+  const offer = ScannerTrialOffer({
+    onContinue: () => {},
+    onSelect: () => {},
+    pricing,
+    selectedInterval: "month",
+  })
+  const button = findByDataAttribute(offer, "data-trial-offer-continue", "")
+  assert.equal(button.props["data-offer-cta"], "pricing_primary")
+  assert.equal(button.props["data-offer-destination"], "checkout")
+  assert.equal(button.props["data-offer-source-section"], "pricing")
+  assert.equal(button.props["data-offer-selected-interval"], "month")
+})

@@ -89,6 +89,24 @@ export type OfferCtaId =
 
 export type OfferEngagementReason = "cta_clicked" | "faq_opened" | "section_depth"
 
+export type OfferContentType =
+  | "scanner_example"
+  | "scanner_benefit_carousel"
+  | "scanner_video"
+  | "scanner_whatsapp"
+
+export type OfferContentAction =
+  | "opened"
+  | "closed"
+  | "previous"
+  | "next"
+  | "played"
+  | "completed"
+  | "failed"
+  | "clicked"
+
+export type OfferContentPlacement = "pricing_inline" | "footer" | "floating"
+
 export type OfferChapterId = "analysis" | "routine" | "support" | "pricing"
 export type OfferDetailType = "analysis_marker" | "routine_product" | "locked_routine_card"
 
@@ -382,6 +400,18 @@ export type AppEventMap = {
     interactionIndex: number
     selectedInterval?: BillingInterval
     sourceSection: OfferSectionId
+  }
+  offer_content_interacted: OfferAnalyticsContext & {
+    action: OfferContentAction
+    actionIndex: number
+    contentType: OfferContentType
+    placement?: OfferContentPlacement
+    sourceSection?: OfferSectionId
+  }
+  offer_content_viewed: OfferAnalyticsContext & {
+    contentId: "scanner" | "plan" | "application" | "chat"
+    contentType: "scanner_benefit_carousel"
+    sourceSection: "product_tour"
   }
   offer_detail_opened: OfferAnalyticsContext & {
     detailId: string

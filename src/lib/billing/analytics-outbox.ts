@@ -76,10 +76,11 @@ export async function createBillingAnalyticsEvent(
   options: CreateBillingAnalyticsEventOptions = {},
 ): Promise<BillingAnalyticsOutboxRow> {
   const event = await insertOrFindOutboxEvent(supabase, input)
-  const destinations =
-    event.event_name === "trial_started"
-      ? ["posthog" as const]
-      : (options.destinations ?? BILLING_ANALYTICS_EXTERNAL_DESTINATIONS)
+  const destinations = event.event_name.startsWith("trial_")
+    ? event.event_name === "trial_started" && event.payload.trial_analytics_version === 1
+      ? ["posthog" as const, "meta" as const]
+      : ["posthog" as const]
+    : (options.destinations ?? BILLING_ANALYTICS_EXTERNAL_DESTINATIONS)
   await ensureDeliveryRows(supabase, event.id, destinations)
 
   if (options.dispatch !== false) {
@@ -417,6 +418,12 @@ function sanitizePayload(payload: Record<string, unknown>) {
     "access_token",
     "payment_method_details",
     "raw_event",
+    "fbp",
+    "fbc",
+    "client_user_agent",
+    "client_ip_address",
+    "meta_context",
+    "marketing_consent",
   ])
   return Object.fromEntries(Object.entries(payload).filter(([key]) => !blockedKeys.has(key)))
 }

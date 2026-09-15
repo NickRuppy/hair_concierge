@@ -126,6 +126,8 @@ function fixture() {
   }
   const calls: string[] = []
   const recorded: TrialPaymentEvent[] = []
+  const analyticsLookups: string[] = []
+  const deliveryOutboxIds: string[] = []
   const provider = {
     accounts: {
       retrieve: async () => {
@@ -183,12 +185,39 @@ function fixture() {
         select() {
           return builder
         },
-        eq() {
+        eq(column: string, value: string) {
+          if (table === "billing_analytics_outbox" && column === "event_key")
+            analyticsLookups.push(value)
+          if (table === "billing_analytics_deliveries" && column === "outbox_id")
+            deliveryOutboxIds.push(value)
           return builder
+        },
+        in() {
+          return builder
+        },
+        or() {
+          return builder
+        },
+        order() {
+          return builder
+        },
+        limit() {
+          return builder
+        },
+        then(resolve: (value: { data: unknown[]; error: null }) => unknown) {
+          assert.equal(table, "billing_analytics_deliveries")
+          return Promise.resolve({ data: [], error: null }).then(resolve)
         },
         maybeSingle: async () => ({
           error: null,
-          data: table === "billing_subscriptions" ? billing : enrollment,
+          data:
+            table === "billing_analytics_outbox"
+              ? recorded.length && result.outcome !== "stale"
+                ? { id: "atomic_trial_event" }
+                : null
+              : table === "billing_subscriptions"
+                ? billing
+                : enrollment,
         }),
       }
       return builder
@@ -205,6 +234,8 @@ function fixture() {
     intent,
     calls,
     recorded,
+    analyticsLookups,
+    deliveryOutboxIds,
     setResult(next: TrialPaymentEventResult) {
       result = next
     },
@@ -236,7 +267,7 @@ function fixture() {
         },
       )
     },
-    async runWebhook(outcome: "succeeded" | "failed") {
+    async runWebhook(outcome: "succeeded" | "failed", recordBillingAnalytics = false) {
       const keys = {
         TRIAL_IDENTITY_PROCESSING_APPROVED: "true",
         TRIAL_STRIPE_ACCOUNT_ID: "acct_live",
@@ -250,7 +281,7 @@ function fixture() {
       const before = Object.fromEntries(Object.keys(keys).map((key) => [key, process.env[key]]))
       Object.assign(process.env, keys)
       try {
-        const queued: unknown[] = []
+        const queued: Array<() => void | Promise<void>> = []
         await handleStripeWebhookEvent(
           {
             id: "evt_route",
@@ -261,17 +292,21 @@ function fixture() {
           {
             stripe: provider as unknown as Stripe,
             supabase: client as unknown as SupabaseClient,
-            recordBillingAnalytics: false,
+            recordBillingAnalytics,
             defer: (work) => {
               queued.push(work)
             },
           },
         )
-        assert.deepEqual(
-          queued,
-          [],
-          "trial invoices must not enqueue legacy optional lifecycle messages",
-        )
+        if (recordBillingAnalytics) {
+          for (const work of queued) await work()
+        } else {
+          assert.deepEqual(
+            queued,
+            [],
+            "trial invoices must not enqueue legacy optional lifecycle messages",
+          )
+        }
       } finally {
         for (const [key, value] of Object.entries(before)) {
           if (value === undefined) delete process.env[key]
@@ -462,4 +497,29 @@ test("duplicate source invoice still reaches dedup after verified repair cancell
   f.setSourceRepair()
   f.setResult({ outcome: "duplicate", phase: "first_paid" })
   assert.equal((await f.run())?.payment?.result.outcome, "duplicate")
+})
+
+test("verified first-payment failure immediately dispatches its atomic outbox key with analytics enabled", async () => {
+  const f = fixture()
+  Object.assign(f.invoice, { status: "open", amount_paid: 0, amount_remaining: 6999 })
+  f.sub.status = "past_due"
+  f.setResult({ outcome: "applied", phase: "none" })
+  await f.runWebhook("failed", true)
+  assert.equal(f.recorded.length, 1)
+  assert.equal(f.recorded[0].outcome, "failed")
+  assert.deepEqual(f.analyticsLookups, ["stripe:trial_first_payment_failed:in_1"])
+  assert.deepEqual(f.deliveryOutboxIds, ["atomic_trial_event"])
+})
+
+test("late failure retrieving paid truth dispatches Purchase, while absent failure facts stay a no-op", async () => {
+  const paid = fixture()
+  await paid.runWebhook("failed", true)
+  assert.equal(paid.recorded[0].outcome, "succeeded")
+  assert.deepEqual(paid.analyticsLookups, ["stripe:purchase_completed:in_1"])
+  const stale = fixture()
+  Object.assign(stale.invoice, { status: "open", amount_paid: 0, amount_remaining: 6999 })
+  stale.setResult({ outcome: "stale", phase: "none" })
+  await stale.runWebhook("failed", true)
+  assert.deepEqual(stale.analyticsLookups, ["stripe:trial_first_payment_failed:in_1"])
+  assert.deepEqual(stale.deliveryOutboxIds, [])
 })

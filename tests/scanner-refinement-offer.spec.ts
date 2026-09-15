@@ -3,6 +3,24 @@ import { expect, test, type Page } from "@playwright/test"
 const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000"
 const labEnabled = process.env.CI_SCANNER_REFINEMENT_LAB_ENABLED === "true"
 
+type CapturedEvent = { eventName: string; properties?: Record<string, unknown> }
+
+async function capturedEvents(page: Page) {
+  return page.evaluate(
+    () =>
+      (window as Window & { __scannerRefinementAnalyticsEvents?: CapturedEvent[] })
+        .__scannerRefinementAnalyticsEvents ?? [],
+  )
+}
+
+async function clearCapturedEvents(page: Page) {
+  await page.evaluate(() => {
+    ;(
+      window as Window & { __scannerRefinementAnalyticsEvents?: CapturedEvent[] }
+    ).__scannerRefinementAnalyticsEvents = []
+  })
+}
+
 test.describe("scanner refinement offer lab", () => {
   test.skip(labEnabled === false, "requires CI_SCANNER_REFINEMENT_LAB_ENABLED=true")
 
@@ -35,6 +53,7 @@ test.describe("scanner refinement offer lab", () => {
       await expect(harness).toHaveAttribute("data-scanner-refinement-hydrated", "true", {
         timeout: 20_000,
       })
+      await clearCapturedEvents(page)
       await expect(page.locator(".sr-offer")).toBeVisible()
       await expect(page.locator("video track[kind='captions'][srclang='de']")).toHaveCount(1)
       await expect(page.locator("video track[kind='captions']")).toHaveAttribute("default", "")
@@ -65,10 +84,139 @@ test.describe("scanner refinement offer lab", () => {
         "Kein Checkout wurde geöffnet",
       )
 
+      await expect
+        .poll(async () => capturedEvents(page))
+        .toContainEqual(
+          expect.objectContaining({
+            eventName: "offer_cta_clicked",
+            properties: expect.objectContaining({
+              cta_id: "pricing_primary",
+              destination: "checkout",
+              selected_interval: "month",
+              source_section: "pricing",
+            }),
+          }),
+        )
+
       const bottomCta = page.locator('[data-offer-cta="sticky_bottom"]')
       await expect(bottomCta).toHaveCount(1)
       await bottomCta.click()
       await expect(page.locator("#pricing")).toBeInViewport()
+
+      const zoom = page.getByRole("button", {
+        name: "Scan-Ergebnis für ein Beispielprofil vergrößern",
+      })
+      await expect(zoom).toHaveCount(1)
+      await zoom.click()
+      const exampleDialog = page.getByRole("dialog", { name: "Scan-Ergebnis · Beispielprofil" })
+      await expect(exampleDialog).toBeVisible()
+      await expect(exampleDialog.locator("img")).toHaveAttribute("width", "390")
+      await page.keyboard.press("Escape")
+      await expect(exampleDialog).toBeHidden()
+
+      const carouselButtons = page.locator(".sr-carousel-controls button")
+      await expect(carouselButtons).toHaveCount(2)
+      await carouselButtons.nth(0).click()
+      await carouselButtons.nth(1).click()
+
+      const cards = page.locator(".sr-benefit-track > li")
+      await expect(cards).toHaveCount(4)
+      for (let index = 0; index < 4; index += 1) {
+        await cards.nth(index).scrollIntoViewIfNeeded()
+        await page.waitForTimeout(800)
+      }
+      await cards.nth(0).scrollIntoViewIfNeeded()
+      await page.waitForTimeout(800)
+
+      const video = page.locator("video")
+      await expect(video).toHaveCount(1)
+      await video.dispatchEvent("play")
+      await video.dispatchEvent("ended")
+      await video.dispatchEvent("error")
+      await expect(video).toHaveCount(0)
+
+      await page.evaluate(() => {
+        document.addEventListener(
+          "click",
+          (event) => {
+            if ((event.target as Element).closest('a[href^="https://wa.me/"]'))
+              event.preventDefault()
+          },
+          { capture: true },
+        )
+      })
+      const whatsappLinks = page.locator('a[href="https://wa.me/message/NIQW4GQHV7UTD1"]')
+      await expect(whatsappLinks).toHaveCount(3)
+      for (let index = 0; index < 3; index += 1) await whatsappLinks.nth(index).click()
+
+      await expect
+        .poll(async () => capturedEvents(page))
+        .toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              eventName: "offer_content_interacted",
+              properties: expect.objectContaining({
+                content_type: "scanner_example",
+                action: "opened",
+              }),
+            }),
+            expect.objectContaining({
+              eventName: "offer_content_interacted",
+              properties: expect.objectContaining({
+                content_type: "scanner_example",
+                action: "closed",
+              }),
+            }),
+          ]),
+        )
+      await expect
+        .poll(async () => {
+          const events = await capturedEvents(page)
+          const content = events.filter((event) => event.eventName === "offer_content_interacted")
+          const views = events.filter((event) => event.eventName === "offer_content_viewed")
+          return Boolean(
+            content.filter((event) => event.properties?.content_type === "scanner_example")
+              .length === 2 &&
+            content.some(
+              (event) =>
+                event.properties?.content_type === "scanner_benefit_carousel" &&
+                event.properties?.action === "previous",
+            ) &&
+            content.some(
+              (event) =>
+                event.properties?.content_type === "scanner_benefit_carousel" &&
+                event.properties?.action === "next",
+            ) &&
+            content.filter((event) => event.properties?.content_type === "scanner_video").length ===
+              3 &&
+            content.filter((event) => event.properties?.content_type === "scanner_whatsapp")
+              .length === 3 &&
+            views.length === 4 &&
+            new Set(views.map((event) => event.properties?.content_id)).size === 4,
+          )
+        })
+        .toBe(true)
+
+      const events = await capturedEvents(page)
+      const content = events.filter((event) => event.eventName === "offer_content_interacted")
+      expect(
+        content.filter((event) => event.properties?.content_type === "scanner_whatsapp"),
+      ).toEqual([
+        expect.objectContaining({
+          properties: expect.objectContaining({
+            placement: "pricing_inline",
+            source_section: "pricing",
+          }),
+        }),
+        expect.objectContaining({ properties: expect.objectContaining({ placement: "footer" }) }),
+        expect.objectContaining({ properties: expect.objectContaining({ placement: "floating" }) }),
+      ])
+      for (const event of content.filter(
+        (event) => event.properties?.content_type === "scanner_whatsapp",
+      )) {
+        expect(event.properties?.source_section).not.toBe("faq")
+        expect(event.properties).not.toHaveProperty("url")
+      }
 
       const dockGeometry = await purchaseGeometry(page)
       expect(dockGeometry.separate).toBe(true)
@@ -80,15 +228,6 @@ test.describe("scanner refinement offer lab", () => {
       await expect(whatsapp).toHaveAttribute("target", "_blank")
       await expect(whatsapp).toHaveAttribute("rel", "noopener")
       await expect(page.getByText("WhatsApp-Kontakt noch nicht verfügbar")).toHaveCount(0)
-
-      const zoom = page.getByRole("button", {
-        name: "Scan-Ergebnis für ein Beispielprofil vergrößern",
-      })
-      await expect(zoom).toHaveCount(1)
-      await zoom.click()
-      const exampleDialog = page.getByRole("dialog", { name: "Scan-Ergebnis · Beispielprofil" })
-      await expect(exampleDialog).toBeVisible()
-      await expect(exampleDialog.locator("img")).toHaveAttribute("width", "390")
     })
   }
 })

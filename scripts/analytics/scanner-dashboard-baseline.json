@@ -1,0 +1,110 @@
+{
+  "dashboardId": 953895,
+  "projectId": 126788,
+  "insights": [
+    {
+      "key": "funnel",
+      "name": "01 · Scanner — Landingpage bis Checkout",
+      "description": "Geordnete Schritte pro funnel_session_id; Einstieg auf /lp/scan im gewählten Zeitraum. Direkte Quiz-Einstiege fehlen bewusst in diesem Landing-Kohort. Markierte Test-/Partner-Sessions ausgeschlossen. Trial-Aktivierung und Stripe-Kauf fehlen hier wegen bestätigter Attribution-Lücke; siehe Qualitätskachel. Unmarkierte Tests können enthalten sein.",
+      "query": "WITH sessions AS (\nSELECT toString(properties.funnel_session_id) AS session_id,\nminIf(timestamp,event='$pageview' AND properties.$pathname='/lp/scan') AS landing_at,\ngroupArrayIf(timestamp,event='quiz_started') AS quiz_times,\ngroupArrayIf(timestamp,event='quiz_lead_captured') AS lead_times,\ngroupArrayIf(timestamp,event='offer_viewed') AS offer_times,\ngroupArrayIf(timestamp,event='offer_checkout_opened') AS checkout_times,\ncountIf(lower(ifNull(toString(properties.is_internal_test),'false')) IN ('true','1') OR ifNull(toString(properties.test_kind),'') IN ('field_test','partner')) AS tests\nFROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND notEmpty(ifNull(toString(properties.funnel_session_id),'')) GROUP BY session_id\n), quiz AS (SELECT *, arrayMin(arrayFilter(t -> t >= landing_at,quiz_times)) AS quiz_at FROM sessions WHERE landing_at > toDateTime('2000-01-01 00:00:00') AND tests=0),\nleads AS (SELECT *, arrayMin(arrayFilter(t -> t >= quiz_at,lead_times)) AS lead_at FROM quiz),\noffers AS (SELECT *, arrayMin(arrayFilter(t -> t >= lead_at,offer_times)) AS offer_at FROM leads),\nopens AS (SELECT *, arrayMin(arrayFilter(t -> t >= offer_at,checkout_times)) AS checkout_at FROM offers), stages AS (\nSELECT '01 Landingpage' AS stufe,count() AS sessions FROM opens\nUNION ALL SELECT '02 Quiz gestartet',countIf(quiz_at > toDateTime('2000-01-01 00:00:00')) FROM opens\nUNION ALL SELECT '03 Lead gespeichert',countIf(quiz_at > toDateTime('2000-01-01 00:00:00') AND lead_at > toDateTime('2000-01-01 00:00:00')) FROM opens\nUNION ALL SELECT '04 Offer geöffnet',countIf(quiz_at > toDateTime('2000-01-01 00:00:00') AND lead_at > toDateTime('2000-01-01 00:00:00') AND offer_at > toDateTime('2000-01-01 00:00:00')) FROM opens\nUNION ALL SELECT '05 Checkout geöffnet',countIf(quiz_at > toDateTime('2000-01-01 00:00:00') AND lead_at > toDateTime('2000-01-01 00:00:00') AND offer_at > toDateTime('2000-01-01 00:00:00') AND checkout_at > toDateTime('2000-01-01 00:00:00')) FROM opens) SELECT stufe,sessions FROM stages ORDER BY stufe",
+      "x": "stufe",
+      "y": "sessions",
+      "display": "ActionsBar",
+      "id": "5960064",
+      "short": "zoqXsxEG"
+    },
+    {
+      "key": "offer",
+      "name": "02 · Offer — Meilensteine ab Seitenaufruf",
+      "description": "Eindeutige Funnel-Sessions mit Offer im Zeitraum; spätere Meilensteine derselben Session. Keine strikte Schrittfolge: Pricing oder Klicks können übersprungen werden. Trial- und Stripe-Kaufzahlen sind wegen fehlender Attribution unvollständig; null bedeutet nicht messbar, nicht null Käufe.",
+      "query": "WITH eligible_sessions AS (SELECT toString(properties.funnel_session_id) AS sid FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND notEmpty(ifNull(toString(properties.funnel_session_id),'')) GROUP BY sid HAVING countIf(lower(ifNull(toString(properties.is_internal_test),'false')) IN ('true','1') OR ifNull(toString(properties.test_kind),'') IN ('field_test','partner'))=0), offers AS (SELECT toString(properties.funnel_session_id) AS sid,min(timestamp) AS opened FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND toString(properties.funnel_session_id) IN (SELECT sid FROM eligible_sessions) AND event='offer_viewed' GROUP BY sid), counts AS (SELECT event,uniqExact(toString(properties.funnel_session_id)) AS sessions FROM events INNER JOIN offers ON toString(events.properties.funnel_session_id)=offers.sid WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND timestamp>=offers.opened GROUP BY event), stages AS (\nSELECT '01 Offer geöffnet' AS stufe,coalesce((SELECT sessions FROM counts WHERE event='offer_viewed'),0) AS sessions\nUNION ALL SELECT '02 Pricing gesehen',coalesce((SELECT sessions FROM counts WHERE event='pricing_viewed'),0)\nUNION ALL SELECT '03 Checkout geöffnet',coalesce((SELECT sessions FROM counts WHERE event='offer_checkout_opened'),0)\nUNION ALL SELECT '04 Anbieter initialisiert',coalesce((SELECT sessions FROM counts WHERE event='checkout_started'),0)\nUNION ALL SELECT '05 Trial aktiviert — Attribution fehlt',NULL\nUNION ALL SELECT '06 Kauf — Attribution unvollständig',NULL\n) SELECT stufe,sessions FROM stages ORDER BY stufe",
+      "x": "stufe",
+      "y": "sessions",
+      "display": "ActionsBar",
+      "id": "5960066",
+      "short": "GXvYgSGa"
+    },
+    {
+      "key": "sections",
+      "name": "03 · Aktuelle Offer-Seite — Abschnittsreichweite",
+      "description": "Nur scan_regal_refinement_v20. Eindeutige offer_view_id je Abschnitt nach passendem offer_viewed; 25% Sichtbarkeit für 750 ms, kein Beweis des Lesens. Markierte Test-Sessions ausgeschlossen.",
+      "query": "WITH eligible_sessions AS (SELECT toString(properties.funnel_session_id) AS sid FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND notEmpty(ifNull(toString(properties.funnel_session_id),'')) GROUP BY sid HAVING countIf(lower(ifNull(toString(properties.is_internal_test),'false')) IN ('true','1') OR ifNull(toString(properties.test_kind),'') IN ('field_test','partner'))=0), views AS (SELECT toString(properties.offer_view_id) AS vid,min(timestamp) AS opened FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND toString(properties.funnel_session_id) IN (SELECT sid FROM eligible_sessions) AND event='offer_viewed' AND properties.offer_revision='scan_regal_refinement_v20' GROUP BY vid)\nSELECT concat(toString(properties.section_index),' · ',toString(properties.section_id)) AS abschnitt,uniqExact(toString(properties.offer_view_id)) AS offer_views FROM events INNER JOIN views ON toString(events.properties.offer_view_id)=views.vid WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND toString(properties.funnel_session_id) IN (SELECT sid FROM eligible_sessions) AND timestamp>=views.opened AND event='offer_section_viewed' AND properties.offer_revision='scan_regal_refinement_v20' GROUP BY abschnitt ORDER BY min(toInt(properties.section_index)) LIMIT 30",
+      "x": "abschnitt",
+      "y": "offer_views",
+      "display": "ActionsBar",
+      "id": "5960067",
+      "short": "ktz2qB22"
+    },
+    {
+      "key": "cta",
+      "name": "04 · Offer — CTA-Klicks nach Platzierung und Ziel",
+      "description": "Scan-Angebote, nach Revision getrennt. Klickende Offer-Ansichten plus rohe Klickzahl; keine CTR ohne passende Exposition. Der aktuelle Trial-Weiter-Button sendet noch kein offer_cta_clicked; checkout_opened misst dessen Checkout-Intent separat.",
+      "query": "WITH eligible_sessions AS (SELECT toString(properties.funnel_session_id) AS sid FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND notEmpty(ifNull(toString(properties.funnel_session_id),'')) GROUP BY sid HAVING countIf(lower(ifNull(toString(properties.is_internal_test),'false')) IN ('true','1') OR ifNull(toString(properties.test_kind),'') IN ('field_test','partner'))=0), clicks AS (SELECT concat(toString(properties.offer_revision),' · ',toString(properties.cta_id),' → ',toString(properties.destination)) AS cta,toString(properties.offer_view_id) AS vid FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND toString(properties.funnel_session_id) IN (SELECT sid FROM eligible_sessions) AND event='offer_cta_clicked') SELECT cta,uniqExact(vid) AS offer_views,count() AS klicks FROM clicks GROUP BY cta ORDER BY offer_views DESC LIMIT 30",
+      "x": "cta",
+      "y": "offer_views",
+      "display": "ActionsBar",
+      "id": "5960068",
+      "short": "U1wzqPbi"
+    },
+    {
+      "key": "quiz",
+      "name": "05 · Quiz — Fragen und Scanner-Einschübe",
+      "description": "Reichweite pro funnel_session_id und Schritt, keine strikt sequenzielle Drop-off-Rate. Fragen und Einschübe können mehrfach besucht werden; Ansichten werden pro Session dedupliziert. Markierte Test-Sessions ausgeschlossen.",
+      "query": "WITH eligible_sessions AS (SELECT toString(properties.funnel_session_id) AS sid FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND notEmpty(ifNull(toString(properties.funnel_session_id),'')) GROUP BY sid HAVING countIf(lower(ifNull(toString(properties.is_internal_test),'false')) IN ('true','1') OR ifNull(toString(properties.test_kind),'') IN ('field_test','partner'))=0), steps AS (SELECT event,properties.step_name AS step_name,properties.insert_id AS insert_id,toString(properties.funnel_session_id) AS sid FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND toString(properties.funnel_session_id) IN (SELECT sid FROM eligible_sessions) AND event IN ('quiz_step_viewed','quiz_insert_viewed')) SELECT if(event='quiz_insert_viewed',concat('Einschub · ',toString(insert_id)),concat('Frage · ',toString(step_name))) AS schritt,uniqExact(sid) AS sessions FROM steps GROUP BY schritt ORDER BY sessions DESC LIMIT 40",
+      "x": "schritt",
+      "y": "sessions",
+      "display": "ActionsBar",
+      "id": "5960069",
+      "short": "QZXy5HrG"
+    },
+    {
+      "key": "traffic",
+      "name": "06 · Akquisition — Quelle, Medium und Kampagne",
+      "description": "Scanner-Landing-Sessions auf /lp/scan, erste beobachtete UTM-Werte im Zeitraum. Fehlende UTM-Werte sind unbekannt, kein Beweis für organischen Traffic. Markierte Test-/Partner-Sessions ausgeschlossen.",
+      "query": "WITH eligible_sessions AS (SELECT toString(properties.funnel_session_id) AS sid FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND notEmpty(ifNull(toString(properties.funnel_session_id),'')) GROUP BY sid HAVING countIf(lower(ifNull(toString(properties.is_internal_test),'false')) IN ('true','1') OR ifNull(toString(properties.test_kind),'') IN ('field_test','partner'))=0), visits AS (SELECT toString(properties.funnel_session_id) AS sid,argMin(ifNull(toString(properties.utm_source),'(ohne UTM)'),timestamp) AS quelle,argMin(ifNull(toString(properties.utm_medium),'(ohne UTM)'),timestamp) AS medium,argMin(ifNull(toString(properties.utm_campaign),'(ohne UTM)'),timestamp) AS kampagne FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND toString(properties.funnel_session_id) IN (SELECT sid FROM eligible_sessions) AND event='$pageview' AND properties.$pathname='/lp/scan' GROUP BY sid) SELECT quelle,medium,kampagne,count() AS sessions FROM visits GROUP BY quelle,medium,kampagne ORDER BY sessions DESC LIMIT 30",
+      "display": "ActionsTable",
+      "id": "5960070",
+      "short": "Qe8Xilgy"
+    },
+    {
+      "key": "health",
+      "name": "07 · Tracking-Qualität — Trial-Zuordnung fehlt",
+      "description": "ACHTUNG: Trial-Aktivierungen ohne Funnel-Zuordnung sind projektweit gezählt und dürfen nicht dem Scanner zugerechnet werden. Beide Provider lassen Trial-Zuordnung aus; Stripe lässt zusätzlich die Zuordnung des ersten bezahlten Trial-Kaufs aus. Meta-Empfang wurde mangels Login nicht verifiziert.",
+      "query": "WITH metrics AS (SELECT 'Scanner: Events ohne Session-ID' AS pruefung,countIf(empty(ifNull(toString(properties.funnel_session_id),''))) AS anzahl FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1'\nUNION ALL SELECT 'Projektweit: Trial-Aktivierungen ohne Funnel-Zuordnung',count() FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND event='trial_started' AND (empty(ifNull(toString(properties.funnel_session_id),'')) OR empty(ifNull(toString(properties.funnel_package_key),'')))\nUNION ALL SELECT 'Scanner: beobachtete Offer-Ansichten (inkl. Tests)',count() FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND event='offer_viewed') SELECT pruefung,anzahl FROM metrics",
+      "display": "ActionsTable",
+      "id": "5960072",
+      "short": "mrk6uHGc"
+    },
+    {
+      "key": "inventory",
+      "name": "08 · Scanner — Erhaltene Events und Revisionen",
+      "description": "Vollständiges Volumen der Scanner-Funnel-Diagnostik im Zeitraum, inklusive möglicher Tests. Zur Prüfung der Instrumentierung, keine Conversion-Rate. Fehlende Events können fehlende Instrumentierung oder fehlende Nutzung bedeuten.",
+      "query": "SELECT event AS ereignis,ifNull(toString(properties.offer_revision),'(keine Revision)') AS revision,count() AS events,uniqExactIf(toString(properties.funnel_session_id),notEmpty(ifNull(toString(properties.funnel_session_id),''))) AS sessions FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND event NOT LIKE '$%' GROUP BY ereignis,revision ORDER BY events DESC LIMIT 60",
+      "display": "ActionsTable",
+      "id": "5960073",
+      "short": "n7nVMCeq"
+    },
+    {
+      "key": "payments",
+      "name": "09 · Checkout — Auswahl, Sichtbarkeit und Fehler",
+      "description": "Ereignisvolumen und eindeutige Funnel-Sessions für Checkout-Diagnosen. Keine Fehlerquote: Wiederholungen und Retries werden im Volumen mitgezählt. Trial-Start und Kauf sind hier nicht als Checkout-Ereignisse enthalten.",
+      "query": "WITH eligible_sessions AS (SELECT toString(properties.funnel_session_id) AS sid FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND notEmpty(ifNull(toString(properties.funnel_session_id),'')) GROUP BY sid HAVING countIf(lower(ifNull(toString(properties.is_internal_test),'false')) IN ('true','1') OR ifNull(toString(properties.test_kind),'') IN ('field_test','partner'))=0), records AS (SELECT event,toString(properties.funnel_session_id) AS sid FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND toString(properties.funnel_session_id) IN (SELECT sid FROM eligible_sessions) AND event IN ('offer_plan_selected','offer_checkout_opened','offer_checkout_lifecycle','offer_payment_option_viewed','offer_payment_method_selected','checkout_started','checkout_start_failed')) SELECT event AS ereignis,uniqExact(sid) AS sessions,count() AS events FROM records GROUP BY ereignis ORDER BY sessions DESC LIMIT 20",
+      "x": "ereignis",
+      "y": "sessions",
+      "display": "ActionsBar",
+      "id": "5960075",
+      "short": "IZ6r7FcU"
+    },
+    {
+      "key": "faq",
+      "name": "10 · Offer — Geöffnete FAQ-Fragen",
+      "description": "Eindeutige Offer-Ansichten und Öffnungen je festem FAQ-Identifier, nach Offer-Revision getrennt. Rohes Öffnungsvolumen ist keine Klickrate. Markierte Test-Sessions ausgeschlossen.",
+      "query": "WITH eligible_sessions AS (SELECT toString(properties.funnel_session_id) AS sid FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND notEmpty(ifNull(toString(properties.funnel_session_id),'')) GROUP BY sid HAVING countIf(lower(ifNull(toString(properties.is_internal_test),'false')) IN ('true','1') OR ifNull(toString(properties.test_kind),'') IN ('field_test','partner'))=0), records AS (SELECT toString(properties.offer_revision) AS revision,toString(properties.faq_id) AS faq,toString(properties.offer_view_id) AS vid FROM events WHERE timestamp >= {filters.dateRange.from} AND timestamp <= {filters.dateRange.to} AND properties.funnel_package_key='scan_v1' AND toString(properties.funnel_session_id) IN (SELECT sid FROM eligible_sessions) AND event='offer_faq_opened') SELECT concat(revision,' · ',faq) AS frage,uniqExact(vid) AS offer_views,count() AS oeffnungen FROM records GROUP BY frage ORDER BY offer_views DESC LIMIT 30",
+      "x": "frage",
+      "y": "offer_views",
+      "display": "ActionsBar",
+      "id": "5960076",
+      "short": "cheQATnc"
+    }
+  ]
+}

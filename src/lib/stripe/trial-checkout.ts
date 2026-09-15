@@ -1,4 +1,8 @@
 import "server-only"
+import {
+  freezeTrialAnalyticsContext,
+  type TrialAnalyticsContextInput,
+} from "../billing/trial-analytics-context"
 
 import type Stripe from "stripe"
 import type { SupabaseClient } from "@supabase/supabase-js"
@@ -24,6 +28,7 @@ import {
 
 const store = {
   create: createTrialCheckoutAttempt,
+  freezeAnalyticsContext: freezeTrialAnalyticsContext,
   freeze: freezeTrialStripeCheckoutAttempt,
   bind: bindTrialStripeCheckoutReference,
   reserve: reserveTrialAdmission,
@@ -39,6 +44,7 @@ type Input = {
   interval: "month" | "year"
   serverVerifiedEmail: string
   claims: readonly TrialIdentityClaim[]
+  analyticsContext?: TrialAnalyticsContextInput
   checkout: Omit<BuildTrialStripeCheckoutSessionParamsInput, "offer">
 }
 
@@ -75,6 +81,12 @@ export async function createDurableStripeTrialCheckout(input: Input, deps: Deps)
     attempt.offer.interval !== input.interval
   )
     throw new Error("Trial checkout attempt does not match")
+
+  await persistence.freezeAnalyticsContext(
+    deps.supabase,
+    attempt.enrollmentId,
+    input.analyticsContext,
+  )
 
   if (input.claims.length && !attempt.providerReference) {
     const admission = await persistence.reserve(deps.supabase, attempt.enrollmentId, input.claims)

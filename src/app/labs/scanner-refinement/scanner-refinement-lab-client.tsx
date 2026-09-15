@@ -1,6 +1,6 @@
 "use client"
 
-import { useSyncExternalStore, useState } from "react"
+import { useEffect, useSyncExternalStore, useState } from "react"
 
 import {
   TrialOffer,
@@ -8,6 +8,7 @@ import {
   type TrialOfferPricing,
 } from "@/components/billing/trial-offer"
 import { ScanRegalOffer } from "@/components/scan-regal-offer/scan-regal-offer"
+import { posthog } from "@/lib/analytics/runtime/posthog"
 import type { QuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
 
@@ -21,6 +22,11 @@ const PRICING: TrialOfferPricing = {
 const subscribeToHydration = () => () => {}
 const hydratedSnapshot = () => true
 const serverHydrationSnapshot = () => false
+
+type ScannerRefinementAnalyticsEvent = {
+  eventName: string
+  properties?: Record<string, unknown>
+}
 
 export function ScannerRefinementLabClient({
   narrative,
@@ -36,6 +42,24 @@ export function ScannerRefinementLabClient({
     hydratedSnapshot,
     serverHydrationSnapshot,
   )
+
+  // This dev-only harness records the real PostHog adapter calls without
+  // loading or contacting an analytics vendor. Browser tests read this local
+  // buffer to prove DOM interactions reach the offer tracking provider.
+  useEffect(() => {
+    const browserWindow = window as Window & {
+      __scannerRefinementAnalyticsEvents?: ScannerRefinementAnalyticsEvent[]
+    }
+    browserWindow.__scannerRefinementAnalyticsEvents = []
+    const capture = posthog.capture
+    posthog.capture = ((eventName: string, properties?: Record<string, unknown>) => {
+      browserWindow.__scannerRefinementAnalyticsEvents?.push({ eventName, properties })
+      return true
+    }) as typeof posthog.capture
+    return () => {
+      posthog.capture = capture
+    }
+  }, [])
 
   return (
     <div

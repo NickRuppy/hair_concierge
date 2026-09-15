@@ -110,6 +110,10 @@ export function ScannerTrialOffer({
         aria-busy={pending || undefined}
         className="mt-5 min-h-[52px] w-full rounded-[14px] bg-[#ad4559] px-4 py-[15px] text-[15px] font-bold text-white shadow-[0_7px_16px_rgba(173,69,89,0.24)] disabled:cursor-wait disabled:opacity-60"
         data-trial-offer-continue=""
+        data-offer-cta="pricing_primary"
+        data-offer-destination="checkout"
+        data-offer-selected-interval={selectedInterval}
+        data-offer-source-section="pricing"
         disabled={isDisabled}
         onClick={() => {
           if (!isDisabled) onContinue()

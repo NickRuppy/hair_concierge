@@ -26,7 +26,12 @@ test("trial_started cannot reach paid lifecycle destinations even if a delivery 
     const result = await deliver(input)
     assert.equal(result.ok, false)
     assert.equal(result.permanent, true)
-    assert.equal(result.error, "trial_started is restricted to PostHog")
+    assert.equal(
+      result.error,
+      deliver === deliverBillingAnalyticsToMeta
+        ? "Verified trial analytics context is required"
+        : "Trial lifecycle events are not sent to Customer.io",
+    )
   }
 })
 

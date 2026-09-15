@@ -2,12 +2,7 @@ import { reconcilePayPalTrialPaidRecovery } from "./trial-paid-recovery"
 import { readTrialEffectiveContract } from "../billing/trial-effective-contract"
 import { reconcilePayPalTrialManagement } from "./trial-management"
 import type { PayPalCheckoutIntentRow } from "./checkout-intents"
-import { billingAnalyticsEventKey } from "../billing/analytics-events"
-import {
-  recordBillingAnalyticsEvent,
-  BILLING_ANALYTICS_EXTERNAL_DESTINATIONS,
-} from "../billing/analytics-outbox"
-import { isBillingFunnelDeliveryEnabled, isFunnelAttributionEnabled } from "../funnel/flags"
+import { dispatchBillingAnalyticsDue } from "../billing/analytics-outbox"
 import "server-only"
 import {
   findPayPalCheckoutIntentByProviderSubscriptionId,
@@ -133,33 +128,13 @@ export async function handlePayPalTrialWebhook(
     if (activation.status === "pending")
       throw new Error("PayPal trial activation is pending reconciliation")
     if (activation.status === "active" && deps.recordBillingAnalytics) {
-      await recordBillingAnalyticsEvent(
-        deps.supabase,
-        {
-          eventKey: billingAnalyticsEventKey({
-            provider: "paypal",
-            eventName: "trial_started",
-            sourceObjectId: activation.trialEnrollmentId!,
-          }),
-          eventName: "trial_started",
-          userId: activation.userId,
-          provider: "paypal",
-          providerSubscriptionId: subscription.id,
-          providerCustomerId: subscription.subscriber?.payer_id,
-          sourceEventId: event.id,
-          sourceObjectId: activation.trialEnrollmentId,
-          occurredAt: activation.authorizationSucceededAt!,
-          payload: {
-            trial_cohort: "trial_v1",
-            trial_enrollment_id: activation.trialEnrollmentId,
-            trial_end_at: activation.trialEndAt,
-            interval: intent.interval,
-            value: 0,
-            currency: "EUR",
-          },
-        },
-        { defer: deps.defer, destinations: ["posthog"] },
-      )
+      const dispatch = async () => {
+        await dispatchBillingAnalyticsDue(deps.supabase, {
+          eventKey: `paypal:trial_started:${activation.trialEnrollmentId}`,
+        })
+      }
+      if (deps.defer) deps.defer(dispatch)
+      else await dispatch()
     }
     return true
   }
@@ -333,61 +308,16 @@ export async function recordVerifiedPayPalTrialSale(
   }
   if (
     deps.recordBillingAnalytics &&
-    (result.outcome === "applied" || result.outcome === "duplicate") &&
+    ["applied", "duplicate"].includes(result.outcome) &&
     result.phase !== "none"
   ) {
-    let intent = await findPayPalCheckoutIntentByProviderSubscriptionId(
-      deps.supabase,
-      subscription.id!,
-    )
-    if (!intent) {
-      const linked = await deps.supabase.rpc("find_paypal_trial_checkout_intent_for_agreement", {
-        p_agreement_id: subscription.id,
-      })
-      if (linked.error) throw new Error("PayPal paid trial attribution lookup failed")
-      intent = linked.data as PayPalCheckoutIntentRow | null
+    const name = result.phase === "first_paid" ? "purchase_completed" : "payment_completed"
+    const anchor = result.phase === "first_paid" ? subscription.id! : saleId
+    const dispatch = async () => {
+      await dispatchBillingAnalyticsDue(deps.supabase, { eventKey: `paypal:${name}:${anchor}` })
     }
-    const eventName = result.phase === "first_paid" ? "purchase_completed" : "payment_completed"
-    const destinations = [...BILLING_ANALYTICS_EXTERNAL_DESTINATIONS]
-    if (
-      eventName === "purchase_completed" &&
-      isFunnelAttributionEnabled() &&
-      isBillingFunnelDeliveryEnabled() &&
-      intent?.metadata.funnel_session_id &&
-      intent.metadata.funnel_package_key
-    )
-      destinations.push("funnel")
-    await recordBillingAnalyticsEvent(
-      deps.supabase,
-      {
-        eventKey: billingAnalyticsEventKey({
-          provider: "paypal",
-          eventName,
-          sourceObjectId: result.phase === "first_paid" ? subscription.id! : saleId,
-        }),
-        eventName,
-        userId: billing.user_id,
-        provider: "paypal",
-        providerCustomerId: billing.provider_customer_id,
-        providerSubscriptionId: subscription.id,
-        sourceEventId: event.id,
-        sourceObjectId: saleId,
-        occurredAt,
-        payload: {
-          value: amountMinor / 100,
-          currency: "EUR",
-          interval: billing.interval,
-          trial_cohort: "trial_v1",
-          trial_enrollment_id: enrollment.id,
-          checkout_reference: subscription.id,
-          plan_id: `trial_v1:${billing.interval}`,
-          paypal_plan_id: live.plan_id,
-          funnel_session_id: intent?.metadata.funnel_session_id,
-          funnel_package_key: intent?.metadata.funnel_package_key,
-        },
-      },
-      { defer: deps.defer, destinations },
-    )
+    if (deps.defer) deps.defer(dispatch)
+    else await dispatch()
   }
   return result
 }

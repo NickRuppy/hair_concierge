@@ -29,6 +29,11 @@ export type BillingAnalyticsDeliveryStatus =
   | "failed_permanent"
 export type BillingAnalyticsEventName =
   | "trial_started"
+  | "trial_cancellation_requested"
+  | "trial_cancellation_confirmed"
+  | "trial_cancellation_restored"
+  | "trial_cancellation_observed"
+  | "trial_first_payment_failed"
   | "purchase_completed"
   | "payment_completed"
   | "subscription_started"

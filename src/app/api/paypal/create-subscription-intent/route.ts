@@ -1,3 +1,4 @@
+import { trialAnalyticsRequestContext } from "@/lib/billing/trial-analytics-context"
 import { createDurablePayPalTrialCheckout } from "@/lib/paypal/trial-checkout"
 import {
   readPayPalTrialRuntime,
@@ -70,6 +71,7 @@ export const PayPalSubscriptionIntentRequestSchema = z
     recoveryOnly: z.boolean().optional(),
     returnDestination: z.string().max(500).optional(),
     trial: z.literal(true).optional(),
+    trialMarketingConsent: z.boolean().optional(),
   })
   .strict()
   .superRefine(
@@ -298,9 +300,19 @@ export async function handlePayPalSubscriptionIntent(
           namespace: "chaarlie",
           normalizedIdentity: verifiedEmail,
         })
+      const cookieStore = await (deps.cookies ?? cookies)()
+      const funnelContext =
+        (await (deps.resolveFunnelCookieContext ?? resolveFunnelCookieContext)(
+          cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
+        )) ?? (resolvedLeadId ? await resolveFunnelContextForLead(resolvedLeadId) : null)
       const result = await (deps.createTrialCheckout ?? createDurablePayPalTrialCheckout)(
         {
           scope: user?.id ? { kind: "user", id: user.id } : { kind: "lead", id: resolvedLeadId! },
+          analyticsContext: trialAnalyticsRequestContext(
+            request,
+            parsed.data.trialMarketingConsent,
+            funnelContext?.sessionId,
+          ),
           clientAttemptId: checkoutAttemptId,
           interval,
           serverVerifiedEmail: verifiedEmail,
@@ -320,11 +332,6 @@ export async function handlePayPalSubscriptionIntent(
           retrieveSubscription: retrievePayPalTrialSubscription,
         },
       )
-      const cookieStore = await (deps.cookies ?? cookies)()
-      const funnelContext =
-        (await (deps.resolveFunnelCookieContext ?? resolveFunnelCookieContext)(
-          cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
-        )) ?? (resolvedLeadId ? await resolveFunnelContextForLead(resolvedLeadId) : null)
       const currentIntent = await admin
         .from("paypal_checkout_intents")
         .select("metadata")
@@ -342,12 +349,6 @@ export async function handlePayPalSubscriptionIntent(
               ? {
                   checkout_context: checkoutContext,
                   return_destination: sanitizeReactivationReturnDestination(rawReturnDestination),
-                }
-              : {}),
-            ...(!metadata.funnel_session_id && funnelContext
-              ? {
-                  funnel_session_id: funnelContext.sessionId,
-                  funnel_package_key: funnelContext.packageKey,
                 }
               : {}),
           },
