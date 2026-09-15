@@ -116,7 +116,10 @@ $$;
 -- Derivation: diagnostics -> its 12 legacy columns.
 -- Mirrors `deriveDiagnosticsColumns` (derive-legacy-columns.ts:79-146).
 -- Returns a jsonb object with all 12 keys always present; a JSON null means the
--- column is SQL NULL.
+-- column is SQL NULL — EXCEPT `chemical_treatment`/`concerns`/`goals`, which are
+-- always a jsonb array (possibly empty) and never JSON null (controller ruling
+-- 2026-09-15, task-2-3-amendment-brief.md: legacy readers rely on the historical
+-- NOT NULL DEFAULT '{}' contract for these three columns).
 -- ---------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.user_facts_derive_diagnostics_columns_v1(p_diagnostics jsonb)
 RETURNS jsonb
@@ -154,7 +157,12 @@ DECLARE
   v_surface text := p_diagnostics ->> 'hairSurface';
   v_scalp_concern text;
   v_scalp_condition text := NULL;
-  v_goals jsonb := NULL;
+  -- Controller ruling 2026-09-15 (task-2-3-amendment-brief.md): chemical_treatment/
+  -- concerns/goals project as '{}', never NULL, when the underlying fact is
+  -- absent (legacy readers rely on the historical NOT NULL DEFAULT '{}'
+  -- contract). Initialized to '[]' rather than NULL so the absent case (the
+  -- loop below never runs) already yields the right value.
+  v_goals jsonb := '[]'::jsonb;
   v_goal text;
   v_mapped text;
   v_desired_volume text := NULL;
@@ -173,7 +181,6 @@ BEGIN
   -- resolves through `resolveVolumeBalanceGoal` (normalization.ts:300-315)
   -- against this document's own thickness/density/texture.
   IF pg_catalog.jsonb_typeof(p_diagnostics -> 'goals') = 'array' THEN
-    v_goals := '[]'::jsonb;
     FOR v_goal IN
       SELECT element FROM pg_catalog.jsonb_array_elements_text(p_diagnostics -> 'goals') AS element
     LOOP
@@ -199,7 +206,7 @@ BEGIN
   -- `deriveDesiredVolumeFromGoals(goals, null)` (hair-profile/derived.ts:70-80):
   -- reads the DERIVED goals column, never the raw answers, and "volume" wins
   -- when both directions somehow survive.
-  IF v_goals IS NOT NULL AND pg_catalog.jsonb_array_length(v_goals) > 0 THEN
+  IF pg_catalog.jsonb_array_length(v_goals) > 0 THEN
     IF v_goals @> '"volume"'::jsonb THEN
       v_desired_volume := 'more';
     ELSIF v_goals @> '"less_volume"'::jsonb THEN
@@ -216,10 +223,18 @@ BEGIN
     'protein_moisture_balance', p_diagnostics ->> 'elasticResponse',
     'scalp_type', p_diagnostics ->> 'scalpOiliness',
     'scalp_condition', v_scalp_condition,
+    -- Controller ruling 2026-09-15: absent -> '[]', not NULL (legacy NOT NULL
+    -- DEFAULT '{}' contract) — the shared helper returns NULL for a non-array
+    -- input, so these two call sites override it, mirroring the TS oracle's
+    -- `?? []`.
     'chemical_treatment',
-      public.user_facts_map_vocabulary_array_v1(p_diagnostics -> 'chemicalTreatments', c_chemical),
+      COALESCE(
+        public.user_facts_map_vocabulary_array_v1(p_diagnostics -> 'chemicalTreatments', c_chemical),
+        '[]'::jsonb),
     'concerns',
-      public.user_facts_map_vocabulary_array_v1(p_diagnostics -> 'currentConcerns', c_concern),
+      COALESCE(
+        public.user_facts_map_vocabulary_array_v1(p_diagnostics -> 'currentConcerns', c_concern),
+        '[]'::jsonb),
     'goals', v_goals,
     'desired_volume', v_desired_volume
   );
@@ -418,6 +433,7 @@ DECLARE
   v_columns jsonb;
   v_changed boolean;
   v_diagnostics jsonb;
+  v_effective_patch jsonb;
 BEGIN
   -- (1) Input validation. Nothing is read or written before this passes.
   IF p_domain IS NULL OR p_domain NOT IN ('diagnostics', 'care_habits', 'quiz_context') THEN
@@ -521,6 +537,24 @@ BEGIN
       'diagnosticsHash', public.user_facts_diagnostics_hash_v1(v_profile.diagnostics));
   END IF;
 
+  -- (4b) Goals anti-clobber (Task 5a review C1, controller ruling 2026-09-15):
+  -- on the create_only diagnostics path that just PROCEEDED (above) because the
+  -- old document's source is the backfill's own `legacy_columns`, the user's
+  -- existing goals must survive: if the OLD document already has a non-empty
+  -- goals array, drop `goals` from the patch before merging, so the linked
+  -- artifact's goals never overwrite goals the user already picked (mirrors the
+  -- pre-PR1 link-to-profile rule "only write goals if the user has none yet").
+  -- Every other field in the patch is unaffected, and this applies ONLY to that
+  -- one path — a normal upsert write, or a create_only write over a real
+  -- (non-legacy_columns) source, replaces goals as patched like any other field.
+  v_effective_patch := p_patch;
+  IF p_mode = 'create_only'
+     AND p_domain = 'diagnostics'
+     AND pg_catalog.jsonb_typeof(v_old_domain -> 'goals') = 'array'
+     AND pg_catalog.jsonb_array_length(v_old_domain -> 'goals') > 0 THEN
+    v_effective_patch := v_effective_patch - 'goals';
+  END IF;
+
   -- (5) Field-level merge (F13). A key whose patch value is JSON null is
   -- CLEARED; every other key is replaced wholesale; keys the patch does not
   -- name survive untouched.
@@ -529,10 +563,10 @@ BEGIN
   -- `diagnostics.source.raw` is the verbatim quiz envelope (task 1) which may
   -- legitimately contain nulls. Only TOP-LEVEL nulls are clear instructions.
   SELECT COALESCE(pg_catalog.array_agg(entry.key), ARRAY[]::text[]) INTO v_cleared_keys
-    FROM pg_catalog.jsonb_each(p_patch) AS entry(key, value)
+    FROM pg_catalog.jsonb_each(v_effective_patch) AS entry(key, value)
    WHERE pg_catalog.jsonb_typeof(entry.value) = 'null';
 
-  v_new_domain := (COALESCE(v_old_domain, '{}'::jsonb) || p_patch) - v_cleared_keys;
+  v_new_domain := (COALESCE(v_old_domain, '{}'::jsonb) || v_effective_patch) - v_cleared_keys;
   v_changed := v_new_domain IS DISTINCT FROM v_old_domain;
 
   -- (6) Provenance: this write's envelope plus the accumulated per-field map
@@ -626,7 +660,7 @@ $$;
 
 COMMENT ON FUNCTION public.user_facts_save_v1(
   uuid, text, jsonb, jsonb, integer, text, uuid, bigint, uuid) IS
-  'The only supported writer of hair_profiles.diagnostics/care_habits/quiz_context and of the 20 legacy columns derived from them. Merges p_patch field-by-field (a top-level JSON null clears that field), merges provenance, bumps facts_revision on every non-preserved write (CAS via p_expected_revision), and recomputes the derived columns owned by p_domain in the same statement. Returns {status, revision, changed, diagnosticsHash} or a typed conflict.';
+  'The only supported writer of hair_profiles.diagnostics/care_habits/quiz_context and of the 20 legacy columns derived from them. Merges p_patch field-by-field (a top-level JSON null clears that field), merges provenance, bumps facts_revision on every non-preserved write (CAS via p_expected_revision), and recomputes the derived columns owned by p_domain in the same statement. On the create_only diagnostics path that proceeds because the existing document''s source is the backfill''s own legacy_columns, a non-empty existing goals array is preserved by dropping goals from the patch before merging (only write goals if the user has none yet). Returns {status, revision, changed, diagnosticsHash} or a typed conflict.';
 
 REVOKE ALL ON FUNCTION public.user_facts_jsonb_text_array_v1(jsonb) FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON FUNCTION public.user_facts_map_vocabulary_array_v1(jsonb, jsonb) FROM PUBLIC, anon, authenticated, service_role;

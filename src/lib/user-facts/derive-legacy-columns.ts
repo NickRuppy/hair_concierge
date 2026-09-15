@@ -40,9 +40,16 @@ export type DiagnosticsDerivedColumns = {
   protein_moisture_balance: string | null
   scalp_type: string | null
   scalp_condition: string | null
-  chemical_treatment: string[] | null
-  concerns: string[] | null
-  goals: string[] | null
+  // Controller ruling 2026-09-15 (task-2-3-amendment-brief.md): legacy readers
+  // rely on the historical `NOT NULL DEFAULT '{}'` contract for these three
+  // columns (`HairProfile` types them non-nullable; unguarded `.includes`/
+  // `.length` call sites in section-config.ts, get-user-context.ts,
+  // load-advisor-guidance.ts), so an absent fact projects as `[]`, never
+  // `null`, for these three legacy projections. Everything else (scalars,
+  // styling_tools/night_protection/brush_type) keeps the absent -> null rule.
+  chemical_treatment: string[]
+  concerns: string[]
+  goals: string[]
   desired_volume: "more" | "less" | null
 }
 
@@ -88,8 +95,9 @@ function deriveScalpCondition(scalpConcerns: readonly string[] | undefined): str
   return null
 }
 
-function deriveGoals(diagnostics: DiagnosticsV1): string[] | null {
-  if (diagnostics.goals === undefined) return null
+function deriveGoals(diagnostics: DiagnosticsV1): string[] {
+  // Controller ruling 2026-09-15: absent -> [], not null (see DiagnosticsDerivedColumns).
+  if (diagnostics.goals === undefined) return []
 
   const seen = new Set<string>()
   const result: string[] = []
@@ -124,11 +132,10 @@ export function deriveDiagnosticsColumns(diagnostics: DiagnosticsV1): Diagnostic
     protein_moisture_balance: diagnostics.elasticResponse ?? null,
     scalp_type: diagnostics.scalpOiliness ?? null,
     scalp_condition: deriveScalpCondition(diagnostics.scalpConcerns),
-    chemical_treatment: mapVocabularyArray(
-      diagnostics.chemicalTreatments,
-      CHEMICAL_TREATMENT_TO_COLUMN,
-    ),
-    concerns: mapVocabularyArray(diagnostics.currentConcerns, CONCERN_TO_PROFILE_CONCERN_MAP),
+    // Controller ruling 2026-09-15: absent -> [], not null (see DiagnosticsDerivedColumns).
+    chemical_treatment:
+      mapVocabularyArray(diagnostics.chemicalTreatments, CHEMICAL_TREATMENT_TO_COLUMN) ?? [],
+    concerns: mapVocabularyArray(diagnostics.currentConcerns, CONCERN_TO_PROFILE_CONCERN_MAP) ?? [],
     goals,
     // `deriveDesiredVolumeFromGoals` with a `null` fallback only ever returns
     // "more" | "less" | null (never "balanced": that value only ever comes from

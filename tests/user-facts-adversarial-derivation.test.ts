@@ -132,10 +132,10 @@ test("concerns: single [frizz_flyaways] -> [frizz]", () => {
   assert.deepEqual(result.concerns, ["frizz"])
 })
 
-test("concerns: absent -> null", () => {
+test("concerns: absent -> [] (controller ruling 2026-09-15: legacy NOT NULL DEFAULT '{}' contract)", () => {
   const { currentConcerns: _omit, ...rest } = makeDiagnostics({})
   const result = deriveDiagnosticsColumns(rest as DiagnosticsV1)
-  assert.equal(result.concerns, null)
+  assert.deepEqual(result.concerns, [])
 })
 
 // ---------------------------------------------------------------------------
@@ -241,10 +241,10 @@ test("goals: [] -> goals column [] and desired_volume null", () => {
   assert.equal(result.desired_volume, null)
 })
 
-test("goals: absent -> goals null and desired_volume null", () => {
+test("goals: absent -> goals [] (controller ruling 2026-09-15: legacy NOT NULL DEFAULT '{}' contract) and desired_volume null", () => {
   const { goals: _omit, ...rest } = makeDiagnostics({})
   const result = deriveDiagnosticsColumns(rest as DiagnosticsV1)
-  assert.equal(result.goals, null)
+  assert.deepEqual(result.goals, [])
   assert.equal(result.desired_volume, null)
 })
 
@@ -252,7 +252,7 @@ test("goals: absent -> goals null and desired_volume null", () => {
 // Diagnostics: chemical_treatment, cuticle_condition, misc scalars
 // ---------------------------------------------------------------------------
 
-test("chemical_treatment: order kept, lightened -> bleached, absent -> null, [] -> []", () => {
+test("chemical_treatment: order kept, lightened -> bleached, absent -> [], [] -> []", () => {
   const withValues = deriveDiagnosticsColumns(
     makeDiagnostics({ chemicalTreatments: ["permed", "lightened", "colored"] }),
   )
@@ -263,7 +263,10 @@ test("chemical_treatment: order kept, lightened -> bleached, absent -> null, [] 
 
   const { chemicalTreatments: _omit, ...rest } = makeDiagnostics({})
   const absent = deriveDiagnosticsColumns(rest as DiagnosticsV1)
-  assert.equal(absent.chemical_treatment, null)
+  // Controller ruling 2026-09-15 (task-2-3-amendment-brief.md): legacy readers
+  // rely on the historical NOT NULL DEFAULT '{}' contract for this column, so an
+  // absent fact still projects as [] (never NULL) for this legacy projection.
+  assert.deepEqual(absent.chemical_treatment, [])
 })
 
 test("cuticle_condition: slightly_uneven -> slightly_rough", () => {

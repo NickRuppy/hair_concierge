@@ -86,7 +86,7 @@ test("rule 3: scalp_condition is a priority pick over scalpConcerns", () => {
   assert.equal(deriveDiagnosticsColumns(diagnostics({})).scalp_condition, null)
 })
 
-test("rule 4: chemical_treatment maps every value, order preserved, deduped; absent -> null, [] -> []", () => {
+test("rule 4: chemical_treatment maps every value, order preserved, deduped; absent -> [], [] -> []", () => {
   assert.deepEqual(
     deriveDiagnosticsColumns(
       diagnostics({
@@ -99,7 +99,10 @@ test("rule 4: chemical_treatment maps every value, order preserved, deduped; abs
     deriveDiagnosticsColumns(diagnostics({ chemicalTreatments: [] })).chemical_treatment,
     [],
   )
-  assert.equal(deriveDiagnosticsColumns(diagnostics({})).chemical_treatment, null)
+  // Controller ruling 2026-09-15 (task-2-3-amendment-brief.md): legacy readers
+  // rely on the historical NOT NULL DEFAULT '{}' contract for this column, so an
+  // absent fact still projects as [] (never NULL) for this legacy projection.
+  assert.deepEqual(deriveDiagnosticsColumns(diagnostics({})).chemical_treatment, [])
 })
 
 test("rule 5: concerns map, order preserved, deduped, unmapped dropped, no cap", () => {
@@ -126,10 +129,13 @@ test("rule 5: concerns map, order preserved, deduped, unmapped dropped, no cap",
       .concerns,
     ["dryness", "frizz"],
   )
-  assert.equal(deriveDiagnosticsColumns(diagnostics({})).concerns, null)
+  // Controller ruling 2026-09-15 (task-2-3-amendment-brief.md): legacy readers
+  // rely on the historical NOT NULL DEFAULT '{}' contract for this column, so an
+  // absent fact still projects as [] (never NULL) for this legacy projection.
+  assert.deepEqual(deriveDiagnosticsColumns(diagnostics({})).concerns, [])
 })
 
-test("rule 6: goals map incl. volume_balance resolution, no cap, absent -> null", () => {
+test("rule 6: goals map incl. volume_balance resolution, no cap, absent -> []", () => {
   assert.equal(
     deriveDiagnosticsColumns(diagnostics({ thickness: "fine", goals: ["volume_balance"] })).goals
       ?.length,
@@ -175,7 +181,10 @@ test("rule 6: goals map incl. volume_balance resolution, no cap, absent -> null"
       .goals,
     ["less_frizz"],
   )
-  assert.equal(deriveDiagnosticsColumns(diagnostics({})).goals, null)
+  // Controller ruling 2026-09-15 (task-2-3-amendment-brief.md): legacy readers
+  // rely on the historical NOT NULL DEFAULT '{}' contract for this column, so an
+  // absent fact still projects as [] (never NULL) for this legacy projection.
+  assert.deepEqual(deriveDiagnosticsColumns(diagnostics({})).goals, [])
 })
 
 test("rule 7: desired_volume derives from the mapped goals column", () => {

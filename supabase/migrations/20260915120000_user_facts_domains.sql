@@ -108,11 +108,11 @@ COMMENT ON COLUMN public.hair_profiles.scalp_type IS
 COMMENT ON COLUMN public.hair_profiles.scalp_condition IS
   'Derived projection owned by public.user_facts_save_v1 from hair_profiles.diagnostics; retire when the legacy recommendation engine and chat context read the facts domains directly (follow-up program F1)';
 COMMENT ON COLUMN public.hair_profiles.chemical_treatment IS
-  'Derived projection owned by public.user_facts_save_v1 from hair_profiles.diagnostics; retire when the legacy recommendation engine and chat context read the facts domains directly (follow-up program F1)';
+  'Derived projection owned by public.user_facts_save_v1 from hair_profiles.diagnostics; retire when the legacy recommendation engine and chat context read the facts domains directly (follow-up program F1). Absent fact projects as ''{}'' for legacy readers; the facts domain keeps the distinction.';
 COMMENT ON COLUMN public.hair_profiles.concerns IS
-  'Derived projection owned by public.user_facts_save_v1 from hair_profiles.diagnostics; retire when the legacy recommendation engine and chat context read the facts domains directly (follow-up program F1)';
+  'Derived projection owned by public.user_facts_save_v1 from hair_profiles.diagnostics; retire when the legacy recommendation engine and chat context read the facts domains directly (follow-up program F1). Absent fact projects as ''{}'' for legacy readers; the facts domain keeps the distinction.';
 COMMENT ON COLUMN public.hair_profiles.goals IS
-  'Derived projection owned by public.user_facts_save_v1 from hair_profiles.diagnostics; retire when the legacy recommendation engine and chat context read the facts domains directly (follow-up program F1)';
+  'Derived projection owned by public.user_facts_save_v1 from hair_profiles.diagnostics; retire when the legacy recommendation engine and chat context read the facts domains directly (follow-up program F1). Absent fact projects as ''{}'' for legacy readers; the facts domain keeps the distinction.';
 COMMENT ON COLUMN public.hair_profiles.desired_volume IS
   'Derived projection owned by public.user_facts_save_v1 from hair_profiles.diagnostics; retire when the legacy recommendation engine and chat context read the facts domains directly (follow-up program F1)';
 COMMENT ON COLUMN public.hair_profiles.drying_method IS

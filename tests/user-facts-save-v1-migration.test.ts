@@ -570,6 +570,93 @@ test("create_only overwrites diagnostics whose source is the backfill's own lega
   assert.deepEqual(row.facts_provenance, { diagnostics: DIAGNOSTICS_PROVENANCE })
 })
 
+// Addendum (Task 5a review C1, controller ruling 2026-09-15): on the create_only
+// diagnostics path that PROCEEDS because the old document's source is the
+// backfill's own `legacy_columns`, existing non-empty goals must survive an
+// account-linked patch — mirrors the pre-PR1 link-to-profile rule "only write
+// goals if the user has none yet". Every other field still follows the normal
+// merge, and this applies ONLY to that one path.
+test("create_only + legacy_columns backfill: existing non-empty goals survive the linked patch (goals anti-clobber)", async (t) => {
+  const pg = await freshDatabase(t)
+  const backfilled = {
+    texture: "coily",
+    thickness: "coarse",
+    goals: ["moisture"],
+    source: { kind: "legacy_columns", version: 1, leadId: "legacy-1", raw: {} },
+  }
+  await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: backfilled,
+    provenance: {
+      source: { kind: "legacy_columns" },
+      schemaVersion: 1,
+      at: "2026-09-14T08:00:00.000Z",
+    },
+  })
+
+  const linked = await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: { texture: "wavy", goals: ["shine"], source: DIAGNOSTICS_SOURCE },
+    provenance: DIAGNOSTICS_PROVENANCE,
+    mode: "create_only",
+  })
+  assert.equal(linked.status, "ok")
+
+  const row = await readHairProfile(pg, USER)
+  assert.ok(row)
+  // `goals` is dropped from the patch before merging: the stored document (and
+  // therefore the derived `goals` column) keeps the user's existing goal.
+  assert.deepEqual(row.diagnostics, {
+    texture: "wavy",
+    thickness: "coarse",
+    goals: ["moisture"],
+    source: DIAGNOSTICS_SOURCE,
+  })
+  assert.deepEqual(row.goals, ["moisture"])
+  // Every other field still follows the normal field-level merge.
+  assert.equal(row.hair_texture, "wavy")
+  assert.equal(row.thickness, "coarse")
+})
+
+test("create_only + legacy_columns backfill: empty old goals let the linked patch's goals win", async (t) => {
+  const pg = await freshDatabase(t)
+  const backfilled = {
+    texture: "coily",
+    goals: [],
+    source: { kind: "legacy_columns", version: 1, leadId: "legacy-1", raw: {} },
+  }
+  await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: backfilled,
+    provenance: {
+      source: { kind: "legacy_columns" },
+      schemaVersion: 1,
+      at: "2026-09-14T08:00:00.000Z",
+    },
+  })
+
+  const linked = await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: { texture: "wavy", goals: ["shine"], source: DIAGNOSTICS_SOURCE },
+    provenance: DIAGNOSTICS_PROVENANCE,
+    mode: "create_only",
+  })
+  assert.equal(linked.status, "ok")
+
+  const row = await readHairProfile(pg, USER)
+  assert.ok(row)
+  assert.deepEqual(row.diagnostics, {
+    texture: "wavy",
+    goals: ["shine"],
+    source: DIAGNOSTICS_SOURCE,
+  })
+  assert.deepEqual(row.goals, ["shine"])
+})
+
 test("preservedCandidates is written only by the preserve path", async (t) => {
   const pg = await freshDatabase(t)
   const candidate = { kind: "artifact", id: "artifact-2", at: "2026-09-15T13:00:00.000Z" }
@@ -1030,6 +1117,13 @@ test("every derived legacy column documents its owner and its retirement conditi
   const comment = (domain: string) =>
     `Derived projection owned by public.user_facts_save_v1 from hair_profiles.${domain}; retire when the legacy recommendation engine and chat context read the facts domains directly (follow-up program F1)`
 
+  // Controller ruling 2026-09-15 (task-2-3-amendment-brief.md): concerns/goals/
+  // chemical_treatment carry an extra note documenting the absent -> '{}' legacy
+  // projection rule (see migration 20260915120000_user_facts_domains.sql).
+  const legacyEmptyArrayNote =
+    ". Absent fact projects as '{}' for legacy readers; the facts domain keeps the distinction."
+  const LEGACY_EMPTY_ARRAY_COLUMNS = new Set(["chemical_treatment", "concerns", "goals"])
+
   const { rows } = await pg.query<{ attname: string; description: string | null }>(
     `SELECT a.attname, pg_catalog.col_description(a.attrelid, a.attnum) AS description
        FROM pg_catalog.pg_attribute a
@@ -1041,7 +1135,9 @@ test("every derived legacy column documents its owner and its retirement conditi
 
   assert.equal(byColumn.size, 20)
   for (const column of diagnosticsColumns) {
-    assert.equal(byColumn.get(column), comment("diagnostics"), column)
+    const expected =
+      comment("diagnostics") + (LEGACY_EMPTY_ARRAY_COLUMNS.has(column) ? legacyEmptyArrayNote : "")
+    assert.equal(byColumn.get(column), expected, column)
   }
   for (const column of careHabitsColumns) {
     assert.equal(byColumn.get(column), comment("care_habits"), column)
