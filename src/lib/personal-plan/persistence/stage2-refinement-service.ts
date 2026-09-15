@@ -26,7 +26,19 @@ import {
   Stage2RefinementError,
   type Stage2ModuleCompletionResult,
 } from "@/lib/personal-plan/refinement/gateway"
+import { toCareHabitsPatch, toFieldProvenance } from "@/lib/user-facts/from-refinement-draft"
+import { CARE_HABITS_SCHEMA_VERSION } from "@/lib/user-facts/schema"
+import type { SaveUserFactsInput, SaveUserFactsResult } from "@/lib/user-facts/save"
 import type { JsonValue } from "./index"
+
+/**
+ * The `care_habits` arm of `SaveUserFactsInput`, injected so `completeModule` can write
+ * facts without this file importing `saveUserFacts` (and its `server-only` guard) or an
+ * admin client directly. Production wiring lives in `refinement/production-persistence-gateway.ts`.
+ */
+export type SaveCareHabitsFacts = (
+  input: Extract<SaveUserFactsInput, { domain: "care_habits" }>,
+) => Promise<SaveUserFactsResult>
 
 const MAX_REFINEMENT_PAYLOAD_BYTES = 64 * 1024
 
@@ -175,6 +187,15 @@ export function createStage2RefinementService(input: {
   userId: string
   persistence: Stage2RefinementPersistence
   snapshotBuilder: Stage2RefinementSnapshotBuilder
+  /**
+   * Writes the `care_habits` user-facts domain from the draft's own answers, bound to the
+   * source draft's revision (F04/F22). Optional so every existing caller that never reaches
+   * `completeModule` (or supplies its own fake in tests) keeps compiling unchanged; the
+   * production factory (`createPersistedStage2RefinementGateway`) always wires the real
+   * `saveUserFacts`. When omitted, a module completion writes no facts — that must never be
+   * true for the real production gateway.
+   */
+  saveFacts?: SaveCareHabitsFacts
 }) {
   let cached: Stage2PersistedDraft | null = null
 
@@ -319,6 +340,39 @@ export function createStage2RefinementService(input: {
           "incomplete_refinement",
           `Stage 2 module is incomplete: ${stage2Module}/${moduleStates[stage2Module].openQuestionIds[0]}`,
         )
+      }
+
+      // `care_habits` covers the FULL answer set (both modules), so every module
+      // completion writes it — before either the terminal `complete()` delegate
+      // below or `persistence.completeModule` (F04/F22): a stale completion
+      // (draft moved on, or the plan's initial need moved) must never publish
+      // older facts. Bound to the draft actually being closed, not the
+      // resolver's own assumptions for this call — the merge keeps whatever an
+      // earlier write recorded for a question the current path no longer asks.
+      if (input.saveFacts) {
+        const facts = await input.saveFacts({
+          userId: input.userId,
+          domain: "care_habits",
+          patch: toCareHabitsPatch(draft.answers),
+          provenance: {
+            source: { kind: "feinschliff_draft", id: draft.id },
+            schemaVersion: CARE_HABITS_SCHEMA_VERSION,
+            at: new Date().toISOString(),
+            fields: toFieldProvenance({
+              completedQuestionIds: draft.completedQuestionIds,
+              answerProvenance: draft.answerProvenance,
+            }),
+          },
+          draftBinding: {
+            sourceDraftId: draft.id,
+            expectedDraftRevision: expectedRevision,
+            expectedInitialVersionId: draft.baseInitialNeedVersionId,
+          },
+        })
+        if (facts.status === "draft_conflict" || facts.status === "revision_conflict") {
+          cached = null
+          throw new Stage2RefinementError("revision_conflict")
+        }
       }
 
       const stage3Handoff = stage2Module === "products"

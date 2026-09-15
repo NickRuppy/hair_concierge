@@ -17,11 +17,23 @@ import type { Stage3AuthorityProductionGateway } from "../products/production-pe
 import { createPersistedStage2RefinementGateway } from "../refinement/production-persistence-gateway"
 import { buildAssumedAnswerProvenance } from "../refinement/answer-provenance"
 import { semanticHash } from "../routine/canonicalize"
+import { toCareHabitsPatch, toFieldProvenance } from "@/lib/user-facts/from-refinement-draft"
+import { CARE_HABITS_SCHEMA_VERSION } from "@/lib/user-facts/schema"
+import type { SaveUserFactsInput, SaveUserFactsResult } from "@/lib/user-facts/save"
 
 import {
   buildDirectAcceptanceStage2Defaults,
   type DirectAcceptanceStage2Defaults,
 } from "./defaults"
+
+/**
+ * The `care_habits` arm of `SaveUserFactsInput`, injected the same way
+ * `SaveCareHabitsFacts` is in `stage2-refinement-service.ts` — so this file never imports
+ * `saveUserFacts` (and its `server-only` guard) or an admin client directly.
+ */
+export type SaveCareHabitsFacts = (
+  input: Extract<SaveUserFactsInput, { domain: "care_habits" }>,
+) => Promise<SaveUserFactsResult>
 
 /**
  * Direct acceptance drives the real Stage-2 → Stage-4 machinery headlessly with
@@ -111,6 +123,16 @@ export type AcceptIdealPlanDeps = {
   refinementPersistence: Stage2RefinementPersistence
   planState: DirectAcceptancePlanStateReader
   stage3Gateway: DirectAcceptanceStage3Gateway
+  /**
+   * Writes the `care_habits` user-facts domain from the synthetic defaults direct
+   * acceptance saves, bound to that draft's revision (F04/F22) — this flow never goes
+   * through `completeModule`, only the terminal `complete()` (see
+   * `completeSyntheticRefinement`), so it writes facts itself, right before that call.
+   * Every synthetic default is `"assumed"` provenance. Optional so existing test harnesses
+   * that construct `AcceptIdealPlanDeps` directly keep compiling unchanged; the production
+   * route always wires the real `saveUserFacts`.
+   */
+  saveFacts?: SaveCareHabitsFacts
 }
 
 /**
@@ -424,6 +446,36 @@ async function completeSyntheticRefinement(deps: AcceptIdealPlanDeps): Promise<{
     answerProvenance: buildAssumedAnswerProvenance(defaults.completedQuestionIds),
   })
   if (saved.outcome !== "saved") throw new DirectAcceptanceError("conflict")
+
+  // This flow never calls `completeModule` — only the terminal `complete()` below — so it
+  // writes `care_habits` facts itself, bound to the draft it just saved, before that call
+  // (same F04/F22 ordering `stage2-refinement-service.ts`'s module completion uses). Every
+  // synthetic default answer is `"assumed"` provenance, mirroring the draft write above.
+  const assumedProvenance = buildAssumedAnswerProvenance(defaults.completedQuestionIds)
+  if (deps.saveFacts) {
+    const facts = await deps.saveFacts({
+      userId: deps.userId,
+      domain: "care_habits",
+      patch: toCareHabitsPatch(defaults.answers),
+      provenance: {
+        source: { kind: "feinschliff_draft", id: draft.id },
+        schemaVersion: CARE_HABITS_SCHEMA_VERSION,
+        at: new Date().toISOString(),
+        fields: toFieldProvenance({
+          completedQuestionIds: defaults.completedQuestionIds,
+          answerProvenance: assumedProvenance,
+        }),
+      },
+      draftBinding: {
+        sourceDraftId: draft.id,
+        expectedDraftRevision: saved.revision,
+        expectedInitialVersionId: draft.baseInitialNeedVersionId,
+      },
+    })
+    if (facts.status === "draft_conflict" || facts.status === "revision_conflict") {
+      throw new DirectAcceptanceError("conflict")
+    }
+  }
 
   const handoff = await createPersistedStage2RefinementGateway({
     userId: deps.userId,

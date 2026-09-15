@@ -1,3 +1,5 @@
+import type { SupabaseClient } from "@supabase/supabase-js"
+
 import { computeNeedPlan } from "@/lib/personal-plan/compute-stage1"
 import type { Stage2RefinementGateway } from "./gateway"
 import {
@@ -7,6 +9,7 @@ import {
 import { hashPersonalPlanNeedVersionInput, type JsonValue } from "@/lib/personal-plan/persistence"
 import { PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION } from "@/lib/personal-plan/persistence/stage1-service"
 import { buildPlanRoutineContextFromCompletedRefinement } from "./stage1-adapter"
+import { saveUserFacts } from "@/lib/user-facts/save"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
 import type {
   PersonalPlanRefinementAnswersV1,
@@ -17,6 +20,14 @@ import type {
 export function createPersistedStage2RefinementGateway(input: {
   userId: string
   persistence: Stage2RefinementPersistence
+  /**
+   * The same admin (service-role) client the caller built `persistence` with — see
+   * `createSupabaseStage2RefinementPersistence`. Optional so every existing caller that
+   * never reaches `completeModule` (e.g. direct acceptance, which only calls `complete`)
+   * keeps compiling unchanged; when omitted, module completion writes no `care_habits`
+   * facts. The route that serves module completion (`stage-2/route.ts`) always passes it.
+   */
+  admin?: SupabaseClient
 }): Stage2RefinementGateway {
   return createStage2RefinementService({
     userId: input.userId,
@@ -26,6 +37,7 @@ export function createPersistedStage2RefinementGateway(input: {
         ...snapshotInput,
         createdAt: new Date().toISOString(),
       }),
+    saveFacts: input.admin ? (factsInput) => saveUserFacts(input.admin!, factsInput) : undefined,
   })
 }
 
