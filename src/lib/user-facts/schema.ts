@@ -93,6 +93,18 @@ export const diagnosticsSourceSchema = z.discriminatedUnion("kind", [
       ...diagnosticsSourceBaseFields,
     })
     .strict(),
+  // Backfill-only (controller ruling 2026-09-15): synthesised for users with neither a
+  // personal-plan artifact nor a legacy lead, from the legacy `hair_profiles` columns
+  // themselves. `leadId` is optional (there may be none) and `raw` is the column snapshot,
+  // not a quiz envelope, so `toStage1Source` refuses it outright — see stage1-source.ts.
+  z
+    .object({
+      kind: z.literal("legacy_columns"),
+      version: z.literal(1),
+      leadId: z.string().min(1).optional(),
+      raw: z.unknown(),
+    })
+    .strict(),
 ])
 export type DiagnosticsSource = z.infer<typeof diagnosticsSourceSchema>
 
@@ -100,25 +112,29 @@ export type DiagnosticsSource = z.infer<typeof diagnosticsSourceSchema>
 // DiagnosticsV1
 // ---------------------------------------------------------------------------
 
+// Controller ruling 2026-09-15: every field is OPTIONAL except `source` — stored diagnostics
+// may be partial (an edit that clears a field, or a legacy-derived row that never carried
+// one). Completeness is enforced at the Stage-1 boundary (`parseSupportedStage1Source`), not
+// here.
 export const diagnosticsV1Schema = z
   .object({
-    texture: personalPlanDurableAnswersBaseSchema.shape.texture,
-    thickness: personalPlanDurableAnswersBaseSchema.shape.thickness,
-    density: personalPlanDurableAnswersBaseSchema.shape.density,
-    hairLength: personalPlanDurableAnswersBaseSchema.shape.hairLength,
-    hairSurface: personalPlanDurableAnswersBaseSchema.shape.hairSurface,
-    elasticResponse: personalPlanDurableAnswersBaseSchema.shape.elasticResponse,
+    texture: personalPlanDurableAnswersBaseSchema.shape.texture.optional(),
+    thickness: personalPlanDurableAnswersBaseSchema.shape.thickness.optional(),
+    density: personalPlanDurableAnswersBaseSchema.shape.density.optional(),
+    hairLength: personalPlanDurableAnswersBaseSchema.shape.hairLength.optional(),
+    hairSurface: personalPlanDurableAnswersBaseSchema.shape.hairSurface.optional(),
+    elasticResponse: personalPlanDurableAnswersBaseSchema.shape.elasticResponse.optional(),
     // Deliberately NOT reusing the base schema's `.min(1)` here: edited or legacy-derived
     // diagnostics can legitimately end up with zero goals/chemical treatments (a user clears
     // the field on edit, or a historical row never carried a value). The enum vocabulary
     // itself (the array element schema) is still reused verbatim from persistence.ts.
     chemicalTreatments: dedupeArray(
       personalPlanDurableAnswersBaseSchema.shape.chemicalTreatments.element,
-    ),
-    scalpOiliness: personalPlanDurableAnswersBaseSchema.shape.scalpOiliness,
-    scalpConcerns: personalPlanDurableAnswersBaseSchema.shape.scalpConcerns,
-    goals: dedupeArray(personalPlanDurableAnswersBaseSchema.shape.goals.element),
-    currentConcerns: personalPlanDurableAnswersBaseSchema.shape.currentConcerns,
+    ).optional(),
+    scalpOiliness: personalPlanDurableAnswersBaseSchema.shape.scalpOiliness.optional(),
+    scalpConcerns: personalPlanDurableAnswersBaseSchema.shape.scalpConcerns.optional(),
+    goals: dedupeArray(personalPlanDurableAnswersBaseSchema.shape.goals.element).optional(),
+    currentConcerns: personalPlanDurableAnswersBaseSchema.shape.currentConcerns.optional(),
     concernRecurrence: personalPlanDurableAnswersBaseSchema.shape.concernRecurrence,
     currentConcernsOtherText: personalPlanDurableAnswersBaseSchema.shape.currentConcernsOtherText,
     source: diagnosticsSourceSchema,
@@ -127,6 +143,7 @@ export const diagnosticsV1Schema = z
   .superRefine((value, context) => {
     if (
       value.concernRecurrence &&
+      value.currentConcerns &&
       !value.currentConcerns.includes(value.concernRecurrence.concernId)
     ) {
       context.addIssue({

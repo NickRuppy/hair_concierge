@@ -426,3 +426,35 @@ test("projectLegacyLeadToFacts throws a typed error instead of returning a silen
     UnsupportedUserFactsSourceError,
   )
 })
+
+// ---------------------------------------------------------------------------
+// 7. legacy_columns source (controller ruling 2026-09-15): never Stage-1-computable
+// ---------------------------------------------------------------------------
+
+const LEGACY_COLUMNS_DIAGNOSTICS = {
+  texture: "wavy" as const,
+  thickness: "fine" as const,
+  source: {
+    kind: "legacy_columns" as const,
+    version: 1 as const,
+    raw: { hair_texture: "wavy", thickness: "fine" },
+  },
+}
+
+test("toStage1Source throws UnsupportedUserFactsSourceError for a legacy_columns source (unedited)", () => {
+  assert.throws(
+    () => toStage1Source({ diagnostics: LEGACY_COLUMNS_DIAGNOSTICS, editedAt: null }),
+    UnsupportedUserFactsSourceError,
+  )
+})
+
+test("toStage1Source throws UnsupportedUserFactsSourceError for a legacy_columns source (edited)", () => {
+  assert.throws(
+    () =>
+      toStage1Source({
+        diagnostics: LEGACY_COLUMNS_DIAGNOSTICS,
+        editedAt: "2026-01-05T00:00:00.000Z",
+      }),
+    UnsupportedUserFactsSourceError,
+  )
+})

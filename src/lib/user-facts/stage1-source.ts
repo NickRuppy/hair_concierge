@@ -1,6 +1,6 @@
 import { canonicalizePersonalPlanAnswers } from "@/lib/personal-plan-quiz/persistence"
 
-import type { DiagnosticsV1, QuizContextV1 } from "./schema"
+import { UnsupportedUserFactsSourceError, type DiagnosticsV1, type QuizContextV1 } from "./schema"
 
 export type ToStage1SourceInput = {
   diagnostics: DiagnosticsV1
@@ -41,6 +41,15 @@ function hasCompleteV3QuizContext(
  *   - A `legacy_quiz` source otherwise (legacy leads have no reflective quiz context).
  */
 export function toStage1Source(input: ToStage1SourceInput): unknown {
+  // Backfill-only source (controller ruling 2026-09-15): a legacy-columns snapshot carries no
+  // quiz envelope at all, so it can never be Stage-1-computable — neither unedited (there is
+  // no verbatim envelope to re-emit) nor edited (there is no quiz context to promote from).
+  if (input.diagnostics.source.kind === "legacy_columns") {
+    throw new UnsupportedUserFactsSourceError(
+      "toStage1Source: legacy_columns diagnostics have no quiz envelope to emit",
+    )
+  }
+
   if (input.editedAt === null || input.editedAt === undefined) {
     // Deep-clone: `source.raw` is the same object every call for a given facts record, and
     // callers must not be able to corrupt it (or a later re-emission) by mutating what this
@@ -51,21 +60,26 @@ export function toStage1Source(input: ToStage1SourceInput): unknown {
   const { diagnostics, quizContext } = input
 
   if (hasCompleteV3QuizContext(quizContext)) {
+    // `!` on the scalar/array diagnostic fields below: this v3-promotion branch is only ever
+    // reached for diagnostics that originated from a personal-plan artifact (v2/v3) — the same
+    // completeness guarantee `project-artifact.ts:baseDiagnosticFields` already asserts through.
+    // Task-4 ruling 2026-09-15 made these OPTIONAL on `DiagnosticsV1` for STORED (possibly
+    // partial) diagnostics; that does not change what a real v2/v3-sourced record carries here.
     const answers = {
-      texture: diagnostics.texture,
-      thickness: diagnostics.thickness,
-      density: diagnostics.density,
-      goals: diagnostics.goals,
-      currentConcerns: diagnostics.currentConcerns,
+      texture: diagnostics.texture!,
+      thickness: diagnostics.thickness!,
+      density: diagnostics.density!,
+      goals: diagnostics.goals!,
+      currentConcerns: diagnostics.currentConcerns!,
       ...(diagnostics.concernRecurrence
         ? { concernRecurrence: { ...diagnostics.concernRecurrence } }
         : {}),
-      hairLength: diagnostics.hairLength,
-      hairSurface: diagnostics.hairSurface,
-      elasticResponse: diagnostics.elasticResponse,
-      chemicalTreatments: diagnostics.chemicalTreatments,
-      scalpOiliness: diagnostics.scalpOiliness,
-      scalpConcerns: diagnostics.scalpConcerns,
+      hairLength: diagnostics.hairLength!,
+      hairSurface: diagnostics.hairSurface!,
+      elasticResponse: diagnostics.elasticResponse!,
+      chemicalTreatments: diagnostics.chemicalTreatments!,
+      scalpOiliness: diagnostics.scalpOiliness!,
+      scalpConcerns: diagnostics.scalpConcerns!,
       ...(diagnostics.currentConcernsOtherText
         ? { currentConcernsOtherText: diagnostics.currentConcernsOtherText }
         : {}),
@@ -86,23 +100,26 @@ export function toStage1Source(input: ToStage1SourceInput): unknown {
     return canonicalizePersonalPlanAnswers(answers)
   }
 
-  // Legacy lead: no reflective quiz context to promote into a v3 envelope.
+  // Legacy lead: no reflective quiz context to promote into a v3 envelope. `!`/non-empty-array
+  // access below: this branch is only reached for diagnostics sourced from a legacy lead, which
+  // `project-legacy-lead.ts` already guarantees are complete for a fresh projection (see its
+  // `REQUIRED_LEGACY_SCALAR_FIELDS` check) — see the comment on the v3 branch above.
   return {
     kind: "legacy_quiz" as const,
     version: 1 as const,
     leadId: diagnostics.source.leadId,
     answers: {
-      texture: diagnostics.texture,
-      thickness: diagnostics.thickness,
-      density: diagnostics.density,
-      goals: [...diagnostics.goals].sort(),
-      currentConcerns: [...diagnostics.currentConcerns].sort(),
-      hairLength: diagnostics.hairLength,
-      hairSurface: diagnostics.hairSurface,
-      elasticResponse: diagnostics.elasticResponse,
-      chemicalTreatments: [...diagnostics.chemicalTreatments].sort(),
-      scalpOiliness: diagnostics.scalpOiliness,
-      scalpConcerns: [...diagnostics.scalpConcerns].sort(),
+      texture: diagnostics.texture!,
+      thickness: diagnostics.thickness!,
+      density: diagnostics.density!,
+      goals: [...diagnostics.goals!].sort(),
+      currentConcerns: [...diagnostics.currentConcerns!].sort(),
+      hairLength: diagnostics.hairLength!,
+      hairSurface: diagnostics.hairSurface!,
+      elasticResponse: diagnostics.elasticResponse!,
+      chemicalTreatments: [...diagnostics.chemicalTreatments!].sort(),
+      scalpOiliness: diagnostics.scalpOiliness!,
+      scalpConcerns: [...diagnostics.scalpConcerns!].sort(),
     },
   }
 }

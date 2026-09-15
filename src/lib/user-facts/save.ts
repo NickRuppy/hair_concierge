@@ -1,0 +1,183 @@
+import "server-only"
+
+import type { SupabaseClient } from "@supabase/supabase-js"
+import { z } from "zod"
+
+import {
+  careHabitsPatchSchema,
+  diagnosticsPatchSchema,
+  domainProvenanceSchema,
+  quizContextPatchSchema,
+  type CareHabitsPatch,
+  type DiagnosticsPatch,
+  type DomainProvenance,
+  type QuizContextPatch,
+} from "./schema"
+
+/**
+ * The write side of the `hair_profiles` fact domains, over the single writer RPC
+ * `public.user_facts_save_v1` (see `supabase/migrations/20260915120200_user_facts_save_v1.sql`
+ * for the authoritative field-level-merge / CAS / draft-binding contract this wraps).
+ */
+
+/** A programming error: the caller handed `saveUserFacts` a patch or provenance envelope that
+ * fails its own schema. Never thrown for a legitimate conflict — those come back as a typed
+ * `SaveUserFactsResult`, not an exception. */
+export class UserFactsValidationError extends Error {
+  constructor(
+    message: string,
+    readonly issues: z.ZodIssue[],
+  ) {
+    super(message)
+    this.name = "UserFactsValidationError"
+  }
+}
+
+/** Transport failure calling `user_facts_save_v1`, an `invalid_input` result (itself a caller
+ * bug the RPC detected), or a result payload this client does not recognise. */
+export class UserFactsWriteError extends Error {
+  constructor(
+    message: string,
+    readonly cause?: unknown,
+  ) {
+    super(message)
+    this.name = "UserFactsWriteError"
+  }
+}
+
+/** Maps to the three `p_source_draft_id` / `p_expected_draft_revision` /
+ * `p_expected_initial_version_id` RPC params (F22 draft binding). */
+export type DraftBinding = {
+  sourceDraftId: string
+  expectedDraftRevision: number
+  expectedInitialVersionId: string
+}
+
+export type SaveUserFactsInput =
+  | {
+      userId: string
+      domain: "diagnostics"
+      patch: DiagnosticsPatch
+      provenance: DomainProvenance
+      expectedRevision?: number
+      mode?: "upsert" | "create_only"
+      draftBinding?: DraftBinding
+    }
+  | {
+      userId: string
+      domain: "care_habits"
+      patch: CareHabitsPatch
+      provenance: DomainProvenance
+      expectedRevision?: number
+      mode?: "upsert" | "create_only"
+      draftBinding?: DraftBinding
+    }
+  | {
+      userId: string
+      domain: "quiz_context"
+      patch: QuizContextPatch
+      provenance: DomainProvenance
+      expectedRevision?: number
+      mode?: "upsert" | "create_only"
+      draftBinding?: DraftBinding
+    }
+
+export type SaveUserFactsResult =
+  | { status: "ok"; revision: number; changed: boolean; diagnosticsHash: string | null }
+  | { status: "preserved"; revision: number; changed: false; diagnosticsHash: string | null }
+  | { status: "revision_conflict"; revision: number }
+  | {
+      status: "draft_conflict"
+      reason: "not_found" | "not_in_progress" | "revision_mismatch" | "stale_source"
+    }
+
+const PATCH_SCHEMAS = {
+  diagnostics: diagnosticsPatchSchema,
+  care_habits: careHabitsPatchSchema,
+  quiz_context: quizContextPatchSchema,
+} as const
+
+// Validates the raw `user_facts_save_v1` RPC payload. `invalid_input` is included here (it is
+// a real, documented status the SQL function returns) so it round-trips through the "unknown
+// payload" check as a recognised shape, then gets converted into a thrown error below — a
+// caller bug the RPC caught is not something `saveUserFacts` can hand back as a result.
+const rpcResultSchema = z.discriminatedUnion("status", [
+  z.object({
+    status: z.literal("ok"),
+    revision: z.number(),
+    changed: z.boolean(),
+    diagnosticsHash: z.string().nullable(),
+  }),
+  z.object({
+    status: z.literal("preserved"),
+    revision: z.number(),
+    changed: z.literal(false),
+    diagnosticsHash: z.string().nullable(),
+  }),
+  z.object({
+    status: z.literal("revision_conflict"),
+    revision: z.number(),
+  }),
+  z.object({
+    status: z.literal("draft_conflict"),
+    reason: z.enum(["not_found", "not_in_progress", "revision_mismatch", "stale_source"]),
+  }),
+  z.object({
+    status: z.literal("invalid_input"),
+    reason: z.string(),
+  }),
+])
+
+export async function saveUserFacts(
+  admin: SupabaseClient,
+  input: SaveUserFactsInput,
+): Promise<SaveUserFactsResult> {
+  const patchSchema = PATCH_SCHEMAS[input.domain]
+  const patchResult = patchSchema.safeParse(input.patch)
+  if (!patchResult.success) {
+    throw new UserFactsValidationError(
+      `saveUserFacts: invalid ${input.domain} patch`,
+      patchResult.error.issues,
+    )
+  }
+
+  const provenanceResult = domainProvenanceSchema.safeParse(input.provenance)
+  if (!provenanceResult.success) {
+    throw new UserFactsValidationError(
+      "saveUserFacts: invalid provenance",
+      provenanceResult.error.issues,
+    )
+  }
+
+  const { data, error } = await admin.rpc("user_facts_save_v1", {
+    p_user_id: input.userId,
+    p_domain: input.domain,
+    p_patch: patchResult.data,
+    p_provenance: provenanceResult.data,
+    p_expected_revision: input.expectedRevision ?? null,
+    p_mode: input.mode ?? "upsert",
+    p_source_draft_id: input.draftBinding?.sourceDraftId ?? null,
+    p_expected_draft_revision: input.draftBinding?.expectedDraftRevision ?? null,
+    p_expected_initial_version_id: input.draftBinding?.expectedInitialVersionId ?? null,
+  })
+
+  if (error) {
+    throw new UserFactsWriteError(`user_facts_save_v1 transport error: ${error.message}`, error)
+  }
+
+  const parsed = rpcResultSchema.safeParse(data)
+  if (!parsed.success) {
+    throw new UserFactsWriteError(
+      `user_facts_save_v1 returned an unrecognised payload: ${JSON.stringify(data)}`,
+      parsed.error,
+    )
+  }
+
+  if (parsed.data.status === "invalid_input") {
+    throw new UserFactsWriteError(
+      `user_facts_save_v1 rejected the call (invalid_input: ${parsed.data.reason})`,
+    )
+  }
+
+  return parsed.data
+}

@@ -75,6 +75,28 @@ test("diagnosticsV1Schema accepts diagnostics without concernRecurrence and with
   assert.equal(result.success, true, JSON.stringify(result.success ? null : result.error.issues))
 })
 
+test("diagnosticsV1Schema accepts a partial fixture with only source present (controller ruling 2026-09-15)", () => {
+  // Stored diagnostics may be partial: completeness is checked at the Stage-1 boundary, not
+  // here. Only `source` remains required.
+  const result = diagnosticsV1Schema.safeParse({ source: FULL_DIAGNOSTICS.source })
+  assert.equal(result.success, true, JSON.stringify(result.success ? null : result.error.issues))
+})
+
+test("diagnosticsV1Schema still rejects a fixture missing source", () => {
+  const { source: _source, ...withoutSource } = FULL_DIAGNOSTICS
+  const result = diagnosticsV1Schema.safeParse(withoutSource)
+  assert.equal(result.success, false, "source remains the one required field")
+})
+
+test("diagnosticsV1Schema skips the concernRecurrence/currentConcerns refinement when either is absent", () => {
+  // Ruling: the concernRecurrence subset-of-currentConcerns check only applies when BOTH are
+  // present, now that currentConcerns itself is optional.
+  const withoutCurrentConcerns = { ...FULL_DIAGNOSTICS } as Record<string, unknown>
+  delete withoutCurrentConcerns.currentConcerns
+  const result = diagnosticsV1Schema.safeParse(withoutCurrentConcerns)
+  assert.equal(result.success, true, JSON.stringify(result.success ? null : result.error.issues))
+})
+
 test("diagnosticsSourceSchema rejects a source with the wrong version for its kind", () => {
   const result = diagnosticsSourceSchema.safeParse({
     kind: "personal_plan_v3",
@@ -94,6 +116,27 @@ test("diagnosticsSourceSchema accepts each supported kind/version pairing", () =
     const result = diagnosticsSourceSchema.safeParse({ kind, version, leadId: "lead-1", raw: {} })
     assert.equal(result.success, true, `${kind}/${version} should parse`)
   }
+})
+
+test("diagnosticsSourceSchema accepts a legacy_columns source with or without leadId (backfill-only kind)", () => {
+  assert.equal(
+    diagnosticsSourceSchema.safeParse({
+      kind: "legacy_columns",
+      version: 1,
+      leadId: "lead-1",
+      raw: { hair_texture: "wavy" },
+    }).success,
+    true,
+  )
+  assert.equal(
+    diagnosticsSourceSchema.safeParse({
+      kind: "legacy_columns",
+      version: 1,
+      raw: { hair_texture: "wavy" },
+    }).success,
+    true,
+    "leadId is optional for legacy_columns",
+  )
 })
 
 const FULL_CARE_HABITS = {

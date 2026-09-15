@@ -14,6 +14,23 @@ export type ProjectLegacyLeadResult = {
 }
 
 /**
+ * The scalar diagnostic fields a legacy lead must carry for a fresh projection (controller
+ * ruling 2026-09-15 made these OPTIONAL on `diagnosticsV1Schema` itself, so it can no longer be
+ * relied on to reject an incomplete legacy lead here — completeness for a fresh projection is
+ * enforced explicitly instead). The four array fields are excluded: `buildLegacyQuizStage1Source`
+ * always defaults them to `[]`, so they are never `undefined`.
+ */
+const REQUIRED_LEGACY_SCALAR_FIELDS = [
+  "texture",
+  "thickness",
+  "density",
+  "hairLength",
+  "hairSurface",
+  "elasticResponse",
+  "scalpOiliness",
+] as const
+
+/**
  * Projects a legacy German-keyed lead (`leads.quiz_answers`) into native-vocabulary
  * `DiagnosticsV1`. Legacy leads have no reflective quiz context, so there is no
  * `QuizContextV1` output. `diagnostics.source.raw` stores the BUILT Stage-1 source object
@@ -32,6 +49,14 @@ export function projectLegacyLeadToFacts(input: ProjectLegacyLeadInput): Project
       answers: input.quizAnswers,
     })
     const answers = legacySource.answers
+
+    for (const field of REQUIRED_LEGACY_SCALAR_FIELDS) {
+      if (answers[field] === undefined) {
+        throw new UnsupportedUserFactsSourceError(
+          `Legacy lead ${input.leadId} is missing required diagnostic field "${field}"`,
+        )
+      }
+    }
 
     const diagnostics = diagnosticsV1Schema.parse({
       texture: answers.texture,
