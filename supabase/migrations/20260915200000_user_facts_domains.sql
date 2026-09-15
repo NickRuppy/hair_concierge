@@ -8,7 +8,7 @@
 -- stay, but stop being independently writable: from the follow-up writers
 -- (task 5) onward they are DERIVED PROJECTIONS maintained by exactly one
 -- function, `public.user_facts_save_v1` (migration
--- 20260915120200_user_facts_save_v1.sql). The `COMMENT ON COLUMN` statements
+-- 20260915200200_user_facts_save_v1.sql). The `COMMENT ON COLUMN` statements
 -- below are that contract, in the database, next to the column.
 --
 -- Additive only. DEPLOY ORDER: apply this migration FIRST, then the function

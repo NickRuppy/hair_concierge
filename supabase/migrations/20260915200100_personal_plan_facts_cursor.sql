@@ -1,7 +1,7 @@
 -- Central user profile, PR1 task 3 (2/3): the plan-side facts cursor and the
 -- refinement-draft origin marker.
 --
--- Once `hair_profiles` owns the facts (migration 20260915120000), a plan can be
+-- Once `hair_profiles` owns the facts (migration 20260915200000), a plan can be
 -- BEHIND those facts: the user edited diagnostics in the Profil while their
 -- Personal Plan still descends from the previous state. The three columns below
 -- are that cursor, recorded on `personal_plans`:
