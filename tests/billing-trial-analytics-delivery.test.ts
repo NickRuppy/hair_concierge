@@ -96,6 +96,27 @@ test("Meta verified activation maps to StartTrial with consented private matchin
   assert.equal(sent[0].data[0].user_data.fbp, "fb.1.1234567890123.456")
   assert.equal(sent[0].data[0].event_source_url, "https://chaarlie.de/result")
   assert.equal(JSON.stringify(sent).includes("person@example.com"), false)
+  for (const provider of ["stripe", "paypal"]) {
+    assert.equal(
+      (
+        await deliverBillingAnalyticsToMeta({
+          ...input,
+          event: {
+            ...event,
+            provider,
+            event_name: "purchase_completed",
+            payload: { ...event.payload, value: 9.99 },
+          },
+        })
+      ).ok,
+      true,
+    )
+    const purchase = sent.at(-1).data[0]
+    assert.equal(purchase.event_name, "Purchase")
+    assert.equal(purchase.action_source, "system_generated")
+    assert.equal(purchase.event_source_url, undefined)
+    assert.equal(purchase.custom_data.value, 9.99)
+  }
   consent = false
   assert.equal((await deliverBillingAnalyticsToMeta(input)).permanent, true)
   assert.equal(
@@ -122,7 +143,7 @@ test("Meta verified activation maps to StartTrial with consented private matchin
     assert.equal((await deliverBillingAnalyticsToMeta(diagnostic)).permanent, true)
     assert.equal((await deliverBillingAnalyticsToCustomerIo(diagnostic)).permanent, true)
   }
-  assert.equal(sent.length, 2)
+  assert.equal(sent.length, 4)
 })
 
 test("PostHog keeps original versioned trial attribution and stable insert ID without private Meta fields", async (t) => {

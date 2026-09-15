@@ -155,22 +155,26 @@ async function recordStripeBillingAnalytics(
 
 async function recordTrialInvoiceAnalytics(
   trial: TrialInvoiceResult,
-  _eventId: string,
+  webhookOutcome: "succeeded" | "failed",
   supabase: SupabaseClient,
   defer: (work: () => void | Promise<void>) => void,
 ) {
-  // The ledger transaction owns the fact and destination rows. Retries only dispatch.
-  if (trial.payment) {
-    const name =
-      trial.payment.result.phase === "first_paid"
-        ? "purchase_completed"
-        : trial.payment.result.phase === "renewal"
-          ? "payment_completed"
-          : "trial_first_payment_failed"
-    defer(async () => {
-      await dispatchBillingAnalyticsDue(supabase, { eventKey: `stripe:${name}:${trial.invoiceId}` })
-    })
-  }
+  // The ledger owns facts and destinations. Failed invoices intentionally return
+  // payment:null; look up their canonical key without creating a new event.
+  // Retrieved paid truth takes precedence over a late failure webhook.
+  const phase = trial.payment?.result.phase
+  const name =
+    phase === "first_paid"
+      ? "purchase_completed"
+      : phase === "renewal"
+        ? "payment_completed"
+        : webhookOutcome === "failed"
+          ? "trial_first_payment_failed"
+          : null
+  if (!name) return
+  defer(async () => {
+    await dispatchBillingAnalyticsDue(supabase, { eventKey: `stripe:${name}:${trial.invoiceId}` })
+  })
 }
 
 async function recordStripeCheckoutAnalytics(input: {
@@ -766,7 +770,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
           throw new Error("Stripe paid recovery requires reconciliation")
         }
         if (recovery?.invoice && recordBillingAnalytics) {
-          await recordTrialInvoiceAnalytics(recovery.invoice, event.id, supabase, defer)
+          await recordTrialInvoiceAnalytics(recovery.invoice, "succeeded", supabase, defer)
         }
         // Its exact initial invoice was already fulfilled by the atomic recovery commit.
         if (recovery?.status === "committed" || recovery?.status === "abandoned") break
@@ -782,7 +786,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
       )
       if (trial) {
         if (recordBillingAnalytics)
-          await recordTrialInvoiceAnalytics(trial, event.id, supabase, defer)
+          await recordTrialInvoiceAnalytics(trial, "succeeded", supabase, defer)
         break
       }
       // Approved identity processing reconciles legacy paid use independently of analytics.
@@ -836,7 +840,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         // A late failure delivery may retrieve an already paid invoice. Reconcile
         // that success instead of downgrading access or sending a failure email.
         if (recordBillingAnalytics)
-          await recordTrialInvoiceAnalytics(trial, event.id, supabase, defer)
+          await recordTrialInvoiceAnalytics(trial, "failed", supabase, defer)
         break
       }
       capturePayment({

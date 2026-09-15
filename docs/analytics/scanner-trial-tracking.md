@@ -3,7 +3,7 @@
 ## Meaning of conversion
 
 - **Meta StartTrial / PostHog `trial_started`:** verified activation of the seven-day trial, zero revenue. Server admission is authoritative; neither opening checkout nor a return URL is proof.
-- **Meta Purchase / PostHog `purchase_completed`:** the first successful paid charge. Existing paid renewal events remain `payment_completed`; they never increase the trial-to-first-payment denominator or numerator.
+- **Meta Purchase / PostHog `purchase_completed`:** the first successful paid charge, classified as `system_generated` because trial billing happens automatically. Existing paid renewal events remain `payment_completed`; they never increase the trial-to-first-payment denominator or numerator.
 - **Trial cancellation day:** elapsed time from verified activation to the customer's immutable cancellation submission. Day 1 is [0h,24h); day 3 is [48h,72h). Provider observation/confirmation does not establish the exact customer decision time.
 
 ## Lifecycle events
@@ -74,7 +74,7 @@ Synthetic histories execute the same cohort SQL in PostHog without inserting eve
 
 Planning read-only production snapshot (2026-09-15): five Stripe enrollment attempts, one authorized, zero first payments/cancellation declarations/applied payment failures. All five attempts have a durable source session. This does not establish that all five belong to scanner traffic. There is no historical marketing-consent/browser context to justify replaying Meta StartTrial. No historical events were replayed.
 
-Release requires the additive migration and application code, then a verified v1 activation before applying dashboard replacements. Inspect delivery rows and provider receipt during rollout, especially any events handled by an older deployment. Do not infer successful Meta delivery from PostHog, or infer actual payment from trial activation. No production migration, application deployment, campaign change, or historical replay is performed by the local implementation.
+Release requires the additive migration before application code. The default dashboard installer requires a verified v1 activation; the explicitly authorized `--publish-awaiting-telemetry` rollout publishes final queries early, with empty trial charts that automatically fill when matching events arrive. Inspect delivery rows and provider receipt during rollout, especially any events handled by an older deployment. Do not infer successful Meta delivery from PostHog, or infer actual payment from trial activation. The local implementation itself performs no production writes; the separately authorized production rollout is recorded below.
 
 ### Mixed deployment handling
 

@@ -152,7 +152,9 @@ export async function deliverBillingAnalyticsToMeta(
         event_time: Math.floor(new Date(input.event.occurred_at).getTime() / 1000),
         ...(eventName === "trial_started"
           ? { action_source: "website", event_source_url: META_OFFER_EVENT_SOURCE_URL }
-          : eventSource(eventName)),
+          : isTrial
+            ? { action_source: "system_generated" }
+            : eventSource(eventName)),
         event_id: metaEventId(input),
         user_data: userData,
         custom_data: Object.fromEntries(
