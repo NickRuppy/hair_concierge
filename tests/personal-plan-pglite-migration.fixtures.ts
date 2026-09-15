@@ -58,7 +58,7 @@ import { uuid_ossp } from "@electric-sql/pglite/contrib/uuid_ossp"
  *   - 20260825120000 (answer provenance): applied for real deploy-order
  *     fidelity even though neither RPC under test reads its column.
  *   - 20260825130000 / 20260825140000: the two migrations under test.
- *   - 20260915120000 / 20260915120100 / 20260915120200 (central user profile
+ *   - 20260915200000 / 20260915200100 / 20260915200200 (central user profile
  *     PR1): the hair_profiles fact domains, the personal_plans facts cursor +
  *     refinement-draft `origin`, and `public.user_facts_save_v1`.
  */
@@ -81,9 +81,9 @@ const MIGRATIONS = [
   "supabase/migrations/20260825140000_personal_plan_refinement_recompute_activation.sql",
   // Central user profile PR1: the fact domains on hair_profiles, the plan-side
   // facts cursor, and the single write function over both.
-  "supabase/migrations/20260915120000_user_facts_domains.sql",
-  "supabase/migrations/20260915120100_personal_plan_facts_cursor.sql",
-  "supabase/migrations/20260915120200_user_facts_save_v1.sql",
+  "supabase/migrations/20260915200000_user_facts_domains.sql",
+  "supabase/migrations/20260915200100_personal_plan_facts_cursor.sql",
+  "supabase/migrations/20260915200200_user_facts_save_v1.sql",
 ] as const
 
 const STUB_PREREQUISITES = `
@@ -133,7 +133,7 @@ CREATE TABLE public.product_submissions (
 );
 
 -- public.hair_profiles as production has it TODAY (before
--- 20260915120000_user_facts_domains.sql, which this harness then applies for
+-- 20260915200000_user_facts_domains.sql, which this harness then applies for
 -- real). Hand-written rather than replayed from the migration chain because
 -- that chain (00001_initial_schema.sql + ~14 later files) also creates leads,
 -- products, conversations, RLS policies and admin functions this harness has no

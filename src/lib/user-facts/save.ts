@@ -16,7 +16,7 @@ import {
 
 /**
  * The write side of the `hair_profiles` fact domains, over the single writer RPC
- * `public.user_facts_save_v1` (see `supabase/migrations/20260915120200_user_facts_save_v1.sql`
+ * `public.user_facts_save_v1` (see `supabase/migrations/20260915200200_user_facts_save_v1.sql`
  * for the authoritative field-level-merge / CAS / draft-binding contract this wraps).
  */
 
