@@ -54,8 +54,10 @@ import {
  *    nothing is written for that domain.
  *  - `brushesCombs` is always lifted from `brush_type`: no Stage-2 version ever carried a
  *    brush answer, so it is merged into whichever care_habits patch this row produces.
- *  - Idempotency: only `facts_revision = 0` rows are planned, unless `--catch-up` re-opens a
- *    domain the backfill itself last wrote and whose legacy columns have changed since.
+ *  - Idempotency is PER DOMAIN (fix round 2, P2), not per row: a domain is planned when its
+ *    stored value is NULL and no live writer owns it, whatever `facts_revision` says; a
+ *    domain that already holds a document is only re-opened by `--catch-up`, and only when
+ *    the backfill itself wrote it and its legacy columns have changed since.
  *
  * No I/O, no `server-only`.
  */
@@ -65,9 +67,16 @@ export type LegacyProfileColumns = LegacyDiagnosticColumns &
 
 export type LoadedUserRow = {
   userId: string
+  /** Only ever used as the CAS baseline for this row's writes (the script pins every write to
+   * it). The plan gate is per DOMAIN and never reads it — see `gateDomain`. */
   factsRevision: number
   factsProvenance: FactsProvenance
   columns: LegacyProfileColumns
+  /** Whether the row's `diagnostics` / `care_habits` / `quiz_context` column holds a document
+   * at all. Kept apart from `storedDiagnostics` / `storedCareHabits`, which are `null` both
+   * for an absent document and for one that does not parse — a distinction the per-domain
+   * guard needs: absent means "backfill it", unreadable means "leave it for review". */
+  storedDomains: Record<"diagnostics" | "care_habits" | "quiz_context", boolean>
   /** The documents already stored on the row. Only the catch-up comparison reads them: they
    * are what the legacy columns are supposed to equal, so a difference is proof a legacy
    * writer changed the columns after the backfill wrote its facts. */
@@ -213,16 +222,40 @@ function legacyColumnsDivergedFromStoredFacts(
   return { plan: true }
 }
 
-/** Only ever reached for a `facts_revision = 0` row (always planned) or, in catch-up mode,
- * for a row the backfill itself wrote — `planUserFactsBackfill` returns before this for every
- * other already-written row. */
+/**
+ * The per-domain plan gate (controller ruling, fix round 2, P2). `facts_revision` is NOT the
+ * gate: a run that wrote diagnostics and then failed on quiz_context left the row at
+ * revision 1, and a row-level guard made it unrepairable — every rerun skipped it, and
+ * `--catch-up` refused the missing domain for having no provenance of its own.
+ *
+ * A domain is planned when it holds NO document AND no live writer owns it. That both makes
+ * the backfill resumable and lets it close the authority gap for a domain still empty on a
+ * row some other writer has already touched. A domain that DOES hold a document is only ever
+ * re-opened by `--catch-up`, under the unchanged content-divergence rule below.
+ */
 function gateDomain(
   domain: "diagnostics" | "care_habits" | "quiz_context",
   row: LoadedUserRow,
+  options: PlanUserFactsBackfillOptions,
 ): DomainGate {
-  if (row.factsRevision === 0) return { plan: true }
-
   const provenance = row.factsProvenance[domain]
+
+  if (!row.storedDomains[domain]) {
+    if (provenance && !BACKFILL_SOURCE_KINDS.has(provenance.source.kind)) {
+      return {
+        plan: false,
+        reason: `${domain}: empty but last written by ${provenance.source.kind} (a live writer; never filled in by the backfill)`,
+      }
+    }
+    return { plan: true }
+  }
+
+  if (!options.catchUp) {
+    return {
+      plan: false,
+      reason: `${domain}: already written (re-run with --catch-up to re-check changed legacy columns)`,
+    }
+  }
   if (!provenance) {
     return {
       plan: false,
@@ -258,8 +291,8 @@ function planDiagnosticsAndContext(
   options: PlanUserFactsBackfillOptions,
   plan: UserFactsBackfillPlan,
 ): void {
-  const diagnosticsGate = gateDomain("diagnostics", row)
-  const quizContextGate = gateDomain("quiz_context", row)
+  const diagnosticsGate = gateDomain("diagnostics", row, options)
+  const quizContextGate = gateDomain("quiz_context", row, options)
 
   // Each domain reports its own gate at its own decision point, so a row that has nothing to
   // write for a domain never prints a skip line about it.
@@ -340,7 +373,7 @@ function planCareHabits(
   options: PlanUserFactsBackfillOptions,
   plan: UserFactsBackfillPlan,
 ): void {
-  const gate = gateDomain("care_habits", row)
+  const gate = gateDomain("care_habits", row, options)
   const brushesCombs = liftBrushesCombs(row.columns.brush_type)
   const hasRefinedVersion = row.needVersions.some((version) => version.kind === "refined")
 
@@ -435,13 +468,6 @@ export function planUserFactsBackfill(
     writes: [],
     skips: [],
     unresolvable: [],
-  }
-
-  if (row.factsRevision !== 0 && !options.catchUp) {
-    plan.skips.push(
-      `facts_revision=${row.factsRevision} (already written; re-run with --catch-up to re-check changed legacy columns)`,
-    )
-    return plan
   }
 
   planDiagnosticsAndContext(row, options, plan)

@@ -298,11 +298,83 @@ function completedDraft(overrides: Partial<BackfillDraftRow> = {}): BackfillDraf
     id: "draft-1",
     revision: 9,
     answer_provenance: { night_protection: "assumed", wet_wash_frequency: "user" },
+    completed_question_ids: [...HEAD_COMPLETED_IDS],
     module_projections: {},
     result_refined_need_version_id: "version-stage2",
     ...overrides,
   }
 }
+
+/** Section A ids only — what a products-first draft has actually completed. */
+const PRODUCTS_ONLY_DRAFT_IDS = ["current_product_categories", "wet_wash_frequency"]
+
+/**
+ * A products-first draft that projected a module receipt: the VERSION's snapshot carries the
+ * resolver-filled habits answers too, but the draft itself never completed those questions
+ * and has no provenance entry for them.
+ */
+function productsFirstReceiptDraft(overrides: Partial<BackfillDraftRow> = {}): BackfillDraftRow {
+  return completedDraft({
+    result_refined_need_version_id: null,
+    revision: 4,
+    answer_provenance: { current_product_categories: "user", wet_wash_frequency: "user" },
+    completed_question_ids: [...PRODUCTS_ONLY_DRAFT_IDS],
+    module_projections: {
+      products: { needVersionId: "version-stage2", projectedAtRevision: 4, stage3Handoff: true },
+    },
+    ...overrides,
+  })
+}
+
+/**
+ * Fix round 2, P2 (F27): on the receipt path the snapshot's `completedQuestionIds` include
+ * every question the projection's assumption resolver filled in. Reading them through
+ * `toFieldProvenance`'s missing-entry default would import resolver assumptions as "user"
+ * facts. The DRAFT's own completed list is the only provable evidence of a user answer.
+ */
+test("resolveStage2Head marks receipt-path answers the draft never completed as assumed", () => {
+  const resolved = resolveStage2Head({
+    plan: { id: "plan-1", current_refined_need_version_id: "version-stage2" },
+    needVersions: [stage2Version()],
+    drafts: [productsFirstReceiptDraft()],
+  })
+
+  assert.equal(resolved.kind, "refined")
+  if (resolved.kind !== "refined") return
+  assert.equal(resolved.provenanceSource, "receipt_at_current_revision")
+  assert.deepEqual(resolved.provenance, {
+    current_product_categories: "user",
+    wet_wash_frequency: "user",
+    towel_handling: "assumed",
+    drying_routes: "assumed",
+    additional_heat_tools: "assumed",
+    "heat:ordinary_blow_dry": "assumed",
+    night_protection: "assumed",
+  })
+})
+
+test("resolveStage2Head still trusts an explicit receipt-path provenance entry over the draft's completed list", () => {
+  const resolved = resolveStage2Head({
+    plan: { id: "plan-1", current_refined_need_version_id: "version-stage2" },
+    needVersions: [stage2Version()],
+    drafts: [
+      productsFirstReceiptDraft({
+        answer_provenance: {
+          current_product_categories: "assumed",
+          wet_wash_frequency: "user",
+          night_protection: "user",
+        },
+      }),
+    ],
+  })
+
+  assert.equal(
+    resolved.kind === "refined" && resolved.provenance.current_product_categories,
+    "assumed",
+  )
+  assert.equal(resolved.kind === "refined" && resolved.provenance.night_protection, "user")
+  assert.equal(resolved.kind === "refined" && resolved.provenance.towel_handling, "assumed")
+})
 
 test("resolveStage2Head reports none when the plan has no refined head at all", () => {
   assert.deepEqual(resolveStage2Head({ plan: null, needVersions: [], drafts: [] }), {
@@ -725,6 +797,7 @@ function userRow(overrides: Partial<LoadedUserRow> = {}): LoadedUserRow {
     factsRevision: 0,
     factsProvenance: {},
     columns: EMPTY_COLUMNS,
+    storedDomains: { diagnostics: false, care_habits: false, quiz_context: false },
     storedDiagnostics: null,
     storedCareHabits: null,
     artifact: null,
@@ -978,6 +1051,33 @@ test("planUserFactsBackfill attributes a Stage-3-revised head to the Stage-2 ver
   assert.deepEqual(plan.unresolvable, [])
 })
 
+test("planUserFactsBackfill imports a products-first receipt's resolver-filled habits as assumed, not user", () => {
+  const plan = planUserFactsBackfill(
+    userRow({
+      columns: { ...EMPTY_COLUMNS, brush_type: ["paddle"] },
+      plan: { id: "plan-1", current_refined_need_version_id: "version-stage2" },
+      needVersions: [stage2Version()],
+      drafts: [productsFirstReceiptDraft()],
+    }),
+    { now: NOW, catchUp: false },
+  )
+
+  const careHabits = writeFor(plan, "care_habits")
+  assert.equal(careHabits.detail, "provenance receipt_at_current_revision")
+  assert.deepEqual(careHabits.provenance.fields, {
+    currentProductCategories: "user",
+    wetWashFrequency: "user",
+    towel: "assumed",
+    dryingRoutes: "assumed",
+    additionalHeatTools: "assumed",
+    // The `heat:*` aggregate rule from `toFieldProvenance` still applies: the one completed
+    // heat event is assumed, so the aggregate is assumed.
+    heatEvents: "assumed",
+    nightProtection: "assumed",
+    brushesCombs: "unknown_historical",
+  })
+})
+
 test("planUserFactsBackfill downgrades every habit field to unknown_historical after an unprojected draft edit", () => {
   const plan = planUserFactsBackfill(
     userRow({
@@ -1036,11 +1136,12 @@ test("planUserFactsBackfill reports an unresolvable Stage-2 head and writes no c
   ])
 })
 
-test("planUserFactsBackfill is idempotent: a row the backfill already wrote is skipped without --catch-up", () => {
+test("planUserFactsBackfill is idempotent: a fully written row is skipped domain by domain without --catch-up", () => {
   const plan = planUserFactsBackfill(
     userRow({
       factsRevision: 1,
       columns: { ...EMPTY_COLUMNS, hair_texture: "wavy" },
+      storedDomains: { diagnostics: true, care_habits: true, quiz_context: false },
       factsProvenance: {
         diagnostics: {
           source: { kind: "legacy_columns" },
@@ -1054,7 +1155,96 @@ test("planUserFactsBackfill is idempotent: a row the backfill already wrote is s
 
   assert.deepEqual(plan.writes, [])
   assert.deepEqual(plan.skips, [
-    "facts_revision=1 (already written; re-run with --catch-up to re-check changed legacy columns)",
+    "diagnostics: already written (re-run with --catch-up to re-check changed legacy columns)",
+    "care_habits: already written (re-run with --catch-up to re-check changed legacy columns)",
+  ])
+})
+
+/**
+ * Fix round 2, P2: the guard is PER DOMAIN, not per row. A run that died between two domain
+ * writes used to leave the row unrepairable: every rerun skipped it on `facts_revision > 0`,
+ * and `--catch-up` refused the still-missing domain for having no provenance.
+ */
+test("planUserFactsBackfill repairs the NULL domains of a partly written row without --catch-up", () => {
+  const plan = planUserFactsBackfill(
+    userRow({
+      factsRevision: 1,
+      columns: { ...EMPTY_COLUMNS, towel_material: "frottee", brush_type: ["paddle"] },
+      storedDomains: { diagnostics: true, care_habits: false, quiz_context: false },
+      storedDiagnostics: null,
+      artifact: { id: "artifact-1", leadId: "lead-1", quizAnswers: V3_ENVELOPE },
+      factsProvenance: {
+        diagnostics: {
+          source: { kind: "personal_plan_artifact", id: "artifact-1" },
+          schemaVersion: 1,
+          at: "2026-09-15T00:00:00.000Z",
+        },
+      },
+    }),
+    { now: NOW, catchUp: false },
+  )
+
+  assert.deepEqual(
+    plan.writes.map((write) => write.domain),
+    ["quiz_context", "care_habits"],
+  )
+  assert.deepEqual(plan.skips, [
+    "diagnostics: already written (re-run with --catch-up to re-check changed legacy columns)",
+  ])
+})
+
+test("planUserFactsBackfill closes the authority gap for a row a live writer touched in another domain", () => {
+  const plan = planUserFactsBackfill(
+    userRow({
+      factsRevision: 4,
+      columns: { ...EMPTY_COLUMNS, towel_material: "frottee" },
+      storedDomains: { diagnostics: false, care_habits: true, quiz_context: false },
+      storedCareHabits: { towel: { material: "frottee" } },
+      legacyLead: { id: "lead-1", quizAnswers: LEGACY_QUIZ_ANSWERS },
+      factsProvenance: {
+        care_habits: {
+          source: { kind: "feinschliff_draft", id: "draft-9" },
+          schemaVersion: 1,
+          at: "2026-09-15T00:00:00.000Z",
+        },
+      },
+    }),
+    { now: NOW, catchUp: false },
+  )
+
+  assert.deepEqual(
+    plan.writes.map((write) => write.domain),
+    ["diagnostics"],
+  )
+  assert.deepEqual(plan.skips, [
+    "care_habits: already written (re-run with --catch-up to re-check changed legacy columns)",
+  ])
+})
+
+test("planUserFactsBackfill never fills an empty domain a live writer owns", () => {
+  const plan = planUserFactsBackfill(
+    userRow({
+      factsRevision: 4,
+      columns: { ...EMPTY_COLUMNS, towel_material: "frottee" },
+      storedDomains: { diagnostics: false, care_habits: false, quiz_context: false },
+      legacyLead: { id: "lead-1", quizAnswers: LEGACY_QUIZ_ANSWERS },
+      factsProvenance: {
+        care_habits: {
+          source: { kind: "feinschliff_draft", id: "draft-9" },
+          schemaVersion: 1,
+          at: "2026-09-15T00:00:00.000Z",
+        },
+      },
+    }),
+    { now: NOW, catchUp: false },
+  )
+
+  assert.deepEqual(
+    plan.writes.map((write) => write.domain),
+    ["diagnostics"],
+  )
+  assert.deepEqual(plan.skips, [
+    "care_habits: empty but last written by feinschliff_draft (a live writer; never filled in by the backfill)",
   ])
 })
 
@@ -1082,6 +1272,7 @@ function backfilledRow(overrides: Partial<LoadedUserRow> = {}): LoadedUserRow {
   return userRow({
     factsRevision: 1,
     columns: BACKFILLED_COLUMNS,
+    storedDomains: { diagnostics: true, care_habits: true, quiz_context: false },
     // Exactly what the backfill would have written, so the derived columns round-trip.
     storedDiagnostics: legacyColumnsToDiagnostics(BACKFILLED_COLUMNS, {}),
     storedCareHabits: {
@@ -1242,7 +1433,12 @@ test("parseBackfillArguments defaults to a bounded dry run and names every flag 
 
 type FakeRow = Record<string, unknown>
 
-function fakeSupabase(tables: Record<string, FakeRow[]>, rpcResult?: Record<string, unknown>) {
+function fakeSupabase(
+  tables: Record<string, FakeRow[]>,
+  rpcResult?:
+    | Record<string, unknown>
+    | ((call: { params: Record<string, unknown>; index: number }) => Record<string, unknown>),
+) {
   const selects: { table: string; columns: string; filters: unknown[] }[] = []
   const rpcs: { name: string; params: Record<string, unknown> }[] = []
 
@@ -1282,11 +1478,13 @@ function fakeSupabase(tables: Record<string, FakeRow[]>, rpcResult?: Record<stri
       return builder
     },
     async rpc(name: string, params: Record<string, unknown>) {
+      const index = rpcs.length
       rpcs.push({ name, params })
-      return {
-        data: rpcResult ?? { status: "ok", revision: 1, changed: true, diagnosticsHash: null },
-        error: null,
-      }
+      const data =
+        typeof rpcResult === "function"
+          ? rpcResult({ params, index })
+          : (rpcResult ?? { status: "ok", revision: 1, changed: true, diagnosticsHash: null })
+      return { data, error: null }
     },
   }
 
@@ -1380,6 +1578,10 @@ test("runUserFactsBackfill prints a per-domain diff and writes nothing in the de
     ["in", "user_id", [SCRIPT_USER]],
     ["eq", "status", "attached"],
   ])
+  // F27 (fix round 2): the receipt-path provenance rule reads the DRAFT's own completed
+  // list, so the loader has to select it.
+  const draftQuery = fake.selects.find((entry) => entry.table === "personal_plan_refinement_drafts")
+  assert.equal(draftQuery?.columns.includes("completed_question_ids"), true)
 })
 
 test("runUserFactsBackfill --apply hands every planned write to user_facts_save_v1 with upsert semantics", async () => {
@@ -1406,7 +1608,6 @@ test("runUserFactsBackfill --apply hands every planned write to user_facts_save_
 
   const careHabits = fake.rpcs[2]!
   assert.equal(careHabits.params.p_user_id, SCRIPT_USER)
-  assert.equal(careHabits.params.p_expected_revision, null)
   assert.equal(careHabits.params.p_source_draft_id, null)
   assert.deepEqual(careHabits.params.p_provenance, {
     source: { kind: "refined_version", id: "version-stage2" },
@@ -1426,6 +1627,78 @@ test("runUserFactsBackfill --apply hands every planned write to user_facts_save_
   assert.equal(
     lines[0],
     `[apply] ${SCRIPT_USER} diagnostics <- personal_plan_artifact artifact-1 (11 fields) -> ok rev 1`,
+  )
+})
+
+/**
+ * Fix round 2, P1: every backfill write is a compare-and-swap. Without
+ * `p_expected_revision` the backfill silently overwrites a concurrent live writer and only
+ * notices afterwards, from a revision that has already moved.
+ */
+test("runUserFactsBackfill pins every write to the revision it loaded for that row", async () => {
+  const fake = fakeSupabase(scriptTables(), ({ index }) => ({
+    status: "ok",
+    revision: index + 1,
+    changed: true,
+    diagnosticsHash: null,
+  }))
+
+  await runUserFactsBackfill(["--apply"], {
+    supabase: fake.client as never,
+    now: NOW,
+    log: () => {},
+  })
+
+  // The row loads at facts_revision 0; each successful write hands back the revision the
+  // next write of the same row must be pinned to.
+  assert.deepEqual(
+    fake.rpcs.map((call) => call.params.p_expected_revision),
+    [0, 1, 2],
+  )
+})
+
+test("a revision_conflict stops that row for the whole run and is reported as a concurrent writer", async () => {
+  const fake = fakeSupabase(scriptTables(), ({ index }) =>
+    index === 1
+      ? { status: "revision_conflict", revision: 7 }
+      : { status: "ok", revision: index + 1, changed: true, diagnosticsHash: null },
+  )
+  const lines: string[] = []
+
+  const summary = await runUserFactsBackfill(["--apply"], {
+    supabase: fake.client as never,
+    now: NOW,
+    log: (line) => lines.push(line),
+  })
+
+  // diagnostics wrote, quiz_context conflicted, care_habits is never attempted: the loaded
+  // snapshot (and every revision derived from it) is stale.
+  assert.deepEqual(
+    fake.rpcs.map((call) => call.params.p_domain),
+    ["diagnostics", "quiz_context"],
+  )
+  assert.equal(summary.revisionConflicts, 1)
+  assert.equal(summary.applied, 1)
+  assert.deepEqual(summary.failures, [])
+  const skippedIndex = lines.findIndex((line) => line.startsWith("SKIPPED ("))
+  assert.ok(skippedIndex >= 0)
+  const skippedBlock = lines.slice(skippedIndex)
+  assert.equal(skippedBlock.includes("  CONFLICTS (concurrent writer) (1)"), true)
+  assert.equal(
+    skippedBlock.some(
+      (line) =>
+        line.includes(SCRIPT_USER) &&
+        line.includes("quiz_context") &&
+        line.includes("revision_conflict"),
+    ),
+    true,
+  )
+  assert.equal(
+    skippedBlock.some(
+      (line) =>
+        line.includes(SCRIPT_USER) && line.includes("care_habits") && line.includes("stale"),
+    ),
+    true,
   )
 })
 

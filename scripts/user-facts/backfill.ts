@@ -46,6 +46,7 @@ const HAIR_PROFILE_COLUMNS = [
   "facts_provenance",
   "diagnostics",
   "care_habits",
+  "quiz_context",
   "hair_texture",
   "thickness",
   "density",
@@ -293,7 +294,7 @@ async function loadPage(
           client
             .from<Record<string, unknown>>("personal_plan_refinement_drafts")
             .select(
-              "id, personal_plan_id, revision, answer_provenance, module_projections, result_refined_need_version_id",
+              "id, personal_plan_id, revision, answer_provenance, completed_question_ids, module_projections, result_refined_need_version_id",
             )
             .in("personal_plan_id", planIds),
           "personal_plan_refinement_drafts",
@@ -346,6 +347,11 @@ async function loadPage(
       factsRevision: typeof profile.facts_revision === "number" ? profile.facts_revision : 0,
       factsProvenance: provenance.data,
       columns: toColumns(profile),
+      storedDomains: {
+        diagnostics: profile.diagnostics !== null && profile.diagnostics !== undefined,
+        care_habits: profile.care_habits !== null && profile.care_habits !== undefined,
+        quiz_context: profile.quiz_context !== null && profile.quiz_context !== undefined,
+      },
       storedDiagnostics: readStoredDiagnostics(profile.diagnostics),
       storedCareHabits: readStoredCareHabits(profile.care_habits),
       artifact:
@@ -387,6 +393,12 @@ export type BackfillSummary = {
   writesByDomain: Record<string, number>
   writesBySource: Record<string, number>
   conflicts: number
+  /** Domains a concurrent writer beat us to: `user_facts_save_v1` answered `revision_conflict`
+   * to the CAS this run pinned to the revision it loaded (fix round 2, P1). The row is left
+   * for the next run, never retried here — every revision derived from that snapshot is
+   * stale. Reported under SKIPPED, not as a failure: a live writer winning the race is the
+   * CAS working, not the page breaking. */
+  revisionConflicts: number
   /** Rows where the winning source would blank a diagnostics-owned column that carries a
    * value today (I2). Counted apart from a value conflict: this is data loss, not disagreement. */
   erasures: number
@@ -415,6 +427,8 @@ export async function runUserFactsBackfill(
   let erasureRows = 0
   const unresolvableLines: string[] = []
   const skipLines: string[] = []
+  const revisionConflictLines: string[] = []
+  let revisionConflicts = 0
   const failures: BackfillSummary["failures"] = []
   const writesByDomain: Record<string, number> = {}
   const writesBySource: Record<string, number> = {}
@@ -461,8 +475,13 @@ export async function runUserFactsBackfill(
       for (const reason of plan.unresolvable) unresolvableLines.push(`  ${row.userId} ${reason}`)
       for (const reason of plan.skips) skipLines.push(`  ${row.userId} ${reason}`)
 
-      // The revision the row is expected to be at before the next write of this run.
+      // The revision this row is pinned to for its next write (CAS, fix round 2 P1): the
+      // revision the page loaded, then whatever each applied write hands back. A fresh row
+      // is 0, which `user_facts_save_v1` accepts as "no profile row yet".
       let expectedRevision = row.factsRevision
+      // Once a concurrent writer wins the CAS, every revision derived from this row's loaded
+      // snapshot is stale — the remaining domains are left for the next run, not guessed at.
+      let rowConflicted = false
 
       for (const write of plan.writes) {
         writesPlanned += 1
@@ -475,25 +494,39 @@ export async function runUserFactsBackfill(
           continue
         }
 
+        if (rowConflicted) {
+          revisionConflictLines.push(
+            `    ${row.userId} ${write.domain}: not attempted — the loaded snapshot is stale after the conflict above`,
+          )
+          log(`${describeWrite(write, prefix, row.userId)} -> skipped (stale snapshot)`)
+          continue
+        }
+
         try {
           const result = await saveUserFacts(deps.supabase, {
             userId: row.userId,
             domain: write.domain,
             patch: write.patch,
             provenance: write.provenance,
+            expectedRevision,
             mode: "upsert",
           } as Parameters<typeof saveUserFacts>[1])
 
           if (result.status === "ok" || result.status === "preserved") {
             if (result.status === "preserved") preserved += 1
             else applied += 1
-            const unexpected =
-              result.status === "ok" && result.revision !== expectedRevision + 1
-                ? ` (warning: revision ${result.revision}, expected ${expectedRevision + 1} — another writer was here)`
-                : ""
             expectedRevision = result.revision
             log(
-              `${describeWrite(write, prefix, row.userId)} -> ${result.status} rev ${result.revision}${unexpected}`,
+              `${describeWrite(write, prefix, row.userId)} -> ${result.status} rev ${result.revision}`,
+            )
+          } else if (result.status === "revision_conflict") {
+            rowConflicted = true
+            revisionConflicts += 1
+            revisionConflictLines.push(
+              `    ${row.userId} ${write.domain}: revision_conflict (pinned to ${expectedRevision}, row is at ${result.revision}); left for the next run`,
+            )
+            log(
+              `${describeWrite(write, prefix, row.userId)} -> revision_conflict rev ${result.revision}`,
             )
           } else {
             failures.push({ userId: row.userId, domain: write.domain, reason: result.status })
@@ -522,6 +555,8 @@ export async function runUserFactsBackfill(
   log("")
   log(`SKIPPED (${skipLines.length})`)
   for (const line of skipLines) log(line)
+  log(`  CONFLICTS (concurrent writer) (${revisionConflicts})`)
+  for (const line of revisionConflictLines) log(line)
 
   const nextCursor =
     !options.userId && lastPageFull && usersExamined >= options.limit ? cursor : null
@@ -534,6 +569,7 @@ export async function runUserFactsBackfill(
     writesByDomain,
     writesBySource,
     conflicts: conflictRows,
+    revisionConflicts,
     erasures: erasureRows,
     unresolvable: unresolvableLines.length,
     skipped: skipLines.length,

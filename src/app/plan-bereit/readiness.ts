@@ -930,15 +930,28 @@ export async function updateMissingPlanBereitSourceFact(
     }
   }
 
-  // (I3, task 5a fix round 1): this is a correction to a single already-established
-  // fact, not a fresh account-link projection — it must land even when a
-  // diagnostics document already exists (an `updated_at`-guarded lead, so a
-  // stale corrector can't race past that either). `upsert` + a single-field
-  // patch, not the full `writeLegacyDiagnosticsFacts` create_only projection.
+  // (I3, task 5a fix round 1; corrected in fix round 2): this is a correction to an
+  // already-established source, not a fresh account-link projection — it must land even
+  // when a diagnostics document already exists (an `updated_at`-guarded lead, so a stale
+  // corrector can't race past that either), hence `upsert` and not
+  // `writeLegacyDiagnosticsFacts`'s `create_only`.
+  //
+  // It writes the WHOLE re-projected lead, not a bare `{ hairLength }` patch. In the normal
+  // recovery case the profile has NO diagnostics document yet (readiness was
+  // `missing_source_facts` before the link), and a single-field patch would have the RPC
+  // create a document without the required `source`: F28 would then report `ready` while
+  // `loadUserFacts` throws on the invalid document. Re-projecting the corrected lead also
+  // keeps `source.raw` equal to the built legacy source (F26), so Stage-1 hashes exactly
+  // what today's path builds from the corrected lead. The corrected lead is the authority,
+  // so the same full projection is written whether or not a document already exists.
+  const { diagnostics } = projectLegacyLeadToFacts({
+    leadId: lead.id,
+    quizAnswers: nextAnswers as QuizAnswers,
+  })
   const factsResult = await saveUserFacts(supabase, {
     userId: input.userId,
     domain: "diagnostics",
-    patch: { hairLength: input.value },
+    patch: diagnostics,
     provenance: {
       source: { kind: "legacy_lead", id: input.leadId },
       schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,

@@ -9,6 +9,8 @@ import {
   updateMissingPlanBereitSourceFact,
   needsFreshMigrationQuiz,
 } from "../src/app/plan-bereit/readiness"
+import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
+import { diagnosticsV1Schema } from "../src/lib/user-facts/schema"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 
 test("migration quiz recovery retains the existing hair-length repair and rejects authorization failures", () => {
@@ -637,20 +639,44 @@ test("missing hair length persists against the exact owner-scoped lead with sour
 
   // F28/task 5a: the direct `hair_profiles` upsert is gone.
   assert.equal(db.upserts.length, 0)
-  // I3 (fix round 1): this is a correction to a single already-established fact,
-  // not a fresh account-link projection — `saveUserFacts` gets `mode: "upsert"`
-  // with a single-field `{ hairLength }` patch (so it lands even when a
-  // diagnostics document already exists), not the full create_only projection.
+  // Fix round 2, I(P1): the recovery re-projects the WHOLE corrected legacy lead. A bare
+  // `{ hairLength }` upsert would create a diagnostics document with no `source` when the
+  // profile has none yet (the normal case here — readiness was `missing_source_facts`
+  // BEFORE any link), which F28 would then report `ready` and `loadUserFacts` would throw
+  // on. `raw` therefore equals the corrected built legacy source (F26).
   const factsCall = db.rpcs.find((call) => call.fn === "user_facts_save_v1")
   assert.ok(factsCall, "expected a user_facts_save_v1 call")
   assert.equal(factsCall!.args.p_user_id, "user-1")
   assert.equal(factsCall!.args.p_domain, "diagnostics")
   assert.equal(factsCall!.args.p_mode, "upsert")
-  assert.deepEqual(factsCall!.args.p_patch, { hairLength: "long" })
+  const patch = factsCall!.args.p_patch as Row
+  assert.equal((patch.source as Row | undefined)?.kind, "legacy_quiz")
+  assert.equal((patch.source as Row | undefined)?.leadId, "lead-legacy")
+  assert.equal(patch.hairLength, "long")
   const provenance = factsCall!.args.p_provenance as Row
   assert.deepEqual(provenance.source, { kind: "legacy_lead", id: "lead-legacy" })
   assert.equal(provenance.editedAt, undefined)
   assert.equal(provenance.preservedCandidates, undefined)
+
+  // (c) readiness only reports `ready` because the written document is a COMPLETE,
+  // schema-valid diagnostics document — not an accidental source-less shell.
+  assert.equal(diagnosticsV1Schema.safeParse(patch).success, true)
+  const reprojected = projectLegacyLeadToFacts({
+    leadId: "lead-legacy",
+    quizAnswers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: "long" } as never,
+  }).diagnostics
+  for (const field of [
+    "texture",
+    "thickness",
+    "density",
+    "hairLength",
+    "hairSurface",
+    "elasticResponse",
+    "scalpOiliness",
+  ] as const) {
+    assert.notEqual(reprojected[field], undefined, `${field} must be projected, not missing`)
+  }
+  assert.deepEqual(patch, reprojected)
 })
 
 test("missing hair length still corrects the fact when a diagnostics document already exists (I3)", async () => {
@@ -681,13 +707,20 @@ test("missing hair length still corrects the fact when a diagnostics document al
   const factsCall = db.rpcs.find((call) => call.fn === "user_facts_save_v1")
   assert.ok(factsCall, "the upsert must still land against an existing diagnostics document")
   assert.equal(factsCall!.args.p_mode, "upsert")
-  assert.deepEqual(factsCall!.args.p_patch, { hairLength: "long" })
-  // The pre-existing `texture` field survives the field-level merge; only
-  // `hairLength` was patched in.
-  assert.deepEqual(db.tables.hair_profiles[0].diagnostics, {
-    texture: "straight",
-    hairLength: "long",
-  })
+  // Fix round 2: the corrected lead is the authority, so the SAME full projection is
+  // written whether or not a diagnostics document already exists.
+  const patch = factsCall!.args.p_patch as Row
+  assert.equal((patch.source as Row | undefined)?.kind, "legacy_quiz")
+  assert.equal(patch.hairLength, "long")
+  assert.deepEqual(
+    patch,
+    projectLegacyLeadToFacts({
+      leadId: "lead-legacy",
+      quizAnswers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: "long" } as never,
+    }).diagnostics,
+  )
+  // The pre-existing `texture` is replaced by the corrected lead's own value.
+  assert.equal((db.tables.hair_profiles[0].diagnostics as Row).texture, "wavy")
 })
 
 test("foreign exact leads are forbidden and never patched from the recovery form", async () => {

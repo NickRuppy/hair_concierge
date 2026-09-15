@@ -819,6 +819,39 @@ test("the terminal complete() lane writes care_habits facts before persistence.c
   })
 })
 
+/**
+ * Fix round 2, P2: a successful completion whose HTTP response was lost. The identical retry
+ * loads the now-`complete` draft; writing facts first would hit the draft binding's
+ * `not_in_progress` and turn the replay into a 409. The facts were already written by the
+ * original successful completion, so the retry skips the write and goes straight to the RPC's
+ * `already_completed` branch — exactly the handoff this program inherited.
+ */
+test("an identical complete() retry after a lost response replays without rewriting facts", async () => {
+  const seed = {
+    answers: { ...PRODUCTS_ANSWERS, ...HABITS_ANSWERS },
+    completedQuestionIds: [...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS],
+    answerProvenance: userProvenance([...PRODUCTS_QUESTION_IDS, ...HABITS_QUESTION_IDS]),
+    revision: 6,
+  }
+  const db = createModuleRefinementDb(seed)
+  const { saveFacts, calls } = createFakeSaveFacts({ order: db.order })
+  const service = createService(db, saveFacts)
+
+  // The original completion succeeded; only its response was lost.
+  const original = await service.complete({ expectedRevision: 6 })
+  assert.deepEqual(db.order, ["saveFacts", "persistence.complete"])
+  assert.equal(calls.length, 1)
+
+  // A fresh service, exactly as the retried request would build one.
+  const retried = await createService(db, saveFacts).complete({ expectedRevision: 6 })
+
+  assert.deepEqual(retried, original, "the replay returns the original handoff")
+  assert.equal(calls.length, 1, "the completed draft's facts are never rewritten")
+  assert.deepEqual(db.order, ["saveFacts", "persistence.complete", "persistence.complete"])
+  assert.equal(db.completeCalls.length, 2)
+  assert.equal(db.needVersions.length, 1)
+})
+
 test("a draft_conflict from saveFacts aborts the terminal complete() lane before its RPC runs", async () => {
   const seed = {
     answers: { ...PRODUCTS_ANSWERS, ...HABITS_ANSWERS },

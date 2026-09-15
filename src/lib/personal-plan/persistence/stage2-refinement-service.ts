@@ -280,7 +280,14 @@ export function createStage2RefinementService(input: {
     if (!contract.isComplete) throw new Stage2RefinementError("incomplete_refinement")
     // I1: EVERY lane that publishes a refined version writes facts first, including this
     // terminal completion (and, by extension, the closing module — it delegates here).
-    await writeCareHabitsFacts(draft, expectedRevision)
+    //
+    // Except on a replay (fix round 2, P2): a draft that is no longer `in_progress` was
+    // already completed successfully — its facts were written by that completion — and only
+    // the HTTP response was lost. The draft binding would reject this write as
+    // `not_in_progress` and turn the identical retry into a 409, so the write is skipped and
+    // the RPC answers from its own `already_completed` branch, exactly as before this
+    // program. `in_progress` drafts keep the facts-first order.
+    if (draft.status === "in_progress") await writeCareHabitsFacts(draft, expectedRevision)
     const snapshot = input.snapshotBuilder({
       baseInitialNeedVersionId: draft.baseInitialNeedVersionId,
       preparedArtifactSourceId: draft.preparedArtifactSourceId,

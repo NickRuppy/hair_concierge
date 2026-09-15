@@ -24,6 +24,16 @@ import { careHabitsV1Schema, type CareHabitsV1, type FieldProvenanceValue } from
  *    draft.revision`: the draft has not been edited since it projected -> `"receipt_at_current_revision"`.
  *  - else every answered question becomes `"unknown_historical"`. No guessing.
  *
+ * Receipt path, fix round 2 (P2): a module projection's snapshot carries the user's answers
+ * UNION the assumption resolver's fills, so its `completedQuestionIds` names questions the
+ * draft never asked. Defaulting a missing provenance entry to `"user"` there would import a
+ * resolver assumption as a user fact. Per answered question id the verdict is therefore:
+ * the draft's own `answer_provenance` entry if present; else `"user"` only when the id is in
+ * the DRAFT's `completed_question_ids` (the snapshot's list is not evidence); else
+ * `"assumed"` — the projection filled it. The completed-draft path keeps its frozen map
+ * (its provenance covers exactly the answers the completion froze), and the
+ * `unknown_historical` fallback is untouched.
+ *
  * R1: answers ALWAYS come from the immutable version, never from the draft — an unprojected
  * Feinschliff edit stays in the draft.
  */
@@ -50,6 +60,9 @@ export type BackfillDraftRow = {
   id: string
   revision: number
   answer_provenance: unknown
+  /** The draft's OWN completed list — the only provable evidence that the user answered a
+   * question, as opposed to a projection's assumption resolver having filled it in. */
+  completed_question_ids: unknown
   module_projections: unknown
   result_refined_need_version_id: string | null
 }
@@ -69,9 +82,12 @@ export type ResolvedStage2Head =
       completedQuestionIds: string[]
       /** Per-question-id provenance, the F27 verdict for this head. */
       provenance: Record<string, FieldProvenanceValue>
-      /** The proving draft's raw map (empty for `unknown_historical`), passed straight to
-       * `toFieldProvenance` by `plan-row.ts` so the question-id -> field table is never
-       * duplicated. */
+      /** The EFFECTIVE per-question verdict for the proving draft (empty for
+       * `unknown_historical`), passed straight to `toFieldProvenance` by `plan-row.ts` so the
+       * question-id -> field table is never duplicated. On the receipt path it is the raw map
+       * completed with an explicit `"user"`/`"assumed"` for every answered id, so
+       * `toFieldProvenance`'s missing-entry default can never attribute a resolver fill to
+       * the user. */
       answerProvenance: Stage2AnswerProvenance
       provenanceSource: Stage2HeadProvenanceSource
       draftId: string | null
@@ -203,7 +219,27 @@ export function resolveStage2Head(input: {
       ? "receipt_at_current_revision"
       : "unknown_historical"
 
-  const answerProvenance = provingDraft ? readAnswerProvenance(provingDraft.answer_provenance) : {}
+  const rawAnswerProvenance = provingDraft
+    ? readAnswerProvenance(provingDraft.answer_provenance)
+    : {}
+
+  // Fix round 2 (P2): only the receipt path needs completing — the completed draft's map was
+  // frozen against its own answers, and `unknown_historical` attributes nothing at all.
+  const draftCompletedIds = new Set(
+    receiptDraft && Array.isArray(receiptDraft.completed_question_ids)
+      ? receiptDraft.completed_question_ids.filter((id): id is string => typeof id === "string")
+      : [],
+  )
+  const answerProvenance: Stage2AnswerProvenance =
+    provenanceSource === "receipt_at_current_revision"
+      ? Object.fromEntries(
+          completedQuestionIds.map((questionId) => [
+            questionId,
+            rawAnswerProvenance[questionId as Stage2QuestionId] ??
+              (draftCompletedIds.has(questionId) ? "user" : "assumed"),
+          ]),
+        )
+      : rawAnswerProvenance
 
   const provenance: Record<string, FieldProvenanceValue> = {}
   for (const questionId of completedQuestionIds) {
