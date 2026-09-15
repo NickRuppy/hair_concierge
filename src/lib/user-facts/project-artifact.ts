@@ -74,10 +74,13 @@ function baseDiagnosticFields(answers: {
 
 /**
  * Projects a v3 or v2 personal-plan quiz envelope into native-vocabulary `DiagnosticsV1` +
- * `QuizContextV1`. `diagnostics.source.raw` stores the envelope verbatim (F26); v2
- * `currentConcerns` are decoded through the same `normalizeV2Concerns`/`V2_CONCERN_MAP`
- * Stage-1 uses so an unchanged user hashes identically (F10) while `source.raw` keeps the
- * original (still-`scalp_imbalance`-carrying) envelope.
+ * `QuizContextV1`. `diagnostics.source.raw` stores `input.envelope` VERBATIM — the original
+ * input object, not the zod-parsed reconstruction (F26 requires byte-identical, same-key-order
+ * storage; `parseSupportedPersonalPlanQuizEnvelope`'s return value rebuilds the object in
+ * schema-declared key order, so it must only be used to validate and to read typed field
+ * values, never as the stored `raw`). v2 `currentConcerns` are decoded through the same
+ * `normalizeV2Concerns`/`V2_CONCERN_MAP` Stage-1 uses so an unchanged user hashes identically
+ * (F10) while `source.raw` keeps the original (still-`scalp_imbalance`-carrying) envelope.
  */
 export function projectArtifactToFacts(input: ProjectArtifactInput): ProjectArtifactResult {
   const parsed = parseSupportedPersonalPlanQuizEnvelope(input.envelope)
@@ -87,6 +90,8 @@ export function projectArtifactToFacts(input: ProjectArtifactInput): ProjectArti
     )
   }
 
+  // Read typed field values from the validated/parsed envelope, but store the caller's
+  // original (unreconstructed) object as `raw` below.
   const envelope = parsed.envelope
 
   const diagnostics = diagnosticsV1Schema.parse(
@@ -102,7 +107,7 @@ export function projectArtifactToFacts(input: ProjectArtifactInput): ProjectArti
             version: 3 as const,
             leadId: input.leadId,
             artifactId: input.artifactId,
-            raw: envelope,
+            raw: input.envelope,
           },
         }
       : {
@@ -113,7 +118,7 @@ export function projectArtifactToFacts(input: ProjectArtifactInput): ProjectArti
             version: 2 as const,
             leadId: input.leadId,
             artifactId: input.artifactId,
-            raw: envelope,
+            raw: input.envelope,
           },
         },
   )

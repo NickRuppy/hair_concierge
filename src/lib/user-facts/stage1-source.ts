@@ -42,7 +42,10 @@ function hasCompleteV3QuizContext(
  */
 export function toStage1Source(input: ToStage1SourceInput): unknown {
   if (input.editedAt === null || input.editedAt === undefined) {
-    return input.diagnostics.source.raw
+    // Deep-clone: `source.raw` is the same object every call for a given facts record, and
+    // callers must not be able to corrupt it (or a later re-emission) by mutating what this
+    // function hands back.
+    return structuredClone(input.diagnostics.source.raw)
   }
 
   const { diagnostics, quizContext } = input
@@ -55,7 +58,7 @@ export function toStage1Source(input: ToStage1SourceInput): unknown {
       goals: diagnostics.goals,
       currentConcerns: diagnostics.currentConcerns,
       ...(diagnostics.concernRecurrence
-        ? { concernRecurrence: diagnostics.concernRecurrence }
+        ? { concernRecurrence: { ...diagnostics.concernRecurrence } }
         : {}),
       hairLength: diagnostics.hairLength,
       hairSurface: diagnostics.hairSurface,

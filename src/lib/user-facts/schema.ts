@@ -267,7 +267,11 @@ function toPatchSchema<Shape extends z.ZodRawShape>(shape: Shape) {
   return z.object(patchShape).strict()
 }
 
-export const diagnosticsPatchSchema = toPatchSchema(diagnosticsV1Schema.shape)
+// `source` is provenance-critical and must never be clearable via a field-level patch: it may
+// be omitted (unchanged) or replaced by a full valid source envelope, but never `null`.
+export const diagnosticsPatchSchema = toPatchSchema(diagnosticsV1Schema.shape).extend({
+  source: diagnosticsSourceSchema.optional(),
+})
 export type DiagnosticsPatch = z.infer<typeof diagnosticsPatchSchema>
 
 export const careHabitsPatchSchema = toPatchSchema(careHabitsV1Schema.shape)

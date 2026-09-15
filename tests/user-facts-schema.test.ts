@@ -143,8 +143,10 @@ test("careHabitsV1Schema rejects an unknown heatEvents key", () => {
   assert.equal(result.success, false)
 })
 
-test("careHabitsV1Schema rejects towel material 'no_towel' paired with a technique key present but undefined only via unknown key", () => {
-  // towel.technique is optional; only unknown-key/enum-vocabulary violations are rejected here.
+test("careHabitsV1Schema accepts towel material 'no_towel' with technique omitted", () => {
+  // towel.technique is optional at the schema level; production callers omit it for
+  // material "no_towel" (see legacy-prefill.ts §10), but this schema does not itself enforce
+  // that pairing.
   const result = careHabitsV1Schema.safeParse({ towel: { material: "no_towel" } })
   assert.equal(result.success, true)
 })
@@ -221,4 +223,27 @@ test("patch schemas accept every field as null (clear) or absent", () => {
 test("patch schemas still reject an unknown key and an invalid enum value", () => {
   assert.equal(diagnosticsPatchSchema.safeParse({ unexpectedField: null }).success, false)
   assert.equal(diagnosticsPatchSchema.safeParse({ texture: "not_a_texture" }).success, false)
+})
+
+test("diagnosticsPatchSchema never allows source to be cleared with null, but every other field may be", () => {
+  assert.equal(
+    diagnosticsPatchSchema.safeParse({ source: null }).success,
+    false,
+    "source is provenance-critical and must not be nullable in a patch",
+  )
+  assert.equal(
+    diagnosticsPatchSchema.safeParse({ source: FULL_DIAGNOSTICS.source }).success,
+    true,
+    "source may be replaced by a full valid source envelope",
+  )
+  assert.equal(
+    diagnosticsPatchSchema.safeParse({}).success,
+    true,
+    "source may be omitted (unchanged)",
+  )
+  assert.equal(
+    diagnosticsPatchSchema.safeParse({ texture: null }).success,
+    true,
+    "other fields stay clearable",
+  )
 })
