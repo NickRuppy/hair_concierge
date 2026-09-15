@@ -3,6 +3,7 @@ import { resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import {
   scannerBaselineInsights,
+  scannerPreviouslyPublishedInsights,
   scannerDashboardDescription,
   scannerDashboardId,
   scannerInsightQuery,
@@ -148,8 +149,10 @@ export async function runScannerTrialDashboard(
       if (exact[0]) insight = (await request(deps, `/insights/${exact[0].id}/`)) as Insight
     }
     if (!insight) continue
-    const previous = scannerBaselineInsights.find((item) => item.key === spec.key)
-    if (!matches(insight, spec) && !(previous && matches(insight, previous)))
+    const previous = [...scannerPreviouslyPublishedInsights, ...scannerBaselineInsights].filter(
+      (item) => item.key === spec.key,
+    )
+    if (!matches(insight, spec) && !previous.some((item) => matches(insight, item)))
       throw new Error(`Unreviewed drift in insight ${insight.id}; no writes performed.`)
     if (
       !Array.isArray(insight.dashboards) ||

@@ -62,6 +62,7 @@ export const eventRoutes = {
   quiz_lead_captured: { customerio: false, meta: true, posthog: true },
   quiz_insert_viewed: { customerio: false, meta: false, posthog: true },
   quiz_started: { customerio: true, meta: true, posthog: true },
+  scanner_quiz_viewed: { customerio: false, meta: false, posthog: true },
   quiz_step_viewed: { customerio: true, meta: false, posthog: true },
   scan_started: { customerio: false, meta: false, posthog: true },
   scan_decoded: { customerio: false, meta: false, posthog: true },

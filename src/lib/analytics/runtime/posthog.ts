@@ -1,5 +1,5 @@
 import { createBoundedFifo } from "./bounded-fifo"
-import type { CurrentFunnelContext } from "@/lib/funnel/client"
+import { subscribeFunnelContext, type CurrentFunnelContext } from "@/lib/funnel/client"
 import { sanitizeAnalyticsUrl } from "@/lib/analytics/page-url"
 
 type PostHogProperties = Record<string, unknown>
@@ -40,6 +40,10 @@ export function createPostHogRuntime({
   })
   let client: PostHogRuntimeClient | null = null
   let contextPromise: Promise<CurrentFunnelContext | null> | null = null
+  let contextVersion = 0
+  let initialContextVersion = 0
+  let latestContext: CurrentFunnelContext | null = null
+  let registeredContextKey: string | null = null
   let released = false
   let failed = false
   let startPromise: Promise<void> | null = null
@@ -70,6 +74,17 @@ export function createPostHogRuntime({
     return true
   }
 
+  const registerContext = (context: CurrentFunnelContext) => {
+    if (!client) return
+    const key = `${context.funnelSessionId}:${context.funnelPackageKey}`
+    if (registeredContextKey === key) return
+    client.register({
+      funnel_package_key: context.funnelPackageKey,
+      funnel_session_id: context.funnelSessionId,
+    })
+    registeredContextKey = key
+  }
+
   const maybeStart = () => {
     if (!released || !contextPromise || startPromise) return startPromise
 
@@ -82,12 +97,9 @@ export function createPostHogRuntime({
         }
 
         client = nextClient
-        if (context) {
-          client.register({
-            funnel_package_key: context.funnelPackageKey,
-            funnel_session_id: context.funnelSessionId,
-          })
-        }
+        // A newer context can settle before the SDK loader. Register it before flushing captures.
+        if (latestContext) registerContext(latestContext)
+        else if (context && initialContextVersion === contextVersion) registerContext(context)
         for (const operation of queue.drain()) dispatch(operation)
       })
       .catch((error) => {
@@ -124,7 +136,18 @@ export function createPostHogRuntime({
 
   return {
     configureContext(promise: Promise<CurrentFunnelContext | null>) {
-      if (!contextPromise) contextPromise = promise.catch(() => null)
+      const version = ++contextVersion
+      const settled = promise.catch(() => null)
+      if (!contextPromise) {
+        contextPromise = settled
+        initialContextVersion = version
+      }
+      void settled.then((context) => {
+        // A slow, older lookup must not overwrite a later journey's superproperties.
+        if (!context || version !== contextVersion) return
+        latestContext = context
+        registerContext(context)
+      })
       return maybeStart() ?? Promise.resolve()
     },
     posthog,
@@ -216,6 +239,11 @@ async function loadPostHogClient(): Promise<PostHogRuntimeClient | null> {
 }
 
 const runtime = createPostHogRuntime({ loadClient: loadPostHogClient })
+
+// The provider configures the first lookup. Later retry/POST success must reach this singleton too.
+subscribeFunnelContext((context) => {
+  void runtime.configureContext(Promise.resolve(context))
+})
 
 export const posthog = runtime.posthog
 

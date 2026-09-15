@@ -6,16 +6,36 @@ import {
   resolveFunnelRequestContext,
   resolvePendingFunnelTouch,
 } from "@/lib/funnel/server"
+import { buildScannerAnalyticsContext } from "@/lib/funnel/analytics-context"
+import { createAdminClient } from "@/lib/supabase/admin"
 import { checkRateLimit, FUNNEL_EVENT_RATE_LIMIT } from "@/lib/rate-limit"
 import { FUNNEL_EVENT_MAX_BODY_BYTES, parseFunnelEventPayload } from "@/lib/funnel/api"
 
 export async function GET(request: NextRequest) {
   const context = await resolveFunnelRequestContext(request)
-  return NextResponse.json({
-    enabled: isFunnelAttributionEnabled(),
-    funnelSessionId: context?.sessionId ?? null,
-    funnelPackageKey: context?.packageKey ?? null,
-  })
+  let analytics: Record<string, unknown> = {}
+  if (context?.packageKey === "scan_v1") {
+    try {
+      const { data, error } = await createAdminClient()
+        .from("funnel_sessions")
+        .select("entry_path,first_touch,is_internal_test,test_kind")
+        .eq("id", context.sessionId)
+        .maybeSingle()
+      const touch = error ? null : await resolvePendingFunnelTouch(request, context)
+      analytics = buildScannerAnalyticsContext(context, data, touch, Boolean(error))
+    } catch {
+      analytics = buildScannerAnalyticsContext(context, null, null, true)
+    }
+  }
+  return NextResponse.json(
+    {
+      enabled: isFunnelAttributionEnabled(),
+      funnelSessionId: context?.sessionId ?? null,
+      funnelPackageKey: context?.packageKey ?? null,
+      ...analytics,
+    },
+    { headers: { "Cache-Control": "private, no-store" } },
+  )
 }
 
 export async function POST(request: NextRequest) {
