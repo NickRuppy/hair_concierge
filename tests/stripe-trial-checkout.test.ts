@@ -31,6 +31,9 @@ function fixture() {
     supabase: {},
     now: () => now,
     store: {
+      freezeAnalyticsContext: async (_client: unknown, id: string, context: any) => {
+        calls.push(["freeze_analytics", id, context])
+      },
       loadManagementCatalog: async () => managementCatalog,
       freezeManagementCatalog: async (_client: unknown, input: any) => {
         calls.push(["freeze_management_catalog", structuredClone(input.catalog)])
@@ -158,6 +161,10 @@ test("freezes accepted trial terms before Stripe and binds the verified session"
   )
   assert.ok(
     f.calls.findIndex((c) => c[0] === "reserve_claims") <
+      f.calls.findIndex((c) => c[0] === "provider_create"),
+  )
+  assert.ok(
+    f.calls.findIndex((c) => c[0] === "freeze_analytics") <
       f.calls.findIndex((c) => c[0] === "provider_create"),
   )
   assert.equal(f.row().providerReference, "cs_trial")

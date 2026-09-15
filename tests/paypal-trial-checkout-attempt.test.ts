@@ -245,7 +245,12 @@ test("service attests each provider interaction, freezes accepted terms, and ver
   })
   let frozenManagementCatalog: any = null
   let frozenPlanCatalog: any = null
+  let analyticsFrozen = false
   const rpc = async (name: string, args: Record<string, unknown>) => {
+    if (name === "freeze_trial_analytics_context") {
+      analyticsFrozen = true
+      return { data: null, error: null }
+    }
     if (name === "get_paypal_trial_checkout_attempt_by_scope")
       return { data: row(attempt), error: null }
     if (name === "load_frozen_trial_management_catalog")
@@ -315,6 +320,7 @@ test("service attests each provider interaction, freezes accepted terms, and ver
         productId: "PROD-owned",
       }),
     createSubscription: async (input: any) => {
+      assert.equal(analyticsFrozen, true, "context must precede provider creation")
       calls.push(input)
       if (calls.length === 1) throw new Error("lost response")
       return { id: "I-subscription", plan_id: input.planId, custom_id: input.customId }

@@ -246,5 +246,6 @@ test("trial checkout serialization is explicit and cannot inherit a paid attempt
     leadId: "11111111-1111-4111-8111-111111111111",
     source: "quiz_result_offer",
     trial: true,
+    trialMarketingConsent: false,
   })
 })

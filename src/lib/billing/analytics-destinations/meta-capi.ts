@@ -1,12 +1,18 @@
+import { isNonCommercialFunnelTestKind } from "@/lib/funnel/journey-kind"
 import { createHash } from "node:crypto"
 import type { BillingAnalyticsDeliveryInput, BillingAnalyticsDeliveryResult } from "./types"
 import { isFunnelMetaCustomDataEnabled } from "@/lib/funnel/flags"
-import { META_CHECKOUT_RETURN_EVENT_SOURCE_URL } from "@/lib/analytics/page-url"
+import {
+  META_CHECKOUT_RETURN_EVENT_SOURCE_URL,
+  META_OFFER_EVENT_SOURCE_URL,
+} from "@/lib/analytics/page-url"
+import { validFbp, validFbc } from "@/lib/analytics/meta-capi"
 
 const DEFAULT_META_CAPI_API_VERSION = "v24.0"
 const DEFAULT_TIMEOUT_MS = 1500
 
 const META_EVENT_NAMES = {
+  trial_started: "StartTrial",
   payment_completed: "Purchase",
   payment_failed: "PaymentFailed",
   purchase_completed: "Purchase",
@@ -27,6 +33,7 @@ function normalizedEmail(email: string | null | undefined) {
 }
 
 function metaEventId(input: BillingAnalyticsDeliveryInput) {
+  if (input.event.event_name === "trial_started") return input.event.event_key
   if (
     input.event.provider === "stripe" &&
     (input.event.event_name === "purchase_completed" ||
@@ -89,8 +96,35 @@ function metaTraceId(responseBody: unknown) {
 export async function deliverBillingAnalyticsToMeta(
   input: BillingAnalyticsDeliveryInput,
 ): Promise<BillingAnalyticsDeliveryResult> {
-  if (input.event.event_name === "trial_started") {
-    return { ok: false, permanent: true, error: "trial_started is restricted to PostHog" }
+  const eventName = input.event.event_name
+  if (!(eventName in META_EVENT_NAMES)) {
+    return { ok: false, permanent: true, error: "Trial diagnostics are restricted to PostHog" }
+  }
+  const isTrial = input.event.payload.trial_analytics_version === 1
+  let trialMatching: Record<string, unknown> | null = null
+  if (eventName === "trial_started" || isTrial) {
+    const enrollmentId = input.event.payload.trial_enrollment_id
+    if (
+      !isTrial ||
+      typeof enrollmentId !== "string" ||
+      (eventName === "trial_started" &&
+        (input.event.payload.value !== 0 || !input.event.payload.trial_authorized_at))
+    ) {
+      return { ok: false, permanent: true, error: "Verified trial analytics context is required" }
+    }
+    const { data, error } = await input.supabase.rpc("read_trial_analytics_meta_context", {
+      p_enrollment_id: enrollmentId,
+    })
+    if (error) return { ok: false, error: "Trial marketing context could not be read" }
+    if (
+      !data ||
+      data.marketing_consent !== true ||
+      input.event.payload.is_internal_test === true ||
+      isNonCommercialFunnelTestKind(input.event.payload.test_kind)
+    ) {
+      return { ok: false, permanent: true, error: "Trial marketing consent is required" }
+    }
+    trialMatching = data as Record<string, unknown>
   }
   const accessToken = process.env.META_CAPI_ACCESS_TOKEN
   const pixelId = process.env.META_PIXEL_ID ?? process.env.NEXT_PUBLIC_META_PIXEL_ID
@@ -102,13 +136,23 @@ export async function deliverBillingAnalyticsToMeta(
     external_id: sha256(input.event.user_id),
   }
   if (email) userData.em = sha256(email)
+  if (trialMatching) {
+    const fbp = validFbp(typeof trialMatching.fbp === "string" ? trialMatching.fbp : null)
+    const fbc = validFbc(typeof trialMatching.fbc === "string" ? trialMatching.fbc : null)
+    if (fbp) userData.fbp = fbp
+    if (fbc) userData.fbc = fbc
+    if (typeof trialMatching.client_user_agent === "string")
+      userData.client_user_agent = trialMatching.client_user_agent.slice(0, 1024)
+  }
 
   const body = {
     data: [
       {
-        event_name: META_EVENT_NAMES[input.event.event_name],
+        event_name: META_EVENT_NAMES[eventName as keyof typeof META_EVENT_NAMES],
         event_time: Math.floor(new Date(input.event.occurred_at).getTime() / 1000),
-        ...eventSource(input.event.event_name),
+        ...(eventName === "trial_started"
+          ? { action_source: "website", event_source_url: META_OFFER_EVENT_SOURCE_URL }
+          : eventSource(eventName)),
         event_id: metaEventId(input),
         user_data: userData,
         custom_data: Object.fromEntries(

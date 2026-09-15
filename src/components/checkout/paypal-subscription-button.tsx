@@ -1,5 +1,6 @@
 "use client"
 
+import { loadConsent } from "@/lib/cookie-consent"
 import { useEffect, useRef, useState } from "react"
 import {
   FUNDING,
@@ -910,7 +911,7 @@ async function createSubscriptionIntent({
       leadId: leadId ?? null,
       returnDestination,
       source,
-      ...(trial ? { trial: true } : {}),
+      ...(trial ? { trial: true, trialMarketingConsent: loadConsent()?.marketing === true } : {}),
       funnelEventId,
     }),
   })

@@ -1,3 +1,4 @@
+import { trialAnalyticsRequestContext } from "@/lib/billing/trial-analytics-context"
 import { after, NextResponse, type NextRequest } from "next/server"
 import { z } from "zod"
 import { createClient } from "@supabase/supabase-js"
@@ -95,6 +96,7 @@ export type CheckoutRequestSource = "pricing_page" | "quiz_result_offer" | "prem
 export const StripeCheckoutSessionRequestSchema = z
   .object({
     trial: z.literal(true).optional(),
+    trialMarketingConsent: z.boolean().optional(),
     interval: z.enum(["month", "quarter", "year"]).optional(),
     purchaseKind: z.literal(PERSONAL_PLAN_ONCE_KIND).optional(),
     funnelSessionId: z.string().uuid().optional(),
@@ -967,6 +969,11 @@ export async function POST(req: NextRequest) {
           claims: identities.length
             ? createTrialIdentityClaims(identities, trialRuntime.identityKeys)
             : [],
+          analyticsContext: trialAnalyticsRequestContext(
+            req,
+            parsed.data.trialMarketingConsent,
+            trialFunnelContext?.sessionId,
+          ),
           checkout: {
             origin,
             customerEmail,

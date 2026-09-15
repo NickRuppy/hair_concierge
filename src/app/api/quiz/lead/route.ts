@@ -1,3 +1,4 @@
+import { isFunnelMetaCustomDataEnabled } from "@/lib/funnel/flags"
 import { after, NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient as createSessionClient } from "@/lib/supabase/server"
@@ -337,6 +338,7 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
             leadId: existingLead.id,
             name: parsed.name,
             requestData: metaUserRequestData,
+            funnelPackageKey: funnelContext?.packageKey,
           })
         }
 
@@ -409,6 +411,7 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
           leadId: data.id,
           name: parsed.name,
           requestData: metaUserRequestData,
+          funnelPackageKey: funnelContext?.packageKey,
         })
       }
 
@@ -431,6 +434,7 @@ export type MetaLeadEnqueueInput = {
   eventTime: string
   email: string
   eventSourceUrl?: string
+  funnelPackageKey?: string
   leadId: string
   name: string
   requestData: MetaRequestData
@@ -449,6 +453,7 @@ export function enqueueMetaLead(
     eventTime,
     email,
     eventSourceUrl,
+    funnelPackageKey,
     leadId,
     name,
     requestData,
@@ -465,6 +470,9 @@ export function enqueueMetaLead(
       eventId: browserEventId,
       eventSourceUrl: eventSourceUrl ?? META_QUIZ_EVENT_SOURCE_URL,
       eventTime: new Date(eventTime),
+      ...(isFunnelMetaCustomDataEnabled() && funnelPackageKey
+        ? { customData: { funnel_package_key: funnelPackageKey } }
+        : {}),
       user: {
         email,
         name,

@@ -1,5 +1,6 @@
 "use client"
 
+import { loadConsent } from "@/lib/cookie-consent"
 import { useCallback, useEffect, useRef, useState } from "react"
 import type { Stripe } from "@stripe/stripe-js"
 
@@ -91,7 +92,9 @@ export function buildResultCheckoutSessionRequest(input: {
     leadId: input.leadId,
     source: "quiz_result_offer" as const,
     ...(input.presentation ? { presentation: input.presentation } : {}),
-    ...(input.trial ? { trial: true as const } : {}),
+    ...(input.trial
+      ? { trial: true as const, trialMarketingConsent: loadConsent()?.marketing === true }
+      : {}),
   }
 }
 

@@ -3,6 +3,10 @@ import {
   loadFrozenTrialManagementCatalog,
 } from "../billing/trial-management-operations"
 import "server-only"
+import {
+  freezeTrialAnalyticsContext,
+  type TrialAnalyticsContextInput,
+} from "../billing/trial-analytics-context"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 
@@ -38,6 +42,7 @@ type Input = {
   claims: readonly TrialIdentityClaim[]
   email: string | null
   leadId: string | null
+  analyticsContext?: TrialAnalyticsContextInput
   source: PayPalCheckoutSource
 }
 
@@ -93,6 +98,8 @@ export async function createDurablePayPalTrialCheckout(input: Input, deps: Deps)
   ) {
     throw new Error("PayPal trial checkout attempt does not match")
   }
+
+  await freezeTrialAnalyticsContext(deps.supabase, attempt.enrollmentId, input.analyticsContext)
 
   if (input.claims.length && !attempt.providerReference) {
     const admission = await reserveTrialAdmission(deps.supabase, attempt.enrollmentId, input.claims)

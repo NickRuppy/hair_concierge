@@ -1,3 +1,4 @@
+import { dispatchBillingAnalyticsDue } from "@/lib/billing/analytics-outbox"
 import { after, NextResponse, type NextRequest } from "next/server"
 import { deferRequiredTrialNotices } from "@/lib/billing/trial-notice-dispatch"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
@@ -154,48 +155,22 @@ async function recordStripeBillingAnalytics(
 
 async function recordTrialInvoiceAnalytics(
   trial: TrialInvoiceResult,
-  eventId: string,
+  _eventId: string,
   supabase: SupabaseClient,
   defer: (work: () => void | Promise<void>) => void,
 ) {
-  const payment = trial.payment
-  if (
-    !payment ||
-    !["applied", "duplicate"].includes(payment.result.outcome) ||
-    payment.result.phase === "none"
-  )
-    return
-  // One revenue event per paid invoice; authorization never creates Purchase.
-  const eventName =
-    payment.result.phase === "first_paid" ? "purchase_completed" : "payment_completed"
-  await recordStripeBillingAnalytics(
-    supabase,
-    defer,
-    {
-      eventKey: billingAnalyticsEventKey({
-        provider: "stripe",
-        eventName,
-        sourceObjectId: trial.invoiceId,
-      }),
-      eventName,
-      userId: trial.userId,
-      providerCustomerId: trial.customerId,
-      providerSubscriptionId: trial.subscriptionId,
-      sourceEventId: eventId,
-      sourceObjectId: trial.invoiceId,
-      occurredAt: payment.occurredAt,
-      payload: {
-        value: amountFromMinorUnits(payment.amountMinor),
-        currency: "EUR",
-        interval: trial.interval,
-        invoice_id: trial.invoiceId,
-        trial_enrollment_id: trial.enrollmentId,
-        subscription_status: "active",
-        meta_event_id: trial.invoiceId,
-      },
-    },
-    ["posthog", "meta"],
-  )
+  // The ledger transaction owns the fact and destination rows. Retries only dispatch.
+  if (trial.payment) {
+    const name =
+      trial.payment.result.phase === "first_paid"
+        ? "purchase_completed"
+        : trial.payment.result.phase === "renewal"
+          ? "payment_completed"
+          : "trial_first_payment_failed"
+    defer(async () => {
+      await dispatchBillingAnalyticsDue(supabase, { eventKey: `stripe:${name}:${trial.invoiceId}` })
+    })
+  }
 }
 
 async function recordStripeCheckoutAnalytics(input: {
@@ -212,41 +187,15 @@ async function recordStripeCheckoutAnalytics(input: {
   const interval = activation.subscriptionInterval
   if (interval !== "month" && interval !== "quarter" && interval !== "year") return
   const trialCandidate = isTrialAnalyticsCandidate({ activation, session })
-  const trial = resolveTrialStartedAnalytics({ activation, interval, session })
   if (trialCandidate) {
-    // A trial marker is never evidence of a paid conversion. Only the exact
-    // admission result below may emit analytics; malformed/replayed candidates
-    // remain silent for reconciliation instead of falling through to paid events.
-    if (!trial) return
-    await recordStripeBillingAnalytics(
-      supabase,
-      defer,
-      {
-        eventKey: billingAnalyticsEventKey({
-          provider: "stripe",
-          eventName: "trial_started",
-          sourceObjectId: trial.enrollmentId,
-        }),
-        eventName: "trial_started",
-        userId: activation.userId,
-        providerCustomerId: activation.stripeCustomerId,
-        providerSubscriptionId: activation.stripeSubscriptionId,
-        sourceEventId: eventId,
-        sourceObjectId: trial.enrollmentId,
-        occurredAt: trial.authorizationSucceededAt,
-        payload: {
-          checkout_session_id: session.id,
-          authorization_succeeded_at: trial.authorizationSucceededAt,
-          trial_enrollment_id: trial.enrollmentId,
-          trial_end_at: trial.trialEndAt,
-          value: trial.value,
-          currency: trial.currency,
-          interval: trial.interval,
-          subscription_status: activation.subscriptionStatus,
-        },
-      },
-      ["posthog"],
-    )
+    // Canonical admission captures trial_started atomically; never fall through to Purchase.
+    const trial = resolveTrialStartedAnalytics({ activation, interval, session })
+    if (trial)
+      defer(async () => {
+        await dispatchBillingAnalyticsDue(supabase, {
+          eventKey: `stripe:trial_started:${trial.enrollmentId}`,
+        })
+      })
     return
   }
   const value = amountFromMinorUnits(session.amount_total)

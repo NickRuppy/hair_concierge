@@ -233,6 +233,26 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         source_section: data.sourceSection,
       }
     }
+    case "offer_content_interacted": {
+      const data = payload as AppEventMap["offer_content_interacted"]
+      return {
+        ...offerContextProperties(data),
+        action: data.action,
+        action_index: data.actionIndex,
+        content_type: data.contentType,
+        placement: data.placement,
+        source_section: data.sourceSection,
+      }
+    }
+    case "offer_content_viewed": {
+      const data = payload as AppEventMap["offer_content_viewed"]
+      return {
+        ...offerContextProperties(data),
+        content_id: data.contentId,
+        content_type: data.contentType,
+        source_section: data.sourceSection,
+      }
+    }
     case "offer_detail_opened": {
       const data = payload as AppEventMap["offer_detail_opened"]
       return {

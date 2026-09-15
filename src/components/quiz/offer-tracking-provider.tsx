@@ -27,6 +27,9 @@ import type {
   FunnelAnalyticsEnvelope,
   OfferAnalyticsContext,
   OfferChapterId,
+  OfferContentAction,
+  OfferContentPlacement,
+  OfferContentType,
   OfferCtaId,
   OfferDetailType,
   OfferEntryContext,
@@ -52,6 +55,16 @@ const OfferTrackingContext = createContext<OfferAnalyticsContext | null>(null)
 
 type OfferTrackingActions = {
   observeOfferSection: (sectionId: OfferSectionId, element: HTMLElement) => () => void
+  observeContentViewed: (
+    contentId: "scanner" | "plan" | "application" | "chat",
+    element: HTMLElement,
+  ) => () => void
+  trackContentInteracted: (content: {
+    action: OfferContentAction
+    contentType: OfferContentType
+    placement?: OfferContentPlacement
+    sourceSection?: OfferSectionId
+  }) => void
   trackDetailOpened: (detail: {
     detailId: string
     detailIndex: number
@@ -62,6 +75,8 @@ type OfferTrackingActions = {
 
 const OfferTrackingActionsContext = createContext<OfferTrackingActions>({
   observeOfferSection: () => () => {},
+  observeContentViewed: () => () => {},
+  trackContentInteracted: () => {},
   trackDetailOpened: () => {},
 })
 
@@ -116,6 +131,8 @@ export function OfferTrackingProvider({
   const revealedChaptersRef = useRef(new Set<OfferChapterId>())
   const ctaInteractionIndexRef = useRef(0)
   const detailInteractionIndexRef = useRef(0)
+  const contentInteractionIndexRef = useRef(0)
+  const viewedContentRef = useRef(new Set<"scanner" | "plan" | "application" | "chat">())
   const faqOpenIndexRef = useRef(0)
   const [offerViewId] = useState(createFunnelEventId)
   const { conditionerModuleId, needLane, shampooModuleId, suggestedCategory } = trackingIdentity
@@ -298,9 +315,56 @@ export function OfferTrackingProvider({
     [context],
   )
 
+  const emitContentViewed = useCallback(
+    (contentId: "scanner" | "plan" | "application" | "chat") => {
+      if (viewedContentRef.current.has(contentId)) return
+      viewedContentRef.current.add(contentId)
+      trackAppEvent("offer_content_viewed", {
+        ...context,
+        contentId,
+        contentType: "scanner_benefit_carousel",
+        funnelEventId: createFunnelEventId(),
+        sourceSection: "product_tour",
+      })
+    },
+    [context],
+  )
+
+  const observeContentViewed = useCallback(
+    (contentId: "scanner" | "plan" | "application" | "chat", element: HTMLElement) =>
+      observeOnceEngaged(element, () => emitContentViewed(contentId)),
+    [emitContentViewed],
+  )
+
+  const trackContentInteracted = useCallback(
+    ({
+      action,
+      contentType,
+      placement,
+      sourceSection,
+    }: Parameters<OfferTrackingActions["trackContentInteracted"]>[0]) => {
+      contentInteractionIndexRef.current += 1
+      trackAppEvent("offer_content_interacted", {
+        ...context,
+        action,
+        actionIndex: contentInteractionIndexRef.current,
+        contentType,
+        funnelEventId: createFunnelEventId(),
+        placement,
+        sourceSection,
+      })
+    },
+    [context],
+  )
+
   const actions = useMemo<OfferTrackingActions>(
-    () => ({ observeOfferSection, trackDetailOpened }),
-    [observeOfferSection, trackDetailOpened],
+    () => ({
+      observeContentViewed,
+      observeOfferSection,
+      trackContentInteracted,
+      trackDetailOpened,
+    }),
+    [observeContentViewed, observeOfferSection, trackContentInteracted, trackDetailOpened],
   )
 
   useEffect(() => {
