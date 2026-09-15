@@ -279,6 +279,7 @@ test("service attests each provider interaction, freezes accepted terms, and ver
         paypalProductId: args.p_product_id,
         paypalPlanId: args.p_plan_id,
         requestId: args.p_request_id,
+        // Freeze = expiry - 72h = 2098-12-29T00:00Z; frozen trial end = next UTC midnight after freeze + 8d.
         requestExpiresAt: "2099-01-01T00:00:00.000Z",
       }
       return { data: row(attempt), error: null }
@@ -356,14 +357,14 @@ test("service attests each provider interaction, freezes accepted terms, and ver
       planId: "P-first",
       customId: "token-1",
       requestId: `paypal-trial:${ATTEMPT}:v1`,
-      startTime: "2099-01-05T00:00:00.000Z",
+      startTime: "2099-01-07T00:00:00.000Z",
       offer: OFFER,
     },
     {
       planId: "P-first",
       customId: "token-1",
       requestId: `paypal-trial:${ATTEMPT}:v1`,
-      startTime: "2099-01-05T00:00:00.000Z",
+      startTime: "2099-01-07T00:00:00.000Z",
       offer: OFFER,
     },
   ])

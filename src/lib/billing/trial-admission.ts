@@ -107,6 +107,12 @@ export async function activateTrialAdmission(
     claims: readonly TrialIdentityClaim[]
     authorizationSucceededAt: Date
     providerAgreementId: string
+    /**
+     * Provider-specific verified trial end. PayPal passes the frozen collection
+     * midnight (8–9 days after authorization); Stripe omits it and the database
+     * stores the exact seven-day end.
+     */
+    originalTrialEndAt?: Date
   },
 ): Promise<TrialAdmissionResult> {
   if (
@@ -118,12 +124,24 @@ export async function activateTrialAdmission(
   ) {
     throw new Error("Invalid verified trial authorization")
   }
+  if (input.originalTrialEndAt !== undefined) {
+    const end = input.originalTrialEndAt instanceof Date ? input.originalTrialEndAt.getTime() : NaN
+    const authorized = input.authorizationSucceededAt.getTime()
+    if (
+      !Number.isFinite(end) ||
+      end < authorized + 7 * 24 * 60 * 60 * 1000 ||
+      end > authorized + 10 * 24 * 60 * 60 * 1000
+    ) {
+      throw new Error("Invalid verified trial end")
+    }
+  }
   return admit(
     client,
     input.enrollmentId,
     input.claims,
     input.authorizationSucceededAt.toISOString(),
     input.providerAgreementId,
+    input.originalTrialEndAt?.toISOString() ?? null,
   )
 }
 
@@ -133,6 +151,7 @@ async function admit(
   claims: readonly TrialIdentityClaim[],
   authorizedAt: string | null,
   agreementId: string | null,
+  originalTrialEndAt: string | null = null,
 ): Promise<TrialAdmissionResult> {
   if (!uuid(enrollmentId)) throw new Error("Invalid trial enrollment")
   const { data, error } = await client.rpc("admit_trial_enrollment", {
@@ -140,6 +159,7 @@ async function admit(
     p_claims: claims,
     p_authorized_at: authorizedAt,
     p_provider_agreement_id: agreementId,
+    ...(originalTrialEndAt === null ? {} : { p_original_trial_end_at: originalTrialEndAt }),
   })
   if (error || !RESULTS.has(data as TrialAdmissionResult)) {
     throw new Error("Trial admission reconciliation required")

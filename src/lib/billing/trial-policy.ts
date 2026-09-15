@@ -1,7 +1,4 @@
-import {
-  paypalTrialCollectionStart,
-  paypalTrialCollectionWindowEnd,
-} from "../paypal/trial-collection-start"
+import { trialFirstCollectionWindowEnd } from "../paypal/trial-collection-start"
 
 export type TrialAccessFacts = {
   authorizationSucceededAt: string | null
@@ -174,8 +171,9 @@ export function resolveTrialAccess(facts: TrialAccessFacts, now: Date): TrialAcc
       // trial keeps access instead of locking the converting customer out
       // overnight; a failed or missing collection locks when the window ends.
       const collectionWindowEndAt = Date.parse(
-        paypalTrialCollectionWindowEnd(
-          paypalTrialCollectionStart(new Date(parsed.originalTrialEndAt).toISOString()),
+        trialFirstCollectionWindowEnd(
+          new Date(parsed.authorizationSucceededAt).toISOString(),
+          new Date(parsed.originalTrialEndAt).toISOString(),
         ),
       )
       if (!facts.cancelAtPeriodEnd && nowAt < collectionWindowEndAt) {

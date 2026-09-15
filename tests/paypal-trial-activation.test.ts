@@ -10,7 +10,10 @@ import {
 } from "../src/lib/paypal/trial-account-admission"
 import { recordVerifiedPayPalTrialSale } from "../src/lib/paypal/trial-webhook"
 import { buildPayPalDeferredTrialPlanRequest } from "../src/lib/paypal/trial-plan-shape"
-import { paypalTrialCollectionStart } from "../src/lib/paypal/trial-collection-start"
+import {
+  frozenPayPalTrialStart,
+  paypalTrialCollectionStart,
+} from "../src/lib/paypal/trial-collection-start"
 import { paypalCheckoutActivationHash } from "../src/lib/paypal/checkout-activation"
 import { getPersistedTrialRecoveryCode } from "../src/lib/paypal/trial-account-admission"
 import { CheckoutRecoveryError } from "../src/lib/auth/checkout-activation-outcome"
@@ -27,7 +30,12 @@ const catalog = {
 function fixture() {
   const now = Date.now()
   const authorized = new Date(now - 30_000).toISOString()
-  const end = new Date(Date.parse(authorized) + 7 * 86400000).toISOString()
+  // Checkout froze two minutes ago; the PayPal trial end is the collection
+  // midnight fixed at that freeze (next UTC midnight after freeze + 8 days).
+  const requestExpiresAt = new Date(now - 120_000 + 3 * 86400000).toISOString()
+  const end = frozenPayPalTrialStart(requestExpiresAt)
+  // Trial end an agreement admitted under the retired contract would carry.
+  const legacyEnd = new Date(Date.parse(authorized) + 7 * 86400000).toISOString()
   const offer = createTrialOfferSnapshot("month", catalog)
   const intent: any = {
     id: "intent",
@@ -60,7 +68,7 @@ function fixture() {
     paypal_product_id: "PROD-owned",
     paypal_plan_id: "P-month",
     request_id: "request",
-    request_expires_at: new Date(now - 120_000 + 3 * 86400000).toISOString(),
+    request_expires_at: requestExpiresAt,
     provider_reference: "I-owned",
     authorization_succeeded_at: authorized,
     activation_event_id: "WH-original",
@@ -87,8 +95,9 @@ function fixture() {
     status: "ACTIVE",
     subscriber: { payer_id: "PAYER", email_address: "payer@example.com" },
     status_update_time: authorized,
-    start_time: new Date(now - 120_000 + 7 * 86400000).toISOString(),
-    billing_info: { next_billing_time: new Date(now - 120_000 + 7 * 86400000).toISOString() },
+    start_time: end,
+    // PayPal keys its daily batch to the UTC date of start_time.
+    billing_info: { next_billing_time: new Date(Date.parse(end) + 10 * 3600 * 1000).toISOString() },
     plan: buildPayPalDeferredTrialPlanRequest({ interval: "month", productId: "PROD-owned" }),
   }
   const tables: Record<string, any[]> = {
@@ -246,7 +255,7 @@ function fixture() {
             admission_status: "active",
             provider_agreement_id: args.p_provider_agreement_id,
             authorization_succeeded_at: args.p_authorized_at,
-            original_trial_end_at: end,
+            original_trial_end_at: args.p_original_trial_end_at ?? legacyEnd,
           })
         else
           Object.assign(enrollment, {
@@ -282,11 +291,9 @@ function fixture() {
     },
     attestPayPalApp: async () => "APP-owned",
     retrievePayPalSubscription: async () => structuredClone(subscription),
-    patchPayPalTrialStart: async (id: string, start: string) => {
-      calls.push({ patchStart: start })
-      subscription.start_time = start
-      subscription.billing_info.next_billing_time = start
-      subscription.status_update_time = new Date().toISOString()
+    // The frozen-end contract never patches an initial agreement.
+    patchPayPalTrialStart: async () => {
+      throw new Error("initial trial agreements must not be patched")
     },
     cancelPayPalSubscription: async () => {
       calls.push({ cancel: true })
@@ -303,6 +310,7 @@ function fixture() {
     tables,
     calls,
     end,
+    legacyEnd,
     authorized,
     setAdmission(value: string) {
       admissionResult = value
@@ -313,14 +321,16 @@ function fixture() {
   }
 }
 
-test("original provider activation pins seven days, and disabled enrollment still reconciles accepted checkout/account", async () => {
+test("original provider activation stores the frozen trial end without patching the agreement, and disabled enrollment still reconciles accepted checkout/account", async () => {
   const f = fixture()
   const result = await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
   assert.equal(result.status, "active")
-  assert.equal(f.calls.filter((c) => c.patchStart).length, 1)
-  assert.equal(f.calls.find((c) => c.patchStart).patchStart, paypalTrialCollectionStart(f.end))
+  assert.equal(result.status === "active" && result.trialEndAt, f.end)
+  assert.equal(f.subscription.start_time, f.end)
   const admission = f.calls.find((c) => c.rpc === "admit_trial_enrollment")
   assert.equal(admission.args.p_authorized_at, f.authorized)
+  assert.equal(admission.args.p_original_trial_end_at, f.end)
+  assert.equal(f.enrollment.original_trial_end_at, f.end)
   assert.equal(
     admission.args.p_claims.some((c: any) => c.kind === "paypal_payer"),
     true,
@@ -330,8 +340,8 @@ test("original provider activation pins seven days, and disabled enrollment stil
     f.calls.some((c) => c.rpc === "record_trial_payment_event"),
     false,
   )
-  await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
-  assert.equal(f.calls.filter((c) => c.patchStart).length, 1)
+  assert.equal((await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)).status, "active")
+  assert.equal(f.calls.filter((c) => c.rpc === "admit_trial_enrollment").length, 1)
 })
 
 test("GET ACTIVE or a redirect alone cannot pin an authorization clock or grant an account", async () => {
@@ -340,7 +350,7 @@ test("GET ACTIVE or a redirect alone cannot pin an authorization clock or grant 
   f.attempt.activation_event_id = null
   assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), { status: "pending" })
   assert.equal(
-    f.calls.some((c) => c.patchStart || c.rpc === "admit_trial_enrollment"),
+    f.calls.some((c) => c.rpc === "admit_trial_enrollment"),
     false,
   )
   assert.equal(f.tables.billing_subscriptions.length, 0)
@@ -371,22 +381,15 @@ test("verified original ACTIVATED resource is required, including exact intent a
   )
 })
 
-test("a lost PATCH response re-reads the provider and admits only the exact seven-day boundary", async () => {
+test("an agreement created with the retired provisional start is closed and neutralized so the customer retries", async () => {
   const f = fixture()
-  const patch = f.deps.patchPayPalTrialStart
-  f.deps.patchPayPalTrialStart = async (...args: any[]) => {
-    await patch(...args)
-    throw new Error("timeout")
-  }
-  assert.equal((await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)).status, "active")
-  assert.equal(f.enrollment.original_trial_end_at, f.end)
-})
-
-test("a rejected patch cancels and reconciles the unadmitted collectible agreement", async () => {
-  const f = fixture()
-  f.deps.patchPayPalTrialStart = async () => {
-    throw new Error("provider rejected")
-  }
+  // Attempts frozen before the frozen-end contract requested start_time =
+  // freeze + 7 days (request_expires_at + 4 days), echoed in whole seconds.
+  const retired = new Date(
+    Math.floor((Date.parse(f.attempt.request_expires_at) + 4 * 86400000) / 1000) * 1000,
+  ).toISOString()
+  f.subscription.start_time = retired
+  f.subscription.billing_info.next_billing_time = retired
   assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
     status: "duplicate",
     recoveryCode: "trial_checkout_closed",
@@ -396,17 +399,18 @@ test("a rejected patch cancels and reconciles the unadmitted collectible agreeme
   assert.equal(f.tables.billing_subscriptions.length, 0)
 })
 
-test("a provider start without the exact next billing boundary never grants access", async () => {
+test("a provider batch outside the collection window never grants access", async () => {
   const f = fixture()
-  f.deps.patchPayPalTrialStart = async (_id: string, start: string) => {
-    f.subscription.start_time = start
-  }
+  f.subscription.billing_info.next_billing_time = new Date(
+    Date.parse(f.end) + 3 * 86400000,
+  ).toISOString()
   await assert.rejects(
     () => ensurePayPalTrialCheckoutAccount(f.intent, f.deps),
     (error: unknown) =>
       error instanceof CheckoutRecoveryError && error.code === "trial_reconciliation_required",
   )
   assert.equal(f.tables.billing_subscriptions.length, 0)
+  assert.equal(f.subscription.status, "ACTIVE")
 })
 
 test("a repeated payer is denied and cancellation is confirmed before claims release", async () => {
@@ -468,7 +472,27 @@ test("admission-to-billing interruption replays projection without resetting the
   assert.equal((await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)).status, "active")
   assert.equal(f.tables.billing_subscriptions.length, 1)
   assert.equal(
-    f.calls.some((c) => c.patchStart || c.rpc === "admit_trial_enrollment"),
+    f.calls.some((c) => c.rpc === "admit_trial_enrollment"),
+    false,
+  )
+})
+
+test("an agreement admitted under the retired seven-day contract still replays through the active path", async () => {
+  const f = fixture()
+  Object.assign(f.enrollment, {
+    admission_status: "active",
+    provider_agreement_id: "I-owned",
+    authorization_succeeded_at: f.authorized,
+    original_trial_end_at: f.legacyEnd,
+  })
+  f.subscription.start_time = f.legacyEnd
+  f.subscription.billing_info.next_billing_time = f.legacyEnd
+  const result = await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
+  assert.equal(result.status, "active")
+  assert.equal(result.status === "active" && result.trialEndAt, f.legacyEnd)
+  assert.equal(f.tables.billing_subscriptions.length, 1)
+  assert.equal(
+    f.calls.some((c) => c.rpc === "admit_trial_enrollment"),
     false,
   )
 })
@@ -824,99 +848,69 @@ test("trial authorization timestamp qualifies a legacy-quiz lead for the plan de
   }
 })
 
-test("provisional trial start is second-precision for the provider", async () => {
-  const { provisionalPayPalTrialStart } = await import("../src/lib/paypal/trial-checkout-attempt")
-  const start = provisionalPayPalTrialStart({ requestExpiresAt: "2026-09-18T10:47:36.026Z" } as any)
-  assert.equal(start, "2026-09-22T10:47:36.000Z")
-})
-
-test("provider whole-second start_time still verifies the provisional trial start", async () => {
-  const f = fixture()
-  // Freeze timestamps carry sub-second precision; PayPal stores and echoes
-  // start_time in whole seconds (prod incident 2026-09-15, sub I-EYRE7NUCK430).
-  const expires = Date.parse(f.attempt.request_expires_at)
-  f.attempt.request_expires_at = new Date(Math.floor(expires / 1000) * 1000 + 26).toISOString()
-  const providerStored =
-    Math.floor((Date.parse(f.attempt.request_expires_at) + 4 * 86400000) / 1000) * 1000
-  f.subscription.start_time = new Date(providerStored).toISOString()
-  f.subscription.billing_info.next_billing_time = f.subscription.start_time
-  const result = await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
-  assert.equal(result.status, "active")
-})
-
-test("provisional start tolerance accepts sub-second deltas only and fails closed on garbage", async () => {
-  const alignProviderStart = (f: any, offsetMs: number) => {
-    const expires = Date.parse(f.attempt.request_expires_at)
-    f.attempt.request_expires_at = new Date(Math.floor(expires / 1000) * 1000 + 600).toISOString()
-    const floored =
-      Math.floor((Date.parse(f.attempt.request_expires_at) + 4 * 86400000) / 1000) * 1000
-    f.subscription.start_time = new Date(floored + offsetMs).toISOString()
-    f.subscription.billing_info.next_billing_time = f.subscription.start_time
-  }
-
-  const accepted = fixture()
-  alignProviderStart(accepted, 500)
-  assert.equal(
-    (await ensurePayPalTrialCheckoutAccount(accepted.intent, accepted.deps)).status,
-    "active",
-  )
-
-  const rejected = fixture()
-  alignProviderStart(rejected, 1000)
-  await assert.rejects(
-    () => ensurePayPalTrialCheckoutAccount(rejected.intent, rejected.deps),
-    /trial_reconciliation_required/,
-  )
-
-  const invalid = fixture()
-  invalid.subscription.start_time = "not-a-timestamp"
-  await assert.rejects(
-    () => ensurePayPalTrialCheckoutAccount(invalid.intent, invalid.deps),
-    /trial_reconciliation_required/,
-  )
-})
-
-test("day-after collection with the provider's morning batch hour verifies and activates", async () => {
-  const f = fixture()
-  const collectionStart = paypalTrialCollectionStart(f.end)
-  const patch = f.deps.patchPayPalTrialStart
-  f.deps.patchPayPalTrialStart = async (id: string, start: string) => {
-    await patch(id, start)
-    // PayPal keys the daily batch to the UTC date of start_time.
+test("a provider start that is not the frozen trial end fails closed for reconciliation", async () => {
+  for (const start of [
+    new Date(Date.parse(fixture().end) + 1000).toISOString(),
+    new Date(Date.parse(fixture().end) - 1000).toISOString(),
+    "not-a-timestamp",
+  ]) {
+    const f = fixture()
+    f.subscription.start_time = start
     f.subscription.billing_info.next_billing_time = new Date(
-      Date.parse(start) + 10 * 3600 * 1000,
+      Date.parse(f.end) + 10 * 3600 * 1000,
     ).toISOString()
+    await assert.rejects(
+      () => ensurePayPalTrialCheckoutAccount(f.intent, f.deps),
+      /trial_reconciliation_required/,
+      start,
+    )
+    assert.equal(f.subscription.status, "ACTIVE", start)
+    assert.equal(f.tables.billing_subscriptions.length, 0, start)
   }
+})
+
+test("the frozen trial end with the provider's morning batch verifies and activates untouched", async () => {
+  const f = fixture()
   const result = await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
   assert.equal(result.status, "active")
-  assert.equal(f.subscription.start_time, collectionStart)
+  assert.equal(f.subscription.start_time, f.end)
+  assert.equal(paypalTrialCollectionStart(f.end), f.end)
+})
+
+test("a batch scheduled exactly at the frozen trial end is accepted", async () => {
+  const f = fixture()
+  f.subscription.billing_info.next_billing_time = f.end
+  assert.equal((await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)).status, "active")
 })
 
 test("a batch scheduled inside the trial window is rejected", async () => {
   const f = fixture()
-  const patch = f.deps.patchPayPalTrialStart
-  f.deps.patchPayPalTrialStart = async (id: string, start: string) => {
-    await patch(id, start)
-    // Regression guard for the observed incident: provider floors the batch
-    // onto the trial-end date, before the seven-day promise is fulfilled.
-    f.subscription.billing_info.next_billing_time = new Date(
-      Date.parse(f.end) - 2 * 3600 * 1000,
-    ).toISOString()
-  }
+  // Regression guard for the observed incident: provider floors the batch
+  // onto a date before the promised trial end.
+  f.subscription.billing_info.next_billing_time = new Date(
+    Date.parse(f.end) - 2 * 3600 * 1000,
+  ).toISOString()
   await assert.rejects(
     () => ensurePayPalTrialCheckoutAccount(f.intent, f.deps),
     /trial_reconciliation_required/,
   )
 })
 
-test("a legacy agreement patched to the exact trial end re-patches to the day-after collection start", async () => {
+test("an approval too late for the frozen trial end closes the checkout without consuming the trial", async () => {
   const f = fixture()
-  // Incident inventory: agreements patched before day-after collection carry
-  // start_time === trialEnd, which differs from the frozen provisional start
-  // by the checkout-to-approval delay (well over one second here).
-  f.subscription.start_time = f.end
-  f.subscription.billing_info.next_billing_time = f.end
-  const result = await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
-  assert.equal(result.status, "active")
-  assert.equal(f.subscription.start_time, paypalTrialCollectionStart(f.end))
+  // Frozen five days ago: the frozen end now sits less than seven days after
+  // this approval, so the promised 7 × 24h could not be honoured.
+  f.attempt.request_expires_at = new Date(Date.now() - 2 * 86400000).toISOString()
+  const end = frozenPayPalTrialStart(f.attempt.request_expires_at)
+  assert.ok(Date.parse(end) > Date.now() && Date.parse(end) < Date.parse(f.legacyEnd))
+  f.subscription.start_time = end
+  f.subscription.billing_info.next_billing_time = new Date(
+    Date.parse(end) + 10 * 3600 * 1000,
+  ).toISOString()
+  assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
+    status: "duplicate",
+    recoveryCode: "trial_checkout_closed",
+  })
+  assert.equal(f.subscription.status, "CANCELLED")
+  assert.equal(f.enrollment.admission_status, "released")
 })
