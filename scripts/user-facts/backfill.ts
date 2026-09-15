@@ -14,7 +14,13 @@ import type {
   BackfillNeedVersionRow,
   BackfillPlanRow,
 } from "../../src/lib/user-facts/backfill/resolve-stage2-head"
-import { factsProvenanceSchema } from "../../src/lib/user-facts/schema"
+import {
+  careHabitsV1Schema,
+  diagnosticsV1Schema,
+  factsProvenanceSchema,
+  type CareHabitsV1,
+  type DiagnosticsV1,
+} from "../../src/lib/user-facts/schema"
 import { saveUserFacts } from "../../src/lib/user-facts/save"
 
 /**
@@ -38,7 +44,8 @@ const HAIR_PROFILE_COLUMNS = [
   "user_id",
   "facts_revision",
   "facts_provenance",
-  "updated_at",
+  "diagnostics",
+  "care_habits",
   "hair_texture",
   "thickness",
   "density",
@@ -58,6 +65,7 @@ const HAIR_PROFILE_COLUMNS = [
   "uses_heat_protection",
   "night_protection",
   "brush_type",
+  "desired_volume",
 ].join(", ")
 
 export type BackfillOptions = {
@@ -164,7 +172,23 @@ function toColumns(row: Record<string, unknown>): LegacyProfileColumns {
     uses_heat_protection: readBoolean(row.uses_heat_protection),
     night_protection: readStringArray(row.night_protection),
     brush_type: readStringArray(row.brush_type),
+    desired_volume: readString(row.desired_volume),
   }
+}
+
+/** The stored documents, or `null` when there is none or it does not parse. Only the catch-up
+ * comparison reads them, and `plan-row.ts` turns a `null` into an explicit "left for review"
+ * skip rather than a blind re-write. */
+function readStoredDiagnostics(value: unknown): DiagnosticsV1 | null {
+  if (value === null || value === undefined) return null
+  const parsed = diagnosticsV1Schema.safeParse(value)
+  return parsed.success ? parsed.data : null
+}
+
+function readStoredCareHabits(value: unknown): CareHabitsV1 | null {
+  if (value === null || value === undefined) return null
+  const parsed = careHabitsV1Schema.safeParse(value)
+  return parsed.success ? parsed.data : null
 }
 
 /** Newest first, mirroring the "most recent legacy lead wins" rule in
@@ -320,9 +344,10 @@ async function loadPage(
     rows.push({
       userId,
       factsRevision: typeof profile.facts_revision === "number" ? profile.facts_revision : 0,
-      updatedAt: readString(profile.updated_at),
       factsProvenance: provenance.data,
       columns: toColumns(profile),
+      storedDiagnostics: readStoredDiagnostics(profile.diagnostics),
+      storedCareHabits: readStoredCareHabits(profile.care_habits),
       artifact:
         artifactRow && artifactId && artifactLeadId
           ? { id: artifactId, leadId: artifactLeadId, quizAnswers: artifactRow.quiz_answers }
@@ -362,9 +387,15 @@ export type BackfillSummary = {
   writesByDomain: Record<string, number>
   writesBySource: Record<string, number>
   conflicts: number
+  /** Rows where the winning source would blank a diagnostics-owned column that carries a
+   * value today (I2). Counted apart from a value conflict: this is data loss, not disagreement. */
+  erasures: number
   unresolvable: number
   skipped: number
   applied: number
+  /** `user_facts_save_v1` returned `preserved`, i.e. it declined the write and kept what was
+   * there. Not an applied change. */
+  preserved: number
   failures: { userId: string; domain: string; reason: string }[]
   pageComplete: boolean
   nextCursor: string | null
@@ -380,6 +411,8 @@ export async function runUserFactsBackfill(
   const prefix = options.apply ? "[apply]" : "[dry]"
 
   const conflictLines: string[] = []
+  let conflictRows = 0
+  let erasureRows = 0
   const unresolvableLines: string[] = []
   const skipLines: string[] = []
   const failures: BackfillSummary["failures"] = []
@@ -389,6 +422,7 @@ export async function runUserFactsBackfill(
   let usersExamined = 0
   let writesPlanned = 0
   let applied = 0
+  let preserved = 0
   let cursor: string | null = null
   let lastPageFull = false
 
@@ -406,12 +440,23 @@ export async function runUserFactsBackfill(
       })
 
       if (plan.conflict) {
-        const fields = plan.conflict.fields
-          .map((field) => `${field.field} columns=${field.column} derived=${field.derived}`)
-          .join("; ")
-        conflictLines.push(
-          `  ${row.userId} diagnostics from ${plan.conflict.sourceKind} ${plan.conflict.sourceId}: ${fields}`,
-        )
+        const origin = `${row.userId} diagnostics from ${plan.conflict.sourceKind} ${plan.conflict.sourceId}`
+        if (plan.conflict.fields.length > 0) {
+          conflictRows += 1
+          conflictLines.push(
+            `  ${origin}: ${plan.conflict.fields
+              .map((field) => `${field.field} columns=${field.column} derived=${field.derived}`)
+              .join("; ")}`,
+          )
+        }
+        if (plan.conflict.erasures.length > 0) {
+          erasureRows += 1
+          conflictLines.push(
+            `  ${origin}: ${plan.conflict.erasures
+              .map((field) => `erasure ${field.field} columns=${field.column} derived=<none>`)
+              .join("; ")}`,
+          )
+        }
       }
       for (const reason of plan.unresolvable) unresolvableLines.push(`  ${row.userId} ${reason}`)
       for (const reason of plan.skips) skipLines.push(`  ${row.userId} ${reason}`)
@@ -440,7 +485,8 @@ export async function runUserFactsBackfill(
           } as Parameters<typeof saveUserFacts>[1])
 
           if (result.status === "ok" || result.status === "preserved") {
-            applied += 1
+            if (result.status === "preserved") preserved += 1
+            else applied += 1
             const unexpected =
               result.status === "ok" && result.revision !== expectedRevision + 1
                 ? ` (warning: revision ${result.revision}, expected ${expectedRevision + 1} — another writer was here)`
@@ -468,7 +514,7 @@ export async function runUserFactsBackfill(
   }
 
   log("")
-  log(`P4 CONFLICTS (${conflictLines.length})`)
+  log(`P4 CONFLICTS (${conflictRows} conflicts, ${erasureRows} erasures)`)
   for (const line of conflictLines) log(line)
   log("")
   log(`UNRESOLVABLE (${unresolvableLines.length})`)
@@ -487,10 +533,12 @@ export async function runUserFactsBackfill(
     writesPlanned,
     writesByDomain,
     writesBySource,
-    conflicts: conflictLines.length,
+    conflicts: conflictRows,
+    erasures: erasureRows,
     unresolvable: unresolvableLines.length,
     skipped: skipLines.length,
     applied,
+    preserved,
     failures,
     pageComplete: failures.length === 0,
     nextCursor,

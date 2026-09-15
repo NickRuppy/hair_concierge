@@ -4,12 +4,15 @@ import type {
 } from "@/lib/personal-plan/refinement/types"
 import { BRUSH_TYPES, type BrushType } from "@/lib/vocabulary/onboarding-care"
 
+import { deriveCareHabitsColumns, deriveDiagnosticsColumns } from "../derive-legacy-columns"
 import { toCareHabitsPatch, toFieldProvenance } from "../from-refinement-draft"
 import {
   CARE_HABITS_SCHEMA_VERSION,
   DIAGNOSTICS_SCHEMA_VERSION,
   QUIZ_CONTEXT_SCHEMA_VERSION,
   type CareHabitsPatch,
+  type CareHabitsV1,
+  type DiagnosticsV1,
   type DiagnosticsPatch,
   type DomainProvenance,
   type FactsProvenance,
@@ -31,8 +34,10 @@ import {
   type BackfillPlanRow,
 } from "./resolve-stage2-head"
 import {
+  DIAGNOSTICS_OWNED_COLUMNS,
   selectDiagnosticsSource,
   type DiagnosticsColumnConflictField,
+  type DiagnosticsColumnErasureField,
 } from "./select-diagnostics-source"
 
 /**
@@ -61,11 +66,13 @@ export type LegacyProfileColumns = LegacyDiagnosticColumns &
 export type LoadedUserRow = {
   userId: string
   factsRevision: number
-  /** `hair_profiles.updated_at`, the only evidence a legacy writer touched the row after the
-   * backfill wrote its facts (the catch-up predicate). */
-  updatedAt: string | null
   factsProvenance: FactsProvenance
   columns: LegacyProfileColumns
+  /** The documents already stored on the row. Only the catch-up comparison reads them: they
+   * are what the legacy columns are supposed to equal, so a difference is proof a legacy
+   * writer changed the columns after the backfill wrote its facts. */
+  storedDiagnostics: DiagnosticsV1 | null
+  storedCareHabits: CareHabitsV1 | null
   artifact: { id: string; leadId: string; quizAnswers: unknown } | null
   legacyLead: { id: string; quizAnswers: unknown } | null
   plan: BackfillPlanRow | null
@@ -107,6 +114,7 @@ export type UserFactsBackfillPlan = {
     sourceKind: "artifact" | "lead"
     sourceId: string
     fields: DiagnosticsColumnConflictField[]
+    erasures: DiagnosticsColumnErasureField[]
   }
 }
 
@@ -127,6 +135,83 @@ const BACKFILL_SOURCE_KINDS = new Set<DomainProvenance["source"]["kind"]>([
 const BRUSH_TYPE_VALUES = new Set<string>(BRUSH_TYPES)
 
 type DomainGate = { plan: true } | { plan: false; reason: string }
+
+/** The columns `user_facts_save_v1` recomputes from the `care_habits` document. */
+const CARE_HABITS_OWNED_COLUMNS = [
+  "drying_method",
+  "heat_styling",
+  "styling_tools",
+  "uses_heat_protection",
+  "towel_material",
+  "towel_technique",
+  "night_protection",
+  "brush_type",
+] as const
+
+/** Arrays compare element-wise (so `[]` equals `[]`); everything else compares strictly, which
+ * makes `null` equal `null` and a NULL column differ from any derived value. */
+function columnValuesEqual(left: unknown, right: unknown): boolean {
+  if (Array.isArray(left) || Array.isArray(right)) {
+    if (!Array.isArray(left) || !Array.isArray(right)) return false
+    return left.length === right.length && left.every((value, index) => value === right[index])
+  }
+  return left === right
+}
+
+/**
+ * The catch-up signal (controller ruling 2026-09-16, I1). It is CONTENT-based, never
+ * timestamp-based: `user_facts_save_v1` itself sets `hair_profiles.updated_at`, so after an
+ * `--apply` every backfilled row would look "changed" and a pre-deploy catch-up would re-plan
+ * the whole population.
+ *
+ * Instead, the stored domain document is re-derived into legacy columns — exactly what the
+ * RPC wrote into them — and compared with the columns as they stand now. A difference can
+ * only have come from a still-live legacy writer, so the domain is re-imported from the
+ * authorities; an exact match means nothing happened and the row is left alone.
+ */
+function legacyColumnsDivergedFromStoredFacts(
+  domain: "diagnostics" | "care_habits" | "quiz_context",
+  row: LoadedUserRow,
+): DomainGate {
+  if (domain === "quiz_context") {
+    return {
+      plan: false,
+      reason:
+        "quiz_context: owns no legacy columns, so no legacy writer can have changed it since the backfill",
+    }
+  }
+
+  const stored = domain === "diagnostics" ? row.storedDiagnostics : row.storedCareHabits
+  if (!stored) {
+    return {
+      plan: false,
+      reason: `${domain}: provenance says the backfill wrote it, but the stored document is missing or unreadable; left for review`,
+    }
+  }
+
+  const derived: Record<string, unknown> =
+    domain === "diagnostics"
+      ? deriveDiagnosticsColumns(stored as DiagnosticsV1)
+      : deriveCareHabitsColumns(stored as CareHabitsV1)
+  const ownedColumns: readonly string[] =
+    domain === "diagnostics" ? DIAGNOSTICS_OWNED_COLUMNS : CARE_HABITS_OWNED_COLUMNS
+
+  const changed = ownedColumns.filter(
+    (column) =>
+      !columnValuesEqual(
+        (row.columns as unknown as Record<string, unknown>)[column],
+        derived[column],
+      ),
+  )
+
+  if (changed.length === 0) {
+    return {
+      plan: false,
+      reason: `${domain}: legacy columns still match the stored facts (nothing changed since the backfill)`,
+    }
+  }
+  return { plan: true }
+}
 
 /** Only ever reached for a `facts_revision = 0` row (always planned) or, in catch-up mode,
  * for a row the backfill itself wrote — `planUserFactsBackfill` returns before this for every
@@ -150,15 +235,7 @@ function gateDomain(
       reason: `${domain}: last written by ${provenance.source.kind} (a live writer; never overwritten by the backfill)`,
     }
   }
-  const changedAt = row.updatedAt ? Date.parse(row.updatedAt) : Number.NaN
-  const writtenAt = Date.parse(provenance.at)
-  if (!(changedAt > writtenAt)) {
-    return {
-      plan: false,
-      reason: `${domain}: legacy columns unchanged since the backfill wrote them (${provenance.at})`,
-    }
-  }
-  return { plan: true }
+  return legacyColumnsDivergedFromStoredFacts(domain, row)
 }
 
 function liftBrushesCombs(brushType: string[] | null): BrushType[] | undefined {
@@ -212,6 +289,7 @@ function planDiagnosticsAndContext(
       sourceKind: selected.sourceKind,
       sourceId: selected.sourceId!,
       fields: selected.conflict.fields,
+      erasures: selected.conflict.erasures,
     }
   }
 

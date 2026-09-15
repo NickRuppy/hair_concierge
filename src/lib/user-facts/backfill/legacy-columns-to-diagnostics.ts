@@ -27,9 +27,13 @@ import { diagnosticsV1Schema, type DiagnosticsV1 } from "../schema"
  * projection of richer quiz answers, so legacy-only values with no native equivalent
  * (`dandruff`/`oily_scalp` concerns, `healthier_hair`/`color_protection` goals) are DROPPED
  * rather than guessed at, and a null column omits its field rather than inventing a default.
- * The one exception is `scalp_condition`, whose `null` is a real answer in the legacy model
- * ("no scalp issue", `link-to-profile.ts` writes null when `has_scalp_issue === false`) and
- * therefore imports as `scalpConcerns: []`, not as an absent field.
+ *
+ * `scalp_condition` is the one column whose `null` can be a real answer rather than an absent
+ * one ("no scalp issue": `link-to-profile.ts` writes null when `has_scalp_issue === false`),
+ * but only for a row that answered the scalp section at all. Controller ruling 2026-09-16
+ * (J2): a null `scalp_condition` imports as `scalpConcerns: []` ONLY when `scalp_type` is
+ * non-null; with no `scalp_type` the row never answered and the field is omitted. An
+ * unrecognised non-null `scalp_condition` is unknown, not "none", so it is omitted too.
  *
  * Pure: no I/O, no `server-only`.
  */
@@ -46,6 +50,10 @@ export type LegacyDiagnosticColumns = {
   chemical_treatment: string[] | null
   concerns: string[] | null
   goals: string[] | null
+  /** Derived from `goals` by the write side; carried here so the backfill's erasure check and
+   * the catch-up comparison see every diagnostics-owned column. Nothing reads it back into a
+   * diagnostics field (the direction lives natively in the `volume_balance` goal). */
+  desired_volume: string | null
 }
 
 /** Inverses of the task-2 forward tables, built from those tables so the two can never drift.
@@ -127,11 +135,15 @@ function mapArray<Mapped extends string>(
   return mapped
 }
 
-function translateScalpCondition(value: string | null): ScalpConcernInput[] | undefined {
-  // See the module doc: a null `scalp_condition` is the legacy model's "no scalp issue".
-  if (value === null) return []
-  const concern = SCALP_CONDITION_TO_SCALP_CONCERN[value as ScalpCondition]
-  return concern ? [concern] : []
+function translateScalpCondition(
+  scalpCondition: string | null,
+  scalpType: string | null,
+): ScalpConcernInput[] | undefined {
+  // See the module doc (J2): "no scalp issue" only reads as an answer when the scalp section
+  // was answered — `scalp_type` is the evidence for that.
+  if (scalpCondition === null) return scalpType === null ? undefined : []
+  const concern = SCALP_CONDITION_TO_SCALP_CONCERN[scalpCondition as ScalpCondition]
+  return concern ? [concern] : undefined
 }
 
 /** True when the row carries at least one legacy diagnostics answer. A row with nothing in
@@ -176,7 +188,10 @@ export function legacyColumnsToDiagnostics(
       parseScalar(shape.elasticResponse, columns.protein_moisture_balance),
     ),
     ...defined("scalpOiliness", parseScalar(shape.scalpOiliness, columns.scalp_type)),
-    ...defined("scalpConcerns", translateScalpCondition(columns.scalp_condition)),
+    ...defined(
+      "scalpConcerns",
+      translateScalpCondition(columns.scalp_condition, columns.scalp_type),
+    ),
     ...defined("chemicalTreatments", chemicalTreatments),
     ...defined("currentConcerns", currentConcerns),
     ...defined("goals", goals),

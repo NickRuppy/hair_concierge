@@ -16,10 +16,16 @@ import {
  *
  * P4 (b) also asks for the disagreement to be VISIBLE rather than silently overwritten: when
  * an artifact or lead wins, the diagnostics it projects are re-derived back into legacy
- * columns and compared with what the row already stores. Only a field where BOTH sides carry
- * a value and the values differ counts as a conflict — a null column is "no prior answer",
- * not a disagreement. Nothing is skipped or changed because of a conflict; it is reported so
- * Nick sees it in the dry run (measured exposure: 1 user).
+ * columns and compared with what the row already stores. Two kinds of divergence are
+ * reported, and nothing is skipped or changed because of either:
+ *  - a CONFLICT: both sides carry a value on one of the fields legacy readers branch on, and
+ *    the values differ (a null column is "no prior answer", not a disagreement).
+ *  - an ERASURE (controller ruling 2026-09-16, I2): the column carries a value and the
+ *    winner's derived value is `null`/`[]`. `user_facts_save_v1` rewrites every
+ *    diagnostics-owned column from the merged document, so a PARTIAL winner (an incomplete
+ *    legacy lead) silently nulls columns legacy readers use. Nick has to see that before
+ *    `--apply`, so it is listed across ALL diagnostics-owned columns, not just the six
+ *    conflict fields.
  *
  * Pure: no I/O, no `server-only`.
  */
@@ -36,10 +42,33 @@ const CONFLICT_FIELDS = [
   "scalp_condition",
 ] as const
 
+/** Every legacy column `user_facts_save_v1` recomputes from the `diagnostics` document, i.e.
+ * every column a partial winner can erase. */
+export const DIAGNOSTICS_OWNED_COLUMNS = [
+  "hair_texture",
+  "thickness",
+  "density",
+  "hair_length",
+  "cuticle_condition",
+  "protein_moisture_balance",
+  "scalp_type",
+  "scalp_condition",
+  "chemical_treatment",
+  "concerns",
+  "goals",
+  "desired_volume",
+] as const
+
 export type DiagnosticsColumnConflictField = {
   field: (typeof CONFLICT_FIELDS)[number]
   column: string
   derived: string
+}
+
+export type DiagnosticsColumnErasureField = {
+  field: (typeof DIAGNOSTICS_OWNED_COLUMNS)[number]
+  /** The value the column carries today and that the winner would blank out. */
+  column: string
 }
 
 export type UnusableDiagnosticsSource = {
@@ -54,7 +83,7 @@ export type SelectedDiagnosticsSource = {
   sourceId?: string
   diagnostics: DiagnosticsV1
   quizContext?: QuizContextV1
-  conflict?: { fields: DiagnosticsColumnConflictField[] }
+  conflict?: { fields: DiagnosticsColumnConflictField[]; erasures: DiagnosticsColumnErasureField[] }
   /** Higher-precedence sources that exist but could not be projected (reported, never guessed
    * around). */
   unusableSources: UnusableDiagnosticsSource[]
@@ -86,12 +115,23 @@ function hasDiagnosticSignal(diagnostics: DiagnosticsV1): boolean {
   })
 }
 
+function columnCarriesValue(value: string | string[] | null): boolean {
+  return Array.isArray(value) ? value.length > 0 : value !== null
+}
+
+function renderColumnValue(value: string | readonly string[]): string {
+  return Array.isArray(value) ? value.join(",") : (value as string)
+}
+
 function detectConflict(
   diagnostics: DiagnosticsV1,
   columns: LegacyDiagnosticColumns,
-): { fields: DiagnosticsColumnConflictField[] } | undefined {
+):
+  | { fields: DiagnosticsColumnConflictField[]; erasures: DiagnosticsColumnErasureField[] }
+  | undefined {
   const derived = deriveDiagnosticsColumns(diagnostics)
   const fields: DiagnosticsColumnConflictField[] = []
+  const erasures: DiagnosticsColumnErasureField[] = []
 
   for (const field of CONFLICT_FIELDS) {
     const columnValue = columns[field]
@@ -101,7 +141,15 @@ function detectConflict(
     fields.push({ field, column: columnValue, derived: derivedValue })
   }
 
-  return fields.length > 0 ? { fields } : undefined
+  for (const field of DIAGNOSTICS_OWNED_COLUMNS) {
+    const columnValue = columns[field] ?? null
+    const derivedValue = derived[field] ?? null
+    if (!columnCarriesValue(columnValue)) continue
+    if (columnCarriesValue(derivedValue)) continue
+    erasures.push({ field, column: renderColumnValue(columnValue!) })
+  }
+
+  return fields.length > 0 || erasures.length > 0 ? { fields, erasures } : undefined
 }
 
 export function selectDiagnosticsSource(

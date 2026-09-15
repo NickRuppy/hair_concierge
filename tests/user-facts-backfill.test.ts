@@ -42,6 +42,7 @@ const FULL_DIAGNOSTIC_COLUMNS: LegacyDiagnosticColumns = {
   chemical_treatment: ["bleached", "colored"],
   concerns: ["dryness", "frizz", "split_ends"],
   goals: ["moisture", "less_frizz", "volume"],
+  desired_volume: null,
 }
 
 test("legacyColumnsToDiagnostics translates a complete column snapshot into native diagnostics", () => {
@@ -108,15 +109,29 @@ test("legacyColumnsToDiagnostics drops unmapped legacy values and dedupes many-t
   assert.deepEqual(diagnostics.goals, ["strength_ends"])
 })
 
-test("legacyColumnsToDiagnostics reads a null scalp_condition as no scalp concerns and a null array column as absent", () => {
-  const diagnostics = legacyColumnsToDiagnostics(
+test("legacyColumnsToDiagnostics reads a null scalp_condition as no scalp concerns only when the scalp section was answered", () => {
+  const answered = legacyColumnsToDiagnostics(
     { ...FULL_DIAGNOSTIC_COLUMNS, scalp_condition: null, goals: null, concerns: null },
     {},
   )
+  assert.deepEqual(answered.scalpConcerns, [])
+  assert.equal("goals" in answered, false)
+  assert.equal("currentConcerns" in answered, false)
 
-  assert.deepEqual(diagnostics.scalpConcerns, [])
-  assert.equal("goals" in diagnostics, false)
-  assert.equal("currentConcerns" in diagnostics, false)
+  // J2: with no `scalp_type` the row never answered the scalp section at all.
+  const neverAnswered = legacyColumnsToDiagnostics(
+    { ...FULL_DIAGNOSTIC_COLUMNS, scalp_condition: null, scalp_type: null },
+    {},
+  )
+  assert.equal("scalpConcerns" in neverAnswered, false)
+  assert.equal("scalpOiliness" in neverAnswered, false)
+
+  // An unrecognised condition is unknown, never "none".
+  const unrecognised = legacyColumnsToDiagnostics(
+    { ...FULL_DIAGNOSTIC_COLUMNS, scalp_condition: "irgendwas" },
+    {},
+  )
+  assert.equal("scalpConcerns" in unrecognised, false)
 })
 
 test("hasLegacyDiagnosticSignal separates an empty legacy row from one carrying any answer", () => {
@@ -132,6 +147,7 @@ test("hasLegacyDiagnosticSignal separates an empty legacy row from one carrying 
     chemical_treatment: [],
     concerns: [],
     goals: null,
+    desired_volume: null,
   }
 
   assert.equal(hasLegacyDiagnosticSignal(empty), false)
@@ -570,6 +586,7 @@ test("selectDiagnosticsSource records the P4 conflict when the winning source di
       hair_texture: "curly",
       scalp_condition: "irritated",
       density: null,
+      desired_volume: "more",
     },
   })
 
@@ -579,7 +596,46 @@ test("selectDiagnosticsSource records the P4 conflict when the winning source di
       { field: "hair_texture", column: "curly", derived: "wavy" },
       { field: "scalp_condition", column: "irritated", derived: "dandruff" },
     ],
+    erasures: [{ field: "desired_volume", column: "more" }],
   })
+})
+
+test("selectDiagnosticsSource lists every diagnostics-owned column a partial winner would blank out", () => {
+  const selected = selectDiagnosticsSource({
+    artifact: null,
+    // An incomplete legacy lead is a legitimate winner (task 5a ruling) but projects PARTIAL
+    // diagnostics, and `user_facts_save_v1` rewrites every diagnostics-owned column from the
+    // merged document — so these columns would be nulled without anyone seeing it.
+    legacyLead: {
+      id: "lead-partial",
+      quizAnswers: {
+        structure: "curly",
+        thickness: "coarse",
+        density: "high",
+        hair_length: "medium",
+        fingertest: "rau",
+        pulltest: "snaps",
+        concerns: ["dry_lengths"],
+      },
+    },
+    columns: { ...FULL_DIAGNOSTIC_COLUMNS, desired_volume: "more" },
+  })
+
+  assert.equal(selected.sourceKind, "lead")
+  assert.deepEqual(selected.conflict?.erasures, [
+    { field: "scalp_type", column: "oily" },
+    { field: "scalp_condition", column: "dandruff" },
+    { field: "chemical_treatment", column: "bleached,colored" },
+    { field: "goals", column: "moisture,less_frizz,volume" },
+    { field: "desired_volume", column: "more" },
+  ])
+  // The value conflicts are reported independently of the erasures.
+  assert.deepEqual(selected.conflict?.fields, [
+    { field: "hair_texture", column: "wavy", derived: "curly" },
+    { field: "thickness", column: "fine", derived: "coarse" },
+    { field: "density", column: "medium", derived: "high" },
+    { field: "hair_length", column: "long", derived: "medium" },
+  ])
 })
 
 test("selectDiagnosticsSource steps past an unusable source instead of guessing, and reports it", () => {
@@ -652,6 +708,7 @@ const EMPTY_COLUMNS: LegacyProfileColumns = {
   chemical_treatment: null,
   concerns: null,
   goals: null,
+  desired_volume: null,
   towel_material: null,
   towel_technique: null,
   drying_method: null,
@@ -666,9 +723,10 @@ function userRow(overrides: Partial<LoadedUserRow> = {}): LoadedUserRow {
   return {
     userId: "user-1",
     factsRevision: 0,
-    updatedAt: "2026-09-01T00:00:00.000Z",
     factsProvenance: {},
     columns: EMPTY_COLUMNS,
+    storedDiagnostics: null,
+    storedCareHabits: null,
     artifact: null,
     legacyLead: null,
     plan: null,
@@ -841,7 +899,6 @@ test("planUserFactsBackfill imports an incomplete column-only row without invent
   assert.deepEqual(diagnostics.patch, {
     texture: "coily",
     thickness: "coarse",
-    scalpConcerns: [],
     source: {
       kind: "legacy_columns",
       version: 1,
@@ -889,6 +946,7 @@ test("planUserFactsBackfill surfaces the v2 artifact source and the P4 column co
     sourceKind: "artifact",
     sourceId: "artifact-v2",
     fields: [{ field: "hair_texture", column: "coily", derived: "wavy" }],
+    erasures: [],
   })
 })
 
@@ -1000,11 +1058,36 @@ test("planUserFactsBackfill is idempotent: a row the backfill already wrote is s
   ])
 })
 
-test("planUserFactsBackfill re-plans a catch-up row a legacy writer changed, and never one a live writer owns", () => {
-  const changedAfterBackfill = userRow({
+// The catch-up signal is CONTENT-based (I1): `user_facts_save_v1` stamps
+// `hair_profiles.updated_at` itself, so a timestamp could never distinguish "the backfill
+// wrote this" from "a legacy writer changed this". The stored document is re-derived into
+// legacy columns and compared with the columns as they stand.
+
+const BACKFILLED_COLUMNS: LegacyProfileColumns = {
+  ...EMPTY_COLUMNS,
+  hair_texture: "wavy",
+  thickness: "fine",
+  scalp_type: "oily",
+  scalp_condition: "dandruff",
+  chemical_treatment: [],
+  concerns: [],
+  goals: [],
+  towel_material: "frottee",
+  towel_technique: "gentle_press",
+  uses_heat_protection: false,
+  brush_type: ["paddle"],
+}
+
+function backfilledRow(overrides: Partial<LoadedUserRow> = {}): LoadedUserRow {
+  return userRow({
     factsRevision: 1,
-    updatedAt: "2026-09-15T12:00:00.000Z",
-    columns: { ...EMPTY_COLUMNS, hair_texture: "wavy", brush_type: ["round"] },
+    columns: BACKFILLED_COLUMNS,
+    // Exactly what the backfill would have written, so the derived columns round-trip.
+    storedDiagnostics: legacyColumnsToDiagnostics(BACKFILLED_COLUMNS, {}),
+    storedCareHabits: {
+      ...legacyColumnsToCareHabits(BACKFILLED_COLUMNS),
+      brushesCombs: ["paddle"],
+    },
     factsProvenance: {
       diagnostics: {
         source: { kind: "legacy_columns" },
@@ -1017,44 +1100,106 @@ test("planUserFactsBackfill re-plans a catch-up row a legacy writer changed, and
         at: "2026-09-15T00:00:00.000Z",
       },
     },
+    ...overrides,
   })
+}
 
-  const replanned = planUserFactsBackfill(changedAfterBackfill, { now: NOW, catchUp: true })
-  assert.deepEqual(
-    replanned.writes.map((write) => write.domain),
-    ["diagnostics", "care_habits"],
-  )
+test("catch-up leaves a backfilled row alone while its legacy columns still match the stored facts", () => {
+  const plan = planUserFactsBackfill(backfilledRow(), { now: NOW, catchUp: true })
 
-  const unchanged = planUserFactsBackfill(
-    { ...changedAfterBackfill, updatedAt: "2026-09-15T00:00:00.000Z" },
+  assert.deepEqual(plan.writes, [])
+  assert.deepEqual(plan.skips, [
+    "diagnostics: legacy columns still match the stored facts (nothing changed since the backfill)",
+    "care_habits: legacy columns still match the stored facts (nothing changed since the backfill)",
+  ])
+})
+
+test("catch-up re-plans only the domain whose columns a legacy writer changed", () => {
+  const towelChanged = planUserFactsBackfill(
+    backfilledRow({ columns: { ...BACKFILLED_COLUMNS, towel_material: "mikrofaser" } }),
     { now: NOW, catchUp: true },
   )
-  assert.deepEqual(unchanged.writes, [])
-  assert.deepEqual(unchanged.skips, [
-    "diagnostics: legacy columns unchanged since the backfill wrote them (2026-09-15T00:00:00.000Z)",
-    "care_habits: legacy columns unchanged since the backfill wrote them (2026-09-15T00:00:00.000Z)",
+  assert.deepEqual(
+    towelChanged.writes.map((write) => write.domain),
+    ["care_habits"],
+  )
+  assert.deepEqual(writeFor(towelChanged, "care_habits").patch, {
+    towel: { material: "mikrofaser", technique: "gentle_press" },
+    brushesCombs: ["paddle"],
+  })
+  assert.deepEqual(towelChanged.skips, [
+    "diagnostics: legacy columns still match the stored facts (nothing changed since the backfill)",
   ])
 
-  const liveWriter = planUserFactsBackfill(
-    {
-      ...changedAfterBackfill,
+  const textureChanged = planUserFactsBackfill(
+    backfilledRow({ columns: { ...BACKFILLED_COLUMNS, hair_texture: "curly" } }),
+    { now: NOW, catchUp: true },
+  )
+  assert.deepEqual(
+    textureChanged.writes.map((write) => write.domain),
+    ["diagnostics"],
+  )
+  assert.equal(writeFor(textureChanged, "diagnostics").patch.texture, "curly")
+  assert.deepEqual(textureChanged.skips, [
+    "care_habits: legacy columns still match the stored facts (nothing changed since the backfill)",
+  ])
+})
+
+test("catch-up never re-plans a domain a live writer owns, however far its columns have drifted", () => {
+  const plan = planUserFactsBackfill(
+    backfilledRow({
+      columns: { ...BACKFILLED_COLUMNS, towel_material: "mikrofaser", hair_texture: "curly" },
       factsProvenance: {
-        ...changedAfterBackfill.factsProvenance,
+        diagnostics: {
+          source: { kind: "legacy_columns" },
+          schemaVersion: 1,
+          at: "2026-09-15T00:00:00.000Z",
+        },
         care_habits: {
           source: { kind: "feinschliff_draft", id: "draft-9" },
           schemaVersion: 1,
           at: "2026-09-15T00:00:00.000Z",
         },
       },
-    },
+    }),
     { now: NOW, catchUp: true },
   )
+
   assert.deepEqual(
-    liveWriter.writes.map((write) => write.domain),
+    plan.writes.map((write) => write.domain),
     ["diagnostics"],
   )
-  assert.deepEqual(liveWriter.skips, [
+  assert.deepEqual(plan.skips, [
     "care_habits: last written by feinschliff_draft (a live writer; never overwritten by the backfill)",
+  ])
+})
+
+test("catch-up leaves a row whose stored document is missing or unreadable for review", () => {
+  const plan = planUserFactsBackfill(
+    backfilledRow({
+      columns: { ...BACKFILLED_COLUMNS, hair_texture: "curly" },
+      storedDiagnostics: null,
+    }),
+    { now: NOW, catchUp: true },
+  )
+
+  assert.deepEqual(plan.writes, [])
+  assert.deepEqual(plan.skips, [
+    "diagnostics: provenance says the backfill wrote it, but the stored document is missing or unreadable; left for review",
+    "care_habits: legacy columns still match the stored facts (nothing changed since the backfill)",
+  ])
+})
+
+test("catch-up leaves an already-written row with no provenance for that domain for review", () => {
+  const plan = planUserFactsBackfill(backfilledRow({ factsProvenance: {} }), {
+    now: NOW,
+    catchUp: true,
+  })
+
+  assert.deepEqual(plan.writes, [])
+  assert.deepEqual(plan.skips, [
+    "diagnostics: facts_revision=1 but no diagnostics provenance (not a backfill row; left for review)",
+    "care_habits: facts_revision=1 but no care_habits provenance (not a backfill row; left for review)",
   ])
 })
 
@@ -1097,7 +1242,7 @@ test("parseBackfillArguments defaults to a bounded dry run and names every flag 
 
 type FakeRow = Record<string, unknown>
 
-function fakeSupabase(tables: Record<string, FakeRow[]>) {
+function fakeSupabase(tables: Record<string, FakeRow[]>, rpcResult?: Record<string, unknown>) {
   const selects: { table: string; columns: string; filters: unknown[] }[] = []
   const rpcs: { name: string; params: Record<string, unknown> }[] = []
 
@@ -1139,7 +1284,7 @@ function fakeSupabase(tables: Record<string, FakeRow[]>) {
     async rpc(name: string, params: Record<string, unknown>) {
       rpcs.push({ name, params })
       return {
-        data: { status: "ok", revision: 1, changed: true, diagnosticsHash: null },
+        data: rpcResult ?? { status: "ok", revision: 1, changed: true, diagnosticsHash: null },
         error: null,
       }
     },
@@ -1157,7 +1302,6 @@ function scriptTables(): Record<string, FakeRow[]> {
         user_id: SCRIPT_USER,
         facts_revision: 0,
         facts_provenance: {},
-        updated_at: "2026-09-01T00:00:00.000Z",
         ...EMPTY_COLUMNS,
         brush_type: ["paddle"],
       },
@@ -1201,6 +1345,9 @@ test("runUserFactsBackfill prints a per-domain diff and writes nothing in the de
   assert.deepEqual(summary.writesByDomain, { diagnostics: 1, care_habits: 1, quiz_context: 1 })
   assert.deepEqual(summary.writesBySource, { personal_plan_artifact: 2, refined_version: 1 })
   assert.equal(summary.applied, 0)
+  assert.equal(summary.preserved, 0)
+  assert.equal(summary.conflicts, 0)
+  assert.equal(summary.erasures, 0)
   assert.equal(summary.pageComplete, true)
 
   assert.deepEqual(lines.slice(0, 3), [
@@ -1280,6 +1427,90 @@ test("runUserFactsBackfill --apply hands every planned write to user_facts_save_
     lines[0],
     `[apply] ${SCRIPT_USER} diagnostics <- personal_plan_artifact artifact-1 (11 fields) -> ok rev 1`,
   )
+})
+
+test("runUserFactsBackfill prints conflicts and erasures on separate labelled lines and counts them apart", async () => {
+  const fake = fakeSupabase({
+    hair_profiles: [
+      {
+        user_id: SCRIPT_USER,
+        facts_revision: 0,
+        facts_provenance: {},
+        ...FULL_DIAGNOSTIC_COLUMNS,
+        desired_volume: "more",
+        towel_material: null,
+        towel_technique: null,
+        drying_method: null,
+        styling_tools: null,
+        heat_styling: null,
+        uses_heat_protection: null,
+        night_protection: null,
+        brush_type: null,
+      },
+    ],
+    personal_plan_prepared_artifacts: [],
+    leads: [
+      {
+        id: "lead-partial",
+        user_id: SCRIPT_USER,
+        created_at: "2026-07-01T00:00:00.000Z",
+        quiz_answers: {
+          structure: "curly",
+          thickness: "coarse",
+          density: "high",
+          hair_length: "medium",
+          fingertest: "rau",
+          pulltest: "snaps",
+          concerns: ["dry_lengths"],
+        },
+      },
+    ],
+    personal_plans: [],
+  })
+  const lines: string[] = []
+
+  const summary = await runUserFactsBackfill([], {
+    supabase: fake.client as never,
+    now: NOW,
+    log: (line) => lines.push(line),
+  })
+
+  assert.equal(summary.conflicts, 1)
+  assert.equal(summary.erasures, 1)
+  assert.equal(lines.includes("P4 CONFLICTS (1 conflicts, 1 erasures)"), true)
+  assert.equal(
+    lines.includes(
+      `  ${SCRIPT_USER} diagnostics from lead lead-partial: hair_texture columns=wavy derived=curly; thickness columns=fine derived=coarse; density columns=medium derived=high; hair_length columns=long derived=medium`,
+    ),
+    true,
+  )
+  assert.equal(
+    lines.includes(
+      `  ${SCRIPT_USER} diagnostics from lead lead-partial: erasure scalp_type columns=oily derived=<none>; erasure scalp_condition columns=dandruff derived=<none>; erasure chemical_treatment columns=bleached,colored derived=<none>; erasure goals columns=moisture,less_frizz,volume derived=<none>; erasure desired_volume columns=more derived=<none>`,
+    ),
+    true,
+  )
+})
+
+test("runUserFactsBackfill counts a preserved RPC result apart from an applied change", async () => {
+  const fake = fakeSupabase(scriptTables(), {
+    status: "preserved",
+    revision: 4,
+    changed: false,
+    diagnosticsHash: null,
+  })
+  const lines: string[] = []
+
+  const summary = await runUserFactsBackfill(["--apply"], {
+    supabase: fake.client as never,
+    now: NOW,
+    log: (line) => lines.push(line),
+  })
+
+  assert.equal(summary.applied, 0)
+  assert.equal(summary.preserved, 3)
+  assert.deepEqual(summary.failures, [])
+  assert.equal(lines[0]?.endsWith("-> preserved rev 4"), true)
 })
 
 test("runUserFactsBackfill honours --user and --limit and reports a resume cursor when a page fills up", async () => {
