@@ -1,5 +1,6 @@
 import { assertPayPalPaidRecoveryPlan } from "./trial-paid-recovery"
 import {
+  frozenPayPalTrialStart,
   paypalTrialCollectionStart,
   paypalTrialCollectionWindowEnd,
 } from "./trial-collection-start"
@@ -26,7 +27,6 @@ import { assertPlanMatchesAcceptedOffer, type PayPalTrialRuntime } from "./trial
 import {
   findPayPalTrialCheckoutAttempt,
   pinPayPalTrialActivation,
-  provisionalPayPalTrialStart,
   type PayPalTrialCheckoutAttempt,
 } from "./trial-checkout-attempt"
 import {
@@ -160,7 +160,12 @@ export async function ensurePayPalTrialCheckoutAccount(
   }
   if (!attempt.authorizationSucceededAt) return { status: "pending" }
   const authorizationAt = new Date(attempt.authorizationSucceededAt)
-  const trialEnd = new Date(authorizationAt.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString()
+  // The PayPal trial ends on the collection midnight frozen at checkout, never
+  // on a moment derived from approval: PayPal computed its billing clock once
+  // from that start_time and never recomputes it after a patch.
+  const frozenTrialEnd = frozenPayPalTrialStart(attempt.requestExpiresAt)
+  // Agreements admitted before the frozen-end contract stored approval + 7 days.
+  const legacyTrialEnd = new Date(authorizationAt.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString()
   if (enrollment.admission_status === "active") {
     const effective = await readTrialEffectiveContract(deps.supabase, enrollment.id)
     if (effective.provider !== "paypal" || !effective.agreementId)
@@ -203,10 +208,12 @@ export async function ensurePayPalTrialCheckoutAccount(
       )
         throw new Error("PayPal revised trial owner or plan mismatch")
     }
+    const storedTrialEnd = Date.parse(enrollment.original_trial_end_at ?? "")
     if (
       !enrollment.user_id ||
       effective.agreementId !== subscription.id ||
-      Date.parse(enrollment.original_trial_end_at) !== Date.parse(trialEnd)
+      (storedTrialEnd !== Date.parse(frozenTrialEnd) &&
+        storedTrialEnd !== Date.parse(legacyTrialEnd))
     )
       throw new Error("PayPal active trial ownership mismatch")
     const identity = await ensurePayPalTrialAccountIdentity(intent, deps, enrollment.user_id)
@@ -222,9 +229,10 @@ export async function ensurePayPalTrialCheckoutAccount(
       ),
       trialEnrollmentId: enrollment.id,
       authorizationSucceededAt: authorizationAt.toISOString(),
-      trialEndAt: trialEnd,
+      trialEndAt: new Date(storedTrialEnd).toISOString(),
     }
   }
+  const trialEnd = frozenTrialEnd
   if (enrollment.admission_status !== "reserved")
     throw new Error("PayPal trial admission state unavailable")
   if (subscription.status !== "ACTIVE") return { status: "pending" }
@@ -234,57 +242,51 @@ export async function ensurePayPalTrialCheckoutAccount(
     subscription.plan ? { ...subscription.plan, status: "ACTIVE" } : null,
     { offer, productId: attempt.paypalProductId! },
   )
+  const providerStart = Date.parse(subscription.start_time ?? "")
   if (
     Date.parse(trialEnd) <= Date.now() ||
-    Date.parse(subscription.start_time ?? "") <= Date.now()
+    providerStart <= Date.now() ||
+    // Late approval: the frozen end no longer covers the promised 7 × 24h.
+    Date.parse(legacyTrialEnd) > Date.parse(trialEnd)
   ) {
     await blockPayPalTrialAgreement(intent, attempt, deps)
     return duplicateTrialActivation("trial_checkout_closed")
   }
-  // First collection happens on the day after the verified trial end: PayPal
-  // bills in a daily batch keyed to the UTC date of start_time and cannot
-  // promise a second-exact charge moment, so the schedule is verified at the
-  // batch's own granularity — never inside the trial.
-  const collectionStart = paypalTrialCollectionStart(trialEnd)
-  if (Date.parse(subscription.start_time ?? "") !== Date.parse(collectionStart)) {
-    // PayPal echoes start_time in whole seconds; a sub-second delta against the
-    // frozen provisional start is provider rounding, not a mismatched agreement.
-    const provisionalDeltaMs = Math.abs(
-      Date.parse(subscription.start_time ?? "") - Date.parse(provisionalPayPalTrialStart(attempt)),
-    )
-    // Agreements patched before day-after collection carry the second-exact
-    // trial end as start_time; they re-patch to the collection start.
-    const legacyPatchedStart = Date.parse(subscription.start_time ?? "") === Date.parse(trialEnd)
-    if (!(provisionalDeltaMs < 1000) && !legacyPatchedStart)
-      throw new CheckoutRecoveryError("trial_reconciliation_required", {
-        cause: new Error("PayPal provisional trial start mismatch"),
-      })
-    try {
-      await (deps.patchPayPalTrialStart ?? patchPayPalTrialStart)(subscription.id!, collectionStart)
-    } catch {
-      // A timeout can mean the patch succeeded. Re-read before deciding whether to retry.
-      subscription = await retrieve(subscription.id!)
-      assertPayPalTrialBindingForRecovery(intent, attempt, subscription)
-      if (Date.parse(subscription.start_time ?? "") !== Date.parse(collectionStart)) {
-        await blockPayPalTrialAgreement(intent, attempt, deps)
-        return duplicateTrialActivation("trial_checkout_closed")
-      }
+  if (providerStart !== Date.parse(trialEnd)) {
+    // Agreements created before the frozen-end contract carry the retired
+    // provisional start (freeze + 7 days, echoed in whole seconds). Close them
+    // so the customer retries with a fresh checkout instead of activating a
+    // trial whose provider billing clock cannot be verified. Anything else is
+    // not the agreement this checkout requested: fail closed for reconciliation.
+    const retiredProvisionalStart =
+      Math.floor((Date.parse(attempt.requestExpiresAt ?? "") + 4 * 24 * 60 * 60 * 1000) / 1000) *
+      1000
+    if (Math.abs(providerStart - retiredProvisionalStart) < 1000) {
+      await blockPayPalTrialAgreement(intent, attempt, deps)
+      return duplicateTrialActivation("trial_checkout_closed")
     }
-    subscription = await retrieve(subscription.id!)
+    throw new CheckoutRecoveryError("trial_reconciliation_required", {
+      cause: new Error(
+        `PayPal trial start is not the frozen trial end (start=${subscription.start_time ?? "missing"} expected=${trialEnd})`,
+      ),
+    })
   }
-  assertPayPalTrialBindingForRecovery(intent, attempt, subscription)
+  // First collection lands in PayPal's daily batch on the frozen end's UTC date
+  // (or at latest the next day): verified at the batch's own granularity, never
+  // before the trial end.
   const nextBillingAt = Date.parse(subscription.billing_info?.next_billing_time ?? "")
   if (
     subscription.status !== "ACTIVE" ||
-    Date.parse(subscription.start_time ?? "") !== Date.parse(collectionStart) ||
-    !(nextBillingAt > Date.parse(trialEnd)) ||
-    !(nextBillingAt < Date.parse(paypalTrialCollectionWindowEnd(collectionStart)))
+    !(nextBillingAt >= Date.parse(trialEnd)) ||
+    !(
+      nextBillingAt <
+      Date.parse(paypalTrialCollectionWindowEnd(paypalTrialCollectionStart(trialEnd)))
+    )
   )
     throw new CheckoutRecoveryError("trial_reconciliation_required", {
-      // Timestamps and status only — no payer data. Needed to see what the
-      // provider actually stored after the post-approval start_time patch.
+      // Timestamps and status only — no payer data.
       cause: new Error(
-        `PayPal trial billing deadline is not verified (status=${subscription.status ?? "missing"} start=${subscription.start_time ?? "missing"} nextBilling=${subscription.billing_info?.next_billing_time ?? "missing"} expectedStart=${collectionStart} trialEnd=${trialEnd})`,
+        `PayPal trial billing deadline is not verified (status=${subscription.status ?? "missing"} start=${subscription.start_time ?? "missing"} nextBilling=${subscription.billing_info?.next_billing_time ?? "missing"} trialEnd=${trialEnd})`,
       ),
     })
   const identity = await ensurePayPalTrialAccountIdentity(intent, deps, enrollment.user_id)
@@ -344,6 +346,7 @@ export async function ensurePayPalTrialCheckoutAccount(
     enrollmentId: enrollment.id,
     providerAgreementId: subscription.id!,
     authorizationSucceededAt: authorizationAt,
+    originalTrialEndAt: new Date(trialEnd),
     claims: createTrialIdentityClaims(identities, runtime.trial.identityKeys),
   })
   if (admitted !== "active") {

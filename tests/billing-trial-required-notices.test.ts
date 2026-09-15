@@ -337,3 +337,27 @@ test("Stripe contract confirmation keeps the exact-moment first-charge statement
   const message = buildTrialRequiredNoticeMessage("contract_confirmation", snapshot)
   assert.match(message.receipt_text, /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/)
 })
+
+test("PayPal contract confirmation with a frozen midnight trial end names one date for trial end and first charge", () => {
+  const message = buildTrialRequiredNoticeMessage("contract_confirmation", {
+    ...snapshot,
+    provider: "paypal",
+    // Frozen end: next UTC midnight after freeze + 8 days (8.6 days after this authorization).
+    trialEndAt: "2026-09-23T00:00:00Z",
+  })
+  assert.match(
+    message.receipt_text,
+    /dauert mindestens 7 Tage und endet am 23\. September 2026 um 02:00:00 MESZ/,
+  )
+  assert.match(message.receipt_text, /Die erste Zahlung ist für den 23\. September 2026 vorgesehen/)
+  // Ten days is the upper bound; Stripe keeps the exact seven-day contract.
+  assert.throws(
+    () =>
+      buildTrialRequiredNoticeMessage("contract_confirmation", {
+        ...snapshot,
+        provider: "paypal",
+        trialEndAt: "2026-09-24T10:00:01Z",
+      }),
+    /Invalid/,
+  )
+})

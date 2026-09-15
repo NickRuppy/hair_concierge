@@ -20,10 +20,18 @@ const MIGRATIONS = [
   "supabase/migrations/20260914044650_trial_admission_foundation.sql",
   "supabase/migrations/20260914051220_trial_access_projection.sql",
   "supabase/migrations/20260915145501_trial_access_first_collection_bridge.sql",
+  "supabase/migrations/20260915190000_paypal_trial_frozen_end.sql",
 ] as const
-// Collection bridge boundary: TRIAL_END is an exact UTC midnight, so the
-// collection window closes three days later.
+// Collection bridge boundary: TRIAL_END is exactly seven days after
+// AUTHORIZED_AT (the Stripe contract), so even though it sits on a UTC midnight
+// its window is the next midnight plus two days. A frozen PayPal end (more than
+// seven days out, on a midnight) is its own collection start and closes two
+// days later.
 const COLLECTION_WINDOW_END = "2020-01-11T00:00:00.000Z"
+const LEGACY_TRIAL_END = "2020-01-08T10:00:00.000Z"
+const LEGACY_COLLECTION_WINDOW_END = "2020-01-11T00:00:00.000Z"
+const FROZEN_TRIAL_END = "2020-01-09T00:00:00.000Z"
+const FROZEN_COLLECTION_WINDOW_END = "2020-01-11T00:00:00.000Z"
 const MUTANT = process.env.TRIAL_ACCESS_MUTANT
 const USER = "11111111-1111-4111-8111-111111111111"
 const OTHER_USER = "22222222-2222-4222-8222-222222222222"
@@ -78,13 +86,18 @@ async function seedUser(pg: PGlite, id = USER) {
   await pg.query("INSERT INTO public.profiles (id) VALUES ($1::uuid)", [id])
 }
 
-async function seedEnrollment(pg: PGlite, id = ENROLLMENT, userId: string | null = USER) {
+async function seedEnrollment(
+  pg: PGlite,
+  id = ENROLLMENT,
+  userId: string | null = USER,
+  trialEnd = TRIAL_END,
+) {
   await pg.query(
     `INSERT INTO public.trial_enrollments (
       id, user_id, accepted_offer, provider, admission_status,
       provider_agreement_id, authorization_succeeded_at, original_trial_end_at
     ) VALUES ($1::uuid, $2::uuid, $3::jsonb, 'stripe', 'active', 'agreement', $4::timestamptz, $5::timestamptz)`,
-    [id, userId, JSON.stringify(OFFER), AUTHORIZED_AT, TRIAL_END],
+    [id, userId, JSON.stringify(OFFER), AUTHORIZED_AT, trialEnd],
   )
 }
 
@@ -451,4 +464,42 @@ test("link ownership, account deletion, and role boundaries preserve safe projec
     [BILLING, ENROLLMENT],
   )
   assert.deepEqual(remaining.rows[0], { billing: 0, user_id: null })
+})
+
+test("a second-exact legacy trial end keeps its next-midnight collection window in SQL and TypeScript", async (t) => {
+  const pg = await database(t)
+  await seedUser(pg)
+  await seedEnrollment(pg, ENROLLMENT, USER, LEGACY_TRIAL_END)
+  await seedBilling(pg, { enrollmentId: ENROLLMENT })
+  const row = await projection(pg)
+  assert.equal(
+    Date.parse(String(row.trial_access_facts.originalTrialEndAt)),
+    Date.parse(LEGACY_TRIAL_END),
+  )
+  const facts = { ...row, metadata: { trial_cohort: "trial_v1" } }
+  for (const [at, expected] of [
+    [LEGACY_TRIAL_END, true],
+    ["2020-01-10T23:59:59.000Z", true],
+    [LEGACY_COLLECTION_WINDOW_END, false],
+  ] as const) {
+    assert.equal(await accessSql(pg, at), expected, at)
+    assert.equal(resolveBillingTrialAccess(facts, new Date(at))?.hasAccess, expected, at)
+  }
+})
+
+test("a frozen midnight PayPal trial end is its own collection start and closes two days later in SQL and TypeScript", async (t) => {
+  const pg = await database(t)
+  await seedUser(pg)
+  await seedEnrollment(pg, ENROLLMENT, USER, FROZEN_TRIAL_END)
+  await seedBilling(pg, { enrollmentId: ENROLLMENT })
+  const row = await projection(pg)
+  const facts = { ...row, metadata: { trial_cohort: "trial_v1" } }
+  for (const [at, expected] of [
+    [FROZEN_TRIAL_END, true],
+    ["2020-01-10T23:59:59.000Z", true],
+    [FROZEN_COLLECTION_WINDOW_END, false],
+  ] as const) {
+    assert.equal(await accessSql(pg, at), expected, at)
+    assert.equal(resolveBillingTrialAccess(facts, new Date(at))?.hasAccess, expected, at)
+  }
 })
