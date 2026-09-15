@@ -10,6 +10,7 @@ import {
 } from "../src/lib/paypal/trial-account-admission"
 import { recordVerifiedPayPalTrialSale } from "../src/lib/paypal/trial-webhook"
 import { buildPayPalDeferredTrialPlanRequest } from "../src/lib/paypal/trial-plan-shape"
+import { paypalTrialCollectionStart } from "../src/lib/paypal/trial-collection-start"
 import { paypalCheckoutActivationHash } from "../src/lib/paypal/checkout-activation"
 import { getPersistedTrialRecoveryCode } from "../src/lib/paypal/trial-account-admission"
 import { CheckoutRecoveryError } from "../src/lib/auth/checkout-activation-outcome"
@@ -317,7 +318,7 @@ test("original provider activation pins seven days, and disabled enrollment stil
   const result = await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
   assert.equal(result.status, "active")
   assert.equal(f.calls.filter((c) => c.patchStart).length, 1)
-  assert.equal(f.calls.find((c) => c.patchStart).patchStart, f.end)
+  assert.equal(f.calls.find((c) => c.patchStart).patchStart, paypalTrialCollectionStart(f.end))
   const admission = f.calls.find((c) => c.rpc === "admit_trial_enrollment")
   assert.equal(admission.args.p_authorized_at, f.authorized)
   assert.equal(
@@ -487,7 +488,9 @@ test("deleted activated owner cannot resurrect its account through an old accept
 test("only retrieved nonzero completed sale reaches payment ledger with authoritative transaction and period", async () => {
   const f = fixture()
   await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
-  const paidAt = f.end
+  const paidAt = new Date(
+    Date.parse(paypalTrialCollectionStart(f.end)) + 10 * 3600 * 1000,
+  ).toISOString()
   const paidEnd = new Date(Date.parse(paidAt) + 31 * 86400000).toISOString()
   f.subscription.billing_info = { next_billing_time: paidEnd, last_payment: { time: paidAt } }
   f.deps.listPayPalTrialTransactions = async () => [
@@ -508,7 +511,7 @@ test("only retrieved nonzero completed sale reaches payment ledger with authorit
   assert.equal(ledger.sourceObjectId, "SALE-1")
   assert.equal(ledger.occurredAt, paidAt)
   assert.equal(ledger.amountMinor, 999)
-  assert.equal(ledger.periodStartAt, f.end)
+  assert.equal(ledger.periodStartAt, paidAt)
   assert.equal(ledger.periodEndAt, paidEnd)
   f.enrollment.first_payment_succeeded_at = paidAt
   f.setPayment({ outcome: "duplicate", phase: "first_paid" })
@@ -871,4 +874,49 @@ test("provisional start tolerance accepts sub-second deltas only and fails close
     () => ensurePayPalTrialCheckoutAccount(invalid.intent, invalid.deps),
     /trial_reconciliation_required/,
   )
+})
+
+test("day-after collection with the provider's morning batch hour verifies and activates", async () => {
+  const f = fixture()
+  const collectionStart = paypalTrialCollectionStart(f.end)
+  const patch = f.deps.patchPayPalTrialStart
+  f.deps.patchPayPalTrialStart = async (id: string, start: string) => {
+    await patch(id, start)
+    // PayPal keys the daily batch to the UTC date of start_time.
+    f.subscription.billing_info.next_billing_time = new Date(
+      Date.parse(start) + 10 * 3600 * 1000,
+    ).toISOString()
+  }
+  const result = await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
+  assert.equal(result.status, "active")
+  assert.equal(f.subscription.start_time, collectionStart)
+})
+
+test("a batch scheduled inside the trial window is rejected", async () => {
+  const f = fixture()
+  const patch = f.deps.patchPayPalTrialStart
+  f.deps.patchPayPalTrialStart = async (id: string, start: string) => {
+    await patch(id, start)
+    // Regression guard for the observed incident: provider floors the batch
+    // onto the trial-end date, before the seven-day promise is fulfilled.
+    f.subscription.billing_info.next_billing_time = new Date(
+      Date.parse(f.end) - 2 * 3600 * 1000,
+    ).toISOString()
+  }
+  await assert.rejects(
+    () => ensurePayPalTrialCheckoutAccount(f.intent, f.deps),
+    /trial_reconciliation_required/,
+  )
+})
+
+test("a legacy agreement patched to the exact trial end re-patches to the day-after collection start", async () => {
+  const f = fixture()
+  // Incident inventory: agreements patched before day-after collection carry
+  // start_time === trialEnd, which differs from the frozen provisional start
+  // by the checkout-to-approval delay (well over one second here).
+  f.subscription.start_time = f.end
+  f.subscription.billing_info.next_billing_time = f.end
+  const result = await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
+  assert.equal(result.status, "active")
+  assert.equal(f.subscription.start_time, paypalTrialCollectionStart(f.end))
 })

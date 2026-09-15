@@ -1,4 +1,8 @@
 import { assertPayPalPaidRecoveryPlan } from "./trial-paid-recovery"
+import {
+  paypalTrialCollectionStart,
+  paypalTrialCollectionWindowEnd,
+} from "./trial-collection-start"
 import { readTrialEffectiveContract } from "../billing/trial-effective-contract"
 import { resolveLegacyQuizFuturePurchaseEligibility } from "../personal-plan/legacy-cutover-eligibility"
 import { loadPayPalTrialPlanCatalog } from "./trial-checkout-attempt"
@@ -237,23 +241,31 @@ export async function ensurePayPalTrialCheckoutAccount(
     await blockPayPalTrialAgreement(intent, attempt, deps)
     return duplicateTrialActivation("trial_checkout_closed")
   }
-  if (Date.parse(subscription.start_time ?? "") !== Date.parse(trialEnd)) {
+  // First collection happens on the day after the verified trial end: PayPal
+  // bills in a daily batch keyed to the UTC date of start_time and cannot
+  // promise a second-exact charge moment, so the schedule is verified at the
+  // batch's own granularity — never inside the trial.
+  const collectionStart = paypalTrialCollectionStart(trialEnd)
+  if (Date.parse(subscription.start_time ?? "") !== Date.parse(collectionStart)) {
     // PayPal echoes start_time in whole seconds; a sub-second delta against the
     // frozen provisional start is provider rounding, not a mismatched agreement.
     const provisionalDeltaMs = Math.abs(
       Date.parse(subscription.start_time ?? "") - Date.parse(provisionalPayPalTrialStart(attempt)),
     )
-    if (!(provisionalDeltaMs < 1000))
+    // Agreements patched before day-after collection carry the second-exact
+    // trial end as start_time; they re-patch to the collection start.
+    const legacyPatchedStart = Date.parse(subscription.start_time ?? "") === Date.parse(trialEnd)
+    if (!(provisionalDeltaMs < 1000) && !legacyPatchedStart)
       throw new CheckoutRecoveryError("trial_reconciliation_required", {
         cause: new Error("PayPal provisional trial start mismatch"),
       })
     try {
-      await (deps.patchPayPalTrialStart ?? patchPayPalTrialStart)(subscription.id!, trialEnd)
+      await (deps.patchPayPalTrialStart ?? patchPayPalTrialStart)(subscription.id!, collectionStart)
     } catch {
       // A timeout can mean the patch succeeded. Re-read before deciding whether to retry.
       subscription = await retrieve(subscription.id!)
       assertPayPalTrialBindingForRecovery(intent, attempt, subscription)
-      if (Date.parse(subscription.start_time ?? "") !== Date.parse(trialEnd)) {
+      if (Date.parse(subscription.start_time ?? "") !== Date.parse(collectionStart)) {
         await blockPayPalTrialAgreement(intent, attempt, deps)
         return duplicateTrialActivation("trial_checkout_closed")
       }
@@ -261,16 +273,18 @@ export async function ensurePayPalTrialCheckoutAccount(
     subscription = await retrieve(subscription.id!)
   }
   assertPayPalTrialBindingForRecovery(intent, attempt, subscription)
+  const nextBillingAt = Date.parse(subscription.billing_info?.next_billing_time ?? "")
   if (
     subscription.status !== "ACTIVE" ||
-    Date.parse(subscription.start_time ?? "") !== Date.parse(trialEnd) ||
-    Date.parse(subscription.billing_info?.next_billing_time ?? "") !== Date.parse(trialEnd)
+    Date.parse(subscription.start_time ?? "") !== Date.parse(collectionStart) ||
+    !(nextBillingAt > Date.parse(trialEnd)) ||
+    !(nextBillingAt < Date.parse(paypalTrialCollectionWindowEnd(collectionStart)))
   )
     throw new CheckoutRecoveryError("trial_reconciliation_required", {
       // Timestamps and status only — no payer data. Needed to see what the
       // provider actually stored after the post-approval start_time patch.
       cause: new Error(
-        `PayPal trial billing deadline is not verified (status=${subscription.status ?? "missing"} start=${subscription.start_time ?? "missing"} nextBilling=${subscription.billing_info?.next_billing_time ?? "missing"} expected=${trialEnd})`,
+        `PayPal trial billing deadline is not verified (status=${subscription.status ?? "missing"} start=${subscription.start_time ?? "missing"} nextBilling=${subscription.billing_info?.next_billing_time ?? "missing"} expectedStart=${collectionStart} trialEnd=${trialEnd})`,
       ),
     })
   const identity = await ensurePayPalTrialAccountIdentity(intent, deps, enrollment.user_id)

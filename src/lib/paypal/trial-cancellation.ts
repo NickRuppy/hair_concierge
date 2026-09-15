@@ -1,5 +1,7 @@
 import "server-only"
 
+import { paypalTrialNextBillingMatches } from "./trial-collection-start"
+
 import type { PayPalSubscription } from "./subscription-shapes"
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -58,8 +60,7 @@ function matchesOwnedTrial(
     subscription.subscriber?.payer_id === operation.provider_customer_id &&
     subscription.plan_id === operation.provider_plan_id &&
     (!requireDeadline ||
-      (typeof providerEnd === "string" &&
-        Date.parse(providerEnd) === Date.parse(operation.original_trial_end_at)))
+      paypalTrialNextBillingMatches(operation.original_trial_end_at, providerEnd))
   )
 }
 

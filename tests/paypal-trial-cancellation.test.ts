@@ -75,7 +75,7 @@ test("PayPal cancellation fails closed for cross-owner, mismatched plan/deadline
   for (const candidate of [
     subscription({ subscriber: { payer_id: "payer_other" } }),
     subscription({ plan_id: "P-other" }),
-    subscription({ billing_info: { next_billing_time: "2030-01-09T00:00:00.000Z" } }),
+    subscription({ billing_info: { next_billing_time: "2030-01-12T00:00:00.000Z" } }),
     subscription({ status: "SUSPENDED" }),
   ]) {
     let mutations = 0
@@ -127,4 +127,33 @@ test("a local restore race between retrieval and cancellation prevents the provi
   })
   assert.equal(result, "pending")
   assert.equal(mutations, 0)
+})
+
+test("PayPal cancellation accepts the day-after collection schedule", async () => {
+  // Trial ends 2030-01-08T00:00Z (exact midnight) -> collection 01-09, batch ~10:00 UTC.
+  let cancelled = 0
+  let confirmed = false
+  const current = subscription({
+    billing_info: { next_billing_time: "2030-01-09T10:00:00Z" },
+  })
+  const result = await reconcilePayPalTrialCancellation({
+    declarationId: ids.declaration,
+    userId: ids.user,
+    rpc: async (name) => {
+      if (name === "load_trial_cancellation_provider_operation")
+        return { data: operation(), error: null }
+      if (name === "confirm_trial_cancellation_provider_operation") {
+        confirmed = true
+        return { data: true, error: null }
+      }
+      return { data: operation(), error: null }
+    },
+    retrieve: async () => ({ ...current, ...(cancelled ? { status: "CANCELLED" } : {}) }) as any,
+    cancel: async () => {
+      cancelled += 1
+    },
+  })
+  assert.equal(result, "confirmed")
+  assert.equal(cancelled, 1)
+  assert.equal(confirmed, true)
 })

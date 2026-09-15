@@ -19,7 +19,11 @@ const MIGRATIONS = [
   "supabase/migrations/20260822140000_billing_subscriptions_classified_views.sql",
   "supabase/migrations/20260914044650_trial_admission_foundation.sql",
   "supabase/migrations/20260914051220_trial_access_projection.sql",
+  "supabase/migrations/20260915145501_trial_access_first_collection_bridge.sql",
 ] as const
+// Collection bridge boundary: TRIAL_END is an exact UTC midnight, so the
+// collection window closes three days later.
+const COLLECTION_WINDOW_END = "2020-01-11T00:00:00.000Z"
 const MUTANT = process.env.TRIAL_ACCESS_MUTANT
 const USER = "11111111-1111-4111-8111-111111111111"
 const OTHER_USER = "22222222-2222-4222-8222-222222222222"
@@ -166,9 +170,14 @@ test("payment RPC updates the billing projection consumed by SQL and application
     periodEndAt: "2020-02-08T00:00:00.000Z",
   }
   await recordTrialPaymentEvent(client, payment)
-  assert.equal(await accessSql(pg, TRIAL_END), false)
+  assert.equal(await accessSql(pg, TRIAL_END), true)
   assert.equal(
-    resolveBillingTrialAccess(await projection(pg), new Date(TRIAL_END))?.hasAccess,
+    resolveBillingTrialAccess(await projection(pg), new Date(TRIAL_END))?.reason,
+    "first_collection_pending",
+  )
+  assert.equal(await accessSql(pg, COLLECTION_WINDOW_END), false)
+  assert.equal(
+    resolveBillingTrialAccess(await projection(pg), new Date(COLLECTION_WINDOW_END))?.hasAccess,
     false,
   )
   await recordTrialPaymentEvent(client, {
@@ -262,7 +271,8 @@ test("SQL and TypeScript agree on strict trial expiry, paid access, grace, cance
   await seedBilling(pg, { enrollmentId: ENROLLMENT })
   let row = await projection(pg)
   assert.equal(await accessSql(pg, AUTHORIZED_AT), true)
-  assert.equal(await accessSql(pg, TRIAL_END), false)
+  assert.equal(await accessSql(pg, TRIAL_END), true)
+  assert.equal(await accessSql(pg, COLLECTION_WINDOW_END), false)
   assert.deepEqual(
     resolveBillingTrialAccess(
       { ...row, metadata: { trial_cohort: "trial_v1" } },
@@ -278,6 +288,17 @@ test("SQL and TypeScript agree on strict trial expiry, paid access, grace, cance
     resolveBillingTrialAccess(
       { ...row, metadata: { trial_cohort: "trial_v1" } },
       new Date(TRIAL_END),
+    ),
+    {
+      hasAccess: true,
+      phase: "trial",
+      reason: "first_collection_pending",
+    },
+  )
+  assert.deepEqual(
+    resolveBillingTrialAccess(
+      { ...row, metadata: { trial_cohort: "trial_v1" } },
+      new Date(COLLECTION_WINDOW_END),
     ),
     {
       hasAccess: false,

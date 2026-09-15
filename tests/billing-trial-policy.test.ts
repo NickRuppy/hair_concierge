@@ -24,7 +24,7 @@ test("grants trial access from authorization inclusively until the immutable end
     phase: "trial",
     reason: "trial_active",
   })
-  assert.equal(resolveTrialAccess(facts(), NOW).hasAccess, false)
+  assert.equal(resolveTrialAccess(facts(), NOW).reason, "first_collection_pending")
 })
 
 test("accepts valid ISO offsets and fractional seconds", () => {
@@ -72,11 +72,17 @@ test("a canceled trial retains access through its original end but has no expiry
   })
 })
 
-test("requires a successful first payment at exact trial expiry and does not grant first-conversion grace", () => {
+test("bridges the first-collection window after trial end, then locks without renewal grace", () => {
+  // Trial ends 09-20T12:00Z -> collection starts 09-21T00:00Z, window closes 09-23T00:00Z.
+  assert.deepEqual(resolveTrialAccess(facts(), NOW), {
+    hasAccess: true,
+    phase: "trial",
+    reason: "first_collection_pending",
+  })
   assert.deepEqual(
     resolveTrialAccess(
       facts({ renewalPaymentFailed: true, renewalGraceEndsAt: "2026-09-27T12:00:00.000Z" }),
-      NOW,
+      new Date("2026-09-23T00:00:00.000Z"),
     ),
     {
       hasAccess: false,

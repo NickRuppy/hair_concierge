@@ -1,3 +1,8 @@
+import {
+  paypalTrialCollectionStart,
+  paypalTrialCollectionWindowEnd,
+} from "../paypal/trial-collection-start"
+
 export type TrialAccessFacts = {
   authorizationSucceededAt: string | null
   originalTrialEndAt: string | null
@@ -12,6 +17,7 @@ export type TrialAccessFacts = {
 export type TrialAccessReason =
   | "authorization_pending"
   | "trial_active"
+  | "first_collection_pending"
   | "first_payment_pending"
   | "trial_expired_without_payment"
   | "paid_active"
@@ -163,6 +169,18 @@ export function resolveTrialAccess(facts: TrialAccessFacts, now: Date): TrialAcc
       return { hasAccess: false, phase: "locked", reason: "first_payment_pending" }
     }
     if (parsed.firstPaymentSucceededAt === null) {
+      // First collection happens in the provider's daily batch on the day
+      // after the trial end. Until that bounded window closes, an uncancelled
+      // trial keeps access instead of locking the converting customer out
+      // overnight; a failed or missing collection locks when the window ends.
+      const collectionWindowEndAt = Date.parse(
+        paypalTrialCollectionWindowEnd(
+          paypalTrialCollectionStart(new Date(parsed.originalTrialEndAt).toISOString()),
+        ),
+      )
+      if (!facts.cancelAtPeriodEnd && nowAt < collectionWindowEndAt) {
+        return { hasAccess: true, phase: "trial", reason: "first_collection_pending" }
+      }
       return { hasAccess: false, phase: "locked", reason: "trial_expired_without_payment" }
     }
   }
