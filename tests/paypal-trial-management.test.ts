@@ -450,3 +450,26 @@ test("foreign-payer restore candidate is canceled without changing accepted tria
   assert.equal(f.subscriptions["I-new"].status, "CANCELLED")
   assert.equal(f.operation.status, "pending")
 })
+
+test("no-payment check for a frozen midnight trial end never queries a future interval", async () => {
+  const { frozenPayPalTrialStart } = await import("../src/lib/paypal/trial-collection-start")
+  // Frozen two minutes ago: the trial end sits 8–9 days out, so "end − 7 days" would be in the future.
+  const deadline = frozenPayPalTrialStart(
+    new Date(Date.now() - 120_000 + 3 * 86400000).toISOString(),
+  )
+  const f = fixture("switch")
+  f.operation.originalTrialEndAt = deadline
+  f.source.start_time = deadline
+  f.source.billing_info = { next_billing_time: deadline }
+  const windows: Array<{ from: string; to: string }> = []
+  f.deps.transactions = async (_id: string, from: string, to: string) => {
+    windows.push({ from, to })
+    return []
+  }
+  await beginPayPalTrialManagement(f.input, f.deps)
+  assert.ok(windows.length >= 1)
+  for (const w of windows) {
+    assert.ok(Date.parse(w.from) < Date.now() - 60_000, `from ${w.from} lies in the past`)
+    assert.ok(Date.parse(w.from) < Date.parse(w.to), `from ${w.from} < to ${w.to}`)
+  }
+})

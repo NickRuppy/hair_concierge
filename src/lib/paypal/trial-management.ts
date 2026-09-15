@@ -207,9 +207,12 @@ async function assertNoPayment(
   operation: TrialManagementOperation,
   deps: PayPalTrialManagementDeps,
 ) {
+  // The stored trial end is at least seven and at most ten days after the
+  // authorization (frozen PayPal ends sit 8–9 days out), so ten days before it
+  // always precedes the agreement's whole collectible history.
   const transactions = await (deps.transactions ?? listPayPalTrialTransactions)(
     id,
-    new Date(Date.parse(operation.originalTrialEndAt) - 7 * 86400000).toISOString(),
+    new Date(Date.parse(operation.originalTrialEndAt) - 10 * 86400000).toISOString(),
     new Date().toISOString(),
   )
   if (transactions.length)

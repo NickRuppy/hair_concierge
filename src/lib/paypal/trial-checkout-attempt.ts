@@ -140,19 +140,6 @@ export function pinPayPalTrialActivation(
   })
 }
 
-/**
- * Freeze uses a 72-hour idempotency window; the separately disclosed provisional start is seven days after that freeze.
- * Whole-second precision: PayPal stores and echoes start_time without fractional
- * seconds, and activation verifies the echoed value against this function.
- */
-export function provisionalPayPalTrialStart(
-  attempt: Pick<PayPalTrialCheckoutAttempt, "requestExpiresAt">,
-): string {
-  const expiry = Date.parse(attempt.requestExpiresAt ?? "")
-  if (!Number.isFinite(expiry)) throw new Error("PayPal trial frozen start unavailable")
-  return new Date(Math.floor((expiry + 4 * 24 * 60 * 60 * 1000) / 1000) * 1000).toISOString()
-}
-
 export type PayPalTrialPlanCatalog = {
   enrollmentId: string
   appId: string
