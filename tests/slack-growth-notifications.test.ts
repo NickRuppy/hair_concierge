@@ -3,35 +3,23 @@ import test from "node:test"
 
 import {
   classifySlackGrowthEvent,
-  deliverBillingAnalyticsToSlack,
   formatSlackGrowthNotification,
-  isSlackGrowthEnabled,
-} from "../src/lib/billing/analytics-destinations/slack"
-import type {
-  BillingAnalyticsOutboxRow,
-  SupabaseBillingAnalyticsClient,
-} from "../src/lib/billing/types"
+} from "../supabase/functions/slack-growth/message-builder.ts"
+import type { SlackGrowthEvent } from "../supabase/functions/slack-growth/message-builder.ts"
 
-function event(overrides: Partial<BillingAnalyticsOutboxRow> = {}): BillingAnalyticsOutboxRow {
+function event(overrides: Partial<SlackGrowthEvent> = {}): SlackGrowthEvent {
   return {
     id: "outbox-1",
-    event_key: "stripe:purchase_completed:cs_123",
     event_name: "purchase_completed",
     user_id: "d2719a90-8121-4fc0-8c7f-1da083018dde",
     provider: "stripe",
-    provider_customer_id: "cus_123",
-    provider_subscription_id: "sub_123",
-    source_event_id: "evt_123",
-    source_object_id: "cs_123",
     occurred_at: "2026-09-15T08:30:00.000Z",
     payload: { value: 14.99, currency: "EUR", interval: "month" },
-    created_at: "2026-09-15T08:30:00.000Z",
-    updated_at: "2026-09-15T08:30:00.000Z",
     ...overrides,
   }
 }
 
-function input(overrides: Partial<Parameters<typeof deliverBillingAnalyticsToSlack>[0]> = {}) {
+function input(overrides: Partial<Parameters<typeof formatSlackGrowthNotification>[0]> = {}) {
   return {
     event: event(),
     profile: {
@@ -39,13 +27,6 @@ function input(overrides: Partial<Parameters<typeof deliverBillingAnalyticsToSla
       full_name: "Mia Beispiel",
       email: "mia@example.com",
     },
-    supabase: {
-      from: () => ({}),
-      rpc: async () => ({
-        data: { enabled: true, enabled_at: "2026-09-15T08:00:00.000Z" },
-        error: null,
-      }),
-    } as unknown as SupabaseBillingAnalyticsClient,
     ...overrides,
   }
 }
@@ -95,6 +76,23 @@ test("classifies only canonical trials, first paid trial conversions, and non-re
     classifySlackGrowthEvent(event({ payload: { value: 29.99, is_internal_test: true } })),
     null,
   )
+  assert.equal(
+    classifySlackGrowthEvent(event({ payload: { value: 29.99, test_kind: "field_test" } })),
+    null,
+  )
+  assert.equal(
+    classifySlackGrowthEvent(event({ payload: { value: 29.99, test_kind: "partner" } })),
+    null,
+  )
+  assert.equal(
+    classifySlackGrowthEvent(
+      event({
+        event_name: "trial_started",
+        payload: { trial_analytics_version: 1, value: 0, trial_authorized_at: "not-a-date" },
+      }),
+    ),
+    null,
+  )
   assert.equal(classifySlackGrowthEvent(event({ payload: { value: "29.99" } })), null)
 })
 
@@ -134,7 +132,7 @@ test("formats German plain-text blocks with profile identity, actual amount, can
 
   const hostile = formatSlackGrowthNotification(
     input({
-      profile: { id: "user-123", full_name: "<@U123>&<>\nA", email: "<mia@example.com>" },
+      profile: { full_name: "<@U123>&<>\nA", email: "<mia@example.com>" },
     }),
   )
   assert.ok(hostile)
@@ -143,11 +141,12 @@ test("formats German plain-text blocks with profile identity, actual amount, can
 
   const longName = formatSlackGrowthNotification(
     input({
-      profile: { id: "user-123", full_name: "A".repeat(500), email: "mia@example.com" },
+      profile: { full_name: "A".repeat(500), email: "mia@example.com" },
     }),
   )
   assert.ok(longName)
   assert.match(JSON.stringify(longName.blocks), /mia@example.com/)
+  assert.match(JSON.stringify(longName.blocks), /A{159}…/)
   const quarterly = formatSlackGrowthNotification(
     input({ event: event({ payload: { value: 29.99, currency: "EUR", interval: "quarter" } }) }),
   )
@@ -156,128 +155,18 @@ test("formats German plain-text blocks with profile identity, actual amount, can
   assert.match(JSON.stringify(quarterly.blocks), /Quartalsabo/)
 })
 
-test("requires production flag, validated active cutoff, and a strict Slack webhook before posting", async () => {
-  assert.equal(
-    isSlackGrowthEnabled({ SLACK_GROWTH_ENABLED: "true", VERCEL_ENV: "production" }),
-    true,
+test("accepts PostgreSQL timestamptz precision and UTC offset forms", () => {
+  const result = formatSlackGrowthNotification(
+    input({ event: event({ occurred_at: "2026-09-15T10:30:00.123456+00:00" }) }),
   )
-  assert.equal(isSlackGrowthEnabled({ SLACK_GROWTH_ENABLED: "true", VERCEL_ENV: "preview" }), false)
-
-  const paused = await deliverBillingAnalyticsToSlack(input(), {
-    env: { SLACK_GROWTH_ENABLED: "false", VERCEL_ENV: "production" },
-  })
-  assert.deepEqual(paused, { ok: false, paused: true, error: "slack_paused" })
-
-  const calls: string[] = []
-  const result = await deliverBillingAnalyticsToSlack(input(), {
-    env: {
-      SLACK_GROWTH_ENABLED: "true",
-      VERCEL_ENV: "production",
-      SLACK_GROWTH_WEBHOOK_URL: "https://hooks.slack.com/services/T123/B123/secret",
-    },
-    fetch: async (url) => {
-      calls.push(String(url))
-      return new Response("ok", { status: 200 })
-    },
-  })
-  assert.deepEqual(calls, ["https://hooks.slack.com/services/T123/B123/secret"])
-  assert.deepEqual(result, { ok: true, status: 200 })
-
-  const badUrl = await deliverBillingAnalyticsToSlack(input(), {
-    env: {
-      SLACK_GROWTH_ENABLED: "true",
-      VERCEL_ENV: "production",
-      SLACK_GROWTH_WEBHOOK_URL: "https://hooks.slack.com/services/T/B/secret?leak=1",
-    },
-  })
-  assert.equal(badUrl.permanent, true)
-  assert.equal(badUrl.error, "Slack webhook configuration is invalid")
-
-  const stale = await deliverBillingAnalyticsToSlack(
-    input({
-      supabase: {
-        from: () => ({}),
-        rpc: async () => ({
-          data: { enabled: true, enabled_at: "2026-09-15T09:00:00.000Z" },
-          error: null,
-        }),
-      } as unknown as SupabaseBillingAnalyticsClient,
-    }),
-    {
-      env: {
-        SLACK_GROWTH_ENABLED: "true",
-        VERCEL_ENV: "production",
-        SLACK_GROWTH_WEBHOOK_URL: "https://hooks.slack.com/services/T123/B123/secret",
-      },
-    },
-  )
-  assert.equal(stale.skipped, true)
-  assert.equal(stale.permanent, true)
+  assert.ok(result)
+  assert.match(result.text, /Neukauf/)
 })
 
-test("accepts PostgreSQL timestamptz precision and UTC offset forms", async () => {
-  const calls: string[] = []
-  const result = await deliverBillingAnalyticsToSlack(
-    input({
-      event: event({ occurred_at: "2026-09-15T10:30:00.123456+00:00" }),
-      supabase: {
-        from: () => ({}),
-        rpc: async () => ({
-          data: { enabled: true, enabled_at: "2026-09-15T10:00:00.000000+00:00" },
-          error: null,
-        }),
-      } as unknown as SupabaseBillingAnalyticsClient,
-    }),
-    {
-      env: {
-        SLACK_GROWTH_ENABLED: "true",
-        VERCEL_ENV: "production",
-        SLACK_GROWTH_WEBHOOK_URL: "https://hooks.slack.com/services/T123/B123/secret",
-      },
-      fetch: async (url) => {
-        calls.push(String(url))
-        return new Response("ok", { status: 200 })
-      },
-    },
+test("renders malformed event dates as unavailable without silently changing eligibility", () => {
+  const result = formatSlackGrowthNotification(
+    input({ event: event({ occurred_at: "2026-09-15 10:30:00", payload: { value: 14.99 } }) }),
   )
-  assert.equal(result.ok, true)
-  assert.equal(calls.length, 1)
-})
-
-test("retries throttling and transient failures without exposing webhook or response body", async () => {
-  const throttled = await deliverBillingAnalyticsToSlack(input(), {
-    env: {
-      SLACK_GROWTH_ENABLED: "true",
-      VERCEL_ENV: "production",
-      SLACK_GROWTH_WEBHOOK_URL: "https://hooks.slack.com/services/T123/B123/secret",
-    },
-    fetch: async () =>
-      new Response("rate_limited", { status: 429, headers: { "retry-after": "99999" } }),
-  })
-  assert.equal(throttled.status, 429)
-  assert.equal(throttled.retryAfterSeconds, 3600)
-  assert.equal(throttled.permanent, undefined)
-  assert.equal(throttled.error, "Slack rate limited the notification")
-
-  const unavailable = await deliverBillingAnalyticsToSlack(input(), {
-    env: {
-      SLACK_GROWTH_ENABLED: "true",
-      VERCEL_ENV: "production",
-      SLACK_GROWTH_WEBHOOK_URL: "https://hooks.slack.com/services/T123/B123/secret",
-    },
-    fetch: async () => new Response("secret response body", { status: 503 }),
-  })
-  assert.equal(unavailable.error, "Slack is temporarily unavailable")
-  assert.equal(unavailable.permanent, undefined)
-
-  const rejected = await deliverBillingAnalyticsToSlack(input(), {
-    env: {
-      SLACK_GROWTH_ENABLED: "true",
-      VERCEL_ENV: "production",
-      SLACK_GROWTH_WEBHOOK_URL: "https://hooks.slack.com/services/T123/B123/secret",
-    },
-    fetch: async () => new Response("invalid_token_secret", { status: 400 }),
-  })
-  assert.equal(rejected.permanent, true)
-  assert.equal(rejected.error, "Slack rejected the notification")
+  assert.ok(result)
+  assert.match(JSON.stringify(result.blocks), /Nicht verfügbar/)
 })

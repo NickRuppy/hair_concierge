@@ -57,7 +57,6 @@ const SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP = [
   "/api/billing/stripe-trial-continuation/reconcile",
   "/api/billing/trial-required-notices/reconcile",
   "/api/billing/trial-reminders/reconcile",
-  "/api/billing/slack-notifications/reconcile",
   "/api/billing/public-contract-declaration-receipts/reconcile",
   "/api/customerio/profile-sync/reconcile",
 ]
