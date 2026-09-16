@@ -18,6 +18,9 @@ export type TrialRequiredNoticeSnapshot = Readonly<{
   firstAmountMinor: number
   renewalAmountMinor: number
   authorizedAt: string
+  authorization_proof_kind?: "webhook" | "api_confirmation"
+  authorization_clock_kind?: "provider_event" | "server_confirmation"
+  authorization_confirmed_at?: string
   trialEndAt: string
   taxBehavior: "inclusive"
   cancelAtPeriodEnd?: boolean
@@ -69,6 +72,29 @@ export function parseTrialRequiredNoticeSnapshot(
     !Number.isInteger(s.firstAmountMinor)
   )
     return null
+  // Historical snapshots have no provenance fields. New PayPal snapshots must
+  // distinguish the provider's event time from our direct confirmation time.
+  if (
+    ["authorization_proof_kind", "authorization_clock_kind", "authorization_confirmed_at"].some(
+      (key) => Object.prototype.hasOwnProperty.call(s, key),
+    )
+  ) {
+    if (s.provider !== "paypal") return null
+    if (s.authorization_proof_kind === "api_confirmation") {
+      if (
+        s.authorization_clock_kind !== "server_confirmation" ||
+        !validDate(s.authorization_confirmed_at) ||
+        Date.parse(s.authorization_confirmed_at) !== Date.parse(s.authorizedAt)
+      )
+        return null
+    } else if (s.authorization_proof_kind === "webhook") {
+      if (
+        s.authorization_clock_kind !== "provider_event" ||
+        Object.prototype.hasOwnProperty.call(s, "authorization_confirmed_at")
+      )
+        return null
+    } else return null
+  }
   if (
     kind === "contract_change" &&
     (typeof s.operationId !== "string" ||

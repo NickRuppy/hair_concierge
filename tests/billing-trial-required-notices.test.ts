@@ -1,7 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import { renderCustomerIoTriggerTemplate } from "./helpers/customerio-liquid"
-import { buildTrialRequiredNoticeMessage } from "../src/lib/billing/trial-required-notices"
+import {
+  buildTrialRequiredNoticeMessage,
+  parseTrialRequiredNoticeSnapshot,
+} from "../src/lib/billing/trial-required-notices"
 import {
   dispatchTrialRequiredNotices,
   type TrialNoticeClaim,
@@ -32,6 +35,48 @@ const claim: TrialNoticeClaim = {
   kind: "contract_confirmation",
   snapshot,
 }
+test("PayPal confirmation notices retain and validate the winning authorization provenance", () => {
+  const api = {
+    ...snapshot,
+    provider: "paypal",
+    authorization_proof_kind: "api_confirmation",
+    authorization_clock_kind: "server_confirmation",
+    authorization_confirmed_at: snapshot.authorizedAt,
+  }
+  assert.deepEqual(parseTrialRequiredNoticeSnapshot(api, "contract_confirmation"), api)
+  assert.match(
+    buildTrialRequiredNoticeMessage("contract_confirmation", api).receipt_text,
+    /Autorisierung bestätigt am: 14\. September 2026 um 12:00:00 MESZ/,
+  )
+  for (const patch of [
+    { authorization_clock_kind: "provider_event" },
+    { authorization_confirmed_at: "2026-09-14T09:59:59Z" },
+    { authorization_confirmed_at: undefined },
+    { authorization_proof_kind: "unknown" },
+    { provider: "stripe" },
+  ])
+    assert.equal(
+      parseTrialRequiredNoticeSnapshot({ ...api, ...patch }, "contract_confirmation"),
+      null,
+    )
+  const webhook = {
+    ...snapshot,
+    provider: "paypal",
+    authorization_proof_kind: "webhook",
+    authorization_clock_kind: "provider_event",
+  }
+  assert.deepEqual(parseTrialRequiredNoticeSnapshot(webhook, "contract_confirmation"), webhook)
+  assert.equal(
+    parseTrialRequiredNoticeSnapshot(
+      { ...webhook, authorization_confirmed_at: snapshot.authorizedAt },
+      "contract_confirmation",
+    ),
+    null,
+  )
+  assert.ok(
+    parseTrialRequiredNoticeSnapshot({ ...snapshot, provider: "paypal" }, "contract_confirmation"),
+  )
+})
 test("contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction", () => {
   const message = buildTrialRequiredNoticeMessage("contract_confirmation", snapshot)
   assert.match(message.receipt_text, /69,99/)

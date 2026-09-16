@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto"
 import { assertPayPalPaidRecoveryPlan } from "./trial-paid-recovery"
 import {
   paypalTrialCollectionStart,
@@ -20,13 +21,15 @@ import {
   upsertBillingSubscription,
 } from "../billing/subscriptions"
 import { mirrorBillingSubscriptionToProfile } from "../billing/entitlements"
-import { getPayPalAppId } from "./client"
+import { getPayPalAppId, PayPalRequestError } from "./client"
 import { cancelPayPalSubscription } from "./subscriptions"
 import { assertPlanMatchesAcceptedOffer, type PayPalTrialRuntime } from "./trial-checkout"
 import {
   findPayPalTrialCheckoutAttempt,
   payPalTrialCheckoutSchedule,
   pinPayPalTrialActivation,
+  confirmPayPalTrialActivation,
+  PayPalTrialConfirmationUnavailableError,
   type PayPalTrialCheckoutAttempt,
 } from "./trial-checkout-attempt"
 import {
@@ -51,6 +54,7 @@ import {
 export { getPersistedTrialRecoveryCode } from "@/lib/auth/checkout-activation-outcome"
 
 export type PayPalTrialActivationDeps = PayPalCheckoutActivationDeps & {
+  apiConfirmationEnabled?: boolean
   recordBillingAnalytics?: boolean
   assertCheckoutAccess?: typeof assertCanStartCheckout
   paypalTrialRuntime?: PayPalTrialRuntime
@@ -104,10 +108,8 @@ export async function pinVerifiedPayPalTrialActivation(
     !Number.isFinite(Date.parse(resource.status_update_time))
   )
     throw new Error("PayPal original activation evidence unavailable")
-  if (Date.parse(resource.status_update_time) > Date.parse(input.intent.expires_at)) {
-    await blockPayPalTrialAgreement(input.intent, attempt, deps)
-    return
-  }
+  // The RPC decides initial late denial under the proof-selection lock. A
+  // stale unproven read here must not cancel a concurrently confirmed trial.
   await pinPayPalTrialActivation(deps.supabase, {
     token: input.intent.token,
     agreementId: input.subscription.id!,
@@ -123,7 +125,7 @@ export async function ensurePayPalTrialCheckoutAccount(
   // Accepted callbacks deliberately ignore enrollmentMode during rollback.
   const runtime = deps.paypalTrialRuntime ?? readPayPalTrialRuntime()
   if (!runtime) throw new Error("PayPal trial reconciliation is not configured")
-  const attempt = await findPayPalTrialCheckoutAttempt(deps.supabase, intent.token)
+  let attempt = await findPayPalTrialCheckoutAttempt(deps.supabase, intent.token)
   if (!attempt) throw new Error("PayPal trial attempt missing")
   if (
     (await (deps.attestPayPalApp ?? getPayPalAppId)()) !== attempt.paypalAppId ||
@@ -132,7 +134,20 @@ export async function ensurePayPalTrialCheckoutAccount(
     throw new Error("PayPal trial app mismatch")
   const retrieve = deps.retrievePayPalSubscription ?? retrievePayPalTrialSubscription
   if (!attempt.providerReference) return { status: "pending" }
-  let subscription = await retrieve(attempt.providerReference)
+  const apiConfirmationEnabled =
+    deps.apiConfirmationEnabled ?? process.env.PAYPAL_TRIAL_API_CONFIRMATION_ENABLED === "true"
+  let subscription: PayPalSubscription
+  try {
+    subscription = await retrieve(attempt.providerReference)
+  } catch (error) {
+    if (
+      !attempt.authorizationProofKind &&
+      apiConfirmationEnabled &&
+      isTemporaryPayPalReadFailure(error)
+    )
+      return { status: "pending" }
+    throw error
+  }
   const { data: enrollment, error } = await deps.supabase
     .from("trial_enrollments")
     .select("*")
@@ -157,6 +172,9 @@ export async function ensurePayPalTrialCheckoutAccount(
       getPersistedTrialRecoveryCode({ ...enrollment, neutralization_required: false }) ??
         "trial_reconciliation_required",
     )
+  }
+  if (!attempt.authorizationSucceededAt && apiConfirmationEnabled) {
+    attempt = await tryConfirmPayPalTrialActivation(intent, attempt, subscription, enrollment, deps)
   }
   if (!attempt.authorizationSucceededAt) return { status: "pending" }
   const authorizationAt = new Date(attempt.authorizationSucceededAt)
@@ -217,6 +235,13 @@ export async function ensurePayPalTrialCheckoutAccount(
         storedTrialEnd !== Date.parse(legacyTrialEnd))
     )
       throw new Error("PayPal active trial ownership mismatch")
+    // Admission may have committed before projection was interrupted. A newer
+    // provider cancellation/suspension must not create that missing access now.
+    if (
+      subscription.status !== "ACTIVE" &&
+      !(await findBillingSubscriptionByProviderId(deps.supabase, "paypal", subscription.id!))
+    )
+      return { status: "pending" }
     const identity = await ensurePayPalTrialAccountIdentity(intent, deps, enrollment.user_id)
     await finishPayPalTrialProjection(intent, attempt, subscription, enrollment, identity, deps)
     await markPayPalCheckoutIntentActivated(deps.supabase, intent.token)
@@ -381,6 +406,117 @@ export async function ensurePayPalTrialCheckoutAccount(
     trialEnrollmentId: enrollment.id,
     authorizationSucceededAt: authorizationAt.toISOString(),
     trialEndAt: trialEnd,
+  }
+}
+
+function isTemporaryPayPalReadFailure(error: unknown) {
+  return (
+    (error instanceof PayPalRequestError &&
+      (error.status === null || error.status === 429 || error.status >= 500)) ||
+    (error instanceof Error && ["AbortError", "TimeoutError"].includes(error.name))
+  )
+}
+
+/** Validate the fresh server response before asking SQL to atomically select proof.
+ * SQL repeats time/state checks at commit; its returned clock always wins.
+ */
+async function tryConfirmPayPalTrialActivation(
+  intent: PayPalCheckoutIntentRow,
+  attempt: PayPalTrialCheckoutAttempt,
+  subscription: PayPalSubscription,
+  enrollment: Record<string, unknown>,
+  deps: PayPalTrialActivationDeps,
+): Promise<PayPalTrialCheckoutAttempt> {
+  if (
+    attempt.requestId !== `paypal-trial:${attempt.id}:v2` ||
+    attempt.status !== "provider_created" ||
+    enrollment.admission_status !== "reserved" ||
+    enrollment.neutralization_required ||
+    subscription.status !== "ACTIVE"
+  )
+    return attempt
+  const now = Date.now()
+  if (!(Date.parse(intent.expires_at) > now) || !(Date.parse(attempt.requestExpiresAt ?? "") > now))
+    return attempt
+  const effective = await readTrialEffectiveContract(deps.supabase, attempt.enrollmentId)
+  if (effective.revision !== 0) return attempt
+  const catalog = await loadPayPalTrialPlanCatalog(deps.supabase, attempt.enrollmentId)
+  const intentOffer = parseTrialOfferSnapshot(intent.metadata.accepted_offer)
+  if (
+    attempt.intentToken !== intent.token ||
+    enrollment.id !== attempt.enrollmentId ||
+    !intentOffer ||
+    JSON.stringify(intentOffer) !== JSON.stringify(attempt.offer) ||
+    intent.metadata.paypal_app_id !== attempt.paypalAppId ||
+    intent.metadata.paypal_product_id !== attempt.paypalProductId ||
+    intent.metadata.paypal_request_id !== attempt.requestId ||
+    (attempt.scope.kind === "user"
+      ? intent.user_id !== attempt.scope.id || enrollment.user_id !== attempt.scope.id
+      : intent.lead_id !== attempt.scope.id) ||
+    (intent.user_id && enrollment.user_id && intent.user_id !== enrollment.user_id) ||
+    effective.provider !== "paypal" ||
+    (effective.agreementId !== null && effective.agreementId !== subscription.id) ||
+    JSON.stringify(effective.offer) !== JSON.stringify(attempt.offer) ||
+    !catalog ||
+    catalog.enrollmentId !== attempt.enrollmentId ||
+    catalog.appId !== attempt.paypalAppId ||
+    catalog.productId !== attempt.paypalProductId ||
+    (attempt.offer.interval === "month" ? catalog.monthPlanId : catalog.yearPlanId) !==
+      attempt.paypalPlanId
+  )
+    throw new Error("PayPal trial API confirmation binding mismatch")
+  assertPayPalTrialBinding(intent, attempt, subscription)
+  if (!subscription.subscriber?.payer_id?.trim()) throw new Error("PayPal authorized payer missing")
+  assertPlanMatchesAcceptedOffer(
+    subscription.plan ? { ...subscription.plan, status: "ACTIVE" } : null,
+    { offer: attempt.offer, productId: attempt.paypalProductId! },
+  )
+  const { trialEndAt, providerStartTime } = payPalTrialCheckoutSchedule(attempt)
+  const nextBilling = Date.parse(subscription.billing_info?.next_billing_time ?? "")
+  if (
+    Date.parse(subscription.start_time ?? "") !== Date.parse(providerStartTime) ||
+    !(nextBilling >= Date.parse(trialEndAt)) ||
+    !(
+      nextBilling <
+      Date.parse(paypalTrialCollectionWindowEnd(paypalTrialCollectionStart(trialEndAt)))
+    )
+  )
+    throw new CheckoutRecoveryError("trial_reconciliation_required", {
+      cause: new Error("PayPal trial API confirmation schedule mismatch"),
+    })
+  // A conservative observation can be too late even though the original event
+  // proves timely authorization. Leave that agreement for the webhook to settle.
+  const remaining = Date.parse(trialEndAt) - now
+  if (remaining < 7 * 86400000 || remaining > 10 * 86400000) return attempt
+  try {
+    const winner = await confirmPayPalTrialActivation(deps.supabase, {
+      token: intent.token,
+      agreementId: subscription.id!,
+      confirmationId: randomUUID(),
+      appId: attempt.paypalAppId!,
+      planId: attempt.paypalPlanId!,
+      providerStartTime: subscription.start_time!,
+      nextBillingTime: subscription.billing_info!.next_billing_time!,
+    })
+    // Even a successful RPC cannot substitute a different immutable attempt.
+    if (
+      winner.id !== attempt.id ||
+      winner.enrollmentId !== attempt.enrollmentId ||
+      winner.intentToken !== attempt.intentToken ||
+      winner.requestId !== attempt.requestId ||
+      winner.paypalAppId !== attempt.paypalAppId ||
+      winner.paypalProductId !== attempt.paypalProductId ||
+      winner.paypalPlanId !== attempt.paypalPlanId ||
+      winner.providerStartTime !== attempt.providerStartTime ||
+      winner.trialEndAt !== attempt.trialEndAt ||
+      JSON.stringify(winner.offer) !== JSON.stringify(attempt.offer)
+    )
+      throw new Error("PayPal trial API proof winner binding mismatch")
+    assertPayPalTrialBinding(intent, winner, subscription)
+    return winner
+  } catch (error) {
+    if (error instanceof PayPalTrialConfirmationUnavailableError) return attempt
+    throw error
   }
 }
 
