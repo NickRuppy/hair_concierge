@@ -285,7 +285,7 @@ test("inline required notice keeps arbitrary declaration content as escaped data
     receipt_text:
       'Kündigung bestätigt: 69,99 €\nhttps://chaarlie.de/kuendigen\n<img src=x onerror=alert(1)> {{ customer.email }} & "Text"',
   }
-  const payload = buildRequiredNoticeEmail({
+  const payload = await buildRequiredNoticeEmail({
     email: "owner@example.test",
     messageId: "required_v1",
     sender: "Chaarlie <info@chaarlie.de>",
