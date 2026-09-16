@@ -12,6 +12,8 @@ export interface CustomerIoTransactionalEmailPayload {
   to: string
   transactionalMessageId: string | number
   messageData: CustomerIoMessageData
+  /** Filename to base64-encoded content, sent in the same API request. */
+  attachments?: Record<string, string>
   /** Optional complete API-owned content. Existing template-only callers are unchanged. */
   inlineContent?: {
     from: string
@@ -38,6 +40,7 @@ export interface CustomerIoTransactionalEmailRequest {
     body_plain?: string
     auto_create?: boolean
     tracked?: boolean
+    attachments?: Record<string, string>
   }
 }
 
@@ -76,6 +79,15 @@ const DEFAULT_TIMEOUT_MS = 10_000
 export function buildCustomerIoTransactionalEmailRequest(
   payload: CustomerIoTransactionalEmailPayload,
 ): CustomerIoTransactionalEmailRequest {
+  // Customer.io limits the total base64-encoded attachment size to under 2 MB.
+  if (
+    payload.attachments &&
+    Object.values(payload.attachments).reduce(
+      (sum, value) => sum + Buffer.byteLength(value, "utf8"),
+      0,
+    ) >= 2_000_000
+  )
+    throw new Error("Customer.io attachments must total less than 2 MB encoded")
   return {
     path: "/v1/send/email",
     body: {
@@ -85,6 +97,7 @@ export function buildCustomerIoTransactionalEmailRequest(
       message_data: payload.messageData,
       send_to_unsubscribed: true,
       disable_message_retention: true,
+      ...(payload.attachments ? { attachments: payload.attachments } : {}),
       ...(payload.inlineContent
         ? {
             from: payload.inlineContent.from,

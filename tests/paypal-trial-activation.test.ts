@@ -1,3 +1,4 @@
+import { PayPalRequestError } from "../src/lib/paypal/client"
 import { CheckoutAccessAlreadyExistsError } from "../src/lib/billing/subscriptions"
 import { handlePayPalWebhookEvent } from "../src/lib/paypal/webhook-handlers"
 import { handlePayPalTrialWebhook } from "../src/lib/paypal/trial-webhook"
@@ -13,6 +14,7 @@ import { buildPayPalDeferredTrialPlanRequest } from "../src/lib/paypal/trial-pla
 import {
   frozenPayPalTrialStart,
   paypalTrialCollectionStart,
+  paypalTrialProviderStart,
 } from "../src/lib/paypal/trial-collection-start"
 import { paypalCheckoutActivationHash } from "../src/lib/paypal/checkout-activation"
 import { getPersistedTrialRecoveryCode } from "../src/lib/paypal/trial-account-admission"
@@ -247,7 +249,35 @@ function fixture() {
       if (name === "get_paypal_trial_checkout_attempt_v2")
         return { data: { ...attempt }, error: null }
       if (name === "pin_paypal_trial_activation") {
-        attempt.authorization_succeeded_at = args.p_authorized_at
+        if (
+          !attempt.authorization_succeeded_at &&
+          Date.parse(args.p_authorized_at) > Date.parse(intent.expires_at)
+        ) {
+          Object.assign(enrollment, {
+            admission_status: "blocked",
+            neutralization_required: true,
+            provider_agreement_id: args.p_agreement_id,
+          })
+          return { data: { ...attempt }, error: null }
+        }
+        if (!attempt.authorization_succeeded_at) {
+          attempt.authorization_succeeded_at = args.p_authorized_at
+          attempt.activation_event_id = args.p_event_id
+          attempt.authorization_proof_kind = "webhook"
+        }
+        return { data: { ...attempt }, error: null }
+      }
+      if (name === "confirm_paypal_trial_activation") {
+        if (!attempt.authorization_succeeded_at)
+          Object.assign(attempt, {
+            authorization_proof_kind: "api_confirmation",
+            authorization_succeeded_at: new Date().toISOString(),
+            api_confirmed_at: new Date().toISOString(),
+            api_confirmation_id: args.p_confirmation_id,
+            activation_event_id: null,
+          })
+        if (attempt.authorization_proof_kind === "api_confirmation")
+          attempt.api_confirmed_at = attempt.authorization_succeeded_at
         return { data: { ...attempt }, error: null }
       }
       if (name === "admit_trial_enrollment") {
@@ -1047,4 +1077,423 @@ test("an admitted noon trial replays with its original midnight end", async () =
   const result = await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
   assert.equal(result.status === "active" && result.trialEndAt, f.end)
   assert.equal(f.tables.billing_subscriptions.length, 1)
+})
+
+function apiFixture() {
+  const f = fixture()
+  Object.assign(f.attempt, {
+    request_id: `paypal-trial:${ATTEMPT}:v2`,
+    trial_end_at: f.end,
+    provider_start_time: paypalTrialProviderStart(f.end),
+    authorization_succeeded_at: null,
+    activation_event_id: null,
+    authorization_proof_kind: null,
+    api_confirmation_id: null,
+    api_confirmed_at: null,
+  })
+  Object.assign(f.intent.metadata, {
+    accepted_offer: f.attempt.accepted_offer,
+    paypal_app_id: f.attempt.paypal_app_id,
+    paypal_product_id: f.attempt.paypal_product_id,
+    paypal_request_id: f.attempt.request_id,
+  })
+  const rpc = f.deps.supabase.rpc
+  f.deps.supabase.rpc = async (name: string, args: any) =>
+    name === "get_paypal_trial_plan_catalog"
+      ? {
+          data: {
+            enrollment_id: ENROLLMENT,
+            app_id: "APP-owned",
+            product_id: "PROD-owned",
+            month_plan_id: "P-month",
+            year_plan_id: "P-year",
+          },
+          error: null,
+        }
+      : rpc(name, args)
+  f.subscription.start_time = f.attempt.provider_start_time
+  f.deps.apiConfirmationEnabled = true
+  return f
+}
+
+test("fresh v2 ACTIVE server evidence admits before any webhook using the DB confirmation clock", async () => {
+  const f = apiFixture()
+  const result = await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)
+  assert.equal(result.status, "active")
+  const proof = f.calls.find((c) => c.rpc === "confirm_paypal_trial_activation")
+  assert.ok(proof)
+  assert.deepEqual(
+    Object.keys(proof.args).sort(),
+    [
+      "p_token",
+      "p_agreement_id",
+      "p_confirmation_id",
+      "p_app_id",
+      "p_plan_id",
+      "p_provider_start_time",
+      "p_next_billing_time",
+    ].sort(),
+  )
+  assert.match(proof.args.p_confirmation_id, /^[0-9a-f-]{36}$/)
+  assert.equal(proof.args.p_agreement_id, "I-owned")
+  assert.equal(proof.args.p_app_id, "APP-owned")
+  assert.equal(proof.args.p_plan_id, "P-month")
+  assert.equal(proof.args.p_provider_start_time, f.subscription.start_time)
+  assert.equal(proof.args.p_next_billing_time, f.subscription.billing_info.next_billing_time)
+  assert.equal(f.attempt.activation_event_id, null)
+  assert.equal(f.enrollment.authorization_succeeded_at, f.attempt.api_confirmed_at)
+  assert.notEqual(f.enrollment.authorization_succeeded_at, f.subscription.status_update_time)
+  assert.equal(f.enrollment.original_trial_end_at, f.end)
+})
+
+test("API confirmation disabled and non-ACTIVE evidence preserve webhook fallback", async () => {
+  for (const status of ["ACTIVE", "APPROVED", "CANCELLED", "SUSPENDED"]) {
+    const f = apiFixture()
+    f.subscription.status = status
+    f.deps.apiConfirmationEnabled = status !== "ACTIVE"
+    assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
+      status: "pending",
+    })
+    assert.equal(
+      f.calls.some(
+        (c) => c.rpc === "confirm_paypal_trial_activation" || c.rpc === "admit_trial_enrollment",
+      ),
+      false,
+    )
+  }
+})
+
+test("API proof is never requested for mismatched accepted bindings or incomplete provider evidence", async () => {
+  for (const change of [
+    (f: any) => {
+      f.subscription.id = "I-foreign"
+    },
+    (f: any) => {
+      f.subscription.custom_id = "foreign"
+    },
+    (f: any) => {
+      f.subscription.plan_id = "P-foreign"
+    },
+    (f: any) => {
+      f.deps.attestPayPalApp = async () => "APP-foreign"
+    },
+    (f: any) => {
+      f.subscription.plan.product_id = "PROD-foreign"
+    },
+    (f: any) => {
+      f.subscription.subscriber.payer_id = ""
+    },
+    (f: any) => {
+      f.subscription.start_time = f.end
+    },
+    (f: any) => {
+      f.subscription.billing_info.next_billing_time = "invalid"
+    },
+  ]) {
+    const f = apiFixture()
+    change(f)
+    await assert.rejects(() => ensurePayPalTrialCheckoutAccount(f.intent, f.deps))
+    assert.equal(
+      f.calls.some(
+        (c) => c.rpc === "confirm_paypal_trial_activation" || c.rpc === "admit_trial_enrollment",
+      ),
+      false,
+    )
+  }
+})
+
+test("an expired API observation stays pending without neutralizing a potentially timely webhook", async () => {
+  const f = apiFixture()
+  f.intent.expires_at = new Date(Date.now() - 1000).toISOString()
+  assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), { status: "pending" })
+  assert.equal(
+    f.calls.some((c) => c.cancel || c.rpc === "confirm_paypal_trial_activation"),
+    false,
+  )
+  assert.equal(f.enrollment.admission_status, "reserved")
+})
+
+test("API proof completion survives feature rollback and late activation evidence without resetting clock", async () => {
+  const f = apiFixture()
+  const confirmationAt = new Date(Date.now() - 10_000).toISOString()
+  Object.assign(f.attempt, {
+    authorization_proof_kind: "api_confirmation",
+    authorization_succeeded_at: confirmationAt,
+    api_confirmed_at: confirmationAt,
+    api_confirmation_id: "44444444-4444-4444-8444-444444444444",
+  })
+  f.deps.apiConfirmationEnabled = false
+  f.intent.expires_at = new Date(Date.now() - 1000).toISOString()
+  await pinVerifiedPayPalTrialActivation(
+    {
+      intent: f.intent,
+      subscription: f.subscription,
+      eventId: "WH-late",
+      resource: { ...f.subscription, status_update_time: new Date().toISOString() },
+    },
+    f.deps,
+  )
+  assert.equal(
+    f.calls.some((c) => c.cancel),
+    false,
+  )
+  assert.equal((await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)).status, "active")
+  assert.equal(f.enrollment.authorization_succeeded_at, confirmationAt)
+  assert.equal(f.attempt.activation_event_id, null)
+  assert.equal(
+    f.calls.some((c) => c.rpc === "confirm_paypal_trial_activation"),
+    false,
+  )
+})
+
+test("a webhook winner returned from API confirmation governs admission", async () => {
+  const f = apiFixture()
+  const rpc = f.deps.supabase.rpc
+  f.deps.supabase.rpc = async (name: string, args: any) => {
+    if (name === "confirm_paypal_trial_activation")
+      Object.assign(f.attempt, {
+        authorization_proof_kind: "webhook",
+        authorization_succeeded_at: f.authorized,
+        activation_event_id: "WH-winner",
+        api_confirmation_id: null,
+        api_confirmed_at: null,
+      })
+    return rpc(name, args)
+  }
+  assert.equal((await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)).status, "active")
+  assert.equal(f.enrollment.authorization_succeeded_at, f.authorized)
+  assert.equal(f.attempt.activation_event_id, "WH-winner")
+})
+
+test("admitted API proof cannot create a missing billing projection after provider cancellation or suspension", async () => {
+  for (const status of ["CANCELLED", "SUSPENDED"]) {
+    const f = apiFixture()
+    Object.assign(f.attempt, {
+      authorization_proof_kind: "api_confirmation",
+      authorization_succeeded_at: f.authorized,
+      api_confirmed_at: f.authorized,
+      api_confirmation_id: "44444444-4444-4444-8444-444444444444",
+    })
+    Object.assign(f.enrollment, {
+      admission_status: "active",
+      provider_agreement_id: "I-owned",
+      authorization_succeeded_at: f.authorized,
+      original_trial_end_at: f.end,
+    })
+    f.subscription.status = status
+    assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
+      status: "pending",
+    })
+    assert.equal(f.tables.billing_subscriptions.length, 0)
+  }
+})
+
+test("temporary API proof persistence failure and DB expiry loser retain bounded webhook fallback", async () => {
+  for (const error of [null, { code: "57014", message: "statement timeout" }]) {
+    const f = apiFixture()
+    const rpc = f.deps.supabase.rpc
+    let confirmations = 0
+    f.deps.supabase.rpc = async (name: string, args: any) => {
+      if (name === "confirm_paypal_trial_activation") {
+        confirmations++
+        return { data: error ? null : { ...f.attempt }, error }
+      }
+      return rpc(name, args)
+    }
+    assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
+      status: "pending",
+    })
+    assert.equal(confirmations, 1)
+    assert.equal(
+      f.calls.some((c) => c.cancel || c.rpc === "admit_trial_enrollment"),
+      false,
+    )
+  }
+})
+
+test("API proof contract-integrity errors remain visible instead of being swallowed as pending", async () => {
+  const f = apiFixture()
+  const rpc = f.deps.supabase.rpc
+  f.deps.supabase.rpc = async (name: string, args: any) =>
+    name === "confirm_paypal_trial_activation"
+      ? { data: null, error: { code: "P0001", message: "PayPal trial binding mismatch" } }
+      : rpc(name, args)
+  await assert.rejects(
+    () => ensurePayPalTrialCheckoutAccount(f.intent, f.deps),
+    /confirmation failed/,
+  )
+  assert.equal(
+    f.calls.some((c) => c.cancel || c.rpc === "admit_trial_enrollment"),
+    false,
+  )
+})
+
+test("conservative API observation with less than seven days remains pending without cancellation", async (t) => {
+  const f = apiFixture()
+  const observedAt = Date.parse(f.end) - 7 * 86400000 + 1
+  t.mock.method(Date, "now", () => observedAt)
+  f.intent.expires_at = new Date(observedAt + 60_000).toISOString()
+  assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), { status: "pending" })
+  assert.equal(
+    f.calls.some((c) => c.cancel || c.rpc === "confirm_paypal_trial_activation"),
+    false,
+  )
+})
+
+test("webhook-first proof remains the immutable admission clock when API issuance is enabled", async () => {
+  const f = apiFixture()
+  Object.assign(f.attempt, {
+    authorization_proof_kind: "webhook",
+    authorization_succeeded_at: f.authorized,
+    activation_event_id: "WH-first",
+  })
+  assert.equal((await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)).status, "active")
+  assert.equal(f.enrollment.authorization_succeeded_at, f.authorized)
+  assert.equal(
+    f.calls.some((c) => c.rpc === "confirm_paypal_trial_activation"),
+    false,
+  )
+})
+
+test("API confirmation never crosses scope, metadata offer, frozen catalog or effective-contract boundaries", async () => {
+  for (const change of [
+    (f: any) => {
+      f.attempt.intent_token = "foreign"
+    },
+    (f: any) => {
+      f.attempt.scope_id = "foreign"
+    },
+    (f: any) => {
+      f.intent.metadata.accepted_offer = null
+    },
+    (f: any) => {
+      f.intent.metadata.paypal_app_id = "foreign"
+    },
+    (f: any) => {
+      f.intent.metadata.paypal_product_id = "foreign"
+    },
+    (f: any) => {
+      f.intent.metadata.paypal_request_id = "foreign"
+    },
+    (f: any) => {
+      const rpc = f.deps.supabase.rpc
+      f.deps.supabase.rpc = async (n: string, a: any) =>
+        n === "get_paypal_trial_plan_catalog" ? { data: null, error: null } : rpc(n, a)
+    },
+    (f: any) => {
+      const rpc = f.deps.supabase.rpc
+      f.deps.supabase.rpc = async (n: string, a: any) =>
+        n === "read_trial_effective_contract"
+          ? {
+              data: {
+                accepted_offer: f.attempt.accepted_offer,
+                provider: "paypal",
+                provider_agreement_id: "foreign",
+                revision: 0,
+              },
+              error: null,
+            }
+          : rpc(n, a)
+    },
+  ]) {
+    const f = apiFixture()
+    change(f)
+    await assert.rejects(() => ensurePayPalTrialCheckoutAccount(f.intent, f.deps))
+    assert.equal(
+      f.calls.some(
+        (c) => c.rpc === "confirm_paypal_trial_activation" || c.rpc === "admit_trial_enrollment",
+      ),
+      false,
+    )
+  }
+})
+
+test("a late webhook stale read cannot neutralize an API proof pinned before its SQL decision", async () => {
+  const f = apiFixture()
+  f.intent.expires_at = new Date(Date.now() - 1000).toISOString()
+  const rpc = f.deps.supabase.rpc
+  let interleaved = false
+  f.deps.supabase.rpc = async (name: string, args: any) => {
+    const response = await rpc(name, args)
+    if (name === "get_paypal_trial_checkout_attempt_v2" && !interleaved) {
+      interleaved = true
+      Object.assign(f.attempt, {
+        authorization_proof_kind: "api_confirmation",
+        authorization_succeeded_at: f.authorized,
+        api_confirmed_at: f.authorized,
+        api_confirmation_id: "44444444-4444-4444-8444-444444444444",
+      })
+    }
+    return response
+  }
+  await pinVerifiedPayPalTrialActivation(
+    {
+      intent: f.intent,
+      subscription: f.subscription,
+      eventId: "WH-late-race",
+      resource: { ...f.subscription, status_update_time: new Date().toISOString() },
+    },
+    f.deps,
+  )
+  assert.equal(f.enrollment.admission_status, "reserved")
+  assert.equal(
+    f.calls.some((c) => c.cancel),
+    false,
+  )
+  assert.equal(f.calls.filter((c) => c.rpc === "pin_paypal_trial_activation").length, 1)
+  assert.equal((await ensurePayPalTrialCheckoutAccount(f.intent, f.deps)).status, "active")
+  assert.equal(f.enrollment.authorization_succeeded_at, f.authorized)
+})
+
+test("a late initial webhook uses SQL persisted denial before ordinary neutralization", async () => {
+  const f = apiFixture()
+  f.intent.expires_at = new Date(Date.now() - 1000).toISOString()
+  await pinVerifiedPayPalTrialActivation(
+    {
+      intent: f.intent,
+      subscription: f.subscription,
+      eventId: "WH-late-initial",
+      resource: { ...f.subscription, status_update_time: new Date().toISOString() },
+    },
+    f.deps,
+  )
+  assert.equal(f.calls.filter((c) => c.rpc === "pin_paypal_trial_activation").length, 1)
+  assert.equal(f.enrollment.admission_status, "blocked")
+  assert.equal(
+    f.calls.some((c) => c.cancel),
+    false,
+  )
+  assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
+    status: "duplicate",
+    recoveryCode: "trial_checkout_closed",
+  })
+  assert.equal(f.enrollment.admission_status, "released")
+  assert.equal(f.calls.filter((c) => c.cancel).length, 1)
+})
+
+test("temporary provider read failures fall back once while authentication failures remain visible", async () => {
+  for (const status of [null, 429, 503, 401]) {
+    const f = apiFixture()
+    let reads = 0
+    f.deps.retrievePayPalSubscription = async () => {
+      reads++
+      throw new PayPalRequestError("provider request failed", status)
+    }
+    if (status === 401)
+      await assert.rejects(
+        () => ensurePayPalTrialCheckoutAccount(f.intent, f.deps),
+        /provider request failed/,
+      )
+    else
+      assert.deepEqual(await ensurePayPalTrialCheckoutAccount(f.intent, f.deps), {
+        status: "pending",
+      })
+    assert.equal(reads, 1)
+    assert.equal(
+      f.calls.some(
+        (c) => c.rpc === "confirm_paypal_trial_activation" || c.rpc === "admit_trial_enrollment",
+      ),
+      false,
+    )
+  }
 })
