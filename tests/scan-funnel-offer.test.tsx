@@ -134,7 +134,7 @@ test("the scanner offer carries the criteria, the tour, coverage and the proof b
   assert.match(html, /Über 1\.000 Produkte/)
   assert.match(html, /Entwickelt gemeinsam mit Friseurmeistern\./)
   assert.match(html, /Über 4\.000 Frauen haben uns geantwortet\./)
-  assert.match(html, /Sarah · Nie wieder googeln vorm Regal/)
+  assert.match(html, /Marion/)
   assert.match(html, /Welche Produkte kennt der Scanner\?/)
 
   assert.match(html, /Dein Scanner wartet\./)

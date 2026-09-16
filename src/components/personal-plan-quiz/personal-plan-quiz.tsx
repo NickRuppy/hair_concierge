@@ -1049,7 +1049,15 @@ function ProofScreen({ onContinue }: { onContinue: () => void }) {
           {`„${EARLY_PROOF_TESTIMONIAL.quote}“`}
         </p>
         <footer className="mt-4 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--brand-plum)]">
-          {EARLY_PROOF_TESTIMONIAL.source}
+          {EARLY_PROOF_TESTIMONIAL.name}
+          <a
+            className="mt-2 block underline underline-offset-4"
+            href={EARLY_PROOF_TESTIMONIAL.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Auszug · Bewertung auf Trustpilot
+          </a>
         </footer>
       </blockquote>
 
@@ -1712,7 +1720,15 @@ function LoadingScreen({
             „{PREPARATION_TESTIMONIALS[Math.min(stageIndex, 2)].quote}“
           </p>
           <footer className="mt-2 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-plum)]">
-            {PREPARATION_TESTIMONIALS[Math.min(stageIndex, 2)].source}
+            {PREPARATION_TESTIMONIALS[Math.min(stageIndex, 2)].name}
+            <a
+              className="mt-2 block underline underline-offset-4"
+              href={PREPARATION_TESTIMONIALS[Math.min(stageIndex, 2)].url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Auszug · Bewertung auf Trustpilot
+            </a>
           </footer>
         </blockquote>
       </section>

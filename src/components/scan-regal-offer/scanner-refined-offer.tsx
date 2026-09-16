@@ -1,5 +1,7 @@
 "use client"
 
+import { TRUSTPILOT_REVIEWS } from "@/lib/trustpilot-reviews"
+
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react"
 import Link from "next/link"
 import { SiteFooter } from "@/components/landing/site-footer"
@@ -44,20 +46,7 @@ const benefits = [
     "Antworten zu deinem Haar – Chaarlie kennt dein Profil.",
   ],
 ] as const
-const testimonials = [
-  [
-    "Kim",
-    "Der Fragebogen ist echt gut und leicht verständlich. Auch die Produktempfehlung fand ich gut.",
-  ],
-  [
-    "Kerstin",
-    "Ich finde die Interaktion sehr gut: meine Fragen stellen zu können und dann die benötigten Antworten zu bekommen.",
-  ],
-  [
-    "Sarah",
-    "Bei den Produkten stehen Preis, Anwendung und der Grund dabei, warum sie empfohlen werden.",
-  ],
-] as const
+const testimonials = TRUSTPILOT_REVIEWS
 
 function profileLine(answers: FunnelOfferVariantProps["quizAnswers"]) {
   const textures: Record<string, string> = {
@@ -486,13 +475,21 @@ function ScannerRefinedOfferContent(props: FunnelOfferVariantProps) {
           </div>
         </section>
         <section className="sr-section sr-testimonials" data-offer-section="testimonials">
-          <p className="sr-eyebrow">Stimmen aus der Beta</p>
-          <h2>Das sagen Kundinnen über Chaarlie.</h2>
+          <p className="sr-eyebrow">Bewertungen auf Trustpilot</p>
+          <h2>Das sagen unsere Nutzer über Chaarlie.</h2>
           <div>
-            {testimonials.map(([name, quote]) => (
-              <figure key={name}>
-                <figcaption>{name}</figcaption>
-                <blockquote>„{quote}“</blockquote>
+            {testimonials.map((testimonial) => (
+              <figure key={testimonial.name}>
+                <figcaption>{testimonial.name}</figcaption>
+                <blockquote>„{testimonial.quote}“</blockquote>
+                <a
+                  className="mt-auto block pt-2 text-sm leading-6 underline underline-offset-4"
+                  href={testimonial.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Auszug · Bewertung auf Trustpilot
+                </a>
               </figure>
             ))}
           </div>

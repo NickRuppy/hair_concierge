@@ -1,5 +1,7 @@
 "use client"
 
+import { TRUSTPILOT_REVIEWS } from "@/lib/trustpilot-reviews"
+
 import { ScannerRefinedOffer } from "./scanner-refined-offer"
 
 import Image from "next/image"
@@ -83,23 +85,7 @@ const surveyStats = [
   ["63%", "suchen Klarheit, welche Produkte wirklich passen", "#9a7cbd"],
 ] as const
 
-const testimonials = [
-  {
-    name: "Sarah · Nie wieder googeln vorm Regal",
-    quote:
-      "Bei den Produkten stehen Preis, Anwendung und der Grund dabei, warum sie empfohlen werden.",
-  },
-  {
-    name: "Kim · Endlich verstehe ich meine Haare",
-    quote:
-      "Der Fragebogen ist echt gut und leicht verständlich. Auch die Produktempfehlung fand ich gut.",
-  },
-  {
-    name: "Kerstin · Echte Antworten bekommen",
-    quote:
-      "Ich finde die Interaktion sehr gut: meine Fragen stellen zu können und dann die benötigten Antworten zu bekommen.",
-  },
-] as const
+const testimonials = TRUSTPILOT_REVIEWS
 
 const faqItems = [
   [
@@ -530,12 +516,12 @@ function LegacyScanRegalOffer(props: FunnelOfferVariantProps) {
           data-offer-section="testimonials"
         >
           <div className="mx-auto max-w-4xl">
-            <SectionEyebrow>Stimmen aus der Beta</SectionEyebrow>
-            <SectionHeading>Das sagen Kundinnen über Chaarlie.</SectionHeading>
+            <SectionEyebrow>Bewertungen auf Trustpilot</SectionEyebrow>
+            <SectionHeading>Das sagen unsere Nutzer über Chaarlie.</SectionHeading>
             <div className="mt-6 grid items-stretch gap-3 md:grid-cols-3">
               {testimonials.map((testimonial) => (
                 <blockquote
-                  className="h-full rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.06)] bg-white p-6 text-left shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.55)]"
+                  className="flex h-full flex-col items-center rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.06)] bg-white p-6 text-center shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.55)]"
                   key={testimonial.name}
                 >
                   <span aria-label="5 von 5 Sternen" className="text-[#d96869]">
@@ -543,6 +529,14 @@ function LegacyScanRegalOffer(props: FunnelOfferVariantProps) {
                   </span>
                   <strong className="mt-2 block">{testimonial.name}</strong>
                   <p className="mt-3 text-base leading-7">„{testimonial.quote}“</p>
+                  <a
+                    className="mt-auto block pt-4 text-sm leading-6 underline underline-offset-4"
+                    href={testimonial.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Auszug · Bewertung auf Trustpilot
+                  </a>
                 </blockquote>
               ))}
             </div>
