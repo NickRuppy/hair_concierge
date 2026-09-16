@@ -30,7 +30,7 @@ const releaseDefaults: RoutingReleaseDependencies = {
 type RoutingSource = {
   qualifiedAt: string
   quizSourceKind: "legacy" | "personal_plan" | null
-  sourceKind: "paid" | "field_test" | "partner" | "migration"
+  sourceKind: "paid" | "field_test" | "partner" | "migration" | "trial"
   migrationStatus: "candidate" | "pending_source" | "ready" | null
   plan: {
     currentInitialNeedVersionId: string | null
@@ -68,7 +68,7 @@ export async function loadPersonalPlanRoutingFrontierForUser(
           (source.sourceKind === "field_test" || source.sourceKind === "partner")
         ? true
         : qualifiedAtIsValid &&
-          (release.migrationEnabled?.() === true ||
+          ((source.sourceKind === "paid" && release.migrationEnabled?.() === true) ||
             Boolean(
               cutoff &&
               qualifiedAt.getTime() >= cutoff.getTime() &&
@@ -119,9 +119,11 @@ function parseRoutingSource(value: unknown): RoutingSource | null {
         ? "field_test"
         : row.source_kind === "partner"
           ? "partner"
-          : row.source_kind === "migration" && migrationStatus
-            ? "migration"
-            : null
+          : row.source_kind === "trial"
+            ? "trial"
+            : row.source_kind === "migration" && migrationStatus
+              ? "migration"
+              : null
   if (!sourceKind) return null
   if (row.plan === null || row.plan === undefined) {
     return {
