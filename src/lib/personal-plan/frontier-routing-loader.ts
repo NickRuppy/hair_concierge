@@ -50,10 +50,13 @@ export async function loadPersonalPlanRoutingFrontierForUser(
   const primary = await client.rpc("personal_plan_get_own_routing_source")
   if (primary.error) throw primary.error
   let source = parseRoutingSource(primary.data)
-  if (!source && primary.data == null) {
+  // Partner admission precedes trial provenance in the enrollment resolver.
+  // The primary RPC does not include partner sources, so check this peer before
+  // accepting a trial and applying its stricter cohort/cutover gates.
+  if ((!source && primary.data == null) || source?.sourceKind === "trial") {
     const partner = await client.rpc("personal_plan_get_own_partner_routing_source")
     if (partner.error && !isMissingPartnerRoutingFunction(partner.error)) throw partner.error
-    if (!partner.error) source = parseRoutingSource(partner.data)
+    if (!partner.error) source = parseRoutingSource(partner.data) ?? source
   }
   if (!source) return { kind: "legacy" }
 

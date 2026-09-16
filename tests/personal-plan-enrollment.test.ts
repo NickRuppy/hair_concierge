@@ -6,6 +6,39 @@ import { loadPersonalPlanRoutingFrontierForUser } from "../src/lib/personal-plan
 
 type Row = Record<string, unknown>
 
+test("partner access retains its routing exemption when the account also has a trial", async () => {
+  const calls: string[] = []
+  const result = await loadPersonalPlanRoutingFrontierForUser(
+    {
+      rpc: async (name: string) => {
+        calls.push(name)
+        return {
+          data: {
+            source_kind:
+              name === "personal_plan_get_own_partner_routing_source" ? "partner" : "trial",
+            qualified_at: "2026-09-15T19:48:05Z",
+            quiz_source_kind: "legacy",
+            plan: { current_initial_need_version_id: "need-1" },
+          },
+          error: null,
+        }
+      },
+    } as never,
+    "user-1",
+    {
+      cohortCutoff: () => new Date("2026-10-01"),
+      legacyQuizCutoverEnabled: () => false,
+      migrationEnabled: () => false,
+      appAllowedForUser: async () => true,
+    },
+  )
+  assert.deepEqual(result, { kind: "personal_plan", frontier: "stage2", nextHref: "/plan-start" })
+  assert.deepEqual(calls, [
+    "personal_plan_get_own_routing_source",
+    "personal_plan_get_own_partner_routing_source",
+  ])
+})
+
 const trialEnrollmentId = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
 const trialLeadId = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb"
 const trialSource = {
@@ -179,7 +212,12 @@ test("trial routing recognizes ready and pending plans while retaining ordinary 
   }
   const load = (release = trialRelease) =>
     loadPersonalPlanRoutingFrontierForUser(
-      { rpc: async () => ({ data: source, error: null }) } as never,
+      {
+        rpc: async (name: string) => ({
+          data: name === "personal_plan_get_own_routing_source" ? source : null,
+          error: null,
+        }),
+      } as never,
       "user-1",
       release,
     )
