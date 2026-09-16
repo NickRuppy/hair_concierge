@@ -39,7 +39,18 @@ export type TrialRequiredNoticeSnapshot = Readonly<{
   paidThroughAt?: string
   renewalAt?: string
 }>
-export type TrialRequiredNoticeMessage = Readonly<{ subject: string; receipt_text: string }>
+export type TrialRequiredNoticeMessage = Readonly<{
+  subject: string
+  receipt_text: string
+  confirmation?: Readonly<{
+    plan: string
+    trialEnd: string
+    firstCharge: string
+    price: string
+    renewal: string
+    canceled: boolean
+  }>
+}>
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const validDate = (v: unknown): v is string =>
   typeof v === "string" && /^\d{4}-\d{2}-\d{2}T/.test(v) && Number.isFinite(Date.parse(v))
@@ -205,6 +216,24 @@ export function buildTrialRequiredNoticeMessage(
       ? `Für das erste bezahlte Jahr werden ${money(s.firstAmountMinor)} fällig; danach ${money(s.renewalAmountMinor)} jährlich im Voraus. Nach dem ersten bezahlten Jahr läuft der Vertrag auf unbestimmte Zeit weiter. Eine Kündigung ist dann jederzeit mit einer Frist von höchstens einem Monat möglich; ungenutztes vorausgezahltes Entgelt nach dem wirksamen Vertragsende wird zeitanteilig erstattet. Es entsteht keine neue feste Jahresbindung.`
       : `Nach dem Test werden ${money(s.firstAmountMinor)} monatlich fällig. Nach dem ersten bezahlten Monat läuft der Vertrag auf unbestimmte Zeit weiter und ist jederzeit mit einer Frist von höchstens einem Monat kündbar.`
   return {
+    ...(kind === "contract_confirmation"
+      ? {
+          confirmation: {
+            plan: s.interval === "year" ? "Jahresmitgliedschaft" : "Monatsmitgliedschaft",
+            trialEnd: date(s.trialEndAt),
+            firstCharge:
+              s.provider === "paypal"
+                ? dateOnly(paypalTrialCollectionStart(s.trialEndAt))
+                : date(s.trialEndAt),
+            price: `${money(s.firstAmountMinor)} ${s.interval === "year" ? "für das erste Jahr" : "monatlich"}`,
+            renewal:
+              s.interval === "year"
+                ? `Danach ${money(s.renewalAmountMinor)} jährlich im Voraus.`
+                : "",
+            canceled: s.cancelAtPeriodEnd === true,
+          },
+        }
+      : {}),
     subject:
       kind === "contract_change"
         ? s.changeKind === "restore"

@@ -183,11 +183,11 @@ test("missing configuration claims nothing; verified owner alone chooses recipie
   assert.equal(outcomes[0]!.status, "queued")
 })
 test("ambiguous/HTTP/error sends park once; settlement failure never retries provider", async () => {
-  for (const error of [
-    new CustomerIoAmbiguousDeliveryError("timeout"),
-    new CustomerIoHttpError(503),
-    new Error("network"),
-  ]) {
+  for (const [error, errorCode] of [
+    [new CustomerIoAmbiguousDeliveryError("timeout"), "customerio_delivery_ambiguous"],
+    [new CustomerIoHttpError(503), "customerio_http_unconfirmed"],
+    [new Error("network"), "customerio_delivery_unconfirmed"],
+  ] as const) {
     let sends = 0
     const outcomes: TrialNoticeOutcome[] = []
     const result = await dispatchTrialRequiredNotices({
@@ -207,7 +207,7 @@ test("ambiguous/HTTP/error sends park once; settlement failure never retries pro
     })
     assert.equal(result.supportRequired, 1)
     assert.equal(sends, 1)
-    assert.equal(outcomes[0]!.status, "support_required")
+    assert.deepEqual(outcomes, [{ status: "support_required", errorCode }])
   }
   let sends = 0
   await assert.rejects(
@@ -285,7 +285,7 @@ test("inline required notice keeps arbitrary declaration content as escaped data
     receipt_text:
       'Kündigung bestätigt: 69,99 €\nhttps://chaarlie.de/kuendigen\n<img src=x onerror=alert(1)> {{ customer.email }} & "Text"',
   }
-  const payload = buildRequiredNoticeEmail({
+  const payload = await buildRequiredNoticeEmail({
     email: "owner@example.test",
     messageId: "required_v1",
     sender: "Chaarlie <info@chaarlie.de>",
@@ -405,4 +405,43 @@ test("PayPal contract confirmation with a frozen midnight trial end names one da
       }),
     /Invalid/,
   )
+})
+
+test("PDF encoding failure is definitively unsent and classified as preparation failure", async () => {
+  const { sendTrialRequiredNotice } = await import("../src/lib/customerio/trial-required-notices")
+  const outcomes: TrialNoticeOutcome[] = []
+  let fetches = 0
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async () => {
+    fetches++
+    throw new Error("Unexpected provider request")
+  }
+  try {
+    const result = await dispatchTrialRequiredNotices({
+      messageId: "required",
+      apiKeyPresent: true,
+      sender: "Chaarlie <info@chaarlie.de>",
+      enqueueAnnual: async () => {},
+      claim: async () => [claim],
+      recipient: async () => "x@example.test",
+      send: (input) =>
+        sendTrialRequiredNotice({
+          ...input,
+          message: {
+            ...input.message,
+            receipt_text: input.message.receipt_text + "\n😀",
+          },
+        }),
+      settle: async (_claim, outcome) => {
+        outcomes.push(outcome)
+      },
+    })
+    assert.equal(result.supportRequired, 1)
+    assert.equal(fetches, 0)
+    assert.deepEqual(outcomes, [
+      { status: "support_required", errorCode: "notice_preparation_failed" },
+    ])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
 })

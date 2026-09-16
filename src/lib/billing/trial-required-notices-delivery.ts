@@ -7,6 +7,7 @@ import {
 } from "@/lib/billing/trial-required-notices"
 import {
   sendTrialRequiredNotice,
+  RequiredNoticePreparationError,
   TRIAL_REQUIRED_NOTICE_MESSAGE_ID_ENV,
   REQUIRED_NOTICE_FROM_ENV,
   DEFAULT_REQUIRED_NOTICE_TRIGGER,
@@ -148,13 +149,15 @@ export async function dispatchTrialRequiredNotices(overrides: Partial<Dependenci
       outcome = {
         status: "support_required",
         errorCode:
-          error instanceof CustomerIoAmbiguousDeliveryError
-            ? "customerio_delivery_ambiguous"
-            : error instanceof CustomerIoHttpError
-              ? "customerio_http_unconfirmed"
-              : sendStarted
-                ? "customerio_delivery_unconfirmed"
-                : "notice_preparation_failed",
+          error instanceof RequiredNoticePreparationError
+            ? "notice_preparation_failed"
+            : error instanceof CustomerIoAmbiguousDeliveryError
+              ? "customerio_delivery_ambiguous"
+              : error instanceof CustomerIoHttpError
+                ? "customerio_http_unconfirmed"
+                : sendStarted
+                  ? "customerio_delivery_unconfirmed"
+                  : "notice_preparation_failed",
       }
     }
     // Settlement failure propagates. A dead lease parks; never retry the send.

@@ -178,9 +178,9 @@ const defaultDependencies: Dependencies = {
     DEFAULT_REQUIRED_NOTICE_TRIGGER,
   apiKeyPresent: Boolean(process.env.CUSTOMERIO_APP_API_KEY?.trim()),
   claim: claimPublicDeclarationReceiptDelivery,
-  send: ({ email, messageId, receiptText }) =>
+  send: async ({ email, messageId, receiptText }) =>
     sendCustomerIoTransactionalEmailWithReceipt(
-      buildRequiredNoticeEmail({
+      await buildRequiredNoticeEmail({
         email,
         messageId,
         sender: process.env[REQUIRED_NOTICE_FROM_ENV] ?? DEFAULT_REQUIRED_NOTICE_SENDER,
