@@ -85,13 +85,26 @@ export function previewRequiredNoticeHtml(message: TrialRequiredNoticeMessage): 
     REQUIRED_NOTICE_HTML_PREFIX + escapeHtml(message.receipt_text) + REQUIRED_NOTICE_HTML_SUFFIX
   )
 }
+/** Only wraps local preparation; provider failures retain their delivery classification. */
+export class RequiredNoticePreparationError extends Error {
+  constructor(cause: unknown) {
+    super("Required notice preparation failed", { cause })
+    this.name = "RequiredNoticePreparationError"
+  }
+}
 export async function sendTrialRequiredNotice(input: {
   email: string
   messageId: string
   sender: string
   message: TrialRequiredNoticeMessage
 }) {
-  return sendCustomerIoTransactionalEmailWithReceipt(await buildRequiredNoticeEmail(input), {
+  let payload: CustomerIoTransactionalEmailPayload
+  try {
+    payload = await buildRequiredNoticeEmail(input)
+  } catch (error) {
+    throw new RequiredNoticePreparationError(error)
+  }
+  return sendCustomerIoTransactionalEmailWithReceipt(payload, {
     timeoutMs: 10_000,
   })
 }
