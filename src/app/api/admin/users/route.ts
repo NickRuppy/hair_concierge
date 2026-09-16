@@ -40,6 +40,7 @@ export async function GET(request: Request) {
     .from("profiles")
     .select("*, hair_profiles(*)", { count: "exact" })
     .order("created_at", { ascending: false })
+    .order("id", { ascending: false })
     .range(offset, offset + limit - 1)
 
   if (error) {
@@ -97,5 +98,5 @@ function parseBoundedInteger(
 ): number {
   const parsed = value === null ? fallback : Number.parseInt(value, 10)
   if (!Number.isFinite(parsed)) return fallback
-  return Math.min(Math.max(parsed, min), max ?? parsed)
+  return Math.min(Math.max(parsed, min), max ?? Number.POSITIVE_INFINITY)
 }
