@@ -559,7 +559,7 @@ async function createPayPalCheckoutUser(
     )
   }
 
-  throw new Error(`createUser failed: ${error?.message ?? "unknown"}`)
+  throw new Error(`createUser failed: ${error?.message ?? "unknown"}`, { cause: error })
 }
 
 export async function canSetInitialPasswordForPayPalCheckout(
@@ -581,10 +581,10 @@ export async function canSetInitialPasswordForPayPalCheckout(
 async function getAuthUserById(
   supabase: SupabaseClient,
   userId: string,
-): Promise<{ email?: string | null; app_metadata?: unknown } | null> {
+): Promise<{ id?: string; email?: string | null; app_metadata?: unknown } | null> {
   const admin = supabase.auth.admin as unknown as {
     getUserById?: (userId: string) => Promise<{
-      data?: { user?: { email?: string | null; app_metadata?: unknown } | null }
+      data?: { user?: { id?: string; email?: string | null; app_metadata?: unknown } | null }
       error?: { message?: string } | null
     }>
   }
@@ -658,6 +658,36 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value)
 }
 
+async function recoverConcurrentPayPalTrialUser(
+  deps: PayPalCheckoutActivationDeps,
+  email: string,
+  activationKey: string,
+  failure: unknown,
+): Promise<{ userId: string; created: false }> {
+  const cause = failure instanceof Error ? failure.cause : null
+  if (!isRecord(cause) || cause.status !== 500 || cause.code !== "unexpected_failure") throw failure
+
+  // Auth can surface a unique-email race as a generic database error. Only adopt
+  // a winner that Auth itself binds to this exact checkout, never email alone.
+  for (const delay of [0, 100, 150]) {
+    if (delay) await new Promise((resolve) => setTimeout(resolve, delay))
+    const profile = await findProfileByEmail(deps, email)
+    if (!profile) continue
+    const user = await getAuthUserById(deps.supabase, profile.id)
+    if (
+      normalizeEmail(profile.email) !== email ||
+      user?.id !== profile.id ||
+      normalizeEmail(user.email) !== email ||
+      !isRecord(user.app_metadata) ||
+      user.app_metadata.checkout_activation_session_hash !==
+        paypalCheckoutActivationHash(activationKey)
+    )
+      throw failure
+    return { userId: profile.id, created: false }
+  }
+  throw failure
+}
+
 /** Reuse checkout identity and password capability without writing a paid entitlement. */
 export async function ensurePayPalTrialAccountIdentity(
   intent: PayPalCheckoutIntentRow,
@@ -694,9 +724,13 @@ export async function ensurePayPalTrialAccountIdentity(
         intent.token,
       )
     } else {
-      const created = await createPayPalCheckoutUser(deps, email, intent.token)
+      const created = await createPayPalCheckoutUser(deps, email, intent.token).catch((failure) =>
+        recoverConcurrentPayPalTrialUser(deps, email, intent.token, failure),
+      )
       userId = created.userId
-      canSetInitialPassword = created.created
+      canSetInitialPassword =
+        created.created ||
+        (await canSetInitialPasswordForPayPalCheckout(deps.supabase, userId, intent.token))
     }
   }
   await upsertSubscriptionProfile(deps, userId, { email })
