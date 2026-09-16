@@ -675,6 +675,7 @@ export function createUpdateSession(
         moderatorAccess === "active" &&
         intakeState !== "ready" &&
         pathMatchesRoutePrefix(pathname, "/chat")
+      let personalPlanPaidAccessCheckAttempted = false
       try {
         const frontier = await (
           dependencies.loadPersonalPlanRoutingFrontier ?? loadPersonalPlanRoutingFrontierForUser
@@ -722,12 +723,14 @@ export function createUpdateSession(
           // General app access can come from a manual grant, so require the
           // independent billing/one-time access check before adding this bypass.
           // Stored routine pointers and trial history alone never grant access.
+          personalPlanPaidAccessCheckAttempted = true
           hasActivePersonalPlanEntitlement =
             (await dependencies.hasCurrentPaidAppAccess?.(supabase, { userId: user.id })) ?? false
         }
       } catch (error) {
         console.warn("[personal-plan] routing frontier unavailable", error)
         if (
+          personalPlanPaidAccessCheckAttempted ||
           moderatorLegacyEntry ||
           getPersonalPlanFrontierRedirect(pathname, {
             kind: "recovery",

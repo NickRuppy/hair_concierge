@@ -83,8 +83,13 @@ for (const enabled of [false, true]) {
         assert.equal(response.status, 503)
       })
       await t.test("unavailable independent billing fails closed", async () => {
-        const response = await scenario({ billingUnavailable: true }).request("/anwendung")
-        assert.equal(response.status, 503)
+        for (const provider of ["stripe", "paypal"] as const) {
+          for (const path of ["/routine", "/anwendung", "/chat"]) {
+            const response = await scenario({ provider, billingUnavailable: true }).request(path)
+            assert.equal(response.status, 503, `${provider} ${path}`)
+            assert.equal(response.headers.get("location"), null)
+          }
+        }
       })
     } finally {
       if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
