@@ -709,6 +709,22 @@ export function createUpdateSession(
           )
           return redirectWithSupabaseCookies(url, supabaseResponse)
         }
+        if (
+          !hasActivePersonalPlanEntitlement &&
+          hasPaidAppAccessResult &&
+          frontier.kind === "personal_plan" &&
+          intakeState === "needs_onboarding" &&
+          isPersonalPlanOnboardingBypassRoute(pathname)
+        ) {
+          // The frontier already verifies the owner's enrollment provenance and
+          // rollout eligibility, including trials. Reuse that authority rather
+          // than maintaining a second list of Personal Plan purchase types here.
+          // General app access can come from a manual grant, so require the
+          // independent billing/one-time access check before adding this bypass.
+          // Stored routine pointers and trial history alone never grant access.
+          hasActivePersonalPlanEntitlement =
+            (await dependencies.hasCurrentPaidAppAccess?.(supabase, { userId: user.id })) ?? false
+        }
       } catch (error) {
         console.warn("[personal-plan] routing frontier unavailable", error)
         if (

@@ -11,8 +11,9 @@ export type PersonalPlanRoutineAccess = {
    * Current paid app access, mirroring the subscription paywall's own
    * composite (`hasCurrentAppAccess` OR an active one-time purchase OR an
    * active moderator grant). Distinct from
-   * `hasActivePersonalPlanEntitlement`, which deliberately excludes plain
-   * subscribers. Only the `/scan` rule reads it; omitted means "unknown",
+   * `hasActivePersonalPlanEntitlement`, which requires a qualifying Personal
+   * Plan source (or established special access), not just a subscription.
+   * Only the `/scan` rule reads it; omitted means "unknown",
    * treated as no paid access.
    */
   hasPaidAppAccess?: boolean
