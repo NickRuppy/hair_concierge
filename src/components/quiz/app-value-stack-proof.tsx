@@ -1,3 +1,4 @@
+import { TRUSTPILOT_REVIEWS } from "@/lib/trustpilot-reviews"
 import Image from "next/image"
 import { Star } from "lucide-react"
 
@@ -21,23 +22,7 @@ const APP_STORY_SCREENSHOTS = {
   },
 } as const satisfies Record<AppValueStackStoryTrackingId, { image: string; imageAlt: string }>
 
-const TESTIMONIALS = [
-  {
-    source: "L. · Chaarlie-Kundin",
-    quote:
-      "Der Fragebogen ist echt gut und leicht verständlich. Im Chat hat das Antworten super geklappt. Auch die Produktempfehlung fand ich gut.",
-  },
-  {
-    source: "A. · Chaarlie-Kundin",
-    quote:
-      "Ich finde die Interaktion sehr gut: meine Fragen stellen zu können und dann die benötigten Antworten zu bekommen.",
-  },
-  {
-    source: "M. · Chaarlie-Kundin",
-    quote:
-      "Dass bei den Produkten der Preis und die Anwendung dabeistehen, ein Foto und warum er es empfiehlt. So muss ich nicht erst googeln.",
-  },
-] as const
+const TESTIMONIALS = TRUSTPILOT_REVIEWS
 
 function ScreenshotFrame({
   src,
@@ -130,7 +115,7 @@ export function AppValueStackProof() {
             Echte Erfahrungen
           </p>
           <h2 className="mt-2 font-header text-[30px] font-medium leading-[1.15] text-[var(--brand-plum-darkest)]">
-            Das sagen Chaarlie-Kundinnen.
+            Das sagen unsere Nutzer über Chaarlie.
           </h2>
           <p className="mx-auto mt-3 max-w-[40ch] text-[13px] leading-[1.6] text-muted-foreground">
             Entwickelt mit Erkenntnissen aus über 4.000 Antworten auf unsere Haarpflege-Umfrage.
@@ -139,7 +124,7 @@ export function AppValueStackProof() {
           <div className="mt-6 grid gap-4">
             {TESTIMONIALS.map((testimonial) => (
               <figure
-                key={testimonial.source}
+                key={testimonial.name}
                 className="rounded-[20px] border border-white/80 bg-white px-5 py-6 text-center shadow-[0_14px_36px_-30px_rgba(var(--brand-plum-rgb),0.7)] sm:px-7"
               >
                 <FiveStars />
@@ -147,7 +132,15 @@ export function AppValueStackProof() {
                   “{testimonial.quote}”
                 </blockquote>
                 <figcaption className="mt-4 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--brand-plum)]">
-                  {testimonial.source}
+                  {testimonial.name}
+                  <a
+                    className="mt-2 block underline underline-offset-4"
+                    href={testimonial.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Auszug · Bewertung auf Trustpilot
+                  </a>
                 </figcaption>
               </figure>
             ))}

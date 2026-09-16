@@ -25,11 +25,14 @@ test("renders the approved independent chat, tracker, proof, and pricing handoff
   assert.match(html, /data-guided-story-chat=/)
   assert.match(html, /data-testid="guided-story-tracker-proof"/)
   assert.match(html, /data-testid="guided-story-testimonial-proof"/)
-  assert.match(html, /Im Chat hat das Antworten super geklappt/)
-  assert.match(html, /meine Fragen stellen zu können/)
-  assert.equal((html.match(/Chaarlie-Kundin/g) ?? []).length, 2)
-  assert.match(html, />L\.</)
-  assert.match(html, />A\.</)
+  assert.match(
+    html,
+    /Denn so hat man eine Haar Analyse die man eher selten, wenn nur auf Nachfrage bei einem Frisör bekommt./,
+  )
+  assert.match(html, /Durch die App habe ich endlich eine Routine gefunden/)
+  assert.equal((html.match(/Auszug · Bewertung auf Trustpilot/g) ?? []).length, 2)
+  assert.match(html, />Chiara</)
+  assert.match(html, />Lucia</)
   assert.match(html, /Bereit für deinen Weg zu gesünderem, schönerem Haar\?/)
   assert.match(html, /Ja, mit Chaarlie starten/)
 })

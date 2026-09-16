@@ -76,7 +76,7 @@ export const scannerRefinedStyles = `
 .sr-offer .sr-carousel-controls button{width:44px;min-height:44px;border:1px solid #e4dbea;border-radius:50%;background:#eee8f6;color:#624c76;cursor:pointer}
 .sr-offer .sr-testimonials{padding-top:28px;padding-bottom:20px;border-top:1px solid #e7deee}
 .sr-offer .sr-testimonials>div{display:grid;gap:12px;margin-top:20px}
-.sr-offer .sr-testimonials figure{margin:0;border:1px solid #e5dbea;border-radius:18px;background:white;padding:20px;display:flex;flex-direction:column;gap:10px}
+.sr-offer .sr-testimonials figure{margin:0;border:1px solid #e5dbea;border-radius:18px;background:white;padding:20px;display:flex;flex-direction:column;gap:10px;text-align:center}
 .sr-offer .sr-testimonials blockquote{font-size:14px;line-height:1.7;margin:0}
 .sr-offer .sr-testimonials figcaption{font-size:15px;line-height:1.45;font-weight:700;color:#2a1845;margin:0}
 .sr-offer .sr-faq{padding-top:24px;padding-bottom:24px}

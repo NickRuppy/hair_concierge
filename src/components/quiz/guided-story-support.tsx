@@ -1,5 +1,7 @@
 "use client"
 
+import { TRUSTPILOT_REVIEWS } from "@/lib/trustpilot-reviews"
+
 import { useEffect } from "react"
 
 import { GuidedStoryChatDemo } from "@/components/quiz/guided-story-chat-demo"
@@ -9,19 +11,7 @@ import { selectGuidedStoryChatExchange } from "@/lib/quiz/guided-story-chat"
 import type { QuizGuidedStoryPreview } from "@/lib/quiz/guided-story-preview"
 import { warmOfferStripe } from "@/lib/stripe/offer-client-loader"
 
-const TESTIMONIALS = [
-  {
-    initials: "L",
-    name: "L.",
-    quote: "Im Chat hat das Antworten super geklappt. Auch die Produktempfehlung fand ich gut.",
-  },
-  {
-    initials: "A",
-    name: "A.",
-    quote:
-      "Ich finde die Interaktion sehr gut: meine Fragen stellen zu können und dann die benötigten Antworten zu bekommen.",
-  },
-] as const
+const TESTIMONIALS = TRUSTPILOT_REVIEWS.slice(0, 2)
 
 export function GuidedStorySupport({
   firstName,
@@ -94,7 +84,7 @@ export function GuidedStorySupport({
                 <blockquote className="max-w-[28rem] text-[15px] leading-[1.65] text-[var(--brand-plum-darkest)]">
                   „{testimonial.quote}“
                 </blockquote>
-                <figcaption className="mt-6 flex items-center justify-center gap-3 text-left">
+                <figcaption className="mt-6 flex flex-col items-center justify-center gap-2 text-center">
                   <span
                     aria-hidden="true"
                     className="grid size-10 shrink-0 place-items-center rounded-full bg-[var(--brand-plum)] text-[12px] font-semibold text-white"
@@ -105,7 +95,14 @@ export function GuidedStorySupport({
                     <span className="block text-[13px] font-semibold text-[var(--brand-plum-darkest)]">
                       {testimonial.name}
                     </span>
-                    <span className="block text-[11px] text-muted-foreground">Chaarlie-Kundin</span>
+                    <a
+                      className="block text-[11px] text-muted-foreground underline underline-offset-4"
+                      href={testimonial.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Auszug · Bewertung auf Trustpilot
+                    </a>
                   </span>
                 </figcaption>
               </figure>
