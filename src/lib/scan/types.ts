@@ -3,6 +3,7 @@ import type {
   Stage3CriterionResult,
 } from "@/lib/personal-plan/products/contracts"
 import type { PlanProductRole } from "@/lib/personal-plan/types"
+import type { Stage3FitComparisonDimension } from "@/lib/personal-plan/products/comparison-dimensions"
 
 import type { ScanOpenSubmissionStatus } from "./pending-submission"
 import type { ScanSnapshotSource } from "./profile-context"
@@ -110,6 +111,14 @@ export type ScanInCatalogVerdictPayload = {
    * hidden when the category has nothing to offer.
    */
   alternatives: ScanAlternative[]
+  /** Server-only native adapter evidence; explicit web mapper strips this. */
+  mobileDimensions?: Stage3FitComparisonDimension[]
+  /** Raw authority outcome for native admission; never serialized by web routes. */
+  mobileAuthority?: {
+    status: "known" | "unknown" | "unsupported" | "pending"
+    missingFacts: string[]
+    unsupportedReason: string | null
+  }
 }
 
 /**
@@ -135,7 +144,7 @@ export type ScanVerdictPayload = ScanInCatalogVerdictPayload | ScanNotNeededVerd
 
 /** The verdict payload after the route joined catalog presentation onto the alternatives. */
 export type ScanPresentedVerdictPayload =
-  | (Omit<ScanInCatalogVerdictPayload, "alternatives"> & {
+  | (Omit<ScanInCatalogVerdictPayload, "alternatives" | "mobileDimensions" | "mobileAuthority"> & {
       alternatives: ScanAlternativePresentation[]
     })
   | ScanNotNeededVerdictPayload

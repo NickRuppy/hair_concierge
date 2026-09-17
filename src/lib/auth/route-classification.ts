@@ -81,6 +81,8 @@ const PUBLIC_API_EXACT_ROUTES = [
 ]
 
 const PROTECTED_ROUTE_PREFIXES = [
+  // Native endpoints validate their own bearer session, independently of web cookies.
+  "/api/mobile/v1",
   "/admin",
   "/anwendung",
   "/chat",
