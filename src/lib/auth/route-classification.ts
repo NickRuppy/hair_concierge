@@ -81,6 +81,8 @@ const PUBLIC_API_EXACT_ROUTES = [
 ]
 
 const PROTECTED_ROUTE_PREFIXES = [
+  // Native handlers validate their own bearer credentials.
+  "/api/mobile/v1",
   "/admin",
   "/anwendung",
   "/chat",

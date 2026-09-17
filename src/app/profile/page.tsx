@@ -233,51 +233,6 @@ function createQuizDraft(profile: HairProfile | null): QuizDraft {
   }
 }
 
-function createLocalHairProfile(
-  currentProfile: HairProfile | null,
-  userId: string,
-  fields: Partial<HairProfile>,
-): HairProfile {
-  const now = fields.updated_at ?? new Date().toISOString()
-  const hasHairLengthOverride = Object.prototype.hasOwnProperty.call(fields, "hair_length")
-
-  return {
-    id: currentProfile?.id ?? `local-${userId}`,
-    user_id: userId,
-    hair_texture: currentProfile?.hair_texture ?? null,
-    thickness: currentProfile?.thickness ?? null,
-    density: currentProfile?.density ?? null,
-    concerns: currentProfile?.concerns ?? [],
-    products_used: currentProfile?.products_used ?? null,
-    shampoo_frequency: currentProfile?.shampoo_frequency ?? null,
-    heat_styling: currentProfile?.heat_styling ?? null,
-    styling_tools: currentProfile?.styling_tools ?? null,
-    goals: currentProfile?.goals ?? [],
-    cuticle_condition: currentProfile?.cuticle_condition ?? null,
-    protein_moisture_balance: currentProfile?.protein_moisture_balance ?? null,
-    scalp_type: currentProfile?.scalp_type ?? null,
-    scalp_condition: currentProfile?.scalp_condition ?? null,
-    chemical_treatment: currentProfile?.chemical_treatment ?? [],
-    desired_volume: currentProfile?.desired_volume ?? null,
-    routine_preference: currentProfile?.routine_preference ?? null,
-    current_routine_products: currentProfile?.current_routine_products ?? null,
-    towel_material: currentProfile?.towel_material ?? null,
-    towel_technique: currentProfile?.towel_technique ?? null,
-    drying_method: currentProfile?.drying_method ?? null,
-    brush_type: currentProfile?.brush_type ?? null,
-    night_protection: currentProfile?.night_protection ?? null,
-    uses_heat_protection: currentProfile?.uses_heat_protection ?? false,
-    additional_notes: currentProfile?.additional_notes ?? null,
-    conversation_memory: currentProfile?.conversation_memory ?? null,
-    created_at: currentProfile?.created_at ?? now,
-    updated_at: now,
-    ...fields,
-    hair_length: hasHairLengthOverride
-      ? (fields.hair_length ?? null)
-      : (currentProfile?.hair_length ?? null),
-  }
-}
-
 function toggleChemicalTreatment(
   currentValues: ChemicalTreatment[],
   treatment: ChemicalTreatment,
@@ -1101,7 +1056,7 @@ export default function ProfilePage() {
       | "scalp_type"
       | "scalp_condition"
       | "chemical_treatment"
-    > & { updated_at: string } = {
+    > = {
       hair_texture: (quizDraft.hair_texture || null) as HairProfile["hair_texture"],
       thickness: (quizDraft.thickness || null) as HairProfile["thickness"],
       density: (quizDraft.density || null) as HairProfile["density"],
@@ -1113,21 +1068,20 @@ export default function ProfilePage() {
       scalp_type: (quizDraft.scalp_type || null) as HairProfile["scalp_type"],
       scalp_condition: (quizDraft.scalp_condition || null) as HairProfile["scalp_condition"],
       chemical_treatment: quizDraft.chemical_treatment,
-      updated_at: new Date().toISOString(),
     }
 
     try {
-      const { error } = await supabase.from("hair_profiles").upsert(
-        {
-          user_id: userId,
-          ...quizPayload,
-        },
-        { onConflict: "user_id" },
-      )
+      const response = await fetch("/api/profile/answers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(quizPayload),
+        cache: "no-store",
+      })
+      if (!response.ok) throw new Error("profile answers save failed")
+      const body = (await response.json()) as { hairProfile?: HairProfile }
+      if (!body.hairProfile) throw new Error("profile answers save returned no profile")
 
-      if (error) throw error
-
-      const nextProfile = createLocalHairProfile(hairProfile, userId, quizPayload)
+      const nextProfile = body.hairProfile
       setHairProfile(nextProfile)
       setQuizDraft(createQuizDraft(nextProfile))
       setQuizEditing(false)

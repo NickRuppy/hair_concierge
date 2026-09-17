@@ -41,7 +41,7 @@ export function maskAlternative(alternative: ScanAlternative): ScanMaskedAlterna
  */
 export type ScanMaskedInCatalogVerdictPayload = Omit<
   ScanInCatalogVerdictPayload,
-  "alternatives"
+  "alternatives" | "mobileDimensions" | "mobileAuthority"
 > & {
   alternatives: ScanMaskedAlternative[]
 }
@@ -49,8 +49,15 @@ export type ScanMaskedInCatalogVerdictPayload = Omit<
 export function maskScanVerdictPayload(
   verdict: ScanInCatalogVerdictPayload,
 ): ScanMaskedInCatalogVerdictPayload {
+  const {
+    mobileDimensions: _mobileDimensions,
+    mobileAuthority: _mobileAuthority,
+    ...maskedBase
+  } = verdict
+  void _mobileDimensions
+  void _mobileAuthority
   return {
-    ...verdict,
+    ...maskedBase,
     alternatives: verdict.alternatives.map(maskAlternative),
   }
 }

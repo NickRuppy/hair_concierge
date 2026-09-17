@@ -41,6 +41,11 @@ import {
 } from "@/lib/observability/app-performance"
 
 export async function proxy(request: NextRequest) {
+  // Native routes own bearer admission; browser cookies/attribution are irrelevant.
+  const pathname = request.nextUrl.pathname
+  if (pathname === "/api/mobile/v1" || pathname.startsWith("/api/mobile/v1/"))
+    return NextResponse.next({ request })
+
   if (request.nextUrl.hostname === "www.chaarlie.de") {
     const url = request.nextUrl.clone()
     url.hostname = "chaarlie.de"

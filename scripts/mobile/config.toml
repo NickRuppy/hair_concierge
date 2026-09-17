@@ -1,0 +1,53 @@
+# Isolated B1 stack. Never use the repository's production-linked local config.
+project_id = "chaarlie-hosted-proof"
+[api]
+enabled = true
+port = 55321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+[db]
+port = 55322
+shadow_port = 55320
+major_version = 17
+[db.migrations]
+enabled = true
+schema_paths = []
+[db.seed]
+enabled = false
+[realtime]
+enabled = false
+[studio]
+enabled = false
+[inbucket]
+enabled = true
+port = 55324
+[storage]
+enabled = true
+file_size_limit = "10MiB"
+[auth]
+enabled = true
+site_url = "http://127.0.0.1:3224"
+additional_redirect_urls = ["chaarlie-local://auth", "chaarlie-local://auth**", "chaarlie-pilot://auth", "chaarlie-pilot://auth**"]
+jwt_expiry = 3600
+enable_signup = false
+enable_anonymous_sign_ins = false
+[auth.rate_limit]
+email_sent = 100
+token_verifications = 100
+[auth.email]
+# CLI maps this to enabling the email provider; global auth.enable_signup stays false.
+enable_signup = true
+enable_confirmations = true
+double_confirm_changes = true
+secure_password_change = true
+max_frequency = "1s"
+otp_length = 8
+otp_expiry = 3600
+[auth.email.template.magic_link]
+subject = "Dein Chaarlie Test-Anmeldecode"
+content_path = "./supabase/templates/mobile-login.html"
+[analytics]
+enabled = false
+[edge_runtime]
+enabled = false

@@ -1,0 +1,6 @@
+<!doctype html><html lang="de"><meta charset="utf-8"><body>
+<h1>Bei Chaarlie anmelden</h1>
+<p>Dein einmaliger Anmeldecode: <strong>{{ .Token }}</strong></p>
+<p><a href="chaarlie-local://auth#callback={{ .RedirectTo | urlquery }}&amp;tokenHash={{ .TokenHash }}">In der Test-App anmelden</a></p>
+<p>Code und Link gehören zum selben Anmeldeversuch. Diese Nachricht wird ausschließlich im lokalen Test-Postfach erfasst.</p>
+</body></html>
