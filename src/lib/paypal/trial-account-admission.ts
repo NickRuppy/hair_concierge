@@ -101,9 +101,23 @@ export async function pinVerifiedPayPalTrialActivation(
   const resource = input.resource
   if (
     resource.id !== input.subscription.id ||
-    resource.status !== "ACTIVE" ||
     resource.custom_id !== input.intent.token ||
-    resource.plan_id !== attempt.paypalPlanId ||
+    resource.plan_id !== attempt.paypalPlanId
+  )
+    throw new Error("PayPal original activation evidence unavailable")
+  // The original authorization clock is immutable. A delayed, otherwise
+  // correctly bound activation event may describe the agreement after PayPal
+  // has already canceled it. Recovery still checks the fresh provider status
+  // and settled enrollment before acknowledging that callback.
+  if (attempt.authorizationSucceededAt) {
+    if (
+      resource.status === "ACTIVE" ||
+      (resource.status === "CANCELLED" && input.subscription.status === "CANCELLED")
+    )
+      return
+  }
+  if (
+    resource.status !== "ACTIVE" ||
     !resource.status_update_time ||
     !Number.isFinite(Date.parse(resource.status_update_time))
   )
@@ -562,6 +576,12 @@ async function blockPayPalTrialAgreement(
   recoveryReason?: "existing_access",
 ) {
   try {
+    const billing = await findBillingSubscriptionByProviderId(
+      deps.supabase,
+      "paypal",
+      attempt.providerReference!,
+    )
+    if (billing) throw new Error("PayPal trial billing exists before denial")
     const result = await deps.supabase
       .from("trial_enrollments")
       .update({

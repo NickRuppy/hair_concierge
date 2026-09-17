@@ -60,6 +60,7 @@ import {
 import type { PayPalSubscription } from "@/lib/paypal/subscription-shapes"
 import { toBillingSubscriptionInputFromPayPal } from "@/lib/paypal/subscription-shapes"
 import { getPayPalIntervalForPlanId } from "@/lib/paypal/plans"
+import { listPayPalTrialTransactions } from "@/lib/paypal/trial-runtime"
 import type { PaymentFailureDetails, PaymentFailureReporter } from "@/lib/observability/payment"
 import { captureServerPaymentFailure } from "@/lib/observability/payment-server"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
@@ -235,6 +236,8 @@ export async function handlePayPalWebhookEvent(
     if (!subscriptionId) throw new Error("PayPal webhook event is missing subscription id")
     const retrieve = deps.retrievePayPalSubscription ?? retrievePayPalSubscriptionForWebhook
     const subscription = await retrieve(subscriptionId)
+    if (await acknowledgeCanceledProviderClockVerification(eventType, subscription, deps))
+      return { handled: true }
     if (await handlePayPalTrialWebhook(event, subscription, deps)) return { handled: true }
 
     switch (eventType) {
@@ -371,6 +374,55 @@ export async function handlePayPalWebhookEvent(
     await releaseWebhookEventClaim(deps.supabase, "paypal", eventId)
     throw error
   }
+}
+
+async function acknowledgeCanceledProviderClockVerification(
+  eventType: string,
+  subscription: PayPalSubscription,
+  deps: PayPalWebhookDeps,
+): Promise<boolean> {
+  // This subscription was a provider-only live clock check. Keep the exception
+  // tied to its exact ID; the evidence and release criteria live in the plan.
+  if (
+    !["BILLING.SUBSCRIPTION.ACTIVATED", "BILLING.SUBSCRIPTION.CANCELLED"].includes(eventType) ||
+    subscription.id !== "I-69ESTM9ANYNB" ||
+    subscription.status !== "CANCELLED" ||
+    !/^paypal-clock-verification:[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(
+      subscription.custom_id ?? "",
+    )
+  )
+    return false
+
+  const createdAt = Date.parse(subscription.create_time ?? "")
+  const balance = subscription.billing_info?.outstanding_balance
+  if (
+    !Number.isFinite(createdAt) ||
+    createdAt > Date.now() ||
+    !/^0(?:\.0+)?$/.test(balance?.value ?? "") ||
+    !/^[A-Z]{3}$/.test(balance?.currency_code ?? "")
+  )
+    throw new Error(`PayPal clock verification ${subscription.id} requires payment reconciliation`)
+
+  const [intentById, intentByToken, billingRow] = await Promise.all([
+    findPayPalCheckoutIntentByProviderSubscriptionId(deps.supabase, subscription.id),
+    findPayPalCheckoutIntentByToken(deps.supabase, subscription.custom_id!),
+    findBillingSubscriptionByProviderId(deps.supabase, "paypal", subscription.id),
+  ])
+  if (intentById || intentByToken || billingRow) return false
+
+  const from = new Date(createdAt - 1000).toISOString()
+  const transactions = await (deps.listPayPalTrialTransactions ?? listPayPalTrialTransactions)(
+    subscription.id,
+    from,
+    new Date().toISOString(),
+  )
+  if (transactions.length)
+    throw new Error(`PayPal clock verification ${subscription.id} has transactions to reconcile`)
+  console.info("[paypal:webhook] canceled provider-only clock verification acknowledged", {
+    subscriptionId: subscription.id,
+    eventType,
+  })
+  return true
 }
 
 async function reconcilePayPalOneTimeDisputeEvent(

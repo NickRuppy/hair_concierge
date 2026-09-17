@@ -389,6 +389,8 @@ test("GET ACTIVE or a redirect alone cannot pin an authorization clock or grant 
 
 test("verified original ACTIVATED resource is required, including exact intent and plan bindings", async () => {
   const f = fixture()
+  f.attempt.authorization_succeeded_at = null
+  f.attempt.activation_event_id = null
   await assert.rejects(
     () =>
       pinVerifiedPayPalTrialActivation(
@@ -1056,6 +1058,7 @@ test("noon request keeps the billing bounds and exact start binding on admission
       /trial_reconciliation_required/,
     )
     assert.equal(f.enrollment.admission_status, "reserved")
+    assert.equal(f.subscription.status, "ACTIVE")
     assert.equal(
       f.calls.some((c) => c.rpc === "admit_trial_enrollment"),
       false,
@@ -1244,6 +1247,176 @@ test("API proof completion survives feature rollback and late activation evidenc
     f.calls.some((c) => c.rpc === "confirm_paypal_trial_activation"),
     false,
   )
+})
+
+test("a canceled activation snapshot acknowledges an already canceled and released API-proven trial", async () => {
+  const f = apiFixture()
+  const confirmedAt = new Date(Date.now() - 10_000).toISOString()
+  Object.assign(f.attempt, {
+    authorization_proof_kind: "api_confirmation",
+    authorization_succeeded_at: confirmedAt,
+    api_confirmed_at: confirmedAt,
+    api_confirmation_id: "44444444-4444-4444-8444-444444444444",
+    activation_event_id: null,
+  })
+  Object.assign(f.enrollment, {
+    admission_status: "released",
+    provider_agreement_id: f.subscription.id,
+    neutralization_required: false,
+    neutralization_evidence: `paypal:canceled:${f.subscription.id}`,
+  })
+  f.subscription.status = "CANCELLED"
+  const activationResource = {
+    ...f.subscription,
+    status_update_time: new Date().toISOString(),
+  }
+
+  assert.equal(
+    await handlePayPalTrialWebhook(
+      {
+        id: "WH-late-canceled",
+        event_type: "BILLING.SUBSCRIPTION.ACTIVATED",
+        resource: activationResource,
+      },
+      f.subscription,
+      f.deps,
+    ),
+    true,
+  )
+  assert.equal(f.enrollment.admission_status, "released")
+  assert.equal(f.attempt.authorization_succeeded_at, confirmedAt)
+  assert.equal(f.tables.billing_subscriptions.length, 0)
+  assert.equal(
+    f.calls.some((call) => call.rpc === "pin_paypal_trial_activation"),
+    false,
+  )
+})
+
+test("a proven canceled activation snapshot may omit its status clock", async () => {
+  const f = apiFixture()
+  Object.assign(f.attempt, {
+    authorization_proof_kind: "api_confirmation",
+    authorization_succeeded_at: new Date(Date.now() - 10_000).toISOString(),
+    api_confirmed_at: new Date(Date.now() - 10_000).toISOString(),
+    api_confirmation_id: "44444444-4444-4444-8444-444444444444",
+    activation_event_id: null,
+  })
+  Object.assign(f.enrollment, {
+    admission_status: "released",
+    provider_agreement_id: f.subscription.id,
+    neutralization_required: false,
+  })
+  f.subscription.status = "CANCELLED"
+  assert.equal(
+    await handlePayPalTrialWebhook(
+      {
+        id: "WH-late-canceled-no-clock",
+        event_type: "BILLING.SUBSCRIPTION.ACTIVATED",
+        resource: { ...f.subscription, status_update_time: undefined },
+      },
+      f.subscription,
+      f.deps,
+    ),
+    true,
+  )
+  assert.equal(f.tables.billing_subscriptions.length, 0)
+})
+
+test("a canceled activation snapshot cannot be replayed against a live active subscription", async () => {
+  const f = apiFixture()
+  Object.assign(f.attempt, {
+    authorization_proof_kind: "api_confirmation",
+    authorization_succeeded_at: new Date(Date.now() - 10_000).toISOString(),
+    api_confirmed_at: new Date(Date.now() - 10_000).toISOString(),
+    api_confirmation_id: "44444444-4444-4444-8444-444444444444",
+  })
+  await assert.rejects(
+    () =>
+      pinVerifiedPayPalTrialActivation(
+        {
+          intent: f.intent,
+          subscription: f.subscription,
+          eventId: "WH-stale-canceled",
+          resource: { ...f.subscription, status: "CANCELLED" },
+        },
+        f.deps,
+      ),
+    /original activation evidence unavailable/,
+  )
+})
+
+test("a late activation snapshot without a status clock can finish an API-proven reserved trial", async () => {
+  const f = apiFixture()
+  const confirmedAt = new Date(Date.now() - 10_000).toISOString()
+  Object.assign(f.attempt, {
+    authorization_proof_kind: "api_confirmation",
+    authorization_succeeded_at: confirmedAt,
+    api_confirmed_at: confirmedAt,
+    api_confirmation_id: "44444444-4444-4444-8444-444444444444",
+    activation_event_id: null,
+  })
+  assert.equal(
+    await handlePayPalTrialWebhook(
+      {
+        id: "WH-late-reserved",
+        event_type: "BILLING.SUBSCRIPTION.ACTIVATED",
+        resource: { ...f.subscription, status_update_time: undefined },
+      },
+      f.subscription,
+      f.deps,
+    ),
+    true,
+  )
+  assert.equal(f.enrollment.admission_status, "active")
+  assert.equal(f.enrollment.authorization_succeeded_at, confirmedAt)
+  assert.equal(f.tables.billing_subscriptions.length, 1)
+  assert.equal(
+    f.calls.some((call) => call.rpc === "pin_paypal_trial_activation"),
+    false,
+  )
+})
+
+test("an unproven trial still rejects an activation snapshot without its original status clock", async () => {
+  const f = apiFixture()
+  const activationResource = { ...f.subscription, status_update_time: undefined }
+  await assert.rejects(
+    () =>
+      handlePayPalTrialWebhook(
+        {
+          id: "WH-unproven",
+          event_type: "BILLING.SUBSCRIPTION.ACTIVATED",
+          resource: activationResource,
+        },
+        f.subscription,
+        f.deps,
+      ),
+    /original activation evidence unavailable/,
+  )
+  assert.equal(f.enrollment.admission_status, "reserved")
+  assert.equal(f.tables.billing_subscriptions.length, 0)
+})
+
+test("an unproven trial rejects a canceled activation snapshot even with a timestamp", async () => {
+  const f = apiFixture()
+  await assert.rejects(
+    () =>
+      handlePayPalTrialWebhook(
+        {
+          id: "WH-unproven-canceled",
+          event_type: "BILLING.SUBSCRIPTION.ACTIVATED",
+          resource: {
+            ...f.subscription,
+            status: "CANCELLED",
+            status_update_time: new Date().toISOString(),
+          },
+        },
+        f.subscription,
+        f.deps,
+      ),
+    /original activation evidence unavailable/,
+  )
+  assert.equal(f.enrollment.admission_status, "reserved")
+  assert.equal(f.tables.billing_subscriptions.length, 0)
 })
 
 test("a webhook winner returned from API confirmation governs admission", async () => {
