@@ -9,6 +9,7 @@ import {
   EAN_UNKNOWN,
   PENDING_SUBMISSION,
   PRODUCT_A_ID,
+  UNKNOWN_RESULT,
   REVEALED_ALTERNATIVES,
   REVEALED_ALTERNATIVE_NAME,
   maskedResolvePayloadFor,
@@ -35,6 +36,109 @@ import {
  */
 
 const LAB_PATH = "/labs/scan"
+
+test("dm identified: compact confirmation, proxied image, category override and explicit submit", async ({
+  page,
+}, testInfo) => {
+  await page.setViewportSize({ width: 375, height: 812 })
+  const api = await installScanApi(page)
+  const pageErrors: string[] = []
+  const directRetailerRequests: string[] = []
+  page.on("pageerror", (error) => pageErrors.push(error.message))
+  page.on("request", (request) => {
+    if (new URL(request.url()).hostname === "products.dm-static.com")
+      directRetailerRequests.push(request.url())
+  })
+  await page.route("**/api/scan/resolve", (route) =>
+    route.fulfill({
+      json: {
+        ...UNKNOWN_RESULT,
+        identified: {
+          source: "dm",
+          dan: "1234567",
+          productName: "Shampoo Rosmarin Revitalising, 250 ml",
+          brand: "WELEDA",
+          imageUrl: "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/example",
+          suggestedCategory: "shampoo",
+        },
+      },
+    }),
+  )
+  // Assert the browser uses our optimizer, with a deterministic image response; no retailer/DB traffic.
+  await page.route("**/_next/image?**", (route) =>
+    route.fulfill({
+      contentType: "image/png",
+      body: Buffer.from(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aVh8AAAAASUVORK5CYII=",
+        "base64",
+      ),
+    }),
+  )
+  await openLab(page)
+  await waitForScanningLoop(page)
+  await emit(page, EAN_UNKNOWN)
+  const dialog = page.getByRole("dialog").filter({ hasText: "Gefunden – jetzt prüfen wir es." })
+  await expect(dialog.getByText("Weleda", { exact: true })).toBeVisible()
+  await expect(dialog.getByRole("button", { name: "Ja, als Shampoo" })).toBeVisible()
+  const displayedImage = new URL((await dialog.locator("img").getAttribute("src"))!, page.url())
+  expect(displayedImage.origin).toBe(new URL(page.url()).origin)
+  expect(displayedImage.pathname).toBe("/_next/image")
+  const dimensions = await dialog.evaluate((element) => {
+    const scroller = element.querySelector(".overflow-y-auto")!
+    return {
+      height: element.getBoundingClientRect().height,
+      scroll: scroller.scrollHeight - scroller.clientHeight,
+    }
+  })
+  await page.screenshot({ path: testInfo.outputPath("dm-confirmation-375.png") })
+  expect(dimensions.scroll).toBeLessThanOrEqual(1)
+  expect(dimensions.height).toBeLessThanOrEqual(406)
+  expect(api.submitBodies).toEqual([])
+  await dialog.getByRole("button", { name: "Wofür anderes" }).click()
+  await expect(dialog.getByText("Wobei benutzt du es?", { exact: true })).toBeVisible()
+  await expect(dialog.getByRole("button", { name: "Shampoo", exact: true })).toHaveCount(0)
+  expect(api.submitBodies).toEqual([])
+  await dialog.getByRole("button", { name: "Conditioner", exact: true }).click()
+  await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "pending")
+  expect(api.submitBodies).toEqual([
+    { identifier: { type: "ean", value: EAN_UNKNOWN }, category: "conditioner" },
+  ])
+  expect(directRetailerRequests).toEqual([])
+  expect(pageErrors).toEqual([])
+})
+
+test("dm identified: ambiguous category and missing image stay usable, closing does not submit", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 812 })
+  const api = await installScanApi(page)
+  await page.route("**/api/scan/resolve", (route) =>
+    route.fulfill({
+      json: {
+        ...UNKNOWN_RESULT,
+        identified: {
+          source: "dm",
+          dan: "1234567",
+          productName: "Nutri Care 2in1, 200 ml",
+          brand: "alverde Naturkosmetik",
+          imageUrl: null,
+          suggestedCategory: null,
+        },
+      },
+    }),
+  )
+  await openLab(page)
+  await waitForScanningLoop(page)
+  await emit(page, EAN_UNKNOWN)
+  await expect(page.getByText("Nutri Care 2in1, 200 ml", { exact: true })).toBeVisible()
+  await expect(
+    page.getByRole("img", { name: "Nutri Care 2in1, 200 ml: Bild nicht verfügbar" }),
+  ).toBeVisible()
+  await expect(page.getByRole("button", { name: "Shampoo", exact: true })).toBeVisible()
+  await closeSheetContaining(page, "Nutri Care 2in1").click()
+  await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "scanning")
+  expect(api.submitBodies).toEqual([])
+})
 
 // Long enough to prove a negative without being so long that a legitimately-delayed
 // transition (the 3s search fallback) would land inside the window.

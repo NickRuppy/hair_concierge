@@ -1,0 +1,203 @@
+{
+  "tools": [
+    {
+      "name": "searchProducts",
+      "title": "searchProducts",
+      "description": "\n\t\tSearch for products available in the German dm-drogerie market (online and local stores).\n\n\t\tUSE WHEN: searching dm-drogerie products by name, category, ingredient, property, or any\n\t\tnatural language query (any language supported). Often answers questions about\n\t\tingredients and properties directly. Covers: dm-drogerie markt brands, make-up,\n\t\tskincare, perfume, hair, health, nutrition, baby & child, household, home & living,\n\t\tphoto, and pets.\n\n\t\tOUTPUT: Returns a maximum of 15 products. GTIN, DAN, brand, title, details, category,\n\t\tprice, appLink (direct product URL), description, highlights/USPs, and extensive\n\t\tattributes including:\n\t\t- Dietary/Allergen: vegan, vegetarian, bio, glutenFree, lactoseFree, sugarFree,\n\t\t  nutFree, soyFree\n\t\t- Cosmetic Ingredients: fragranceFree, alcoholFree, parabenFree, sulfateFree,\n\t\t  preservativeFree, dyeFree, oilFree, siliconeFree, naturalCosmetics\n\t\t- Product Properties: waterproof, new, limitedEdition, sellout, onlineOnly,\n\t\t  exclusiveDm, dmBrand, purchasable\n\n\t\tNOT FOR: nutritional information (calories, protein, carbs, fats), complete allergen\n\t\tlists, full ingredient details. For these, use 'getProductDetails' tool with\n\t\tthe GTINs or DANs.\n\n\t\tLIMITATIONS: Only make claims based on EXPLICITLY stated product highlights/descriptions.\n\t\tDo NOT extrapolate or assume properties not mentioned in the results.\n\t\t",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The search query for dm-drogerie products"
+          }
+        },
+        "required": ["query"]
+      },
+      "annotations": {
+        "title": "",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "getStoreAvailability",
+      "title": "Get in-store product availability",
+      "description": "\n            Check whether one or more dm-drogeriemarkt products are available in one or more\n            specific stores right now.\n\n            USE WHEN: you need to know if one or more products can currently be bought in one or\n            more particular physical stores.\n\n            INPUT: one to five storeIds and one to ten DANs (dm product numbers).\n\n            OUTPUT: for each requested DAN, whether it was found and a status per requested\n            storeId - VERFUEGBAR (available, includes current stockLevel), NICHT_VERFUEGBAR (not\n            available in this store right now), NUR_ONLINE (this product is not carried in ANY\n            dm store, not just this one), PRODUKT_UNBEKANNT (DAN not found), or STORE_UNBEKANNT\n            (storeId does not exist in our system).\n\n            IMPORTANT: NUR_ONLINE means the product itself is never sold in physical dm stores -\n            it will be the same result for every store. Do not check other or nearby stores for\n            that product; tell the customer it is online-only right away.\n\n            IMPORTANT: storeIds MUST come from the findNearbyStores tool - call it first to\n            resolve the storeId(s) for a location. Never invent, guess, or otherwise make up a\n            storeId yourself; a made-up storeId will come back as STORE_UNBEKANNT instead of a\n            real availability answer.\n\n            IMPORTANT: if a customer asks about availability for several products, pass ALL of\n            their DANs (up to 10) into this single call. Never assume, infer, or extrapolate the\n            availability of a product you have not included in a call and gotten a result for -\n            not even from a similar or already-checked product, and not even for \"usually\n            available\" items. When reporting back, state the result for every single product\n            individually (e.g. one line per product) - never collapse multiple products into one\n            summary statement such as \"all of them are available\".\n\n            TIP: if a product's result is NUR_ONLINE, or it is NICHT_VERFUEGBAR and you already\n            know from an earlier product lookup that it is available online, suggest buying it\n            online instead and include a link to the product page if you have one.\n\n            NOT FOR: click & collect / express pickup or same-day delivery eligibility (not covered\n            by this tool), or repeatedly polling a store's stock over time.\n\n            ERRORS: validation error if any DAN is invalid, dans is empty, more than 10 dans are\n            given, storeIds is empty, or more than 5 storeIds are given.\n            ",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "storeIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Store IDs of the physical dm stores (1-5)"
+          },
+          "dans": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "DANs (dm product numbers) (1-10)"
+          }
+        },
+        "required": ["storeIds", "dans"]
+      },
+      "annotations": {
+        "title": "",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "findNearbyStores",
+      "description": "Findet dm-Märkte in der Nähe eines Ortes. Erfordert eine eindeutig identifizierbare Ortsangabe (Stadt, Stadtteil, PLZ, Straße mit Stadt oder vollständige Adresse mit Stadt). Bei Straßenname ohne Stadt oder mehrdeutigen Angaben das Tool NICHT aufrufen, sondern Rückfrage stellen. Tool genau einmal pro Anfrage aufrufen. Filter-Args (storeServices_filter, store_open=true) DÜRFEN in einem zweiten Call NICHT entfernt oder gelockert werden — sonst werden dem Kunden Märkte angezeigt, die seine Anforderungen nicht erfüllen (z.B. ein nicht-barrierefreier Markt bei Filter 'barrierefrei', ein geschlossener Markt bei store_open=true). Eine leere oder kurze Ergebnisliste ist die korrekte Antwort, wenn kein Markt das Kriterium erfüllt. Gibt TOON-formatierte Marktdaten zurück (storeId, Name, Adresse, Telefon, Koordinaten, Öffnungszeiten, Ausstattungsmerkmale, Distanz in km). Märkte aufsteigend nach distanceKm sortiert. Das Feld next7Days enthält die effektiven Öffnungszeiten der nächsten 7 Tage ab heute (Zeitzone Europe/Berlin) — inklusive Sonderschließungen (z.B. Feiertage) und Sonderöffnungszeiten (z.B. verkaufsoffener Sonntag), die die Standardzeiten überschreiben. Pro Tag 'Wochentag TT.MM. HH:MM-HH:MM' (mehrere Spannen mit '; ' getrennt) oder 'Wochentag TT.MM. geschlossen'; die Tage sind mit ' / ' getrennt, der erste Tag ist heute. Beispiel: 'Do 18.06. 09:00-20:00 / Fr 19.06. 08:00-20:00 / Sa 20.06. geschlossen'. Fragen zu einem konkreten Wochentag innerhalb der nächsten 7 Tage (z.B. 'Hat der Markt Samstag geöffnet?') aus diesem Feld beantworten. Tage darüber hinaus sind NICHT enthalten — dafür darauf hinweisen, dass nur die nächsten 7 Tage vorliegen. Das Feld amenities listet die offiziellen Bezeichnungen der Ausstattung und Services. Kunden fragen oft mit Marken-, Umgangs- oder Synonymnamen, die davon abweichen — diese auf die amenities abbilden, z.B. ist der 'Sapur' bzw. 'Sapur-Teppichreiniger' als 'Teppichreiniger ausleihen' gelistet. Ist ein passendes Merkmal vorhanden, die Frage bejahen; nur verneinen, wenn kein entsprechendes Merkmal in amenities steht.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Eindeutige Ortsangabe. Ausreichend: 'Calw', 'Stuttgart Mitte', '76131' (PLZ), 'Bahnhofstraße 5 Karlsruhe'. NICHT ausreichend (Rückfrage stellen): 'Kurpfalzstraße' (Straße ohne Stadt)."
+          },
+          "min_results": {
+            "default": 5,
+            "description": "Minimale Anzahl zurückgegebener Märkte",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "store_open": {
+            "default": false,
+            "description": "Nur aktuell geöffnete Märkte zurückgeben",
+            "type": "boolean"
+          },
+          "storeServices_filter": {
+            "description": "Filtert Märkte nach Ausstattungsmerkmal, z.B. 'Stillecke', 'Wickeltisch', 'Parkplätze', 'barrierefrei'. Einmal gesetzt, in Folge-Calls derselben Anfrage beibehalten.",
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "required": ["location"],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "getProductDetails",
+      "title": "Get detailed Product Information",
+      "description": "Retrieve detailed product information for dm-drogeriemarkt products.\n\nUSE WHEN: ingredients, nutrition facts, allergens, usage instructions,\nwarnings, hazard info, product URLs/images\n\nINPUT: DANs (7 digits, preferred) and/or GTINs (8-14 digits)\nmultiple products can be requested at once min 1 / max 50.\nUse search tool first if only product name is known.\n\nOUTPUT: TOON format (compact YAML-like). Fields: name, brand, description,\ningredients, nutrition, allergens, usage, warnings, URLs, images.\nfound=false for unresolved IDs.\n\nNOT FOR: prices, availability, stock, reviews, recommendations\n\nERRORS: validation error if >50 or no identifiers\n",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "gtins": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "GTINs (8-14 digits)"
+          },
+          "dans": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "DANs (exactly 7 digits, preferred over GTIN)"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "title": "",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    },
+    {
+      "name": "renderProductTiles",
+      "title": "Show Products as Cards",
+      "description": "Retrieve dm-drogeriemarkt products and render them as a visual card grid\n(product image, brand, name, link to the product page).\n\nUSE WHEN: the user wants to see products, an overview of several products,\nor a picture/link instead of a text description\n\nINPUT: DANs (7 digits, preferred) and/or GTINs (8-14 digits)\nmultiple products can be requested at once min 1 / max 50.\nUse search tool first if only product name is known.\n\nOUTPUT: card grid rendered by the host. found=false for unresolved IDs.\n\nNOT FOR: ingredients, nutrition facts, allergens, warnings - the cards do not\nshow them, use getProductDetails for those.\nNot for prices, availability, stock, reviews, recommendations.\n\nERRORS: validation error if >50 or no identifiers\n",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "gtins": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "GTINs (8-14 digits)"
+          },
+          "dans": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "DANs (exactly 7 digits, preferred over GTIN)"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "title": "",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "openai/outputTemplate": "ui://product-details/card.html",
+        "ui": {
+          "resourceUri": "ui://product-details/card.html"
+        },
+        "fastmcp": {
+          "tags": []
+        }
+      }
+    }
+  ]
+}

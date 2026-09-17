@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { after } from "next/server"
 
 import {
   productIntakeCategorySchema,
@@ -12,9 +13,13 @@ import {
 import type { ScanProductIntakeSubmissionResult } from "@/lib/product-intake/types"
 import { checkRateLimit } from "@/lib/rate-limit"
 import { filterScanEligibleProductIds } from "@/lib/scan/catalog-eligibility"
+import { resolveRetailerEnrichment } from "@/lib/scan/enrichment/resolve-enrichment"
+import { retailerEnrichmentTimeoutMs } from "@/lib/scan/enrichment/flag"
+import type { RetailerLookupResult } from "@/lib/scan/enrichment/types"
 import { validateEanInput } from "@/lib/scan/identifier-lookup"
+import { recordScanSubmitDmLookupEvent } from "@/lib/scan/submit-dm-event-log"
 import { SCAN_PENDING_SUBMISSION_HEADLINE } from "@/lib/scan/verdict-labels"
-import { captureScanException } from "@/lib/observability/scan"
+import { captureScanException, reportRetailerLookupWarning } from "@/lib/observability/scan"
 import { createScanRoute, parseJsonBody, scanFail, scanOk } from "@/lib/scan/route"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -45,11 +50,15 @@ export type ScanSubmitRouteDeps = {
   createAdminClient: typeof createAdminClient
   createRepository: (admin: ReturnType<typeof createAdminClient>) => ProductIntakeRepository
   filterScanEligibleProductIds: typeof filterScanEligibleProductIds
+  resolveRetailerEnrichment: typeof resolveRetailerEnrichment
+  recordScanSubmitDmLookupEvent: typeof recordScanSubmitDmLookupEvent
   submit: typeof submitScanProductIntake
   captureScanException?: typeof captureScanException
+  after?: (task: () => Promise<void> | void) => void
 }
 
 export function createScanSubmitRouteHandler(deps: ScanSubmitRouteDeps) {
+  const runAfter = deps.after ?? after
   return createScanRoute<z.infer<typeof submitBodySchema>>({
     route: "submit",
     deps,
@@ -77,11 +86,49 @@ export function createScanSubmitRouteHandler(deps: ScanSubmitRouteDeps) {
         replace_existing_confirmed: false,
       }
 
+      const lookupStarted = performance.now()
+      let lookup: RetailerLookupResult
+      try {
+        lookup = await deps.resolveRetailerEnrichment(validation.value, { route: "submit" })
+      } catch {
+        // Lookup failure cannot block the user's category-confirmed submission.
+        reportRetailerLookupWarning({ route: "submit", reason: "unexpected" })
+        lookup = {
+          enrichment: null,
+          outcome: "unexpected",
+          durationMs: Math.max(0, Math.round(performance.now() - lookupStarted)),
+          deadlineMs: retailerEnrichmentTimeoutMs(),
+        }
+      }
+
       const admin = deps.createAdminClient()
+      const lookupEvent = {
+        outcome: lookup.outcome,
+        durationMs: lookup.durationMs,
+        deadlineMs: lookup.deadlineMs,
+        createdAt: new Date().toISOString(),
+      }
+      const recordLookup = () =>
+        deps.recordScanSubmitDmLookupEvent(
+          admin,
+          lookupEvent,
+          deps.captureScanException ?? captureScanException,
+        )
+      try {
+        // The lookup is part of the submission response, but diagnostic storage is not.
+        runAfter(recordLookup)
+      } catch {
+        // No request-scoped waitUntil: still attempt the fail-open writer without delaying submit.
+        console.warn("[scan] submit dm telemetry scheduling failed")
+        void Promise.resolve()
+          .then(recordLookup)
+          .catch(() => console.warn("[scan] submit dm telemetry fallback failed"))
+      }
       const repository = deps.createRepository(admin)
       const result = await deps.submit({
         userId: ctx.userId,
         input,
+        enrichment: lookup.enrichment,
         repository,
         // Batch-shaped helper (one query for many ids), deliberately called with a single
         // id: a submit has at most one catalog match to gate.
@@ -113,5 +160,7 @@ export const POST = createScanSubmitRouteHandler({
   createAdminClient,
   createRepository: createSupabaseProductIntakeRepository,
   filterScanEligibleProductIds,
+  resolveRetailerEnrichment,
+  recordScanSubmitDmLookupEvent,
   submit: submitScanProductIntake,
 })

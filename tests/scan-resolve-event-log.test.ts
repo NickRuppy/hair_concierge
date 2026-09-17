@@ -112,6 +112,48 @@ test("completes exactly the same unfinished attempt with the v2 terminal outcome
   ])
 })
 
+test("persists dm lookup telemetry only when the completed resolve was eligible", async () => {
+  let updated: unknown = null
+  const client = {
+    from() {
+      return {
+        update(row: unknown) {
+          updated = row
+          return {
+            eq() {
+              return {
+                is: async () => ({ error: null }),
+              }
+            },
+          }
+        },
+      }
+    },
+  }
+
+  await completeScanResolveAttempt(client as never, {
+    attemptId: "00000000-0000-4000-8000-000000000001",
+    lookupOutcome: "miss",
+    terminalOutcome: "unknown_product",
+    matchedProductId: null,
+    failureStage: null,
+    dmLookup: { outcome: "hit", durationMs: 420, deadlineMs: 1500 },
+  })
+
+  assert.deepEqual(
+    {
+      dm_lookup_outcome: (updated as Record<string, unknown>).dm_lookup_outcome,
+      dm_lookup_duration_ms: (updated as Record<string, unknown>).dm_lookup_duration_ms,
+      dm_lookup_deadline_ms: (updated as Record<string, unknown>).dm_lookup_deadline_ms,
+    },
+    {
+      dm_lookup_outcome: "hit",
+      dm_lookup_duration_ms: 420,
+      dm_lookup_deadline_ms: 1500,
+    },
+  )
+})
+
 test("non-GTIN raw value logs a null canonical value", async () => {
   const { client, inserted } = stubClient({ error: null })
 

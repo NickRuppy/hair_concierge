@@ -17,6 +17,56 @@ Kalendertagen in die service-role-only Tagesaggregate überführt. Die Aggregate
 enthalten weder `user_id`, `raw_value` noch `matched_product_id` und werden
 nach 12 Monaten gelöscht.
 
+## dm-Lookup-Messung
+
+Die additive dm-Messung bewertet den Katalog-Resolve nicht neu. Bei einem
+berechtigten echten Miss nach dem Open-Submission-Check stehen auf
+`scan_resolve_events` zusätzlich `dm_lookup_outcome`,
+`dm_lookup_duration_ms` und `dm_lookup_deadline_ms`. Alle anderen
+Resolve-Zeilen behalten diese drei Felder auf `NULL`; `NULL` bedeutet also
+„kein berechtigter dm-Lookup“, nicht „dm hat das Produkt nicht gefunden“.
+`disabled` ist dagegen ein gemessener, berechtigter Lookup ohne Outbound-
+Aufruf und bleibt als Outcome sichtbar.
+
+`scan_submit_dm_lookup_events` misst jeden berechtigten submit-seitigen
+Lookup. Sie enthält absichtlich nur Zeitstempel, Outcome, Dauer und Deadline:
+keine Nutzer-ID, keinen Barcode/GTIN, keine Produkt- oder Submission-ID und
+keinen dm-Payload. Beide Rohquellen sind nur für `service_role` zugänglich.
+
+Vor dem Löschen überführt `private.run_scan_resolve_retention()` beide
+Rohquellen in `scan_dm_lookup_daily_aggregates`, gruppiert nach UTC-Tag,
+Route (`resolve`/`submit`), Outcome, verwendeter Deadline und Dauer-Bucket.
+Die Buckets sind `0_249`, `250_499`, `500_999`, `1000_1499`,
+`1500_1999`, `2000_2999`, `3000_4999` und `5000_plus` Millisekunden.
+`not_called` bedeutet `duration_ms IS NULL`; sein Aggregate-Schlüssel
+verwendet `deadline_ms = 0`, weil ein Primärschlüssel kein `NULL` als
+idempotenten Bucket zulässt. `duration_sum_ms` ist dort nullfrei und daher
+`0`. Die Funktion ersetzt beim Wiederholen den exakten Tagesbucket, bevor
+sie Rohzeilen löscht; sie verdoppelt keine Counts.
+
+```sql
+select
+  day,
+  route,
+  outcome,
+  deadline_ms,
+  latency_bucket,
+  sum(event_count) as lookups,
+  sum(duration_sum_ms) as duration_sum_ms
+from public.scan_dm_lookup_daily_aggregates
+group by 1, 2, 3, 4, 5
+order by day desc, route, outcome, deadline_ms, latency_bucket;
+```
+
+Die 30-Tage-Rohdaten erlauben exakte p50/p95-Berechnungen aus
+`duration_ms`. Die 12-Monats-Aggregate erlauben nur eine Bucket-Näherung,
+nicht ein exaktes Perzentil. Für die dm-Hit-Quote ist der Nenner ausschließlich
+ein abgeschlossener, echter Katalog-Miss mit nicht-null
+`dm_lookup_outcome`; offene Submissions, Quarantäne, ungültige Eingaben und
+Resolve-Zeilen ohne dm-Felder werden separat gezählt. Eine fehlende
+dm-Messung auf einem berechtigten Miss ist ein Telemetriefehler, kein
+`not_found`.
+
 ## V2: Backfill-Prioritäten aus aktuellen Rohereignissen
 
 ```sql

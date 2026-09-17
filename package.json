@@ -191,6 +191,7 @@
     "@langfuse/openai": "^5.2.0",
     "@langfuse/otel": "^5.2.0",
     "@langfuse/tracing": "^5.1.0",
+    "@modelcontextprotocol/sdk": "1.30.0",
     "@opentelemetry/sdk-node": "^0.216.0",
     "@paypal/react-paypal-js": "^9.2.0",
     "@sentry/nextjs": "^10.51.0",

@@ -176,6 +176,12 @@ function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRou
     createAdminClient: () => ({}) as never,
     validateEanInput: () => ({ ok: true, type: "ean", value: ALT_A_EAN }),
     findOpenScanSubmission: async () => null,
+    resolveRetailerEnrichment: async () => ({
+      enrichment: null,
+      outcome: "disabled",
+      durationMs: null,
+      deadlineMs: null,
+    }),
     createScanResolveAttemptId: () => "attempt-1",
     recordScanResolveAttempt: async () => {},
     completeScanResolveAttempt: async () => {},
@@ -374,4 +380,51 @@ test("anti-leak: masking survives an alternative whose productId collides with a
     // is that the alternative carries no id field of its own to compare against at all.
     assert.equal(Object.hasOwn(body.alternatives[0], "productId"), false)
   })
+})
+
+test("anti-leak: dm-identified unknown exposes only the product-row subset", async () => {
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      lookupCatalogProductByIdentifier: async () => null,
+      resolveRetailerEnrichment: async () => ({
+        outcome: "hit",
+        durationMs: 220,
+        deadlineMs: 1500,
+        enrichment: {
+          source: "dm",
+          fetchedAt: "2026-09-17T10:00:00.000Z",
+          gtin: "04006381333931",
+          dan: "1234567",
+          productName: "Repair Shampoo",
+          brand: "WELEDA",
+          imageUrl: "https://products.dm-static.com/images/repair.jpg",
+          productUrl: "https://dm.de/secret-product-url",
+          ingredientsText: "Sensitive secret ingredients",
+          description: "Sensitive secret description",
+          keyBenefits: "Sensitive secret benefit",
+          suggestedCategory: "shampoo",
+        },
+      }),
+    }),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: ALT_A_EAN } }))
+  assert.equal(response.status, 200)
+  const raw = await response.text()
+  const body = JSON.parse(raw)
+  assert.deepEqual(Object.keys(body.identified).sort(), [
+    "brand",
+    "dan",
+    "imageUrl",
+    "productName",
+    "source",
+    "suggestedCategory",
+  ])
+  for (const secret of [
+    "Sensitive secret ingredients",
+    "Sensitive secret description",
+    "Sensitive secret benefit",
+    "secret-product-url",
+  ]) {
+    assert.equal(raw.includes(secret), false, secret)
+  }
 })

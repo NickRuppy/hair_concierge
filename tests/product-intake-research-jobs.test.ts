@@ -18,6 +18,11 @@ import {
   finalImageUploadDecisionFromArtifacts,
 } from "../apps/product-intake-review/app/api/submissions/[submissionId]/publish/final-image-handoff"
 import { buildReviewPropertyRows } from "../apps/product-intake-review/app/submissions/[submissionId]/review-property-rows"
+import {
+  createRetailerEnrichmentWarningReporter,
+  parseRetailerEnrichmentPacket,
+  retailerEnrichmentPacketFromIntakeHistory,
+} from "../scripts/product-intake/retailer-enrichment-packet"
 
 const migration = readFileSync(
   "supabase/migrations/20260630120000_product_intake_research_jobs.sql",
@@ -114,6 +119,97 @@ const REVIEW_CATEGORY_KEYS: ProductIntakeReviewCategoryKey[] = [
   "heat_protectant",
   "scalp_care",
 ]
+
+test("worker packet keeps only exact-GTIN dm provenance and makes retailer images candidates", () => {
+  const history = [
+    {
+      at: "2026-09-17T10:00:01.000Z",
+      source: "retailer_enrichment",
+      retailer: "dm",
+      enrichment: {
+        source: "dm",
+        fetchedAt: "2026-09-17T10:00:00.000Z",
+        gtin: "4001638530378",
+        dan: "1234567",
+        productName: "Exact product",
+        brand: "DM",
+        imageUrl: "https://products.dm-static.com/images/example.png",
+        productUrl: "https://www.dm.de/example",
+        ingredientsText: "Aqua",
+        suggestedCategory: "mask",
+      },
+    },
+  ]
+
+  const packet = retailerEnrichmentPacketFromIntakeHistory(history, {
+    type: "ean",
+    value: "4001638530378",
+  })
+
+  assert.deepEqual(packet, {
+    source: "dm",
+    fetched_at: "2026-09-17T10:00:00.000Z",
+    gtin: "4001638530378",
+    dan: "1234567",
+    product_name: "Exact product",
+    brand: "DM",
+    ingredients_text: "Aqua",
+    product_url: "https://www.dm.de/example",
+    image_url_candidate: "https://products.dm-static.com/images/example.png",
+    suggested_category: "mask",
+  })
+  assert.equal("image_url" in (packet ?? {}), false)
+
+  const mismatch = retailerEnrichmentPacketFromIntakeHistory(history, {
+    type: "ean",
+    value: "4006381333931",
+  })
+  assert.equal(mismatch, null)
+})
+
+test("worker packet reports an exact-GTIN mismatch without preserving a packet or leaking payload", () => {
+  const parsed = parseRetailerEnrichmentPacket(
+    [
+      {
+        source: "retailer_enrichment",
+        retailer: "dm",
+        enrichment: {
+          source: "dm",
+          fetchedAt: "2026-09-17T10:00:00.000Z",
+          gtin: "4001638530378",
+          dan: "1234567",
+          productName: "Secret product name",
+        },
+      },
+    ],
+    { type: "ean", value: "4006381333931" },
+  )
+
+  assert.deepEqual(parsed, { packet: null, warning: "gtin_mismatch" })
+
+  const emitted: Array<{ message: string; fields: Record<string, string> }> = []
+  let now = 1_000
+  const report = createRetailerEnrichmentWarningReporter({
+    now: () => now,
+    emit: (message, fields) => emitted.push({ message, fields }),
+  })
+
+  report(parsed.warning)
+  report(parsed.warning)
+  now += 60_000
+  report(parsed.warning)
+
+  assert.deepEqual(emitted, [
+    {
+      message: "product_intake_retailer_enrichment_warning",
+      fields: { reason: "gtin_mismatch", source: "dm" },
+    },
+    {
+      message: "product_intake_retailer_enrichment_warning",
+      fields: { reason: "gtin_mismatch", source: "dm" },
+    },
+  ])
+})
 
 const ARRAY_SPEC_TABLES = new Set([
   "product_shampoo_specs",
@@ -1072,6 +1168,8 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /derive Shampoo protocol roles from the reviewed Shampoo buckets/i)
   assert.match(workerScript, /A schuppen-only Shampoo is complete without shampoo_everyday/i)
   assert.match(workerScript, /loadBrandResolutionCatalogForWorker/)
+  assert.match(workerScript, /retailer_enrichment/)
+  assert.match(workerScript, /scanned_identifier_type, scanned_identifier_value, intake_history/)
   assert.match(workerScript, /brand_resolution_context/)
   assert.match(workerScript, /resolveBrandFromText/)
   assert.match(workerScript, /brands"\)\.select\("id, canonical_name, normalized_name"\)/)

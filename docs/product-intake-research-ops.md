@@ -450,6 +450,34 @@ What this cockpit intentionally must not do:
 - Notify users unless the guarded publish route or the legacy approval command
   has actually completed.
 
+### Retailer enrichment (dm) on scan submissions
+
+An unknown scan may carry a `retailer_enrichment` entry in the existing
+`product_submissions.intake_history`. It is a dm-sourced research lead created
+only after the user confirms a category; it does not create a second queue or a
+catalog product. The worker exposes it in its prompt packet only when the
+returned GTIN canonicalizes to the submission's scanned GTIN.
+
+Treat its identity, ingredient text, product URL, image URL, and suggested
+category as provenance-tagged draft evidence. Independently verify the product
+before proposing a final payload, record conflicts in the normal review
+decisions, and never regard user category confirmation as a quality verdict.
+The dm image URL is a raw candidate only: it still needs the usual visual
+review, processing, and guarded `product-images` upload. It must never become
+the final catalog `image_url`.
+
+The monitored public trial does not settle dm's terms for continuing public or
+commercial display and storage. Reassess those terms before treating this as
+an indefinite source; the intake approval boundary remains unchanged.
+
+The lookup is controlled by server-only environment values: set
+`SCAN_RETAILER_ENRICHMENT_ENABLED=true` only for the monitored trial; it is
+otherwise off. `SCAN_RETAILER_ENRICHMENT_TIMEOUT_MS` is the full-operation
+cap in milliseconds, defaults safely to `1500`, and accepts only whole values
+from `1` through `10000`. The repository deliberately has no tracked
+`.env.example` because its blanket environment-file ignore prevents it from
+being a reliable source of configuration.
+
 The internal app is local no-login for development. Do not deploy it publicly
 without a deployment-level protection gate.
 

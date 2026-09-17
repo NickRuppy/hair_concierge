@@ -26,6 +26,24 @@ export type ScanResolveFailureStage =
   | "alternative_filter"
   | "response_build"
 
+export type ScanDmLookupOutcome =
+  | "disabled"
+  | "hit"
+  | "not_found"
+  | "timeout"
+  | "session_expired"
+  | "transport"
+  | "malformed"
+  | "gtin_mismatch"
+  | "unexpected"
+  | "invalid_gtin"
+
+export type ScanDmLookupTelemetry = {
+  outcome: ScanDmLookupOutcome
+  durationMs: number | null
+  deadlineMs: number | null
+}
+
 export type ScanResolveAttempt = {
   attemptId: string
   userId: string
@@ -45,6 +63,11 @@ export type ScanResolveAttemptCompletion = {
   terminalOutcome: ScanResolveTerminalOutcome
   matchedProductId: string | null
   failureStage: ScanResolveFailureStage | null
+  /**
+   * Present only for an eligible, true catalog miss after the open-submission
+   * gate. Other resolve paths deliberately leave the three dm columns null.
+   */
+  dmLookup?: ScanDmLookupTelemetry | null
 }
 
 /**
@@ -129,6 +152,13 @@ export async function completeScanResolveAttempt(
         terminal_outcome: completion.terminalOutcome,
         matched_product_id: completion.matchedProductId,
         failure_stage: completion.failureStage,
+        ...(completion.dmLookup
+          ? {
+              dm_lookup_outcome: completion.dmLookup.outcome,
+              dm_lookup_duration_ms: completion.dmLookup.durationMs,
+              dm_lookup_deadline_ms: completion.dmLookup.deadlineMs,
+            }
+          : {}),
         completed_at: new Date().toISOString(),
       })
       .eq("id", completion.attemptId)

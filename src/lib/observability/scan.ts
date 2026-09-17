@@ -76,6 +76,38 @@ export function captureScanException(
   })
 }
 
+export type RetailerLookupWarningDetails = {
+  route: "resolve" | "submit"
+  reason: "session_expired" | "transport" | "malformed" | "gtin_mismatch" | "unexpected"
+}
+
+const RETAILER_WARNING_THROTTLE_MS = 60_000
+const retailerWarningNextAllowedAt = new Map<string, number>()
+
+/** Sanitized, rate-limited warning for fail-open dm lookup faults. */
+export function reportRetailerLookupWarning(
+  details: RetailerLookupWarningDetails,
+  capture: typeof captureScanException = captureScanException,
+  now: () => number = Date.now,
+): void {
+  const key = details.route + ":" + details.reason
+  const currentTime = now()
+  if (currentTime < (retailerWarningNextAllowedAt.get(key) ?? 0)) return
+  retailerWarningNextAllowedAt.set(key, currentTime + RETAILER_WARNING_THROTTLE_MS)
+  try {
+    // The underlying transport error may contain URLs, identifiers or response payloads.
+    // Neither its message nor its stack enters this event.
+    capture(new Error("scan_retailer_lookup_failed"), {
+      route: details.route,
+      status: 200,
+      reason: "retailer_lookup_" + details.reason,
+      level: "warning",
+    })
+  } catch {
+    // Enrichment and its diagnostics must never determine the scan response.
+  }
+}
+
 function addOptional(
   target: Record<string, unknown>,
   key: string,

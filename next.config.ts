@@ -73,7 +73,9 @@ export const nextConfig: NextConfig = {
     root: process.cwd(),
   },
   images: {
+    maximumRedirects: 0,
     remotePatterns: [
+      { protocol: "https", hostname: "products.dm-static.com", pathname: "/images/**" },
       {
         protocol: "https",
         hostname: "www.tophair.de",

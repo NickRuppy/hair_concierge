@@ -17,6 +17,9 @@ import {
 } from "@/lib/personal-plan/products/contracts"
 import { normalizeIdentifierValue } from "@/lib/product-identity/normalize"
 import { checkRateLimit } from "@/lib/rate-limit"
+import { resolveRetailerEnrichment } from "@/lib/scan/enrichment/resolve-enrichment"
+import { retailerEnrichmentTimeoutMs } from "@/lib/scan/enrichment/flag"
+import type { RetailerEnrichment, RetailerLookupResult } from "@/lib/scan/enrichment/types"
 import {
   isProductSearchQuarantined,
   loadQuarantinedProductIdsAmong,
@@ -48,7 +51,7 @@ import {
 } from "@/lib/scan/saved-state"
 import type { ScanResolveResult, ScanResolvedVerdictResult } from "@/lib/scan/types"
 import { SCAN_PENDING_SUBMISSION_HEADLINE } from "@/lib/scan/verdict-labels"
-import { captureScanException } from "@/lib/observability/scan"
+import { captureScanException, reportRetailerLookupWarning } from "@/lib/observability/scan"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 import { isPersonalPlanFieldTestGuest } from "@/lib/supabase/middleware"
@@ -86,6 +89,7 @@ export type ScanResolveRouteDeps = {
   createAdminClient: typeof createAdminClient
   validateEanInput: typeof validateEanInput
   findOpenScanSubmission: typeof findOpenScanSubmission
+  resolveRetailerEnrichment: typeof resolveRetailerEnrichment
   createScanResolveAttemptId: typeof createScanResolveAttemptId
   recordScanResolveAttempt: typeof recordScanResolveAttempt
   completeScanResolveAttempt: typeof completeScanResolveAttempt
@@ -146,6 +150,7 @@ type ResolveAttemptTracker = {
   /** Request start, written as the attempt row's `created_at` — see `ScanResolveAttempt`. */
   startedAt: string
   lookupOutcome: ScanResolveLookupOutcome | null
+  dmLookup: Pick<RetailerLookupResult, "outcome" | "durationMs" | "deadlineMs"> | null
   matchedProductId: string | null
   failureStage: ScanResolveFailureStage
   /** Deferred telemetry writes, drained in FIFO order — see `scheduleAttemptWrite`. */
@@ -225,6 +230,7 @@ function completeResolveAttempt(
     terminalOutcome,
     matchedProductId: attempt.matchedProductId,
     failureStage: stage,
+    ...(attempt.dmLookup ? { dmLookup: attempt.dmLookup } : {}),
   }
   scheduleAttemptWrite(attempt, runAfter, () =>
     deps.completeScanResolveAttempt(
@@ -254,6 +260,7 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
             attemptId: null,
             startedAt: new Date().toISOString(),
             lookupOutcome: null,
+            dmLookup: null,
             matchedProductId: null,
             failureStage: "identifier_lookup",
             telemetryWrites: [],
@@ -278,13 +285,29 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
       const { input, attempt, client } = ctx.body
       const userId = ctx.userId
 
-      const unknownProduct = (type: "ean", value: string): ScanResolveResult => ({
+      const unknownProduct = (
+        type: "ean",
+        value: string,
+        enrichment: RetailerEnrichment | null = null,
+      ): ScanResolveResult => ({
         kind: "unknown_product",
         identifier: { type, value },
         categories: PERSONAL_PLAN_PRODUCT_CATEGORIES.map((key) => ({
           key,
           label: CATEGORY_COPY[key].label,
         })),
+        ...(enrichment
+          ? {
+              identified: {
+                source: "dm" as const,
+                dan: enrichment.dan,
+                productName: enrichment.productName,
+                brand: enrichment.brand,
+                imageUrl: enrichment.imageUrl,
+                suggestedCategory: enrichment.suggestedCategory,
+              },
+            }
+          : {}),
       })
 
       const completeAttempt = (
@@ -356,6 +379,29 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
               headline: SCAN_PENDING_SUBMISSION_HEADLINE,
               status: pending.status,
             } satisfies ScanResolveResult)
+          }
+          if (!hit) {
+            const started = performance.now()
+            let lookup: RetailerLookupResult
+            try {
+              lookup = await deps.resolveRetailerEnrichment(validation.value, { route: "resolve" })
+            } catch {
+              // A broken injected/client dependency must not turn a catalog miss into a scan 5xx.
+              reportRetailerLookupWarning({ route: "resolve", reason: "unexpected" })
+              lookup = {
+                enrichment: null,
+                outcome: "unexpected",
+                durationMs: Math.max(0, Math.round(performance.now() - started)),
+                deadlineMs: retailerEnrichmentTimeoutMs(),
+              }
+            }
+            attempt.dmLookup = {
+              outcome: lookup.outcome,
+              durationMs: lookup.durationMs,
+              deadlineMs: lookup.deadlineMs,
+            }
+            completeAttempt("unknown_product", null)
+            return scanOk(unknownProduct(identifier.type, normalizedValue, lookup.enrichment))
           }
           completeAttempt("unknown_product", null)
           return scanOk(unknownProduct(identifier.type, normalizedValue))
@@ -595,6 +641,7 @@ export const POST = createScanResolveRouteHandler({
   createAdminClient,
   validateEanInput,
   findOpenScanSubmission,
+  resolveRetailerEnrichment,
   createScanResolveAttemptId,
   recordScanResolveAttempt,
   completeScanResolveAttempt,
