@@ -1,7 +1,11 @@
 import { expect, test, type Page } from "@playwright/test"
 
 import { SCAN_CONFIRM_LABEL, SCAN_HINT_DEFAULT, SCAN_HINT_SPOTTED } from "../src/lib/scan/guidance"
-import { SCAN_UNKNOWN_BRIDGE, SCAN_UNKNOWN_SUBLINE } from "../src/lib/scan/verdict-labels"
+import {
+  SCAN_UNKNOWN_BRIDGE,
+  SCAN_UNKNOWN_HEADLINE,
+  SCAN_UNKNOWN_SUBLINE,
+} from "../src/lib/scan/verdict-labels"
 
 import {
   EAN_PRODUCT_A,
@@ -854,6 +858,7 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
   test("copy: the unknown sheet bridges from the read barcode to the missing product", async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 375, height: 812 })
     await installScanApi(page)
     await openLab(page)
     await waitForScanningLoop(page)
@@ -873,6 +878,21 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     )
     expect(order.bridge).toBeGreaterThanOrEqual(0)
     expect(order.bridge).toBeLessThan(order.subline)
+
+    // The close button must not cover the last words of the fallback heading on a phone.
+    const dialog = page.getByRole("dialog").filter({ hasText: SCAN_UNKNOWN_HEADLINE })
+    const heading = dialog.locator("h2.font-header")
+    const close = dialog.getByRole("button", { name: "Schließen" }).first()
+    const headingBox = await heading.boundingBox()
+    const closeBox = await close.boundingBox()
+    const headingPaddingRight = await heading.evaluate((element) =>
+      Number.parseFloat(getComputedStyle(element).paddingRight),
+    )
+    expect(headingBox).not.toBeNull()
+    expect(closeBox).not.toBeNull()
+    expect(headingBox!.x + headingBox!.width - headingPaddingRight).toBeLessThanOrEqual(
+      closeBox!.x - 8,
+    )
   })
 
   /* ------------------------------------------- T9: the free tier's verdict states */

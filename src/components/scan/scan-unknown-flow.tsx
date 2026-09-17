@@ -101,7 +101,12 @@ export function ScanUnknownFlow({
         </div>
       ) : null}
       <div>
-        <h2 className="font-header text-2xl leading-tight text-foreground">
+        <h2
+          className={cn(
+            "font-header text-2xl leading-tight text-foreground",
+            !identified && "pr-12",
+          )}
+        >
           {identified ? SCAN_UNKNOWN_IDENTIFIED_HEADLINE : SCAN_UNKNOWN_HEADLINE}
         </h2>
         {!identified ? (
