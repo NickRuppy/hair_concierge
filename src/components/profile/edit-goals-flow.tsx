@@ -3,8 +3,6 @@
 import { useCallback, useState } from "react"
 import { useRouter } from "next/navigation"
 import { GoalsScreen } from "@/components/goals/goals-screen"
-import { createClient } from "@/lib/supabase/client"
-import { deriveDesiredVolumeFromGoals } from "@/lib/hair-profile/derived"
 import { useToast } from "@/providers/toast-provider"
 import type { HairTexture } from "@/lib/vocabulary"
 
@@ -30,7 +28,7 @@ function toggleGoal(current: string[], goal: string): string[] {
   return [...next, goal]
 }
 
-export function EditGoalsFlow({ userId, initialGoals, hairTexture, returnTo }: EditGoalsFlowProps) {
+export function EditGoalsFlow({ initialGoals, hairTexture, returnTo }: EditGoalsFlowProps) {
   const router = useRouter()
   const { toast } = useToast()
   const [selectedGoals, setSelectedGoals] = useState<string[]>(initialGoals)
@@ -46,20 +44,15 @@ export function EditGoalsFlow({ userId, initialGoals, hairTexture, returnTo }: E
 
     setSaving(true)
     try {
-      const supabase = createClient()
-      // Upsert (not update) so a user landing here without a hair_profiles
-      // row still gets one created — update().eq() would no-op silently and
-      // redirect as if save succeeded.
-      const { error } = await supabase.from("hair_profiles").upsert(
-        {
-          user_id: userId,
-          goals: selectedGoals,
-          desired_volume: deriveDesiredVolumeFromGoals(selectedGoals, null),
-        },
-        { onConflict: "user_id" },
-      )
-
-      if (error) throw error
+      // The route keeps this prior upsert behavior for an owner whose scanner
+      // source is incomplete, and atomically publishes a complete source.
+      const response = await fetch("/api/profile/answers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ goals: selectedGoals }),
+        cache: "no-store",
+      })
+      if (!response.ok) throw new Error("goals save failed")
 
       router.push(returnTo)
     } catch (err) {
@@ -71,7 +64,7 @@ export function EditGoalsFlow({ userId, initialGoals, hairTexture, returnTo }: E
     } finally {
       setSaving(false)
     }
-  }, [saving, selectedGoals, userId, router, returnTo, toast])
+  }, [saving, selectedGoals, router, returnTo, toast])
 
   const handleBack = useCallback(() => {
     router.push(returnTo)

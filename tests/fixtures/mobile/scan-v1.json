@@ -1,0 +1,226 @@
+{
+  "contractVersion": 1,
+  "kind": "assessment",
+  "contextRevision": "fixture-context-v1",
+  "product": {
+    "id": "fixture-current",
+    "name": "Feuchtigkeits-Conditioner",
+    "brand": "Chaarlie Test",
+    "category": "conditioner",
+    "categoryLabel": "Conditioner",
+    "imageUrl": "https://example.test/current.png",
+    "priceEur": 12.9,
+    "currency": "EUR",
+    "purchaseUrl": "https://shop.example.test/current"
+  },
+  "verdict": "mismatch",
+  "verdictLabel": "Passt nicht",
+  "verdictTitle": "Passt nicht zu deinem Haar",
+  "subtitle": "Pflegegewicht: mittel statt leicht · Pflegerichtung: Protein statt Feuchtigkeit",
+  "mismatchSummary": "Pflegegewicht: mittel statt leicht · Pflegerichtung: Protein statt Feuchtigkeit",
+  "categoryFit": "Dein Conditioner-Ziel richtet sich nach deinem Haar.",
+  "rows": [
+    {
+      "dimensionId": "conditioner.weight",
+      "label": "Pflegegewicht",
+      "axisKind": "ordered",
+      "definition": "Wie reichhaltig eine Formel ist. Leicht legt wenig auf, reichhaltig legt mehr auf und kann feines Haar beschweren.",
+      "categoryFit": "Dein Conditioner-Ziel richtet sich nach deinem Haar.",
+      "targetValue": "leicht",
+      "productValue": "mittel",
+      "targetStopIds": ["light"],
+      "productStopIds": ["medium"],
+      "state": "outside_target",
+      "displayStatus": "amber",
+      "stops": [
+        {
+          "id": "light",
+          "label": "leicht",
+          "meaning": "Legt wenig auf. Für feines Haar oder schnell beschwerte Längen."
+        },
+        {
+          "id": "medium",
+          "label": "mittel",
+          "meaning": "Legt mittelstark auf. Für die meisten Haartypen ausgelegt."
+        },
+        {
+          "id": "rich",
+          "label": "reichhaltig",
+          "meaning": "Legt viel auf. Für dickes, trockenes oder stark strapaziertes Haar."
+        }
+      ]
+    },
+    {
+      "dimensionId": "conditioner.care_direction",
+      "label": "Pflegerichtung",
+      "axisKind": "categorical",
+      "definition": "Ob eine Formel eher auf feuchtigkeitsbindende Stoffe oder auf Protein setzt. Ausgeglichen enthält beides.",
+      "categoryFit": "Dein Conditioner-Ziel richtet sich nach deinem Haar.",
+      "targetValue": "Feuchtigkeit",
+      "productValue": "Protein",
+      "targetStopIds": ["moisture"],
+      "productStopIds": ["protein"],
+      "state": "outside_target",
+      "displayStatus": "red",
+      "stops": [
+        {
+          "id": "moisture",
+          "label": "Feuchtigkeit",
+          "meaning": "Setzt auf feuchtigkeitsbindende Stoffe wie Glycerin oder Panthenol."
+        },
+        {
+          "id": "balanced",
+          "label": "ausgeglichen",
+          "meaning": "Enthält beides, ohne klaren Schwerpunkt."
+        },
+        {
+          "id": "protein",
+          "label": "Protein",
+          "meaning": "Setzt auf hydrolysierte Proteine, etwa Keratin oder Weizenprotein."
+        }
+      ]
+    },
+    {
+      "dimensionId": "conditioner.repair_support",
+      "label": "Repair-Pflege",
+      "axisKind": "ordered",
+      "definition": "Wie stark eine Formel auf strapazierte Längen ausgelegt ist.",
+      "categoryFit": "Dein Conditioner-Ziel richtet sich nach deinem Haar.",
+      "targetValue": "mittel",
+      "productValue": "mittel",
+      "targetStopIds": ["medium"],
+      "productStopIds": ["medium"],
+      "state": "in_target",
+      "displayStatus": "green",
+      "stops": [
+        {
+          "id": "low",
+          "label": "niedrig",
+          "meaning": "Kaum Repair-Stoffe. Nicht auf strapazierte Längen ausgelegt."
+        },
+        {
+          "id": "medium",
+          "label": "mittel",
+          "meaning": "Etwas Repair-Anteil. Auf leicht strapazierte Längen ausgelegt."
+        },
+        {
+          "id": "high",
+          "label": "hoch",
+          "meaning": "Deutlich auf strapazierte Längen ausgelegt, etwa nach Färben, Blondieren oder viel Hitze."
+        }
+      ]
+    }
+  ],
+  "alternatives": [
+    {
+      "product": {
+        "id": "fixture-alternative",
+        "name": "Leichter Conditioner",
+        "brand": "Chaarlie Test",
+        "category": "conditioner",
+        "categoryLabel": "Conditioner",
+        "imageUrl": "https://example.test/alternative.png",
+        "priceEur": 9.9,
+        "currency": "EUR",
+        "purchaseUrl": "https://shop.example.test/alternative"
+      },
+      "verdict": "ideal",
+      "verdictLabel": "Passt",
+      "categoryFit": "Dein Conditioner-Ziel richtet sich nach deinem Haar.",
+      "rows": [
+        {
+          "dimensionId": "conditioner.weight",
+          "label": "Pflegegewicht",
+          "axisKind": "ordered",
+          "definition": "Wie reichhaltig eine Formel ist. Leicht legt wenig auf, reichhaltig legt mehr auf und kann feines Haar beschweren.",
+          "categoryFit": "Dein Conditioner-Ziel richtet sich nach deinem Haar.",
+          "targetValue": "leicht",
+          "productValue": "leicht",
+          "targetStopIds": ["light"],
+          "productStopIds": ["light"],
+          "state": "in_target",
+          "displayStatus": "green",
+          "stops": [
+            {
+              "id": "light",
+              "label": "leicht",
+              "meaning": "Legt wenig auf. Für feines Haar oder schnell beschwerte Längen."
+            },
+            {
+              "id": "medium",
+              "label": "mittel",
+              "meaning": "Legt mittelstark auf. Für die meisten Haartypen ausgelegt."
+            },
+            {
+              "id": "rich",
+              "label": "reichhaltig",
+              "meaning": "Legt viel auf. Für dickes, trockenes oder stark strapaziertes Haar."
+            }
+          ]
+        },
+        {
+          "dimensionId": "conditioner.care_direction",
+          "label": "Pflegerichtung",
+          "axisKind": "categorical",
+          "definition": "Ob eine Formel eher auf feuchtigkeitsbindende Stoffe oder auf Protein setzt. Ausgeglichen enthält beides.",
+          "categoryFit": "Dein Conditioner-Ziel richtet sich nach deinem Haar.",
+          "targetValue": "Feuchtigkeit",
+          "productValue": "Feuchtigkeit",
+          "targetStopIds": ["moisture"],
+          "productStopIds": ["moisture"],
+          "state": "in_target",
+          "displayStatus": "green",
+          "stops": [
+            {
+              "id": "moisture",
+              "label": "Feuchtigkeit",
+              "meaning": "Setzt auf feuchtigkeitsbindende Stoffe wie Glycerin oder Panthenol."
+            },
+            {
+              "id": "balanced",
+              "label": "ausgeglichen",
+              "meaning": "Enthält beides, ohne klaren Schwerpunkt."
+            },
+            {
+              "id": "protein",
+              "label": "Protein",
+              "meaning": "Setzt auf hydrolysierte Proteine, etwa Keratin oder Weizenprotein."
+            }
+          ]
+        },
+        {
+          "dimensionId": "conditioner.repair_support",
+          "label": "Repair-Pflege",
+          "axisKind": "ordered",
+          "definition": "Wie stark eine Formel auf strapazierte Längen ausgelegt ist.",
+          "categoryFit": "Dein Conditioner-Ziel richtet sich nach deinem Haar.",
+          "targetValue": "mittel",
+          "productValue": "mittel",
+          "targetStopIds": ["medium"],
+          "productStopIds": ["medium"],
+          "state": "in_target",
+          "displayStatus": "green",
+          "stops": [
+            {
+              "id": "low",
+              "label": "niedrig",
+              "meaning": "Kaum Repair-Stoffe. Nicht auf strapazierte Längen ausgelegt."
+            },
+            {
+              "id": "medium",
+              "label": "mittel",
+              "meaning": "Etwas Repair-Anteil. Auf leicht strapazierte Längen ausgelegt."
+            },
+            {
+              "id": "high",
+              "label": "hoch",
+              "meaning": "Deutlich auf strapazierte Längen ausgelegt, etwa nach Färben, Blondieren oder viel Hitze."
+            }
+          ]
+        }
+      ],
+      "verdictTitle": "Passt zu deinem Haar",
+      "mismatchSummary": "Alles im Ziel."
+    }
+  ]
+}
