@@ -430,6 +430,170 @@ test("duplicate PayPal webhook event id is skipped before retrieving provider st
   assert.equal(billing.length, 1)
 })
 
+test("canceled provider-only clock verification acknowledges delayed activation and cancellation without billing access", async () => {
+  for (const eventType of ["BILLING.SUBSCRIPTION.ACTIVATED", "BILLING.SUBSCRIPTION.CANCELLED"]) {
+    const { supabase, billing, webhookEvents } = createSupabaseStub({ paypalIntents: [] })
+    let transactionReads = 0
+    const provider = {
+      ...subscription("CANCELLED", null),
+      id: "I-69ESTM9ANYNB",
+      custom_id: "paypal-clock-verification:26973c24-1685-4308-a3d7-8d48c57519a4",
+      create_time: new Date(Date.now() - 86_400_000).toISOString(),
+      billing_info: {
+        outstanding_balance: { value: "0.0", currency_code: "EUR" },
+        // A free trial cycle can complete without any collection.
+        cycle_executions: [{ cycles_completed: 1 }],
+      },
+    }
+    const result = await handlePayPalWebhookEvent(
+      { id: `WH-clock-${eventType}`, event_type: eventType, resource: { id: provider.id } },
+      {
+        supabase,
+        premiumTierId: "tier-premium",
+        freeTierId: "tier-free",
+        retrievePayPalSubscription: async () => provider,
+        listPayPalTrialTransactions: async () => {
+          transactionReads += 1
+          return []
+        },
+      },
+    )
+    assert.deepEqual(result, { handled: true })
+    assert.equal(transactionReads, 1)
+    assert.equal(billing.length, 0)
+    assert.equal(webhookEvents.size, 1)
+  }
+})
+
+test("provider-only clock verification remains observable when the provider state or transaction history is unsafe", async () => {
+  for (const scenario of [
+    "active",
+    "charged",
+    "unmarked",
+    "different-subscription",
+    "transaction-read-failed",
+    "outstanding-balance",
+    "malformed-balance",
+    "missing-balance",
+  ]) {
+    const { supabase, billing, webhookEvents } = createSupabaseStub({ paypalIntents: [] })
+    const provider = {
+      ...subscription(scenario === "active" ? "ACTIVE" : "CANCELLED", null),
+      id: scenario === "different-subscription" ? "I-other-clock" : "I-69ESTM9ANYNB",
+      custom_id:
+        scenario === "unmarked"
+          ? "unrelated"
+          : "paypal-clock-verification:26973c24-1685-4308-a3d7-8d48c57519a4",
+      create_time: new Date(Date.now() - 86_400_000).toISOString(),
+      billing_info: {
+        outstanding_balance:
+          scenario === "missing-balance"
+            ? undefined
+            : {
+                value:
+                  scenario === "outstanding-balance"
+                    ? "1.00"
+                    : scenario === "malformed-balance"
+                      ? ""
+                      : "0.00",
+                currency_code: "EUR",
+              },
+      },
+    }
+    await assert.rejects(() =>
+      handlePayPalWebhookEvent(
+        {
+          id: `WH-clock-unsafe-${scenario}`,
+          event_type: "BILLING.SUBSCRIPTION.ACTIVATED",
+          resource: { id: provider.id },
+        },
+        {
+          supabase,
+          premiumTierId: "tier-premium",
+          freeTierId: "tier-free",
+          retrievePayPalSubscription: async () => provider,
+          listPayPalTrialTransactions: async () => {
+            if (scenario === "transaction-read-failed")
+              throw new Error("PayPal transactions unavailable")
+            return scenario === "charged" ? [{ id: "SALE-1", status: "COMPLETED" }] : []
+          },
+        },
+      ),
+    )
+    assert.equal(billing.length, 0)
+    assert.equal(webhookEvents.size, 0)
+  }
+})
+
+test("a payment sale for a provider-only clock verification never disappears as an unknown subscription", async () => {
+  const { supabase, webhookEvents } = createSupabaseStub({ paypalIntents: [] })
+  const provider = {
+    ...subscription("CANCELLED", null),
+    id: "I-69ESTM9ANYNB",
+    custom_id: "paypal-clock-verification:26973c24-1685-4308-a3d7-8d48c57519a4",
+    create_time: new Date(Date.now() - 86_400_000).toISOString(),
+    billing_info: {
+      outstanding_balance: { value: "0.00", currency_code: "EUR" },
+    },
+  }
+  await assert.rejects(
+    () =>
+      handlePayPalWebhookEvent(
+        {
+          id: "WH-clock-sale",
+          event_type: "PAYMENT.SALE.COMPLETED",
+          resource: { id: "SALE-clock", billing_agreement_id: provider.id },
+        },
+        {
+          supabase,
+          premiumTierId: "tier-premium",
+          freeTierId: "tier-free",
+          retrievePayPalSubscription: async () => provider,
+        },
+      ),
+    /no checkout intent or local row/,
+  )
+  assert.equal(webhookEvents.size, 0)
+})
+
+test("a marked subscription with a billing row follows the normal cancellation handler", async () => {
+  const { supabase, billing } = createSupabaseStub({
+    paypalIntents: [],
+    billing: [{ provider_subscription_id: "I-69ESTM9ANYNB" }],
+  })
+  let transactionReads = 0
+  const provider = {
+    ...subscription("CANCELLED", null),
+    id: "I-69ESTM9ANYNB",
+    custom_id: "paypal-clock-verification:26973c24-1685-4308-a3d7-8d48c57519a4",
+    create_time: new Date(Date.now() - 86_400_000).toISOString(),
+    billing_info: { outstanding_balance: { value: "0.00", currency_code: "EUR" } },
+  }
+  assert.deepEqual(
+    await handlePayPalWebhookEvent(
+      {
+        id: "WH-clock-owned-cancel",
+        event_type: "BILLING.SUBSCRIPTION.CANCELLED",
+        resource: { id: provider.id },
+      },
+      {
+        supabase,
+        premiumTierId: "tier-premium",
+        freeTierId: "tier-free",
+        retrievePayPalSubscription: async () => provider,
+        listPayPalTrialTransactions: async () => {
+          transactionReads += 1
+          return []
+        },
+      },
+    ),
+    { handled: true },
+  )
+  assert.equal(transactionReads, 0)
+  assert.equal(billing[0].provider_status, "CANCELLED")
+  assert.equal(billing[0].entitlement_status, "canceled")
+})
+
 test("PayPal webhook claim is released when side effects fail so retry can recover", async () => {
   const { supabase, billing } = createSupabaseStub()
   let retrieveCount = 0
