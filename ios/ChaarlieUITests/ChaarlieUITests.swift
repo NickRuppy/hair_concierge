@@ -264,6 +264,9 @@ final class ChaarlieUITests: XCTestCase {
     func testSignedOutEntryHasExistingAccountFlowAndNoDeferredActions() {
         let app = XCUIApplication()
         app.launch()
+        // New visitors land on the Haar-Check; the existing-account flow is one tap away.
+        let existingAccount = app.buttons["onboarding.login"]
+        if existingAccount.waitForExistence(timeout: 10) { existingAccount.tap() }
         XCTAssertTrue(app.textFields["login.email"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Anmeldelink und Code senden"].exists)
         XCTAssertFalse(app.buttons["Konto löschen"].exists)
@@ -485,6 +488,8 @@ final class ChaarlieUITests: XCTestCase {
             return button
         }
         var reached = false
+        var lastScrolledUp: Bool?
+        var fine = false
         for _ in 0..<16 {
             guard button.exists else { break }
             let frame = button.frame
@@ -494,8 +499,16 @@ final class ChaarlieUITests: XCTestCase {
                 && frame.minY >= screen.minY + 80 && frame.maxY < screen.maxY - 25
             // XCTest can throw for offscreen activation points, before returning false.
             if visible, button.isHittable { reached = true; break }
-            if frame.minY < screen.minY + 80 { app.swipeDown() }
-            else { app.swipeUp() }
+            let scrollUp = frame.minY >= screen.minY + 80
+            // Full swipes can overshoot a tall row in both directions; after the first
+            // reversal, approach it with short controlled drags instead.
+            if let lastScrolledUp, lastScrolledUp != scrollUp { fine = true }
+            lastScrolledUp = scrollUp
+            if fine {
+                let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+                let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: scrollUp ? 0.3 : 0.7))
+                start.press(forDuration: 0.05, thenDragTo: end)
+            } else if scrollUp { app.swipeUp() } else { app.swipeDown() }
         }
         XCTAssertTrue(reached, "Editor control must remain reachable: \(identifier)")
         return button

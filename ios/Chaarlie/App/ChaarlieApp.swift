@@ -120,12 +120,16 @@ struct RootView: View {
             #endif
         }
         .preferredColorScheme(model.admission == .ready && model.selectedTab == .scan ? .dark : .light)
-        .safeAreaInset(edge: .top) {
+        .overlay(alignment: .top) {
+            // Floats above the tab content so opening a delivered result never shifts the layout.
             if model.admission == .ready, model.researchDestinationBusy {
-                ProgressView("Ergebnis wird geladen …").padding().frame(maxWidth: .infinity)
-                    .background(ChaarlieTheme.background)
+                BusyLabel(text: "Ergebnis wird geladen …")
+                    .shadow(color: ChaarlieTheme.shadow.opacity(0.12), radius: 14, y: 5)
+                    .padding(.top, 8).transition(.move(edge: .top).combined(with: .opacity))
             }
         }
+        .animation(ChaarlieTheme.Motion.state, value: model.researchDestinationBusy)
+        .sensoryFeedback(.warning, trigger: model.researchDestinationError) { _, error in error != nil }
         .alert("Ergebnis öffnen", isPresented: Binding(get: { model.researchDestinationError != nil }, set: { _ in })) {
             Button("Erneut versuchen") { Task { await model.openResearchDestination() } }
             Button("Schließen", role: .cancel) { model.dismissResearchDestination() }
