@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chaarlie · Suche und Verlauf · Planungsbeleg</title>
+  <style>
+    @font-face { font-family:"Chaarlie Playfair"; src:url("../../../ios/Chaarlie/Resources/Fonts/PlayfairDisplay-Regular.ttf") format("truetype"); font-display:swap; }
+    :root { --paper:#faf8f6; --ink:#3b3532; --muted:#68605b; --line:#e6e0da; --plum:#6b50a0; --plum-ice:#f2eefa; --coral:#aa464e; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#eee9e5; color:var(--ink); font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { max-width:1520px; margin:auto; padding:32px 20px 48px; }
+    h1 { font-size:26px; margin:0 0 6px; }
+    .intro { max-width:800px; margin:0 0 28px; color:#594f49; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; align-items:start; }
+    figure { margin:0; }
+    figcaption { font-weight:650; margin:0 0 10px; }
+    .phone { width:100%; max-width:340px; height:740px; margin:auto; display:flex; flex-direction:column; overflow:hidden; border:7px solid #2c2929; border-radius:38px; background:var(--paper); box-shadow:0 16px 40px #342a281f; }
+    .status { height:50px; flex:none; padding:13px 20px 0; font-size:11px; font-weight:700; position:relative; background:var(--paper); }
+    .status::after { content:""; display:block; width:92px; height:24px; border-radius:16px; background:#080808; position:absolute; top:7px; left:50%; transform:translateX(-50%); }
+    .scan-status { background:#8f8d87; color:#fff; }
+    .screen { flex:1; min-height:0; overflow:hidden; padding:24px 24px 12px; }
+    .screen h2 { font:30px/1.15 ui-serif,Georgia,serif; font-weight:400; margin:6px 0 18px; }
+    .screen p { margin:0 0 14px; }
+    .muted { color:var(--muted); }
+    .scan { background:radial-gradient(circle at 52% 42%,#c0bcb3 0%,#aba79f 37%,#696763 80%),linear-gradient(#8f8d87,#706c68); color:#fff; display:flex; flex-direction:column; text-align:center; }
+    .scan h2 { margin-top:14px; font-size:28px; text-shadow:0 1px 6px #2a28283b; }
+    .camera { display:grid; place-items:center; flex:1; min-height:200px; }
+    .finder { width:225px; height:150px; border:3px solid #fff; border-radius:18px; }
+    .scan-copy { padding:0 12px 64px; text-shadow:0 1px 6px #2a28283b; }
+    .field { display:flex; align-items:center; gap:9px; background:#fff; border:1px solid var(--line); border-radius:6px; min-height:44px; padding:0 10px; color:var(--muted); margin-bottom:12px; }
+    .button { display:block; width:100%; border:0; border-radius:12px; background:var(--coral); color:#fff; font-size:15px; font-weight:700; padding:15px 12px; text-align:center; margin-bottom:16px; }
+    .row { background:#fff; border-radius:14px; padding:14px; display:flex; align-items:flex-start; gap:14px; margin-bottom:9px; }
+    .pack { width:52px; height:64px; border-radius:12px; background:#fff; color:var(--line); display:grid; place-items:center; flex:none; }
+    .pack::after { content:"▧"; font-size:28px; line-height:1; }
+    .row-body { min-width:0; flex:1; }
+    .name { font-size:15px; font-weight:700; line-height:1.25; }
+    .meta { font-size:12px; color:var(--muted); margin-top:5px; }
+    .chevron { color:var(--muted); font-size:20px; }
+    .empty { margin-top:108px; text-align:center; }
+    .empty-icon { display:grid; place-items:center; width:56px; height:56px; color:var(--plum); font-size:25px; margin:0 auto 18px; }
+    .empty h3 { font:24px/1.2 ui-serif,Georgia,serif; font-weight:400; margin:0 0 9px; }
+    .empty .button { margin-top:24px; }
+    .tabs { height:61px; flex:none; display:grid; grid-template-columns:repeat(4,1fr); align-items:center; background:#fffefcf5; backdrop-filter:blur(14px); border-top:1px solid #e5dfdb; }
+    .tab { display:flex; flex-direction:column; align-items:center; gap:3px; color:#777274; font-size:10px; font-weight:500; }
+    .tab svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .tab .profile-dot { fill:currentColor; stroke:none; }
+    .tab.active { color:var(--plum); }
+    .home { height:20px; flex:none; background:#fffefcf5; display:grid; place-items:center; }
+    .home::after { content:""; width:90px; height:4px; border-radius:4px; background:#191919; }
+    .profile-mark { font:28px/1.1 "Chaarlie Playfair",ui-serif,serif; margin:8px 0 26px; }
+    .profile h2 { font-size:30px; margin:0 0 20px; }
+    .profile-section { color:var(--muted); font-size:13px; font-weight:600; margin:28px 0 10px; }
+    .profile-group { border:1px solid var(--line); border-radius:16px; background:#fff; overflow:hidden; }
+    .profile-row { min-height:55px; padding:16px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; gap:10px; font-size:16px; }
+    .profile-row:last-child { border:0; }
+    .profile-value { color:var(--muted); font-size:15px; white-space:nowrap; }
+    .profile-row.multiline { display:block; }
+    .profile-row.multiline .profile-value { display:block; margin-top:5px; white-space:normal; }
+    .caption-note { max-width:340px; margin:9px auto 0; font-size:12px; color:#5b524e; }
+    .barcode { color:var(--muted); font-size:13px; margin-bottom:18px; }
+    .research-card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px; margin-top:16px; }
+    .research-card h3 { font:22px/1.2 ui-serif,Georgia,serif; font-weight:400; margin:0 0 9px; }
+    .research-card p { color:var(--muted); margin:0 0 16px; }
+    .research-card .field { margin-bottom:12px; }
+    .research-card .button { margin-bottom:0; }
+    .category { display:block; width:100%; text-align:left; border:1px solid var(--line); background:var(--paper); border-radius:10px; padding:12px 14px; color:var(--ink); font:600 14px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; margin-top:8px; }
+    .footer-note { max-width:800px; margin:26px 0 0; color:#594f49; font-size:13px; }
+  </style>
+</head>
+<body>
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <symbol id="scan-icon" viewBox="0 0 24 24"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3M8 9v6m3-6v6m2-6v6m3-6v6"/></symbol>
+  <symbol id="search-icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+  <symbol id="history-icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 2.6-6.4M3 4v4h4M12 7v5l3 2"/></symbol>
+  <symbol id="profile-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="9" r="3"/><path d="M5.5 18c1.4-2.3 3.6-3.5 6.5-3.5s5.1 1.2 6.5 3.5"/></symbol>
+</svg>
+<main>
+  <h1>Suche und Verlauf · Navigation</h1>
+  <p class="intro">Vier Tabs am vertrauten Ort. Auch ein erkannter Barcode ohne Katalogtreffer bleibt im Verlauf. HTML-Skizze mit Beispieldaten, kein iOS-Rendering.</p>
+  <div class="grid">
+    <figure><figcaption>1 · Scan bleibt Kamera</figcaption><div class="phone">
+      <div class="status scan-status">3:24</div>
+      <div class="screen scan"><h2>Produkt scannen</h2><div class="camera"><div class="finder"></div></div><div class="scan-copy">Halte den Barcode in den Rahmen.</div></div>
+      <nav class="tabs"><div class="tab active"><svg><use href="#scan-icon"/></svg>Scan</div><div class="tab"><svg><use href="#search-icon"/></svg>Suche</div><div class="tab"><svg><use href="#history-icon"/></svg>Verlauf</div><div class="tab"><svg><use href="#profile-icon"/></svg>Profil</div></nav><div class="home"></div>
+    </div></figure>
+    <figure><figcaption>2 · Suche als eigene Seite</figcaption><div class="phone">
+      <div class="status">3:24</div><div class="screen"><h2>Produkt suchen</h2><div class="field">Produktname, Marke oder Barcode</div><div class="button">Suchen</div>
+        <div class="row"><div class="pack"></div><div class="row-body"><div class="name">Sanftes Feuchtigkeits-Shampoo</div><div class="meta">Beispielmarke · Shampoo</div></div><div class="chevron">›</div></div>
+        <div class="row"><div class="pack"></div><div class="row-body"><div class="name">Leichter Conditioner</div><div class="meta">Beispielmarke · Conditioner</div></div><div class="chevron">›</div></div>
+      </div><nav class="tabs"><div class="tab"><svg><use href="#scan-icon"/></svg>Scan</div><div class="tab active"><svg><use href="#search-icon"/></svg>Suche</div><div class="tab"><svg><use href="#history-icon"/></svg>Verlauf</div><div class="tab"><svg><use href="#profile-icon"/></svg>Profil</div></nav><div class="home"></div>
+    </div></figure>
+    <figure><figcaption>3 · Verlauf, neueste zuerst</figcaption><div class="phone">
+      <div class="status">3:24</div><div class="screen"><h2>Verlauf</h2>
+        <div class="row"><div class="pack"></div><div class="row-body"><div class="name">Barcode 4012345678901</div><div class="meta">Heute · Noch nicht im Katalog</div></div><div class="chevron">›</div></div>
+        <div class="row"><div class="pack"></div><div class="row-body"><div class="name">Sanftes Feuchtigkeits-Shampoo</div><div class="meta">Gestern · Scan</div></div><div class="chevron">›</div></div>
+        <div class="row"><div class="pack"></div><div class="row-body"><div class="name">Barcode 4006381333931</div><div class="meta">Mo · In Prüfung</div></div><div class="chevron">›</div></div>
+        <div class="row"><div class="pack"></div><div class="row-body"><div class="name">Leichter Conditioner</div><div class="meta">So · Suche</div></div><div class="chevron">›</div></div>
+      </div><nav class="tabs"><div class="tab"><svg><use href="#scan-icon"/></svg>Scan</div><div class="tab"><svg><use href="#search-icon"/></svg>Suche</div><div class="tab active"><svg><use href="#history-icon"/></svg>Verlauf</div><div class="tab"><svg><use href="#profile-icon"/></svg>Profil</div></nav><div class="home"></div>
+    </div><p class="caption-note">Ein Eintrag je Barcode; erneutes Scannen setzt ihn nach oben.</p></figure>
+    <figure><figcaption>4 · Leerer Verlauf</figcaption><div class="phone">
+      <div class="status">3:24</div><div class="screen"><h2>Verlauf</h2><div class="empty"><div class="empty-icon">◷</div><h3>Noch keine Produkte</h3><p class="muted">Scanne oder suche ein Produkt.</p><div class="button">Produkt scannen</div></div>
+      </div><nav class="tabs"><div class="tab"><svg><use href="#scan-icon"/></svg>Scan</div><div class="tab"><svg><use href="#search-icon"/></svg>Suche</div><div class="tab active"><svg><use href="#history-icon"/></svg>Verlauf</div><div class="tab"><svg><use href="#profile-icon"/></svg>Profil</div></nav><div class="home"></div>
+    </div><p class="caption-note">Ladefehler: „Verlauf nicht verfügbar“ · „Erneut versuchen“</p></figure>
+    <figure><figcaption>5 · Profil bleibt Profil</figcaption><div class="phone">
+      <div class="status">3:24</div><div class="screen profile"><div class="profile-mark">chaarlie</div><h2>Meine Haarangaben</h2><p class="muted">Diese Angaben verwenden wir, um Produkte für dich einzuschätzen.</p><div class="profile-section">Dein Haar</div><div class="profile-group"><div class="profile-row"><span>Haarstruktur</span><span class="profile-value">Wellig ›</span></div><div class="profile-row"><span>Haardicke</span><span class="profile-value">Mittel ›</span></div><div class="profile-row"><span>Haardichte</span><span class="profile-value">Viele Haare ›</span></div><div class="profile-row"><span>Haarlänge</span><span class="profile-value">Mittellang ›</span></div><div class="profile-row"><span>Haaroberfläche</span><span class="profile-value">Glatt wie Glas ›</span></div><div class="profile-row multiline"><span>Dehnbarkeit</span><span class="profile-value">Dehnt sich und geht zurück ›</span></div></div></div>
+      <nav class="tabs"><div class="tab"><svg><use href="#scan-icon"/></svg>Scan</div><div class="tab"><svg><use href="#search-icon"/></svg>Suche</div><div class="tab"><svg><use href="#history-icon"/></svg>Verlauf</div><div class="tab active"><svg><use href="#profile-icon"/></svg>Profil</div></nav><div class="home"></div>
+    </div></figure>
+    <figure><figcaption>6 · Unbekannter Scan</figcaption><div class="phone">
+      <div class="status">3:24</div><div class="screen"><h2>Produkt nicht gefunden</h2><div class="barcode">Barcode 4012345678901</div>
+        <div class="research-card"><h3>Wobei benutzt du es?</h3><p>Wähle die Produktart. Ein Tipp reicht das Produkt zur Prüfung ein.</p><button class="category" type="button">Shampoo&nbsp; ›</button><button class="category" type="button">Conditioner&nbsp; ›</button><button class="category" type="button">Leave-in&nbsp; ›</button></div>
+      </div><nav class="tabs"><div class="tab"><svg><use href="#scan-icon"/></svg>Scan</div><div class="tab"><svg><use href="#search-icon"/></svg>Suche</div><div class="tab active"><svg><use href="#history-icon"/></svg>Verlauf</div><div class="tab"><svg><use href="#profile-icon"/></svg>Profil</div></nav><div class="home"></div>
+    </div><p class="caption-note">Der Barcode ist bereits im Verlauf. „In Prüfung“ gilt erst nach bestätigter Einreichung. Automatische E-Mail und optionale Push-Nachricht folgen in der zweiten Bau-Scheibe.</p></figure>
+  </div>
+  <p class="footer-note">Die Tab-Leiste bleibt über der Kamera hell und gut lesbar. Wie iOS die Fläche technisch zeichnet, ist keine zusätzliche Designentscheidung.</p>
+</main>
+</body>
+</html>

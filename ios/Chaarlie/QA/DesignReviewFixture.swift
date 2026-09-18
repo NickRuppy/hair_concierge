@@ -6,6 +6,7 @@ import Foundation
 /// its synthetic session never enters the live client, Keychain, or an HTTP connection.
 enum DesignReviewScenario: String, Sendable {
     case scan
+    case scanBright = "scan-bright"
     case scanResolveError = "scan-resolve-error"
     case login
     case loginLongEmail = "login-long-email"
@@ -18,6 +19,13 @@ enum DesignReviewScenario: String, Sendable {
     case searchEmpty = "search-empty"
     case searchLoading = "search-loading"
     case searchError = "search-error"
+    case history
+    case historyEmpty = "history-empty"
+    case historyError = "history-error"
+    case historyLoading = "history-loading"
+    case research
+    case researchPending = "research-pending"
+    case researchError = "research-error"
     case profile
     case profileEdit = "profile-edit"
     case profileEditError = "profile-edit-error"
@@ -75,10 +83,15 @@ struct DesignReviewFixture: View {
             model.lastRequest = .barcode("1234567890123")
             model.scanError = "Die Einschätzung konnte nicht geladen werden. Dein Barcode bleibt für einen neuen Versuch erhalten."
         case .searchResults, .searchEmpty, .searchLoading, .searchError:
-            model.searchPresented = true
+            model.selectedTab = .search
+            model.searchSubmitted = scenario == .searchEmpty
             model.searchText = "Chaarlie Designprüfung"
             if scenario == .searchResults { model.searchResults = DesignReviewData.products }
             if scenario == .searchError { model.searchError = "Die Suche ist gerade nicht verfügbar. Bitte versuche es erneut." }
+        case .history, .historyEmpty, .historyError, .historyLoading:
+            model.selectedTab = .history
+        case .research, .researchPending, .researchError:
+            model.selectedTab = .search
         case .profile, .profileLoading, .profileError, .profileEdit, .profileEditError, .profileEditConflict, .profileEditLoading, .profileEditLoadError, .profileEditSaving, .profileEditMissingLength:
             model.selectedTab = .profile
         default: break
@@ -113,6 +126,7 @@ struct DesignReviewFixture: View {
                 case .loginLoading: await model.startLogin()
                 case .scanLoading: await model.resolve(.barcode("1234567890123"))
                 case .searchLoading: await model.search()
+                case .research, .researchPending, .researchError: await model.resolve(.barcode("4006381333931"))
                 default: break
                 }
             }
@@ -173,6 +187,8 @@ actor DesignReviewTransport: HTTPTransport {
     private var savedSnapshot: ProfileEditSnapshot?
     private var saveAttempts = 0
     private var resolveAttempts = 0
+    private var submittedResearch = false
+    private var clearedHistory = false
     private struct ResolveInput: Decodable {
         struct Identifier: Decodable { let type: String; let value: String }
         let productId: String?
@@ -194,7 +210,8 @@ actor DesignReviewTransport: HTTPTransport {
         if (scenario == .loginLoading && path.hasSuffix("/auth/start")) ||
             (scenario == .profileLoading && path.hasSuffix("/profile")) ||
             (scenario == .scanLoading && path.hasSuffix("/scan/resolve")) ||
-            (scenario == .searchLoading && path.hasSuffix("/scan/search")) {
+            (scenario == .searchLoading && path.hasSuffix("/scan/search")) ||
+            (scenario == .historyLoading && path.hasSuffix("/scan/history")) {
             try await Task.sleep(for: .seconds(30))
             throw MobileError.unavailable
         }
@@ -236,6 +253,10 @@ actor DesignReviewTransport: HTTPTransport {
         } else if path.hasSuffix("/scan/resolve") {
             guard request.httpMethod == "POST", let body = request.httpBody else { throw MobileError.invalidResponse }
             let input = try JSONDecoder().decode(ResolveInput.self, from: body)
+            if input.identifier?.value == "4006381333931" || input.identifier?.value == "96385074" {
+                return (Data(#"{"contractVersion":1,"kind":"submission_required","missingFacts":["unknown_product"],"historySaved":true}"#.utf8),
+                    HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!)
+            }
             let product: ScanProduct?
             if let id = input.productId, input.identifier == nil {
                 product = DesignReviewData.products.first { $0.id == id }
@@ -251,6 +272,28 @@ actor DesignReviewTransport: HTTPTransport {
         } else if path.hasSuffix("/scan/search") {
             if scenario == .searchError { throw MobileError.unavailable }
             data = try JSONEncoder().encode(SearchResponse(contractVersion: 1, results: scenario == .searchEmpty ? [] : DesignReviewData.products, truncated: false))
+        } else if path.hasSuffix("/scan/history") {
+            if scenario == .historyError { throw MobileError.unavailable }
+            if request.httpMethod == "DELETE" {
+                clearedHistory = true
+                data = Data(#"{"contractVersion":1,"cleared":true}"#.utf8)
+            } else {
+                var entries = [
+                    HistoryEntry(id: "unknown", barcodeGtin: "4006381333931", productId: nil, productName: nil, brand: nil, imageUrl: nil, lastSeenAt: "2026-09-18T12:05:00Z", status: submittedResearch || scenario == .researchPending ? .in_research : .not_in_catalog),
+                    HistoryEntry(id: "known", barcodeGtin: nil, productId: "design-long-product", productName: DesignReviewData.products[0].name, brand: DesignReviewData.products[0].brand, imageUrl: nil, lastSeenAt: "2026-09-18T11:00:00Z", status: .available),
+                    HistoryEntry(id: "pending", barcodeGtin: "96385074", productId: nil, productName: nil, brand: nil, imageUrl: nil, lastSeenAt: "2026-09-17T09:00:00Z", status: .in_research),
+                    HistoryEntry(id: "unavailable", barcodeGtin: nil, productId: "withdrawn", productName: nil, brand: nil, imageUrl: nil, lastSeenAt: "2026-09-16T09:00:00Z", status: .unavailable)
+                ]
+                if let barcode = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.first(where: { $0.name == "barcode" })?.value {
+                    entries = entries.filter { $0.barcodeGtin == barcode }
+                }
+                if scenario == .historyEmpty || clearedHistory { entries = [] }
+                data = try JSONEncoder().encode(HistoryResponse(contractVersion: 1, entries: entries))
+            }
+        } else if path.hasSuffix("/scan/submit") {
+            if scenario == .researchError { throw MobileError.unavailable }
+            submittedResearch = true
+            data = Data(#"{"contractVersion":1,"kind":"pending_submission","submissionId":"fixture-submission","headline":"In Prüfung","historySaved":true}"#.utf8)
         } else if path.hasSuffix("/auth/start") {
             data = try JSONEncoder().encode(DesignReviewData.attempt)
         } else if path.hasSuffix("/auth/logout") {

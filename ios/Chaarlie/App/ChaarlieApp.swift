@@ -83,10 +83,13 @@ struct RootView: View {
                     message: "Du bist angemeldet. Bitte versuche es noch einmal.", model: model, retry: true)
             case .ready:
                 TabView(selection: $model.selectedTab) {
-                    ScannerView(model: model).tabItem { Label("Scan", systemImage: "barcode.viewfinder") }.tag(AppModel.Tab.scan)
-                    ProfileView(model: model).tabItem { Label("Profil", systemImage: "person.crop.circle") }.tag(AppModel.Tab.profile)
+                    ScannerView(model: model).readableTabBar(forceLight: true).tabItem { Label("Scan", systemImage: "barcode.viewfinder") }.tag(AppModel.Tab.scan)
+                    ProductSearchView(model: model).readableTabBar().tabItem { Label("Suche", systemImage: "magnifyingglass") }.tag(AppModel.Tab.search)
+                    HistoryView(model: model).readableTabBar().tabItem { Label("Verlauf", systemImage: "clock.arrow.circlepath") }.tag(AppModel.Tab.history)
+                    ProfileView(model: model).readableTabBar().tabItem { Label("Profil", systemImage: "person.crop.circle") }.tag(AppModel.Tab.profile)
                 }
-                .onChange(of: model.selectedTab) { _, newValue in if newValue != .scan { model.leaveScan() } }
+                .tint(ChaarlieTheme.plum)
+                .onChange(of: model.selectedTab) { old, _ in model.changeTab(from: old) }
             }
         }
         .chaarlieSystemFont().foregroundStyle(ChaarlieTheme.ink)
@@ -102,6 +105,14 @@ struct RootView: View {
             #endif
         }
         .preferredColorScheme(model.admission == .ready && model.selectedTab == .scan ? .dark : .light)
+        .sheet(item: Binding(get: { model.scanResult }, set: { if $0 == nil { model.dismissScan() } })) { result in
+            ScanResultPresentation(model: model, result: result)
+                .preferredColorScheme(.light)
+                .presentationDetents(result.kind == .submission_required && model.lastRequest?.identifier != nil
+                    ? (model.researchPending ? [.medium] : [.large]) : [.fraction(0.88)])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(24)
+        }
         .alert("Mit anderem Konto anmelden?", isPresented: Binding(get: { model.pendingAccountLink != nil }, set: { _ in })) {
             Button("Abmelden und Link öffnen") {
                 let callback = model.pendingAccountLink
@@ -112,6 +123,14 @@ struct RootView: View {
         } message: {
             Text("Der Anmeldelink kann zu einem anderen Konto gehören. Du wirst zuerst abgemeldet. Deine Haarangaben bleiben gespeichert.")
         }
+    }
+}
+private extension View {
+    func readableTabBar(forceLight: Bool = false) -> some View {
+        toolbarBackground(ChaarlieTheme.background, for: .tabBar)
+            .toolbarBackground(.visible, for: .tabBar)
+            .toolbarColorScheme(forceLight ? .light : nil, for: .tabBar)
+            .tint(ChaarlieTheme.plum)
     }
 }
 struct MissingProfileCompletionView: View {

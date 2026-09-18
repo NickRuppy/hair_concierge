@@ -241,7 +241,7 @@ final class ChaarlieUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Haarstruktur"].waitForExistence(timeout: 10))
         screenshot("connected-profile", app: app)
         app.tabBars.buttons["Scan"].tap()
-        app.buttons["scanner.search"].tap()
+        app.tabBars.buttons["Suche"].tap()
         XCTAssertTrue(app.textFields["search.query"].waitForExistence(timeout: 5))
         app.textFields["search.query"].tap()
         app.textFields["search.query"].typeText("Chaarlie Local")
@@ -255,7 +255,7 @@ final class ChaarlieUITests: XCTestCase {
         screenshot("connected-alternatives", app: app)
         XCTAssertTrue(app.staticTexts["Alternativen"].exists)
         app.buttons["Ergebnis schließen"].tap()
-        XCTAssertTrue(app.buttons["scanner.search"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.textFields["search.query"].waitForExistence(timeout: 5))
         app.tabBars.buttons["Profil"].tap()
         app.buttons["profile.logout"].tap()
         XCTAssertTrue(app.textFields["login.email"].waitForExistence(timeout: 10))
@@ -278,6 +278,65 @@ final class ChaarlieUITests: XCTestCase {
         app.launch()
         return app
     }
+    func testFourTabsAndHistoryResearchJourney() {
+        let app = designApp("history")
+        for tab in ["Scan", "Suche", "Verlauf", "Profil"] {
+            XCTAssertTrue(app.tabBars.buttons[tab].waitForExistence(timeout: 5))
+        }
+        let unknown = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Barcode 4006381333931")).firstMatch
+        XCTAssertTrue(unknown.waitForExistence(timeout: 5))
+        screenshot("history-mixed-states", app: app)
+        unknown.tap()
+        XCTAssertTrue(app.staticTexts["Noch nicht im Katalog"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Shampoo"].waitForExistence(timeout: 5))
+        screenshot("history-unknown-category", app: app)
+        app.buttons["Shampoo"].tap()
+        XCTAssertTrue(app.staticTexts["In Prüfung"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["Shampoo"].exists)
+        screenshot("history-research-confirmed", app: app)
+        app.buttons["Zum Verlauf"].tap()
+        XCTAssertTrue(unknown.waitForExistence(timeout: 5))
+        XCTAssertTrue(unknown.label.contains("In Prüfung"))
+        app.buttons["Verlauf verwalten"].tap()
+        app.buttons["Verlauf löschen"].tap()
+        app.buttons["Verlauf löschen"].tap()
+        XCTAssertTrue(app.staticTexts["Noch keine Produkte"].waitForExistence(timeout: 5))
+        screenshot("history-cleared", app: app)
+    }
+    func testHistoryRecoveryAndNativeTabContrastFixtures() {
+        for scenario in ["scan", "scan-bright", "history-empty", "history-error", "history-loading", "research-pending", "search-results"] {
+            let app = designApp(scenario)
+            XCTAssertTrue(app.tabBars.buttons["Suche"].waitForExistence(timeout: 5))
+            if scenario == "history-empty" { XCTAssertTrue(app.staticTexts["Noch keine Produkte"].waitForExistence(timeout: 5)) }
+            if scenario == "history-error" { XCTAssertTrue(app.staticTexts["Verlauf konnte nicht geladen werden."].waitForExistence(timeout: 5)) }
+            if scenario == "research-pending" { XCTAssertTrue(app.staticTexts["In Prüfung"].waitForExistence(timeout: 5)) }
+            screenshot("history-navigation-\(scenario)", app: app)
+        }
+    }
+    func testScanTabContrastFixtures() {
+        for scenario in ["scan", "scan-bright"] {
+            let app = designApp(scenario)
+            XCTAssertTrue(app.tabBars.buttons["Suche"].waitForExistence(timeout: 5))
+            screenshot("tab-contrast-\(scenario)", app: app)
+        }
+    }
+    func testSearchTabRetainsQueryAndReturnsFromAssessment() {
+        let app = designApp("search-results")
+        let field = app.textFields["search.query"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        let original = field.value as? String
+        app.tabBars.buttons["Profil"].tap()
+        app.tabBars.buttons["Suche"].tap()
+        XCTAssertEqual(field.value as? String, original)
+        let product = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Leichter Conditioner")).firstMatch
+        XCTAssertTrue(product.waitForExistence(timeout: 5))
+        product.tap()
+        XCTAssertTrue(app.staticTexts["assessment.verdict"].waitForExistence(timeout: 5))
+        app.buttons["Ergebnis schließen"].tap()
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        XCTAssertEqual(field.value as? String, original)
+        XCTAssertTrue(product.exists)
+    }
     func testDesignReviewAuthAndRecovery() {
         for scenario in ["login", "code", "code-error", "login-loading", "recovery-missing", "recovery-unavailable"] {
             let app = designApp(scenario)
@@ -294,10 +353,10 @@ final class ChaarlieUITests: XCTestCase {
         let search = designApp("search-empty")
         XCTAssertTrue(search.textFields["search.query"].waitForExistence(timeout: 5))
         search.buttons["search.submit"].tap()
-        XCTAssertTrue(search.staticTexts["Keine Produkte gefunden. Prüfe den Suchbegriff oder gib den Barcode ein."].waitForExistence(timeout: 5))
+        XCTAssertTrue(search.staticTexts["Keine Treffer"].waitForExistence(timeout: 5))
         screenshot("design-search-empty", app: search)
-        search.buttons["Suche schließen"].tap()
-        XCTAssertTrue(search.buttons["scanner.search"].waitForExistence(timeout: 5))
+        search.tabBars.buttons["Scan"].tap()
+        XCTAssertTrue(search.staticTexts["Produkt scannen"].waitForExistence(timeout: 5))
         let login = designApp("login-long-email")
         let email = login.textFields["login.email"]
         XCTAssertTrue(email.waitForExistence(timeout: 5))
@@ -348,13 +407,13 @@ final class ChaarlieUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Meine Haarangaben"].waitForExistence(timeout: 5))
         screenshot("design-appearance-profile", app: app)
         app.tabBars.buttons["Scan"].tap()
-        XCTAssertTrue(app.buttons["scanner.search"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Produkt scannen"].waitForExistence(timeout: 5))
         screenshot("design-appearance-scan", app: app)
-        app.buttons["scanner.search"].tap()
+        app.tabBars.buttons["Suche"].tap()
         XCTAssertTrue(app.textFields["search.query"].waitForExistence(timeout: 5))
         screenshot("design-appearance-search", app: app)
-        app.buttons["Suche schließen"].tap()
-        XCTAssertTrue(app.buttons["scanner.search"].waitForExistence(timeout: 5))
+        app.tabBars.buttons["Scan"].tap()
+        XCTAssertTrue(app.staticTexts["Produkt scannen"].waitForExistence(timeout: 5))
         screenshot("design-appearance-scan-return", app: app)
         app.tabBars.buttons["Profil"].tap()
         XCTAssertTrue(app.staticTexts["Meine Haarangaben"].waitForExistence(timeout: 5))
@@ -382,13 +441,9 @@ final class ChaarlieUITests: XCTestCase {
         let heading = app.staticTexts["Produkt scannen"]
         XCTAssertTrue(heading.waitForExistence(timeout: 5))
         XCTAssertGreaterThan(heading.frame.height, 90, "Largest text heading wraps instead of ellipsizing")
-        let search = app.buttons["scanner.search"]
-        for _ in 0..<10 {
-            if search.isHittable, search.frame.maxY <= app.tabBars.firstMatch.frame.minY { break }
-            app.swipeUp()
-        }
+        let search = app.tabBars.buttons["Suche"]
         XCTAssertTrue(search.isHittable)
-        XCTAssertLessThanOrEqual(search.frame.maxY, app.tabBars.firstMatch.frame.minY + 1, "Manual search stays clear of the tab bar")
+        XCTAssertFalse(app.buttons["scanner.search"].exists, "Manual search belongs to its tab")
         screenshot("design-large-scan-actions-final", app: app)
         search.tap()
         XCTAssertTrue(app.textFields["search.query"].waitForExistence(timeout: 5))

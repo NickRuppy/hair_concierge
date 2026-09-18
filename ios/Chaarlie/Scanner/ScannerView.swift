@@ -5,41 +5,38 @@ struct ScannerView: View {
     @State private var camera = CameraController()
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.openURL) private var openURL
-    private var cameraActive: Bool {
-        model.selectedTab == .scan && model.admission == .ready && scenePhase == .active && !model.searchPresented
+    private var fixtureBackdrop: Color? {
+        #if DEBUG
+        if DesignReviewScenario.current == .scan { return Color(hex: 0x17141b) }
+        if DesignReviewScenario.current == .scanBright { return Color(hex: 0xc5c0b4) }
+        #endif
+        return nil
     }
-    private var detectionActive: Bool { cameraActive && model.scanResult == nil && !model.scanBusy && model.scanError == nil }
+    private var cameraActive: Bool {
+        fixtureBackdrop == nil && model.selectedTab == .scan && model.admission == .ready && scenePhase == .active && model.scanResult == nil
+    }
+    private var detectionActive: Bool { cameraActive && model.scanResult == nil && !model.scanBusy && (model.scanError == nil || model.resolveOrigin != .scan) }
     var body: some View {
         ZStack {
             Color(hex: 0x17141b).ignoresSafeArea()
+            if let fixtureBackdrop { fixtureBackdrop.ignoresSafeArea() }
             if camera.availability == .available { CameraPreview(session: camera.worker.session).ignoresSafeArea().accessibilityHidden(true) }
+            VStack {
+                LinearGradient(colors: [.black.opacity(0.6), .black.opacity(0.35), .clear], startPoint: .top, endPoint: .bottom)
+                    .frame(height: 220)
+                Spacer()
+            }.ignoresSafeArea().allowsHitTesting(false).accessibilityHidden(true)
             GeometryReader { geometry in
                 ScrollView {
                     scannerContent
+                        .frame(maxWidth: .infinity)
                         .frame(minHeight: max(0, geometry.size.height - 48))
                         .padding(24)
                 }.scrollBounceBehavior(.basedOnSize)
                     .accessibilityIdentifier("scanner.content")
             }
         }
-        .onTapGesture { if model.scanResult != nil { model.dismissScan() } }
-        .sheet(isPresented: Binding(get: { model.searchPresented || model.scanResult != nil }, set: { presented in
-            if !presented { model.dismissScanPresentation() }
-        }), onDismiss: { model.dismissScanPresentation() }) {
-            Group {
-                if let result = model.scanResult {
-                    AssessmentSheet(result: result, onDismiss: { model.dismissScan() })
-                } else {
-                    ProductSearchView(model: model)
-                }
-            }
-            .preferredColorScheme(.light)
-            .presentationDetents([.fraction(0.88)])
-            .presentationDragIndicator(.visible)
-            .presentationBackgroundInteraction(.enabled)
-            .presentationCornerRadius(24)
-        }
-        .task { await camera.permission(); updateCamera() }
+        .task { if fixtureBackdrop == nil { await camera.permission(); updateCamera() } }
         .onChange(of: cameraActive) { _, _ in updateCamera() }
         .onChange(of: detectionActive) { _, _ in updateCamera() }
         .onChange(of: camera.availability) { _, _ in updateCamera() }
@@ -53,10 +50,12 @@ struct ScannerView: View {
         VStack(spacing: 24) {
             Text("Produkt scannen").chaarlieHeading(28).padding(.top, 16)
             Spacer()
-            if camera.availability == .available {
+            if camera.availability == .available || fixtureBackdrop != nil {
                 RoundedRectangle(cornerRadius: 16).stroke(.white.opacity(0.8), lineWidth: 3)
                     .frame(maxWidth: 260).frame(height: 170).accessibilityHidden(true)
                 Text("Halte den Barcode in den Rahmen.").multilineTextAlignment(.center)
+                    .padding(.horizontal, 12).padding(.vertical, 8)
+                    .background(.black.opacity(0.42), in: RoundedRectangle(cornerRadius: 10))
             } else {
                 Image(systemName: "barcode.viewfinder").font(.system(size: 60)).accessibilityHidden(true)
                 Text(camera.availability == .denied ? "Kamera nicht freigegeben" : "Produkt per Suche finden")
@@ -70,30 +69,28 @@ struct ScannerView: View {
                 }
             }
             Spacer()
-            if model.scanBusy { ProgressView("Produkt wird geprüft …").tint(.white) }
-            if let error = model.scanError {
+            if model.scanBusy, model.resolveOrigin == .scan { ProgressView("Produkt wird geprüft …").tint(.white) }
+            if let error = model.scanError, model.resolveOrigin == .scan {
                 Text(error).multilineTextAlignment(.center)
                 if let request = model.lastRequest {
                     Button("Erneut versuchen") { Task { await model.resolve(request) } }.buttonStyle(ChaarlieButton())
                 }
                 Button("Schließen") { model.dismissScan() }.frame(minHeight: 44)
             }
-            Button("Produkt manuell suchen") { model.dismissScan(); model.searchPresented = true }
-                .buttonStyle(ChaarlieButton(outline: true)).accessibilityIdentifier("scanner.search")
         }.foregroundStyle(.white).multilineTextAlignment(.center)
     }
     private func updateCamera() {
         let target = model
         camera.update(active: cameraActive, detecting: detectionActive) { [weak target] barcode in
             guard let target, target.admission == .ready, target.selectedTab == .scan,
-                  !target.searchPresented, target.scanResult == nil, !target.scanBusy, target.scanError == nil else { return }
+                  target.scanResult == nil, !target.scanBusy, (target.scanError == nil || target.resolveOrigin != .scan) else { return }
             Task { await target.resolve(.barcode(barcode)) }
         }
     }
 }
 struct ProductSearchView: View {
     @Bindable var model: AppModel
-    @State private var submitted = false
+    @FocusState private var queryFocused: Bool
     @Environment(\.dynamicTypeSize) private var typeSize
     var body: some View {
         NavigationStack {
@@ -103,15 +100,12 @@ struct ProductSearchView: View {
                     TextField("Produktname, Marke oder Barcode", text: $model.searchText)
                         .textFieldStyle(ChaarlieField()).submitLabel(.search)
                         .accessibilityIdentifier("search.query")
+                        .focused($queryFocused)
                         .onSubmit { submit() }
-                        .onChange(of: model.searchText) { _, _ in submitted = false; model.searchTextDidChange() }
+                        .onChange(of: model.searchText) { _, _ in model.searchTextDidChange() }
                     Button("Suchen") { submit() }.accessibilityIdentifier("search.submit").buttonStyle(ChaarlieButton()).disabled(model.searchBusy || model.searchText.count < 2)
-                    if isBarcode {
-                        Button("Barcode prüfen") { Task { await model.resolve(.barcode(model.searchText.trimmingCharacters(in: .whitespaces))) } }
-                            .buttonStyle(ChaarlieButton(outline: true))
-                    }
                     if model.searchBusy { ProgressView("Produkte werden gesucht …") }
-                    if model.scanBusy { ProgressView("Produkt wird geprüft …") }
+                    ResolveFeedback(model: model, origin: .search)
                     if let error = model.searchError {
                         Text(error)
                         Button("Erneut versuchen") { submit() }.buttonStyle(ChaarlieButton(outline: true))
@@ -139,13 +133,15 @@ struct ProductSearchView: View {
                             }.padding(14).background(.white).clipShape(RoundedRectangle(cornerRadius: 14))
                         }.buttonStyle(.plain)
                     }
-                    if submitted, !model.searchBusy, model.searchError == nil, model.searchResults.isEmpty {
-                        Text("Keine Produkte gefunden. Prüfe den Suchbegriff oder gib den Barcode ein.")
+                    if model.searchSubmitted, !isBarcode, !model.searchBusy, model.searchError == nil, model.searchResults.isEmpty {
+                        ContentUnavailableView("Keine Treffer", systemImage: "magnifyingglass", description: Text("Anderen Namen oder Barcode versuchen."))
                     }
                 }.padding(24)
             }.background(ChaarlieTheme.background)
-                .toolbar { ToolbarItem(placement: .topBarTrailing) { CloseButton(label: "Suche schließen") { model.cancelSearch() } } }
+                .scrollDismissesKeyboard(.interactively)
+                .chaarlieStatusBarBackground()
         }
+        .onDisappear { queryFocused = false }
     }
     private func productText(_ product: ScanProduct) -> some View {
         VStack(alignment: .leading, spacing: 5) {
@@ -160,5 +156,11 @@ struct ProductSearchView: View {
         let value = model.searchText.trimmingCharacters(in: .whitespaces)
         return [8, 12, 13, 14].contains(value.count) && value.allSatisfy(\.isNumber)
     }
-    private func submit() { submitted = true; Task { await model.search() } }
+    private func submit() {
+        queryFocused = false
+        model.searchSubmitted = true
+        if isBarcode {
+            Task { await model.resolve(.barcode(model.searchText.trimmingCharacters(in: .whitespacesAndNewlines))) }
+        } else { Task { await model.search() } }
+    }
 }

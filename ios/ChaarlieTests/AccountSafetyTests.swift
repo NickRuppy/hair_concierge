@@ -28,6 +28,216 @@ actor ControlledTransport: HTTPTransport {
 }
 @MainActor
 final class AccountSafetyTests: XCTestCase {
+    func testLeavingScannerPreservesManualSearchContext() {
+        let model = AppModel(client: MobileClient(configuration: try! MobileConfiguration(baseURL: URL(string: "http://localhost/api/mobile/v1")!), store: MemorySessionStore()))
+        model.searchText = "Shampoo"
+        model.searchError = "Suche erneut versuchen"
+        model.searchResults = [ScanProduct(id: "product", name: "Shampoo", brand: nil, category: "shampoo", categoryLabel: "Shampoo", imageUrl: nil, priceEur: nil, currency: nil, purchaseUrl: nil)]
+        model.selectedTab = .search
+        model.changeTab(from: .scan)
+        XCTAssertEqual(model.searchText, "Shampoo")
+        XCTAssertEqual(model.searchResults.count, 1)
+        XCTAssertEqual(model.searchError, "Suche erneut versuchen")
+    }
+    func testCancelledSearchDoesNotPretendThereWereNoMatches() {
+        let model = AppModel(client: MobileClient(configuration: try! MobileConfiguration(baseURL: URL(string: "http://localhost/api/mobile/v1")!), store: MemorySessionStore()))
+        model.searchText = "Shampoo"; model.searchBusy = true; model.searchSubmitted = true
+        model.selectedTab = .profile
+        model.changeTab(from: .search)
+        XCTAssertFalse(model.searchBusy)
+        XCTAssertFalse(model.searchSubmitted)
+        XCTAssertEqual(model.searchText, "Shampoo")
+    }
+    func testFailedHistorySaveSurvivesDismissalAndRetriesOriginalIdentity() async throws {
+        let transport = ControlledTransport()
+        let client = try client(transport)
+        try await client.install(session("history"))
+        let model = AppModel(client: client)
+        model.admission = .ready
+        model.selectedTab = .search
+        let load = Task { await model.resolve(.barcode("4006381333931")) }
+        try await waitFor("resolve", transport: transport)
+        await transport.complete("resolve", json: #"{"contractVersion":1,"kind":"submission_required","missingFacts":["unknown_product"],"historySaved":false}"#)
+        await load.value
+        XCTAssertNotNil(model.scanResult, "History failure must not hide the product result")
+        XCTAssertEqual(model.resolveOrigin, .search)
+        model.dismissScan()
+        XCTAssertTrue(model.hasUnsavedHistory)
+        let retry = Task { await model.retryHistorySaving() }
+        try await waitFor("resolve", transport: transport)
+        let body = await transport.lastBody("resolve")
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: XCTUnwrap(body)) as? [String: Any])
+        XCTAssertEqual((object["identifier"] as? [String: String])?["value"], "4006381333931")
+        await transport.complete("resolve", json: #"{"contractVersion":1,"kind":"submission_required","missingFacts":["unknown_product"],"historySaved":true}"#)
+        await retry.value
+        XCTAssertFalse(model.hasUnsavedHistory)
+        XCTAssertNil(model.scanResult, "Save retry must not reopen a dismissed result")
+    }
+    func testHistoryOpenDoesNotRecordAnotherVisit() throws {
+        let entry = HistoryEntry(id: "h1", barcodeGtin: "4006381333931", productId: "product", productName: nil, brand: nil, imageUrl: nil, lastSeenAt: "2026-09-18T12:00:00.123Z", status: .available)
+        let request = try XCTUnwrap(entry.request)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(request)) as? [String: Any])
+        XCTAssertEqual(object["recordHistory"] as? Bool, false)
+        XCTAssertEqual((object["identifier"] as? [String: String])?["value"], "4006381333931")
+        XCTAssertNil(object["productId"])
+        XCTAssertNotNil(entry.date)
+        XCTAssertEqual(entry.statusLabel, "Produkt öffnen", "Catalog presence does not promise a usable assessment")
+    }
+    func testInvalidManualBarcodeRemainsOnSearchWithSpecificRecovery() async throws {
+        let transport = ControlledTransport()
+        let client = try client(transport)
+        try await client.install(session("invalid-barcode"))
+        let model = AppModel(client: client)
+        model.admission = .ready; model.selectedTab = .search
+        let load = Task { await model.resolve(.barcode("4006381333932")) }
+        try await waitFor("resolve", transport: transport)
+        await transport.complete("resolve", status: 400, json: #"{"error":"invalid_identifier"}"#)
+        await load.value
+        XCTAssertEqual(model.selectedTab, .search)
+        XCTAssertEqual(model.scanError, "Barcode ungültig. Prüfe die 8 oder 13 Ziffern.")
+        XCTAssertFalse(model.hasUnsavedHistory)
+    }
+    func testAlreadyCataloguedSubmissionKeepsSheetMountedDuringFreshAssessment() async throws {
+        let transport = ControlledTransport()
+        let client = try client(transport)
+        try await client.install(session("race"))
+        let model = AppModel(client: client)
+        model.admission = .ready; model.selectedTab = .search
+        model.lastRequest = .barcode("4006381333931")
+        model.scanResult = try JSONDecoder().decode(ScanResult.self, from: Data(#"{"contractVersion":1,"kind":"submission_required","missingFacts":["unknown_product"]}"#.utf8))
+        model.researchChecked = true
+        let submit = Task { await model.submitResearch(category: "shampoo") }
+        try await waitFor("submit", transport: transport)
+        await transport.complete("submit", json: #"{"contractVersion":1,"kind":"already_in_catalog","productId":"now-known","historySaved":true}"#)
+        try await waitFor("resolve", transport: transport)
+        XCTAssertNotNil(model.scanResult)
+        XCTAssertTrue(model.scanBusy)
+        await transport.fail("resolve")
+        await submit.value
+        XCTAssertNotNil(model.scanResult, "The sheet stays mounted with its own retry state")
+        XCTAssertNotNil(model.scanError)
+        XCTAssertFalse(model.researchBusy)
+    }
+    func testResearchPendingNeedsConfirmedResponseAndRetryKeepsCategory() async throws {
+        let transport = ControlledTransport()
+        let client = try client(transport)
+        try await client.install(session("research"))
+        let model = AppModel(client: client)
+        model.admission = .ready
+        model.lastRequest = .barcode("4006381333931")
+        model.researchChecked = true
+        let submit = Task { await model.submitResearch(category: "shampoo") }
+        try await waitFor("submit", transport: transport)
+        XCTAssertFalse(model.researchPending)
+        await transport.fail("submit")
+        await submit.value
+        XCTAssertFalse(model.researchPending)
+        XCTAssertNotNil(model.researchError)
+        let first = await transport.lastBody("submit")
+        let retry = Task { await model.submitResearch(category: "conditioner") }
+        try await waitFor("submit", transport: transport)
+        let repeated = await transport.lastBody("submit")
+        XCTAssertEqual(try JSONSerialization.jsonObject(with: XCTUnwrap(first)) as? NSDictionary,
+                       try JSONSerialization.jsonObject(with: XCTUnwrap(repeated)) as? NSDictionary)
+        await transport.complete("submit", status: 202, json: #"{"contractVersion":1,"kind":"pending_submission","submissionId":"confirmed","headline":"In Prüfung","historySaved":false}"#)
+        await retry.value
+        XCTAssertTrue(model.researchPending)
+        XCTAssertTrue(model.hasUnsavedHistory)
+        XCTAssertFalse(model.researchBusy)
+    }
+    func testUnavailableHistoryReadStillAllowsIdempotentResearchSubmission() async throws {
+        let transport = ControlledTransport()
+        let client = try client(transport)
+        try await client.install(session("research-fallback"))
+        let model = AppModel(client: client)
+        model.admission = .ready
+        model.lastRequest = .barcode("4006381333931")
+        let check = Task { await model.checkResearchStatus() }
+        try await waitFor("history", transport: transport)
+        await transport.fail("history")
+        await check.value
+        XCTAssertFalse(model.researchPending)
+        XCTAssertTrue(model.researchChecked)
+        let submit = Task { await model.submitResearch(category: "shampoo") }
+        try await waitFor("submit", transport: transport)
+        await transport.complete("submit", status: 202, json: #"{"contractVersion":1,"kind":"pending_submission","submissionId":"confirmed","historySaved":true}"#)
+        await submit.value
+        XCTAssertTrue(model.researchPending)
+    }
+    func testLateHistoryAfterLogoutCannotRestoreAnotherAccountsEntries() async throws {
+        let transport = ControlledTransport()
+        let client = try client(transport)
+        try await client.install(session("old"))
+        let model = AppModel(client: client)
+        model.admission = .ready
+        let load = Task { await model.loadHistory() }
+        try await waitFor("history", transport: transport)
+        let logout = Task { await model.logout() }
+        try await waitFor("logout", transport: transport)
+        await transport.complete("history", json: #"{"contractVersion":1,"entries":[{"id":"private","barcodeGtin":"4006381333931","lastSeenAt":"2026-09-18T12:00:00Z","status":"in_research"}],"nextCursor":"old"}"#)
+        await transport.complete("logout", json: "{}")
+        await load.value; await logout.value
+        XCTAssertTrue(model.historyEntries.isEmpty)
+        XCTAssertNil(model.historyNextCursor)
+        XCTAssertFalse(model.historyBusy)
+        XCTAssertEqual(model.admission, .signedOut)
+    }
+    func testHistoryPagingKeepsRowsAndDropsOverlappingIdentity() async throws {
+        let transport = ControlledTransport()
+        let client = try client(transport)
+        try await client.install(session("pages"))
+        let model = AppModel(client: client)
+        model.admission = .ready
+        let load = Task { await model.loadHistory() }
+        try await waitFor("history", transport: transport)
+        await transport.complete("history", json: #"{"contractVersion":1,"entries":[{"id":"first","barcodeGtin":"4006381333931","lastSeenAt":"2026-09-18T12:00:00Z","status":"in_research"}],"nextCursor":"page2"}"#)
+        await load.value
+        let more = Task { await model.loadHistory(more: true) }
+        try await waitFor("history", transport: transport)
+        await transport.complete("history", json: #"{"contractVersion":1,"entries":[{"id":"first","barcodeGtin":"4006381333931","lastSeenAt":"2026-09-18T12:00:00Z","status":"in_research"},{"id":"second","productId":"other","lastSeenAt":"2026-09-17T12:00:00Z","status":"available"}],"nextCursor":null}"#)
+        await more.value
+        XCTAssertEqual(model.historyEntries.map(\.id), ["first", "second"])
+        XCTAssertNil(model.historyNextCursor)
+    }
+    func testLeavingSearchRejectsLateResolveWithoutLosingQuery() async throws {
+        let transport = ControlledTransport()
+        let client = try client(transport)
+        try await client.install(session("tabs"))
+        let model = AppModel(client: client)
+        model.admission = .ready; model.selectedTab = .search; model.searchText = "Shampoo"
+        let load = Task { await model.resolve(.product("product")) }
+        try await waitFor("resolve", transport: transport)
+        model.selectedTab = .profile
+        model.changeTab(from: .search)
+        await transport.complete("resolve", json: #"{"contractVersion":1,"kind":"submission_required","missingFacts":["unknown_product"]}"#)
+        await load.value
+        XCTAssertNil(model.scanResult)
+        XCTAssertFalse(model.scanBusy)
+        XCTAssertEqual(model.searchText, "Shampoo")
+    }
+    func testResolveErrorsStayWithTheirTabAcrossAnotherSuccessfulScan() async throws {
+        let transport = ControlledTransport()
+        let client = try client(transport)
+        try await client.install(session("tab-errors"))
+        let model = AppModel(client: client)
+        model.admission = .ready; model.selectedTab = .search
+        let search = Task { await model.resolve(.product("product")) }
+        try await waitFor("resolve", transport: transport)
+        await transport.fail("resolve")
+        await search.value
+        let message = model.scanError
+        model.selectedTab = .scan; model.changeTab(from: .search)
+        XCTAssertNil(model.scanError)
+        let scan = Task { await model.resolve(.barcode("4006381333931")) }
+        try await waitFor("resolve", transport: transport)
+        await transport.complete("resolve", json: #"{"contractVersion":1,"kind":"submission_required","missingFacts":["unknown_product"],"historySaved":true}"#)
+        await scan.value
+        model.dismissScan()
+        model.selectedTab = .search; model.changeTab(from: .scan)
+        XCTAssertEqual(model.scanError, message)
+        XCTAssertEqual(model.lastRequest, .product("product"))
+        XCTAssertEqual(model.resolveOrigin, .search)
+    }
     private struct CapturedProof: Decodable {
         struct DeliveredEmail: Decodable {
             struct MessageData: Decodable { let token_hash: String? }
@@ -373,23 +583,23 @@ final class AccountSafetyTests: XCTestCase {
         await transport.complete("complete", json: "{\"bootstrap\":{\"status\":\"ready\"}}")
         await retrying.value
     }
-    func testPresentationDismissalKeepsResolveFailureUntilExplicitClose() throws {
+    func testTabSwitchKeepsResolveFailureUntilExplicitClose() throws {
         let model = AppModel(client: try client(ControlledTransport()))
         model.admission = .ready
         model.lastRequest = .product("selected-product")
         model.scanError = "Die Verbindung ist gerade nicht verfügbar. Versuche es erneut."
-        model.searchPresented = true
-        model.dismissScanPresentation()
-        XCTAssertFalse(model.searchPresented)
-        XCTAssertEqual(model.lastRequest, .product("selected-product"))
-        XCTAssertNotNil(model.scanError)
-        model.dismissScanPresentation() // SwiftUI binding and onDismiss may both fire.
+        model.selectedTab = .search
+        model.changeTab(from: .scan)
+        XCTAssertNil(model.scanError)
+        model.selectedTab = .scan
+        model.changeTab(from: .search)
         XCTAssertEqual(model.lastRequest, .product("selected-product"))
         XCTAssertNotNil(model.scanError)
         model.dismissScan() // The explicit close action acknowledges the error.
         XCTAssertNil(model.lastRequest); XCTAssertNil(model.scanError)
         model.lastRequest = .barcode("12345678"); model.scanBusy = true
-        model.dismissScanPresentation() // A normal cancellation still clears pending scan state.
+        model.selectedTab = .profile
+        model.changeTab(from: .scan)
         XCTAssertNil(model.lastRequest); XCTAssertFalse(model.scanBusy)
     }
 
@@ -429,7 +639,6 @@ final class AccountSafetyTests: XCTestCase {
         model.profile = HairProfile(profileRevision: "A", answers: [])
         model.scanError = "Retained resolve failure"
         model.lastRequest = .product("account-A-product")
-        model.dismissScanPresentation()
         XCTAssertNotNil(model.scanError)
         let callback = LoginCallback(attemptId: UUID().uuidString, tokenHash: "abcdefghijklmnop")
         model.pendingAccountLink = callback
@@ -721,7 +930,6 @@ final class AccountSafetyTests: XCTestCase {
         try await waitFor("profile", transport: transport)
         let scan = Task { await model.resolve(.barcode("12345678")) }
         try await waitFor("resolve", transport: transport)
-        model.searchPresented = true
         model.searchText = "Shampoo"
         let search = Task { await model.search() }
         try await waitFor("search", transport: transport)
@@ -738,7 +946,6 @@ final class AccountSafetyTests: XCTestCase {
         XCTAssertNil(model.scanResult)
         XCTAssertNil(model.lastRequest)
         XCTAssertFalse(model.scanBusy)
-        XCTAssertFalse(model.searchPresented)
         XCTAssertFalse(model.searchBusy)
         XCTAssertEqual(model.searchText, "")
         XCTAssertTrue(model.searchResults.isEmpty)

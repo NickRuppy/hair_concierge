@@ -5,7 +5,7 @@ import SwiftUI
 @Observable
 final class AppModel {
     enum Admission: Equatable { case signedOut, loading, ready, profileRequired, unavailable }
-    enum Tab: Hashable { case scan, profile }
+    enum Tab: Hashable { case scan, search, history, profile }
     let client: MobileClient
     var admission: Admission = .loading
     var selectedTab: Tab = .scan
@@ -40,7 +40,24 @@ final class AppModel {
     var searchResults: [ScanProduct] = []
     var searchBusy = false
     var searchError: String?
-    var searchPresented = false
+    var searchSubmitted = false
+    var resolveOrigin: Tab = .scan
+    var historyEntries: [HistoryEntry] = []
+    var historyBusy = false
+    var historyError: String?
+    var historyLoaded = false
+    var historyNextCursor: String?
+    var historyClearing = false
+    var historySaveBusy = false
+    var pendingHistorySaves: [ScanRequest] = []
+    var pendingResearchSaves: [ResearchRequest] = []
+    var researchBusy = false
+    var researchChecking = false
+    var researchChecked = false
+    var researchPending = false
+    var researchError: String?
+    var researchRequest: ResearchRequest?
+    var hasUnsavedHistory: Bool { !pendingHistorySaves.isEmpty || !pendingResearchSaves.isEmpty }
     #if DEBUG
     private var consumedCodeInjection = false
     func verifyCapturedTestCode(_ value: String) async {
@@ -56,6 +73,9 @@ final class AppModel {
     private var searchOperation = UUID()
     private var profileOperation = UUID()
     private var profileEditOperation = UUID()
+    private var historyOperation = UUID()
+    private var historySaveOperation = UUID()
+    private var resolveFailures: [Tab: (request: ScanRequest, message: String)] = [:]
     private var restorationTask: Task<Void, Never>?
 
     init(client: MobileClient) { self.client = client }
@@ -321,6 +341,7 @@ final class AppModel {
             profile = HairProfile(profileRevision: saved.profileRevision, answers: saved.answers)
             profileError = nil
             dismissScan()
+            resolveFailures.removeAll()
             cancelSearch()
             searchText = ""
             searchError = nil
@@ -345,18 +366,20 @@ final class AppModel {
             }
         }
     }
-    func resolve(_ request: ScanRequest) async {
-        guard admission == .ready, !scanBusy, scanResult == nil else { return }
+    func resolve(_ request: ScanRequest, replacingPresentedResult: Bool = false) async {
+        guard admission == .ready, !scanBusy, scanResult == nil || replacingPresentedResult else { return }
         let account = generation, operation = UUID()
         scanOperation = operation
-        searchOperation = UUID()
-        searchBusy = false
+        resolveOrigin = selectedTab
+        resolveFailures[selectedTab] = nil
+        resetResearch()
         lastRequest = request
         scanBusy = true
         scanError = nil
         do {
             let result = try await client.resolve(request)
             guard account == generation, operation == scanOperation, admission == .ready else { return }
+            trackHistorySave(request, saved: result.historySaved)
             if result.kind == .profile_required { admission = .profileRequired }
             else if result.kind == .retryable_error || (result.kind == .authority_unavailable && result.reason != "personal_target_unavailable") {
                 scanError = "Die Einschätzung konnte nicht geladen werden. Dein Barcode bleibt für einen neuen Versuch erhalten."
@@ -364,10 +387,10 @@ final class AppModel {
         } catch {
             guard account == generation, operation == scanOperation else { return }
             if error as? MobileError == .unauthorized { await expired() }
+            else if error as? MobileError == .invalidBarcode { scanError = "Barcode ungültig. Prüfe die 8 oder 13 Ziffern." }
             else { scanError = "Die Verbindung ist gerade nicht verfügbar. Versuche es erneut." }
         }
         guard account == generation, operation == scanOperation else { return }
-        searchPresented = false
         scanBusy = false
     }
     func search() async {
@@ -380,7 +403,7 @@ final class AppModel {
         searchBusy = true
         do {
             let response = try await client.search(query)
-            guard account == generation, operation == searchOperation, searchPresented else { return }
+            guard account == generation, operation == searchOperation else { return }
             searchResults = response.results
         } catch {
             guard account == generation, operation == searchOperation else { return }
@@ -391,6 +414,7 @@ final class AppModel {
         searchBusy = false
     }
     func searchTextDidChange() {
+        searchSubmitted = false
         searchOperation = UUID()
         searchBusy = false
         searchError = nil
@@ -400,24 +424,153 @@ final class AppModel {
         searchOperation = UUID()
         searchBusy = false
         searchResults = []
-        searchPresented = false
-    }
-    func dismissScanPresentation() {
-        cancelSearch()
-        // Resolve failures dismiss search to expose the scanner's existing retry UI.
-        // Presentation cleanup must not acknowledge that error or discard its request.
-        if scanError == nil { dismissScan() }
+        searchSubmitted = false
     }
     func dismissScan() {
+        resolveFailures[resolveOrigin] = nil
         scanOperation = UUID()
         scanBusy = false
         scanResult = nil
         scanError = nil
         lastRequest = nil
+        resetResearch()
     }
-    func leaveScan() {
-        if scanBusy { dismissScan() }
-        cancelSearch()
+    func changeTab(from previous: Tab) {
+        // Invalidate only the request belonging to the page being left.
+        if scanBusy, resolveOrigin == previous { dismissScan() }
+        if previous == .search, searchBusy {
+            searchOperation = UUID(); searchBusy = false; searchSubmitted = false
+        }
+        if let request = lastRequest, let message = scanError {
+            resolveFailures[resolveOrigin] = (request, message)
+        }
+        resolveOrigin = selectedTab
+        lastRequest = resolveFailures[selectedTab]?.request
+        scanError = resolveFailures[selectedTab]?.message
+    }
+
+    private func trackHistorySave(_ request: ScanRequest, saved: Bool?) {
+        guard request.recordHistory != false else { return }
+        if saved == false {
+            if !pendingHistorySaves.contains(request) { pendingHistorySaves.append(request) }
+        } else if saved == true { pendingHistorySaves.removeAll { $0 == request } }
+    }
+    func loadHistory(more: Bool = false) async {
+        guard admission == .ready, !historyClearing else { return }
+        if more, historyBusy || historyNextCursor == nil { return }
+        let account = generation, operation = UUID()
+        historyOperation = operation
+        historyBusy = true; historyError = nil
+        do {
+            let response = try await client.history(cursor: more ? historyNextCursor : nil)
+            guard account == generation, operation == historyOperation else { return }
+            if more {
+                let existingIDs = Set(historyEntries.map(\.id))
+                historyEntries.append(contentsOf: response.entries.filter { !existingIDs.contains($0.id) })
+            } else { historyEntries = response.entries }
+            historyNextCursor = response.nextCursor
+            historyLoaded = true
+        } catch {
+            guard account == generation, operation == historyOperation else { return }
+            if error as? MobileError == .unauthorized { await expired(); return }
+            historyError = "Verlauf konnte nicht geladen werden."
+        }
+        guard account == generation, operation == historyOperation else { return }
+        historyBusy = false
+    }
+    func clearHistory() async {
+        guard admission == .ready, !historyClearing, !historySaveBusy else { return }
+        let account = generation, operation = UUID()
+        historyOperation = operation
+        historySaveOperation = UUID()
+        historyClearing = true; historyBusy = false; historyError = nil
+        do {
+            try await client.clearHistory()
+            guard account == generation, operation == historyOperation else { return }
+            historyEntries = []; historyLoaded = true; historyNextCursor = nil
+            pendingHistorySaves = []; pendingResearchSaves = []
+        } catch {
+            guard account == generation, operation == historyOperation else { return }
+            if error as? MobileError == .unauthorized { await expired(); return }
+            historyError = "Verlauf konnte nicht gelöscht werden."
+        }
+        guard account == generation, operation == historyOperation else { return }
+        historyClearing = false
+    }
+    func retryHistorySaving() async {
+        guard !historySaveBusy, !historyClearing else { return }
+        let account = generation, operation = UUID()
+        historySaveOperation = operation; historySaveBusy = true
+        do {
+            for request in pendingHistorySaves {
+                let result = try await client.resolve(request)
+                guard account == generation, operation == historySaveOperation else { return }
+                trackHistorySave(request, saved: result.historySaved)
+            }
+            for request in pendingResearchSaves {
+                let result = try await client.submitResearch(request)
+                guard account == generation, operation == historySaveOperation else { return }
+                if result.historySaved { pendingResearchSaves.removeAll { $0 == request } }
+            }
+        } catch {
+            guard account == generation, operation == historySaveOperation else { return }
+            if error as? MobileError == .unauthorized { await expired(); return }
+        }
+        guard account == generation, operation == historySaveOperation else { return }
+        historySaveBusy = false
+        if selectedTab == .history { await loadHistory() }
+    }
+    func checkResearchStatus() async {
+        guard let barcode = lastRequest?.identifier?.value, !researchChecking, !researchBusy else { return }
+        let account = generation, operation = scanOperation
+        researchChecking = true; researchError = nil
+        do {
+            let response = try await client.history(barcode: barcode)
+            guard account == generation, operation == scanOperation else { return }
+            researchPending = response.entries.contains {
+                $0.barcodeGtin?.drop(while: { $0 == "0" }) == barcode.drop(while: { $0 == "0" }) && $0.status == .in_research
+            }
+            researchChecked = true
+        } catch {
+            guard account == generation, operation == scanOperation else { return }
+            if error as? MobileError == .unauthorized { await expired(); return }
+            researchChecked = true
+            researchError = "Prüfstatus nicht verfügbar. Du kannst das Produkt trotzdem einreichen."
+        }
+        guard account == generation, operation == scanOperation else { return }
+        researchChecking = false
+    }
+    func submitResearch(category: String) async {
+        guard let identifier = lastRequest?.identifier, !researchBusy, !researchPending, researchChecked else { return }
+        let request = researchRequest ?? ResearchRequest(identifier: identifier, category: category)
+        researchRequest = request
+        let account = generation, operation = scanOperation
+        researchBusy = true; researchError = nil
+        do {
+            let result = try await client.submitResearch(request)
+            guard account == generation, operation == scanOperation else { return }
+            if result.historySaved {
+                pendingResearchSaves.removeAll { $0 == request }
+                pendingHistorySaves.removeAll { $0.identifier == request.identifier }
+            }
+            else if !pendingResearchSaves.contains(request) { pendingResearchSaves.append(request) }
+            if result.kind == .pending_submission { researchPending = true }
+            else if let productId = result.productId {
+                // Keep the sheet mounted while loading a product that became
+                // available between lookup and submission.
+                await resolve(.product(productId).withoutHistory(), replacingPresentedResult: true)
+            }
+        } catch {
+            guard account == generation, operation == scanOperation else { return }
+            if error as? MobileError == .unauthorized { await expired(); return }
+            researchError = "Einreichung noch nicht bestätigt. Bitte erneut versuchen."
+        }
+        guard account == generation, operation == scanOperation else { return }
+        researchBusy = false
+    }
+    private func resetResearch() {
+        researchBusy = false; researchChecking = false; researchChecked = false
+        researchPending = false; researchError = nil; researchRequest = nil
     }
     func logout() async {
         generation = UUID()
@@ -449,6 +602,11 @@ final class AppModel {
         profileError = nil
         searchText = ""
         searchError = nil
+        searchSubmitted = false
+        historyOperation = UUID(); historySaveOperation = UUID()
+        historyEntries = []; historyBusy = false; historyLoaded = false; historyError = nil; historyNextCursor = nil
+        historyClearing = false; historySaveBusy = false; pendingHistorySaves = []; pendingResearchSaves = []
+        resolveFailures.removeAll()
         selectedTab = .scan
     }
 }

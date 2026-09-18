@@ -27,7 +27,7 @@ struct HairProfile: Codable, Sendable {
 }
 
 enum MobileError: Error, Equatable {
-    case configuration, unauthorized, invalidResponse, unavailable, stale, invalidCode, profileConflict, invalidProfile, profileRequired
+    case configuration, unauthorized, invalidResponse, unavailable, stale, invalidCode, invalidBarcode, profileConflict, invalidProfile, profileRequired
 }
 
 enum MobileRuntime: Sendable, Equatable {
@@ -238,6 +238,24 @@ actor MobileClient {
         guard response.contractVersion == 1 else { throw MobileError.invalidResponse }
         return response
     }
+    func history(cursor: String? = nil, barcode: String? = nil) async throws -> HistoryResponse {
+        var query: [URLQueryItem] = []
+        if let cursor { query.append(URLQueryItem(name: "cursor", value: cursor)) }
+        if let barcode { query.append(URLQueryItem(name: "barcode", value: barcode)) }
+        let response: HistoryResponse = try await authorized("scan/history", query: query)
+        guard response.contractVersion == 1 else { throw MobileError.invalidResponse }
+        return response
+    }
+    func clearHistory() async throws {
+        let response: HistoryClearResponse = try await authorized("scan/history", method: "DELETE")
+        guard response.contractVersion == 1 else { throw MobileError.invalidResponse }
+    }
+    func submitResearch(_ request: ResearchRequest) async throws -> ResearchResponse {
+        let response: ResearchResponse = try await authorized("scan/submit", method: "POST", encodedBody: JSONEncoder().encode(request))
+        guard response.contractVersion == 1,
+              response.kind == .pending_submission ? response.submissionId != nil : response.productId != nil else { throw MobileError.invalidResponse }
+        return response
+    }
     private func authorized<T: Decodable>(_ path: String, method: String = "GET", encodedBody: Data? = nil,
                                           query: [URLQueryItem] = []) async throws -> T {
         let expected = epoch
@@ -308,6 +326,10 @@ actor MobileClient {
         let (data, response) = try await operation.value
         guard (200..<300).contains(response.statusCode) else {
             if response.statusCode == 401 { throw MobileError.unauthorized }
+            if path == "scan/resolve", response.statusCode == 400,
+               (try? JSONDecoder().decode(ProfileEditErrorBody.self, from: data))?.error == "invalid_identifier" {
+                throw MobileError.invalidBarcode
+            }
             if path == "auth/verify", response.statusCode == 400 { throw MobileError.invalidCode }
             if path == "profile/edit" {
                 let code = (try? JSONDecoder().decode(ProfileEditErrorBody.self, from: data))?.error

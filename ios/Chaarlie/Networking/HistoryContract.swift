@@ -1,0 +1,55 @@
+import Foundation
+
+struct HistoryResponse: Codable, Sendable {
+    let contractVersion: Int
+    let entries: [HistoryEntry]
+    var nextCursor: String? = nil
+}
+
+struct HistoryEntry: Codable, Identifiable, Sendable {
+    enum Status: String, Codable, Sendable { case available, not_in_catalog, in_research, unavailable }
+    let id: String
+    let barcodeGtin: String?
+    let productId: String?
+    let productName: String?
+    let brand: String?
+    let imageUrl: String?
+    let lastSeenAt: String
+    let status: Status
+
+    var title: String { productName ?? barcodeGtin.map { "Barcode \($0)" } ?? "Produkt" }
+    var statusLabel: String {
+        switch status {
+        case .available: "Produkt öffnen"
+        case .not_in_catalog: "Noch nicht im Katalog"
+        case .in_research: "In Prüfung"
+        case .unavailable: "Derzeit nicht verfügbar"
+        }
+    }
+    var request: ScanRequest? {
+        if let barcodeGtin { return .barcode(barcodeGtin).withoutHistory() }
+        return productId.map { .product($0).withoutHistory() }
+    }
+    var date: Date? {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter.date(from: lastSeenAt) ?? ISO8601DateFormatter().date(from: lastSeenAt)
+    }
+}
+
+struct ResearchRequest: Encodable, Equatable, Sendable {
+    let identifier: ScanRequest.Identifier
+    let category: String
+}
+
+struct ResearchResponse: Decodable, Sendable {
+    enum Kind: String, Decodable, Sendable { case pending_submission, already_in_catalog }
+    let contractVersion: Int
+    let kind: Kind
+    let submissionId: String?
+    let productId: String?
+    let headline: String?
+    let historySaved: Bool
+}
+
+struct HistoryClearResponse: Decodable, Sendable { let contractVersion: Int }

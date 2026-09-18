@@ -4,8 +4,10 @@ struct ScanRequest: Encodable, Equatable, Sendable {
     struct Identifier: Encodable, Equatable, Sendable { let type: String; let value: String }
     let identifier: Identifier?
     let productId: String?
+    var recordHistory: Bool? = nil
     static func barcode(_ value: String) -> Self { Self(identifier: Identifier(type: "ean", value: value), productId: nil) }
     static func product(_ id: String) -> Self { Self(identifier: nil, productId: id) }
+    func withoutHistory() -> Self { var request = self; request.recordHistory = false; return request }
 }
 struct ScanProduct: Codable, Identifiable, Sendable {
     let id: String
@@ -92,6 +94,7 @@ struct ScanResult: Codable, Identifiable, Sendable {
     let productId: String?
     let missingFacts: [String]?
     let code: String?
+    var historySaved: Bool? = nil
     func validate() throws {
         guard contractVersion == 1 else { throw MobileError.invalidResponse }
         switch kind {

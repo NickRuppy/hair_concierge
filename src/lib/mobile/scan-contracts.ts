@@ -3,6 +3,18 @@ import { z } from "zod"
 /** Versioned wire contract for the native scanner. All values are render-ready German. */
 export const MOBILE_SCAN_CONTRACT_VERSION = 1 as const
 
+export const mobileScanResolveRequestSchema = z
+  .object({
+    productId: z.uuid().optional(),
+    identifier: z
+      .object({ type: z.literal("ean"), value: z.string().trim().min(1).max(64) })
+      .strict()
+      .optional(),
+    recordHistory: z.boolean().optional(),
+  })
+  .strict()
+  .refine((value) => Boolean(value.productId) !== Boolean(value.identifier))
+
 const productSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
@@ -65,54 +77,56 @@ const assessmentSchema = z.object({
     .max(5),
 })
 
-export const mobileScanResolveResultSchema = z.discriminatedUnion("kind", [
-  assessmentSchema,
-  z.object({
-    contractVersion: z.literal(MOBILE_SCAN_CONTRACT_VERSION),
-    kind: z.literal("not_needed"),
-    contextRevision: z.string().min(1),
-    product: productSchema,
-    headline: z.string().min(1),
-    subtitle: z.string().min(1),
-    reasons: z.array(z.string()),
-    rows: z.array(mobileScanRowSchema),
-    coveredBy: z.array(z.object({ label: z.string(), detail: z.string().nullable() })),
-  }),
-  z.object({
-    contractVersion: z.literal(MOBILE_SCAN_CONTRACT_VERSION),
-    kind: z.literal("profile_decision_deferred"),
-    contextRevision: z.string().min(1),
-    product: productSchema,
-    headline: z.string().min(1),
-    subtitle: z.string().min(1),
-    reason: z.string().min(1),
-  }),
-  z.object({
-    contractVersion: z.literal(MOBILE_SCAN_CONTRACT_VERSION),
-    kind: z.literal("submission_required"),
-    productId: z.string().min(1).nullable(),
-    missingFacts: z.array(z.string()).min(1),
-  }),
-  z.object({
-    contractVersion: z.literal(MOBILE_SCAN_CONTRACT_VERSION),
-    kind: z.literal("authority_unavailable"),
-    reason: z.enum(["personal_target_unavailable", "temporarily_unavailable"]),
-    product: productSchema.optional(),
-    headline: z.string().min(1).optional(),
-    subtitle: z.string().min(1).optional(),
-    productId: z.string().min(1),
-    missingFacts: z.array(z.string()).min(1),
-  }),
-  z.object({
-    contractVersion: z.literal(MOBILE_SCAN_CONTRACT_VERSION),
-    kind: z.literal("profile_required"),
-  }),
-  z.object({
-    contractVersion: z.literal(MOBILE_SCAN_CONTRACT_VERSION),
-    kind: z.literal("retryable_error"),
-    code: z.string().min(1),
-  }),
-])
+export const mobileScanResolveResultSchema = z
+  .discriminatedUnion("kind", [
+    assessmentSchema,
+    z.object({
+      contractVersion: z.literal(MOBILE_SCAN_CONTRACT_VERSION),
+      kind: z.literal("not_needed"),
+      contextRevision: z.string().min(1),
+      product: productSchema,
+      headline: z.string().min(1),
+      subtitle: z.string().min(1),
+      reasons: z.array(z.string()),
+      rows: z.array(mobileScanRowSchema),
+      coveredBy: z.array(z.object({ label: z.string(), detail: z.string().nullable() })),
+    }),
+    z.object({
+      contractVersion: z.literal(MOBILE_SCAN_CONTRACT_VERSION),
+      kind: z.literal("profile_decision_deferred"),
+      contextRevision: z.string().min(1),
+      product: productSchema,
+      headline: z.string().min(1),
+      subtitle: z.string().min(1),
+      reason: z.string().min(1),
+    }),
+    z.object({
+      contractVersion: z.literal(MOBILE_SCAN_CONTRACT_VERSION),
+      kind: z.literal("submission_required"),
+      productId: z.string().min(1).nullable(),
+      missingFacts: z.array(z.string()).min(1),
+    }),
+    z.object({
+      contractVersion: z.literal(MOBILE_SCAN_CONTRACT_VERSION),
+      kind: z.literal("authority_unavailable"),
+      reason: z.enum(["personal_target_unavailable", "temporarily_unavailable"]),
+      product: productSchema.optional(),
+      headline: z.string().min(1).optional(),
+      subtitle: z.string().min(1).optional(),
+      productId: z.string().min(1),
+      missingFacts: z.array(z.string()).min(1),
+    }),
+    z.object({
+      contractVersion: z.literal(MOBILE_SCAN_CONTRACT_VERSION),
+      kind: z.literal("profile_required"),
+    }),
+    z.object({
+      contractVersion: z.literal(MOBILE_SCAN_CONTRACT_VERSION),
+      kind: z.literal("retryable_error"),
+      code: z.string().min(1),
+    }),
+  ])
+  .and(z.object({ historySaved: z.boolean().optional() }))
 
 export type MobileScanProduct = z.infer<typeof productSchema>
 export type MobileScanRow = z.infer<typeof mobileScanRowSchema>
