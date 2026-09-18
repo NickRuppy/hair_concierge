@@ -1,5 +1,6 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
+import { safeBearerTokenMatches } from "@/app/api/billing/payment-monitor/route"
 import { researchDeliveryEnabled } from "@/lib/mobile/push-installation-service"
 import { reconcileMobileResearchDeliveries } from "@/lib/mobile/research-delivery-worker"
 
@@ -17,7 +18,7 @@ export async function handleMobileResearchDeliveryReconcile(
 ) {
   if (
     !dependencies.cronSecret ||
-    request.headers.get("authorization") !== `Bearer ${dependencies.cronSecret}`
+    !safeBearerTokenMatches(request.headers.get("authorization"), dependencies.cronSecret)
   )
     return { status: 401, body: { error: "unauthorized" } }
   if (!dependencies.enabled) return { status: 200, body: { disabled: true } }

@@ -176,6 +176,10 @@ export function classifyApnsResponse(
       invalidatedAt: typeof timestamp === "number" && Number.isFinite(timestamp) ? timestamp : null,
     }
   }
+  // Our own provider credentials failed, not this device. Hold the delivery for a slow
+  // retry so a corrected key recovers it; the next run signs a fresh provider token.
+  if (reason === "InvalidProviderToken" || reason === "ExpiredProviderToken")
+    return { state: "retryable", apnsId, reason, retryAfterSeconds: 3600 }
   if (response.status === 429 || response.status >= 500) {
     return {
       state: "retryable",

@@ -106,12 +106,19 @@ test("APNs responses distinguish invalid tokens, retryable responses, rejected r
     ),
     { state: "retryable", apnsId: id, reason: "ServiceUnavailable", retryAfterSeconds: 30 },
   )
+  // A provider-credential fault affects every device at once and is ours to repair;
+  // it must stay recoverable instead of burning each user's only push.
+  for (const reason of ["InvalidProviderToken", "ExpiredProviderToken"]) {
+    assert.deepEqual(classifyApnsResponse({ status: 403, body: JSON.stringify({ reason }) }, id), {
+      state: "retryable",
+      apnsId: id,
+      reason,
+      retryAfterSeconds: 3600,
+    })
+  }
   assert.deepEqual(
-    classifyApnsResponse(
-      { status: 403, body: JSON.stringify({ reason: "InvalidProviderToken" }) },
-      id,
-    ),
-    { state: "rejected", apnsId: id, reason: "InvalidProviderToken" },
+    classifyApnsResponse({ status: 400, body: JSON.stringify({ reason: "BadTopic" }) }, id),
+    { state: "rejected", apnsId: id, reason: "BadTopic" },
   )
 })
 
