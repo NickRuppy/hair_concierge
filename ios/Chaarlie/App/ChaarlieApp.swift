@@ -2,6 +2,8 @@ import SwiftUI
 
 @main
 struct ChaarlieApp: App {
+    @UIApplicationDelegateAdaptor(ResearchNotificationDelegate.self) private var notificationDelegate
+    @Environment(\.scenePhase) private var scenePhase
     private let model: AppModel?
     init() {
         #if DEBUG
@@ -31,7 +33,14 @@ struct ChaarlieApp: App {
     @ViewBuilder private var application: some View {
             if let model {
                 RootView(model: model)
+                    .onAppear { notificationDelegate.attach(model) }
                     .onOpenURL { url in Task { await model.receive(url) } }
+                    .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { activity in
+                        if let url = activity.webpageURL { Task { await model.receive(url) } }
+                    }
+                    .onChange(of: scenePhase) { _, phase in
+                        if phase == .active { Task { await model.refreshPushRegistration() } }
+                    }
             } else {
                 ContentUnavailableView("Entwicklungsbuild nicht eingerichtet", systemImage: "gearshape",
                     description: Text("Für diesen Build fehlt eine freigegebene Serverkonfiguration."))
@@ -105,6 +114,16 @@ struct RootView: View {
             #endif
         }
         .preferredColorScheme(model.admission == .ready && model.selectedTab == .scan ? .dark : .light)
+        .safeAreaInset(edge: .top) {
+            if model.admission == .ready, model.researchDestinationBusy {
+                ProgressView("Ergebnis wird geladen …").padding().frame(maxWidth: .infinity)
+                    .background(ChaarlieTheme.background)
+            }
+        }
+        .alert("Ergebnis öffnen", isPresented: Binding(get: { model.researchDestinationError != nil }, set: { _ in })) {
+            Button("Erneut versuchen") { Task { await model.openResearchDestination() } }
+            Button("Schließen", role: .cancel) { model.dismissResearchDestination() }
+        } message: { Text(model.researchDestinationError ?? "") }
         .sheet(item: Binding(get: { model.scanResult }, set: { if $0 == nil { model.dismissScan() } })) { result in
             ScanResultPresentation(model: model, result: result)
                 .preferredColorScheme(.light)

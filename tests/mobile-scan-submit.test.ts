@@ -27,6 +27,7 @@ function deps(
   return {
     loadProfile: async () => ({ status: "ready", context: {} }) as never,
     findOpen: async () => null,
+    markMobileResultRequested: async () => undefined,
     createRepository: () => ({}) as never,
     save: async () => true,
     submit: async () => pending,
@@ -88,6 +89,41 @@ test("failed intake is not a confirmed request; existing owner request is reused
   assert.equal(submitted, 1)
   assert.equal(saved, 1)
 })
+test("mobile pending submissions mark durable result intent before returning, including an existing request", async () => {
+  const marks: Array<[string, string]> = []
+  const markMobileResultRequested: MobileScanSubmitDependencies["markMobileResultRequested"] =
+    async (_client, userId, submissionId) => {
+      marks.push([userId, submissionId])
+    }
+
+  await submitMobileScan({} as never, owner, input, deps({ markMobileResultRequested }))
+  await submitMobileScan(
+    {} as never,
+    owner,
+    input,
+    deps({ findOpen: async () => submission, markMobileResultRequested }),
+  )
+  assert.deepEqual(marks, [
+    [owner, submission],
+    [owner, submission],
+  ])
+})
+test("mobile submit fails retryably when durable result intent cannot be marked", async () => {
+  let saved = 0
+  const dependencies = deps()
+  delete dependencies.markMobileResultRequested
+  await assert.rejects(
+    submitMobileScan({ rpc: async () => ({ data: false, error: null }) } as never, owner, input, {
+      ...dependencies,
+      save: async () => {
+        saved++
+        return true
+      },
+    }),
+    /temporarily_unavailable/,
+  )
+  assert.equal(saved, 0)
+})
 test("catalog identity is not assessment readiness; missing product facts still submit and transient failure does not", async () => {
   let current: MobileScanResolveResult = {
     contractVersion: 1,
@@ -129,6 +165,30 @@ test("catalog identity is not assessment readiness; missing product facts still 
     (await submitMobileScan({} as never, owner, input, dependencies)).kind,
     "already_in_catalog",
   )
+})
+test("already catalogued products do not request a future research result", async () => {
+  let marked = 0
+  const result = await submitMobileScan(
+    {} as never,
+    owner,
+    input,
+    deps({
+      eligible: async () => new Set([product]),
+      resolve: async () =>
+        ({ contractVersion: 1, kind: "not_needed", product: { id: product } }) as never,
+      submit: async () => ({
+        kind: "already_in_catalog",
+        productId: product,
+        category: "shampoo",
+        match: {} as never,
+      }),
+      markMobileResultRequested: async () => {
+        marked++
+      },
+    }),
+  )
+  assert.equal(result.kind, "already_in_catalog")
+  assert.equal(marked, 0)
 })
 test("mobile submit rejects invalid barcode, unsupported category and incomplete profile before intake", async () => {
   assert.equal(

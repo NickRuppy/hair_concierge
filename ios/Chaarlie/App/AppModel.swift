@@ -7,6 +7,12 @@ final class AppModel {
     enum Admission: Equatable { case signedOut, loading, ready, profileRequired, unavailable }
     enum Tab: Hashable { case scan, search, history, profile }
     let client: MobileClient
+    let push: ResearchPushCoordinator
+    private(set) var researchDeliveryEnabled = false
+    private(set) var pendingResearchDestination: UUID?
+    private(set) var researchDestinationBusy = false
+    private(set) var researchDestinationError: String?
+    private var researchDestinationOperation = UUID()
     var admission: Admission = .loading
     var selectedTab: Tab = .scan
     var session: MobileSession?
@@ -78,7 +84,10 @@ final class AppModel {
     private var resolveFailures: [Tab: (request: ScanRequest, message: String)] = [:]
     private var restorationTask: Task<Void, Never>?
 
-    init(client: MobileClient) { self.client = client }
+    init(client: MobileClient, push: ResearchPushCoordinator? = nil) {
+        self.client = client
+        self.push = push ?? ResearchPushCoordinator()
+    }
     func restore() async {
         if let active = restorationTask { await active.value; return }
         let active = Task { await self.performRestore() }
@@ -128,6 +137,15 @@ final class AppModel {
         await verify(attemptId: attempt.attemptId, code: code.trimmingCharacters(in: .whitespacesAndNewlines))
     }
     func receive(_ url: URL) async {
+        if let destination = ResearchDestination.parse(url) {
+            researchDestinationOperation = UUID()
+            pendingResearchDestination = destination
+            researchDestinationError = nil
+            researchDestinationBusy = false
+            if admission == .loading, session == nil { await restore() }
+            await openResearchDestination()
+            return
+        }
         if let registrationCallback, await registrationCallback(url) { return }
         let expected = generation, operation = authOperation
         if session == nil, admission == .loading, !authBusy { await restore() }
@@ -152,6 +170,7 @@ final class AppModel {
                 code = ""
                 authError = nil
                 admission = .ready
+                await admitResearchDelivery(response.bootstrap)
                 return true
             }
             guard response.session == nil, response.status == .profile_required, response.completionToken?.isEmpty == false,
@@ -188,6 +207,7 @@ final class AppModel {
             guard account == generation else { return false }
             resetPersonalState()
             admission = .ready
+            await admitResearchDelivery(response.bootstrap)
             return true
         } catch { return false }
     }
@@ -256,11 +276,54 @@ final class AppModel {
             case .profile_required: admission = .profileRequired
             case .temporarily_unavailable: admission = .unavailable
             }
+            await admitResearchDelivery(response)
         } catch {
             guard account == generation else { return }
             if error as? MobileError == .unauthorized { await expired() }
             else { admission = .unavailable }
         }
+    }
+    private func admitResearchDelivery(_ response: Bootstrap?) async {
+        let account = generation
+        researchDeliveryEnabled = admission == .ready && response?.researchDeliveryEnabled == true
+        await push.activate(client: client, enabled: researchDeliveryEnabled)
+        guard account == generation else { return }
+        if admission == .ready { await openResearchDestination() }
+    }
+    func refreshPushRegistration() async {
+        guard admission == .ready else { return }
+        await push.activate(client: client, enabled: researchDeliveryEnabled)
+    }
+    func openResearchDestination() async {
+        guard admission == .ready, let destination = pendingResearchDestination, !researchDestinationBusy else { return }
+        let account = generation, operation = UUID()
+        researchDestinationOperation = operation
+        researchDestinationBusy = true; researchDestinationError = nil
+        dismissScan()
+        selectedTab = .history
+        resolveOrigin = .history
+        do {
+            let result = try await client.researchResult(destination)
+            guard account == generation, operation == researchDestinationOperation, admission == .ready else { return }
+            pendingResearchDestination = nil
+            scanResult = result
+        } catch {
+            guard account == generation, operation == researchDestinationOperation else { return }
+            switch error as? MobileError {
+            case .unauthorized:
+                await expired(preservingResearchDestination: destination)
+                return
+            case .researchNotReady: researchDestinationError = "Die Einschätzung ist noch nicht verfügbar."
+            case .researchNotFound: researchDestinationError = "Dieses Ergebnis gehört nicht zu diesem Konto oder ist nicht mehr verfügbar."
+            default: researchDestinationError = "Ergebnis konnte nicht geladen werden. Bitte erneut versuchen."
+            }
+        }
+        guard account == generation, operation == researchDestinationOperation else { return }
+        researchDestinationBusy = false
+    }
+    func dismissResearchDestination() {
+        researchDestinationOperation = UUID()
+        pendingResearchDestination = nil; researchDestinationBusy = false; researchDestinationError = nil
     }
     func loadProfile() async {
         let account = generation, operation = UUID()
@@ -368,6 +431,7 @@ final class AppModel {
     }
     func resolve(_ request: ScanRequest, replacingPresentedResult: Bool = false) async {
         guard admission == .ready, !scanBusy, scanResult == nil || replacingPresentedResult else { return }
+        if researchDestinationBusy { dismissResearchDestination() }
         let account = generation, operation = UUID()
         scanOperation = operation
         resolveOrigin = selectedTab
@@ -436,6 +500,7 @@ final class AppModel {
         resetResearch()
     }
     func changeTab(from previous: Tab) {
+        if previous == .history, selectedTab != .history, researchDestinationBusy { dismissResearchDestination() }
         // Invalidate only the request belonging to the page being left.
         if scanBusy, resolveOrigin == previous { dismissScan() }
         if previous == .search, searchBusy {
@@ -554,7 +619,10 @@ final class AppModel {
                 pendingHistorySaves.removeAll { $0.identifier == request.identifier }
             }
             else if !pendingResearchSaves.contains(request) { pendingResearchSaves.append(request) }
-            if result.kind == .pending_submission { researchPending = true }
+            if result.kind == .pending_submission {
+                researchPending = true
+                if researchDeliveryEnabled { push.confirmedResearch() }
+            }
             else if let productId = result.productId {
                 // Keep the sheet mounted while loading a product that became
                 // available between lookup and submission.
@@ -572,10 +640,15 @@ final class AppModel {
         researchBusy = false; researchChecking = false; researchChecked = false
         researchPending = false; researchError = nil; researchRequest = nil
     }
-    func logout() async {
+    func logout(preservingResearchDestination destination: UUID? = nil) async {
+        let pushInstallationId = push.installationToRevoke
         generation = UUID()
         authOperation = UUID()
         completionAuthority = nil
+        dismissResearchDestination()
+        pendingResearchDestination = destination
+        researchDeliveryEnabled = false
+        push.endSession()
         resetPersonalState()
         session = nil
         attempt = nil
@@ -585,11 +658,11 @@ final class AppModel {
         authError = nil
         pendingAccountLink = nil
         admission = .signedOut
-        await client.logout()
+        await client.logout(pushInstallationId: pushInstallationId)
     }
-    private func expired() async {
-        await logout()
-        authError = "Deine Anmeldung ist abgelaufen. Bitte melde dich erneut an."
+    private func expired(preservingResearchDestination destination: UUID? = nil) async {
+        await logout(preservingResearchDestination: destination)
+        if admission == .signedOut { authError = "Deine Anmeldung ist abgelaufen. Bitte melde dich erneut an." }
     }
     private func resetPersonalState() {
         completionAuthority = nil

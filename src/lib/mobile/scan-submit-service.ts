@@ -41,6 +41,18 @@ const defaultDependencies = {
     if (error) throw new MobileError("temporarily_unavailable", 503)
     return data?.id ?? null
   },
+  /**
+   * This marker outlives the optional, user-clearable History row. The guarded
+   * database function makes concurrent mobile submits idempotent and verifies
+   * that the request belongs to this account's barcode scan.
+   */
+  async markMobileResultRequested(client: SupabaseClient, userId: string, submissionId: string) {
+    const { data, error } = await client.rpc("mobile_research_request_result", {
+      p_user_id: userId,
+      p_submission_id: submissionId,
+    })
+    if (error || data !== true) throw new MobileError("temporarily_unavailable", 503)
+  },
 }
 export type MobileScanSubmitDependencies = typeof defaultDependencies
 
@@ -56,7 +68,8 @@ export async function submitMobileScan(
   const profile = await deps.loadProfile(client, userId)
   if (profile.status !== "ready") throw new MobileError("profile_required", 409)
   const existing = await deps.findOpen(client, userId, validation.value)
-  if (existing)
+  if (existing) {
+    await deps.markMobileResultRequested(client, userId, existing)
     return {
       contractVersion: 1 as const,
       kind: "pending_submission" as const,
@@ -64,6 +77,7 @@ export async function submitMobileScan(
       headline: "In Prüfung",
       historySaved: await deps.save(client, userId, validation.value, null, existing),
     }
+  }
   const result = await deps.submit({
     userId,
     repository: deps.createRepository(client),
@@ -97,6 +111,7 @@ export async function submitMobileScan(
       productId: result.productId,
       historySaved: await deps.save(client, userId, validation.value, result.productId),
     }
+  await deps.markMobileResultRequested(client, userId, result.submission.id)
   return {
     contractVersion: 1 as const,
     kind: "pending_submission" as const,

@@ -139,6 +139,9 @@ test(
     const submitDeps: Partial<MobileScanSubmitDependencies> = {
       loadProfile: async () => ({ status: "ready", context: {} }) as never,
       findOpen: async () => null,
+      // This test owns History concurrency; the durable research-intent RPC
+      // is exercised against PostgreSQL in mobile-research-delivery-postgres.
+      markMobileResultRequested: async () => {},
       // Real shared get-or-create function, with repository IO backed by separate
       // PostgreSQL connections and the real existing scan-submission unique index.
       submit: submitScanProductIntake,

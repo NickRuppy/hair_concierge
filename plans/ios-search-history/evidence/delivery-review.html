@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie · Research-Ergebnis</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+        color: #3b3532;
+        background: #f7f5f2;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+      }
+      main {
+        max-width: 1050px;
+        margin: auto;
+        padding: 42px 22px 68px;
+      }
+      h1,
+      h2 {
+        font-family: ui-serif, Georgia, serif;
+        font-weight: 400;
+      }
+      h1 {
+        font-size: clamp(32px, 5vw, 46px);
+        margin: 0 0 10px;
+      }
+      h2 {
+        font-size: 28px;
+        margin: 0 0 14px;
+      }
+      p {
+        line-height: 1.5;
+      }
+      .intro {
+        max-width: 680px;
+        color: #68605b;
+        margin: 0 0 36px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+        gap: 20px;
+      }
+      figure {
+        margin: 0;
+      }
+      figcaption {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #6b50a0;
+        margin-bottom: 12px;
+      }
+      .surface {
+        background: #fff;
+        border: 1px solid #e6e0da;
+        border-radius: 22px;
+        padding: 25px;
+        min-height: 280px;
+        box-shadow: 0 10px 30px rgba(59, 53, 50, 0.035);
+      }
+      .phone {
+        background: #e8e5e2;
+        border-radius: 28px;
+        padding: 50px 16px 16px;
+        min-height: 280px;
+        position: relative;
+      }
+      .phone::before {
+        content: "9:41";
+        position: absolute;
+        top: 16px;
+        left: 22px;
+        font-size: 14px;
+        font-weight: 650;
+      }
+      .notification {
+        background: rgba(255, 255, 255, 0.94);
+        border-radius: 17px;
+        padding: 14px 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      }
+      .notification small {
+        display: block;
+        color: #68605b;
+        margin-bottom: 9px;
+        font-size: 12px;
+      }
+      .notification strong {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 3px;
+      }
+      .notification span {
+        font-size: 14px;
+      }
+      .brand {
+        font-family: ui-serif, Georgia, serif;
+        font-size: 25px;
+        margin-bottom: 25px;
+      }
+      .subject {
+        font-size: 13px;
+        color: #68605b;
+        margin-bottom: 20px;
+      }
+      .mail-title {
+        font-size: 27px;
+        font-family: ui-serif, Georgia, serif;
+        line-height: 1.15;
+        margin-bottom: 14px;
+      }
+      .mail-body {
+        color: #68605b;
+        font-size: 15px;
+        margin: 0 0 26px;
+      }
+      .button {
+        display: inline-block;
+        background: #6b50a0;
+        color: #fff;
+        padding: 12px 17px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 650;
+        font-size: 14px;
+      }
+      .note {
+        color: #68605b;
+        font-size: 13px;
+        margin: 12px 0 0;
+      }
+      .question {
+        margin: 42px 0 16px;
+      }
+      .question p {
+        color: #68605b;
+        margin: 0;
+        max-width: 700px;
+      }
+      .option {
+        min-height: 185px;
+      }
+      .option h3 {
+        font-size: 17px;
+        margin: 0 0 12px;
+      }
+      .option p {
+        margin: 0;
+        color: #68605b;
+        font-size: 14px;
+      }
+      .option .small-button {
+        display: inline-block;
+        border: 1px solid #6b50a0;
+        color: #6b50a0;
+        padding: 9px 13px;
+        border-radius: 10px;
+        margin-top: 22px;
+        font-size: 13px;
+        font-weight: 650;
+      }
+      footer {
+        margin-top: 35px;
+        border-top: 1px solid #e6e0da;
+        padding-top: 15px;
+        color: #68605b;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Das Produkt ist bereit.</h1>
+      <p class="intro">
+        Nach einer freigegebenen, jetzt nutzbaren Einschätzung gehen E-Mail und — falls erlaubt —
+        Push unabhängig heraus. Beide führen auf dem iPhone nach Anmeldung zum aktuellen Ergebnis,
+        nicht zu einem gespeicherten Urteil.
+      </p>
+      <div class="grid">
+        <figure>
+          <figcaption>iPhone · Push-Vorschau</figcaption>
+          <div class="phone">
+            <div class="notification">
+              <small>chaarlie · jetzt</small><strong>Dein Produkt ist bereit.</strong
+              ><span>Öffne deine Einschätzung.</span>
+            </div>
+          </div>
+          <p class="note">
+            Kein Produktname auf dem Sperrbildschirm. Die System-Erlaubnis wird erst nach
+            bestätigter Einreichung angefragt; Ablehnen ändert die E-Mail nicht.
+          </p>
+        </figure>
+        <figure>
+          <figcaption>E-Mail · knappe Nachricht</figcaption>
+          <div class="surface">
+            <div class="brand">chaarlie</div>
+            <div class="subject">Betreff: Dein Produkt ist bereit</div>
+            <div class="mail-title">Deine Einschätzung ist da.</div>
+            <p class="mail-body">
+              Dein Produkt ist bereit. Öffne die Einschätzung in der iPhone-App.
+            </p>
+            <span class="button">Einschätzung öffnen</span>
+            <p class="note">Der Link wird erst nach gültiger Freigabe verschickt.</p>
+          </div>
+        </figure>
+      </div>
+      <div class="question">
+        <h2>Auf dem Computer</h2>
+        <p>
+          Die E-Mail enthält denselben sicheren Link. Persönliche Ergebnisse bleiben in der
+          iPhone-App.
+        </p>
+      </div>
+      <div class="grid">
+        <figure>
+          <figcaption>Bestätigter Fallback</figcaption>
+          <div class="surface option">
+            <h3>Auf dem iPhone öffnen</h3>
+            <p>
+              Öffne diese E-Mail auf deinem iPhone. Dort kannst du deine Einschätzung in der App
+              ansehen.
+            </p>
+            <span class="small-button">TestFlight-App öffnen</span>
+            <span class="small-button">Chaarlie-App öffnen</span>
+          </div>
+        </figure>
+      </div>
+      <footer>
+        Bestätigte Journey, kein Screenshot der installierten App und keine aktive Benachrichtigung.
+        Die vorhandene Scan-/History-Navigation und das native Ergebnis-Sheet bleiben unverändert.
+        Wird das Produkt später unzugänglich, zeigt die App statt eines alten Urteils einen
+        ehrlichen Nicht-verfügbar-Zustand.
+      </footer>
+    </main>
+  </body>
+</html>
