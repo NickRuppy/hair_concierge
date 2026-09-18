@@ -79,6 +79,8 @@ export type BuildScanVerdictInput = {
   }
   refinedVersionId: string
   refinedInputHash: string
+  /** Native presentation may select from the full eligible pool; web retains its default. */
+  alternativeSelection?: "web" | "native"
 }
 
 export function buildScanVerdict(input: BuildScanVerdictInput): ScanVerdictPayload {
@@ -172,20 +174,20 @@ function productOnlyDimensions(input: BuildScanVerdictInput): ScanDimension[] {
   const facts = factsForRole(input, role).productFacts
   if (!facts) return []
   const authorityInput = scanAuthorityInput(input, role)
-  const dimensions = renderedDimensions(
-    comparisonDimensions(authorityInput, [
-      {
-        product: {
-          productId: facts.productId,
-          displayName: facts.displayName,
-          category: facts.category,
-          role,
-          source: "current",
-        },
-        facts,
+  const allDimensions = comparisonDimensions(authorityInput, [
+    {
+      product: {
+        productId: facts.productId,
+        displayName: facts.displayName,
+        category: facts.category,
+        role,
+        source: "current",
       },
-    ]),
-  )
+      facts,
+    },
+  ])
+  const dimensions =
+    input.alternativeSelection === "native" ? allDimensions : renderedDimensions(allDimensions)
   return dimensions.map((dimension) =>
     scanDimension(dimension, facts.productId, { withoutTarget: true }),
   )
@@ -217,7 +219,9 @@ function inCatalogPayload(input: BuildScanVerdictInput): ScanInCatalogVerdictPay
   if (!best || !facts) return unclearPayload(input)
 
   const authorityInput = scanAuthorityInput(input, best.role)
-  const comparison = buildStage3FitComparison(authorityInput, best.evaluation)
+  const comparison = buildStage3FitComparison(authorityInput, best.evaluation, undefined, {
+    alternativeSelection: input.alternativeSelection ?? "web",
+  })
   const dimensions = renderedDimensions(comparison.dimensions).map((dimension) =>
     scanDimension(dimension, facts.productId, { withoutTarget: false }),
   )
@@ -246,6 +250,12 @@ function inCatalogPayload(input: BuildScanVerdictInput): ScanInCatalogVerdictPay
     // Ruling R12: alternatives show on every in_catalog verdict, `ideal` included — a
     // fitting product is not a reason to hide what else would fit.
     alternatives: alternativesFrom(comparison),
+    mobileDimensions: comparison.dimensions,
+    mobileAuthority: {
+      status: best.evaluation.status,
+      missingFacts: best.evaluation.status === "unknown" ? best.evaluation.missingFacts : [],
+      unsupportedReason: best.evaluation.status === "unsupported" ? best.evaluation.reason : null,
+    },
   }
 }
 
@@ -269,6 +279,14 @@ function unclearPayload(input: BuildScanVerdictInput): ScanInCatalogVerdictPaylo
       ? { productCriteria: narrative.productCriteria, fit: narrative.fit }
       : null,
     alternatives: [],
+    mobileAuthority:
+      input.decision.roles.length === 0
+        ? {
+            status: "unsupported",
+            missingFacts: [],
+            unsupportedReason: "personal_role_target_unavailable",
+          }
+        : { status: "unknown", missingFacts: ["catalog_product_facts"], unsupportedReason: null },
   }
 }
 

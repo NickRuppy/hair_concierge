@@ -1,10 +1,10 @@
 import { Webhook } from "https://esm.sh/standardwebhooks@1.0.0"
 
+import { type CustomerIoTransactionalEmail, type SendEmailHookPayload } from "./message-builder.ts"
 import {
-  buildCustomerIoEmails,
-  type CustomerIoTransactionalEmail,
-  type SendEmailHookPayload,
-} from "./message-builder.ts"
+  buildRegistrationAwareEmails,
+  registrationHookBinding,
+} from "./registration-message-builder.ts"
 
 const customerIoApiUrl = Deno.env.get("CUSTOMERIO_APP_API_URL") ?? "https://api-eu.customer.io"
 const publicSiteUrl = Deno.env.get("SITE_URL") ?? "https://chaarlie.de"
@@ -36,8 +36,7 @@ async function sendCustomerIoEmail(email: CustomerIoTransactionalEmail, appApiKe
   })
 
   if (!response.ok) {
-    const body = await response.text()
-    throw new Error(`Customer.io transactional email failed: ${response.status} ${body}`)
+    throw new Error("customerio_delivery_failed")
   }
 }
 
@@ -47,12 +46,17 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const appApiKey = requiredEnv("CUSTOMERIO_APP_API_KEY")
     const hookSecret = normalizeHookSecret(requiredEnv("SEND_EMAIL_HOOK_SECRET"))
     const payload = await req.text()
     const headers = Object.fromEntries(req.headers)
     const verifiedPayload = new Webhook(hookSecret).verify(payload, headers) as SendEmailHookPayload
-    const emails = buildCustomerIoEmails(verifiedPayload, { siteUrl: publicSiteUrl })
+    const emails = await buildRegistrationAwareEmails(
+      verifiedPayload,
+      { siteUrl: publicSiteUrl },
+      Deno.env.toObject(),
+      registrationHookBinding(Deno.env.toObject()),
+    )
+    const appApiKey = requiredEnv("CUSTOMERIO_APP_API_KEY")
 
     console.info("[send-email] dispatch", {
       actionType: verifiedPayload.email_data.email_action_type,
@@ -64,9 +68,14 @@ Deno.serve(async (req) => {
 
     return Response.json({}, { status: 200 })
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown send-email hook error"
+    const message = error instanceof Error ? error.message : "unknown"
     const isSignatureError = message.toLowerCase().includes("signature")
-    console.error("[send-email]", message)
-    return Response.json({ error: message }, { status: isSignatureError ? 401 : 500 })
+    console.error("[send-email] failed", {
+      kind: isSignatureError ? "signature" : "delivery_or_configuration",
+    })
+    return Response.json(
+      { error: isSignatureError ? "unauthorized" : "temporarily_unavailable" },
+      { status: isSignatureError ? 401 : 500 },
+    )
   }
 })

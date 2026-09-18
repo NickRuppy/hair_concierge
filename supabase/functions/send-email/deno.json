@@ -1,4 +1,7 @@
 {
+  "imports": {
+    "jose": "npm:jose@6.2.12"
+  },
   "compilerOptions": {
     "lib": ["deno.ns", "dom", "dom.iterable", "esnext"],
     "strict": true
