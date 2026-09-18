@@ -5,7 +5,12 @@ import {
   CustomerIoHttpError,
   type CustomerIoTransactionalDeliveryReceipt,
 } from "@/lib/customerio/transactional"
-import { ApnsClient, readApnsConfig, type ApnsDeliveryReceipt } from "./apns-client"
+import {
+  APNS_PROVIDER_CREDENTIAL_REASONS,
+  ApnsClient,
+  readApnsConfig,
+  type ApnsDeliveryReceipt,
+} from "./apns-client"
 import { readApnsTopicAllowlist, researchDeliveryEnabled } from "./push-installation-service"
 import {
   buildMobileResearchEmail,
@@ -268,7 +273,10 @@ export async function reconcileMobileResearchDeliveries(
         case "retryable":
           result = {
             action: "retry",
-            error: "push_provider_retry",
+            // The outbox refunds this attempt: a wrong provider key is ours to fix.
+            error: APNS_PROVIDER_CREDENTIAL_REASONS.has(receipt.reason)
+              ? "push_provider_credentials"
+              : "push_provider_retry",
             retrySeconds: Math.min(86400, Math.max(60, receipt.retryAfterSeconds ?? 300)),
           }
           break

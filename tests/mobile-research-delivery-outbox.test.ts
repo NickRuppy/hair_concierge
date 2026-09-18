@@ -163,6 +163,52 @@ test("unknown result is held; pre-send expired processing can be reclaimed", asy
   }
 })
 
+test("provider-credential retries never exhaust a device's only push; device refusals still do", async () => {
+  const db = await fixture()
+  try {
+    const candidate = await claimCandidate(db)
+    await db.query("SELECT materialize_mobile_research_deliveries($1,$2)", [
+      submission,
+      candidate.lease_token,
+    ])
+    const attempt = async (channel: string, code: string) => {
+      await db.query(
+        "UPDATE private.mobile_research_deliveries SET next_attempt_at=clock_timestamp()-interval '1 second' WHERE channel=$1",
+        [channel],
+      )
+      const [row] = await claim(db, channel)
+      assert.ok(row, `${channel} stays claimable`)
+      await db.query("SELECT begin_mobile_research_delivery_send($1,$2)", [row.id, row.lease_token])
+      await db.query(
+        "SELECT finish_mobile_research_delivery($1,$2,'retry',clock_timestamp()+interval '1 hour',NULL,NULL,$3)",
+        [row.id, row.lease_token, code],
+      )
+      return (
+        await db.query<{ status: string; send_attempts: number }>(
+          "SELECT status, send_attempts FROM private.mobile_research_deliveries WHERE id=$1",
+          [row.id],
+        )
+      ).rows[0]
+    }
+    // Our own APNs key was wrong: nothing reached the device, so no attempt is spent.
+    for (let run = 0; run < 7; run++) {
+      assert.deepEqual(await attempt("push", "push_provider_credentials"), {
+        status: "pending",
+        send_attempts: 0,
+      })
+    }
+    for (let run = 1; run <= 4; run++) {
+      assert.deepEqual(await attempt("email", "email_provider_retry"), {
+        status: "pending",
+        send_attempts: run,
+      })
+    }
+    assert.equal((await attempt("email", "email_provider_retry")).status, "failed_terminal")
+  } finally {
+    await db.close()
+  }
+})
+
 test("account deletion removes candidate, device and channel receipts", async () => {
   const db = await fixture()
   try {

@@ -142,9 +142,16 @@ BEGIN
     OR (p_action = 'queued' AND p_provider_delivery_id IS NULL) THEN
     RAISE EXCEPTION 'invalid mobile delivery transition';
   END IF;
+  -- `push_provider_credentials` means APNs refused our own signing key before any
+  -- device was addressed. That attempt is refunded and never terminal, so repairing
+  -- the key still delivers; it is duplicate-safe because nothing was sent.
   UPDATE private.mobile_research_deliveries SET
     status = CASE WHEN p_action = 'retry' AND d.send_attempts >= 5
+      AND p_error_code IS DISTINCT FROM 'push_provider_credentials'
       THEN 'failed_terminal' ELSE CASE WHEN p_action = 'retry' THEN 'pending' ELSE p_action END END,
+    send_attempts = CASE WHEN p_action = 'retry' AND d.status = 'sending'
+      AND p_error_code = 'push_provider_credentials'
+      THEN GREATEST(d.send_attempts - 1, 0) ELSE d.send_attempts END,
     next_attempt_at = COALESCE(p_next_attempt_at, next_attempt_at),
     lease_token = NULL, lease_until = NULL,
     provider_delivery_id = p_provider_delivery_id,

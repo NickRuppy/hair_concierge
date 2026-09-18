@@ -149,6 +149,12 @@ export function readApnsConfig(env: Record<string, string | undefined> = process
   }
 }
 
+/** APNs refused our signing key or token; no device was addressed. */
+export const APNS_PROVIDER_CREDENTIAL_REASONS: ReadonlySet<string> = new Set([
+  "InvalidProviderToken",
+  "ExpiredProviderToken",
+])
+
 export function classifyApnsResponse(
   response: ApnsTransportResponse,
   requestedApnsId: string,
@@ -178,7 +184,7 @@ export function classifyApnsResponse(
   }
   // Our own provider credentials failed, not this device. Hold the delivery for a slow
   // retry so a corrected key recovers it; the next run signs a fresh provider token.
-  if (reason === "InvalidProviderToken" || reason === "ExpiredProviderToken")
+  if (reason && APNS_PROVIDER_CREDENTIAL_REASONS.has(reason))
     return { state: "retryable", apnsId, reason, retryAfterSeconds: 3600 }
   if (response.status === 429 || response.status >= 500) {
     return {
