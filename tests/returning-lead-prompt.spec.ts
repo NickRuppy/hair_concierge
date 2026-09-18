@@ -1,9 +1,18 @@
 import assert from "node:assert/strict"
-import test from "node:test"
 import { build } from "esbuild"
-import { chromium } from "playwright"
+import { test } from "@playwright/test"
 
-test("return prompt requires an explicit choice, isolates focus, and supports pending/retry", async (t) => {
+declare global {
+  interface Window {
+    choices: string[]
+    renderPrompt: (busy?: boolean) => void
+    unmountPrompt: () => void
+  }
+}
+
+test("@ci return prompt requires an explicit choice, isolates focus, and supports pending/retry", async ({
+  page,
+}) => {
   const bundle = await build({
     stdin: {
       contents: `import React from 'react'; import {createRoot} from 'react-dom/client';
@@ -22,12 +31,8 @@ test("return prompt requires an explicit choice, isolates focus, and supports pe
     jsx: "automatic",
     define: { "process.env.NODE_ENV": '"production"' },
   })
-  const browser = await chromium.launch()
-  t.after(() => browser.close())
-  const page = await browser.newPage({
-    viewport: { width: 375, height: 667 },
-    reducedMotion: "reduce",
-  })
+  await page.setViewportSize({ width: 375, height: 667 })
+  await page.emulateMedia({ reducedMotion: "reduce" })
   await page.route("**/*", (route) => route.abort())
   await page.setContent('<button id="quiz">Glatt</button><div id="root"></div>')
   await page.locator("#quiz").focus()
@@ -63,13 +68,13 @@ test("return prompt requires an explicit choice, isolates focus, and supports pe
   assert.equal(await dialog.count(), 1)
   await page.locator("[data-returning-lead-overlay]").dispatchEvent("click")
   assert.equal(await dialog.count(), 1)
-  assert.deepEqual(await page.evaluate(() => (window as any).choices), [])
+  assert.deepEqual(await page.evaluate(() => window.choices), [])
 
   await next.click()
   await edit.click()
-  assert.deepEqual(await page.evaluate(() => (window as any).choices), ["continue", "edit"])
+  assert.deepEqual(await page.evaluate(() => window.choices), ["continue", "edit"])
 
-  await page.evaluate(() => (window as any).renderPrompt(true))
+  await page.evaluate(() => window.renderPrompt(true))
   await page.waitForFunction(
     () => document.querySelector('[role="dialog"]')?.getAttribute("aria-busy") === "true",
   )
@@ -78,19 +83,15 @@ test("return prompt requires an explicit choice, isolates focus, and supports pe
   assert.equal(await page.getByRole("status").innerText(), "Einen Moment bitte …")
   await page.keyboard.press("Tab")
   await page.keyboard.press("Enter")
-  assert.deepEqual(await page.evaluate(() => (window as any).choices), ["continue", "edit"])
+  assert.deepEqual(await page.evaluate(() => window.choices), ["continue", "edit"])
 
-  await page.evaluate(() => (window as any).renderPrompt(false))
+  await page.evaluate(() => window.renderPrompt(false))
   await page.waitForFunction(
     () => !document.querySelector('[role="dialog"] button')?.hasAttribute("disabled"),
   )
   await next.click()
-  assert.deepEqual(await page.evaluate(() => (window as any).choices), [
-    "continue",
-    "edit",
-    "continue",
-  ])
-  await page.evaluate(() => (window as any).unmountPrompt())
+  assert.deepEqual(await page.evaluate(() => window.choices), ["continue", "edit", "continue"])
+  await page.evaluate(() => window.unmountPrompt())
   assert.equal(
     await page
       .locator("#quiz")

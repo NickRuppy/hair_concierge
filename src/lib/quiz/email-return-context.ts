@@ -1,7 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto"
 
-export const QUIZ_EMAIL_RETURN_COOKIE = "chaarlie_quiz_email_return"
-export const QUIZ_EMAIL_RETURN_PACKAGE_KEY = "customerio_scan_return_v1"
+export { QUIZ_EMAIL_RETURN_COOKIE, QUIZ_EMAIL_RETURN_PACKAGE_KEY } from "./email-return-constants"
 const CONTEXT_VERSION = 1
 const CONTEXT_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i

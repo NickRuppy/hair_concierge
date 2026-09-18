@@ -20,7 +20,7 @@ import { ScanInsertProblem } from "@/components/quiz/scan-inserts/scan-insert-pr
 import { ScanInsertSolution } from "@/components/quiz/scan-inserts/scan-insert-solution"
 import { Button } from "@/components/ui/button"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
-import { QUIZ_EMAIL_RETURN_PACKAGE_KEY } from "@/lib/quiz/email-return-context"
+import { QUIZ_EMAIL_RETURN_PACKAGE_KEY } from "@/lib/quiz/email-return-constants"
 import { normalizeMigrationQuizPrefillAnswers } from "@/lib/quiz/migration-prefill-init"
 import { createScannerQuizViewTracker } from "@/lib/analytics/scanner-quiz-view"
 import {
