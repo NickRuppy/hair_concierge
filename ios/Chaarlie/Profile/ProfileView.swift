@@ -54,6 +54,15 @@ struct ProfileView: View {
                     Text("chaarlie").font(ChaarlieTheme.wordmark(28))
                     Text("Meine Haarangaben").chaarlieHeading(30).accessibilityAddTraits(.isHeader)
                     Text("Diese Angaben verwenden wir, um Produkte für dich einzuschätzen.").foregroundStyle(ChaarlieTheme.muted)
+                    if let message = model.profileSavedMessage {
+                        HStack(spacing: 8) {
+                            Image(systemName: "checkmark.circle.fill").accessibilityHidden(true)
+                            Text(message).chaarlieSystemFont(14, weight: .medium).accessibilityIdentifier("profile.saved")
+                        }.foregroundStyle(ChaarlieTheme.plum).padding(.horizontal, 14).padding(.vertical, 10)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(ChaarlieTheme.plumIce, in: RoundedRectangle(cornerRadius: ChaarlieTheme.Radius.control, style: .continuous))
+                            .chaarlieTransition(.opacity.combined(with: .move(edge: .top)))
+                    }
                     if let profile = model.profile {
                         propertyGroup("Dein Haar", properties: ProfileProperty.hair, profile: profile)
                         propertyGroup("Pflege & Wünsche", properties: ProfileProperty.care, profile: profile)
@@ -81,15 +90,6 @@ struct ProfileView: View {
                         NoticeCard(systemImage: "wifi.slash", message: error) {
                             Button("Erneut versuchen") { Task { await model.loadProfile() } }.buttonStyle(ChaarlieButton())
                         }
-                    }
-                    if let message = model.profileSavedMessage {
-                        HStack(spacing: 8) {
-                            Image(systemName: "checkmark.circle.fill").accessibilityHidden(true)
-                            Text(message).chaarlieSystemFont(14, weight: .medium).accessibilityIdentifier("profile.saved")
-                        }.foregroundStyle(ChaarlieTheme.plum).padding(.horizontal, 14).padding(.vertical, 10)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(ChaarlieTheme.plumIce, in: RoundedRectangle(cornerRadius: ChaarlieTheme.Radius.control, style: .continuous))
-                            .transition(.opacity.combined(with: .move(edge: .top)))
                     }
                     Button("Abmelden") { Task { await model.logout() } }.buttonStyle(ChaarlieButton(outline: true))
                         .accessibilityIdentifier("profile.logout")

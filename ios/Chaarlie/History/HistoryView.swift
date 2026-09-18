@@ -134,10 +134,14 @@ private struct HistoryRow: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     var body: some View {
         HStack(alignment: .center, spacing: 14) {
-            if !typeSize.isAccessibilitySize { thumbnail.frame(width: 52, height: 64) }
+            if !typeSize.isAccessibilitySize {
+                thumbnail.frame(width: 52, height: 64).opacity(entry.status == .unavailable ? 0.55 : 1)
+            }
             VStack(alignment: .leading, spacing: 5) {
                 Text(entry.productName == nil ? entry.title : GermanLineBreaks.text(entry.title))
                     .chaarlieSystemFont(15, weight: .bold).monospacedDigit()
+                    // Withdrawn entries recede through colour that still meets text contrast.
+                    .foregroundStyle(entry.status == .unavailable ? ChaarlieTheme.muted : ChaarlieTheme.ink)
                     .accessibilityLabel(entry.title)
                 if let brand = entry.brand { Text(brand).chaarlieSystemFont(12).foregroundStyle(ChaarlieTheme.muted) }
                 ViewThatFits(in: .horizontal) {
@@ -151,9 +155,9 @@ private struct HistoryRow: View {
                     .foregroundStyle(ChaarlieTheme.plumMid).accessibilityHidden(true)
             }
         }.multilineTextAlignment(.leading).padding(14).chaarlieCard().contentShape(Rectangle())
-            .opacity(entry.status == .unavailable ? 0.62 : 1)
             .accessibilityElement(children: .combine)
-            .accessibilityHint(entry.status == .available ? "Öffnet die aktuelle Einschätzung" : "")
+            // The chevron carries "Produkt öffnen" visually; VoiceOver still hears the status.
+            .accessibilityValue(entry.status == .available ? entry.statusLabel : "")
     }
     @ViewBuilder private var thumbnail: some View {
         if entry.productName == nil, entry.barcodeGtin != nil {

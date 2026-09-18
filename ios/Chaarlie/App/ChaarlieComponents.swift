@@ -74,7 +74,15 @@ private struct ChaarlieShimmer: ViewModifier {
     }
 }
 
+/// Movement or scale only when the user allows it; Reduce Motion keeps a plain fade.
+private struct ChaarlieMotionTransition: ViewModifier {
+    let transition: AnyTransition
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    func body(content: Content) -> some View { content.transition(reduceMotion ? .opacity : transition) }
+}
+
 extension View {
+    func chaarlieTransition(_ transition: AnyTransition) -> some View { modifier(ChaarlieMotionTransition(transition: transition)) }
     func chaarlieCard(radius: CGFloat = ChaarlieTheme.Radius.card) -> some View { modifier(ChaarlieCard(radius: radius)) }
     func chaarlieReveal(_ index: Int = 0) -> some View { modifier(ChaarlieReveal(index: index)) }
     func chaarlieShimmer() -> some View { modifier(ChaarlieShimmer()) }

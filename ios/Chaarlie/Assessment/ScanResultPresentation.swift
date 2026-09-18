@@ -61,7 +61,7 @@ private struct ResearchSheet: View {
                         .symbolEffect(.bounce, value: model.researchPending)
                         .frame(width: 72, height: 72).background(ChaarlieTheme.plumIce, in: Circle())
                         .overlay(Circle().strokeBorder(ChaarlieTheme.plumScale))
-                        .accessibilityHidden(true).transition(.scale(scale: 0.6).combined(with: .opacity))
+                        .accessibilityHidden(true).chaarlieTransition(.scale(scale: 0.6).combined(with: .opacity))
                 }
                 Text(model.researchPending ? "In Prüfung" : "Noch nicht im Katalog").chaarlieHeading(30)
                     .accessibilityIdentifier("research.status").accessibilityAddTraits(.isHeader)

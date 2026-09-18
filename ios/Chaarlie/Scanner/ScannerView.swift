@@ -64,7 +64,7 @@ struct ScannerView: View {
                             .padding(.horizontal, 16).padding(.vertical, 11)
                             .background { Capsule().fill(.ultraThinMaterial).environment(\.colorScheme, .dark) }
                     }
-                }.transition(.opacity.combined(with: .scale(scale: 0.94)))
+                }.chaarlieTransition(.opacity.combined(with: .scale(scale: 0.94)))
             } else {
                 Image(systemName: "barcode.viewfinder").font(.system(size: 38, weight: .light))
                     .frame(width: 96, height: 96)
@@ -93,7 +93,7 @@ struct ScannerView: View {
                 }.padding(18)
                     .background { RoundedRectangle(cornerRadius: 24, style: .continuous).fill(.ultraThinMaterial).environment(\.colorScheme, .dark) }
                     .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous).strokeBorder(.white.opacity(0.14)))
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .chaarlieTransition(.move(edge: .bottom).combined(with: .opacity))
             }
         }.foregroundStyle(.white).multilineTextAlignment(.center)
             .animation(ChaarlieTheme.Motion.state, value: scanResolving)
@@ -131,7 +131,7 @@ private struct ScanReticle: View {
                 }
                 ReticleCorners(radius: 20, length: 30)
                     .stroke(resolving ? ChaarlieTheme.plumMid : .white, style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                    .scaleEffect(resolving ? 0.95 : breathing ? 1.025 : 1)
+                    .scaleEffect(reduceMotion ? 1 : resolving ? 0.95 : breathing ? 1.025 : 1)
                     .shadow(color: .black.opacity(0.25), radius: 4)
             }
         }
@@ -255,7 +255,7 @@ struct ProductSearchView: View {
                 Button { model.searchText = "" } label: {
                     Image(systemName: "xmark.circle.fill").font(.system(size: 17)).foregroundStyle(ChaarlieTheme.border)
                         .frame(width: 32, height: 44).contentShape(Rectangle())
-                }.buttonStyle(.plain).accessibilityLabel("Eingabe löschen").transition(.opacity.combined(with: .scale(scale: 0.7)))
+                }.buttonStyle(.plain).accessibilityLabel("Eingabe löschen").chaarlieTransition(.opacity.combined(with: .scale(scale: 0.7)))
             }
             Button { submit() } label: {
                 Image(systemName: "arrow.right").font(.system(size: 15, weight: .bold)).foregroundStyle(.white)

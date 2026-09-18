@@ -125,7 +125,7 @@ struct RootView: View {
             if model.admission == .ready, model.researchDestinationBusy {
                 BusyLabel(text: "Ergebnis wird geladen …")
                     .shadow(color: ChaarlieTheme.shadow.opacity(0.12), radius: 14, y: 5)
-                    .padding(.top, 8).transition(.move(edge: .top).combined(with: .opacity))
+                    .padding(.top, 8).chaarlieTransition(.move(edge: .top).combined(with: .opacity))
             }
         }
         .animation(ChaarlieTheme.Motion.state, value: model.researchDestinationBusy)
