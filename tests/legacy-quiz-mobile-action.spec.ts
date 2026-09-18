@@ -24,7 +24,7 @@ async function openFreshQuiz(page: Page, viewport: { width: number; height: numb
     )
     window.localStorage.removeItem("chaarlie:quiz-draft:v1")
   })
-  await page.goto(`${baseUrl}/quiz`, { waitUntil: "networkidle" })
+  await page.goto(`${baseUrl}/quiz`, { waitUntil: "domcontentloaded" })
 }
 
 async function openDraft(
@@ -52,7 +52,7 @@ async function openDraft(
     },
     { answers, draftStep: step },
   )
-  await page.goto(`${baseUrl}/quiz`, { waitUntil: "networkidle" })
+  await page.goto(`${baseUrl}/quiz`, { waitUntil: "domcontentloaded" })
 }
 
 async function visibleActionGeometry(page: Page) {
@@ -420,6 +420,9 @@ test.describe("@ci regular quiz mobile parity", () => {
 
   test("keeps browser Forward from desynchronizing the rendered quiz screen", async ({ page }) => {
     await openDraft(page, 7, { width: 390, height: 844 })
+    await expect(
+      page.getByRole("heading", { name: "Sind deine Haare chemisch behandelt?" }),
+    ).toBeVisible()
     await page.goBack()
     await expect(page.getByRole("heading", { name: "Wie elastisch ist dein Haar?" })).toBeVisible()
 

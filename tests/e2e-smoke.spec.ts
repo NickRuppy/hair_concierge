@@ -41,7 +41,7 @@ test.describe("Core user flows — smoke test @ci", () => {
   test("2. Quiz page loads with intro and first quiz step after clicking start", async ({
     page,
   }) => {
-    await page.goto("/quiz", { waitUntil: "networkidle" })
+    await page.goto("/quiz", { waitUntil: "domcontentloaded" })
     expect(page.url()).toContain("/quiz")
 
     // Info strip is shown above the first question, framing the quiz
