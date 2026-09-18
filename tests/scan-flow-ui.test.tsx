@@ -516,6 +516,11 @@ test("ScanFlow: dismissing the unknown sheet before the submit lands leaves no p
   // sheet is still open, so it must still be tracked, exactly once.
   assert.equal(sheetProps(flow.tree).open, false)
   assert.equal(flow.events.filter((event) => event.name === "scan_submission_created").length, 1)
+  assert.equal(
+    flow.events.find((event) => event.name === "scan_submission_created")!.payload
+      .scanInteractionId,
+    flow.events.find((event) => event.name === "scan_not_found")!.payload.scanInteractionId,
+  )
 })
 
 test("ScanFlow: a failed submission keeps the unknown sheet open with its error (F17)", async () => {
@@ -536,6 +541,60 @@ test("ScanFlow: a failed submission keeps the unknown sheet open with its error 
   const unknownFlow = requireByType(flow.tree, ScanUnknownFlow, "ScanUnknownFlow")
   assert.equal(unknownFlow.props.submitting, false)
   assert.equal(unknownFlow.props.error, "Hat nicht geklappt – versuch's nochmal.")
+  assert.equal(flow.events.filter((event) => event.name === "scan_submission_created").length, 0)
+})
+
+test("ScanFlow: identified journey correlates confirmation and measures both waits without product data", async () => {
+  const requests: unknown[] = []
+  const flow = await mountFlow(async (url, init) => {
+    if (url === "/api/scan/resolve")
+      return json({
+        ...unknownResult,
+        identified: {
+          source: "dm",
+          dan: "1234567",
+          productName: "Secret product name",
+          brand: "BRAND",
+          imageUrl: null,
+          suggestedCategory: "shampoo",
+        },
+      })
+    if (url === "/api/scan/submit") {
+      requests.push(JSON.parse(String(init?.body)))
+      return json({ kind: "pending_submission", submissionId: "s1", headline: "Eingereicht!" })
+    }
+    return notFound()
+  })
+  scannerProps(flow.tree).onDecoded({ type: "ean", value: "4006381333931" })
+  await delay(450)
+  await flow.settle()
+  const found = flow.events.find((event) => event.name === "scan_not_found")!.payload
+  assert.equal(found.identified, true)
+  assert.equal(found.suggestedCategory, "shampoo")
+  assert.match(String(found.scanInteractionId), /^[0-9a-f-]{36}$/)
+  assert.ok(Number(found.msToUnknownSheetReady) >= 350)
+  assert.deepEqual(requests, [])
+  requireByType(flow.tree, ScanUnknownFlow, "ScanUnknownFlow").props.onSubmit(
+    { category: "shampoo" },
+    "one_tap",
+  )
+  await flow.settle()
+  const submitted = flow.events.find((event) => event.name === "scan_submission_created")!.payload
+  assert.equal(submitted.scanInteractionId, found.scanInteractionId)
+  assert.equal(submitted.suggestedCategory, "shampoo")
+  assert.equal(submitted.selectionPath, "one_tap")
+  assert.ok(Number(submitted.msConfirmationToPending) >= 0)
+  assert.deepEqual(requests, [
+    { identifier: { type: "ean", value: "4006381333931" }, category: "shampoo" },
+  ])
+  assert.doesNotMatch(JSON.stringify(flow.events), /Secret product|BRAND|4006381333931|1234567/)
+  sheetProps(flow.tree).onClose()
+  await flow.settle()
+  scannerProps(flow.tree).onDecoded({ type: "ean", value: "4006381333931" })
+  await delay(450)
+  await flow.settle()
+  const second = flow.events.filter((event) => event.name === "scan_not_found")[1].payload
+  assert.notEqual(second.scanInteractionId, found.scanInteractionId)
 })
 
 // --- F5: a save may only land on the product it was started for -------------

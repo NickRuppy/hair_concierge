@@ -26,6 +26,14 @@ function baseDeps(overrides: Partial<ScanSubmitRouteDeps> = {}): ScanSubmitRoute
     // only calls isMatchScanEligible for a "matched" result), so an empty set is a safe,
     // inert default here -- tests that care about eligibility override this.
     filterScanEligibleProductIds: async () => new Set(),
+    resolveRetailerEnrichment: async () => ({
+      enrichment: null,
+      outcome: "disabled",
+      durationMs: null,
+      deadlineMs: null,
+    }),
+    recordScanSubmitDmLookupEvent: async () => {},
+    after: () => {},
     submit: async () => ({
       kind: "pending_review",
       category: "shampoo",
@@ -155,6 +163,94 @@ test("scan submit: pending_review maps to 202 pending_submission with headline",
     submissionId,
     headline: "Eingereicht!",
   })
+})
+
+test("scan submit: server-fetched dm draft reaches the confirmed submission and logs lookup", async () => {
+  const logged: unknown[] = []
+  let submittedEnrichment: unknown = undefined
+  const enrichment = {
+    source: "dm" as const,
+    fetchedAt: "2026-09-17T10:00:00.000Z",
+    gtin: "04006381333931",
+    dan: "1234567",
+    productName: "Repair Shampoo",
+    brand: "WELEDA",
+    imageUrl: null,
+    productUrl: "https://dm.de/repair",
+    ingredientsText: "Water",
+    description: null,
+    keyBenefits: null,
+    suggestedCategory: "shampoo" as const,
+  }
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({
+      resolveRetailerEnrichment: (async () => ({
+        enrichment,
+        outcome: "hit",
+        durationMs: 210,
+        deadlineMs: 1500,
+      })) as never,
+      recordScanSubmitDmLookupEvent: (async (_client: unknown, event: unknown) => {
+        logged.push(event)
+      }) as never,
+      after: (task: () => Promise<void> | void) => {
+        void task()
+      },
+      submit: (async ({ enrichment: draft }: { enrichment?: unknown }) => {
+        submittedEnrichment = draft
+        return {
+          kind: "pending_review",
+          category: "shampoo",
+          submission: { id: submissionId, status: "pending_review", category: "shampoo" },
+          match: { status: "insufficient_identity" } as never,
+        }
+      }) as never,
+    } as Partial<ScanSubmitRouteDeps>),
+  )
+  const response = await handler(request(validBody))
+  assert.equal(response.status, 202)
+  assert.deepEqual(submittedEnrichment, enrichment)
+  assert.equal(logged.length, 1)
+  assert.deepEqual(
+    (({ outcome, durationMs, deadlineMs }) => ({ outcome, durationMs, deadlineMs }))(
+      logged[0] as { outcome: string; durationMs: number; deadlineMs: number },
+    ),
+    { outcome: "hit", durationMs: 210, deadlineMs: 1500 },
+  )
+})
+
+test("scan submit: dm timeout still creates the plain submission and records timeout", async () => {
+  const logged: unknown[] = []
+  let submittedEnrichment: unknown = "not-called"
+  const handler = createScanSubmitRouteHandler(
+    baseDeps({
+      resolveRetailerEnrichment: (async () => ({
+        enrichment: null,
+        outcome: "timeout",
+        durationMs: 1500,
+        deadlineMs: 1500,
+      })) as never,
+      recordScanSubmitDmLookupEvent: (async (_client: unknown, event: unknown) => {
+        logged.push(event)
+      }) as never,
+      after: (task: () => Promise<void> | void) => {
+        void task()
+      },
+      submit: (async ({ enrichment }: { enrichment?: unknown }) => {
+        submittedEnrichment = enrichment
+        return {
+          kind: "pending_review",
+          category: "shampoo",
+          submission: { id: submissionId, status: "pending_review", category: "shampoo" },
+          match: { status: "insufficient_identity" } as never,
+        }
+      }) as never,
+    } as Partial<ScanSubmitRouteDeps>),
+  )
+  const response = await handler(request(validBody))
+  assert.equal(response.status, 202)
+  assert.equal(submittedEnrichment, null)
+  assert.equal((logged[0] as { outcome?: string })?.outcome, "timeout")
 })
 
 test("scan submit: a scan-eligible catalog match is wired into submit's isMatchScanEligible, honoured as 200 already_in_catalog", async () => {

@@ -186,6 +186,20 @@ local database in the normal workflow. Every row you seed is real: always carry 
 in `metadata`, never sign in with or mutate a customer account, and never widen a rollout flag
 for a local test. When a step here turns out stale, fix this file in the same PR as the fix.
 
+For scan dm-enrichment QA, do not treat `/labs/scan` as persistence proof: its UI can exercise
+the sheet, but `/api/scan/*` uses the real production-backed data path when authenticated. Before
+any controlled smoke, read the current flag and cap, preflight that the labelled QA account and
+barcode have no open scan submission, and use one confirmation only. Record the resulting
+submission ID privately; do not delete, reject, or publish it automatically. A failed smoke means
+switch the flag off and verify a plain unknown-sheet fallback without a dm call.
+
+The server defaults to `SCAN_RETAILER_ENRICHMENT_ENABLED=false`. Its
+`SCAN_RETAILER_ENRICHMENT_TIMEOUT_MS` cap defaults to `1500` ms; only whole
+numbers from `1` to `10000` are valid. Set both in the task worktree's
+`.env.local` and restart the dev server after changes. There is intentionally
+no tracked `.env.example` in this repository: blanket environment-file
+ignoring makes it an unreliable configuration source.
+
 # Partner access QA
 
 Use the dedicated partner route and an isolated/local database migration for creator-flow QA.

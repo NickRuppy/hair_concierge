@@ -492,8 +492,16 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
       }
     }
     case "scan_started":
-    case "scan_not_found":
       return {}
+    case "scan_not_found": {
+      const data = payload as AppEventMap["scan_not_found"]
+      return {
+        identified: data.identified,
+        suggested_category: data.suggestedCategory,
+        scan_interaction_id: data.scanInteractionId,
+        ms_to_unknown_sheet_ready: data.msToUnknownSheetReady,
+      }
+    }
     case "scan_decoded": {
       const data = payload as AppEventMap["scan_decoded"]
       return { ms_to_decode: data.msToDecode, format: data.format }
@@ -509,7 +517,13 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
     }
     case "scan_submission_created": {
       const data = payload as AppEventMap["scan_submission_created"]
-      return { category: data.category }
+      return {
+        category: data.category,
+        suggested_category: data.suggestedCategory,
+        selection_path: data.selectionPath,
+        scan_interaction_id: data.scanInteractionId,
+        ms_confirmation_to_pending: data.msConfirmationToPending,
+      }
     }
     case "scan_fallback_search_used": {
       const data = payload as AppEventMap["scan_fallback_search_used"]

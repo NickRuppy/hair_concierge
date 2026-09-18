@@ -67,6 +67,12 @@ import { applyConditionerResearchAdapter } from "@/lib/product-intake/conditione
 import { conditionerResearchPromptContract } from "@/lib/product-intake/conditioner-research-prompt-contract"
 import { applyLeaveInResearchAdapter } from "@/lib/product-intake/leave-in-research-adapter"
 import { leaveInResearchPromptContract } from "@/lib/product-intake/leave-in-research-prompt-contract"
+import {
+  createRetailerEnrichmentWarningReporter,
+  parseRetailerEnrichmentPacket,
+  type RetailerEnrichmentPacket,
+  type ScannedIdentifierPacketValue,
+} from "./retailer-enrichment-packet"
 
 type WorkerResult = {
   worker_id: string
@@ -122,7 +128,15 @@ type BrandResolutionPromptContext = {
   rules: string[]
 }
 
-type ScannedIdentifierPacketValue = { type: string; value: string } | null
+type ScanIntakeSeed = {
+  scannedIdentifier: ScannedIdentifierPacketValue
+  retailerEnrichment: RetailerEnrichmentPacket | null
+  retailerEnrichmentWarning: "gtin_mismatch" | null
+}
+
+const reportRetailerEnrichmentWarning = createRetailerEnrichmentWarningReporter({
+  emit: (message, fields) => console.warn("[product-intake]", message, fields),
+})
 
 type SupabaseQueryResult<T> = {
   data: T | null
@@ -252,20 +266,22 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
 
   for (const job of jobs) {
     const detail = await loadProductIntakeSubmissionDetail(options.supabase, job.submission_id)
-    const scannedIdentifier = await loadScannedIdentifierForSubmission(
+    const scanIntakeSeed = await loadScanIntakeSeedForSubmission(
       options.supabase,
       job.submission_id,
     )
+    reportRetailerEnrichmentWarning(scanIntakeSeed.retailerEnrichmentWarning)
     const brandResolutionContext = await loadBrandResolutionContext(
       options.supabase,
       detail,
-      scannedIdentifier,
+      scanIntakeSeed.scannedIdentifier,
     )
     const promptPacketPath = writePromptPacket(
       job,
       options.workerId,
       detail,
       brandResolutionContext,
+      scanIntakeSeed.retailerEnrichment,
     )
 
     if (options.failTest) {
@@ -701,6 +717,7 @@ function writePromptPacket(
   workerId: string,
   detail: ProductIntakeSubmissionDetail | null,
   brandResolutionContext: BrandResolutionPromptContext,
+  retailerEnrichment: RetailerEnrichmentPacket | null,
 ): string {
   const dir = join(process.cwd(), "tmp", "product-intake-codex-worker")
   mkdirSync(dir, { recursive: true })
@@ -733,6 +750,15 @@ function writePromptPacket(
           source: detail?.source ?? null,
         },
         brand_resolution_context: brandResolutionContext,
+        retailer_enrichment: retailerEnrichment,
+        retailer_enrichment_contract: retailerEnrichment
+          ? [
+              "This is a dm-provided research lead, not an approved catalog fact.",
+              "The returned GTIN must equal scanned_identifier after canonical GTIN normalization; this packet omits mismatches.",
+              "Use the verbatim ingredient text and product URL as a source lead, then independently verify identity, category, and properties.",
+              "The raw retailer image is a candidate only: inspect it under image_source_contract and never use it as final.product.image_url.",
+            ]
+          : [],
         current_payload: detail?.payload ?? {},
         review_decisions: detail?.decisions ?? [],
         recent_artifacts: detail?.artifacts.slice(0, 20) ?? [],
@@ -1349,19 +1375,17 @@ async function loadBrandResolutionContext(
 }
 
 /**
- * Scan intake's strongest research seed (WP4): product_submissions.scanned_identifier_type/
- * value (migration 20260820100100), fetched directly here rather than through
- * ProductIntakeSubmissionDetail/loadProductIntakeSubmissionDetail (packages/product-intake-core),
- * which is out of this task's file scope and doesn't select these columns. Null for every
- * non-scan submission (both columns are null there by the DB CHECK).
+ * Scan-specific fields are fetched directly because ProductIntakeSubmissionDetail
+ * deliberately does not select them. This keeps the shared core repository
+ * contract unchanged while giving the worker an exact-GTIN-checked dm lead.
  */
-async function loadScannedIdentifierForSubmission(
+async function loadScanIntakeSeedForSubmission(
   supabase: ReturnType<typeof createSupabaseClientFromEnv>,
   submissionId: string,
-): Promise<ScannedIdentifierPacketValue> {
+): Promise<ScanIntakeSeed> {
   const { data, error } = await supabase
     .from("product_submissions")
-    .select("scanned_identifier_type, scanned_identifier_value")
+    .select("scanned_identifier_type, scanned_identifier_value, intake_history")
     .eq("id", submissionId)
     .maybeSingle()
   if (error) {
@@ -1371,10 +1395,19 @@ async function loadScannedIdentifierForSubmission(
   const row = data as {
     scanned_identifier_type: string | null
     scanned_identifier_value: string | null
+    intake_history: unknown
   } | null
-  if (!row?.scanned_identifier_type || !row.scanned_identifier_value) return null
+  const scannedIdentifier =
+    row?.scanned_identifier_type && row.scanned_identifier_value
+      ? { type: row.scanned_identifier_type, value: row.scanned_identifier_value }
+      : null
 
-  return { type: row.scanned_identifier_type, value: row.scanned_identifier_value }
+  const retailerEnrichment = parseRetailerEnrichmentPacket(row?.intake_history, scannedIdentifier)
+  return {
+    scannedIdentifier,
+    retailerEnrichment: retailerEnrichment.packet,
+    retailerEnrichmentWarning: retailerEnrichment.warning,
+  }
 }
 
 async function loadBrandResolutionCatalogForWorker(

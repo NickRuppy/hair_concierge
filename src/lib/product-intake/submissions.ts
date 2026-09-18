@@ -8,7 +8,8 @@ import {
   type ProductIdentityBrand,
   type ProductIdentityProductLine,
 } from "@/lib/product-identity/brand-resolution"
-import { normalizeIdentifierValue } from "@/lib/product-identity/normalize"
+import { canonicalizeGtin, normalizeIdentifierValue } from "@/lib/product-identity/normalize"
+import type { RetailerEnrichment } from "@/lib/scan/enrichment/types"
 import { matchProductIntake } from "@/lib/product-intake/product-matching"
 import {
   ProductIntakePersistenceError,
@@ -922,8 +923,12 @@ export async function submitProductIntake(
   }
 }
 
-function buildScanIntakeHistory(input: ScanProductIntakeSubmissionInput, now: string) {
-  return [
+function buildScanIntakeHistory(
+  input: ScanProductIntakeSubmissionInput,
+  now: string,
+  enrichment: RetailerEnrichment | null | undefined,
+) {
+  const history: JsonRecord[] = [
     {
       at: now,
       source: "scan",
@@ -939,11 +944,27 @@ function buildScanIntakeHistory(input: ScanProductIntakeSubmissionInput, now: st
       },
     },
   ]
+
+  // The caller has already matched against the user's original scan input. dm may
+  // prefill the draft only after that fall-through, and remains review-only
+  // provenance in the shared product_submissions staging row.
+  if (enrichment) {
+    history.push({
+      at: now,
+      source: "retailer_enrichment",
+      retailer: "dm",
+      enrichment,
+    })
+  }
+
+  return history
 }
 
 export type SubmitScanProductIntakeParams = {
   userId: string
   input: ScanProductIntakeSubmissionInput
+  /** Server-derived after the scan route's exact-GTIN validation; never client input. */
+  enrichment?: RetailerEnrichment | null
   repository: ProductIntakeRepository
   /**
    * Gate applied to a catalog match's product id before it is honoured as
@@ -1024,6 +1045,16 @@ export async function submitScanProductIntake(
   }
 
   const now = params.now?.() ?? new Date().toISOString()
+  const scannedGtin = scannedIdentifier ? canonicalizeGtin(scannedIdentifier.value) : null
+  const enrichment =
+    scannedGtin && params.enrichment && canonicalizeGtin(params.enrichment.gtin) === scannedGtin
+      ? params.enrichment
+      : null
+  // Keep matching above anchored to the original scan input. These fields are a
+  // research-draft prefill only; using them in matching could turn a dm suggestion
+  // into an unintended catalog match.
+  const brandText = params.input.brand_text ?? enrichment?.brand ?? null
+  const productNameText = params.input.product_name_text ?? enrichment?.productName ?? null
   const insertRow: Parameters<ProductIntakeRepository["insertProductSubmission"]>[0] = {
     id: randomUUID(),
     user_id: params.userId,
@@ -1033,8 +1064,8 @@ export async function submitScanProductIntake(
     source_conversation_id: null,
     intake_method: params.input.intake_method,
     category: params.input.category,
-    brand_text: params.input.brand_text ?? null,
-    product_name_text: params.input.product_name_text ?? null,
+    brand_text: brandText,
+    product_name_text: productNameText,
     frequency_range: params.input.frequency_range,
     front_image_path: null,
     barcode_image_path: null,
@@ -1046,7 +1077,7 @@ export async function submitScanProductIntake(
     previous_product_snapshot: {},
     status: "pending_review",
     researched_payload: {},
-    intake_history: buildScanIntakeHistory(params.input, now),
+    intake_history: buildScanIntakeHistory(params.input, now, enrichment),
     approved_product_id: null,
     scanned_identifier_type: scannedIdentifier?.type ?? null,
     scanned_identifier_value: scannedIdentifier?.value ?? null,

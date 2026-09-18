@@ -1565,6 +1565,135 @@ test("unknown scanned EAN creates an anchorless pending submission with the norm
   assert.deepEqual(fake.calls, ["insert_submission"])
 })
 
+test("dm enrichment prefills absent scan text only after original scan matching falls through, and is staging provenance", async () => {
+  const fake = createFakeRepository()
+
+  const result = await submitScanProductIntake({
+    userId: USER_ID,
+    input: scanProductIntakeSubmissionSchema.parse({
+      category: "mask",
+      frequency_range: "weekly_1x",
+      scannedIdentifier: { type: "ean", value: "4001638530378" },
+    }),
+    enrichment: {
+      source: "dm",
+      fetchedAt: "2026-09-17T10:00:00.000Z",
+      gtin: "04001638530378",
+      dan: "1234567",
+      productName: "Hair Food Aloe Maske",
+      brand: "GARNIER",
+      imageUrl: "https://products.dm-static.com/images/example.png",
+      productUrl: "https://www.dm.de/example",
+      ingredientsText: "Aqua",
+      description: null,
+      keyBenefits: null,
+      suggestedCategory: "mask",
+    },
+    repository: fake.repository,
+    isMatchScanEligible: async () => {
+      throw new Error("must not be called: original scan input does not match the catalog")
+    },
+    now: () => "2026-09-17T10:00:01.000Z",
+  })
+
+  assert.equal(result.kind, "pending_review")
+  assert.equal(fake.submissions.length, 1)
+  assert.equal(fake.submissions[0].brand_text, "GARNIER")
+  assert.equal(fake.submissions[0].product_name_text, "Hair Food Aloe Maske")
+  assert.equal(fake.submissions[0].intake_history.length, 2)
+  assert.deepEqual(fake.submissions[0].intake_history[1], {
+    at: "2026-09-17T10:00:01.000Z",
+    source: "retailer_enrichment",
+    retailer: "dm",
+    enrichment: {
+      source: "dm",
+      fetchedAt: "2026-09-17T10:00:00.000Z",
+      gtin: "04001638530378",
+      dan: "1234567",
+      productName: "Hair Food Aloe Maske",
+      brand: "GARNIER",
+      imageUrl: "https://products.dm-static.com/images/example.png",
+      productUrl: "https://www.dm.de/example",
+      ingredientsText: "Aqua",
+      description: null,
+      keyBenefits: null,
+      suggestedCategory: "mask",
+    },
+  })
+})
+
+test("dm enrichment preserves user-supplied scan text while retaining dm provenance", async () => {
+  const fake = createFakeRepository()
+
+  const result = await submitScanProductIntake({
+    userId: USER_ID,
+    input: scanProductIntakeSubmissionSchema.parse({
+      category: "mask",
+      frequency_range: "weekly_1x",
+      brand_text: "Vom Nutzer genannte Marke",
+      product_name_text: "Vom Nutzer genannte Maske",
+      scannedIdentifier: { type: "ean", value: "4001638530378" },
+    }),
+    enrichment: {
+      source: "dm",
+      fetchedAt: "2026-09-17T10:00:00.000Z",
+      gtin: "04001638530378",
+      dan: "1234567",
+      productName: "Hair Food Aloe Maske",
+      brand: "GARNIER",
+      imageUrl: "https://products.dm-static.com/images/example.png",
+      productUrl: "https://www.dm.de/example",
+      ingredientsText: "Aqua",
+      description: null,
+      keyBenefits: null,
+      suggestedCategory: "mask",
+    },
+    repository: fake.repository,
+    isMatchScanEligible: async () => {
+      throw new Error("must not be called: original scan input does not match the catalog")
+    },
+    now: () => "2026-09-17T10:00:01.000Z",
+  })
+
+  assert.equal(result.kind, "pending_review")
+  assert.equal(fake.submissions[0].brand_text, "Vom Nutzer genannte Marke")
+  assert.equal(fake.submissions[0].product_name_text, "Vom Nutzer genannte Maske")
+  assert.equal(fake.submissions[0].intake_history.length, 2)
+})
+
+test("a mismatched dm GTIN cannot prefill or enter scan submission provenance", async () => {
+  const fake = createFakeRepository()
+
+  await submitScanProductIntake({
+    userId: USER_ID,
+    input: scanProductIntakeSubmissionSchema.parse({
+      category: "mask",
+      frequency_range: "weekly_1x",
+      scannedIdentifier: { type: "ean", value: "4001638530378" },
+    }),
+    enrichment: {
+      source: "dm",
+      fetchedAt: "2026-09-17T10:00:00.000Z",
+      gtin: "4001638530379",
+      dan: "1234567",
+      productName: "Different product",
+      brand: "Other brand",
+      imageUrl: null,
+      productUrl: null,
+      ingredientsText: null,
+      description: null,
+      keyBenefits: null,
+      suggestedCategory: "mask",
+    },
+    repository: fake.repository,
+    isMatchScanEligible: async () => false,
+  })
+
+  assert.equal(fake.submissions[0].brand_text, null)
+  assert.equal(fake.submissions[0].product_name_text, null)
+  assert.equal(fake.submissions[0].intake_history.length, 1)
+})
+
 test("a lost race on the one-open-scan-submission index returns the submission that won it", async () => {
   // Two concurrent submits for the same user+EAN: the loser's INSERT trips
   // idx_product_submissions_one_open_scan (migration 20260820103000). Without the

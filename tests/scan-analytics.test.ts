@@ -28,6 +28,19 @@ const scanEventNames = [
   "scan_buy_clicked",
 ] as const
 
+const unknownJourney = {
+  identified: true,
+  suggestedCategory: "shampoo" as const,
+  scanInteractionId: "test-sheet-1",
+  msToUnknownSheetReady: 430,
+}
+const submittedJourney = {
+  suggestedCategory: "shampoo" as const,
+  selectionPath: "grid" as const,
+  scanInteractionId: "test-sheet-1",
+  msConfirmationToPending: 180,
+}
+
 test("Scan analytics is PostHog-only", () => {
   for (const eventName of scanEventNames) {
     assert.deepEqual(eventRoutes[eventName], { customerio: false, meta: false, posthog: true })
@@ -63,6 +76,8 @@ test("Scan analytics factory only fires with analytics consent", () => {
   })
   declined.track("scan_started", {})
   declined.track("scan_buy_clicked", { verdict: "ideal" })
+  declined.track("scan_not_found", unknownJourney)
+  declined.track("scan_submission_created", { category: "conditioner", ...submittedJourney })
   assert.equal(calls.length, 0)
 
   const unset = createConsentAwareScanAnalytics({
@@ -84,8 +99,8 @@ test("Scan analytics factory only fires with analytics consent", () => {
     inCatalog: true,
     snapshotSource: "refined",
   })
-  consented.track("scan_not_found", {})
-  consented.track("scan_submission_created", { category: "conditioner" })
+  consented.track("scan_not_found", unknownJourney)
+  consented.track("scan_submission_created", { category: "conditioner", ...submittedJourney })
   consented.track("scan_fallback_search_used", { trigger: "timeout" })
   consented.track("scan_saved", { kind: "routine", verdict: "ideal" })
   consented.track("scan_buy_clicked", { verdict: "mismatch" })
@@ -102,8 +117,11 @@ test("Scan analytics factory only fires with analytics consent", () => {
         snapshotSource: "refined",
       },
     },
-    { eventName: "scan_not_found", payload: {} },
-    { eventName: "scan_submission_created", payload: { category: "conditioner" } },
+    { eventName: "scan_not_found", payload: unknownJourney },
+    {
+      eventName: "scan_submission_created",
+      payload: { category: "conditioner", ...submittedJourney },
+    },
     { eventName: "scan_fallback_search_used", payload: { trigger: "timeout" } },
     { eventName: "scan_saved", payload: { kind: "routine", verdict: "ideal" } },
     { eventName: "scan_buy_clicked", payload: { verdict: "mismatch" } },
@@ -127,8 +145,8 @@ test("Scan events map to PostHog with the documented snake_case properties", () 
       inCatalog: false,
       snapshotSource: "initial",
     })
-    postHogDestination.track("scan_not_found", {})
-    postHogDestination.track("scan_submission_created", { category: "mask" })
+    postHogDestination.track("scan_not_found", unknownJourney)
+    postHogDestination.track("scan_submission_created", { category: "mask", ...submittedJourney })
     postHogDestination.track("scan_fallback_search_used", { trigger: "manual" })
     postHogDestination.track("scan_saved", { kind: "merkliste", verdict: "supportive" })
     postHogDestination.track("scan_buy_clicked", { verdict: "merkliste" })
@@ -143,8 +161,25 @@ test("Scan events map to PostHog with the documented snake_case properties", () 
       "scan_result_shown",
       { verdict: "not_needed", category: "oil", in_catalog: false, snapshot_source: "initial" },
     ],
-    ["scan_not_found", {}],
-    ["scan_submission_created", { category: "mask" }],
+    [
+      "scan_not_found",
+      {
+        identified: true,
+        suggested_category: "shampoo",
+        scan_interaction_id: "test-sheet-1",
+        ms_to_unknown_sheet_ready: 430,
+      },
+    ],
+    [
+      "scan_submission_created",
+      {
+        category: "mask",
+        suggested_category: "shampoo",
+        selection_path: "grid",
+        scan_interaction_id: "test-sheet-1",
+        ms_confirmation_to_pending: 180,
+      },
+    ],
     ["scan_fallback_search_used", { trigger: "manual" }],
     ["scan_saved", { kind: "merkliste", verdict: "supportive" }],
     ["scan_buy_clicked", { verdict: "merkliste" }],

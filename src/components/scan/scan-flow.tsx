@@ -205,6 +205,7 @@ export function ScanFlow({
   // Reset at the start of every scanning window (mount + each "Nochmal scannen") so
   // `scan_decoded`'s `ms_to_decode` measures this attempt, not the whole page visit.
   const scanSessionStartRef = useRef(0)
+  const unknownInteractionIdRef = useRef("")
   // The confirm-window timer that raises the resolving skeleton. Stored in a ref so
   // `returnToScanning` and unmount can clear it; a timer that still fires is harmless,
   // because `resolving_sheet_due` carries its request's token.
@@ -515,6 +516,7 @@ export function ScanFlow({
       // up — the fetch below still starts immediately, so no time-to-verdict is lost.
       const token = requests.begin()
       resolveInFlightRef.current = true
+      const resolveStartedAt = performance.now()
       dispatch({
         type: "resolve_started",
         token,
@@ -559,7 +561,13 @@ export function ScanFlow({
         if (!requests.isCurrent(token)) return
         resolveInFlightRef.current = false
         if (result.kind === "unknown_product") {
-          analytics.track("scan_not_found", {})
+          unknownInteractionIdRef.current = crypto.randomUUID()
+          analytics.track("scan_not_found", {
+            identified: Boolean(result.identified),
+            suggestedCategory: result.identified?.suggestedCategory ?? null,
+            scanInteractionId: unknownInteractionIdRef.current,
+            msToUnknownSheetReady: Math.round(performance.now() - resolveStartedAt),
+          })
         } else if (result.kind !== "pending_submission") {
           analytics.track("scan_result_shown", {
             verdict: resultVerdictLabel(result),
@@ -769,7 +777,16 @@ export function ScanFlow({
   }, [resolve])
 
   const submitUnknown = useCallback(
-    async (input: ScanSubmissionInput, identifier: ScanIdentifier) => {
+    async (
+      input: ScanSubmissionInput,
+      identifier: ScanIdentifier,
+      journey: {
+        scanInteractionId: string
+        suggestedCategory: ScanSubmissionInput["category"] | null
+        selectionPath: "one_tap" | "grid"
+      },
+    ) => {
+      const confirmedAt = performance.now()
       const token = requests.begin()
       dispatch({ type: "submit_started", token })
       try {
@@ -797,7 +814,11 @@ export function ScanFlow({
         // The submission exists server-side the moment this response lands, whether or
         // not the user is still looking at the sheet — tracked unconditionally. Only the
         // `submitted` dispatch (which would repaint the step) stays token-guarded.
-        analytics.track("scan_submission_created", { category: input.category })
+        analytics.track("scan_submission_created", {
+          category: input.category,
+          ...journey,
+          msConfirmationToPending: Math.round(performance.now() - confirmedAt),
+        })
         dispatch({
           type: "submitted",
           token,
@@ -816,6 +837,9 @@ export function ScanFlow({
   )
 
   const { step } = state
+  // Capture the current sheet's identity in its callback; a later scan cannot relabel
+  // a submission whose network response arrives after the original sheet was dismissed.
+  const unknownInteractionId = unknownInteractionIdRef.current
   const sheetOpen = step.kind !== "scanning"
   const resultStep = step.kind === "result" ? step : null
   /**
@@ -1034,13 +1058,22 @@ export function ScanFlow({
         ) : null}
         {step.kind === "unknown" ? (
           <ScanUnknownFlow
+            key={unknownInteractionId}
             unknown={step.unknown}
             submitting={state.submitting}
             error={state.submitError}
             // The v1 scan surface is EAN-only in both directions (resolve returns the
             // scanned/typed EAN, submit accepts nothing else), so the narrowing is safe.
-            onSubmit={(input) =>
-              void submitUnknown(input, { type: "ean", value: step.unknown.identifier.value })
+            onSubmit={(input, selectionPath = "grid") =>
+              void submitUnknown(
+                input,
+                { type: "ean", value: step.unknown.identifier.value },
+                {
+                  scanInteractionId: unknownInteractionId,
+                  suggestedCategory: step.unknown.identified?.suggestedCategory ?? null,
+                  selectionPath,
+                },
+              )
             }
           />
         ) : null}

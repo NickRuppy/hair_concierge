@@ -649,9 +649,18 @@ export type AppEventMap = {
     inCatalog: boolean
     snapshotSource: string
   }
-  scan_not_found: Record<string, never>
+  scan_not_found: {
+    identified: boolean
+    suggestedCategory: PersonalPlanCategory | null
+    scanInteractionId: string
+    msToUnknownSheetReady: number
+  }
   scan_submission_created: {
-    category: string
+    category: PersonalPlanCategory
+    suggestedCategory: PersonalPlanCategory | null
+    selectionPath: "one_tap" | "grid"
+    scanInteractionId: string
+    msConfirmationToPending: number
   }
   scan_fallback_search_used: {
     trigger: string

@@ -184,6 +184,15 @@ export type ScanUnknownProductResult = {
    */
   identifier: { type: "ean"; value: string }
   categories: Array<{ key: PersonalPlanCategory; label: string }>
+  /** Identity only: research ingredients, description and source URLs stay server-side. */
+  identified?: {
+    source: "dm"
+    dan: string
+    productName: string
+    brand: string | null
+    imageUrl: string | null
+    suggestedCategory: PersonalPlanCategory | null
+  }
 }
 
 export type ScanResolveResult =

@@ -125,6 +125,12 @@ function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRou
     createAdminClient: () => ({}) as never,
     validateEanInput: () => ({ ok: true, type: "ean", value: "4006381333931" }),
     findOpenScanSubmission: async () => null,
+    resolveRetailerEnrichment: async () => ({
+      enrichment: null,
+      outcome: "disabled",
+      durationMs: null,
+      deadlineMs: null,
+    }),
     createScanResolveAttemptId: () => "attempt-1",
     recordScanResolveAttempt: async () => {},
     completeScanResolveAttempt: async () => {},
