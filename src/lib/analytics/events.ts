@@ -604,6 +604,13 @@ export type AppEventMap = {
     reason: EmailDeliverabilityFailure
     suggestionPresent: boolean
   }
+  quiz_email_return_prompt_viewed: {
+    funnelPackageKey: "customerio_scan_return_v1"
+  }
+  quiz_email_return_choice: {
+    choice: "continue" | "edit"
+    funnelPackageKey: "customerio_scan_return_v1"
+  }
   /**
    * Ein Funnel-Einschub im Quiz wurde gesehen. Einschübe sind keine Fragen und
    * bleiben deshalb aus `quiz_step_viewed` heraus.

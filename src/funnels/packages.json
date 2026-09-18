@@ -43,5 +43,14 @@
     "landingVariant": "scan-regal",
     "quizVariant": "legacy-quiz-v1",
     "offerVariant": "scan-regal-v1"
+  },
+  {
+    "key": "customerio_scan_return_v1",
+    "slug": null,
+    "channel": "email",
+    "status": "placeholder",
+    "landingVariant": "scan-regal",
+    "quizVariant": "legacy-quiz-v1",
+    "offerVariant": "scan-regal-v1"
   }
 ]

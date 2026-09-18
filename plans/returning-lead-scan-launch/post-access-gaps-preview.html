@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie · Fehlende Angaben nach dem Teststart — Entwurf</title>
+    <style>
+      :root { color-scheme:light; --ink:#2a1845; --body:#3a3835; --muted:#6a6560; --plum:#6b50a0; --line:#ded2e9; --ice:#f2eefa; font-family:Arial,Helvetica,sans-serif; }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--body); background:#f2efec; }
+      .overview { max-width:560px; margin:auto; padding:28px 20px 52px; }
+      .overview h1 { font:500 30px/1.15 Georgia,serif; color:var(--ink); margin:0 0 8px; }
+      .overview > p { color:var(--muted); line-height:1.5; margin:0 0 24px; }
+      .case-label { color:var(--ink); font-weight:700; font-size:12px; letter-spacing:.07em; text-transform:uppercase; margin:0 0 10px; }
+      .frame { min-height:650px; border:1px solid #d8d0cb; border-radius:25px; background:#fff; box-shadow:0 20px 48px -40px #3d2a62; }
+      .content { max-width:440px; margin:auto; padding:34px 24px; }
+      .progress { display:flex; align-items:center; gap:10px; color:#655b6c; font-size:12px; margin-bottom:36px; }
+      .bar { height:6px; flex:1; background:#eee8f3; border-radius:9px; overflow:hidden; }
+      .bar::before { content:""; display:block; width:33%; height:100%; background:var(--plum); }
+      h2 { font:500 28px/1.13 Georgia,serif; color:var(--ink); text-align:center; letter-spacing:-.02em; margin:0 0 12px; }
+      .intro { color:var(--muted); font-size:13px; line-height:1.5; text-align:center; margin:0 0 28px; }
+      .card { border:1px solid #e7ddef; border-radius:24px; padding:20px; }
+      h3 { color:var(--ink); font-size:16px; line-height:1.35; margin:0 0 8px; }
+      .helper { color:var(--muted); font-size:13px; line-height:1.5; margin:0 0 14px; }
+      .option { border:1px solid var(--line); border-radius:14px; padding:14px 16px; min-height:52px; margin:8px 0; display:flex; align-items:center; background:#fff; font-size:14px; font-weight:700; color:var(--ink); }
+      .option.selected { background:var(--ice); border:2px solid var(--plum); }
+      .button { display:flex; justify-content:center; align-items:center; width:100%; min-height:45px; padding:10px 15px; text-align:center; border-radius:24px; text-decoration:none; font-size:13px; font-weight:700; margin-top:20px; color:#fff; background:var(--plum); }
+      .note { margin-top:18px; color:var(--muted); font-size:12px; line-height:1.5; }
+      @media(max-width:600px) { .overview { padding:19px 14px 40px; } .overview h1 { font-size:26px; } .frame { min-height:620px; } .content { padding:25px 18px; } }
+    </style>
+  </head>
+  <body>
+    <main class="overview">
+      <h1>Nur was noch fehlt</h1>
+      <p>Zusatzfall für ältere Quiz-Einträge, bei denen nach dem bestätigten Teststart mehr als eine Angabe fehlt. Das ist dieselbe ruhige Quiz-Oberfläche wie bei der Haarlänge: eine Frage auf einmal, keine Wiederholung bereits gespeicherter Antworten.</p>
+      <p class="case-label">Beispiel · 3 fehlende Angaben · nach bestätigtem Teststart</p>
+      <section class="frame" aria-label="Entwurf für fehlende Angaben">
+        <div class="content">
+          <div class="progress"><span>←</span><div class="bar"></div><span>1 von 3</span></div>
+          <h2>Drei Angaben fehlen noch.</h2>
+          <p class="intro">Deine früheren Antworten sind übernommen. Beantworte nur noch, was für deinen Scanner-Start fehlt.</p>
+          <div class="card">
+            <h3>Wie dicht ist dein Haar insgesamt?</h3>
+            <p class="helper">Schau zum Beispiel auf Scheitel, Zopf-Umfang und wie viel Kopfhaut sichtbar ist.</p>
+            <div class="option">Wenig Haare</div>
+            <div class="option selected">Mittlere Dichte</div>
+            <div class="option">Viele Haare</div>
+            <a class="button" href="#" aria-label="Weiter zur nächsten fehlenden Angabe">Weiter</a>
+          </div>
+          <p class="note">Auf die letzte fehlende Frage folgt „Speichern und Scanner öffnen“. Wenn nur die Haarlänge fehlt, bleibt die bereits gezeigte einzelne Frage unverändert.</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

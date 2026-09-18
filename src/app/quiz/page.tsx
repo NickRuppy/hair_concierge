@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { notFound } from "next/navigation"
 import { useQuizStore } from "@/lib/quiz/store"
-import { loadQuizDraft } from "@/lib/quiz/draft"
+import { loadQuizDraft, saveQuizDraft } from "@/lib/quiz/draft"
 import { consumeModeratorOrganicFreshStart } from "@/lib/quiz/moderator-fresh-start"
 import { getQuestionByStep } from "@/lib/quiz/questions"
 import { QuizQuestion } from "@/components/quiz/quiz-question"
@@ -14,11 +14,14 @@ import { QuizPreparation } from "@/components/quiz/quiz-preparation"
 import { QuizResults } from "@/components/quiz/quiz-results"
 import { QuizGoals } from "@/components/quiz/quiz-goals"
 import { QuizWelcome } from "@/components/quiz/quiz-welcome"
+import { ReturningLeadPrompt } from "@/components/quiz/returning-lead-prompt"
 import { ScanInsertHome } from "@/components/quiz/scan-inserts/scan-insert-home"
 import { ScanInsertProblem } from "@/components/quiz/scan-inserts/scan-insert-problem"
 import { ScanInsertSolution } from "@/components/quiz/scan-inserts/scan-insert-solution"
 import { Button } from "@/components/ui/button"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import { QUIZ_EMAIL_RETURN_PACKAGE_KEY } from "@/lib/quiz/email-return-context"
+import { normalizeMigrationQuizPrefillAnswers } from "@/lib/quiz/migration-prefill-init"
 import { createScannerQuizViewTracker } from "@/lib/analytics/scanner-quiz-view"
 import {
   getLegacyQuizScreenPosition,
@@ -65,7 +68,13 @@ export default function QuizPage() {
   const restoreDraft = useQuizStore((s) => s.restoreDraft)
   const [draftStatus, setDraftStatus] = useState<"checking" | "ready" | "unavailable">("checking")
   const [migrationRecoveryAttempt, setMigrationRecoveryAttempt] = useState(0)
+  const [returnPrompt, setReturnPrompt] = useState<"none" | "open" | "invalid" | "unavailable">(
+    "none",
+  )
+  const [returnBusy, setReturnBusy] = useState(false)
+  const [returnError, setReturnError] = useState<string | null>(null)
   const quizStartedRef = useRef(false)
+  const returnPromptTrackedRef = useRef(false)
   const scannerQuizMountedRef = useRef(true)
   const scannerQuizViewedRef = useRef(false)
   const scannerQuizViewTrackerRef = useRef(createScannerQuizViewTracker())
@@ -125,6 +134,40 @@ export default function QuizPage() {
         return
       }
 
+      const returnIntent = new URLSearchParams(window.location.search).get("return")
+      if (returnIntent) {
+        // A return link never resumes an unrelated local draft behind the modal.
+        // Leave that draft in storage until the visitor explicitly chooses Edit.
+        useQuizStore.setState({
+          step: 2,
+          answers: {},
+          leadCaptureSubStep: "name",
+          leadCaptureMode: "regular",
+          lead: { name: "", email: "", marketingConsent: false },
+          leadId: null,
+        })
+        if (returnIntent === "ready") {
+          let status: string = "unavailable"
+          try {
+            const response = await fetch("/api/quiz/email-return/context", {
+              headers: { Accept: "application/json" },
+              cache: "no-store",
+            })
+            status = response.ok ? (await response.json()).status : "unavailable"
+          } catch {
+            status = "unavailable"
+          }
+          if (!active) return
+          setReturnPrompt(
+            status === "resolved" ? "open" : status === "invalid" ? "invalid" : "unavailable",
+          )
+        } else {
+          setReturnPrompt(returnIntent === "invalid" ? "invalid" : "unavailable")
+        }
+        setSafeDraftStatus("ready")
+        return
+      }
+
       const state = useQuizStore.getState()
       if (state.step !== 2 || Object.keys(state.answers).length > 0) {
         setSafeDraftStatus("ready")
@@ -171,7 +214,71 @@ export default function QuizPage() {
   }
 
   useEffect(() => {
-    if (draftStatus !== "ready" || funnelPackageKey !== "scan_v1" || scannerQuizViewedRef.current)
+    if (returnPrompt !== "open" || returnPromptTrackedRef.current) return
+    returnPromptTrackedRef.current = true
+    trackAppEvent("quiz_email_return_prompt_viewed", {
+      funnelPackageKey: QUIZ_EMAIL_RETURN_PACKAGE_KEY,
+    })
+  }, [returnPrompt])
+
+  async function chooseReturn(choice: "continue" | "edit") {
+    if (returnBusy) return
+    setReturnBusy(true)
+    setReturnError(null)
+    try {
+      const response = await fetch("/api/quiz/email-return/choose", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({ choice }),
+      })
+      const result = await response.json().catch(() => null)
+      if (response.status === 410 || result?.status === "invalid") {
+        // A link may be revoked while the dialog is open. Release the ordinary
+        // first question instead of trapping the visitor in a retry-only modal.
+        window.history.replaceState(null, "", "/quiz?return=invalid")
+        setReturnPrompt("invalid")
+        setReturnBusy(false)
+        return
+      }
+      if (!response.ok || !result) throw new Error("choice_unavailable")
+      trackAppEvent("quiz_email_return_choice", {
+        choice,
+        funnelPackageKey: QUIZ_EMAIL_RETURN_PACKAGE_KEY,
+      })
+      if (
+        choice === "continue" &&
+        result.status === "continue" &&
+        typeof result.destination === "string"
+      ) {
+        window.location.assign(result.destination)
+        return
+      }
+      if (
+        choice === "edit" &&
+        result.status === "edit" &&
+        result.answers &&
+        typeof result.answers === "object"
+      ) {
+        const answers = normalizeMigrationQuizPrefillAnswers(result.answers)
+        saveQuizDraft({ step: 2, answers, funnelPackageKey: QUIZ_EMAIL_RETURN_PACKAGE_KEY })
+        window.location.assign("/quiz")
+        return
+      }
+      throw new Error("choice_unavailable")
+    } catch {
+      setReturnError("Das hat gerade nicht geklappt. Bitte versuche es erneut.")
+      setReturnBusy(false)
+    }
+  }
+
+  useEffect(() => {
+    if (
+      draftStatus !== "ready" ||
+      returnPrompt === "open" ||
+      funnelPackageKey !== "scan_v1" ||
+      scannerQuizViewedRef.current
+    )
       return
     scannerQuizViewedRef.current = true
     scannerQuizViewTrackerRef.current({
@@ -181,10 +288,10 @@ export default function QuizPage() {
       resumed: step !== 2,
       step,
     })
-  }, [draftStatus, funnelPackageKey, step])
+  }, [draftStatus, funnelPackageKey, returnPrompt, step])
 
   useEffect(() => {
-    if (draftStatus !== "ready") return
+    if (draftStatus !== "ready" || returnPrompt === "open") return
     if (lastTrackedStepRef.current === step) return
     lastTrackedStepRef.current = step
 
@@ -210,7 +317,7 @@ export default function QuizPage() {
         stepNumber: step, // deprecated: use stepName after Phase 4 resequencing
       })
     }
-  }, [draftStatus, funnelPackageKey, step])
+  }, [draftStatus, funnelPackageKey, returnPrompt, step])
 
   if (draftStatus === "checking") {
     return null
@@ -238,7 +345,31 @@ export default function QuizPage() {
 
   // Standard quiz question cards
   const question = getQuestionByStep(step)
-  if (question) return <QuizQuestion key={question.step} question={question} />
+  if (question) {
+    return (
+      <>
+        {returnPrompt === "invalid" || returnPrompt === "unavailable" ? (
+          <p
+            role="status"
+            className="mx-auto mb-3 max-w-xl text-center text-sm text-muted-foreground"
+          >
+            {returnPrompt === "invalid"
+              ? "Deine gespeicherten Antworten konnten über diesen Link nicht geöffnet werden. Du kannst das Quiz hier neu starten."
+              : "Deine gespeicherten Antworten sind gerade nicht verfügbar. Bitte versuche den E-Mail-Link später erneut oder starte das Quiz neu."}
+          </p>
+        ) : null}
+        <QuizQuestion key={question.step} question={question} />
+        {returnPrompt === "open" ? (
+          <ReturningLeadPrompt
+            busy={returnBusy}
+            error={returnError}
+            onContinue={() => void chooseReturn("continue")}
+            onEdit={() => void chooseReturn("edit")}
+          />
+        ) : null}
+      </>
+    )
+  }
 
   switch (step) {
     case 9:

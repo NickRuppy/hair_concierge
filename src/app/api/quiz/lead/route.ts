@@ -7,6 +7,7 @@ import { leadSchema } from "@/lib/quiz/validators"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import { findReusableLead } from "@/lib/quiz/lead-lifecycle"
+import { QUIZ_EMAIL_RETURN_PACKAGE_KEY } from "@/lib/quiz/email-return-context"
 import { syncQuizLeadToCustomerIo } from "@/lib/customerio/quiz-sync"
 import {
   bindRegularQuizFieldTestLead,
@@ -268,17 +269,20 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
         return NextResponse.json({ error: "Speichern fehlgeschlagen" }, { status: 500 })
       }
 
-      const existingLead = findReusableLead(
-        (
-          (recentLeads as Array<{
-            id: string
-            quiz_answers: Record<string, unknown> | null
-            moderator_campaign_id?: string | null
-            partner_access_invitation_id?: string | null
-          }> | null) ?? []
-        ).filter((lead) => !lead.moderator_campaign_id && !lead.partner_access_invitation_id),
-        quizAnswers,
-      )
+      const existingLead =
+        funnelContext?.packageKey === QUIZ_EMAIL_RETURN_PACKAGE_KEY
+          ? null
+          : findReusableLead(
+              (
+                (recentLeads as Array<{
+                  id: string
+                  quiz_answers: Record<string, unknown> | null
+                  moderator_campaign_id?: string | null
+                  partner_access_invitation_id?: string | null
+                }> | null) ?? []
+              ).filter((lead) => !lead.moderator_campaign_id && !lead.partner_access_invitation_id),
+              quizAnswers,
+            )
 
       if (existingLead) {
         const createdAt = new Date().toISOString()

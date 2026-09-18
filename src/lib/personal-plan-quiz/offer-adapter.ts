@@ -1,6 +1,9 @@
 import { GOALS, type Goal } from "@/lib/vocabulary/concerns-goals"
 import type { QuizAnswers } from "@/lib/quiz/types"
-import type { PersonalPlanDiagnosticInput } from "@/lib/quiz/diagnostic-input"
+import {
+  resolveVisibleDiagnosticGoals,
+  type PersonalPlanDiagnosticInput,
+} from "@/lib/quiz/diagnostic-input"
 
 import type {
   PersonalPlanQuizAnswers,
@@ -33,24 +36,6 @@ const LEGACY_CONCERN_TO_DIAGNOSTIC = {
   low_volume_or_weighed_down: "low_volume_or_weighed_down",
 } as const
 
-const LEGACY_GOAL_TO_DIAGNOSTIC = {
-  moisture: "moisture",
-  less_frizz: "frizz_surface",
-  shine: "shine",
-  curl_definition: "shape_definition",
-  volume: "volume_balance",
-  less_volume: "volume_balance",
-  anti_breakage: "strength_ends",
-  less_split_ends: "strength_ends",
-  healthy_scalp: "scalp_balance",
-  frizz_surface: "frizz_surface",
-  shape_definition: "shape_definition",
-  volume_balance: "volume_balance",
-  strength_ends: "strength_ends",
-  scalp_balance: "scalp_balance",
-  manageability_styling: "manageability_styling",
-} as const
-
 /**
  * Converts the legacy factual answers into the exact input the public
  * assessment understands. Context questions which legacy never asked remain
@@ -63,10 +48,7 @@ export function adaptLegacyQuizAnswersForAssessment(
     const mapped = LEGACY_CONCERN_TO_DIAGNOSTIC[value as keyof typeof LEGACY_CONCERN_TO_DIAGNOSTIC]
     return mapped ? [mapped] : []
   })
-  const goals = (answers.goals ?? []).flatMap((value) => {
-    const mapped = LEGACY_GOAL_TO_DIAGNOSTIC[value as keyof typeof LEGACY_GOAL_TO_DIAGNOSTIC]
-    return mapped ? [mapped] : []
-  })
+  const goals = resolveVisibleDiagnosticGoals(answers.goals ?? [])
   const scalpConcernByCondition = {
     schuppen: "oily_dandruff",
     trockene_schuppen: "dry_dandruff",
@@ -84,7 +66,7 @@ export function adaptLegacyQuizAnswersForAssessment(
     texture: answers.structure as PersonalPlanDiagnosticInput["texture"],
     thickness: answers.thickness as PersonalPlanDiagnosticInput["thickness"],
     density: answers.density as PersonalPlanDiagnosticInput["density"],
-    goals: [...new Set(goals)],
+    goals,
     currentConcerns: [...new Set(concerns)],
     hairLength: answers.hair_length,
     hairSurface:

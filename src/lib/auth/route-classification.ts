@@ -21,6 +21,7 @@ const PUBLIC_EXACT_ROUTES = [
   "/opengraph-image",
   "/pricing",
   "/quiz",
+  "/quiz/return",
   // freemium-scanner-first T18: free registration happens before an account
   // exists. The page itself 404s while the feature flag is off.
   "/registrierung",

@@ -174,6 +174,7 @@ function PayPalScriptFailureObserver({
 export function PayPalSubscriptionButton({
   checkoutAttemptId,
   checkoutContext,
+  funnelSessionId,
   interval,
   leadId,
   onApproved,
@@ -194,6 +195,7 @@ export function PayPalSubscriptionButton({
 }: {
   checkoutAttemptId?: string
   checkoutContext?: CheckoutContext
+  funnelSessionId?: string
   interval: BillingInterval
   leadId?: string | null
   /**
@@ -510,6 +512,7 @@ export function PayPalSubscriptionButton({
                 intent = await createSubscriptionIntent({
                   checkoutAttemptId,
                   checkoutContext,
+                  funnelSessionId,
                   interval,
                   leadId,
                   returnDestination,
@@ -886,6 +889,7 @@ export function PayPalSubscriptionButton({
 async function createSubscriptionIntent({
   checkoutAttemptId,
   checkoutContext,
+  funnelSessionId,
   interval,
   leadId,
   returnDestination,
@@ -895,6 +899,7 @@ async function createSubscriptionIntent({
 }: {
   checkoutAttemptId?: string
   checkoutContext?: CheckoutContext
+  funnelSessionId?: string
   interval: BillingInterval
   leadId?: string | null
   returnDestination?: string
@@ -909,6 +914,7 @@ async function createSubscriptionIntent({
     body: JSON.stringify({
       checkoutAttemptId,
       checkoutContext,
+      funnelSessionId,
       interval,
       leadId: leadId ?? null,
       returnDestination,

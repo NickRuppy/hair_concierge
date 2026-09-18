@@ -59,6 +59,8 @@ export const eventRoutes = {
   quiz_completed: { customerio: true, meta: false, posthog: true },
   quiz_goals_selected: { customerio: true, meta: false, posthog: true },
   quiz_email_deliverability_rejected: { customerio: false, meta: false, posthog: true },
+  quiz_email_return_prompt_viewed: { customerio: false, meta: false, posthog: true },
+  quiz_email_return_choice: { customerio: false, meta: false, posthog: true },
   quiz_lead_captured: { customerio: false, meta: true, posthog: true },
   quiz_insert_viewed: { customerio: false, meta: false, posthog: true },
   quiz_started: { customerio: true, meta: true, posthog: true },

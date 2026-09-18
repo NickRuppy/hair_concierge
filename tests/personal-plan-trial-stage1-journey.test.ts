@@ -365,6 +365,7 @@ test("plan readiness keeps an active trial on its exact source lead and never di
         email: "trial@example.invalid",
         leadId,
         expectedQuizSourceKind: "legacy",
+        funnelSessionId: null,
       })
       return {
         status: "ready" as const,

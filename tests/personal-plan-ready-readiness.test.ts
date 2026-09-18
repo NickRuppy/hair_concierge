@@ -8,7 +8,72 @@ import {
   resolvePlanBereitFunnelPackage,
   updateMissingPlanBereitSourceFact,
   needsFreshMigrationQuiz,
+  classifyPlanBereitSourceFacts,
+  isValidPlanBereitFactPatch,
 } from "../src/app/plan-bereit/readiness"
+
+test("email return recovery asks only absent or invalid Stage-1 facts", () => {
+  const source = classifyPlanBereitSourceFacts({
+    id: "old",
+    quiz_kind: "legacy",
+    quiz_answers: {
+      ...COMPLETE_LEGACY_ANSWERS,
+      density: "unknown",
+      hair_length: undefined,
+      concerns: ["retired"],
+    },
+  })
+  assert.equal(source.status, "missing_source_facts")
+  if (source.status === "missing_source_facts")
+    assert.deepEqual(
+      source.missingFacts.map((f) => f.field),
+      ["density", "hair_length"],
+    )
+  assert.equal(
+    needsFreshMigrationQuiz({
+      status: "missing_source_facts",
+      missingFacts: [{ field: "density" }, { field: "hair_length" }],
+      funnelPackageKey: "customerio_scan_return_v1",
+    }),
+    false,
+  )
+})
+
+test("Personal Plan missing facts remain distinct from missing artifacts and context answers", () => {
+  const source = classifyPlanBereitSourceFacts({
+    id: "pp",
+    quiz_kind: "personal_plan",
+    quiz_answers: {
+      kind: "personal_plan",
+      version: 3,
+      answers: {
+        texture: "wavy",
+        thickness: "fine",
+        density: "low",
+        hairLength: "medium",
+        hairSurface: "rough",
+        elasticResponse: "snaps",
+        scalpOiliness: "dry",
+        goals: ["moisture"],
+        chemicalTreatments: ["colored"],
+      },
+    },
+  })
+  assert.equal(
+    source.status,
+    "ready",
+    "missing unrelated Personal Plan context is not a missing hair fact",
+  )
+})
+
+test("missing-fact patch rejects wrong enums, duplicates and contradictory treatments", () => {
+  assert.equal(isValidPlanBereitFactPatch("density", "high"), true)
+  assert.equal(isValidPlanBereitFactPatch("density", "unknown"), false)
+  assert.equal(isValidPlanBereitFactPatch("treatment", ["natur", "gefaerbt"]), false)
+  assert.equal(isValidPlanBereitFactPatch("treatment", ["gefaerbt", "gefaerbt"]), false)
+  assert.equal(isValidPlanBereitFactPatch("goals", []), false)
+  assert.equal(isValidPlanBereitFactPatch("goals", ["shine", "moisture"]), true)
+})
 
 test("migration quiz recovery retains the existing hair-length repair and rejects authorization failures", () => {
   assert.equal(needsFreshMigrationQuiz({ status: "invalid_source" }), true)
@@ -543,9 +608,9 @@ test("missing hair length persists against the exact owner-scoped lead with sour
     db.updates[0].filters.map((filter) => [filter.column, filter.value]),
     [
       ["id", "lead-legacy"],
-      ["user_id", "user-1"],
       ["quiz_kind", "legacy"],
       ["updated_at", "2026-08-12T08:00:00.000Z"],
+      ["user_id", "user-1"],
     ],
   )
   assert.equal(db.upserts.length, 1)
@@ -779,6 +844,338 @@ function scanLinkInput() {
   }
 }
 
+test("email return saves only a currently missing fact, retaining other answers and version CAS", async () => {
+  const db = scanFunnelDb()
+  db.tables.leads[0].user_id = "user-1"
+  db.tables.leads[0].quiz_answers = {
+    ...COMPLETE_LEGACY_ANSWERS,
+    density: undefined,
+    hair_length: undefined,
+  }
+  const deps = {
+    resolveFunnelPackage: async () => resolvedPackage("customerio_scan_return_v1"),
+    provisionStage1Plan: async () => ({ status: "completed" }),
+  }
+  const input = {
+    ...scanLinkInput(),
+    funnelSessionId: "return-session",
+    sourceVersion: "2026-09-12T08:00:00.000Z",
+  }
+  const result = await updateMissingPlanBereitSourceFact(
+    db as never,
+    { ...input, field: "density", value: "high" },
+    deps,
+  )
+  assert.equal(result.status, "missing_source_facts")
+  if (result.status === "missing_source_facts")
+    assert.deepEqual(
+      result.missingFacts.map((f) => f.field),
+      ["hair_length"],
+    )
+  assert.equal((db.tables.leads[0].quiz_answers as Row).density, "high")
+  assert.equal((db.tables.leads[0].quiz_answers as Row).structure, "wavy")
+  assert.equal(db.upserts.length, 0, "a partial recovery must not project incomplete profile")
+  assert.equal(
+    db.updates[0].filters.some((f) => f.column === "updated_at" && f.value === input.sourceVersion),
+    true,
+  )
+  await updateMissingPlanBereitSourceFact(
+    db as never,
+    { ...input, field: "structure", value: "curly" },
+    deps,
+  )
+  assert.equal(
+    (db.tables.leads[0].quiz_answers as Row).structure,
+    "wavy",
+    "existing fact cannot be overwritten through recovery",
+  )
+})
+
+test("legacy German-valued recovery preserves source answers and projects canonical profile values", async () => {
+  const cases = [
+    { field: "fingertest", value: "rau", profileField: "cuticle_condition", profileValue: "rough" },
+    { field: "scalp_type", value: "trocken", profileField: "scalp_type", profileValue: "dry" },
+    {
+      field: "treatment",
+      value: ["gefaerbt"],
+      profileField: "chemical_treatment",
+      profileValue: ["colored"],
+    },
+  ] as const
+  for (const { field, value, profileField, profileValue } of cases) {
+    const db = scanFunnelDb()
+    db.tables.leads[0].user_id = "user-1"
+    db.tables.leads[0].quiz_answers = { ...COMPLETE_LEGACY_ANSWERS, [field]: undefined }
+    const result = await updateMissingPlanBereitSourceFact(
+      db as never,
+      {
+        ...scanLinkInput(),
+        funnelSessionId: "return-session",
+        sourceVersion: "2026-09-12T08:00:00.000Z",
+        field,
+        value: typeof value === "string" ? value : [...value],
+      },
+      {
+        resolveFunnelPackage: async () => resolvedPackage("customerio_scan_return_v1"),
+        provisionStage1Plan: async () => ({ status: "completed" }),
+      },
+    )
+    assert.equal(result.status, "ready", field)
+    assert.deepEqual((db.tables.leads[0].quiz_answers as Row)[field], value, field)
+    assert.deepEqual(db.tables.hair_profiles[0][profileField], profileValue, field)
+  }
+})
+
+test("stale missing-fact writes do not replace a newer quiz", async () => {
+  const db = scanFunnelDb()
+  db.tables.leads[0].user_id = "user-1"
+  db.tables.leads[0].quiz_answers = { ...COMPLETE_LEGACY_ANSWERS, density: undefined }
+  const result = await updateMissingPlanBereitSourceFact(
+    db as never,
+    {
+      ...scanLinkInput(),
+      funnelSessionId: "return-session",
+      field: "density",
+      value: "high",
+      sourceVersion: "stale",
+    },
+    {
+      resolveFunnelPackage: async () => resolvedPackage("customerio_scan_return_v1"),
+      provisionStage1Plan: async () => ({ status: "completed" }),
+    },
+  )
+  assert.equal(result.status, "source_pending")
+  assert.equal((db.tables.leads[0].quiz_answers as Row).density, undefined)
+  assert.equal(db.upserts.length, 0)
+})
+
+test("email package recovery needs the exact supplied lead session", async () => {
+  const db = scanFunnelDb()
+  db.tables.leads[0].user_id = "user-1"
+  db.tables.leads[0].quiz_answers = { ...COMPLETE_LEGACY_ANSWERS, density: undefined }
+  const calls: Array<string | null | undefined> = []
+  const deps = {
+    resolveFunnelPackage: async (_lead: string, session?: string | null) => {
+      calls.push(session)
+      return resolvedPackage("customerio_scan_return_v1")
+    },
+    provisionStage1Plan: async () => ({ status: "completed" }),
+  }
+  assert.equal(
+    (await loadPlanBereitReadiness(db as never, scanLinkInput(), deps)).status,
+    "invalid_source",
+  )
+  const recovery = await loadPlanBereitReadiness(
+    db as never,
+    { ...scanLinkInput(), funnelSessionId: "exact-return" },
+    deps,
+  )
+  assert.equal(recovery.status, "missing_source_facts")
+  assert.deepEqual(calls, [undefined, "exact-return"])
+})
+
+test("Personal Plan email returns provision only with facts, attached artifact and exact session", async () => {
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-pp",
+        email: "lea@example.test",
+        user_id: "user-1",
+        quiz_kind: "personal_plan",
+        quiz_answers: {
+          kind: "personal_plan",
+          version: 3,
+          answers: {
+            texture: "wavy",
+            thickness: "fine",
+            density: "low",
+            hairLength: "medium",
+            hairSurface: "rough",
+            elasticResponse: "snaps",
+            scalpOiliness: "dry",
+            goals: ["moisture"],
+            chemicalTreatments: ["colored"],
+          },
+        },
+      },
+    ],
+    personal_plan_prepared_artifacts: [],
+    hair_profiles: [COMPLETE_PROFILE],
+  })
+  let provisioned = 0
+  const deps = {
+    resolveFunnelPackage: async () => resolvedPackage("customerio_scan_return_v1"),
+    provisionStage1Plan: async () => {
+      provisioned++
+      return { status: "completed" }
+    },
+  }
+  const input = {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-pp",
+    expectedQuizSourceKind: "personal_plan" as const,
+    funnelSessionId: "return-session",
+  }
+  assert.equal((await loadPlanBereitReadiness(db as never, input, deps)).status, "source_pending")
+  assert.equal(provisioned, 0)
+  db.tables.personal_plan_prepared_artifacts.push({
+    id: "artifact",
+    lead_id: "lead-pp",
+    user_id: "user-1",
+    status: "attached",
+    quiz_answers: db.tables.leads[0].quiz_answers,
+    canonical_profile: COMPLETE_LEGACY_ANSWERS,
+  })
+  assert.equal((await loadPlanBereitReadiness(db as never, input, deps)).status, "ready")
+  assert.equal(provisioned, 1)
+})
+
+test("exact email return repairs a missing Personal Plan artifact only after the post-access POST", async () => {
+  const answers = {
+    kind: "personal_plan",
+    version: 3,
+    answers: {
+      texture: "wavy",
+      thickness: "fine",
+      density: "low",
+      hairLength: "medium",
+      hairSurface: "rough",
+      elasticResponse: "snaps",
+      scalpOiliness: "dry",
+      goals: ["moisture"],
+      chemicalTreatments: ["colored"],
+    },
+  }
+  const db = new FakeSupabase(
+    {
+      leads: [
+        {
+          id: "lead-pp-return",
+          email: "lea@example.test",
+          quiz_kind: "personal_plan",
+          quiz_answers: answers,
+          user_id: null,
+          updated_at: "2026-09-12T08:00:00.000Z",
+        },
+      ],
+      personal_plan_prepared_artifacts: [],
+      hair_profiles: [],
+    },
+    {
+      link_personal_plan_artifact_to_user: {
+        data: [{ canonical_profile: COMPLETE_LEGACY_ANSWERS }],
+        error: null,
+      },
+    },
+  )
+  const repairCalls: Array<{ leadId: string; userId: string; quizAnswers: unknown }> = []
+  const deps = {
+    resolveFunnelPackage: async () => resolvedPackage("customerio_scan_return_v1"),
+    provisionStage1Plan: async () => ({ status: "completed" }),
+    repairPersonalPlanArtifact: async (input: {
+      leadId: string
+      userId: string
+      quizAnswers: unknown
+    }) => {
+      repairCalls.push(input)
+      db.tables.personal_plan_prepared_artifacts.push({
+        id: "repaired-artifact",
+        lead_id: input.leadId,
+        user_id: input.userId,
+        status: "attached",
+        quiz_answers: input.quizAnswers,
+        canonical_profile: COMPLETE_LEGACY_ANSWERS,
+      })
+      return { status: "repaired" as const, artifactId: "repaired-artifact" }
+    },
+  }
+  const input = {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-pp-return",
+    expectedQuizSourceKind: "personal_plan" as const,
+    funnelSessionId: "exact-return",
+  }
+
+  const initial = await loadPlanBereitInitialReadiness(db as never, input, deps)
+  assert.equal(initial.status, "source_pending")
+  assert.equal(initial.initialAction, "link")
+  assert.equal(repairCalls.length, 0)
+  assert.equal(db.updates.length, 0)
+
+  const linked = await linkExactPlanBereitSourceToProfile(db as never, input, deps)
+  assert.equal(linked.status, "ready")
+  assert.deepEqual(repairCalls, [
+    { leadId: input.leadId, userId: input.userId, quizAnswers: answers },
+  ])
+  assert.equal(db.tables.leads[0].user_id, input.userId)
+  assert.equal(db.tables.personal_plan_prepared_artifacts.length, 1)
+})
+
+test("email return will not use a stale Personal Plan artifact as scanner-ready source", async () => {
+  const oldAnswers = {
+    kind: "personal_plan",
+    version: 3,
+    answers: {
+      texture: "wavy",
+      thickness: "fine",
+      density: "low",
+      hairLength: null,
+      hairSurface: "rough",
+      elasticResponse: "snaps",
+      scalpOiliness: "dry",
+      goals: ["moisture"],
+      chemicalTreatments: ["colored"],
+    },
+  }
+  const newAnswers = {
+    ...oldAnswers,
+    answers: { ...oldAnswers.answers, hairLength: "medium" },
+  }
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-pp-stale",
+        email: "lea@example.test",
+        quiz_kind: "personal_plan",
+        quiz_answers: newAnswers,
+        user_id: "user-1",
+        updated_at: "2026-09-12T08:00:00.000Z",
+      },
+    ],
+    personal_plan_prepared_artifacts: [
+      {
+        id: "artifact-old",
+        lead_id: "lead-pp-stale",
+        user_id: "user-1",
+        status: "attached",
+        quiz_answers: oldAnswers,
+        canonical_profile: COMPLETE_LEGACY_ANSWERS,
+      },
+    ],
+    hair_profiles: [COMPLETE_PROFILE],
+  })
+  const input = {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-pp-stale",
+    expectedQuizSourceKind: "personal_plan" as const,
+    funnelSessionId: "exact-return",
+  }
+  const deps = {
+    resolveFunnelPackage: async () => resolvedPackage("customerio_scan_return_v1"),
+    provisionStage1Plan: async () => ({ status: "completed" }),
+    repairPersonalPlanArtifact: async () => ({ status: "conflict" as const }),
+  }
+  const initial = await loadPlanBereitInitialReadiness(db as never, input, deps)
+  assert.equal(initial.status, "source_pending")
+  assert.equal(initial.initialAction, "link")
+  const blocked = await linkExactPlanBereitSourceToProfile(db as never, input, deps)
+  assert.equal(blocked.status, "invalid_source")
+  assert.equal(db.rpcs.length, 0, "stale artifact must not enter the ordinary linker")
+})
+
 test("a scan_v1 buyer gets the initial need snapshot provisioned inside the link poll", async () => {
   const db = scanFunnelDb()
   const packageLookups: string[] = []
@@ -805,6 +1202,11 @@ test("a scan_v1 buyer gets the initial need snapshot provisioned inside the link
     db.updates.map((update) => [update.table, update.values]),
     [["leads", { user_id: "user-1", status: "linked" }]],
   )
+  assert.equal(
+    db.updates[0].filters.some((filter) => filter.column === "user_id" && filter.value === null),
+    true,
+    "the link cannot steal a lead claimed after the readiness read",
+  )
 })
 
 test("scanner provisioning repeats safely once the lead is already linked", async () => {
@@ -820,10 +1222,9 @@ test("scanner provisioning repeats safely once the lead is already linked", asyn
     },
   })
 
-  // Every pass re-runs the idempotent loadOrCreate (it reuses an existing plan): once
-  // right after the link, once more in the readiness read that reports `ready`.
+  // The read-back performs the idempotent loadOrCreate once for this request.
   // The lead link itself is only written while it is still missing.
-  assert.deepEqual(provisioned, ["user-1", "user-1"])
+  assert.deepEqual(provisioned, ["user-1"])
   assert.equal(db.updates.length, 0)
 })
 
@@ -925,7 +1326,7 @@ test("a lead with no funnel session at all is an organic buyer, not a blocked on
 
   assert.equal(provisionCalls, 0)
   assert.equal(db.upserts.length, 1)
-  assert.equal(readiness.status, "source_pending", "unchanged pre-scanner link outcome")
+  assert.equal(readiness.status, "ready", "the linked profile is visible on the read-back")
   assert.equal(readiness.funnelPackageKey, null, "organic, and said so explicitly")
 })
 
