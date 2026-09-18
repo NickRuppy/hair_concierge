@@ -4,18 +4,21 @@ import CoreText
 struct ProductImage: View {
     let product: ScanProduct
     var body: some View {
+        let shape = RoundedRectangle(cornerRadius: 12, style: .continuous)
         Group {
             if let url = ShopDestination.url(product.imageUrl, httpsOnly: true) {
-                AsyncImage(url: url) { phase in
-                    if let image = phase.image { image.resizable().scaledToFit() }
+                AsyncImage(url: url, transaction: Transaction(animation: .easeOut(duration: 0.25))) { phase in
+                    if let image = phase.image { image.resizable().scaledToFit().padding(6).transition(.opacity) }
                     else { placeholder }
                 }
             } else { placeholder }
-        }.padding(6).background(Color.white).clipShape(RoundedRectangle(cornerRadius: 12))
+        }.frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.white).clipShape(shape)
             .accessibilityLabel("Produktbild: \(product.name)")
     }
+    /// Quiet fixed-size glyph on a tinted tile; it must not grow with the frame.
     private var placeholder: some View {
-        Image(systemName: "photo").resizable().scaledToFit().foregroundStyle(ChaarlieTheme.border).padding(8)
+        Image(systemName: "photo").font(.system(size: 17, weight: .medium)).foregroundStyle(ChaarlieTheme.plumMid.opacity(0.75))
+            .frame(maxWidth: .infinity, maxHeight: .infinity).background(ChaarlieTheme.plumIce)
             .accessibilityLabel("Produktbild nicht verfügbar")
     }
 }
@@ -76,10 +79,11 @@ struct AssessmentSheet: View {
                             .scrollPosition(id: $selectedAlternative)
                         HStack(spacing: 6) {
                             ForEach(alternatives) { alternative in
-                                Circle().fill((selectedAlternative ?? alternatives.first?.id) == alternative.id ? ChaarlieTheme.plum : ChaarlieTheme.border)
-                                    .frame(width: 6, height: 6)
+                                Capsule().fill((selectedAlternative ?? alternatives.first?.id) == alternative.id ? ChaarlieTheme.plum : ChaarlieTheme.border)
+                                    .frame(width: (selectedAlternative ?? alternatives.first?.id) == alternative.id ? 16 : 6, height: 6)
                             }
                         }.frame(maxWidth: .infinity).accessibilityHidden(true)
+                            .animation(reduceAnimations ? nil : ChaarlieTheme.Motion.state, value: selectedAlternative)
                     }
                 } else {
                     unavailableContent

@@ -16,10 +16,15 @@ struct QuizOptionButton: View {
                     }
                 }.frame(maxWidth: .infinity, alignment: .leading)
                 Image(systemName: selected ? (multiple ? "checkmark.square.fill" : "checkmark.circle.fill") : (multiple ? "square" : "circle"))
-                    .foregroundStyle(ChaarlieTheme.plum).accessibilityHidden(true)
+                    .font(.system(size: 20)).foregroundStyle(selected ? ChaarlieTheme.plum : ChaarlieTheme.plumMid)
+                    .contentTransition(.symbolEffect(.replace)).accessibilityHidden(true)
             }.fixedSize(horizontal: false, vertical: true).padding(16).frame(minHeight: 54)
-                .background(selected ? ChaarlieTheme.plumIce : .white, in: RoundedRectangle(cornerRadius: 14))
-                .overlay(RoundedRectangle(cornerRadius: 14).stroke(selected ? ChaarlieTheme.plum : ChaarlieTheme.border))
-        }.buttonStyle(.plain).accessibilityAddTraits(selected ? [.isSelected] : [])
+                .background(selected ? ChaarlieTheme.plumIce : .white, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .strokeBorder(selected ? ChaarlieTheme.plum : ChaarlieTheme.border, lineWidth: selected ? 1.5 : 1))
+                .contentShape(Rectangle())
+                .animation(ChaarlieTheme.Motion.state, value: selected)
+        }.buttonStyle(ChaarliePressStyle()).accessibilityAddTraits(selected ? [.isSelected] : [])
+            .sensoryFeedback(.selection, trigger: selected)
     }
 }

@@ -73,21 +73,31 @@ struct ProfileView: View {
                                             .accessibilityElement(children: .combine)
                                         if answer.id != details.last?.id { Divider() }
                                     }
-                                }.background(.white, in: RoundedRectangle(cornerRadius: 16))
+                                }.chaarlieCard()
                             }
                         }
-                    } else if model.profileError == nil { ProgressView("Haarangaben werden geladen …") }
+                    } else if model.profileError == nil { BusyLabel(text: "Haarangaben werden geladen …") }
                     if let error = model.profileError {
-                        Text(error)
-                        Button("Erneut versuchen") { Task { await model.loadProfile() } }.buttonStyle(ChaarlieButton())
+                        NoticeCard(systemImage: "wifi.slash", message: error) {
+                            Button("Erneut versuchen") { Task { await model.loadProfile() } }.buttonStyle(ChaarlieButton())
+                        }
                     }
                     if let message = model.profileSavedMessage {
-                        Text(message).foregroundStyle(ChaarlieTheme.plum).accessibilityIdentifier("profile.saved")
+                        HStack(spacing: 8) {
+                            Image(systemName: "checkmark.circle.fill").accessibilityHidden(true)
+                            Text(message).chaarlieSystemFont(14, weight: .medium).accessibilityIdentifier("profile.saved")
+                        }.foregroundStyle(ChaarlieTheme.plum).padding(.horizontal, 14).padding(.vertical, 10)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(ChaarlieTheme.plumIce, in: RoundedRectangle(cornerRadius: ChaarlieTheme.Radius.control, style: .continuous))
+                            .transition(.opacity.combined(with: .move(edge: .top)))
                     }
                     Button("Abmelden") { Task { await model.logout() } }.buttonStyle(ChaarlieButton(outline: true))
                         .accessibilityIdentifier("profile.logout")
                 }.padding(24)
+                    .animation(ChaarlieTheme.Motion.state, value: model.profileSavedMessage)
+                    .animation(ChaarlieTheme.Motion.state, value: model.profile == nil)
             }.background(ChaarlieTheme.background).toolbar(.hidden, for: .navigationBar)
+                .sensoryFeedback(.success, trigger: model.profileSavedMessage) { _, message in message != nil }
                 .chaarlieStatusBarBackground()
                 .task { await model.loadProfile() }
                 .sheet(isPresented: $model.profileEditPresented, onDismiss: { model.cancelProfileEdit() }) {
@@ -124,13 +134,12 @@ struct ProfileView: View {
                                 .foregroundStyle(ChaarlieTheme.muted).accessibilityHidden(true)
                         }.frame(maxWidth: .infinity, minHeight: 44, alignment: .leading).padding(16)
                             .contentShape(Rectangle())
-                    }.buttonStyle(.plain).accessibilityElement(children: .combine)
+                    }.buttonStyle(ProfileRowStyle()).accessibilityElement(children: .combine)
                         .accessibilityIdentifier("profile.property.\(property.id)")
                         .accessibilityHint("Angabe bearbeiten")
                     if property.id != properties.last?.id { Divider().padding(.leading, 16) }
                 }
-            }.background(.white, in: RoundedRectangle(cornerRadius: 16))
-                .overlay(RoundedRectangle(cornerRadius: 16).stroke(ChaarlieTheme.border))
+            }.clipShape(RoundedRectangle(cornerRadius: ChaarlieTheme.Radius.card, style: .continuous)).chaarlieCard()
         }
     }
     private func propertyText(_ property: ProfileProperty, profile: HairProfile) -> some View {
@@ -138,5 +147,13 @@ struct ProfileView: View {
             Text(property.title).chaarlieSystemFont(16)
             Text(property.value(in: profile)).chaarlieSystemFont(14).foregroundStyle(ChaarlieTheme.muted)
         }.fixedSize(horizontal: false, vertical: true).frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+/// Grouped rows highlight in place; scaling a single row inside a shared card would tear its edges.
+private struct ProfileRowStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label.background(configuration.isPressed ? ChaarlieTheme.plumIce : .clear)
+            .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
     }
 }

@@ -27,7 +27,8 @@ struct SignedOutEntryView: View {
                     LoginView(model: app)
                     if app.attempt == nil {
                         Button("Neu hier? Haar-Check starten") { showingLogin = false }
-                            .buttonStyle(ChaarlieTextButton()).padding(.bottom, 16)
+                            .buttonStyle(ChaarlieTextButton()).chaarlieSystemFont(15, weight: .semibold)
+                            .foregroundStyle(ChaarlieTheme.plum).padding(.horizontal, 24).padding(.bottom, 16)
                     }
                 }
             } else if let onboarding {

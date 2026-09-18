@@ -81,10 +81,12 @@ struct RootView: View {
             switch model.admission {
             case .signedOut: SignedOutEntryView(app: model, prefersExistingLogin: prefersExistingLogin)
             case .loading:
-                VStack(spacing: 20) {
-                    ProgressView("Deine Haarangaben werden geladen …")
+                VStack(spacing: 22) {
+                    Text("chaarlie").font(ChaarlieTheme.wordmark(34))
+                    BusyLabel(text: "Deine Haarangaben werden geladen …")
                     Button("Abmelden") { Task { await model.logout() } }
-                }
+                        .chaarlieSystemFont(14, weight: .medium).foregroundStyle(ChaarlieTheme.muted).frame(minHeight: 44)
+                }.padding(24).transition(.opacity)
             case .profileRequired:
                 MissingProfileCompletionView(app: model)
             case .unavailable:
@@ -99,8 +101,12 @@ struct RootView: View {
                 }
                 .tint(ChaarlieTheme.plum)
                 .onChange(of: model.selectedTab) { old, _ in model.changeTab(from: old) }
+                .sensoryFeedback(.selection, trigger: model.selectedTab)
+                .sensoryFeedback(.success, trigger: model.scanResult?.id) { _, id in id != nil }
+                .transition(.opacity)
             }
         }
+        .animation(.easeInOut(duration: 0.3), value: model.admission)
         .chaarlieSystemFont().foregroundStyle(ChaarlieTheme.ink)
         .tint(ChaarlieTheme.plum).frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(ChaarlieTheme.background).task {
@@ -224,7 +230,7 @@ struct RecoveryView: View {
             VStack(alignment: .leading, spacing: 24) {
                 Text("chaarlie").font(ChaarlieTheme.wordmark())
                 Text(title).chaarlieHeading(30)
-                Text(message)
+                Text(message).foregroundStyle(ChaarlieTheme.muted)
                 if retry { Button("Erneut versuchen") { Task { await model.bootstrap() } }.buttonStyle(ChaarlieButton()) }
                 Button("Abmelden") { Task { await model.logout() } }.buttonStyle(ChaarlieButton(outline: true))
             }.padding(24)
