@@ -138,7 +138,9 @@ export async function reconcileMobileResearchDeliveries(
       p_error_code: result.error ?? null,
     })
     const persistedAction =
-      result.action === "retry" && row.send_attempts + Number(sent) >= 5
+      result.action === "retry" &&
+      result.error !== "push_provider_credentials" &&
+      row.send_attempts + Number(sent) >= 5
         ? "failed_terminal"
         : result.action
     if (saved) stats[persistedAction] += 1

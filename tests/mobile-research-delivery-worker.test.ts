@@ -70,6 +70,7 @@ function fixture(
           String(args.p_delivery_id),
           args.p_action === "retry" &&
             (options.sendAttempts ?? 0) >= 4 &&
+            args.p_error_code !== "push_provider_credentials" &&
             states.get(String(args.p_delivery_id)) === "sending"
             ? "failed_terminal"
             : String(args.p_action),
@@ -254,6 +255,20 @@ test("an APNs credential fault is tagged for the outbox refund and retried slowl
   const settled = f.calls.find((call) => call.name === "finish_mobile_research_delivery")
   assert.equal(settled?.args.p_error_code, "push_provider_credentials")
   assert.equal(Date.parse(String(settled?.args.p_next_attempt_at)) - f.deps.now(), 3600 * 1000)
+})
+
+test("a fifth APNs credential fault reports the refunded retry rather than a terminal failure", async () => {
+  const f = fixture({ channels: ["push"], sendAttempts: 4 })
+  f.deps.preparePush = () => async () => ({
+    state: "retryable",
+    apnsId: "apns-receipt",
+    reason: "InvalidProviderToken",
+    retryAfterSeconds: 3600,
+  })
+  const result = await reconcileMobileResearchDeliveries(f.client, f.deps)
+  assert.equal(result.retry, 1)
+  assert.equal(result.failed_terminal, 0)
+  assert.equal(f.states.get("push"), "retry")
 })
 
 test("fifth definitive refusal reports the terminal state persisted by the outbox", async () => {
