@@ -18,6 +18,7 @@ export const mobileScanResolveRequestSchema = z
 const productSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
+  displayName: z.string().min(1).optional(),
   brand: z.string().nullable(),
   category: z.string().min(1),
   categoryLabel: z.string().min(1),
@@ -78,6 +79,7 @@ const assessmentSchema = z.object({
 })
 
 const retailerIdentifiedProductSchema = z.object({
+  displayName: z.string().min(1).optional(),
   productName: z.string().min(1),
   brand: z.string().min(1).nullable(),
   suggestedCategory: z.string().min(1).nullable(),
@@ -143,6 +145,7 @@ export type MobileScanResolveResult = z.infer<typeof mobileScanResolveResultSche
 export const mobileScanSearchResultSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
+  displayName: z.string().min(1).optional(),
   brand: z.string().nullable(),
   category: z.string().min(1),
   categoryLabel: z.string().min(1),

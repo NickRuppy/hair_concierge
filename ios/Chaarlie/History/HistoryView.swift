@@ -173,7 +173,10 @@ private struct HistoryRow: View {
                     // Withdrawn entries recede through colour that still meets text contrast.
                     .foregroundStyle(entry.status == .unavailable ? ChaarlieTheme.muted : ChaarlieTheme.ink)
                     .accessibilityLabel(entry.title)
-                if let brand = entry.brand { Text(brand).chaarlieSystemFont(12).foregroundStyle(ChaarlieTheme.muted) }
+                if let category = entry.categoryLabel {
+                    Text(category).chaarlieSystemFont(12, weight: .semibold, relativeTo: .caption)
+                        .foregroundStyle(ChaarlieTheme.plum)
+                }
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 8) { status; time }
                     VStack(alignment: .leading, spacing: 6) { status; time }

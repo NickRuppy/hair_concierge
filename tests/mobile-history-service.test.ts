@@ -27,7 +27,9 @@ const row = {
 const productRow = {
   id: product,
   name: "Test Shampoo",
-  brand: "Marke",
+  brand: "Legacy Marke",
+  brand_identity: { canonical_name: "Marke" },
+  product_line: { canonical_name: "Repair" },
   image_url: "https://example.test/image.jpg",
   category_key: "shampoo",
   is_active: true,
@@ -190,12 +192,16 @@ test("history status comes from live owner research and catalog state without ca
   const available = (await loadMobileHistory(db, owner)).entries[0]
   assert.equal(available.status, "available")
   assert.equal(available.productName, "Test Shampoo")
+  assert.equal(available.displayName, "Marke Repair Test Shampoo")
+  assert.equal(available.brand, "Marke")
+  assert.equal(available.categoryLabel, "Shampoo")
   assert.equal(available.barcodeGtin, row.barcode_ean)
   assert.equal("verdict" in available, false)
   quarantine = true
   const quarantined = (await loadMobileHistory(db, owner)).entries[0]
   assert.equal(quarantined.status, "unavailable")
   assert.equal(quarantined.productName, null)
+  assert.equal(quarantined.displayName, null)
   assert.equal(quarantined.brand, null)
   assert.equal(quarantined.imageUrl, null)
   assert.equal(quarantined.barcodeGtin, row.barcode_ean)
@@ -204,6 +210,7 @@ test("history status comes from live owner research and catalog state without ca
   const research = (await loadMobileHistory(db, owner)).entries[0]
   assert.equal(research.status, "in_research")
   assert.equal(research.productName, null)
+  assert.equal(research.displayName, null)
   assert.equal(research.brand, null)
   assert.equal(research.imageUrl, null)
   quarantine = false

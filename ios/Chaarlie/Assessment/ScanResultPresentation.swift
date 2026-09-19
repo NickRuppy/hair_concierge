@@ -43,14 +43,23 @@ private struct ResearchSheet: View {
     let barcode: String
     let identified: IdentifiedScanProduct?
     @State private var choosingCategory = false
+    @State private var selectedCategoryKey: String?
+    @State private var retailerMatchRejected = false
     // These are the existing intake categories. Their labels carry no new
     // assessment rules or inferred classification from the scanned barcode.
-    private let categories: [(String, String)] = [
+    private static let categories: [(String, String)] = [
         ("shampoo", "Shampoo"), ("conditioner", "Conditioner"), ("leave_in", "Leave-in"),
         ("mask", "Maske"), ("oil", "Haaröl"), ("dry_shampoo", "Trockenshampoo"),
         ("deep_cleansing_shampoo", "Tiefenreinigungsshampoo"), ("bondbuilder", "Bondbuilder"),
         ("heat_protectant", "Hitzeschutz"), ("scalp_care", "Kopfhautpflege")
     ]
+    init(model: AppModel, barcode: String, identified: IdentifiedScanProduct?) {
+        self.model = model
+        self.barcode = barcode
+        self.identified = identified
+        let suggestion = identified?.suggestedCategory
+        _selectedCategoryKey = State(initialValue: Self.categories.contains { $0.0 == suggestion } ? suggestion : nil)
+    }
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private var motionReduced: Bool {
@@ -60,7 +69,13 @@ private struct ResearchSheet: View {
         return reduceMotion
     }
     private var suggestion: (String, String)? {
-        categories.first { $0.0 == identified?.suggestedCategory }
+        Self.categories.first { $0.0 == identified?.suggestedCategory }
+    }
+    private var selectedCategory: (String, String)? {
+        Self.categories.first { $0.0 == selectedCategoryKey }
+    }
+    private var activeIdentified: IdentifiedScanProduct? {
+        retailerMatchRejected ? nil : identified
     }
     var body: some View {
         Group {
@@ -111,9 +126,18 @@ private struct ResearchSheet: View {
     private var chooser: some View {
         VStack(alignment: .leading, spacing: 20) {
             header
-            if let identified { identityPreview(identified) }
-            Text(identified != nil ? "Produkt erkannt" : "Noch nicht im Katalog").chaarlieHeading(30)
+            Text(activeIdentified != nil ? "Produkt gefunden" : "Noch nicht im Katalog").chaarlieHeading(30)
                 .accessibilityIdentifier("research.status").accessibilityAddTraits(.isHeader)
+            if let product = activeIdentified {
+                identityPreview(product)
+                Button("Nicht dein Produkt?") {
+                    retailerMatchRejected = true
+                    choosingCategory = true
+                    selectedCategoryKey = nil
+                }
+                .frame(minHeight: 44)
+                .accessibilityIdentifier("research.reject")
+            }
             if model.researchChecking {
                 BusyLabel(text: "Prüfstatus wird geladen …")
             } else if !model.researchChecked {
@@ -131,45 +155,75 @@ private struct ResearchSheet: View {
                         }
                     }
                 }
-                if let suggestion, !choosingCategory {
-                    Text(categoryQuestion(suggestion.0, label: suggestion.1))
+                if activeIdentified != nil {
+                    Text("Als was verwendest du das Produkt?")
                         .chaarlieSystemFont(20, weight: .semibold, relativeTo: .title2)
-                    Button {
-                        Task { await model.submitResearch(category: suggestion.0) }
-                    } label: {
-                        HStack {
-                            if model.researchBusy { ProgressView().tint(.white) }
-                            Text("Als \(suggestion.1) einreichen")
-                        }
-                    }.buttonStyle(ChaarlieButton()).disabled(model.researchBusy || model.researchRequest != nil)
-                        .accessibilityIdentifier("research.suggestion")
-                    Button("Andere Produktart") { choosingCategory = true }
+                } else {
+                    Text("Welche Produktart?").chaarlieSystemFont(20, weight: .semibold, relativeTo: .title2)
+                }
+                if let suggestion, !choosingCategory, activeIdentified != nil {
+                    categoryChoice(suggestion, identifier: "research.suggestion")
+                    Button("Andere Kategorie") { choosingCategory = true }
                         .frame(maxWidth: .infinity, minHeight: 44)
                         .disabled(model.researchBusy || model.researchRequest != nil)
                 } else {
-                    Text("Welche Produktart?").chaarlieSystemFont(20, weight: .semibold, relativeTo: .title2)
                     categoryGrid
+                }
+                if let selectedCategory {
+                    Button {
+                        let decision: ResearchRequest.RetailerMatchDecision? = identified == nil ? nil :
+                            (retailerMatchRejected ? .rejected : .accepted)
+                        Task { await model.submitResearch(category: selectedCategory.0,
+                                                          retailerMatchDecision: decision) }
+                    } label: {
+                        HStack {
+                            if model.researchBusy { ProgressView().tint(.white) }
+                            Text("Zur Prüfung einreichen")
+                        }
+                    }
+                    .buttonStyle(ChaarlieButton())
+                    .disabled(model.researchBusy || model.researchRequest != nil)
+                    .accessibilityIdentifier("research.submit")
                 }
             }
         }.padding(24)
             .background { GeometryReader { proxy in
                 Color.clear.preference(key: ResearchConfirmationHeightKey.self,
-                    value: suggestion != nil && !choosingCategory ? proxy.size.height : 0)
+                    value: activeIdentified != nil && !choosingCategory ? proxy.size.height : 0)
             } }
+    }
+    private func categoryChoice(_ category: (String, String), identifier: String? = nil) -> some View {
+        let chosen = selectedCategoryKey == category.0
+        return Button { selectedCategoryKey = category.0 } label: {
+            HStack(spacing: 10) {
+                Text(category.1).chaarlieSystemFont(16, weight: .semibold)
+                Spacer()
+                if chosen { Image(systemName: "checkmark.circle.fill").foregroundStyle(ChaarlieTheme.plum) }
+            }
+            .padding(.horizontal, 16).padding(.vertical, 14)
+            .frame(maxWidth: .infinity, minHeight: 54, alignment: .leading)
+            .foregroundStyle(chosen ? ChaarlieTheme.plum : ChaarlieTheme.ink)
+            .background(chosen ? ChaarlieTheme.plumIce : .white,
+                        in: RoundedRectangle(cornerRadius: ChaarlieTheme.Radius.control, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: ChaarlieTheme.Radius.control, style: .continuous)
+                .strokeBorder(chosen ? ChaarlieTheme.plum : ChaarlieTheme.border, lineWidth: chosen ? 1.5 : 1))
+        }
+        .buttonStyle(ChaarliePressStyle())
+        .disabled(model.researchBusy || model.researchRequest != nil)
+        .accessibilityLabel(chosen ? "\(category.1), ausgewählt" : category.1)
+        .accessibilityIdentifier(identifier ?? "research.category.\(category.0)")
     }
     private var categoryGrid: some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: typeSize.isAccessibilitySize ? 1 : 2), spacing: 10) {
-            ForEach(Array(categories.enumerated()), id: \.element.0) { index, category in
-                let chosen = model.researchRequest?.category == category.0
-                Button {
-                    Task { await model.submitResearch(category: category.0) }
-                } label: {
+            ForEach(Array(Self.categories.enumerated()), id: \.element.0) { index, category in
+                let chosen = selectedCategoryKey == category.0
+                Button { selectedCategoryKey = category.0 } label: {
                     HStack(spacing: 8) {
                         Text(GermanLineBreaks.text(category.1)).chaarlieSystemFont(15, weight: .semibold)
                             .accessibilityLabel(category.1)
                             .fixedSize(horizontal: false, vertical: true)
                         Spacer(minLength: 0)
-                        if chosen && model.researchBusy { ProgressView().tint(ChaarlieTheme.plum) }
+                        if chosen { Image(systemName: "checkmark.circle.fill").foregroundStyle(ChaarlieTheme.plum) }
                     }.padding(.horizontal, 16).padding(.vertical, 12)
                         .frame(maxWidth: .infinity, minHeight: 58, alignment: .leading)
                         .foregroundStyle(chosen ? ChaarlieTheme.plum : ChaarlieTheme.ink)
@@ -178,6 +232,8 @@ private struct ResearchSheet: View {
                             .strokeBorder(chosen ? ChaarlieTheme.plum : ChaarlieTheme.border, lineWidth: chosen ? 1.5 : 1))
                         .contentShape(Rectangle())
                 }.buttonStyle(ChaarliePressStyle()).disabled(model.researchBusy || model.researchRequest != nil)
+                    .accessibilityLabel(chosen ? "\(category.1), ausgewählt" : category.1)
+                    .accessibilityIdentifier("research.category.\(category.0)")
                     .opacity(model.researchRequest != nil && !chosen ? 0.5 : 1)
                     .chaarlieReveal(index)
             }
@@ -191,17 +247,9 @@ private struct ResearchSheet: View {
                     .frame(width: 72, height: 88).accessibilityHidden(true)
             }
             VStack(alignment: .leading, spacing: 6) {
-                Text(product.productName).chaarlieSystemFont(17, weight: .semibold)
-                if let brand = product.brand { Text(brand).chaarlieSystemFont(13).foregroundStyle(ChaarlieTheme.muted) }
+                Text(product.title).chaarlieSystemFont(17, weight: .semibold)
             }.fixedSize(horizontal: false, vertical: true)
         }.accessibilityElement(children: .combine)
-    }
-    private func categoryQuestion(_ category: String, label: String) -> String {
-        switch category {
-        case "mask": "Ist das eine Maske?"
-        case "scalp_care": "Ist das eine Kopfhautpflege?"
-        default: "Ist das ein \(label)?"
-        }
     }
 }
 

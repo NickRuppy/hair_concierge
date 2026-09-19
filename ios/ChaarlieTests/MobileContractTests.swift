@@ -40,6 +40,25 @@ final class MobileContractTests: XCTestCase {
         XCTAssertTrue(result.mismatchSummary?.hasPrefix("Pflegegewicht: mittel statt leicht") == true)
         XCTAssertEqual(result.rows?.count, 3)
     }
+    func testProductIdentityUsesRenderReadyTitleAndKeepsCategorySeparate() throws {
+        let product = try JSONDecoder().decode(ScanProduct.self, from: Data(#"{"id":"p1","name":"Leave-In Moisturizing Mist","displayName":"NEQI x @_the.beautiful.people Leave-In Moisturizing Mist","brand":"Neqi","category":"leave_in","categoryLabel":"Leave-in","imageUrl":null,"priceEur":12.99,"currency":"EUR","purchaseUrl":null}"#.utf8))
+        XCTAssertEqual(product.title, "NEQI x @_the.beautiful.people Leave-In Moisturizing Mist")
+        XCTAssertEqual(product.detail, "Leave-in · ca. 12,99 €")
+        XCTAssertFalse(product.detail.contains("Neqi"))
+
+        let legacy = try JSONDecoder().decode(ScanProduct.self, from: Data(#"{"id":"p2","name":"Legacy Shampoo","brand":"Legacy","category":"shampoo","categoryLabel":"Shampoo","imageUrl":null,"priceEur":null,"currency":null,"purchaseUrl":null}"#.utf8))
+        XCTAssertEqual(legacy.title, "Legacy Shampoo")
+    }
+    func testResearchRequestEncodesOptionalRetailerMatchDecision() throws {
+        let accepted = ResearchRequest(identifier: .init(type: "ean", value: "4001638530378"),
+                                       category: "shampoo", retailerMatchDecision: .accepted)
+        let acceptedObject = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(accepted)) as? [String: Any])
+        XCTAssertEqual(acceptedObject["retailerMatchDecision"] as? String, "accepted")
+
+        let legacy = ResearchRequest(identifier: .init(type: "ean", value: "4001638530378"), category: "shampoo")
+        let legacyObject = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(legacy)) as? [String: Any])
+        XCTAssertNil(legacyObject["retailerMatchDecision"])
+    }
     func testGlossaryStopDecodesOldPayloadWithoutMeaning() throws {
         let stop = try JSONDecoder().decode(ScanRow.Stop.self, from: Data(#"{"id":"light","label":"leicht"}"#.utf8))
         XCTAssertNil(stop.meaning)

@@ -13,7 +13,7 @@ struct ProductImage: View {
                 }
             } else { placeholder }
         }.frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.white).clipShape(shape)
-            .accessibilityLabel("Produktbild: \(product.name)")
+            .accessibilityLabel("Produktbild: \(product.title)")
     }
     /// Quiet fixed-size glyph on a tinted tile; it must not grow with the frame.
     private var placeholder: some View {
@@ -46,7 +46,7 @@ struct AssessmentSheet: View {
                     HStack(alignment: .top, spacing: 12) {
                         ProductImage(product: product).frame(width: 52, height: 64)
                         VStack(alignment: .leading, spacing: 5) {
-                            Text(product.name).chaarlieSystemFont(15, weight: .bold).fixedSize(horizontal: false, vertical: true)
+                            Text(product.title).chaarlieSystemFont(15, weight: .bold).fixedSize(horizontal: false, vertical: true)
                             Text(product.detail).chaarlieSystemFont(12).foregroundStyle(ChaarlieTheme.muted).fixedSize(horizontal: false, vertical: true)
                         }.frame(maxWidth: .infinity, alignment: .leading)
                         CloseButton(label: "Ergebnis schließen", action: onDismiss)
@@ -98,7 +98,7 @@ struct AssessmentSheet: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if let product = result.product, let url = ShopDestination.url(product.purchaseUrl) {
                 Button("Kaufen ↗") { openURL(url) }.buttonStyle(ChaarlieButton(outline: true))
-                    .accessibilityLabel("\(product.name) kaufen, öffnet den Shop")
+                    .accessibilityLabel("\(product.title) kaufen, öffnet den Shop")
                     .accessibilityIdentifier("assessment.buy")
                     .padding(16).background(.white).overlay(alignment: .top) { Divider() }
             }
@@ -142,7 +142,7 @@ struct AlternativeCard: View {
             ProductImage(product: alternative.product).frame(maxWidth: .infinity).frame(height: 88)
                 .background(ChaarlieTheme.plumIce)
             VStack(alignment: .leading, spacing: 12) {
-                Text(alternative.product.name).chaarlieSystemFont(14, weight: .bold).fixedSize(horizontal: false, vertical: true)
+                Text(alternative.product.title).chaarlieSystemFont(14, weight: .bold).fixedSize(horizontal: false, vertical: true)
                 if revealed {
                     Text(alternative.verdictTitle)
                         .chaarlieSystemFont(18, weight: .semibold, relativeTo: .title).foregroundStyle(alternative.verdict == .supportive ? Color(hex: 0x805a16) : ChaarlieTheme.ink)
@@ -151,7 +151,7 @@ struct AlternativeCard: View {
                     ComparisonTable(rows: alternative.rows, compact: true, selected: selected, explain: explain)
                     if let url = ShopDestination.url(alternative.product.purchaseUrl) {
                         Button("Kaufen ↗") { openURL(url) }.buttonStyle(ChaarlieButton(outline: true))
-                            .accessibilityLabel("\(alternative.product.name) kaufen, öffnet den Shop")
+                            .accessibilityLabel("\(alternative.product.title) kaufen, öffnet den Shop")
                     }
                 }
             }.padding(.horizontal, 12).padding(.bottom, 14)

@@ -1565,6 +1565,30 @@ test("unknown scanned EAN creates an anchorless pending submission with the norm
   assert.deepEqual(fake.calls, ["insert_submission"])
 })
 
+test("scan submission persists the explicit retailer match decision as privacy-safe provenance", async () => {
+  const fake = createFakeRepository()
+
+  await submitScanProductIntake({
+    userId: USER_ID,
+    input: scanProductIntakeSubmissionSchema.parse({
+      category: "shampoo",
+      frequency_range: null,
+      scannedIdentifier: { type: "ean", value: "4001638530378" },
+    }),
+    retailerMatchDecision: "rejected",
+    repository: fake.repository,
+    isMatchScanEligible: async () => false,
+    now: () => "2026-09-19T18:00:00.000Z",
+  })
+
+  assert.deepEqual(fake.submissions[0].intake_history[1], {
+    at: "2026-09-19T18:00:00.000Z",
+    source: "retailer_match_decision",
+    retailer: "dm",
+    decision: "rejected",
+  })
+})
+
 test("dm enrichment prefills absent scan text only after original scan matching falls through, and is staging provenance", async () => {
   const fake = createFakeRepository()
 

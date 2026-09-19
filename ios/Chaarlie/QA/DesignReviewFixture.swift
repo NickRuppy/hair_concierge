@@ -187,8 +187,8 @@ private enum DesignReviewData {
             reason: nil, productId: nil, missingFacts: nil, code: nil)
     }
     static let products: [ScanProduct] = [
-        .init(id: "design-long-product", name: "Chaarlie Designprüfung Sanftes Feuchtigkeits-Shampoo für trockene und empfindliche Kopfhaut mit sehr langem Produktnamen", brand: "Synthetische Testmarke mit langem Namen", category: "shampoo", categoryLabel: "Shampoo", imageUrl: nil, priceEur: nil, currency: nil, purchaseUrl: nil),
-        .init(id: "design-second-product", name: "Leichter Conditioner", brand: "Chaarlie Designprüfung", category: "conditioner", categoryLabel: "Conditioner", imageUrl: nil, priceEur: nil, currency: nil, purchaseUrl: nil)
+        .init(id: "design-long-product", name: "Sanftes Feuchtigkeits-Shampoo für trockene und empfindliche Kopfhaut mit sehr langem Produktnamen", displayName: "Synthetische Testmarke Pflegelinie Sanftes Feuchtigkeits-Shampoo für trockene und empfindliche Kopfhaut mit sehr langem Produktnamen", brand: "Synthetische Testmarke", category: "shampoo", categoryLabel: "Shampoo", imageUrl: nil, priceEur: nil, currency: nil, purchaseUrl: nil),
+        .init(id: "design-second-product", name: "Leichter Conditioner", displayName: "Chaarlie Designprüfung Balance Leichter Conditioner", brand: "Chaarlie Designprüfung", category: "conditioner", categoryLabel: "Conditioner", imageUrl: nil, priceEur: nil, currency: nil, purchaseUrl: nil)
     ]
 }
 
@@ -269,7 +269,7 @@ actor DesignReviewTransport: HTTPTransport {
                 var result = try JSONDecoder().decode(ScanResult.self, from: Data(#"{"contractVersion":1,"kind":"submission_required","missingFacts":["unknown_product"],"historySaved":true}"#.utf8))
                 if scenario == .researchUnsaved { result.historySaved = false }
                 if [.researchIdentified, .researchIdentifiedPending, .researchIdentifiedError, .researchStatusLoading, .researchNoSuggestion].contains(scenario) {
-                    result.identified = IdentifiedScanProduct(productName: "Shampoo Derma x Pro Hydra Pflege, 250 ml", brand: "head&shoulders",
+                    result.identified = IdentifiedScanProduct(displayName: "head&shoulders Derma x Pro Hydra Pflege Shampoo, 250 ml", productName: "Shampoo Derma x Pro Hydra Pflege, 250 ml", brand: "head&shoulders",
                         imageUrl: nil, suggestedCategory: scenario == .researchNoSuggestion ? "unsupported" : "shampoo")
                 }
                 return (try JSONEncoder().encode(result),
@@ -305,7 +305,7 @@ actor DesignReviewTransport: HTTPTransport {
             } else {
                 var entries = [
                     HistoryEntry(id: "unknown", barcodeGtin: "4006381333931", productId: nil, productName: nil, brand: nil, imageUrl: nil, lastSeenAt: "2026-09-18T12:05:00Z", status: submittedResearch || [.researchPending, .researchIdentifiedPending].contains(scenario) ? .in_research : .not_in_catalog),
-                    HistoryEntry(id: "known", barcodeGtin: nil, productId: "design-long-product", productName: DesignReviewData.products[0].name, brand: DesignReviewData.products[0].brand, imageUrl: nil, lastSeenAt: "2026-09-18T11:00:00Z", status: .available),
+                    HistoryEntry(id: "known", barcodeGtin: nil, productId: "design-long-product", productName: DesignReviewData.products[0].name, displayName: DesignReviewData.products[0].displayName, brand: DesignReviewData.products[0].brand, categoryLabel: DesignReviewData.products[0].categoryLabel, imageUrl: nil, lastSeenAt: "2026-09-18T11:00:00Z", status: .available),
                     HistoryEntry(id: "pending", barcodeGtin: "96385074", productId: nil, productName: nil, brand: nil, imageUrl: nil, lastSeenAt: "2026-09-17T09:00:00Z", status: .in_research),
                     HistoryEntry(id: "unavailable", barcodeGtin: nil, productId: "withdrawn", productName: nil, brand: nil, imageUrl: nil, lastSeenAt: "2026-09-16T09:00:00Z", status: .unavailable)
                 ]

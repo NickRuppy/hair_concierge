@@ -3,6 +3,8 @@ import { z } from "zod"
 import { canonicalizeGtin, gtinQueryVariants } from "@/lib/product-identity/normalize"
 import { OPEN_SUBMISSION_STATUSES } from "@/lib/product-intake/submissions"
 import { PERSONAL_PLAN_PRODUCT_CATEGORIES } from "@/lib/personal-plan/products/contracts"
+import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
+import { composeProductIdentityTitle } from "@/lib/product-identity/display-title"
 import { loadQuarantinedProductIdsAmong } from "@/lib/scan/catalog-eligibility"
 import { validateEanInput } from "@/lib/scan/identifier-lookup"
 import { MobileError } from "./errors"
@@ -14,7 +16,9 @@ export type MobileHistoryEntry = {
   barcodeGtin: string | null
   productId: string | null
   productName: string | null
+  displayName: string | null
   brand: string | null
+  categoryLabel: string | null
   imageUrl: string | null
   lastSeenAt: string
   isFavorite: boolean
@@ -43,6 +47,12 @@ type ProductRow = {
   category_key: string
   is_active: boolean
   lifecycle_status: string
+  brand_identity?: { canonical_name: string | null } | { canonical_name: string | null }[] | null
+  product_line?: { canonical_name: string | null } | { canonical_name: string | null }[] | null
+}
+
+function firstRelation<T>(value: T | T[] | null | undefined): T | null {
+  return Array.isArray(value) ? (value[0] ?? null) : (value ?? null)
 }
 const PAGE_SIZE = 100
 const cursorSchema = z.object({ time: z.iso.datetime({ offset: true }), id: z.uuid() }).strict()
@@ -213,7 +223,9 @@ export async function loadMobileHistory(
     ids.length
       ? client
           .from("products")
-          .select("id,name,brand,image_url,category_key,is_active,lifecycle_status")
+          .select(
+            "id,name,brand,image_url,category_key,is_active,lifecycle_status,brand_identity:brands(canonical_name),product_line:product_lines(canonical_name)",
+          )
           .in("id", ids)
       : { data: [], error: null },
     loadQuarantinedProductIdsAmong(client, ids),
@@ -246,6 +258,12 @@ export async function loadMobileHistory(
     // Retain the user's history identity/status, without redisplaying the hidden
     // catalog name, brand or image (including while a real request is pending).
     const displayProduct = product && !quarantined.has(product.id) ? product : undefined
+    const displayBrand = displayProduct
+      ? (firstRelation(displayProduct.brand_identity)?.canonical_name ?? displayProduct.brand)
+      : null
+    const displayLine = displayProduct
+      ? (firstRelation(displayProduct.product_line)?.canonical_name ?? null)
+      : null
     const available = Boolean(
       product &&
       product.is_active &&
@@ -261,7 +279,17 @@ export async function loadMobileHistory(
       barcodeGtin: row.barcode_ean,
       productId,
       productName: displayProduct?.name ?? null,
-      brand: displayProduct?.brand ?? null,
+      displayName: displayProduct
+        ? composeProductIdentityTitle({
+            brand: displayBrand,
+            productLine: displayLine,
+            name: displayProduct.name,
+          })
+        : null,
+      brand: displayBrand,
+      categoryLabel: displayProduct
+        ? (CATEGORY_COPY[displayProduct.category_key as keyof typeof CATEGORY_COPY]?.label ?? null)
+        : null,
       imageUrl: safeImageUrl(displayProduct?.image_url ?? null),
       lastSeenAt: row.last_seen_at,
       isFavorite: Boolean(row.is_favorite),

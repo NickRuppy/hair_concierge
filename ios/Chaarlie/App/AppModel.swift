@@ -662,9 +662,10 @@ final class AppModel {
         guard account == generation, operation == scanOperation else { return }
         researchChecking = false
     }
-    func submitResearch(category: String) async {
+    func submitResearch(category: String, retailerMatchDecision: ResearchRequest.RetailerMatchDecision? = nil) async {
         guard let identifier = lastRequest?.identifier, !researchBusy, !researchChecking, !researchPending, researchChecked else { return }
-        let request = researchRequest ?? ResearchRequest(identifier: identifier, category: category)
+        let request = researchRequest ?? ResearchRequest(identifier: identifier, category: category,
+                                                          retailerMatchDecision: retailerMatchDecision)
         researchRequest = request
         let account = generation, operation = scanOperation
         researchBusy = true; researchError = nil

@@ -120,6 +120,70 @@ test("mobile submit reruns dm after open-request protection, persists its truste
     }),
   )
 })
+test("mobile submit records an accepted retailer match and uses only server-revalidated enrichment", async () => {
+  const decisions: unknown[] = []
+  const accepted = mobileScanSubmitSchema.parse({
+    ...input,
+    retailerMatchDecision: "accepted",
+  })
+  await submitMobileScan(
+    {} as never,
+    owner,
+    accepted,
+    deps({
+      resolveRetailerEnrichment: async () => ({
+        outcome: "hit",
+        durationMs: 10,
+        deadlineMs: 1500,
+        enrichment: {
+          source: "dm",
+          fetchedAt: "2026-09-19T10:00:00.000Z",
+          gtin: "0000096385074",
+          dan: "2973187",
+          productName: "Server product",
+          brand: "DM",
+          imageUrl: null,
+          productUrl: null,
+          ingredientsText: null,
+          description: null,
+          keyBenefits: null,
+          suggestedCategory: "shampoo",
+        },
+      }),
+      submit: async (params) => {
+        decisions.push(params.retailerMatchDecision)
+        assert.equal(params.enrichment?.productName, "Server product")
+        return pending
+      },
+    }),
+  )
+  assert.deepEqual(decisions, ["accepted"])
+})
+
+test("mobile submit records a rejected retailer match without looking up or attaching dm", async () => {
+  let lookups = 0
+  const rejected = mobileScanSubmitSchema.parse({
+    ...input,
+    retailerMatchDecision: "rejected",
+  })
+  await submitMobileScan(
+    {} as never,
+    owner,
+    rejected,
+    deps({
+      resolveRetailerEnrichment: async () => {
+        lookups++
+        throw new Error("must not lookup a rejected candidate")
+      },
+      submit: async (params) => {
+        assert.equal(params.retailerMatchDecision, "rejected")
+        assert.equal(params.enrichment, null)
+        return pending
+      },
+    }),
+  )
+  assert.equal(lookups, 0)
+})
 test("an already-open mobile request skips the repeated dm lookup", async () => {
   let lookedUp = 0
   await submitMobileScan(

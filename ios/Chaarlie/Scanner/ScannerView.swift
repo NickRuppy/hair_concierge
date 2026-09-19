@@ -213,7 +213,7 @@ struct ProductSearchView: View {
                             ForEach(Array(model.searchResults.enumerated()), id: \.element.id) { index, product in
                                 Button { Task { await model.resolve(.product(product.id)) } } label: { resultRow(product) }
                                     .buttonStyle(ChaarliePressStyle())
-                                    .accessibilityLabel([product.name, product.categoryLabel].compactMap { $0 }.joined(separator: ", "))
+                                    .accessibilityLabel([product.title, product.categoryLabel].joined(separator: ", "))
                                     .chaarlieReveal(index)
                             }
                         }
@@ -300,9 +300,9 @@ struct ProductSearchView: View {
     }
     private func productText(_ product: ScanProduct) -> some View {
         VStack(alignment: .leading, spacing: 9) {
-            Text(GermanLineBreaks.text(product.name)).chaarlieSystemFont(15, weight: .bold)
+            Text(GermanLineBreaks.text(product.title)).chaarlieSystemFont(15, weight: .bold)
                 .lineLimit(typeSize.isAccessibilitySize ? nil : 3).truncationMode(.tail)
-                .accessibilityLabel(product.name)
+                .accessibilityLabel(product.title)
             Text(product.categoryLabel).chaarlieSystemFont(12, weight: .semibold, relativeTo: .caption)
                 .foregroundStyle(ChaarlieTheme.plum)
                 .padding(.horizontal, 9).padding(.vertical, 5)
