@@ -49,6 +49,12 @@ final class AppModel {
     var searchSubmitted = false
     var resolveOrigin: Tab = .scan
     var historyEntries: [HistoryEntry] = []
+    var historyFavoritesOnly = false
+    var historyFavoriteBusy: Set<String> = []
+    var historyFavoriteError: String?
+    private var historyFavoriteRetryId: String?
+    private var historyFavoriteRevisions: [String: UUID] = [:]
+    private var historyFavoriteValues: [String: Bool] = [:]
     var historyBusy = false
     var historyError: String?
     var historyLoaded = false
@@ -524,15 +530,27 @@ final class AppModel {
         guard admission == .ready, !historyClearing else { return }
         if more, historyBusy || historyNextCursor == nil { return }
         let account = generation, operation = UUID()
+        let favoriteRevisions = historyFavoriteRevisions
         historyOperation = operation
         historyBusy = true; historyError = nil
         do {
-            let response = try await client.history(cursor: more ? historyNextCursor : nil)
+            let response = try await client.history(cursor: more ? historyNextCursor : nil, favoritesOnly: historyFavoritesOnly)
             guard account == generation, operation == historyOperation else { return }
+            var entries = response.entries.map { entry in
+                var current = entry
+                if historyFavoriteBusy.contains(entry.id) || favoriteRevisions[entry.id] != historyFavoriteRevisions[entry.id],
+                   let favorite = historyFavoriteValues[entry.id] { current.isFavorite = favorite }
+                return current
+            }.filter { !historyFavoritesOnly || $0.isFavorite || historyFavoriteBusy.contains($0.id) }
+            // A filtered read may finish before the PATCH acknowledgement. Keep
+            // the optimistic row available for rollback until that write settles.
+            let returnedIDs = Set(entries.map(\.id))
+            entries.append(contentsOf: historyEntries.filter { historyFavoriteBusy.contains($0.id) && !returnedIDs.contains($0.id) })
+            entries.sort { $0.lastSeenAt == $1.lastSeenAt ? $0.id > $1.id : $0.lastSeenAt > $1.lastSeenAt }
             if more {
                 let existingIDs = Set(historyEntries.map(\.id))
-                historyEntries.append(contentsOf: response.entries.filter { !existingIDs.contains($0.id) })
-            } else { historyEntries = response.entries }
+                historyEntries.append(contentsOf: entries.filter { !existingIDs.contains($0.id) })
+            } else { historyEntries = entries }
             historyNextCursor = response.nextCursor
             historyLoaded = true
         } catch {
@@ -543,8 +561,46 @@ final class AppModel {
         guard account == generation, operation == historyOperation else { return }
         historyBusy = false
     }
+    func setHistoryFilter(favoritesOnly: Bool) async {
+        guard historyFavoritesOnly != favoritesOnly, !historyClearing, historyFavoriteBusy.isEmpty else { return }
+        historyFavoritesOnly = favoritesOnly
+        historyEntries = []; historyNextCursor = nil; historyLoaded = false
+        await loadHistory()
+    }
+    func toggleHistoryFavorite(_ entry: HistoryEntry) async {
+        guard admission == .ready, !historyClearing, !historyFavoriteBusy.contains(entry.id) else { return }
+        let account = generation
+        let original = historyEntries.first { $0.id == entry.id }?.isFavorite ?? entry.isFavorite
+        let desired = !original
+        historyFavoriteBusy.insert(entry.id)
+        historyFavoriteError = nil; historyFavoriteRetryId = nil
+        updateHistoryFavorite(entry.id, value: desired)
+        do {
+            _ = try await client.setHistoryFavorite(entryId: entry.id, isFavorite: desired)
+            guard account == generation else { return }
+            updateHistoryFavorite(entry.id, value: desired)
+            if historyFavoritesOnly, !desired { historyEntries.removeAll { $0.id == entry.id } }
+        } catch {
+            guard account == generation else { return }
+            if error as? MobileError == .unauthorized { await expired(); return }
+            updateHistoryFavorite(entry.id, value: original)
+            historyFavoriteRetryId = entry.id
+            historyFavoriteError = "Favorit konnte nicht gespeichert werden. Bitte erneut versuchen."
+        }
+        historyFavoriteBusy.remove(entry.id)
+    }
+    func retryHistoryFavorite() async {
+        guard let id = historyFavoriteRetryId, let entry = historyEntries.first(where: { $0.id == id }) else {
+            historyFavoriteError = nil; return
+        }
+        await toggleHistoryFavorite(entry)
+    }
+    private func updateHistoryFavorite(_ id: String, value: Bool) {
+        historyFavoriteRevisions[id] = UUID(); historyFavoriteValues[id] = value
+        if let index = historyEntries.firstIndex(where: { $0.id == id }) { historyEntries[index].isFavorite = value }
+    }
     func clearHistory() async {
-        guard admission == .ready, !historyClearing, !historySaveBusy else { return }
+        guard admission == .ready, !historyClearing, !historySaveBusy, historyFavoriteBusy.isEmpty else { return }
         let account = generation, operation = UUID()
         historyOperation = operation
         historySaveOperation = UUID()
@@ -552,7 +608,7 @@ final class AppModel {
         do {
             try await client.clearHistory()
             guard account == generation, operation == historyOperation else { return }
-            historyEntries = []; historyLoaded = true; historyNextCursor = nil
+            historyEntries.removeAll { !$0.isFavorite }; historyLoaded = true; historyNextCursor = nil
             pendingHistorySaves = []; pendingResearchSaves = []
         } catch {
             guard account == generation, operation == historyOperation else { return }
@@ -561,6 +617,7 @@ final class AppModel {
         }
         guard account == generation, operation == historyOperation else { return }
         historyClearing = false
+        if historyError == nil { await loadHistory() }
     }
     func retryHistorySaving() async {
         guard !historySaveBusy, !historyClearing else { return }
@@ -599,14 +656,14 @@ final class AppModel {
         } catch {
             guard account == generation, operation == scanOperation else { return }
             if error as? MobileError == .unauthorized { await expired(); return }
-            researchChecked = true
-            researchError = "Prüfstatus nicht verfügbar. Du kannst das Produkt trotzdem einreichen."
+            researchChecked = false
+            researchError = "Prüfstatus konnte nicht geladen werden. Bitte erneut versuchen."
         }
         guard account == generation, operation == scanOperation else { return }
         researchChecking = false
     }
     func submitResearch(category: String) async {
-        guard let identifier = lastRequest?.identifier, !researchBusy, !researchPending, researchChecked else { return }
+        guard let identifier = lastRequest?.identifier, !researchBusy, !researchChecking, !researchPending, researchChecked else { return }
         let request = researchRequest ?? ResearchRequest(identifier: identifier, category: category)
         researchRequest = request
         let account = generation, operation = scanOperation
@@ -678,6 +735,8 @@ final class AppModel {
         searchSubmitted = false
         historyOperation = UUID(); historySaveOperation = UUID()
         historyEntries = []; historyBusy = false; historyLoaded = false; historyError = nil; historyNextCursor = nil
+        historyFavoritesOnly = false; historyFavoriteBusy = []; historyFavoriteError = nil; historyFavoriteRetryId = nil
+        historyFavoriteRevisions = [:]; historyFavoriteValues = [:]
         historyClearing = false; historySaveBusy = false; pendingHistorySaves = []; pendingResearchSaves = []
         resolveFailures.removeAll()
         selectedTab = .scan

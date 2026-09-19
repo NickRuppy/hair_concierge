@@ -17,6 +17,7 @@ export type MobileHistoryEntry = {
   brand: string | null
   imageUrl: string | null
   lastSeenAt: string
+  isFavorite: boolean
   status: "available" | "not_in_catalog" | "in_research" | "unavailable"
 }
 type HistoryRow = {
@@ -26,6 +27,7 @@ type HistoryRow = {
   product_id: string | null
   submission_id: string | null
   last_seen_at: string
+  is_favorite: boolean
 }
 type SubmissionRow = {
   id: string
@@ -113,23 +115,44 @@ export async function clearMobileHistory(client: SupabaseClient, userId: string)
   if (error) throw new MobileError("temporarily_unavailable", 503)
 }
 
+export async function setMobileHistoryFavorite(
+  client: SupabaseClient,
+  userId: string,
+  entryId: string,
+  isFavorite: boolean,
+) {
+  const { data, error } = await client.rpc("mobile_scan_history_set_favorite", {
+    p_user_id: userId,
+    p_entry_id: entryId,
+    p_is_favorite: isFavorite,
+  })
+  if (error) {
+    if (error.message.includes("history_entry_not_found")) throw new MobileError("not_found", 404)
+    throw new MobileError("temporarily_unavailable", 503)
+  }
+  if (typeof data !== "boolean") throw new MobileError("temporarily_unavailable", 503)
+  return data
+}
+
 export async function loadMobileHistory(
   client: SupabaseClient,
   userId: string,
   rawCursor: string | null = null,
   barcode: string | null = null,
+  favoritesOnly = false,
 ) {
   const cursor = parseHistoryCursor(rawCursor)
   const validation = barcode === null ? null : validateEanInput(barcode)
   if (validation && !validation.ok) throw new MobileError("invalid_identifier", 400)
   let query = client
     .from("mobile_scan_history")
-    .select("id,barcode_ean,barcode_gtin14,product_id,submission_id,last_seen_at")
+    .select("id,barcode_ean,barcode_gtin14,product_id,submission_id,last_seen_at,is_favorite")
     .eq("user_id", userId)
     .order("last_seen_at", { ascending: false })
     .order("id", { ascending: false })
     .limit(PAGE_SIZE + 1)
   if (validation?.ok) query = query.eq("barcode_gtin14", canonicalizeGtin(validation.value)!)
+  if (favoritesOnly) query = query.eq("is_favorite", true)
   // Both values have been strictly validated, not interpolated from raw client text.
   if (cursor)
     query = query.or(
@@ -241,6 +264,7 @@ export async function loadMobileHistory(
       brand: displayProduct?.brand ?? null,
       imageUrl: safeImageUrl(displayProduct?.image_url ?? null),
       lastSeenAt: row.last_seen_at,
+      isFavorite: Boolean(row.is_favorite),
       status: pending
         ? "in_research"
         : available

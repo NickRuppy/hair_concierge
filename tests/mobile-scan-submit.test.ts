@@ -7,6 +7,7 @@ import {
 } from "../src/lib/mobile/scan-submit-service"
 import { validateEanInput } from "../src/lib/scan/identifier-lookup"
 import type { MobileScanResolveResult } from "../src/lib/mobile/scan-contracts"
+import type { RetailerLookupResult } from "../src/lib/scan/enrichment/resolve-enrichment"
 
 const owner = "11111111-1111-4111-8111-111111111111",
   product = "22222222-2222-4222-8222-222222222222",
@@ -65,6 +66,75 @@ test("mobile submit preserves category and exact History barcode while canonical
     })
     assert.deepEqual(calls, [[owner, barcode, null, submission]])
   }
+})
+test("mobile submit reruns dm after open-request protection, persists its trusted enrichment, and fails open", async () => {
+  const enrichment: RetailerLookupResult = {
+    outcome: "hit",
+    durationMs: 10,
+    deadlineMs: 1500,
+    enrichment: {
+      source: "dm",
+      fetchedAt: "2026-09-19T10:00:00.000Z",
+      gtin: "0000096385074",
+      dan: "2973187",
+      productName: "Test Shampoo",
+      brand: "DM",
+      imageUrl: null,
+      productUrl: null,
+      ingredientsText: null,
+      description: null,
+      keyBenefits: null,
+      suggestedCategory: "shampoo",
+    },
+  }
+  let lookupCalls = 0
+  await submitMobileScan(
+    {} as never,
+    owner,
+    input,
+    deps({
+      resolveRetailerEnrichment: async (_barcode, options) => {
+        lookupCalls++
+        assert.equal(options.route, "submit")
+        return enrichment
+      },
+      submit: async (params) => {
+        assert.equal(params.enrichment, enrichment.enrichment)
+        return pending
+      },
+    }),
+  )
+  assert.equal(lookupCalls, 1)
+  await submitMobileScan(
+    {} as never,
+    owner,
+    input,
+    deps({
+      resolveRetailerEnrichment: async () => {
+        throw new Error("dm unavailable")
+      },
+      submit: async (params) => {
+        assert.equal(params.enrichment, null)
+        return pending
+      },
+    }),
+  )
+})
+test("an already-open mobile request skips the repeated dm lookup", async () => {
+  let lookedUp = 0
+  await submitMobileScan(
+    {} as never,
+    owner,
+    input,
+    deps({
+      findOpen: async () => submission,
+      resolveRetailerEnrichment: async () => {
+        lookedUp++
+        throw new Error("must not lookup")
+      },
+    }),
+  )
+  assert.equal(lookedUp, 0)
 })
 test("failed intake is not a confirmed request; existing owner request is reused without resubmission", async () => {
   let saved = 0,

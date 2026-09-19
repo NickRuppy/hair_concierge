@@ -79,6 +79,9 @@ test(
     )
     await sql(readFileSync("supabase/migrations/20260919130450_mobile_scan_history.sql", "utf8"))
     await sql(
+      readFileSync("supabase/migrations/20260919150936_mobile_scan_history_favorites.sql", "utf8"),
+    )
+    await sql(
       readFileSync(
         "supabase/migrations/20260820103000_product_submissions_one_open_scan.sql",
         "utf8",
@@ -194,8 +197,24 @@ test(
       await sql("SELECT count(*) FROM mobile_scan_history WHERE barcode_gtin14='00000096385074'"),
       "1",
     )
+    const favoriteEntry = await sql(
+      "SELECT id FROM mobile_scan_history WHERE barcode_gtin14='00000096385074'",
+    )
+    await race(
+      `SELECT mobile_scan_history_set_favorite('${owner}','${favoriteEntry}',true);`,
+      `SELECT mobile_scan_history_clear('${owner}');`,
+    )
+    assert.equal(await sql("SELECT count(*) FROM mobile_scan_history WHERE is_favorite"), "1")
+    await race(
+      `SELECT mobile_scan_history_touch('${owner}','4012345678901','${product}',NULL);`,
+      `SELECT mobile_scan_history_set_favorite('${owner}','${favoriteEntry}',true);`,
+    )
+    assert.equal(
+      await sql(`SELECT is_favorite FROM mobile_scan_history WHERE id='${favoriteEntry}'`),
+      "t",
+    )
     await sql(`SET ROLE service_role; SELECT mobile_scan_history_clear('${owner}');`)
-    assert.equal(await sql("SELECT count(*) FROM mobile_scan_history"), "0")
+    assert.equal(await sql("SELECT count(*) FROM mobile_scan_history"), "1")
     assert.equal(await sql("SELECT count(*) FROM product_submissions"), "2")
     await sql(touch("4012345678901", null))
     assert.equal(

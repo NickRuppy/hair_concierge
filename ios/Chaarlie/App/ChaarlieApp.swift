@@ -137,8 +137,8 @@ struct RootView: View {
         .sheet(item: Binding(get: { model.scanResult }, set: { if $0 == nil { model.dismissScan() } })) { result in
             ScanResultPresentation(model: model, result: result)
                 .preferredColorScheme(.light)
-                .presentationDetents(result.kind == .submission_required && model.lastRequest?.identifier != nil
-                    ? (model.researchPending ? [.medium] : [.large]) : [.fraction(0.88)])
+                .modifier(ScanSheetSizing(isResearch: result.kind == .submission_required && model.lastRequest?.identifier != nil,
+                                          isConfirmed: model.researchPending))
                 .presentationDragIndicator(.visible)
                 .presentationCornerRadius(24)
         }
@@ -151,6 +151,27 @@ struct RootView: View {
             Button("Angemeldet bleiben", role: .cancel) { model.declineAccountLink() }
         } message: {
             Text("Der Anmeldelink kann zu einem anderen Konto gehören. Du wirst zuerst abgemeldet. Deine Haarangaben bleiben gespeichert.")
+        }
+    }
+}
+
+private struct ScanSheetSizing: ViewModifier {
+    let isResearch: Bool
+    let isConfirmed: Bool
+    @State private var contentHeight: CGFloat = 0
+    @State private var noticeHeight: CGFloat = 0
+    func body(content: Content) -> some View {
+        Group {
+            if isResearch {
+                content.presentationSizing(.fitted)
+                    .presentationDetents(contentHeight > 0 ? [.height(contentHeight + noticeHeight)] : isConfirmed ? [.height(360 + noticeHeight)] : [.large])
+            } else {
+                content.presentationDetents([.fraction(0.88)])
+            }
+        }.onPreferenceChange(ResearchConfirmationHeightKey.self) { height in
+            contentHeight = height
+        }.onPreferenceChange(ResearchSaveNoticeHeightKey.self) { height in
+            noticeHeight = height
         }
     }
 }

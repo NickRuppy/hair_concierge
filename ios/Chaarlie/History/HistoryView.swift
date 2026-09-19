@@ -4,6 +4,7 @@ struct HistoryView: View {
     @Bindable var model: AppModel
     @State private var confirmClear = false
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private var showsEmptyState: Bool {
         model.historyLoaded && model.historyEntries.isEmpty && model.historyError == nil && !model.historyBusy
     }
@@ -20,16 +21,23 @@ struct HistoryView: View {
                         Spacer()
                         if !model.historyEntries.isEmpty || model.hasUnsavedHistory {
                             Menu {
-                                Button("Verlauf löschen", systemImage: "trash", role: .destructive) { confirmClear = true }
+                                Button("Verlauf leeren", systemImage: "trash", role: .destructive) { confirmClear = true }
                             } label: {
                                 Image(systemName: "ellipsis").font(.system(size: 15, weight: .bold))
                                     .frame(width: 34, height: 34).background(.white, in: Circle())
                                     .overlay(Circle().strokeBorder(ChaarlieTheme.border))
                                     .frame(minWidth: 44, minHeight: 44).contentShape(Rectangle())
                             }.accessibilityLabel("Verlauf verwalten")
-                                .disabled(model.historyClearing || model.historySaveBusy)
+                                .disabled(model.historyClearing || model.historySaveBusy || !model.historyFavoriteBusy.isEmpty)
                         }
                     }
+                    Picker("Verlauf filtern", selection: Binding(get: { model.historyFavoritesOnly }, set: { value in
+                        Task { await model.setHistoryFilter(favoritesOnly: value) }
+                    })) {
+                        Text("Alle").tag(false)
+                        Text("Favoriten").tag(true)
+                    }.pickerStyle(.segmented).disabled(model.historyClearing || !model.historyFavoriteBusy.isEmpty)
+                        .accessibilityIdentifier("history.filter")
                     HistorySaveNotice(model: model)
                     ResolveFeedback(model: model, origin: .history)
                     if model.historyBusy, model.historyEntries.isEmpty {
@@ -41,13 +49,22 @@ struct HistoryView: View {
                             Button("Erneut versuchen") { Task { await model.loadHistory() } }.buttonStyle(ChaarlieButton(outline: true))
                         }.transition(.opacity)
                     }
+                    if let error = model.historyFavoriteError {
+                        NoticeCard(systemImage: "heart.slash", message: error) {
+                            Button("Erneut versuchen") { Task { await model.retryHistoryFavorite() } }
+                                .buttonStyle(ChaarlieButton(outline: true))
+                        }
+                    }
                     if showsEmptyState {
-                        EmptyStateView(systemImage: "clock.arrow.circlepath", title: "Noch keine Produkte",
-                                       message: "Gescannte und geöffnete Produkte erscheinen hier.") {
+                        EmptyStateView(systemImage: model.historyFavoritesOnly ? "heart" : "clock.arrow.circlepath",
+                                       title: model.historyFavoritesOnly ? "Noch keine Favoriten" : "Noch keine Produkte",
+                                       message: model.historyFavoritesOnly ? "Tippe auf ein Herz im Verlauf." : "Gescannte und geöffnete Produkte erscheinen hier.") {
+                            if !model.historyFavoritesOnly {
                             VStack(spacing: 10) {
                                 Button("Produkt scannen") { model.selectedTab = .scan }.buttonStyle(ChaarlieButton())
                                 Button("Produkt suchen") { model.selectedTab = .search }.buttonStyle(ChaarlieButton(outline: true))
                             }.padding(.top, 18)
+                            }
                         }.transition(.opacity)
                     }
                     LazyVStack(alignment: .leading, spacing: 12) {
@@ -56,12 +73,25 @@ struct HistoryView: View {
                                 .foregroundStyle(ChaarlieTheme.muted).accessibilityAddTraits(.isHeader)
                                 .padding(.top, section.id == 0 ? 0 : 10)
                             ForEach(section.entries) { entry in
-                                Group {
+                                HStack(spacing: 0) {
                                     if let request = entry.request, entry.status != .unavailable {
                                         Button { Task { await model.resolve(request) } } label: { HistoryRow(entry: entry, day: section.day) }
                                             .buttonStyle(ChaarliePressStyle()).disabled(model.historyClearing)
+                                            .accessibilityIdentifier("history.open.\(entry.id)")
                                     } else { HistoryRow(entry: entry, day: section.day) }
-                                }.chaarlieReveal(section.offset + (section.entries.firstIndex { $0.id == entry.id } ?? 0))
+                                    Button { Task { await model.toggleHistoryFavorite(entry) } } label: {
+                                        Image(systemName: entry.isFavorite ? "heart.fill" : "heart")
+                                            .font(.system(size: 20, weight: .medium))
+                                            .foregroundStyle(entry.isFavorite ? ChaarlieTheme.plum : ChaarlieTheme.muted)
+                                            .frame(width: 44, height: 44).contentShape(Rectangle())
+                                    }.buttonStyle(.plain).padding(.trailing, 8)
+                                        .opacity(model.historyFavoriteBusy.contains(entry.id) ? 0.5 : 1)
+                                        .disabled(model.historyClearing || model.historyFavoriteBusy.contains(entry.id))
+                                        .accessibilityIdentifier("history.favorite.\(entry.id)")
+                                        .accessibilityLabel(entry.isFavorite ? "\(entry.title) aus Favoriten entfernen" : "\(entry.title) als Favorit merken")
+                                        .accessibilityValue(model.historyFavoriteBusy.contains(entry.id) ? "Wird gespeichert" : entry.isFavorite ? "Favorisiert" : "Nicht favorisiert")
+                                }.chaarlieCard()
+                                    .chaarlieReveal(section.offset + (section.entries.firstIndex { $0.id == entry.id } ?? 0))
                                     .transition(.opacity)
                             }
                         }
@@ -71,11 +101,11 @@ struct HistoryView: View {
                             .buttonStyle(ChaarlieButton(outline: true)).disabled(model.historyBusy)
                     }
                 }.padding(24)
-                    .animation(ChaarlieTheme.Motion.state, value: model.historyBusy)
-                    .animation(ChaarlieTheme.Motion.state, value: model.historyClearing)
-                    .animation(ChaarlieTheme.Motion.state, value: model.historyError)
-                    .animation(ChaarlieTheme.Motion.state, value: showsEmptyState)
-                    .animation(ChaarlieTheme.Motion.state, value: model.historyEntries.map(\.id))
+                    .animation(reduceMotion ? nil : ChaarlieTheme.Motion.state, value: model.historyBusy)
+                    .animation(reduceMotion ? nil : ChaarlieTheme.Motion.state, value: model.historyClearing)
+                    .animation(reduceMotion ? nil : ChaarlieTheme.Motion.state, value: model.historyError)
+                    .animation(reduceMotion ? nil : ChaarlieTheme.Motion.state, value: showsEmptyState)
+                    .animation(reduceMotion ? nil : ChaarlieTheme.Motion.state, value: model.historyEntries.map(\.id))
             }.background(ChaarlieTheme.background)
                 .chaarlieStatusBarBackground()
                 .refreshable { await model.loadHistory() }
@@ -88,10 +118,10 @@ struct HistoryView: View {
                 .onChange(of: scenePhase) { _, phase in
                     if phase == .active, model.selectedTab == .history { Task { await model.loadHistory() } }
                 }
-                .confirmationDialog("Verlauf löschen?", isPresented: $confirmClear, titleVisibility: .visible) {
-                    Button("Verlauf löschen", role: .destructive) { Task { await model.clearHistory() } }
+                .confirmationDialog("Verlauf leeren?", isPresented: $confirmClear, titleVisibility: .visible) {
+                    Button("Verlauf leeren", role: .destructive) { Task { await model.clearHistory() } }
                     Button("Abbrechen", role: .cancel) { }
-                } message: { Text("Alle Einträge werden entfernt. Eingereichte Produkte bleiben in Prüfung.") }
+                } message: { Text("Nicht favorisierte Einträge werden entfernt. Favoriten und eingereichte Produkte bleiben erhalten.") }
         }
     }
 }
@@ -154,7 +184,7 @@ private struct HistoryRow: View {
                 Image(systemName: "chevron.right").font(.system(size: 12, weight: .bold))
                     .foregroundStyle(ChaarlieTheme.plumMid).accessibilityHidden(true)
             }
-        }.multilineTextAlignment(.leading).padding(14).chaarlieCard().contentShape(Rectangle())
+        }.multilineTextAlignment(.leading).padding(14).frame(maxWidth: .infinity, minHeight: 44).contentShape(Rectangle())
             .accessibilityElement(children: .combine)
             // The chevron carries "Produkt öffnen" visually; VoiceOver still hears the status.
             .accessibilityValue(entry.status == .available ? entry.statusLabel : "")

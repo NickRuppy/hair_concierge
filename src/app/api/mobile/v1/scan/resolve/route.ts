@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     const result = await resolveMobileScan(
       client,
       profile.status === "ready" ? profile.context : null,
-      parsed.data,
+      { ...parsed.data, retailerImageOrigin: request.url },
     )
     const historySaved = await recordMobileHistory(client, userId, parsed.data, result)
     return mobileJSON({ ...result, ...(historySaved === undefined ? {} : { historySaved }) })

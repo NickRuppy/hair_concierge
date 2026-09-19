@@ -16,6 +16,28 @@ struct HistoryEntry: Codable, Identifiable, Sendable {
     let imageUrl: String?
     let lastSeenAt: String
     let status: Status
+    var isFavorite: Bool = false
+
+    enum CodingKeys: String, CodingKey {
+        case id, barcodeGtin, productId, productName, brand, imageUrl, lastSeenAt, status, isFavorite
+    }
+    init(id: String, barcodeGtin: String?, productId: String?, productName: String?, brand: String?, imageUrl: String?, lastSeenAt: String, status: Status, isFavorite: Bool = false) {
+        self.id = id; self.barcodeGtin = barcodeGtin; self.productId = productId
+        self.productName = productName; self.brand = brand; self.imageUrl = imageUrl
+        self.lastSeenAt = lastSeenAt; self.status = status; self.isFavorite = isFavorite
+    }
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        id = try values.decode(String.self, forKey: .id)
+        barcodeGtin = try values.decodeIfPresent(String.self, forKey: .barcodeGtin)
+        productId = try values.decodeIfPresent(String.self, forKey: .productId)
+        productName = try values.decodeIfPresent(String.self, forKey: .productName)
+        brand = try values.decodeIfPresent(String.self, forKey: .brand)
+        imageUrl = try values.decodeIfPresent(String.self, forKey: .imageUrl)
+        lastSeenAt = try values.decode(String.self, forKey: .lastSeenAt)
+        status = try values.decode(Status.self, forKey: .status)
+        isFavorite = try values.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
+    }
 
     var title: String { productName ?? barcodeGtin.map { "Barcode \($0)" } ?? "Produkt" }
     var statusLabel: String {
@@ -35,6 +57,13 @@ struct HistoryEntry: Codable, Identifiable, Sendable {
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return formatter.date(from: lastSeenAt) ?? ISO8601DateFormatter().date(from: lastSeenAt)
     }
+}
+
+struct HistoryFavoriteRequest: Codable, Sendable { let isFavorite: Bool }
+struct HistoryFavoriteResponse: Codable, Sendable {
+    let contractVersion: Int
+    let entryId: String
+    let isFavorite: Bool
 }
 
 struct ResearchRequest: Encodable, Equatable, Sendable {

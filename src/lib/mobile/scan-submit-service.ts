@@ -10,6 +10,7 @@ import { MobileError } from "./errors"
 import { saveMobileHistory } from "./history-service"
 import { loadMobileProfile } from "./profile-service"
 import { resolveMobileScan } from "./scan-service"
+import { resolveRetailerEnrichment } from "@/lib/scan/enrichment/resolve-enrichment"
 
 export const mobileScanSubmitSchema = z
   .object({
@@ -26,6 +27,7 @@ const defaultDependencies = {
   submit: submitScanProductIntake,
   eligible: filterScanEligibleProductIds,
   resolve: resolveMobileScan,
+  resolveRetailerEnrichment,
   save: saveMobileHistory,
   async findOpen(client: SupabaseClient, userId: string, barcode: string): Promise<string | null> {
     const { data, error } = await client
@@ -78,9 +80,18 @@ export async function submitMobileScan(
       historySaved: await deps.save(client, userId, validation.value, null, existing),
     }
   }
+  // Supplemental retailer evidence never blocks a category-confirmed submission.
+  let enrichment = null
+  try {
+    enrichment = (await deps.resolveRetailerEnrichment(validation.value, { route: "submit" }))
+      .enrichment
+  } catch {
+    enrichment = null
+  }
   const result = await deps.submit({
     userId,
     repository: deps.createRepository(client),
+    enrichment,
     input: {
       intake_method: "manual",
       category: input.category,

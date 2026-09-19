@@ -18,7 +18,12 @@ import {
   loadQuarantinedProductIds,
   loadQuarantinedProductIdsAmong,
 } from "@/lib/scan/catalog-eligibility"
+import { canonicalizeGtin } from "@/lib/product-identity/normalize"
 import { lookupCatalogProductByIdentifier } from "@/lib/scan/identifier-lookup"
+import {
+  resolveRetailerEnrichment,
+  type RetailerLookupResult,
+} from "@/lib/scan/enrichment/resolve-enrichment"
 import { buildScanVerdict, isNotNeeded, type ScanRoleFacts } from "@/lib/scan/resolve-verdict"
 import type { ScanVerdictPayload } from "@/lib/scan/types"
 import type { ScanEvaluationContext } from "@/lib/scan/profile-context"
@@ -37,6 +42,7 @@ import {
   type MobileScanResolveResult,
   type MobileScanSearchResponse,
 } from "./scan-contracts"
+import { buildRetailerImageProxyUrl } from "./retailer-image"
 
 type ProductRow = {
   id: string
@@ -52,10 +58,25 @@ type ProductRow = {
   sort_order?: number | null
 }
 
+type IdentifierLookup =
+  | { kind: "miss" }
+  | { kind: "candidate"; productId: string; category: PersonalPlanCategory }
+  | { kind: "unavailable" }
+
 export type MobileScanResolveInput = {
   productId?: string
   identifier?: { type: "ean"; value: string }
+  /** Internal request context; not accepted from the native JSON body. */
+  retailerImageOrigin?: string
 }
+
+const defaultDependencies = {
+  lookupIdentifier: lookupMobileIdentifier,
+  isQuarantined: isProductSearchQuarantined,
+  loadProductById,
+  resolveRetailerEnrichment,
+}
+export type MobileScanResolveDependencies = typeof defaultDependencies
 
 /**
  * Native-only domain service. Its caller authenticates and derives the owner/context; this
@@ -65,19 +86,30 @@ export async function resolveMobileScan(
   client: SupabaseClient,
   context: ScanEvaluationContext | null,
   input: MobileScanResolveInput,
+  dependencies: Partial<MobileScanResolveDependencies> = {},
 ): Promise<MobileScanResolveResult> {
+  const deps = { ...defaultDependencies, ...dependencies }
   if (!context)
     return parse({ contractVersion: MOBILE_SCAN_CONTRACT_VERSION, kind: "profile_required" })
-  const matched = await findProduct(client, input)
-  if (!matched)
+  const matched = await findProduct(client, input, deps)
+  if (matched.kind !== "hit") {
+    const lookup =
+      matched.kind === "identifier_miss" && input.identifier
+        ? await lookupRetailer(input.identifier.value, deps.resolveRetailerEnrichment)
+        : null
     return parse({
       contractVersion: MOBILE_SCAN_CONTRACT_VERSION,
       kind: "submission_required",
       productId: null,
       missingFacts: ["unknown_product"],
+      ...(lookup?.enrichment
+        ? { identified: toRetailerIdentified(lookup.enrichment, input.retailerImageOrigin) }
+        : {}),
     })
-  const product = toMobileProduct(matched)
-  const category = matched.category_key as PersonalPlanCategory
+  }
+  const productRow = matched.product
+  const product = toMobileProduct(productRow)
+  const category = productRow.category_key as PersonalPlanCategory
   const decision = context.snapshot.decisions.find((entry) => entry.category === category)
   if (!decision)
     return parse({
@@ -93,7 +125,7 @@ export async function resolveMobileScan(
       code: "profile_target_invalid",
     })
 
-  const loaded = await loadVerdict(client, category, matched.id, decision, context)
+  const loaded = await loadVerdict(client, category, productRow.id, decision, context)
   const verdict = loaded.verdict
   const revision = context.refinedVersionId
   if (verdict.kind === "not_needed") {
@@ -124,7 +156,7 @@ export async function resolveMobileScan(
     const failure = mobileAuthorityFailure(verdict)
     return parse({
       contractVersion: MOBILE_SCAN_CONTRACT_VERSION,
-      productId: matched.id,
+      productId: productRow.id,
       ...failure,
       ...(failure.kind === "authority_unavailable" &&
       failure.reason === "personal_target_unavailable"
@@ -163,7 +195,7 @@ export async function resolveMobileScan(
   const rows = mobileAssessmentRows(
     category,
     verdict.evaluatedRole!,
-    matched.id,
+    productRow.id,
     verdict.mobileDimensions ?? [],
     verdict.criteria,
     verdict.fitNarrative?.fit ?? null,
@@ -316,15 +348,84 @@ async function loadVerdict(
 async function findProduct(
   client: SupabaseClient,
   input: MobileScanResolveInput,
-): Promise<ProductRow | null> {
+  deps: MobileScanResolveDependencies,
+): Promise<
+  { kind: "hit"; product: ProductRow } | { kind: "identifier_miss" } | { kind: "unavailable" }
+> {
   if (input.productId) {
-    if (await isProductSearchQuarantined(client, input.productId)) return null
-    return loadProductById(client, input.productId)
+    if (await deps.isQuarantined(client, input.productId)) return { kind: "unavailable" }
+    const product = await deps.loadProductById(client, input.productId)
+    return product ? { kind: "hit", product } : { kind: "unavailable" }
   }
-  if (!input.identifier) return null
-  const match = await lookupCatalogProductByIdentifier(client, input.identifier)
-  if (!match || (await isProductSearchQuarantined(client, match.productId))) return null
-  return loadProductById(client, match.productId)
+  if (!input.identifier) return { kind: "unavailable" }
+  const match = await deps.lookupIdentifier(client, input.identifier)
+  if (match.kind === "miss") return { kind: "identifier_miss" }
+  if (match.kind === "unavailable") return { kind: "unavailable" }
+  if (await deps.isQuarantined(client, match.productId)) return { kind: "unavailable" }
+  const product = await deps.loadProductById(client, match.productId)
+  return product ? { kind: "hit", product } : { kind: "unavailable" }
+}
+
+/**
+ * Unlike the shared resolver, this retains inactive/colliding identifier evidence as
+ * unavailable. dm is only appropriate when no identifier exists in our catalog at all.
+ */
+async function lookupMobileIdentifier(
+  client: SupabaseClient,
+  identifier: { type: "ean"; value: string },
+): Promise<IdentifierLookup> {
+  // This shared matcher is the production authority for active/colliding catalog
+  // identifiers. In particular, it can select one active product among raw rows
+  // which also reference an inactive product.
+  const resolved = await lookupCatalogProductByIdentifier(client, identifier)
+  if (resolved)
+    return {
+      kind: "candidate",
+      productId: resolved.productId,
+      category: resolved.category,
+    }
+
+  // The shared matcher intentionally folds inactive, colliding, and dangling rows
+  // into null. Here we need only distinguish that evidence from a genuine no-row miss
+  // before deciding whether dm may be called.
+  const canonicalGtin14 = canonicalizeGtin(identifier.value)
+  if (!canonicalGtin14) return { kind: "unavailable" }
+  const { data: identifierRows, error: identifierError } = await client
+    .from("product_identifiers")
+    .select("product_id")
+    .eq("canonical_gtin14", canonicalGtin14)
+    .in("identifier_type", ["ean", "gtin", "barcode"])
+  if (identifierError) throw new Error("mobile_scan_identifier_lookup_unavailable")
+  const productIds = [
+    ...new Set(
+      ((identifierRows ?? []) as Array<{ product_id: string }>).map((row) => row.product_id),
+    ),
+  ]
+  if (productIds.length === 0) return { kind: "miss" }
+  return { kind: "unavailable" }
+}
+
+async function lookupRetailer(
+  barcode: string,
+  resolve: MobileScanResolveDependencies["resolveRetailerEnrichment"],
+): Promise<RetailerLookupResult | null> {
+  try {
+    return await resolve(barcode, { route: "resolve" })
+  } catch {
+    return null
+  }
+}
+
+function toRetailerIdentified(
+  enrichment: NonNullable<RetailerLookupResult["enrichment"]>,
+  requestUrl: string | undefined,
+) {
+  return {
+    productName: enrichment.productName,
+    brand: enrichment.brand,
+    suggestedCategory: enrichment.suggestedCategory,
+    imageUrl: buildRetailerImageProxyUrl(enrichment.imageUrl, requestUrl),
+  }
 }
 
 async function loadProductById(client: SupabaseClient, id: string): Promise<ProductRow | null> {
