@@ -71,6 +71,33 @@ test("builds rich Customer.io quiz traits with labels when consent is true", () 
   assert.equal(sync.eventProperties.source, "quiz_lead_api")
 })
 
+test("keeps inherited consent time separate from the fresh quiz completion", () => {
+  const sync = buildCustomerIoQuizLeadSync({
+    createdAt: "2026-09-19T10:00:00.000Z",
+    consentTimestamp: "2026-05-28T10:00:00.000Z",
+    email: "lead@example.com",
+    leadId: "lead-returned",
+    marketingConsent: true,
+    name: "Lead",
+    quizAnswers: {
+      structure: "wavy",
+      thickness: "fine",
+      density: "medium",
+      hair_length: "medium",
+      fingertest: "leicht_uneben",
+      pulltest: "stretches_bounces",
+      scalp_type: "ausgeglichen",
+      has_scalp_issue: false,
+      concerns: ["dryness"],
+      treatment: ["natur"],
+      goals: ["shine"],
+    },
+  } as Parameters<typeof buildCustomerIoQuizLeadSync>[0] & { consentTimestamp: string })
+
+  assert.equal(sync.identifyTraits.consent_timestamp, "2026-05-28T10:00:00.000Z")
+  assert.equal(sync.identifyTraits.quiz_completed_at, "2026-09-19T10:00:00.000Z")
+})
+
 test("builds rich Customer.io quiz traits when marketing consent is false", () => {
   const sync = buildCustomerIoQuizLeadSync({
     createdAt: "2026-05-28T10:00:00.000Z",

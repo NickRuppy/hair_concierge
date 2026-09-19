@@ -9,6 +9,10 @@ import {
 } from "../src/lib/personal-plan/migration-quiz-context"
 import { REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE } from "../src/lib/personal-plan-field-test"
 import { MODERATOR_INTENT_COOKIE } from "../src/lib/personal-plan-field-test/moderator-contract"
+import {
+  QUIZ_EMAIL_RETURN_COOKIE,
+  QUIZ_EMAIL_RETURN_EDIT_COOKIE,
+} from "../src/lib/quiz/email-return-constants"
 
 const leadId = "10000000-0000-4000-8000-000000000001"
 const migrationUserId = "50000000-0000-4000-8000-000000000005"
@@ -156,16 +160,24 @@ function handler({
   insertedLeadId,
   onInsert,
   returnPackage = false,
+  returnIdentity,
 }: {
   campaignCookie?: string
   enabled?: boolean
   bind?: () => Promise<boolean>
-  onSync?: () => void
+  onSync?: (input: unknown) => void
   onMeta?: () => void
   recentLeads?: Parameters<typeof existingLeadClient>[0]
   insertedLeadId?: string
   onInsert?: (row: unknown) => void
   returnPackage?: boolean
+  returnIdentity?: {
+    leadId: string
+    name: string
+    email: string
+    marketingConsent: boolean
+    consentTimestamp: string
+  }
 } = {}) {
   return createQuizLeadPostHandler({
     resolveModeratorJourney: async () => ({ kind: "ordinary" }),
@@ -178,10 +190,18 @@ function handler({
     })) as never,
     recordEmailDeliverabilityOutcome: () => {},
     cookies: (async () => ({
-      get: (name: string) =>
-        name === REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE && campaignCookie
-          ? { value: campaignCookie }
-          : undefined,
+      get: (name: string) => {
+        if (name === REGULAR_QUIZ_FIELD_TEST_CAMPAIGN_COOKIE && campaignCookie) {
+          return { value: campaignCookie }
+        }
+        if (
+          returnPackage &&
+          (name === QUIZ_EMAIL_RETURN_COOKIE || name === QUIZ_EMAIL_RETURN_EDIT_COOKIE)
+        ) {
+          return { value: "signed-return-cookie" }
+        }
+        return undefined
+      },
     })) as never,
     createAdminClient: (() => existingLeadClient(recentLeads, insertedLeadId, onInsert)) as never,
     isRegularQuizFieldTestEnabled: () => enabled,
@@ -194,8 +214,12 @@ function handler({
     resolvePendingFunnelTouchValue: async () => null,
     recordFunnelEvent: async () => undefined,
     bindRegularQuizFieldTestLead: bind as never,
-    syncQuizLeadToCustomerIo: (async () => {
-      onSync()
+    resolveQuizEmailReturnSourceIdentity: async () =>
+      returnIdentity
+        ? { status: "resolved" as const, identity: returnIdentity }
+        : { status: "invalid" as const },
+    syncQuizLeadToCustomerIo: (async (input: unknown) => {
+      onSync(input)
       return {}
     }) as never,
     enqueueMetaLead: () => {
@@ -977,4 +1001,87 @@ test("email-return Edit saves a fresh completion even when the same answers were
   assert.equal(response.status, 200)
   assert.deepEqual(await response.json(), { leadId: freshLeadId })
   assert.equal(inserted.length, 1)
+})
+
+test("email-return Edit preserves verified consent provenance for the same email", async () => {
+  const syncInputs: Record<string, unknown>[] = []
+  const response = await handler({
+    returnPackage: true,
+    returnIdentity: {
+      leadId,
+      name: "Feldtest Person",
+      email: requestBody.email,
+      marketingConsent: true,
+      consentTimestamp: "2026-05-28T10:00:00.000Z",
+    },
+    onSync: (input) => {
+      syncInputs.push(input as Record<string, unknown>)
+    },
+  })(request({}, { marketingConsent: true, marketingConsentSource: "inherited" }))
+
+  assert.equal(response.status, 200)
+  assert.equal(syncInputs[0]?.consentTimestamp, "2026-05-28T10:00:00.000Z")
+})
+
+test("email-return Edit rejects inherited consent when the source identity cannot validate it", async () => {
+  const post = createQuizLeadPostHandler({
+    resolveModeratorJourney: async () => ({ kind: "ordinary" }),
+    resolvePartnerJourney: anonymousPartnerJourney,
+    checkRateLimit: async () => ({ allowed: true }),
+    cookies: (async () => ({ get: () => ({ value: "signed-return-cookie" }) })) as never,
+    resolveFunnelCookieContext: async () => ({
+      ...funnelContext,
+      packageKey: "customerio_scan_return_v1",
+    }),
+    resolveQuizEmailReturnSourceIdentity: async () => ({ status: "invalid" as const }),
+    createAdminClient: (() => {
+      throw new Error("invalid inherited consent must stop before persistence")
+    }) as never,
+  } as never)
+
+  const response = await post(
+    request({}, { marketingConsent: true, marketingConsentSource: "inherited" }),
+  )
+
+  assert.equal(response.status, 422)
+  assert.deepEqual(await response.json(), {
+    code: "return_consent_unavailable",
+    error: "Bitte bestätige deine Einwilligung erneut.",
+  })
+})
+
+test("email-return Edit never inherits consent onto a different email", async () => {
+  const post = createQuizLeadPostHandler({
+    resolveModeratorJourney: async () => ({ kind: "ordinary" }),
+    resolvePartnerJourney: anonymousPartnerJourney,
+    checkRateLimit: async () => ({ allowed: true }),
+    cookies: (async () => ({ get: () => ({ value: "signed-return-cookie" }) })) as never,
+    resolveFunnelCookieContext: async () => ({
+      ...funnelContext,
+      packageKey: "customerio_scan_return_v1",
+    }),
+    resolveQuizEmailReturnSourceIdentity: async () => ({
+      status: "resolved" as const,
+      identity: {
+        leadId,
+        name: requestBody.name,
+        email: "original@example.com",
+        marketingConsent: true,
+        consentTimestamp: "2026-05-28T10:00:00.000Z",
+      },
+    }),
+    createAdminClient: (() => {
+      throw new Error("email mismatch must stop before persistence")
+    }) as never,
+  } as never)
+
+  const response = await post(
+    request({}, { marketingConsent: true, marketingConsentSource: "inherited" }),
+  )
+
+  assert.equal(response.status, 422)
+  assert.deepEqual(await response.json(), {
+    code: "return_consent_unavailable",
+    error: "Bitte bestätige deine Einwilligung erneut.",
+  })
 })

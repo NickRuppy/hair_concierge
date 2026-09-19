@@ -7,7 +7,12 @@ import { leadSchema } from "@/lib/quiz/validators"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import { findReusableLead } from "@/lib/quiz/lead-lifecycle"
-import { QUIZ_EMAIL_RETURN_PACKAGE_KEY } from "@/lib/quiz/email-return-context"
+import {
+  QUIZ_EMAIL_RETURN_COOKIE,
+  QUIZ_EMAIL_RETURN_EDIT_COOKIE,
+  QUIZ_EMAIL_RETURN_PACKAGE_KEY,
+} from "@/lib/quiz/email-return-context"
+import { resolveQuizEmailReturnSourceIdentity } from "@/lib/quiz/email-return-server"
 import { syncQuizLeadToCustomerIo } from "@/lib/customerio/quiz-sync"
 import {
   bindRegularQuizFieldTestLead,
@@ -76,6 +81,7 @@ interface QuizLeadPostDependencies {
   now: () => number
   saveMigrationQuizLead: typeof saveMigrationQuizLead
   resolveFunnelCookieContext: typeof resolveFunnelCookieContext
+  resolveQuizEmailReturnSourceIdentity: typeof resolveQuizEmailReturnSourceIdentity
   resolvePendingFunnelTouchValue: typeof resolvePendingFunnelTouchValue
   recordFunnelEvent: typeof recordFunnelEvent
   syncQuizLeadToCustomerIo: typeof syncQuizLeadToCustomerIo
@@ -102,6 +108,7 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
     now: () => Date.now(),
     saveMigrationQuizLead,
     resolveFunnelCookieContext,
+    resolveQuizEmailReturnSourceIdentity,
     resolvePendingFunnelTouchValue,
     recordFunnelEvent,
     syncQuizLeadToCustomerIo,
@@ -121,6 +128,10 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
     try {
       const body = await request.json()
       const { browserEventId, funnelEventId } = resolveBrowserFunnelEventId(body)
+      const marketingConsentSource =
+        body && typeof body === "object" && body.marketingConsentSource === "inherited"
+          ? "inherited"
+          : "prompt"
       const parsed = leadSchema.parse(body)
       const email = normalizeEmail(parsed.email)
       const migrationRecovery = isMigrationRecoverySubmission(body)
@@ -216,6 +227,34 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
       // branch did not claim — an entitled partner must never silently fall through
       // into the paid funnel.
       if (partner.kind === "unavailable") return partnerUnavailableResponse()
+
+      let inheritedConsentTimestamp: string | undefined
+      if (marketingConsentSource === "inherited") {
+        const returnCookieValue = cookieStore.get(QUIZ_EMAIL_RETURN_COOKIE)?.value
+        const editCookieValue = cookieStore.get(QUIZ_EMAIL_RETURN_EDIT_COOKIE)?.value
+        const source =
+          funnelContext?.packageKey === QUIZ_EMAIL_RETURN_PACKAGE_KEY &&
+          parsed.marketingConsent &&
+          returnCookieValue &&
+          editCookieValue === returnCookieValue
+            ? await dependencies.resolveQuizEmailReturnSourceIdentity(returnCookieValue)
+            : { status: "invalid" as const }
+        if (
+          source.status !== "resolved" ||
+          !source.identity.marketingConsent ||
+          normalizeEmail(source.identity.email) !== email
+        ) {
+          return NextResponse.json(
+            {
+              code: "return_consent_unavailable",
+              error: "Bitte bestätige deine Einwilligung erneut.",
+            },
+            { status: 422 },
+          )
+        }
+        inheritedConsentTimestamp = source.identity.consentTimestamp
+      }
+
       const deliverability = await dependencies.checkEmailDeliverability(email)
       dependencies.recordEmailDeliverabilityOutcome("legacy", deliverability)
       if (!deliverability.ok) {
@@ -399,6 +438,7 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
         dependencies.scheduleAfter(() =>
           dependencies.syncQuizLeadToCustomerIo({
             createdAt,
+            consentTimestamp: inheritedConsentTimestamp,
             email: deliverableEmail,
             leadId: data.id,
             marketingConsent: parsed.marketingConsent,

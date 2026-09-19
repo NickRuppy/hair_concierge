@@ -12,7 +12,9 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { checkRateLimit } from "@/lib/rate-limit"
 import {
   QUIZ_EMAIL_RETURN_COOKIE,
+  QUIZ_EMAIL_RETURN_EDIT_COOKIE,
   QUIZ_EMAIL_RETURN_PACKAGE_KEY,
+  quizEmailReturnCookieOptions,
 } from "@/lib/quiz/email-return-context"
 import { projectQuizEmailReturnPrefill } from "@/lib/quiz/email-return-prefill"
 import { resolveQuizEmailReturnCookie } from "@/lib/quiz/email-return-server"
@@ -72,9 +74,8 @@ export function createQuizEmailReturnChoiceHandler(overrides: Partial<ChoiceDepe
     }
 
     const cookieStore = await dependencies.cookieStore()
-    const source = await dependencies.resolveSource(
-      cookieStore.get(QUIZ_EMAIL_RETURN_COOKIE)?.value,
-    )
+    const returnCookieValue = cookieStore.get(QUIZ_EMAIL_RETURN_COOKIE)?.value
+    const source = await dependencies.resolveSource(returnCookieValue)
     if (source.status !== "resolved") {
       return NextResponse.json(
         { status: source.status },
@@ -143,6 +144,13 @@ export function createQuizEmailReturnChoiceHandler(overrides: Partial<ChoiceDepe
       FUNNEL_SESSION_COOKIE,
       await encodeFunnelContext(context, secret),
       funnelSessionCookieOptions,
+    )
+    response.cookies.set(
+      QUIZ_EMAIL_RETURN_EDIT_COOKIE,
+      body.choice === "edit" ? (returnCookieValue ?? "") : "",
+      body.choice === "edit"
+        ? quizEmailReturnCookieOptions
+        : { ...quizEmailReturnCookieOptions, maxAge: 0 },
     )
     response.headers.set("Cache-Control", "private, no-store")
     response.headers.set("Referrer-Policy", "no-referrer")
