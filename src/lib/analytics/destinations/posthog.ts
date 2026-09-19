@@ -161,6 +161,12 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
     }
     case "quiz_goals_selected":
       return payload
+    case "quiz_email_return_prompt_viewed":
+      return { funnel_package_key: "customerio_scan_return_v1" }
+    case "quiz_email_return_choice": {
+      const data = payload as AppEventMap["quiz_email_return_choice"]
+      return { choice: data.choice, funnel_package_key: data.funnelPackageKey }
+    }
     case "quiz_insert_viewed": {
       const data = payload as AppEventMap["quiz_insert_viewed"]
       return {

@@ -1,6 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { isDeepStrictEqual } from "node:util"
 import { hasCompletedQuizDiagnostics } from "@/lib/quiz/completion"
-import { HAIR_LENGTH_OPTIONS, HAIR_LENGTHS, type HairLength } from "@/lib/vocabulary/hair-length"
+import { HAIR_LENGTH_OPTIONS } from "@/lib/vocabulary/hair-length"
+import { getQuestionByStep } from "@/lib/quiz/questions"
+import { personalPlanDurableAnswersBaseSchema } from "@/lib/personal-plan-quiz/persistence"
+import { repairReturningPersonalPlanArtifact } from "@/lib/personal-plan-quiz/return-artifact-repair"
 import { buildLegacyQuizStage1Source } from "@/lib/personal-plan/input"
 import { canLinkDirectQuizLead } from "@/lib/quiz/link-to-profile"
 import { SCAN_FUNNEL_PACKAGE_KEY } from "@/lib/quiz/screen-order"
@@ -25,6 +29,7 @@ type PersonalPlanLead = {
 type PersonalPlanPreparedArtifact = {
   id: string
   canonical_profile?: unknown
+  quiz_answers?: unknown
   user_id: string | null
 }
 
@@ -54,11 +59,22 @@ type ManualAccessGrantRow = {
 
 export type PlanBereitQuizSourceKind = "legacy" | "personal_plan"
 
+export type PlanBereitMissingFactField =
+  | "structure"
+  | "thickness"
+  | "density"
+  | "hair_length"
+  | "fingertest"
+  | "pulltest"
+  | "scalp_type"
+  | "goals"
+  | "treatment"
 export type PlanBereitMissingSourceFact = {
-  field: "hair_length"
+  field: PlanBereitMissingFactField
   question: string
   helper: string
-  options: typeof HAIR_LENGTH_OPTIONS
+  options: readonly { value: string; label: string }[]
+  selectionMode?: "single" | "multi"
 }
 
 /**
@@ -85,7 +101,7 @@ export type PlanBereitReadiness =
   | ({
       status: "missing_source_facts"
       leadId: string
-      quizSourceKind: "legacy"
+      quizSourceKind: PlanBereitQuizSourceKind
       sourceVersion: string | null
       missingFacts: PlanBereitMissingSourceFact[]
     } & PlanBereitResolvedPackage)
@@ -110,7 +126,9 @@ export type PlanBereitInitialReadiness = {
 export function needsFreshMigrationQuiz(readiness: {
   status: string
   missingFacts?: readonly { field: string }[]
+  funnelPackageKey?: string | null
 }): boolean {
+  if (readiness.funnelPackageKey === "customerio_scan_return_v1") return false
   return (
     readiness.status === "invalid_source" ||
     (readiness.status === "missing_source_facts" &&
@@ -123,13 +141,14 @@ type ExactReadinessInput = {
   email?: string | null
   leadId?: string | null
   expectedQuizSourceKind?: PlanBereitQuizSourceKind | null
+  funnelSessionId?: string | null
 }
 
 type MissingFactPatchInput = ExactReadinessInput & {
   leadId: string
   sourceVersion: string
-  field: "hair_length"
-  value: HairLength
+  field: PlanBereitMissingFactField
+  value: string | string[]
 }
 
 const HAIR_LENGTH_FACT: PlanBereitMissingSourceFact = {
@@ -137,6 +156,101 @@ const HAIR_LENGTH_FACT: PlanBereitMissingSourceFact = {
   question: "Wie lang sind deine Haare aktuell?",
   helper: "Bei Wellen, Locken und krausem Haar zählt die sanft gestreckte Länge einer Strähne.",
   options: HAIR_LENGTH_OPTIONS,
+}
+
+const FACT_CANONICAL_KEYS = {
+  structure: "texture",
+  thickness: "thickness",
+  density: "density",
+  hair_length: "hairLength",
+  fingertest: "hairSurface",
+  pulltest: "elasticResponse",
+  scalp_type: "scalpOiliness",
+  goals: "goals",
+  treatment: "chemicalTreatments",
+} as const
+
+const FACT_VALUE_MAPS: Partial<Record<PlanBereitMissingFactField, Record<string, string>>> = {
+  fingertest: { glatt: "smooth", leicht_uneben: "slightly_uneven", rau: "rough" },
+  scalp_type: { fettig: "oily", ausgeglichen: "balanced", trocken: "dry" },
+  treatment: {
+    natur: "natural",
+    gefaerbt: "colored",
+    blondiert: "lightened",
+    dauerwelle: "permed",
+    chemisch_geglaettet: "chemically_straightened",
+  },
+}
+
+function questionFact(
+  field: PlanBereitMissingFactField,
+  step: number,
+): PlanBereitMissingSourceFact {
+  const question = getQuestionByStep(step)!
+  return {
+    field,
+    question: question.title,
+    helper: question.instruction ?? "",
+    options: question.options,
+    selectionMode: question.selectionMode,
+  }
+}
+
+const SOURCE_FACTS: PlanBereitMissingSourceFact[] = [
+  questionFact("structure", 2),
+  questionFact("thickness", 3),
+  questionFact("density", 13),
+  HAIR_LENGTH_FACT,
+  questionFact("fingertest", 4),
+  questionFact("pulltest", 5),
+  {
+    field: "scalp_type",
+    question: "Wie fühlt sich deine Kopfhaut meistens an?",
+    helper: "Wähle die Beschreibung, die am besten passt.",
+    options: [
+      { value: "fettig", label: "Schnell fettig" },
+      { value: "ausgeglichen", label: "Ausgeglichen" },
+      { value: "trocken", label: "Trocken" },
+    ],
+  },
+  {
+    field: "goals",
+    question: "Was wünschst du dir für deine Haare?",
+    helper: "Du kannst mehrere Ziele auswählen.",
+    selectionMode: "multi",
+    options: [
+      { value: "moisture", label: "Mehr Feuchtigkeit" },
+      { value: "frizz_surface", label: "Weniger Frizz" },
+      { value: "shine", label: "Mehr Glanz" },
+      { value: "shape_definition", label: "Mehr Definition" },
+      { value: "strength_ends", label: "Stärkere Längen und Spitzen" },
+      { value: "scalp_balance", label: "Eine ausgeglichene Kopfhaut" },
+      { value: "manageability_styling", label: "Leichteres Styling" },
+      { value: "volume_balance", label: "Passendes Volumen" },
+    ],
+  },
+  questionFact("treatment", 7),
+]
+
+function canonicalFactValue(field: PlanBereitMissingFactField, value: string | string[]) {
+  const convert = (item: string) => FACT_VALUE_MAPS[field]?.[item] ?? item
+  return Array.isArray(value) ? value.map(convert) : convert(value)
+}
+
+export function isValidPlanBereitFactPatch(field: string, value: unknown): boolean {
+  const fact = SOURCE_FACTS.find((item) => item.field === field)
+  if (!fact) return false
+  const values = fact.selectionMode === "multi" ? value : [value]
+  if (!Array.isArray(values) || !values.length || new Set(values).size !== values.length)
+    return false
+  if (
+    values.some(
+      (item) => typeof item !== "string" || !fact.options.some((option) => option.value === item),
+    )
+  )
+    return false
+  if (field === "treatment" && values.includes("natur") && values.length > 1) return false
+  return fact.selectionMode === "multi" ? Array.isArray(value) : typeof value === "string"
 }
 
 const PROFILE_PROJECTION_FIELDS = [
@@ -218,10 +332,6 @@ async function loadProjectedHairProfile(
 
 function isSupportedQuizKind(value: unknown): value is PlanBereitQuizSourceKind {
   return value === "legacy" || value === "personal_plan"
-}
-
-function isHairLength(value: unknown): value is HairLength {
-  return typeof value === "string" && (HAIR_LENGTHS as readonly string[]).includes(value)
 }
 
 function remainsActiveAfter(value: unknown, now: Date): boolean {
@@ -356,8 +466,8 @@ async function loadExactPlanBereitLead(
   return { lead: null, forbidden: true }
 }
 
-function classifyLegacySource(
-  lead: PersonalPlanLead,
+export function classifyPlanBereitSourceFacts(
+  lead: Pick<PersonalPlanLead, "id" | "quiz_kind" | "quiz_answers">,
 ):
   | { status: "ready" }
   | { status: "missing_source_facts"; missingFacts: PlanBereitMissingSourceFact[] }
@@ -366,28 +476,33 @@ function classifyLegacySource(
     return { status: "invalid_source" }
   }
 
-  const source = buildLegacyQuizStage1Source({
-    leadId: lead.id,
-    answers: lead.quiz_answers as QuizAnswers,
+  if (
+    lead.quiz_kind === "personal_plan" &&
+    (lead.quiz_answers.kind !== "personal_plan" ||
+      ![2, 3].includes(lead.quiz_answers.version as number) ||
+      !isRecord(lead.quiz_answers.answers))
+  ) {
+    return { status: "invalid_source" }
+  }
+  const answers =
+    lead.quiz_kind === "legacy"
+      ? buildLegacyQuizStage1Source({ leadId: lead.id, answers: lead.quiz_answers as QuizAnswers })
+          .answers
+      : (lead.quiz_answers.answers as Record<string, unknown>)
+  const missingFacts = SOURCE_FACTS.filter((fact) => {
+    const key = FACT_CANONICAL_KEYS[fact.field]
+    const value = answers[key]
+    return (
+      !personalPlanDurableAnswersBaseSchema.shape[key].safeParse(value).success ||
+      (key === "chemicalTreatments" &&
+        Array.isArray(value) &&
+        value.includes("natural") &&
+        value.length > 1)
+    )
   })
-  const answers = source.answers
-  const missing = {
-    texture: !answers.texture,
-    thickness: !answers.thickness,
-    density: !answers.density,
-    hairLength: !answers.hairLength,
-    hairSurface: !answers.hairSurface,
-    elasticResponse: !answers.elasticResponse,
-    scalpOiliness: !answers.scalpOiliness,
-    goals: !answers.goals?.length,
-    chemicalTreatments: !answers.chemicalTreatments?.length,
-  }
-  const missingEntries = Object.entries(missing).filter(([, value]) => value)
-  if (missingEntries.length === 0) return { status: "ready" }
-  if (missingEntries.length === 1 && missing.hairLength) {
-    return { status: "missing_source_facts", missingFacts: [HAIR_LENGTH_FACT] }
-  }
-  return { status: "invalid_source" }
+  return missingFacts.length
+    ? { status: "missing_source_facts", missingFacts }
+    : { status: "ready" }
 }
 
 async function loadAttachedPersonalPlanArtifact(
@@ -396,7 +511,7 @@ async function loadAttachedPersonalPlanArtifact(
 ): Promise<PersonalPlanPreparedArtifact | null> {
   const { data, error } = await supabase
     .from("personal_plan_prepared_artifacts")
-    .select("id,user_id,canonical_profile")
+    .select("id,user_id,canonical_profile,quiz_answers")
     .eq("lead_id", leadId)
     .eq("status", "attached")
     .limit(2)
@@ -425,7 +540,7 @@ function readinessFromInitial(initial: PlanBereitInitialReadiness): PlanBereitRe
     return {
       status: "missing_source_facts",
       leadId: initial.leadId ?? "",
-      quizSourceKind: "legacy",
+      quizSourceKind: initial.quizSourceKind ?? "legacy",
       sourceVersion: initial.sourceVersion,
       missingFacts: initial.missingFacts,
       funnelPackageKey: initial.funnelPackageKey,
@@ -478,8 +593,17 @@ async function loadPlanBereitLinkCandidate(
   // Resolved once per readiness pass, before any outcome is built: provisioning and
   // the destination/copy the client renders must never come from two lookups that
   // can disagree.
-  const funnelPackage = await resolveLeadFunnelPackage(lead, deps)
+  const funnelPackage = await resolveLeadFunnelPackage(lead, deps, input.funnelSessionId)
   const funnelPackageKey = resolvedPackageKey(funnelPackage)
+  if (input.funnelSessionId && funnelPackage.kind === "unavailable") {
+    return {
+      status: "transient_error",
+      leadId: lead.id,
+      quizSourceKind: lead.quiz_kind,
+      sourceVersion: lead.updated_at ?? null,
+      funnelPackageKey: null,
+    }
+  }
 
   if (input.expectedQuizSourceKind && lead.quiz_kind !== input.expectedQuizSourceKind) {
     return {
@@ -492,8 +616,23 @@ async function loadPlanBereitLinkCandidate(
   }
 
   if (lead.quiz_kind === "personal_plan") {
+    if (funnelPackageKey === "customerio_scan_return_v1") {
+      const facts = classifyPlanBereitSourceFacts(lead)
+      if (facts.status !== "ready")
+        return {
+          ...facts,
+          leadId: lead.id,
+          quizSourceKind: lead.quiz_kind,
+          sourceVersion: lead.updated_at ?? null,
+          funnelPackageKey,
+        }
+    }
     const artifact = await loadAttachedPersonalPlanArtifact(supabase, lead.id)
-    if (!artifact) {
+    if (
+      !artifact ||
+      (funnelPackageKey === "customerio_scan_return_v1" &&
+        !isDeepStrictEqual(artifact.quiz_answers, lead.quiz_answers))
+    ) {
       return {
         status: "source_pending",
         leadId: lead.id,
@@ -523,8 +662,20 @@ async function loadPlanBereitLinkCandidate(
     }
   }
 
-  const source = classifyLegacySource(lead)
+  const source = classifyPlanBereitSourceFacts(lead)
   if (source.status === "missing_source_facts") {
+    if (
+      funnelPackageKey !== "customerio_scan_return_v1" &&
+      !(source.missingFacts.length === 1 && source.missingFacts[0].field === "hair_length")
+    ) {
+      return {
+        status: "invalid_source",
+        leadId: lead.id,
+        quizSourceKind: "legacy",
+        sourceVersion: lead.updated_at ?? null,
+        funnelPackageKey,
+      }
+    }
     return {
       status: "missing_source_facts",
       leadId: lead.id,
@@ -564,7 +715,14 @@ export async function loadPlanBereitInitialReadiness(
     return {
       ...candidate,
       missingFacts: candidate.status === "missing_source_facts" ? candidate.missingFacts : [],
-      initialAction: candidate.status === "source_pending" ? "poll" : "none",
+      initialAction:
+        candidate.status === "source_pending" &&
+        candidate.quizSourceKind === "personal_plan" &&
+        candidate.funnelPackageKey === "customerio_scan_return_v1"
+          ? "link"
+          : candidate.status === "source_pending"
+            ? "poll"
+            : "none",
     }
   }
 
@@ -668,9 +826,13 @@ function resolvedPackageKey(resolution: PlanBereitFunnelPackageResolution): stri
  */
 export type PlanBereitProvisioningDependencies = {
   /** Package identity of a lead — always server-owned (`funnel_sessions`), never client input. */
-  resolveFunnelPackage: (leadId: string) => Promise<PlanBereitFunnelPackageResolution>
+  resolveFunnelPackage: (
+    leadId: string,
+    funnelSessionId?: string | null,
+  ) => Promise<PlanBereitFunnelPackageResolution>
   /** The exact provisioning `/plan-start` performs on render; idempotent (reuses an existing plan). */
   provisionStage1Plan: (supabase: SupabaseClient, userId: string) => Promise<{ status: string }>
+  repairPersonalPlanArtifact?: typeof repairReturningPersonalPlanArtifact
 }
 
 /**
@@ -679,16 +841,29 @@ export type PlanBereitProvisioningDependencies = {
  */
 export async function resolvePlanBereitFunnelPackage(
   leadId: string,
-  lookup: (leadId: string) => Promise<FunnelLeadContextLookup> = lookupFunnelContextForLead,
+  lookup: (
+    leadId: string,
+    funnelSessionId?: string | null,
+  ) => Promise<FunnelLeadContextLookup> = lookupFunnelContextForLead,
+  funnelSessionId?: string | null,
 ): Promise<PlanBereitFunnelPackageResolution> {
-  const result = await lookup(leadId).catch(() => ({ kind: "unavailable" }) as const)
+  const result = await lookup(leadId, funnelSessionId).catch(
+    () => ({ kind: "unavailable" }) as const,
+  )
   return result.kind === "resolved"
-    ? { kind: "resolved", packageKey: result.context?.packageKey ?? null }
+    ? {
+        kind: "resolved",
+        packageKey:
+          result.context?.packageKey === "customerio_scan_return_v1" && !funnelSessionId
+            ? null
+            : (result.context?.packageKey ?? null),
+      }
     : { kind: "unavailable" }
 }
 
 const planBereitProvisioningDefaults: PlanBereitProvisioningDependencies = {
-  resolveFunnelPackage: resolvePlanBereitFunnelPackage,
+  resolveFunnelPackage: (leadId, sessionId) =>
+    resolvePlanBereitFunnelPackage(leadId, lookupFunnelContextForLead, sessionId),
   provisionStage1Plan: (supabase, userId) =>
     createStage1PersistenceService(
       createStage1SupabaseDependencies(supabase as never),
@@ -696,17 +871,26 @@ const planBereitProvisioningDefaults: PlanBereitProvisioningDependencies = {
 }
 
 /**
- * `personal_plan` sources are never scanner buyers (the `scan_v1` package runs the
- * legacy quiz), so they keep their pre-scanner behaviour: no lookup, organic copy.
+ * Personal Plan sources retain their ordinary behavior unless an exact session
+ * proves this lead entered through the approved email return package.
  * An injected lookup that throws is an unavailable lookup, not an organic buyer.
  */
 async function resolveLeadFunnelPackage(
   lead: PersonalPlanLead,
   deps: PlanBereitProvisioningDependencies,
+  funnelSessionId?: string | null,
 ): Promise<PlanBereitFunnelPackageResolution> {
-  if (lead.quiz_kind !== "legacy") return { kind: "resolved", packageKey: null }
+  if (lead.quiz_kind !== "legacy" && !funnelSessionId) return { kind: "resolved", packageKey: null }
   try {
-    return await deps.resolveFunnelPackage(lead.id)
+    const resolved = await deps.resolveFunnelPackage(lead.id, funnelSessionId)
+    if (
+      resolved.kind === "resolved" &&
+      ((lead.quiz_kind === "personal_plan" &&
+        resolved.packageKey !== "customerio_scan_return_v1") ||
+        (resolved.packageKey === "customerio_scan_return_v1" && !funnelSessionId))
+    )
+      return { kind: "resolved", packageKey: null }
+    return resolved
   } catch {
     return { kind: "unavailable" }
   }
@@ -717,38 +901,75 @@ export async function linkExactPlanBereitSourceToProfile(
   input: ExactReadinessInput,
   deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
 ): Promise<PlanBereitReadiness> {
-  const candidate = await loadPlanBereitLinkCandidate(supabase, input, deps)
+  let candidate = await loadPlanBereitLinkCandidate(supabase, input, deps)
+  if (
+    candidate.status === "source_pending" &&
+    candidate.quizSourceKind === "personal_plan" &&
+    candidate.funnelPackageKey === "customerio_scan_return_v1" &&
+    input.leadId
+  ) {
+    // A completed historic Personal Plan quiz can predate prepared-artifact
+    // attachment. Only this exact, post-access return session may repair it.
+    const { lead, forbidden } = await loadExactPlanBereitLead(supabase, input)
+    if (forbidden || !lead || lead.quiz_kind !== "personal_plan") {
+      return { ...candidate, status: forbidden ? "forbidden" : "invalid_source" }
+    }
+    if (!lead.user_id) {
+      const linked = await supabase
+        .from("leads")
+        .update({ user_id: input.userId, status: "linked" })
+        .eq("id", lead.id)
+        .eq("quiz_kind", "personal_plan")
+        .eq("updated_at", lead.updated_at)
+        .is("user_id", null)
+        .select("id")
+        .maybeSingle()
+      if (linked.error) throw new Error(`personal plan lead link failed: ${linked.error.message}`)
+      if (!linked.data) return { ...candidate, status: "transient_error" }
+    }
+    const repaired = await (deps.repairPersonalPlanArtifact ?? repairReturningPersonalPlanArtifact)(
+      {
+        leadId: lead.id,
+        userId: input.userId,
+        quizAnswers: lead.quiz_answers,
+      },
+    )
+    if (repaired.status === "cannot_reconstruct" || repaired.status === "conflict") {
+      return { ...candidate, status: "invalid_source" }
+    }
+    if (repaired.status === "forbidden") return { ...candidate, status: "forbidden" }
+    if (repaired.status === "unavailable") return { ...candidate, status: "transient_error" }
+    candidate = await loadPlanBereitLinkCandidate(supabase, input, deps)
+    if (candidate.status === "source_pending") {
+      return { ...candidate, status: "transient_error" }
+    }
+  }
   if (candidate.status !== "linkable") return candidate
   const { lead } = candidate
 
   if (lead.quiz_kind === "legacy") {
-    await persistProfileOutput(supabase, input.userId, candidate.projectedProfile)
     if (lead.user_id !== input.userId) {
       const linked = await supabase
         .from("leads")
         .update({ user_id: input.userId, status: "linked" })
         .eq("id", lead.id)
+        .is("user_id", null)
+        .select("id")
+        .maybeSingle()
       if (linked.error) throw new Error(`leads.user_id update failed: ${linked.error.message}`)
-    }
-    const provisioning = await ensureScanBuyerProvisioned(
-      supabase,
-      {
-        userId: input.userId,
-        leadId: lead.id,
-        quizSourceKind: "legacy",
-        funnelPackage: candidate.funnelPackage,
-      },
-      deps,
-    )
-    if (provisioning.status === "failed") {
-      return {
-        status: "transient_error",
-        leadId: lead.id,
-        quizSourceKind: "legacy",
-        sourceVersion: lead.updated_at ?? null,
-        funnelPackageKey: provisioning.funnelPackageKey,
+      if (!linked.data) {
+        return {
+          status: "forbidden",
+          leadId: lead.id,
+          quizSourceKind: "legacy",
+          sourceVersion: lead.updated_at ?? null,
+          funnelPackageKey: resolvedPackageKey(candidate.funnelPackage),
+        }
       }
     }
+    await persistProfileOutput(supabase, input.userId, candidate.projectedProfile)
+    // The read-back checks projection and provisions Stage 1 once. A failure is
+    // surfaced as transient_error there, never as a premature ready state.
     return loadPlanBereitReadiness(supabase, input, deps)
   }
 
@@ -788,7 +1009,7 @@ export type ScanBuyerProvisioningResult =
  *
  * A failure is reported, never swallowed — the callers turn it into `transient_error`
  * so the buyer sees a retry instead of an empty camera. Other funnel packages and
- * `personal_plan` sources keep the pre-existing behaviour untouched (no lookup, no write).
+ * ordinary Personal Plan sources keep their pre-existing behavior.
  */
 export async function ensureScanBuyerProvisioned(
   supabase: SupabaseClient,
@@ -800,27 +1021,30 @@ export async function ensureScanBuyerProvisioned(
   },
   deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
 ): Promise<ScanBuyerProvisioningResult> {
-  if (input.quizSourceKind !== "legacy") return { status: "not_applicable", funnelPackageKey: null }
   if (input.funnelPackage.kind === "unavailable") {
     // Reading a broken lookup as organic would hand a paid scanner buyer the plan
     // destination and no need snapshot. A retryable error is the safe answer.
     return { status: "failed", reason: "funnel_package_unavailable", funnelPackageKey: null }
   }
   const funnelPackageKey = input.funnelPackage.packageKey
-  if (funnelPackageKey !== SCAN_FUNNEL_PACKAGE_KEY) {
+  if (
+    funnelPackageKey !== "customerio_scan_return_v1" &&
+    (input.quizSourceKind !== "legacy" || funnelPackageKey !== SCAN_FUNNEL_PACKAGE_KEY)
+  ) {
     return { status: "not_applicable", funnelPackageKey }
   }
   const provisioned = await deps.provisionStage1Plan(supabase, input.userId)
   return provisioned.status === "completed"
-    ? { status: "provisioned", funnelPackageKey: SCAN_FUNNEL_PACKAGE_KEY }
+    ? { status: "provisioned", funnelPackageKey }
     : { status: "failed", reason: provisioned.status, funnelPackageKey }
 }
 
 export async function updateMissingPlanBereitSourceFact(
   supabase: SupabaseClient,
   input: MissingFactPatchInput,
+  deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
 ): Promise<PlanBereitReadiness> {
-  if (input.field !== "hair_length" || !isHairLength(input.value)) {
+  if (!isValidPlanBereitFactPatch(input.field, input.value)) {
     return {
       status: "invalid_source",
       leadId: input.leadId,
@@ -830,14 +1054,34 @@ export async function updateMissingPlanBereitSourceFact(
     }
   }
 
-  const readiness = await loadPlanBereitReadiness(supabase, input)
+  const readiness = await loadPlanBereitReadiness(supabase, input, deps)
   if (readiness.status !== "missing_source_facts") return readiness
+  if (!readiness.missingFacts.some((fact) => fact.field === input.field)) return readiness
 
   const { lead } = await loadExactPlanBereitLead(supabase, input)
-  if (!lead || lead.quiz_kind !== "legacy" || !isRecord(lead.quiz_answers)) return readiness
+  if (!lead || !isRecord(lead.quiz_answers)) return readiness
+  if (lead.quiz_kind !== "legacy" && readiness.funnelPackageKey !== "customerio_scan_return_v1")
+    return readiness
+  // Revalidate against the just-loaded source too: a concurrent update may have
+  // filled this field after the initial readiness read.
+  const latestFacts = classifyPlanBereitSourceFacts(lead)
+  if (
+    latestFacts.status !== "missing_source_facts" ||
+    !latestFacts.missingFacts.some((f) => f.field === input.field)
+  )
+    return loadPlanBereitReadiness(supabase, input, deps)
 
-  const nextAnswers = { ...lead.quiz_answers, hair_length: input.value }
-  const updated = await supabase
+  const nextAnswers =
+    lead.quiz_kind === "legacy"
+      ? { ...lead.quiz_answers, [input.field]: input.value }
+      : {
+          ...lead.quiz_answers,
+          answers: {
+            ...(lead.quiz_answers.answers as Record<string, unknown>),
+            [FACT_CANONICAL_KEYS[input.field]]: canonicalFactValue(input.field, input.value),
+          },
+        }
+  let updateQuery = supabase
     .from("leads")
     .update({
       quiz_answers: nextAnswers,
@@ -845,9 +1089,13 @@ export async function updateMissingPlanBereitSourceFact(
       status: "linked",
     })
     .eq("id", input.leadId)
-    .eq("user_id", input.userId)
-    .eq("quiz_kind", "legacy")
+    .eq("quiz_kind", lead.quiz_kind)
     .eq("updated_at", input.sourceVersion)
+  // Same-email unclaimed leads may be linked here, but cannot steal a concurrent claim.
+  updateQuery = lead.user_id
+    ? updateQuery.eq("user_id", input.userId)
+    : updateQuery.is("user_id", null)
+  const updated = await updateQuery
     .select("id,email,quiz_kind,quiz_answers,user_id,updated_at")
     .maybeSingle()
 
@@ -858,19 +1106,19 @@ export async function updateMissingPlanBereitSourceFact(
     return {
       status: "source_pending",
       leadId: input.leadId,
-      quizSourceKind: "legacy",
+      quizSourceKind: lead.quiz_kind,
       sourceVersion: null,
       funnelPackageKey: readiness.funnelPackageKey,
     }
   }
 
-  await persistProfileOutput(
-    supabase,
-    input.userId,
-    buildProfileDataFromQuizAnswers(nextAnswers as QuizAnswers),
-  )
-
-  return loadPlanBereitReadiness(supabase, input)
+  const remaining = classifyPlanBereitSourceFacts({ ...lead, quiz_answers: nextAnswers })
+  if (remaining.status === "ready") {
+    // Link/provision only after every required fact is valid; intermediate saves
+    // must not publish a partially populated profile.
+    return linkExactPlanBereitSourceToProfile(supabase, input, deps)
+  }
+  return loadPlanBereitReadiness(supabase, input, deps)
 }
 
 export async function loadPersonalPlanReadiness(

@@ -19,6 +19,7 @@ import {
   PersonalPlanOneTimeCheckoutAuthorizationError,
   resolveFunnelCookieContext,
   resolveFunnelContextForLead,
+  lookupFunnelContextForLead,
   resolvePendingFunnelTouchValue,
 } from "@/lib/funnel/server"
 import { isPersonalPlanLaunchPricingEnabled } from "@/lib/funnel/flags"
@@ -384,6 +385,39 @@ export function resolveCheckoutFunnelContext<
   if (leadFunnelContext?.sessionId === exactOfferFunnelSessionId) return leadFunnelContext
   if (cookieFunnelContext?.sessionId === exactOfferFunnelSessionId) return cookieFunnelContext
   return null
+}
+
+/** A signed browser cookie alone cannot attach a Customer.io return to an
+ * arbitrary checkout lead. The exact session must be bound to that lead in
+ * durable funnel state before a trial is created or attributed. */
+export async function resolveEmailReturnTrialBinding(
+  input: {
+    leadId: string
+    exactOfferFunnelSessionId?: string
+    cookieFunnelContext: FunnelCookieContext | null
+  },
+  lookup: typeof lookupFunnelContextForLead = lookupFunnelContextForLead,
+) {
+  const cookie = input.cookieFunnelContext
+  if (cookie?.packageKey !== "customerio_scan_return_v1") {
+    return { status: "not_email" as const, context: null }
+  }
+  if (input.exactOfferFunnelSessionId && input.exactOfferFunnelSessionId !== cookie.sessionId) {
+    return { status: "invalid" as const, context: null }
+  }
+  const bound = await lookup(input.leadId, cookie.sessionId)
+  if (bound.kind === "unavailable") return { status: "unavailable" as const, context: null }
+  if (
+    !bound.context ||
+    bound.context.sessionId !== cookie.sessionId ||
+    bound.context.visitorId !== cookie.visitorId ||
+    bound.context.packageKey !== cookie.packageKey ||
+    bound.context.testKind ||
+    bound.context.fieldTestCampaignId
+  ) {
+    return { status: "invalid" as const, context: null }
+  }
+  return { status: "valid" as const, context: bound.context }
 }
 
 export function reportMissingExactOfferFunnelContext(
@@ -929,13 +963,25 @@ export async function POST(req: NextRequest) {
       ) {
         return NextResponse.json({ error: "trial_identity_mismatch" }, { status: 409 })
       }
+      const cookieFunnelContext = await resolveFunnelCookieContext(
+        cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
+      )
+      const emailReturnBinding = await resolveEmailReturnTrialBinding({
+        leadId: resolvedLeadId,
+        exactOfferFunnelSessionId,
+        cookieFunnelContext,
+      })
+      if (emailReturnBinding.status === "unavailable") {
+        return NextResponse.json({ error: "trial_funnel_unavailable" }, { status: 503 })
+      }
+      if (emailReturnBinding.status === "invalid") {
+        return NextResponse.json({ error: "trial_funnel_mismatch" }, { status: 409 })
+      }
       const trialFunnelContext = resolveCheckoutFunnelContext({
         shouldRecord: true,
         exactOfferFunnelSessionId,
-        leadFunnelContext,
-        cookieFunnelContext: await resolveFunnelCookieContext(
-          cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
-        ),
+        leadFunnelContext: emailReturnBinding.context ?? leadFunnelContext,
+        cookieFunnelContext,
       })
       reportMissingExactOfferFunnelContext({
         shouldRecord: true,

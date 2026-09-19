@@ -155,6 +155,7 @@ function handler({
   recentLeads,
   insertedLeadId,
   onInsert,
+  returnPackage = false,
 }: {
   campaignCookie?: string
   enabled?: boolean
@@ -164,6 +165,7 @@ function handler({
   recentLeads?: Parameters<typeof existingLeadClient>[0]
   insertedLeadId?: string
   onInsert?: (row: unknown) => void
+  returnPackage?: boolean
 } = {}) {
   return createQuizLeadPostHandler({
     resolveModeratorJourney: async () => ({ kind: "ordinary" }),
@@ -183,7 +185,12 @@ function handler({
     })) as never,
     createAdminClient: (() => existingLeadClient(recentLeads, insertedLeadId, onInsert)) as never,
     isRegularQuizFieldTestEnabled: () => enabled,
-    resolveFunnelCookieContext: async () => (campaignCookie ? funnelContext : null),
+    resolveFunnelCookieContext: async () =>
+      returnPackage
+        ? { ...funnelContext, packageKey: "customerio_scan_return_v1" }
+        : campaignCookie
+          ? funnelContext
+          : null,
     resolvePendingFunnelTouchValue: async () => null,
     recordFunnelEvent: async () => undefined,
     bindRegularQuizFieldTestLead: bind as never,
@@ -951,6 +958,20 @@ test("ordinary lead reuse excludes a partner-owned lead with the same email and 
         partner_access_invitation_id: "40000000-0000-4000-8000-000000000004",
       },
     ],
+  })(request())
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { leadId: freshLeadId })
+  assert.equal(inserted.length, 1)
+})
+
+test("email-return Edit saves a fresh completion even when the same answers were saved recently", async () => {
+  const inserted: unknown[] = []
+  const freshLeadId = "10000000-0000-4000-8000-000000000019"
+  const response = await handler({
+    returnPackage: true,
+    insertedLeadId: freshLeadId,
+    onInsert: (row) => inserted.push(row),
   })(request())
 
   assert.equal(response.status, 200)

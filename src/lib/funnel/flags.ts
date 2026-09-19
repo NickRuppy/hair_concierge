@@ -2,6 +2,11 @@ export function isFunnelAttributionEnabled() {
   return process.env.FUNNEL_ATTRIBUTION_ENABLED === "true"
 }
 
+/** Emergency stop for token exchange and the email-return funnel package. */
+export function isQuizEmailReturnEnabled() {
+  return process.env.QUIZ_EMAIL_RETURN_ENABLED === "true"
+}
+
 export function isPersonalPlanPricingExperimentEnabled() {
   return process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED === "true"
 }

@@ -22,6 +22,7 @@ import {
   reusableOneTimeStripeSessionClientSecret,
   reportStripeCheckoutInitializationFailure,
   resolveCheckoutFunnelContext,
+  resolveEmailReturnTrialBinding,
   resolveStripeCheckoutSessionCreateOptions,
   resolvePreparedCheckoutPricing,
   resolveOneTimeConsentFunnelContext,
@@ -324,6 +325,55 @@ test("pinned offer attribution falls back only to the same signed cookie session
     }),
     null,
   )
+})
+
+test("Customer.io return trial requires the signed session to be bound to the exact checkout lead", async () => {
+  const cookie = {
+    sessionId: "7a9675fe-f955-46a2-84dc-0ef5e94009d2",
+    visitorId: "8a9675fe-f955-46a2-84dc-0ef5e94009d3",
+    packageKey: "customerio_scan_return_v1",
+    issuedAt: 1,
+  }
+  const input = {
+    leadId: validRequest.leadId,
+    exactOfferFunnelSessionId: cookie.sessionId,
+    cookieFunnelContext: cookie,
+  }
+  const valid = await resolveEmailReturnTrialBinding(input, async (leadId, sessionId) => {
+    assert.equal(leadId, validRequest.leadId)
+    assert.equal(sessionId, cookie.sessionId)
+    return {
+      kind: "resolved",
+      context: { ...cookie, testKind: null, fieldTestCampaignId: null },
+    } as never
+  })
+  assert.equal(valid.status, "valid")
+  assert.equal(valid.context?.sessionId, cookie.sessionId)
+  const wrongLead = await resolveEmailReturnTrialBinding(input, async () => ({
+    kind: "resolved",
+    context: null,
+  }))
+  assert.equal(wrongLead.status, "invalid")
+  const wrongVisitor = await resolveEmailReturnTrialBinding(
+    input,
+    async () =>
+      ({
+        kind: "resolved",
+        context: { ...cookie, visitorId: "different", testKind: null, fieldTestCampaignId: null },
+      }) as never,
+  )
+  assert.equal(wrongVisitor.status, "invalid")
+  const unavailable = await resolveEmailReturnTrialBinding(input, async () => ({
+    kind: "unavailable",
+  }))
+  assert.equal(unavailable.status, "unavailable")
+  const changedSession = await resolveEmailReturnTrialBinding(
+    { ...input, exactOfferFunnelSessionId: "different" },
+    async () => {
+      throw new Error("mismatched session must fail before lookup")
+    },
+  )
+  assert.equal(changedSession.status, "invalid")
 })
 
 test("missing exact offer attribution is reported without identifiers or blocking checkout", () => {

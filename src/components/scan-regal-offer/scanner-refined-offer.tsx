@@ -48,6 +48,21 @@ const benefits = [
 ] as const
 const testimonials = TRUSTPILOT_REVIEWS
 
+type ScannerRefinedOfferProps = Pick<
+  FunnelOfferVariantProps,
+  | "pricingSlot"
+  | "trialOfferPricing"
+  | "entryContext"
+  | "isInternalTest"
+  | "leadId"
+  | "offerTracking"
+  | "offerVariant"
+> & {
+  quizAnswers: FunnelOfferVariantProps["quizAnswers"] | null
+  /** Saved answers are shown as facts, never passed to diagnostic fallbacks. */
+  savedProfileIncomplete?: boolean
+}
+
 function profileLine(answers: FunnelOfferVariantProps["quizAnswers"]) {
   const textures: Record<string, string> = {
     straight: "glattes",
@@ -120,10 +135,12 @@ function ScannerBenefitCard({
   )
 }
 
-function ScannerRefinedOfferContent(props: FunnelOfferVariantProps) {
+function ScannerRefinedOfferContent(props: ScannerRefinedOfferProps) {
   const { quizAnswers, pricingSlot, trialOfferPricing } = props
-  const input = adaptLegacyQuizAnswersForAssessment(quizAnswers)
-  const rows = buildPersonalPlanAssessmentRows(assessPersonalPlanHair(input), input)
+  const savedProfileIncomplete = props.savedProfileIncomplete || !quizAnswers
+  const input =
+    !savedProfileIncomplete && quizAnswers ? adaptLegacyQuizAnswersForAssessment(quizAnswers) : null
+  const rows = input ? buildPersonalPlanAssessmentRows(assessPersonalPlanHair(input), input) : []
   const dock = useRef<HTMLDivElement>(null)
   const example = useRef<HTMLDialogElement>(null)
   const tour = useRef<HTMLUListElement>(null)
@@ -237,23 +254,38 @@ function ScannerRefinedOfferContent(props: FunnelOfferVariantProps) {
           </a>
         </header>
         <section className="sr-hero" data-offer-section="hero">
-          <p className="sr-eyebrow">Dein Ergebnis</p>
-          <h1>Das ist dein Haarprofil.</h1>
-          <p>{profileLine(quizAnswers)}</p>
+          <p className="sr-eyebrow">
+            {savedProfileIncomplete ? "Willkommen zurück" : "Dein Ergebnis"}
+          </p>
+          <h1>
+            {savedProfileIncomplete
+              ? "Deine Angaben sind gespeichert."
+              : "Das ist dein Haarprofil."}
+          </h1>
+          <p>{quizAnswers ? profileLine(quizAnswers) : "Für dein persönliches Haarprofil."}</p>
         </section>
-        <section className="sr-diagnosis" data-offer-section="personal_plan_diagnosis">
-          <h2>Deine Ausgangslage</h2>
-          <div className="sr-diagnostic-rows">
-            {rows.map((row) => (
-              <DiagnosticRow key={row.id} row={row} />
-            ))}
-          </div>
-        </section>
+        {rows.length > 0 && (
+          <section className="sr-diagnosis" data-offer-section="personal_plan_diagnosis">
+            <h2>Deine Ausgangslage</h2>
+            <div className="sr-diagnostic-rows">
+              {rows.map((row) => (
+                <DiagnosticRow key={row.id} row={row} />
+              ))}
+            </div>
+          </section>
+        )}
         <section data-offer-section="scan_criteria" className="sr-scanner">
           <div className="sr-bridge">
             <p className="sr-eyebrow">Dein nächster Schritt</p>
-            <h2>Dein Haarprofil steht.</h2>
+            <h2>
+              {savedProfileIncomplete
+                ? "Entdecke, was zu deinem Haar passt."
+                : "Dein Haarprofil steht."}
+            </h2>
             <p>Der Scanner zeigt dir, welche Produkte dazu passen.</p>
+            {savedProfileIncomplete && (
+              <p>Fehlende Angaben ergänzen wir nach dem Start deiner Testphase.</p>
+            )}
           </div>
           <div className="sr-examples">
             <article className="sr-example-card">
@@ -588,7 +620,7 @@ function ScannerRefinedOfferContent(props: FunnelOfferVariantProps) {
   )
 }
 
-export function ScannerRefinedOffer(props: FunnelOfferVariantProps) {
+export function ScannerRefinedOffer(props: ScannerRefinedOfferProps) {
   if (!props.trialOfferPricing) return null
   return (
     <OfferTrackingProvider
