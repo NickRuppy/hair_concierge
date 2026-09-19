@@ -46,7 +46,11 @@ struct HistoryEntry: Codable, Identifiable, Sendable {
         isFavorite = try values.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
     }
 
-    var title: String { displayName ?? productName ?? barcodeGtin.map { "Barcode \($0)" } ?? "Produkt" }
+    var title: String {
+        productIdentityTitle(displayName: displayName, brand: brand, name: productName)
+            ?? barcodeGtin.map { "Barcode \($0)" }
+            ?? "Produkt"
+    }
     var statusLabel: String {
         switch status {
         case .available: "Produkt öffnen"

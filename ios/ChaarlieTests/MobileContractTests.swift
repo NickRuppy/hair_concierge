@@ -46,8 +46,16 @@ final class MobileContractTests: XCTestCase {
         XCTAssertEqual(product.detail, "Leave-in · ca. 12,99 €")
         XCTAssertFalse(product.detail.contains("Neqi"))
 
-        let legacy = try JSONDecoder().decode(ScanProduct.self, from: Data(#"{"id":"p2","name":"Legacy Shampoo","brand":"Legacy","category":"shampoo","categoryLabel":"Shampoo","imageUrl":null,"priceEur":null,"currency":null,"purchaseUrl":null}"#.utf8))
-        XCTAssertEqual(legacy.title, "Legacy Shampoo")
+        let legacy = try JSONDecoder().decode(ScanProduct.self, from: Data(#"{"id":"p2","name":"Repair Shampoo","brand":"Legacy","category":"shampoo","categoryLabel":"Shampoo","imageUrl":null,"priceEur":null,"currency":null,"purchaseUrl":null}"#.utf8))
+        XCTAssertEqual(legacy.title, "Legacy Repair Shampoo")
+
+        let legacyIdentified = try JSONDecoder().decode(IdentifiedScanProduct.self, from: Data(#"{"productName":"Repair Shampoo","brand":"Legacy","imageUrl":null,"suggestedCategory":"shampoo"}"#.utf8))
+        XCTAssertEqual(legacyIdentified.title, "Legacy Repair Shampoo")
+
+        let legacyHistory = HistoryEntry(id: "h1", barcodeGtin: "4000000000000", productId: "p2",
+                                         productName: "Repair Shampoo", brand: "Legacy", imageUrl: nil,
+                                         lastSeenAt: "2026-09-19T12:00:00Z", status: .available)
+        XCTAssertEqual(legacyHistory.title, "Legacy Repair Shampoo")
     }
     func testResearchRequestEncodesOptionalRetailerMatchDecision() throws {
         let accepted = ResearchRequest(identifier: .init(type: "ean", value: "4001638530378"),
