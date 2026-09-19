@@ -295,6 +295,7 @@ final class ChaarlieUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Shampoo"].waitForExistence(timeout: 5))
         screenshot("history-unknown-category", app: app)
         app.buttons["Shampoo"].tap()
+        app.buttons["Zur Prüfung einreichen"].tap()
         XCTAssertTrue(app.staticTexts["In Prüfung"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.buttons["Shampoo"].exists)
         screenshot("history-research-confirmed", app: app)
@@ -311,15 +312,17 @@ final class ChaarlieUITests: XCTestCase {
         let app = designApp("research-identified")
         let suggested = app.buttons["research.suggestion"]
         XCTAssertTrue(suggested.waitForExistence(timeout: 8))
-        XCTAssertEqual(suggested.label, "Als Shampoo einreichen")
-        XCTAssertTrue(app.staticTexts["Produkt erkannt"].exists)
-        XCTAssertTrue(app.staticTexts["Ist das ein Shampoo?"].exists)
-        XCTAssertLessThan(app.frame.maxY - app.buttons["Andere Produktart"].frame.maxY, 100)
+        XCTAssertEqual(suggested.label, "Shampoo, ausgewählt")
+        XCTAssertTrue(app.staticTexts["Produkt gefunden"].exists)
+        XCTAssertTrue(app.staticTexts["Als was verwendest du das Produkt?"].exists)
+        XCTAssertFalse(app.staticTexts["Ist das ein Shampoo?"].exists)
+        XCTAssertTrue(app.buttons["Nicht dein Produkt?"].exists)
         screenshot("refinement-dm-preview", app: app)
-        app.buttons["Andere Produktart"].tap()
+        app.buttons["Andere Kategorie"].tap()
         XCTAssertTrue(app.buttons["Conditioner"].waitForExistence(timeout: 5))
         XCTAssertFalse(suggested.exists)
         app.buttons["Conditioner"].tap()
+        app.buttons["Zur Prüfung einreichen"].tap()
         let openHistory = app.buttons["Verlauf öffnen"]
         XCTAssertTrue(openHistory.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["Wir melden uns, sobald das Ergebnis da ist."].exists)
@@ -340,13 +343,28 @@ final class ChaarlieUITests: XCTestCase {
         app = designApp("research-no-suggestion")
         XCTAssertTrue(app.buttons["Shampoo"].waitForExistence(timeout: 8))
         XCTAssertFalse(app.buttons["research.suggestion"].exists)
+        XCTAssertFalse(app.buttons["research.submit"].exists)
+        app.buttons["Shampoo"].tap()
+        XCTAssertTrue(app.buttons["research.submit"].isEnabled)
         app = designApp("research-identified-error")
         XCTAssertTrue(app.buttons["research.suggestion"].waitForExistence(timeout: 8))
-        app.buttons["research.suggestion"].tap()
+        app.buttons["research.submit"].tap()
         XCTAssertTrue(app.buttons["Erneut versuchen"].waitForExistence(timeout: 8))
         XCTAssertFalse(app.buttons["Verlauf öffnen"].exists)
-        XCTAssertFalse(app.buttons["Andere Produktart"].isEnabled)
+        XCTAssertFalse(app.buttons["Andere Kategorie"].isEnabled)
         screenshot("refinement-dm-error", app: app)
+    }
+    func testRefinementDMRejectedCandidateFallsBackToManualCategory() {
+        let app = designApp("research-identified")
+        XCTAssertTrue(app.buttons["research.reject"].waitForExistence(timeout: 8))
+        app.buttons["research.reject"].tap()
+        XCTAssertTrue(app.staticTexts["Noch nicht im Katalog"].exists)
+        XCTAssertFalse(app.staticTexts["Produkt gefunden"].exists)
+        XCTAssertFalse(app.staticTexts["head&shoulders Derma x Pro Hydra Pflege Shampoo, 250 ml"].exists)
+        XCTAssertTrue(app.buttons["research.category.conditioner"].exists)
+        app.buttons["research.category.conditioner"].tap()
+        XCTAssertTrue(app.buttons["research.submit"].isEnabled)
+        screenshot("refinement-dm-rejected", app: app)
     }
     func testRefinementFavoritesAreSeparateFromOpeningAndSurviveClear() throws {
         let app = designApp("history")
@@ -396,6 +414,10 @@ final class ChaarlieUITests: XCTestCase {
         for _ in 0..<6 { if suggested.isHittable { break }; app.swipeUp() }
         XCTAssertTrue(suggested.isHittable)
         suggested.tap()
+        let submit = app.buttons["research.submit"]
+        for _ in 0..<6 { if submit.isHittable { break }; app.swipeUp() }
+        XCTAssertTrue(submit.isHittable)
+        submit.tap()
         let openHistory = app.buttons["Verlauf öffnen"]
         XCTAssertTrue(openHistory.waitForExistence(timeout: 8))
         for _ in 0..<6 { if openHistory.isHittable { break }; app.swipeUp() }

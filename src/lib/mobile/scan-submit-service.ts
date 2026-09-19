@@ -18,6 +18,7 @@ export const mobileScanSubmitSchema = z
       .object({ type: z.literal("ean"), value: z.string().trim().min(1).max(64) })
       .strict(),
     category: productIntakeCategorySchema,
+    retailerMatchDecision: z.enum(["accepted", "rejected"]).optional(),
   })
   .strict()
 
@@ -82,16 +83,19 @@ export async function submitMobileScan(
   }
   // Supplemental retailer evidence never blocks a category-confirmed submission.
   let enrichment = null
-  try {
-    enrichment = (await deps.resolveRetailerEnrichment(validation.value, { route: "submit" }))
-      .enrichment
-  } catch {
-    enrichment = null
+  if (input.retailerMatchDecision !== "rejected") {
+    try {
+      enrichment = (await deps.resolveRetailerEnrichment(validation.value, { route: "submit" }))
+        .enrichment
+    } catch {
+      enrichment = null
+    }
   }
   const result = await deps.submit({
     userId,
     repository: deps.createRepository(client),
     enrichment,
+    retailerMatchDecision: input.retailerMatchDecision,
     input: {
       intake_method: "manual",
       category: input.category,

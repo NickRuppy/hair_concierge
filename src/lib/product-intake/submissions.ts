@@ -927,6 +927,7 @@ function buildScanIntakeHistory(
   input: ScanProductIntakeSubmissionInput,
   now: string,
   enrichment: RetailerEnrichment | null | undefined,
+  retailerMatchDecision: "accepted" | "rejected" | undefined,
 ) {
   const history: JsonRecord[] = [
     {
@@ -944,6 +945,15 @@ function buildScanIntakeHistory(
       },
     },
   ]
+
+  if (retailerMatchDecision) {
+    history.push({
+      at: now,
+      source: "retailer_match_decision",
+      retailer: "dm",
+      decision: retailerMatchDecision,
+    })
+  }
 
   // The caller has already matched against the user's original scan input. dm may
   // prefill the draft only after that fall-through, and remains review-only
@@ -965,6 +975,8 @@ export type SubmitScanProductIntakeParams = {
   input: ScanProductIntakeSubmissionInput
   /** Server-derived after the scan route's exact-GTIN validation; never client input. */
   enrichment?: RetailerEnrichment | null
+  /** User decision about the retailer candidate shown by the mobile resolver. */
+  retailerMatchDecision?: "accepted" | "rejected"
   repository: ProductIntakeRepository
   /**
    * Gate applied to a catalog match's product id before it is honoured as
@@ -1077,7 +1089,12 @@ export async function submitScanProductIntake(
     previous_product_snapshot: {},
     status: "pending_review",
     researched_payload: {},
-    intake_history: buildScanIntakeHistory(params.input, now, enrichment),
+    intake_history: buildScanIntakeHistory(
+      params.input,
+      now,
+      enrichment,
+      params.retailerMatchDecision,
+    ),
     approved_product_id: null,
     scanned_identifier_type: scannedIdentifier?.type ?? null,
     scanned_identifier_value: scannedIdentifier?.value ?? null,

@@ -12,18 +12,23 @@ struct HistoryEntry: Codable, Identifiable, Sendable {
     let barcodeGtin: String?
     let productId: String?
     let productName: String?
+    let displayName: String?
     let brand: String?
+    let categoryLabel: String?
     let imageUrl: String?
     let lastSeenAt: String
     let status: Status
     var isFavorite: Bool = false
 
     enum CodingKeys: String, CodingKey {
-        case id, barcodeGtin, productId, productName, brand, imageUrl, lastSeenAt, status, isFavorite
+        case id, barcodeGtin, productId, productName, displayName, brand, categoryLabel, imageUrl, lastSeenAt, status, isFavorite
     }
-    init(id: String, barcodeGtin: String?, productId: String?, productName: String?, brand: String?, imageUrl: String?, lastSeenAt: String, status: Status, isFavorite: Bool = false) {
+    init(id: String, barcodeGtin: String?, productId: String?, productName: String?, displayName: String? = nil,
+         brand: String?, categoryLabel: String? = nil, imageUrl: String?, lastSeenAt: String, status: Status,
+         isFavorite: Bool = false) {
         self.id = id; self.barcodeGtin = barcodeGtin; self.productId = productId
-        self.productName = productName; self.brand = brand; self.imageUrl = imageUrl
+        self.productName = productName; self.displayName = displayName; self.brand = brand
+        self.categoryLabel = categoryLabel; self.imageUrl = imageUrl
         self.lastSeenAt = lastSeenAt; self.status = status; self.isFavorite = isFavorite
     }
     init(from decoder: Decoder) throws {
@@ -32,14 +37,20 @@ struct HistoryEntry: Codable, Identifiable, Sendable {
         barcodeGtin = try values.decodeIfPresent(String.self, forKey: .barcodeGtin)
         productId = try values.decodeIfPresent(String.self, forKey: .productId)
         productName = try values.decodeIfPresent(String.self, forKey: .productName)
+        displayName = try values.decodeIfPresent(String.self, forKey: .displayName)
         brand = try values.decodeIfPresent(String.self, forKey: .brand)
+        categoryLabel = try values.decodeIfPresent(String.self, forKey: .categoryLabel)
         imageUrl = try values.decodeIfPresent(String.self, forKey: .imageUrl)
         lastSeenAt = try values.decode(String.self, forKey: .lastSeenAt)
         status = try values.decode(Status.self, forKey: .status)
         isFavorite = try values.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
     }
 
-    var title: String { productName ?? barcodeGtin.map { "Barcode \($0)" } ?? "Produkt" }
+    var title: String {
+        productIdentityTitle(displayName: displayName, brand: brand, name: productName)
+            ?? barcodeGtin.map { "Barcode \($0)" }
+            ?? "Produkt"
+    }
     var statusLabel: String {
         switch status {
         case .available: "Produkt öffnen"
@@ -67,8 +78,10 @@ struct HistoryFavoriteResponse: Codable, Sendable {
 }
 
 struct ResearchRequest: Encodable, Equatable, Sendable {
+    enum RetailerMatchDecision: String, Encodable, Sendable { case accepted, rejected }
     let identifier: ScanRequest.Identifier
     let category: String
+    var retailerMatchDecision: RetailerMatchDecision? = nil
 }
 
 struct ResearchResponse: Decodable, Sendable {

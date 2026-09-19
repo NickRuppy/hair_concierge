@@ -1,5 +1,15 @@
 import Foundation
 
+func productIdentityTitle(displayName: String?, brand: String?, name: String?) -> String? {
+    if let displayName = displayName?.trimmingCharacters(in: .whitespacesAndNewlines), !displayName.isEmpty {
+        return displayName
+    }
+    guard let name = name?.trimmingCharacters(in: .whitespacesAndNewlines), !name.isEmpty else { return nil }
+    guard let brand = brand?.trimmingCharacters(in: .whitespacesAndNewlines), !brand.isEmpty,
+          !name.localizedCaseInsensitiveContains(brand) else { return name }
+    return "\(brand) \(name)"
+}
+
 struct ScanRequest: Encodable, Equatable, Sendable {
     struct Identifier: Encodable, Equatable, Sendable { let type: String; let value: String }
     let identifier: Identifier?
@@ -12,6 +22,7 @@ struct ScanRequest: Encodable, Equatable, Sendable {
 struct ScanProduct: Codable, Identifiable, Sendable {
     let id: String
     let name: String
+    var displayName: String? = nil
     let brand: String?
     let category: String
     let categoryLabel: String
@@ -19,8 +30,9 @@ struct ScanProduct: Codable, Identifiable, Sendable {
     let priceEur: Double?
     let currency: String?
     let purchaseUrl: String?
+    var title: String { productIdentityTitle(displayName: displayName, brand: brand, name: name) ?? name }
     var detail: String {
-        var parts = [brand, categoryLabel].compactMap { $0 }.filter { !$0.isEmpty }
+        var parts = [categoryLabel].filter { !$0.isEmpty }
         if let priceEur, let currency {
             parts.append("ca. " + priceEur.formatted(.currency(code: currency).locale(Locale(identifier: "de_DE"))))
         }
@@ -117,10 +129,12 @@ struct ScanResult: Codable, Identifiable, Sendable {
     var id: String { [kind.rawValue, contextRevision ?? "", product?.id ?? productId ?? ""].joined(separator: ":") }
 }
 struct IdentifiedScanProduct: Codable, Sendable {
+    var displayName: String? = nil
     let productName: String
     let brand: String?
     let imageUrl: String?
     let suggestedCategory: String?
+    var title: String { productIdentityTitle(displayName: displayName, brand: brand, name: productName) ?? productName }
 }
 struct SearchResponse: Codable, Sendable {
     let contractVersion: Int

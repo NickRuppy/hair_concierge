@@ -66,6 +66,7 @@ test("a true identifier catalog miss exposes only a safe dm identity preview", a
   assert.equal(result.productId, null)
   assert.deepEqual(routes, ["resolve"])
   assert.deepEqual(result.identified, {
+    displayName: "WELEDA Shampoo Rosmarin Revitalising, 250 ml",
     productName: "Shampoo Rosmarin Revitalising, 250 ml",
     brand: "WELEDA",
     suggestedCategory: "shampoo",

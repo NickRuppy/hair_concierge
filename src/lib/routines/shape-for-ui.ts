@@ -1,5 +1,6 @@
 import { PRODUCT_CATEGORY_LABELS, PRODUCT_CATEGORY_ORDER } from "@/lib/onboarding/product-options"
 import { isUnselectedShampooFallbackItem } from "@/lib/product-usage/shampoo-fallback"
+import { composeProductIdentityTitle } from "@/lib/product-identity/display-title"
 import type { CareBalanceRow } from "@/lib/recommendation-engine/types"
 import type { HairProfile } from "@/lib/types"
 import type {
@@ -36,49 +37,21 @@ function firstProduct(product: RoutineArtifactUsageRow["product"]): RoutineArtif
   return firstRelation(product)
 }
 
-function normalizeText(value: string | null | undefined): string | null {
-  const trimmed = value?.trim()
-  return trimmed ? trimmed : null
-}
-
-function appendDistinct(parts: string[], value: string | null | undefined): void {
-  const text = normalizeText(value)
-  if (!text) return
-
-  const normalized = text.toLocaleLowerCase("de")
-  const alreadyCovered = parts.some((part) => {
-    const normalizedPart = part.toLocaleLowerCase("de")
-    return normalizedPart === normalized || normalizedPart.includes(normalized)
-  })
-  if (alreadyCovered) return
-
-  // Drop earlier parts the new text already contains (e.g. a product name that
-  // repeats brand + line: "Syoss" + "Syoss Intense Fullness Shampoo").
-  for (let index = parts.length - 1; index >= 0; index -= 1) {
-    if (normalized.includes(parts[index].toLocaleLowerCase("de"))) {
-      parts.splice(index, 1)
-    }
-  }
-
-  parts.push(text)
-}
-
 function productDisplayName(row: RoutineArtifactUsageRow, product: RoutineArtifactProduct | null) {
-  const parts: string[] = []
   if (product && row.match_status === "matched") {
     const brand = firstRelation(product.brand_identity)
     const line =
       firstRelation<RoutineArtifactProductLine>(product.product_line)?.canonical_name ??
       product.product_line_name
-    appendDistinct(parts, brand?.canonical_name ?? product.brand)
-    appendDistinct(parts, line)
-    appendDistinct(parts, product.name)
-    return parts.join(" ").trim() || null
+    return (
+      composeProductIdentityTitle({
+        brand: brand?.canonical_name ?? product.brand,
+        productLine: line,
+        name: product.name,
+      }) || null
+    )
   }
-
-  appendDistinct(parts, row.brand_text)
-  appendDistinct(parts, row.product_name)
-  return parts.join(" ").trim() || null
+  return composeProductIdentityTitle({ brand: row.brand_text, name: row.product_name }) || null
 }
 
 function normalizeProductForDrawer(

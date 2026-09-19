@@ -19,6 +19,7 @@ import {
   loadQuarantinedProductIdsAmong,
 } from "@/lib/scan/catalog-eligibility"
 import { canonicalizeGtin } from "@/lib/product-identity/normalize"
+import { composeProductIdentityTitle } from "@/lib/product-identity/display-title"
 import { lookupCatalogProductByIdentifier } from "@/lib/scan/identifier-lookup"
 import {
   resolveRetailerEnrichment,
@@ -56,6 +57,20 @@ type ProductRow = {
   purchase_link_status: string | null
   price_checked_at: string | null
   sort_order?: number | null
+  brand_identity?: { canonical_name: string | null } | { canonical_name: string | null }[] | null
+  product_line?: { canonical_name: string | null } | { canonical_name: string | null }[] | null
+}
+
+function firstRelation<T>(value: T | T[] | null | undefined): T | null {
+  return Array.isArray(value) ? (value[0] ?? null) : (value ?? null)
+}
+
+function identityParts(row: ProductRow) {
+  return {
+    brand: firstRelation(row.brand_identity)?.canonical_name ?? row.brand,
+    productLine: firstRelation(row.product_line)?.canonical_name ?? null,
+    name: row.name,
+  }
 }
 
 type IdentifierLookup =
@@ -232,7 +247,9 @@ export async function searchMobileScanCatalog(
   const [{ data, error }, quarantined] = await Promise.all([
     client
       .from("products")
-      .select("id,name,brand,category_key,image_url,sort_order")
+      .select(
+        "id,name,brand,category_key,image_url,sort_order,brand_identity:brands(canonical_name),product_line:product_lines(canonical_name)",
+      )
       .eq("is_active", true)
       .eq("lifecycle_status", "active")
       .in("category_key", PERSONAL_PLAN_PRODUCT_CATEGORIES)
@@ -245,12 +262,16 @@ export async function searchMobileScanCatalog(
     .filter(
       (row) =>
         !quarantined.has(row.id) &&
-        `${row.brand ?? ""} ${row.name}`.toLocaleLowerCase().includes(normalized),
+        composeProductIdentityTitle(identityParts(row)).toLocaleLowerCase().includes(normalized),
     )
     .sort(
       (a, b) =>
-        (`${a.brand ?? ""} ${a.name}`.trim().toLocaleLowerCase() === normalized ? -1 : 0) -
-          (`${b.brand ?? ""} ${b.name}`.trim().toLocaleLowerCase() === normalized ? -1 : 0) ||
+        (composeProductIdentityTitle(identityParts(a)).toLocaleLowerCase() === normalized
+          ? -1
+          : 0) -
+          (composeProductIdentityTitle(identityParts(b)).toLocaleLowerCase() === normalized
+            ? -1
+            : 0) ||
         (a.sort_order ?? Number.MAX_SAFE_INTEGER) - (b.sort_order ?? Number.MAX_SAFE_INTEGER) ||
         a.name.localeCompare(b.name, "de") ||
         a.id.localeCompare(b.id),
@@ -259,7 +280,8 @@ export async function searchMobileScanCatalog(
     .map((row) => ({
       id: row.id,
       name: row.name,
-      brand: row.brand,
+      displayName: composeProductIdentityTitle(identityParts(row)),
+      brand: identityParts(row).brand,
       category: row.category_key,
       categoryLabel: CATEGORY_COPY[row.category_key as PersonalPlanCategory].label,
       imageUrl: safeUrl(row.image_url),
@@ -421,6 +443,10 @@ function toRetailerIdentified(
   requestUrl: string | undefined,
 ) {
   return {
+    displayName: composeProductIdentityTitle({
+      brand: enrichment.brand,
+      name: enrichment.productName,
+    }),
     productName: enrichment.productName,
     brand: enrichment.brand,
     suggestedCategory: enrichment.suggestedCategory,
@@ -432,7 +458,7 @@ async function loadProductById(client: SupabaseClient, id: string): Promise<Prod
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,brand,category_key,image_url,price_eur,currency,affiliate_link,purchase_link_status,price_checked_at",
+      "id,name,brand,category_key,image_url,price_eur,currency,affiliate_link,purchase_link_status,price_checked_at,brand_identity:brands(canonical_name),product_line:product_lines(canonical_name)",
     )
     .eq("id", id)
     .eq("is_active", true)
@@ -443,10 +469,12 @@ async function loadProductById(client: SupabaseClient, id: string): Promise<Prod
 }
 
 function toMobileProduct(row: ProductRow): MobileScanProduct {
+  const identity = identityParts(row)
   return {
     id: row.id,
     name: row.name,
-    brand: row.brand,
+    displayName: composeProductIdentityTitle(identity),
+    brand: identity.brand,
     category: row.category_key,
     categoryLabel: CATEGORY_COPY[row.category_key as PersonalPlanCategory].label,
     imageUrl: safeUrl(row.image_url),
