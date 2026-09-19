@@ -111,6 +111,7 @@ export function PaymentMethodCheckout({
   fetchClientSecret,
   interval,
   leadId,
+  funnelSessionId,
   lockedProvider = null,
   onBeforeStripeConfirm,
   onClientMounted,
@@ -148,6 +149,7 @@ export function PaymentMethodCheckout({
   fetchClientSecret: () => Promise<string>
   interval: BillingInterval
   leadId?: string | null
+  funnelSessionId?: string | null
   lockedProvider?: "stripe" | "paypal" | null
   onBeforeStripeConfirm?: () => Promise<boolean>
   onClientMounted?: OfferCheckoutProviderLifecycleCallback
@@ -237,6 +239,7 @@ export function PaymentMethodCheckout({
           checkoutContext={checkoutContext}
           interval={interval}
           leadId={leadId}
+          funnelSessionId={funnelSessionId ?? undefined}
           trial={trial}
           onCheckoutFailed={(failure) => {
             setPayPalReadyForCheckoutKey((readyCheckoutKey) =>

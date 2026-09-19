@@ -1348,6 +1348,7 @@ function MembershipResultOfferPricing({
         fetchClientSecret={fetchClientSecret}
         interval={checkoutInterval}
         leadId={leadId}
+        funnelSessionId={offerContext?.funnelSessionId ?? undefined}
         trial={Boolean(trialOfferPricing)}
         trialTerms={trialCheckoutTerms}
         lockedProvider={express ? lockedProvider : null}

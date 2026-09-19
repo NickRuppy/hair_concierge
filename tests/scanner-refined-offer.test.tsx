@@ -56,6 +56,22 @@ function diagnostics(html: string) {
   ].map((match) => match[0])
 }
 
+test("returning incomplete profile displays only saved facts without diagnostic defaults", () => {
+  const html = renderToStaticMarkup(
+    <ScannerRefinedOffer
+      {...propsFor()}
+      quizAnswers={{ structure: "wavy" }}
+      savedProfileIncomplete
+    />,
+  )
+  assert.match(html, /Welliges Haar/)
+  assert.match(html, /Fehlende Angaben ergänzen wir nach dem Start deiner Testphase/)
+  assert.doesNotMatch(html, /Dein Haarprofil steht|Das ist dein Haarprofil|Deine Ausgangslage/)
+  assert.equal(diagnostics(html).length, 0)
+  assert.match(html, /So funktioniert der Scanner/)
+  assert.match(html, /data-testid="authoritative-pricing"/)
+})
+
 test("refined scanner uses the same real-answer diagnostic output as organic for contrasting profiles", () => {
   const profiles: QuizAnswers[] = [
     baseAnswers,

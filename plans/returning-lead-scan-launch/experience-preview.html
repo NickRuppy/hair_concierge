@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie · Quiz-Rückkehr — Entwurf</title>
+    <style>
+      :root { color-scheme: light; --ink:#2a1845; --body:#3a3835; --muted:#6a6560; --plum:#6b50a0; --line:#ded2e9; --ice:#f2eefa; font-family:Arial,Helvetica,sans-serif; }
+      * { box-sizing:border-box; }
+      body { margin:0; color:var(--body); background:#f2efec; }
+      .overview { max-width:1130px; margin:auto; padding:28px 20px 52px; }
+      .overview h1 { font:500 30px/1.15 Georgia,serif; color:var(--ink); margin:0 0 8px; }
+      .overview > p { max-width:780px; color:var(--muted); line-height:1.5; margin:0 0 24px; }
+      .gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; }
+      .case-label { color:var(--ink); font-weight:700; font-size:12px; letter-spacing:.07em; text-transform:uppercase; margin:0 0 10px; }
+      .frame { min-height:650px; position:relative; overflow:hidden; border:1px solid #d8d0cb; border-radius:25px; background:#fff; box-shadow:0 20px 48px -40px #3d2a62; }
+      .quiz { max-width:440px; margin:auto; padding:34px 24px; }
+      .progress { display:flex; align-items:center; gap:10px; color:#655b6c; font-size:12px; margin-bottom:26px; }
+      .bar { height:6px; flex:1; background:#eee8f3; border-radius:9px; overflow:hidden; }
+      .bar::before { content:""; display:block; width:10%; height:100%; background:var(--plum); }
+      .strip { border:1px solid #e1d7ef; border-radius:10px; background:#f7f3fc; color:#4b376d; padding:11px 13px; font-size:12px; line-height:1.4; margin-bottom:22px; }
+      h2 { font:500 28px/1.13 Georgia,serif; color:var(--ink); text-align:center; letter-spacing:-.02em; margin:0 0 12px; }
+      .question-copy { color:var(--muted); font-size:13px; line-height:1.5; text-align:center; margin:0 0 20px; }
+      .option { border:1px solid #ddd0e9; border-radius:14px; padding:15px 17px; min-height:63px; margin:10px 0; display:flex; align-items:center; background:#fff; font-size:14px; font-weight:700; color:var(--ink); }
+      .option.selected { background:var(--ice); border:2px solid var(--plum); }
+      .shade { position:absolute; inset:0; background:rgba(34,22,49,.3); display:flex; align-items:center; justify-content:center; padding:20px; }
+      .prompt { width:min(100%,350px); border-radius:18px; padding:21px; background:#fff; box-shadow:0 18px 56px rgba(31,20,49,.2); }
+      .prompt h3 { color:var(--ink); font:500 23px/1.16 Georgia,serif; margin:0 0 7px; }
+      .prompt p { font-size:13px; line-height:1.45; color:var(--muted); margin:0 0 16px; }
+      .button { display:flex; justify-content:center; align-items:center; width:100%; min-height:45px; padding:10px 15px; text-align:center; border-radius:24px; text-decoration:none; font-size:13px; font-weight:700; margin-top:9px; }
+      .primary { color:#fff; background:var(--plum); }
+      .secondary { color:var(--ink); background:#fff; border:1px solid #c8b8e0; }
+      .hair .progress { margin-bottom:40px; }
+      .hair .bar::before { width:88%; }
+      .hair .option { min-height:46px; margin:7px 0; }
+      .hair .button { margin-top:24px; }
+      @media(max-width:760px) { .gallery { grid-template-columns:1fr; } .overview { max-width:500px; padding:19px 14px 40px; } .overview h1 { font-size:26px; } .frame { min-height:620px; } .quiz { padding:25px 18px; } .prompt { width:min(100%,325px); } }
+    </style>
+  </head>
+  <body>
+    <div class="overview">
+      <h1>Zurück im normalen Quiz</h1>
+      <p>Überarbeiteter Planungsentwurf: keine eigene Rückkehr- oder Fehlerseite. Nach Erkennung erscheint nur dieser kurze Hinweis über der bestehenden ersten Quizfrage. Die Haarlänge bleibt eine separate Frage nach bestätigtem Testzugang, wenn sie noch fehlt.</p>
+      <div class="gallery">
+        <section>
+          <p class="case-label">1 · Normaler Quiz-Start mit kurzem Hinweis</p>
+          <div class="frame">
+            <div class="quiz">
+              <div class="strip">Wir lernen dein Haar kennen · 10 kurze Fragen</div>
+              <div class="progress"><span>←</span><div class="bar"></div><span>1/10</span></div>
+              <h2>Welche Haarstruktur haben die meisten deiner Haare?</h2>
+              <p class="question-copy">Wähle die natürliche Form deiner Haare, so gut du sie erkennen kannst.</p>
+              <div class="option">Glatt</div><div class="option">Wellig</div><div class="option">Lockig</div><div class="option">Kraus</div>
+            </div>
+            <div class="shade">
+              <div class="prompt" role="dialog" aria-labelledby="return-title" aria-modal="true">
+                <h3 id="return-title">Du hast das Quiz schon gemacht.</h3>
+                <p>Deine Antworten sind noch da. Möchtest du sie übernehmen oder ändern?</p>
+                <a class="button primary" href="#">Mit meinen Antworten weiter</a>
+                <a class="button secondary" href="#">Antworten bearbeiten</a>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section>
+          <p class="case-label">2 · Nach dem Teststart, nur wenn Haarlänge fehlt</p>
+          <div class="frame hair"><div class="quiz">
+            <div class="progress"><span>←</span><div class="bar"></div><span>Fast fertig</span></div>
+            <h2>Wie lang sind deine Haare aktuell?</h2>
+            <p class="question-copy">Bei Locken oder Coils zählt die sanft gestreckte Länge einer Strähne.</p>
+            <div class="option">Sehr kurz</div><div class="option">Kurz</div><div class="option selected">Mittellang</div><div class="option">Lang</div><div class="option">Sehr lang</div>
+            <a class="button primary" href="#">Speichern und Scanner öffnen</a>
+          </div></div>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

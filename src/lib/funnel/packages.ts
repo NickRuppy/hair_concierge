@@ -7,7 +7,7 @@ export { ORGANIC_PLAN_OFFER_VARIANT } from "@/lib/funnel/offer-presentation"
 export type FunnelPackage = {
   key: string
   slug: string | null
-  channel: "organic" | "meta" | "internal"
+  channel: "organic" | "meta" | "internal" | "email"
   status: "active" | "placeholder" | "archived"
   landingVariant: string
   quizVariant: string
@@ -18,7 +18,7 @@ export const DEFAULT_FUNNEL_PACKAGE_KEY = "default_organic"
 
 const KEY_PATTERN = /^[a-z0-9]+(?:_[a-z0-9]+)*$/
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
-const CHANNELS = new Set<FunnelPackage["channel"]>(["organic", "meta", "internal"])
+const CHANNELS = new Set<FunnelPackage["channel"]>(["organic", "meta", "internal", "email"])
 const STATUSES = new Set<FunnelPackage["status"]>(["active", "placeholder", "archived"])
 
 export function validateFunnelPackages(value: unknown): readonly FunnelPackage[] {

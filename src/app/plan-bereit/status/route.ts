@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
+import { resolveFunnelRequestContext } from "@/lib/funnel/server"
 import { z } from "zod"
 import { resolveOneTimeAccessStateForUser as resolveOneTimeAccessState } from "@/lib/billing/purchases"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
@@ -21,6 +22,8 @@ import {
   loadPlanBereitInitialReadiness,
   updateMissingPlanBereitSourceFact,
   needsFreshMigrationQuiz,
+  isValidPlanBereitFactPatch,
+  type PlanBereitMissingFactField,
   type PlanBereitQuizSourceKind,
 } from "../readiness"
 
@@ -73,11 +76,29 @@ export async function PATCH(request: Request) {
   return resolveMissingFactPatch(request)
 }
 
-const missingFactPatchSchema = z.object({
-  field: z.literal("hair_length"),
-  value: z.enum(["very_short", "short", "medium", "long", "very_long"]),
-  sourceVersion: z.string().min(1),
-})
+const missingFactPatchSchema = z
+  .object({
+    field: z.enum([
+      "structure",
+      "thickness",
+      "density",
+      "hair_length",
+      "fingertest",
+      "pulltest",
+      "scalp_type",
+      "goals",
+      "treatment",
+    ]),
+    value: z.union([z.string(), z.array(z.string())]),
+    sourceVersion: z.string().min(1),
+  })
+  .strict()
+  .refine((body) => isValidPlanBereitFactPatch(body.field, body.value))
+
+async function exactReturnSession(request: Request): Promise<string | null> {
+  const context = await resolveFunnelRequestContext(new NextRequest(request))
+  return context?.packageKey === "customerio_scan_return_v1" ? context.sessionId : null
+}
 
 async function resolveCanonicalLead(
   input: {
@@ -181,6 +202,7 @@ async function resolveStatus(request: Request, retryLink: boolean, deps = status
       email: user.email,
       leadId: canonical.leadId,
       expectedQuizSourceKind: canonical.expectedQuizSourceKind,
+      funnelSessionId: await exactReturnSession(request),
     }
     const readiness = retryLink
       ? await deps.linkSource(admin, readinessInput)
@@ -226,6 +248,12 @@ function migrationQuizResponse(userId: string, enrollmentId: string) {
 }
 
 async function resolveMissingFactPatch(request: Request) {
+  if (
+    request.headers.get("origin") &&
+    request.headers.get("origin") !== new URL(request.url).origin
+  ) {
+    return NextResponse.json({ status: "forbidden" }, { status: 403 })
+  }
   const leadResult = z.string().uuid().safeParse(new URL(request.url).searchParams.get("lead"))
   if (!leadResult.success) {
     return NextResponse.json({ status: "invalid_source" }, { status: 400 })
@@ -259,6 +287,8 @@ async function resolveMissingFactPatch(request: Request) {
   }
 
   try {
+    if (!(await isPersonalPlanAppV1AllowedForUser(user.id)))
+      return NextResponse.json({ status: "forbidden" }, { status: 403 })
     const canonical = await resolveCanonicalLead({
       admin,
       requestedLeadId: leadResult.data,
@@ -275,8 +305,9 @@ async function resolveMissingFactPatch(request: Request) {
       email: user.email,
       leadId: leadResult.data,
       expectedQuizSourceKind: canonical.expectedQuizSourceKind,
+      funnelSessionId: await exactReturnSession(request),
       sourceVersion: body.data.sourceVersion,
-      field: body.data.field,
+      field: body.data.field as PlanBereitMissingFactField,
       value: body.data.value,
     })
 

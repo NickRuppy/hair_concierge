@@ -273,7 +273,7 @@ test("the package key reaches the ready client from the server, never from the c
   // One resolution, shared with the readiness/provisioning path — never the
   // error-swallowing attribution lookup, and never a second, independent one.
   assert.doesNotMatch(pageSource, /resolveFunnelContextForLead/)
-  assert.match(pageSource, /resolvePlanBereitFunnelPackage\(leadId\)/)
+  assert.match(pageSource, /resolvePlanBereitFunnelPackage\(leadId, undefined, funnelSessionId\)/)
 
   // Every render site of the ready client carries the package, not just the ready one:
   // a waiting or error screen can reach `ready` through the poll without a new render.
