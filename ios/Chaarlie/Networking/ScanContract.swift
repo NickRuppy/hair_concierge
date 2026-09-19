@@ -95,6 +95,7 @@ struct ScanResult: Codable, Identifiable, Sendable {
     let missingFacts: [String]?
     let code: String?
     var historySaved: Bool? = nil
+    var identified: IdentifiedScanProduct? = nil
     func validate() throws {
         guard contractVersion == 1 else { throw MobileError.invalidResponse }
         switch kind {
@@ -114,6 +115,12 @@ struct ScanResult: Codable, Identifiable, Sendable {
         }
     }
     var id: String { [kind.rawValue, contextRevision ?? "", product?.id ?? productId ?? ""].joined(separator: ":") }
+}
+struct IdentifiedScanProduct: Codable, Sendable {
+    let productName: String
+    let brand: String?
+    let imageUrl: String?
+    let suggestedCategory: String?
 }
 struct SearchResponse: Codable, Sendable {
     let contractVersion: Int

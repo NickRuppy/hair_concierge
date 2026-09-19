@@ -6,6 +6,7 @@ import {
   parseHistoryCursor,
   recordMobileHistory,
   saveMobileHistory,
+  setMobileHistoryFavorite,
 } from "../src/lib/mobile/history-service"
 import {
   mobileScanResolveRequestSchema,
@@ -226,14 +227,15 @@ test("history pages preserve timestamp precision, use owner keyset boundary and 
     }
     return []
   })
-  const first = await loadMobileHistory(db, owner)
+  const first = await loadMobileHistory(db, owner, null, null, true)
   assert.equal(first.entries.length, 100)
   assert.ok(first.nextCursor)
+  assert.equal(seen[0].searchParams.get("is_favorite"), "eq.true")
   assert.deepEqual(parseHistoryCursor(first.nextCursor), {
     time: row.last_seen_at,
     id: rows[99].id,
   })
-  const second = await loadMobileHistory(db, owner, first.nextCursor)
+  const second = await loadMobileHistory(db, owner, first.nextCursor, null, true)
   assert.equal(second.entries.length, 1)
   assert.equal(second.nextCursor, null)
   assert.ok(seen[1].searchParams.get("or")?.includes(row.last_seen_at))
@@ -249,6 +251,25 @@ test("history pages preserve timestamp precision, use owner keyset boundary and 
       ),
     /invalid_request/,
   )
+})
+
+test("history returns favorite state, filters it server-side, and toggles an owner entry idempotently", async () => {
+  const seen: URL[] = []
+  const db = client((url, body) => {
+    if (url.pathname === "/rest/v1/mobile_scan_history") {
+      seen.push(url)
+      return [{ ...row, is_favorite: true }]
+    }
+    if (url.pathname === "/rest/v1/rpc/mobile_scan_history_set_favorite") {
+      assert.deepEqual(body, { p_user_id: owner, p_entry_id: row.id, p_is_favorite: true })
+      return true
+    }
+    return []
+  })
+  const page = await loadMobileHistory(db, owner, null, null, true)
+  assert.equal(page.entries[0].isFavorite, true)
+  assert.equal(seen[0].searchParams.get("is_favorite"), "eq.true")
+  assert.equal(await setMobileHistoryFavorite(db, owner, row.id, true), true)
 })
 
 test("barcode history availability follows its current mapping, while product-only history remains available", async () => {

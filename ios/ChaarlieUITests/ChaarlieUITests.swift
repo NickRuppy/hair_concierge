@@ -273,10 +273,11 @@ final class ChaarlieUITests: XCTestCase {
         XCTAssertFalse(app.buttons["Haarangaben aktualisieren"].exists)
         XCTAssertFalse(app.buttons["Hinzufügen"].exists)
     }
-    private func designApp(_ scenario: String, largeText: Bool = false) -> XCUIApplication {
+    private func designApp(_ scenario: String, largeText: Bool = false, reduceMotion: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["--ui-design-review"]
         if largeText { app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
+        if reduceMotion { app.launchArguments += ["--ui-reduce-motion"] }
         app.launchEnvironment["CHAARLIE_DESIGN_SCENARIO"] = scenario
         app.launch()
         return app
@@ -286,7 +287,7 @@ final class ChaarlieUITests: XCTestCase {
         for tab in ["Scan", "Suche", "Verlauf", "Profil"] {
             XCTAssertTrue(app.tabBars.buttons[tab].waitForExistence(timeout: 5))
         }
-        let unknown = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Barcode 4006381333931")).firstMatch
+        let unknown = app.buttons["history.open.unknown"]
         XCTAssertTrue(unknown.waitForExistence(timeout: 5))
         screenshot("history-mixed-states", app: app)
         unknown.tap()
@@ -297,14 +298,128 @@ final class ChaarlieUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["In Prüfung"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.buttons["Shampoo"].exists)
         screenshot("history-research-confirmed", app: app)
-        app.buttons["Zum Verlauf"].tap()
+        app.buttons["Verlauf öffnen"].tap()
         XCTAssertTrue(unknown.waitForExistence(timeout: 5))
         XCTAssertTrue(unknown.label.contains("In Prüfung"))
         app.buttons["Verlauf verwalten"].tap()
-        app.buttons["Verlauf löschen"].tap()
-        app.buttons["Verlauf löschen"].tap()
+        app.buttons["Verlauf leeren"].tap()
+        app.buttons["Verlauf leeren"].tap()
         XCTAssertTrue(app.staticTexts["Noch keine Produkte"].waitForExistence(timeout: 5))
         screenshot("history-cleared", app: app)
+    }
+    func testRefinementDMPreviewOtherCategoryAndCompactConfirmation() throws {
+        let app = designApp("research-identified")
+        let suggested = app.buttons["research.suggestion"]
+        XCTAssertTrue(suggested.waitForExistence(timeout: 8))
+        XCTAssertEqual(suggested.label, "Als Shampoo einreichen")
+        XCTAssertTrue(app.staticTexts["Produkt erkannt"].exists)
+        XCTAssertTrue(app.staticTexts["Ist das ein Shampoo?"].exists)
+        XCTAssertLessThan(app.frame.maxY - app.buttons["Andere Produktart"].frame.maxY, 100)
+        screenshot("refinement-dm-preview", app: app)
+        app.buttons["Andere Produktart"].tap()
+        XCTAssertTrue(app.buttons["Conditioner"].waitForExistence(timeout: 5))
+        XCTAssertFalse(suggested.exists)
+        app.buttons["Conditioner"].tap()
+        let openHistory = app.buttons["Verlauf öffnen"]
+        XCTAssertTrue(openHistory.waitForExistence(timeout: 8))
+        XCTAssertTrue(app.staticTexts["Wir melden uns, sobald das Ergebnis da ist."].exists)
+        XCTAssertTrue(openHistory.isHittable)
+        let status = app.staticTexts["research.status"]
+        XCTAssertEqual(status.frame.midX, app.frame.midX, accuracy: 12)
+        XCTAssertLessThan(app.frame.maxY - openHistory.frame.maxY, 100, "Content fitting must remove the old empty lower half")
+        try app.performAccessibilityAudit(for: [.elementDetection, .sufficientElementDescription, .trait])
+        screenshot("refinement-confirmation", app: app)
+    }
+    func testRefinementDMPendingGateFallbackAndRetry() {
+        var app = designApp("research-status-loading")
+        XCTAssertTrue(app.staticTexts["Prüfstatus wird geladen …"].waitForExistence(timeout: 8))
+        XCTAssertFalse(app.buttons["research.suggestion"].exists)
+        app = designApp("research-identified-pending")
+        XCTAssertTrue(app.buttons["Verlauf öffnen"].waitForExistence(timeout: 8))
+        XCTAssertFalse(app.buttons["research.suggestion"].exists)
+        app = designApp("research-no-suggestion")
+        XCTAssertTrue(app.buttons["Shampoo"].waitForExistence(timeout: 8))
+        XCTAssertFalse(app.buttons["research.suggestion"].exists)
+        app = designApp("research-identified-error")
+        XCTAssertTrue(app.buttons["research.suggestion"].waitForExistence(timeout: 8))
+        app.buttons["research.suggestion"].tap()
+        XCTAssertTrue(app.buttons["Erneut versuchen"].waitForExistence(timeout: 8))
+        XCTAssertFalse(app.buttons["Verlauf öffnen"].exists)
+        XCTAssertFalse(app.buttons["Andere Produktart"].isEnabled)
+        screenshot("refinement-dm-error", app: app)
+    }
+    func testRefinementFavoritesAreSeparateFromOpeningAndSurviveClear() throws {
+        let app = designApp("history")
+        let heart = app.buttons["history.favorite.unknown"]
+        XCTAssertTrue(heart.waitForExistence(timeout: 8))
+        XCTAssertTrue(heart.label.contains("als Favorit merken"))
+        XCTAssertGreaterThanOrEqual(heart.frame.width, 44)
+        XCTAssertGreaterThanOrEqual(heart.frame.height, 44)
+        heart.tap()
+        XCTAssertTrue(app.buttons["history.open.unknown"].exists)
+        XCTAssertFalse(app.staticTexts["research.status"].exists)
+        XCTAssertTrue(heart.label.contains("aus Favoriten entfernen"))
+        app.segmentedControls.buttons["Favoriten"].tap()
+        XCTAssertTrue(heart.waitForExistence(timeout: 8))
+        XCTAssertFalse(app.buttons["history.open.known"].exists)
+        try app.performAccessibilityAudit(for: [.elementDetection, .sufficientElementDescription, .trait])
+        screenshot("refinement-favorites-filter", app: app)
+        app.segmentedControls.buttons["Alle"].tap()
+        XCTAssertTrue(app.buttons["history.open.known"].waitForExistence(timeout: 8))
+        app.buttons["Verlauf verwalten"].tap()
+        app.buttons["Verlauf leeren"].tap()
+        XCTAssertTrue(app.staticTexts["Nicht favorisierte Einträge werden entfernt. Favoriten und eingereichte Produkte bleiben erhalten."].exists)
+        app.buttons["Verlauf leeren"].tap()
+        XCTAssertTrue(heart.waitForExistence(timeout: 8))
+        XCTAssertFalse(app.buttons["history.open.known"].exists)
+        app.buttons["history.open.unknown"].tap()
+        XCTAssertTrue(app.buttons["Shampoo"].waitForExistence(timeout: 8))
+    }
+    func testRefinementFavoriteFailureRollsBackAndRetries() {
+        let app = designApp("favorite-error")
+        let heart = app.buttons["history.favorite.unknown"]
+        XCTAssertTrue(heart.waitForExistence(timeout: 8))
+        heart.tap()
+        XCTAssertTrue(app.staticTexts["Favorit konnte nicht gespeichert werden. Bitte erneut versuchen."].waitForExistence(timeout: 8))
+        XCTAssertTrue(heart.label.contains("als Favorit merken"))
+        app.buttons["Erneut versuchen"].tap()
+        XCTAssertTrue(heart.label.contains("aus Favoriten entfernen"))
+        app.segmentedControls.buttons["Favoriten"].tap()
+        XCTAssertTrue(heart.waitForExistence(timeout: 8))
+        heart.tap()
+        XCTAssertTrue(app.staticTexts["Noch keine Favoriten"].waitForExistence(timeout: 8))
+    }
+    func testRefinementLargeTextAndReducedMotionKeepActionsReachable() {
+        let app = designApp("research-identified", largeText: true, reduceMotion: true)
+        let suggested = app.buttons["research.suggestion"]
+        XCTAssertTrue(suggested.waitForExistence(timeout: 8))
+        for _ in 0..<6 { if suggested.isHittable { break }; app.swipeUp() }
+        XCTAssertTrue(suggested.isHittable)
+        suggested.tap()
+        let openHistory = app.buttons["Verlauf öffnen"]
+        XCTAssertTrue(openHistory.waitForExistence(timeout: 8))
+        for _ in 0..<6 { if openHistory.isHittable { break }; app.swipeUp() }
+        XCTAssertTrue(openHistory.isHittable)
+        screenshot("refinement-large-confirmation", app: app)
+        openHistory.tap()
+        let heart = app.buttons["history.favorite.unknown"]
+        XCTAssertTrue(heart.waitForExistence(timeout: 8))
+        XCTAssertTrue(heart.label.contains("als Favorit merken"))
+        XCTAssertGreaterThanOrEqual(heart.frame.width, 44)
+        screenshot("refinement-large-history", app: app)
+    }
+    func testRefinementUnsavedNoticeKeepsManualAndCompactActionsReachable() {
+        let app = designApp("research-unsaved")
+        XCTAssertTrue(app.buttons["Shampoo"].waitForExistence(timeout: 8))
+        XCTAssertTrue(app.buttons["Shampoo"].isHittable)
+        XCTAssertTrue(app.buttons["Erneut speichern"].isHittable)
+        app.buttons["Shampoo"].tap()
+        let openHistory = app.buttons["Verlauf öffnen"]
+        XCTAssertTrue(openHistory.waitForExistence(timeout: 8))
+        XCTAssertTrue(openHistory.isHittable)
+        XCTAssertTrue(app.buttons["Erneut speichern"].isHittable)
+        XCTAssertLessThan(app.frame.maxY - openHistory.frame.maxY, 100)
+        screenshot("refinement-confirmation-save-retry", app: app)
     }
     func testHistoryRecoveryAndNativeTabContrastFixtures() {
         for scenario in ["scan", "scan-bright", "history-empty", "history-error", "history-loading", "research-pending", "search-results"] {

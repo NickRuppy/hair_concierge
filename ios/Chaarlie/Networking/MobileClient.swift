@@ -255,12 +255,22 @@ actor MobileClient {
         guard response.contractVersion == 1 else { throw MobileError.invalidResponse }
         return response
     }
-    func history(cursor: String? = nil, barcode: String? = nil) async throws -> HistoryResponse {
+    func history(cursor: String? = nil, barcode: String? = nil, favoritesOnly: Bool = false) async throws -> HistoryResponse {
         var query: [URLQueryItem] = []
         if let cursor { query.append(URLQueryItem(name: "cursor", value: cursor)) }
         if let barcode { query.append(URLQueryItem(name: "barcode", value: barcode)) }
+        if favoritesOnly { query.append(URLQueryItem(name: "favorites", value: "1")) }
         let response: HistoryResponse = try await authorized("scan/history", query: query)
         guard response.contractVersion == 1 else { throw MobileError.invalidResponse }
+        return response
+    }
+    func setHistoryFavorite(entryId: String, isFavorite: Bool) async throws -> HistoryFavoriteResponse {
+        let idCharacters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-"))
+        guard !entryId.isEmpty, entryId.rangeOfCharacter(from: idCharacters.inverted) == nil else { throw MobileError.invalidResponse }
+        // raw() builds the URL and performs path encoding exactly once.
+        let response: HistoryFavoriteResponse = try await authorized("scan/history/\(entryId)", method: "PATCH",
+            encodedBody: JSONEncoder().encode(HistoryFavoriteRequest(isFavorite: isFavorite)))
+        guard response.contractVersion == 1, response.entryId == entryId, response.isFavorite == isFavorite else { throw MobileError.invalidResponse }
         return response
     }
     func clearHistory() async throws {

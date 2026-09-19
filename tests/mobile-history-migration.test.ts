@@ -11,6 +11,10 @@ const migration = new URL(
   "../supabase/migrations/20260919130450_mobile_scan_history.sql",
   import.meta.url,
 )
+const favoritesMigration = new URL(
+  "../supabase/migrations/20260919150936_mobile_scan_history_favorites.sql",
+  import.meta.url,
+)
 
 async function fixture() {
   const db = new PGlite()
@@ -37,6 +41,7 @@ async function fixture() {
   )
   await db.exec(canonicalMigration.split("ALTER TABLE public.product_identifiers")[0])
   await db.exec(await readFile(migration, "utf8"))
+  await db.exec(await readFile(favoritesMigration, "utf8"))
   return db
 }
 async function touch(
@@ -106,6 +111,124 @@ test("history validates owner submission, keeps confirmed research when rescanne
     await touch(db, "4012345678901")
     await db.query("DELETE FROM profiles WHERE id=$1", [owner])
     assert.equal((await db.query("SELECT * FROM mobile_scan_history")).rows.length, 0)
+  } finally {
+    await db.close()
+  }
+})
+
+test("favorite is service-only, idempotent, owner-bound, preserves merges, and survives clear", async () => {
+  const db = await fixture()
+  try {
+    const scan = await touch(db, "4012345678901", product)
+    const entry = (scan.rows[0] as { id: string }).id
+    assert.equal(
+      (
+        await db.query<{ mobile_scan_history_set_favorite: boolean }>(
+          "SELECT mobile_scan_history_set_favorite($1,$2,$3)",
+          [owner, entry, true],
+        )
+      ).rows[0].mobile_scan_history_set_favorite,
+      true,
+    )
+    assert.equal(
+      (
+        await db.query<{ mobile_scan_history_set_favorite: boolean }>(
+          "SELECT mobile_scan_history_set_favorite($1,$2,$3)",
+          [owner, entry, true],
+        )
+      ).rows[0].mobile_scan_history_set_favorite,
+      true,
+    )
+    await touch(db, null, product)
+    assert.equal(
+      (
+        await db.query<{ is_favorite: boolean }>(
+          "SELECT is_favorite FROM mobile_scan_history WHERE id=$1",
+          [entry],
+        )
+      ).rows[0].is_favorite,
+      true,
+    )
+    await db.query("SELECT mobile_scan_history_clear($1)", [owner])
+    assert.equal(
+      (await db.query<{ count: number }>("SELECT count(*) FROM mobile_scan_history")).rows[0].count,
+      1,
+    )
+    await assert.rejects(
+      db.query("SELECT mobile_scan_history_set_favorite($1,$2,$3)", [other, entry, false]),
+      /history_entry_not_found/,
+    )
+    await assert.rejects(
+      db.query("SELECT mobile_scan_history_set_favorite($1,$2,$3)", [owner, other, false]),
+      /history_entry_not_found/,
+    )
+    await db.exec(`SET ROLE authenticated; SET request.jwt.claim.sub='${owner}'`)
+    await assert.rejects(
+      db.query("SELECT mobile_scan_history_set_favorite($1,$2,$3)", [owner, entry, false]),
+      /permission denied/,
+    )
+    await db.exec("RESET ROLE")
+    await db.exec(`DELETE FROM profiles WHERE id='${owner}'`)
+    assert.equal(
+      (await db.query<{ count: number }>("SELECT count(*) FROM mobile_scan_history")).rows[0].count,
+      0,
+    )
+  } finally {
+    await db.close()
+  }
+})
+
+test("favorite migration retains the clear void signature and no client update grant", async () => {
+  const db = await fixture()
+  try {
+    assert.equal(
+      (
+        await db.query<{ result: string }>(
+          "SELECT pg_get_function_result('public.mobile_scan_history_clear(uuid)'::regprocedure) result",
+        )
+      ).rows[0].result,
+      "void",
+    )
+    await db.exec(`SET ROLE authenticated; SET request.jwt.claim.sub='${owner}'`)
+    await assert.rejects(
+      db.exec("UPDATE mobile_scan_history SET is_favorite=true"),
+      /permission denied/,
+    )
+  } finally {
+    await db.close()
+  }
+})
+
+test("touch OR-preserves favorites at both deduplication deletes", async () => {
+  const db = await fixture()
+  try {
+    const scanned = await touch(db, "4012345678901", product)
+    const barcodeEntry = (scanned.rows[0] as { id: string }).id
+    await db.exec(
+      `INSERT INTO mobile_scan_history(user_id,product_id,is_favorite) VALUES('${owner}','${product}',true)`,
+    )
+    await touch(db, "4012345678901", product)
+    assert.equal(
+      (
+        await db.query<{ is_favorite: boolean }>(
+          "SELECT is_favorite FROM mobile_scan_history WHERE id=$1",
+          [barcodeEntry],
+        )
+      ).rows[0].is_favorite,
+      true,
+    )
+
+    await db.exec("DELETE FROM mobile_scan_history; DROP INDEX mobile_scan_history_product_key")
+    await db.exec(`
+      INSERT INTO mobile_scan_history(user_id,product_id,is_favorite) VALUES
+        ('${owner}','${product}',false),('${owner}','${product}',true)
+    `)
+    await touch(db, null, product)
+    const rows = await db.query<{ is_favorite: boolean }>(
+      "SELECT is_favorite FROM mobile_scan_history WHERE user_id=$1",
+      [owner],
+    )
+    assert.deepEqual(rows.rows, [{ is_favorite: true }])
   } finally {
     await db.close()
   }

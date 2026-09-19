@@ -77,6 +77,13 @@ const assessmentSchema = z.object({
     .max(5),
 })
 
+const retailerIdentifiedProductSchema = z.object({
+  productName: z.string().min(1),
+  brand: z.string().min(1).nullable(),
+  suggestedCategory: z.string().min(1).nullable(),
+  imageUrl: z.string().url().nullable(),
+})
+
 export const mobileScanResolveResultSchema = z
   .discriminatedUnion("kind", [
     assessmentSchema,
@@ -105,6 +112,7 @@ export const mobileScanResolveResultSchema = z
       kind: z.literal("submission_required"),
       productId: z.string().min(1).nullable(),
       missingFacts: z.array(z.string()).min(1),
+      identified: retailerIdentifiedProductSchema.optional(),
     }),
     z.object({
       contractVersion: z.literal(MOBILE_SCAN_CONTRACT_VERSION),

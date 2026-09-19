@@ -4,7 +4,12 @@ import { GET as bootstrap } from "../src/app/api/mobile/v1/bootstrap/route"
 import { GET as profile } from "../src/app/api/mobile/v1/profile/route"
 import { POST as resolve } from "../src/app/api/mobile/v1/scan/resolve/route"
 import { GET as search } from "../src/app/api/mobile/v1/scan/search/route"
-import { GET as history, DELETE as clearHistory } from "../src/app/api/mobile/v1/scan/history/route"
+import {
+  DELETE as clearHistory,
+  GET as history,
+  parseHistoryFavoritesFilter,
+} from "../src/app/api/mobile/v1/scan/history/route"
+import { PATCH as setHistoryFavorite } from "../src/app/api/mobile/v1/scan/history/[entryId]/route"
 import { POST as submit } from "../src/app/api/mobile/v1/scan/submit/route"
 import { classifyRoute } from "../src/lib/auth/route-classification"
 import { requiresSubscriptionPath } from "../src/lib/supabase/middleware"
@@ -31,6 +36,19 @@ test("native routes fail closed by default and never infer admission from platfo
       assert.equal(response.headers.get("cache-control"), "no-store")
       assert.deepEqual(await response.json(), { error: "unauthorized" })
     }
+    const favoriteResponse = await setHistoryFavorite(
+      new Request(
+        "http://localhost/api/mobile/v1/scan/history/11111111-1111-4111-8111-111111111111",
+        {
+          method: "PATCH",
+          headers: { cookie: "session=fabricated", "content-type": "application/json" },
+          body: JSON.stringify({ isFavorite: true }),
+        },
+      ),
+      { params: Promise.resolve({ entryId: "11111111-1111-4111-8111-111111111111" }) },
+    )
+    assert.equal(favoriteResponse.status, 401)
+    assert.deepEqual(await favoriteResponse.json(), { error: "unauthorized" })
   } finally {
     if (previous === undefined) delete process.env.MOBILE_API_ENABLED
     else process.env.MOBILE_API_ENABLED = previous
@@ -51,6 +69,13 @@ test("native bearer route classification leaves web subscription paths intact", 
   ])
     assert.equal(requiresSubscriptionPath(path), true, path)
   assert.equal(requiresSubscriptionPath("/api/mobile/v1/scan/resolve"), false)
+})
+
+test("History favorites filter accepts only its documented query value", () => {
+  assert.equal(parseHistoryFavoritesFilter(null), false)
+  assert.equal(parseHistoryFavoritesFilter("1"), true)
+  for (const raw of ["", "0", "true", "01", "1&barcode=other"])
+    assert.throws(() => parseHistoryFavoritesFilter(raw), /invalid_request/)
 })
 
 test("native proxy bypasses browser cookie work only at the exact route boundary", async () => {

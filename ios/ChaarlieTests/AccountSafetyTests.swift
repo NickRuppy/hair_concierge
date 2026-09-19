@@ -18,6 +18,8 @@ actor ControlledTransport: HTTPTransport {
         return try await withCheckedThrowingContinuation { continuations[request.url!.lastPathComponent] = $0 }
     }
     func lastBody(_ path: String) -> Data? { requests.last { $0.url?.lastPathComponent == path }?.httpBody }
+    func lastRequest(_ path: String) -> URLRequest? { requests.last { $0.url?.lastPathComponent == path } }
+    func latestRequest() -> URLRequest? { requests.last }
     func fail(_ path: String) { continuations.removeValue(forKey: path)?.resume(throwing: URLError(.networkConnectionLost)) }
     func requestCount(_ path: String) -> Int { requests.filter { $0.url?.lastPathComponent == path }.count }
     func hasRequest(_ path: String) -> Bool { continuations[path] != nil }
@@ -28,6 +30,131 @@ actor ControlledTransport: HTTPTransport {
 }
 @MainActor
 final class AccountSafetyTests: XCTestCase {
+    func testFavoritePatchUsesUnescapedUUIDPath() async throws {
+        let transport = ControlledTransport(), client = try client(transport)
+        try await client.install(session("favorite-wire"))
+        let id = "11111111-2222-4333-8444-555555555555"
+        let update = Task { try await client.setHistoryFavorite(entryId: id, isFavorite: true) }
+        for _ in 0..<200 {
+            if await transport.latestRequest() != nil { break }
+            try await Task.sleep(for: .milliseconds(5))
+        }
+        let captured = await transport.latestRequest()
+        let request = try XCTUnwrap(captured)
+        XCTAssertEqual(request.url?.path, "/api/mobile/v1/scan/history/11111111-2222-4333-8444-555555555555")
+        await transport.complete(try XCTUnwrap(request.url?.lastPathComponent), json: "{\"contractVersion\":1,\"entryId\":\"\(id)\",\"isFavorite\":true}")
+        _ = try await update.value
+    }
+    private func historyEntry(_ id: String = "unknown", favorite: Bool = false) -> HistoryEntry {
+        HistoryEntry(id: id, barcodeGtin: "8700216328609", productId: nil, productName: nil, brand: nil, imageUrl: nil,
+                     lastSeenAt: "2026-09-19T12:00:00Z", status: .not_in_catalog, isFavorite: favorite)
+    }
+    func testHistoryFavoriteIsOptimisticAndRollsBackWithRetry() async throws {
+        let transport = ControlledTransport(), client = try client(transport)
+        try await client.install(session("favorites"))
+        let model = AppModel(client: client); model.admission = .ready
+        model.historyEntries = [historyEntry()]
+        let first = Task { await model.toggleHistoryFavorite(model.historyEntries[0]) }
+        try await waitFor("unknown", transport: transport)
+        XCTAssertTrue(model.historyEntries[0].isFavorite)
+        XCTAssertTrue(model.historyFavoriteBusy.contains("unknown"))
+        let capturedRequest = await transport.lastRequest("unknown")
+        let request = try XCTUnwrap(capturedRequest)
+        XCTAssertEqual(request.httpMethod, "PATCH")
+        XCTAssertEqual(request.url?.path, "/api/mobile/v1/scan/history/unknown")
+        XCTAssertEqual(try JSONDecoder().decode(HistoryFavoriteRequest.self, from: XCTUnwrap(request.httpBody)).isFavorite, true)
+        await transport.fail("unknown"); await first.value
+        XCTAssertFalse(model.historyEntries[0].isFavorite)
+        XCTAssertNotNil(model.historyFavoriteError)
+        XCTAssertTrue(model.historyFavoriteBusy.isEmpty)
+        let retry = Task { await model.retryHistoryFavorite() }
+        try await waitFor("unknown", transport: transport)
+        await transport.complete("unknown", json: #"{"contractVersion":1,"entryId":"unknown","isFavorite":true}"#)
+        await retry.value
+        XCTAssertTrue(model.historyEntries[0].isFavorite)
+        XCTAssertNil(model.historyFavoriteError)
+        XCTAssertNil(model.scanResult, "Heart mutation must not open a product")
+        XCTAssertEqual(model.historyEntries[0].lastSeenAt, "2026-09-19T12:00:00Z")
+    }
+    func testFavoritesFilterUsesServerAndRemovesUnfavoritedRowAfterSuccess() async throws {
+        let transport = ControlledTransport(), client = try client(transport)
+        try await client.install(session("filter"))
+        let model = AppModel(client: client); model.admission = .ready
+        model.historyNextCursor = "old-filter-page"
+        let filter = Task { await model.setHistoryFilter(favoritesOnly: true) }
+        try await waitFor("history", transport: transport)
+        let request = await transport.lastRequest("history")
+        let query = URLComponents(url: try XCTUnwrap(request?.url), resolvingAgainstBaseURL: false)?.queryItems
+        XCTAssertEqual(query?.first { $0.name == "favorites" }?.value, "1")
+        XCTAssertNil(query?.first { $0.name == "cursor" })
+        await transport.complete("history", json: #"{"contractVersion":1,"entries":[{"id":"unknown","lastSeenAt":"2026-09-19T12:00:00Z","status":"in_research","isFavorite":true}]}"#)
+        await filter.value
+        let toggle = Task { await model.toggleHistoryFavorite(model.historyEntries[0]) }
+        try await waitFor("unknown", transport: transport)
+        XCTAssertEqual(model.historyEntries.count, 1, "Keep the pending row reachable until acknowledgement")
+        await transport.complete("unknown", json: #"{"contractVersion":1,"entryId":"unknown","isFavorite":false}"#)
+        await toggle.value
+        XCTAssertTrue(model.historyEntries.isEmpty)
+    }
+    func testClearHistoryRetainsFavoritesAndReloadsTheirPagination() async throws {
+        let transport = ControlledTransport(), client = try client(transport)
+        try await client.install(session("clear"))
+        let model = AppModel(client: client); model.admission = .ready
+        model.historyEntries = [historyEntry("saved", favorite: true), historyEntry("other")]
+        let clear = Task { await model.clearHistory() }
+        try await waitFor("history", transport: transport)
+        await transport.complete("history", json: #"{"contractVersion":1,"cleared":true}"#)
+        try await waitFor("history", transport: transport)
+        XCTAssertEqual(model.historyEntries.map(\.id), ["saved"])
+        await transport.complete("history", json: #"{"contractVersion":1,"entries":[{"id":"saved","lastSeenAt":"2026-09-19T12:00:00Z","status":"available","isFavorite":true}],"nextCursor":"remaining-favorites"}"#)
+        await clear.value
+        XCTAssertTrue(model.historyEntries[0].isFavorite)
+        XCTAssertEqual(model.historyNextCursor, "remaining-favorites")
+    }
+    func testResearchStatusCheckingAndPendingPreventSecondSubmit() async throws {
+        let transport = ControlledTransport(), client = try client(transport)
+        try await client.install(session("pending"))
+        let model = AppModel(client: client); model.admission = .ready
+        model.lastRequest = .barcode("8700216328609")
+        let check = Task { await model.checkResearchStatus() }
+        try await waitFor("history", transport: transport)
+        await model.submitResearch(category: "shampoo")
+        await transport.complete("history", json: #"{"contractVersion":1,"entries":[{"id":"unknown","barcodeGtin":"08700216328609","lastSeenAt":"2026-09-19T12:00:00Z","status":"in_research"}]}"#)
+        await check.value
+        XCTAssertTrue(model.researchPending)
+        await model.submitResearch(category: "shampoo")
+        let count = await transport.requestCount("submit")
+        XCTAssertEqual(count, 0)
+    }
+    func testFavoriteRollbackSurvivesOverlappingFilteredReload() async throws {
+        let transport = ControlledTransport(), client = try client(transport)
+        try await client.install(session("favorite-reload"))
+        let model = AppModel(client: client); model.admission = .ready; model.historyFavoritesOnly = true
+        model.historyEntries = [historyEntry(favorite: true)]
+        let toggle = Task { await model.toggleHistoryFavorite(model.historyEntries[0]) }
+        try await waitFor("unknown", transport: transport)
+        let reload = Task { await model.loadHistory() }
+        try await waitFor("history", transport: transport)
+        await transport.complete("history", json: #"{"contractVersion":1,"entries":[]}"#)
+        await reload.value
+        await transport.fail("unknown"); await toggle.value
+        XCTAssertEqual(model.historyEntries.map(\.id), ["unknown"])
+        XCTAssertEqual(model.historyEntries.first?.isFavorite, true)
+    }
+    func testRefinementContractsRoundTripIdentityAndFavoriteWhileAcceptingOldResponses() throws {
+        let old = #"{"id":"unknown","barcodeGtin":"8700216328609","lastSeenAt":"2026-09-19T12:00:00Z","status":"not_in_catalog"}"#
+        let oldEntry = try JSONDecoder().decode(HistoryEntry.self, from: Data(old.utf8))
+        let oldEncoded = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(oldEntry)) as? [String: Any])
+        XCTAssertEqual(oldEncoded["isFavorite"] as? Bool, false)
+        let newEntry = try JSONDecoder().decode(HistoryEntry.self, from: Data(old.dropLast().appending(",\"isFavorite\":true}").utf8))
+        let encoded = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(newEntry)) as? [String: Any])
+        XCTAssertEqual(encoded["isFavorite"] as? Bool, true)
+        let result = try JSONDecoder().decode(ScanResult.self, from: Data(#"{"contractVersion":1,"kind":"submission_required","missingFacts":["unknown_product"],"identified":{"productName":"Hydra Pflege","brand":"head&shoulders","imageUrl":null,"suggestedCategory":"shampoo"}}"#.utf8))
+        let output = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(result)) as? [String: Any])
+        XCTAssertEqual((output["identified"] as? [String: Any])?["productName"] as? String, "Hydra Pflege")
+        let legacy = try JSONDecoder().decode(ScanResult.self, from: Data(#"{"contractVersion":1,"kind":"submission_required","missingFacts":["unknown_product"]}"#.utf8))
+        XCTAssertNoThrow(try legacy.validate())
+    }
     func testLeavingScannerPreservesManualSearchContext() {
         let model = AppModel(client: MobileClient(configuration: try! MobileConfiguration(baseURL: URL(string: "http://localhost/api/mobile/v1")!), store: MemorySessionStore()))
         model.searchText = "Shampoo"
@@ -145,7 +272,7 @@ final class AccountSafetyTests: XCTestCase {
         XCTAssertTrue(model.hasUnsavedHistory)
         XCTAssertFalse(model.researchBusy)
     }
-    func testUnavailableHistoryReadStillAllowsIdempotentResearchSubmission() async throws {
+    func testUnavailableHistoryReadRequiresStatusRetryBeforeResearchSubmission() async throws {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("research-fallback"))
@@ -157,12 +284,10 @@ final class AccountSafetyTests: XCTestCase {
         await transport.fail("history")
         await check.value
         XCTAssertFalse(model.researchPending)
-        XCTAssertTrue(model.researchChecked)
-        let submit = Task { await model.submitResearch(category: "shampoo") }
-        try await waitFor("submit", transport: transport)
-        await transport.complete("submit", status: 202, json: #"{"contractVersion":1,"kind":"pending_submission","submissionId":"confirmed","historySaved":true}"#)
-        await submit.value
-        XCTAssertTrue(model.researchPending)
+        XCTAssertFalse(model.researchChecked)
+        await model.submitResearch(category: "shampoo")
+        let count = await transport.requestCount("submit")
+        XCTAssertEqual(count, 0)
     }
     func testLateHistoryAfterLogoutCannotRestoreAnotherAccountsEntries() async throws {
         let transport = ControlledTransport()
