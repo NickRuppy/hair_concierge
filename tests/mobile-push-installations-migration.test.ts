@@ -10,7 +10,7 @@ const otherInstallation = "44444444-4444-4444-8444-444444444444"
 const token = "ab".repeat(32)
 const rotatedToken = "cd".repeat(32)
 const migration = new URL(
-  "../supabase/migrations/20260918192304_mobile_push_installations.sql",
+  "../supabase/migrations/20260919130529_mobile_push_installations.sql",
   import.meta.url,
 )
 

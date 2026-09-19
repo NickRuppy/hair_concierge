@@ -77,7 +77,7 @@ test(
         "utf8",
       ).split("ALTER TABLE public.product_identifiers")[0],
     )
-    await sql(readFileSync("supabase/migrations/20260918181303_mobile_scan_history.sql", "utf8"))
+    await sql(readFileSync("supabase/migrations/20260919130450_mobile_scan_history.sql", "utf8"))
     await sql(
       readFileSync(
         "supabase/migrations/20260820103000_product_submissions_one_open_scan.sql",

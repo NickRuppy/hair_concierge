@@ -10,7 +10,7 @@ const afterApproval = "44444444-4444-4444-8444-444444444444"
 const webOnly = "55555555-5555-4555-8555-555555555555"
 const product = "66666666-6666-4666-8666-666666666666"
 const migration = new URL(
-  "../supabase/migrations/20260918191038_mobile_research_delivery_intent.sql",
+  "../supabase/migrations/20260919130507_mobile_research_delivery_intent.sql",
   import.meta.url,
 )
 

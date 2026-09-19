@@ -8,9 +8,9 @@ const submission = "33333333-3333-4333-8333-333333333333"
 const installation = "44444444-4444-4444-8444-444444444444"
 const product = "66666666-6666-4666-8666-666666666666"
 const migrations = [
-  "20260918191038_mobile_research_delivery_intent.sql",
-  "20260918192304_mobile_push_installations.sql",
-  "20260918192915_mobile_research_delivery_outbox.sql",
+  "20260919130507_mobile_research_delivery_intent.sql",
+  "20260919130529_mobile_push_installations.sql",
+  "20260919130547_mobile_research_delivery_outbox.sql",
 ]
 
 async function fixture() {

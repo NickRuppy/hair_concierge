@@ -8,7 +8,7 @@ const other = "22222222-2222-4222-8222-222222222222"
 const product = "33333333-3333-4333-8333-333333333333"
 const submission = "44444444-4444-4444-8444-444444444444"
 const migration = new URL(
-  "../supabase/migrations/20260918181303_mobile_scan_history.sql",
+  "../supabase/migrations/20260919130450_mobile_scan_history.sql",
   import.meta.url,
 )
 

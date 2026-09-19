@@ -6,7 +6,7 @@ import { setTimeout } from "node:timers/promises"
 
 const enabled = process.env.MOBILE_RESEARCH_POSTGRES_TEST === "1"
 const migration = readFileSync(
-  "supabase/migrations/20260918191038_mobile_research_delivery_intent.sql",
+  "supabase/migrations/20260919130507_mobile_research_delivery_intent.sql",
   "utf8",
 )
 const owner = "11111111-1111-4111-8111-111111111111"
