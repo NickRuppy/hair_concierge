@@ -15,6 +15,7 @@ struct Bootstrap: Codable, Sendable {
     let status: Status
     let profileRevision: String?
     let contextRevision: String?
+    var researchDeliveryEnabled: Bool? = nil
 }
 struct HairProfile: Codable, Sendable {
     struct Answer: Codable, Identifiable, Sendable {
@@ -27,7 +28,7 @@ struct HairProfile: Codable, Sendable {
 }
 
 enum MobileError: Error, Equatable {
-    case configuration, unauthorized, invalidResponse, unavailable, stale, invalidCode, profileConflict, invalidProfile, profileRequired
+    case configuration, unauthorized, invalidResponse, unavailable, stale, invalidCode, invalidBarcode, profileConflict, invalidProfile, profileRequired, researchNotReady, researchNotFound
 }
 
 enum MobileRuntime: Sendable, Equatable {
@@ -166,10 +167,15 @@ actor MobileClient {
         try? store.saveSession(nil)
         try? store.saveAttempt(nil)
     }
-    func logout() async {
+    func logout(pushInstallationId: String? = nil) async {
         let oldToken = session?.accessToken
         clear() // Local account removal never waits on the network.
-        if let oldToken { _ = try? await raw("auth/logout", method: "POST", bearer: oldToken) }
+        if let oldToken {
+            if let pushInstallationId {
+                _ = try? await raw("push/registration", method: "DELETE", body: ["installationId": pushInstallationId], bearer: oldToken)
+            }
+            _ = try? await raw("auth/logout", method: "POST", bearer: oldToken)
+        }
     }
     func start(email: String) async throws -> AuthAttempt {
         guard session == nil else { throw MobileError.stale }
@@ -219,6 +225,17 @@ actor MobileClient {
         return try await authorized("profile/complete", method: "POST", encodedBody: JSONEncoder().encode(request))
     }
     func bootstrap() async throws -> Bootstrap { try await authorized("bootstrap") }
+    func researchResult(_ submissionId: UUID) async throws -> ScanResult {
+        let result: ScanResult = try await authorized("scan/research-result/\(submissionId.uuidString.lowercased())")
+        try result.validate()
+        guard result.kind == .assessment || result.kind == .not_needed else { throw MobileError.invalidResponse }
+        return result
+    }
+    func registerPush(_ registration: PushRegistration, ifGeneration expected: UUID) async throws {
+        guard expected == epoch else { throw MobileError.stale }
+        let response: PushRegistrationResponse = try await authorized("push/registration", method: "POST", encodedBody: JSONEncoder().encode(registration))
+        guard response.registered else { throw MobileError.invalidResponse }
+    }
     func profile() async throws -> HairProfile { try await authorized("profile") }
     func editableProfile() async throws -> ProfileEditSnapshot {
         let snapshot: ProfileEditSnapshot = try await authorized("profile/edit")
@@ -236,6 +253,24 @@ actor MobileClient {
     func search(_ query: String) async throws -> SearchResponse {
         let response: SearchResponse = try await authorized("scan/search", query: [URLQueryItem(name: "q", value: query)])
         guard response.contractVersion == 1 else { throw MobileError.invalidResponse }
+        return response
+    }
+    func history(cursor: String? = nil, barcode: String? = nil) async throws -> HistoryResponse {
+        var query: [URLQueryItem] = []
+        if let cursor { query.append(URLQueryItem(name: "cursor", value: cursor)) }
+        if let barcode { query.append(URLQueryItem(name: "barcode", value: barcode)) }
+        let response: HistoryResponse = try await authorized("scan/history", query: query)
+        guard response.contractVersion == 1 else { throw MobileError.invalidResponse }
+        return response
+    }
+    func clearHistory() async throws {
+        let response: HistoryClearResponse = try await authorized("scan/history", method: "DELETE")
+        guard response.contractVersion == 1 else { throw MobileError.invalidResponse }
+    }
+    func submitResearch(_ request: ResearchRequest) async throws -> ResearchResponse {
+        let response: ResearchResponse = try await authorized("scan/submit", method: "POST", encodedBody: JSONEncoder().encode(request))
+        guard response.contractVersion == 1,
+              response.kind == .pending_submission ? response.submissionId != nil : response.productId != nil else { throw MobileError.invalidResponse }
         return response
     }
     private func authorized<T: Decodable>(_ path: String, method: String = "GET", encodedBody: Data? = nil,
@@ -308,6 +343,14 @@ actor MobileClient {
         let (data, response) = try await operation.value
         guard (200..<300).contains(response.statusCode) else {
             if response.statusCode == 401 { throw MobileError.unauthorized }
+            if path.hasPrefix("scan/research-result/") {
+                if response.statusCode == 409 { throw MobileError.researchNotReady }
+                if response.statusCode == 404 { throw MobileError.researchNotFound }
+            }
+            if path == "scan/resolve", response.statusCode == 400,
+               (try? JSONDecoder().decode(ProfileEditErrorBody.self, from: data))?.error == "invalid_identifier" {
+                throw MobileError.invalidBarcode
+            }
             if path == "auth/verify", response.statusCode == 400 { throw MobileError.invalidCode }
             if path == "profile/edit" {
                 let code = (try? JSONDecoder().decode(ProfileEditErrorBody.self, from: data))?.error

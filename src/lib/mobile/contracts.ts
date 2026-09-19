@@ -40,7 +40,14 @@ export const bootstrapSchema = z.discriminatedUnion("status", [
     status: z.literal("ready"),
     profileRevision: z.string(),
     contextRevision: z.string(),
+    researchDeliveryEnabled: z.boolean().optional().default(false),
   }),
-  z.object({ status: z.literal("profile_required") }),
-  z.object({ status: z.literal("temporarily_unavailable") }),
+  z.object({
+    status: z.literal("profile_required"),
+    researchDeliveryEnabled: z.boolean().optional().default(false),
+  }),
+  z.object({
+    status: z.literal("temporarily_unavailable"),
+    researchDeliveryEnabled: z.boolean().optional().default(false),
+  }),
 ])

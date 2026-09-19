@@ -4,6 +4,8 @@ import { GET as bootstrap } from "../src/app/api/mobile/v1/bootstrap/route"
 import { GET as profile } from "../src/app/api/mobile/v1/profile/route"
 import { POST as resolve } from "../src/app/api/mobile/v1/scan/resolve/route"
 import { GET as search } from "../src/app/api/mobile/v1/scan/search/route"
+import { GET as history, DELETE as clearHistory } from "../src/app/api/mobile/v1/scan/history/route"
+import { POST as submit } from "../src/app/api/mobile/v1/scan/submit/route"
 import { classifyRoute } from "../src/lib/auth/route-classification"
 import { requiresSubscriptionPath } from "../src/lib/supabase/middleware"
 
@@ -19,7 +21,7 @@ test("native routes fail closed by default and never infer admission from platfo
     process.env.MOBILE_AUTH_MODE = "local"
     process.env.MOBILE_AUTH_CALLBACK_URL = "chaarlie-local://auth"
     process.env.NEXT_PUBLIC_SUPABASE_URL = "http://127.0.0.1:55321"
-    for (const handler of [bootstrap, profile, resolve, search]) {
+    for (const handler of [bootstrap, profile, resolve, search, history, clearHistory, submit]) {
       const response = await handler(
         new Request("http://localhost/api/mobile/v1/bootstrap?platform=ios&userId=other", {
           headers: { cookie: "session=fabricated", "x-user-id": "other" },

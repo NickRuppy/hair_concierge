@@ -218,8 +218,9 @@ final class OnboardingUITests: XCTestCase {
     }
 
     private func assertScanner(app: XCUIApplication) {
-        XCTAssertTrue(app.buttons["Produkt manuell suchen"].waitForExistence(timeout: 5),
+        XCTAssertTrue(app.staticTexts["Produkt scannen"].waitForExistence(timeout: 5),
                       "Only acknowledged synthetic completion may enter the real scanner view")
+        XCTAssertTrue(app.tabBars.buttons["Suche"].exists, "Manual search lives in its own tab")
         screenshot("scanner-after-fixture-completion", app: app)
     }
 
@@ -252,7 +253,7 @@ final class OnboardingUITests: XCTestCase {
         submitAccount(app: app)
         tap("onboarding.simulate-link", app: app)
         assertScanner(app: app)
-        app.buttons["scanner.search"].tap()
+        app.tabBars.buttons["Suche"].tap()
         let query = app.textFields["search.query"]
         XCTAssertTrue(query.waitForExistence(timeout: 3))
         query.tap(); query.typeText("Chaarlie")
@@ -263,7 +264,7 @@ final class OnboardingUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["assessment.verdict"].waitForExistence(timeout: 5))
         screenshot("search-assessment", app: app)
         app.buttons["Ergebnis schließen"].tap()
-        XCTAssertTrue(app.buttons["scanner.search"].waitForExistence(timeout: 3))
+        XCTAssertTrue(query.waitForExistence(timeout: 3), "Closing the result returns to the originating search tab")
     }
 
     func testSearchResolveFailureKeepsRetryAfterSheetDismissal() {
@@ -271,15 +272,15 @@ final class OnboardingUITests: XCTestCase {
         submitAccount(app: app)
         tap("onboarding.simulate-link", app: app)
         assertScanner(app: app)
-        app.buttons["scanner.search"].tap()
+        app.tabBars.buttons["Suche"].tap()
         let query = app.textFields["search.query"]
         XCTAssertTrue(query.waitForExistence(timeout: 3))
         query.tap(); query.typeText("Chaarlie")
         app.buttons["search.submit"].tap()
         let product = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Leichter Conditioner")).firstMatch
         XCTAssertTrue(product.waitForExistence(timeout: 3)); product.tap()
-        XCTAssertTrue(query.waitForNonExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Erneut versuchen"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.buttons["Erneut versuchen"].waitForExistence(timeout: 5))
+        XCTAssertTrue(query.exists, "A failed search resolve keeps its retry on the search tab")
         XCTAssertTrue(app.staticTexts["Die Verbindung ist gerade nicht verfügbar. Versuche es erneut."].exists)
         screenshot("search-error-retained", app: app)
         app.buttons["Erneut versuchen"].tap()
@@ -367,7 +368,7 @@ final class OnboardingUITests: XCTestCase {
         app.launchArguments = ["--ui-design-review"]
         app.launchEnvironment["CHAARLIE_DESIGN_SCENARIO"] = "scan"
         app.launch()
-        XCTAssertTrue(app.buttons["scanner.search"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.tabBars.buttons["Suche"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.buttons["onboarding.start"].exists)
         XCTAssertFalse(app.staticTexts["onboarding.title"].exists)
         screenshot("native-existing-session-scanner", app: app)
@@ -605,7 +606,7 @@ final class OnboardingUITests: XCTestCase {
             submitAccount(app: app)
             tap("onboarding.simulate-link", app: app)
             XCTAssertTrue(app.buttons["onboarding.profile.keep"].waitForExistence(timeout: 3))
-            XCTAssertFalse(app.buttons["Produkt manuell suchen"].exists)
+            XCTAssertFalse(app.tabBars.firstMatch.exists, "Scanner tabs stay unavailable before completion")
             screenshot("existing-profile-\(choice)", app: app)
             tap("onboarding.profile.\(choice)", app: app)
             assertScanner(app: app)
@@ -619,7 +620,7 @@ final class OnboardingUITests: XCTestCase {
         tap("onboarding.simulate-link", app: app)
         XCTAssertTrue(app.buttons["onboarding.retry-completion"].waitForExistence(timeout: 3))
         XCTAssertTrue(app.staticTexts["onboarding.error"].exists)
-        XCTAssertFalse(app.buttons["Produkt manuell suchen"].exists)
+        XCTAssertFalse(app.tabBars.firstMatch.exists, "Scanner tabs stay unavailable before completion")
         let heading = app.staticTexts["onboarding.title"]
         XCTAssertGreaterThanOrEqual(heading.frame.minX, app.frame.minX + 20)
         XCTAssertLessThanOrEqual(heading.frame.maxX, app.frame.maxX - 20)
@@ -634,7 +635,7 @@ final class OnboardingUITests: XCTestCase {
         tap("onboarding.submit", app: app)
         XCTAssertTrue(app.staticTexts["onboarding.error"].waitForExistence(timeout: 3))
         XCTAssertFalse(app.textFields["onboarding.code"].exists)
-        XCTAssertFalse(app.buttons["Produkt manuell suchen"].exists)
+        XCTAssertFalse(app.tabBars.firstMatch.exists, "Scanner tabs stay unavailable before completion")
         screenshot("registration-unavailable", app: app)
         tap("onboarding.back", app: app)
         assertQuestion(10, app: app)

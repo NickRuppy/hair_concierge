@@ -50,15 +50,20 @@ extension Color {
 struct ChaarlieButton: ButtonStyle {
     var outline = false
     @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     func makeBody(configuration: Configuration) -> some View {
+        let shape = RoundedRectangle(cornerRadius: ChaarlieTheme.Radius.control, style: .continuous)
+        let lifted = isEnabled && !configuration.isPressed && !outline
         configuration.label.chaarlieSystemFont(15, weight: .bold)
             .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity).padding(.vertical, 15).padding(.horizontal, 12)
             .foregroundStyle(outline ? ChaarlieTheme.plum : .white)
-            .background(outline ? Color.white : ChaarlieTheme.coral)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .overlay(RoundedRectangle(cornerRadius: 12).stroke(outline ? ChaarlieTheme.plum : .clear))
-            .opacity(!isEnabled ? 0.45 : configuration.isPressed ? 0.7 : 1)
+            .background(outline ? Color.white : ChaarlieTheme.coral, in: shape)
+            .overlay(shape.strokeBorder(outline ? ChaarlieTheme.plum.opacity(0.55) : .clear, lineWidth: 1))
+            .shadow(color: ChaarlieTheme.coral.opacity(lifted ? 0.26 : 0), radius: 10, y: 5)
+            .opacity(!isEnabled ? 0.45 : configuration.isPressed ? 0.88 : 1)
+            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.975 : 1)
+            .animation(ChaarlieTheme.Motion.press, value: configuration.isPressed)
     }
 }
 struct ChaarlieTextButton: ButtonStyle {
@@ -67,23 +72,28 @@ struct ChaarlieTextButton: ButtonStyle {
         configuration.label.multilineTextAlignment(.leading).fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
             .contentShape(Rectangle())
-            .opacity(!isEnabled ? 0.45 : configuration.isPressed ? 0.7 : 1)
+            .opacity(!isEnabled ? 0.45 : configuration.isPressed ? 0.55 : 1)
+            .animation(ChaarlieTheme.Motion.press, value: configuration.isPressed)
     }
 }
 struct ChaarlieField: TextFieldStyle {
     func _body(configuration: TextField<Self._Label>) -> some View {
-        configuration.padding(.horizontal, 10).padding(.vertical, 12)
-            .frame(minHeight: 44)
-            .background(.white, in: RoundedRectangle(cornerRadius: 6))
-            .overlay(RoundedRectangle(cornerRadius: 6).stroke(ChaarlieTheme.border))
+        let shape = RoundedRectangle(cornerRadius: ChaarlieTheme.Radius.control, style: .continuous)
+        configuration.padding(.horizontal, 14).padding(.vertical, 14)
+            .frame(minHeight: 50)
+            .background(.white, in: shape)
+            .overlay(shape.strokeBorder(ChaarlieTheme.border))
     }
 }
 struct CloseButton: View {
     let label: String
     let action: () -> Void
     var body: some View {
-        Button(action: action) { Image(systemName: "xmark").font(.system(size: 16, weight: .semibold)).frame(width: 44, height: 44) }
-            .foregroundStyle(ChaarlieTheme.ink).accessibilityLabel(label)
+        Button(action: action) {
+            Image(systemName: "xmark").font(.system(size: 12, weight: .bold))
+                .frame(width: 30, height: 30).background(ChaarlieTheme.surfaceMuted, in: Circle())
+                .frame(width: 44, height: 44).contentShape(Rectangle())
+        }.buttonStyle(ChaarliePressStyle()).foregroundStyle(ChaarlieTheme.ink).accessibilityLabel(label)
     }
 }
 

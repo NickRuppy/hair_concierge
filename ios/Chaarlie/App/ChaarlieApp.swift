@@ -2,6 +2,8 @@ import SwiftUI
 
 @main
 struct ChaarlieApp: App {
+    @UIApplicationDelegateAdaptor(ResearchNotificationDelegate.self) private var notificationDelegate
+    @Environment(\.scenePhase) private var scenePhase
     private let model: AppModel?
     init() {
         #if DEBUG
@@ -31,7 +33,14 @@ struct ChaarlieApp: App {
     @ViewBuilder private var application: some View {
             if let model {
                 RootView(model: model)
+                    .onAppear { notificationDelegate.attach(model) }
                     .onOpenURL { url in Task { await model.receive(url) } }
+                    .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { activity in
+                        if let url = activity.webpageURL { Task { await model.receive(url) } }
+                    }
+                    .onChange(of: scenePhase) { _, phase in
+                        if phase == .active { Task { await model.refreshPushRegistration() } }
+                    }
             } else {
                 ContentUnavailableView("Entwicklungsbuild nicht eingerichtet", systemImage: "gearshape",
                     description: Text("Für diesen Build fehlt eine freigegebene Serverkonfiguration."))
@@ -72,10 +81,12 @@ struct RootView: View {
             switch model.admission {
             case .signedOut: SignedOutEntryView(app: model, prefersExistingLogin: prefersExistingLogin)
             case .loading:
-                VStack(spacing: 20) {
-                    ProgressView("Deine Haarangaben werden geladen …")
+                VStack(spacing: 22) {
+                    Text("chaarlie").font(ChaarlieTheme.wordmark(34))
+                    BusyLabel(text: "Deine Haarangaben werden geladen …")
                     Button("Abmelden") { Task { await model.logout() } }
-                }
+                        .chaarlieSystemFont(14, weight: .medium).foregroundStyle(ChaarlieTheme.muted).frame(minHeight: 44)
+                }.padding(24).transition(.opacity)
             case .profileRequired:
                 MissingProfileCompletionView(app: model)
             case .unavailable:
@@ -83,12 +94,19 @@ struct RootView: View {
                     message: "Du bist angemeldet. Bitte versuche es noch einmal.", model: model, retry: true)
             case .ready:
                 TabView(selection: $model.selectedTab) {
-                    ScannerView(model: model).tabItem { Label("Scan", systemImage: "barcode.viewfinder") }.tag(AppModel.Tab.scan)
-                    ProfileView(model: model).tabItem { Label("Profil", systemImage: "person.crop.circle") }.tag(AppModel.Tab.profile)
+                    ScannerView(model: model).readableTabBar(forceLight: true).tabItem { Label("Scan", systemImage: "barcode.viewfinder") }.tag(AppModel.Tab.scan)
+                    ProductSearchView(model: model).readableTabBar().tabItem { Label("Suche", systemImage: "magnifyingglass") }.tag(AppModel.Tab.search)
+                    HistoryView(model: model).readableTabBar().tabItem { Label("Verlauf", systemImage: "clock.arrow.circlepath") }.tag(AppModel.Tab.history)
+                    ProfileView(model: model).readableTabBar().tabItem { Label("Profil", systemImage: "person.crop.circle") }.tag(AppModel.Tab.profile)
                 }
-                .onChange(of: model.selectedTab) { _, newValue in if newValue != .scan { model.leaveScan() } }
+                .tint(ChaarlieTheme.plum)
+                .onChange(of: model.selectedTab) { old, _ in model.changeTab(from: old) }
+                .sensoryFeedback(.selection, trigger: model.selectedTab)
+                .sensoryFeedback(.success, trigger: model.scanResult?.id) { _, id in id != nil }
+                .transition(.opacity)
             }
         }
+        .animation(.easeInOut(duration: 0.3), value: model.admission)
         .chaarlieSystemFont().foregroundStyle(ChaarlieTheme.ink)
         .tint(ChaarlieTheme.plum).frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(ChaarlieTheme.background).task {
@@ -102,6 +120,28 @@ struct RootView: View {
             #endif
         }
         .preferredColorScheme(model.admission == .ready && model.selectedTab == .scan ? .dark : .light)
+        .overlay(alignment: .top) {
+            // Floats above the tab content so opening a delivered result never shifts the layout.
+            if model.admission == .ready, model.researchDestinationBusy {
+                BusyLabel(text: "Ergebnis wird geladen …")
+                    .shadow(color: ChaarlieTheme.shadow.opacity(0.12), radius: 14, y: 5)
+                    .padding(.top, 8).chaarlieTransition(.move(edge: .top).combined(with: .opacity))
+            }
+        }
+        .animation(ChaarlieTheme.Motion.state, value: model.researchDestinationBusy)
+        .sensoryFeedback(.warning, trigger: model.researchDestinationError) { _, error in error != nil }
+        .alert("Ergebnis öffnen", isPresented: Binding(get: { model.researchDestinationError != nil }, set: { _ in })) {
+            Button("Erneut versuchen") { Task { await model.openResearchDestination() } }
+            Button("Schließen", role: .cancel) { model.dismissResearchDestination() }
+        } message: { Text(model.researchDestinationError ?? "") }
+        .sheet(item: Binding(get: { model.scanResult }, set: { if $0 == nil { model.dismissScan() } })) { result in
+            ScanResultPresentation(model: model, result: result)
+                .preferredColorScheme(.light)
+                .presentationDetents(result.kind == .submission_required && model.lastRequest?.identifier != nil
+                    ? (model.researchPending ? [.medium] : [.large]) : [.fraction(0.88)])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(24)
+        }
         .alert("Mit anderem Konto anmelden?", isPresented: Binding(get: { model.pendingAccountLink != nil }, set: { _ in })) {
             Button("Abmelden und Link öffnen") {
                 let callback = model.pendingAccountLink
@@ -112,6 +152,14 @@ struct RootView: View {
         } message: {
             Text("Der Anmeldelink kann zu einem anderen Konto gehören. Du wirst zuerst abgemeldet. Deine Haarangaben bleiben gespeichert.")
         }
+    }
+}
+private extension View {
+    func readableTabBar(forceLight: Bool = false) -> some View {
+        toolbarBackground(ChaarlieTheme.background, for: .tabBar)
+            .toolbarBackground(.visible, for: .tabBar)
+            .toolbarColorScheme(forceLight ? .light : nil, for: .tabBar)
+            .tint(ChaarlieTheme.plum)
     }
 }
 struct MissingProfileCompletionView: View {
@@ -186,7 +234,7 @@ struct RecoveryView: View {
             VStack(alignment: .leading, spacing: 24) {
                 Text("chaarlie").font(ChaarlieTheme.wordmark())
                 Text(title).chaarlieHeading(30)
-                Text(message)
+                Text(message).foregroundStyle(ChaarlieTheme.muted)
                 if retry { Button("Erneut versuchen") { Task { await model.bootstrap() } }.buttonStyle(ChaarlieButton()) }
                 Button("Abmelden") { Task { await model.logout() } }.buttonStyle(ChaarlieButton(outline: true))
             }.padding(24)

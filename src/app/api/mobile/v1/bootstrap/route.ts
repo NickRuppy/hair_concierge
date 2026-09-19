@@ -12,6 +12,7 @@ export async function GET(request: Request) {
               status: "ready",
               profileRevision: result.profileRevision,
               contextRevision: result.contextRevision,
+              researchDeliveryEnabled: process.env.MOBILE_RESEARCH_DELIVERY_ENABLED === "true",
             }
           : { status: "profile_required" },
       )

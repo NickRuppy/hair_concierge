@@ -3,6 +3,10 @@
   "regions": ["dub1"],
   "crons": [
     {
+      "path": "/api/mobile/v1/research-delivery/reconcile",
+      "schedule": "*/5 * * * *"
+    },
+    {
       "path": "/api/billing/trial-reminders/reconcile",
       "schedule": "*/5 * * * *"
     },

@@ -4,6 +4,7 @@
 <key>CFBundleDisplayName</key><string>Chaarlie</string>
 <key>CFBundleShortVersionString</key><string>0.1</string>
 <key>CFBundleVersion</key><string>1</string>
+<key>CFBundleURLTypes</key><array><dict><key>CFBundleURLSchemes</key><array><string>chaarlie</string></array></dict></array>
 <key>NSCameraUsageDescription</key><string>Chaarlie verwendet die Kamera, um Produktbarcodes zu lesen und dir eine persönliche Einschätzung zu zeigen.</string>
 <key>UIAppFonts</key><array><string>PlayfairDisplay-Regular.ttf</string><string>PlusJakartaSans-Regular.ttf</string><string>Manrope.ttf</string></array>
 <key>UILaunchScreen</key><dict/>
