@@ -5,7 +5,7 @@ import { MobileError } from "./errors"
 const apnsTokenSchema = z
   .string()
   .min(32)
-  .max(1024)
+  .max(200)
   .regex(/^[0-9a-fA-F]+$/)
   .refine((value) => value.length % 2 === 0)
   .transform((value) => value.toLowerCase())

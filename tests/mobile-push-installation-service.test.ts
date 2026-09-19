@@ -31,6 +31,10 @@ test("push registration accepts APNs hex in either case and normalizes it", () =
     false,
   )
   assert.equal(
+    mobilePushRegistrationSchema.safeParse({ ...parsed, token: "ab".repeat(101) }).success,
+    false,
+  )
+  assert.equal(
     mobilePushRegistrationSchema.safeParse({ ...parsed, topic: "not a topic" }).success,
     false,
   )
