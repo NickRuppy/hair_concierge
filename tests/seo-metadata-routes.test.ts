@@ -75,6 +75,7 @@ test("classifies every current public page and route handler", () => {
     "/auth",
     "/auth/confirm",
     "/auth/update-password",
+    "/app/research/11111111-1111-4111-8111-111111111111",
     "/datenschutz",
     "/icon",
     "/impressum",

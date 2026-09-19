@@ -39,6 +39,9 @@ const PUBLIC_EXACT_ROUTES = [
 
 const PUBLIC_ROUTE_PREFIXES = [
   "/auth",
+  // The email handoff renders only a generic, noindex app-opening page. The
+  // authenticated native result endpoint remains protected under /api/mobile/v1.
+  "/app/research",
   "/lp",
   "/partner",
   "/result",
