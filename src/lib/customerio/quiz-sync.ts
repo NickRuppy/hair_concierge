@@ -8,6 +8,7 @@ import type { QuizAnswers } from "@/lib/quiz/types"
 
 export async function syncQuizLeadToCustomerIo({
   createdAt,
+  consentTimestamp,
   email,
   leadId,
   marketingConsent,
@@ -17,6 +18,7 @@ export async function syncQuizLeadToCustomerIo({
   funnelPackageKey,
 }: {
   createdAt: string
+  consentTimestamp?: string | null
   email: string
   leadId: string
   marketingConsent: boolean
@@ -27,6 +29,7 @@ export async function syncQuizLeadToCustomerIo({
 }) {
   const sync = buildCustomerIoQuizLeadSync({
     createdAt,
+    consentTimestamp,
     email,
     leadId,
     marketingConsent,

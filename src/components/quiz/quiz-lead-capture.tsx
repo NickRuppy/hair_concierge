@@ -33,6 +33,12 @@ import {
   resolveLeadCaptureRecoveryNextHref,
   resolveLeadCaptureServerNextHref,
 } from "@/lib/quiz/migration-prefill-init"
+import { QUIZ_EMAIL_RETURN_PACKAGE_KEY } from "@/lib/quiz/email-return-constants"
+import {
+  canInheritQuizEmailReturnConsent,
+  parseQuizEmailReturnEditIdentity,
+  type QuizEmailReturnEditIdentity,
+} from "@/lib/quiz/email-return-edit"
 
 function isValidEmail(email: string) {
   return EMAIL_ADDRESS_PATTERN.test(email.trim().toLowerCase())
@@ -64,6 +70,11 @@ export function QuizLeadCapture() {
   const [serverSuggestion, setServerSuggestion] = useState<string | null>(null)
   const [contextStatus, setContextStatus] = useState<"checking" | "ready" | "unavailable">("ready")
   const [contextAttempt, setContextAttempt] = useState(0)
+  const [returnContextStatus, setReturnContextStatus] = useState<"checking" | "ready">(
+    funnelPackageKey === QUIZ_EMAIL_RETURN_PACKAGE_KEY ? "checking" : "ready",
+  )
+  const [returnIdentity, setReturnIdentity] = useState<QuizEmailReturnEditIdentity | null>(null)
+  const [returnConsentRejected, setReturnConsentRejected] = useState(false)
   const emailInputRef = useRef<HTMLInputElement>(null)
   // A rejected address sends the user back to the e-mail step. The consent
   // question was already answered by then, so it must not be asked a second
@@ -130,6 +141,54 @@ export function QuizLeadCapture() {
   }, [contextAttempt, contextLookupKey, setPartnerLeadIdentity, setRegularLeadCapture])
 
   useEffect(() => {
+    if (funnelPackageKey !== QUIZ_EMAIL_RETURN_PACKAGE_KEY) {
+      setReturnContextStatus("ready")
+      setReturnIdentity(null)
+      setReturnConsentRejected(false)
+      return
+    }
+
+    let active = true
+    setReturnContextStatus("checking")
+    void fetch("/api/quiz/email-return/context?mode=edit", {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+      credentials: "same-origin",
+    })
+      .then(async (response) => {
+        if (!response.ok) return null
+        return parseQuizEmailReturnEditIdentity(await response.json().catch(() => null))
+      })
+      .then((identity) => {
+        if (!active) return
+        if (!identity) {
+          setReturnIdentity(null)
+          setReturnConsentRejected(true)
+          setReturnContextStatus("ready")
+          return
+        }
+        const currentLead = useQuizStore.getState().lead
+        if (!currentLead.name.trim() && identity.name) setLeadField("name", identity.name)
+        if (!currentLead.email.trim()) {
+          setLeadField("email", identity.email)
+          setLeadField("marketingConsent", identity.marketingConsent)
+        }
+        setReturnIdentity(identity)
+        setReturnContextStatus("ready")
+      })
+      .catch(() => {
+        if (!active) return
+        setReturnIdentity(null)
+        setReturnConsentRejected(true)
+        setReturnContextStatus("ready")
+      })
+
+    return () => {
+      active = false
+    }
+  }, [funnelPackageKey, setLeadField])
+
+  useEffect(() => {
     if (leadCaptureSubStep !== "email") return
 
     let secondFrame = 0
@@ -174,6 +233,10 @@ export function QuizLeadCapture() {
     }
     setError("")
     setServerSuggestion(null)
+    if (canInheritQuizEmailReturnConsent(returnIdentity, lead.email, returnConsentRejected)) {
+      void handleConsent(true, "inherited")
+      return
+    }
     if (consentAnsweredRef.current) {
       void handleConsent(lead.marketingConsent)
       return
@@ -243,11 +306,14 @@ export function QuizLeadCapture() {
     requestBack()
   }
 
-  const handleConsent = async (accepted: boolean) => {
+  const handleConsent = async (
+    accepted: boolean,
+    consentSource: "prompt" | "inherited" = "prompt",
+  ) => {
     if (saving) return
 
     setLeadField("marketingConsent", accepted)
-    consentAnsweredRef.current = true
+    consentAnsweredRef.current = consentSource === "prompt"
     setSaving(true)
     setError("")
 
@@ -260,6 +326,7 @@ export function QuizLeadCapture() {
           name: lead.name.trim(),
           email: lead.email.trim().toLowerCase(),
           marketingConsent: accepted,
+          marketingConsentSource: consentSource,
           quizAnswers: canonicalizeQuizAnswers(answers),
           funnelEventId,
           migrationRecovery: isMigrationQuizRecoverySearch(window.location.search),
@@ -279,6 +346,21 @@ export function QuizLeadCapture() {
       if (!res.ok) {
         if (res.status === 422) {
           const detail: unknown = data
+          if (
+            consentSource === "inherited" &&
+            detail &&
+            typeof detail === "object" &&
+            "code" in detail &&
+            detail.code === "return_consent_unavailable"
+          ) {
+            consentAnsweredRef.current = false
+            setReturnConsentRejected(true)
+            setLeadField("marketingConsent", false)
+            setError("")
+            setServerSuggestion(null)
+            setLeadCaptureSubStep("consent")
+            return
+          }
           if (
             detail &&
             typeof detail === "object" &&
@@ -305,6 +387,7 @@ export function QuizLeadCapture() {
           }
           setServerSuggestion(suggestion)
           setError(rejection?.error ?? EMAIL_DELIVERABILITY_REJECTION_MESSAGE)
+          if (consentSource === "inherited") consentAnsweredRef.current = false
           returnToEmailStep()
           window.scrollTo(0, 0)
           return
@@ -328,13 +411,18 @@ export function QuizLeadCapture() {
       goNext()
     } catch {
       setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.")
+      if (consentSource === "inherited") consentAnsweredRef.current = false
       returnToEmailStep()
     } finally {
       setSaving(false)
     }
   }
 
-  if (contextLookupKey === "checking" || contextStatus !== "ready") {
+  if (
+    contextLookupKey === "checking" ||
+    contextStatus !== "ready" ||
+    returnContextStatus !== "ready"
+  ) {
     return (
       <div className="flex flex-col">
         <div className="mb-4 flex items-center gap-3">
@@ -350,7 +438,9 @@ export function QuizLeadCapture() {
             <QuizProgressBar current={QUIZ_TOTAL_QUESTIONS} total={QUIZ_TOTAL_QUESTIONS} />
           </div>
         </div>
-        {contextLookupKey === "checking" || contextStatus === "checking" ? (
+        {contextLookupKey === "checking" ||
+        contextStatus === "checking" ||
+        returnContextStatus === "checking" ? (
           <p className="text-center text-sm text-muted-foreground" role="status">
             Dein Zugang wird geladen …
           </p>

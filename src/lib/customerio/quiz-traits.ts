@@ -76,6 +76,7 @@ function labelsFor(values: string[] | undefined, labels: Record<string, string>)
 
 export function buildCustomerIoQuizLeadSync({
   createdAt,
+  consentTimestamp,
   email,
   leadId,
   marketingConsent,
@@ -85,6 +86,7 @@ export function buildCustomerIoQuizLeadSync({
   funnelPackageKey,
 }: {
   createdAt: string
+  consentTimestamp?: string | null
   email: string
   leadId: string
   marketingConsent: boolean
@@ -103,7 +105,7 @@ export function buildCustomerIoQuizLeadSync({
     funnel_session_id: funnelSessionId,
     funnel_package_key: funnelPackageKey,
     marketing_consent: marketingConsent,
-    consent_timestamp: marketingConsent ? createdAt : undefined,
+    consent_timestamp: marketingConsent ? (consentTimestamp ?? createdAt) : undefined,
     quiz_completed_at: createdAt,
     hair_texture: answers.structure,
     hair_texture_label: labelFor(answers.structure, HAIR_TEXTURE_LABELS),

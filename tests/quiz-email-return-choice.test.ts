@@ -3,6 +3,7 @@ import test from "node:test"
 
 import { createQuizEmailReturnChoiceHandler } from "../src/app/api/quiz/email-return/choose/route"
 import { decodeFunnelContext, FUNNEL_SESSION_COOKIE } from "../src/lib/funnel/cookie"
+import { QUIZ_EMAIL_RETURN_EDIT_COOKIE } from "../src/lib/quiz/email-return-constants"
 
 const leadId = "22222222-2222-4222-8222-222222222222"
 const secret = "test-secret-with-at-least-thirty-two-characters"
@@ -58,6 +59,7 @@ test("Continue binds the exact saved lead to a fresh email session, without quiz
     assert.ok(cookie)
     const session = await decodeFunnelContext(cookie.value, secret)
     assert.equal(session?.sessionId, events[0].context.sessionId)
+    assert.equal(response.cookies.get(QUIZ_EMAIL_RETURN_EDIT_COOKIE)?.value, "")
   } finally {
     if (oldSecret === undefined) delete process.env.FUNNEL_COOKIE_SIGNING_SECRET
     else process.env.FUNNEL_COOKIE_SIGNING_SECRET = oldSecret
@@ -105,6 +107,7 @@ test("Edit creates an unbound session and returns only prefilled quiz answers", 
     assert.equal(response.status, 200)
     assert.equal(recordedLeadId, null)
     assert.deepEqual(await response.json(), { status: "edit", answers: { structure: "wavy" } })
+    assert.equal(response.cookies.get(QUIZ_EMAIL_RETURN_EDIT_COOKIE)?.value, "signed-link-cookie")
   } finally {
     if (oldSecret === undefined) delete process.env.FUNNEL_COOKIE_SIGNING_SECRET
     else process.env.FUNNEL_COOKIE_SIGNING_SECRET = oldSecret
