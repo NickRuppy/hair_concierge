@@ -212,7 +212,9 @@ struct ProductSearchView: View {
                         LazyVStack(spacing: 12) {
                             ForEach(Array(model.searchResults.enumerated()), id: \.element.id) { index, product in
                                 Button { Task { await model.resolve(.product(product.id)) } } label: { resultRow(product) }
-                                    .buttonStyle(ChaarliePressStyle()).chaarlieReveal(index)
+                                    .buttonStyle(ChaarliePressStyle())
+                                    .accessibilityLabel([product.name, product.categoryLabel].compactMap { $0 }.joined(separator: ", "))
+                                    .chaarlieReveal(index)
                             }
                         }
                     }
@@ -276,32 +278,35 @@ struct ProductSearchView: View {
         Group {
             if typeSize.isAccessibilitySize {
                 VStack(alignment: .leading, spacing: 14) {
-                    HStack {
-                        ProductImage(product: product).frame(width: 52, height: 64)
+                    HStack(alignment: .top) {
+                        ProductImage(product: product).frame(width: 88, height: 104)
                         Spacer()
                         rowChevron
                     }
                     productText(product)
                 }
             } else {
-                HStack(alignment: .center, spacing: 14) {
-                    ProductImage(product: product).frame(width: 52, height: 64)
+                HStack(alignment: .center, spacing: 16) {
+                    ProductImage(product: product).frame(width: 76, height: 92)
                     productText(product)
                     rowChevron
                 }
             }
-        }.padding(14).chaarlieCard().contentShape(Rectangle())
+        }.padding(12).chaarlieCard().contentShape(Rectangle())
     }
     private var rowChevron: some View {
         Image(systemName: "chevron.right").font(.system(size: 12, weight: .bold))
             .foregroundStyle(ChaarlieTheme.plumMid).accessibilityHidden(true)
     }
     private func productText(_ product: ScanProduct) -> some View {
-        VStack(alignment: .leading, spacing: 5) {
+        VStack(alignment: .leading, spacing: 9) {
             Text(GermanLineBreaks.text(product.name)).chaarlieSystemFont(15, weight: .bold)
+                .lineLimit(typeSize.isAccessibilitySize ? nil : 3).truncationMode(.tail)
                 .accessibilityLabel(product.name)
-            Text([product.brand, product.categoryLabel].compactMap { $0 }.joined(separator: " · "))
-                .chaarlieSystemFont(12).foregroundStyle(ChaarlieTheme.muted)
+            Text(product.categoryLabel).chaarlieSystemFont(12, weight: .semibold, relativeTo: .caption)
+                .foregroundStyle(ChaarlieTheme.plum)
+                .padding(.horizontal, 9).padding(.vertical, 5)
+                .background(ChaarlieTheme.plumIce, in: Capsule())
         }.multilineTextAlignment(.leading).fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .leading)
     }

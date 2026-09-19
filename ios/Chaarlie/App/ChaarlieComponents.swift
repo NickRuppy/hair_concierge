@@ -96,14 +96,14 @@ struct SkeletonProductRows: View {
         VStack(spacing: 12) {
             ForEach(0..<count, id: \.self) { index in
                 HStack(spacing: 14) {
-                    block(width: 52, height: 64, radius: 12)
+                    block(width: 76, height: 92, radius: 12)
                     VStack(alignment: .leading, spacing: 9) {
                         block(width: index.isMultiple(of: 2) ? 190 : 150, height: 13, radius: 6)
                         block(width: 110, height: 10, radius: 5)
-                        block(width: 72, height: 10, radius: 5)
+                        block(width: 72, height: 22, radius: 11)
                     }
                     Spacer(minLength: 0)
-                }.padding(14).chaarlieCard().opacity(1 - Double(index) * 0.25)
+                }.padding(12).chaarlieCard().opacity(1 - Double(index) * 0.25)
             }
         }.chaarlieShimmer()
             .accessibilityElement(children: .ignore).accessibilityLabel(label)

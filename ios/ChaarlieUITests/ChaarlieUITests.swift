@@ -340,6 +340,14 @@ final class ChaarlieUITests: XCTestCase {
         XCTAssertEqual(field.value as? String, original)
         XCTAssertTrue(product.exists)
     }
+    func testSearchResultsShowCategoryWithoutRepeatingBrand() {
+        let app = designApp("search-results")
+        XCTAssertTrue(app.staticTexts["Shampoo"].waitForExistence(timeout: 5))
+        let repeatedBrand = app.staticTexts.matching(
+            NSPredicate(format: "label CONTAINS %@", "Synthetische Testmarke mit langem Namen")
+        ).firstMatch
+        XCTAssertFalse(repeatedBrand.exists)
+    }
     func testDesignReviewAuthAndRecovery() {
         for scenario in ["login", "code", "code-error", "login-loading", "recovery-missing", "recovery-unavailable"] {
             let app = designApp(scenario)
