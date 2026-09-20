@@ -328,6 +328,56 @@ test("partitionDmSearchRows: a duplicate canonical gtin keeps the first (best-ra
   assert.equal(result.retailer[0].name, "First Ranked Shampoo")
 })
 
+test("partitionDmSearchRows: dedupe is keyed on the canonical form, not the raw string", async () => {
+  const client = stubClient()
+  // Two distinct raw spellings of the same barcode (13-digit vs. explicit 14-digit) —
+  // both canonicalize to "03574661799438". Dedupe must collapse them into one row
+  // despite the raw strings differing.
+  const result = await partitionDmSearchRows(client, [
+    dmRow({ gtin: "3574661799438", title: "First Ranked Shampoo" }),
+    dmRow({ gtin: "03574661799438", title: "Second Ranked Shampoo" }),
+  ])
+  assert.equal(result.retailer.length, 1)
+  assert.equal(result.retailer[0].name, "First Ranked Shampoo")
+  assert.equal(result.retailer[0].gtin, "3574661799438")
+})
+
+// -- Amended contract: outward `gtin` is the resolve-compatible EAN, not the canonical
+// GTIN-14 — /api/scan/resolve's validateEanInput only accepts 8/13-digit values.
+
+test("partitionDmSearchRows: an 8-digit-source row surfaces an 8-digit gtin", async () => {
+  const client = stubClient()
+  const result = await partitionDmSearchRows(client, [
+    dmRow({ gtin: "40063812", title: "Shampoo Mini, 100 ml" }),
+  ])
+  assert.equal(result.retailer.length, 1)
+  assert.equal(result.retailer[0].gtin, "40063812")
+})
+
+test("partitionDmSearchRows: a 12- or 13-digit-source row surfaces a 13-digit gtin", async () => {
+  const client = stubClient()
+  const result = await partitionDmSearchRows(client, [
+    // 12-digit UPC-A source: canonicalizes with two leading zeros, zero-extends to 13.
+    dmRow({ gtin: "036000291452", title: "Shampoo US Import, 300 ml" }),
+    // 13-digit EAN-13 source: canonicalizes with one leading zero, round-trips as-is.
+    dmRow({ gtin: "8700216212847", title: "Shampoo Repair Arganöl, 350 ml" }),
+  ])
+  assert.equal(result.retailer.length, 2)
+  assert.equal(result.retailer[0].gtin, "0036000291452")
+  assert.equal(result.retailer[0].gtin.length, 13)
+  assert.equal(result.retailer[1].gtin, "8700216212847")
+  assert.equal(result.retailer[1].gtin.length, 13)
+})
+
+test("partitionDmSearchRows: a non-zero-indicator GTIN-14 has no EAN form and is dropped", async () => {
+  const client = stubClient()
+  // Indicator digit "1" (a true multipack GTIN-14) — no 8- or 13-digit EAN exists for it.
+  const result = await partitionDmSearchRows(client, [
+    dmRow({ gtin: "10000000000007", title: "Shampoo Sparpack, 3x385 ml" }),
+  ])
+  assert.deepEqual(result, { catalog: [], retailer: [] })
+})
+
 test("partitionDmSearchRows: an active mapped product goes to catalog via toScanSearchResult", async () => {
   const client = stubClient({
     identifierRows: [{ product_id: "p-active", canonical_gtin14: "03574661818450" }],
@@ -368,7 +418,8 @@ test("partitionDmSearchRows: an inactive/discontinued mapped product presents as
   ])
   assert.equal(result.catalog.length, 0)
   assert.equal(result.retailer.length, 1)
-  assert.equal(result.retailer[0].gtin, "08700216212847")
+  // Resolve-compatible EAN form (amended contract), not the internal canonical GTIN-14.
+  assert.equal(result.retailer[0].gtin, "8700216212847")
 })
 
 test("partitionDmSearchRows: a dangling identifier (no product_identifiers row) presents as dm-only", async () => {

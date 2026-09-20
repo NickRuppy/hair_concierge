@@ -160,6 +160,23 @@ function firstRelation<T>(value: T | T[] | null | undefined): T | null {
   return Array.isArray(value) ? (value[0] ?? null) : (value ?? null)
 }
 
+/**
+ * Amended contract: `ScanRetailerResult.gtin` must be the resolve-compatible EAN
+ * representation, not the internal canonical GTIN-14 — the search sheet feeds it
+ * verbatim into `/api/scan/resolve`, whose `validateEanInput` accepts only 8- or
+ * 13-digit values. Mirrors the variant expansion in `normalize.ts`'s
+ * `gtinQueryVariants` (the 8/13 legs only — resolve never accepts a bare 12-digit UPC):
+ * six leading zeros → the 8-digit EAN-8 body; at least one leading zero → the 13-digit
+ * EAN-13 form (a 12-digit UPC-A canonicalizes with two leading zeros, so this leg also
+ * covers it, zero-extended). A true GTIN-14 (non-zero indicator digit) has no EAN
+ * form — returns null so the caller drops that row entirely (fail closed).
+ */
+function canonicalGtinToResolvableEan(canonicalGtin: string): string | null {
+  if (canonicalGtin.slice(0, 6) === "000000") return canonicalGtin.slice(6)
+  if (canonicalGtin.slice(0, 1) === "0") return canonicalGtin.slice(1)
+  return null
+}
+
 type IdentifierRow = { product_id: string; canonical_gtin14: string }
 
 /**
@@ -243,8 +260,16 @@ export async function partitionDmSearchRows(
     const suggestedCategory = suggestCategoryFromRetailerName(title)
     if (!/haar/i.test(dmCategory) && suggestedCategory === null) continue
 
+    // The outward `gtin` must be resolve-compatible: `/api/scan/resolve`'s
+    // `validateEanInput` only accepts 8/13-digit EAN values, never the internal
+    // canonical GTIN-14. A true GTIN-14 (non-zero indicator digit) has no EAN
+    // representation at all — fail closed and drop the row rather than surface a value
+    // the next tap could never resolve.
+    const resolvableGtin = canonicalGtinToResolvableEan(canonicalGtin)
+    if (!resolvableGtin) continue
+
     retailer.push({
-      gtin: canonicalGtin,
+      gtin: resolvableGtin,
       name: title,
       brand: row.brand ? scanRetailerBrandLabel(row.brand) : null,
       categoryLabel: suggestedCategory ? CATEGORY_COPY[suggestedCategory].label : null,
