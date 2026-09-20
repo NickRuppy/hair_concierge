@@ -63,33 +63,34 @@ struct ScannerView: View {
     }
     private var scanResolving: Bool { model.scanBusy && model.resolveOrigin == .scan }
     private var scannerContent: some View {
-        VStack(spacing: 24) {
-            Text("Produkt scannen").chaarlieHeading(28).padding(.top, 16)
-                .shadow(color: .black.opacity(0.35), radius: 8, y: 1)
-                .zIndex(1) // stays above the viewfinder's dimmed surround
-            Spacer()
+        VStack(spacing: 20) {
             if camera.availability == .available || fixtureBackdrop != nil {
-                VStack(alignment: .trailing, spacing: 10) {
+                HStack {
                     if camera.isTorchAvailable || fixtureBackdrop != nil {
                         torchButton
                     }
-                    ScanReticle(resolving: scanResolving) { feedbackPoint, windowPoint in
-                        focus(feedbackPoint: feedbackPoint, windowPoint: windowPoint)
-                    }
-                        .frame(width: 260, height: 170)
-                        .accessibilityHidden(true)
+                    Spacer()
                 }
-                .frame(width: 260)
+                .frame(maxWidth: .infinity)
+                Spacer(minLength: 28)
+                ScanReticle(resolving: scanResolving) { feedbackPoint, windowPoint in
+                    focus(feedbackPoint: feedbackPoint, windowPoint: windowPoint)
+                }
+                    .frame(maxWidth: 380)
+                    .frame(height: 230)
+                    .padding(.horizontal, 8)
+                    .accessibilityHidden(true)
                 Group {
                     if scanResolving { BusyLabel(text: "Produkt wird geprüft …", onDark: true) }
                     else {
-                        Label("Halte den Barcode in den Rahmen.", systemImage: "barcode")
+                        Text("Halte den Barcode in den Rahmen.")
                             .chaarlieSystemFont(14, weight: .medium).multilineTextAlignment(.center)
                             .padding(.horizontal, 16).padding(.vertical, 11)
                             .background { Capsule().fill(.ultraThinMaterial).environment(\.colorScheme, .dark) }
                     }
                 }.chaarlieTransition(.opacity.combined(with: .scale(scale: 0.94)))
             } else {
+                Spacer()
                 Image(systemName: "barcode.viewfinder").font(.system(size: 38, weight: .light))
                     .frame(width: 96, height: 96)
                     .background { Circle().fill(.ultraThinMaterial).environment(\.colorScheme, .dark) }
@@ -186,8 +187,6 @@ private struct ScanReticle: View {
             let feedbackOrigin = geometry.frame(in: .named("scanner.camera")).origin
             let windowOrigin = geometry.frame(in: .global).origin
             ZStack {
-                ReticleSurround(radius: 20).fill(.black.opacity(0.42), style: FillStyle(eoFill: true)).allowsHitTesting(false)
-                RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(.white.opacity(0.22), lineWidth: 1)
                 if !resolving && !reduceMotion {
                     Capsule().fill(LinearGradient(colors: [.clear, .white.opacity(0.95), .clear], startPoint: .leading, endPoint: .trailing))
                         .frame(height: 2).padding(.horizontal, 18)
@@ -222,17 +221,6 @@ private struct ScanReticle: View {
             withAnimation(.easeInOut(duration: 2.1).repeatForever(autoreverses: true)) { sweeping = true }
             withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) { breathing = true }
         }
-    }
-}
-
-/// Everything around the frame, far past the screen edges, with the frame cut out.
-private struct ReticleSurround: Shape {
-    let radius: CGFloat
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.addRect(rect.insetBy(dx: -1500, dy: -1500))
-        path.addRoundedRect(in: rect, cornerSize: CGSize(width: radius, height: radius), style: .continuous)
-        return path
     }
 }
 

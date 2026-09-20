@@ -218,7 +218,7 @@ final class OnboardingUITests: XCTestCase {
     }
 
     private func assertScanner(app: XCUIApplication) {
-        XCTAssertTrue(app.staticTexts["Produkt scannen"].waitForExistence(timeout: 5),
+        XCTAssertTrue(app.scrollViews["scanner.content"].waitForExistence(timeout: 5),
                       "Only acknowledged synthetic completion may enter the real scanner view")
         XCTAssertTrue(app.tabBars.buttons["Suche"].exists, "Manual search lives in its own tab")
         screenshot("scanner-after-fixture-completion", app: app)

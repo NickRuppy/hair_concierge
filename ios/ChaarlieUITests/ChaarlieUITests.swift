@@ -466,6 +466,10 @@ final class ChaarlieUITests: XCTestCase {
         XCTAssertTrue(torch.waitForExistence(timeout: 5))
         XCTAssertGreaterThanOrEqual(torch.frame.width, 44)
         XCTAssertGreaterThanOrEqual(torch.frame.height, 44)
+        XCTAssertLessThan(torch.frame.midX, app.frame.width * 0.3,
+                          "The torch is a camera-level control aligned to the upper-left")
+        XCTAssertFalse(app.staticTexts["Produkt scannen"].exists,
+                       "The selected Scan tab already supplies the screen context")
     }
     func testSearchTabRetainsQueryAndReturnsFromAssessment() {
         let app = designApp("search-results")
@@ -511,7 +515,7 @@ final class ChaarlieUITests: XCTestCase {
         XCTAssertTrue(search.staticTexts["Keine Treffer"].waitForExistence(timeout: 5))
         screenshot("design-search-empty", app: search)
         search.tabBars.buttons["Scan"].tap()
-        XCTAssertTrue(search.staticTexts["Produkt scannen"].waitForExistence(timeout: 5))
+        XCTAssertTrue(search.scrollViews["scanner.content"].waitForExistence(timeout: 5))
         let login = designApp("login-long-email")
         let email = login.textFields["login.email"]
         XCTAssertTrue(email.waitForExistence(timeout: 5))
@@ -523,8 +527,12 @@ final class ChaarlieUITests: XCTestCase {
     func testDesignReviewSearchAndProfile() {
         for scenario in ["scan-error", "scan-loading", "search-results", "search-loading", "search-error", "profile", "profile-loading", "profile-error"] {
             let app = designApp(scenario)
-            let title = scenario.hasPrefix("scan-") ? "Produkt scannen" : scenario.hasPrefix("search-") ? "Produkt suchen" : "Meine Haarangaben"
-            XCTAssertTrue(app.staticTexts[title].waitForExistence(timeout: 5))
+            if scenario.hasPrefix("scan-") {
+                XCTAssertTrue(app.scrollViews["scanner.content"].waitForExistence(timeout: 5))
+            } else {
+                let title = scenario.hasPrefix("search-") ? "Produkt suchen" : "Meine Haarangaben"
+                XCTAssertTrue(app.staticTexts[title].waitForExistence(timeout: 5))
+            }
             screenshot("design-\(scenario)", app: app)
             if scenario == "profile" {
                 _ = revealEditButton("profile.logout", app: app)
@@ -562,13 +570,13 @@ final class ChaarlieUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Meine Haarangaben"].waitForExistence(timeout: 5))
         screenshot("design-appearance-profile", app: app)
         app.tabBars.buttons["Scan"].tap()
-        XCTAssertTrue(app.staticTexts["Produkt scannen"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.scrollViews["scanner.content"].waitForExistence(timeout: 5))
         screenshot("design-appearance-scan", app: app)
         app.tabBars.buttons["Suche"].tap()
         XCTAssertTrue(app.textFields["search.query"].waitForExistence(timeout: 5))
         screenshot("design-appearance-search", app: app)
         app.tabBars.buttons["Scan"].tap()
-        XCTAssertTrue(app.staticTexts["Produkt scannen"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.scrollViews["scanner.content"].waitForExistence(timeout: 5))
         screenshot("design-appearance-scan-return", app: app)
         app.tabBars.buttons["Profil"].tap()
         XCTAssertTrue(app.staticTexts["Meine Haarangaben"].waitForExistence(timeout: 5))
@@ -593,9 +601,8 @@ final class ChaarlieUITests: XCTestCase {
             XCTAssertGreaterThanOrEqual(codeApp.buttons[name].frame.height, 44)
         }
         let app = designApp("scan-error", largeText: true)
-        let heading = app.staticTexts["Produkt scannen"]
-        XCTAssertTrue(heading.waitForExistence(timeout: 5))
-        XCTAssertGreaterThan(heading.frame.height, 90, "Largest text heading wraps instead of ellipsizing")
+        XCTAssertTrue(app.scrollViews["scanner.content"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["Produkt scannen"].exists)
         let search = app.tabBars.buttons["Suche"]
         XCTAssertTrue(search.isHittable)
         XCTAssertFalse(app.buttons["scanner.search"].exists, "Manual search belongs to its tab")
