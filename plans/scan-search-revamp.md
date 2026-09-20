@@ -460,10 +460,11 @@ identifier-less body accepted, missing brand/name rejected, dm lookup not called
 row carries null identifier + both texts, coalesce-on-conflict; name matching an eligible
 catalog product → `already_in_catalog`; the §4 worker oracle (extend
 `tests/product-intake-research-jobs.test.ts` via the extracted seam, no source-regex
-assertions); UI test — recovery entry only in the post-submit empty state, prefill
-correctness, category tap submits, pending sheet reached and not covered by the auxiliary,
-error keeps the form open. Done when a name-only submission round-trips to a pending
-receipt in tests and the EAN path is byte-identical.
+assertions); UI test — recovery entry in the post-submit empty state (T8 later adds the
+persistent link as a second entry to the same intake), prefill correctness, category tap
+submits, pending sheet reached and not covered by the auxiliary, error keeps the form
+open. Done when a name-only submission round-trips to a pending receipt in tests and the
+EAN path is byte-identical.
 
 **T6 — analytics + a11y + copy pass.** Add the two search events per §4 through the
 sheet's `analytics` prop, `aria-live` regions for both result sections and the intake
@@ -479,6 +480,17 @@ cases to `tests/scan-flow.spec.ts`: search → two sections → dm-row tap → u
 reached; empty result → recovery intake → pending sheet; flag-off spec asserting no
 `/api/scan/search-retailer` request. Consumes: T4, T5. Done when
 `npx playwright test tests/scan-flow.spec.ts` passes locally alongside the existing cases.
+
+**T8 — persistent recovery link (added Rev. 7, Nick ruling after the live finding).** One
+quiet line „Nicht dabei? Für dich prüfen lassen" at the end of the results area after any
+submitted search whose results actually render (visible-rows predicate — catalog lane
+ready and/or dm lane ready), calling the shared `openResearchIntake()` (same prefill
+clamp as the empty-state CTA). Hidden pre-submit, in the terminal empty state, under
+loading skeletons, and under a failed catalog lane. Consumes: T4 sheet states + T5
+intake. Tests: renders with dm rows / with catalog-only flag-off results; absent
+pre-submit, in the empty state, while loading after resubmit, and on catalog error; click
+opens the prefilled intake. Done when both recovery entries share one helper and all
+listed states are covered.
 
 ## 9. Verification
 
