@@ -555,7 +555,7 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
       (sample) => sample.step === "scanning" && sample.calls === 0,
     )
 
-    await closeSheetContaining(page, "Ohne Scan finden").click()
+    await closeSheetContaining(page, "Produkt finden").click()
     await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "result")
     await expect(page.getByText("Lab Shampoo Alpha")).toBeVisible()
     expect(api.resolveBodies).toHaveLength(1)
@@ -597,7 +597,7 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     )
 
     // And it was not consumed either: the same code, never moved, still resolves once.
-    await closeSheetContaining(page, "Ohne Scan finden").click()
+    await closeSheetContaining(page, "Produkt finden").click()
     await emit(page, EAN_PRODUCT_A)
     await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "result")
     await expect(page.getByText("Lab Shampoo Alpha")).toBeVisible()
@@ -691,7 +691,7 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     // The FIRST failure pops the fallback the user actually needs.
     await expect(flowRoot(page)).toHaveAttribute("data-scan-auxiliary", "search")
 
-    await closeSheetContaining(page, "Ohne Scan finden").click()
+    await closeSheetContaining(page, "Produkt finden").click()
     await page.getByRole("button", { name: "Kamera erneut versuchen" }).click()
 
     await expect(flowRoot(page)).toHaveAttribute("data-scan-camera", "live")
@@ -1095,7 +1095,7 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     await expect(flowRoot(page)).toHaveAttribute("data-scan-auxiliary", "search")
 
     // Nothing failed to read here — the user simply asked for the search.
-    await expect(page.getByRole("heading", { name: "Ohne Scan finden" })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Produkt finden" })).toBeVisible()
     await expect(page.getByRole("heading", { name: "Barcode nicht lesbar?" })).toHaveCount(0)
   })
 })
