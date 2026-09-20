@@ -2119,6 +2119,125 @@ test("ScanSearchSheet: Zurück (onBack) returns to the results/empty state witho
   assert.equal(findByType(view.tree, ScanResearchIntakeForm), null)
 })
 
+// --- Task 8: the persistent recovery link ("Nicht dabei? Für dich prüfen lassen") ------
+//
+// dm's semantic search returns neighbor products for most real queries, so the terminal
+// empty state (and its own recovery CTA) is rarely reached — this link is the recovery
+// path when SOME results are on screen but not the user's own product.
+
+function persistentRecoveryLinkButtons(tree: ReactNode): AnyElement[] {
+  return findAll(
+    tree,
+    (element) => element.type === "button" && textContent(element) === "Für dich prüfen lassen",
+  )
+}
+
+test("Task 8: the persistent recovery link renders below dm-only results", async () => {
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({ catalog: [], retailer: [retailerRow()], retailerOutcome: "ok" })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true, onStartResearchIntake: () => {} },
+  )
+
+  await typeQuery(view, "gliss kur")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  const text = textContent(view.tree)
+  assert.ok(text.includes("Nicht dabei? Für dich prüfen lassen"))
+  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
+  // Only the small link renders, never the big empty-state CTA at the same time.
+  assert.equal(text.includes("Dazu haben wir nichts gefunden."), false)
+})
+
+test("Task 8: the persistent recovery link renders below catalog-only results with the retailer flag off", async () => {
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [liveCatalogResult()] })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { onStartResearchIntake: () => {} },
+  )
+
+  await typeQuery(view, "gliss kur")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  assert.ok(textContent(view.tree).includes("Nicht dabei? Für dich prüfen lassen"))
+  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
+})
+
+test("Task 8: the persistent recovery link is NOT shown pre-submit, even while live-typing results are already on screen", async () => {
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [liveCatalogResult()] })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true, onStartResearchIntake: () => {} },
+  )
+
+  await typeQuery(view, "gliss kur")
+  await delay(300)
+  await view.settle()
+
+  // The live catalog result is on screen (proves this isn't just an empty pre-submit
+  // render), but the query was never submitted.
+  assert.ok(textContent(view.tree).includes(liveCatalogResult().name))
+  assert.equal(textContent(view.tree).includes("Nicht dabei?"), false)
+  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 0)
+})
+
+test("Task 8: the persistent recovery link is NOT shown in the terminal empty state (its own big CTA owns recovery there)", async () => {
+  const { view } = await mountSearchSheetAtEmptyState("kerastase ciment")
+
+  assert.equal(textContent(view.tree).includes("Nicht dabei?"), false)
+  // Exactly one "Für dich prüfen lassen" -- the big empty-state CTA, not the small link too.
+  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
+})
+
+test("Task 8: clicking the persistent recovery link opens the intake with the query prefilled", async () => {
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [liveCatalogResult()] })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { onStartResearchIntake: () => {} },
+  )
+
+  await typeQuery(view, "  kerastase ciment thermique  ")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  persistentRecoveryLinkButtons(view.tree)[0].props.onClick()
+  await view.settle()
+
+  assert.equal(
+    searchSheetHeaderText(view.tree),
+    "Wir prüfen es für dichDas Ergebnis kommt in den Chat – meist innerhalb von 24 Stunden.",
+  )
+  assert.equal(intakeFormProps(view.tree).productNameText, "kerastase ciment thermique")
+  assert.equal(intakeFormProps(view.tree).brandText, "")
+})
+
+test("Task 8: the persistent recovery link is absent when onStartResearchIntake is not provided, even with results on screen", async () => {
+  const view = await mountSearchSheet(async (url) => {
+    if (url.startsWith("/api/scan/search?")) return json({ results: [liveCatalogResult()] })
+    return json({ error: "unexpected_call" }, 500)
+  }, {})
+
+  await typeQuery(view, "gliss kur")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  assert.ok(textContent(view.tree).includes(liveCatalogResult().name))
+  assert.equal(textContent(view.tree).includes("Nicht dabei?"), false)
+  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 0)
+})
+
 // --- T9: the free tier's verdict states, end to end through the flow ---------
 
 /**

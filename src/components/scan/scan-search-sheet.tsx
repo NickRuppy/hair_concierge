@@ -61,6 +61,10 @@ const ERROR_COPY = "Die Suche klappt gerade nicht."
 const QUIET_INVITATION_COPY = "Drück Suchen für mehr Treffer."
 const POST_SUBMIT_EMPTY_COPY = "Dazu haben wir nichts gefunden."
 const RESEARCH_CTA_LABEL = "Für dich prüfen lassen"
+// Task 8: the persistent recovery link, shown below whatever post-submit results are
+// displayed — dm's semantic search returns neighbor products for most real queries, so the
+// terminal empty state (and with it its own big CTA) is rarely reached.
+const PERSISTENT_RECOVERY_PROMPT = "Nicht dabei?"
 const CATALOG_SECTION_LABEL = "In deinem Chaarlie-Katalog"
 const RETAILER_SECTION_LABEL = "Weitere Treffer"
 const RETAILER_SECTION_SUBLINE = "Noch nicht geprüft — tippe drauf, wir übernehmen das."
@@ -498,6 +502,21 @@ export function ScanSearchSheet({
     searchInputRef.current?.focus()
   }
 
+  /**
+   * Shared by the terminal empty state's CTA and Task 8's persistent recovery link — both
+   * enter the exact same intake state (empty Marke, Produktname prefilled with the full
+   * trimmed query, clamped to its own max).
+   */
+  function openResearchIntake() {
+    onStartResearchIntake?.()
+    setIntakeBrandText("")
+    // `maxLength` on the input only limits typing, not this programmatic prefill -- a
+    // query longer than the field's own bound would otherwise submit an over-length value
+    // and 400 with only the generic error (fix round 1, Important finding).
+    setIntakeProductNameText(trimmedQuery.slice(0, RESEARCH_INTAKE_PRODUCT_NAME_MAX))
+    setIntakeOpen(true)
+  }
+
   const mergedCatalog = mergeCatalogResults(catalogResults, retailerCatalogMatches)
   // "The dm section exists" (T4 brief §4) once a submit with the lane enabled happened,
   // unless the server itself answered `disabled` — that renders as if the lane were off.
@@ -521,6 +540,16 @@ export function ScanSearchSheet({
     !dmFailed &&
     dmReadyResults.length === 0 &&
     (!retailerSearchEnabled || submitted)
+  // Task 8's persistent recovery link: dm's semantic search returns neighbor products for
+  // most real queries, so the terminal empty state above (and with it its own recovery CTA)
+  // is rarely reached — a user searching a product we can't find otherwise sees only
+  // results that aren't theirs, with no path to research it. Shown once ANY post-submit
+  // results are on screen (dm-only rows and/or merged catalog rows, either or both) — not
+  // pre-submit (live typing), and not in the terminal empty state (its own CTA owns
+  // recovery there). Works with the retailer flag off too: `dmReadyResults` is always `[]`
+  // in that case, so this reduces to catalog-only results.
+  const showPersistentRecoveryLink =
+    submitted && (mergedCatalog.length > 0 || dmReadyResults.length > 0)
 
   return (
     <BottomSheet open={open} onOpenChange={onOpenChange}>
@@ -639,18 +668,7 @@ export function ScanSearchSheet({
                   {onStartResearchIntake ? (
                     <button
                       type="button"
-                      onClick={() => {
-                        onStartResearchIntake?.()
-                        setIntakeBrandText("")
-                        // `maxLength` on the input only limits typing, not this
-                        // programmatic prefill -- a query longer than the field's own
-                        // bound would otherwise submit an over-length value and 400 with
-                        // only the generic error (fix round 1, Important finding).
-                        setIntakeProductNameText(
-                          trimmedQuery.slice(0, RESEARCH_INTAKE_PRODUCT_NAME_MAX),
-                        )
-                        setIntakeOpen(true)
-                      }}
+                      onClick={openResearchIntake}
                       className="mt-4 w-full rounded-[10px] bg-[var(--brand-coral)] px-6 py-4 text-base font-semibold text-white transition hover:bg-[var(--brand-coral-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2"
                     >
                       {RESEARCH_CTA_LABEL}
@@ -760,6 +778,19 @@ export function ScanSearchSheet({
                     </p>
                   ) : null}
                 </div>
+              ) : null}
+
+              {showPersistentRecoveryLink && onStartResearchIntake ? (
+                <p className="mt-4 text-center text-sm text-muted-foreground">
+                  {PERSISTENT_RECOVERY_PROMPT}{" "}
+                  <button
+                    type="button"
+                    onClick={openResearchIntake}
+                    className="inline-flex min-h-[44px] items-center px-1 align-middle font-semibold text-[var(--brand-plum)] underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+                  >
+                    {RESEARCH_CTA_LABEL}
+                  </button>
+                </p>
               ) : null}
             </div>
           </>
