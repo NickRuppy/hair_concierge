@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowRight, Search } from "lucide-react"
+import { ArrowRight, ChevronDown, ChevronLeft, Search } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 
 import { BottomSheet, BottomSheetContent, BottomSheetTitle } from "@/components/ui/bottom-sheet"
@@ -10,6 +10,9 @@ import type {
   ScanRetailerResult,
   ScanRetailerSearchResponse,
 } from "@/app/api/scan/search-retailer/route"
+import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
+import { PERSONAL_PLAN_PRODUCT_CATEGORIES } from "@/lib/personal-plan/products/contracts"
+import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { cn } from "@/lib/utils"
 
 import { useLatestRequest } from "@/lib/scan/use-latest-request"
@@ -63,8 +66,190 @@ const RETAILER_SECTION_SUBLINE = "Noch nicht geprüft — tippe drauf, wir über
 const RETAILER_PILL_LABEL = "Prüfen lassen"
 const RETAILER_UNAVAILABLE_COPY = "Die erweiterte Suche ist gerade nicht verfügbar."
 
+// Task 5: the name-based research intake, entered from the terminal empty state's CTA.
+const RESEARCH_INTAKE_HEADING = "Wir prüfen es für dich"
+const RESEARCH_INTAKE_SUBLINE = "Das Ergebnis kommt in den Chat – meist innerhalb von 24 Stunden."
+const RESEARCH_INTAKE_BRAND_LABEL = "Marke"
+const RESEARCH_INTAKE_BRAND_PLACEHOLDER = "z. B. Kérastase"
+const RESEARCH_INTAKE_PRODUCT_LABEL = "Produktname"
+const RESEARCH_INTAKE_CATEGORY_LABEL = "Was ist es?"
+const RESEARCH_INTAKE_CATEGORY_HELPER = "Tippe die Kategorie an – das reicht uns schon."
+const RESEARCH_INTAKE_MORE_LABEL = "Mehr …"
+const RESEARCH_INTAKE_BACK_LABEL = "Zurück"
+const RESEARCH_INTAKE_SUBMITTING_LABEL = "Wird eingereicht"
+const RESEARCH_INTAKE_BRAND_MAX = 200
+const RESEARCH_INTAKE_PRODUCT_NAME_MAX = 240
+
+/** The five most-scanned shelf categories stay visible; the rest sit behind "Mehr …". */
+const RESEARCH_INTAKE_PRIMARY_CATEGORIES: PersonalPlanCategory[] = [
+  "shampoo",
+  "conditioner",
+  "leave_in",
+  "mask",
+  "oil",
+]
+
 type CatalogStatus = "idle" | "loading" | "ready" | "error"
 type RetailerStatus = "idle" | "loading" | "ready" | "error" | "disabled"
+
+export type ScanResearchIntakeInput = {
+  brandText: string
+  productNameText: string
+  category: PersonalPlanCategory
+}
+
+/**
+ * The one-step research intake form (T5): a swapped content state inside the sheet, not a
+ * separate sheet or a modification of `ScanUnknownFlow` (that component stays untouched —
+ * this is a deliberately separate, smaller component with its own category-grid state).
+ * A category tap submits; it is blocked (and redirects focus to the first empty field)
+ * until both text fields are non-empty.
+ */
+export function ScanResearchIntakeForm({
+  brandText,
+  productNameText,
+  onBrandTextChange,
+  onProductNameTextChange,
+  submitting,
+  error,
+  onBack,
+  onSubmit,
+}: {
+  brandText: string
+  productNameText: string
+  onBrandTextChange: (value: string) => void
+  onProductNameTextChange: (value: string) => void
+  submitting: boolean
+  error: string | null
+  onBack: () => void
+  onSubmit: (category: PersonalPlanCategory) => void
+}) {
+  const [showAll, setShowAll] = useState(false)
+  const [tappedCategory, setTappedCategory] = useState<PersonalPlanCategory | null>(null)
+  const brandInputRef = useRef<HTMLInputElement>(null)
+  const productNameInputRef = useRef<HTMLInputElement>(null)
+
+  const brandValid = brandText.trim().length > 0
+  const productNameValid = productNameText.trim().length > 0
+  const fieldsValid = brandValid && productNameValid
+
+  const rest = PERSONAL_PLAN_PRODUCT_CATEGORIES.filter(
+    (key) => !RESEARCH_INTAKE_PRIMARY_CATEGORIES.includes(key),
+  )
+  const visible = showAll
+    ? [...RESEARCH_INTAKE_PRIMARY_CATEGORIES, ...rest]
+    : RESEARCH_INTAKE_PRIMARY_CATEGORIES
+
+  function handleTap(category: PersonalPlanCategory) {
+    if (submitting) return
+    if (!brandValid) {
+      brandInputRef.current?.focus()
+      return
+    }
+    if (!productNameValid) {
+      productNameInputRef.current?.focus()
+      return
+    }
+    setTappedCategory(category)
+    onSubmit(category)
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <button
+        type="button"
+        onClick={onBack}
+        disabled={submitting}
+        className="flex w-fit items-center gap-1 text-sm font-semibold text-[var(--brand-plum)] disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+        {RESEARCH_INTAKE_BACK_LABEL}
+      </button>
+
+      <div>
+        <div className="mb-1 text-xs font-bold text-[var(--text-sub)]">
+          {RESEARCH_INTAKE_BRAND_LABEL}
+        </div>
+        <input
+          ref={brandInputRef}
+          type="text"
+          value={brandText}
+          onChange={(event) => onBrandTextChange(event.target.value)}
+          maxLength={RESEARCH_INTAKE_BRAND_MAX}
+          placeholder={RESEARCH_INTAKE_BRAND_PLACEHOLDER}
+          aria-label={RESEARCH_INTAKE_BRAND_LABEL}
+          className="w-full rounded-[12px] border border-border bg-card px-3.5 py-3 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+        />
+      </div>
+
+      <div>
+        <div className="mb-1 text-xs font-bold text-[var(--text-sub)]">
+          {RESEARCH_INTAKE_PRODUCT_LABEL}
+        </div>
+        <input
+          ref={productNameInputRef}
+          type="text"
+          value={productNameText}
+          onChange={(event) => onProductNameTextChange(event.target.value)}
+          maxLength={RESEARCH_INTAKE_PRODUCT_NAME_MAX}
+          aria-label={RESEARCH_INTAKE_PRODUCT_LABEL}
+          className="w-full rounded-[12px] border border-border bg-card px-3.5 py-3 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+        />
+      </div>
+
+      <div>
+        <div className="mb-2 text-xs font-bold text-[var(--text-sub)]">
+          {RESEARCH_INTAKE_CATEGORY_LABEL}
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {visible.map((key) => {
+            const isTapped = tappedCategory === key && submitting
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => handleTap(key)}
+                disabled={submitting}
+                aria-pressed={isTapped}
+                className={cn(
+                  "flex min-h-[52px] items-center justify-center rounded-xl border p-3 text-center transition-colors disabled:cursor-not-allowed",
+                  isTapped
+                    ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)]"
+                    : "border-border bg-card hover:border-[var(--brand-plum)]/40",
+                  !fieldsValid && !isTapped ? "opacity-60" : null,
+                )}
+              >
+                <span className="text-[15px] font-bold text-foreground">
+                  {isTapped ? RESEARCH_INTAKE_SUBMITTING_LABEL : CATEGORY_COPY[key].label}
+                </span>
+              </button>
+            )
+          })}
+          {!showAll && rest.length > 0 ? (
+            <button
+              type="button"
+              onClick={() => setShowAll(true)}
+              disabled={submitting}
+              className="flex min-h-[52px] items-center justify-center gap-1 rounded-xl border border-dashed border-[var(--brand-plum-light)] p-3 text-center text-[15px] font-semibold text-[var(--brand-plum)] transition-colors hover:border-[var(--brand-plum)] disabled:cursor-not-allowed"
+            >
+              {RESEARCH_INTAKE_MORE_LABEL}
+              <ChevronDown className="h-4 w-4" aria-hidden="true" />
+            </button>
+          ) : null}
+        </div>
+        <p className="mt-2 text-xs leading-5 text-muted-foreground">
+          {RESEARCH_INTAKE_CATEGORY_HELPER}
+        </p>
+      </div>
+
+      {error ? (
+        <p role="alert" className="text-sm text-[var(--brand-coral-dark)]">
+          {error}
+        </p>
+      ) : null}
+    </div>
+  )
+}
 
 /**
  * Merge policy (T4 brief §4): the live lane keeps its own order; any GTIN-mapped catalog
@@ -88,6 +273,9 @@ export function ScanSearchSheet({
   onSelectProduct,
   onSelectRetailerResult,
   onStartResearchIntake,
+  onSubmitResearchIntake,
+  submitting = false,
+  submitError = null,
   retailerSearchEnabled = false,
 }: {
   open: boolean
@@ -101,11 +289,23 @@ export function ScanSearchSheet({
    */
   onSelectRetailerResult?: (gtin: string) => void
   /**
-   * The post-submit empty state's CTA (T4 brief §7). Task 5 builds the research intake
-   * behind it; this sheet only renders the CTA (and only while this prop is supplied), so
-   * T4 ships inert without T5.
+   * The post-submit empty state's CTA (T4 brief §7): invoked (in addition to opening the
+   * intake form below) when the CTA is tapped, and gates the CTA's rendering — while it is
+   * `undefined` no CTA renders, so T4 ships inert without T5.
    */
   onStartResearchIntake?: () => void
+  /**
+   * T5: submits the name-based research intake form once a category is tapped with both
+   * text fields filled. `ScanFlow` wires this to `submitResearchFromSearch`, which reuses
+   * `submitUnknown`'s fetch/dispatch machinery without an identifier. Optional so any
+   * existing caller that only wants the CTA to render (without a working submit) keeps
+   * compiling.
+   */
+  onSubmitResearchIntake?: (input: ScanResearchIntakeInput) => void
+  /** `ScanFlow`'s `state.submitting` — keeps the intake grid busy while a submit is in flight. */
+  submitting?: boolean
+  /** `ScanFlow`'s `state.submitError` — the standard error copy, shown inside the intake form. */
+  submitError?: string | null
   /**
    * Server-derived flag (T3's `isRetailerSearchEnabled()`), threaded down through
    * `ScanFlow`. `false` (the default) means zero retailer-lane fetches ever — every
@@ -121,6 +321,9 @@ export function ScanSearchSheet({
   const [retailerStatus, setRetailerStatus] = useState<RetailerStatus>("idle")
   const [retailerResults, setRetailerResults] = useState<ScanRetailerResult[]>([])
   const [retailerCatalogMatches, setRetailerCatalogMatches] = useState<ScanSearchResult[]>([])
+  const [intakeOpen, setIntakeOpen] = useState(false)
+  const [intakeBrandText, setIntakeBrandText] = useState("")
+  const [intakeProductNameText, setIntakeProductNameText] = useState("")
 
   const catalogRequests = useLatestRequest()
   const retailerRequests = useLatestRequest()
@@ -150,6 +353,9 @@ export function ScanSearchSheet({
       setCatalogResults([])
       setCatalogStatus("idle")
       resetToUnsubmitted()
+      setIntakeOpen(false)
+      setIntakeBrandText("")
+      setIntakeProductNameText("")
     }
   }, [open, catalogRequests, retailerRequests])
 
@@ -277,161 +483,146 @@ export function ScanSearchSheet({
         className="max-h-[85vh]"
         contentClassName="px-4 pb-6 sm:px-5"
         header={
-          <div className="px-4 pb-2 pt-1 sm:px-5">
-            <BottomSheetTitle className="text-[17px]">
-              {reason === "timeout" ? TIMEOUT_TITLE : DEFAULT_TITLE}
-            </BottomSheetTitle>
-            {reason === "timeout" ? (
-              <p className="mt-0.5 text-sm leading-6 text-[var(--text-sub)]">{TIMEOUT_SUBLINE}</p>
-            ) : null}
-          </div>
+          intakeOpen ? (
+            <div className="px-4 pb-2 pt-1 sm:px-5">
+              <BottomSheetTitle className="text-[17px]">{RESEARCH_INTAKE_HEADING}</BottomSheetTitle>
+              <p className="mt-0.5 text-sm leading-6 text-[var(--text-sub)]">
+                {RESEARCH_INTAKE_SUBLINE}
+              </p>
+            </div>
+          ) : (
+            <div className="px-4 pb-2 pt-1 sm:px-5">
+              <BottomSheetTitle className="text-[17px]">
+                {reason === "timeout" ? TIMEOUT_TITLE : DEFAULT_TITLE}
+              </BottomSheetTitle>
+              {reason === "timeout" ? (
+                <p className="mt-0.5 text-sm leading-6 text-[var(--text-sub)]">{TIMEOUT_SUBLINE}</p>
+              ) : null}
+            </div>
+          )
         }
       >
-        <div className="flex items-center gap-2 rounded-[14px] border-[1.5px] border-[var(--brand-plum)] bg-card py-1.5 pl-3.5 pr-1.5 shadow-[0_5px_14px_rgba(107,80,160,0.10)] focus-within:ring-2 focus-within:ring-[var(--brand-plum)] focus-within:ring-offset-2">
-          <Search className="h-4 w-4 shrink-0 text-[var(--brand-plum)]" aria-hidden="true" />
-          <input
-            type="search"
-            autoComplete="off"
-            aria-label={FIELD_PLACEHOLDER}
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                event.preventDefault()
-                handleSubmit()
-              }
-            }}
-            placeholder={FIELD_PLACEHOLDER}
-            className="min-w-0 flex-1 bg-transparent text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none"
+        {intakeOpen ? (
+          <ScanResearchIntakeForm
+            brandText={intakeBrandText}
+            productNameText={intakeProductNameText}
+            onBrandTextChange={setIntakeBrandText}
+            onProductNameTextChange={setIntakeProductNameText}
+            submitting={submitting}
+            error={submitError}
+            onBack={() => setIntakeOpen(false)}
+            onSubmit={(category) =>
+              onSubmitResearchIntake?.({
+                brandText: intakeBrandText.trim(),
+                productNameText: intakeProductNameText.trim(),
+                category,
+              })
+            }
           />
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={!submittable}
-            aria-label="Suchen"
-            className={cn(
-              "flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2",
-              submittable
-                ? "bg-[var(--brand-coral)] text-white hover:bg-[var(--brand-coral-dark)]"
-                : "border border-border bg-transparent text-muted-foreground",
-            )}
-          >
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </div>
-
-        <div className="mt-3 min-h-[64px]" aria-live="polite">
-          {catalogStatus === "loading" ? (
-            <div className="flex flex-col gap-2">
-              {[0, 1, 2].map((index) => (
-                <Skeleton key={index} className="h-[64px] w-full rounded-[12px]" />
-              ))}
+        ) : (
+          <>
+            <div className="flex items-center gap-2 rounded-[14px] border-[1.5px] border-[var(--brand-plum)] bg-card py-1.5 pl-3.5 pr-1.5 shadow-[0_5px_14px_rgba(107,80,160,0.10)] focus-within:ring-2 focus-within:ring-[var(--brand-plum)] focus-within:ring-offset-2">
+              <Search className="h-4 w-4 shrink-0 text-[var(--brand-plum)]" aria-hidden="true" />
+              <input
+                type="search"
+                autoComplete="off"
+                aria-label={FIELD_PLACEHOLDER}
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault()
+                    handleSubmit()
+                  }
+                }}
+                placeholder={FIELD_PLACEHOLDER}
+                className="min-w-0 flex-1 bg-transparent text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none"
+              />
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={!submittable}
+                aria-label="Suchen"
+                className={cn(
+                  "flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2",
+                  submittable
+                    ? "bg-[var(--brand-coral)] text-white hover:bg-[var(--brand-coral-dark)]"
+                    : "border border-border bg-transparent text-muted-foreground",
+                )}
+              >
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
             </div>
-          ) : null}
 
-          {catalogStatus === "error" ? (
-            <p className="py-4 text-center text-sm text-muted-foreground">{ERROR_COPY}</p>
-          ) : null}
-
-          {showQuietInvitation ? (
-            <p className="py-4 text-center text-sm leading-6 text-muted-foreground">
-              {QUIET_INVITATION_COPY}
-            </p>
-          ) : null}
-
-          {showTerminalEmptyState ? (
-            <div className="py-4 text-center">
-              <p className="text-sm leading-6 text-muted-foreground">{POST_SUBMIT_EMPTY_COPY}</p>
-              {onStartResearchIntake ? (
-                <button
-                  type="button"
-                  onClick={onStartResearchIntake}
-                  className="mt-4 w-full rounded-[10px] bg-[var(--brand-coral)] px-6 py-4 text-base font-semibold text-white transition hover:bg-[var(--brand-coral-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2"
-                >
-                  {RESEARCH_CTA_LABEL}
-                </button>
-              ) : null}
-            </div>
-          ) : null}
-
-          {catalogStatus === "ready" && mergedCatalog.length > 0 ? (
-            <>
-              {showCatalogLabel ? (
-                <div className="mb-2 mt-1 text-xs font-bold text-[var(--text-sub)]">
-                  {CATALOG_SECTION_LABEL}
+            <div className="mt-3 min-h-[64px]" aria-live="polite">
+              {catalogStatus === "loading" ? (
+                <div className="flex flex-col gap-2">
+                  {[0, 1, 2].map((index) => (
+                    <Skeleton key={index} className="h-[64px] w-full rounded-[12px]" />
+                  ))}
                 </div>
               ) : null}
-              <ul className="flex flex-col gap-2">
-                {mergedCatalog.map((result) => (
-                  <li key={result.id}>
-                    <button
-                      type="button"
-                      onClick={() => onSelectProduct(result.id)}
-                      className="flex w-full items-center gap-3 rounded-[12px] border border-border bg-card px-3 py-2.5 text-left transition-colors hover:border-[var(--brand-plum)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
-                    >
-                      <ScanProductThumb imageUrl={result.imageUrl} label={result.name} size={44} />
-                      <span className="min-w-0">
-                        <span className="block truncate text-[13px] font-semibold text-foreground">
-                          {result.name}
-                        </span>
-                        <span className="mt-0.5 block truncate text-[12px] text-muted-foreground">
-                          {result.brand ? `${result.brand} · ` : ""}
-                          {result.categoryLabel}
-                        </span>
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </>
-          ) : null}
 
-          {dmActive ? (
-            <div className={mergedCatalog.length > 0 ? "mt-4" : undefined}>
-              {dmLoading ? (
-                <>
-                  <div className="mb-1 mt-1 text-xs font-bold text-[var(--text-sub)]">
-                    {RETAILER_SECTION_LABEL}
-                  </div>
-                  <p className="mb-2 text-xs leading-5 text-[var(--text-sub)]">
-                    {RETAILER_SECTION_SUBLINE}
-                  </p>
-                  <div className="flex flex-col gap-2">
-                    {[0, 1].map((index) => (
-                      <Skeleton key={index} className="h-[64px] w-full rounded-[12px]" />
-                    ))}
-                  </div>
-                </>
+              {catalogStatus === "error" ? (
+                <p className="py-4 text-center text-sm text-muted-foreground">{ERROR_COPY}</p>
               ) : null}
 
-              {retailerStatus === "ready" && retailerResults.length > 0 ? (
-                <>
-                  <div className="mb-1 mt-1 text-xs font-bold text-[var(--text-sub)]">
-                    {RETAILER_SECTION_LABEL}
-                  </div>
-                  <p className="mb-2 text-xs leading-5 text-[var(--text-sub)]">
-                    {RETAILER_SECTION_SUBLINE}
+              {showQuietInvitation ? (
+                <p className="py-4 text-center text-sm leading-6 text-muted-foreground">
+                  {QUIET_INVITATION_COPY}
+                </p>
+              ) : null}
+
+              {showTerminalEmptyState ? (
+                <div className="py-4 text-center">
+                  <p className="text-sm leading-6 text-muted-foreground">
+                    {POST_SUBMIT_EMPTY_COPY}
                   </p>
+                  {onStartResearchIntake ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onStartResearchIntake?.()
+                        setIntakeBrandText("")
+                        setIntakeProductNameText(trimmedQuery)
+                        setIntakeOpen(true)
+                      }}
+                      className="mt-4 w-full rounded-[10px] bg-[var(--brand-coral)] px-6 py-4 text-base font-semibold text-white transition hover:bg-[var(--brand-coral-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2"
+                    >
+                      {RESEARCH_CTA_LABEL}
+                    </button>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {catalogStatus === "ready" && mergedCatalog.length > 0 ? (
+                <>
+                  {showCatalogLabel ? (
+                    <div className="mb-2 mt-1 text-xs font-bold text-[var(--text-sub)]">
+                      {CATALOG_SECTION_LABEL}
+                    </div>
+                  ) : null}
                   <ul className="flex flex-col gap-2">
-                    {retailerResults.map((result) => (
-                      <li key={result.gtin}>
+                    {mergedCatalog.map((result) => (
+                      <li key={result.id}>
                         <button
                           type="button"
-                          onClick={() => onSelectRetailerResult?.(result.gtin)}
+                          onClick={() => onSelectProduct(result.id)}
                           className="flex w-full items-center gap-3 rounded-[12px] border border-border bg-card px-3 py-2.5 text-left transition-colors hover:border-[var(--brand-plum)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
                         >
-                          <ScanProductThumb imageUrl={null} label={result.name} size={44} />
-                          <span className="min-w-0 flex-1">
+                          <ScanProductThumb
+                            imageUrl={result.imageUrl}
+                            label={result.name}
+                            size={44}
+                          />
+                          <span className="min-w-0">
                             <span className="block truncate text-[13px] font-semibold text-foreground">
                               {result.name}
                             </span>
                             <span className="mt-0.5 block truncate text-[12px] text-muted-foreground">
                               {result.brand ? `${result.brand} · ` : ""}
-                              {result.categoryLabel ?? ""}
+                              {result.categoryLabel}
                             </span>
-                          </span>
-                          <span className="shrink-0 rounded-full bg-[var(--brand-coral-light)] px-2.5 py-1 text-[11px] font-bold text-[var(--brand-coral-dark)]">
-                            {RETAILER_PILL_LABEL}
                           </span>
                         </button>
                       </li>
@@ -440,14 +631,70 @@ export function ScanSearchSheet({
                 </>
               ) : null}
 
-              {dmFailed ? (
-                <p className="py-2 text-center text-xs leading-5 text-muted-foreground">
-                  {RETAILER_UNAVAILABLE_COPY}
-                </p>
+              {dmActive ? (
+                <div className={mergedCatalog.length > 0 ? "mt-4" : undefined}>
+                  {dmLoading ? (
+                    <>
+                      <div className="mb-1 mt-1 text-xs font-bold text-[var(--text-sub)]">
+                        {RETAILER_SECTION_LABEL}
+                      </div>
+                      <p className="mb-2 text-xs leading-5 text-[var(--text-sub)]">
+                        {RETAILER_SECTION_SUBLINE}
+                      </p>
+                      <div className="flex flex-col gap-2">
+                        {[0, 1].map((index) => (
+                          <Skeleton key={index} className="h-[64px] w-full rounded-[12px]" />
+                        ))}
+                      </div>
+                    </>
+                  ) : null}
+
+                  {retailerStatus === "ready" && retailerResults.length > 0 ? (
+                    <>
+                      <div className="mb-1 mt-1 text-xs font-bold text-[var(--text-sub)]">
+                        {RETAILER_SECTION_LABEL}
+                      </div>
+                      <p className="mb-2 text-xs leading-5 text-[var(--text-sub)]">
+                        {RETAILER_SECTION_SUBLINE}
+                      </p>
+                      <ul className="flex flex-col gap-2">
+                        {retailerResults.map((result) => (
+                          <li key={result.gtin}>
+                            <button
+                              type="button"
+                              onClick={() => onSelectRetailerResult?.(result.gtin)}
+                              className="flex w-full items-center gap-3 rounded-[12px] border border-border bg-card px-3 py-2.5 text-left transition-colors hover:border-[var(--brand-plum)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+                            >
+                              <ScanProductThumb imageUrl={null} label={result.name} size={44} />
+                              <span className="min-w-0 flex-1">
+                                <span className="block truncate text-[13px] font-semibold text-foreground">
+                                  {result.name}
+                                </span>
+                                <span className="mt-0.5 block truncate text-[12px] text-muted-foreground">
+                                  {result.brand ? `${result.brand} · ` : ""}
+                                  {result.categoryLabel ?? ""}
+                                </span>
+                              </span>
+                              <span className="shrink-0 rounded-full bg-[var(--brand-coral-light)] px-2.5 py-1 text-[11px] font-bold text-[var(--brand-coral-dark)]">
+                                {RETAILER_PILL_LABEL}
+                              </span>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : null}
+
+                  {dmFailed ? (
+                    <p className="py-2 text-center text-xs leading-5 text-muted-foreground">
+                      {RETAILER_UNAVAILABLE_COPY}
+                    </p>
+                  ) : null}
+                </div>
               ) : null}
             </div>
-          ) : null}
-        </div>
+          </>
+        )}
       </BottomSheetContent>
     </BottomSheet>
   )

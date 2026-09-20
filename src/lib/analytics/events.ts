@@ -668,6 +668,12 @@ export type AppEventMap = {
     selectionPath: "one_tap" | "grid"
     scanInteractionId: string
     msConfirmationToPending: number
+    /**
+     * Which intake surface produced this submission (plan Rev. 6 §4, Task 5): the
+     * barcode-scan unknown-product flow (`"scan"`, the only value before this task) or the
+     * search sheet's name-based research recovery (`"name_search"`, no scanned identifier).
+     */
+    intakePath: "scan" | "name_search"
   }
   scan_fallback_search_used: {
     trigger: string

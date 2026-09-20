@@ -50,7 +50,7 @@ import { ScanActionFooter } from "./scan-action-footer"
 import { ScanResultCard } from "./scan-result-card"
 import { ScanResultSheet } from "./scan-result-sheet"
 import { ScanSaveSheet, type ScanSaveCompletion } from "./scan-save-sheet"
-import { ScanSearchSheet } from "./scan-search-sheet"
+import { ScanSearchSheet, type ScanResearchIntakeInput } from "./scan-search-sheet"
 import { ScanCategoryRepeatCard, ScanProactiveTriggerCard } from "./scan-trigger-cards"
 import { ScanUnknownFlow, type ScanSubmissionInput } from "./scan-unknown-flow"
 import { ScanWishlistSheet, ScanWishlistTrigger } from "./scan-wishlist-sheet"
@@ -827,7 +827,82 @@ export function ScanFlow({
           category: input.category,
           ...journey,
           msConfirmationToPending: Math.round(performance.now() - confirmedAt),
+          intakePath: "scan",
         })
+        dispatch({
+          type: "submitted",
+          token,
+          pending: {
+            kind: "pending_submission",
+            submissionId: result.submissionId,
+            headline: result.headline,
+            status: "pending_review",
+          },
+        })
+      } catch {
+        dispatch({ type: "submit_failed", token, error: GENERIC_ERROR })
+      }
+    },
+    [analytics, requests, resolve],
+  )
+
+  /**
+   * Task 5: the search sheet's terminal-empty-state recovery — "Marke + Produktname"
+   * submitted with no scanned identifier at all. Reuses `submitUnknown`'s fetch/dispatch
+   * shape (token, `submit_started`/`submitted`/`submit_failed`), but the search sheet is an
+   * AUXILIARY sheet, not a step — so, unlike `submitUnknown` (whose "unknown" step is
+   * already replaced the instant `resolved`/`submitted` repaints `step`), this must
+   * explicitly close it. Search-origin submit lifecycle (plan Rev. 6 §4, final-review F3):
+   * the search sheet stays open through `submit_started` and on failure (`submit_failed`
+   * touches neither `step` nor `auxiliary`, so the form simply stays visible with the
+   * error); `auxiliary_closed` is dispatched only once the outcome arrives — before
+   * `resolve({ productId })` on `already_in_catalog` (mirrors `openFromProductId`), and
+   * together with the `submitted` dispatch so the pending step is never covered by the
+   * sheet.
+   */
+  const submitResearchFromSearch = useCallback(
+    async (input: ScanResearchIntakeInput) => {
+      const confirmedAt = performance.now()
+      const token = requests.begin()
+      dispatch({ type: "submit_started", token })
+      try {
+        const response = await fetch("/api/scan/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            category: input.category,
+            brandText: input.brandText,
+            productNameText: input.productNameText,
+          }),
+        })
+        if (!response.ok) {
+          dispatch({ type: "submit_failed", token, error: GENERIC_ERROR })
+          return
+        }
+        const result = (await response.json()) as
+          | { kind: "already_in_catalog"; productId: string }
+          | { kind: "pending_submission"; submissionId: string; headline: string }
+        if (result.kind === "already_in_catalog") {
+          if (!requests.isCurrent(token)) return
+          dispatch({ type: "auxiliary_closed" })
+          await resolve({ productId: result.productId })
+          return
+        }
+        // Tracked unconditionally, same reasoning as `submitUnknown` above: the submission
+        // exists server-side the moment this response lands. There is no scan-decode
+        // interaction to correlate this event with, so `scanInteractionId` is minted fresh
+        // per submit attempt and `suggestedCategory` is `null` (no scan-derived suggestion
+        // on this path); `selectionPath` is `"grid"`, matching the category-grid tap that
+        // triggered this submit.
+        analytics.track("scan_submission_created", {
+          category: input.category,
+          suggestedCategory: null,
+          selectionPath: "grid",
+          scanInteractionId: crypto.randomUUID(),
+          msConfirmationToPending: Math.round(performance.now() - confirmedAt),
+          intakePath: "name_search",
+        })
+        dispatch({ type: "auxiliary_closed" })
         dispatch({
           type: "submitted",
           token,
@@ -1117,6 +1192,10 @@ export function ScanFlow({
           dispatch({ type: "auxiliary_closed" })
           void resolve({ identifier: { type: "ean", value: gtin } })
         }}
+        onStartResearchIntake={() => {}}
+        onSubmitResearchIntake={(input) => void submitResearchFromSearch(input)}
+        submitting={state.submitting}
+        submitError={state.submitError}
       />
 
       <ScanWishlistSheet

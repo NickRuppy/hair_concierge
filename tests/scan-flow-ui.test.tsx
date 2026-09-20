@@ -9,7 +9,7 @@ import { ScanFlow } from "../src/components/scan/scan-flow"
 import { ScanResultCard } from "../src/components/scan/scan-result-card"
 import { ScanResultSheet } from "../src/components/scan/scan-result-sheet"
 import { ScanSaveSheet, type ScanSaveCompletion } from "../src/components/scan/scan-save-sheet"
-import { ScanSearchSheet } from "../src/components/scan/scan-search-sheet"
+import { ScanResearchIntakeForm, ScanSearchSheet } from "../src/components/scan/scan-search-sheet"
 import {
   ScanCategoryRepeatCard,
   ScanProactiveTriggerCard,
@@ -809,6 +809,146 @@ test("ScanFlow: a search-sheet submit sees no onSubmitIdentifier prop — the ba
   assert.equal("onSubmitIdentifier" in sheet.props, false)
 })
 
+// --- T5: submitResearchFromSearch — the search-origin submit lifecycle ------------------
+
+const researchIntakeInput = {
+  brandText: "Kérastase",
+  productNameText: "Ciment Thermique",
+  category: "shampoo" as const,
+}
+
+test("ScanFlow: a pending research-intake submission closes the search auxiliary together with reaching the pending sheet", async () => {
+  const flow = await mountFlow(async (url) => {
+    if (url === "/api/scan/submit")
+      return json({ kind: "pending_submission", submissionId: "s1", headline: "Eingereicht!" })
+    return notFound()
+  })
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
+  await flow.settle()
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, true)
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSubmitResearchIntake(
+    researchIntakeInput,
+  )
+  await flow.settle()
+
+  // The auxiliary is closed AND the pending step is showing — never both an open search
+  // sheet and the pending sheet at once (plan Rev. 6 final-review F3).
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, false)
+  assert.equal(sheetProps(flow.tree).open, true)
+  assert.equal(sheetProps(flow.tree).title, "Eingereicht!")
+})
+
+test("ScanFlow: research-intake already_in_catalog closes the auxiliary before resolving the real verdict", async () => {
+  const flow = await mountFlow(async (url, init) => {
+    if (url === "/api/scan/submit")
+      return json({ kind: "already_in_catalog", productId: "p-name-search" })
+    if (url === "/api/scan/resolve") {
+      assert.deepEqual(JSON.parse(String(init?.body)), { productId: "p-name-search" })
+      return json(verdictResult("p-name-search"))
+    }
+    return notFound()
+  })
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
+  await flow.settle()
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSubmitResearchIntake(
+    researchIntakeInput,
+  )
+  await flow.settle()
+
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, false)
+  assert.equal(sheetProps(flow.tree).title, "Brauchst du nicht (p-name-search)")
+})
+
+test("ScanFlow: a failed research-intake submission keeps the search sheet open with the standard error", async () => {
+  const flow = await mountFlow(async (url) => {
+    if (url === "/api/scan/submit") return json({ error: "temporarily_unavailable" }, 500)
+    return notFound()
+  })
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
+  await flow.settle()
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSubmitResearchIntake(
+    researchIntakeInput,
+  )
+  await flow.settle()
+
+  const sheet = requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet")
+  assert.equal(sheet.props.open, true)
+  assert.equal(sheet.props.submitting, false)
+  assert.equal(sheet.props.submitError, "Hat nicht geklappt – versuch's nochmal.")
+})
+
+test("ScanFlow: research-intake submitting=true is threaded into the search sheet while the request is in flight", async () => {
+  const gate = deferred<Response>()
+  const flow = await mountFlow(async (url) => {
+    if (url === "/api/scan/submit") return gate.promise
+    return notFound()
+  })
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
+  await flow.settle()
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSubmitResearchIntake(
+    researchIntakeInput,
+  )
+  await flow.settle()
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.submitting, true)
+
+  gate.resolve(json({ kind: "pending_submission", submissionId: "s1", headline: "Eingereicht!" }))
+  await flow.settle()
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.submitting, false)
+})
+
+test("ScanFlow: a successful research-intake submission tracks scan_submission_created with intakePath 'name_search'", async () => {
+  const flow = await mountFlow(async (url) => {
+    if (url === "/api/scan/submit")
+      return json({ kind: "pending_submission", submissionId: "s1", headline: "Eingereicht!" })
+    return notFound()
+  })
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
+  await flow.settle()
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSubmitResearchIntake(
+    researchIntakeInput,
+  )
+  await flow.settle()
+
+  const submitted = flow.events.find((event) => event.name === "scan_submission_created")
+  assert.ok(submitted)
+  assert.equal(submitted!.payload.intakePath, "name_search")
+  assert.equal(submitted!.payload.category, "shampoo")
+  assert.equal(submitted!.payload.selectionPath, "grid")
+  assert.equal(submitted!.payload.suggestedCategory, null)
+  assert.match(String(submitted!.payload.scanInteractionId), /^[0-9a-f-]{36}$/)
+})
+
+test("ScanFlow: the search-sheet body posts brandText/productNameText/category with no identifier key", async () => {
+  const bodies: unknown[] = []
+  const flow = await mountFlow(async (url, init) => {
+    if (url === "/api/scan/submit") {
+      bodies.push(JSON.parse(String(init?.body)))
+      return json({ kind: "pending_submission", submissionId: "s1", headline: "Eingereicht!" })
+    }
+    return notFound()
+  })
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
+  await flow.settle()
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSubmitResearchIntake(
+    researchIntakeInput,
+  )
+  await flow.settle()
+
+  assert.deepEqual(bodies, [
+    { category: "shampoo", brandText: "Kérastase", productNameText: "Ciment Thermique" },
+  ])
+})
+
 test("ScanFlow: a stalled stream swaps in the restart tile", async () => {
   const flow = await mountFlow(notFound)
 
@@ -1040,6 +1180,13 @@ async function mountSearchSheet(
     onSelectProduct?: (productId: string) => void
     onSelectRetailerResult?: (gtin: string) => void
     onStartResearchIntake?: () => void
+    onSubmitResearchIntake?: (input: {
+      brandText: string
+      productNameText: string
+      category: string
+    }) => void
+    submitting?: boolean
+    submitError?: string | null
   } = {},
 ) {
   const previousFetch = globalThis.fetch
@@ -1058,6 +1205,9 @@ async function mountSearchSheet(
         onSelectProduct: props.onSelectProduct ?? (() => {}),
         onSelectRetailerResult: props.onSelectRetailerResult,
         onStartResearchIntake: props.onStartResearchIntake,
+        onSubmitResearchIntake: props.onSubmitResearchIntake as never,
+        submitting: props.submitting,
+        submitError: props.submitError,
         retailerSearchEnabled: props.retailerSearchEnabled ?? false,
       }),
     {},
@@ -1372,6 +1522,126 @@ test("ScanSearchSheet: without onStartResearchIntake the post-submit empty state
 
   assert.equal(textContent(view.tree).includes("Dazu haben wir nichts gefunden."), true)
   assert.equal(buttonLabels(view.tree).includes("Für dich prüfen lassen"), false)
+})
+
+// --- T5: the name-based research intake, mounted directly on ScanSearchSheet -----------
+//
+// `ScanResearchIntakeForm` is a nested custom component inside `ScanSearchSheet`'s return
+// tree, so — same convention as `ScanUnknownFlow` in the mountFlow suite below — this
+// harness never invokes it; these tests read the PROPS `ScanSearchSheet` hands it.
+// `ScanResearchIntakeForm`'s own interactive behavior (category-tap blocking, the "Mehr …"
+// expander, the submitting label) is covered directly in
+// tests/scan-research-intake-form-ui.test.tsx, mounting it the same way
+// tests/scan-unknown-flow-ui.test.tsx mounts `ScanUnknownFlow`.
+
+function intakeFormProps(tree: ReactNode): Record<string, any> {
+  return requireByType(tree, ScanResearchIntakeForm, "ScanResearchIntakeForm").props
+}
+
+async function mountSearchSheetAtEmptyState(
+  query: string,
+  overrides: {
+    onSubmitResearchIntake?: (input: {
+      brandText: string
+      productNameText: string
+      category: string
+    }) => void
+    submitting?: boolean
+    submitError?: string | null
+  } = {},
+) {
+  const started: number[] = []
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({ catalog: [], retailer: [], retailerOutcome: "ok" })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    {
+      retailerSearchEnabled: true,
+      onStartResearchIntake: () => started.push(1),
+      ...overrides,
+    },
+  )
+  await typeQuery(view, query)
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+  return { view, started }
+}
+
+function openIntake(tree: ReactNode) {
+  const cta = findAll(
+    tree,
+    (element) => element.type === "button" && textContent(element) === "Für dich prüfen lassen",
+  )[0]
+  assert.ok(cta, "Expected the 'Für dich prüfen lassen' CTA")
+  cta.props.onClick()
+}
+
+test("ScanSearchSheet: the recovery CTA opens the intake form (heading swaps, search bar is gone)", async () => {
+  const { view } = await mountSearchSheetAtEmptyState("kerastase ciment")
+  openIntake(view.tree)
+  await view.settle()
+
+  assert.equal(
+    searchSheetHeaderText(view.tree),
+    "Wir prüfen es für dichDas Ergebnis kommt in den Chat – meist innerhalb von 24 Stunden.",
+  )
+  assert.equal(
+    findAll(view.tree, (el) => el.type === "input" && el.props.type === "search").length,
+    0,
+  )
+  assert.ok(requireByType(view.tree, ScanResearchIntakeForm, "ScanResearchIntakeForm"))
+})
+
+test("ScanSearchSheet: intake prefills Produktname with the full trimmed query and leaves Marke empty", async () => {
+  const { view } = await mountSearchSheetAtEmptyState("  kerastase ciment thermique  ")
+  openIntake(view.tree)
+  await view.settle()
+
+  assert.equal(intakeFormProps(view.tree).productNameText, "kerastase ciment thermique")
+  assert.equal(intakeFormProps(view.tree).brandText, "")
+})
+
+test("ScanSearchSheet: threads submitting/error into the intake form and forwards a category submit trimmed", async () => {
+  const submitted: Array<{ brandText: string; productNameText: string; category: string }> = []
+  const { view } = await mountSearchSheetAtEmptyState("ciment thermique", {
+    onSubmitResearchIntake: (input) => submitted.push(input),
+    submitting: true,
+    submitError: "Hat nicht geklappt – versuch's nochmal.",
+  })
+  openIntake(view.tree)
+  await view.settle()
+
+  const props = intakeFormProps(view.tree)
+  assert.equal(props.submitting, true)
+  assert.equal(props.error, "Hat nicht geklappt – versuch's nochmal.")
+
+  // Simulate the form's own Marke edit (its own change handler is tested in
+  // scan-research-intake-form-ui.test.tsx) via the prop `ScanSearchSheet` hands it, then
+  // simulate a valid category submit the same way.
+  props.onBrandTextChange("Kérastase")
+  await view.settle()
+  intakeFormProps(view.tree).onSubmit("shampoo")
+
+  assert.deepEqual(submitted, [
+    { brandText: "Kérastase", productNameText: "ciment thermique", category: "shampoo" },
+  ])
+})
+
+test("ScanSearchSheet: Zurück (onBack) returns to the results/empty state without losing the query", async () => {
+  const { view } = await mountSearchSheetAtEmptyState("kerastase ciment")
+  openIntake(view.tree)
+  await view.settle()
+
+  intakeFormProps(view.tree).onBack()
+  await view.settle()
+
+  assert.equal(searchSheetHeaderText(view.tree), "Produkt finden")
+  assert.equal(queryInputProps(view.tree).value, "kerastase ciment")
+  assert.equal(textContent(view.tree).includes("Dazu haben wir nichts gefunden."), true)
+  assert.equal(findByType(view.tree, ScanResearchIntakeForm), null)
 })
 
 // --- T9: the free tier's verdict states, end to end through the flow ---------

@@ -529,6 +529,7 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         selection_path: data.selectionPath,
         scan_interaction_id: data.scanInteractionId,
         ms_confirmation_to_pending: data.msConfirmationToPending,
+        intake_path: data.intakePath,
       }
     }
     case "scan_fallback_search_used": {
