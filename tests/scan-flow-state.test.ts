@@ -403,6 +403,99 @@ test("auxiliary_closed: returns to no auxiliary sheet without touching the step"
   assert.deepEqual(state.step, { kind: "scanning" })
 })
 
+test("auxiliary_closed: without cancelSubmit leaves an in-flight submit's activeRequest untouched (the submitResearchFromSearch success/already_in_catalog continuation depends on this)", () => {
+  const state = run(
+    { type: "auxiliary_opened", sheet: "search" },
+    { type: "submit_started", token: 5 },
+    { type: "auxiliary_closed" },
+  )
+
+  assert.equal(state.auxiliary, "none")
+  assert.equal(state.submitting, true)
+  assert.deepEqual(state.activeRequest, { kind: "submit", token: 5 })
+})
+
+test("auxiliary_closed with cancelSubmit: dismissing the search sheet while a research-intake submit is in flight cancels it (same bug class as F4)", () => {
+  const state = run(
+    { type: "auxiliary_opened", sheet: "search" },
+    { type: "submit_started", token: 5 },
+    { type: "auxiliary_closed", cancelSubmit: true },
+  )
+
+  assert.equal(state.auxiliary, "none")
+  assert.equal(state.submitting, false)
+  assert.equal(state.submitError, null)
+  assert.equal(state.activeRequest, null)
+})
+
+test("auxiliary_closed with cancelSubmit: a late SUCCESS after dismissal is dropped -- no pending step, step stays scanning", () => {
+  const state = run(
+    { type: "auxiliary_opened", sheet: "search" },
+    { type: "submit_started", token: 5 },
+    { type: "auxiliary_closed", cancelSubmit: true },
+    { type: "submitted", token: 5, pending: pendingResult },
+  )
+
+  assert.deepEqual(state.step, { kind: "scanning" })
+  assert.equal(state.submitting, false)
+  assert.equal(state.auxiliary, "none")
+})
+
+test("auxiliary_closed with cancelSubmit: a late FAILURE after dismissal is dropped -- no error resurfacing", () => {
+  const state = run(
+    { type: "auxiliary_opened", sheet: "search" },
+    { type: "submit_started", token: 5 },
+    { type: "auxiliary_closed", cancelSubmit: true },
+    { type: "submit_failed", token: 5, error: "Hat nicht geklappt" },
+  )
+
+  assert.equal(state.submitError, null)
+  assert.equal(state.submitting, false)
+})
+
+test("auxiliary_closed with cancelSubmit: reopening and submitting again still works (a fresh token owns the flow)", () => {
+  const dismissed = run(
+    { type: "auxiliary_opened", sheet: "search" },
+    { type: "submit_started", token: 5 },
+    { type: "auxiliary_closed", cancelSubmit: true },
+  )
+
+  const reopened = scanFlowReducer(dismissed, {
+    type: "auxiliary_opened",
+    sheet: "search",
+  })
+  const resubmitted = scanFlowReducer(reopened, { type: "submit_started", token: 6 })
+  assert.equal(resubmitted.submitting, true)
+  assert.deepEqual(resubmitted.activeRequest, { kind: "submit", token: 6 })
+
+  const settled = scanFlowReducer(resubmitted, {
+    type: "submitted",
+    token: 6,
+    pending: pendingResult,
+  })
+  assert.deepEqual(settled.step, { kind: "pending", pending: pendingResult })
+  assert.equal(settled.submitting, false)
+
+  // The earlier cancelled token (5) still cannot settle anything after the reopen/resubmit.
+  const stale = scanFlowReducer(resubmitted, {
+    type: "submitted",
+    token: 5,
+    pending: pendingResult,
+  })
+  assert.equal(stale, resubmitted)
+})
+
+test("auxiliary_closed with cancelSubmit: a no-op when nothing is in flight (e.g. dismissing an idle sheet)", () => {
+  const state = run(
+    { type: "auxiliary_opened", sheet: "search" },
+    { type: "auxiliary_closed", cancelSubmit: true },
+  )
+
+  assert.equal(state.auxiliary, "none")
+  assert.equal(state.submitting, false)
+  assert.equal(state.activeRequest, null)
+})
+
 // --- save sheet + saved state ----------------------------------------------
 
 test("save_sheet_toggled: opens and closes the save sheet", () => {

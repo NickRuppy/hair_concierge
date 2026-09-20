@@ -921,6 +921,142 @@ test("ScanFlow: research-intake submitting=true is threaded into the search shee
   assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.submitting, false)
 })
 
+// --- Final-review fix wave: dismissing the search sheet cancels an in-flight submit -----
+
+test("ScanFlow: a late SUCCESS after the search sheet was dismissed mid-submit is dropped -- no pending step, step stays scanning", async () => {
+  const gate = deferred<Response>()
+  const flow = await mountFlow(async (url) => {
+    if (url === "/api/scan/submit") return gate.promise
+    return notFound()
+  })
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
+  await flow.settle()
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSubmitResearchIntake(
+    researchIntakeInput,
+  )
+  await flow.settle()
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.submitting, true)
+
+  // The user dismisses the sheet (X / backdrop / Escape / drag) while the submit is still
+  // in flight -- back to the live viewfinder.
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(false)
+  await flow.settle()
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, false)
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.submitting, false)
+
+  // The late response now lands.
+  gate.resolve(json({ kind: "pending_submission", submissionId: "s1", headline: "Eingereicht!" }))
+  await flow.settle()
+
+  // No pending sheet opened over the viewfinder, and the search sheet was not reopened.
+  assert.equal(sheetProps(flow.tree).open, false)
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, false)
+})
+
+test("ScanFlow: a late already_in_catalog after the search sheet was dismissed mid-submit does not resolve a verdict", async () => {
+  const gate = deferred<Response>()
+  const resolveCalls: string[] = []
+  const flow = await mountFlow(async (url) => {
+    if (url === "/api/scan/submit") return gate.promise
+    if (url === "/api/scan/resolve") {
+      resolveCalls.push(url)
+      return json(verdictResult("p-name-search"))
+    }
+    return notFound()
+  })
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
+  await flow.settle()
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSubmitResearchIntake(
+    researchIntakeInput,
+  )
+  await flow.settle()
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(false)
+  await flow.settle()
+
+  gate.resolve(json({ kind: "already_in_catalog", productId: "p-name-search" }))
+  await flow.settle()
+
+  // `requests.invalidateAll()` (fired on dismissal) makes the already_in_catalog branch's
+  // own `requests.isCurrent(token)` guard drop this response before it ever calls resolve.
+  assert.deepEqual(resolveCalls, [])
+  assert.equal(sheetProps(flow.tree).open, false)
+})
+
+test("ScanFlow: a late FAILURE after the search sheet was dismissed mid-submit is dropped -- no error resurfacing", async () => {
+  const gate = deferred<Response>()
+  const flow = await mountFlow(async (url) => {
+    if (url === "/api/scan/submit") return gate.promise
+    return notFound()
+  })
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
+  await flow.settle()
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSubmitResearchIntake(
+    researchIntakeInput,
+  )
+  await flow.settle()
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(false)
+  await flow.settle()
+
+  gate.resolve(json({ error: "temporarily_unavailable" }, 500))
+  await flow.settle()
+
+  const sheet = requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet")
+  assert.equal(sheet.props.open, false)
+  assert.equal(sheet.props.submitting, false)
+  assert.equal(sheet.props.submitError, null)
+})
+
+test("ScanFlow: reopening the search sheet after a cancelled submit and submitting again still works", async () => {
+  const firstGate = deferred<Response>()
+  let submitCalls = 0
+  const flow = await mountFlow(async (url) => {
+    if (url === "/api/scan/submit") {
+      submitCalls += 1
+      if (submitCalls === 1) return firstGate.promise
+      return json({ kind: "pending_submission", submissionId: "s2", headline: "Eingereicht!" })
+    }
+    return notFound()
+  })
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
+  await flow.settle()
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSubmitResearchIntake(
+    researchIntakeInput,
+  )
+  await flow.settle()
+
+  // Dismiss while the first submit is still (permanently, in this test) in flight.
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(false)
+  await flow.settle()
+
+  // Reopen and submit again -- a fresh token must own the flow cleanly.
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
+  await flow.settle()
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, true)
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.submitting, false)
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSubmitResearchIntake(
+    researchIntakeInput,
+  )
+  await flow.settle()
+
+  assert.equal(submitCalls, 2)
+  assert.equal(sheetProps(flow.tree).open, true)
+  assert.equal(sheetProps(flow.tree).title, "Eingereicht!")
+
+  // The abandoned first request settling afterwards changes nothing.
+  firstGate.resolve(
+    json({ kind: "pending_submission", submissionId: "s1-stale", headline: "Stale!" }),
+  )
+  await flow.settle()
+  assert.equal(sheetProps(flow.tree).title, "Eingereicht!")
+})
+
 test("ScanFlow: a successful research-intake submission tracks scan_submission_created with intakePath 'name_search'", async () => {
   const flow = await mountFlow(async (url) => {
     if (url === "/api/scan/submit")

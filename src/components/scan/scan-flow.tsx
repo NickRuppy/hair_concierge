@@ -1179,13 +1179,25 @@ export function ScanFlow({
       <ScanSearchSheet
         open={state.auxiliary === "search"}
         reason={state.searchReason}
-        onOpenChange={(open) =>
-          dispatch(
-            open
-              ? { type: "auxiliary_opened", sheet: "search", searchReason: "manual" }
-              : { type: "auxiliary_closed" },
-          )
-        }
+        onOpenChange={(open) => {
+          if (open) {
+            dispatch({ type: "auxiliary_opened", sheet: "search", searchReason: "manual" })
+            return
+          }
+          // Final-review fix wave: the sheet's own dismissal (X / backdrop / Escape /
+          // drag) must cancel a research-intake submit still in flight -- otherwise a
+          // late response can still `own()` its token and either open the pending sheet
+          // over the live viewfinder the user just returned to, or resurface a stale
+          // error on reopen (same bug class the historic F4 fix closed for
+          // `submitUnknown`). `requests.invalidateAll()` covers the component-level guard
+          // the `already_in_catalog` branch of `submitResearchFromSearch` checks
+          // (`requests.isCurrent(token)`); `cancelSubmit: true` covers the reducer-level
+          // guard (`owns()`) the pending-success branch relies on instead. Safe
+          // unconditionally: no resolve can be in flight while the search sheet is open
+          // (dm-row taps close it first), so this can only ever cancel a submit.
+          requests.invalidateAll()
+          dispatch({ type: "auxiliary_closed", cancelSubmit: true })
+        }}
         onSelectProduct={openFromProductId}
         retailerSearchEnabled={retailerSearchEnabled}
         analytics={analytics}
