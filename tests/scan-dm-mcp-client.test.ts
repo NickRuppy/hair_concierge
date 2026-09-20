@@ -8,6 +8,10 @@ const table = readFileSync(
   new URL("./fixtures/dm-mcp/details-all-gtins.txt", import.meta.url),
   "utf8",
 )
+const searchTable = readFileSync(
+  new URL("./fixtures/dm-mcp/search-ogx-argan-oil-shampoo.json", import.meta.url),
+  "utf8",
+)
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 function fakeServer(
   options: {
@@ -268,5 +272,31 @@ test("transport error contains neither original exception nor its URL", async ()
       assert.equal(error.cause, undefined)
       return true
     },
+  )
+})
+test("searchProducts sends a plain-string query and parses the captured OGX probe payload", async () => {
+  const server = fakeServer({
+    body: { content: [{ type: "text", text: JSON.stringify({ result: searchTable }) }] },
+  })
+  const rows = await createDmMcpClient({ fetch: server.fetch, deadlineMs: 1000 }).searchProducts(
+    "OGX Argan Oil Shampoo",
+  )
+  assert.equal(rows.length, 15)
+  assert.equal(rows[0].gtin, "3574661799438")
+  assert.equal(rows[0].brand, "OGX")
+  assert.deepEqual(
+    server.requests.map((r) => r.method),
+    ["initialize", "notifications/initialized", "tools/call"],
+  )
+  assert.deepEqual(server.requests[2].params, {
+    name: "searchProducts",
+    arguments: { query: "OGX Argan Oil Shampoo" },
+  })
+})
+test("searchProducts respects the same absolute timeout budget as getProductDetails", async () => {
+  const server = fakeServer({ delays: [20, 20, 30] })
+  await assert.rejects(
+    createDmMcpClient({ fetch: server.fetch, deadlineMs: 55 }).searchProducts("OGX"),
+    reason("timeout"),
   )
 })

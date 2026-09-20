@@ -8,7 +8,7 @@ import type { RetailerEnrichment, RetailerLookupOutcome, RetailerLookupResult } 
 export type { RetailerLookupOutcome, RetailerLookupResult } from "./types"
 
 export type ResolveRetailerEnrichmentDeps = {
-  client: DmMcpClient
+  client: Pick<DmMcpClient, "getProductDetails">
   flag: () => boolean
   now: () => string
   monotonicNow: () => number
