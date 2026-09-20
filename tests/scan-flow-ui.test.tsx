@@ -1604,6 +1604,28 @@ test("ScanSearchSheet: intake prefills Produktname with the full trimmed query a
   assert.equal(intakeFormProps(view.tree).brandText, "")
 })
 
+test("ScanSearchSheet: a query longer than Produktname's 240-char max is clamped on prefill and still submits successfully (fix round 1)", async () => {
+  const overLong = "a".repeat(250)
+  const submitted: Array<{ brandText: string; productNameText: string; category: string }> = []
+  const { view } = await mountSearchSheetAtEmptyState(`  ${overLong}  `, {
+    onSubmitResearchIntake: (input) => submitted.push(input),
+  })
+  openIntake(view.tree)
+  await view.settle()
+
+  const prefilled = intakeFormProps(view.tree).productNameText as string
+  assert.equal(prefilled.length, 240)
+  assert.equal(prefilled, overLong.slice(0, 240))
+
+  intakeFormProps(view.tree).onBrandTextChange("Kérastase")
+  await view.settle()
+  intakeFormProps(view.tree).onSubmit("shampoo")
+
+  assert.deepEqual(submitted, [
+    { brandText: "Kérastase", productNameText: overLong.slice(0, 240), category: "shampoo" },
+  ])
+})
+
 test("ScanSearchSheet: threads submitting/error into the intake form and forwards a category submit trimmed", async () => {
   const submitted: Array<{ brandText: string; productNameText: string; category: string }> = []
   const { view } = await mountSearchSheetAtEmptyState("ciment thermique", {

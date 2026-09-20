@@ -584,7 +584,13 @@ export function ScanSearchSheet({
                       onClick={() => {
                         onStartResearchIntake?.()
                         setIntakeBrandText("")
-                        setIntakeProductNameText(trimmedQuery)
+                        // `maxLength` on the input only limits typing, not this
+                        // programmatic prefill -- a query longer than the field's own
+                        // bound would otherwise submit an over-length value and 400 with
+                        // only the generic error (fix round 1, Important finding).
+                        setIntakeProductNameText(
+                          trimmedQuery.slice(0, RESEARCH_INTAKE_PRODUCT_NAME_MAX),
+                        )
                         setIntakeOpen(true)
                       }}
                       className="mt-4 w-full rounded-[10px] bg-[var(--brand-coral)] px-6 py-4 text-base font-semibold text-white transition hover:bg-[var(--brand-coral-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-coral)] focus-visible:ring-offset-2"
