@@ -512,6 +512,19 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
       const data = payload as AppEventMap["scan_decoded"]
       return { ms_to_decode: data.msToDecode, format: data.format }
     }
+    case "scan_retailer_search": {
+      const data = payload as AppEventMap["scan_retailer_search"]
+      return {
+        catalog_count: data.catalogCount,
+        retailer_count: data.retailerCount,
+        outcome: data.outcome,
+        duration_ms: data.durationMs,
+      }
+    }
+    case "scan_retailer_result_opened": {
+      const data = payload as AppEventMap["scan_retailer_result_opened"]
+      return { category_label: data.categoryLabel }
+    }
     case "scan_result_shown": {
       const data = payload as AppEventMap["scan_result_shown"]
       return {

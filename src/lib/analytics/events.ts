@@ -662,6 +662,21 @@ export type AppEventMap = {
     scanInteractionId: string
     msToUnknownSheetReady: number
   }
+  /**
+   * The search sheet's retailer (dm) lane response settling (plan Rev. 6 §4/§8, Task 6) —
+   * fired once per submit, whether the lane succeeded, came back disabled, or failed/timed
+   * out. Never the query text.
+   */
+  scan_retailer_search: {
+    catalogCount: number
+    retailerCount: number
+    outcome: "ok" | "disabled" | "unavailable"
+    durationMs: number
+  }
+  /** A dm-only row tap in the search sheet's retailer section (plan Rev. 6 §4, Task 6). */
+  scan_retailer_result_opened: {
+    categoryLabel: string | null
+  }
   scan_submission_created: {
     category: PersonalPlanCategory
     suggestedCategory: PersonalPlanCategory | null

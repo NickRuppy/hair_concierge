@@ -7,6 +7,8 @@ export type ScanAnalyticsEventName =
   | "scan_decoded"
   | "scan_result_shown"
   | "scan_not_found"
+  | "scan_retailer_search"
+  | "scan_retailer_result_opened"
   | "scan_submission_created"
   | "scan_fallback_search_used"
   | "scan_saved"

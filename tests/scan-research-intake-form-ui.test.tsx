@@ -129,6 +129,23 @@ test("ScanResearchIntakeForm: renders the signed-off heading copy, Marke/Produkt
   assert.match(markup, /Was ist es\?/)
   assert.match(markup, /Tippe die Kategorie an – das reicht uns schon\./)
   assert.match(markup, /Zurück/)
+  // Task 6 copy audit: no user-facing string in the intake form leaks the retailer name.
+  assert.doesNotMatch(markup, /\bdm\b/)
+})
+
+test("ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)", () => {
+  const tree = renderForm({ brandText: "", productNameText: "", onSubmit: () => undefined })
+  const markup = renderToStaticMarkup(tree.value)
+  assert.match(markup, /autofocus/)
+  const marke = findAll(tree.value, (element) => element.props["aria-label"] === "Marke")[0]
+  assert.ok(marke)
+  assert.equal(marke.props.autoFocus, true)
+  const produktname = findAll(
+    tree.value,
+    (element) => element.props["aria-label"] === "Produktname",
+  )[0]
+  assert.ok(produktname)
+  assert.notEqual(produktname.props.autoFocus, true)
 })
 
 test("ScanResearchIntakeForm: a category tap is blocked while Marke is empty, even with a filled Produktname", () => {
@@ -275,13 +292,14 @@ test("ScanResearchIntakeForm: onBack fires exactly on the back affordance", () =
   assert.deepEqual(calls, [1])
 })
 
-test("ScanResearchIntakeForm: renders the standard error copy inside an alert role", () => {
+test("ScanResearchIntakeForm: renders the standard error copy inside an alert role with a polite live region (task 6 a11y)", () => {
   const tree = renderForm({
     error: "Hat nicht geklappt – versuch's nochmal.",
     onSubmit: () => undefined,
   })
   const markup = renderToStaticMarkup(tree.value)
   assert.match(markup, /role="alert"/)
+  assert.match(markup, /aria-live="polite"/)
   assert.match(markup, /Hat nicht geklappt – versuch&#x27;s nochmal\./)
 })
 

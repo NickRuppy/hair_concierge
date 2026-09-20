@@ -776,6 +776,23 @@ test("ScanFlow: retailerSearchEnabled threads through to the search sheet, defau
   )
 })
 
+test("ScanFlow: threads its analytics port to the search sheet (task 6)", async () => {
+  const flow = await mountFlow(notFound)
+  const sheet = requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet")
+  assert.equal(typeof sheet.props.analytics?.track, "function")
+  sheet.props.analytics.track("scan_retailer_search", {
+    catalogCount: 0,
+    retailerCount: 0,
+    outcome: "ok",
+    durationMs: 1,
+  })
+  assert.ok(
+    flow.events.some(
+      (event) => event.name === "scan_retailer_search" && event.payload.outcome === "ok",
+    ),
+  )
+})
+
 test("ScanFlow: a dm-row tap in the search sheet closes it and resolves the tapped GTIN", async () => {
   const bodies: string[] = []
   const flow = await mountFlow(
@@ -1196,6 +1213,15 @@ async function mountSearchSheet(
     globalThis.fetch = previousFetch
   })
 
+  // Task 6: a fake port recording every `analytics.track(...)` call, in order — same
+  // pattern as `mountFlow`'s own fake port above.
+  const events: TrackedEvent[] = []
+  const analytics: ScanAnalyticsPort = {
+    track(name, payload) {
+      events.push({ name, payload: payload as Record<string, unknown> })
+    },
+  }
+
   const harness = createClientStateHarness(
     () =>
       ScanSearchSheet({
@@ -1209,11 +1235,13 @@ async function mountSearchSheet(
         submitting: props.submitting,
         submitError: props.submitError,
         retailerSearchEnabled: props.retailerSearchEnabled ?? false,
+        analytics,
       }),
     {},
   )
   const view = {
     tree: null as ReactElement | null,
+    events,
     async settle() {
       await harness.render()
       await delay(0)
@@ -1522,6 +1550,295 @@ test("ScanSearchSheet: without onStartResearchIntake the post-submit empty state
 
   assert.equal(textContent(view.tree).includes("Dazu haben wir nichts gefunden."), true)
   assert.equal(buttonLabels(view.tree).includes("Für dich prüfen lassen"), false)
+})
+
+// --- T6: search analytics, focus management, copy audit --------------------------------
+
+test("ScanSearchSheet: scan_retailer_search fires on a successful retailer response, with counts/outcome/duration and never the query text", async () => {
+  const catalog = liveCatalogResult()
+  const retailer = retailerRow()
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [catalog] })
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({
+          catalog: [liveCatalogResult({ id: "mapped-1" })],
+          retailer: [retailer],
+          retailerOutcome: "ok",
+        })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+
+  await typeQuery(view, "gliss kur geheimquery")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  const searchEvents = view.events.filter((event) => event.name === "scan_retailer_search")
+  assert.equal(searchEvents.length, 1)
+  const payload = searchEvents[0].payload
+  assert.equal(payload.catalogCount, 1)
+  assert.equal(payload.retailerCount, 1)
+  assert.equal(payload.outcome, "ok")
+  assert.equal(typeof payload.durationMs, "number")
+  assert.ok((payload.durationMs as number) >= 0)
+  assert.deepEqual(Object.keys(payload).sort(), [
+    "catalogCount",
+    "durationMs",
+    "outcome",
+    "retailerCount",
+  ])
+  assert.equal(JSON.stringify(payload).includes("geheimquery"), false)
+})
+
+test("ScanSearchSheet: scan_retailer_search fires with outcome 'unavailable' on a dm-lane failure, and 'disabled' when the server reports the flag off", async () => {
+  const failing = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({ catalog: [], retailer: [], retailerOutcome: "unavailable" })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+  await typeQuery(failing, "standing")
+  submitButton(failing.tree).props.onClick()
+  await failing.settle()
+  const failingEvents = failing.events.filter((event) => event.name === "scan_retailer_search")
+  assert.equal(failingEvents.length, 1)
+  assert.equal(failingEvents[0].payload.outcome, "unavailable")
+  assert.equal(failingEvents[0].payload.catalogCount, 0)
+  assert.equal(failingEvents[0].payload.retailerCount, 0)
+
+  const thrown = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+      if (url.startsWith("/api/scan/search-retailer?")) throw new Error("network down")
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+  await typeQuery(thrown, "standing")
+  submitButton(thrown.tree).props.onClick()
+  await thrown.settle()
+  const thrownEvents = thrown.events.filter((event) => event.name === "scan_retailer_search")
+  assert.equal(thrownEvents.length, 1)
+  assert.equal(thrownEvents[0].payload.outcome, "unavailable")
+
+  const disabled = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({ catalog: [], retailer: [], retailerOutcome: "disabled" })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+  await typeQuery(disabled, "standing")
+  submitButton(disabled.tree).props.onClick()
+  await disabled.settle()
+  const disabledEvents = disabled.events.filter((event) => event.name === "scan_retailer_search")
+  assert.equal(disabledEvents.length, 1)
+  assert.equal(disabledEvents[0].payload.outcome, "disabled")
+})
+
+test("ScanSearchSheet: retailerSearchEnabled=false never fires scan_retailer_search", async () => {
+  const view = await mountSearchSheet(async (url) => {
+    if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+    return json({ error: "unexpected_call" }, 500)
+  })
+  await typeQuery(view, "kerastase")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+  assert.equal(
+    view.events.some((event) => event.name === "scan_retailer_search"),
+    false,
+  )
+})
+
+test("ScanSearchSheet: a dm-row tap fires scan_retailer_result_opened with the row's categoryLabel before resolving", async () => {
+  const retailer = retailerRow({ gtin: "4006381111116", categoryLabel: "Conditioner" })
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({ catalog: [], retailer: [retailer], retailerOutcome: "ok" })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+  await typeQuery(view, "aqua revive")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  const row = findAll(
+    view.tree,
+    (element) => element.type === "button" && textContent(element).includes(retailer.name),
+  )[0]
+  assert.ok(row)
+  row.props.onClick()
+
+  const opened = view.events.filter((event) => event.name === "scan_retailer_result_opened")
+  assert.deepEqual(opened, [
+    { name: "scan_retailer_result_opened", payload: { categoryLabel: "Conditioner" } },
+  ])
+})
+
+test("ScanSearchSheet: submitting via the round button returns focus to the search field", async () => {
+  const view = await mountSearchSheet(async (url) => {
+    if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+    return json({ error: "unexpected_call" }, 500)
+  })
+  await typeQuery(view, "kerastase")
+
+  const inputElement = findAll(
+    view.tree,
+    (element) => element.type === "input" && element.props.type === "search",
+  )[0]
+  assert.ok(inputElement)
+  const focusCalls: number[] = []
+  // Simulate what React's reconciler does on mount/commit — this harness never runs one.
+  ;(inputElement.props.ref as (node: unknown) => void)({ focus: () => focusCalls.push(1) })
+
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  assert.deepEqual(focusCalls, [1])
+})
+
+test("ScanSearchSheet: Zurück returns focus to the search field", async () => {
+  const { view } = await mountSearchSheetAtEmptyState("kerastase ciment")
+  openIntake(view.tree)
+  await view.settle()
+
+  intakeFormProps(view.tree).onBack()
+  await view.settle()
+
+  const inputElement = findAll(
+    view.tree,
+    (element) => element.type === "input" && element.props.type === "search",
+  )[0]
+  assert.ok(inputElement)
+  const focusCalls: number[] = []
+  ;(inputElement.props.ref as (node: unknown) => void)({ focus: () => focusCalls.push(1) })
+  assert.deepEqual(focusCalls, [1])
+})
+
+test("ScanSearchSheet + ScanResearchIntakeForm: no user-facing copy leaks 'dm' (word-boundary), and every §6 string matches verbatim, across every state incl. intake", async () => {
+  const catalog = liveCatalogResult()
+  const retailer = retailerRow()
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [catalog] })
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({ catalog: [], retailer: [retailer], retailerOutcome: "ok" })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true, onStartResearchIntake: () => {} },
+  )
+
+  const dmLeak = /\bdm\b/
+  const chunks: string[] = []
+
+  // idle/default state
+  assert.equal(searchSheetHeaderText(view.tree), "Produkt finden")
+  chunks.push(textContent(view.tree))
+
+  // two-section submitted state
+  await typeQuery(view, "gliss kur")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+  const resultsText = textContent(view.tree)
+  chunks.push(resultsText)
+  for (const copy of [
+    "In deinem Chaarlie-Katalog",
+    "Weitere Treffer",
+    "Noch nicht geprüft — tippe drauf, wir übernehmen das.",
+    "Prüfen lassen",
+  ]) {
+    assert.ok(resultsText.includes(copy), `Expected results state to include "${copy}"`)
+  }
+
+  // dm-lane-unavailable state
+  const unavailable = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [catalog] })
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({ catalog: [], retailer: [], retailerOutcome: "unavailable" })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+  await typeQuery(unavailable, "gliss kur")
+  submitButton(unavailable.tree).props.onClick()
+  await unavailable.settle()
+  const unavailableText = textContent(unavailable.tree)
+  chunks.push(unavailableText)
+  assert.ok(unavailableText.includes("Die erweiterte Suche ist gerade nicht verfügbar."))
+
+  // pre-submit quiet invitation
+  const invitation = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+  await typeQuery(invitation, "kerastase")
+  await delay(300)
+  await invitation.settle()
+  const invitationText = textContent(invitation.tree)
+  chunks.push(invitationText)
+  assert.ok(invitationText.includes("Drück Suchen für mehr Treffer."))
+
+  // post-submit empty state + intake header (rendered by ScanSearchSheet itself)
+  const { view: emptyView } = await mountSearchSheetAtEmptyState("kerastase ciment")
+  const emptyText = textContent(emptyView.tree)
+  chunks.push(emptyText)
+  assert.ok(emptyText.includes("Dazu haben wir nichts gefunden."))
+  assert.ok(emptyText.includes("Für dich prüfen lassen"))
+
+  openIntake(emptyView.tree)
+  await emptyView.settle()
+  assert.equal(
+    searchSheetHeaderText(emptyView.tree),
+    "Wir prüfen es für dichDas Ergebnis kommt in den Chat – meist innerhalb von 24 Stunden.",
+  )
+  chunks.push(searchSheetHeaderText(emptyView.tree))
+
+  // ScanResearchIntakeForm's own body copy (a nested, never-invoked element in the sheet's
+  // own tree per the file header comment above — rendered directly here, same convention
+  // as tests/scan-research-intake-form-ui.test.tsx).
+  const intakeHarness = createClientStateHarness(
+    () =>
+      ScanResearchIntakeForm({
+        brandText: "",
+        productNameText: "Ciment Thermique",
+        onBrandTextChange: () => {},
+        onProductNameTextChange: () => {},
+        submitting: false,
+        error: "Hat nicht geklappt – versuch's nochmal.",
+        onBack: () => {},
+        onSubmit: () => {},
+      }),
+    {},
+  )
+  const intakeTree = await intakeHarness.render()
+  const intakeText = textContent(intakeTree)
+  chunks.push(intakeText)
+  for (const copy of [
+    "Marke",
+    "Produktname",
+    "Was ist es?",
+    "Tippe die Kategorie an – das reicht uns schon.",
+    "Zurück",
+  ]) {
+    assert.ok(intakeText.includes(copy), `Expected intake form to include "${copy}"`)
+  }
+
+  const combined = chunks.join(" ")
+  assert.equal(dmLeak.test(combined), false, `Found a standalone "dm" leak in: ${combined}`)
 })
 
 // --- T5: the name-based research intake, mounted directly on ScanSearchSheet -----------

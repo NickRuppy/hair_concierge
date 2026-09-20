@@ -1188,6 +1188,7 @@ export function ScanFlow({
         }
         onSelectProduct={openFromProductId}
         retailerSearchEnabled={retailerSearchEnabled}
+        analytics={analytics}
         onSelectRetailerResult={(gtin) => {
           dispatch({ type: "auxiliary_closed" })
           void resolve({ identifier: { type: "ean", value: gtin } })

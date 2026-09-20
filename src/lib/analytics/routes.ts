@@ -70,6 +70,8 @@ export const eventRoutes = {
   scan_decoded: { customerio: false, meta: false, posthog: true },
   scan_result_shown: { customerio: false, meta: false, posthog: true },
   scan_not_found: { customerio: false, meta: false, posthog: true },
+  scan_retailer_search: { customerio: false, meta: false, posthog: true },
+  scan_retailer_result_opened: { customerio: false, meta: false, posthog: true },
   scan_submission_created: { customerio: false, meta: false, posthog: true },
   scan_fallback_search_used: { customerio: false, meta: false, posthog: true },
   scan_saved: { customerio: false, meta: false, posthog: true },

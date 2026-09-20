@@ -15,6 +15,7 @@ import { PERSONAL_PLAN_PRODUCT_CATEGORIES } from "@/lib/personal-plan/products/c
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { cn } from "@/lib/utils"
 
+import { noOpScanAnalytics, type ScanAnalyticsPort } from "@/lib/scan/scan-analytics"
 import { useLatestRequest } from "@/lib/scan/use-latest-request"
 
 import { ScanProductThumb } from "./scan-product-thumb"
@@ -178,6 +179,10 @@ export function ScanResearchIntakeForm({
           maxLength={RESEARCH_INTAKE_BRAND_MAX}
           placeholder={RESEARCH_INTAKE_BRAND_PLACEHOLDER}
           aria-label={RESEARCH_INTAKE_BRAND_LABEL}
+          // Entering the intake state moves focus to Marke (task 6 a11y pass) — declarative
+          // so it works the moment the form mounts, without a `useEffect` this component
+          // doesn't otherwise need.
+          autoFocus
           className="w-full rounded-[12px] border border-border bg-card px-3.5 py-3 text-base text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
         />
       </div>
@@ -243,7 +248,7 @@ export function ScanResearchIntakeForm({
       </div>
 
       {error ? (
-        <p role="alert" className="text-sm text-[var(--brand-coral-dark)]">
+        <p role="alert" aria-live="polite" className="text-sm text-[var(--brand-coral-dark)]">
           {error}
         </p>
       ) : null}
@@ -277,6 +282,7 @@ export function ScanSearchSheet({
   submitting = false,
   submitError = null,
   retailerSearchEnabled = false,
+  analytics = noOpScanAnalytics,
 }: {
   open: boolean
   /** Why this sheet is up. Drives the header only — the search itself is identical. */
@@ -313,6 +319,12 @@ export function ScanSearchSheet({
    * plain live-catalog-only sheet.
    */
   retailerSearchEnabled?: boolean
+  /**
+   * Task 6: the search-events port (`scan_retailer_search`, `scan_retailer_result_opened`).
+   * Defaults to the safe no-op, matching `ScanFlow`'s own default — every existing caller
+   * (labs, tests) that does not pass this stays inert.
+   */
+  analytics?: ScanAnalyticsPort
 }) {
   const [query, setQuery] = useState("")
   const [submitted, setSubmitted] = useState(false)
@@ -330,6 +342,13 @@ export function ScanSearchSheet({
   // The typing effect's pending debounce timer. Cleared explicitly on submit so a submit
   // never races a duplicate, debounced fetch for the same query (T4 brief §3).
   const debounceTimeoutRef = useRef<number | null>(null)
+  // Focus management (task 6 a11y pass). The search field is unmounted/remounted whenever
+  // `intakeOpen` toggles (conditional render, not hidden CSS), so "focus returns to the
+  // search field on Zurück" is done via a callback ref rather than an effect: the flag is
+  // armed right before the intake form closes, and the field's ref callback consumes it the
+  // moment the new input element mounts.
+  const searchInputRef = useRef<HTMLInputElement | null>(null)
+  const focusSearchOnMountRef = useRef(false)
 
   function resetToUnsubmitted() {
     setSubmitted(false)
@@ -376,6 +395,9 @@ export function ScanSearchSheet({
   }
 
   async function runRetailerSearch(trimmed: string, token: number) {
+    // Task 6: `scan_retailer_search` fires once per submit, whichever way the lane's
+    // response settles — success, disabled, or failure/timeout. Never the query text.
+    const startedAt = performance.now()
     try {
       const response = await fetch(`/api/scan/search-retailer?q=${encodeURIComponent(trimmed)}`, {
         cache: "no-store",
@@ -387,14 +409,32 @@ export function ScanSearchSheet({
         setRetailerStatus("error")
         setRetailerResults([])
         setRetailerCatalogMatches([])
+        analytics.track("scan_retailer_search", {
+          catalogCount: 0,
+          retailerCount: 0,
+          outcome: "unavailable",
+          durationMs: Math.round(performance.now() - startedAt),
+        })
         return
       }
       setRetailerResults(body.retailer ?? [])
       setRetailerCatalogMatches(body.catalog ?? [])
       setRetailerStatus(body.retailerOutcome === "disabled" ? "disabled" : "ready")
+      analytics.track("scan_retailer_search", {
+        catalogCount: body.catalog?.length ?? 0,
+        retailerCount: body.retailer?.length ?? 0,
+        outcome: body.retailerOutcome,
+        durationMs: Math.round(performance.now() - startedAt),
+      })
     } catch {
       if (!retailerRequests.isCurrent(token)) return
       setRetailerStatus("error")
+      analytics.track("scan_retailer_search", {
+        catalogCount: 0,
+        retailerCount: 0,
+        outcome: "unavailable",
+        durationMs: Math.round(performance.now() - startedAt),
+      })
     }
   }
 
@@ -451,6 +491,11 @@ export function ScanSearchSheet({
       setRetailerCatalogMatches([])
       void runRetailerSearch(trimmedQuery, retailerToken)
     }
+
+    // Task 6: submitting via the round button moves DOM focus to it natively — pull it
+    // back into the field so typing (or Enter, which never left it) keeps working the same
+    // way either submit path is used.
+    searchInputRef.current?.focus()
   }
 
   const mergedCatalog = mergeCatalogResults(catalogResults, retailerCatalogMatches)
@@ -510,7 +555,13 @@ export function ScanSearchSheet({
             onProductNameTextChange={setIntakeProductNameText}
             submitting={submitting}
             error={submitError}
-            onBack={() => setIntakeOpen(false)}
+            onBack={() => {
+              // Task 6: Zurück returns focus to the search field. The field itself
+              // unmounts/remounts with this toggle (conditional render), so the flag is
+              // consumed by the input's own ref callback once it exists again.
+              focusSearchOnMountRef.current = true
+              setIntakeOpen(false)
+            }}
             onSubmit={(category) =>
               onSubmitResearchIntake?.({
                 brandText: intakeBrandText.trim(),
@@ -524,6 +575,13 @@ export function ScanSearchSheet({
             <div className="flex items-center gap-2 rounded-[14px] border-[1.5px] border-[var(--brand-plum)] bg-card py-1.5 pl-3.5 pr-1.5 shadow-[0_5px_14px_rgba(107,80,160,0.10)] focus-within:ring-2 focus-within:ring-[var(--brand-plum)] focus-within:ring-offset-2">
               <Search className="h-4 w-4 shrink-0 text-[var(--brand-plum)]" aria-hidden="true" />
               <input
+                ref={(element) => {
+                  searchInputRef.current = element
+                  if (element && focusSearchOnMountRef.current) {
+                    focusSearchOnMountRef.current = false
+                    element.focus()
+                  }
+                }}
                 type="search"
                 autoComplete="off"
                 aria-label={FIELD_PLACEHOLDER}
@@ -668,7 +726,12 @@ export function ScanSearchSheet({
                           <li key={result.gtin}>
                             <button
                               type="button"
-                              onClick={() => onSelectRetailerResult?.(result.gtin)}
+                              onClick={() => {
+                                analytics.track("scan_retailer_result_opened", {
+                                  categoryLabel: result.categoryLabel,
+                                })
+                                onSelectRetailerResult?.(result.gtin)
+                              }}
                               className="flex w-full items-center gap-3 rounded-[12px] border border-border bg-card px-3 py-2.5 text-left transition-colors hover:border-[var(--brand-plum)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
                             >
                               <ScanProductThumb imageUrl={null} label={result.name} size={44} />
