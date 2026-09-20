@@ -517,9 +517,11 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
 
     case "auxiliary_closed":
       // See the action's own doc comment: only a dismissal (`cancelSubmit: true`) cancels
-      // an in-flight submit, and only when one is actually in flight -- a resolve can never
-      // be active while the search sheet is open (dm-row taps close it first), so this can
-      // only ever cancel a research-intake submit, never a resolve.
+      // an in-flight submit, and only when one is actually in flight. A resolve CAN be
+      // active while the search sheet is open (a camera decode's 400ms confirm window
+      // keeps step "scanning" with the search link clickable), so the `kind === "submit"`
+      // check is load-bearing, and the dispatch site in scan-flow.tsx gates on the same
+      // condition before invalidating any request token.
       return {
         ...state,
         auxiliary: "none",
