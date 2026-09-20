@@ -662,12 +662,33 @@ export type AppEventMap = {
     scanInteractionId: string
     msToUnknownSheetReady: number
   }
+  /**
+   * The search sheet's retailer (dm) lane response settling (plan Rev. 6 §4/§8, Task 6) —
+   * fired once per submit, whether the lane succeeded, came back disabled, or failed/timed
+   * out. Never the query text.
+   */
+  scan_retailer_search: {
+    catalogCount: number
+    retailerCount: number
+    outcome: "ok" | "disabled" | "unavailable"
+    durationMs: number
+  }
+  /** A dm-only row tap in the search sheet's retailer section (plan Rev. 6 §4, Task 6). */
+  scan_retailer_result_opened: {
+    categoryLabel: string | null
+  }
   scan_submission_created: {
     category: PersonalPlanCategory
     suggestedCategory: PersonalPlanCategory | null
     selectionPath: "one_tap" | "grid"
     scanInteractionId: string
     msConfirmationToPending: number
+    /**
+     * Which intake surface produced this submission (plan Rev. 6 §4, Task 5): the
+     * barcode-scan unknown-product flow (`"scan"`, the only value before this task) or the
+     * search sheet's name-based research recovery (`"name_search"`, no scanned identifier).
+     */
+    intakePath: "scan" | "name_search"
   }
   scan_fallback_search_used: {
     trigger: string

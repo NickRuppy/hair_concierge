@@ -216,7 +216,21 @@ export type ScanFlowAction =
   | { type: "submit_failed"; token: number; error: string }
   | { type: "return_to_scanning" }
   | { type: "auxiliary_opened"; sheet: "search" | "wishlist"; searchReason?: ScanSearchReason }
-  | { type: "auxiliary_closed" }
+  /**
+   * `cancelSubmit` (final-review fix wave, T5): the search sheet's own dismissal (X /
+   * backdrop / Escape / drag — `scan-flow.tsx`'s `onOpenChange(false)`) sets this so a
+   * research-intake submit still in flight cannot settle after the user has already
+   * returned to the live viewfinder — the same bug class the historic F4 fix closed for
+   * `submitUnknown` (a stale `submitted`/`submit_failed` would otherwise still `own()` its
+   * token and either open the pending sheet over the viewfinder or resurface a stale
+   * error). Left `undefined`/`false` for every OTHER `auxiliary_closed` dispatch — in
+   * particular `submitResearchFromSearch`'s own two internal dispatches (before
+   * `resolve()` on `already_in_catalog`, and together with the `submitted` dispatch for a
+   * pending receipt) — because those are the deliberate CONTINUATION of the very request
+   * this flag would cancel; clearing `activeRequest` there would make the following
+   * `submitted` dispatch's own `owns()` guard drop it, silently losing the pending step.
+   */
+  | { type: "auxiliary_closed"; cancelSubmit?: boolean }
   | { type: "save_sheet_toggled"; open: boolean }
   | { type: "saved_state_changed"; productId: string; savedState: ScanSavedStatePayload }
   | { type: "camera_unavailable"; reason: ScanUnavailableReason }
@@ -502,7 +516,19 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
       }
 
     case "auxiliary_closed":
-      return { ...state, auxiliary: "none" }
+      // See the action's own doc comment: only a dismissal (`cancelSubmit: true`) cancels
+      // an in-flight submit, and only when one is actually in flight. A resolve CAN be
+      // active while the search sheet is open (a camera decode's 400ms confirm window
+      // keeps step "scanning" with the search link clickable), so the `kind === "submit"`
+      // check is load-bearing, and the dispatch site in scan-flow.tsx gates on the same
+      // condition before invalidating any request token.
+      return {
+        ...state,
+        auxiliary: "none",
+        ...(action.cancelSubmit && state.activeRequest?.kind === "submit"
+          ? { activeRequest: null, submitting: false, submitError: null }
+          : {}),
+      }
 
     case "save_sheet_toggled":
       return { ...state, saveOpen: action.open }

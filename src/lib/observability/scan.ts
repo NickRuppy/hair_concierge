@@ -10,7 +10,14 @@ import * as Sentry from "@sentry/nextjs"
  * rest of the API surface treats it (only the checkout-critical auth-link path also captures it,
  * which is not the general pattern this scope follows).
  */
-export type ScanRoute = "resolve" | "search" | "submit" | "save" | "wishlist" | "reveal"
+export type ScanRoute =
+  | "resolve"
+  | "search"
+  | "search-retailer"
+  | "submit"
+  | "save"
+  | "wishlist"
+  | "reveal"
 
 type BreadcrumbLevel = "debug" | "info" | "warning" | "error"
 
@@ -105,6 +112,54 @@ export function reportRetailerLookupWarning(
     })
   } catch {
     // Enrichment and its diagnostics must never determine the scan response.
+  }
+}
+
+/**
+ * Mirrors `DmMcpErrorReason` plus the two outcomes that have no dm-taxonomy equivalent
+ * ("ok" for a successful dm-lane attempt, "unexpected" for a non-`DmMcpError` throw) —
+ * spelled out locally rather than imported so this file stays decoupled from
+ * `dm-mcp-client.ts`, same as `RetailerLookupWarningDetails` above.
+ */
+export type RetailerSearchOutcome =
+  | "ok"
+  | "timeout"
+  | "session_expired"
+  | "transport"
+  | "malformed"
+  | "unexpected"
+
+export type RetailerSearchOutcomeDetails = {
+  outcome: RetailerSearchOutcome
+  durationMs: number
+  catalogCount: number
+  retailerCount: number
+}
+
+/**
+ * Sanitized telemetry for `/api/scan/search-retailer`'s dm lane, called once per dm-lane
+ * attempt (ok and failure paths) — only the outcome and result-shape counts leave this
+ * function, never the query text, user id, or raw dm payload.
+ */
+export function reportRetailerSearchOutcome(
+  details: RetailerSearchOutcomeDetails,
+  sink: ScanSentrySink = Sentry,
+): void {
+  try {
+    sink.withScope((scope) => {
+      scope.setTag("scan.route", "search-retailer")
+      scope.setTag("scan.retailer_search_outcome", details.outcome)
+      scope.setContext("scan_retailer_search", {
+        outcome: details.outcome,
+        durationMs: details.durationMs,
+        catalogCount: details.catalogCount,
+        retailerCount: details.retailerCount,
+      })
+      scope.setLevel?.(details.outcome === "ok" ? "info" : "warning")
+      sink.captureException(new Error("scan_retailer_search_outcome"))
+    })
+  } catch {
+    // Telemetry must never determine the scan response.
   }
 }
 

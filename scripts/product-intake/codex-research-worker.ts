@@ -3,6 +3,7 @@ import { basename, join } from "node:path"
 import { hostname } from "node:os"
 import { spawnSync } from "node:child_process"
 import { createHash } from "node:crypto"
+import { pathToFileURL } from "node:url"
 import sharp from "sharp"
 
 import {
@@ -117,7 +118,7 @@ type WorkerOptions = {
   supabase: ReturnType<typeof createSupabaseClientFromEnv>
 }
 
-type BrandResolutionPromptContext = {
+export type BrandResolutionPromptContext = {
   submitted_brand_text: string | null
   submitted_product_name_text: string | null
   scanned_identifier: ScannedIdentifierPacketValue
@@ -128,7 +129,7 @@ type BrandResolutionPromptContext = {
   rules: string[]
 }
 
-type ScanIntakeSeed = {
+export type ScanIntakeSeed = {
   scannedIdentifier: ScannedIdentifierPacketValue
   retailerEnrichment: RetailerEnrichmentPacket | null
   retailerEnrichmentWarning: "gtin_mismatch" | null
@@ -712,7 +713,7 @@ async function persistResearchOutput(params: {
   }
 }
 
-function writePromptPacket(
+export function writePromptPacket(
   job: ProductIntakeResearchJob,
   workerId: string,
   detail: ProductIntakeSubmissionDetail | null,
@@ -1379,7 +1380,7 @@ async function loadBrandResolutionContext(
  * deliberately does not select them. This keeps the shared core repository
  * contract unchanged while giving the worker an exact-GTIN-checked dm lead.
  */
-async function loadScanIntakeSeedForSubmission(
+export async function loadScanIntakeSeedForSubmission(
   supabase: ReturnType<typeof createSupabaseClientFromEnv>,
   submissionId: string,
 ): Promise<ScanIntakeSeed> {
@@ -2057,7 +2058,7 @@ function projectJob(
   job: ProductIntakeResearchJob,
   promptPacketPath: string,
   executeCodex: boolean,
-) {
+): WorkerResult["jobs"][number] {
   return {
     id: job.id,
     submission_id: job.submission_id,
@@ -2290,7 +2291,20 @@ function isJobStage(value: string): value is ProductIntakeJobStage {
   return PRODUCT_INTAKE_JOB_STAGES.includes(value as ProductIntakeJobStage)
 }
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : error)
-  process.exitCode = 1
-})
+/**
+ * Task 5 (null-identifier worker proof): guards the CLI entry point so this module can be
+ * `import`-ed by a test (to reach the exported `loadScanIntakeSeedForSubmission` /
+ * `writePromptPacket` seam below) without executing `main()` — which claims real jobs and
+ * needs `createSupabaseClientFromEnv()`'s env vars. Strictly behavior-preserving: run
+ * directly (`tsx scripts/product-intake/codex-research-worker.ts`, the
+ * `products:intake:codex-worker` npm script), `process.argv[1]` is this file and the guard
+ * is true, so `main()` still fires exactly as before. Same pattern already used by every
+ * other CLI script in `scripts/` that also needs to be import-safe (e.g.
+ * `scripts/catalog-authority/audit.ts`).
+ */
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : error)
+    process.exitCode = 1
+  })
+}

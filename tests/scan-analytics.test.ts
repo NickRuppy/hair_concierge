@@ -22,6 +22,8 @@ const scanEventNames = [
   "scan_decoded",
   "scan_result_shown",
   "scan_not_found",
+  "scan_retailer_search",
+  "scan_retailer_result_opened",
   "scan_submission_created",
   "scan_fallback_search_used",
   "scan_saved",
@@ -39,6 +41,7 @@ const submittedJourney = {
   selectionPath: "grid" as const,
   scanInteractionId: "test-sheet-1",
   msConfirmationToPending: 180,
+  intakePath: "scan" as const,
 }
 
 test("Scan analytics is PostHog-only", () => {
@@ -100,6 +103,13 @@ test("Scan analytics factory only fires with analytics consent", () => {
     snapshotSource: "refined",
   })
   consented.track("scan_not_found", unknownJourney)
+  consented.track("scan_retailer_search", {
+    catalogCount: 1,
+    retailerCount: 2,
+    outcome: "ok",
+    durationMs: 340,
+  })
+  consented.track("scan_retailer_result_opened", { categoryLabel: "Conditioner" })
   consented.track("scan_submission_created", { category: "conditioner", ...submittedJourney })
   consented.track("scan_fallback_search_used", { trigger: "timeout" })
   consented.track("scan_saved", { kind: "routine", verdict: "ideal" })
@@ -118,6 +128,14 @@ test("Scan analytics factory only fires with analytics consent", () => {
       },
     },
     { eventName: "scan_not_found", payload: unknownJourney },
+    {
+      eventName: "scan_retailer_search",
+      payload: { catalogCount: 1, retailerCount: 2, outcome: "ok", durationMs: 340 },
+    },
+    {
+      eventName: "scan_retailer_result_opened",
+      payload: { categoryLabel: "Conditioner" },
+    },
     {
       eventName: "scan_submission_created",
       payload: { category: "conditioner", ...submittedJourney },
@@ -146,6 +164,13 @@ test("Scan events map to PostHog with the documented snake_case properties", () 
       snapshotSource: "initial",
     })
     postHogDestination.track("scan_not_found", unknownJourney)
+    postHogDestination.track("scan_retailer_search", {
+      catalogCount: 3,
+      retailerCount: 5,
+      outcome: "unavailable",
+      durationMs: 902,
+    })
+    postHogDestination.track("scan_retailer_result_opened", { categoryLabel: null })
     postHogDestination.track("scan_submission_created", { category: "mask", ...submittedJourney })
     postHogDestination.track("scan_fallback_search_used", { trigger: "manual" })
     postHogDestination.track("scan_saved", { kind: "merkliste", verdict: "supportive" })
@@ -171,6 +196,11 @@ test("Scan events map to PostHog with the documented snake_case properties", () 
       },
     ],
     [
+      "scan_retailer_search",
+      { catalog_count: 3, retailer_count: 5, outcome: "unavailable", duration_ms: 902 },
+    ],
+    ["scan_retailer_result_opened", { category_label: null }],
+    [
       "scan_submission_created",
       {
         category: "mask",
@@ -178,11 +208,48 @@ test("Scan events map to PostHog with the documented snake_case properties", () 
         selection_path: "grid",
         scan_interaction_id: "test-sheet-1",
         ms_confirmation_to_pending: 180,
+        intake_path: "scan",
       },
     ],
     ["scan_fallback_search_used", { trigger: "manual" }],
     ["scan_saved", { kind: "merkliste", verdict: "supportive" }],
     ["scan_buy_clicked", { verdict: "merkliste" }],
+  ])
+})
+
+test("scan_submission_created's intakePath distinguishes the barcode-scan unknown flow from the search sheet's name-based recovery", () => {
+  const originalCapture = posthog.capture
+  const calls: unknown[][] = []
+  posthog.capture = ((...args: unknown[]) => {
+    calls.push(args)
+    return true
+  }) as typeof posthog.capture
+
+  try {
+    postHogDestination.track("scan_submission_created", {
+      category: "shampoo",
+      suggestedCategory: null,
+      selectionPath: "grid",
+      scanInteractionId: "test-name-search-1",
+      msConfirmationToPending: 240,
+      intakePath: "name_search",
+    })
+  } finally {
+    posthog.capture = originalCapture
+  }
+
+  assert.deepEqual(calls, [
+    [
+      "scan_submission_created",
+      {
+        category: "shampoo",
+        suggested_category: null,
+        selection_path: "grid",
+        scan_interaction_id: "test-name-search-1",
+        ms_confirmation_to_pending: 240,
+        intake_path: "name_search",
+      },
+    ],
   ])
 })
 

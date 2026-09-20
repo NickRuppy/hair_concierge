@@ -122,6 +122,14 @@ declare global {
      * gets no `tier` prop at all — same as today.
      */
     __SCAN_LAB_TIER?: EntitlementTier
+    /**
+     * Task 7: stands in for the SERVER-derived `retailerSearchEnabled` prop
+     * `/scan/page.tsx` passes in production (`isRetailerSearchEnabled()`). Omitted (the
+     * default), `ScanFlow` gets `retailerSearchEnabled={false}` — the search sheet's dm
+     * lane stays inert, byte-identical to before T4, same as every other caller that does
+     * not opt in.
+     */
+    __SCAN_LAB_RETAILER_SEARCH_ENABLED?: boolean
   }
 }
 
@@ -414,11 +422,18 @@ function ensureScanLab(): ScanLabInternals {
 export function ScanLabClient() {
   const harness = useMemo(() => (typeof window === "undefined" ? null : ensureScanLab()), [])
   const tier = typeof window === "undefined" ? undefined : window.__SCAN_LAB_TIER
+  const retailerSearchEnabled =
+    typeof window === "undefined" ? false : (window.__SCAN_LAB_RETAILER_SEARCH_ENABLED ?? false)
 
   return (
     <ToastProvider>
       <main className="min-h-dvh bg-background py-4">
-        <ScanFlow analytics={harness?.analytics} scannerRuntime={harness?.runtime} tier={tier} />
+        <ScanFlow
+          analytics={harness?.analytics}
+          scannerRuntime={harness?.runtime}
+          tier={tier}
+          retailerSearchEnabled={retailerSearchEnabled}
+        />
       </main>
     </ToastProvider>
   )

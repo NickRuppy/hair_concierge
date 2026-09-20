@@ -301,10 +301,21 @@ async function installScanApi(page: Page): Promise<ScanApiController> {
 
 async function openLab(
   page: Page,
-  boot: { holdCamera?: boolean; denyCamera?: string; tier?: "free" | "premium" } = {},
+  boot: {
+    holdCamera?: boolean
+    denyCamera?: string
+    tier?: "free" | "premium"
+    /**
+     * Task 7: stands in for the SERVER-derived `retailerSearchEnabled` prop
+     * `/scan/page.tsx` passes in production — see `scan-lab-client.tsx`'s
+     * `__SCAN_LAB_RETAILER_SEARCH_ENABLED` doc comment. Omitted, the search sheet's dm
+     * lane stays inert (`false`), same as every other caller.
+     */
+    retailerSearchEnabled?: boolean
+  } = {},
 ): Promise<void> {
   await page.addInitScript(
-    ({ holdCamera, denyCamera, tier }) => {
+    ({ holdCamera, denyCamera, tier, retailerSearchEnabled }) => {
       window.localStorage.setItem(
         "chaarlie_cookie_consent_v1",
         JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),
@@ -314,8 +325,14 @@ async function openLab(
       // Fix round 1 (F1): stands in for the SERVER-derived `tier` prop `/scan/page.tsx`
       // passes in production — see `scan-lab-client.tsx`'s `__SCAN_LAB_TIER` doc comment.
       if (tier) window.__SCAN_LAB_TIER = tier
+      if (retailerSearchEnabled) window.__SCAN_LAB_RETAILER_SEARCH_ENABLED = true
     },
-    { holdCamera: boot.holdCamera ?? false, denyCamera: boot.denyCamera ?? "", tier: boot.tier },
+    {
+      holdCamera: boot.holdCamera ?? false,
+      denyCamera: boot.denyCamera ?? "",
+      tier: boot.tier,
+      retailerSearchEnabled: boot.retailerSearchEnabled ?? false,
+    },
   )
   await page.goto(LAB_PATH)
   await page.waitForFunction(() => Boolean(window.__scanLab))
@@ -555,7 +572,7 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
       (sample) => sample.step === "scanning" && sample.calls === 0,
     )
 
-    await closeSheetContaining(page, "Ohne Scan finden").click()
+    await closeSheetContaining(page, "Produkt finden").click()
     await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "result")
     await expect(page.getByText("Lab Shampoo Alpha")).toBeVisible()
     expect(api.resolveBodies).toHaveLength(1)
@@ -597,7 +614,7 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     )
 
     // And it was not consumed either: the same code, never moved, still resolves once.
-    await closeSheetContaining(page, "Ohne Scan finden").click()
+    await closeSheetContaining(page, "Produkt finden").click()
     await emit(page, EAN_PRODUCT_A)
     await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "result")
     await expect(page.getByText("Lab Shampoo Alpha")).toBeVisible()
@@ -691,7 +708,7 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     // The FIRST failure pops the fallback the user actually needs.
     await expect(flowRoot(page)).toHaveAttribute("data-scan-auxiliary", "search")
 
-    await closeSheetContaining(page, "Ohne Scan finden").click()
+    await closeSheetContaining(page, "Produkt finden").click()
     await page.getByRole("button", { name: "Kamera erneut versuchen" }).click()
 
     await expect(flowRoot(page)).toHaveAttribute("data-scan-camera", "live")
@@ -1095,7 +1112,155 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     await expect(flowRoot(page)).toHaveAttribute("data-scan-auxiliary", "search")
 
     // Nothing failed to read here — the user simply asked for the search.
-    await expect(page.getByRole("heading", { name: "Ohne Scan finden" })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Produkt finden" })).toBeVisible()
     await expect(page.getByRole("heading", { name: "Barcode nicht lesbar?" })).toHaveCount(0)
+  })
+
+  /* ------------------------------------------- T7: search-sheet retailer lane + intake */
+
+  test("T7 retailer search: the dm lane renders next to the catalog, and a dm-row tap reaches the unknown sheet", async ({
+    page,
+  }) => {
+    await installScanApi(page)
+    await openLab(page, { retailerSearchEnabled: true })
+    await waitForScanningLoop(page)
+
+    await page.route("**/api/scan/search?*", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          results: [
+            {
+              id: PRODUCT_A_ID,
+              name: "Lab Shampoo Alpha",
+              brand: "Chaarlie Lab",
+              category: "shampoo",
+              categoryLabel: "Shampoo",
+              imageUrl: null,
+            },
+          ],
+          truncated: false,
+        }),
+      }),
+    )
+    const dmGtin = "4006381333962"
+    const dmName = "Weleda Shampoo Rosmarin"
+    await page.route("**/api/scan/search-retailer?*", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          catalog: [],
+          retailer: [{ gtin: dmGtin, name: dmName, brand: "WELEDA", categoryLabel: "Shampoo" }],
+          retailerOutcome: "ok",
+        }),
+      }),
+    )
+
+    await page.getByRole("button", { name: "Produkt suchen" }).click()
+    await expect(page.getByRole("heading", { name: "Produkt finden" })).toBeVisible()
+
+    await page.getByLabel("Produktname oder Marke").fill("weleda")
+    await page.getByRole("button", { name: "Suchen" }).click()
+
+    // Both sections render: the catalog carries the `In deinem Chaarlie-Katalog` label
+    // only once the dm lane is active, and the dm-only row sits under its own heading.
+    await expect(page.getByText("In deinem Chaarlie-Katalog")).toBeVisible()
+    await expect(page.getByText("Lab Shampoo Alpha")).toBeVisible()
+    await expect(page.getByText("Weitere Treffer")).toBeVisible()
+    await expect(page.getByText(dmName)).toBeVisible()
+
+    await page.route("**/api/scan/resolve", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(UNKNOWN_RESULT),
+      }),
+    )
+
+    await page.getByRole("button", { name: new RegExp(dmName) }).click()
+
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "unknown")
+    // Twice on purpose (same as the other unknown-sheet coverage above): the sheet's
+    // sr-only dialog title and the visible heading both carry the bridge headline.
+    await expect(page.getByText(SCAN_UNKNOWN_HEADLINE)).toHaveCount(2)
+  })
+
+  test("T7 recovery intake: an empty submit reaches the research intake and a pending submission", async ({
+    page,
+  }) => {
+    await installScanApi(page)
+    await openLab(page, { retailerSearchEnabled: true })
+    await waitForScanningLoop(page)
+
+    await page.route("**/api/scan/search?*", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ results: [], truncated: false }),
+      }),
+    )
+    await page.route("**/api/scan/search-retailer?*", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ catalog: [], retailer: [], retailerOutcome: "ok" }),
+      }),
+    )
+
+    await page.getByRole("button", { name: "Produkt suchen" }).click()
+    const query = "Unbekanntes Wunderserum"
+    await page.getByLabel("Produktname oder Marke").fill(query)
+    await page.getByRole("button", { name: "Suchen" }).click()
+
+    // Both lanes came back empty after an explicit submit: the terminal empty state, not
+    // the quiet pre-submit invitation.
+    await expect(page.getByText("Dazu haben wir nichts gefunden.")).toBeVisible()
+    await page.getByRole("button", { name: "Für dich prüfen lassen" }).click()
+
+    await expect(page.getByRole("heading", { name: "Wir prüfen es für dich" })).toBeVisible()
+    await expect(page.getByLabel("Produktname")).toHaveValue(query)
+
+    await page.getByLabel("Marke").fill("Chaarlie Lab")
+
+    await page.route("**/api/scan/submit", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(PENDING_SUBMISSION),
+      }),
+    )
+
+    await page.getByRole("button", { name: "Shampoo", exact: true }).click()
+
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "pending")
+    await expect(
+      page.getByText("Meist innerhalb von 24 Stunden – wir melden uns im Chat."),
+    ).toBeVisible()
+    // The search sheet is closed, not stacked underneath the pending sheet — exactly one
+    // dialog is on screen, and it is not the search sheet.
+    await expect(page.getByRole("dialog")).toHaveCount(1)
+    await expect(page.getByRole("heading", { name: "Produkt finden" })).toHaveCount(0)
+  })
+
+  test("T7 flag off: submitting a search never calls the retailer lane", async ({ page }) => {
+    await installScanApi(page)
+    await openLab(page)
+    await waitForScanningLoop(page)
+
+    const retailerRequests: string[] = []
+    page.on("request", (request) => {
+      if (request.url().includes("/api/scan/search-retailer")) retailerRequests.push(request.url())
+    })
+
+    await page.getByRole("button", { name: "Produkt suchen" }).click()
+    await page.getByLabel("Produktname oder Marke").fill("weleda")
+    await page.getByRole("button", { name: "Suchen" }).click()
+
+    // The default installer's catalog stub is empty, and with the flag off the terminal
+    // empty state does not wait on a dm lane that will never fire — a solid settle point.
+    await expect(page.getByText("Dazu haben wir nichts gefunden.")).toBeVisible()
+    expect(retailerRequests).toEqual([])
   })
 })

@@ -1,12 +1,14 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { z } from "zod"
 
-import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
-import {
-  PERSONAL_PLAN_PRODUCT_CATEGORIES,
-  type PersonalPlanCategory,
-} from "@/lib/personal-plan/products/contracts"
+import { PERSONAL_PLAN_PRODUCT_CATEGORIES } from "@/lib/personal-plan/products/contracts"
 import { checkRateLimit } from "@/lib/rate-limit"
+import {
+  matchCatalogProducts,
+  toScanSearchResult,
+  type CatalogSearchCandidate,
+  type ScanSearchResult,
+} from "@/lib/scan/catalog-search"
 import { loadQuarantinedProductIds } from "@/lib/scan/catalog-eligibility"
 import { captureScanException } from "@/lib/observability/scan"
 import { createScanRoute, scanOk } from "@/lib/scan/route"
@@ -17,14 +19,13 @@ import { createClient } from "@/lib/supabase/server"
  * `inventory-search.ts`'s `searchOwnedProductCatalog` is locked to one category (its
  * `OwnedProductCatalogSource.listActiveProducts` boundary has no production Supabase
  * implementation to call into either) — scan search spans all 10 categories at once, so
- * per the brief this drops to a direct query instead, mirroring that module's matching
- * (substring over "brand name", case-insensitive) and ranking (exact label match first,
- * then name) rather than importing it.
+ * per the brief this drops to a direct query instead, sharing `catalog-search.ts`'s
+ * identity-title matching and ranking with the mobile scan search service.
  */
 const MIN_QUERY_LENGTH = 2
 const MAX_QUERY_LENGTH = 120
 const MAX_RESULTS = 8
-// Catalog sits around 256 active products today, well under this cap, so an in-Node
+// Catalog sits around 348 active products today, well under this cap, so an in-Node
 // filter over one page is fine. A full page means the catalog outgrew the cap and results
 // are computed over a partial catalog — reported as `truncated` (mirroring
 // inventory-search.ts's `totalCapped`) rather than silently swallowed.
@@ -36,14 +37,9 @@ export type ScanSearchResponse = {
   truncated: boolean
 }
 
-export type ScanSearchResult = {
-  id: string
-  name: string
-  brand: string | null
-  category: PersonalPlanCategory
-  categoryLabel: string
-  imageUrl: string | null
-}
+export type { ScanSearchResult }
+
+type CandidateRelation = { canonical_name: string | null }
 
 type CandidateRow = {
   id: string
@@ -52,6 +48,12 @@ type CandidateRow = {
   category_key: string
   image_url: string | null
   sort_order: number | null
+  brand_identity: CandidateRelation | CandidateRelation[] | null
+  product_line: CandidateRelation | CandidateRelation[] | null
+}
+
+function firstRelation<T>(value: T | T[] | null | undefined): T | null {
+  return Array.isArray(value) ? (value[0] ?? null) : (value ?? null)
 }
 
 export type ScanSearchRouteDeps = {
@@ -94,7 +96,9 @@ export async function searchScanCatalog(
   const [{ data, error }, quarantinedIds] = await Promise.all([
     client
       .from("products")
-      .select("id, name, brand, category_key, image_url, sort_order")
+      .select(
+        "id, name, brand, category_key, image_url, sort_order, brand_identity:brands(canonical_name), product_line:product_lines(canonical_name)",
+      )
       .eq("is_active", true)
       .eq("lifecycle_status", "active")
       .in("category_key", PERSONAL_PLAN_PRODUCT_CATEGORIES)
@@ -104,43 +108,28 @@ export async function searchScanCatalog(
   if (error) throw new Error("scan_search_catalog_unavailable")
 
   const rows = (data ?? []) as CandidateRow[]
-  const normalizedQuery = query.toLocaleLowerCase()
   // Ruling R7: a disposition-quarantined product (personal_plan_product_search_dispositions)
   // never surfaces via scan search — same predicate personal_plan_create_or_reuse_user_product
   // enforces server-side (see catalog-eligibility.ts).
-  const matches = rows.filter(
-    (row) =>
-      !quarantinedIds.has(row.id) &&
-      `${row.brand ?? ""} ${row.name}`.toLocaleLowerCase().includes(normalizedQuery),
-  )
-
-  matches.sort((left, right) => {
-    const leftExact = isExactMatch(left, normalizedQuery)
-    const rightExact = isExactMatch(right, normalizedQuery)
-    if (leftExact !== rightExact) return leftExact ? -1 : 1
-    return (
-      (left.sort_order ?? Number.MAX_SAFE_INTEGER) -
-        (right.sort_order ?? Number.MAX_SAFE_INTEGER) ||
-      left.name.localeCompare(right.name, "de") ||
-      left.id.localeCompare(right.id)
-    )
-  })
-
-  return {
-    results: matches.slice(0, MAX_RESULTS).map((row) => ({
+  const candidates: CatalogSearchCandidate[] = rows
+    .filter((row) => !quarantinedIds.has(row.id))
+    .map((row) => ({
       id: row.id,
       name: row.name,
       brand: row.brand,
-      category: row.category_key as PersonalPlanCategory,
-      categoryLabel: CATEGORY_COPY[row.category_key as PersonalPlanCategory].label,
-      imageUrl: row.image_url,
-    })),
+      category_key: row.category_key,
+      image_url: row.image_url,
+      sort_order: row.sort_order,
+      brand_identity: firstRelation(row.brand_identity),
+      product_line: firstRelation(row.product_line),
+    }))
+
+  const matches = matchCatalogProducts(candidates, query)
+
+  return {
+    results: matches.slice(0, MAX_RESULTS).map(toScanSearchResult),
     truncated: rows.length === CANDIDATE_LOAD_LIMIT,
   }
-}
-
-function isExactMatch(row: CandidateRow, normalizedQuery: string): boolean {
-  return `${row.brand ?? ""} ${row.name}`.trim().toLocaleLowerCase() === normalizedQuery
 }
 
 export const GET = createScanSearchRouteHandler({
