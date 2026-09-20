@@ -1,4 +1,4 @@
-# Scan: Manuelle Suche — name-only search + dm lane + research recovery (Rev. 6, 2026-09-20)
+# Scan: Manuelle Suche — name-only search + dm lane + research recovery (Rev. 7, 2026-09-20)
 
 ## 1. Outcome and source context
 
@@ -257,6 +257,9 @@ states approved 2026-09-20).
 - dm-only rows filtered to hair-relevant products (review F14).
 - Rev. 3 journey + mockup sign-off: "Approved" (2026-09-20) for the name-only sheet and
   two-section presentation.
+- Persistent recovery link (2026-09-20, post-implementation live finding): „Nicht dabei?
+  Für dich prüfen lassen" under the results after any submitted search (§6 step 7b) —
+  option 2 chosen; option 3 (filtering dm's semantic ranking) explicitly rejected.
 - Name-based research recovery (2026-09-20): when neither catalog nor dm finds the query,
   the standard recovery is "enter brand + name, submit for research" — supersedes the
   earlier "no name-only submissions" non-goal, the typed-EAN corner-case consequence, and
@@ -317,7 +320,10 @@ coalesce policy inherited from the EAN lane's contract), F2 omit-not-null for
 lifecycle keeps the auxiliary open until the outcome, F5 PostHog destination mapping for
 `intakePath`, F6 leftover "dm-Suche" copy neutralized, F7 runnable worker oracle, F8 task
 renumbering (intake T5 before the final T6 pass) and stale marker removed. All technical
-corrections within approved rulings — coverage remains confirmed.
+corrections within approved rulings — coverage remains confirmed. Rev. 7 (post-
+implementation): adds Nick's persistent-recovery-link ruling (journey step 7b, Task 8)
+after the live manual finding that dm's semantic search makes the terminal empty state
+rare; coverage remains confirmed.
 
 ## 6. Designed user journey
 
@@ -350,6 +356,14 @@ Actor: signed-in user on `/scan` (mobile or desktop web), camera running or unav
    reicht uns schon.") — the category tap submits. `already_in_catalog` answer → the
    sheet closes and the real verdict resolves instead; otherwise the existing pending
    sheet. Submit error keeps the intake state with the standard error copy.
+7b. Results shown but the searched product is not among them (dm semantic search returns
+   neighbors for most real queries — live finding 2026-09-20, so the terminal empty state
+   is rare): one quiet line under the results after any submitted search — „Nicht dabei?
+   Für dich prüfen lassen" — opens the same prefilled intake (Nick ruling 2026-09-20,
+   option 2; fighting dm's ranking, option 3, explicitly rejected). Hidden pre-submit and
+   in the terminal empty state (whose primary CTA already owns recovery); renders with
+   dm rows and/or merged catalog results alike, flag-off included (the intake is not
+   dm-gated).
 8. dm lane fails/times out/rate-limited → catalog results render normally; dm section slot
    shows one quiet line ("Die erweiterte Suche ist gerade nicht verfügbar.") only in the
    failed-after-submit case; flag off renders no dm affordance at all.
