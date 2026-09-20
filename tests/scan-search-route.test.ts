@@ -277,6 +277,34 @@ test("searchScanCatalog: a full candidate page reports truncated", async () => {
   assert.equal(results.length, 8)
 })
 
+test("searchScanCatalog: a canonical-brand-only query misses raw brand+name but hits via the composed identity title", async () => {
+  const { client } = stubProductsClient([
+    {
+      id: "1",
+      name: "Repair Serum",
+      brand: "LN0042",
+      category_key: "leave_in",
+      image_url: null,
+      sort_order: 5,
+      brand_identity: { canonical_name: "Neqi" },
+      product_line: null,
+    },
+  ])
+  // The raw "brand name" string ("LN0042 Repair Serum") never contains "neqi" — only the
+  // composed identity title (using the canonical brand) does.
+  assert.equal("LN0042 Repair Serum".toLocaleLowerCase().includes("neqi"), false)
+  const { results } = await searchScanCatalog(client as never, "neqi")
+  assert.equal(results.length, 1)
+  assert.deepEqual(results[0], {
+    id: "1",
+    name: "Repair Serum",
+    brand: "Neqi",
+    category: "leave_in",
+    categoryLabel: "Leave-in",
+    imageUrl: null,
+  })
+})
+
 test("searchScanCatalog: a partial candidate page is not truncated", async () => {
   const { client } = stubProductsClient([
     {

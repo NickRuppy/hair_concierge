@@ -18,6 +18,11 @@ import {
   loadQuarantinedProductIds,
   loadQuarantinedProductIdsAmong,
 } from "@/lib/scan/catalog-eligibility"
+import {
+  matchCatalogProducts,
+  toScanSearchResult,
+  type CatalogSearchCandidate,
+} from "@/lib/scan/catalog-search"
 import { canonicalizeGtin } from "@/lib/product-identity/normalize"
 import { composeProductIdentityTitle } from "@/lib/product-identity/display-title"
 import { lookupCatalogProductByIdentifier } from "@/lib/scan/identifier-lookup"
@@ -233,12 +238,24 @@ export async function resolveMobileScan(
   })
 }
 
+function toCatalogSearchCandidate(row: ProductRow): CatalogSearchCandidate {
+  return {
+    id: row.id,
+    name: row.name,
+    brand: row.brand,
+    category_key: row.category_key,
+    image_url: row.image_url,
+    sort_order: row.sort_order ?? null,
+    brand_identity: firstRelation(row.brand_identity),
+    product_line: firstRelation(row.product_line),
+  }
+}
+
 export async function searchMobileScanCatalog(
   client: SupabaseClient,
   query: string,
 ): Promise<MobileScanSearchResponse> {
-  const normalized = query.trim().toLocaleLowerCase()
-  if (normalized.length < 2)
+  if (query.trim().length < 2)
     return mobileScanSearchResponseSchema.parse({
       contractVersion: MOBILE_SCAN_CONTRACT_VERSION,
       results: [],
@@ -258,33 +275,17 @@ export async function searchMobileScanCatalog(
   ])
   if (error) throw new Error("mobile_scan_search_unavailable")
   const rows = (data ?? []) as ProductRow[]
-  const results = rows
-    .filter(
-      (row) =>
-        !quarantined.has(row.id) &&
-        composeProductIdentityTitle(identityParts(row)).toLocaleLowerCase().includes(normalized),
-    )
-    .sort(
-      (a, b) =>
-        (composeProductIdentityTitle(identityParts(a)).toLocaleLowerCase() === normalized
-          ? -1
-          : 0) -
-          (composeProductIdentityTitle(identityParts(b)).toLocaleLowerCase() === normalized
-            ? -1
-            : 0) ||
-        (a.sort_order ?? Number.MAX_SAFE_INTEGER) - (b.sort_order ?? Number.MAX_SAFE_INTEGER) ||
-        a.name.localeCompare(b.name, "de") ||
-        a.id.localeCompare(b.id),
-    )
+  const candidates = rows.filter((row) => !quarantined.has(row.id)).map(toCatalogSearchCandidate)
+  const results = matchCatalogProducts(candidates, query)
     .slice(0, 8)
-    .map((row) => ({
-      id: row.id,
-      name: row.name,
-      displayName: composeProductIdentityTitle(identityParts(row)),
-      brand: identityParts(row).brand,
-      category: row.category_key,
-      categoryLabel: CATEGORY_COPY[row.category_key as PersonalPlanCategory].label,
-      imageUrl: safeUrl(row.image_url),
+    .map((candidate) => ({
+      ...toScanSearchResult(candidate),
+      displayName: composeProductIdentityTitle({
+        brand: candidate.brand_identity?.canonical_name ?? candidate.brand,
+        productLine: candidate.product_line?.canonical_name ?? null,
+        name: candidate.name,
+      }),
+      imageUrl: safeUrl(candidate.image_url),
     }))
   return mobileScanSearchResponseSchema.parse({
     contractVersion: MOBILE_SCAN_CONTRACT_VERSION,
