@@ -4,6 +4,7 @@ import React, { type ReactElement, type ReactNode } from "react"
 
 import { PremiumSheet } from "../src/components/premium-sheet/premium-sheet"
 import { BottomSheetContent } from "../src/components/ui/bottom-sheet"
+import { Skeleton } from "../src/components/ui/skeleton"
 import { ScanActionFooter } from "../src/components/scan/scan-action-footer"
 import { ScanFlow } from "../src/components/scan/scan-flow"
 import { ScanResultCard } from "../src/components/scan/scan-result-card"
@@ -393,6 +394,62 @@ test("ScanFlow: a decode holds the viewfinder for the confirm window, then resol
     flow.events.map((event) => event.name),
     ["scan_started", "scan_decoded", "scan_result_shown"],
   )
+})
+
+test("ScanFlow: opening and dismissing the search sheet during a camera-decode's confirm window does not strand the resolve (delta review, Finding 1)", async () => {
+  // A camera-decode resolve keeps `step` at "scanning" for up to 400ms (the confirm
+  // window), so "Produkt suchen" is still reachable and the search sheet can genuinely be
+  // opened and dismissed WHILE the resolve is in flight. The dismissal handler must not
+  // cancel that resolve -- only an actual in-flight submit -- or its `requests.isCurrent`
+  // guard exits early without ever clearing `resolveInFlightRef`, permanently blocking
+  // every future decode, while the still-armed confirm-window timer raises a resolving
+  // skeleton for a token nothing will ever settle.
+  let resolveCalls = 0
+  const firstGate = deferred<Response>()
+  const flow = await mountFlow(async (url) => {
+    if (url === "/api/scan/resolve") {
+      resolveCalls += 1
+      if (resolveCalls === 1) return firstGate.promise
+      return json(verdictResult("p-second"))
+    }
+    return notFound()
+  })
+
+  scannerProps(flow.tree).onDecoded({ type: "ean", value: "4006381333931" })
+  await flow.settle()
+
+  // Still inside the confirm window: step is "scanning" (the pending sheet has not
+  // raised yet), so opening the search sheet mid-resolve is exactly the scenario at risk.
+  assert.equal(sheetProps(flow.tree).open, false)
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
+  await flow.settle()
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, true)
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(false)
+  await flow.settle()
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, false)
+
+  // The confirm window elapses and the delayed resolve response finally lands.
+  await delay(450)
+  await flow.settle()
+  firstGate.resolve(json(verdictResult("p-first")))
+  await flow.settle()
+
+  // The resolve was NOT stranded: the real verdict is shown, not a permanent resolving
+  // skeleton (title would stay "Produkt wird geprüft" forever if it were stuck).
+  assert.equal(sheetProps(flow.tree).open, true)
+  assert.equal(sheetProps(flow.tree).title, "Brauchst du nicht (p-first)")
+
+  // `resolveInFlightRef` must not be stuck true either: return to scanning and decode
+  // again -- a genuinely new resolve call must fire.
+  sheetProps(flow.tree).onClose()
+  await flow.settle()
+  scannerProps(flow.tree).onDecoded({ type: "ean", value: "4005808298389" })
+  await delay(450)
+  await flow.settle()
+  assert.equal(sheetProps(flow.tree).open, true)
+  assert.equal(sheetProps(flow.tree).title, "Brauchst du nicht (p-second)")
+  assert.equal(resolveCalls, 2)
 })
 
 test("ScanFlow: a second decode inside the confirm window is ignored", async () => {
@@ -2169,6 +2226,77 @@ test("Task 8: the persistent recovery link renders below catalog-only results wi
 
   assert.ok(textContent(view.tree).includes("Nicht dabei? Für dich prüfen lassen"))
   assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
+})
+
+test("Task 8 delta review (Finding 2): no link while the catalog lane is loading after a resubmit, even though stale results are still stored", async () => {
+  // `catalogResults` persists across a resubmit's fresh loading cycle -- nothing clears it
+  // until the NEW response lands -- so the predicate must key off `catalogStatus`, not
+  // merely off `mergedCatalog` being non-empty from the PREVIOUS submit.
+  let catalogCalls = 0
+  const secondGate = deferred<Response>()
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) {
+        catalogCalls += 1
+        if (catalogCalls === 1) return json({ results: [liveCatalogResult()] })
+        return secondGate.promise
+      }
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { onStartResearchIntake: () => {} },
+  )
+
+  await typeQuery(view, "gliss kur")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+  // First submit settled: the link is showing under real, rendered rows.
+  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
+
+  // Resubmit the same (unchanged) query -- catalogStatus flips back to "loading" while
+  // `catalogResults` still holds the first submit's rows.
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  assert.equal(
+    findAll(view.tree, (element) => element.type === Skeleton).length > 0,
+    true,
+    "expected the catalog loading skeletons to be showing",
+  )
+  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 0)
+  assert.equal(textContent(view.tree).includes("Nicht dabei?"), false)
+
+  secondGate.resolve(json({ results: [liveCatalogResult()] }))
+  await view.settle()
+  // Once the resubmit settles, the link is back.
+  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
+})
+
+test("Task 8 delta review (Finding 2): no link when the catalog lane errored, even with a dm-mapped catalog match stored from the retailer route", async () => {
+  // The dm lane can map a GTIN into the catalog section (`retailerCatalogMatches`)
+  // independently of the catalog lane's own outcome. If the catalog lane itself failed,
+  // NOTHING from it renders -- the predicate must not treat a stored, unrendered
+  // `retailerCatalogMatches` entry as "results are displayed".
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ error: "unexpected_call" }, 500)
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({
+          catalog: [liveCatalogResult({ id: "p-dm-mapped" })],
+          retailer: [],
+          retailerOutcome: "ok",
+        })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true, onStartResearchIntake: () => {} },
+  )
+
+  await typeQuery(view, "gliss kur")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  assert.equal(textContent(view.tree).includes("Die Suche klappt gerade nicht."), true)
+  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 0)
+  assert.equal(textContent(view.tree).includes("Nicht dabei?"), false)
 })
 
 test("Task 8: the persistent recovery link is NOT shown pre-submit, even while live-typing results are already on screen", async () => {

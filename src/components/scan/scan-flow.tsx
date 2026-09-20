@@ -1189,14 +1189,31 @@ export function ScanFlow({
           // late response can still `own()` its token and either open the pending sheet
           // over the live viewfinder the user just returned to, or resurface a stale
           // error on reopen (same bug class the historic F4 fix closed for
-          // `submitUnknown`). `requests.invalidateAll()` covers the component-level guard
-          // the `already_in_catalog` branch of `submitResearchFromSearch` checks
-          // (`requests.isCurrent(token)`); `cancelSubmit: true` covers the reducer-level
-          // guard (`owns()`) the pending-success branch relies on instead. Safe
-          // unconditionally: no resolve can be in flight while the search sheet is open
-          // (dm-row taps close it first), so this can only ever cancel a submit.
-          requests.invalidateAll()
-          dispatch({ type: "auxiliary_closed", cancelSubmit: true })
+          // `submitUnknown`).
+          //
+          // Delta review (Finding 1): a camera-decode resolve CAN be in flight while the
+          // search sheet is open at the same time -- `resolve()`'s confirm-window delay
+          // (`sheetDelayMs`) keeps `step` at "scanning" for up to 400ms after a decode
+          // starts a resolve, and `auxiliary_opened`'s guard only checks `step.kind`, not
+          // whether a request owns the flow, so "Produkt suchen" stays reachable during
+          // that window. `requests` is ONE token sequence shared with `resolve()`, so
+          // invalidating it unconditionally here would strand that in-flight resolve:
+          // its `requests.isCurrent(token)` check would now exit early WITHOUT ever
+          // clearing `resolveInFlightRef` (stuck true -> every future decode silently
+          // blocked), while the confirm-window timer -- never cleared by this path -- still
+          // fires and raises the resolving skeleton for a token the reducer never
+          // invalidated (`cancelSubmit` is kind-gated, but `requests.invalidateAll()`
+          // was not) -- a permanent resolving skeleton over the live viewfinder.
+          //
+          // So: only cancel when a SUBMIT is the request actually in flight.
+          // `stateRef.current` (not the render-scope `state`) because this fires from a
+          // DOM event and must read the truly current `activeRequest` kind.
+          if (stateRef.current.activeRequest?.kind === "submit") {
+            requests.invalidateAll()
+            dispatch({ type: "auxiliary_closed", cancelSubmit: true })
+            return
+          }
+          dispatch({ type: "auxiliary_closed" })
         }}
         onSelectProduct={openFromProductId}
         retailerSearchEnabled={retailerSearchEnabled}

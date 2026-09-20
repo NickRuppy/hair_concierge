@@ -525,7 +525,15 @@ export function ScanSearchSheet({
   const dmFailed = dmActive && retailerStatus === "error"
   const dmReadyResults = dmActive && retailerStatus === "ready" ? retailerResults : []
 
-  const showCatalogLabel = dmActive && catalogStatus === "ready" && mergedCatalog.length > 0
+  // Whether the catalog section is ACTUALLY rendering rows right now — not merely whether
+  // `mergedCatalog` (built from stored `catalogResults`/`retailerCatalogMatches` state)
+  // happens to be non-empty. Those two state pieces persist across a re-submit's fresh
+  // loading cycle (nothing clears them until the new response lands), so `mergedCatalog`
+  // alone can stay non-empty while the catalog section is showing loading skeletons or an
+  // error instead of any rows — the single source of truth for "rows are on screen" also
+  // gates the catalog section's own JSX below (delta review, Finding 2).
+  const showCatalogResults = catalogStatus === "ready" && mergedCatalog.length > 0
+  const showCatalogLabel = dmActive && showCatalogResults
   // Pre-submit catalog miss with the dm lane available (T4 brief §6): a quiet nudge, not
   // the terminal empty state.
   const showQuietInvitation =
@@ -544,12 +552,13 @@ export function ScanSearchSheet({
   // most real queries, so the terminal empty state above (and with it its own recovery CTA)
   // is rarely reached — a user searching a product we can't find otherwise sees only
   // results that aren't theirs, with no path to research it. Shown once ANY post-submit
-  // results are on screen (dm-only rows and/or merged catalog rows, either or both) — not
+  // results are ACTUALLY DISPLAYED (dm-ready rows and/or rendered catalog rows, either or
+  // both — both already computed the same way their own rendering condition is, so the
+  // link can never appear under a loading/error state with no visible rows) — not
   // pre-submit (live typing), and not in the terminal empty state (its own CTA owns
   // recovery there). Works with the retailer flag off too: `dmReadyResults` is always `[]`
   // in that case, so this reduces to catalog-only results.
-  const showPersistentRecoveryLink =
-    submitted && (mergedCatalog.length > 0 || dmReadyResults.length > 0)
+  const showPersistentRecoveryLink = submitted && (showCatalogResults || dmReadyResults.length > 0)
 
   return (
     <BottomSheet open={open} onOpenChange={onOpenChange}>
@@ -677,7 +686,7 @@ export function ScanSearchSheet({
                 </div>
               ) : null}
 
-              {catalogStatus === "ready" && mergedCatalog.length > 0 ? (
+              {showCatalogResults ? (
                 <>
                   {showCatalogLabel ? (
                     <div className="mb-2 mt-1 text-xs font-bold text-[var(--text-sub)]">
