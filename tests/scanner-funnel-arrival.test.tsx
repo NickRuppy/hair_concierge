@@ -210,6 +210,7 @@ test("the scan page renders the hint only when the welcome query asked for it", 
         ScanPageClient({
           tier: "premium" as const,
           merklisteEnabled: true,
+          retailerSearchEnabled: false,
           welcomeHint,
         }),
       () => false,

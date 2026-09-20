@@ -7,6 +7,7 @@ import {
 } from "@/lib/auth/free-registration"
 import { recoverMissingFreeSnapshot } from "@/lib/auth/free-registration-recovery"
 import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
+import { isRetailerSearchEnabled } from "@/lib/scan/enrichment/flag"
 import { createClient } from "@/lib/supabase/server"
 
 import { ScanPageClient } from "./scan-page-client"
@@ -43,6 +44,10 @@ export default async function ScanPage({
   // read: `isFreemiumScannerFirstEnabled()` is not Edge/browser-safe, so it cannot be read
   // from `ScanFlow` itself.
   const merklisteEnabled = isFreemiumScannerFirstEnabled()
+  // T4: the search sheet's parallel dm name-search lane — its own server-derived flag,
+  // read here (not Edge/browser-safe) and threaded through the client boundary the same
+  // way `merklisteEnabled` is.
+  const retailerSearchEnabled = isRetailerSearchEnabled()
 
   // T18 fix round 1 (review finding W2): a free account whose confirm-time
   // snapshot provisioning failed used to be permanently stuck on
@@ -71,6 +76,7 @@ export default async function ScanPage({
     <ScanPageClient
       tier={tier}
       merklisteEnabled={merklisteEnabled}
+      retailerSearchEnabled={retailerSearchEnabled}
       bindSkippedNotice={bindSkippedNotice}
       welcomeHint={params[SCAN_WELCOME_PARAM] === SCAN_WELCOME_VALUE}
     />

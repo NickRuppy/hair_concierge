@@ -3,6 +3,7 @@ import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
 
 import { PremiumSheet } from "../src/components/premium-sheet/premium-sheet"
+import { BottomSheetContent } from "../src/components/ui/bottom-sheet"
 import { ScanActionFooter } from "../src/components/scan/scan-action-footer"
 import { ScanFlow } from "../src/components/scan/scan-flow"
 import { ScanResultCard } from "../src/components/scan/scan-result-card"
@@ -16,6 +17,8 @@ import {
 import { ScanUnknownFlow } from "../src/components/scan/scan-unknown-flow"
 import { ScanWishlistSheet, ScanWishlistTrigger } from "../src/components/scan/scan-wishlist-sheet"
 import { Scanner } from "../src/components/scan/scanner"
+import type { ScanSearchResult } from "../src/app/api/scan/search/route"
+import type { ScanRetailerResult } from "../src/app/api/scan/search-retailer/route"
 import type { ScanWishlistEntry } from "../src/app/api/scan/wishlist/route"
 import type { EntitlementTier } from "../src/lib/entitlements"
 import type { ScanMaskedVerdictResult } from "../src/lib/scan/masked-alternative"
@@ -285,6 +288,9 @@ async function mountFlow(
     /** T16: defaults to `false`, matching `ScanFlow`'s own default — every existing test
      * that does not pass this stays on zero wishlist-count fetches, zero deep-link wiring. */
     merklisteEnabled?: boolean
+    /** T4: defaults to `false`, matching `ScanFlow`'s own default — every existing test
+     * that does not pass this stays on zero retailer-lane fetches. */
+    retailerSearchEnabled?: boolean
   } = {},
 ): Promise<FlowHarness> {
   const events: TrackedEvent[] = []
@@ -310,6 +316,7 @@ async function mountFlow(
         sessionRecordStorage: options.sessionRecordStorage,
         fatigueStorage: options.fatigueStorage,
         merklisteEnabled: options.merklisteEnabled,
+        retailerSearchEnabled: options.retailerSearchEnabled,
         // T16: a plain injected function, never the real `useRouter()` — this harness's
         // `useContext` always returns the fixed toast port regardless of which context is
         // requested (see the file header comment), so `ScanFlow` must never call
@@ -753,6 +760,55 @@ test("ScanFlow: the sheet knows whether the timeout or the user opened it", asyn
   assert.equal(sheet.props.reason, "manual")
 })
 
+// --- T4: search-sheet rebuild — ScanFlow wiring ------------------------------
+
+test("ScanFlow: retailerSearchEnabled threads through to the search sheet, defaulting to false", async () => {
+  const off = await mountFlow(notFound)
+  assert.equal(
+    requireByType(off.tree, ScanSearchSheet, "ScanSearchSheet").props.retailerSearchEnabled,
+    false,
+  )
+
+  const on = await mountFlow(notFound, { retailerSearchEnabled: true })
+  assert.equal(
+    requireByType(on.tree, ScanSearchSheet, "ScanSearchSheet").props.retailerSearchEnabled,
+    true,
+  )
+})
+
+test("ScanFlow: a dm-row tap in the search sheet closes it and resolves the tapped GTIN", async () => {
+  const bodies: string[] = []
+  const flow = await mountFlow(
+    async (url, init) => {
+      if (url === "/api/scan/resolve") {
+        bodies.push(String(init?.body))
+        return json(verdictResult("p-dm"))
+      }
+      return notFound()
+    },
+    { retailerSearchEnabled: true },
+  )
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onOpenChange(true)
+  await flow.settle()
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, true)
+
+  requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.onSelectRetailerResult(
+    "4006381111116",
+  )
+  await flow.settle()
+
+  assert.equal(requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet").props.open, false)
+  assert.deepEqual(JSON.parse(bodies[0]), { identifier: { type: "ean", value: "4006381111116" } })
+  assert.equal(sheetProps(flow.tree).title, "Brauchst du nicht (p-dm)")
+})
+
+test("ScanFlow: a search-sheet submit sees no onSubmitIdentifier prop — the barcode path is gone", async () => {
+  const flow = await mountFlow(notFound)
+  const sheet = requireByType(flow.tree, ScanSearchSheet, "ScanSearchSheet")
+  assert.equal("onSubmitIdentifier" in sheet.props, false)
+})
+
 test("ScanFlow: a stalled stream swaps in the restart tile", async () => {
   const flow = await mountFlow(notFound)
 
@@ -949,6 +1005,373 @@ test("ScanWishlistSheet: a stale load cannot overwrite the newer list (F13)", as
   await view.settle()
 
   assert.deepEqual(entryIds(view.tree), ["new"])
+})
+
+// --- T4: the search-sheet rebuild, mounted directly ---------------------------
+
+function liveCatalogResult(overrides: Partial<ScanSearchResult> = {}): ScanSearchResult {
+  return {
+    id: "p-live",
+    name: "Gliss Kur Total Repair Shampoo",
+    brand: "Schwarzkopf",
+    category: "shampoo",
+    categoryLabel: "Shampoo",
+    imageUrl: null,
+    ...overrides,
+  }
+}
+
+function retailerRow(overrides: Partial<ScanRetailerResult> = {}): ScanRetailerResult {
+  return {
+    gtin: "4008400123457",
+    name: "Gliss Kur Aqua Revive Spülung",
+    brand: "Schwarzkopf",
+    categoryLabel: "Conditioner",
+    ...overrides,
+  }
+}
+
+async function mountSearchSheet(
+  route: (url: string, init: RequestInit | undefined) => Promise<Response>,
+  props: {
+    open?: boolean
+    reason?: "timeout" | "manual" | "camera"
+    retailerSearchEnabled?: boolean
+    onSelectProduct?: (productId: string) => void
+    onSelectRetailerResult?: (gtin: string) => void
+    onStartResearchIntake?: () => void
+  } = {},
+) {
+  const previousFetch = globalThis.fetch
+  globalThis.fetch = (async (input: unknown, init?: RequestInit) =>
+    route(String(input), init)) as typeof fetch
+  test.after?.(() => {
+    globalThis.fetch = previousFetch
+  })
+
+  const harness = createClientStateHarness(
+    () =>
+      ScanSearchSheet({
+        open: props.open ?? true,
+        reason: props.reason ?? "manual",
+        onOpenChange: () => {},
+        onSelectProduct: props.onSelectProduct ?? (() => {}),
+        onSelectRetailerResult: props.onSelectRetailerResult,
+        onStartResearchIntake: props.onStartResearchIntake,
+        retailerSearchEnabled: props.retailerSearchEnabled ?? false,
+      }),
+    {},
+  )
+  const view = {
+    tree: null as ReactElement | null,
+    async settle() {
+      await harness.render()
+      await delay(0)
+      view.tree = await harness.render()
+      return view.tree
+    },
+  }
+  await view.settle()
+  return view
+}
+
+function queryInputProps(tree: ReactNode): Record<string, any> {
+  return requireByType(tree, "input", "input").props
+}
+
+function submitButton(tree: ReactNode): AnyElement {
+  const match = findAll(
+    tree,
+    (element) => element.type === "button" && element.props["aria-label"] === "Suchen",
+  )[0]
+  assert.ok(match, "Expected the search sheet's submit button")
+  return match
+}
+
+function sectionLabelTexts(tree: ReactNode): string[] {
+  return findAll(
+    tree,
+    (element) =>
+      element.type === "div" &&
+      (textContent(element) === "In deinem Chaarlie-Katalog" ||
+        textContent(element) === "Weitere Treffer"),
+  ).map((element) => textContent(element))
+}
+
+function searchSheetHeaderText(tree: ReactNode): string {
+  const content = requireByType(tree, BottomSheetContent, "BottomSheetContent")
+  return textContent(content.props.header)
+}
+
+function typeQuery(view: { tree: ReactElement | null; settle: () => Promise<any> }, value: string) {
+  queryInputProps(view.tree).onChange({ target: { value } })
+  return view.settle()
+}
+
+test("ScanSearchSheet: default header is 'Produkt finden'; the timeout reason keeps its own header", async () => {
+  const manual = await mountSearchSheet(notFound, { reason: "manual" })
+  assert.equal(searchSheetHeaderText(manual.tree), "Produkt finden")
+
+  const timeout = await mountSearchSheet(notFound, { reason: "timeout" })
+  const timeoutHeader = searchSheetHeaderText(timeout.tree)
+  assert.ok(timeoutHeader.includes("Barcode nicht lesbar?"))
+  assert.ok(timeoutHeader.includes("So findest du's trotzdem."))
+})
+
+test("ScanSearchSheet: a text submit renders both sections with exact labels", async () => {
+  const catalog = liveCatalogResult()
+  const retailer = retailerRow()
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [catalog] })
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({ catalog: [], retailer: [retailer], retailerOutcome: "ok" })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+
+  await typeQuery(view, "gliss kur")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  assert.deepEqual(sectionLabelTexts(view.tree), ["In deinem Chaarlie-Katalog", "Weitere Treffer"])
+  assert.ok(buttonLabels(view.tree).some((label) => label.includes(catalog.name)))
+  assert.ok(buttonLabels(view.tree).some((label) => label.includes(retailer.name)))
+})
+
+test("ScanSearchSheet: a GTIN-mapped retailer catalog hit merges into the catalog section, deduped by id", async () => {
+  const live = liveCatalogResult({ id: "shared-1", name: "Only Once Shampoo" })
+  const duplicate = liveCatalogResult({ id: "shared-1", name: "Only Once Shampoo" })
+  const appended = liveCatalogResult({ id: "new-1", name: "Brand New Catalog Match" })
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [live] })
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({ catalog: [duplicate, appended], retailer: [], retailerOutcome: "ok" })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+
+  await typeQuery(view, "only once")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  const labels = buttonLabels(view.tree)
+  assert.equal(labels.filter((label) => label.includes("Only Once Shampoo")).length, 1)
+  assert.equal(labels.filter((label) => label.includes("Brand New Catalog Match")).length, 1)
+})
+
+test("ScanSearchSheet: a dm-row tap calls onSelectRetailerResult with its GTIN", async () => {
+  const retailer = retailerRow({ gtin: "4006381111116" })
+  const taps: string[] = []
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({ catalog: [], retailer: [retailer], retailerOutcome: "ok" })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true, onSelectRetailerResult: (gtin) => taps.push(gtin) },
+  )
+
+  await typeQuery(view, "aqua revive")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  const row = findAll(
+    view.tree,
+    (element) => element.type === "button" && textContent(element).includes(retailer.name),
+  )[0]
+  assert.ok(row)
+  row.props.onClick()
+  assert.deepEqual(taps, ["4006381111116"])
+})
+
+test("ScanSearchSheet: a dm-lane failure leaves catalog results standing and shows the quiet unavailable line", async () => {
+  const catalog = liveCatalogResult({ id: "p-standing", name: "Standing Catalog Shampoo" })
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [catalog] })
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({ catalog: [], retailer: [], retailerOutcome: "unavailable" })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+
+  await typeQuery(view, "standing")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  assert.ok(buttonLabels(view.tree).some((label) => label.includes(catalog.name)))
+  assert.equal(
+    textContent(view.tree).includes("Die erweiterte Suche ist gerade nicht verfügbar."),
+    true,
+  )
+  assert.equal(textContent(view.tree).includes("Dazu haben wir nichts gefunden."), false)
+})
+
+test("ScanSearchSheet: retailerSearchEnabled=false never fetches the dm lane, even on submit", async () => {
+  const urls: string[] = []
+  const view = await mountSearchSheet(async (url) => {
+    urls.push(url)
+    if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+    return json({ error: "unexpected_call" }, 500)
+  })
+
+  await typeQuery(view, "kerastase")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+  await delay(50)
+  await view.settle()
+
+  assert.equal(
+    urls.some((url) => url.includes("/api/scan/search-retailer")),
+    false,
+  )
+})
+
+test("ScanSearchSheet: an out-of-order dm response across a query change is dropped", async () => {
+  const gates: Record<string, ReturnType<typeof deferred<Response>>> = {}
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+      if (url.startsWith("/api/scan/search-retailer?")) {
+        const q = new URL(url, "http://test").searchParams.get("q") ?? ""
+        const gate = deferred<Response>()
+        gates[q] = gate
+        return gate.promise
+      }
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+
+  await typeQuery(view, "alpha query")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  await typeQuery(view, "beta query")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  gates["beta query"].resolve(
+    json({
+      catalog: [],
+      retailer: [retailerRow({ gtin: "1", name: "Beta Hit" })],
+      retailerOutcome: "ok",
+    }),
+  )
+  await view.settle()
+  gates["alpha query"].resolve(
+    json({
+      catalog: [],
+      retailer: [retailerRow({ gtin: "2", name: "Alpha Hit" })],
+      retailerOutcome: "ok",
+    }),
+  )
+  await view.settle()
+
+  const text = textContent(view.tree)
+  assert.ok(text.includes("Beta Hit"))
+  assert.equal(text.includes("Alpha Hit"), false)
+})
+
+test("ScanSearchSheet: submitting during a pending debounce issues exactly one catalog request", async () => {
+  const catalogCalls: string[] = []
+  const view = await mountSearchSheet(async (url) => {
+    if (url.startsWith("/api/scan/search?")) {
+      catalogCalls.push(url)
+      return json({ results: [] })
+    }
+    return json({ error: "unexpected_call" }, 500)
+  })
+
+  await typeQuery(view, "ab")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  assert.equal(catalogCalls.length, 1)
+})
+
+test("ScanSearchSheet: dm lane enabled shows the quiet pre-submit invitation, not the terminal empty state", async () => {
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+
+  await typeQuery(view, "kerastase")
+  await delay(300)
+  await view.settle()
+
+  assert.equal(textContent(view.tree).includes("Drück Suchen für mehr Treffer."), true)
+  assert.equal(textContent(view.tree).includes("Dazu haben wir nichts gefunden."), false)
+})
+
+test("ScanSearchSheet: dm lane disabled keeps the terminal empty state even before a submit", async () => {
+  const view = await mountSearchSheet(async (url) => {
+    if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+    return json({ error: "unexpected_call" }, 500)
+  })
+
+  await typeQuery(view, "kerastase")
+  await delay(300)
+  await view.settle()
+
+  assert.equal(textContent(view.tree).includes("Dazu haben wir nichts gefunden."), true)
+})
+
+test("ScanSearchSheet: the post-submit empty state renders exactly one CTA and never leaks the retailer name", async () => {
+  const started: number[] = []
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({ catalog: [], retailer: [], retailerOutcome: "ok" })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true, onStartResearchIntake: () => started.push(1) },
+  )
+
+  await typeQuery(view, "kerastase ciment")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  const ctas = buttonLabels(view.tree).filter((label) => label === "Für dich prüfen lassen")
+  assert.equal(ctas.length, 1)
+  assert.equal(textContent(view.tree).includes("Dazu haben wir nichts gefunden."), true)
+  assert.equal(/dm/.test(textContent(view.tree)), false)
+
+  const cta = findAll(
+    view.tree,
+    (element) => element.type === "button" && textContent(element) === "Für dich prüfen lassen",
+  )[0]
+  cta.props.onClick()
+  assert.deepEqual(started, [1])
+})
+
+test("ScanSearchSheet: without onStartResearchIntake the post-submit empty state renders no CTA at all", async () => {
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (url.startsWith("/api/scan/search?")) return json({ results: [] })
+      if (url.startsWith("/api/scan/search-retailer?"))
+        return json({ catalog: [], retailer: [], retailerOutcome: "ok" })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+
+  await typeQuery(view, "kerastase ciment")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  assert.equal(textContent(view.tree).includes("Dazu haben wir nichts gefunden."), true)
+  assert.equal(buttonLabels(view.tree).includes("Für dich prüfen lassen"), false)
 })
 
 // --- T9: the free tier's verdict states, end to end through the flow ---------

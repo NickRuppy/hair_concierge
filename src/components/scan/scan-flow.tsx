@@ -165,6 +165,7 @@ export function ScanFlow({
   sessionRecordStorage,
   fatigueStorage,
   merklisteEnabled = false,
+  retailerSearchEnabled = false,
   navigate = (href: string) => {
     window.location.href = href
   },
@@ -182,6 +183,14 @@ export function ScanFlow({
    * (Storybook, this file's own test harness) stays on today's plain bookmark, unchanged.
    */
   merklisteEnabled?: boolean
+  /**
+   * T4: gates the search sheet's parallel dm name-search lane. Server-derived
+   * (`isRetailerSearchEnabled()` from `src/lib/scan/enrichment/flag.ts`, not Edge/browser-
+   * safe), threaded down the same way as `merklisteEnabled` — `/scan/page.tsx` computes it
+   * and hands it through `ScanPageClient`. Defaults to `false` so every existing caller
+   * (labs, tests) keeps zero retailer-lane fetches, byte-identical to before T4.
+   */
+  retailerSearchEnabled?: boolean
   /**
    * DI seam for the premium bookmark's deep-link (`router.push`, supplied by
    * `ScanPageClient`) — not a bare `useRouter()` call in this component, so this file's
@@ -1103,9 +1112,10 @@ export function ScanFlow({
           )
         }
         onSelectProduct={openFromProductId}
-        onSubmitIdentifier={(identifier) => {
+        retailerSearchEnabled={retailerSearchEnabled}
+        onSelectRetailerResult={(gtin) => {
           dispatch({ type: "auxiliary_closed" })
-          void resolve({ identifier })
+          void resolve({ identifier: { type: "ean", value: gtin } })
         }}
       />
 

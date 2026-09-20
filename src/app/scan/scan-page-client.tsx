@@ -113,11 +113,14 @@ export function ScanWelcomeHint() {
 export function ScanPageClient({
   tier,
   merklisteEnabled,
+  retailerSearchEnabled,
   bindSkippedNotice = false,
   welcomeHint = false,
 }: {
   tier: EntitlementTier
   merklisteEnabled: boolean
+  /** T4: the search sheet's parallel dm name-search lane — see `ScanFlow`'s prop doc. */
+  retailerSearchEnabled: boolean
   bindSkippedNotice?: boolean
   /** Set by `?welcome=scan`, the hand-over from /plan-bereit for a scan_v1 buyer. */
   welcomeHint?: boolean
@@ -139,6 +142,7 @@ export function ScanPageClient({
         analytics={scanAnalytics}
         tier={tier}
         merklisteEnabled={merklisteEnabled}
+        retailerSearchEnabled={retailerSearchEnabled}
         navigate={router.push}
       />
     </>
