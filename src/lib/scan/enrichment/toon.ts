@@ -75,10 +75,14 @@ function parseSearchToonTable(text: string): Array<Record<string, string>> {
     throw new ToonParseError()
   }
   const rowCount = Number(header[1])
-  // Unlike getProductDetails, a search table may be followed by trailing footer text
-  // (a blank line plus a usage tip) that is not part of the declared row data.
   if (lines.length < rowCount) throw new ToonParseError()
-  return lines.slice(0, rowCount).map((line) => {
+  const dataLines = lines.slice(0, rowCount)
+  // Unlike getProductDetails, a search table may be followed by trailing footer text (a
+  // blank line plus a usage tip) that is not part of the declared row data. That footer never
+  // carries the two-space row indent, so any trailing line that does is an extra, undeclared
+  // data row rather than footer noise — fail closed instead of silently truncating it away.
+  if (lines.slice(rowCount).some((line) => line.startsWith("  "))) throw new ToonParseError()
+  return dataLines.map((line) => {
     const cells = splitToonRow(line.replace(/^ {2}/, ""), ",")
     if (cells.length !== keys.length) throw new ToonParseError()
     const values = decodeToonCells(cells)

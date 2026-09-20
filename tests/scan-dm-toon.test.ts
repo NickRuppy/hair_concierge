@@ -99,3 +99,14 @@ test("malformed search TOON (bad header, width, quoting or short row count) fail
   ])
     assert.throws(() => parseSearchToonTables(JSON.stringify([table])), ToonParseError)
 })
+test("declaring fewer rows than the table actually contains fails closed instead of truncating", () => {
+  // The extra row is well-formed (same cell count as the header), so a cell-count mismatch
+  // alone would not catch it; only the shared two-space row indent distinguishes it from
+  // genuine footer text.
+  const table = "products[1]{gtin,title}:\n  1,a\n  2,b"
+  assert.throws(() => parseSearchToonTables(JSON.stringify([table])), ToonParseError)
+})
+test("a genuine trailing footer (blank line + unindented tip) does not trip the extra-row check", () => {
+  const table = "products[1]{gtin,title}:\n  1,a\n\n💡 tip text, with a comma"
+  assert.deepEqual(parseSearchToonTables(JSON.stringify([table])), [{ gtin: "1", title: "a" }])
+})
