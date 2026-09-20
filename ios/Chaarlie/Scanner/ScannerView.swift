@@ -3,8 +3,11 @@ import SwiftUI
 struct ScannerView: View {
     @Bindable var model: AppModel
     @State private var camera = CameraController()
+    @State private var focusFeedback: FocusFeedback?
+    @State private var focusSettled = false
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.openURL) private var openURL
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private var fixtureBackdrop: Color? {
         #if DEBUG
         if DesignReviewScenario.current == .scan { return Color(hex: 0x17141b) }
@@ -20,7 +23,7 @@ struct ScannerView: View {
         ZStack {
             Color(hex: 0x17141b).ignoresSafeArea()
             if let fixtureBackdrop { fixtureBackdrop.ignoresSafeArea() }
-            if camera.availability == .available { CameraPreview(session: camera.worker.session).ignoresSafeArea().accessibilityHidden(true) }
+            if camera.availability == .available { CameraPreview(controller: camera).ignoresSafeArea().accessibilityHidden(true) }
             VStack {
                 LinearGradient(colors: [.black.opacity(0.6), .black.opacity(0.35), .clear], startPoint: .top, endPoint: .bottom)
                     .frame(height: 220)
@@ -35,7 +38,19 @@ struct ScannerView: View {
                 }.scrollBounceBehavior(.basedOnSize).scrollClipDisabled()
                     .accessibilityIdentifier("scanner.content")
             }
+            if let feedback = focusFeedback {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .strokeBorder(.white.opacity(0.92), lineWidth: 2)
+                    .frame(width: 54, height: 54)
+                    .scaleEffect(focusSettled ? 1 : 1.18)
+                    .opacity(focusSettled ? 1 : 0.5)
+                    .position(feedback.point)
+                    .shadow(color: .black.opacity(0.28), radius: 5)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+            }
         }
+        .coordinateSpace(name: "scanner.camera")
         .task { if fixtureBackdrop == nil { await camera.permission(); updateCamera() } }
         .onChange(of: cameraActive) { _, _ in updateCamera() }
         .onChange(of: detectionActive) { _, _ in updateCamera() }
@@ -48,24 +63,34 @@ struct ScannerView: View {
     }
     private var scanResolving: Bool { model.scanBusy && model.resolveOrigin == .scan }
     private var scannerContent: some View {
-        VStack(spacing: 24) {
-            Text("Produkt scannen").chaarlieHeading(28).padding(.top, 16)
-                .shadow(color: .black.opacity(0.35), radius: 8, y: 1)
-                .zIndex(1) // stays above the viewfinder's dimmed surround
-            Spacer()
+        VStack(spacing: 20) {
             if camera.availability == .available || fixtureBackdrop != nil {
-                ScanReticle(resolving: scanResolving)
-                    .frame(maxWidth: 260).frame(height: 170).accessibilityHidden(true)
+                HStack {
+                    if camera.isTorchAvailable || fixtureBackdrop != nil {
+                        torchButton
+                    }
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity)
+                Spacer(minLength: 28)
+                ScanReticle(resolving: scanResolving) { feedbackPoint, windowPoint in
+                    focus(feedbackPoint: feedbackPoint, windowPoint: windowPoint)
+                }
+                    .frame(maxWidth: 380)
+                    .frame(height: 230)
+                    .padding(.horizontal, 8)
+                    .accessibilityHidden(true)
                 Group {
                     if scanResolving { BusyLabel(text: "Produkt wird geprüft …", onDark: true) }
                     else {
-                        Label("Halte den Barcode in den Rahmen.", systemImage: "barcode")
+                        Text("Halte den Barcode in den Rahmen.")
                             .chaarlieSystemFont(14, weight: .medium).multilineTextAlignment(.center)
                             .padding(.horizontal, 16).padding(.vertical, 11)
                             .background { Capsule().fill(.ultraThinMaterial).environment(\.colorScheme, .dark) }
                     }
                 }.chaarlieTransition(.opacity.combined(with: .scale(scale: 0.94)))
             } else {
+                Spacer()
                 Image(systemName: "barcode.viewfinder").font(.system(size: 38, weight: .light))
                     .frame(width: 96, height: 96)
                     .background { Circle().fill(.ultraThinMaterial).environment(\.colorScheme, .dark) }
@@ -109,19 +134,59 @@ struct ScannerView: View {
             Task { await target.resolve(.barcode(barcode)) }
         }
     }
+    private var torchButton: some View {
+        Button { camera.toggleTorch() } label: {
+            Image(systemName: camera.isTorchEnabled ? "flashlight.on.fill" : "flashlight.off.fill")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(camera.isTorchEnabled ? Color(hex: 0x241d27) : .white)
+                .frame(width: 48, height: 48)
+                .background {
+                    Circle().fill(camera.isTorchEnabled ? .white : .black.opacity(0.56))
+                        .background(.ultraThinMaterial, in: Circle())
+                        .environment(\.colorScheme, .dark)
+                }
+                .overlay(Circle().strokeBorder(.white.opacity(camera.isTorchEnabled ? 0.35 : 0.28)))
+        }
+        .buttonStyle(ChaarliePressStyle())
+        .accessibilityLabel(camera.isTorchEnabled ? "Taschenlampe ausschalten" : "Taschenlampe einschalten")
+        .accessibilityIdentifier("scanner.torch")
+        .sensoryFeedback(.selection, trigger: camera.isTorchEnabled)
+    }
+    private func focus(feedbackPoint: CGPoint, windowPoint: CGPoint) {
+        guard camera.focus(at: windowPoint) else { return }
+        let feedback = FocusFeedback(point: feedbackPoint)
+        focusFeedback = feedback
+        focusSettled = false
+        if reduceMotion {
+            focusSettled = true
+        } else {
+            withAnimation(.easeOut(duration: 0.16)) { focusSettled = true }
+        }
+        Task {
+            try? await Task.sleep(for: .milliseconds(850))
+            guard focusFeedback?.id == feedback.id else { return }
+            withAnimation(reduceMotion ? nil : .easeOut(duration: 0.18)) { focusFeedback = nil }
+        }
+    }
+}
+
+private struct FocusFeedback: Equatable {
+    let id = UUID()
+    let point: CGPoint
 }
 /// Viewfinder: dimmed surround, corner brackets and a slow sweep while waiting for a barcode.
 /// Once a code is read the brackets tighten and the sweep stops. Decorative only.
 private struct ScanReticle: View {
     let resolving: Bool
+    let focus: (CGPoint, CGPoint) -> Void
     @State private var sweeping = false
     @State private var breathing = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var body: some View {
         GeometryReader { geometry in
+            let feedbackOrigin = geometry.frame(in: .named("scanner.camera")).origin
+            let windowOrigin = geometry.frame(in: .global).origin
             ZStack {
-                ReticleSurround(radius: 20).fill(.black.opacity(0.42), style: FillStyle(eoFill: true)).allowsHitTesting(false)
-                RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(.white.opacity(0.22), lineWidth: 1)
                 if !resolving && !reduceMotion {
                     Capsule().fill(LinearGradient(colors: [.clear, .white.opacity(0.95), .clear], startPoint: .leading, endPoint: .trailing))
                         .frame(height: 2).padding(.horizontal, 18)
@@ -134,6 +199,21 @@ private struct ScanReticle: View {
                     .scaleEffect(reduceMotion ? 1 : resolving ? 0.95 : breathing ? 1.025 : 1)
                     .shadow(color: .black.opacity(0.25), radius: 4)
             }
+            .contentShape(Rectangle())
+            .simultaneousGesture(
+                SpatialTapGesture().onEnded { value in
+                    guard !resolving else { return }
+                    let feedbackPoint = CGPoint(
+                        x: feedbackOrigin.x + value.location.x,
+                        y: feedbackOrigin.y + value.location.y
+                    )
+                    let windowPoint = CGPoint(
+                        x: windowOrigin.x + value.location.x,
+                        y: windowOrigin.y + value.location.y
+                    )
+                    focus(feedbackPoint, windowPoint)
+                }
+            )
         }
         .animation(ChaarlieTheme.Motion.state, value: resolving)
         .onAppear {
@@ -141,17 +221,6 @@ private struct ScanReticle: View {
             withAnimation(.easeInOut(duration: 2.1).repeatForever(autoreverses: true)) { sweeping = true }
             withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) { breathing = true }
         }
-    }
-}
-
-/// Everything around the frame, far past the screen edges, with the frame cut out.
-private struct ReticleSurround: Shape {
-    let radius: CGFloat
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.addRect(rect.insetBy(dx: -1500, dy: -1500))
-        path.addRoundedRect(in: rect, cornerSize: CGSize(width: radius, height: radius), style: .continuous)
-        return path
     }
 }
 
