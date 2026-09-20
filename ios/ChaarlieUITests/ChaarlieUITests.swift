@@ -460,6 +460,13 @@ final class ChaarlieUITests: XCTestCase {
             screenshot("tab-contrast-\(scenario)", app: app)
         }
     }
+    func testScannerFixtureShowsReachableTorchControl() {
+        let app = designApp("scan")
+        let torch = app.buttons["scanner.torch"]
+        XCTAssertTrue(torch.waitForExistence(timeout: 5))
+        XCTAssertGreaterThanOrEqual(torch.frame.width, 44)
+        XCTAssertGreaterThanOrEqual(torch.frame.height, 44)
+    }
     func testSearchTabRetainsQueryAndReturnsFromAssessment() {
         let app = designApp("search-results")
         let field = app.textFields["search.query"]
