@@ -79,6 +79,7 @@ test("PayPal confirmation notices retain and validate the winning authorization 
 })
 test("contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction", () => {
   const message = buildTrialRequiredNoticeMessage("contract_confirmation", snapshot)
+  assert.equal(message.subject, "Dein Chaarlie-Test ist gestartet")
   assert.match(message.receipt_text, /69,99/)
   assert.match(message.receipt_text, /99,99/)
   assert.match(message.receipt_text, /21\. September 2026 um 12:00:00 MESZ/)
