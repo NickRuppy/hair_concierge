@@ -166,6 +166,14 @@ export type DiscoveryRefinedStep = {
   step: DiscoveryIdealStep
   outcome: DiscoveryStepOutcome
   item: DiscoveryIntakeItem | null
+  /**
+   * The decided swap target's id, independent of whether its catalog row could be read.
+   * Carried separately from `swapProduct` because `sourceHash` must move when the decision
+   * points at a different product even while BOTH rows are missing — otherwise
+   * swap→A and swap→B would fingerprint identically and the PDF's drift banner would stay
+   * silent on a real change.
+   */
+  swapProductId: string | null
   swapProduct: ScanCatalogPresentationRow | null
 }
 
@@ -204,13 +212,13 @@ export function composeDiscoveryRefinedRoutine(input: {
       : item
         ? "undecided"
         : "ideal"
+    const swapProductId = decision?.swapProductId ?? null
     return {
       step,
       outcome,
       item,
-      swapProduct: decision?.swapProductId
-        ? (swapProductsById.get(decision.swapProductId) ?? null)
-        : null,
+      swapProductId,
+      swapProduct: swapProductId ? (swapProductsById.get(swapProductId) ?? null) : null,
     }
   })
 

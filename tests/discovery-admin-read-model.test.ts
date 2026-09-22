@@ -3,10 +3,29 @@ import test from "node:test"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import { seedMobileProfileFixtures } from "../scripts/mobile/profile-fixture"
 import { loadDiscoveryIdealRoutine } from "../src/lib/discovery/load-ideal-routine"
-import { loadParticipantScanVerdicts } from "../src/lib/discovery/load-participant-verdicts"
+import {
+  loadParticipantScanVerdicts,
+  DISCOVERY_SCAN_VERDICT_DEPS,
+  DISCOVERY_VERDICT_DEPS,
+} from "../src/lib/discovery/load-participant-verdicts"
 import type { DiscoveryIntakeItem } from "../src/lib/discovery/refined-routine"
+import {
+  computeStage1ProductExamplePreviews,
+  stage1PreviewedRoleDecisionKeys,
+} from "../src/lib/personal-plan/product-previews"
+import {
+  loadScanProductFacts,
+  loadStage3RecommendationCandidatesByRole,
+} from "../src/lib/personal-plan/products/authority/catalog-facts"
+import {
+  isProductSearchQuarantined,
+  loadQuarantinedProductIdsAmong,
+} from "../src/lib/scan/catalog-eligibility"
 import type { ScanEvaluationContext } from "../src/lib/scan/profile-context"
+import { buildScanVerdict } from "../src/lib/scan/resolve-verdict"
+import type { ScannerSourceRead } from "../src/lib/scan/scanner-context"
 import type { ScanInCatalogVerdictPayload } from "../src/lib/scan/types"
 
 const userId = "11111111-1111-4111-8111-111111111111"
@@ -20,15 +39,15 @@ const alternativeId = "44444444-4444-4444-8444-444444444444"
  * ONE accepted write is `rpc("scanner_context_read_source")`, whose idempotent source
  * registration is documented in migration 20260916175239.
  */
+const MUTATING_VERBS = new Set(["insert", "upsert", "update", "delete", "rpc"])
+
 function recordingClient(options: {
   rpc?: (name: string, args: unknown) => unknown
-  select?: (table: string) => { data: unknown; error: unknown }
+  select?: (table: string) => { data: unknown; error: unknown; count?: number }
 }) {
   const rpcCalls: string[] = []
   const tables: string[] = []
-  const forbid = (verb: string) => () => {
-    throw new Error(`discovery read model must not call ${verb}`)
-  }
+  const mutations: string[] = []
   const client = {
     rpc: (name: string, args: unknown) => {
       rpcCalls.push(name)
@@ -37,24 +56,36 @@ function recordingClient(options: {
     },
     from: (table: string) => {
       tables.push(table)
-      const result = options.select?.(table) ?? { data: null, error: null }
-      const builder: Record<string, unknown> = {
-        select: () => builder,
-        eq: () => builder,
-        in: () => builder,
-        order: () => builder,
-        maybeSingle: () => Promise.resolve(result),
-        single: () => Promise.resolve(result),
-        then: (resolve: (value: unknown) => unknown) => Promise.resolve(result).then(resolve),
-        insert: forbid("insert"),
-        upsert: forbid("upsert"),
-        update: forbid("update"),
-        delete: forbid("delete"),
-      }
+      const result = options.select?.(table) ?? { data: null, error: null, count: 0 }
+      // Any chainable filter/ordering verb returns the builder; the builder itself is
+      // thenable, so `await q`, `await q.maybeSingle()` and `await q.range(...)` all
+      // resolve to `result`. Every mutating verb is recorded AND throws, so a write
+      // anywhere on the path fails the test instead of passing unnoticed.
+      const builder: unknown = new Proxy(
+        {},
+        {
+          get(_target, property) {
+            if (typeof property !== "string") return undefined
+            if (property === "then") {
+              return (
+                resolve: (value: unknown) => unknown,
+                reject?: (reason: unknown) => unknown,
+              ) => Promise.resolve(result).then(resolve, reject)
+            }
+            if (MUTATING_VERBS.has(property)) {
+              return () => {
+                mutations.push(`${table}.${property}`)
+                throw new Error(`discovery read model must not call ${property} on ${table}`)
+              }
+            }
+            return () => builder
+          },
+        },
+      )
       return builder
     },
   }
-  return { client: client as unknown as SupabaseClient, rpcCalls, tables }
+  return { client: client as unknown as SupabaseClient, rpcCalls, tables, mutations }
 }
 
 const decision = {
@@ -176,6 +207,138 @@ test("the ideal-routine loader touches exactly the documented source RPC — no 
   assert.deepEqual(rpcCalls, ["scanner_context_read_source"])
 })
 
+/**
+ * A real `ScannerSourceRead`, built by the same seeding helper `scan-profile-context.test.ts`
+ * uses — only the RPC boundary is faked. Without it the read-only proof never reaches the
+ * branch that actually queries the catalog.
+ */
+async function usableScannerSource(): Promise<ScannerSourceRead> {
+  const rows: Record<string, Record<string, unknown>[]> = {}
+  const seedClient = {
+    supabaseUrl: "http://127.0.0.1:54321",
+    from(table: string) {
+      return {
+        async insert(data: Record<string, unknown> | Record<string, unknown>[]) {
+          ;(rows[table] ??= []).push(...(Array.isArray(data) ? data : [data]))
+          return { error: null }
+        },
+        update(data: Record<string, unknown>) {
+          return {
+            async eq(_column: string, id: string) {
+              Object.assign(rows[table].find((row) => row.id === id)!, data)
+              return { error: null }
+            },
+          }
+        },
+      }
+    },
+  }
+  await seedMobileProfileFixtures(seedClient as never, {
+    free: "free",
+    detailed: "owner",
+    incomplete: "incomplete",
+  })
+  return {
+    userId: "owner",
+    sourceRevision: "3",
+    profileRevision: "1",
+    profile: rows.hair_profiles[1],
+    plan: rows.personal_plans[0],
+    initial: rows.personal_plan_need_versions[0],
+    refined: rows.personal_plan_need_versions[1],
+    refinements: rows.personal_plan_refinement_drafts,
+    leads: [],
+  } as unknown as ScannerSourceRead
+}
+
+/** Catalog reads the Stage-1 preview computation legitimately performs. */
+const CATALOG_READ_TABLES = new Set([
+  "products",
+  "product_relationships",
+  "product_application_protocols",
+  "application_guidance_protocols",
+])
+
+test("the ready path builds steps from the prepared context and still writes nothing", async () => {
+  const source = await usableScannerSource()
+  let rpcArgs: unknown = null
+  const { client, rpcCalls, tables, mutations } = recordingClient({
+    rpc: (name, args) => {
+      rpcArgs = args
+      assert.equal(name, "scanner_context_read_source")
+      return { data: source, error: null }
+    },
+    // Every catalog read comes back empty: the previews degrade to fallbacks, the ideal
+    // steps are still built, and the whole composition runs.
+    select: () => ({ data: [], error: null, count: 0 }),
+  })
+
+  const result = await loadDiscoveryIdealRoutine(client, "owner", intakeId)
+
+  assert.equal(result.status, "ready")
+  if (result.status !== "ready") throw new Error("expected a ready routine")
+
+  // The ONE accepted write is the source-registration RPC — nothing else, and no publish.
+  assert.deepEqual(rpcCalls, ["scanner_context_read_source"])
+  assert.deepEqual(rpcArgs, { p_user_id: "owner" })
+  assert.deepEqual(mutations, [], "no insert/upsert/update/delete anywhere on the path")
+  assert.ok(tables.length > 0, "the candidate loader must actually have queried")
+  const unexpected = [...new Set(tables)].filter((table) => !CATALOG_READ_TABLES.has(table))
+  assert.deepEqual(unexpected, [], "only catalog tables may be read")
+
+  // The prepared context is narrowed to ScanEvaluationContext and is what the verdict
+  // loader consumes — no second, publishing load.
+  assert.deepEqual(Object.keys(result.context).sort(), [
+    "refinedInputHash",
+    "refinedVersionId",
+    "snapshot",
+    "snapshotSource",
+  ])
+  assert.equal(result.context.snapshotSource, "refined")
+  assert.equal(result.context.refinedVersionId, source.refined!.id)
+  assert.match(result.context.refinedInputHash, /^[a-f0-9]{64}$/)
+
+  // Steps mirror exactly what Stage 1 would preview for this very snapshot.
+  assert.ok(result.steps.length > 0, "the seeded profile must produce previewed roles")
+  assert.deepEqual(
+    new Set(result.steps.map((step) => step.decisionKey)),
+    stage1PreviewedRoleDecisionKeys(result.context.snapshot),
+  )
+  for (const step of result.steps) {
+    assert.equal(step.preview?.kind, "fallback", "an empty catalog yields fallback previews")
+    assert.ok(step.categoryLabel.length > 0)
+    assert.ok(step.frequencyLabel.length > 0)
+  }
+})
+
+test("the preview computation is fed the intake-scoped id and the prepared context's version", async () => {
+  const source = await usableScannerSource()
+  const { client } = recordingClient({
+    rpc: () => ({ data: source, error: null }),
+    select: () => ({ data: [], error: null, count: 0 }),
+  })
+
+  // Same inputs, read back off the module's own composition: the personalPlanId is
+  // `discovery:<intakeId>` and the sourceNeedVersionId is the prepared context's
+  // refinedVersionId — the two values that keep this path off `stage1-service`.
+  const result = await loadDiscoveryIdealRoutine(client, "owner", intakeId)
+  assert.equal(result.status, "ready")
+  if (result.status !== "ready") throw new Error("expected a ready routine")
+
+  const previews = await computeStage1ProductExamplePreviews({
+    personalPlanId: `discovery:${intakeId}`,
+    sourceNeedVersionId: result.context.refinedVersionId,
+    snapshot: result.context.snapshot,
+    loadCandidates: async () => [],
+  })
+  assert.equal(previews.personalPlanId, `discovery:${intakeId}`)
+  assert.equal(previews.sourceNeedVersionId, source.refined!.id)
+  assert.deepEqual(
+    result.steps.map((step) => step.decisionKey),
+    previews.previews.map((preview) => preview.decisionKey),
+  )
+})
+
 test("a profile without a usable scanner source reports no_usable_source, not an error", async () => {
   const { client } = recordingClient({
     rpc: () => ({
@@ -252,7 +415,10 @@ test("participant verdicts map the per-item failure modes instead of throwing", 
       loadActiveProductById: async (_c: SupabaseClient, id: string) =>
         id.endsWith("1")
           ? null
-          : { id, category: id.endsWith("3") ? "conditioner" : id.endsWith("4") ? "mask" : "shampoo" },
+          : {
+              id,
+              category: id.endsWith("3") ? "conditioner" : id.endsWith("4") ? "mask" : "shampoo",
+            },
       isProductSearchQuarantined: async (_c: SupabaseClient, id: string) => id.endsWith("2"),
       loadScanVerdict: async () => {
         throw new Error("verdict exploded")
@@ -318,5 +484,64 @@ test("participant verdicts: a scanned product missing from the catalog read repo
   assert.deepEqual(
     verdicts.map((entry) => [entry.itemId, entry.status]),
     [["item-1", "unavailable"]],
+  )
+})
+
+/**
+ * Every verdict test above injects stubs, so `DISCOVERY_VERDICT_DEPS` — the wiring
+ * production actually runs — is never executed by them. Pin its members' identity to the
+ * same functions `/api/scan/resolve` wires (`resolve/route.ts:651-655`), so a silent
+ * rewire to a different facts loader, candidate loader or verdict builder fails here
+ * instead of quietly giving the cockpit a different engine than the participant's scanner.
+ */
+test("the production verdict wiring is the resolve route's own engine", () => {
+  assert.equal(DISCOVERY_SCAN_VERDICT_DEPS.loadScanProductFacts, loadScanProductFacts)
+  assert.equal(
+    DISCOVERY_SCAN_VERDICT_DEPS.loadRecommendationCandidates,
+    loadStage3RecommendationCandidatesByRole,
+  )
+  assert.equal(DISCOVERY_SCAN_VERDICT_DEPS.buildScanVerdict, buildScanVerdict)
+  assert.deepEqual(Object.keys(DISCOVERY_SCAN_VERDICT_DEPS).sort(), [
+    "buildScanVerdict",
+    "loadRecommendationCandidates",
+    "loadScanProductFacts",
+  ])
+
+  assert.equal(DISCOVERY_VERDICT_DEPS.isProductSearchQuarantined, isProductSearchQuarantined)
+  assert.equal(
+    DISCOVERY_VERDICT_DEPS.loadQuarantinedProductIdsAmong,
+    loadQuarantinedProductIdsAmong,
+  )
+  assert.equal(typeof DISCOVERY_VERDICT_DEPS.loadActiveProductById, "function")
+  assert.equal(typeof DISCOVERY_VERDICT_DEPS.loadPresentationRows, "function")
+  assert.deepEqual(Object.keys(DISCOVERY_VERDICT_DEPS).sort(), [
+    "isProductSearchQuarantined",
+    "loadActiveProductById",
+    "loadPresentationRows",
+    "loadQuarantinedProductIdsAmong",
+    "loadScanVerdict",
+  ])
+})
+
+test("the production loaders carry the discovery error codes", async () => {
+  const failing = {
+    from: () => {
+      const builder: Record<string, unknown> = {
+        select: () => builder,
+        eq: () => builder,
+        in: () => Promise.resolve({ data: null, error: new Error("db down") }),
+        maybeSingle: () => Promise.resolve({ data: null, error: new Error("db down") }),
+      }
+      return builder
+    },
+  } as never
+
+  await assert.rejects(
+    () => DISCOVERY_VERDICT_DEPS.loadActiveProductById(failing, productId),
+    /discovery_product_lookup_failed/,
+  )
+  await assert.rejects(
+    () => DISCOVERY_VERDICT_DEPS.loadPresentationRows(failing, [productId]),
+    /discovery_presentation_lookup_failed/,
   )
 })

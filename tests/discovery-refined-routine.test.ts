@@ -90,10 +90,7 @@ function recommendationPreview(
   }
 }
 
-function fallbackPreview(
-  category: string,
-  role: PlanProductRole,
-): Stage1ProductExampleRolePreview {
+function fallbackPreview(category: string, role: PlanProductRole): Stage1ProductExampleRolePreview {
   return {
     kind: "fallback",
     category: category as never,
@@ -126,7 +123,10 @@ const OIL_ROLES: PlanProductRole[] = [
 
 function oilSteps() {
   const oil = decision({ category: "oil", roles: OIL_ROLES })
-  return buildDiscoveryIdealSteps(snapshotOf([oil]), OIL_ROLES.map((role) => fallbackPreview("oil", role)))
+  return buildDiscoveryIdealSteps(
+    snapshotOf([oil]),
+    OIL_ROLES.map((role) => fallbackPreview("oil", role)),
+  )
 }
 
 test("ideal steps mirror exactly the roles Stage 1 previews — the drift net against stage1PreviewedRoleDecisionKeys", () => {
@@ -300,7 +300,7 @@ test("surplus items past the category's last step are unassigned, not silently d
   )
 })
 
-test("„benutze ich nicht\" is an explicit answer, not an unassigned product", () => {
+test('„benutze ich nicht" is an explicit answer, not an unassigned product', () => {
   const steps = oilSteps()
   const reduction = reduceIntakeItemsToSteps(steps, [
     item({ id: "item-none", source: "none" }),
@@ -381,7 +381,12 @@ test("composed outcomes: kept, swapped, undecided for an owned product, ideal fo
   assert.equal(routine.steps[0]!.step.preview?.kind, "recommendation")
   assert.equal(routine.steps[1]!.step.preview?.kind, "fallback")
 
-  const undecided = composeDiscoveryRefinedRoutine({ steps, items, decisions: [], swapProducts: [] })
+  const undecided = composeDiscoveryRefinedRoutine({
+    steps,
+    items,
+    decisions: [],
+    swapProducts: [],
+  })
   assert.deepEqual(
     undecided.steps.map((step) => step.outcome),
     ["undecided", "undecided", "ideal"],
@@ -482,6 +487,27 @@ test("sourceHash is order-independent and changes when the routine's content cha
     swapProducts,
   })
   assert.notEqual(base.sourceHash, driftedDecision.sourceHash)
+
+  // The swap TARGET must move the hash even when neither catalog row could be read —
+  // otherwise swap→A and swap→B fingerprint identically and the PDF's drift banner stays
+  // silent on a real change.
+  const swapToA = composeDiscoveryRefinedRoutine({
+    steps,
+    items,
+    decisions: [callDecision(steps[0]!.decisionKey, { decision: "swap", swapProductId: "swap-a" })],
+    swapProducts: [],
+  })
+  const swapToB = composeDiscoveryRefinedRoutine({
+    steps,
+    items,
+    decisions: [callDecision(steps[0]!.decisionKey, { decision: "swap", swapProductId: "swap-b" })],
+    swapProducts: [],
+  })
+  assert.equal(swapToA.steps[0]!.swapProduct, null)
+  assert.equal(swapToB.steps[0]!.swapProduct, null)
+  assert.equal(swapToA.steps[0]!.swapProductId, "swap-a")
+  assert.equal(swapToB.steps[0]!.swapProductId, "swap-b")
+  assert.notEqual(swapToA.sourceHash, swapToB.sourceHash)
 
   const driftedCatalog = composeDiscoveryRefinedRoutine({
     steps,

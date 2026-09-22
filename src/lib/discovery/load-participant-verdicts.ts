@@ -9,7 +9,7 @@ import {
   isProductSearchQuarantined,
   loadQuarantinedProductIdsAmong,
 } from "@/lib/scan/catalog-eligibility"
-import { loadScanVerdictForProduct } from "@/lib/scan/load-scan-verdict"
+import { loadScanVerdictForProduct, type LoadScanVerdictDeps } from "@/lib/scan/load-scan-verdict"
 import {
   createActiveProductByIdLoader,
   createPresentationRowLoader,
@@ -86,6 +86,19 @@ export type DiscoveryVerdictDeps = {
   ) => Promise<ScanVerdictPayload>
 }
 
+/**
+ * The facts/candidate/verdict trio `loadScanVerdictForProduct` runs on — exported so a test
+ * can pin each member's identity to the same functions `/api/scan/resolve` wires
+ * (`resolve/route.ts:651-655`). Without that pin, a silent rewire here would give the
+ * cockpit a different engine than the participant's own scanner, and every verdict test
+ * injects stubs, so nothing else would notice.
+ */
+export const DISCOVERY_SCAN_VERDICT_DEPS: LoadScanVerdictDeps = {
+  loadScanProductFacts,
+  loadRecommendationCandidates: loadStage3RecommendationCandidatesByRole,
+  buildScanVerdict,
+}
+
 export const DISCOVERY_VERDICT_DEPS: DiscoveryVerdictDeps = {
   loadActiveProductById: createActiveProductByIdLoader("discovery_product_lookup_failed"),
   loadPresentationRows: createPresentationRowLoader("discovery_presentation_lookup_failed"),
@@ -94,11 +107,7 @@ export const DISCOVERY_VERDICT_DEPS: DiscoveryVerdictDeps = {
   loadScanVerdict: (client, category, productId, decision, context) =>
     loadScanVerdictForProduct(
       client,
-      {
-        loadScanProductFacts,
-        loadRecommendationCandidates: loadStage3RecommendationCandidatesByRole,
-        buildScanVerdict,
-      },
+      DISCOVERY_SCAN_VERDICT_DEPS,
       category,
       productId,
       decision,
