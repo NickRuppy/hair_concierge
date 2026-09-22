@@ -4,6 +4,7 @@ import { useState } from "react"
 
 import { ScanVerdictSections } from "@/components/scan/scan-verdict-sections"
 import type { DiscoveryCockpitStepView } from "@/lib/discovery/cockpit"
+import type { DiscoveryVerdictStatus } from "@/lib/discovery/load-participant-verdicts"
 
 import { formatDiscoveryTimestamp } from "./format"
 
@@ -34,7 +35,8 @@ const GAP_TITLE = "Lücke in der Idealroutine"
 const GAP_BODY = "Sie benutzt für diesen Schritt aktuell nichts."
 const NO_PRODUCT = "Kein Produkt angegeben"
 const UNDECIDED_HINT = "Noch nicht entschieden."
-const FROZEN_HINT = "Finalisiert — zum Ändern zuerst die Finalisierung aufheben."
+const FROZEN_HINT =
+  "Diese Beratung ist inzwischen finalisiert. Seite neu laden, dann die Finalisierung aufheben."
 const WRITE_ERROR = "Nicht gespeichert. Bitte noch einmal."
 const NO_OPTIONS_HINT = "Keine Alternative im Katalog. Nur behalten oder offen lassen."
 
@@ -49,7 +51,7 @@ const PDF_OPEN = "PDF: frei"
 const NOT_SUBMITTED_HINT = "Die Checkliste ist noch nicht abgeschickt."
 
 /** Why a bound product carries no verdict — internal, factual, no medical claim. */
-const VERDICT_FAILURE_COPY: Record<string, string> = {
+const VERDICT_FAILURE_COPY: Record<Exclude<DiscoveryVerdictStatus, "verdict">, string> = {
   product_unavailable: "Produkt ist nicht mehr im Katalog.",
   quarantined: "Produkt ist im Katalog gesperrt.",
   target_mismatch: "Der Katalog führt das Produkt in einer anderen Kategorie.",
@@ -114,7 +116,8 @@ export function DiscoveryCallCockpit({
         setSelections((current) => ({ ...current, [step.decisionKey]: previous }))
         const body = (await response.json().catch(() => null)) as { code?: string } | null
         if (body?.code === "finalized") {
-          setFinalizedAt((current) => current ?? new Date().toISOString())
+          // Someone (or another tab) finalised in the meantime. The stored timestamp is
+          // not ours to invent, so the screen says what happened instead of faking it.
           setError(FROZEN_HINT)
         } else {
           setError(WRITE_ERROR)
@@ -233,7 +236,7 @@ function StepVerdict({ step }: { step: DiscoveryCockpitStepView }) {
       <div className="flex flex-col gap-2">
         <p className="text-[15px] font-semibold text-foreground">{step.ownedLabel}</p>
         <p className="rounded-[14px] bg-muted px-3 py-2 text-[13px] text-muted-foreground">
-          {VERDICT_FAILURE_COPY[step.verdict.status] ?? VERDICT_FAILURE_COPY.unavailable}
+          {VERDICT_FAILURE_COPY[step.verdict.status]}
         </p>
       </div>
     )
