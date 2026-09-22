@@ -14,7 +14,6 @@ import {
   loadScanProductFacts,
   loadStage3RecommendationCandidatesByRole,
 } from "@/lib/personal-plan/products/authority/catalog-facts"
-import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { checkRateLimit } from "@/lib/rate-limit"
 import {
   isProductSearchQuarantined,
