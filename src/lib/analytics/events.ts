@@ -318,6 +318,28 @@ export type OfferCommerceProperties =
   | MembershipCommerceProperties
   | OneTimePersonalPlanCommerceProperties
 
+/**
+ * Quiz-entry snapshot shared by the scanner and discovery-call funnels.
+ * `scannerTrackingVersion` keeps its historical name — the scanner shipped it
+ * first and its PostHog queries reference the property.
+ */
+export type QuizViewSnapshotPayload = FunnelAnalyticsEnvelope & {
+  entryAt?: string
+  entryPath?: string
+  isResumed: boolean
+  isInternalTest?: boolean
+  quizStep: number
+  quizViewId: string
+  scannerTrackingVersion: 1
+  testKind?: FunnelTestKind | null
+  utmCampaign?: string
+  utmContent?: string
+  utmMedium?: string
+  utmSource?: string
+  utmTerm?: string
+  viewedAt: string
+}
+
 export type AppEventMap = {
   chat_product_recommendation_shown: {
     productCount: number
@@ -633,22 +655,10 @@ export type AppEventMap = {
     stepName: string
     stepNumber: number
   }
-  scanner_quiz_viewed: FunnelAnalyticsEnvelope & {
-    entryAt?: string
-    entryPath?: string
-    isResumed: boolean
-    isInternalTest?: boolean
-    quizStep: number
-    quizViewId: string
-    scannerTrackingVersion: 1
-    testKind?: FunnelTestKind | null
-    utmCampaign?: string
-    utmContent?: string
-    utmMedium?: string
-    utmSource?: string
-    utmTerm?: string
-    viewedAt: string
-  }
+  scanner_quiz_viewed: QuizViewSnapshotPayload
+  // Same quiz-entry snapshot for the discovery-call funnel; separate event
+  // name so the scanner dashboards keep their unfiltered queries intact.
+  discovery_call_quiz_viewed: QuizViewSnapshotPayload
   quiz_step_viewed: {
     stepName: string
     stepNumber: number

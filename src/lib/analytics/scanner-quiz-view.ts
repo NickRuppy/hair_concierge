@@ -7,6 +7,19 @@ import { trackAppEvent } from "./track-app-event"
 
 type Retry = (callback: () => void) => void
 
+/**
+ * Packages whose quiz entry gets a one-shot view snapshot, and the event each
+ * one emits. Separate event names keep the scanner's PostHog queries intact.
+ */
+const QUIZ_VIEW_EVENTS = {
+  scan_v1: "scanner_quiz_viewed",
+  discovery_call_v1: "discovery_call_quiz_viewed",
+} as const
+
+export function quizViewEventForPackage(packageKey: string | null | undefined) {
+  return packageKey ? (QUIZ_VIEW_EVENTS[packageKey as keyof typeof QUIZ_VIEW_EVENTS] ?? null) : null
+}
+
 const scheduleRetry: Retry = (callback) => {
   setTimeout(callback, 150)
 }
@@ -38,7 +51,8 @@ export function createScannerQuizViewTracker({
     step: number
   }) => {
     if (settled) return
-    if (displayedFunnelPackageKey !== "scan_v1") return
+    const eventName = quizViewEventForPackage(displayedFunnelPackageKey)
+    if (!eventName) return
     const viewedAt = now()
     const quizViewId = createId()
     // Keep a single immutable view snapshot while the bounded context lookup resolves.
@@ -47,11 +61,11 @@ export function createScannerQuizViewTracker({
       void bootstrap()
         .then((context) => {
           if (
-            context?.funnelPackageKey === "scan_v1" &&
+            context?.funnelPackageKey === displayedFunnelPackageKey &&
             context.analyticsContextReady !== false &&
             isCurrent()
           ) {
-            track("scanner_quiz_viewed", {
+            track(eventName, {
               funnelEventId: quizViewId,
               funnelPackageKey: context.funnelPackageKey,
               funnelSessionId: context.funnelSessionId,

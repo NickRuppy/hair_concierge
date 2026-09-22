@@ -189,6 +189,7 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         step_number: data.stepNumber,
       }
     }
+    case "discovery_call_quiz_viewed":
     case "scanner_quiz_viewed": {
       const data = payload as AppEventMap["scanner_quiz_viewed"]
       return {
