@@ -236,17 +236,17 @@ test.describe("@ci regular quiz mobile parity", () => {
     expect(geometry.buttonBottom).toBeLessThanOrEqual(geometry.visualBottom + 8)
     expect(geometry.visibleActions).toBe(1)
     await expect(
-      page.getByRole("heading", { name: "Was wünschst du dir für deine Wellen?" }),
+      page.getByRole("heading", { name: "Was wünschst du dir für deine Haare?" }),
     ).toBeVisible()
   })
 
-  test("uses plain German Locken wording for coily goals", async ({ page }) => {
+  test("uses the neutral goals heading for coily hair", async ({ page }) => {
     await openDraft(page, 8, { width: 390, height: 844 }, { structure: "coily" })
     await page.getByRole("button", { name: "Trockene oder strohige Längen", exact: true }).click()
     await page.locator('[data-quiz-bottom-action="viewport"]').locator("button").click()
 
     await expect(
-      page.getByRole("heading", { name: "Was wünschst du dir für deine Locken?" }),
+      page.getByRole("heading", { name: "Was wünschst du dir für deine Haare?" }),
     ).toBeVisible()
   })
 
