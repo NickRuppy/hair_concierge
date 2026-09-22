@@ -39,9 +39,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           - `contents` generates NO box on screen, so the header keeps `body` as its sticky
             containing block and the sidebar/mobile-nav stay flex items of the row. A real
             wrapper div would collapse the header's sticky range to its own height.
-          - the wrapper carries no responsive display utility. `print:hidden` on an element
-            that also has `md:block` loses: Tailwind emits breakpoint variants after `print`,
-            and an A4 portrait page (~794px at `@page { margin: 0 }`) matches `md`.
+          - the wrapper carries no responsive display utility, so nothing on the element can
+            out-rank its own print rule. An A4 portrait page (~794px with `@page { margin: 0 }`)
+            matches `md`, so `print:hidden` next to `md:block` on ONE element is decided purely
+            by which rule Tailwind emits last — today `print` wins, and that is not a property
+            worth depending on. `tests/discovery-pdf-page.test.tsx` guards both rules.
       */}
       <div className="contents print:hidden">
         <Header />

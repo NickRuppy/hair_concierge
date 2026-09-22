@@ -489,10 +489,11 @@ test("a routine that moved since the finalisation says so, and never re-derives 
  *  - `contents` on the wrapper, never a plain `div`. A real box would become the sticky
  *    containing block for the admin `<Header>` (collapsing its sticky range to the box's
  *    own height) and would take the sidebar and mobile nav out of the layout row.
- *  - NO responsive display utility on the element that carries `print:hidden`. Tailwind
- *    emits breakpoint variants after `print`, so `md:block` beats `print:hidden` on the
- *    same element — and an A4 portrait page (~794px with `@page { margin: 0 }`) matches
- *    `md`, which is exactly when it matters.
+ *  - NO responsive display utility on the element that carries `print:hidden`. An A4
+ *    portrait page (~794px with `@page { margin: 0 }`) matches `md`, so `md:block` and
+ *    `print:hidden` on ONE element both apply while printing and only Tailwind's emission
+ *    order decides. Measured against the compiled stylesheet, `print` currently wins — but
+ *    the sheet must not depend on a utility-sort order nobody here controls.
  *
  * These layouts cannot be rendered here (client components behind the app's provider tree),
  * so the guard reads their class lists straight out of the source.
