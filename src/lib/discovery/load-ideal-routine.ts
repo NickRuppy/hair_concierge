@@ -1,0 +1,148 @@
+import type { SupabaseClient } from "@supabase/supabase-js"
+
+import { CATEGORY_LABELS, frequencyLabel } from "@/lib/personal-plan/decision-presentation"
+import type { Stage1ProductExampleRolePreview } from "@/lib/personal-plan/product-preview-contract"
+import {
+  computeStage1ProductExamplePreviews,
+  createSupabaseStage1ProductExamplePreviewCandidateLoader,
+} from "@/lib/personal-plan/product-previews"
+import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
+import {
+  stage3DecisionKey,
+  type PersonalPlanCategory,
+} from "@/lib/personal-plan/products/contracts"
+import {
+  routinePurposeLabel,
+  routineRolePurposeDescription,
+} from "@/lib/personal-plan/routine/labels"
+import type { InitialNeedPlanSnapshot, PlanProductRole } from "@/lib/personal-plan/types"
+import type { ScanEvaluationContext } from "@/lib/scan/profile-context"
+import { prepareScannerContext } from "@/lib/scan/scanner-context"
+import { readScannerProfileSource } from "@/lib/scan/scanner-context-supabase"
+
+/**
+ * The participant's Idealplan, read for the admin cockpit.
+ *
+ * Read-only by construction (§4 read-only contract): the ONLY write anywhere on this path
+ * is the idempotent source registration `read_scanner_profile_source` performs inside
+ * `scanner_context_read_source` (migration 20260916175239) — an `INSERT … ON CONFLICT DO
+ * NOTHING` plus a `FOR UPDATE` lock. Everything else is a plain select.
+ *
+ * That is why this module deliberately does NOT use the ordinary Stage-1 entry points:
+ * `loadSharedScannerContext` / `loadScanEvaluationContext` publish a scanner context,
+ * `createStage1PersistenceService` is entitlement-gated and writes, and
+ * `provisionFreeInitialSnapshotForUser` writes a snapshot that would collide with the
+ * participant's own. Opening a discovery participant's cockpit must change nothing about
+ * their plan artifacts.
+ */
+
+export type DiscoveryIdealStep = {
+  decisionKey: string
+  category: PersonalPlanCategory
+  role: PlanProductRole
+  /** `decision.needTier` — the cockpit's section split (Basis vs. Optional). */
+  section: "basis" | "optional"
+  categoryLabel: string
+  roleLabel: string
+  roleDescription: string | null
+  frequencyLabel: string
+  /** The Stage-1 example for this role — a recommendation, a fallback, or nothing. */
+  preview: Stage1ProductExampleRolePreview | null
+}
+
+export type DiscoveryIdealRoutine = {
+  status: "ready"
+  steps: DiscoveryIdealStep[]
+  context: ScanEvaluationContext
+}
+
+export type DiscoveryIdealRoutineResult =
+  | DiscoveryIdealRoutine
+  /** The participant has no usable quiz/plan source yet — nothing to show, not a failure. */
+  | { status: "no_usable_source" }
+  /** The source exists but could not be projected right now — retryable. */
+  | { status: "temporarily_unavailable" }
+
+/**
+ * Exactly the roles Stage 1 previews, in Idealplan order.
+ *
+ * The filters mirror `stage1PreviewRoleTasks` (product-previews.ts:63-77) one for one —
+ * rendered order, a target of the category's own kind, a basis/optional tier, no deferred
+ * resolution, and only roles the category's policy allows, ordered by `allowedRoles`.
+ * `tests/discovery-refined-routine.test.ts` pins the resulting decision keys equal to
+ * `stage1PreviewedRoleDecisionKeys`, so a change to either side fails there instead of
+ * silently giving the cockpit a step the participant's plan never shows.
+ */
+export function buildDiscoveryIdealSteps(
+  snapshot: InitialNeedPlanSnapshot,
+  previews: readonly Stage1ProductExampleRolePreview[],
+): DiscoveryIdealStep[] {
+  const previewsByDecisionKey = new Map(
+    previews.map((preview) => [preview.decisionKey, preview] as const),
+  )
+  const decisions = new Map(snapshot.decisions.map((decision) => [decision.category, decision]))
+  const steps: DiscoveryIdealStep[] = []
+
+  for (const category of snapshot.renderedOrder) {
+    const decision = decisions.get(category)
+    if (!decision?.target || decision.target.category !== category) continue
+    if (decision.needTier !== "basis" && decision.needTier !== "optional") continue
+    if (decision.resolution === "deferred_until_post_plan_onboarding") continue
+    const allowedRoles = CATEGORY_ROLE_POLICIES[category].allowedRoles
+    for (const role of allowedRoles as readonly PlanProductRole[]) {
+      if (!decision.roles.includes(role)) continue
+      const decisionKey = stage3DecisionKey(category, role, null)
+      steps.push({
+        decisionKey,
+        category,
+        role,
+        section: decision.needTier,
+        categoryLabel: CATEGORY_LABELS[category],
+        roleLabel: routinePurposeLabel(role),
+        roleDescription: routineRolePurposeDescription(role),
+        frequencyLabel: frequencyLabel(decision.frequency, decision.executionState === "paused"),
+        preview: previewsByDecisionKey.get(decisionKey) ?? null,
+      })
+    }
+  }
+
+  return steps
+}
+
+export async function loadDiscoveryIdealRoutine(
+  admin: SupabaseClient,
+  userId: string,
+  intakeId: string,
+): Promise<DiscoveryIdealRoutineResult> {
+  let context
+  try {
+    context = prepareScannerContext(await readScannerProfileSource(admin, userId))
+  } catch {
+    // `scan_profile_context_unavailable` covers both the RPC failing and an inconsistent
+    // stored source; neither is something the admin can fix from the cockpit.
+    return { status: "temporarily_unavailable" }
+  }
+  if (!context) return { status: "no_usable_source" }
+
+  // All four inputs are named explicitly so no future edit can reintroduce the
+  // `stage1-service` / shared-context loading this path must stay clear of. The synthetic
+  // `personalPlanId` keeps the preview payload's identity tied to this intake — it is
+  // never persisted, because nothing on this path persists.
+  const previews = await computeStage1ProductExamplePreviews({
+    personalPlanId: `discovery:${intakeId}`,
+    sourceNeedVersionId: context.refinedVersionId,
+    snapshot: context.snapshot,
+    loadCandidates: createSupabaseStage1ProductExamplePreviewCandidateLoader(admin),
+  })
+
+  return {
+    status: "ready",
+    steps: buildDiscoveryIdealSteps(context.snapshot, previews.previews),
+    context: {
+      snapshot: context.snapshot,
+      snapshotSource: context.snapshotSource,
+      refinedVersionId: context.refinedVersionId,
+      refinedInputHash: context.refinedInputHash,
+    },
+  }
+}
