@@ -34,8 +34,8 @@ npm run discovery -- list
 npm run discovery -- create --name="Lea Sommer" --email="lea@example.com"
 ```
 
-Beide Schreibformen (`create`, `revoke`, `rotate`) sind ohne `--apply` **Dry-run** und schreiben
-nichts. Eine echte Produktionsmutation braucht alle vier Bedingungen gleichzeitig:
+Jede Schreibform (`create`, `revoke`, `rotate`, `reconcile`) ist ohne `--apply` **Dry-run** und
+schreibt nichts. Eine echte Produktionsmutation braucht alle vier Bedingungen gleichzeitig:
 
 ```sh
 ALLOW_DISCOVERY_PRODUCTION_WRITE=1 npm run discovery -- create \
@@ -115,18 +115,11 @@ Produkte, die die Teilnehmerin scannt oder eintippt und die der Katalog nicht ke
 Im Cockpit erscheinen sie unter „Nicht in der Idealroutine" als **„Noch in Recherche"** und bekommen
 kein Urteil und keinen Routine-Schritt.
 
-Die offenen Einträge einer Teilnehmerin findest du so:
+Die offenen Einträge einer Teilnehmerin listet der Dry-run des Abgleichs — mit Kategorie, den Worten
+der Teilnehmerin, der Submission und deren Status:
 
-```sql
-select i.id, i.category, i.source, i.brand_text, i.product_name_text,
-       i.barcode_identifier, i.product_submission_id,
-       s.status, s.approved_product_id
-from public.discovery_intake_items i
-left join public.product_submissions s on s.id = i.product_submission_id
-join public.discovery_intakes t on t.id = i.intake_id
-where t.enrollment_id = '<enrollment-id>'
-  and i.source <> 'none'
-  and i.product_id is null;
+```sh
+npm run discovery -- reconcile --enrollment=<uuid>
 ```
 
 Die Recherche selbst läuft über die bestehende Produkt-Intake-Strecke — **`docs/product-intake-research-ops.md`
@@ -134,27 +127,58 @@ ist dafür die Quelle der Wahrheit** (Queue → Review → geführte Freigabe, u
 `npm run products:intake:research-queue`, `npm run products:intake:review-app`,
 `npm run products:intake:approve-package`). Dieses Runbook wiederholt diese Regeln nicht.
 
-### 3b. Ergebnis in den Intake zurückschreiben (manuell)
+### 3b. Ergebnis in den Intake zurückschreiben
 
-**Das Toolkit gleicht nichts automatisch ab.** `discovery_intake_items.product_id` wird nur beim
-Erfassen gesetzt. Auch nachdem die Recherche das Produkt veröffentlicht und
-`product_submissions.approved_product_id` gefüllt hat, bleibt die Intake-Zeile ohne
-`product_id` — und damit ohne Urteil und ohne Schritt. Der Abgleich ist ein bewusster Handgriff
-vor dem Call, auf der service-only Tabelle (Supabase-SQL, Service-Rolle):
+**Nichts gleicht sich von selbst ab.** `discovery_intake_items.product_id` wird nur beim Erfassen
+gesetzt. Auch nachdem die Recherche das Produkt veröffentlicht und
+`product_submissions.approved_product_id` gefüllt hat, bleibt die Intake-Zeile ohne `product_id` —
+und damit ohne Urteil und ohne Schritt. Der Abgleich ist ein bewusster Handgriff vor dem Call:
 
-```sql
-update public.discovery_intake_items i
-set product_id = s.approved_product_id
-from public.product_submissions s
-where i.product_submission_id = s.id
-  and i.intake_id = (select id from public.discovery_intakes where enrollment_id = '<enrollment-id>')
-  and i.product_id is null
-  and s.approved_product_id is not null;
+```sh
+npm run discovery -- reconcile --enrollment=<uuid>
+npm run discovery -- reconcile --email="lea@example.com"
+npm run discovery -- reconcile --all
 ```
 
-Zeilen mit `source='barcode_unknown'` ohne Submission tragen nur den Barcode und lesen sich im
-Cockpit als „Gescanntes Produkt · &lt;Barcode&gt;". Für die gilt dasselbe von Hand: die passende
-`products.id` heraussuchen und in `product_id` eintragen, sonst bleibt das Produkt ohne Urteil.
+Genau ein Bereich pro Aufruf; zwei davon gleichzeitig lehnt der Befehl ab. Ohne `--apply` ist er ein
+**Dry-run**: er liest, rechnet und druckt genau den Plan, den `--apply` dann ausführt. Geschrieben
+wird nur unter demselben vierfachen Gate wie bei `create` / `revoke` / `rotate`:
+
+```sh
+ALLOW_DISCOVERY_PRODUCTION_WRITE=1 npm run discovery -- reconcile --all \
+  --apply --confirm-project=pqdkhefxsxkyeqelqegq
+```
+
+Jeder offene Eintrag bekommt im Ergebnis genau eines von vier Urteilen:
+
+| `outcome` | Bedeutung |
+| --- | --- |
+| `reconciled` | Die Submission ist auf ein Produkt freigegeben, das die Scan-Prüfung besteht; die Zeile trägt jetzt dessen `product_id` (im Dry-run: würde sie tragen). |
+| `research_pending` | Noch kein freigegebenes Produkt — die Recherche läuft weiter. |
+| `approved_but_ineligible` | Freigegeben, aber das Produkt ist deaktiviert oder aus dem Personal-Plan-Suchraum genommen. Bewusst **nicht** geschrieben: dieselbe Prüfung hätte es schon beim Erfassen abgelehnt. Erst im Katalog klären. |
+| `already_assigned` | Die Zeile hat zwischen Plan und Schreibvorgang selbst eine `product_id` bekommen. Die Antwort der Teilnehmerin bleibt stehen. |
+
+Was der Befehl **nicht** anfasst:
+
+- Zeilen, die schon eine `product_id` tragen — das ist die Antwort der Teilnehmerin, nicht unsere.
+- Zeilen mit `source='barcode_unknown'` **ohne** Submission. Die tragen nur den Barcode und lesen
+  sich im Cockpit als „Gescanntes Produkt · &lt;Barcode&gt;". Dafür bleibt es bei Handarbeit: die
+  passende `products.id` heraussuchen und per Service-Rolle eintragen, sonst bleibt das Produkt ohne
+  Urteil.
+
+  ```sql
+  update public.discovery_intake_items
+  set product_id = '<product-id>'
+  where id = '<item-id>' and product_id is null;
+  ```
+
+Die Reichweite der Bereiche unterscheidet sich absichtlich:
+
+- **`--enrollment` / `--email`** nehmen genau diese eine Teilnehmerin, auch wenn ihr Call schon
+  finalisiert ist. Steht im Ergebnis ein `finalizedAt`, danach im Cockpit **neu finalisieren** —
+  sonst zeigt das PDF weiter den Stand von vorher.
+- **`--all`** ist enger: widerrufene Einladungen und finalisierte Calls bleiben außen vor, und
+  Teilnehmerinnen ohne offene Einträge tauchen gar nicht erst auf.
 
 Nach dem Abgleich das Cockpit neu laden — es rechnet bei jedem Aufruf frisch.
 
@@ -297,6 +321,8 @@ Zwei Stellen, an denen Discovery-Teilnehmerinnen in Zahlen auftauchen, die nicht
 - **Checkliste schickt zurück ins Quiz** — Diagnostik oder Lead-Bindung fehlen. Die Seite prüft
   beides gegen die Datenbank und protokolliert die Lücke (`[discovery] quiz projection incomplete`).
   Die Teilnehmerin muss das Quiz wirklich abschließen.
+- **`reconcile` meldet `reconciled`, im Cockpit ändert sich nichts** — das war ein Dry-run. Ohne
+  `--apply` samt Gate bleibt der Plan ein Plan; `mode` und `writes` im Ergebnis sagen, was galt.
 - **„Diese Teilnehmerin hat die Checkliste noch nicht geöffnet."** — es gibt keine Intake-Zeile.
   Nichts zu reparieren, nur nachzufassen.
 - **„Finalisieren" ist ausgegraut** — die Checkliste ist noch nicht abgeschickt (`state='draft'`).

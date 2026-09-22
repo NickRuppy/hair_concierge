@@ -10,9 +10,20 @@ import {
   type DiscoveryEnrollmentRow as DiscoveryEnrollmentServiceRow,
 } from "../src/lib/discovery/enrollment"
 import {
+  assignDiscoveryIntakeItemProduct,
+  filterDiscoveryEligibleProductIds,
+  loadDiscoveryReconcileTargets,
+  loadDiscoverySubmissionOutcomes,
+  type DiscoveryPendingIntakeItem,
+  type DiscoveryReconcileScope,
+  type DiscoveryReconcileTarget,
+  type DiscoverySubmissionOutcome,
+} from "../src/lib/discovery/reconcile"
+import {
   discoveryEnrollmentSigningSecret,
   projectDiscoveryEnrollmentCredential,
 } from "../src/lib/discovery/token"
+import { createAdminClient } from "../src/lib/supabase/admin"
 
 const PROJECT_ID = "pqdkhefxsxkyeqelqegq"
 const WRITE_GATE = "ALLOW_DISCOVERY_PRODUCTION_WRITE"
@@ -23,6 +34,7 @@ export type DiscoveryCommand =
   | { action: "list" }
   | { action: "create"; apply: boolean; name: string; email: string }
   | { action: "revoke" | "rotate"; apply: boolean; enrollmentId: string }
+  | { action: "reconcile"; apply: boolean; scope: DiscoveryReconcileScope }
 
 /** The enrollment service owns the row shape; the CLI only projects receipts from it. */
 export type DiscoveryEnrollmentRow = DiscoveryEnrollmentServiceRow
@@ -50,6 +62,72 @@ export type DiscoveryEnrollmentGateway = {
   rotate: (enrollmentId: string) => Promise<DiscoveryEnrollmentRow>
 }
 
+/** The reconciliation service owns these shapes; the CLI ports and projects them. */
+export type {
+  DiscoveryPendingIntakeItem,
+  DiscoveryReconcileScope,
+  DiscoveryReconcileTarget,
+  DiscoverySubmissionOutcome,
+}
+
+/**
+ * The read/write surface `reconcile` needs, split from the enrollment gateway so
+ * the production gate can be proven to refuse before any of it runs. Its
+ * behaviour lives in `src/lib/discovery/reconcile.ts`.
+ */
+export type DiscoveryReconcileGateway = {
+  loadTargets: (scope: DiscoveryReconcileScope) => Promise<DiscoveryReconcileTarget[]>
+  loadSubmissionOutcomes: (
+    submissionIds: readonly string[],
+  ) => Promise<Map<string, DiscoverySubmissionOutcome>>
+  filterEligibleProductIds: (productIds: readonly string[]) => Promise<Set<string>>
+  assignProductId: (input: { itemId: string; productId: string }) => Promise<boolean>
+}
+
+/**
+ * - `reconciled` — the submission is approved onto an eligible catalog product,
+ *   so the item now carries a `product_id` (in a dry run: it would).
+ * - `research_pending` — no approved product yet; the research is still open.
+ * - `approved_but_ineligible` — approved, but the product is deactivated or
+ *   disposition-quarantined. Deliberately NOT written: the capture gate would
+ *   have refused the same product.
+ * - `already_assigned` — the row was claimed between the plan and the write.
+ */
+export type DiscoveryReconcileOutcome =
+  | "reconciled"
+  | "research_pending"
+  | "approved_but_ineligible"
+  | "already_assigned"
+
+export type DiscoveryReconcileItemReceipt = {
+  itemId: string
+  category: string
+  source: string
+  product: string | null
+  submissionId: string
+  submissionStatus: string | null
+  productId: string | null
+  outcome: DiscoveryReconcileOutcome
+}
+
+export type DiscoveryReconcileParticipantReceipt = {
+  enrollmentId: string
+  name: string
+  email: string
+  intakeId: string
+  finalizedAt: string | null
+  items: DiscoveryReconcileItemReceipt[]
+}
+
+export type DiscoveryReconcileReceipt = {
+  action: "reconcile"
+  mode: "dry-run" | "apply"
+  writes: boolean
+  scope: DiscoveryReconcileScope
+  totals: Record<DiscoveryReconcileOutcome, number>
+  participants: DiscoveryReconcileParticipantReceipt[]
+}
+
 function value(args: readonly string[], name: string) {
   const prefix = `${name}=`
   return args.find((argument) => argument.startsWith(prefix))?.slice(prefix.length)
@@ -72,9 +150,28 @@ export function parseDiscoveryCommand(args: readonly string[]): DiscoveryCommand
     if (!enrollmentId) throw new Error(`${action} requires --enrollment=<uuid>`)
     return { action, apply: args.includes("--apply"), enrollmentId }
   }
+  if (action === "reconcile") {
+    return { action, apply: args.includes("--apply"), scope: parseDiscoveryReconcileScope(args) }
+  }
   throw new Error(
-    "Usage: list | create --name=<name> --email=<email> | revoke|rotate --enrollment=<uuid>",
+    "Usage: list | create --name=<name> --email=<email> | revoke|rotate --enrollment=<uuid>" +
+      " | reconcile --enrollment=<uuid>|--email=<email>|--all",
   )
+}
+
+/** Exactly one scope — an ambiguous run is a refusal, never a silent precedence rule. */
+export function parseDiscoveryReconcileScope(args: readonly string[]): DiscoveryReconcileScope {
+  const enrollmentId = value(args, "--enrollment")?.trim()
+  const email = value(args, "--email")?.trim().toLowerCase()
+  const all = args.includes("--all")
+  const chosen = [enrollmentId, email, all ? "--all" : undefined].filter(Boolean)
+  if (chosen.length !== 1) {
+    throw new Error("reconcile requires exactly one of --enrollment=<uuid>, --email=<email>, --all")
+  }
+  if (all) return { kind: "all" }
+  if (enrollmentId) return { kind: "enrollment", enrollmentId }
+  if (!email || !EMAIL.test(email)) throw new Error("reconcile requires a valid --email=<email>")
+  return { kind: "email", email }
 }
 
 export function canApplyDiscoveryWrite(
@@ -152,6 +249,104 @@ function projectReceipt(
   }
 }
 
+/** The participant's own words, which the cockpit shows while research is open. */
+function describePendingItem(item: DiscoveryPendingIntakeItem) {
+  const label = [item.brandText, item.productNameText].filter(Boolean).join(" ").trim()
+  return label || null
+}
+
+/**
+ * Pure: decides, per pending item, what should happen — and NEVER returns
+ * `reconciled` without an eligible `productId` to write.
+ */
+export function planDiscoveryReconciliation(input: {
+  targets: readonly DiscoveryReconcileTarget[]
+  outcomes: Map<string, DiscoverySubmissionOutcome>
+  eligible: ReadonlySet<string>
+}): DiscoveryReconcileParticipantReceipt[] {
+  return input.targets.map((target) => ({
+    enrollmentId: target.enrollmentId,
+    name: target.name,
+    email: target.email,
+    intakeId: target.intakeId,
+    finalizedAt: target.finalizedAt,
+    items: target.items.map((item) => {
+      const outcome = input.outcomes.get(item.productSubmissionId)
+      const approved = outcome?.approvedProductId ?? null
+      const eligible = approved !== null && input.eligible.has(approved)
+      return {
+        itemId: item.itemId,
+        category: item.category,
+        source: item.source,
+        product: describePendingItem(item),
+        submissionId: item.productSubmissionId,
+        submissionStatus: outcome?.status ?? null,
+        productId: eligible ? approved : null,
+        outcome: !approved
+          ? "research_pending"
+          : eligible
+            ? "reconciled"
+            : "approved_but_ineligible",
+      } satisfies DiscoveryReconcileItemReceipt
+    }),
+  }))
+}
+
+function totalDiscoveryReconcileOutcomes(participants: DiscoveryReconcileParticipantReceipt[]) {
+  const totals: Record<DiscoveryReconcileOutcome, number> = {
+    reconciled: 0,
+    research_pending: 0,
+    approved_but_ineligible: 0,
+    already_assigned: 0,
+  }
+  for (const participant of participants) {
+    for (const item of participant.items) totals[item.outcome] += 1
+  }
+  return totals
+}
+
+/**
+ * Reads what is pending, decides, and — only with `apply` — writes. The read is
+ * the same in both modes, so the dry run is the plan that `--apply` executes.
+ */
+async function runDiscoveryReconcile(input: {
+  scope: DiscoveryReconcileScope
+  apply: boolean
+  gateway: DiscoveryReconcileGateway
+}): Promise<DiscoveryReconcileReceipt> {
+  const targets = await input.gateway.loadTargets(input.scope)
+  const submissionIds = targets.flatMap((target) =>
+    target.items.map((item) => item.productSubmissionId),
+  )
+  const outcomes = await input.gateway.loadSubmissionOutcomes(submissionIds)
+  const approvedIds = [...outcomes.values()]
+    .map((outcome) => outcome.approvedProductId)
+    .filter((id): id is string => id !== null)
+  const eligible = await input.gateway.filterEligibleProductIds(approvedIds)
+
+  const participants = planDiscoveryReconciliation({ targets, outcomes, eligible })
+  if (input.apply) {
+    for (const participant of participants) {
+      for (const item of participant.items) {
+        if (item.outcome !== "reconciled" || !item.productId) continue
+        const written = await input.gateway.assignProductId({
+          itemId: item.itemId,
+          productId: item.productId,
+        })
+        if (!written) item.outcome = "already_assigned"
+      }
+    }
+  }
+  return {
+    action: "reconcile",
+    mode: input.apply ? "apply" : "dry-run",
+    writes: input.apply,
+    scope: input.scope,
+    totals: totalDiscoveryReconcileOutcomes(participants),
+    participants,
+  }
+}
+
 function publicSiteUrl(explicit?: string) {
   const site = explicit ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://chaarlie.de"
   return site.replace(/\/$/, "")
@@ -173,10 +368,23 @@ function adminGateway(): DiscoveryEnrollmentGateway {
   }
 }
 
+/** One service-role client for the whole reconcile run, built only when it runs. */
+function adminReconcileGateway(): DiscoveryReconcileGateway {
+  let client: ReturnType<typeof createAdminClient> | null = null
+  const admin = () => (client ??= createAdminClient())
+  return {
+    loadTargets: (scope) => loadDiscoveryReconcileTargets(scope, admin()),
+    loadSubmissionOutcomes: (ids) => loadDiscoverySubmissionOutcomes(ids, admin()),
+    filterEligibleProductIds: (ids) => filterDiscoveryEligibleProductIds(ids, admin()),
+    assignProductId: (assignment) => assignDiscoveryIntakeItemProduct(assignment, admin()),
+  }
+}
+
 export async function runDiscoveryCommand(input: {
   args: readonly string[]
   environment: Record<string, string | undefined>
   gateway?: DiscoveryEnrollmentGateway
+  reconcileGateway?: DiscoveryReconcileGateway
   secret?: string
   siteUrl?: string
   log?: (value: unknown) => void
@@ -196,14 +404,26 @@ export async function runDiscoveryCommand(input: {
     log(rows.map((row) => projectReceipt(row, context())))
     return
   }
-  if (!command.apply) {
-    log({ mode: "dry-run", writes: false, ...command })
-    return
-  }
-  if (!canApplyDiscoveryWrite(input.args, input.environment)) {
+  // The gate is checked before anything else a write command touches — including
+  // `reconcile`'s reads, which would otherwise soften a refusal into a report.
+  if (command.apply && !canApplyDiscoveryWrite(input.args, input.environment)) {
     throw new Error(
       `Writes require ${WRITE_GATE}=1, ${CONFIRM_PROJECT}, --apply, and the matching Supabase URL`,
     )
+  }
+  if (command.action === "reconcile") {
+    log(
+      await runDiscoveryReconcile({
+        scope: command.scope,
+        apply: command.apply,
+        gateway: input.reconcileGateway ?? adminReconcileGateway(),
+      }),
+    )
+    return
+  }
+  if (!command.apply) {
+    log({ mode: "dry-run", writes: false, ...command })
+    return
   }
   if (command.action === "create") {
     log(projectReceipt(await gateway.create(command), context()))
