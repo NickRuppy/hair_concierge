@@ -48,7 +48,7 @@ const PREFLIGHT_NO_LEAD = "Zu diesem Konto ist kein Quiz-Lead gebunden."
 const PREFLIGHT_INVALID = "Die Quiz-Antworten sind nicht lesbar."
 const PREFLIGHT_MISSING = "Diese Antworten fehlen für einen vollständigen Plan:"
 const DECLINED_SUFFIX = "— benutzt sie nicht. Keine Entscheidung nötig."
-const NO_STEP_SUFFIX = "— kein Schritt im Idealplan."
+const NO_STEP_SUFFIX = "— kein Schritt im Idealplan:"
 
 export type DiscoveryCockpitPageDependencies = {
   flagEnabled: () => boolean
@@ -222,6 +222,10 @@ function categoryLine(categories: readonly PersonalPlanCategory[]): string {
  * Everything with no decision to make, collapsed: „benutze ich nicht" categories on one
  * grey line, products outside the Idealroutine on another, and whatever is still being
  * researched on a third — named, so Nick can still mention it.
+ *
+ * The no-step line names its products, not just their categories: the participant's
+ * document lists every one of them under „Brauchst du nicht mehr", and Nick has to be
+ * able to read that list here before he finalises and sends it.
  */
 function OutsideRoutine({ view }: { view: DiscoveryCockpitView }) {
   const noStep = view.unassigned.filter((entry) => entry.reason === "no_ideal_step")
@@ -240,8 +244,10 @@ function OutsideRoutine({ view }: { view: DiscoveryCockpitView }) {
         {view.declinedCategories.length > 0 ? (
           <p>{`${categoryLine(view.declinedCategories)} ${DECLINED_SUFFIX}`}</p>
         ) : null}
-        {noStepCategories.length > 0 ? (
-          <p>{`${categoryLine(noStepCategories)} ${NO_STEP_SUFFIX}`}</p>
+        {noStep.length > 0 ? (
+          <p>{`${categoryLine(noStepCategories)} ${NO_STEP_SUFFIX} ${noStep
+            .map((entry) => entry.label)
+            .join(" · ")}`}</p>
         ) : null}
         {research.length > 0 ? (
           <p>{`${DISCOVERY_RESEARCH_PENDING_LABEL}: ${research

@@ -163,6 +163,43 @@ export type DiscoveryStampResult =
   | { status: "stamped" }
   | { status: "foreign_access_kind"; accessKind: string }
 
+/** The read half of the stamp, so the refusal can be taken before anything is written. */
+export type DiscoveryAccessKindCheck =
+  | { status: "eligible" }
+  | { status: "foreign_access_kind"; accessKind: string }
+
+async function readDiscoveryAccessMetadata(userId: string, client: DiscoveryAdminClient) {
+  const current = await client.auth.admin.getUserById(userId)
+  if (current.error || !current.data.user) {
+    throw current.error ?? new Error("Discovery account metadata is unavailable")
+  }
+  const metadata = (current.data.user.app_metadata ?? {}) as Record<string, unknown>
+  const accessKind = metadata.access_kind
+  const foreign =
+    accessKind !== null &&
+    accessKind !== undefined &&
+    accessKind !== "" &&
+    accessKind !== DISCOVERY_ACCESS_KIND
+  return { metadata, accessKind, foreign }
+}
+
+/**
+ * Answers the `access_kind` question WITHOUT writing anything.
+ *
+ * The claim route needs the refusal before it binds the enrollment, and the stamp
+ * itself has to come after that binding — so the two halves are separate callers of
+ * the same rule rather than the route re-implementing it.
+ */
+export async function checkDiscoveryAccessKind(
+  userId: string,
+  client: DiscoveryAdminClient = createAdminClient(),
+): Promise<DiscoveryAccessKindCheck> {
+  const current = await readDiscoveryAccessMetadata(userId, client)
+  return current.foreign
+    ? { status: "foreign_access_kind", accessKind: String(current.accessKind) }
+    : { status: "eligible" }
+}
+
 /**
  * Writes the access stamp onto an account that already existed before the claim
  * (the magic-link continuation). A brand-new account receives it inline in
@@ -180,18 +217,8 @@ export async function stampDiscoveryAccess(
   input: { userId: string; enrollmentId: string },
   client: DiscoveryAdminClient = createAdminClient(),
 ): Promise<DiscoveryStampResult> {
-  const current = await client.auth.admin.getUserById(input.userId)
-  if (current.error || !current.data.user) {
-    throw current.error ?? new Error("Discovery account metadata is unavailable")
-  }
-  const metadata = (current.data.user.app_metadata ?? {}) as Record<string, unknown>
-  const accessKind = metadata.access_kind
-  if (
-    accessKind !== null &&
-    accessKind !== undefined &&
-    accessKind !== "" &&
-    accessKind !== DISCOVERY_ACCESS_KIND
-  ) {
+  const { metadata, accessKind, foreign } = await readDiscoveryAccessMetadata(input.userId, client)
+  if (foreign) {
     return { status: "foreign_access_kind", accessKind: String(accessKind) }
   }
   const { error } = await client.auth.admin.updateUserById(input.userId, {

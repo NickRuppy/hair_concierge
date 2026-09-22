@@ -31,6 +31,8 @@ const ids = {
   item: "50000000-0000-4000-8000-000000000005",
   barcodeItem: "50000000-0000-4000-8000-000000000006",
   declinedItem: "50000000-0000-4000-8000-000000000007",
+  noStepItem: "50000000-0000-4000-8000-000000000008",
+  noStepProduct: "30000000-0000-4000-8000-00000000000d",
 }
 
 const enrollment: DiscoveryEnrollment = {
@@ -122,6 +124,19 @@ const items = [
     productId: null,
     productSubmissionId: null,
     createdAt: "2026-09-20T10:05:00.000Z",
+  },
+  {
+    // Resolved to a catalog product, but its category has no step in this Idealplan —
+    // the participant's document names it under „Brauchst du nicht mehr".
+    id: ids.noStepItem,
+    category: "conditioner" as const,
+    source: "catalog_search" as const,
+    brandText: "Balea",
+    productNameText: "Feuchtigkeitsspülung",
+    barcodeIdentifier: null,
+    productId: ids.noStepProduct,
+    productSubmissionId: null,
+    createdAt: "2026-09-20T10:05:30.000Z",
   },
   {
     id: ids.declinedItem,
@@ -286,6 +301,10 @@ test("what needs no decision collapses to one grey line each", async () => {
   assert.ok(markup.includes("Öl — benutzt sie nicht. Keine Entscheidung nötig."))
   // The unresolved barcode row keeps its code instead of inventing a name.
   assert.ok(markup.includes("Noch in Recherche: Gescanntes Produkt · 4005900123456"))
+  // The no-step line NAMES its products: the document lists every one of them under
+  // „Brauchst du nicht mehr", so the category alone would leave Nick sending a list he
+  // never saw.
+  assert.ok(markup.includes("Conditioner — kein Schritt im Idealplan: Balea Feuchtigkeitsspülung"))
 })
 
 test("a finalised call renders as finalised", async () => {

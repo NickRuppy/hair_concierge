@@ -2,6 +2,7 @@ import "server-only"
 
 import { z } from "zod"
 
+import type { DiscoveryIntakeItemView } from "@/components/discovery/intake/types"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -258,6 +259,25 @@ function projectIntake(row: IntakeRow): DiscoveryIntake {
     userId: row.user_id,
     state: row.state === "submitted" ? "submitted" : "draft",
     submittedAt: row.submitted_at,
+  }
+}
+
+/**
+ * The one projection every browser-bound intake item goes through — the checklist
+ * page's initial list and the items route's 201 body alike.
+ *
+ * `productId` / `productSubmissionId` stay on the server: the checklist never renders
+ * them, and the cockpit reads them straight from the table. One function so the two
+ * surfaces cannot drift into disagreeing about that boundary.
+ */
+export function toDiscoveryIntakeItemView(item: DiscoveryIntakeItem): DiscoveryIntakeItemView {
+  return {
+    id: item.id,
+    category: item.category,
+    source: item.source,
+    brandText: item.brandText,
+    productNameText: item.productNameText,
+    barcodeIdentifier: item.barcodeIdentifier,
   }
 }
 

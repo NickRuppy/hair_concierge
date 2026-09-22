@@ -262,7 +262,18 @@ test("a product write clears only a standing „benutze ich nicht“, never the 
   )(itemsRequest(validCapture))
 
   assert.equal(response.status, 201)
-  assert.deepEqual(await response.json(), { item: storedItem })
+  // The response is the browser projection, not the stored row: the identity columns
+  // the checklist never renders do not leave the server.
+  assert.deepEqual(await response.json(), {
+    item: {
+      id: storedItem.id,
+      category: storedItem.category,
+      source: storedItem.source,
+      brandText: storedItem.brandText,
+      productNameText: storedItem.productNameText,
+      barcodeIdentifier: storedItem.barcodeIdentifier,
+    },
+  })
   assert.deepEqual(cleared, [{ intakeId: ids.intake, category: "shampoo", sources: ["none"] }])
 })
 

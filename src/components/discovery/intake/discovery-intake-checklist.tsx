@@ -166,8 +166,12 @@ export function DiscoveryIntakeChecklist({
         </div>
 
         {DISCOVERY_INTAKE_GROUPS.map((group) => (
-          <section key={group.label}>
-            <h2 className="mb-2 mt-4 pl-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--text-caption)] first:mt-0">
+          // The gap belongs to the SECTION. On the heading it did nothing: an `h2` is
+          // always the first child of its own section, so `first:mt-0` there killed the
+          // gap above every group instead of only the first one. No reset is needed here
+          // — the first section's `mt-4` collapses into the progress bar's own `mb-6`.
+          <section key={group.label} className="mt-4">
+            <h2 className="mb-2 pl-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--text-caption)]">
               {group.label}
             </h2>
             <ul className="flex flex-col gap-2">

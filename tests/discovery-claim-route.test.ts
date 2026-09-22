@@ -57,6 +57,10 @@ function dependencies(overrides: Record<string, unknown> = {}) {
         return { userId: ids.user, password: "hidden-random-password" }
       },
       deleteUser: async (input: unknown) => calls.push(["deleteUser", input]),
+      checkAccessKind: async (input: unknown) => {
+        calls.push(["checkAccessKind", input])
+        return { status: "eligible" as const }
+      },
       stampDiscoveryAccess: async (input: unknown) => {
         calls.push(["stamp", input])
         return { status: "stamped" as const }
@@ -126,8 +130,8 @@ test("a paid account is refused even when it already claimed this enrollment", a
 test("an account belonging to another access kind is refused, and nothing is bound", async () => {
   const { calls, deps } = dependencies({
     getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
-    stampDiscoveryAccess: async (input: unknown) => {
-      calls.push(["stamp", input])
+    checkAccessKind: async (input: unknown) => {
+      calls.push(["checkAccessKind", input])
       return { status: "foreign_access_kind" as const, accessKind: "field_test" }
     },
   })
@@ -137,11 +141,11 @@ test("an account belonging to another access kind is refused, and nothing is bou
   const body = await response.json()
   assert.equal(body.code, "existing_access_kind")
   assert.match(body.error, /anderen Chaarlie-Zugang/)
-  // The stamp helper was consulted but wrote nothing, and the claim never ran.
-  assert.deepEqual(names(calls), ["stamp"])
+  // The access kind was READ but nothing was written, and the claim never ran.
+  assert.deepEqual(names(calls), ["checkAccessKind"])
 })
 
-test("an unpaid existing account is stamped, then bound", async () => {
+test("an unpaid existing account is bound first, then stamped", async () => {
   const { calls, deps } = dependencies({
     getUser: async () => ({ id: ids.user, email: "LEA@example.test" }),
   })
@@ -149,9 +153,59 @@ test("an unpaid existing account is stamped, then bound", async () => {
 
   assert.equal(response.status, 200)
   assert.deepEqual(await response.json(), { destination: "/quiz", requiresEmail: false })
-  // Stamp before claim, and no password sign-in: the session already exists.
-  assert.deepEqual(names(calls), ["stamp", "claim"])
-  assert.deepEqual(calls[0][1], { userId: ids.user, enrollmentId: ids.enrollment })
+  // The refusal is read up front, the binding is taken, and only then is the account
+  // stamped — no password sign-in, the session already exists.
+  assert.deepEqual(names(calls), ["checkAccessKind", "claim", "stamp"])
+  assert.deepEqual(calls[2][1], { userId: ids.user, enrollmentId: ids.enrollment })
+})
+
+// --- The stamp never outlives a failed claim ---------------------------------
+
+test("a claim that throws leaves the existing account unstamped", async () => {
+  const { calls, deps } = dependencies({
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+    claimEnrollment: async (input: unknown) => {
+      calls.push(["claim", input])
+      throw new Error("database is down")
+    },
+  })
+  const response = await createDiscoveryClaimHandler(deps)(request())
+
+  // A stamp here would strand the account: every discovery surface re-reads the
+  // enrollment and 404s, and revocation cannot clear a stamp it is not bound to.
+  assert.equal(response.status, 503)
+  assert.deepEqual(names(calls), ["checkAccessKind", "claim"])
+})
+
+test("losing the claim race leaves the existing account unstamped", async () => {
+  const { calls, deps } = dependencies({
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+    claimEnrollment: async (input: unknown) => {
+      calls.push(["claim", input])
+      return { status: "conflict" as const }
+    },
+  })
+  const response = await createDiscoveryClaimHandler(deps)(request())
+
+  assert.equal(response.status, 409)
+  // Neither stamped nor deleted: an account that existed before the claim is left
+  // exactly as it was found.
+  assert.deepEqual(names(calls), ["checkAccessKind", "claim"])
+})
+
+test("a claim that throws takes the just-created account down with its inline stamp", async () => {
+  const { calls, deps } = dependencies({
+    claimEnrollment: async (input: unknown) => {
+      calls.push(["claim", input])
+      throw new Error("database is down")
+    },
+  })
+  const response = await createDiscoveryClaimHandler(deps)(request())
+
+  // The new-account branch stamps inline in `createUser`; the rollback deletes the
+  // account, so that stamp cannot outlive the failed claim either.
+  assert.equal(response.status, 503)
+  assert.deepEqual(names(calls), ["createUser", "claim", "deleteUser"])
 })
 
 // --- The existing-account continuation --------------------------------------
@@ -195,7 +249,7 @@ test("the continuation claims from the body handoff and re-parks the cookie", as
   )
 
   assert.equal(response.status, 200)
-  assert.deepEqual(names(calls), ["stamp", "claim"])
+  assert.deepEqual(names(calls), ["checkAccessKind", "claim", "stamp"])
   assert.equal(response.cookies.get(DISCOVERY_INVITE_COOKIE)?.value, CREDENTIAL)
 })
 
@@ -226,7 +280,7 @@ test("the body handoff beats a stale cookie and replaces it", async () => {
   assert.equal(response.status, 200)
   assert.deepEqual(decoded, [CREDENTIAL])
   assert.equal(response.cookies.get(DISCOVERY_INVITE_COOKIE)?.value, CREDENTIAL)
-  assert.deepEqual(names(calls), ["stamp", "claim"])
+  assert.deepEqual(names(calls), ["checkAccessKind", "claim", "stamp"])
 })
 
 // --- Refusals ----------------------------------------------------------------
@@ -287,15 +341,6 @@ test("losing the claim race rolls the just-created account back", async () => {
   assert.deepEqual(await response.json(), { error: "Diese Einladung wurde bereits eingelöst." })
   assert.deepEqual(names(calls), ["createUser", "claim", "deleteUser"])
   assert.deepEqual(calls[2][1], { userId: ids.user })
-})
-
-test("losing the race on an existing account leaves that account alone", async () => {
-  const { calls, deps } = dependencies({
-    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
-    claimEnrollment: async () => ({ status: "conflict" as const }),
-  })
-  assert.equal((await createDiscoveryClaimHandler(deps)(request())).status, 409)
-  assert.ok(!names(calls).includes("deleteUser"))
 })
 
 // --- Resolve -----------------------------------------------------------------

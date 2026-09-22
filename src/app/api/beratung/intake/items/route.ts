@@ -1,11 +1,12 @@
 import type { NextRequest } from "next/server"
 
+import type { DiscoveryIntakeItemView } from "@/components/discovery/intake/types"
 import {
   buildDiscoveryIntakeItemRow,
   clearDiscoveryIntakeCategory,
   discoveryIntakeItemBodySchema,
   insertDiscoveryIntakeItem,
-  type DiscoveryIntakeItem,
+  toDiscoveryIntakeItemView,
 } from "@/lib/discovery/intake"
 
 import {
@@ -68,8 +69,11 @@ export function createDiscoveryIntakeItemsHandler(
         },
         admin,
       )
-      const item = await insert(built.row, admin)
-      return discoveryIntakeJson({ item } satisfies { item: DiscoveryIntakeItem }, 201)
+      const stored = await insert(built.row, admin)
+      // The browser gets the same projection the checklist page is built from — never
+      // the stored row, whose `product_id` / `product_submission_id` stay server-side.
+      const item = toDiscoveryIntakeItemView(stored)
+      return discoveryIntakeJson({ item } satisfies { item: DiscoveryIntakeItemView }, 201)
     } catch (error) {
       console.error("[discovery] intake item write failed:", error)
       return discoveryIntakeError("unavailable", 503)

@@ -5,9 +5,11 @@ import { NextResponse, type NextRequest } from "next/server"
 
 import { hasCurrentPaidAppAccess } from "@/lib/billing/subscriptions"
 import {
+  checkDiscoveryAccessKind,
   claimDiscoveryEnrollment,
   loadDiscoveryEnrollment,
   stampDiscoveryAccess,
+  type DiscoveryAccessKindCheck,
   type DiscoveryClaimResult,
   type DiscoveryEnrollment,
   type DiscoveryStampResult,
@@ -68,6 +70,7 @@ type ClaimDependencies = {
   flagEnabled: () => boolean
   loadEnrollment: typeof loadDiscoveryEnrollment
   claimEnrollment: typeof claimDiscoveryEnrollment
+  checkAccessKind: typeof checkDiscoveryAccessKind
   stampDiscoveryAccess: typeof stampDiscoveryAccess
   getUser: () => Promise<SessionUser | null>
   hasCurrentPaidAppAccess: (userId: string) => Promise<boolean>
@@ -167,6 +170,11 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
     }
 
     let password: string | null = null
+    // Set on the pre-existing-account branch only. A brand-new account carries the
+    // stamp inline from `createUser`, and a failed claim deletes that account again —
+    // so only the pre-existing one needs a stamp written as its own step, AFTER the
+    // claim.
+    let stampExistingAccount = false
     if (!user) {
       // Someone already owns this address, so the only safe way in is a link to
       // it. That covers both a previously claimed enrollment and a plain
@@ -214,25 +222,19 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
       // The second refusal, beside the paid one and for the same reason: an
       // account that already belongs to another access kind (partner,
       // field_test) must not be dragged behind the participant gate, and
-      // overwriting its `access_kind` would be irrecoverable.
-      let stamp: DiscoveryStampResult
+      // overwriting its `access_kind` would be irrecoverable. This is the READ
+      // half of the stamp, so the refusal still precedes every write while the
+      // stamp itself waits for the claim below.
+      let accessKind: DiscoveryAccessKindCheck
       try {
-        stamp = await (overrides.stampDiscoveryAccess ?? stampDiscoveryAccess)({
-          userId: user.id,
-          enrollmentId: enrollment.enrollmentId,
-        })
+        accessKind = await (overrides.checkAccessKind ?? checkDiscoveryAccessKind)(user.id)
       } catch {
         return copyResponseCookies(response, jsonError(SERVICE_UNAVAILABLE, 503))
       }
-      if (stamp.status === "foreign_access_kind") {
-        return copyResponseCookies(
-          response,
-          NextResponse.json(
-            { code: "existing_access_kind", error: EXISTING_ACCESS_KIND },
-            { status: 403, headers: NO_STORE_HEADERS },
-          ),
-        )
+      if (accessKind.status === "foreign_access_kind") {
+        return copyResponseCookies(response, refuseForeignAccessKind())
       }
+      stampExistingAccount = true
     }
 
     let claim: DiscoveryClaimResult
@@ -251,6 +253,29 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
       // bound to nothing, so it must not survive.
       await rollbackCreatedUser({ overrides, password, userId: user.id })
       return copyResponseCookies(response, jsonError(ALREADY_CLAIMED, 409))
+    }
+
+    if (stampExistingAccount) {
+      // Deliberately the LAST write of the claim. The stamp is what middleware gates
+      // on, and a stamp without a live claim strands the account: every discovery
+      // surface re-reads the enrollment and 404s, while revocation cannot clear the
+      // stamp because it runs off the enrollment row this account is not bound to.
+      // Claiming first turns a stamp failure into a plain retry — the claim is
+      // idempotent for the same account, so the continuation re-stamps cleanly.
+      let stamp: DiscoveryStampResult
+      try {
+        stamp = await (overrides.stampDiscoveryAccess ?? stampDiscoveryAccess)({
+          userId: user.id,
+          enrollmentId: enrollment.enrollmentId,
+        })
+      } catch {
+        return copyResponseCookies(response, jsonError(SERVICE_UNAVAILABLE, 503))
+      }
+      // Only reachable if the account acquired a foreign `access_kind` between the
+      // check above and here; the refusal copy is the same one.
+      if (stamp.status === "foreign_access_kind") {
+        return copyResponseCookies(response, refuseForeignAccessKind())
+      }
     }
 
     if (password) {
@@ -384,6 +409,13 @@ function isExistingUserError(error: unknown) {
 
 function isSameOrigin(request: Request) {
   return request.headers.get("origin") === new URL(request.url).origin
+}
+
+function refuseForeignAccessKind() {
+  return NextResponse.json(
+    { code: "existing_access_kind", error: EXISTING_ACCESS_KIND },
+    { status: 403, headers: NO_STORE_HEADERS },
+  )
 }
 
 function jsonError(error: string, status: number) {
