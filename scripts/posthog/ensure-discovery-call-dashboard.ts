@@ -139,6 +139,15 @@ export async function runDiscoveryCallDashboard(
       )
       return { mode: "dry-run", action: "preflight", created: false }
     }
+    // Verify every query BEFORE the first dashboard write: a rejected query
+    // must not strand an empty dashboard whose id is nowhere recorded.
+    for (const spec of discoveryCallInsights) {
+      const result = (await request(deps, "/query/", {
+        query: discoveryCallInsightQuery(spec).source,
+      })) as { results?: unknown[] }
+      if (!Array.isArray(result.results))
+        throw new Error(`Query verification failed for ${spec.name}; nothing was created.`)
+    }
     const created = (await request(deps, "/dashboards/", {
       name: discoveryCallDashboardName,
       description: discoveryCallDashboardDescription,

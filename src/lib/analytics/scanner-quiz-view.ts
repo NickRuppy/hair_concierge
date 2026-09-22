@@ -37,7 +37,10 @@ export function createScannerQuizViewTracker({
   track?: typeof trackAppEvent
   retry?: Retry
 } = {}) {
-  let settled = false
+  // Keyed by package: a mid-bootstrap package hand-off (the provider may
+  // republish a different key) must not leave BOTH funnels without their
+  // one-shot snapshot.
+  let settledFor: string | null = null
 
   return ({
     displayedFunnelPackageKey,
@@ -50,13 +53,14 @@ export function createScannerQuizViewTracker({
     resumed: boolean
     step: number
   }) => {
-    if (settled) return
+    if (settledFor === displayedFunnelPackageKey) return
     const eventName = quizViewEventForPackage(displayedFunnelPackageKey)
     if (!eventName) return
     const viewedAt = now()
     const quizViewId = createId()
-    // Keep a single immutable view snapshot while the bounded context lookup resolves.
-    settled = true
+    // Keep a single immutable view snapshot per package while the bounded
+    // context lookup resolves.
+    settledFor = displayedFunnelPackageKey
     const attempt = (number: number) => {
       void bootstrap()
         .then((context) => {

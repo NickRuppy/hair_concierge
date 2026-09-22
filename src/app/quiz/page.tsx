@@ -79,7 +79,7 @@ export default function QuizPage() {
   const quizStartedRef = useRef(false)
   const returnPromptTrackedRef = useRef(false)
   const scannerQuizMountedRef = useRef(true)
-  const scannerQuizViewedRef = useRef(false)
+  const scannerQuizViewedRef = useRef<string | null>(null)
   const scannerQuizViewTrackerRef = useRef(createScannerQuizViewTracker())
   const lastTrackedStepRef = useRef<number | null>(null)
 
@@ -281,10 +281,10 @@ export default function QuizPage() {
       returnPrompt === "open" ||
       !funnelPackageKey ||
       !quizViewEventForPackage(funnelPackageKey) ||
-      scannerQuizViewedRef.current
+      scannerQuizViewedRef.current === funnelPackageKey
     )
       return
-    scannerQuizViewedRef.current = true
+    scannerQuizViewedRef.current = funnelPackageKey
     scannerQuizViewTrackerRef.current({
       displayedFunnelPackageKey: funnelPackageKey,
       isCurrent: () =>

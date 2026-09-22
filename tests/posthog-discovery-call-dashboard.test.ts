@@ -46,6 +46,9 @@ function fixture(
     let result: unknown
     if (path.endsWith("/query/")) {
       result = options.queryFailure ? { error: "bad query" } : { results: [] }
+    } else if (path.endsWith("/dashboards/") && method === "POST") {
+      writes.push({ path, method })
+      result = { ...dashboard, description: body.description, name: body.name }
     } else if (path.endsWith(`/dashboards/${dashboardId}/`)) {
       if (method === "PATCH") {
         writes.push({ path, method })
@@ -120,6 +123,29 @@ test("all new query results are verified before any dashboard mutations", async 
     /Query verification failed/,
   )
   assert.equal(deps.writes.length, 0)
+})
+
+test("a first-time apply verifies every query before creating any dashboard", async () => {
+  const deps = fixture({ queryFailure: true, empty: true })
+  await assert.rejects(
+    runDiscoveryCallDashboard(["--apply", `--confirm-project=${discoveryCallProjectId}`], deps),
+    /Query verification failed/,
+  )
+  assert.equal(deps.writes.length, 0)
+})
+
+test("a first-time apply creates the dashboard only after all queries verify", async () => {
+  const deps = fixture({ empty: true })
+  const result = (await runDiscoveryCallDashboard(
+    ["--apply", `--confirm-project=${discoveryCallProjectId}`],
+    deps,
+  )) as { dashboardId?: number }
+  assert.equal(result.dashboardId, dashboardId)
+  assert.equal(deps.writes[0]?.path.endsWith("/dashboards/"), true)
+  assert.equal(
+    deps.writes.filter((write) => write.path.includes("/insights/")).length,
+    discoveryCallInsights.length,
+  )
 })
 
 test("discovery-call installer converges to zero writes once every insight matches the spec", async () => {

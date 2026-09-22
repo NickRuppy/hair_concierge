@@ -23,9 +23,22 @@ export const discoveryCallPackageKey = "discovery_call_v1"
 // `src/funnels/offers/discovery-call-v1.tsx`).
 export const discoveryCallOfferVariant = "discovery-call-v1"
 
-const testExclusion =
-  "lower(ifNull(toString(properties.is_internal_test),'false')) NOT IN ('true','1') AND ifNull(toString(properties.test_kind),'') NOT IN ('field_test','partner')"
+// A row counts as test-marked when either flag is set. Only SOME events carry
+// `is_internal_test` (offer context) while others in the same session do not
+// (e.g. the booking event), so exclusion must be decided per SESSION: one
+// marked row disqualifies the whole `funnel_session_id`.
+const testMarker =
+  "(lower(ifNull(toString(properties.is_internal_test),'false')) IN ('true','1') OR ifNull(toString(properties.test_kind),'') IN ('field_test','partner'))"
 const packageFilter = `properties.funnel_package_key='${discoveryCallPackageKey}'`
+const sessionIdExpr = "toString(properties.funnel_session_id)"
+/** Subquery of session ids with at least one test-marked row in the range. */
+const markedSessionsSubquery = `SELECT DISTINCT ${sessionIdExpr}
+  FROM events
+  WHERE timestamp>={filters.dateRange.from} AND timestamp<={filters.dateRange.to}
+    AND ${packageFilter} AND ${testMarker}
+    AND notEmpty(ifNull(${sessionIdExpr},''))`
+/** Row-level guard for tiles: not itself marked, and not from a marked session. */
+const testExclusion = `NOT ${testMarker} AND ifNull(${sessionIdExpr},'') NOT IN (${markedSessionsSubquery})`
 
 export type DiscoveryCallInsightSpec = {
   key: string
@@ -70,15 +83,15 @@ export function buildDiscoveryCallFunnelQuery() {
     .join("\n ")
   return `WITH sessions AS (
   SELECT toString(properties.funnel_session_id) AS sid,
+    max(if(${testMarker},1,0)) AS is_test_session,
 ${sessionColumns}
   FROM events
   WHERE timestamp>={filters.dateRange.from} AND timestamp<={filters.dateRange.to}
     AND ${packageFilter}
     AND notEmpty(ifNull(toString(properties.funnel_session_id),''))
-    AND ${testExclusion}
   GROUP BY sid
 ),
-quiz AS (SELECT *,arrayMin(quiz_started_times) AS quiz_at FROM sessions WHERE length(quiz_started_times)>0),
+quiz AS (SELECT *,arrayMin(quiz_started_times) AS quiz_at FROM sessions WHERE length(quiz_started_times)>0 AND is_test_session=0),
 progressed AS (
   SELECT *,
 ${progressedColumns}

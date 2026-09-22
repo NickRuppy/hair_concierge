@@ -189,6 +189,27 @@ test("the quiz-entry snapshot emits for the discovery-call package under its own
   ])
 })
 
+test("a package hand-off mid-bootstrap still emits the new package's snapshot", async () => {
+  const events: Array<{ eventName: string }> = []
+  const tracker = createScannerQuizViewTracker({
+    // The first mount resolves to a context that no longer matches; the
+    // second call for the handed-off package must not be blocked by the
+    // first call's settle.
+    bootstrap: async () => ({
+      funnelPackageKey: "discovery_call_v1",
+      funnelSessionId: "session-5",
+    }),
+    track: ((eventName: string) => events.push({ eventName })) as never,
+  })
+  tracker({ displayedFunnelPackageKey: "scan_v1", step: 2, resumed: false })
+  await Promise.resolve()
+  assert.deepEqual(events, [])
+
+  tracker({ displayedFunnelPackageKey: "discovery_call_v1", step: 2, resumed: false })
+  await Promise.resolve()
+  assert.deepEqual(events, [{ eventName: "discovery_call_quiz_viewed" }])
+})
+
 test("a scanner context resolving under a discovery mount never emits", async () => {
   const events: unknown[] = []
   createScannerQuizViewTracker({
