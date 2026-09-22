@@ -52,5 +52,14 @@
     "landingVariant": "scan-regal",
     "quizVariant": "legacy-quiz-v1",
     "offerVariant": "scan-regal-v1"
+  },
+  {
+    "key": "discovery_call_v1",
+    "slug": "call",
+    "channel": "meta",
+    "status": "active",
+    "landingVariant": "call-direct",
+    "quizVariant": "legacy-quiz-v1",
+    "offerVariant": "discovery-call-v1"
   }
 ]

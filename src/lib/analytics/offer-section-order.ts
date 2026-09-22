@@ -47,6 +47,16 @@ const SCAN_REGAL_SECTION_ORDER = [
   "final_cta",
 ] as const satisfies readonly OfferSectionId[]
 
+/** `discovery-call-v1` — booking replaces pricing as the conversion surface. */
+const DISCOVERY_CALL_SECTION_ORDER = [
+  "hero",
+  "method",
+  "booking",
+  "testimonials",
+  "free_explanation",
+  "final_cta",
+] as const satisfies readonly OfferSectionId[]
+
 const SCANNER_REFINEMENT_SECTION_ORDER = [
   "hero",
   "personal_plan_diagnosis",
@@ -66,14 +76,16 @@ export function resolveOfferSectionIndex(
 ): number {
   const presentationVariant = resolveOfferPresentationVariant(offerVariant)
   const order: readonly OfferSectionId[] =
-    presentationVariant === "scan-regal-v1"
-      ? offerRevision === "scan_regal_refinement_v20"
-        ? SCANNER_REFINEMENT_SECTION_ORDER
-        : SCAN_REGAL_SECTION_ORDER
-      : presentationVariant === "personal-plan-v1" ||
-          isPersonalPlanPricingExperimentVariant(presentationVariant)
-        ? PERSONAL_PLAN_SECTION_ORDER
-        : ORGANIC_PLAN_SECTION_ORDER
+    presentationVariant === "discovery-call-v1"
+      ? DISCOVERY_CALL_SECTION_ORDER
+      : presentationVariant === "scan-regal-v1"
+        ? offerRevision === "scan_regal_refinement_v20"
+          ? SCANNER_REFINEMENT_SECTION_ORDER
+          : SCAN_REGAL_SECTION_ORDER
+        : presentationVariant === "personal-plan-v1" ||
+            isPersonalPlanPricingExperimentVariant(presentationVariant)
+          ? PERSONAL_PLAN_SECTION_ORDER
+          : ORGANIC_PLAN_SECTION_ORDER
   const index = order.indexOf(sectionId)
   return index >= 0 ? index : order.length
 }

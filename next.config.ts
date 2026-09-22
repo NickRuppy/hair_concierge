@@ -33,7 +33,7 @@ const securityHeaders = [
       "font-src 'self' data: https://fast.wistia.net",
       "connect-src 'self' https://eu.i.posthog.com https://eu.posthog.com https://cdp-eu.customer.io https://*.supabase.co https://*.sentry.io https://api.stripe.com https://js.stripe.com https://checkout.stripe.com https://www.paypal.com https://www.sandbox.paypal.com https://api-m.paypal.com https://api-m.sandbox.paypal.com https://fast.wistia.com https://fast.wistia.net https://embed-cloudfront.wistia.com https://embed-ssl.wistia.com https://distillery.wistia.com https://pipedream.wistia.com",
       "media-src 'self' https://embed-cloudfront.wistia.com https://embed-ssl.wistia.com",
-      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://www.paypal.com https://www.sandbox.paypal.com https://form.typeform.com",
+      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://www.paypal.com https://www.sandbox.paypal.com https://form.typeform.com https://calendly.com",
       "frame-ancestors 'none'",
       "object-src 'none'",
       "base-uri 'self'",
