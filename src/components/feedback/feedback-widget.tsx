@@ -150,7 +150,11 @@ export function FeedbackWidget() {
   }
 
   return (
-    <>
+    // `contents` generates no box, so the fixed overlays below are positioned exactly as
+    // before; `print:hidden` (no responsive display utility on this wrapper, so nothing
+    // out-ranks it) keeps the side tab and its hint off printed pages — the discovery
+    // routine document at `/admin/beratung/<id>/pdf` is an A4 sheet a participant receives.
+    <div className="contents print:hidden">
       {/* First-time hint bubble — sits to the left of the tab */}
       {hintVisible && (
         <div
@@ -258,6 +262,6 @@ export function FeedbackWidget() {
           )}
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   )
 }

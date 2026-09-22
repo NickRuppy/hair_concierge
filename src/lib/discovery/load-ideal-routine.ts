@@ -80,8 +80,11 @@ export type DiscoveryIdealRoutine = {
   context: ScanEvaluationContext
   /**
    * Echoed straight off the computed preview response — the identity the previews were
-   * actually computed under, not a recomputation. It is the provenance T6 stamps on the
-   * PDF, and it makes the loader's two preview arguments observable from its own output.
+   * actually computed under, not a recomputation. It makes the loader's two preview
+   * arguments observable from its own output, which is what pins them in the tests.
+   *
+   * Deliberately NOT rendered anywhere: the participant's document carries no internal
+   * identity (`discovery:<intakeId>`, a need-version id), and the cockpit has no use for it.
    */
   previewSource: DiscoveryPreviewInput
 }

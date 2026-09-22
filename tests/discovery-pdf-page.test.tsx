@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 import { NextResponse } from "next/server"
 import { renderToStaticMarkup } from "react-dom/server"
@@ -138,7 +139,8 @@ const maskStep = step({
   categoryLabel: "Maske",
   roleLabel: "Intensivpflege",
   roleDescription: "Gibt den Längen eine intensive, auswaschbare Pflegeeinheit.",
-  frequencyLabel: "1× pro Woche",
+  // Plan-internal phrasing for a category with no frequency target yet.
+  frequencyLabel: "wird im nächsten Schritt verfeinert",
 })
 
 const oilStep = step({
@@ -148,7 +150,8 @@ const oilStep = step({
   categoryLabel: "Haaröl",
   roleLabel: "Finish",
   roleDescription: "Schließt die Routine als Finish für die Längen ab.",
-  frequencyLabel: "bei Bedarf",
+  // Plan-internal phrasing for a paused category.
+  frequencyLabel: "später: 1× pro Woche",
 })
 
 const steps = [shampooStep, conditionerStep, leaveInStep, maskStep, oilStep]
@@ -307,7 +310,12 @@ async function renderPdf(overrides: Deps = {}): Promise<string> {
   return renderToStaticMarkup(element)
 }
 
-async function redirectTargetOf(overrides: Deps): Promise<string> {
+/**
+ * The digest Next attaches to its control-flow throws. Asserting it — rather than merely
+ * that something threw — is what keeps a `notFound()` from silently becoming a `redirect()`
+ * (or the other way round) without a test noticing.
+ */
+async function digestOf(overrides: Deps): Promise<string> {
   try {
     await renderPdf(overrides)
   } catch (error) {
@@ -320,21 +328,35 @@ async function redirectTargetOf(overrides: Deps): Promise<string> {
 // --- the gates ------------------------------------------------------------------
 
 test("the kill switch and the admin gate hide the document rather than explain it", async () => {
-  await assert.rejects(() => renderPdf({ flagEnabled: () => false }))
-  await assert.rejects(() =>
-    renderPdf({
-      requireAdmin: async () => ({
-        response: NextResponse.json({ error: "Nicht erlaubt." }, { status: 403 }),
-      }),
-    }),
+  // A 404, not a redirect: an admin surface must not confirm its own existence.
+  const notFound = "NEXT_HTTP_ERROR_FALLBACK;404"
+
+  assert.ok((await digestOf({ flagEnabled: () => false })).startsWith(notFound))
+  assert.ok(
+    (
+      await digestOf({
+        requireAdmin: async () => ({
+          response: NextResponse.json({ error: "Nicht erlaubt." }, { status: 403 }),
+        }),
+      })
+    ).startsWith(notFound),
   )
-  await assert.rejects(() => renderPdf({ loadEnrollment: async () => null }))
+  assert.ok(
+    (
+      await digestOf({
+        requireAdmin: async () => ({
+          response: NextResponse.json({ error: "Nicht angemeldet." }, { status: 401 }),
+        }),
+      })
+    ).startsWith(notFound),
+  )
+  assert.ok((await digestOf({ loadEnrollment: async () => null })).startsWith(notFound))
 })
 
 test("the render gate: only a finalised call has a document", async () => {
   const cockpit = `/admin/beratung/${ids.enrollment}`
 
-  const unfinalized = await redirectTargetOf({
+  const unfinalized = await digestOf({
     loadIntake: async () => ({ ...intake, callFinalizedAt: null, finalizedSourceHash: null }),
   })
   assert.ok(unfinalized.startsWith("NEXT_REDIRECT"), unfinalized)
@@ -342,16 +364,14 @@ test("the render gate: only a finalised call has a document", async () => {
 
   // No checklist at all, and a profile that cannot be read right now, land in the same place:
   // the cockpit is the surface that explains why there is nothing to print.
-  assert.ok((await redirectTargetOf({ loadIntake: async () => null })).includes(cockpit))
+  assert.ok((await digestOf({ loadIntake: async () => null })).includes(cockpit))
   assert.ok(
-    (await redirectTargetOf({ loadModel: async () => ({ status: "no_usable_source" }) })).includes(
-      cockpit,
-    ),
+    (await digestOf({ loadModel: async () => ({ status: "no_usable_source" }) })).includes(cockpit),
   )
   assert.ok(
-    (
-      await redirectTargetOf({ loadModel: async () => ({ status: "temporarily_unavailable" }) })
-    ).includes(cockpit),
+    (await digestOf({ loadModel: async () => ({ status: "temporarily_unavailable" }) })).includes(
+      cockpit,
+    ),
   )
 })
 
@@ -386,6 +406,12 @@ test("the document is written to the participant, step by step", async () => {
   assert.ok(markup.includes("Regelmäßige Reinigung für deine Kopfhaut."))
   assert.ok(markup.includes("Gibt den Längen Pflege, die im Haar bleibt."))
 
+  // Plan-internal cadence phrasings — an unrefined category and a paused one — never reach
+  // the participant's sheet; both fall back to a neutral cadence.
+  assert.ok(!markup.includes("wird im nächsten Schritt verfeinert"))
+  assert.ok(!markup.includes("später:"))
+  assert.equal(markup.split("nach Bedarf").length - 1, 2)
+
   // Print CSS is the point of this page.
   assert.ok(markup.includes("print-color-adjust: exact"))
   assert.ok(markup.includes("@page { size: A4; margin: 0; }"))
@@ -395,7 +421,10 @@ test("the shelf says what happens to every product she brought", async () => {
   const markup = await renderPdf()
 
   assert.ok(markup.includes("Deine bisherigen Produkte"))
-  assert.ok(markup.includes("3 Produkte geprüft — 1 bleibt, 1 wird ersetzt, 1 ist noch offen."))
+  // „in deiner Routine", not „geprüft": this counts only the step-bound products.
+  assert.ok(
+    markup.includes("3 Produkte in deiner Routine — 1 bleibt, 1 wird ersetzt, 1 ist noch offen."),
+  )
   assert.ok(markup.includes("Bleibt in deiner Routine."))
   assert.ok(markup.includes("Wird ersetzt durch Guhl Feuchtigkeit &amp; Glanz Spülung."))
   assert.ok(markup.includes("Gliss Kur Aqua Revive Spülung"))
@@ -410,6 +439,20 @@ test("the shelf says what happens to every product she brought", async () => {
   // it is NOT filed under „brauchst du nicht mehr", because nothing is known about it yet.
   assert.ok(markup.includes("Dazu melden wir uns noch</h2>"))
   assert.ok(markup.includes("Gescanntes Produkt · 4005900123456"))
+})
+
+test("the date is the one she lived, not the one UTC stored", async () => {
+  // 00:30 CEST on the 23rd is 22:30 UTC on the 22nd. Slicing the ISO string would print
+  // yesterday on her sheet.
+  const afterMidnight = await renderPdf({
+    loadIntake: async () => ({
+      ...intake,
+      callFinalizedAt: "2026-09-22T22:30:00.000Z",
+      finalizedSourceHash: FINALIZED_HASH,
+    }),
+  })
+  assert.ok(afterMidnight.includes("23.09.2026"))
+  assert.ok(!afterMidnight.includes("22.09.2026"))
 })
 
 // --- drift ----------------------------------------------------------------------
@@ -434,4 +477,48 @@ test("a routine that moved since the finalisation says so, and never re-derives 
     loadIntake: async () => ({ ...intake, finalizedSourceHash: null }),
   })
   assert.ok(unstamped.includes("Stand hat sich geändert"))
+})
+
+// --- what hides the app's own chrome from the printed sheet ----------------------
+
+/**
+ * The document prints alone. Three wrappers make that true, and both of their properties
+ * are easy to break by accident, so they are pinned here rather than left to a manual
+ * print preview:
+ *
+ *  - `contents` on the wrapper, never a plain `div`. A real box would become the sticky
+ *    containing block for the admin `<Header>` (collapsing its sticky range to the box's
+ *    own height) and would take the sidebar and mobile nav out of the layout row.
+ *  - NO responsive display utility on the element that carries `print:hidden`. Tailwind
+ *    emits breakpoint variants after `print`, so `md:block` beats `print:hidden` on the
+ *    same element — and an A4 portrait page (~794px with `@page { margin: 0 }`) matches
+ *    `md`, which is exactly when it matters.
+ *
+ * These layouts cannot be rendered here (client components behind the app's provider tree),
+ * so the guard reads their class lists straight out of the source.
+ */
+const CHROME_SOURCES = [
+  "src/app/admin/layout.tsx",
+  "src/components/feedback/feedback-widget.tsx",
+  "src/components/cookie-consent/cookie-consent.tsx",
+]
+
+const RESPONSIVE_DISPLAY =
+  /\b(sm|md|lg|xl|2xl):(block|flex|inline-flex|grid|inline|inline-block|table|contents|hidden)\b/
+
+test("every print:hidden wrapper is a contents box with no responsive display utility", () => {
+  for (const path of CHROME_SOURCES) {
+    const source = readFileSync(new URL(`../${path}`, import.meta.url), "utf8")
+    const classLists = [...source.matchAll(/className="([^"]*)"/g)].map((match) => match[1])
+    const printHidden = classLists.filter((value) => value.includes("print:hidden"))
+
+    assert.ok(printHidden.length > 0, `${path} carries no print:hidden wrapper`)
+    for (const value of printHidden) {
+      assert.ok(
+        value.split(/\s+/).includes("contents"),
+        `${path}: "${value}" is not a contents box`,
+      )
+      assert.ok(!RESPONSIVE_DISPLAY.test(value), `${path}: "${value}" out-ranks its own print rule`)
+    }
+  }
 })

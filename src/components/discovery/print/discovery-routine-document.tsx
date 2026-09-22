@@ -79,7 +79,7 @@ function printSteps(view: DiscoveryCockpitView): PrintStep[] {
   return view.steps.map((step) => ({
     key: step.decisionKey,
     categoryLabel: step.categoryLabel,
-    frequencyLabel: step.frequencyLabel,
+    frequencyLabel: cadenceLabel(step.frequencyLabel),
     // The role's own sentence — what this step does, in the plan's established wording.
     why: step.roleDescription ?? step.roleLabel,
     product: stepProduct(step),
@@ -141,12 +141,17 @@ function routineSummary(steps: PrintStep[]): string {
   ])
 }
 
-/** „6 Produkte geprüft — 4 bleiben, 2 werden ersetzt." */
+/**
+ * „6 Produkte in deiner Routine — 4 bleiben, 2 werden ersetzt."
+ *
+ * Deliberately not „geprüft": this counts only the products that carry a routine step, so
+ * „geprüft" would undercount everything listed further down the page.
+ */
 function shelfSummary(entries: ShelfEntry[]): string {
   const keep = entries.filter((entry) => entry.tag === TAG_KEEP).length
   const swap = entries.filter((entry) => entry.tag === TAG_SWAP).length
   const open = entries.filter((entry) => entry.tag === TAG_OPEN).length
-  return sentence(`${countLabel(entries.length, "Produkt", "Produkte")} geprüft`, [
+  return sentence(`${countLabel(entries.length, "Produkt", "Produkte")} in deiner Routine`, [
     ...(keep > 0 ? [`${keep} ${keep === 1 ? "bleibt" : "bleiben"}`] : []),
     ...(swap > 0 ? [`${swap} ${swap === 1 ? "wird" : "werden"} ersetzt`] : []),
     ...(open > 0 ? [`${open} ${open === 1 ? "ist" : "sind"} noch offen`] : []),
@@ -154,15 +159,46 @@ function shelfSummary(entries: ShelfEntry[]): string {
 }
 
 /**
- * Date only, read straight off the stored ISO string — same reason as the cockpit's
- * formatter: server render and browser hydration must not disagree about a time zone.
+ * The date as the participant lived it.
+ *
+ * Fixed to Europe/Berlin rather than sliced off the UTC string: a call finalised at 00:30
+ * CEST is stored as the previous day in UTC and would print yesterday's date on her sheet.
+ * The zone is a constant, not the runtime's, so the server render and any hydration of this
+ * text agree by construction.
  */
-export function formatDiscoveryDocumentDate(value: string | null | undefined): string {
+const DOCUMENT_DATE_FORMAT = new Intl.DateTimeFormat("de-DE", {
+  timeZone: "Europe/Berlin",
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+})
+
+function formatDiscoveryDocumentDate(value: string | null | undefined): string {
   if (!value) return ""
-  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value)
-  if (!match) return ""
-  const [, year, month, day] = match
-  return `${day}.${month}.${year}`
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return ""
+  return DOCUMENT_DATE_FORMAT.format(date)
+}
+
+/**
+ * The cadence column, guarded against the plan's own internal phrasings.
+ *
+ * `frequencyLabel` (decision-presentation.ts) answers „wird im nächsten Schritt verfeinert"
+ * for a category with no frequency target yet, and prefixes „später: " while a category is
+ * paused. Both are plan-machinery wording about a step that is not settled — on a finished
+ * document they read as a loose end, so the cadence falls back to a neutral „nach Bedarf"
+ * and the step's own line (open or named) carries the actual state.
+ */
+const CADENCE_FALLBACK = "nach Bedarf"
+const CADENCE_UNREFINED = "wird im nächsten Schritt verfeinert"
+const CADENCE_PAUSED_PREFIX = "später:"
+
+function cadenceLabel(label: string): string {
+  const value = label.trim()
+  if (!value || value === CADENCE_UNREFINED || value.startsWith(CADENCE_PAUSED_PREFIX)) {
+    return CADENCE_FALLBACK
+  }
+  return value
 }
 
 // --- document -----------------------------------------------------------------
