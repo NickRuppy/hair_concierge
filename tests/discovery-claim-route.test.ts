@@ -1,0 +1,301 @@
+import assert from "node:assert/strict"
+import test from "node:test"
+import { NextRequest } from "next/server"
+
+import { createDiscoveryClaimHandler } from "../src/app/api/beratung/claim/route"
+import { createDiscoveryResolveHandler } from "../src/app/api/beratung/resolve/route"
+import { DISCOVERY_INVITE_COOKIE } from "../src/lib/discovery/invite-session"
+import type { DiscoveryEnrollment } from "../src/lib/discovery/enrollment"
+
+const ids = {
+  enrollment: "3f1a6f2e-2b44-4a1e-9a1a-6f2e2b444a1e",
+  user: "20000000-0000-4000-8000-000000000002",
+  otherUser: "20000000-0000-4000-8000-000000000003",
+}
+
+const SECRET = "discovery-enrollment-secret-with-enough-length"
+const CREDENTIAL = "v1.stub-credential.stub-signature"
+
+const enrollment: DiscoveryEnrollment = {
+  enrollmentId: ids.enrollment,
+  name: "Lea Sommer",
+  email: "lea@example.test",
+  tokenVersion: 2,
+  claimedUserId: null,
+  claimedAt: null,
+  createdAt: "2026-09-22T10:00:00.000Z",
+}
+
+function request({
+  cookie = true,
+  body,
+  origin = "https://chaarlie.de",
+}: { cookie?: boolean; body?: unknown; origin?: string | null } = {}) {
+  const headers: Record<string, string> = { "Content-Type": "application/json" }
+  if (origin) headers.origin = origin
+  if (cookie) headers.cookie = `${DISCOVERY_INVITE_COOKIE}=${CREDENTIAL}`
+  return new NextRequest("https://chaarlie.de/api/beratung/claim", {
+    method: "POST",
+    headers,
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+  })
+}
+
+function dependencies(overrides: Record<string, unknown> = {}) {
+  const calls: Array<[string, unknown]> = []
+  return {
+    calls,
+    deps: {
+      flagEnabled: () => true,
+      signingSecret: () => SECRET,
+      decodeCredential: () => ({ enrollmentId: ids.enrollment, tokenVersion: 2 }),
+      loadEnrollment: async () => enrollment,
+      getUser: async () => null,
+      hasCurrentPaidAppAccess: async () => false,
+      createUser: async (input: unknown) => {
+        calls.push(["createUser", input])
+        return { userId: ids.user, password: "hidden-random-password" }
+      },
+      deleteUser: async (input: unknown) => calls.push(["deleteUser", input]),
+      stampDiscoveryAccess: async (input: unknown) => {
+        calls.push(["stamp", input])
+      },
+      claimEnrollment: async (input: unknown) => {
+        calls.push(["claim", input])
+        return { status: "claimed" as const, enrollment }
+      },
+      signIn: async (input: unknown) => calls.push(["signIn", input]),
+      sendMagicLink: async (input: unknown) => calls.push(["magicLink", input]),
+      ...overrides,
+    },
+  }
+}
+
+const names = (calls: Array<[string, unknown]>) => calls.map(([name]) => name)
+
+// --- The happy path ----------------------------------------------------------
+
+test("a fresh invite creates the named account, stamps it inline and signs in", async () => {
+  const { calls, deps } = dependencies()
+  const response = await createDiscoveryClaimHandler(deps)(request())
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { destination: "/quiz", requiresEmail: false })
+  assert.deepEqual(names(calls), ["createUser", "claim", "signIn"])
+  assert.deepEqual(calls[0][1], {
+    enrollmentId: ids.enrollment,
+    email: "lea@example.test",
+    name: "Lea Sommer",
+  })
+  // The binding is version-scoped, which is what makes it a compare-and-set.
+  assert.deepEqual(calls[1][1], {
+    enrollmentId: ids.enrollment,
+    tokenVersion: 2,
+    userId: ids.user,
+  })
+})
+
+// --- The new paid-user refusal ----------------------------------------------
+
+test("an account with current paid access is refused and nothing is written", async () => {
+  const { calls, deps } = dependencies({
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+    hasCurrentPaidAppAccess: async () => true,
+  })
+  const response = await createDiscoveryClaimHandler(deps)(request())
+
+  assert.equal(response.status, 403)
+  const body = await response.json()
+  assert.equal(body.code, "existing_paid_access")
+  assert.match(body.error, /vollen Zugang zu Chaarlie/)
+  // No stamp, no claim, no account: the refusal precedes every write.
+  assert.deepEqual(names(calls), [])
+})
+
+test("a paid account is refused even when it already claimed this enrollment", async () => {
+  const { calls, deps } = dependencies({
+    loadEnrollment: async () => ({ ...enrollment, claimedUserId: ids.user }),
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+    hasCurrentPaidAppAccess: async () => true,
+  })
+  assert.equal((await createDiscoveryClaimHandler(deps)(request())).status, 403)
+  assert.deepEqual(names(calls), [])
+})
+
+test("an unpaid existing account is stamped, then bound", async () => {
+  const { calls, deps } = dependencies({
+    getUser: async () => ({ id: ids.user, email: "LEA@example.test" }),
+  })
+  const response = await createDiscoveryClaimHandler(deps)(request())
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { destination: "/quiz", requiresEmail: false })
+  // Stamp before claim, and no password sign-in: the session already exists.
+  assert.deepEqual(names(calls), ["stamp", "claim"])
+  assert.deepEqual(calls[0][1], { userId: ids.user, enrollmentId: ids.enrollment })
+})
+
+// --- The existing-account continuation --------------------------------------
+
+test("email_exists sends a magic link to the continuation instead of creating a second account", async () => {
+  const { calls, deps } = dependencies({
+    createUser: async () => {
+      throw { code: "email_exists", status: 422, message: "email already registered" }
+    },
+  })
+  const response = await createDiscoveryClaimHandler(deps)(request())
+
+  assert.equal(response.status, 202)
+  assert.deepEqual(await response.json(), { requiresEmail: true, email: "lea@example.test" })
+  assert.deepEqual(names(calls), ["magicLink"])
+  const link = calls[0][1] as { email: string; redirectTo: string }
+  assert.equal(link.email, "lea@example.test")
+  const redirect = new URL(link.redirectTo)
+  assert.equal(redirect.pathname, "/auth/confirm")
+  // The credential rides the fragment of the continuation, never a query string.
+  assert.equal(
+    redirect.searchParams.get("next"),
+    `/beratung/weiter#handoff=${encodeURIComponent(CREDENTIAL)}`,
+  )
+})
+
+test("an already claimed enrollment with no session also goes through the link", async () => {
+  const { calls, deps } = dependencies({
+    loadEnrollment: async () => ({ ...enrollment, claimedUserId: ids.otherUser }),
+  })
+  assert.equal((await createDiscoveryClaimHandler(deps)(request())).status, 202)
+  assert.deepEqual(names(calls), ["magicLink"])
+})
+
+test("the continuation claims from the body handoff and re-parks the cookie", async () => {
+  const { calls, deps } = dependencies({
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+  })
+  const response = await createDiscoveryClaimHandler(deps)(
+    request({ cookie: false, body: { handoff: CREDENTIAL } }),
+  )
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(names(calls), ["stamp", "claim"])
+  assert.equal(response.cookies.get(DISCOVERY_INVITE_COOKIE)?.value, CREDENTIAL)
+})
+
+// --- Refusals ----------------------------------------------------------------
+
+test("a revoked or rotated enrollment is refused", async () => {
+  const { calls, deps } = dependencies({ loadEnrollment: async () => null })
+  const response = await createDiscoveryClaimHandler(deps)(request())
+  assert.equal(response.status, 410)
+  assert.deepEqual(await response.json(), { error: "Diese Einladung ist nicht verfügbar." })
+  assert.deepEqual(names(calls), [])
+})
+
+test("the kill switch closes links that are already out in the wild", async () => {
+  const { calls, deps } = dependencies({ flagEnabled: () => false })
+  assert.equal((await createDiscoveryClaimHandler(deps)(request())).status, 410)
+  assert.deepEqual(names(calls), [])
+})
+
+test("a cross-origin claim is refused before anything is read", async () => {
+  const { calls, deps } = dependencies()
+  const response = await createDiscoveryClaimHandler(deps)(request({ origin: "https://evil.test" }))
+  assert.equal(response.status, 403)
+  assert.deepEqual(names(calls), [])
+})
+
+test("a signed-in stranger cannot spend someone else's invitation", async () => {
+  const { calls, deps } = dependencies({
+    getUser: async () => ({ id: ids.otherUser, email: "someone@else.test" }),
+  })
+  const response = await createDiscoveryClaimHandler(deps)(request())
+  assert.equal(response.status, 403)
+  assert.deepEqual(await response.json(), {
+    error: "Dieses Konto kann diese Einladung nicht nutzen.",
+  })
+  assert.deepEqual(names(calls), [])
+})
+
+test("the account bound by another claim is never overwritten", async () => {
+  const { calls, deps } = dependencies({
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+    loadEnrollment: async () => ({ ...enrollment, claimedUserId: ids.otherUser }),
+  })
+  const response = await createDiscoveryClaimHandler(deps)(request())
+  assert.equal(response.status, 403)
+  assert.deepEqual(names(calls), [])
+})
+
+test("losing the claim race rolls the just-created account back", async () => {
+  const { calls, deps } = dependencies({
+    claimEnrollment: async (input: unknown) => {
+      calls.push(["claim", input])
+      return { status: "conflict" as const }
+    },
+  })
+  const response = await createDiscoveryClaimHandler(deps)(request())
+
+  assert.equal(response.status, 409)
+  assert.deepEqual(await response.json(), { error: "Diese Einladung wurde bereits eingelöst." })
+  assert.deepEqual(names(calls), ["createUser", "claim", "deleteUser"])
+  assert.deepEqual(calls[2][1], { userId: ids.user })
+})
+
+test("losing the race on an existing account leaves that account alone", async () => {
+  const { calls, deps } = dependencies({
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+    claimEnrollment: async () => ({ status: "conflict" as const }),
+  })
+  assert.equal((await createDiscoveryClaimHandler(deps)(request())).status, 409)
+  assert.ok(!names(calls).includes("deleteUser"))
+})
+
+// --- Resolve -----------------------------------------------------------------
+
+test("resolve greets by name, reports the state and parks the credential", async () => {
+  const response = await createDiscoveryResolveHandler({
+    flagEnabled: () => true,
+    signingSecret: () => SECRET,
+    decodeCredential: () => ({ enrollmentId: ids.enrollment, tokenVersion: 2 }),
+    loadEnrollment: async () => enrollment,
+  })(
+    new NextRequest("https://chaarlie.de/api/beratung/resolve", {
+      method: "POST",
+      headers: { origin: "https://chaarlie.de", "Content-Type": "application/json" },
+      body: JSON.stringify({ credential: CREDENTIAL }),
+    }),
+  )
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), {
+    name: "Lea Sommer",
+    email: "lea@example.test",
+    state: "invited",
+  })
+  const cookie = response.cookies.get(DISCOVERY_INVITE_COOKIE)
+  assert.equal(cookie?.value, CREDENTIAL)
+  assert.equal(cookie?.httpOnly, true)
+  assert.equal(response.headers.get("Cache-Control"), "private, no-store")
+})
+
+test("resolve refuses a revoked enrollment and a switched-off flag alike", async () => {
+  const base = {
+    flagEnabled: () => true,
+    signingSecret: () => SECRET,
+    decodeCredential: () => ({ enrollmentId: ids.enrollment, tokenVersion: 2 }),
+  }
+  const send = (deps: Record<string, unknown>) =>
+    createDiscoveryResolveHandler(deps as never)(
+      new NextRequest("https://chaarlie.de/api/beratung/resolve", {
+        method: "POST",
+        headers: { origin: "https://chaarlie.de", "Content-Type": "application/json" },
+        body: JSON.stringify({ credential: CREDENTIAL }),
+      }),
+    )
+
+  assert.equal((await send({ ...base, loadEnrollment: async () => null })).status, 410)
+  assert.equal(
+    (await send({ ...base, flagEnabled: () => false, loadEnrollment: async () => enrollment }))
+      .status,
+    410,
+  )
+})
