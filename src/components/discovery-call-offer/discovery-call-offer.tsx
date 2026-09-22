@@ -9,7 +9,7 @@ import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider
 import type { FunnelOfferVariantProps } from "@/funnels/types"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { createFunnelEventId } from "@/lib/funnel/client"
-import { TRUSTPILOT_REVIEWS } from "@/lib/trustpilot-reviews"
+import { DISCOVERY_CALL_TRUSTPILOT_REVIEWS } from "@/lib/trustpilot-reviews"
 
 const DISCOVERY_CALL_OFFER_REVISION = "discovery_call_v1"
 
@@ -205,7 +205,7 @@ export function DiscoveryCallOffer(props: FunnelOfferVariantProps) {
             <SectionEyebrow>Bewertungen auf Trustpilot</SectionEyebrow>
             <SectionHeading>Das sagen unsere Nutzer über Chaarlie.</SectionHeading>
             <div className="mt-6 grid items-stretch gap-3 md:grid-cols-3">
-              {TRUSTPILOT_REVIEWS.map((testimonial) => (
+              {DISCOVERY_CALL_TRUSTPILOT_REVIEWS.map((testimonial) => (
                 <blockquote
                   className="flex h-full flex-col items-center rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.06)] bg-white p-6 text-center shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.55)]"
                   key={testimonial.name}
