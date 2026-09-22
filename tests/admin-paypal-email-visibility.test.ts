@@ -66,6 +66,19 @@ test("admin users API merges visible billing subscription data with provider sub
       error: null,
     }),
   }
+  const leadFilters: unknown[] = []
+  const leadsQuery = {
+    select: () => leadsQuery,
+    in: (key: string, values: string[]) => {
+      leadFilters.push([key, values])
+      return leadsQuery
+    },
+    not: () => leadsQuery,
+    order: async () => ({
+      data: [{ email: "chaarlie@example.test", name: "Marie", created_at: "2026-01-01" }],
+      error: null,
+    }),
+  }
   const mocks: Record<string, unknown> = {
     "@/lib/supabase/server": {
       createClient: async () => ({
@@ -79,6 +92,7 @@ test("admin users API merges visible billing subscription data with provider sub
     "@/lib/supabase/admin": {
       createAdminClient: () => ({
         from: (table: string) => {
+          if (table === "leads") return leadsQuery
           assert.equal(table, "billing_subscriptions")
           return billingQuery
         },
@@ -101,8 +115,32 @@ test("admin users API merges visible billing subscription data with provider sub
   assert.equal(response.status, 200)
   assert.deepEqual(await response.json(), {
     users: [
-      { ...users[0], current_billing_subscription: visible },
-      { ...users[1], current_billing_subscription: null },
+      {
+        ...users[0],
+        display_name: "Marie",
+        display_name_source: "quiz_lead",
+        intake_state: "needs_quiz",
+        current_billing_subscription: visible,
+        billing_summary: {
+          status: "active",
+          trial_ends_at: null,
+          period_end: null,
+          provider_subscriber_email: "paypal@example.test",
+        },
+      },
+      {
+        ...users[1],
+        display_name: null,
+        display_name_source: null,
+        intake_state: "needs_quiz",
+        current_billing_subscription: expired,
+        billing_summary: {
+          status: "expired",
+          trial_ends_at: null,
+          period_end: "2020-01-01T00:00:00Z",
+          provider_subscriber_email: "paypal@example.test",
+        },
+      },
     ],
     total: 2,
   })
@@ -110,12 +148,13 @@ test("admin users API merges visible billing subscription data with provider sub
     ["user_id", users.map((user) => user.id)],
     ["entitlement_status", ["active", "past_due", "canceled"]],
   ])
+  assert.deepEqual(leadFilters, [["email", ["chaarlie@example.test"]]])
 })
 
 test("admin users API returns a controlled response if billing lookup fails", () => {
   assert.match(
     adminUsersRouteSource,
-    /try \{[\s\S]*billingByUserId = await loadVisibleBillingByUserId/,
+    /try \{[\s\S]*billingByUserId = await loadRelevantBillingByUserId/,
   )
   assert.match(adminUsersRouteSource, /billing lookup failed/)
   assert.match(adminUsersRouteSource, /fehler\("Laden", "der Abo-Daten"\)/)

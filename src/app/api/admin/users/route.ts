@@ -1,6 +1,10 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { hasCurrentBillingAccess } from "@/lib/billing/subscriptions"
+import {
+  pickAdminUserBillingRow,
+  summarizeAdminUserBilling,
+} from "@/lib/billing/admin-user-summary"
+import { resolveIntakeState } from "@/lib/auth/intake-state"
 import type { BillingSubscriptionRow } from "@/lib/billing/types"
 import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, fehler } from "@/lib/vocabulary"
 import { NextResponse } from "next/server"
@@ -47,28 +51,69 @@ export async function GET(request: Request) {
   }
 
   const userRows = users || []
+  const admin = createAdminClient()
+
   let billingByUserId: Map<string, BillingSubscriptionRow>
   try {
-    billingByUserId = await loadVisibleBillingByUserId(userRows.map((row) => row.id))
+    billingByUserId = await loadRelevantBillingByUserId(
+      admin,
+      userRows.map((row) => row.id),
+    )
   } catch (billingError) {
     console.error("[admin.users] billing lookup failed:", billingError)
     return NextResponse.json({ error: fehler("Laden", "der Abo-Daten") }, { status: 500 })
   }
 
+  let leadNameByEmail: Map<string, string>
+  try {
+    leadNameByEmail = await loadLeadNamesByEmail(
+      admin,
+      userRows
+        .filter((row) => !hasText(row.full_name))
+        .flatMap((row) => {
+          const raw = row.email?.trim()
+          const normalized = normalizeEmail(row.email)
+          // Lead emails are lowercased on insert today, but query the raw
+          // spelling too in case historical rows predate that normalization.
+          return raw && normalized ? [normalized, raw] : []
+        }),
+    )
+  } catch (leadError) {
+    // Lead names are a best-effort display fallback; never fail the listing over them.
+    console.error("[admin.users] lead name lookup failed:", leadError)
+    leadNameByEmail = new Map()
+  }
+
   return NextResponse.json({
-    users: userRows.map((row) => ({
-      ...row,
-      current_billing_subscription: billingByUserId.get(row.id) ?? null,
-    })),
+    users: userRows.map((row) => {
+      const billingRow = billingByUserId.get(row.id) ?? null
+      const leadName = hasText(row.full_name)
+        ? null
+        : (leadNameByEmail.get(normalizeEmail(row.email) ?? "") ?? null)
+      return {
+        ...row,
+        display_name: hasText(row.full_name) ? row.full_name : leadName,
+        display_name_source: hasText(row.full_name) ? "profile" : leadName ? "quiz_lead" : null,
+        intake_state: resolveIntakeState(row, row.hair_profiles?.[0] ?? null),
+        current_billing_subscription: billingRow,
+        billing_summary: summarizeAdminUserBilling(billingRow),
+      }
+    }),
     total: count || 0,
   })
 }
 
-async function loadVisibleBillingByUserId(userIds: string[]) {
+type AdminSupabaseClient = ReturnType<typeof createAdminClient>
+
+/**
+ * Picks one subscription row per user via `pickAdminUserBillingRow` (current
+ * access first, then entitlement/period relevance) so lapsed/canceled
+ * memberships stay visible without masking an active subscription.
+ */
+async function loadRelevantBillingByUserId(admin: AdminSupabaseClient, userIds: string[]) {
   const billingByUserId = new Map<string, BillingSubscriptionRow>()
   if (userIds.length === 0) return billingByUserId
 
-  const admin = createAdminClient()
   const { data, error } = await admin
     .from("billing_subscriptions")
     .select("*")
@@ -78,15 +123,50 @@ async function loadVisibleBillingByUserId(userIds: string[]) {
 
   if (error) throw error
 
-  for (const row of ((data as BillingSubscriptionRow[] | null) ?? []).filter((candidate) =>
-    hasCurrentBillingAccess(candidate),
-  )) {
-    if (!billingByUserId.has(row.user_id)) {
-      billingByUserId.set(row.user_id, row)
-    }
+  const rowsByUserId = new Map<string, BillingSubscriptionRow[]>()
+  for (const row of (data as BillingSubscriptionRow[] | null) ?? []) {
+    const rows = rowsByUserId.get(row.user_id)
+    if (rows) rows.push(row)
+    else rowsByUserId.set(row.user_id, [row])
+  }
+  for (const [userId, rows] of Array.from(rowsByUserId.entries())) {
+    const picked = pickAdminUserBillingRow(rows)
+    if (picked) billingByUserId.set(userId, picked)
   }
 
   return billingByUserId
+}
+
+/** Latest quiz-lead first name per normalized email, for accounts without a profile name. */
+async function loadLeadNamesByEmail(admin: AdminSupabaseClient, emails: string[]) {
+  const leadNameByEmail = new Map<string, string>()
+  if (emails.length === 0) return leadNameByEmail
+
+  const { data, error } = await admin
+    .from("leads")
+    .select("email, name, created_at")
+    .in("email", Array.from(new Set(emails)))
+    .not("name", "is", null)
+    .order("created_at", { ascending: false })
+
+  if (error) throw error
+
+  for (const lead of (data as { email: string | null; name: string | null }[] | null) ?? []) {
+    const email = normalizeEmail(lead.email)
+    if (!email || !hasText(lead.name) || leadNameByEmail.has(email)) continue
+    leadNameByEmail.set(email, lead.name!.trim())
+  }
+
+  return leadNameByEmail
+}
+
+function normalizeEmail(email: string | null | undefined): string | null {
+  const normalized = email?.trim().toLowerCase()
+  return normalized ? normalized : null
+}
+
+function hasText(value: string | null | undefined): value is string {
+  return typeof value === "string" && value.trim().length > 0
 }
 
 function parseBoundedInteger(
