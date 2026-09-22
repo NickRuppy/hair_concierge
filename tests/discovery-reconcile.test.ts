@@ -316,6 +316,16 @@ test("a row claimed between plan and write is reported, never counted as reconci
     approved_but_ineligible: 1,
     already_assigned: 1,
   })
+  // `productId` is what this run wrote — and it wrote nothing. The discarded
+  // candidate must not linger there as if it were the row's current product.
+  assert.deepEqual(
+    receipt.participants[0].items.map((item) => [item.outcome, item.productId]),
+    [
+      ["research_pending", null],
+      ["already_assigned", null],
+      ["approved_but_ineligible", null],
+    ],
+  )
 })
 
 // --- The database layer's own predicates -------------------------------------

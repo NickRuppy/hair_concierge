@@ -12,7 +12,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
  * participant typed or scanned that the catalog did not know is captured with a
  * `product_submission_id` and no `product_id`, so the cockpit shows it as „Noch in
  * Recherche" and it earns no verdict and no routine step. When the product-intake
- * strecke later publishes that submission, nothing walks back to the intake — the
+ * pipeline later publishes that submission, nothing walks back to the intake — the
  * item stays research-pending forever. This module is that walk back.
  *
  * Two rules it must not soften:
@@ -107,6 +107,10 @@ export async function loadDiscoveryReconcileTargets(
   const enrollments = (enrollmentData as EnrollmentRow[] | null) ?? []
   if (enrollments.length === 0) return []
 
+  // This read and the item read below ride PostgREST's default max-rows rather
+  // than paginating: the enrollment read is capped at 250 (as `listDiscoveryEnrollments`
+  // is), one intake per enrollment, ~10 pending items each — comfortably inside it
+  // at the programme's 50–100-call scale. A larger programme needs pagination here.
   let intakeQuery = client
     .from(INTAKES_TABLE)
     .select("id,enrollment_id,call_finalized_at")
@@ -169,6 +173,12 @@ export async function loadDiscoveryReconcileTargets(
   return targets
 }
 
+/**
+ * Unbounded by design: the id list is whatever the pending-item read returned, so
+ * it rides the same default max-rows budget and is bounded by the same scale
+ * argument. A submission id with no row comes back missing from the map, which
+ * the planner reads as research-pending — never as approved.
+ */
 export async function loadDiscoverySubmissionOutcomes(
   submissionIds: readonly string[],
   client: DiscoveryAdminClient = createAdminClient(),

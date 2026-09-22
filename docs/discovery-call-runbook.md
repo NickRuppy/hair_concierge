@@ -22,8 +22,9 @@ und `plans/discovery-call-toolkit/plan.md`. Lokales QA: `docs/local-qa-access.md
 2. **Umgebungsvariablen gesetzt** (siehe [Konfiguration](#konfiguration)):
    `DISCOVERY_CALL_TOOLKIT_ENABLED=true` und `DISCOVERY_ENROLLMENT_SIGNING_SECRET`.
 3. **Der Kill-Switch ist der Schalter für alles.** Ohne `DISCOVERY_CALL_TOOLKIT_ENABLED=true`
-   antworten Einladung und Claim mit `410`, Checkliste und Cockpit mit `404`. Der Nav-Eintrag
-   „Beratungen" im Admin bleibt trotzdem sichtbar — die Seite dahinter ist dann nur nicht da.
+   antworten alle Seiten — Einladung, Checkliste, Cockpit — mit `404`; nur die beiden Claim-APIs
+   (`resolve`, `claim`) antworten mit `410`. Der Nav-Eintrag „Beratungen" im Admin bleibt trotzdem
+   sichtbar — die Seite dahinter ist dann nur nicht da.
 
 ## 1. Einladung
 
@@ -156,15 +157,33 @@ Jeder offene Eintrag bekommt im Ergebnis genau eines von vier Urteilen:
 | `reconciled` | Die Submission ist auf ein Produkt freigegeben, das die Scan-Prüfung besteht; die Zeile trägt jetzt dessen `product_id` (im Dry-run: würde sie tragen). |
 | `research_pending` | Noch kein freigegebenes Produkt — die Recherche läuft weiter. |
 | `approved_but_ineligible` | Freigegeben, aber das Produkt ist deaktiviert oder aus dem Personal-Plan-Suchraum genommen. Bewusst **nicht** geschrieben: dieselbe Prüfung hätte es schon beim Erfassen abgelehnt. Erst im Katalog klären. |
-| `already_assigned` | Die Zeile hat zwischen Plan und Schreibvorgang selbst eine `product_id` bekommen. Die Antwort der Teilnehmerin bleibt stehen. |
+| `already_assigned` | Die Zeile hat zwischen Plan und Schreibvorgang selbst eine `product_id` bekommen. Die Antwort der Teilnehmerin bleibt stehen; dieser Lauf hat nichts geschrieben. |
+
+Das Feld `productId` im Ergebnis ist immer das, was **dieser Lauf** geschrieben hat (im Dry-run:
+geschrieben hätte) — nie der aktuelle Wert der Zeile. Außer bei `reconciled` steht dort `null`; was
+eine `already_assigned`-Zeile jetzt wirklich trägt, sagt nur das Cockpit.
 
 Was der Befehl **nicht** anfasst:
 
 - Zeilen, die schon eine `product_id` tragen — das ist die Antwort der Teilnehmerin, nicht unsere.
 - Zeilen mit `source='barcode_unknown'` **ohne** Submission. Die tragen nur den Barcode und lesen
-  sich im Cockpit als „Gescanntes Produkt · &lt;Barcode&gt;". Dafür bleibt es bei Handarbeit: die
-  passende `products.id` heraussuchen und per Service-Rolle eintragen, sonst bleibt das Produkt ohne
-  Urteil.
+  sich im Cockpit als „Gescanntes Produkt · &lt;Barcode&gt;". Es gibt für sie keine Submission, aus
+  der sich etwas zurückschreiben ließe — der Befehl sieht sie deshalb gar nicht erst. Dafür bleibt es
+  bei Handarbeit, und die braucht zwei Schritte (Supabase-SQL, Service-Rolle).
+
+  Erst die betroffenen Zeilen samt Barcode heraussuchen:
+
+  ```sql
+  select i.id, i.category, i.barcode_identifier
+  from public.discovery_intake_items i
+  join public.discovery_intakes t on t.id = i.intake_id
+  where t.enrollment_id = '<enrollment-id>'
+    and i.source <> 'none'
+    and i.product_id is null
+    and i.product_submission_id is null;
+  ```
+
+  Dann die passende `products.id` heraussuchen und eintragen, sonst bleibt das Produkt ohne Urteil:
 
   ```sql
   update public.discovery_intake_items
@@ -255,8 +274,9 @@ Konten stehen, und du brauchst den Flag wieder an, um sie über die CLI loszuwer
 Ist `DISCOVERY_CALL_TOOLKIT_ENABLED` nicht `true`, ist der Middleware-Gate **inert** — er greift
 weder ein noch leitet er um:
 
-- `/beratung/einladung`, `POST /api/beratung/resolve`, `POST /api/beratung/claim` → `410`.
-- `/beratung/produkte` und das Cockpit → `404`.
+- `POST /api/beratung/resolve` und `POST /api/beratung/claim` → `410`.
+- `/beratung/einladung`, `/beratung/produkte` und das Cockpit → `404` (die Seiten rufen
+  `notFound()`; die Teilnehmerin sieht also die normale 404-Seite, keinen Hinweis auf das Programm).
 - Ein bereits eingelöstes Konto trägt weiter seinen Stempel, hat aber kein Abo. Es folgt deshalb
   dem gewöhnlichen Paywall-Pfad und landet auf **`/reactivate`**. Das ist dokumentiert und
   akzeptiert, keine Schleife — aber es ist auch keine Erklärung für die Teilnehmerin. Wer den Flag
@@ -311,8 +331,12 @@ Zwei Stellen, an denen Discovery-Teilnehmerinnen in Zahlen auftauchen, die nicht
 
 ## Fehlerbilder
 
-- **„Der Link funktioniert nicht" (`410`)** — widerrufen, rotiert oder Flag aus. Erst
-  `npm run discovery -- list` lesen, dann den aktuellen Link schicken.
+- **„Der Link funktioniert nicht"** — zwei verschiedene Bilder, und sie sagen Verschiedenes:
+  - **Die Seite meldet „nicht gefunden" (`404`)** — der Flag ist aus. Die Einladungsseite ruft dann
+    `notFound()`; am Link selbst ist nichts kaputt.
+  - **Die Seite lädt, meldet aber „Diese Einladung ist nicht verfügbar." (`410` aus
+    `POST /api/beratung/resolve`)** — widerrufen oder rotiert. Erst
+    `npm run discovery -- list` lesen, dann den aktuellen Link schicken.
 - **Teilnehmerin landet immer wieder auf der Checkliste** — so gewollt: der Gate lässt nur
   `/beratung`, `/api/beratung`, `/quiz`, `/api/quiz` und `/api/scan` durch und schickt alles andere
   auf `/beratung/produkte`. Das Ziel ist selbst freigegeben, die Umleitung endet also dort.

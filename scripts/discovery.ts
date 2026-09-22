@@ -92,6 +92,10 @@ export type DiscoveryReconcileGateway = {
  *   disposition-quarantined. Deliberately NOT written: the capture gate would
  *   have refused the same product.
  * - `already_assigned` — the row was claimed between the plan and the write.
+ *
+ * `productId` on the receipt is always what THIS run wrote (or, in a dry run,
+ * would write) — never the row's current value. It is null for every outcome but
+ * `reconciled`.
  */
 export type DiscoveryReconcileOutcome =
   | "reconciled"
@@ -333,7 +337,12 @@ async function runDiscoveryReconcile(input: {
           itemId: item.itemId,
           productId: item.productId,
         })
-        if (!written) item.outcome = "already_assigned"
+        if (written) continue
+        // `productId` is what this run wrote, never what the row now holds — and
+        // this run wrote nothing. Leaving the discarded candidate in would read
+        // as the item's current product, which it provably is not.
+        item.outcome = "already_assigned"
+        item.productId = null
       }
     }
   }
