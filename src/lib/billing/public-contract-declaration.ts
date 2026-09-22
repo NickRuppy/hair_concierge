@@ -1,4 +1,5 @@
 /** Public declarations contain only the submitter's own assertions, never account facts. */
+import type { RequiredNoticePresentation } from "./trial-required-notices"
 export type PublicDeclarationKind =
   | "ordinary_cancellation"
   | "extraordinary_cancellation"
@@ -78,7 +79,7 @@ export function publicDeclarationStatement(declaration: PublicContractDeclaratio
   return `Hiermit kündige ich den angegebenen Vertrag ${type}. Gewünschtes Vertragsende: ${declaration.requestedEnd}.`
 }
 
-/** Exact durable plain-text snapshot used by download and transactional delivery. */
+/** Exact durable plain-text snapshot used by download and retained in the delivery payload. */
 export function publicDeclarationReceiptText(receipt: PublicContractDeclarationReceipt): string {
   const d = receipt.declaration
   return [
@@ -96,4 +97,57 @@ export function publicDeclarationReceiptText(receipt: PublicContractDeclarationR
       : "Diese Bestätigung dokumentiert den Eingang deiner Kündigung. Nach sicherer Zuordnung bestätigen wir dir das Vertragsende.",
     "Kontakt: info@chaarlie.de",
   ].join("\n")
+}
+
+export function publicDeclarationRequiredNoticePresentation(
+  receipt: PublicContractDeclarationReceipt,
+): RequiredNoticePresentation {
+  const d = receipt.declaration
+  const withdrawal = d.kind === "withdrawal"
+  const extraordinary = d.kind === "extraordinary_cancellation"
+  const kind = withdrawal
+    ? "Widerruf"
+    : extraordinary
+      ? "Außerordentliche Kündigung"
+      : "Ordentliche Kündigung"
+  const submittedAt = new Intl.DateTimeFormat("de-DE", {
+    dateStyle: "long",
+    timeStyle: "long",
+    timeZone: "Europe/Berlin",
+  }).format(new Date(receipt.submittedAt))
+  return {
+    eyebrow: withdrawal
+      ? "Widerruf eingegangen"
+      : extraordinary
+        ? "Außerordentliche Kündigung eingegangen"
+        : "Kündigung eingegangen",
+    title: withdrawal
+      ? "Wir haben deinen Widerruf erhalten."
+      : extraordinary
+        ? "Wir haben deine außerordentliche Kündigung erhalten."
+        : "Wir haben deine Kündigung erhalten.",
+    intro:
+      "Diese Bestätigung dokumentiert den Eingang deiner Erklärung. Sie ist noch keine Bestätigung eines Vertragsendes.",
+    facts: [
+      { label: "Erklärung", value: kind },
+      { label: "Vertrag (deine Angabe)", value: d.contract },
+      {
+        label: "Status",
+        value: withdrawal
+          ? "Die Zuordnung und Abwicklung werden geprüft"
+          : `Gewünschtes Vertragsende: ${d.requestedEnd}`,
+      },
+    ],
+    status: "Wir prüfen die sichere Zuordnung. Bei Rückfragen antworte bitte auf diese E-Mail.",
+    primaryAction: { kind: "contact", label: "Kontakt aufnehmen" },
+    detailTitle: "Eingangsbeleg",
+    details: [
+      { label: "Erklärungsnummer", value: receipt.declarationId },
+      { label: "Eingang", value: submittedAt },
+      { label: "Name", value: d.name },
+      { label: "E-Mail", value: d.email },
+      { label: "Deine Erklärung", value: publicDeclarationStatement(d) },
+      ...(d.reason ? [{ label: "Kündigungsgrund", value: d.reason }] : []),
+    ],
+  }
 }
