@@ -10,6 +10,11 @@ const AUTH_FIRST_PREFIXES = [
   "/tracker",
   "/admin",
   "/scan",
+  // A discovery participant who closes the tab and returns to the checklist
+  // already has an account, so send them to sign in rather than into the quiz.
+  // The public `/beratung/einladung` and `/beratung/weiter` never reach this
+  // function — an unauthenticated request to a public route is not redirected.
+  "/beratung",
   "/api/chat",
   "/api/routine",
   "/api/tracker",

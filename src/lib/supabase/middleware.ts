@@ -29,6 +29,12 @@ import {
   type RouteEnvironment,
 } from "@/lib/auth/route-classification"
 import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
+import { isDiscoveryCallToolkitEnabled } from "@/lib/discovery/flag"
+import {
+  DISCOVERY_ACCESS_KIND,
+  DISCOVERY_CHECKLIST_PATH,
+  DISCOVERY_ENROLLMENT_METADATA_KEY,
+} from "@/lib/discovery/participant"
 
 const AUTHENTICATED_APP_ROUTE_PREFIXES = ["/anwendung", "/chat", "/routine", "/scan", "/tracker"]
 export const AUTHENTICATED_SESSION_RESPONSE_HEADER = "x-chaarlie-authenticated-session"
@@ -238,6 +244,39 @@ export function isPartnerAccessGuest(user: { app_metadata?: Record<string, unkno
   return (
     user.app_metadata?.access_kind === "partner" ||
     typeof user.app_metadata?.partner_access_invitation_id === "string"
+  )
+}
+
+/**
+ * A claimed discovery-call participant, read from the JWT alone (no database
+ * round trip in the Edge runtime). The stamp is written only by
+ * `POST /api/beratung/claim` and cleared again by `revokeDiscoveryEnrollment`,
+ * which is what makes a revocation take effect here.
+ */
+export function isDiscoveryParticipant(user: { app_metadata?: Record<string, unknown> }) {
+  return (
+    user.app_metadata?.access_kind === DISCOVERY_ACCESS_KIND &&
+    typeof user.app_metadata?.[DISCOVERY_ENROLLMENT_METADATA_KEY] === "string"
+  )
+}
+
+/**
+ * Everything a participant needs for invite → quiz → checklist, and nothing
+ * else. `/api/scan` is on the list because the checklist reuses the Produkt-Scan
+ * identify endpoints; the gate returns before the subscription paywall, so those
+ * stay reachable for an account with no subscription and the freemium flag off.
+ */
+const DISCOVERY_PARTICIPANT_ROUTE_PREFIXES = [
+  "/beratung",
+  "/api/beratung",
+  "/quiz",
+  "/api/quiz",
+  "/api/scan",
+]
+
+export function isDiscoveryParticipantAllowedPath(pathname: string) {
+  return DISCOVERY_PARTICIPANT_ROUTE_PREFIXES.some((prefix) =>
+    pathMatchesRoutePrefix(pathname, prefix),
   )
 }
 
@@ -476,6 +515,29 @@ export function createUpdateSession(
     if (isForcedAuthLogin) {
       return supabaseResponse
     }
+
+    // --- Discovery-call participant gate ------------------------------------
+    // Two conditions, both required, so this block is provably inert for every
+    // ordinary user: the kill switch must be on AND the account must carry the
+    // claim stamp. A participant holds no subscription, so the gate has to
+    // return BEFORE the paywall below — otherwise their quiz and the
+    // checklist's scanner calls would bounce to /reactivate.
+    //
+    // The bounce target is itself allow-listed, which makes it terminal: a
+    // participant who wanders onto a member route lands on the checklist and
+    // stops there instead of ping-ponging. With the flag off the block does
+    // nothing at all and an enrolled account follows the ordinary paywall to
+    // /reactivate, which is also loop-free.
+    if (isDiscoveryCallToolkitEnabled() && isDiscoveryParticipant(user)) {
+      if (isDiscoveryParticipantAllowedPath(pathname)) {
+        return supabaseResponse
+      }
+      const url = request.nextUrl.clone()
+      url.pathname = DISCOVERY_CHECKLIST_PATH
+      url.search = ""
+      return redirectWithSupabaseCookies(url, supabaseResponse)
+    }
+    // --- End discovery-call participant gate ---------------------------------
 
     // Mark user as returning (survives session expiry, 1 year)
     if (!request.cookies.has("hc_returning")) {
