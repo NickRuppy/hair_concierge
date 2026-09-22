@@ -4,17 +4,17 @@ import test from "node:test"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { seedMobileProfileFixtures } from "../scripts/mobile/profile-fixture"
-import { loadDiscoveryIdealRoutine } from "../src/lib/discovery/load-ideal-routine"
+import {
+  discoveryPreviewInput,
+  loadDiscoveryIdealRoutine,
+} from "../src/lib/discovery/load-ideal-routine"
 import {
   loadParticipantScanVerdicts,
   DISCOVERY_SCAN_VERDICT_DEPS,
   DISCOVERY_VERDICT_DEPS,
 } from "../src/lib/discovery/load-participant-verdicts"
 import type { DiscoveryIntakeItem } from "../src/lib/discovery/refined-routine"
-import {
-  computeStage1ProductExamplePreviews,
-  stage1PreviewedRoleDecisionKeys,
-} from "../src/lib/personal-plan/product-previews"
+import { stage1PreviewedRoleDecisionKeys } from "../src/lib/personal-plan/product-previews"
 import {
   loadScanProductFacts,
   loadStage3RecommendationCandidatesByRole,
@@ -311,32 +311,34 @@ test("the ready path builds steps from the prepared context and still writes not
   }
 })
 
-test("the preview computation is fed the intake-scoped id and the prepared context's version", async () => {
+test("discoveryPreviewInput is the intake-scoped plan id and the prepared context's version", () => {
+  assert.deepEqual(discoveryPreviewInput(intakeId, { refinedVersionId: "need-version-7" }), {
+    personalPlanId: `discovery:${intakeId}`,
+    sourceNeedVersionId: "need-version-7",
+  })
+})
+
+test("the loader's own output echoes the two ids the preview computation actually ran under", async () => {
   const source = await usableScannerSource()
   const { client } = recordingClient({
     rpc: () => ({ data: source, error: null }),
     select: () => ({ data: [], error: null, count: 0 }),
   })
 
-  // Same inputs, read back off the module's own composition: the personalPlanId is
-  // `discovery:<intakeId>` and the sourceNeedVersionId is the prepared context's
-  // refinedVersionId — the two values that keep this path off `stage1-service`.
   const result = await loadDiscoveryIdealRoutine(client, "owner", intakeId)
   assert.equal(result.status, "ready")
   if (result.status !== "ready") throw new Error("expected a ready routine")
 
-  const previews = await computeStage1ProductExamplePreviews({
+  // `previewSource` is read back off the preview RESPONSE, which echoes its own inputs
+  // verbatim — so changing either argument at the call site fails here. The expectations
+  // are literals, not a second call to the code under test.
+  assert.deepEqual(result.previewSource, {
     personalPlanId: `discovery:${intakeId}`,
-    sourceNeedVersionId: result.context.refinedVersionId,
-    snapshot: result.context.snapshot,
-    loadCandidates: async () => [],
+    // The PREPARED context's version — never a published `scanner_context_publish` one.
+    sourceNeedVersionId: source.refined!.id,
   })
-  assert.equal(previews.personalPlanId, `discovery:${intakeId}`)
-  assert.equal(previews.sourceNeedVersionId, source.refined!.id)
-  assert.deepEqual(
-    result.steps.map((step) => step.decisionKey),
-    previews.previews.map((preview) => preview.decisionKey),
-  )
+  assert.deepEqual(result.previewSource, discoveryPreviewInput(intakeId, result.context))
+  assert.equal(result.context.refinedVersionId, result.previewSource.sourceNeedVersionId)
 })
 
 test("a profile without a usable scanner source reports no_usable_source, not an error", async () => {
@@ -490,7 +492,7 @@ test("participant verdicts: a scanned product missing from the catalog read repo
 /**
  * Every verdict test above injects stubs, so `DISCOVERY_VERDICT_DEPS` — the wiring
  * production actually runs — is never executed by them. Pin its members' identity to the
- * same functions `/api/scan/resolve` wires (`resolve/route.ts:651-655`), so a silent
+ * same functions `/api/scan/resolve` wires (the `POST` deps literal, `resolve/route.ts:604-607`), so a silent
  * rewire to a different facts loader, candidate loader or verdict builder fails here
  * instead of quietly giving the cockpit a different engine than the participant's scanner.
  */

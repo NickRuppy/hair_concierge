@@ -50,10 +50,40 @@ export type DiscoveryIdealStep = {
   preview: Stage1ProductExampleRolePreview | null
 }
 
+export type DiscoveryPreviewInput = {
+  personalPlanId: string
+  sourceNeedVersionId: string
+}
+
+/**
+ * The two identity arguments the Stage-1 preview computation runs under, as one value.
+ *
+ * A synthetic `discovery:<intakeId>` plan id keeps the payload's identity tied to this
+ * intake without inventing a `personal_plans` row, and the version id is the PREPARED
+ * context's — not a published one. Both live here, in one pure function the loader spreads
+ * and a test can assert, rather than as two literals at the call site where a change would
+ * be invisible.
+ */
+export function discoveryPreviewInput(
+  intakeId: string,
+  context: Pick<ScanEvaluationContext, "refinedVersionId">,
+): DiscoveryPreviewInput {
+  return {
+    personalPlanId: `discovery:${intakeId}`,
+    sourceNeedVersionId: context.refinedVersionId,
+  }
+}
+
 export type DiscoveryIdealRoutine = {
   status: "ready"
   steps: DiscoveryIdealStep[]
   context: ScanEvaluationContext
+  /**
+   * Echoed straight off the computed preview response — the identity the previews were
+   * actually computed under, not a recomputation. It is the provenance T6 stamps on the
+   * PDF, and it makes the loader's two preview arguments observable from its own output.
+   */
+  previewSource: DiscoveryPreviewInput
 }
 
 export type DiscoveryIdealRoutineResult =
@@ -125,12 +155,10 @@ export async function loadDiscoveryIdealRoutine(
   if (!context) return { status: "no_usable_source" }
 
   // All four inputs are named explicitly so no future edit can reintroduce the
-  // `stage1-service` / shared-context loading this path must stay clear of. The synthetic
-  // `personalPlanId` keeps the preview payload's identity tied to this intake — it is
-  // never persisted, because nothing on this path persists.
+  // `stage1-service` / shared-context loading this path must stay clear of. Nothing here
+  // is persisted, because nothing on this path persists.
   const previews = await computeStage1ProductExamplePreviews({
-    personalPlanId: `discovery:${intakeId}`,
-    sourceNeedVersionId: context.refinedVersionId,
+    ...discoveryPreviewInput(intakeId, context),
     snapshot: context.snapshot,
     loadCandidates: createSupabaseStage1ProductExamplePreviewCandidateLoader(admin),
   })
@@ -143,6 +171,11 @@ export async function loadDiscoveryIdealRoutine(
       snapshotSource: context.snapshotSource,
       refinedVersionId: context.refinedVersionId,
       refinedInputHash: context.refinedInputHash,
+    },
+    // Read back off the response, so the arguments above are observable to a caller.
+    previewSource: {
+      personalPlanId: previews.personalPlanId,
+      sourceNeedVersionId: previews.sourceNeedVersionId,
     },
   }
 }

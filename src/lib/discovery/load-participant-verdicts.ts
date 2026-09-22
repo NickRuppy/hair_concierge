@@ -89,7 +89,7 @@ export type DiscoveryVerdictDeps = {
 /**
  * The facts/candidate/verdict trio `loadScanVerdictForProduct` runs on — exported so a test
  * can pin each member's identity to the same functions `/api/scan/resolve` wires
- * (`resolve/route.ts:651-655`). Without that pin, a silent rewire here would give the
+ * (the `POST` deps literal, `resolve/route.ts:604-607`). Without that pin, a silent rewire here would give the
  * cockpit a different engine than the participant's own scanner, and every verdict test
  * injects stubs, so nothing else would notice.
  */
