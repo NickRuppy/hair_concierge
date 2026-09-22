@@ -7,6 +7,19 @@ import { trackAppEvent } from "./track-app-event"
 
 type Retry = (callback: () => void) => void
 
+/**
+ * Packages whose quiz entry gets a one-shot view snapshot, and the event each
+ * one emits. Separate event names keep the scanner's PostHog queries intact.
+ */
+const QUIZ_VIEW_EVENTS = {
+  scan_v1: "scanner_quiz_viewed",
+  discovery_call_v1: "discovery_call_quiz_viewed",
+} as const
+
+export function quizViewEventForPackage(packageKey: string | null | undefined) {
+  return packageKey ? (QUIZ_VIEW_EVENTS[packageKey as keyof typeof QUIZ_VIEW_EVENTS] ?? null) : null
+}
+
 const scheduleRetry: Retry = (callback) => {
   setTimeout(callback, 150)
 }
@@ -24,7 +37,10 @@ export function createScannerQuizViewTracker({
   track?: typeof trackAppEvent
   retry?: Retry
 } = {}) {
-  let settled = false
+  // Keyed by package: a mid-bootstrap package hand-off (the provider may
+  // republish a different key) must not leave BOTH funnels without their
+  // one-shot snapshot.
+  let settledFor: string | null = null
 
   return ({
     displayedFunnelPackageKey,
@@ -37,21 +53,23 @@ export function createScannerQuizViewTracker({
     resumed: boolean
     step: number
   }) => {
-    if (settled) return
-    if (displayedFunnelPackageKey !== "scan_v1") return
+    if (settledFor === displayedFunnelPackageKey) return
+    const eventName = quizViewEventForPackage(displayedFunnelPackageKey)
+    if (!eventName) return
     const viewedAt = now()
     const quizViewId = createId()
-    // Keep a single immutable view snapshot while the bounded context lookup resolves.
-    settled = true
+    // Keep a single immutable view snapshot per package while the bounded
+    // context lookup resolves.
+    settledFor = displayedFunnelPackageKey
     const attempt = (number: number) => {
       void bootstrap()
         .then((context) => {
           if (
-            context?.funnelPackageKey === "scan_v1" &&
+            context?.funnelPackageKey === displayedFunnelPackageKey &&
             context.analyticsContextReady !== false &&
             isCurrent()
           ) {
-            track("scanner_quiz_viewed", {
+            track(eventName, {
               funnelEventId: quizViewId,
               funnelPackageKey: context.funnelPackageKey,
               funnelSessionId: context.funnelSessionId,

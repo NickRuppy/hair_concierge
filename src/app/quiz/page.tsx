@@ -22,7 +22,10 @@ import { Button } from "@/components/ui/button"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { QUIZ_EMAIL_RETURN_PACKAGE_KEY } from "@/lib/quiz/email-return-constants"
 import { normalizeMigrationQuizPrefillAnswers } from "@/lib/quiz/migration-prefill-init"
-import { createScannerQuizViewTracker } from "@/lib/analytics/scanner-quiz-view"
+import {
+  createScannerQuizViewTracker,
+  quizViewEventForPackage,
+} from "@/lib/analytics/scanner-quiz-view"
 import {
   getLegacyQuizScreenPosition,
   seedLegacyQuizBrowserHistoryToDepth,
@@ -76,7 +79,7 @@ export default function QuizPage() {
   const quizStartedRef = useRef(false)
   const returnPromptTrackedRef = useRef(false)
   const scannerQuizMountedRef = useRef(true)
-  const scannerQuizViewedRef = useRef(false)
+  const scannerQuizViewedRef = useRef<string | null>(null)
   const scannerQuizViewTrackerRef = useRef(createScannerQuizViewTracker())
   const lastTrackedStepRef = useRef<number | null>(null)
 
@@ -276,15 +279,17 @@ export default function QuizPage() {
     if (
       draftStatus !== "ready" ||
       returnPrompt === "open" ||
-      funnelPackageKey !== "scan_v1" ||
-      scannerQuizViewedRef.current
+      !funnelPackageKey ||
+      !quizViewEventForPackage(funnelPackageKey) ||
+      scannerQuizViewedRef.current === funnelPackageKey
     )
       return
-    scannerQuizViewedRef.current = true
+    scannerQuizViewedRef.current = funnelPackageKey
     scannerQuizViewTrackerRef.current({
       displayedFunnelPackageKey: funnelPackageKey,
       isCurrent: () =>
-        scannerQuizMountedRef.current && useQuizStore.getState().funnelPackageKey === "scan_v1",
+        scannerQuizMountedRef.current &&
+        useQuizStore.getState().funnelPackageKey === funnelPackageKey,
       resumed: step !== 2,
       step,
     })
