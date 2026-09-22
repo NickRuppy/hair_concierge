@@ -31,10 +31,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <AppRouteProviders>
-      <Header />
-      <div className="flex min-h-[calc(100vh-3.5rem)]">
+      {/* Printing an admin page prints the page, not the tool around it — the discovery
+          routine document (`/admin/beratung/<id>/pdf`) is an A4 sheet a participant receives. */}
+      <div className="print:hidden">
+        <Header />
+      </div>
+      <div className="flex min-h-[calc(100vh-3.5rem)] print:block print:min-h-0">
         {/* Sidebar */}
-        <aside className="hidden w-56 shrink-0 border-r bg-sidebar p-4 md:block">
+        <aside className="hidden w-56 shrink-0 border-r bg-sidebar p-4 md:block print:hidden">
           <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Admin
           </p>
@@ -62,7 +66,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </aside>
 
         {/* Mobile nav */}
-        <div className="border-b p-2 md:hidden">
+        <div className="border-b p-2 md:hidden print:hidden">
           <div className="flex gap-1 overflow-x-auto">
             {adminNav.map((item) => {
               const isActive =
@@ -85,7 +89,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Content */}
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-6 print:p-0">{children}</main>
       </div>
     </AppRouteProviders>
   )
