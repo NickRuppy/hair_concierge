@@ -47,7 +47,7 @@ const FINALIZE_HINT =
 const FINALIZE_OPEN = "noch nicht finalisiert"
 const FINALIZE_BUSY = "Wird gespeichert"
 const PDF_LOCKED = "PDF: gesperrt"
-const PDF_OPEN = "PDF: frei"
+const PDF_OPEN = "PDF öffnen"
 const NOT_SUBMITTED_HINT = "Die Checkliste ist noch nicht abgeschickt."
 
 /** Why a bound product carries no verdict — internal, factual, no medical claim. */
@@ -205,7 +205,20 @@ export function DiscoveryCallCockpit({
           {finalizePending ? FINALIZE_BUSY : frozen ? UNFINALIZE_LABEL : FINALIZE_LABEL}
         </button>
         <p className="text-[13px] leading-5 text-muted-foreground">{FINALIZE_HINT}</p>
-        <span className="text-xs text-muted-foreground">{frozen ? PDF_OPEN : PDF_LOCKED}</span>
+        {frozen ? (
+          // The document exists only for a finalised call, so the link exists only then too —
+          // in a new tab, so the cockpit stays where it is while Nick prints.
+          <a
+            href={`/admin/beratung/${enrollmentId}/pdf`}
+            target="_blank"
+            rel="noopener"
+            className="text-xs font-bold text-[var(--brand-plum)] underline"
+          >
+            {PDF_OPEN}
+          </a>
+        ) : (
+          <span className="text-xs text-muted-foreground">{PDF_LOCKED}</span>
+        )}
         <span className="ml-auto rounded bg-muted px-2 py-1 text-xs text-muted-foreground">
           {frozen ? `finalisiert am ${formatDiscoveryTimestamp(finalizedAt)}` : FINALIZE_OPEN}
         </span>

@@ -275,6 +275,8 @@ test("the cockpit reads as the call: routine, verdict, one decision per step", a
   assert.ok(markup.includes("Finalisieren"))
   assert.ok(markup.includes("noch nicht finalisiert"))
   assert.ok(markup.includes("PDF: gesperrt"))
+  // No document before finalisation: the state line is a line, not a link.
+  assert.ok(!markup.includes(`/admin/beratung/${ids.enrollment}/pdf`))
 })
 
 test("what needs no decision collapses to one grey line each", async () => {
@@ -296,7 +298,9 @@ test("a finalised call renders as finalised", async () => {
   })
   assert.ok(markup.includes("Finalisierung aufheben"))
   assert.ok(markup.includes("finalisiert am 22.09.2026 12:00 UTC"))
-  assert.ok(markup.includes("PDF: frei"))
+  // Finalised: the state line becomes the link to the participant's document.
+  assert.ok(markup.includes("PDF öffnen"))
+  assert.ok(markup.includes(`href="/admin/beratung/${ids.enrollment}/pdf"`))
   // Frozen: every radio is disabled until the finalisation is lifted.
   assert.equal((markup.match(/disabled=""/g) ?? []).length, 4)
 })
