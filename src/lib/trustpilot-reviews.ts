@@ -22,3 +22,30 @@ export const TRUSTPILOT_REVIEWS = [
     url: "https://www.trustpilot.com/reviews/6a884be4a8140e3831760b17",
   },
 ] as const
+
+// Discovery-call offer selection, checked on 2026-09-22. Same rules as above:
+// verbatim excerpts from 5/5 reviews, names and links attached. Phil replaces
+// Chiara here (his hairdresser story fits the consultation offer), and Lucia's
+// excerpt is her concrete wash-frequency outcome.
+export const DISCOVERY_CALL_TRUSTPILOT_REVIEWS = [
+  {
+    name: "Phil",
+    initials: "P",
+    quote:
+      "Mit Chaarlie konnte ich endlich herausfinden, was meine Haare brauchen, um eine passende Routine entwickeln.",
+    url: "https://www.trustpilot.com/reviews/6a8ff9d6899d9b9f7a0e5107",
+  },
+  {
+    name: "Lucia",
+    initials: "L",
+    quote:
+      "Ich wasche meine Haare mittlerweile deutlich seltener und benutze Shampoo nur noch etwa zweimal die Woche.",
+    url: "https://www.trustpilot.com/reviews/6aa6b4108fc8b3854149df82",
+  },
+  {
+    name: "Marion",
+    initials: "M",
+    quote: "Großartig, endlich weiß ich, wie und was ich benutzen muss!",
+    url: "https://www.trustpilot.com/reviews/6a884be4a8140e3831760b17",
+  },
+] as const

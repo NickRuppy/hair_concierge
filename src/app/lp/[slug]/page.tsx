@@ -70,6 +70,12 @@ export default async function CampaignLandingPage({
   if (funnelPackage.key === "scan_v1" && isScannerFunnelRefinementEnabled()) {
     redirect(buildScannerQuizRedirect(resolvedSearchParams))
   }
+  // Discovery-call funnel: no landing page by design — the proxy has already
+  // minted the funnel session for /lp/call, so the visitor starts straight in
+  // the quiz (the first question's info strip carries the prep framing).
+  if (funnelPackage.key === "discovery_call_v1") {
+    redirect(buildScannerQuizRedirect(resolvedSearchParams))
+  }
 
   const resumeToken = getSingleSearchParam(
     resolvedSearchParams[PERSONAL_PLAN_QUIZ_RESUME_QUERY_KEY],

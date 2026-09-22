@@ -297,6 +297,9 @@ export function isAttributableFunnelPackage(
   if (funnelPackage.key === "customerio_scan_return_v1") {
     return funnelPackage.status === "placeholder" && emailReturnEnabled
   }
+  // Discovery-call funnel: a manual program without its own env flag —
+  // package status alone decides whether /lp/call attributes sessions.
+  if (funnelPackage.key === "discovery_call_v1") return funnelPackage.status === "active"
   return (
     funnelPackage.key === "scan_v1" &&
     (funnelPackage.status === "active" ||

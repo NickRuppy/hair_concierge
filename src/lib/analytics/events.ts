@@ -69,6 +69,11 @@ export type OfferSectionId =
   | "product_story_products"
   | "testimonials"
   | "subscription_explanation"
+  // `discovery-call-v1` sections that have no plan/scanner counterpart. The
+  // booking calendar replaces pricing as the conversion surface.
+  | "video"
+  | "booking"
+  | "free_explanation"
   | "pricing"
   | "guarantee"
   | "faq"
@@ -82,6 +87,7 @@ export type OfferCtaId =
   | "support_continue"
   | "locked_plan"
   | "pricing_primary"
+  | "hero_primary"
   | "change_plan"
   | "field_test_activation"
   | "partner_access_activation"
@@ -358,6 +364,10 @@ export type AppEventMap = {
       source: "pricing_page" | "quiz_result_offer"
       value?: number
     }
+  discovery_call_booking_scheduled: FunnelAnalyticsEnvelope & {
+    leadId?: string | null
+    offerVariant?: string
+  }
   first_chat_message: Record<string, never>
   onboarding_completed: {
     userId: string

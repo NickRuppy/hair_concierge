@@ -104,6 +104,13 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         source: data.source,
       }
     }
+    case "discovery_call_booking_scheduled": {
+      const data = payload as AppEventMap["discovery_call_booking_scheduled"]
+      return {
+        leadId: data.leadId,
+        offer_variant: data.offerVariant,
+      }
+    }
     case "first_chat_message":
       return payload
     case "purchase_completed": {
