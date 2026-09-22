@@ -224,3 +224,21 @@ create and claim a partner invitation for that same e-mail and sign in as that a
 gets independent app access from the partner grant instead of being blocked as an ended moderator —
 this exercises the middleware re-check at `src/lib/supabase/middleware.ts` where an active partner
 grant is checked once a moderator membership is found `ended`/`unavailable`.
+
+# Discovery-call QA
+
+The discovery-call toolkit is off by default. For a local walkthrough set both
+`DISCOVERY_CALL_TOOLKIT_ENABLED=true` and a `DISCOVERY_ENROLLMENT_SIGNING_SECRET` of at least 32
+characters in the worktree's `.env.local`, then restart the dev server. With the flag off the
+invite page and its two public APIs answer `410` and the checklist and admin cockpit answer `404`,
+so nothing is reachable to test.
+
+Create the local enrollment with `npm run discovery -- create --name="…" --email="…"` (dry-run
+without `--apply`). Never point the CLI at production for QA: a production write additionally
+requires `ALLOW_DISCOVERY_PRODUCTION_WRITE=1`, `--apply`, `--confirm-project=pqdkhefxsxkyeqelqegq`
+and a matching Supabase URL, and that combination is the operator path, not a QA path. The invite
+credential lives in the URL fragment (`/beratung/einladung#code=…`), so it never reaches a server
+log — copy the whole link, not a truncated one. The participant journey is invite → `/quiz`
+(legacy, never an `/lp/*` link) → `/beratung/produkte` → „Absenden"; the operator side is
+`/admin/beratung`. For the complete operator contract, the environment keys, the manual research
+reconciliation and the two analytics caveats, see `docs/discovery-call-runbook.md`.
