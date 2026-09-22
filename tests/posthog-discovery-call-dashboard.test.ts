@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import {
+  discoveryCallDashboardId,
   discoveryCallDashboardName,
   discoveryCallInsightQuery,
   discoveryCallInsights,
@@ -11,8 +12,15 @@ import { runDiscoveryCallDashboard } from "../scripts/posthog/ensure-discovery-c
 const dashboardId = 9999001
 
 function fixture(
-  options: { drift?: boolean; shared?: boolean; queryFailure?: boolean; empty?: boolean } = {},
+  options: {
+    drift?: boolean
+    shared?: boolean
+    queryFailure?: boolean
+    empty?: boolean
+    id?: number
+  } = {},
 ) {
+  const fixtureDashboardId = options.id ?? dashboardId
   let nextId = 7100000
   const seeded = options.empty ? [] : discoveryCallInsights
   const insights = new Map(
@@ -23,14 +31,14 @@ function fixture(
         name: spec.name,
         description: spec.description,
         query: discoveryCallInsightQuery(spec),
-        dashboards: [dashboardId],
+        dashboards: [fixtureDashboardId],
       },
     ]),
   )
   if (options.drift) insights.values().next().value!.description = "Unreviewed user edit"
   if (options.shared) insights.values().next().value!.dashboards.push(999)
   const dashboard = {
-    id: dashboardId,
+    id: fixtureDashboardId,
     name: discoveryCallDashboardName,
     filters: {},
     description: "Baseline",
@@ -49,7 +57,7 @@ function fixture(
     } else if (path.endsWith("/dashboards/") && method === "POST") {
       writes.push({ path, method })
       result = { ...dashboard, description: body.description, name: body.name }
-    } else if (path.endsWith(`/dashboards/${dashboardId}/`)) {
+    } else if (path.endsWith(`/dashboards/${fixtureDashboardId}/`)) {
       if (method === "PATCH") {
         writes.push({ path, method })
         dashboard.description = body.description
@@ -126,7 +134,7 @@ test("all new query results are verified before any dashboard mutations", async 
 })
 
 test("a first-time apply verifies every query before creating any dashboard", async () => {
-  const deps = fixture({ queryFailure: true, empty: true })
+  const deps = { ...fixture({ queryFailure: true, empty: true }), configuredDashboardId: undefined }
   await assert.rejects(
     runDiscoveryCallDashboard(["--apply", `--confirm-project=${discoveryCallProjectId}`], deps),
     /Query verification failed/,
@@ -135,7 +143,7 @@ test("a first-time apply verifies every query before creating any dashboard", as
 })
 
 test("a first-time apply creates the dashboard only after all queries verify", async () => {
-  const deps = fixture({ empty: true })
+  const deps = { ...fixture({ empty: true }), configuredDashboardId: undefined }
   const result = (await runDiscoveryCallDashboard(
     ["--apply", `--confirm-project=${discoveryCallProjectId}`],
     deps,
@@ -188,12 +196,10 @@ test("PostHog description length is validated before any API call", async () => 
   }
 })
 
-test("dry-run with no dashboard id configured performs no writes", async () => {
-  const deps = fixture()
-  assert.deepEqual(await runDiscoveryCallDashboard(["--inspect"], deps), {
-    mode: "dry-run",
-    action: "preflight",
-    created: false,
-  })
-  assert.equal(deps.calls(), 0)
+test("inspect resolves the pinned dashboard id without a flag and stays read-only", async () => {
+  // No --dashboard flag: the run must fall back to the pinned constant.
+  const deps = fixture({ id: discoveryCallDashboardId })
+  const result = (await runDiscoveryCallDashboard(["--inspect"], deps)) as { mode?: string }
+  assert.equal(result.mode, "dry-run")
+  assert.equal(deps.writes.length, 0)
 })

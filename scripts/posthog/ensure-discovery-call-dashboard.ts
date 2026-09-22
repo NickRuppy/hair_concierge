@@ -35,6 +35,8 @@ export type DiscoveryCallDashboardDependencies = {
   ) => Promise<{ ok: boolean; status: number; text(): Promise<string> }>
   token?: string
   output: (line: string) => void
+  /** Test seam: simulate the pre-creation state where no id is pinned yet. */
+  configuredDashboardId?: number | undefined
 }
 
 function jsonEqual(a: unknown, b: unknown): boolean {
@@ -103,10 +105,10 @@ async function request(
   return JSON.parse(await response.text()) as unknown
 }
 
-function resolveDashboardId(args: string[]): number | undefined {
+function resolveDashboardId(args: string[], configuredId: number | undefined): number | undefined {
   const flag = args.find((arg) => arg.startsWith("--dashboard="))
   if (flag) return Number(flag.split("=")[1])
-  return discoveryCallDashboardId
+  return configuredId
 }
 
 export async function runDiscoveryCallDashboard(
@@ -130,7 +132,13 @@ export async function runDiscoveryCallDashboard(
     return { mode: "dry-run", action: "declaration-only" }
   }
 
-  let dashboardId = resolveDashboardId(args)
+  // An explicitly passed `configuredDashboardId: undefined` simulates the
+  // pre-creation state; only its absence falls back to the pinned constant.
+  const configuredId =
+    "configuredDashboardId" in overrides
+      ? overrides.configuredDashboardId
+      : discoveryCallDashboardId
+  let dashboardId = resolveDashboardId(args, configuredId)
   let dashboard: Dashboard | undefined
   if (dashboardId === undefined) {
     if (!apply) {
