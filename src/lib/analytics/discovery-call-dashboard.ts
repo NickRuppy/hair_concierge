@@ -4,15 +4,13 @@
  * specs plus HogQL query builders, verified against a stable dashboard
  * identity by `scripts/posthog/ensure-discovery-call-dashboard.ts`.
  *
- * The dashboard does not exist in PostHog yet. `discoveryCallDashboardId`
- * stays `undefined` until the ensure script creates it (a separate,
- * explicitly authorized `--apply` run); once created, hardcode the returned
- * id here so later runs verify against a stable identity, exactly like the
- * scanner dashboard does.
+ * Created 2026-09-22 by the first authorized `--apply` run; the pinned id
+ * makes every later run verify against the same dashboard identity, exactly
+ * like the scanner dashboard does.
  */
 
 export const discoveryCallProjectId = 126788
-export const discoveryCallDashboardId: number | undefined = undefined
+export const discoveryCallDashboardId: number | undefined = 968665
 export const discoveryCallDashboardName = "Discovery-Call — Funnel & Buchungen"
 
 // `funnel_package_key` on every event in this funnel's envelope

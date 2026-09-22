@@ -126,7 +126,7 @@ test("all new query results are verified before any dashboard mutations", async 
 })
 
 test("a first-time apply verifies every query before creating any dashboard", async () => {
-  const deps = fixture({ queryFailure: true, empty: true })
+  const deps = { ...fixture({ queryFailure: true, empty: true }), configuredDashboardId: undefined }
   await assert.rejects(
     runDiscoveryCallDashboard(["--apply", `--confirm-project=${discoveryCallProjectId}`], deps),
     /Query verification failed/,
@@ -135,7 +135,7 @@ test("a first-time apply verifies every query before creating any dashboard", as
 })
 
 test("a first-time apply creates the dashboard only after all queries verify", async () => {
-  const deps = fixture({ empty: true })
+  const deps = { ...fixture({ empty: true }), configuredDashboardId: undefined }
   const result = (await runDiscoveryCallDashboard(
     ["--apply", `--confirm-project=${discoveryCallProjectId}`],
     deps,
@@ -188,12 +188,12 @@ test("PostHog description length is validated before any API call", async () => 
   }
 })
 
-test("dry-run with no dashboard id configured performs no writes", async () => {
+test("inspect against the pinned dashboard id stays read-only", async () => {
   const deps = fixture()
-  assert.deepEqual(await runDiscoveryCallDashboard(["--inspect"], deps), {
-    mode: "dry-run",
-    action: "preflight",
-    created: false,
-  })
-  assert.equal(deps.calls(), 0)
+  const result = (await runDiscoveryCallDashboard(
+    ["--inspect", `--dashboard=${dashboardId}`],
+    deps,
+  )) as { mode?: string }
+  assert.equal(result.mode, "dry-run")
+  assert.equal(deps.writes.length, 0)
 })
