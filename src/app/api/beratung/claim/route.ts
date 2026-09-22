@@ -10,6 +10,7 @@ import {
   stampDiscoveryAccess,
   type DiscoveryClaimResult,
   type DiscoveryEnrollment,
+  type DiscoveryStampResult,
 } from "@/lib/discovery/enrollment"
 import { isDiscoveryCallToolkitEnabled } from "@/lib/discovery/flag"
 import {
@@ -56,6 +57,8 @@ const WRONG_ACCOUNT = "Dieses Konto kann diese Einladung nicht nutzen."
 const ALREADY_CLAIMED = "Diese Einladung wurde bereits eingelöst."
 const EXISTING_PAID_ACCESS =
   "Dieses Konto hat bereits vollen Zugang zu Chaarlie. Melde dich kurz bei uns, dann klären wir das persönlich."
+const EXISTING_ACCESS_KIND =
+  "Dieses Konto gehört schon zu einem anderen Chaarlie-Zugang. Melde dich kurz bei uns, dann klären wir das persönlich."
 
 type SessionUser = { id: string; email?: string }
 
@@ -93,10 +96,14 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
     }
 
     const cookieCredential = request.cookies.get(DISCOVERY_INVITE_COOKIE)?.value ?? null
-    // The magic-link continuation arrives in a fresh browser context, so its
-    // credential travels in the request body instead of the cookie.
-    const handoffCredential = cookieCredential ? null : await readHandoffCredential(request)
-    const credential = cookieCredential ?? handoffCredential
+    // The magic-link continuation arrives with its credential in the request
+    // body. It WINS over the cookie: the same browser may still hold a cookie
+    // from an older invitation (a rotated link, or a different participant on a
+    // shared device), and the body handoff is the one the participant just
+    // proved ownership of by following the e-mail. The cookie is only the
+    // fallback for the ordinary invite-page claim, which sends no body.
+    const handoffCredential = await readHandoffCredential(request)
+    const credential = handoffCredential ?? cookieCredential
     const payload = (overrides.decodeCredential ?? decodeDiscoveryEnrollmentCredential)(
       credential,
       secret,
@@ -204,13 +211,27 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
           ),
         )
       }
+      // The second refusal, beside the paid one and for the same reason: an
+      // account that already belongs to another access kind (partner,
+      // field_test) must not be dragged behind the participant gate, and
+      // overwriting its `access_kind` would be irrecoverable.
+      let stamp: DiscoveryStampResult
       try {
-        await (overrides.stampDiscoveryAccess ?? stampDiscoveryAccess)({
+        stamp = await (overrides.stampDiscoveryAccess ?? stampDiscoveryAccess)({
           userId: user.id,
           enrollmentId: enrollment.enrollmentId,
         })
       } catch {
         return copyResponseCookies(response, jsonError(SERVICE_UNAVAILABLE, 503))
+      }
+      if (stamp.status === "foreign_access_kind") {
+        return copyResponseCookies(
+          response,
+          NextResponse.json(
+            { code: "existing_access_kind", error: EXISTING_ACCESS_KIND },
+            { status: 403, headers: NO_STORE_HEADERS },
+          ),
+        )
       }
     }
 

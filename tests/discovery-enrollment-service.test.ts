@@ -240,15 +240,43 @@ test("a revoked row cannot be claimed", async () => {
 // --- The `app_metadata` stamp ------------------------------------------------
 
 test("stamping preserves unrelated metadata", async () => {
-  const fake = fakeClient({ authUser: { app_metadata: { provider: "email" } } })
-  await stampDiscoveryAccess({ userId: ids.user, enrollmentId: ids.enrollment }, fake.client)
-  assert.deepEqual(fake.metadataWrites[0], {
-    app_metadata: {
-      provider: "email",
-      access_kind: DISCOVERY_ACCESS_KIND,
-      [DISCOVERY_ENROLLMENT_METADATA_KEY]: ids.enrollment,
-    },
-  })
+  for (const app_metadata of [
+    { provider: "email" },
+    { provider: "email", access_kind: null },
+    // Re-stamping our own kind is the idempotent continuation replay.
+    { provider: "email", access_kind: DISCOVERY_ACCESS_KIND },
+  ]) {
+    const fake = fakeClient({ authUser: { app_metadata } })
+    const result = await stampDiscoveryAccess(
+      { userId: ids.user, enrollmentId: ids.enrollment },
+      fake.client,
+    )
+    assert.deepEqual(result, { status: "stamped" }, JSON.stringify(app_metadata))
+    assert.deepEqual(fake.metadataWrites[0], {
+      app_metadata: {
+        provider: "email",
+        access_kind: DISCOVERY_ACCESS_KIND,
+        [DISCOVERY_ENROLLMENT_METADATA_KEY]: ids.enrollment,
+      },
+    })
+  }
+})
+
+test("a foreign access kind is refused, never overwritten", async () => {
+  // `clearDiscoveryAccessStamp` only ever nulls "discovery", so an overwritten
+  // field_test or partner kind could never be restored on revocation. The
+  // refusal has to happen at stamp time.
+  for (const accessKind of ["partner", "field_test", "something_new"]) {
+    const fake = fakeClient({
+      authUser: { app_metadata: { provider: "email", access_kind: accessKind } },
+    })
+    const result = await stampDiscoveryAccess(
+      { userId: ids.user, enrollmentId: ids.enrollment },
+      fake.client,
+    )
+    assert.deepEqual(result, { status: "foreign_access_kind", accessKind }, accessKind)
+    assert.deepEqual(fake.metadataWrites, [], accessKind)
+  }
 })
 
 test("clearing removes both keys, but only our own access kind", async () => {

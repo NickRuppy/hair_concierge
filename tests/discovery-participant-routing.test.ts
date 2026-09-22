@@ -2,6 +2,8 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { getPreparationResultPath } from "../src/components/quiz/quiz-preparation"
+import { handleAuthConfirm, sanitizeAuthRedirectPath } from "../src/app/auth/confirm/route"
+import { isDiscoveryReturnPath } from "../src/lib/auth/discovery-return"
 import { classifyRoute } from "../src/lib/auth/route-classification"
 import { getUnauthenticatedRedirectTarget } from "../src/lib/auth/unauthenticated-redirect"
 import {
@@ -57,6 +59,81 @@ test("an unauthenticated checklist request goes to sign-in, not into the quiz", 
     getUnauthenticatedRedirectTarget("/beratung/produkte", "?lead=abc", false),
     "/auth?next=%2Fberatung%2Fprodukte%3Flead%3Dabc",
   )
+})
+
+test("an expired-session intake XHR is redirected to /auth, never to the /quiz page", () => {
+  // `pathMatchesRoutePrefix` compares whole segments, so the page prefix does
+  // NOT cover the API — without its own entry the client would receive the
+  // /quiz HTML and try to parse it as JSON.
+  for (const pathname of ["/api/beratung", "/api/beratung/intake", "/api/beratung/quiz-context"]) {
+    assert.equal(
+      getUnauthenticatedRedirectTarget(pathname, "", false),
+      `/auth?next=${encodeURIComponent(pathname)}`,
+      pathname,
+    )
+  }
+  assert.equal(
+    getUnauthenticatedRedirectTarget("/api/beratung/intake", "", true),
+    "/auth?reason=session_expired&next=%2Fapi%2Fberatung%2Fintake",
+  )
+})
+
+// --- The /auth/confirm return path -------------------------------------------
+
+test("the discovery continuation is recognised only in its exact, handoff-only shape", () => {
+  const credential = "v1.eyJhIjoxfQ.c2lnbmF0dXJl"
+  assert.equal(isDiscoveryReturnPath(`/beratung/weiter#handoff=${credential}`), true)
+  assert.equal(isDiscoveryReturnPath("/beratung/weiter"), true)
+  for (const value of [
+    null,
+    "",
+    "/beratung/produkte#handoff=v1.a.b",
+    "/beratung/weiter?lead=1",
+    "/beratung/weiter#handoff=v1.a.b&extra=1",
+    "/beratung/weiter#token_hash=abc",
+    "/beratung/weiter#handoff=not-three-segments",
+    "https://evil.test/beratung/weiter#handoff=v1.a.b",
+  ]) {
+    assert.equal(isDiscoveryReturnPath(value), false, String(value))
+  }
+})
+
+test("the discovery continuation never projects a stale legacy lead into the profile", async () => {
+  // The claim has not run yet at this point and the participant's own quiz comes
+  // after it, so linking here could write a stale profile and falsely satisfy
+  // the checklist's "diagnostics present and lead bound" completion criterion.
+  let linkCalls = 0
+  let redirected = ""
+  const next = "/beratung/weiter#handoff=v1.eyJhIjoxfQ.c2ln"
+  await handleAuthConfirm(
+    new Request(`https://chaarlie.de/auth/confirm?code=valid&next=${encodeURIComponent(next)}`),
+    {
+      exchangeCodeForSession: async () => ({ error: null }),
+      verifyOtp: async () => ({ error: null }),
+      getUser: async () => ({ data: { user: { id: "user", email: "lea@example.test" } } }),
+      linkQuizToProfile: async () => {
+        linkCalls += 1
+      },
+      redirect: (url) => {
+        redirected = url
+        return new Response(null, { status: 302, headers: { location: url } })
+      },
+    },
+  )
+  assert.equal(linkCalls, 0)
+  // And the handoff survives the redirect intact.
+  assert.equal(redirected, `https://chaarlie.de${next}`)
+})
+
+test("a credential that happens to contain code/token/error keeps its fragment", () => {
+  // Opaque base64url hits these substrings roughly once in 10^4 invitations.
+  for (const credential of ["v1.aXcodeQQ.c2ln", "v1.token_hashY.c2ln", "v1.ZerrorZz.c2ln"]) {
+    const next = `/beratung/weiter#handoff=${credential}`
+    assert.match(next, /code|token|error/i)
+    // The exemption predicate is what stops `sanitizeAuthIntendedPath` stripping it.
+    assert.equal(isDiscoveryReturnPath(next), true, credential)
+    assert.equal(sanitizeAuthRedirectPath(next), next, credential)
+  }
 })
 
 // --- The `app_metadata` stamp ------------------------------------------------

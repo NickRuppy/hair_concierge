@@ -159,27 +159,50 @@ export async function claimDiscoveryEnrollment(
 
 // --- `app_metadata` stamp ----------------------------------------------------
 
+export type DiscoveryStampResult =
+  | { status: "stamped" }
+  | { status: "foreign_access_kind"; accessKind: string }
+
 /**
  * Writes the access stamp onto an account that already existed before the claim
  * (the magic-link continuation). A brand-new account receives it inline in
  * `createUser`, which is why this is not part of `claimDiscoveryEnrollment`.
+ *
+ * An account that already carries a DIFFERENT `access_kind` — `partner`,
+ * `field_test`, anything non-null that is not ours — is refused rather than
+ * overwritten. The overwrite would be irrecoverable: `clearDiscoveryAccessStamp`
+ * only ever nulls `"discovery"`, so revoking the enrollment afterwards would
+ * leave the account with no access kind at all and its partner or field-test
+ * routing permanently gone. The refusal lives here rather than in the claim
+ * route so every future caller inherits it.
  */
 export async function stampDiscoveryAccess(
   input: { userId: string; enrollmentId: string },
   client: DiscoveryAdminClient = createAdminClient(),
-): Promise<void> {
+): Promise<DiscoveryStampResult> {
   const current = await client.auth.admin.getUserById(input.userId)
   if (current.error || !current.data.user) {
     throw current.error ?? new Error("Discovery account metadata is unavailable")
   }
+  const metadata = (current.data.user.app_metadata ?? {}) as Record<string, unknown>
+  const accessKind = metadata.access_kind
+  if (
+    accessKind !== null &&
+    accessKind !== undefined &&
+    accessKind !== "" &&
+    accessKind !== DISCOVERY_ACCESS_KIND
+  ) {
+    return { status: "foreign_access_kind", accessKind: String(accessKind) }
+  }
   const { error } = await client.auth.admin.updateUserById(input.userId, {
     app_metadata: {
-      ...(current.data.user.app_metadata ?? {}),
+      ...metadata,
       access_kind: DISCOVERY_ACCESS_KIND,
       [DISCOVERY_ENROLLMENT_METADATA_KEY]: input.enrollmentId,
     },
   })
   if (error) throw error
+  return { status: "stamped" }
 }
 
 /**

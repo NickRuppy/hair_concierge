@@ -20,9 +20,16 @@ export function DiscoveryInvitationClient() {
   useEffect(() => {
     if (resolvedRef.current) return
     resolvedRef.current = true
-    // The credential travels in the fragment, so it never reaches a server log,
-    // a Referer header or an analytics query string. Drop it from the URL bar as
-    // soon as it has been handed to the server, which parks it in a cookie.
+    // The invite link carries the credential in the fragment, so opening it puts
+    // nothing in a server log, a Referer header or an analytics query string.
+    // Drop it from the URL bar as soon as it has been handed to the server,
+    // which parks it in an httpOnly cookie.
+    //
+    // This is not a claim that the credential never leaves the fragment: on the
+    // existing-account path the claim route puts it in the magic link's `next=`
+    // query parameter and mails it, exactly as the partner flow does. It goes to
+    // the enrollment's own verified address, and the server re-checks revocation
+    // and token version on every use.
     const credential = new URLSearchParams(window.location.hash.slice(1)).get("code")
     window.history.replaceState(
       window.history.state,
@@ -53,7 +60,10 @@ export function DiscoveryInvitationClient() {
         headers: { "Content-Type": "application/json" },
       })
       const body: unknown = await response.json().catch(() => null)
-      if (!response.ok && response.status !== 202) {
+      // 202 (the magic link was sent) is already `ok`, so this covers only the
+      // real refusals — including the paid-account and foreign-access-kind ones,
+      // whose German copy is what the card then shows.
+      if (!response.ok) {
         throw new Error(readError(body) ?? "Dein Zugang konnte nicht geöffnet werden.")
       }
       if (isEmailRequired(body)) {

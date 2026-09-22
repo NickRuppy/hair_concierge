@@ -59,6 +59,7 @@ function dependencies(overrides: Record<string, unknown> = {}) {
       deleteUser: async (input: unknown) => calls.push(["deleteUser", input]),
       stampDiscoveryAccess: async (input: unknown) => {
         calls.push(["stamp", input])
+        return { status: "stamped" as const }
       },
       claimEnrollment: async (input: unknown) => {
         calls.push(["claim", input])
@@ -122,6 +123,24 @@ test("a paid account is refused even when it already claimed this enrollment", a
   assert.deepEqual(names(calls), [])
 })
 
+test("an account belonging to another access kind is refused, and nothing is bound", async () => {
+  const { calls, deps } = dependencies({
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+    stampDiscoveryAccess: async (input: unknown) => {
+      calls.push(["stamp", input])
+      return { status: "foreign_access_kind" as const, accessKind: "field_test" }
+    },
+  })
+  const response = await createDiscoveryClaimHandler(deps)(request())
+
+  assert.equal(response.status, 403)
+  const body = await response.json()
+  assert.equal(body.code, "existing_access_kind")
+  assert.match(body.error, /anderen Chaarlie-Zugang/)
+  // The stamp helper was consulted but wrote nothing, and the claim never ran.
+  assert.deepEqual(names(calls), ["stamp"])
+})
+
 test("an unpaid existing account is stamped, then bound", async () => {
   const { calls, deps } = dependencies({
     getUser: async () => ({ id: ids.user, email: "LEA@example.test" }),
@@ -178,6 +197,36 @@ test("the continuation claims from the body handoff and re-parks the cookie", as
   assert.equal(response.status, 200)
   assert.deepEqual(names(calls), ["stamp", "claim"])
   assert.equal(response.cookies.get(DISCOVERY_INVITE_COOKIE)?.value, CREDENTIAL)
+})
+
+test("the body handoff beats a stale cookie and replaces it", async () => {
+  const decoded: unknown[] = []
+  const { calls, deps } = dependencies({
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+    decodeCredential: (credential: unknown) => {
+      decoded.push(credential)
+      return { enrollmentId: ids.enrollment, tokenVersion: 2 }
+    },
+  })
+  // The browser still holds a cookie from an older invitation; the participant
+  // just proved ownership of THIS one by following the e-mail.
+  const stale = "v1.stale-credential.stale-signature"
+  const response = await createDiscoveryClaimHandler(deps)(
+    new NextRequest("https://chaarlie.de/api/beratung/claim", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        origin: "https://chaarlie.de",
+        cookie: `${DISCOVERY_INVITE_COOKIE}=${stale}`,
+      },
+      body: JSON.stringify({ handoff: CREDENTIAL }),
+    }),
+  )
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(decoded, [CREDENTIAL])
+  assert.equal(response.cookies.get(DISCOVERY_INVITE_COOKIE)?.value, CREDENTIAL)
+  assert.deepEqual(names(calls), ["stamp", "claim"])
 })
 
 // --- Refusals ----------------------------------------------------------------

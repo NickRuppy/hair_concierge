@@ -166,10 +166,13 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
       // Meta, and it is identified afterwards through the enrollment's intake,
       // not through a column on `leads`. The resolver reads the signed-in
       // account's stamp first and only then the table, so it costs an unstamped
-      // visitor nothing. A discovery account carries its own `access_kind` and
-      // can therefore never also be a partner or a moderator, which is why both
-      // of its outcomes are decided here instead of being deferred like the
-      // partner `unavailable` below.
+      // visitor nothing.
+      //
+      // Both outcomes are decided here instead of being deferred like the
+      // partner `unavailable` below, because a discovery account can never also
+      // be a partner or a moderator: `stampDiscoveryAccess` REFUSES an account
+      // that already carries another `access_kind` rather than overwriting it,
+      // so the claim never mints an account belonging to two journeys at once.
       //
       // The kill switch guards the whole branch, not just its outcome: with the
       // flag off the resolver is never called, so an ordinary lead cannot be

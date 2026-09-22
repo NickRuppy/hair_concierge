@@ -191,7 +191,21 @@ test("a participant reaches every checklist-called path with no subscription and
 
 test("a participant on a member route lands on the checklist, and the checklist is terminal", async () => {
   const middleware = createMiddleware()
-  for (const pathname of ["/chat", "/anwendung", "/routine", "/profile", "/scan", "/tracker"]) {
+  for (const pathname of [
+    "/chat",
+    "/anwendung",
+    "/routine",
+    "/profile",
+    "/scan",
+    "/tracker",
+    // The routes that would otherwise claim a participant on the way out of the
+    // quiz: legacy intake, the purchase frontier, the paid result and the admin
+    // area. None of them is allow-listed, so all four bounce.
+    "/onboarding",
+    "/plan-bereit",
+    "/result/9a8b7c6d-0000-4000-8000-00000000000a",
+    "/admin",
+  ]) {
     const response = await middleware(request(pathname))
     assert.equal(response.status, 307, pathname)
     assert.equal(
