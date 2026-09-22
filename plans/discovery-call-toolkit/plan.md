@@ -38,14 +38,14 @@ Compose from existing machinery behind one new middleware gate. Enrollment copie
 
 ## 5. Decision coverage
 
-Status: **pending** — one small open fork (swap scope, below) presented with the mockups for the single approval; everything else confirmed.
+Status: **confirmed** (pending only the final journey sign-off word)
 
 - **Confirmed with Nick:** intake path (full quiz + checklist, submit-everything pre-call); participant boundary; no score/problem capture in intake; cockpit = Idealroutine + verdicts + alternatives with exactly one interaction (keep/swap); call flow; PDF = refined routine, only after explicit „Finalisieren", manual send, no email service; build order; build-first-then-outreach; optional post-call comp grant; subagents on Opus.
 - **Inherited from evidence or contract:** invite-token + env-kill-switch gating; partner-claim registration pattern **including resolver endpoint and `/beratung/weiter` magic-link continuation** (the pattern requires them); paying-member refusal (new discovery-specific check — the partner route only sets `freshStart`); single middleware gate + allow-list incl. the freemium-off `/api/scan` admission; legacy-`/quiz` pin; discovery quiz identity as a first-class mode (see T2 — more than widening a type union); four-table schema with service-only RLS; decisions per `decision_key`; category constant + drift guard; display-only grouping; thin identify endpoint; no-plan-artifact-writes contract with the documented source-RPC exception; finalize fingerprint + frozen-while-finalized rule; camera-header extension; `ScanVerdictSections` fragment extraction with rendered-parity coverage; shared presentation-rows + `requireAdmin` lifts; grants never for pre-call gating — from the Codex spec review, the three Opus hardening lanes, and the Codex plan review (all verified against the repo, adopted 2026-09-22).
 - **Implementation defaults:** route slugs; column names/CHECKs; token format; „Noch offen – Empfehlung folgt" copy for undecided PDF steps; kill-switch-off behavior = documented `/reactivate` landing (no loop — gate inert when flag off; tested); display-group labels; positional-binding tie-breaks; ordinary (non-`create_only`) projection mode for `linkQuizToProfile` — the fresh discovery quiz is intentionally the source of truth, including for a re-used existing account.
-- **Open consequential assumptions:** **Swap scope** (`resolve before handoff`, affects T5/T6): spec Rev. 4 allows swapping to *any* catalog product; the mockup + minimal build offer only the displayed alternatives (plus the ideal recommendation on open steps). Recommendation: **alternatives-only for v1** — the alternatives already come from the recommendation engine, and a catalog picker is a later add if real calls demand it. Presented to Nick with this plan.
+- **Open consequential assumptions:** none. (Swap scope ruled by Nick 2026-09-22: **displayed alternatives only** — plus the ideal recommendation on empty steps; a catalog picker only if real calls demand it.)
 
-Undiscussed consequential assumptions affecting this handoff: none besides the explicitly presented swap-scope fork.
+Undiscussed consequential assumptions affecting this handoff: none.
 
 Coverage acknowledgement: Nick approved the design 2026-09-21/22 (chat), ruled the trims, call flow, and PDF lifecycle, and gave the go 2026-09-22 ("Okay, yeah, go ahead… use subagents with Opus").
 
