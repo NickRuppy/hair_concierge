@@ -2786,7 +2786,7 @@ export function PersonalPlanQuiz({
       return renderQuestion(
         {
           field: "goals",
-          title: `Was wünschst du dir für ${TEXTURE_COPY[answers.texture ?? "wavy"].possessive}?`,
+          title: "Was wünschst du dir für deine Haare?",
           helper: "Wähl ruhig mehrere Ziele aus – alles, was dir wichtig ist.",
           options: getGoalOptions(answers.texture),
           multi: true,

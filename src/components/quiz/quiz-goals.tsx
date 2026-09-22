@@ -14,7 +14,6 @@ import { resolveVisibleDiagnosticGoals } from "@/lib/quiz/diagnostic-input"
 import { getLegacyQuizGoalIcon } from "./legacy-quiz-visuals"
 import { QuizMobileBottomAction, QuizMobileBottomClearance } from "./quiz-mobile-bottom-action"
 import { useQuizBrowserBack } from "./quiz-browser-history"
-import { TEXTURE_COPY } from "@/components/personal-plan-quiz/quiz-data"
 
 function toggleGoal(current: string[], goal: string): string[] {
   if (current.includes(goal)) {
@@ -35,8 +34,6 @@ export function QuizGoals() {
   )
   const hairTexture = (answers.structure as HairTexture | undefined) ?? null
   const goals = useMemo(() => getGoalOptions(hairTexture ?? undefined), [hairTexture])
-  const hairLabel =
-    hairTexture === "coily" ? "deine Locken" : TEXTURE_COPY[hairTexture ?? "wavy"].possessive
 
   const handleToggle = useCallback(
     (goal: string) => {
@@ -73,7 +70,7 @@ export function QuizGoals() {
       </div>
 
       <h2 className="text-balance text-center font-header text-[1.625rem] font-medium leading-[1.12] text-foreground outline-none focus:outline-none sm:text-[2.4rem]">
-        Was wünschst du dir für {hairLabel}?
+        Was wünschst du dir für deine Haare?
       </h2>
       <p className="mx-auto mb-5 mt-2 max-w-xl text-center text-[15px] leading-6 text-muted-foreground">
         Wähle alles aus, was sich für deinen Plan wichtig anfühlt. Wir priorisieren daraus die
