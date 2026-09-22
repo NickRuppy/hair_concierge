@@ -22,7 +22,13 @@ export type QuizStep =
   | 18 // scan_insert_home (scan_v1, after 12)
 
 export type LeadCaptureSubStep = "name" | "email" | "consent"
-export type LeadCaptureMode = "regular" | "partner"
+/**
+ * Who the quiz is capturing. `regular` asks for name and e-mail; the other two
+ * are invitation-bound identities the server already knows and the quiz must not
+ * let the visitor edit. See `hasLockedLeadIdentity` in `lead-capture-mode.ts` —
+ * every screen that branches on this type handles all three explicitly.
+ */
+export type LeadCaptureMode = "regular" | "partner" | "discovery"
 
 export type SelectionMode = "single" | "multi"
 

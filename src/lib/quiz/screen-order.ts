@@ -1,3 +1,4 @@
+import { hasLockedLeadIdentity } from "./lead-capture-mode"
 import { QUIZ_QUESTION_STEPS } from "./questions"
 import type { LeadCaptureMode, LeadCaptureSubStep, QuizStep } from "./types"
 
@@ -40,15 +41,16 @@ function expandHistoryScreens(
   mode: LeadCaptureMode,
 ): readonly QuizHistoryScreen[] {
   // Lead capture is one store step but three browser-history entries, so system
-  // Back maps to one visible quiz screen at a time. A partner quiz never shows
-  // the identity screens, so they must not consume history entries either.
+  // Back maps to one visible quiz screen at a time. A quiz whose identity is
+  // already locked (partner, discovery) never shows the name and e-mail screens,
+  // so they must not consume history entries either.
   const expanded: QuizHistoryScreen[] = order.flatMap((step) =>
     step === LEAD_CAPTURE_STEP
       ? LEAD_CAPTURE_SUB_STEPS.map((leadCaptureSubStep) => ({ step, leadCaptureSubStep }))
       : [{ step }],
   )
 
-  if (mode !== "partner") return expanded
+  if (!hasLockedLeadIdentity(mode)) return expanded
   return expanded.filter(
     (entry) =>
       entry.step !== LEAD_CAPTURE_STEP ||
@@ -57,14 +59,16 @@ function expandHistoryScreens(
   )
 }
 
+// Keyed by what the mode does to the screens, not by the mode's name: every
+// locked-identity mode runs the identical sequence.
 const HISTORY_SCREEN_ORDERS = {
   organic: {
     regular: expandHistoryScreens(ORGANIC_SCREEN_ORDER, "regular"),
-    partner: expandHistoryScreens(ORGANIC_SCREEN_ORDER, "partner"),
+    locked: expandHistoryScreens(ORGANIC_SCREEN_ORDER, "partner"),
   },
   scan: {
     regular: expandHistoryScreens(SCAN_SCREEN_ORDER, "regular"),
-    partner: expandHistoryScreens(SCAN_SCREEN_ORDER, "partner"),
+    locked: expandHistoryScreens(SCAN_SCREEN_ORDER, "partner"),
   },
 } as const
 
@@ -95,7 +99,7 @@ export function getQuizHistoryScreenOrder(
   const orders = isScanPackage(packageKey)
     ? HISTORY_SCREEN_ORDERS.scan
     : HISTORY_SCREEN_ORDERS.organic
-  return mode === "partner" ? orders.partner : orders.regular
+  return hasLockedLeadIdentity(mode) ? orders.locked : orders.regular
 }
 
 /** Projection: the answered questions, in order. Inserts are not questions. */

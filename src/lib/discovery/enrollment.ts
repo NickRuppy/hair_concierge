@@ -282,6 +282,13 @@ export async function revokeDiscoveryEnrollment(
   const row = (data as DiscoveryEnrollmentJourneyRow | null) ?? null
   if (!row) throw new Error("Discovery enrollment not found")
   if (row.claimed_user_id) await clearDiscoveryAccessStamp(row.claimed_user_id, client)
-  const { claimed_user_id: _claimedUserId, ...receipt } = row
-  return receipt
+  return {
+    id: row.id,
+    display_name: row.display_name,
+    normalized_email: row.normalized_email,
+    token_version: row.token_version,
+    claimed_at: row.claimed_at,
+    revoked_at: row.revoked_at,
+    created_at: row.created_at,
+  }
 }
