@@ -50,6 +50,7 @@ const SCAN_REGAL_SECTION_ORDER = [
 /** `discovery-call-v1` — booking replaces pricing as the conversion surface. */
 const DISCOVERY_CALL_SECTION_ORDER = [
   "hero",
+  "video",
   "method",
   "booking",
   "testimonials",

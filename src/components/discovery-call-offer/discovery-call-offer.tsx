@@ -16,12 +16,9 @@ const DISCOVERY_CALL_OFFER_REVISION = "discovery_call_v1"
 const CALENDLY_EVENT_URL = "https://calendly.com/nick-chaarlie/20min"
 const CALENDLY_ORIGIN = "https://calendly.com"
 
-/**
- * Jonas' walkthrough video (he builds his mother a routine on camera). The
- * asset is still in production; the whole section stays hidden until the
- * source lands here.
- */
-const DISCOVERY_CALL_VIDEO_SRC: string | null = null
+/** Jonas' walkthrough video: he builds his mother a routine on camera. */
+const DISCOVERY_CALL_VIDEO_SRC = "/videos/funnels/discovery-call/call-vsl-v4-720.mp4"
+const DISCOVERY_CALL_VIDEO_POSTER = "/images/funnels/discovery-call/call-vsl-v4-poster.jpg"
 
 const callSteps = [
   {
@@ -141,21 +138,21 @@ export function DiscoveryCallOffer(props: FunnelOfferVariantProps) {
           </div>
         </section>
 
-        {DISCOVERY_CALL_VIDEO_SRC ? (
-          <section className="mx-auto max-w-4xl px-5 py-9 sm:py-14">
-            <SectionEyebrow>So sieht das aus</SectionEyebrow>
-            <SectionHeading>
-              Jonas baut seiner Mutter im Video eine Routine. Genau das machen wir mit dir.
-            </SectionHeading>
-            <video
-              className="mt-6 w-full rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-black"
-              controls
-              playsInline
-              preload="metadata"
-              src={DISCOVERY_CALL_VIDEO_SRC}
-            />
-          </section>
-        ) : null}
+        <section className="mx-auto max-w-4xl px-5 py-9 sm:py-14" data-offer-section="video">
+          <SectionEyebrow>So sieht das aus</SectionEyebrow>
+          <SectionHeading>
+            Jonas baut seiner Mutter im Video eine Routine. Genau das machen wir mit dir.
+          </SectionHeading>
+          {/* The clip is portrait (720x1280), so it holds a phone-shaped column. */}
+          <video
+            className="mx-auto mt-6 aspect-[9/16] w-full max-w-[340px] rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.10)] bg-black"
+            controls
+            playsInline
+            poster={DISCOVERY_CALL_VIDEO_POSTER}
+            preload="metadata"
+            src={DISCOVERY_CALL_VIDEO_SRC}
+          />
+        </section>
 
         <section
           className="border-y border-[rgba(var(--brand-plum-rgb),0.08)] bg-white/55 px-5 py-9 sm:py-14"

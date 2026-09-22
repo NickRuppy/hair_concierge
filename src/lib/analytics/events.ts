@@ -71,6 +71,7 @@ export type OfferSectionId =
   | "subscription_explanation"
   // `discovery-call-v1` sections that have no plan/scanner counterpart. The
   // booking calendar replaces pricing as the conversion surface.
+  | "video"
   | "booking"
   | "free_explanation"
   | "pricing"
