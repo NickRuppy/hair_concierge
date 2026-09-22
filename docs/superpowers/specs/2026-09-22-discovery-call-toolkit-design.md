@@ -17,21 +17,20 @@ Participants see **only**: registration → existing 10-question quiz (unchanged
 1. **Outreach** (manual) → participant books via Calendly.
 2. **Intake link** in the booking confirmation → register → quiz → product checklist → submit.
 3. **Prep** (Nick, T-1 day): research unknown products, review generated analysis in cockpit.
-4. **Call**: Nick screen-shares the cockpit and walks through diagnosis → product verdicts → ideal routine → concrete steps.
+4. **Call**: Nick screen-shares the cockpit and walks through product verdicts → Idealroutine → alternatives.
 5. **After**: participant receives a simple PDF of their plan; optionally a `manual_access_grants` comp (reason `friend`) if they want to explore the app themselves.
 
 **Sequencing decision:** build intake + cockpit **first**, then start outreach (no Calendly free-text bridge, no manual product entry).
 
 ## Component 1 — Intake checklist page (build)
 
-A flag-/link-gated page in the existing app (participant must be logged in).
+A flag-/link-gated page in the existing app (participant must be logged in). Purely the product checklist — no score/problem capture: the quiz already covers concerns + goals, and the 1–10 satisfaction score is collected by Nick during WhatsApp outreach and stays there (an in-app score field can be added later if tracking across many calls warrants it).
 
-- **Step 1:** capture 1–10 satisfaction score + biggest problem/goal (free text). Lives here, not in Calendly questions, so all call data is in the DB and appears in the cockpit automatically.
-- **Steps 2…n:** one entry per product category (Shampoo, Conditioner, Maske, Leave-in, Öl, Styling, …exact list decided at planning time from the engine's category set). Per category:
+- One entry per product category (Shampoo, Conditioner, Maske, Leave-in, Öl, Styling, …exact list decided at planning time from the engine's category set). Per category:
   - **Scan barcode** (existing scan resolve flow) **or type a name** (existing name-only search with dm-backed lane from the scan-search revamp, PR #593).
   - Pick the match, or „nicht dabei" → files a normal miss into the existing intake pipeline (`scan_resolve_events` / `product_submissions`).
   - Category gets its checkmark; **multiple products per category allowed**; "use nothing here" is a valid answer.
-- **Storage:** new small table (working name `discovery_intake`) holding score, problem text, and product rows `(user_id, category, product_id | raw_name, source)`. Deliberately **not** squeezed into `user_product_usage` (one-per-category limit) — a mapping into engine inputs happens at analysis time.
+- **Storage:** new small table (working name `discovery_intake`) holding product rows `(user_id, category, product_id | raw_name, source)`. Deliberately **not** squeezed into `user_product_usage` (one-per-category limit) — a mapping into engine inputs happens at analysis time.
 - **Finish:** explicit „Absenden" marking intake complete (visible to Nick).
 - All UI text in German, telegram style, one job per screen.
 
@@ -39,21 +38,17 @@ This page doubles as a live probe of the Badezimmer-Check pillar from the freemi
 
 ## Component 2 — Thin cockpit (build)
 
-One admin-gated page per participant, inside the existing repo so it calls the real engines directly. Sections:
+One admin-gated page per participant, inside the existing repo so it calls the real engines directly. Deliberately minimal — output only, three sections:
 
-1. Score + stated problem/goal (from intake)
-2. Diagnosis — quiz profile rendered readable
-3. Product verdicts — their shelf, evaluated by the existing evaluation logic
-4. Idealroutine (existing engine)
-5. Konkrete Schritte / refined routine (existing engine)
-6. Alternatives / recommendations
-7. **Notes** — free-text per participant; Nick's discovery log (what confused them, what landed). This is the research output of the program.
+1. **Product verdicts** — for each intake product, exactly what the scanner output page would show if the participant had scanned it there (reuse the scan-verdict components/logic).
+2. **Idealroutine** (existing engine).
+3. **Alternatives** — recycled from the scanner output page's alternatives.
 
-Design bar: deliberately plain, fast to reshape between calls. No polish, no mobile optimization, no access for anyone but Nick.
+No diagnosis rendering, no score/problem header, no notes field (Nick keeps call notes outside the app). Design bar: deliberately plain, fast to reshape between calls. No polish, no mobile optimization, no access for anyone but Nick.
 
 ## Component 3 — PDF (thin)
 
-A participant-facing, print-styled view of the cockpit's plan sections (product voice, German, no internal notes/verdict internals). Export = browser "print to PDF", sent manually. No PDF generation pipeline.
+A participant-facing, print-styled view of the cockpit's sections (product voice, German). Export = browser "print to PDF", sent manually. No PDF generation pipeline.
 
 ## Component 4 — Prep runbook (docs only)
 
@@ -80,3 +75,6 @@ Checklist in `docs/` (no feature): T-1 day → check intake submitted → run mi
 - Handoff: simple PDF; optional comp grant (Nick)
 - Build first, then start calls — no manual-entry bridge (Nick, 2026-09-22)
 - Participant boundary confirmed: registration + quiz + checklist only (Nick, 2026-09-22)
+- No score/problem capture in intake: quiz already covers concerns/goals; 1–10 score stays in WhatsApp outreach (Nick, 2026-09-22)
+- Cockpit trimmed to output only: scanner-style product verdicts + Idealroutine + recycled alternatives; no diagnosis/notes sections (Nick, 2026-09-22)
+- Build order: intake table + checklist first, then cockpit (Nick, 2026-09-22)
