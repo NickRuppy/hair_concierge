@@ -11,6 +11,7 @@ import {
   Users,
   MessageCircle,
   Sparkles,
+  PhoneCall,
 } from "lucide-react"
 import { AppRouteProviders } from "@/providers/route-providers"
 
@@ -21,6 +22,7 @@ const adminNav = [
   { href: "/admin/products", label: "Produkte", icon: Package },
   { href: "/admin/users", label: "Nutzer", icon: Users },
   { href: "/admin/partner-access", label: "Partnerzugänge", icon: Sparkles },
+  { href: "/admin/beratung", label: "Beratungen", icon: PhoneCall },
   { href: "/admin/conversations", label: "Chats", icon: MessageCircle },
 ]
 
