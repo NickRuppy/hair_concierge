@@ -36,7 +36,7 @@
     "funnel:check": "node scripts/funnels/new-package.mjs --check",
     "personal-plan:field-test-campaign": "tsx scripts/personal-plan-field-test-campaign.ts",
     "partner-access": "tsx scripts/partner-access.ts",
-    "discovery": "tsx scripts/discovery.ts",
+    "discovery": "node --import ./tests/server-only-register.cjs --import tsx scripts/discovery.ts",
     "test:extract": "tsx scripts/extract-qa-fixtures.ts",
     "conditioner:research:rework-queue": "node --import ./tests/server-only-register.cjs --import tsx scripts/conditioner-research/rework-queue.ts",
     "research:conditioner:production-adapter": "tsx scripts/conditioner-research/project-production-adapter.ts",

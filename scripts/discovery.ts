@@ -3,32 +3,29 @@ import { resolve } from "node:path"
 import { pathToFileURL } from "node:url"
 
 import {
+  createDiscoveryEnrollment,
+  listDiscoveryEnrollments,
+  revokeDiscoveryEnrollment,
+  rotateDiscoveryEnrollment,
+  type DiscoveryEnrollmentRow as DiscoveryEnrollmentServiceRow,
+} from "../src/lib/discovery/enrollment"
+import {
   discoveryEnrollmentSigningSecret,
   projectDiscoveryEnrollmentCredential,
 } from "../src/lib/discovery/token"
-import { createAdminClient } from "../src/lib/supabase/admin"
 
 const PROJECT_ID = "pqdkhefxsxkyeqelqegq"
 const WRITE_GATE = "ALLOW_DISCOVERY_PRODUCTION_WRITE"
 const CONFIRM_PROJECT = `--confirm-project=${PROJECT_ID}`
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const TABLE = "discovery_enrollments"
-const COLUMNS = "id,display_name,normalized_email,token_version,claimed_at,revoked_at,created_at"
 
 export type DiscoveryCommand =
   | { action: "list" }
   | { action: "create"; apply: boolean; name: string; email: string }
   | { action: "revoke" | "rotate"; apply: boolean; enrollmentId: string }
 
-export type DiscoveryEnrollmentRow = {
-  id: string
-  display_name: string
-  normalized_email: string
-  token_version: number
-  claimed_at: string | null
-  revoked_at: string | null
-  created_at: string
-}
+/** The enrollment service owns the row shape; the CLI only projects receipts from it. */
+export type DiscoveryEnrollmentRow = DiscoveryEnrollmentServiceRow
 
 export type DiscoveryEnrollmentStatus = "invited" | "claimed" | "revoked"
 
@@ -160,61 +157,19 @@ function publicSiteUrl(explicit?: string) {
   return site.replace(/\/$/, "")
 }
 
+/**
+ * The gateway is the production write surface; its behaviour lives in
+ * `src/lib/discovery/enrollment.ts` so the app routes and this CLI share one
+ * implementation. `revoke` in particular must be the stamp-clearing one: a
+ * `revoked_at` timestamp alone leaves a claimed participant inside the
+ * JWT-gated middleware until their token refreshes.
+ */
 function adminGateway(): DiscoveryEnrollmentGateway {
-  const table = () => createAdminClient().from(TABLE)
-  const one = async (result: { data: unknown; error: unknown }) => {
-    if (result.error) throw result.error
-    const row = result.data as DiscoveryEnrollmentRow | null
-    if (!row) throw new Error("Discovery enrollment not found")
-    return row
-  }
   return {
-    async list() {
-      const { data, error } = await table()
-        .select(COLUMNS)
-        .order("created_at", { ascending: false })
-        .limit(250)
-      if (error) throw error
-      return (data as DiscoveryEnrollmentRow[] | null) ?? []
-    },
-    async create(input) {
-      return one(
-        await table()
-          .insert({ display_name: input.name, normalized_email: input.email })
-          .select(COLUMNS)
-          .maybeSingle(),
-      )
-    },
-    async revoke(enrollmentId) {
-      return one(
-        await table()
-          .update({ revoked_at: new Date().toISOString() })
-          .eq("id", enrollmentId)
-          .is("revoked_at", null)
-          .select(COLUMNS)
-          .maybeSingle(),
-      )
-    },
-    async rotate(enrollmentId) {
-      const { data, error } = await table()
-        .select(COLUMNS)
-        .eq("id", enrollmentId)
-        .is("revoked_at", null)
-        .maybeSingle()
-      if (error) throw error
-      const current = data as DiscoveryEnrollmentRow | null
-      if (!current) throw new Error("Discovery enrollment not found")
-      // Guarded against a concurrent rotate: the read version must still be the
-      // stored one, otherwise the other rotation already invalidated the link.
-      return one(
-        await table()
-          .update({ token_version: current.token_version + 1 })
-          .eq("id", enrollmentId)
-          .eq("token_version", current.token_version)
-          .select(COLUMNS)
-          .maybeSingle(),
-      )
-    },
+    list: () => listDiscoveryEnrollments(),
+    create: (input) => createDiscoveryEnrollment(input),
+    revoke: (enrollmentId) => revokeDiscoveryEnrollment(enrollmentId),
+    rotate: (enrollmentId) => rotateDiscoveryEnrollment(enrollmentId),
   }
 }
 
