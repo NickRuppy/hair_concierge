@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { hasCurrentBillingAccess } from "@/lib/billing/subscriptions"
-import { summarizeAdminUserBilling } from "@/lib/billing/admin-user-summary"
+import {
+  pickAdminUserBillingRow,
+  summarizeAdminUserBilling,
+} from "@/lib/billing/admin-user-summary"
 import { resolveIntakeState } from "@/lib/auth/intake-state"
 import type { BillingSubscriptionRow } from "@/lib/billing/types"
 import { ERR_UNAUTHORIZED, ERR_FORBIDDEN, fehler } from "@/lib/vocabulary"
@@ -68,8 +70,13 @@ export async function GET(request: Request) {
       admin,
       userRows
         .filter((row) => !hasText(row.full_name))
-        .map((row) => normalizeEmail(row.email))
-        .filter((email): email is string => email !== null),
+        .flatMap((row) => {
+          const raw = row.email?.trim()
+          const normalized = normalizeEmail(row.email)
+          // Lead emails are lowercased on insert today, but query the raw
+          // spelling too in case historical rows predate that normalization.
+          return raw && normalized ? [normalized, raw] : []
+        }),
     )
   } catch (leadError) {
     // Lead names are a best-effort display fallback; never fail the listing over them.
@@ -99,9 +106,9 @@ export async function GET(request: Request) {
 type AdminSupabaseClient = ReturnType<typeof createAdminClient>
 
 /**
- * Picks one subscription row per user: the row with current access when one
- * exists, otherwise the most recently updated row so lapsed/canceled
- * memberships stay visible in the admin listing.
+ * Picks one subscription row per user via `pickAdminUserBillingRow` (current
+ * access first, then entitlement/period relevance) so lapsed/canceled
+ * memberships stay visible without masking an active subscription.
  */
 async function loadRelevantBillingByUserId(admin: AdminSupabaseClient, userIds: string[]) {
   const billingByUserId = new Map<string, BillingSubscriptionRow>()
@@ -116,18 +123,15 @@ async function loadRelevantBillingByUserId(admin: AdminSupabaseClient, userIds: 
 
   if (error) throw error
 
-  const rows = (data as BillingSubscriptionRow[] | null) ?? []
-  for (const row of rows) {
-    const existing = billingByUserId.get(row.user_id)
-    if (!existing) {
-      billingByUserId.set(row.user_id, row)
-      continue
-    }
-    const existingHasAccess = hasCurrentBillingAccess(existing)
-    if (existingHasAccess) continue
-    if (hasCurrentBillingAccess(row) || row.updated_at > existing.updated_at) {
-      billingByUserId.set(row.user_id, row)
-    }
+  const rowsByUserId = new Map<string, BillingSubscriptionRow[]>()
+  for (const row of (data as BillingSubscriptionRow[] | null) ?? []) {
+    const rows = rowsByUserId.get(row.user_id)
+    if (rows) rows.push(row)
+    else rowsByUserId.set(row.user_id, [row])
+  }
+  for (const [userId, rows] of Array.from(rowsByUserId.entries())) {
+    const picked = pickAdminUserBillingRow(rows)
+    if (picked) billingByUserId.set(userId, picked)
   }
 
   return billingByUserId
@@ -142,6 +146,7 @@ async function loadLeadNamesByEmail(admin: AdminSupabaseClient, emails: string[]
     .from("leads")
     .select("email, name, created_at")
     .in("email", Array.from(new Set(emails)))
+    .not("name", "is", null)
     .order("created_at", { ascending: false })
 
   if (error) throw error

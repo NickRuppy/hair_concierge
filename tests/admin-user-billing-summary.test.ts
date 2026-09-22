@@ -1,6 +1,9 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { summarizeAdminUserBilling } from "../src/lib/billing/admin-user-summary"
+import {
+  pickAdminUserBillingRow,
+  summarizeAdminUserBilling,
+} from "../src/lib/billing/admin-user-summary"
 import type { BillingSubscriptionRow } from "../src/lib/billing/types"
 
 const NOW = new Date("2026-09-22T12:00:00.000Z")
@@ -180,4 +183,106 @@ test("active entitlement with lapsed period end reports expired", () => {
     NOW,
   )
   assert.equal(summary.status, "expired")
+})
+
+test("active entitlement within the 24h expiry grace still reports active", () => {
+  // 12h past the period end: hasCurrentBillingAccess still grants access.
+  const summary = summarizeAdminUserBilling(
+    subscriptionRow({ current_period_end: "2026-09-22T00:00:00.000Z" }),
+    NOW,
+  )
+  assert.equal(summary.status, "active")
+})
+
+test("active entitlement just beyond the 24h expiry grace reports expired", () => {
+  const summary = summarizeAdminUserBilling(
+    subscriptionRow({ current_period_end: "2026-09-21T00:00:00.000Z" }),
+    NOW,
+  )
+  assert.equal(summary.status, "expired")
+})
+
+test("past_due beyond the expiry grace reports expired instead of pending payment", () => {
+  const withinGrace = summarizeAdminUserBilling(
+    subscriptionRow({
+      entitlement_status: "past_due",
+      current_period_end: "2026-09-22T00:00:00.000Z",
+    }),
+    NOW,
+  )
+  assert.equal(withinGrace.status, "past_due")
+
+  const beyondGrace = summarizeAdminUserBilling(
+    subscriptionRow({
+      entitlement_status: "past_due",
+      current_period_end: "2026-09-20T00:00:00.000Z",
+    }),
+    NOW,
+  )
+  assert.equal(beyondGrace.status, "expired")
+})
+
+test("reserved trial admission reports trial_pending, not an active trial", () => {
+  const summary = summarizeAdminUserBilling(
+    subscriptionRow({
+      trial_enrollment_id: ENROLLMENT_ID,
+      trial_access_facts: trialFacts({ admissionStatus: "reserved" }),
+    }),
+    NOW,
+  )
+  assert.equal(summary.status, "trial_pending")
+})
+
+test("row pick prefers an active subscription over a later-ending canceled row", () => {
+  const active = subscriptionRow({
+    id: "sub-active",
+    current_period_end: "2026-10-10T00:00:00.000Z",
+    updated_at: "2026-09-01T00:00:00.000Z",
+  })
+  const canceledLater = subscriptionRow({
+    id: "sub-canceled",
+    entitlement_status: "canceled",
+    cancel_at_period_end: true,
+    current_period_end: "2026-11-01T00:00:00.000Z",
+    updated_at: "2026-09-10T00:00:00.000Z",
+  })
+  assert.equal(pickAdminUserBillingRow([canceledLater, active], NOW)?.id, "sub-active")
+  assert.equal(pickAdminUserBillingRow([active, canceledLater], NOW)?.id, "sub-active")
+})
+
+test("row pick prefers any access-holding row over lapsed rows", () => {
+  const lapsed = subscriptionRow({
+    id: "sub-lapsed",
+    entitlement_status: "canceled",
+    current_period_end: "2026-05-01T00:00:00.000Z",
+    updated_at: "2026-09-19T00:00:00.000Z",
+  })
+  const canceledWithAccess = subscriptionRow({
+    id: "sub-canceled-access",
+    entitlement_status: "canceled",
+    cancel_at_period_end: true,
+    current_period_end: "2026-10-01T00:00:00.000Z",
+    updated_at: "2026-06-01T00:00:00.000Z",
+  })
+  assert.equal(
+    pickAdminUserBillingRow([lapsed, canceledWithAccess], NOW)?.id,
+    "sub-canceled-access",
+  )
+})
+
+test("row pick falls back to the most recently updated lapsed row", () => {
+  const older = subscriptionRow({
+    id: "sub-old",
+    entitlement_status: "canceled",
+    current_period_end: "2026-04-01T00:00:00.000Z",
+    updated_at: "2026-04-02T00:00:00.000Z",
+  })
+  const newer = subscriptionRow({
+    id: "sub-new",
+    entitlement_status: "canceled",
+    current_period_end: "2026-04-01T00:00:00.000Z",
+    updated_at: "2026-08-02T00:00:00.000Z",
+  })
+  assert.equal(pickAdminUserBillingRow([older, newer], NOW)?.id, "sub-new")
+  assert.equal(pickAdminUserBillingRow([], NOW), null)
 })

@@ -73,6 +73,7 @@ test("admin users API merges visible billing subscription data with provider sub
       leadFilters.push([key, values])
       return leadsQuery
     },
+    not: () => leadsQuery,
     order: async () => ({
       data: [{ email: "chaarlie@example.test", name: "Marie", created_at: "2026-01-01" }],
       error: null,

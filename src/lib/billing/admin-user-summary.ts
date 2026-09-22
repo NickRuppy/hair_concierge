@@ -1,7 +1,9 @@
+import { hasCurrentBillingAccess } from "./subscriptions"
 import { resolveBillingTrialAccess } from "./trial-access-projection"
 import type { BillingSubscriptionRow } from "./types"
 
 export type AdminUserBillingStatus =
+  | "trial_pending"
   | "trial"
   | "trial_canceled"
   | "active"
@@ -24,6 +26,57 @@ const NO_BILLING: AdminUserBillingSummary = {
   trial_ends_at: null,
   period_end: null,
   provider_subscriber_email: null,
+}
+
+/**
+ * Picks the one subscription row worth showing per user: current access wins
+ * (mirroring `hasCurrentBillingAccess`, including its expiry grace), then open
+ * entitlements over canceled ones, then the later period end, then recency.
+ * This keeps a lingering canceled row from masking an active subscription.
+ */
+export function pickAdminUserBillingRow(
+  rows: BillingSubscriptionRow[],
+  now: Date = new Date(),
+): BillingSubscriptionRow | null {
+  let best: BillingSubscriptionRow | null = null
+  for (const row of rows) {
+    if (best === null || compareBillingRelevance(row, best, now) > 0) {
+      best = row
+    }
+  }
+  return best
+}
+
+const ENTITLEMENT_RANK: Record<string, number> = {
+  active: 3,
+  past_due: 2,
+  canceled: 1,
+}
+
+function compareBillingRelevance(
+  left: BillingSubscriptionRow,
+  right: BillingSubscriptionRow,
+  now: Date,
+): number {
+  const accessDelta =
+    Number(hasCurrentBillingAccess(left, now)) - Number(hasCurrentBillingAccess(right, now))
+  if (accessDelta !== 0) return accessDelta
+
+  const rankDelta =
+    (ENTITLEMENT_RANK[left.entitlement_status] ?? 0) -
+    (ENTITLEMENT_RANK[right.entitlement_status] ?? 0)
+  if (rankDelta !== 0) return rankDelta
+
+  const periodDelta = parseTime(left.current_period_end) - parseTime(right.current_period_end)
+  if (periodDelta !== 0) return periodDelta
+
+  return left.updated_at.localeCompare(right.updated_at)
+}
+
+function parseTime(value: string | null | undefined): number {
+  if (!value) return Number.NEGATIVE_INFINITY
+  const timestamp = Date.parse(value)
+  return Number.isFinite(timestamp) ? timestamp : Number.NEGATIVE_INFINITY
 }
 
 function readTrialFacts(row: BillingSubscriptionRow): {
@@ -68,6 +121,7 @@ export function summarizeAdminUserBilling(
     const canceled = facts.cancelAtPeriodEnd || row.cancel_at_period_end
     switch (trialAccess.phase) {
       case "awaiting_authorization":
+        return { ...base, status: "trial_pending", trial_ends_at: facts.originalTrialEndAt }
       case "trial":
         return {
           ...base,
@@ -91,10 +145,9 @@ export function summarizeAdminUserBilling(
     }
   }
 
-  if (row.entitlement_status === "past_due") {
-    return { ...base, status: "past_due" }
-  }
-
+  // Legacy (non-trial) rows: defer access questions to the canonical policy,
+  // including its post-period-end expiry grace, so the badge never contradicts
+  // whether the user can actually use the app.
   if (row.entitlement_status === "canceled") {
     return {
       ...base,
@@ -105,14 +158,17 @@ export function summarizeAdminUserBilling(
     }
   }
 
+  const hasAccess = hasCurrentBillingAccess(row, now)
+
+  if (row.entitlement_status === "past_due") {
+    return { ...base, status: hasAccess ? "past_due" : "expired" }
+  }
+
   if (row.entitlement_status === "active") {
     if (row.cancel_at_period_end && isFutureIso(row.current_period_end, now)) {
       return { ...base, status: "canceled_at_period_end" }
     }
-    if (row.current_period_end !== null && !isFutureIso(row.current_period_end, now)) {
-      return { ...base, status: "expired" }
-    }
-    return { ...base, status: "active" }
+    return { ...base, status: hasAccess ? "active" : "expired" }
   }
 
   return { ...base, status: "expired" }

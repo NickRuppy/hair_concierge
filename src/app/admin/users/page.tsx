@@ -20,13 +20,14 @@ interface UserWithHairProfile extends Profile {
 const INTAKE_BADGES: Record<IntakeState, { label: string; className: string }> = {
   ready: { label: "Vollständig", className: "bg-primary/10 text-primary" },
   needs_onboarding: { label: "Quiz fertig", className: "bg-amber-100 text-amber-800" },
-  needs_quiz: { label: "Kein Profil", className: "bg-muted text-muted-foreground" },
+  needs_quiz: { label: "Quiz offen", className: "bg-muted text-muted-foreground" },
 }
 
 const BILLING_BADGES: Record<
   AdminUserBillingSummary["status"],
   { label: string; className: string }
 > = {
+  trial_pending: { label: "Trial ausstehend", className: "bg-muted text-muted-foreground" },
   trial: { label: "Trial", className: "bg-primary/10 text-primary" },
   trial_canceled: { label: "Trial gekündigt", className: "bg-amber-100 text-amber-800" },
   active: { label: "Aktiv", className: "bg-emerald-100 text-emerald-800" },
@@ -99,7 +100,11 @@ export default function AdminUsersPage() {
 
   function getBillingDetail(summary: AdminUserBillingSummary | undefined): string | null {
     if (!summary) return null
-    if (summary.status === "trial" || summary.status === "trial_canceled") {
+    if (
+      summary.status === "trial" ||
+      summary.status === "trial_canceled" ||
+      summary.status === "trial_pending"
+    ) {
       const trialEnd = formatDate(summary.trial_ends_at)
       return trialEnd ? `Trial bis ${trialEnd}` : null
     }
@@ -107,7 +112,7 @@ export default function AdminUsersPage() {
     if (!periodEnd) return null
     if (summary.status === "canceled_at_period_end") return `Zugang bis ${periodEnd}`
     if (summary.status === "expired") return `seit ${periodEnd}`
-    if (summary.status === "active") return `verlängert am ${periodEnd}`
+    if (summary.status === "active") return `Verlängerung am ${periodEnd}`
     return null
   }
 
