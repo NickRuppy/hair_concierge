@@ -1,7 +1,7 @@
 # Discovery-Call Toolkit — Design
 
-**Date:** 2026-09-22 (Rev. 2 after Codex review)
-**Status:** Approved in shape by Nick; Rev. 2 incorporates Codex findings; one open decision (routine authority)
+**Date:** 2026-09-22 (Rev. 3 — call-flow ruling)
+**Status:** Approved in shape by Nick; Rev. 2 incorporated Codex findings; Rev. 3 encodes Nick's call-flow ruling (routine authority resolved, keep/swap interaction added)
 **Owner:** Nick
 
 ## Purpose
@@ -17,8 +17,8 @@ Participants see **only**: registration → existing 10-question quiz (unchanged
 1. **Outreach** (manual, WhatsApp) → participant books via Calendly.
 2. **Intake link** in the booking confirmation → register → quiz → product checklist → submit.
 3. **Prep** (Nick, T-1 day): research unknown products, review generated analysis in cockpit.
-4. **Call**: Nick screen-shares the cockpit and walks through product verdicts → Idealroutine → alternatives.
-5. **After**: participant receives a simple PDF of their plan; optionally a `manual_access_grants` comp (reason `friend`) if they explicitly want the normal app afterwards. Grants are **never** used as the pre-call gating mechanism — an active grant flips full member routing, which would break the locked boundary (`src/lib/billing/subscriptions.ts`).
+4. **Call** (Nick's ruled flow): show the Idealroutine and guide the participant through it → per entered product: „du benutzt X — schauen wir es uns an" (verdict) → per category, decide together: **keep** their product or **swap** to an alternative → the refined routine assembles from those decisions.
+5. **After**: participant receives a PDF of the **refined routine** — the conversation's outcome, mixing kept products and new ones; optionally a `manual_access_grants` comp (reason `friend`) if they explicitly want the normal app afterwards. Grants are **never** used as the pre-call gating mechanism — an active grant flips full member routing, which would break the locked boundary (`src/lib/billing/subscriptions.ts`).
 
 ### Journey contract (Codex finding 1 — the locked journey does not exist in current routing)
 
@@ -40,7 +40,7 @@ Token-gated page in the existing app (participant must be logged in and enrolled
   - Category gets its checkmark; **multiple products per category allowed**; „benutze ich nicht" is an explicit, stored answer (distinct from unanswered).
 - **Storage (Codex finding 3):** two new tables:
   - `discovery_intakes` — parent per participant: enrollment reference, state (`draft` / `submitted`), `submitted_at`. This is what tells Nick intake is complete.
-  - `discovery_intake_items` — `(intake_id, category, brand_text, product_name_text, barcode_identifier?, product_id?, product_submission_id?, source)`, plus explicit empty-category rows. Deliberately separate from `user_product_usage` (`UNIQUE (user_id, category)`), `scan_wishlist` (identity only), and `user_products` (couples to Personal Plan service-only writes and routine source-change triggers — rejected to keep the experiment decoupled).
+  - `discovery_intake_items` — `(intake_id, category, brand_text, product_name_text, barcode_identifier?, product_id?, product_submission_id?, source)`, plus explicit empty-category rows. Also carries the call outcome: `call_decision` (`keep` / `swap`, null until the call) and `swap_product_id?` — written only by Nick via the admin-gated cockpit. Deliberately separate from `user_product_usage` (`UNIQUE (user_id, category)`), `scan_wishlist` (identity only), and `user_products` (couples to Personal Plan service-only writes and routine source-change triggers — rejected to keep the experiment decoupled).
 - **Finish:** explicit „Absenden" setting the parent state to `submitted`.
 - All UI text in German, telegram style, one job per screen.
 
@@ -48,26 +48,18 @@ This page doubles as a live probe of the Badezimmer-Check pillar from the freemi
 
 ## Component 2 — Thin cockpit (build)
 
-One admin-gated page per participant, inside the existing repo so it calls the real engines directly. Deliberately minimal — output only, three sections:
+One admin-gated page per participant, inside the existing repo so it calls the real engines directly. Deliberately minimal — generated output plus exactly **one** interaction (keep/swap). Sections mirror the ruled call flow:
 
-1. **Product verdicts** — for each intake product, what the scanner output page would show if the participant had scanned it. **Implementation contract (Codex findings 4–5):** call the lower-level helpers (`loadScanVerdict` in `src/lib/scan/load-scan-verdict.ts`, scanner context loading, quarantine filter, presentation helpers) with the **participant's** user id via a service-role client behind the admin gate — never `POST /api/scan/resolve` as Nick (that route fixes identity to the caller, applies caller entitlements, and auto-saves to the caller's wishlist). Note: scanner context loading publishes a context revision, so "output-only" describes the cockpit UX, not a strictly read-only backend.
-2. **Idealroutine** — ⚠️ **open decision, see below.**
-3. **Alternatives** — the alternatives the scanner output computes, rendered from the same server payload. `ScanResultCard` is not reusable as-is (client component with rescan/buy callbacks, private alternatives renderer): extract or add **neutral presentational sections** for verdict body + alternatives that both cockpit and print view consume. Since the card already embeds alternatives, cockpit rendering must avoid duplicating them (verdict body and alternatives as two views of one payload).
+1. **Idealroutine** — the ideal routine generated for the participant's hair profile. **Routine authority (resolved, Codex finding 2):** generated **ephemerally admin-side** from `hair_profiles` via the existing ideal-routine generation path (the Idealplan-Konkret lane), invoked with an explicit participant userId + service-role reads. No Personal Plan artifact lifecycle (refined-need snapshots, Stage-3 resolutions, plan versions) is driven per participant — that machinery is disproportionate for a manual program and couples the experiment to the product being rethought. The implementation plan names the concrete generator entry point and the documented `discovery_intake_items` → engine-input reduction (including the primary-product-per-category rule when multiple exist).
+2. **Product verdicts with alternatives** — for each intake product, what the scanner output page would show if the participant had scanned it. **Implementation contract (Codex findings 4–5):** call the lower-level helpers (`loadScanVerdict` in `src/lib/scan/load-scan-verdict.ts`, scanner context loading, quarantine filter, presentation helpers) with the **participant's** user id via a service-role client behind the admin gate — never `POST /api/scan/resolve` as Nick (that route fixes identity to the caller, applies caller entitlements, and auto-saves to the caller's wishlist). `ScanResultCard` is not reusable as-is (client component with rescan/buy callbacks, private alternatives renderer): extract **neutral presentational sections** for verdict body + alternatives that both cockpit and print view consume, without duplicating the alternatives the card already embeds. Note: scanner context loading publishes a context revision, so the backend is not strictly read-only.
+3. **Keep/swap decisions (the one interaction):** per category, Nick records the call's outcome — **behalten** (keep the participant's product) or **tauschen** (pick one of the computed alternatives). Persisted so the refined routine and PDF can be produced after the call.
+4. **Refined routine** — the Idealroutine's steps overlaid with the keep/swap decisions: concrete products per step, mixing kept and swapped ones. Pure composition of sections 1–3; no separate engine run.
 
 No diagnosis rendering, no score/problem header, no notes field (Nick keeps call notes outside the app). Design bar: deliberately plain, fast to reshape between calls. No polish, no mobile optimization, no access for anyone but Nick.
 
-### Open decision — routine authority (Codex finding 2)
-
-"Idealroutine (existing engine)" is ambiguous; neither existing path consumes `discovery_intake` as-is:
-
-- **Option A — ephemeral admin-side projection (recommended):** compute the routine on the fly from the participant's `hair_profiles` + a documented `discovery_intake_items` → engine-input reduction (including the primary-product-per-category rule when multiple exist), via the recommendation runtime that the legacy loader maps into (`src/lib/routines/load-routine-artifact-data.ts` shape, invoked with an explicit userId + service-role reads). No Personal Plan artifacts created. Lighter, decoupled, easy to reshape between calls.
-- **Option B — full Personal Plan routine:** drive the real product lifecycle (refined-need snapshot, Stage-3 portfolio/category resolutions, plan artifact) per participant. Byte-identical to the paying product's output, but disproportionate machinery for a manual 50–100-call program and couples the experiment to product internals.
-
-The intake→engine reduction is part of the output definition and must be specified in the implementation plan, whichever option is chosen.
-
 ## Component 3 — PDF (thin)
 
-A participant-facing, print-styled view of the cockpit's sections (product voice, German), consuming the **same view model** minus scanner controls, reveal masking, analytics callbacks, and purchase interactions. The route itself stays **admin-gated** (its wording is participant-facing; its access is not). Export = browser "print to PDF", sent manually. No PDF generation pipeline.
+A participant-facing, print-styled view of the **refined routine** — the conversation's outcome (steps with the kept and swapped products), in product voice, German — plus the product verdicts as supporting detail. Consumes the **same view model** as the cockpit minus scanner controls, reveal masking, analytics callbacks, purchase interactions, and the keep/swap controls. The route itself stays **admin-gated** (its wording is participant-facing; its access is not). Export = browser "print to PDF", sent manually. No PDF generation pipeline.
 
 ## Access & data boundary (Codex finding 6)
 
@@ -99,4 +91,5 @@ Checklist in `docs/` (no feature): T-1 day → check `discovery_intakes.state = 
 - Cockpit trimmed to output only: scanner-style product verdicts + Idealroutine + recycled alternatives; no diagnosis/notes sections (Nick, 2026-09-22)
 - Build order: intake tables + checklist first, then cockpit (Nick, 2026-09-22)
 - Rev. 2 technical contracts (journey/token gating, two-table intake schema, Personal Plan category vocabulary, lower-level scan helper reuse, RLS boundary, grants-not-for-gating) adopted from Codex review 2026-09-22
-- Routine authority (Option A vs B): **OPEN — Nick to rule**
+- Call flow ruled: Idealroutine walkthrough → per-product verdicts → per-category keep/swap decided together → refined routine = outcome; PDF shows the refined routine (Nick, 2026-09-22)
+- Routine authority resolved: ephemeral admin-side generation of the Idealroutine from the hair profile (Idealplan-Konkret lane), no Personal Plan artifact lifecycle per participant; refined routine is a composition of Idealroutine + keep/swap decisions, not a second engine run (2026-09-22)
