@@ -4,11 +4,43 @@ import { useEffect, useState } from "react"
 import { useToast } from "@/providers/toast-provider"
 import type { Profile, HairProfile } from "@/lib/types"
 import type { BillingSubscriptionRow } from "@/lib/billing/types"
+import type { AdminUserBillingSummary } from "@/lib/billing/admin-user-summary"
+import type { IntakeState } from "@/lib/auth/intake-state"
 import { fehler, HAIR_TEXTURE_LABELS } from "@/lib/vocabulary"
 
 interface UserWithHairProfile extends Profile {
   hair_profiles?: HairProfile[]
   current_billing_subscription?: BillingSubscriptionRow | null
+  display_name?: string | null
+  display_name_source?: "profile" | "quiz_lead" | null
+  intake_state?: IntakeState
+  billing_summary?: AdminUserBillingSummary
+}
+
+const INTAKE_BADGES: Record<IntakeState, { label: string; className: string }> = {
+  ready: { label: "Vollständig", className: "bg-primary/10 text-primary" },
+  needs_onboarding: { label: "Quiz fertig", className: "bg-amber-100 text-amber-800" },
+  needs_quiz: { label: "Kein Profil", className: "bg-muted text-muted-foreground" },
+}
+
+const BILLING_BADGES: Record<
+  AdminUserBillingSummary["status"],
+  { label: string; className: string }
+> = {
+  trial: { label: "Trial", className: "bg-primary/10 text-primary" },
+  trial_canceled: { label: "Trial gekündigt", className: "bg-amber-100 text-amber-800" },
+  active: { label: "Aktiv", className: "bg-emerald-100 text-emerald-800" },
+  canceled_at_period_end: { label: "Gekündigt", className: "bg-amber-100 text-amber-800" },
+  past_due: { label: "Zahlung ausstehend", className: "bg-destructive/10 text-destructive" },
+  expired: { label: "Abgelaufen", className: "bg-muted text-muted-foreground" },
+  none: { label: "—", className: "bg-muted text-muted-foreground" },
+}
+
+function formatDate(value: string | null | undefined): string | null {
+  if (!value) return null
+  const timestamp = Date.parse(value)
+  if (!Number.isFinite(timestamp)) return null
+  return new Date(timestamp).toLocaleDateString("de-DE")
 }
 
 export default function AdminUsersPage() {
@@ -65,6 +97,20 @@ export default function AdminUsersPage() {
     return subscriberEmail
   }
 
+  function getBillingDetail(summary: AdminUserBillingSummary | undefined): string | null {
+    if (!summary) return null
+    if (summary.status === "trial" || summary.status === "trial_canceled") {
+      const trialEnd = formatDate(summary.trial_ends_at)
+      return trialEnd ? `Trial bis ${trialEnd}` : null
+    }
+    const periodEnd = formatDate(summary.period_end)
+    if (!periodEnd) return null
+    if (summary.status === "canceled_at_period_end") return `Zugang bis ${periodEnd}`
+    if (summary.status === "expired") return `seit ${periodEnd}`
+    if (summary.status === "active") return `verlängert am ${periodEnd}`
+    return null
+  }
+
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
@@ -89,10 +135,10 @@ export default function AdminUsersPage() {
               <tr className="border-b bg-muted/50">
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Name</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Kontakt</th>
-                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Admin</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                   Haarprofil
                 </th>
+                <th className="px-4 py-3 text-left font-medium text-muted-foreground">Abo</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                   Erstellt am
                 </th>
@@ -102,13 +148,28 @@ export default function AdminUsersPage() {
               {users.map((user) => {
                 const hairSummary = getHairSummary(user)
                 const paypalEmail = getPayPalEmail(user)
+                const intakeBadge = INTAKE_BADGES[user.intake_state ?? "needs_quiz"]
+                const billingBadge = BILLING_BADGES[user.billing_summary?.status ?? "none"]
+                const billingDetail = getBillingDetail(user.billing_summary)
                 return (
                   <tr
                     key={user.id}
                     className="border-b last:border-0 hover:bg-muted/30 transition-colors"
                   >
-                    <td className="px-4 py-3 font-medium text-foreground">
-                      {user.full_name || "—"}
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-foreground">
+                          {user.display_name || "—"}
+                        </span>
+                        {user.is_admin ? (
+                          <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                            Admin
+                          </span>
+                        ) : null}
+                      </div>
+                      {user.display_name_source === "quiz_lead" ? (
+                        <p className="text-[11px] text-muted-foreground/70">aus Quiz</p>
+                      ) : null}
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">
                       <div className="space-y-1">
@@ -130,21 +191,23 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="px-4 py-3">
                       <span
-                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                          user.is_admin
-                            ? "bg-primary/10 text-primary"
-                            : "bg-muted text-muted-foreground"
-                        }`}
+                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${intakeBadge.className}`}
                       >
-                        {user.is_admin ? "Admin" : "Nutzer"}
+                        {intakeBadge.label}
                       </span>
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground">
                       {hairSummary ? (
-                        <span className="text-xs">{hairSummary}</span>
-                      ) : (
-                        <span className="text-xs text-muted-foreground/50">Kein Profil</span>
-                      )}
+                        <p className="mt-1 text-xs text-muted-foreground">{hairSummary}</p>
+                      ) : null}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${billingBadge.className}`}
+                      >
+                        {billingBadge.label}
+                      </span>
+                      {billingDetail ? (
+                        <p className="mt-1 text-xs text-muted-foreground">{billingDetail}</p>
+                      ) : null}
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">
                       {new Date(user.created_at).toLocaleDateString("de-DE")}
