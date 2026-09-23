@@ -28,11 +28,27 @@ und `plans/discovery-call-toolkit/plan.md`. Lokales QA: `docs/local-qa-access.md
 
 ## 1. Einladung
 
-Einladungen entstehen ausschließlich über die CLI. Es gibt keine Admin-Oberfläche zum Anlegen.
+**Im Admin (Standardweg):** `/admin/beratung` → „Neue Einladung": Name (Pflicht), E-Mail
+(optional) → „Einladung erstellen" zeigt den Link mit „Link kopieren". Die Nachricht dazu schreibst
+du selbst. Pro Zeile: **„Link kopieren"** (der aktuelle Link, jedes Mal aus ID + `token_version`
+abgeleitet — nichts wird gespeichert), **„Link erneuern"** (= `rotate`, mit Rückfrage; alte Links
+sterben, der neue steht direkt darunter zum Kopieren) und **„Widerrufen"** (= `revoke`, mit
+Rückfrage). Widerrufene Zeilen bleiben mit Status „widerrufen" stehen, ohne Link-Knöpfe. Die Route
+(`/api/admin/beratung/invites`) ist admin-gegatet und nutzt dieselben Service-Funktionen wie die CLI;
+der Produktions-Schreib-Gate der CLI gilt für sie nicht.
+
+**E-Mail optional:** Ohne E-Mail zeigt die Einladungsseite ein leeres E-Mail-Feld, sonst ist es
+vorausgefüllt — editierbar ist es immer. Die mit „Los geht's" abgeschickte Adresse wird an die
+Einladung gebunden und ist die Konto-Adresse (neu → Konto, existiert → Magic-Link, zahlend →
+abgelehnt). Solange die Einladung nicht eingelöst ist, darf ein neuer Versuch mit anderer Adresse
+umbinden (Tippfehler); danach nicht mehr. Die Liste zeigt bis dahin „noch offen" als E-Mail.
+Eine Bestätigung der Adresse gibt es bewusst nicht (Discovery-Zugang gibt nichts Bezahltes frei).
+
+**CLI (Alternative):**
 
 ```sh
 npm run discovery -- list
-npm run discovery -- create --name="Lea Sommer" --email="lea@example.com"
+npm run discovery -- create --name="Lea Sommer" [--email="lea@example.com"]
 ```
 
 Jede Schreibform (`create`, `revoke`, `rotate`, `reconcile`) ist ohne `--apply` **Dry-run** und
@@ -86,6 +102,8 @@ Eine widerrufene Einladung blockiert dieselbe E-Mail nicht: die Eindeutigkeits-I
 | Konto mit fremdem `access_kind` (Partner, Field-Test)                     | `403`, Code `existing_access_kind`                                                                        | Den alten Zugang bewusst auflösen, bevor diese Person eingeladen wird. Der Claim überschreibt fremde Zugangsarten nie — das wäre nicht rückholbar. |
 | Link widerrufen oder rotiert                                              | `410`, „Diese Einladung ist nicht verfügbar."                                                             | Aktuellen Link aus `npm run discovery -- list` schicken.                                                                                           |
 | Konto existiert schon (ohne bezahlten Zugang, ohne fremden `access_kind`) | `202` + Magic-Link                                                                                        | Kein Fehler: die Teilnehmerin bestätigt per Mail und wird über `/beratung/weiter` in denselben Claim zurückgeführt.                                |
+| Getippte E-Mail gehört schon zu einer anderen aktiven Einladung           | `409`, Code `email_taken` („Diese E-Mail-Adresse gehört schon zu einer anderen Einladung.")               | Die andere Einladung prüfen (Doppelung?) und ggf. widerrufen. Die Copy verrät nicht, wessen Einladung es ist.                                      |
+| Eingelöste Einladung, andere E-Mail getippt                               | `409` („Diese Einladung ist schon mit einer anderen E-Mail-Adresse verbunden.")                           | So gewollt: nach dem Einlösen bleibt die Adresse fest. Bei echtem Irrtum widerrufen und neu einladen.                                              |
 
 ### Was die Teilnehmerin durchläuft
 

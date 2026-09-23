@@ -1,3 +1,4 @@
+import type { DiscoveryEnrollmentRow } from "./enrollment"
 import { DISCOVERY_INVITE_PATH } from "./participant"
 import { projectDiscoveryEnrollmentCredential } from "./token"
 
@@ -26,4 +27,39 @@ export function buildDiscoveryInviteUrl(input: {
 export function discoveryPublicSiteUrl(explicit?: string): string {
   const site = explicit ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://chaarlie.de"
   return site.replace(/\/+$/, "")
+}
+
+/** One invite as `/admin/beratung` shows and manages it. */
+export type DiscoveryAdminInvite = {
+  enrollmentId: string
+  name: string
+  /** Null until the participant types it on the invite page. */
+  email: string | null
+  status: "invited" | "claimed" | "revoked"
+  tokenVersion: number
+  /** Null for a revoked invite: there is no working link to hand out. */
+  url: string | null
+}
+
+export function projectDiscoveryAdminInvite(
+  row: DiscoveryEnrollmentRow,
+  context: { secret: string; siteUrl: string },
+): DiscoveryAdminInvite {
+  const status = row.revoked_at ? "revoked" : row.claimed_at ? "claimed" : "invited"
+  return {
+    enrollmentId: row.id,
+    name: row.display_name,
+    email: row.normalized_email,
+    status,
+    tokenVersion: row.token_version,
+    url:
+      status === "revoked"
+        ? null
+        : buildDiscoveryInviteUrl({
+            enrollmentId: row.id,
+            tokenVersion: row.token_version,
+            secret: context.secret,
+            siteUrl: context.siteUrl,
+          }),
+  }
 }
