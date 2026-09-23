@@ -10,7 +10,7 @@ import {
   DISCOVERY_INTAKE_CATEGORIES,
   checkDiscoveryIntakeItemIdentity,
   clearDiscoveryIntakeCoexistingNone,
-  loadDiscoverySubmissionCategory,
+  discoverySubmissionBelongsToUser,
   type DiscoveryAdminClient,
   type DiscoveryIntake,
   type DiscoveryIntakeIdentityDependencies,
@@ -82,11 +82,9 @@ type Deps = Record<string, unknown>
 function checkIdentityWith(overrides: Partial<DiscoveryIntakeIdentityDependencies> = {}) {
   const deps: DiscoveryIntakeIdentityDependencies = {
     filterEligibleProductIds: async (_client, productIds) => new Set(productIds),
-    loadProductCategory: async () => "shampoo",
     // Models ONE stored submission, owned by the participant — and the read is
     // scoped, so it answers nothing for any other account.
-    loadSubmissionCategory: async (_client, _submissionId, userId) =>
-      userId === ids.user ? "shampoo" : null,
+    submissionBelongsToUser: async (_client, _submissionId, userId) => userId === ids.user,
     ...overrides,
   }
   return (
@@ -429,32 +427,38 @@ test("a product that is not scan-eligible is a 422 and reaches no write", async 
   assert.match(body.error, /Produkt/)
 })
 
-test("a product filed under the wrong category is a 422, eligible or not", async () => {
+// --- Catalog-category divergence is a legitimate capture, not a bad request ---
+
+test("a product the catalog files elsewhere is STORED, under the opened category", async () => {
+  // Catalog search is not category-scoped and `/api/beratung/identify` ignores
+  // category entirely, so an eligible product whose catalog category is `mask` can
+  // legitimately arrive on the shampoo tile. The item belongs to the shelf slot the
+  // participant opened; the divergence surfaces later as the cockpit's
+  // `target_mismatch`, never as a refusal here.
+  const inserted: Array<Record<string, unknown>> = []
+  const checked: Array<Record<string, unknown>> = []
   const response = await createDiscoveryIntakeItemsHandler(
     baseDeps({
-      // Eligible — the catalog simply says it is a mask, and the request says shampoo.
-      checkIdentity: checkIdentityWith({ loadProductCategory: async () => "mask" }),
-      insertItem: async () => {
-        throw new Error("must not be reached")
+      checkIdentity: async (input: unknown) => {
+        checked.push(input as Record<string, unknown>)
+        return { ok: true as const }
+      },
+      clearCategory: async () => {},
+      insertItem: async (row: unknown) => {
+        inserted.push(row as Record<string, unknown>)
+        return storedItem
       },
     }),
   )(itemsRequest(validCapture))
 
-  assert.equal(response.status, 422)
-  assert.deepEqual((await response.json()).code, "category_mismatch")
-})
-
-test("a product with no catalog category at all is a mismatch, not a pass", async () => {
-  const response = await createDiscoveryIntakeItemsHandler(
-    baseDeps({
-      checkIdentity: checkIdentityWith({ loadProductCategory: async () => null }),
-      insertItem: async () => {
-        throw new Error("must not be reached")
-      },
-    }),
-  )(itemsRequest(validCapture))
-  assert.equal(response.status, 422)
-  assert.deepEqual((await response.json()).code, "category_mismatch")
+  assert.equal(response.status, 201)
+  // Structural, not incidental: the identity check is never TOLD the item's category,
+  // so no future edit can quietly start comparing against it.
+  assert.deepEqual(Object.keys(checked[0]).sort(), ["productId", "productSubmissionId", "userId"])
+  // Written under the OPENED category, carrying the product id unchanged.
+  assert.equal(inserted.length, 1)
+  assert.equal(inserted[0].category, "shampoo")
+  assert.equal(inserted[0].product_id, ids.product)
 })
 
 const submissionCapture = {
@@ -470,7 +474,7 @@ const submissionCapture = {
 test("a submission id that exists nowhere is a 422 and reaches no write", async () => {
   const response = await createDiscoveryIntakeItemsHandler(
     baseDeps({
-      checkIdentity: checkIdentityWith({ loadSubmissionCategory: async () => null }),
+      checkIdentity: checkIdentityWith({ submissionBelongsToUser: async () => false }),
       insertItem: async () => {
         throw new Error("must not be reached")
       },
@@ -481,28 +485,36 @@ test("a submission id that exists nowhere is a 422 and reaches no write", async 
   assert.deepEqual((await response.json()).code, "unknown_submission")
 })
 
-test("a submission opened for another category is a 422", async () => {
+test("a submission the reviewer will catalogue elsewhere is STORED, not refused", async () => {
+  // The research sheet's category grid records what the product ACTUALLY is, because
+  // that answer belongs to the submission a reviewer catalogues from. The checklist
+  // row stays under the tile the participant opened — see `handleResearchIntake` in
+  // `discovery-product-entry.tsx`. Refusing this would also orphan the
+  // `product_submissions` row `POST /api/scan/submit` already created.
+  const inserted: Array<Record<string, unknown>> = []
   const response = await createDiscoveryIntakeItemsHandler(
     baseDeps({
-      checkIdentity: checkIdentityWith({ loadSubmissionCategory: async () => "oil" }),
-      insertItem: async () => {
-        throw new Error("must not be reached")
+      clearCategory: async () => {},
+      insertItem: async (row: unknown) => {
+        inserted.push(row as Record<string, unknown>)
+        return { ...storedItem, source: "name_research" as const }
       },
     }),
   )(itemsRequest(submissionCapture))
 
-  assert.equal(response.status, 422)
-  assert.deepEqual((await response.json()).code, "category_mismatch")
+  assert.equal(response.status, 201)
+  assert.equal(inserted.length, 1)
+  assert.equal(inserted[0].category, "shampoo")
+  assert.equal(inserted[0].product_submission_id, submissionCapture.capture.productSubmissionId)
 })
 
 test("another account's submission is a 422, told apart from nothing at all", async () => {
   const response = await createDiscoveryIntakeItemsHandler(
     baseDeps({
       checkIdentity: checkIdentityWith({
-        // The row exists and is in the right category — it just belongs to someone
-        // else, so the account-scoped read answers nothing for this participant.
-        loadSubmissionCategory: async (_client, _submissionId, userId) =>
-          userId === ids.otherUser ? "shampoo" : null,
+        // The row exists — it just belongs to someone else, so the account-scoped
+        // read answers nothing for this participant.
+        submissionBelongsToUser: async (_client, _submissionId, userId) => userId === ids.otherUser,
       }),
       insertItem: async () => {
         throw new Error("must not be reached")
@@ -526,9 +538,9 @@ test("the participant's own submission still passes, and is read with HER user i
   const response = await createDiscoveryIntakeItemsHandler(
     baseDeps({
       checkIdentity: checkIdentityWith({
-        loadSubmissionCategory: async (_client, submissionId, userId) => {
+        submissionBelongsToUser: async (_client, submissionId, userId) => {
           asked.push([submissionId, userId])
-          return userId === ids.user ? "shampoo" : null
+          return userId === ids.user
         },
       }),
       clearCategory: async () => {},
@@ -556,25 +568,26 @@ test("the submission read carries the ownership predicate in the query itself", 
           call[`eq_${column}`] = value
           return chain
         },
-        maybeSingle: async () => ({ data: { category: "shampoo" }, error: null }),
+        maybeSingle: async () => ({ data: { id: "row" }, error: null }),
       }
       return chain
     },
   } as unknown as DiscoveryAdminClient
 
   assert.equal(
-    await loadDiscoverySubmissionCategory(
+    await discoverySubmissionBelongsToUser(
       client,
       submissionCapture.capture.productSubmissionId,
       ids.user,
     ),
-    "shampoo",
+    true,
   )
   // A foreign row is never returned to be compared — it is filtered out in Postgres.
+  // And the category is not even selected: nothing here may branch on it.
   assert.deepEqual(calls, [
     {
       table: "product_submissions",
-      select: "category",
+      select: "id",
       eq_id: submissionCapture.capture.productSubmissionId,
       eq_user_id: ids.user,
     },
@@ -588,10 +601,7 @@ test("„benutze ich nicht“ carries no ids, so it asks the catalog nothing", a
         filterEligibleProductIds: async () => {
           throw new Error("must not be reached")
         },
-        loadProductCategory: async () => {
-          throw new Error("must not be reached")
-        },
-        loadSubmissionCategory: async () => {
+        submissionBelongsToUser: async () => {
           throw new Error("must not be reached")
         },
       }),

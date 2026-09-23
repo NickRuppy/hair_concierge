@@ -70,6 +70,10 @@ ALLOW_DISCOVERY_PRODUCTION_WRITE=1 npm run discovery -- revoke --enrollment=<uui
   Beides ist nötig: der Middleware-Gate liest nur das JWT, ein `revoked_at` allein ließe eine
   Teilnehmerin bis zum nächsten Token-Refresh im Gate stehen. Nach dem Widerruf läuft das Konto als
   gewöhnlicher Nutzer weiter; Quiz-, Profil- und Scan-Daten bleiben unangetastet.
+  Der Befehl ist für eingelöste Einladungen **wiederholbar**: bricht der zweite Schritt ab (der
+  Stempel bleibt stehen, obwohl `revoked_at` schon gesetzt ist), räumt ein erneuter Lauf genau
+  diesen Rest auf und meldet den **ursprünglichen** Zeitstempel — er widerruft also nicht ein
+  zweites Mal. Nach einem Fehler einfach noch einmal ausführen.
 
 Eine widerrufene Einladung blockiert dieselbe E-Mail nicht: die Eindeutigkeits-Indizes sind partiell
 (`WHERE revoked_at IS NULL`), du kannst also jederzeit neu einladen.

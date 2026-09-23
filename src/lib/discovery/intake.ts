@@ -264,13 +264,10 @@ export function buildDiscoveryIntakeItemRow(
  *
  * Two things therefore have to be re-established here, per write:
  *
- * 1. The product is the one the identify endpoint would have answered with — active,
- *    not disposition-quarantined (`filterScanEligibleProductIds`, the same call
- *    `POST /api/beratung/identify` makes) — AND its catalog category is the category
- *    the item is being filed under. Without the category check a participant could
- *    file a shampoo as their mask, and the T-1 routine would then recommend against a
- *    product that is not in that slot at all.
- * 2. The submission is the PARTICIPANT'S OWN and carries the same category.
+ * 1. The product exists and is the one the identify endpoint would have answered with
+ *    — active and not disposition-quarantined (`filterScanEligibleProductIds`, the
+ *    same call `POST /api/beratung/identify` makes).
+ * 2. The submission exists AND belongs to this participant.
  *
  * On that second point, the ownership column is worth naming precisely. A scan
  * submission is anchorless: `submitScanProductIntake`
@@ -285,11 +282,26 @@ export function buildDiscoveryIntakeItemRow(
  * separate "forbidden" code: to THIS intake it is simply not a submission that exists.
  * Scoping the query rather than comparing after the fact is what makes that true by
  * construction — a foreign row never comes back at all.
+ *
+ * What is deliberately NOT checked is that the catalog category matches the item's.
+ * An intake item lives under the SHELF SLOT the participant opened, and the T3 design
+ * accepted that this can diverge from what the catalog says the product is:
+ *
+ *  - catalog search is not category-scoped, so any hit can be filed anywhere;
+ *  - `POST /api/beratung/identify` ignores category entirely and answers pure identity;
+ *  - the research sheet's category grid records what the product ACTUALLY is, because
+ *    that answer belongs to the submission a reviewer will catalogue from — while the
+ *    checklist row stays under the tile the participant opened
+ *    (`discovery-product-entry.tsx`, `handleResearchIntake`).
+ *
+ * Divergence is therefore a legitimate capture, not a bad request, and it is already
+ * carried downstream rather than dropped: `loadParticipantVerdicts` resolves such an
+ * item to the typed `target_mismatch` state, which the cockpit renders as „Der Katalog
+ * führt das Produkt in einer anderen Kategorie." Refusing it here would 422 an ordinary
+ * capture and — on the research paths — orphan the `product_submissions` row that
+ * `POST /api/scan/submit` had already created.
  */
-export type DiscoveryIntakeIdentityRefusal =
-  | "unknown_product"
-  | "category_mismatch"
-  | "unknown_submission"
+export type DiscoveryIntakeIdentityRefusal = "unknown_product" | "unknown_submission"
 
 export type DiscoveryIntakeIdentityCheck =
   | { ok: true }
@@ -300,36 +312,27 @@ export type DiscoveryIntakeIdentityDependencies = {
     client: DiscoveryAdminClient,
     productIds: readonly string[],
   ) => Promise<Set<string>>
-  loadProductCategory: (client: DiscoveryAdminClient, productId: string) => Promise<string | null>
-  /** Scoped to the owning account: a foreign submission answers `null`, like a missing one. */
-  loadSubmissionCategory: (
+  /**
+   * Existence AND ownership in one answer: the read is scoped to the account, so a
+   * submission belonging to someone else is indistinguishable from a missing one.
+   * The submission's own category is deliberately not returned — nothing may branch
+   * on it here (see the contract above).
+   */
+  submissionBelongsToUser: (
     client: DiscoveryAdminClient,
     submissionId: string,
     userId: string,
-  ) => Promise<string | null>
+  ) => Promise<boolean>
 }
 
-export async function loadDiscoveryProductCategory(
-  client: DiscoveryAdminClient,
-  productId: string,
-): Promise<string | null> {
-  const { data, error } = await client
-    .from("products")
-    .select("category_key")
-    .eq("id", productId)
-    .maybeSingle()
-  if (error) throw error
-  return (data as { category_key: string | null } | null)?.category_key ?? null
-}
-
-export async function loadDiscoverySubmissionCategory(
+export async function discoverySubmissionBelongsToUser(
   client: DiscoveryAdminClient,
   submissionId: string,
   userId: string,
-): Promise<string | null> {
+): Promise<boolean> {
   const { data, error } = await client
     .from("product_submissions")
-    .select("category")
+    .select("id")
     // The ownership predicate, in the query rather than after it: a submission that
     // belongs to another account never comes back, so it cannot be distinguished from
     // a missing one — which is exactly the answer this intake should get.
@@ -337,19 +340,17 @@ export async function loadDiscoverySubmissionCategory(
     .eq("user_id", userId)
     .maybeSingle()
   if (error) throw error
-  return (data as { category: string | null } | null)?.category ?? null
+  return data !== null
 }
 
 export const defaultDiscoveryIntakeIdentityDependencies: DiscoveryIntakeIdentityDependencies = {
   filterEligibleProductIds: (client, productIds) =>
     filterScanEligibleProductIds(client as unknown as SupabaseClient, productIds),
-  loadProductCategory: loadDiscoveryProductCategory,
-  loadSubmissionCategory: loadDiscoverySubmissionCategory,
+  submissionBelongsToUser: discoverySubmissionBelongsToUser,
 }
 
 export async function checkDiscoveryIntakeItemIdentity(
   input: {
-    category: DiscoveryIntakeCategory
     productId: string | null
     productSubmissionId: string | null
     /** The signed-in participant, from the guard — never from the request body. */
@@ -361,22 +362,17 @@ export async function checkDiscoveryIntakeItemIdentity(
   if (input.productId) {
     const eligible = await deps.filterEligibleProductIds(client, [input.productId])
     if (!eligible.has(input.productId)) return { ok: false, reason: "unknown_product" }
-    const category = await deps.loadProductCategory(client, input.productId)
-    // A null category is a mismatch, not a pass: an uncategorized catalog row cannot
-    // be the answer to „welches Shampoo benutzt du".
-    if (category !== input.category) return { ok: false, reason: "category_mismatch" }
   }
 
   if (input.productSubmissionId) {
     // Missing, or owned by someone else — the scoped read cannot tell them apart, and
     // to this intake they are the same answer.
-    const category = await deps.loadSubmissionCategory(
+    const owned = await deps.submissionBelongsToUser(
       client,
       input.productSubmissionId,
       input.userId,
     )
-    if (category === null) return { ok: false, reason: "unknown_submission" }
-    if (category !== input.category) return { ok: false, reason: "category_mismatch" }
+    if (!owned) return { ok: false, reason: "unknown_submission" }
   }
 
   return { ok: true }

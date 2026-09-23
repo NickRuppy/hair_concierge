@@ -29,8 +29,9 @@ import {
  * `captured_has_identity` CHECK would reject. The ids inside that capture are then
  * re-established by `checkDiscoveryIntakeItemIdentity` — 422 — because a UUID-shaped
  * id from the browser proves nothing about what it points at: the product must be one
- * the identify endpoint would have answered with and sit in this category, and the
- * research submission must be this participant's own.
+ * the identify endpoint would have answered with, and the research submission must be
+ * this participant's own. The item's category is NOT part of that check — it is the
+ * shelf slot the participant opened, and the catalog is allowed to disagree with it.
  *
  * Writing an answer also clears the answer it replaces, because a category is
  * either „benutze ich nicht" or a non-empty product list:
@@ -50,7 +51,6 @@ import {
 // intake they are the same fact and the copy should not hint at the difference.
 const IDENTITY_REFUSALS: Record<DiscoveryIntakeIdentityRefusal, string> = {
   unknown_product: "Dieses Produkt können wir gerade nicht übernehmen. Such es bitte neu.",
-  category_mismatch: "Dieses Produkt gehört nicht in diese Kategorie.",
   unknown_submission: "Diese Produktanfrage kennen wir nicht. Versuch es bitte nochmal.",
 }
 
@@ -83,12 +83,12 @@ export function createDiscoveryIntakeItemsHandler(
     if (!built.ok) return discoveryIntakeError(built.reason, 400)
 
     try {
-      // Before anything is written: the ids in the capture have to resolve, to resolve
-      // into THIS category, and — for a submission — to belong to this participant.
-      // `userId` comes from the guard, never from the body.
+      // Before anything is written: the ids in the capture have to resolve, and — for a
+      // submission — to belong to this participant. `userId` comes from the guard, never
+      // from the body. Note what is NOT asked: whether the catalog files the product in
+      // the category this item is being written under. It often does not, by design.
       const identity = await checkIdentityOf(
         {
-          category: parsed.data.category,
           productId: built.row.product_id,
           productSubmissionId: built.row.product_submission_id,
           userId,
