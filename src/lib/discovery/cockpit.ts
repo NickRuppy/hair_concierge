@@ -362,6 +362,8 @@ export type DiscoveryCockpitView = {
   steps: DiscoveryCockpitStepView[]
   unassigned: DiscoveryCockpitUnassignedView[]
   declinedCategories: PersonalPlanCategory[]
+  /** Categories the participant never answered — the call asks about them. */
+  unansweredCategories: PersonalPlanCategory[]
   sourceHash: string
   /** See `DiscoveryCockpitModel.recommendationBrandsAvailable`. */
   recommendationBrandsAvailable: boolean
@@ -475,6 +477,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       reason: entry.reason,
     })),
     declinedCategories: model.routine.declinedCategories,
+    unansweredCategories: model.routine.unansweredCategories,
     sourceHash: model.routine.sourceHash,
     recommendationBrandsAvailable: model.recommendationBrandsAvailable,
   }

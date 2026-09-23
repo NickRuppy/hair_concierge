@@ -669,27 +669,43 @@ test("deleting an own item answers 200 and is scoped to the caller's intake", as
   assert.deepEqual(seen, [{ intakeId: ids.intake, itemId: ids.item }])
 })
 
-// --- Submit completeness ------------------------------------------------------
+// --- Submit: one answer is enough, nothing is refused -------------------------
 
 const everyCategory = DISCOVERY_INTAKE_CATEGORIES.map((category) => ({
   ...storedItem,
   category,
 }))
 
-test("submitting an incomplete checklist is refused and names the open categories", async () => {
+test("an intake with nothing answered is refused — 400 nothing_answered", async () => {
   const response = await createDiscoveryIntakeSubmitHandler(
     baseDeps({
-      loadItems: async () => everyCategory.filter((item) => item.category !== "oil"),
+      loadItems: async () => [],
       submitIntake: async () => {
         throw new Error("must not be reached")
       },
     }),
   )()
   assert.equal(response.status, 400)
-  assert.deepEqual(await response.json(), { code: "incomplete", missing: ["oil"] })
+  assert.deepEqual(await response.json(), { code: "nothing_answered" })
 })
 
-test("completeness is decided from the stored rows, not from the client", async () => {
+test("one answered category is enough — the untouched ones stay unanswered, nothing is written for them", async () => {
+  let submittedId: string | null = null
+  const response = await createDiscoveryIntakeSubmitHandler(
+    baseDeps({
+      loadItems: async () => [storedItem],
+      clearCoexistingNone: async () => [],
+      submitIntake: async (intakeId: string) => {
+        submittedId = intakeId
+        return submittedIntake
+      },
+    }),
+  )()
+  assert.equal(response.status, 200)
+  assert.equal(submittedId, ids.intake)
+})
+
+test("the „at least one“ rule is decided from the stored rows, not from the client", async () => {
   let submittedId: string | null = null
   const response = await createDiscoveryIntakeSubmitHandler(
     baseDeps({
@@ -741,10 +757,10 @@ test("a category holding BOTH answers loses its „benutze ich nicht“ before t
   assert.deepEqual(healed, [{ intakeId: ids.intake, items }])
 })
 
-test("an incomplete checklist is refused before anything is healed", async () => {
+test("an empty intake is refused before anything is healed", async () => {
   const response = await createDiscoveryIntakeSubmitHandler(
     baseDeps({
-      loadItems: async () => everyCategory.filter((item) => item.category !== "oil"),
+      loadItems: async () => [],
       clearCoexistingNone: async () => {
         throw new Error("must not be reached")
       },

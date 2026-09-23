@@ -602,34 +602,6 @@ export async function insertDiscoveryIntakeItem(
   return projectDiscoveryIntakeItemRow(inserted)
 }
 
-/**
- * „Mehr benutze ich nicht": one `none` row for each of `categories`, in ONE insert.
- *
- * The caller passes only categories with no answer at all (see
- * `missingDiscoveryIntakeCategories`), so no row here can displace a product or
- * collide with a standing `none` — the none-XOR-products rule needs no clear. The
- * rows come from `buildDiscoveryIntakeItemRow`, the one place a capture becomes a
- * row, so they satisfy `discovery_intake_items_none_is_empty` by construction.
- */
-export async function insertDiscoveryIntakeNoneItems(
-  input: { intakeId: string; categories: readonly DiscoveryIntakeCategory[] },
-  client: DiscoveryAdminClient,
-): Promise<DiscoveryIntakeItem[]> {
-  if (input.categories.length === 0) return []
-  const rows = input.categories.map((category) => {
-    const built = buildDiscoveryIntakeItemRow(input.intakeId, category, { source: "none" })
-    if (!built.ok) throw new Error("A none answer always builds a row")
-    return built.row
-  })
-  const { data, error } = await client.from(ITEMS_TABLE).insert(rows).select(ITEM_COLUMNS)
-  if (error) throw error
-  const inserted = (data as ItemRow[] | null) ?? []
-  if (inserted.length !== rows.length) {
-    throw new Error("Discovery intake none answers could not be stored")
-  }
-  return inserted.map(projectDiscoveryIntakeItemRow)
-}
-
 /** Scoped to the caller's own intake: an item id from another intake deletes nothing. */
 export async function deleteDiscoveryIntakeItem(
   input: { intakeId: string; itemId: string },
@@ -666,16 +638,6 @@ export async function submitDiscoveryIntake(
 // --- Completeness ------------------------------------------------------------
 
 /** Every one of the ten categories must carry an answer — a product or „none". */
-export function missingDiscoveryIntakeCategories(
-  items: Pick<DiscoveryIntakeItem, "category">[],
-): DiscoveryIntakeCategory[] {
-  const answered = new Set(items.map((item) => item.category))
-  return DISCOVERY_INTAKE_CATEGORIES.filter((category) => !answered.has(category))
-}
-
-export function isDiscoveryIntakeComplete(items: Pick<DiscoveryIntakeItem, "category">[]): boolean {
-  return missingDiscoveryIntakeCategories(items).length === 0
-}
 
 // --- The per-request guard ---------------------------------------------------
 

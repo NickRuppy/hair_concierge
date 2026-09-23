@@ -103,17 +103,6 @@ export async function removeIntakeItem(itemId: string): Promise<void> {
   if (!response.ok) throw await failure(response)
 }
 
-/**
- * „Mehr benutze ich nicht": the server answers every still-open category with
- * `none` and returns the WHOLE list afterwards, which replaces the client's state.
- */
-export async function markRemainingCategoriesNone(): Promise<DiscoveryIntakeItemView[]> {
-  const response = await fetch("/api/beratung/intake/remaining-none", { method: "POST" })
-  if (!response.ok) throw await failure(response)
-  const body = (await response.json()) as { items: DiscoveryIntakeItemView[] }
-  return body.items
-}
-
 export async function submitIntake(): Promise<void> {
   const response = await fetch("/api/beratung/intake/submit", { method: "POST" })
   if (!response.ok) throw await failure(response)

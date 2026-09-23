@@ -3,7 +3,10 @@ import { notFound } from "next/navigation"
 
 import { DiscoveryCallCockpit } from "@/components/discovery/cockpit/discovery-call-cockpit"
 import { formatDiscoveryTimestamp } from "@/components/discovery/cockpit/format"
-import { DISCOVERY_INTAKE_CATEGORY_COPY } from "@/components/discovery/intake/categories"
+import {
+  DISCOVERY_INTAKE_CATEGORY_COPY,
+  DISCOVERY_INTAKE_GROUPS,
+} from "@/components/discovery/intake/categories"
 import { requireAdmin } from "@/lib/auth/require-admin"
 import {
   buildDiscoveryCockpitView,
@@ -51,6 +54,8 @@ const PREFLIGHT_INVALID = "Die Quiz-Antworten sind nicht lesbar."
 const PREFLIGHT_MISSING = "Diese Antworten fehlen für einen vollständigen Plan:"
 const DECLINED_SUFFIX = "— benutzt sie nicht. Keine Entscheidung nötig."
 const NO_STEP_SUFFIX = "— kein Schritt im Idealplan:"
+const UNANSWERED_PREFIX = "Nicht angegeben:"
+const UNANSWERED_SUFFIX = "— im Call fragen."
 
 export type DiscoveryCockpitPageDependencies = {
   flagEnabled: () => boolean
@@ -129,7 +134,7 @@ export function createDiscoveryCockpitPage(
           submitted={intake.state === "submitted"}
           initialFinalizedAt={intake.callFinalizedAt}
         />
-        <OutsideRoutine view={view} />
+        <OutsideRoutine view={view} submitted={intake.state === "submitted"} />
       </Shell>
     )
   }
@@ -217,24 +222,42 @@ function IdealRoutine({ view }: { view: DiscoveryCockpitView }) {
   )
 }
 
-/** The checklist's own labels, so the cockpit names a category the way the participant saw it. */
+const SHELF_ORDER = DISCOVERY_INTAKE_GROUPS.flatMap((group) =>
+  group.categories.map((category) => category.key),
+)
+
+/**
+ * The checklist's own labels, in the checklist's own shelf order, so the cockpit names
+ * categories the way the participant saw them.
+ */
 function categoryLine(categories: readonly PersonalPlanCategory[]): string {
-  return categories.map((category) => DISCOVERY_INTAKE_CATEGORY_COPY[category].label).join(" · ")
+  return [...categories]
+    .sort((left, right) => SHELF_ORDER.indexOf(left) - SHELF_ORDER.indexOf(right))
+    .map((category) => DISCOVERY_INTAKE_CATEGORY_COPY[category].label)
+    .join(" · ")
 }
 
 /**
  * Everything with no decision to make, collapsed: „benutze ich nicht" categories on one
- * grey line, products outside the Idealroutine on another, and whatever is still being
- * researched on a third — named, so Nick can still mention it.
+ * grey line, categories the participant left unanswered on the next (only once she has
+ * submitted — before that they are simply not done yet), products outside the
+ * Idealroutine on another, and whatever is still being researched on the last — named,
+ * so Nick can still mention it.
  *
  * The no-step line names its products, not just their categories: the participant's
  * document lists every one of them under „Brauchst du nicht mehr", and Nick has to be
  * able to read that list here before he finalises and sends it.
  */
-function OutsideRoutine({ view }: { view: DiscoveryCockpitView }) {
+function OutsideRoutine({ view, submitted }: { view: DiscoveryCockpitView; submitted: boolean }) {
   const noStep = view.unassigned.filter((entry) => entry.reason === "no_ideal_step")
   const research = view.unassigned.filter((entry) => entry.reason === "research_pending")
-  if (view.declinedCategories.length === 0 && noStep.length === 0 && research.length === 0) {
+  const unanswered = submitted ? view.unansweredCategories : []
+  if (
+    view.declinedCategories.length === 0 &&
+    unanswered.length === 0 &&
+    noStep.length === 0 &&
+    research.length === 0
+  ) {
     return null
   }
   const noStepCategories = [...new Set(noStep.map((entry) => entry.category))]
@@ -247,6 +270,9 @@ function OutsideRoutine({ view }: { view: DiscoveryCockpitView }) {
       <div className="flex flex-col gap-1.5 px-4 py-3 text-[13px] leading-6 text-muted-foreground">
         {view.declinedCategories.length > 0 ? (
           <p>{`${categoryLine(view.declinedCategories)} ${DECLINED_SUFFIX}`}</p>
+        ) : null}
+        {unanswered.length > 0 ? (
+          <p>{`${UNANSWERED_PREFIX} ${categoryLine(unanswered)} ${UNANSWERED_SUFFIX}`}</p>
         ) : null}
         {noStep.length > 0 ? (
           <p>{`${categoryLine(noStepCategories)} ${NO_STEP_SUFFIX} ${noStep

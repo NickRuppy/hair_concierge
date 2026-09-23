@@ -1,5 +1,6 @@
 import { semanticHash } from "@/lib/personal-plan/routine/canonicalize"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
 import type { ScanCatalogPresentationRow } from "@/lib/scan/product-presentation"
 
 import { discoveryProductLabel } from "./product-label"
@@ -87,6 +88,20 @@ export type DiscoveryIntakeReduction = {
   unassignedIntakeProducts: DiscoveryUnassignedIntakeProduct[]
   /** Categories the participant explicitly answered „benutze ich nicht" for. */
   declinedCategories: PersonalPlanCategory[]
+  /**
+   * Categories with no row at all — the participant submitted without touching them.
+   * Honestly unanswered, NOT „benutze ich nicht": their steps still show the Idealplan's
+   * own pick (like a declined category), and the cockpit names them so the call can ask.
+   */
+  unansweredCategories: PersonalPlanCategory[]
+}
+
+/** Every checklist category with no row at all, in catalog order. */
+export function missingDiscoveryIntakeCategories(
+  items: ReadonlyArray<{ category: PersonalPlanCategory }>,
+): PersonalPlanCategory[] {
+  const answered = new Set(items.map((item) => item.category))
+  return SUPPORTED_PRODUCT_CATEGORY_KEYS.filter((category) => !answered.has(category))
 }
 
 function bindingOrder(left: DiscoveryIntakeItem, right: DiscoveryIntakeItem): number {
@@ -143,6 +158,7 @@ export function reduceIntakeItemsToSteps(
     bindings,
     unassignedIntakeProducts: unassigned.sort((left, right) => bindingOrder(left.item, right.item)),
     declinedCategories: [...declined].sort(),
+    unansweredCategories: missingDiscoveryIntakeCategories(items),
   }
 }
 
@@ -190,6 +206,8 @@ export type DiscoveryRefinedRoutine = {
   steps: DiscoveryRefinedStep[]
   unassignedIntakeProducts: DiscoveryUnassignedIntakeProduct[]
   declinedCategories: PersonalPlanCategory[]
+  /** See `DiscoveryIntakeReduction.unansweredCategories`. */
+  unansweredCategories: PersonalPlanCategory[]
   /**
    * Fingerprint of everything this routine renders — ideal steps and their previews, the
    * bound products, the decisions and the swapped catalog rows. „Finalisieren" stores it
@@ -248,6 +266,10 @@ export function composeDiscoveryRefinedRoutine(input: {
     steps,
     unassignedIntakeProducts: reduction.unassignedIntakeProducts,
     declinedCategories: reduction.declinedCategories,
+    unansweredCategories: reduction.unansweredCategories,
+    // `unansweredCategories` is deliberately NOT hashed: it is the complement of the rows
+    // the hash already covers (bound, unassigned and declined), so it cannot change
+    // without them — and adding a key would flag every finalized document as drifted.
     sourceHash: semanticHash({
       steps,
       unassignedIntakeProducts: reduction.unassignedIntakeProducts,
