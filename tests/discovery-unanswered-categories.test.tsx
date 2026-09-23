@@ -214,34 +214,95 @@ const intake: DiscoveryCallIntake = {
   finalizedSourceHash: null,
 }
 
-async function renderCockpit(state: DiscoveryCallIntake["state"]): Promise<string> {
+function noneItem(category: DiscoveryIntakeItem["category"], index: number): DiscoveryIntakeItem {
+  return {
+    id: `60000000-0000-4000-8000-${String(index).padStart(12, "0")}`,
+    category,
+    source: "none",
+    brandText: null,
+    productNameText: null,
+    barcodeIdentifier: null,
+    productId: null,
+    productSubmissionId: null,
+    createdAt: "2026-09-20T10:03:00.000Z",
+  }
+}
+
+async function renderCockpit(
+  state: DiscoveryCallIntake["state"],
+  alsoDeclined: DiscoveryIntakeItem["category"][] = [],
+): Promise<string> {
+  const forItems = [...items, ...alsoDeclined.map(noneItem)]
   const Page = createDiscoveryCockpitPage({
     flagEnabled: () => true,
     requireAdmin: (async () => ({ userId: "admin-1" })) as never,
     createAdminClient: () => ({}) as never,
     loadEnrollment: async () => enrollment,
     loadIntake: async () => ({ ...intake, state }),
-    loadModel: async () => model(),
+    loadModel: async () => ({ ...model(), routine: routine(forItems) }),
     loadPreflight: async () => ({ status: "ready" }),
   })
   const element = await Page({ params: Promise.resolve({ enrollmentId: ids.enrollment }) })
   return renderToStaticMarkup(element)
 }
 
-test("the cockpit names the gaps of a submitted intake, in shelf order, next to the declined line", async () => {
+/** The product column of one step block, located by its category heading. */
+function stepBlock(markup: string, categoryLabel: string): string {
+  const start = markup.indexOf(
+    `<span class="text-[15px] font-bold text-foreground">${categoryLabel}</span>`,
+  )
+  assert.ok(start >= 0, `no step block for ${categoryLabel}`)
+  const end = markup.indexOf("Entscheidung", start)
+  return markup.slice(start, end)
+}
+
+const UNANSWERED_STEP = "Nicht angegeben — im Call fragen."
+const USES_NOTHING = "Sie benutzt für diesen Schritt aktuell nichts."
+
+test("a submitted intake's untouched step says so at the step — never „benutzt nichts“", async () => {
+  const markup = await renderCockpit("submitted")
+  for (const label of ["Leave-in", "mask"]) {
+    const block = stepBlock(markup, label)
+    assert.ok(block.includes(UNANSWERED_STEP), `${label}: unanswered wording`)
+    assert.ok(!block.includes(USES_NOTHING), `${label}: no „uses nothing" claim`)
+    assert.ok(!block.includes("Lücke in der Idealroutine"), `${label}: no gap title`)
+  }
+  // Only the explicit „benutze ich nicht" earns the gap wording.
+  const oil = stepBlock(markup, "oil")
+  assert.ok(oil.includes("Lücke in der Idealroutine"))
+  assert.ok(oil.includes(USES_NOTHING))
+  assert.ok(!oil.includes(UNANSWERED_STEP))
+})
+
+test("the summary line names only the unanswered categories no step already names", async () => {
   const markup = await renderCockpit("submitted")
   assert.ok(markup.includes("Öl — benutzt sie nicht. Keine Entscheidung nötig."))
+  // Leave-in and mask are named at their steps; the line carries the six without a step.
   assert.ok(
     markup.includes(
-      "Nicht angegeben: Tiefenreinigung · Conditioner · Maske · Leave-in · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.",
+      "Nicht angegeben: Tiefenreinigung · Conditioner · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.",
     ),
   )
 })
 
-test("before submission an open category is just not done yet — no gap line", async () => {
+test("with every unanswered category on a step, the summary line disappears", async () => {
+  const markup = await renderCockpit("submitted", [
+    "conditioner",
+    "dry_shampoo",
+    "deep_cleansing_shampoo",
+    "bondbuilder",
+    "heat_protectant",
+    "scalp_care",
+  ])
+  assert.ok(!markup.includes("Nicht angegeben:"))
+  assert.equal(markup.split(UNANSWERED_STEP).length - 1, 2)
+})
+
+test("before submission an open category is just not done yet — current gap wording, no line", async () => {
   const markup = await renderCockpit("draft")
   assert.ok(markup.includes("Öl — benutzt sie nicht."))
   assert.ok(!markup.includes("Nicht angegeben"))
+  assert.ok(stepBlock(markup, "Leave-in").includes(USES_NOTHING))
 })
 
 test("the participant's document reads like any other: gaps get the Idealplan's pick, nothing is dropped", () => {

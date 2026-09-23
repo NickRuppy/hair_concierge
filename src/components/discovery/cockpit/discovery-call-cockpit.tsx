@@ -34,6 +34,7 @@ const SWAP_PREFIX = "Tauschen zu "
 const NEW_PREFIX = "Neu: "
 const GAP_TITLE = "Lücke in der Idealroutine"
 const GAP_BODY = "Sie benutzt für diesen Schritt aktuell nichts."
+const UNANSWERED_STEP = "Nicht angegeben — im Call fragen."
 const NO_PRODUCT = "Kein Produkt angegeben"
 const UNDECIDED_HINT = "Noch nicht entschieden."
 const FROZEN_HINT =
@@ -178,7 +179,7 @@ export function DiscoveryCallCockpit({
                 <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
                   {COL_PRODUCT}
                 </p>
-                <StepVerdict step={step} />
+                <StepVerdict step={step} submitted={submitted} />
               </div>
               <div className="p-4">
                 <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
@@ -237,7 +238,7 @@ export function DiscoveryCallCockpit({
   )
 }
 
-function StepVerdict({ step }: { step: DiscoveryCockpitStepView }) {
+function StepVerdict({ step, submitted }: { step: DiscoveryCockpitStepView; submitted: boolean }) {
   if (step.verdict?.status === "verdict") {
     // The scan header's label is the scan feature's own; the call names the category the
     // way the participant's checklist did („Kopfhautpflege", not „Kopfhautprodukt").
@@ -261,12 +262,22 @@ function StepVerdict({ step }: { step: DiscoveryCockpitStepView }) {
       </div>
     )
   }
+  // A submitted checklist that never touched this category says nothing about use — only
+  // an explicit „benutze ich nicht" earns „Lücke … benutzt nichts". Before submission an
+  // open category is simply not done yet, so the draft keeps the gap wording.
+  const unanswered = submitted && step.unanswered
   return (
     <div className="flex flex-col gap-2">
       <p className="text-[15px] font-semibold text-muted-foreground">{NO_PRODUCT}</p>
       <div className="rounded-[14px] bg-muted px-3 py-2">
-        <p className="text-[13px] font-bold text-foreground">{GAP_TITLE}</p>
-        <p className="mt-1 text-[13px] leading-5 text-muted-foreground">{GAP_BODY}</p>
+        {unanswered ? (
+          <p className="text-[13px] font-bold text-foreground">{UNANSWERED_STEP}</p>
+        ) : (
+          <>
+            <p className="text-[13px] font-bold text-foreground">{GAP_TITLE}</p>
+            <p className="mt-1 text-[13px] leading-5 text-muted-foreground">{GAP_BODY}</p>
+          </>
+        )}
       </div>
       <p className="text-[12px] text-muted-foreground">{step.frequencyLabel}</p>
     </div>

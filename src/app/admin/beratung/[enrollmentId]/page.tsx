@@ -240,7 +240,8 @@ function categoryLine(categories: readonly PersonalPlanCategory[]): string {
 /**
  * Everything with no decision to make, collapsed: „benutze ich nicht" categories on one
  * grey line, categories the participant left unanswered on the next (only once she has
- * submitted — before that they are simply not done yet), products outside the
+ * submitted — before that they are simply not done yet — and only those without a routine
+ * step, since a step names its own), products outside the
  * Idealroutine on another, and whatever is still being researched on the last — named,
  * so Nick can still mention it.
  *
@@ -251,7 +252,14 @@ function categoryLine(categories: readonly PersonalPlanCategory[]): string {
 function OutsideRoutine({ view, submitted }: { view: DiscoveryCockpitView; submitted: boolean }) {
   const noStep = view.unassigned.filter((entry) => entry.reason === "no_ideal_step")
   const research = view.unassigned.filter((entry) => entry.reason === "research_pending")
-  const unanswered = submitted ? view.unansweredCategories : []
+  // An unanswered category WITH a routine step already says so at the step itself; the
+  // summary line only carries the ones no step would otherwise mention.
+  const namedAtStep = new Set(
+    view.steps.filter((step) => step.unanswered).map((step) => step.category),
+  )
+  const unanswered = submitted
+    ? view.unansweredCategories.filter((category) => !namedAtStep.has(category))
+    : []
   if (
     view.declinedCategories.length === 0 &&
     unanswered.length === 0 &&

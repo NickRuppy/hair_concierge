@@ -99,7 +99,10 @@ das fehl, bleibt ein „Erneut versuchen" stehen). Danach kommt „Geschafft —
 „Weiter zu deinen Produkten" statt des Analyse-Teasers. In der Checkliste ist nichts Pflicht:
 „Fertig – abschicken" erscheint, sobald eine Kategorie beantwortet ist (Produkt oder „benutze ich
 nicht"). Unberührte Kategorien bleiben unbeantwortet — es wird nichts für sie gespeichert — und das
-Cockpit listet sie nach dem Absenden als „Nicht angegeben: … — im Call fragen.".
+Cockpit markiert sie nach dem Absenden: Hat die Kategorie einen Schritt in der Idealroutine, steht
+dort „Nicht angegeben — im Call fragen." (statt „Lücke … benutzt nichts", das nur ein ausdrückliches
+„benutze ich nicht" bekommt); die übrigen stehen gesammelt unten als „Nicht angegeben: … — im Call
+fragen.".
 
 Das Legacy-`/quiz` ist harte Voraussetzung: nur daraus entsteht die Quelle, aus der das Cockpit die
 Idealroutine rechnet. Der Einladungs-Flow führt von selbst dorthin — **schick einer Teilnehmerin

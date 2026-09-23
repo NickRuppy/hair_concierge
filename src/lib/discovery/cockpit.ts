@@ -342,6 +342,12 @@ export type DiscoveryCockpitStepView = {
   /** What the participant owns for this step, as the cockpit names it. */
   ownedLabel: string | null
   intakeItemId: string | null
+  /**
+   * No product bound AND the participant never answered this category at all — not the
+   * same as „benutze ich nicht". Only meaningful once the checklist is submitted; before
+   * that an open category is simply not done yet.
+   */
+  unanswered: boolean
   verdict: DiscoveryCockpitVerdictView | null
   swapOptions: DiscoveryCockpitSwapOption[]
   /** The decided swap target, even when its catalog row could not be read. */
@@ -421,6 +427,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
     model.recommendationProducts.map((row) => [row.id, row.brand] as const),
   )
 
+  const unanswered = new Set(model.routine.unansweredCategories)
   const steps = model.routine.steps.map((refined): DiscoveryCockpitStepView => {
     const { step, item } = refined
     const verdict = item ? (verdictsByItemId.get(item.id) ?? null) : null
@@ -454,6 +461,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
           : describeDiscoveryIntakeItem(item)
         : null,
       intakeItemId: item?.id ?? null,
+      unanswered: !item && unanswered.has(step.category),
       verdict: verdict
         ? verdict.status === "verdict"
           ? { status: "verdict", product: verdict.product, payload: verdict.payload }
