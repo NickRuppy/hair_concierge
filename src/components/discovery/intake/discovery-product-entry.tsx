@@ -251,6 +251,10 @@ export function DiscoveryProductEntry({
             ? `${category.possessive} ${category.label}`
             : `${category.interrogative} ${category.label} benutzt du?`}
         </h1>
+        {products.length === 0 && category.hint ? (
+          // Guidance belongs to the question, not to a filled category.
+          <p className="mt-1.5 text-sm leading-6 text-[var(--text-sub)]">{category.hint}</p>
+        ) : null}
         <p className="mb-5 mt-1.5 text-sm leading-6 text-[var(--text-sub)]">
           {products.length > 0 ? "Mehrere sind okay." : "Barcode ist am schnellsten."}
         </p>
