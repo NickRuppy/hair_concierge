@@ -3,7 +3,10 @@ import test from "node:test"
 import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import { DiscoveryInvitationCard } from "../src/app/beratung/einladung/discovery-invitation-client"
+import {
+  claimRefusalHint,
+  DiscoveryInvitationCard,
+} from "../src/app/beratung/einladung/discovery-invitation-client"
 
 const REFUSAL = "Dieses Konto kann diese Einladung nicht nutzen."
 const HINT = "Du bist gerade mit einem anderen Konto angemeldet."
@@ -40,4 +43,15 @@ test("the invite CTA uses the coral funnel CTA, not plum", () => {
   )
   assert.ok(markup.includes("bg-[var(--brand-coral)]"))
   assert.ok(!markup.includes("bg-[var(--brand-plum)]"))
+})
+
+test("the claim response's code decides whether the session hint appears", () => {
+  assert.match(
+    claimRefusalHint({ code: "signed_in_other_account", error: REFUSAL }) ?? "",
+    new RegExp(HINT),
+  )
+  assert.equal(claimRefusalHint({ code: "existing_paid_access", error: "…" }), null)
+  assert.equal(claimRefusalHint({ code: "existing_access_kind", error: "…" }), null)
+  assert.equal(claimRefusalHint({ error: REFUSAL }), null)
+  assert.equal(claimRefusalHint(null), null)
 })

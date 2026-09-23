@@ -72,9 +72,7 @@ export function DiscoveryInvitationClient() {
       // real refusals — including the paid-account and foreign-access-kind ones,
       // whose German copy is what the card then shows.
       if (!response.ok) {
-        if (readCode(body) === DISCOVERY_CLAIM_SIGNED_IN_OTHER_ACCOUNT) {
-          setErrorHint(SIGNED_IN_OTHER_ACCOUNT_HINT)
-        }
+        setErrorHint(claimRefusalHint(body))
         throw new Error(readError(body) ?? "Dein Zugang konnte nicht geöffnet werden.")
       }
       if (isEmailRequired(body)) {
@@ -204,6 +202,13 @@ function isDestination(value: unknown): value is { destination: string } {
     !Array.isArray(value) &&
     (value as Record<string, unknown>).destination === DISCOVERY_QUIZ_ENTRY_HREF,
   )
+}
+
+/** The extra line under a claim refusal — only for the signed-in-elsewhere cause. */
+export function claimRefusalHint(body: unknown): string | null {
+  return readCode(body) === DISCOVERY_CLAIM_SIGNED_IN_OTHER_ACCOUNT
+    ? SIGNED_IN_OTHER_ACCOUNT_HINT
+    : null
 }
 
 function readCode(value: unknown) {
