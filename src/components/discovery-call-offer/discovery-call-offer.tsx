@@ -9,6 +9,7 @@ import { OfferTrackingProvider } from "@/components/quiz/offer-tracking-provider
 import type { FunnelOfferVariantProps } from "@/funnels/types"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
 import { createFunnelEventId } from "@/lib/funnel/client"
+import { CALENDLY_FUNNEL_UTM_SOURCE } from "@/lib/calendly/constants"
 import { DISCOVERY_CALL_TRUSTPILOT_REVIEWS } from "@/lib/trustpilot-reviews"
 
 const DISCOVERY_CALL_OFFER_REVISION = "discovery_call_v1"
@@ -44,6 +45,15 @@ export function DiscoveryCallOffer(props: FunnelOfferVariantProps) {
   const { entryContext, isInternalTest = false, leadId, name, offerTracking, offerVariant } = props
 
   const bookingTrackedRef = useRef(false)
+  // One event id for the whole booking: the browser pixel event carries it,
+  // and the Calendly embed round-trips it (utm_content) so the webhook's
+  // server-side Meta CAPI copy dedupes against the pixel. Minted lazily in
+  // the browser — never during the server render.
+  const bookingEventIdRef = useRef<string | null>(null)
+  const getBookingEventId = useCallback(() => {
+    if (!bookingEventIdRef.current) bookingEventIdRef.current = createFunnelEventId()
+    return bookingEventIdRef.current
+  }, [])
   const handleScheduled = useCallback(() => {
     if (bookingTrackedRef.current) return
     bookingTrackedRef.current = true
@@ -51,14 +61,14 @@ export function DiscoveryCallOffer(props: FunnelOfferVariantProps) {
     // attribution but must not reuse the offer-view `funnelEventId`, which
     // PostHog consumes as the `$insert_id` of `offer_viewed`.
     trackAppEvent("discovery_call_booking_scheduled", {
-      funnelEventId: createFunnelEventId(),
+      funnelEventId: getBookingEventId(),
       funnelSessionId: offerTracking?.funnelSessionId ?? null,
       funnelPackageKey: offerTracking?.funnelPackageKey ?? null,
       testKind: offerTracking?.testKind ?? null,
       leadId,
       offerVariant,
     })
-  }, [leadId, offerTracking, offerVariant])
+  }, [getBookingEventId, leadId, offerTracking, offerVariant])
 
   const normalizedName = name.trim()
 
@@ -191,7 +201,11 @@ export function DiscoveryCallOffer(props: FunnelOfferVariantProps) {
             Such dir eine Zeit aus, die dir passt. Den Link zum Video-Gespräch bekommst du direkt
             per E-Mail.
           </p>
-          <CalendlyInline name={normalizedName} onScheduled={handleScheduled} />
+          <CalendlyInline
+            getBookingEventId={getBookingEventId}
+            name={normalizedName}
+            onScheduled={handleScheduled}
+          />
         </section>
 
         <section
@@ -297,7 +311,15 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
  * prefills the booking form — deliberately no email prefill, because
  * `/result/<leadId>` is reachable by lead id alone and must not expose it.
  */
-function CalendlyInline({ name, onScheduled }: { name: string; onScheduled: () => void }) {
+function CalendlyInline({
+  getBookingEventId,
+  name,
+  onScheduled,
+}: {
+  getBookingEventId: () => string
+  name: string
+  onScheduled: () => void
+}) {
   const frameRef = useRef<HTMLIFrameElement | null>(null)
 
   useEffect(() => {
@@ -308,8 +330,12 @@ function CalendlyInline({ name, onScheduled }: { name: string; onScheduled: () =
     // consent settings neither disclose nor gate Calendly, and hiding the
     // banner is only allowed when the host site manages that consent.
     if (name) url.searchParams.set("name", name)
+    // Round-trip the booking event id through Calendly's UTM passthrough so
+    // the invitee.created webhook can fire the deduped Meta CAPI copy.
+    url.searchParams.set("utm_source", CALENDLY_FUNNEL_UTM_SOURCE)
+    url.searchParams.set("utm_content", getBookingEventId())
     if (frameRef.current) frameRef.current.src = url.toString()
-  }, [name])
+  }, [getBookingEventId, name])
 
   useEffect(() => {
     function onMessage(event: MessageEvent) {

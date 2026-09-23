@@ -48,8 +48,58 @@ still belongs to the funnel session, and the page never infers channel from refe
 
 `offer_viewed` fires through the shared `OfferTrackingProvider` (revision
 `discovery_call_v1`). A completed booking inside the Calendly embed fires
-`discovery_call_booking_scheduled` (PostHog only) via Calendly's
-`calendly.event_scheduled` postMessage.
+`discovery_call_booking_scheduled` (PostHog + Customer.io + Meta `Schedule`)
+via Calendly's `calendly.event_scheduled` postMessage.
+
+### Meta CAPI lane (webhook)
+
+The browser pixel is lost to ad blockers, so bookings also reach Meta
+server-side: the offer page mints one booking event id, gives it to the pixel
+event AND to the Calendly embed as `utm_content` (plus
+`utm_source=chaarlie_funnel`). Calendly's `invitee.created` webhook returns
+it, and `POST /api/calendly/webhook` fires a Meta CAPI `Schedule` with the
+same `event_id` — Meta dedupes the two copies. Bookings without the id
+(directly shared Calendly links) are deliberately not reported to Meta.
+The receiver acknowledges a funnel booking only after Meta accepts the CAPI
+event. A failed Meta delivery returns 503 so Calendly can retry; repeated
+events count on Meta's `event_id` dedupe, with no local idempotency store.
+
+**Setup (one-time, Nick). Order matters: the key and the deployed route come
+FIRST, the subscription last — Calendly only retries failed deliveries for
+about 24 hours and may disable a persistently failing webhook, so the
+receiver must already work when the subscription goes live.**
+
+1. Calendly webhooks need a paid Calendly plan (Standard or higher) and a
+   personal access token. YOU generate the signing key — Calendly does not
+   issue one for PAT-created subscriptions, it uses whatever `signing_key`
+   the creation call supplies.
+2. Generate and persist the key, then configure Vercel and redeploy so the
+   route stops answering 503:
+   `CALENDLY_WEBHOOK_SIGNING_KEY=<openssl rand -hex 32>`,
+   `META_CAPI_SCHEDULE_ENABLED=true`, and optionally
+   `CALENDLY_EVENT_TYPE_URI=<event-type URI of the 20min meeting>` so a
+   user-scoped subscription's other meeting types are ignored (find the URI
+   via `GET https://api.calendly.com/event_types?user=<user URI>`).
+3. Create the subscription with that same key:
+
+   ```bash
+   curl -s -X POST https://api.calendly.com/webhook_subscriptions \
+     -H "Authorization: Bearer $CALENDLY_PAT" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "url": "https://chaarlie.de/api/calendly/webhook",
+       "events": ["invitee.created"],
+       "organization": "<organization URI from GET https://api.calendly.com/users/me>",
+       "scope": "user",
+       "user": "<user URI from GET https://api.calendly.com/users/me>",
+       "signing_key": "<the key from step 2>"
+     }'
+   ```
+
+4. Verify with Meta's Test Events (`META_CAPI_TEST_EVENT_CODE`) on a test
+   booking before relying on it. If the webhook ever gets disabled after a
+   long outage, recreate the subscription (same call) — the signing key can
+   stay the same.
 
 ## Operational notes
 
