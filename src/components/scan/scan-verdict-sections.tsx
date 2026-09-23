@@ -63,7 +63,18 @@ export type ScanVerdictSectionsPayload =
     })
   | (ScanNotNeededVerdictPayload & { product: ScanProductHeader })
 
-export function ScanVerdictSections({ result }: { result: ScanVerdictSectionsPayload }) {
+export function ScanVerdictSections({
+  result,
+  productTitle,
+}: {
+  result: ScanVerdictSectionsPayload
+  /**
+   * Optional heading override for the product header. The scan feature never passes it
+   * (its header stays `product.name` over „brand · category"); the discovery cockpit
+   * passes its composed brand + line + name label so cockpit and PDF name a product alike.
+   */
+  productTitle?: string
+}) {
   const sections =
     result.kind === "not_needed"
       ? scanNotNeededSections(result)
@@ -71,7 +82,7 @@ export function ScanVerdictSections({ result }: { result: ScanVerdictSectionsPay
 
   return (
     <>
-      <ProductHeader product={result.product} />
+      <ProductHeader product={result.product} title={productTitle} />
 
       {result.kind === "in_catalog" ? (
         <Banner status={result.status} title={result.verdictTitle} subtitle={result.subtitle} />
@@ -136,17 +147,18 @@ export function ScanVerdictSections({ result }: { result: ScanVerdictSectionsPay
   )
 }
 
-function ProductHeader({ product }: { product: ScanProductHeader }) {
+function ProductHeader({ product, title }: { product: ScanProductHeader; title?: string }) {
   return (
     // pr-9 keeps the title clear of the sheet's absolute close button (right-3, 40px).
     <div className="flex items-center gap-3 pr-9">
       <ScanProductThumb imageUrl={product.imageUrl} label={product.name} size={48} />
       <div className="min-w-0">
         <h2 className="break-words text-[15px] font-bold leading-snug text-foreground">
-          {product.name}
+          {title ?? product.name}
         </h2>
         <p className="mt-0.5 text-[12px] text-muted-foreground">
-          {product.brand ? `${product.brand} · ` : ""}
+          {/* A composed title already names the brand. */}
+          {product.brand && !title ? `${product.brand} · ` : ""}
           <span className="font-semibold text-[var(--brand-plum)]">{product.categoryLabel}</span>
         </p>
       </div>

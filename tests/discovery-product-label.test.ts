@@ -69,3 +69,49 @@ test("apostrophe variants count as the same brand, and the name keeps its own", 
     "L’Oréal Paris Elvital Shampoo",
   )
 })
+
+test("with a product line the title reads brand + line + name, de-duplicated", async () => {
+  const { discoveryProductTitle } = await import("../src/lib/discovery/product-label")
+  assert.equal(
+    discoveryProductTitle({
+      brand: "Garnier",
+      productLine: "Wahre Schätze",
+      name: "Honig Shampoo",
+    }),
+    "Garnier Wahre Schätze Honig Shampoo",
+  )
+  assert.equal(
+    discoveryProductTitle({
+      brand: "Syoss",
+      productLine: "Intense Fullness",
+      name: "Syoss Intense Fullness Shampoo",
+    }),
+    "Syoss Intense Fullness Shampoo",
+  )
+  // The brand the name starts with keeps the name's own spelling, apostrophes included.
+  assert.equal(
+    discoveryProductTitle({
+      brand: "L'Oréal Paris",
+      productLine: "Elvital",
+      name: "L’Oréal Paris Color-Glanz Shampoo",
+    }),
+    "L’Oréal Paris Elvital Color-Glanz Shampoo",
+  )
+})
+
+test("without a line the title is exactly the brand + name label", async () => {
+  const { discoveryProductTitle } = await import("../src/lib/discovery/product-label")
+  for (const [brand, name] of [
+    ["Afrolocke", "Afrolocke Shea Butter Leave-in"],
+    ["L'Oréal", "L’Oréal Paris Shampoo"],
+    ["Bio", "Biotin Shampoo"],
+    [null, "Eigenmarke Spülung"],
+  ] as const) {
+    for (const productLine of [null, undefined, "  "]) {
+      assert.equal(
+        discoveryProductTitle({ brand, productLine, name }),
+        discoveryProductLabel(brand, name),
+      )
+    }
+  }
+})

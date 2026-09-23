@@ -104,7 +104,23 @@ test("the discovery CLI parses its four subcommands and normalizes identity", ()
     apply: true,
     enrollmentId,
   })
-  assert.throws(() => parseDiscoveryCommand(["create", "--name=Lea"]), /valid --email/)
+  // The e-mail is optional; the participant types it on the invite page.
+  assert.deepEqual(parseDiscoveryCommand(["create", "--name=Lea"]), {
+    action: "create",
+    apply: false,
+    name: "Lea",
+    email: null,
+  })
+  assert.deepEqual(parseDiscoveryCommand(["create", "--name=Lea", "--email= "]), {
+    action: "create",
+    apply: false,
+    name: "Lea",
+    email: null,
+  })
+  assert.throws(
+    () => parseDiscoveryCommand(["create", "--name=Lea", "--email=lea@"]),
+    /valid --email/,
+  )
   assert.throws(() => parseDiscoveryCommand(["create", "--email=lea@example.test"]), /--name/)
   assert.throws(() => parseDiscoveryCommand(["revoke"]), /requires --enrollment/)
   assert.throws(() => parseDiscoveryCommand(["nope"]), /Usage: list \| create/)
@@ -301,4 +317,28 @@ test("invite links are reproducible per token version and statuses read off the 
     }),
     "revoked",
   )
+})
+
+test("create without --email makes a name-only invite whose receipt says so", async () => {
+  const created: unknown[] = []
+  const logged: unknown[] = []
+  await runDiscoveryCommand({
+    args: ["create", "--name=Lea Sommer", "--apply", "--confirm-project=pqdkhefxsxkyeqelqegq"],
+    environment: applyEnvironment,
+    gateway: {
+      ...forbiddenGateway(),
+      create: async (input) => {
+        created.push(input)
+        return { ...row, normalized_email: null }
+      },
+    },
+    secret: SECRET,
+    siteUrl: SITE_URL,
+    log: (value) => logged.push(value),
+  })
+  assert.deepEqual(created, [{ name: "Lea Sommer", email: null }])
+  const receipt = logged[0] as { email: string | null; url: string; status: string }
+  assert.equal(receipt.email, null)
+  assert.equal(receipt.status, "invited")
+  assert.match(receipt.url, /^https:\/\/chaarlie\.de\/beratung\/einladung#code=v1\./)
 })

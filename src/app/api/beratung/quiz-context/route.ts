@@ -35,6 +35,9 @@ export function createDiscoveryQuizContextGetHandler(
       const discovery = await dependencies.resolveDiscoveryJourney()
       if (discovery.kind === "none") return response({ status: "regular" })
       if (discovery.kind === "unavailable") return response({ status: "unavailable" })
+      // A claimed enrollment always carries its bound address (the claim binds it
+      // first); a null here would be a broken row, and the lead must match the account.
+      if (!discovery.enrollment.email) return response({ status: "unavailable" })
       return response({
         status: "participant",
         name: discovery.enrollment.name,

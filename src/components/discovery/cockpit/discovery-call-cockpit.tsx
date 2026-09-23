@@ -249,7 +249,11 @@ function StepVerdict({ step, submitted }: { step: DiscoveryCockpitStepView; subm
     }
     return (
       <div className="flex flex-col gap-4">
-        <ScanVerdictSections result={{ ...step.verdict.payload, product }} />
+        {/* Named like the PDF names it: brand + line + name (the fingerprinted label). */}
+        <ScanVerdictSections
+          result={{ ...step.verdict.payload, product }}
+          productTitle={step.ownedLabel ?? undefined}
+        />
       </div>
     )
   }
@@ -319,8 +323,8 @@ function StepDecision({
           value={option.productId}
           checked={value === option.productId}
           disabled={disabled}
-          title={`${empty ? NEW_PREFIX : SWAP_PREFIX}${option.name}`}
-          subtitle={option.brand}
+          // The option as the PDF would print it once chosen — brand + line + name.
+          title={`${empty ? NEW_PREFIX : SWAP_PREFIX}${option.label}`}
           pill={option.verdictLabel}
           onChoose={onChoose}
         />

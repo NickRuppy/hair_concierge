@@ -5,6 +5,7 @@ import {
   buildDiscoveryCockpitView,
   describeDiscoveryIntakeItem,
   discoveryCockpitSwapOptionIds,
+  discoveryOwnedProductIdentities,
   finalizeDiscoveryCall,
   loadDiscoveryCockpitModel,
   unfinalizeDiscoveryCall,
@@ -156,6 +157,7 @@ function model(input: {
       decisions: input.decisions ?? [],
       swapProducts: input.catalogRows ?? [],
       recommendationProducts: input.catalogRows ?? [],
+      ownedProducts: discoveryOwnedProductIdentities(input.verdicts ?? []),
     }),
     recommendationProducts: input.catalogRows ?? [],
     recommendationBrandsAvailable: true,
@@ -440,6 +442,7 @@ test("swap targets and PRINTED recommendations share one batched catalog read", 
       ]),
       loadItems: async () => [item()],
       loadVerdicts: async () => [],
+      loadProductIdentities: async () => new Map(),
       loadDecisions: async () => [swapShampoo],
       loadSwapProducts: async (_client, productIds) => {
         reads.push(productIds)
@@ -470,6 +473,7 @@ test("a recommendation that is not printed never blocks the call", async () => {
       loadIdealRoutine: readyIdeal([step({ preview: idealPreview(ids.ideal) })]),
       loadItems: async () => [item()],
       loadVerdicts: async () => [],
+      loadProductIdentities: async () => new Map(),
       loadDecisions: async () => [{ ...swapShampoo, decision: "keep", swapProductId: null }],
       loadSwapProducts: async () => {
         throw new Error("an unprinted recommendation must not be read")
@@ -490,6 +494,7 @@ test("a printed recommendation missing from a successful read counts as unavaila
         loadIdealRoutine: readyIdeal([step(), maskIdealStep]),
         loadItems: async () => [item()],
         loadVerdicts: async () => [],
+        loadProductIdentities: async () => new Map(),
         loadDecisions: async () => decisions,
         // The swap row comes back; the recommendation's row does not.
         loadSwapProducts: async () => [
@@ -513,6 +518,7 @@ test("a failed brand lookup degrades a swap-free call instead of failing it", as
     }),
     loadItems: async () => [],
     loadVerdicts: async () => [],
+    loadProductIdentities: async () => new Map(),
     loadSwapProducts: async (): Promise<ScanCatalogPresentationRow[]> => {
       throw new Error("catalog down")
     },
@@ -736,4 +742,171 @@ test("a keep never stores a swap target, and the upsert keys on the decision key
   assert.equal(calls[0].op, "upsert")
   assert.equal((calls[0].payload as { swap_product_id: unknown }).swap_product_id, null)
   assert.deepEqual(calls[0].options, { onConflict: "intake_id,decision_key" })
+})
+
+// --- product identities (brand + line + name) ----------------------------------------
+
+const identity = (name: string, brand: string | null, productLine: string | null = null) => ({
+  name,
+  brand,
+  productLine,
+})
+
+test("identities are read for every labelled product and option, and a failed read degrades", async () => {
+  const reads: string[][] = []
+  const deps = {
+    loadIdealRoutine: readyIdeal([step({ preview: idealPreview(ids.ideal) }), maskIdealStep]),
+    loadItems: async () => [item()],
+    loadVerdicts: async () => [],
+    loadDecisions: async () => [swapShampoo],
+    loadSwapProducts: async () => [
+      catalogRow(ids.alternativeA, "Guhl", "Leichte Frische Shampoo"),
+      catalogRow(ids.ideal, "Schwarzkopf", "Lab Maske"),
+    ],
+  }
+  const result = await loadDiscoveryCockpitModel(
+    {} as never,
+    { intakeId: ids.intake, userId: ids.user },
+    {
+      ...deps,
+      loadProductIdentities: async (_client, productIds) => {
+        reads.push(productIds)
+        return new Map([
+          [ids.alternativeA, identity("Leichte Frische Shampoo", "Guhl", "Frische Linie")],
+        ])
+      },
+    },
+  )
+  assert.equal(result.status, "ready")
+  if (result.status !== "ready") return
+  // Owned product, swap target and the recommendation(s) — one batched read.
+  assert.deepEqual(reads, [[ids.alternativeA, ids.ideal, ids.owned].sort()])
+  assert.equal(result.recommendationBrandsAvailable, true)
+  assert.equal(
+    result.routine.steps[0]!.swapProductLabel,
+    "Guhl Frische Linie Leichte Frische Shampoo",
+  )
+
+  const degraded = await loadDiscoveryCockpitModel(
+    {} as never,
+    { intakeId: ids.intake, userId: ids.user },
+    {
+      ...deps,
+      loadProductIdentities: async () => {
+        throw new Error("discovery_product_identity_lookup_failed")
+      },
+    },
+  )
+  assert.equal(degraded.status, "ready")
+  if (degraded.status !== "ready") return
+  // Labels fall back to brand + name, and finalize/PDF are blocked like for brands.
+  assert.equal(degraded.recommendationBrandsAvailable, false)
+  assert.equal(degraded.routine.steps[0]!.swapProductLabel, "Guhl Leichte Frische Shampoo")
+})
+
+async function modelWithVerdict(
+  verdict: DiscoveryParticipantVerdict,
+  identities: Map<string, ReturnType<typeof identity>>,
+) {
+  const result = await loadDiscoveryCockpitModel(
+    {} as never,
+    { intakeId: ids.intake, userId: ids.user },
+    {
+      loadIdealRoutine: readyIdeal([step({ preview: idealPreview(ids.ideal) })]),
+      loadItems: async () => [item()],
+      loadVerdicts: async () => [verdict],
+      loadDecisions: async () => [],
+      loadSwapProducts: async () => [],
+      loadProductIdentities: async () => identities,
+    },
+  )
+  assert.equal(result.status, "ready")
+  if (result.status !== "ready") throw new Error("not ready")
+  return result
+}
+
+test("a transient verdict failure keeps the printed name and the fingerprint", async () => {
+  const catalog = new Map([
+    [ids.owned, identity(productHeader.name, productHeader.brand, "Hyaluron Pure")],
+  ])
+  const computed = await modelWithVerdict(
+    {
+      itemId: ids.item,
+      productId: ids.owned,
+      status: "verdict",
+      product: productHeader,
+      payload: payload([]),
+    },
+    catalog,
+  )
+  const flaky = await modelWithVerdict(
+    { itemId: ids.item, productId: ids.owned, status: "unavailable" },
+    catalog,
+  )
+  // Named by the catalog identity, as if the verdict had come back.
+  assert.equal(flaky.routine.steps[0]!.ownedLabel, "L'Oréal Paris Elvital Hyaluron Pure Shampoo")
+  assert.equal(flaky.routine.steps[0]!.ownedLabel, computed.routine.steps[0]!.ownedLabel)
+  // Same paper, same fingerprint: an unchanged finalised PDF does not read as drifted.
+  assert.equal(flaky.routine.sourceHash, computed.routine.sourceHash)
+  assert.equal(flaky.recommendationBrandsAvailable, true)
+
+  // Without a catalog identity the name WOULD fall back to her own words — degraded.
+  const unnamed = await modelWithVerdict(
+    { itemId: ids.item, productId: ids.owned, status: "unavailable" },
+    new Map(),
+  )
+  assert.equal(unnamed.recommendationBrandsAvailable, false)
+})
+
+test("permanent verdict states keep her own words and never degrade", async () => {
+  for (const status of [
+    "product_unavailable",
+    "quarantined",
+    "target_mismatch",
+    "decision_missing",
+  ] as const) {
+    const result = await modelWithVerdict(
+      { itemId: ids.item, productId: ids.owned, status },
+      new Map([[ids.owned, identity(productHeader.name, productHeader.brand)]]),
+    )
+    assert.equal(result.routine.steps[0]!.ownedLabel, "Elvital Hyaluron Pure", status)
+    assert.equal(result.recommendationBrandsAvailable, true, status)
+  }
+})
+
+test("swap option cards carry the same brand + line + name the PDF would print", () => {
+  const identities = new Map([
+    [ids.alternativeA, identity("Leichte Frische Shampoo", "Guhl", "Frische Linie")],
+    [ids.ideal, identity("Lab Shampoo Ideal", "Schwarzkopf", "Lab")],
+  ])
+  const alternatives = buildDiscoveryCockpitView({
+    ...model({
+      steps: [step()],
+      items: [item()],
+      verdicts: [
+        {
+          itemId: ids.item,
+          productId: ids.owned,
+          status: "verdict",
+          product: productHeader,
+          payload: payload([ids.alternativeA, ids.alternativeB]),
+        },
+      ],
+    }),
+    productIdentities: identities,
+  })
+  assert.deepEqual(
+    alternatives.steps[0].swapOptions.map((option) => option.label),
+    // B has no catalog identity: the engine's own name and brand.
+    ["Guhl Frische Linie Leichte Frische Shampoo", "Guhl Alternative 2"],
+  )
+
+  const open = buildDiscoveryCockpitView({
+    ...model({ steps: [step({ preview: idealPreview(ids.ideal) })], items: [] }),
+    productIdentities: identities,
+  })
+  assert.deepEqual(
+    open.steps[0].swapOptions.map((option) => option.label),
+    ["Schwarzkopf Lab Shampoo Ideal"],
+  )
 })

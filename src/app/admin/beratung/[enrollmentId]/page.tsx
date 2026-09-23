@@ -2,7 +2,10 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { DiscoveryCallCockpit } from "@/components/discovery/cockpit/discovery-call-cockpit"
-import { formatDiscoveryTimestamp } from "@/components/discovery/cockpit/format"
+import {
+  DISCOVERY_EMAIL_PENDING_LABEL,
+  formatDiscoveryTimestamp,
+} from "@/components/discovery/cockpit/format"
 import {
   DISCOVERY_INTAKE_CATEGORY_COPY,
   DISCOVERY_INTAKE_GROUPS,
@@ -47,7 +50,7 @@ const NO_INTAKE = "Diese Teilnehmerin hat die Checkliste noch nicht geöffnet."
 const NO_SOURCE = "Für dieses Konto gibt es noch kein nutzbares Haarprofil. Quiz prüfen."
 const UNAVAILABLE = "Der Plan lässt sich gerade nicht lesen. Später noch einmal öffnen."
 const BRANDS_UNAVAILABLE =
-  "Markennamen der Empfehlungen sind gerade nicht lesbar. Finalisieren und PDF gehen erst wieder, wenn der Katalog antwortet — Seite später neu laden."
+  "Produktnamen (Marke, Linie) sind gerade nicht vollständig lesbar. Finalisieren und PDF gehen erst wieder, wenn der Katalog antwortet — Seite später neu laden."
 const PREFLIGHT_TITLE = "Intake unvollständig"
 const PREFLIGHT_NO_LEAD = "Zu diesem Konto ist kein Quiz-Lead gebunden."
 const PREFLIGHT_INVALID = "Die Quiz-Antworten sind nicht lesbar."
@@ -147,7 +150,7 @@ function Shell({
   children,
 }: {
   name: string
-  email: string
+  email: string | null
   status: string
   children: React.ReactNode
 }) {
@@ -158,7 +161,9 @@ function Shell({
           {TOOL_LABEL}
         </span>
         <h1 className="text-2xl font-bold text-foreground">{name}</h1>
-        <span className="text-sm text-muted-foreground">{email}</span>
+        <span className="text-sm text-muted-foreground">
+          {email ?? DISCOVERY_EMAIL_PENDING_LABEL}
+        </span>
         <span className="ml-auto rounded bg-muted px-2 py-1 text-xs text-muted-foreground">
           {status}
         </span>

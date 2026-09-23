@@ -1,5 +1,4 @@
 import type { DiscoveryCockpitStepView, DiscoveryCockpitView } from "@/lib/discovery/cockpit"
-import { discoveryProductLabel } from "@/lib/discovery/product-label"
 
 /**
  * The participant's own document (mockup: `plans/discovery-call-toolkit/evidence/pdf-ansicht.html`).
@@ -68,15 +67,8 @@ function stepProduct(step: DiscoveryCockpitStepView): PrintProduct | null {
     case "swapped":
       return step.swapProductLabel ? { name: step.swapProductLabel, badge: BADGE_NEW } : null
     case "ideal":
-      return step.idealRecommendation
-        ? {
-            name: discoveryProductLabel(
-              step.idealRecommendation.brand,
-              step.idealRecommendation.name,
-            ),
-            badge: BADGE_NEW,
-          }
-        : null
+      // The fingerprinted label, not a re-derivation: what is printed is what is hashed.
+      return step.recommendationLabel ? { name: step.recommendationLabel, badge: BADGE_NEW } : null
     case "undecided":
       return null
   }

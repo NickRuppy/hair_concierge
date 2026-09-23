@@ -28,11 +28,27 @@ und `plans/discovery-call-toolkit/plan.md`. Lokales QA: `docs/local-qa-access.md
 
 ## 1. Einladung
 
-Einladungen entstehen ausschließlich über die CLI. Es gibt keine Admin-Oberfläche zum Anlegen.
+**Im Admin (Standardweg):** `/admin/beratung` → „Neue Einladung": Name (Pflicht), E-Mail
+(optional) → „Einladung erstellen" zeigt den Link mit „Link kopieren". Die Nachricht dazu schreibst
+du selbst. Pro Zeile: **„Link kopieren"** (der aktuelle Link, jedes Mal aus ID + `token_version`
+abgeleitet — nichts wird gespeichert), **„Link erneuern"** (= `rotate`, mit Rückfrage; alte Links
+sterben, der neue steht direkt darunter zum Kopieren) und **„Widerrufen"** (= `revoke`, mit
+Rückfrage). Widerrufene Zeilen bleiben mit Status „widerrufen" stehen, ohne Link-Knöpfe. Die Route
+(`/api/admin/beratung/invites`) ist admin-gegatet und nutzt dieselben Service-Funktionen wie die CLI;
+der Produktions-Schreib-Gate der CLI gilt für sie nicht.
+
+**E-Mail optional:** Ohne E-Mail zeigt die Einladungsseite ein leeres E-Mail-Feld, sonst ist es
+vorausgefüllt — editierbar ist es immer. Die mit „Los geht's" abgeschickte Adresse wird an die
+Einladung gebunden und ist die Konto-Adresse (neu → Konto, existiert → Magic-Link, zahlend →
+abgelehnt). Solange die Einladung nicht eingelöst ist, darf ein neuer Versuch mit anderer Adresse
+umbinden (Tippfehler); danach nicht mehr. Die Liste zeigt bis dahin „noch offen" als E-Mail.
+Eine Bestätigung der Adresse gibt es bewusst nicht (Discovery-Zugang gibt nichts Bezahltes frei).
+
+**CLI (Alternative):**
 
 ```sh
 npm run discovery -- list
-npm run discovery -- create --name="Lea Sommer" --email="lea@example.com"
+npm run discovery -- create --name="Lea Sommer" [--email="lea@example.com"]
 ```
 
 Jede Schreibform (`create`, `revoke`, `rotate`, `reconcile`) ist ohne `--apply` **Dry-run** und
@@ -80,12 +96,14 @@ Eine widerrufene Einladung blockiert dieselbe E-Mail nicht: die Eindeutigkeits-I
 
 ### Absagen, mit denen du rechnen musst
 
-| Fall                                                                      | Antwort                                                                                                   | Was zu tun ist                                                                                                                                     |
-| ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Konto mit laufendem bezahltem Zugang                                      | `403`, Code `existing_paid_access`, deutsche Copy („Dieses Konto hat bereits vollen Zugang zu Chaarlie…") | Nicht einladen. Ein Discovery-Stempel würde ein zahlendes Mitglied hinter den Teilnehmer-Gate ziehen. Persönlich klären.                           |
-| Konto mit fremdem `access_kind` (Partner, Field-Test)                     | `403`, Code `existing_access_kind`                                                                        | Den alten Zugang bewusst auflösen, bevor diese Person eingeladen wird. Der Claim überschreibt fremde Zugangsarten nie — das wäre nicht rückholbar. |
-| Link widerrufen oder rotiert                                              | `410`, „Diese Einladung ist nicht verfügbar."                                                             | Aktuellen Link aus `npm run discovery -- list` schicken.                                                                                           |
-| Konto existiert schon (ohne bezahlten Zugang, ohne fremden `access_kind`) | `202` + Magic-Link                                                                                        | Kein Fehler: die Teilnehmerin bestätigt per Mail und wird über `/beratung/weiter` in denselben Claim zurückgeführt.                                |
+| Fall                                                                      | Antwort                                                                                                                        | Was zu tun ist                                                                                                                                     |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Konto mit laufendem bezahltem Zugang                                      | `403`, Code `existing_paid_access`, deutsche Copy („Dieses Konto hat bereits vollen Zugang zu Chaarlie…")                      | Nicht einladen. Ein Discovery-Stempel würde ein zahlendes Mitglied hinter den Teilnehmer-Gate ziehen. Persönlich klären.                           |
+| Konto mit fremdem `access_kind` (Partner, Field-Test)                     | `403`, Code `existing_access_kind`                                                                                             | Den alten Zugang bewusst auflösen, bevor diese Person eingeladen wird. Der Claim überschreibt fremde Zugangsarten nie — das wäre nicht rückholbar. |
+| Link widerrufen oder rotiert                                              | `410`, „Diese Einladung ist nicht verfügbar."                                                                                  | Aktuellen Link aus `npm run discovery -- list` schicken.                                                                                           |
+| Konto existiert schon (ohne bezahlten Zugang, ohne fremden `access_kind`) | `202` + Magic-Link                                                                                                             | Kein Fehler: die Teilnehmerin bestätigt per Mail und wird über `/beratung/weiter` in denselben Claim zurückgeführt.                                |
+| Getippte E-Mail gehört schon zu einer anderen aktiven Einladung           | `409`, Code `email_unavailable` („Mit dieser E-Mail-Adresse geht es gerade nicht. Nimm eine andere oder melde dich bei Nick.") | Die andere Einladung prüfen (Doppelung?) und ggf. widerrufen. Die Copy verrät bewusst nicht, dass es eine Einladung zu der Adresse gibt.           |
+| Eingelöste Einladung, andere E-Mail getippt                               | `409` („Diese Einladung ist schon mit einer anderen E-Mail-Adresse verbunden.")                                                | So gewollt: nach dem Einlösen bleibt die Adresse fest. Bei echtem Irrtum widerrufen und neu einladen.                                              |
 
 ### Was die Teilnehmerin durchläuft
 
@@ -265,6 +283,9 @@ Finalisierung leitet die Seite ins Cockpit zurück.
    Finalisieren gewandert. Das Dokument zeigt dann den _aktuellen_ Stand, nicht den finalisierten —
    im Cockpit prüfen und neu finalisieren, bevor du es verschickst. Der Banner erscheint nur am
    Bildschirm, nie im Druck.
+   Produktnamen stehen als Marke + Linie + Name da (wie in der Routine); diese gedruckten Namen
+   sind Teil des Fingerabdrucks. Seit der Umstellung (Sept. 2026) zeigen vorher finalisierte
+   Dokumente den Banner einmal — im Cockpit neu finalisieren.
 3. Über den Browser als PDF drucken (A4). Die Admin-Navigation ist im Druck ausgeblendet.
 4. Den Versand machst du selbst — WhatsApp oder E-Mail. Es gibt keine Versand-Automatik und keine
    Customer.io-Strecke für dieses Werkzeug.

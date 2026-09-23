@@ -24,6 +24,9 @@ import {
  * The partner-access `resolve` analogue. It reveals the enrollment's own name
  * and e-mail to whoever already holds the signed credential — nothing else, and
  * only for an enrollment that is neither revoked nor rotated past.
+ *
+ * `email` is null when the invite was created with just a name and nobody has
+ * typed an address yet; the invite page then shows an empty e-mail field.
  */
 
 const NO_STORE_HEADERS = { "Cache-Control": "private, no-store" }

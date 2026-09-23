@@ -42,6 +42,8 @@ export default async function DiscoveryChecklistPage({
   const context = await resolveDiscoveryIntakeContext()
   if (context.status !== "ready") notFound()
   const { userId, enrollment, intake, admin } = context
+  // A claimed enrollment always carries its address (DB CHECK `claim_has_email`).
+  if (!enrollment.email) notFound()
 
   const params = searchParams ? await searchParams : {}
   const rawLead = params.lead

@@ -12,3 +12,6 @@ export function formatDiscoveryTimestamp(value: string | null | undefined): stri
   const [, year, month, day, hour, minute] = match
   return `${day}.${month}.${year} ${hour}:${minute} UTC`
 }
+
+/** An invite created with just a name has no address until the participant types one. */
+export const DISCOVERY_EMAIL_PENDING_LABEL = "noch offen"

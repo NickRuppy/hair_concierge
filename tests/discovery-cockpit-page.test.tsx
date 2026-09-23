@@ -1,11 +1,17 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import { NextResponse } from "next/server"
+import { AppRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime"
+import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { createDiscoveryCockpitListPage } from "../src/app/admin/beratung/page"
 import { createDiscoveryCockpitPage } from "../src/app/admin/beratung/[enrollmentId]/page"
-import type { DiscoveryCallIntake, DiscoveryCockpitModel } from "../src/lib/discovery/cockpit"
+import {
+  discoveryOwnedProductIdentities,
+  type DiscoveryCallIntake,
+  type DiscoveryCockpitModel,
+} from "../src/lib/discovery/cockpit"
 import type { DiscoveryEnrollment } from "../src/lib/discovery/enrollment"
 import type { DiscoveryIdealStep } from "../src/lib/discovery/load-ideal-routine"
 import type { DiscoveryParticipantVerdict } from "../src/lib/discovery/load-participant-verdicts"
@@ -212,6 +218,7 @@ function readyModel(): DiscoveryCockpitModel {
       items,
       decisions: [],
       swapProducts: [],
+      ownedProducts: discoveryOwnedProductIdentities(verdicts),
     }),
     recommendationProducts: [],
     recommendationBrandsAvailable: true,
@@ -413,7 +420,7 @@ test("the list joins every enrollment with the state of its checklist", async ()
     ],
     listIntakes: async () => [intake],
   })
-  const markup = renderToStaticMarkup(await Page())
+  const markup = renderWithRouter(await Page())
 
   assert.ok(markup.includes("Lena M."))
   assert.ok(markup.includes("eingelöst"))
@@ -423,6 +430,84 @@ test("the list joins every enrollment with the state of its checklist", async ()
   assert.ok(markup.includes("Mira K."))
   assert.ok(markup.includes("eingeladen"))
   assert.ok(markup.includes("nicht begonnen"))
+})
+
+/** The invite controls call `useRouter()`; a real app router is mounted in production. */
+function renderWithRouter(element: React.ReactElement) {
+  const router = {
+    back() {},
+    forward() {},
+    refresh() {},
+    push() {},
+    replace() {},
+    prefetch() {},
+  }
+  return renderToStaticMarkup(
+    <AppRouterContext.Provider value={router as never}>{element}</AppRouterContext.Provider>,
+  )
+}
+
+const LIST_SECRET = "discovery-enrollment-secret-with-enough-length"
+const listRow = {
+  id: ids.enrollment,
+  display_name: "Lena M.",
+  normalized_email: "lena@example.test",
+  token_version: 1,
+  claimed_at: null,
+  revoked_at: null,
+  created_at: "2026-09-18T10:00:00.000Z",
+}
+
+test("the list opens with the invite form and gives each live row its link controls", async () => {
+  const Page = createDiscoveryCockpitListPage({
+    flagEnabled: () => true,
+    requireAdmin: async () => ({ userId: "admin-1" }),
+    createAdminClient: () => ({}) as never,
+    signingSecret: () => LIST_SECRET,
+    siteUrl: () => "https://chaarlie.de",
+    listEnrollments: async () => [
+      { ...listRow, normalized_email: null },
+      {
+        ...listRow,
+        id: "3f1a6f2e-2b44-4a1e-9a1a-6f2e2b444a2f",
+        display_name: "Revoked R.",
+        normalized_email: "revoked@example.test",
+        revoked_at: "2026-09-19T10:00:00.000Z",
+      },
+    ],
+    listIntakes: async () => [],
+  })
+  const markup = renderWithRouter(await Page())
+
+  assert.ok(markup.includes("Neue Einladung"))
+  assert.ok(markup.includes("E-Mail (optional)"))
+  assert.ok(markup.includes("Einladung erstellen"))
+  assert.ok(markup.includes("bg-[var(--brand-coral)]"))
+  // A name-only invite shows the pending address instead of an empty cell.
+  assert.ok(markup.includes("noch offen"))
+  // One live row → exactly one set of link controls; the revoked row gets none.
+  assert.equal(markup.split("Link erneuern").length - 1, 1)
+  assert.equal(markup.split("Widerrufen").length - 1, 1)
+  assert.ok(markup.includes("Revoked R."))
+  assert.ok(markup.includes("widerrufen"))
+  // The cockpit link stays.
+  assert.ok(markup.includes(`/admin/beratung/${ids.enrollment}`))
+})
+
+test("without a signing secret the list still renders, just without link controls", async () => {
+  const Page = createDiscoveryCockpitListPage({
+    flagEnabled: () => true,
+    requireAdmin: async () => ({ userId: "admin-1" }),
+    createAdminClient: () => ({}) as never,
+    signingSecret: () => {
+      throw new Error("Discovery enrollment signing secret is not configured")
+    },
+    listEnrollments: async () => [listRow],
+    listIntakes: async () => [],
+  })
+  const markup = renderWithRouter(await Page())
+  assert.ok(markup.includes("Lena M."))
+  assert.ok(!markup.includes("Link erneuern"))
 })
 
 test("the list is hidden behind the same two gates", async () => {
@@ -439,4 +524,36 @@ test("the list is hidden behind the same two gates", async () => {
     }),
   })
   await assert.rejects(() => refused())
+})
+
+test("the cockpit names her product and every swap card like the PDF: brand + line + name", async () => {
+  const productIdentities = new Map([
+    [
+      ids.owned,
+      { name: "Elvital Hyaluron Pure Shampoo", brand: "L'Oréal Elvital", productLine: "Hyaluron" },
+    ],
+    [ids.alternative, { name: "Leichte Frische Shampoo", brand: "Guhl", productLine: "Brise" }],
+  ])
+  const lines = new Map([
+    [ids.owned, "Hyaluron"],
+    [ids.alternative, "Brise"],
+  ])
+  const markup = await renderCockpit({
+    loadModel: async () => ({
+      ...readyModel(),
+      routine: composeDiscoveryRefinedRoutine({
+        steps: [shampooStep, leaveInStep],
+        items,
+        decisions: [],
+        swapProducts: [],
+        ownedProducts: discoveryOwnedProductIdentities(verdicts, productIdentities),
+        productLines: lines,
+      }),
+      productIdentities,
+    }),
+  })
+  // Verdict header: the composed title, not the scan header's bare catalog name.
+  assert.match(markup, /<h2[^>]*>L&#x27;Oréal Elvital Elvital Hyaluron Pure Shampoo<\/h2>/)
+  // Swap card: the label a swap would print.
+  assert.ok(markup.includes("Guhl Brise Leichte Frische Shampoo"))
 })

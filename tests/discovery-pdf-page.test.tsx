@@ -5,7 +5,11 @@ import { NextResponse } from "next/server"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { createDiscoveryPdfPage } from "../src/app/admin/beratung/[enrollmentId]/pdf/page"
-import type { DiscoveryCallIntake, DiscoveryCockpitModel } from "../src/lib/discovery/cockpit"
+import {
+  discoveryOwnedProductIdentities,
+  type DiscoveryCallIntake,
+  type DiscoveryCockpitModel,
+} from "../src/lib/discovery/cockpit"
 import type { DiscoveryEnrollment } from "../src/lib/discovery/enrollment"
 import type { DiscoveryIdealStep } from "../src/lib/discovery/load-ideal-routine"
 import type { DiscoveryParticipantVerdict } from "../src/lib/discovery/load-participant-verdicts"
@@ -283,7 +287,13 @@ function readyModel(): DiscoveryCockpitModel {
     steps,
     verdicts,
     previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
-    routine: composeDiscoveryRefinedRoutine({ steps, items, decisions, swapProducts }),
+    routine: composeDiscoveryRefinedRoutine({
+      steps,
+      items,
+      decisions,
+      swapProducts,
+      ownedProducts: discoveryOwnedProductIdentities(verdicts),
+    }),
     recommendationProducts: [],
     recommendationBrandsAvailable: true,
   }
@@ -389,6 +399,7 @@ test("a brand-only catalog change after finalising trips the drift banner", asyn
       decisions,
       swapProducts,
       recommendationProducts: [leaveInRow(brand)],
+      ownedProducts: discoveryOwnedProductIdentities(verdicts),
     }),
     recommendationProducts: [leaveInRow(brand)],
   })
@@ -419,14 +430,24 @@ test("a brandless catalog name reads with its brand on the paper", async () => {
       ? { ...entry, preview: { ...entry.preview, productName: "Klärendes Serum" } }
       : entry,
   )
+  const recommendationProducts = [
+    { ...swapProducts[0], id: ids.idealLeaveIn, brand: "Schwarzkopf", name: "Klärendes Serum" },
+  ]
   const markup = await renderPdf({
     loadModel: async () => ({
       ...readyModel(),
       steps: brandless,
-      routine: composeDiscoveryRefinedRoutine({ steps: brandless, items, decisions, swapProducts }),
-      recommendationProducts: [
-        { ...swapProducts[0], id: ids.idealLeaveIn, brand: "Schwarzkopf", name: "Klärendes Serum" },
-      ],
+      // The paper prints the composition's (fingerprinted) label, so the brand has to
+      // reach the composition — not only the view.
+      routine: composeDiscoveryRefinedRoutine({
+        steps: brandless,
+        items,
+        decisions,
+        swapProducts,
+        recommendationProducts,
+        ownedProducts: discoveryOwnedProductIdentities(verdicts),
+      }),
+      recommendationProducts,
     }),
   })
   assert.ok(markup.includes("Schwarzkopf Klärendes Serum"))
@@ -580,4 +601,32 @@ test("every print:hidden wrapper is a contents box with no responsive display ut
       assert.ok(!RESPONSIVE_DISPLAY.test(value), `${path}: "${value}" out-ranks its own print rule`)
     }
   }
+})
+
+test("the paper names products with their line, and that label is the fingerprinted one", async () => {
+  const withLines = (lines: Map<string, string>): DiscoveryCockpitModel => ({
+    ...readyModel(),
+    routine: composeDiscoveryRefinedRoutine({
+      steps,
+      items,
+      decisions,
+      swapProducts,
+      ownedProducts: discoveryOwnedProductIdentities(verdicts),
+      productLines: lines,
+    }),
+  })
+  const lined = withLines(new Map([[ids.conditionerSwap, "Hydro Care"]]))
+  const markup = await renderPdf({
+    loadIntake: async () => ({ ...intake, finalizedSourceHash: lined.routine.sourceHash }),
+    loadModel: async () => lined,
+  })
+  assert.ok(markup.includes("Guhl Hydro Care Feuchtigkeit &amp; Glanz Spülung"))
+  assert.ok(!markup.includes("Stand hat sich geändert"))
+
+  // A document finalised before the line existed reads as drifted once.
+  const drifted = await renderPdf({
+    loadIntake: async () => ({ ...intake, finalizedSourceHash: FINALIZED_HASH }),
+    loadModel: async () => lined,
+  })
+  assert.ok(drifted.includes("Stand hat sich geändert"))
 })

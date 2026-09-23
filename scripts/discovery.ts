@@ -20,11 +20,9 @@ import {
   type DiscoveryReconcileTarget,
   type DiscoverySubmissionOutcome,
 } from "../src/lib/discovery/reconcile"
+import { buildDiscoveryInviteUrl, discoveryPublicSiteUrl } from "../src/lib/discovery/invite-link"
 import { discoveryProductLabel } from "../src/lib/discovery/product-label"
-import {
-  discoveryEnrollmentSigningSecret,
-  projectDiscoveryEnrollmentCredential,
-} from "../src/lib/discovery/token"
+import { discoveryEnrollmentSigningSecret } from "../src/lib/discovery/token"
 import { createAdminClient } from "../src/lib/supabase/admin"
 
 const PROJECT_ID = "pqdkhefxsxkyeqelqegq"
@@ -34,7 +32,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export type DiscoveryCommand =
   | { action: "list" }
-  | { action: "create"; apply: boolean; name: string; email: string }
+  | { action: "create"; apply: boolean; name: string; email: string | null }
   | { action: "revoke" | "rotate"; apply: boolean; enrollmentId: string }
   | { action: "reconcile"; apply: boolean; scope: DiscoveryReconcileScope }
 
@@ -46,7 +44,8 @@ export type DiscoveryEnrollmentStatus = "invited" | "claimed" | "revoked"
 export type DiscoveryEnrollmentReceipt = {
   enrollmentId: string
   name: string
-  email: string
+  /** Null when the invite was created without one; the participant types it on claim. */
+  email: string | null
   status: DiscoveryEnrollmentStatus
   tokenVersion: number
   url: string
@@ -59,7 +58,7 @@ export type DiscoveryEnrollmentReceipt = {
  */
 export type DiscoveryEnrollmentGateway = {
   list: () => Promise<DiscoveryEnrollmentRow[]>
-  create: (input: { name: string; email: string }) => Promise<DiscoveryEnrollmentRow>
+  create: (input: { name: string; email: string | null }) => Promise<DiscoveryEnrollmentRow>
   revoke: (enrollmentId: string) => Promise<DiscoveryEnrollmentRow>
   rotate: (enrollmentId: string) => Promise<DiscoveryEnrollmentRow>
 }
@@ -124,7 +123,7 @@ export type DiscoveryReconcileItemReceipt = {
 export type DiscoveryReconcileParticipantReceipt = {
   enrollmentId: string
   name: string
-  email: string
+  email: string | null
   intakeId: string
   finalizedAt: string | null
   items: DiscoveryReconcileItemReceipt[]
@@ -149,10 +148,11 @@ export function parseDiscoveryCommand(args: readonly string[]): DiscoveryCommand
   if (action === "list") return { action }
   if (action === "create") {
     const name = value(args, "--name")?.trim()
-    const email = value(args, "--email")?.trim().toLowerCase()
+    const email = value(args, "--email")?.trim().toLowerCase() || null
     if (!name || name.length > 120) throw new Error("create requires --name=<name>")
-    if (!email || !EMAIL.test(email) || email.length > 320) {
-      throw new Error("create requires a valid --email=<email>")
+    // Optional: without it the participant types their address on the invite page.
+    if (email !== null && (!EMAIL.test(email) || email.length > 320)) {
+      throw new Error("create requires a valid --email=<email> (or none)")
     }
     return { action, apply: args.includes("--apply"), name, email }
   }
@@ -165,7 +165,7 @@ export function parseDiscoveryCommand(args: readonly string[]): DiscoveryCommand
     return { action, apply: args.includes("--apply"), scope: parseDiscoveryReconcileScope(args) }
   }
   throw new Error(
-    "Usage: list | create --name=<name> --email=<email> | revoke|rotate --enrollment=<uuid>" +
+    "Usage: list | create --name=<name> [--email=<email>] | revoke|rotate --enrollment=<uuid>" +
       " | reconcile --enrollment=<uuid>|--email=<email>|--all",
   )
 }
@@ -221,14 +221,9 @@ export function projectDiscoveryInvitation(input: {
   secret: string
   siteUrl: string
 }) {
-  const credential = projectDiscoveryEnrollmentCredential(
-    { enrollmentId: input.enrollmentId, tokenVersion: input.tokenVersion },
-    input.secret,
-  )
-  const url = `${input.siteUrl.replace(/\/+$/, "")}/beratung/einladung#code=${encodeURIComponent(credential)}`
+  const url = buildDiscoveryInviteUrl(input)
   const firstName = input.name.trim().split(/\s+/)[0] || input.name
   return {
-    credential,
     url,
     message: [
       `Hi ${firstName}, hier ist dein persönlicher Link für unser Gespräch:`,
@@ -386,11 +381,6 @@ async function runDiscoveryReconcile(input: {
   }
 }
 
-function publicSiteUrl(explicit?: string) {
-  const site = explicit ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://chaarlie.de"
-  return site.replace(/\/$/, "")
-}
-
 /**
  * The gateway is the production write surface; its behaviour lives in
  * `src/lib/discovery/enrollment.ts` so the app routes and this CLI share one
@@ -434,7 +424,7 @@ export async function runDiscoveryCommand(input: {
   // never mask the production-gate refusal below.
   const context = () => ({
     secret: discoveryEnrollmentSigningSecret(input.secret),
-    siteUrl: publicSiteUrl(input.siteUrl),
+    siteUrl: discoveryPublicSiteUrl(input.siteUrl),
   })
   const gateway = input.gateway ?? adminGateway()
 
@@ -465,7 +455,9 @@ export async function runDiscoveryCommand(input: {
     return
   }
   if (command.action === "create") {
-    log(projectReceipt(await gateway.create(command), context()))
+    log(
+      projectReceipt(await gateway.create({ name: command.name, email: command.email }), context()),
+    )
     return
   }
   log(projectReceipt(await gateway[command.action](command.enrollmentId), context()))

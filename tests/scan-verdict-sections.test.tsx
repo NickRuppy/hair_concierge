@@ -284,3 +284,17 @@ test("R8: the re-scan link stays last, and the alternatives list is inert withou
   assert.ok(readOnlyMarkup.includes("Passt mit Einschränkung"))
   assert.ok(!readOnlyMarkup.includes("Kaufen"))
 })
+
+test("without a title override the scan header is unchanged; the override is cockpit-only", () => {
+  const plain = renderToStaticMarkup(<ScanVerdictSections result={SCAN_PARITY_DIMENSION_RESULT} />)
+  const product = SCAN_PARITY_DIMENSION_RESULT.product
+  assert.ok(plain.includes(`>${product.name}</h2>`))
+  if (product.brand) assert.ok(plain.includes(`${product.brand} · `))
+
+  const titled = renderToStaticMarkup(
+    <ScanVerdictSections result={SCAN_PARITY_DIMENSION_RESULT} productTitle="Marke Linie Name" />,
+  )
+  assert.ok(titled.includes(">Marke Linie Name</h2>"))
+  // The composed title already names the brand; the sub-line keeps only the category.
+  if (product.brand) assert.ok(!titled.includes(`${product.brand} · `))
+})

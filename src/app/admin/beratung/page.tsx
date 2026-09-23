@@ -2,16 +2,27 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
-import { formatDiscoveryTimestamp } from "@/components/discovery/cockpit/format"
+import {
+  DISCOVERY_EMAIL_PENDING_LABEL,
+  formatDiscoveryTimestamp,
+} from "@/components/discovery/cockpit/format"
 import { requireAdmin } from "@/lib/auth/require-admin"
 import { listDiscoveryCallIntakes, type DiscoveryCockpitAdminClient } from "@/lib/discovery/cockpit"
 import { listDiscoveryEnrollments } from "@/lib/discovery/enrollment"
 import { isDiscoveryCallToolkitEnabled } from "@/lib/discovery/flag"
+import { discoveryPublicSiteUrl, projectDiscoveryAdminInvite } from "@/lib/discovery/invite-link"
+import { discoveryEnrollmentSigningSecret } from "@/lib/discovery/token"
 import { createAdminClient } from "@/lib/supabase/admin"
+
+import { DiscoveryInviteForm, DiscoveryInviteRowActions } from "./discovery-invite-controls"
 
 /**
  * The cockpit's front door: every enrollment with the state of its checklist, newest
  * first. Two reads, joined in memory — there are tens of these, not thousands.
+ *
+ * It is also where invites are made and managed („Neue Einladung", then per row „Link
+ * kopieren" / „Link erneuern" / „Widerrufen"). Each row's link is derived here from
+ * (id, token_version) with the same signer the CLI uses — nothing extra is stored.
  *
  * Same gate as the cockpit itself: kill switch, then the shared `requireAdmin`, and
  * `notFound()` rather than a 403 for anyone else.
@@ -21,7 +32,7 @@ export const dynamic = "force-dynamic"
 export const metadata: Metadata = { robots: { index: false, follow: false } }
 
 const TITLE = "Beratungen"
-const EMPTY = "Noch keine Einladungen. `npm run discovery -- create …` legt eine an."
+const EMPTY = "Noch keine Einladungen."
 const STATE_REVOKED = "widerrufen"
 const STATE_INVITED = "eingeladen"
 const STATE_CLAIMED = "eingelöst"
@@ -35,6 +46,8 @@ export type DiscoveryCockpitListDependencies = {
   createAdminClient: () => DiscoveryCockpitAdminClient
   listEnrollments: typeof listDiscoveryEnrollments
   listIntakes: typeof listDiscoveryCallIntakes
+  signingSecret: () => string
+  siteUrl: () => string
 }
 
 const DEFAULTS: DiscoveryCockpitListDependencies = {
@@ -43,6 +56,8 @@ const DEFAULTS: DiscoveryCockpitListDependencies = {
   createAdminClient,
   listEnrollments: listDiscoveryEnrollments,
   listIntakes: listDiscoveryCallIntakes,
+  signingSecret: () => discoveryEnrollmentSigningSecret(),
+  siteUrl: () => discoveryPublicSiteUrl(),
 }
 
 export function createDiscoveryCockpitListPage(
@@ -61,10 +76,19 @@ export function createDiscoveryCockpitListPage(
       deps.listIntakes(admin),
     ])
     const intakeByEnrollment = new Map(intakes.map((intake) => [intake.enrollmentId, intake]))
+    // Without the signing secret the page still lists everything; only the link
+    // controls disappear (the create route answers 503 with the reason).
+    let linkContext: { secret: string; siteUrl: string } | null = null
+    try {
+      linkContext = { secret: deps.signingSecret(), siteUrl: deps.siteUrl() }
+    } catch {
+      linkContext = null
+    }
 
     return (
       <div>
         <h1 className="mb-6 text-2xl font-bold">{TITLE}</h1>
+        <DiscoveryInviteForm />
         {enrollments.length === 0 ? (
           <p className="rounded-xl border bg-card p-8 text-center text-sm text-muted-foreground">
             {EMPTY}
@@ -79,6 +103,7 @@ export function createDiscoveryCockpitListPage(
                   <th className="px-4 py-3 font-medium">Zugang</th>
                   <th className="px-4 py-3 font-medium">Checkliste</th>
                   <th className="px-4 py-3 font-medium">Finalisiert</th>
+                  <th className="px-4 py-3 font-medium">Link</th>
                   <th className="px-4 py-3 font-medium" />
                 </tr>
               </thead>
@@ -91,7 +116,7 @@ export function createDiscoveryCockpitListPage(
                         {enrollment.display_name}
                       </td>
                       <td className="px-4 py-3 text-muted-foreground">
-                        {enrollment.normalized_email}
+                        {enrollment.normalized_email ?? DISCOVERY_EMAIL_PENDING_LABEL}
                       </td>
                       <td className="px-4 py-3 text-muted-foreground">
                         {enrollment.revoked_at
@@ -109,6 +134,13 @@ export function createDiscoveryCockpitListPage(
                       </td>
                       <td className="px-4 py-3 text-muted-foreground">
                         {formatDiscoveryTimestamp(intake?.callFinalizedAt ?? null)}
+                      </td>
+                      <td className="px-4 py-3">
+                        {linkContext && !enrollment.revoked_at ? (
+                          <DiscoveryInviteRowActions
+                            invite={projectDiscoveryAdminInvite(enrollment, linkContext)}
+                          />
+                        ) : null}
                       </td>
                       <td className="px-4 py-3">
                         <Link

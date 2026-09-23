@@ -1,3 +1,5 @@
+import { composeProductIdentityTitle } from "@/lib/product-identity/display-title"
+
 /**
  * Brand + name as one line, for every discovery surface that names a product (cockpit,
  * PDF, CLI receipts).
@@ -17,6 +19,34 @@ export function discoveryProductLabel(
   if (!cleanBrand) return cleanName
   if (!cleanName) return cleanBrand
   return startsWithWord(cleanName, cleanBrand) ? cleanName : `${cleanBrand} ${cleanName}`
+}
+
+/**
+ * Brand + product line + name, the way the routine and the checklist's search cards name a
+ * catalog product (`composeProductIdentityTitle`, de-duplicated).
+ *
+ * Without a line this IS `discoveryProductLabel`, byte for byte — so a label with nothing new
+ * to say keeps its exact spelling (and a finalised document its fingerprint). With a line,
+ * a brand the name already starts with is taken in the name's own spelling first, so the
+ * apostrophe-tolerant brand match above still holds and the brand stays in front.
+ */
+export function discoveryProductTitle(input: {
+  brand: string | null | undefined
+  productLine: string | null | undefined
+  name: string | null | undefined
+}): string {
+  const line = collapseWhitespace(input.productLine)
+  if (!line) return discoveryProductLabel(input.brand, input.name)
+  const cleanBrand = collapseWhitespace(input.brand)
+  const cleanName = collapseWhitespace(input.name)
+  if (cleanBrand && cleanName && startsWithWord(cleanName, cleanBrand)) {
+    return composeProductIdentityTitle({
+      brand: cleanName.slice(0, cleanBrand.length),
+      productLine: line,
+      name: cleanName.slice(cleanBrand.length).trim() || null,
+    })
+  }
+  return composeProductIdentityTitle({ brand: cleanBrand, productLine: line, name: cleanName })
 }
 
 function collapseWhitespace(value: string | null | undefined): string {
