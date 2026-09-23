@@ -93,6 +93,13 @@ Eine widerrufene Einladung blockiert dieselbe E-Mail nicht: die Eindeutigkeits-I
 (das reguläre Legacy-Quiz, Inhalt unverändert, Name und E-Mail auf die Einladung festgenagelt) →
 `/beratung/produkte` (Produkt-Checkliste, zehn Kategorien) → „Absenden".
 
+Unterschiede zum normalen Quiz-Ende: Die Teilnehmerin sieht **keine Marketing-Einwilligung** — der
+Lead wird beim Erreichen des Schritts automatisch mit `marketing_consent=false` gespeichert (schlägt
+das fehl, bleibt ein „Erneut versuchen" stehen). Danach kommt „Geschafft — dein Haarprofil steht." mit
+„Weiter zu deinen Produkten" statt des Analyse-Teasers. In der Checkliste beantwortet „Mehr benutze ich
+nicht" (erscheint, sobald eine Kategorie beantwortet ist) alle noch offenen Kategorien mit „benutze ich
+nicht" — abgeschickt wird trotzdem erst mit „Absenden".
+
 Das Legacy-`/quiz` ist harte Voraussetzung: nur daraus entsteht die Quelle, aus der das Cockpit die
 Idealroutine rechnet. Der Einladungs-Flow führt von selbst dorthin — **schick einer Teilnehmerin
 niemals einen `/lp/*`-Link**, der Funnel-Quiz erzeugt keine brauchbare Quelle für dieses Werkzeug.
