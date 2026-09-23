@@ -1,6 +1,9 @@
 import assert from "node:assert/strict"
 import { createHmac } from "node:crypto"
 import test from "node:test"
+import { NextRequest } from "next/server"
+
+import { POST as receiveCalendlyWebhook } from "../src/app/api/calendly/webhook/route"
 
 import {
   buildMetaConversionPayload,
@@ -185,4 +188,52 @@ test("delivery is flag-gated and sends one Schedule event to the pixel endpoint"
   const sent = JSON.parse(requests[0].body) as { data: Array<{ event_name: string }> }
   assert.equal(sent.data.length, 1)
   assert.equal(sent.data[0].event_name, "Schedule")
+})
+
+test("the webhook retries Meta failures before acknowledging a booking", async () => {
+  const keys = [
+    "CALENDLY_WEBHOOK_SIGNING_KEY",
+    "META_CAPI_SCHEDULE_ENABLED",
+    "META_CAPI_ACCESS_TOKEN",
+    "META_PIXEL_ID",
+  ] as const
+  const original = Object.fromEntries(keys.map((key) => [key, process.env[key]]))
+  const originalFetch = globalThis.fetch
+  const originalWarn = console.warn
+  const body = inviteeCreatedBody()
+  let deliveries = 0
+
+  try {
+    process.env.CALENDLY_WEBHOOK_SIGNING_KEY = SIGNING_KEY
+    process.env.META_CAPI_SCHEDULE_ENABLED = "true"
+    process.env.META_CAPI_ACCESS_TOKEN = "test-token"
+    process.env.META_PIXEL_ID = "test-pixel"
+    globalThis.fetch = async () => {
+      deliveries++
+      return new Response("{}", { status: deliveries === 1 ? 503 : 200 })
+    }
+    console.warn = () => {}
+
+    const request = () =>
+      new NextRequest("https://chaarlie.de/api/calendly/webhook", {
+        method: "POST",
+        headers: { "calendly-webhook-signature": signedHeader(body) },
+        body,
+      })
+    const failed = await receiveCalendlyWebhook(request())
+    assert.equal(failed.status, 503)
+    assert.equal(deliveries, 1)
+
+    const retried = await receiveCalendlyWebhook(request())
+    assert.equal(retried.status, 200)
+    assert.equal(deliveries, 2)
+  } finally {
+    for (const key of keys) {
+      const value = original[key]
+      if (value === undefined) delete process.env[key]
+      else process.env[key] = value
+    }
+    globalThis.fetch = originalFetch
+    console.warn = originalWarn
+  }
 })

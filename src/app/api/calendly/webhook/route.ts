@@ -1,4 +1,4 @@
-import { after, NextResponse, type NextRequest } from "next/server"
+import { NextResponse, type NextRequest } from "next/server"
 
 import { parseCalendlyBookingWebhook, verifyCalendlyWebhookSignature } from "@/lib/calendly/webhook"
 import {
@@ -61,18 +61,17 @@ export async function POST(request: NextRequest) {
     },
   }
 
-  after(async () => {
-    const result = await deliverMetaConversion(input, {
-      enabled: isMetaScheduleCapiEnabled(),
-    })
-    if (!result.ok && !result.skipped) {
-      console.warn("[calendly-webhook] Meta Schedule CAPI delivery failed", {
-        eventId: webhook.bookingEventId,
-        error: result.error,
-        status: result.status,
-      })
-    }
+  const result = await deliverMetaConversion(input, {
+    enabled: isMetaScheduleCapiEnabled(),
   })
+  if (!result.ok && result.error !== "disabled") {
+    console.warn("[calendly-webhook] Meta Schedule CAPI delivery failed", {
+      eventId: webhook.bookingEventId,
+      error: result.error,
+      status: result.status,
+    })
+    return NextResponse.json({ error: "conversion delivery failed" }, { status: 503 })
+  }
 
   return NextResponse.json({ received: true })
 }

@@ -60,8 +60,9 @@ event AND to the Calendly embed as `utm_content` (plus
 it, and `POST /api/calendly/webhook` fires a Meta CAPI `Schedule` with the
 same `event_id` — Meta dedupes the two copies. Bookings without the id
 (directly shared Calendly links) are deliberately not reported to Meta.
-Calendly retries count on Meta's `event_id` dedupe; no local idempotency
-store.
+The receiver acknowledges a funnel booking only after Meta accepts the CAPI
+event. A failed Meta delivery returns 503 so Calendly can retry; repeated
+events count on Meta's `event_id` dedupe, with no local idempotency store.
 
 **Setup (one-time, Nick). Order matters: the key and the deployed route come
 FIRST, the subscription last — Calendly only retries failed deliveries for
