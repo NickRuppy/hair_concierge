@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 
+import { DISCOVERY_INTAKE_CATEGORY_COPY } from "@/components/discovery/intake/categories"
 import { ScanVerdictSections } from "@/components/scan/scan-verdict-sections"
 import type { DiscoveryCockpitStepView } from "@/lib/discovery/cockpit"
 import type { DiscoveryVerdictStatus } from "@/lib/discovery/load-participant-verdicts"
@@ -238,9 +239,15 @@ export function DiscoveryCallCockpit({
 
 function StepVerdict({ step }: { step: DiscoveryCockpitStepView }) {
   if (step.verdict?.status === "verdict") {
+    // The scan header's label is the scan feature's own; the call names the category the
+    // way the participant's checklist did („Kopfhautpflege", not „Kopfhautprodukt").
+    const product = {
+      ...step.verdict.product,
+      categoryLabel: DISCOVERY_INTAKE_CATEGORY_COPY[step.verdict.product.category].label,
+    }
     return (
       <div className="flex flex-col gap-4">
-        <ScanVerdictSections result={{ ...step.verdict.payload, product: step.verdict.product }} />
+        <ScanVerdictSections result={{ ...step.verdict.payload, product }} />
       </div>
     )
   }

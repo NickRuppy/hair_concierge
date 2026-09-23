@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
-import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
 import { DiscoveryCallCockpit } from "@/components/discovery/cockpit/discovery-call-cockpit"
 import { formatDiscoveryTimestamp } from "@/components/discovery/cockpit/format"
+import { DISCOVERY_INTAKE_CATEGORY_COPY } from "@/components/discovery/intake/categories"
 import { requireAdmin } from "@/lib/auth/require-admin"
 import {
   buildDiscoveryCockpitView,
@@ -214,8 +214,9 @@ function IdealRoutine({ view }: { view: DiscoveryCockpitView }) {
   )
 }
 
+/** The checklist's own labels, so the cockpit names a category the way the participant saw it. */
 function categoryLine(categories: readonly PersonalPlanCategory[]): string {
-  return categories.map((category) => CATEGORY_COPY[category].label).join(" · ")
+  return categories.map((category) => DISCOVERY_INTAKE_CATEGORY_COPY[category].label).join(" · ")
 }
 
 /**
