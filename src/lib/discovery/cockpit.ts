@@ -18,6 +18,7 @@ import {
   type DiscoveryParticipantVerdict,
   type DiscoveryVerdictStatus,
 } from "./load-participant-verdicts"
+import { discoveryProductTitle } from "./product-label"
 import {
   composeDiscoveryRefinedRoutine,
   describeDiscoveryIntakeItem,
@@ -198,29 +199,53 @@ export async function loadDiscoveryCallDecisions(
 
 const loadSwapPresentationRows = createPresentationRowLoader("discovery_swap_lookup_failed")
 
+/** How the catalog names a product: the parts of a brand + line + name label. */
+export type DiscoveryProductIdentity = {
+  name: string
+  brand: string | null
+  productLine: string | null
+}
+
 /**
- * Catalog product id → product line name, for every product a cockpit/PDF label names.
- * Only products that HAVE a line appear in the map.
+ * Catalog identity (name, brand, product line) for every product a cockpit/PDF label or
+ * swap option names — one batched read, independent of whether a product's verdict could
+ * be computed, so a transient verdict failure never changes a printed name.
  */
-export async function loadDiscoveryProductLines(
+export async function loadDiscoveryProductIdentities(
   client: DiscoveryCockpitAdminClient,
   productIds: string[],
-): Promise<Map<string, string>> {
-  const lines = new Map<string, string>()
-  if (productIds.length === 0) return lines
+): Promise<Map<string, DiscoveryProductIdentity>> {
+  const identities = new Map<string, DiscoveryProductIdentity>()
+  if (productIds.length === 0) return identities
   const { data, error } = await client
     .from("products")
-    .select("id, product_line:product_lines(canonical_name)")
+    .select("id, name, brand, product_line:product_lines(canonical_name)")
     .in("id", productIds)
-  if (error) throw new Error("discovery_product_line_lookup_failed")
+  if (error) throw new Error("discovery_product_identity_lookup_failed")
   type LineRelation = { canonical_name: string | null }
   for (const row of (data as Array<{
     id: string
+    name: string
+    brand: string | null
     product_line: LineRelation | LineRelation[] | null
   }> | null) ?? []) {
     const relation = Array.isArray(row.product_line) ? row.product_line[0] : row.product_line
-    const name = relation?.canonical_name?.trim()
-    if (name) lines.set(row.id, name)
+    identities.set(row.id, {
+      name: row.name,
+      brand: row.brand,
+      productLine: relation?.canonical_name?.trim() || null,
+    })
+  }
+  return identities
+}
+
+/** Product id → line name, for the composition (only products that HAVE a line). */
+export function discoveryProductLinesOf(
+  identities: ReadonlyMap<string, DiscoveryProductIdentity>,
+): Map<string, string> {
+  const lines = new Map<string, string>()
+  for (const [id, identity] of identities) {
+    if (identity.productLine) lines.set(id, identity.productLine)
   }
   return lines
 }
@@ -239,13 +264,16 @@ export type DiscoveryCockpitModel = {
    */
   recommendationProducts: ScanCatalogPresentationRow[]
   /**
-   * False when the brand lookup for a call WITHOUT swaps failed, or the product-line
-   * lookup failed. The cockpit still renders (labels without brand or line), but the
-   * routine's `sourceHash` then describes a degraded document — so finalising refuses and
-   * the PDF sends Nick back to the cockpit rather than printing a degraded sheet or a
-   * false drift warning.
+   * False when a printed name could come out degraded: the brand lookup for a call
+   * WITHOUT swaps failed, the product-identity lookup failed, or an owned product whose
+   * verdict failed transiently has no catalog identity to be named by. The cockpit still
+   * renders, but the routine's `sourceHash` then describes a degraded document — so
+   * finalising refuses and the PDF sends Nick back to the cockpit rather than printing a
+   * degraded sheet or a false drift warning.
    */
   recommendationBrandsAvailable: boolean
+  /** Catalog identities of every labelled product and swap option (see the loader). */
+  productIdentities?: ReadonlyMap<string, DiscoveryProductIdentity>
 }
 
 export type DiscoveryCockpitModelResult =
@@ -262,7 +290,7 @@ export type DiscoveryCockpitDependencies = {
     client: DiscoveryCockpitAdminClient,
     productIds: string[],
   ) => Promise<ScanCatalogPresentationRow[]>
-  loadProductLines: typeof loadDiscoveryProductLines
+  loadProductIdentities: typeof loadDiscoveryProductIdentities
 }
 
 export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
@@ -271,21 +299,30 @@ export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
   loadVerdicts: loadParticipantScanVerdicts,
   loadDecisions: loadDiscoveryCallDecisions,
   loadSwapProducts: loadSwapPresentationRows,
-  loadProductLines: loadDiscoveryProductLines,
+  loadProductIdentities: loadDiscoveryProductIdentities,
 }
 
 /**
- * The catalog identity each owned product's verdict names — handed to the composition so
- * the owned label it prints is also the label it fingerprints.
+ * The catalog identity each owned product is named by — handed to the composition so the
+ * owned label it prints is also the label it fingerprints.
+ *
+ * A computed verdict names its product. A TRANSIENT verdict failure (`unavailable`) is
+ * named from the separately loaded catalog identity instead, so a flaky verdict never
+ * flips the printed name back to the participant's own words (a false drift). The
+ * permanent states (not sellable, quarantined, category mismatch, no decision) keep
+ * their established label: the participant's own words.
  */
 export function discoveryOwnedProductIdentities(
   verdicts: readonly DiscoveryParticipantVerdict[],
+  identities: ReadonlyMap<string, DiscoveryProductIdentity> = new Map(),
 ): { itemId: string; brand: string | null; name: string }[] {
-  return verdicts.flatMap((verdict) =>
-    verdict.status === "verdict"
-      ? [{ itemId: verdict.itemId, brand: verdict.product.brand, name: verdict.product.name }]
-      : [],
-  )
+  return verdicts.flatMap((verdict) => {
+    if (verdict.status === "verdict") {
+      return [{ itemId: verdict.itemId, brand: verdict.product.brand, name: verdict.product.name }]
+    }
+    const identity = verdict.status === "unavailable" ? identities.get(verdict.productId) : null
+    return identity ? [{ itemId: verdict.itemId, brand: identity.brand, name: identity.name }] : []
+  })
 }
 
 export async function loadDiscoveryCockpitModel(
@@ -330,30 +367,47 @@ export async function loadDiscoveryCockpitModel(
   }
   const swapProducts = catalogRows.filter((row) => swapProductIds.has(row.id))
   const recommendationProducts = catalogRows.filter((row) => printedIds.has(row.id))
-  // Product lines for every product a label names: owned catalog products, swap targets
-  // and printed recommendations. Enrichment only, like the brands: a failed read degrades
-  // (and blocks finalize/PDF) rather than failing the call.
-  const lineIds = [
+  // Catalog identity (brand, line, name) for every product a label or a swap option names:
+  // owned catalog products, swap targets, printed recommendations and every option the
+  // cockpit offers. Enrichment only, like the brands: a failed read degrades (and blocks
+  // finalize/PDF) rather than failing the call.
+  const identityIds = [
     ...new Set([
       ...items.flatMap((item) => (item.productId ? [item.productId] : [])),
       ...swapProductIds,
       ...printedIds,
+      ...ideal.steps.flatMap((entry) =>
+        entry.preview?.kind === "recommendation" ? [entry.preview.productId] : [],
+      ),
+      ...verdicts.flatMap((verdict) =>
+        verdict.status === "verdict" && verdict.payload.kind === "in_catalog"
+          ? verdict.payload.alternatives.map((alternative) => alternative.productId)
+          : [],
+      ),
     ]),
   ].sort()
-  let productLines = new Map<string, string>()
-  let linesFailed = false
-  if (lineIds.length > 0) {
+  let productIdentities = new Map<string, DiscoveryProductIdentity>()
+  let identitiesFailed = false
+  if (identityIds.length > 0) {
     try {
-      productLines = await deps.loadProductLines(admin, lineIds)
+      productIdentities = await deps.loadProductIdentities(admin, identityIds)
     } catch (error) {
-      console.error("[discovery] product line lookup failed:", error)
-      linesFailed = true
+      console.error("[discovery] product identity lookup failed:", error)
+      identitiesFailed = true
     }
   }
+  // An owned product whose verdict failed transiently is named by its catalog identity;
+  // without one, its printed name would silently fall back to her own words.
+  const ownedIdentityMissing = verdicts.some(
+    (verdict) => verdict.status === "unavailable" && !productIdentities.has(verdict.productId),
+  )
   // A printed recommendation whose row did not come back would print (and fingerprint)
   // brandless — the same degraded state as a failed read.
   const recommendationBrandsAvailable =
-    !lookupFailed && !linesFailed && recommendationProducts.length === printedIds.size
+    !lookupFailed &&
+    !identitiesFailed &&
+    !ownedIdentityMissing &&
+    recommendationProducts.length === printedIds.size
 
   return {
     status: "ready",
@@ -363,14 +417,15 @@ export async function loadDiscoveryCockpitModel(
       decisions,
       swapProducts,
       recommendationProducts,
-      ownedProducts: discoveryOwnedProductIdentities(verdicts),
-      productLines,
+      ownedProducts: discoveryOwnedProductIdentities(verdicts, productIdentities),
+      productLines: discoveryProductLinesOf(productIdentities),
     }),
     steps: ideal.steps,
     verdicts,
     previewSource: ideal.previewSource,
     recommendationProducts,
     recommendationBrandsAvailable,
+    productIdentities,
   }
 }
 
@@ -389,6 +444,11 @@ export type DiscoveryCockpitSwapOption = {
   productId: string
   name: string
   brand: string | null
+  /**
+   * The option as the PDF would print it once chosen (the swap label): the catalog's
+   * brand + line + name, falling back to the engine's own name and brand.
+   */
+  label: string
   verdictLabel: string
   origin: "alternative" | "ideal_recommendation"
 }
@@ -444,16 +504,37 @@ export type DiscoveryCockpitView = {
   recommendationBrandsAvailable: boolean
 }
 
-function alternativeOption(alternative: {
-  productId: string
-  displayName: string
-  brand: string | null
-  verdictLabel: string
-}): DiscoveryCockpitSwapOption {
+function optionLabel(
+  productId: string,
+  fallback: { name: string; brand: string | null },
+  identities: ReadonlyMap<string, DiscoveryProductIdentity>,
+): string {
+  const identity = identities.get(productId)
+  return discoveryProductTitle({
+    brand: identity ? identity.brand : fallback.brand,
+    productLine: identity?.productLine ?? null,
+    name: identity ? identity.name : fallback.name,
+  })
+}
+
+function alternativeOption(
+  alternative: {
+    productId: string
+    displayName: string
+    brand: string | null
+    verdictLabel: string
+  },
+  identities: ReadonlyMap<string, DiscoveryProductIdentity>,
+): DiscoveryCockpitSwapOption {
   return {
     productId: alternative.productId,
     name: alternative.displayName,
     brand: alternative.brand,
+    label: optionLabel(
+      alternative.productId,
+      { name: alternative.displayName, brand: alternative.brand },
+      identities,
+    ),
     verdictLabel: alternative.verdictLabel,
     origin: "alternative",
   }
@@ -462,13 +543,16 @@ function alternativeOption(alternative: {
 function idealRecommendationOption(
   step: DiscoveryIdealStep,
   brandsByProductId: ReadonlyMap<string, string | null>,
+  identities: ReadonlyMap<string, DiscoveryProductIdentity>,
 ): DiscoveryCockpitSwapOption | null {
   const preview = step.preview
   if (!preview || preview.kind !== "recommendation") return null
+  const brand = brandsByProductId.get(preview.productId) ?? null
   return {
     productId: preview.productId,
     name: preview.productName,
-    brand: brandsByProductId.get(preview.productId) ?? null,
+    brand,
+    label: optionLabel(preview.productId, { name: preview.productName, brand }, identities),
     verdictLabel: SCAN_VERDICT_COPY[preview.verdict].label,
     origin: "ideal_recommendation",
   }
@@ -480,6 +564,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
     model.recommendationProducts.map((row) => [row.id, row.brand] as const),
   )
 
+  const identities = model.productIdentities ?? new Map<string, DiscoveryProductIdentity>()
   const unanswered = new Set(model.routine.unansweredCategories)
   const steps = model.routine.steps.map((refined): DiscoveryCockpitStepView => {
     const { step, item } = refined
@@ -488,13 +573,13 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       verdict?.status === "verdict" && verdict.payload.kind === "in_catalog"
         ? verdict.payload.alternatives
         : []
-    const ideal = idealRecommendationOption(step, brandsByProductId)
+    const ideal = idealRecommendationOption(step, brandsByProductId, identities)
     // The ruled fallback: with no displayed alternatives the only swap target the cockpit
     // can honestly offer is the Idealplan's own pick — and never the product already in
     // the participant's bathroom.
     const swapOptions =
       alternatives.length > 0
-        ? alternatives.map(alternativeOption)
+        ? alternatives.map((alternative) => alternativeOption(alternative, identities))
         : ideal && ideal.productId !== item?.productId
           ? [ideal]
           : []

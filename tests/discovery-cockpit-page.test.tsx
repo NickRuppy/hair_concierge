@@ -525,3 +525,35 @@ test("the list is hidden behind the same two gates", async () => {
   })
   await assert.rejects(() => refused())
 })
+
+test("the cockpit names her product and every swap card like the PDF: brand + line + name", async () => {
+  const productIdentities = new Map([
+    [
+      ids.owned,
+      { name: "Elvital Hyaluron Pure Shampoo", brand: "L'Oréal Elvital", productLine: "Hyaluron" },
+    ],
+    [ids.alternative, { name: "Leichte Frische Shampoo", brand: "Guhl", productLine: "Brise" }],
+  ])
+  const lines = new Map([
+    [ids.owned, "Hyaluron"],
+    [ids.alternative, "Brise"],
+  ])
+  const markup = await renderCockpit({
+    loadModel: async () => ({
+      ...readyModel(),
+      routine: composeDiscoveryRefinedRoutine({
+        steps: [shampooStep, leaveInStep],
+        items,
+        decisions: [],
+        swapProducts: [],
+        ownedProducts: discoveryOwnedProductIdentities(verdicts, productIdentities),
+        productLines: lines,
+      }),
+      productIdentities,
+    }),
+  })
+  // Verdict header: the composed title, not the scan header's bare catalog name.
+  assert.match(markup, /<h2[^>]*>L&#x27;Oréal Elvital Elvital Hyaluron Pure Shampoo<\/h2>/)
+  // Swap card: the label a swap would print.
+  assert.ok(markup.includes("Guhl Brise Leichte Frische Shampoo"))
+})
