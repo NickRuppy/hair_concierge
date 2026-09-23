@@ -2,6 +2,8 @@ import { semanticHash } from "@/lib/personal-plan/routine/canonicalize"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import type { ScanCatalogPresentationRow } from "@/lib/scan/product-presentation"
 
+import { discoveryProductLabel } from "./product-label"
+
 import type { DiscoveryIdealStep } from "./load-ideal-routine"
 
 /**
@@ -176,11 +178,12 @@ export type DiscoveryRefinedStep = {
   swapProductId: string | null
   swapProduct: ScanCatalogPresentationRow | null
   /**
-   * The catalog brand of the Idealplan's recommendation, set ONLY where the document prints
-   * that recommendation (`ideal`). The preview's own name is often brandless, so the brand
-   * is part of what the PDF renders — and therefore of `sourceHash`.
+   * The Idealplan's recommendation exactly as the document prints it (brand + name), set
+   * ONLY where it is printed (`ideal`). The preview's own name is often brandless, so the
+   * brand is part of what the PDF renders — and the printed label, not the raw brand
+   * spelling, is what `sourceHash` covers.
    */
-  recommendationBrand: string | null
+  recommendationLabel: string | null
 }
 
 export type DiscoveryRefinedRoutine = {
@@ -231,9 +234,12 @@ export function composeDiscoveryRefinedRoutine(input: {
       item,
       swapProductId,
       swapProduct: swapProductId ? (swapProductsById.get(swapProductId) ?? null) : null,
-      recommendationBrand:
+      recommendationLabel:
         outcome === "ideal" && preview?.kind === "recommendation"
-          ? (recommendationBrandsById.get(preview.productId) ?? null)
+          ? discoveryProductLabel(
+              recommendationBrandsById.get(preview.productId) ?? null,
+              preview.productName,
+            )
           : null,
     }
   })
@@ -251,6 +257,19 @@ export function composeDiscoveryRefinedRoutine(input: {
 }
 
 /** Every swap target the decisions reference, for one batched products-by-id select. */
+/** The recommendations the document prints — only `ideal` steps show the Idealplan's pick. */
+export function discoveryPrintedRecommendationIds(routine: DiscoveryRefinedRoutine): string[] {
+  return [
+    ...new Set(
+      routine.steps.flatMap(({ outcome, step }) =>
+        outcome === "ideal" && step.preview?.kind === "recommendation"
+          ? [step.preview.productId]
+          : [],
+      ),
+    ),
+  ].sort()
+}
+
 export function discoverySwapProductIds(decisions: readonly DiscoveryCallDecision[]): string[] {
   return [
     ...new Set(

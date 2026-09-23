@@ -21,6 +21,7 @@ import {
 import { discoveryProductLabel } from "./product-label"
 import {
   composeDiscoveryRefinedRoutine,
+  discoveryPrintedRecommendationIds,
   discoverySwapProductIds,
   type DiscoveryCallDecision,
   type DiscoveryIntakeItem,
@@ -257,15 +258,19 @@ export async function loadDiscoveryCockpitModel(
   const verdicts = await deps.loadVerdicts(admin, input.userId, items, ideal.context)
   const decisions = await deps.loadDecisions(input.intakeId, admin)
   const swapProductIds = new Set(discoverySwapProductIds(decisions))
-  const recommendationIds = new Set(
-    ideal.steps.flatMap((step) =>
-      step.preview?.kind === "recommendation" ? [step.preview.productId] : [],
-    ),
-  )
-  // One batched catalog read for both: the swap targets and the recommendations' brands.
-  const catalogIds = [...new Set([...swapProductIds, ...recommendationIds])].sort()
+  // Outcomes first (composition is pure): only an `ideal` step prints the Idealplan's
+  // recommendation, so only those brands are read — and only those gate availability.
+  const outline = composeDiscoveryRefinedRoutine({
+    steps: ideal.steps,
+    items,
+    decisions,
+    swapProducts: [],
+  })
+  const printedIds = new Set(discoveryPrintedRecommendationIds(outline))
+  // One batched catalog read for both: the swap targets and the printed brands.
+  const catalogIds = [...new Set([...swapProductIds, ...printedIds])].sort()
   let catalogRows: ScanCatalogPresentationRow[] = []
-  let recommendationBrandsAvailable = true
+  let lookupFailed = false
   if (swapProductIds.size > 0) {
     // Swap rows are required: a failed read fails the composition, exactly as before.
     catalogRows = await deps.loadSwapProducts(admin, catalogIds)
@@ -275,11 +280,15 @@ export async function loadDiscoveryCockpitModel(
       catalogRows = await deps.loadSwapProducts(admin, catalogIds)
     } catch (error) {
       console.error("[discovery] recommendation brand lookup failed:", error)
-      recommendationBrandsAvailable = false
+      lookupFailed = true
     }
   }
   const swapProducts = catalogRows.filter((row) => swapProductIds.has(row.id))
-  const recommendationProducts = catalogRows.filter((row) => recommendationIds.has(row.id))
+  const recommendationProducts = catalogRows.filter((row) => printedIds.has(row.id))
+  // A printed recommendation whose row did not come back would print (and fingerprint)
+  // brandless — the same degraded state as a failed read.
+  const recommendationBrandsAvailable =
+    !lookupFailed && recommendationProducts.length === printedIds.size
 
   return {
     status: "ready",

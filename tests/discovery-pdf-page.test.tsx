@@ -398,7 +398,10 @@ test("a brand-only catalog change after finalising trips the drift banner", asyn
     loadModel: async () => modelWith(brand),
   })
   assert.ok(!(await renderPdf(deps("Garnier"))).includes("Stand hat sich geändert"))
-  assert.ok((await renderPdf(deps("Garnier Fructis"))).includes("Stand hat sich geändert"))
+  // Same printed label („Garnier Fructis Hair Food Leave-in") — no drift.
+  assert.ok(!(await renderPdf(deps("GARNIER FRUCTIS"))).includes("Stand hat sich geändert"))
+  // A brand that changes what the paper prints — drift.
+  assert.ok((await renderPdf(deps("Fructis Lab"))).includes("Stand hat sich geändert"))
 })
 
 test("unreadable recommendation brands send the PDF back to the cockpit", async () => {

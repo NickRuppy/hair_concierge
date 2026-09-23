@@ -551,7 +551,7 @@ test("the rendered recommendation brand is part of sourceHash, and only where it
     recommendationProducts: withBrand("Marke B"),
   })
   assert.equal(brandA.steps[0]!.outcome, "ideal")
-  assert.equal(brandA.steps[0]!.recommendationBrand, "Marke A")
+  assert.equal(brandA.steps[0]!.recommendationLabel, "Marke A Ideal pre_wash_fibre_treatment")
   assert.notEqual(brandA.sourceHash, brandB.sourceHash)
 
   // A kept step does not print the recommendation, so its brand must not move the hash.
@@ -572,6 +572,30 @@ test("the rendered recommendation brand is part of sourceHash, and only where it
     recommendationProducts: withBrand("Marke B"),
   })
   assert.equal(keptA.steps[0]!.outcome, "kept")
-  assert.equal(keptA.steps[0]!.recommendationBrand, null)
+  assert.equal(keptA.steps[0]!.recommendationLabel, null)
   assert.equal(keptA.sourceHash, keptB.sourceHash)
+})
+
+test("sourceHash follows the printed label, not the brand's raw spelling", () => {
+  const oil = decision({ category: "oil", roles: OIL_ROLES })
+  const preview = recommendationPreview("oil", "pre_wash_fibre_treatment", "ideal-1")
+  assert.equal(preview.kind, "recommendation")
+  const steps = buildDiscoveryIdealSteps(snapshotOf([oil]), [
+    {
+      ...(preview as Extract<typeof preview, { kind: "recommendation" }>),
+      productName: "Marke Öl",
+    },
+  ])
+  const compose = (brand: string) =>
+    composeDiscoveryRefinedRoutine({
+      steps,
+      items: [],
+      decisions: [],
+      swapProducts: [],
+      recommendationProducts: [{ ...swapRow("ideal-1"), brand }],
+    })
+  // „Marke" / „MARKE" both print „Marke Öl" — the name already starts with the brand.
+  assert.equal(compose("Marke").steps[0]!.recommendationLabel, "Marke Öl")
+  assert.equal(compose("Marke").sourceHash, compose("MARKE").sourceHash)
+  assert.notEqual(compose("Marke").sourceHash, compose("Andere").sourceHash)
 })
