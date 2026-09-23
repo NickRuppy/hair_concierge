@@ -436,6 +436,9 @@ test("the document is written to the participant, step by step", async () => {
   // Print CSS is the point of this page.
   assert.ok(markup.includes("print-color-adjust: exact"))
   assert.ok(markup.includes("@page { size: A4; margin: 0; }"))
+  // The on-screen sheet shrinks to fit narrow viewports; that rule is screen-only, so the
+  // printed A4 page is untouched.
+  assert.ok(markup.includes("@media screen {\n  .dcp-page { width: 100%; max-width: 210mm; }"))
 })
 
 test("the shelf says what happens to every product she brought", async () => {
