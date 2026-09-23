@@ -29,13 +29,19 @@ function signedHeader(rawBody: string, options: { key?: string; atMs?: number } 
 const EVENT_TYPE_URI = "https://api.calendly.com/event_types/20min-uuid"
 
 function inviteeCreatedBody(
-  options: { utmContent?: string | null; utmSource?: string | null; eventType?: string } = {},
+  options: {
+    utmContent?: string | null
+    utmSource?: string | null
+    eventType?: string
+    rescheduled?: boolean
+  } = {},
 ) {
   const utmSource =
     options.utmSource === null ? {} : { utm_source: options.utmSource ?? "chaarlie_funnel" }
   return JSON.stringify({
     event: "invitee.created",
     payload: {
+      ...(options.rescheduled === undefined ? {} : { rescheduled: options.rescheduled }),
       email: "testkim@example.com",
       name: "Testkim Beispiel",
       created_at: "2026-09-22T18:00:00.000000Z",
@@ -110,6 +116,18 @@ test("only invitee.created with a round-tripped funnel event id becomes a bookin
     kind: "ignored",
     reason: "unreadable",
   })
+})
+
+test("a reschedule's re-fired invitee.created never reports a second conversion", () => {
+  assert.deepEqual(parseCalendlyBookingWebhook(inviteeCreatedBody({ rescheduled: true })), {
+    kind: "ignored",
+    reason: "rescheduled",
+  })
+  // An explicit `rescheduled: false` on a first booking still counts.
+  assert.equal(
+    parseCalendlyBookingWebhook(inviteeCreatedBody({ rescheduled: false })).kind,
+    "booking",
+  )
 })
 
 test("bookings from other sources or meeting types never reach Meta", () => {
