@@ -284,6 +284,7 @@ function readyModel(): DiscoveryCockpitModel {
     verdicts,
     previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
     routine: composeDiscoveryRefinedRoutine({ steps, items, decisions, swapProducts }),
+    recommendationProducts: [],
   }
 }
 
@@ -376,6 +377,26 @@ test("the render gate: only a finalised call has a document", async () => {
 })
 
 // --- the document ---------------------------------------------------------------
+
+test("a brandless catalog name reads with its brand on the paper", async () => {
+  // Catalog rows keep the brand in its own column („Klärendes Serum" + „Schwarzkopf").
+  const brandless = steps.map((entry) =>
+    entry.preview?.kind === "recommendation"
+      ? { ...entry, preview: { ...entry.preview, productName: "Klärendes Serum" } }
+      : entry,
+  )
+  const markup = await renderPdf({
+    loadModel: async () => ({
+      ...readyModel(),
+      steps: brandless,
+      routine: composeDiscoveryRefinedRoutine({ steps: brandless, items, decisions, swapProducts }),
+      recommendationProducts: [
+        { ...swapProducts[0], id: ids.idealLeaveIn, brand: "Schwarzkopf", name: "Klärendes Serum" },
+      ],
+    }),
+  })
+  assert.ok(markup.includes("Schwarzkopf Klärendes Serum"))
+})
 
 test("the document is written to the participant, step by step", async () => {
   const markup = await renderPdf()

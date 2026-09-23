@@ -125,6 +125,7 @@ function readyModel(): DiscoveryCockpitModel {
       decisions: [],
       swapProducts: [],
     }),
+    recommendationProducts: [],
   }
 }
 

@@ -1,4 +1,5 @@
 import type { DiscoveryCockpitStepView, DiscoveryCockpitView } from "@/lib/discovery/cockpit"
+import { discoveryProductLabel } from "@/lib/discovery/product-label"
 
 /**
  * The participant's own document (mockup: `plans/discovery-call-toolkit/evidence/pdf-ansicht.html`).
@@ -68,7 +69,13 @@ function stepProduct(step: DiscoveryCockpitStepView): PrintProduct | null {
       return step.swapProductLabel ? { name: step.swapProductLabel, badge: BADGE_NEW } : null
     case "ideal":
       return step.idealRecommendation
-        ? { name: step.idealRecommendation.name, badge: BADGE_NEW }
+        ? {
+            name: discoveryProductLabel(
+              step.idealRecommendation.brand,
+              step.idealRecommendation.name,
+            ),
+            badge: BADGE_NEW,
+          }
         : null
     case "undecided":
       return null
