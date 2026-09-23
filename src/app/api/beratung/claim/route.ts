@@ -67,7 +67,13 @@ const EXISTING_PAID_ACCESS =
   "Dieses Konto hat bereits vollen Zugang zu Chaarlie. Melde dich kurz bei uns, dann klären wir das persönlich."
 const EMAIL_REQUIRED = "Bitte gib deine E-Mail-Adresse ein."
 const EMAIL_INVALID = "Bitte prüf deine E-Mail-Adresse."
-const EMAIL_TAKEN = "Diese E-Mail-Adresse gehört schon zu einer anderen Einladung."
+/**
+ * Deliberately says nothing about WHY: „gehört zu einer anderen Einladung" would confirm to
+ * anyone holding a link that an address has an active invite. (The admin create form keeps
+ * its specific message — the admin may know.)
+ */
+const EMAIL_UNAVAILABLE =
+  "Mit dieser E-Mail-Adresse geht es gerade nicht. Nimm eine andere oder melde dich bei Nick."
 const EMAIL_BOUND = "Diese Einladung ist schon mit einer anderen E-Mail-Adresse verbunden."
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const EXISTING_ACCESS_KIND =
@@ -252,7 +258,7 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
         return copyResponseCookies(
           response,
           NextResponse.json(
-            { code: "email_taken", error: EMAIL_TAKEN },
+            { code: "email_unavailable", error: EMAIL_UNAVAILABLE },
             { status: 409, headers: NO_STORE_HEADERS },
           ),
         )
@@ -296,14 +302,17 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
         enrollmentId: enrollment.enrollmentId,
         tokenVersion: enrollment.tokenVersion,
         userId: user.id,
+        // The address bound above — the claim refuses a row re-bound in between.
+        email,
       })
     } catch {
       await rollbackCreatedUser({ overrides, password, userId: user.id })
       return copyResponseCookies(response, jsonError(SERVICE_UNAVAILABLE, 503))
     }
     if (claim.status !== "claimed") {
-      // Another claim won the compare-and-set. The account we just created is
-      // bound to nothing, so it must not survive.
+      // Another claim won the compare-and-set, or another attempt re-bound the
+      // address in between. The account we just created is bound to nothing, so it
+      // must not survive.
       await rollbackCreatedUser({ overrides, password, userId: user.id })
       return copyResponseCookies(response, jsonError(ALREADY_CLAIMED, 409))
     }

@@ -137,9 +137,21 @@ export async function loadDiscoveryEnrollmentForUser(
  * uses), so two concurrent claims cannot overwrite each other: the loser updates
  * nothing and is told so. Re-claiming with the SAME account is idempotent — that
  * is the magic-link continuation replaying its own claim.
+ *
+ * `email` — the address this claim bound and the account carries — is part of the
+ * predicate too. Binding the address and claiming are separate writes, so a second
+ * attempt can re-bind a different address in between; without this the first claim
+ * would bind its account to a row holding someone else's address (and the quiz would
+ * run on the wrong identity). A changed address makes the claim a `conflict`.
  */
 export async function claimDiscoveryEnrollment(
-  input: { enrollmentId: string; tokenVersion: number; userId: string; now?: () => string },
+  input: {
+    enrollmentId: string
+    tokenVersion: number
+    userId: string
+    email: string
+    now?: () => string
+  },
   client: DiscoveryAdminClient = createAdminClient(),
 ): Promise<DiscoveryClaimResult> {
   const claimedAt = (input.now ?? (() => new Date().toISOString()))()
@@ -150,6 +162,7 @@ export async function claimDiscoveryEnrollment(
     .eq("token_version", input.tokenVersion)
     .is("revoked_at", null)
     .is("claimed_user_id", null)
+    .eq("normalized_email", input.email)
     .select(DISCOVERY_ENROLLMENT_JOURNEY_COLUMNS)
     .maybeSingle()
   if (error) throw error
@@ -160,7 +173,9 @@ export async function claimDiscoveryEnrollment(
     { enrollmentId: input.enrollmentId, tokenVersion: input.tokenVersion },
     client,
   )
-  if (current?.claimedUserId === input.userId) return { status: "claimed", enrollment: current }
+  if (current?.claimedUserId === input.userId && current.email === input.email) {
+    return { status: "claimed", enrollment: current }
+  }
   return { status: "conflict" }
 }
 

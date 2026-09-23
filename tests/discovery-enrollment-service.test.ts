@@ -190,7 +190,13 @@ test("the state is derived, never stored", () => {
 test("the claim binds only an unclaimed, unrevoked row of the right version", async () => {
   const fake = fakeClient({ row: storedRow })
   const result = await claimDiscoveryEnrollment(
-    { enrollmentId: ids.enrollment, tokenVersion: 2, userId: ids.user, now: () => "NOW" },
+    {
+      enrollmentId: ids.enrollment,
+      tokenVersion: 2,
+      userId: ids.user,
+      email: "lea@example.test",
+      now: () => "NOW",
+    },
     fake.client,
   )
   assert.equal(result.status, "claimed")
@@ -201,6 +207,8 @@ test("the claim binds only an unclaimed, unrevoked row of the right version", as
     ["is", "revoked_at", null],
     // The compare half: without this a plain UPDATE would steal a live claim.
     ["is", "claimed_user_id", null],
+    // …and the address this claim bound: a re-bind in between must make it lose.
+    ["eq", "normalized_email", "lea@example.test"],
   ] as const) {
     assert.ok(hasFilter(fake.filters, filter[0], filter[1], filter[2]), filter.join(" "))
   }
@@ -212,7 +220,12 @@ test("a second claim by another account loses cleanly and leaves the first bindi
   // update matches nothing and the follow-up read sees the winner's binding.
   const fake = fakeClient({ row: claimed })
   const result = await claimDiscoveryEnrollment(
-    { enrollmentId: ids.enrollment, tokenVersion: 2, userId: ids.otherUser },
+    {
+      enrollmentId: ids.enrollment,
+      tokenVersion: 2,
+      userId: ids.otherUser,
+      email: "lea@example.test",
+    },
     fake.client,
   )
   assert.deepEqual(result, { status: "conflict" })
@@ -227,7 +240,7 @@ test("a second claim by another account loses cleanly and leaves the first bindi
 test("re-claiming with the same account is idempotent — the continuation replays it", async () => {
   const fake = fakeClient({ row: { ...storedRow, claimed_user_id: ids.user, claimed_at: "FIRST" } })
   const result = await claimDiscoveryEnrollment(
-    { enrollmentId: ids.enrollment, tokenVersion: 2, userId: ids.user },
+    { enrollmentId: ids.enrollment, tokenVersion: 2, userId: ids.user, email: "lea@example.test" },
     fake.client,
   )
   assert.equal(result.status, "claimed")
@@ -238,7 +251,12 @@ test("a revoked row cannot be claimed", async () => {
   const fake = fakeClient({ row: { ...storedRow, revoked_at: "2026-09-22T12:00:00.000Z" } })
   assert.deepEqual(
     await claimDiscoveryEnrollment(
-      { enrollmentId: ids.enrollment, tokenVersion: 2, userId: ids.user },
+      {
+        enrollmentId: ids.enrollment,
+        tokenVersion: 2,
+        userId: ids.user,
+        email: "lea@example.test",
+      },
       fake.client,
     ),
     { status: "conflict" },
@@ -454,4 +472,73 @@ test("an address another current invite owns reports email_taken, other errors t
     { status: "email_taken" },
   )
   await assert.rejects(bindDiscoveryEnrollmentEmail(input, failing({ code: "57014" })))
+})
+
+// --- Bind/claim interleaving ---------------------------------------------------
+
+/** One stored row that every UPDATE really mutates when its predicates match. */
+function statefulClient(initial: Row) {
+  const row: Row = { ...initial }
+  const chain = (apply: (own: Filter[]) => Row | null) => {
+    const own: Filter[] = []
+    const builder: Record<string, unknown> = {
+      eq(column: string, value: unknown) {
+        own.push(["eq", column, value])
+        return builder
+      },
+      is(column: string, value: unknown) {
+        own.push(["is", column, value])
+        return builder
+      },
+      select: () => builder,
+      maybeSingle: async () => ({ data: apply(own), error: null }),
+    }
+    return builder
+  }
+  const matches = (own: Filter[]) => own.every(([, column, value]) => row[column] === value)
+  const client = {
+    from: () => ({
+      select: () => chain((own) => (matches(own) ? { ...row } : null)),
+      update: (values: Row) =>
+        chain((own) => {
+          if (!matches(own)) return null
+          Object.assign(row, values)
+          return { ...row }
+        }),
+    }),
+  }
+  return { client: client as unknown as DiscoveryAdminClient, row }
+}
+
+test("bind A, bind B, then claim-as-A fails: the row never ends up A's account with B's address", async () => {
+  const { client, row } = statefulClient({ ...storedRow, normalized_email: null })
+  const bind = (email: string) =>
+    bindDiscoveryEnrollmentEmail({ enrollmentId: ids.enrollment, tokenVersion: 2, email }, client)
+
+  assert.equal((await bind("a@example.test")).status, "bound")
+  // A second attempt (another tab, a forwarded link) re-binds before A's claim lands.
+  assert.equal((await bind("b@example.test")).status, "bound")
+
+  const claimAsA = await claimDiscoveryEnrollment(
+    { enrollmentId: ids.enrollment, tokenVersion: 2, userId: ids.user, email: "a@example.test" },
+    client,
+  )
+  assert.deepEqual(claimAsA, { status: "conflict" })
+  assert.equal(row.claimed_user_id, null)
+  assert.equal(row.normalized_email, "b@example.test")
+
+  // B's own claim still goes through, bound to B's address.
+  const claimAsB = await claimDiscoveryEnrollment(
+    {
+      enrollmentId: ids.enrollment,
+      tokenVersion: 2,
+      userId: ids.otherUser,
+      email: "b@example.test",
+    },
+    client,
+  )
+  assert.equal(claimAsB.status, "claimed")
+  assert.equal(row.claimed_user_id, ids.otherUser)
+  // …and after that nobody re-binds it.
+  assert.deepEqual(await bind("a@example.test"), { status: "conflict" })
 })

@@ -103,6 +103,7 @@ test("a fresh invite creates the account, binds it, stamps it and only then sign
     enrollmentId: ids.enrollment,
     tokenVersion: 2,
     userId: ids.user,
+    email: "lea@example.test",
   })
   assert.deepEqual(calls[2][1], { userId: ids.user, enrollmentId: ids.enrollment })
 })
@@ -525,7 +526,7 @@ test("a re-bind that loses to a concurrent claim is refused and writes nothing e
   assert.deepEqual(names(calls), ["bind"])
 })
 
-test("an address another current invite owns is refused without saying whose", async () => {
+test("an address another current invite owns gets a refusal that confirms nothing", async () => {
   const { calls, deps } = dependencies({
     loadEnrollment: async () => nameOnly,
     bindEmail: async (input: unknown) => {
@@ -538,9 +539,13 @@ test("an address another current invite owns is refused without saying whose", a
   )
   assert.equal(response.status, 409)
   const body = (await response.json()) as { code: string; error: string }
-  assert.equal(body.code, "email_taken")
-  assert.equal(body.error, "Diese E-Mail-Adresse gehört schon zu einer anderen Einladung.")
-  assert.ok(!body.error.includes("taken@example.test"))
+  assert.equal(body.code, "email_unavailable")
+  assert.equal(
+    body.error,
+    "Mit dieser E-Mail-Adresse geht es gerade nicht. Nimm eine andere oder melde dich bei Nick.",
+  )
+  // Neither the code nor the copy says the address has an invite, or whose.
+  assert.ok(!/taken|Einladung|invite/i.test(JSON.stringify(body)))
   assert.deepEqual(names(calls), ["bind"])
 })
 
@@ -605,4 +610,21 @@ test("resolve answers a null e-mail for a name-only invite", async () => {
   )
   assert.equal(response.status, 200)
   assert.deepEqual(await response.json(), { name: "Lea Sommer", email: null, state: "invited" })
+})
+
+test("a claim that loses to a re-bind in between rolls the new account back", async () => {
+  const { calls, deps } = dependencies({
+    loadEnrollment: async () => nameOnly,
+    // The row was re-bound to another address after this attempt bound its own.
+    claimEnrollment: async (input: unknown) => {
+      calls.push(["claim", input])
+      return { status: "conflict" as const }
+    },
+  })
+  const response = await createDiscoveryClaimHandler(deps)(
+    request({ body: { email: "a@example.test" } }),
+  )
+  assert.equal(response.status, 409)
+  assert.deepEqual(names(calls), ["bind", "createUser", "claim", "deleteUser"])
+  assert.equal((calls[2][1] as { email: string }).email, "a@example.test")
 })
