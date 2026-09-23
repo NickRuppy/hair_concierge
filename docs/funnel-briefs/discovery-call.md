@@ -48,8 +48,47 @@ still belongs to the funnel session, and the page never infers channel from refe
 
 `offer_viewed` fires through the shared `OfferTrackingProvider` (revision
 `discovery_call_v1`). A completed booking inside the Calendly embed fires
-`discovery_call_booking_scheduled` (PostHog only) via Calendly's
-`calendly.event_scheduled` postMessage.
+`discovery_call_booking_scheduled` (PostHog + Customer.io + Meta `Schedule`)
+via Calendly's `calendly.event_scheduled` postMessage.
+
+### Meta CAPI lane (webhook)
+
+The browser pixel is lost to ad blockers, so bookings also reach Meta
+server-side: the offer page mints one booking event id, gives it to the pixel
+event AND to the Calendly embed as `utm_content` (plus
+`utm_source=chaarlie_funnel`). Calendly's `invitee.created` webhook returns
+it, and `POST /api/calendly/webhook` fires a Meta CAPI `Schedule` with the
+same `event_id` — Meta dedupes the two copies. Bookings without the id
+(directly shared Calendly links) are deliberately not reported to Meta.
+Calendly retries count on Meta's `event_id` dedupe; no local idempotency
+store.
+
+**Setup (one-time, Nick):**
+
+1. Calendly webhooks need a paid Calendly plan (Standard or higher) and a
+   personal access token.
+2. Create the subscription (returns the signing key — store it immediately):
+
+   ```bash
+   curl -s -X POST https://api.calendly.com/webhook_subscriptions \
+     -H "Authorization: Bearer $CALENDLY_PAT" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "url": "https://chaarlie.de/api/calendly/webhook",
+       "events": ["invitee.created"],
+       "organization": "<organization URI from GET https://api.calendly.com/users/me>",
+       "scope": "user",
+       "user": "<user URI from GET https://api.calendly.com/users/me>",
+       "signing_key": "<openssl rand -hex 32>"
+     }'
+   ```
+
+3. Vercel env: `CALENDLY_WEBHOOK_SIGNING_KEY=<signing key>` and
+   `META_CAPI_SCHEDULE_ENABLED=true` (delivery stays off until both exist;
+   the route answers 503 without the signing key so Calendly keeps retrying
+   until it is configured).
+4. Verify with Meta's Test Events (`META_CAPI_TEST_EVENT_CODE`) on a staging
+   booking before enabling in production.
 
 ## Operational notes
 

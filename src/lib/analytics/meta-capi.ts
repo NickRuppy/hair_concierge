@@ -7,7 +7,7 @@ const FBP_PATTERN = /^fb\.1\.\d{10,16}\.\d+$/
 const FBC_PATTERN = /^fb\.1\.\d{10,16}\.[A-Za-z0-9._~-]+$/
 const MAX_BROWSER_ID_LENGTH = 512
 
-export type MetaConversionEventName = "Lead" | "ViewContent"
+export type MetaConversionEventName = "Lead" | "Schedule" | "ViewContent"
 
 export type MetaRequestData = {
   clientIpAddress?: string
@@ -24,7 +24,8 @@ export type MetaConversionInput = {
   user: MetaRequestData & {
     email?: string | null
     name?: string | null
-    externalId: string
+    /** Optional: a webhook-sourced event (Calendly booking) has no lead id. */
+    externalId?: string
   }
   customData?: Record<string, string | number | boolean>
 }
@@ -137,6 +138,10 @@ export function isMetaLeadCapiEnabled(env: MetaCapiEnvironment = process.env) {
 
 export function isMetaOfferViewCapiEnabled(env: MetaCapiEnvironment = process.env) {
   return env.META_CAPI_OFFER_VIEW_ENABLED === "true"
+}
+
+export function isMetaScheduleCapiEnabled(env: MetaCapiEnvironment = process.env) {
+  return env.META_CAPI_SCHEDULE_ENABLED === "true"
 }
 
 export function buildMetaConversionPayload(input: MetaConversionInput) {

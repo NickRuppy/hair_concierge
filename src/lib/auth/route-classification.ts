@@ -67,6 +67,9 @@ const PUBLIC_API_EXACT_ROUTES = [
   "/api/auth/send-magic-link",
   "/api/auth/send-setup-link",
   "/api/auth/set-checkout-password",
+  // Calendly signs every delivery (HMAC, replay-window checked in the
+  // handler); a session can never exist on an inbound webhook.
+  "/api/calendly/webhook",
   // A paid buyer reaches this capability before an account/session exists.
   // Keep it exact: all other billing APIs remain behind the billing prefix.
   "/api/billing/one-time-activation-status",
