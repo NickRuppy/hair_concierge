@@ -80,13 +80,15 @@ const names = (calls: Array<[string, unknown]>) => calls.map(([name]) => name)
 
 // --- The happy path ----------------------------------------------------------
 
-test("a fresh invite creates the named account, stamps it inline and signs in", async () => {
+test("a fresh invite creates the account, binds it, stamps it and only then signs in", async () => {
   const { calls, deps } = dependencies()
   const response = await createDiscoveryClaimHandler(deps)(request())
 
   assert.equal(response.status, 200)
   assert.deepEqual(await response.json(), { destination: "/quiz", requiresEmail: false })
-  assert.deepEqual(names(calls), ["createUser", "claim", "signIn"])
+  // Symmetric with the existing-account branch: the stamp is its own step AFTER
+  // the claim, never written inline by `createUser`.
+  assert.deepEqual(names(calls), ["createUser", "claim", "stamp", "signIn"])
   assert.deepEqual(calls[0][1], {
     enrollmentId: ids.enrollment,
     email: "lea@example.test",
@@ -98,6 +100,23 @@ test("a fresh invite creates the named account, stamps it inline and signs in", 
     tokenVersion: 2,
     userId: ids.user,
   })
+  assert.deepEqual(calls[2][1], { userId: ids.user, enrollmentId: ids.enrollment })
+})
+
+test("a stamp that fails after a successful claim is a retryable 503, not a rollback", async () => {
+  const { calls, deps } = dependencies({
+    stampDiscoveryAccess: async (input: unknown) => {
+      calls.push(["stamp", input])
+      throw new Error("gotrue is down")
+    },
+  })
+  const response = await createDiscoveryClaimHandler(deps)(request())
+
+  assert.equal(response.status, 503)
+  // The account stays: it IS bound to the enrollment, so the magic-link
+  // continuation replays the idempotent claim and re-stamps. Deleting it here
+  // would orphan a live enrollment instead.
+  assert.deepEqual(names(calls), ["createUser", "claim", "stamp"])
 })
 
 // --- The new paid-user refusal ----------------------------------------------
@@ -193,7 +212,7 @@ test("losing the claim race leaves the existing account unstamped", async () => 
   assert.deepEqual(names(calls), ["checkAccessKind", "claim"])
 })
 
-test("a claim that throws takes the just-created account down with its inline stamp", async () => {
+test("a claim that throws leaves the just-created account unstamped", async () => {
   const { calls, deps } = dependencies({
     claimEnrollment: async (input: unknown) => {
       calls.push(["claim", input])
@@ -202,8 +221,9 @@ test("a claim that throws takes the just-created account down with its inline st
   })
   const response = await createDiscoveryClaimHandler(deps)(request())
 
-  // The new-account branch stamps inline in `createUser`; the rollback deletes the
-  // account, so that stamp cannot outlive the failed claim either.
+  // The rollback deletes the account — but even when that delete itself fails
+  // (its error is swallowed), no stamp was ever written, so middleware has
+  // nothing to trust. That is the whole reason the stamp waits for the claim.
   assert.equal(response.status, 503)
   assert.deepEqual(names(calls), ["createUser", "claim", "deleteUser"])
 })

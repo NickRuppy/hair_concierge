@@ -20,12 +20,7 @@ import {
   DISCOVERY_INVITE_COOKIE,
   readDiscoveryCredentialInput,
 } from "@/lib/discovery/invite-session"
-import {
-  DISCOVERY_ACCESS_KIND,
-  DISCOVERY_CONTINUATION_PATH,
-  DISCOVERY_ENROLLMENT_METADATA_KEY,
-  DISCOVERY_QUIZ_ENTRY_HREF,
-} from "@/lib/discovery/participant"
+import { DISCOVERY_CONTINUATION_PATH, DISCOVERY_QUIZ_ENTRY_HREF } from "@/lib/discovery/participant"
 import {
   decodeDiscoveryEnrollmentCredential,
   discoveryEnrollmentSigningSecret,
@@ -170,11 +165,6 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
     }
 
     let password: string | null = null
-    // Set on the pre-existing-account branch only. A brand-new account carries the
-    // stamp inline from `createUser`, and a failed claim deletes that account again —
-    // so only the pre-existing one needs a stamp written as its own step, AFTER the
-    // claim.
-    let stampExistingAccount = false
     if (!user) {
       // Someone already owns this address, so the only safe way in is a link to
       // it. That covers both a previously claimed enrollment and a plain
@@ -234,7 +224,6 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
       if (accessKind.status === "foreign_access_kind") {
         return copyResponseCookies(response, refuseForeignAccessKind())
       }
-      stampExistingAccount = true
     }
 
     let claim: DiscoveryClaimResult
@@ -255,27 +244,31 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
       return copyResponseCookies(response, jsonError(ALREADY_CLAIMED, 409))
     }
 
-    if (stampExistingAccount) {
-      // Deliberately the LAST write of the claim. The stamp is what middleware gates
-      // on, and a stamp without a live claim strands the account: every discovery
-      // surface re-reads the enrollment and 404s, while revocation cannot clear the
-      // stamp because it runs off the enrollment row this account is not bound to.
-      // Claiming first turns a stamp failure into a plain retry — the claim is
-      // idempotent for the same account, so the continuation re-stamps cleanly.
-      let stamp: DiscoveryStampResult
-      try {
-        stamp = await (overrides.stampDiscoveryAccess ?? stampDiscoveryAccess)({
-          userId: user.id,
-          enrollmentId: enrollment.enrollmentId,
-        })
-      } catch {
-        return copyResponseCookies(response, jsonError(SERVICE_UNAVAILABLE, 503))
-      }
-      // Only reachable if the account acquired a foreign `access_kind` between the
-      // check above and here; the refusal copy is the same one.
-      if (stamp.status === "foreign_access_kind") {
-        return copyResponseCookies(response, refuseForeignAccessKind())
-      }
+    // Deliberately the LAST write of the claim, on BOTH branches. The stamp is what
+    // middleware gates on, and a stamp without a live claim strands the account: every
+    // discovery surface re-reads the enrollment and 404s, while revocation cannot clear
+    // the stamp because it runs off the enrollment row this account is not bound to.
+    //
+    // A brand-new account is stamped here too rather than inline in `createUser`: the
+    // rollback that deletes it on a failed claim can itself fail (its error is
+    // swallowed), and a stamped account with no enrollment is exactly the stranded
+    // state above — one middleware then trusts. Claiming first turns a stamp failure
+    // into a plain retry instead: the claim is idempotent for the same account, so the
+    // magic-link continuation re-stamps cleanly.
+    let stamp: DiscoveryStampResult
+    try {
+      stamp = await (overrides.stampDiscoveryAccess ?? stampDiscoveryAccess)({
+        userId: user.id,
+        enrollmentId: enrollment.enrollmentId,
+      })
+    } catch {
+      return copyResponseCookies(response, jsonError(SERVICE_UNAVAILABLE, 503))
+    }
+    // Only reachable if the account acquired a foreign `access_kind` between the
+    // check above and here; the refusal copy is the same one. A brand-new account
+    // cannot reach it at all — it is created with no access kind.
+    if (stamp.status === "foreign_access_kind") {
+      return copyResponseCookies(response, refuseForeignAccessKind())
     }
 
     if (password) {
@@ -313,6 +306,13 @@ async function rollbackCreatedUser({
   } catch {}
 }
 
+/**
+ * Creates the account WITHOUT the discovery stamp: `app_metadata` is written by
+ * `stampDiscoveryAccess` after the claim succeeded (see the stamp block above), so a
+ * claim that fails can never leave a stamped account with no enrollment behind.
+ * `enrollmentId` is still taken — it is what the caller stamps with — but nothing
+ * here writes it.
+ */
 async function createDiscoveryUser(input: { enrollmentId: string; email: string; name: string }) {
   const password = randomBytes(32).toString("base64url")
   const { data, error } = await createAdminClient().auth.admin.createUser({
@@ -320,10 +320,6 @@ async function createDiscoveryUser(input: { enrollmentId: string; email: string;
     password,
     email_confirm: true,
     user_metadata: { full_name: input.name },
-    app_metadata: {
-      access_kind: DISCOVERY_ACCESS_KIND,
-      [DISCOVERY_ENROLLMENT_METADATA_KEY]: input.enrollmentId,
-    },
   })
   if (error || !data.user?.id) throw error ?? new Error("Discovery user creation failed")
   return { userId: data.user.id, password }

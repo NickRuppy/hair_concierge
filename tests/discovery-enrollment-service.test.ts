@@ -34,14 +34,18 @@ function fakeClient({
   row,
   updateRow,
   authUser,
+  failMetadataWrites = 0,
 }: {
   row?: Row | null
   updateRow?: Row | null
   authUser?: Row | null
+  /** Makes the first N `app_metadata` writes throw — the half-done revocation. */
+  failMetadataWrites?: number
 } = {}) {
   const filters: Filter[] = []
   const updates: Row[] = []
   const metadataWrites: Row[] = []
+  let metadataAttempts = 0
 
   const matches = (own: Filter[], candidate: Row | null | undefined) => {
     if (!candidate) return null
@@ -97,6 +101,9 @@ function fakeClient({
       admin: {
         getUserById: async () => ({ data: { user: authUser }, error: null }),
         updateUserById: async (_userId: string, attributes: Row) => {
+          if (metadataAttempts++ < failMetadataWrites) {
+            return { data: { user: null }, error: new Error("gotrue is down") }
+          }
           metadataWrites.push(attributes)
           return { data: { user: authUser }, error: null }
         },
@@ -348,6 +355,59 @@ test("revoking an unclaimed enrollment touches no account", async () => {
 })
 
 test("revoking twice refuses instead of restamping", async () => {
+  // Unclaimed: nothing is left to finish, so a second revoke stays a refusal.
   const fake = fakeClient({ row: { ...storedRow, revoked_at: "2026-09-22T12:00:00.000Z" } })
   await assert.rejects(() => revokeDiscoveryEnrollment(ids.enrollment, fake.client), /not found/)
+})
+
+test("a revoke whose stamp clear failed finishes the clear on the next run", async () => {
+  const claimedStamp = {
+    app_metadata: {
+      access_kind: DISCOVERY_ACCESS_KIND,
+      [DISCOVERY_ENROLLMENT_METADATA_KEY]: ids.enrollment,
+    },
+  }
+
+  // Run 1 — the compare-and-set lands, the stamp clear does not.
+  const first = fakeClient({
+    row: { ...storedRow, claimed_user_id: ids.user, claimed_at: "FIRST" },
+    authUser: claimedStamp,
+    failMetadataWrites: 1,
+  })
+  await assert.rejects(
+    () => revokeDiscoveryEnrollment(ids.enrollment, first.client),
+    /gotrue is down/,
+  )
+  // `revoked_at` IS written — which is exactly what makes the naive retry blind.
+  const revokedAt = first.updates[0].revoked_at as string
+  assert.ok(typeof revokedAt === "string")
+  assert.deepEqual(first.metadataWrites, [])
+
+  // Run 2 — same enrollment, now as the database holds it: revoked, still bound,
+  // still stamped. The compare-and-set matches nothing, so the clear is only
+  // reachable through the re-read.
+  const second = fakeClient({
+    row: {
+      ...storedRow,
+      claimed_user_id: ids.user,
+      claimed_at: "FIRST",
+      revoked_at: revokedAt,
+    },
+    authUser: claimedStamp,
+  })
+  const receipt = await revokeDiscoveryEnrollment(ids.enrollment, second.client)
+
+  assert.deepEqual(second.metadataWrites, [
+    {
+      app_metadata: {
+        access_kind: null,
+        [DISCOVERY_ENROLLMENT_METADATA_KEY]: null,
+      },
+    },
+  ])
+  // The receipt reports the ORIGINAL revocation, not a fresh one: this run
+  // finished an earlier revoke rather than performing a second.
+  assert.equal(receipt.revoked_at, revokedAt)
+  assert.equal(receipt.id, ids.enrollment)
+  assert.ok(!("claimed_user_id" in receipt))
 })

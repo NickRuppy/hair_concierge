@@ -201,9 +201,11 @@ export async function checkDiscoveryAccessKind(
 }
 
 /**
- * Writes the access stamp onto an account that already existed before the claim
- * (the magic-link continuation). A brand-new account receives it inline in
- * `createUser`, which is why this is not part of `claimDiscoveryEnrollment`.
+ * Writes the access stamp. BOTH claim branches go through it — the account that
+ * already existed (the magic-link continuation) and the one the claim route just
+ * created — and both call it AFTER the enrollment binding landed, never inline in
+ * `createUser`: a stamp that outlives a failed claim strands the account behind a
+ * middleware gate no enrollment backs.
  *
  * An account that already carries a DIFFERENT `access_kind` — `partner`,
  * `field_test`, anything non-null that is not ours — is refused rather than
@@ -311,11 +313,37 @@ export async function rotateDiscoveryEnrollment(
   )
 }
 
+function toEnrollmentRow(row: DiscoveryEnrollmentJourneyRow): DiscoveryEnrollmentRow {
+  return {
+    id: row.id,
+    display_name: row.display_name,
+    normalized_email: row.normalized_email,
+    token_version: row.token_version,
+    claimed_at: row.claimed_at,
+    revoked_at: row.revoked_at,
+    created_at: row.created_at,
+  }
+}
+
 /**
  * Revocation stamps `revoked_at` AND clears the claimed account's
  * `app_metadata` stamp. The middleware gate is JWT-only, so `revoked_at` on its
  * own would leave a claimed participant inside the gate until their token next
  * refreshes; clearing the stamp is what actually closes the door.
+ *
+ * The two writes are not atomic, so the second one is made RETRYABLE. The
+ * `revoked_at` write is a compare-and-set on `revoked_at IS NULL`; if the clear
+ * that follows it fails, that predicate no longer matches and a plain re-run
+ * would report „already revoked" without ever reaching the clear again — the
+ * participant would keep their stamp, which is the half that actually gates
+ * middleware. So a run that matches nothing re-reads the row and, when it finds
+ * an already-revoked enrollment that still carries a binding, attempts the clear
+ * anyway. `clearDiscoveryAccessStamp` only ever nulls OUR access kind, so doing
+ * it twice is a no-op rather than a second effect.
+ *
+ * An already-revoked enrollment with no `claimed_user_id` has nothing left to
+ * finish, so it stays a refusal: there, a second revoke is simply an operator
+ * mistake worth surfacing.
  */
 export async function revokeDiscoveryEnrollment(
   enrollmentId: string,
@@ -330,15 +358,25 @@ export async function revokeDiscoveryEnrollment(
     .maybeSingle()
   if (error) throw error
   const row = (data as DiscoveryEnrollmentJourneyRow | null) ?? null
-  if (!row) throw new Error("Discovery enrollment not found")
-  if (row.claimed_user_id) await clearDiscoveryAccessStamp(row.claimed_user_id, client)
-  return {
-    id: row.id,
-    display_name: row.display_name,
-    normalized_email: row.normalized_email,
-    token_version: row.token_version,
-    claimed_at: row.claimed_at,
-    revoked_at: row.revoked_at,
-    created_at: row.created_at,
+  if (row) {
+    if (row.claimed_user_id) await clearDiscoveryAccessStamp(row.claimed_user_id, client)
+    return toEnrollmentRow(row)
   }
+
+  // Nothing matched: either the enrollment is gone, or a previous run already
+  // set `revoked_at` — possibly one whose clear failed afterwards.
+  const { data: currentData, error: currentError } = await client
+    .from(TABLE)
+    .select(DISCOVERY_ENROLLMENT_JOURNEY_COLUMNS)
+    .eq("id", enrollmentId)
+    .maybeSingle()
+  if (currentError) throw currentError
+  const current = (currentData as DiscoveryEnrollmentJourneyRow | null) ?? null
+  if (!current || !current.revoked_at || !current.claimed_user_id) {
+    throw new Error("Discovery enrollment not found")
+  }
+  await clearDiscoveryAccessStamp(current.claimed_user_id, client)
+  // `revoked_at` is the ORIGINAL timestamp, never a fresh one: this run finished
+  // an earlier revocation, it did not perform a new one.
+  return toEnrollmentRow(current)
 }
