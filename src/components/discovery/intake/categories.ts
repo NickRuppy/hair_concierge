@@ -67,30 +67,24 @@ function copyFor(key: PersonalPlanCategory): DiscoveryIntakeCategoryCopy {
   return { key, label: CATEGORY_COPY[key].label, ...GRAMMAR[key], ...LABEL_OVERRIDES[key] }
 }
 
-export const DISCOVERY_INTAKE_GROUPS: DiscoveryIntakeGroup[] = [
-  {
-    label: "Waschen",
-    categories: ["shampoo", "conditioner", "deep_cleansing_shampoo"].map((key) =>
-      copyFor(key as PersonalPlanCategory),
-    ),
-  },
-  {
-    label: "Pflege",
-    categories: ["mask", "leave_in", "oil", "bondbuilder"].map((key) =>
-      copyFor(key as PersonalPlanCategory),
-    ),
-  },
-  {
-    label: "Kopfhaut",
-    categories: ["scalp_care"].map((key) => copyFor(key as PersonalPlanCategory)),
-  },
-  {
-    label: "Styling",
-    categories: ["heat_protectant", "dry_shampoo"].map((key) =>
-      copyFor(key as PersonalPlanCategory),
-    ),
-  },
+/**
+ * Which shelf each category sits on. Waschen is what cleanses; Pflege is what
+ * conditions the lengths — conditioner included, it rinses out but it does not
+ * wash; Kopfhaut is scalp care; Styling is what goes on for the look or the heat.
+ */
+export const DISCOVERY_INTAKE_GROUP_KEYS: ReadonlyArray<{
+  label: string
+  keys: readonly PersonalPlanCategory[]
+}> = [
+  { label: "Waschen", keys: ["shampoo", "deep_cleansing_shampoo"] },
+  { label: "Pflege", keys: ["conditioner", "mask", "leave_in", "oil", "bondbuilder"] },
+  { label: "Kopfhaut", keys: ["scalp_care"] },
+  { label: "Styling", keys: ["heat_protectant", "dry_shampoo"] },
 ]
+
+export const DISCOVERY_INTAKE_GROUPS: DiscoveryIntakeGroup[] = DISCOVERY_INTAKE_GROUP_KEYS.map(
+  (group) => ({ label: group.label, categories: group.keys.map(copyFor) }),
+)
 
 export const DISCOVERY_INTAKE_CATEGORY_COPY: Record<
   PersonalPlanCategory,

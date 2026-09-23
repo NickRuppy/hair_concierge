@@ -121,3 +121,18 @@ test("other categories' entry screens carry no hint line", () => {
   assert.match(html, /Welches Shampoo benutzt du\?/)
   assert.doesNotMatch(html, /z\. B\./)
 })
+
+test("the shelves: conditioner is care, not washing", () => {
+  const byGroup = Object.fromEntries(
+    DISCOVERY_INTAKE_GROUPS.map((group) => [
+      group.label,
+      group.categories.map((category) => category.key),
+    ]),
+  )
+  assert.deepEqual(byGroup, {
+    Waschen: ["shampoo", "deep_cleansing_shampoo"],
+    Pflege: ["conditioner", "mask", "leave_in", "oil", "bondbuilder"],
+    Kopfhaut: ["scalp_care"],
+    Styling: ["heat_protectant", "dry_shampoo"],
+  })
+})
