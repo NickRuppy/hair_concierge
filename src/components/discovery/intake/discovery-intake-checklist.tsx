@@ -223,7 +223,7 @@ export function DiscoveryIntakeChecklist({
                         <span className="h-5 w-5 shrink-0 rounded-full border-[1.5px] border-border" />
                       )}
                       <span className="flex-1 text-[15px] font-semibold text-[var(--brand-plum-darkest)]">
-                        {category.label}
+                        {category.rowLabel}
                       </span>
                       {state ? (
                         <span className="truncate text-xs text-[var(--text-caption)]">{state}</span>

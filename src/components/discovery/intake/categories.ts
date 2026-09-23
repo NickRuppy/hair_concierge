@@ -17,26 +17,34 @@ import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contract
  * `CATEGORY_COPY` stays untouched — the personal plan and Stage 3 keep their
  * own wording. „Kopfhautpflege" is the shelf term dm, Rossmann and Douglas use
  * for serums, tonics and peelings; „Kopfhautprodukt" read as a catch-all in
- * the field test, so the entry screen also names examples (`hint`).
+ * the field test.
+ *
+ * `label` is also what the cockpit and the admin pages print, so it stays the
+ * bare noun. `rowLabel` is the participant's own row: the name plus, where the
+ * name alone did not say what counts, the contents in brackets. The brackets
+ * list the scalp-care roles the routine engine actually knows (comfort serum,
+ * density tonic, scalp oil, exfoliant) — and they replace the entry screen's
+ * former „z. B. …" line, so the same thing is never said twice.
  */
 
 export type DiscoveryIntakeCategoryCopy = {
   key: PersonalPlanCategory
   label: string
+  /** The participant's overview row and entry-screen breadcrumb. */
+  rowLabel: string
   /** „Dein Shampoo" / „Deine Maske" — the possessive for the heading. */
   possessive: "Dein" | "Deine"
   /** „Welches Shampoo …" / „Welchen Conditioner …" / „Welche Maske …" */
   interrogative: "Welches" | "Welchen" | "Welche"
-  /** Optional guidance line under the entry screen's question. */
-  hint?: string
 }
 
-const LABEL_OVERRIDES: Partial<Record<PersonalPlanCategory, { label: string; hint?: string }>> = {
-  scalp_care: {
-    label: "Kopfhautpflege",
-    hint: "z. B. Kopfhaut-Serum, -Tonikum oder -Peeling",
-  },
-}
+const LABEL_OVERRIDES: Partial<Record<PersonalPlanCategory, { label: string; rowLabel?: string }>> =
+  {
+    scalp_care: {
+      label: "Kopfhautpflege",
+      rowLabel: "Kopfhautpflege (Serum, Tonikum, Öl, Peeling)",
+    },
+  }
 
 const GRAMMAR: Record<
   PersonalPlanCategory,
@@ -64,7 +72,9 @@ export type DiscoveryIntakeGroup = {
 }
 
 function copyFor(key: PersonalPlanCategory): DiscoveryIntakeCategoryCopy {
-  return { key, label: CATEGORY_COPY[key].label, ...GRAMMAR[key], ...LABEL_OVERRIDES[key] }
+  const override = LABEL_OVERRIDES[key]
+  const label = override?.label ?? CATEGORY_COPY[key].label
+  return { key, label, rowLabel: override?.rowLabel ?? label, ...GRAMMAR[key] }
 }
 
 /**
