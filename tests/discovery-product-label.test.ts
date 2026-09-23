@@ -54,3 +54,18 @@ test("an empty or missing brand leaves the name alone, and vice versa", () => {
   assert.equal(discoveryProductLabel("Balea", null), "Balea")
   assert.equal(discoveryProductLabel(null, null), "")
 })
+
+test("apostrophe variants count as the same brand, and the name keeps its own", () => {
+  assert.equal(discoveryProductLabel("L'Oréal", "L’Oréal Paris Shampoo"), "L’Oréal Paris Shampoo")
+  for (const mark of ["'", "’", "‘", "ʼ", "`"]) {
+    assert.equal(
+      discoveryProductLabel(`L${mark}Oréal Paris`, "L'Oréal Paris Elvital"),
+      "L'Oréal Paris Elvital",
+    )
+  }
+  // Only the comparison is normalised: a genuine prefix still keeps the brand's spelling.
+  assert.equal(
+    discoveryProductLabel("L’Oréal Paris", "Elvital Shampoo"),
+    "L’Oréal Paris Elvital Shampoo",
+  )
+})
