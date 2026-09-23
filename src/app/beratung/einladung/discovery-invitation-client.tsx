@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 
 import {
   DISCOVERY_CLAIM_ENDPOINT,
+  DISCOVERY_CLAIM_SIGNED_IN_OTHER_ACCOUNT,
   DISCOVERY_QUIZ_ENTRY_HREF,
   DISCOVERY_RESOLVE_ENDPOINT,
 } from "@/lib/discovery/participant"
@@ -11,10 +12,15 @@ import {
 type InvitationMode = "ready" | "claiming" | "email_sent" | "unavailable"
 type InvitationIdentity = { name: string; email: string; state: "invited" | "claimed" }
 
+/** Only for the signed-in-elsewhere refusal; every other refusal's copy stands alone. */
+const SIGNED_IN_OTHER_ACCOUNT_HINT =
+  "Du bist gerade mit einem anderen Konto angemeldet. Melde dich ab oder öffne den Link in einem privaten Fenster."
+
 export function DiscoveryInvitationClient() {
   const [identity, setIdentity] = useState<InvitationIdentity | null>(null)
   const [mode, setMode] = useState<InvitationMode>("ready")
   const [error, setError] = useState<string | null>(null)
+  const [errorHint, setErrorHint] = useState<string | null>(null)
   const resolvedRef = useRef(false)
 
   useEffect(() => {
@@ -53,6 +59,7 @@ export function DiscoveryInvitationClient() {
   async function claim() {
     setMode("claiming")
     setError(null)
+    setErrorHint(null)
     try {
       const response = await fetch(DISCOVERY_CLAIM_ENDPOINT, {
         method: "POST",
@@ -64,6 +71,9 @@ export function DiscoveryInvitationClient() {
       // real refusals — including the paid-account and foreign-access-kind ones,
       // whose German copy is what the card then shows.
       if (!response.ok) {
+        if (readCode(body) === DISCOVERY_CLAIM_SIGNED_IN_OTHER_ACCOUNT) {
+          setErrorHint(SIGNED_IN_OTHER_ACCOUNT_HINT)
+        }
         throw new Error(readError(body) ?? "Dein Zugang konnte nicht geöffnet werden.")
       }
       if (isEmailRequired(body)) {
@@ -95,6 +105,7 @@ export function DiscoveryInvitationClient() {
     <DiscoveryInvitationCard
       email={identity.email}
       error={error}
+      errorHint={errorHint}
       mode={mode}
       name={identity.name}
       onContinue={() => void claim()}
@@ -105,12 +116,14 @@ export function DiscoveryInvitationClient() {
 export function DiscoveryInvitationCard({
   email,
   error = null,
+  errorHint = null,
   mode,
   name,
   onContinue,
 }: {
   email: string
   error?: string | null
+  errorHint?: string | null
   mode: InvitationMode
   name: string
   onContinue?: () => void
@@ -132,9 +145,10 @@ export function DiscoveryInvitationCard({
       <h1 className="font-header text-3xl">Hi {firstName}, alles bereit für unser Gespräch.</h1>
       <p className="mt-5 break-all font-semibold">{email}</p>
       {error ? (
-        <p className="mt-4 text-sm text-destructive" role="alert">
-          {error}
-        </p>
+        <div className="mt-4 text-sm" role="alert">
+          <p className="text-destructive">{error}</p>
+          {errorHint ? <p className="mt-1 text-[var(--text-sub)]">{errorHint}</p> : null}
+        </div>
       ) : null}
       <button
         className={primaryButtonClass}
@@ -191,6 +205,12 @@ function isDestination(value: unknown): value is { destination: string } {
     !Array.isArray(value) &&
     (value as Record<string, unknown>).destination === DISCOVERY_QUIZ_ENTRY_HREF,
   )
+}
+
+function readCode(value: unknown) {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>).code
+    : null
 }
 
 function readError(value: unknown) {
