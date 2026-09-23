@@ -175,6 +175,12 @@ export type DiscoveryRefinedStep = {
    */
   swapProductId: string | null
   swapProduct: ScanCatalogPresentationRow | null
+  /**
+   * The catalog brand of the Idealplan's recommendation, set ONLY where the document prints
+   * that recommendation (`ideal`). The preview's own name is often brandless, so the brand
+   * is part of what the PDF renders — and therefore of `sourceHash`.
+   */
+  recommendationBrand: string | null
 }
 
 export type DiscoveryRefinedRoutine = {
@@ -195,10 +201,15 @@ export function composeDiscoveryRefinedRoutine(input: {
   items: readonly DiscoveryIntakeItem[]
   decisions: readonly DiscoveryCallDecision[]
   swapProducts: readonly ScanCatalogPresentationRow[]
+  /** Catalog rows of the Idealplan's recommendations — read for their brand only. */
+  recommendationProducts?: readonly ScanCatalogPresentationRow[]
 }): DiscoveryRefinedRoutine {
   const reduction = reduceIntakeItemsToSteps(input.steps, input.items)
   const decisionsByKey = new Map(input.decisions.map((entry) => [entry.decisionKey, entry]))
   const swapProductsById = new Map(input.swapProducts.map((row) => [row.id, row]))
+  const recommendationBrandsById = new Map(
+    (input.recommendationProducts ?? []).map((row) => [row.id, row.brand] as const),
+  )
 
   const steps = reduction.bindings.map(({ step, item }): DiscoveryRefinedStep => {
     const decision = decisionsByKey.get(step.decisionKey) ?? null
@@ -213,12 +224,17 @@ export function composeDiscoveryRefinedRoutine(input: {
         ? "undecided"
         : "ideal"
     const swapProductId = decision?.swapProductId ?? null
+    const preview = step.preview
     return {
       step,
       outcome,
       item,
       swapProductId,
       swapProduct: swapProductId ? (swapProductsById.get(swapProductId) ?? null) : null,
+      recommendationBrand:
+        outcome === "ideal" && preview?.kind === "recommendation"
+          ? (recommendationBrandsById.get(preview.productId) ?? null)
+          : null,
     }
   })
 

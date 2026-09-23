@@ -155,8 +155,10 @@ function model(input: {
       items: input.items,
       decisions: input.decisions ?? [],
       swapProducts: input.catalogRows ?? [],
+      recommendationProducts: input.catalogRows ?? [],
     }),
     recommendationProducts: input.catalogRows ?? [],
+    recommendationBrandsAvailable: true,
   }
 }
 
@@ -439,6 +441,53 @@ test("swap targets and recommendations share one batched catalog read", async ()
     [ids.ideal],
   )
   assert.equal(result.routine.steps[0].swapProduct?.id, ids.alternativeA)
+})
+
+test("a failed brand lookup degrades a swap-free call instead of failing it", async () => {
+  const deps = {
+    loadIdealRoutine: async () => ({
+      status: "ready" as const,
+      steps: [step({ preview: idealPreview(ids.ideal) })],
+      context: {} as never,
+      previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
+    }),
+    loadItems: async () => [],
+    loadVerdicts: async () => [],
+    loadSwapProducts: async (): Promise<ScanCatalogPresentationRow[]> => {
+      throw new Error("catalog down")
+    },
+  }
+  const degraded = await loadDiscoveryCockpitModel(
+    {} as never,
+    { intakeId: ids.intake, userId: ids.user },
+    { ...deps, loadDecisions: async () => [] },
+  )
+  assert.equal(degraded.status, "ready")
+  if (degraded.status !== "ready") return
+  assert.equal(degraded.recommendationBrandsAvailable, false)
+  const view = buildDiscoveryCockpitView(degraded)
+  assert.equal(view.recommendationBrandsAvailable, false)
+  assert.equal(view.steps[0].idealRecommendation?.brand, null)
+  assert.equal(view.steps[0].idealRecommendation?.name, "Lab Shampoo Ideal")
+
+  // With a swap decided, the rows are required — the failure still fails the composition.
+  await assert.rejects(() =>
+    loadDiscoveryCockpitModel(
+      {} as never,
+      { intakeId: ids.intake, userId: ids.user },
+      {
+        ...deps,
+        loadDecisions: async () => [
+          {
+            decisionKey: "decision:shampoo:shampoo_everyday:gap",
+            decision: "swap" as const,
+            swapProductId: ids.alternativeA,
+            intakeItemId: null,
+          },
+        ],
+      },
+    ),
+  )
 })
 
 // --- the single composition ----------------------------------------------------

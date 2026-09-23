@@ -87,6 +87,9 @@ export function createDiscoveryPdfPage(overrides: Partial<DiscoveryPdfPageDepend
     if (model.status !== "ready") redirect(cockpitHref)
 
     const view = buildDiscoveryCockpitView(model)
+    // Brands unreadable right now: neither a brandless sheet nor a false drift warning —
+    // back to the cockpit, like any other temporarily unreadable source.
+    if (!view.recommendationBrandsAvailable) redirect(cockpitHref)
     const drifted = view.sourceHash !== intake.finalizedSourceHash
 
     return (

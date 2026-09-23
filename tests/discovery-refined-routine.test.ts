@@ -527,3 +527,51 @@ test("sourceHash is order-independent and changes when the routine's content cha
   })
   assert.notEqual(base.sourceHash, driftedIdeal.sourceHash)
 })
+
+test("the rendered recommendation brand is part of sourceHash, and only where it renders", () => {
+  const oil = decision({ category: "oil", roles: OIL_ROLES })
+  const steps = buildDiscoveryIdealSteps(snapshotOf([oil]), [
+    recommendationPreview("oil", "pre_wash_fibre_treatment", "ideal-1"),
+  ])
+  const withBrand = (brand: string | null) => [{ ...swapRow("ideal-1"), brand }]
+
+  // An open step: the recommendation is what the PDF prints, brand included.
+  const brandA = composeDiscoveryRefinedRoutine({
+    steps,
+    items: [],
+    decisions: [],
+    swapProducts: [],
+    recommendationProducts: withBrand("Marke A"),
+  })
+  const brandB = composeDiscoveryRefinedRoutine({
+    steps,
+    items: [],
+    decisions: [],
+    swapProducts: [],
+    recommendationProducts: withBrand("Marke B"),
+  })
+  assert.equal(brandA.steps[0]!.outcome, "ideal")
+  assert.equal(brandA.steps[0]!.recommendationBrand, "Marke A")
+  assert.notEqual(brandA.sourceHash, brandB.sourceHash)
+
+  // A kept step does not print the recommendation, so its brand must not move the hash.
+  const keptItems = [item({ id: "item-a", productId: "product-a" })]
+  const keptDecisions = [callDecision(steps[0]!.decisionKey)]
+  const keptA = composeDiscoveryRefinedRoutine({
+    steps,
+    items: keptItems,
+    decisions: keptDecisions,
+    swapProducts: [],
+    recommendationProducts: withBrand("Marke A"),
+  })
+  const keptB = composeDiscoveryRefinedRoutine({
+    steps,
+    items: keptItems,
+    decisions: keptDecisions,
+    swapProducts: [],
+    recommendationProducts: withBrand("Marke B"),
+  })
+  assert.equal(keptA.steps[0]!.outcome, "kept")
+  assert.equal(keptA.steps[0]!.recommendationBrand, null)
+  assert.equal(keptA.sourceHash, keptB.sourceHash)
+})

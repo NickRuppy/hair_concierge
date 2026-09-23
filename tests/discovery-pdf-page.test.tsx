@@ -285,6 +285,7 @@ function readyModel(): DiscoveryCockpitModel {
     previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
     routine: composeDiscoveryRefinedRoutine({ steps, items, decisions, swapProducts }),
     recommendationProducts: [],
+    recommendationBrandsAvailable: true,
   }
 }
 
@@ -377,6 +378,36 @@ test("the render gate: only a finalised call has a document", async () => {
 })
 
 // --- the document ---------------------------------------------------------------
+
+test("a brand-only catalog change after finalising trips the drift banner", async () => {
+  const leaveInRow = (brand: string) => ({ ...swapProducts[0], id: ids.idealLeaveIn, brand })
+  const modelWith = (brand: string): DiscoveryCockpitModel => ({
+    ...readyModel(),
+    routine: composeDiscoveryRefinedRoutine({
+      steps,
+      items,
+      decisions,
+      swapProducts,
+      recommendationProducts: [leaveInRow(brand)],
+    }),
+    recommendationProducts: [leaveInRow(brand)],
+  })
+  const finalizedHash = modelWith("Garnier").routine.sourceHash
+  const deps = (brand: string) => ({
+    loadIntake: async () => ({ ...intake, finalizedSourceHash: finalizedHash }),
+    loadModel: async () => modelWith(brand),
+  })
+  assert.ok(!(await renderPdf(deps("Garnier"))).includes("Stand hat sich geändert"))
+  assert.ok((await renderPdf(deps("Garnier Fructis"))).includes("Stand hat sich geändert"))
+})
+
+test("unreadable recommendation brands send the PDF back to the cockpit", async () => {
+  const digest = await digestOf({
+    loadModel: async () => ({ ...readyModel(), recommendationBrandsAvailable: false }),
+  })
+  assert.match(digest, /NEXT_REDIRECT/)
+  assert.match(digest, new RegExp(`/admin/beratung/${ids.enrollment}`))
+})
 
 test("a brandless catalog name reads with its brand on the paper", async () => {
   // Catalog rows keep the brand in its own column („Klärendes Serum" + „Schwarzkopf").

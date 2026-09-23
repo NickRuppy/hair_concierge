@@ -209,6 +209,13 @@ export type DiscoveryCockpitModel = {
    * catalog `name`, which is often brandless („Klärendes Serum"); the brand comes from here.
    */
   recommendationProducts: ScanCatalogPresentationRow[]
+  /**
+   * False when the brand lookup for a call WITHOUT swaps failed. The cockpit still renders
+   * (brandless recommendation names), but the routine's `sourceHash` then describes a
+   * degraded document — so finalising refuses and the PDF sends Nick back to the cockpit
+   * rather than printing a brandless sheet or a false drift warning.
+   */
+  recommendationBrandsAvailable: boolean
 }
 
 export type DiscoveryCockpitModelResult =
@@ -257,8 +264,22 @@ export async function loadDiscoveryCockpitModel(
   )
   // One batched catalog read for both: the swap targets and the recommendations' brands.
   const catalogIds = [...new Set([...swapProductIds, ...recommendationIds])].sort()
-  const catalogRows = catalogIds.length > 0 ? await deps.loadSwapProducts(admin, catalogIds) : []
+  let catalogRows: ScanCatalogPresentationRow[] = []
+  let recommendationBrandsAvailable = true
+  if (swapProductIds.size > 0) {
+    // Swap rows are required: a failed read fails the composition, exactly as before.
+    catalogRows = await deps.loadSwapProducts(admin, catalogIds)
+  } else if (catalogIds.length > 0) {
+    // Only brand enrichment is at stake — degrade instead of failing the whole call.
+    try {
+      catalogRows = await deps.loadSwapProducts(admin, catalogIds)
+    } catch (error) {
+      console.error("[discovery] recommendation brand lookup failed:", error)
+      recommendationBrandsAvailable = false
+    }
+  }
   const swapProducts = catalogRows.filter((row) => swapProductIds.has(row.id))
+  const recommendationProducts = catalogRows.filter((row) => recommendationIds.has(row.id))
 
   return {
     status: "ready",
@@ -267,11 +288,13 @@ export async function loadDiscoveryCockpitModel(
       items,
       decisions,
       swapProducts,
+      recommendationProducts,
     }),
     steps: ideal.steps,
     verdicts,
     previewSource: ideal.previewSource,
-    recommendationProducts: catalogRows.filter((row) => recommendationIds.has(row.id)),
+    recommendationProducts,
+    recommendationBrandsAvailable,
   }
 }
 
@@ -331,6 +354,8 @@ export type DiscoveryCockpitView = {
   unassigned: DiscoveryCockpitUnassignedView[]
   declinedCategories: PersonalPlanCategory[]
   sourceHash: string
+  /** See `DiscoveryCockpitModel.recommendationBrandsAvailable`. */
+  recommendationBrandsAvailable: boolean
 }
 
 /**
@@ -442,6 +467,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
     })),
     declinedCategories: model.routine.declinedCategories,
     sourceHash: model.routine.sourceHash,
+    recommendationBrandsAvailable: model.recommendationBrandsAvailable,
   }
 }
 

@@ -214,6 +214,7 @@ function readyModel(): DiscoveryCockpitModel {
       swapProducts: [],
     }),
     recommendationProducts: [],
+    recommendationBrandsAvailable: true,
   }
 }
 

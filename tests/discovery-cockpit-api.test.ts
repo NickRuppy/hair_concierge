@@ -126,6 +126,7 @@ function readyModel(): DiscoveryCockpitModel {
       swapProducts: [],
     }),
     recommendationProducts: [],
+    recommendationBrandsAvailable: true,
   }
 }
 
@@ -393,6 +394,19 @@ test("finalize stores the hash of the routine as composed right now", async () =
     finalizedSourceHash: expected,
   })
   assert.deepEqual(calls, [{ intakeId: ids.intake, sourceHash: expected }])
+})
+
+test("finalize refuses a composition whose recommendation brands could not be read", async () => {
+  const response = await createDiscoveryFinalizeHandler(
+    baseDeps({
+      loadModel: async () => ({ ...readyModel(), recommendationBrandsAvailable: false }),
+      finalize: async () => {
+        throw new Error("a degraded hash must never be stored")
+      },
+    }),
+  )(finalizeRequest({ finalized: true }), params)
+  assert.equal(response.status, 503)
+  assert.deepEqual(await response.json(), { code: "unavailable" })
 })
 
 test("finalize requires a submitted intake, both before and inside the write", async () => {
