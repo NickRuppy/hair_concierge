@@ -44,7 +44,7 @@ test("the checklist's display groups cover every category exactly once", () => {
 test("scalp care names its contents in the participant's row — the shared label stays bare", () => {
   const scalp = DISCOVERY_INTAKE_CATEGORY_COPY.scalp_care
   assert.equal(scalp.label, "Kopfhautpflege")
-  assert.equal(scalp.rowLabel, "Kopfhautpflege (Serum, Tonikum, Öl, Peeling)")
+  assert.equal(scalp.rowLabel, "Kopfhautpflege (Serum, Tonikum, Peeling)")
   assert.equal(`${scalp.possessive} ${scalp.label}`, "Deine Kopfhautpflege")
   assert.equal(
     `${scalp.interrogative} ${scalp.label} benutzt du?`,
@@ -80,7 +80,7 @@ test("the scalp entry screen names the contents once, in the breadcrumb, not twi
     />,
   )
   assert.match(html, /Welche Kopfhautpflege benutzt du\?/)
-  assert.equal(html.split("(Serum, Tonikum, Öl, Peeling)").length - 1, 1)
+  assert.equal(html.split("(Serum, Tonikum, Peeling)").length - 1, 1)
   assert.doesNotMatch(html, /z\. B\./)
   assert.doesNotMatch(html, /Kopfhautprodukt/)
 })

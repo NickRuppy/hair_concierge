@@ -42,7 +42,7 @@ const LABEL_OVERRIDES: Partial<Record<PersonalPlanCategory, { label: string; row
   {
     scalp_care: {
       label: "Kopfhautpflege",
-      rowLabel: "Kopfhautpflege (Serum, Tonikum, Öl, Peeling)",
+      rowLabel: "Kopfhautpflege (Serum, Tonikum, Peeling)",
     },
   }
 
