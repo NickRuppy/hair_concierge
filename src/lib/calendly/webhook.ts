@@ -72,6 +72,7 @@ export type CalendlyBookingWebhook =
       kind: "ignored"
       reason:
         | "not-invitee-created"
+        | "rescheduled"
         | "not-funnel-source"
         | "wrong-event-type"
         | "no-funnel-event-id"
@@ -107,6 +108,11 @@ export function parseCalendlyBookingWebhook(
       ? (body.payload as Record<string, unknown>)
       : null
   if (!payload) return { kind: "ignored", reason: "unreadable" }
+
+  // A reschedule re-fires invitee.created with the ORIGINAL tracking carried
+  // over. The first booking already counted; reporting it again would
+  // double-count once Meta's ~48h event_id dedupe window has passed.
+  if (payload.rescheduled === true) return { kind: "ignored", reason: "rescheduled" }
 
   const tracking =
     payload.tracking && typeof payload.tracking === "object" && !Array.isArray(payload.tracking)
