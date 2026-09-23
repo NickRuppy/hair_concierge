@@ -45,11 +45,11 @@ const ITEMS_TABLE = "discovery_intake_items"
 const INTAKE_COLUMNS = "id,enrollment_id,user_id,state,submitted_at"
 /**
  * The linked catalog product is read alongside the row (FK `product_id` ->
- * `products`), so the checklist can show the same packshot the search row showed
- * without storing a copy of it. Rows without a catalog product read it as null.
+ * `products`), so the checklist can show the same packshot and product line the
+ * search row showed without storing a copy of either. Rows without a catalog product read it as null.
  */
 const ITEM_COLUMNS =
-  "id,intake_id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,created_at,catalog_product:products(image_url)"
+  "id,intake_id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,created_at,catalog_product:products(image_url,product_line:product_lines(canonical_name))"
 
 export type DiscoveryAdminClient = ReturnType<typeof createAdminClient>
 
@@ -79,6 +79,7 @@ export type DiscoveryIntakeItem = {
 
 export type DiscoveryIntakeCatalogPresentation = {
   imageUrl: string | null
+  productLine: string | null
 }
 
 type IntakeRow = {
@@ -105,6 +106,7 @@ type ItemRow = {
 
 type CatalogProductRelation = {
   image_url: string | null
+  product_line?: { canonical_name: string | null } | { canonical_name: string | null }[] | null
 }
 
 /** The insert payload, with every identity column written explicitly. */
@@ -415,8 +417,8 @@ function projectIntake(row: IntakeRow): DiscoveryIntake {
  *
  * `productId` / `productSubmissionId` stay on the server: the checklist never renders
  * them, and the cockpit reads them straight from the table. One function so the two
- * surfaces cannot drift into disagreeing about that boundary. The catalog image is
- * the one thing the browser gets from the linked product — the packshot for the row.
+ * surfaces cannot drift into disagreeing about that boundary. From the linked product
+ * the browser gets presentation only: its packshot and its product line.
  */
 export function toDiscoveryIntakeItemView(item: DiscoveryIntakeItem): DiscoveryIntakeItemView {
   return {
@@ -427,6 +429,7 @@ export function toDiscoveryIntakeItemView(item: DiscoveryIntakeItem): DiscoveryI
     productNameText: item.productNameText,
     barcodeIdentifier: item.barcodeIdentifier,
     imageUrl: item.catalog?.imageUrl ?? null,
+    productLine: item.catalog?.productLine ?? null,
   }
 }
 
@@ -440,7 +443,10 @@ function projectCatalogPresentation(
 ): DiscoveryIntakeCatalogPresentation | null {
   const product = Array.isArray(relation) ? (relation[0] ?? null) : (relation ?? null)
   if (!product) return null
-  return { imageUrl: nonEmpty(product.image_url) }
+  const line = Array.isArray(product.product_line)
+    ? (product.product_line[0] ?? null)
+    : (product.product_line ?? null)
+  return { imageUrl: nonEmpty(product.image_url), productLine: nonEmpty(line?.canonical_name) }
 }
 
 /** The row-to-domain projection, join included. Exported for tests. */

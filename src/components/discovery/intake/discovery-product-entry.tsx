@@ -8,6 +8,7 @@ import { ScanProductThumb } from "@/components/scan/scan-product-thumb"
 import { ScanSearchSheet, type ScanResearchIntakeInput } from "@/components/scan/scan-search-sheet"
 import type { ScanSearchResult } from "@/app/api/scan/search/route"
 import type { ScanRetailerResult } from "@/app/api/scan/search-retailer/route"
+import { composeProductIdentityTitle } from "@/lib/product-identity/display-title"
 
 import type { DiscoveryIntakeCategoryCopy } from "./categories"
 import {
@@ -70,13 +71,25 @@ function BarcodeGlyph() {
   )
 }
 
-/** A captured row always has SOMETHING to show — a name, or the barcode it was read from. */
+/**
+ * A captured row always has SOMETHING to show. A named product reads like the search
+ * row it was picked from and like the routine names it — brand, product line and name
+ * as one de-duplicated title; an unnamed scan falls back to „Gescanntes Produkt".
+ */
 export function itemDisplayName(item: DiscoveryIntakeItemView): string {
-  return item.productNameText ?? UNNAMED_PRODUCT
+  if (!item.productNameText) return UNNAMED_PRODUCT
+  return (
+    composeProductIdentityTitle({
+      brand: item.brandText,
+      productLine: item.productLine,
+      name: item.productNameText,
+    }) || UNNAMED_PRODUCT
+  )
 }
 
+/** Only an unnamed scan needs a second line: the barcode it was read from. */
 export function itemDisplaySubline(item: DiscoveryIntakeItemView): string | null {
-  return item.brandText ?? item.barcodeIdentifier
+  return item.productNameText ? null : item.barcodeIdentifier
 }
 
 export function DiscoveryProductEntry({
@@ -268,7 +281,7 @@ export function DiscoveryProductEntry({
                   size={40}
                 />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-semibold text-[var(--brand-plum-darkest)]">
+                  <span className="line-clamp-2 text-sm font-semibold leading-snug text-[var(--brand-plum-darkest)]">
                     {itemDisplayName(item)}
                   </span>
                   {itemDisplaySubline(item) ? (

@@ -13,6 +13,7 @@ import type {
 import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
 import { PERSONAL_PLAN_PRODUCT_CATEGORIES } from "@/lib/personal-plan/products/contracts"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import { composeProductIdentityTitle } from "@/lib/product-identity/display-title"
 import { cn } from "@/lib/utils"
 
 import { noOpScanAnalytics, type ScanAnalyticsPort } from "@/lib/scan/scan-analytics"
@@ -93,6 +94,25 @@ const RESEARCH_INTAKE_PRIMARY_CATEGORIES: PersonalPlanCategory[] = [
   "mask",
   "oil",
 ]
+
+/**
+ * A result row names the product the way the routine and the iOS search do: brand,
+ * product line and name as one de-duplicated title (the shared identity formatter).
+ * dm rows carry no product line, so theirs is brand + name.
+ */
+export function scanResultTitle(result: {
+  brand: string | null
+  name: string
+  productLine?: string | null
+}): string {
+  return (
+    composeProductIdentityTitle({
+      brand: result.brand,
+      productLine: result.productLine,
+      name: result.name,
+    }) || result.name
+  )
+}
 
 type CatalogStatus = "idle" | "loading" | "ready" | "error"
 type RetailerStatus = "idle" | "loading" | "ready" | "error" | "disabled"
@@ -722,11 +742,10 @@ export function ScanSearchSheet({
                             size={44}
                           />
                           <span className="min-w-0">
-                            <span className="block truncate text-[13px] font-semibold text-foreground">
-                              {result.name}
+                            <span className="line-clamp-2 text-[13px] font-semibold leading-snug text-foreground">
+                              {scanResultTitle(result)}
                             </span>
                             <span className="mt-0.5 block truncate text-[12px] text-muted-foreground">
-                              {result.brand ? `${result.brand} · ` : ""}
                               {result.categoryLabel}
                             </span>
                           </span>
@@ -779,13 +798,14 @@ export function ScanSearchSheet({
                             >
                               <ScanProductThumb imageUrl={null} label={result.name} size={44} />
                               <span className="min-w-0 flex-1">
-                                <span className="block truncate text-[13px] font-semibold text-foreground">
-                                  {result.name}
+                                <span className="line-clamp-2 text-[13px] font-semibold leading-snug text-foreground">
+                                  {scanResultTitle(result)}
                                 </span>
-                                <span className="mt-0.5 block truncate text-[12px] text-muted-foreground">
-                                  {result.brand ? `${result.brand} · ` : ""}
-                                  {result.categoryLabel ?? ""}
-                                </span>
+                                {result.categoryLabel ? (
+                                  <span className="mt-0.5 block truncate text-[12px] text-muted-foreground">
+                                    {result.categoryLabel}
+                                  </span>
+                                ) : null}
                               </span>
                               <span className="shrink-0 rounded-full bg-[var(--brand-coral-light)] px-2.5 py-1 text-[11px] font-bold text-[var(--brand-coral-dark)]">
                                 {RETAILER_PILL_LABEL}

@@ -302,6 +302,7 @@ test("searchScanCatalog: a canonical-brand-only query misses raw brand+name but 
     category: "leave_in",
     categoryLabel: "Leave-in",
     imageUrl: null,
+    productLine: null,
   })
 })
 

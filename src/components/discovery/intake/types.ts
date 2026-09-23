@@ -21,6 +21,8 @@ export type DiscoveryIntakeItemView = {
    * for rows with no catalog product (unknown barcode, dm or typed-in research).
    */
   imageUrl?: string | null
+  /** The linked catalog product's line, for the brand + line + name title. */
+  productLine?: string | null
 }
 
 /** The wire shape of one capture — the discriminated union the items route validates. */

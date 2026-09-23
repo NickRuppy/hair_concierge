@@ -403,6 +403,7 @@ test("partitionDmSearchRows: an active mapped product goes to catalog via toScan
       category: "shampoo",
       categoryLabel: "Shampoo",
       imageUrl: null,
+      productLine: null,
     },
   ])
   assert.equal(result.retailer.length, 0)
@@ -543,6 +544,7 @@ test("anti-leak: catalog and retailer rows carry exactly the contract's keys", a
     "id",
     "imageUrl",
     "name",
+    "productLine",
   ])
   assert.deepEqual(Object.keys(result.retailer[0]).sort(), [
     "brand",

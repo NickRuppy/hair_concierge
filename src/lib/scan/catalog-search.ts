@@ -30,6 +30,8 @@ export type ScanSearchResult = {
   category: PersonalPlanCategory
   categoryLabel: string
   imageUrl: string | null
+  /** The catalog product line, when the product has one — part of the display title. */
+  productLine?: string | null
 }
 
 function identityParts(row: CatalogSearchCandidate) {
@@ -78,5 +80,6 @@ export function toScanSearchResult(row: CatalogSearchCandidate): ScanSearchResul
     category: row.category_key as PersonalPlanCategory,
     categoryLabel: CATEGORY_COPY[row.category_key as PersonalPlanCategory].label,
     imageUrl: row.image_url,
+    productLine: identityParts(row).productLine,
   }
 }
