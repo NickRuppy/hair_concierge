@@ -91,6 +91,12 @@ export function QuizLeadCapture() {
   const [serverSuggestion, setServerSuggestion] = useState<string | null>(null)
   const [contextStatus, setContextStatus] = useState<"checking" | "ready" | "unavailable">("ready")
   const [contextAttempt, setContextAttempt] = useState(0)
+  // The store outlives this component, so a SECOND visit to the lead step mounts
+  // with `leadCaptureMode: "discovery"` already set and `contextStatus` at its
+  // "ready" default — and the save step's own effect would run before the context
+  // effect below re-checks the enrollment. Discovery capture therefore waits for a
+  // participant answer from THIS mount.
+  const [discoveryContextConfirmed, setDiscoveryContextConfirmed] = useState(false)
   const [returnContextStatus, setReturnContextStatus] = useState<"checking" | "ready">(
     funnelPackageKey === QUIZ_EMAIL_RETURN_PACKAGE_KEY ? "checking" : "ready",
   )
@@ -161,6 +167,7 @@ export function QuizLeadCapture() {
         }
         if (payload.status === "participant") {
           setDiscoveryLeadIdentity({ name: payload.name, email: payload.email })
+          setDiscoveryContextConfirmed(true)
           setContextStatus("ready")
           return
         }
@@ -475,10 +482,13 @@ export function QuizLeadCapture() {
     }
   }
 
+  const discoveryAwaitingContext = leadCaptureMode === "discovery" && !discoveryContextConfirmed
+
   if (
     partnerLookupKey === "checking" ||
     contextStatus !== "ready" ||
-    returnContextStatus !== "ready"
+    returnContextStatus !== "ready" ||
+    discoveryAwaitingContext
   ) {
     return (
       <div className="flex flex-col">
@@ -497,7 +507,8 @@ export function QuizLeadCapture() {
         </div>
         {partnerLookupKey === "checking" ||
         contextStatus === "checking" ||
-        returnContextStatus === "checking" ? (
+        returnContextStatus === "checking" ||
+        (discoveryAwaitingContext && contextStatus === "ready") ? (
           <p className="text-center text-sm text-muted-foreground" role="status">
             Dein Zugang wird geladen …
           </p>

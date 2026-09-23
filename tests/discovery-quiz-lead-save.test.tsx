@@ -237,7 +237,11 @@ const discoveryUser = {
 
 const answers = { structure: "wavy", thickness: "fine" } as unknown as QuizAnswers
 
-function leadStep(mode: LeadCaptureMode, user: unknown = discoveryUser) {
+function leadStep(
+  mode: LeadCaptureMode,
+  user: unknown = discoveryUser,
+  { runEffects = mode === "discovery" } = {},
+) {
   useQuizStore.setState({
     step: 9,
     leadCaptureMode: mode,
@@ -252,12 +256,20 @@ function leadStep(mode: LeadCaptureMode, user: unknown = discoveryUser) {
     registerBackHandler: () => () => {},
     requestBack: () => {},
   }
-  // The lead step's own effects (context lookup, focus) are not what is under test:
-  // the store is set to the state that lookup would have produced.
+  // Discovery runs the step's real effects, so the enrollment re-check against
+  // `/api/beratung/quiz-context` is part of what is under test. Regular and partner
+  // keep the store as set: their context lookup is not what these tests pin.
   return createHarness(() => QuizLeadCapture(), {
     contexts: [{ user, loading: false }, null, history],
-    runEffects: false,
+    runEffects,
   })
+}
+
+/** First render (effects start the context check), let it answer, render again. */
+async function arrive(harness: ReturnType<typeof leadStep>) {
+  harness.render()
+  await settle()
+  return harness.render()
 }
 
 function withBrowser(t: { after: (fn: () => void) => void }) {
@@ -274,17 +286,24 @@ function withBrowser(t: { after: (fn: () => void) => void }) {
     useQuizStore.getState().reset()
   })
   const requests: Array<{ url: string; body: Record<string, unknown> }> = []
-  let respond: () => { ok: boolean; status: number; body: unknown } = () => ({
+  type Answer = { ok: boolean; status: number; body: unknown }
+  let respond: () => Answer = () => ({ ok: true, status: 200, body: { leadId: "lead-1" } })
+  let context: () => Promise<Answer> = async () => ({
     ok: true,
     status: 200,
-    body: { leadId: "lead-1" },
+    body: { status: "participant", name: "Lea", email: "lea@example.test" },
   })
   globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input)
-    if (url === "/api/quiz/lead") {
-      requests.push({ url, body: JSON.parse(String(init?.body)) })
-    }
-    const answer = respond()
+    const answer =
+      url === "/api/beratung/quiz-context"
+        ? await context()
+        : (() => {
+            if (url === "/api/quiz/lead") {
+              requests.push({ url, body: JSON.parse(String(init?.body)) })
+            }
+            return respond()
+          })()
     return { ok: answer.ok, status: answer.status, json: async () => answer.body } as Response
   }) as typeof fetch
   return {
@@ -292,13 +311,16 @@ function withBrowser(t: { after: (fn: () => void) => void }) {
     respondWith(next: typeof respond) {
       respond = next
     },
+    contextWith(next: typeof context) {
+      context = next
+    },
   }
 }
 
 test("discovery: no consent UI, and the one lead request carries marketingConsent:false", async (t) => {
   const browser = withBrowser(t)
   const harness = leadStep("discovery")
-  const tree = harness.render()
+  const tree = await arrive(harness)
 
   assert.equal(ofType(tree, QuizConsentSheet).length, 0, "the consent sheet is not rendered")
   assert.doesNotMatch(textOf(tree), /Dein persönlicher Pflegeplan ist bereit!/)
@@ -322,7 +344,7 @@ test("discovery: a failed save surfaces the error for the retry, and the retry p
   browser.respondWith(() => ({ ok: false, status: 503, body: { error: "down" } }))
   const harness = leadStep("discovery")
 
-  ofType(harness.render(), QuizDiscoveryLeadSave)[0].props.onSave()
+  ofType(await arrive(harness), QuizDiscoveryLeadSave)[0].props.onSave()
   await settle()
   let saveStep = ofType(harness.render(), QuizDiscoveryLeadSave)[0]
   assert.equal(saveStep.props.saving, false)
@@ -346,6 +368,44 @@ test("discovery: a failed save surfaces the error for the retry, and the retry p
   useQuizStore.setState({ answers: { ...answers, thickness: "coarse" } as QuizAnswers })
   saveStep = ofType(harness.render(), QuizDiscoveryLeadSave)[0]
   assert.equal(saveStep.props.alreadySaved, false)
+})
+
+test("discovery: a second visit re-checks the enrollment before the save step can mount", async (t) => {
+  // The store kept `discovery` / `consent` from the first visit; this is a NEW mount
+  // whose context check has not answered yet. The save step (whose effect would post
+  // the lead) must not be in the tree until it has.
+  const browser = withBrowser(t)
+  let answer: (value: { ok: boolean; status: number; body: unknown }) => void = () => {}
+  browser.contextWith(() => new Promise((resolve) => (answer = resolve)))
+  const harness = leadStep("discovery")
+
+  let tree = harness.render()
+  assert.equal(useQuizStore.getState().leadCaptureMode, "discovery", "retained from visit one")
+  assert.equal(ofType(tree, QuizDiscoveryLeadSave).length, 0)
+  assert.match(textOf(tree), /Dein Zugang wird geladen …/)
+  await settle()
+  tree = harness.render()
+  assert.equal(ofType(tree, QuizDiscoveryLeadSave).length, 0, "still waiting for the check")
+  assert.equal(browser.requests.length, 0, "no lead posted before the check")
+
+  answer({
+    ok: true,
+    status: 200,
+    body: { status: "participant", name: "Lea", email: "lea@example.test" },
+  })
+  await settle()
+  tree = harness.render()
+  assert.equal(ofType(tree, QuizDiscoveryLeadSave).length, 1, "confirmed in THIS mount")
+})
+
+test("discovery: a failed enrollment re-check never reaches the save step", async (t) => {
+  const browser = withBrowser(t)
+  browser.contextWith(async () => ({ ok: false, status: 503, body: null }))
+  const tree = await arrive(leadStep("discovery"))
+
+  assert.equal(ofType(tree, QuizDiscoveryLeadSave).length, 0)
+  assert.match(textOf(tree), /Deine Angaben konnten gerade nicht geladen werden\./)
+  assert.equal(browser.requests.length, 0)
 })
 
 for (const mode of ["regular", "partner"] as const) {

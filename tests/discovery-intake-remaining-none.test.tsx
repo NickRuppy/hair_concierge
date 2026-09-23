@@ -590,3 +590,54 @@ test("a failed bulk write keeps the list as it was and says so", async (t) => {
   // Still offered, so the participant can simply tap again.
   assert.ok(button(tree, REST_LABEL))
 })
+
+test("while the bulk answer is in flight, no category can be opened and it cannot be re-tapped", async (t) => {
+  const initial = [view("shampoo")]
+  let release: () => void = () => {}
+  const original = globalThis.fetch
+  t.after(() => {
+    globalThis.fetch = original
+  })
+  globalThis.fetch = (() =>
+    new Promise<Response>((resolve) => {
+      release = () =>
+        resolve({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            items: [
+              ...initial,
+              ...DISCOVERY_INTAKE_CATEGORIES.filter((category) => category !== "shampoo").map(
+                (category) => view(category, "none"),
+              ),
+            ],
+          }),
+        } as unknown as Response)
+    })) as typeof fetch
+
+  const harness = createHarness(() =>
+    DiscoveryIntakeChecklist({
+      initialItems: initial,
+      initialSubmitted: false,
+      retailerSearchEnabled: false,
+    }),
+  )
+  const categoryRows = (tree: ReactNode) =>
+    findAll(tree, (element) => element.type === "button" && textOf(element) !== REST_LABEL)
+
+  let tree = harness.render()
+  assert.equal(categoryRows(tree).length, 10)
+  assert.ok(categoryRows(tree).every((row) => !row.props.disabled))
+
+  button(tree, REST_LABEL)!.props.onClick()
+  tree = harness.render()
+  // A product captured now would be overwritten by the response, so the rows are shut.
+  assert.ok(categoryRows(tree).every((row) => row.props.disabled === true))
+  assert.equal(button(tree, REST_LABEL)!.props.disabled, true)
+
+  release()
+  await settle()
+  tree = harness.render()
+  assert.match(textOf(tree), /10 von 10/)
+  assert.ok(categoryRows(tree).every((row) => !row.props.disabled))
+})

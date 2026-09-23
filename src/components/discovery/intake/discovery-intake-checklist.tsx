@@ -206,7 +206,10 @@ export function DiscoveryIntakeChecklist({
                     <button
                       type="button"
                       onClick={() => setOpenCategory(category.key)}
-                      className={`flex min-h-[52px] w-full items-center gap-3 rounded-[14px] border px-3.5 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] ${
+                      // The bulk answer replaces the whole list when it lands, so
+                      // nothing may be captured underneath it while it is in flight.
+                      disabled={markingRest}
+                      className={`flex min-h-[52px] w-full items-center gap-3 rounded-[14px] border px-3.5 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] disabled:opacity-60 ${
                         state
                           ? "border-[var(--brand-plum-light)] bg-[#fdfcff]"
                           : "border-border bg-white"
