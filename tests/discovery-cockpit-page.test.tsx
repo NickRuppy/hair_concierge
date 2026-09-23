@@ -213,6 +213,8 @@ function readyModel(): DiscoveryCockpitModel {
       decisions: [],
       swapProducts: [],
     }),
+    recommendationProducts: [],
+    recommendationBrandsAvailable: true,
   }
 }
 
@@ -305,6 +307,33 @@ test("what needs no decision collapses to one grey line each", async () => {
   // „Brauchst du nicht mehr", so the category alone would leave Nick sending a list he
   // never saw.
   assert.ok(markup.includes("Conditioner — kein Schritt im Idealplan: Balea Feuchtigkeitsspülung"))
+})
+
+test("the cockpit names scalp care the way the participant's checklist does", async () => {
+  const model = readyModel()
+  // The scan header carries the shared scan label („Kopfhautprodukt") — the cockpit must
+  // not echo it back.
+  const scalpVerdicts = model.verdicts.map((entry) =>
+    entry.status === "verdict"
+      ? {
+          ...entry,
+          product: {
+            ...entry.product,
+            category: "scalp_care" as const,
+            categoryLabel: "Kopfhautprodukt",
+          },
+        }
+      : entry,
+  )
+  const markup = await renderCockpit({
+    loadModel: async () => ({
+      ...model,
+      verdicts: scalpVerdicts,
+      routine: { ...model.routine, declinedCategories: ["scalp_care"] },
+    }),
+  })
+  assert.ok(markup.includes("Kopfhautpflege — benutzt sie nicht."))
+  assert.ok(!markup.includes("Kopfhautprodukt"))
 })
 
 test("a finalised call renders as finalised", async () => {

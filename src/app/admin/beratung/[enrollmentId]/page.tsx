@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
-import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
 import { DiscoveryCallCockpit } from "@/components/discovery/cockpit/discovery-call-cockpit"
 import { formatDiscoveryTimestamp } from "@/components/discovery/cockpit/format"
+import { DISCOVERY_INTAKE_CATEGORY_COPY } from "@/components/discovery/intake/categories"
 import { requireAdmin } from "@/lib/auth/require-admin"
 import {
   buildDiscoveryCockpitView,
@@ -43,6 +43,8 @@ const OUTSIDE_TITLE = "Nicht in der Idealroutine"
 const NO_INTAKE = "Diese Teilnehmerin hat die Checkliste noch nicht geöffnet."
 const NO_SOURCE = "Für dieses Konto gibt es noch kein nutzbares Haarprofil. Quiz prüfen."
 const UNAVAILABLE = "Der Plan lässt sich gerade nicht lesen. Später noch einmal öffnen."
+const BRANDS_UNAVAILABLE =
+  "Markennamen der Empfehlungen sind gerade nicht lesbar. Finalisieren und PDF gehen erst wieder, wenn der Katalog antwortet — Seite später neu laden."
 const PREFLIGHT_TITLE = "Intake unvollständig"
 const PREFLIGHT_NO_LEAD = "Zu diesem Konto ist kein Quiz-Lead gebunden."
 const PREFLIGHT_INVALID = "Die Quiz-Antworten sind nicht lesbar."
@@ -119,6 +121,7 @@ export function createDiscoveryCockpitPage(
     return (
       <Shell name={enrollment.name} email={enrollment.email} status={statusLine}>
         <PreflightBanner preflight={preflight} />
+        {view.recommendationBrandsAvailable ? null : <Notice text={BRANDS_UNAVAILABLE} />}
         <IdealRoutine view={view} />
         <DiscoveryCallCockpit
           enrollmentId={enrollmentId}
@@ -214,8 +217,9 @@ function IdealRoutine({ view }: { view: DiscoveryCockpitView }) {
   )
 }
 
+/** The checklist's own labels, so the cockpit names a category the way the participant saw it. */
 function categoryLine(categories: readonly PersonalPlanCategory[]): string {
-  return categories.map((category) => CATEGORY_COPY[category].label).join(" · ")
+  return categories.map((category) => DISCOVERY_INTAKE_CATEGORY_COPY[category].label).join(" · ")
 }
 
 /**

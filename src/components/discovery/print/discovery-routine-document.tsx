@@ -1,4 +1,5 @@
 import type { DiscoveryCockpitStepView, DiscoveryCockpitView } from "@/lib/discovery/cockpit"
+import { discoveryProductLabel } from "@/lib/discovery/product-label"
 
 /**
  * The participant's own document (mockup: `plans/discovery-call-toolkit/evidence/pdf-ansicht.html`).
@@ -68,7 +69,13 @@ function stepProduct(step: DiscoveryCockpitStepView): PrintProduct | null {
       return step.swapProductLabel ? { name: step.swapProductLabel, badge: BADGE_NEW } : null
     case "ideal":
       return step.idealRecommendation
-        ? { name: step.idealRecommendation.name, badge: BADGE_NEW }
+        ? {
+            name: discoveryProductLabel(
+              step.idealRecommendation.brand,
+              step.idealRecommendation.name,
+            ),
+            badge: BADGE_NEW,
+          }
         : null
     case "undecided":
       return null
@@ -490,6 +497,17 @@ const DOCUMENT_STYLES = `
   display: flex;
   justify-content: space-between;
   gap: 12px;
+}
+/* Screen only — print keeps the A4 rules above and below. A fixed 210mm width is also the
+   sheet's min-content width, so inside the admin layout's flex row (whose main column has
+   no min-width: 0) it pushed the page sideways whenever that column was narrower than A4.
+   A percentage width contributes no fixed minimum, so the sheet shrinks to fit. */
+@media screen {
+  .dcp-page { width: 100%; max-width: 210mm; }
+}
+@media screen and (max-width: 793px) {
+  .dcp-sheet { padding: 12px 0; }
+  .dcp-page { min-height: 0; padding: 24px 16px; }
 }
 @page { size: A4; margin: 0; }
 @media print {

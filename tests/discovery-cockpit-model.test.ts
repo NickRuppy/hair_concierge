@@ -18,6 +18,7 @@ import {
   type DiscoveryCallDecision,
   type DiscoveryIntakeItem,
 } from "../src/lib/discovery/refined-routine"
+import type { ScanCatalogPresentationRow } from "../src/lib/scan/product-presentation"
 import type { ScanEvaluationContext } from "../src/lib/scan/profile-context"
 import type { ScanPresentedVerdictPayload, ScanProductHeader } from "../src/lib/scan/types"
 
@@ -101,7 +102,7 @@ function item(overrides: Partial<DiscoveryIntakeItem> = {}): DiscoveryIntakeItem
 const productHeader: ScanProductHeader = {
   productId: ids.owned,
   name: "Elvital Hyaluron Pure Shampoo",
-  brand: "L'Oréal Elvital",
+  brand: "L'Oréal Paris",
   category: "shampoo",
   categoryLabel: "Shampoo",
   imageUrl: null,
@@ -142,6 +143,7 @@ function model(input: {
   items: DiscoveryIntakeItem[]
   decisions?: DiscoveryCallDecision[]
   verdicts?: DiscoveryParticipantVerdict[]
+  catalogRows?: ScanCatalogPresentationRow[]
 }): DiscoveryCockpitModel {
   return {
     status: "ready",
@@ -152,8 +154,26 @@ function model(input: {
       steps: input.steps,
       items: input.items,
       decisions: input.decisions ?? [],
-      swapProducts: [],
+      swapProducts: input.catalogRows ?? [],
+      recommendationProducts: input.catalogRows ?? [],
     }),
+    recommendationProducts: input.catalogRows ?? [],
+    recommendationBrandsAvailable: true,
+  }
+}
+
+function catalogRow(id: string, brand: string | null, name: string): ScanCatalogPresentationRow {
+  return {
+    id,
+    name,
+    brand,
+    category: "shampoo",
+    imageUrl: null,
+    priceEur: null,
+    currency: null,
+    affiliateLink: null,
+    purchaseLinkStatus: null,
+    priceCheckedAt: null,
   }
 }
 
@@ -190,7 +210,8 @@ test("a bound product offers exactly the alternatives the engine displayed", () 
     ids.alternativeA,
     ids.alternativeB,
   ])
-  assert.equal(view.steps[0].ownedLabel, productHeader.name)
+  // Named with its catalog brand — the catalog `name` alone is often brandless.
+  assert.equal(view.steps[0].ownedLabel, "L'Oréal Paris Elvital Hyaluron Pure Shampoo")
   assert.equal(view.steps[0].outcome, "undecided")
 })
 
@@ -260,6 +281,12 @@ test("a textless barcode row is named by its code, and research items stay named
     describeDiscoveryIntakeItem(item({ brandText: null, productNameText: "Eigenmarke Spülung" })),
     "Eigenmarke Spülung",
   )
+  assert.equal(
+    describeDiscoveryIntakeItem(
+      item({ brandText: "Afrolocke", productNameText: "Afrolocke Shea Butter Leave-in" }),
+    ),
+    "Afrolocke Shea Butter Leave-in",
+  )
 
   const view = buildDiscoveryCockpitView(
     model({
@@ -328,6 +355,201 @@ test("a decided step carries its swap target even when the catalog row is unread
   assert.ok(view.sourceHash.length > 0)
 })
 
+// --- brand on catalog names ----------------------------------------------------
+
+// Catalog `name` is often brandless („Klärendes Serum", „Deep Cleansing Shampoo"); the
+// brand lives in its own column. Every product the call and the PDF NAME must carry it.
+
+test("the Idealplan's recommendation carries its catalog brand", () => {
+  const view = buildDiscoveryCockpitView(
+    model({
+      steps: [step({ preview: idealPreview(ids.ideal) })],
+      items: [],
+      catalogRows: [catalogRow(ids.ideal, "Schwarzkopf", "Lab Shampoo Ideal")],
+    }),
+  )
+  assert.equal(view.steps[0].idealRecommendation?.brand, "Schwarzkopf")
+  assert.equal(view.steps[0].idealRecommendation?.name, "Lab Shampoo Ideal")
+  assert.equal(view.steps[0].swapOptions[0]?.brand, "Schwarzkopf")
+})
+
+test("a swap target and a kept verdict product are named with their brand", () => {
+  const view = buildDiscoveryCockpitView(
+    model({
+      steps: [step()],
+      items: [item()],
+      decisions: [
+        {
+          decisionKey: "decision:shampoo:shampoo_everyday:gap",
+          decision: "swap",
+          swapProductId: ids.alternativeA,
+          intakeItemId: ids.item,
+        },
+      ],
+      verdicts: [
+        {
+          itemId: ids.item,
+          productId: ids.owned,
+          status: "verdict",
+          product: { ...productHeader, brand: "NEQI", name: "Deep Cleansing Shampoo" },
+          payload: payload([ids.alternativeA]),
+        },
+      ],
+      catalogRows: [catalogRow(ids.alternativeA, "Guhl", "Leichte Frische Shampoo")],
+    }),
+  )
+  assert.equal(view.steps[0].swapProductLabel, "Guhl Leichte Frische Shampoo")
+  assert.equal(view.steps[0].ownedLabel, "NEQI Deep Cleansing Shampoo")
+})
+
+const maskIdealStep = step({
+  decisionKey: "decision:mask:intensive_conditioning_mask:gap",
+  category: "mask",
+  role: "intensive_conditioning_mask",
+  categoryLabel: "Haarmaske",
+  preview: idealPreview(ids.ideal),
+})
+
+const swapShampoo: DiscoveryCallDecision = {
+  decisionKey: "decision:shampoo:shampoo_everyday:gap",
+  decision: "swap",
+  swapProductId: ids.alternativeA,
+  intakeItemId: ids.item,
+}
+
+function readyIdeal(steps: DiscoveryIdealStep[]) {
+  return async () => ({
+    status: "ready" as const,
+    steps,
+    context: {} as never,
+    previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
+  })
+}
+
+test("swap targets and PRINTED recommendations share one batched catalog read", async () => {
+  const reads: string[][] = []
+  const result = await loadDiscoveryCockpitModel(
+    {} as never,
+    { intakeId: ids.intake, userId: ids.user },
+    {
+      // The shampoo step is swapped, so its own recommendation is never printed and is not
+      // read; the open mask step prints its recommendation, so that one is.
+      loadIdealRoutine: readyIdeal([
+        step({ preview: idealPreview("30000000-0000-4000-8000-0000000000ff") }),
+        maskIdealStep,
+      ]),
+      loadItems: async () => [item()],
+      loadVerdicts: async () => [],
+      loadDecisions: async () => [swapShampoo],
+      loadSwapProducts: async (_client, productIds) => {
+        reads.push(productIds)
+        return [
+          catalogRow(ids.alternativeA, "Guhl", "Leichte Frische Shampoo"),
+          catalogRow(ids.ideal, "Schwarzkopf", "Lab Shampoo Ideal"),
+        ]
+      },
+    },
+  )
+  assert.deepEqual(reads, [[ids.alternativeA, ids.ideal].sort()])
+  assert.equal(result.status, "ready")
+  if (result.status !== "ready") return
+  assert.equal(result.recommendationBrandsAvailable, true)
+  assert.deepEqual(
+    result.recommendationProducts.map((row) => row.id),
+    [ids.ideal],
+  )
+  assert.equal(result.routine.steps[0].swapProduct?.id, ids.alternativeA)
+})
+
+test("a recommendation that is not printed never blocks the call", async () => {
+  // A kept step: its recommendation is not on the paper, so nothing is read at all.
+  const result = await loadDiscoveryCockpitModel(
+    {} as never,
+    { intakeId: ids.intake, userId: ids.user },
+    {
+      loadIdealRoutine: readyIdeal([step({ preview: idealPreview(ids.ideal) })]),
+      loadItems: async () => [item()],
+      loadVerdicts: async () => [],
+      loadDecisions: async () => [{ ...swapShampoo, decision: "keep", swapProductId: null }],
+      loadSwapProducts: async () => {
+        throw new Error("an unprinted recommendation must not be read")
+      },
+    },
+  )
+  assert.equal(result.status, "ready")
+  if (result.status !== "ready") return
+  assert.equal(result.recommendationBrandsAvailable, true)
+})
+
+test("a printed recommendation missing from a successful read counts as unavailable", async () => {
+  for (const decisions of [[], [swapShampoo]]) {
+    const result = await loadDiscoveryCockpitModel(
+      {} as never,
+      { intakeId: ids.intake, userId: ids.user },
+      {
+        loadIdealRoutine: readyIdeal([step(), maskIdealStep]),
+        loadItems: async () => [item()],
+        loadVerdicts: async () => [],
+        loadDecisions: async () => decisions,
+        // The swap row comes back; the recommendation's row does not.
+        loadSwapProducts: async () => [
+          catalogRow(ids.alternativeA, "Guhl", "Leichte Frische Shampoo"),
+        ],
+      },
+    )
+    assert.equal(result.status, "ready")
+    if (result.status !== "ready") return
+    assert.equal(result.recommendationBrandsAvailable, false)
+  }
+})
+
+test("a failed brand lookup degrades a swap-free call instead of failing it", async () => {
+  const deps = {
+    loadIdealRoutine: async () => ({
+      status: "ready" as const,
+      steps: [step({ preview: idealPreview(ids.ideal) })],
+      context: {} as never,
+      previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
+    }),
+    loadItems: async () => [],
+    loadVerdicts: async () => [],
+    loadSwapProducts: async (): Promise<ScanCatalogPresentationRow[]> => {
+      throw new Error("catalog down")
+    },
+  }
+  const degraded = await loadDiscoveryCockpitModel(
+    {} as never,
+    { intakeId: ids.intake, userId: ids.user },
+    { ...deps, loadDecisions: async () => [] },
+  )
+  assert.equal(degraded.status, "ready")
+  if (degraded.status !== "ready") return
+  assert.equal(degraded.recommendationBrandsAvailable, false)
+  const view = buildDiscoveryCockpitView(degraded)
+  assert.equal(view.recommendationBrandsAvailable, false)
+  assert.equal(view.steps[0].idealRecommendation?.brand, null)
+  assert.equal(view.steps[0].idealRecommendation?.name, "Lab Shampoo Ideal")
+
+  // With a swap decided, the rows are required — the failure still fails the composition.
+  await assert.rejects(() =>
+    loadDiscoveryCockpitModel(
+      {} as never,
+      { intakeId: ids.intake, userId: ids.user },
+      {
+        ...deps,
+        loadDecisions: async () => [
+          {
+            decisionKey: "decision:shampoo:shampoo_everyday:gap",
+            decision: "swap" as const,
+            swapProductId: ids.alternativeA,
+            intakeItemId: null,
+          },
+        ],
+      },
+    ),
+  )
+})
+
 // --- the single composition ----------------------------------------------------
 
 test("the verdict pass runs once, on the very context the Idealplan prepared", async () => {
@@ -352,7 +574,7 @@ test("the verdict pass runs once, on the very context the Idealplan prepared", a
       },
       loadDecisions: async () => [],
       loadSwapProducts: async () => {
-        throw new Error("no swap decision, so no catalog read")
+        throw new Error("no swap decision and no recommendation, so no catalog read")
       },
     },
   )

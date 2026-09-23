@@ -20,6 +20,7 @@ import {
   type DiscoveryReconcileTarget,
   type DiscoverySubmissionOutcome,
 } from "../src/lib/discovery/reconcile"
+import { discoveryProductLabel } from "../src/lib/discovery/product-label"
 import {
   discoveryEnrollmentSigningSecret,
   projectDiscoveryEnrollmentCredential,
@@ -261,8 +262,7 @@ function projectReceipt(
 
 /** The participant's own words, which the cockpit shows while research is open. */
 function describePendingItem(item: DiscoveryPendingIntakeItem) {
-  const label = [item.brandText, item.productNameText].filter(Boolean).join(" ").trim()
-  return label || null
+  return discoveryProductLabel(item.brandText, item.productNameText) || null
 }
 
 /**

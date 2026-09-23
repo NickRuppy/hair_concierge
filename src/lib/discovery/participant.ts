@@ -16,6 +16,8 @@ export const DISCOVERY_QUIZ_ENTRY_HREF = "/quiz"
 
 export const DISCOVERY_RESOLVE_ENDPOINT = "/api/beratung/resolve"
 export const DISCOVERY_CLAIM_ENDPOINT = "/api/beratung/claim"
+/** The claim's refusal code when a different account is signed in in this browser. */
+export const DISCOVERY_CLAIM_SIGNED_IN_OTHER_ACCOUNT = "signed_in_other_account"
 export const DISCOVERY_QUIZ_CONTEXT_ENDPOINT = "/api/beratung/quiz-context"
 
 /**

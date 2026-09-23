@@ -69,6 +69,11 @@ export function createDiscoveryFinalizeHandler(overrides: DiscoveryFinalizeRoute
 
     const composed = await resolveDiscoveryCockpitView(admin, intake, guardOverrides)
     if (!composed.ok) return composed.response
+    // A degraded composition (recommendation brands unreadable) must never become the
+    // stored fingerprint — the PDF would later read as drifted for no real reason.
+    if (!composed.view.recommendationBrandsAvailable) {
+      return discoveryCockpitError("unavailable", 503)
+    }
 
     try {
       const finalized = await applyFinalize(

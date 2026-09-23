@@ -333,6 +333,7 @@ test("a signed-in stranger cannot spend someone else's invitation", async () => 
   const response = await createDiscoveryClaimHandler(deps)(request())
   assert.equal(response.status, 403)
   assert.deepEqual(await response.json(), {
+    code: "signed_in_other_account",
     error: "Dieses Konto kann diese Einladung nicht nutzen.",
   })
   assert.deepEqual(names(calls), [])
@@ -345,6 +346,7 @@ test("the account bound by another claim is never overwritten", async () => {
   })
   const response = await createDiscoveryClaimHandler(deps)(request())
   assert.equal(response.status, 403)
+  assert.equal(((await response.json()) as { code?: string }).code, "signed_in_other_account")
   assert.deepEqual(names(calls), [])
 })
 

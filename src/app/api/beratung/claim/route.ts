@@ -20,7 +20,11 @@ import {
   DISCOVERY_INVITE_COOKIE,
   readDiscoveryCredentialInput,
 } from "@/lib/discovery/invite-session"
-import { DISCOVERY_CONTINUATION_PATH, DISCOVERY_QUIZ_ENTRY_HREF } from "@/lib/discovery/participant"
+import {
+  DISCOVERY_CLAIM_SIGNED_IN_OTHER_ACCOUNT,
+  DISCOVERY_CONTINUATION_PATH,
+  DISCOVERY_QUIZ_ENTRY_HREF,
+} from "@/lib/discovery/participant"
 import {
   decodeDiscoveryEnrollmentCredential,
   discoveryEnrollmentSigningSecret,
@@ -155,12 +159,14 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
     // Revoked, rotated past, or gone. The loader enforces all three.
     if (!enrollment) return copyResponseCookies(response, jsonError(UNAVAILABLE, 410))
 
+    // Both refusals mean the SAME thing to the browser: a different account is signed in
+    // (typically a tester's earlier participant). The code lets the invite page say so.
     if (user) {
       if (user.email?.trim().toLowerCase() !== enrollment.email) {
-        return copyResponseCookies(response, jsonError(WRONG_ACCOUNT, 403))
+        return copyResponseCookies(response, refuseSignedInOtherAccount())
       }
       if (enrollment.claimedUserId && enrollment.claimedUserId !== user.id) {
-        return copyResponseCookies(response, jsonError(WRONG_ACCOUNT, 403))
+        return copyResponseCookies(response, refuseSignedInOtherAccount())
       }
     }
 
@@ -405,6 +411,13 @@ function isExistingUserError(error: unknown) {
 
 function isSameOrigin(request: Request) {
   return request.headers.get("origin") === new URL(request.url).origin
+}
+
+function refuseSignedInOtherAccount() {
+  return NextResponse.json(
+    { code: DISCOVERY_CLAIM_SIGNED_IN_OTHER_ACCOUNT, error: WRONG_ACCOUNT },
+    { status: 403, headers: NO_STORE_HEADERS },
+  )
 }
 
 function refuseForeignAccessKind() {

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 
+import { Button } from "@/components/ui/button"
 import { DISCOVERY_CLAIM_ENDPOINT, DISCOVERY_QUIZ_ENTRY_HREF } from "@/lib/discovery/participant"
 
 /**
@@ -53,14 +54,16 @@ export function DiscoveryContinuation() {
           {error ? "Dein Zugang konnte nicht geöffnet werden." : "Dein Zugang wird geöffnet …"}
         </h1>
         {error ? (
-          <button className={primaryButtonClass} onClick={() => void continueClaim()} type="button">
+          <Button
+            className="mt-6"
+            onClick={() => void continueClaim()}
+            type="button"
+            variant="funnelCta"
+          >
             Erneut versuchen
-          </button>
+          </Button>
         ) : null}
       </section>
     </main>
   )
 }
-
-const primaryButtonClass =
-  "mt-6 inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--brand-plum)] px-6 py-3 font-bold text-white"

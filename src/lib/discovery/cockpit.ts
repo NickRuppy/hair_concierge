@@ -18,8 +18,10 @@ import {
   type DiscoveryParticipantVerdict,
   type DiscoveryVerdictStatus,
 } from "./load-participant-verdicts"
+import { discoveryProductLabel } from "./product-label"
 import {
   composeDiscoveryRefinedRoutine,
+  discoveryPrintedRecommendationIds,
   discoverySwapProductIds,
   type DiscoveryCallDecision,
   type DiscoveryIntakeItem,
@@ -203,6 +205,18 @@ export type DiscoveryCockpitModel = {
   steps: DiscoveryIdealStep[]
   verdicts: DiscoveryParticipantVerdict[]
   previewSource: DiscoveryPreviewInput
+  /**
+   * Catalog rows for the Idealplan's own recommendations. The preview carries only the
+   * catalog `name`, which is often brandless („Klärendes Serum"); the brand comes from here.
+   */
+  recommendationProducts: ScanCatalogPresentationRow[]
+  /**
+   * False when the brand lookup for a call WITHOUT swaps failed. The cockpit still renders
+   * (brandless recommendation names), but the routine's `sourceHash` then describes a
+   * degraded document — so finalising refuses and the PDF sends Nick back to the cockpit
+   * rather than printing a brandless sheet or a false drift warning.
+   */
+  recommendationBrandsAvailable: boolean
 }
 
 export type DiscoveryCockpitModelResult =
@@ -243,9 +257,38 @@ export async function loadDiscoveryCockpitModel(
   // Exactly one verdict pass per render, on the context the Idealplan already prepared.
   const verdicts = await deps.loadVerdicts(admin, input.userId, items, ideal.context)
   const decisions = await deps.loadDecisions(input.intakeId, admin)
-  const swapProductIds = discoverySwapProductIds(decisions)
-  const swapProducts =
-    swapProductIds.length > 0 ? await deps.loadSwapProducts(admin, swapProductIds) : []
+  const swapProductIds = new Set(discoverySwapProductIds(decisions))
+  // Outcomes first (composition is pure): only an `ideal` step prints the Idealplan's
+  // recommendation, so only those brands are read — and only those gate availability.
+  const outline = composeDiscoveryRefinedRoutine({
+    steps: ideal.steps,
+    items,
+    decisions,
+    swapProducts: [],
+  })
+  const printedIds = new Set(discoveryPrintedRecommendationIds(outline))
+  // One batched catalog read for both: the swap targets and the printed brands.
+  const catalogIds = [...new Set([...swapProductIds, ...printedIds])].sort()
+  let catalogRows: ScanCatalogPresentationRow[] = []
+  let lookupFailed = false
+  if (swapProductIds.size > 0) {
+    // Swap rows are required: a failed read fails the composition, exactly as before.
+    catalogRows = await deps.loadSwapProducts(admin, catalogIds)
+  } else if (catalogIds.length > 0) {
+    // Only brand enrichment is at stake — degrade instead of failing the whole call.
+    try {
+      catalogRows = await deps.loadSwapProducts(admin, catalogIds)
+    } catch (error) {
+      console.error("[discovery] recommendation brand lookup failed:", error)
+      lookupFailed = true
+    }
+  }
+  const swapProducts = catalogRows.filter((row) => swapProductIds.has(row.id))
+  const recommendationProducts = catalogRows.filter((row) => printedIds.has(row.id))
+  // A printed recommendation whose row did not come back would print (and fingerprint)
+  // brandless — the same degraded state as a failed read.
+  const recommendationBrandsAvailable =
+    !lookupFailed && recommendationProducts.length === printedIds.size
 
   return {
     status: "ready",
@@ -254,10 +297,13 @@ export async function loadDiscoveryCockpitModel(
       items,
       decisions,
       swapProducts,
+      recommendationProducts,
     }),
     steps: ideal.steps,
     verdicts,
     previewSource: ideal.previewSource,
+    recommendationProducts,
+    recommendationBrandsAvailable,
   }
 }
 
@@ -317,6 +363,8 @@ export type DiscoveryCockpitView = {
   unassigned: DiscoveryCockpitUnassignedView[]
   declinedCategories: PersonalPlanCategory[]
   sourceHash: string
+  /** See `DiscoveryCockpitModel.recommendationBrandsAvailable`. */
+  recommendationBrandsAvailable: boolean
 }
 
 /**
@@ -327,7 +375,7 @@ export type DiscoveryCockpitView = {
  * name nobody entered.
  */
 export function describeDiscoveryIntakeItem(item: DiscoveryIntakeItem): string {
-  const text = [item.brandText, item.productNameText].filter(Boolean).join(" ").trim()
+  const text = discoveryProductLabel(item.brandText, item.productNameText)
   if (text) return text
   if (item.barcodeIdentifier) {
     return `${DISCOVERY_SCANNED_PRODUCT_LABEL} · ${item.barcodeIdentifier}`
@@ -350,13 +398,16 @@ function alternativeOption(alternative: {
   }
 }
 
-function idealRecommendationOption(step: DiscoveryIdealStep): DiscoveryCockpitSwapOption | null {
+function idealRecommendationOption(
+  step: DiscoveryIdealStep,
+  brandsByProductId: ReadonlyMap<string, string | null>,
+): DiscoveryCockpitSwapOption | null {
   const preview = step.preview
   if (!preview || preview.kind !== "recommendation") return null
   return {
     productId: preview.productId,
     name: preview.productName,
-    brand: null,
+    brand: brandsByProductId.get(preview.productId) ?? null,
     verdictLabel: SCAN_VERDICT_COPY[preview.verdict].label,
     origin: "ideal_recommendation",
   }
@@ -364,6 +415,9 @@ function idealRecommendationOption(step: DiscoveryIdealStep): DiscoveryCockpitSw
 
 export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): DiscoveryCockpitView {
   const verdictsByItemId = new Map(model.verdicts.map((entry) => [entry.itemId, entry]))
+  const brandsByProductId = new Map(
+    model.recommendationProducts.map((row) => [row.id, row.brand] as const),
+  )
 
   const steps = model.routine.steps.map((refined): DiscoveryCockpitStepView => {
     const { step, item } = refined
@@ -372,7 +426,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       verdict?.status === "verdict" && verdict.payload.kind === "in_catalog"
         ? verdict.payload.alternatives
         : []
-    const ideal = idealRecommendationOption(step)
+    const ideal = idealRecommendationOption(step, brandsByProductId)
     // The ruled fallback: with no displayed alternatives the only swap target the cockpit
     // can honestly offer is the Idealplan's own pick — and never the product already in
     // the participant's bathroom.
@@ -394,7 +448,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       outcome: refined.outcome,
       ownedLabel: item
         ? verdict?.status === "verdict"
-          ? verdict.product.name
+          ? discoveryProductLabel(verdict.product.brand, verdict.product.name)
           : describeDiscoveryIntakeItem(item)
         : null,
       intakeItemId: item?.id ?? null,
@@ -405,7 +459,9 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
         : null,
       swapOptions,
       swapProductId: refined.swapProductId,
-      swapProductLabel: refined.swapProduct?.name ?? null,
+      swapProductLabel: refined.swapProduct
+        ? discoveryProductLabel(refined.swapProduct.brand, refined.swapProduct.name)
+        : null,
       idealRecommendation: ideal,
     }
   })
@@ -420,6 +476,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
     })),
     declinedCategories: model.routine.declinedCategories,
     sourceHash: model.routine.sourceHash,
+    recommendationBrandsAvailable: model.recommendationBrandsAvailable,
   }
 }
 

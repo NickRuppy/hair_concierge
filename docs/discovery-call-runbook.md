@@ -349,6 +349,12 @@ Zwei Stellen, an denen Discovery-Teilnehmerinnen in Zahlen auftauchen, die nicht
   - **Die Seite lädt, meldet aber „Diese Einladung ist nicht verfügbar." (`410` aus
     `POST /api/beratung/resolve`)** — widerrufen oder rotiert. Erst
     `npm run discovery -- list` lesen, dann den aktuellen Link schicken.
+- **„Dieses Konto kann diese Einladung nicht nutzen." (`403`, Code `signed_in_other_account`) beim
+  Testen** — der Browser ist noch
+  mit einer früheren Test-Teilnehmerin angemeldet. Der Claim bindet eine Einladung nur an das Konto
+  mit genau ihrer E-Mail; eine fremde Sitzung wird abgewiesen, nie umgebogen. Neue Einladungen
+  deshalb in einem privaten Fenster öffnen oder vorher abmelden. Bei echten Teilnehmerinnen auf
+  einem geteilten Gerät gilt dasselbe; die Einladungsseite nennt ihnen genau diesen Ausweg.
 - **Teilnehmerin landet immer wieder auf der Checkliste** — so gewollt: der Gate lässt nur
   `/beratung`, `/api/beratung`, `/quiz`, `/api/quiz` und `/api/scan` durch und schickt alles andere
   auf `/beratung/produkte`. Das Ziel ist selbst freigegeben, die Umleitung endet also dort.

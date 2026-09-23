@@ -284,6 +284,8 @@ function readyModel(): DiscoveryCockpitModel {
     verdicts,
     previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
     routine: composeDiscoveryRefinedRoutine({ steps, items, decisions, swapProducts }),
+    recommendationProducts: [],
+    recommendationBrandsAvailable: true,
   }
 }
 
@@ -377,6 +379,59 @@ test("the render gate: only a finalised call has a document", async () => {
 
 // --- the document ---------------------------------------------------------------
 
+test("a brand-only catalog change after finalising trips the drift banner", async () => {
+  const leaveInRow = (brand: string) => ({ ...swapProducts[0], id: ids.idealLeaveIn, brand })
+  const modelWith = (brand: string): DiscoveryCockpitModel => ({
+    ...readyModel(),
+    routine: composeDiscoveryRefinedRoutine({
+      steps,
+      items,
+      decisions,
+      swapProducts,
+      recommendationProducts: [leaveInRow(brand)],
+    }),
+    recommendationProducts: [leaveInRow(brand)],
+  })
+  const finalizedHash = modelWith("Garnier").routine.sourceHash
+  const deps = (brand: string) => ({
+    loadIntake: async () => ({ ...intake, finalizedSourceHash: finalizedHash }),
+    loadModel: async () => modelWith(brand),
+  })
+  assert.ok(!(await renderPdf(deps("Garnier"))).includes("Stand hat sich geändert"))
+  // Same printed label („Garnier Fructis Hair Food Leave-in") — no drift.
+  assert.ok(!(await renderPdf(deps("GARNIER FRUCTIS"))).includes("Stand hat sich geändert"))
+  // A brand that changes what the paper prints — drift.
+  assert.ok((await renderPdf(deps("Fructis Lab"))).includes("Stand hat sich geändert"))
+})
+
+test("unreadable recommendation brands send the PDF back to the cockpit", async () => {
+  const digest = await digestOf({
+    loadModel: async () => ({ ...readyModel(), recommendationBrandsAvailable: false }),
+  })
+  assert.match(digest, /NEXT_REDIRECT/)
+  assert.match(digest, new RegExp(`/admin/beratung/${ids.enrollment}`))
+})
+
+test("a brandless catalog name reads with its brand on the paper", async () => {
+  // Catalog rows keep the brand in its own column („Klärendes Serum" + „Schwarzkopf").
+  const brandless = steps.map((entry) =>
+    entry.preview?.kind === "recommendation"
+      ? { ...entry, preview: { ...entry.preview, productName: "Klärendes Serum" } }
+      : entry,
+  )
+  const markup = await renderPdf({
+    loadModel: async () => ({
+      ...readyModel(),
+      steps: brandless,
+      routine: composeDiscoveryRefinedRoutine({ steps: brandless, items, decisions, swapProducts }),
+      recommendationProducts: [
+        { ...swapProducts[0], id: ids.idealLeaveIn, brand: "Schwarzkopf", name: "Klärendes Serum" },
+      ],
+    }),
+  })
+  assert.ok(markup.includes("Schwarzkopf Klärendes Serum"))
+})
+
 test("the document is written to the participant, step by step", async () => {
   const markup = await renderPdf()
 
@@ -415,6 +470,9 @@ test("the document is written to the participant, step by step", async () => {
   // Print CSS is the point of this page.
   assert.ok(markup.includes("print-color-adjust: exact"))
   assert.ok(markup.includes("@page { size: A4; margin: 0; }"))
+  // The on-screen sheet shrinks to fit narrow viewports; that rule is screen-only, so the
+  // printed A4 page is untouched.
+  assert.ok(markup.includes("@media screen {\n  .dcp-page { width: 100%; max-width: 210mm; }"))
 })
 
 test("the shelf says what happens to every product she brought", async () => {
