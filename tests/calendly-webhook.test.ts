@@ -245,6 +245,13 @@ test("the webhook retries Meta failures before acknowledging a booking", async (
     const retried = await receiveCalendlyWebhook(request())
     assert.equal(retried.status, 200)
     assert.equal(deliveries, 2)
+
+    // Misconfiguration (missing Meta credentials) must NOT 503: retrying
+    // cannot heal it, and a permanent 503 gets the webhook disabled.
+    delete process.env.META_CAPI_ACCESS_TOKEN
+    const skipped = await receiveCalendlyWebhook(request())
+    assert.equal(skipped.status, 200)
+    assert.equal(deliveries, 2)
   } finally {
     for (const key of keys) {
       const value = original[key]

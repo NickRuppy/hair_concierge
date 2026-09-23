@@ -64,13 +64,23 @@ export async function POST(request: NextRequest) {
   const result = await deliverMetaConversion(input, {
     enabled: isMetaScheduleCapiEnabled(),
   })
-  if (!result.ok && result.error !== "disabled") {
+  // Only a genuine delivery failure earns a 503 (Calendly retries; Meta's
+  // event_id dedupe absorbs repeats). A SKIPPED result — flag off or missing
+  // Meta credentials — is misconfiguration that retrying cannot heal, and a
+  // permanent 503 would get the webhook disabled after ~24h of retries.
+  if (!result.ok && !result.skipped) {
     console.warn("[calendly-webhook] Meta Schedule CAPI delivery failed", {
       eventId: webhook.bookingEventId,
       error: result.error,
       status: result.status,
     })
     return NextResponse.json({ error: "conversion delivery failed" }, { status: 503 })
+  }
+  if (!result.ok && result.skipped && result.error !== "disabled") {
+    console.warn("[calendly-webhook] Meta Schedule CAPI is misconfigured; booking acknowledged", {
+      eventId: webhook.bookingEventId,
+      error: result.error,
+    })
   }
 
   return NextResponse.json({ received: true })
