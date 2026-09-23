@@ -10,6 +10,7 @@ import {
   DISCOVERY_INTAKE_CATEGORIES,
   checkDiscoveryIntakeItemIdentity,
   clearDiscoveryIntakeCoexistingNone,
+  loadDiscoverySubmissionCategory,
   type DiscoveryAdminClient,
   type DiscoveryIntake,
   type DiscoveryIntakeIdentityDependencies,
@@ -82,7 +83,10 @@ function checkIdentityWith(overrides: Partial<DiscoveryIntakeIdentityDependencie
   const deps: DiscoveryIntakeIdentityDependencies = {
     filterEligibleProductIds: async (_client, productIds) => new Set(productIds),
     loadProductCategory: async () => "shampoo",
-    loadSubmissionCategory: async () => "shampoo",
+    // Models ONE stored submission, owned by the participant — and the read is
+    // scoped, so it answers nothing for any other account.
+    loadSubmissionCategory: async (_client, _submissionId, userId) =>
+      userId === ids.user ? "shampoo" : null,
     ...overrides,
   }
   return (
@@ -489,6 +493,92 @@ test("a submission opened for another category is a 422", async () => {
 
   assert.equal(response.status, 422)
   assert.deepEqual((await response.json()).code, "category_mismatch")
+})
+
+test("another account's submission is a 422, told apart from nothing at all", async () => {
+  const response = await createDiscoveryIntakeItemsHandler(
+    baseDeps({
+      checkIdentity: checkIdentityWith({
+        // The row exists and is in the right category — it just belongs to someone
+        // else, so the account-scoped read answers nothing for this participant.
+        loadSubmissionCategory: async (_client, _submissionId, userId) =>
+          userId === ids.otherUser ? "shampoo" : null,
+      }),
+      insertItem: async () => {
+        throw new Error("must not be reached")
+      },
+      clearCategory: async () => {
+        throw new Error("must not be reached")
+      },
+    }),
+  )(itemsRequest(submissionCapture))
+
+  assert.equal(response.status, 422)
+  const body = await response.json()
+  // Same code and same sentence as a missing submission: the refusal must not tell a
+  // prober that the id exists under another account.
+  assert.equal(body.code, "unknown_submission")
+  assert.equal(body.error, "Diese Produktanfrage kennen wir nicht. Versuch es bitte nochmal.")
+})
+
+test("the participant's own submission still passes, and is read with HER user id", async () => {
+  const asked: Array<[string, string]> = []
+  const response = await createDiscoveryIntakeItemsHandler(
+    baseDeps({
+      checkIdentity: checkIdentityWith({
+        loadSubmissionCategory: async (_client, submissionId, userId) => {
+          asked.push([submissionId, userId])
+          return userId === ids.user ? "shampoo" : null
+        },
+      }),
+      clearCategory: async () => {},
+      insertItem: async () => ({ ...storedItem, source: "name_research" as const }),
+    }),
+  )(itemsRequest(submissionCapture))
+
+  assert.equal(response.status, 201)
+  // The id comes from the guard's session, never from the request body.
+  assert.deepEqual(asked, [[submissionCapture.capture.productSubmissionId, ids.user]])
+})
+
+test("the submission read carries the ownership predicate in the query itself", async () => {
+  const calls: Array<Record<string, unknown>> = []
+  const client = {
+    from: (table: string) => {
+      const call: Record<string, unknown> = { table }
+      calls.push(call)
+      const chain = {
+        select: (columns: string) => {
+          call.select = columns
+          return chain
+        },
+        eq: (column: string, value: unknown) => {
+          call[`eq_${column}`] = value
+          return chain
+        },
+        maybeSingle: async () => ({ data: { category: "shampoo" }, error: null }),
+      }
+      return chain
+    },
+  } as unknown as DiscoveryAdminClient
+
+  assert.equal(
+    await loadDiscoverySubmissionCategory(
+      client,
+      submissionCapture.capture.productSubmissionId,
+      ids.user,
+    ),
+    "shampoo",
+  )
+  // A foreign row is never returned to be compared — it is filtered out in Postgres.
+  assert.deepEqual(calls, [
+    {
+      table: "product_submissions",
+      select: "category",
+      eq_id: submissionCapture.capture.productSubmissionId,
+      eq_user_id: ids.user,
+    },
+  ])
 })
 
 test("„benutze ich nicht“ carries no ids, so it asks the catalog nothing", async () => {

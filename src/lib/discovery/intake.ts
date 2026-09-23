@@ -270,22 +270,21 @@ export function buildDiscoveryIntakeItemRow(
  *    the item is being filed under. Without the category check a participant could
  *    file a shampoo as their mask, and the T-1 routine would then recommend against a
  *    product that is not in that slot at all.
- * 2. The submission exists and carries the same category.
+ * 2. The submission is the PARTICIPANT'S OWN and carries the same category.
  *
- * What this does NOT establish is that the submission belongs to this participant,
- * and the reason is worth stating precisely rather than in passing.
- *
- * A scan submission is ANCHORLESS: `submitScanProductIntake`
+ * On that second point, the ownership column is worth naming precisely. A scan
+ * submission is anchorless: `submitScanProductIntake`
  * (`src/lib/product-intake/submissions.ts`) writes `user_product_usage_id: null` and
- * `user_product_id: null`, so there is no row tying the submission to anything the
- * participant owns — the usual ownership path other intake surfaces use is simply not
- * there. What IS there is `product_submissions.user_id`, set to the caller, and
- * scoping this read on it is the available tightening. It is deliberately left out of
- * THIS pass rather than decided here: it narrows an existing accepted contract, and
- * the checklist's `POST /api/scan/submit` calls run as the participant anyway, so the
- * only shape it would newly refuse is a forged foreign id. What such an id can do is
- * bounded — it attaches someone else's open research to this item, and reconciliation
- * re-validates the approved product against the catalog before writing anything.
+ * `user_product_id: null`, so there is no row tying it to anything the participant
+ * owns and the usual anchor other intake surfaces follow is simply not there. But
+ * `product_submissions.user_id` IS written, as the calling user — and the checklist's
+ * own `POST /api/scan/submit` calls run as the participant — so that column is the
+ * ownership check, and the read below is scoped on it.
+ *
+ * A submission belonging to someone else is refused as `unknown_submission`, not as a
+ * separate "forbidden" code: to THIS intake it is simply not a submission that exists.
+ * Scoping the query rather than comparing after the fact is what makes that true by
+ * construction — a foreign row never comes back at all.
  */
 export type DiscoveryIntakeIdentityRefusal =
   | "unknown_product"
@@ -302,9 +301,11 @@ export type DiscoveryIntakeIdentityDependencies = {
     productIds: readonly string[],
   ) => Promise<Set<string>>
   loadProductCategory: (client: DiscoveryAdminClient, productId: string) => Promise<string | null>
+  /** Scoped to the owning account: a foreign submission answers `null`, like a missing one. */
   loadSubmissionCategory: (
     client: DiscoveryAdminClient,
     submissionId: string,
+    userId: string,
   ) => Promise<string | null>
 }
 
@@ -324,11 +325,16 @@ export async function loadDiscoveryProductCategory(
 export async function loadDiscoverySubmissionCategory(
   client: DiscoveryAdminClient,
   submissionId: string,
+  userId: string,
 ): Promise<string | null> {
   const { data, error } = await client
     .from("product_submissions")
     .select("category")
+    // The ownership predicate, in the query rather than after it: a submission that
+    // belongs to another account never comes back, so it cannot be distinguished from
+    // a missing one — which is exactly the answer this intake should get.
     .eq("id", submissionId)
+    .eq("user_id", userId)
     .maybeSingle()
   if (error) throw error
   return (data as { category: string | null } | null)?.category ?? null
@@ -346,6 +352,8 @@ export async function checkDiscoveryIntakeItemIdentity(
     category: DiscoveryIntakeCategory
     productId: string | null
     productSubmissionId: string | null
+    /** The signed-in participant, from the guard — never from the request body. */
+    userId: string
   },
   client: DiscoveryAdminClient,
   deps: DiscoveryIntakeIdentityDependencies = defaultDiscoveryIntakeIdentityDependencies,
@@ -360,7 +368,13 @@ export async function checkDiscoveryIntakeItemIdentity(
   }
 
   if (input.productSubmissionId) {
-    const category = await deps.loadSubmissionCategory(client, input.productSubmissionId)
+    // Missing, or owned by someone else — the scoped read cannot tell them apart, and
+    // to this intake they are the same answer.
+    const category = await deps.loadSubmissionCategory(
+      client,
+      input.productSubmissionId,
+      input.userId,
+    )
     if (category === null) return { ok: false, reason: "unknown_submission" }
     if (category !== input.category) return { ok: false, reason: "category_mismatch" }
   }
