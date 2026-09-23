@@ -12,7 +12,7 @@ import {
   DISCOVERY_INTAKE_GROUPS,
 } from "./categories"
 import { DiscoveryProductEntry } from "./discovery-product-entry"
-import { submitIntake } from "./intake-api"
+import { markRemainingCategoriesNone, submitIntake } from "./intake-api"
 import type { DiscoveryIntakeItemView } from "./types"
 
 /**
@@ -26,6 +26,12 @@ import type { DiscoveryIntakeItemView } from "./types"
  *
  * Optimistic state mirrors the server's own replacement rule exactly: a category
  * is either „benutze ich nicht" or a non-empty product list, never both.
+ *
+ * „Mehr benutze ich nicht" is the field-test shortcut for the rest of the shelf:
+ * once something is answered and something is still open, one quiet tap answers
+ * every open category with „benutze ich nicht". It is NOT optimistic — the list
+ * comes back from the server — and it never submits: the ordinary „Absenden"
+ * dock then appears and stays the participant's own decision.
  */
 
 const TITLE = "Was benutzt du gerade?"
@@ -34,6 +40,8 @@ const LEDE_DONE = "Alles da. Schick es ab."
 const SUBMIT_LABEL = "Absenden"
 const SUBMIT_BUSY_LABEL = "Wird gesendet"
 const SUBMIT_ERROR = "Das Absenden hat nicht geklappt. Versuch es nochmal."
+const REST_NONE_LABEL = "Mehr benutze ich nicht"
+const REST_NONE_ERROR = "Das hat gerade nicht geklappt. Versuch es nochmal."
 const NONE_STATE = "benutze ich nicht"
 const CONFIRM_TITLE = "Danke!"
 const CONFIRM_BODY = "Wir bereiten deinen Termin vor."
@@ -63,11 +71,13 @@ export function DiscoveryIntakeChecklist({
   const [openCategory, setOpenCategory] = useState<PersonalPlanCategory | null>(null)
   const [submitted, setSubmitted] = useState(initialSubmitted)
   const [submitting, setSubmitting] = useState(false)
+  const [markingRest, setMarkingRest] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const answeredCategories = new Set(items.map((item) => item.category))
   const answeredCount = answeredCategories.size
   const complete = answeredCount === DISCOVERY_INTAKE_CATEGORY_COUNT
+  const canMarkRestNone = answeredCount > 0 && !complete
 
   function handleAdded(item: DiscoveryIntakeItemView) {
     setItems((previous) => [
@@ -83,6 +93,19 @@ export function DiscoveryIntakeChecklist({
 
   function handleRemoved(itemId: string) {
     setItems((previous) => previous.filter((existing) => existing.id !== itemId))
+  }
+
+  async function handleMarkRestNone() {
+    if (markingRest) return
+    setMarkingRest(true)
+    setError(null)
+    try {
+      setItems(await markRemainingCategoriesNone())
+    } catch {
+      setError(REST_NONE_ERROR)
+    } finally {
+      setMarkingRest(false)
+    }
   }
 
   async function handleSubmit() {
@@ -183,7 +206,10 @@ export function DiscoveryIntakeChecklist({
                     <button
                       type="button"
                       onClick={() => setOpenCategory(category.key)}
-                      className={`flex min-h-[52px] w-full items-center gap-3 rounded-[14px] border px-3.5 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] ${
+                      // The bulk answer replaces the whole list when it lands, so
+                      // nothing may be captured underneath it while it is in flight.
+                      disabled={markingRest}
+                      className={`flex min-h-[52px] w-full items-center gap-3 rounded-[14px] border px-3.5 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] disabled:opacity-60 ${
                         state
                           ? "border-[var(--brand-plum-light)] bg-[#fdfcff]"
                           : "border-border bg-white"
@@ -214,6 +240,19 @@ export function DiscoveryIntakeChecklist({
             </ul>
           </section>
         ))}
+
+        {canMarkRestNone ? (
+          <div className="mt-5 text-center">
+            <button
+              type="button"
+              onClick={() => void handleMarkRestNone()}
+              disabled={markingRest}
+              className="min-h-[44px] px-2 text-sm font-semibold text-[var(--text-caption)] underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] disabled:opacity-50"
+            >
+              {REST_NONE_LABEL}
+            </button>
+          </div>
+        ) : null}
 
         {error ? (
           <p role="alert" className="mt-4 text-center text-sm text-[var(--brand-coral-dark)]">

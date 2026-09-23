@@ -11,7 +11,7 @@ import {
  * The shared front half of every intake endpoint: kill switch, then the
  * per-request participant guard (`resolveDiscoveryIntakeContext`).
  *
- * The mapping from guard outcome to status code is fixed here so the three
+ * The mapping from guard outcome to status code is fixed here so the
  * endpoints cannot drift apart:
  *   no session               -> 401
  *   no live enrollment       -> 404  (this is also what a REVOKED participant gets)

@@ -3,7 +3,7 @@ import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contract
 import type { DiscoveryIntakeCaptureInput, DiscoveryIntakeItemView } from "./types"
 
 /**
- * The checklist's four calls. Kept together (and free of React) so the entry
+ * The checklist's calls. Kept together (and free of React) so the entry
  * component stays about the screen, not about transport.
  *
  * `submitProductForResearch` is the caller the plan asks for: it speaks to the
@@ -101,6 +101,17 @@ export async function removeIntakeItem(itemId: string): Promise<void> {
     method: "DELETE",
   })
   if (!response.ok) throw await failure(response)
+}
+
+/**
+ * „Mehr benutze ich nicht": the server answers every still-open category with
+ * `none` and returns the WHOLE list afterwards, which replaces the client's state.
+ */
+export async function markRemainingCategoriesNone(): Promise<DiscoveryIntakeItemView[]> {
+  const response = await fetch("/api/beratung/intake/remaining-none", { method: "POST" })
+  if (!response.ok) throw await failure(response)
+  const body = (await response.json()) as { items: DiscoveryIntakeItemView[] }
+  return body.items
 }
 
 export async function submitIntake(): Promise<void> {

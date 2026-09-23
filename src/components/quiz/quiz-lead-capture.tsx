@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { QuizProgressBar } from "./quiz-progress-bar"
 import { QuizConsentSheet } from "./quiz-consent-sheet"
+import { QuizDiscoveryLeadSave } from "./quiz-discovery-lead-save"
 import { ArrowLeft } from "lucide-react"
 import { Icon } from "@/components/ui/icon"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
@@ -53,6 +54,18 @@ function isValidEmail(email: string) {
 /** Shown on blur of a malformed address — the server never sees that request. */
 const INVALID_EMAIL_MESSAGE = "Bitte eine gültige E-Mail-Adresse eingeben."
 
+/**
+ * The discovery lead this browser last saved, and the answers it was saved for.
+ * Browser-only (written after a successful save, never during a server render):
+ * it lets a Back onto the lead step recognise that nothing changed since the
+ * save, instead of posting a duplicate lead and bouncing forward again.
+ */
+let lastDiscoveryLeadSave: { leadId: string; answersKey: string } | null = null
+
+function discoveryAnswersKey(answers: Parameters<typeof canonicalizeQuizAnswers>[0]): string {
+  return JSON.stringify(canonicalizeQuizAnswers(answers))
+}
+
 export function QuizLeadCapture() {
   const { user, loading: authLoading } = useAuth()
   const {
@@ -65,6 +78,7 @@ export function QuizLeadCapture() {
     lead,
     setLeadField,
     answers,
+    leadId,
     setLeadId,
     goNext,
     goBack,
@@ -77,6 +91,12 @@ export function QuizLeadCapture() {
   const [serverSuggestion, setServerSuggestion] = useState<string | null>(null)
   const [contextStatus, setContextStatus] = useState<"checking" | "ready" | "unavailable">("ready")
   const [contextAttempt, setContextAttempt] = useState(0)
+  // The store outlives this component, so a SECOND visit to the lead step mounts
+  // with `leadCaptureMode: "discovery"` already set and `contextStatus` at its
+  // "ready" default — and the save step's own effect would run before the context
+  // effect below re-checks the enrollment. Discovery capture therefore waits for a
+  // participant answer from THIS mount.
+  const [discoveryContextConfirmed, setDiscoveryContextConfirmed] = useState(false)
   const [returnContextStatus, setReturnContextStatus] = useState<"checking" | "ready">(
     funnelPackageKey === QUIZ_EMAIL_RETURN_PACKAGE_KEY ? "checking" : "ready",
   )
@@ -147,6 +167,7 @@ export function QuizLeadCapture() {
         }
         if (payload.status === "participant") {
           setDiscoveryLeadIdentity({ name: payload.name, email: payload.email })
+          setDiscoveryContextConfirmed(true)
           setContextStatus("ready")
           return
         }
@@ -437,6 +458,9 @@ export function QuizLeadCapture() {
 
       // The submission is done, so the recovery it belonged to is over too.
       consentAnsweredRef.current = false
+      if (leadCaptureMode === "discovery") {
+        lastDiscoveryLeadSave = { leadId: data.leadId, answersKey: discoveryAnswersKey(answers) }
+      }
       setLeadId(data.leadId)
       trackAppEvent("quiz_lead_captured", {
         leadId: data.leadId,
@@ -458,10 +482,13 @@ export function QuizLeadCapture() {
     }
   }
 
+  const discoveryAwaitingContext = leadCaptureMode === "discovery" && !discoveryContextConfirmed
+
   if (
     partnerLookupKey === "checking" ||
     contextStatus !== "ready" ||
-    returnContextStatus !== "ready"
+    returnContextStatus !== "ready" ||
+    discoveryAwaitingContext
   ) {
     return (
       <div className="flex flex-col">
@@ -480,7 +507,8 @@ export function QuizLeadCapture() {
         </div>
         {partnerLookupKey === "checking" ||
         contextStatus === "checking" ||
-        returnContextStatus === "checking" ? (
+        returnContextStatus === "checking" ||
+        (discoveryAwaitingContext && contextStatus === "ready") ? (
           <p className="text-center text-sm text-muted-foreground" role="status">
             Dein Zugang wird geladen …
           </p>
@@ -502,23 +530,49 @@ export function QuizLeadCapture() {
     )
   }
 
+  const progressHeader = (
+    <div className="flex items-center gap-3 mb-4">
+      <button
+        onClick={saving ? undefined : requestBack}
+        aria-label="Zurück"
+        aria-disabled={saving}
+        disabled={saving}
+        className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors disabled:pointer-events-none disabled:opacity-40"
+      >
+        <ArrowLeft className="h-5 w-5" />
+      </button>
+      <div className="flex-1">
+        <QuizProgressBar current={QUIZ_TOTAL_QUESTIONS} total={QUIZ_TOTAL_QUESTIONS} />
+      </div>
+    </div>
+  )
+
+  // A discovery participant is never asked for marketing consent: discovery
+  // leads are kept out of every marketing pipeline anyway. The step saves the
+  // lead with `false` on arrival instead — see `QuizDiscoveryLeadSave`.
+  if (leadCaptureMode === "discovery" && leadCaptureSubStep === "consent") {
+    return (
+      <div className="flex flex-col" key={leadCaptureSubStep}>
+        {progressHeader}
+        <QuizDiscoveryLeadSave
+          alreadySaved={
+            leadId !== null &&
+            lastDiscoveryLeadSave?.leadId === leadId &&
+            lastDiscoveryLeadSave.answersKey === discoveryAnswersKey(answers)
+          }
+          error={error}
+          onContinue={goNext}
+          onSave={() => void handleConsent(false)}
+          saving={saving}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col" key={leadCaptureSubStep}>
       {/* Progress bar */}
-      <div className="flex items-center gap-3 mb-4">
-        <button
-          onClick={saving ? undefined : requestBack}
-          aria-label="Zurück"
-          aria-disabled={saving}
-          disabled={saving}
-          className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors disabled:pointer-events-none disabled:opacity-40"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-        <div className="flex-1">
-          <QuizProgressBar current={QUIZ_TOTAL_QUESTIONS} total={QUIZ_TOTAL_QUESTIONS} />
-        </div>
-      </div>
+      {progressHeader}
 
       {/* Plum banner */}
       <div

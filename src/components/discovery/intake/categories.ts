@@ -12,6 +12,12 @@ import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contract
  * `article` and `interrogative` carry the German gender the shared
  * `CATEGORY_COPY.label` cannot: „Dein Shampoo" but „Deine Maske", „Welchen
  * Conditioner" but „Welches Öl".
+ *
+ * `LABEL_OVERRIDES` renames a category for THIS checklist only. The shared
+ * `CATEGORY_COPY` stays untouched — the personal plan and Stage 3 keep their
+ * own wording. „Kopfhautpflege" is the shelf term dm, Rossmann and Douglas use
+ * for serums, tonics and peelings; „Kopfhautprodukt" read as a catch-all in
+ * the field test, so the entry screen also names examples (`hint`).
  */
 
 export type DiscoveryIntakeCategoryCopy = {
@@ -21,6 +27,15 @@ export type DiscoveryIntakeCategoryCopy = {
   possessive: "Dein" | "Deine"
   /** „Welches Shampoo …" / „Welchen Conditioner …" / „Welche Maske …" */
   interrogative: "Welches" | "Welchen" | "Welche"
+  /** Optional guidance line under the entry screen's question. */
+  hint?: string
+}
+
+const LABEL_OVERRIDES: Partial<Record<PersonalPlanCategory, { label: string; hint?: string }>> = {
+  scalp_care: {
+    label: "Kopfhautpflege",
+    hint: "z. B. Kopfhaut-Serum, -Tonikum oder -Peeling",
+  },
 }
 
 const GRAMMAR: Record<
@@ -37,7 +52,8 @@ const GRAMMAR: Record<
   leave_in: { possessive: "Dein", interrogative: "Welches" },
   oil: { possessive: "Dein", interrogative: "Welches" },
   bondbuilder: { possessive: "Dein", interrogative: "Welchen" },
-  scalp_care: { possessive: "Dein", interrogative: "Welches" },
+  // Grammar of the checklist's label („die Kopfhautpflege"), not of the shared one.
+  scalp_care: { possessive: "Deine", interrogative: "Welche" },
   heat_protectant: { possessive: "Dein", interrogative: "Welchen" },
   dry_shampoo: { possessive: "Dein", interrogative: "Welches" },
 }
@@ -48,7 +64,7 @@ export type DiscoveryIntakeGroup = {
 }
 
 function copyFor(key: PersonalPlanCategory): DiscoveryIntakeCategoryCopy {
-  return { key, label: CATEGORY_COPY[key].label, ...GRAMMAR[key] }
+  return { key, label: CATEGORY_COPY[key].label, ...GRAMMAR[key], ...LABEL_OVERRIDES[key] }
 }
 
 export const DISCOVERY_INTAKE_GROUPS: DiscoveryIntakeGroup[] = [
