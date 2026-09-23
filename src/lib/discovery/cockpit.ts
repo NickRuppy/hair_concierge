@@ -18,6 +18,7 @@ import {
   type DiscoveryParticipantVerdict,
   type DiscoveryVerdictStatus,
 } from "./load-participant-verdicts"
+import { discoveryProductLabel } from "./product-label"
 import {
   composeDiscoveryRefinedRoutine,
   discoverySwapProductIds,
@@ -327,7 +328,7 @@ export type DiscoveryCockpitView = {
  * name nobody entered.
  */
 export function describeDiscoveryIntakeItem(item: DiscoveryIntakeItem): string {
-  const text = [item.brandText, item.productNameText].filter(Boolean).join(" ").trim()
+  const text = discoveryProductLabel(item.brandText, item.productNameText)
   if (text) return text
   if (item.barcodeIdentifier) {
     return `${DISCOVERY_SCANNED_PRODUCT_LABEL} · ${item.barcodeIdentifier}`

@@ -260,6 +260,12 @@ test("a textless barcode row is named by its code, and research items stay named
     describeDiscoveryIntakeItem(item({ brandText: null, productNameText: "Eigenmarke Spülung" })),
     "Eigenmarke Spülung",
   )
+  assert.equal(
+    describeDiscoveryIntakeItem(
+      item({ brandText: "Afrolocke", productNameText: "Afrolocke Shea Butter Leave-in" }),
+    ),
+    "Afrolocke Shea Butter Leave-in",
+  )
 
   const view = buildDiscoveryCockpitView(
     model({
