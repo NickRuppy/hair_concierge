@@ -16,6 +16,11 @@ export type DiscoveryIntakeItemView = {
   brandText: string | null
   productNameText: string | null
   barcodeIdentifier: string | null
+  /**
+   * The linked catalog product's packshot, read at load time from `product_id`. Absent
+   * for rows with no catalog product (unknown barcode, dm or typed-in research).
+   */
+  imageUrl?: string | null
 }
 
 /** The wire shape of one capture — the discriminated union the items route validates. */

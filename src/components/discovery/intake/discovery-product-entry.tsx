@@ -262,7 +262,11 @@ export function DiscoveryProductEntry({
                 key={item.id}
                 className="flex items-center gap-3 rounded-[14px] border border-[var(--brand-plum-light)] bg-white px-3 py-2.5"
               >
-                <ScanProductThumb imageUrl={null} label={itemDisplayName(item)} size={40} />
+                <ScanProductThumb
+                  imageUrl={item.imageUrl ?? null}
+                  label={itemDisplayName(item)}
+                  size={40}
+                />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-semibold text-[var(--brand-plum-darkest)]">
                     {itemDisplayName(item)}

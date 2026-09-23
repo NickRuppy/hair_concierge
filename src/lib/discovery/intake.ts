@@ -43,8 +43,13 @@ const INTAKES_TABLE = "discovery_intakes"
 const ITEMS_TABLE = "discovery_intake_items"
 
 const INTAKE_COLUMNS = "id,enrollment_id,user_id,state,submitted_at"
+/**
+ * The linked catalog product is read alongside the row (FK `product_id` ->
+ * `products`), so the checklist can show the same packshot the search row showed
+ * without storing a copy of it. Rows without a catalog product read it as null.
+ */
 const ITEM_COLUMNS =
-  "id,intake_id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,created_at"
+  "id,intake_id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,created_at,catalog_product:products(image_url)"
 
 export type DiscoveryAdminClient = ReturnType<typeof createAdminClient>
 
@@ -65,6 +70,15 @@ export type DiscoveryIntakeItem = {
   barcodeIdentifier: string | null
   productId: string | null
   productSubmissionId: string | null
+  /**
+   * Presentation of the linked catalog product, when the row was read with its join
+   * (`loadDiscoveryIntakeItems`, the insert helpers). Display only — never identity.
+   */
+  catalog?: DiscoveryIntakeCatalogPresentation | null
+}
+
+export type DiscoveryIntakeCatalogPresentation = {
+  imageUrl: string | null
 }
 
 type IntakeRow = {
@@ -86,6 +100,11 @@ type ItemRow = {
   product_id: string | null
   product_submission_id: string | null
   created_at: string
+  catalog_product?: CatalogProductRelation | CatalogProductRelation[] | null
+}
+
+type CatalogProductRelation = {
+  image_url: string | null
 }
 
 /** The insert payload, with every identity column written explicitly. */
@@ -396,7 +415,8 @@ function projectIntake(row: IntakeRow): DiscoveryIntake {
  *
  * `productId` / `productSubmissionId` stay on the server: the checklist never renders
  * them, and the cockpit reads them straight from the table. One function so the two
- * surfaces cannot drift into disagreeing about that boundary.
+ * surfaces cannot drift into disagreeing about that boundary. The catalog image is
+ * the one thing the browser gets from the linked product — the packshot for the row.
  */
 export function toDiscoveryIntakeItemView(item: DiscoveryIntakeItem): DiscoveryIntakeItemView {
   return {
@@ -406,10 +426,25 @@ export function toDiscoveryIntakeItemView(item: DiscoveryIntakeItem): DiscoveryI
     brandText: item.brandText,
     productNameText: item.productNameText,
     barcodeIdentifier: item.barcodeIdentifier,
+    imageUrl: item.catalog?.imageUrl ?? null,
   }
 }
 
-function projectItem(row: ItemRow): DiscoveryIntakeItem {
+function nonEmpty(value: string | null | undefined): string | null {
+  const text = value?.trim()
+  return text ? text : null
+}
+
+function projectCatalogPresentation(
+  relation: ItemRow["catalog_product"],
+): DiscoveryIntakeCatalogPresentation | null {
+  const product = Array.isArray(relation) ? (relation[0] ?? null) : (relation ?? null)
+  if (!product) return null
+  return { imageUrl: nonEmpty(product.image_url) }
+}
+
+/** The row-to-domain projection, join included. Exported for tests. */
+export function projectDiscoveryIntakeItemRow(row: ItemRow): DiscoveryIntakeItem {
   return {
     id: row.id,
     category: row.category as DiscoveryIntakeCategory,
@@ -419,6 +454,7 @@ function projectItem(row: ItemRow): DiscoveryIntakeItem {
     barcodeIdentifier: row.barcode_identifier,
     productId: row.product_id,
     productSubmissionId: row.product_submission_id,
+    catalog: projectCatalogPresentation(row.catalog_product),
   }
 }
 
@@ -476,7 +512,7 @@ export async function loadDiscoveryIntakeItems(
     .order("created_at", { ascending: true })
     .order("id", { ascending: true })
   if (error) throw error
-  return ((data as ItemRow[] | null) ?? []).map(projectItem)
+  return ((data as ItemRow[] | null) ?? []).map(projectDiscoveryIntakeItemRow)
 }
 
 /**
@@ -557,7 +593,7 @@ export async function insertDiscoveryIntakeItem(
   if (error) throw error
   const inserted = (data as ItemRow | null) ?? null
   if (!inserted) throw new Error("Discovery intake item could not be stored")
-  return projectItem(inserted)
+  return projectDiscoveryIntakeItemRow(inserted)
 }
 
 /**
@@ -585,7 +621,7 @@ export async function insertDiscoveryIntakeNoneItems(
   if (inserted.length !== rows.length) {
     throw new Error("Discovery intake none answers could not be stored")
   }
-  return inserted.map(projectItem)
+  return inserted.map(projectDiscoveryIntakeItemRow)
 }
 
 /** Scoped to the caller's own intake: an item id from another intake deletes nothing. */

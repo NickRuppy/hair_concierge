@@ -306,6 +306,8 @@ test("a product write clears only a standing „benutze ich nicht“, never the 
       brandText: storedItem.brandText,
       productNameText: storedItem.productNameText,
       barcodeIdentifier: storedItem.barcodeIdentifier,
+      // A stored row with no catalog join read carries no packshot.
+      imageUrl: null,
     },
   })
   assert.deepEqual(cleared, [

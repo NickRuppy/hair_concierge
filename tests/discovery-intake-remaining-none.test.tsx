@@ -201,6 +201,7 @@ test("only categories with NO answer are touched — products and a standing non
       "brandText",
       "category",
       "id",
+      "imageUrl",
       "productNameText",
       "source",
     ])
