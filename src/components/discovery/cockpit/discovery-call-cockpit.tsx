@@ -35,6 +35,7 @@ const NEW_PREFIX = "Neu: "
 const GAP_TITLE = "Lücke in der Idealroutine"
 const GAP_BODY = "Sie benutzt für diesen Schritt aktuell nichts."
 const UNANSWERED_STEP = "Nicht angegeben — im Call fragen."
+const NOT_YET_FILLED_STEP = "Noch nicht ausgefüllt."
 const NO_PRODUCT = "Kein Produkt angegeben"
 const UNDECIDED_HINT = "Noch nicht entschieden."
 const FROZEN_HINT =
@@ -262,16 +263,20 @@ function StepVerdict({ step, submitted }: { step: DiscoveryCockpitStepView; subm
       </div>
     )
   }
-  // A submitted checklist that never touched this category says nothing about use — only
-  // an explicit „benutze ich nicht" earns „Lücke … benutzt nichts". Before submission an
-  // open category is simply not done yet, so the draft keeps the gap wording.
-  const unanswered = submitted && step.unanswered
+  // An untouched category says nothing about use — only an explicit „benutze ich nicht"
+  // earns „Lücke … benutzt nichts". After submission it is a question for the call; before
+  // submission the checklist is simply not done yet.
+  const unansweredCopy = step.unanswered
+    ? submitted
+      ? UNANSWERED_STEP
+      : NOT_YET_FILLED_STEP
+    : null
   return (
     <div className="flex flex-col gap-2">
       <p className="text-[15px] font-semibold text-muted-foreground">{NO_PRODUCT}</p>
       <div className="rounded-[14px] bg-muted px-3 py-2">
-        {unanswered ? (
-          <p className="text-[13px] font-bold text-foreground">{UNANSWERED_STEP}</p>
+        {unansweredCopy ? (
+          <p className="text-[13px] font-bold text-foreground">{unansweredCopy}</p>
         ) : (
           <>
             <p className="text-[13px] font-bold text-foreground">{GAP_TITLE}</p>

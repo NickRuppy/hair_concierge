@@ -298,11 +298,13 @@ test("with every unanswered category on a step, the summary line disappears", as
   assert.equal(markup.split(UNANSWERED_STEP).length - 1, 2)
 })
 
-test("before submission an open category is just not done yet — current gap wording, no line", async () => {
+test("before submission an open category is just not done yet — never „benutzt nichts“, no line", async () => {
   const markup = await renderCockpit("draft")
   assert.ok(markup.includes("Öl — benutzt sie nicht."))
   assert.ok(!markup.includes("Nicht angegeben"))
-  assert.ok(stepBlock(markup, "Leave-in").includes(USES_NOTHING))
+  const leaveIn = stepBlock(markup, "Leave-in")
+  assert.ok(leaveIn.includes("Noch nicht ausgefüllt."))
+  assert.ok(!leaveIn.includes(USES_NOTHING))
 })
 
 test("the participant's document reads like any other: gaps get the Idealplan's pick, nothing is dropped", () => {
