@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Deine Routine — Lena</title>
+<style>
+  :root {
+    --paper: #ffffff;
+    --plum-darkest: #2a1845;
+    --plum-dark: #3d2a62;
+    --plum: #6b50a0;
+    --plum-ice: #f2eefa;
+    --plum-light: #c8b8e0;
+    --coral: #d4616a;
+    --ok-bg: #edf7ef; --ok-text: #356b45;
+    --neutral-bg: #f3f0f6; --neutral-text: #574b61;
+    --rule: #e6e2df;
+    --text: #3a3835;
+    --text-sub: #6a6560;
+    --text-caption: #857f79;
+    --display: Georgia, "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; padding: 0; background: #e9e6e3; }
+
+  body {
+    font-family: var(--sans);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    padding: 32px 16px;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: var(--paper);
+    padding: 18mm 20mm 16mm;
+    box-shadow: 0 16px 40px -26px rgba(42, 24, 69, 0.5);
+  }
+
+  /* --- header --- */
+  header { border-bottom: 2px solid var(--plum-darkest); padding-bottom: 12px; margin-bottom: 22px; }
+  .wordmark {
+    font-family: var(--display);
+    font-size: 13px; letter-spacing: 0.06em;
+    color: var(--plum); margin: 0 0 14px;
+  }
+  header h1 {
+    font-family: var(--display);
+    font-weight: 500; font-size: 30px; line-height: 1.15;
+    color: var(--plum-darkest); margin: 0;
+  }
+  header .sub { margin: 6px 0 0; font-size: 13.5px; color: var(--text-sub); }
+
+  /* --- routine --- */
+  h2.section {
+    font-family: var(--display);
+    font-weight: 500; font-size: 18px; color: var(--plum-darkest);
+    margin: 0 0 12px;
+  }
+
+  ol.steps { list-style: none; margin: 0 0 30px; padding: 0; }
+  ol.steps > li {
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    gap: 0 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--rule);
+    break-inside: avoid;
+  }
+  ol.steps > li:first-child { border-top: 1px solid var(--rule); }
+
+  .num {
+    font-family: var(--display);
+    font-size: 17px; color: var(--plum-light);
+    line-height: 1.25; grid-row: span 3;
+  }
+  .step-top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .cat {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--plum);
+  }
+  .freq { font-size: 11.5px; color: var(--text-caption); margin-left: auto; }
+  .prod {
+    font-size: 15.5px; font-weight: 700; color: var(--plum-darkest);
+    margin: 3px 0 0; line-height: 1.3;
+  }
+  .badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    border-radius: 999px; padding: 2px 8px; margin-left: 8px; vertical-align: 2px;
+  }
+  .b-keep { background: var(--neutral-bg); color: var(--neutral-text); }
+  .b-new { background: var(--plum-ice); color: var(--plum-dark); }
+  .why { font-size: 13px; line-height: 1.55; color: var(--text-sub); margin: 4px 0 0; }
+
+  /* --- summary of existing products --- */
+  .summary { break-inside: avoid; }
+  .summary .count {
+    font-size: 13px; color: var(--text-sub); margin: 0 0 12px;
+  }
+  ul.checked { list-style: none; margin: 0; padding: 0; }
+  ul.checked li {
+    display: grid; grid-template-columns: 96px 1fr;
+    gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--rule);
+    font-size: 13px; line-height: 1.5;
+  }
+  ul.checked li:first-child { border-top: 1px solid var(--rule); }
+  .tag {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    border-radius: 4px; padding: 3px 7px; text-align: center; align-self: start;
+  }
+  .t-keep { background: var(--ok-bg); color: var(--ok-text); }
+  .t-swap { background: var(--plum-ice); color: var(--plum-dark); }
+  .checked .pname { font-weight: 600; color: var(--plum-darkest); }
+  .checked .note { color: var(--text-sub); }
+
+  footer {
+    margin-top: 28px; padding-top: 12px;
+    border-top: 1px solid var(--rule);
+    font-size: 11px; color: var(--text-caption);
+    display: flex; justify-content: space-between;
+  }
+
+  @page { size: A4; margin: 0; }
+
+  @media print {
+    html, body { background: #fff; }
+    body { padding: 0; }
+    .page { box-shadow: none; margin: 0; width: auto; min-height: auto; padding: 16mm 18mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header>
+    <p class="wordmark">Chaarlie</p>
+    <h1>Deine Routine, Lena</h1>
+    <p class="sub">Vier Produkte bleiben, drei ändern sich. Mehr braucht es nicht.</p>
+  </header>
+
+  <h2 class="section">So gehst du vor</h2>
+  <ol class="steps">
+
+    <li>
+      <span class="num">1</span>
+      <div class="step-top"><span class="cat">Shampoo</span><span class="freq">3× pro Woche</span></div>
+      <p class="prod">Elvital Hyaluron Pure Shampoo <span class="badge b-keep">bleibt</span></p>
+      <p class="why">Waschen am Ansatz, Längen nur durchspülen. Reinigt leicht genug für deine Kopfhaut.</p>
+    </li>
+
+    <li>
+      <span class="num">2</span>
+      <div class="step-top"><span class="cat">Conditioner</span><span class="freq">nach jeder Wäsche</span></div>
+      <p class="prod">Guhl Feuchtigkeit &amp; Glanz Spülung <span class="badge b-new">neu</span></p>
+      <p class="why">Ab Ohrhöhe, zwei Minuten einwirken. Leichter als dein bisheriger — die Längen bleiben beweglich.</p>
+    </li>
+
+    <li>
+      <span class="num">3</span>
+      <div class="step-top"><span class="cat">Maske</span><span class="freq">1× pro Woche</span></div>
+      <p class="prod">Nivea 1-Minute Kur Feuchtigkeit <span class="badge b-new">neu</span></p>
+      <p class="why">An dem Tag statt Conditioner, nicht zusätzlich. Eine Minute reicht.</p>
+    </li>
+
+    <li>
+      <span class="num">4</span>
+      <div class="step-top"><span class="cat">Leave-in</span><span class="freq">nach jeder Wäsche</span></div>
+      <p class="prod">Garnier Fructis Hair Food Aloe Vera Leave-in <span class="badge b-new">neu</span></p>
+      <p class="why">Ins handtuchfeuchte Haar, ab Ohrhöhe. Der Schritt, der bei dir bisher gefehlt hat — dafür Glanz und weniger Frizz.</p>
+    </li>
+
+    <li>
+      <span class="num">5</span>
+      <div class="step-top"><span class="cat">Hitzeschutz</span><span class="freq">vor jedem Styling</span></div>
+      <p class="prod">got2b Guardian Angel Hitzeschutz-Spray <span class="badge b-keep">bleibt</span></p>
+      <p class="why">Aufs feuchte Haar, vor Föhn und Glätteisen. Bleibt leicht, auch bei feinem Haar.</p>
+    </li>
+
+    <li>
+      <span class="num">6</span>
+      <div class="step-top"><span class="cat">Öl</span><span class="freq">bei Bedarf</span></div>
+      <p class="prod">Elvital Öl Magique <span class="badge b-keep">bleibt</span></p>
+      <p class="why">Ein Tropfen, nur in die Spitzen, ins trockene Haar. Weiter oben wird es schnell schwer.</p>
+    </li>
+
+    <li>
+      <span class="num">7</span>
+      <div class="step-top"><span class="cat">Trockenshampoo</span><span class="freq">zwischen den Wäschen</span></div>
+      <p class="prod">Batiste Trockenshampoo Original <span class="badge b-keep">bleibt</span></p>
+      <p class="why">Am Vorabend in den Ansatz, mit Abstand sprühen, kurz einmassieren.</p>
+    </li>
+
+  </ol>
+
+  <section class="summary">
+    <h2 class="section">Deine bisherigen Produkte</h2>
+    <p class="count">Sechs geprüft: vier bleiben, zwei ersetzt.</p>
+    <ul class="checked">
+      <li><span class="tag t-keep">bleibt</span><span><span class="pname">Elvital Hyaluron Pure Shampoo</span> — <span class="note">leichte Reinigung, passt zu deinem Ansatz.</span></span></li>
+      <li><span class="tag t-swap">ersetzt</span><span><span class="pname">Gliss Kur Aqua Revive Spülung</span> — <span class="note">richtige Richtung, für feines Haar aber zu schwer.</span></span></li>
+      <li><span class="tag t-swap">ersetzt</span><span><span class="pname">Balea Professional Repair Haarkur</span> — <span class="note">sehr reichhaltig, legt sich auf deine Längen.</span></span></li>
+      <li><span class="tag t-keep">bleibt</span><span><span class="pname">got2b Guardian Angel Hitzeschutz-Spray</span> — <span class="note">leichtes Spray, deckt Föhn und Glätteisen ab.</span></span></li>
+      <li><span class="tag t-keep">bleibt</span><span><span class="pname">Elvital Öl Magique</span> — <span class="note">gutes Finish, sparsam und nur in den Spitzen.</span></span></li>
+      <li><span class="tag t-keep">bleibt</span><span><span class="pname">Batiste Trockenshampoo Original</span> — <span class="note">passt zu deinem Waschrhythmus.</span></span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Chaarlie · Deine Routine für Lena</span>
+    <span>23.09.2026</span>
+  </footer>
+
+</div>
+
+</body>
+</html>

@@ -280,7 +280,9 @@ export function ScanSearchSheet({
   reason,
   onOpenChange,
   onSelectProduct,
+  onSelectProductResult,
   onSelectRetailerResult,
+  onSelectRetailerResultRow,
   onStartResearchIntake,
   onSubmitResearchIntake,
   submitting = false,
@@ -294,10 +296,20 @@ export function ScanSearchSheet({
   onOpenChange: (open: boolean) => void
   onSelectProduct: (productId: string) => void
   /**
+   * The same catalog-row tap as `onSelectProduct`, carrying the WHOLE result instead of
+   * just its id — called right beside it, never instead of it, so every existing caller is
+   * untouched. Added for the discovery-call checklist, which stores the participant's own
+   * wording (`brand_text` / `product_name_text`) alongside the resolved `product_id` and
+   * would otherwise have to re-fetch what the row already displayed.
+   */
+  onSelectProductResult?: (result: ScanSearchResult) => void
+  /**
    * dm-row tap (T4 brief §5). Only ever invoked while `retailerSearchEnabled` is true —
    * the row it lives on only renders in that state.
    */
   onSelectRetailerResult?: (gtin: string) => void
+  /** The dm-row analogue of `onSelectProductResult`: the whole row, called beside it. */
+  onSelectRetailerResultRow?: (result: ScanRetailerResult) => void
   /**
    * The post-submit empty state's CTA (T4 brief §7): invoked (in addition to opening the
    * intake form below) when the CTA is tapped, and gates the CTA's rendering — while it is
@@ -698,7 +710,10 @@ export function ScanSearchSheet({
                       <li key={result.id}>
                         <button
                           type="button"
-                          onClick={() => onSelectProduct(result.id)}
+                          onClick={() => {
+                            onSelectProduct(result.id)
+                            onSelectProductResult?.(result)
+                          }}
                           className="flex w-full items-center gap-3 rounded-[12px] border border-border bg-card px-3 py-2.5 text-left transition-colors hover:border-[var(--brand-plum)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
                         >
                           <ScanProductThumb
@@ -758,6 +773,7 @@ export function ScanSearchSheet({
                                   categoryLabel: result.categoryLabel,
                                 })
                                 onSelectRetailerResult?.(result.gtin)
+                                onSelectRetailerResultRow?.(result)
                               }}
                               className="flex w-full items-center gap-3 rounded-[12px] border border-border bg-card px-3 py-2.5 text-left transition-colors hover:border-[var(--brand-plum)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
                             >

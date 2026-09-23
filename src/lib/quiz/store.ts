@@ -20,6 +20,7 @@ interface QuizState {
   setLeadId: (id: string) => void
   setLeadCaptureSubStep: (sub: LeadCaptureSubStep) => void
   setPartnerLeadIdentity: (identity: { name: string; email: string }) => void
+  setDiscoveryLeadIdentity: (identity: { name: string; email: string }) => void
   setRegularLeadCapture: () => void
   setStep: (step: QuizStep) => void
   setFunnelPackageKey: (key: string | null) => void
@@ -96,6 +97,14 @@ export const useQuizStore = create<QuizState>((set, get) => ({
   setPartnerLeadIdentity: ({ name, email }) =>
     set((state) => ({
       leadCaptureMode: "partner",
+      leadCaptureSubStep: "consent",
+      lead: { ...state.lead, name, email },
+    })),
+  // The discovery-call analogue: the enrollment owns the identity, so the quiz
+  // jumps straight to consent and the lead route re-validates the address.
+  setDiscoveryLeadIdentity: ({ name, email }) =>
+    set((state) => ({
+      leadCaptureMode: "discovery",
       leadCaptureSubStep: "consent",
       lead: { ...state.lead, name, email },
     })),

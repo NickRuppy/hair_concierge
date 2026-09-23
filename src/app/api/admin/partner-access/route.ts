@@ -7,7 +7,7 @@ import {
   mutatePartnerInvitation,
 } from "@/lib/partner-access/service"
 import { sendPartnerInvitationEmail } from "@/lib/partner-access/email"
-import { createClient } from "@/lib/supabase/server"
+import { requireAdmin } from "@/lib/auth/require-admin"
 
 const NO_STORE = { "Cache-Control": "private, no-store" }
 const createSchema = z.object({
@@ -22,18 +22,6 @@ const actionSchema = z.object({
   action: z.enum(["revoke", "reactivate", "rotate", "send"]),
   invitationId: z.string().uuid(),
 })
-
-async function requireAdmin() {
-  const client = await createClient()
-  const {
-    data: { user },
-  } = await client.auth.getUser()
-  if (!user) return { response: NextResponse.json({ error: "Nicht angemeldet." }, { status: 401 }) }
-  const { data } = await client.from("profiles").select("is_admin").eq("id", user.id).single()
-  if (!data?.is_admin)
-    return { response: NextResponse.json({ error: "Nicht erlaubt." }, { status: 403 }) }
-  return { userId: user.id }
-}
 
 export async function GET() {
   const auth = await requireAdmin()

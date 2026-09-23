@@ -55,6 +55,8 @@ import {
 } from "@/lib/personal-plan/migration-quiz"
 import { isPersonalPlanLegacyMigrationEnabled } from "@/lib/personal-plan/migration-admission"
 import { resolvePartnerJourney, savePartnerAccessLead } from "@/lib/partner-access/journey"
+import { isDiscoveryCallToolkitEnabled } from "@/lib/discovery/flag"
+import { resolveDiscoveryJourney } from "@/lib/discovery/journey"
 
 const DEDUPE_WINDOW_MS = 15 * 60 * 1000
 const MAX_RECENT_DUPLICATE_CANDIDATES = 10
@@ -68,6 +70,8 @@ interface QuizLeadPostDependencies {
   saveModeratorOrganicLead: typeof saveModeratorOrganicLead
   resolvePartnerJourney: typeof resolvePartnerJourney
   savePartnerAccessLead: typeof savePartnerAccessLead
+  resolveDiscoveryJourney: typeof resolveDiscoveryJourney
+  discoveryEnabled: () => boolean
   checkRateLimit: typeof checkRateLimit
   checkEmailDeliverability: typeof checkEmailDeliverability
   recordEmailDeliverabilityOutcome: typeof recordEmailDeliverabilityOutcome
@@ -95,6 +99,8 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
     saveModeratorOrganicLead,
     resolvePartnerJourney,
     savePartnerAccessLead,
+    resolveDiscoveryJourney,
+    discoveryEnabled: isDiscoveryCallToolkitEnabled,
     checkRateLimit,
     checkEmailDeliverability,
     recordEmailDeliverabilityOutcome,
@@ -155,6 +161,52 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
       const funnelContext = await dependencies.resolveFunnelCookieContext(
         cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
       )
+      // A discovery-call participant's quiz is call preparation, not a funnel
+      // lead: it never enters the dedupe pool, never reaches Customer.io or
+      // Meta, and it is identified afterwards through the enrollment's intake,
+      // not through a column on `leads`. The resolver reads the signed-in
+      // account's stamp first and only then the table, so it costs an unstamped
+      // visitor nothing.
+      //
+      // Both outcomes are decided here instead of being deferred like the
+      // partner `unavailable` below, because a discovery account can never also
+      // be a partner or a moderator: `stampDiscoveryAccess` REFUSES an account
+      // that already carries another `access_kind` rather than overwriting it,
+      // so the claim never mints an account belonging to two journeys at once.
+      //
+      // The kill switch guards the whole branch, not just its outcome: with the
+      // flag off the resolver is never called, so an ordinary lead cannot be
+      // turned into a 503 by anything discovery does or fails to do.
+      const discovery = dependencies.discoveryEnabled()
+        ? await dependencies.resolveDiscoveryJourney()
+        : ({ kind: "none" } as const)
+      if (discovery.kind === "unavailable") return discoveryUnavailableResponse()
+      if (discovery.kind === "authorized") {
+        const origin = request.headers.get("origin")
+        if (origin && origin !== new URL(request.url).origin) {
+          return NextResponse.json({ error: "Ungültige Anfrage" }, { status: 403 })
+        }
+        // Fail closed on a mismatch, exactly like the partner branch: the
+        // enrollment's address is the identity the call was booked under.
+        if (email !== discovery.enrollment.email) {
+          return NextResponse.json(
+            {
+              code: "invited_email_mismatch",
+              error: "Bitte verwende die E-Mail-Adresse deiner Einladung.",
+            },
+            { status: 422 },
+          )
+        }
+        const saved = await saveDiscoveryQuizLead({
+          client: dependencies.createAdminClient(),
+          email: discovery.enrollment.email,
+          name: discovery.enrollment.name,
+          marketingConsent: parsed.marketingConsent,
+          quizAnswers: canonicalizeQuizAnswers(parsed.quizAnswers),
+        }).catch(() => null)
+        return saved ? leadResponse(saved.leadId, false) : discoveryUnavailableResponse()
+      }
+
       // The partner journey resolves from the signed-in account, the moderator
       // journey from an intent cookie. A former moderator who later becomes a
       // partner still carries that cookie, and its resolver fails closed with
@@ -655,6 +707,38 @@ function fieldTestUnavailableResponse() {
 
 function partnerUnavailableResponse() {
   return NextResponse.json({ error: "Dein Zugang ist nicht verfügbar" }, { status: 503 })
+}
+
+function discoveryUnavailableResponse() {
+  return NextResponse.json({ error: "Deine Einladung ist nicht verfügbar" }, { status: 503 })
+}
+
+/**
+ * A fresh legacy lead for the participant, always inserted, never deduped: the
+ * checklist binds exactly this lead to the enrollment's intake, so handing back
+ * a stranger's recent row would bind the wrong answers. Name and e-mail come
+ * from the enrollment, not from the submitted body.
+ */
+export async function saveDiscoveryQuizLead(input: {
+  client: ReturnType<typeof createAdminClient>
+  email: string
+  name: string
+  marketingConsent: boolean
+  quizAnswers: QuizAnswers
+}) {
+  const { data, error } = await input.client
+    .from("leads")
+    .insert({
+      name: input.name,
+      email: input.email,
+      marketing_consent: input.marketingConsent,
+      quiz_answers: input.quizAnswers,
+      status: "captured",
+    })
+    .select("id")
+    .single()
+  if (error || !data?.id) throw error ?? new Error("Discovery lead save failed")
+  return { leadId: data.id as string }
 }
 
 function leadResponse(leadId: string, clearTouch: boolean, fieldTestAttached?: boolean) {

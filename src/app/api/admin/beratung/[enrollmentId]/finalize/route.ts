@@ -1,0 +1,92 @@
+import type { NextRequest } from "next/server"
+import { z } from "zod"
+
+import { finalizeDiscoveryCall, unfinalizeDiscoveryCall } from "@/lib/discovery/cockpit"
+
+import {
+  discoveryCockpitError,
+  discoveryCockpitJson,
+  guardDiscoveryCockpitRequest,
+  readJsonBody,
+  resolveDiscoveryCockpitView,
+  type DiscoveryCockpitRouteDependencies,
+} from "../../shared"
+
+/**
+ * `POST /api/admin/beratung/<enrollmentId>/finalize` — „Finalisieren" and its undo.
+ *
+ * Finalising stores the timestamp together with `finalized_source_hash`, the fingerprint
+ * of the routine AS COMPOSED RIGHT NOW. That pair is the whole point: the PDF renders only
+ * from a finalised intake, and it warns when a freshly computed hash no longer matches —
+ * i.e. the profile or the catalog drifted since the call. Computing the hash here, from
+ * the same composition the cockpit renders, is what makes that comparison meaningful.
+ *
+ * It requires `state = 'submitted'` (the predicate is in the UPDATE, so a draft intake
+ * finalises nothing), and un-finalising clears BOTH columns and is allowed at any time —
+ * sending the PDF is manual, so there is nothing to protect against a second thought.
+ */
+
+const bodySchema = z.object({ finalized: z.boolean() })
+
+export type DiscoveryFinalizeRouteDependencies = DiscoveryCockpitRouteDependencies & {
+  finalize?: typeof finalizeDiscoveryCall
+  unfinalize?: typeof unfinalizeDiscoveryCall
+  now?: () => string
+}
+
+export function createDiscoveryFinalizeHandler(overrides: DiscoveryFinalizeRouteDependencies = {}) {
+  const { finalize, unfinalize, now, ...guardOverrides } = overrides
+  const applyFinalize = finalize ?? finalizeDiscoveryCall
+  const applyUnfinalize = unfinalize ?? unfinalizeDiscoveryCall
+
+  return async function POST(
+    request: NextRequest,
+    context: { params: Promise<{ enrollmentId: string }> },
+  ) {
+    const { enrollmentId } = await context.params
+    const guard = await guardDiscoveryCockpitRequest(enrollmentId, guardOverrides)
+    if (!guard.ok) return guard.response
+    const { admin, intake } = guard
+
+    const body = bodySchema.safeParse(await readJsonBody(request))
+    if (!body.success) return discoveryCockpitError("invalid_body", 400)
+
+    if (!body.data.finalized) {
+      try {
+        const cleared = await applyUnfinalize(intake.id, admin)
+        if (!cleared) return discoveryCockpitError("not_found", 404)
+        return discoveryCockpitJson({
+          callFinalizedAt: cleared.callFinalizedAt,
+          finalizedSourceHash: cleared.finalizedSourceHash,
+        })
+      } catch (error) {
+        console.error("[discovery] cockpit un-finalize failed:", error)
+        return discoveryCockpitError("unavailable", 503)
+      }
+    }
+
+    if (intake.state !== "submitted") return discoveryCockpitError("not_submitted", 409)
+
+    const composed = await resolveDiscoveryCockpitView(admin, intake, guardOverrides)
+    if (!composed.ok) return composed.response
+
+    try {
+      const finalized = await applyFinalize(
+        { intakeId: intake.id, sourceHash: composed.view.sourceHash, now },
+        admin,
+      )
+      // The UPDATE carries the `submitted` predicate too, so a state that changed between
+      // the read and the write lands here rather than storing an impossible pair.
+      if (!finalized) return discoveryCockpitError("not_submitted", 409)
+      return discoveryCockpitJson({
+        callFinalizedAt: finalized.callFinalizedAt,
+        finalizedSourceHash: finalized.finalizedSourceHash,
+      })
+    } catch (error) {
+      console.error("[discovery] cockpit finalize failed:", error)
+      return discoveryCockpitError("unavailable", 503)
+    }
+  }
+}
+
+export const POST = createDiscoveryFinalizeHandler()
