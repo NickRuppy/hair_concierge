@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie Zahlungsbestätigung – Entwurf</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #2d1b46;
+        --muted: #655471;
+        --line: #e8e1f0;
+        --wash: #f4f0f9;
+        --canvas: #ebe7ef;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--canvas);
+        color: var(--ink);
+      }
+      .review {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 40px 24px 64px;
+      }
+      .review-header {
+        max-width: 760px;
+        margin-bottom: 30px;
+      }
+      .review-kicker {
+        margin: 0 0 8px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .review-header h1 {
+        margin: 0 0 12px;
+        font-size: clamp(30px, 5vw, 48px);
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+      }
+      .review-header p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.55;
+      }
+      .frames {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 390px;
+        gap: 28px;
+        align-items: start;
+      }
+      .frame-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 0 10px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .client {
+        background: #fff;
+        border: 1px solid rgba(45, 27, 70, 0.12);
+        border-radius: 18px;
+        box-shadow: 0 18px 55px rgba(45, 27, 70, 0.12);
+        overflow: hidden;
+      }
+      .client-bar {
+        padding: 18px 22px;
+        border-bottom: 1px solid #ece8ef;
+      }
+      .subject {
+        margin: 0 0 9px;
+        color: #202124;
+        font-size: 18px;
+      }
+      .sender {
+        margin: 0;
+        color: #5f6368;
+        font-size: 13px;
+      }
+      .sender strong {
+        color: #202124;
+      }
+      .mobile .client-bar {
+        padding: 16px;
+      }
+      .mobile .subject {
+        font-size: 16px;
+        line-height: 1.35;
+      }
+      .email-canvas {
+        padding: 28px 16px;
+        background: #f4f0f9;
+      }
+      .mobile .email-canvas {
+        padding: 0;
+      }
+      .email-card {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .email-main {
+        padding: 38px 42px 32px;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.55;
+        color: var(--ink);
+      }
+      .mobile .email-main {
+        padding: 30px 22px 26px;
+      }
+      .wordmark {
+        margin: 0 0 28px;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -1px;
+      }
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.4px;
+      }
+      .email-main h2 {
+        margin: 0 0 12px;
+        font-size: 30px;
+        line-height: 1.18;
+        letter-spacing: -0.7px;
+      }
+      .mobile .email-main h2 {
+        font-size: 27px;
+      }
+      .intro {
+        margin: 0 0 24px;
+        color: var(--muted);
+      }
+      .facts {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        overflow: hidden;
+        background: var(--wash);
+        border-radius: 10px;
+      }
+      .facts td {
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--line);
+      }
+      .facts tr:last-child td {
+        border-bottom: 0;
+      }
+      .facts .label {
+        margin: 0 0 3px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .facts .value {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+      .meta {
+        margin: 12px 0 24px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .button {
+        display: inline-block;
+        padding: 13px 22px;
+        border-radius: 8px;
+        background: var(--ink);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .cancel {
+        margin: 16px 0 0;
+        font-size: 14px;
+      }
+      .cancel a {
+        color: var(--ink);
+        text-decoration: underline;
+      }
+      .support {
+        margin: 20px 0 30px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .receipt {
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .receipt-title {
+        margin: 0 0 10px;
+        color: var(--ink);
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .receipt p {
+        margin: 5px 0;
+      }
+      .receipt code {
+        color: var(--muted);
+        font:
+          12px/1.45 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .email-footer {
+        padding: 20px 22px 26px;
+        text-align: center;
+        color: var(--muted);
+        font:
+          12px/1.8 Arial,
+          sans-serif;
+      }
+      .email-footer a {
+        color: var(--muted);
+      }
+      .notes {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-top: 28px;
+      }
+      .note {
+        padding: 16px;
+        border: 1px solid rgba(45, 27, 70, 0.12);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.62);
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .note strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--ink);
+      }
+      @media (max-width: 900px) {
+        .frames {
+          grid-template-columns: 1fr;
+        }
+        .mobile {
+          max-width: 390px;
+        }
+        .notes {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="review">
+      <header class="review-header">
+        <p class="review-kicker">Review-Artefakt · erste erfolgreiche Zahlung</p>
+        <h1>Die Zahlungsbestätigung wird zu einer echten Bestätigung.</h1>
+        <p>
+          Vorgeschlagene Darstellung für den Moment, in dem der kostenlose Test erfolgreich in die
+          bezahlte Chaarlie-Mitgliedschaft übergeht. Alle Abrechnungsdaten bleiben sichtbar, aber
+          die Kernaussage ist zuerst erfassbar.
+        </p>
+      </header>
+
+      <section class="frames" aria-label="Desktop- und Mobilansicht der E-Mail">
+        <div>
+          <p class="frame-label"><span>Desktop</span><span>600 px E-Mail-Inhalt</span></p>
+          <article class="client">
+            <header class="client-bar">
+              <p class="subject">Deine Zahlungsbestätigung von Chaarlie</p>
+              <p class="sender"><strong>Chaarlie</strong> &lt;info@chaarlie.de&gt;</p>
+            </header>
+            <div class="email-canvas">
+              <div class="email-card">
+                <div class="email-main">
+                  <p class="wordmark">chaarlie</p>
+                  <p class="eyebrow">ZAHLUNG BESTÄTIGT</p>
+                  <h2>Deine Mitgliedschaft ist jetzt aktiv.</h2>
+                  <p class="intro">
+                    Dein kostenloser Test ist abgeschlossen. Deine Zahlung war erfolgreich und dein
+                    bezahlter Chaarlie-Zugang ist jetzt aktiv.
+                  </p>
+                  <table class="facts" role="presentation">
+                    <tr>
+                      <td>
+                        <p class="label">Bezahlt</p>
+                        <p class="value">69,99 €</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p class="label">Zahlungsdatum</p>
+                        <p class="value">22. September 2026</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p class="label">Bezahlter Zugang bis</p>
+                        <p class="value">22. September 2027</p>
+                      </td>
+                    </tr>
+                  </table>
+                  <p class="meta">
+                    Jahresmitgliedschaft · bezahlt über Stripe · Gesamtpreis inkl. anwendbarer
+                    Steuern
+                  </p>
+                  <a class="button" href="https://chaarlie.de/profile">Mitgliedschaft verwalten</a>
+                  <p class="cancel"><a href="https://chaarlie.de/kuendigen">Online kündigen</a></p>
+                  <p class="support">Fragen? Antworte einfach auf diese E-Mail.</p>
+                  <div class="receipt">
+                    <p class="receipt-title">Belegdetails</p>
+                    <p>Zahlung gebucht<br /><code>22. September 2026 um 08:30:52 MESZ</code></p>
+                    <p>Zugang bezahlt bis<br /><code>22. September 2027 um 08:30:52 MESZ</code></p>
+                    <p>Vertragskennung<br /><code>8a2368ec-2cbe-4234-b711-174594112c46</code></p>
+                    <p>Zahlungskennung<br /><code>3949a816-4cca-4177-93ad-0e6cb5bad1bd</code></p>
+                  </div>
+                </div>
+                <footer class="email-footer">
+                  Chaarlie · Haarmony LLC<br /><a href="#">Abmelden</a> ·
+                  <a href="https://chaarlie.de/impressum">Impressum</a> ·
+                  <a href="https://chaarlie.de/datenschutz">Datenschutz</a>
+                </footer>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="mobile">
+          <p class="frame-label"><span>Mobil</span><span>390 px</span></p>
+          <article class="client">
+            <header class="client-bar">
+              <p class="subject">Deine Zahlungsbestätigung von Chaarlie</p>
+              <p class="sender"><strong>Chaarlie</strong> &lt;info@chaarlie.de&gt;</p>
+            </header>
+            <div class="email-canvas">
+              <div class="email-card">
+                <div class="email-main">
+                  <p class="wordmark">chaarlie</p>
+                  <p class="eyebrow">ZAHLUNG BESTÄTIGT</p>
+                  <h2>Deine Mitgliedschaft ist jetzt aktiv.</h2>
+                  <p class="intro">
+                    Dein kostenloser Test ist abgeschlossen. Deine Zahlung war erfolgreich und dein
+                    bezahlter Chaarlie-Zugang ist jetzt aktiv.
+                  </p>
+                  <table class="facts" role="presentation">
+                    <tr>
+                      <td>
+                        <p class="label">Bezahlt</p>
+                        <p class="value">69,99 €</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p class="label">Zahlungsdatum</p>
+                        <p class="value">22. September 2026</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <p class="label">Bezahlter Zugang bis</p>
+                        <p class="value">22. September 2027</p>
+                      </td>
+                    </tr>
+                  </table>
+                  <p class="meta">
+                    Jahresmitgliedschaft · bezahlt über Stripe · Gesamtpreis inkl. anwendbarer
+                    Steuern
+                  </p>
+                  <a class="button" href="https://chaarlie.de/profile">Mitgliedschaft verwalten</a>
+                  <p class="cancel"><a href="https://chaarlie.de/kuendigen">Online kündigen</a></p>
+                  <p class="support">Fragen? Antworte einfach auf diese E-Mail.</p>
+                  <div class="receipt">
+                    <p class="receipt-title">Belegdetails</p>
+                    <p>Zahlung gebucht<br /><code>22. September 2026 um 08:30:52 MESZ</code></p>
+                    <p>Zugang bezahlt bis<br /><code>22. September 2027 um 08:30:52 MESZ</code></p>
+                    <p>Vertragskennung<br /><code>8a2368ec-2cbe-4234-b711-174594112c46</code></p>
+                    <p>Zahlungskennung<br /><code>3949a816-4cca-4177-93ad-0e6cb5bad1bd</code></p>
+                  </div>
+                </div>
+                <footer class="email-footer">
+                  Chaarlie · Haarmony LLC<br /><a href="#">Abmelden</a> ·
+                  <a href="https://chaarlie.de/impressum">Impressum</a> ·
+                  <a href="https://chaarlie.de/datenschutz">Datenschutz</a>
+                </footer>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="notes" aria-label="Entwurfsentscheidungen">
+        <div class="note">
+          <strong>Kernaussage zuerst</strong>Die erfolgreiche Umwandlung aus dem Test wird
+          bestätigt, bevor technische Belegdaten erscheinen.
+        </div>
+        <div class="note">
+          <strong>Abrechnung bleibt vollständig</strong>Betrag, Datum, bezahlter Zeitraum, Anbieter,
+          Steuern und beide Kennungen bleiben im E-Mail-Inhalt erhalten.
+        </div>
+        <div class="note">
+          <strong>Handlungsfähig ohne Druck</strong>Verwalten und Kündigen sind direkt erreichbar;
+          es gibt kein Upselling und keine künstliche Dringlichkeit.
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

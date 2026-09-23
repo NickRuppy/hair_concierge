@@ -2,8 +2,10 @@ import "server-only"
 
 import {
   publicDeclarationReceiptText,
+  publicDeclarationRequiredNoticePresentation,
   type PublicContractDeclarationReceipt,
 } from "@/lib/billing/public-contract-declaration"
+import type { RequiredNoticePresentation } from "@/lib/billing/trial-required-notices"
 import {
   CustomerIoAmbiguousDeliveryError,
   CustomerIoHttpError,
@@ -45,6 +47,7 @@ type Dependencies = Readonly<{
     email: string
     messageId: string
     receiptText: string
+    requiredNotice: RequiredNoticePresentation
   }) => Promise<CustomerIoTransactionalDeliveryReceipt>
   settle: (claim: PublicDeclarationReceiptClaim, outcome: Outcome) => Promise<void>
 }>
@@ -178,7 +181,7 @@ const defaultDependencies: Dependencies = {
     DEFAULT_REQUIRED_NOTICE_TRIGGER,
   apiKeyPresent: Boolean(process.env.CUSTOMERIO_APP_API_KEY?.trim()),
   claim: claimPublicDeclarationReceiptDelivery,
-  send: async ({ email, messageId, receiptText }) =>
+  send: async ({ email, messageId, receiptText, requiredNotice }) =>
     sendCustomerIoTransactionalEmailWithReceipt(
       await buildRequiredNoticeEmail({
         email,
@@ -187,6 +190,7 @@ const defaultDependencies: Dependencies = {
         message: {
           subject: "Deine Erklärung zu deinem Chaarlie Vertrag",
           receipt_text: receiptText,
+          requiredNotice,
         },
       }),
       { timeoutMs: 10_000 },
@@ -228,6 +232,7 @@ export async function dispatchPublicContractDeclarationReceipts(
         email: claim.receiptPayload.declaration.email,
         messageId,
         receiptText: publicDeclarationReceiptText(claim.receiptPayload),
+        requiredNotice: publicDeclarationRequiredNoticePresentation(claim.receiptPayload),
       })
       queuedAt = normalizedProviderQueuedAt(receipt.queuedAt)
     } catch (error) {

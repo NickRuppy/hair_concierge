@@ -10,6 +10,8 @@ import {
   renderConfirmationContent,
   renderConfirmationText,
 } from "./contract-confirmation-html"
+import { renderPaymentReceiptContent, renderPaymentReceiptText } from "./payment-receipt-html"
+import { renderRequiredNoticeContent, renderRequiredNoticeText } from "./required-notice-html"
 import { buildContractPdf, CONTRACT_PDF_FILENAME } from "./contract-pdf"
 export const TRIAL_REQUIRED_NOTICE_MESSAGE_ID_ENV =
   "CUSTOMERIO_TRIAL_REQUIRED_NOTICE_TRANSACTIONAL_MESSAGE_ID"
@@ -57,6 +59,18 @@ export async function buildRequiredNoticeEmail(input: {
             confirmation_text: renderConfirmationText(input.message),
           }
         : {}),
+      ...(input.message.paymentReceipt
+        ? {
+            payment_receipt_html: renderPaymentReceiptContent(input.message),
+            payment_receipt_text: renderPaymentReceiptText(input.message),
+          }
+        : {}),
+      ...(input.message.requiredNotice
+        ? {
+            required_notice_html: renderRequiredNoticeContent(input.message),
+            required_notice_text: renderRequiredNoticeText(input.message),
+          }
+        : {}),
     },
     inlineContent: {
       from: input.sender,
@@ -66,12 +80,24 @@ export async function buildRequiredNoticeEmail(input: {
       subject: "{{ trigger.subject }}",
       htmlBody: input.message.confirmation
         ? CONFIRMATION_HTML_PREFIX + "{{ trigger.confirmation_html }}" + CONFIRMATION_HTML_SUFFIX
-        : REQUIRED_NOTICE_HTML_PREFIX +
-          "{{ trigger.receipt_text | htmlencode }}" +
-          REQUIRED_NOTICE_HTML_SUFFIX,
+        : input.message.paymentReceipt
+          ? CONFIRMATION_HTML_PREFIX +
+            "{{ trigger.payment_receipt_html }}" +
+            CONFIRMATION_HTML_SUFFIX
+          : input.message.requiredNotice
+            ? CONFIRMATION_HTML_PREFIX +
+              "{{ trigger.required_notice_html }}" +
+              CONFIRMATION_HTML_SUFFIX
+            : REQUIRED_NOTICE_HTML_PREFIX +
+              "{{ trigger.receipt_text | htmlencode }}" +
+              REQUIRED_NOTICE_HTML_SUFFIX,
       textBody: input.message.confirmation
         ? "{{ trigger.confirmation_text }}"
-        : "{{ trigger.receipt_text }}",
+        : input.message.paymentReceipt
+          ? "{{ trigger.payment_receipt_text }}"
+          : input.message.requiredNotice
+            ? "{{ trigger.required_notice_text }}"
+            : "{{ trigger.receipt_text }}",
       autoCreate: true,
       tracked: false,
     },
@@ -81,6 +107,14 @@ export async function buildRequiredNoticeEmail(input: {
 export function previewRequiredNoticeHtml(message: TrialRequiredNoticeMessage): string {
   if (message.confirmation)
     return CONFIRMATION_HTML_PREFIX + renderConfirmationContent(message) + CONFIRMATION_HTML_SUFFIX
+  if (message.paymentReceipt)
+    return (
+      CONFIRMATION_HTML_PREFIX + renderPaymentReceiptContent(message) + CONFIRMATION_HTML_SUFFIX
+    )
+  if (message.requiredNotice)
+    return (
+      CONFIRMATION_HTML_PREFIX + renderRequiredNoticeContent(message) + CONFIRMATION_HTML_SUFFIX
+    )
   return (
     REQUIRED_NOTICE_HTML_PREFIX + escapeHtml(message.receipt_text) + REQUIRED_NOTICE_HTML_SUFFIX
   )

@@ -42,6 +42,19 @@ export type TrialRequiredNoticeSnapshot = Readonly<{
 export type TrialRequiredNoticeMessage = Readonly<{
   subject: string
   receipt_text: string
+  requiredNotice?: RequiredNoticePresentation
+  paymentReceipt?: Readonly<{
+    phase: "first_paid" | "renewal"
+    plan: string
+    amount: string
+    paidOn: string
+    paidAt: string
+    paidThroughOn: string
+    paidThrough: string
+    provider: string
+    contractId: string
+    paymentId: string
+  }>
   confirmation?: Readonly<{
     plan: string
     trialEnd: string
@@ -50,6 +63,24 @@ export type TrialRequiredNoticeMessage = Readonly<{
     renewal: string
     canceled: boolean
   }>
+}>
+export type RequiredNoticePresentation = Readonly<{
+  eyebrow: string
+  title: string
+  intro: string
+  facts: ReadonlyArray<Readonly<{ label: string; value: string }>>
+  status: string
+  primaryAction: Readonly<{
+    kind: "manage" | "contact"
+    label: string
+  }>
+  secondaryAction?: Readonly<{
+    kind: "cancel"
+    label: string
+  }>
+  detailTitle: string
+  details: ReadonlyArray<Readonly<{ label: string; value: string }>>
+  appendReceiptTextLabel?: string
 }>
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const validDate = (v: unknown): v is string =>
@@ -114,7 +145,10 @@ export function parseTrialRequiredNoticeSnapshot(
       !validDate(s.committedAt) ||
       !Number.isInteger(s.revision) ||
       Number(s.revision) < 1 ||
-      typeof s.cancelAtPeriodEnd !== "boolean")
+      typeof s.cancelAtPeriodEnd !== "boolean" ||
+      // The committed restore operation writes cancel_at_period_end=false before
+      // the notice trigger reads the enrollment in the same database transaction.
+      (s.changeKind === "restore" && s.cancelAtPeriodEnd !== false))
   )
     return null
   if (
@@ -190,25 +224,103 @@ export function buildTrialRequiredNoticeMessage(
 ): TrialRequiredNoticeMessage {
   const s = parseTrialRequiredNoticeSnapshot(value, kind)
   if (!s) throw new Error("Invalid required notice snapshot")
-  const contract = `Chaarlie ${s.interval === "year" ? "Jahresmitgliedschaft" : "Monatsmitgliedschaft"}\nVertragskennung: ${s.contractId}`
+  const plan = s.interval === "year" ? "Jahresmitgliedschaft" : "Monatsmitgliedschaft"
+  const contract = `Chaarlie ${plan}\nVertragskennung: ${s.contractId}`
   if (kind === "cancellation_receipt")
     return {
       subject: "Deine Kündigung bei Chaarlie ist eingegangen",
+      requiredNotice: {
+        eyebrow: "Kündigung eingegangen",
+        title: "Nach dem Test entstehen keine Kosten.",
+        intro: "Wir haben deine Kündigung erhalten. Du musst nicht erneut kündigen.",
+        facts: [
+          { label: "Zugang bis", value: dateOnly(s.effectiveEndAt!) },
+          { label: "Danach berechnet", value: money(0) },
+          { label: "Mitgliedschaft", value: plan },
+        ],
+        status:
+          "Dein Testzugang bleibt bis zum Ende bestehen. Diese Eingangsbestätigung bleibt gültig, auch wenn die technische Bearbeitung beim Zahlungsanbieter noch läuft.",
+        primaryAction: { kind: "manage", label: "Mitgliedschaft ansehen" },
+        detailTitle: "Kündigungsbeleg",
+        details: [
+          { label: "Kündigungskennung", value: s.declarationId! },
+          { label: "Vertragskennung", value: s.contractId },
+          { label: "Eingegangen", value: date(s.submittedAt!) },
+          { label: "Zugang endet", value: date(s.effectiveEndAt!) },
+        ],
+      },
       receipt_text: `${contract}\nKündigungskennung: ${s.declarationId}\nEingegangen am: ${date(s.submittedAt!)}\nWir bestätigen den Eingang deiner Kündigung. Deine Mitgliedschaft endet am ${date(s.effectiveEndAt!)}. Bis dahin bleibt dein Testzugang bestehen; danach beginnt kein kostenpflichtiger Zeitraum. Du musst nicht erneut kündigen. Diese Bestätigung gilt auch, wenn die technische Bearbeitung beim Zahlungsanbieter noch läuft.\n\n${management}`,
     }
   if (kind === "paid_cancellation_receipt")
     return {
       subject: "Deine Kündigung bei Chaarlie ist eingegangen",
+      requiredNotice: {
+        eyebrow: "Kündigung eingegangen",
+        title: `Dein Zugang bleibt bis zum ${dateOnly(s.paidThroughAt!)} bestehen.`,
+        intro: "Wir haben deine Kündigung erhalten. Du musst nicht erneut kündigen.",
+        facts: [
+          { label: "Bezahlter Zugang bis", value: dateOnly(s.paidThroughAt!) },
+          { label: "Wirksames Vertragsende", value: dateOnly(s.effectiveEndAt!) },
+          { label: "Mitgliedschaft", value: plan },
+        ],
+        status:
+          "Die technische Bearbeitung beim Zahlungsanbieter läuft noch. Diese Eingangsbestätigung bleibt gültig.",
+        primaryAction: { kind: "manage", label: "Mitgliedschaft ansehen" },
+        detailTitle: "Kündigungsbeleg",
+        details: [
+          { label: "Kündigungskennung", value: s.declarationId! },
+          { label: "Vertragskennung", value: s.contractId },
+          { label: "Eingegangen", value: date(s.submittedAt!) },
+          { label: "Wirksames Vertragsende", value: date(s.effectiveEndAt!) },
+        ],
+      },
       receipt_text: `${contract}\nKündigungskennung: ${s.declarationId}\nEingegangen am: ${date(s.submittedAt!)}\nWir bestätigen den Eingang deiner Kündigung zum ${date(s.effectiveEndAt!)}. Dein bereits bezahlter Zugang bleibt bis zum ${date(s.paidThroughAt!)} bestehen. Die technische Bearbeitung beim Zahlungsanbieter läuft noch. Du musst nicht erneut kündigen.\n\n${management}`,
     }
   if (kind === "payment_receipt")
     return {
       subject: "Deine Zahlungsbestätigung von Chaarlie",
+      paymentReceipt: {
+        phase: s.phase!,
+        plan,
+        amount: money(s.amountMinor!),
+        paidOn: dateOnly(s.occurredAt!),
+        paidAt: date(s.occurredAt!),
+        paidThroughOn: dateOnly(s.paidThroughAt!),
+        paidThrough: date(s.paidThroughAt!),
+        provider: s.provider === "stripe" ? "Stripe" : "PayPal",
+        contractId: s.contractId,
+        paymentId: s.paymentEventId!,
+      },
       receipt_text: `${contract}\nZahlungskennung: ${s.paymentEventId}\nErfolgreiche Zahlung: ${money(s.amountMinor!)} am ${date(s.occurredAt!)} über ${s.provider === "stripe" ? "Stripe" : "PayPal"}.\n${s.phase === "first_paid" ? "Dein erster bezahlter Zeitraum beginnt mit dieser erfolgreichen Zahlung." : "Die Zahlung für die Fortsetzung deiner Mitgliedschaft ist eingegangen."}\nBezahlter Zugang bis: ${date(s.paidThroughAt!)}.\nDer Betrag ist der Gesamtpreis einschließlich anwendbarer Steuern. Dies ist eine Zahlungsbestätigung.\n\n${management}`,
     }
   if (kind === "annual_renewal")
     return {
       subject: "Deine nächste jährliche Chaarlie-Zahlung",
+      requiredNotice: {
+        eyebrow: "Jährliche Zahlung",
+        title: `Deine nächste Zahlung ist für den ${dateOnly(s.renewalAt!)} vorgesehen.`,
+        intro:
+          "Eine kurze Erinnerung vor der nächsten jährlichen Zahlung deiner Chaarlie-Mitgliedschaft.",
+        facts: [
+          { label: "Betrag", value: `${money(s.amountMinor!)} inkl. Steuern` },
+          { label: "Vorgesehen am", value: dateOnly(s.renewalAt!) },
+          { label: "Mitgliedschaft", value: plan },
+        ],
+        status:
+          "Es beginnt keine neue feste Jahresbindung. Nach dem ersten bezahlten Jahr kannst du mit höchstens einem Monat Frist kündigen.",
+        primaryAction: { kind: "manage", label: "Mitgliedschaft verwalten" },
+        secondaryAction: { kind: "cancel", label: "Online kündigen" },
+        detailTitle: "Vertragsdetails",
+        details: [
+          { label: "Vertragskennung", value: s.contractId },
+          { label: "Zahlungsanbieter", value: s.provider === "stripe" ? "Stripe" : "PayPal" },
+          { label: "Vorgesehen", value: date(s.renewalAt!) },
+          {
+            label: "Nach Vertragsende",
+            value: "Ungenutztes vorausgezahltes Entgelt wird zeitanteilig erstattet.",
+          },
+        ],
+      },
       receipt_text: `${contract}\nDie nächste jährliche Zahlung von ${money(s.amountMinor!)} einschließlich anwendbarer Steuern ist für den ${date(s.renewalAt!)} vorgesehen.\nNach dem ersten bezahlten Jahr läuft deine Mitgliedschaft auf unbestimmte Zeit weiter. Du kannst jederzeit mit einer Frist von höchstens einem Monat kündigen. Für die Zeit nach dem wirksamen Vertragsende erstatten wir ungenutztes, im Voraus gezahltes Entgelt zeitanteilig. Es beginnt keine neue feste Jahresbindung.\n\n${management}`,
     }
   const paymentTerms =
@@ -219,7 +331,7 @@ export function buildTrialRequiredNoticeMessage(
     ...(kind === "contract_confirmation"
       ? {
           confirmation: {
-            plan: s.interval === "year" ? "Jahresmitgliedschaft" : "Monatsmitgliedschaft",
+            plan,
             trialEnd: date(s.trialEndAt),
             firstCharge:
               s.provider === "paypal"
@@ -231,6 +343,50 @@ export function buildTrialRequiredNoticeMessage(
                 ? `Danach ${money(s.renewalAmountMinor)} jährlich im Voraus.`
                 : "",
             canceled: s.cancelAtPeriodEnd === true,
+          },
+        }
+      : {}),
+    ...(kind === "contract_change"
+      ? {
+          requiredNotice: {
+            eyebrow: "Änderung bestätigt",
+            title:
+              s.changeKind === "restore"
+                ? "Deine Kündigung wurde aufgehoben."
+                : "Deine Laufzeit wurde geändert.",
+            intro:
+              s.changeKind === "restore"
+                ? "Wie von dir gewünscht wird deine Mitgliedschaft fortgesetzt. Dein ursprünglicher Test läuft unverändert weiter."
+                : "Dein kostenloser Test läuft unverändert weiter. Für diese Änderung wurde keine Zahlung ausgelöst.",
+            facts: [
+              {
+                label: s.changeKind === "restore" ? "Mitgliedschaft" : "Neue Laufzeit",
+                value: plan,
+              },
+              { label: "Test endet", value: dateOnly(s.trialEndAt) },
+              s.cancelAtPeriodEnd
+                ? { label: "Danach berechnet", value: money(0) }
+                : {
+                    label: "Erste Zahlung",
+                    value: `${money(s.firstAmountMinor)} am ${dateOnly(s.provider === "paypal" ? paypalTrialCollectionStart(s.trialEndAt) : s.trialEndAt)}`,
+                  },
+            ],
+            status: s.cancelAtPeriodEnd
+              ? "Deine Kündigung bleibt wirksam. Dein Zugang endet zum ursprünglichen Testende."
+              : `Für diese Änderung wurden ${money(0)} berechnet. Es beginnt kein neuer Test.`,
+            primaryAction: { kind: "manage" as const, label: "Mitgliedschaft verwalten" },
+            ...(!s.cancelAtPeriodEnd
+              ? {
+                  secondaryAction: { kind: "cancel" as const, label: "Online kündigen" },
+                }
+              : {}),
+            detailTitle: "Änderungsdetails",
+            details: [
+              { label: "Änderungskennung", value: s.operationId! },
+              { label: "Vertragskennung", value: s.contractId },
+              { label: "Bestätigt", value: date(s.committedAt!) },
+            ],
+            appendReceiptTextLabel: "Vollständige Vertragsbedingungen",
           },
         }
       : {}),
