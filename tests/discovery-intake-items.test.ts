@@ -7,10 +7,9 @@ import {
   DISCOVERY_INTAKE_CATEGORIES,
   buildDiscoveryIntakeItemRow,
   discoveryIntakeItemBodySchema,
-  isDiscoveryIntakeComplete,
-  missingDiscoveryIntakeCategories,
   type DiscoveryIntakeCapture,
 } from "../src/lib/discovery/intake"
+import { missingDiscoveryIntakeCategories } from "../src/lib/discovery/refined-routine"
 
 /**
  * The checklist's row mapping: one capture in, one `discovery_intake_items` row
@@ -211,19 +210,20 @@ test("the request schema rejects a capture with an unknown source or a stray fie
   )
 })
 
-// --- Completeness ------------------------------------------------------------
+// --- Unanswered categories ---------------------------------------------------
 
-test("completeness needs an answer in every one of the ten categories", () => {
+test("the unanswered categories are exactly the ones with no row at all", () => {
   const all = DISCOVERY_INTAKE_CATEGORIES.map((category) => ({ category }))
-  assert.equal(isDiscoveryIntakeComplete(all), true)
   assert.deepEqual(missingDiscoveryIntakeCategories(all), [])
 
   const withoutOil = all.filter((item) => item.category !== "oil")
-  assert.equal(isDiscoveryIntakeComplete(withoutOil), false)
   assert.deepEqual(missingDiscoveryIntakeCategories(withoutOil), ["oil"])
 
   // Several products in one category do not stand in for a missing one.
-  assert.equal(isDiscoveryIntakeComplete([...withoutOil, { category: "shampoo" as const }]), false)
+  assert.deepEqual(
+    missingDiscoveryIntakeCategories([...withoutOil, { category: "shampoo" as const }]),
+    ["oil"],
+  )
 })
 
 // --- The write path, against the real migration ------------------------------

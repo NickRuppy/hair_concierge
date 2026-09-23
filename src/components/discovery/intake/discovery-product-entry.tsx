@@ -8,6 +8,7 @@ import { ScanProductThumb } from "@/components/scan/scan-product-thumb"
 import { ScanSearchSheet, type ScanResearchIntakeInput } from "@/components/scan/scan-search-sheet"
 import type { ScanSearchResult } from "@/app/api/scan/search/route"
 import type { ScanRetailerResult } from "@/app/api/scan/search-retailer/route"
+import { composeProductIdentityTitle } from "@/lib/product-identity/display-title"
 
 import type { DiscoveryIntakeCategoryCopy } from "./categories"
 import {
@@ -70,13 +71,25 @@ function BarcodeGlyph() {
   )
 }
 
-/** A captured row always has SOMETHING to show — a name, or the barcode it was read from. */
+/**
+ * A captured row always has SOMETHING to show. A named product reads like the search
+ * row it was picked from and like the routine names it — brand, product line and name
+ * as one de-duplicated title; an unnamed scan falls back to „Gescanntes Produkt".
+ */
 export function itemDisplayName(item: DiscoveryIntakeItemView): string {
-  return item.productNameText ?? UNNAMED_PRODUCT
+  if (!item.productNameText) return UNNAMED_PRODUCT
+  return (
+    composeProductIdentityTitle({
+      brand: item.brandText,
+      productLine: item.productLine,
+      name: item.productNameText,
+    }) || UNNAMED_PRODUCT
+  )
 }
 
+/** Only an unnamed scan needs a second line: the barcode it was read from. */
 export function itemDisplaySubline(item: DiscoveryIntakeItemView): string | null {
-  return item.brandText ?? item.barcodeIdentifier
+  return item.productNameText ? null : item.barcodeIdentifier
 }
 
 export function DiscoveryProductEntry({
@@ -242,7 +255,7 @@ export function DiscoveryProductEntry({
             <ChevronLeft className="h-5 w-5" aria-hidden="true" />
           </button>
           <span className="text-[13px] font-semibold tracking-[0.02em] text-[var(--text-sub)]">
-            {category.label}
+            {category.rowLabel}
           </span>
         </div>
 
@@ -251,10 +264,6 @@ export function DiscoveryProductEntry({
             ? `${category.possessive} ${category.label}`
             : `${category.interrogative} ${category.label} benutzt du?`}
         </h1>
-        {products.length === 0 && category.hint ? (
-          // Guidance belongs to the question, not to a filled category.
-          <p className="mt-1.5 text-sm leading-6 text-[var(--text-sub)]">{category.hint}</p>
-        ) : null}
         <p className="mb-5 mt-1.5 text-sm leading-6 text-[var(--text-sub)]">
           {products.length > 0 ? "Mehrere sind okay." : "Barcode ist am schnellsten."}
         </p>
@@ -266,9 +275,13 @@ export function DiscoveryProductEntry({
                 key={item.id}
                 className="flex items-center gap-3 rounded-[14px] border border-[var(--brand-plum-light)] bg-white px-3 py-2.5"
               >
-                <ScanProductThumb imageUrl={null} label={itemDisplayName(item)} size={40} />
+                <ScanProductThumb
+                  imageUrl={item.imageUrl ?? null}
+                  label={itemDisplayName(item)}
+                  size={40}
+                />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-semibold text-[var(--brand-plum-darkest)]">
+                  <span className="line-clamp-2 text-sm font-semibold leading-snug text-[var(--brand-plum-darkest)]">
                     {itemDisplayName(item)}
                   </span>
                   {itemDisplaySubline(item) ? (

@@ -1,7 +1,6 @@
 import {
   clearDiscoveryIntakeCoexistingNone,
   loadDiscoveryIntakeItems,
-  missingDiscoveryIntakeCategories,
   submitDiscoveryIntake,
 } from "@/lib/discovery/intake"
 
@@ -16,11 +15,11 @@ import {
 /**
  * `POST /api/beratung/intake/submit` — hands the checklist over for the call.
  *
- * Completeness is decided from the STORED items, never from what the client
- * claims: „Absenden" only renders once all ten categories are answered, and this
- * re-derives the same fact server-side. An incomplete intake is refused with the
- * categories that are still open, so a client whose optimistic state drifted can
- * repair itself.
+ * Nothing on the checklist is mandatory: a category the participant never touched
+ * stays unanswered (no row) and the call covers it. What IS required is one answer —
+ * a product or an explicit „benutze ich nicht" — decided from the STORED items,
+ * never from what the client claims. An intake with nothing in it is refused
+ * (400 `nothing_answered`): there would be nothing to prepare the call from.
  *
  * The state transition is a compare-and-set (`state = 'draft'`), so a double tap
  * cannot submit twice — and after it, every write endpoint answers 409.
@@ -55,14 +54,10 @@ export function createDiscoveryIntakeSubmitHandler(
 
     try {
       const items = await load(intake.id, admin)
-      const missing = missingDiscoveryIntakeCategories(items)
-      if (missing.length > 0) {
-        return discoveryIntakeJson({ code: "incomplete", missing }, 400)
-      }
-      // Deliberately after the completeness check and before the freeze. It cannot
-      // change completeness — a healed category keeps its products, so it stays
-      // answered — and running it on an intake that is about to be refused anyway
-      // would write for nothing.
+      if (items.length === 0) return discoveryIntakeError("nothing_answered", 400)
+      // Deliberately after the emptiness check and before the freeze. It cannot empty
+      // the intake — a healed category keeps its products — and running it on an
+      // intake that is about to be refused anyway would write for nothing.
       await heal({ intakeId: intake.id, items }, admin)
       const submitted = await submit(intake.id, admin)
       return discoveryIntakeJson({ state: submitted.state, submittedAt: submitted.submittedAt })

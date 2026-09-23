@@ -91,14 +91,18 @@ Eine widerrufene Einladung blockiert dieselbe E-Mail nicht: die Eindeutigkeits-I
 
 `/beratung/einladung` (Begrüßung mit Namen) → „Los geht's" → Konto + Anmeldung → **`/quiz`**
 (das reguläre Legacy-Quiz, Inhalt unverändert, Name und E-Mail auf die Einladung festgenagelt) →
-`/beratung/produkte` (Produkt-Checkliste, zehn Kategorien) → „Absenden".
+`/beratung/produkte` (Produkt-Checkliste, zehn Kategorien) → „Fertig – abschicken".
 
 Unterschiede zum normalen Quiz-Ende: Die Teilnehmerin sieht **keine Marketing-Einwilligung** — der
 Lead wird beim Erreichen des Schritts automatisch mit `marketing_consent=false` gespeichert (schlägt
 das fehl, bleibt ein „Erneut versuchen" stehen). Danach kommt „Geschafft — dein Haarprofil steht." mit
-„Weiter zu deinen Produkten" statt des Analyse-Teasers. In der Checkliste beantwortet „Mehr benutze ich
-nicht" (erscheint, sobald eine Kategorie beantwortet ist) alle noch offenen Kategorien mit „benutze ich
-nicht" — abgeschickt wird trotzdem erst mit „Absenden".
+„Weiter zu deinen Produkten" statt des Analyse-Teasers. In der Checkliste ist nichts Pflicht:
+„Fertig – abschicken" erscheint, sobald eine Kategorie beantwortet ist (Produkt oder „benutze ich
+nicht"). Unberührte Kategorien bleiben unbeantwortet — es wird nichts für sie gespeichert — und das
+Cockpit markiert sie nach dem Absenden: Hat die Kategorie einen Schritt in der Idealroutine, steht
+dort „Nicht angegeben — im Call fragen." (statt „Lücke … benutzt nichts", das nur ein ausdrückliches
+„benutze ich nicht" bekommt); die übrigen stehen gesammelt unten als „Nicht angegeben: … — im Call
+fragen.".
 
 Das Legacy-`/quiz` ist harte Voraussetzung: nur daraus entsteht die Quelle, aus der das Cockpit die
 Idealroutine rechnet. Der Einladungs-Flow führt von selbst dorthin — **schick einer Teilnehmerin

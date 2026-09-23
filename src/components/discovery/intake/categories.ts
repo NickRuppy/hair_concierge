@@ -17,26 +17,34 @@ import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contract
  * `CATEGORY_COPY` stays untouched — the personal plan and Stage 3 keep their
  * own wording. „Kopfhautpflege" is the shelf term dm, Rossmann and Douglas use
  * for serums, tonics and peelings; „Kopfhautprodukt" read as a catch-all in
- * the field test, so the entry screen also names examples (`hint`).
+ * the field test.
+ *
+ * `label` is also what the cockpit and the admin pages print, so it stays the
+ * bare noun. `rowLabel` is the participant's own row: the name plus, where the
+ * name alone did not say what counts, the contents in brackets. The brackets
+ * list the scalp-care roles the routine engine actually knows (comfort serum,
+ * density tonic, scalp oil, exfoliant) — and they replace the entry screen's
+ * former „z. B. …" line, so the same thing is never said twice.
  */
 
 export type DiscoveryIntakeCategoryCopy = {
   key: PersonalPlanCategory
   label: string
+  /** The participant's overview row and entry-screen breadcrumb. */
+  rowLabel: string
   /** „Dein Shampoo" / „Deine Maske" — the possessive for the heading. */
   possessive: "Dein" | "Deine"
   /** „Welches Shampoo …" / „Welchen Conditioner …" / „Welche Maske …" */
   interrogative: "Welches" | "Welchen" | "Welche"
-  /** Optional guidance line under the entry screen's question. */
-  hint?: string
 }
 
-const LABEL_OVERRIDES: Partial<Record<PersonalPlanCategory, { label: string; hint?: string }>> = {
-  scalp_care: {
-    label: "Kopfhautpflege",
-    hint: "z. B. Kopfhaut-Serum, -Tonikum oder -Peeling",
-  },
-}
+const LABEL_OVERRIDES: Partial<Record<PersonalPlanCategory, { label: string; rowLabel?: string }>> =
+  {
+    scalp_care: {
+      label: "Kopfhautpflege",
+      rowLabel: "Kopfhautpflege (Serum, Tonikum, Peeling)",
+    },
+  }
 
 const GRAMMAR: Record<
   PersonalPlanCategory,
@@ -64,33 +72,29 @@ export type DiscoveryIntakeGroup = {
 }
 
 function copyFor(key: PersonalPlanCategory): DiscoveryIntakeCategoryCopy {
-  return { key, label: CATEGORY_COPY[key].label, ...GRAMMAR[key], ...LABEL_OVERRIDES[key] }
+  const override = LABEL_OVERRIDES[key]
+  const label = override?.label ?? CATEGORY_COPY[key].label
+  return { key, label, rowLabel: override?.rowLabel ?? label, ...GRAMMAR[key] }
 }
 
-export const DISCOVERY_INTAKE_GROUPS: DiscoveryIntakeGroup[] = [
-  {
-    label: "Waschen",
-    categories: ["shampoo", "conditioner", "deep_cleansing_shampoo"].map((key) =>
-      copyFor(key as PersonalPlanCategory),
-    ),
-  },
-  {
-    label: "Pflege",
-    categories: ["mask", "leave_in", "oil", "bondbuilder"].map((key) =>
-      copyFor(key as PersonalPlanCategory),
-    ),
-  },
-  {
-    label: "Kopfhaut",
-    categories: ["scalp_care"].map((key) => copyFor(key as PersonalPlanCategory)),
-  },
-  {
-    label: "Styling",
-    categories: ["heat_protectant", "dry_shampoo"].map((key) =>
-      copyFor(key as PersonalPlanCategory),
-    ),
-  },
+/**
+ * Which shelf each category sits on. Waschen is what cleanses; Pflege is what
+ * conditions the lengths — conditioner included, it rinses out but it does not
+ * wash; Kopfhaut is scalp care; Styling is what goes on for the look or the heat.
+ */
+export const DISCOVERY_INTAKE_GROUP_KEYS: ReadonlyArray<{
+  label: string
+  keys: readonly PersonalPlanCategory[]
+}> = [
+  { label: "Waschen", keys: ["shampoo", "deep_cleansing_shampoo"] },
+  { label: "Pflege", keys: ["conditioner", "mask", "leave_in", "oil", "bondbuilder"] },
+  { label: "Kopfhaut", keys: ["scalp_care"] },
+  { label: "Styling", keys: ["heat_protectant", "dry_shampoo"] },
 ]
+
+export const DISCOVERY_INTAKE_GROUPS: DiscoveryIntakeGroup[] = DISCOVERY_INTAKE_GROUP_KEYS.map(
+  (group) => ({ label: group.label, categories: group.keys.map(copyFor) }),
+)
 
 export const DISCOVERY_INTAKE_CATEGORY_COPY: Record<
   PersonalPlanCategory,

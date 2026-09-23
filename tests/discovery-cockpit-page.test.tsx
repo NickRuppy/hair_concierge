@@ -281,7 +281,10 @@ test("the cockpit reads as the call: routine, verdict, one decision per step", a
   // The open step reads „Ohne Produkt weiter" + the Idealplan's own pick as „Neu:".
   assert.ok(markup.includes("Ohne Produkt weiter"))
   assert.ok(markup.includes("Neu: Garnier Fructis Hair Food Leave-in"))
-  assert.ok(markup.includes("Lücke in der Idealroutine"))
+  // Leave-in was never answered on the submitted checklist: the step says so honestly
+  // instead of claiming she uses nothing for it.
+  assert.ok(markup.includes("Nicht angegeben — im Call fragen."))
+  assert.ok(!markup.includes("Lücke in der Idealroutine"))
 
   // Exactly one radio group per step, and nothing pre-selected before the call.
   const radios = markup.match(/type="radio"/g) ?? []

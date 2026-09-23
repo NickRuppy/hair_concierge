@@ -41,24 +41,25 @@ test("the checklist's display groups cover every category exactly once", () => {
   }
 })
 
-test("the checklist says „Kopfhautpflege“ — feminine — and names examples, shared copy untouched", () => {
+test("scalp care names its contents in the participant's row — the shared label stays bare", () => {
   const scalp = DISCOVERY_INTAKE_CATEGORY_COPY.scalp_care
   assert.equal(scalp.label, "Kopfhautpflege")
+  assert.equal(scalp.rowLabel, "Kopfhautpflege (Serum, Tonikum, Peeling)")
   assert.equal(`${scalp.possessive} ${scalp.label}`, "Deine Kopfhautpflege")
   assert.equal(
     `${scalp.interrogative} ${scalp.label} benutzt du?`,
     "Welche Kopfhautpflege benutzt du?",
   )
-  assert.equal(scalp.hint, "z. B. Kopfhaut-Serum, -Tonikum oder -Peeling")
 
   // Nothing else in the checklist still says „Kopfhautprodukt“ …
   for (const copy of Object.values(DISCOVERY_INTAKE_CATEGORY_COPY)) {
     assert.doesNotMatch(copy.label, /Kopfhautprodukt/)
+    assert.doesNotMatch(copy.rowLabel, /Kopfhautprodukt/)
   }
-  // … and only scalp care carries a hint, so every other entry screen is unchanged.
+  // … and only scalp care carries brackets; every other row reads as its label.
   assert.deepEqual(
     Object.values(DISCOVERY_INTAKE_CATEGORY_COPY)
-      .filter((copy) => copy.hint)
+      .filter((copy) => copy.rowLabel !== copy.label)
       .map((copy) => copy.key),
     ["scalp_care"],
   )
@@ -67,7 +68,7 @@ test("the checklist says „Kopfhautpflege“ — feminine — and names example
   assert.equal(CATEGORY_COPY.scalp_care.label, "Kopfhautprodukt")
 })
 
-test("the scalp entry screen asks the feminine question with the example line", () => {
+test("the scalp entry screen names the contents once, in the breadcrumb, not twice", () => {
   const html = renderToStaticMarkup(
     <DiscoveryProductEntry
       category={DISCOVERY_INTAKE_CATEGORY_COPY.scalp_care}
@@ -79,11 +80,12 @@ test("the scalp entry screen asks the feminine question with the example line", 
     />,
   )
   assert.match(html, /Welche Kopfhautpflege benutzt du\?/)
-  assert.match(html, /z\. B\. Kopfhaut-Serum, -Tonikum oder -Peeling/)
+  assert.equal(html.split("(Serum, Tonikum, Peeling)").length - 1, 1)
+  assert.doesNotMatch(html, /z\. B\./)
   assert.doesNotMatch(html, /Kopfhautprodukt/)
 })
 
-test("a filled scalp category reads „Deine Kopfhautpflege“ and drops the example line", () => {
+test("a filled scalp category reads „Deine Kopfhautpflege“", () => {
   const html = renderToStaticMarkup(
     <DiscoveryProductEntry
       category={DISCOVERY_INTAKE_CATEGORY_COPY.scalp_care}
@@ -104,10 +106,9 @@ test("a filled scalp category reads „Deine Kopfhautpflege“ and drops the exa
     />,
   )
   assert.match(html, /Deine Kopfhautpflege/)
-  assert.doesNotMatch(html, /z\. B\. Kopfhaut-Serum/)
 })
 
-test("other categories' entry screens carry no hint line", () => {
+test("other categories' entry screens carry no brackets and no example line", () => {
   const html = renderToStaticMarkup(
     <DiscoveryProductEntry
       category={DISCOVERY_INTAKE_CATEGORY_COPY.shampoo}
@@ -120,4 +121,20 @@ test("other categories' entry screens carry no hint line", () => {
   )
   assert.match(html, /Welches Shampoo benutzt du\?/)
   assert.doesNotMatch(html, /z\. B\./)
+  assert.doesNotMatch(html, />Shampoo \(/)
+})
+
+test("the shelves: conditioner is care, not washing", () => {
+  const byGroup = Object.fromEntries(
+    DISCOVERY_INTAKE_GROUPS.map((group) => [
+      group.label,
+      group.categories.map((category) => category.key),
+    ]),
+  )
+  assert.deepEqual(byGroup, {
+    Waschen: ["shampoo", "deep_cleansing_shampoo"],
+    Pflege: ["conditioner", "mask", "leave_in", "oil", "bondbuilder"],
+    Kopfhaut: ["scalp_care"],
+    Styling: ["heat_protectant", "dry_shampoo"],
+  })
 })

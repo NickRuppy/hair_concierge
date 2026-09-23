@@ -239,6 +239,6 @@ requires `ALLOW_DISCOVERY_PRODUCTION_WRITE=1`, `--apply`, `--confirm-project=pqd
 and a matching Supabase URL, and that combination is the operator path, not a QA path. The invite
 credential lives in the URL fragment (`/beratung/einladung#code=…`), so it never reaches a server
 log — copy the whole link, not a truncated one. The participant journey is invite → `/quiz`
-(legacy, never an `/lp/*` link) → `/beratung/produkte` → „Absenden"; the operator side is
+(legacy, never an `/lp/*` link) → `/beratung/produkte` → „Fertig – abschicken"; the operator side is
 `/admin/beratung`. For the complete operator contract, the environment keys, the manual research
 reconciliation and the two analytics caveats, see `docs/discovery-call-runbook.md`.

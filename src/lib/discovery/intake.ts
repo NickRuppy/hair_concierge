@@ -43,8 +43,13 @@ const INTAKES_TABLE = "discovery_intakes"
 const ITEMS_TABLE = "discovery_intake_items"
 
 const INTAKE_COLUMNS = "id,enrollment_id,user_id,state,submitted_at"
+/**
+ * The linked catalog product is read alongside the row (FK `product_id` ->
+ * `products`), so the checklist can show the same packshot and product line the
+ * search row showed without storing a copy of either. Rows without a catalog product read it as null.
+ */
 const ITEM_COLUMNS =
-  "id,intake_id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,created_at"
+  "id,intake_id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,created_at,catalog_product:products(image_url,product_line:product_lines(canonical_name))"
 
 export type DiscoveryAdminClient = ReturnType<typeof createAdminClient>
 
@@ -65,6 +70,16 @@ export type DiscoveryIntakeItem = {
   barcodeIdentifier: string | null
   productId: string | null
   productSubmissionId: string | null
+  /**
+   * Presentation of the linked catalog product, when the row was read with its join
+   * (`loadDiscoveryIntakeItems`, the insert helpers). Display only — never identity.
+   */
+  catalog?: DiscoveryIntakeCatalogPresentation | null
+}
+
+export type DiscoveryIntakeCatalogPresentation = {
+  imageUrl: string | null
+  productLine: string | null
 }
 
 type IntakeRow = {
@@ -86,6 +101,12 @@ type ItemRow = {
   product_id: string | null
   product_submission_id: string | null
   created_at: string
+  catalog_product?: CatalogProductRelation | CatalogProductRelation[] | null
+}
+
+type CatalogProductRelation = {
+  image_url: string | null
+  product_line?: { canonical_name: string | null } | { canonical_name: string | null }[] | null
 }
 
 /** The insert payload, with every identity column written explicitly. */
@@ -396,7 +417,8 @@ function projectIntake(row: IntakeRow): DiscoveryIntake {
  *
  * `productId` / `productSubmissionId` stay on the server: the checklist never renders
  * them, and the cockpit reads them straight from the table. One function so the two
- * surfaces cannot drift into disagreeing about that boundary.
+ * surfaces cannot drift into disagreeing about that boundary. From the linked product
+ * the browser gets presentation only: its packshot and its product line.
  */
 export function toDiscoveryIntakeItemView(item: DiscoveryIntakeItem): DiscoveryIntakeItemView {
   return {
@@ -406,10 +428,29 @@ export function toDiscoveryIntakeItemView(item: DiscoveryIntakeItem): DiscoveryI
     brandText: item.brandText,
     productNameText: item.productNameText,
     barcodeIdentifier: item.barcodeIdentifier,
+    imageUrl: item.catalog?.imageUrl ?? null,
+    productLine: item.catalog?.productLine ?? null,
   }
 }
 
-function projectItem(row: ItemRow): DiscoveryIntakeItem {
+function nonEmpty(value: string | null | undefined): string | null {
+  const text = value?.trim()
+  return text ? text : null
+}
+
+function projectCatalogPresentation(
+  relation: ItemRow["catalog_product"],
+): DiscoveryIntakeCatalogPresentation | null {
+  const product = Array.isArray(relation) ? (relation[0] ?? null) : (relation ?? null)
+  if (!product) return null
+  const line = Array.isArray(product.product_line)
+    ? (product.product_line[0] ?? null)
+    : (product.product_line ?? null)
+  return { imageUrl: nonEmpty(product.image_url), productLine: nonEmpty(line?.canonical_name) }
+}
+
+/** The row-to-domain projection, join included. Exported for tests. */
+export function projectDiscoveryIntakeItemRow(row: ItemRow): DiscoveryIntakeItem {
   return {
     id: row.id,
     category: row.category as DiscoveryIntakeCategory,
@@ -419,6 +460,7 @@ function projectItem(row: ItemRow): DiscoveryIntakeItem {
     barcodeIdentifier: row.barcode_identifier,
     productId: row.product_id,
     productSubmissionId: row.product_submission_id,
+    catalog: projectCatalogPresentation(row.catalog_product),
   }
 }
 
@@ -476,7 +518,7 @@ export async function loadDiscoveryIntakeItems(
     .order("created_at", { ascending: true })
     .order("id", { ascending: true })
   if (error) throw error
-  return ((data as ItemRow[] | null) ?? []).map(projectItem)
+  return ((data as ItemRow[] | null) ?? []).map(projectDiscoveryIntakeItemRow)
 }
 
 /**
@@ -557,35 +599,7 @@ export async function insertDiscoveryIntakeItem(
   if (error) throw error
   const inserted = (data as ItemRow | null) ?? null
   if (!inserted) throw new Error("Discovery intake item could not be stored")
-  return projectItem(inserted)
-}
-
-/**
- * „Mehr benutze ich nicht": one `none` row for each of `categories`, in ONE insert.
- *
- * The caller passes only categories with no answer at all (see
- * `missingDiscoveryIntakeCategories`), so no row here can displace a product or
- * collide with a standing `none` — the none-XOR-products rule needs no clear. The
- * rows come from `buildDiscoveryIntakeItemRow`, the one place a capture becomes a
- * row, so they satisfy `discovery_intake_items_none_is_empty` by construction.
- */
-export async function insertDiscoveryIntakeNoneItems(
-  input: { intakeId: string; categories: readonly DiscoveryIntakeCategory[] },
-  client: DiscoveryAdminClient,
-): Promise<DiscoveryIntakeItem[]> {
-  if (input.categories.length === 0) return []
-  const rows = input.categories.map((category) => {
-    const built = buildDiscoveryIntakeItemRow(input.intakeId, category, { source: "none" })
-    if (!built.ok) throw new Error("A none answer always builds a row")
-    return built.row
-  })
-  const { data, error } = await client.from(ITEMS_TABLE).insert(rows).select(ITEM_COLUMNS)
-  if (error) throw error
-  const inserted = (data as ItemRow[] | null) ?? []
-  if (inserted.length !== rows.length) {
-    throw new Error("Discovery intake none answers could not be stored")
-  }
-  return inserted.map(projectItem)
+  return projectDiscoveryIntakeItemRow(inserted)
 }
 
 /** Scoped to the caller's own intake: an item id from another intake deletes nothing. */
@@ -624,16 +638,6 @@ export async function submitDiscoveryIntake(
 // --- Completeness ------------------------------------------------------------
 
 /** Every one of the ten categories must carry an answer — a product or „none". */
-export function missingDiscoveryIntakeCategories(
-  items: Pick<DiscoveryIntakeItem, "category">[],
-): DiscoveryIntakeCategory[] {
-  const answered = new Set(items.map((item) => item.category))
-  return DISCOVERY_INTAKE_CATEGORIES.filter((category) => !answered.has(category))
-}
-
-export function isDiscoveryIntakeComplete(items: Pick<DiscoveryIntakeItem, "category">[]): boolean {
-  return missingDiscoveryIntakeCategories(items).length === 0
-}
 
 // --- The per-request guard ---------------------------------------------------
 
