@@ -235,6 +235,7 @@ export function QuizPreparation() {
 
   return (
     <QuizAnalysis
+      discoveryParticipant={isDiscoveryParticipant}
       name={lead.name}
       onCommit={(choice) => {
         if (resultPath) router.prefetch(resultPath)
