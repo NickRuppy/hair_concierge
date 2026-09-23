@@ -63,11 +63,23 @@ same `event_id` — Meta dedupes the two copies. Bookings without the id
 Calendly retries count on Meta's `event_id` dedupe; no local idempotency
 store.
 
-**Setup (one-time, Nick):**
+**Setup (one-time, Nick). Order matters: the key and the deployed route come
+FIRST, the subscription last — Calendly only retries failed deliveries for
+about 24 hours and may disable a persistently failing webhook, so the
+receiver must already work when the subscription goes live.**
 
 1. Calendly webhooks need a paid Calendly plan (Standard or higher) and a
-   personal access token.
-2. Create the subscription (returns the signing key — store it immediately):
+   personal access token. YOU generate the signing key — Calendly does not
+   issue one for PAT-created subscriptions, it uses whatever `signing_key`
+   the creation call supplies.
+2. Generate and persist the key, then configure Vercel and redeploy so the
+   route stops answering 503:
+   `CALENDLY_WEBHOOK_SIGNING_KEY=<openssl rand -hex 32>`,
+   `META_CAPI_SCHEDULE_ENABLED=true`, and optionally
+   `CALENDLY_EVENT_TYPE_URI=<event-type URI of the 20min meeting>` so a
+   user-scoped subscription's other meeting types are ignored (find the URI
+   via `GET https://api.calendly.com/event_types?user=<user URI>`).
+3. Create the subscription with that same key:
 
    ```bash
    curl -s -X POST https://api.calendly.com/webhook_subscriptions \
@@ -79,16 +91,14 @@ store.
        "organization": "<organization URI from GET https://api.calendly.com/users/me>",
        "scope": "user",
        "user": "<user URI from GET https://api.calendly.com/users/me>",
-       "signing_key": "<openssl rand -hex 32>"
+       "signing_key": "<the key from step 2>"
      }'
    ```
 
-3. Vercel env: `CALENDLY_WEBHOOK_SIGNING_KEY=<signing key>` and
-   `META_CAPI_SCHEDULE_ENABLED=true` (delivery stays off until both exist;
-   the route answers 503 without the signing key so Calendly keeps retrying
-   until it is configured).
-4. Verify with Meta's Test Events (`META_CAPI_TEST_EVENT_CODE`) on a staging
-   booking before enabling in production.
+4. Verify with Meta's Test Events (`META_CAPI_TEST_EVENT_CODE`) on a test
+   booking before relying on it. If the webhook ever gets disabled after a
+   long outage, recreate the subscription (same call) — the signing key can
+   stay the same.
 
 ## Operational notes
 

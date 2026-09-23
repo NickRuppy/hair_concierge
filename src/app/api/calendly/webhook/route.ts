@@ -38,7 +38,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "invalid signature" }, { status: 401 })
   }
 
-  const webhook = parseCalendlyBookingWebhook(rawBody)
+  const webhook = parseCalendlyBookingWebhook(rawBody, {
+    eventTypeUri: process.env.CALENDLY_EVENT_TYPE_URI ?? null,
+  })
   if (webhook.kind === "ignored") {
     // Acknowledged so Calendly does not retry; nothing here is an error.
     return NextResponse.json({ received: true, ignored: webhook.reason })

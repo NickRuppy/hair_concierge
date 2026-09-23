@@ -16,19 +16,34 @@ export type MetaRequestData = {
   fbc?: string
 }
 
-export type MetaConversionInput = {
-  eventName: MetaConversionEventName
+type MetaConversionUser = MetaRequestData & {
+  email?: string | null
+  name?: string | null
+}
+
+type MetaConversionBase = {
   eventId: string
   eventSourceUrl: string
   eventTime?: Date
-  user: MetaRequestData & {
-    email?: string | null
-    name?: string | null
-    /** Optional: a webhook-sourced event (Calendly booking) has no lead id. */
-    externalId?: string
-  }
   customData?: Record<string, string | number | boolean>
 }
+
+/**
+ * Lead/ViewContent keep their compile-time `externalId` requirement (both
+ * fire with a lead id); only the webhook-sourced Schedule, which has no lead
+ * identity, may omit it.
+ */
+export type MetaConversionInput = MetaConversionBase &
+  (
+    | {
+        eventName: "Lead" | "ViewContent"
+        user: MetaConversionUser & { externalId: string }
+      }
+    | {
+        eventName: "Schedule"
+        user: MetaConversionUser & { externalId?: undefined }
+      }
+  )
 
 export type MetaConversionDeliveryResult =
   | { ok: true; status: number; providerRequestId?: string }

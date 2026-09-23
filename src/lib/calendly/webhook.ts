@@ -1,5 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto"
 
+import { CALENDLY_FUNNEL_UTM_SOURCE } from "./constants"
+
 /**
  * Calendly v2 webhook contract for the discovery-call funnel.
  *
@@ -66,9 +68,28 @@ export type CalendlyBookingWebhook =
       /** When the invitee completed the booking. */
       createdAt: Date
     }
-  | { kind: "ignored"; reason: "not-invitee-created" | "no-funnel-event-id" | "unreadable" }
+  | {
+      kind: "ignored"
+      reason:
+        | "not-invitee-created"
+        | "not-funnel-source"
+        | "wrong-event-type"
+        | "no-funnel-event-id"
+        | "unreadable"
+    }
 
-export function parseCalendlyBookingWebhook(rawBody: string): CalendlyBookingWebhook {
+export function parseCalendlyBookingWebhook(
+  rawBody: string,
+  options: {
+    /**
+     * Optional exact `scheduled_event.event_type` URI
+     * (env `CALENDLY_EVENT_TYPE_URI`). A user-scoped subscription receives
+     * every meeting type, so when the URI is configured, other event types
+     * are ignored even if they somehow carry funnel-shaped UTMs.
+     */
+    eventTypeUri?: string | null
+  } = {},
+): CalendlyBookingWebhook {
   let parsed: unknown
   try {
     parsed = JSON.parse(rawBody)
@@ -91,6 +112,22 @@ export function parseCalendlyBookingWebhook(rawBody: string): CalendlyBookingWeb
     payload.tracking && typeof payload.tracking === "object" && !Array.isArray(payload.tracking)
       ? (payload.tracking as Record<string, unknown>)
       : null
+  // Only bookings stamped by the discovery-call offer count: the embed always
+  // sets this utm_source alongside the event id.
+  if (tracking?.utm_source !== CALENDLY_FUNNEL_UTM_SOURCE) {
+    return { kind: "ignored", reason: "not-funnel-source" }
+  }
+  if (options.eventTypeUri) {
+    const scheduledEvent =
+      payload.scheduled_event &&
+      typeof payload.scheduled_event === "object" &&
+      !Array.isArray(payload.scheduled_event)
+        ? (payload.scheduled_event as Record<string, unknown>)
+        : null
+    if (scheduledEvent?.event_type !== options.eventTypeUri) {
+      return { kind: "ignored", reason: "wrong-event-type" }
+    }
+  }
   const bookingEventId =
     tracking && typeof tracking.utm_content === "string" && UUID_PATTERN.test(tracking.utm_content)
       ? tracking.utm_content

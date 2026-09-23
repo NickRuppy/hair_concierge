@@ -23,20 +23,24 @@ function signedHeader(rawBody: string, options: { key?: string; atMs?: number } 
   return `t=${t},v1=${v1}`
 }
 
-function inviteeCreatedBody(options: { utmContent?: string | null } = {}) {
+const EVENT_TYPE_URI = "https://api.calendly.com/event_types/20min-uuid"
+
+function inviteeCreatedBody(
+  options: { utmContent?: string | null; utmSource?: string | null; eventType?: string } = {},
+) {
+  const utmSource =
+    options.utmSource === null ? {} : { utm_source: options.utmSource ?? "chaarlie_funnel" }
   return JSON.stringify({
     event: "invitee.created",
     payload: {
       email: "testkim@example.com",
       name: "Testkim Beispiel",
       created_at: "2026-09-22T18:00:00.000000Z",
+      scheduled_event: { event_type: options.eventType ?? EVENT_TYPE_URI },
       tracking:
         options.utmContent === null
-          ? { utm_source: "chaarlie_funnel" }
-          : {
-              utm_source: "chaarlie_funnel",
-              utm_content: options.utmContent ?? BOOKING_EVENT_ID,
-            },
+          ? utmSource
+          : { ...utmSource, utm_content: options.utmContent ?? BOOKING_EVENT_ID },
     },
   })
 }
@@ -103,6 +107,29 @@ test("only invitee.created with a round-tripped funnel event id becomes a bookin
     kind: "ignored",
     reason: "unreadable",
   })
+})
+
+test("bookings from other sources or meeting types never reach Meta", () => {
+  // A different or missing utm_source is not the funnel's embed.
+  for (const utmSource of [null, "meta", "some_other_page"] as const) {
+    assert.deepEqual(parseCalendlyBookingWebhook(inviteeCreatedBody({ utmSource })), {
+      kind: "ignored",
+      reason: "not-funnel-source",
+    })
+  }
+  // With a configured event-type URI, other meeting types are ignored even
+  // when they somehow carry funnel-shaped UTMs.
+  assert.deepEqual(
+    parseCalendlyBookingWebhook(
+      inviteeCreatedBody({ eventType: "https://api.calendly.com/event_types/other" }),
+      {
+        eventTypeUri: EVENT_TYPE_URI,
+      },
+    ),
+    { kind: "ignored", reason: "wrong-event-type" },
+  )
+  const scoped = parseCalendlyBookingWebhook(inviteeCreatedBody(), { eventTypeUri: EVENT_TYPE_URI })
+  assert.equal(scoped.kind, "booking")
 })
 
 test("the Schedule conversion hashes the invitee identity and needs no external id", () => {
