@@ -12,6 +12,12 @@ export type RouteEnvironment = {
 const PUBLIC_EXACT_ROUTES = [
   "/",
   "/agb",
+  // discovery-call toolkit: the personal invite link and the magic-link
+  // continuation are both opened before an account or a session exists. Exact,
+  // so every other /beratung page stays protected below. Both 410/404 while the
+  // DISCOVERY_CALL_TOOLKIT_ENABLED flag is off.
+  "/beratung/einladung",
+  "/beratung/weiter",
   "/datenschutz",
   "/icon",
   "/impressum",
@@ -70,6 +76,11 @@ const PUBLIC_API_EXACT_ROUTES = [
   // Calendly signs every delivery (HMAC, replay-window checked in the
   // handler); a session can never exist on an inbound webhook.
   "/api/calendly/webhook",
+  // discovery-call toolkit: both are reached from the invite page before a
+  // session exists. They authenticate the signed invite credential themselves
+  // and refuse a revoked or rotated enrollment.
+  "/api/beratung/claim",
+  "/api/beratung/resolve",
   // A paid buyer reaches this capability before an account/session exists.
   // Keep it exact: all other billing APIs remain behind the billing prefix.
   "/api/billing/one-time-activation-status",
@@ -92,6 +103,11 @@ const PROTECTED_ROUTE_PREFIXES = [
   "/api/mobile/v1",
   "/admin",
   "/anwendung",
+  // discovery-call toolkit: the checklist, the intake API and the admin cockpit
+  // all require a session. The two public invite pages and their two public APIs
+  // above are exact carve-outs and are matched first.
+  "/beratung",
+  "/api/beratung",
   "/chat",
   "/onboarding",
   "/plan-bereit",

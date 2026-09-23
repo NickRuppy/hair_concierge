@@ -17,6 +17,7 @@ import {
   pushLegacyQuizBrowserHistoryState,
   shouldHandleLegacyQuizPopState,
 } from "@/lib/quiz/browser-history"
+import { hasLockedLeadIdentity } from "@/lib/quiz/lead-capture-mode"
 import { useQuizStore } from "@/lib/quiz/store"
 
 type QuizBrowserHistoryContextValue = {
@@ -47,7 +48,8 @@ export function QuizBrowserHistoryProvider({ children }: { children: ReactNode }
 
   const defaultBackHandler = useCallback(() => {
     if (step === 9 && leadCaptureSubStep === "consent") {
-      if (leadCaptureMode === "partner") {
+      // Partner and discovery have no name/e-mail screens to step back into.
+      if (hasLockedLeadIdentity(leadCaptureMode)) {
         goBack()
         return
       }

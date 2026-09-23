@@ -4,6 +4,10 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
+import {
+  buildDiscoveryChecklistPath,
+  hasDiscoveryEnrollmentStamp,
+} from "@/lib/discovery/participant"
 import { buildQuizResultPath } from "@/lib/quiz/result-navigation"
 import { useQuizStore } from "@/lib/quiz/store"
 import type { LeadCaptureSubStep } from "@/lib/quiz/types"
@@ -95,16 +99,24 @@ export function getPreparationRecoverySubStep(name: string): LeadCaptureSubStep 
   return name.trim() ? "email" : "name"
 }
 
+/**
+ * `discovery` defaults to `false`, so an ordinary quiz keeps byte-identical
+ * navigation. A discovery participant's quiz feeds the call preparation instead
+ * of the paid result screen, so it ends on their product checklist.
+ */
 export function getPreparationResultPath({
   leadId,
   mode,
   returnTo,
+  discovery = false,
 }: {
   leadId: string | null
   mode: string | null
   returnTo: string | null
+  discovery?: boolean
 }): string | null {
   if (!leadId) return null
+  if (discovery) return buildDiscoveryChecklistPath(leadId)
   return buildQuizResultPath({ leadId, mode, returnTo })
 }
 
@@ -131,14 +143,16 @@ export function QuizPreparation() {
     profileHasAccess,
     userId: user?.id ?? null,
   })
+  const isDiscoveryParticipant = hasDiscoveryEnrollmentStamp(user)
   const resultPath = useMemo(
     () =>
       getPreparationResultPath({
         leadId,
         mode: searchParams.get("mode"),
         returnTo: searchParams.get("returnTo"),
+        discovery: isDiscoveryParticipant,
       }),
-    [leadId, searchParams],
+    [isDiscoveryParticipant, leadId, searchParams],
   )
 
   useEffect(() => {

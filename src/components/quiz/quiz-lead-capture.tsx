@@ -29,6 +29,12 @@ import {
   PARTNER_QUIZ_CONTEXT_ENDPOINT,
 } from "@/lib/partner-access/quiz-context"
 import {
+  hasDiscoveryEnrollmentStamp,
+  parseDiscoveryQuizContextPayload,
+  DISCOVERY_QUIZ_CONTEXT_ENDPOINT,
+} from "@/lib/discovery/participant"
+import { hasLockedLeadIdentity } from "@/lib/quiz/lead-capture-mode"
+import {
   isMigrationQuizRecoverySearch,
   resolveLeadCaptureRecoveryNextHref,
   resolveLeadCaptureServerNextHref,
@@ -54,6 +60,7 @@ export function QuizLeadCapture() {
     leadCaptureMode,
     setLeadCaptureSubStep,
     setPartnerLeadIdentity,
+    setDiscoveryLeadIdentity,
     setRegularLeadCapture,
     lead,
     setLeadField,
@@ -87,20 +94,28 @@ export function QuizLeadCapture() {
   // sent with a consent answer the user never gave for it.
   const consentAnsweredRef = useRef(false)
   const liveSuggestion = suggestEmailCorrection(lead.email)
-  const contextLookupKey = getPartnerQuizContextLookupKey({
+  const partnerLookupKey = getPartnerQuizContextLookupKey({
     authLoading,
     hasMetadataHint: hasPartnerAccessQuizHint(user),
     search: typeof window === "undefined" ? "" : window.location.search,
     userId: user?.id ?? null,
   })
+  // A discovery participant carries their own `app_metadata` stamp and never the
+  // partner marker, so the two lookups are mutually exclusive. Partner keeps
+  // precedence, which leaves the creator flow byte-identical: this key is only
+  // ever non-null on a run the partner lookup has already called `regular`.
+  const discoveryLookupKey =
+    partnerLookupKey === "regular" && hasDiscoveryEnrollmentStamp(user) && user?.id
+      ? `discovery:${user.id}`
+      : null
 
   useEffect(() => {
-    if (contextLookupKey === "checking") {
+    if (partnerLookupKey === "checking") {
       setContextStatus("checking")
       return
     }
 
-    if (contextLookupKey === "regular") {
+    if (partnerLookupKey === "regular" && !discoveryLookupKey) {
       setRegularLeadCapture()
       setContextStatus("ready")
       return
@@ -108,19 +123,30 @@ export function QuizLeadCapture() {
 
     let active = true
     setContextStatus("checking")
-    void fetch(PARTNER_QUIZ_CONTEXT_ENDPOINT, {
+    const endpoint = discoveryLookupKey
+      ? DISCOVERY_QUIZ_CONTEXT_ENDPOINT
+      : PARTNER_QUIZ_CONTEXT_ENDPOINT
+    void fetch(endpoint, {
       headers: { Accept: "application/json" },
       cache: "no-store",
       credentials: "same-origin",
     })
       .then(async (response) => {
         if (!response.ok) return { status: "unavailable" } as const
-        return parsePartnerQuizContextPayload(await response.json().catch(() => null))
+        const body: unknown = await response.json().catch(() => null)
+        return discoveryLookupKey
+          ? parseDiscoveryQuizContextPayload(body)
+          : parsePartnerQuizContextPayload(body)
       })
       .then((payload) => {
         if (!active) return
         if (payload.status === "creator") {
           setPartnerLeadIdentity({ name: payload.name, email: payload.email })
+          setContextStatus("ready")
+          return
+        }
+        if (payload.status === "participant") {
+          setDiscoveryLeadIdentity({ name: payload.name, email: payload.email })
           setContextStatus("ready")
           return
         }
@@ -138,7 +164,14 @@ export function QuizLeadCapture() {
     return () => {
       active = false
     }
-  }, [contextAttempt, contextLookupKey, setPartnerLeadIdentity, setRegularLeadCapture])
+  }, [
+    contextAttempt,
+    discoveryLookupKey,
+    partnerLookupKey,
+    setDiscoveryLeadIdentity,
+    setPartnerLeadIdentity,
+    setRegularLeadCapture,
+  ])
 
   useEffect(() => {
     if (funnelPackageKey !== QUIZ_EMAIL_RETURN_PACKAGE_KEY) {
@@ -263,7 +296,9 @@ export function QuizLeadCapture() {
     // is what moves the user to the e-mail step once the response lands.
     if (saving && !isRecoveryBack) return
     if (leadCaptureSubStep === "consent") {
-      if (leadCaptureMode === "partner") {
+      // A locked identity (partner, discovery) has no e-mail step behind the
+      // consent sheet, so Back leaves lead capture entirely.
+      if (hasLockedLeadIdentity(leadCaptureMode)) {
         consentAnsweredRef.current = false
         goBack()
         return
@@ -292,10 +327,11 @@ export function QuizLeadCapture() {
    * The retry after a rejection is submitted from the e-mail step itself, so a
    * second rejection must not move at all — a Back request from there would
    * step on to the name screen and clear both the message and the suggestion.
-   * Partner capture has no e-mail step; its error stays on the consent sheet.
+   * Locked-identity capture (partner, discovery) has no e-mail step; its error
+   * stays on the consent sheet.
    */
   const returnToEmailStep = () => {
-    if (leadCaptureMode === "partner") return
+    if (hasLockedLeadIdentity(leadCaptureMode)) return
     if (leadCaptureSubStep !== "consent") return
     // Routed through the Back request so the browser history depth stays in
     // sync; the consent branch of `handleBack` keeps the error and suggestion.
@@ -368,10 +404,14 @@ export function QuizLeadCapture() {
             detail.code === "invited_email_mismatch"
           ) {
             setServerSuggestion(null)
+            // One message per mode: a locked identity cannot be corrected by the
+            // person in front of the screen, a regular one can.
             setError(
               leadCaptureMode === "partner"
                 ? "Dein persönlicher Zugang konnte gerade nicht bestätigt werden."
-                : "Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos.",
+                : leadCaptureMode === "discovery"
+                  ? "Deine Einladung konnte gerade nicht bestätigt werden."
+                  : "Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos.",
             )
             returnToEmailStep()
             window.scrollTo(0, 0)
@@ -419,7 +459,7 @@ export function QuizLeadCapture() {
   }
 
   if (
-    contextLookupKey === "checking" ||
+    partnerLookupKey === "checking" ||
     contextStatus !== "ready" ||
     returnContextStatus !== "ready"
   ) {
@@ -438,7 +478,7 @@ export function QuizLeadCapture() {
             <QuizProgressBar current={QUIZ_TOTAL_QUESTIONS} total={QUIZ_TOTAL_QUESTIONS} />
           </div>
         </div>
-        {contextLookupKey === "checking" ||
+        {partnerLookupKey === "checking" ||
         contextStatus === "checking" ||
         returnContextStatus === "checking" ? (
           <p className="text-center text-sm text-muted-foreground" role="status">
@@ -591,7 +631,8 @@ export function QuizLeadCapture() {
       )}
 
       {/* Consent inline card */}
-      {leadCaptureMode === "partner" && error ? (
+      {/* A locked identity never reaches the e-mail step, so its errors are shown here. */}
+      {hasLockedLeadIdentity(leadCaptureMode) && error ? (
         <p
           className="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-700"
           role="alert"

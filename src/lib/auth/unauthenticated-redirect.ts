@@ -10,6 +10,17 @@ const AUTH_FIRST_PREFIXES = [
   "/tracker",
   "/admin",
   "/scan",
+  // A discovery participant who closes the tab and returns to the checklist
+  // already has an account, so send them to sign in rather than into the quiz.
+  // The public `/beratung/einladung` and `/beratung/weiter` never reach this
+  // function — an unauthenticated request to a public route is not redirected.
+  //
+  // `/api/beratung` needs its own entry: `pathMatchesRoutePrefix` compares whole
+  // segments, so an API path is NOT covered by the page prefix. Without it an
+  // expired-session XHR from the checklist would be answered with the `/quiz`
+  // HTML page, which the client then tries to parse as JSON.
+  "/beratung",
+  "/api/beratung",
   "/api/chat",
   "/api/routine",
   "/api/tracker",

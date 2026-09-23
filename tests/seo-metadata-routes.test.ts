@@ -415,6 +415,10 @@ test("private and unstable routes receive response-level noindex headers", async
   for (const source of [
     "/admin/:path*",
     "/auth/:path*",
+    // Invite-only discovery-call journey; both are needed because `:path*` does
+    // not match the bare segment.
+    "/beratung",
+    "/beratung/:path*",
     "/chat/:path*",
     "/labs/:path*",
     "/onboarding/:path*",
@@ -432,7 +436,7 @@ test("private and unstable routes receive response-level noindex headers", async
   }
 })
 
-test("camera stays denied site-wide and is re-enabled for same-origin /scan only", async () => {
+test("camera stays denied site-wide and is re-enabled for the same-origin scanner surfaces only", async () => {
   const headerRules = (await nextConfig.headers?.()) ?? []
   const permissionsRules = headerRules
     .map((rule, index) => ({
@@ -446,9 +450,12 @@ test("camera stays denied site-wide and is re-enabled for same-origin /scan only
   assert.ok(globalRule, "site-wide Permissions-Policy rule is missing")
   assert.equal(globalRule.value, "camera=(), microphone=(), geolocation=()")
 
-  // `getUserMedia` is policy-denied without this, so the scan viewfinder would break in
-  // production. Both sources are needed: `:path*` does not match the bare `/scan`.
-  for (const source of ["/scan", "/scan/:path*"]) {
+  // `getUserMedia` is policy-denied without this, so the viewfinder would break in
+  // production. Both `/scan` sources are needed: `:path*` does not match the bare
+  // `/scan`. `/beratung/produkte` is the discovery-call checklist, which mounts the
+  // same `Scanner` component and is a single leaf route.
+  const cameraSources = ["/scan", "/scan/:path*", "/beratung/produkte"]
+  for (const source of cameraSources) {
     const scanRule = permissionsRules.find((rule) => rule.source === source)
     assert.ok(scanRule, `camera override missing for ${source}`)
     assert.equal(scanRule.value, "camera=(self), microphone=(), geolocation=()")
@@ -458,7 +465,7 @@ test("camera stays denied site-wide and is re-enabled for same-origin /scan only
 
   // No other route may widen the camera policy.
   for (const rule of permissionsRules) {
-    if (rule.source === "/scan" || rule.source === "/scan/:path*") continue
+    if (cameraSources.includes(rule.source)) continue
     assert.ok(rule.value.startsWith("camera=()"), `${rule.source} must keep camera denied`)
   }
 })

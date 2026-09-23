@@ -40,6 +40,11 @@ import {
   type ScanCatalogPresentationRow,
 } from "@/lib/scan/product-presentation"
 import { loadScanVerdictForProduct } from "@/lib/scan/load-scan-verdict"
+import {
+  createActiveProductByIdLoader,
+  createPresentationRowLoader,
+  type ScanActiveProductLookup,
+} from "@/lib/scan/presentation-rows"
 import { maskScanVerdictPayload, type ScanMaskedVerdictResult } from "@/lib/scan/masked-alternative"
 import { loadScanEvaluationContext } from "@/lib/scan/profile-context"
 import { buildScanVerdict } from "@/lib/scan/resolve-verdict"
@@ -81,7 +86,7 @@ const resolveBodySchema = z
 
 type ResolveInput = z.infer<typeof resolveBodySchema>
 
-type ActiveProductLookup = { id: string; category: PersonalPlanCategory } | null
+type ActiveProductLookup = ScanActiveProductLookup
 
 export type ScanResolveRouteDeps = {
   getUserId: () => Promise<string | null>
@@ -577,63 +582,10 @@ export function createScanResolveRouteHandler(deps: ScanResolveRouteDeps) {
   })
 }
 
-async function loadActiveProductById(
-  client: SupabaseClient,
-  productId: string,
-): Promise<ActiveProductLookup> {
-  const { data, error } = await client
-    .from("products")
-    .select("id, category_key")
-    .eq("id", productId)
-    .eq("is_active", true)
-    .eq("lifecycle_status", "active")
-    .maybeSingle()
-  if (error) throw new Error("scan_resolve_product_lookup_failed")
-  const row = data as { id: string; category_key: string } | null
-  return row ? { id: row.id, category: row.category_key as PersonalPlanCategory } : null
-}
-
-async function loadPresentationRows(
-  client: SupabaseClient,
-  productIds: string[],
-): Promise<ScanCatalogPresentationRow[]> {
-  if (productIds.length === 0) return []
-  const { data, error } = await client
-    .from("products")
-    .select(
-      "id, name, brand, category_key, image_url, price_eur, currency, affiliate_link, purchase_link_status, price_checked_at",
-    )
-    .in("id", [...new Set(productIds)])
-  if (error) throw new Error("scan_resolve_presentation_lookup_failed")
-  return ((data ?? []) as PresentationRow[]).map((row) => ({
-    id: row.id,
-    name: row.name,
-    brand: row.brand,
-    category: row.category_key as PersonalPlanCategory,
-    imageUrl: row.image_url,
-    priceEur: row.price_eur,
-    currency: row.currency,
-    affiliateLink: row.affiliate_link,
-    purchaseLinkStatus:
-      row.purchase_link_status === "available" || row.purchase_link_status === "unavailable"
-        ? row.purchase_link_status
-        : null,
-    priceCheckedAt: row.price_checked_at,
-  }))
-}
-
-type PresentationRow = {
-  id: string
-  name: string
-  brand: string | null
-  category_key: string
-  image_url: string | null
-  price_eur: number | null
-  currency: string | null
-  affiliate_link: string | null
-  purchase_link_status: string | null
-  price_checked_at: string | null
-}
+// Both loaders now live in `@/lib/scan/presentation-rows` — shared verbatim with
+// `/api/scan/reveal` and the discovery cockpit. Each caller keeps its own error code.
+const loadActiveProductById = createActiveProductByIdLoader("scan_resolve_product_lookup_failed")
+const loadPresentationRows = createPresentationRowLoader("scan_resolve_presentation_lookup_failed")
 
 export const POST = createScanResolveRouteHandler({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,

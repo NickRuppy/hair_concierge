@@ -19,8 +19,13 @@ const permissionsPolicy = (camera: string) => `${camera}, microphone=(), geoloca
  * these entries must stay AFTER the site-wide `securityHeaders` entry in `headers()`.
  * `/scan` and `/scan/:path*` are both listed because `:path*` does not match the bare
  * segment on its own.
+ *
+ * `/beratung/produkte` is the discovery-call product checklist. It reuses the same
+ * `Scanner` component, so without its own override the viewfinder would fail in
+ * production exactly the way `/scan` would. It is a single leaf route, so no
+ * `:path*` twin is needed.
  */
-const cameraRoutes = ["/scan", "/scan/:path*"]
+const cameraRoutes = ["/scan", "/scan/:path*", "/beratung/produkte"]
 
 const securityHeaders = [
   {
@@ -49,6 +54,9 @@ const securityHeaders = [
 const noindexRoutes = [
   "/admin/:path*",
   "/auth/:path*",
+  // The whole discovery-call journey is personal and invite-only.
+  "/beratung",
+  "/beratung/:path*",
   "/chat/:path*",
   "/labs/:path*",
   "/onboarding/:path*",

@@ -13,6 +13,7 @@ import {
   PUBLIC_DECLARATION_RECEIPT_DELIVERY_LIMIT,
 } from "../src/lib/billing/public-contract-declaration-receipt-delivery"
 import type { PublicContractDeclarationReceipt } from "../src/lib/billing/public-contract-declaration"
+import type { RequiredNoticePresentation } from "../src/lib/billing/trial-required-notices"
 import { handlePublicContractDeclarationReceiptReconcile } from "../src/app/api/billing/public-contract-declaration-receipts/reconcile/route"
 
 const receiptPayload: PublicContractDeclarationReceipt = {
@@ -168,7 +169,12 @@ test("the durable declaration starts locally queued and only a later matching pr
 })
 
 test("a Customer.io acknowledgement records queued, never sent, and uses the declared recipient", async () => {
-  const sent: Array<{ email: string; messageId: string; receiptText: string }> = []
+  const sent: Array<{
+    email: string
+    messageId: string
+    receiptText: string
+    requiredNotice: RequiredNoticePresentation
+  }> = []
   const settled: unknown[] = []
   const result = await dispatchPublicContractDeclarationReceipts({
     messageId: "legal-declaration-receipt",
@@ -201,6 +207,11 @@ test("a Customer.io acknowledgement records queued, never sent, and uses the dec
   )
   assert.match(sent[0]!.receiptText, /Eingangsbestätigung/)
   assert.match(sent[0]!.receiptText, /Marie Beispiel/)
+  assert.equal(sent[0]!.requiredNotice.title, "Wir haben deine Kündigung erhalten.")
+  assert.deepEqual(sent[0]!.requiredNotice.primaryAction, {
+    kind: "contact",
+    label: "Kontakt aufnehmen",
+  })
   assert.deepEqual(settled, [
     {
       status: "queued",

@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1280" />
+<title>Discovery-Cockpit — Lena M.</title>
+<style>
+  :root {
+    --bg: #f5f4f2;
+    --card: #ffffff;
+    --border: #dcd8d4;
+    --border-soft: #eae7e4;
+    --plum: #6b50a0;
+    --plum-dark: #3d2a62;
+    --plum-darkest: #2a1845;
+    --plum-ice: #f2eefa;
+    --plum-light: #c8b8e0;
+    --coral: #d4616a;
+    --coral-dark: #c0555d;
+    --ok-bg: #edf7ef; --ok-text: #356b45; --ok-dot: #4c9163;
+    --warn-bg: #fff5df; --warn-text: #805a16; --warn-dot: #d19b2a;
+    --bad-bg: #fff0f1; --bad-text: #9a3f48; --bad-dot: #c8535d;
+    --neutral-bg: #f3f0f6; --neutral-text: #574b61; --neutral-dot: #9b93a5;
+    --text: #32302e;
+    --text-sub: #6a6560;
+    --text-caption: #857f79;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { width: 1280px; margin: 0 auto; padding: 0 0 80px; }
+
+  /* --- top bar --- */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--plum-darkest); color: #fff;
+    padding: 10px 24px;
+  }
+  .topbar .tool { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.85; }
+  .topbar .status { font-family: var(--mono); font-size: 12px; color: #e9c9cc; }
+
+  /* --- participant header --- */
+  .participant {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px;
+    display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap;
+  }
+  .participant h1 { font-size: 22px; font-weight: 700; margin: 0; color: var(--plum-darkest); }
+  .participant .profile { font-size: 14px; color: var(--text-sub); }
+  .participant .meta { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--text-caption); }
+
+  main { padding: 24px; display: flex; flex-direction: column; gap: 22px; }
+
+  section.block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .block > h2 {
+    margin: 0;
+    font-size: 12px; font-family: var(--mono); font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-caption);
+    padding: 12px 18px; border-bottom: 1px solid var(--border-soft);
+  }
+
+  /* --- Idealroutine --- */
+  ol.routine { list-style: none; margin: 0; padding: 4px 0; }
+  ol.routine li {
+    display: flex; align-items: baseline; gap: 14px;
+    padding: 9px 18px;
+    border-bottom: 1px dashed var(--border-soft);
+  }
+  ol.routine li:last-child { border-bottom: 0; }
+  ol.routine .n { font-family: var(--mono); font-size: 12px; color: var(--text-caption); width: 18px; flex-shrink: 0; }
+  ol.routine .cat {
+    font-size: 12px; font-weight: 700; color: var(--plum-dark);
+    background: var(--plum-ice); border-radius: 4px; padding: 2px 8px;
+    width: 140px; flex-shrink: 0; text-align: center;
+  }
+  ol.routine .what { flex: 1; }
+  ol.routine .freq { font-family: var(--mono); font-size: 12px; color: var(--text-caption); }
+
+  /* --- category decision blocks --- */
+  .cat-block { border-bottom: 1px solid var(--border-soft); }
+  .cat-block:last-child { border-bottom: 0; }
+  .cat-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 18px;
+    background: #faf9f8;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .cat-head .n { font-family: var(--mono); font-size: 12px; color: var(--text-caption); }
+  .cat-head .label { font-size: 15px; font-weight: 700; color: var(--plum-darkest); }
+  .cat-head .role { font-size: 12px; color: var(--text-caption); }
+
+  .cat-body { display: grid; grid-template-columns: 1fr 1fr; }
+  .verdict-col { padding: 16px 18px; border-right: 1px solid var(--border-soft); }
+  .decision-col { padding: 16px 18px; }
+
+  .col-label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-caption); margin: 0 0 10px;
+  }
+
+  .product-line { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .product-line .pname { font-size: 15px; font-weight: 600; color: var(--plum-darkest); }
+  .product-line .brand { font-size: 12px; color: var(--text-caption); }
+
+  .verdict {
+    display: flex; align-items: center; gap: 8px;
+    border-radius: 5px; padding: 8px 10px; margin-bottom: 8px;
+    font-size: 13px; font-weight: 700;
+  }
+  .verdict .dot { width: 9px; height: 9px; border-radius: 999px; flex-shrink: 0; }
+  .v-ok { background: var(--ok-bg); color: var(--ok-text); }
+  .v-ok .dot { background: var(--ok-dot); }
+  .v-warn { background: var(--warn-bg); color: var(--warn-text); }
+  .v-warn .dot { background: var(--warn-dot); }
+  .v-bad { background: var(--bad-bg); color: var(--bad-text); }
+  .v-bad .dot { background: var(--bad-dot); }
+  .v-neutral { background: var(--neutral-bg); color: var(--neutral-text); }
+  .v-neutral .dot { background: var(--neutral-dot); }
+
+  .reason { font-size: 13px; line-height: 1.55; color: var(--text-sub); margin: 0; }
+
+  /* --- radio decision list --- */
+  ul.choices { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  ul.choices label {
+    display: flex; align-items: flex-start; gap: 10px;
+    border: 1px solid var(--border); border-radius: 5px;
+    padding: 10px 12px; cursor: pointer;
+    background: #fff;
+  }
+  ul.choices input { margin: 2px 0 0; accent-color: var(--plum); flex-shrink: 0; }
+  ul.choices input:checked + .choice-text .ctitle { color: var(--plum-dark); }
+  ul.choices label:has(input:checked) { border-color: var(--plum); background: var(--plum-ice); }
+  .choice-text { min-width: 0; }
+  .ctitle { font-size: 14px; font-weight: 600; color: var(--text); }
+  .csub { display: block; font-size: 12px; color: var(--text-caption); margin-top: 2px; line-height: 1.45; }
+  .pill {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    border-radius: 999px; padding: 1px 7px; margin-left: 6px; vertical-align: 1px;
+  }
+  .pill-ok { background: var(--ok-bg); color: var(--ok-text); }
+  .pill-warn { background: var(--warn-bg); color: var(--warn-text); }
+
+  /* --- out-of-routine --- */
+  .outside { padding: 14px 18px; font-size: 13px; color: var(--text-sub); line-height: 1.7; }
+  .outside code { font-family: var(--mono); font-size: 12px; color: var(--text-caption); }
+
+  /* --- finalize --- */
+  .finalize {
+    display: flex; align-items: center; gap: 18px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 6px;
+    padding: 16px 18px;
+  }
+  .finalize button {
+    border: 0; border-radius: 6px; background: var(--coral); color: #fff;
+    font-family: inherit; font-size: 14px; font-weight: 700;
+    padding: 11px 22px; cursor: pointer;
+  }
+  .finalize .hint { font-size: 13px; color: var(--text-sub); line-height: 1.5; }
+  .finalize .state {
+    margin-left: auto; font-family: var(--mono); font-size: 12px;
+    color: var(--warn-text); background: var(--warn-bg);
+    border-radius: 4px; padding: 5px 9px;
+  }
+  .finalize .pdf-off { font-family: var(--mono); font-size: 12px; color: var(--text-caption); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <span class="tool">Discovery-Cockpit</span>
+    <span class="status">intake: submitted · 2026-09-20 18:41</span>
+  </div>
+
+  <div class="participant">
+    <h1>Lena M.</h1>
+    <span class="profile">wellig · fein · Kopfhaut fettet schnell · Längen trocken · Ziel: Glanz, weniger Frizz</span>
+    <span class="meta">Termin 23.09. 18:00</span>
+  </div>
+
+  <main>
+
+    <!-- 1 — IDEALROUTINE -->
+    <section class="block">
+      <h2>Idealroutine</h2>
+      <ol class="routine">
+        <li><span class="n">1</span><span class="cat">Shampoo</span><span class="what">Kopfhaut waschen, Längen nur durchspülen</span><span class="freq">3× / Woche</span></li>
+        <li><span class="n">2</span><span class="cat">Conditioner</span><span class="what">Längen und Spitzen, 2 Min. einwirken</span><span class="freq">nach jeder Wäsche</span></li>
+        <li><span class="n">3</span><span class="cat">Maske</span><span class="what">Ersetzt an dem Tag den Conditioner</span><span class="freq">1× / Woche</span></li>
+        <li><span class="n">4</span><span class="cat">Leave-in</span><span class="what">Ins handtuchfeuchte Haar, ab Ohrhöhe</span><span class="freq">nach jeder Wäsche</span></li>
+        <li><span class="n">5</span><span class="cat">Hitzeschutz</span><span class="what">Vor Föhn und Glätteisen, auf feuchtes Haar</span><span class="freq">vor jedem Styling</span></li>
+        <li><span class="n">6</span><span class="cat">Öl</span><span class="what">Nur Spitzen, trockenes Haar</span><span class="freq">bei Bedarf</span></li>
+        <li><span class="n">7</span><span class="cat">Trockenshampoo</span><span class="what">Ansatz, am Vorabend</span><span class="freq">zwischen den Wäschen</span></li>
+      </ol>
+    </section>
+
+    <!-- 2+3 — VERDICTS + KEEP/SWAP -->
+    <section class="block">
+      <h2>Produkte &amp; Entscheidung</h2>
+
+      <!-- Shampoo -->
+      <div class="cat-block">
+        <div class="cat-head"><span class="n">1</span><span class="label">Shampoo</span><span class="role">Hauptreinigung</span></div>
+        <div class="cat-body">
+          <div class="verdict-col">
+            <p class="col-label">Ihr Produkt</p>
+            <div class="product-line">
+              <span class="pname">Elvital Hyaluron Pure Shampoo</span>
+              <span class="brand">L'Oréal Elvital</span>
+            </div>
+            <div class="verdict v-ok"><span class="dot"></span>Passt zu ihrem Haar</div>
+            <p class="reason">Leichte Reinigung ohne Silikone. Sitzt richtig bei einem Ansatz, der schnell nachfettet, und beschwert feines Haar nicht.</p>
+          </div>
+          <div class="decision-col">
+            <p class="col-label">Entscheidung</p>
+            <ul class="choices">
+              <li><label><input type="radio" name="d-shampoo" checked /><span class="choice-text"><span class="ctitle">Behalten</span><span class="csub">Elvital Hyaluron Pure Shampoo</span></span></label></li>
+              <li><label><input type="radio" name="d-shampoo" /><span class="choice-text"><span class="ctitle">Tauschen zu Guhl Leichte Frische Shampoo<span class="pill pill-ok">Passt</span></span><span class="csub">Ähnlich leicht, etwas milder in der Reinigung.</span></span></label></li>
+              <li><label><input type="radio" name="d-shampoo" /><span class="choice-text"><span class="ctitle">Tauschen zu Alverde Volumen Shampoo Zitronenmelisse<span class="pill pill-ok">Passt</span></span><span class="csub">Leichte Textur, ohne Silikone.</span></span></label></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conditioner -->
+      <div class="cat-block">
+        <div class="cat-head"><span class="n">2</span><span class="label">Conditioner</span><span class="role">Pflege nach der Wäsche</span></div>
+        <div class="cat-body">
+          <div class="verdict-col">
+            <p class="col-label">Ihr Produkt</p>
+            <div class="product-line">
+              <span class="pname">Gliss Kur Aqua Revive Spülung</span>
+              <span class="brand">Schwarzkopf</span>
+            </div>
+            <div class="verdict v-warn"><span class="dot"></span>Passt mit Einschränkung</div>
+            <p class="reason">Die Feuchtigkeitsrichtung stimmt. Die Textur ist für feines Haar eher schwer und kann die Längen mit der Zeit platt wirken lassen.</p>
+          </div>
+          <div class="decision-col">
+            <p class="col-label">Entscheidung</p>
+            <ul class="choices">
+              <li><label><input type="radio" name="d-cond" /><span class="choice-text"><span class="ctitle">Behalten</span><span class="csub">Gliss Kur Aqua Revive Spülung</span></span></label></li>
+              <li><label><input type="radio" name="d-cond" checked /><span class="choice-text"><span class="ctitle">Tauschen zu Guhl Feuchtigkeit &amp; Glanz Spülung<span class="pill pill-ok">Passt</span></span><span class="csub">Gleiche Feuchtigkeitsrichtung, leichter im Haar.</span></span></label></li>
+              <li><label><input type="radio" name="d-cond" /><span class="choice-text"><span class="ctitle">Tauschen zu Alverde Feuchtigkeit Spülung Aloe Vera<span class="pill pill-ok">Passt</span></span><span class="csub">Sehr leicht, gut für feines Haar.</span></span></label></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Maske -->
+      <div class="cat-block">
+        <div class="cat-head"><span class="n">3</span><span class="label">Maske</span><span class="role">Intensivpflege</span></div>
+        <div class="cat-body">
+          <div class="verdict-col">
+            <p class="col-label">Ihr Produkt</p>
+            <div class="product-line">
+              <span class="pname">Balea Professional Repair Haarkur</span>
+              <span class="brand">Balea</span>
+            </div>
+            <div class="verdict v-bad"><span class="dot"></span>Passt nicht zu ihrem Haar</div>
+            <p class="reason">Sehr reichhaltig aufgebaut, gedacht für kräftiges, stark strapaziertes Haar. Bei feinem Haar legt sie sich schnell auf die Längen.</p>
+          </div>
+          <div class="decision-col">
+            <p class="col-label">Entscheidung</p>
+            <ul class="choices">
+              <li><label><input type="radio" name="d-mask" /><span class="choice-text"><span class="ctitle">Behalten</span><span class="csub">Balea Professional Repair Haarkur</span></span></label></li>
+              <li><label><input type="radio" name="d-mask" checked /><span class="choice-text"><span class="ctitle">Tauschen zu Nivea 1-Minute Kur Feuchtigkeit<span class="pill pill-ok">Passt</span></span><span class="csub">Leichte Intensivpflege, kurze Einwirkzeit.</span></span></label></li>
+              <li><label><input type="radio" name="d-mask" /><span class="choice-text"><span class="ctitle">Tauschen zu Guhl Feuchtigkeit &amp; Glanz Kur<span class="pill pill-warn">Passt mit Einschränkung</span></span><span class="csub">Passt, ist aber etwas reichhaltiger.</span></span></label></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leave-in — Lücke -->
+      <div class="cat-block">
+        <div class="cat-head"><span class="n">4</span><span class="label">Leave-in</span><span class="role">Pflege im feuchten Haar</span></div>
+        <div class="cat-body">
+          <div class="verdict-col">
+            <p class="col-label">Ihr Produkt</p>
+            <div class="product-line">
+              <span class="pname" style="color:var(--text-caption);font-weight:600">Kein Produkt angegeben</span>
+            </div>
+            <div class="verdict v-neutral"><span class="dot"></span>Lücke in der Idealroutine</div>
+            <p class="reason">Schritt 4 steht in der Idealroutine, sie benutzt aktuell nichts dafür. Der größte Hebel für Frizz und Glanz in den Längen.</p>
+          </div>
+          <div class="decision-col">
+            <p class="col-label">Entscheidung</p>
+            <ul class="choices">
+              <li><label><input type="radio" name="d-leavein" /><span class="choice-text"><span class="ctitle">Ohne Produkt weiter</span><span class="csub">Schritt bleibt offen.</span></span></label></li>
+              <li><label><input type="radio" name="d-leavein" checked /><span class="choice-text"><span class="ctitle">Neu: Garnier Fructis Hair Food Aloe Vera Leave-in<span class="pill pill-ok">Passt</span></span><span class="csub">Leichtes Spray, gut für feines welliges Haar.</span></span></label></li>
+              <li><label><input type="radio" name="d-leavein" /><span class="choice-text"><span class="ctitle">Neu: Balea Professional Leave-in Spray Feuchtigkeit<span class="pill pill-ok">Passt</span></span><span class="csub">Günstigere Variante, gleiche Richtung.</span></span></label></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hitzeschutz -->
+      <div class="cat-block">
+        <div class="cat-head"><span class="n">5</span><span class="label">Hitzeschutz</span><span class="role">Vor dem Styling</span></div>
+        <div class="cat-body">
+          <div class="verdict-col">
+            <p class="col-label">Ihr Produkt</p>
+            <div class="product-line">
+              <span class="pname">got2b Guardian Angel Hitzeschutz-Spray</span>
+              <span class="brand">Schwarzkopf got2b</span>
+            </div>
+            <div class="verdict v-ok"><span class="dot"></span>Passt zu ihrem Haar</div>
+            <p class="reason">Sprühtextur, bleibt im feinen Haar leicht. Deckt beides ab: Föhn und Glätteisen.</p>
+          </div>
+          <div class="decision-col">
+            <p class="col-label">Entscheidung</p>
+            <ul class="choices">
+              <li><label><input type="radio" name="d-heat" checked /><span class="choice-text"><span class="ctitle">Behalten</span><span class="csub">got2b Guardian Angel Hitzeschutz-Spray</span></span></label></li>
+              <li><label><input type="radio" name="d-heat" /><span class="choice-text"><span class="ctitle">Tauschen zu Syoss Heat Protect Spray<span class="pill pill-ok">Passt</span></span><span class="csub">Gleiche Anwendung, feinerer Sprühnebel.</span></span></label></li>
+              <li><label><input type="radio" name="d-heat" /><span class="choice-text"><span class="ctitle">Tauschen zu Balea Hitzeschutz-Spray<span class="pill pill-ok">Passt</span></span><span class="csub">Günstigere Variante, gleiche Richtung.</span></span></label></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Öl -->
+      <div class="cat-block">
+        <div class="cat-head"><span class="n">6</span><span class="label">Öl</span><span class="role">Finish im trockenen Haar</span></div>
+        <div class="cat-body">
+          <div class="verdict-col">
+            <p class="col-label">Ihr Produkt</p>
+            <div class="product-line">
+              <span class="pname">Elvital Öl Magique</span>
+              <span class="brand">L'Oréal Elvital</span>
+            </div>
+            <div class="verdict v-warn"><span class="dot"></span>Passt mit Einschränkung</div>
+            <p class="reason">Gutes Finish für die Spitzen. Für feines Haar reicht ein Tropfen — weiter oben im Haar wirkt es schnell schwer.</p>
+          </div>
+          <div class="decision-col">
+            <p class="col-label">Entscheidung</p>
+            <ul class="choices">
+              <li><label><input type="radio" name="d-oil" checked /><span class="choice-text"><span class="ctitle">Behalten</span><span class="csub">Elvital Öl Magique — nur Spitzen, ein Tropfen.</span></span></label></li>
+              <li><label><input type="radio" name="d-oil" /><span class="choice-text"><span class="ctitle">Tauschen zu Isana Haaröl Arganöl<span class="pill pill-ok">Passt</span></span><span class="csub">Leichtere Textur, einfacher zu dosieren.</span></span></label></li>
+              <li><label><input type="radio" name="d-oil" /><span class="choice-text"><span class="ctitle">Tauschen zu Guhl Glanz-Öl Seidenglanz<span class="pill pill-warn">Passt mit Einschränkung</span></span><span class="csub">Gleiche Schwere wie das aktuelle.</span></span></label></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trockenshampoo -->
+      <div class="cat-block">
+        <div class="cat-head"><span class="n">7</span><span class="label">Trockenshampoo</span><span class="role">Ansatz zwischen den Wäschen</span></div>
+        <div class="cat-body">
+          <div class="verdict-col">
+            <p class="col-label">Ihr Produkt</p>
+            <div class="product-line">
+              <span class="pname">Batiste Trockenshampoo Original</span>
+              <span class="brand">Batiste</span>
+            </div>
+            <div class="verdict v-ok"><span class="dot"></span>Passt zu ihrem Haar</div>
+            <p class="reason">Passt zum Waschrhythmus. Wichtig bleibt die Anwendung: am Vorabend, mit Abstand, nur am Ansatz.</p>
+          </div>
+          <div class="decision-col">
+            <p class="col-label">Entscheidung</p>
+            <ul class="choices">
+              <li><label><input type="radio" name="d-dry" checked /><span class="choice-text"><span class="ctitle">Behalten</span><span class="csub">Batiste Trockenshampoo Original</span></span></label></li>
+              <li><label><input type="radio" name="d-dry" /><span class="choice-text"><span class="ctitle">Tauschen zu Balea Trockenshampoo Volumen<span class="pill pill-ok">Passt</span></span><span class="csub">Weniger sichtbarer Rückstand bei dunklem Ansatz.</span></span></label></li>
+              <li><label><input type="radio" name="d-dry" /><span class="choice-text"><span class="ctitle">Tauschen zu Syoss Dry Shampoo Volume Lift<span class="pill pill-ok">Passt</span></span><span class="csub">Gleiche Anwendung, etwas trockeneres Finish.</span></span></label></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- OUTSIDE THE ROUTINE -->
+    <section class="block">
+      <h2>Nicht in der Idealroutine</h2>
+      <div class="outside">
+        Bondbuilder · Kopfhautprodukt · Tiefenreinigung — jeweils <code>benutze ich nicht</code>. Keine Entscheidung nötig.
+      </div>
+    </section>
+
+    <!-- FINALIZE -->
+    <div class="finalize">
+      <button type="button">Finalisieren</button>
+      <span class="hint">Entscheidungen bleiben bis dahin änderbar.<br />Das PDF entsteht erst aus dem finalisierten Stand.</span>
+      <span class="pdf-off">PDF: gesperrt</span>
+      <span class="state">noch nicht finalisiert</span>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>
