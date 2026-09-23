@@ -33,3 +33,11 @@ test("other refusals keep their own copy without the session hint", () => {
   )
   assert.ok(!markup.includes(HINT))
 })
+
+test("the invite CTA uses the coral funnel CTA, not plum", () => {
+  const markup = renderToStaticMarkup(
+    <DiscoveryInvitationCard email="lea@example.test" mode="ready" name="Lea Sommer" />,
+  )
+  assert.ok(markup.includes("bg-[var(--brand-coral)]"))
+  assert.ok(!markup.includes("bg-[var(--brand-plum)]"))
+})

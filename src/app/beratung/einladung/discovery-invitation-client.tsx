@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 
+import { Button } from "@/components/ui/button"
 import {
   DISCOVERY_CLAIM_ENDPOINT,
   DISCOVERY_CLAIM_SIGNED_IN_OTHER_ACCOUNT,
@@ -150,14 +151,15 @@ export function DiscoveryInvitationCard({
           {errorHint ? <p className="mt-1 text-[var(--text-sub)]">{errorHint}</p> : null}
         </div>
       ) : null}
-      <button
-        className={primaryButtonClass}
+      <Button
+        className="mt-6"
         disabled={mode === "claiming"}
         onClick={onContinue}
         type="button"
+        variant="funnelCta"
       >
         {mode === "claiming" ? "Wird geöffnet …" : "Los geht’s"}
-      </button>
+      </Button>
       <p className="mt-3 text-xs leading-5 text-[var(--text-caption)]">
         Danach: Fragebogen und deine Produkte eintragen. Dauert etwa 10 Minuten.
       </p>
@@ -174,9 +176,6 @@ function InvitationShell({ children }: { children: React.ReactNode }) {
     </main>
   )
 }
-
-const primaryButtonClass =
-  "mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--brand-plum)] px-6 py-3 font-bold text-white transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2 disabled:opacity-60"
 
 function isInvitationIdentity(value: unknown): value is InvitationIdentity {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false
