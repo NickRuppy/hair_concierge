@@ -21,7 +21,8 @@ import { createAdminClient } from "@/lib/supabase/admin"
  *   POST  { name, email? }                      -> new invite + its link
  *   PATCH { action: "rotate"|"revoke", enrollmentId } -> the row after the write
  *
- * Gate order is the cockpit's: kill switch (404), the shared `requireAdmin` (401/403),
+ * Gate order: same-origin (403, CSRF), then the cockpit's kill switch (404), the shared
+ * `requireAdmin` (401/403),
  * and only then the service-role client. The CLI's production-write env gate does not
  * apply here — this route is an authenticated admin surface, not an operator script.
  *
@@ -74,7 +75,10 @@ type Guarded =
   | { ok: true; admin: DiscoveryAdminClient; context: { secret: string; siteUrl: string } }
   | { ok: false; response: NextResponse }
 
-async function guard(deps: DiscoveryInvitesRouteDependencies): Promise<Guarded> {
+async function guard(request: Request, deps: DiscoveryInvitesRouteDependencies): Promise<Guarded> {
+  // CSRF: the admin session cookie rides along on a cross-site form or fetch, so a
+  // write must also prove it was sent by our own page. Checked before anything else.
+  if (!isSameOrigin(request)) return { ok: false, response: error("Ungültige Anfrage.", 403) }
   if (!deps.flagEnabled()) return { ok: false, response: error("Nicht verfügbar.", 404) }
   const auth = await deps.requireAdmin()
   if ("response" in auth) return { ok: false, response: auth.response }
@@ -97,7 +101,7 @@ export function createDiscoveryInvitesHandlers(
   const deps = { ...DEFAULTS, ...overrides }
 
   async function POST(request: Request) {
-    const guarded = await guard(deps)
+    const guarded = await guard(request, deps)
     if (!guarded.ok) return guarded.response
     const body = createSchema.safeParse(await request.json().catch(() => null))
     if (!body.success) return error("Bitte prüf Name und E-Mail.", 400)
@@ -114,7 +118,7 @@ export function createDiscoveryInvitesHandlers(
   }
 
   async function PATCH(request: Request) {
-    const guarded = await guard(deps)
+    const guarded = await guard(request, deps)
     if (!guarded.ok) return guarded.response
     const body = actionSchema.safeParse(await request.json().catch(() => null))
     if (!body.success) return error("Ungültige Aktion.", 400)
@@ -138,6 +142,11 @@ export function createDiscoveryInvitesHandlers(
 const handlers = createDiscoveryInvitesHandlers()
 export const POST = handlers.POST
 export const PATCH = handlers.PATCH
+
+/** Same rule as `POST /api/beratung/claim`: the browser's Origin must be our own. */
+function isSameOrigin(request: Request) {
+  return request.headers.get("origin") === new URL(request.url).origin
+}
 
 function json(body: unknown, status = 200) {
   return NextResponse.json(body, { status, headers: NO_STORE })

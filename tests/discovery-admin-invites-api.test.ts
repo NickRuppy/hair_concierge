@@ -49,13 +49,13 @@ function handlers(overrides: Record<string, unknown> = {}) {
 const post = (body: unknown) =>
   new Request("https://chaarlie.de/api/admin/beratung/invites", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", origin: "https://chaarlie.de" },
     body: JSON.stringify(body),
   })
 const patch = (body: unknown) =>
   new Request("https://chaarlie.de/api/admin/beratung/invites", {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", origin: "https://chaarlie.de" },
     body: JSON.stringify(body),
   })
 
@@ -208,4 +208,28 @@ test("the copied link is a pure projection of (id, version) — the CLI's link, 
     siteUrl: SITE,
   })
   assert.equal(admin.url, cli.url)
+})
+
+test("a cross-origin or origin-less write is refused before the admin gate and any write", async () => {
+  for (const origin of ["https://evil.test", null]) {
+    let gateAsked = false
+    const { calls, POST, PATCH } = handlers({
+      requireAdmin: async () => {
+        gateAsked = true
+        return { userId: "admin-1" }
+      },
+    })
+    const headers: Record<string, string> = { "Content-Type": "application/json" }
+    if (origin) headers.origin = origin
+    const send = (method: string, body: unknown) =>
+      new Request("https://chaarlie.de/api/admin/beratung/invites", {
+        method,
+        headers,
+        body: JSON.stringify(body),
+      })
+    assert.equal((await POST(send("POST", { name: "Lea" }))).status, 403)
+    assert.equal((await PATCH(send("PATCH", { action: "revoke", enrollmentId }))).status, 403)
+    assert.deepEqual(calls, [])
+    assert.equal(gateAsked, false)
+  }
 })
