@@ -5,6 +5,12 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import { filterScanEligibleProductIds } from "@/lib/scan/catalog-eligibility"
 import { createAdminClient } from "@/lib/supabase/admin"
 
+import {
+  DISCOVERY_RESOLVED_SUBMISSION_STATUSES,
+  isResolvedDiscoverySubmissionStatus,
+  type DiscoverySubmissionOutcome,
+} from "./research-status"
+
 /**
  * The T-1 reconciliation surface: the database half of `npm run discovery -- reconcile`.
  *
@@ -13,7 +19,10 @@ import { createAdminClient } from "@/lib/supabase/admin"
  * `product_submission_id` and no `product_id`, so the cockpit shows it as „Noch in
  * Recherche" and it earns no verdict and no routine step. When the product-intake
  * pipeline later publishes that submission, nothing walks back to the intake — the
- * item stays research-pending forever. This module is that walk back.
+ * item stays research-pending in the DATA. The cockpit no longer depends on this walk
+ * back — it treats approved, eligible research as the item's product at read time
+ * (`research-status.ts`, `discoveryResearchLinks`) — but the CLI still writes it through,
+ * so the row itself stops being research-pending.
  *
  * Two rules it must not soften:
  *
@@ -24,7 +33,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
  *    onto a product that is since deactivated or disposition-quarantined; writing that
  *    id would put a product in front of the participant that no scan surface would.
  * 3. `approved_product_id` alone is not a verdict — the STATUS has to say so too. See
- *    `DISCOVERY_RESOLVED_SUBMISSION_STATUSES` below.
+ *    `DISCOVERY_RESOLVED_SUBMISSION_STATUSES` (`research-status.ts`).
  *
  * Everything here runs on the service-role client: all three tables are service-only.
  */
@@ -60,33 +69,14 @@ export type DiscoveryReconcileTarget = {
   items: DiscoveryPendingIntakeItem[]
 }
 
-export type DiscoverySubmissionOutcome = {
-  status: string | null
-  approvedProductId: string | null
-}
+export type { DiscoverySubmissionOutcome }
 
 /**
- * The only two `product_submissions.status` values that mean the review genuinely
- * RESOLVED onto a catalog product. The vocabulary is the migration's own
- * (`product_submissions_status_check` in
- * `supabase/migrations/20260612130000_product_intake_submissions.sql`): `pending_review`,
- * `researching`, `ready_for_review`, `needs_more_info`, `matched_existing`, `approved`,
- * `rejected`, `cancelled_by_user`. The same pair is what
- * `productIntakeReviewIsResolved` in `src/lib/product-intake/notifications.ts` tells the
- * user about.
- *
- * `approved_product_id` on its own is NOT that verdict. The table's
- * `product_submissions_success_product_check` only runs one way — a resolved status must
- * have a product — so a submission that was approved and then moved back to
- * `needs_more_info`, or `rejected` outright, still carries the id it was approved onto.
- * Reconciling off the id alone would put a product the review has since backed away from
- * into the participant's intake, hours before the call, with no trace but this receipt.
+ * The resolved-status rule and its constant live with the cockpit's research read
+ * (`research-status.ts`), so the CLI and the cockpit's read-time auto-link share one
+ * definition of „research is done". Re-exported for the CLI's existing imports.
  */
-export const DISCOVERY_RESOLVED_SUBMISSION_STATUSES = ["approved", "matched_existing"] as const
-
-export function isResolvedDiscoverySubmissionStatus(status: string | null | undefined): boolean {
-  return (DISCOVERY_RESOLVED_SUBMISSION_STATUSES as readonly string[]).includes(status ?? "")
-}
+export { DISCOVERY_RESOLVED_SUBMISSION_STATUSES, isResolvedDiscoverySubmissionStatus }
 
 type EnrollmentRow = { id: string; display_name: string; normalized_email: string | null }
 type IntakeRow = { id: string; enrollment_id: string; call_finalized_at: string | null }
