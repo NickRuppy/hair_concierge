@@ -54,6 +54,31 @@ const purposeDescriptions: Record<string, string> = {
   scalp_exfoliant: "Löst Schuppen und Rückstände kontrolliert von der Kopfhaut.",
 }
 
+/**
+ * When in the wash routine a role's product is used. Shared by the Routine item card and
+ * the discovery cockpit's step detail (so both say „Nach Shampoo" for the same role).
+ */
+const timingLabels: Record<string, string> = {
+  shampoo_everyday: "Haarwäsche",
+  shampoo_dandruff: "Haarwäsche",
+  conditioner_rinse_out: "Nach Shampoo",
+  post_wash_leave_in: "Nach der Wäsche",
+  pre_heat_application: "Vor Hitze",
+  intensive_conditioning_mask: "Nach Shampoo",
+  pre_wash_fibre_treatment: "Vor der Haarwäsche",
+  leave_on_fibre_conditioning: "Nach der Wäsche",
+  dry_finish: "Im trockenen Haar",
+  residue_reset: "Statt Shampoo",
+  mineral_reset: "Statt Shampoo",
+  root_refresh_bridge: "Zwischen Wäschen",
+  pre_heat_protection: "Vor Hitze",
+  specialized_bond_treatment: "Nach Herstellerangabe",
+  scalp_comfort: "Auf der Kopfhaut",
+  scalp_flake_oil_adjunct: "Vor der Wäsche",
+  density_claim_tonic: "Auf der Kopfhaut",
+  scalp_exfoliant: "Vor der Wäsche",
+}
+
 const categoryLabels: Record<string, string> = {
   shampoo: "Shampoo",
   conditioner: "Conditioner",
@@ -77,6 +102,11 @@ export function routinePurposeLabel(value: string) {
 
 export function routineCategoryLabel(value: string) {
   return labelFor(categoryLabels, value)
+}
+
+/** `null` when the role (or purpose key) has no timing — callers own the fallback. */
+export function routineRoleTimingLabel(value: string): string | null {
+  return timingLabels[value] ?? null
 }
 
 /** `null` when the role has no dedicated sentence — callers own the fallback. */

@@ -1,6 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
-import { CATEGORY_LABELS, frequencyLabel } from "@/lib/personal-plan/decision-presentation"
+import {
+  CATEGORY_LABELS,
+  frequencyLabel,
+  presentationFor,
+  type CategoryPresentation,
+} from "@/lib/personal-plan/decision-presentation"
 import type { Stage1ProductExampleRolePreview } from "@/lib/personal-plan/product-preview-contract"
 import {
   computeStage1ProductExamplePreviews,
@@ -14,8 +19,13 @@ import {
 import {
   routinePurposeLabel,
   routineRolePurposeDescription,
+  routineRoleTimingLabel,
 } from "@/lib/personal-plan/routine/labels"
-import type { InitialNeedPlanSnapshot, PlanProductRole } from "@/lib/personal-plan/types"
+import type {
+  InitialNeedPlanSnapshot,
+  PlanCategoryDecision,
+  PlanProductRole,
+} from "@/lib/personal-plan/types"
 import type { ScanEvaluationContext } from "@/lib/scan/profile-context"
 import { prepareScannerContext } from "@/lib/scan/scanner-context"
 import { readScannerProfileSource } from "@/lib/scan/scanner-context-supabase"
@@ -36,6 +46,28 @@ import { readScannerProfileSource } from "@/lib/scan/scanner-context-supabase"
  * their plan artifacts.
  */
 
+/**
+ * Why this step, what product type, what matters in the product, why it fits her hair and
+ * when it is used — the Idealplan's own copy (`presentationFor`, `labels.ts`), read off the
+ * decisions the cockpit already has. Nothing here reads or writes a Personal Plan artifact.
+ *
+ * Presentation only, and deliberately NOT part of the finalised fingerprint
+ * (`composeDiscoveryRefinedRoutine` hashes the step without it): the printed document does
+ * not show it, so a copy edit here must never flag a finalised call as drifted.
+ */
+export type DiscoveryStepDepth = {
+  /** „Warum dieser Schritt": the role's purpose, else the category's. */
+  purpose: string | null
+  /** „Produkttyp". */
+  targetType: string | null
+  /** „Worauf es ankommt". */
+  productCriteria: string | null
+  /** „Warum das zu ihrem Haar passt" (the engine's own second-person sentence). */
+  fit: string | null
+  /** When in the wash routine („Nach Shampoo"). */
+  timingLabel: string | null
+}
+
 export type DiscoveryIdealStep = {
   decisionKey: string
   category: PersonalPlanCategory
@@ -48,6 +80,31 @@ export type DiscoveryIdealStep = {
   frequencyLabel: string
   /** The Stage-1 example for this role — a recommendation, a fallback, or nothing. */
   preview: Stage1ProductExampleRolePreview | null
+  /** Step detail for the call — see `DiscoveryStepDepth` (never hashed). */
+  depth?: DiscoveryStepDepth
+}
+
+/** A malformed decision target must thin the step detail, not fail the whole cockpit. */
+function safePresentation(decision: PlanCategoryDecision): CategoryPresentation | null {
+  try {
+    return presentationFor(decision)
+  } catch {
+    return null
+  }
+}
+
+export function discoveryStepDepth(
+  decision: PlanCategoryDecision,
+  role: PlanProductRole,
+): DiscoveryStepDepth {
+  const presentation = safePresentation(decision)
+  return {
+    purpose: routineRolePurposeDescription(role) ?? presentation?.purpose ?? null,
+    targetType: presentation?.targetType ?? null,
+    productCriteria: presentation?.productCriteria ?? null,
+    fit: presentation?.fit ?? null,
+    timingLabel: routineRoleTimingLabel(role),
+  }
 }
 
 export type DiscoveryPreviewInput = {
@@ -135,6 +192,7 @@ export function buildDiscoveryIdealSteps(
         roleDescription: routineRolePurposeDescription(role),
         frequencyLabel: frequencyLabel(decision.frequency, decision.executionState === "paused"),
         preview: previewsByDecisionKey.get(decisionKey) ?? null,
+        depth: discoveryStepDepth(decision, role),
       })
     }
   }

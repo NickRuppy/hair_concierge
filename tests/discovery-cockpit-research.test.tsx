@@ -1,0 +1,561 @@
+import assert from "node:assert/strict"
+import test from "node:test"
+import { NextRequest, NextResponse } from "next/server"
+import { renderToStaticMarkup } from "react-dom/server"
+
+import { createDiscoveryCockpitPage } from "../src/app/admin/beratung/[enrollmentId]/page"
+import { createDiscoveryResearchHandler } from "../src/app/api/admin/beratung/[enrollmentId]/research/route"
+import {
+  buildDiscoveryCockpitView,
+  loadDiscoveryCockpitModel,
+  type DiscoveryCallIntake,
+  type DiscoveryCockpitModel,
+  type DiscoveryProductIdentity,
+} from "../src/lib/discovery/cockpit"
+import type { DiscoveryIdealStep } from "../src/lib/discovery/load-ideal-routine"
+import type { DiscoveryParticipantVerdict } from "../src/lib/discovery/load-participant-verdicts"
+import type { DiscoveryResearchState } from "../src/lib/discovery/research-status"
+import type { DiscoveryIntakeItem } from "../src/lib/discovery/refined-routine"
+
+/**
+ * Batch 4, the research half: „Eingetragene Produkte" with each product's research state,
+ * read-time auto-link of approved research (B), and „Recherche starten" (C).
+ */
+
+const ids = {
+  enrollment: "3f1a6f2e-2b44-4a1e-9a1a-6f2e2b444a1e",
+  intake: "40000000-0000-4000-8000-000000000001",
+  user: "20000000-0000-4000-8000-000000000002",
+  owned: "30000000-0000-4000-8000-000000000003",
+  approved: "30000000-0000-4000-8000-000000000009",
+  researchItem: "50000000-0000-4000-8000-000000000001",
+  ownedItem: "50000000-0000-4000-8000-000000000002",
+  barcodeItem: "50000000-0000-4000-8000-000000000003",
+  foreignItem: "50000000-0000-4000-8000-0000000000ff",
+  submission: "60000000-0000-4000-8000-000000000001",
+  newSubmission: "60000000-0000-4000-8000-000000000002",
+  job: "70000000-0000-4000-8000-000000000001",
+}
+
+const EAN = "4006381333931"
+
+const intake: DiscoveryCallIntake = {
+  id: ids.intake,
+  enrollmentId: ids.enrollment,
+  userId: ids.user,
+  state: "submitted",
+  submittedAt: "2026-09-20T18:41:00.000Z",
+  callFinalizedAt: null,
+  finalizedSourceHash: null,
+}
+
+const shampooStep: DiscoveryIdealStep = {
+  decisionKey: "decision:shampoo:shampoo_everyday:gap",
+  category: "shampoo",
+  role: "shampoo_everyday",
+  section: "basis",
+  categoryLabel: "Shampoo",
+  roleLabel: "Regelmäßige Reinigung",
+  roleDescription: "Regelmäßige Reinigung für deine Kopfhaut.",
+  frequencyLabel: "3×/Woche",
+  preview: null,
+  depth: {
+    purpose: "Regelmäßige Reinigung für deine Kopfhaut.",
+    targetType: "Ausgleichend reinigend",
+    productCriteria: "Ausgeglichen reinigen, ohne unnötig stark zu entfetten.",
+    fit: "Deine Kopfhaut fettet schneller nach.",
+    timingLabel: "Haarwäsche",
+  },
+}
+
+function item(overrides: Partial<DiscoveryIntakeItem> & { id: string }): DiscoveryIntakeItem {
+  return {
+    category: "shampoo",
+    source: "name_research",
+    brandText: "Balea",
+    productNameText: "Frische Shampoo",
+    barcodeIdentifier: null,
+    productId: null,
+    productSubmissionId: null,
+    createdAt: "2026-09-20T10:00:00.000Z",
+    ...overrides,
+  }
+}
+
+const researchItem = item({ id: ids.researchItem, productSubmissionId: ids.submission })
+const barcodeItem = item({
+  id: ids.barcodeItem,
+  category: "mask",
+  source: "barcode_unknown",
+  brandText: null,
+  productNameText: null,
+  barcodeIdentifier: EAN,
+  createdAt: "2026-09-20T10:05:00.000Z",
+})
+
+function researchState(submissionStatus: string, eligible: string[] = []): DiscoveryResearchState {
+  return {
+    submissions: new Map([
+      [
+        ids.submission,
+        {
+          status: submissionStatus,
+          approvedProductId: ["approved", "matched_existing"].includes(submissionStatus)
+            ? ids.approved
+            : null,
+        },
+      ],
+    ]),
+    latestJobs: new Map(),
+    eligible: new Set(eligible),
+  }
+}
+
+function readyIdeal(steps: DiscoveryIdealStep[]) {
+  return async () => ({
+    status: "ready" as const,
+    steps,
+    context: {} as never,
+    previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
+  })
+}
+
+const identities = new Map<string, DiscoveryProductIdentity>([
+  [
+    ids.approved,
+    {
+      name: "Frische Shampoo",
+      brand: "Balea",
+      productLine: "Men",
+      imageUrl: "https://catalog.example/balea.jpg",
+    },
+  ],
+])
+
+async function model(input: {
+  items: DiscoveryIntakeItem[]
+  state: () => Promise<DiscoveryResearchState>
+  verdictsFor?: (items: readonly DiscoveryIntakeItem[]) => DiscoveryParticipantVerdict[]
+}) {
+  const seen: { verdictItems: readonly DiscoveryIntakeItem[] } = { verdictItems: [] }
+  const result = await loadDiscoveryCockpitModel(
+    {} as never,
+    { intakeId: ids.intake, userId: ids.user },
+    {
+      loadIdealRoutine: readyIdeal([shampooStep]),
+      loadItems: async () => input.items,
+      loadResearchState: input.state,
+      loadVerdicts: async (_client, _user, items) => {
+        seen.verdictItems = items
+        return input.verdictsFor?.(items) ?? []
+      },
+      loadDecisions: async () => [],
+      loadSwapProducts: async () => [],
+      loadProductIdentities: async () => identities,
+    },
+  )
+  if (result.status !== "ready") throw new Error("not ready")
+  return { result, seen }
+}
+
+// --- B: auto-link ---------------------------------------------------------------
+
+test("approved, eligible research becomes her product for the verdicts, the routine and the hash", async () => {
+  const { result, seen } = await model({
+    items: [researchItem],
+    state: async () => researchState("approved", [ids.approved]),
+  })
+  // The verdict pass sees the linked product — so does the binding.
+  assert.equal(seen.verdictItems[0]?.productId, ids.approved)
+  assert.equal(result.routine.steps[0]!.item?.productId, ids.approved)
+  assert.equal(result.routine.steps[0]!.outcome, "undecided")
+  assert.deepEqual(result.routine.unassignedIntakeProducts, [])
+  assert.equal(result.recommendationBrandsAvailable, true)
+
+  const view = buildDiscoveryCockpitView(result)
+  assert.equal(view.intakeProducts[0]!.statusLabel, "Freigegeben")
+  assert.equal(view.intakeProducts[0]!.label, "Balea Men Frische Shampoo")
+  assert.equal(view.intakeProducts[0]!.imageUrl, "https://catalog.example/balea.jpg")
+
+  // Before the approval the same intake fingerprints differently: an approval after
+  // finalising shows up as drift, which is the point.
+  const { result: pending } = await model({
+    items: [researchItem],
+    state: async () => researchState("ready_for_review"),
+  })
+  assert.notEqual(pending.routine.sourceHash, result.routine.sourceHash)
+  assert.equal(pending.routine.unassignedIntakeProducts[0]?.reason, "research_pending")
+})
+
+test("rejected, pending and approved-but-ineligible research link nothing", async () => {
+  for (const [status, eligible] of [
+    ["rejected", [ids.approved]],
+    ["pending_review", []],
+    ["approved", []],
+  ] as const) {
+    const { result } = await model({
+      items: [researchItem],
+      state: async () => researchState(status, [...eligible]),
+    })
+    assert.equal(result.routine.steps[0]!.item, null, status)
+    assert.equal(result.routine.unassignedIntakeProducts[0]?.reason, "research_pending", status)
+    assert.equal(result.recommendationBrandsAvailable, true, status)
+  }
+})
+
+test("a failed research read degrades: nothing linked, finalize blocked, statuses honest", async () => {
+  const { result } = await model({
+    items: [researchItem, barcodeItem],
+    state: async () => {
+      throw new Error("discovery_research_jobs_lookup_failed")
+    },
+  })
+  assert.equal(result.routine.steps[0]!.item, null)
+  // The same gate finalize and the PDF already read: no degraded fingerprint, no false drift.
+  assert.equal(result.recommendationBrandsAvailable, false)
+  const view = buildDiscoveryCockpitView(result)
+  assert.equal(view.researchStatusAvailable, false)
+  assert.equal(view.recommendationBrandsAvailable, false)
+  assert.deepEqual(
+    view.intakeProducts.map((entry) => [entry.statusLabel, entry.canStartResearch]),
+    [
+      ["Status gerade nicht lesbar", false],
+      // No submission, no lookup needed: a barcode-only item can still be started.
+      ["Nur Barcode – keine Recherche", true],
+    ],
+  )
+})
+
+// --- A: the page section ------------------------------------------------------
+
+function pageModel(): DiscoveryCockpitModel {
+  const ownedItem = item({
+    id: ids.ownedItem,
+    source: "catalog_search",
+    productId: ids.owned,
+    brandText: "Elvital",
+    productNameText: "Hyaluron Pure",
+  })
+  const declined = item({
+    id: "50000000-0000-4000-8000-0000000000dd",
+    category: "oil",
+    source: "none",
+    brandText: null,
+    productNameText: null,
+  })
+  const items = [ownedItem, researchItem, barcodeItem, declined]
+  const base = {
+    status: "ready" as const,
+    steps: [shampooStep],
+    verdicts: [],
+    previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
+    recommendationProducts: [],
+    recommendationBrandsAvailable: true,
+    productIdentities: new Map<string, DiscoveryProductIdentity>([
+      [
+        ids.owned,
+        {
+          name: "Hyaluron Pure Shampoo",
+          brand: "Elvital",
+          productLine: null,
+          imageUrl: "https://catalog.example/elvital.jpg",
+        },
+      ],
+    ]),
+    research: {
+      items,
+      state: {
+        submissions: new Map([
+          [ids.submission, { status: "researching", approvedProductId: null }],
+        ]),
+        latestJobs: new Map([[ids.submission, { id: ids.job, status: "running" }]]),
+        eligible: new Set<string>(),
+      },
+    },
+  }
+  return {
+    ...base,
+    routine: {
+      steps: [],
+      unassignedIntakeProducts: [],
+      declinedCategories: ["oil"],
+      unansweredCategories: [],
+      sourceHash: "hash",
+    },
+  }
+}
+
+async function renderPage(model: DiscoveryCockpitModel) {
+  const Page = createDiscoveryCockpitPage({
+    flagEnabled: () => true,
+    requireAdmin: async () => ({ userId: "admin-1" }),
+    createAdminClient: () => ({}) as never,
+    loadEnrollment: async () => ({
+      enrollmentId: ids.enrollment,
+      name: "Lena M.",
+      email: "lena@example.test",
+      tokenVersion: 1,
+      claimedUserId: ids.user,
+      claimedAt: null,
+      createdAt: "2026-09-18T10:00:00.000Z",
+    }),
+    loadIntake: async () => intake,
+    loadModel: async () => model,
+    loadPreflight: async () => ({ status: "ready" }),
+  })
+  return renderToStaticMarkup(
+    await Page({ params: Promise.resolve({ enrollmentId: ids.enrollment }) }),
+  )
+}
+
+test("„Eingetragene Produkte“ opens the cockpit: image, name, shelf and research state per product", async () => {
+  const markup = await renderPage(pageModel())
+  const section = markup.indexOf("Eingetragene Produkte")
+  assert.ok(section >= 0)
+  assert.ok(section < markup.indexOf("Idealroutine"), "the list comes before the routine")
+
+  assert.ok(markup.includes("https://catalog.example/elvital.jpg"))
+  assert.ok(markup.includes("Elvital Hyaluron Pure Shampoo"))
+  assert.ok(markup.includes("Im Katalog"))
+  assert.ok(markup.includes("Balea Frische Shampoo"))
+  assert.ok(markup.includes("In Recherche – läuft"))
+  assert.ok(markup.includes("Gescanntes Produkt · 4006381333931"))
+  assert.ok(markup.includes("Nur Barcode – keine Recherche"))
+  // Shelf labels as her checklist named them.
+  assert.ok(markup.includes(">Maske<"))
+  // Exactly one start button: the barcode-only product. The running one has none.
+  assert.equal(markup.split("Recherche starten").length - 1, 1)
+  assert.ok(markup.includes("npm run products:intake:review-center"))
+  // „benutze ich nicht" stays on its own grey line below, not in the list.
+  assert.ok(markup.includes("Öl — benutzt sie nicht."))
+})
+
+test("the step shows why, type, criteria, fit, and rhythm with timing", async () => {
+  const model = pageModel()
+  const markup = await renderPage({
+    ...model,
+    routine: {
+      ...model.routine,
+      steps: [
+        {
+          step: shampooStep,
+          outcome: "ideal",
+          item: null,
+          swapProductId: null,
+          swapProduct: null,
+          recommendationLabel: null,
+          ownedLabel: null,
+          swapProductLabel: null,
+        },
+      ],
+    },
+  })
+  for (const text of [
+    "Warum dieser Schritt",
+    "Produkttyp",
+    "Ausgleichend reinigend",
+    "Worauf es ankommt",
+    "Warum das zu ihrem Haar passt",
+    "Deine Kopfhaut fettet schneller nach.",
+    "3×/Woche · Haarwäsche",
+  ]) {
+    assert.ok(markup.includes(text), text)
+  }
+})
+
+test("a failed research read is said above the list", async () => {
+  const model = pageModel()
+  const markup = await renderPage({
+    ...model,
+    recommendationBrandsAvailable: false,
+    research: { ...model.research!, state: null },
+  })
+  assert.ok(markup.includes("Recherche-Stand ist gerade nicht lesbar"))
+  assert.ok(markup.includes("Status gerade nicht lesbar"))
+})
+
+// --- C: the research route -----------------------------------------------------
+
+type RouteDeps = Parameters<typeof createDiscoveryResearchHandler>[0]
+
+function routeDeps(overrides: RouteDeps = {}) {
+  const calls: string[] = []
+  const deps: RouteDeps = {
+    flagEnabled: () => true,
+    requireAdmin: async () => ({ userId: "admin-1" }),
+    createAdminClient: () => ({}) as never,
+    loadIntake: async () => intake,
+    loadItems: async () => [researchItem, barcodeItem],
+    loadResearchState: async () => researchState("pending_review"),
+    enqueue: async (_client, submissionId) => {
+      calls.push(`enqueue:${submissionId}`)
+    },
+    retry: async (_client, jobId) => {
+      calls.push(`retry:${jobId}`)
+    },
+    createSubmission: async (_client, input) => {
+      calls.push(`create:${input.userId}:${input.submission.identifier}`)
+      return { kind: "pending_submission", submissionId: ids.newSubmission }
+    },
+    attachSubmission: async (_client, input) => {
+      calls.push(`attach:${input.itemId}:${input.submissionId}`)
+      return true
+    },
+    assignCatalogProduct: async (_client, input) => {
+      calls.push(`assign:${input.itemId}:${input.productId}`)
+      return true
+    },
+    ...overrides,
+  }
+  return { deps, calls }
+}
+
+function researchRequest(body: unknown, origin = "https://chaarlie.de") {
+  return new NextRequest(`https://chaarlie.de/api/admin/beratung/${ids.enrollment}/research`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", origin },
+    body: JSON.stringify(body),
+  })
+}
+
+const params = () => ({ params: Promise.resolve({ enrollmentId: ids.enrollment }) })
+
+async function post(deps: RouteDeps, body: unknown, origin?: string) {
+  const response = await createDiscoveryResearchHandler(deps)(
+    researchRequest(body, origin),
+    params(),
+  )
+  return {
+    status: response.status,
+    body: (await response.json()) as {
+      code?: string
+      status?: { kind: string; label: string; canStartResearch: boolean }
+    },
+  }
+}
+
+test("the research route refuses cross-origin first, then the kill switch, then non-admins", async () => {
+  let adminChecked = false
+  const { deps, calls } = routeDeps({
+    requireAdmin: async () => {
+      adminChecked = true
+      return { userId: "admin-1" }
+    },
+  })
+  const crossOrigin = await post(deps, { itemId: ids.researchItem }, "https://evil.example")
+  assert.equal(crossOrigin.status, 403)
+  assert.equal(adminChecked, false)
+
+  const off = await post({ ...deps, flagEnabled: () => false }, { itemId: ids.researchItem })
+  assert.equal(off.status, 404)
+
+  for (const status of [401, 403]) {
+    const refused = await post(
+      {
+        ...deps,
+        requireAdmin: async () => ({
+          response: NextResponse.json({ error: "Nicht erlaubt." }, { status }),
+        }),
+      },
+      { itemId: ids.researchItem },
+    )
+    assert.equal(refused.status, status)
+  }
+  assert.deepEqual(calls, [])
+})
+
+test("an item of another intake is not found, and a bad body is a 400", async () => {
+  const { deps, calls } = routeDeps()
+  const foreign = await post(deps, { itemId: ids.foreignItem })
+  assert.equal(foreign.status, 404)
+  const bad = await post(deps, { itemId: "nope" })
+  assert.equal(bad.status, 400)
+  assert.deepEqual(calls, [])
+})
+
+test("an open submission without a live job is enqueued, and the new status comes back", async () => {
+  let reads = 0
+  const { deps, calls } = routeDeps({
+    loadResearchState: async () => {
+      reads += 1
+      if (reads === 1) return researchState("pending_review")
+      return {
+        ...researchState("pending_review"),
+        latestJobs: new Map([[ids.submission, { id: ids.job, status: "queued" }]]),
+      }
+    },
+  })
+  const result = await post(deps, { itemId: ids.researchItem })
+  assert.equal(result.status, 200)
+  assert.deepEqual(calls, [`enqueue:${ids.submission}`])
+  assert.deepEqual(result.body.status, {
+    kind: "research_queued",
+    label: "In Recherche – wartet",
+    canStartResearch: false,
+  })
+})
+
+test("a failed job is retried, not enqueued", async () => {
+  const { deps, calls } = routeDeps({
+    loadResearchState: async () => ({
+      ...researchState("researching"),
+      latestJobs: new Map([[ids.submission, { id: ids.job, status: "failed" }]]),
+    }),
+  })
+  const result = await post(deps, { itemId: ids.researchItem })
+  assert.equal(result.status, 200)
+  assert.deepEqual(calls, [`retry:${ids.job}`])
+})
+
+test("an item without a submission gets one, opened as the participant and attached to the row", async () => {
+  const { deps, calls } = routeDeps()
+  const result = await post(deps, { itemId: ids.barcodeItem })
+  assert.equal(result.status, 200)
+  assert.deepEqual(calls, [
+    `create:${ids.user}:${EAN}`,
+    `attach:${ids.barcodeItem}:${ids.newSubmission}`,
+  ])
+})
+
+test("a submit that finds the product in the catalog lands it on the row instead", async () => {
+  const { deps, calls } = routeDeps({
+    createSubmission: async () => ({ kind: "already_in_catalog", productId: ids.approved }),
+  })
+  const result = await post(deps, { itemId: ids.barcodeItem })
+  assert.equal(result.status, 200)
+  assert.deepEqual(calls, [`assign:${ids.barcodeItem}:${ids.approved}`])
+})
+
+test("nothing to start is a 409 carrying the current status — running, catalog, too thin", async () => {
+  const running = routeDeps({
+    loadResearchState: async () => ({
+      ...researchState("researching"),
+      latestJobs: new Map([[ids.submission, { id: ids.job, status: "running" }]]),
+    }),
+  })
+  const busy = await post(running.deps, { itemId: ids.researchItem })
+  assert.equal(busy.status, 409)
+  assert.equal(busy.body.code, "not_researchable")
+  assert.equal(busy.body.status?.label, "In Recherche – läuft")
+  assert.deepEqual(running.calls, [])
+
+  const thin = routeDeps({
+    loadItems: async () => [
+      item({ id: ids.barcodeItem, brandText: null, barcodeIdentifier: "12345678" }),
+    ],
+  })
+  const tooThin = await post(thin.deps, { itemId: ids.barcodeItem })
+  assert.equal(tooThin.status, 409)
+  assert.equal(tooThin.body.status?.label, "Zu wenig Angaben für eine Recherche")
+  assert.deepEqual(thin.calls, [])
+})
+
+test("a failing enqueue is a 503, never a silent success", async () => {
+  const { deps } = routeDeps({
+    enqueue: async () => {
+      throw new Error("Product submission is not open for research")
+    },
+  })
+  const result = await post(deps, { itemId: ids.researchItem })
+  assert.equal(result.status, 503)
+})

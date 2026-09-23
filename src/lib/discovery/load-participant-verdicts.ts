@@ -29,6 +29,9 @@ import type {
   ScanVerdictPayload,
 } from "@/lib/scan/types"
 
+import { mobileAssessmentRows } from "@/lib/mobile/result-presentation"
+
+import { discoveryPropertyRows, type DiscoveryPropertyRow } from "./property-rows"
 import type { DiscoveryIntakeItem } from "./refined-routine"
 
 /**
@@ -58,6 +61,18 @@ export type DiscoveryVerdictStatus =
   | "decision_missing"
   | "unavailable"
 
+/**
+ * Target-vs-product rows (iOS result-card rows) for her product and for every alternative
+ * the verdict displays. Cockpit-only: computed from the FULL verdict before the web
+ * presenter strips `mobileDimensions`/`criteria`, so the shared scan sheet and the web scan
+ * API keep their exact shape. Absent when the rows could not be built — the verdict itself
+ * still renders.
+ */
+export type DiscoveryVerdictPropertyRows = {
+  product: DiscoveryPropertyRow[]
+  alternatives: Array<{ productId: string; rows: DiscoveryPropertyRow[] }>
+}
+
 export type DiscoveryParticipantVerdict =
   | {
       itemId: string
@@ -65,6 +80,7 @@ export type DiscoveryParticipantVerdict =
       status: "verdict"
       product: ScanProductHeader
       payload: ScanPresentedVerdictPayload
+      propertyRows?: DiscoveryVerdictPropertyRows
     }
   | {
       itemId: string
@@ -163,12 +179,70 @@ export async function loadParticipantScanVerdicts(
       status: "verdict",
       product: toScanProductHeader(scannedRow),
       payload: presentScanVerdictPayload(entry.verdict, rows),
+      ...propertyRowsFor(entry),
     }
   })
 }
 
+/**
+ * The same builder `src/lib/mobile/scan-service.ts` runs for the native card — her product
+ * against `verdict.criteria`, each alternative against its own `criteria` — over the same
+ * `mobileDimensions`. A failure here only drops the rows, never the verdict.
+ */
+function propertyRowsFor(entry: Extract<ItemVerdict, { kind: "verdict" }>): {
+  propertyRows?: DiscoveryVerdictPropertyRows
+} {
+  const verdict = entry.verdict
+  if (verdict.kind !== "in_catalog" || !verdict.evaluatedRole) return {}
+  const role = verdict.evaluatedRole
+  const fit = verdict.fitNarrative?.fit ?? null
+  const dimensions = verdict.mobileDimensions ?? []
+  try {
+    return {
+      propertyRows: {
+        product: discoveryPropertyRows(
+          mobileAssessmentRows(
+            entry.category,
+            role,
+            entry.productId,
+            dimensions,
+            verdict.criteria,
+            fit,
+          ),
+        ),
+        alternatives: verdict.alternatives.map((alternative) => ({
+          productId: alternative.productId,
+          rows: discoveryPropertyRows(
+            mobileAssessmentRows(
+              entry.category,
+              role,
+              alternative.productId,
+              dimensions,
+              alternative.criteria ?? [],
+              fit,
+            ),
+          ),
+        })),
+      },
+    }
+  } catch (error) {
+    console.warn("discovery_property_rows_unavailable", {
+      itemId: entry.itemId,
+      productId: entry.productId,
+      reason: error instanceof Error ? error.message : "unknown",
+    })
+    return {}
+  }
+}
+
 type ItemVerdict =
-  | { kind: "verdict"; itemId: string; productId: string; verdict: ScanVerdictPayload }
+  | {
+      kind: "verdict"
+      itemId: string
+      productId: string
+      category: PersonalPlanCategory
+      verdict: ScanVerdictPayload
+    }
   | {
       kind: Exclude<DiscoveryVerdictStatus, "verdict">
       itemId: string
@@ -201,6 +275,7 @@ async function resolveItemVerdict(
       kind: "verdict",
       itemId,
       productId,
+      category: active.category,
       verdict: await withEligibleAlternatives(verdict, (ids) =>
         deps.loadQuarantinedProductIdsAmong(admin, ids),
       ),

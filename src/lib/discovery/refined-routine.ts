@@ -344,8 +344,10 @@ export function composeDiscoveryRefinedRoutine(input: {
     // without them — and adding a key would flag every finalized document as drifted.
     // Every printed product label is part of `steps` / `unassignedIntakeProducts`, so a
     // label that changes (a catalog rename, a new product line) moves the hash with it.
+    // The step's call-only `depth` is stripped: the paper does not print it, so a copy
+    // change there must not flag every finalised document as drifted.
     sourceHash: semanticHash({
-      steps,
+      steps: steps.map((entry) => ({ ...entry, step: { ...entry.step, depth: undefined } })),
       unassignedIntakeProducts,
       declinedCategories: reduction.declinedCategories,
     }),
