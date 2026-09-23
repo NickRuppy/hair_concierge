@@ -76,12 +76,12 @@ Eine widerrufene Einladung blockiert dieselbe E-Mail nicht: die Eindeutigkeits-I
 
 ### Absagen, mit denen du rechnen musst
 
-| Fall | Antwort | Was zu tun ist |
-| --- | --- | --- |
-| Konto mit laufendem bezahltem Zugang | `403`, Code `existing_paid_access`, deutsche Copy („Dieses Konto hat bereits vollen Zugang zu Chaarlie…") | Nicht einladen. Ein Discovery-Stempel würde ein zahlendes Mitglied hinter den Teilnehmer-Gate ziehen. Persönlich klären. |
-| Konto mit fremdem `access_kind` (Partner, Field-Test) | `403`, Code `existing_access_kind` | Den alten Zugang bewusst auflösen, bevor diese Person eingeladen wird. Der Claim überschreibt fremde Zugangsarten nie — das wäre nicht rückholbar. |
-| Link widerrufen oder rotiert | `410`, „Diese Einladung ist nicht verfügbar." | Aktuellen Link aus `npm run discovery -- list` schicken. |
-| Konto existiert schon (ohne bezahlten Zugang, ohne fremden `access_kind`) | `202` + Magic-Link | Kein Fehler: die Teilnehmerin bestätigt per Mail und wird über `/beratung/weiter` in denselben Claim zurückgeführt. |
+| Fall                                                                      | Antwort                                                                                                   | Was zu tun ist                                                                                                                                     |
+| ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Konto mit laufendem bezahltem Zugang                                      | `403`, Code `existing_paid_access`, deutsche Copy („Dieses Konto hat bereits vollen Zugang zu Chaarlie…") | Nicht einladen. Ein Discovery-Stempel würde ein zahlendes Mitglied hinter den Teilnehmer-Gate ziehen. Persönlich klären.                           |
+| Konto mit fremdem `access_kind` (Partner, Field-Test)                     | `403`, Code `existing_access_kind`                                                                        | Den alten Zugang bewusst auflösen, bevor diese Person eingeladen wird. Der Claim überschreibt fremde Zugangsarten nie — das wäre nicht rückholbar. |
+| Link widerrufen oder rotiert                                              | `410`, „Diese Einladung ist nicht verfügbar."                                                             | Aktuellen Link aus `npm run discovery -- list` schicken.                                                                                           |
+| Konto existiert schon (ohne bezahlten Zugang, ohne fremden `access_kind`) | `202` + Magic-Link                                                                                        | Kein Fehler: die Teilnehmerin bestätigt per Mail und wird über `/beratung/weiter` in denselben Claim zurückgeführt.                                |
 
 ### Was die Teilnehmerin durchläuft
 
@@ -97,11 +97,11 @@ niemals einen `/lp/*`-Link**, der Funnel-Quiz erzeugt keine brauchbare Quelle f�
 
 `/admin/beratung` listet jede Einladung mit dem Stand ihrer Checkliste:
 
-| Spalte | Bedeutung |
-| --- | --- |
-| Zugang | `eingeladen` (Link raus) · `eingelöst` (Konto angelegt) · `widerrufen` |
-| Checkliste | `nicht begonnen` (keine Intake-Zeile) · `offen` (Entwurf, `state='draft'`) · Zeitstempel (abgeschickt, `state='submitted'`) |
-| Finalisiert | leer, bis du im Cockpit „Finalisieren" gedrückt hast |
+| Spalte      | Bedeutung                                                                                                                   |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Zugang      | `eingeladen` (Link raus) · `eingelöst` (Konto angelegt) · `widerrufen`                                                      |
+| Checkliste  | `nicht begonnen` (keine Intake-Zeile) · `offen` (Entwurf, `state='draft'`) · Zeitstempel (abgeschickt, `state='submitted'`) |
+| Finalisiert | leer, bis du im Cockpit „Finalisieren" gedrückt hast                                                                        |
 
 **Gesprächsreif ist eine Teilnehmerin erst, wenn in „Checkliste" ein Zeitstempel steht.** Der
 Zustand `submitted` ist Voraussetzung für „Finalisieren" — ohne ihn antwortet der Endpunkt `409`.
@@ -150,14 +150,15 @@ ALLOW_DISCOVERY_PRODUCTION_WRITE=1 npm run discovery -- reconcile --all \
   --apply --confirm-project=pqdkhefxsxkyeqelqegq
 ```
 
-Jeder offene Eintrag bekommt im Ergebnis genau eines von vier Urteilen:
+Jeder offene Eintrag bekommt im Ergebnis genau eines von fünf Urteilen:
 
-| `outcome` | Bedeutung |
-| --- | --- |
-| `reconciled` | Die Submission ist auf ein Produkt freigegeben, das die Scan-Prüfung besteht; die Zeile trägt jetzt dessen `product_id` (im Dry-run: würde sie tragen). |
-| `research_pending` | Noch kein freigegebenes Produkt — die Recherche läuft weiter. |
-| `approved_but_ineligible` | Freigegeben, aber das Produkt ist deaktiviert oder aus dem Personal-Plan-Suchraum genommen. Bewusst **nicht** geschrieben: dieselbe Prüfung hätte es schon beim Erfassen abgelehnt. Erst im Katalog klären. |
-| `already_assigned` | Die Zeile hat zwischen Plan und Schreibvorgang selbst eine `product_id` bekommen. Die Antwort der Teilnehmerin bleibt stehen; dieser Lauf hat nichts geschrieben. |
+| `outcome`                 | Bedeutung                                                                                                                                                                                                                                                                                                                                                              |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `reconciled`              | Die Submission ist auf ein Produkt freigegeben, das die Scan-Prüfung besteht; die Zeile trägt jetzt dessen `product_id` (im Dry-run: würde sie tragen).                                                                                                                                                                                                                |
+| `research_pending`        | Noch kein freigegebenes Produkt — die Recherche läuft weiter.                                                                                                                                                                                                                                                                                                          |
+| `submission_not_approved` | Eine `approved_product_id` steht zwar auf der Submission, ihr `status` ist aber weder `approved` noch `matched_existing` — das Review ist zurück auf `needs_more_info` gegangen oder hat abgelehnt, ohne die alte ID zu löschen. Die ID ist damit kein Urteil mehr und wird nicht geschrieben. Im Review klären.                                                       |
+| `approved_but_ineligible` | Freigegeben, aber das Produkt ist deaktiviert oder aus dem Personal-Plan-Suchraum genommen. Bewusst **nicht** geschrieben: dieselbe Prüfung hätte es schon beim Erfassen abgelehnt. Erst im Katalog klären. Die Prüfung läuft bei `--apply` direkt vor jedem einzelnen Schreibvorgang noch einmal — ein langer Sweep darf nicht gegen einen veralteten Plan schreiben. |
+| `already_assigned`        | Die Zeile hat zwischen Plan und Schreibvorgang selbst eine `product_id` bekommen. Die Antwort der Teilnehmerin bleibt stehen; dieser Lauf hat nichts geschrieben.                                                                                                                                                                                                      |
 
 Das Feld `productId` im Ergebnis ist immer das, was **dieser Lauf** geschrieben hat (im Dry-run:
 geschrieben hätte) — nie der aktuelle Wert der Zeile. Außer bei `reconciled` steht dort `null`; was
@@ -246,7 +247,7 @@ Finalisierung leitet die Seite ins Cockpit zurück.
 
 1. Dokument prüfen. Unentschiedene Schritte stehen als „Noch offen – Empfehlung folgt".
 2. Steht oben der rote Banner **„Stand hat sich geändert"**, sind Haarprofil oder Katalog seit dem
-   Finalisieren gewandert. Das Dokument zeigt dann den *aktuellen* Stand, nicht den finalisierten —
+   Finalisieren gewandert. Das Dokument zeigt dann den _aktuellen_ Stand, nicht den finalisierten —
    im Cockpit prüfen und neu finalisieren, bevor du es verschickst. Der Banner erscheint nur am
    Bildschirm, nie im Druck.
 3. Über den Browser als PDF drucken (A4). Die Admin-Navigation ist im Druck ausgeblendet.

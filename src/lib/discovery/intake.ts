@@ -1,9 +1,11 @@
 import "server-only"
 
+import type { SupabaseClient } from "@supabase/supabase-js"
 import { z } from "zod"
 
 import type { DiscoveryIntakeItemView } from "@/components/discovery/intake/types"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
+import { filterScanEligibleProductIds } from "@/lib/scan/catalog-eligibility"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -250,6 +252,122 @@ export function buildDiscoveryIntakeItemRow(
   return { ok: true, row }
 }
 
+// --- Server-side validation of the ids the client supplies -------------------
+
+/**
+ * `product_id` and `product_submission_id` arrive from the browser. Zod proves they
+ * are UUID-shaped and `buildDiscoveryIntakeItemRow` proves the COMBINATION is one the
+ * table accepts — neither proves the ids point at anything, and the table's own FKs
+ * are no help either: `product_id` references `products(id)` and
+ * `product_submission_id` is unconstrained, so any live product id and any submission
+ * id at all would be stored happily.
+ *
+ * Two things therefore have to be re-established here, per write:
+ *
+ * 1. The product is the one the identify endpoint would have answered with — active,
+ *    not disposition-quarantined (`filterScanEligibleProductIds`, the same call
+ *    `POST /api/beratung/identify` makes) — AND its catalog category is the category
+ *    the item is being filed under. Without the category check a participant could
+ *    file a shampoo as their mask, and the T-1 routine would then recommend against a
+ *    product that is not in that slot at all.
+ * 2. The submission exists and carries the same category.
+ *
+ * What this does NOT establish is that the submission belongs to this participant,
+ * and the reason is worth stating precisely rather than in passing.
+ *
+ * A scan submission is ANCHORLESS: `submitScanProductIntake`
+ * (`src/lib/product-intake/submissions.ts`) writes `user_product_usage_id: null` and
+ * `user_product_id: null`, so there is no row tying the submission to anything the
+ * participant owns — the usual ownership path other intake surfaces use is simply not
+ * there. What IS there is `product_submissions.user_id`, set to the caller, and
+ * scoping this read on it is the available tightening. It is deliberately left out of
+ * THIS pass rather than decided here: it narrows an existing accepted contract, and
+ * the checklist's `POST /api/scan/submit` calls run as the participant anyway, so the
+ * only shape it would newly refuse is a forged foreign id. What such an id can do is
+ * bounded — it attaches someone else's open research to this item, and reconciliation
+ * re-validates the approved product against the catalog before writing anything.
+ */
+export type DiscoveryIntakeIdentityRefusal =
+  | "unknown_product"
+  | "category_mismatch"
+  | "unknown_submission"
+
+export type DiscoveryIntakeIdentityCheck =
+  | { ok: true }
+  | { ok: false; reason: DiscoveryIntakeIdentityRefusal }
+
+export type DiscoveryIntakeIdentityDependencies = {
+  filterEligibleProductIds: (
+    client: DiscoveryAdminClient,
+    productIds: readonly string[],
+  ) => Promise<Set<string>>
+  loadProductCategory: (client: DiscoveryAdminClient, productId: string) => Promise<string | null>
+  loadSubmissionCategory: (
+    client: DiscoveryAdminClient,
+    submissionId: string,
+  ) => Promise<string | null>
+}
+
+export async function loadDiscoveryProductCategory(
+  client: DiscoveryAdminClient,
+  productId: string,
+): Promise<string | null> {
+  const { data, error } = await client
+    .from("products")
+    .select("category_key")
+    .eq("id", productId)
+    .maybeSingle()
+  if (error) throw error
+  return (data as { category_key: string | null } | null)?.category_key ?? null
+}
+
+export async function loadDiscoverySubmissionCategory(
+  client: DiscoveryAdminClient,
+  submissionId: string,
+): Promise<string | null> {
+  const { data, error } = await client
+    .from("product_submissions")
+    .select("category")
+    .eq("id", submissionId)
+    .maybeSingle()
+  if (error) throw error
+  return (data as { category: string | null } | null)?.category ?? null
+}
+
+export const defaultDiscoveryIntakeIdentityDependencies: DiscoveryIntakeIdentityDependencies = {
+  filterEligibleProductIds: (client, productIds) =>
+    filterScanEligibleProductIds(client as unknown as SupabaseClient, productIds),
+  loadProductCategory: loadDiscoveryProductCategory,
+  loadSubmissionCategory: loadDiscoverySubmissionCategory,
+}
+
+export async function checkDiscoveryIntakeItemIdentity(
+  input: {
+    category: DiscoveryIntakeCategory
+    productId: string | null
+    productSubmissionId: string | null
+  },
+  client: DiscoveryAdminClient,
+  deps: DiscoveryIntakeIdentityDependencies = defaultDiscoveryIntakeIdentityDependencies,
+): Promise<DiscoveryIntakeIdentityCheck> {
+  if (input.productId) {
+    const eligible = await deps.filterEligibleProductIds(client, [input.productId])
+    if (!eligible.has(input.productId)) return { ok: false, reason: "unknown_product" }
+    const category = await deps.loadProductCategory(client, input.productId)
+    // A null category is a mismatch, not a pass: an uncategorized catalog row cannot
+    // be the answer to „welches Shampoo benutzt du".
+    if (category !== input.category) return { ok: false, reason: "category_mismatch" }
+  }
+
+  if (input.productSubmissionId) {
+    const category = await deps.loadSubmissionCategory(client, input.productSubmissionId)
+    if (category === null) return { ok: false, reason: "unknown_submission" }
+    if (category !== input.category) return { ok: false, reason: "category_mismatch" }
+  }
+
+  return { ok: true }
+}
+
 // --- Projections -------------------------------------------------------------
 
 function projectIntake(row: IntakeRow): DiscoveryIntake {
@@ -355,14 +473,19 @@ export async function loadDiscoveryIntakeItems(
  * A category is either „benutze ich nicht" OR a non-empty product list — never
  * both. Rather than leaving that to the UI, every write clears the answer it
  * replaces: adding a product drops a standing `none` row, and answering `none`
- * drops the products. (It also keeps
- * `discovery_intake_items_one_none_per_category` from ever being hit.)
+ * drops the products.
+ *
+ * `exceptItemId` exists because the items route now inserts BEFORE it clears (so a
+ * failed insert cannot leave the category empty): the replacement is already in the
+ * table when this runs, and a `none` answer's clear would otherwise delete the very
+ * row it was called to make exclusive.
  */
 export async function clearDiscoveryIntakeCategory(
   input: {
     intakeId: string
     category: DiscoveryIntakeCategory
     sources?: DiscoveryIntakeItemSource[]
+    exceptItemId?: string
   },
   client: DiscoveryAdminClient,
 ): Promise<void> {
@@ -372,8 +495,44 @@ export async function clearDiscoveryIntakeCategory(
     .eq("intake_id", input.intakeId)
     .eq("category", input.category)
   if (input.sources) query = query.in("source", input.sources)
+  if (input.exceptItemId) query = query.neq("id", input.exceptItemId)
   const { error } = await query
   if (error) throw error
+}
+
+/**
+ * The self-heal for the one state insert-before-clear can leave behind: a category
+ * that carries a „benutze ich nicht" row AND products, because the clear after a
+ * successful insert failed or the request died between the two.
+ *
+ * Products win. A `none` row asserts only an absence and is one tap to restore; a
+ * product row is something the participant actually captured, and the T-1 routine is
+ * built from it. Run immediately before the intake is frozen, so what Nick reads on
+ * the call is never self-contradictory.
+ */
+export async function clearDiscoveryIntakeCoexistingNone(
+  input: { intakeId: string; items: Pick<DiscoveryIntakeItem, "category" | "source">[] },
+  client: DiscoveryAdminClient,
+): Promise<DiscoveryIntakeCategory[]> {
+  const withProducts = new Set(
+    input.items.filter((item) => item.source !== "none").map((item) => item.category),
+  )
+  const contradicted = [
+    ...new Set(
+      input.items
+        .filter((item) => item.source === "none" && withProducts.has(item.category))
+        .map((item) => item.category),
+    ),
+  ]
+  if (contradicted.length === 0) return []
+  const { error } = await client
+    .from(ITEMS_TABLE)
+    .delete()
+    .eq("intake_id", input.intakeId)
+    .eq("source", "none")
+    .in("category", contradicted)
+  if (error) throw error
+  return contradicted
 }
 
 export async function insertDiscoveryIntakeItem(

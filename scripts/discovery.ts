@@ -12,6 +12,7 @@ import {
 import {
   assignDiscoveryIntakeItemProduct,
   filterDiscoveryEligibleProductIds,
+  isResolvedDiscoverySubmissionStatus,
   loadDiscoveryReconcileTargets,
   loadDiscoverySubmissionOutcomes,
   type DiscoveryPendingIntakeItem,
@@ -85,10 +86,14 @@ export type DiscoveryReconcileGateway = {
 }
 
 /**
- * - `reconciled` — the submission is approved onto an eligible catalog product,
- *   so the item now carries a `product_id` (in a dry run: it would).
+ * - `reconciled` — the submission RESOLVED onto an eligible catalog product, so the
+ *   item now carries a `product_id` (in a dry run: it would).
  * - `research_pending` — no approved product yet; the research is still open.
- * - `approved_but_ineligible` — approved, but the product is deactivated or
+ * - `submission_not_approved` — a product id is on the submission, but its status is
+ *   not one of `DISCOVERY_RESOLVED_SUBMISSION_STATUSES`: the review moved back to
+ *   `needs_more_info`, or rejected/cancelled it, without clearing the id it once had.
+ *   Reported rather than written, because the id no longer states a verdict.
+ * - `approved_but_ineligible` — resolved, but the product is deactivated or
  *   disposition-quarantined. Deliberately NOT written: the capture gate would
  *   have refused the same product.
  * - `already_assigned` — the row was claimed between the plan and the write.
@@ -100,6 +105,7 @@ export type DiscoveryReconcileGateway = {
 export type DiscoveryReconcileOutcome =
   | "reconciled"
   | "research_pending"
+  | "submission_not_approved"
   | "approved_but_ineligible"
   | "already_assigned"
 
@@ -262,6 +268,11 @@ function describePendingItem(item: DiscoveryPendingIntakeItem) {
 /**
  * Pure: decides, per pending item, what should happen — and NEVER returns
  * `reconciled` without an eligible `productId` to write.
+ *
+ * Two independent conditions have to hold before an id is a candidate, and they fail
+ * into two different outcomes so the receipt says WHICH one blocked it: the submission
+ * must be in a genuinely resolved status (`submission_not_approved` otherwise), and the
+ * product must still pass scan eligibility (`approved_but_ineligible` otherwise).
  */
 export function planDiscoveryReconciliation(input: {
   targets: readonly DiscoveryReconcileTarget[]
@@ -275,22 +286,26 @@ export function planDiscoveryReconciliation(input: {
     intakeId: target.intakeId,
     finalizedAt: target.finalizedAt,
     items: target.items.map((item) => {
-      const outcome = input.outcomes.get(item.productSubmissionId)
-      const approved = outcome?.approvedProductId ?? null
-      const eligible = approved !== null && input.eligible.has(approved)
+      const submission = input.outcomes.get(item.productSubmissionId)
+      const approved = submission?.approvedProductId ?? null
+      const resolved = approved !== null && isResolvedDiscoverySubmissionStatus(submission?.status)
+      const eligible = resolved && input.eligible.has(approved)
+      const outcome: DiscoveryReconcileOutcome = !approved
+        ? "research_pending"
+        : !resolved
+          ? "submission_not_approved"
+          : eligible
+            ? "reconciled"
+            : "approved_but_ineligible"
       return {
         itemId: item.itemId,
         category: item.category,
         source: item.source,
         product: describePendingItem(item),
         submissionId: item.productSubmissionId,
-        submissionStatus: outcome?.status ?? null,
-        productId: eligible ? approved : null,
-        outcome: !approved
-          ? "research_pending"
-          : eligible
-            ? "reconciled"
-            : "approved_but_ineligible",
+        submissionStatus: submission?.status ?? null,
+        productId: outcome === "reconciled" ? approved : null,
+        outcome,
       } satisfies DiscoveryReconcileItemReceipt
     }),
   }))
@@ -300,6 +315,7 @@ function totalDiscoveryReconcileOutcomes(participants: DiscoveryReconcilePartici
   const totals: Record<DiscoveryReconcileOutcome, number> = {
     reconciled: 0,
     research_pending: 0,
+    submission_not_approved: 0,
     approved_but_ineligible: 0,
     already_assigned: 0,
   }
@@ -323,7 +339,10 @@ async function runDiscoveryReconcile(input: {
     target.items.map((item) => item.productSubmissionId),
   )
   const outcomes = await input.gateway.loadSubmissionOutcomes(submissionIds)
+  // Only a RESOLVED submission's id is a candidate, so only those are worth an
+  // eligibility lookup — an id left behind by a reverted review is not asked about.
   const approvedIds = [...outcomes.values()]
+    .filter((outcome) => isResolvedDiscoverySubmissionStatus(outcome.status))
     .map((outcome) => outcome.approvedProductId)
     .filter((id): id is string => id !== null)
   const eligible = await input.gateway.filterEligibleProductIds(approvedIds)
@@ -333,6 +352,17 @@ async function runDiscoveryReconcile(input: {
     for (const participant of participants) {
       for (const item of participant.items) {
         if (item.outcome !== "reconciled" || !item.productId) continue
+        // Re-asked per item, immediately before the write, rather than trusted from
+        // the batch read above. A sweep over 100 participants is a long-running run,
+        // and deactivating or quarantining a product is exactly the kind of thing that
+        // happens DURING one. The batch answer is what makes the dry run a plan; this
+        // is what keeps `--apply` from writing against a stale one.
+        const stillEligible = await input.gateway.filterEligibleProductIds([item.productId])
+        if (!stillEligible.has(item.productId)) {
+          item.outcome = "approved_but_ineligible"
+          item.productId = null
+          continue
+        }
         const written = await input.gateway.assignProductId({
           itemId: item.itemId,
           productId: item.productId,

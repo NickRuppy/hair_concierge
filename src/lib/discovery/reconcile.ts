@@ -23,6 +23,8 @@ import { createAdminClient } from "@/lib/supabase/admin"
  *    gate `POST /api/beratung/identify` runs at capture. A submission can be approved
  *    onto a product that is since deactivated or disposition-quarantined; writing that
  *    id would put a product in front of the participant that no scan surface would.
+ * 3. `approved_product_id` alone is not a verdict — the STATUS has to say so too. See
+ *    `DISCOVERY_RESOLVED_SUBMISSION_STATUSES` below.
  *
  * Everything here runs on the service-role client: all three tables are service-only.
  */
@@ -61,6 +63,29 @@ export type DiscoveryReconcileTarget = {
 export type DiscoverySubmissionOutcome = {
   status: string | null
   approvedProductId: string | null
+}
+
+/**
+ * The only two `product_submissions.status` values that mean the review genuinely
+ * RESOLVED onto a catalog product. The vocabulary is the migration's own
+ * (`product_submissions_status_check` in
+ * `supabase/migrations/20260612130000_product_intake_submissions.sql`): `pending_review`,
+ * `researching`, `ready_for_review`, `needs_more_info`, `matched_existing`, `approved`,
+ * `rejected`, `cancelled_by_user`. The same pair is what
+ * `productIntakeReviewIsResolved` in `src/lib/product-intake/notifications.ts` tells the
+ * user about.
+ *
+ * `approved_product_id` on its own is NOT that verdict. The table's
+ * `product_submissions_success_product_check` only runs one way — a resolved status must
+ * have a product — so a submission that was approved and then moved back to
+ * `needs_more_info`, or `rejected` outright, still carries the id it was approved onto.
+ * Reconciling off the id alone would put a product the review has since backed away from
+ * into the participant's intake, hours before the call, with no trace but this receipt.
+ */
+export const DISCOVERY_RESOLVED_SUBMISSION_STATUSES = ["approved", "matched_existing"] as const
+
+export function isResolvedDiscoverySubmissionStatus(status: string | null | undefined): boolean {
+  return (DISCOVERY_RESOLVED_SUBMISSION_STATUSES as readonly string[]).includes(status ?? "")
 }
 
 type EnrollmentRow = { id: string; display_name: string; normalized_email: string }

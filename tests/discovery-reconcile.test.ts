@@ -226,6 +226,7 @@ test("without --apply reconcile reports the plan and writes nothing", async () =
   assert.deepEqual(receipt.totals, {
     reconciled: 1,
     research_pending: 1,
+    submission_not_approved: 0,
     approved_but_ineligible: 1,
     already_assigned: 0,
   })
@@ -244,6 +245,7 @@ test("a gated reconcile writes only the approved, eligible product", async () =>
   assert.deepEqual(receipt.totals, {
     reconciled: 1,
     research_pending: 1,
+    submission_not_approved: 0,
     approved_but_ineligible: 1,
     already_assigned: 0,
   })
@@ -313,6 +315,7 @@ test("a row claimed between plan and write is reported, never counted as reconci
   assert.deepEqual(receipt.totals, {
     reconciled: 0,
     research_pending: 1,
+    submission_not_approved: 0,
     approved_but_ineligible: 1,
     already_assigned: 1,
   })
@@ -326,6 +329,128 @@ test("a row claimed between plan and write is reported, never counted as reconci
       ["approved_but_ineligible", null],
     ],
   )
+})
+
+// --- `approved_product_id` is not by itself a verdict ------------------------
+
+test("a product id under an unresolved status is reported, never written", async () => {
+  // Every non-resolved status in the migration's own vocabulary, each carrying an
+  // `approved_product_id` that IS scan-eligible — so eligibility cannot be what
+  // stops the write. Only the status can.
+  for (const status of [
+    "pending_review",
+    "researching",
+    "ready_for_review",
+    "needs_more_info",
+    "rejected",
+    "cancelled_by_user",
+    null,
+  ]) {
+    const { writes, receipt } = await run(applyArgs, applyEnvironment, {
+      loadSubmissionOutcomes: async (submissionIds) =>
+        new Map(
+          submissionIds.map((id) => [
+            id,
+            id === ids.approvedSubmission
+              ? { status, approvedProductId: ids.eligibleProduct }
+              : { status: "researching", approvedProductId: null },
+          ]),
+        ),
+    })
+
+    assert.deepEqual(writes, [], `status ${status} must not be written`)
+    const item = receipt.participants[0].items.find((entry) => entry.itemId === ids.eligibleItem)
+    assert.equal(item?.outcome, "submission_not_approved", `status ${status}`)
+    assert.equal(item?.productId, null, `status ${status}`)
+    assert.equal(item?.submissionStatus, status, `status ${status}`)
+    assert.equal(receipt.totals.submission_not_approved, 1, `status ${status}`)
+    assert.equal(receipt.totals.reconciled, 0, `status ${status}`)
+  }
+})
+
+test("both resolved statuses reconcile — `matched_existing` as much as `approved`", async () => {
+  for (const status of ["approved", "matched_existing"]) {
+    const { writes } = await run(applyArgs, applyEnvironment, {
+      loadSubmissionOutcomes: async (submissionIds) =>
+        new Map(
+          submissionIds.map((id) => [
+            id,
+            id === ids.approvedSubmission
+              ? { status, approvedProductId: ids.eligibleProduct }
+              : { status: "researching", approvedProductId: null },
+          ]),
+        ),
+    })
+    assert.deepEqual(writes, [{ itemId: ids.eligibleItem, productId: ids.eligibleProduct }], status)
+  }
+})
+
+test("an unresolved submission's product id is never even asked about", async () => {
+  const asked: string[][] = []
+  await run(applyArgs, applyEnvironment, {
+    loadSubmissionOutcomes: async (submissionIds) =>
+      new Map(
+        submissionIds.map((id) => [
+          id,
+          { status: "rejected", approvedProductId: ids.eligibleProduct },
+        ]),
+      ),
+    filterEligibleProductIds: async (productIds) => {
+      asked.push([...productIds])
+      return new Set(productIds)
+    },
+  })
+  // The batch lookup happens with an empty list; nothing is re-verified per item
+  // either, because no item ever became a `reconciled` candidate.
+  assert.deepEqual(asked, [[]])
+})
+
+// --- Eligibility is re-asked immediately before each write -------------------
+
+test("a product that loses eligibility between plan and write is not written", async () => {
+  const asked: string[][] = []
+  let batchRead = true
+  const { writes, receipt } = await run(applyArgs, applyEnvironment, {
+    filterEligibleProductIds: async (productIds) => {
+      asked.push([...productIds])
+      // The batch read that produces the plan still says eligible; the per-item
+      // re-check right before the write no longer does. That is the window a long
+      // sweep over 100 participants actually leaves open.
+      if (batchRead) {
+        batchRead = false
+        return new Set(productIds.filter((id) => id === ids.eligibleProduct))
+      }
+      return new Set()
+    },
+    assignProductId: async () => {
+      throw new Error("the write must not be reached for an ineligible product")
+    },
+  })
+
+  assert.deepEqual(writes, [])
+  // Two calls: the batch one behind the plan, then the one for this single item.
+  assert.deepEqual(asked, [[ids.eligibleProduct, ids.ineligibleProduct], [ids.eligibleProduct]])
+  assert.deepEqual(receipt.totals, {
+    reconciled: 0,
+    research_pending: 1,
+    submission_not_approved: 0,
+    approved_but_ineligible: 2,
+    already_assigned: 0,
+  })
+  const item = receipt.participants[0].items.find((entry) => entry.itemId === ids.eligibleItem)
+  assert.equal(item?.outcome, "approved_but_ineligible")
+  assert.equal(item?.productId, null)
+})
+
+test("a dry run re-verifies nothing, because it writes nothing", async () => {
+  const asked: string[][] = []
+  await run(["reconcile", "--all"], applyEnvironment, {
+    filterEligibleProductIds: async (productIds) => {
+      asked.push([...productIds])
+      return new Set(productIds.filter((id) => id === ids.eligibleProduct))
+    },
+  })
+  assert.deepEqual(asked, [[ids.eligibleProduct, ids.ineligibleProduct]])
 })
 
 // --- The database layer's own predicates -------------------------------------

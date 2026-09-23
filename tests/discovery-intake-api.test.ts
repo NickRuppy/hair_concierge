@@ -8,7 +8,11 @@ import { createDiscoveryIntakeItemDeleteHandler } from "../src/app/api/beratung/
 import { createDiscoveryIntakeSubmitHandler } from "../src/app/api/beratung/intake/submit/route"
 import {
   DISCOVERY_INTAKE_CATEGORIES,
+  checkDiscoveryIntakeItemIdentity,
+  clearDiscoveryIntakeCoexistingNone,
+  type DiscoveryAdminClient,
   type DiscoveryIntake,
+  type DiscoveryIntakeIdentityDependencies,
   type DiscoveryIntakeItem,
 } from "../src/lib/discovery/intake"
 import type { DiscoveryEnrollment } from "../src/lib/discovery/enrollment"
@@ -68,6 +72,25 @@ function enrollmentLoader(row: (DiscoveryEnrollment & { revoked?: boolean }) | n
 
 type Deps = Record<string, unknown>
 
+/**
+ * The REAL `checkDiscoveryIntakeItemIdentity`, driven through injected catalog
+ * reads — so what the route's 422s are proven against is the rule itself, not a
+ * stand-in for it. The defaults say yes to everything, which is what makes an
+ * override below the single reason a given test refuses.
+ */
+function checkIdentityWith(overrides: Partial<DiscoveryIntakeIdentityDependencies> = {}) {
+  const deps: DiscoveryIntakeIdentityDependencies = {
+    filterEligibleProductIds: async (_client, productIds) => new Set(productIds),
+    loadProductCategory: async () => "shampoo",
+    loadSubmissionCategory: async () => "shampoo",
+    ...overrides,
+  }
+  return (
+    input: Parameters<typeof checkDiscoveryIntakeItemIdentity>[0],
+    client: DiscoveryAdminClient,
+  ) => checkDiscoveryIntakeItemIdentity(input, client, deps)
+}
+
 function baseDeps(overrides: Deps = {}): Deps {
   return {
     flagEnabled: () => true,
@@ -75,6 +98,7 @@ function baseDeps(overrides: Deps = {}): Deps {
     loadEnrollment: enrollmentLoader(enrollment),
     createAdminClient: () => ({}) as never,
     getOrCreateIntake: async () => draftIntake,
+    checkIdentity: checkIdentityWith(),
     ...overrides,
   }
 }
@@ -251,16 +275,24 @@ test("a submitted intake cannot be submitted twice", async () => {
 // --- Item writes --------------------------------------------------------------
 
 test("a product write clears only a standing „benutze ich nicht“, never the other products", async () => {
+  const order: string[] = []
   const cleared: unknown[] = []
   const response = await createDiscoveryIntakeItemsHandler(
     baseDeps({
       clearCategory: async (input: unknown) => {
+        order.push("clear")
         cleared.push(input)
       },
-      insertItem: async () => storedItem,
+      insertItem: async () => {
+        order.push("insert")
+        return storedItem
+      },
     }),
   )(itemsRequest(validCapture))
 
+  // The insert comes FIRST: a clear that ran first and an insert that then failed
+  // would leave the category with no answer at all.
+  assert.deepEqual(order, ["insert", "clear"])
   assert.equal(response.status, 201)
   // The response is the browser projection, not the stored row: the identity columns
   // the checklist never renders do not leave the server.
@@ -274,22 +306,219 @@ test("a product write clears only a standing „benutze ich nicht“, never the 
       barcodeIdentifier: storedItem.barcodeIdentifier,
     },
   })
-  assert.deepEqual(cleared, [{ intakeId: ids.intake, category: "shampoo", sources: ["none"] }])
+  assert.deepEqual(cleared, [
+    {
+      intakeId: ids.intake,
+      category: "shampoo",
+      sources: ["none"],
+      exceptItemId: storedItem.id,
+    },
+  ])
 })
 
-test("„benutze ich nicht“ replaces the whole category", async () => {
+test("„benutze ich nicht“ replaces the whole category, except the row it just wrote", async () => {
+  const order: string[] = []
+  const cleared: unknown[] = []
+  const noneItem = {
+    ...storedItem,
+    id: "50000000-0000-4000-8000-00000000000n",
+    source: "none" as const,
+  }
+  const response = await createDiscoveryIntakeItemsHandler(
+    baseDeps({
+      clearCategory: async (input: unknown) => {
+        order.push("clear")
+        cleared.push(input)
+      },
+      insertItem: async () => {
+        order.push("insert")
+        return noneItem
+      },
+    }),
+  )(itemsRequest({ category: "mask", capture: { source: "none" } }))
+
+  assert.equal(response.status, 201)
+  // A `none` answer is the one capture with a clear BEFORE the insert too — the
+  // partial unique index allows a single one per category, so a re-tap would
+  // collide. That pre-clear drops only `none` rows, which carry no information the
+  // replacement does not; the products are still only touched after the insert.
+  assert.deepEqual(order, ["clear", "insert", "clear"])
+  assert.deepEqual(cleared, [
+    { intakeId: ids.intake, category: "mask", sources: ["none"] },
+    { intakeId: ids.intake, category: "mask", exceptItemId: noneItem.id },
+  ])
+})
+
+// --- Fix 5: a failed insert must never cost the previous answer ---------------
+
+test("an insert that fails leaves the category's products untouched", async () => {
   const cleared: unknown[] = []
   const response = await createDiscoveryIntakeItemsHandler(
     baseDeps({
       clearCategory: async (input: unknown) => {
         cleared.push(input)
       },
+      insertItem: async () => {
+        throw new Error("postgres is down")
+      },
+    }),
+  )(itemsRequest(validCapture))
+
+  assert.equal(response.status, 503)
+  // Nothing was deleted at all: the participant's standing answer in this category
+  // — „benutze ich nicht" or a product she captured earlier — is still there.
+  assert.deepEqual(cleared, [])
+})
+
+test("a „benutze ich nicht“ whose insert fails deletes no products either", async () => {
+  const cleared: unknown[] = []
+  const response = await createDiscoveryIntakeItemsHandler(
+    baseDeps({
+      clearCategory: async (input: unknown) => {
+        cleared.push(input)
+      },
+      insertItem: async () => {
+        throw new Error("postgres is down")
+      },
+    }),
+  )(itemsRequest({ category: "mask", capture: { source: "none" } }))
+
+  assert.equal(response.status, 503)
+  // Only the information-free pre-clear ran, and it is scoped to `none` rows.
+  assert.deepEqual(cleared, [{ intakeId: ids.intake, category: "mask", sources: ["none"] }])
+})
+
+test("a clear that fails AFTER a successful insert still reports the stored answer", async () => {
+  const response = await createDiscoveryIntakeItemsHandler(
+    baseDeps({
+      clearCategory: async () => {
+        throw new Error("postgres is down")
+      },
+      insertItem: async () => storedItem,
+    }),
+  )(itemsRequest(validCapture))
+
+  // The row IS in the table, so telling the participant to try again would be a
+  // lie. The two answers coexist until submit heals them.
+  assert.equal(response.status, 201)
+  assert.deepEqual((await response.json()).item.id, storedItem.id)
+})
+
+// --- Fix 4: the ids the client supplies are re-established server-side --------
+
+test("a product that is not scan-eligible is a 422 and reaches no write", async () => {
+  const response = await createDiscoveryIntakeItemsHandler(
+    baseDeps({
+      checkIdentity: checkIdentityWith({ filterEligibleProductIds: async () => new Set() }),
+      clearCategory: async () => {
+        throw new Error("must not be reached")
+      },
+      insertItem: async () => {
+        throw new Error("must not be reached")
+      },
+    }),
+  )(itemsRequest(validCapture))
+
+  assert.equal(response.status, 422)
+  const body = await response.json()
+  assert.equal(body.code, "unknown_product")
+  assert.match(body.error, /Produkt/)
+})
+
+test("a product filed under the wrong category is a 422, eligible or not", async () => {
+  const response = await createDiscoveryIntakeItemsHandler(
+    baseDeps({
+      // Eligible — the catalog simply says it is a mask, and the request says shampoo.
+      checkIdentity: checkIdentityWith({ loadProductCategory: async () => "mask" }),
+      insertItem: async () => {
+        throw new Error("must not be reached")
+      },
+    }),
+  )(itemsRequest(validCapture))
+
+  assert.equal(response.status, 422)
+  assert.deepEqual((await response.json()).code, "category_mismatch")
+})
+
+test("a product with no catalog category at all is a mismatch, not a pass", async () => {
+  const response = await createDiscoveryIntakeItemsHandler(
+    baseDeps({
+      checkIdentity: checkIdentityWith({ loadProductCategory: async () => null }),
+      insertItem: async () => {
+        throw new Error("must not be reached")
+      },
+    }),
+  )(itemsRequest(validCapture))
+  assert.equal(response.status, 422)
+  assert.deepEqual((await response.json()).code, "category_mismatch")
+})
+
+const submissionCapture = {
+  category: "shampoo",
+  capture: {
+    source: "name_research",
+    productSubmissionId: "30000000-0000-4000-8000-000000000004",
+    brandText: "Kérastase",
+    productNameText: "Bain Satin 2",
+  },
+}
+
+test("a submission id that exists nowhere is a 422 and reaches no write", async () => {
+  const response = await createDiscoveryIntakeItemsHandler(
+    baseDeps({
+      checkIdentity: checkIdentityWith({ loadSubmissionCategory: async () => null }),
+      insertItem: async () => {
+        throw new Error("must not be reached")
+      },
+    }),
+  )(itemsRequest(submissionCapture))
+
+  assert.equal(response.status, 422)
+  assert.deepEqual((await response.json()).code, "unknown_submission")
+})
+
+test("a submission opened for another category is a 422", async () => {
+  const response = await createDiscoveryIntakeItemsHandler(
+    baseDeps({
+      checkIdentity: checkIdentityWith({ loadSubmissionCategory: async () => "oil" }),
+      insertItem: async () => {
+        throw new Error("must not be reached")
+      },
+    }),
+  )(itemsRequest(submissionCapture))
+
+  assert.equal(response.status, 422)
+  assert.deepEqual((await response.json()).code, "category_mismatch")
+})
+
+test("„benutze ich nicht“ carries no ids, so it asks the catalog nothing", async () => {
+  const response = await createDiscoveryIntakeItemsHandler(
+    baseDeps({
+      checkIdentity: checkIdentityWith({
+        filterEligibleProductIds: async () => {
+          throw new Error("must not be reached")
+        },
+        loadProductCategory: async () => {
+          throw new Error("must not be reached")
+        },
+        loadSubmissionCategory: async () => {
+          throw new Error("must not be reached")
+        },
+      }),
+      clearCategory: async () => {},
       insertItem: async () => ({ ...storedItem, source: "none" as const }),
     }),
   )(itemsRequest({ category: "mask", capture: { source: "none" } }))
 
   assert.equal(response.status, 201)
-  assert.deepEqual(cleared, [{ intakeId: ids.intake, category: "mask" }])
+})
+
+test("a resolved, correctly-filed product is stored exactly as before", async () => {
+  const response = await createDiscoveryIntakeItemsHandler(
+    baseDeps({ clearCategory: async () => {}, insertItem: async () => storedItem }),
+  )(itemsRequest(validCapture))
+  assert.equal(response.status, 201)
+  assert.deepEqual((await response.json()).item.id, storedItem.id)
 })
 
 test("a malformed capture is a 400 and never reaches the table", async () => {
@@ -374,6 +603,129 @@ test("completeness is decided from the stored rows, not from the client", async 
     state: "submitted",
     submittedAt: "2026-09-22T12:00:00.000Z",
   })
+})
+
+// --- Fix 5: the coexistence the items route tolerates is healed on submit -----
+
+test("a category holding BOTH answers loses its „benutze ich nicht“ before the freeze", async () => {
+  const order: string[] = []
+  const healed: unknown[] = []
+  // `mask` carries the contradiction: a product AND a standing `none`, the state an
+  // items write leaves behind when its post-insert clear failed.
+  const items = [
+    ...everyCategory,
+    { ...storedItem, id: "x", category: "mask" as const, source: "none" as const },
+  ]
+
+  const response = await createDiscoveryIntakeSubmitHandler(
+    baseDeps({
+      loadItems: async () => items,
+      clearCoexistingNone: async (input: unknown) => {
+        order.push("heal")
+        healed.push(input)
+        return ["mask"]
+      },
+      submitIntake: async () => {
+        order.push("submit")
+        return submittedIntake
+      },
+    }),
+  )()
+
+  assert.equal(response.status, 200)
+  // Healed BEFORE the freeze — afterwards every write endpoint answers 409.
+  assert.deepEqual(order, ["heal", "submit"])
+  assert.deepEqual(healed, [{ intakeId: ids.intake, items }])
+})
+
+test("an incomplete checklist is refused before anything is healed", async () => {
+  const response = await createDiscoveryIntakeSubmitHandler(
+    baseDeps({
+      loadItems: async () => everyCategory.filter((item) => item.category !== "oil"),
+      clearCoexistingNone: async () => {
+        throw new Error("must not be reached")
+      },
+      submitIntake: async () => {
+        throw new Error("must not be reached")
+      },
+    }),
+  )()
+  assert.equal(response.status, 400)
+})
+
+test("the heal itself deletes only the contradicted categories' none rows", async () => {
+  const deletes: Array<Record<string, unknown>> = []
+  const client = {
+    from: (table: string) => {
+      const call: Record<string, unknown> = { table }
+      const chain = {
+        delete: () => {
+          call.delete = true
+          return chain
+        },
+        eq: (column: string, value: unknown) => {
+          call[`eq_${column}`] = value
+          return chain
+        },
+        in: (column: string, values: readonly unknown[]) => {
+          call[`in_${column}`] = [...values]
+          return chain
+        },
+        then: (resolve: (result: { error: null }) => unknown) => {
+          deletes.push(call)
+          return Promise.resolve({ error: null }).then(resolve)
+        },
+      }
+      return chain
+    },
+  } as unknown as DiscoveryAdminClient
+
+  const contradicted = await clearDiscoveryIntakeCoexistingNone(
+    {
+      intakeId: ids.intake,
+      items: [
+        { category: "shampoo", source: "catalog_search" },
+        { category: "shampoo", source: "none" },
+        // `mask` answered „none" and nothing else — not a contradiction, left alone.
+        { category: "mask", source: "none" },
+        // `oil` has products only — nothing to heal.
+        { category: "oil", source: "dm_search" },
+      ],
+    },
+    client,
+  )
+
+  assert.deepEqual(contradicted, ["shampoo"])
+  assert.deepEqual(deletes, [
+    {
+      table: "discovery_intake_items",
+      delete: true,
+      eq_intake_id: ids.intake,
+      eq_source: "none",
+      in_category: ["shampoo"],
+    },
+  ])
+})
+
+test("a consistent checklist is healed with no write at all", async () => {
+  const client = {
+    from: () => {
+      throw new Error("must not be reached")
+    },
+  } as unknown as DiscoveryAdminClient
+  assert.deepEqual(
+    await clearDiscoveryIntakeCoexistingNone(
+      {
+        intakeId: ids.intake,
+        items: [
+          { category: "shampoo", source: "catalog_search" },
+          { category: "mask", source: "none" },
+        ],
+      },
+      client,
+    ),
+    [],
+  )
 })
 
 // --- Identify -----------------------------------------------------------------
