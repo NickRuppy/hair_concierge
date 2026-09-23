@@ -18,9 +18,10 @@ import {
   type DiscoveryParticipantVerdict,
   type DiscoveryVerdictStatus,
 } from "./load-participant-verdicts"
-import { discoveryProductLabel } from "./product-label"
 import {
   composeDiscoveryRefinedRoutine,
+  describeDiscoveryIntakeItem,
+  DISCOVERY_SCANNED_PRODUCT_LABEL,
   discoveryPrintedRecommendationIds,
   discoverySwapProductIds,
   type DiscoveryCallDecision,
@@ -58,8 +59,8 @@ const ITEM_COLUMNS =
   "id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,created_at"
 const DECISION_COLUMNS = "decision_key,decision,swap_product_id,intake_item_id"
 
-/** „Gescanntes Produkt" — a `barcode_unknown` row carries no text at all, only the code. */
-export const DISCOVERY_SCANNED_PRODUCT_LABEL = "Gescanntes Produkt"
+/** Re-exported: the label rules live with the (pure, hashed) composition now. */
+export { describeDiscoveryIntakeItem, DISCOVERY_SCANNED_PRODUCT_LABEL }
 /** Everything not yet reconciled into the catalog, in one internal phrase. */
 export const DISCOVERY_RESEARCH_PENDING_LABEL = "Noch in Recherche"
 
@@ -197,6 +198,33 @@ export async function loadDiscoveryCallDecisions(
 
 const loadSwapPresentationRows = createPresentationRowLoader("discovery_swap_lookup_failed")
 
+/**
+ * Catalog product id → product line name, for every product a cockpit/PDF label names.
+ * Only products that HAVE a line appear in the map.
+ */
+export async function loadDiscoveryProductLines(
+  client: DiscoveryCockpitAdminClient,
+  productIds: string[],
+): Promise<Map<string, string>> {
+  const lines = new Map<string, string>()
+  if (productIds.length === 0) return lines
+  const { data, error } = await client
+    .from("products")
+    .select("id, product_line:product_lines(canonical_name)")
+    .in("id", productIds)
+  if (error) throw new Error("discovery_product_line_lookup_failed")
+  type LineRelation = { canonical_name: string | null }
+  for (const row of (data as Array<{
+    id: string
+    product_line: LineRelation | LineRelation[] | null
+  }> | null) ?? []) {
+    const relation = Array.isArray(row.product_line) ? row.product_line[0] : row.product_line
+    const name = relation?.canonical_name?.trim()
+    if (name) lines.set(row.id, name)
+  }
+  return lines
+}
+
 // --- Composition -------------------------------------------------------------
 
 export type DiscoveryCockpitModel = {
@@ -211,10 +239,11 @@ export type DiscoveryCockpitModel = {
    */
   recommendationProducts: ScanCatalogPresentationRow[]
   /**
-   * False when the brand lookup for a call WITHOUT swaps failed. The cockpit still renders
-   * (brandless recommendation names), but the routine's `sourceHash` then describes a
-   * degraded document — so finalising refuses and the PDF sends Nick back to the cockpit
-   * rather than printing a brandless sheet or a false drift warning.
+   * False when the brand lookup for a call WITHOUT swaps failed, or the product-line
+   * lookup failed. The cockpit still renders (labels without brand or line), but the
+   * routine's `sourceHash` then describes a degraded document — so finalising refuses and
+   * the PDF sends Nick back to the cockpit rather than printing a degraded sheet or a
+   * false drift warning.
    */
   recommendationBrandsAvailable: boolean
 }
@@ -233,6 +262,7 @@ export type DiscoveryCockpitDependencies = {
     client: DiscoveryCockpitAdminClient,
     productIds: string[],
   ) => Promise<ScanCatalogPresentationRow[]>
+  loadProductLines: typeof loadDiscoveryProductLines
 }
 
 export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
@@ -241,6 +271,21 @@ export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
   loadVerdicts: loadParticipantScanVerdicts,
   loadDecisions: loadDiscoveryCallDecisions,
   loadSwapProducts: loadSwapPresentationRows,
+  loadProductLines: loadDiscoveryProductLines,
+}
+
+/**
+ * The catalog identity each owned product's verdict names — handed to the composition so
+ * the owned label it prints is also the label it fingerprints.
+ */
+export function discoveryOwnedProductIdentities(
+  verdicts: readonly DiscoveryParticipantVerdict[],
+): { itemId: string; brand: string | null; name: string }[] {
+  return verdicts.flatMap((verdict) =>
+    verdict.status === "verdict"
+      ? [{ itemId: verdict.itemId, brand: verdict.product.brand, name: verdict.product.name }]
+      : [],
+  )
 }
 
 export async function loadDiscoveryCockpitModel(
@@ -285,10 +330,30 @@ export async function loadDiscoveryCockpitModel(
   }
   const swapProducts = catalogRows.filter((row) => swapProductIds.has(row.id))
   const recommendationProducts = catalogRows.filter((row) => printedIds.has(row.id))
+  // Product lines for every product a label names: owned catalog products, swap targets
+  // and printed recommendations. Enrichment only, like the brands: a failed read degrades
+  // (and blocks finalize/PDF) rather than failing the call.
+  const lineIds = [
+    ...new Set([
+      ...items.flatMap((item) => (item.productId ? [item.productId] : [])),
+      ...swapProductIds,
+      ...printedIds,
+    ]),
+  ].sort()
+  let productLines = new Map<string, string>()
+  let linesFailed = false
+  if (lineIds.length > 0) {
+    try {
+      productLines = await deps.loadProductLines(admin, lineIds)
+    } catch (error) {
+      console.error("[discovery] product line lookup failed:", error)
+      linesFailed = true
+    }
+  }
   // A printed recommendation whose row did not come back would print (and fingerprint)
   // brandless — the same degraded state as a failed read.
   const recommendationBrandsAvailable =
-    !lookupFailed && recommendationProducts.length === printedIds.size
+    !lookupFailed && !linesFailed && recommendationProducts.length === printedIds.size
 
   return {
     status: "ready",
@@ -298,6 +363,8 @@ export async function loadDiscoveryCockpitModel(
       decisions,
       swapProducts,
       recommendationProducts,
+      ownedProducts: discoveryOwnedProductIdentities(verdicts),
+      productLines,
     }),
     steps: ideal.steps,
     verdicts,
@@ -353,8 +420,10 @@ export type DiscoveryCockpitStepView = {
   /** The decided swap target, even when its catalog row could not be read. */
   swapProductId: string | null
   swapProductLabel: string | null
-  /** The Idealplan's own recommendation for this step, for the „Neu:" slot and the PDF. */
+  /** The Idealplan's own recommendation for this step, for the „Neu:" slot. */
   idealRecommendation: DiscoveryCockpitSwapOption | null
+  /** That recommendation as the PDF prints it (brand + line + name) — hashed, see routine. */
+  recommendationLabel: string | null
 }
 
 export type DiscoveryCockpitUnassignedView = {
@@ -373,22 +442,6 @@ export type DiscoveryCockpitView = {
   sourceHash: string
   /** See `DiscoveryCockpitModel.recommendationBrandsAvailable`. */
   recommendationBrandsAvailable: boolean
-}
-
-/**
- * How the cockpit names an intake product that has no catalog row behind it.
- *
- * A `barcode_unknown` row carries NO brand and NO name — its identity is the barcode
- * (T3 handoff), so it reads „Gescanntes Produkt · <code>" rather than pretending to a
- * name nobody entered.
- */
-export function describeDiscoveryIntakeItem(item: DiscoveryIntakeItem): string {
-  const text = discoveryProductLabel(item.brandText, item.productNameText)
-  if (text) return text
-  if (item.barcodeIdentifier) {
-    return `${DISCOVERY_SCANNED_PRODUCT_LABEL} · ${item.barcodeIdentifier}`
-  }
-  return DISCOVERY_SCANNED_PRODUCT_LABEL
 }
 
 function alternativeOption(alternative: {
@@ -455,11 +508,8 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       frequencyLabel: step.frequencyLabel,
       section: step.section,
       outcome: refined.outcome,
-      ownedLabel: item
-        ? verdict?.status === "verdict"
-          ? discoveryProductLabel(verdict.product.brand, verdict.product.name)
-          : describeDiscoveryIntakeItem(item)
-        : null,
+      // Every printed label comes from the composition, which fingerprints it.
+      ownedLabel: refined.ownedLabel,
       intakeItemId: item?.id ?? null,
       unanswered: !item && unanswered.has(step.category),
       verdict: verdict
@@ -469,9 +519,8 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
         : null,
       swapOptions,
       swapProductId: refined.swapProductId,
-      swapProductLabel: refined.swapProduct
-        ? discoveryProductLabel(refined.swapProduct.brand, refined.swapProduct.name)
-        : null,
+      swapProductLabel: refined.swapProductLabel,
+      recommendationLabel: refined.recommendationLabel,
       idealRecommendation: ideal,
     }
   })
@@ -481,7 +530,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
     unassigned: model.routine.unassignedIntakeProducts.map((entry) => ({
       itemId: entry.item.id,
       category: entry.item.category,
-      label: describeDiscoveryIntakeItem(entry.item),
+      label: entry.label,
       reason: entry.reason,
     })),
     declinedCategories: model.routine.declinedCategories,

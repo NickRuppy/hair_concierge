@@ -3,7 +3,7 @@ import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contract
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
 import type { ScanCatalogPresentationRow } from "@/lib/scan/product-presentation"
 
-import { discoveryProductLabel } from "./product-label"
+import { discoveryProductTitle } from "./product-label"
 
 import type { DiscoveryIdealStep } from "./load-ideal-routine"
 
@@ -76,6 +76,38 @@ export type DiscoveryUnassignedReason = "research_pending" | "no_ideal_step"
 export type DiscoveryUnassignedIntakeProduct = {
   item: DiscoveryIntakeItem
   reason: DiscoveryUnassignedReason
+}
+
+/** An unassigned product as the documents print it — the label is part of the fingerprint. */
+export type DiscoveryLabeledUnassignedIntakeProduct = DiscoveryUnassignedIntakeProduct & {
+  label: string
+}
+
+/** „Gescanntes Produkt" — a `barcode_unknown` row carries no text at all, only the code. */
+export const DISCOVERY_SCANNED_PRODUCT_LABEL = "Gescanntes Produkt"
+
+/**
+ * How the cockpit and the PDF name an intake product from the participant's own words.
+ *
+ * A `barcode_unknown` row carries NO brand and NO name — its identity is the barcode
+ * (T3 handoff), so it reads „Gescanntes Produkt · <code>" rather than pretending to a
+ * name nobody entered. `productLine` is the catalog line of the item's resolved product,
+ * when there is one; it only joins a label that has a name to join.
+ */
+export function describeDiscoveryIntakeItem(
+  item: DiscoveryIntakeItem,
+  productLine: string | null = null,
+): string {
+  const text = discoveryProductTitle({
+    brand: item.brandText,
+    productLine: item.productNameText ? productLine : null,
+    name: item.productNameText,
+  })
+  if (text) return text
+  if (item.barcodeIdentifier) {
+    return `${DISCOVERY_SCANNED_PRODUCT_LABEL} · ${item.barcodeIdentifier}`
+  }
+  return DISCOVERY_SCANNED_PRODUCT_LABEL
 }
 
 export type DiscoveryStepBinding = {
@@ -194,17 +226,25 @@ export type DiscoveryRefinedStep = {
   swapProductId: string | null
   swapProduct: ScanCatalogPresentationRow | null
   /**
-   * The Idealplan's recommendation exactly as the document prints it (brand + name), set
-   * ONLY where it is printed (`ideal`). The preview's own name is often brandless, so the
-   * brand is part of what the PDF renders — and the printed label, not the raw brand
+   * The Idealplan's recommendation exactly as the document prints it (brand + line + name),
+   * set ONLY where it is printed (`ideal`). The preview's own name is often brandless, so
+   * the brand is part of what the PDF renders — and the printed label, not the raw brand
    * spelling, is what `sourceHash` covers.
    */
   recommendationLabel: string | null
+  /**
+   * The participant's own product for this step, exactly as cockpit and PDF print it: the
+   * catalog identity the verdict names (brand + line + name) when there is one, else their
+   * own words. Hashed for the same reason as `recommendationLabel`.
+   */
+  ownedLabel: string | null
+  /** The decided swap target as printed (brand + line + name); null when unreadable. */
+  swapProductLabel: string | null
 }
 
 export type DiscoveryRefinedRoutine = {
   steps: DiscoveryRefinedStep[]
-  unassignedIntakeProducts: DiscoveryUnassignedIntakeProduct[]
+  unassignedIntakeProducts: DiscoveryLabeledUnassignedIntakeProduct[]
   declinedCategories: PersonalPlanCategory[]
   /** See `DiscoveryIntakeReduction.unansweredCategories`. */
   unansweredCategories: PersonalPlanCategory[]
@@ -224,8 +264,26 @@ export function composeDiscoveryRefinedRoutine(input: {
   swapProducts: readonly ScanCatalogPresentationRow[]
   /** Catalog rows of the Idealplan's recommendations — read for their brand only. */
   recommendationProducts?: readonly ScanCatalogPresentationRow[]
+  /** The catalog identity each owned product's verdict names, by intake item id. */
+  ownedProducts?: readonly { itemId: string; brand: string | null; name: string }[]
+  /** Catalog product id → product line name, for every product a label names. */
+  productLines?: ReadonlyMap<string, string>
 }): DiscoveryRefinedRoutine {
   const reduction = reduceIntakeItemsToSteps(input.steps, input.items)
+  const lineOf = (productId: string | null | undefined) =>
+    (productId ? input.productLines?.get(productId) : null) ?? null
+  const ownedByItemId = new Map((input.ownedProducts ?? []).map((row) => [row.itemId, row]))
+  const ownedLabel = (item: DiscoveryIntakeItem | null) => {
+    if (!item) return null
+    const owned = ownedByItemId.get(item.id)
+    return owned
+      ? discoveryProductTitle({
+          brand: owned.brand,
+          productLine: lineOf(item.productId),
+          name: owned.name,
+        })
+      : describeDiscoveryIntakeItem(item, lineOf(item.productId))
+  }
   const decisionsByKey = new Map(input.decisions.map((entry) => [entry.decisionKey, entry]))
   const swapProductsById = new Map(input.swapProducts.map((row) => [row.id, row]))
   const recommendationBrandsById = new Map(
@@ -245,34 +303,50 @@ export function composeDiscoveryRefinedRoutine(input: {
         ? "undecided"
         : "ideal"
     const swapProductId = decision?.swapProductId ?? null
+    const swapProduct = swapProductId ? (swapProductsById.get(swapProductId) ?? null) : null
     const preview = step.preview
     return {
       step,
       outcome,
       item,
       swapProductId,
-      swapProduct: swapProductId ? (swapProductsById.get(swapProductId) ?? null) : null,
+      swapProduct,
       recommendationLabel:
         outcome === "ideal" && preview?.kind === "recommendation"
-          ? discoveryProductLabel(
-              recommendationBrandsById.get(preview.productId) ?? null,
-              preview.productName,
-            )
+          ? discoveryProductTitle({
+              brand: recommendationBrandsById.get(preview.productId) ?? null,
+              productLine: lineOf(preview.productId),
+              name: preview.productName,
+            })
           : null,
+      ownedLabel: ownedLabel(item),
+      swapProductLabel: swapProduct
+        ? discoveryProductTitle({
+            brand: swapProduct.brand,
+            productLine: lineOf(swapProduct.id),
+            name: swapProduct.name,
+          })
+        : null,
     }
   })
+  const unassignedIntakeProducts = reduction.unassignedIntakeProducts.map((entry) => ({
+    ...entry,
+    label: describeDiscoveryIntakeItem(entry.item, lineOf(entry.item.productId)),
+  }))
 
   return {
     steps,
-    unassignedIntakeProducts: reduction.unassignedIntakeProducts,
+    unassignedIntakeProducts,
     declinedCategories: reduction.declinedCategories,
     unansweredCategories: reduction.unansweredCategories,
     // `unansweredCategories` is deliberately NOT hashed: it is the complement of the rows
     // the hash already covers (bound, unassigned and declined), so it cannot change
     // without them — and adding a key would flag every finalized document as drifted.
+    // Every printed product label is part of `steps` / `unassignedIntakeProducts`, so a
+    // label that changes (a catalog rename, a new product line) moves the hash with it.
     sourceHash: semanticHash({
       steps,
-      unassignedIntakeProducts: reduction.unassignedIntakeProducts,
+      unassignedIntakeProducts,
       declinedCategories: reduction.declinedCategories,
     }),
   }

@@ -4,10 +4,11 @@ import { NextRequest, NextResponse } from "next/server"
 
 import { createDiscoveryDecisionsHandler } from "../src/app/api/admin/beratung/[enrollmentId]/decisions/route"
 import { createDiscoveryFinalizeHandler } from "../src/app/api/admin/beratung/[enrollmentId]/finalize/route"
-import type {
-  DiscoveryCallDecisionInput,
-  DiscoveryCallIntake,
-  DiscoveryCockpitModel,
+import {
+  discoveryOwnedProductIdentities,
+  type DiscoveryCallDecisionInput,
+  type DiscoveryCallIntake,
+  type DiscoveryCockpitModel,
 } from "../src/lib/discovery/cockpit"
 import type { DiscoveryIdealStep } from "../src/lib/discovery/load-ideal-routine"
 import type { DiscoveryParticipantVerdict } from "../src/lib/discovery/load-participant-verdicts"
@@ -124,6 +125,7 @@ function readyModel(): DiscoveryCockpitModel {
       items: [intakeItem],
       decisions: [],
       swapProducts: [],
+      ownedProducts: discoveryOwnedProductIdentities([verdict]),
     }),
     recommendationProducts: [],
     recommendationBrandsAvailable: true,
@@ -372,6 +374,7 @@ test("finalize stores the hash of the routine as composed right now", async () =
     items: [intakeItem],
     decisions: [],
     swapProducts: [],
+    ownedProducts: discoveryOwnedProductIdentities([verdict]),
   }).sourceHash
 
   const response = await createDiscoveryFinalizeHandler(

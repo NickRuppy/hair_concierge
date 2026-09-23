@@ -50,7 +50,7 @@ const NO_INTAKE = "Diese Teilnehmerin hat die Checkliste noch nicht geöffnet."
 const NO_SOURCE = "Für dieses Konto gibt es noch kein nutzbares Haarprofil. Quiz prüfen."
 const UNAVAILABLE = "Der Plan lässt sich gerade nicht lesen. Später noch einmal öffnen."
 const BRANDS_UNAVAILABLE =
-  "Markennamen der Empfehlungen sind gerade nicht lesbar. Finalisieren und PDF gehen erst wieder, wenn der Katalog antwortet — Seite später neu laden."
+  "Produktnamen (Marke, Linie) sind gerade nicht vollständig lesbar. Finalisieren und PDF gehen erst wieder, wenn der Katalog antwortet — Seite später neu laden."
 const PREFLIGHT_TITLE = "Intake unvollständig"
 const PREFLIGHT_NO_LEAD = "Zu diesem Konto ist kein Quiz-Lead gebunden."
 const PREFLIGHT_INVALID = "Die Quiz-Antworten sind nicht lesbar."

@@ -5,6 +5,7 @@ import {
   buildDiscoveryCockpitView,
   describeDiscoveryIntakeItem,
   discoveryCockpitSwapOptionIds,
+  discoveryOwnedProductIdentities,
   finalizeDiscoveryCall,
   loadDiscoveryCockpitModel,
   unfinalizeDiscoveryCall,
@@ -156,6 +157,7 @@ function model(input: {
       decisions: input.decisions ?? [],
       swapProducts: input.catalogRows ?? [],
       recommendationProducts: input.catalogRows ?? [],
+      ownedProducts: discoveryOwnedProductIdentities(input.verdicts ?? []),
     }),
     recommendationProducts: input.catalogRows ?? [],
     recommendationBrandsAvailable: true,
@@ -440,6 +442,7 @@ test("swap targets and PRINTED recommendations share one batched catalog read", 
       ]),
       loadItems: async () => [item()],
       loadVerdicts: async () => [],
+      loadProductLines: async () => new Map(),
       loadDecisions: async () => [swapShampoo],
       loadSwapProducts: async (_client, productIds) => {
         reads.push(productIds)
@@ -470,6 +473,7 @@ test("a recommendation that is not printed never blocks the call", async () => {
       loadIdealRoutine: readyIdeal([step({ preview: idealPreview(ids.ideal) })]),
       loadItems: async () => [item()],
       loadVerdicts: async () => [],
+      loadProductLines: async () => new Map(),
       loadDecisions: async () => [{ ...swapShampoo, decision: "keep", swapProductId: null }],
       loadSwapProducts: async () => {
         throw new Error("an unprinted recommendation must not be read")
@@ -490,6 +494,7 @@ test("a printed recommendation missing from a successful read counts as unavaila
         loadIdealRoutine: readyIdeal([step(), maskIdealStep]),
         loadItems: async () => [item()],
         loadVerdicts: async () => [],
+        loadProductLines: async () => new Map(),
         loadDecisions: async () => decisions,
         // The swap row comes back; the recommendation's row does not.
         loadSwapProducts: async () => [
@@ -513,6 +518,7 @@ test("a failed brand lookup degrades a swap-free call instead of failing it", as
     }),
     loadItems: async () => [],
     loadVerdicts: async () => [],
+    loadProductLines: async () => new Map(),
     loadSwapProducts: async (): Promise<ScanCatalogPresentationRow[]> => {
       throw new Error("catalog down")
     },
@@ -736,4 +742,57 @@ test("a keep never stores a swap target, and the upsert keys on the decision key
   assert.equal(calls[0].op, "upsert")
   assert.equal((calls[0].payload as { swap_product_id: unknown }).swap_product_id, null)
   assert.deepEqual(calls[0].options, { onConflict: "intake_id,decision_key" })
+})
+
+// --- product lines -----------------------------------------------------------------
+
+test("product lines are read for every labelled product, and a failed read degrades", async () => {
+  const lineReads: string[][] = []
+  const deps = {
+    loadIdealRoutine: readyIdeal([step({ preview: idealPreview(ids.ideal) }), maskIdealStep]),
+    loadItems: async () => [item()],
+    loadVerdicts: async () => [],
+    loadDecisions: async () => [swapShampoo],
+    loadSwapProducts: async () => [
+      catalogRow(ids.alternativeA, "Guhl", "Leichte Frische Shampoo"),
+      catalogRow(ids.ideal, "Schwarzkopf", "Lab Maske"),
+    ],
+  }
+  const result = await loadDiscoveryCockpitModel(
+    {} as never,
+    { intakeId: ids.intake, userId: ids.user },
+    {
+      ...deps,
+      loadProductLines: async (_client, productIds) => {
+        lineReads.push(productIds)
+        return new Map([[ids.alternativeA, "Frische Linie"]])
+      },
+    },
+  )
+  assert.equal(result.status, "ready")
+  if (result.status !== "ready") return
+  // Owned product, swap target and printed recommendation — one batched read.
+  assert.equal(lineReads.length, 1)
+  assert.deepEqual(lineReads, [[ids.alternativeA, ids.ideal, ids.owned].sort()])
+  assert.equal(result.recommendationBrandsAvailable, true)
+  assert.equal(
+    result.routine.steps[0]!.swapProductLabel,
+    "Guhl Frische Linie Leichte Frische Shampoo",
+  )
+
+  const degraded = await loadDiscoveryCockpitModel(
+    {} as never,
+    { intakeId: ids.intake, userId: ids.user },
+    {
+      ...deps,
+      loadProductLines: async () => {
+        throw new Error("discovery_product_line_lookup_failed")
+      },
+    },
+  )
+  assert.equal(degraded.status, "ready")
+  if (degraded.status !== "ready") return
+  // Labels fall back to brand + name, and finalize/PDF are blocked like for brands.
+  assert.equal(degraded.recommendationBrandsAvailable, false)
+  assert.equal(degraded.routine.steps[0]!.swapProductLabel, "Guhl Leichte Frische Shampoo")
 })

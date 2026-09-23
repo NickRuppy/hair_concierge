@@ -599,3 +599,142 @@ test("sourceHash follows the printed label, not the brand's raw spelling", () =>
   assert.equal(compose("Marke").sourceHash, compose("MARKE").sourceHash)
   assert.notEqual(compose("Marke").sourceHash, compose("Andere").sourceHash)
 })
+
+// --- Product lines in every printed label (brand + line + name) ----------------------
+
+test("kept, swapped, recommended and unassigned labels carry the product line", () => {
+  const oil = decision({ category: "oil", roles: OIL_ROLES })
+  const steps = buildDiscoveryIdealSteps(snapshotOf([oil]), [
+    recommendationPreview("oil", "pre_wash_fibre_treatment", "ideal-1"),
+    recommendationPreview("oil", "leave_on_fibre_conditioning", "ideal-2"),
+    recommendationPreview("oil", "dry_finish", "ideal-3"),
+  ])
+  const items = [
+    item({
+      id: "item-a",
+      productId: "product-a",
+      brandText: "Garnier",
+      productNameText: "Honig Öl",
+      createdAt: "2026-09-20T01:00:00.000Z",
+    }),
+    item({
+      id: "item-b",
+      productId: "product-b",
+      brandText: "Balea",
+      productNameText: "Repair Öl",
+      createdAt: "2026-09-20T02:00:00.000Z",
+    }),
+    // A fourth oil with no step left: unassigned, printed from her own words + the line.
+    item({
+      id: "item-d",
+      productId: "product-d",
+      brandText: "Syoss",
+      productNameText: "Glossing Öl",
+      createdAt: "2026-09-20T04:00:00.000Z",
+    }),
+    item({
+      id: "item-e",
+      productId: "product-e",
+      brandText: "Nivea",
+      productNameText: "Pflege Öl",
+      createdAt: "2026-09-20T05:00:00.000Z",
+    }),
+  ]
+  const productLines = new Map([
+    ["product-a", "Wahre Schätze"],
+    ["swap-1", "Oil Reflections"],
+    ["ideal-3", "Hair Food"],
+    ["product-e", "Repair & Care"],
+  ])
+  const routine = composeDiscoveryRefinedRoutine({
+    steps,
+    items,
+    decisions: [
+      callDecision(steps[0]!.decisionKey),
+      callDecision(steps[1]!.decisionKey, { decision: "swap", swapProductId: "swap-1" }),
+    ],
+    swapProducts: [{ ...swapRow("swap-1"), brand: "Wella", name: "Luminous Öl" }],
+    recommendationProducts: [{ ...swapRow("ideal-3"), brand: "Garnier" }],
+    // The kept product is named as its verdict names it (catalog identity).
+    ownedProducts: [{ itemId: "item-a", brand: "Garnier", name: "Honig Schätze Öl" }],
+    productLines,
+  })
+
+  // Only three oil steps: item-a is kept, item-b swapped, the third step binds item-d.
+  assert.equal(routine.steps[0]!.ownedLabel, "Garnier Wahre Schätze Honig Schätze Öl")
+  assert.equal(routine.steps[1]!.ownedLabel, "Balea Repair Öl")
+  assert.equal(routine.steps[1]!.swapProductLabel, "Wella Oil Reflections Luminous Öl")
+  assert.equal(routine.steps[2]!.outcome, "undecided")
+  assert.deepEqual(
+    routine.unassignedIntakeProducts.map((entry) => entry.label),
+    ["Nivea Repair & Care Pflege Öl"],
+  )
+
+  // An open step prints the Idealplan's pick with its line.
+  const open = composeDiscoveryRefinedRoutine({
+    steps,
+    items: [],
+    decisions: [],
+    swapProducts: [],
+    recommendationProducts: [{ ...swapRow("ideal-3"), brand: "Garnier" }],
+    productLines,
+  })
+  assert.equal(open.steps[2]!.recommendationLabel, "Garnier Hair Food Ideal dry_finish")
+})
+
+test("a product line that changes what the paper prints moves sourceHash", () => {
+  const oil = decision({ category: "oil", roles: OIL_ROLES })
+  const steps = buildDiscoveryIdealSteps(snapshotOf([oil]), [
+    recommendationPreview("oil", "pre_wash_fibre_treatment", "ideal-1"),
+  ])
+  const keptItems = [item({ id: "item-a", productId: "product-a", productNameText: "Öl" })]
+  const kept = (line: string | null) =>
+    composeDiscoveryRefinedRoutine({
+      steps,
+      items: keptItems,
+      decisions: [callDecision(steps[0]!.decisionKey)],
+      swapProducts: [],
+      ownedProducts: [{ itemId: "item-a", brand: "Marke", name: "Öl" }],
+      productLines: new Map(line ? [["product-a", line]] : []),
+    })
+  assert.equal(kept(null).steps[0]!.ownedLabel, "Marke Öl")
+  assert.equal(kept("Linie").steps[0]!.ownedLabel, "Marke Linie Öl")
+  assert.notEqual(kept(null).sourceHash, kept("Linie").sourceHash)
+  assert.notEqual(kept("Linie").sourceHash, kept("Andere Linie").sourceHash)
+
+  // The kept label is the verdict's catalog identity — a catalog rename moves the hash too.
+  const renamed = composeDiscoveryRefinedRoutine({
+    steps,
+    items: keptItems,
+    decisions: [callDecision(steps[0]!.decisionKey)],
+    swapProducts: [],
+    ownedProducts: [{ itemId: "item-a", brand: "Marke", name: "Neues Öl" }],
+  })
+  assert.notEqual(kept(null).sourceHash, renamed.sourceHash)
+
+  const swapped = (line: string | null) =>
+    composeDiscoveryRefinedRoutine({
+      steps,
+      items: keptItems,
+      decisions: [callDecision(steps[0]!.decisionKey, { decision: "swap", swapProductId: "s" })],
+      swapProducts: [swapRow("s")],
+      productLines: new Map(line ? [["s", line]] : []),
+    })
+  assert.equal(swapped("Linie").steps[0]!.swapProductLabel, "Marke Linie Swap Öl")
+  assert.notEqual(swapped(null).sourceHash, swapped("Linie").sourceHash)
+})
+
+test("without any product line every label is exactly the brand + name label", () => {
+  const oil = decision({ category: "oil", roles: OIL_ROLES })
+  const steps = buildDiscoveryIdealSteps(snapshotOf([oil]), [
+    recommendationPreview("oil", "pre_wash_fibre_treatment", "ideal-1"),
+  ])
+  const routine = composeDiscoveryRefinedRoutine({
+    steps,
+    items: [],
+    decisions: [],
+    swapProducts: [],
+    recommendationProducts: [{ ...swapRow("ideal-1"), brand: "Marke A" }],
+  })
+  assert.equal(routine.steps[0]!.recommendationLabel, "Marke A Ideal pre_wash_fibre_treatment")
+})

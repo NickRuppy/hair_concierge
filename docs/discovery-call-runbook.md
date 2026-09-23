@@ -283,6 +283,9 @@ Finalisierung leitet die Seite ins Cockpit zurück.
    Finalisieren gewandert. Das Dokument zeigt dann den _aktuellen_ Stand, nicht den finalisierten —
    im Cockpit prüfen und neu finalisieren, bevor du es verschickst. Der Banner erscheint nur am
    Bildschirm, nie im Druck.
+   Produktnamen stehen als Marke + Linie + Name da (wie in der Routine); diese gedruckten Namen
+   sind Teil des Fingerabdrucks. Seit der Umstellung (Sept. 2026) zeigen vorher finalisierte
+   Dokumente den Banner einmal — im Cockpit neu finalisieren.
 3. Über den Browser als PDF drucken (A4). Die Admin-Navigation ist im Druck ausgeblendet.
 4. Den Versand machst du selbst — WhatsApp oder E-Mail. Es gibt keine Versand-Automatik und keine
    Customer.io-Strecke für dieses Werkzeug.

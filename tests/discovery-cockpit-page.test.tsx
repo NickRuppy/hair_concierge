@@ -7,7 +7,11 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 import { createDiscoveryCockpitListPage } from "../src/app/admin/beratung/page"
 import { createDiscoveryCockpitPage } from "../src/app/admin/beratung/[enrollmentId]/page"
-import type { DiscoveryCallIntake, DiscoveryCockpitModel } from "../src/lib/discovery/cockpit"
+import {
+  discoveryOwnedProductIdentities,
+  type DiscoveryCallIntake,
+  type DiscoveryCockpitModel,
+} from "../src/lib/discovery/cockpit"
 import type { DiscoveryEnrollment } from "../src/lib/discovery/enrollment"
 import type { DiscoveryIdealStep } from "../src/lib/discovery/load-ideal-routine"
 import type { DiscoveryParticipantVerdict } from "../src/lib/discovery/load-participant-verdicts"
@@ -214,6 +218,7 @@ function readyModel(): DiscoveryCockpitModel {
       items,
       decisions: [],
       swapProducts: [],
+      ownedProducts: discoveryOwnedProductIdentities(verdicts),
     }),
     recommendationProducts: [],
     recommendationBrandsAvailable: true,
