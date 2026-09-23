@@ -24,7 +24,8 @@ const DISCOVERY_ENROLLMENT_JOURNEY_COLUMNS = `${DISCOVERY_ENROLLMENT_COLUMNS},cl
 export type DiscoveryEnrollmentRow = {
   id: string
   display_name: string
-  normalized_email: string
+  /** Null until the participant types it on the invite page (the admin may leave it out). */
+  normalized_email: string | null
   token_version: number
   claimed_at: string | null
   revoked_at: string | null
@@ -36,7 +37,8 @@ type DiscoveryEnrollmentJourneyRow = DiscoveryEnrollmentRow & { claimed_user_id:
 export type DiscoveryEnrollment = {
   enrollmentId: string
   name: string
-  email: string
+  /** Null until bound; a claimed enrollment always carries one (the claim binds it first). */
+  email: string | null
   tokenVersion: number
   claimedUserId: string | null
   claimedAt: string | null
@@ -47,6 +49,11 @@ export type DiscoveryEnrollment = {
 export type DiscoveryEnrollmentState = "invited" | "claimed"
 
 export type DiscoveryAdminClient = ReturnType<typeof createAdminClient>
+
+export type DiscoveryEmailBindResult =
+  | { status: "bound"; enrollment: DiscoveryEnrollment }
+  | { status: "email_taken" }
+  | { status: "conflict" }
 
 export type DiscoveryClaimResult =
   | { status: "claimed"; enrollment: DiscoveryEnrollment }
@@ -157,6 +164,44 @@ export async function claimDiscoveryEnrollment(
   return { status: "conflict" }
 }
 
+// --- E-mail binding ------------------------------------------------------------
+
+/** Postgres unique violation — here only ever `discovery_enrollments_one_current_email`. */
+export function isDiscoveryEmailTakenError(error: unknown): boolean {
+  return Boolean(
+    error && typeof error === "object" && (error as { code?: unknown }).code === "23505",
+  )
+}
+
+/**
+ * Binds the address the participant typed on the invite page. Allowed only while
+ * the enrollment is unclaimed — the same compare-and-set predicates as the claim —
+ * so a typo can be fixed by retrying, but a claimed enrollment never moves to a
+ * different address. `conflict` means the row was claimed, rotated or revoked in
+ * between; `email_taken` means another current enrollment already owns the address
+ * (the partial unique index), and deliberately says nothing about whose.
+ */
+export async function bindDiscoveryEnrollmentEmail(
+  input: { enrollmentId: string; tokenVersion: number; email: string },
+  client: DiscoveryAdminClient = createAdminClient(),
+): Promise<DiscoveryEmailBindResult> {
+  const { data, error } = await client
+    .from(TABLE)
+    .update({ normalized_email: input.email })
+    .eq("id", input.enrollmentId)
+    .eq("token_version", input.tokenVersion)
+    .is("revoked_at", null)
+    .is("claimed_user_id", null)
+    .select(DISCOVERY_ENROLLMENT_JOURNEY_COLUMNS)
+    .maybeSingle()
+  if (error) {
+    if (isDiscoveryEmailTakenError(error)) return { status: "email_taken" }
+    throw error
+  }
+  const row = (data as DiscoveryEnrollmentJourneyRow | null) ?? null
+  return row ? { status: "bound", enrollment: projectEnrollment(row) } : { status: "conflict" }
+}
+
 // --- `app_metadata` stamp ----------------------------------------------------
 
 export type DiscoveryStampResult =
@@ -258,7 +303,7 @@ export async function clearDiscoveryAccessStamp(
   if (error) throw error
 }
 
-// --- Operator writes (the `npm run discovery` CLI) ---------------------------
+// --- Operator writes (the `npm run discovery` CLI and `/admin/beratung`) ------
 
 export async function listDiscoveryEnrollments(
   client: DiscoveryAdminClient = createAdminClient(),
@@ -273,7 +318,7 @@ export async function listDiscoveryEnrollments(
 }
 
 export async function createDiscoveryEnrollment(
-  input: { name: string; email: string },
+  input: { name: string; email: string | null },
   client: DiscoveryAdminClient = createAdminClient(),
 ): Promise<DiscoveryEnrollmentRow> {
   return requireRow(

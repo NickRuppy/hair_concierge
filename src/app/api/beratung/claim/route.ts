@@ -5,6 +5,7 @@ import { NextResponse, type NextRequest } from "next/server"
 
 import { hasCurrentPaidAppAccess } from "@/lib/billing/subscriptions"
 import {
+  bindDiscoveryEnrollmentEmail,
   checkDiscoveryAccessKind,
   claimDiscoveryEnrollment,
   loadDiscoveryEnrollment,
@@ -49,6 +50,12 @@ import { createAdminClient } from "@/lib/supabase/admin"
  * The enrollment binding is a compare-and-set inside
  * `claimDiscoveryEnrollment`, so a second concurrent claim loses cleanly instead
  * of overwriting the first.
+ *
+ * The account's address is whatever the participant submits with „Los geht's"
+ * (the invite may have been created with just a name). It is bound to the
+ * enrollment before the account or the magic link is touched; an unclaimed
+ * enrollment may be re-bound (typo fix), a claimed one never moves. Nick accepted
+ * the missing verification step: discovery access grants nothing paid.
  */
 
 const NO_STORE_HEADERS = { "Cache-Control": "private, no-store" }
@@ -58,6 +65,11 @@ const WRONG_ACCOUNT = "Dieses Konto kann diese Einladung nicht nutzen."
 const ALREADY_CLAIMED = "Diese Einladung wurde bereits eingelöst."
 const EXISTING_PAID_ACCESS =
   "Dieses Konto hat bereits vollen Zugang zu Chaarlie. Melde dich kurz bei uns, dann klären wir das persönlich."
+const EMAIL_REQUIRED = "Bitte gib deine E-Mail-Adresse ein."
+const EMAIL_INVALID = "Bitte prüf deine E-Mail-Adresse."
+const EMAIL_TAKEN = "Diese E-Mail-Adresse gehört schon zu einer anderen Einladung."
+const EMAIL_BOUND = "Diese Einladung ist schon mit einer anderen E-Mail-Adresse verbunden."
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const EXISTING_ACCESS_KIND =
   "Dieses Konto gehört schon zu einem anderen Chaarlie-Zugang. Melde dich kurz bei uns, dann klären wir das persönlich."
 
@@ -69,6 +81,7 @@ type ClaimDependencies = {
   flagEnabled: () => boolean
   loadEnrollment: typeof loadDiscoveryEnrollment
   claimEnrollment: typeof claimDiscoveryEnrollment
+  bindEmail: typeof bindDiscoveryEnrollmentEmail
   checkAccessKind: typeof checkDiscoveryAccessKind
   stampDiscoveryAccess: typeof stampDiscoveryAccess
   getUser: () => Promise<SessionUser | null>
@@ -104,7 +117,8 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
     // shared device), and the body handoff is the one the participant just
     // proved ownership of by following the e-mail. The cookie is only the
     // fallback for the ordinary invite-page claim, which sends no body.
-    const handoffCredential = await readHandoffCredential(request)
+    const body = await readClaimBody(request)
+    const handoffCredential = body.handoff
     const credential = handoffCredential ?? cookieCredential
     const payload = (overrides.decodeCredential ?? decodeDiscoveryEnrollmentCredential)(
       credential,
@@ -159,47 +173,35 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
     // Revoked, rotated past, or gone. The loader enforces all three.
     if (!enrollment) return copyResponseCookies(response, jsonError(UNAVAILABLE, 410))
 
+    // The address this claim runs on: what the participant typed on the invite page,
+    // else the one already bound (the admin entered it, or an earlier attempt bound
+    // it — the magic-link continuation sends no e-mail and relies on exactly that).
+    if (body.email === "empty") {
+      return copyResponseCookies(response, jsonError(EMAIL_REQUIRED, 400))
+    }
+    if (body.email === "invalid") {
+      return copyResponseCookies(response, jsonError(EMAIL_INVALID, 400))
+    }
+    const email = body.email ?? enrollment.email
+    if (!email) return copyResponseCookies(response, jsonError(EMAIL_REQUIRED, 400))
+    // Once claimed, the enrollment is bound to that account's address for good.
+    if (enrollment.claimedUserId && email !== enrollment.email) {
+      return copyResponseCookies(response, jsonError(EMAIL_BOUND, 409))
+    }
+
     // Both refusals mean the SAME thing to the browser: a different account is signed in
     // (typically a tester's earlier participant). The code lets the invite page say so.
     if (user) {
-      if (user.email?.trim().toLowerCase() !== enrollment.email) {
+      if (user.email?.trim().toLowerCase() !== email) {
         return copyResponseCookies(response, refuseSignedInOtherAccount())
       }
       if (enrollment.claimedUserId && enrollment.claimedUserId !== user.id) {
         return copyResponseCookies(response, refuseSignedInOtherAccount())
       }
-    }
-
-    let password: string | null = null
-    if (!user) {
-      // Someone already owns this address, so the only safe way in is a link to
-      // it. That covers both a previously claimed enrollment and a plain
-      // pre-existing Chaarlie account.
-      if (enrollment.claimedUserId) {
-        return sendExistingAccountLink({ request, response, credential, enrollment, sendMagicLink })
-      }
-      try {
-        const created = await (overrides.createUser ?? createDiscoveryUser)({
-          enrollmentId: enrollment.enrollmentId,
-          email: enrollment.email,
-          name: enrollment.name,
-        })
-        user = { id: created.userId, email: enrollment.email }
-        password = created.password
-      } catch (error) {
-        if (!isExistingUserError(error)) {
-          return copyResponseCookies(
-            response,
-            jsonError("Dein Konto konnte nicht erstellt werden.", 503),
-          )
-        }
-        return sendExistingAccountLink({ request, response, credential, enrollment, sendMagicLink })
-      }
-    } else {
-      // The refusal sits before every write: an account with current paid access
-      // never receives the discovery stamp and never gets bound to the
-      // enrollment. A brand-new account cannot reach here, so the check only
-      // costs a query on the existing-account branch.
+      // The refusals sit before every write: an account with current paid access
+      // never receives the discovery stamp, never gets bound to the enrollment, and
+      // never re-binds its address. A brand-new account cannot reach here, so the
+      // check only costs a query on the existing-account branch.
       let paid: boolean
       try {
         paid = await (overrides.hasCurrentPaidAppAccess ?? hasPaidAppAccessForUser)(user.id)
@@ -229,6 +231,62 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
       }
       if (accessKind.status === "foreign_access_kind") {
         return copyResponseCookies(response, refuseForeignAccessKind())
+      }
+    }
+
+    // Binding the typed address comes before the account and the magic link, both of
+    // which use it. Only an unclaimed enrollment is re-bound (a typo fix); the
+    // one-live-invite-per-address index refuses an address another invite owns.
+    if (email !== enrollment.email) {
+      let bound: Awaited<ReturnType<typeof bindDiscoveryEnrollmentEmail>>
+      try {
+        bound = await (overrides.bindEmail ?? bindDiscoveryEnrollmentEmail)({
+          enrollmentId: enrollment.enrollmentId,
+          tokenVersion: enrollment.tokenVersion,
+          email,
+        })
+      } catch {
+        return copyResponseCookies(response, jsonError(SERVICE_UNAVAILABLE, 503))
+      }
+      if (bound.status === "email_taken") {
+        return copyResponseCookies(
+          response,
+          NextResponse.json(
+            { code: "email_taken", error: EMAIL_TAKEN },
+            { status: 409, headers: NO_STORE_HEADERS },
+          ),
+        )
+      }
+      if (bound.status === "conflict") {
+        return copyResponseCookies(response, jsonError(ALREADY_CLAIMED, 409))
+      }
+      enrollment = bound.enrollment
+    }
+
+    let password: string | null = null
+    if (!user) {
+      // Someone already owns this address, so the only safe way in is a link to
+      // it. That covers both a previously claimed enrollment and a plain
+      // pre-existing Chaarlie account.
+      if (enrollment.claimedUserId) {
+        return sendExistingAccountLink({ request, response, credential, email, sendMagicLink })
+      }
+      try {
+        const created = await (overrides.createUser ?? createDiscoveryUser)({
+          enrollmentId: enrollment.enrollmentId,
+          email,
+          name: enrollment.name,
+        })
+        user = { id: created.userId, email }
+        password = created.password
+      } catch (error) {
+        if (!isExistingUserError(error)) {
+          return copyResponseCookies(
+            response,
+            jsonError("Dein Konto konnte nicht erstellt werden.", 503),
+          )
+        }
+        return sendExistingAccountLink({ request, response, credential, email, sendMagicLink })
       }
     }
 
@@ -279,7 +337,7 @@ export function createDiscoveryClaimHandler(overrides: Partial<ClaimDependencies
 
     if (password) {
       try {
-        await signIn({ email: enrollment.email, password })
+        await signIn({ email, password })
       } catch {
         return copyResponseCookies(response, jsonError(SERVICE_UNAVAILABLE, 503))
       }
@@ -344,7 +402,7 @@ async function sendExistingAccountLink(input: {
   request: Request
   response: NextResponse
   credential: string | null
-  enrollment: DiscoveryEnrollment
+  email: string
   sendMagicLink: ClaimDependencies["sendMagicLink"]
 }) {
   if (!input.credential) {
@@ -353,13 +411,13 @@ async function sendExistingAccountLink(input: {
   try {
     const continuation = `${DISCOVERY_CONTINUATION_PATH}#handoff=${encodeURIComponent(input.credential)}`
     await input.sendMagicLink({
-      email: input.enrollment.email,
+      email: input.email,
       redirectTo: `${new URL(input.request.url).origin}/auth/confirm?next=${encodeURIComponent(continuation)}`,
     })
     return copyResponseCookies(
       input.response,
       NextResponse.json(
-        { requiresEmail: true, email: input.enrollment.email },
+        { requiresEmail: true, email: input.email },
         { status: 202, headers: NO_STORE_HEADERS },
       ),
     )
@@ -371,17 +429,40 @@ async function sendExistingAccountLink(input: {
   }
 }
 
-async function readHandoffCredential(request: Request) {
+/**
+ * `handoff` is the magic-link continuation's credential; `email` is what the
+ * participant typed on the invite page. An e-mail that is present but malformed
+ * is reported as `"invalid"` so the page can say so instead of silently falling
+ * back to the bound address.
+ */
+async function readClaimBody(
+  request: Request,
+): Promise<{ handoff: string | null; email: SubmittedEmail }> {
+  let body: unknown
   try {
-    const body: unknown = await request.json()
-    const handoff =
-      body && typeof body === "object" && !Array.isArray(body)
-        ? (body as Record<string, unknown>).handoff
-        : null
-    return readDiscoveryCredentialInput(handoff)
+    body = await request.json()
   } catch {
-    return null
+    return { handoff: null, email: null }
   }
+  const record =
+    body && typeof body === "object" && !Array.isArray(body)
+      ? (body as Record<string, unknown>)
+      : {}
+  return {
+    handoff: readDiscoveryCredentialInput(record.handoff),
+    email: readSubmittedEmail(record.email),
+  }
+}
+
+/** `null` = not sent at all (the continuation); `"empty"` = the field was sent blank. */
+type SubmittedEmail = string | null | "empty" | "invalid"
+
+function readSubmittedEmail(value: unknown): SubmittedEmail {
+  if (value === undefined || value === null) return null
+  if (typeof value !== "string") return "invalid"
+  const email = value.trim().toLowerCase()
+  if (!email) return "empty"
+  return EMAIL.test(email) && email.length <= 320 ? email : "invalid"
 }
 
 function createClaimSession(request: NextRequest, response: NextResponse) {

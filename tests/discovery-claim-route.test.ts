@@ -69,6 +69,10 @@ function dependencies(overrides: Record<string, unknown> = {}) {
         calls.push(["claim", input])
         return { status: "claimed" as const, enrollment }
       },
+      bindEmail: async (input: { email: string }) => {
+        calls.push(["bind", input])
+        return { status: "bound" as const, enrollment: { ...enrollment, email: input.email } }
+      },
       signIn: async (input: unknown) => calls.push(["signIn", input]),
       sendMagicLink: async (input: unknown) => calls.push(["magicLink", input]),
       ...overrides,
@@ -414,4 +418,191 @@ test("resolve refuses a revoked enrollment and a switched-off flag alike", async
       .status,
     410,
   )
+})
+
+// --- Optional e-mail: the participant types it on the invite page ------------
+
+const nameOnly: DiscoveryEnrollment = { ...enrollment, email: null }
+
+test("a name-only invite binds the typed address, then creates the account with it", async () => {
+  const { calls, deps } = dependencies({ loadEnrollment: async () => nameOnly })
+  const response = await createDiscoveryClaimHandler(deps)(
+    request({ body: { email: " Lea@Example.Test " } }),
+  )
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { destination: "/quiz", requiresEmail: false })
+  assert.deepEqual(names(calls), ["bind", "createUser", "claim", "stamp", "signIn"])
+  assert.deepEqual(calls[0][1], {
+    enrollmentId: ids.enrollment,
+    tokenVersion: 2,
+    email: "lea@example.test",
+  })
+  assert.equal((calls[1][1] as { email: string }).email, "lea@example.test")
+  assert.equal((calls[4][1] as { email: string }).email, "lea@example.test")
+})
+
+test("a name-only invite whose address already has an account sends the magic link there", async () => {
+  const { calls, deps } = dependencies({
+    loadEnrollment: async () => nameOnly,
+    createUser: async () => {
+      throw { code: "email_exists", status: 422, message: "email already registered" }
+    },
+  })
+  const response = await createDiscoveryClaimHandler(deps)(
+    request({ body: { email: "lea@example.test" } }),
+  )
+
+  assert.equal(response.status, 202)
+  assert.deepEqual(await response.json(), { requiresEmail: true, email: "lea@example.test" })
+  // Bound BEFORE the link goes out: the continuation sends no e-mail and claims
+  // on exactly the address bound here.
+  assert.deepEqual(names(calls), ["bind", "magicLink"])
+  assert.equal((calls[1][1] as { email: string }).email, "lea@example.test")
+})
+
+test("the continuation after a name-only invite claims on the address bound before the link", async () => {
+  const { calls, deps } = dependencies({
+    // By now the row carries the address the first attempt bound.
+    loadEnrollment: async () => ({ ...nameOnly, email: "lea@example.test" }),
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+  })
+  const response = await createDiscoveryClaimHandler(deps)(
+    request({ cookie: false, body: { handoff: CREDENTIAL } }),
+  )
+  assert.equal(response.status, 200)
+  assert.deepEqual(names(calls), ["checkAccessKind", "claim", "stamp"])
+})
+
+test("a typo is fixed by retrying with another address while the invite is unclaimed", async () => {
+  const { calls, deps } = dependencies({
+    loadEnrollment: async () => ({ ...enrollment, email: "lea@exmaple.test" }),
+  })
+  const response = await createDiscoveryClaimHandler(deps)(
+    request({ body: { email: "lea@example.test" } }),
+  )
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(names(calls), ["bind", "createUser", "claim", "stamp", "signIn"])
+  assert.equal((calls[0][1] as { email: string }).email, "lea@example.test")
+})
+
+test("an unchanged, admin-entered address is not re-bound", async () => {
+  const { calls, deps } = dependencies()
+  const response = await createDiscoveryClaimHandler(deps)(
+    request({ body: { email: "lea@example.test" } }),
+  )
+  assert.equal(response.status, 200)
+  assert.deepEqual(names(calls), ["createUser", "claim", "stamp", "signIn"])
+})
+
+test("a claimed invite never moves to a different address", async () => {
+  const { calls, deps } = dependencies({
+    loadEnrollment: async () => ({ ...enrollment, claimedUserId: ids.user }),
+  })
+  const response = await createDiscoveryClaimHandler(deps)(
+    request({ body: { email: "other@example.test" } }),
+  )
+  assert.equal(response.status, 409)
+  assert.deepEqual(await response.json(), {
+    error: "Diese Einladung ist schon mit einer anderen E-Mail-Adresse verbunden.",
+  })
+  assert.deepEqual(names(calls), [])
+})
+
+test("a re-bind that loses to a concurrent claim is refused and writes nothing else", async () => {
+  const { calls, deps } = dependencies({
+    loadEnrollment: async () => nameOnly,
+    bindEmail: async (input: unknown) => {
+      calls.push(["bind", input])
+      return { status: "conflict" as const }
+    },
+  })
+  const response = await createDiscoveryClaimHandler(deps)(
+    request({ body: { email: "lea@example.test" } }),
+  )
+  assert.equal(response.status, 409)
+  assert.deepEqual(names(calls), ["bind"])
+})
+
+test("an address another current invite owns is refused without saying whose", async () => {
+  const { calls, deps } = dependencies({
+    loadEnrollment: async () => nameOnly,
+    bindEmail: async (input: unknown) => {
+      calls.push(["bind", input])
+      return { status: "email_taken" as const }
+    },
+  })
+  const response = await createDiscoveryClaimHandler(deps)(
+    request({ body: { email: "taken@example.test" } }),
+  )
+  assert.equal(response.status, 409)
+  const body = (await response.json()) as { code: string; error: string }
+  assert.equal(body.code, "email_taken")
+  assert.equal(body.error, "Diese E-Mail-Adresse gehört schon zu einer anderen Einladung.")
+  assert.ok(!body.error.includes("taken@example.test"))
+  assert.deepEqual(names(calls), ["bind"])
+})
+
+test("a name-only invite without a typed address, or with a malformed one, writes nothing", async () => {
+  for (const [body, status, error] of [
+    [undefined, 400, "Bitte gib deine E-Mail-Adresse ein."],
+    [{ email: "   " }, 400, "Bitte gib deine E-Mail-Adresse ein."],
+    [{ email: "lea@" }, 400, "Bitte prüf deine E-Mail-Adresse."],
+  ] as const) {
+    const { calls, deps } = dependencies({ loadEnrollment: async () => nameOnly })
+    const response = await createDiscoveryClaimHandler(deps)(request({ body }))
+    assert.equal(response.status, status)
+    assert.deepEqual(await response.json(), { error })
+    assert.deepEqual(names(calls), [])
+  }
+})
+
+test("a signed-in account must match the typed address, and is refused before any re-bind", async () => {
+  const { calls, deps } = dependencies({
+    loadEnrollment: async () => nameOnly,
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+  })
+  const mismatch = await createDiscoveryClaimHandler(deps)(
+    request({ body: { email: "other@example.test" } }),
+  )
+  assert.equal(mismatch.status, 403)
+  assert.equal(((await mismatch.json()) as { code?: string }).code, "signed_in_other_account")
+  assert.deepEqual(names(calls), [])
+
+  const matched = await createDiscoveryClaimHandler(deps)(
+    request({ body: { email: "lea@example.test" } }),
+  )
+  assert.equal(matched.status, 200)
+  assert.deepEqual(names(calls), ["checkAccessKind", "bind", "claim", "stamp"])
+})
+
+test("a paid account is refused before its address is bound", async () => {
+  const { calls, deps } = dependencies({
+    loadEnrollment: async () => nameOnly,
+    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
+    hasCurrentPaidAppAccess: async () => true,
+  })
+  const response = await createDiscoveryClaimHandler(deps)(
+    request({ body: { email: "lea@example.test" } }),
+  )
+  assert.equal(response.status, 403)
+  assert.deepEqual(names(calls), [])
+})
+
+test("resolve answers a null e-mail for a name-only invite", async () => {
+  const response = await createDiscoveryResolveHandler({
+    flagEnabled: () => true,
+    signingSecret: () => SECRET,
+    decodeCredential: () => ({ enrollmentId: ids.enrollment, tokenVersion: 2 }),
+    loadEnrollment: async () => nameOnly,
+  })(
+    new NextRequest("https://chaarlie.de/api/beratung/resolve", {
+      method: "POST",
+      headers: { origin: "https://chaarlie.de", "Content-Type": "application/json" },
+      body: JSON.stringify({ credential: CREDENTIAL }),
+    }),
+  )
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { name: "Lea Sommer", email: null, state: "invited" })
 })

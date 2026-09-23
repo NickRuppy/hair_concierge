@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  bindDiscoveryEnrollmentEmail,
   claimDiscoveryEnrollment,
   clearDiscoveryAccessStamp,
   deriveDiscoveryEnrollmentState,
@@ -410,4 +411,47 @@ test("a revoke whose stamp clear failed finishes the clear on the next run", asy
   assert.equal(receipt.revoked_at, revokedAt)
   assert.equal(receipt.id, ids.enrollment)
   assert.ok(!("claimed_user_id" in receipt))
+})
+
+// --- E-mail binding (name-only invites) --------------------------------------
+
+test("an unclaimed invite binds the typed address under the claim's own predicates", async () => {
+  const { client, filters, updates } = fakeClient({ row: { ...storedRow, normalized_email: null } })
+  const result = await bindDiscoveryEnrollmentEmail(
+    { enrollmentId: ids.enrollment, tokenVersion: 2, email: "lea@example.test" },
+    client,
+  )
+  assert.equal(result.status, "bound")
+  assert.equal(result.status === "bound" && result.enrollment.email, "lea@example.test")
+  assert.deepEqual(updates, [{ normalized_email: "lea@example.test" }])
+  assert.ok(hasFilter(filters, "eq", "token_version", 2))
+  assert.ok(hasFilter(filters, "is", "revoked_at", null))
+  assert.ok(hasFilter(filters, "is", "claimed_user_id", null))
+})
+
+test("a claimed invite is never re-bound", async () => {
+  const { client } = fakeClient({ row: { ...storedRow, claimed_user_id: ids.user } })
+  const result = await bindDiscoveryEnrollmentEmail(
+    { enrollmentId: ids.enrollment, tokenVersion: 2, email: "other@example.test" },
+    client,
+  )
+  assert.deepEqual(result, { status: "conflict" })
+})
+
+test("an address another current invite owns reports email_taken, other errors throw", async () => {
+  const failing = (error: unknown) => {
+    const chain: Record<string, unknown> = {
+      eq: () => chain,
+      is: () => chain,
+      select: () => chain,
+      maybeSingle: async () => ({ data: null, error }),
+    }
+    return { from: () => ({ update: () => chain }) } as unknown as DiscoveryAdminClient
+  }
+  const input = { enrollmentId: ids.enrollment, tokenVersion: 2, email: "taken@example.test" }
+  assert.deepEqual(
+    await bindDiscoveryEnrollmentEmail(input, failing({ code: "23505", message: "duplicate" })),
+    { status: "email_taken" },
+  )
+  await assert.rejects(bindDiscoveryEnrollmentEmail(input, failing({ code: "57014" })))
 })

@@ -54,7 +54,7 @@ export type DiscoveryPendingIntakeItem = {
 export type DiscoveryReconcileTarget = {
   enrollmentId: string
   name: string
-  email: string
+  email: string | null
   intakeId: string
   finalizedAt: string | null
   items: DiscoveryPendingIntakeItem[]
@@ -88,7 +88,7 @@ export function isResolvedDiscoverySubmissionStatus(status: string | null | unde
   return (DISCOVERY_RESOLVED_SUBMISSION_STATUSES as readonly string[]).includes(status ?? "")
 }
 
-type EnrollmentRow = { id: string; display_name: string; normalized_email: string }
+type EnrollmentRow = { id: string; display_name: string; normalized_email: string | null }
 type IntakeRow = { id: string; enrollment_id: string; call_finalized_at: string | null }
 type ItemRow = {
   id: string

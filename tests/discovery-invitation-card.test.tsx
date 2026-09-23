@@ -6,6 +6,7 @@ import { renderToStaticMarkup } from "react-dom/server"
 import {
   claimRefusalHint,
   DiscoveryInvitationCard,
+  validateInvitationEmail,
 } from "../src/app/beratung/einladung/discovery-invitation-client"
 
 const REFUSAL = "Dieses Konto kann diese Einladung nicht nutzen."
@@ -54,4 +55,37 @@ test("the claim response's code decides whether the session hint appears", () =>
   assert.equal(claimRefusalHint({ code: "existing_access_kind", error: "…" }), null)
   assert.equal(claimRefusalHint({ error: REFUSAL }), null)
   assert.equal(claimRefusalHint(null), null)
+})
+
+test("the invite always shows an editable e-mail field, prefilled when the admin entered one", () => {
+  const prefilled = renderToStaticMarkup(
+    <DiscoveryInvitationCard email="lea@example.test" mode="ready" name="Lea Sommer" />,
+  )
+  assert.match(prefilled, /<input[^>]*type="email"[^>]*value="lea@example.test"/)
+  assert.ok(prefilled.includes("Deine E-Mail"))
+  assert.ok(!/<input[^>]*readonly/i.test(prefilled))
+  assert.ok(!/<input[^>]*disabled/i.test(prefilled))
+
+  const empty = renderToStaticMarkup(
+    <DiscoveryInvitationCard email="" mode="ready" name="Lea Sommer" />,
+  )
+  assert.match(empty, /<input[^>]*type="email"[^>]*value=""/)
+  assert.ok(empty.includes("Los geht"))
+})
+
+test("the magic-link screen names the address the link went to", () => {
+  const markup = renderToStaticMarkup(
+    <DiscoveryInvitationCard email="lea@example.test" mode="email_sent" name="Lea Sommer" />,
+  )
+  assert.ok(markup.includes("Schau kurz in deine E-Mails."))
+  assert.ok(markup.includes("lea@example.test"))
+  assert.ok(!markup.includes("<input"))
+})
+
+test("the invite page checks the address before it claims", () => {
+  assert.equal(validateInvitationEmail(""), "Bitte gib deine E-Mail-Adresse ein.")
+  assert.equal(validateInvitationEmail("   "), "Bitte gib deine E-Mail-Adresse ein.")
+  assert.equal(validateInvitationEmail("lea@"), "Bitte prüf deine E-Mail-Adresse.")
+  assert.equal(validateInvitationEmail("lea example@x.de"), "Bitte prüf deine E-Mail-Adresse.")
+  assert.equal(validateInvitationEmail(" lea@example.test "), null)
 })
