@@ -191,11 +191,16 @@ export function isDiscoveryUsageWithinProductFamily(
 export type DiscoveryTypeRuleId =
   | "T1_catalog"
   | "T2_catalog_unsupported"
-  | "T3_name"
-  | "T4_compound_oil"
-  | "T5_scalp_modifier"
-  | "T6_leave_in_dominates"
-  | "T7_unknown"
+  | "T3_never_guessed"
+  | "T4_scalp_treatment"
+  | "T5_name"
+  | "T6_compound_oil"
+  | "T7_scalp_modifier"
+  | "T8_leave_in_dominates"
+  | "T9_oil_treatment"
+  | "T10_oil_pre_wash"
+  | "T11_oil_leave_in"
+  | "T12_unknown"
 
 export type DiscoveryProductTypeResult = {
   productType: PersonalPlanCategory | null
@@ -209,33 +214,63 @@ function hasWord(name: string, pattern: string): boolean {
   return new RegExp(WORD_START + "(?:" + pattern + ")" + WORD_END, "iu").test(name)
 }
 
-function withoutWords(name: string, pattern: string): string {
-  return name.replace(new RegExp(WORD_START + "(?:" + pattern + ")" + WORD_END, "giu"), " ")
+function withoutWords(name: string, ...patterns: string[]): string {
+  return patterns.reduce(
+    (rest, pattern) =>
+      rest.replace(new RegExp(WORD_START + "(?:" + pattern + ")" + WORD_END, "giu"), " "),
+    name,
+  )
 }
 
+/** The retailer rules' own „never guess" words: colour products and 2-in-1s. */
+const NEVER_GUESSED_WORDS = "Tönung|Color|Farbe|2\\s*in\\s*1"
 const SCALP_WORDS = "Kopfhaut|Scalp"
+const OIL_WORDS = "Öl|Oil|Haaröl"
 const LEAVE_IN_WORDS = "Leave[-\\s]in|Sprühkur|Sprühpflege"
+/** A treatment word — „Kur" on its own (not „Haarkur", which is a mask), „Treatment". */
+const TREATMENT_WORDS = "Kur|Treatment"
+const SCALP_TREATMENT_WORDS = "Kur|Treatment|Serum|Tonikum|Tonic"
+const PRE_WASH_WORDS = "Pre[-\\s]?Shampoo|Pre[-\\s]?Wash|vor\\s+der\\s+(?:Haar)?wäsche"
 
-/** T5 only turns a scalp-modified name into one of these; a „Scalp Treatment" stays unknown. */
+/** T7 only turns a scalp-modified name into one of these. */
 const SCALP_MODIFIABLE = new Set<PersonalPlanCategory>(["oil", "shampoo", "deep_cleansing_shampoo"])
-/** T6: a leave-in statement decides only inside the care family. */
+/** T8: a leave-in statement decides only inside the care family. */
 const LEAVE_IN_DOMINATES = new Set<PersonalPlanCategory>(["conditioner", "mask"])
 
-/** „Arganöl" → „Argan Öl": the retailer rules need the oil word on its own. */
+/**
+ * „Arganöl" → „Argan Öl", „Ölkur" → „Öl kur": the retailer rules need the oil word (and a
+ * glued-on „kur") on their own.
+ */
 function splitCompoundOil(name: string): string {
-  return name.replace(/(\p{L})öl(?=$|[^\p{L}\p{N}])/giu, "$1 Öl")
+  return name
+    .replace(/öl(?=kur(?:$|[^\p{L}\p{N}]))/giu, "Öl ")
+    .replace(/(\p{L})öl(?=$|[^\p{L}\p{N}])/giu, "$1 Öl")
+}
+
+/** Nothing but the words already accounted for: no second product noun left over. */
+function nothingElse(name: string, ...accounted: string[]): boolean {
+  return suggestCategoryFromRetailerName(withoutWords(name, ...accounted)) === null
 }
 
 /**
  * The product type of a capture. Rules, first match wins:
  *
- *  T1 a catalog category (`products.category_key`) is authoritative (P2-6);
- *  T2 …but a catalog key outside the ten supported categories is no type;
- *  T3 the retailer-name rules (`suggestCategoryFromRetailerName`) found exactly one type;
- *  T4 …after splitting a German „…öl" compound;
- *  T5 a scalp word in front of an oil or shampoo is a modifier („Scalp Oil" is an oil);
- *  T6 a leave-in word decides inside the care family („Leave-in Conditioner");
- *  T7 otherwise unknown — including 2-in-1, colour products and brand-only names.
+ *  T1  a catalog category (`products.category_key`) is authoritative (P2-6);
+ *  T2  …but a catalog key outside the ten supported categories is no type;
+ *  T3  a colour product or a 2-in-1 is never guessed (she says which product she means);
+ *  T4  a scalp word with a treatment word and no oil is scalp care („Scalp Treatment",
+ *      „Kopfhaut-Kur", „Kopfhaut-Serum") — before T5, whose „Kur" would say mask;
+ *  T5  the retailer-name rules (`suggestCategoryFromRetailerName`) found exactly one type;
+ *  T6  …after splitting a German „…öl" compound;
+ *  T7  a scalp word in front of an oil or shampoo is a modifier („Scalp Oil" is an oil);
+ *  T8  a leave-in word decides inside the care family („Leave-in Conditioner");
+ *  T9  an oil with a treatment word is an oil („Öl-Kur", „Oil Treatment", „Haaröl-Kur");
+ *  T10 an oil with a pre-wash word is an oil („Pre-Shampoo Öl");
+ *  T11 an oil with a leave-in word is an oil („Leave-in Öl");
+ *  T12 otherwise unknown — including brand-only names.
+ *
+ * T9–T11 only fire when no other product noun is left once the oil, qualifier and scalp
+ * words are taken out: „Leave-in Conditioner mit Öl" or „Argan Oil Shampoo" stay unknown.
  */
 export function classifyDiscoveryProductType(input: {
   catalogCategory?: string | null
@@ -249,32 +284,52 @@ export function classifyDiscoveryProductType(input: {
   }
 
   const name = input.name?.trim() ?? ""
-  if (!name) return { productType: null, rule: "T7_unknown" }
-
-  const direct = suggestCategoryFromRetailerName(name)
-  if (direct) return { productType: direct, rule: "T3_name" }
+  if (!name) return { productType: null, rule: "T12_unknown" }
+  if (hasWord(name, NEVER_GUESSED_WORDS)) return { productType: null, rule: "T3_never_guessed" }
 
   const split = splitCompoundOil(name)
+  const hasOil = hasWord(split, OIL_WORDS)
+
+  if (
+    !hasOil &&
+    hasWord(split, SCALP_WORDS) &&
+    hasWord(split, SCALP_TREATMENT_WORDS) &&
+    nothingElse(split, SCALP_WORDS, SCALP_TREATMENT_WORDS)
+  ) {
+    return { productType: "scalp_care", rule: "T4_scalp_treatment" }
+  }
+
+  const direct = suggestCategoryFromRetailerName(name)
+  if (direct) return { productType: direct, rule: "T5_name" }
+
   if (split !== name) {
     const compound = suggestCategoryFromRetailerName(split)
-    if (compound) return { productType: compound, rule: "T4_compound_oil" }
+    if (compound) return { productType: compound, rule: "T6_compound_oil" }
   }
 
   if (hasWord(split, SCALP_WORDS)) {
     const base = suggestCategoryFromRetailerName(withoutWords(split, SCALP_WORDS))
     if (base && SCALP_MODIFIABLE.has(base)) {
-      return { productType: base, rule: "T5_scalp_modifier" }
+      return { productType: base, rule: "T7_scalp_modifier" }
     }
   }
 
   if (hasWord(split, LEAVE_IN_WORDS)) {
     const base = suggestCategoryFromRetailerName(withoutWords(split, LEAVE_IN_WORDS))
     if (base && LEAVE_IN_DOMINATES.has(base)) {
-      return { productType: "leave_in", rule: "T6_leave_in_dominates" }
+      return { productType: "leave_in", rule: "T8_leave_in_dominates" }
     }
   }
 
-  return { productType: null, rule: "T7_unknown" }
+  if (hasOil) {
+    const oilWith = (qualifier: string) =>
+      hasWord(split, qualifier) && nothingElse(split, OIL_WORDS, qualifier, SCALP_WORDS)
+    if (oilWith(TREATMENT_WORDS)) return { productType: "oil", rule: "T9_oil_treatment" }
+    if (oilWith(PRE_WASH_WORDS)) return { productType: "oil", rule: "T10_oil_pre_wash" }
+    if (oilWith(LEAVE_IN_WORDS)) return { productType: "oil", rule: "T11_oil_leave_in" }
+  }
+
+  return { productType: null, rule: "T12_unknown" }
 }
 
 // --- Usage step + preselection (F5) ---------------------------------------------------
@@ -302,9 +357,11 @@ export type DiscoveryUsageStep =
   | { kind: "what_is_it"; rule: "P8_what_is_it" }
 
 // German compounds („Kopfhautöl", „Glanzöl") make these substring matches on purpose;
-// „kur" alone is read only at a word end so „kurzes Haar" is not a treatment.
+// „kur" is read only at a word end so „kurzes Haar" is not a treatment, and never as
+// „Sprühkur" (a leave-in word: that oil stays in the hair).
 const OIL_SCALP = /kopfhaut|scalp/iu
-const OIL_PRE_WASH = /pre-?wash|vor der wäsche|kur(?=$|[^\p{L}\p{N}])/iu
+const OIL_PRE_WASH =
+  /pre[-\s]?wash|pre[-\s]?shampoo|vor der (?:haar)?wäsche|treatment|(?<!sprüh)kur(?=$|[^\p{L}\p{N}])/iu
 const OIL_FINISH = /finish|glanz|serum/iu
 
 function preselectOil(name: string): {

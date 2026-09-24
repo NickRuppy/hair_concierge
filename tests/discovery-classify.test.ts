@@ -50,35 +50,62 @@ const TYPE_FIXTURES: TypeFixture[] = [
     input: { catalogCategory: "serum", name: "Haaröl" },
     expected: null,
   },
-  // T3 — the retailer-name rules (`suggestCategoryFromRetailerName`), one match.
-  { rule: "T3_name", input: { name: "Elvital Hyaluron Pure Shampoo" }, expected: "shampoo" },
-  { rule: "T3_name", input: { name: "Balea Trockenshampoo" }, expected: "dry_shampoo" },
-  { rule: "T3_name", input: { name: "Clarifying Shampoo" }, expected: "deep_cleansing_shampoo" },
-  { rule: "T3_name", input: { name: "Repair Conditioner" }, expected: "conditioner" },
-  { rule: "T3_name", input: { name: "Spülung Feuchtigkeit" }, expected: "conditioner" },
-  { rule: "T3_name", input: { name: "Haarkur Intensiv" }, expected: "mask" },
-  { rule: "T3_name", input: { name: "Glanz Sprühkur" }, expected: "leave_in" },
-  { rule: "T3_name", input: { name: "Hitzeschutz Spray" }, expected: "heat_protectant" },
-  { rule: "T3_name", input: { name: "Kopfhaut-Serum" }, expected: "scalp_care" },
-  { rule: "T3_name", input: { name: "Haaröl Argan" }, expected: "oil" },
-  // T4 — a German compound ending in „öl" is an oil (the retailer rule needs a word boundary).
-  { rule: "T4_compound_oil", input: { name: "Arganöl" }, expected: "oil" },
-  { rule: "T4_compound_oil", input: { name: "Kopfhautöl Beruhigend" }, expected: "oil" },
-  // T5 — a scalp word in front of a base product is a modifier, not scalp care.
-  { rule: "T5_scalp_modifier", input: { name: "Scalp Oil" }, expected: "oil" },
-  { rule: "T5_scalp_modifier", input: { name: "Scalp Shampoo" }, expected: "shampoo" },
+  // T5 — the retailer-name rules (`suggestCategoryFromRetailerName`), one match.
+  { rule: "T5_name", input: { name: "Elvital Hyaluron Pure Shampoo" }, expected: "shampoo" },
+  { rule: "T5_name", input: { name: "Balea Trockenshampoo" }, expected: "dry_shampoo" },
+  { rule: "T5_name", input: { name: "Clarifying Shampoo" }, expected: "deep_cleansing_shampoo" },
+  { rule: "T5_name", input: { name: "Repair Conditioner" }, expected: "conditioner" },
+  { rule: "T5_name", input: { name: "Spülung Feuchtigkeit" }, expected: "conditioner" },
+  { rule: "T5_name", input: { name: "Haarkur Intensiv" }, expected: "mask" },
+  { rule: "T5_name", input: { name: "Glanz Sprühkur" }, expected: "leave_in" },
+  { rule: "T5_name", input: { name: "Hitzeschutz Spray" }, expected: "heat_protectant" },
+  { rule: "T5_name", input: { name: "Haaröl Argan" }, expected: "oil" },
+  // T6 — a German compound ending in „öl" is an oil (the retailer rule needs a word boundary).
+  { rule: "T6_compound_oil", input: { name: "Arganöl" }, expected: "oil" },
+  { rule: "T6_compound_oil", input: { name: "Kopfhautöl Beruhigend" }, expected: "oil" },
+  // T7 — a scalp word in front of a base product is a modifier, not scalp care.
+  { rule: "T7_scalp_modifier", input: { name: "Scalp Oil" }, expected: "oil" },
+  { rule: "T7_scalp_modifier", input: { name: "Scalp Shampoo" }, expected: "shampoo" },
   {
-    rule: "T5_scalp_modifier",
+    rule: "T7_scalp_modifier",
     input: { name: "Scalp Detox Shampoo" },
     expected: "deep_cleansing_shampoo",
   },
-  // T6 — within the care family a leave-in statement decides.
-  { rule: "T6_leave_in_dominates", input: { name: "Haarkur Leave-in" }, expected: "leave_in" },
-  { rule: "T6_leave_in_dominates", input: { name: "Leave-in Conditioner" }, expected: "leave_in" },
-  // T7 — nothing (or more than one family) matched: unknown.
-  { rule: "T7_unknown", input: { name: "Olaplex" }, expected: null },
-  { rule: "T7_unknown", input: { name: "" }, expected: null },
-  { rule: "T7_unknown", input: {}, expected: null },
+  // T8 — within the care family a leave-in statement decides.
+  { rule: "T8_leave_in_dominates", input: { name: "Haarkur Leave-in" }, expected: "leave_in" },
+  { rule: "T8_leave_in_dominates", input: { name: "Leave-in Conditioner" }, expected: "leave_in" },
+  // T3 — colour products and 2-in-1s are never guessed, whatever else the name says.
+  { rule: "T3_never_guessed", input: { name: "2in1 Shampoo & Spülung" }, expected: null },
+  { rule: "T3_never_guessed", input: { name: "2in1 Öl-Kur" }, expected: null },
+  { rule: "T3_never_guessed", input: { name: "Color Shampoo" }, expected: null },
+  { rule: "T3_never_guessed", input: { name: "Tönung Kopfhaut Kur" }, expected: null },
+  // T4 — a scalp word plus a treatment word, and no oil, is scalp care.
+  { rule: "T4_scalp_treatment", input: { name: "Scalp Treatment" }, expected: "scalp_care" },
+  { rule: "T4_scalp_treatment", input: { name: "Kopfhaut-Kur" }, expected: "scalp_care" },
+  { rule: "T4_scalp_treatment", input: { name: "Kopfhaut-Serum" }, expected: "scalp_care" },
+  { rule: "T4_scalp_treatment", input: { name: "Scalp Tonic" }, expected: "scalp_care" },
+  // T9 — an oil with a treatment word is an oil.
+  { rule: "T9_oil_treatment", input: { name: "Öl-Kur" }, expected: "oil" },
+  { rule: "T9_oil_treatment", input: { name: "Oil Treatment" }, expected: "oil" },
+  { rule: "T9_oil_treatment", input: { name: "Haaröl-Kur" }, expected: "oil" },
+  { rule: "T9_oil_treatment", input: { name: "Ölkur Intensiv" }, expected: "oil" },
+  { rule: "T9_oil_treatment", input: { name: "Scalp Oil Treatment" }, expected: "oil" },
+  // T10 — an oil with a pre-wash word is an oil („Pre-Wash Oil" already is one by T5).
+  { rule: "T10_oil_pre_wash", input: { name: "Pre-Shampoo Öl" }, expected: "oil" },
+  { rule: "T5_name", input: { name: "Pre-Wash Oil" }, expected: "oil" },
+  // T11 — an oil with a leave-in word is an oil.
+  { rule: "T11_oil_leave_in", input: { name: "Leave-in Öl" }, expected: "oil" },
+  { rule: "T11_oil_leave_in", input: { name: "Leave-in Oil" }, expected: "oil" },
+  { rule: "T11_oil_leave_in", input: { name: "Sprühkur Öl" }, expected: "oil" },
+  // T12 — nothing (or more than one product noun) matched: unknown. The oil rules need
+  // the oil to be the only product noun left.
+  { rule: "T12_unknown", input: { name: "Argan Oil Shampoo" }, expected: null },
+  { rule: "T12_unknown", input: { name: "Öl Maske" }, expected: null },
+  { rule: "T12_unknown", input: { name: "Haarkur mit Öl" }, expected: null },
+  { rule: "T12_unknown", input: { name: "Leave-in Conditioner mit Öl" }, expected: null },
+  { rule: "T12_unknown", input: { name: "Olaplex" }, expected: null },
+  { rule: "T12_unknown", input: { name: "" }, expected: null },
+  { rule: "T12_unknown", input: {}, expected: null },
 ]
 
 for (const fixture of TYPE_FIXTURES) {
@@ -165,6 +192,31 @@ const STEP_FIXTURES: StepFixture[] = [
     rule: "P4_oil_default",
     productType: "oil",
     name: null,
+    expected: { kind: "ask", question: "oil_use", preselected: "oil_damp" },
+  },
+  {
+    rule: "P2_oil_pre_wash",
+    productType: "oil",
+    name: "Oil Treatment",
+    expected: { kind: "ask", question: "oil_use", preselected: "oil_pre_wash" },
+  },
+  {
+    rule: "P2_oil_pre_wash",
+    productType: "oil",
+    name: "Pre-Shampoo Öl",
+    expected: { kind: "ask", question: "oil_use", preselected: "oil_pre_wash" },
+  },
+  {
+    rule: "P4_oil_default",
+    productType: "oil",
+    name: "Leave-in Öl",
+    expected: { kind: "ask", question: "oil_use", preselected: "oil_damp" },
+  },
+  // „Sprühkur" is a leave-in word, not a pre-wash treatment.
+  {
+    rule: "P4_oil_default",
+    productType: "oil",
+    name: "Sprühkur Öl",
     expected: { kind: "ask", question: "oil_use", preselected: "oil_damp" },
   },
   // „Kurz" is not „Kur": the pre-wash rule reads „kur" only at a word end.
@@ -269,12 +321,24 @@ const ADVERSARIAL: EndToEnd[] = [
   { name: "Guhl", productType: null, step: "what_is_it" },
   { name: "", productType: null, step: "what_is_it" },
   { name: "   ", productType: null, step: "what_is_it" },
-  // Conservative: an oil AND a mask word, or an oil AND a shampoo word, is not guessed.
-  { name: "Öl-Kur", productType: null, step: "what_is_it" },
-  { name: "Pre-Shampoo Öl", productType: null, step: "what_is_it" },
-  { name: "Leave-in Öl", productType: null, step: "what_is_it" },
-  // A scalp TREATMENT is not a mask with a scalp word in front of it.
-  { name: "Scalp Treatment", productType: null, step: "what_is_it" },
+  // Clearly oils (coordinator ruling 2026-09-24): an oil treatment or pre-wash oil is used
+  // before washing, a leave-in oil after.
+  { name: "Öl-Kur", productType: "oil", step: "oil_pre_wash" },
+  { name: "Oil Treatment", productType: "oil", step: "oil_pre_wash" },
+  { name: "Haaröl-Kur", productType: "oil", step: "oil_pre_wash" },
+  { name: "Pre-Shampoo Öl", productType: "oil", step: "oil_pre_wash" },
+  { name: "Pre-Wash Oil", productType: "oil", step: "oil_pre_wash" },
+  { name: "Leave-in Öl", productType: "oil", step: "oil_damp" },
+  { name: "Leave-in Oil", productType: "oil", step: "oil_damp" },
+  { name: "Scalp Oil Treatment", productType: "oil", step: "oil_scalp" },
+  // A scalp TREATMENT is scalp care, not a mask with a scalp word in front of it.
+  { name: "Scalp Treatment", productType: "scalp_care", step: "fixed" },
+  { name: "Kopfhaut-Kur", productType: "scalp_care", step: "fixed" },
+  { name: "Kopfhaut-Serum", productType: "scalp_care", step: "fixed" },
+  // An oil next to another product noun is still not guessed.
+  { name: "Argan Oil Shampoo", productType: null, step: "what_is_it" },
+  { name: "Leave-in Conditioner mit Öl", productType: null, step: "what_is_it" },
+  { name: "2in1 Öl-Kur", productType: null, step: "what_is_it" },
   // Colour products are never guessed.
   { name: "Color Shampoo", productType: null, step: "what_is_it" },
   // Upper case and the umlaut's case fold.
