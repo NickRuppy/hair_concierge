@@ -243,7 +243,8 @@ function pageDeps(overrides: Deps = {}): Deps {
 async function renderCockpit(overrides: Deps = {}): Promise<string> {
   const Page = createDiscoveryCockpitPage(pageDeps(overrides))
   const element = await Page({ params: Promise.resolve({ enrollmentId: ids.enrollment }) })
-  return renderToStaticMarkup(element)
+  // The intake-product list refreshes the page after a research start (`useRouter`).
+  return renderWithRouter(element)
 }
 
 // --- the gate -------------------------------------------------------------------

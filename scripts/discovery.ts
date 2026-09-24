@@ -21,6 +21,10 @@ import {
   type DiscoverySubmissionOutcome,
 } from "../src/lib/discovery/reconcile"
 import { buildDiscoveryInviteUrl, discoveryPublicSiteUrl } from "../src/lib/discovery/invite-link"
+import {
+  resolveDiscoveryResearchProduct,
+  type DiscoveryResearchResolution,
+} from "../src/lib/discovery/research-status"
 import { discoveryProductLabel } from "../src/lib/discovery/product-label"
 import { discoveryEnrollmentSigningSecret } from "../src/lib/discovery/token"
 import { createAdminClient } from "../src/lib/supabase/admin"
@@ -255,6 +259,13 @@ function projectReceipt(
   }
 }
 
+const RECONCILE_OUTCOME = {
+  resolved: "reconciled",
+  pending: "research_pending",
+  not_approved: "submission_not_approved",
+  ineligible: "approved_but_ineligible",
+} as const satisfies Record<DiscoveryResearchResolution["outcome"], DiscoveryReconcileOutcome>
+
 /** The participant's own words, which the cockpit shows while research is open. */
 function describePendingItem(item: DiscoveryPendingIntakeItem) {
   return discoveryProductLabel(item.brandText, item.productNameText) || null
@@ -282,16 +293,10 @@ export function planDiscoveryReconciliation(input: {
     finalizedAt: target.finalizedAt,
     items: target.items.map((item) => {
       const submission = input.outcomes.get(item.productSubmissionId)
-      const approved = submission?.approvedProductId ?? null
-      const resolved = approved !== null && isResolvedDiscoverySubmissionStatus(submission?.status)
-      const eligible = resolved && input.eligible.has(approved)
-      const outcome: DiscoveryReconcileOutcome = !approved
-        ? "research_pending"
-        : !resolved
-          ? "submission_not_approved"
-          : eligible
-            ? "reconciled"
-            : "approved_but_ineligible"
+      // The same resolver the cockpit's read-time auto-link uses, so the CLI and the call
+      // can never disagree about which research counts as done.
+      const resolution = resolveDiscoveryResearchProduct(submission, input.eligible)
+      const outcome: DiscoveryReconcileOutcome = RECONCILE_OUTCOME[resolution.outcome]
       return {
         itemId: item.itemId,
         category: item.category,
@@ -299,7 +304,7 @@ export function planDiscoveryReconciliation(input: {
         product: describePendingItem(item),
         submissionId: item.productSubmissionId,
         submissionStatus: submission?.status ?? null,
-        productId: outcome === "reconciled" ? approved : null,
+        productId: resolution.outcome === "resolved" ? resolution.productId : null,
         outcome,
       } satisfies DiscoveryReconcileItemReceipt
     }),

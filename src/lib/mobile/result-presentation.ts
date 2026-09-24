@@ -385,20 +385,22 @@ export function mobileVerdictTitle(
     : "Passt nicht zu deinem Haar"
 }
 
+/** One off-target row as „<Eigenschaft>: <Produktwert> statt <Zielwert>". */
+export function mobileRowDifferenceText(row: MobileScanRow): string {
+  return `${row.label}: ${
+    row.stops
+      .filter((stop) => row.productStopIds.includes(stop.id))
+      .map((stop) => stop.label)
+      .join(", ") ||
+    row.productValue ||
+    "Keine Angabe"
+  } statt ${row.targetValue ?? "kein Ziel"}`
+}
+
 export function mobileMismatchSummary(rows: readonly MobileScanRow[]): string {
   const differences = rows
     .filter((row) => row.displayStatus === "amber" || row.displayStatus === "red")
-    .map(
-      (row) =>
-        `${row.label}: ${
-          row.stops
-            .filter((stop) => row.productStopIds.includes(stop.id))
-            .map((stop) => stop.label)
-            .join(", ") ||
-          row.productValue ||
-          "Keine Angabe"
-        } statt ${row.targetValue ?? "kein Ziel"}`,
-    )
+    .map(mobileRowDifferenceText)
   if (differences.length > 0) return differences.join(" · ")
   return rows.length === 0 || rows.some((row) => row.displayStatus === "neutral")
     ? "Noch nicht vollständig einschätzbar."

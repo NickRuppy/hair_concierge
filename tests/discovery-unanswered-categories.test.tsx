@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { AppRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { createDiscoveryCockpitPage } from "../src/app/admin/beratung/[enrollmentId]/page"
@@ -243,7 +244,11 @@ async function renderCockpit(
     loadPreflight: async () => ({ status: "ready" }),
   })
   const element = await Page({ params: Promise.resolve({ enrollmentId: ids.enrollment }) })
-  return renderToStaticMarkup(element)
+  // The intake-product list refreshes the page after a research start (`useRouter`).
+  const router = { back() {}, forward() {}, refresh() {}, push() {}, replace() {}, prefetch() {} }
+  return renderToStaticMarkup(
+    <AppRouterContext.Provider value={router as never}>{element}</AppRouterContext.Provider>,
+  )
 }
 
 /** The product column of one step block, located by its category heading. */

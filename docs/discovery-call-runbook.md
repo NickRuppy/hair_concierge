@@ -145,28 +145,67 @@ Solange die Checkliste offen ist, kannst du das Cockpit zwar öffnen und lesen, 
 ### 3a. Unbekannte Produkte durch die Recherche schicken
 
 Produkte, die die Teilnehmerin scannt oder eintippt und die der Katalog nicht kennt, landen als
-`product_submissions`-Zeile (Quelle `name_research`, `dm_search` oder ein `barcode_unknown`-Scan).
-Im Cockpit erscheinen sie unter „Nicht in der Idealroutine" als **„Noch in Recherche"** und bekommen
-kein Urteil und keinen Routine-Schritt.
+`product_submissions`-Zeile (Quelle `name_research`, `dm_search` oder ein `barcode_unknown`-Scan);
+ein DB-Trigger reiht dafür automatisch einen Recherche-Job ein. **Die Recherche selbst läuft nur
+lokal:** `npm run products:intake:review-center` starten — der Watch-Modus holt eingereihte Jobs ab,
+freigegeben wird in der lokalen Review-App. Ohne laufendes Review-Center bleibt alles in
+„In Recherche – wartet". Regeln und Freigabe: **`docs/product-intake-research-ops.md` ist dafür die
+Quelle der Wahrheit**; dieses Runbook wiederholt sie nicht.
 
-Die offenen Einträge einer Teilnehmerin listet der Dry-run des Abgleichs — mit Kategorie, den Worten
-der Teilnehmerin, der Submission und deren Status:
+Den Stand siehst du oben im Cockpit unter **„Eingetragene Produkte"** — jedes erfasste Produkt mit
+Bild, Name, Kategorie und Status:
 
-```sh
-npm run discovery -- reconcile --enrollment=<uuid>
-```
+| Status                                                 | Bedeutung                                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Im Katalog                                             | Beim Erfassen erkannt.                                                                                                                                                                                                                                                                                                            |
+| Freigegeben                                            | Recherche freigegeben, Produkt nutzbar — das Cockpit verwendet es automatisch (siehe 3b).                                                                                                                                                                                                                                         |
+| Freigegeben – im Katalog gesperrt                      | Freigegeben, aber deaktiviert/quarantänisiert. Wird nicht verwendet; im Katalog klären.                                                                                                                                                                                                                                           |
+| In Recherche – wartet / läuft                          | Job eingereiht bzw. läuft im lokalen Review-Center.                                                                                                                                                                                                                                                                               |
+| In Recherche – wartet auf Freigabe                     | Ergebnis liegt in der Review-App.                                                                                                                                                                                                                                                                                                 |
+| In Recherche – Nacharbeit / wird veröffentlicht        | Job in Nacharbeit bzw. in der Veröffentlichung.                                                                                                                                                                                                                                                                                   |
+| Rückfrage                                              | Review hat `needs_more_info` gesetzt.                                                                                                                                                                                                                                                                                             |
+| Recherche fehlgeschlagen / blockiert                   | Letzter Job `failed` / `blocked`.                                                                                                                                                                                                                                                                                                 |
+| Recherche ausgeschöpft – im Review-Center neu anstoßen | Job hat alle Versuche verbraucht (`attempt_count >= max_attempts`) — auch ein „laufender" Job im letzten Versuch, dessen Worker seit über 10 Minuten nichts gemeldet hat. Ein Worker nimmt ihn nie wieder; im Cockpit gibt es deshalb keinen Knopf. In der Review-App „Änderungen neu recherchieren" (setzt die Versuche zurück). |
+| Recherche nicht gestartet                              | Offene Submission ohne laufenden Job.                                                                                                                                                                                                                                                                                             |
+| Nur Barcode – keine Recherche / Keine Recherche        | Keine Submission vorhanden.                                                                                                                                                                                                                                                                                                       |
+| Zu wenig Angaben für eine Recherche                    | Weder gültiger Barcode noch Marke **und** Name — nichts, womit eine Recherche starten kann.                                                                                                                                                                                                                                       |
+| Abgelehnt / Zurückgezogen                              | Submission `rejected` / `cancelled_by_user`. Nichts zu starten.                                                                                                                                                                                                                                                                   |
 
-Die Recherche selbst läuft über die bestehende Produkt-Intake-Strecke — **`docs/product-intake-research-ops.md`
-ist dafür die Quelle der Wahrheit** (Queue → Review → geführte Freigabe, u. a.
-`npm run products:intake:research-queue`, `npm run products:intake:review-app`,
-`npm run products:intake:approve-package`). Dieses Runbook wiederholt diese Regeln nicht.
+**„Recherche starten"** steht an jedem Produkt, bei dem es etwas zu tun gibt
+(`POST /api/admin/beratung/<enrollmentId>/research`, admin-gegatet wie die Einladungen):
 
-### 3b. Ergebnis in den Intake zurückschreiben
+- offene Submission ohne laufenden Job (auch nach „Rückfrage") → Job einreihen
+  (`product_intake_enqueue_research_job`);
+- letzter Job fehlgeschlagen oder blockiert, mit verbleibenden Versuchen → genau diesen Job erneut einreihen
+  (`product_intake_retry_research_job`);
+- noch keine Submission → eine anlegen, genau wie die Checkliste es tut (Scan-Strecke, als die
+  Teilnehmerin, Kategorie der Zeile, Barcode bzw. Marke + Name); der Trigger reiht den Job ein.
+  Findet diese Strecke das Produkt schon im Katalog, bekommt die Zeile direkt dessen `product_id`.
 
-**Nichts gleicht sich von selbst ab.** `discovery_intake_items.product_id` wird nur beim Erfassen
-gesetzt. Auch nachdem die Recherche das Produkt veröffentlicht und
-`product_submissions.approved_product_id` gefüllt hat, bleibt die Intake-Zeile ohne `product_id` —
-und damit ohne Urteil und ohne Schritt. Der Abgleich ist ein bewusster Handgriff vor dem Call:
+Der Knopf reiht nur ein — er startet keinen Worker. Nach dem Klick steht der neue Status da; hat
+sich dabei das Produkt oder die Submission der Zeile geändert, lädt das ganze Cockpit neu (Name,
+Urteil, Routine und Entscheidungen kommen dann frisch vom Server). Ein Doppelklick oder ein zweiter
+Tab legt keine zweite Submission an: die Scan-Strecke liefert dieselbe offene Submission zurück,
+und die Zeile wird nur beschrieben, solange sie weder Produkt noch Submission trägt.
+
+### 3b. Freigegebene Recherche im Cockpit
+
+**Das Cockpit gleicht beim Laden selbst ab — nur lesend.** Ist die Submission einer Zeile ohne
+`product_id` auf `approved`/`matched_existing` mit `approved_product_id` gesetzt und besteht dieses
+Produkt dieselbe Scan-Prüfung wie beim Erfassen, behandelt das Cockpit es als Produkt der Zeile:
+Urteil, Routine-Schritt, Namen und PDF. In die Datenbank geschrieben wird dabei nichts. Ein
+`reconcile` vor dem Call ist damit **nicht mehr nötig**.
+
+Zwei Folgen für den Fingerabdruck:
+
+- Wird Recherche **nach** dem Finalisieren freigegeben, ändert sich die Routine — das PDF zeigt dann
+  zu Recht „Stand hat sich geändert". Im Cockpit prüfen und neu finalisieren.
+- Ist der Recherche-Stand gerade nicht lesbar, steht oben „Der Recherche-Stand ist gerade nicht
+  lesbar …", nichts wird verknüpft, und Finalisieren sowie PDF sind gesperrt (wie bei unlesbaren
+  Produktnamen) — kein falscher Drift, kein halb gelesener Fingerabdruck. Seite später neu laden.
+
+Wer die Verknüpfung trotzdem dauerhaft in die Zeile schreiben will (z. B. für Auswertungen), nimmt
+weiter den Abgleich:
 
 ```sh
 npm run discovery -- reconcile --enrollment=<uuid>
@@ -183,7 +222,8 @@ ALLOW_DISCOVERY_PRODUCTION_WRITE=1 npm run discovery -- reconcile --all \
   --apply --confirm-project=pqdkhefxsxkyeqelqegq
 ```
 
-Jeder offene Eintrag bekommt im Ergebnis genau eines von fünf Urteilen:
+CLI und Cockpit entscheiden mit derselben Regel (`resolveDiscoveryResearchProduct`), was als
+freigegeben gilt. Jeder offene Eintrag bekommt im Ergebnis genau eines von fünf Urteilen:
 
 | `outcome`                 | Bedeutung                                                                                                                                                                                                                                                                                                                                                              |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -200,30 +240,9 @@ eine `already_assigned`-Zeile jetzt wirklich trägt, sagt nur das Cockpit.
 Was der Befehl **nicht** anfasst:
 
 - Zeilen, die schon eine `product_id` tragen — das ist die Antwort der Teilnehmerin, nicht unsere.
-- Zeilen mit `source='barcode_unknown'` **ohne** Submission. Die tragen nur den Barcode und lesen
-  sich im Cockpit als „Gescanntes Produkt · &lt;Barcode&gt;". Es gibt für sie keine Submission, aus
-  der sich etwas zurückschreiben ließe — der Befehl sieht sie deshalb gar nicht erst. Dafür bleibt es
-  bei Handarbeit, und die braucht zwei Schritte (Supabase-SQL, Service-Rolle).
-
-  Erst die betroffenen Zeilen samt Barcode heraussuchen:
-
-  ```sql
-  select i.id, i.category, i.barcode_identifier
-  from public.discovery_intake_items i
-  join public.discovery_intakes t on t.id = i.intake_id
-  where t.enrollment_id = '<enrollment-id>'
-    and i.source <> 'none'
-    and i.product_id is null
-    and i.product_submission_id is null;
-  ```
-
-  Dann die passende `products.id` heraussuchen und eintragen, sonst bleibt das Produkt ohne Urteil:
-
-  ```sql
-  update public.discovery_intake_items
-  set product_id = '<product-id>'
-  where id = '<item-id>' and product_id is null;
-  ```
+- Zeilen **ohne** Submission (z. B. ein `barcode_unknown`-Scan ohne Submission). Für sie gibt es
+  nichts zurückzuschreiben. Statt Handarbeit in SQL: im Cockpit **„Recherche starten"** — das legt
+  die Submission an, und nach der Freigabe verknüpft das Cockpit das Produkt von selbst.
 
 Die Reichweite der Bereiche unterscheidet sich absichtlich:
 
@@ -233,7 +252,8 @@ Die Reichweite der Bereiche unterscheidet sich absichtlich:
 - **`--all`** ist enger: widerrufene Einladungen und finalisierte Calls bleiben außen vor, und
   Teilnehmerinnen ohne offene Einträge tauchen gar nicht erst auf.
 
-Nach dem Abgleich das Cockpit neu laden — es rechnet bei jedem Aufruf frisch.
+Das Cockpit rechnet bei jedem Aufruf frisch — nach einer Freigabe oder einem Abgleich einfach neu
+laden.
 
 ### 3c. Preflight: sind die Quellfakten vollständig?
 
@@ -255,17 +275,24 @@ Kein Banner heißt: Quelle in Ordnung. Statt des Cockpits können auch zwei Hinw
 
 `/admin/beratung/<enrollmentId>` ist der einzige Bildschirm, den du im Gespräch brauchst.
 
-1. **Idealroutine** — der obere Block, zum Vorlesen gebaut: Schritt, Kategorie, was passiert, wie oft.
-2. **Pro Schritt**: das Produkt der Teilnehmerin mit dem Urteil des Scanners und den Alternativen,
-   dazu genau eine Entscheidung — **behalten** oder **tauschen**.
+1. **Eingetragene Produkte** — ganz oben: alles, was sie erfasst hat, mit Bild, Name, Kategorie und
+   Recherche-Status (siehe 3a), samt „Recherche starten".
+2. **Idealroutine** — zum Vorlesen gebaut: Schritt, Kategorie, was passiert, wie oft.
+3. **Pro Schritt**: oben die Erklärung in den Worten des Idealplans — „Warum dieser Schritt",
+   „Produkttyp", „Worauf es ankommt", „Warum das zu ihrem Haar passt", „Wie oft · wann". Darunter
+   das Produkt der Teilnehmerin mit dem Urteil des Scanners und den Alternativen, dazu genau eine
+   Entscheidung — **behalten** oder **tauschen**. Ihr Produkt und jede Alternative tragen
+   Eigenschafts-Zeilen wie die iOS-Ergebniskarte (✓ im Ziel, ✗ „Pflegegewicht: reichhaltig statt
+   leicht") — so siehst du, **wo** eine Alternative besser passt. Diese Zeilen und die Erklärung
+   stehen nur im Cockpit, nicht im PDF, und gehen nicht in den Fingerabdruck ein.
    - Die wählbaren Tauschziele sind die Alternativen, die die Engine zu ihrem Produkt ohnehin
      anzeigt. Gibt es keine, steht als einzige Option die Empfehlung des Idealplans. Einen freien
      Katalog-Picker gibt es bewusst nicht; der Endpunkt nimmt nichts an, was nicht angeboten wurde
      (`400 swap_not_offered`).
-3. **„Nicht in der Idealroutine"** — eingeklappt darunter: Kategorien mit „benutze ich nicht",
+4. **„Nicht in der Idealroutine"** — eingeklappt darunter: Kategorien mit „benutze ich nicht",
    Produkte ohne Schritt im Idealplan und alles, was noch in Recherche ist. Kein Handlungsbedarf,
    aber ansprechbar.
-4. **„Finalisieren"** am Ende. Das ist der Abschluss, nicht der Versand.
+5. **„Finalisieren"** am Ende. Das ist der Abschluss, nicht der Versand.
 
 Entscheidungen lassen sich während und nach dem Gespräch beliebig ändern — solange nicht finalisiert
 ist. Nach dem Finalisieren werden Entscheidungs-Schreibvorgänge abgelehnt (`409`, Code `finalized`);
@@ -388,8 +415,16 @@ Zwei Stellen, an denen Discovery-Teilnehmerinnen in Zahlen auftauchen, die nicht
 - **Checkliste schickt zurück ins Quiz** — Diagnostik oder Lead-Bindung fehlen. Die Seite prüft
   beides gegen die Datenbank und protokolliert die Lücke (`[discovery] quiz projection incomplete`).
   Die Teilnehmerin muss das Quiz wirklich abschließen.
-- **`reconcile` meldet `reconciled`, im Cockpit ändert sich nichts** — das war ein Dry-run. Ohne
+- **Produkt bleibt auf „In Recherche – wartet"** — das lokale Review-Center läuft nicht
+  (`npm run products:intake:review-center`). Der Knopf im Cockpit reiht nur ein.
+- **„Recherche starten" antwortet mit dem alten Status** — es gab nichts zu starten (Job läuft schon,
+  Review offen, zu wenig Angaben). Der angezeigte Status ist der aktuelle.
+- **„Der Recherche-Stand ist gerade nicht lesbar"** — vorübergehender Lesefehler bei Submissions,
+  Jobs oder der Scan-Prüfung. Freigegebene Produkte fehlen dann in der Routine; Finalisieren und PDF
+  sind gesperrt. Neu laden.
+- **`reconcile` meldet `reconciled`, in der Tabelle ändert sich nichts** — das war ein Dry-run. Ohne
   `--apply` samt Gate bleibt der Plan ein Plan; `mode` und `writes` im Ergebnis sagen, was galt.
+  (Im Cockpit ist das Produkt trotzdem schon verknüpft — das liest die Freigabe direkt.)
 - **„Diese Teilnehmerin hat die Checkliste noch nicht geöffnet."** — es gibt keine Intake-Zeile.
   Nichts zu reparieren, nur nachzufassen.
 - **„Finalisieren" ist ausgegraut** — die Checkliste ist noch nicht abgeschickt (`state='draft'`).

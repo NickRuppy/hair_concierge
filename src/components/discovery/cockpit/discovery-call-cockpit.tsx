@@ -1,12 +1,15 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 import { DISCOVERY_INTAKE_CATEGORY_COPY } from "@/components/discovery/intake/categories"
 import { ScanVerdictSections } from "@/components/scan/scan-verdict-sections"
 import type { DiscoveryCockpitStepView } from "@/lib/discovery/cockpit"
 import type { DiscoveryVerdictStatus } from "@/lib/discovery/load-participant-verdicts"
+import type { DiscoveryPropertyRow } from "@/lib/discovery/property-rows"
 
+import { beginDiscoveryDecisionWrite } from "./decision-writes"
 import { formatDiscoveryTimestamp } from "./format"
 
 /**
@@ -19,6 +22,11 @@ import { formatDiscoveryTimestamp } from "./format"
  * rendered by the SAME component their scanner uses (`ScanVerdictSections`) — its second
  * person is the engine's wording, and re-writing it here would mean the cockpit and the
  * participant's app could say different things about the same product.
+ *
+ * Above the two columns, each step explains itself in the Idealplan's own words (why the
+ * step, what product type, what matters, why it fits her hair, how often and when), and
+ * her product and every alternative carry target-vs-product rows like the iOS result card,
+ * so Nick can see WHERE an alternative is better, not just that it is.
  *
  * Every write goes to `/api/admin/beratung/<id>/decisions`, which re-composes the routine
  * server-side and refuses anything the cockpit did not display. The optimistic selection
@@ -42,6 +50,23 @@ const FROZEN_HINT =
   "Diese Beratung ist inzwischen finalisiert. Seite neu laden, dann die Finalisierung aufheben."
 const WRITE_ERROR = "Nicht gespeichert. Bitte noch einmal."
 const NO_OPTIONS_HINT = "Keine Alternative im Katalog. Nur behalten oder offen lassen."
+
+const DEPTH_WHY = "Warum dieser Schritt"
+const DEPTH_TYPE = "Produkttyp"
+const DEPTH_CRITERIA = "Worauf es ankommt"
+const DEPTH_FIT = "Warum das zu ihrem Haar passt"
+const DEPTH_RHYTHM = "Wie oft · wann"
+const ROWS_TITLE = "Im Vergleich zum Ziel"
+
+const ROW_MARK: Record<
+  DiscoveryPropertyRow["status"],
+  { mark: string; label: string; className: string }
+> = {
+  match: { mark: "✓", label: "im Ziel", className: "text-[var(--status-ok-text)]" },
+  partial: { mark: "✗", label: "teilweise", className: "text-[var(--status-pending-text)]" },
+  mismatch: { mark: "✗", label: "außerhalb", className: "text-[var(--status-danger-text)]" },
+  unknown: { mark: "–", label: "unbestätigt", className: "text-muted-foreground" },
+}
 
 const FINALIZE_LABEL = "Finalisieren"
 const UNFINALIZE_LABEL = "Finalisierung aufheben"
@@ -70,6 +95,37 @@ function initialSelection(step: DiscoveryCockpitStepView): Selection {
   return null
 }
 
+/**
+ * What a keep/swap answer means for the panel, pure so it can be tested: a refusal rolls
+ * the optimistic choice back with its message; a success refreshes the page, so the panel
+ * reconciles with committed server state even if a research refresh remounted it mid-write.
+ */
+export function discoveryDecisionWriteOutcome(
+  ok: boolean,
+  body: { code?: string } | null,
+): { rollback: boolean; error: string | null; refresh: boolean } {
+  if (ok) return { rollback: false, error: null, refresh: true }
+  return {
+    rollback: true,
+    // Finalised in the meantime (another tab): the stored timestamp is not ours to
+    // invent, so the screen says what happened instead of faking it.
+    error: body?.code === "finalized" ? FROZEN_HINT : WRITE_ERROR,
+    refresh: false,
+  }
+}
+
+/** Finalize / un-finalize: same rule — a success refreshes, a refusal explains itself. */
+export function discoveryFinalizeWriteOutcome(
+  ok: boolean,
+  body: { code?: string } | null,
+): { error: string | null; refresh: boolean } {
+  if (ok) return { error: null, refresh: true }
+  return {
+    error: body?.code === "not_submitted" ? NOT_SUBMITTED_HINT : WRITE_ERROR,
+    refresh: false,
+  }
+}
+
 function selectionValue(selection: Selection): string {
   if (!selection) return ""
   return selection.decision === "keep" ? "keep" : (selection.swapProductId ?? "")
@@ -86,6 +142,7 @@ export function DiscoveryCallCockpit({
   submitted: boolean
   initialFinalizedAt: string | null
 }) {
+  const router = useRouter()
   const [selections, setSelections] = useState<Record<string, Selection>>(() =>
     Object.fromEntries(steps.map((step) => [step.decisionKey, initialSelection(step)])),
   )
@@ -105,6 +162,7 @@ export function DiscoveryCallCockpit({
     setSelections((current) => ({ ...current, [step.decisionKey]: next }))
     setPending(step.decisionKey)
     setError(null)
+    const endWrite = beginDiscoveryDecisionWrite()
     try {
       const response = await fetch(`/api/admin/beratung/${enrollmentId}/decisions`, {
         method: "POST",
@@ -115,21 +173,20 @@ export function DiscoveryCallCockpit({
           swapProductId: next.swapProductId,
         }),
       })
-      if (!response.ok) {
+      const body = response.ok
+        ? null
+        : ((await response.json().catch(() => null)) as { code?: string } | null)
+      const outcome = discoveryDecisionWriteOutcome(response.ok, body)
+      if (outcome.rollback) {
         setSelections((current) => ({ ...current, [step.decisionKey]: previous }))
-        const body = (await response.json().catch(() => null)) as { code?: string } | null
-        if (body?.code === "finalized") {
-          // Someone (or another tab) finalised in the meantime. The stored timestamp is
-          // not ours to invent, so the screen says what happened instead of faking it.
-          setError(FROZEN_HINT)
-        } else {
-          setError(WRITE_ERROR)
-        }
       }
+      if (outcome.error) setError(outcome.error)
+      if (outcome.refresh) router.refresh()
     } catch {
       setSelections((current) => ({ ...current, [step.decisionKey]: previous }))
       setError(WRITE_ERROR)
     } finally {
+      endWrite()
       setPending(null)
     }
   }
@@ -137,6 +194,7 @@ export function DiscoveryCallCockpit({
   async function toggleFinalize() {
     setFinalizePending(true)
     setError(null)
+    const endWrite = beginDiscoveryDecisionWrite()
     try {
       const response = await fetch(`/api/admin/beratung/${enrollmentId}/finalize`, {
         method: "POST",
@@ -147,14 +205,17 @@ export function DiscoveryCallCockpit({
         callFinalizedAt?: string | null
         code?: string
       } | null
-      if (!response.ok) {
-        setError(body?.code === "not_submitted" ? NOT_SUBMITTED_HINT : WRITE_ERROR)
+      const outcome = discoveryFinalizeWriteOutcome(response.ok, body)
+      if (outcome.error) {
+        setError(outcome.error)
         return
       }
       setFinalizedAt(body?.callFinalizedAt ?? null)
+      if (outcome.refresh) router.refresh()
     } catch {
       setError(WRITE_ERROR)
     } finally {
+      endWrite()
       setFinalizePending(false)
     }
   }
@@ -175,6 +236,7 @@ export function DiscoveryCallCockpit({
                 <span className="text-xs text-muted-foreground">· optional</span>
               ) : null}
             </div>
+            <StepDepth step={step} />
             <div className="grid gap-0 md:grid-cols-2">
               <div className="border-b p-4 md:border-b-0 md:border-r">
                 <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
@@ -254,6 +316,7 @@ function StepVerdict({ step, submitted }: { step: DiscoveryCockpitStepView; subm
           result={{ ...step.verdict.payload, product }}
           productTitle={step.ownedLabel ?? undefined}
         />
+        <PropertyRows rows={step.verdict.propertyRows} title={ROWS_TITLE} />
       </div>
     )
   }
@@ -326,6 +389,7 @@ function StepDecision({
           // The option as the PDF would print it once chosen — brand + line + name.
           title={`${empty ? NEW_PREFIX : SWAP_PREFIX}${option.label}`}
           pill={option.verdictLabel}
+          rows={option.propertyRows}
           onChoose={onChoose}
         />
       ))}
@@ -345,6 +409,7 @@ function Choice({
   title,
   subtitle,
   pill,
+  rows,
   onChoose,
 }: {
   name: string
@@ -354,6 +419,7 @@ function Choice({
   title: string
   subtitle?: string | null
   pill?: string
+  rows?: DiscoveryPropertyRow[] | null
   onChoose: (value: string) => void
 }) {
   return (
@@ -385,7 +451,64 @@ function Choice({
             {subtitle}
           </span>
         ) : null}
+        <PropertyRows rows={rows} />
       </span>
     </label>
+  )
+}
+
+/** The step in the Idealplan's own words — compact, to glance at mid-call. */
+function StepDepth({ step }: { step: DiscoveryCockpitStepView }) {
+  const depth = step.depth
+  if (!depth) return null
+  const rhythm = [step.frequencyLabel, depth.timingLabel].filter(Boolean).join(" · ")
+  const candidates: Array<[string, string | null]> = [
+    [DEPTH_WHY, depth.purpose],
+    [DEPTH_TYPE, depth.targetType],
+    [DEPTH_CRITERIA, depth.productCriteria],
+    [DEPTH_FIT, depth.fit],
+    [DEPTH_RHYTHM, rhythm],
+  ]
+  const entries = candidates.filter((entry): entry is [string, string] => Boolean(entry[1]))
+  if (entries.length === 0) return null
+  return (
+    <dl className="grid gap-x-6 gap-y-1.5 border-b px-4 py-3 text-[12px] leading-5 md:grid-cols-2">
+      {entries.map(([term, value]) => (
+        <div key={term}>
+          <dt className="font-bold text-muted-foreground">{term}</dt>
+          <dd className="text-foreground">{value}</dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
+
+/** ✓/✗ per property, „<Eigenschaft>: <Produktwert> statt <Zielwert>" where it misses. */
+function PropertyRows({ rows, title }: { rows?: DiscoveryPropertyRow[] | null; title?: string }) {
+  if (!rows || rows.length === 0) return null
+  return (
+    <span className="mt-1.5 block">
+      {title ? (
+        <span className="mb-1 block text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
+          {title}
+        </span>
+      ) : null}
+      <span className="flex flex-col gap-0.5 text-[12px] leading-5">
+        {rows.map((row) => {
+          const mark = ROW_MARK[row.status]
+          return (
+            <span key={`${row.dimensionId}:${row.text}`} className="flex gap-1.5">
+              <span aria-hidden="true" className={`w-3 shrink-0 font-bold ${mark.className}`}>
+                {mark.mark}
+              </span>
+              <span className="text-foreground">
+                <span className="sr-only">{`${mark.label}: `}</span>
+                {row.text}
+              </span>
+            </span>
+          )
+        })}
+      </span>
+    </span>
   )
 }

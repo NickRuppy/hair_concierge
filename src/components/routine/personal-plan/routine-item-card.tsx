@@ -13,6 +13,7 @@ import {
   routineDeferralCopyFor,
   routinePurposeLabel,
   routineRolePurposeDescription,
+  routineRoleTimingLabel,
 } from "@/lib/personal-plan/routine/labels"
 import {
   routinePresentationLabels,
@@ -24,27 +25,6 @@ import { getRoutineStatus, hasChosenPlannedProduct, RoutineStatusBadge } from ".
 type RoutineItem = RoutinePayloadV1["items"][number]
 
 export { routineCategoryLabel, routinePurposeLabel }
-
-const timingLabelsByRole: Record<string, string> = {
-  shampoo_everyday: "Haarwäsche",
-  shampoo_dandruff: "Haarwäsche",
-  conditioner_rinse_out: "Nach Shampoo",
-  post_wash_leave_in: "Nach der Wäsche",
-  pre_heat_application: "Vor Hitze",
-  intensive_conditioning_mask: "Nach Shampoo",
-  pre_wash_fibre_treatment: "Vor der Haarwäsche",
-  leave_on_fibre_conditioning: "Nach der Wäsche",
-  dry_finish: "Im trockenen Haar",
-  residue_reset: "Statt Shampoo",
-  mineral_reset: "Statt Shampoo",
-  root_refresh_bridge: "Zwischen Wäschen",
-  pre_heat_protection: "Vor Hitze",
-  specialized_bond_treatment: "Nach Herstellerangabe",
-  scalp_comfort: "Auf der Kopfhaut",
-  scalp_flake_oil_adjunct: "Vor der Wäsche",
-  density_claim_tonic: "Auf der Kopfhaut",
-  scalp_exfoliant: "Vor der Wäsche",
-}
 
 const categoryAccentBorders: Record<string, string> = {
   shampoo: "border-amber-300",
@@ -180,7 +160,7 @@ function routinePurposeDescription(item: RoutineItem) {
 }
 
 function routineTimingLabel(item: RoutineItem) {
-  return timingLabelsByRole[item.role] ?? timingLabelsByRole[item.purposeKey] ?? "Im Plan"
+  return routineRoleTimingLabel(item.role) ?? routineRoleTimingLabel(item.purposeKey) ?? "Im Plan"
 }
 
 export function routineFitLabel(

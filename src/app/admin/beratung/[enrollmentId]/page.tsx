@@ -2,8 +2,10 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { DiscoveryCallCockpit } from "@/components/discovery/cockpit/discovery-call-cockpit"
+import { DiscoveryIntakeProducts } from "@/components/discovery/cockpit/discovery-intake-products"
 import {
   DISCOVERY_EMAIL_PENDING_LABEL,
+  discoveryCockpitStateKey,
   formatDiscoveryTimestamp,
 } from "@/components/discovery/cockpit/format"
 import {
@@ -29,7 +31,8 @@ import { loadDiscoverySourceFactsPreflight, type DiscoverySourceFactsPreflight }
 /**
  * The discovery call cockpit (mockup: `plans/discovery-call-toolkit/evidence/cockpit.html`).
  *
- * One screen for one call: the Idealroutine to read out, the engine's verdict on every
+ * One screen for one call: what she captured and where its research stands („Eingetragene
+ * Produkte"), the Idealroutine to read out, the engine's verdict on every
  * product the participant owns, one keep/swap decision per routine step, and
  * „Finalisieren" at the bottom. Everything it shows comes from ONE composition
  * (`loadDiscoveryCockpitModel`) — the same one the decisions route validates against, so
@@ -51,6 +54,8 @@ const NO_SOURCE = "Für dieses Konto gibt es noch kein nutzbares Haarprofil. Qui
 const UNAVAILABLE = "Der Plan lässt sich gerade nicht lesen. Später noch einmal öffnen."
 const BRANDS_UNAVAILABLE =
   "Produktnamen (Marke, Linie) sind gerade nicht vollständig lesbar. Finalisieren und PDF gehen erst wieder, wenn der Katalog antwortet — Seite später neu laden."
+const RESEARCH_UNAVAILABLE =
+  "Der Recherche-Stand ist gerade nicht lesbar. Freigegebene Produkte fehlen deshalb in der Routine; Finalisieren und PDF gehen erst wieder, wenn er lesbar ist — Seite später neu laden."
 const PREFLIGHT_TITLE = "Intake unvollständig"
 const PREFLIGHT_NO_LEAD = "Zu diesem Konto ist kein Quiz-Lead gebunden."
 const PREFLIGHT_INVALID = "Die Quiz-Antworten sind nicht lesbar."
@@ -125,13 +130,25 @@ export function createDiscoveryCockpitPage(
 
     const view = buildDiscoveryCockpitView(model)
     const preflight = await deps.loadPreflight(admin, intake.userId)
+    // A refresh with a different routine remounts the client islands (see the helper).
+    const stateKey = discoveryCockpitStateKey(view.sourceHash, intake.callFinalizedAt)
 
     return (
       <Shell name={enrollment.name} email={enrollment.email} status={statusLine}>
         <PreflightBanner preflight={preflight} />
-        {view.recommendationBrandsAvailable ? null : <Notice text={BRANDS_UNAVAILABLE} />}
+        {!view.researchStatusAvailable ? (
+          <Notice text={RESEARCH_UNAVAILABLE} />
+        ) : view.recommendationBrandsAvailable ? null : (
+          <Notice text={BRANDS_UNAVAILABLE} />
+        )}
+        <DiscoveryIntakeProducts
+          key={`products:${stateKey}`}
+          enrollmentId={enrollmentId}
+          products={view.intakeProducts}
+        />
         <IdealRoutine view={view} />
         <DiscoveryCallCockpit
+          key={`decisions:${stateKey}`}
           enrollmentId={enrollmentId}
           steps={view.steps}
           submitted={intake.state === "submitted"}

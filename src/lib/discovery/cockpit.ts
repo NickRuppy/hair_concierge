@@ -12,6 +12,7 @@ import {
   loadDiscoveryIdealRoutine,
   type DiscoveryIdealStep,
   type DiscoveryPreviewInput,
+  type DiscoveryStepDepth,
 } from "./load-ideal-routine"
 import {
   loadParticipantScanVerdicts,
@@ -19,6 +20,16 @@ import {
   type DiscoveryVerdictStatus,
 } from "./load-participant-verdicts"
 import { discoveryProductTitle } from "./product-label"
+import type { DiscoveryPropertyRow } from "./property-rows"
+import { loadDiscoveryResearchState } from "./research"
+import {
+  DISCOVERY_RESEARCH_STATUS_COPY,
+  discoveryResearchLinks,
+  discoveryResearchStatus,
+  withDiscoveryResearchLinks,
+  type DiscoveryResearchState,
+  type DiscoveryResearchStatusKind,
+} from "./research-status"
 import {
   composeDiscoveryRefinedRoutine,
   describeDiscoveryIntakeItem,
@@ -204,6 +215,8 @@ export type DiscoveryProductIdentity = {
   name: string
   brand: string | null
   productLine: string | null
+  /** The packshot, for the „Eingetragene Produkte" list — display only, never hashed. */
+  imageUrl?: string | null
 }
 
 /**
@@ -219,7 +232,7 @@ export async function loadDiscoveryProductIdentities(
   if (productIds.length === 0) return identities
   const { data, error } = await client
     .from("products")
-    .select("id, name, brand, product_line:product_lines(canonical_name)")
+    .select("id, name, brand, image_url, product_line:product_lines(canonical_name)")
     .in("id", productIds)
   if (error) throw new Error("discovery_product_identity_lookup_failed")
   type LineRelation = { canonical_name: string | null }
@@ -227,6 +240,7 @@ export async function loadDiscoveryProductIdentities(
     id: string
     name: string
     brand: string | null
+    image_url?: string | null
     product_line: LineRelation | LineRelation[] | null
   }> | null) ?? []) {
     const relation = Array.isArray(row.product_line) ? row.product_line[0] : row.product_line
@@ -234,6 +248,7 @@ export async function loadDiscoveryProductIdentities(
       name: row.name,
       brand: row.brand,
       productLine: relation?.canonical_name?.trim() || null,
+      imageUrl: row.image_url?.trim() || null,
     })
   }
   return identities
@@ -274,6 +289,16 @@ export type DiscoveryCockpitModel = {
   recommendationBrandsAvailable: boolean
   /** Catalog identities of every labelled product and swap option (see the loader). */
   productIdentities?: ReadonlyMap<string, DiscoveryProductIdentity>
+  /**
+   * The intake as captured (before auto-link) and its research read, for the
+   * „Eingetragene Produkte" list. `state` is null when the research read failed — then
+   * nothing is auto-linked and `recommendationBrandsAvailable` is false as well, so the
+   * degraded composition can never become a stored fingerprint.
+   */
+  research?: {
+    items: DiscoveryIntakeItem[]
+    state: DiscoveryResearchState | null
+  }
 }
 
 export type DiscoveryCockpitModelResult =
@@ -291,6 +316,10 @@ export type DiscoveryCockpitDependencies = {
     productIds: string[],
   ) => Promise<ScanCatalogPresentationRow[]>
   loadProductIdentities: typeof loadDiscoveryProductIdentities
+  loadResearchState: (
+    client: DiscoveryCockpitAdminClient,
+    items: DiscoveryIntakeItem[],
+  ) => Promise<DiscoveryResearchState>
 }
 
 export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
@@ -300,6 +329,7 @@ export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
   loadDecisions: loadDiscoveryCallDecisions,
   loadSwapProducts: loadSwapPresentationRows,
   loadProductIdentities: loadDiscoveryProductIdentities,
+  loadResearchState: (client, items) => loadDiscoveryResearchState(client, items),
 }
 
 /**
@@ -335,7 +365,24 @@ export async function loadDiscoveryCockpitModel(
   const ideal = await deps.loadIdealRoutine(admin, input.userId, input.intakeId)
   if (ideal.status !== "ready") return { status: ideal.status }
 
-  const items = await deps.loadItems(input.intakeId, admin)
+  const capturedItems = await deps.loadItems(input.intakeId, admin)
+  // Auto-link, read-only: research approved onto an eligible product counts as the item's
+  // product for everything below — verdicts, binding, labels, the PDF and the fingerprint —
+  // without writing `product_id` (the reconcile CLI still can). A failed research read
+  // links nothing and blocks finalising, like a failed brand read: the composition would
+  // otherwise fingerprint (and print) the pre-approval state as if it were current.
+  let researchState: DiscoveryResearchState | null
+  try {
+    researchState = await deps.loadResearchState(admin, capturedItems)
+  } catch (error) {
+    console.error("[discovery] research state lookup failed:", error)
+    researchState = null
+  }
+  const links = researchState
+    ? discoveryResearchLinks(capturedItems, researchState)
+    : new Map<string, string>()
+  // Nothing linked: the very rows as loaded, untouched.
+  const items = links.size > 0 ? withDiscoveryResearchLinks(capturedItems, links) : capturedItems
   // Exactly one verdict pass per render, on the context the Idealplan already prepared.
   const verdicts = await deps.loadVerdicts(admin, input.userId, items, ideal.context)
   const decisions = await deps.loadDecisions(input.intakeId, admin)
@@ -404,6 +451,7 @@ export async function loadDiscoveryCockpitModel(
   // A printed recommendation whose row did not come back would print (and fingerprint)
   // brandless — the same degraded state as a failed read.
   const recommendationBrandsAvailable =
+    researchState !== null &&
     !lookupFailed &&
     !identitiesFailed &&
     !ownedIdentityMissing &&
@@ -426,6 +474,7 @@ export async function loadDiscoveryCockpitModel(
     recommendationProducts,
     recommendationBrandsAvailable,
     productIdentities,
+    research: { items: capturedItems, state: researchState },
   }
 }
 
@@ -451,10 +500,18 @@ export type DiscoveryCockpitSwapOption = {
   label: string
   verdictLabel: string
   origin: "alternative" | "ideal_recommendation"
+  /** Target-vs-product rows for a displayed alternative; null when there are none. */
+  propertyRows: DiscoveryPropertyRow[] | null
 }
 
 export type DiscoveryCockpitVerdictView =
-  | { status: "verdict"; product: ScanProductHeader; payload: ScanPresentedVerdictPayload }
+  | {
+      status: "verdict"
+      product: ScanProductHeader
+      payload: ScanPresentedVerdictPayload
+      /** Her product's target-vs-product rows (empty when they could not be built). */
+      propertyRows: DiscoveryPropertyRow[]
+    }
   | { status: Exclude<DiscoveryVerdictStatus, "verdict"> }
 
 export type DiscoveryCockpitStepView = {
@@ -464,6 +521,8 @@ export type DiscoveryCockpitStepView = {
   roleLabel: string
   roleDescription: string | null
   frequencyLabel: string
+  /** Why / product type / criteria / fit / timing, for the call (not printed, not hashed). */
+  depth: DiscoveryStepDepth | null
   section: "basis" | "optional"
   outcome: DiscoveryStepOutcome
   /** What the participant owns for this step, as the cockpit names it. */
@@ -493,7 +552,24 @@ export type DiscoveryCockpitUnassignedView = {
   reason: DiscoveryUnassignedReason
 }
 
+/** One captured product in „Eingetragene Produkte" — every row but „benutze ich nicht". */
+export type DiscoveryCockpitIntakeProductView = {
+  itemId: string
+  category: PersonalPlanCategory
+  /** Brand + line + name from the catalog when the item has a product, else her words. */
+  label: string
+  imageUrl: string | null
+  status: DiscoveryResearchStatusKind
+  statusLabel: string
+  /** „Recherche starten" applies (the route re-decides server-side). */
+  canStartResearch: boolean
+}
+
 export type DiscoveryCockpitView = {
+  /** The captured products, in capture order (the page sorts them onto the shelf). */
+  intakeProducts: DiscoveryCockpitIntakeProductView[]
+  /** False when the research read failed: statuses say so, and finalising is blocked. */
+  researchStatusAvailable: boolean
   steps: DiscoveryCockpitStepView[]
   unassigned: DiscoveryCockpitUnassignedView[]
   declinedCategories: PersonalPlanCategory[]
@@ -525,6 +601,7 @@ function alternativeOption(
     verdictLabel: string
   },
   identities: ReadonlyMap<string, DiscoveryProductIdentity>,
+  propertyRows: DiscoveryPropertyRow[] | null,
 ): DiscoveryCockpitSwapOption {
   return {
     productId: alternative.productId,
@@ -537,6 +614,7 @@ function alternativeOption(
     ),
     verdictLabel: alternative.verdictLabel,
     origin: "alternative",
+    propertyRows,
   }
 }
 
@@ -555,7 +633,42 @@ function idealRecommendationOption(
     label: optionLabel(preview.productId, { name: preview.productName, brand }, identities),
     verdictLabel: SCAN_VERDICT_COPY[preview.verdict].label,
     origin: "ideal_recommendation",
+    propertyRows: null,
   }
+}
+
+/**
+ * The „Eingetragene Produkte" rows: every captured product (not „benutze ich nicht"), named
+ * like the routine names it once it has a catalog product — her own or auto-linked — and
+ * with its research state otherwise.
+ */
+function intakeProductViews(model: DiscoveryCockpitModel): DiscoveryCockpitIntakeProductView[] {
+  if (!model.research) return []
+  const identities = model.productIdentities ?? new Map<string, DiscoveryProductIdentity>()
+  const state = model.research.state
+  const links = state ? discoveryResearchLinks(model.research.items, state) : new Map()
+  return model.research.items
+    .filter((item) => item.source !== "none")
+    .map((item) => {
+      const productId = item.productId ?? links.get(item.id) ?? null
+      const identity = productId ? identities.get(productId) : undefined
+      const status = discoveryResearchStatus(item, state)
+      return {
+        itemId: item.id,
+        category: item.category,
+        label: identity
+          ? discoveryProductTitle({
+              brand: identity.brand,
+              productLine: identity.productLine,
+              name: identity.name,
+            })
+          : describeDiscoveryIntakeItem(item),
+        imageUrl: identity?.imageUrl ?? null,
+        status: status.kind,
+        statusLabel: DISCOVERY_RESEARCH_STATUS_COPY[status.kind],
+        canStartResearch: status.action !== null,
+      }
+    })
 }
 
 export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): DiscoveryCockpitView {
@@ -573,13 +686,24 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       verdict?.status === "verdict" && verdict.payload.kind === "in_catalog"
         ? verdict.payload.alternatives
         : []
+    const alternativeRows = new Map(
+      (verdict?.status === "verdict" ? (verdict.propertyRows?.alternatives ?? []) : []).map(
+        (entry) => [entry.productId, entry.rows] as const,
+      ),
+    )
     const ideal = idealRecommendationOption(step, brandsByProductId, identities)
     // The ruled fallback: with no displayed alternatives the only swap target the cockpit
     // can honestly offer is the Idealplan's own pick — and never the product already in
     // the participant's bathroom.
     const swapOptions =
       alternatives.length > 0
-        ? alternatives.map((alternative) => alternativeOption(alternative, identities))
+        ? alternatives.map((alternative) =>
+            alternativeOption(
+              alternative,
+              identities,
+              alternativeRows.get(alternative.productId) ?? null,
+            ),
+          )
         : ideal && ideal.productId !== item?.productId
           ? [ideal]
           : []
@@ -591,6 +715,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       roleLabel: step.roleLabel,
       roleDescription: step.roleDescription,
       frequencyLabel: step.frequencyLabel,
+      depth: step.depth ?? null,
       section: step.section,
       outcome: refined.outcome,
       // Every printed label comes from the composition, which fingerprints it.
@@ -599,7 +724,12 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       unanswered: !item && unanswered.has(step.category),
       verdict: verdict
         ? verdict.status === "verdict"
-          ? { status: "verdict", product: verdict.product, payload: verdict.payload }
+          ? {
+              status: "verdict",
+              product: verdict.product,
+              payload: verdict.payload,
+              propertyRows: verdict.propertyRows?.product ?? [],
+            }
           : { status: verdict.status }
         : null,
       swapOptions,
@@ -611,6 +741,8 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
   })
 
   return {
+    intakeProducts: intakeProductViews(model),
+    researchStatusAvailable: model.research ? model.research.state !== null : true,
     steps,
     unassigned: model.routine.unassignedIntakeProducts.map((entry) => ({
       itemId: entry.item.id,
