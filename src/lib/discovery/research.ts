@@ -49,7 +49,7 @@ export async function loadDiscoveryLatestResearchJobs(
   if (unique.length === 0) return latest
   const { data, error } = await client
     .from(JOBS_TABLE)
-    .select("id,submission_id,status,attempt_count,max_attempts,created_at")
+    .select("id,submission_id,status,attempt_count,max_attempts,locked_at,created_at")
     .in("submission_id", unique)
     .order("created_at", { ascending: false })
   if (error) throw new Error("discovery_research_jobs_lookup_failed")
@@ -59,6 +59,7 @@ export async function loadDiscoveryLatestResearchJobs(
     status: string
     attempt_count: number
     max_attempts: number
+    locked_at: string | null
   }
   for (const row of (data as JobRow[] | null) ?? []) {
     if (!latest.has(row.submission_id)) {
@@ -67,6 +68,7 @@ export async function loadDiscoveryLatestResearchJobs(
         status: row.status,
         attemptCount: row.attempt_count,
         maxAttempts: row.max_attempts,
+        lockedAt: row.locked_at,
       })
     }
   }
@@ -106,6 +108,7 @@ export async function loadDiscoveryResearchState(
   if (submissionIds.length === 0) {
     return { submissions: new Map(), latestJobs: new Map(), eligible: new Set() }
   }
+  const checkedAt = new Date().toISOString()
   const [submissions, latestJobs] = await Promise.all([
     deps.loadSubmissions(client, submissionIds),
     deps.loadLatestJobs(client, submissionIds),
@@ -113,7 +116,7 @@ export async function loadDiscoveryResearchState(
   const candidates = discoveryResearchCandidateIds(submissions)
   const eligible =
     candidates.length > 0 ? await deps.filterEligibleProductIds(client, candidates) : new Set()
-  return { submissions, latestJobs, eligible: eligible as Set<string> }
+  return { submissions, latestJobs, eligible: eligible as Set<string>, checkedAt }
 }
 
 // --- writes -------------------------------------------------------------------

@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 import { DISCOVERY_INTAKE_CATEGORY_COPY } from "@/components/discovery/intake/categories"
@@ -8,6 +9,7 @@ import type { DiscoveryCockpitStepView } from "@/lib/discovery/cockpit"
 import type { DiscoveryVerdictStatus } from "@/lib/discovery/load-participant-verdicts"
 import type { DiscoveryPropertyRow } from "@/lib/discovery/property-rows"
 
+import { beginDiscoveryDecisionWrite } from "./decision-writes"
 import { formatDiscoveryTimestamp } from "./format"
 
 /**
@@ -93,6 +95,37 @@ function initialSelection(step: DiscoveryCockpitStepView): Selection {
   return null
 }
 
+/**
+ * What a keep/swap answer means for the panel, pure so it can be tested: a refusal rolls
+ * the optimistic choice back with its message; a success refreshes the page, so the panel
+ * reconciles with committed server state even if a research refresh remounted it mid-write.
+ */
+export function discoveryDecisionWriteOutcome(
+  ok: boolean,
+  body: { code?: string } | null,
+): { rollback: boolean; error: string | null; refresh: boolean } {
+  if (ok) return { rollback: false, error: null, refresh: true }
+  return {
+    rollback: true,
+    // Finalised in the meantime (another tab): the stored timestamp is not ours to
+    // invent, so the screen says what happened instead of faking it.
+    error: body?.code === "finalized" ? FROZEN_HINT : WRITE_ERROR,
+    refresh: false,
+  }
+}
+
+/** Finalize / un-finalize: same rule — a success refreshes, a refusal explains itself. */
+export function discoveryFinalizeWriteOutcome(
+  ok: boolean,
+  body: { code?: string } | null,
+): { error: string | null; refresh: boolean } {
+  if (ok) return { error: null, refresh: true }
+  return {
+    error: body?.code === "not_submitted" ? NOT_SUBMITTED_HINT : WRITE_ERROR,
+    refresh: false,
+  }
+}
+
 function selectionValue(selection: Selection): string {
   if (!selection) return ""
   return selection.decision === "keep" ? "keep" : (selection.swapProductId ?? "")
@@ -109,6 +142,7 @@ export function DiscoveryCallCockpit({
   submitted: boolean
   initialFinalizedAt: string | null
 }) {
+  const router = useRouter()
   const [selections, setSelections] = useState<Record<string, Selection>>(() =>
     Object.fromEntries(steps.map((step) => [step.decisionKey, initialSelection(step)])),
   )
@@ -128,6 +162,7 @@ export function DiscoveryCallCockpit({
     setSelections((current) => ({ ...current, [step.decisionKey]: next }))
     setPending(step.decisionKey)
     setError(null)
+    const endWrite = beginDiscoveryDecisionWrite()
     try {
       const response = await fetch(`/api/admin/beratung/${enrollmentId}/decisions`, {
         method: "POST",
@@ -138,21 +173,20 @@ export function DiscoveryCallCockpit({
           swapProductId: next.swapProductId,
         }),
       })
-      if (!response.ok) {
+      const body = response.ok
+        ? null
+        : ((await response.json().catch(() => null)) as { code?: string } | null)
+      const outcome = discoveryDecisionWriteOutcome(response.ok, body)
+      if (outcome.rollback) {
         setSelections((current) => ({ ...current, [step.decisionKey]: previous }))
-        const body = (await response.json().catch(() => null)) as { code?: string } | null
-        if (body?.code === "finalized") {
-          // Someone (or another tab) finalised in the meantime. The stored timestamp is
-          // not ours to invent, so the screen says what happened instead of faking it.
-          setError(FROZEN_HINT)
-        } else {
-          setError(WRITE_ERROR)
-        }
       }
+      if (outcome.error) setError(outcome.error)
+      if (outcome.refresh) router.refresh()
     } catch {
       setSelections((current) => ({ ...current, [step.decisionKey]: previous }))
       setError(WRITE_ERROR)
     } finally {
+      endWrite()
       setPending(null)
     }
   }
@@ -160,6 +194,7 @@ export function DiscoveryCallCockpit({
   async function toggleFinalize() {
     setFinalizePending(true)
     setError(null)
+    const endWrite = beginDiscoveryDecisionWrite()
     try {
       const response = await fetch(`/api/admin/beratung/${enrollmentId}/finalize`, {
         method: "POST",
@@ -170,14 +205,17 @@ export function DiscoveryCallCockpit({
         callFinalizedAt?: string | null
         code?: string
       } | null
-      if (!response.ok) {
-        setError(body?.code === "not_submitted" ? NOT_SUBMITTED_HINT : WRITE_ERROR)
+      const outcome = discoveryFinalizeWriteOutcome(response.ok, body)
+      if (outcome.error) {
+        setError(outcome.error)
         return
       }
       setFinalizedAt(body?.callFinalizedAt ?? null)
+      if (outcome.refresh) router.refresh()
     } catch {
       setError(WRITE_ERROR)
     } finally {
+      endWrite()
       setFinalizePending(false)
     }
   }

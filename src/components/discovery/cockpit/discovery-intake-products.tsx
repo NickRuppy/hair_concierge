@@ -11,6 +11,8 @@ import { ScanProductThumb } from "@/components/scan/scan-product-thumb"
 import type { DiscoveryCockpitIntakeProductView } from "@/lib/discovery/cockpit"
 import type { DiscoveryResearchStatusKind } from "@/lib/discovery/research-status"
 
+import { useDiscoveryDecisionWritePending } from "./decision-writes"
+
 /**
  * „Eingetragene Produkte": everything the participant captured, at the top of the call —
  * packshot, the product's name, the shelf it sits on and where its research stands.
@@ -116,6 +118,8 @@ export function DiscoveryIntakeProducts({
   products: DiscoveryCockpitIntakeProductView[]
 }) {
   const router = useRouter()
+  // A research refresh would remount the decision panel mid-write: wait until it settles.
+  const decisionWritePending = useDiscoveryDecisionWritePending()
   const [statuses, setStatuses] = useState<Record<string, RowStatus>>({})
   const [pending, setPending] = useState<string | null>(null)
   const [failed, setFailed] = useState<string | null>(null)
@@ -187,7 +191,7 @@ export function DiscoveryIntakeProducts({
                 <button
                   type="button"
                   onClick={() => void start(row.itemId)}
-                  disabled={pending !== null}
+                  disabled={pending !== null || decisionWritePending}
                   className="rounded-lg border border-[var(--brand-plum)] px-3 py-1.5 text-xs font-bold text-[var(--brand-plum)] disabled:opacity-50"
                 >
                   {pending === row.itemId ? START_BUSY : START_LABEL}

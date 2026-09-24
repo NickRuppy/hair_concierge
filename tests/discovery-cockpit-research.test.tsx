@@ -6,6 +6,15 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 import { createDiscoveryCockpitPage } from "../src/app/admin/beratung/[enrollmentId]/page"
 import { createDiscoveryResearchHandler } from "../src/app/api/admin/beratung/[enrollmentId]/research/route"
+import {
+  discoveryDecisionWriteOutcome,
+  discoveryFinalizeWriteOutcome,
+} from "../src/components/discovery/cockpit/discovery-call-cockpit"
+import {
+  beginDiscoveryDecisionWrite,
+  discoveryDecisionWritesPending,
+  subscribeDiscoveryDecisionWrites,
+} from "../src/components/discovery/cockpit/decision-writes"
 import { discoveryResearchStartOutcome } from "../src/components/discovery/cockpit/discovery-intake-products"
 import { discoveryCockpitStateKey } from "../src/components/discovery/cockpit/format"
 import {
@@ -731,4 +740,88 @@ test("a refreshed routine remounts the decision island so its state re-syncs", (
     discoveryCockpitStateKey("hash-a", "2026-09-22T12:00:00.000Z"),
   )
   assert.equal(discoveryCockpitStateKey("hash-a", null), discoveryCockpitStateKey("hash-a", null))
+})
+
+// --- confirm-pass fixes: decision writes vs research refresh ------------------
+
+test("every successful decision or finalize write refreshes; a refusal rolls back and explains", () => {
+  assert.deepEqual(discoveryDecisionWriteOutcome(true, null), {
+    rollback: false,
+    error: null,
+    refresh: true,
+  })
+  const frozen = discoveryDecisionWriteOutcome(false, { code: "finalized" })
+  assert.equal(frozen.rollback, true)
+  assert.equal(frozen.refresh, false)
+  assert.match(frozen.error ?? "", /finalisiert/)
+  assert.equal(
+    discoveryDecisionWriteOutcome(false, null).error,
+    "Nicht gespeichert. Bitte noch einmal.",
+  )
+
+  assert.deepEqual(discoveryFinalizeWriteOutcome(true, { code: undefined }), {
+    error: null,
+    refresh: true,
+  })
+  assert.deepEqual(discoveryFinalizeWriteOutcome(false, { code: "not_submitted" }), {
+    error: "Die Checkliste ist noch nicht abgeschickt.",
+    refresh: false,
+  })
+})
+
+test("research starts wait while a decision write is pending — including a remounted panel's", () => {
+  const seen: boolean[] = []
+  const unsubscribe = subscribeDiscoveryDecisionWrites(() =>
+    seen.push(discoveryDecisionWritesPending()),
+  )
+  assert.equal(discoveryDecisionWritesPending(), false)
+  const endFirst = beginDiscoveryDecisionWrite()
+  const endSecond = beginDiscoveryDecisionWrite()
+  assert.equal(discoveryDecisionWritesPending(), true)
+  endFirst()
+  endFirst() // ending twice never undercounts the other write
+  assert.equal(discoveryDecisionWritesPending(), true)
+  endSecond()
+  assert.equal(discoveryDecisionWritesPending(), false)
+  unsubscribe()
+  assert.deepEqual(seen, [true, true, true, false])
+})
+
+test("a lost submission attach answers with the winner's state, not an error", async () => {
+  let reads = 0
+  const { deps, calls } = routeDeps({
+    loadItems: async () => {
+      reads += 1
+      return reads === 1
+        ? [barcodeItem]
+        : [{ ...barcodeItem, productSubmissionId: ids.newSubmission }]
+    },
+    loadResearchState: async (_client, items) => ({
+      submissions: new Map(
+        items[0]?.productSubmissionId
+          ? [[ids.newSubmission, { status: "pending_review", approvedProductId: null }]]
+          : [],
+      ),
+      latestJobs: new Map(
+        items[0]?.productSubmissionId
+          ? [
+              [
+                ids.newSubmission,
+                { id: ids.job, status: "running", attemptCount: 1, maxAttempts: 3 },
+              ],
+            ]
+          : [],
+      ),
+      eligible: new Set<string>(),
+    }),
+    attachSubmission: async (_client, input) => {
+      calls.push(`attach-lost:${input.itemId}`)
+      return false
+    },
+  })
+  const result = await post(deps, { itemId: ids.barcodeItem })
+  assert.equal(result.status, 200)
+  assert.deepEqual(calls, [`create:${ids.user}:${EAN}`, `attach-lost:${ids.barcodeItem}`])
+  assert.equal(result.body.status?.label, "In Recherche – läuft")
+  assert.equal((result.body as { identityChanged?: boolean }).identityChanged, true)
 })

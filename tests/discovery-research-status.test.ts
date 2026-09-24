@@ -49,10 +49,18 @@ function item(overrides: Partial<DiscoveryIntakeItem> = {}): DiscoveryIntakeItem
 
 function state(input: {
   submission?: DiscoverySubmissionOutcome | null
-  job?: { id: string; status: string; attemptCount: number; maxAttempts: number } | null
+  job?: {
+    id: string
+    status: string
+    attemptCount: number
+    maxAttempts: number
+    lockedAt?: string | null
+  } | null
   eligible?: string[]
+  checkedAt?: string
 }): DiscoveryResearchState {
   return {
+    checkedAt: input.checkedAt,
     submissions: new Map(input.submission ? [[ids.submission, input.submission]] : []),
     latestJobs: new Map(input.job ? [[ids.submission, input.job]] : []),
     eligible: new Set(input.eligible ?? []),
@@ -264,6 +272,29 @@ test("a job out of attempts is named as such and offers no button a worker would
     }),
   )
   assert.equal(running.label, "In Recherche – läuft")
+})
+
+test("a final-attempt running job whose lease expired is exhausted; a live lease still runs", () => {
+  const checkedAt = "2026-09-24T12:00:00.000Z"
+  const running = (lockedAt: string | null, attemptCount = 3) =>
+    status(
+      item(),
+      state({
+        submission: open(),
+        job: { id: ids.job, status: "running", attemptCount, maxAttempts: 3, lockedAt },
+        checkedAt,
+      }),
+    )
+  // Worker died on the last attempt: the claim would reclaim it as stale, but only below
+  // max_attempts — so it would read „läuft" forever.
+  const stale = running("2026-09-24T11:49:59.000Z")
+  assert.equal(stale.label, "Recherche ausgeschöpft – im Review-Center neu anstoßen")
+  assert.equal(stale.action, null)
+  assert.equal(running(null).label, "Recherche ausgeschöpft – im Review-Center neu anstoßen")
+  // Lease younger than ten minutes: still running.
+  assert.equal(running("2026-09-24T11:55:00.000Z").label, "In Recherche – läuft")
+  // An expired lease with attempts left is the claim's job to pick up again: still „läuft".
+  assert.equal(running("2026-09-24T11:00:00.000Z", 2).label, "In Recherche – läuft")
 })
 
 test("an open submission with no live job is enqueued", () => {

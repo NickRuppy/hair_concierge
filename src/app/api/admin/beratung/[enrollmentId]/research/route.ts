@@ -141,15 +141,19 @@ export function createDiscoveryResearchHandler(overrides: DiscoveryResearchRoute
         // name. The conditional writes below then let exactly one of them touch the row.
         const created = await createSubmission(admin, { userId: intake.userId, submission })
         const target = { intakeId: intake.id, itemId: before.item.id }
-        // `false` = a concurrent start already gave the row an identity. Nothing to undo:
-        // the re-read below reports the winner's state instead of ours.
-        if (created.kind === "already_in_catalog") {
-          // The scan lane found the product in the catalog (and it passed the same scan
-          // eligibility): that IS the answer research would give, so it lands on the row the
-          // way the checklist would have stored it.
-          await assignCatalogProduct(admin, { ...target, productId: created.productId })
-        } else {
-          await attachSubmission(admin, { ...target, submissionId: created.submissionId })
+        // The scan lane found the product in the catalog (and it passed the same scan
+        // eligibility): that IS the answer research would give, so it lands on the row the
+        // way the checklist would have stored it. Otherwise the new submission is attached.
+        const landed =
+          created.kind === "already_in_catalog"
+            ? await assignCatalogProduct(admin, { ...target, productId: created.productId })
+            : await attachSubmission(admin, { ...target, submissionId: created.submissionId })
+        if (!landed) {
+          // Lost the race: a concurrent start already gave the row its identity. Report the
+          // winner's state, not an error. Accepted risk (single-admin tool): a submission we
+          // opened and could not attach stays an orphan research request — harmless.
+          const winner = await currentStatus(before.item.id)
+          if (winner) return answer(before.item, winner)
         }
       }
     } catch (error) {

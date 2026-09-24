@@ -91,7 +91,18 @@ export type DiscoveryResearchJob = {
   status: string
   attemptCount: number
   maxAttempts: number
+  /** The worker's lease: set at claim, renewed on every `running` update. */
+  lockedAt?: string | null
 }
+
+/**
+ * How long a `running` lease holds before the claim RPC treats the job as stale. The table
+ * has no locked-until column: staleness is `locked_at <= now() - stale_after`, and
+ * `stale_after` is the claim call's argument — `00:10:00` by default in
+ * `@chaarlie/product-intake-core`'s `claimResearchJobs`, which the local worker does not
+ * override. Mirrored here; change both together.
+ */
+export const DISCOVERY_RESEARCH_LEASE_MS = 10 * 60 * 1000
 
 /** Everything the research read returned for one intake. */
 export type DiscoveryResearchState = {
@@ -101,6 +112,8 @@ export type DiscoveryResearchState = {
   latestJobs: ReadonlyMap<string, DiscoveryResearchJob>
   /** Which of `discoveryResearchCandidateIds` pass scan eligibility. */
   eligible: ReadonlySet<string>
+  /** When the jobs were read — the clock a `running` lease is judged against. */
+  checkedAt?: string
 }
 
 export type DiscoveryResearchItem = Pick<
@@ -276,8 +289,21 @@ const CLAIMABLE_OR_RETRYABLE_JOB_STATUSES = new Set([
   "blocked",
 ])
 
-export function isDiscoveryResearchJobExhausted(job: DiscoveryResearchJob): boolean {
-  return CLAIMABLE_OR_RETRYABLE_JOB_STATUSES.has(job.status) && job.attemptCount >= job.maxAttempts
+/**
+ * A job no worker will ever claim again. Besides the claimable/retryable states, that is a
+ * `running` job on its final attempt whose lease has expired (the worker died mid-run): the
+ * claim would take it back as stale — but only below `max_attempts`, so it stays „running"
+ * forever. A running job with a live lease (or no read clock) is taken at its word.
+ */
+export function isDiscoveryResearchJobExhausted(
+  job: DiscoveryResearchJob,
+  checkedAt?: string,
+): boolean {
+  if (job.attemptCount < job.maxAttempts) return false
+  if (CLAIMABLE_OR_RETRYABLE_JOB_STATUSES.has(job.status)) return true
+  if (job.status !== "running" || !checkedAt) return false
+  if (!job.lockedAt) return true
+  return Date.parse(job.lockedAt) <= Date.parse(checkedAt) - DISCOVERY_RESEARCH_LEASE_MS
 }
 
 const OPEN_SUBMISSION_STATUSES = new Set([
@@ -323,7 +349,7 @@ export function discoveryResearchStatus(
   }
 
   const job = state.latestJobs.get(submissionId) ?? null
-  if (job && isDiscoveryResearchJobExhausted(job)) {
+  if (job && isDiscoveryResearchJobExhausted(job, state.checkedAt)) {
     return { kind: "research_exhausted", action: null }
   }
   const active = job ? ACTIVE_JOB_KINDS[job.status] : undefined
