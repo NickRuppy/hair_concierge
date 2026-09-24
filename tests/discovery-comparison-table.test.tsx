@@ -202,6 +202,9 @@ function cockpitStep(overrides: Partial<DiscoveryCockpitStepView> = {}): Discove
     idealRecommendation: null,
     recommendationLabel: null,
     ownedUsageLabel: null,
+    ownedImageUrl: null,
+    swapProductImageUrl: null,
+    recommendationImageUrl: null,
     usageDifference: null,
     ...overrides,
   }

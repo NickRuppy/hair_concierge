@@ -105,6 +105,8 @@ export type DiscoveryLabeledUnassignedIntakeProduct = DiscoveryUnassignedIntakeP
   label: string
   /** „als Maske benutzt" — present ONLY when her usage differs from the product type (F6). */
   usageLabel?: string
+  /** The printed packshot (batch 6) — present ONLY when the catalog has one (hash-stable). */
+  imageUrl?: string
 }
 
 /**
@@ -314,6 +316,15 @@ export type DiscoveryRefinedStep = {
    * from the product type, so a legacy step object (and its fingerprint) is unchanged.
    */
   ownedUsageLabel?: string
+  /**
+   * The packshots the document prints next to each name (batch 6): her own product (step
+   * and shelf), the decided swap target, the Idealplan's printed recommendation. Each is
+   * present ONLY when the catalog has one AND the name is printed, so a routine without
+   * images keeps its finalised fingerprint and an unprinted image never moves it.
+   */
+  ownedImageUrl?: string
+  swapProductImageUrl?: string
+  recommendationImageUrl?: string
 }
 
 export type DiscoveryRefinedRoutine = {
@@ -342,10 +353,14 @@ export function composeDiscoveryRefinedRoutine(input: {
   ownedProducts?: readonly { itemId: string; brand: string | null; name: string }[]
   /** Catalog product id → product line name, for every product a label names. */
   productLines?: ReadonlyMap<string, string>
+  /** Catalog product id → printable packshot URL (batch 6), for every product a label names. */
+  productImages?: ReadonlyMap<string, string>
 }): DiscoveryRefinedRoutine {
   const reduction = reduceIntakeItemsToSteps(input.steps, input.items)
   const lineOf = (productId: string | null | undefined) =>
     (productId ? input.productLines?.get(productId) : null) ?? null
+  const imageOf = (productId: string | null | undefined) =>
+    (productId ? input.productImages?.get(productId) : undefined) ?? null
   const ownedByItemId = new Map((input.ownedProducts ?? []).map((row) => [row.itemId, row]))
   const ownedLabel = (item: DiscoveryIntakeItem | null) => {
     if (!item) return null
@@ -380,6 +395,11 @@ export function composeDiscoveryRefinedRoutine(input: {
     const swapProduct = swapProductId ? (swapProductsById.get(swapProductId) ?? null) : null
     const preview = step.preview
     const usageLabel = item ? discoveryItemUsageLabel(item, CATEGORY_LABELS) : null
+    const printedRecommendationId =
+      outcome === "ideal" && preview?.kind === "recommendation" ? preview.productId : null
+    const ownedImageUrl = imageOf(item?.productId)
+    const swapProductImageUrl = swapProduct ? imageOf(swapProduct.id) : null
+    const recommendationImageUrl = imageOf(printedRecommendationId)
     return {
       step,
       outcome,
@@ -403,15 +423,20 @@ export function composeDiscoveryRefinedRoutine(input: {
           })
         : null,
       ...(usageLabel ? { ownedUsageLabel: usageLabel } : {}),
+      ...(ownedImageUrl ? { ownedImageUrl } : {}),
+      ...(swapProductImageUrl ? { swapProductImageUrl } : {}),
+      ...(recommendationImageUrl ? { recommendationImageUrl } : {}),
     }
   })
   const unassignedIntakeProducts = reduction.unassignedIntakeProducts.map(
     (entry): DiscoveryLabeledUnassignedIntakeProduct => {
       const usageLabel = discoveryItemUsageLabel(entry.item, CATEGORY_LABELS)
+      const imageUrl = imageOf(entry.item.productId)
       return {
         ...entry,
         label: describeDiscoveryIntakeItem(entry.item, lineOf(entry.item.productId)),
         ...(usageLabel ? { usageLabel } : {}),
+        ...(imageUrl ? { imageUrl } : {}),
       }
     },
   )

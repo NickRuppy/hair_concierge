@@ -47,6 +47,8 @@ type PrintProduct = {
   badge: typeof BADGE_KEEP | typeof BADGE_NEW
   /** „als Haarmaske benutzt" — her product used differently from what it is (F6). */
   usage: string | null
+  /** The catalog packshot (batch 6), fingerprinted with the routine; null → placeholder. */
+  imageUrl: string | null
 }
 
 type PrintStep = {
@@ -69,16 +71,31 @@ function stepProduct(step: DiscoveryCockpitStepView): PrintProduct | null {
   switch (step.outcome) {
     case "kept":
       return step.ownedLabel
-        ? { name: step.ownedLabel, badge: BADGE_KEEP, usage: step.ownedUsageLabel }
+        ? {
+            name: step.ownedLabel,
+            badge: BADGE_KEEP,
+            usage: step.ownedUsageLabel,
+            imageUrl: step.ownedImageUrl,
+          }
         : null
     case "swapped":
       return step.swapProductLabel
-        ? { name: step.swapProductLabel, badge: BADGE_NEW, usage: null }
+        ? {
+            name: step.swapProductLabel,
+            badge: BADGE_NEW,
+            usage: null,
+            imageUrl: step.swapProductImageUrl,
+          }
         : null
     case "ideal":
       // The fingerprinted label, not a re-derivation: what is printed is what is hashed.
       return step.recommendationLabel
-        ? { name: step.recommendationLabel, badge: BADGE_NEW, usage: null }
+        ? {
+            name: step.recommendationLabel,
+            badge: BADGE_NEW,
+            usage: null,
+            imageUrl: step.recommendationImageUrl,
+          }
         : null
     case "undecided":
       return null
@@ -99,6 +116,7 @@ function printSteps(view: DiscoveryCockpitView): PrintStep[] {
 type ShelfEntry = {
   key: string
   name: string
+  imageUrl: string | null
   /** „als Haarmaske benutzt" (F6), fingerprinted with the routine. */
   usage: string | null
   tag: typeof TAG_KEEP | typeof TAG_SWAP | typeof TAG_OPEN
@@ -113,7 +131,12 @@ type ShelfEntry = {
 function shelfEntries(view: DiscoveryCockpitView): ShelfEntry[] {
   return view.steps.flatMap((step): ShelfEntry[] => {
     if (!step.intakeItemId || !step.ownedLabel) return []
-    const owned = { key: step.intakeItemId, name: step.ownedLabel, usage: step.ownedUsageLabel }
+    const owned = {
+      key: step.intakeItemId,
+      name: step.ownedLabel,
+      imageUrl: step.ownedImageUrl,
+      usage: step.ownedUsageLabel,
+    }
     if (step.outcome === "kept") {
       return [{ ...owned, tag: TAG_KEEP, note: NOTE_KEEP }]
     }
@@ -259,19 +282,22 @@ export function DiscoveryRoutineDocument({
                       <span className="dcp-freq">{step.frequencyLabel}</span>
                     </div>
                     {step.product ? (
-                      <p className="dcp-prod">
-                        {step.product.name}
-                        {step.product.usage ? (
-                          <span className="dcp-usage">{` · ${step.product.usage}`}</span>
-                        ) : null}
-                        <span
-                          className={`dcp-badge ${
-                            step.product.badge === BADGE_KEEP ? "dcp-b-keep" : "dcp-b-new"
-                          }`}
-                        >
-                          {step.product.badge}
-                        </span>
-                      </p>
+                      <div className="dcp-prod-row">
+                        <ProductThumb imageUrl={step.product.imageUrl} />
+                        <p className="dcp-prod">
+                          {step.product.name}
+                          {step.product.usage ? (
+                            <span className="dcp-usage">{` · ${step.product.usage}`}</span>
+                          ) : null}
+                          <span
+                            className={`dcp-badge ${
+                              step.product.badge === BADGE_KEEP ? "dcp-b-keep" : "dcp-b-new"
+                            }`}
+                          >
+                            {step.product.badge}
+                          </span>
+                        </p>
+                      </div>
                     ) : (
                       <p className="dcp-prod dcp-prod-open">{OPEN_STEP}</p>
                     )}
@@ -300,6 +326,7 @@ export function DiscoveryRoutineDocument({
                     >
                       {entry.tag}
                     </span>
+                    <ProductThumb imageUrl={entry.imageUrl} />
                     <span>
                       <span className="dcp-pname">{entry.name}</span>
                       {entry.usage ? (
@@ -320,7 +347,12 @@ export function DiscoveryRoutineDocument({
               <p className="dcp-count">{DROP_LEAD}</p>
               <ul className="dcp-plain">
                 {dropped.map((entry) => (
-                  <UnassignedLine key={entry.itemId} label={entry.label} usage={entry.usageLabel} />
+                  <UnassignedLine
+                    key={entry.itemId}
+                    label={entry.label}
+                    usage={entry.usageLabel}
+                    imageUrl={entry.imageUrl}
+                  />
                 ))}
               </ul>
             </section>
@@ -332,7 +364,12 @@ export function DiscoveryRoutineDocument({
               <p className="dcp-count">{PENDING_LEAD}</p>
               <ul className="dcp-plain">
                 {pending.map((entry) => (
-                  <UnassignedLine key={entry.itemId} label={entry.label} usage={entry.usageLabel} />
+                  <UnassignedLine
+                    key={entry.itemId}
+                    label={entry.label}
+                    usage={entry.usageLabel}
+                    imageUrl={entry.imageUrl}
+                  />
                 ))}
               </ul>
             </section>
@@ -348,13 +385,36 @@ export function DiscoveryRoutineDocument({
   )
 }
 
-function UnassignedLine({ label, usage }: { label: string; usage: string | null }) {
+function UnassignedLine({
+  label,
+  usage,
+  imageUrl,
+}: {
+  label: string
+  usage: string | null
+  imageUrl: string | null
+}) {
   return (
     <li>
-      {label}
-      {usage ? <span className="dcp-usage">{` · ${usage}`}</span> : null}
+      <ProductThumb imageUrl={imageUrl} />
+      <span>
+        {label}
+        {usage ? <span className="dcp-usage">{` · ${usage}`}</span> : null}
+      </span>
     </li>
   )
+}
+
+/**
+ * The catalog packshot at a fixed print size, contained (never cropped). Decorative: the
+ * product's name sits right next to it. Without one, a quiet empty tile keeps the column.
+ */
+function ProductThumb({ imageUrl }: { imageUrl: string | null }) {
+  if (!imageUrl) return <span className="dcp-thumb dcp-thumb-empty" aria-hidden="true" />
+  // A plain <img>: the print must not depend on the image optimiser, and the URL is the
+  // catalog's own (already restricted to http(s) in `discoveryProductImagesOf`).
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img className="dcp-thumb" src={imageUrl} alt="" />
 }
 
 const DOCUMENT_STYLES = `
@@ -459,6 +519,21 @@ const DOCUMENT_STYLES = `
   line-height: 1.3;
 }
 .dcp-prod-open { font-weight: 500; color: var(--dcp-text-sub); }
+.dcp-prod-row { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+.dcp-prod-row .dcp-prod { margin: 0; }
+.dcp-thumb {
+  display: block;
+  flex: 0 0 auto;
+  width: 15mm;
+  height: 15mm;
+  object-fit: contain;
+  background: var(--dcp-paper);
+  border: 1px solid var(--dcp-rule);
+  border-radius: 6px;
+  padding: 1mm;
+}
+.dcp-thumb-empty { background: var(--dcp-neutral-bg); border-style: dashed; }
+.dcp-checked .dcp-thumb, .dcp-plain .dcp-thumb { width: 12mm; height: 12mm; }
 .dcp-badge {
   display: inline-block;
   font-size: 10px;
@@ -477,7 +552,8 @@ const DOCUMENT_STYLES = `
 .dcp-checked { list-style: none; margin: 0; padding: 0; }
 .dcp-checked li {
   display: grid;
-  grid-template-columns: 96px 1fr;
+  grid-template-columns: 96px 12mm 1fr;
+  align-items: center;
   gap: 12px;
   padding: 8px 0;
   border-bottom: 1px solid var(--dcp-rule);
@@ -504,6 +580,9 @@ const DOCUMENT_STYLES = `
 .dcp-note { color: var(--dcp-text-sub); }
 .dcp-plain { list-style: none; margin: 0; padding: 0; }
 .dcp-plain li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   padding: 7px 0;
   border-bottom: 1px solid var(--dcp-rule);
   font-size: 13px;

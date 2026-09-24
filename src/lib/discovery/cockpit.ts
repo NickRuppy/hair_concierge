@@ -228,7 +228,10 @@ export type DiscoveryProductIdentity = {
   name: string
   brand: string | null
   productLine: string | null
-  /** The packshot, for the „Eingetragene Produkte" list — display only, never hashed. */
+  /**
+   * The packshot: the „Eingetragene Produkte" list shows it, and the PDF prints it next to
+   * every product (batch 6) — there it is fingerprinted, via `discoveryProductImagesOf`.
+   */
   imageUrl?: string | null
 }
 
@@ -276,6 +279,27 @@ export function discoveryProductLinesOf(
     if (identity.productLine) lines.set(id, identity.productLine)
   }
   return lines
+}
+
+/**
+ * Product id → packshot URL, for the composition (only products that HAVE a printable one:
+ * an http(s) URL — anything else would print as a broken image or worse).
+ */
+export function discoveryProductImagesOf(
+  identities: ReadonlyMap<string, DiscoveryProductIdentity>,
+): Map<string, string> {
+  const images = new Map<string, string>()
+  for (const [id, identity] of identities) {
+    const url = identity.imageUrl?.trim()
+    if (!url) continue
+    try {
+      const protocol = new URL(url).protocol
+      if (protocol === "https:" || protocol === "http:") images.set(id, url)
+    } catch {
+      // Not a URL: nothing to print.
+    }
+  }
+  return images
 }
 
 // --- Composition -------------------------------------------------------------
@@ -480,6 +504,7 @@ export async function loadDiscoveryCockpitModel(
       recommendationProducts,
       ownedProducts: discoveryOwnedProductIdentities(verdicts, productIdentities),
       productLines: discoveryProductLinesOf(productIdentities),
+      productImages: discoveryProductImagesOf(productIdentities),
     }),
     steps: ideal.steps,
     verdicts,
@@ -558,6 +583,10 @@ export type DiscoveryCockpitStepView = {
   recommendationLabel: string | null
   /** „als Haarmaske benutzt" as the PDF prints it next to her product (F6), else null. */
   ownedUsageLabel: string | null
+  /** The packshots the PDF prints next to each name (batch 6) — hashed with the routine. */
+  ownedImageUrl: string | null
+  swapProductImageUrl: string | null
+  recommendationImageUrl: string | null
   /**
    * She uses her product differently from what it is, legitimately (F2): the verdict grades
    * the product against its own category, and the cockpit names both. Null otherwise.
@@ -573,6 +602,8 @@ export type DiscoveryCockpitUnassignedView = {
   reason: DiscoveryUnassignedReason
   /** „als Haarmaske benutzt" as the PDF prints it (F6), else null. */
   usageLabel: string | null
+  /** The packshot the PDF prints next to it (batch 6), else null. */
+  imageUrl: string | null
 }
 
 /** One captured product in „Eingetragene Produkte" — every row but „benutze ich nicht". */
@@ -780,6 +811,9 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       recommendationLabel: refined.recommendationLabel,
       idealRecommendation: ideal,
       ownedUsageLabel: refined.ownedUsageLabel ?? null,
+      ownedImageUrl: refined.ownedImageUrl ?? null,
+      swapProductImageUrl: refined.swapProductImageUrl ?? null,
+      recommendationImageUrl: refined.recommendationImageUrl ?? null,
       usageDifference: verdict?.status === "verdict" ? (verdict.usageDifference ?? null) : null,
     }
   })
@@ -794,6 +828,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       label: entry.label,
       reason: entry.reason,
       usageLabel: entry.usageLabel ?? null,
+      imageUrl: entry.imageUrl ?? null,
     })),
     declinedCategories: model.routine.declinedCategories,
     unansweredCategories: model.routine.unansweredCategories,
