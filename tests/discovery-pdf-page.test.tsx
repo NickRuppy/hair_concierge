@@ -5,7 +5,9 @@ import { NextResponse } from "next/server"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { createDiscoveryPdfPage } from "../src/app/admin/beratung/[enrollmentId]/pdf/page"
+import { DiscoveryRoutineDocument } from "../src/components/discovery/print/discovery-routine-document"
 import {
+  buildDiscoveryCockpitView,
   discoveryOwnedProductIdentities,
   type DiscoveryCallIntake,
   type DiscoveryCockpitModel,
@@ -174,7 +176,7 @@ function item(overrides: Partial<DiscoveryIntakeItem> & Pick<DiscoveryIntakeItem
   } satisfies DiscoveryIntakeItem
 }
 
-const items: DiscoveryIntakeItem[] = [
+const allItems: DiscoveryIntakeItem[] = [
   item({
     id: ids.shampooItem,
     productId: ids.shampoo,
@@ -212,6 +214,13 @@ const items: DiscoveryIntakeItem[] = [
     createdAt: "2026-09-20T10:04:00.000Z",
   }),
 ]
+
+/**
+ * What a printable (finalisable) call holds: everything resolved. The unidentified scan in
+ * `allItems` is still in research — batch 6 sends such a call back to the cockpit, so its
+ * „Dazu melden wir uns noch" safety net is asserted on the document directly below.
+ */
+const items = allItems.filter((entry) => entry.id !== ids.barcodeItem)
 
 const decisions: DiscoveryCallDecision[] = [
   {
@@ -385,6 +394,32 @@ test("the render gate: only a finalised call has a document", async () => {
       cockpit,
     ),
   )
+
+  // Batch 6: what finalising would refuse right now does not print either — a product back
+  // in research, or a printed product without complete verified guidance.
+  const researching = await digestOf({
+    loadModel: async () => ({
+      ...readyModel(),
+      routine: composeDiscoveryRefinedRoutine({
+        steps,
+        items: allItems,
+        decisions,
+        swapProducts,
+        ownedProducts: discoveryOwnedProductIdentities(verdicts),
+      }),
+    }),
+  })
+  assert.ok(researching.startsWith("NEXT_REDIRECT") && researching.includes(cockpit), researching)
+  const guidanceMissing = await digestOf({
+    loadModel: async () => ({
+      ...readyModel(),
+      application: {
+        status: "ready",
+        section: { print: { days: [] }, gaps: [{ productId: ids.shampoo, name: "Elvital" }] },
+      },
+    }),
+  })
+  assert.ok(guidanceMissing.includes(cockpit), guidanceMissing)
 })
 
 // --- the document ---------------------------------------------------------------
@@ -516,8 +551,26 @@ test("the shelf says what happens to every product she brought", async () => {
 
   // A scanned product we could not identify keeps its code instead of inventing a name — and
   // it is NOT filed under „brauchst du nicht mehr", because nothing is known about it yet.
-  assert.ok(markup.includes("Dazu melden wir uns noch</h2>"))
-  assert.ok(markup.includes("Gescanntes Produkt · 4005900123456"))
+  // (Such a call cannot be printed any more — see the render gate — so the safety net is
+  // asserted on the document itself.)
+  const pending = renderToStaticMarkup(
+    <DiscoveryRoutineDocument
+      name={enrollment.name}
+      view={buildDiscoveryCockpitView({
+        ...readyModel(),
+        routine: composeDiscoveryRefinedRoutine({
+          steps,
+          items: allItems,
+          decisions,
+          swapProducts,
+          ownedProducts: discoveryOwnedProductIdentities(verdicts),
+        }),
+      })}
+      finalizedAt={FINALIZED_AT}
+    />,
+  )
+  assert.ok(pending.includes("Dazu melden wir uns noch</h2>"))
+  assert.ok(pending.includes("Gescanntes Produkt · 4005900123456"))
 })
 
 test("the date is the one she lived, not the one UTC stored", async () => {

@@ -5,6 +5,8 @@ import { DiscoveryRoutineDocument } from "@/components/discovery/print/discovery
 import { requireAdmin } from "@/lib/auth/require-admin"
 import {
   buildDiscoveryCockpitView,
+  discoveryCategoryOpenItems,
+  discoveryResearchOpenItems,
   loadDiscoveryCallIntake,
   loadDiscoveryCockpitModel,
   type DiscoveryCockpitAdminClient,
@@ -91,6 +93,17 @@ export function createDiscoveryPdfPage(overrides: Partial<DiscoveryPdfPageDepend
     // a false drift warning — back to the cockpit, like any other temporarily unreadable
     // source.
     if (!view.recommendationBrandsAvailable || !view.applicationAvailable) redirect(cockpitHref)
+    // Whatever finalising would refuse right now — a product in research again, a usage
+    // still open, a printed product without complete verified guidance — must not print
+    // either: the sheet would carry incomplete guidance. Back to the cockpit, which names
+    // it. The drift banner below is only for complete content that changed.
+    if (
+      discoveryCategoryOpenItems(view).length > 0 ||
+      discoveryResearchOpenItems(view).length > 0 ||
+      view.applicationGaps.length > 0
+    ) {
+      redirect(cockpitHref)
+    }
     const drifted = view.sourceHash !== intake.finalizedSourceHash
 
     return (
