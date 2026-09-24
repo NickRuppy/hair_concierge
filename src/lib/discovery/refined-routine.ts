@@ -1,8 +1,10 @@
+import { CATEGORY_LABELS } from "@/lib/personal-plan/decision-presentation"
 import { semanticHash } from "@/lib/personal-plan/routine/canonicalize"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
 import type { ScanCatalogPresentationRow } from "@/lib/scan/product-presentation"
 
+import type { DiscoveryUsageRole } from "./classify"
 import { discoveryProductTitle } from "./product-label"
 
 import type { DiscoveryIdealStep } from "./load-ideal-routine"
@@ -35,7 +37,12 @@ export type DiscoveryIntakeItemSource = (typeof DISCOVERY_INTAKE_SOURCES)[number
  */
 export type DiscoveryIntakeItem = {
   id: string
-  category: PersonalPlanCategory
+  /**
+   * Her USAGE (batch 5): the category she uses the product in. `null` = unknown („Weiß ich
+   * nicht") — such an item binds to no step (`category_unknown`) and blocks finalising.
+   * Legacy (tile-model) rows and every `none` row always carry one.
+   */
+  category: PersonalPlanCategory | null
   source: DiscoveryIntakeItemSource
   brandText: string | null
   productNameText: string | null
@@ -43,6 +50,18 @@ export type DiscoveryIntakeItem = {
   productId: string | null
   productSubmissionId: string | null
   createdAt: string
+  /**
+   * What the product IS when no catalog product carries it (batch 5, F1) — the research
+   * submission is created from it, never from `category` (her usage). Present ONLY when the
+   * row has one: item objects are part of `sourceHash`, and a key that legacy rows never had
+   * must not move their fingerprint (F4).
+   */
+  productType?: PersonalPlanCategory
+  /**
+   * The routine role of her usage (R9: the oil step's three roles, scalp oil). Present ONLY
+   * when set, for the same fingerprint reason as `productType` (F4).
+   */
+  usageRole?: DiscoveryUsageRole
 }
 
 /**
@@ -68,10 +87,13 @@ export const DISCOVERY_INTAKE_SOURCE_RANK: Record<DiscoveryIntakeItemSource, num
  * - `no_ideal_step` — resolved, but its category's ideal steps are already taken (or the
  *   Idealplan has no step for that category at all). The UI renders „kein Schritt im
  *   Idealplan".
+ * - `category_unknown` — her usage is unknown („Weiß ich nicht", batch 5): nothing to bind
+ *   it to until the cockpit sets it. The UI renders „Kategorie offen"; finalising is blocked
+ *   while any item carries it.
  *
  * A typed state, never the German string: the copy lives in the surface, not the model.
  */
-export type DiscoveryUnassignedReason = "research_pending" | "no_ideal_step"
+export type DiscoveryUnassignedReason = "research_pending" | "no_ideal_step" | "category_unknown"
 
 export type DiscoveryUnassignedIntakeProduct = {
   item: DiscoveryIntakeItem
@@ -81,6 +103,23 @@ export type DiscoveryUnassignedIntakeProduct = {
 /** An unassigned product as the documents print it — the label is part of the fingerprint. */
 export type DiscoveryLabeledUnassignedIntakeProduct = DiscoveryUnassignedIntakeProduct & {
   label: string
+  /** „als Maske benutzt" — present ONLY when her usage differs from the product type (F6). */
+  usageLabel?: string
+}
+
+/**
+ * F6: „als Maske benutzt" — how the documents say that she uses a product differently from
+ * what it is. Only a batch-5 row can say so: it carries the product type next to her usage.
+ * A legacy (tile) row has no product type, so it never gets a note and its fingerprint stays
+ * exactly as finalised (F4). Pure: `usageLabels` is the category wording the caller prints.
+ */
+export function discoveryItemUsageLabel(
+  item: Pick<DiscoveryIntakeItem, "category" | "productType" | "source">,
+  usageLabels: Readonly<Record<PersonalPlanCategory, string>>,
+): string | null {
+  if (item.source === "none" || !item.category || !item.productType) return null
+  if (item.productType === item.category) return null
+  return `als ${usageLabels[item.category]} benutzt`
 }
 
 /** „Gescanntes Produkt" — a `barcode_unknown` row carries no text at all, only the code. */
@@ -130,7 +169,7 @@ export type DiscoveryIntakeReduction = {
 
 /** Every checklist category with no row at all, in catalog order. */
 export function missingDiscoveryIntakeCategories(
-  items: ReadonlyArray<{ category: PersonalPlanCategory }>,
+  items: ReadonlyArray<{ category: PersonalPlanCategory | null }>,
 ): PersonalPlanCategory[] {
   const answered = new Set(items.map((item) => item.category))
   return SUPPORTED_PRODUCT_CATEGORY_KEYS.filter((category) => !answered.has(category))
@@ -159,29 +198,59 @@ export function reduceIntakeItemsToSteps(
   items: readonly DiscoveryIntakeItem[],
 ): DiscoveryIntakeReduction {
   const declined = new Set<PersonalPlanCategory>()
-  const bindable: DiscoveryIntakeItem[] = []
+  const bindable: Array<DiscoveryIntakeItem & { category: PersonalPlanCategory }> = []
   const unassigned: DiscoveryUnassignedIntakeProduct[] = []
 
   for (const item of items) {
     if (item.source === "none") {
-      declined.add(item.category)
+      // A `none` row always answers a category (migration CHECK).
+      if (item.category) declined.add(item.category)
+      continue
+    }
+    if (item.category === null) {
+      unassigned.push({ item, reason: "category_unknown" })
       continue
     }
     if (item.productId === null) {
       unassigned.push({ item, reason: "research_pending" })
       continue
     }
-    bindable.push(item)
+    bindable.push(item as DiscoveryIntakeItem & { category: PersonalPlanCategory })
   }
 
+  const ordered = [...bindable].sort(bindingOrder)
+  const bound = new Map<number, DiscoveryIntakeItem>()
+  const taken = new Set<string>()
+
+  // An item with a usage role (R9) takes the step of exactly that (category, role) — or none.
+  for (const item of ordered) {
+    if (!item.usageRole) continue
+    const index = steps.findIndex(
+      (step, position) =>
+        !bound.has(position) && step.category === item.category && step.role === item.usageRole,
+    )
+    if (index === -1) continue
+    bound.set(index, item)
+    taken.add(item.id)
+  }
+
+  // Everything else: positional per category, as before batch 5 — a legacy intake (no roles)
+  // binds exactly as it always did.
   const queues = new Map<PersonalPlanCategory, DiscoveryIntakeItem[]>()
-  for (const item of [...bindable].sort(bindingOrder)) {
+  for (const item of ordered) {
+    if (item.usageRole) continue
     const queue = queues.get(item.category)
     if (queue) queue.push(item)
     else queues.set(item.category, [item])
   }
 
-  const bindings = steps.map((step) => ({ step, item: queues.get(step.category)?.shift() ?? null }))
+  const bindings = steps.map((step, index) => ({
+    step,
+    item: bound.get(index) ?? queues.get(step.category)?.shift() ?? null,
+  }))
+  for (const item of ordered) {
+    if (item.usageRole && !taken.has(item.id)) unassigned.push({ item, reason: "no_ideal_step" })
+  }
   for (const queue of queues.values()) {
     for (const item of queue) unassigned.push({ item, reason: "no_ideal_step" })
   }
@@ -240,6 +309,11 @@ export type DiscoveryRefinedStep = {
   ownedLabel: string | null
   /** The decided swap target as printed (brand + line + name); null when unreadable. */
   swapProductLabel: string | null
+  /**
+   * „als Haarmaske benutzt" next to her product (F6) — present ONLY when her usage differs
+   * from the product type, so a legacy step object (and its fingerprint) is unchanged.
+   */
+  ownedUsageLabel?: string
 }
 
 export type DiscoveryRefinedRoutine = {
@@ -305,6 +379,7 @@ export function composeDiscoveryRefinedRoutine(input: {
     const swapProductId = decision?.swapProductId ?? null
     const swapProduct = swapProductId ? (swapProductsById.get(swapProductId) ?? null) : null
     const preview = step.preview
+    const usageLabel = item ? discoveryItemUsageLabel(item, CATEGORY_LABELS) : null
     return {
       step,
       outcome,
@@ -327,12 +402,19 @@ export function composeDiscoveryRefinedRoutine(input: {
             name: swapProduct.name,
           })
         : null,
+      ...(usageLabel ? { ownedUsageLabel: usageLabel } : {}),
     }
   })
-  const unassignedIntakeProducts = reduction.unassignedIntakeProducts.map((entry) => ({
-    ...entry,
-    label: describeDiscoveryIntakeItem(entry.item, lineOf(entry.item.productId)),
-  }))
+  const unassignedIntakeProducts = reduction.unassignedIntakeProducts.map(
+    (entry): DiscoveryLabeledUnassignedIntakeProduct => {
+      const usageLabel = discoveryItemUsageLabel(entry.item, CATEGORY_LABELS)
+      return {
+        ...entry,
+        label: describeDiscoveryIntakeItem(entry.item, lineOf(entry.item.productId)),
+        ...(usageLabel ? { usageLabel } : {}),
+      }
+    },
+  )
 
   return {
     steps,

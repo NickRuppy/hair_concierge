@@ -15,6 +15,7 @@ import {
 import { requireAdmin } from "@/lib/auth/require-admin"
 import {
   buildDiscoveryCockpitView,
+  discoveryCategoryOpenItems,
   loadDiscoveryCallIntake,
   loadDiscoveryCockpitModel,
   DISCOVERY_RESEARCH_PENDING_LABEL,
@@ -64,6 +65,8 @@ const DECLINED_SUFFIX = "— benutzt sie nicht. Keine Entscheidung nötig."
 const NO_STEP_SUFFIX = "— kein Schritt im Idealplan:"
 const UNANSWERED_PREFIX = "Nicht angegeben:"
 const UNANSWERED_SUFFIX = "— im Call fragen."
+const CATEGORY_OPEN_PREFIX = "Kategorie offen:"
+const CATEGORY_OPEN_SUFFIX = "— oben festlegen, dann finalisieren."
 
 export type DiscoveryCockpitPageDependencies = {
   flagEnabled: () => boolean
@@ -145,6 +148,8 @@ export function createDiscoveryCockpitPage(
           key={`products:${stateKey}`}
           enrollmentId={enrollmentId}
           products={view.intakeProducts}
+          editable={intake.state === "submitted"}
+          finalized={intake.callFinalizedAt !== null}
         />
         <IdealRoutine view={view} />
         <DiscoveryCallCockpit
@@ -153,6 +158,7 @@ export function createDiscoveryCockpitPage(
           steps={view.steps}
           submitted={intake.state === "submitted"}
           initialFinalizedAt={intake.callFinalizedAt}
+          categoryOpenCount={discoveryCategoryOpenItems(view).length}
         />
         <OutsideRoutine view={view} submitted={intake.state === "submitted"} />
       </Shell>
@@ -260,8 +266,9 @@ function categoryLine(categories: readonly PersonalPlanCategory[]): string {
 }
 
 /**
- * Everything with no decision to make, collapsed: „benutze ich nicht" categories on one
- * grey line, categories the participant left unanswered on the next (only once she has
+ * Everything with no decision to make, collapsed: products whose usage is still unknown
+ * first („Kategorie offen" — they block finalising until set in the product list),
+ * „benutze ich nicht" categories on one grey line, categories the participant left unanswered on the next (only once she has
  * submitted — before that they are simply not done yet — and only those without a routine
  * step, since a step names its own), products outside the
  * Idealroutine on another, and whatever is still being researched on the last — named,
@@ -274,6 +281,7 @@ function categoryLine(categories: readonly PersonalPlanCategory[]): string {
 function OutsideRoutine({ view, submitted }: { view: DiscoveryCockpitView; submitted: boolean }) {
   const noStep = view.unassigned.filter((entry) => entry.reason === "no_ideal_step")
   const research = view.unassigned.filter((entry) => entry.reason === "research_pending")
+  const categoryOpen = discoveryCategoryOpenItems(view)
   // An unanswered category WITH a routine step already says so at the step itself; the
   // summary line only carries the ones no step would otherwise mention.
   const namedAtStep = new Set(
@@ -286,11 +294,14 @@ function OutsideRoutine({ view, submitted }: { view: DiscoveryCockpitView; submi
     view.declinedCategories.length === 0 &&
     unanswered.length === 0 &&
     noStep.length === 0 &&
-    research.length === 0
+    research.length === 0 &&
+    categoryOpen.length === 0
   ) {
     return null
   }
-  const noStepCategories = [...new Set(noStep.map((entry) => entry.category))]
+  const noStepCategories = [
+    ...new Set(noStep.flatMap((entry) => (entry.category ? [entry.category] : []))),
+  ]
 
   return (
     <section className="rounded-xl border bg-card">
@@ -298,6 +309,11 @@ function OutsideRoutine({ view, submitted }: { view: DiscoveryCockpitView; submi
         {OUTSIDE_TITLE}
       </h2>
       <div className="flex flex-col gap-1.5 px-4 py-3 text-[13px] leading-6 text-muted-foreground">
+        {categoryOpen.length > 0 ? (
+          <p className="font-bold text-[var(--status-danger-text)]">{`${CATEGORY_OPEN_PREFIX} ${categoryOpen
+            .map((entry) => entry.label)
+            .join(" · ")} ${CATEGORY_OPEN_SUFFIX}`}</p>
+        ) : null}
         {view.declinedCategories.length > 0 ? (
           <p>{`${categoryLine(view.declinedCategories)} ${DECLINED_SUFFIX}`}</p>
         ) : null}

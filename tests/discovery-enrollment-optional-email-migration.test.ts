@@ -43,16 +43,15 @@ const insert = (pg: PGlite, email: string | null) =>
     [email],
   )
 
-test("the optional-email migration has the latest, unique version", () => {
+test("the optional-email migration has a unique version after the toolkit migration", () => {
   const versions = readdirSync(dir)
     .filter((name) => name.endsWith(".sql"))
     .map((name) => name.split("_")[0])
   const own = OPTIONAL_EMAIL.split("_")[0]
   assert.equal(versions.filter((version) => version === own).length, 1)
-  assert.ok(
-    versions.every((version) => version <= own),
-    "must sort after every migration",
-  )
+  // Was "sorts after every migration" when it was the newest; later discovery migrations
+  // (20260924120000) now follow it, so what still matters is that it follows its base.
+  assert.ok(own > BASE.split("_")[0], "must sort after the toolkit migration it alters")
 })
 
 test("a name-only invite is allowed, and several can coexist", async (t) => {

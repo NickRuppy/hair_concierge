@@ -70,6 +70,18 @@ export function refuseSubmittedIntake(context: {
     : null
 }
 
+/**
+ * Participant writes only from our own pages: a cross-site `text/plain` POST would still
+ * carry the participant's cookies and `readJsonBody` parses it. Same rule as the invite
+ * claim route. Next always passes the request; only in-process tests omit it.
+ */
+export function refuseCrossOrigin(request: Request | undefined): NextResponse | null {
+  if (!request) return null
+  return request.headers.get("origin") === new URL(request.url).origin
+    ? null
+    : discoveryIntakeError("cross_origin", 403)
+}
+
 export async function readJsonBody(request: Request): Promise<unknown> {
   try {
     return await request.json()

@@ -126,6 +126,7 @@ export type DiscoveryResearchItem = Pick<
   | "barcodeIdentifier"
   | "productId"
   | "productSubmissionId"
+  | "productType"
 >
 
 /** Does this item's research decide anything? Only an open row with a submission. */
@@ -178,7 +179,8 @@ export function withDiscoveryResearchLinks<T extends { id: string; productId: st
  * `null` when neither lane has enough to go on.
  */
 export type DiscoveryResearchSubmissionInput = {
-  category: DiscoveryIntakeItem["category"]
+  /** The PRODUCT TYPE (batch 5, F1) — for a legacy row without one, its tile category. */
+  category: NonNullable<DiscoveryIntakeItem["category"]>
   identifier: string | null
   brandText: string | null
   productNameText: string | null
@@ -188,14 +190,20 @@ export function discoveryResearchSubmissionInput(
   item: DiscoveryResearchItem,
 ): DiscoveryResearchSubmissionInput | null {
   if (item.source === "none") return null
+  // What the product IS, never how she uses it (F1). A legacy row (tile model) has no
+  // product type; there the tile she filed it under was also what the submission got. A
+  // product whose type is still unknown („Weiß ich nicht") has neither — and is not
+  // researchable until the cockpit sets its type.
+  const category = item.productType ?? item.category
+  if (!category) return null
   const brandText = item.brandText?.trim() || null
   const productNameText = item.productNameText?.trim() || null
   const ean = item.barcodeIdentifier ? validateEanInput(item.barcodeIdentifier) : null
   if (ean?.ok) {
-    return { category: item.category, identifier: ean.value, brandText, productNameText }
+    return { category, identifier: ean.value, brandText, productNameText }
   }
   if (brandText && productNameText) {
-    return { category: item.category, identifier: null, brandText, productNameText }
+    return { category, identifier: null, brandText, productNameText }
   }
   return null
 }
@@ -222,6 +230,7 @@ export type DiscoveryResearchStatusKind =
   | "barcode_only"
   | "no_research"
   | "not_researchable"
+  | "type_unknown"
   | "status_unavailable"
 
 /** Internal, short, Nick's register — this list is read during the call, not by her. */
@@ -245,6 +254,7 @@ export const DISCOVERY_RESEARCH_STATUS_COPY: Record<DiscoveryResearchStatusKind,
   barcode_only: "Nur Barcode – keine Recherche",
   no_research: "Keine Recherche",
   not_researchable: "Zu wenig Angaben für eine Recherche",
+  type_unknown: "Produkttyp offen",
   status_unavailable: "Status gerade nicht lesbar",
 }
 
@@ -324,6 +334,11 @@ export function discoveryResearchStatus(
   if (item.productId !== null) return { kind: "in_catalog", action: null }
 
   if (item.productSubmissionId === null) {
+    // „Weiß ich nicht" (batch 5, R7): nobody knows what the product is, so there is nothing to
+    // research it AS until the cockpit sets its type.
+    if (item.source !== "none" && !item.productType && item.category === null) {
+      return { kind: "type_unknown", action: null }
+    }
     const input = discoveryResearchSubmissionInput(item)
     if (!input) return { kind: "not_researchable", action: null }
     const kind = input.productNameText ? "no_research" : "barcode_only"

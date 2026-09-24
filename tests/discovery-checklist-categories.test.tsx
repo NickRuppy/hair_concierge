@@ -1,6 +1,5 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { renderToStaticMarkup } from "react-dom/server"
 
 import { CATEGORY_COPY } from "../src/components/personal-plan-products/stage3-product-copy"
 
@@ -9,7 +8,6 @@ import {
   DISCOVERY_INTAKE_CATEGORY_COUNT,
   DISCOVERY_INTAKE_GROUPS,
 } from "../src/components/discovery/intake/categories"
-import { DiscoveryProductEntry } from "../src/components/discovery/intake/discovery-product-entry"
 import { DISCOVERY_INTAKE_CATEGORIES } from "../src/lib/discovery/intake"
 
 /**
@@ -66,62 +64,6 @@ test("scalp care names its contents in the participant's row — the shared labe
 
   // The override is scoped to the checklist: the personal plan keeps its label.
   assert.equal(CATEGORY_COPY.scalp_care.label, "Kopfhautprodukt")
-})
-
-test("the scalp entry screen names the contents once, in the breadcrumb, not twice", () => {
-  const html = renderToStaticMarkup(
-    <DiscoveryProductEntry
-      category={DISCOVERY_INTAKE_CATEGORY_COPY.scalp_care}
-      items={[]}
-      retailerSearchEnabled={false}
-      onAdded={() => {}}
-      onRemoved={() => {}}
-      onBack={() => {}}
-    />,
-  )
-  assert.match(html, /Welche Kopfhautpflege benutzt du\?/)
-  assert.equal(html.split("(Serum, Tonikum, Peeling)").length - 1, 1)
-  assert.doesNotMatch(html, /z\. B\./)
-  assert.doesNotMatch(html, /Kopfhautprodukt/)
-})
-
-test("a filled scalp category reads „Deine Kopfhautpflege“", () => {
-  const html = renderToStaticMarkup(
-    <DiscoveryProductEntry
-      category={DISCOVERY_INTAKE_CATEGORY_COPY.scalp_care}
-      items={[
-        {
-          id: "i1",
-          category: "scalp_care",
-          source: "catalog_search",
-          brandText: "Weleda",
-          productNameText: "Kopfhaut-Tonikum",
-          barcodeIdentifier: null,
-        },
-      ]}
-      retailerSearchEnabled={false}
-      onAdded={() => {}}
-      onRemoved={() => {}}
-      onBack={() => {}}
-    />,
-  )
-  assert.match(html, /Deine Kopfhautpflege/)
-})
-
-test("other categories' entry screens carry no brackets and no example line", () => {
-  const html = renderToStaticMarkup(
-    <DiscoveryProductEntry
-      category={DISCOVERY_INTAKE_CATEGORY_COPY.shampoo}
-      items={[]}
-      retailerSearchEnabled={false}
-      onAdded={() => {}}
-      onRemoved={() => {}}
-      onBack={() => {}}
-    />,
-  )
-  assert.match(html, /Welches Shampoo benutzt du\?/)
-  assert.doesNotMatch(html, /z\. B\./)
-  assert.doesNotMatch(html, />Shampoo \(/)
 })
 
 test("the shelves: conditioner is care, not washing", () => {

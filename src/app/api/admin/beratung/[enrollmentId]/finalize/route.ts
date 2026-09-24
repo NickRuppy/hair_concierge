@@ -1,7 +1,11 @@
 import type { NextRequest } from "next/server"
 import { z } from "zod"
 
-import { finalizeDiscoveryCall, unfinalizeDiscoveryCall } from "@/lib/discovery/cockpit"
+import {
+  discoveryCategoryOpenItems,
+  finalizeDiscoveryCall,
+  unfinalizeDiscoveryCall,
+} from "@/lib/discovery/cockpit"
 
 import {
   discoveryCockpitError,
@@ -24,6 +28,12 @@ import {
  * It requires `state = 'submitted'` (the predicate is in the UPDATE, so a draft intake
  * finalises nothing), and un-finalising clears BOTH columns and is allowed at any time —
  * sending the PDF is manual, so there is nothing to protect against a second thought.
+ *
+ * Batch 5 (P1-5): finalising is refused (409 `category_open`) while any product's usage is
+ * unknown („Kategorie offen") — re-checked here from the composition it fingerprints, so
+ * every product is understood before she gets a result. Accepted risk (plan Rev. 3): no
+ * compare-and-set against a concurrent usage write; the correction itself refuses while
+ * finalised.
  */
 
 const bodySchema = z.object({ finalized: z.boolean() })
@@ -69,6 +79,9 @@ export function createDiscoveryFinalizeHandler(overrides: DiscoveryFinalizeRoute
 
     const composed = await resolveDiscoveryCockpitView(admin, intake, guardOverrides)
     if (!composed.ok) return composed.response
+    if (discoveryCategoryOpenItems(composed.view).length > 0) {
+      return discoveryCockpitError("category_open", 409)
+    }
     // A degraded composition (recommendation brands unreadable) must never become the
     // stored fingerprint — the PDF would later read as drifted for no real reason.
     if (!composed.view.recommendationBrandsAvailable) {

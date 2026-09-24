@@ -42,7 +42,12 @@ const NOTE_SWAP_UNNAMED = "Wird ersetzt."
 
 // --- projection ---------------------------------------------------------------
 
-type PrintProduct = { name: string; badge: typeof BADGE_KEEP | typeof BADGE_NEW }
+type PrintProduct = {
+  name: string
+  badge: typeof BADGE_KEEP | typeof BADGE_NEW
+  /** „als Haarmaske benutzt" — her product used differently from what it is (F6). */
+  usage: string | null
+}
 
 type PrintStep = {
   key: string
@@ -63,12 +68,18 @@ type PrintStep = {
 function stepProduct(step: DiscoveryCockpitStepView): PrintProduct | null {
   switch (step.outcome) {
     case "kept":
-      return step.ownedLabel ? { name: step.ownedLabel, badge: BADGE_KEEP } : null
+      return step.ownedLabel
+        ? { name: step.ownedLabel, badge: BADGE_KEEP, usage: step.ownedUsageLabel }
+        : null
     case "swapped":
-      return step.swapProductLabel ? { name: step.swapProductLabel, badge: BADGE_NEW } : null
+      return step.swapProductLabel
+        ? { name: step.swapProductLabel, badge: BADGE_NEW, usage: null }
+        : null
     case "ideal":
       // The fingerprinted label, not a re-derivation: what is printed is what is hashed.
-      return step.recommendationLabel ? { name: step.recommendationLabel, badge: BADGE_NEW } : null
+      return step.recommendationLabel
+        ? { name: step.recommendationLabel, badge: BADGE_NEW, usage: null }
+        : null
     case "undecided":
       return null
   }
@@ -88,6 +99,8 @@ function printSteps(view: DiscoveryCockpitView): PrintStep[] {
 type ShelfEntry = {
   key: string
   name: string
+  /** „als Haarmaske benutzt" (F6), fingerprinted with the routine. */
+  usage: string | null
   tag: typeof TAG_KEEP | typeof TAG_SWAP | typeof TAG_OPEN
   note: string
 }
@@ -100,14 +113,14 @@ type ShelfEntry = {
 function shelfEntries(view: DiscoveryCockpitView): ShelfEntry[] {
   return view.steps.flatMap((step): ShelfEntry[] => {
     if (!step.intakeItemId || !step.ownedLabel) return []
+    const owned = { key: step.intakeItemId, name: step.ownedLabel, usage: step.ownedUsageLabel }
     if (step.outcome === "kept") {
-      return [{ key: step.intakeItemId, name: step.ownedLabel, tag: TAG_KEEP, note: NOTE_KEEP }]
+      return [{ ...owned, tag: TAG_KEEP, note: NOTE_KEEP }]
     }
     if (step.outcome === "swapped") {
       return [
         {
-          key: step.intakeItemId,
-          name: step.ownedLabel,
+          ...owned,
           tag: TAG_SWAP,
           note: step.swapProductLabel
             ? `${NOTE_SWAP_PREFIX}${step.swapProductLabel}.`
@@ -115,7 +128,7 @@ function shelfEntries(view: DiscoveryCockpitView): ShelfEntry[] {
         },
       ]
     }
-    return [{ key: step.intakeItemId, name: step.ownedLabel, tag: TAG_OPEN, note: NOTE_OPEN }]
+    return [{ ...owned, tag: TAG_OPEN, note: NOTE_OPEN }]
   })
 }
 
@@ -216,7 +229,11 @@ export function DiscoveryRoutineDocument({
   const dropped = view.unassigned.filter((entry) => entry.reason === "no_ideal_step")
   // Still in research: nothing is known about these yet, so the document promises a follow-up
   // instead of filing them under „brauchst du nicht mehr" — that would be a claim we cannot make.
-  const pending = view.unassigned.filter((entry) => entry.reason === "research_pending")
+  // A product whose usage is still open never reaches a finalised sheet (finalising is
+  // blocked, P1-5); should one ever appear, it is a follow-up too, never a silent omission.
+  const pending = view.unassigned.filter(
+    (entry) => entry.reason === "research_pending" || entry.reason === "category_unknown",
+  )
   const date = formatDiscoveryDocumentDate(finalizedAt)
 
   return (
@@ -244,6 +261,9 @@ export function DiscoveryRoutineDocument({
                     {step.product ? (
                       <p className="dcp-prod">
                         {step.product.name}
+                        {step.product.usage ? (
+                          <span className="dcp-usage">{` · ${step.product.usage}`}</span>
+                        ) : null}
                         <span
                           className={`dcp-badge ${
                             step.product.badge === BADGE_KEEP ? "dcp-b-keep" : "dcp-b-new"
@@ -282,6 +302,9 @@ export function DiscoveryRoutineDocument({
                     </span>
                     <span>
                       <span className="dcp-pname">{entry.name}</span>
+                      {entry.usage ? (
+                        <span className="dcp-usage">{` · ${entry.usage}`}</span>
+                      ) : null}
                       {" — "}
                       <span className="dcp-note">{entry.note}</span>
                     </span>
@@ -297,7 +320,7 @@ export function DiscoveryRoutineDocument({
               <p className="dcp-count">{DROP_LEAD}</p>
               <ul className="dcp-plain">
                 {dropped.map((entry) => (
-                  <li key={entry.itemId}>{entry.label}</li>
+                  <UnassignedLine key={entry.itemId} label={entry.label} usage={entry.usageLabel} />
                 ))}
               </ul>
             </section>
@@ -309,7 +332,7 @@ export function DiscoveryRoutineDocument({
               <p className="dcp-count">{PENDING_LEAD}</p>
               <ul className="dcp-plain">
                 {pending.map((entry) => (
-                  <li key={entry.itemId}>{entry.label}</li>
+                  <UnassignedLine key={entry.itemId} label={entry.label} usage={entry.usageLabel} />
                 ))}
               </ul>
             </section>
@@ -322,6 +345,15 @@ export function DiscoveryRoutineDocument({
         </div>
       </div>
     </>
+  )
+}
+
+function UnassignedLine({ label, usage }: { label: string; usage: string | null }) {
+  return (
+    <li>
+      {label}
+      {usage ? <span className="dcp-usage">{` · ${usage}`}</span> : null}
+    </li>
   )
 }
 
@@ -468,6 +500,7 @@ const DOCUMENT_STYLES = `
 .dcp-t-swap { background: var(--dcp-plum-ice); color: var(--dcp-plum-dark); }
 .dcp-t-open { background: var(--dcp-open-bg); color: var(--dcp-open-text); }
 .dcp-pname { font-weight: 600; color: var(--dcp-plum-darkest); }
+.dcp-usage { font-size: 0.85em; font-weight: 500; color: var(--dcp-text-sub); }
 .dcp-note { color: var(--dcp-text-sub); }
 .dcp-plain { list-style: none; margin: 0; padding: 0; }
 .dcp-plain li {

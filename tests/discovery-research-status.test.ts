@@ -384,3 +384,25 @@ test("the submission a research start creates uses the scan lanes' own inputs", 
     null,
   )
 })
+
+test("F1: a research start uses the PRODUCT TYPE, never her usage; a legacy row falls back to its tile", () => {
+  // A conditioner she uses as a mask is researched as a conditioner.
+  assert.equal(
+    discoveryResearchSubmissionInput(item({ category: "mask", productType: "conditioner" }))
+      ?.category,
+    "conditioner",
+  )
+  // Legacy (tile model): no product type — the tile was also what research got then.
+  assert.equal(discoveryResearchSubmissionInput(item({ category: "mask" }))?.category, "mask")
+  // Type known, usage unknown: still researchable, as the type.
+  assert.equal(
+    discoveryResearchSubmissionInput(item({ category: null as never, productType: "leave_in" }))
+      ?.category,
+    "leave_in",
+  )
+  // „Weiß ich nicht": neither — nothing to research until the cockpit sets the type.
+  assert.equal(
+    discoveryResearchSubmissionInput(item({ category: null as never, productSubmissionId: null })),
+    null,
+  )
+})

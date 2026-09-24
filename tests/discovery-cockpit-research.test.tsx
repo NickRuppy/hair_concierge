@@ -538,6 +538,35 @@ test("an item without a submission gets one, opened as the participant and attac
   ])
 })
 
+test("F1: the route opens the submission as the PRODUCT TYPE, not her usage; legacy rows as their tile", async () => {
+  const categories: string[] = []
+  const recordCategory = async (_client: unknown, input: { submission: { category: string } }) => {
+    categories.push(input.submission.category)
+    return { kind: "pending_submission" as const, submissionId: ids.newSubmission }
+  }
+  // Filed (used) as a mask, but the product is a conditioner.
+  const typed = routeDeps({
+    loadItems: async () => [{ ...barcodeItem, productType: "conditioner" }],
+    createSubmission: recordCategory,
+  })
+  assert.equal((await post(typed.deps, { itemId: ids.barcodeItem })).status, 200)
+  // Legacy row: no product type — its tile is what research gets, as before.
+  const legacy = routeDeps({ createSubmission: recordCategory })
+  assert.equal((await post(legacy.deps, { itemId: ids.barcodeItem })).status, 200)
+  assert.deepEqual(categories, ["conditioner", "mask"])
+
+  // „Weiß ich nicht": no type and no usage — nothing to research yet.
+  const unknown = routeDeps({
+    loadItems: async () => [{ ...barcodeItem, category: null as never }],
+    createSubmission: async () => {
+      throw new Error("must not be reached")
+    },
+  })
+  const refused = await post(unknown.deps, { itemId: ids.barcodeItem })
+  assert.equal(refused.status, 409)
+  assert.equal(refused.body.code, "not_researchable")
+})
+
 test("a submit that finds the product in the catalog lands it on the row instead", async () => {
   const { deps, calls } = routeDeps({
     createSubmission: async () => ({ kind: "already_in_catalog", productId: ids.approved }),

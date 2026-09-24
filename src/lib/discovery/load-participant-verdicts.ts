@@ -31,6 +31,7 @@ import type {
 
 import { mobileAssessmentRows } from "@/lib/mobile/result-presentation"
 
+import { isDiscoveryUsageWithinProductFamily } from "./classify"
 import { discoveryPropertyRows, type DiscoveryPropertyRow } from "./property-rows"
 import type { DiscoveryIntakeItem } from "./refined-routine"
 
@@ -73,6 +74,17 @@ export type DiscoveryVerdictPropertyRows = {
   alternatives: Array<{ productId: string; rows: DiscoveryPropertyRow[] }>
 }
 
+/**
+ * F2: she uses the product differently from what it is, and that difference is one of the
+ * product type's own usages (conditioner used as a mask, an oil on the scalp). The verdict
+ * then grades the PRODUCT against its own category; the cockpit says
+ * „Benutzt als Maske · Produkt: Conditioner" next to it.
+ */
+export type DiscoveryUsageDifference = {
+  usageCategory: PersonalPlanCategory
+  productCategory: PersonalPlanCategory
+}
+
 export type DiscoveryParticipantVerdict =
   | {
       itemId: string
@@ -81,6 +93,8 @@ export type DiscoveryParticipantVerdict =
       product: ScanProductHeader
       payload: ScanPresentedVerdictPayload
       propertyRows?: DiscoveryVerdictPropertyRows
+      /** Present only for a legitimate usage difference (F2). */
+      usageDifference?: DiscoveryUsageDifference
     }
   | {
       itemId: string
@@ -139,10 +153,11 @@ export async function loadParticipantScanVerdicts(
   deps: DiscoveryVerdictDeps = DISCOVERY_VERDICT_DEPS,
 ): Promise<DiscoveryParticipantVerdict[]> {
   // Controller ruling: an item still in research carries no catalog product, so it gets no
-  // verdict at all and surfaces through `unassignedIntakeProducts` instead.
+  // verdict at all and surfaces through `unassignedIntakeProducts` instead. Neither does an
+  // item whose usage is unknown (batch 5): there is no step to judge it for yet.
   const owned = items.filter(
     (item): item is DiscoveryIntakeItem & { productId: string } =>
-      item.source !== "none" && item.productId !== null,
+      item.source !== "none" && item.productId !== null && item.category !== null,
   )
   if (owned.length === 0) return []
 
@@ -180,6 +195,7 @@ export async function loadParticipantScanVerdicts(
       product: toScanProductHeader(scannedRow),
       payload: presentScanVerdictPayload(entry.verdict, rows),
       ...propertyRowsFor(entry),
+      ...(entry.usageDifference ? { usageDifference: entry.usageDifference } : {}),
     }
   })
 }
@@ -242,6 +258,7 @@ type ItemVerdict =
       productId: string
       category: PersonalPlanCategory
       verdict: ScanVerdictPayload
+      usageDifference?: DiscoveryUsageDifference
     }
   | {
       kind: Exclude<DiscoveryVerdictStatus, "verdict">
@@ -263,9 +280,23 @@ async function resolveItemVerdict(
     if (await deps.isProductSearchQuarantined(admin, active.id)) {
       return { kind: "quarantined", itemId, productId }
     }
-    // The participant filed the product under one category; the catalog says another. The
-    // engine would grade it against the wrong decision, so the cockpit shows the conflict.
-    if (active.category !== item.category) return { kind: "target_mismatch", itemId, productId }
+    // The participant uses the product in one category; the catalog files it under another.
+    // A usage the product type's own usage question offers (F2) is legitimate: the verdict
+    // grades the PRODUCT against its own category and names the difference. Anything else —
+    // and every legacy (tile) row, which has no product type and was always shown as a
+    // conflict — would grade it against the wrong decision, so the cockpit shows the conflict.
+    let usageDifference: DiscoveryUsageDifference | undefined
+    if (active.category !== item.category) {
+      const usageCategory = item.category
+      if (
+        item.productType === undefined ||
+        usageCategory === null ||
+        !isDiscoveryUsageWithinProductFamily(active.category, usageCategory)
+      ) {
+        return { kind: "target_mismatch", itemId, productId }
+      }
+      usageDifference = { usageCategory, productCategory: active.category }
+    }
 
     const decision = context.snapshot.decisions.find((entry) => entry.category === active.category)
     if (!decision) return { kind: "decision_missing", itemId, productId }
@@ -279,6 +310,7 @@ async function resolveItemVerdict(
       verdict: await withEligibleAlternatives(verdict, (ids) =>
         deps.loadQuarantinedProductIdsAmong(admin, ids),
       ),
+      ...(usageDifference ? { usageDifference } : {}),
     }
   } catch (error) {
     // No identity or answers in this breadcrumb — the participant's user id is the same
