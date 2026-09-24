@@ -16,6 +16,7 @@ import { requireAdmin } from "@/lib/auth/require-admin"
 import {
   buildDiscoveryCockpitView,
   discoveryCategoryOpenItems,
+  discoveryResearchOpenItems,
   loadDiscoveryCallIntake,
   loadDiscoveryCockpitModel,
   DISCOVERY_RESEARCH_PENDING_LABEL,
@@ -55,6 +56,8 @@ const NO_SOURCE = "Für dieses Konto gibt es noch kein nutzbares Haarprofil. Qui
 const UNAVAILABLE = "Der Plan lässt sich gerade nicht lesen. Später noch einmal öffnen."
 const BRANDS_UNAVAILABLE =
   "Produktnamen (Marke, Linie) sind gerade nicht vollständig lesbar. Finalisieren und PDF gehen erst wieder, wenn der Katalog antwortet — Seite später neu laden."
+const APPLICATION_UNAVAILABLE =
+  "Die Anwendung („So wendest du es an“) ist gerade nicht lesbar. Finalisieren und PDF gehen erst wieder, wenn sie lesbar ist — Seite später neu laden."
 const RESEARCH_UNAVAILABLE =
   "Der Recherche-Stand ist gerade nicht lesbar. Freigegebene Produkte fehlen deshalb in der Routine; Finalisieren und PDF gehen erst wieder, wenn er lesbar ist — Seite später neu laden."
 const PREFLIGHT_TITLE = "Intake unvollständig"
@@ -144,6 +147,7 @@ export function createDiscoveryCockpitPage(
         ) : view.recommendationBrandsAvailable ? null : (
           <Notice text={BRANDS_UNAVAILABLE} />
         )}
+        {view.applicationAvailable ? null : <Notice text={APPLICATION_UNAVAILABLE} />}
         <DiscoveryIntakeProducts
           key={`products:${stateKey}`}
           enrollmentId={enrollmentId}
@@ -159,6 +163,8 @@ export function createDiscoveryCockpitPage(
           submitted={intake.state === "submitted"}
           initialFinalizedAt={intake.callFinalizedAt}
           categoryOpenCount={discoveryCategoryOpenItems(view).length}
+          researchOpenCount={discoveryResearchOpenItems(view).length}
+          applicationGaps={view.applicationGaps.map((gap) => gap.name)}
         />
         <OutsideRoutine view={view} submitted={intake.state === "submitted"} />
       </Shell>

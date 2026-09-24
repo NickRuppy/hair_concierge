@@ -1,3 +1,8 @@
+import { discoveryCadenceLabel } from "@/lib/discovery/cadence-label"
+import type {
+  DiscoveryApplicationPrintDay,
+  DiscoveryApplicationPrintStep,
+} from "@/lib/discovery/application"
 import type { DiscoveryCockpitStepView, DiscoveryCockpitView } from "@/lib/discovery/cockpit"
 
 /**
@@ -27,6 +32,7 @@ const DROP_LEAD = "Diese Produkte kommen in deiner Routine nicht mehr vor."
 const PENDING_TITLE = "Dazu melden wir uns noch"
 const PENDING_LEAD = "Diese Produkte schauen wir uns in Ruhe an und sagen dir Bescheid."
 const OPEN_STEP = "Noch offen – Empfehlung folgt"
+const APPLY_TITLE = "So wendest du es an"
 const FALLBACK_SUB = "Deine Routine nach unserem Gespräch."
 
 const BADGE_KEEP = "bleibt"
@@ -47,6 +53,8 @@ type PrintProduct = {
   badge: typeof BADGE_KEEP | typeof BADGE_NEW
   /** „als Haarmaske benutzt" — her product used differently from what it is (F6). */
   usage: string | null
+  /** The catalog packshot (batch 6), fingerprinted with the routine; null → placeholder. */
+  imageUrl: string | null
 }
 
 type PrintStep = {
@@ -69,16 +77,31 @@ function stepProduct(step: DiscoveryCockpitStepView): PrintProduct | null {
   switch (step.outcome) {
     case "kept":
       return step.ownedLabel
-        ? { name: step.ownedLabel, badge: BADGE_KEEP, usage: step.ownedUsageLabel }
+        ? {
+            name: step.ownedLabel,
+            badge: BADGE_KEEP,
+            usage: step.ownedUsageLabel,
+            imageUrl: step.ownedImageUrl,
+          }
         : null
     case "swapped":
       return step.swapProductLabel
-        ? { name: step.swapProductLabel, badge: BADGE_NEW, usage: null }
+        ? {
+            name: step.swapProductLabel,
+            badge: BADGE_NEW,
+            usage: null,
+            imageUrl: step.swapProductImageUrl,
+          }
         : null
     case "ideal":
       // The fingerprinted label, not a re-derivation: what is printed is what is hashed.
       return step.recommendationLabel
-        ? { name: step.recommendationLabel, badge: BADGE_NEW, usage: null }
+        ? {
+            name: step.recommendationLabel,
+            badge: BADGE_NEW,
+            usage: null,
+            imageUrl: step.recommendationImageUrl,
+          }
         : null
     case "undecided":
       return null
@@ -89,7 +112,8 @@ function printSteps(view: DiscoveryCockpitView): PrintStep[] {
   return view.steps.map((step) => ({
     key: step.decisionKey,
     categoryLabel: step.categoryLabel,
-    frequencyLabel: cadenceLabel(step.frequencyLabel),
+    // Guarded against the plan's internal phrasings (see `discoveryCadenceLabel`).
+    frequencyLabel: discoveryCadenceLabel(step.frequencyLabel),
     // The role's own sentence — what this step does, in the plan's established wording.
     why: step.roleDescription ?? step.roleLabel,
     product: stepProduct(step),
@@ -99,6 +123,7 @@ function printSteps(view: DiscoveryCockpitView): PrintStep[] {
 type ShelfEntry = {
   key: string
   name: string
+  imageUrl: string | null
   /** „als Haarmaske benutzt" (F6), fingerprinted with the routine. */
   usage: string | null
   tag: typeof TAG_KEEP | typeof TAG_SWAP | typeof TAG_OPEN
@@ -113,7 +138,12 @@ type ShelfEntry = {
 function shelfEntries(view: DiscoveryCockpitView): ShelfEntry[] {
   return view.steps.flatMap((step): ShelfEntry[] => {
     if (!step.intakeItemId || !step.ownedLabel) return []
-    const owned = { key: step.intakeItemId, name: step.ownedLabel, usage: step.ownedUsageLabel }
+    const owned = {
+      key: step.intakeItemId,
+      name: step.ownedLabel,
+      imageUrl: step.ownedImageUrl,
+      usage: step.ownedUsageLabel,
+    }
     if (step.outcome === "kept") {
       return [{ ...owned, tag: TAG_KEEP, note: NOTE_KEEP }]
     }
@@ -192,27 +222,6 @@ function formatDiscoveryDocumentDate(value: string | null | undefined): string {
   return DOCUMENT_DATE_FORMAT.format(date)
 }
 
-/**
- * The cadence column, guarded against the plan's own internal phrasings.
- *
- * `frequencyLabel` (decision-presentation.ts) answers „wird im nächsten Schritt verfeinert"
- * for a category with no frequency target yet, and prefixes „später: " while a category is
- * paused. Both are plan-machinery wording about a step that is not settled — on a finished
- * document they read as a loose end, so the cadence falls back to a neutral „nach Bedarf"
- * and the step's own line (open or named) carries the actual state.
- */
-const CADENCE_FALLBACK = "nach Bedarf"
-const CADENCE_UNREFINED = "wird im nächsten Schritt verfeinert"
-const CADENCE_PAUSED_PREFIX = "später:"
-
-function cadenceLabel(label: string): string {
-  const value = label.trim()
-  if (!value || value === CADENCE_UNREFINED || value.startsWith(CADENCE_PAUSED_PREFIX)) {
-    return CADENCE_FALLBACK
-  }
-  return value
-}
-
 // --- document -----------------------------------------------------------------
 
 export function DiscoveryRoutineDocument({
@@ -259,19 +268,22 @@ export function DiscoveryRoutineDocument({
                       <span className="dcp-freq">{step.frequencyLabel}</span>
                     </div>
                     {step.product ? (
-                      <p className="dcp-prod">
-                        {step.product.name}
-                        {step.product.usage ? (
-                          <span className="dcp-usage">{` · ${step.product.usage}`}</span>
-                        ) : null}
-                        <span
-                          className={`dcp-badge ${
-                            step.product.badge === BADGE_KEEP ? "dcp-b-keep" : "dcp-b-new"
-                          }`}
-                        >
-                          {step.product.badge}
-                        </span>
-                      </p>
+                      <div className="dcp-prod-row">
+                        <ProductThumb imageUrl={step.product.imageUrl} />
+                        <p className="dcp-prod">
+                          {step.product.name}
+                          {step.product.usage ? (
+                            <span className="dcp-usage">{` · ${step.product.usage}`}</span>
+                          ) : null}
+                          <span
+                            className={`dcp-badge ${
+                              step.product.badge === BADGE_KEEP ? "dcp-b-keep" : "dcp-b-new"
+                            }`}
+                          >
+                            {step.product.badge}
+                          </span>
+                        </p>
+                      </div>
                     ) : (
                       <p className="dcp-prod dcp-prod-open">{OPEN_STEP}</p>
                     )}
@@ -300,6 +312,7 @@ export function DiscoveryRoutineDocument({
                     >
                       {entry.tag}
                     </span>
+                    <ProductThumb imageUrl={entry.imageUrl} />
                     <span>
                       <span className="dcp-pname">{entry.name}</span>
                       {entry.usage ? (
@@ -320,7 +333,12 @@ export function DiscoveryRoutineDocument({
               <p className="dcp-count">{DROP_LEAD}</p>
               <ul className="dcp-plain">
                 {dropped.map((entry) => (
-                  <UnassignedLine key={entry.itemId} label={entry.label} usage={entry.usageLabel} />
+                  <UnassignedLine
+                    key={entry.itemId}
+                    label={entry.label}
+                    usage={entry.usageLabel}
+                    imageUrl={entry.imageUrl}
+                  />
                 ))}
               </ul>
             </section>
@@ -332,9 +350,23 @@ export function DiscoveryRoutineDocument({
               <p className="dcp-count">{PENDING_LEAD}</p>
               <ul className="dcp-plain">
                 {pending.map((entry) => (
-                  <UnassignedLine key={entry.itemId} label={entry.label} usage={entry.usageLabel} />
+                  <UnassignedLine
+                    key={entry.itemId}
+                    label={entry.label}
+                    usage={entry.usageLabel}
+                    imageUrl={entry.imageUrl}
+                  />
                 ))}
               </ul>
+            </section>
+          ) : null}
+
+          {view.application ? (
+            <section className="dcp-apply">
+              <h2 className="dcp-section">{APPLY_TITLE}</h2>
+              {view.application.days.map((day) => (
+                <ApplicationDay key={day.dayType} day={day} />
+              ))}
             </section>
           ) : null}
 
@@ -348,13 +380,111 @@ export function DiscoveryRoutineDocument({
   )
 }
 
-function UnassignedLine({ label, usage }: { label: string; usage: string | null }) {
+function UnassignedLine({
+  label,
+  usage,
+  imageUrl,
+}: {
+  label: string
+  usage: string | null
+  imageUrl: string | null
+}) {
   return (
     <li>
-      {label}
-      {usage ? <span className="dcp-usage">{` · ${usage}`}</span> : null}
+      <ProductThumb imageUrl={imageUrl} />
+      <span>
+        {label}
+        {usage ? <span className="dcp-usage">{` · ${usage}`}</span> : null}
+      </span>
     </li>
   )
+}
+
+/**
+ * One application day as the production page (`/anwendung/<Tag>`) shows it — label, summary,
+ * cadence, then every step in order, numbered like the page numbers them — in print form.
+ * All copy is the compiled, verified guidance; this component only lays it out.
+ */
+function ApplicationDay({ day }: { day: DiscoveryApplicationPrintDay }) {
+  return (
+    <section className="dcp-day">
+      <div className="dcp-day-head">
+        <h3 className="dcp-day-title">{day.label}</h3>
+        {day.cadence ? <span className="dcp-day-cadence">{day.cadence}</span> : null}
+      </div>
+      <p className="dcp-day-summary">{day.summary}</p>
+      <ol className="dcp-day-steps">
+        {day.steps.map((step, index) => (
+          <ApplicationStep key={`${day.dayType}:${index}`} step={step} position={index + 1} />
+        ))}
+      </ol>
+    </section>
+  )
+}
+
+function ApplicationStep({
+  step,
+  position,
+}: {
+  step: DiscoveryApplicationPrintStep
+  position: number
+}) {
+  if (step.kind === "transition") {
+    return (
+      <li className="dcp-apply-transition">
+        <span className="dcp-apply-num dcp-apply-num-quiet">{position}</span>
+        <p>{step.copy}</p>
+      </li>
+    )
+  }
+  if (step.kind === "unresolved") {
+    return (
+      <li className="dcp-apply-product dcp-apply-unresolved">
+        <span className="dcp-apply-num dcp-apply-num-quiet">{position}</span>
+        <div>
+          <p className="dcp-apply-cat">{step.categoryLabel}</p>
+          <p className="dcp-apply-name">{step.title}</p>
+          <p className="dcp-apply-purpose">{step.body}</p>
+        </div>
+      </li>
+    )
+  }
+  return (
+    <li className="dcp-apply-product">
+      <span className="dcp-apply-num">{position}</span>
+      <div>
+        <div className="dcp-apply-head">
+          <ProductThumb imageUrl={step.imageUrl} />
+          <div>
+            <p className="dcp-apply-cat">{step.categoryLabel}</p>
+            <p className="dcp-apply-name">
+              {step.name}
+              {step.usage ? <span className="dcp-usage">{` · ${step.usage}`}</span> : null}
+            </p>
+            <p className="dcp-apply-purpose">{step.purpose}</p>
+          </div>
+        </div>
+        <ol className="dcp-apply-actions">
+          {step.actions.map((action, index) => (
+            <li key={index}>{action}</li>
+          ))}
+        </ol>
+        {step.note ? <p className="dcp-apply-note">{step.note}</p> : null}
+      </div>
+    </li>
+  )
+}
+
+/**
+ * The catalog packshot at a fixed print size, contained (never cropped). Decorative: the
+ * product's name sits right next to it. Without one, a quiet empty tile keeps the column.
+ */
+function ProductThumb({ imageUrl }: { imageUrl: string | null }) {
+  if (!imageUrl) return <span className="dcp-thumb dcp-thumb-empty" aria-hidden="true" />
+  // A plain <img>: the print must not depend on the image optimiser, and the URL is the
+  // catalog's own (already restricted to http(s) in `discoveryProductImagesOf`).
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img className="dcp-thumb" src={imageUrl} alt="" />
 }
 
 const DOCUMENT_STYLES = `
@@ -459,6 +589,21 @@ const DOCUMENT_STYLES = `
   line-height: 1.3;
 }
 .dcp-prod-open { font-weight: 500; color: var(--dcp-text-sub); }
+.dcp-prod-row { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+.dcp-prod-row .dcp-prod { margin: 0; }
+.dcp-thumb {
+  display: block;
+  flex: 0 0 auto;
+  width: 15mm;
+  height: 15mm;
+  object-fit: contain;
+  background: var(--dcp-paper);
+  border: 1px solid var(--dcp-rule);
+  border-radius: 6px;
+  padding: 1mm;
+}
+.dcp-thumb-empty { background: var(--dcp-neutral-bg); border-style: dashed; }
+.dcp-checked .dcp-thumb, .dcp-plain .dcp-thumb { width: 12mm; height: 12mm; }
 .dcp-badge {
   display: inline-block;
   font-size: 10px;
@@ -477,7 +622,8 @@ const DOCUMENT_STYLES = `
 .dcp-checked { list-style: none; margin: 0; padding: 0; }
 .dcp-checked li {
   display: grid;
-  grid-template-columns: 96px 1fr;
+  grid-template-columns: 96px 12mm 1fr;
+  align-items: center;
   gap: 12px;
   padding: 8px 0;
   border-bottom: 1px solid var(--dcp-rule);
@@ -494,7 +640,7 @@ const DOCUMENT_STYLES = `
   border-radius: 4px;
   padding: 3px 7px;
   text-align: center;
-  align-self: start;
+  align-self: center;
 }
 .dcp-t-keep { background: var(--dcp-ok-bg); color: var(--dcp-ok-text); }
 .dcp-t-swap { background: var(--dcp-plum-ice); color: var(--dcp-plum-dark); }
@@ -504,6 +650,9 @@ const DOCUMENT_STYLES = `
 .dcp-note { color: var(--dcp-text-sub); }
 .dcp-plain { list-style: none; margin: 0; padding: 0; }
 .dcp-plain li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   padding: 7px 0;
   border-bottom: 1px solid var(--dcp-rule);
   font-size: 13px;
@@ -513,6 +662,94 @@ const DOCUMENT_STYLES = `
   break-inside: avoid;
 }
 .dcp-plain li:first-child { border-top: 1px solid var(--dcp-rule); }
+.dcp-apply { margin-top: 26px; }
+.dcp-day { margin-top: 18px; }
+.dcp-day-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--dcp-rule);
+  padding-bottom: 6px;
+  break-after: avoid;
+}
+.dcp-day-title {
+  font-family: var(--dcp-display);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--dcp-plum-darkest);
+  margin: 0;
+}
+.dcp-day-cadence { font-size: 11.5px; color: var(--dcp-text-caption); margin-left: auto; }
+.dcp-day-summary {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--dcp-text-sub);
+  margin: 6px 0 10px;
+  break-after: avoid;
+}
+.dcp-day-steps { list-style: none; margin: 0; padding: 0; }
+.dcp-apply-product, .dcp-apply-transition {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 0 10px;
+  padding: 8px 0;
+  break-inside: avoid;
+}
+.dcp-apply-product + .dcp-apply-product { border-top: 1px solid var(--dcp-rule); }
+.dcp-apply-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--dcp-plum);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dcp-apply-num-quiet {
+  background: transparent;
+  color: var(--dcp-text-caption);
+  border: 1px dashed var(--dcp-plum-light);
+}
+.dcp-apply-transition p { margin: 1px 0 0; font-size: 12.5px; color: var(--dcp-text-sub); font-style: italic; }
+.dcp-apply-head { display: flex; align-items: flex-start; gap: 10px; }
+.dcp-apply-cat {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dcp-plum);
+  margin: 0;
+}
+.dcp-apply-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dcp-plum-darkest);
+  margin: 1px 0 0;
+  line-height: 1.3;
+}
+.dcp-apply-purpose { font-size: 12.5px; line-height: 1.5; color: var(--dcp-text-sub); margin: 2px 0 0; }
+.dcp-apply-actions {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--dcp-text);
+}
+.dcp-apply-actions li + li { margin-top: 3px; }
+.dcp-apply-note {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--dcp-text-sub);
+  background: var(--dcp-plum-ice);
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+.dcp-apply-unresolved .dcp-apply-name { color: var(--dcp-text-sub); }
 .dcp-footer {
   margin-top: 28px;
   padding-top: 12px;
@@ -537,6 +774,8 @@ const DOCUMENT_STYLES = `
 @page { size: A4; margin: 0; }
 @media print {
   .dcp-sheet { background: #fff; padding: 0; }
+  /* The instructions start on their own page, after the one-page routine summary. */
+  .dcp-apply { break-before: page; margin-top: 0; }
   .dcp-page {
     box-shadow: none;
     margin: 0;

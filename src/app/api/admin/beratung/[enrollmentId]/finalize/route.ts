@@ -3,6 +3,7 @@ import { z } from "zod"
 
 import {
   discoveryCategoryOpenItems,
+  discoveryResearchOpenItems,
   finalizeDiscoveryCall,
   unfinalizeDiscoveryCall,
 } from "@/lib/discovery/cockpit"
@@ -34,6 +35,13 @@ import {
  * every product is understood before she gets a result. Accepted risk (plan Rev. 3): no
  * compare-and-set against a concurrent usage write; the correction itself refuses while
  * finalised.
+ *
+ * Batch 6 (Nick, 2026-09-24): finalising is also refused while any captured product is not
+ * yet resolved to a catalog product (409 `research_open`), and while a printed product has
+ * no complete verified application guide (409 `application_missing`) — every researched
+ * product carries its verified guide, so a finalised sheet always has complete
+ * „So wendest du es an" guidance, never invented copy. A section that cannot be read right
+ * now refuses like unreadable brands (503 `unavailable`).
  */
 
 const bodySchema = z.object({ finalized: z.boolean() })
@@ -82,9 +90,16 @@ export function createDiscoveryFinalizeHandler(overrides: DiscoveryFinalizeRoute
     if (discoveryCategoryOpenItems(composed.view).length > 0) {
       return discoveryCockpitError("category_open", 409)
     }
-    // A degraded composition (recommendation brands unreadable) must never become the
-    // stored fingerprint — the PDF would later read as drifted for no real reason.
-    if (!composed.view.recommendationBrandsAvailable) {
+    if (discoveryResearchOpenItems(composed.view).length > 0) {
+      return discoveryCockpitError("research_open", 409)
+    }
+    if (composed.view.applicationGaps.length > 0) {
+      return discoveryCockpitError("application_missing", 409)
+    }
+    // A degraded composition (recommendation brands or the application section unreadable)
+    // must never become the stored fingerprint — the PDF would later read as drifted for no
+    // real reason.
+    if (!composed.view.recommendationBrandsAvailable || !composed.view.applicationAvailable) {
       return discoveryCockpitError("unavailable", 503)
     }
 

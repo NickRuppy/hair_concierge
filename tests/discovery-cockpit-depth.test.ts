@@ -128,7 +128,7 @@ function row(overrides: Partial<MobileScanRow>): MobileScanRow {
   }
 }
 
-test("mobile rows map to ✓/✗ lines in the iOS card's own „statt“ wording", () => {
+test("mobile rows keep label, product value and target value apart (iOS comparison table)", () => {
   assert.deepEqual(
     discoveryPropertyRows([
       row({}),
@@ -157,23 +157,48 @@ test("mobile rows map to ✓/✗ lines in the iOS card's own „statt“ wording
         state: "unknown",
         displayStatus: "neutral",
       }),
+      row({ targetValue: null, targetStopIds: [], state: "no_target", displayStatus: "neutral" }),
     ]),
     [
       {
         dimensionId: "shampoo.scalp_route",
+        label: "Kopfhaut",
         status: "mismatch",
-        text: "Kopfhaut: trocken statt fettig",
+        state: "outside_target",
+        productValue: "trocken",
+        targetValue: "fettig",
       },
       {
         dimensionId: "conditioner.weight",
+        label: "Pflegegewicht",
         status: "partial",
-        text: "Pflegegewicht: mittel statt leicht",
+        state: "outside_target",
+        productValue: "mittel",
+        targetValue: "leicht",
       },
-      { dimensionId: "shampoo.scalp_route", status: "match", text: "Kopfhaut: fettig" },
       {
         dimensionId: "shampoo.scalp_route",
+        label: "Kopfhaut",
+        status: "match",
+        state: "in_target",
+        productValue: "fettig",
+        targetValue: "fettig",
+      },
+      {
+        dimensionId: "shampoo.scalp_route",
+        label: "Kopfhaut",
         status: "unknown",
-        text: "Kopfhaut: keine Angabe (Ziel: fettig)",
+        state: "unknown",
+        productValue: null,
+        targetValue: "fettig",
+      },
+      {
+        dimensionId: "shampoo.scalp_route",
+        label: "Kopfhaut",
+        status: "unknown",
+        state: "no_target",
+        productValue: "trocken",
+        targetValue: null,
       },
     ],
   )
@@ -275,17 +300,27 @@ test("the verdict loader carries property rows for her product and every display
   )
   assert.equal(entry?.status, "verdict")
   if (entry?.status !== "verdict") return
-  assert.deepEqual(entry.propertyRows?.product, [
-    {
-      dimensionId: "shampoo.scalp_route",
-      status: "mismatch",
-      text: "Kopfhaut: trocken statt fettig",
-    },
-  ])
+  assert.deepEqual(
+    entry.propertyRows?.product.map((entry) => [
+      entry.status,
+      entry.productValue,
+      entry.targetValue,
+    ]),
+    [["mismatch", "trocken", "fettig"]],
+  )
   assert.deepEqual(entry.propertyRows?.alternatives, [
     {
       productId: alternativeId,
-      rows: [{ dimensionId: "shampoo.scalp_route", status: "match", text: "Kopfhaut: fettig" }],
+      rows: [
+        {
+          dimensionId: "shampoo.scalp_route",
+          label: "Kopfhaut",
+          status: "match",
+          state: "in_target",
+          productValue: "fettig",
+          targetValue: "fettig",
+        },
+      ],
     },
   ])
   // The web payload the shared scan sheet renders stays the stripped web shape.

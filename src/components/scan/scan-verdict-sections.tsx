@@ -66,6 +66,7 @@ export type ScanVerdictSectionsPayload =
 export function ScanVerdictSections({
   result,
   productTitle,
+  comparison,
 }: {
   result: ScanVerdictSectionsPayload
   /**
@@ -74,6 +75,12 @@ export function ScanVerdictSections({
    * passes its composed brand + line + name label so cockpit and PDF name a product alike.
    */
   productTitle?: string
+  /**
+   * Cockpit-only: a target-vs-product table that takes the place of the dimension bars and
+   * criterion rows. The scan feature never passes it, so the scanner renders exactly as
+   * before (`tests/scan-result-card-parity.test.tsx`).
+   */
+  comparison?: React.ReactNode
 }) {
   const sections =
     result.kind === "not_needed"
@@ -90,7 +97,9 @@ export function ScanVerdictSections({
         <Banner status={result.status} title={result.headline} subtitle={result.subtitle} />
       )}
 
-      {result.dimensions.length > 0 ? (
+      {comparison ?? null}
+
+      {!comparison && result.dimensions.length > 0 ? (
         <section className="divide-y divide-border rounded-[14px] border border-border bg-card px-4 py-1">
           {result.dimensions.map((dimension) => (
             <ScanDimensionBar key={dimension.dimensionId} dimension={dimension} />
@@ -98,7 +107,8 @@ export function ScanVerdictSections({
         </section>
       ) : null}
 
-      {result.kind === "in_catalog" &&
+      {!comparison &&
+      result.kind === "in_catalog" &&
       result.dimensions.length === 0 &&
       result.criteria.length > 0 ? (
         <CriterionRows criteria={result.criteria} />

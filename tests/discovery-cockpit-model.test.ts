@@ -323,6 +323,7 @@ test("a textless barcode row is named by its code, and research items stay named
       label: "Gescanntes Produkt · 4005900123456",
       reason: "research_pending",
       usageLabel: null,
+      imageUrl: null,
     },
   ])
 })
