@@ -1,5 +1,7 @@
 import "server-only"
 
+import type { PlanProductRole } from "@/lib/personal-plan/types"
+
 import type { RoutinePayloadV1 } from "./contracts"
 import { effectiveRoutineCadenceCopyDe } from "./cadence"
 import { adaptCatalogApplicationFacts } from "@/lib/routines/personal-plan/application/catalog-facts"
@@ -21,7 +23,8 @@ import {
   PRODUCT_APPLICATION_FACTS_SELECT,
 } from "@/lib/catalog-authority/product-spec-relationships"
 
-const semanticRoleByRoutineRole = {
+/** Stage 4 routine role → the application compiler's semantic role (shared with discovery). */
+export const SEMANTIC_ROLE_BY_ROUTINE_ROLE = {
   shampoo_everyday: "cleanse",
   shampoo_dandruff: "cleanse",
   conditioner_rinse_out: "condition",
@@ -40,7 +43,8 @@ const semanticRoleByRoutineRole = {
   scalp_flake_oil_adjunct: "scalp_care",
   density_claim_tonic: "scalp_care",
   scalp_exfoliant: "scalp_care",
-} as const
+} as const satisfies Record<PlanProductRole, NormalizedRoutineItem["role"]>
+const semanticRoleByRoutineRole = SEMANTIC_ROLE_BY_ROUTINE_ROLE
 
 type ProductRow = {
   id: string
@@ -217,6 +221,76 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
       exactGuidanceProtocols: [],
       applicationPointersV2: [],
     }
+  const catalog = await readApplicationCatalogRows({
+    client: input.client,
+    productIds,
+    contractVersion,
+  })
+  const normalized = normalizeApplicationRoutineProducts({
+    ...catalog,
+    contractVersion,
+    candidates: candidates.map(({ item, routineOrder }) => {
+      if (item.product.kind !== "owned" && item.product.kind !== "planned") {
+        throw new Error("accepted_routine_product_identity_unavailable")
+      }
+      const productId = item.product.productId
+      if (!productId) throw new Error("accepted_routine_product_identity_unavailable")
+      return {
+        itemId: item.itemKey,
+        applicationInstanceKey: item.assignmentKey,
+        routineOrder,
+        category: item.category,
+        routineRole: item.role,
+        productId,
+        productName: item.product.displayName,
+        kind: item.product.kind,
+        executable: item.executable,
+        effectiveCadenceDe: effectiveRoutineCadenceCopyDe({
+          recommended: item.cadence?.recommended ?? null,
+          userOverride:
+            typeof item.cadence?.userOverride === "string" ? item.cadence.userOverride : null,
+          resolved: item.cadence?.resolved,
+          role: item.role,
+          displayKey: item.cadence?.displayKey,
+        }),
+      }
+    }),
+  })
+  const routineItems = normalized.routineItems
+  const degradedItems = normalized.degradedItems
+  unresolvedRoutineItems.push(...normalized.unresolvedRoutineItems)
+  // A page without a single serviceable product is not a degraded page; it has
+  // no Routine left to show and must not render as ready.
+  if (routineItems.length === 0 && degradedItems.length > 0) {
+    throw new Error("accepted_routine_product_unavailable")
+  }
+  return {
+    routineVersionId: input.activeVersion.id,
+    planId: input.activeVersion.payload.planId,
+    routineItems,
+    unresolvedRoutineItems,
+    degradedItems,
+    exactGuidanceProtocols: normalized.exactGuidanceProtocols,
+    applicationPointersV2: normalized.applicationPointersV2,
+  }
+}
+
+/** The catalog rows Stage 5 reads for a set of routine products: facts + reviewed protocols. */
+export type ApplicationCatalogRows = {
+  products: ReadonlyMap<string, ProductRow>
+  protocolRows: ReviewedProductApplicationProtocolRow[]
+}
+
+/**
+ * The two catalog reads behind Stage 5's product guidance, for any caller that names its
+ * products (the accepted Routine here, the discovery call sheet in `lib/discovery`).
+ */
+export async function readApplicationCatalogRows(input: {
+  client: ApplicationRoutineReadClient
+  productIds: readonly string[]
+  contractVersion: PersonalPlanStage5ContractVersion
+}): Promise<ApplicationCatalogRows> {
+  const productIds = [...input.productIds]
   const { data, error } = await input.client
     .from("products")
     .select(PRODUCT_APPLICATION_FACTS_SELECT)
@@ -227,41 +301,81 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
   if (productIds.length > 0) {
     const result = await input.client
       .from("product_application_protocols")
-      .select(contractVersion === 2 ? PRODUCT_PROTOCOL_V2_SELECT : PRODUCT_PROTOCOL_SELECT)
+      .select(input.contractVersion === 2 ? PRODUCT_PROTOCOL_V2_SELECT : PRODUCT_PROTOCOL_SELECT)
       .in("product_id", productIds)
     if (result.error) throw new CatalogDatabaseReadError()
     protocolRows = (result.data ?? []) as ReviewedProductApplicationProtocolRow[]
   }
+  return { products, protocolRows }
+}
+
+/**
+ * One routine product as Stage 5 normalizes it — whatever routine it comes from. `kind`
+ * `planned` is a product not bought yet: a catalog product that is no longer recommended
+ * must not be presented as a confirmed step (owned products stay usable regardless).
+ */
+export type ApplicationRoutineProductCandidate = {
+  itemId: string
+  applicationInstanceKey: string
+  routineOrder: number
+  category: NormalizedRoutineItem["category"]
+  routineRole: PlanProductRole
+  productId: string
+  productName: string
+  kind: "owned" | "planned"
+  executable: boolean
+  effectiveCadenceDe: string
+}
+
+/**
+ * Pure: verified catalog identities and exact heat guidance for each candidate, from the
+ * rows `readApplicationCatalogRows` returned. A candidate the catalog can no longer serve
+ * under its identity degrades to an unresolved item of its own.
+ */
+export function normalizeApplicationRoutineProducts(input: {
+  candidates: readonly ApplicationRoutineProductCandidate[]
+  products: ReadonlyMap<string, ProductRow>
+  protocolRows: readonly ReviewedProductApplicationProtocolRow[]
+  contractVersion: PersonalPlanStage5ContractVersion
+}): {
+  routineItems: NormalizedRoutineItem[]
+  unresolvedRoutineItems: NormalizedUnresolvedRoutineItem[]
+  degradedItems: DegradedApplicationItem[]
+  exactGuidanceProtocols: ApplicationGuidanceProtocolV1[]
+  applicationPointersV2: ProductApplicationPointerV2[]
+} {
+  const { products, protocolRows } = input
   const routineItems: NormalizedRoutineItem[] = []
+  const unresolvedRoutineItems: NormalizedUnresolvedRoutineItem[] = []
   const degradedItems: DegradedApplicationItem[] = []
-  for (const { item, routineOrder } of candidates) {
-    if (item.product.kind !== "owned" && item.product.kind !== "planned") {
-      throw new Error("accepted_routine_product_identity_unavailable")
-    }
-    const productId = item.product.productId
-    if (!productId) throw new Error("accepted_routine_product_identity_unavailable")
+  for (const candidate of input.candidates) {
+    const productId = candidate.productId
     const product = products.get(productId)
     const category = product?.category_key ?? product?.category
     // A planned product the catalog no longer recommends must not be presented
     // as a confirmed step; owned products stay usable regardless of curation.
     const demotedRecommendation =
-      item.product.kind === "planned" && product?.is_chaarlie_recommended === false
+      candidate.kind === "planned" && product?.is_chaarlie_recommended === false
     if (
       !product ||
       !product.is_active ||
       product.lifecycle_status !== "active" ||
-      category !== item.category ||
+      category !== candidate.category ||
       demotedRecommendation
     ) {
       // One unavailable catalog identity must degrade its own step only; the
       // rest of the accepted Routine stays readable.
-      degradedItems.push({ productId, category: item.category, issue: "catalog_identity_mismatch" })
+      degradedItems.push({
+        productId,
+        category: candidate.category,
+        issue: "catalog_identity_mismatch",
+      })
       unresolvedRoutineItems.push({
-        itemId: item.itemKey,
-        category: item.category,
-        role: semanticRoleByRoutineRole[item.role],
-        routineOrder,
-        applicationInstanceKey: item.assignmentKey,
+        itemId: candidate.itemId,
+        category: candidate.category,
+        role: semanticRoleByRoutineRole[candidate.routineRole],
+        routineOrder: candidate.routineOrder,
+        applicationInstanceKey: candidate.applicationInstanceKey,
         reason: "catalog_unavailable",
       })
       continue
@@ -300,48 +414,34 @@ export async function adaptAcceptedActiveRoutineForApplication(input: {
           }
         : adapted.facts
     routineItems.push({
-      itemId: item.itemKey,
+      itemId: candidate.itemId,
       productId: product.id,
-      productName: item.product.displayName,
+      productName: candidate.productName,
       imageUrl: sanitizeImageUrl(product.image_url),
-      category: item.category,
-      role: semanticRoleByRoutineRole[item.role],
-      sourceRoutineRole: item.role,
-      effectiveCadenceDe: effectiveRoutineCadenceCopyDe({
-        recommended: item.cadence?.recommended ?? null,
-        userOverride:
-          typeof item.cadence?.userOverride === "string" ? item.cadence.userOverride : null,
-        resolved: item.cadence?.resolved,
-        role: item.role,
-        displayKey: item.cadence?.displayKey,
-      }),
+      category: candidate.category,
+      role: semanticRoleByRoutineRole[candidate.routineRole],
+      sourceRoutineRole: candidate.routineRole,
+      effectiveCadenceDe: candidate.effectiveCadenceDe,
       inclusion: "included" as const,
-      availability: item.product.kind === "owned" ? ("owned" as const) : ("planned" as const),
-      executable: item.executable,
+      availability: candidate.kind,
+      executable: candidate.executable,
       // The accepted payload is already sorted by Stage 4's global category +
       // role order. `roleOrder` alone is category-local and cannot preserve an
       // unresolved product's physical position across categories.
-      routineOrder,
-      applicationInstanceKey: item.assignmentKey,
+      routineOrder: candidate.routineOrder,
+      applicationInstanceKey: candidate.applicationInstanceKey,
       catalogFacts,
       catalogFactProvenance: adapted.provenance,
     })
   }
-  // A page without a single serviceable product is not a degraded page; it has
-  // no Routine left to show and must not render as ready.
-  if (routineItems.length === 0 && degradedItems.length > 0) {
-    throw new Error("accepted_routine_product_unavailable")
-  }
   return {
-    routineVersionId: input.activeVersion.id,
-    planId: input.activeVersion.payload.planId,
     routineItems,
     unresolvedRoutineItems,
     degradedItems,
     exactGuidanceProtocols:
-      contractVersion === 1 ? adaptReviewedProductApplicationProtocols(protocolRows) : [],
+      input.contractVersion === 1 ? adaptReviewedProductApplicationProtocols(protocolRows) : [],
     applicationPointersV2:
-      contractVersion === 2 ? adaptReviewedProductApplicationPointersV2(protocolRows) : [],
+      input.contractVersion === 2 ? adaptReviewedProductApplicationPointersV2(protocolRows) : [],
   }
 }
 
@@ -362,6 +462,16 @@ export async function loadImmutableRoutineProfile(input: {
   if (error) throw new CatalogDatabaseReadError()
   if (!data || typeof data !== "object") throw new Error("refined_need_not_found")
   const snapshot = (data as { output_snapshot?: unknown }).output_snapshot
+  return normalizedProfileFromNeedSnapshot(snapshot)
+}
+
+/**
+ * Pure: the application profile (length, density, thickness, drying route, heat events)
+ * from a need snapshot's `profile.hair` and `assessments.heatExposure.events`. The refined
+ * need version's `output_snapshot` has this shape, and so does an initial snapshot (the
+ * discovery call sheet builds its profile from the participant's evaluation context).
+ */
+export function normalizedProfileFromNeedSnapshot(snapshot: unknown): NormalizedProfile {
   const profile =
     snapshot && typeof snapshot === "object" && "profile" in snapshot
       ? (snapshot as { profile?: { hair?: unknown } }).profile
