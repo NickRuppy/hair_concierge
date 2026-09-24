@@ -11,6 +11,7 @@ import type { DiscoveryPropertyRow } from "@/lib/discovery/property-rows"
 
 import { beginDiscoveryDecisionWrite } from "./decision-writes"
 import { formatDiscoveryTimestamp } from "./format"
+import { discoveryUsageDifferenceLabel } from "./usage-options"
 
 /**
  * The call surface: one block per routine step, the engine's verdict on the left, the
@@ -77,6 +78,12 @@ const FINALIZE_BUSY = "Wird gespeichert"
 const PDF_LOCKED = "PDF: gesperrt"
 const PDF_OPEN = "PDF öffnen"
 const NOT_SUBMITTED_HINT = "Die Checkliste ist noch nicht abgeschickt."
+const CATEGORY_OPEN_HINT = "Erst Kategorie festlegen"
+
+/** „Erst Kategorie festlegen — 2 Produkte mit offener Kategorie." */
+export function discoveryCategoryOpenHint(count: number): string {
+  return `${CATEGORY_OPEN_HINT} — ${count} ${count === 1 ? "Produkt" : "Produkte"} mit offener Kategorie.`
+}
 
 /** Why a bound product carries no verdict — internal, factual, no medical claim. */
 const VERDICT_FAILURE_COPY: Record<Exclude<DiscoveryVerdictStatus, "verdict">, string> = {
@@ -121,7 +128,12 @@ export function discoveryFinalizeWriteOutcome(
 ): { error: string | null; refresh: boolean } {
   if (ok) return { error: null, refresh: true }
   return {
-    error: body?.code === "not_submitted" ? NOT_SUBMITTED_HINT : WRITE_ERROR,
+    error:
+      body?.code === "not_submitted"
+        ? NOT_SUBMITTED_HINT
+        : body?.code === "category_open"
+          ? `${CATEGORY_OPEN_HINT}.`
+          : WRITE_ERROR,
     refresh: false,
   }
 }
@@ -136,11 +148,14 @@ export function DiscoveryCallCockpit({
   steps,
   submitted,
   initialFinalizedAt,
+  categoryOpenCount = 0,
 }: {
   enrollmentId: string
   steps: DiscoveryCockpitStepView[]
   submitted: boolean
   initialFinalizedAt: string | null
+  /** Products whose usage is unknown: finalising waits for them (P1-5). */
+  categoryOpenCount?: number
 }) {
   const router = useRouter()
   const [selections, setSelections] = useState<Record<string, Selection>>(() =>
@@ -152,6 +167,8 @@ export function DiscoveryCallCockpit({
   const [finalizePending, setFinalizePending] = useState(false)
 
   const frozen = finalizedAt !== null
+  // Un-finalising is always possible; finalising waits until every product has a usage.
+  const finalizeBlocked = !frozen && categoryOpenCount > 0
 
   async function choose(step: DiscoveryCockpitStepView, value: string) {
     const previous = selections[step.decisionKey] ?? null
@@ -264,12 +281,18 @@ export function DiscoveryCallCockpit({
         <button
           type="button"
           onClick={() => void toggleFinalize()}
-          disabled={finalizePending || (!frozen && !submitted)}
+          disabled={finalizePending || (!frozen && !submitted) || finalizeBlocked}
           className="rounded-lg bg-[var(--brand-coral)] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
         >
           {finalizePending ? FINALIZE_BUSY : frozen ? UNFINALIZE_LABEL : FINALIZE_LABEL}
         </button>
-        <p className="text-[13px] leading-5 text-muted-foreground">{FINALIZE_HINT}</p>
+        {finalizeBlocked ? (
+          <p className="text-[13px] font-bold leading-5 text-[var(--status-danger-text)]">
+            {discoveryCategoryOpenHint(categoryOpenCount)}
+          </p>
+        ) : (
+          <p className="text-[13px] leading-5 text-muted-foreground">{FINALIZE_HINT}</p>
+        )}
         {frozen ? (
           // The document exists only for a finalised call, so the link exists only then too —
           // in a new tab, so the cockpit stays where it is while Nick prints.
@@ -309,8 +332,20 @@ function StepVerdict({ step, submitted }: { step: DiscoveryCockpitStepView; subm
       ...step.verdict.product,
       categoryLabel: DISCOVERY_INTAKE_CATEGORY_COPY[step.verdict.product.category].label,
     }
+    const usageLine = step.usageDifference
+      ? discoveryUsageDifferenceLabel(
+          step.usageDifference.usageCategory,
+          step.usageDifference.productCategory,
+        )
+      : null
     return (
       <div className="flex flex-col gap-4">
+        {/* F2: graded as what it IS; the call sees how she uses it. */}
+        {usageLine ? (
+          <p className="rounded-[14px] bg-[var(--brand-plum-ice)] px-3 py-2 text-[13px] font-bold text-[var(--brand-plum)]">
+            {usageLine}
+          </p>
+        ) : null}
         {/* Named like the PDF names it: brand + line + name (the fingerprinted label). */}
         <ScanVerdictSections
           result={{ ...step.verdict.payload, product }}

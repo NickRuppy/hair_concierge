@@ -8,6 +8,7 @@ import type { ScanCatalogPresentationRow } from "@/lib/scan/product-presentation
 import type { ScanPresentedVerdictPayload, ScanProductHeader } from "@/lib/scan/types"
 import { SCAN_VERDICT_COPY } from "@/lib/scan/verdict-labels"
 
+import { DISCOVERY_USAGE_ROLES, type DiscoveryUsageRole } from "./classify"
 import {
   loadDiscoveryIdealRoutine,
   type DiscoveryIdealStep,
@@ -17,6 +18,7 @@ import {
 import {
   loadParticipantScanVerdicts,
   type DiscoveryParticipantVerdict,
+  type DiscoveryUsageDifference,
   type DiscoveryVerdictStatus,
 } from "./load-participant-verdicts"
 import { discoveryProductTitle } from "./product-label"
@@ -36,6 +38,7 @@ import {
   DISCOVERY_SCANNED_PRODUCT_LABEL,
   discoveryPrintedRecommendationIds,
   discoverySwapProductIds,
+  reduceIntakeItemsToSteps,
   type DiscoveryCallDecision,
   type DiscoveryIntakeItem,
   type DiscoveryIntakeItemSource,
@@ -68,7 +71,7 @@ const DECISIONS_TABLE = "discovery_call_decisions"
 const INTAKE_COLUMNS =
   "id,enrollment_id,user_id,state,submitted_at,call_finalized_at,finalized_source_hash"
 const ITEM_COLUMNS =
-  "id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,created_at,product_type"
+  "id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,created_at,product_type,usage_role"
 const DECISION_COLUMNS = "decision_key,decision,swap_product_id,intake_item_id"
 
 /** Re-exported: the label rules live with the (pure, hashed) composition now. */
@@ -145,7 +148,7 @@ export async function listDiscoveryCallIntakes(
 
 type ItemRow = {
   id: string
-  category: string
+  category: string | null
   source: string
   brand_text: string | null
   product_name_text: string | null
@@ -154,6 +157,11 @@ type ItemRow = {
   product_submission_id: string | null
   created_at: string
   product_type?: string | null
+  usage_role?: string | null
+}
+
+function isDiscoveryUsageRole(value: unknown): value is DiscoveryUsageRole {
+  return typeof value === "string" && (DISCOVERY_USAGE_ROLES as readonly string[]).includes(value)
 }
 
 /**
@@ -173,7 +181,8 @@ export async function loadDiscoveryCockpitItems(
   if (error) throw error
   return ((data as ItemRow[] | null) ?? []).map((row) => ({
     id: row.id,
-    category: row.category as PersonalPlanCategory,
+    // NULL = her usage is unknown („Weiß ich nicht", batch 5).
+    category: (row.category ?? null) as PersonalPlanCategory | null,
     source: row.source as DiscoveryIntakeItemSource,
     brandText: row.brand_text,
     productNameText: row.product_name_text,
@@ -183,6 +192,7 @@ export async function loadDiscoveryCockpitItems(
     createdAt: row.created_at,
     // Only when set (F4): a legacy row's item object — and so its fingerprint — is unchanged.
     ...(row.product_type ? { productType: row.product_type as PersonalPlanCategory } : {}),
+    ...(isDiscoveryUsageRole(row.usage_role) ? { usageRole: row.usage_role } : {}),
   }))
 }
 
@@ -546,19 +556,41 @@ export type DiscoveryCockpitStepView = {
   idealRecommendation: DiscoveryCockpitSwapOption | null
   /** That recommendation as the PDF prints it (brand + line + name) — hashed, see routine. */
   recommendationLabel: string | null
+  /** „als Haarmaske benutzt" as the PDF prints it next to her product (F6), else null. */
+  ownedUsageLabel: string | null
+  /**
+   * She uses her product differently from what it is, legitimately (F2): the verdict grades
+   * the product against its own category, and the cockpit names both. Null otherwise.
+   */
+  usageDifference: DiscoveryUsageDifference | null
 }
 
 export type DiscoveryCockpitUnassignedView = {
   itemId: string
-  category: PersonalPlanCategory
+  /** Null only for `category_unknown`. */
+  category: PersonalPlanCategory | null
   label: string
   reason: DiscoveryUnassignedReason
+  /** „als Haarmaske benutzt" as the PDF prints it (F6), else null. */
+  usageLabel: string | null
 }
 
 /** One captured product in „Eingetragene Produkte" — every row but „benutze ich nicht". */
 export type DiscoveryCockpitIntakeProductView = {
   itemId: string
-  category: PersonalPlanCategory
+  /** Her usage; null = „Kategorie offen" (batch 5, R7). */
+  category: PersonalPlanCategory | null
+  /** The routine role of her usage (oil roles, scalp oil), else null. */
+  usageRole: DiscoveryUsageRole | null
+  /** What the product IS (batch 5, F1); null for a legacy row or when nobody knows yet. */
+  productType: PersonalPlanCategory | null
+  /**
+   * Nobody knows what the product is: no type, no catalog product, no research. Only then
+   * may the cockpit set its product type (R7) — before research can start.
+   */
+  typeOpen: boolean
+  /** Her own product name (for the usage preselection, F5); null when she typed none. */
+  productName: string | null
   /** Brand + line + name from the catalog when the item has a product, else her words. */
   label: string
   imageUrl: string | null
@@ -659,6 +691,13 @@ function intakeProductViews(model: DiscoveryCockpitModel): DiscoveryCockpitIntak
       return {
         itemId: item.id,
         category: item.category,
+        usageRole: item.usageRole ?? null,
+        productType: item.productType ?? null,
+        typeOpen:
+          (item.productType ?? null) === null &&
+          item.productId === null &&
+          item.productSubmissionId === null,
+        productName: identity?.name ?? item.productNameText ?? null,
         label: identity
           ? discoveryProductTitle({
               brand: identity.brand,
@@ -740,6 +779,8 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       swapProductLabel: refined.swapProductLabel,
       recommendationLabel: refined.recommendationLabel,
       idealRecommendation: ideal,
+      ownedUsageLabel: refined.ownedUsageLabel ?? null,
+      usageDifference: verdict?.status === "verdict" ? (verdict.usageDifference ?? null) : null,
     }
   })
 
@@ -752,6 +793,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       category: entry.item.category,
       label: entry.label,
       reason: entry.reason,
+      usageLabel: entry.usageLabel ?? null,
     })),
     declinedCategories: model.routine.declinedCategories,
     unansweredCategories: model.routine.unansweredCategories,
@@ -859,4 +901,128 @@ export async function unfinalizeDiscoveryCall(
   if (error) throw error
   const row = (data as IntakeRow | null) ?? null
   return row ? projectCallIntake(row) : null
+}
+
+// --- Usage correction (batch 5: R7, R10, P1-3, F3) ------------------------------
+
+export type DiscoveryItemUsageChange = {
+  itemId: string
+  category: PersonalPlanCategory
+  role: DiscoveryUsageRole | null
+  /** Only for a type-open item („Kategorie offen", R7). */
+  productType: PersonalPlanCategory | null
+}
+
+/**
+ * The items exactly as the composition bound them — auto-linked research included — so a
+ * re-binding after a usage change is computed on the same inputs the cockpit rendered.
+ * `none` rows never bind and are left out.
+ */
+function composedItems(model: DiscoveryCockpitModel): DiscoveryIntakeItem[] {
+  return [
+    ...model.routine.steps.flatMap((entry) => (entry.item ? [entry.item] : [])),
+    ...model.routine.unassignedIntakeProducts.map((entry) => entry.item),
+  ]
+}
+
+/**
+ * F3 — decisions follow the item: the decision keys of every step whose bound item a usage
+ * change would change (the item's own old step, the step it lands on, and any step whose
+ * item it displaces). Decisions that reference the moved item itself are cleared by id in
+ * the same database call; these keys cover the rest. Pure.
+ */
+export function discoveryStaleDecisionKeysForUsageChange(
+  model: DiscoveryCockpitModel,
+  change: DiscoveryItemUsageChange,
+): string[] {
+  const before = new Map(
+    model.routine.steps.map((entry) => [entry.step.decisionKey, entry.item?.id ?? null] as const),
+  )
+  const items = composedItems(model).map((item): DiscoveryIntakeItem => {
+    if (item.id !== change.itemId) return item
+    const moved: DiscoveryIntakeItem = { ...item, category: change.category }
+    delete moved.usageRole
+    if (change.role) moved.usageRole = change.role
+    if (change.productType) moved.productType = change.productType
+    return moved
+  })
+  const after = reduceIntakeItemsToSteps(model.steps, items).bindings
+  return after
+    .filter(
+      (binding) => (binding.item?.id ?? null) !== (before.get(binding.step.decisionKey) ?? null),
+    )
+    .map((binding) => binding.step.decisionKey)
+    .sort()
+}
+
+export type DiscoveryItemUsageOutcome =
+  | "not_found"
+  | "not_submitted"
+  | "finalized"
+  | "item_not_found"
+  | "type_known"
+  | "product_type_required"
+  | "updated"
+
+export type DiscoveryItemUsageResult = {
+  outcome: DiscoveryItemUsageOutcome
+  noneInserted?: boolean
+  noneRemoved?: boolean
+  decisionsCleared?: number
+}
+
+/**
+ * The correction as ONE database call (`discovery_admin_set_intake_item_usage`): refuses
+ * while finalised or a draft, sets usage (+ type for a type-open item), removes the
+ * destination's „benutzt sie nicht", records one for a vacated category, and clears the
+ * moved item's decisions plus `staleDecisionKeys`.
+ */
+export async function setDiscoveryIntakeItemUsage(
+  input: DiscoveryItemUsageChange & { intakeId: string; staleDecisionKeys: string[] },
+  client: DiscoveryCockpitAdminClient,
+): Promise<DiscoveryItemUsageResult> {
+  const { data, error } = await client.rpc("discovery_admin_set_intake_item_usage", {
+    target_intake_id: input.intakeId,
+    target_item_id: input.itemId,
+    new_category: input.category,
+    new_usage_role: input.role,
+    new_product_type: input.productType,
+    stale_decision_keys: input.staleDecisionKeys,
+  })
+  if (error) throw error
+  const row = (data ?? {}) as {
+    outcome?: string
+    none_inserted?: boolean
+    none_removed?: boolean
+    decisions_cleared?: number
+  }
+  const outcomes: readonly DiscoveryItemUsageOutcome[] = [
+    "not_found",
+    "not_submitted",
+    "finalized",
+    "item_not_found",
+    "type_known",
+    "product_type_required",
+    "updated",
+  ]
+  if (!outcomes.includes(row.outcome as DiscoveryItemUsageOutcome)) {
+    throw new Error("discovery_item_usage_unexpected_outcome")
+  }
+  return {
+    outcome: row.outcome as DiscoveryItemUsageOutcome,
+    ...(row.outcome === "updated"
+      ? {
+          noneInserted: row.none_inserted === true,
+          noneRemoved: row.none_removed === true,
+          decisionsCleared: row.decisions_cleared ?? 0,
+        }
+      : {}),
+  }
+}
+
+/** Items whose usage is unknown — finalising waits for them (P1-5). */
+export function discoveryCategoryOpenItems(
+  view: Pick<DiscoveryCockpitView, "unassigned">,
+): DiscoveryCockpitUnassignedView[] {
+  return view.unassigned.filter((entry) => entry.reason === "category_unknown")
 }

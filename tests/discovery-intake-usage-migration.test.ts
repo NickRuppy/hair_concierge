@@ -113,15 +113,17 @@ async function noneCategories(pg: PGlite, intakeId: string) {
   return result.rows.map((row) => row.category)
 }
 
-test("the usage migration has a unique version that sorts after every migration", () => {
+test("the usage migration has a unique version that sorts after the migrations it alters", () => {
   const versions = readdirSync(dir)
     .filter((name) => name.endsWith(".sql"))
     .map((name) => name.split("_")[0])
   const own = OWN.split("_")[0]
   assert.equal(versions.filter((version) => version === own).length, 1)
+  // Was "sorts after every migration" when it was the newest; the cockpit's usage correction
+  // (20260924140000) now follows it, so what still matters is that it follows its chain.
   assert.ok(
-    versions.every((version) => version <= own),
-    "must sort after every migration",
+    CHAIN.slice(0, 2).every((file) => file.split("_")[0] < own),
+    "must sort after the discovery migrations it alters",
   )
 })
 
