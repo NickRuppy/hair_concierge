@@ -13,12 +13,16 @@ und `plans/discovery-call-toolkit/plan.md`. Lokales QA: `docs/local-qa-access.md
 
 ## Voraussetzungen
 
-1. **Migration ausgerollt.** `supabase/migrations/20260922120000_discovery_call_toolkit.sql` legt
+1. **Migrationen ausgerollt.** `supabase/migrations/20260922120000_discovery_call_toolkit.sql` legt
    `discovery_enrollments`, `discovery_intakes`, `discovery_intake_items` und
    `discovery_call_decisions` an — alle vier service-only (RLS an, keine Rechte für `anon` und
-   `authenticated`). Die Migration muss vor dem Anwendungscode laufen; wegen der abweichenden
-   lokalen und entfernten Migrationshistorie nicht per pauschalem `supabase db push`, sondern als
-   gezielter, geprüfter Schritt.
+   `authenticated`). Für die flache Checkliste (Batch 5) kommen zwei dazu, in dieser Reihenfolge:
+   `20260924120000_discovery_intake_usage_product_type.sql` (`category` = Nutzung, jetzt nullable;
+   neu `product_type` und `usage_role`; RPC `discovery_intake_submit_confirming_none`) und
+   `20260924140000_discovery_admin_item_usage.sql` (RPC `discovery_admin_set_intake_item_usage` für
+   die Nutzungs-Korrektur im Cockpit). Beide sind rückwärtskompatibel. Migrationen laufen vor dem
+   Anwendungscode; wegen der abweichenden lokalen und entfernten Migrationshistorie nicht per
+   pauschalem `supabase db push`, sondern als gezielter, geprüfter Schritt.
 2. **Umgebungsvariablen gesetzt** (siehe [Konfiguration](#konfiguration)):
    `DISCOVERY_CALL_TOOLKIT_ENABLED=true` und `DISCOVERY_ENROLLMENT_SIGNING_SECRET`.
 3. **Der Kill-Switch ist der Schalter für alles.** Ohne `DISCOVERY_CALL_TOOLKIT_ENABLED=true`
@@ -109,18 +113,37 @@ Eine widerrufene Einladung blockiert dieselbe E-Mail nicht: die Eindeutigkeits-I
 
 `/beratung/einladung` (Begrüßung mit Namen) → „Los geht's" → Konto + Anmeldung → **`/quiz`**
 (das reguläre Legacy-Quiz, Inhalt unverändert, Name und E-Mail auf die Einladung festgenagelt) →
-`/beratung/produkte` (Produkt-Checkliste, zehn Kategorien) → „Fertig – abschicken".
+`/beratung/produkte` („Deine Produkte": eine flache Liste, keine Kategorie-Kacheln) → „Fertig" →
+„Passt das so?" → „Stimmt so – abschicken".
 
 Unterschiede zum normalen Quiz-Ende: Die Teilnehmerin sieht **keine Marketing-Einwilligung** — der
 Lead wird beim Erreichen des Schritts automatisch mit `marketing_consent=false` gespeichert (schlägt
 das fehl, bleibt ein „Erneut versuchen" stehen). Danach kommt „Geschafft — dein Haarprofil steht." mit
-„Weiter zu deinen Produkten" statt des Analyse-Teasers. In der Checkliste ist nichts Pflicht:
-„Fertig – abschicken" erscheint, sobald eine Kategorie beantwortet ist (Produkt oder „benutze ich
-nicht"). Unberührte Kategorien bleiben unbeantwortet — es wird nichts für sie gespeichert — und das
-Cockpit markiert sie nach dem Absenden: Hat die Kategorie einen Schritt in der Idealroutine, steht
-dort „Nicht angegeben — im Call fragen." (statt „Lücke … benutzt nichts", das nur ein ausdrückliches
-„benutze ich nicht" bekommt); die übrigen stehen gesammelt unten als „Nicht angegeben: … — im Call
-fragen.".
+„Weiter zu deinen Produkten" statt des Analyse-Teasers.
+
+**Die Checkliste (flache Liste, Batch 5).** Sie trägt Produkt für Produkt ein — suchen, scannen
+oder „Nicht gefunden? Namen eintippen". Das System ordnet jedes Produkt selbst ein und fragt nur,
+wenn es nötig ist. Zwei Antworten stehen dabei getrennt:
+
+- **Produkttyp** — was das Produkt _ist_. Bei einem Katalogprodukt kommt er aus dem Katalog, sonst
+  aus dem Namen. Aus ihm wird die Recherche-Submission angelegt, nie aus der Nutzung.
+- **Nutzung** — _wie sie es benutzt_ (die Kategorie der Zeile, beim Öl samt Rolle). Nur sie
+  entscheidet, an welchem Routine-Schritt das Produkt im Cockpit steht.
+
+Gefragt wird nach der Nutzung, die erkannte Antwort ist vorausgewählt (ein Tipp zum Bestätigen):
+Öl → „Wann benutzt du das Öl?" (vor der Haarwäsche · nach der Wäsche ins feuchte Haar · als Finish
+ins trockene Haar · auf die Kopfhaut); Conditioner/Maske/Leave-in → „Wie benutzt du das?";
+Shampoo/Tiefenreinigung → „Wie oft benutzt du das?". Hitzeschutz, Trockenshampoo, Bondbuilder und
+Kopfhautpflege fragen nichts. Lässt sich ein Produkt nicht einordnen, kommt „Was ist das?" mit den
+Kategorien **und „Weiß ich nicht"** — dann wird es ohne Produkttyp, ohne Nutzung und ohne Recherche
+gespeichert und steht im Cockpit als **„Kategorie offen"** (siehe 3d).
+
+„Fertig" führt auf „Passt das so?": ihre Produkte nach Kategorie, darunter „Nichts eingetragen für:
+…". **„Stimmt so – abschicken"** speichert in _einem_ Aufruf für jede Kategorie ohne Produkt ein
+ausdrückliches „benutzt sie nicht" und schickt die Liste ab — das Cockpit zeigt dort deshalb
+„benutzt sie nicht", nicht „Nicht angegeben". „Nicht angegeben — im Call fragen." gibt es nur noch
+bei Checklisten aus dem alten Kachel-Modell (vor Batch 5), die ohne diese Bestätigung abgeschickt
+wurden. Nach dem Absenden ändert sie nichts mehr; Korrekturen macht nur das Cockpit (siehe 3d).
 
 Das Legacy-`/quiz` ist harte Voraussetzung: nur daraus entsteht die Quelle, aus der das Cockpit die
 Idealroutine rechnet. Der Einladungs-Flow führt von selbst dorthin — **schick einer Teilnehmerin
@@ -153,7 +176,7 @@ freigegeben wird in der lokalen Review-App. Ohne laufendes Review-Center bleibt 
 Quelle der Wahrheit**; dieses Runbook wiederholt sie nicht.
 
 Den Stand siehst du oben im Cockpit unter **„Eingetragene Produkte"** — jedes erfasste Produkt mit
-Bild, Name, Kategorie und Status:
+Bild, Name, Nutzung und Status:
 
 | Status                                                 | Bedeutung                                                                                                                                                                                                                                                                                                                         |
 | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -169,6 +192,7 @@ Bild, Name, Kategorie und Status:
 | Recherche nicht gestartet                              | Offene Submission ohne laufenden Job.                                                                                                                                                                                                                                                                                             |
 | Nur Barcode – keine Recherche / Keine Recherche        | Keine Submission vorhanden.                                                                                                                                                                                                                                                                                                       |
 | Zu wenig Angaben für eine Recherche                    | Weder gültiger Barcode noch Marke **und** Name — nichts, womit eine Recherche starten kann.                                                                                                                                                                                                                                       |
+| Produkttyp offen                                       | „Weiß ich nicht": niemand weiß, was das Produkt ist. Erst im Cockpit den Produkttyp festlegen (3d), dann „Recherche starten".                                                                                                                                                                                                     |
 | Abgelehnt / Zurückgezogen                              | Submission `rejected` / `cancelled_by_user`. Nichts zu starten.                                                                                                                                                                                                                                                                   |
 
 **„Recherche starten"** steht an jedem Produkt, bei dem es etwas zu tun gibt
@@ -179,7 +203,8 @@ Bild, Name, Kategorie und Status:
 - letzter Job fehlgeschlagen oder blockiert, mit verbleibenden Versuchen → genau diesen Job erneut einreihen
   (`product_intake_retry_research_job`);
 - noch keine Submission → eine anlegen, genau wie die Checkliste es tut (Scan-Strecke, als die
-  Teilnehmerin, Kategorie der Zeile, Barcode bzw. Marke + Name); der Trigger reiht den Job ein.
+  Teilnehmerin, **Produkttyp** der Zeile — bei alten Kachel-Zeilen ohne Produkttyp deren Kategorie —,
+  Barcode bzw. Marke + Name); der Trigger reiht den Job ein.
   Findet diese Strecke das Produkt schon im Katalog, bekommt die Zeile direkt dessen `product_id`.
 
 Der Knopf reiht nur ein — er startet keinen Worker. Nach dem Klick steht der neue Status da; hat
@@ -271,12 +296,55 @@ Kein Banner heißt: Quelle in Ordnung. Statt des Cockpits können auch zwei Hinw
 „Für dieses Konto gibt es noch kein nutzbares Haarprofil. Quiz prüfen." (keine lesbare Quelle) oder
 „Der Plan lässt sich gerade nicht lesen. Später noch einmal öffnen." (vorübergehender Fehler).
 
+### 3d. Kategorie offen und Nutzung korrigieren
+
+Unter „Eingetragene Produkte" nennt jede Zeile ihre **Nutzung** („Maske", „Öl · Als Finish ins
+trockene Haar"). Weicht sie vom Produkttyp ab, stehen beide da: **„Benutzt als Maske · Produkt:
+Conditioner"**.
+
+- **„Kategorie offen"** (rot) — Nutzung unbekannt („Weiß ich nicht"). Die Zeile hat die Auswahl
+  direkt offen: **„Produkttyp"** (nur wenn niemand weiß, was es ist — ein bekannter Typ aus Katalog,
+  Name oder ihrer Antwort wird nie überschrieben) und **„Benutzt als"**, vorausgewählt wie ihre
+  eigene Frage es täte (änderbar) → „Speichern". Danach „Recherche starten", falls noch keine
+  Recherche läuft.
+- **„Kategorie ändern"** — an jeder anderen Zeile, sobald die Checkliste abgeschickt ist: „Benutzt
+  als" wählen → „Speichern". Die Auswahl kennt alle Kategorien, beim Öl die drei Zeitpunkte, bei der
+  Kopfhautpflege zusätzlich „Auf die Kopfhaut" (Öl).
+
+Beides geht über `PATCH /api/admin/beratung/<enrollmentId>/items/<itemId>` (gegatet wie „Recherche
+starten": gleiche Herkunft → Kill-Switch → Admin → Einladung/Zeile) und ist **ein**
+Datenbank-Aufruf (`discovery_admin_set_intake_item_usage`):
+
+- Nutzung (und ggf. Produkttyp) setzen;
+- ein „benutzt sie nicht" in der Ziel-Kategorie löschen;
+- bleibt die alte Kategorie ohne Produkt, dort ein „benutzt sie nicht" eintragen — ihr „Stimmt so –
+  abschicken" hat die ganze Liste bestätigt, die alte Kategorie ist also ehrlich leer;
+- Entscheidungen löschen, die an diesem Produkt hingen, und die Entscheidungen jedes Schritts, dessen
+  Produkt sich durch die Verschiebung ändert (auch ein verdrängtes). Diese Schritte neu entscheiden.
+
+Abgelehnt wird: solange finalisiert (`409 finalized` — „Erst Finalisierung aufheben"), solange die
+Checkliste ein Entwurf ist (`409 not_submitted`), ein Produkttyp für ein Produkt mit bekanntem Typ
+(`409 type_known`), eine Nutzung ohne Produkttyp bei „Kategorie offen" (`400
+product_type_required`) und eine unpassende Kombination aus Kategorie und Rolle (`400
+invalid_usage`).
+
+**Urteil bei abweichender Nutzung.** Ist die Nutzung eine, die ihre eigene Frage für diesen
+Produkttyp anbietet (Conditioner als Maske oder Leave-in, Shampoo als Tiefenreinigung, Öl auf der
+Kopfhaut), bewertet das Cockpit das Produkt als das, was es _ist_, und zeigt über dem Urteil
+„Benutzt als … · Produkt: …". Jede andere Abweichung — und jede alte Kachel-Zeile — bleibt „Der
+Katalog führt das Produkt in einer anderen Kategorie."
+
+**Bindung.** Ein Produkt mit Öl-Rolle (bzw. Kopfhaut-Öl) steht genau am Schritt dieser Rolle —
+gibt es den im Idealplan nicht, steht es unter „kein Schritt im Idealplan". Alles andere wird wie
+bisher der Reihe nach auf die Schritte seiner Kategorie verteilt.
+
 ## 4. Der Call
 
 `/admin/beratung/<enrollmentId>` ist der einzige Bildschirm, den du im Gespräch brauchst.
 
-1. **Eingetragene Produkte** — ganz oben: alles, was sie erfasst hat, mit Bild, Name, Kategorie und
-   Recherche-Status (siehe 3a), samt „Recherche starten".
+1. **Eingetragene Produkte** — ganz oben: alles, was sie erfasst hat, mit Bild, Name, Nutzung und
+   Recherche-Status (siehe 3a), samt „Recherche starten", „Kategorie offen" und „Kategorie ändern"
+   (siehe 3d).
 2. **Idealroutine** — zum Vorlesen gebaut: Schritt, Kategorie, was passiert, wie oft.
 3. **Pro Schritt**: oben die Erklärung in den Worten des Idealplans — „Warum dieser Schritt",
    „Produkttyp", „Worauf es ankommt", „Warum das zu ihrem Haar passt", „Wie oft · wann". Darunter
@@ -289,10 +357,14 @@ Kein Banner heißt: Quelle in Ordnung. Statt des Cockpits können auch zwei Hinw
      anzeigt. Gibt es keine, steht als einzige Option die Empfehlung des Idealplans. Einen freien
      Katalog-Picker gibt es bewusst nicht; der Endpunkt nimmt nichts an, was nicht angeboten wurde
      (`400 swap_not_offered`).
-4. **„Nicht in der Idealroutine"** — eingeklappt darunter: Kategorien mit „benutze ich nicht",
-   Produkte ohne Schritt im Idealplan und alles, was noch in Recherche ist. Kein Handlungsbedarf,
+4. **„Nicht in der Idealroutine"** — eingeklappt darunter: zuerst rot „Kategorie offen: … — oben
+   festlegen, dann finalisieren.", dann Kategorien mit „benutzt sie nicht", Produkte ohne Schritt im
+   Idealplan und alles, was noch in Recherche ist. Außer „Kategorie offen" kein Handlungsbedarf,
    aber ansprechbar.
-5. **„Finalisieren"** am Ende. Das ist der Abschluss, nicht der Versand.
+5. **„Finalisieren"** am Ende. Das ist der Abschluss, nicht der Versand. Solange ein Produkt
+   „Kategorie offen" ist, bleibt der Knopf gesperrt („Erst Kategorie festlegen — n Produkte mit
+   offener Kategorie."); der Endpunkt prüft das selbst noch einmal (`409 category_open`). So ist
+   jedes Produkt verstanden, bevor sie ein Ergebnis bekommt.
 
 Entscheidungen lassen sich während und nach dem Gespräch beliebig ändern — solange nicht finalisiert
 ist. Nach dem Finalisieren werden Entscheidungs-Schreibvorgänge abgelehnt (`409`, Code `finalized`);
@@ -305,7 +377,10 @@ erlaubt, weil der Versand ohnehin von Hand passiert.
 danach gibt der Knopf **„PDF öffnen"** den Weg auf `/admin/beratung/<enrollmentId>/pdf` frei; ohne
 Finalisierung leitet die Seite ins Cockpit zurück.
 
-1. Dokument prüfen. Unentschiedene Schritte stehen als „Noch offen – Empfehlung folgt".
+1. Dokument prüfen. Unentschiedene Schritte stehen als „Noch offen – Empfehlung folgt". Benutzt sie
+   ein Produkt anders, als es ist, steht kurz dahinter „· als Haarmaske benutzt" (am Schritt, im
+   Regal und in den Listen). Dieser Zusatz ist Teil des Fingerabdrucks; alte Kachel-Dokumente haben
+   ihn nie und bleiben unverändert.
 2. Steht oben der rote Banner **„Stand hat sich geändert"**, sind Haarprofil oder Katalog seit dem
    Finalisieren gewandert. Das Dokument zeigt dann den _aktuellen_ Stand, nicht den finalisierten —
    im Cockpit prüfen und neu finalisieren, bevor du es verschickst. Der Banner erscheint nur am
@@ -427,7 +502,10 @@ Zwei Stellen, an denen Discovery-Teilnehmerinnen in Zahlen auftauchen, die nicht
   (Im Cockpit ist das Produkt trotzdem schon verknüpft — das liest die Freigabe direkt.)
 - **„Diese Teilnehmerin hat die Checkliste noch nicht geöffnet."** — es gibt keine Intake-Zeile.
   Nichts zu reparieren, nur nachzufassen.
-- **„Finalisieren" ist ausgegraut** — die Checkliste ist noch nicht abgeschickt (`state='draft'`).
+- **„Finalisieren" ist ausgegraut** — die Checkliste ist noch nicht abgeschickt (`state='draft'`),
+  oder ein Produkt steht auf „Kategorie offen" (daneben „Erst Kategorie festlegen"; siehe 3d).
+- **„Kategorie ändern" ist ausgegraut / „Erst Finalisierung aufheben."** — der Call ist finalisiert.
+  Aufheben, korrigieren, betroffene Schritte neu entscheiden, neu finalisieren.
 - **Entscheidung lässt sich nicht speichern (`409`)** — der Call ist finalisiert. Erst die
   Finalisierung aufheben.
 - **PDF öffnet das Cockpit statt des Dokuments** — nicht finalisiert, oder die Quelle ist gerade

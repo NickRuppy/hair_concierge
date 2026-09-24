@@ -239,6 +239,28 @@ requires `ALLOW_DISCOVERY_PRODUCTION_WRITE=1`, `--apply`, `--confirm-project=pqd
 and a matching Supabase URL, and that combination is the operator path, not a QA path. The invite
 credential lives in the URL fragment (`/beratung/einladung#code=…`), so it never reaches a server
 log — copy the whole link, not a truncated one. The participant journey is invite → `/quiz`
-(legacy, never an `/lp/*` link) → `/beratung/produkte` → „Fertig – abschicken"; the operator side is
+(legacy, never an `/lp/*` link) → `/beratung/produkte` (one flat product list, no category tiles) →
+„Fertig" → review „Passt das so?" → „Stimmt so – abschicken"; the operator side is
 `/admin/beratung`. For the complete operator contract, the environment keys, the manual research
 reconciliation and the two analytics caveats, see `docs/discovery-call-runbook.md`.
+
+The flat checklist needs both batch-5 migrations applied to the local database
+(`20260924120000_discovery_intake_usage_product_type.sql`, then
+`20260924140000_discovery_admin_item_usage.sql`); without them adds, confirm-submit and the cockpit's
+usage correction fail. A complete local walkthrough covers:
+
+1. Add one product each by search, scan and typed name. An oil asks „Wann benutzt du das Öl?", a
+   conditioner/mask/leave-in „Wie benutzt du das?", a shampoo „Wie oft benutzt du das?" — the
+   detected answer is preselected.
+2. Type a name the classifier cannot place and answer „Weiß ich nicht": the item is stored with no
+   product type, no usage and no research submission.
+3. „Fertig" → „Passt das so?" → „Stimmt so – abschicken": every category without a product becomes an
+   explicit „benutzt sie nicht" in the same call.
+4. In the cockpit (`/admin/beratung/<enrollmentId>`): the „Weiß ich nicht" product reads
+   „Kategorie offen" and „Finalisieren" is blocked („Erst Kategorie festlegen"). Set its
+   „Produkttyp" and „Benutzt als", save, then „Recherche starten" opens its research from the type.
+5. „Kategorie ändern" on a product with a usage (e.g. conditioner → Maske): its row reads
+   „Benutzt als Maske · Produkt: Conditioner", the vacated category turns into „benutzt sie nicht"
+   and the moved step's decisions are gone. While finalized the correction is refused
+   („Erst Finalisierung aufheben").
+6. Finalize, open the PDF: the moved product carries „als Haarmaske benutzt".
