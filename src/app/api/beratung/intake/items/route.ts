@@ -1,15 +1,24 @@
 import type { NextRequest } from "next/server"
 
 import type { DiscoveryIntakeItemView } from "@/components/discovery/intake/types"
+import { isValidDiscoveryUsage } from "@/lib/discovery/classify"
 import {
   buildDiscoveryIntakeItemRow,
   checkDiscoveryIntakeItemIdentity,
   clearDiscoveryIntakeCategory,
   discoveryIntakeItemBodySchema,
+  discoveryIntakeProductBodySchema,
+  discoveryIntakeProductIdentity,
   insertDiscoveryIntakeItem,
   toDiscoveryIntakeItemView,
+  type DiscoveryIntakeCategory,
   type DiscoveryIntakeIdentityRefusal,
 } from "@/lib/discovery/intake"
+import {
+  DISCOVERY_INTAKE_RESEARCH_DEPENDENCIES,
+  openDiscoveryIntakeResearch,
+  type DiscoveryIntakeResearchDependencies,
+} from "@/lib/discovery/intake-research"
 
 import {
   discoveryIntakeError,
@@ -21,7 +30,22 @@ import {
 } from "../shared"
 
 /**
- * `POST /api/beratung/intake/items` — records one checklist answer.
+ * `POST /api/beratung/intake/items` — records one checklist answer. Two request shapes:
+ *
+ * FLAT CHECKLIST (batch 5, plan Rev. 3) — `{ capture, productType?, usage }`, sent once the
+ * participant has answered the usage question (R9):
+ *   - a catalog capture's product type is read from `products.category_key` (P2-6);
+ *   - otherwise `productType` is the classifier's or her „Was ist das?" answer, and — when
+ *     known — the server opens the research submission from it (F1), as the participant,
+ *     through the same scan lane „Recherche starten" uses. A submission that fails to open
+ *     leaves the item stored without one (the cockpit can start research later);
+ *   - `productType: null` („Weiß ich nicht") stores the item with no type, no usage and no
+ *     submission; a usage without a type is refused (400 `product_type_required`).
+ *   201 `{ item }` · 400 `invalid_body` | `invalid_usage` | `product_type_required` ·
+ *   409 `already_submitted` · 422 `unknown_product` · 503 `unavailable`.
+ *
+ * LEGACY (tile checklist, until the flat UI replaces it) — `{ category, capture }`, as below.
+ *
  *
  * The client declares WHAT it captured (`capture`, one variant per source); the
  * row shape itself is derived server-side by `buildDiscoveryIntakeItemRow`, so
@@ -54,16 +78,24 @@ const IDENTITY_REFUSALS: Record<DiscoveryIntakeIdentityRefusal, string> = {
   unknown_submission: "Diese Produktanfrage kennen wir nicht. Versuch es bitte nochmal.",
 }
 
-export type DiscoveryIntakeItemsRouteDependencies = DiscoveryIntakeRouteDependencies & {
-  clearCategory?: typeof clearDiscoveryIntakeCategory
-  insertItem?: typeof insertDiscoveryIntakeItem
-  checkIdentity?: typeof checkDiscoveryIntakeItemIdentity
-}
+export type DiscoveryIntakeItemsRouteDependencies = DiscoveryIntakeRouteDependencies &
+  Partial<DiscoveryIntakeResearchDependencies> & {
+    clearCategory?: typeof clearDiscoveryIntakeCategory
+    insertItem?: typeof insertDiscoveryIntakeItem
+    checkIdentity?: typeof checkDiscoveryIntakeItemIdentity
+  }
 
 export function createDiscoveryIntakeItemsHandler(
   overrides: DiscoveryIntakeItemsRouteDependencies = {},
 ) {
-  const { clearCategory, insertItem, checkIdentity, ...guardOverrides } = overrides
+  const {
+    clearCategory,
+    insertItem,
+    checkIdentity,
+    loadCatalogProductType = DISCOVERY_INTAKE_RESEARCH_DEPENDENCIES.loadCatalogProductType,
+    createResearchSubmission = DISCOVERY_INTAKE_RESEARCH_DEPENDENCIES.createResearchSubmission,
+    ...guardOverrides
+  } = overrides
   const clear = clearCategory ?? clearDiscoveryIntakeCategory
   const insert = insertItem ?? insertDiscoveryIntakeItem
   const checkIdentityOf = checkIdentity ?? checkDiscoveryIntakeItemIdentity
@@ -76,7 +108,13 @@ export function createDiscoveryIntakeItemsHandler(
     const frozen = refuseSubmittedIntake(guard.context)
     if (frozen) return frozen
 
-    const parsed = discoveryIntakeItemBodySchema.safeParse(await readJsonBody(request))
+    const body = await readJsonBody(request)
+    const isLegacy = typeof body === "object" && body !== null && "category" in body
+    if (!isLegacy) {
+      return addFlatChecklistProduct(body)
+    }
+
+    const parsed = discoveryIntakeItemBodySchema.safeParse(body)
     if (!parsed.success) return discoveryIntakeError("invalid_body", 400)
 
     const built = buildDiscoveryIntakeItemRow(intake.id, parsed.data.category, parsed.data.capture)
@@ -144,6 +182,90 @@ export function createDiscoveryIntakeItemsHandler(
     } catch (error) {
       console.error("[discovery] intake item write failed:", error)
       return discoveryIntakeError("unavailable", 503)
+    }
+
+    async function addFlatChecklistProduct(raw: unknown) {
+      const parsed = discoveryIntakeProductBodySchema.safeParse(raw)
+      if (!parsed.success) return discoveryIntakeError("invalid_body", 400)
+      const { capture, usage } = parsed.data
+      if (usage && !isValidDiscoveryUsage(usage)) {
+        return discoveryIntakeError("invalid_usage", 400)
+      }
+      const identity = discoveryIntakeProductIdentity(capture)
+
+      try {
+        let productType: DiscoveryIntakeCategory | null = parsed.data.productType ?? null
+        let productId = identity.product_id
+        let productSubmissionId: string | null = null
+
+        if (productId) {
+          const checked = await checkIdentityOf(
+            { productId, productSubmissionId: null, userId },
+            admin,
+          )
+          if (!checked.ok) {
+            return discoveryIntakeJson(
+              { code: checked.reason, error: IDENTITY_REFUSALS[checked.reason] },
+              422,
+            )
+          }
+          // Catalog authority (P2-6): what the client classified is not asked.
+          productType = await loadCatalogProductType(admin, productId)
+        } else if (productType === null && usage !== null) {
+          // „Weiß ich nicht" carries no usage: a usage alone would read as a legacy row.
+          return discoveryIntakeError("product_type_required", 400)
+        }
+
+        if (!productId && productType) {
+          // Opened only now — on the add that carries her usage answer — and from the
+          // product type, never from the usage (F1).
+          const research = await openDiscoveryIntakeResearch(
+            { userId, productType, identity },
+            admin,
+            { createResearchSubmission, loadCatalogProductType },
+          )
+          productId = research.productId
+          productSubmissionId = research.productSubmissionId
+          productType = research.productType
+        }
+
+        const stored = await insert(
+          {
+            intake_id: intake.id,
+            category: usage?.category ?? null,
+            usage_role: usage?.role ?? null,
+            product_type: productType,
+            ...identity,
+            product_id: productId,
+            product_submission_id: productSubmissionId,
+          },
+          admin,
+        )
+
+        // A standing legacy „benutze ich nicht" in her usage category is displaced, exactly
+        // as on the tile path — best effort, after the insert.
+        if (usage) {
+          try {
+            await clear(
+              {
+                intakeId: intake.id,
+                category: usage.category,
+                sources: ["none"],
+                exceptItemId: stored.id,
+              },
+              admin,
+            )
+          } catch (error) {
+            console.error("[discovery] intake category clear failed after the insert:", error)
+          }
+        }
+
+        const item = toDiscoveryIntakeItemView(stored)
+        return discoveryIntakeJson({ item } satisfies { item: DiscoveryIntakeItemView }, 201)
+      } catch (error) {
+        console.error("[discovery] intake product write failed:", error)
+        return discoveryIntakeError("unavailable", 503)
+      }
     }
   }
 }

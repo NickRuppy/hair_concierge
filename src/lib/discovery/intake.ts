@@ -5,6 +5,11 @@ import { z } from "zod"
 
 import type { DiscoveryIntakeItemView } from "@/components/discovery/intake/types"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
+import {
+  DISCOVERY_USAGE_ROLES,
+  isDiscoveryProductCategory,
+  type DiscoveryUsageRole,
+} from "@/lib/discovery/classify"
 import { filterScanEligibleProductIds } from "@/lib/scan/catalog-eligibility"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -49,7 +54,7 @@ const INTAKE_COLUMNS = "id,enrollment_id,user_id,state,submitted_at"
  * search row showed without storing a copy of either. Rows without a catalog product read it as null.
  */
 const ITEM_COLUMNS =
-  "id,intake_id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,created_at,catalog_product:products(image_url,product_line:product_lines(canonical_name))"
+  "id,intake_id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,product_type,usage_role,created_at,catalog_product:products(image_url,product_line:product_lines(canonical_name))"
 
 export type DiscoveryAdminClient = ReturnType<typeof createAdminClient>
 
@@ -63,13 +68,26 @@ export type DiscoveryIntake = {
 
 export type DiscoveryIntakeItem = {
   id: string
-  category: DiscoveryIntakeCategory
+  /**
+   * Her USAGE (batch 5): the category she uses the product in. `null` = unknown
+   * („Weiß ich nicht"). Legacy (tile-model) rows always carry one.
+   */
+  category: DiscoveryIntakeCategory | null
   source: DiscoveryIntakeItemSource
   brandText: string | null
   productNameText: string | null
   barcodeIdentifier: string | null
   productId: string | null
   productSubmissionId: string | null
+  /**
+   * What the product IS (batch 5, F1): from the catalog's `category_key` for a catalog
+   * product, else the classifier's or her „Was ist das?" answer; `null` = unknown. Research
+   * submissions are opened from it. Optional only so legacy fixtures stay valid — every
+   * projection sets it.
+   */
+  productType?: DiscoveryIntakeCategory | null
+  /** The routine role of her usage, for the multi-role oil step and scalp oil (R9). */
+  usageRole?: DiscoveryUsageRole | null
   /**
    * Presentation of the linked catalog product, when the row was read with its join
    * (`loadDiscoveryIntakeItems`, the insert helpers). Display only — never identity.
@@ -93,13 +111,15 @@ type IntakeRow = {
 type ItemRow = {
   id: string
   intake_id: string
-  category: string
+  category: string | null
   source: string
   brand_text: string | null
   product_name_text: string | null
   barcode_identifier: string | null
   product_id: string | null
   product_submission_id: string | null
+  product_type?: string | null
+  usage_role?: string | null
   created_at: string
   catalog_product?: CatalogProductRelation | CatalogProductRelation[] | null
 }
@@ -109,16 +129,22 @@ type CatalogProductRelation = {
   product_line?: { canonical_name: string | null } | { canonical_name: string | null }[] | null
 }
 
-/** The insert payload, with every identity column written explicitly. */
+/**
+ * The insert payload, with every identity column written explicitly. The legacy (tile)
+ * path writes neither `product_type` nor `usage_role` — exactly the rows it wrote before
+ * the batch-5 migration.
+ */
 export type DiscoveryIntakeItemInsert = {
   intake_id: string
-  category: DiscoveryIntakeCategory
+  category: DiscoveryIntakeCategory | null
   source: DiscoveryIntakeItemSource
   brand_text: string | null
   product_name_text: string | null
   barcode_identifier: string | null
   product_id: string | null
   product_submission_id: string | null
+  product_type?: DiscoveryIntakeCategory | null
+  usage_role?: DiscoveryUsageRole | null
 }
 
 // --- The capture contract ----------------------------------------------------
@@ -210,6 +236,119 @@ export const discoveryIntakeItemBodySchema = z
     capture: discoveryIntakeCaptureSchema,
   })
   .strict()
+
+// --- The flat-checklist capture contract (batch 5) -------------------------------
+
+/**
+ * What the flat checklist sends: the product (identity only — never a submission id: the
+ * server opens research itself, AFTER her usage answer, F1), what she or the classifier
+ * says it IS, and how she uses it.
+ *
+ * - `catalog_search` / `barcode`: a catalog product; its type is read from
+ *   `products.category_key` (P2-6) and `productType` is ignored.
+ * - `barcode_unknown` / `dm_search` / `name_research`: no catalog product yet. With a
+ *   `productType` the server opens the research submission from it; with `null`
+ *   („Weiß ich nicht") the item is stored with no type, no usage and no submission.
+ */
+export const discoveryIntakeProductCaptureSchema = z.discriminatedUnion("source", [
+  z
+    .object({
+      source: z.literal("catalog_search"),
+      productId: uuidSchema,
+      brandText: brandTextSchema.nullish(),
+      productNameText: productNameTextSchema,
+    })
+    .strict(),
+  z
+    .object({
+      source: z.literal("barcode"),
+      productId: uuidSchema,
+      barcodeIdentifier: barcodeSchema,
+      brandText: brandTextSchema.nullish(),
+      productNameText: productNameTextSchema,
+    })
+    .strict(),
+  z
+    .object({
+      source: z.literal("barcode_unknown"),
+      barcodeIdentifier: barcodeSchema,
+      brandText: brandTextSchema.nullish(),
+      productNameText: productNameTextSchema.nullish(),
+    })
+    .strict(),
+  z
+    .object({
+      source: z.literal("dm_search"),
+      barcodeIdentifier: barcodeSchema,
+      brandText: brandTextSchema.nullish(),
+      productNameText: productNameTextSchema,
+    })
+    .strict(),
+  z
+    .object({
+      source: z.literal("name_research"),
+      brandText: brandTextSchema,
+      productNameText: productNameTextSchema,
+    })
+    .strict(),
+])
+
+export type DiscoveryIntakeProductCapture = z.infer<typeof discoveryIntakeProductCaptureSchema>
+
+/** Shape only; the category/role PAIR is checked by `isValidDiscoveryUsage` (400 `invalid_usage`). */
+export const discoveryIntakeUsageSchema = z
+  .object({
+    category: discoveryIntakeCategorySchema,
+    role: z.enum(DISCOVERY_USAGE_ROLES).nullable(),
+  })
+  .strict()
+
+export const discoveryIntakeProductBodySchema = z
+  .object({
+    capture: discoveryIntakeProductCaptureSchema,
+    productType: discoveryIntakeCategorySchema.nullish(),
+    usage: discoveryIntakeUsageSchema.nullable(),
+  })
+  .strict()
+
+export const discoveryIntakeUsagePatchSchema = z
+  .object({
+    usage: discoveryIntakeUsageSchema.nullable(),
+    productType: discoveryIntakeCategorySchema.optional(),
+  })
+  .strict()
+
+/** The flat-checklist capture's identity columns (type, usage and submission are added by the route). */
+export function discoveryIntakeProductIdentity(capture: DiscoveryIntakeProductCapture): {
+  source: DiscoveryIntakeItemSource
+  brand_text: string | null
+  product_name_text: string | null
+  barcode_identifier: string | null
+  product_id: string | null
+} {
+  return {
+    source: capture.source,
+    brand_text: orNull("brandText" in capture ? capture.brandText : null),
+    product_name_text: orNull("productNameText" in capture ? capture.productNameText : null),
+    barcode_identifier: orNull("barcodeIdentifier" in capture ? capture.barcodeIdentifier : null),
+    product_id: orNull("productId" in capture ? capture.productId : null),
+  }
+}
+
+/**
+ * An item whose product type nobody knows yet: no type, no catalog product, no research.
+ * Only such an item may be given a type by the participant (PATCH), and it may not carry a
+ * usage without one — a usage alone would make it look like a legacy row to research (F1).
+ */
+export function isDiscoveryIntakeItemTypeOpen(
+  item: Pick<DiscoveryIntakeItem, "productType" | "productId" | "productSubmissionId">,
+): boolean {
+  return (
+    (item.productType ?? null) === null &&
+    item.productId === null &&
+    item.productSubmissionId === null
+  )
+}
 
 export type DiscoveryIntakeItemBuildResult =
   | { ok: true; row: DiscoveryIntakeItemInsert }
@@ -430,6 +569,9 @@ export function toDiscoveryIntakeItemView(item: DiscoveryIntakeItem): DiscoveryI
     barcodeIdentifier: item.barcodeIdentifier,
     imageUrl: item.catalog?.imageUrl ?? null,
     productLine: item.catalog?.productLine ?? null,
+    // Only when set, so a legacy (tile) row projects exactly as before.
+    ...(item.productType ? { productType: item.productType } : {}),
+    ...(item.usageRole ? { usageRole: item.usageRole } : {}),
   }
 }
 
@@ -453,13 +595,15 @@ function projectCatalogPresentation(
 export function projectDiscoveryIntakeItemRow(row: ItemRow): DiscoveryIntakeItem {
   return {
     id: row.id,
-    category: row.category as DiscoveryIntakeCategory,
+    category: (row.category ?? null) as DiscoveryIntakeCategory | null,
     source: row.source as DiscoveryIntakeItemSource,
     brandText: row.brand_text,
     productNameText: row.product_name_text,
     barcodeIdentifier: row.barcode_identifier,
     productId: row.product_id,
     productSubmissionId: row.product_submission_id,
+    productType: isDiscoveryProductCategory(row.product_type) ? row.product_type : null,
+    usageRole: (row.usage_role ?? null) as DiscoveryUsageRole | null,
     catalog: projectCatalogPresentation(row.catalog_product),
   }
 }
@@ -573,7 +717,9 @@ export async function clearDiscoveryIntakeCoexistingNone(
     ...new Set(
       input.items
         .filter((item) => item.source === "none" && withProducts.has(item.category))
-        .map((item) => item.category),
+        .map((item) => item.category)
+        // A `none` row always has a category (migration CHECK); the filter only narrows.
+        .filter((category): category is DiscoveryIntakeCategory => category !== null),
     ),
   ]
   if (contradicted.length === 0) return []
@@ -600,6 +746,73 @@ export async function insertDiscoveryIntakeItem(
   const inserted = (data as ItemRow | null) ?? null
   if (!inserted) throw new Error("Discovery intake item could not be stored")
   return projectDiscoveryIntakeItemRow(inserted)
+}
+
+/** Scoped to the caller's own intake: an item id from another intake reads nothing. */
+export async function loadDiscoveryIntakeItem(
+  input: { intakeId: string; itemId: string },
+  client: DiscoveryAdminClient,
+): Promise<DiscoveryIntakeItem | null> {
+  const { data, error } = await client
+    .from(ITEMS_TABLE)
+    .select(ITEM_COLUMNS)
+    .eq("intake_id", input.intakeId)
+    .eq("id", input.itemId)
+    .maybeSingle()
+  if (error) throw error
+  const row = (data as ItemRow | null) ?? null
+  return row ? projectDiscoveryIntakeItemRow(row) : null
+}
+
+export type DiscoveryIntakeItemUsageUpdate = {
+  category: DiscoveryIntakeCategory | null
+  usage_role: DiscoveryUsageRole | null
+  /** Only when the participant answered „Was ist das?" for a type-open item. */
+  product_type?: DiscoveryIntakeCategory
+  product_id?: string
+  product_submission_id?: string
+}
+
+/**
+ * Scoped to the caller's intake. When the update gives the item a type, the row must still
+ * be type-open — re-stated as predicates, so a concurrent write that already typed it is
+ * never overwritten. `null` = no row matched (gone, foreign, or no longer type-open).
+ */
+export async function updateDiscoveryIntakeItemUsage(
+  input: { intakeId: string; itemId: string; update: DiscoveryIntakeItemUsageUpdate },
+  client: DiscoveryAdminClient,
+): Promise<DiscoveryIntakeItem | null> {
+  let query = client
+    .from(ITEMS_TABLE)
+    .update(input.update)
+    .eq("intake_id", input.intakeId)
+    .eq("id", input.itemId)
+    .neq("source", "none")
+  if (input.update.product_type) {
+    query = query.is("product_type", null).is("product_id", null).is("product_submission_id", null)
+  }
+  const { data, error } = await query.select(ITEM_COLUMNS).maybeSingle()
+  if (error) throw error
+  const row = (data as ItemRow | null) ?? null
+  return row ? projectDiscoveryIntakeItemRow(row) : null
+}
+
+/**
+ * The product type the catalog files a product under (P2-6). A key outside the ten
+ * supported categories is no type (`null`).
+ */
+export async function loadDiscoveryCatalogProductType(
+  client: DiscoveryAdminClient,
+  productId: string,
+): Promise<DiscoveryIntakeCategory | null> {
+  const { data, error } = await client
+    .from("products")
+    .select("category_key")
+    .eq("id", productId)
+    .maybeSingle()
+  if (error) throw error
+  const key = (data as { category_key: string | null } | null)?.category_key ?? null
+  return isDiscoveryProductCategory(key) ? key : null
 }
 
 /** Scoped to the caller's own intake: an item id from another intake deletes nothing. */
@@ -633,6 +846,46 @@ export async function submitDiscoveryIntake(
   const row = (data as IntakeRow | null) ?? null
   if (!row) throw new Error("Discovery intake is not in draft state")
   return projectIntake(row)
+}
+
+export type DiscoveryIntakeConfirmedSubmit =
+  | { outcome: "submitted"; submittedAt: string; confirmedNone: DiscoveryIntakeCategory[] }
+  | { outcome: "not_draft" | "no_products" | "not_found" }
+
+/**
+ * „Stimmt so – abschicken" (R6): ONE call to `discovery_intake_submit_confirming_none`
+ * (migration 20260924120000), which — under a lock on the intake row — inserts a `none` row
+ * for every category without a product and marks the intake submitted. A product whose
+ * usage is unknown counts as a product but answers no category.
+ */
+export async function submitDiscoveryIntakeConfirmingNone(
+  intakeId: string,
+  client: DiscoveryAdminClient,
+): Promise<DiscoveryIntakeConfirmedSubmit> {
+  const { data, error } = await client.rpc("discovery_intake_submit_confirming_none", {
+    target_intake_id: intakeId,
+  })
+  if (error) throw error
+  const result = (data ?? {}) as {
+    outcome?: string
+    submitted_at?: string
+    confirmed_none?: string[]
+  }
+  switch (result.outcome) {
+    case "submitted":
+      if (!result.submitted_at) throw new Error("Discovery submit returned no timestamp")
+      return {
+        outcome: "submitted",
+        submittedAt: result.submitted_at,
+        confirmedNone: (result.confirmed_none ?? []).filter(isDiscoveryProductCategory),
+      }
+    case "not_draft":
+    case "no_products":
+    case "not_found":
+      return { outcome: result.outcome }
+    default:
+      throw new Error(`Discovery submit returned an unknown outcome: ${String(result.outcome)}`)
+  }
 }
 
 // --- Completeness ------------------------------------------------------------
