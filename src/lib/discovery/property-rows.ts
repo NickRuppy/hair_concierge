@@ -1,11 +1,10 @@
-import { mobileRowDifferenceText } from "@/lib/mobile/result-presentation"
 import type { MobileScanRow } from "@/lib/mobile/scan-contracts"
 
 /**
- * Target-vs-product rows for the cockpit, built from the iOS result card's own rows
- * (`mobileAssessmentRows` in `src/lib/mobile/result-presentation.ts`) so the call reads a
- * product the way the participant's app does — one line per property, in the card's own
- * „<Eigenschaft>: <Produktwert> statt <Zielwert>" wording.
+ * Target-vs-product rows for the cockpit's comparison table, built from the iOS result
+ * card's own rows (`mobileAssessmentRows` in `src/lib/mobile/result-presentation.ts`) so
+ * the call reads a product the way the participant's app does: one row per property, the
+ * product's value and her target value side by side (iOS `ComparisonTable`).
  *
  * Status follows the row's own `displayStatus` (category authority, never the product-wide
  * verdict): green is a match, amber a partial fit, red a miss, neutral unconfirmed.
@@ -15,8 +14,11 @@ export type DiscoveryPropertyRowStatus = "match" | "partial" | "mismatch" | "unk
 
 export type DiscoveryPropertyRow = {
   dimensionId: string
+  label: string
   status: DiscoveryPropertyRowStatus
-  text: string
+  state: MobileScanRow["state"]
+  productValue: string | null
+  targetValue: string | null
 }
 
 const STATUS: Record<MobileScanRow["displayStatus"], DiscoveryPropertyRowStatus> = {
@@ -27,18 +29,12 @@ const STATUS: Record<MobileScanRow["displayStatus"], DiscoveryPropertyRowStatus>
 }
 
 export function discoveryPropertyRows(rows: readonly MobileScanRow[]): DiscoveryPropertyRow[] {
-  return rows.map((row) => {
-    const status = STATUS[row.displayStatus]
-    let text: string
-    if (status === "partial" || status === "mismatch") {
-      text = mobileRowDifferenceText(row)
-    } else if (status === "match") {
-      text = `${row.label}: ${row.productValue ?? row.targetValue ?? "passt"}`
-    } else {
-      const target =
-        row.state !== "no_target" && row.targetValue ? ` (Ziel: ${row.targetValue})` : ""
-      text = `${row.label}: ${row.productValue ?? "keine Angabe"}${target}`
-    }
-    return { dimensionId: row.dimensionId, status, text }
-  })
+  return rows.map((row) => ({
+    dimensionId: row.dimensionId,
+    label: row.label,
+    status: STATUS[row.displayStatus],
+    state: row.state,
+    productValue: row.productValue,
+    targetValue: row.targetValue,
+  }))
 }

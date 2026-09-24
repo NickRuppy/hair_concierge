@@ -9,6 +9,7 @@ import type { DiscoveryCockpitStepView } from "@/lib/discovery/cockpit"
 import type { DiscoveryVerdictStatus } from "@/lib/discovery/load-participant-verdicts"
 import type { DiscoveryPropertyRow } from "@/lib/discovery/property-rows"
 
+import { DiscoveryComparisonTable } from "./comparison-table"
 import { beginDiscoveryDecisionWrite } from "./decision-writes"
 import { formatDiscoveryTimestamp } from "./format"
 import { discoveryUsageDifferenceLabel } from "./usage-options"
@@ -26,8 +27,9 @@ import { discoveryUsageDifferenceLabel } from "./usage-options"
  *
  * Above the two columns, each step explains itself in the Idealplan's own words (why the
  * step, what product type, what matters, why it fits her hair, how often and when), and
- * her product and every alternative carry target-vs-product rows like the iOS result card,
- * so Nick can see WHERE an alternative is better, not just that it is.
+ * her product and every alternative carry the iOS result card's comparison table (product
+ * value next to her target, batch 6), so Nick can see WHERE an alternative is better, not
+ * just that it is. The table takes the place of the scanner's slider bars in the verdict.
  *
  * Every write goes to `/api/admin/beratung/<id>/decisions`, which re-composes the routine
  * server-side and refuses anything the cockpit did not display. The optimistic selection
@@ -57,17 +59,6 @@ const DEPTH_TYPE = "Produkttyp"
 const DEPTH_CRITERIA = "Worauf es ankommt"
 const DEPTH_FIT = "Warum das zu ihrem Haar passt"
 const DEPTH_RHYTHM = "Wie oft · wann"
-const ROWS_TITLE = "Im Vergleich zum Ziel"
-
-const ROW_MARK: Record<
-  DiscoveryPropertyRow["status"],
-  { mark: string; label: string; className: string }
-> = {
-  match: { mark: "✓", label: "im Ziel", className: "text-[var(--status-ok-text)]" },
-  partial: { mark: "✗", label: "teilweise", className: "text-[var(--status-pending-text)]" },
-  mismatch: { mark: "✗", label: "außerhalb", className: "text-[var(--status-danger-text)]" },
-  unknown: { mark: "–", label: "unbestätigt", className: "text-muted-foreground" },
-}
 
 const FINALIZE_LABEL = "Finalisieren"
 const UNFINALIZE_LABEL = "Finalisierung aufheben"
@@ -346,12 +337,17 @@ function StepVerdict({ step, submitted }: { step: DiscoveryCockpitStepView; subm
             {usageLine}
           </p>
         ) : null}
-        {/* Named like the PDF names it: brand + line + name (the fingerprinted label). */}
+        {/* Named like the PDF names it: brand + line + name (the fingerprinted label). The
+            comparison table replaces the scanner's bars; without rows the bars stay. */}
         <ScanVerdictSections
           result={{ ...step.verdict.payload, product }}
           productTitle={step.ownedLabel ?? undefined}
+          comparison={
+            step.verdict.propertyRows.length > 0 ? (
+              <DiscoveryComparisonTable rows={step.verdict.propertyRows} />
+            ) : undefined
+          }
         />
-        <PropertyRows rows={step.verdict.propertyRows} title={ROWS_TITLE} />
       </div>
     )
   }
@@ -486,7 +482,11 @@ function Choice({
             {subtitle}
           </span>
         ) : null}
-        <PropertyRows rows={rows} />
+        {rows && rows.length > 0 ? (
+          <span className="mt-2 block">
+            <DiscoveryComparisonTable rows={rows} compact />
+          </span>
+        ) : null}
       </span>
     </label>
   )
@@ -515,35 +515,5 @@ function StepDepth({ step }: { step: DiscoveryCockpitStepView }) {
         </div>
       ))}
     </dl>
-  )
-}
-
-/** ✓/✗ per property, „<Eigenschaft>: <Produktwert> statt <Zielwert>" where it misses. */
-function PropertyRows({ rows, title }: { rows?: DiscoveryPropertyRow[] | null; title?: string }) {
-  if (!rows || rows.length === 0) return null
-  return (
-    <span className="mt-1.5 block">
-      {title ? (
-        <span className="mb-1 block text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
-          {title}
-        </span>
-      ) : null}
-      <span className="flex flex-col gap-0.5 text-[12px] leading-5">
-        {rows.map((row) => {
-          const mark = ROW_MARK[row.status]
-          return (
-            <span key={`${row.dimensionId}:${row.text}`} className="flex gap-1.5">
-              <span aria-hidden="true" className={`w-3 shrink-0 font-bold ${mark.className}`}>
-                {mark.mark}
-              </span>
-              <span className="text-foreground">
-                <span className="sr-only">{`${mark.label}: `}</span>
-                {row.text}
-              </span>
-            </span>
-          )
-        })}
-      </span>
-    </span>
   )
 }
