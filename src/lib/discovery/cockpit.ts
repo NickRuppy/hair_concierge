@@ -8,6 +8,12 @@ import type { ScanCatalogPresentationRow } from "@/lib/scan/product-presentation
 import type { ScanPresentedVerdictPayload, ScanProductHeader } from "@/lib/scan/types"
 import { SCAN_VERDICT_COPY } from "@/lib/scan/verdict-labels"
 
+import {
+  loadDiscoveryApplication,
+  type DiscoveryApplication,
+  type DiscoveryApplicationGap,
+  type DiscoveryApplicationPrint,
+} from "./application"
 import { DISCOVERY_USAGE_ROLES, type DiscoveryUsageRole } from "./classify"
 import {
   loadDiscoveryIdealRoutine,
@@ -39,6 +45,7 @@ import {
   discoveryPrintedRecommendationIds,
   discoverySwapProductIds,
   reduceIntakeItemsToSteps,
+  withDiscoveryApplicationHash,
   type DiscoveryCallDecision,
   type DiscoveryIntakeItem,
   type DiscoveryIntakeItemSource,
@@ -336,6 +343,13 @@ export type DiscoveryCockpitModel = {
     items: DiscoveryIntakeItem[]
     state: DiscoveryResearchState | null
   }
+  /**
+   * „So wendest du es an" (batch 6): the production application pipeline over the printed
+   * products. `unavailable` when it could not be read or compiled right now — then, like a
+   * failed brand read, finalising refuses and the PDF sends Nick back to the cockpit. Absent
+   * only for a model composed without it (tests): no section, nothing blocked.
+   */
+  application?: { status: "ready"; section: DiscoveryApplication } | { status: "unavailable" }
 }
 
 export type DiscoveryCockpitModelResult =
@@ -357,6 +371,7 @@ export type DiscoveryCockpitDependencies = {
     client: DiscoveryCockpitAdminClient,
     items: DiscoveryIntakeItem[],
   ) => Promise<DiscoveryResearchState>
+  loadApplication: typeof loadDiscoveryApplication
 }
 
 export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
@@ -367,6 +382,7 @@ export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
   loadSwapProducts: loadSwapPresentationRows,
   loadProductIdentities: loadDiscoveryProductIdentities,
   loadResearchState: (client, items) => loadDiscoveryResearchState(client, items),
+  loadApplication: loadDiscoveryApplication,
 }
 
 /**
@@ -494,18 +510,37 @@ export async function loadDiscoveryCockpitModel(
     !ownedIdentityMissing &&
     recommendationProducts.length === printedIds.size
 
+  const composed = composeDiscoveryRefinedRoutine({
+    steps: ideal.steps,
+    items,
+    decisions,
+    swapProducts,
+    recommendationProducts,
+    ownedProducts: discoveryOwnedProductIdentities(verdicts, productIdentities),
+    productLines: discoveryProductLinesOf(productIdentities),
+    productImages: discoveryProductImagesOf(productIdentities),
+  })
+  // „So wendest du es an": the production application pipeline over exactly the products
+  // this composition prints. A failure degrades (finalize/PDF wait) instead of failing the
+  // call — the cockpit must stay usable mid-conversation.
+  let application: NonNullable<DiscoveryCockpitModel["application"]>
+  try {
+    application = {
+      status: "ready",
+      section: await deps.loadApplication(admin, { routine: composed, context: ideal.context }),
+    }
+  } catch (error) {
+    console.error("[discovery] application section unavailable:", error)
+    application = { status: "unavailable" }
+  }
+
   return {
     status: "ready",
-    routine: composeDiscoveryRefinedRoutine({
-      steps: ideal.steps,
-      items,
-      decisions,
-      swapProducts,
-      recommendationProducts,
-      ownedProducts: discoveryOwnedProductIdentities(verdicts, productIdentities),
-      productLines: discoveryProductLinesOf(productIdentities),
-      productImages: discoveryProductImagesOf(productIdentities),
-    }),
+    // The printed application section is part of the fingerprint (only when it prints).
+    routine: withDiscoveryApplicationHash(
+      composed,
+      application.status === "ready" ? application.section.print : null,
+    ),
     steps: ideal.steps,
     verdicts,
     previewSource: ideal.previewSource,
@@ -513,6 +548,7 @@ export async function loadDiscoveryCockpitModel(
     recommendationBrandsAvailable,
     productIdentities,
     research: { items: capturedItems, state: researchState },
+    application,
   }
 }
 
@@ -644,6 +680,12 @@ export type DiscoveryCockpitView = {
   sourceHash: string
   /** See `DiscoveryCockpitModel.recommendationBrandsAvailable`. */
   recommendationBrandsAvailable: boolean
+  /** The PDF's „So wendest du es an" section; null when there is none (or it is unreadable). */
+  application: DiscoveryApplicationPrint | null
+  /** False when the section could not be read right now: finalising and the PDF wait. */
+  applicationAvailable: boolean
+  /** Printed products without complete verified guidance — finalising waits for them. */
+  applicationGaps: DiscoveryApplicationGap[]
 }
 
 function optionLabel(
@@ -834,6 +876,12 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
     unansweredCategories: model.routine.unansweredCategories,
     sourceHash: model.routine.sourceHash,
     recommendationBrandsAvailable: model.recommendationBrandsAvailable,
+    application:
+      model.application?.status === "ready" && model.application.section.print.days.length > 0
+        ? model.application.section.print
+        : null,
+    applicationAvailable: model.application?.status !== "unavailable",
+    applicationGaps: model.application?.status === "ready" ? model.application.section.gaps : [],
   }
 }
 
@@ -1053,6 +1101,17 @@ export async function setDiscoveryIntakeItemUsage(
         }
       : {}),
   }
+}
+
+/**
+ * Captured products not yet resolved to a catalog product (research pending, not started,
+ * failed …) — finalising waits for them (Nick, 2026-09-24): every researched product carries
+ * its verified application guide, so a finalised sheet always has complete guidance.
+ */
+export function discoveryResearchOpenItems(
+  view: Pick<DiscoveryCockpitView, "unassigned">,
+): DiscoveryCockpitUnassignedView[] {
+  return view.unassigned.filter((entry) => entry.reason === "research_pending")
 }
 
 /** Items whose usage is unknown — finalising waits for them (P1-5). */

@@ -70,10 +70,23 @@ const PDF_LOCKED = "PDF: gesperrt"
 const PDF_OPEN = "PDF öffnen"
 const NOT_SUBMITTED_HINT = "Die Checkliste ist noch nicht abgeschickt."
 const CATEGORY_OPEN_HINT = "Erst Kategorie festlegen"
+const RESEARCH_OPEN_HINT = "Erst Recherche abschließen"
+const APPLICATION_MISSING_PREFIX = "Anwendung fehlt für"
+const APPLICATION_MISSING_ERROR = "Anwendung fehlt für mindestens ein Produkt."
 
 /** „Erst Kategorie festlegen — 2 Produkte mit offener Kategorie." */
 export function discoveryCategoryOpenHint(count: number): string {
   return `${CATEGORY_OPEN_HINT} — ${count} ${count === 1 ? "Produkt" : "Produkte"} mit offener Kategorie.`
+}
+
+/** „Erst Recherche abschließen — 2 Produkte noch in Recherche." (batch 6) */
+export function discoveryResearchOpenHint(count: number): string {
+  return `${RESEARCH_OPEN_HINT} — ${count} ${count === 1 ? "Produkt" : "Produkte"} noch in Recherche.`
+}
+
+/** „Anwendung fehlt für Marke Produkt · Marke Produkt." (batch 6) */
+export function discoveryApplicationMissingHint(names: readonly string[]): string {
+  return `${APPLICATION_MISSING_PREFIX} ${names.join(" · ")}.`
 }
 
 /** Why a bound product carries no verdict — internal, factual, no medical claim. */
@@ -124,7 +137,11 @@ export function discoveryFinalizeWriteOutcome(
         ? NOT_SUBMITTED_HINT
         : body?.code === "category_open"
           ? `${CATEGORY_OPEN_HINT}.`
-          : WRITE_ERROR,
+          : body?.code === "research_open"
+            ? `${RESEARCH_OPEN_HINT}.`
+            : body?.code === "application_missing"
+              ? APPLICATION_MISSING_ERROR
+              : WRITE_ERROR,
     refresh: false,
   }
 }
@@ -140,6 +157,8 @@ export function DiscoveryCallCockpit({
   submitted,
   initialFinalizedAt,
   categoryOpenCount = 0,
+  researchOpenCount = 0,
+  applicationGaps = [],
 }: {
   enrollmentId: string
   steps: DiscoveryCockpitStepView[]
@@ -147,6 +166,10 @@ export function DiscoveryCallCockpit({
   initialFinalizedAt: string | null
   /** Products whose usage is unknown: finalising waits for them (P1-5). */
   categoryOpenCount?: number
+  /** Products not yet resolved to a catalog product: finalising waits for them (batch 6). */
+  researchOpenCount?: number
+  /** Printed products without complete verified guidance, by name (batch 6). */
+  applicationGaps?: readonly string[]
 }) {
   const router = useRouter()
   const [selections, setSelections] = useState<Record<string, Selection>>(() =>
@@ -158,8 +181,16 @@ export function DiscoveryCallCockpit({
   const [finalizePending, setFinalizePending] = useState(false)
 
   const frozen = finalizedAt !== null
-  // Un-finalising is always possible; finalising waits until every product has a usage.
-  const finalizeBlocked = !frozen && categoryOpenCount > 0
+  // Un-finalising is always possible; finalising waits until every product has a usage, is
+  // resolved to a catalog product, and every printed product has its verified guidance.
+  const blockHints = frozen
+    ? []
+    : [
+        ...(categoryOpenCount > 0 ? [discoveryCategoryOpenHint(categoryOpenCount)] : []),
+        ...(researchOpenCount > 0 ? [discoveryResearchOpenHint(researchOpenCount)] : []),
+        ...(applicationGaps.length > 0 ? [discoveryApplicationMissingHint(applicationGaps)] : []),
+      ]
+  const finalizeBlocked = blockHints.length > 0
 
   async function choose(step: DiscoveryCockpitStepView, value: string) {
     const previous = selections[step.decisionKey] ?? null
@@ -278,9 +309,16 @@ export function DiscoveryCallCockpit({
           {finalizePending ? FINALIZE_BUSY : frozen ? UNFINALIZE_LABEL : FINALIZE_LABEL}
         </button>
         {finalizeBlocked ? (
-          <p className="text-[13px] font-bold leading-5 text-[var(--status-danger-text)]">
-            {discoveryCategoryOpenHint(categoryOpenCount)}
-          </p>
+          <div className="flex flex-col gap-0.5">
+            {blockHints.map((hint) => (
+              <p
+                key={hint}
+                className="text-[13px] font-bold leading-5 text-[var(--status-danger-text)]"
+              >
+                {hint}
+              </p>
+            ))}
+          </div>
         ) : (
           <p className="text-[13px] leading-5 text-muted-foreground">{FINALIZE_HINT}</p>
         )}

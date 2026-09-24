@@ -446,19 +446,54 @@ export function composeDiscoveryRefinedRoutine(input: {
     unassignedIntakeProducts,
     declinedCategories: reduction.declinedCategories,
     unansweredCategories: reduction.unansweredCategories,
-    // `unansweredCategories` is deliberately NOT hashed: it is the complement of the rows
-    // the hash already covers (bound, unassigned and declined), so it cannot change
-    // without them — and adding a key would flag every finalized document as drifted.
-    // Every printed product label is part of `steps` / `unassignedIntakeProducts`, so a
-    // label that changes (a catalog rename, a new product line) moves the hash with it.
-    // The step's call-only `depth` is stripped: the paper does not print it, so a copy
-    // change there must not flag every finalised document as drifted.
-    sourceHash: semanticHash({
-      steps: steps.map((entry) => ({ ...entry, step: { ...entry.step, depth: undefined } })),
+    sourceHash: discoveryRoutineSourceHash({
+      steps,
       unassignedIntakeProducts,
       declinedCategories: reduction.declinedCategories,
     }),
   }
+}
+
+/**
+ * The fingerprint of everything the sheet prints.
+ *
+ * `unansweredCategories` is deliberately NOT hashed: it is the complement of the rows the
+ * hash already covers (bound, unassigned and declined), so it cannot change without them —
+ * and adding a key would flag every finalized document as drifted. Every printed product
+ * label is part of `steps` / `unassignedIntakeProducts`, so a label that changes (a catalog
+ * rename, a new product line) moves the hash with it. The step's call-only `depth` is
+ * stripped: the paper does not print it, so a copy change there must not flag every
+ * finalised document as drifted.
+ *
+ * `application` (batch 6) is the printed „So wendest du es an" section. It joins the hash
+ * only when it prints anything, so a routine without one keeps its finalised fingerprint.
+ */
+function discoveryRoutineSourceHash(
+  routine: Pick<
+    DiscoveryRefinedRoutine,
+    "steps" | "unassignedIntakeProducts" | "declinedCategories"
+  >,
+  application: unknown = null,
+): string {
+  return semanticHash({
+    steps: routine.steps.map((entry) => ({ ...entry, step: { ...entry.step, depth: undefined } })),
+    unassignedIntakeProducts: routine.unassignedIntakeProducts,
+    declinedCategories: routine.declinedCategories,
+    ...(application ? { application } : {}),
+  })
+}
+
+/**
+ * The routine with its printed application section folded into `sourceHash` — what
+ * „Finalisieren" stores and the PDF compares. `null` (or a section without days) leaves
+ * the routine and its hash exactly as composed.
+ */
+export function withDiscoveryApplicationHash(
+  routine: DiscoveryRefinedRoutine,
+  application: { days: readonly unknown[] } | null,
+): DiscoveryRefinedRoutine {
+  if (!application || application.days.length === 0) return routine
+  return { ...routine, sourceHash: discoveryRoutineSourceHash(routine, application) }
 }
 
 /** Every swap target the decisions reference, for one batched products-by-id select. */

@@ -352,22 +352,35 @@ bisher der Reihe nach auf die Schritte seiner Kategorie verteilt.
 3. **Pro Schritt**: oben die Erklärung in den Worten des Idealplans — „Warum dieser Schritt",
    „Produkttyp", „Worauf es ankommt", „Warum das zu ihrem Haar passt", „Wie oft · wann". Darunter
    das Produkt der Teilnehmerin mit dem Urteil des Scanners und den Alternativen, dazu genau eine
-   Entscheidung — **behalten** oder **tauschen**. Ihr Produkt und jede Alternative tragen
-   Eigenschafts-Zeilen wie die iOS-Ergebniskarte (✓ im Ziel, ✗ „Pflegegewicht: reichhaltig statt
-   leicht") — so siehst du, **wo** eine Alternative besser passt. Diese Zeilen und die Erklärung
-   stehen nur im Cockpit, nicht im PDF, und gehen nicht in den Fingerabdruck ein.
+   Entscheidung — **behalten** oder **tauschen**. Ihr Produkt und jede Alternative tragen die
+   Vergleichstabelle der iOS-Ergebniskarte (Batch 6): pro Eigenschaft eine Zeile mit Statusscheibe
+   (✓ passt, ! mit Einschränkung, ✕ passt nicht, – nicht einschätzbar), dem Wert des Produkts in
+   der Statusfarbe und ihrem Ziel in Plum („PRODUKT · DEIN ZIEL"); die Alternativen in der kompakten
+   Variante. Sie ersetzt die Schieberegler des Scanners — so siehst du, **wo** eine Alternative
+   besser passt. Tabelle und Erklärung stehen nur im Cockpit, nicht im PDF, und gehen nicht in den
+   Fingerabdruck ein. Der Web-Scanner selbst bleibt unverändert.
    - Die wählbaren Tauschziele sind die Alternativen, die die Engine zu ihrem Produkt ohnehin
      anzeigt. Gibt es keine, steht als einzige Option die Empfehlung des Idealplans. Einen freien
      Katalog-Picker gibt es bewusst nicht; der Endpunkt nimmt nichts an, was nicht angeboten wurde
      (`400 swap_not_offered`).
 4. **„Nicht in der Idealroutine"** — eingeklappt darunter: zuerst rot „Kategorie offen: … — oben
    festlegen, dann finalisieren.", dann Kategorien mit „benutzt sie nicht", Produkte ohne Schritt im
-   Idealplan und alles, was noch in Recherche ist. Außer „Kategorie offen" kein Handlungsbedarf,
-   aber ansprechbar.
-5. **„Finalisieren"** am Ende. Das ist der Abschluss, nicht der Versand. Solange ein Produkt
-   „Kategorie offen" ist, bleibt der Knopf gesperrt („Erst Kategorie festlegen — n Produkte mit
-   offener Kategorie."); der Endpunkt prüft das selbst noch einmal (`409 category_open`). So ist
-   jedes Produkt verstanden, bevor sie ein Ergebnis bekommt.
+   Idealplan und alles, was noch in Recherche ist. „Kategorie offen" und „Noch in Recherche"
+   sperren das Finalisieren (siehe 5.), der Rest ist nur ansprechbar.
+5. **„Finalisieren"** am Ende. Das ist der Abschluss, nicht der Versand. Der Knopf bleibt gesperrt,
+   und daneben steht rot, worauf er wartet — der Endpunkt prüft jede Sperre selbst noch einmal:
+   - ein Produkt ist „Kategorie offen" → „Erst Kategorie festlegen — n Produkte mit offener
+     Kategorie." (`409 category_open`);
+   - ein erfasstes Produkt ist noch keinem Katalogprodukt zugeordnet (Recherche wartet, läuft,
+     nicht gestartet, fehlgeschlagen …) → „Erst Recherche abschließen — n Produkte noch in
+     Recherche." (`409 research_open`, Batch 6). Grund: jedes recherchierte Produkt trägt seine
+     geprüfte Anwendung, das finalisierte PDF hat so immer eine vollständige Anleitung;
+   - ein gedrucktes Produkt hat keine vollständige geprüfte Anwendung → „Anwendung fehlt für …"
+     (`409 application_missing`, Batch 6). Das ist eine Datenlücke im Katalog (kein Anwendungs-
+     Protokoll, Rolle ohne Protokoll, Katalogprodukt nicht mehr aktiv/empfohlen): im
+     Produkt-Intake ergänzen, nicht im Cockpit überbrücken — es wird keine Anleitung erfunden.
+     So ist jedes Produkt verstanden, bevor sie ein Ergebnis bekommt. Ist die Anwendung gerade nicht
+     lesbar, steht oben ein Hinweis, und Finalisieren/PDF warten (`503 unavailable`).
 
 Entscheidungen lassen sich während und nach dem Gespräch beliebig ändern — solange nicht finalisiert
 ist. Nach dem Finalisieren werden Entscheidungs-Schreibvorgänge abgelehnt (`409`, Code `finalized`);
@@ -384,13 +397,22 @@ Finalisierung leitet die Seite ins Cockpit zurück.
    ein Produkt anders, als es ist, steht kurz dahinter „· als Haarmaske benutzt" (am Schritt, im
    Regal und in den Listen). Dieser Zusatz ist Teil des Fingerabdrucks; alte Kachel-Dokumente haben
    ihn nie und bleiben unverändert.
+   Neben jedem Produkt steht sein Katalogbild (Batch 6) — in der Routine, im Regal und in den
+   Listen; ohne Bild eine leere Kachel.
+   **„So wendest du es an"** (Batch 6) beginnt auf einer eigenen Seite: dieselbe Anleitung wie
+   `/anwendung` in der App, nach Tagen (Waschtag, Auffrischtag, Pflege zwischendurch …), pro
+   Produkt Bild, Name, Zweck, die geprüften Schritte in Reihenfolge und ggf. ein Hinweis. Sie kommt
+   aus der Recherche (Produkt-Protokolle + Familien-Vorlagen) über den Produktions-Compiler — für
+   die gedruckten Produkte (behalten, getauscht, neu), mit dem Rhythmus des jeweiligen Schritts.
+   Bilder und Anleitung sind Teil des Fingerabdrucks.
 2. Steht oben der rote Banner **„Stand hat sich geändert"**, sind Haarprofil oder Katalog seit dem
    Finalisieren gewandert. Das Dokument zeigt dann den _aktuellen_ Stand, nicht den finalisierten —
    im Cockpit prüfen und neu finalisieren, bevor du es verschickst. Der Banner erscheint nur am
    Bildschirm, nie im Druck.
    Produktnamen stehen als Marke + Linie + Name da (wie in der Routine); diese gedruckten Namen
    sind Teil des Fingerabdrucks. Seit der Umstellung (Sept. 2026) zeigen vorher finalisierte
-   Dokumente den Banner einmal — im Cockpit neu finalisieren.
+   Dokumente den Banner einmal — im Cockpit neu finalisieren. Dasselbe gilt seit Batch 6 für
+   Dokumente, deren Produkte Bilder haben oder die eine Anwendung drucken: einmal neu finalisieren.
 3. Über den Browser als PDF drucken (A4). Die Admin-Navigation ist im Druck ausgeblendet.
 4. Den Versand machst du selbst — WhatsApp oder E-Mail. Es gibt keine Versand-Automatik und keine
    Customer.io-Strecke für dieses Werkzeug.
@@ -506,10 +528,12 @@ Zwei Stellen, an denen Discovery-Teilnehmerinnen in Zahlen auftauchen, die nicht
 - **„Diese Teilnehmerin hat die Checkliste noch nicht geöffnet."** — es gibt keine Intake-Zeile.
   Nichts zu reparieren, nur nachzufassen.
 - **„Finalisieren" ist ausgegraut** — die Checkliste ist noch nicht abgeschickt (`state='draft'`),
-  oder ein Produkt steht auf „Kategorie offen" (daneben „Erst Kategorie festlegen"; siehe 3d).
+  ein Produkt steht auf „Kategorie offen" (daneben „Erst Kategorie festlegen"; siehe 3d), ein
+  Produkt ist noch in Recherche („Erst Recherche abschließen") oder einem gedruckten Produkt fehlt
+  die geprüfte Anwendung („Anwendung fehlt für …"; siehe 4.5).
 - **„Kategorie ändern" ist ausgegraut / „Erst Finalisierung aufheben."** — der Call ist finalisiert.
   Aufheben, korrigieren, betroffene Schritte neu entscheiden, neu finalisieren.
 - **Entscheidung lässt sich nicht speichern (`409`)** — der Call ist finalisiert. Erst die
   Finalisierung aufheben.
-- **PDF öffnet das Cockpit statt des Dokuments** — nicht finalisiert, oder die Quelle ist gerade
-  nicht lesbar.
+- **PDF öffnet das Cockpit statt des Dokuments** — nicht finalisiert, oder die Quelle (Marken,
+  Anwendung) ist gerade nicht lesbar.
