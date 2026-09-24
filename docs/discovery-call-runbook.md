@@ -379,6 +379,13 @@ bisher der Reihe nach auf die Schritte seiner Kategorie verteilt.
      (`409 application_missing`, Batch 6). Das ist eine Datenlücke im Katalog (kein Anwendungs-
      Protokoll, Rolle ohne Protokoll, Katalogprodukt nicht mehr aktiv/empfohlen): im
      Produkt-Intake ergänzen, nicht im Cockpit überbrücken — es wird keine Anleitung erfunden.
+     Geprüft wird pro gedrucktem Produkt **und Rolle**: dasselbe Öl in zwei Rollen braucht für
+     beide eine Anleitung. Benutzt sie ein Produkt anders, als es ist, aber innerhalb seiner
+     Familie (Conditioner als Maske, Öl auf der Kopfhaut), druckt das PDF die eigene geprüfte
+     Anleitung des Produkts (seine Katalogkategorie; Rolle: die Idealplan-Rolle dieser Kategorie,
+     für die ein Protokoll existiert, sonst die erste geprüfte Rolle der Kategorie) mit
+     „· als Haarmaske benutzt" — das sperrt nicht (Nick, 24.09.2026). Jede andere Abweichung
+     bleibt eine Lücke.
      So ist jedes Produkt verstanden, bevor sie ein Ergebnis bekommt. Ist die Anwendung gerade nicht
      lesbar, steht oben ein Hinweis, und Finalisieren/PDF warten (`503 unavailable`).
 
@@ -535,5 +542,7 @@ Zwei Stellen, an denen Discovery-Teilnehmerinnen in Zahlen auftauchen, die nicht
   Aufheben, korrigieren, betroffene Schritte neu entscheiden, neu finalisieren.
 - **Entscheidung lässt sich nicht speichern (`409`)** — der Call ist finalisiert. Erst die
   Finalisierung aufheben.
-- **PDF öffnet das Cockpit statt des Dokuments** — nicht finalisiert, oder die Quelle (Marken,
-  Anwendung) ist gerade nicht lesbar.
+- **PDF öffnet das Cockpit statt des Dokuments** — nicht finalisiert, die Quelle (Marken,
+  Anwendung) ist gerade nicht lesbar, oder der aktuelle Stand würde nicht finalisiert werden
+  (Kategorie offen, wieder in Recherche, Anwendung fehlt). Der Drift-Banner gilt nur für
+  vollständige, aber geänderte Inhalte.

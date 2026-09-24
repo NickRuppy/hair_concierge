@@ -16,9 +16,15 @@ import {
   type ApplicationRoutineProductCandidate,
   type ApplicationRoutineReadClient,
 } from "@/lib/personal-plan/routine/application-adapter"
+import { CATEGORY_LABELS } from "@/lib/personal-plan/decision-presentation"
+import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
+import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import { SEMANTIC_ROLE_BY_ROUTINE_ROLE } from "@/lib/personal-plan/routine/application-adapter"
 import { PERSONAL_PLAN_STAGE5_CONTRACT_VERSION } from "@/lib/personal-plan/stage5-access"
+import type { PlanProductRole } from "@/lib/personal-plan/types"
 import { projectApplicationCadenceByDay } from "@/lib/routines/personal-plan/application/cadence-projector"
 import { compileApplicationViewV2 } from "@/lib/routines/personal-plan/application/compiler-v2"
+import { adaptReviewedProductApplicationPointersV2 } from "@/lib/routines/personal-plan/application/product-protocol-adapter"
 import type {
   ApplicationDayTypeKey,
   NormalizedProfile,
@@ -35,6 +41,7 @@ import {
 import type { ScanEvaluationContext } from "@/lib/scan/profile-context"
 
 import { discoveryCadenceLabel } from "./cadence-label"
+import { isDiscoveryUsageWithinProductFamily } from "./classify"
 import type { DiscoveryRefinedRoutine } from "./refined-routine"
 
 /**
@@ -57,11 +64,26 @@ import type { DiscoveryRefinedRoutine } from "./refined-routine"
  *
  * A printed product the compiler cannot give complete guidance for is a GAP: the cockpit
  * names it and finalising waits (Nick, 2026-09-24) — never an invented instruction.
+ *
+ * A product she uses differently from what it IS, within its family (a conditioner as a
+ * mask, an oil on the scalp — `isDiscoveryUsageWithinProductFamily`), prints the product's
+ * OWN verified guidance with the note „als Maske benutzt" (Nick, 2026-09-24): see
+ * `resolveDiscoveryUsageDifferences`. Any other category conflict stays a gap.
  */
 
 const CONTRACT_VERSION = PERSONAL_PLAN_STAGE5_CONTRACT_VERSION
 
 // --- printed products → routine candidates ------------------------------------------------
+
+/**
+ * A printed product as an application candidate. For her own product, `typed` says the row
+ * carries a batch-5 product type (only then may a usage difference be legitimate, as in the
+ * verdict loader) and `usageLabel` is the sheet's „als Maske benutzt" when it has one.
+ */
+export type DiscoveryApplicationCandidate = ApplicationRoutineProductCandidate & {
+  typed?: boolean
+  usageLabel?: string
+}
 
 /**
  * The sheet's printed products as application candidates, in routine order. Only what the
@@ -70,8 +92,8 @@ const CONTRACT_VERSION = PERSONAL_PLAN_STAGE5_CONTRACT_VERSION
  */
 export function discoveryApplicationCandidates(
   routine: Pick<DiscoveryRefinedRoutine, "steps">,
-): ApplicationRoutineProductCandidate[] {
-  return routine.steps.flatMap((entry, index): ApplicationRoutineProductCandidate[] => {
+): DiscoveryApplicationCandidate[] {
+  return routine.steps.flatMap((entry, index): DiscoveryApplicationCandidate[] => {
     const { step } = entry
     const printed =
       entry.outcome === "kept" && entry.item?.productId && entry.ownedLabel
@@ -105,8 +127,68 @@ export function discoveryApplicationCandidates(
         // Agreed in the call: every printed product is one she uses from now on.
         executable: true,
         effectiveCadenceDe: discoveryCadenceLabel(step.frequencyLabel),
+        ...(printed.kind === "owned" && entry.item?.productType !== undefined
+          ? { typed: true }
+          : {}),
+        ...(printed.kind === "owned" && entry.ownedUsageLabel
+          ? { usageLabel: entry.ownedUsageLabel }
+          : {}),
       },
     ]
+  })
+}
+
+function isPlanCategory(value: unknown): value is PersonalPlanCategory {
+  return typeof value === "string" && value in CATEGORY_ROLE_POLICIES
+}
+
+/**
+ * Nick's ruling (2026-09-24) for her own product used differently from what it IS, within
+ * the product's family: it is instructed as what it is — its own catalog category and the
+ * role its verified protocol exists for — and carries the usage note.
+ *
+ * The role, deterministically: among the roles this product has a verified (V2) pointer
+ * for in its own category,
+ *   1. the first Idealplan step role of that category (routine order), else
+ *   2. the first of the category's `allowedRoles` (policy order).
+ * No verified role at all → the category's first allowed role, which the compiler then
+ * reports as a missing pointer (a gap, never invented guidance).
+ *
+ * Out-of-family conflicts, legacy rows without a product type, swaps and recommendations
+ * are left untouched (a category conflict there stays a gap).
+ */
+export function resolveDiscoveryUsageDifferences(input: {
+  candidates: readonly DiscoveryApplicationCandidate[]
+  catalog: ApplicationCatalogRows
+  idealRoles: readonly { category: PersonalPlanCategory; role: PlanProductRole }[]
+}): DiscoveryApplicationCandidate[] {
+  const pointers = adaptReviewedProductApplicationPointersV2(input.catalog.protocolRows)
+  return input.candidates.map((candidate) => {
+    if (candidate.kind !== "owned" || !candidate.typed) return candidate
+    const product = input.catalog.products.get(candidate.productId)
+    const own = product?.category_key ?? product?.category
+    if (!isPlanCategory(own) || own === candidate.category) return candidate
+    const usage = candidate.category as PersonalPlanCategory
+    if (!isDiscoveryUsageWithinProductFamily(own, usage)) return candidate
+    const verified = new Set(
+      pointers
+        .filter(
+          (pointer) =>
+            pointer.scope.productId === candidate.productId && pointer.scope.category === own,
+        )
+        .map((pointer) => pointer.sourceRole),
+    )
+    const allowed = CATEGORY_ROLE_POLICIES[own].allowedRoles as readonly PlanProductRole[]
+    const role =
+      input.idealRoles.find((entry) => entry.category === own && verified.has(entry.role))?.role ??
+      allowed.find((entry) => verified.has(entry)) ??
+      allowed[0]!
+    return {
+      ...candidate,
+      category: own,
+      routineRole: role,
+      usageLabel: candidate.usageLabel ?? `als ${CATEGORY_LABELS[usage]} benutzt`,
+    }
   })
 }
 
@@ -124,6 +206,8 @@ export type DiscoveryApplicationPrintStep =
       kind: "product"
       productId: string
       name: string
+      /** „als Maske benutzt" — present ONLY for a usage difference (hash-stable otherwise). */
+      usage?: string
       imageUrl: string | null
       categoryLabel: string
       purpose: string
@@ -152,7 +236,10 @@ function sentenceCase(value: string): string {
   return value ? `${value.charAt(0).toLocaleUpperCase("de-DE")}${value.slice(1)}` : value
 }
 
-function printDay(day: ApplicationDayView): DiscoveryApplicationPrintDay {
+function printDay(
+  day: ApplicationDayView,
+  usageByProductId: ReadonlyMap<string, string>,
+): DiscoveryApplicationPrintDay {
   return {
     dayType: day.dayType,
     label: day.labelDe,
@@ -160,10 +247,12 @@ function printDay(day: ApplicationDayView): DiscoveryApplicationPrintDay {
     cadence: day.cadenceDe ? sentenceCase(day.cadenceDe) : null,
     steps: day.steps.map((step): DiscoveryApplicationPrintStep => {
       if (step.kind === "product") {
+        const usage = usageByProductId.get(step.productId)
         return {
           kind: "product",
           productId: step.productId,
           name: step.productName,
+          ...(usage ? { usage } : {}),
           imageUrl: step.imageUrl,
           categoryLabel: step.categoryLabelDe,
           purpose: step.purposeDe,
@@ -190,46 +279,61 @@ function printDay(day: ApplicationDayView): DiscoveryApplicationPrintDay {
  * own order, without the rest day (nothing to apply). A page with no complete day prints
  * no section at all.
  */
-export function discoveryApplicationPrint(view: ApplicationPageView): DiscoveryApplicationPrint {
+export function discoveryApplicationPrint(
+  view: ApplicationPageView,
+  usageByProductId: ReadonlyMap<string, string> = new Map(),
+): DiscoveryApplicationPrint {
   if (view.state !== "ready") return { days: [] }
   return {
     days: [...view.days]
       .sort((left, right) => left.sortOrder - right.sortOrder)
       .filter((day) => day.dayType !== "rest_day")
-      .map(printDay),
+      .map((day) => printDay(day, usageByProductId)),
   }
 }
 
 /**
- * Printed products the compiled page cannot fully instruct: one the catalog no longer
- * serves under its identity, one that appears on no application day at all, or one that
- * sits as an unresolved slot on any day. Named by the sheet's own label, in routine order.
+ * Printed products the compiled page cannot fully instruct — checked per printed candidate
+ * (product AND role), because one product may print in two roles with guidance for only
+ * one of them. A candidate is a gap when
+ *  - the catalog no longer serves it under its identity (demoted to unresolved),
+ *  - the V2 compiler reported a pointer issue for its product and role (no pointer, no
+ *    family template, missing contact time, companion missing …),
+ *  - no compiled day instructs its product in its role, or
+ *  - it sits as an unresolved slot on any compiled day.
+ * Named by the sheet's own label, in routine order, each name once.
  */
 export function discoveryApplicationGaps(input: {
   candidates: readonly ApplicationRoutineProductCandidate[]
-  degradedProductIds: ReadonlySet<string>
-  view: ApplicationPageView
+  degradedItemIds: ReadonlySet<string>
+  compiled: ReturnType<typeof compileApplicationViewV2>
 }): DiscoveryApplicationGap[] {
-  const days = input.view.state === "ready" ? input.view.days : []
-  const instructed = new Set<string>()
-  const unresolved = new Set<string>()
-  for (const day of days) {
-    for (const step of day.steps) {
-      if (step.kind === "product") instructed.add(step.productId)
-      if (step.kind === "unresolved_product" && step.productId) unresolved.add(step.productId)
-    }
-  }
   const gaps: DiscoveryApplicationGap[] = []
   const seen = new Set<string>()
   for (const candidate of input.candidates) {
-    if (seen.has(candidate.productId)) continue
-    if (
-      input.degradedProductIds.has(candidate.productId) ||
-      !instructed.has(candidate.productId) ||
-      unresolved.has(candidate.productId)
-    ) {
-      seen.add(candidate.productId)
-      gaps.push({ productId: candidate.productId, name: candidate.productName })
+    const role = SEMANTIC_ROLE_BY_ROUTINE_ROLE[candidate.routineRole]
+    const productId = candidate.productId
+    const pointerIssue = input.compiled.pointerIssues.some(
+      (issue) => issue.productId === productId && issue.role === role,
+    )
+    const instructed = input.compiled.days.some((day) =>
+      day.productBlocks.some(
+        (block) => block.productId === productId && block.roles.includes(role),
+      ),
+    )
+    const unresolved = input.compiled.days.some((day) =>
+      day.outerSequence.some(
+        (step) =>
+          step.kind === "unresolved_product" &&
+          step.block.productId === productId &&
+          step.block.role === role,
+      ),
+    )
+    if (input.degradedItemIds.has(candidate.itemId) || pointerIssue || !instructed || unresolved) {
+      const key = `${productId}\u0000${candidate.productName}`
+      if (seen.has(key)) continue
+      seen.add(key)
+      gaps.push({ productId, name: candidate.productName })
     }
   }
   return gaps
@@ -247,15 +351,22 @@ export type DiscoveryApplication = {
  * `resolveAnwendungPage`) over the discovery candidates.
  */
 export function compileDiscoveryApplication(input: {
-  candidates: readonly ApplicationRoutineProductCandidate[]
+  candidates: readonly DiscoveryApplicationCandidate[]
   catalog: ApplicationCatalogRows
   dayDefinitions: readonly ApplicationDayTypeDefinition[]
   familyTemplates: readonly ApplicationFamilyTemplateV2[]
   profile: NormalizedProfile
+  /** The Idealplan's (category, role) steps in routine order — for usage differences. */
+  idealRoles?: readonly { category: PersonalPlanCategory; role: PlanProductRole }[]
 }): DiscoveryApplication {
+  const candidates = resolveDiscoveryUsageDifferences({
+    candidates: input.candidates,
+    catalog: input.catalog,
+    idealRoles: input.idealRoles ?? [],
+  })
   const normalized = normalizeApplicationRoutineProducts({
     ...input.catalog,
-    candidates: input.candidates,
+    candidates,
     contractVersion: CONTRACT_VERSION,
   })
   const compiled = compileApplicationViewV2({
@@ -271,17 +382,28 @@ export function compileDiscoveryApplication(input: {
   const view = toApplicationPageView({
     compiled,
     dayDefinitions: input.dayDefinitions,
+    // Discovery-side projection (Nick, 2026-09-24): every printed product is agreed in the
+    // call, so a planned (swapped-in or new) product's cadence names its day too. The
+    // projector itself — and so /anwendung — keeps reading owned products only.
     cadenceByDay: projectApplicationCadenceByDay({
-      routineItems: normalized.routineItems,
+      routineItems: normalized.routineItems.map((item) => ({
+        ...item,
+        availability: "owned" as const,
+      })),
       compiledDayKeys: compiled.days.map((day) => day.key),
     }),
   })
+  const usageByProductId = new Map(
+    candidates.flatMap((candidate) =>
+      candidate.usageLabel ? [[candidate.productId, candidate.usageLabel] as const] : [],
+    ),
+  )
   return {
-    print: discoveryApplicationPrint(view),
+    print: discoveryApplicationPrint(view, usageByProductId),
     gaps: discoveryApplicationGaps({
-      candidates: input.candidates,
-      degradedProductIds: new Set(normalized.degradedItems.map((item) => item.productId)),
-      view,
+      candidates,
+      degradedItemIds: new Set(normalized.unresolvedRoutineItems.map((item) => item.itemId)),
+      compiled,
     }),
   }
 }
@@ -325,5 +447,9 @@ export async function loadDiscoveryApplication(
       applicationFamilyTemplateV2Schema.parse(protocol.payload),
     ),
     profile: discoveryApplicationProfile(input.context),
+    idealRoles: input.routine.steps.map((entry) => ({
+      category: entry.step.category,
+      role: entry.step.role,
+    })),
   })
 }

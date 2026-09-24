@@ -17,6 +17,7 @@ import {
   discoveryApplicationCandidates,
   discoveryApplicationProfile,
   loadDiscoveryApplication,
+  resolveDiscoveryUsageDifferences,
   type DiscoveryApplication,
 } from "../src/lib/discovery/application"
 import {
@@ -865,4 +866,439 @@ test("the PDF sends Nick back to the cockpit while the section cannot be read", 
     (error: unknown) =>
       String((error as { digest?: string }).digest ?? "").startsWith("NEXT_REDIRECT"),
   )
+})
+
+// --- I: usage differences (Nick, 2026-09-24) ----------------------------------------------
+
+const usage = {
+  conditioner: "30000000-0000-4000-8000-000000000011",
+  oil: "30000000-0000-4000-8000-000000000012",
+  shampooAsMask: "30000000-0000-4000-8000-000000000013",
+}
+
+const scalpStep = step({
+  decisionKey: "d:scalp",
+  category: "scalp_care",
+  role: "scalp_flake_oil_adjunct",
+  categoryLabel: "Kopfhautpflege",
+  frequencyLabel: "1× pro Woche",
+})
+
+function usageRoutine(maskProduct: { id: string; type: "conditioner" | "shampoo" }) {
+  const usageItems: DiscoveryIntakeItem[] = [
+    item({ id: "i-shampoo", productId: ids.keptShampoo, brandText: "A", productNameText: "Pure" }),
+    // A conditioner (or, out of family, a shampoo) she uses as a mask.
+    item({
+      id: "i-mask",
+      category: "mask",
+      productType: maskProduct.type,
+      productId: maskProduct.id,
+      brandText: "K",
+      productNameText: "Kur",
+    }),
+    // An oil she puts on her scalp.
+    item({
+      id: "i-scalp",
+      category: "scalp_care",
+      productType: "oil",
+      usageRole: "scalp_flake_oil_adjunct",
+      productId: usage.oil,
+      brandText: "O",
+      productNameText: "Öl",
+    }),
+  ]
+  const keep = (decisionKey: string, intakeItemId: string): DiscoveryCallDecision => ({
+    decisionKey,
+    decision: "keep",
+    swapProductId: null,
+    intakeItemId,
+  })
+  return composeDiscoveryRefinedRoutine({
+    steps: [shampooStep, maskStep, scalpStep],
+    items: usageItems,
+    decisions: [
+      keep("d:shampoo", "i-shampoo"),
+      keep("d:mask", "i-mask"),
+      keep("d:scalp", "i-scalp"),
+    ],
+    swapProducts: [],
+    ownedProducts: [
+      { itemId: "i-shampoo", brand: "Elvital", name: "Hyaluron Pure Shampoo" },
+      { itemId: "i-mask", brand: "Kurmarke", name: "Repair Spülung" },
+      { itemId: "i-scalp", brand: "Ölmarke", name: "Argan Öl" },
+    ],
+  })
+}
+
+const OIL_DRY_FINISH = (productId: string) =>
+  pointer(
+    productId,
+    {
+      sourceRole: "dry_finish",
+      role: "finish",
+      applicationFamily: "dry_finish",
+      facts: {
+        applicationState: "dry_hair",
+        applicationArea: "hair_lengths_ends",
+        rinse: "leave_in",
+        contactTime: null,
+        amount: null,
+        heat: null,
+        conditionerPolicy: "not_applicable",
+      },
+    },
+    "oil",
+  )
+
+function usageCatalog(maskProduct: { id: string; type: "conditioner" | "shampoo" }) {
+  const maskPointer =
+    maskProduct.type === "conditioner"
+      ? pointer(
+          maskProduct.id,
+          {
+            ...POINTERS.conditioner,
+            scope: { kind: "product", category: "conditioner", productId: maskProduct.id },
+          },
+          "conditioner",
+        )
+      : pointer(
+          maskProduct.id,
+          {
+            sourceRole: "shampoo_everyday",
+            role: "cleanse",
+            applicationFamily: "standard_rinse_out_cleanse",
+          },
+          "shampoo",
+        )
+  return catalog(
+    [POINTERS.shampoo, maskPointer, OIL_DRY_FINISH(usage.oil)],
+    [
+      productRow(ids.keptShampoo, "shampoo"),
+      productRow(maskProduct.id, maskProduct.type),
+      productRow(usage.oil, "oil"),
+    ],
+  )
+}
+
+function compileUsage(maskProduct: { id: string; type: "conditioner" | "shampoo" }) {
+  const routine = usageRoutine(maskProduct)
+  return {
+    routine,
+    section: compileDiscoveryApplication({
+      candidates: discoveryApplicationCandidates(routine),
+      catalog: usageCatalog(maskProduct),
+      dayDefinitions,
+      familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+      profile: discoveryApplicationProfile(initialContext),
+      idealRoles: routine.steps.map((entry) => ({
+        category: entry.step.category,
+        role: entry.step.role,
+      })),
+    }),
+  }
+}
+
+const CONDITIONER_AS_MASK = { id: usage.conditioner, type: "conditioner" as const }
+
+test("in-family usage: the product prints its OWN verified guidance with „als … benutzt“", () => {
+  const { section } = compileUsage(CONDITIONER_AS_MASK)
+  assert.deepEqual(section.gaps, [])
+  const products = section.print.days.flatMap((day) =>
+    day.steps.flatMap((entry) => (entry.kind === "product" ? [entry] : [])),
+  )
+  const conditioner = products.find((entry) => entry.productId === usage.conditioner)
+  assert.equal(conditioner?.usage, "als Haarmaske benutzt")
+  // Its own conditioner guidance, not a mask's.
+  assert.equal(conditioner?.categoryLabel, "Conditioner")
+  assert.ok(
+    conditioner?.actions.includes("Eine kleine Menge gleichmäßig in Längen und Spitzen verteilen."),
+  )
+  // The oil on her scalp: its own oil guidance — no oil step in the Idealplan, so the first
+  // verified role in the oil policy's order (dry_finish, the only one with a protocol).
+  const oil = products.find((entry) => entry.productId === usage.oil)
+  assert.equal(oil?.usage, "als Kopfhautpflege benutzt")
+  assert.equal(oil?.categoryLabel, "Haaröl")
+  // Products without a usage difference carry no note (hash-stable).
+  assert.ok(!("usage" in products.find((entry) => entry.productId === ids.keptShampoo)!))
+})
+
+test("the role rule prefers the Idealplan's step role for the product's own category", () => {
+  const routine = usageRoutine(CONDITIONER_AS_MASK)
+  const candidates = discoveryApplicationCandidates(routine)
+  const withBoth = catalog(
+    [
+      OIL_DRY_FINISH(usage.oil),
+      pointer(
+        usage.oil,
+        {
+          sourceRole: "pre_wash_fibre_treatment",
+          role: "bond_repair",
+          applicationFamily: "pre_wash_lengths_treatment",
+          facts: {
+            applicationState: "pre_wash_dry_hair",
+            applicationArea: "hair_lengths_ends",
+            rinse: "follow_with_shampoo",
+            contactTime: null,
+            amount: null,
+            heat: null,
+            conditionerPolicy: "not_applicable",
+          },
+        },
+        "oil",
+      ),
+    ],
+    [productRow(usage.oil, "oil"), productRow(usage.conditioner, "conditioner")],
+  )
+  const role = (
+    idealRoles: { category: "oil"; role: "dry_finish" | "pre_wash_fibre_treatment" }[],
+  ) =>
+    resolveDiscoveryUsageDifferences({ candidates, catalog: withBoth, idealRoles }).find(
+      (entry) => entry.productId === usage.oil,
+    )?.routineRole
+  // No oil step in the Idealplan → policy order (pre_wash_fibre_treatment first).
+  assert.equal(role([]), "pre_wash_fibre_treatment")
+  // An Idealplan oil step with a verified role wins.
+  assert.equal(role([{ category: "oil", role: "dry_finish" }]), "dry_finish")
+})
+
+test("out of family (a shampoo used as a mask) stays a gap", () => {
+  const { section } = compileUsage({ id: usage.shampooAsMask, type: "shampoo" })
+  assert.deepEqual(
+    section.gaps.map((gap) => gap.productId),
+    [usage.shampooAsMask],
+  )
+})
+
+test("usage differences finalise and print (conditioner as mask, oil on the scalp)", async () => {
+  const { routine, section } = compileUsage(CONDITIONER_AS_MASK)
+  const model = readyModel({
+    steps: [shampooStep, maskStep, scalpStep],
+    routine: withDiscoveryApplicationHash(routine, section.print),
+    application: { status: "ready", section },
+  })
+  const call = finalizeWith(model)
+  const response = await call.run()
+  assert.equal(response.status, 200)
+  assert.equal(call.stored(), model.routine.sourceHash)
+  const markup = await renderPdf(model, model.routine.sourceHash)
+  const apply = markup.slice(markup.indexOf("So wendest du es an"))
+  assert.match(apply, /Kurmarke Repair Spülung<span class="dcp-usage"> · als Haarmaske benutzt</)
+  assert.match(apply, /Ölmarke Argan Öl<span class="dcp-usage"> · als Kopfhautpflege benutzt</)
+})
+
+// --- J: coverage per printed role ------------------------------------------------------
+
+test("the same oil printed in two roles with guidance for only one is a gap", () => {
+  const oilId = "30000000-0000-4000-8000-000000000021"
+  const preWash = step({
+    decisionKey: "d:oil-pre",
+    category: "oil",
+    role: "pre_wash_fibre_treatment",
+    categoryLabel: "Haaröl",
+  })
+  const finish = step({
+    decisionKey: "d:oil-finish",
+    category: "oil",
+    role: "dry_finish",
+    categoryLabel: "Haaröl",
+  })
+  const routine = composeDiscoveryRefinedRoutine({
+    steps: [shampooStep, preWash, finish],
+    items: [
+      item({
+        id: "i-shampoo",
+        productId: ids.keptShampoo,
+        brandText: "A",
+        productNameText: "Pure",
+      }),
+      item({
+        id: "i-oil",
+        category: "oil",
+        usageRole: "dry_finish",
+        productType: "oil",
+        productId: oilId,
+        brandText: "O",
+        productNameText: "Öl",
+      }),
+    ],
+    decisions: [
+      {
+        decisionKey: "d:shampoo",
+        decision: "keep",
+        swapProductId: null,
+        intakeItemId: "i-shampoo",
+      },
+      { decisionKey: "d:oil-finish", decision: "keep", swapProductId: null, intakeItemId: "i-oil" },
+      // The same oil, also chosen for the pre-wash step.
+      { decisionKey: "d:oil-pre", decision: "swap", swapProductId: oilId, intakeItemId: null },
+    ],
+    swapProducts: [catalogRow(oilId, "Argan Öl", "Ölmarke", "oil")],
+    ownedProducts: [{ itemId: "i-oil", brand: "Ölmarke", name: "Argan Öl" }],
+  })
+  const candidates = discoveryApplicationCandidates(routine)
+  assert.equal(candidates.filter((entry) => entry.productId === oilId).length, 2)
+  const section = compileDiscoveryApplication({
+    candidates,
+    catalog: catalog(
+      [POINTERS.shampoo, OIL_DRY_FINISH(oilId)],
+      [productRow(ids.keptShampoo, "shampoo"), productRow(oilId, "oil")],
+    ),
+    dayDefinitions,
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    profile: discoveryApplicationProfile(initialContext),
+  })
+  // Instructed as a finish somewhere — but the pre-wash role has no guide.
+  assert.ok(
+    section.print.days.some((day) =>
+      day.steps.some((entry) => entry.kind === "product" && entry.productId === oilId),
+    ),
+  )
+  assert.deepEqual(section.gaps, [{ productId: oilId, name: "Ölmarke Argan Öl" }])
+})
+
+// --- K: day cadence for planned products -------------------------------------------------
+
+test("a swapped-in (planned) product's agreed cadence names its day on the sheet", () => {
+  const swapShampoo = "30000000-0000-4000-8000-000000000031"
+  const routine = composeDiscoveryRefinedRoutine({
+    steps: [shampooStep],
+    items: [
+      item({
+        id: "i-shampoo",
+        productId: ids.keptShampoo,
+        brandText: "A",
+        productNameText: "Pure",
+      }),
+    ],
+    decisions: [
+      {
+        decisionKey: "d:shampoo",
+        decision: "swap",
+        swapProductId: swapShampoo,
+        intakeItemId: "i-shampoo",
+      },
+    ],
+    swapProducts: [catalogRow(swapShampoo, "Mildes Shampoo", "Guhl", "shampoo")],
+  })
+  const [candidate] = discoveryApplicationCandidates(routine)
+  assert.equal(candidate?.kind, "planned")
+  const section = compileDiscoveryApplication({
+    candidates: [candidate!],
+    catalog: catalog(
+      [
+        pointer(
+          swapShampoo,
+          {
+            sourceRole: "shampoo_everyday",
+            role: "cleanse",
+            applicationFamily: "standard_rinse_out_cleanse",
+          },
+          "shampoo",
+        ),
+      ],
+      [productRow(swapShampoo, "shampoo")],
+    ),
+    dayDefinitions,
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    profile: {},
+  })
+  assert.equal(
+    section.print.days.find((day) => day.dayType === "wash_day")?.cadence,
+    "3× pro Woche",
+  )
+})
+
+// --- L: legacy golden --------------------------------------------------------------------
+
+/**
+ * Computed on origin/main 2bb16f10 (before batch 6) by running this very no-image call
+ * through `loadDiscoveryCockpitModel`: a call finalised then must keep its fingerprint when
+ * no packshot and no application section prints.
+ */
+const BASE_GOLDEN_HASH = "fd996795c2ccc3b2336c2e39852ee082c4b668e859543e60afc214db896a9e4a"
+
+test("a no-image call with no printed application keeps the pre-batch-6 fingerprint", async () => {
+  const product = (suffix: string) => `30000000-0000-4000-8000-0000000000${suffix}`
+  const goldenSteps = [
+    step({ decisionKey: "g:shampoo", category: "shampoo", roleDescription: "Reinigt." }),
+    step({
+      decisionKey: "g:conditioner",
+      category: "conditioner",
+      role: "conditioner_rinse_out",
+      categoryLabel: "Conditioner",
+      roleLabel: "Pflege",
+      roleDescription: "Pflegt.",
+      frequencyLabel: "nach jeder Haarwäsche",
+    }),
+  ]
+  const model = await loadDiscoveryCockpitModel(
+    {} as never,
+    { intakeId: "x", userId: "u" },
+    {
+      loadIdealRoutine: async () => ({
+        status: "ready",
+        steps: goldenSteps,
+        context: { snapshot: {} } as never,
+        previewSource: { personalPlanId: "p", sourceNeedVersionId: "v" },
+      }),
+      loadItems: async () => [
+        item({
+          id: "g-i1",
+          productId: product("a1"),
+          brandText: "Elvital",
+          productNameText: "Pure",
+        }),
+        item({
+          id: "g-i2",
+          category: "conditioner",
+          productId: product("a2"),
+          brandText: "Gliss",
+          productNameText: "Aqua",
+          createdAt: "2026-09-20T10:01:00.000Z",
+        }),
+      ],
+      loadVerdicts: async () => [],
+      loadDecisions: async () => [
+        { decisionKey: "g:shampoo", decision: "keep", swapProductId: null, intakeItemId: "g-i1" },
+        {
+          decisionKey: "g:conditioner",
+          decision: "swap",
+          swapProductId: product("a3"),
+          intakeItemId: "g-i2",
+        },
+      ],
+      loadSwapProducts: async () => [
+        catalogRow(product("a3"), "Feuchtigkeit Spülung", "Guhl", "conditioner"),
+      ],
+      loadProductIdentities: async () =>
+        new Map([
+          [
+            product("a1"),
+            {
+              name: "Hyaluron Pure Shampoo",
+              brand: "Elvital",
+              productLine: "Hyaluron",
+              imageUrl: null,
+            },
+          ],
+          [
+            product("a2"),
+            { name: "Aqua Revive", brand: "Gliss", productLine: null, imageUrl: null },
+          ],
+          [
+            product("a3"),
+            { name: "Feuchtigkeit Spülung", brand: "Guhl", productLine: null, imageUrl: null },
+          ],
+        ]),
+      loadResearchState: async () => ({
+        submissions: new Map(),
+        latestJobs: new Map(),
+        eligible: new Set<string>(),
+      }),
+      loadApplication: async () => ({ print: { days: [] }, gaps: [] }),
+    },
+  )
+  assert.equal(model.status, "ready")
+  if (model.status !== "ready") return
+  assert.equal(model.routine.sourceHash, BASE_GOLDEN_HASH)
 })

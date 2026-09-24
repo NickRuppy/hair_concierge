@@ -457,7 +457,10 @@ function ApplicationStep({
           <ProductThumb imageUrl={step.imageUrl} />
           <div>
             <p className="dcp-apply-cat">{step.categoryLabel}</p>
-            <p className="dcp-apply-name">{step.name}</p>
+            <p className="dcp-apply-name">
+              {step.name}
+              {step.usage ? <span className="dcp-usage">{` · ${step.usage}`}</span> : null}
+            </p>
             <p className="dcp-apply-purpose">{step.purpose}</p>
           </div>
         </div>
