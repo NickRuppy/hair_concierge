@@ -637,7 +637,7 @@ const DOCUMENT_STYLES = `
   border-radius: 4px;
   padding: 3px 7px;
   text-align: center;
-  align-self: start;
+  align-self: center;
 }
 .dcp-t-keep { background: var(--dcp-ok-bg); color: var(--dcp-ok-text); }
 .dcp-t-swap { background: var(--dcp-plum-ice); color: var(--dcp-plum-dark); }
