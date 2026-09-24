@@ -450,9 +450,9 @@ export function buildDiscoveryIntakeItemRow(
  *  - catalog search is not category-scoped, so any hit can be filed anywhere;
  *  - `POST /api/beratung/identify` ignores category entirely and answers pure identity;
  *  - the research sheet's category grid records what the product ACTUALLY is, because
- *    that answer belongs to the submission a reviewer will catalogue from — while the
- *    checklist row stays under the tile the participant opened
- *    (`discovery-product-entry.tsx`, `handleResearchIntake`).
+ *    that answer belongs to the submission a reviewer will catalogue from — while a
+ *    legacy (tile-era) checklist row stayed under the tile the participant opened. Flat
+ *    checklist rows keep product type and usage apart (`product_type` vs `category`).
  *
  * Divergence is therefore a legitimate capture, not a bad request, and it is already
  * carried downstream rather than dropped: `loadParticipantVerdicts` resolves such an

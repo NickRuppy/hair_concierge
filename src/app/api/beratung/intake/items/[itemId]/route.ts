@@ -22,6 +22,7 @@ import {
   discoveryIntakeError,
   discoveryIntakeJson,
   guardDiscoveryIntakeRequest,
+  refuseCrossOrigin,
   readJsonBody,
   refuseSubmittedIntake,
   type DiscoveryIntakeRouteDependencies,
@@ -46,9 +47,11 @@ export function createDiscoveryIntakeItemDeleteHandler(
   const remove = deleteItem ?? deleteDiscoveryIntakeItem
 
   return async function DELETE(
-    _request: NextRequest,
+    request: NextRequest,
     context: { params: Promise<{ itemId: string }> },
   ) {
+    const crossOrigin = refuseCrossOrigin(request)
+    if (crossOrigin) return crossOrigin
     const guard = await guardDiscoveryIntakeRequest(guardOverrides)
     if (!guard.ok) return guard.response
 
@@ -112,6 +115,8 @@ export function createDiscoveryIntakeItemPatchHandler(
     request: NextRequest,
     context: { params: Promise<{ itemId: string }> },
   ) {
+    const crossOrigin = refuseCrossOrigin(request)
+    if (crossOrigin) return crossOrigin
     const guard = await guardDiscoveryIntakeRequest(guardOverrides)
     if (!guard.ok) return guard.response
     const { intake, admin, userId } = guard.context

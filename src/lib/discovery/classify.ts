@@ -223,7 +223,7 @@ function withoutWords(name: string, ...patterns: string[]): string {
 }
 
 /** The retailer rules' own „never guess" words: colour products and 2-in-1s. */
-const NEVER_GUESSED_WORDS = "Tönung|Color|Farbe|2\\s*in\\s*1"
+const NEVER_GUESSED_WORDS = "Tönung|Color|Farbe|2[-\\s]*in[-\\s]*1"
 const SCALP_WORDS = "Kopfhaut|Scalp"
 const OIL_WORDS = "Öl|Oil|Haaröl"
 const LEAVE_IN_WORDS = "Leave[-\\s]in|Sprühkur|Sprühpflege"

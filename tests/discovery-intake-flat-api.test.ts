@@ -138,7 +138,7 @@ function baseDeps(rec: Recorder, overrides: Deps = {}): Deps {
 function jsonRequest(method: string, body: unknown, path = "/api/beratung/intake/items") {
   return new NextRequest(`https://chaarlie.de${path}`, {
     method,
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Origin: "https://chaarlie.de" },
     body: JSON.stringify(body),
   })
 }
@@ -678,8 +678,11 @@ function submitRequest(body?: unknown) {
   return new Request("https://chaarlie.de/api/beratung/intake/submit", {
     method: "POST",
     ...(body === undefined
-      ? {}
-      : { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
+      ? { headers: { Origin: "https://chaarlie.de" } }
+      : {
+          headers: { "Content-Type": "application/json", Origin: "https://chaarlie.de" },
+          body: JSON.stringify(body),
+        }),
   })
 }
 
@@ -922,4 +925,46 @@ test("F4: the cockpit read model carries productType only when set, so legacy ob
     "source",
   ])
   assert.equal(typed.productType, "conditioner")
+})
+
+test("participant writes refuse a foreign or missing Origin before any guard or write", async () => {
+  let guardCalls = 0
+  const guard = {
+    flagEnabled: () => {
+      guardCalls += 1
+      return true
+    },
+  }
+  for (const origin of ["https://evil.example", null]) {
+    const headers: Record<string, string> = { "Content-Type": "text/plain" }
+    if (origin) headers.Origin = origin
+    const body = JSON.stringify({ confirmNoneForMissing: true })
+    const post = await createDiscoveryIntakeItemsHandler(guard as never)(
+      new NextRequest("https://chaarlie.de/api/beratung/intake/items", {
+        method: "POST",
+        headers,
+        body,
+      }),
+    )
+    const patch = await createDiscoveryIntakeItemPatchHandler(guard as never)(
+      new NextRequest("https://chaarlie.de/api/beratung/intake/items/x", {
+        method: "PATCH",
+        headers,
+        body,
+      }),
+      { params: Promise.resolve({ itemId: "x" }) },
+    )
+    const submit = await createDiscoveryIntakeSubmitHandler(guard as never)(
+      new Request("https://chaarlie.de/api/beratung/intake/submit", {
+        method: "POST",
+        headers,
+        body,
+      }),
+    )
+    for (const response of [post, patch, submit]) {
+      assert.equal(response.status, 403)
+      assert.equal((await response.json()).code, "cross_origin")
+    }
+  }
+  assert.equal(guardCalls, 0)
 })

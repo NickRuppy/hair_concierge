@@ -11,6 +11,7 @@ import {
   discoveryIntakeError,
   discoveryIntakeJson,
   guardDiscoveryIntakeRequest,
+  refuseCrossOrigin,
   readJsonBody,
   refuseSubmittedIntake,
   type DiscoveryIntakeRouteDependencies,
@@ -69,6 +70,8 @@ export function createDiscoveryIntakeSubmitHandler(
 
   // `request` is optional only for the legacy callers (and their tests) that post no body.
   return async function POST(request?: Request) {
+    const crossOrigin = refuseCrossOrigin(request)
+    if (crossOrigin) return crossOrigin
     const guard = await guardDiscoveryIntakeRequest(guardOverrides)
     if (!guard.ok) return guard.response
     const { intake, admin } = guard.context

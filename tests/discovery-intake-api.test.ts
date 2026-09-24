@@ -108,7 +108,7 @@ function baseDeps(overrides: Deps = {}): Deps {
 function itemsRequest(body: unknown) {
   return new NextRequest("https://chaarlie.de/api/beratung/intake/items", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Origin: "https://chaarlie.de" },
     body: JSON.stringify(body),
   })
 }
@@ -122,7 +122,10 @@ function identifyRequest(body: unknown) {
 }
 
 function deleteRequest() {
-  return new NextRequest("https://chaarlie.de/api/beratung/intake/items/x", { method: "DELETE" })
+  return new NextRequest("https://chaarlie.de/api/beratung/intake/items/x", {
+    method: "DELETE",
+    headers: { Origin: "https://chaarlie.de" },
+  })
 }
 
 const params = { params: Promise.resolve({ itemId: ids.item }) }
@@ -492,7 +495,7 @@ test("a submission the reviewer will catalogue elsewhere is STORED, not refused"
   // The research sheet's category grid records what the product ACTUALLY is, because
   // that answer belongs to the submission a reviewer catalogues from. The checklist
   // row stays under the tile the participant opened — see `handleResearchIntake` in
-  // `discovery-product-entry.tsx`. Refusing this would also orphan the
+  // tile-era checklist. Refusing this would also orphan the
   // `product_submissions` row `POST /api/scan/submit` already created.
   const inserted: Array<Record<string, unknown>> = []
   const response = await createDiscoveryIntakeItemsHandler(

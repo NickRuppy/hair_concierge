@@ -24,6 +24,7 @@ import {
   discoveryIntakeError,
   discoveryIntakeJson,
   guardDiscoveryIntakeRequest,
+  refuseCrossOrigin,
   readJsonBody,
   refuseSubmittedIntake,
   type DiscoveryIntakeRouteDependencies,
@@ -101,6 +102,8 @@ export function createDiscoveryIntakeItemsHandler(
   const checkIdentityOf = checkIdentity ?? checkDiscoveryIntakeItemIdentity
 
   return async function POST(request: NextRequest) {
+    const crossOrigin = refuseCrossOrigin(request)
+    if (crossOrigin) return crossOrigin
     const guard = await guardDiscoveryIntakeRequest(guardOverrides)
     if (!guard.ok) return guard.response
     const { intake, admin, userId } = guard.context
