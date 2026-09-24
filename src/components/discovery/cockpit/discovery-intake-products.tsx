@@ -5,6 +5,7 @@ import { useState } from "react"
 
 import { DISCOVERY_INTAKE_GROUPS } from "@/components/discovery/intake/categories"
 import { ScanProductThumb } from "@/components/scan/scan-product-thumb"
+import type { DiscoveryUsage } from "@/lib/discovery/classify"
 import type { DiscoveryCockpitIntakeProductView } from "@/lib/discovery/cockpit"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
@@ -34,7 +35,8 @@ import {
  * A product whose usage nobody knows reads „Kategorie offen" with the product type and usage
  * selects already open (R7); every other row can be corrected via „Kategorie ändern" once
  * she submitted (R10). Both save through `PATCH /api/admin/beratung/<id>/items/<itemId>`,
- * which refuses while the call is finalised.
+ * which refuses while the call is finalised. Giving a „Kategorie offen" product its type also
+ * starts its research right after the save (`saveDiscoveryItemUsage`).
  */
 
 const TITLE = "Eingetragene Produkte"
@@ -157,6 +159,58 @@ export function discoveryUsageWriteOutcome(
 ): { error: string | null; refresh: boolean } {
   if (ok) return { error: null, refresh: true }
   return { error: body?.code === "finalized" ? FINALIZED_HINT : SAVE_ERROR, refresh: false }
+}
+
+type FetchLike = (input: string, init?: RequestInit) => Promise<Response>
+
+/**
+ * Saves a usage correction — and, when it gave a „Kategorie offen" product its TYPE, starts
+ * its research right after (coordinator ruling 2026-09-24): one more call to the batch-4
+ * research route, which re-decides server-side what starting means (and refuses what does
+ * not apply). The save stands on its own: a research start that fails or does not apply
+ * changes nothing here — the refreshed list shows the status as it is, with „Recherche
+ * starten" where there is still something to start.
+ */
+export async function saveDiscoveryItemUsage(
+  input: {
+    enrollmentId: string
+    itemId: string
+    usage: DiscoveryUsage
+    productType: PersonalPlanCategory | null
+  },
+  fetchImpl: FetchLike = fetch,
+): Promise<{ error: string | null; refresh: boolean; researchStarted: boolean }> {
+  let response: Response
+  try {
+    response = await fetchImpl(`/api/admin/beratung/${input.enrollmentId}/items/${input.itemId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        usage: input.usage,
+        ...(input.productType ? { productType: input.productType } : {}),
+      }),
+    })
+  } catch {
+    return { error: SAVE_ERROR, refresh: false, researchStarted: false }
+  }
+  const body = response.ok
+    ? null
+    : ((await response.json().catch(() => null)) as { code?: string } | null)
+  const outcome = discoveryUsageWriteOutcome(response.ok, body)
+  if (!response.ok || !input.productType) return { ...outcome, researchStarted: false }
+
+  let researchStarted = false
+  try {
+    const research = await fetchImpl(`/api/admin/beratung/${input.enrollmentId}/research`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ itemId: input.itemId }),
+    })
+    researchStarted = research.ok
+  } catch {
+    // The save stands; the list shows the research status as it is.
+  }
+  return { ...outcome, researchStarted }
 }
 
 export function DiscoveryIntakeProducts({
@@ -338,23 +392,16 @@ function UsageEditor({
     setError(null)
     const endWrite = beginDiscoveryDecisionWrite()
     try {
-      const response = await fetch(`/api/admin/beratung/${enrollmentId}/items/${product.itemId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          usage: chosen.usage,
-          ...(needsType && productType ? { productType } : {}),
-        }),
+      const outcome = await saveDiscoveryItemUsage({
+        enrollmentId,
+        itemId: product.itemId,
+        usage: chosen.usage,
+        productType: needsType && productType ? productType : null,
       })
-      const body = response.ok
-        ? null
-        : ((await response.json().catch(() => null)) as { code?: string } | null)
-      const outcome = discoveryUsageWriteOutcome(response.ok, body)
       if (outcome.error) setError(outcome.error)
-      // Binding, decisions, „benutzt sie nicht" and the fingerprint all move: reload it all.
+      // Binding, decisions, „benutzt sie nicht", the research status and the fingerprint all
+      // move: reload it all.
       if (outcome.refresh) router.refresh()
-    } catch {
-      setError(SAVE_ERROR)
     } finally {
       endWrite()
       setSaving(false)

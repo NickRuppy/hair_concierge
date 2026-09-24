@@ -15,6 +15,7 @@ import {
 import {
   discoveryIntakeProductUsageLine,
   discoveryUsageWriteOutcome,
+  saveDiscoveryItemUsage,
 } from "../src/components/discovery/cockpit/discovery-intake-products"
 import {
   discoveryCockpitUsageOptions,
@@ -712,4 +713,97 @@ test("page: a draft shows no correction controls; a finalized call disables them
   })
   assert.ok(finalized.includes("Kategorie ändern"))
   assert.ok(finalized.includes('title="Erst Finalisierung aufheben."'))
+})
+
+// --- Setting a type starts research right after the save ------------------------------
+
+function fakeFetch(answers: Record<string, () => Response | Promise<Response>>) {
+  const calls: Array<{ method: string; url: string; body: unknown }> = []
+  const fetchImpl = async (url: string, init?: RequestInit) => {
+    const method = init?.method ?? "GET"
+    calls.push({ method, url, body: init?.body ? JSON.parse(String(init.body)) : null })
+    const answer =
+      answers[`${method} ${url.split("/").slice(-1)[0] === "research" ? "research" : "item"}`]
+    if (!answer) throw new Error(`unexpected ${method} ${url}`)
+    return answer()
+  }
+  return { calls, fetchImpl }
+}
+
+const SAVE_INPUT = {
+  enrollmentId: ids.enrollment,
+  itemId: ids.open,
+  usage: { category: "mask" as const, role: null },
+}
+
+test("setting a „Kategorie offen“ product's type saves, then starts its research once", async () => {
+  const { calls, fetchImpl } = fakeFetch({
+    "PATCH item": () => Response.json({ outcome: "updated" }),
+    "POST research": () => Response.json({ status: { kind: "research_queued" } }),
+  })
+  const outcome = await saveDiscoveryItemUsage(
+    { ...SAVE_INPUT, productType: "conditioner" },
+    fetchImpl,
+  )
+  assert.deepEqual(outcome, { error: null, refresh: true, researchStarted: true })
+  assert.deepEqual(calls, [
+    {
+      method: "PATCH",
+      url: `/api/admin/beratung/${ids.enrollment}/items/${ids.open}`,
+      body: { usage: { category: "mask", role: null }, productType: "conditioner" },
+    },
+    {
+      method: "POST",
+      url: `/api/admin/beratung/${ids.enrollment}/research`,
+      body: { itemId: ids.open },
+    },
+  ])
+})
+
+test("a research start that is refused or fails leaves the save standing", async () => {
+  for (const research of [
+    () => Response.json({ code: "not_researchable" }, { status: 409 }),
+    () => Response.json({ code: "unavailable" }, { status: 503 }),
+    () => Promise.reject(new Error("offline")),
+  ]) {
+    const { calls, fetchImpl } = fakeFetch({
+      "PATCH item": () => Response.json({ outcome: "updated" }),
+      "POST research": research,
+    })
+    const outcome = await saveDiscoveryItemUsage(
+      { ...SAVE_INPUT, productType: "conditioner" },
+      fetchImpl,
+    )
+    assert.deepEqual(outcome, { error: null, refresh: true, researchStarted: false })
+    assert.equal(calls.length, 2)
+  }
+})
+
+test("a plain usage correction starts no research; a refused save starts none either", async () => {
+  const plain = fakeFetch({ "PATCH item": () => Response.json({ outcome: "updated" }) })
+  assert.deepEqual(
+    await saveDiscoveryItemUsage({ ...SAVE_INPUT, productType: null }, plain.fetchImpl),
+    {
+      error: null,
+      refresh: true,
+      researchStarted: false,
+    },
+  )
+  assert.equal(plain.calls.length, 1)
+  assert.deepEqual(plain.calls[0]!.body, { usage: { category: "mask", role: null } })
+
+  const refused = fakeFetch({
+    "PATCH item": () => Response.json({ code: "finalized" }, { status: 409 }),
+  })
+  assert.deepEqual(
+    await saveDiscoveryItemUsage({ ...SAVE_INPUT, productType: "conditioner" }, refused.fetchImpl),
+    { error: "Erst Finalisierung aufheben.", refresh: false, researchStarted: false },
+  )
+  assert.equal(refused.calls.length, 1)
+
+  const offline = fakeFetch({ "PATCH item": () => Promise.reject(new Error("offline")) })
+  assert.deepEqual(
+    await saveDiscoveryItemUsage({ ...SAVE_INPUT, productType: "conditioner" }, offline.fetchImpl),
+    { error: "Nicht gespeichert. Bitte noch einmal.", refresh: false, researchStarted: false },
+  )
 })

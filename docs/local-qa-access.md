@@ -258,7 +258,8 @@ usage correction fail. A complete local walkthrough covers:
    explicit „benutzt sie nicht" in the same call.
 4. In the cockpit (`/admin/beratung/<enrollmentId>`): the „Weiß ich nicht" product reads
    „Kategorie offen" and „Finalisieren" is blocked („Erst Kategorie festlegen"). Set its
-   „Produkttyp" and „Benutzt als", save, then „Recherche starten" opens its research from the type.
+   „Produkttyp" and „Benutzt als" and save: research starts right after the save, from the type
+   (status „In Recherche – wartet"; with too little to research the save still stands).
 5. „Kategorie ändern" on a product with a usage (e.g. conditioner → Maske): its row reads
    „Benutzt als Maske · Produkt: Conditioner", the vacated category turns into „benutzt sie nicht"
    and the moved step's decisions are gone. While finalized the correction is refused

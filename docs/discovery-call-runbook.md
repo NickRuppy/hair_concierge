@@ -305,8 +305,11 @@ Conditioner"**.
 - **„Kategorie offen"** (rot) — Nutzung unbekannt („Weiß ich nicht"). Die Zeile hat die Auswahl
   direkt offen: **„Produkttyp"** (nur wenn niemand weiß, was es ist — ein bekannter Typ aus Katalog,
   Name oder ihrer Antwort wird nie überschrieben) und **„Benutzt als"**, vorausgewählt wie ihre
-  eigene Frage es täte (änderbar) → „Speichern". Danach „Recherche starten", falls noch keine
-  Recherche läuft.
+  eigene Frage es täte (änderbar) → „Speichern". Mit dem Produkttyp startet das Cockpit direkt nach
+  dem Speichern die Recherche (derselbe Weg wie „Recherche starten", aus dem Produkttyp). Klappt das
+  nicht oder gibt es nichts zu starten (z. B. weder gültiger Barcode noch Marke + Name), bleibt die
+  Speicherung trotzdem stehen, und die Liste zeigt den Status wie sonst — ggf. mit „Recherche
+  starten".
 - **„Kategorie ändern"** — an jeder anderen Zeile, sobald die Checkliste abgeschickt ist: „Benutzt
   als" wählen → „Speichern". Die Auswahl kennt alle Kategorien, beim Öl die drei Zeitpunkte, bei der
   Kopfhautpflege zusätzlich „Auf die Kopfhaut" (Öl).
