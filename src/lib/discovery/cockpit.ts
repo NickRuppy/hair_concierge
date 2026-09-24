@@ -68,7 +68,7 @@ const DECISIONS_TABLE = "discovery_call_decisions"
 const INTAKE_COLUMNS =
   "id,enrollment_id,user_id,state,submitted_at,call_finalized_at,finalized_source_hash"
 const ITEM_COLUMNS =
-  "id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,created_at"
+  "id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,created_at,product_type"
 const DECISION_COLUMNS = "decision_key,decision,swap_product_id,intake_item_id"
 
 /** Re-exported: the label rules live with the (pure, hashed) composition now. */
@@ -153,6 +153,7 @@ type ItemRow = {
   product_id: string | null
   product_submission_id: string | null
   created_at: string
+  product_type?: string | null
 }
 
 /**
@@ -180,6 +181,8 @@ export async function loadDiscoveryCockpitItems(
     productId: row.product_id,
     productSubmissionId: row.product_submission_id,
     createdAt: row.created_at,
+    // Only when set (F4): a legacy row's item object — and so its fingerprint — is unchanged.
+    ...(row.product_type ? { productType: row.product_type as PersonalPlanCategory } : {}),
   }))
 }
 

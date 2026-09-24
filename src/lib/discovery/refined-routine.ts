@@ -43,6 +43,13 @@ export type DiscoveryIntakeItem = {
   productId: string | null
   productSubmissionId: string | null
   createdAt: string
+  /**
+   * What the product IS when no catalog product carries it (batch 5, F1) — the research
+   * submission is created from it, never from `category` (her usage). Present ONLY when the
+   * row has one: item objects are part of `sourceHash`, and a key that legacy rows never had
+   * must not move their fingerprint (F4).
+   */
+  productType?: PersonalPlanCategory
 }
 
 /**

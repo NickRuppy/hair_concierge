@@ -126,6 +126,7 @@ export type DiscoveryResearchItem = Pick<
   | "barcodeIdentifier"
   | "productId"
   | "productSubmissionId"
+  | "productType"
 >
 
 /** Does this item's research decide anything? Only an open row with a submission. */
@@ -178,6 +179,7 @@ export function withDiscoveryResearchLinks<T extends { id: string; productId: st
  * `null` when neither lane has enough to go on.
  */
 export type DiscoveryResearchSubmissionInput = {
+  /** The PRODUCT TYPE (batch 5, F1) — for a legacy row without one, its tile category. */
   category: DiscoveryIntakeItem["category"]
   identifier: string | null
   brandText: string | null
@@ -188,14 +190,21 @@ export function discoveryResearchSubmissionInput(
   item: DiscoveryResearchItem,
 ): DiscoveryResearchSubmissionInput | null {
   if (item.source === "none") return null
+  // What the product IS, never how she uses it (F1). A legacy row (tile model) has no
+  // product type; there the tile she filed it under was also what the submission got. A
+  // product whose type is still unknown („Weiß ich nicht") has neither — and is not
+  // researchable until the cockpit sets its type. (`category` is typed non-null by the read
+  // model but is NULL in the table for an unknown usage.)
+  const category = item.productType ?? (item.category as DiscoveryIntakeItem["category"] | null)
+  if (!category) return null
   const brandText = item.brandText?.trim() || null
   const productNameText = item.productNameText?.trim() || null
   const ean = item.barcodeIdentifier ? validateEanInput(item.barcodeIdentifier) : null
   if (ean?.ok) {
-    return { category: item.category, identifier: ean.value, brandText, productNameText }
+    return { category, identifier: ean.value, brandText, productNameText }
   }
   if (brandText && productNameText) {
-    return { category: item.category, identifier: null, brandText, productNameText }
+    return { category, identifier: null, brandText, productNameText }
   }
   return null
 }
