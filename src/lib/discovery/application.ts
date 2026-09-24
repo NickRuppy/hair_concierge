@@ -83,6 +83,11 @@ const CONTRACT_VERSION = PERSONAL_PLAN_STAGE5_CONTRACT_VERSION
 export type DiscoveryApplicationCandidate = ApplicationRoutineProductCandidate & {
   typed?: boolean
   usageLabel?: string
+  /**
+   * For a usage difference: the product's verified roles in the deterministic order (see
+   * `resolveDiscoveryUsageDifferences`); the compile picks the first that fully compiles.
+   */
+  roleOptions?: PlanProductRole[]
 }
 
 /**
@@ -147,12 +152,15 @@ function isPlanCategory(value: unknown): value is PersonalPlanCategory {
  * the product's family: it is instructed as what it is — its own catalog category and the
  * role its verified protocol exists for — and carries the usage note.
  *
- * The role, deterministically: among the roles this product has a verified (V2) pointer
- * for in its own category,
- *   1. the first Idealplan step role of that category (routine order), else
- *   2. the first of the category's `allowedRoles` (policy order).
- * No verified role at all → the category's first allowed role, which the compiler then
- * reports as a missing pointer (a gap, never invented guidance).
+ * The role, deterministically: the roles this product has a verified (V2) pointer for in
+ * its own category, ordered
+ *   1. Idealplan step roles of that category (routine order), then
+ *   2. the category's `allowedRoles` (policy order).
+ * This returns the first as `routineRole` and the whole order as `roleOptions`;
+ * `compileDiscoveryApplication` then keeps the first role whose guidance compiles WITHOUT
+ * a pointer issue or unresolved slot for this product in this routine. If none does (or
+ * there is no verified role at all — then the category's first allowed role), it is a gap,
+ * never invented guidance.
  *
  * Out-of-family conflicts, legacy rows without a product type, swaps and recommendations
  * are left untouched (a category conflict there stays a gap).
@@ -179,14 +187,19 @@ export function resolveDiscoveryUsageDifferences(input: {
         .map((pointer) => pointer.sourceRole),
     )
     const allowed = CATEGORY_ROLE_POLICIES[own].allowedRoles as readonly PlanProductRole[]
-    const role =
-      input.idealRoles.find((entry) => entry.category === own && verified.has(entry.role))?.role ??
-      allowed.find((entry) => verified.has(entry)) ??
-      allowed[0]!
+    const roleOptions = [
+      ...new Set([
+        ...input.idealRoles
+          .filter((entry) => entry.category === own && verified.has(entry.role))
+          .map((entry) => entry.role),
+        ...allowed.filter((entry) => verified.has(entry)),
+      ]),
+    ]
     return {
       ...candidate,
       category: own,
-      routineRole: role,
+      routineRole: roleOptions[0] ?? allowed[0]!,
+      roleOptions,
       usageLabel: candidate.usageLabel ?? `als ${CATEGORY_LABELS[usage]} benutzt`,
     }
   })
@@ -236,9 +249,16 @@ function sentenceCase(value: string): string {
   return value ? `${value.charAt(0).toLocaleUpperCase("de-DE")}${value.slice(1)}` : value
 }
 
+/** The usage note for one printed product block (product AND the roles it instructs). */
+type DiscoveryUsageLookup = (
+  dayType: ApplicationDayTypeKey,
+  productId: string,
+  applicationInstanceKey: string,
+) => string | undefined
+
 function printDay(
   day: ApplicationDayView,
-  usageByProductId: ReadonlyMap<string, string>,
+  usageOf: DiscoveryUsageLookup,
 ): DiscoveryApplicationPrintDay {
   return {
     dayType: day.dayType,
@@ -247,7 +267,7 @@ function printDay(
     cadence: day.cadenceDe ? sentenceCase(day.cadenceDe) : null,
     steps: day.steps.map((step): DiscoveryApplicationPrintStep => {
       if (step.kind === "product") {
-        const usage = usageByProductId.get(step.productId)
+        const usage = usageOf(day.dayType, step.productId, step.applicationInstanceKey)
         return {
           kind: "product",
           productId: step.productId,
@@ -281,14 +301,14 @@ function printDay(
  */
 export function discoveryApplicationPrint(
   view: ApplicationPageView,
-  usageByProductId: ReadonlyMap<string, string> = new Map(),
+  usageOf: DiscoveryUsageLookup = () => undefined,
 ): DiscoveryApplicationPrint {
   if (view.state !== "ready") return { days: [] }
   return {
     days: [...view.days]
       .sort((left, right) => left.sortOrder - right.sortOrder)
       .filter((day) => day.dayType !== "rest_day")
-      .map((day) => printDay(day, usageByProductId)),
+      .map((day) => printDay(day, usageOf)),
   }
 }
 
@@ -303,38 +323,46 @@ export function discoveryApplicationPrint(
  *  - it sits as an unresolved slot on any compiled day.
  * Named by the sheet's own label, in routine order, each name once.
  */
-export function discoveryApplicationGaps(input: {
-  candidates: readonly ApplicationRoutineProductCandidate[]
+type DiscoveryCompileRun = {
   degradedItemIds: ReadonlySet<string>
   compiled: ReturnType<typeof compileApplicationViewV2>
-}): DiscoveryApplicationGap[] {
+}
+
+/** Is this printed candidate (product AND role) without complete guidance in this run? */
+function discoveryCandidateHasGap(
+  candidate: ApplicationRoutineProductCandidate,
+  run: DiscoveryCompileRun,
+): boolean {
+  const role = SEMANTIC_ROLE_BY_ROUTINE_ROLE[candidate.routineRole]
+  const productId = candidate.productId
+  const pointerIssue = run.compiled.pointerIssues.some(
+    (issue) => issue.productId === productId && issue.role === role,
+  )
+  const instructed = run.compiled.days.some((day) =>
+    day.productBlocks.some((block) => block.productId === productId && block.roles.includes(role)),
+  )
+  const unresolved = run.compiled.days.some((day) =>
+    day.outerSequence.some(
+      (step) =>
+        step.kind === "unresolved_product" &&
+        step.block.productId === productId &&
+        step.block.role === role,
+    ),
+  )
+  return run.degradedItemIds.has(candidate.itemId) || pointerIssue || !instructed || unresolved
+}
+
+export function discoveryApplicationGaps(
+  input: { candidates: readonly ApplicationRoutineProductCandidate[] } & DiscoveryCompileRun,
+): DiscoveryApplicationGap[] {
   const gaps: DiscoveryApplicationGap[] = []
   const seen = new Set<string>()
   for (const candidate of input.candidates) {
-    const role = SEMANTIC_ROLE_BY_ROUTINE_ROLE[candidate.routineRole]
-    const productId = candidate.productId
-    const pointerIssue = input.compiled.pointerIssues.some(
-      (issue) => issue.productId === productId && issue.role === role,
-    )
-    const instructed = input.compiled.days.some((day) =>
-      day.productBlocks.some(
-        (block) => block.productId === productId && block.roles.includes(role),
-      ),
-    )
-    const unresolved = input.compiled.days.some((day) =>
-      day.outerSequence.some(
-        (step) =>
-          step.kind === "unresolved_product" &&
-          step.block.productId === productId &&
-          step.block.role === role,
-      ),
-    )
-    if (input.degradedItemIds.has(candidate.itemId) || pointerIssue || !instructed || unresolved) {
-      const key = `${productId}\u0000${candidate.productName}`
-      if (seen.has(key)) continue
-      seen.add(key)
-      gaps.push({ productId, name: candidate.productName })
-    }
+    if (!discoveryCandidateHasGap(candidate, input)) continue
+    const key = `${candidate.productId}\u0000${candidate.productName}`
+    if (seen.has(key)) continue
+    seen.add(key)
+    gaps.push({ productId: candidate.productId, name: candidate.productName })
   }
   return gaps
 }
@@ -359,26 +387,50 @@ export function compileDiscoveryApplication(input: {
   /** The Idealplan's (category, role) steps in routine order — for usage differences. */
   idealRoles?: readonly { category: PersonalPlanCategory; role: PlanProductRole }[]
 }): DiscoveryApplication {
-  const candidates = resolveDiscoveryUsageDifferences({
+  const run = (trial: readonly DiscoveryApplicationCandidate[]) => {
+    const normalized = normalizeApplicationRoutineProducts({
+      ...input.catalog,
+      candidates: trial,
+      contractVersion: CONTRACT_VERSION,
+    })
+    const compiled = compileApplicationViewV2({
+      input: {
+        routineItems: normalized.routineItems,
+        unresolvedRoutineItems: normalized.unresolvedRoutineItems,
+        profile: input.profile,
+        dayTypes: input.dayDefinitions.map((day) => ({ key: day.key, sortOrder: day.sortOrder })),
+      },
+      familyTemplates: input.familyTemplates,
+      productPointers: normalized.applicationPointersV2,
+    })
+    return {
+      normalized,
+      compiled,
+      degradedItemIds: new Set(normalized.unresolvedRoutineItems.map((item) => item.itemId)),
+    }
+  }
+  let candidates = resolveDiscoveryUsageDifferences({
     candidates: input.candidates,
     catalog: input.catalog,
     idealRoles: input.idealRoles ?? [],
   })
-  const normalized = normalizeApplicationRoutineProducts({
-    ...input.catalog,
-    candidates,
-    contractVersion: CONTRACT_VERSION,
-  })
-  const compiled = compileApplicationViewV2({
-    input: {
-      routineItems: normalized.routineItems,
-      unresolvedRoutineItems: normalized.unresolvedRoutineItems,
-      profile: input.profile,
-      dayTypes: input.dayDefinitions.map((day) => ({ key: day.key, sortOrder: day.sortOrder })),
-    },
-    familyTemplates: input.familyTemplates,
-    productPointers: normalized.applicationPointersV2,
-  })
+  // A usage difference keeps the first role (in its deterministic order) whose guidance
+  // fully compiles in THIS routine — a verified pointer can still fail to compose (no family
+  // template, a companion missing from the routine …). None → the first role, a gap.
+  for (let index = 0; index < candidates.length; index += 1) {
+    const options = candidates[index]!.roleOptions ?? []
+    if (options.length < 2) continue
+    for (const role of options) {
+      const trial = candidates.map((candidate, position) =>
+        position === index ? { ...candidate, routineRole: role } : candidate,
+      )
+      if (!discoveryCandidateHasGap(trial[index]!, run(trial))) {
+        candidates = trial
+        break
+      }
+    }
+  }
+  const { normalized, compiled, degradedItemIds } = run(candidates)
   const view = toApplicationPageView({
     compiled,
     dayDefinitions: input.dayDefinitions,
@@ -393,18 +445,25 @@ export function compileDiscoveryApplication(input: {
       compiledDayKeys: compiled.days.map((day) => day.key),
     }),
   })
-  const usageByProductId = new Map(
-    candidates.flatMap((candidate) =>
-      candidate.usageLabel ? [[candidate.productId, candidate.usageLabel] as const] : [],
+  // The note belongs to the printed product IN the role she uses it for — a second printed
+  // role of the same product carries none.
+  const rolesByBlock = new Map(
+    compiled.days.flatMap((day) =>
+      day.productBlocks.map((block) => [`${day.key}|${block.applicationInstanceKey}`, block.roles]),
     ),
   )
+  const usageOf: DiscoveryUsageLookup = (dayType, productId, applicationInstanceKey) => {
+    const roles = rolesByBlock.get(`${dayType}|${applicationInstanceKey}`) ?? []
+    return candidates.find(
+      (candidate) =>
+        candidate.usageLabel &&
+        candidate.productId === productId &&
+        roles.includes(SEMANTIC_ROLE_BY_ROUTINE_ROLE[candidate.routineRole]),
+    )?.usageLabel
+  }
   return {
-    print: discoveryApplicationPrint(view, usageByProductId),
-    gaps: discoveryApplicationGaps({
-      candidates,
-      degradedItemIds: new Set(normalized.unresolvedRoutineItems.map((item) => item.itemId)),
-      compiled,
-    }),
+    print: discoveryApplicationPrint(view, usageOf),
+    gaps: discoveryApplicationGaps({ candidates, degradedItemIds, compiled }),
   }
 }
 

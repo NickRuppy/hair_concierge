@@ -1302,3 +1302,183 @@ test("a no-image call with no printed application keeps the pre-batch-6 fingerpr
   if (model.status !== "ready") return
   assert.equal(model.routine.sourceHash, BASE_GOLDEN_HASH)
 })
+
+// --- M: a verified role that does not compile falls through to the next -------------------
+
+/** A pre-wash oil pointer whose guidance cannot compose (no family template for its role). */
+const OIL_PRE_WASH_BLOCKED = (productId: string) =>
+  pointer(
+    productId,
+    {
+      sourceRole: "pre_wash_fibre_treatment",
+      role: "bond_repair",
+      applicationFamily: "pre_wash_lengths_treatment",
+      facts: {
+        applicationState: "pre_wash_dry_hair",
+        applicationArea: "hair_lengths_ends",
+        rinse: "follow_with_shampoo",
+        contactTime: null,
+        amount: null,
+        heat: null,
+        conditionerPolicy: "not_applicable",
+      },
+    },
+    "oil",
+  )
+
+function compileOilOnScalp(pointers: ProductApplicationPointerV2[]) {
+  const routine = usageRoutine(CONDITIONER_AS_MASK)
+  return {
+    routine,
+    section: compileDiscoveryApplication({
+      candidates: discoveryApplicationCandidates(routine),
+      catalog: catalog(
+        [
+          POINTERS.shampoo,
+          pointer(
+            usage.conditioner,
+            {
+              ...POINTERS.conditioner,
+              scope: { kind: "product", category: "conditioner", productId: usage.conditioner },
+            },
+            "conditioner",
+          ),
+          ...pointers,
+        ],
+        [
+          productRow(ids.keptShampoo, "shampoo"),
+          productRow(usage.conditioner, "conditioner"),
+          productRow(usage.oil, "oil"),
+        ],
+      ),
+      dayDefinitions,
+      familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+      profile: discoveryApplicationProfile(initialContext),
+      idealRoles: routine.steps.map((entry) => ({
+        category: entry.step.category,
+        role: entry.step.role,
+      })),
+    }),
+  }
+}
+
+test("oil on the scalp: the first verified role cannot compile, the second prints — finalize OK", async () => {
+  // Policy order puts pre-wash first; its guidance does not compose, dry finish does.
+  const { routine, section } = compileOilOnScalp([
+    OIL_PRE_WASH_BLOCKED(usage.oil),
+    OIL_DRY_FINISH(usage.oil),
+  ])
+  assert.deepEqual(section.gaps, [])
+  const oilBlocks = section.print.days.flatMap((day) =>
+    day.steps.flatMap((entry) =>
+      entry.kind === "product" && entry.productId === usage.oil ? [entry] : [],
+    ),
+  )
+  assert.ok(oilBlocks.length > 0)
+  assert.ok(oilBlocks.every((entry) => entry.usage === "als Kopfhautpflege benutzt"))
+  const model = readyModel({
+    steps: [shampooStep, maskStep, scalpStep],
+    routine: withDiscoveryApplicationHash(routine, section.print),
+    application: { status: "ready", section },
+  })
+  const response = await finalizeWith(model).run()
+  assert.equal(response.status, 200)
+})
+
+test("oil on the scalp with every verified role blocked stays a gap", () => {
+  const { section } = compileOilOnScalp([OIL_PRE_WASH_BLOCKED(usage.oil)])
+  assert.deepEqual(
+    section.gaps.map((gap) => gap.productId),
+    [usage.oil],
+  )
+})
+
+// --- N: the usage note belongs to the role she uses it for -------------------------------
+
+test("a second printed role of the same product does not inherit the usage note", () => {
+  const oilId = "30000000-0000-4000-8000-000000000041"
+  const base = {
+    productId: oilId,
+    productName: "Ölmarke Argan Öl",
+    category: "oil" as const,
+    executable: true,
+    effectiveCadenceDe: "1× pro Woche",
+  }
+  const section = compileDiscoveryApplication({
+    candidates: [
+      // A shampoo, so the wash day (where the damp oil step lives) compiles.
+      {
+        ...base,
+        productId: ids.keptShampoo,
+        productName: "Elvital Hyaluron Pure Shampoo",
+        category: "shampoo",
+        itemId: "d:shampoo",
+        applicationInstanceKey: "d:shampoo",
+        routineOrder: 0,
+        routineRole: "shampoo_everyday",
+        kind: "owned",
+      },
+      {
+        ...base,
+        itemId: "d:scalp",
+        applicationInstanceKey: "d:scalp",
+        routineOrder: 0,
+        routineRole: "dry_finish",
+        kind: "owned",
+        usageLabel: "als Kopfhautpflege benutzt",
+      },
+      {
+        ...base,
+        itemId: "d:oil-damp",
+        applicationInstanceKey: "d:oil-damp",
+        routineOrder: 1,
+        routineRole: "leave_on_fibre_conditioning",
+        kind: "planned",
+      },
+    ],
+    catalog: catalog(
+      [
+        POINTERS.shampoo,
+        OIL_DRY_FINISH(oilId),
+        pointer(
+          oilId,
+          {
+            sourceRole: "leave_on_fibre_conditioning",
+            role: "leave_in",
+            applicationFamily: "post_wash_damp_conditioning",
+            facts: {
+              applicationState: "damp_hair",
+              applicationArea: "hair_lengths_ends",
+              rinse: "leave_in",
+              contactTime: null,
+              amount: null,
+              heat: null,
+              conditionerPolicy: "not_applicable",
+            },
+          },
+          "oil",
+        ),
+      ],
+      [productRow(oilId, "oil"), productRow(ids.keptShampoo, "shampoo")],
+    ),
+    dayDefinitions,
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    profile: {},
+  })
+  const blocks = section.print.days.flatMap((day) =>
+    day.steps.flatMap((entry) => (entry.kind === "product" ? [{ day: day.dayType, entry }] : [])),
+  )
+  const oil = blocks.filter(({ entry }) => entry.productId === oilId)
+  // A block that instructs her usage role (finish) carries the note …
+  const finish = oil.filter(({ entry }) => entry.purpose.includes("Schließt die Anwendung"))
+  // … the damp leave-on block (only the other printed role) does not.
+  const damp = oil.filter(
+    ({ entry }) => entry.purpose === "Pflegt das Haar nach der Wäsche, ohne ausgespült zu werden.",
+  )
+  assert.ok(
+    finish.length > 0 && damp.length > 0,
+    JSON.stringify(blocks.map((b) => b.entry.purpose)),
+  )
+  assert.ok(finish.every(({ entry }) => entry.usage === "als Kopfhautpflege benutzt"))
+  assert.ok(damp.every(({ entry }) => entry.usage === undefined))
+})
