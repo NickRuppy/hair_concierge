@@ -49,14 +49,25 @@ export async function loadDiscoveryLatestResearchJobs(
   if (unique.length === 0) return latest
   const { data, error } = await client
     .from(JOBS_TABLE)
-    .select("id,submission_id,status,created_at")
+    .select("id,submission_id,status,attempt_count,max_attempts,created_at")
     .in("submission_id", unique)
     .order("created_at", { ascending: false })
   if (error) throw new Error("discovery_research_jobs_lookup_failed")
-  for (const row of (data as Array<{ id: string; submission_id: string; status: string }> | null) ??
-    []) {
+  type JobRow = {
+    id: string
+    submission_id: string
+    status: string
+    attempt_count: number
+    max_attempts: number
+  }
+  for (const row of (data as JobRow[] | null) ?? []) {
     if (!latest.has(row.submission_id)) {
-      latest.set(row.submission_id, { id: row.id, status: row.status })
+      latest.set(row.submission_id, {
+        id: row.id,
+        status: row.status,
+        attemptCount: row.attempt_count,
+        maxAttempts: row.max_attempts,
+      })
     }
   }
   return latest
@@ -135,7 +146,9 @@ export async function retryDiscoveryResearchJob(client: Client, jobId: string): 
 
 /**
  * Attaches a new submission to the intake row. Only a row that still has NO submission and
- * NO product is touched — both are re-stated as predicates, like reconcile's write.
+ * NO product is touched — both are re-stated as predicates, like reconcile's write — so of
+ * two concurrent starts exactly one identity lands. `false` means another write got there
+ * first; the caller re-reads and reports that winner.
  */
 export async function attachDiscoveryIntakeItemSubmission(
   client: Client,
@@ -153,7 +166,11 @@ export async function attachDiscoveryIntakeItemSubmission(
   return ((data as Array<{ id: string }> | null) ?? []).length > 0
 }
 
-/** A catalog match the submit path found instead: same guarded write as reconcile's. */
+/**
+ * A catalog match the submit path found instead. Same predicates as the attach above —
+ * BOTH identity columns still empty — so a concurrent start that already attached a
+ * submission is never overwritten by a product (or the other way round).
+ */
 export async function assignDiscoveryIntakeItemCatalogProduct(
   client: Client,
   input: { intakeId: string; itemId: string; productId: string },
@@ -164,6 +181,7 @@ export async function assignDiscoveryIntakeItemCatalogProduct(
     .eq("id", input.itemId)
     .eq("intake_id", input.intakeId)
     .is("product_id", null)
+    .is("product_submission_id", null)
     .select("id")
   if (error) throw error
   return ((data as Array<{ id: string }> | null) ?? []).length > 0

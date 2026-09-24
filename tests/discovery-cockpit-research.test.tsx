@@ -1,10 +1,13 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { AppRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import { NextRequest, NextResponse } from "next/server"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { createDiscoveryCockpitPage } from "../src/app/admin/beratung/[enrollmentId]/page"
 import { createDiscoveryResearchHandler } from "../src/app/api/admin/beratung/[enrollmentId]/research/route"
+import { discoveryResearchStartOutcome } from "../src/components/discovery/cockpit/discovery-intake-products"
+import { discoveryCockpitStateKey } from "../src/components/discovery/cockpit/format"
 import {
   buildDiscoveryCockpitView,
   loadDiscoveryCockpitModel,
@@ -268,7 +271,9 @@ function pageModel(): DiscoveryCockpitModel {
         submissions: new Map([
           [ids.submission, { status: "researching", approvedProductId: null }],
         ]),
-        latestJobs: new Map([[ids.submission, { id: ids.job, status: "running" }]]),
+        latestJobs: new Map([
+          [ids.submission, { id: ids.job, status: "running", attemptCount: 1, maxAttempts: 3 }],
+        ]),
         eligible: new Set<string>(),
       },
     },
@@ -303,8 +308,11 @@ async function renderPage(model: DiscoveryCockpitModel) {
     loadModel: async () => model,
     loadPreflight: async () => ({ status: "ready" }),
   })
+  const router = { back() {}, forward() {}, refresh() {}, push() {}, replace() {}, prefetch() {} }
   return renderToStaticMarkup(
-    await Page({ params: Promise.resolve({ enrollmentId: ids.enrollment }) }),
+    <AppRouterContext.Provider value={router as never}>
+      {await Page({ params: Promise.resolve({ enrollmentId: ids.enrollment }) })}
+    </AppRouterContext.Provider>,
   )
 }
 
@@ -481,7 +489,9 @@ test("an open submission without a live job is enqueued, and the new status come
       if (reads === 1) return researchState("pending_review")
       return {
         ...researchState("pending_review"),
-        latestJobs: new Map([[ids.submission, { id: ids.job, status: "queued" }]]),
+        latestJobs: new Map([
+          [ids.submission, { id: ids.job, status: "queued", attemptCount: 1, maxAttempts: 3 }],
+        ]),
       }
     },
   })
@@ -499,7 +509,9 @@ test("a failed job is retried, not enqueued", async () => {
   const { deps, calls } = routeDeps({
     loadResearchState: async () => ({
       ...researchState("researching"),
-      latestJobs: new Map([[ids.submission, { id: ids.job, status: "failed" }]]),
+      latestJobs: new Map([
+        [ids.submission, { id: ids.job, status: "failed", attemptCount: 1, maxAttempts: 3 }],
+      ]),
     }),
   })
   const result = await post(deps, { itemId: ids.researchItem })
@@ -530,7 +542,9 @@ test("nothing to start is a 409 carrying the current status — running, catalog
   const running = routeDeps({
     loadResearchState: async () => ({
       ...researchState("researching"),
-      latestJobs: new Map([[ids.submission, { id: ids.job, status: "running" }]]),
+      latestJobs: new Map([
+        [ids.submission, { id: ids.job, status: "running", attemptCount: 1, maxAttempts: 3 }],
+      ]),
     }),
   })
   const busy = await post(running.deps, { itemId: ids.researchItem })
@@ -558,4 +572,163 @@ test("a failing enqueue is a 503, never a silent success", async () => {
   })
   const result = await post(deps, { itemId: ids.researchItem })
   assert.equal(result.status, 503)
+})
+
+// --- review fixes: exhausted jobs, concurrent starts, stale cockpit ------------
+
+test("a failed job out of attempts is not retried — the route answers with the exhausted state", async () => {
+  const { deps, calls } = routeDeps({
+    loadResearchState: async () => ({
+      ...researchState("researching"),
+      latestJobs: new Map([
+        [ids.submission, { id: ids.job, status: "failed", attemptCount: 3, maxAttempts: 3 }],
+      ]),
+    }),
+  })
+  const result = await post(deps, { itemId: ids.researchItem })
+  assert.equal(result.status, 409)
+  assert.equal(result.body.status?.label, "Recherche ausgeschöpft – im Review-Center neu anstoßen")
+  assert.equal(result.body.status?.canStartResearch, false)
+  assert.deepEqual(calls, [])
+})
+
+/**
+ * Two starts on the same submission-less item both read „no identity" before either writes.
+ * The conditional writes (both identity columns still empty) let only the first land; the
+ * loser must report what the row holds now — never claim its own write happened.
+ */
+test("race: a submission attached first wins over a later catalog match", async () => {
+  let reads = 0
+  const { deps, calls } = routeDeps({
+    loadItems: async () => {
+      reads += 1
+      return reads === 1
+        ? [barcodeItem]
+        : [{ ...barcodeItem, productSubmissionId: ids.newSubmission }]
+    },
+    loadResearchState: async (_client, items) => ({
+      submissions: new Map(
+        items[0]?.productSubmissionId
+          ? [[ids.newSubmission, { status: "pending_review", approvedProductId: null }]]
+          : [],
+      ),
+      latestJobs: new Map(
+        items[0]?.productSubmissionId
+          ? [
+              [
+                ids.newSubmission,
+                { id: ids.job, status: "queued", attemptCount: 0, maxAttempts: 3 },
+              ],
+            ]
+          : [],
+      ),
+      eligible: new Set<string>(),
+    }),
+    createSubmission: async () => ({ kind: "already_in_catalog", productId: ids.approved }),
+    // The other request's attach got there first: our assign matches no row.
+    assignCatalogProduct: async (_client, input) => {
+      calls.push(`assign-lost:${input.itemId}`)
+      return false
+    },
+  })
+  const result = await post(deps, { itemId: ids.barcodeItem })
+  assert.equal(result.status, 200)
+  assert.deepEqual(calls, [`assign-lost:${ids.barcodeItem}`])
+  assert.equal(result.body.status?.label, "In Recherche – wartet")
+  assert.equal((result.body as { identityChanged?: boolean }).identityChanged, true)
+})
+
+test("race: a catalog match assigned first wins over a later submission attach", async () => {
+  let reads = 0
+  const { deps, calls } = routeDeps({
+    loadItems: async () => {
+      reads += 1
+      return reads === 1 ? [barcodeItem] : [{ ...barcodeItem, productId: ids.approved }]
+    },
+    attachSubmission: async (_client, input) => {
+      calls.push(`attach-lost:${input.itemId}`)
+      return false
+    },
+  })
+  const result = await post(deps, { itemId: ids.barcodeItem })
+  assert.equal(result.status, 200)
+  assert.deepEqual(calls, [`create:${ids.user}:${EAN}`, `attach-lost:${ids.barcodeItem}`])
+  assert.equal(result.body.status?.label, "Im Katalog")
+  assert.equal((result.body as { identityChanged?: boolean }).identityChanged, true)
+})
+
+test("an enqueue changes no identity, so the cockpit only updates the badge", async () => {
+  const { deps } = routeDeps()
+  const result = await post(deps, { itemId: ids.researchItem })
+  assert.equal(result.status, 200)
+  assert.equal((result.body as { identityChanged?: boolean }).identityChanged, false)
+})
+
+test("a second-tab retry the RPC refuses reports the job the first tab queued", async () => {
+  let reads = 0
+  const { deps } = routeDeps({
+    loadResearchState: async () => {
+      reads += 1
+      return {
+        ...researchState("researching"),
+        latestJobs: new Map([
+          [
+            ids.submission,
+            reads === 1
+              ? { id: ids.job, status: "failed", attemptCount: 1, maxAttempts: 3 }
+              : { id: ids.job, status: "queued", attemptCount: 1, maxAttempts: 3 },
+          ],
+        ]),
+      }
+    },
+    retry: async () => {
+      throw new Error("Product intake research job is not retryable from status queued")
+    },
+  })
+  const result = await post(deps, { itemId: ids.researchItem })
+  assert.equal(result.status, 200)
+  assert.equal(result.body.status?.label, "In Recherche – wartet")
+})
+
+test("the list refreshes the whole cockpit exactly when an item's identity changed", () => {
+  const status = {
+    kind: "research_queued" as const,
+    label: "In Recherche – wartet",
+    canStartResearch: false,
+  }
+  assert.deepEqual(discoveryResearchStartOutcome(true, { status, identityChanged: true }), {
+    row: {
+      status: "research_queued",
+      statusLabel: "In Recherche – wartet",
+      canStartResearch: false,
+    },
+    refresh: true,
+    failed: false,
+  })
+  assert.equal(
+    discoveryResearchStartOutcome(true, { status, identityChanged: false }).refresh,
+    false,
+  )
+  // A 409 carries the current status and refreshes nothing.
+  const conflict = discoveryResearchStartOutcome(false, { status })
+  assert.equal(conflict.failed, false)
+  assert.equal(conflict.refresh, false)
+  assert.deepEqual(discoveryResearchStartOutcome(false, null), {
+    row: null,
+    refresh: false,
+    failed: true,
+  })
+})
+
+test("a refreshed routine remounts the decision island so its state re-syncs", () => {
+  // The page keys both client islands with this; a new routine or finalize state is a new key.
+  assert.notEqual(
+    discoveryCockpitStateKey("hash-a", null),
+    discoveryCockpitStateKey("hash-b", null),
+  )
+  assert.notEqual(
+    discoveryCockpitStateKey("hash-a", null),
+    discoveryCockpitStateKey("hash-a", "2026-09-22T12:00:00.000Z"),
+  )
+  assert.equal(discoveryCockpitStateKey("hash-a", null), discoveryCockpitStateKey("hash-a", null))
 })

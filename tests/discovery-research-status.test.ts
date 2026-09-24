@@ -49,7 +49,7 @@ function item(overrides: Partial<DiscoveryIntakeItem> = {}): DiscoveryIntakeItem
 
 function state(input: {
   submission?: DiscoverySubmissionOutcome | null
-  job?: { id: string; status: string } | null
+  job?: { id: string; status: string; attemptCount: number; maxAttempts: number } | null
   eligible?: string[]
 }): DiscoveryResearchState {
   return {
@@ -205,7 +205,10 @@ test("an active job names its stage in short German and offers nothing", () => {
   for (const [jobStatus, label] of cases) {
     const result = status(
       item(),
-      state({ submission: open(), job: { id: ids.job, status: jobStatus } }),
+      state({
+        submission: open(),
+        job: { id: ids.job, status: jobStatus, attemptCount: 1, maxAttempts: 3 },
+      }),
     )
     assert.equal(result.label, label, jobStatus)
     assert.equal(result.action, null, jobStatus)
@@ -219,15 +222,56 @@ test("a failed or blocked job is retried — the enqueue RPC would hand the stuc
   ] as const) {
     const result = status(
       item(),
-      state({ submission: open(), job: { id: ids.job, status: jobStatus } }),
+      state({
+        submission: open(),
+        job: { id: ids.job, status: jobStatus, attemptCount: 1, maxAttempts: 3 },
+      }),
     )
     assert.equal(result.label, label)
     assert.deepEqual(result.action, { type: "retry", jobId: ids.job })
   }
 })
 
+test("a job out of attempts is named as such and offers no button a worker would never honour", () => {
+  // The retry RPC re-queues without resetting attempt_count, and the claim RPC only takes
+  // attempt_count < max_attempts: a retry here would read „wartet" forever.
+  for (const jobStatus of ["failed", "blocked", "queued", "waiting_for_rework"]) {
+    const result = status(
+      item(),
+      state({
+        submission: open(),
+        job: { id: ids.job, status: jobStatus, attemptCount: 3, maxAttempts: 3 },
+      }),
+    )
+    assert.equal(result.label, "Recherche ausgeschöpft – im Review-Center neu anstoßen", jobStatus)
+    assert.equal(result.action, null, jobStatus)
+  }
+  // Still one attempt left: a failed job is retried as before.
+  const retryable = status(
+    item(),
+    state({
+      submission: open(),
+      job: { id: ids.job, status: "failed", attemptCount: 2, maxAttempts: 3 },
+    }),
+  )
+  assert.deepEqual(retryable.action, { type: "retry", jobId: ids.job })
+  // A running job has already been claimed (the claim counts the attempt): still running.
+  const running = status(
+    item(),
+    state({
+      submission: open(),
+      job: { id: ids.job, status: "running", attemptCount: 3, maxAttempts: 3 },
+    }),
+  )
+  assert.equal(running.label, "In Recherche – läuft")
+})
+
 test("an open submission with no live job is enqueued", () => {
-  for (const job of [null, { id: ids.job, status: "done" }, { id: ids.job, status: "cancelled" }]) {
+  for (const job of [
+    null,
+    { id: ids.job, status: "done", attemptCount: 1, maxAttempts: 3 },
+    { id: ids.job, status: "cancelled", attemptCount: 1, maxAttempts: 3 },
+  ]) {
     const result = status(item(), state({ submission: open("pending_review"), job }))
     assert.equal(result.label, "Recherche nicht gestartet")
     assert.deepEqual(result.action, { type: "enqueue", submissionId: ids.submission })
@@ -237,7 +281,10 @@ test("an open submission with no live job is enqueued", () => {
 test("the review's own states win over a finished job", () => {
   const review = status(
     item(),
-    state({ submission: open("ready_for_review"), job: { id: ids.job, status: "done" } }),
+    state({
+      submission: open("ready_for_review"),
+      job: { id: ids.job, status: "done", attemptCount: 1, maxAttempts: 3 },
+    }),
   )
   assert.equal(review.label, "In Recherche – wartet auf Freigabe")
   assert.equal(review.action, null)

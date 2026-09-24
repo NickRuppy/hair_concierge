@@ -5,6 +5,7 @@ import { DiscoveryCallCockpit } from "@/components/discovery/cockpit/discovery-c
 import { DiscoveryIntakeProducts } from "@/components/discovery/cockpit/discovery-intake-products"
 import {
   DISCOVERY_EMAIL_PENDING_LABEL,
+  discoveryCockpitStateKey,
   formatDiscoveryTimestamp,
 } from "@/components/discovery/cockpit/format"
 import {
@@ -129,6 +130,8 @@ export function createDiscoveryCockpitPage(
 
     const view = buildDiscoveryCockpitView(model)
     const preflight = await deps.loadPreflight(admin, intake.userId)
+    // A refresh with a different routine remounts the client islands (see the helper).
+    const stateKey = discoveryCockpitStateKey(view.sourceHash, intake.callFinalizedAt)
 
     return (
       <Shell name={enrollment.name} email={enrollment.email} status={statusLine}>
@@ -138,9 +141,14 @@ export function createDiscoveryCockpitPage(
         ) : view.recommendationBrandsAvailable ? null : (
           <Notice text={BRANDS_UNAVAILABLE} />
         )}
-        <DiscoveryIntakeProducts enrollmentId={enrollmentId} products={view.intakeProducts} />
+        <DiscoveryIntakeProducts
+          key={`products:${stateKey}`}
+          enrollmentId={enrollmentId}
+          products={view.intakeProducts}
+        />
         <IdealRoutine view={view} />
         <DiscoveryCallCockpit
+          key={`decisions:${stateKey}`}
           enrollmentId={enrollmentId}
           steps={view.steps}
           submitted={intake.state === "submitted"}

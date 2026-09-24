@@ -81,8 +81,17 @@ export function discoveryResearchCandidateIds(
   ].sort()
 }
 
-/** The latest research job of one submission — only its id and status matter here. */
-export type DiscoveryResearchJob = { id: string; status: string }
+/**
+ * The latest research job of one submission. The attempt counters matter because the
+ * claim RPC (`product_intake_claim_research_jobs`) only takes jobs with
+ * `attempt_count < max_attempts`, and neither enqueue nor retry resets the count.
+ */
+export type DiscoveryResearchJob = {
+  id: string
+  status: string
+  attemptCount: number
+  maxAttempts: number
+}
 
 /** Everything the research read returned for one intake. */
 export type DiscoveryResearchState = {
@@ -194,6 +203,7 @@ export type DiscoveryResearchStatusKind =
   | "research_needs_info"
   | "research_failed"
   | "research_blocked"
+  | "research_exhausted"
   | "research_not_started"
   | "research_unknown"
   | "barcode_only"
@@ -216,6 +226,7 @@ export const DISCOVERY_RESEARCH_STATUS_COPY: Record<DiscoveryResearchStatusKind,
   research_needs_info: "Rückfrage",
   research_failed: "Recherche fehlgeschlagen",
   research_blocked: "Recherche blockiert",
+  research_exhausted: "Recherche ausgeschöpft – im Review-Center neu anstoßen",
   research_not_started: "Recherche nicht gestartet",
   research_unknown: "Recherche-Status unbekannt",
   barcode_only: "Nur Barcode – keine Recherche",
@@ -249,6 +260,24 @@ const ACTIVE_JOB_KINDS: Record<string, DiscoveryResearchStatusKind> = {
   waiting_for_rework: "research_rework",
   publish_preflight: "research_publishing",
   publishing: "research_publishing",
+}
+
+/**
+ * Job states the claim RPC picks up — or that retry would turn into one. A job in any of
+ * them with no attempts left will never be claimed again: the retry RPC re-queues it WITHOUT
+ * resetting `attempt_count`. The only reset lives in the review app's rework path
+ * (`product_intake_request_rework_job`), which is a reviewer's „Änderungen neu
+ * recherchieren" with feedback — not something the cockpit may trigger on its own.
+ */
+const CLAIMABLE_OR_RETRYABLE_JOB_STATUSES = new Set([
+  "queued",
+  "waiting_for_rework",
+  "failed",
+  "blocked",
+])
+
+export function isDiscoveryResearchJobExhausted(job: DiscoveryResearchJob): boolean {
+  return CLAIMABLE_OR_RETRYABLE_JOB_STATUSES.has(job.status) && job.attemptCount >= job.maxAttempts
 }
 
 const OPEN_SUBMISSION_STATUSES = new Set([
@@ -294,6 +323,9 @@ export function discoveryResearchStatus(
   }
 
   const job = state.latestJobs.get(submissionId) ?? null
+  if (job && isDiscoveryResearchJobExhausted(job)) {
+    return { kind: "research_exhausted", action: null }
+  }
   const active = job ? ACTIVE_JOB_KINDS[job.status] : undefined
   if (active) return { kind: active, action: null }
   if (job?.status === "failed" || job?.status === "blocked") {

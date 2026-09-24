@@ -155,33 +155,38 @@ Quelle der Wahrheit**; dieses Runbook wiederholt sie nicht.
 Den Stand siehst du oben im Cockpit unter **„Eingetragene Produkte"** — jedes erfasste Produkt mit
 Bild, Name, Kategorie und Status:
 
-| Status                                          | Bedeutung                                                                                   |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Im Katalog                                      | Beim Erfassen erkannt.                                                                      |
-| Freigegeben                                     | Recherche freigegeben, Produkt nutzbar — das Cockpit verwendet es automatisch (siehe 3b).   |
-| Freigegeben – im Katalog gesperrt               | Freigegeben, aber deaktiviert/quarantänisiert. Wird nicht verwendet; im Katalog klären.     |
-| In Recherche – wartet / läuft                   | Job eingereiht bzw. läuft im lokalen Review-Center.                                         |
-| In Recherche – wartet auf Freigabe              | Ergebnis liegt in der Review-App.                                                           |
-| In Recherche – Nacharbeit / wird veröffentlicht | Job in Nacharbeit bzw. in der Veröffentlichung.                                             |
-| Rückfrage                                       | Review hat `needs_more_info` gesetzt.                                                       |
-| Recherche fehlgeschlagen / blockiert            | Letzter Job `failed` / `blocked`.                                                           |
-| Recherche nicht gestartet                       | Offene Submission ohne laufenden Job.                                                       |
-| Nur Barcode – keine Recherche / Keine Recherche | Keine Submission vorhanden.                                                                 |
-| Zu wenig Angaben für eine Recherche             | Weder gültiger Barcode noch Marke **und** Name — nichts, womit eine Recherche starten kann. |
-| Abgelehnt / Zurückgezogen                       | Submission `rejected` / `cancelled_by_user`. Nichts zu starten.                             |
+| Status                                                 | Bedeutung                                                                                                                                                                                                                   |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Im Katalog                                             | Beim Erfassen erkannt.                                                                                                                                                                                                      |
+| Freigegeben                                            | Recherche freigegeben, Produkt nutzbar — das Cockpit verwendet es automatisch (siehe 3b).                                                                                                                                   |
+| Freigegeben – im Katalog gesperrt                      | Freigegeben, aber deaktiviert/quarantänisiert. Wird nicht verwendet; im Katalog klären.                                                                                                                                     |
+| In Recherche – wartet / läuft                          | Job eingereiht bzw. läuft im lokalen Review-Center.                                                                                                                                                                         |
+| In Recherche – wartet auf Freigabe                     | Ergebnis liegt in der Review-App.                                                                                                                                                                                           |
+| In Recherche – Nacharbeit / wird veröffentlicht        | Job in Nacharbeit bzw. in der Veröffentlichung.                                                                                                                                                                             |
+| Rückfrage                                              | Review hat `needs_more_info` gesetzt.                                                                                                                                                                                       |
+| Recherche fehlgeschlagen / blockiert                   | Letzter Job `failed` / `blocked`.                                                                                                                                                                                           |
+| Recherche ausgeschöpft – im Review-Center neu anstoßen | Job hat alle Versuche verbraucht (`attempt_count >= max_attempts`). Ein Worker nimmt ihn nie wieder; im Cockpit gibt es deshalb keinen Knopf. In der Review-App „Änderungen neu recherchieren" (setzt die Versuche zurück). |
+| Recherche nicht gestartet                              | Offene Submission ohne laufenden Job.                                                                                                                                                                                       |
+| Nur Barcode – keine Recherche / Keine Recherche        | Keine Submission vorhanden.                                                                                                                                                                                                 |
+| Zu wenig Angaben für eine Recherche                    | Weder gültiger Barcode noch Marke **und** Name — nichts, womit eine Recherche starten kann.                                                                                                                                 |
+| Abgelehnt / Zurückgezogen                              | Submission `rejected` / `cancelled_by_user`. Nichts zu starten.                                                                                                                                                             |
 
 **„Recherche starten"** steht an jedem Produkt, bei dem es etwas zu tun gibt
 (`POST /api/admin/beratung/<enrollmentId>/research`, admin-gegatet wie die Einladungen):
 
 - offene Submission ohne laufenden Job (auch nach „Rückfrage") → Job einreihen
   (`product_intake_enqueue_research_job`);
-- letzter Job fehlgeschlagen oder blockiert → genau diesen Job erneut einreihen
+- letzter Job fehlgeschlagen oder blockiert, mit verbleibenden Versuchen → genau diesen Job erneut einreihen
   (`product_intake_retry_research_job`);
 - noch keine Submission → eine anlegen, genau wie die Checkliste es tut (Scan-Strecke, als die
   Teilnehmerin, Kategorie der Zeile, Barcode bzw. Marke + Name); der Trigger reiht den Job ein.
   Findet diese Strecke das Produkt schon im Katalog, bekommt die Zeile direkt dessen `product_id`.
 
-Der Knopf reiht nur ein — er startet keinen Worker. Nach dem Klick steht der neue Status da.
+Der Knopf reiht nur ein — er startet keinen Worker. Nach dem Klick steht der neue Status da; hat
+sich dabei das Produkt oder die Submission der Zeile geändert, lädt das ganze Cockpit neu (Name,
+Urteil, Routine und Entscheidungen kommen dann frisch vom Server). Ein Doppelklick oder ein zweiter
+Tab legt keine zweite Submission an: die Scan-Strecke liefert dieselbe offene Submission zurück,
+und die Zeile wird nur beschrieben, solange sie weder Produkt noch Submission trägt.
 
 ### 3b. Freigegebene Recherche im Cockpit
 

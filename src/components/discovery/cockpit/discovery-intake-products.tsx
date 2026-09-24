@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 import {
@@ -47,6 +48,7 @@ const TONE: Record<DiscoveryResearchStatusKind, Tone> = {
   research_needs_info: "pending",
   research_failed: "danger",
   research_blocked: "danger",
+  research_exhausted: "danger",
   research_not_started: "neutral",
   research_unknown: "neutral",
   barcode_only: "neutral",
@@ -67,6 +69,38 @@ type RowStatus = Pick<
   "status" | "statusLabel" | "canStartResearch"
 >
 
+export type DiscoveryResearchStartBody = {
+  status?: { kind: DiscoveryResearchStatusKind; label: string; canStartResearch: boolean }
+  identityChanged?: boolean
+} | null
+
+/**
+ * What a research-start answer means for the list, pure so it can be tested:
+ *
+ *  - `row` — the item's new badge (a 409 carries the current status too);
+ *  - `refresh` — the item's product or submission changed (ours or a concurrent start's):
+ *    its name, verdict, routine step and the fingerprint finalize will use are all stale,
+ *    so the whole cockpit reloads from the server rather than just the badge;
+ *  - `failed` — nothing usable came back.
+ */
+export function discoveryResearchStartOutcome(
+  ok: boolean,
+  body: DiscoveryResearchStartBody,
+): { row: RowStatus | null; refresh: boolean; failed: boolean } {
+  const status = body?.status ?? null
+  return {
+    row: status
+      ? {
+          status: status.kind,
+          statusLabel: status.label,
+          canStartResearch: status.canStartResearch,
+        }
+      : null,
+    refresh: body?.identityChanged === true,
+    failed: !ok && !status,
+  }
+}
+
 function shelfSorted(products: DiscoveryCockpitIntakeProductView[]) {
   // Stable: within a shelf, capture order stays.
   return [...products].sort(
@@ -81,6 +115,7 @@ export function DiscoveryIntakeProducts({
   enrollmentId: string
   products: DiscoveryCockpitIntakeProductView[]
 }) {
+  const router = useRouter()
   const [statuses, setStatuses] = useState<Record<string, RowStatus>>({})
   const [pending, setPending] = useState<string | null>(null)
   const [failed, setFailed] = useState<string | null>(null)
@@ -102,22 +137,15 @@ export function DiscoveryIntakeProducts({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ itemId }),
       })
-      const body = (await response.json().catch(() => null)) as {
-        status?: { kind: DiscoveryResearchStatusKind; label: string; canStartResearch: boolean }
-      } | null
-      // A 409 still carries the item's current status: show it instead of a dead button.
-      if (body?.status) {
-        const next = body.status
-        setStatuses((current) => ({
-          ...current,
-          [itemId]: {
-            status: next.kind,
-            statusLabel: next.label,
-            canStartResearch: next.canStartResearch,
-          },
-        }))
+      const body = (await response.json().catch(() => null)) as DiscoveryResearchStartBody
+      const outcome = discoveryResearchStartOutcome(response.ok, body)
+      if (outcome.row) {
+        const row = outcome.row
+        setStatuses((current) => ({ ...current, [itemId]: row }))
       }
-      if (!response.ok && !body?.status) setFailed(itemId)
+      if (outcome.failed) setFailed(itemId)
+      // Re-renders the server page; the state key then remounts the decision island too.
+      if (outcome.refresh) router.refresh()
     } catch {
       setFailed(itemId)
     } finally {
