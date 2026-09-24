@@ -2,8 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import { DISCOVERY_INTAKE_CATEGORY_COPY } from "../src/components/discovery/intake/categories"
-import { DiscoveryProductEntry } from "../src/components/discovery/intake/discovery-product-entry"
+import { DiscoveryProductList } from "../src/components/discovery/intake/discovery-product-list"
 import {
   projectDiscoveryIntakeItemRow,
   toDiscoveryIntakeItemView,
@@ -59,8 +58,7 @@ test("rows without a catalog product (or without a catalog image) degrade to no 
 
 function renderEntry(imageUrl: string | null) {
   return renderToStaticMarkup(
-    <DiscoveryProductEntry
-      category={DISCOVERY_INTAKE_CATEGORY_COPY.shampoo}
+    <DiscoveryProductList
       items={[
         {
           id: "i1",
@@ -72,10 +70,9 @@ function renderEntry(imageUrl: string | null) {
           imageUrl,
         },
       ]}
-      retailerSearchEnabled={false}
-      onAdded={() => {}}
-      onRemoved={() => {}}
-      onBack={() => {}}
+      busy={false}
+      onChange={() => {}}
+      onRemove={() => {}}
     />,
   )
 }

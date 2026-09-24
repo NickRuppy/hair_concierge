@@ -1,83 +1,24 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
-import { renderToStaticMarkup } from "react-dom/server"
 
+import type { ScanSearchResult } from "../src/app/api/scan/search/route"
+import { DiscoveryChoiceSheet } from "../src/components/discovery/intake/discovery-choice-sheet"
 import { DiscoveryIntakeChecklist } from "../src/components/discovery/intake/discovery-intake-checklist"
+import { DiscoveryIntakeReview } from "../src/components/discovery/intake/discovery-intake-review"
+import { DiscoveryProductList } from "../src/components/discovery/intake/discovery-product-list"
 import type { DiscoveryIntakeItemView } from "../src/components/discovery/intake/types"
-import {
-  DISCOVERY_INTAKE_CATEGORIES,
-  type DiscoveryIntakeCategory,
-} from "../src/lib/discovery/intake"
+import { ScanSearchSheet } from "../src/components/scan/scan-search-sheet"
 
 /**
- * The checklist's one CTA: „Fertig – abschicken" as soon as one category is answered.
- * Nothing is mandatory; what the participant leaves untouched stays untouched (no tick,
- * no stored row) and the caption under the CTA says the call covers it.
+ * The flat checklist driven like a tap would: add → one POST with type + usage, pill →
+ * one PATCH, „Fertig“ → „Passt das so?“ → „Stimmt so – abschicken“ → one submit carrying
+ * `{confirmNoneForMissing: true}` → „Danke!“.
+ *
+ * A hand-rolled `useState` dispatcher (no jsdom in this repo — same family as
+ * `tests/discovery-search-sheet-props.test.tsx`): the checklist is called directly, its
+ * element tree walked, and the handlers it hands its children invoked.
  */
-
-const SUBMIT = "Fertig – abschicken"
-const CAPTION = "Was fehlt, klären wir im Call."
-
-function view(
-  category: DiscoveryIntakeCategory,
-  source: DiscoveryIntakeItemView["source"] = "catalog_search",
-): DiscoveryIntakeItemView {
-  const none = source === "none"
-  return {
-    id: `view-${category}-${source}`,
-    category,
-    source,
-    brandText: none ? null : "Balea",
-    productNameText: none ? null : `Balea ${category}`,
-    barcodeIdentifier: null,
-  }
-}
-
-function overview(items: DiscoveryIntakeItemView[]) {
-  return renderToStaticMarkup(
-    <DiscoveryIntakeChecklist
-      initialItems={items}
-      initialSubmitted={false}
-      retailerSearchEnabled={false}
-    />,
-  )
-}
-
-test("nothing answered: no CTA, no caption, and no counter implying ten required answers", () => {
-  const html = overview([])
-  assert.match(html, /Trag ein, was du benutzt\./)
-  assert.doesNotMatch(html, new RegExp(SUBMIT))
-  assert.doesNotMatch(html, new RegExp(CAPTION))
-  assert.doesNotMatch(html, /von 10/)
-  assert.doesNotMatch(html, /role="progressbar"/)
-})
-
-test("one answer is enough: the CTA appears, with the caption while anything is open", () => {
-  const html = overview([view("shampoo")])
-  assert.match(html, new RegExp(`>${SUBMIT}<`))
-  assert.match(html, new RegExp(CAPTION))
-  // The bulk shortcut is gone.
-  assert.doesNotMatch(html, /Mehr benutze ich nicht/)
-  // Only the answered row carries a tick; the nine untouched rows stay untouched.
-  assert.equal((html.match(/lucide-check/g) ?? []).length, 1)
-})
-
-test("an explicit „benutze ich nicht“ counts as an answer too", () => {
-  const html = overview([view("mask", "none")])
-  assert.match(html, new RegExp(`>${SUBMIT}<`))
-  assert.match(html, /benutze ich nicht/)
-})
-
-test("with every category answered the caption has nothing left to promise", () => {
-  const html = overview(DISCOVERY_INTAKE_CATEGORIES.map((category) => view(category)))
-  assert.match(html, new RegExp(`>${SUBMIT}<`))
-  assert.doesNotMatch(html, new RegExp(CAPTION))
-})
-
-// A hand-rolled `useState` dispatcher (no jsdom in this repo — same family as
-// `tests/discovery-search-sheet-props.test.tsx`): the checklist is called directly, its
-// element tree walked, and its handlers invoked as a tap would.
 
 type AnyElement = ReactElement<Record<string, any>>
 type ReactDispatcherInternals = { H: unknown }
@@ -101,8 +42,17 @@ function findAll(node: ReactNode, predicate: (element: AnyElement) => boolean): 
   ]
 }
 
-function button(tree: ReactNode, label: string): AnyElement | undefined {
-  return findAll(tree, (element) => element.type === "button" && textOf(element) === label)[0]
+function find(tree: ReactNode, type: unknown): AnyElement {
+  const found = findAll(tree, (element) => element.type === type)[0]
+  assert.ok(found, "element on screen")
+  return found
+}
+
+function tappable(tree: ReactNode, label: string): AnyElement | undefined {
+  return findAll(
+    tree,
+    (element) => typeof element.props.onClick === "function" && textOf(element) === label,
+  )[0]
 }
 
 function createHarness(render: () => ReactElement) {
@@ -144,65 +94,207 @@ function createHarness(render: () => ReactElement) {
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0))
 
-test("two answers → „Fertig – abschicken“ → one submit request, and the thank-you screen", async (t) => {
-  const requests: Array<{ url: string; method: string | undefined }> = []
+type Recorded = { url: string; method: string | undefined; body: unknown }
+
+function mockFetch(
+  t: { after: (fn: () => void) => void },
+  respond: (request: Recorded) => { status: number; body: unknown },
+): Recorded[] {
+  const requests: Recorded[] = []
   const original = globalThis.fetch
   t.after(() => {
     globalThis.fetch = original
   })
   globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
-    requests.push({ url: String(input), method: init?.method })
-    return {
-      ok: true,
-      status: 200,
-      json: async () => ({ state: "submitted", submittedAt: "2026-09-23T10:00:00.000Z" }),
-    } as unknown as Response
+    const request = {
+      url: String(input),
+      method: init?.method,
+      body: typeof init?.body === "string" ? JSON.parse(init.body) : undefined,
+    }
+    requests.push(request)
+    const { status, body } = respond(request)
+    return { ok: status < 400, status, json: async () => body } as unknown as Response
   }) as typeof fetch
+  return requests
+}
 
-  const harness = createHarness(() =>
+function view(overrides: Partial<DiscoveryIntakeItemView> = {}): DiscoveryIntakeItemView {
+  return {
+    id: "item-1",
+    category: "conditioner",
+    source: "catalog_search",
+    brandText: "Balea",
+    productNameText: "Spülung",
+    barcodeIdentifier: null,
+    productType: "conditioner",
+    ...overrides,
+  }
+}
+
+function checklist(items: DiscoveryIntakeItemView[]) {
+  return createHarness(() =>
     DiscoveryIntakeChecklist({
-      initialItems: [view("shampoo"), view("oil", "none")],
+      initialItems: items,
       initialSubmitted: false,
       retailerSearchEnabled: false,
     }),
   )
+}
+
+const CATALOG_RESULT: ScanSearchResult = {
+  id: "20000000-0000-4000-8000-000000000001",
+  name: "Intensiv-Kur",
+  brand: "Balea",
+  category: "mask",
+  categoryLabel: "Maske",
+  imageUrl: "https://catalog.example/kur.jpg",
+  productLine: "Professional Oil Repair",
+}
+
+test("a search pick asks the usage, and the one tap sends ONE add with type + usage", async (t) => {
+  const stored = view({ id: "item-9", category: "mask", productType: "mask" })
+  const requests = mockFetch(t, () => ({ status: 201, body: { item: stored } }))
+  const harness = checklist([])
 
   let tree = harness.render()
-  const submit = button(tree, SUBMIT)
-  assert.ok(submit, "the CTA is on screen")
-  submit.props.onClick()
+  find(tree, ScanSearchSheet).props.onSelectProductResult(CATALOG_RESULT)
+  await settle()
+  tree = harness.render()
+  assert.equal(requests.length, 0, "nothing is written before the usage answer")
+
+  const sheet = find(tree, DiscoveryChoiceSheet).props.sheet
+  assert.equal(sheet.kind, "usage")
+  assert.equal(sheet.highlighted, "mask")
+  const confirm = sheet.question.options.find((option: { key: string }) => option.key === "mask")
+  find(tree, DiscoveryChoiceSheet).props.onChooseUsage(confirm)
   await settle()
   tree = harness.render()
 
-  // Only the submit — nothing is written for the eight untouched categories.
-  assert.deepEqual(requests, [{ url: "/api/beratung/intake/submit", method: "POST" }])
-  assert.match(textOf(tree), /Danke!/)
+  assert.deepEqual(requests, [
+    {
+      url: "/api/beratung/intake/items",
+      method: "POST",
+      body: {
+        capture: {
+          source: "catalog_search",
+          productId: CATALOG_RESULT.id,
+          brandText: "Balea",
+          productNameText: "Intensiv-Kur",
+        },
+        productType: "mask",
+        usage: { category: "mask", role: null },
+      },
+    },
+  ])
+  assert.equal(find(tree, DiscoveryChoiceSheet).props.sheet, null, "the sheet closes")
+  assert.deepEqual(
+    find(tree, DiscoveryProductList).props.items.map((item: DiscoveryIntakeItemView) => item.id),
+    ["item-9"],
+  )
+  assert.ok(tappable(tree, "Fertig"), "one product is enough for „Fertig“")
 })
 
-test("a failed submit keeps the checklist and says so", async (t) => {
-  const original = globalThis.fetch
-  t.after(() => {
-    globalThis.fetch = original
-  })
-  globalThis.fetch = (async () =>
-    ({
-      ok: false,
-      status: 503,
-      json: async () => ({ code: "unavailable" }),
-    }) as unknown as Response) as typeof fetch
+test("a pill tap PATCHes only the usage and swaps the card in place", async (t) => {
+  const changed = view({ category: "leave_in" })
+  const requests = mockFetch(t, () => ({ status: 200, body: { item: changed } }))
+  const harness = checklist([view()])
 
-  const harness = createHarness(() =>
-    DiscoveryIntakeChecklist({
-      initialItems: [view("shampoo")],
-      initialSubmitted: false,
-      retailerSearchEnabled: false,
-    }),
-  )
   let tree = harness.render()
-  button(tree, SUBMIT)!.props.onClick()
+  find(tree, DiscoveryProductList).props.onChange(view())
+  tree = harness.render()
+  const sheet = find(tree, DiscoveryChoiceSheet).props.sheet
+  assert.equal(sheet.highlighted, "conditioner")
+  find(tree, DiscoveryChoiceSheet).props.onChooseUsage(
+    sheet.question.options.find((option: { key: string }) => option.key === "leave_in"),
+  )
   await settle()
   tree = harness.render()
 
-  assert.match(textOf(tree), /Das Absenden hat nicht geklappt\. Versuch es nochmal\./)
-  assert.ok(button(tree, SUBMIT), "still offered, so she can simply tap again")
+  assert.deepEqual(requests, [
+    {
+      url: "/api/beratung/intake/items/item-1",
+      method: "PATCH",
+      body: { usage: { category: "leave_in", role: null } },
+    },
+  ])
+  assert.equal(find(tree, DiscoveryProductList).props.items[0].category, "leave_in")
+})
+
+test("„Fertig“ → „Passt das so?“ → „Stimmt so – abschicken“: one confirming submit, then „Danke!“", async (t) => {
+  const requests = mockFetch(t, () => ({
+    status: 200,
+    body: {
+      state: "submitted",
+      submittedAt: "2026-09-24T10:00:00.000Z",
+      confirmedNone: ["shampoo"],
+    },
+  }))
+  const harness = checklist([view()])
+
+  let tree = harness.render()
+  tappable(tree, "Fertig")!.props.onClick()
+  tree = harness.render()
+  const review = find(tree, DiscoveryIntakeReview)
+  assert.deepEqual(
+    review.props.items.map((item: DiscoveryIntakeItemView) => item.id),
+    ["item-1"],
+  )
+  assert.equal(requests.length, 0, "the review writes nothing by itself")
+
+  review.props.onSubmit()
+  await settle()
+  tree = harness.render()
+
+  assert.deepEqual(requests, [
+    {
+      url: "/api/beratung/intake/submit",
+      method: "POST",
+      body: { confirmNoneForMissing: true },
+    },
+  ])
+  assert.equal(findAll(tree, (element) => element.type === DiscoveryIntakeReview).length, 0)
+  assert.equal(
+    (tree.type as { name?: string }).name,
+    "DiscoveryIntakeThanks",
+    "the thank-you screen",
+  )
+})
+
+test("„Noch was ergänzen“ goes back to the list without writing", (t) => {
+  const requests = mockFetch(t, () => ({ status: 500, body: {} }))
+  const harness = checklist([view()])
+  let tree = harness.render()
+  tappable(tree, "Fertig")!.props.onClick()
+  tree = harness.render()
+  find(tree, DiscoveryIntakeReview).props.onBack()
+  tree = harness.render()
+  assert.ok(find(tree, DiscoveryProductList))
+  assert.equal(requests.length, 0)
+})
+
+test("a failed submit keeps the review and says so", async (t) => {
+  mockFetch(t, () => ({ status: 503, body: { code: "unavailable" } }))
+  const harness = checklist([view()])
+  let tree = harness.render()
+  tappable(tree, "Fertig")!.props.onClick()
+  tree = harness.render()
+  find(tree, DiscoveryIntakeReview).props.onSubmit()
+  await settle()
+  tree = harness.render()
+
+  const review = find(tree, DiscoveryIntakeReview)
+  assert.equal(review.props.error, "Das Absenden hat nicht geklappt. Versuch es nochmal.")
+  assert.equal(review.props.submitting, false, "so she can simply tap again")
+})
+
+test("an intake submitted elsewhere lands on „Danke!“ instead of an error", async (t) => {
+  mockFetch(t, () => ({ status: 409, body: { code: "already_submitted" } }))
+  const harness = checklist([view()])
+  let tree = harness.render()
+  tappable(tree, "Fertig")!.props.onClick()
+  tree = harness.render()
+  find(tree, DiscoveryIntakeReview).props.onSubmit()
+  await settle()
+  tree = harness.render()
+  assert.equal((tree.type as { name?: string }).name, "DiscoveryIntakeThanks")
 })

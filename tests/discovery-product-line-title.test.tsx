@@ -2,13 +2,9 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import { DISCOVERY_INTAKE_CATEGORY_COPY } from "../src/components/discovery/intake/categories"
-import {
-  DiscoveryProductEntry,
-  itemDisplayName,
-  itemDisplaySubline,
-} from "../src/components/discovery/intake/discovery-product-entry"
+import { DiscoveryProductList } from "../src/components/discovery/intake/discovery-product-list"
 import type { DiscoveryIntakeItemView } from "../src/components/discovery/intake/types"
+import { itemDisplayName, itemDisplaySubline } from "../src/components/discovery/intake/usage-flow"
 import { scanResultTitle } from "../src/components/scan/scan-search-sheet"
 import { toScanSearchResult } from "../src/lib/scan/catalog-search"
 import {
@@ -125,13 +121,11 @@ test("the joined product line reaches the browser view", () => {
 
 test("the selected entry renders the full title", () => {
   const html = renderToStaticMarkup(
-    <DiscoveryProductEntry
-      category={DISCOVERY_INTAKE_CATEGORY_COPY.shampoo}
+    <DiscoveryProductList
       items={[item({ productLine: "Wahre Schätze" })]}
-      retailerSearchEnabled={false}
-      onAdded={() => {}}
-      onRemoved={() => {}}
-      onBack={() => {}}
+      busy={false}
+      onChange={() => {}}
+      onRemove={() => {}}
     />,
   )
   assert.match(html, /Garnier Wahre Schätze Honig Schätze Shampoo/)
