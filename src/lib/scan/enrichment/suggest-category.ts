@@ -8,7 +8,8 @@ function keyword(name: string, pattern: string): boolean {
 }
 
 export function suggestCategoryFromRetailerName(name: string): PersonalPlanCategory | null {
-  if (keyword(name, "Tönung|Color|Farbe|2[-\\s]*in[-\\s]*1")) return null
+  if (keyword(name, "Tönung|Color|Farbe|2[-\\u2010-\\u2015\\s]*in[-\\u2010-\\u2015\\s]*1"))
+    return null
   const matches = new Set<PersonalPlanCategory>()
   const dry = keyword(name, "Trockenshampoo|Dry\\s+Shampoo")
   const deep = keyword(name, "Tiefenreinigung|Clarifying|Detox")

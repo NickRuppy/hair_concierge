@@ -77,6 +77,8 @@ const TYPE_FIXTURES: TypeFixture[] = [
   // T3 — colour products and 2-in-1s are never guessed, whatever else the name says.
   { rule: "T3_never_guessed", input: { name: "2in1 Shampoo & Spülung" }, expected: null },
   { rule: "T3_never_guessed", input: { name: "2-in-1 Shampoo" }, expected: null },
+  { rule: "T3_never_guessed", input: { name: "2‑in‑1 Shampoo" }, expected: null },
+  { rule: "T3_never_guessed", input: { name: "2–in–1 Shampoo" }, expected: null },
   { rule: "T3_never_guessed", input: { name: "2 in 1 Pflege-Shampoo" }, expected: null },
   { rule: "T3_never_guessed", input: { name: "2in1 Öl-Kur" }, expected: null },
   { rule: "T3_never_guessed", input: { name: "Color Shampoo" }, expected: null },
