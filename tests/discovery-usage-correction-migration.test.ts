@@ -196,7 +196,8 @@ test("the usage-correction migration has a unique version that sorts after the m
   const own = OWN.split("_")[0]
   assert.equal(versions.filter((version) => version === own).length, 1)
   // Was "sorts after every migration" when it was the newest; hair_profiles.primary_concern
-  // (20260925100000) now follows it, so what still matters is that it follows its chain.
+  // (20260925100000) and batch 7's frequency/heat migrations (20260925120000, 20260925150000)
+  // now follow it, so what still matters is that it follows its chain.
   assert.ok(
     CHAIN.slice(0, 3).every((file) => file.split("_")[0] < own),
     "must sort after the discovery migrations it builds on",
