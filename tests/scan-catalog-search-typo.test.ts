@@ -113,3 +113,21 @@ test("matchCatalogProducts: plain substring matching is unchanged (case-insensit
   assert.deepEqual(ids("PURE SHAMP"), ["elvital"])
   assert.deepEqual(ids("aqua revive"), ["gliss"])
 })
+
+test("matchCatalogProducts: numbers never match by typo — sizes and product numbers are exact", () => {
+  const rows = [
+    row("100", "Repair Shampoo 100 ml", "Marke"),
+    row("200", "Repair Shampoo 200 ml", "Marke"),
+    row("no3", "No. 3 Hair Perfector", "Olaplex"),
+    row("no4", "No. 4 Bond Maintenance Shampoo", "Olaplex"),
+  ]
+  const match = (query: string) =>
+    matchCatalogProducts(rows, query).map((candidate) => candidate.id)
+  assert.deepEqual(match("shampoo 100"), ["100"])
+  assert.deepEqual(match("shampoo 200"), ["200"])
+  assert.deepEqual(match("shampoo 300"), [])
+  // Digits inside a token get no typo budget either, in the query or in the title.
+  assert.deepEqual(match("olaplex no3"), [])
+  assert.deepEqual(match("olaplex no5"), [])
+  assert.deepEqual(match("olaplex no 3"), ["no3"])
+})

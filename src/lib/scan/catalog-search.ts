@@ -60,8 +60,12 @@ function tokenize(text: string): string[] {
   return text.split(TOKEN_SEPARATOR).filter(Boolean)
 }
 
+// Numbers are identities, not spellings: „100" must never find „200 ml", „no3" never
+// „No. 4". A token with a digit — query or title side — only matches as a substring.
+const HAS_DIGIT = /\p{N}/u
+
 function typoBudget(token: string): number {
-  if (token.length < MIN_TYPO_TOKEN_LENGTH) return 0
+  if (token.length < MIN_TYPO_TOKEN_LENGTH || HAS_DIGIT.test(token)) return 0
   return token.length <= SHORT_TOKEN_MAX_LENGTH ? 1 : 2
 }
 
@@ -116,7 +120,10 @@ function matchTier(title: string, titleTokens: string[], query: string): MatchTi
     const prefix = token.length >= MIN_PREFIX_TYPO_TOKEN_LENGTH
     if (
       budget === 0 ||
-      !titleTokens.some((titleToken) => editDistance(token, titleToken, budget, prefix) <= budget)
+      !titleTokens.some(
+        (titleToken) =>
+          !HAS_DIGIT.test(titleToken) && editDistance(token, titleToken, budget, prefix) <= budget,
+      )
     ) {
       return null
     }
