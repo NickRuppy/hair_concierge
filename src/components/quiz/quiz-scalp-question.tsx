@@ -12,28 +12,34 @@ type Phase = "type" | "gate" | "condition"
 import type { IconName } from "@/components/ui/icon"
 import { useQuizBrowserBack, useQuizBrowserHistoryEntry } from "./quiz-browser-history"
 
-const SCALP_TYPES: { value: string; label: string; description: string; icon: IconName }[] = [
-  {
-    value: "fettig",
-    label: "Eher fettig",
-    description: "Meine Ansätze werden meist nach 1–2 Tagen ölig",
-    icon: "scalp-oily",
-  },
-  {
-    value: "ausgeglichen",
-    label: "Ausgeglichen",
-    description: "Meine Kopfhaut fühlt sich weder fettig noch trocken an",
-    icon: "scalp-normal",
-  },
-  {
-    value: "trocken",
-    label: "Eher trocken",
-    description: "Meine Kopfhaut spannt manchmal oder fühlt sich rau an",
-    icon: "scalp-dry",
-  },
-]
+export const SCALP_TYPES: { value: string; label: string; description: string; icon: IconName }[] =
+  [
+    {
+      value: "fettig",
+      label: "Eher fettig",
+      description: "Meine Ansätze werden meist nach 1–2 Tagen ölig",
+      icon: "scalp-oily",
+    },
+    {
+      value: "ausgeglichen",
+      label: "Ausgeglichen",
+      description: "Meine Kopfhaut fühlt sich weder fettig noch trocken an",
+      icon: "scalp-normal",
+    },
+    {
+      value: "trocken",
+      label: "Eher trocken",
+      description: "Meine Kopfhaut spannt manchmal oder fühlt sich rau an",
+      icon: "scalp-dry",
+    },
+  ]
 
-const SCALP_CONDITIONS: { value: string; label: string; description: string; icon: IconName }[] = [
+export const SCALP_CONDITIONS: {
+  value: string
+  label: string
+  description: string
+  icon: IconName
+}[] = [
   {
     value: "schuppen",
     label: "Schuppen",

@@ -662,6 +662,7 @@ async function renderPage(model: DiscoveryCockpitModel, intake = submittedIntake
     }),
     loadIntake: async () => intake,
     loadModel: async () => model,
+    loadQuizLead: async () => null,
     loadPreflight: async () => ({ status: "ready" }),
   })
   const router = { back() {}, forward() {}, refresh() {}, push() {}, replace() {}, prefetch() {} }

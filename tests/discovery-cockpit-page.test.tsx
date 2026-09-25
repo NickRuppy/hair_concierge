@@ -235,6 +235,7 @@ function pageDeps(overrides: Deps = {}): Deps {
     loadEnrollment: async () => enrollment,
     loadIntake: async () => intake,
     loadModel: async () => readyModel(),
+    loadQuizLead: async () => null,
     loadPreflight: async () => ({ status: "ready" }),
     ...overrides,
   }
@@ -390,6 +391,131 @@ test("an intake that does not exist yet, and a profile that cannot be read, say 
     loadModel: async () => ({ status: "temporarily_unavailable" }),
   })
   assert.ok(unavailable.includes("lässt sich gerade nicht lesen"))
+})
+
+// --- quiz answers + main problem (batch 7c) -----------------------------------------
+
+const legacyLead = {
+  id: "60000000-0000-4000-8000-000000000001",
+  quiz_kind: "legacy",
+  quiz_answers: {
+    structure: "wavy",
+    thickness: "normal",
+    scalp_type: "ausgeglichen",
+    has_scalp_issue: false,
+    concerns: ["dryness", "tangling"],
+    treatment: ["natur"],
+    goals: ["moisture"],
+  },
+}
+
+function personalPlanLead(answers: Record<string, unknown>) {
+  return {
+    id: "60000000-0000-4000-8000-000000000002",
+    quiz_kind: "personal_plan",
+    quiz_answers: { kind: "personal_plan", version: 3, answers },
+  }
+}
+
+test("a legacy participant: quiz answers on top, a main-problem picker, then the call", async () => {
+  const markup = await renderCockpit({ loadQuizLead: async () => legacyLead })
+  assert.ok(markup.includes("Quiz-Antworten"))
+  assert.ok(markup.includes("Standard-Quiz"))
+  assert.ok(markup.includes("Welche Haarstruktur haben die meisten deiner Haare?"))
+  assert.ok(markup.includes("Wellig"))
+  // Density was never answered.
+  assert.match(markup, /Wie dicht ist dein Haar insgesamt\?<\/dt><dd[^>]*><span[^>]*>—</)
+  // Two concerns, none stated: no highlight, no recipe yet — Nick picks in the call.
+  assert.ok(!markup.includes(">Hauptproblem</span>"))
+  assert.ok(markup.includes("Kein Hauptproblem angegeben"))
+  assert.ok(markup.includes("Trockene oder strohige Längen"))
+  assert.ok(markup.includes("Schnelles Verknoten"))
+  assert.ok(!markup.includes("So sagst du es"))
+  // Both sections sit above the existing cockpit.
+  const quizAt = markup.indexOf("Quiz-Antworten")
+  const mainAt = markup.indexOf("Kein Hauptproblem angegeben")
+  const routineAt = markup.indexOf("Idealroutine")
+  assert.ok(quizAt < mainAt && mainAt < routineAt)
+})
+
+test("a new participant with a stated main problem gets its recipe for her profile", async () => {
+  const markup = await renderCockpit({
+    loadQuizLead: async () =>
+      personalPlanLead({
+        texture: "curly",
+        thickness: "coarse",
+        currentConcerns: ["dry_lengths", "tangling"],
+        primaryConcern: "dry_lengths",
+      }),
+    loadModel: async () => ({
+      ...readyModel(),
+      concernProfileFacts: {
+        hair_texture: "curly",
+        thickness: "coarse",
+        scalp_type: "balanced",
+        chemical_treatment: ["natural"],
+        damaged: false,
+        heat_styling: null,
+      },
+    }),
+  })
+  assert.ok(markup.includes("Personal-Plan-Quiz"))
+  assert.ok(markup.includes("Hauptproblem: Trockene oder strohige Längen"))
+  assert.ok(!markup.includes("Kein Hauptproblem angegeben"))
+  assert.ok(markup.includes("So sagst du es"))
+  assert.ok(markup.includes("Damit anfangen"))
+  // Coarse curls: the mask applies; heat styling is unknown, so the protectant is „prüfen".
+  assert.ok(markup.includes("Haarmaske"))
+  assert.ok(markup.includes("prüfen: Hitzestyling"))
+  // The Idealroutine has a leave-in step.
+  assert.ok(markup.includes("in der Idealroutine"))
+  assert.ok(markup.includes("Nicht damit anfangen"))
+})
+
+test("hair loss as the main problem renders the boundary only", async () => {
+  const markup = await renderCockpit({
+    loadQuizLead: async () =>
+      personalPlanLead({ texture: "straight", currentConcerns: ["hair_loss_or_thinning"] }),
+  })
+  assert.ok(markup.includes("Hauptproblem: Haarausfall oder dünner werdendes Haar"))
+  assert.ok(markup.includes("Grenze"))
+  assert.ok(!markup.includes("Damit anfangen"))
+  assert.ok(!markup.includes("Für ihr Profil"))
+})
+
+test("quiz answers show even when the Idealplan cannot be read", async () => {
+  const markup = await renderCockpit({
+    loadQuizLead: async () => legacyLead,
+    loadModel: async () => ({ status: "no_usable_source" }),
+  })
+  assert.ok(markup.includes("Quiz-Antworten"))
+  assert.ok(markup.includes("noch kein nutzbares Haarprofil"))
+})
+
+test("a failed quiz-lead read never takes the cockpit (or its degraded page) down", async () => {
+  const failingLead = async () => {
+    throw new Error("leads read failed")
+  }
+  const degraded = await renderCockpit({
+    loadQuizLead: failingLead,
+    loadModel: async () => ({ status: "no_usable_source" }),
+  })
+  assert.ok(degraded.includes("noch kein nutzbares Haarprofil"))
+  assert.ok(degraded.includes("Quiz-Antworten sind gerade nicht lesbar"))
+
+  const unavailable = await renderCockpit({
+    loadQuizLead: failingLead,
+    loadModel: async () => ({ status: "temporarily_unavailable" }),
+  })
+  assert.ok(unavailable.includes("lässt sich gerade nicht lesen"))
+
+  const ready = await renderCockpit({ loadQuizLead: failingLead })
+  assert.ok(ready.includes("Idealroutine"))
+  assert.ok(ready.includes("Quiz-Antworten sind gerade nicht lesbar"))
+  assert.ok(!ready.includes("Standard-Quiz") && !ready.includes("Personal-Plan-Quiz"))
+  assert.ok(!ready.includes("Hauptproblem"))
+  // Unknown is not „no lead": the preflight banner does not claim a missing quiz.
+  assert.ok(!ready.includes("Intake unvollständig"))
 })
 
 // --- the list -------------------------------------------------------------------
