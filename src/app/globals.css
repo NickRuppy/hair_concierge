@@ -89,6 +89,19 @@
   --brand-coral-deeper: #9f3d45;
   --brand-coral-light: #fdeef0;
   --brand-coral-rgb: 212, 97, 106;
+
+  /* Motion tokens (batch 8, plans/discovery-b8-motion-days/plan.md) — one spec for the
+     quiz and the discovery flow. TS twins live in src/lib/motion.ts. */
+  --motion-ease-enter: cubic-bezier(0.32, 0.72, 0, 1);
+  --motion-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --motion-press: 120ms;
+  --motion-settle: 200ms;
+  --motion-step-in: 240ms;
+  --motion-step-out: 160ms;
+  --motion-screen: 320ms;
+  --motion-sheet-in: 350ms;
+  --motion-sheet-out: 250ms;
+  --motion-list: 220ms;
   --status-ok-bg: #edf7ef;
   --status-ok-text: #356b45;
   --status-pending-bg: #fff5df;
