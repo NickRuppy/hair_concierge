@@ -14,22 +14,22 @@ import { BACK_BUTTON, CORAL_BUTTON, CTA_BAR, OUTLINE_BUTTON, SCREEN_TITLE } from
 /**
  * „Deine Routine" (batch 7, C6; replaces „Passt das so?"): her products composed back to her
  * as day cards (`composeDiscoveryRoutineDays`) — Waschtag with her shampoo's rhythm,
- * Intensiv-Pflegetag, Zwischendurch, Styling, Weitere. A product tap opens its edit sheet.
+ * Tag ohne Wäsche, Intensiv-Pflegetag, Styling, Weitere. Waschtag and Tag ohne Wäsche always
+ * show (batch 8); an empty one says „Nichts eingetragen". A product tap opens its edit sheet.
  * Coral „Stimmt so" → Hitze & Styling; outline „Noch was ergänzen" → back to her products.
  */
 
 export const ROUTINE_TITLE = "Deine Routine"
 export const CONFIRM_LABEL = "Stimmt so"
 export const ADD_MORE_LABEL = "Noch was ergänzen"
+export const EMPTY_DAY_LABEL = "Nichts eingetragen"
 const BACK_LABEL = "Zurück"
 
 function DayCard({
   day,
-  busy,
   onEdit,
 }: {
   day: DiscoveryRoutineDay<DiscoveryIntakeItemView>
-  busy: boolean
   onEdit: (item: DiscoveryIntakeItemView) => void
 }) {
   return (
@@ -44,52 +44,53 @@ function DayCard({
           </span>
         ) : null}
       </div>
-      <ul className="-mx-4 flex snap-x gap-2.5 overflow-x-auto px-4 py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {day.items.map((item) => {
-          const subject = itemSubject(item)
-          return (
-            <li key={item.id} className="w-24 shrink-0 snap-start">
-              <button
-                type="button"
-                onClick={() => onEdit(item)}
-                disabled={busy}
-                aria-label={`${itemDisplayName(item)} bearbeiten`}
-                className="flex w-full flex-col gap-0.5 rounded-[14px] text-left transition active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]"
-              >
-                <DiscoveryPackshot
-                  imageUrl={item.imageUrl}
-                  category={item.category}
-                  className="mb-1.5 h-[108px] w-24 rounded-[14px]"
-                />
-                <span className="line-clamp-2 break-words text-[12.5px] font-bold leading-[1.28] text-[var(--brand-plum-darkest)] hyphens-auto">
-                  {subject.name}
-                </span>
-                <span className="truncate text-[11.5px] text-[var(--text-sub)]">
-                  {routineItemCaption(item)}
-                </span>
-                {item.frequency ? (
-                  <span className="text-[11.5px] font-semibold leading-snug text-[var(--brand-plum)]">
-                    {DISCOVERY_FREQUENCY_LABELS[item.frequency]}
+      {day.items.length === 0 ? (
+        <p className="pb-0.5 text-[14px] text-[var(--text-sub)]">{EMPTY_DAY_LABEL}</p>
+      ) : (
+        <ul className="-mx-4 flex snap-x gap-2.5 overflow-x-auto px-4 py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {day.items.map((item) => {
+            const subject = itemSubject(item)
+            return (
+              <li key={item.id} className="w-24 shrink-0 snap-start">
+                <button
+                  type="button"
+                  onClick={() => onEdit(item)}
+                  aria-label={`${itemDisplayName(item)} bearbeiten`}
+                  className="flex w-full flex-col gap-0.5 rounded-[14px] text-left transition active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]"
+                >
+                  <DiscoveryPackshot
+                    imageUrl={item.imageUrl}
+                    category={item.category}
+                    className="mb-1.5 h-[108px] w-24 rounded-[14px]"
+                  />
+                  <span className="line-clamp-2 break-words text-[12.5px] font-bold leading-[1.28] text-[var(--brand-plum-darkest)] hyphens-auto">
+                    {subject.name}
                   </span>
-                ) : null}
-              </button>
-            </li>
-          )
-        })}
-      </ul>
+                  <span className="truncate text-[11.5px] text-[var(--text-sub)]">
+                    {routineItemCaption(item)}
+                  </span>
+                  {item.frequency ? (
+                    <span className="text-[11.5px] font-semibold leading-snug text-[var(--brand-plum)]">
+                      {DISCOVERY_FREQUENCY_LABELS[item.frequency]}
+                    </span>
+                  ) : null}
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </section>
   )
 }
 
 export function DiscoveryRoutineScreen({
   items,
-  busy,
   onEdit,
   onBack,
   onConfirm,
 }: {
   items: DiscoveryIntakeItemView[]
-  busy: boolean
   onEdit: (item: DiscoveryIntakeItemView) => void
   onBack: () => void
   onConfirm: () => void
@@ -105,14 +106,14 @@ export function DiscoveryRoutineScreen({
         </div>
         <h1 className={cn("mb-3.5", SCREEN_TITLE)}>{ROUTINE_TITLE}</h1>
         {days.map((day) => (
-          <DayCard key={day.kind} day={day} busy={busy} onEdit={onEdit} />
+          <DayCard key={day.kind} day={day} onEdit={onEdit} />
         ))}
       </div>
       <div className={CTA_BAR}>
-        <button type="button" onClick={onConfirm} disabled={busy} className={CORAL_BUTTON}>
+        <button type="button" onClick={onConfirm} className={CORAL_BUTTON}>
           {CONFIRM_LABEL}
         </button>
-        <button type="button" onClick={onBack} disabled={busy} className={OUTLINE_BUTTON}>
+        <button type="button" onClick={onBack} className={OUTLINE_BUTTON}>
           {ADD_MORE_LABEL}
         </button>
       </div>

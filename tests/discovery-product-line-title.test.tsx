@@ -136,7 +136,6 @@ test("the product card names brand · line and the product, and labels its edit 
   const html = renderToStaticMarkup(
     <DiscoveryProductCard
       item={item({ productLine: "Wahre Schätze" })}
-      busy={false}
       landed={false}
       onEdit={() => {}}
       onFrequency={() => {}}

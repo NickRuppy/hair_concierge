@@ -214,10 +214,9 @@ test("„Deine Produkte“: ghost slots in shelf order, her cards in their slot,
   const html = renderToStaticMarkup(
     <DiscoveryProductsScreen
       items={[]}
-      busy={false}
       error={null}
       cameraBlocked={false}
-      landedItemId={null}
+      landedKey={null}
       onSearch={() => {}}
       onScan={() => {}}
       onEdit={() => {}}
@@ -257,7 +256,6 @@ test("the product card: packshot, brand · line, bold name, plum capsule, freque
         imageUrl: "https://catalog.example/oel.webp",
         frequency: "weekly_1x",
       })}
-      busy={false}
       landed
       onEdit={() => {}}
       onFrequency={() => {}}
@@ -277,7 +275,6 @@ test("a draft from the old checklist (no frequency) shows the „Wie oft?“ pil
   const html = renderToStaticMarkup(
     <DiscoveryProductCard
       item={view({ frequency: undefined })}
-      busy={false}
       landed={false}
       onEdit={() => {}}
       onFrequency={() => {}}
@@ -317,6 +314,14 @@ test("search pick → usage → frequency: ONE add with the frequency, the sheet
   assert.deepEqual(frequency, { kind: "frequency", current: null, suggestion: "weekly_3_4x" })
 
   find(tree, DiscoveryAddSheet).props.handlers.onFrequency("weekly_3_4x")
+  // Batch 8: the card lands right away (provisional) while the POST runs.
+  tree = harness.render()
+  assert.equal(find(tree, DiscoveryAddSheet).props.open, false, "the sheet closes at once")
+  const landing = find(tree, DiscoveryProductsScreen)
+  const provisional = landing.props.items.at(-1) as DiscoveryIntakeItemView
+  assert.match(provisional.id, /^provisional:/)
+  assert.equal(provisional.productNameText, CONDITIONER_RESULT.name)
+  assert.equal(landing.props.landedKey, provisional.id)
   await settle()
   tree = harness.render()
 
@@ -343,10 +348,12 @@ test("search pick → usage → frequency: ONE add with the frequency, the sheet
     screen.props.items.map((item: DiscoveryIntakeItemView) => item.id),
     ["item-1", "item-9"],
   )
-  assert.equal(screen.props.landedItemId, "item-9")
+  // The confirmed card keeps the provisional card's key — no re-mount, no second landing.
+  assert.deepEqual(screen.props.itemKeys, { "item-9": provisional.id })
+  assert.equal(screen.props.landedKey, provisional.id)
 })
 
-test("a failed add keeps the sheet on the frequency and says so", async (t) => {
+test("a failed add rolls the card back and brings the sheet back on the frequency, saying so", async (t) => {
   mockFetch(t, () => ({ status: 503, body: { code: "unavailable" } }))
   const harness = checklist([])
   let tree = harness.render()
@@ -365,6 +372,7 @@ test("a failed add keeps the sheet on the frequency and says so", async (t) => {
   assert.equal(sheet.props.open, true)
   assert.equal(sheet.props.error, "Das hat gerade nicht geklappt. Versuch es nochmal.")
   assert.equal(currentStep(sheetFlow(tree)).kind, "frequency")
+  assert.deepEqual(find(tree, DiscoveryProductsScreen).props.items, [], "the card rolled back")
 })
 
 test("the frequency step: every option, the shampoo suggestion in plum with its hint, „Weiß ich nicht“ quiet", () => {
@@ -553,7 +561,6 @@ test("„Deine Routine“ renders the composer's day cards with cadence pills an
   const html = renderToStaticMarkup(
     <DiscoveryRoutineScreen
       items={ROUTINE_ITEMS}
-      busy={false}
       onEdit={() => {}}
       onBack={() => {}}
       onConfirm={() => {}}
@@ -563,8 +570,8 @@ test("„Deine Routine“ renders the composer's day cards with cadence pills an
   const titles = [...html.matchAll(/<h2[^>]*>([^<]+)<\/h2>/g)].map((match) => match[1])
   assert.deepEqual(titles, [
     "Waschtag",
+    "Tag ohne Wäsche",
     "Intensiv-Pflegetag",
-    "Zwischendurch",
     "Styling",
     "Weitere",
   ])
@@ -705,7 +712,6 @@ test("the heat questions use production options, icons and photos — and the no
     <DiscoveryHeatStepBody
       step={{ kind: "drying" }}
       draft={{ heatEvents: {} }}
-      busy={false}
       onDrying={() => {}}
       onTools={() => {}}
       onFrequency={() => {}}
@@ -728,7 +734,6 @@ test("the heat questions use production options, icons and photos — and the no
     <DiscoveryHeatStepBody
       step={{ kind: "tools" }}
       draft={{ dryingRoutes: [], additionalHeatTools: [], heatEvents: {} }}
-      busy={false}
       onDrying={() => {}}
       onTools={() => {}}
       onFrequency={() => {}}
@@ -744,7 +749,6 @@ test("the heat questions use production options, icons and photos — and the no
     <DiscoveryHeatStepBody
       step={{ kind: "frequency", source: "straightener" }}
       draft={{ heatEvents: {} }}
-      busy={false}
       onDrying={() => {}}
       onTools={() => {}}
       onFrequency={() => {}}
@@ -759,7 +763,6 @@ test("the heat questions use production options, icons and photos — and the no
     <DiscoveryHeatStepBody
       step={{ kind: "protection", source: "straightener" }}
       draft={{ heatEvents: {} }}
-      busy={false}
       onDrying={() => {}}
       onTools={() => {}}
       onFrequency={() => {}}
@@ -825,7 +828,6 @@ test("the final page: three check rows — Fragebogen, products with the Waschta
     <DiscoveryFinalPage
       items={ROUTINE_ITEMS}
       heat={DONE_HEAT}
-      busy={false}
       onEditProducts={() => {}}
       onEditHeat={() => {}}
     />,
@@ -916,7 +918,7 @@ test("a failed submit keeps the final page and says so", async (t) => {
   const screen = find(tree, DiscoveryHeatScreen)
   assert.equal(heatStep(tree), "summary")
   assert.equal(screen.props.error, "Das Absenden hat nicht geklappt. Versuch es nochmal.")
-  assert.equal(screen.props.busy, false, "so she can simply tap again")
+  assert.equal(screen.props.submitting, false, "so she can simply tap again")
 })
 
 test("an intake submitted elsewhere lands on the done page instead of an error", async (t) => {
