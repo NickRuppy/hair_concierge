@@ -241,7 +241,8 @@ test("personal-plan concern notes are standalone, bounded, and do not restore a 
     quiz.indexOf('if (screen === "admission_recurrence")'),
   )
 
-  assert.match(quiz, /resolvePrimaryPersonalPlanConcern/)
+  // F1: the recurrence follows her stated main problem, not an inferred ranking.
+  assert.match(quiz, /resolveStatedPersonalPlanConcern/)
   assert.match(quiz, /standaloneOtherText/)
   assert.match(quiz, /continueValidity/)
   assert.match(quiz, /maxLength: 50/)
