@@ -74,6 +74,7 @@ const APPLICATION_UNAVAILABLE =
   "Die Anwendung („So wendest du es an“) ist gerade nicht lesbar. Finalisieren und PDF gehen erst wieder, wenn sie lesbar ist — Seite später neu laden."
 const RESEARCH_UNAVAILABLE =
   "Der Recherche-Stand ist gerade nicht lesbar. Freigegebene Produkte fehlen deshalb in der Routine; Finalisieren und PDF gehen erst wieder, wenn er lesbar ist — Seite später neu laden."
+const QUIZ_UNAVAILABLE = "Die Quiz-Antworten sind gerade nicht lesbar. Seite später neu laden."
 const PREFLIGHT_TITLE = "Intake unvollständig"
 const PREFLIGHT_NO_LEAD = "Zu diesem Konto ist kein Quiz-Lead gebunden."
 const PREFLIGHT_INVALID = "Die Quiz-Antworten sind nicht lesbar."
@@ -142,25 +143,42 @@ export function createDiscoveryCockpitPage(
         ? `${status} · ${formatDiscoveryTimestamp(intake.submittedAt)}`
         : status
 
-    const lead = await deps.loadQuizLead(admin, intake.userId)
-    const quiz = buildDiscoveryQuizAnswers(lead)
+    // The quiz lead only feeds the two internal sections and the preflight: a failed read
+    // must not take down the call (or its degraded page), it just leaves them out.
+    let lead: DiscoveryQuizLead | null = null
+    let leadAvailable = true
+    try {
+      lead = await deps.loadQuizLead(admin, intake.userId)
+    } catch (error) {
+      console.error("[discovery] quiz lead lookup failed:", error)
+      leadAvailable = false
+    }
+    const quiz = leadAvailable ? buildDiscoveryQuizAnswers(lead) : null
+    const quizSection = quiz ? (
+      <DiscoveryQuizAnswersSection quiz={quiz} />
+    ) : (
+      <Notice text={QUIZ_UNAVAILABLE} />
+    )
 
     const model = await deps.loadModel(admin, { intakeId: intake.id, userId: intake.userId })
     if (model.status !== "ready") {
       return (
         <Shell name={enrollment.name} email={enrollment.email} status={statusLine}>
-          <DiscoveryQuizAnswersSection quiz={quiz} />
+          {quizSection}
           <Notice text={model.status === "no_usable_source" ? NO_SOURCE : UNAVAILABLE} />
         </Shell>
       )
     }
 
     const view = buildDiscoveryCockpitView(model)
-    const preflight = await deps.loadPreflight(lead)
+    // Unknown is not „no lead": without a readable lead there is nothing to warn about.
+    const preflight: DiscoverySourceFactsPreflight = leadAvailable
+      ? await deps.loadPreflight(lead)
+      : { status: "ready" }
     const concernFacts = model.concernProfileFacts ?? UNKNOWN_CONCERN_PROFILE_FACTS
     const concernCoverage = discoveryConcernCoverageInput(view)
     const concernViews =
-      quiz.status === "ready"
+      quiz?.status === "ready"
         ? quiz.concerns.flatMap(
             (code) => buildDiscoveryConcernRecipeView(code, concernFacts, concernCoverage) ?? [],
           )
@@ -170,8 +188,8 @@ export function createDiscoveryCockpitPage(
 
     return (
       <Shell name={enrollment.name} email={enrollment.email} status={statusLine}>
-        <DiscoveryQuizAnswersSection quiz={quiz} />
-        {quiz.status === "ready" ? (
+        {quizSection}
+        {quiz?.status === "ready" ? (
           <DiscoveryConcernRecipeSection views={concernViews} mainConcern={quiz.mainConcern} />
         ) : null}
         <PreflightBanner preflight={preflight} />

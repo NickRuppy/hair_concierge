@@ -492,6 +492,32 @@ test("quiz answers show even when the Idealplan cannot be read", async () => {
   assert.ok(markup.includes("noch kein nutzbares Haarprofil"))
 })
 
+test("a failed quiz-lead read never takes the cockpit (or its degraded page) down", async () => {
+  const failingLead = async () => {
+    throw new Error("leads read failed")
+  }
+  const degraded = await renderCockpit({
+    loadQuizLead: failingLead,
+    loadModel: async () => ({ status: "no_usable_source" }),
+  })
+  assert.ok(degraded.includes("noch kein nutzbares Haarprofil"))
+  assert.ok(degraded.includes("Quiz-Antworten sind gerade nicht lesbar"))
+
+  const unavailable = await renderCockpit({
+    loadQuizLead: failingLead,
+    loadModel: async () => ({ status: "temporarily_unavailable" }),
+  })
+  assert.ok(unavailable.includes("lässt sich gerade nicht lesen"))
+
+  const ready = await renderCockpit({ loadQuizLead: failingLead })
+  assert.ok(ready.includes("Idealroutine"))
+  assert.ok(ready.includes("Quiz-Antworten sind gerade nicht lesbar"))
+  assert.ok(!ready.includes("Standard-Quiz") && !ready.includes("Personal-Plan-Quiz"))
+  assert.ok(!ready.includes("Hauptproblem"))
+  // Unknown is not „no lead": the preflight banner does not claim a missing quiz.
+  assert.ok(!ready.includes("Intake unvollständig"))
+})
+
 // --- the list -------------------------------------------------------------------
 
 test("the list joins every enrollment with the state of its checklist", async () => {

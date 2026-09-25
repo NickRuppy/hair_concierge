@@ -114,7 +114,7 @@ function snapshot(overrides: {
   elasticity?: string
   chemicalTreatments?: string[]
   oiliness?: string
-  heat?: { state: "present" | "absent" | "unknown"; frequencies?: string[] }
+  heat?: { state: "present" | "absent" | "unknown"; frequencies?: string[]; route?: string }
 }) {
   const heat = overrides.heat ?? { state: "unknown" }
   return {
@@ -134,7 +134,7 @@ function snapshot(overrides: {
         events: (heat.frequencies ?? []).map((frequency, index) => ({
           id: `heat-${index}`,
           tool: "straightener",
-          route: "direct_contact_heat",
+          route: heat.route ?? "direct_contact_heat",
           frequency,
           sourceRuleIds: [],
         })),
@@ -183,6 +183,16 @@ test("heat styling: weekly or more counts, rarer does not, unknown stays unknown
   assert.equal(heat("present", ["less_than_monthly", "biweekly_1x"]), false)
   assert.equal(heat("absent"), false)
   assert.equal(heat("unknown"), null)
+})
+
+test("heat styling counts only styling heat — plain blow-drying does not", () => {
+  const heat = (route: string) =>
+    discoveryConcernProfileFacts(
+      snapshot({ heat: { state: "present", frequencies: ["daily_1x"], route } }),
+    ).heat_styling
+  assert.equal(heat("ordinary_airflow"), false)
+  assert.equal(heat("direct_contact_heat"), true)
+  assert.equal(heat("airflow_shaping"), true)
 })
 
 test("no readable snapshot: every fact is unknown, nothing throws", () => {

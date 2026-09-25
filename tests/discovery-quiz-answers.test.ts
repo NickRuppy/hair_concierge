@@ -223,6 +223,56 @@ test("a personal-plan lead with a stated main problem highlights it", () => {
   ])
 })
 
+test("a free-text concern is her answer, never „Nichts davon“ (both quiz kinds)", () => {
+  const legacy = ready(
+    buildDiscoveryQuizAnswers({
+      id: "lead-1",
+      quiz_kind: "legacy",
+      quiz_answers: { ...legacyAnswers, concerns: [], concerns_other_text: "Juckender Nacken" },
+    }),
+  )
+  assert.deepEqual(labels(legacy, "Welche Haarprobleme beschäftigen dich gerade?"), [
+    "Etwas anderes: Juckender Nacken",
+  ])
+
+  const personalPlan = ready(
+    buildDiscoveryQuizAnswers({
+      id: "lead-2",
+      quiz_kind: "personal_plan",
+      quiz_answers: {
+        kind: "personal_plan",
+        version: 3,
+        answers: {
+          ...personalPlanAnswers,
+          currentConcerns: [],
+          currentConcernsOtherText: "Farbe verblasst",
+        },
+      },
+    }),
+  )
+  assert.deepEqual(labels(personalPlan, "Was beschäftigt dich gerade?"), [
+    "Etwas anderes: Farbe verblasst",
+  ])
+
+  // Cards plus text: the text follows her cards in the same row.
+  const both = ready(
+    buildDiscoveryQuizAnswers({
+      id: "lead-2",
+      quiz_kind: "personal_plan",
+      quiz_answers: {
+        kind: "personal_plan",
+        version: 3,
+        answers: { ...personalPlanAnswers, currentConcernsOtherText: "Farbe verblasst" },
+      },
+    }),
+  )
+  assert.deepEqual(labels(both, "Was beschäftigt dich gerade?"), [
+    "Wenig Glanz",
+    "Mein Haar verliert schnell Form und Halt",
+    "Etwas anderes: Farbe verblasst",
+  ])
+})
+
 test("no lead, an unknown quiz kind or unreadable answers say so instead of guessing", () => {
   assert.deepEqual(buildDiscoveryQuizAnswers(null), { status: "no_lead" })
   assert.deepEqual(buildDiscoveryQuizAnswers({ id: "x", quiz_kind: "other", quiz_answers: {} }), {

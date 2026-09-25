@@ -1,4 +1,5 @@
 import { CATEGORY_LABELS } from "@/lib/personal-plan/decision-presentation"
+import { STAGE3_HEAT_QUALIFYING_ROUTES } from "@/lib/personal-plan/products/contracts"
 import type { DiagnosticConcern } from "@/lib/quiz/diagnostic-input"
 
 import {
@@ -48,7 +49,12 @@ const FACT_LABELS: Record<keyof ConcernRecipeWhen, string> = {
 
 /** README: only these treatments count as structural damage (`colored` alone does not). */
 const DAMAGING_TREATMENTS = new Set(["lightened", "permed", "chemically_straightened"])
-/** README: heat styling = weekly or more often. */
+/**
+ * Heat styling = a styling route (as the heat-protectant decision counts it, see
+ * `personal-plan/categories/heat-protectant.ts`), weekly or more often. Plain blow-drying
+ * (`ordinary_airflow`) is not heat styling.
+ */
+const STYLING_HEAT_ROUTES = new Set<string>(STAGE3_HEAT_QUALIFYING_ROUTES)
 const WEEKLY_OR_MORE = new Set(["weekly_1x", "weekly_2x", "weekly_3_4x", "weekly_5_6x", "daily_1x"])
 
 /**
@@ -83,7 +89,11 @@ export function discoveryConcernProfileFacts(snapshot: unknown): DiscoveryConcer
     heatState === "absent"
       ? false
       : heatState === "present" && Array.isArray(events)
-        ? events.some((event) => WEEKLY_OR_MORE.has(String(field(event, "frequency"))))
+        ? events.some(
+            (event) =>
+              STYLING_HEAT_ROUTES.has(String(field(event, "route"))) &&
+              WEEKLY_OR_MORE.has(String(field(event, "frequency"))),
+          )
         : null
 
   return {

@@ -213,8 +213,8 @@ function legacyQuizAnswers(raw: Record<string, unknown>): DiscoveryQuizAnswers {
             Array.isArray(raw.concerns) ? concerns : undefined,
             texture,
             mainConcern,
+            answers.concerns_other_text,
           ),
-          ...otherTextRow(answers.concerns_other_text),
         ],
       },
       {
@@ -304,8 +304,8 @@ function personalPlanQuizAnswers(answers: Record<string, unknown>): DiscoveryQui
             Array.isArray(answers.currentConcerns) ? concerns : undefined,
             texture,
             mainConcern,
+            answers.currentConcernsOtherText,
           ),
-          ...otherTextRow(answers.currentConcernsOtherText),
           ...recurrenceRows,
           screen("routine_clarity"),
           screen("result_reliability"),
@@ -335,25 +335,32 @@ function personalPlanQuizAnswers(answers: Record<string, unknown>): DiscoveryQui
 const TEXTURES = ["straight", "wavy", "curly", "coily"] as const
 type Texture = (typeof TEXTURES)[number]
 
-/** Her concerns with the labels the concerns step showed her, the main one marked. */
+/**
+ * Her concerns with the labels the concerns step showed her, the main one marked, and her
+ * „Etwas anderes" text (the step's own free-text field) after the cards. „Nichts davon"
+ * only when she chose no card AND wrote nothing.
+ */
 function concernRow(
   question: string,
   concerns: readonly DiagnosticConcern[] | undefined,
   texture: Texture | undefined,
   mainConcern: DiagnosticConcern | null,
+  otherText: unknown,
 ): DiscoveryQuizAnswerRow {
-  if (concerns === undefined) return { question, answers: [] }
-  if (concerns.length === 0) return { question, answers: [{ label: NOTHING_SELECTED }] }
-  return {
-    question,
-    answers: getConcernOptions(texture)
-      .filter((option) => concerns.includes(option.value as DiagnosticConcern))
-      .map((option) =>
-        option.value === mainConcern
-          ? { label: option.label, main: true as const }
-          : { label: option.label },
-      ),
-  }
+  const other =
+    typeof otherText === "string" && otherText.trim()
+      ? [{ label: `${OTHER_TEXT_QUESTION}: ${otherText.trim()}` }]
+      : []
+  const cards = getConcernOptions(texture)
+    .filter((option) => concerns?.includes(option.value as DiagnosticConcern))
+    .map((option) =>
+      option.value === mainConcern
+        ? { label: option.label, main: true as const }
+        : { label: option.label },
+    )
+  const answers = [...cards, ...other]
+  if (answers.length > 0) return { question, answers }
+  return { question, answers: concerns === undefined ? [] : [{ label: NOTHING_SELECTED }] }
 }
 
 function midSentenceConcernLabel(texture: Texture | undefined, concernId: unknown) {
