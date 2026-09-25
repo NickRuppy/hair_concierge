@@ -275,7 +275,17 @@ export async function ensurePayPalTrialCheckoutAccount(
   const trialEnd = frozenTrialEnd
   if (enrollment.admission_status !== "reserved")
     throw new Error("PayPal trial admission state unavailable")
-  if (subscription.status !== "ACTIVE") return { status: "pending" }
+  if (subscription.status !== "ACTIVE") {
+    // Timestamps and status only — no payer data. Post-approval start_time
+    // patches have been observed to move live subscriptions out of ACTIVE;
+    // retries need the provider's actual state in the logs.
+    console.info("[paypal-trial] activation pending on non-active subscription", {
+      status: subscription.status ?? "missing",
+      startTime: subscription.start_time ?? "missing",
+      nextBillingTime: subscription.billing_info?.next_billing_time ?? "missing",
+    })
+    return { status: "pending" }
+  }
   if (!subscription.subscriber?.payer_id) throw new Error("PayPal authorized payer missing")
   // Effective subscription plan includes frozen price overrides; never use today's catalog for accepted terms.
   assertPlanMatchesAcceptedOffer(
