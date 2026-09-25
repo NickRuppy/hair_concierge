@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { useDelayedLoader } from "@/lib/motion-loader"
 import { DISCOVERY_CLAIM_ENDPOINT, DISCOVERY_QUIZ_ENTRY_HREF } from "@/lib/discovery/participant"
 
 /**
@@ -14,6 +15,8 @@ export function DiscoveryContinuation() {
   const startedRef = useRef(false)
   const handoffRef = useRef<string | null>(null)
   const [error, setError] = useState(false)
+  // Batch 8 loader rule: the card stands at once, its „wird geöffnet" line only after 300 ms.
+  const loaderVisible = useDelayedLoader(!error)
 
   const continueClaim = useCallback(async () => {
     setError(false)
@@ -50,7 +53,11 @@ export function DiscoveryContinuation() {
   return (
     <main className="grid min-h-dvh place-items-center bg-[#fcfaf7] px-4 text-center text-[var(--brand-plum-darkest)]">
       <section className="max-w-md rounded-[2rem] border border-[var(--brand-plum-light)] bg-white p-8">
-        <h1 className="font-header text-3xl">
+        <h1
+          className={
+            error || loaderVisible ? "font-header text-3xl" : "invisible font-header text-3xl"
+          }
+        >
           {error ? "Dein Zugang konnte nicht geöffnet werden." : "Dein Zugang wird geöffnet …"}
         </h1>
         {error ? (

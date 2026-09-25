@@ -6,8 +6,10 @@ import { renderToStaticMarkup } from "react-dom/server"
 import {
   claimRefusalHint,
   DiscoveryInvitationCard,
+  DiscoveryInvitationClient,
   validateInvitationEmail,
 } from "../src/app/beratung/einladung/discovery-invitation-client"
+import { DiscoveryContinuation } from "../src/app/beratung/weiter/discovery-continuation"
 
 const REFUSAL = "Dieses Konto kann diese Einladung nicht nutzen."
 const HINT = "Du bist gerade mit einem anderen Konto angemeldet."
@@ -88,4 +90,30 @@ test("the invite page checks the address before it claims", () => {
   assert.equal(validateInvitationEmail("lea@"), "Bitte prüf deine E-Mail-Adresse.")
   assert.equal(validateInvitationEmail("lea example@x.de"), "Bitte prüf deine E-Mail-Adresse.")
   assert.equal(validateInvitationEmail(" lea@example.test "), null)
+})
+
+// --- Batch 8, plan item 11: no loader flash, no growing card -------------------------
+
+test("while the invite resolves, the card stands at its final size and says nothing yet", () => {
+  const markup = renderToStaticMarkup(<DiscoveryInvitationClient />)
+  // The ready form is laid out, invisibly, so the card already has its final size.
+  assert.match(markup, /<div aria-hidden="true" class="invisible" inert="">/)
+  assert.match(markup, /alles bereit für unser Gespräch/)
+  assert.match(markup, /Los geht’s/)
+  // The text loader appears only after 300 ms (the effect-driven timer).
+  assert.match(markup, /<p class="[^"]*" role="status"><\/p>/)
+  assert.doesNotMatch(markup, /Wird geöffnet/)
+})
+
+test("the ready card fades its content in", () => {
+  const markup = renderToStaticMarkup(<DiscoveryInvitationCard email="" mode="ready" name="Lea" />)
+  assert.match(markup, /motion-safe:animate-\[personalPlanStageTargetFade_var\(--motion-screen\)/)
+})
+
+test("the magic-link landing keeps its card but shows its line only after 300 ms", () => {
+  const markup = renderToStaticMarkup(<DiscoveryContinuation />)
+  assert.match(
+    markup,
+    /<h1 class="invisible font-header text-3xl">Dein Zugang wird geöffnet …<\/h1>/,
+  )
 })

@@ -10,12 +10,13 @@ import {
 } from "@/lib/discovery/participant"
 import { buildQuizResultPath } from "@/lib/quiz/result-navigation"
 import { useQuizStore } from "@/lib/quiz/store"
-import type { LeadCaptureSubStep } from "@/lib/quiz/types"
+import type { LeadCaptureSubStep, QuizAnswers } from "@/lib/quiz/types"
 import { isSubscriptionActive } from "@/lib/stripe/gating"
 import { useAuth } from "@/providers/auth-provider"
 
 import { QuizAnalysis } from "./quiz-analysis"
 import { useQuizBrowserBack } from "./quiz-browser-history"
+import { QuizDiscoveryLeadSave } from "./quiz-discovery-lead-save"
 
 interface PreparationAccessState {
   authLoading: boolean
@@ -95,6 +96,18 @@ export function shouldTriggerPreparationResultArtifact({
   return Boolean(leadId && accessSettled && leadId !== previouslyTriggeredLeadId)
 }
 
+/** `quiz_completed` — once a lead exists for the answers. */
+export function trackQuizCompleted(answers: QuizAnswers, leadId: string) {
+  trackAppEvent("quiz_completed", {
+    thickness: answers.thickness,
+    hairLength: answers.hair_length,
+    hairTexture: answers.structure,
+    leadId,
+    scalpCondition: answers.scalp_condition,
+    scalpType: answers.scalp_type,
+  })
+}
+
 export function getPreparationRecoverySubStep(name: string): LeadCaptureSubStep {
   return name.trim() ? "email" : "name"
 }
@@ -130,12 +143,17 @@ export function QuizPreparation() {
   const quizCompletedLeadRef = useRef<string | null>(null)
   const resultArtifactLeadRef = useRef<string | null>(null)
   const profileHasAccess = isSubscriptionActive(profile)
-  const accessCheckKey = getPreparationAccessCheckKey({
-    authLoading,
-    leadId,
-    profileHasAccess,
-    userId: user?.id ?? null,
-  })
+  const isDiscoveryParticipant = hasDiscoveryEnrollmentStamp(user)
+  // A discovery participant needs no billing access check and no result artifact: her
+  // quiz ends on the product checklist (batch 8, plan item 2).
+  const accessCheckKey = isDiscoveryParticipant
+    ? null
+    : getPreparationAccessCheckKey({
+        authLoading,
+        leadId,
+        profileHasAccess,
+        userId: user?.id ?? null,
+      })
   const accessSettled = isPreparationReady({
     authLoading,
     checkedAccessKey,
@@ -143,7 +161,6 @@ export function QuizPreparation() {
     profileHasAccess,
     userId: user?.id ?? null,
   })
-  const isDiscoveryParticipant = hasDiscoveryEnrollmentStamp(user)
   const resultPath = useMemo(
     () =>
       getPreparationResultPath({
@@ -159,22 +176,8 @@ export function QuizPreparation() {
     if (!leadId || quizCompletedLeadRef.current === leadId) return
 
     quizCompletedLeadRef.current = leadId
-    trackAppEvent("quiz_completed", {
-      thickness: answers.thickness,
-      hairLength: answers.hair_length,
-      hairTexture: answers.structure,
-      leadId,
-      scalpCondition: answers.scalp_condition,
-      scalpType: answers.scalp_type,
-    })
-  }, [
-    answers.hair_length,
-    answers.scalp_condition,
-    answers.scalp_type,
-    answers.structure,
-    answers.thickness,
-    leadId,
-  ])
+    trackQuizCompleted(answers, leadId)
+  }, [answers, leadId])
 
   useEffect(() => {
     if (!accessCheckKey) return
@@ -191,6 +194,7 @@ export function QuizPreparation() {
 
   useEffect(() => {
     if (
+      isDiscoveryParticipant ||
       !shouldTriggerPreparationResultArtifact({
         accessSettled,
         leadId,
@@ -207,7 +211,7 @@ export function QuizPreparation() {
       body: JSON.stringify({ leadId }),
       keepalive: true,
     }).catch(() => {})
-  }, [accessSettled, leadId])
+  }, [accessSettled, isDiscoveryParticipant, leadId])
 
   if (!leadId) {
     return (
@@ -233,9 +237,26 @@ export function QuizPreparation() {
     )
   }
 
+  if (isDiscoveryParticipant) {
+    // Only reachable with a lead already stored (the lead step itself ends her quiz): the
+    // same „Geschafft", with nothing left to wait for.
+    return (
+      <QuizDiscoveryLeadSave
+        canSave={false}
+        error=""
+        onContinue={() => {
+          trackAppEvent("quiz_analysis_commitment", { choice: "ja", leadId })
+          if (resultPath) router.push(resultPath)
+        }}
+        onRetry={() => {}}
+        onSave={() => {}}
+        saved
+      />
+    )
+  }
+
   return (
     <QuizAnalysis
-      discoveryParticipant={isDiscoveryParticipant}
       name={lead.name}
       onCommit={(choice) => {
         if (resultPath) router.prefetch(resultPath)

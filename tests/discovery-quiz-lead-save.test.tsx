@@ -3,6 +3,8 @@ import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
+import { Loader2 } from "lucide-react"
+
 import { QuizAnalysisView } from "../src/components/quiz/quiz-analysis"
 import { QuizConsentSheet } from "../src/components/quiz/quiz-consent-sheet"
 import {
@@ -10,6 +12,11 @@ import {
   QuizDiscoveryLeadSave,
 } from "../src/components/quiz/quiz-discovery-lead-save"
 import { QuizLeadCapture } from "../src/components/quiz/quiz-lead-capture"
+import { Input } from "../src/components/ui/input"
+import {
+  prefetchDiscoveryQuizContext,
+  resetDiscoveryQuizContextPrefetchForTests,
+} from "../src/lib/quiz/discovery-context-prefetch"
 import { getQuizFunnelCopy } from "../src/lib/quiz/funnel-copy"
 import { useQuizStore } from "../src/lib/quiz/store"
 import type { LeadCaptureMode, QuizAnswers } from "../src/lib/quiz/types"
@@ -18,8 +25,12 @@ import type { LeadCaptureMode, QuizAnswers } from "../src/lib/quiz/types"
  * Field-test fix: a discovery participant is no longer asked the marketing
  * question. Her lead is saved with `marketingConsent: false` the moment the step
  * is reached — the save itself is never skipped, because the checklist's profile
- * projection is built from it — and the commitment screen after it names the
- * checklist instead of teasing an analysis.
+ * projection is built from it.
+ *
+ * Batch 8 (plan item 2): „Geschafft" shows the moment the lead step opens; the
+ * enrollment check and the save run behind it, the button waits for the save
+ * (spinner only after 300 ms), and there is no analysis beat, no fixed wait, no
+ * billing-access or result-artifact call for her.
  *
  * Regular and partner capture must not move at all, so their copy is pinned here.
  *
@@ -58,7 +69,7 @@ function ofType(tree: ReactNode, type: unknown): AnyElement[] {
 
 /**
  * `contexts` answers `useContext` by CALL ORDER within one render. The lead step
- * reads exactly three: `useAuth`, `useQuizFunnelPackageKey`, `useQuizBrowserBack`.
+ * reads exactly four: `useAuth`, `useQuizFunnelPackageKey`, `useQuizBrowserBack`, `useRouter`.
  */
 function createHarness(
   render: () => ReactElement | null,
@@ -154,25 +165,48 @@ function createHarness(
 
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0))
 
-// --- The lead-save step on its own ---------------------------------------------
+// --- The „Geschafft" ending on its own -------------------------------------------
 
-function leadSave(props: Partial<Parameters<typeof QuizDiscoveryLeadSave>[0]>) {
+function ending(props: Partial<Parameters<typeof QuizDiscoveryLeadSave>[0]>) {
   return {
-    alreadySaved: false,
+    canSave: true,
     error: "",
     onContinue: () => {},
+    onRetry: () => {},
     onSave: () => {},
-    saving: false,
+    saved: false,
     ...props,
   }
 }
 
-test("the step saves the lead exactly once, however often it re-renders", () => {
+function continueButton(tree: ReactNode) {
+  return findAll(tree, (element) => textOf(element).startsWith(DISCOVERY_LEAD_SAVE_COPY.continue))
+    .filter((element) => element.type === "button")
+    .at(-1)!
+}
+
+test("„Geschafft“ at once: one CTA, no name form, no analysis beat, no fixed wait", () => {
+  const html = renderToStaticMarkup(<QuizDiscoveryLeadSave {...ending({ canSave: false })} />)
+  assert.match(html, /Geschafft — dein Haarprofil steht\./)
+  assert.match(html, /Jetzt noch deine Produkte\. Dauert 5 Minuten\./)
+  assert.match(html, />Weiter zu deinen Produkten</)
+  assert.equal((html.match(/<button/g) ?? []).length, 1)
+  assert.doesNotMatch(
+    html,
+    /Wie heißt du|<input|Einen Moment|Bereit\.|wird gespeichert|Analyse|Auswertung|quiz-shimmer-bar/,
+  )
+})
+
+test("the save waits for the enrollment check, then posts exactly once", () => {
   let saves = 0
+  let canSave = false
   const harness = createHarness(() =>
     // A fresh `onSave` per render, exactly like the lead step's inline arrow.
-    QuizDiscoveryLeadSave(leadSave({ onSave: () => (saves += 1), saving: saves > 0 })),
+    QuizDiscoveryLeadSave(ending({ canSave, onSave: () => (saves += 1) })),
   )
+  harness.render()
+  assert.equal(saves, 0, "no post before the check confirmed her")
+  canSave = true
   harness.render()
   harness.render()
   harness.replayEffects()
@@ -180,52 +214,63 @@ test("the step saves the lead exactly once, however often it re-renders", () => 
   assert.equal(saves, 1)
 })
 
-test("while saving it shows only a quiet status — no consent question, no buttons", () => {
-  const html = renderToStaticMarkup(<QuizDiscoveryLeadSave {...leadSave({ saving: true })} />)
-  assert.match(html, /role="status"/)
-  assert.match(html, /Dein Haarprofil wird gespeichert …/)
-  assert.doesNotMatch(html, /<button/)
-  assert.doesNotMatch(html, /Dürfen wir|Haarpflege-Tipps|Auswertung|Analyse/)
-})
-
-test("a failed save stays on screen with a retry that saves again", () => {
-  let saves = 0
-  const props = leadSave({
-    error: "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
-    onSave: () => (saves += 1),
-  })
-  const html = renderToStaticMarkup(<QuizDiscoveryLeadSave {...props} />)
-  assert.match(html, /role="alert"/)
-  assert.match(html, /Etwas ist schiefgelaufen\. Bitte versuche es erneut\./)
-  assert.match(html, />Erneut versuchen</)
-
-  const harness = createHarness(() => QuizDiscoveryLeadSave(props))
-  const tree = harness.render()
-  assert.equal(saves, 1, "the arrival save")
-  const retry = findAll(tree, (element) => textOf(element) === DISCOVERY_LEAD_SAVE_COPY.retry)
-  retry.at(-1)!.props.onClick()
-  assert.equal(saves, 2, "the participant's own retry")
-})
-
-test("Back onto a step whose lead is already saved does not post again", () => {
+test("an already saved lead is not posted again, and Weiter goes straight on", () => {
   let saves = 0
   let continued = 0
   const harness = createHarness(() =>
     QuizDiscoveryLeadSave(
-      leadSave({
-        alreadySaved: true,
-        onSave: () => (saves += 1),
-        onContinue: () => (continued += 1),
-      }),
+      ending({ saved: true, onSave: () => (saves += 1), onContinue: () => (continued += 1) }),
     ),
   )
   const tree = harness.render()
   assert.equal(saves, 0)
-  assert.match(textOf(tree), /Dein Haarprofil ist gespeichert\./)
-  findAll(tree, (element) => textOf(element) === "Weiter")
+  continueButton(tree).props.onClick()
+  harness.render()
+  harness.render()
+  assert.equal(continued, 1, "exactly once")
+})
+
+test("Weiter before the save answered waits; a spinner only after 300 ms; on once saved", (t) => {
+  t.mock.timers.enable({ apis: ["setTimeout", "Date"] })
+  let saved = false
+  let continued = 0
+  const harness = createHarness(() =>
+    QuizDiscoveryLeadSave(ending({ saved, onContinue: () => (continued += 1) })),
+  )
+  let tree = harness.render()
+  continueButton(tree).props.onClick()
+  tree = harness.render()
+  assert.equal(continued, 0, "nothing to continue to yet")
+  assert.equal(continueButton(tree).props["aria-busy"], true)
+  assert.equal(ofType(tree, Loader2).length, 0, "no spinner before 300 ms")
+  assert.match(textOf(continueButton(tree)), /^Weiter zu deinen Produkten$/, "label kept")
+
+  t.mock.timers.tick(299)
+  tree = harness.render()
+  assert.equal(ofType(tree, Loader2).length, 0)
+  t.mock.timers.tick(1)
+  tree = harness.render()
+  assert.equal(ofType(tree, Loader2).length, 1, "spinner after 300 ms")
+  assert.match(textOf(continueButton(tree)), /^Weiter zu deinen Produkten$/, "label still kept")
+
+  saved = true
+  harness.render()
+  assert.equal(continued, 1, "on the moment the save answered")
+})
+
+test("a failed check or save replaces the button with a retry", () => {
+  let retries = 0
+  const props = ending({ error: "Etwas ist schiefgelaufen.", onRetry: () => (retries += 1) })
+  const html = renderToStaticMarkup(<QuizDiscoveryLeadSave {...props} />)
+  assert.match(html, /role="alert"/)
+  assert.match(html, /Etwas ist schiefgelaufen\./)
+  assert.doesNotMatch(html, /Weiter zu deinen Produkten/)
+
+  const tree = createHarness(() => QuizDiscoveryLeadSave(props)).render()
+  findAll(tree, (element) => textOf(element) === DISCOVERY_LEAD_SAVE_COPY.retry)
     .at(-1)!
     .props.onClick()
-  assert.equal(continued, 1)
+  assert.equal(retries, 1)
 })
 
 // --- The lead step, wired ------------------------------------------------------
@@ -260,9 +305,20 @@ function leadStep(
   // `/api/beratung/quiz-context` is part of what is under test. Regular and partner
   // keep the store as set: their context lookup is not what these tests pin.
   return createHarness(() => QuizLeadCapture(), {
-    contexts: [{ user, loading: false }, null, history],
+    contexts: [{ user, loading: false }, null, history, router],
     runEffects,
   })
+}
+
+const router = {
+  pushes: [] as string[],
+  prefetches: [] as string[],
+  push(href: string) {
+    router.pushes.push(href)
+  },
+  prefetch(href: string) {
+    router.prefetches.push(href)
+  },
 }
 
 /** First render (effects start the context check), let it answer, render again. */
@@ -279,6 +335,9 @@ function withBrowser(t: { after: (fn: () => void) => void }) {
     configurable: true,
     value: { location: { search: "", assign: () => {} }, scrollTo: () => {} },
   })
+  router.pushes = []
+  router.prefetches = []
+  resetDiscoveryQuizContextPrefetchForTests()
   t.after(() => {
     globalThis.fetch = originalFetch
     if (originalWindow) Object.defineProperty(globalThis, "window", originalWindow)
@@ -286,6 +345,7 @@ function withBrowser(t: { after: (fn: () => void) => void }) {
     useQuizStore.getState().reset()
   })
   const requests: Array<{ url: string; body: Record<string, unknown> }> = []
+  const calls: string[] = []
   type Answer = { ok: boolean; status: number; body: unknown }
   let respond: () => Answer = () => ({ ok: true, status: 200, body: { leadId: "lead-1" } })
   let context: () => Promise<Answer> = async () => ({
@@ -295,6 +355,7 @@ function withBrowser(t: { after: (fn: () => void) => void }) {
   })
   globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input)
+    calls.push(url)
     const answer =
       url === "/api/beratung/quiz-context"
         ? await context()
@@ -307,6 +368,7 @@ function withBrowser(t: { after: (fn: () => void) => void }) {
     return { ok: answer.ok, status: answer.status, json: async () => answer.body } as Response
   }) as typeof fetch
   return {
+    calls,
     requests,
     respondWith(next: typeof respond) {
       respond = next
@@ -317,26 +379,55 @@ function withBrowser(t: { after: (fn: () => void) => void }) {
   }
 }
 
-test("discovery: no consent UI, and the one lead request carries marketingConsent:false", async (t) => {
+function endingOf(tree: ReactNode) {
+  const found = ofType(tree, QuizDiscoveryLeadSave)
+  assert.equal(found.length, 1, "the „Geschafft“ ending is on screen")
+  return found[0]
+}
+
+test("discovery, first visit: „Geschafft“ from the very first render — never the name form", async (t) => {
+  withBrowser(t)
+  const harness = leadStep("discovery")
+  // First visit: the store has not been switched to discovery yet.
+  useQuizStore.setState({ leadCaptureMode: "regular", leadCaptureSubStep: "name" })
+  const first = harness.render()
+  assert.equal(endingOf(first).props.canSave, false, "the check has not answered yet")
+  assert.doesNotMatch(textOf(first), /Wie heißt du\?/)
+  assert.equal(ofType(first, Input).length, 0, "no autofocused name input")
+  assert.equal(ofType(first, QuizConsentSheet).length, 0)
+
+  await settle()
+  const confirmed = harness.render()
+  assert.equal(endingOf(confirmed).props.canSave, true)
+  assert.equal(useQuizStore.getState().leadCaptureMode, "discovery")
+})
+
+test("discovery: the one lead request carries marketingConsent:false; Weiter goes to the checklist", async (t) => {
   const browser = withBrowser(t)
   const harness = leadStep("discovery")
-  const tree = await arrive(harness)
+  let tree = await arrive(harness)
 
   assert.equal(ofType(tree, QuizConsentSheet).length, 0, "the consent sheet is not rendered")
   assert.doesNotMatch(textOf(tree), /Dein persönlicher Pflegeplan ist bereit!/)
-  const saveStep = ofType(tree, QuizDiscoveryLeadSave)
-  assert.equal(saveStep.length, 1)
-  assert.equal(saveStep[0].props.alreadySaved, false)
+  assert.equal(endingOf(tree).props.saved, false)
+  assert.ok(router.prefetches.includes("/beratung/produkte"), "the checklist is prefetched")
 
-  // What the step's arrival effect calls.
-  saveStep[0].props.onSave()
+  // What the ending's arrival effect calls.
+  endingOf(tree).props.onSave()
   await settle()
 
   assert.equal(browser.requests.length, 1)
   assert.equal(browser.requests[0].body.marketingConsent, false)
   assert.equal(browser.requests[0].body.email, "lea@example.test")
   assert.equal(useQuizStore.getState().leadId, "lead-1")
-  assert.equal(useQuizStore.getState().step, 10, "on to the commitment screen")
+  assert.equal(useQuizStore.getState().step, 9, "no analysis step — she stays on „Geschafft“")
+
+  tree = harness.render()
+  assert.equal(endingOf(tree).props.saved, true)
+  endingOf(tree).props.onContinue()
+  assert.deepEqual(router.pushes, ["/beratung/produkte?lead=lead-1"])
+  assert.ok(!browser.calls.includes("/api/billing/access"), "no billing access check")
+  assert.ok(!browser.calls.includes("/api/quiz/result-artifact"), "no result artifact")
 })
 
 test("discovery: a failed save surfaces the error for the retry, and the retry posts again", async (t) => {
@@ -344,36 +435,35 @@ test("discovery: a failed save surfaces the error for the retry, and the retry p
   browser.respondWith(() => ({ ok: false, status: 503, body: { error: "down" } }))
   const harness = leadStep("discovery")
 
-  ofType(await arrive(harness), QuizDiscoveryLeadSave)[0].props.onSave()
+  endingOf(await arrive(harness)).props.onSave()
   await settle()
-  let saveStep = ofType(harness.render(), QuizDiscoveryLeadSave)[0]
-  assert.equal(saveStep.props.saving, false)
+  let saveStep = endingOf(harness.render())
   assert.equal(saveStep.props.error, "Etwas ist schiefgelaufen. Bitte versuche es erneut.")
   assert.equal(useQuizStore.getState().leadId, null, "never skipped over")
   assert.equal(useQuizStore.getState().step, 9)
 
   browser.respondWith(() => ({ ok: true, status: 200, body: { leadId: "lead-2" } }))
-  saveStep.props.onSave()
+  saveStep.props.onRetry()
   await settle()
   assert.equal(browser.requests.length, 2)
   assert.equal(browser.requests[1].body.marketingConsent, false)
   assert.equal(useQuizStore.getState().leadId, "lead-2")
 
   // Back onto the step with the same answers: recognised as saved, not re-posted.
-  useQuizStore.setState({ step: 9 })
-  saveStep = ofType(harness.render(), QuizDiscoveryLeadSave)[0]
-  assert.equal(saveStep.props.alreadySaved, true)
+  saveStep = endingOf(harness.render())
+  assert.equal(saveStep.props.saved, true)
+  assert.equal(saveStep.props.error, "")
 
   // A changed answer is a new profile, so it is saved again.
   useQuizStore.setState({ answers: { ...answers, thickness: "coarse" } as QuizAnswers })
-  saveStep = ofType(harness.render(), QuizDiscoveryLeadSave)[0]
-  assert.equal(saveStep.props.alreadySaved, false)
+  saveStep = endingOf(harness.render())
+  assert.equal(saveStep.props.saved, false)
 })
 
-test("discovery: a second visit re-checks the enrollment before the save step can mount", async (t) => {
+test("discovery: a second visit re-checks the enrollment before the save may run", async (t) => {
   // The store kept `discovery` / `consent` from the first visit; this is a NEW mount
-  // whose context check has not answered yet. The save step (whose effect would post
-  // the lead) must not be in the tree until it has.
+  // whose context check has not answered yet. „Geschafft“ shows, but the save (whose
+  // effect would post the lead) is not allowed until the check answered in THIS mount.
   const browser = withBrowser(t)
   let answer: (value: { ok: boolean; status: number; body: unknown }) => void = () => {}
   browser.contextWith(() => new Promise((resolve) => (answer = resolve)))
@@ -381,11 +471,10 @@ test("discovery: a second visit re-checks the enrollment before the save step ca
 
   let tree = harness.render()
   assert.equal(useQuizStore.getState().leadCaptureMode, "discovery", "retained from visit one")
-  assert.equal(ofType(tree, QuizDiscoveryLeadSave).length, 0)
-  assert.match(textOf(tree), /Dein Zugang wird geladen …/)
+  assert.equal(endingOf(tree).props.canSave, false)
   await settle()
   tree = harness.render()
-  assert.equal(ofType(tree, QuizDiscoveryLeadSave).length, 0, "still waiting for the check")
+  assert.equal(endingOf(tree).props.canSave, false, "still waiting for the check")
   assert.equal(browser.requests.length, 0, "no lead posted before the check")
 
   answer({
@@ -395,17 +484,42 @@ test("discovery: a second visit re-checks the enrollment before the save step ca
   })
   await settle()
   tree = harness.render()
-  assert.equal(ofType(tree, QuizDiscoveryLeadSave).length, 1, "confirmed in THIS mount")
+  assert.equal(endingOf(tree).props.canSave, true, "confirmed in THIS mount")
 })
 
-test("discovery: a failed enrollment re-check never reaches the save step", async (t) => {
+test("discovery: the check started on the last question is used, not repeated", async (t) => {
+  const browser = withBrowser(t)
+  prefetchDiscoveryQuizContext(`discovery:${discoveryUser.id}`)
+  assert.equal(browser.calls.filter((url) => url === "/api/beratung/quiz-context").length, 1)
+  const tree = await arrive(leadStep("discovery"))
+  assert.equal(endingOf(tree).props.canSave, true)
+  assert.equal(
+    browser.calls.filter((url) => url === "/api/beratung/quiz-context").length,
+    1,
+    "the lead step consumed the prefetched answer",
+  )
+})
+
+test("discovery: a failed enrollment re-check never saves, and its retry checks again", async (t) => {
   const browser = withBrowser(t)
   browser.contextWith(async () => ({ ok: false, status: 503, body: null }))
-  const tree = await arrive(leadStep("discovery"))
+  const harness = leadStep("discovery")
+  const tree = await arrive(harness)
 
-  assert.equal(ofType(tree, QuizDiscoveryLeadSave).length, 0)
-  assert.match(textOf(tree), /Deine Angaben konnten gerade nicht geladen werden\./)
+  const ending = endingOf(tree)
+  assert.equal(ending.props.canSave, false)
+  assert.equal(ending.props.error, "Deine Angaben konnten gerade nicht geladen werden.")
   assert.equal(browser.requests.length, 0)
+
+  browser.contextWith(async () => ({
+    ok: true,
+    status: 200,
+    body: { status: "participant", name: "Lea", email: "lea@example.test" },
+  }))
+  ending.props.onRetry()
+  harness.render()
+  await settle()
+  assert.equal(endingOf(harness.render()).props.canSave, true)
 })
 
 for (const mode of ["regular", "partner"] as const) {
@@ -439,65 +553,19 @@ test("the consent sheet's copy is pinned", () => {
   )
 })
 
-// --- The commitment screen -----------------------------------------------------
+// --- The regular commitment screen ---------------------------------------------
 
-test("discovery commitment names the checklist — one CTA, no analysis teaser", () => {
-  const html = renderToStaticMarkup(
-    <QuizAnalysisView
-      commitPending={false}
-      discoveryParticipant
-      name="Lea"
-      onCommit={() => {}}
-      phase="commit"
-    />,
-  )
-  assert.match(html, /Geschafft — dein Haarprofil steht\./)
-  assert.match(html, /Jetzt noch deine Produkte\. Dauert 5 Minuten\./)
-  assert.match(html, />Weiter zu deinen Produkten</)
-  assert.equal((html.match(/<button/g) ?? []).length, 1)
-  assert.doesNotMatch(html, /Analyse|Auswertung|neugierig|bereit für den nächsten Schritt/)
-})
-
-test("discovery loading beat keeps the machinery but not the analysis wording", () => {
-  const html = renderToStaticMarkup(
-    <QuizAnalysisView
-      commitPending
-      discoveryParticipant
-      name="Lea"
-      onCommit={() => {}}
-      phase="loading"
-    />,
-  )
-  assert.match(html, /Einen Moment, Lea\./)
-  assert.match(html, /Gleich geht’s zu deinen Produkten\./)
-  assert.match(html, /quiz-shimmer-bar/)
-  assert.doesNotMatch(html, /Analyse|Auswertung/)
-})
-
-test("the discovery CTA commits exactly like the regular one", () => {
-  const choices: string[] = []
-  const harness = createHarness(() =>
-    QuizAnalysisView({
-      commitPending: false,
-      discoveryParticipant: true,
-      name: "Lea",
-      onCommit: (choice) => choices.push(choice),
-      phase: "commit",
-    }),
-  )
-  const tree = harness.render()
-  findAll(tree, (element) => element.type === "button")[0].props.onClick()
-  assert.deepEqual(choices, ["ja"])
-})
-
-test("without the flag the commitment screen is byte-identical to the regular one", () => {
+test("the regular funnel keeps its commitment screen and analysis beat", () => {
   const props = { commitPending: false, name: "Lena", onCommit: () => {}, phase: "commit" as const }
-  assert.equal(
-    renderToStaticMarkup(<QuizAnalysisView {...props} discoveryParticipant={false} />),
-    renderToStaticMarkup(<QuizAnalysisView {...props} />),
-  )
   const html = renderToStaticMarkup(<QuizAnalysisView {...props} />)
   assert.match(html, /Lena, bereit für den nächsten Schritt mit deinem Haar\?/)
   assert.match(html, />Ja, zeig mir meine Analyse</)
   assert.match(html, />Ich bin neugierig</)
+  assert.doesNotMatch(html, /Geschafft/)
+
+  const loading = renderToStaticMarkup(
+    <QuizAnalysisView commitPending name="Lena" onCommit={() => {}} phase="loading" />,
+  )
+  assert.match(loading, /Einen Moment, Lena\./)
+  assert.match(loading, /quiz-shimmer-bar/)
 })
