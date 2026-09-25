@@ -344,68 +344,79 @@ export default function QuizPage() {
     )
   }
 
-  // Step 6: custom scalp progressive disclosure
-  if (step === 6) return <QuizScalpQuestion />
-  if (step === 8) {
-    return (
-      <>
-        <QuizConcernsQuestion />
-        <QuizDiscoveryContextPrefetch />
-      </>
-    )
-  }
+  // Until the draft check has reconciled, the screen is visible but inert (no dimming):
+  // a tap in those few ms must not answer question 1 and overwrite a restorable draft.
+  // The wrapper is always there (display: contents), so the screen never remounts.
+  return (
+    <div className="contents" data-quiz-draft-gate="" inert={draftStatus === "checking"}>
+      {renderScreen()}
+    </div>
+  )
 
-  // Standard quiz question cards
-  const question = getQuestionByStep(step)
-  if (question) {
-    return (
-      <>
-        {returnPrompt === "invalid" || returnPrompt === "unavailable" ? (
-          <p
-            role="status"
-            className="mx-auto mb-3 max-w-xl text-center text-sm text-muted-foreground"
-          >
-            {returnPrompt === "invalid"
-              ? "Deine gespeicherten Antworten konnten über diesen Link nicht geöffnet werden. Du kannst das Quiz hier neu starten."
-              : "Deine gespeicherten Antworten sind gerade nicht verfügbar. Bitte versuche den E-Mail-Link später erneut oder starte das Quiz neu."}
-          </p>
-        ) : null}
-        <QuizQuestion key={question.step} question={question} />
-        {returnPrompt === "open" ? (
-          <ReturningLeadPrompt
-            busy={returnBusy}
-            error={returnError}
-            onContinue={() => void chooseReturn("continue")}
-            onEdit={() => void chooseReturn("edit")}
-          />
-        ) : null}
-      </>
-    )
-  }
+  function renderScreen() {
+    // Step 6: custom scalp progressive disclosure
+    if (step === 6) return <QuizScalpQuestion />
+    if (step === 8) {
+      return (
+        <>
+          <QuizConcernsQuestion />
+          <QuizDiscoveryContextPrefetch />
+        </>
+      )
+    }
 
-  switch (step) {
-    case 9:
-      return <QuizLeadCapture />
-    case 10:
-      return <QuizPreparation />
-    case 11:
-      // Legacy compatibility only. New completions navigate from step 10
-      // directly to the canonical result route.
-      return <QuizResults />
-    case 12:
-      return <QuizGoals />
-    case 14:
-      return <QuizWelcome />
-    case 16:
-      return <ScanInsertProblem />
-    case 17:
-      return <ScanInsertSolution />
-    case 18:
-      return <ScanInsertHome />
-    default:
-      // Unknown step — shouldn't happen with a healthy store. Surface a 404
-      // rather than silently rendering a placeholder (would hide bugs).
-      notFound()
+    // Standard quiz question cards
+    const question = getQuestionByStep(step)
+    if (question) {
+      return (
+        <>
+          {returnPrompt === "invalid" || returnPrompt === "unavailable" ? (
+            <p
+              role="status"
+              className="mx-auto mb-3 max-w-xl text-center text-sm text-muted-foreground"
+            >
+              {returnPrompt === "invalid"
+                ? "Deine gespeicherten Antworten konnten über diesen Link nicht geöffnet werden. Du kannst das Quiz hier neu starten."
+                : "Deine gespeicherten Antworten sind gerade nicht verfügbar. Bitte versuche den E-Mail-Link später erneut oder starte das Quiz neu."}
+            </p>
+          ) : null}
+          <QuizQuestion key={question.step} question={question} />
+          {returnPrompt === "open" ? (
+            <ReturningLeadPrompt
+              busy={returnBusy}
+              error={returnError}
+              onContinue={() => void chooseReturn("continue")}
+              onEdit={() => void chooseReturn("edit")}
+            />
+          ) : null}
+        </>
+      )
+    }
+
+    switch (step) {
+      case 9:
+        return <QuizLeadCapture />
+      case 10:
+        return <QuizPreparation />
+      case 11:
+        // Legacy compatibility only. New completions navigate from step 10
+        // directly to the canonical result route.
+        return <QuizResults />
+      case 12:
+        return <QuizGoals />
+      case 14:
+        return <QuizWelcome />
+      case 16:
+        return <ScanInsertProblem />
+      case 17:
+        return <ScanInsertSolution />
+      case 18:
+        return <ScanInsertHome />
+      default:
+        // Unknown step — shouldn't happen with a healthy store. Surface a 404
+        // rather than silently rendering a placeholder (would hide bugs).
+        notFound()
+    }
   }
 }
 
