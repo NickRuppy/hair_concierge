@@ -533,3 +533,50 @@ export function draftCapsule(draft: AddDraft): string | null {
   }
   return draft.productType ? categoryLabel(draft.productType) : null
 }
+
+// --- Optimistic add (batch 8) ----------------------------------------------------------------
+
+const PROVISIONAL_ID_PREFIX = "provisional:"
+
+export function provisionalItemId(sequence: number): string {
+  return `${PROVISIONAL_ID_PREFIX}${sequence}`
+}
+
+/** A card shown before the server confirmed it — not editable or removable yet. */
+export function isProvisionalItem(item: Pick<DiscoveryIntakeItemView, "id">): boolean {
+  return item.id.startsWith(PROVISIONAL_ID_PREFIX)
+}
+
+/**
+ * The card that lands right after the frequency tap while the POST runs (plan
+ * `plans/discovery-b8-motion-days/plan.md` Part B item 7): what the request says plus the
+ * sheet's pinned subject, so it reads exactly like the header she just saw — the server's
+ * item replaces it in place, or it rolls back.
+ */
+export function provisionalIntakeItem(
+  id: string,
+  body: DiscoveryIntakeProductBody,
+  subject: DiscoveryProductSubject,
+): DiscoveryIntakeItemView {
+  const capture = body.capture
+  const brand = capture.brandText?.trim() || null
+  // The subject's muted line is „brand · line": give the card the same line back.
+  const linePrefix = brand ? `${brand} · ` : null
+  const productLine =
+    linePrefix && subject.brandLine?.startsWith(linePrefix)
+      ? subject.brandLine.slice(linePrefix.length)
+      : null
+  return {
+    id,
+    source: capture.source,
+    category: body.usage?.category ?? null,
+    brandText: brand,
+    productNameText: capture.productNameText ?? null,
+    barcodeIdentifier: "barcodeIdentifier" in capture ? capture.barcodeIdentifier : null,
+    imageUrl: subject.imageUrl,
+    productLine,
+    ...(body.productType ? { productType: body.productType } : {}),
+    ...(body.usage?.role ? { usageRole: body.usage.role } : {}),
+    ...(body.frequency ? { frequency: body.frequency } : {}),
+  }
+}

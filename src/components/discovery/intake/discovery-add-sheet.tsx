@@ -1,7 +1,7 @@
 "use client"
 
 import { Check, ChevronLeft } from "lucide-react"
-import { useState, type ReactNode } from "react"
+import { useRef, useState, type ReactNode } from "react"
 
 import type { ScanRetailerResult } from "@/app/api/scan/search-retailer/route"
 import type { ScanSearchResult } from "@/app/api/scan/search/route"
@@ -24,6 +24,7 @@ import {
   type DiscoveryItemFrequency,
 } from "@/lib/discovery/frequency"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import { MOTION_MS } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
 import {
@@ -35,7 +36,20 @@ import {
   type AddStep,
   type DiscoveryProductSubject,
 } from "./add-flow"
-import { DiscoveryPackshot, SlideStage, useSettledTap } from "./discovery-motion"
+import {
+  BeforeCommit,
+  DiscoveryPackshot,
+  frozenCopyOf,
+  jumpToTop,
+  motionMs,
+  nextFrozenLayerId,
+  PendingSpinner,
+  prefersReducedMotion,
+  SlideStage,
+  useDelayedPending,
+  useSettledTap,
+  type FrozenLayer,
+} from "./discovery-motion"
 import type { DiscoveryIntakeItemView } from "./types"
 import { BACK_BUTTON, CORAL_BUTTON, OUTLINE_BUTTON } from "./ui-classes"
 
@@ -46,6 +60,12 @@ import { BACK_BUTTON, CORAL_BUTTON, OUTLINE_BUTTON } from "./ui-classes"
  * The typed path („Selbst eintragen") and the barcode scanner live in the same sheet.
  *
  * Presentational: every answer goes up to the checklist, which owns the `AddFlow`.
+ *
+ * Batch 8 (plan `plans/discovery-b8-motion-days/plan.md` Part B items 8, 10): one stable sheet
+ * height for the whole flow; the pinned product header sits above the sliding step area, so it
+ * stays put from usage to frequency; search ↔ steps slide like the steps do (the leaving side
+ * is always a frozen copy). Nothing dims while a save runs — only the tapped option shows a
+ * spinner, after 300 ms.
  */
 
 export const TYPED_ENTRY_LABEL = "Nicht dabei? Selbst eintragen"
@@ -59,6 +79,10 @@ const BACK_LABEL = "Zurück"
 const SCAN_TITLE = "Barcode scannen"
 const BRAND_MAX = 200
 const NAME_MAX = 240
+/** Marks the sheet panel, so the search ↔ steps slide can find the search content. */
+const SHEET_MARKER = "discovery-add-sheet"
+/** One stable height for the whole add flow (search, scanner, every step). */
+const SHEET_CLASS = `${SHEET_MARKER} h-[88dvh]`
 
 /** The ten categories of „Was ist das?", in the checklist's shelf order. */
 const TYPE_CHOICES: readonly PersonalPlanCategory[] = [
@@ -159,20 +183,21 @@ function OptionRow({
   label,
   on,
   hint,
-  disabled,
+  pending = false,
   onClick,
 }: {
   label: string
   on: boolean
   hint?: string | null
-  disabled: boolean
+  /** Its save has been running > 300 ms: a spinner in place of the check. */
+  pending?: boolean
   onClick: () => void
 }) {
   return (
     <button
       type="button"
       aria-pressed={on}
-      disabled={disabled}
+      aria-busy={pending || undefined}
       onClick={onClick}
       className={cn(OPTION, on ? OPTION_ON : OPTION_OFF)}
     >
@@ -182,7 +207,11 @@ function OptionRow({
           {hint}
         </span>
       ) : null}
-      {on ? <Check className="h-5 w-5 shrink-0" strokeWidth={2.2} aria-hidden="true" /> : null}
+      {on && pending ? (
+        <PendingSpinner className="h-5 w-5" />
+      ) : on ? (
+        <Check className="h-5 w-5 shrink-0" strokeWidth={2.2} aria-hidden="true" />
+      ) : null}
     </button>
   )
 }
@@ -199,6 +228,11 @@ export function DiscoveryFrequencyStep({
 }) {
   const [tapped, tap] = useSettledTap<DiscoveryItemFrequency>()
   const marked = tapped ?? step.current ?? step.suggestion
+  // `busy` here = her edit's PATCH is running; the tapped option stays plum meanwhile.
+  const pending = useDelayedPending(busy && tapped !== null)
+  const choose = (value: DiscoveryItemFrequency) => {
+    if (!busy) tap(value, () => onFrequency(value))
+  }
   return (
     <>
       <BottomSheetTitle className={QUESTION}>{FREQUENCY_PROMPT}</BottomSheetTitle>
@@ -214,25 +248,27 @@ export function DiscoveryFrequencyStep({
                   ? DISCOVERY_FREQUENCY_SUGGESTION_HINT
                   : null
               }
-              disabled={busy}
-              onClick={() => tap(value, () => onFrequency(value))}
+              pending={pending && marked === value}
+              onClick={() => choose(value)}
             />
           ),
         )}
         <button
           type="button"
           aria-pressed={marked === DISCOVERY_UNKNOWN_FREQUENCY}
-          disabled={busy}
-          onClick={() =>
-            tap(DISCOVERY_UNKNOWN_FREQUENCY, () => onFrequency(DISCOVERY_UNKNOWN_FREQUENCY))
-          }
+          aria-busy={(pending && marked === DISCOVERY_UNKNOWN_FREQUENCY) || undefined}
+          onClick={() => choose(DISCOVERY_UNKNOWN_FREQUENCY)}
           className={cn(
             QUIET_OPTION,
+            "relative",
             marked === DISCOVERY_UNKNOWN_FREQUENCY &&
               "bg-[#f1ece7] text-[var(--brand-plum-darkest)]",
           )}
         >
           {DISCOVERY_FREQUENCY_LABELS.unknown}
+          {pending && marked === DISCOVERY_UNKNOWN_FREQUENCY ? (
+            <PendingSpinner className="absolute right-4" />
+          ) : null}
         </button>
       </div>
     </>
@@ -263,8 +299,9 @@ function UsageStep({
             key={option.key}
             label={option.label}
             on={marked === option.key}
-            disabled={busy}
-            onClick={() => tap(option.key, () => onChoose(option.key))}
+            onClick={() => {
+              if (!busy) tap(option.key, () => onChoose(option.key))
+            }}
           />
         ))}
       </div>
@@ -292,10 +329,11 @@ function TypeStep({
             key={key}
             type="button"
             aria-pressed={marked === key}
-            disabled={busy}
-            onClick={() => tap(key, () => onType(key))}
+            onClick={() => {
+              if (!busy) tap(key, () => onType(key))
+            }}
             className={cn(
-              "flex min-h-[54px] items-center gap-2.5 rounded-[15px] border px-3 text-left text-[15px] font-semibold transition active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] disabled:opacity-60",
+              "flex min-h-[54px] items-center gap-2.5 rounded-[15px] border px-3 text-left text-[15px] font-semibold transition active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)]",
               marked === key ? OPTION_ON : OPTION_OFF,
             )}
           >
@@ -310,8 +348,9 @@ function TypeStep({
         <button
           type="button"
           aria-pressed={marked === "unknown"}
-          disabled={busy}
-          onClick={() => tap("unknown", () => onType(null))}
+          onClick={() => {
+            if (!busy) tap("unknown", () => onType(null))
+          }}
           className={cn(
             QUIET_OPTION,
             "col-span-2",
@@ -385,7 +424,7 @@ export function DiscoveryNameStep({
           enterKeyHint="done"
           className={field}
         />
-        <button type="submit" disabled={!ready || busy} className={cn(CORAL_BUTTON, "mt-4")}>
+        <button type="submit" disabled={!ready} className={cn(CORAL_BUTTON, "mt-4")}>
           {CONTINUE_LABEL}
         </button>
       </form>
@@ -478,8 +517,58 @@ function stepCategory(flow: AddFlow): PersonalPlanCategory | null {
   return draft.productType && draft.productType !== "styling" ? draft.productType : null
 }
 
+/** The sheet panel's scrolling content (where the search and the steps live). */
+function sheetContentElement(): HTMLElement | null {
+  const panel = document.querySelector<HTMLElement>(`[data-bottom-sheet-panel].${SHEET_MARKER}`)
+  if (!panel) return null
+  for (const child of Array.from(panel.children)) {
+    if (child instanceof HTMLElement && child.classList.contains("overflow-y-auto")) return child
+  }
+  return null
+}
+
+type SheetCapture =
+  | { kind: "to-steps"; layer: FrozenLayer; content: HTMLElement }
+  | { kind: "to-search"; node: HTMLElement; offsetY: number; content: HTMLElement }
+
+/**
+ * Back from the first step to the search: the ScanSearchSheet owns the search, so the frozen
+ * step is laid over the content by hand and slides away to the right while the search comes
+ * in from the left — the steps' own back animation.
+ */
+function playBackToSearch(capture: Extract<SheetCapture, { kind: "to-search" }>) {
+  const { content, node, offsetY } = capture
+  const panel = content.parentElement
+  if (!panel) return
+  const style = window.getComputedStyle(content)
+  const overlay = document.createElement("div")
+  overlay.className = "discovery-sheet-overlay discovery-step-out-back"
+  overlay.setAttribute("aria-hidden", "true")
+  overlay.inert = true
+  overlay.style.top = `${content.offsetTop}px`
+  overlay.style.height = `${content.clientHeight}px`
+  overlay.style.paddingLeft = style.paddingLeft
+  overlay.style.paddingRight = style.paddingRight
+  node.style.transform = `translateY(${-offsetY}px)`
+  overlay.appendChild(node)
+  panel.appendChild(overlay)
+  jumpToTop(content)
+  const entering = Array.from(content.children).filter(
+    (child): child is HTMLElement => child instanceof HTMLElement,
+  )
+  for (const child of entering) child.classList.add("discovery-step-in-back")
+  window.setTimeout(
+    () => {
+      overlay.remove()
+      for (const child of entering) child.classList.remove("discovery-step-in-back")
+    },
+    motionMs(Math.max(MOTION_MS.stepIn, MOTION_MS.stepOut)) + 40,
+  )
+}
+
 export function DiscoveryAddSheet({
   open,
+  session = 0,
   flow,
   busy,
   error,
@@ -488,6 +577,8 @@ export function DiscoveryAddSheet({
   handlers,
 }: {
   open: boolean
+  /** Which opening of the sheet this is — a new opening never slides from the last one. */
+  session?: number
   flow: AddFlow | null
   busy: boolean
   error: string | null
@@ -495,77 +586,127 @@ export function DiscoveryAddSheet({
   scannerRuntime?: ScannerRuntime
   handlers: DiscoveryAddSheetHandlers
 }) {
+  const stepsRef = useRef<HTMLDivElement>(null)
+  // The frozen search, handed to the steps as they slide in — for this opening only.
+  const [searchLeaving, setSearchLeaving] = useState<{
+    session: number
+    layer: FrozenLayer
+  } | null>(null)
   const step = flow ? currentStep(flow) : null
   const inSearch = step?.kind === "search"
   const pinned = flow?.draft && step && step.kind !== "name" && step.kind !== "scan"
+  const watch = open && step ? `${session}:${inSearch ? "search" : "steps"}` : "closed"
+
+  function capture(previous: string, next: string): SheetCapture | null {
+    // Only a change inside one open sheet slides; opening or closing never does.
+    if (previous === "closed" || next === "closed" || prefersReducedMotion()) return null
+    if (previous.split(":")[0] !== next.split(":")[0]) return null
+    const content = sheetContentElement()
+    if (!content) return null
+    if (next.endsWith(":steps")) {
+      // The search is leaving: freeze what she sees of it.
+      const node = document.createElement("div")
+      for (const child of Array.from(content.children)) {
+        if (child instanceof HTMLElement) node.appendChild(frozenCopyOf(child))
+      }
+      return {
+        kind: "to-steps",
+        layer: { id: nextFrozenLayerId(), node, direction: 1, offsetY: content.scrollTop },
+        content,
+      }
+    }
+    const steps = stepsRef.current
+    if (!steps) return null
+    return { kind: "to-search", node: frozenCopyOf(steps), offsetY: content.scrollTop, content }
+  }
+
+  function onCaptured(captured: SheetCapture) {
+    if (captured.kind === "to-steps") {
+      jumpToTop(captured.content)
+      setSearchLeaving({ session, layer: captured.layer })
+    } else {
+      setSearchLeaving(null)
+      playBackToSearch(captured)
+    }
+  }
 
   let stepContent: ReactNode = null
   if (flow && step && !inSearch) {
     stepContent = (
-      <SlideStage
-        stepKey={`${flow.steps.length}:${step.kind}`}
-        direction={flow.direction}
-        animate={step.kind !== "scan"}
-      >
-        {pinned && flow.draft ? (
-          <DiscoveryPinnedHeader
-            subject={flow.draft.subject}
-            capsule={draftCapsule(flow.draft)}
-            category={stepCategory(flow)}
-            onBack={canGoBack(flow) ? handlers.onBack : null}
-          />
-        ) : null}
-        <DiscoveryAddStepBody
-          flow={flow}
-          busy={busy}
-          handlers={handlers}
-          scannerRuntime={scannerRuntime}
-        />
-        {flow.mode === "edit" && flow.draft?.target.kind === "change" ? (
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() => {
-              const target = flow.draft?.target
-              if (target?.kind === "change") handlers.onRemove(target.item)
-            }}
-            className={cn(QUIET_OPTION, "mt-2.5 active:bg-[#f1ece7]")}
+      <div ref={stepsRef} key={session}>
+        <SlideStage
+          stepKey="steps"
+          direction={1}
+          enterFrom={searchLeaving?.session === session ? searchLeaving.layer : null}
+          surfaceClassName="bg-background"
+        >
+          {pinned && flow.draft ? (
+            <DiscoveryPinnedHeader
+              subject={flow.draft.subject}
+              capsule={draftCapsule(flow.draft)}
+              category={stepCategory(flow)}
+              onBack={canGoBack(flow) ? handlers.onBack : null}
+            />
+          ) : null}
+          <SlideStage
+            stepKey={`${flow.steps.length}:${step.kind}`}
+            direction={flow.direction}
+            animate={step.kind !== "scan"}
+            surfaceClassName="bg-background"
           >
-            {REMOVE_LABEL}
-          </button>
-        ) : null}
-        {error ? (
-          <p role="alert" className="mt-3 text-center text-sm text-[var(--brand-coral-dark)]">
-            {error}
-          </p>
-        ) : null}
-      </SlideStage>
+            <DiscoveryAddStepBody
+              flow={flow}
+              busy={busy}
+              handlers={handlers}
+              scannerRuntime={scannerRuntime}
+            />
+            {flow.mode === "edit" && flow.draft?.target.kind === "change" ? (
+              <button
+                type="button"
+                onClick={() => {
+                  const target = flow.draft?.target
+                  if (!busy && target?.kind === "change") handlers.onRemove(target.item)
+                }}
+                className={cn(QUIET_OPTION, "mt-2.5 active:bg-[#f1ece7]")}
+              >
+                {REMOVE_LABEL}
+              </button>
+            ) : null}
+            {error ? (
+              <p role="alert" className="mt-3 text-center text-sm text-[var(--brand-coral-dark)]">
+                {error}
+              </p>
+            ) : null}
+          </SlideStage>
+        </SlideStage>
+      </div>
     )
   }
 
   return (
-    <ScanSearchSheet
-      open={open}
-      reason="manual"
-      onOpenChange={handlers.onOpenChange}
-      onSelectProduct={() => undefined}
-      onSelectProductResult={handlers.onPickCatalog}
-      onSelectRetailerResultRow={handlers.onPickRetailer}
-      submitting={busy}
-      retailerSearchEnabled={retailerSearchEnabled}
-      autoFocusSearch={inSearch}
-      sheetClassName={inSearch || step?.kind === "scan" ? "h-[88dvh]" : undefined}
-      stepContent={stepContent}
-      resultsFooter={
-        <button
-          type="button"
-          onClick={handlers.onStartTyped}
-          disabled={busy}
-          className={cn(OUTLINE_BUTTON, "mt-4")}
-        >
-          {TYPED_ENTRY_LABEL}
-        </button>
-      }
-    />
+    <BeforeCommit watch={watch} capture={capture} onCaptured={onCaptured}>
+      <ScanSearchSheet
+        open={open}
+        reason="manual"
+        onOpenChange={handlers.onOpenChange}
+        onSelectProduct={() => undefined}
+        onSelectProductResult={handlers.onPickCatalog}
+        onSelectRetailerResultRow={handlers.onPickRetailer}
+        submitting={busy}
+        retailerSearchEnabled={retailerSearchEnabled}
+        autoFocusSearch={inSearch}
+        sheetClassName={SHEET_CLASS}
+        stepContent={stepContent}
+        resultsFooter={
+          <button
+            type="button"
+            onClick={handlers.onStartTyped}
+            className={cn(OUTLINE_BUTTON, "mt-4")}
+          >
+            {TYPED_ENTRY_LABEL}
+          </button>
+        }
+      />
+    </BeforeCommit>
   )
 }

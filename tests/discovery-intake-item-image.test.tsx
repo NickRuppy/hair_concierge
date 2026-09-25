@@ -69,7 +69,6 @@ function renderEntry(imageUrl: string | null) {
         imageUrl,
         frequency: "weekly_2x",
       }}
-      busy={false}
       landed={false}
       onEdit={() => {}}
       onFrequency={() => {}}

@@ -1,6 +1,7 @@
 "use client"
 
 import { ChevronLeft, ChevronRight, Wind } from "lucide-react"
+import { preload } from "react-dom"
 
 import {
   ADDITIONAL_HEAT_TOOL_OPTIONS,
@@ -25,7 +26,13 @@ import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 import { cn } from "@/lib/utils"
 
 import { isProductItem } from "./add-flow"
-import { DrawCheck, SlideStage, useSettledTap } from "./discovery-motion"
+import {
+  DrawCheck,
+  PendingSpinner,
+  SlideStage,
+  useDelayedPending,
+  useSettledTap,
+} from "./discovery-motion"
 import {
   heatDraftSources,
   heatStepKey,
@@ -44,6 +51,10 @@ import { BACK_BUTTON, CORAL_BUTTON, CTA_BAR } from "./ui-classes"
  * per screen with production Feinschliff options, icons and tool photos, a progress bar and
  * a back chevron — ending on „Alles bereit für unser Gespräch", the final page with its three
  * check rows and the coral „Abschicken".
+ *
+ * Batch 8: the questions slide as frozen steps; a one-tap answer moves on after the settle
+ * while its save runs behind; the bottom button stays mounted and fades instead of popping;
+ * the tool photos are preloaded so none pops in mid-slide.
  */
 
 export const DRYING_PROMPT = "Wie trocknet dein Haar meistens?"
@@ -77,7 +88,6 @@ function HeatVisual({ source }: { source: Stage2HeatEventSource }) {
 function SingleTapList<K extends string>({
   options,
   value,
-  busy,
   onPick,
 }: {
   options: ReadonlyArray<{
@@ -86,21 +96,18 @@ function SingleTapList<K extends string>({
     icon?: (typeof HEAT_PROTECTION_OPTIONS)[number]["icon"]
   }>
   value: K | undefined
-  busy: boolean
   onPick: (value: K) => void
 }) {
   const [tapped, tap] = useSettledTap<K>()
   const marked = tapped ?? value
   return (
     <div className="grid grid-cols-1 gap-2.5">
-      {options.map((option, index) => (
+      {options.map((option) => (
         <QuizOptionCard
           key={option.value}
           icon={option.icon}
           label={option.label}
           active={marked === option.value}
-          disabled={busy}
-          animationDelay={index * 18}
           onClick={() => tap(option.value, () => onPick(option.value))}
         />
       ))}
@@ -238,13 +245,11 @@ export function discoveryFinalRows(
 export function DiscoveryFinalPage({
   items,
   heat,
-  busy,
   onEditProducts,
   onEditHeat,
 }: {
   items: readonly DiscoveryIntakeItemView[]
   heat: DiscoveryHeatDraft
-  busy: boolean
   onEditProducts: () => void
   onEditHeat: () => void
 }) {
@@ -295,7 +300,6 @@ export function DiscoveryFinalPage({
               key={row.key}
               type="button"
               onClick={onClick}
-              disabled={busy}
               style={{ animationDelay: `${delay}ms` }}
               className={cn(
                 rowClass,
@@ -320,7 +324,6 @@ export function DiscoveryFinalPage({
 export function DiscoveryHeatStepBody({
   step,
   draft,
-  busy,
   onDrying,
   onTools,
   onFrequency,
@@ -328,7 +331,6 @@ export function DiscoveryHeatStepBody({
 }: {
   step: DiscoveryHeatStep
   draft: DiscoveryHeatDraft
-  busy: boolean
   onDrying: (routes: DryingRoute[]) => void
   onTools: (tools: AdditionalHeatTool[]) => void
   onFrequency: (source: Stage2HeatEventSource, frequency: ProductFrequency) => void
@@ -374,7 +376,6 @@ export function DiscoveryHeatStepBody({
           <SingleTapList
             options={HEAT_FREQUENCY_CHOICES}
             value={draft.heatEvents[createStage2HeatEventId(step.source)]?.frequency}
-            busy={busy}
             onPick={(frequency) => onFrequency(step.source, frequency)}
           />
         </>
@@ -387,7 +388,6 @@ export function DiscoveryHeatStepBody({
           <SingleTapList
             options={HEAT_PROTECTION_OPTIONS}
             value={draft.heatEvents[createStage2HeatEventId(step.source)]?.protectionConsistency}
-            busy={busy}
             onPick={(protection) => onProtection(step.source, protection)}
           />
         </>
@@ -403,7 +403,7 @@ export function DiscoveryHeatScreen({
   direction,
   draft,
   items,
-  busy,
+  submitting,
   error,
   onBack,
   onNext,
@@ -420,7 +420,8 @@ export function DiscoveryHeatScreen({
   direction: 1 | -1
   draft: DiscoveryHeatDraft
   items: readonly DiscoveryIntakeItemView[]
-  busy: boolean
+  /** „Abschicken" is on its way (it first waits for any save still running). */
+  submitting: boolean
   error: string | null
   onBack: () => void
   onNext: () => void
@@ -432,19 +433,19 @@ export function DiscoveryHeatScreen({
   onEditProducts: () => void
   onEditHeat: () => void
 }) {
+  // The tool photos come a step or two later — fetched now, they never pop in mid-slide.
+  for (const src of Object.values(HEAT_SOURCE_IMAGES)) preload(src, { as: "image" })
+  const submitPending = useDelayedPending(submitting)
   const step = steps[Math.min(index, steps.length - 1)]
   const multi = step.kind === "drying" || step.kind === "tools"
+  const summary = step.kind === "summary"
+  // Always mounted: on a one-tap question it fades out instead of popping away.
+  const buttonShown = multi || summary
   const progress = ((Math.min(index, steps.length - 1) + 1) / steps.length) * 100
   return (
     <main className="flex min-h-dvh flex-col bg-[#faf8f6]">
       <div className="sticky top-0 z-20 flex h-[54px] items-center gap-2.5 bg-[#faf8f6] pl-1 pr-4 pt-1.5">
-        <button
-          type="button"
-          onClick={onBack}
-          disabled={busy}
-          aria-label={BACK_LABEL}
-          className={BACK_BUTTON}
-        >
+        <button type="button" onClick={onBack} aria-label={BACK_LABEL} className={BACK_BUTTON}>
           <ChevronLeft className="h-[22px] w-[22px]" aria-hidden="true" />
         </button>
         <div
@@ -460,12 +461,16 @@ export function DiscoveryHeatScreen({
           />
         </div>
       </div>
-      <SlideStage stepKey={heatStepKey(step)} direction={direction} className="flex-1">
-        {step.kind === "summary" ? (
+      <SlideStage
+        stepKey={heatStepKey(step)}
+        direction={direction}
+        surfaceClassName="bg-[#faf8f6]"
+        className="flex-1"
+      >
+        {summary ? (
           <DiscoveryFinalPage
             items={items}
             heat={draft}
-            busy={busy}
             onEditProducts={onEditProducts}
             onEditHeat={onEditHeat}
           />
@@ -474,7 +479,6 @@ export function DiscoveryHeatScreen({
             <DiscoveryHeatStepBody
               step={step}
               draft={draft}
-              busy={busy}
               onDrying={onDrying}
               onTools={onTools}
               onFrequency={onFrequency}
@@ -488,18 +492,26 @@ export function DiscoveryHeatScreen({
           {error}
         </p>
       ) : null}
-      {multi || step.kind === "summary" ? (
-        <div className={CTA_BAR}>
-          <button
-            type="button"
-            onClick={step.kind === "summary" ? onSubmit : onNext}
-            disabled={busy || !isHeatStepAnswered(draft, step)}
-            className={CORAL_BUTTON}
-          >
-            {step.kind === "summary" ? SUBMIT_LABEL : NEXT_LABEL}
-          </button>
-        </div>
-      ) : null}
+      <div
+        aria-hidden={buttonShown ? undefined : true}
+        inert={!buttonShown}
+        className={cn(
+          CTA_BAR,
+          "transition-opacity duration-[var(--motion-step-in)] ease-[var(--motion-ease-enter)]",
+          !buttonShown && "pointer-events-none opacity-0",
+        )}
+      >
+        <button
+          type="button"
+          onClick={summary ? onSubmit : onNext}
+          disabled={!summary && !isHeatStepAnswered(draft, step)}
+          aria-busy={(summary && submitting) || undefined}
+          className={cn(CORAL_BUTTON, "relative")}
+        >
+          {summary ? SUBMIT_LABEL : NEXT_LABEL}
+          {summary && submitPending ? <PendingSpinner className="absolute right-6" /> : null}
+        </button>
+      </div>
     </main>
   )
 }
