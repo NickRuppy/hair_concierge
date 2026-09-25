@@ -105,7 +105,19 @@ type WriteLedger = {
   heatSavedVersion: number
   /** Which sheet opening is current — a failed add reopens only its own sheet. */
   sheetSession: number
+  sheetOpen: boolean
+  /** The opening whose add went out — one add per opening; a failure frees it again. */
+  addCommittedSession: number
+  /** Counts failed adds — „Weiter" only moves on when none failed while it waited. */
+  addFailures: number
+  /** „Already submitted" arrived: the done page is final. */
+  done: boolean
   provisional: number
+  /** The items as of the latest write — what an async step reads after an await. */
+  items: DiscoveryIntakeItemView[]
+  /** Capture order of every item (by id) — a failed remove comes back to its own place. */
+  order: Map<string, number>
+  nextOrder: number
 }
 
 export { DiscoveryIntakeThanks }
@@ -147,6 +159,8 @@ export function DiscoveryIntakeChecklist({
   const [heat, setHeat] = useState<DiscoveryHeatDraft>(() => heatDraftFrom(initialHeatStyling))
   const [heatIndex, setHeatIndex] = useState(0)
   const [heatDirection, setHeatDirection] = useState<1 | -1>(1)
+  /** Failed sheet saves — the frequency step shows the saved answer again after each. */
+  const [sheetRejections, setSheetRejections] = useState(0)
   const [writes] = useState<WriteLedger>(() => ({
     pending: new Set(),
     removing: new Set(),
@@ -154,15 +168,50 @@ export function DiscoveryIntakeChecklist({
     heatVersion: 0,
     heatSavedVersion: 0,
     sheetSession: 0,
+    sheetOpen: false,
+    addCommittedSession: 0,
+    addFailures: 0,
+    done: initialSubmitted,
     provisional: 0,
+    items: initialItems,
+    order: new Map(initialItems.map((item, index) => [item.id, index])),
+    nextOrder: initialItems.length,
   }))
 
   const heatSteps = discoveryHeatSteps(heat)
 
   function go(to: Screen, direction: 1 | -1) {
+    // Once „already submitted" landed her on the done page, nothing navigates away again.
+    if (writes.done && to !== "done") return
+    if (to === "done") writes.done = true
     setError(null)
     setScreenDirection(direction)
     setScreen(to)
+  }
+
+  /** Every item change goes through the ledger, so async steps never read a stale list. */
+  function updateItems(change: (current: DiscoveryIntakeItemView[]) => DiscoveryIntakeItemView[]) {
+    writes.items = change(writes.items)
+    setItems(writes.items)
+  }
+
+  function setSheet(open: boolean) {
+    writes.sheetOpen = open
+    setSheetOpen(open)
+  }
+
+  /** Puts a restored item back at its capture-order place among the current items. */
+  function restoreInOrder(item: DiscoveryIntakeItemView) {
+    updateItems((current) => {
+      if (current.some((existing) => existing.id === item.id)) return current
+      const rank = writes.order.get(item.id) ?? Number.MAX_SAFE_INTEGER
+      const at = current.findIndex(
+        (existing) => (writes.order.get(existing.id) ?? Number.MAX_SAFE_INTEGER) > rank,
+      )
+      const next = [...current]
+      next.splice(at === -1 ? next.length : at, 0, item)
+      return next
+    })
   }
 
   function track<T>(write: Promise<T>): Promise<T> {
@@ -186,7 +235,7 @@ export function DiscoveryIntakeChecklist({
     setError(null)
     setRemoveFailedId(null)
     setFlow(next)
-    setSheetOpen(true)
+    setSheet(true)
   }
 
   function advance(next: (current: AddFlow) => AddFlow) {
@@ -207,27 +256,35 @@ export function DiscoveryIntakeChecklist({
   /** The frequency tap of an ADD: the card lands at once, the POST runs behind it. */
   function commitAdd(body: DiscoveryIntakeProductBody, committed: AddFlow) {
     const subject = committed.draft?.subject
-    if (!subject) return
+    const session = writes.sheetSession
+    // One add per sheet opening — a double tap or a late settle never adds twice.
+    if (!subject || writes.addCommittedSession === session) return
+    writes.addCommittedSession = session
     writes.provisional += 1
     const key = provisionalItemId(writes.provisional)
-    const session = writes.sheetSession
-    setItems((previous) => [...previous, provisionalIntakeItem(key, body, subject)])
-    setSheetOpen(false)
+    writes.order.set(key, writes.nextOrder++)
+    updateItems((current) => [...current, provisionalIntakeItem(key, body, subject)])
+    setSheet(false)
     landCard(key)
     void track(addIntakeProduct(body)).then(
       (item) => {
-        setItems((previous) => previous.map((existing) => (existing.id === key ? item : existing)))
+        writes.order.set(item.id, writes.order.get(key) ?? writes.nextOrder++)
+        updateItems((current) => current.map((existing) => (existing.id === key ? item : existing)))
         setItemKeys((previous) => ({ ...previous, [item.id]: key }))
       },
       (caught) => {
-        setItems((previous) => previous.filter((existing) => existing.id !== key))
+        writes.addFailures += 1
+        updateItems((current) => current.filter((existing) => existing.id !== key))
         if (isAlreadySubmitted(caught)) {
           go("done", 1)
         } else if (writes.sheetSession === session) {
-          // Nothing else opened since: her sheet comes back on the frequency, with the error.
+          // Nothing else opened since: her sheet comes back on the frequency, with the error,
+          // showing what is actually saved (nothing) — and she may try again.
+          writes.addCommittedSession = 0
           setFlow(committed)
           setSheetError(GENERIC_ERROR)
-          setSheetOpen(true)
+          setSheetRejections((count) => count + 1)
+          setSheet(true)
         } else {
           setError(GENERIC_ERROR)
         }
@@ -235,8 +292,10 @@ export function DiscoveryIntakeChecklist({
     )
   }
 
-  async function commit(change: AddCommit | null) {
+  /** `session`: the opening the tap came from — a late answer from an earlier one is dropped. */
+  async function commit(change: AddCommit | null, session: number) {
     if (!change || !flow || sheetBusy) return
+    if (session !== writes.sheetSession || !writes.sheetOpen) return
     if (change.kind === "add") {
       commitAdd(change.body, flow)
       return
@@ -245,16 +304,18 @@ export function DiscoveryIntakeChecklist({
     setSheetError(null)
     try {
       const item = await track(updateIntakeItemUsage(change.itemId, change.body))
-      setItems((previous) =>
-        previous.map((existing) => (existing.id === item.id ? item : existing)),
+      updateItems((current) =>
+        current.map((existing) => (existing.id === item.id ? item : existing)),
       )
-      setSheetOpen(false)
+      setSheet(false)
     } catch (caught) {
       if (isAlreadySubmitted(caught)) {
-        setSheetOpen(false)
+        setSheet(false)
         go("done", 1)
       } else {
+        // The server kept the old answer: the step shows it again; the error invites a retry.
         setSheetError(GENERIC_ERROR)
+        setSheetRejections((count) => count + 1)
       }
     } finally {
       setSheetBusy(false)
@@ -266,8 +327,7 @@ export function DiscoveryIntakeChecklist({
    * there) while the DELETE runs; a failed DELETE puts it back where it was, with a line.
    */
   function handleRemove(itemId: string, options: { afterSheet?: boolean } = {}) {
-    const index = items.findIndex((existing) => existing.id === itemId)
-    const removed = items[index]
+    const removed = writes.items.find((existing) => existing.id === itemId)
     if (!removed || isProvisionalItem(removed) || writes.removing.has(itemId)) return
     writes.removing.add(itemId)
     setError(null)
@@ -279,19 +339,14 @@ export function DiscoveryIntakeChecklist({
       later(motionMs(MOTION_MS.list), () => {
         if (!writes.removing.has(itemId)) return
         writes.removing.delete(itemId)
-        setItems((previous) => previous.filter((existing) => existing.id !== itemId))
+        updateItems((current) => current.filter((existing) => existing.id !== itemId))
         setRemovingIds((previous) => previous.filter((id) => id !== itemId))
       })
     })
     void track(removeIntakeItem(itemId)).catch((caught) => {
       writes.removing.delete(itemId)
       setRemovingIds((previous) => previous.filter((id) => id !== itemId))
-      setItems((previous) => {
-        if (previous.some((existing) => existing.id === itemId)) return previous
-        const next = [...previous]
-        next.splice(Math.min(index, next.length), 0, removed)
-        return next
-      })
+      restoreInOrder(removed)
       if (isAlreadySubmitted(caught)) go("done", 1)
       else setRemoveFailedId(itemId)
     })
@@ -343,7 +398,7 @@ export function DiscoveryIntakeChecklist({
   const sheetHandlers: DiscoveryAddSheetHandlers = {
     onOpenChange: (open) => {
       // Never mid-write: the answer is on its way, the sheet closes when it lands.
-      if (!open && !sheetBusy) setSheetOpen(false)
+      if (!open && !sheetBusy) setSheet(false)
     },
     onPickCatalog: (result: ScanSearchResult) =>
       advance((current) =>
@@ -386,18 +441,18 @@ export function DiscoveryIntakeChecklist({
     onUsage: (option) => advance((current) => answerUsage(current, option, items)),
     onSpray: (option) => advance((current) => answerSpray(current, option, items)),
     onFrequency: (frequency) => {
-      if (flow) void commit(answerFrequency(flow, frequency))
+      if (flow) void commit(answerFrequency(flow, frequency), sheetSession)
     },
     onBack: () => advance(backStep),
     onRemove: (item) => {
       if (sheetBusy) return
-      setSheetOpen(false)
+      setSheet(false)
       handleRemove(item.id, { afterSheet: true })
     },
     onDecoded: handleDecoded,
     onCameraUnavailable: () => {
       setCameraBlocked(true)
-      setSheetOpen(false)
+      setSheet(false)
     },
   }
 
@@ -406,18 +461,21 @@ export function DiscoveryIntakeChecklist({
   async function continueFromProducts() {
     if (continuing) return
     if (writes.pending.size > 0) {
-      // A card still on its way: „Weiter" waits for it (spinner only after 300 ms).
-      const session = writes.sheetSession
+      // A card still on its way: „Weiter" waits for it (spinner only after 300 ms) and moves
+      // on only if everything it waited for succeeded — a failed add has her sheet back
+      // (or „already submitted" has her on the done page, which `go` keeps).
+      const failures = writes.addFailures
       setContinuing(true)
       await settledWrites()
       setContinuing(false)
-      // A failed add brought her sheet back — she finishes that first.
-      if (writes.sheetSession !== session) return
+      if (writes.done || writes.addFailures !== failures) return
     }
+    // Read NOW, not from the tap: cards confirmed, removed or restored meanwhile count.
+    const current = writes.items.filter((item) => !writes.removing.has(item.id))
     // A draft from the old checklist still owes its „Wie oft?" — asked before the routine.
-    const missing = items.find(needsFrequency)
+    const missing = current.find(needsFrequency)
     if (missing) {
-      openSheet(openAddEdit(missing, items, { frequencyOnly: true }))
+      openSheet(openAddEdit(missing, current, { frequencyOnly: true }))
       return
     }
     go("routine", 1)
@@ -571,6 +629,7 @@ export function DiscoveryIntakeChecklist({
           session={sheetSession}
           flow={flow}
           busy={sheetBusy}
+          rejections={sheetRejections}
           error={sheetError}
           retailerSearchEnabled={retailerSearchEnabled}
           scannerRuntime={scannerRuntime}

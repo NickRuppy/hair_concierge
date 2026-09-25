@@ -220,13 +220,16 @@ function OptionRow({
 export function DiscoveryFrequencyStep({
   step,
   busy,
+  rejections = 0,
   onFrequency,
 }: {
   step: Extract<AddStep, { kind: "frequency" }>
   busy: boolean
+  /** How often a save from this sheet failed — each failure shows the saved answer again. */
+  rejections?: number
   onFrequency: (frequency: DiscoveryItemFrequency) => void
 }) {
-  const [tapped, tap] = useSettledTap<DiscoveryItemFrequency>()
+  const [tapped, tap] = useSettledTap<DiscoveryItemFrequency>(rejections)
   const marked = tapped ?? step.current ?? step.suggestion
   // `busy` here = her edit's PATCH is running; the tapped option stays plum meanwhile.
   const pending = useDelayedPending(busy && tapped !== null)
@@ -436,11 +439,13 @@ export function DiscoveryNameStep({
 export function DiscoveryAddStepBody({
   flow,
   busy,
+  rejections = 0,
   handlers,
   scannerRuntime,
 }: {
   flow: AddFlow
   busy: boolean
+  rejections?: number
   handlers: Pick<
     DiscoveryAddSheetHandlers,
     | "onType"
@@ -506,7 +511,14 @@ export function DiscoveryAddStepBody({
         />
       )
     case "frequency":
-      return <DiscoveryFrequencyStep step={step} busy={busy} onFrequency={handlers.onFrequency} />
+      return (
+        <DiscoveryFrequencyStep
+          step={step}
+          busy={busy}
+          rejections={rejections}
+          onFrequency={handlers.onFrequency}
+        />
+      )
   }
 }
 
@@ -536,6 +548,22 @@ type SheetCapture =
  * step is laid over the content by hand and slides away to the right while the search comes
  * in from the left — the steps' own back animation.
  */
+/** The back-to-search overlay still on screen, if any — only ever one. */
+let clearActiveOverlay: (() => void) | null = null
+
+/** Registers the overlay's removal; a previous one is removed first. */
+export function trackSheetOverlay(remove: () => void) {
+  clearSheetOverlay()
+  clearActiveOverlay = remove
+}
+
+/** Removes the overlay now — its timeout, or the next transition, whichever comes first. */
+export function clearSheetOverlay() {
+  const remove = clearActiveOverlay
+  clearActiveOverlay = null
+  remove?.()
+}
+
 function playBackToSearch(capture: Extract<SheetCapture, { kind: "to-search" }>) {
   const { content, node, offsetY } = capture
   const panel = content.parentElement
@@ -557,13 +585,15 @@ function playBackToSearch(capture: Extract<SheetCapture, { kind: "to-search" }>)
     (child): child is HTMLElement => child instanceof HTMLElement,
   )
   for (const child of entering) child.classList.add("discovery-step-in-back")
-  window.setTimeout(
-    () => {
-      overlay.remove()
-      for (const child of entering) child.classList.remove("discovery-step-in-back")
-    },
-    motionMs(Math.max(MOTION_MS.stepIn, MOTION_MS.stepOut)) + 40,
-  )
+  let timeout: ReturnType<typeof setTimeout> | null = null
+  const remove = () => {
+    if (timeout !== null) clearTimeout(timeout)
+    overlay.remove()
+    for (const child of entering) child.classList.remove("discovery-step-in-back")
+    if (clearActiveOverlay === remove) clearActiveOverlay = null
+  }
+  trackSheetOverlay(remove)
+  timeout = setTimeout(remove, motionMs(Math.max(MOTION_MS.stepIn, MOTION_MS.stepOut)) + 40)
 }
 
 export function DiscoveryAddSheet({
@@ -571,6 +601,7 @@ export function DiscoveryAddSheet({
   session = 0,
   flow,
   busy,
+  rejections = 0,
   error,
   retailerSearchEnabled,
   scannerRuntime,
@@ -581,6 +612,8 @@ export function DiscoveryAddSheet({
   session?: number
   flow: AddFlow | null
   busy: boolean
+  /** Failed saves so far — the frequency step then shows the saved answer again. */
+  rejections?: number
   error: string | null
   retailerSearchEnabled: boolean
   scannerRuntime?: ScannerRuntime
@@ -595,15 +628,25 @@ export function DiscoveryAddSheet({
   const step = flow ? currentStep(flow) : null
   const inSearch = step?.kind === "search"
   const pinned = flow?.draft && step && step.kind !== "name" && step.kind !== "scan"
-  const watch = open && step ? `${session}:${inSearch ? "search" : "steps"}` : "closed"
+  // `<session>:search`, `<session>:steps:<step>` or `closed` — every step change is one, so a
+  // leftover back overlay goes away on the very next transition.
+  const watch =
+    open && flow && step
+      ? inSearch
+        ? `${session}:search`
+        : `${session}:steps:${flow.steps.length}:${step.kind}`
+      : "closed"
 
   function capture(previous: string, next: string): SheetCapture | null {
-    // Only a change inside one open sheet slides; opening or closing never does.
-    if (previous === "closed" || next === "closed" || prefersReducedMotion()) return null
-    if (previous.split(":")[0] !== next.split(":")[0]) return null
+    clearSheetOverlay()
+    const mode = (key: string) => key.split(":").slice(0, 2).join(":")
+    // Only search ↔ steps inside one open sheet slides here (step → step is the SlideStage's
+    // job); opening or closing never does.
+    if (previous === "closed" || next === "closed" || mode(previous) === mode(next)) return null
+    if (previous.split(":")[0] !== next.split(":")[0] || prefersReducedMotion()) return null
     const content = sheetContentElement()
     if (!content) return null
-    if (next.endsWith(":steps")) {
+    if (next.includes(":steps")) {
       // The search is leaving: freeze what she sees of it.
       const node = document.createElement("div")
       for (const child of Array.from(content.children)) {
@@ -657,6 +700,7 @@ export function DiscoveryAddSheet({
             <DiscoveryAddStepBody
               flow={flow}
               busy={busy}
+              rejections={rejections}
               handlers={handlers}
               scannerRuntime={scannerRuntime}
             />

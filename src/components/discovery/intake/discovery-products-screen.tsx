@@ -112,6 +112,8 @@ export function DiscoveryProductCard({
   const frequency = frequencyLine(item)
   // A card whose POST is still running is not editable yet; taps simply do nothing.
   const settled = !isProvisionalItem(item) && !removing
+  // Unavailable until confirmed — announced and out of the tab order, never dimmed.
+  const unavailable = settled ? {} : ({ "aria-disabled": true, tabIndex: -1 } as const)
   return (
     <li
       className={cn(
@@ -122,6 +124,7 @@ export function DiscoveryProductCard({
     >
       <button
         type="button"
+        {...unavailable}
         onClick={() => {
           if (settled) onEdit(item)
         }}
@@ -149,6 +152,7 @@ export function DiscoveryProductCard({
           {needsFrequency(item) ? (
             <button
               type="button"
+              {...unavailable}
               onClick={() => {
                 if (settled) onFrequency(item)
               }}
@@ -172,6 +176,7 @@ export function DiscoveryProductCard({
       </div>
       <button
         type="button"
+        {...unavailable}
         onClick={() => {
           if (settled) onRemove(item.id)
         }}

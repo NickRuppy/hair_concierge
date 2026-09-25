@@ -457,22 +457,39 @@ export function DiscoveryPackshot({
  * after `DISCOVERY_TAP_SETTLE_MS` (immediately under reduced motion). A second tap while one
  * settles is ignored. The tapped key STAYS marked after the answer went out — the leaving
  * step, a closing sheet or a running save keep showing her choice; a new tap moves it.
+ *
+ * A step that goes away within the settle (Back, the sheet closing) takes its pending answer
+ * with it — the timer dies with the step. When `resetKey` changes (her save was rejected),
+ * the mark falls back to the saved answer.
  */
-export function useSettledTap<K extends string>(): [
-  K | null,
-  (key: K, commit: () => void) => void,
-] {
+export function useSettledTap<K extends string>(
+  resetKey: number = 0,
+): [K | null, (key: K, commit: () => void) => void] {
   const [tapped, setTapped] = useState<K | null>(null)
-  const pending = useRef(false)
-  function tap(key: K, commit: () => void) {
-    if (pending.current) return
-    pending.current = true
-    setTapped(key)
-    const delay = prefersReducedMotion() ? 0 : DISCOVERY_TAP_SETTLE_MS
-    window.setTimeout(() => {
-      pending.current = false
-      commit()
-    }, delay)
+  const [seenResetKey, setSeenResetKey] = useState(resetKey)
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const reset = resetKey !== seenResetKey
+  if (reset) {
+    setSeenResetKey(resetKey)
+    setTapped(null)
   }
-  return [tapped, tap]
+  useEffect(
+    () => () => {
+      if (timer.current !== null) clearTimeout(timer.current)
+      timer.current = null
+    },
+    [],
+  )
+  function tap(key: K, commit: () => void) {
+    if (timer.current !== null) return
+    setTapped(key)
+    timer.current = setTimeout(
+      () => {
+        timer.current = null
+        commit()
+      },
+      prefersReducedMotion() ? 0 : DISCOVERY_TAP_SETTLE_MS,
+    )
+  }
+  return [reset ? null : tapped, tap]
 }
