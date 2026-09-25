@@ -63,6 +63,7 @@ const ROLE_LABELS: Record<DiscoveryUsageRole, string> = {
   leave_on_fibre_conditioning: "Öl · ins feuchte Haar",
   dry_finish: "Öl · als Finish",
   scalp_flake_oil_adjunct: "Öl · Kopfhaut",
+  pre_wash_conditioner: "Conditioner · vor der Wäsche",
 }
 
 export function categoryLabel(category: PersonalPlanCategory): string {

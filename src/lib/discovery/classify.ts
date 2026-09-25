@@ -31,12 +31,15 @@ export const DISCOVERY_OIL_USAGE_ROLES = [
 
 /**
  * Every value `discovery_intake_items.usage_role` may hold — mirrors the migration's
- * `discovery_intake_items_usage_role_pair` CHECK (20260924120000). The scalp oil role only
- * ever goes with the `scalp_care` category.
+ * `discovery_intake_items_usage_role_pair` CHECK (20260924120000, 20260925120000). The scalp
+ * oil role only ever goes with the `scalp_care` category, the pre-wash conditioner (batch 7,
+ * D1) only with `conditioner`. `pre_wash_conditioner` is intake-only: no routine step has
+ * that role, so binding treats the item as a role-less conditioner (`refined-routine.ts`).
  */
 export const DISCOVERY_USAGE_ROLES = [
   ...DISCOVERY_OIL_USAGE_ROLES,
   "scalp_flake_oil_adjunct",
+  "pre_wash_conditioner",
 ] as const
 
 export type DiscoveryUsageRole = (typeof DISCOVERY_USAGE_ROLES)[number]
@@ -52,7 +55,29 @@ export function isDiscoveryProductCategory(value: unknown): value is PersonalPla
   return typeof value === "string" && SUPPORTED.has(value)
 }
 
-/** The DB CHECK's pairs, in code: no role, or an oil role with oil, or the scalp oil role with scalp care. */
+/**
+ * Batch 7, D2: a styling product (hairspray, styling spray) we list but never evaluate. It
+ * is a PRODUCT TYPE only — never a usage category, never one of the ten supported
+ * categories — so it carries no usage, no routine role, no research and no verdict.
+ */
+export const DISCOVERY_STYLING_PRODUCT_TYPE = "styling" as const
+
+/** What a captured product IS: one of the ten categories, or the styling marker (D2). */
+export type DiscoveryProductType = PersonalPlanCategory | typeof DISCOVERY_STYLING_PRODUCT_TYPE
+
+export const DISCOVERY_PRODUCT_TYPES = [
+  ...SUPPORTED_PRODUCT_CATEGORY_KEYS,
+  DISCOVERY_STYLING_PRODUCT_TYPE,
+] as const
+
+export function isDiscoveryProductType(value: unknown): value is DiscoveryProductType {
+  return value === DISCOVERY_STYLING_PRODUCT_TYPE || isDiscoveryProductCategory(value)
+}
+
+/**
+ * The DB CHECK's pairs, in code: no role, or an oil role with oil, the scalp oil role with
+ * scalp care, or the pre-wash conditioner role with conditioner (D1).
+ */
 export function isValidDiscoveryUsage(usage: {
   category: string
   role: string | null
@@ -62,6 +87,7 @@ export function isValidDiscoveryUsage(usage: {
   if (usage.category === "oil") {
     return (DISCOVERY_OIL_USAGE_ROLES as readonly string[]).includes(usage.role)
   }
+  if (usage.category === "conditioner") return usage.role === "pre_wash_conditioner"
   return usage.category === "scalp_care" && usage.role === "scalp_flake_oil_adjunct"
 }
 
@@ -77,6 +103,7 @@ export type DiscoveryUsageOptionKey =
   | "conditioner"
   | "mask"
   | "leave_in"
+  | "conditioner_pre_wash"
   | "shampoo"
   | "deep_cleansing_shampoo"
 
@@ -135,6 +162,12 @@ export const DISCOVERY_USAGE_QUESTIONS: Record<DiscoveryUsageQuestionKind, Disco
           usage: { category: "mask", role: null },
         },
         { key: "leave_in", label: "Bleibt im Haar", usage: { category: "leave_in", role: null } },
+        // Batch 7, D1: intake-only — the routine and the PDF treat it as a conditioner.
+        {
+          key: "conditioner_pre_wash",
+          label: "Vor der Haarwäsche",
+          usage: { category: "conditioner", role: "pre_wash_conditioner" },
+        },
       ],
     },
     shampoo_use: {
@@ -150,6 +183,59 @@ export const DISCOVERY_USAGE_QUESTIONS: Record<DiscoveryUsageQuestionKind, Disco
       ],
     },
   }
+
+// --- D2: the spray question ---------------------------------------------------------
+
+export type DiscoverySprayOptionKey =
+  | "spray_heat_protectant"
+  | "spray_leave_in"
+  | "spray_styling"
+  | "spray_unknown"
+
+/**
+ * One answer to „Wofür nutzt du das Spray?" — unlike the R9 usage options it decides what
+ * the product IS as well: heat protectant, leave-in, styling (not evaluated) or unknown.
+ * `productType: null` with `usage: null` is „Weiß ich nicht" (stored type-open).
+ */
+export type DiscoverySprayOption = {
+  key: DiscoverySprayOptionKey
+  label: string
+  productType: DiscoveryProductType | null
+  usage: DiscoveryUsage | null
+}
+
+export type DiscoverySprayQuestion = {
+  kind: "spray_use"
+  prompt: string
+  options: readonly DiscoverySprayOption[]
+}
+
+/** Batch 7, D2 — with Nick's copy note: the care option must read as a leave-in care spray. */
+export const DISCOVERY_SPRAY_QUESTION: DiscoverySprayQuestion = {
+  kind: "spray_use",
+  prompt: "Wofür nutzt du das Spray?",
+  options: [
+    {
+      key: "spray_heat_protectant",
+      label: "Hitzeschutz",
+      productType: "heat_protectant",
+      usage: { category: "heat_protectant", role: null },
+    },
+    {
+      key: "spray_leave_in",
+      label: "Pflegespray – bleibt im Haar (Leave-in)",
+      productType: "leave_in",
+      usage: { category: "leave_in", role: null },
+    },
+    {
+      key: "spray_styling",
+      label: "Styling & Halt",
+      productType: DISCOVERY_STYLING_PRODUCT_TYPE,
+      usage: null,
+    },
+    { key: "spray_unknown", label: "Weiß ich nicht", productType: null, usage: null },
+  ],
+}
 
 /** R4: the question for a product whose type is unknown. */
 export const DISCOVERY_WHAT_IS_IT_PROMPT = "Was ist das?"
@@ -201,6 +287,7 @@ export type DiscoveryTypeRuleId =
   | "T10_oil_pre_wash"
   | "T11_oil_leave_in"
   | "T12_unknown"
+  | "T13_spray"
 
 export type DiscoveryProductTypeResult = {
   productType: PersonalPlanCategory | null
@@ -231,6 +318,8 @@ const LEAVE_IN_WORDS = "Leave[-\\s]in|Sprühkur|Sprühpflege"
 const TREATMENT_WORDS = "Kur|Treatment"
 const SCALP_TREATMENT_WORDS = "Kur|Treatment|Serum|Tonikum|Tonic"
 const PRE_WASH_WORDS = "Pre[-\\s]?Shampoo|Pre[-\\s]?Wash|vor\\s+der\\s+(?:Haar)?wäsche"
+/** D2: „Spray" anywhere, compounds included („Haarspray", „Hitzeschutzspray"). */
+const SPRAY = /spray/iu
 
 /** T7 only turns a scalp-modified name into one of these. */
 const SCALP_MODIFIABLE = new Set<PersonalPlanCategory>(["oil", "shampoo", "deep_cleansing_shampoo"])
@@ -267,7 +356,9 @@ function nothingElse(name: string, ...accounted: string[]): boolean {
  *  T9  an oil with a treatment word is an oil („Öl-Kur", „Oil Treatment", „Haaröl-Kur");
  *  T10 an oil with a pre-wash word is an oil („Pre-Shampoo Öl");
  *  T11 an oil with a leave-in word is an oil („Leave-in Öl");
- *  T12 otherwise unknown — including brand-only names.
+ *  T12 otherwise unknown — including brand-only names;
+ *  T13 …but a spray without a clear type gets the spray question (D2) instead of
+ *      „Was ist das?".
  *
  * T9–T11 only fire when no other product noun is left once the oil, qualifier and scalp
  * words are taken out: „Leave-in Conditioner mit Öl" or „Argan Oil Shampoo" stay unknown.
@@ -329,6 +420,7 @@ export function classifyDiscoveryProductType(input: {
     if (oilWith(LEAVE_IN_WORDS)) return { productType: "oil", rule: "T11_oil_leave_in" }
   }
 
+  if (SPRAY.test(name)) return { productType: null, rule: "T13_spray" }
   return { productType: null, rule: "T12_unknown" }
 }
 
@@ -343,6 +435,15 @@ export type DiscoveryPreselectRuleId =
   | "P6_shampoo_type"
   | "P7_no_question"
   | "P8_what_is_it"
+  | "P9_spray_heat"
+  | "P10_spray_leave_in"
+  | "P11_spray_styling"
+  | "P12_spray_open"
+
+export type DiscoverySprayPreselectRuleId = Extract<
+  DiscoveryPreselectRuleId,
+  "P9_spray_heat" | "P10_spray_leave_in" | "P11_spray_styling" | "P12_spray_open"
+>
 
 export type DiscoveryUsageStep =
   | {
@@ -355,6 +456,16 @@ export type DiscoveryUsageStep =
   | { kind: "fixed"; usage: DiscoveryUsage; rule: "P7_no_question" }
   /** R4: „Was ist das?" chips plus „Weiß ich nicht". */
   | { kind: "what_is_it"; rule: "P8_what_is_it" }
+  /**
+   * D2: „Wofür nutzt du das Spray?" — only from `classifyDiscoveryProduct` for a T13 spray.
+   * `preselected: null` = nothing in the name to go on.
+   */
+  | {
+      kind: "spray"
+      question: DiscoverySprayQuestion
+      preselected: DiscoverySprayOptionKey | null
+      rule: DiscoverySprayPreselectRuleId
+    }
 
 // German compounds („Kopfhautöl", „Glanzöl") make these substring matches on purpose;
 // „kur" is read only at a word end so „kurzes Haar" is not a treatment, and never as
@@ -381,7 +492,7 @@ function preselectOil(name: string): {
 export function discoveryUsageStepFor(
   productType: PersonalPlanCategory | null,
   name: string | null | undefined,
-): DiscoveryUsageStep {
+): Exclude<DiscoveryUsageStep, { kind: "spray" }> {
   if (productType === null) return { kind: "what_is_it", rule: "P8_what_is_it" }
   const question = discoveryUsageQuestionFor(productType)
   if (!question) {
@@ -400,15 +511,41 @@ export function discoveryUsageStepFor(
   }
 }
 
+// D2 preselection, first match wins: heat, then leave-in care (overnight sprays belong to
+// the leave-in option), then styling. Substrings on purpose: German compounds.
+const SPRAY_HEAT = /hitze|heat|thermo/iu
+const SPRAY_LEAVE_IN = /overnight|über\s*nacht|nacht|night|pflege|conditioning|detangl|entwirr/iu
+const SPRAY_STYLING =
+  /haarspray|hairspray|haarlack|styling|halt|hold|fixier|volum|textur|salz|salt/iu
+
+/** D2: the spray question for a spray without a clear type, preselected from its name. */
+export function discoverySprayStepFor(
+  name: string | null | undefined,
+): Extract<DiscoveryUsageStep, { kind: "spray" }> {
+  const text = name?.trim() ?? ""
+  const pick = (
+    preselected: DiscoverySprayOptionKey | null,
+    rule: DiscoverySprayPreselectRuleId,
+  ) => ({ kind: "spray" as const, question: DISCOVERY_SPRAY_QUESTION, preselected, rule })
+  if (SPRAY_HEAT.test(text)) return pick("spray_heat_protectant", "P9_spray_heat")
+  if (SPRAY_LEAVE_IN.test(text)) return pick("spray_leave_in", "P10_spray_leave_in")
+  if (SPRAY_STYLING.test(text)) return pick("spray_styling", "P11_spray_styling")
+  return pick(null, "P12_spray_open")
+}
+
 export type DiscoveryProductClassification = DiscoveryProductTypeResult & {
   step: DiscoveryUsageStep
 }
 
-/** Product type and the usage step in one call — what the capture flow asks after an add. */
+/**
+ * Product type and the usage step in one call — what the capture flow asks after an add. A
+ * T13 spray gets the spray question (D2); everything else what `discoveryUsageStepFor` says.
+ */
 export function classifyDiscoveryProduct(input: {
   catalogCategory?: string | null
   name?: string | null
 }): DiscoveryProductClassification {
   const type = classifyDiscoveryProductType(input)
+  if (type.rule === "T13_spray") return { ...type, step: discoverySprayStepFor(input.name) }
   return { ...type, step: discoveryUsageStepFor(type.productType, input.name) }
 }

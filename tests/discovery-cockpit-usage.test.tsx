@@ -21,6 +21,7 @@ import {
   discoveryCockpitUsageOptions,
   discoveryDefaultUsageFor,
   discoveryUsageDifferenceLabel,
+  discoveryUsageLabel,
 } from "../src/components/discovery/cockpit/usage-options"
 import {
   buildDiscoveryCockpitView,
@@ -320,7 +321,13 @@ test("the usage select offers every category, the three oil roles and the scalp 
   assert.ok(values.includes("scalp_care"))
   assert.ok(values.includes("scalp_care:scalp_flake_oil_adjunct"))
   assert.ok(!values.includes("oil"))
-  assert.equal(values.length, 13)
+  // Batch 7, D1: the pre-wash conditioner, next to the plain one.
+  assert.ok(values.includes("conditioner:pre_wash_conditioner"))
+  assert.equal(
+    discoveryUsageLabel({ category: "conditioner", role: "pre_wash_conditioner" }),
+    "Conditioner · Vor der Haarwäsche",
+  )
+  assert.equal(values.length, 14)
   // A legacy role-less oil keeps its own entry while it is the current value.
   assert.ok(
     discoveryCockpitUsageOptions({ category: "oil", role: null })
