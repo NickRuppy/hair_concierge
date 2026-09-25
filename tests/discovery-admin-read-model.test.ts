@@ -9,6 +9,7 @@ import {
   loadDiscoveryIdealRoutine,
   recomputeDiscoverySnapshot,
 } from "../src/lib/discovery/load-ideal-routine"
+import { discoveryConcernProfileFacts } from "../src/lib/discovery/concern-recipe-view"
 import { buildDiscoveryRoutineContext } from "../src/lib/discovery/routine-context"
 import {
   loadParticipantScanVerdicts,
@@ -611,6 +612,25 @@ test("override on the initial path: recomputed with her answers, heat protectant
     [...new Set(tables)].filter((table) => !CATALOG_READ_TABLES.has(table)),
     [],
   )
+})
+
+test("„Hauptproblem“ profile facts read the snapshot actually used: with the override, her real heat answers", async () => {
+  const source = await initialOnlyScannerSource()
+  const { client } = recordingClient({
+    rpc: () => ({ data: source, error: null }),
+    select: () => ({ data: [], error: null, count: 0 }),
+  })
+  const plain = await loadDiscoveryIdealRoutine(client, "owner", intakeId)
+  const withAnswers = await loadDiscoveryIdealRoutine(client, "owner", intakeId, {
+    routineOverride: straightenerOverride,
+  })
+  if (plain.status !== "ready" || withAnswers.status !== "ready") {
+    assert.fail("both ready")
+  }
+  // Quiz only: heat was never asked, so the recipe gate cannot tell.
+  assert.equal(discoveryConcernProfileFacts(plain.context.snapshot).heat_styling, null)
+  // Her checklist says straightener 2× a week: weekly styling heat.
+  assert.equal(discoveryConcernProfileFacts(withAnswers.context.snapshot).heat_styling, true)
 })
 
 test("a refined participant keeps her Feinschliff: the override is ignored", async () => {
