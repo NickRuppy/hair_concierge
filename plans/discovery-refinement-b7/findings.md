@@ -153,3 +153,16 @@ Context: after rejecting two drafts and a Fable proposition for the frequency/he
 **C5 — Unknown-product flow.** Typed-name sheet → then a different, bigger „Was ist das?" sheet pops out. Research the best pattern for a multi-part sheet: push/slide to part 2 vs. one sheet with sections that reveal/scroll automatically. Make it one natural motion.
 
 **C6 — Final overview → „Deine Tage".** Nick likes the end overview (categories correct). Turn it into the routine composition: reuse the application-guidance day logic (wash day = shampoo + conditioner + leave-in, etc.) so the overview asks „Ist das dein Waschtag mit diesen Produkten?" — confirming products per category AND rhythm/frequencies on one page („two birds, one stone"). Frequencies captured in C2 feed it.
+
+### Proposed direction for C1–C6 (2026-09-25, pending Nick's prototype review)
+
+Research basis: Apple HIG sheets + WWDC21 sheet detents (one persistent sheet, content push between steps, large detent while searching), Apple Health „Add Medication" (add item → schedule presets), NN/g empty states + buttons vs links, Baymard „no results" pages (surface the recovery action only on empty/weak results), Yuka (manual entry only after failed lookup). Earlier frequency research: chips with concrete values, no slider, no preselection.
+
+- **C1** Title only. Ghost slots for typical categories (Shampoo, Conditioner, Leave-in, Maske, Öl, Hitzeschutz, + Weiteres) that turn into real product cards as she adds — the page visibly fills up.
+- **C2/C5** One persistent large sheet: search (auto-focus) → pick → product pinned as header → usage (only if ambiguous) → frequency (one tap saves + closes). Same sheet hosts the typed-name path („Wie heißt es?" → „Was ist das?" → usage → frequency). In-sheet back chevron. First shampoo asks the wash frequency; wash-day products get options relative to wash days with the concrete value as subtext; heat protectant gets no frequency question.
+- **C3** iOS-style product card: ~76×92 packshot, name bold, plum category capsule, frequency line; no chevron pill; tap card = edit.
+- **C4** No „Nicht gefunden" upfront; outline secondary button „Selbst eintragen" inside empty results and at the end of results. Global rule: no underline-only CTAs.
+- **C6** „Deine Routine" replaces „Passt das so?": auto-composed day cards (Waschtag · W, Intensiv-Pflegetag · mask cadence, Zwischendurch, Styling) using the application day-type vocabulary (`src/lib/routines/personal-plan/application/day-type-registry.ts`, `cadence-projector.ts` — runs on category + role + cadence). Styling card hosts the heat question: tool chip → small sheet „Wie oft?" → „Mit Hitzeschutz?".
+- Frequency-default conflict between research lanes (Apple Health defaults vs. anchoring bias) → resolved as no preselection + one-tap auto-advance.
+
+Prototype: `scratchpad/proto-b7/index.html` (throwaway), shown in iOS Simulator Safari.
