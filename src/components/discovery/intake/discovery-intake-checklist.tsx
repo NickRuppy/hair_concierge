@@ -459,16 +459,19 @@ export function DiscoveryIntakeChecklist({
   // --- Screens ---------------------------------------------------------------------------
 
   async function continueFromProducts() {
-    if (continuing) return
+    if (continuing || writes.sheetOpen) return
     if (writes.pending.size > 0) {
       // A card still on its way: „Weiter" waits for it (spinner only after 300 ms) and moves
       // on only if everything it waited for succeeded — a failed add has her sheet back
       // (or „already submitted" has her on the done page, which `go` keeps).
       const failures = writes.addFailures
+      const session = writes.sheetSession
       setContinuing(true)
       await settledWrites()
       setContinuing(false)
       if (writes.done || writes.addFailures !== failures) return
+      // She opened a sheet while it waited: that sheet is hers to finish — no advance under it.
+      if (writes.sheetSession !== session || writes.sheetOpen) return
     }
     // Read NOW, not from the tap: cards confirmed, removed or restored meanwhile count.
     const current = writes.items.filter((item) => !writes.removing.has(item.id))

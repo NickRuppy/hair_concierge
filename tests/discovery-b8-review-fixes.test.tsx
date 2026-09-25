@@ -412,3 +412,27 @@ test("fix 6: a card still on its way exposes no working controls — unavailable
   )
   assert.doesNotMatch(settled, /aria-disabled|tabindex="-1"/)
 })
+
+test("fix 1 (confirm pass): a sheet opened while „Weiter“ waits keeps her on the products", async (t) => {
+  const reply = deferred<Reply>()
+  mockFetch(t, () => reply.promise)
+  const harness = checklist([view()])
+  let tree = toMaskFrequency(harness)
+  sheet(tree).props.handlers.onFrequency("weekly_1x")
+  tree = harness.render()
+  products(tree).props.onContinue()
+  // While „Weiter" waits she opens a second add sheet …
+  products(tree).props.onSearch(null)
+  tree = harness.render()
+  assert.equal(sheet(tree).props.open, true)
+  // … and the first add succeeds before that sheet saved anything.
+  reply.resolve({
+    status: 201,
+    body: { item: view({ id: "item-mask", category: "mask", productType: "mask" }) },
+  })
+  await flush()
+  tree = harness.render()
+  assert.equal(isOn(tree, DiscoveryRoutineScreen), false, "no advance under an open sheet")
+  assert.equal(sheet(tree).props.open, true, "her new sheet stays")
+  assert.deepEqual(ids(tree), ["item-1", "item-mask"])
+})
