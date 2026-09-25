@@ -190,3 +190,10 @@ Prototype: `scratchpad/proto-b7/index.html` (throwaway), shown in iOS Simulator 
 - **Order:** Deine Produkte → Deine Routine (product/day check) → Hitze & Styling (quick heat questions, one per screen) → Abschicken. Styling leaves the routine screen.
 - **Frequency control:** tap buttons throughout the consultation flow (no slider), incl. wash frequency. Reasons: one tap, category-specific option sets, wash-relative options don't fit a slider. Production Feinschliff keeps its slider.
 - **Wash-relative logic explained:** first shampoo asks wash frequency W; later wash-day products get options relative to W with the concrete value; routine „Waschtag · W". Gap: a wash-day product added before any shampoo only gets absolute options. **Open proposal:** ask W on the FIRST wash-day product of any type (shampoo, conditioner, leave-in, mask …), so later products are always relative.
+
+### Ruling round 4 — frequency model (Nick, 2026-09-25)
+
+- **No conditional/wash-relative frequency logic** („source of errors" — breaks on odd entry order and later edits).
+- **One uniform option set for every product** (1:1 with `ProductFrequency`): Täglich · 5–6× · 3–4× · 2× · 1× pro Woche · Alle 2 Wochen · 1× im Monat · Seltener · Weiß ich nicht. Shampoo asked like every product („Wie oft nutzt du es?").
+- **Preselect as suggestion only:** conditioner and leave-in preselect the latest shampoo's frequency; she confirms or changes. No coupling afterwards.
+- Heat protectant gets the normal frequency step. Waschtag cadence = shampoo frequency (most frequent if several); no shampoo → cadence open, asked in the call. Wash-frequency fallback on the heat page dropped.
