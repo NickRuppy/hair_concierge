@@ -9,7 +9,7 @@ import {
 
 /**
  * Batch 7 (plan §2.1 item 4, prototype round 6 `routineGroups`): „Deine Routine" composes her
- * products into day cards — Waschtag, Intensiv-Pflegetag, Tag ohne Wäsche, Styling, Weitere, in
+ * products into day cards — Waschtag, Tag ohne Wäsche, Intensiv-Pflegetag, Styling, Weitere, in
  * that order. Batch 8 (plan `plans/discovery-b8-motion-days/plan.md` Part A): Waschtag and Tag
  * ohne Wäsche always show (empty too); the rest only with products. Pure and client-safe.
  */
@@ -102,13 +102,13 @@ test("every category lands on its day, in the card's own order; optional days on
         "3–4× pro Woche",
         ["shampoo", "conditioner", "leave_in", "damp_oil"],
       ],
+      ["no_wash_day", "Tag ohne Wäsche", null, ["finish", "dry", "scalp"]],
       [
         "intensive_day",
         "Intensiv-Pflegetag",
         "1× pro Woche",
         ["pre_oil", "pre_cond", "deep", "bond", "mask"],
       ],
-      ["no_wash_day", "Tag ohne Wäsche", null, ["finish", "dry", "scalp"]],
       ["styling", "Styling", null, ["heat"]],
     ],
   )

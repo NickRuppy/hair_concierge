@@ -21,18 +21,19 @@ import {
  *
  *  - Waschtag: shampoo, conditioner, leave-in, oil into damp hair; cadence = her MOST
  *    frequent shampoo (none known → open, asked in the call).
- *  - Intensiv-Pflegetag: pre-wash oil or conditioner, deep cleansing, bondbuilder, mask;
- *    cadence = her most frequent mask or bondbuilder.
  *  - Tag ohne Wäsche (batch 8, replaces „Zwischendurch"): finish oil (and a legacy role-less
  *    oil), dry shampoo, scalp care — and her leave-in AS WELL when she uses it more often than
  *    her most frequent shampoo (display only; an unknown frequency on either side → Waschtag
  *    only). No cadence.
+ *  - Intensiv-Pflegetag: pre-wash oil or conditioner, deep cleansing, bondbuilder, mask;
+ *    cadence = her most frequent mask or bondbuilder.
  *  - Styling: heat protectant and styling products (D2) — products only; her heat answers
  *    have their own page.
  *  - Weitere: products whose usage is still open („Kategorie offen").
  *
  * In that order. Batch 8 (plan `plans/discovery-b8-motion-days/plan.md` Part A): Waschtag and
- * Tag ohne Wäsche always show — empty too; the other days only with products. Within the
+ * Tag ohne Wäsche are the default pair — always shown, empty too, one after the other; the
+ * other days only with products. Within the
  * Waschtag and the Intensiv-Pflegetag the products follow the routine's own order; everywhere
  * else, and within a rank, capture order.
  */
@@ -54,8 +55,8 @@ export const DISCOVERY_ROUTINE_DAY_TITLES: Record<DiscoveryRoutineDayKind, strin
 
 const DAY_ORDER: readonly DiscoveryRoutineDayKind[] = [
   "wash_day",
-  "intensive_day",
   "no_wash_day",
+  "intensive_day",
   "styling",
   "other",
 ]

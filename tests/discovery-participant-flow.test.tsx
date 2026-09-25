@@ -570,8 +570,8 @@ test("„Deine Routine“ renders the composer's day cards with cadence pills an
   const titles = [...html.matchAll(/<h2[^>]*>([^<]+)<\/h2>/g)].map((match) => match[1])
   assert.deepEqual(titles, [
     "Waschtag",
-    "Intensiv-Pflegetag",
     "Tag ohne Wäsche",
+    "Intensiv-Pflegetag",
     "Styling",
     "Weitere",
   ])

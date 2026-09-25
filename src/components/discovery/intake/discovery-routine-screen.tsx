@@ -14,7 +14,7 @@ import { BACK_BUTTON, CORAL_BUTTON, CTA_BAR, OUTLINE_BUTTON, SCREEN_TITLE } from
 /**
  * „Deine Routine" (batch 7, C6; replaces „Passt das so?"): her products composed back to her
  * as day cards (`composeDiscoveryRoutineDays`) — Waschtag with her shampoo's rhythm,
- * Intensiv-Pflegetag, Tag ohne Wäsche, Styling, Weitere. Waschtag and Tag ohne Wäsche always
+ * Tag ohne Wäsche, Intensiv-Pflegetag, Styling, Weitere. Waschtag and Tag ohne Wäsche always
  * show (batch 8); an empty one says „Nichts eingetragen". A product tap opens its edit sheet.
  * Coral „Stimmt so" → Hitze & Styling; outline „Noch was ergänzen" → back to her products.
  */
