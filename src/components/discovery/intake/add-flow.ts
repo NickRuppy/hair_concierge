@@ -1,6 +1,8 @@
 import {
   classifyDiscoveryProduct,
+  discoverySprayOptionKeyFor,
   discoveryUsageStepFor,
+  isDiscoverySprayAnswerItem,
   DISCOVERY_SPRAY_QUESTION,
   DISCOVERY_STYLING_PRODUCT_TYPE,
   type DiscoveryProductType,
@@ -487,21 +489,27 @@ export function openAddEdit(
   const flow: AddFlow = { mode: "edit", slot: null, steps: [], draft, direction: 1 }
   const single = (step: AddStep): AddFlow => ({ ...flow, steps: [step] })
 
-  if (options.frequencyOnly || item.productType === DISCOVERY_STYLING_PRODUCT_TYPE) {
+  if (options.frequencyOnly) return single(frequencyStep(draft, items))
+  // A spray she answered „Wofür nutzt du das Spray?" for: that question again, her answer in
+  // plum — she may correct heat protectant ↔ leave-in ↔ styling (the route allows exactly that).
+  if (
+    isDiscoverySprayAnswerItem({
+      source: item.source,
+      productType: item.productType,
+      name: item.productNameText,
+    })
+  ) {
+    return single({
+      kind: "spray",
+      question: DISCOVERY_SPRAY_QUESTION,
+      highlighted: discoverySprayOptionKeyFor(item.productType),
+    })
+  }
+  if (item.productType === DISCOVERY_STYLING_PRODUCT_TYPE) {
     return single(frequencyStep(draft, items))
   }
   const type = item.productType ?? item.category
-  if (!type) {
-    const classified = classifyDiscoveryProduct({ name: item.productNameText })
-    if (classified.step.kind === "spray") {
-      return single({
-        kind: "spray",
-        question: DISCOVERY_SPRAY_QUESTION,
-        highlighted: "spray_unknown",
-      })
-    }
-    return single({ kind: "type", current: "unknown" })
-  }
+  if (!type) return single({ kind: "type", current: "unknown" })
   const step = discoveryUsageStepFor(type, item.productNameText)
   if (step.kind === "ask") {
     return single({

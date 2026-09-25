@@ -549,3 +549,47 @@ export function classifyDiscoveryProduct(input: {
   if (type.rule === "T13_spray") return { ...type, step: discoverySprayStepFor(input.name) }
   return { ...type, step: discoveryUsageStepFor(type.productType, input.name) }
 }
+
+// --- D2: correcting a saved spray answer (Codex review 7b, P2) ---------------------------
+
+/** What the spray question can make of a product — the types it may move between. */
+export const DISCOVERY_SPRAY_ANSWER_TYPES = [
+  "heat_protectant",
+  "leave_in",
+  DISCOVERY_STYLING_PRODUCT_TYPE,
+] as const satisfies readonly DiscoveryProductType[]
+
+export type DiscoverySprayAnswerType = (typeof DISCOVERY_SPRAY_ANSWER_TYPES)[number]
+
+export function isDiscoverySprayAnswerType(value: unknown): value is DiscoverySprayAnswerType {
+  return (DISCOVERY_SPRAY_ANSWER_TYPES as readonly unknown[]).includes(value)
+}
+
+/**
+ * A product whose type is (or would be) her answer to „Wofür nutzt du das Spray?": not a
+ * catalog capture, a name the classifier reads as a spray without a clear type (T13), and a
+ * type the spray question can give (or none yet). Decided from the item's own data, so the
+ * participant sheet and the PATCH route agree without storing where the type came from.
+ */
+export function isDiscoverySprayAnswerItem(item: {
+  source: string
+  productType?: DiscoveryProductType | null
+  name: string | null | undefined
+}): boolean {
+  if (item.source === "catalog_search" || item.source === "barcode" || item.source === "none") {
+    return false
+  }
+  const type = item.productType ?? null
+  if (type !== null && !isDiscoverySprayAnswerType(type)) return false
+  return classifyDiscoveryProductType({ name: item.name }).rule === "T13_spray"
+}
+
+/** The spray option that stands for a stored type — „Weiß ich nicht" while there is none. */
+export function discoverySprayOptionKeyFor(
+  productType: DiscoveryProductType | null | undefined,
+): DiscoverySprayOptionKey {
+  return (
+    DISCOVERY_SPRAY_QUESTION.options.find((option) => option.productType === (productType ?? null))
+      ?.key ?? "spray_unknown"
+  )
+}

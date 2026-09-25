@@ -337,10 +337,12 @@ export function discoveryResearchStatus(
   item: DiscoveryResearchItem,
   state: DiscoveryResearchState | null,
 ): DiscoveryResearchStatus {
-  if (item.productId !== null) return { kind: "in_catalog", action: null }
+  // Styling first: a catalog product corrected into styling keeps its catalog link, but is
+  // still never evaluated (Codex review 7b, P3).
   if (item.productType === DISCOVERY_STYLING_PRODUCT_TYPE) {
     return { kind: "styling_not_evaluated", action: null }
   }
+  if (item.productId !== null) return { kind: "in_catalog", action: null }
 
   if (item.productSubmissionId === null) {
     // „Weiß ich nicht" (batch 5, R7): nobody knows what the product is, so there is nothing to

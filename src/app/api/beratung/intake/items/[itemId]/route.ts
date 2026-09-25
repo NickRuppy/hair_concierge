@@ -1,7 +1,12 @@
 import type { NextRequest } from "next/server"
 
 import type { DiscoveryIntakeItemView } from "@/components/discovery/intake/types"
-import { DISCOVERY_STYLING_PRODUCT_TYPE, isValidDiscoveryUsage } from "@/lib/discovery/classify"
+import {
+  DISCOVERY_STYLING_PRODUCT_TYPE,
+  isDiscoverySprayAnswerItem,
+  isDiscoverySprayAnswerType,
+  isValidDiscoveryUsage,
+} from "@/lib/discovery/classify"
 import {
   clearDiscoveryIntakeCategory,
   deleteDiscoveryIntakeItem,
@@ -94,6 +99,12 @@ export const DELETE = createDiscoveryIntakeItemDeleteHandler()
  * non-evaluated styling product — no usage, no research; a usage on (or with) a styling
  * product is 400 `invalid_usage`.
  *
+ * A SPRAY she answered „Wofür nutzt du das Spray?" for (`isDiscoverySprayAnswerItem`) may
+ * correct that answer among the spray answers only — heat protectant ↔ leave-in ↔ styling:
+ * into styling drops usage and research link (the styling CHECK), out of it (or to the other
+ * evaluated answer) opens research exactly like „Was ist das?". Compare-and-set on the type
+ * she corrected; every other type change stays 409 `product_type_locked`.
+ *
  *   200 `{ item }` · 400 `invalid_body` | `invalid_usage` | `product_type_required` ·
  *   404 `not_found` · 409 `already_submitted` | `product_type_locked` · 503 `unavailable`
  */
@@ -143,12 +154,29 @@ export function createDiscoveryIntakeItemPatchHandler(
       if (!item || item.source === "none") return discoveryIntakeError("not_found", 404)
 
       const typeOpen = isDiscoveryIntakeItemTypeOpen(item)
-      if (productType && !typeOpen) return discoveryIntakeError("product_type_locked", 409)
+      const sprayCorrection =
+        Boolean(productType) &&
+        !typeOpen &&
+        isDiscoverySprayAnswerType(productType) &&
+        isDiscoverySprayAnswerItem({
+          source: item.source,
+          productType: item.productType,
+          name: item.productNameText,
+        })
+      const typeChange = sprayCorrection && productType !== (item.productType ?? null)
+      if (productType && !typeOpen && !sprayCorrection) {
+        return discoveryIntakeError("product_type_locked", 409)
+      }
       if (!productType && typeOpen && usage) {
         return discoveryIntakeError("product_type_required", 400)
       }
-      // A styling product has no usage to set (the table's CHECK, restated).
-      if (item.productType === DISCOVERY_STYLING_PRODUCT_TYPE && usage) {
+      // A styling product has no usage to set (the table's CHECK, restated) — unless she
+      // corrects it out of styling.
+      if (item.productType === DISCOVERY_STYLING_PRODUCT_TYPE && usage && !sprayCorrection) {
+        return discoveryIntakeError("invalid_usage", 400)
+      }
+      // An evaluated spray answer carries its own usage (heat protectant, leave-in).
+      if (sprayCorrection && !styling && usage?.category !== productType) {
         return discoveryIntakeError("invalid_usage", 400)
       }
 
@@ -159,9 +187,10 @@ export function createDiscoveryIntakeItemPatchHandler(
       }
       if (frequency) update.frequency = frequency
       if (styling) {
-        // Listed, never evaluated: no research (D2).
-        update.product_type = DISCOVERY_STYLING_PRODUCT_TYPE
-      } else if (productType) {
+        // Listed, never evaluated: no research (D2) — a corrected spray drops its link.
+        if (typeOpen || typeChange) update.product_type = DISCOVERY_STYLING_PRODUCT_TYPE
+        if (typeChange) update.product_submission_id = null
+      } else if (productType && (typeOpen || typeChange)) {
         const research = await openDiscoveryIntakeResearch(
           {
             userId,
@@ -177,13 +206,27 @@ export function createDiscoveryIntakeItemPatchHandler(
           { createResearchSubmission, loadCatalogProductType },
         )
         update.product_type = research.productType
-        if (research.productId) update.product_id = research.productId
-        if (research.productSubmissionId) {
-          update.product_submission_id = research.productSubmissionId
+        if (typeChange) {
+          // The old type's research link goes; the new one (if any) replaces it.
+          update.product_id = research.productId ?? null
+          update.product_submission_id = research.productSubmissionId ?? null
+        } else {
+          if (research.productId) update.product_id = research.productId
+          if (research.productSubmissionId) {
+            update.product_submission_id = research.productSubmissionId
+          }
         }
       }
 
-      const stored = await updateItem({ intakeId: intake.id, itemId, update }, admin)
+      const stored = await updateItem(
+        {
+          intakeId: intake.id,
+          itemId,
+          update,
+          ...(typeChange ? { expectedProductType: item.productType ?? null } : {}),
+        },
+        admin,
+      )
       // Gone in between, or typed by a concurrent write (the update re-states type-open).
       if (!stored) return discoveryIntakeError("not_found", 404)
 

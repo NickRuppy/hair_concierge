@@ -351,6 +351,14 @@ test("D2: a styling product is „Styling (nicht bewertet)“ — never category
   )
 })
 
+test("D2: a catalog product corrected into styling reads „Styling – nicht bewertet“, not „Im Katalog“", () => {
+  const corrected = { ...sprayItem, productId: ids.conditioner, source: "catalog_search" as const }
+  assert.deepEqual(discoveryResearchStatus(corrected, null), {
+    kind: "styling_not_evaluated",
+    action: null,
+  })
+})
+
 test("D2: research never starts for a styling product", () => {
   assert.equal(discoveryResearchSubmissionInput(sprayItem), null)
   assert.deepEqual(discoveryResearchStatus(sprayItem, null), {

@@ -394,3 +394,72 @@ test("edit: a styling product and a fixed type only change their frequency", () 
 test("a „benutzt sie nicht“ row opens nothing", () => {
   assert.equal(openAddEdit(view({ source: "none" }), []), null)
 })
+
+// --- Spray answers are correctable (Codex review 7b, P2) -----------------------------------
+
+const TAFT = view({
+  id: "spray-1",
+  source: "dm_search",
+  brandText: "Taft",
+  productNameText: "Taft Haarspray Ultra Strong",
+  barcodeIdentifier: "4015100000001",
+  category: null,
+  productType: "styling",
+  frequency: "daily_1x",
+})
+
+test("edit: a saved styling spray re-opens the spray question with „Styling & Halt“ in plum", () => {
+  let flow = openAddEdit(TAFT, [])!
+  const spray = step(flow, "spray")
+  assert.equal(spray.highlighted, "spray_styling")
+  flow = answerSpray(
+    flow,
+    spray.question.options.find((option) => option.key === "spray_heat_protectant")!,
+    [],
+  )
+  assert.equal(step(flow, "frequency").current, "daily_1x")
+  assert.deepEqual(answerFrequency(flow, "weekly_2x"), {
+    kind: "patch",
+    itemId: "spray-1",
+    body: {
+      productType: "heat_protectant",
+      usage: { category: "heat_protectant", role: null },
+      frequency: "weekly_2x",
+    },
+  })
+})
+
+test("edit: a saved heat-protectant spray can go back to styling", () => {
+  const heat = {
+    ...TAFT,
+    category: "heat_protectant" as const,
+    productType: "heat_protectant" as const,
+  }
+  let flow = openAddEdit(heat, [])!
+  const spray = step(flow, "spray")
+  assert.equal(spray.highlighted, "spray_heat_protectant")
+  flow = answerSpray(
+    flow,
+    spray.question.options.find((option) => option.key === "spray_styling")!,
+    [],
+  )
+  assert.deepEqual(answerFrequency(flow, "daily_1x")?.body, {
+    productType: "styling",
+    frequency: "daily_1x",
+  })
+})
+
+test("edit: a catalog heat protectant is no spray answer — frequency only, as before", () => {
+  const flow = openAddEdit(
+    view({
+      category: "heat_protectant",
+      productType: "heat_protectant",
+      productNameText: "Hitzeschutzspray",
+    }),
+    [],
+  )!
+  assert.deepEqual(
+    flow.steps.map((entry) => entry.kind),
+    ["frequency"],
+  )
+})

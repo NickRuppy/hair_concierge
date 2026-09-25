@@ -557,3 +557,135 @@ test("a stored heat answer that no longer validates reads as not asked", () => {
   assert.equal(projectDiscoveryHeatStyling(null), null)
   assert.equal(projectDiscoveryHeatStyling({ dryingRoutes: ["sun"] }), null)
 })
+
+// --- Spray answers are correctable (Codex review 7b, P2) -------------------------------------
+
+const heatSprayItem: DiscoveryIntakeItem = {
+  ...openItem,
+  source: "dm_search",
+  brandText: "Taft",
+  productNameText: "Taft Haarspray Ultra Strong",
+  barcodeIdentifier: "4015100000001",
+  category: "heat_protectant",
+  productType: "heat_protectant",
+  productSubmissionId: ids.submission,
+}
+const stylingSprayItem: DiscoveryIntakeItem = {
+  ...heatSprayItem,
+  category: null,
+  productType: "styling",
+  productSubmissionId: null,
+}
+
+function sprayPatchDeps(rec: Recorder, item: DiscoveryIntakeItem, expected: unknown[]) {
+  return patchDeps(rec, item, {
+    updateItem: async (input: {
+      update: DiscoveryIntakeItemUsageUpdate
+      expectedProductType?: unknown
+    }) => {
+      rec.updates.push(input.update)
+      expected.push(input.expectedProductType)
+      return {
+        ...item,
+        ...("category" in input.update ? { category: input.update.category ?? null } : {}),
+        ...(input.update.product_type ? { productType: input.update.product_type } : {}),
+      }
+    },
+  })
+}
+
+test("spray: a saved styling spray is corrected to heat protectant — usage set, research opened", async () => {
+  const rec = recorder()
+  const expected: unknown[] = []
+  const result = await patch(sprayPatchDeps(rec, stylingSprayItem, expected), {
+    productType: "heat_protectant",
+    usage: { category: "heat_protectant", role: null },
+    frequency: "weekly_2x",
+  })
+  assert.equal(result.status, 200)
+  assert.equal(rec.research.length, 1, "leaving styling opens research like „Was ist das?“")
+  assert.deepEqual(rec.updates, [
+    {
+      category: "heat_protectant",
+      usage_role: null,
+      frequency: "weekly_2x",
+      product_type: "heat_protectant",
+      product_id: null,
+      product_submission_id: ids.submission,
+    },
+  ])
+  assert.deepEqual(expected, ["styling"], "compare-and-set on the type she corrected")
+})
+
+test("spray: a saved heat-protectant spray goes back to styling — no usage, research link dropped", async () => {
+  const rec = recorder()
+  const expected: unknown[] = []
+  const result = await patch(sprayPatchDeps(rec, heatSprayItem, expected), {
+    productType: "styling",
+    frequency: "daily_1x",
+  })
+  assert.equal(result.status, 200)
+  assert.deepEqual(rec.research, [])
+  assert.deepEqual(rec.updates, [
+    {
+      category: null,
+      usage_role: null,
+      frequency: "daily_1x",
+      product_type: "styling",
+      product_submission_id: null,
+    },
+  ])
+  assert.deepEqual(expected, ["heat_protectant"])
+})
+
+test("spray: the same answer again changes only usage + frequency (no new research)", async () => {
+  const rec = recorder()
+  const expected: unknown[] = []
+  const result = await patch(sprayPatchDeps(rec, heatSprayItem, expected), {
+    productType: "heat_protectant",
+    usage: { category: "heat_protectant", role: null },
+    frequency: "weekly_1x",
+  })
+  assert.equal(result.status, 200)
+  assert.deepEqual(rec.research, [])
+  assert.deepEqual(rec.updates, [
+    { category: "heat_protectant", usage_role: null, frequency: "weekly_1x" },
+  ])
+})
+
+test("spray: type changes outside the spray answers — and on non-spray products — stay locked", async () => {
+  const cases: Array<[DiscoveryIntakeItem, unknown]> = [
+    // A conditioner (not a spray) never changes its type.
+    [typedItem, { productType: "leave_in", usage: { category: "leave_in", role: null } }],
+    [typedItem, { productType: "styling" }],
+    // A spray answer only moves among the spray answers.
+    [heatSprayItem, { productType: "conditioner", usage: { category: "conditioner", role: null } }],
+  ]
+  for (const [item, body] of cases) {
+    const rec = recorder()
+    const result = await patch(patchDeps(rec, item), body)
+    assert.equal(result.status, 409, JSON.stringify(body))
+    assert.equal(result.body.code, "product_type_locked")
+    assert.deepEqual(rec.updates, [])
+    assert.deepEqual(rec.research, [])
+  }
+  // A spray answer that is not styling needs its own usage.
+  const rec = recorder()
+  const mismatch = await patch(patchDeps(rec, stylingSprayItem), {
+    productType: "leave_in",
+    usage: { category: "heat_protectant", role: null },
+  })
+  assert.equal(mismatch.status, 400)
+  assert.equal(mismatch.body.code, "invalid_usage")
+})
+
+test("spray: a corrected spray answer is frozen after submit like every write", async () => {
+  const rec = recorder()
+  const result = await patch(
+    patchDeps(rec, stylingSprayItem, { getOrCreateIntake: async () => submittedIntake }),
+    { productType: "heat_protectant", usage: { category: "heat_protectant", role: null } },
+  )
+  assert.equal(result.status, 409)
+  assert.equal(result.body.code, "already_submitted")
+  assert.deepEqual(rec.updates, [])
+})

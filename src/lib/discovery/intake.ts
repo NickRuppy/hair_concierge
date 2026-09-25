@@ -814,20 +814,30 @@ export async function loadDiscoveryIntakeItem(
 export type DiscoveryIntakeItemUsageUpdate = {
   category?: DiscoveryIntakeCategory | null
   usage_role?: DiscoveryUsageRole | null
-  /** Only when the participant answered „Was ist das?" for a type-open item. */
+  /**
+   * Only when the participant answered „Was ist das?" for a type-open item — or corrected a
+   * spray answer (heat protectant ↔ leave-in ↔ styling, `expectedProductType`).
+   */
   product_type?: DiscoveryProductType
-  product_id?: string
-  product_submission_id?: string
+  /** `null` only on a spray correction: the old research link goes with the old type. */
+  product_id?: string | null
+  product_submission_id?: string | null
   frequency?: DiscoveryItemFrequency
 }
 
 /**
  * Scoped to the caller's intake. When the update gives the item a type, the row must still
  * be type-open — re-stated as predicates, so a concurrent write that already typed it is
- * never overwritten. `null` = no row matched (gone, foreign, or no longer type-open).
+ * never overwritten. A spray correction instead compares-and-sets on the type she corrected
+ * (`expectedProductType`). `null` = no row matched (gone, foreign, or typed meanwhile).
  */
 export async function updateDiscoveryIntakeItemUsage(
-  input: { intakeId: string; itemId: string; update: DiscoveryIntakeItemUsageUpdate },
+  input: {
+    intakeId: string
+    itemId: string
+    update: DiscoveryIntakeItemUsageUpdate
+    expectedProductType?: DiscoveryProductType | null
+  },
   client: DiscoveryAdminClient,
 ): Promise<DiscoveryIntakeItem | null> {
   let query = client
@@ -836,7 +846,12 @@ export async function updateDiscoveryIntakeItemUsage(
     .eq("intake_id", input.intakeId)
     .eq("id", input.itemId)
     .neq("source", "none")
-  if (input.update.product_type) {
+  if (input.expectedProductType !== undefined) {
+    query =
+      input.expectedProductType === null
+        ? query.is("product_type", null)
+        : query.eq("product_type", input.expectedProductType)
+  } else if (input.update.product_type) {
     query = query.is("product_type", null).is("product_id", null).is("product_submission_id", null)
   }
   const { data, error } = await query.select(ITEM_COLUMNS).maybeSingle()
