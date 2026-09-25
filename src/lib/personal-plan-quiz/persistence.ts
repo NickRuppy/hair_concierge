@@ -33,6 +33,9 @@ export const personalPlanDurableAnswersBaseSchema = z
     resultReliability: z.enum(["mostly", "sometimes", "rarely"]),
     adaptationConfidence: z.enum(["yes", "partly", "no"]),
     currentConcerns: stringArray(PERSONAL_PLAN_QUIZ_CONCERNS),
+    // Her stated main problem (F1). No "must be selected" rule, unlike the recurrence:
+    // a stale pick is dropped by `canonicalizePersonalPlanAnswers`, never rejected.
+    primaryConcern: z.enum(PERSONAL_PLAN_QUIZ_CONCERNS).optional(),
     concernRecurrence: z
       .object({
         concernId: z.enum(PERSONAL_PLAN_QUIZ_CONCERNS),
@@ -140,7 +143,7 @@ export function normalizePersonalPlanEmail(email: string) {
 export function canonicalizePersonalPlanAnswers(
   answers: PersonalPlanLeadRequest["answers"] | PersonalPlanPrepareRequest["answers"],
 ): PersonalPlanQuizSubmissionEnvelope {
-  const { currentConcernsOtherText, ...durableAnswers } = answers
+  const { currentConcernsOtherText, primaryConcern, ...durableAnswers } = answers
 
   return {
     kind: PERSONAL_PLAN_QUIZ_KIND,
@@ -156,6 +159,9 @@ export function canonicalizePersonalPlanAnswers(
         PersonalPlanQuizAnswers["chemicalTreatments"]
       >,
       blockers: [...answers.blockers].sort() as NonNullable<PersonalPlanQuizAnswers["blockers"]>,
+      ...(primaryConcern && answers.currentConcerns.includes(primaryConcern)
+        ? { primaryConcern }
+        : {}),
       ...(currentConcernsOtherText?.trim()
         ? { currentConcernsOtherText: currentConcernsOtherText.trim() }
         : {}),

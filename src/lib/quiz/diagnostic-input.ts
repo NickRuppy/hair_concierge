@@ -79,6 +79,8 @@ export type PersonalPlanDiagnosticInput = {
   density?: "low" | "medium" | "high"
   goals?: DiagnosticGoal[]
   currentConcerns?: DiagnosticConcern[]
+  /** Her stated main problem (F1) — asked with two or more concerns; one of `currentConcerns`. */
+  primaryConcern?: DiagnosticConcern
   concernRecurrence?: {
     concernId: DiagnosticConcern
     frequency: "often" | "sometimes" | "rather_not"

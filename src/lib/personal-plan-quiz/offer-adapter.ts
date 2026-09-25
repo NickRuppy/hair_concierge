@@ -5,6 +5,7 @@ import {
   type PersonalPlanDiagnosticInput,
 } from "@/lib/quiz/diagnostic-input"
 
+import { resolveStatedPersonalPlanConcern } from "./primary-concern"
 import type {
   PersonalPlanQuizAnswers,
   PersonalPlanQuizConcern,
@@ -276,10 +277,26 @@ function mapScalpType(answers: PersonalPlanQuizAnswers): {
   return { scalpType: "ausgeglichen", fallback: true }
 }
 
+/**
+ * Her stated main problem in the adapted (legacy) concern vocabulary — only when the
+ * adapted concerns still carry it (the legacy offer contract caps them), so the canonical
+ * profile never names a main problem outside its own `concerns`.
+ */
+function retainPrimaryConcern(
+  answers: PersonalPlanQuizAnswers,
+  retainedConcerns: NonNullable<QuizAnswers["concerns"]>,
+): QuizAnswers["primary_concern"] {
+  const stated = resolveStatedPersonalPlanConcern(answers)
+  const adapted =
+    stated === "dry_lengths" ? "dryness" : stated === "frizz_flyaways" ? "frizz" : stated
+  return adapted && retainedConcerns.includes(adapted) ? adapted : undefined
+}
+
 export function adaptPersonalPlanAnswersForOffer(
   answers: PersonalPlanQuizAnswers,
 ): PersonalPlanOfferAdapterResult {
   const retainedConcerns = retainConcerns(answers)
+  const primaryConcern = retainPrimaryConcern(answers, retainedConcerns)
   const scalp = mapScalpType(answers)
   const primaryScalpConcern = SCALP_CONCERN_PRIORITY.find((concern) =>
     answers.scalpConcerns?.includes(concern),
@@ -298,6 +315,7 @@ export function adaptPersonalPlanAnswersForOffer(
       has_scalp_issue: Boolean(primaryScalpConcern),
       ...(primaryScalpConcern ? { scalp_condition: SCALP_CONCERN_MAP[primaryScalpConcern] } : {}),
       concerns: retainedConcerns,
+      ...(primaryConcern ? { primary_concern: primaryConcern } : {}),
       treatment: mapTreatments(answers),
       goals: retainGoals(answers, retainedConcerns),
     },

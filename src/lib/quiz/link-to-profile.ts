@@ -2,6 +2,8 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { hasCompletedQuizDiagnostics } from "./completion"
 import type { QuizAnswers } from "./types"
 import { normalizeStoredQuizAnswers, projectQuizAnswersToLegacyVocabulary } from "./normalization"
+import { resolveStatedPrimaryConcern } from "./primary-concern"
+import type { ProfileConcern } from "@/lib/vocabulary"
 
 export function canLinkDirectQuizLead(
   lead: { email: string; userId: string | null },
@@ -87,6 +89,30 @@ export function buildProfileDataFromQuizAnswers(answers: QuizAnswers): Record<st
   }
 
   return profileData
+}
+
+/**
+ * `hair_profiles.primary_concern` (F1): her stated main problem in the same legacy
+ * vocabulary as `concerns` — `null` when she stated none or it has no legacy equivalent.
+ *
+ * Deliberately NOT part of `buildProfileDataFromQuizAnswers`: that projection is also the
+ * mobile registration/edit patch, whose RPC accepts only a fixed column list. Only the
+ * quiz-link write below carries it.
+ */
+export function buildProfilePrimaryConcern(
+  answers: Pick<QuizAnswers, "concerns" | "primary_concern">,
+): ProfileConcern | null {
+  const stated = resolveStatedPrimaryConcern(answers)
+  if (!stated) return null
+  return projectQuizAnswersToLegacyVocabulary({ concerns: [stated] }).concerns[0] ?? null
+}
+
+function withProfilePrimaryConcern(
+  profileData: Record<string, unknown>,
+  answers: QuizAnswers,
+): Record<string, unknown> {
+  if (answers.concerns === undefined) return profileData
+  return { ...profileData, primary_concern: buildProfilePrimaryConcern(answers) }
 }
 
 export function buildProfileDataFromPersonalPlanCanonicalProfile(
@@ -306,7 +332,7 @@ function prepareLegacyProfileProjection(quizAnswers: unknown): {
 
   console.log("[linkQuizToProfile] legacy answers:", Object.keys(answers))
   return {
-    profileData: buildProfileDataFromQuizAnswers(answers),
+    profileData: withProfilePrimaryConcern(buildProfileDataFromQuizAnswers(answers), answers),
     incomingGoals: (() => {
       const goals = projectQuizAnswersToLegacyVocabulary(answers).goals
       return goals.length > 0 ? goals : null
@@ -336,7 +362,10 @@ async function preparePersonalPlanProfileProjection(
     throw new Error("personal plan artifact link returned no canonical diagnostics")
   }
 
-  const profileData = buildProfileDataFromPersonalPlanCanonicalProfile(result.canonical_profile)
+  const profileData = withProfilePrimaryConcern(
+    buildProfileDataFromPersonalPlanCanonicalProfile(result.canonical_profile),
+    normalizeStoredQuizAnswers(result.canonical_profile as Record<string, unknown>),
+  )
   const incomingGoals =
     Array.isArray(profileData.goals) && profileData.goals.length > 0
       ? (profileData.goals as string[])

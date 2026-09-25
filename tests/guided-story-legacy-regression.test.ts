@@ -29,6 +29,8 @@ const PROFILES = {
     scalp_type: "ausgeglichen",
     has_scalp_issue: false,
     concerns: ["breakage", "hair_damage"],
+    // Her stated main problem (F1) — the inferred ranking that used to pick it is retired.
+    primary_concern: "breakage",
     treatment: ["blondiert"],
     goals: ["anti_breakage", "healthier_hair"],
   },

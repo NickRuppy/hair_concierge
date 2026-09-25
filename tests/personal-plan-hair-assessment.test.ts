@@ -5,7 +5,6 @@ import {
   HAIR_ASSESSMENT_DIMENSION_IDS,
   assessPersonalPlanHair,
   evidenceScoreToSegments,
-  resolvePrimaryPersonalPlanConcern,
   type HairAssessmentDimensionId,
 } from "../src/lib/personal-plan-quiz/hair-assessment"
 import { buildPersonalPlanAssessmentRows } from "../src/lib/personal-plan-quiz/assessment-copy"
@@ -180,57 +179,6 @@ test("generic damage honors its exact recurrence only as an ordering tie-break",
     "breakage_stability",
     "surface_frizz",
   ])
-})
-
-test("primary concern resolver uses pre-recurrence assessment ranking", () => {
-  const selected = resolvePrimaryPersonalPlanConcern(
-    complete({
-      currentConcerns: ["dry_lengths", "tangling"],
-      concernRecurrence: { concernId: "tangling", frequency: "often" },
-      goals: [],
-    }),
-  )
-
-  assert.equal(selected, "dry_lengths")
-})
-
-test("primary concern resolver maps the combined hair-loss dimension back to its quiz concern", () => {
-  assert.equal(
-    resolvePrimaryPersonalPlanConcern(
-      complete({
-        currentConcerns: ["dry_lengths", "hair_loss_or_thinning"],
-        goals: [],
-      }),
-    ),
-    "hair_loss_or_thinning",
-  )
-})
-
-test("primary concern resolver keeps breakage and generic damage distinct", () => {
-  assert.equal(
-    resolvePrimaryPersonalPlanConcern(complete({ currentConcerns: ["hair_damage"], goals: [] })),
-    "hair_damage",
-  )
-  assert.equal(
-    resolvePrimaryPersonalPlanConcern(
-      complete({ currentConcerns: ["hair_damage", "breakage"], goals: [] }),
-    ),
-    "breakage",
-  )
-})
-
-test("primary concern resolver never lets observation-only dimensions win", () => {
-  assert.equal(
-    resolvePrimaryPersonalPlanConcern(
-      complete({
-        currentConcerns: [],
-        hairSurface: "rough",
-        elasticResponse: "snaps",
-        goals: ["frizz_surface"],
-      }),
-    ),
-    null,
-  )
 })
 
 test("hair-loss assessment row uses the reviewed cautious two-sentence copy", () => {

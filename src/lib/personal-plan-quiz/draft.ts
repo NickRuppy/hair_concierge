@@ -97,6 +97,12 @@ export function sanitizePersonalPlanQuizAnswers(value: unknown): PersonalPlanQui
     answers.currentConcerns = (currentConcerns ?? []) as PersonalPlanQuizAnswers["currentConcerns"]
   }
 
+  // The stated main problem (F1) survives only while it is one of her concerns.
+  const primaryConcern = stringValue(input.primaryConcern, PERSONAL_PLAN_QUIZ_CONCERNS)
+  if (primaryConcern && answers.currentConcerns?.includes(primaryConcern as never)) {
+    answers.primaryConcern = primaryConcern as PersonalPlanQuizAnswers["primaryConcern"]
+  }
+
   if (
     input.concernRecurrence &&
     typeof input.concernRecurrence === "object" &&

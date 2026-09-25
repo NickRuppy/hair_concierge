@@ -23,6 +23,9 @@ const baseQuizAnswersShape = {
   has_scalp_issue: z.boolean(),
   scalp_condition: z.enum(QUIZ_SCALP_CONDITION_VALUES).optional(),
   concerns: z.array(z.enum(QUIZ_ANSWER_CONCERN_VALUES)),
+  // Her stated main problem (F1). Deliberately no "must be one of concerns" rule: a
+  // stale pick is dropped by canonicalisation, never a reason to reject the answers.
+  primary_concern: z.enum(QUIZ_ANSWER_CONCERN_VALUES).optional(),
   concerns_other_text: z.string().trim().max(50, "Bitte bleib bei maximal 50 Zeichen").optional(),
   treatment: z
     .array(z.enum(QUIZ_TREATMENT_VALUES))

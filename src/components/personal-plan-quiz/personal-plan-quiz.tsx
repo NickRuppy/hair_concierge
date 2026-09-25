@@ -67,6 +67,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { HairLengthOptionCard } from "@/components/quiz/hair-length-option-card"
 import { HairPortraitFigure } from "@/components/quiz/hair-portrait-figure"
+import { getLegacyQuizConcernIcon } from "@/components/quiz/legacy-quiz-visuals"
+import { QuizMainProblemSheet } from "@/components/quiz/quiz-main-problem-sheet"
 import { TreatmentPermedIcon, TreatmentStraightenedIcon } from "@/components/ui/icon"
 import { Input } from "@/components/ui/input"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
@@ -112,7 +114,8 @@ import {
 } from "@/lib/personal-plan-quiz"
 import type { PortraitConfig } from "@/lib/quiz/portrait-config"
 import { cn } from "@/lib/utils"
-import { resolvePrimaryPersonalPlanConcern } from "@/lib/personal-plan-quiz/hair-assessment"
+import { resolveStatedPersonalPlanConcern } from "@/lib/personal-plan-quiz/primary-concern"
+import { reconcilePrimaryConcern, requiresPrimaryConcernPick } from "@/lib/quiz/primary-concern"
 import {
   clearPendingPersonalPlanPreparationCredential,
   createPendingPersonalPlanPreparationCredential,
@@ -1238,7 +1241,7 @@ function AdmissionScreen({
   onSelect: (value: string) => void
 }) {
   const conflictPrompt = derivePersonalPlanConflictPrompt(answers)
-  const primaryConcern = resolvePrimaryPersonalPlanConcern(answers)
+  const primaryConcern = resolveStatedPersonalPlanConcern(answers)
   const primaryConcernOption = getConcernOptions(answers.texture).find(
     (option) => option.value === primaryConcern,
   )
@@ -2197,6 +2200,7 @@ export function PersonalPlanQuiz({
   const [currentConcernNoteOpen, setCurrentConcernNoteOpen] = useState(
     Boolean(initialCurrentConcernNote.trim()),
   )
+  const [mainProblemSheetOpen, setMainProblemSheetOpen] = useState(false)
   const [currentConcernNoteDraft, setCurrentConcernNoteDraft] = useState(initialCurrentConcernNote)
   const [draftReady, setDraftReady] = useState(false)
   const [preparedPlan, setPreparedPlan] = useState<PreparedPlanState>({
@@ -2668,7 +2672,11 @@ export function PersonalPlanQuiz({
       if (clearWhenEmpty && next.length === 0) {
         delete (updated as Record<string, unknown>)[config.field]
       }
-      if (config.field === "currentConcerns") delete updated.concernRecurrence
+      if (config.field === "currentConcerns") {
+        delete updated.concernRecurrence
+        // …and a main-problem pick she just deselected (F1); the sheet asks again.
+        if (!reconcilePrimaryConcern(next, updated.primaryConcern)) delete updated.primaryConcern
+      }
       // Drop the free-text detail when "Etwas anderes" is no longer selected.
       if (config.field === "blockers" && !next.includes("other")) {
         delete updated.blockersOtherText
@@ -2748,7 +2756,7 @@ export function PersonalPlanQuiz({
   }
 
   function selectConcernRecurrence(value: string) {
-    const concernId = resolvePrimaryPersonalPlanConcern(answers)
+    const concernId = resolveStatedPersonalPlanConcern(answers)
     if (!concernId) {
       scheduleNext(answers)
       return
@@ -2764,6 +2772,19 @@ export function PersonalPlanQuiz({
     }
     setAnswers(next)
     scheduleNext(next)
+  }
+
+  // F1: one tap on the main-problem sheet is the answer — store it and advance. A
+  // recurrence answered for a different concern no longer belongs to her main problem.
+  function pickMainProblem(value: string) {
+    const primaryConcern = value as NonNullable<PersonalPlanQuizAnswers["primaryConcern"]>
+    const next: PersonalPlanQuizAnswers = { ...answers, primaryConcern }
+    if (next.concernRecurrence && next.concernRecurrence.concernId !== primaryConcern) {
+      delete next.concernRecurrence
+    }
+    setAnswers(next)
+    setMainProblemSheetOpen(false)
+    goNext(next)
   }
 
   // Field-test and moderator completions keep the paid result reveal even with
@@ -2797,12 +2818,14 @@ export function PersonalPlanQuiz({
     }
     if (screen === "current_problems") {
       const hasCurrentConcernNote = Boolean(answers.currentConcernsOtherText?.trim())
-      return renderQuestion(
+      const concernOptions = getConcernOptions(answers.texture)
+      const selectedConcerns: readonly string[] = answers.currentConcerns ?? []
+      const question = renderQuestion(
         {
           field: "currentConcerns",
           title: "Was beschäftigt dich gerade?",
           helper: "Wähle alles aus, was du aktuell bemerkst.",
-          options: getConcernOptions(answers.texture),
+          options: concernOptions,
           multi: true,
           visual: true,
         },
@@ -2811,6 +2834,11 @@ export function PersonalPlanQuiz({
           continueValidity: Boolean(answers.currentConcerns?.length) || hasCurrentConcernNote,
           onContinue: () => {
             if (!currentConcernNoteOpen) setCurrentConcernNoteDraft("")
+            // Two or more concerns: ask for her main problem first (F1).
+            if (requiresPrimaryConcernPick(answers.currentConcerns ?? [])) {
+              setMainProblemSheetOpen(true)
+              return
+            }
             goNext()
           },
           standaloneOtherText: {
@@ -2852,6 +2880,24 @@ export function PersonalPlanQuiz({
             },
           },
         },
+      )
+      return (
+        <>
+          {question}
+          <QuizMainProblemSheet
+            open={mainProblemSheetOpen}
+            options={concernOptions
+              .filter((option) => selectedConcerns.includes(option.value))
+              .map((option) => ({
+                value: option.value,
+                label: option.label,
+                icon: getLegacyQuizConcernIcon(option.value),
+              }))}
+            selected={reconcilePrimaryConcern(selectedConcerns, answers.primaryConcern)}
+            onPick={pickMainProblem}
+            onClose={() => setMainProblemSheetOpen(false)}
+          />
+        </>
       )
     }
     if (screen === "analysis_bridge") {
