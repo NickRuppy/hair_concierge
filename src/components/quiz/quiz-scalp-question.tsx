@@ -1,5 +1,6 @@
 "use client"
 
+import { MOTION_MS } from "@/lib/motion"
 import { useState, useCallback, useEffect, useRef } from "react"
 import { useQuizStore } from "@/lib/quiz/store"
 import { QuizOptionCard } from "./quiz-option-card"
@@ -111,7 +112,7 @@ export function QuizScalpQuestion() {
         setAnimateGate(true)
         setPhase("gate")
         setAdvancing(false)
-      }, 300)
+      }, MOTION_MS.settle)
     },
     [advancing, pushBrowserHistoryEntry, setAnswer],
   )
@@ -126,7 +127,7 @@ export function QuizScalpQuestion() {
         setAdvancing(true)
         setTimeout(() => {
           goNext()
-        }, 300)
+        }, MOTION_MS.settle)
       } else {
         setAnswer("has_scalp_issue", true)
         setAnswer("scalp_condition", undefined)
@@ -149,7 +150,7 @@ export function QuizScalpQuestion() {
       setAdvancing(true)
       setTimeout(() => {
         goNext()
-      }, 400)
+      }, MOTION_MS.settle)
     },
     [setAnswer, goNext, advancing],
   )

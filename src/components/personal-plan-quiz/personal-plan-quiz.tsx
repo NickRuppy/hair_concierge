@@ -1,5 +1,6 @@
 "use client"
 
+import { MOTION_MS } from "@/lib/motion"
 import { useModeratorQuiz } from "./moderator-quiz-context"
 import { scopeQuizDraftStorage, type QuizDraftStorage } from "@/lib/personal-plan-quiz/draft-scope"
 
@@ -194,8 +195,10 @@ function resolveQuizCompletionNavigation(
  * damit der Funnel nie an einem Spinner stehen bleibt.
  */
 const EMAIL_PRECHECK_TIMEOUT_MS = 6000
-const AUTO_ADVANCE_MS = 400
-const SCREEN_EXIT_MS = 200
+// Batch 8 motion spec: one settle delay after a single-tap answer; the outgoing snapshot
+// stays until the incoming step has finished entering.
+const AUTO_ADVANCE_MS = MOTION_MS.settle
+const SCREEN_EXIT_MS = MOTION_MS.stepIn
 const subscribeToClientReady = () => () => {}
 const getClientReadySnapshot = () => true
 const getServerReadySnapshot = () => false

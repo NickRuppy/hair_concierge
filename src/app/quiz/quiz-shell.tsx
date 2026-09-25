@@ -10,9 +10,12 @@ import { getQuizQuestionNumber, QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/question
 import { getQuizMotionOrder, getQuizProgressStep } from "@/lib/quiz/screen-order"
 import type { QuizStep } from "@/lib/quiz/types"
 import { useEffect, useRef, useState } from "react"
+import { MOTION_MS } from "@/lib/motion"
 
 const LEAD_CAPTURE_MOTION_ORDER = ["name", "email", "consent"]
-const SCREEN_EXIT_MS = 200
+// The outgoing snapshot (and the incoming layer's enter class) stay until the incoming step
+// has finished entering — batch 8 motion tokens.
+const SCREEN_EXIT_MS = MOTION_MS.stepIn
 
 type QuizOutgoingLayer = {
   direction: "forward" | "back"
@@ -76,6 +79,15 @@ export function QuizShell({
       const previousKey = `${previousState.step}:${previousState.leadCaptureSubStep}`
       const nextKey = `${nextState.step}:${nextState.leadCaptureSubStep}`
       if (previousKey === nextKey) return
+
+      // Step AND answers replaced in one store write is a restore (draft, migration
+      // prefill, return link, fresh start) — not a navigation, so it swaps without a step
+      // transition. Every in-quiz move writes answers and step separately.
+      if (nextState.step !== previousState.step && nextState.answers !== previousState.answers) {
+        setOutgoingLayer(null)
+        setProgressTransition(null)
+        return
+      }
 
       const direction =
         nextState.step === previousState.step

@@ -1040,20 +1040,21 @@
   }
 }
 
+/* Quiz step transition (legacy /quiz + personal-plan quiz) on the batch 8 motion tokens. */
 .personal-plan-screen-enter[data-personal-plan-transition-direction="forward"] {
-  animation: personalPlanScreenEnterForward 200ms ease-out both;
+  animation: personalPlanScreenEnterForward var(--motion-step-in) var(--motion-ease-enter) both;
 }
 
 .personal-plan-screen-enter[data-personal-plan-transition-direction="back"] {
-  animation: personalPlanScreenEnterBack 200ms ease-out both;
+  animation: personalPlanScreenEnterBack var(--motion-step-in) var(--motion-ease-enter) both;
 }
 
 .personal-plan-screen-exit[data-personal-plan-transition-direction="forward"] {
-  animation: personalPlanScreenExitForward 160ms ease-out both;
+  animation: personalPlanScreenExitForward var(--motion-step-out) var(--motion-ease-exit) both;
 }
 
 .personal-plan-screen-exit[data-personal-plan-transition-direction="back"] {
-  animation: personalPlanScreenExitBack 160ms ease-out both;
+  animation: personalPlanScreenExitBack var(--motion-step-out) var(--motion-ease-exit) both;
 }
 
 .personal-plan-option-card {
