@@ -166,3 +166,15 @@ Research basis: Apple HIG sheets + WWDC21 sheet detents (one persistent sheet, c
 - Frequency-default conflict between research lanes (Apple Health defaults vs. anchoring bias) → resolved as no preselection + one-tap auto-advance.
 
 Prototype: `scratchpad/proto-b7/index.html` (throwaway), shown in iOS Simulator Safari.
+
+### Prototype round 1 feedback (Nick, 2026-09-25)
+
+- Overall: „huge improvement, way better … roughly works."
+- **P1 Frequency options per category.** Mask with W=3–4× offered Bei jeder Wäsche / jede 2. Wäsche / ca. 1× im Monat / Seltener — **1× pro Woche missing**. Fix: fixed option set per category family:
+  - first shampoo → wash frequency (1× · 2× · 3–4× · 5–6× pro Woche · Täglich · Seltener)
+  - conditioner, leave-in → Bei jeder Wäsche · Bei jeder 2. Wäsche · Seltener
+  - mask, bondbuilder, pre-wash oil → Bei jeder Wäsche · 1× pro Woche · Alle 2 Wochen · Ca. 1× im Monat · Seltener
+  - deep cleansing → 1× pro Woche · Alle 2 Wochen · Ca. 1× im Monat · Seltener
+  - dry shampoo, finish oil, scalp care → Täglich · 2–3× pro Woche · 1× pro Woche · Seltener
+  - „Weiß ich nicht" everywhere; wash-relative options keep the concrete value as subtext; drop duplicates by mapped value.
+- **P2 Styling on its own page.** Styling inside the day composition felt incoherent. Behaviour questions (beyond quiz + products) move to a separate page „Hitze & Styling": drying method, heat tools, per tool frequency + heat protection; wash frequency only as fallback when no shampoo was entered. Proposed order: Produkte → Hitze & Styling → Deine Routine (styling card shows result only). Pending Nick's OK on order.
