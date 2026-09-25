@@ -184,3 +184,9 @@ Prototype: `scratchpad/proto-b7/index.html` (throwaway), shown in iOS Simulator 
 - „Duplicate option disappears" explained: with W = 1× pro Woche, „Bei jeder Wäsche" and „1× pro Woche" are the same value → show one.
 - **P3 Hitze & Styling must match production Feinschliff and be one question at a time, visual.** Two questions on one screen = too much visual load. Production reference: `refinement-question.tsx` (drying_routes, additional_heat_tools, heat:<source>), `refinement-options.tsx` (DRYING_ROUTE_OPTIONS with icons; ADDITIONAL_HEAT_TOOL_OPTIONS photo-card grid incl. Thermo-Wickler; HEAT_PROTECTION_OPTIONS), `public/images/tools/*.webp`. Production puts heat frequency + protection on one screen → split into two single-tap steps.
 - Finding: production already uses a discrete labelled frequency slider (`FrequencySliderField` / `DiscreteSlider`) for wet-wash frequency (Feinschliff) and product frequency (`personal-plan-products`). Open question to Nick: use it in the product sheet too (consistency) vs. one-tap buttons.
+
+### Rulings round 3 (Nick, 2026-09-25)
+
+- **Order:** Deine Produkte → Deine Routine (product/day check) → Hitze & Styling (quick heat questions, one per screen) → Abschicken. Styling leaves the routine screen.
+- **Frequency control:** tap buttons throughout the consultation flow (no slider), incl. wash frequency. Reasons: one tap, category-specific option sets, wash-relative options don't fit a slider. Production Feinschliff keeps its slider.
+- **Wash-relative logic explained:** first shampoo asks wash frequency W; later wash-day products get options relative to W with the concrete value; routine „Waschtag · W". Gap: a wash-day product added before any shampoo only gets absolute options. **Open proposal:** ask W on the FIRST wash-day product of any type (shampoo, conditioner, leave-in, mask …), so later products are always relative.
