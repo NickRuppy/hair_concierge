@@ -8,11 +8,14 @@ import { QuizProgressBar } from "./quiz-progress-bar"
 import { getQuestionByStep, QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
 import { useQuizStore } from "@/lib/quiz/store"
 import { resolveVisibleDiagnosticConcerns } from "@/lib/quiz/diagnostic-input"
+import { reconcilePrimaryConcern, requiresPrimaryConcernPick } from "@/lib/quiz/primary-concern"
+import type { QuizAnswers } from "@/lib/quiz/types"
 import { QuizMobileBottomAction, QuizMobileBottomClearance } from "./quiz-mobile-bottom-action"
 import { useQuizBrowserBack } from "./quiz-browser-history"
 import { getConcernOptions } from "@/components/personal-plan-quiz/quiz-data"
 import type { HairTexture } from "@/lib/vocabulary"
 import { getLegacyQuizConcernIcon } from "./legacy-quiz-visuals"
+import { QuizMainProblemSheet } from "./quiz-main-problem-sheet"
 
 function toggleConcern(current: string[], value: string): string[] {
   if (value === "none") return []
@@ -29,6 +32,7 @@ export function QuizConcernsQuestion() {
   )
   const [otherText, setOtherText] = useState(answers.concerns_other_text ?? "")
   const [showOtherField, setShowOtherField] = useState(Boolean(answers.concerns_other_text?.trim()))
+  const [mainProblemSheetOpen, setMainProblemSheetOpen] = useState(false)
   const otherTextRef = useRef<HTMLTextAreaElement>(null)
   const hairTexture = (answers.structure as HairTexture | undefined) ?? null
   const concerns = useMemo(() => getConcernOptions(hairTexture ?? undefined), [hairTexture])
@@ -37,11 +41,33 @@ export function QuizConcernsQuestion() {
     setLocalSelection((current) => toggleConcern(current, value))
   }, [])
 
+  const commitAndAdvance = useCallback(
+    (primaryConcern: QuizAnswers["primary_concern"]) => {
+      setAnswer("concerns", localSelection)
+      setAnswer("primary_concern", primaryConcern)
+      setAnswer("concerns_other_text", showOtherField ? otherText.trim() || undefined : undefined)
+      goNext()
+    },
+    [goNext, localSelection, otherText, setAnswer, showOtherField],
+  )
+
+  // Two or more concerns: Weiter asks for her main problem first (F1). With exactly one,
+  // that one IS the main problem — no sheet, nothing extra stored.
   const handleContinue = useCallback(() => {
-    setAnswer("concerns", localSelection)
-    setAnswer("concerns_other_text", showOtherField ? otherText.trim() || undefined : undefined)
-    goNext()
-  }, [goNext, localSelection, otherText, setAnswer, showOtherField])
+    if (requiresPrimaryConcernPick(localSelection)) {
+      setMainProblemSheetOpen(true)
+      return
+    }
+    commitAndAdvance(undefined)
+  }, [commitAndAdvance, localSelection])
+
+  const handlePickMainProblem = useCallback(
+    (value: string) => {
+      setMainProblemSheetOpen(false)
+      commitAndAdvance(value as QuizAnswers["primary_concern"])
+    },
+    [commitAndAdvance],
+  )
 
   const handleOtherFocus = useCallback((event: FocusEvent<HTMLTextAreaElement>) => {
     if (!window.matchMedia("(max-width: 639px), (max-height: 700px)").matches) return
@@ -178,6 +204,19 @@ export function QuizConcernsQuestion() {
         </Button>
       </QuizMobileBottomAction>
       <QuizMobileBottomClearance />
+      <QuizMainProblemSheet
+        open={mainProblemSheetOpen}
+        options={concerns
+          .filter((option) => localSelection.includes(option.value))
+          .map((option) => ({
+            value: option.value,
+            label: option.label,
+            icon: getLegacyQuizConcernIcon(option.value),
+          }))}
+        selected={reconcilePrimaryConcern(localSelection, answers.primary_concern)}
+        onPick={handlePickMainProblem}
+        onClose={() => setMainProblemSheetOpen(false)}
+      />
     </div>
   )
 }

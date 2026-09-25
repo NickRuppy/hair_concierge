@@ -165,3 +165,12 @@ export const SCAN_RATE_LIMIT: RateLimitConfig = {
   limit: 30,
   windowMs: 60_000,
 }
+
+// The search sheet's dm name-search lane (`/api/scan/search-retailer`) fires on every typing
+// pause (F2), so it gets its own bucket rather than draining the shared scan budget above —
+// a burst of auto searches must never block a resolve/save. 40/min per user.
+export const SCAN_RETAILER_SEARCH_RATE_LIMIT: RateLimitConfig = {
+  prefix: "scan-retailer-search",
+  limit: 40,
+  windowMs: 60_000,
+}

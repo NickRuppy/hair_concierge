@@ -108,6 +108,7 @@ test("Scan analytics factory only fires with analytics consent", () => {
     retailerCount: 2,
     outcome: "ok",
     durationMs: 340,
+    trigger: "auto",
   })
   consented.track("scan_retailer_result_opened", { categoryLabel: "Conditioner" })
   consented.track("scan_submission_created", { category: "conditioner", ...submittedJourney })
@@ -130,7 +131,13 @@ test("Scan analytics factory only fires with analytics consent", () => {
     { eventName: "scan_not_found", payload: unknownJourney },
     {
       eventName: "scan_retailer_search",
-      payload: { catalogCount: 1, retailerCount: 2, outcome: "ok", durationMs: 340 },
+      payload: {
+        catalogCount: 1,
+        retailerCount: 2,
+        outcome: "ok",
+        durationMs: 340,
+        trigger: "auto",
+      },
     },
     {
       eventName: "scan_retailer_result_opened",
@@ -169,6 +176,7 @@ test("Scan events map to PostHog with the documented snake_case properties", () 
       retailerCount: 5,
       outcome: "unavailable",
       durationMs: 902,
+      trigger: "submit",
     })
     postHogDestination.track("scan_retailer_result_opened", { categoryLabel: null })
     postHogDestination.track("scan_submission_created", { category: "mask", ...submittedJourney })
@@ -197,7 +205,13 @@ test("Scan events map to PostHog with the documented snake_case properties", () 
     ],
     [
       "scan_retailer_search",
-      { catalog_count: 3, retailer_count: 5, outcome: "unavailable", duration_ms: 902 },
+      {
+        catalog_count: 3,
+        retailer_count: 5,
+        outcome: "unavailable",
+        duration_ms: 902,
+        trigger: "submit",
+      },
     ],
     ["scan_retailer_result_opened", { category_label: null }],
     [

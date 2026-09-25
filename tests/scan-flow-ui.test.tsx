@@ -1511,7 +1511,7 @@ test("ScanSearchSheet: a text submit renders both sections with exact labels", a
   assert.ok(buttonLabels(view.tree).some((label) => label.includes(retailer.name)))
 })
 
-test("ScanSearchSheet: a GTIN-mapped retailer catalog hit merges into the catalog section, deduped by id", async () => {
+test("ScanSearchSheet: a GTIN-mapped retailer catalog hit renders once, deduped by id against the live rows", async () => {
   const live = liveCatalogResult({ id: "shared-1", name: "Only Once Shampoo" })
   const duplicate = liveCatalogResult({ id: "shared-1", name: "Only Once Shampoo" })
   const appended = liveCatalogResult({ id: "new-1", name: "Brand New Catalog Match" })
@@ -1667,7 +1667,7 @@ test("ScanSearchSheet: submitting during a pending debounce issues exactly one c
   assert.equal(catalogCalls.length, 1)
 })
 
-test("ScanSearchSheet: dm lane enabled shows the quiet pre-submit invitation, not the terminal empty state", async () => {
+test("ScanSearchSheet: dm lane enabled shows the quiet invitation for a 2-char query (below the auto-search minimum), not the terminal empty state", async () => {
   const view = await mountSearchSheet(
     async (url) => {
       if (url.startsWith("/api/scan/search?")) return json({ results: [] })
@@ -1676,7 +1676,9 @@ test("ScanSearchSheet: dm lane enabled shows the quiet pre-submit invitation, no
     { retailerSearchEnabled: true },
   )
 
-  await typeQuery(view, "kerastase")
+  // F2: from 3 chars on the dm lane searches by itself — only a 2-char query still
+  // needs the explicit submit the invitation asks for.
+  await typeQuery(view, "ke")
   await delay(300)
   await view.settle()
 
@@ -1776,11 +1778,13 @@ test("ScanSearchSheet: scan_retailer_search fires on a successful retailer respo
   assert.equal(payload.outcome, "ok")
   assert.equal(typeof payload.durationMs, "number")
   assert.ok((payload.durationMs as number) >= 0)
+  assert.equal(payload.trigger, "submit")
   assert.deepEqual(Object.keys(payload).sort(), [
     "catalogCount",
     "durationMs",
     "outcome",
     "retailerCount",
+    "trigger",
   ])
   assert.equal(JSON.stringify(payload).includes("geheimquery"), false)
 })
@@ -1970,7 +1974,7 @@ test("ScanSearchSheet + ScanResearchIntakeForm: no user-facing copy leaks 'dm' (
   chunks.push(unavailableText)
   assert.ok(unavailableText.includes("Die erweiterte Suche ist gerade nicht verfügbar."))
 
-  // pre-submit quiet invitation
+  // quiet invitation (2-char query: below the dm lane's auto-search minimum)
   const invitation = await mountSearchSheet(
     async (url) => {
       if (url.startsWith("/api/scan/search?")) return json({ results: [] })
@@ -1978,7 +1982,7 @@ test("ScanSearchSheet + ScanResearchIntakeForm: no user-facing copy leaks 'dm' (
     },
     { retailerSearchEnabled: true },
   )
-  await typeQuery(invitation, "kerastase")
+  await typeQuery(invitation, "ke")
   await delay(300)
   await invitation.settle()
   const invitationText = textContent(invitation.tree)
@@ -2231,7 +2235,8 @@ test("Task 8: the persistent recovery link renders below catalog-only results wi
 test("Task 8 delta review (Finding 2): no link while the catalog lane is loading after a resubmit, even though stale results are still stored", async () => {
   // `catalogResults` persists across a resubmit's fresh loading cycle -- nothing clears it
   // until the NEW response lands -- so the predicate must key off `catalogStatus`, not
-  // merely off `mergedCatalog` being non-empty from the PREVIOUS submit.
+  // merely off stored rows being non-empty from the PREVIOUS submit. (F2: a resubmit of the
+  // SAME query is now served from the sheet's cache, so the second submit uses a new query.)
   let catalogCalls = 0
   const secondGate = deferred<Response>()
   const view = await mountSearchSheet(
@@ -2252,8 +2257,9 @@ test("Task 8 delta review (Finding 2): no link while the catalog lane is loading
   // First submit settled: the link is showing under real, rendered rows.
   assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
 
-  // Resubmit the same (unchanged) query -- catalogStatus flips back to "loading" while
+  // Submit a refined query -- catalogStatus flips back to "loading" while
   // `catalogResults` still holds the first submit's rows.
+  await typeQuery(view, "gliss kur repair")
   submitButton(view.tree).props.onClick()
   await view.settle()
 
@@ -2271,17 +2277,16 @@ test("Task 8 delta review (Finding 2): no link while the catalog lane is loading
   assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
 })
 
-test("Task 8 delta review (Finding 2): no link when the catalog lane errored, even with a dm-mapped catalog match stored from the retailer route", async () => {
-  // The dm lane can map a GTIN into the catalog section (`retailerCatalogMatches`)
-  // independently of the catalog lane's own outcome. If the catalog lane itself failed,
-  // NOTHING from it renders -- the predicate must not treat a stored, unrendered
-  // `retailerCatalogMatches` entry as "results are displayed".
+test("Task 8 delta review (Finding 2), revised for F2: a catalog-lane error hides the live rows, but a dm-mapped catalog match renders in the dm section and counts as displayed", async () => {
+  // F2 moved dm-mapped catalog matches out of the live list into the dm section below, so
+  // they no longer depend on the catalog lane's own outcome. The Finding-2 invariant still
+  // holds: the link follows the rows that are ACTUALLY on screen.
   const view = await mountSearchSheet(
     async (url) => {
       if (url.startsWith("/api/scan/search?")) return json({ error: "unexpected_call" }, 500)
       if (url.startsWith("/api/scan/search-retailer?"))
         return json({
-          catalog: [liveCatalogResult({ id: "p-dm-mapped" })],
+          catalog: [liveCatalogResult({ id: "p-dm-mapped", name: "Dm Mapped Shampoo" })],
           retailer: [],
           retailerOutcome: "ok",
         })
@@ -2294,9 +2299,11 @@ test("Task 8 delta review (Finding 2): no link when the catalog lane errored, ev
   submitButton(view.tree).props.onClick()
   await view.settle()
 
-  assert.equal(textContent(view.tree).includes("Die Suche klappt gerade nicht."), true)
-  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 0)
-  assert.equal(textContent(view.tree).includes("Nicht dabei?"), false)
+  const text = textContent(view.tree)
+  assert.equal(text.includes("Die Suche klappt gerade nicht."), true)
+  assert.equal(text.includes("Dm Mapped Shampoo"), true)
+  assert.deepEqual(sectionLabelTexts(view.tree), ["Weitere Treffer"])
+  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
 })
 
 test("Task 8: the persistent recovery link is NOT shown pre-submit, even while live-typing results are already on screen", async () => {
@@ -2364,6 +2371,347 @@ test("Task 8: the persistent recovery link is absent when onStartResearchIntake 
   assert.ok(textContent(view.tree).includes(liveCatalogResult().name))
   assert.equal(textContent(view.tree).includes("Nicht dabei?"), false)
   assert.equal(persistentRecoveryLinkButtons(view.tree).length, 0)
+})
+
+// --- F2 (plan Rev. 3 §1.2): dm lane auto-search, abort, cache, append-not-reorder ------
+
+// The dm lane's typing pause is ~500 ms; wait comfortably past it (and past the catalog's
+// 250 ms) with real timers — the harness's own `settle()` runs on real macrotasks.
+const AUTO_DM_WAIT_MS = 600
+
+function isRetailerUrl(url: string) {
+  return url.startsWith("/api/scan/search-retailer?")
+}
+
+function isCatalogUrl(url: string) {
+  return url.startsWith("/api/scan/search?")
+}
+
+function queryOf(url: string) {
+  return new URL(url, "http://test").searchParams.get("q") ?? ""
+}
+
+function retailerSearchEvents(view: { events: TrackedEvent[] }) {
+  return view.events.filter((event) => event.name === "scan_retailer_search")
+}
+
+test("F2: typing ≥ 3 chars auto-fires the dm lane after the typing pause (trigger 'auto'), no submit needed", async () => {
+  const retailerCalls: string[] = []
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (isCatalogUrl(url)) return json({ results: [] })
+      if (isRetailerUrl(url)) {
+        // Only this test's own query: an earlier test's pending timer may still land here.
+        if (queryOf(url) === "aqua") retailerCalls.push(queryOf(url))
+        return json({ catalog: [], retailer: [retailerRow()], retailerOutcome: "ok" })
+      }
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true, onStartResearchIntake: () => {} },
+  )
+
+  await typeQuery(view, "aqua")
+  await delay(300)
+  await view.settle()
+  assert.deepEqual(retailerCalls, [], "the dm lane must wait for the ~500 ms typing pause")
+  // While the pause runs, the dm section already holds its loading row below the catalog.
+  assert.ok(sectionLabelTexts(view.tree).includes("Weitere Treffer"))
+  assert.ok(findAll(view.tree, (element) => element.type === Skeleton).length > 0)
+
+  await delay(AUTO_DM_WAIT_MS - 300)
+  await view.settle()
+  assert.deepEqual(retailerCalls, ["aqua"])
+  assert.ok(textContent(view.tree).includes(retailerRow().name))
+  const events = retailerSearchEvents(view)
+  assert.equal(events.length, 1)
+  assert.equal(events[0].payload.trigger, "auto")
+  // The auto search settled with rows on screen: the persistent recovery link is offered.
+  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
+})
+
+test("F2: a 2-char query never auto-fires the dm lane", async () => {
+  const retailerCalls: string[] = []
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (isCatalogUrl(url)) return json({ results: [] })
+      if (isRetailerUrl(url)) retailerCalls.push(queryOf(url))
+      return json({ catalog: [], retailer: [], retailerOutcome: "ok" })
+    },
+    { retailerSearchEnabled: true },
+  )
+  await typeQuery(view, "aq")
+  await delay(AUTO_DM_WAIT_MS)
+  await view.settle()
+  // Filtered to this test's own query: an earlier test's pending timer may still land here.
+  assert.deepEqual(
+    retailerCalls.filter((q) => q === "aq"),
+    [],
+  )
+})
+
+test("F2: retailerSearchEnabled=false never auto-fires the dm lane", async () => {
+  const retailerCalls: string[] = []
+  const view = await mountSearchSheet(async (url) => {
+    if (isRetailerUrl(url)) retailerCalls.push(queryOf(url))
+    return json({ results: [] })
+  })
+  await typeQuery(view, "flag off probe")
+  await delay(AUTO_DM_WAIT_MS)
+  await view.settle()
+  assert.deepEqual(
+    retailerCalls.filter((q) => q === "flag off probe"),
+    [],
+  )
+  assert.equal(sectionLabelTexts(view.tree).length, 0)
+})
+
+for (const via of ["Enter", "arrow"] as const) {
+  test(`F2: ${via} fires the dm lane immediately (trigger 'submit') and cancels the pending auto search`, async () => {
+    const retailerCalls: string[] = []
+    const view = await mountSearchSheet(
+      async (url) => {
+        if (isCatalogUrl(url)) return json({ results: [] })
+        if (isRetailerUrl(url)) {
+          retailerCalls.push(queryOf(url))
+          return json({ catalog: [], retailer: [retailerRow()], retailerOutcome: "ok" })
+        }
+        return json({ error: "unexpected_call" }, 500)
+      },
+      { retailerSearchEnabled: true },
+    )
+    await typeQuery(view, "aqua revive")
+    if (via === "Enter") {
+      queryInputProps(view.tree).onKeyDown({ key: "Enter", preventDefault: () => {} })
+    } else {
+      submitButton(view.tree).props.onClick()
+    }
+    await view.settle()
+    assert.deepEqual(retailerCalls, ["aqua revive"], "fired without waiting for the pause")
+    assert.ok(textContent(view.tree).includes(retailerRow().name))
+
+    await delay(AUTO_DM_WAIT_MS)
+    await view.settle()
+    assert.deepEqual(retailerCalls, ["aqua revive"], "the debounced auto search was cancelled")
+    assert.deepEqual(
+      retailerSearchEvents(view).map((event) => event.payload.trigger),
+      ["submit"],
+    )
+  })
+}
+
+test("F2: a superseded dm request is aborted, and its AbortError never flips the lane to error", async () => {
+  const signals: Record<string, AbortSignal | undefined> = {}
+  const view = await mountSearchSheet(
+    async (url, init) => {
+      if (isCatalogUrl(url)) return json({ results: [] })
+      if (isRetailerUrl(url)) {
+        const q = queryOf(url)
+        signals[q] = init?.signal ?? undefined
+        if (q === "alpha query") {
+          // Behave like the real fetch: reject with an AbortError once aborted.
+          return new Promise<Response>((_resolve, reject) => {
+            init?.signal?.addEventListener("abort", () =>
+              reject(new DOMException("The operation was aborted.", "AbortError")),
+            )
+          })
+        }
+        return json({
+          catalog: [],
+          retailer: [retailerRow({ name: "Beta Hit" })],
+          retailerOutcome: "ok",
+        })
+      }
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+
+  await typeQuery(view, "alpha query")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+  assert.ok(signals["alpha query"], "the dm fetch must carry an AbortSignal")
+  assert.equal(signals["alpha query"]?.aborted, false)
+
+  await typeQuery(view, "beta query")
+  assert.equal(signals["alpha query"]?.aborted, true, "typing aborts the superseded dm request")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+
+  const text = textContent(view.tree)
+  assert.ok(text.includes("Beta Hit"))
+  assert.equal(text.includes("Die erweiterte Suche ist gerade nicht verfügbar."), false)
+  assert.deepEqual(
+    retailerSearchEvents(view).map((event) => event.payload.outcome),
+    ["ok"],
+    "the aborted request never reports 'unavailable'",
+  )
+})
+
+test("F2: a superseded catalog request is aborted too", async () => {
+  const signals: AbortSignal[] = []
+  const view = await mountSearchSheet(async (url, init) => {
+    if (isCatalogUrl(url)) {
+      if (init?.signal) signals.push(init.signal)
+      return new Promise<Response>(() => {})
+    }
+    return json({ error: "unexpected_call" }, 500)
+  })
+  await typeQuery(view, "gliss")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+  assert.equal(signals.length, 1)
+  assert.equal(signals[0].aborted, false)
+
+  await typeQuery(view, "gliss kur")
+  assert.equal(signals[0].aborted, true)
+})
+
+test("F2: closing the sheet aborts both lanes' in-flight requests", async () => {
+  const signals: AbortSignal[] = []
+  const props = { retailerSearchEnabled: true, open: true }
+  const view = await mountSearchSheet(async (_url, init) => {
+    if (init?.signal) signals.push(init.signal)
+    return new Promise<Response>(() => {})
+  }, props)
+  await typeQuery(view, "gliss kur")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+  assert.equal(signals.length, 2)
+
+  props.open = false
+  await view.settle()
+  assert.deepEqual(
+    signals.map((signal) => signal.aborted),
+    [true, true],
+  )
+})
+
+test("F2: a repeated query is served from the per-session cache — one fetch per lane — and the cache is cleared on close", async () => {
+  const calls: string[] = []
+  const props = { retailerSearchEnabled: true, open: true }
+  const view = await mountSearchSheet(async (url) => {
+    calls.push(`${isRetailerUrl(url) ? "dm" : "catalog"}:${queryOf(url)}`)
+    if (isCatalogUrl(url)) return json({ results: [liveCatalogResult()] })
+    return json({ catalog: [], retailer: [retailerRow()], retailerOutcome: "ok" })
+  }, props)
+
+  await typeQuery(view, "cache probe")
+  await delay(AUTO_DM_WAIT_MS)
+  await view.settle()
+  await typeQuery(view, "cache prob")
+  await delay(AUTO_DM_WAIT_MS)
+  await view.settle()
+  await typeQuery(view, "cache probe")
+  // Served synchronously from the cache: no loading state, rows already there.
+  assert.ok(textContent(view.tree).includes(liveCatalogResult().name))
+  assert.ok(textContent(view.tree).includes(retailerRow().name))
+  submitButton(view.tree).props.onClick()
+  await delay(AUTO_DM_WAIT_MS)
+  await view.settle()
+
+  const count = (key: string) => calls.filter((call) => call === key).length
+  assert.equal(count("catalog:cache probe"), 1)
+  assert.equal(count("dm:cache probe"), 1)
+  // Cache hits are not dm requests: only the two real fetches were measured.
+  assert.equal(retailerSearchEvents(view).length, 2)
+
+  props.open = false
+  await view.settle()
+  props.open = true
+  await view.settle()
+  await typeQuery(view, "cache probe")
+  await delay(AUTO_DM_WAIT_MS)
+  await view.settle()
+  assert.equal(count("catalog:cache probe"), 2)
+  assert.equal(count("dm:cache probe"), 2)
+})
+
+test("F2: a failed dm response is not cached — the same query refetches", async () => {
+  let dmCalls = 0
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (isCatalogUrl(url)) return json({ results: [] })
+      dmCalls += 1
+      return json({ catalog: [], retailer: [], retailerOutcome: "unavailable" })
+    },
+    { retailerSearchEnabled: true },
+  )
+  await typeQuery(view, "gliss kur")
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+  submitButton(view.tree).props.onClick()
+  await view.settle()
+  assert.equal(dmCalls, 2)
+})
+
+test("F2: a 429 from the retailer bucket shows the retailer-unavailable line and leaves catalog rows standing", async () => {
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (isCatalogUrl(url)) return json({ results: [liveCatalogResult()] })
+      if (isRetailerUrl(url)) return json({ error: "rate_limited" }, 429)
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+  await typeQuery(view, "gliss kur")
+  await delay(AUTO_DM_WAIT_MS)
+  await view.settle()
+
+  const text = textContent(view.tree)
+  assert.ok(text.includes("Die erweiterte Suche ist gerade nicht verfügbar."))
+  assert.ok(text.includes(liveCatalogResult().name))
+  assert.equal(text.includes("Die Suche klappt gerade nicht."), false)
+  assert.deepEqual(
+    retailerSearchEvents(view).map((event) => [event.payload.outcome, event.payload.trigger]),
+    [["unavailable", "auto"]],
+  )
+})
+
+test("F2: dm results append below the live rows — live rows keep their order, dm catalog matches are deduped and render in the dm section", async () => {
+  const liveA = liveCatalogResult({ id: "live-a", name: "Live A Shampoo" })
+  const liveB = liveCatalogResult({ id: "live-b", name: "Live B Shampoo" })
+  const mappedC = liveCatalogResult({ id: "mapped-c", name: "Mapped C Shampoo" })
+  const view = await mountSearchSheet(
+    async (url) => {
+      if (isCatalogUrl(url)) return json({ results: [liveA, liveB] })
+      if (isRetailerUrl(url))
+        return json({
+          // liveB is also a dm hit: it must not be duplicated or pulled down.
+          catalog: [liveB, mappedC],
+          retailer: [retailerRow({ name: "Retailer R Spülung" })],
+          retailerOutcome: "ok",
+        })
+      return json({ error: "unexpected_call" }, 500)
+    },
+    { retailerSearchEnabled: true },
+  )
+
+  await typeQuery(view, "shampoo")
+  await delay(300)
+  await view.settle()
+  const rowOrder = (tree: ReactNode) =>
+    buttonLabels(tree)
+      .map((label) => label.match(/(Live A|Live B|Mapped C|Retailer R)/)?.[1])
+      .filter(Boolean)
+  assert.deepEqual(rowOrder(view.tree), ["Live A", "Live B"])
+
+  await delay(AUTO_DM_WAIT_MS - 300)
+  await view.settle()
+  assert.deepEqual(rowOrder(view.tree), ["Live A", "Live B", "Mapped C", "Retailer R"])
+  assert.deepEqual(sectionLabelTexts(view.tree), ["In deinem Chaarlie-Katalog", "Weitere Treffer"])
+  // "Weitere Treffer" sits between the live rows and the dm-derived rows.
+  const text = textContent(view.tree)
+  assert.ok(text.indexOf("Live B") < text.indexOf("Weitere Treffer"))
+  assert.ok(text.indexOf("Weitere Treffer") < text.indexOf("Mapped C"))
+})
+
+test("F2: the search field carries the mobile search-keyboard attributes", async () => {
+  const view = await mountSearchSheet(notFound)
+  const input = queryInputProps(view.tree)
+  assert.equal(input.enterKeyHint, "search")
+  assert.equal(input.autoCorrect, "off")
+  assert.equal(input.autoCapitalize, "none")
+  assert.equal(input.spellCheck, false)
 })
 
 // --- T9: the free tier's verdict states, end to end through the flow ---------

@@ -189,15 +189,17 @@ const COND_KEY = "decision:conditioner:conditioner_rinse_out:gap"
 const MASK_KEY = "decision:mask:intensive_conditioning_mask:gap"
 const OIL_PRE_KEY = "decision:oil:pre_wash_fibre_treatment:gap"
 
-test("the usage-correction migration has a unique version that sorts after every migration", () => {
+test("the usage-correction migration has a unique version that sorts after the migrations it builds on", () => {
   const versions = readdirSync(dir)
     .filter((name) => name.endsWith(".sql"))
     .map((name) => name.split("_")[0])
   const own = OWN.split("_")[0]
   assert.equal(versions.filter((version) => version === own).length, 1)
+  // Was "sorts after every migration" when it was the newest; hair_profiles.primary_concern
+  // (20260925100000) now follows it, so what still matters is that it follows its chain.
   assert.ok(
-    versions.every((version) => version <= own),
-    "must sort after every migration",
+    CHAIN.slice(0, 3).every((file) => file.split("_")[0] < own),
+    "must sort after the discovery migrations it builds on",
   )
 })
 

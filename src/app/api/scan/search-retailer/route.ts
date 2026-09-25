@@ -4,7 +4,7 @@ import { z } from "zod"
 import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
 import { PERSONAL_PLAN_PRODUCT_CATEGORIES } from "@/lib/personal-plan/products/contracts"
 import { canonicalizeGtin } from "@/lib/product-identity/normalize"
-import { checkRateLimit } from "@/lib/rate-limit"
+import { checkRateLimit, SCAN_RETAILER_SEARCH_RATE_LIMIT } from "@/lib/rate-limit"
 import {
   toScanSearchResult,
   type CatalogSearchCandidate,
@@ -90,6 +90,8 @@ export function createScanRetailerSearchRouteHandler(deps: ScanRetailerSearchRou
   return createScanRoute<string>({
     route: "search-retailer",
     deps,
+    // F2: the lane now auto-fires per typing pause — its own bucket, not the shared one.
+    rateLimit: SCAN_RETAILER_SEARCH_RATE_LIMIT,
     // A too-short/too-long/missing query is a normal typing state, not a client error —
     // mirrors `/api/scan/search`'s parse, which always succeeds and defers bounds
     // checking to the handler.

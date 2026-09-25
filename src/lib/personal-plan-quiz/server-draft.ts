@@ -50,6 +50,8 @@ const partialDurableAnswersSchema = z
     resultReliability: z.enum(["mostly", "sometimes", "rarely"]).optional(),
     adaptationConfidence: z.enum(["yes", "partly", "no"]).optional(),
     currentConcerns: uniqueEnumArray(PERSONAL_PLAN_QUIZ_CONCERNS).optional(),
+    // A stale pick is dropped by the sanitizer below, never a reason to reject the draft.
+    primaryConcern: z.enum(PERSONAL_PLAN_QUIZ_CONCERNS).optional(),
     concernRecurrence: z
       .object({
         concernId: z.enum(PERSONAL_PLAN_QUIZ_CONCERNS),

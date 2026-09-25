@@ -1,8 +1,10 @@
 import { buildPersonalPlanAssessmentRows } from "@/lib/personal-plan-quiz/assessment-copy"
 import { assessPersonalPlanHair } from "@/lib/personal-plan-quiz/hair-assessment"
 import { adaptLegacyQuizAnswersForAssessment } from "@/lib/personal-plan-quiz/offer-adapter"
-import { derivePersonalPlanPrimaryMessage } from "@/lib/personal-plan-quiz/prepared-plan"
+import { derivePersonalPlanStatedPrimaryMessage } from "@/lib/personal-plan-quiz/prepared-plan"
+import { resolveVisibleDiagnosticConcerns } from "@/lib/quiz/diagnostic-input"
 import { rankGuidedStoryPriorities } from "@/lib/quiz/guided-story-priorities"
+import { resolveStatedPrimaryConcern } from "@/lib/quiz/primary-concern"
 import type { QuizAnswers } from "@/lib/quiz/types"
 
 import { buildPersonalPlanResultArtifactEmailPayload } from "./personal-plan-result-artifact"
@@ -63,7 +65,18 @@ export function buildQuizResultArtifactEmailPayload(
       modelVersion: "personal_plan_offer_v2",
       profileLine: profileLine(input.quizAnswers),
       diagnosticRows,
-      primaryMessage: derivePersonalPlanPrimaryMessage(centralPriority),
+      // Her stated main problem, as the card she tapped (legacy aliases included) — never
+      // the top of the assessment ranking (F1).
+      primaryMessage: derivePersonalPlanStatedPrimaryMessage({
+        statedConcern:
+          resolveVisibleDiagnosticConcerns(
+            [resolveStatedPrimaryConcern(input.quizAnswers)].filter(
+              (concern): concern is NonNullable<typeof concern> => concern !== null,
+            ),
+          )[0] ?? null,
+        texture: diagnosticInput.texture,
+        priorities,
+      }),
       planFitStatement:
         "Eine verlässliche Richtung für dein Haar: Dein Plan baut auf deiner Ausgangslage auf und macht die nächsten Pflegeschritte klar.",
     },

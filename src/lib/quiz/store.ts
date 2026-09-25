@@ -1,5 +1,6 @@
 import { create } from "zustand"
 import { clearQuizDraft, loadQuizDraft, saveQuizDraft } from "./draft"
+import { reconcilePrimaryConcern } from "./primary-concern"
 import { getQuizStepOrder, normalizeQuizStepForPackage } from "./screen-order"
 import type { QuizStep, LeadCaptureMode, LeadCaptureSubStep, QuizAnswers, LeadData } from "./types"
 
@@ -85,6 +86,14 @@ export const useQuizStore = create<QuizState>((set, get) => ({
         delete (nextAnswers as Record<string, unknown>)[key]
       } else {
         ;(nextAnswers as Record<string, unknown>)[key] = value
+      }
+      // A changed concern selection drops a main-problem pick it no longer contains (F1).
+      if (key === "concerns") {
+        const primaryConcern = reconcilePrimaryConcern(
+          nextAnswers.concerns ?? [],
+          nextAnswers.primary_concern,
+        )
+        if (primaryConcern === undefined) delete nextAnswers.primary_concern
       }
 
       return { answers: nextAnswers }

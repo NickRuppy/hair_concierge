@@ -5,6 +5,7 @@ import {
   type PersonalPlanDiagnosticInput,
 } from "@/lib/quiz/diagnostic-input"
 
+import { resolveStatedPersonalPlanConcern } from "./primary-concern"
 import type {
   PersonalPlanQuizAnswers,
   PersonalPlanQuizConcern,
@@ -171,7 +172,14 @@ function retainConcerns(answers: PersonalPlanQuizAnswers): NonNullable<QuizAnswe
   // The paid-plan legacy offer adapter remains intentionally capped for its
   // established routine contract. Raw Personal Plan answers and the shared
   // assessment above retain every selection.
-  const retained = [...selected].slice(0, 3)
+  const ordered = [...selected]
+  // Her stated main problem (F1) always keeps a slot: it takes the third one when the
+  // fixed order would cap it away, so the canonical profile can still name it.
+  const stated = toAdaptedConcern(resolveStatedPersonalPlanConcern(answers))
+  const retained =
+    stated && ordered.indexOf(stated) >= 3
+      ? ordered.filter((concern, index) => index < 2 || concern === stated)
+      : ordered.slice(0, 3)
   if (
     hasConcern(answers.currentConcerns, "hair_loss_or_thinning") &&
     !retained.includes("hair_loss_or_thinning")
@@ -276,10 +284,33 @@ function mapScalpType(answers: PersonalPlanQuizAnswers): {
   return { scalpType: "ausgeglichen", fallback: true }
 }
 
+/** A diagnostic concern in the adapter's legacy concern vocabulary. */
+function toAdaptedConcern(
+  concern: ReturnType<typeof resolveStatedPersonalPlanConcern>,
+): NonNullable<QuizAnswers["concerns"]>[number] | null {
+  if (concern === "dry_lengths") return "dryness"
+  if (concern === "frizz_flyaways") return "frizz"
+  return concern
+}
+
+/**
+ * Her stated main problem in the adapted (legacy) concern vocabulary — only when the
+ * adapted concerns carry it (`retainConcerns` keeps a slot for every mappable pick), so
+ * the canonical profile never names a main problem outside its own `concerns`.
+ */
+function retainPrimaryConcern(
+  answers: PersonalPlanQuizAnswers,
+  retainedConcerns: NonNullable<QuizAnswers["concerns"]>,
+): QuizAnswers["primary_concern"] {
+  const adapted = toAdaptedConcern(resolveStatedPersonalPlanConcern(answers))
+  return adapted && retainedConcerns.includes(adapted) ? adapted : undefined
+}
+
 export function adaptPersonalPlanAnswersForOffer(
   answers: PersonalPlanQuizAnswers,
 ): PersonalPlanOfferAdapterResult {
   const retainedConcerns = retainConcerns(answers)
+  const primaryConcern = retainPrimaryConcern(answers, retainedConcerns)
   const scalp = mapScalpType(answers)
   const primaryScalpConcern = SCALP_CONCERN_PRIORITY.find((concern) =>
     answers.scalpConcerns?.includes(concern),
@@ -298,6 +329,7 @@ export function adaptPersonalPlanAnswersForOffer(
       has_scalp_issue: Boolean(primaryScalpConcern),
       ...(primaryScalpConcern ? { scalp_condition: SCALP_CONCERN_MAP[primaryScalpConcern] } : {}),
       concerns: retainedConcerns,
+      ...(primaryConcern ? { primary_concern: primaryConcern } : {}),
       treatment: mapTreatments(answers),
       goals: retainGoals(answers, retainedConcerns),
     },

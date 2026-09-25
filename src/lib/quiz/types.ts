@@ -73,6 +73,11 @@ export interface QuizAnswers {
   scalp_condition?: string
   /** Quiz-owned values; legacy profile consumers use an explicit projection. */
   concerns?: QuizConcern[]
+  /**
+   * Her stated main problem — asked only when she selected two or more concerns. Always
+   * one of `concerns`; a stale value is dropped. See `primary-concern.ts`.
+   */
+  primary_concern?: QuizConcern
   concerns_other_text?: string
   treatment?: string[]
   /** Quiz-owned values; legacy profile consumers use an explicit projection. */

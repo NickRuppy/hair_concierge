@@ -1,7 +1,7 @@
 import type { OfferSectionId } from "@/lib/analytics/events"
 
-import type { QuizNeedLane, QuizConcern } from "./need-lane"
-import type { QuizResultNarrative } from "./result-narrative"
+import type { QuizNeedLane } from "./need-lane"
+import type { NarrativeConcern, QuizResultNarrative } from "./result-narrative"
 
 export const APP_VALUE_STACK_CTA_LABEL = "Mit Chaarlie starten"
 export const APP_VALUE_STACK_BRIDGE_HEADLINE = "Deine Routine ist erst der Anfang."
@@ -41,13 +41,18 @@ export const APP_VALUE_STACK_STORIES = [
   },
 ] as const satisfies readonly AppValueStackStory[]
 
-const CONCERN_LEADS: Record<QuizConcern, string> = {
+// Hair loss has no lead on purpose: it is medically adjacent, not a care focus we
+// promise to address — it takes the neutral goal line like „nothing stated".
+const CONCERN_LEADS: Partial<Record<NarrativeConcern, string>> = {
   frizz: "Frizz ist dein wichtigster Pflegefokus.",
   dryness: "Trockenheit ist dein wichtigster Pflegefokus.",
   breakage: "Haarbruch ist dein wichtigster Pflegefokus.",
   split_ends: "Spliss ist dein wichtigster Pflegefokus.",
   tangling: "Verknotungen sind dein wichtigster Pflegefokus.",
   hair_damage: "Strapaziertes Haar ist dein wichtigster Pflegefokus.",
+  low_shine: "Wenig Glanz ist dein wichtigster Pflegefokus.",
+  lost_shape: "Mehr Form und Halt sind dein wichtigster Pflegefokus.",
+  low_volume_or_weighed_down: "Plattes, beschwertes Haar ist dein wichtigster Pflegefokus.",
 }
 
 const LANE_ACTIONS: Record<QuizNeedLane, string> = {
@@ -87,12 +92,12 @@ export function buildAppValueStackHeroCopy({
   const outcome = narrative.rows[2].after
   const laneAction = LANE_ACTIONS[lane]
 
+  const concernLead = narrative.primaryConcern ? CONCERN_LEADS[narrative.primaryConcern] : null
+
   return {
     headline: firstName
       ? `${firstName}, dein 4-Wochen-Weg zu ${outcome}.`
       : `Dein 4-Wochen-Weg zu ${outcome}.`,
-    intro: narrative.primaryConcern
-      ? `${CONCERN_LEADS[narrative.primaryConcern]} ${laneAction}`
-      : `Dein Ziel: ${outcome}. ${laneAction}`,
+    intro: concernLead ? `${concernLead} ${laneAction}` : `Dein Ziel: ${outcome}. ${laneAction}`,
   }
 }

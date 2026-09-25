@@ -20,8 +20,12 @@ import {
   buildPersonalPlanAssessmentRows,
   type PersonalPlanExplanationPart,
 } from "./assessment-copy"
+import { getConcernOptions } from "@/components/personal-plan-quiz/quiz-data"
+import type { DiagnosticConcern } from "@/lib/quiz/diagnostic-input"
+
 import { assessPersonalPlanHair, type HairAssessment } from "./hair-assessment"
-import type { PersonalPlanQuizSubmissionEnvelope } from "./types"
+import { resolveStatedPersonalPlanConcern } from "./primary-concern"
+import type { PersonalPlanQuizAnswers, PersonalPlanQuizSubmissionEnvelope } from "./types"
 
 export type PersonalPlanVisibleSegments = 1 | 2 | 3
 
@@ -235,6 +239,37 @@ export function derivePersonalPlanPrimaryMessage(
   }
 }
 
+// Her goal line when she stated no main problem and no priority speaks to a goal or a
+// strength — honest, and it names nothing she did not say.
+const NEUTRAL_PRIMARY_MESSAGE: PersonalPlanPrimaryMessage = {
+  kind: "goal",
+  label: "Eine Pflege, die wirklich zu deinem Haar passt",
+}
+
+/**
+ * The result email's primary message (F1, Codex review of PR 7a): „Das beschäftigt dich
+ * gerade besonders" names the problem she STATED, with the label of the card she tapped.
+ * Without a statement it never makes a concern claim — the first goal or strength message
+ * of the (unchanged) assessment priorities, else a neutral goal line.
+ */
+export function derivePersonalPlanStatedPrimaryMessage(input: {
+  statedConcern: DiagnosticConcern | null
+  texture: PersonalPlanQuizAnswers["texture"]
+  priorities: readonly PersonalPlanPrimaryMessagePriority[]
+}): PersonalPlanPrimaryMessage {
+  if (input.statedConcern) {
+    const option = getConcernOptions(input.texture).find(
+      (candidate) => candidate.value === input.statedConcern,
+    )
+    if (option) return { kind: "concern", label: option.label }
+  }
+  for (const priority of input.priorities) {
+    const message = derivePersonalPlanPrimaryMessage(priority)
+    if (message.kind !== "concern") return message
+  }
+  return NEUTRAL_PRIMARY_MESSAGE
+}
+
 function replaceUnscoreableLegacyFallbacks(
   ranked: readonly GuidedStoryPriority[],
 ): GuidedStoryPriority[] {
@@ -278,7 +313,11 @@ export function buildPersonalPlanPreparedArtifact(
       planTitle: planTitle(adapted.answers),
       profileLine: profileLine(adapted.answers),
       diagnosticRows,
-      primaryMessage: derivePersonalPlanPrimaryMessage(centralPriority),
+      primaryMessage: derivePersonalPlanStatedPrimaryMessage({
+        statedConcern: resolveStatedPersonalPlanConcern(envelope.answers),
+        texture: envelope.answers.texture,
+        priorities,
+      }),
       planFitStatement: planFitStatement(envelope.answers),
     },
     lockedPlan: {

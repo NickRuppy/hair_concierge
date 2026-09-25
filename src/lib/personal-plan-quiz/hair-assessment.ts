@@ -1,5 +1,5 @@
 import type { PersonalPlanQuizConcern, PersonalPlanQuizGoal } from "./types"
-import type { DiagnosticConcern, PersonalPlanDiagnosticInput } from "@/lib/quiz/diagnostic-input"
+import type { PersonalPlanDiagnosticInput } from "@/lib/quiz/diagnostic-input"
 
 export const HAIR_ASSESSMENT_DIMENSION_IDS = [
   "scalp_balance",
@@ -269,37 +269,6 @@ function rankActiveDimensions(
     )
   })
   return active
-}
-
-function concernForDimension(
-  dimension: HairAssessmentDimension,
-  answers: PersonalPlanDiagnosticInput,
-): DiagnosticConcern | null {
-  if (!dimension.explicitConcern) return null
-  if (dimension.id === "hair_loss_thinning") {
-    return hasConcern(answers, "hair_loss_or_thinning") ? "hair_loss_or_thinning" : null
-  }
-  if (dimension.id === "breakage_stability") {
-    if (hasConcern(answers, "breakage")) return "breakage"
-    if (hasConcern(answers, "hair_damage")) return "hair_damage"
-    return null
-  }
-  const concern = CONCERN_BY_DIMENSION[dimension.id]
-  return concern && hasConcern(answers, concern) ? concern : null
-}
-
-export function resolvePrimaryPersonalPlanConcern(
-  answers: PersonalPlanDiagnosticInput,
-): DiagnosticConcern | null {
-  const preRecurrenceAnswers = { ...answers, concernRecurrence: undefined }
-  const ranked = rankActiveDimensions(evaluateDimensions(preRecurrenceAnswers), {
-    includeRecurrence: false,
-  })
-  for (const dimension of ranked) {
-    const concern = concernForDimension(dimension, preRecurrenceAnswers)
-    if (concern) return concern
-  }
-  return null
 }
 
 export function assessPersonalPlanHair(answers: PersonalPlanDiagnosticInput): HairAssessment {

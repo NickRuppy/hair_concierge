@@ -46,30 +46,121 @@ function normalizedIdentityTitle(row: CatalogSearchCandidate): string {
   return composeProductIdentityTitle(identityParts(row)).toLocaleLowerCase()
 }
 
+const TOKEN_SEPARATOR = /[^\p{L}\p{N}]+/u
+// Typo tolerance (F2): shorter tokens get none — with one edit a 2-char token matches
+// almost every title token that merely starts with either of its letters.
+const MIN_TYPO_TOKEN_LENGTH = 3
+const SHORT_TOKEN_MAX_LENGTH = 5
+// A typo'd, half-typed word ("kerasp" → "Kérastase") matches a title-word PREFIX only from
+// this length on; shorter tokens compare whole words — with prefix matching a 3-letter
+// token within 1 edit would hit every word sharing two of its letters ("oil" → "Olaplex").
+const MIN_PREFIX_TYPO_TOKEN_LENGTH = 5
+
+function tokenize(text: string): string[] {
+  return text.split(TOKEN_SEPARATOR).filter(Boolean)
+}
+
+// Numbers are identities, not spellings: „100" must never find „200 ml", „no3" never
+// „No. 4". A token with a digit — query or title side — only matches as a substring.
+const HAS_DIGIT = /\p{N}/u
+
+function typoBudget(token: string): number {
+  if (token.length < MIN_TYPO_TOKEN_LENGTH || HAS_DIGIT.test(token)) return 0
+  return token.length <= SHORT_TOKEN_MAX_LENGTH ? 1 : 2
+}
+
 /**
- * Substring match over the composed product identity title (brand + product line + name,
- * de-duplicated), exact-match-first ranking, then sort_order → localeCompare(de) → id.
+ * Optimal-string-alignment (restricted Damerau-Levenshtein) distance from `query` to
+ * `target` — or, with `prefix`, to the closest PREFIX of `target` (the full target
+ * included), so a typo in a half-typed token still matches. Returns early once every cell
+ * of a row exceeds `budget`, keeping the ~350-row scan cheap.
+ */
+function editDistance(query: string, target: string, budget: number, prefix: boolean): number {
+  const width = target.length + 1
+  let twoBack: number[] = []
+  let previous = Array.from({ length: width }, (_, column) => column)
+  for (let row = 1; row <= query.length; row += 1) {
+    const current = [row]
+    let rowMin = row
+    for (let column = 1; column < width; column += 1) {
+      const cost = query[row - 1] === target[column - 1] ? 0 : 1
+      let value = Math.min(
+        previous[column] + 1,
+        current[column - 1] + 1,
+        previous[column - 1] + cost,
+      )
+      if (
+        row > 1 &&
+        column > 1 &&
+        query[row - 1] === target[column - 2] &&
+        query[row - 2] === target[column - 1]
+      ) {
+        value = Math.min(value, twoBack[column - 2] + 1)
+      }
+      current.push(value)
+      rowMin = Math.min(rowMin, value)
+    }
+    if (rowMin > budget) return rowMin
+    twoBack = previous
+    previous = current
+  }
+  return prefix ? Math.min(...previous) : previous[width - 1]
+}
+
+/** 0 exact title, 1 whole-query substring, 2 every token a substring, 3 needs a typo edit. */
+type MatchTier = 0 | 1 | 2 | 3
+
+function matchTier(title: string, titleTokens: string[], query: string): MatchTier | null {
+  if (title === query) return 0
+  if (title.includes(query)) return 1
+  let needsTypo = false
+  for (const token of tokenize(query)) {
+    if (titleTokens.some((titleToken) => titleToken.includes(token))) continue
+    const budget = typoBudget(token)
+    const prefix = token.length >= MIN_PREFIX_TYPO_TOKEN_LENGTH
+    if (
+      budget === 0 ||
+      !titleTokens.some(
+        (titleToken) =>
+          !HAS_DIGIT.test(titleToken) && editDistance(token, titleToken, budget, prefix) <= budget,
+      )
+    ) {
+      return null
+    }
+    needsTypo = true
+  }
+  return needsTypo ? 3 : 2
+}
+
+/**
+ * Match over the composed product identity title (brand + product line + name,
+ * de-duplicated), in tiers: exact title → whole-query substring (the original matcher,
+ * still the strongest signal) → every query token found in some title token → the same
+ * with typo tolerance (F2: Damerau-Levenshtein, 1 edit for tokens ≤ 5 chars, 2 above).
+ * Within a tier: sort_order → localeCompare(de) → id.
  */
 export function matchCatalogProducts(
   rows: CatalogSearchCandidate[],
   query: string,
 ): CatalogSearchCandidate[] {
   const normalizedQuery = query.trim().toLocaleLowerCase()
-  const matches = rows.filter((row) => normalizedIdentityTitle(row).includes(normalizedQuery))
+  const matches: Array<{ row: CatalogSearchCandidate; tier: MatchTier }> = []
+  for (const row of rows) {
+    const title = normalizedIdentityTitle(row)
+    const tier = matchTier(title, tokenize(title), normalizedQuery)
+    if (tier !== null) matches.push({ row, tier })
+  }
 
-  matches.sort((left, right) => {
-    const leftExact = normalizedIdentityTitle(left) === normalizedQuery ? -1 : 0
-    const rightExact = normalizedIdentityTitle(right) === normalizedQuery ? -1 : 0
-    return (
-      leftExact - rightExact ||
+  matches.sort(
+    ({ row: left, tier: leftTier }, { row: right, tier: rightTier }) =>
+      leftTier - rightTier ||
       (left.sort_order ?? Number.MAX_SAFE_INTEGER) -
         (right.sort_order ?? Number.MAX_SAFE_INTEGER) ||
       left.name.localeCompare(right.name, "de") ||
-      left.id.localeCompare(right.id)
-    )
-  })
+      left.id.localeCompare(right.id),
+  )
 
-  return matches
+  return matches.map((match) => match.row)
 }
 
 export function toScanSearchResult(row: CatalogSearchCandidate): ScanSearchResult {
