@@ -77,6 +77,28 @@ interface BottomSheetContentProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export type BottomSheetFocusAction = "initial" | "restore" | "none"
 
+/**
+ * Where Tab / Shift+Tab must go to stay inside the sheet, or `null` to let the browser
+ * move focus within the list. Wraps at both ends, and — batch 8 review — also when focus
+ * sits on something that is NOT in the tabbable list (the tap-open title with
+ * `tabindex="-1"`, the panel itself, `body` after a step unmounted the focused control):
+ * from there Tab goes to the first control and Shift+Tab to the last, never out.
+ */
+export function resolveFocusTrapTarget<T>(
+  focusable: readonly T[],
+  active: unknown,
+  direction: "forward" | "backward",
+): T | null {
+  if (focusable.length === 0) return null
+  const first = focusable[0]
+  const last = focusable[focusable.length - 1]
+  const index = focusable.indexOf(active as T)
+  if (index === -1) return direction === "forward" ? first : last
+  if (direction === "backward" && index === 0) return last
+  if (direction === "forward" && index === focusable.length - 1) return first
+  return null
+}
+
 // Whether the last user input was the keyboard (vs. a pointer/touch). A sheet opened by
 // keyboard starts on its close X (a ring is expected there); one opened by a tap starts on
 // its title, because WebKit rings a programmatically focused button even after a tap.
@@ -361,15 +383,14 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
         const focusable = getModalTabbableElements(panel)
         if (focusable.length === 0) return
 
-        const first = focusable[0]
-        const last = focusable[focusable.length - 1]
-
-        if (e.shiftKey && document.activeElement === first) {
+        const target = resolveFocusTrapTarget(
+          focusable,
+          document.activeElement,
+          e.shiftKey ? "backward" : "forward",
+        )
+        if (target) {
           e.preventDefault()
-          focusModalElement(last)
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault()
-          focusModalElement(first)
+          focusModalElement(target)
         }
       }
 

@@ -2,7 +2,10 @@ import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
 import test from "node:test"
 
-import { resolveBottomSheetFocusAction } from "../src/components/ui/bottom-sheet"
+import {
+  resolveBottomSheetFocusAction,
+  resolveFocusTrapTarget,
+} from "../src/components/ui/bottom-sheet"
 
 /**
  * Batch 8, plan item 9: the sheet places initial focus once per open, never again on a
@@ -62,4 +65,24 @@ test("the close X shows its ring for keyboard focus only", () => {
   const className = closeButton.match(/className="([^"]+)"/)?.[1] ?? ""
   assert.match(className, /focus-visible:ring-2/)
   assert.doesNotMatch(className, /(^|\s)focus:ring/)
+})
+
+test("the focus trap wraps from an element outside the tabbable list (tap-open title)", () => {
+  const [x, input, done] = ["x", "input", "done"]
+  const list = [x, input, done]
+  const title = "title (tabindex=-1)"
+  assert.equal(resolveFocusTrapTarget(list, title, "backward"), done, "Shift+Tab → last")
+  assert.equal(resolveFocusTrapTarget(list, title, "forward"), x, "Tab → first")
+  assert.equal(resolveFocusTrapTarget(list, "body", "backward"), done)
+  // A close-button-free sheet (e.g. the routine editor's discard sheet): same rule.
+  assert.equal(resolveFocusTrapTarget([input, done], title, "backward"), done)
+})
+
+test("the focus trap wraps at both ends and leaves the middle to the browser", () => {
+  const list = ["a", "b", "c"]
+  assert.equal(resolveFocusTrapTarget(list, "a", "backward"), "c")
+  assert.equal(resolveFocusTrapTarget(list, "c", "forward"), "a")
+  assert.equal(resolveFocusTrapTarget(list, "b", "forward"), null)
+  assert.equal(resolveFocusTrapTarget(list, "b", "backward"), null)
+  assert.equal(resolveFocusTrapTarget([], "a", "forward"), null)
 })
