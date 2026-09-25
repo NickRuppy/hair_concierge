@@ -178,3 +178,9 @@ Prototype: `scratchpad/proto-b7/index.html` (throwaway), shown in iOS Simulator 
   - dry shampoo, finish oil, scalp care → Täglich · 2–3× pro Woche · 1× pro Woche · Seltener
   - „Weiß ich nicht" everywhere; wash-relative options keep the concrete value as subtext; drop duplicates by mapped value.
 - **P2 Styling on its own page.** Styling inside the day composition felt incoherent. Behaviour questions (beyond quiz + products) move to a separate page „Hitze & Styling": drying method, heat tools, per tool frequency + heat protection; wash frequency only as fallback when no shampoo was entered. Proposed order: Produkte → Hitze & Styling → Deine Routine (styling card shows result only). Pending Nick's OK on order.
+
+### Prototype round 2 feedback (Nick, 2026-09-25)
+
+- „Duplicate option disappears" explained: with W = 1× pro Woche, „Bei jeder Wäsche" and „1× pro Woche" are the same value → show one.
+- **P3 Hitze & Styling must match production Feinschliff and be one question at a time, visual.** Two questions on one screen = too much visual load. Production reference: `refinement-question.tsx` (drying_routes, additional_heat_tools, heat:<source>), `refinement-options.tsx` (DRYING_ROUTE_OPTIONS with icons; ADDITIONAL_HEAT_TOOL_OPTIONS photo-card grid incl. Thermo-Wickler; HEAT_PROTECTION_OPTIONS), `public/images/tools/*.webp`. Production puts heat frequency + protection on one screen → split into two single-tap steps.
+- Finding: production already uses a discrete labelled frequency slider (`FrequencySliderField` / `DiscreteSlider`) for wet-wash frequency (Feinschliff) and product frequency (`personal-plan-products`). Open question to Nick: use it in the product sheet too (consistency) vs. one-tap buttons.
