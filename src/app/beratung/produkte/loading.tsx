@@ -48,8 +48,8 @@ function BarcodeGlyph() {
 
 export default function DiscoveryChecklistLoading() {
   return (
-    <div className="relative overflow-x-clip">
-      <div className="relative">
+    <div className="discovery-stage relative overflow-x-clip">
+      <div className="relative bg-[#faf8f6]">
         <main aria-busy="true" className="flex min-h-dvh flex-col bg-[#faf8f6]">
           <div className="flex-1 px-4 pb-8 pt-10">
             <h1 className={cn("mb-3.5", SCREEN_TITLE)}>Deine Produkte</h1>

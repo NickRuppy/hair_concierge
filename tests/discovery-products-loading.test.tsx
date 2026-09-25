@@ -26,10 +26,9 @@ function realEmptyScreen() {
   return renderToStaticMarkup(
     <DiscoveryProductsScreen
       items={[]}
-      busy={false}
       error={null}
       cameraBlocked={false}
-      landedItemId={null}
+      landedKey={null}
       onSearch={noop}
       onScan={noop}
       onEdit={noop}
