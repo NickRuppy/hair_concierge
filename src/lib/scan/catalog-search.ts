@@ -174,3 +174,22 @@ export function toScanSearchResult(row: CatalogSearchCandidate): ScanSearchResul
     productLine: identityParts(row).productLine,
   }
 }
+
+/**
+ * Whether one displayed row (brand + line + name) matches `query` with the same tiers as
+ * `matchCatalogProducts`. The search sheet uses it to keep only still-matching rows on
+ * screen while a new query's response is pending (batch 8).
+ */
+export function identityMatchesQuery(
+  parts: { brand: string | null; productLine?: string | null; name: string },
+  query: string,
+): boolean {
+  const normalizedQuery = query.trim().toLocaleLowerCase()
+  if (!normalizedQuery) return false
+  const title = composeProductIdentityTitle({
+    brand: parts.brand,
+    productLine: parts.productLine ?? null,
+    name: parts.name,
+  }).toLocaleLowerCase()
+  return matchTier(title, tokenize(title), normalizedQuery) !== null
+}

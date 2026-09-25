@@ -31,6 +31,10 @@ export function DiscoveryInvitationClient() {
   const [error, setError] = useState<string | null>(null)
   const [errorHint, setErrorHint] = useState<string | null>(null)
   const resolvedRef = useRef(false)
+  // The loader is owned here, not by the loading card: once its text has shown, the card
+  // stays for the loader minimum even if the invite resolves in between (batch 8).
+  const resolving = !identity && mode !== "unavailable"
+  const loaderVisible = useDelayedLoader(resolving)
 
   useEffect(() => {
     if (resolvedRef.current) return
@@ -109,7 +113,7 @@ export function DiscoveryInvitationClient() {
     }
   }
 
-  if (!identity && mode !== "unavailable") return <InvitationLoading />
+  if (resolving || loaderVisible) return <InvitationLoading showText={loaderVisible} />
   if (!identity) {
     return (
       <InvitationShell>
@@ -188,8 +192,7 @@ const CONTENT_FADE_IN =
  * the ready form laid out invisibly — and the „Wird geöffnet …" line only after 300 ms, so
  * a quick resolve shows no loader and no card that grows.
  */
-function InvitationLoading() {
-  const loaderVisible = useDelayedLoader(true)
+function InvitationLoading({ showText }: { showText: boolean }) {
   return (
     <InvitationShell>
       <div aria-hidden="true" className="invisible" inert>
@@ -199,7 +202,7 @@ function InvitationLoading() {
         className="absolute inset-0 grid place-items-center px-7 text-[var(--text-sub)]"
         role="status"
       >
-        {loaderVisible ? "Wird geöffnet …" : null}
+        {showText ? "Wird geöffnet …" : null}
       </p>
     </InvitationShell>
   )

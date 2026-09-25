@@ -152,6 +152,12 @@ function createHarness(renderComponent: () => ReactElement | null) {
   }
 
   const view = {
+    unmount() {
+      for (const value of hookValues) {
+        const record = value as EffectRecord | undefined
+        if (record && typeof record === "object" && "deps" in record) record.cleanup?.()
+      }
+    },
     tree: null as ReactElement | null,
     async settle(): Promise<ReactElement | null> {
       // A single `doRender()` captures the tree BEFORE its own microtask flush lets any
@@ -167,6 +173,10 @@ function createHarness(renderComponent: () => ReactElement | null) {
 }
 
 type Harness = ReturnType<typeof createHarness>
+
+function unmountHarness(view: Harness) {
+  view.unmount()
+}
 
 function queryInputProps(tree: ReactNode): Record<string, any> {
   const field = findAll(tree, (element) => element.props.type === "search")[0]
@@ -293,10 +303,17 @@ function mountSheet(overrides: Partial<Parameters<typeof ScanSearchSheet>[0]> = 
   )
 }
 
-// --- (a) old rows stay up through the debounce AND through the next fetch --------------
+// --- (a) only rows that belong to (or match) the query in the field are ever shown ------
 
-test("typing a new query keeps old rows visible during the debounce and during the fetch", async (t) => {
-  t.mock.timers.enable({ apis: ["setTimeout"] })
+function rowButtons(tree: ReactNode, name: string) {
+  return findAll(
+    tree,
+    (element) => element.type === "button" && textContent(element).includes(name),
+  )
+}
+
+test("a new query drops previous rows that do not match it at once — never selectable for B", async (t) => {
+  t.mock.timers.enable({ apis: ["setTimeout", "Date"] })
   const { fetchImpl, catalogGate } = createGatedFetch()
   const restore = stubFetch(fetchImpl)
   try {
@@ -309,33 +326,51 @@ test("typing a new query keeps old rows visible during the debounce and during t
     t.mock.timers.tick(DEBOUNCE_MS)
     catalogGate("erst").resolve({ results: [first] })
     await view.settle()
-    assert.ok(textContent(view.tree).includes(first.name), "first query's row is on screen")
+    assert.equal(rowButtons(view.tree, first.name).length, 1, "query A's row is on screen")
 
-    // A new keystroke: nothing may change yet — the debounce hasn't even started counting
-    // down to a new fetch, so the OLD rows are still exactly what's on screen.
+    // Query B: A's row does not match B, so it is gone the moment she types — no row for
+    // product A can be tapped while B is pending. Nothing replaces it yet (no skeleton
+    // before the fetch has run for 300 ms).
     await typeQuery(view, "zwei")
-    assert.ok(textContent(view.tree).includes(first.name), "old row survives the keystroke")
+    assert.equal(rowButtons(view.tree, first.name).length, 0, "A-only row gone at once")
     assert.equal(findAll(view.tree, isSkeleton).length, 0, "no skeleton during the debounce")
-
-    // Debounce elapses: the new fetch starts, but it's gated — still old rows, no skeleton
-    // (rows are already on screen, so this can never be a "first load").
     t.mock.timers.tick(DEBOUNCE_MS)
     await view.settle()
-    assert.ok(textContent(view.tree).includes(first.name), "old row survives while refetching")
-    assert.equal(findAll(view.tree, isSkeleton).length, 0, "reload with old rows never skeletons")
+    assert.equal(findAll(view.tree, isSkeleton).length, 0, "no skeleton before 300 ms")
+    assert.equal(textContent(view.tree).includes("Dazu haben wir nichts gefunden"), false)
 
-    // Even past the loader delay, still the stale row — nothing timer-driven forces a
-    // skeleton onto a reload that already has rows.
-    t.mock.timers.tick(LOADER_DELAY_MS)
-    await view.settle()
-    assert.ok(textContent(view.tree).includes(first.name))
-    assert.equal(findAll(view.tree, isSkeleton).length, 0)
-
-    // The second query's answer lands: it replaces the first query's row.
     catalogGate("zwei").resolve({ results: [second] })
     await view.settle()
-    assert.ok(textContent(view.tree).includes(second.name))
-    assert.equal(textContent(view.tree).includes(first.name), false, "stale row is gone")
+    assert.equal(rowButtons(view.tree, second.name).length, 1, "B's own answer replaces it")
+    assert.equal(rowButtons(view.tree, first.name).length, 0)
+  } finally {
+    restore()
+    t.mock.timers.reset()
+  }
+})
+
+test("extending the query keeps the previous rows that still match it through the reload", async (t) => {
+  t.mock.timers.enable({ apis: ["setTimeout", "Date"] })
+  const { fetchImpl, catalogGate } = createGatedFetch()
+  const restore = stubFetch(fetchImpl)
+  try {
+    const keeps = catalogResult({ id: "row-keeps", name: "Erstes Shampoo" })
+    const drops = catalogResult({ id: "row-drops", name: "Erdbeer Maske", brand: "Frucht" })
+    const view = mountSheet()
+    await view.settle()
+    await typeQuery(view, "er")
+    t.mock.timers.tick(DEBOUNCE_MS)
+    catalogGate("er").resolve({ results: [keeps, drops] })
+    await view.settle()
+    assert.equal(rowButtons(view.tree, drops.name).length, 1)
+
+    await typeQuery(view, "erstes")
+    assert.equal(rowButtons(view.tree, keeps.name).length, 1, "a still-matching row stays")
+    assert.equal(rowButtons(view.tree, drops.name).length, 0, "a no-longer-matching row goes")
+    t.mock.timers.tick(DEBOUNCE_MS + LOADER_DELAY_MS * 2)
+    await view.settle()
+    assert.equal(rowButtons(view.tree, keeps.name).length, 1, "stays for the whole reload")
+    assert.equal(findAll(view.tree, isSkeleton).length, 0, "no skeleton while rows are shown")
   } finally {
     restore()
     t.mock.timers.reset()
@@ -345,7 +380,7 @@ test("typing a new query keeps old rows visible during the debounce and during t
 // --- (b) skeleton timing: never under 300ms, only for a genuine first load -------------
 
 test("no skeleton when the fetch answers in <300ms; a first load only skeletons after 300ms in flight", async (t) => {
-  t.mock.timers.enable({ apis: ["setTimeout"] })
+  t.mock.timers.enable({ apis: ["setTimeout", "Date"] })
   const { fetchImpl, catalogGate } = createGatedFetch()
   const restore = stubFetch(fetchImpl)
   try {
@@ -385,9 +420,19 @@ test("no skeleton when the fetch answers in <300ms; a first load only skeletons 
       findAll(slow.tree, isSkeleton).length > 0,
       "300ms in flight with nothing on screen yet",
     )
+    // The rows answer 50 ms after the skeleton appeared: the skeleton stays for its 500 ms
+    // minimum, and only then do the rows swap in (never a skeleton blink).
+    t.mock.timers.tick(50)
     catalogGate("lang").resolve({ results: [slowResult] })
     await slow.settle()
-    assert.equal(findAll(slow.tree, isSkeleton).length, 0, "skeleton clears once the rows land")
+    assert.ok(findAll(slow.tree, isSkeleton).length > 0, "held for the loader minimum")
+    assert.equal(textContent(slow.tree).includes(slowResult.name), false, "rows wait for it")
+    t.mock.timers.tick(MOTION_MS.loaderMinimum - 51)
+    await slow.settle()
+    assert.ok(findAll(slow.tree, isSkeleton).length > 0, "still inside the minimum")
+    t.mock.timers.tick(1)
+    await slow.settle()
+    assert.equal(findAll(slow.tree, isSkeleton).length, 0, "skeleton goes after 500 ms")
     assert.ok(textContent(slow.tree).includes(slowResult.name))
   } finally {
     restore()
@@ -398,7 +443,7 @@ test("no skeleton when the fetch answers in <300ms; a first load only skeletons 
 // --- (c) a reload with old rows already shown never skeletons, however long it takes ---
 
 test("no skeleton on a reload when old rows are already shown, even past 300ms in flight", async (t) => {
-  t.mock.timers.enable({ apis: ["setTimeout"] })
+  t.mock.timers.enable({ apis: ["setTimeout", "Date"] })
   const { fetchImpl, catalogGate } = createGatedFetch()
   const restore = stubFetch(fetchImpl)
   try {
@@ -431,12 +476,13 @@ test("no skeleton on a reload when old rows are already shown, even past 300ms i
 // --- (d) the dm lane keeps its own rows through its own reload -------------------------
 
 test("dm rows persist while a new dm request runs and are replaced once it answers", async (t) => {
-  t.mock.timers.enable({ apis: ["setTimeout"] })
+  t.mock.timers.enable({ apis: ["setTimeout", "Date"] })
   const { fetchImpl, catalogGate, dmGate } = createGatedFetch()
   const restore = stubFetch(fetchImpl)
   try {
-    const dmFirst = retailerResult({ gtin: "1", name: "dm Erste Spülung" })
-    const dmSecond = retailerResult({ gtin: "2", name: "dm Zweite Spülung" })
+    // The first row still matches the refined query, so it may stay through the reload.
+    const dmFirst = retailerResult({ gtin: "1", name: "Aqua Revive Spülung", brand: "dm" })
+    const dmSecond = retailerResult({ gtin: "2", name: "Aqua Revive Maske", brand: "dm" })
     const view = mountSheet({ retailerSearchEnabled: true })
     await view.settle()
 
@@ -486,7 +532,7 @@ test("dm rows persist while a new dm request runs and are replaced once it answe
 // --- (e) resultsFooter stays mounted across a reload once it has shown -----------------
 
 test("resultsFooter stays mounted across a reload once the catalog lane has answered once", async (t) => {
-  t.mock.timers.enable({ apis: ["setTimeout"] })
+  t.mock.timers.enable({ apis: ["setTimeout", "Date"] })
   const { fetchImpl, catalogGate } = createGatedFetch()
   const restore = stubFetch(fetchImpl)
   try {
@@ -576,5 +622,41 @@ test("stepHeader renders in the header slot while stepContent is set; omitting i
     )
   } finally {
     restore()
+  }
+})
+
+// --- unmount: nothing keeps running or writing for a sheet that is gone ----------------
+
+test("unmount aborts both lanes, and a late answer writes nothing", async (t) => {
+  t.mock.timers.enable({ apis: ["setTimeout", "Date"] })
+  const { fetchImpl, catalogGate } = createGatedFetch()
+  const restore = stubFetch(fetchImpl)
+  const aborted: string[] = []
+  const OriginalAbortController = globalThis.AbortController
+  globalThis.AbortController = class extends OriginalAbortController {
+    abort() {
+      aborted.push("abort")
+      super.abort()
+    }
+  } as typeof AbortController
+  try {
+    const view = mountSheet()
+    await view.settle()
+    await typeQuery(view, "spät")
+    t.mock.timers.tick(DEBOUNCE_MS)
+    await view.settle()
+
+    // The effect cleanups of an unmount, as React runs them.
+    const tree = view.tree
+    assert.ok(tree)
+    unmountHarness(view)
+    assert.ok(aborted.length >= 1, "the in-flight catalog request is aborted")
+    catalogGate("spät").resolve({ results: [catalogResult({ name: "Spätes Shampoo" })] })
+    await Promise.resolve()
+    t.mock.timers.tick(LOADER_DELAY_MS * 3)
+  } finally {
+    globalThis.AbortController = OriginalAbortController
+    restore()
+    t.mock.timers.reset()
   }
 })
