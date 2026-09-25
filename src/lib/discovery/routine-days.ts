@@ -1,5 +1,5 @@
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
-import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
+import { compareProductFrequencies, type ProductFrequency } from "@/lib/vocabulary/frequencies"
 
 import {
   DISCOVERY_STYLING_PRODUCT_TYPE,
@@ -8,6 +8,7 @@ import {
 } from "./classify"
 import {
   DISCOVERY_FREQUENCY_LABELS,
+  isKnownProductFrequency,
   mostFrequentDiscoveryFrequency,
   type DiscoveryItemFrequency,
 } from "./frequency"
@@ -22,21 +23,31 @@ import {
  *    frequent shampoo (none known → open, asked in the call).
  *  - Intensiv-Pflegetag: pre-wash oil or conditioner, deep cleansing, bondbuilder, mask;
  *    cadence = her most frequent mask or bondbuilder.
- *  - Zwischendurch: finish oil (and a legacy role-less oil), dry shampoo, scalp care.
+ *  - Tag ohne Wäsche (batch 8, replaces „Zwischendurch"): finish oil (and a legacy role-less
+ *    oil), dry shampoo, scalp care — and her leave-in AS WELL when she uses it more often than
+ *    her most frequent shampoo (display only; an unknown frequency on either side → Waschtag
+ *    only). No cadence.
  *  - Styling: heat protectant and styling products (D2) — products only; her heat answers
  *    have their own page.
  *  - Weitere: products whose usage is still open („Kategorie offen").
  *
- * Only non-empty cards, in that order. Within the Waschtag and the Intensiv-Pflegetag the
- * products follow the routine's own order; everywhere else, and within a rank, capture order.
+ * In that order. Batch 8 (plan `plans/discovery-b8-motion-days/plan.md` Part A): Waschtag and
+ * Tag ohne Wäsche always show — empty too; the other days only with products. Within the
+ * Waschtag and the Intensiv-Pflegetag the products follow the routine's own order; everywhere
+ * else, and within a rank, capture order.
  */
 
-export type DiscoveryRoutineDayKind = "wash_day" | "intensive_day" | "between" | "styling" | "other"
+export type DiscoveryRoutineDayKind =
+  | "wash_day"
+  | "intensive_day"
+  | "no_wash_day"
+  | "styling"
+  | "other"
 
 export const DISCOVERY_ROUTINE_DAY_TITLES: Record<DiscoveryRoutineDayKind, string> = {
   wash_day: "Waschtag",
   intensive_day: "Intensiv-Pflegetag",
-  between: "Zwischendurch",
+  no_wash_day: "Tag ohne Wäsche",
   styling: "Styling",
   other: "Weitere",
 }
@@ -44,10 +55,13 @@ export const DISCOVERY_ROUTINE_DAY_TITLES: Record<DiscoveryRoutineDayKind, strin
 const DAY_ORDER: readonly DiscoveryRoutineDayKind[] = [
   "wash_day",
   "intensive_day",
-  "between",
+  "no_wash_day",
   "styling",
   "other",
 ]
+
+/** The days that always show, empty too (Nick's ruling 2026-09-25). */
+const DEFAULT_DAYS: ReadonlySet<DiscoveryRoutineDayKind> = new Set(["wash_day", "no_wash_day"])
 
 /** What the composer reads of an item — `DiscoveryIntakeItemView` satisfies it. */
 export type DiscoveryRoutineDayItem = {
@@ -90,7 +104,7 @@ function placementOf(item: DiscoveryRoutineDayItem): Placement {
     case "oil":
       if (role === "leave_on_fibre_conditioning") return { day: "wash_day", rank: 3 }
       if (role === "pre_wash_fibre_treatment") return { day: "intensive_day", rank: 0 }
-      return { day: "between", rank: 0 }
+      return { day: "no_wash_day", rank: 0 }
     case "deep_cleansing_shampoo":
       return { day: "intensive_day", rank: 1 }
     case "bondbuilder":
@@ -99,7 +113,7 @@ function placementOf(item: DiscoveryRoutineDayItem): Placement {
       return { day: "intensive_day", rank: 3 }
     case "dry_shampoo":
     case "scalp_care":
-      return { day: "between", rank: 0 }
+      return { day: "no_wash_day", rank: 0 }
     case "heat_protectant":
       return { day: "styling", rank: 0 }
   }
@@ -122,19 +136,37 @@ function cadenceOf(
   )
 }
 
+/**
+ * A leave-in she uses strictly more often than her most frequent shampoo also belongs to the
+ * days without a wash. Unknown or unasked on either side → no.
+ */
+function alsoOnNoWashDay(
+  item: DiscoveryRoutineDayItem,
+  shampooCadence: ProductFrequency | null,
+): boolean {
+  if (item.category !== "leave_in" || shampooCadence === null) return false
+  if (!isKnownProductFrequency(item.frequency)) return false
+  return compareProductFrequencies(item.frequency, shampooCadence) === 1
+}
+
 export function composeDiscoveryRoutineDays<T extends DiscoveryRoutineDayItem>(
   items: readonly T[],
 ): DiscoveryRoutineDay<T>[] {
-  const placed = items
-    .filter((item) => item.source !== "none")
-    .map((item, index) => ({ item, index, ...placementOf(item) }))
+  const products = items.filter((item) => item.source !== "none")
+  const shampooCadence = cadenceOf("wash_day", products)
+  const placed = products.flatMap((item, index) => {
+    const placement = { item, index, ...placementOf(item) }
+    return alsoOnNoWashDay(item, shampooCadence)
+      ? [placement, { item, index, day: "no_wash_day" as const, rank: 0 }]
+      : [placement]
+  })
 
   return DAY_ORDER.flatMap((kind): DiscoveryRoutineDay<T>[] => {
     const members = placed
       .filter((entry) => entry.day === kind)
       .sort((left, right) => left.rank - right.rank || left.index - right.index)
       .map((entry) => entry.item)
-    if (members.length === 0) return []
+    if (members.length === 0 && !DEFAULT_DAYS.has(kind)) return []
     const cadence = cadenceOf(kind, members)
     return [
       {
