@@ -135,3 +135,21 @@ Source: Nick's field notes after the first real calls. Code evidence on `origin/
   6. Own-catalog match gets typo tolerance (Damerau-Levenshtein, 1 edit for short tokens, 2 for longer).
   7. dm lane gets its **own rate-limit bucket** (separate from `SCAN_RATE_LIMIT`), plus a client-side query→results cache so a repeated query is not refetched.
   Note: the research lane itself suggested keeping dm submit-only (unknown cost); overruled — the extra tap is the problem, dm has no per-request price, guardrails 3+7 cover load.
+
+---
+
+## Checklist UX walkthrough (Nick, iOS Simulator, live prod, 2026-09-25)
+
+Context: after rejecting two drafts and a Fable proposition for the frequency/heat questions („alle schrecklich … soll sich intuitiv und leicht anfühlen, nicht überfordern"), Nick clicked the LIVE participant flow (test invite „Theresa Test", enrollment `f807756d-73f2-4d45-b526-71174f2b9f2e`, revoke later) and gave these findings. Target: iterate the whole capture flow, then prototype in the simulator.
+
+**C1 — Empty product screen.** „Deine Produkte / Trag ein, was du benutzt." + search + Scannen + underlined link, then a blank half-screen. (a) What useful content fills that space and visibly „fills up" as she adds products? (b) Kill the generic headline/subheadline pattern everywhere — no filler sublines.
+
+**C2 — Search sheet + multi-step sheet.** The search sheet only slides up a little, with lots of empty space under it; transitions between sheets feel unnatural. Wanted: the sheet comes up large (≥ half screen), she finds the product, and the SAME sheet continues — auto-scrolls to the next section (how do you use it → how often), last section saves the product with identity + usage + frequency attached. One continuous flow inside one sheet instead of sheet → close → new sheet. Frequency as slider or buttons.
+
+**C3 — Product list cards.** Images too small, too much white space in the card, every category pill the same colour with a dropdown chevron. Look at the iOS app's product card (brand, line, name, category layout) and adopt it.
+
+**C4 — Underlined text links as secondary CTAs (global).** „Nicht gefunden? Namen eintippen" as a thin underline is easy to miss — not a best practice. Secondary actions must still read as buttons (less prominent colour is fine). And: don't show „Nicht gefunden" upfront — start with search + scan only; the manual-entry route appears when a search yields nothing (e.g. „Keine Treffer" → enter it yourself).
+
+**C5 — Unknown-product flow.** Typed-name sheet → then a different, bigger „Was ist das?" sheet pops out. Research the best pattern for a multi-part sheet: push/slide to part 2 vs. one sheet with sections that reveal/scroll automatically. Make it one natural motion.
+
+**C6 — Final overview → „Deine Tage".** Nick likes the end overview (categories correct). Turn it into the routine composition: reuse the application-guidance day logic (wash day = shampoo + conditioner + leave-in, etc.) so the overview asks „Ist das dein Waschtag mit diesen Produkten?" — confirming products per category AND rhythm/frequencies on one page („two birds, one stone"). Frequencies captured in C2 feed it.
