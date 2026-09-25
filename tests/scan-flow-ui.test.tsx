@@ -2232,11 +2232,13 @@ test("Task 8: the persistent recovery link renders below catalog-only results wi
   assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
 })
 
-test("Task 8 delta review (Finding 2): no link while the catalog lane is loading after a resubmit, even though stale results are still stored", async () => {
+test("Batch 8 (supersedes Task 8 delta review Finding 2): a resubmit's reload keeps the stale rows AND the recovery link up, with no skeleton, until the new answer lands", async () => {
   // `catalogResults` persists across a resubmit's fresh loading cycle -- nothing clears it
-  // until the NEW response lands -- so the predicate must key off `catalogStatus`, not
-  // merely off stored rows being non-empty from the PREVIOUS submit. (F2: a resubmit of the
-  // SAME query is now served from the sheet's cache, so the second submit uses a new query.)
+  // until the NEW response lands. Batch 8 changed what that means on screen: instead of
+  // hiding the stale rows (and the recovery link riding on them) for the length of the
+  // reload, the motion rework keeps them exactly as they were -- no skeleton, no flash --
+  // until the new answer actually replaces them. (F2: a resubmit of the SAME query is
+  // served from the sheet's cache, so the second submit below uses a new, refined query.)
   let catalogCalls = 0
   const secondGate = deferred<Response>()
   const view = await mountSearchSheet(
@@ -2264,16 +2266,24 @@ test("Task 8 delta review (Finding 2): no link while the catalog lane is loading
   await view.settle()
 
   assert.equal(
-    findAll(view.tree, (element) => element.type === Skeleton).length > 0,
-    true,
-    "expected the catalog loading skeletons to be showing",
+    findAll(view.tree, (element) => element.type === Skeleton).length,
+    0,
+    "rows are already on screen for this reload -- batch 8: a reload with stale rows never skeletons",
   )
-  assert.equal(persistentRecoveryLinkButtons(view.tree).length, 0)
-  assert.equal(textContent(view.tree).includes("Nicht dabei?"), false)
+  assert.ok(
+    buttonLabels(view.tree).some((label) => label.includes(liveCatalogResult().name)),
+    "the stale row from the first submit is still shown while the reload is in flight",
+  )
+  assert.equal(
+    persistentRecoveryLinkButtons(view.tree).length,
+    1,
+    "the link stays up too -- nothing actually disappeared from screen",
+  )
+  assert.equal(textContent(view.tree).includes("Nicht dabei?"), true)
 
   secondGate.resolve(json({ results: [liveCatalogResult()] }))
   await view.settle()
-  // Once the resubmit settles, the link is back.
+  // Once the resubmit settles, the link is (still) showing.
   assert.equal(persistentRecoveryLinkButtons(view.tree).length, 1)
 })
 
@@ -2414,9 +2424,11 @@ test("F2: typing ≥ 3 chars auto-fires the dm lane after the typing pause (trig
   await delay(300)
   await view.settle()
   assert.deepEqual(retailerCalls, [], "the dm lane must wait for the ~500 ms typing pause")
-  // While the pause runs, the dm section already holds its loading row below the catalog.
-  assert.ok(sectionLabelTexts(view.tree).includes("Weitere Treffer"))
-  assert.ok(findAll(view.tree, (element) => element.type === Skeleton).length > 0)
+  // Batch 8: "loading" only starts once the fetch itself starts, not while merely
+  // debouncing -- the dm lane's own debounce is 500ms, so at 300ms it hasn't fired its
+  // fetch yet and nothing dm-related is on screen (no section label, no skeleton).
+  assert.equal(sectionLabelTexts(view.tree).includes("Weitere Treffer"), false)
+  assert.equal(findAll(view.tree, (element) => element.type === Skeleton).length, 0)
 
   await delay(AUTO_DM_WAIT_MS - 300)
   await view.settle()

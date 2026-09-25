@@ -13,6 +13,7 @@ import type {
 import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
 import { PERSONAL_PLAN_PRODUCT_CATEGORIES } from "@/lib/personal-plan/products/contracts"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import { MOTION_MS } from "@/lib/motion"
 import { composeProductIdentityTitle } from "@/lib/product-identity/display-title"
 import { cn } from "@/lib/utils"
 
@@ -307,6 +308,7 @@ export function ScanSearchSheet({
   retailerSearchEnabled = false,
   analytics = noOpScanAnalytics,
   stepContent,
+  stepHeader,
   resultsFooter,
   autoFocusSearch = false,
   sheetClassName,
@@ -367,6 +369,14 @@ export function ScanSearchSheet({
    * search (header and body) — the query and its results stay, so going back finds them.
    */
   stepContent?: ReactNode
+  /**
+   * Batch 8: what the header slot shows while `stepContent` is set. Optional and
+   * backward compatible — when `stepContent` is set and this is omitted, the header
+   * slot renders nothing (`undefined`), same as before this prop existed. Given, it
+   * replaces the plain search header the same way `stepContent` replaces the search
+   * body, so a step's own title survives the header-slot swap instead of vanishing.
+   */
+  stepHeader?: ReactNode
   /** Rendered at the end of the results once the catalog lane has answered. */
   resultsFooter?: ReactNode
   /** Focus the search field when the sheet opens. */
@@ -381,6 +391,15 @@ export function ScanSearchSheet({
   const [retailerStatus, setRetailerStatus] = useState<RetailerStatus>("idle")
   const [retailerResults, setRetailerResults] = useState<ScanRetailerResult[]>([])
   const [retailerCatalogMatches, setRetailerCatalogMatches] = useState<ScanSearchResult[]>([])
+  // Batch 8 motion: a lane only shows its skeleton once it has been actually FETCHING
+  // (not merely debouncing) for `MOTION_MS.loaderDelay`, and only while no settled rows
+  // of its own are already on screen (first load only — see `runCatalogSearch` /
+  // `runRetailerSearch`, which arm/disarm these).
+  const [catalogShowSkeleton, setCatalogShowSkeleton] = useState(false)
+  const [retailerShowSkeleton, setRetailerShowSkeleton] = useState(false)
+  // `resultsFooter` (discovery's "Selbst eintragen"), once shown, stays mounted through
+  // later reloads of the SAME query series — reset only on close or query < 2 chars.
+  const [footerEligible, setFooterEligible] = useState(false)
   const [intakeOpen, setIntakeOpen] = useState(false)
   const [intakeBrandText, setIntakeBrandText] = useState("")
   const [intakeProductNameText, setIntakeProductNameText] = useState("")
@@ -391,6 +410,10 @@ export function ScanSearchSheet({
   // races a duplicate, debounced fetch for the same query (T4 brief §3).
   const debounceTimeoutRef = useRef<number | null>(null)
   const retailerDebounceTimeoutRef = useRef<number | null>(null)
+  // Batch 8: each lane's pending "arm the skeleton" timer (`MOTION_MS.loaderDelay` after
+  // the fetch itself starts, first load only).
+  const catalogSkeletonTimeoutRef = useRef<number | null>(null)
+  const retailerSkeletonTimeoutRef = useRef<number | null>(null)
   // F2: each lane's in-flight fetch, cancelled (not just ignored) once superseded.
   const catalogAbortRef = useRef<AbortController | null>(null)
   const retailerAbortRef = useRef<AbortController | null>(null)
@@ -405,8 +428,18 @@ export function ScanSearchSheet({
   const searchInputRef = useRef<HTMLInputElement | null>(null)
   const focusSearchOnMountRef = useRef(false)
 
+  /** Only resets the submit flag — the dm lane's rows are a separate concern (below). */
   function resetToUnsubmitted() {
     setSubmitted(false)
+  }
+
+  /**
+   * Drops the dm lane back to idle with no rows — used only where NOTHING will replace
+   * them (the query fell below the dm minimum, below `MIN_QUERY_LENGTH` entirely, or the
+   * sheet closed). A query change that will keep running the dm lane must NOT call this:
+   * its rows stay on screen (stale) until the next answer lands (batch 8, F4).
+   */
+  function clearRetailerLane() {
     setRetailerStatus("idle")
     setRetailerResults([])
     setRetailerCatalogMatches([])
@@ -418,6 +451,14 @@ export function ScanSearchSheet({
         window.clearTimeout(timeoutRef.current)
         timeoutRef.current = null
       }
+    }
+  }
+
+  /** The "arm the skeleton after `loaderDelay`" timers — always safe to cancel early. */
+  function clearSkeletonTimeout(timeoutRef: { current: number | null }) {
+    if (timeoutRef.current !== null) {
+      window.clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
     }
   }
 
@@ -433,6 +474,10 @@ export function ScanSearchSheet({
     abortLane(catalogAbortRef)
     abortLane(retailerAbortRef)
     clearPendingDebounces()
+    clearSkeletonTimeout(catalogSkeletonTimeoutRef)
+    clearSkeletonTimeout(retailerSkeletonTimeoutRef)
+    setCatalogShowSkeleton(false)
+    setRetailerShowSkeleton(false)
   }
 
   // Unmount: nothing may keep fetching for a sheet that no longer exists.
@@ -455,7 +500,9 @@ export function ScanSearchSheet({
       setQuery("")
       setCatalogResults([])
       setCatalogStatus("idle")
+      setFooterEligible(false)
       resetToUnsubmitted()
+      clearRetailerLane()
       setIntakeOpen(false)
       setIntakeBrandText("")
       setIntakeProductNameText("")
@@ -467,6 +514,19 @@ export function ScanSearchSheet({
     abortLane(catalogAbortRef)
     const controller = new AbortController()
     catalogAbortRef.current = controller
+    // Batch 8: "loading" starts here — when the fetch itself begins, not when the
+    // debounce that led to it started (`startCatalogLane` no longer sets this). A
+    // skeleton is only worth arming when nothing is on screen yet for this query series;
+    // otherwise the old rows below just stay, quietly, until this settles.
+    setCatalogStatus("loading")
+    const firstLoad = catalogResults.length === 0
+    clearSkeletonTimeout(catalogSkeletonTimeoutRef)
+    if (firstLoad) {
+      catalogSkeletonTimeoutRef.current = window.setTimeout(() => {
+        catalogSkeletonTimeoutRef.current = null
+        if (catalogRequests.isCurrent(token)) setCatalogShowSkeleton(true)
+      }, MOTION_MS.loaderDelay)
+    }
     try {
       const response = await fetch(`/api/scan/search?q=${encodeURIComponent(trimmed)}`, {
         cache: "no-store",
@@ -477,11 +537,20 @@ export function ScanSearchSheet({
       const results = body.results ?? []
       catalogCacheRef.current.set(trimmed, results)
       if (!catalogRequests.isCurrent(token)) return
+      clearSkeletonTimeout(catalogSkeletonTimeoutRef)
+      setCatalogShowSkeleton(false)
       setCatalogResults(results)
       setCatalogStatus("ready")
+      setFooterEligible(true)
     } catch (error) {
       if (isAbortError(error) || !catalogRequests.isCurrent(token)) return
+      clearSkeletonTimeout(catalogSkeletonTimeoutRef)
+      setCatalogShowSkeleton(false)
+      // The latest request failed: stale rows from an earlier query may no longer be
+      // relevant, and showing them under an error banner is more confusing than useful.
+      setCatalogResults([])
       setCatalogStatus("error")
+      setFooterEligible(true)
     }
   }
 
@@ -498,6 +567,18 @@ export function ScanSearchSheet({
     abortLane(retailerAbortRef)
     const controller = new AbortController()
     retailerAbortRef.current = controller
+    // Batch 8: same "loading starts when the fetch starts" rule as the catalog lane —
+    // and the dm lane's own rows (not the catalog's) decide whether this is its first
+    // load. Existing rows are left standing; only cleared once this settles.
+    setRetailerStatus("loading")
+    const firstLoad = retailerResults.length === 0 && retailerCatalogMatches.length === 0
+    clearSkeletonTimeout(retailerSkeletonTimeoutRef)
+    if (firstLoad) {
+      retailerSkeletonTimeoutRef.current = window.setTimeout(() => {
+        retailerSkeletonTimeoutRef.current = null
+        if (retailerRequests.isCurrent(token)) setRetailerShowSkeleton(true)
+      }, MOTION_MS.loaderDelay)
+    }
     const startedAt = performance.now()
     const track = (
       body: Pick<ScanRetailerSearchResponse, "catalog" | "retailer" | "retailerOutcome">,
@@ -518,6 +599,8 @@ export function ScanSearchSheet({
       const body = (await response.json()) as ScanRetailerSearchResponse
       if (body.retailerOutcome === "ok") retailerCacheRef.current.set(trimmed, body)
       if (!retailerRequests.isCurrent(token)) return
+      clearSkeletonTimeout(retailerSkeletonTimeoutRef)
+      setRetailerShowSkeleton(false)
       if (body.retailerOutcome === "unavailable") {
         setRetailerStatus("error")
         setRetailerResults([])
@@ -533,25 +616,35 @@ export function ScanSearchSheet({
       })
     } catch (error) {
       if (isAbortError(error) || !retailerRequests.isCurrent(token)) return
+      clearSkeletonTimeout(retailerSkeletonTimeoutRef)
+      setRetailerShowSkeleton(false)
+      // Same call as the catalog lane's error path: nothing replaced these rows, and the
+      // unavailable copy reads oddly next to a stale hit list.
       setRetailerStatus("error")
+      setRetailerResults([])
+      setRetailerCatalogMatches([])
       track({ catalog: [], retailer: [], retailerOutcome: "unavailable" })
     }
   }
 
   /**
-   * Starts (or re-starts) the catalog lane for `trimmed`: a cache hit is applied at once;
-   * otherwise the lane shows loading and fetches after `debounceMs` (0 = right away).
+   * Starts (or re-starts) the catalog lane for `trimmed`: a cache hit is applied at once
+   * (no loading state); otherwise the fetch fires after `debounceMs` (0 = right away) and
+   * `runCatalogSearch` itself flips the lane to "loading" once that fetch actually
+   * starts — nothing here does, so the debounce window shows no visible change (batch 8).
    */
   function startCatalogLane(trimmed: string, debounceMs: number) {
     const token = catalogRequests.begin()
     const cached = catalogCacheRef.current.get(trimmed)
     if (cached) {
       abortLane(catalogAbortRef)
+      clearSkeletonTimeout(catalogSkeletonTimeoutRef)
+      setCatalogShowSkeleton(false)
       setCatalogResults(cached)
       setCatalogStatus("ready")
+      setFooterEligible(true)
       return
     }
-    setCatalogStatus("loading")
     if (debounceMs === 0) {
       void runCatalogSearch(trimmed, token)
       return
@@ -562,18 +655,22 @@ export function ScanSearchSheet({
     }, debounceMs)
   }
 
-  /** The dm-lane analogue of `startCatalogLane`; the loading row shows while it waits. */
+  /**
+   * The dm-lane analogue of `startCatalogLane`. Existing dm rows (if the caller is
+   * re-starting the lane for a refined query that still runs it) are left in place —
+   * cleared only by `clearRetailerLane` when nothing will replace them, or once this
+   * lane's own request settles.
+   */
   function startRetailerLane(trimmed: string, trigger: RetailerSearchTrigger, debounceMs: number) {
     const token = retailerRequests.begin()
     const cached = retailerCacheRef.current.get(trimmed)
     if (cached) {
       abortLane(retailerAbortRef)
+      clearSkeletonTimeout(retailerSkeletonTimeoutRef)
+      setRetailerShowSkeleton(false)
       applyRetailerResponse(cached)
       return
     }
-    setRetailerStatus("loading")
-    setRetailerResults([])
-    setRetailerCatalogMatches([])
     if (debounceMs === 0) {
       void runRetailerSearch(trimmed, token, trigger)
       return
@@ -586,6 +683,12 @@ export function ScanSearchSheet({
 
   // Every query change (typing) cancels both lanes, drops back to unsubmitted state and
   // re-arms both debounces — T4 brief §3, F2. Also fires on mount (query "").
+  //
+  // Batch 8: this no longer clears `catalogResults` (or the dm lane's rows) just because
+  // a new query is coming — the previous, still-settled rows stay on screen until this
+  // query's own answer lands (or an error drops them). The dm lane's rows are only
+  // dropped here when NOTHING will replace them: the query fell below the dm minimum or
+  // below `MIN_QUERY_LENGTH` entirely.
   useEffect(() => {
     cancelBothLanes()
     resetToUnsubmitted()
@@ -594,11 +697,15 @@ export function ScanSearchSheet({
     if (trimmed.length < MIN_QUERY_LENGTH) {
       setCatalogStatus("idle")
       setCatalogResults([])
+      setFooterEligible(false)
+      clearRetailerLane()
       return
     }
     startCatalogLane(trimmed, DEBOUNCE_MS)
     if (retailerSearchEnabled && trimmed.length >= RETAILER_AUTO_MIN_QUERY_LENGTH) {
       startRetailerLane(trimmed, "auto", RETAILER_DEBOUNCE_MS)
+    } else {
+      clearRetailerLane()
     }
     return clearPendingDebounces
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -635,27 +742,36 @@ export function ScanSearchSheet({
     setIntakeOpen(true)
   }
 
-  // Whether the catalog section is ACTUALLY rendering rows right now — `catalogResults`
-  // persists across a fresh loading cycle (nothing clears it until the new response lands),
-  // so the status is part of "rows are on screen" (delta review, Finding 2).
-  const liveRows = catalogStatus === "ready" ? catalogResults : []
+  // Whether the catalog section is ACTUALLY rendering rows right now. Batch 8: unlike
+  // before, this no longer depends on `catalogStatus === "ready"` — `catalogResults`
+  // itself is the settled rows for this query series, and they stay on screen through a
+  // reload (`catalogStatus === "loading"`) exactly as long as nothing has cleared them.
+  const liveRows = catalogResults
   const showCatalogResults = liveRows.length > 0
+  // A RELOAD, not a first load: rows are already on screen while a fresh fetch runs.
+  const catalogReloading = catalogStatus === "loading" && showCatalogResults
   // The dm lane has been started for this query — typing pause (3+ chars) or submit.
   // The server answering `disabled` renders as if the lane were off.
   const dmStarted = retailerSearchEnabled && retailerStatus !== "idle"
   const dmActive = dmStarted && retailerStatus !== "disabled"
   const dmLoading = dmActive && retailerStatus === "loading"
   const dmFailed = dmActive && retailerStatus === "error"
-  const dmSettled = dmStarted && retailerStatus !== "loading"
   // F2: dm-derived rows live in their own section below the live rows, never merged into
   // them — dm catalog matches deduped against the live rows on screen, then dm-only rows.
+  // Batch 8: same as `liveRows` above, these read straight off the retained arrays, not
+  // off `retailerStatus === "ready"` — they stay up during a dm reload too.
   const liveIds = new Set(liveRows.map((result) => result.id))
-  const dmCatalogRows =
-    dmActive && retailerStatus === "ready"
-      ? retailerCatalogMatches.filter((result) => !liveIds.has(result.id))
-      : []
-  const dmOnlyRows = dmActive && retailerStatus === "ready" ? retailerResults : []
+  const dmCatalogRows = dmActive
+    ? retailerCatalogMatches.filter((result) => !liveIds.has(result.id))
+    : []
+  const dmOnlyRows = dmActive ? retailerResults : []
   const dmHasRows = dmCatalogRows.length > 0 || dmOnlyRows.length > 0
+  const dmReloading = dmLoading && dmHasRows
+  // dm has produced a settled answer for the CURRENT rows on screen — either it is not
+  // mid-fetch, or it is (a reload) but its previous rows are still standing (batch 8: a
+  // reload must not un-settle what was already shown, or the recovery link below would
+  // flicker off for the length of the refetch even though nothing actually disappeared).
+  const dmSettled = dmStarted && (retailerStatus !== "loading" || dmHasRows)
 
   const showCatalogLabel = dmActive && showCatalogResults
   // Catalog miss on a query the dm lane has not searched (2 chars: below its auto
@@ -668,7 +784,9 @@ export function ScanSearchSheet({
     !dmStarted
   // The terminal empty state (T4 brief §7): both lanes came back empty, or the dm lane is
   // disabled/off entirely and the catalog alone is empty. Never shown while the dm lane is
-  // still loading or has failed — those get their own presentation.
+  // still loading or has failed — those get their own presentation. Gating on
+  // `catalogStatus === "ready"` (a SETTLED answer, not a reload in flight) keeps this from
+  // flashing empty while a reload with old rows is still running.
   const showTerminalEmptyState =
     catalogStatus === "ready" &&
     liveRows.length === 0 &&
@@ -683,7 +801,8 @@ export function ScanSearchSheet({
   // "done" — submitted, or the dm lane's auto search settled — and rows are ACTUALLY
   // DISPLAYED (live and/or dm-derived); not while only live typing results are up, and not
   // in the terminal empty state (its own CTA owns recovery there). With the retailer flag
-  // off this reduces to submitted + catalog rows.
+  // off this reduces to submitted + catalog rows. Batch 8: rows staying up through a
+  // reload keeps this link up too — it never disappears out from under rows still shown.
   const showPersistentRecoveryLink = (submitted || dmSettled) && (showCatalogResults || dmHasRows)
 
   function renderCatalogRow(result: ScanSearchResult) {
@@ -718,7 +837,9 @@ export function ScanSearchSheet({
         contentClassName="px-4 pb-6 sm:px-5"
         initialFocusRef={autoFocusSearch ? searchInputRef : undefined}
         header={
-          stepContent ? undefined : intakeOpen ? (
+          stepContent ? (
+            stepHeader
+          ) : intakeOpen ? (
             <div className="px-4 pb-2 pt-1 sm:px-5">
               <BottomSheetTitle className="text-[17px]">{RESEARCH_INTAKE_HEADING}</BottomSheetTitle>
               <p className="mt-0.5 text-sm leading-6 text-[var(--text-sub)]">
@@ -808,8 +929,14 @@ export function ScanSearchSheet({
               </button>
             </div>
 
-            <div className="mt-3 min-h-[64px]" aria-live="polite">
-              {catalogStatus === "loading" ? (
+            {/* A reload keeps the old rows exactly as they are — no dimming, which would
+                blink on every keystroke — and only tells assistive tech it is busy. */}
+            <div
+              className="mt-3 min-h-[64px]"
+              aria-live="polite"
+              aria-busy={catalogReloading || dmReloading ? true : undefined}
+            >
+              {catalogShowSkeleton ? (
                 <div className="flex flex-col gap-2">
                   {[0, 1, 2].map((index) => (
                     <Skeleton key={index} className="h-[64px] w-full rounded-[12px]" />
@@ -857,13 +984,15 @@ export function ScanSearchSheet({
 
               {dmActive ? (
                 <div className={showCatalogResults ? "mt-4" : undefined}>
-                  {dmLoading || dmHasRows ? (
+                  {retailerShowSkeleton || dmHasRows ? (
                     <div className="mb-1 mt-1 text-xs font-bold text-[var(--text-sub)]">
                       {RETAILER_SECTION_LABEL}
                     </div>
                   ) : null}
 
-                  {dmLoading ? <Skeleton className="mt-1 h-[64px] w-full rounded-[12px]" /> : null}
+                  {retailerShowSkeleton ? (
+                    <Skeleton className="mt-1 h-[64px] w-full rounded-[12px]" />
+                  ) : null}
 
                   {dmCatalogRows.length > 0 ? (
                     <ul className="mt-1 flex flex-col gap-2">
@@ -937,9 +1066,7 @@ export function ScanSearchSheet({
                 </p>
               ) : null}
 
-              {resultsFooter && (catalogStatus === "ready" || catalogStatus === "error")
-                ? resultsFooter
-                : null}
+              {resultsFooter && footerEligible ? resultsFooter : null}
             </div>
           </>
         )}
