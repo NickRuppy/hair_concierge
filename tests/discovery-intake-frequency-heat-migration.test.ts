@@ -137,9 +137,11 @@ test("the batch-7 migration has a unique version that sorts after every migratio
     .map((name) => name.split("_")[0])
   const own = OWN.split("_")[0]
   assert.equal(versions.filter((version) => version === own).length, 1)
-  assert.ok(
-    versions.every((version) => version <= own),
-    "must sort after every migration",
+  // Only its own batch-7 follow-up (the styling-aware usage correction) may come later.
+  assert.deepEqual(
+    versions.filter((version) => version > own),
+    ["20260925150000"],
+    "must sort after every migration but its follow-up",
   )
 })
 

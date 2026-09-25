@@ -5,7 +5,11 @@ import { useState } from "react"
 
 import { DISCOVERY_INTAKE_GROUPS } from "@/components/discovery/intake/categories"
 import { ScanProductThumb } from "@/components/scan/scan-product-thumb"
-import { DISCOVERY_STYLING_PRODUCT_TYPE, type DiscoveryUsage } from "@/lib/discovery/classify"
+import {
+  DISCOVERY_STYLING_PRODUCT_TYPE,
+  type DiscoveryProductType,
+  type DiscoveryUsage,
+} from "@/lib/discovery/classify"
 import type { DiscoveryCockpitIntakeProductView } from "@/lib/discovery/cockpit"
 import {
   DISCOVERY_FREQUENCY_LABELS,
@@ -53,6 +57,8 @@ const START_BUSY = "Wird gestartet …"
 const START_ERROR = "Nicht gestartet. Bitte noch einmal."
 const EMPTY = "Noch keine Produkte eingetragen."
 const CHANGE_LABEL = "Kategorie ändern"
+/** The „Benutzt als" select's entry that moves a product into styling (batch 7, D2). */
+const STYLING_VALUE = "styling"
 const TYPE_LABEL = "Produkttyp"
 const TYPE_PLACEHOLDER = "Was ist das?"
 const USAGE_LABEL = "Benutzt als"
@@ -225,8 +231,9 @@ export async function saveDiscoveryItemUsage(
   input: {
     enrollmentId: string
     itemId: string
-    usage: DiscoveryUsage
-    productType: PersonalPlanCategory | null
+    /** `null` only with `productType: "styling"` (batch 7, D2). */
+    usage: DiscoveryUsage | null
+    productType: DiscoveryProductType | null
   },
   fetchImpl: FetchLike = fetch,
 ): Promise<{ error: string | null; refresh: boolean; researchStarted: boolean }> {
@@ -247,7 +254,10 @@ export async function saveDiscoveryItemUsage(
     ? null
     : ((await response.json().catch(() => null)) as { code?: string } | null)
   const outcome = discoveryUsageWriteOutcome(response.ok, body)
-  if (!response.ok || !input.productType) return { ...outcome, researchStarted: false }
+  // Research only starts from an evaluable type — never for „Styling (nicht bewertet)".
+  if (!response.ok || !input.productType || input.productType === DISCOVERY_STYLING_PRODUCT_TYPE) {
+    return { ...outcome, researchStarted: false }
+  }
 
   let researchStarted = false
   try {
@@ -375,7 +385,7 @@ export function DiscoveryIntakeProducts({
                   blocked={pending !== null || decisionWritePending}
                 />
               ) : null}
-              {editable && row.productType !== DISCOVERY_STYLING_PRODUCT_TYPE ? (
+              {editable ? (
                 <UsageEditor
                   enrollmentId={enrollmentId}
                   product={row}
@@ -460,6 +470,9 @@ function FrequencyEditor({
  * „Kategorie offen" (open from the start) or „Kategorie ändern" (behind a text button):
  * product type — only when nobody knows it — and usage, saved together. A newly chosen
  * type preselects its usage the way the participant's own question would (F5).
+ *
+ * Batch 7, D2: a styling product asks its type like „Kategorie offen" (then research starts
+ * like there), and every other product may be moved into „Styling (nicht bewertet)".
  */
 function UsageEditor({
   enrollmentId,
@@ -473,9 +486,9 @@ function UsageEditor({
   blocked: boolean
 }) {
   const router = useRouter()
-  const categoryOpen = product.category === null
+  const styling = product.productType === DISCOVERY_STYLING_PRODUCT_TYPE
+  const categoryOpen = product.category === null && !styling
   const current = product.category ? { category: product.category, role: product.usageRole } : null
-  // Never rendered for a styling product (it has no usage); the guard only narrows the type.
   const knownType =
     product.productType === DISCOVERY_STYLING_PRODUCT_TYPE ? null : product.productType
   const initialUsage = current ?? discoveryDefaultUsageFor(knownType, product.productName)
@@ -489,8 +502,9 @@ function UsageEditor({
 
   const options = discoveryCockpitUsageOptions(current)
   const chosen = options.find((option) => option.value === usageValue) ?? null
-  const needsType = product.typeOpen
-  const ready = chosen !== null && (!needsType || productType !== "")
+  const intoStyling = usageValue === STYLING_VALUE
+  const needsType = (product.typeOpen || styling) && !intoStyling
+  const ready = intoStyling || (chosen !== null && (!needsType || productType !== ""))
 
   if (!open) {
     return (
@@ -513,7 +527,7 @@ function UsageEditor({
   }
 
   async function save() {
-    if (!chosen) return
+    if (!chosen && !intoStyling) return
     setSaving(true)
     setError(null)
     const endWrite = beginDiscoveryDecisionWrite()
@@ -521,8 +535,12 @@ function UsageEditor({
       const outcome = await saveDiscoveryItemUsage({
         enrollmentId,
         itemId: product.itemId,
-        usage: chosen.usage,
-        productType: needsType && productType ? productType : null,
+        usage: intoStyling ? null : (chosen?.usage ?? null),
+        productType: intoStyling
+          ? DISCOVERY_STYLING_PRODUCT_TYPE
+          : needsType && productType
+            ? productType
+            : null,
       })
       if (outcome.error) setError(outcome.error)
       // Binding, decisions, „benutzt sie nicht", the research status and the fingerprint all
@@ -569,6 +587,7 @@ function UsageEditor({
               {option.label}
             </option>
           ))}
+          {styling ? null : <option value={STYLING_VALUE}>{DISCOVERY_STYLING_LABEL}</option>}
         </select>
       </label>
       <button

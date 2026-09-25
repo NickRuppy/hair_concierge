@@ -1085,10 +1085,14 @@ export async function unfinalizeDiscoveryCall(
 
 export type DiscoveryItemUsageChange = {
   itemId: string
-  category: PersonalPlanCategory
+  /** `null` only together with `productType: "styling"` (batch 7, D2): no usage. */
+  category: PersonalPlanCategory | null
   role: DiscoveryUsageRole | null
-  /** Only for a type-open item („Kategorie offen", R7). */
-  productType: PersonalPlanCategory | null
+  /**
+   * Only for a type-open item („Kategorie offen", R7) or a styling item leaving styling —
+   * or `"styling"` to move an evaluated item INTO the non-evaluated styling bucket.
+   */
+  productType: DiscoveryProductType | null
 }
 
 /**
@@ -1122,6 +1126,8 @@ export function discoveryStaleDecisionKeysForUsageChange(
     delete moved.usageRole
     if (change.role) moved.usageRole = change.role
     if (change.productType) moved.productType = change.productType
+    // Into styling: the research link goes with the usage (the row's CHECK).
+    if (change.productType === DISCOVERY_STYLING_PRODUCT_TYPE) moved.productSubmissionId = null
     return moved
   })
   const after = reduceIntakeItemsToSteps(model.steps, items).bindings
@@ -1151,7 +1157,8 @@ export type DiscoveryItemUsageResult = {
 
 /**
  * The correction as ONE database call (`discovery_admin_set_intake_item_usage`): refuses
- * while finalised or a draft, sets usage (+ type for a type-open item), removes the
+ * while finalised or a draft, sets usage (+ type for a type-open or styling item — or moves
+ * an item into styling, dropping usage and research link, 20260925150000), removes the
  * destination's „benutzt sie nicht", records one for a vacated category, and clears the
  * moved item's decisions plus `staleDecisionKeys`.
  */

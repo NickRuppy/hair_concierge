@@ -724,6 +724,34 @@ test("page: a draft shows no correction controls; a finalized call disables them
   assert.ok(finalized.includes('title="Erst Finalisierung aufheben."'))
 })
 
+test("page (batch 7, D2): a styling product is correctable behind „Kategorie ändern“; any product can move into styling", async () => {
+  const markup = await renderPage(
+    modelOf([
+      item({
+        id: ids.item,
+        category: null,
+        productType: "styling",
+        productId: null,
+        source: "name_research",
+        brandText: "Taft",
+        productNameText: "Haarspray",
+      }),
+      item({
+        id: ids.open,
+        category: null,
+        productId: null,
+        source: "name_research",
+        brandText: "Balea",
+        productNameText: "Wunderpflege",
+      }),
+    ]),
+  )
+  assert.ok(markup.includes("Styling (nicht bewertet)"))
+  assert.ok(markup.includes("Kategorie ändern"), "the styling row offers a correction")
+  // The open editor of the type-open product offers styling as a usage.
+  assert.ok(markup.includes('<option value="styling">Styling (nicht bewertet)</option>'))
+})
+
 // --- Setting a type starts research right after the save ------------------------------
 
 function fakeFetch(answers: Record<string, () => Response | Promise<Response>>) {

@@ -9,6 +9,7 @@ import { createDiscoveryItemUsageHandler } from "../src/app/api/admin/beratung/[
 import {
   discoveryIntakeProductUsageLine,
   saveDiscoveryItemFrequency,
+  saveDiscoveryItemUsage,
 } from "../src/components/discovery/cockpit/discovery-intake-products"
 import {
   buildDiscoveryCockpitView,
@@ -519,8 +520,12 @@ test("the cockpit's frequency save calls the route and reloads on success", asyn
   assert.deepEqual(refused, { error: "Erst Finalisierung aufheben.", refresh: false })
 })
 
-test("D2: the admin usage correction refuses a styling product", async () => {
-  const usageModel = await model({ items: [...legacyItems, sprayItem] })
+async function patchUsage(
+  usageModel: DiscoveryCockpitModel,
+  itemId: string,
+  body: unknown,
+  calls: unknown[],
+) {
   const response = await createDiscoveryItemUsageHandler({
     flagEnabled: () => true,
     requireAdmin: async () => ({ userId: "admin-1" }) as never,
@@ -531,20 +536,97 @@ test("D2: the admin usage correction refuses a styling product", async () => {
       finalizedSourceHash: null,
     }),
     loadModel: async () => usageModel,
-    setUsage: async () => {
-      throw new Error("must not write")
+    setUsage: async (input) => {
+      calls.push(input)
+      return { outcome: "updated", noneInserted: false, noneRemoved: false, decisionsCleared: 0 }
     },
   })(
-    new NextRequest(
-      `https://chaarlie.de/api/admin/beratung/${ids.enrollment}/items/${ids.sprayItem}`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json", Origin: "https://chaarlie.de" },
-        body: JSON.stringify({ usage: { category: "leave_in", role: null } }),
-      },
-    ),
-    { params: Promise.resolve({ enrollmentId: ids.enrollment, itemId: ids.sprayItem }) },
+    new NextRequest(`https://chaarlie.de/api/admin/beratung/${ids.enrollment}/items/${itemId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Origin: "https://chaarlie.de" },
+      body: JSON.stringify(body),
+    }),
+    { params: Promise.resolve({ enrollmentId: ids.enrollment, itemId }) },
   )
-  assert.equal(response.status, 409)
-  assert.equal((await response.json()).code, "styling_not_evaluated")
+  return { status: response.status, body: (await response.json()) as Record<string, unknown> }
+}
+
+test("D2: a styling product can be corrected into an evaluated type — type and usage together", async () => {
+  const usageModel = await model({ items: [...legacyItems, sprayItem] })
+  const calls: Array<Record<string, unknown>> = []
+  const result = await patchUsage(
+    usageModel,
+    ids.sprayItem,
+    { usage: { category: "leave_in", role: null }, productType: "leave_in" },
+    calls,
+  )
+  assert.equal(result.status, 200)
+  assert.equal(calls.length, 1)
+  assert.equal(calls[0].itemId, ids.sprayItem)
+  assert.equal(calls[0].category, "leave_in")
+  assert.equal(calls[0].role, null)
+  assert.equal(calls[0].productType, "leave_in")
+})
+
+test("D2: an evaluated product can be moved into „Styling (nicht bewertet)“ — no usage", async () => {
+  const usageModel = await model({ items: [...legacyItems, sprayItem] })
+  const calls: Array<Record<string, unknown>> = []
+  const result = await patchUsage(
+    usageModel,
+    ids.conditionerItem,
+    { usage: null, productType: "styling" },
+    calls,
+  )
+  assert.equal(result.status, 200)
+  assert.equal(calls[0].category, null)
+  assert.equal(calls[0].role, null)
+  assert.equal(calls[0].productType, "styling")
+  // Its old step loses its bound item: that decision is stale.
+  assert.ok(Array.isArray(calls[0].staleDecisionKeys))
+})
+
+test("D2: styling corrections refuse what the CHECK would refuse", async () => {
+  const usageModel = await model({ items: [...legacyItems, sprayItem] })
+  const cases: Array<[string, unknown, number, string]> = [
+    // A styling item leaving styling needs its type.
+    [ids.sprayItem, { usage: { category: "leave_in", role: null } }, 400, "product_type_required"],
+    // Already styling.
+    [ids.sprayItem, { usage: null, productType: "styling" }, 409, "type_known"],
+    // Styling carries no usage…
+    [
+      ids.conditionerItem,
+      { usage: { category: "leave_in", role: null }, productType: "styling" },
+      400,
+      "invalid_usage",
+    ],
+    // …and everything else needs one.
+    [ids.conditionerItem, { usage: null }, 400, "invalid_body"],
+  ]
+  for (const [itemId, body, status, code] of cases) {
+    const calls: unknown[] = []
+    const result = await patchUsage(usageModel, itemId, body, calls)
+    assert.equal(result.status, status, code)
+    assert.equal(result.body.code, code)
+    assert.deepEqual(calls, [])
+  }
+})
+
+test("D2: saving „Styling (nicht bewertet)“ from the cockpit never starts research", async () => {
+  const requests: string[] = []
+  const outcome = await saveDiscoveryItemUsage(
+    {
+      enrollmentId: ids.enrollment,
+      itemId: ids.conditionerItem,
+      usage: null,
+      productType: "styling",
+    },
+    async (url, init) => {
+      requests.push(`${init?.method} ${url} ${init?.body}`)
+      return new Response(JSON.stringify({ outcome: "updated" }), { status: 200 })
+    },
+  )
+  assert.deepEqual(outcome, { error: null, refresh: true, researchStarted: false })
+  assert.deepEqual(requests, [
+    `PATCH /api/admin/beratung/${ids.enrollment}/items/${ids.conditionerItem} {"usage":null,"productType":"styling"}`,
+  ])
 })
