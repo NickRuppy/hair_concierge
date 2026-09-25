@@ -338,3 +338,36 @@ test("batch 7: `resultsFooter` shows once the catalog lane answered, never befor
     restore()
   }
 })
+
+test("batch 7: with the dm lane on, the footer sits BELOW the dm section and never hides it", async () => {
+  const restore = stubFetch()
+  try {
+    const harness = createHarness(() =>
+      ScanSearchSheet({
+        open: true,
+        reason: "manual",
+        onOpenChange: () => undefined,
+        onSelectProduct: () => undefined,
+        retailerSearchEnabled: true,
+        resultsFooter: <button data-footer="typed">Nicht dabei? Selbst eintragen</button>,
+      }),
+    )
+    const idle = await harness.render()
+    findAll(idle, (element) => element.props.type === "search")[0].props.onChange({
+      target: { value: "elvital" },
+    })
+    const typed = await harness.render()
+    findAll(typed, (element) => element.props["aria-label"] === "Suchen")[0].props.onClick()
+    await harness.render()
+    const answered = await harness.render()
+    const flat = findAll(answered, () => true)
+    const dmRow = flat.findIndex((element) =>
+      JSON.stringify(element.props).includes("Balea Professional Repair Shampoo"),
+    )
+    const footer = flat.findIndex((element) => element.props["data-footer"] === "typed")
+    assert.ok(dmRow >= 0, "the dm section still renders its rows")
+    assert.ok(footer > dmRow, "the footer comes after the dm rows")
+  } finally {
+    restore()
+  }
+})

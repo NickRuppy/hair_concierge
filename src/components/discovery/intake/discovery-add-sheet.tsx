@@ -48,7 +48,7 @@ import { BACK_BUTTON, CORAL_BUTTON, OUTLINE_BUTTON } from "./ui-classes"
  * Presentational: every answer goes up to the checklist, which owns the `AddFlow`.
  */
 
-export const TYPED_ENTRY_LABEL = "Selbst eintragen"
+export const TYPED_ENTRY_LABEL = "Nicht dabei? Selbst eintragen"
 export const NAME_PROMPT = "Wie heißt es?"
 export const FREQUENCY_PROMPT = "Wie oft nutzt du es?"
 const BRAND_PLACEHOLDER = "Marke"
