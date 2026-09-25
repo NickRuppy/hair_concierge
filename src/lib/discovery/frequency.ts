@@ -86,3 +86,22 @@ export function mostFrequentDiscoveryFrequency(
   }
   return best
 }
+
+/** The hint under a preselected frequency (ruling round 4). */
+export const DISCOVERY_FREQUENCY_SUGGESTION_HINT = "Wie dein Shampoo"
+
+/**
+ * The frequency step's preselection — a suggestion only, she confirms or changes it, and
+ * nothing is coupled afterwards (ruling round 4): a conditioner or leave-in suggests the
+ * frequency of her MOST RECENTLY saved shampoo (`items` in capture order). `null` for every
+ * other usage, without a shampoo, or when that shampoo's frequency is not known.
+ */
+export function discoveryFrequencySuggestion(
+  usageCategory: string | null,
+  items: ReadonlyArray<{ source: string; category: string | null; frequency?: string | null }>,
+): ProductFrequency | null {
+  if (usageCategory !== "conditioner" && usageCategory !== "leave_in") return null
+  const shampoos = items.filter((item) => item.source !== "none" && item.category === "shampoo")
+  const latest = shampoos.at(-1)?.frequency
+  return isKnownProductFrequency(latest) ? latest : null
+}
