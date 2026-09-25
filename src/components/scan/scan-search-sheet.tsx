@@ -1,7 +1,7 @@
 "use client"
 
 import { ArrowRight, ChevronDown, ChevronLeft, Search } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
 
 import { BottomSheet, BottomSheetContent, BottomSheetTitle } from "@/components/ui/bottom-sheet"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -306,6 +306,10 @@ export function ScanSearchSheet({
   submitError = null,
   retailerSearchEnabled = false,
   analytics = noOpScanAnalytics,
+  stepContent,
+  resultsFooter,
+  autoFocusSearch = false,
+  sheetClassName,
 }: {
   open: boolean
   /** Why this sheet is up. Drives the header only — the search itself is identical. */
@@ -358,6 +362,17 @@ export function ScanSearchSheet({
    * (labs, tests) that does not pass this stays inert.
    */
   analytics?: ScanAnalyticsPort
+  /**
+   * Discovery add sheet (batch 7): while set, the SAME open sheet shows this instead of the
+   * search (header and body) — the query and its results stay, so going back finds them.
+   */
+  stepContent?: ReactNode
+  /** Rendered at the end of the results once the catalog lane has answered. */
+  resultsFooter?: ReactNode
+  /** Focus the search field when the sheet opens. */
+  autoFocusSearch?: boolean
+  /** Extra classes for the sheet panel (e.g. a large fixed height). */
+  sheetClassName?: string
 }) {
   const [query, setQuery] = useState("")
   const [submitted, setSubmitted] = useState(false)
@@ -699,10 +714,11 @@ export function ScanSearchSheet({
   return (
     <BottomSheet open={open} onOpenChange={onOpenChange}>
       <BottomSheetContent
-        className="max-h-[85vh]"
+        className={cn("max-h-[85vh]", sheetClassName)}
         contentClassName="px-4 pb-6 sm:px-5"
+        initialFocusRef={autoFocusSearch ? searchInputRef : undefined}
         header={
-          intakeOpen ? (
+          stepContent ? undefined : intakeOpen ? (
             <div className="px-4 pb-2 pt-1 sm:px-5">
               <BottomSheetTitle className="text-[17px]">{RESEARCH_INTAKE_HEADING}</BottomSheetTitle>
               <p className="mt-0.5 text-sm leading-6 text-[var(--text-sub)]">
@@ -721,7 +737,9 @@ export function ScanSearchSheet({
           )
         }
       >
-        {intakeOpen ? (
+        {stepContent ? (
+          stepContent
+        ) : intakeOpen ? (
           <ScanResearchIntakeForm
             brandText={intakeBrandText}
             productNameText={intakeProductNameText}
@@ -918,6 +936,10 @@ export function ScanSearchSheet({
                   </button>
                 </p>
               ) : null}
+
+              {resultsFooter && (catalogStatus === "ready" || catalogStatus === "error")
+                ? resultsFooter
+                : null}
             </div>
           </>
         )}

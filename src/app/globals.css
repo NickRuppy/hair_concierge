@@ -1534,3 +1534,145 @@
     transform: translateX(100%);
   }
 }
+
+/*
+ * Discovery participant flow (batch 7, prototype round 6): the 280 ms cross-slide between
+ * sheet steps and screens, the card landing in its slot, the drawn-in check. Off under
+ * `prefers-reduced-motion` — every element still renders in its final state.
+ */
+@keyframes discoverySlideInForward {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes discoverySlideOutForward {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-30%);
+  }
+}
+
+@keyframes discoverySlideInBack {
+  from {
+    opacity: 0.4;
+    transform: translateX(-30%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes discoverySlideOutBack {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes discoveryLand {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes discoveryPop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes discoveryDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes discoveryCtaIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.discovery-slide-in-forward {
+  animation: discoverySlideInForward 280ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.discovery-slide-out-forward {
+  animation: discoverySlideOutForward 280ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.discovery-slide-in-back {
+  animation: discoverySlideInBack 280ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.discovery-slide-out-back {
+  animation: discoverySlideOutBack 280ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.discovery-land {
+  animation: discoveryLand 440ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.discovery-pop {
+  animation: discoveryPop 420ms cubic-bezier(0.34, 1.5, 0.64, 1) both;
+}
+
+.discovery-fade-up,
+.discovery-ornament {
+  animation: fadeInUp 0.55s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.discovery-cta-in {
+  animation: discoveryCtaIn 500ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+.discovery-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: discoveryDraw 550ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .discovery-slide-in-forward,
+  .discovery-slide-out-forward,
+  .discovery-slide-in-back,
+  .discovery-slide-out-back,
+  .discovery-land,
+  .discovery-pop,
+  .discovery-fade-up,
+  .discovery-ornament,
+  .discovery-cta-in {
+    animation: none;
+  }
+
+  .discovery-draw {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}

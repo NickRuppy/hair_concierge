@@ -5,8 +5,17 @@ import { useState } from "react"
 
 import { DISCOVERY_INTAKE_GROUPS } from "@/components/discovery/intake/categories"
 import { ScanProductThumb } from "@/components/scan/scan-product-thumb"
-import type { DiscoveryUsage } from "@/lib/discovery/classify"
+import {
+  DISCOVERY_STYLING_PRODUCT_TYPE,
+  type DiscoveryProductType,
+  type DiscoveryUsage,
+} from "@/lib/discovery/classify"
 import type { DiscoveryCockpitIntakeProductView } from "@/lib/discovery/cockpit"
+import {
+  DISCOVERY_FREQUENCY_LABELS,
+  DISCOVERY_FREQUENCY_OPTIONS,
+  type DiscoveryItemFrequency,
+} from "@/lib/discovery/frequency"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
 import type { DiscoveryResearchStatusKind } from "@/lib/discovery/research-status"
@@ -14,6 +23,7 @@ import type { DiscoveryResearchStatusKind } from "@/lib/discovery/research-statu
 import { beginDiscoveryDecisionWrite, useDiscoveryDecisionWritePending } from "./decision-writes"
 import {
   DISCOVERY_CATEGORY_OPEN_LABEL,
+  DISCOVERY_STYLING_LABEL,
   discoveryCategoryLabel,
   discoveryCockpitUsageOptions,
   discoveryDefaultUsageFor,
@@ -47,6 +57,8 @@ const START_BUSY = "Wird gestartet …"
 const START_ERROR = "Nicht gestartet. Bitte noch einmal."
 const EMPTY = "Noch keine Produkte eingetragen."
 const CHANGE_LABEL = "Kategorie ändern"
+/** The „Benutzt als" select's entry that moves a product into styling (batch 7, D2). */
+const STYLING_VALUE = "styling"
 const TYPE_LABEL = "Produkttyp"
 const TYPE_PLACEHOLDER = "Was ist das?"
 const USAGE_LABEL = "Benutzt als"
@@ -56,6 +68,8 @@ const SAVE_BUSY = "Wird gespeichert …"
 const CANCEL_LABEL = "Abbrechen"
 const SAVE_ERROR = "Nicht gespeichert. Bitte noch einmal."
 const FINALIZED_HINT = "Erst Finalisierung aufheben."
+const FREQUENCY_LABEL = "Wie oft"
+const FREQUENCY_PLACEHOLDER = "Nicht gefragt"
 
 const SHELF_ORDER = DISCOVERY_INTAKE_GROUPS.flatMap((group) =>
   group.categories.map((category) => category.key),
@@ -84,6 +98,7 @@ const TONE: Record<DiscoveryResearchStatusKind, Tone> = {
   no_research: "neutral",
   not_researchable: "neutral",
   type_unknown: "neutral",
+  styling_not_evaluated: "neutral",
   status_unavailable: "neutral",
 }
 
@@ -141,15 +156,56 @@ function shelfSorted(products: DiscoveryCockpitIntakeProductView[]) {
   return [...products].sort((left, right) => shelfRank(left.category) - shelfRank(right.category))
 }
 
-/** How a row names her usage — and the product type when the two differ. */
+/**
+ * How a row names her usage — and the product type when the two differ; a styling product
+ * (batch 7, D2) reads „Styling (nicht bewertet)". Her frequency follows when she was asked.
+ */
 export function discoveryIntakeProductUsageLine(
+  product: Pick<DiscoveryCockpitIntakeProductView, "category" | "usageRole" | "productType"> & {
+    frequencyLabel?: string | null
+  },
+): string {
+  const usage = usageLine(product)
+  return product.frequencyLabel ? `${usage} · ${product.frequencyLabel}` : usage
+}
+
+function usageLine(
   product: Pick<DiscoveryCockpitIntakeProductView, "category" | "usageRole" | "productType">,
 ): string {
+  const productType = product.productType
+  if (productType === DISCOVERY_STYLING_PRODUCT_TYPE) return DISCOVERY_STYLING_LABEL
   if (product.category === null) return DISCOVERY_CATEGORY_OPEN_LABEL
   return (
-    discoveryUsageDifferenceLabel(product.category, product.productType) ??
+    discoveryUsageDifferenceLabel(product.category, productType) ??
     discoveryUsageLabel({ category: product.category, role: product.usageRole })
   )
+}
+
+/**
+ * Saves a frequency correction (batch 7): `PUT /api/admin/beratung/<id>/items/<itemId>/frequency`,
+ * refused while the call is finalised — the same guard as the usage correction.
+ */
+export async function saveDiscoveryItemFrequency(
+  input: { enrollmentId: string; itemId: string; frequency: DiscoveryItemFrequency },
+  fetchImpl: FetchLike = fetch,
+): Promise<{ error: string | null; refresh: boolean }> {
+  let response: Response
+  try {
+    response = await fetchImpl(
+      `/api/admin/beratung/${input.enrollmentId}/items/${input.itemId}/frequency`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ frequency: input.frequency }),
+      },
+    )
+  } catch {
+    return { error: SAVE_ERROR, refresh: false }
+  }
+  const body = response.ok
+    ? null
+    : ((await response.json().catch(() => null)) as { code?: string } | null)
+  return discoveryUsageWriteOutcome(response.ok, body)
 }
 
 /** What a usage answer means for the row: a refusal explains itself, a success refreshes. */
@@ -175,8 +231,9 @@ export async function saveDiscoveryItemUsage(
   input: {
     enrollmentId: string
     itemId: string
-    usage: DiscoveryUsage
-    productType: PersonalPlanCategory | null
+    /** `null` only with `productType: "styling"` (batch 7, D2). */
+    usage: DiscoveryUsage | null
+    productType: DiscoveryProductType | null
   },
   fetchImpl: FetchLike = fetch,
 ): Promise<{ error: string | null; refresh: boolean; researchStarted: boolean }> {
@@ -197,7 +254,10 @@ export async function saveDiscoveryItemUsage(
     ? null
     : ((await response.json().catch(() => null)) as { code?: string } | null)
   const outcome = discoveryUsageWriteOutcome(response.ok, body)
-  if (!response.ok || !input.productType) return { ...outcome, researchStarted: false }
+  // Research only starts from an evaluable type — never for „Styling (nicht bewertet)".
+  if (!response.ok || !input.productType || input.productType === DISCOVERY_STYLING_PRODUCT_TYPE) {
+    return { ...outcome, researchStarted: false }
+  }
 
   let researchStarted = false
   try {
@@ -289,7 +349,7 @@ export function DiscoveryIntakeProducts({
                 </span>
                 <span
                   className={`block text-[12px] ${
-                    row.category === null
+                    row.category === null && row.productType !== DISCOVERY_STYLING_PRODUCT_TYPE
                       ? "font-bold text-[var(--status-danger-text)]"
                       : "text-muted-foreground"
                   }`}
@@ -318,6 +378,14 @@ export function DiscoveryIntakeProducts({
                 </p>
               ) : null}
               {editable ? (
+                <FrequencyEditor
+                  enrollmentId={enrollmentId}
+                  product={row}
+                  finalized={finalized}
+                  blocked={pending !== null || decisionWritePending}
+                />
+              ) : null}
+              {editable ? (
                 <UsageEditor
                   enrollmentId={enrollmentId}
                   product={row}
@@ -334,9 +402,77 @@ export function DiscoveryIntakeProducts({
 }
 
 /**
+ * Batch 7: her frequency, correctable after submit — one small select that saves on change
+ * and reloads the cockpit (the routine and its fingerprint may move with it).
+ */
+function FrequencyEditor({
+  enrollmentId,
+  product,
+  finalized,
+  blocked,
+}: {
+  enrollmentId: string
+  product: DiscoveryCockpitIntakeProductView
+  finalized: boolean
+  blocked: boolean
+}) {
+  const router = useRouter()
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function change(value: DiscoveryItemFrequency) {
+    setSaving(true)
+    setError(null)
+    const endWrite = beginDiscoveryDecisionWrite()
+    try {
+      const outcome = await saveDiscoveryItemFrequency({
+        enrollmentId,
+        itemId: product.itemId,
+        frequency: value,
+      })
+      if (outcome.error) setError(outcome.error)
+      if (outcome.refresh) router.refresh()
+    } finally {
+      endWrite()
+      setSaving(false)
+    }
+  }
+
+  return (
+    <label className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground">
+      {FREQUENCY_LABEL}
+      <select
+        value={product.frequency ?? ""}
+        disabled={finalized || saving || blocked}
+        title={finalized ? FINALIZED_HINT : undefined}
+        onChange={(event) => {
+          if (event.target.value) void change(event.target.value as DiscoveryItemFrequency)
+        }}
+        className="rounded-lg border bg-card px-2 py-1 text-xs font-normal text-foreground"
+      >
+        {product.frequency ? null : <option value="">{FREQUENCY_PLACEHOLDER}</option>}
+        {DISCOVERY_FREQUENCY_OPTIONS.map((value) => (
+          <option key={value} value={value}>
+            {DISCOVERY_FREQUENCY_LABELS[value]}
+          </option>
+        ))}
+      </select>
+      {error ? (
+        <span role="status" className="font-normal text-[var(--status-danger-text)]">
+          {error}
+        </span>
+      ) : null}
+    </label>
+  )
+}
+
+/**
  * „Kategorie offen" (open from the start) or „Kategorie ändern" (behind a text button):
  * product type — only when nobody knows it — and usage, saved together. A newly chosen
  * type preselects its usage the way the participant's own question would (F5).
+ *
+ * Batch 7, D2: a styling product asks its type like „Kategorie offen" (then research starts
+ * like there), and every other product may be moved into „Styling (nicht bewertet)".
  */
 function UsageEditor({
   enrollmentId,
@@ -350,9 +486,12 @@ function UsageEditor({
   blocked: boolean
 }) {
   const router = useRouter()
-  const categoryOpen = product.category === null
+  const styling = product.productType === DISCOVERY_STYLING_PRODUCT_TYPE
+  const categoryOpen = product.category === null && !styling
   const current = product.category ? { category: product.category, role: product.usageRole } : null
-  const initialUsage = current ?? discoveryDefaultUsageFor(product.productType, product.productName)
+  const knownType =
+    product.productType === DISCOVERY_STYLING_PRODUCT_TYPE ? null : product.productType
+  const initialUsage = current ?? discoveryDefaultUsageFor(knownType, product.productName)
   const [open, setOpen] = useState(categoryOpen)
   const [productType, setProductType] = useState<PersonalPlanCategory | "">("")
   const [usageValue, setUsageValue] = useState(
@@ -363,8 +502,9 @@ function UsageEditor({
 
   const options = discoveryCockpitUsageOptions(current)
   const chosen = options.find((option) => option.value === usageValue) ?? null
-  const needsType = product.typeOpen
-  const ready = chosen !== null && (!needsType || productType !== "")
+  const intoStyling = usageValue === STYLING_VALUE
+  const needsType = (product.typeOpen || styling) && !intoStyling
+  const ready = intoStyling || (chosen !== null && (!needsType || productType !== ""))
 
   if (!open) {
     return (
@@ -387,7 +527,7 @@ function UsageEditor({
   }
 
   async function save() {
-    if (!chosen) return
+    if (!chosen && !intoStyling) return
     setSaving(true)
     setError(null)
     const endWrite = beginDiscoveryDecisionWrite()
@@ -395,8 +535,12 @@ function UsageEditor({
       const outcome = await saveDiscoveryItemUsage({
         enrollmentId,
         itemId: product.itemId,
-        usage: chosen.usage,
-        productType: needsType && productType ? productType : null,
+        usage: intoStyling ? null : (chosen?.usage ?? null),
+        productType: intoStyling
+          ? DISCOVERY_STYLING_PRODUCT_TYPE
+          : needsType && productType
+            ? productType
+            : null,
       })
       if (outcome.error) setError(outcome.error)
       // Binding, decisions, „benutzt sie nicht", the research status and the fingerprint all
@@ -443,6 +587,7 @@ function UsageEditor({
               {option.label}
             </option>
           ))}
+          {styling ? null : <option value={STYLING_VALUE}>{DISCOVERY_STYLING_LABEL}</option>}
         </select>
       </label>
       <button

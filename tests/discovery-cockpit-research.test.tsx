@@ -155,6 +155,7 @@ async function model(input: {
     { intakeId: ids.intake, userId: ids.user },
     {
       loadIdealRoutine: readyIdeal([shampooStep]),
+      loadHeatStyling: async () => null,
       loadItems: async () => input.items,
       loadResearchState: input.state,
       loadVerdicts: async (_client, _user, items) => {

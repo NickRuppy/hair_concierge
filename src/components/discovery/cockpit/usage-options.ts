@@ -24,6 +24,8 @@ export type DiscoveryCockpitUsageOption = {
 }
 
 export const DISCOVERY_CATEGORY_OPEN_LABEL = "Kategorie offen"
+/** A styling product (batch 7, D2): listed, never evaluated. */
+export const DISCOVERY_STYLING_LABEL = "Styling (nicht bewertet)"
 
 export function discoveryCategoryLabel(category: PersonalPlanCategory): string {
   return DISCOVERY_INTAKE_CATEGORY_COPY[category].label
@@ -37,12 +39,17 @@ export function discoveryUsageValue(usage: {
 }
 
 const OIL_OPTIONS = DISCOVERY_USAGE_QUESTIONS.oil_use.options
+/** The role-carrying answers of every usage question: the oil roles, the pre-wash conditioner. */
+const ROLE_OPTIONS = [...OIL_OPTIONS, ...DISCOVERY_USAGE_QUESTIONS.care_use.options]
 
 function roleLabel(role: DiscoveryUsageRole): string | null {
-  return OIL_OPTIONS.find((option) => option.usage.role === role)?.label ?? null
+  return ROLE_OPTIONS.find((option) => option.usage.role === role)?.label ?? null
 }
 
-/** „Maske", „Öl · Als Finish ins trockene Haar", „Kopfhautpflege · Auf die Kopfhaut". */
+/**
+ * „Maske", „Öl · Als Finish ins trockene Haar", „Kopfhautpflege · Auf die Kopfhaut",
+ * „Conditioner · Vor der Haarwäsche".
+ */
 export function discoveryUsageLabel(usage: {
   category: PersonalPlanCategory
   role: DiscoveryUsageRole | null
@@ -77,7 +84,13 @@ export function discoveryCockpitUsageOptions(
               { category, role: null },
               { category, role: "scalp_flake_oil_adjunct" },
             ]
-          : [{ category, role: null }]
+          : category === "conditioner"
+            ? [
+                { category, role: null },
+                // Batch 7, D1.
+                { category, role: "pre_wash_conditioner" },
+              ]
+            : [{ category, role: null }]
     for (const usage of usages) {
       options.push({ value: discoveryUsageValue(usage), label: discoveryUsageLabel(usage), usage })
     }

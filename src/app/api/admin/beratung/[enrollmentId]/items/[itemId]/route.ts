@@ -1,9 +1,14 @@
 import type { NextRequest } from "next/server"
 import { z } from "zod"
 
-import { DISCOVERY_USAGE_ROLES, isValidDiscoveryUsage } from "@/lib/discovery/classify"
+import {
+  DISCOVERY_STYLING_PRODUCT_TYPE,
+  DISCOVERY_USAGE_ROLES,
+  isValidDiscoveryUsage,
+} from "@/lib/discovery/classify"
 import {
   discoveryStaleDecisionKeysForUsageChange,
+  isDiscoveryStylingItem,
   loadDiscoveryCockpitModel,
   setDiscoveryIntakeItemUsage,
   type DiscoveryItemUsageOutcome,
@@ -25,8 +30,13 @@ import {
  * cockpit changes how a product is used; she never reopens her list.
  *
  * Body: `{ usage: { category, role }, productType? }`. `productType` sets what the product
- * IS, and only for an item nobody knows the type of („Kategorie offen"); then „Recherche
- * starten" opens its research from that type. A known type is never overwritten.
+ * IS, and only for an item nobody knows the type of („Kategorie offen") or a styling
+ * product that turns out to be evaluable (batch 7, D2); then „Recherche starten" opens its
+ * research from that type. A known type is never overwritten.
+ *
+ * Batch 7, D2 — into styling: `{ usage: null, productType: "styling" }` moves an evaluated
+ * item into the non-evaluated styling bucket (usage cleared, research link dropped, the
+ * vacated category gets its „benutzt sie nicht").
  *
  * Gate order, as the research route: same-origin (403) → kill switch (404) → the shared
  * `requireAdmin` (401/403) → the intake the URL names (404) → the item must belong to THAT
@@ -35,8 +45,9 @@ import {
  *   finalised               → 409 `finalized`       („Erst Finalisierung aufheben")
  *   still a draft           → 409 `not_submitted`
  *   bad body / pair         → 400 `invalid_body` | `invalid_usage`
- *   type on a typed item    → 409 `type_known`
- *   usage on a type-open item without a type → 400 `product_type_required`
+ *   type on a typed item    → 409 `type_known` (also: styling on a styling item)
+ *   usage with styling / none without → 400 `invalid_usage` / `invalid_body`
+ *   usage on a type-open or styling item without a type → 400 `product_type_required`
  *   200 `{ outcome: "updated", noneInserted, noneRemoved, decisionsCleared }`
  *
  * The write is ONE database call (`discovery_admin_set_intake_item_usage`), which re-checks
@@ -51,8 +62,11 @@ const bodySchema = z
   .object({
     usage: z
       .object({ category: categorySchema, role: z.enum(DISCOVERY_USAGE_ROLES).nullable() })
-      .strict(),
-    productType: categorySchema.optional(),
+      .strict()
+      .nullable(),
+    productType: z
+      .enum([...SUPPORTED_PRODUCT_CATEGORY_KEYS, DISCOVERY_STYLING_PRODUCT_TYPE])
+      .optional(),
   })
   .strict()
 
@@ -94,7 +108,11 @@ export function createDiscoveryItemUsageHandler(
     const body = bodySchema.safeParse(await readJsonBody(request))
     if (!body.success) return discoveryCockpitError("invalid_body", 400)
     const { usage, productType } = body.data
-    if (!isValidDiscoveryUsage(usage)) return discoveryCockpitError("invalid_usage", 400)
+    const toStyling = productType === DISCOVERY_STYLING_PRODUCT_TYPE
+    // Into styling there is no usage; everywhere else there must be one.
+    if (toStyling && usage) return discoveryCockpitError("invalid_usage", 400)
+    if (!toStyling && !usage) return discoveryCockpitError("invalid_body", 400)
+    if (usage && !isValidDiscoveryUsage(usage)) return discoveryCockpitError("invalid_usage", 400)
 
     let model
     try {
@@ -111,16 +129,24 @@ export function createDiscoveryItemUsageHandler(
     // Scoped to this intake by construction: another intake's item is simply not found.
     const item = model.research?.items.find((entry) => entry.id === itemId) ?? null
     if (!item || item.source === "none") return discoveryCockpitError("not_found", 404)
-
-    const typeOpen =
-      !item.productType && item.productId === null && item.productSubmissionId === null
-    if (productType && !typeOpen) return discoveryCockpitError("type_known", 409)
-    if (!productType && typeOpen) return discoveryCockpitError("product_type_required", 400)
+    const styling = isDiscoveryStylingItem(item)
+    if (toStyling) {
+      // Already styling: nothing to correct.
+      if (styling) return discoveryCockpitError("type_known", 409)
+    } else if (styling) {
+      // Out of styling (batch 7, D2) the type comes with the usage, as on „Kategorie offen".
+      if (!productType) return discoveryCockpitError("product_type_required", 400)
+    } else {
+      const typeOpen =
+        !item.productType && item.productId === null && item.productSubmissionId === null
+      if (productType && !typeOpen) return discoveryCockpitError("type_known", 409)
+      if (!productType && typeOpen) return discoveryCockpitError("product_type_required", 400)
+    }
 
     const change = {
       itemId,
-      category: usage.category,
-      role: usage.role,
+      category: usage?.category ?? null,
+      role: usage?.role ?? null,
       productType: productType ?? null,
     }
     try {

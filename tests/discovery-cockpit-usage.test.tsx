@@ -21,6 +21,7 @@ import {
   discoveryCockpitUsageOptions,
   discoveryDefaultUsageFor,
   discoveryUsageDifferenceLabel,
+  discoveryUsageLabel,
 } from "../src/components/discovery/cockpit/usage-options"
 import {
   buildDiscoveryCockpitView,
@@ -261,6 +262,7 @@ test("F2: an approved-research conditioner she uses as a mask binds to the mask 
         context,
         previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
       }),
+      loadHeatStyling: async () => null,
       loadItems: async () => [researched],
       loadResearchState: async () => approvedState(),
       loadVerdicts: (client, userId, items, ctx) =>
@@ -320,7 +322,13 @@ test("the usage select offers every category, the three oil roles and the scalp 
   assert.ok(values.includes("scalp_care"))
   assert.ok(values.includes("scalp_care:scalp_flake_oil_adjunct"))
   assert.ok(!values.includes("oil"))
-  assert.equal(values.length, 13)
+  // Batch 7, D1: the pre-wash conditioner, next to the plain one.
+  assert.ok(values.includes("conditioner:pre_wash_conditioner"))
+  assert.equal(
+    discoveryUsageLabel({ category: "conditioner", role: "pre_wash_conditioner" }),
+    "Conditioner · Vor der Haarwäsche",
+  )
+  assert.equal(values.length, 14)
   // A legacy role-less oil keeps its own entry while it is the current value.
   assert.ok(
     discoveryCockpitUsageOptions({ category: "oil", role: null })
@@ -714,6 +722,34 @@ test("page: a draft shows no correction controls; a finalized call disables them
   })
   assert.ok(finalized.includes("Kategorie ändern"))
   assert.ok(finalized.includes('title="Erst Finalisierung aufheben."'))
+})
+
+test("page (batch 7, D2): a styling product is correctable behind „Kategorie ändern“; any product can move into styling", async () => {
+  const markup = await renderPage(
+    modelOf([
+      item({
+        id: ids.item,
+        category: null,
+        productType: "styling",
+        productId: null,
+        source: "name_research",
+        brandText: "Taft",
+        productNameText: "Haarspray",
+      }),
+      item({
+        id: ids.open,
+        category: null,
+        productId: null,
+        source: "name_research",
+        brandText: "Balea",
+        productNameText: "Wunderpflege",
+      }),
+    ]),
+  )
+  assert.ok(markup.includes("Styling (nicht bewertet)"))
+  assert.ok(markup.includes("Kategorie ändern"), "the styling row offers a correction")
+  // The open editor of the type-open product offers styling as a usage.
+  assert.ok(markup.includes('<option value="styling">Styling (nicht bewertet)</option>'))
 })
 
 // --- Setting a type starts research right after the save ------------------------------

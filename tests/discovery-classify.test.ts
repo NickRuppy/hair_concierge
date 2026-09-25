@@ -398,6 +398,8 @@ test("R9: the care and shampoo questions map to their categories without roles",
       ["Kurz einwirken & ausspülen", { category: "conditioner", role: null }],
       ["Länger einwirken als Kur", { category: "mask", role: null }],
       ["Bleibt im Haar", { category: "leave_in", role: null }],
+      // Batch 7, D1: the pre-wash conditioner.
+      ["Vor der Haarwäsche", { category: "conditioner", role: "pre_wash_conditioner" }],
     ],
   )
   assert.equal(DISCOVERY_USAGE_QUESTIONS.shampoo_use.prompt, "Wie oft benutzt du das?")
@@ -417,7 +419,7 @@ test("every question option is a valid usage (the DB CHECK's pairs)", () => {
   }
 })
 
-test("usage roles: only the three oil roles with oil, the scalp oil role with scalp care", () => {
+test("usage roles: the three oil roles with oil, the scalp oil role with scalp care, the pre-wash conditioner with conditioner", () => {
   assert.deepEqual(
     [...DISCOVERY_OIL_USAGE_ROLES],
     ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
@@ -429,14 +431,16 @@ test("usage roles: only the three oil roles with oil, the scalp oil role with sc
       "leave_on_fibre_conditioning",
       "dry_finish",
       "scalp_flake_oil_adjunct",
+      "pre_wash_conditioner",
     ],
   )
   for (const category of SUPPORTED_PRODUCT_CATEGORY_KEYS) {
     assert.ok(isValidDiscoveryUsage({ category, role: null }), `${category} without a role`)
     for (const role of DISCOVERY_USAGE_ROLES) {
       const allowed =
-        (category === "oil" && role !== "scalp_flake_oil_adjunct") ||
-        (category === "scalp_care" && role === "scalp_flake_oil_adjunct")
+        (category === "oil" && (DISCOVERY_OIL_USAGE_ROLES as readonly string[]).includes(role)) ||
+        (category === "scalp_care" && role === "scalp_flake_oil_adjunct") ||
+        (category === "conditioner" && role === "pre_wash_conditioner")
       assert.equal(isValidDiscoveryUsage({ category, role }), allowed, `${category}/${role}`)
     }
   }

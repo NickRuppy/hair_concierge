@@ -6,10 +6,19 @@ import { z } from "zod"
 import type { DiscoveryIntakeItemView } from "@/components/discovery/intake/types"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
 import {
+  DISCOVERY_PRODUCT_TYPES,
   DISCOVERY_USAGE_ROLES,
   isDiscoveryProductCategory,
+  isDiscoveryProductType,
+  type DiscoveryProductType,
   type DiscoveryUsageRole,
 } from "@/lib/discovery/classify"
+import {
+  DISCOVERY_ITEM_FREQUENCIES,
+  isDiscoveryItemFrequency,
+  type DiscoveryItemFrequency,
+} from "@/lib/discovery/frequency"
+import { readDiscoveryHeatStyling, type DiscoveryHeatStylingV1 } from "@/lib/discovery/heat-styling"
 import { filterScanEligibleProductIds } from "@/lib/scan/catalog-eligibility"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -47,14 +56,14 @@ export type DiscoveryIntakeItemSource = (typeof DISCOVERY_INTAKE_ITEM_SOURCES)[n
 const INTAKES_TABLE = "discovery_intakes"
 const ITEMS_TABLE = "discovery_intake_items"
 
-const INTAKE_COLUMNS = "id,enrollment_id,user_id,state,submitted_at"
+const INTAKE_COLUMNS = "id,enrollment_id,user_id,state,submitted_at,heat_styling"
 /**
  * The linked catalog product is read alongside the row (FK `product_id` ->
  * `products`), so the checklist can show the same packshot and product line the
  * search row showed without storing a copy of either. Rows without a catalog product read it as null.
  */
 const ITEM_COLUMNS =
-  "id,intake_id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,product_type,usage_role,created_at,catalog_product:products(image_url,product_line:product_lines(canonical_name))"
+  "id,intake_id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,product_type,usage_role,frequency,created_at,catalog_product:products(image_url,product_line:product_lines(canonical_name))"
 
 export type DiscoveryAdminClient = ReturnType<typeof createAdminClient>
 
@@ -64,6 +73,11 @@ export type DiscoveryIntake = {
   userId: string
   state: "draft" | "submitted"
   submittedAt: string | null
+  /**
+   * Her „Hitze & Styling" answers (batch 7); `null` = not asked yet. A stored value that no
+   * longer validates reads as `null` (asked again) rather than failing the page.
+   */
+  heatStyling?: DiscoveryHeatStylingV1 | null
 }
 
 export type DiscoveryIntakeItem = {
@@ -83,11 +97,14 @@ export type DiscoveryIntakeItem = {
    * What the product IS (batch 5, F1): from the catalog's `category_key` for a catalog
    * product, else the classifier's or her „Was ist das?" answer; `null` = unknown. Research
    * submissions are opened from it. Optional only so legacy fixtures stay valid — every
-   * projection sets it.
+   * projection sets it. Batch 7 (D2): `styling` = a styling product, listed but never
+   * evaluated (no usage, no research).
    */
-  productType?: DiscoveryIntakeCategory | null
+  productType?: DiscoveryProductType | null
   /** The routine role of her usage, for the multi-role oil step and scalp oil (R9). */
   usageRole?: DiscoveryUsageRole | null
+  /** How often she uses it (batch 7): `null` = not asked, `unknown` = „Weiß ich nicht". */
+  frequency?: DiscoveryItemFrequency | null
   /**
    * Presentation of the linked catalog product, when the row was read with its join
    * (`loadDiscoveryIntakeItems`, the insert helpers). Display only — never identity.
@@ -106,6 +123,7 @@ type IntakeRow = {
   user_id: string
   state: string
   submitted_at: string | null
+  heat_styling?: unknown
 }
 
 type ItemRow = {
@@ -120,6 +138,7 @@ type ItemRow = {
   product_submission_id: string | null
   product_type?: string | null
   usage_role?: string | null
+  frequency?: string | null
   created_at: string
   catalog_product?: CatalogProductRelation | CatalogProductRelation[] | null
 }
@@ -143,8 +162,10 @@ export type DiscoveryIntakeItemInsert = {
   barcode_identifier: string | null
   product_id: string | null
   product_submission_id: string | null
-  product_type?: DiscoveryIntakeCategory | null
+  product_type?: DiscoveryProductType | null
   usage_role?: DiscoveryUsageRole | null
+  /** Batch 7: written only when the client sent one — a legacy write leaves it NULL. */
+  frequency?: DiscoveryItemFrequency | null
 }
 
 // --- The capture contract ----------------------------------------------------
@@ -303,20 +324,38 @@ export const discoveryIntakeUsageSchema = z
   })
   .strict()
 
+/** What a product IS: the ten categories plus the non-evaluated `styling` marker (batch 7, D2). */
+export const discoveryIntakeProductTypeSchema = z.enum(DISCOVERY_PRODUCT_TYPES)
+
+/** „Wie oft nutzt du es?" (batch 7): the `ProductFrequency` values plus `unknown`. */
+export const discoveryIntakeFrequencySchema = z.enum(DISCOVERY_ITEM_FREQUENCIES)
+
 export const discoveryIntakeProductBodySchema = z
   .object({
     capture: discoveryIntakeProductCaptureSchema,
-    productType: discoveryIntakeCategorySchema.nullish(),
+    productType: discoveryIntakeProductTypeSchema.nullish(),
     usage: discoveryIntakeUsageSchema.nullable(),
+    /** Optional so the pre-batch-7 checklist keeps adding products (stored NULL = not asked). */
+    frequency: discoveryIntakeFrequencySchema.optional(),
   })
   .strict()
 
+/**
+ * `PATCH …/items/<id>`: every key optional, at least one present. An absent key leaves its
+ * column as it is — `{ frequency }` alone changes only the frequency; `usage: null` still
+ * means „Weiß ich nicht" (batch 5).
+ */
 export const discoveryIntakeUsagePatchSchema = z
   .object({
-    usage: discoveryIntakeUsageSchema.nullable(),
-    productType: discoveryIntakeCategorySchema.optional(),
+    usage: discoveryIntakeUsageSchema.nullable().optional(),
+    productType: discoveryIntakeProductTypeSchema.optional(),
+    frequency: discoveryIntakeFrequencySchema.optional(),
   })
   .strict()
+  .refine(
+    (body) =>
+      body.usage !== undefined || body.productType !== undefined || body.frequency !== undefined,
+  )
 
 /** The flat-checklist capture's identity columns (type, usage and submission are added by the route). */
 export function discoveryIntakeProductIdentity(capture: DiscoveryIntakeProductCapture): {
@@ -540,6 +579,9 @@ export async function checkDiscoveryIntakeItemIdentity(
 
 // --- Projections -------------------------------------------------------------
 
+/** A stored heat answer that no longer validates is not asked yet (`null`), never a failure. */
+export const projectDiscoveryHeatStyling = readDiscoveryHeatStyling
+
 function projectIntake(row: IntakeRow): DiscoveryIntake {
   return {
     id: row.id,
@@ -547,6 +589,7 @@ function projectIntake(row: IntakeRow): DiscoveryIntake {
     userId: row.user_id,
     state: row.state === "submitted" ? "submitted" : "draft",
     submittedAt: row.submitted_at,
+    heatStyling: projectDiscoveryHeatStyling(row.heat_styling),
   }
 }
 
@@ -572,6 +615,7 @@ export function toDiscoveryIntakeItemView(item: DiscoveryIntakeItem): DiscoveryI
     // Only when set, so a legacy (tile) row projects exactly as before.
     ...(item.productType ? { productType: item.productType } : {}),
     ...(item.usageRole ? { usageRole: item.usageRole } : {}),
+    ...(item.frequency ? { frequency: item.frequency } : {}),
   }
 }
 
@@ -602,8 +646,10 @@ export function projectDiscoveryIntakeItemRow(row: ItemRow): DiscoveryIntakeItem
     barcodeIdentifier: row.barcode_identifier,
     productId: row.product_id,
     productSubmissionId: row.product_submission_id,
-    productType: isDiscoveryProductCategory(row.product_type) ? row.product_type : null,
+    // The styling marker (D2) is kept — it is what keeps the item out of „Kategorie offen".
+    productType: isDiscoveryProductType(row.product_type) ? row.product_type : null,
     usageRole: (row.usage_role ?? null) as DiscoveryUsageRole | null,
+    frequency: isDiscoveryItemFrequency(row.frequency) ? row.frequency : null,
     catalog: projectCatalogPresentation(row.catalog_product),
   }
 }
@@ -764,22 +810,34 @@ export async function loadDiscoveryIntakeItem(
   return row ? projectDiscoveryIntakeItemRow(row) : null
 }
 
+/** Only the columns present are written (batch 7: a frequency-only PATCH leaves the usage). */
 export type DiscoveryIntakeItemUsageUpdate = {
-  category: DiscoveryIntakeCategory | null
-  usage_role: DiscoveryUsageRole | null
-  /** Only when the participant answered „Was ist das?" for a type-open item. */
-  product_type?: DiscoveryIntakeCategory
-  product_id?: string
-  product_submission_id?: string
+  category?: DiscoveryIntakeCategory | null
+  usage_role?: DiscoveryUsageRole | null
+  /**
+   * Only when the participant answered „Was ist das?" for a type-open item — or corrected a
+   * spray answer (heat protectant ↔ leave-in ↔ styling, `expectedProductType`).
+   */
+  product_type?: DiscoveryProductType
+  /** `null` only on a spray correction: the old research link goes with the old type. */
+  product_id?: string | null
+  product_submission_id?: string | null
+  frequency?: DiscoveryItemFrequency
 }
 
 /**
  * Scoped to the caller's intake. When the update gives the item a type, the row must still
  * be type-open — re-stated as predicates, so a concurrent write that already typed it is
- * never overwritten. `null` = no row matched (gone, foreign, or no longer type-open).
+ * never overwritten. A spray correction instead compares-and-sets on the type she corrected
+ * (`expectedProductType`). `null` = no row matched (gone, foreign, or typed meanwhile).
  */
 export async function updateDiscoveryIntakeItemUsage(
-  input: { intakeId: string; itemId: string; update: DiscoveryIntakeItemUsageUpdate },
+  input: {
+    intakeId: string
+    itemId: string
+    update: DiscoveryIntakeItemUsageUpdate
+    expectedProductType?: DiscoveryProductType | null
+  },
   client: DiscoveryAdminClient,
 ): Promise<DiscoveryIntakeItem | null> {
   let query = client
@@ -788,7 +846,12 @@ export async function updateDiscoveryIntakeItemUsage(
     .eq("intake_id", input.intakeId)
     .eq("id", input.itemId)
     .neq("source", "none")
-  if (input.update.product_type) {
+  if (input.expectedProductType !== undefined) {
+    query =
+      input.expectedProductType === null
+        ? query.is("product_type", null)
+        : query.eq("product_type", input.expectedProductType)
+  } else if (input.update.product_type) {
     query = query.is("product_type", null).is("product_id", null).is("product_submission_id", null)
   }
   const { data, error } = await query.select(ITEM_COLUMNS).maybeSingle()
@@ -828,6 +891,27 @@ export async function deleteDiscoveryIntakeItem(
     .select("id")
   if (error) throw error
   return ((data as Array<{ id: string }> | null) ?? []).length > 0
+}
+
+/**
+ * `PUT /api/beratung/intake/heat-styling`'s write: a compare-and-set on the draft state, so a
+ * write racing the submit either lands before the freeze or not at all. `null` = no draft row
+ * matched (submitted meanwhile, or gone) — the route answers 409.
+ */
+export async function saveDiscoveryIntakeHeatStyling(
+  input: { intakeId: string; heatStyling: DiscoveryHeatStylingV1 },
+  client: DiscoveryAdminClient,
+): Promise<DiscoveryIntake | null> {
+  const { data, error } = await client
+    .from(INTAKES_TABLE)
+    .update({ heat_styling: input.heatStyling })
+    .eq("id", input.intakeId)
+    .eq("state", "draft")
+    .select(INTAKE_COLUMNS)
+    .maybeSingle()
+  if (error) throw error
+  const row = (data as IntakeRow | null) ?? null
+  return row ? projectIntake(row) : null
 }
 
 export async function submitDiscoveryIntake(

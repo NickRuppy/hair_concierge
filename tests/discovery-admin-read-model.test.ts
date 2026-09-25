@@ -7,7 +7,10 @@ import { seedMobileProfileFixtures } from "../scripts/mobile/profile-fixture"
 import {
   discoveryPreviewInput,
   loadDiscoveryIdealRoutine,
+  recomputeDiscoverySnapshot,
 } from "../src/lib/discovery/load-ideal-routine"
+import { discoveryConcernProfileFacts } from "../src/lib/discovery/concern-recipe-view"
+import { buildDiscoveryRoutineContext } from "../src/lib/discovery/routine-context"
 import {
   loadParticipantScanVerdicts,
   DISCOVERY_SCAN_VERDICT_DEPS,
@@ -546,4 +549,117 @@ test("the production loaders carry the discovery error codes", async () => {
     () => DISCOVERY_VERDICT_DEPS.loadPresentationRows(failing, [productId]),
     /discovery_presentation_lookup_failed/,
   )
+})
+
+// --- Batch 7: the routine override (plan §2.3 Rev. 3) ------------------------------------
+
+const straightenerOverride = buildDiscoveryRoutineContext(
+  [{ source: "catalog_search", category: "shampoo", usageRole: null, frequency: "weekly_2x" }],
+  {
+    dryingRoutes: ["air_dry"],
+    additionalHeatTools: ["straightener"],
+    heatEvents: { "heat:straightener": { frequency: "weekly_2x", protectionConsistency: "no" } },
+  },
+)
+
+/** The same seeded owner, before any Feinschliff: only the initial need version. */
+async function initialOnlyScannerSource(): Promise<ScannerSourceRead> {
+  const source = await usableScannerSource()
+  return {
+    ...source,
+    plan: { ...source.plan!, current_refined_need_version_id: null },
+    refined: null,
+    refinements: [],
+  }
+}
+
+test("override on the initial path: recomputed with her answers, heat protectant in, still no write", async () => {
+  const source = await initialOnlyScannerSource()
+  const { client, rpcCalls, tables, mutations } = recordingClient({
+    rpc: () => ({ data: source, error: null }),
+    select: () => ({ data: [], error: null, count: 0 }),
+  })
+
+  const plain = await loadDiscoveryIdealRoutine(client, "owner", intakeId)
+  const withAnswers = await loadDiscoveryIdealRoutine(client, "owner", intakeId, {
+    routineOverride: straightenerOverride,
+  })
+  assert.equal(plain.status, "ready")
+  assert.equal(withAnswers.status, "ready")
+  if (plain.status !== "ready" || withAnswers.status !== "ready") return
+
+  assert.equal(plain.context.snapshotSource, "initial")
+  assert.equal(plain.routineSource, "quiz_only")
+  assert.equal(plain.heatProtectionDeferred, true)
+  assert.ok(!plain.steps.some((entry) => entry.category === "heat_protectant"))
+
+  // Discovery-only origin; the shared contract keeps "initial".
+  assert.equal(withAnswers.routineSource, "intake_answers")
+  assert.equal(withAnswers.context.snapshotSource, "initial")
+  assert.equal(withAnswers.heatProtectionDeferred, false)
+  assert.ok(withAnswers.steps.some((entry) => entry.category === "heat_protectant"))
+  assert.equal(withAnswers.context.snapshot.profile.source.projection, "initial_quiz")
+  // Steps and previews come from the same recomputed snapshot.
+  assert.deepEqual(
+    new Set(withAnswers.steps.map((entry) => entry.decisionKey)),
+    stage1PreviewedRoleDecisionKeys(withAnswers.context.snapshot),
+  )
+
+  // Nothing persists: only the documented source RPC, only catalog reads, no mutation.
+  assert.deepEqual([...new Set(rpcCalls)], ["scanner_context_read_source"])
+  assert.deepEqual(mutations, [])
+  assert.deepEqual(
+    [...new Set(tables)].filter((table) => !CATALOG_READ_TABLES.has(table)),
+    [],
+  )
+})
+
+test("„Hauptproblem“ profile facts read the snapshot actually used: with the override, her real heat answers", async () => {
+  const source = await initialOnlyScannerSource()
+  const { client } = recordingClient({
+    rpc: () => ({ data: source, error: null }),
+    select: () => ({ data: [], error: null, count: 0 }),
+  })
+  const plain = await loadDiscoveryIdealRoutine(client, "owner", intakeId)
+  const withAnswers = await loadDiscoveryIdealRoutine(client, "owner", intakeId, {
+    routineOverride: straightenerOverride,
+  })
+  if (plain.status !== "ready" || withAnswers.status !== "ready") {
+    assert.fail("both ready")
+  }
+  // Quiz only: heat was never asked, so the recipe gate cannot tell.
+  assert.equal(discoveryConcernProfileFacts(plain.context.snapshot).heat_styling, null)
+  // Her checklist says straightener 2× a week: weekly styling heat.
+  assert.equal(discoveryConcernProfileFacts(withAnswers.context.snapshot).heat_styling, true)
+})
+
+test("a refined participant keeps her Feinschliff: the override is ignored", async () => {
+  const source = await usableScannerSource()
+  const { client } = recordingClient({
+    rpc: () => ({ data: source, error: null }),
+    select: () => ({ data: [], error: null, count: 0 }),
+  })
+  const plain = await loadDiscoveryIdealRoutine(client, "owner", intakeId)
+  const withAnswers = await loadDiscoveryIdealRoutine(client, "owner", intakeId, {
+    routineOverride: straightenerOverride,
+  })
+  assert.equal(withAnswers.status, "ready")
+  if (plain.status !== "ready" || withAnswers.status !== "ready") return
+  assert.equal(withAnswers.context.snapshotSource, "refined")
+  assert.equal(withAnswers.routineSource, "quiz_only")
+  assert.deepEqual(withAnswers.steps, plain.steps)
+})
+
+test("a recompute that is not ready falls back to the prepared snapshot, never an error", () => {
+  const prepared = {
+    snapshot: {
+      sourceQuiz: { kind: "nonsense" },
+      profile: { source: { artifactId: "a" } },
+    } as never,
+    snapshotSource: "initial" as const,
+  }
+  const result = recomputeDiscoverySnapshot(prepared, straightenerOverride)
+  assert.equal(result.snapshot, prepared.snapshot)
+  assert.equal(result.routineSource, "quiz_only")
+  assert.equal(recomputeDiscoverySnapshot(prepared, null).routineSource, "quiz_only")
 })

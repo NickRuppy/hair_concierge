@@ -1,7 +1,12 @@
 import type { NextRequest } from "next/server"
 
 import type { DiscoveryIntakeItemView } from "@/components/discovery/intake/types"
-import { isValidDiscoveryUsage } from "@/lib/discovery/classify"
+import {
+  DISCOVERY_STYLING_PRODUCT_TYPE,
+  isDiscoveryProductCategory,
+  isValidDiscoveryUsage,
+  type DiscoveryProductType,
+} from "@/lib/discovery/classify"
 import {
   buildDiscoveryIntakeItemRow,
   checkDiscoveryIntakeItemIdentity,
@@ -11,7 +16,6 @@ import {
   discoveryIntakeProductIdentity,
   insertDiscoveryIntakeItem,
   toDiscoveryIntakeItemView,
-  type DiscoveryIntakeCategory,
   type DiscoveryIntakeIdentityRefusal,
 } from "@/lib/discovery/intake"
 import {
@@ -42,6 +46,9 @@ import {
  *     leaves the item stored without one (the cockpit can start research later);
  *   - `productType: null` („Weiß ich nicht") stores the item with no type, no usage and no
  *     submission; a usage without a type is refused (400 `product_type_required`).
+ *   - batch 7: `productType: "styling"` („Styling & Halt", D2) stores a non-evaluated styling
+ *     product — no usage (else 400 `invalid_usage`), no research; `frequency` („Wie oft
+ *     nutzt du es?") is stored when sent, NULL (not asked) otherwise.
  *   201 `{ item }` · 400 `invalid_body` | `invalid_usage` | `product_type_required` ·
  *   409 `already_submitted` · 422 `unknown_product` · 503 `unavailable`.
  *
@@ -190,14 +197,14 @@ export function createDiscoveryIntakeItemsHandler(
     async function addFlatChecklistProduct(raw: unknown) {
       const parsed = discoveryIntakeProductBodySchema.safeParse(raw)
       if (!parsed.success) return discoveryIntakeError("invalid_body", 400)
-      const { capture, usage } = parsed.data
+      const { capture, usage, frequency } = parsed.data
       if (usage && !isValidDiscoveryUsage(usage)) {
         return discoveryIntakeError("invalid_usage", 400)
       }
       const identity = discoveryIntakeProductIdentity(capture)
 
       try {
-        let productType: DiscoveryIntakeCategory | null = parsed.data.productType ?? null
+        let productType: DiscoveryProductType | null = parsed.data.productType ?? null
         let productId = identity.product_id
         let productSubmissionId: string | null = null
 
@@ -217,9 +224,13 @@ export function createDiscoveryIntakeItemsHandler(
         } else if (productType === null && usage !== null) {
           // „Weiß ich nicht" carries no usage: a usage alone would read as a legacy row.
           return discoveryIntakeError("product_type_required", 400)
+        } else if (productType === DISCOVERY_STYLING_PRODUCT_TYPE && usage !== null) {
+          // A styling product is listed, never evaluated: it has no usage (D2).
+          return discoveryIntakeError("invalid_usage", 400)
         }
 
-        if (!productId && productType) {
+        // Never for a styling product (D2): nothing to research it AS.
+        if (!productId && isDiscoveryProductCategory(productType)) {
           // Opened only now — on the add that carries her usage answer — and from the
           // product type, never from the usage (F1).
           const research = await openDiscoveryIntakeResearch(
@@ -241,6 +252,8 @@ export function createDiscoveryIntakeItemsHandler(
             ...identity,
             product_id: productId,
             product_submission_id: productSubmissionId,
+            // Only when sent: the old checklist's rows stay exactly what they were.
+            ...(frequency ? { frequency } : {}),
           },
           admin,
         )

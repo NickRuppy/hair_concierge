@@ -442,6 +442,7 @@ test("swap targets and PRINTED recommendations share one batched catalog read", 
         step({ preview: idealPreview("30000000-0000-4000-8000-0000000000ff") }),
         maskIdealStep,
       ]),
+      loadHeatStyling: async () => null,
       loadItems: async () => [item()],
       loadVerdicts: async () => [],
       loadProductIdentities: async () => new Map(),
@@ -473,6 +474,7 @@ test("a recommendation that is not printed never blocks the call", async () => {
     { intakeId: ids.intake, userId: ids.user },
     {
       loadIdealRoutine: readyIdeal([step({ preview: idealPreview(ids.ideal) })]),
+      loadHeatStyling: async () => null,
       loadItems: async () => [item()],
       loadVerdicts: async () => [],
       loadProductIdentities: async () => new Map(),
@@ -494,6 +496,7 @@ test("a printed recommendation missing from a successful read counts as unavaila
       { intakeId: ids.intake, userId: ids.user },
       {
         loadIdealRoutine: readyIdeal([step(), maskIdealStep]),
+        loadHeatStyling: async () => null,
         loadItems: async () => [item()],
         loadVerdicts: async () => [],
         loadProductIdentities: async () => new Map(),
@@ -518,6 +521,7 @@ test("a failed brand lookup degrades a swap-free call instead of failing it", as
       context: {} as never,
       previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
     }),
+    loadHeatStyling: async () => null,
     loadItems: async () => [],
     loadVerdicts: async () => [],
     loadProductIdentities: async () => new Map(),
@@ -575,6 +579,7 @@ test("the verdict pass runs once, on the very context the Idealplan prepared", a
         context,
         previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
       }),
+      loadHeatStyling: async () => null,
       loadItems: async () => items,
       loadVerdicts: async (_admin, _userId, passedItems, passedContext) => {
         verdictCalls.push({ context: passedContext, items: passedItems })
@@ -595,15 +600,23 @@ test("the verdict pass runs once, on the very context the Idealplan prepared", a
   assert.equal(verdictCalls[0].items, items)
 })
 
-test("an unusable source short-circuits before anything else is read", async () => {
+test("an unusable source short-circuits after her answers are read, before anything else", async () => {
+  // Batch 7 (plan §2.3): items and heat answers are read BEFORE the Idealroutine, because they
+  // may shape it; nothing past the routine is read when it is unusable.
   for (const status of ["no_usable_source", "temporarily_unavailable"] as const) {
+    const reads: string[] = []
     const result = await loadDiscoveryCockpitModel(
       {} as never,
       { intakeId: ids.intake, userId: ids.user },
       {
         loadIdealRoutine: async () => ({ status }),
         loadItems: async () => {
-          throw new Error("must not read items")
+          reads.push("items")
+          return []
+        },
+        loadHeatStyling: async () => {
+          reads.push("heat")
+          return null
         },
         loadVerdicts: async () => {
           throw new Error("must not compute verdicts")
@@ -614,6 +627,7 @@ test("an unusable source short-circuits before anything else is read", async () 
       },
     )
     assert.deepEqual(result, { status })
+    assert.deepEqual(reads, ["items", "heat"])
   }
 })
 
@@ -758,6 +772,7 @@ test("identities are read for every labelled product and option, and a failed re
   const reads: string[][] = []
   const deps = {
     loadIdealRoutine: readyIdeal([step({ preview: idealPreview(ids.ideal) }), maskIdealStep]),
+    loadHeatStyling: async () => null,
     loadItems: async () => [item()],
     loadVerdicts: async () => [],
     loadDecisions: async () => [swapShampoo],
@@ -815,6 +830,7 @@ async function modelWithVerdict(
     { intakeId: ids.intake, userId: ids.user },
     {
       loadIdealRoutine: readyIdeal([step({ preview: idealPreview(ids.ideal) })]),
+      loadHeatStyling: async () => null,
       loadItems: async () => [item()],
       loadVerdicts: async () => [verdict],
       loadDecisions: async () => [],
