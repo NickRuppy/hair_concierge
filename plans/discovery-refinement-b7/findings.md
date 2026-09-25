@@ -198,3 +198,9 @@ Prototype: `scratchpad/proto-b7/index.html` (throwaway), shown in iOS Simulator 
 - **Preselect as suggestion only:** conditioner and leave-in preselect the latest shampoo's frequency; she confirms or changes. No coupling afterwards.
 - Heat protectant gets the normal frequency step. Waschtag cadence = shampoo frequency (most frequent if several); no shampoo → cadence open, asked in the call. Wash-frequency fallback on the heat page dropped.
 - **Final page (Nick, 2026-09-25):** no answer-summary („Fertig") screen. Instead a warm closing page: three sections done — Fragebogen, Deine Produkte, Hitze & Styling — „now you're prepared for our meeting" + „Abschicken".
+
+### Rulings D1/D2 + lock (Nick, 2026-09-25)
+- Plan Rev. 1 locked („lock this in … build it … review by Codex"). Reassurance line on the final page removed.
+- Drying question: all 3 production options present; add production's „Keiner dieser Wege" option; towel question stays out (low impact).
+- **D1** conditioner „Vor der Haarwäsche": checklist-only (usage role recorded + shown in cockpit; routine/PDF treat as conditioner).
+- **D2** sprays: spray usage question + non-evaluated `styling` type; care option must read clearly as leave-in care spray → „Pflegespray – bleibt im Haar (Leave-in)".

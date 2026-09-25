@@ -1,6 +1,6 @@
 # Discovery toolkit — batch 7 refinement plan (Rev. 1)
 
-Status: **Rev. 1 — locked by Nick 2026-09-25 („lock this in … build it")**, pending Codex plan review and decisions D1–D2.
+Status: **Rev. 1 — locked by Nick 2026-09-25 („lock this in … build it")**, D1/D2 ruled 2026-09-25, pending Codex plan review.
 Inputs: `findings.md` (F1–F9, C1–C6, all rulings), clickable prototype `prototype/index.html` (round 6, the approved flow), research notes cited in `findings.md`.
 Base: `origin/main` `ee11a80b`. Worktree `.worktrees/discovery-refinement-b7`, branch `codex/discovery-refinement-b7`.
 
@@ -95,10 +95,10 @@ Legacy/in-flight: drafts created on the old UI render in the new UI; items with 
 - Hash invariant: frequency/heat fields enter printed objects and `discoveryRoutineSourceHash` **only when non-null**, so finalized legacy calls keep their hash (golden hash test stays green). New finalizations include them.
 - Admin item-usage correction RPC: also allows correcting `frequency` post-submit (cockpit), same finalize guard.
 
-### 2.4 F7 and F4 (pending decisions)
+### 2.4 F7 and F4 (ruled 2026-09-25)
 
-- **D1 conditioner „Vor der Haarwäsche"**: (a, recommended) intake-level only — 4th option on `care_use`, new usage role `pre_wash_conditioner` allowed only with `conditioner`; cockpit shows the usage; routine engine and PDF treat it as a conditioner (rinse-out guide). (b) full engine support (new `PlanProductRole`, `authorities.ts` policy, semantic-role mapping, new `application_guidance_protocols` row) — separate larger batch.
-- **D2 sprays**: (a, recommended) names with „Spray" and no clear type get „Wofür nutzt du das Spray?": Hitzeschutz · Pflege, bleibt im Haar (→ leave-in) · Styling & Halt (→ new non-evaluated type `styling`) · Weiß ich nicht. `styling` items are listed in the cockpit as „Styling (nicht bewertet)", never block finalize, never enter verdicts/routine. Overnight sprays → „Pflege, bleibt im Haar". (b) keep today (unknown → „Was ist das?" chips, styling products end up „Kategorie offen").
+- **D1 conditioner „Vor der Haarwäsche" — RULED (a)**: intake-level only — 4th option on `care_use`, new usage role `pre_wash_conditioner` allowed only with `conditioner`; cockpit shows the usage; routine engine and PDF treat it as a conditioner (rinse-out guide). (b, not chosen) full engine support — possible later batch.
+- **D2 sprays — RULED (a)**, with Nick's copy note (the care option must clearly read as a leave-in care spray): names with „Spray" and no clear type get „Wofür nutzt du das Spray?": Hitzeschutz · Pflegespray – bleibt im Haar (Leave-in) (→ leave-in) · Styling & Halt (→ new non-evaluated type `styling`) · Weiß ich nicht. `styling` items are listed in the cockpit as „Styling (nicht bewertet)", never block finalize, never enter verdicts/routine. Overnight sprays → the Pflegespray (Leave-in) option. (b, not chosen) keep today.
 
 Tests: frequency CHECK/API validation, heat-styling schema, legacy draft rendering, `composeDiscoveryRoutineDays` table, `buildDiscoveryRoutineContext` rule fixtures, hash golden test, participant flow component tests (add sheet steps, preselect hint, heat flow branching incl. protection skip for plain föhnen, final page), same-origin on the new route.
 
