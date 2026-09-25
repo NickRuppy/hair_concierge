@@ -156,3 +156,34 @@ test("reactivation return destination rejects external, recursive, escaped and u
     )
   }
 })
+
+test("reactivation restores the saved main-problem pick (F1); older profiles stay neutral", () => {
+  const withPick = buildQuizAnswersFromHairProfile({
+    hair_texture: "wavy",
+    concerns: ["breakage", "frizz"],
+    primary_concern: "frizz",
+  })
+  assert.equal(withPick.primary_concern, "frizz")
+  assert.equal(buildQuizOfferPreview(withPick).lane, "surface_support")
+
+  const older = buildQuizAnswersFromHairProfile({
+    hair_texture: "wavy",
+    concerns: ["breakage", "frizz"],
+  })
+  assert.equal(older.primary_concern, undefined)
+
+  // A pick outside the quiz vocabulary or outside her concerns is dropped, not guessed.
+  for (const primary_concern of ["hair_loss", "tangling", 42]) {
+    assert.equal(
+      buildQuizAnswersFromHairProfile({ concerns: ["breakage", "frizz"], primary_concern })
+        .primary_concern,
+      undefined,
+    )
+  }
+})
+
+test("the reactivation page reads the saved main-problem pick", async () => {
+  const { readFileSync } = await import("node:fs")
+  const page = readFileSync(new URL("../src/app/reactivate/page.tsx", import.meta.url), "utf8")
+  assert.match(page, /\.from\("hair_profiles"\)\s*\.select\(\s*"[^"]*\bprimary_concern\b/)
+})
