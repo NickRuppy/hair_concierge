@@ -139,14 +139,12 @@ function leadHandler({
   inserts,
   selects,
   recent = [],
-  filters,
 }: {
   discoveryEnabled?: boolean
   discovery?: Awaited<ReturnType<typeof resolveDiscoveryJourney>>
   inserts?: LeadCall[]
   selects?: string[]
   recent?: Array<{ id: string; quiz_answers: Record<string, unknown> }>
-  filters?: Array<[string, unknown]>
 } = {}) {
   const admin = {
     from(table: string) {
@@ -165,10 +163,7 @@ function leadHandler({
               get: (_target, property) =>
                 property === "then"
                   ? undefined
-                  : (column: string, value: unknown) => {
-                      if (property === "eq" || property === "is") filters?.push([column, value])
-                      return property === "limit" ? { data: recent, error: null } : chain
-                    },
+                  : () => (property === "limit" ? { data: recent, error: null } : chain),
             },
           )
           return chain
@@ -235,46 +230,19 @@ test("a participant's lead is saved under the enrollment identity, not the submi
   assert.equal(inserts[0].values.email, "lea@example.test")
   assert.equal(inserts[0].values.marketing_consent, true)
   assert.equal(inserts[0].values.status, "captured")
-  // Only the narrow replay guard reads the table (batch 8 review) — never the dedupe pool.
-  assert.deepEqual(selects, ["leads"])
+  // Never deduped: the checklist binds exactly this lead to the intake.
+  assert.deepEqual(selects, [])
 })
 
-test("a retry whose first response was lost gets her own lead back, not a duplicate", async () => {
+test("a recent regular lead with the same e-mail and answers is never returned for a discovery save", async () => {
   const inserts: LeadCall[] = []
-  const filters: Array<[string, unknown]> = []
-  const replayed = "30000000-0000-4000-8000-000000000009"
-  const body = {
-    name: "Lea Sommer",
-    email: "lea@example.test",
-    marketingConsent: false,
-    quizAnswers,
-  }
+  const selects: string[] = []
+  const regularLead = "30000000-0000-4000-8000-000000000009"
   const response = await leadHandler({
     inserts,
-    filters,
-    recent: [{ id: replayed, quiz_answers: quizAnswers as Record<string, unknown> }],
-  })(leadRequest(body))
-  assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), { leadId: replayed, journey: "discovery" })
-  assert.deepEqual(inserts, [], "no second row")
-  // Scoped to her enrollment identity and to rows no other journey owns.
-  assert.deepEqual(
-    filters.filter(([column]) => column !== "created_at"),
-    [
-      ["email", "lea@example.test"],
-      ["name", "Lea Sommer"],
-      ["marketing_consent", false],
-      ["partner_access_invitation_id", null],
-      ["moderator_campaign_id", null],
-    ],
-  )
-})
-
-test("a recent row with different answers is a new profile and is inserted", async () => {
-  const inserts: LeadCall[] = []
-  const response = await leadHandler({
-    inserts,
-    recent: [{ id: "30000000-0000-4000-8000-000000000009", quiz_answers: { structure: "coily" } }],
+    selects,
+    // Would be the dedupe pool's perfect match — the discovery branch must never look.
+    recent: [{ id: regularLead, quiz_answers: quizAnswers as Record<string, unknown> }],
   })(
     leadRequest({
       name: "Lea Sommer",
@@ -283,8 +251,10 @@ test("a recent row with different answers is a new profile and is inserted", asy
       quizAnswers,
     }),
   )
+  assert.equal(response.status, 200)
   assert.deepEqual(await response.json(), { leadId: ids.lead, journey: "discovery" })
-  assert.equal(inserts.length, 1)
+  assert.equal(inserts.length, 1, "a new discovery lead row is inserted")
+  assert.deepEqual(selects, [], "no lookup of existing leads at all")
 })
 
 test("an identity mismatch fails closed, exactly like the partner analogue", async () => {
