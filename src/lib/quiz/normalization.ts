@@ -224,6 +224,7 @@ export function normalizeStoredQuizAnswers(
   }
 
   const concerns = sortConcerns(source.concerns) ?? []
+  const primaryConcern = normalizePrimaryConcern(source.primary_concern, concerns)
 
   return {
     structure: isAllowedValue(source.structure, QUIZ_STRUCTURE_VALUES)
@@ -244,7 +245,8 @@ export function normalizeStoredQuizAnswers(
     has_scalp_issue: hasScalpIssue,
     scalp_condition: scalpCondition,
     concerns,
-    primary_concern: normalizePrimaryConcern(source.primary_concern, concerns),
+    // Present only when stated: answers without a pick keep their historical shape.
+    ...(primaryConcern ? { primary_concern: primaryConcern } : {}),
     concerns_other_text: normalizeConcernOtherText(source.concerns_other_text),
     treatment: sortTreatments(source.treatment),
     goals: normalizeGoals(source.goals),
@@ -252,11 +254,11 @@ export function normalizeStoredQuizAnswers(
 }
 
 export function canonicalizeQuizAnswers(answers: QuizAnswers): QuizAnswers {
-  const concerns = sortConcerns(answers.concerns)
+  // `primary_concern` comes from the stored normalization: same concern set, dropped
+  // when stale, absent when not stated.
   const normalized = {
     ...normalizeStoredQuizAnswers(answers),
-    concerns,
-    primary_concern: normalizePrimaryConcern(answers.primary_concern, concerns),
+    concerns: sortConcerns(answers.concerns),
     concerns_other_text: normalizeConcernOtherText(answers.concerns_other_text),
     treatment: sortTreatments(answers.treatment),
     goals: normalizeGoals(answers.goals),
