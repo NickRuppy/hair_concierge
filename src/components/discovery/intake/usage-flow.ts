@@ -204,6 +204,8 @@ export function subjectOf(item: DiscoveryIntakeItemView): DiscoveryFlowSubject {
  */
 export function beginChange(item: DiscoveryIntakeItemView): DiscoveryFlowSheet | null {
   if (!isProductItem(item)) return null
+  // A styling product (batch 7, D2) has no usage to change.
+  if (item.productType === "styling") return null
   const target: DiscoveryFlowTarget = { kind: "change", item, subject: subjectOf(item) }
   const type = item.productType ?? item.category
   if (!type) return { kind: "what_is_it", target, current: "unknown" }

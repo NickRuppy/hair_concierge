@@ -324,3 +324,48 @@ test("only service_role may execute the frequency correction", async (t) => {
   await pg.exec("RESET ROLE")
   assert.equal(result.outcome, "updated")
 })
+
+/**
+ * The heat write is a compare-and-set on `state = 'draft'` (`saveDiscoveryIntakeHeatStyling`:
+ * `update … where id = $intake and state = 'draft'`, returning the row). Replayed here as the
+ * very statement against the submit RPC, in both orders: whichever runs first wins, and a
+ * heat answer never lands on a frozen intake.
+ */
+test("heat write vs submit: exactly one order wins, never a write after the freeze", async (t) => {
+  const pg = await migrated(t)
+  const heatWrite = async (intakeId: string) =>
+    (
+      await pg.query<{ id: string }>(
+        "UPDATE public.discovery_intakes SET heat_styling = $2 WHERE id = $1 AND state = 'draft' RETURNING id",
+        [intakeId, JSON.stringify({ dryingRoutes: [], additionalHeatTools: [], heatEvents: {} })],
+      )
+    ).rows.length
+  const submit = async (intakeId: string) =>
+    (
+      await pg.query<{ result: { outcome: string } }>(
+        "SELECT public.discovery_intake_submit_confirming_none($1) AS result",
+        [intakeId],
+      )
+    ).rows[0].result.outcome
+  const heatOf = async (intakeId: string) =>
+    (
+      await pg.query<{ heat_styling: unknown }>(
+        "SELECT heat_styling FROM public.discovery_intakes WHERE id = $1",
+        [intakeId],
+      )
+    ).rows[0].heat_styling
+
+  // Submit first: the heat write matches no draft row (the route answers 409).
+  const submittedFirst = await createIntake(pg)
+  await insertItem(pg, submittedFirst, { category: "shampoo", product_type: "shampoo" })
+  assert.equal(await submit(submittedFirst), "submitted")
+  assert.equal(await heatWrite(submittedFirst), 0)
+  assert.equal(await heatOf(submittedFirst), null)
+
+  // Heat first: it lands, then the submit freezes the intake with it.
+  const heatFirst = await createIntake(pg)
+  await insertItem(pg, heatFirst, { category: "shampoo", product_type: "shampoo" })
+  assert.equal(await heatWrite(heatFirst), 1)
+  assert.equal(await submit(heatFirst), "submitted")
+  assert.notEqual(await heatOf(heatFirst), null)
+})

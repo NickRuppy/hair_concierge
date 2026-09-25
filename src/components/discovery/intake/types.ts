@@ -1,4 +1,10 @@
-import type { DiscoveryUsage, DiscoveryUsageRole } from "@/lib/discovery/classify"
+import type {
+  DiscoveryProductType,
+  DiscoveryUsage,
+  DiscoveryUsageRole,
+} from "@/lib/discovery/classify"
+import type { DiscoveryItemFrequency } from "@/lib/discovery/frequency"
+import type { DiscoveryHeatStylingV1 } from "@/lib/discovery/heat-styling"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 
 /**
@@ -31,10 +37,16 @@ export type DiscoveryIntakeItemView = {
   /**
    * What the product IS (batch 5): absent when unknown („Weiß ich nicht") and on legacy
    * rows. Drives which usage question a pill tap re-asks (`discoveryUsageStepFor`).
+   * Batch 7 (D2): `styling` = a styling product, listed but never evaluated.
    */
-  productType?: PersonalPlanCategory
-  /** The routine role of her usage — only on oil uses and scalp oil (R9). */
+  productType?: DiscoveryProductType
+  /** The routine role of her usage — oil uses, scalp oil, the pre-wash conditioner (D1). */
   usageRole?: DiscoveryUsageRole
+  /**
+   * „Wie oft nutzt du es?" (batch 7): absent = not asked yet (a draft from the old checklist —
+   * the new UI shows a „Wie oft?" pill), `unknown` = „Weiß ich nicht".
+   */
+  frequency?: DiscoveryItemFrequency
 }
 
 /** The flat checklist's capture — identity only; the server opens research (batch 5, F1). */
@@ -69,15 +81,27 @@ export type DiscoveryIntakeProductCaptureInput =
 /** `POST /api/beratung/intake/items` (flat checklist). */
 export type DiscoveryIntakeProductBody = {
   capture: DiscoveryIntakeProductCaptureInput
-  /** Ignored for catalog captures (the catalog's category is authoritative). `null` = „Weiß ich nicht". */
-  productType?: PersonalPlanCategory | null
-  /** `null` = usage unknown. Must be `null` while the product type is unknown. */
+  /**
+   * Ignored for catalog captures (the catalog's category is authoritative). `null` = „Weiß ich
+   * nicht". `styling` (D2, „Styling & Halt") requires `usage: null` and opens no research.
+   */
+  productType?: DiscoveryProductType | null
+  /** `null` = usage unknown. Must be `null` while the product type is unknown or styling. */
   usage: DiscoveryUsage | null
+  /** „Wie oft nutzt du es?" (batch 7). Optional only for the old checklist. */
+  frequency?: DiscoveryItemFrequency
 }
 
-/** `PATCH /api/beratung/intake/items/<id>`. */
+/**
+ * `PATCH /api/beratung/intake/items/<id>` — every key optional, at least one present; an
+ * absent key leaves its column unchanged (`{ frequency }` alone answers „Wie oft?").
+ */
 export type DiscoveryIntakeUsagePatchBody = {
-  usage: DiscoveryUsage | null
-  /** Only for an item whose type is still unknown — opens its research. */
-  productType?: PersonalPlanCategory
+  usage?: DiscoveryUsage | null
+  /** Only for an item whose type is still unknown — opens its research (never for styling). */
+  productType?: DiscoveryProductType
+  frequency?: DiscoveryItemFrequency
 }
+
+/** `PUT /api/beratung/intake/heat-styling` — the whole answer, validated server-side. */
+export type DiscoveryIntakeHeatStylingBody = DiscoveryHeatStylingV1
