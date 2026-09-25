@@ -186,3 +186,22 @@ test("the concerns screen opens the shared main-problem sheet for two or more co
   assert.match(quizSource, /<QuizMainProblemSheet/)
   assert.match(quizSource, /requiresPrimaryConcernPick\(answers\.currentConcerns \?\? \[\]\)/)
 })
+
+test("the adapter's three-concern cap keeps a stated pick that sorts outside the first three", () => {
+  // Fixed adapter order: hair_damage, breakage, split_ends, dryness, tangling, frizz.
+  const adapted = adaptPersonalPlanAnswersForOffer({
+    ...ANSWERS,
+    currentConcerns: ["hair_damage", "breakage", "split_ends", "tangling", "frizz_flyaways"],
+    primaryConcern: "frizz_flyaways",
+  })
+  assert.deepEqual(adapted.answers.concerns, ["hair_damage", "breakage", "frizz"])
+  assert.equal(adapted.answers.primary_concern, "frizz")
+
+  // Without a pick (or with one already inside the cap) nothing changes.
+  const unstated = adaptPersonalPlanAnswersForOffer({
+    ...ANSWERS,
+    currentConcerns: ["hair_damage", "breakage", "split_ends", "tangling", "frizz_flyaways"],
+  })
+  assert.deepEqual(unstated.answers.concerns, ["hair_damage", "breakage", "split_ends"])
+  assert.equal(unstated.answers.primary_concern, undefined)
+})

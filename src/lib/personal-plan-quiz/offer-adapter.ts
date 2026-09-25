@@ -172,7 +172,14 @@ function retainConcerns(answers: PersonalPlanQuizAnswers): NonNullable<QuizAnswe
   // The paid-plan legacy offer adapter remains intentionally capped for its
   // established routine contract. Raw Personal Plan answers and the shared
   // assessment above retain every selection.
-  const retained = [...selected].slice(0, 3)
+  const ordered = [...selected]
+  // Her stated main problem (F1) always keeps a slot: it takes the third one when the
+  // fixed order would cap it away, so the canonical profile can still name it.
+  const stated = toAdaptedConcern(resolveStatedPersonalPlanConcern(answers))
+  const retained =
+    stated && ordered.indexOf(stated) >= 3
+      ? ordered.filter((concern, index) => index < 2 || concern === stated)
+      : ordered.slice(0, 3)
   if (
     hasConcern(answers.currentConcerns, "hair_loss_or_thinning") &&
     !retained.includes("hair_loss_or_thinning")
@@ -277,18 +284,25 @@ function mapScalpType(answers: PersonalPlanQuizAnswers): {
   return { scalpType: "ausgeglichen", fallback: true }
 }
 
+/** A diagnostic concern in the adapter's legacy concern vocabulary. */
+function toAdaptedConcern(
+  concern: ReturnType<typeof resolveStatedPersonalPlanConcern>,
+): NonNullable<QuizAnswers["concerns"]>[number] | null {
+  if (concern === "dry_lengths") return "dryness"
+  if (concern === "frizz_flyaways") return "frizz"
+  return concern
+}
+
 /**
  * Her stated main problem in the adapted (legacy) concern vocabulary — only when the
- * adapted concerns still carry it (the legacy offer contract caps them), so the canonical
- * profile never names a main problem outside its own `concerns`.
+ * adapted concerns carry it (`retainConcerns` keeps a slot for every mappable pick), so
+ * the canonical profile never names a main problem outside its own `concerns`.
  */
 function retainPrimaryConcern(
   answers: PersonalPlanQuizAnswers,
   retainedConcerns: NonNullable<QuizAnswers["concerns"]>,
 ): QuizAnswers["primary_concern"] {
-  const stated = resolveStatedPersonalPlanConcern(answers)
-  const adapted =
-    stated === "dry_lengths" ? "dryness" : stated === "frizz_flyaways" ? "frizz" : stated
+  const adapted = toAdaptedConcern(resolveStatedPersonalPlanConcern(answers))
   return adapted && retainedConcerns.includes(adapted) ? adapted : undefined
 }
 
