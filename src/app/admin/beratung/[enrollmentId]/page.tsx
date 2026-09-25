@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
+import { DiscoveryConcernRecipeSection } from "@/components/discovery/cockpit/concern-recipe"
 import { DiscoveryCallCockpit } from "@/components/discovery/cockpit/discovery-call-cockpit"
 import { DiscoveryIntakeProducts } from "@/components/discovery/cockpit/discovery-intake-products"
 import {
@@ -8,6 +9,7 @@ import {
   discoveryCockpitStateKey,
   formatDiscoveryTimestamp,
 } from "@/components/discovery/cockpit/format"
+import { DiscoveryQuizAnswersSection } from "@/components/discovery/cockpit/quiz-answers"
 import {
   DISCOVERY_INTAKE_CATEGORY_COPY,
   DISCOVERY_INTAKE_GROUPS,
@@ -23,12 +25,22 @@ import {
   type DiscoveryCockpitAdminClient,
   type DiscoveryCockpitView,
 } from "@/lib/discovery/cockpit"
+import {
+  UNKNOWN_CONCERN_PROFILE_FACTS,
+  buildDiscoveryConcernRecipeView,
+  discoveryConcernCoverageInput,
+} from "@/lib/discovery/concern-recipe-view"
 import { loadDiscoveryEnrollment } from "@/lib/discovery/enrollment"
 import { isDiscoveryCallToolkitEnabled } from "@/lib/discovery/flag"
+import { buildDiscoveryQuizAnswers, type DiscoveryQuizLead } from "@/lib/discovery/quiz-answers"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { createAdminClient } from "@/lib/supabase/admin"
 
-import { loadDiscoverySourceFactsPreflight, type DiscoverySourceFactsPreflight } from "./preflight"
+import {
+  classifyDiscoverySourceFactsPreflight,
+  loadDiscoveryQuizLead,
+  type DiscoverySourceFactsPreflight,
+} from "./preflight"
 
 /**
  * The discovery call cockpit (mockup: `plans/discovery-call-toolkit/evidence/cockpit.html`).
@@ -36,7 +48,9 @@ import { loadDiscoverySourceFactsPreflight, type DiscoverySourceFactsPreflight }
  * One screen for one call: what she captured and where its research stands („Eingetragene
  * Produkte"), the Idealroutine to read out, the engine's verdict on every
  * product the participant owns, one keep/swap decision per routine step, and
- * „Finalisieren" at the bottom. Everything it shows comes from ONE composition
+ * „Finalisieren" at the bottom. Above all of it (batch 7c, internal only): her quiz answers
+ * („Quiz-Antworten") and the research recipe for her main problem („Hauptproblem").
+ * Everything the call itself decides on comes from ONE composition
  * (`loadDiscoveryCockpitModel`) — the same one the decisions route validates against, so
  * the screen and the rules behind it cannot drift apart.
  *
@@ -78,7 +92,9 @@ export type DiscoveryCockpitPageDependencies = {
   loadEnrollment: typeof loadDiscoveryEnrollment
   loadIntake: typeof loadDiscoveryCallIntake
   loadModel: typeof loadDiscoveryCockpitModel
-  loadPreflight: typeof loadDiscoverySourceFactsPreflight
+  /** Her quiz lead, read once and shared by „Quiz-Antworten" and the preflight. */
+  loadQuizLead: typeof loadDiscoveryQuizLead
+  loadPreflight: (lead: DiscoveryQuizLead | null) => Promise<DiscoverySourceFactsPreflight>
 }
 
 const DEFAULTS: DiscoveryCockpitPageDependencies = {
@@ -88,7 +104,8 @@ const DEFAULTS: DiscoveryCockpitPageDependencies = {
   loadEnrollment: loadDiscoveryEnrollment,
   loadIntake: loadDiscoveryCallIntake,
   loadModel: loadDiscoveryCockpitModel,
-  loadPreflight: loadDiscoverySourceFactsPreflight,
+  loadQuizLead: loadDiscoveryQuizLead,
+  loadPreflight: async (lead) => classifyDiscoverySourceFactsPreflight(lead),
 }
 
 export function createDiscoveryCockpitPage(
@@ -125,22 +142,38 @@ export function createDiscoveryCockpitPage(
         ? `${status} · ${formatDiscoveryTimestamp(intake.submittedAt)}`
         : status
 
+    const lead = await deps.loadQuizLead(admin, intake.userId)
+    const quiz = buildDiscoveryQuizAnswers(lead)
+
     const model = await deps.loadModel(admin, { intakeId: intake.id, userId: intake.userId })
     if (model.status !== "ready") {
       return (
         <Shell name={enrollment.name} email={enrollment.email} status={statusLine}>
+          <DiscoveryQuizAnswersSection quiz={quiz} />
           <Notice text={model.status === "no_usable_source" ? NO_SOURCE : UNAVAILABLE} />
         </Shell>
       )
     }
 
     const view = buildDiscoveryCockpitView(model)
-    const preflight = await deps.loadPreflight(admin, intake.userId)
+    const preflight = await deps.loadPreflight(lead)
+    const concernFacts = model.concernProfileFacts ?? UNKNOWN_CONCERN_PROFILE_FACTS
+    const concernCoverage = discoveryConcernCoverageInput(view)
+    const concernViews =
+      quiz.status === "ready"
+        ? quiz.concerns.flatMap(
+            (code) => buildDiscoveryConcernRecipeView(code, concernFacts, concernCoverage) ?? [],
+          )
+        : []
     // A refresh with a different routine remounts the client islands (see the helper).
     const stateKey = discoveryCockpitStateKey(view.sourceHash, intake.callFinalizedAt)
 
     return (
       <Shell name={enrollment.name} email={enrollment.email} status={statusLine}>
+        <DiscoveryQuizAnswersSection quiz={quiz} />
+        {quiz.status === "ready" ? (
+          <DiscoveryConcernRecipeSection views={concernViews} mainConcern={quiz.mainConcern} />
+        ) : null}
         <PreflightBanner preflight={preflight} />
         {!view.researchStatusAvailable ? (
           <Notice text={RESEARCH_UNAVAILABLE} />

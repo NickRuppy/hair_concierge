@@ -241,6 +241,7 @@ async function renderCockpit(
     loadEnrollment: async () => enrollment,
     loadIntake: async () => ({ ...intake, state }),
     loadModel: async () => ({ ...model(), routine: routine(forItems) }),
+    loadQuizLead: async () => null,
     loadPreflight: async () => ({ status: "ready" }),
   })
   const element = await Page({ params: Promise.resolve({ enrollmentId: ids.enrollment }) })

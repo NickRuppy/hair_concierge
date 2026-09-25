@@ -16,6 +16,10 @@ import {
 } from "./application"
 import { DISCOVERY_USAGE_ROLES, type DiscoveryUsageRole } from "./classify"
 import {
+  discoveryConcernProfileFacts,
+  type DiscoveryConcernProfileFacts,
+} from "./concern-recipe-view"
+import {
   loadDiscoveryIdealRoutine,
   type DiscoveryIdealStep,
   type DiscoveryPreviewInput,
@@ -350,6 +354,12 @@ export type DiscoveryCockpitModel = {
    * only for a model composed without it (tests): no section, nothing blocked.
    */
   application?: { status: "ready"; section: DiscoveryApplication } | { status: "unavailable" }
+  /**
+   * Her profile as the „Hauptproblem" recipe gates read it (batch 7c) — off the same
+   * snapshot the Idealroutine was computed from. Absent only for a model composed without
+   * it (tests): every gate then reads „prüfen".
+   */
+  concernProfileFacts?: DiscoveryConcernProfileFacts
 }
 
 export type DiscoveryCockpitModelResult =
@@ -549,6 +559,7 @@ export async function loadDiscoveryCockpitModel(
     productIdentities,
     research: { items: capturedItems, state: researchState },
     application,
+    concernProfileFacts: discoveryConcernProfileFacts(ideal.context?.snapshot),
   }
 }
 
