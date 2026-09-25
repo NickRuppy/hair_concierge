@@ -67,6 +67,75 @@ interface BottomSheetContentProps extends React.HTMLAttributes<HTMLDivElement> {
   footer?: React.ReactNode
   showCloseButton?: boolean
   onDismissRequest?: (origin: "x" | "backdrop" | "escape" | "handle_drag") => void
+  /**
+   * Called once the sheet has FINISHED closing (exit animation done, scroll lock
+   * released, focus restored) — the moment the next thing may happen (batch 8 motion
+   * rule: a sheet always finishes closing before the flow moves on).
+   */
+  onClosed?: () => void
+}
+
+export type BottomSheetFocusAction = "initial" | "restore" | "none"
+
+/**
+ * Where Tab / Shift+Tab must go to stay inside the sheet, or `null` to let the browser
+ * move focus within the list. Wraps at both ends, and — batch 8 review — also when focus
+ * sits on something that is NOT in the tabbable list (the tap-open title with
+ * `tabindex="-1"`, the panel itself, `body` after a step unmounted the focused control):
+ * from there Tab goes to the first control and Shift+Tab to the last, never out.
+ */
+export function resolveFocusTrapTarget<T>(
+  focusable: readonly T[],
+  active: unknown,
+  direction: "forward" | "backward",
+): T | null {
+  if (focusable.length === 0) return null
+  const first = focusable[0]
+  const last = focusable[focusable.length - 1]
+  const index = focusable.indexOf(active as T)
+  if (index === -1) return direction === "forward" ? first : last
+  if (direction === "backward" && index === 0) return last
+  if (direction === "forward" && index === focusable.length - 1) return first
+  return null
+}
+
+// Whether the last user input was the keyboard (vs. a pointer/touch). A sheet opened by
+// keyboard starts on its close X (a ring is expected there); one opened by a tap starts on
+// its title, because WebKit rings a programmatically focused button even after a tap.
+let lastInputWasKeyboard = false
+let inputModalityTracked = false
+
+function trackInputModality() {
+  if (inputModalityTracked || typeof document === "undefined") return
+  inputModalityTracked = true
+  document.addEventListener(
+    "keydown",
+    (event) => {
+      if (!event.metaKey && !event.ctrlKey && !event.altKey) lastInputWasKeyboard = true
+    },
+    true,
+  )
+  document.addEventListener("pointerdown", () => (lastInputWasKeyboard = false), true)
+}
+
+/**
+ * Focus rule of the sheet (batch 8, plan item 9): initial focus is placed ONCE per open —
+ * never again on content/step changes inside the same open sheet (that used to land on the
+ * close X). When the sheet becomes the top layer again after a nested layer closed, focus
+ * goes back to where it was inside the sheet, and only if it is not in the sheet already.
+ */
+export function resolveBottomSheetFocusAction({
+  initialFocusDone,
+  regainedTopLayer,
+  focusInsidePanel,
+}: {
+  initialFocusDone: boolean
+  regainedTopLayer: boolean
+  focusInsidePanel: boolean
+}): BottomSheetFocusAction {
+  if (!initialFocusDone) return "initial"
+  if (regainedTopLayer && !focusInsidePanel) return "restore"
+  return "none"
 }
 
 const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentProps>(
@@ -85,6 +154,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
       rootClassName,
       showCloseButton = true,
       onDismissRequest,
+      onClosed,
       children,
       style,
       ...props
@@ -114,6 +184,18 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
     const closeButtonRef = React.useRef<HTMLButtonElement>(null)
     const previousFocusRef = React.useRef<HTMLElement | null>(null)
     const hasCapturedFocusRef = React.useRef(false)
+    const initialFocusDoneRef = React.useRef(false)
+    const wasTopLayerRef = React.useRef(false)
+    const lastFocusInsideRef = React.useRef<HTMLElement | null>(null)
+    const wasVisibleRef = React.useRef(false)
+    // Latest-refs: a changing `initialFocusRef` (e.g. a step that stops focusing the search
+    // field) or `onClosed` identity must never re-run the focus or close effects.
+    const initialFocusTargetRef = React.useRef(initialFocusRef)
+    const onClosedRef = React.useRef(onClosed)
+    React.useLayoutEffect(() => {
+      initialFocusTargetRef.current = initialFocusRef
+      onClosedRef.current = onClosed
+    })
 
     // Merge forwarded ref with internal panelRef
     const mergedRef = React.useCallback(
@@ -126,6 +208,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
     )
 
     React.useEffect(() => {
+      trackInputModality()
       setMounted(true)
     }, [])
 
@@ -216,17 +299,64 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
     }, [modalActive])
 
     React.useEffect(() => {
-      if (modalActive && isTopLayer) {
-        requestAnimationFrame(() => {
-          const target =
-            initialFocusRef?.current ??
-            closeButtonRef.current ??
-            getModalTabbableElements(panelRef.current ?? rootElement ?? document.body)[0] ??
-            panelRef.current
-          focusModalElement(target)
+      const isActiveTop = modalActive && isTopLayer
+      const regainedTopLayer = isActiveTop && !wasTopLayerRef.current
+      wasTopLayerRef.current = isActiveTop
+      if (!isActiveTop) return
+
+      const frame = requestAnimationFrame(() => {
+        const panel = panelRef.current
+        const action = resolveBottomSheetFocusAction({
+          initialFocusDone: initialFocusDoneRef.current,
+          regainedTopLayer,
+          focusInsidePanel: Boolean(panel && panel.contains(document.activeElement)),
         })
+        if (action === "initial") {
+          initialFocusDoneRef.current = true
+          // Without an explicit target, a tap-opened sheet starts on its title, not the
+          // close X: WebKit rings a programmatically focused button even after a tap, which
+          // read as a stray ring on the X (batch 8, plan item 9). Keyboard opens keep the X.
+          const title = lastInputWasKeyboard
+            ? null
+            : (panel?.querySelector<HTMLElement>(`[id="${titleId}"]`) ?? null)
+          if (title && !title.hasAttribute("tabindex")) title.setAttribute("tabindex", "-1")
+          focusModalElement(
+            initialFocusTargetRef.current?.current ??
+              title ??
+              closeButtonRef.current ??
+              getModalTabbableElements(panel ?? rootElement ?? document.body)[0] ??
+              panel,
+          )
+        } else if (action === "restore") {
+          const last = lastFocusInsideRef.current
+          if (last?.isConnected && panel?.contains(last)) focusModalElement(last)
+        }
+      })
+      return () => cancelAnimationFrame(frame)
+    }, [isTopLayer, modalActive, rootElement, titleId])
+
+    // Where focus last was inside the sheet — what a nested layer's close returns to.
+    React.useEffect(() => {
+      const panel = panelRef.current
+      if (!visible || !panel) return
+      const remember = (event: FocusEvent) => {
+        if (event.target instanceof HTMLElement) lastFocusInsideRef.current = event.target
       }
-    }, [initialFocusRef, isTopLayer, modalActive, rootElement])
+      panel.addEventListener("focusin", remember)
+      return () => panel.removeEventListener("focusin", remember)
+    }, [visible, rootElement])
+
+    React.useEffect(() => {
+      if (visible) {
+        wasVisibleRef.current = true
+        return
+      }
+      initialFocusDoneRef.current = false
+      lastFocusInsideRef.current = null
+      if (!wasVisibleRef.current) return
+      wasVisibleRef.current = false
+      onClosedRef.current?.()
+    }, [visible])
 
     React.useEffect(() => {
       if (!visible && previousFocusRef.current) {
@@ -253,15 +383,14 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
         const focusable = getModalTabbableElements(panel)
         if (focusable.length === 0) return
 
-        const first = focusable[0]
-        const last = focusable[focusable.length - 1]
-
-        if (e.shiftKey && document.activeElement === first) {
+        const target = resolveFocusTrapTarget(
+          focusable,
+          document.activeElement,
+          e.shiftKey ? "backward" : "forward",
+        )
+        if (target) {
           e.preventDefault()
-          focusModalElement(last)
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault()
-          focusModalElement(first)
+          focusModalElement(target)
         }
       }
 
@@ -427,7 +556,7 @@ const BottomSheetContent = React.forwardRef<HTMLDivElement, BottomSheetContentPr
             <button
               ref={closeButtonRef}
               type="button"
-              className="absolute right-3 top-2 z-10 flex h-10 w-10 items-center justify-center rounded-md bg-background/95 opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              className="absolute right-3 top-2 z-10 flex h-10 w-10 items-center justify-center rounded-md bg-background/95 opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               onClick={() => requestDismissal("x")}
             >
               <X className="h-4 w-4" />
@@ -468,7 +597,7 @@ function BottomSheetTitle({ className, ...props }: React.HTMLAttributes<HTMLHead
   return (
     <h2
       id={titleId}
-      className={cn("text-lg font-semibold text-foreground", className)}
+      className={cn("text-lg font-semibold text-foreground focus:outline-none", className)}
       {...props}
     />
   )

@@ -236,3 +236,25 @@ test("tool grid options without an image fall back to the icon row card", () => 
   assert.match(html, /grid-cols-\[auto_minmax\(0,1fr\)_auto\]/)
   assert.doesNotMatch(html, /<img/)
 })
+
+test("batch 8: the card's own fade-in is on by default and can be switched off", () => {
+  const withFade = renderToStaticMarkup(
+    <QuizOptionCard label="Glatt" active={false} onClick={() => {}} animationDelay={60} />,
+  )
+  assert.match(withFade, /class="animate-fade-in-up" style="animation-delay:60ms"/)
+
+  const without = renderToStaticMarkup(
+    <QuizOptionCard label="Glatt" active={false} onClick={() => {}} animateIn={false} />,
+  )
+  assert.doesNotMatch(without, /animate-fade-in-up|animation-delay/)
+})
+
+test("batch 8: a pending parent keeps the selected card clearly selected and not dimmed", () => {
+  const html = renderToStaticMarkup(
+    <QuizOptionCard label="Glatt" active pending onClick={() => {}} />,
+  )
+  assert.match(html, /quiz-card-active/)
+  assert.match(html, /aria-pressed="true"/)
+  assert.match(html, /aria-disabled="true"/)
+  assert.doesNotMatch(html, /opacity-60|disabled=""/)
+})

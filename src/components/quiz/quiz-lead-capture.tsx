@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useQuizStore } from "@/lib/quiz/store"
 import { useQuizFunnelPackageKey } from "@/components/quiz/quiz-funnel-package-provider"
 import { getQuizFunnelCopy } from "@/lib/quiz/funnel-copy"
@@ -30,10 +31,15 @@ import {
   PARTNER_QUIZ_CONTEXT_ENDPOINT,
 } from "@/lib/partner-access/quiz-context"
 import {
+  buildDiscoveryChecklistPath,
+  DISCOVERY_CHECKLIST_PATH,
   hasDiscoveryEnrollmentStamp,
-  parseDiscoveryQuizContextPayload,
-  DISCOVERY_QUIZ_CONTEXT_ENDPOINT,
 } from "@/lib/discovery/participant"
+import {
+  prefetchDiscoveryQuizContext,
+  takeDiscoveryQuizContext,
+} from "@/lib/quiz/discovery-context-prefetch"
+import { useDelayedLoader } from "@/lib/motion-loader"
 import { hasLockedLeadIdentity } from "@/lib/quiz/lead-capture-mode"
 import {
   isMigrationQuizRecoverySearch,
@@ -46,6 +52,7 @@ import {
   parseQuizEmailReturnEditIdentity,
   type QuizEmailReturnEditIdentity,
 } from "@/lib/quiz/email-return-edit"
+import { trackQuizCompleted } from "./quiz-preparation"
 
 function isValidEmail(email: string) {
   return EMAIL_ADDRESS_PATTERN.test(email.trim().toLowerCase())
@@ -64,6 +71,46 @@ let lastDiscoveryLeadSave: { leadId: string; answersKey: string } | null = null
 
 function discoveryAnswersKey(answers: Parameters<typeof canonicalizeQuizAnswers>[0]): string {
   return JSON.stringify(canonicalizeQuizAnswers(answers))
+}
+
+type LeadCaptureUser = Parameters<typeof hasDiscoveryEnrollmentStamp>[0] & {
+  id?: string | null
+}
+
+/**
+ * The two context lookups the lead step may need, derived from the auth state alone — so
+ * the very first render already knows whether this is a partner creator, a discovery
+ * invitee or a regular visitor (no one-frame name form for anyone who never sees it).
+ */
+function getLeadCaptureLookupKeys(authLoading: boolean, user: LeadCaptureUser | null) {
+  const partnerLookupKey = getPartnerQuizContextLookupKey({
+    authLoading,
+    hasMetadataHint: hasPartnerAccessQuizHint(user),
+    search: typeof window === "undefined" ? "" : window.location.search,
+    userId: user?.id ?? null,
+  })
+  // A discovery participant carries their own `app_metadata` stamp and never the
+  // partner marker, so the two lookups are mutually exclusive. Partner keeps
+  // precedence, which leaves the creator flow byte-identical: this key is only
+  // ever non-null on a run the partner lookup has already called `regular`.
+  const discoveryLookupKey =
+    partnerLookupKey === "regular" && hasDiscoveryEnrollmentStamp(user) && user?.id
+      ? `discovery:${user.id}`
+      : null
+  return { partnerLookupKey, discoveryLookupKey }
+}
+
+/**
+ * Rendered next to the last question (batch 8, plan item 2): starts an invitee's enrollment
+ * check early, so the lead step's „Geschafft" rarely has to wait for it.
+ */
+export function QuizDiscoveryContextPrefetch() {
+  const { user, loading: authLoading } = useAuth()
+  const { discoveryLookupKey } = getLeadCaptureLookupKeys(authLoading, user)
+  useEffect(() => {
+    if (discoveryLookupKey) prefetchDiscoveryQuizContext(discoveryLookupKey)
+  }, [discoveryLookupKey])
+  return null
 }
 
 export function QuizLeadCapture() {
@@ -89,7 +136,12 @@ export function QuizLeadCapture() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
   const [serverSuggestion, setServerSuggestion] = useState<string | null>(null)
-  const [contextStatus, setContextStatus] = useState<"checking" | "ready" | "unavailable">("ready")
+  const { partnerLookupKey, discoveryLookupKey } = getLeadCaptureLookupKeys(authLoading, user)
+  // Checking from the first render whenever a lookup will run, so nobody who is about to
+  // be recognised as a creator or invitee sees the regular name form for a frame.
+  const [contextStatus, setContextStatus] = useState<"checking" | "ready" | "unavailable">(() =>
+    partnerLookupKey !== "regular" || discoveryLookupKey ? "checking" : "ready",
+  )
   const [contextAttempt, setContextAttempt] = useState(0)
   // The store outlives this component, so a SECOND visit to the lead step mounts
   // with `leadCaptureMode: "discovery"` already set and `contextStatus` at its
@@ -97,6 +149,9 @@ export function QuizLeadCapture() {
   // effect below re-checks the enrollment. Discovery capture therefore waits for a
   // participant answer from THIS mount.
   const [discoveryContextConfirmed, setDiscoveryContextConfirmed] = useState(false)
+  // The enrollment check answered `regular` for a stamped account (revoked enrollment):
+  // she gets the regular capture after all.
+  const [discoveryDeclined, setDiscoveryDeclined] = useState(false)
   const [returnContextStatus, setReturnContextStatus] = useState<"checking" | "ready">(
     funnelPackageKey === QUIZ_EMAIL_RETURN_PACKAGE_KEY ? "checking" : "ready",
   )
@@ -113,21 +168,8 @@ export function QuizLeadCapture() {
   // successful save finishes it. Otherwise a later, unrelated address would be
   // sent with a consent answer the user never gave for it.
   const consentAnsweredRef = useRef(false)
+  const saveInFlightRef = useRef(false)
   const liveSuggestion = suggestEmailCorrection(lead.email)
-  const partnerLookupKey = getPartnerQuizContextLookupKey({
-    authLoading,
-    hasMetadataHint: hasPartnerAccessQuizHint(user),
-    search: typeof window === "undefined" ? "" : window.location.search,
-    userId: user?.id ?? null,
-  })
-  // A discovery participant carries their own `app_metadata` stamp and never the
-  // partner marker, so the two lookups are mutually exclusive. Partner keeps
-  // precedence, which leaves the creator flow byte-identical: this key is only
-  // ever non-null on a run the partner lookup has already called `regular`.
-  const discoveryLookupKey =
-    partnerLookupKey === "regular" && hasDiscoveryEnrollmentStamp(user) && user?.id
-      ? `discovery:${user.id}`
-      : null
 
   useEffect(() => {
     if (partnerLookupKey === "checking") {
@@ -143,21 +185,17 @@ export function QuizLeadCapture() {
 
     let active = true
     setContextStatus("checking")
-    const endpoint = discoveryLookupKey
-      ? DISCOVERY_QUIZ_CONTEXT_ENDPOINT
-      : PARTNER_QUIZ_CONTEXT_ENDPOINT
-    void fetch(endpoint, {
-      headers: { Accept: "application/json" },
-      cache: "no-store",
-      credentials: "same-origin",
-    })
-      .then(async (response) => {
-        if (!response.ok) return { status: "unavailable" } as const
-        const body: unknown = await response.json().catch(() => null)
-        return discoveryLookupKey
-          ? parseDiscoveryQuizContextPayload(body)
-          : parsePartnerQuizContextPayload(body)
-      })
+    const lookup = discoveryLookupKey
+      ? takeDiscoveryQuizContext(discoveryLookupKey)
+      : fetch(PARTNER_QUIZ_CONTEXT_ENDPOINT, {
+          headers: { Accept: "application/json" },
+          cache: "no-store",
+          credentials: "same-origin",
+        }).then(async (response) => {
+          if (!response.ok) return { status: "unavailable" } as const
+          return parsePartnerQuizContextPayload(await response.json().catch(() => null))
+        })
+    void lookup
       .then((payload) => {
         if (!active) return
         if (payload.status === "creator") {
@@ -172,6 +210,7 @@ export function QuizLeadCapture() {
           return
         }
         if (payload.status === "regular") {
+          if (discoveryLookupKey) setDiscoveryDeclined(true)
           setRegularLeadCapture()
           setContextStatus("ready")
           return
@@ -340,6 +379,7 @@ export function QuizLeadCapture() {
     }
   }, [goBack, leadCaptureMode, leadCaptureSubStep, saving, setLeadCaptureSubStep])
   const requestBack = useQuizBrowserBack(handleBack)
+  const router = useRouter()
 
   /**
    * Where a failed save puts the user: always the e-mail step, with the server
@@ -367,7 +407,10 @@ export function QuizLeadCapture() {
     accepted: boolean,
     consentSource: "prompt" | "inherited" = "prompt",
   ) => {
-    if (saving) return
+    // The ref, not the `saving` state: two taps in the same frame (a double retry) both
+    // still read the old state, and each would post its own lead.
+    if (saving || saveInFlightRef.current) return
+    saveInFlightRef.current = true
 
     setLeadField("marketingConsent", accepted)
     consentAnsweredRef.current = consentSource === "prompt"
@@ -458,7 +501,11 @@ export function QuizLeadCapture() {
 
       // The submission is done, so the recovery it belonged to is over too.
       consentAnsweredRef.current = false
-      if (leadCaptureMode === "discovery") {
+      // The server says which journey actually saved the lead. Only a discovery save may
+      // lead on to the checklist — a revoked enrollment (a stale prefetched answer) saves
+      // an ordinary lead and continues the regular way.
+      const savedAsDiscovery = data?.journey === "discovery"
+      if (savedAsDiscovery) {
         lastDiscoveryLeadSave = { leadId: data.leadId, answersKey: discoveryAnswersKey(answers) }
       }
       setLeadId(data.leadId)
@@ -472,17 +519,94 @@ export function QuizLeadCapture() {
         window.location.assign(serverNextHref)
         return
       }
+      if (savedAsDiscovery) {
+        // Her „Geschafft" is already on screen and its Weiter goes straight to the
+        // checklist — there is no preparation step to advance to.
+        trackQuizCompleted(answers, data.leadId)
+        return
+      }
+      if (leadCaptureMode === "discovery") {
+        setDiscoveryDeclined(true)
+        setRegularLeadCapture()
+      }
       goNext()
     } catch {
       setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.")
       if (consentSource === "inherited") consentAnsweredRef.current = false
       returnToEmailStep()
     } finally {
+      saveInFlightRef.current = false
       setSaving(false)
     }
   }
 
   const discoveryAwaitingContext = leadCaptureMode === "discovery" && !discoveryContextConfirmed
+  const inviteeEnding =
+    (discoveryLookupKey !== null || leadCaptureMode === "discovery") && !discoveryDeclined
+  const discoverySaved =
+    leadId !== null &&
+    lastDiscoveryLeadSave?.leadId === leadId &&
+    lastDiscoveryLeadSave.answersKey === discoveryAnswersKey(answers)
+
+  // The loader for the context lookups: its text only after 300 ms (batch 8 loader rule).
+  const contextLoaderVisible = useDelayedLoader(
+    partnerLookupKey === "checking" ||
+      (!inviteeEnding && (contextStatus === "checking" || returnContextStatus === "checking")),
+  )
+
+  useEffect(() => {
+    if (!inviteeEnding) return
+    router.prefetch(DISCOVERY_CHECKLIST_PATH)
+    if (leadId) router.prefetch(buildDiscoveryChecklistPath(leadId))
+  }, [inviteeEnding, leadId, router])
+
+  // A discovery participant never sees the name, e-mail or consent screens: „Geschafft"
+  // shows at once, and the enrollment check plus the profile save (`marketingConsent:
+  // false` — discovery leads are kept out of every marketing pipeline) run behind it.
+  if (inviteeEnding && partnerLookupKey !== "checking") {
+    return (
+      <div className="flex flex-col" key="discovery-ending">
+        <div className="mb-4 flex items-center gap-3">
+          {/* Never dimmed for the background save — a Back tap during it is ignored. */}
+          <button
+            onClick={requestBack}
+            aria-label="Zurück"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+            type="button"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+          <div className="flex-1">
+            <QuizProgressBar current={QUIZ_TOTAL_QUESTIONS} total={QUIZ_TOTAL_QUESTIONS} />
+          </div>
+        </div>
+        <QuizDiscoveryLeadSave
+          canSave={leadCaptureMode === "discovery" && discoveryContextConfirmed}
+          error={
+            contextStatus === "unavailable"
+              ? "Deine Angaben konnten gerade nicht geladen werden."
+              : saving
+                ? ""
+                : error
+          }
+          onContinue={() => {
+            if (!leadId) return
+            trackAppEvent("quiz_analysis_commitment", { choice: "ja", leadId })
+            router.push(buildDiscoveryChecklistPath(leadId))
+          }}
+          onRetry={() => {
+            if (contextStatus === "unavailable") {
+              setContextAttempt((attempt) => attempt + 1)
+              return
+            }
+            void handleConsent(false)
+          }}
+          onSave={() => void handleConsent(false)}
+          saved={discoverySaved}
+        />
+      </div>
+    )
+  }
 
   if (
     partnerLookupKey === "checking" ||
@@ -510,7 +634,7 @@ export function QuizLeadCapture() {
         returnContextStatus === "checking" ||
         (discoveryAwaitingContext && contextStatus === "ready") ? (
           <p className="text-center text-sm text-muted-foreground" role="status">
-            Dein Zugang wird geladen …
+            {contextLoaderVisible ? "Dein Zugang wird geladen …" : null}
           </p>
         ) : (
           <div className="rounded-2xl border border-border bg-background p-5 text-center shadow-sm">
@@ -546,28 +670,6 @@ export function QuizLeadCapture() {
       </div>
     </div>
   )
-
-  // A discovery participant is never asked for marketing consent: discovery
-  // leads are kept out of every marketing pipeline anyway. The step saves the
-  // lead with `false` on arrival instead — see `QuizDiscoveryLeadSave`.
-  if (leadCaptureMode === "discovery" && leadCaptureSubStep === "consent") {
-    return (
-      <div className="flex flex-col" key={leadCaptureSubStep}>
-        {progressHeader}
-        <QuizDiscoveryLeadSave
-          alreadySaved={
-            leadId !== null &&
-            lastDiscoveryLeadSave?.leadId === leadId &&
-            lastDiscoveryLeadSave.answersKey === discoveryAnswersKey(answers)
-          }
-          error={error}
-          onContinue={goNext}
-          onSave={() => void handleConsent(false)}
-          saving={saving}
-        />
-      </div>
-    )
-  }
 
   return (
     <div className="flex flex-col" key={leadCaptureSubStep}>

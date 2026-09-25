@@ -138,11 +138,13 @@ function leadHandler({
   discovery = { kind: "authorized" as const, userId: ids.user, enrollment },
   inserts,
   selects,
+  recent = [],
 }: {
   discoveryEnabled?: boolean
   discovery?: Awaited<ReturnType<typeof resolveDiscoveryJourney>>
   inserts?: LeadCall[]
   selects?: string[]
+  recent?: Array<{ id: string; quiz_answers: Record<string, unknown> }>
 } = {}) {
   const admin = {
     from(table: string) {
@@ -161,7 +163,7 @@ function leadHandler({
               get: (_target, property) =>
                 property === "then"
                   ? undefined
-                  : () => (property === "limit" ? { data: [], error: null } : chain),
+                  : () => (property === "limit" ? { data: recent, error: null } : chain),
             },
           )
           return chain
@@ -221,7 +223,7 @@ test("a participant's lead is saved under the enrollment identity, not the submi
   )
 
   assert.equal(response.status, 200)
-  assert.deepEqual(await response.json(), { leadId: ids.lead })
+  assert.deepEqual(await response.json(), { leadId: ids.lead, journey: "discovery" })
   assert.equal(inserts.length, 1)
   assert.equal(inserts[0].table, "leads")
   assert.equal(inserts[0].values.name, "Lea Sommer")
@@ -230,6 +232,29 @@ test("a participant's lead is saved under the enrollment identity, not the submi
   assert.equal(inserts[0].values.status, "captured")
   // Never deduped: the checklist binds exactly this lead to the intake.
   assert.deepEqual(selects, [])
+})
+
+test("a recent regular lead with the same e-mail and answers is never returned for a discovery save", async () => {
+  const inserts: LeadCall[] = []
+  const selects: string[] = []
+  const regularLead = "30000000-0000-4000-8000-000000000009"
+  const response = await leadHandler({
+    inserts,
+    selects,
+    // Would be the dedupe pool's perfect match — the discovery branch must never look.
+    recent: [{ id: regularLead, quiz_answers: quizAnswers as Record<string, unknown> }],
+  })(
+    leadRequest({
+      name: "Lea Sommer",
+      email: "lea@example.test",
+      marketingConsent: false,
+      quizAnswers,
+    }),
+  )
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { leadId: ids.lead, journey: "discovery" })
+  assert.equal(inserts.length, 1, "a new discovery lead row is inserted")
+  assert.deepEqual(selects, [], "no lookup of existing leads at all")
 })
 
 test("an identity mismatch fails closed, exactly like the partner analogue", async () => {

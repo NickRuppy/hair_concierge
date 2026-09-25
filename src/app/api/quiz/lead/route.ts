@@ -204,7 +204,11 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
           marketingConsent: parsed.marketingConsent,
           quizAnswers: canonicalizeQuizAnswers(parsed.quizAnswers),
         }).catch(() => null)
-        return saved ? leadResponse(saved.leadId, false) : discoveryUnavailableResponse()
+        // `journey` tells the client which journey actually saved her lead, so a stale
+        // client-side enrollment answer can never send a regular lead to the checklist.
+        return saved
+          ? NextResponse.json({ leadId: saved.leadId, journey: "discovery" })
+          : discoveryUnavailableResponse()
       }
 
       // The partner journey resolves from the signed-in account, the moderator

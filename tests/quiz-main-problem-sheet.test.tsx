@@ -4,6 +4,8 @@ import React, { type ReactElement, type ReactNode } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { Button } from "../src/components/ui/button"
+import { BottomSheet, BottomSheetContent } from "../src/components/ui/bottom-sheet"
+import { MOTION_MS } from "../src/lib/motion"
 import { QuizConcernsQuestion } from "../src/components/quiz/quiz-concerns-question"
 import {
   MAIN_PROBLEM_SHEET_TITLE,
@@ -286,4 +288,118 @@ test("sheet body: the ruled question, one card per option, the current pick high
   assert.equal(html.match(/<button/g)?.length, 2)
   assert.match(html, /Wenig Glanz/)
   assert.match(html, /aria-pressed="true"[^>]*>[\s\S]*?Mein Haar bricht/)
+})
+
+// --- Batch 8 motion: settle → close → advance after close --------------------------
+
+function createEffectHarness(render: () => ReactElement | null) {
+  const internals = (
+    React as unknown as {
+      __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE: ReactDispatcherInternals
+    }
+  ).__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE
+  const values: unknown[] = []
+  let cursor = 0
+  let pending: Array<() => void | (() => void)> = []
+  const dispatcher = {
+    useContext: () => undefined,
+    useEffect(effect: () => void | (() => void), deps?: unknown[]) {
+      const index = cursor++
+      const previous = values[index] as { deps?: unknown[]; cleanup?: () => void } | undefined
+      const changed = !previous?.deps || !deps || deps.some((dep, i) => dep !== previous.deps?.[i])
+      if (!changed) return
+      previous?.cleanup?.()
+      const record: { deps?: unknown[]; cleanup?: () => void } = { deps }
+      values[index] = record
+      pending.push(() => {
+        const cleanup = effect()
+        if (typeof cleanup === "function") record.cleanup = cleanup
+      })
+    },
+    useRef<T>(initial: T): { current: T } {
+      const index = cursor++
+      if (!values[index]) values[index] = { current: initial }
+      return values[index] as { current: T }
+    },
+    useState<T>(initial: T): [T, (next: T) => void] {
+      const index = cursor++
+      if (values.length <= index) values[index] = initial
+      return [values[index] as T, (next) => (values[index] = next)]
+    },
+  }
+  return () => {
+    cursor = 0
+    pending = []
+    const previous = internals.H
+    internals.H = dispatcher
+    try {
+      const tree = render()
+      for (const run of pending) run()
+      return tree
+    } finally {
+      internals.H = previous
+    }
+  }
+}
+
+function sheetParts(tree: ReactNode) {
+  const sheet = findAll(tree, (el) => el.type === BottomSheet)[0]
+  const content = findAll(tree, (el) => el.type === BottomSheetContent)[0]
+  const body = findAll(tree, (el) => el.type === QuizMainProblemSheetBody)[0]
+  assert.ok(sheet && content && body)
+  return { sheet, content, body }
+}
+
+test("a pick shows its selected state for the settle time, closes, then advances after close", (t) => {
+  Object.defineProperty(globalThis, "window", { configurable: true, value: globalThis })
+  t.after(() => delete (globalThis as { window?: unknown }).window)
+  t.mock.timers.enable({ apis: ["setTimeout"] })
+  const picks: string[] = []
+  const render = createEffectHarness(() =>
+    QuizMainProblemSheet({
+      open: true,
+      options: [
+        { value: "low_shine", label: "Wenig Glanz" },
+        { value: "breakage", label: "Bruch" },
+      ],
+      selected: undefined,
+      onPick: (value) => picks.push(value),
+      onClose: () => {},
+    }),
+  )
+
+  let parts = sheetParts(render())
+  parts.body.props.onPick("breakage")
+  parts = sheetParts(render())
+  assert.equal(parts.body.props.selected, "breakage", "the tapped card is selected at once")
+  assert.equal(parts.sheet.props.open, true, "still open during the settle")
+  assert.deepEqual(picks, [])
+
+  t.mock.timers.tick(MOTION_MS.settle - 1)
+  parts = sheetParts(render())
+  assert.equal(parts.sheet.props.open, true)
+  t.mock.timers.tick(1)
+  parts = sheetParts(render())
+  assert.equal(parts.sheet.props.open, false, "closes after the settle")
+  assert.deepEqual(picks, [], "nothing advances while the sheet is closing")
+
+  // A second tap while closing is ignored.
+  parts.body.props.onPick("low_shine")
+  parts.content.props.onClosed()
+  assert.deepEqual(picks, ["breakage"], "advance only after the sheet finished closing")
+})
+
+test("closing without a pick advances nothing", () => {
+  const picks: string[] = []
+  const render = createEffectHarness(() =>
+    QuizMainProblemSheet({
+      open: false,
+      options: [{ value: "low_shine", label: "Wenig Glanz" }],
+      selected: undefined,
+      onPick: (value) => picks.push(value),
+      onClose: () => {},
+    }),
+  )
+  sheetParts(render()).content.props.onClosed()
+  assert.deepEqual(picks, [])
 })

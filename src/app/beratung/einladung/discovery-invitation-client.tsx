@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { useDelayedLoader } from "@/lib/motion-loader"
 import {
   DISCOVERY_CLAIM_ENDPOINT,
   DISCOVERY_CLAIM_SIGNED_IN_OTHER_ACCOUNT,
@@ -30,6 +31,10 @@ export function DiscoveryInvitationClient() {
   const [error, setError] = useState<string | null>(null)
   const [errorHint, setErrorHint] = useState<string | null>(null)
   const resolvedRef = useRef(false)
+  // The loader is owned here, not by the loading card: once its text has shown, the card
+  // stays for the loader minimum even if the invite resolves in between (batch 8).
+  const resolving = !identity && mode !== "unavailable"
+  const loaderVisible = useDelayedLoader(resolving)
 
   useEffect(() => {
     if (resolvedRef.current) return
@@ -108,7 +113,7 @@ export function DiscoveryInvitationClient() {
     }
   }
 
-  if (!identity && mode !== "unavailable") return <InvitationShell>Wird geöffnet …</InvitationShell>
+  if (resolving || loaderVisible) return <InvitationLoading showText={loaderVisible} />
   if (!identity) {
     return (
       <InvitationShell>
@@ -149,20 +154,80 @@ export function DiscoveryInvitationCard({
   onEmailChange?: (value: string) => void
   onContinue?: () => void
 }) {
-  const firstName = name.trim().split(/\s+/)[0] || name
-
   if (mode === "email_sent") {
     return (
       <InvitationShell>
-        <h1 className="font-header text-3xl">Schau kurz in deine E-Mails.</h1>
-        <p className="mt-4 break-all font-semibold">{email}</p>
-        <p className="mt-3 text-[var(--text-sub)]">Mit dem Link geht es hier weiter.</p>
+        <div className={CONTENT_FADE_IN}>
+          <h1 className="font-header text-3xl">Schau kurz in deine E-Mails.</h1>
+          <p className="mt-4 break-all font-semibold">{email}</p>
+          <p className="mt-3 text-[var(--text-sub)]">Mit dem Link geht es hier weiter.</p>
+        </div>
       </InvitationShell>
     )
   }
 
   return (
     <InvitationShell>
+      <div className={CONTENT_FADE_IN}>
+        <InvitationForm
+          email={email}
+          error={error}
+          errorHint={errorHint}
+          mode={mode}
+          name={name}
+          onContinue={onContinue}
+          onEmailChange={onEmailChange}
+        />
+      </div>
+    </InvitationShell>
+  )
+}
+
+/** Card content fades in once the invite is resolved (batch 8 motion tokens). */
+const CONTENT_FADE_IN =
+  "motion-safe:animate-[personalPlanStageTargetFade_var(--motion-screen)_var(--motion-ease-enter)_both]"
+
+/**
+ * While the invite resolves (batch 8, plan item 11): the card at its FINAL size at once —
+ * the ready form laid out invisibly — and the „Wird geöffnet …" line only after 300 ms, so
+ * a quick resolve shows no loader and no card that grows.
+ */
+function InvitationLoading({ showText }: { showText: boolean }) {
+  return (
+    <InvitationShell>
+      <div aria-hidden="true" className="invisible" inert>
+        <InvitationForm email="" mode="ready" name="Lea" />
+      </div>
+      <p
+        className="absolute inset-0 grid place-items-center px-7 text-[var(--text-sub)]"
+        role="status"
+      >
+        {showText ? "Wird geöffnet …" : null}
+      </p>
+    </InvitationShell>
+  )
+}
+
+function InvitationForm({
+  email,
+  error = null,
+  errorHint = null,
+  mode,
+  name,
+  onEmailChange,
+  onContinue,
+}: {
+  email: string
+  error?: string | null
+  errorHint?: string | null
+  mode: InvitationMode
+  name: string
+  onEmailChange?: (value: string) => void
+  onContinue?: () => void
+}) {
+  const firstName = name.trim().split(/\s+/)[0] || name
+  return (
+    <>
       <h1 className="font-header text-3xl">Hi {firstName}, alles bereit für unser Gespräch.</h1>
       <form
         className="mt-6"
@@ -208,14 +273,14 @@ export function DiscoveryInvitationCard({
       <p className="mt-3 text-xs leading-5 text-[var(--text-caption)]">
         Danach: Fragebogen und deine Produkte eintragen. Dauert etwa 10 Minuten.
       </p>
-    </InvitationShell>
+    </>
   )
 }
 
 function InvitationShell({ children }: { children: React.ReactNode }) {
   return (
     <main className="grid min-h-dvh place-items-center bg-[#fcfaf7] px-4 py-10 text-center text-[var(--brand-plum-darkest)]">
-      <section className="w-full max-w-md rounded-[2rem] border border-[var(--brand-plum-light)] bg-white p-7 shadow-[0_22px_54px_-40px_rgba(var(--brand-plum-rgb),0.55)] sm:p-9">
+      <section className="relative w-full max-w-md rounded-[2rem] border border-[var(--brand-plum-light)] bg-white p-7 shadow-[0_22px_54px_-40px_rgba(var(--brand-plum-rgb),0.55)] sm:p-9">
         {children}
       </section>
     </main>

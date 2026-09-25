@@ -26,6 +26,16 @@ interface QuizOptionCardProps {
   visualLayout?: LegacyQuizOptionLayout
   /** Grid layout only: keep the description visible on mobile and let the card grow with it. */
   alwaysShowDescription?: boolean
+  /**
+   * The card's own staggered fade-in on mount (default on). A parent that already animates
+   * the whole step in turns it off, so nothing animates twice (batch 8 motion rule).
+   */
+  animateIn?: boolean
+  /**
+   * The parent is busy with this answer (settling, saving): taps are ignored, but the card
+   * is NOT dimmed — the selected card stays clearly selected. Unlike `disabled`.
+   */
+  pending?: boolean
 }
 
 function SelectionCheck({ multi = false }: { multi?: boolean }) {
@@ -63,9 +73,14 @@ export function QuizOptionCard({
   visual,
   visualLayout = "row",
   alwaysShowDescription = false,
+  animateIn = true,
+  pending = false,
 }: QuizOptionCardProps) {
   const labelId = useId()
   const descriptionId = useId()
+  const wrapperClassName = animateIn ? "animate-fade-in-up" : undefined
+  const wrapperStyle = animateIn ? { animationDelay: `${animationDelay}ms` } : undefined
+  const handleClick = pending ? undefined : onClick
 
   if (visual && visualLayout !== "row") {
     const isThumbnail = visualLayout === "thumbnail" && visual.kind === "image"
@@ -73,14 +88,14 @@ export function QuizOptionCard({
 
     if (isGrid && visual.kind === "portrait") {
       return (
-        <div className="animate-fade-in-up" style={{ animationDelay: `${animationDelay}ms` }}>
+        <div className={wrapperClassName} style={wrapperStyle}>
           <HairLengthOptionCard
             ariaLabel={ariaLabel}
             config={visual.config}
             description={description}
             disabled={disabled}
             label={label}
-            onClick={onClick}
+            onClick={handleClick ?? (() => {})}
             priority={visual.priority}
             selected={active}
             selectionVariant="regular"
@@ -90,15 +105,16 @@ export function QuizOptionCard({
     }
 
     return (
-      <div className="animate-fade-in-up" style={{ animationDelay: `${animationDelay}ms` }}>
+      <div className={wrapperClassName} style={wrapperStyle}>
         <button
           type="button"
           aria-label={ariaLabel}
           aria-labelledby={ariaLabel ? undefined : labelId}
           aria-describedby={description ? descriptionId : undefined}
           aria-pressed={active}
+          aria-disabled={pending || undefined}
           disabled={disabled}
-          onClick={onClick}
+          onClick={handleClick}
           className={cn(
             "personal-plan-option-card group relative flex w-full overflow-hidden rounded-2xl border bg-white text-left shadow-[0_12px_34px_-28px_rgba(var(--brand-plum-rgb),0.6)] transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] disabled:cursor-not-allowed disabled:opacity-50",
             isThumbnail
@@ -188,7 +204,7 @@ export function QuizOptionCard({
   }
 
   return (
-    <div className="animate-fade-in-up" style={{ animationDelay: `${animationDelay}ms` }}>
+    <div className={wrapperClassName} style={wrapperStyle}>
       <div
         aria-disabled={disabled || undefined}
         className={cn(
@@ -204,8 +220,9 @@ export function QuizOptionCard({
           aria-labelledby={ariaLabel ? undefined : labelId}
           aria-describedby={description ? descriptionId : undefined}
           aria-pressed={active}
+          aria-disabled={pending || undefined}
           disabled={disabled}
-          onClick={onClick}
+          onClick={handleClick}
           className="absolute inset-0 z-0 rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[rgba(var(--brand-plum-rgb),0.35)] disabled:cursor-not-allowed"
         />
         <div className="pointer-events-none relative z-10 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">

@@ -18,19 +18,6 @@ export function getCommitHeading(name: string) {
   return ORGANIC_QUIZ_FUNNEL_COPY.commitHeading(name)
 }
 
-/**
- * The commitment screen for a discovery participant. Not a funnel package — a
- * participant runs the organic `/quiz`; the enrollment stamp selects this — and it
- * teases no analysis: what comes next is her product checklist, so it says so.
- * One CTA, no „Ich bin neugierig": there is nothing to be curious about yet.
- */
-export const DISCOVERY_PARTICIPANT_COMMIT_COPY = {
-  heading: "Geschafft — dein Haarprofil steht.",
-  subline: "Jetzt noch deine Produkte. Dauert 5 Minuten.",
-  button: "Weiter zu deinen Produkten",
-  loadingHeadline: "Gleich geht’s zu deinen Produkten.",
-} as const
-
 export function getLoadingHeading(name: string) {
   const normalized = name.trim()
   return normalized ? `Einen Moment, ${normalized}.` : "Einen Moment."
@@ -98,10 +85,11 @@ export function startQuizAnalysisReveal(
   return true
 }
 
+// A discovery participant's quiz ends on its own „Geschafft" screen with no analysis beat
+// (`QuizDiscoveryLeadSave`, batch 8) — this view is the regular funnel's only.
 export function QuizAnalysisView({
   commitPending,
   copy = ORGANIC_QUIZ_FUNNEL_COPY,
-  discoveryParticipant = false,
   name,
   onCommit,
   phase,
@@ -109,8 +97,6 @@ export function QuizAnalysisView({
 }: {
   commitPending: boolean
   copy?: QuizFunnelCopy
-  /** `false` keeps every existing screen byte-identical. */
-  discoveryParticipant?: boolean
   name: string
   onCommit: (choice: QuizCommitChoice) => void
   phase: QuizTransitionPhase
@@ -118,25 +104,7 @@ export function QuizAnalysisView({
 }) {
   return (
     <>
-      {phase === "commit" && discoveryParticipant ? (
-        <div className="mx-auto flex w-full max-w-[26rem] flex-col items-center py-10 text-center sm:py-16">
-          <h2 className="text-balance font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.4rem]">
-            {DISCOVERY_PARTICIPANT_COMMIT_COPY.heading}
-          </h2>
-          <p className="mt-3 text-[15px] leading-6 text-[var(--text-sub)]">
-            {DISCOVERY_PARTICIPANT_COMMIT_COPY.subline}
-          </p>
-          <button
-            className="quiz-btn-primary mt-9 min-h-12 w-full rounded-[14px] px-5 py-3 text-base font-bold disabled:cursor-wait disabled:opacity-80"
-            disabled={commitPending}
-            onClick={() => onCommit("ja")}
-            type="button"
-          >
-            {DISCOVERY_PARTICIPANT_COMMIT_COPY.button}
-          </button>
-        </div>
-      ) : null}
-      {phase === "commit" && !discoveryParticipant ? (
+      {phase === "commit" ? (
         <div className="mx-auto flex w-full max-w-[26rem] flex-col items-center py-10 text-center sm:py-16">
           <h2 className="text-balance font-header text-[2rem] font-medium leading-tight text-[var(--brand-plum-darkest)] sm:text-[2.4rem]">
             {copy.commitHeading(name)}
@@ -177,9 +145,7 @@ export function QuizAnalysisView({
               {getLoadingHeading(name)}
             </h2>
             <p className="mt-3 text-[15px] leading-6 text-[var(--text-sub)]">
-              {discoveryParticipant
-                ? DISCOVERY_PARTICIPANT_COMMIT_COPY.loadingHeadline
-                : copy.analysisLoadingHeadline}
+              {copy.analysisLoadingHeadline}
             </p>
             <div aria-hidden="true" className="quiz-shimmer-bar mt-8" />
           </>
@@ -195,21 +161,13 @@ export function QuizAnalysisView({
 }
 
 export interface QuizAnalysisProps {
-  /** A discovery participant's commitment screen names the checklist, not an analysis. */
-  discoveryParticipant?: boolean
   name: string
   onCommit?: (choice: QuizCommitChoice) => void
   onReveal: () => void | Promise<void>
   ready: boolean
 }
 
-export function QuizAnalysis({
-  discoveryParticipant = false,
-  name,
-  onCommit,
-  onReveal,
-  ready,
-}: QuizAnalysisProps) {
+export function QuizAnalysis({ name, onCommit, onReveal, ready }: QuizAnalysisProps) {
   const funnelPackageKey = useQuizFunnelPackageKey()
   const copy = getQuizFunnelCopy(funnelPackageKey)
   const [choice, setChoice] = useState<QuizCommitChoice | null>(null)
@@ -268,7 +226,6 @@ export function QuizAnalysis({
     <QuizAnalysisView
       commitPending={choice !== null}
       copy={copy}
-      discoveryParticipant={discoveryParticipant}
       name={name}
       onCommit={handleCommit}
       phase={phase}

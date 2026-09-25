@@ -9,7 +9,7 @@ import { getQuestionByStep } from "@/lib/quiz/questions"
 import { QuizQuestion } from "@/components/quiz/quiz-question"
 import { QuizScalpQuestion } from "@/components/quiz/quiz-scalp-question"
 import { QuizConcernsQuestion } from "@/components/quiz/quiz-concerns-question"
-import { QuizLeadCapture } from "@/components/quiz/quiz-lead-capture"
+import { QuizDiscoveryContextPrefetch, QuizLeadCapture } from "@/components/quiz/quiz-lead-capture"
 import { QuizPreparation } from "@/components/quiz/quiz-preparation"
 import { QuizResults } from "@/components/quiz/quiz-results"
 import { QuizGoals } from "@/components/quiz/quiz-goals"
@@ -324,9 +324,9 @@ export default function QuizPage() {
     }
   }, [draftStatus, funnelPackageKey, returnPrompt, step])
 
-  if (draftStatus === "checking") {
-    return null
-  }
+  // While the draft is still being checked the store's own screen renders — question 1 on
+  // a fresh start — instead of a blank page (batch 8, plan item 11). A restored draft then
+  // replaces it without a step transition (`QuizShell` treats a restore as no navigation).
   if (draftStatus === "unavailable") {
     return (
       <div
@@ -344,61 +344,79 @@ export default function QuizPage() {
     )
   }
 
-  // Step 6: custom scalp progressive disclosure
-  if (step === 6) return <QuizScalpQuestion />
-  if (step === 8) return <QuizConcernsQuestion />
+  // Until the draft check has reconciled, the screen is visible but inert (no dimming):
+  // a tap in those few ms must not answer question 1 and overwrite a restorable draft.
+  // The wrapper is always there (display: contents), so the screen never remounts.
+  return (
+    <div className="contents" data-quiz-draft-gate="" inert={draftStatus === "checking"}>
+      {renderScreen()}
+    </div>
+  )
 
-  // Standard quiz question cards
-  const question = getQuestionByStep(step)
-  if (question) {
-    return (
-      <>
-        {returnPrompt === "invalid" || returnPrompt === "unavailable" ? (
-          <p
-            role="status"
-            className="mx-auto mb-3 max-w-xl text-center text-sm text-muted-foreground"
-          >
-            {returnPrompt === "invalid"
-              ? "Deine gespeicherten Antworten konnten über diesen Link nicht geöffnet werden. Du kannst das Quiz hier neu starten."
-              : "Deine gespeicherten Antworten sind gerade nicht verfügbar. Bitte versuche den E-Mail-Link später erneut oder starte das Quiz neu."}
-          </p>
-        ) : null}
-        <QuizQuestion key={question.step} question={question} />
-        {returnPrompt === "open" ? (
-          <ReturningLeadPrompt
-            busy={returnBusy}
-            error={returnError}
-            onContinue={() => void chooseReturn("continue")}
-            onEdit={() => void chooseReturn("edit")}
-          />
-        ) : null}
-      </>
-    )
-  }
+  function renderScreen() {
+    // Step 6: custom scalp progressive disclosure
+    if (step === 6) return <QuizScalpQuestion />
+    if (step === 8) {
+      return (
+        <>
+          <QuizConcernsQuestion />
+          <QuizDiscoveryContextPrefetch />
+        </>
+      )
+    }
 
-  switch (step) {
-    case 9:
-      return <QuizLeadCapture />
-    case 10:
-      return <QuizPreparation />
-    case 11:
-      // Legacy compatibility only. New completions navigate from step 10
-      // directly to the canonical result route.
-      return <QuizResults />
-    case 12:
-      return <QuizGoals />
-    case 14:
-      return <QuizWelcome />
-    case 16:
-      return <ScanInsertProblem />
-    case 17:
-      return <ScanInsertSolution />
-    case 18:
-      return <ScanInsertHome />
-    default:
-      // Unknown step — shouldn't happen with a healthy store. Surface a 404
-      // rather than silently rendering a placeholder (would hide bugs).
-      notFound()
+    // Standard quiz question cards
+    const question = getQuestionByStep(step)
+    if (question) {
+      return (
+        <>
+          {returnPrompt === "invalid" || returnPrompt === "unavailable" ? (
+            <p
+              role="status"
+              className="mx-auto mb-3 max-w-xl text-center text-sm text-muted-foreground"
+            >
+              {returnPrompt === "invalid"
+                ? "Deine gespeicherten Antworten konnten über diesen Link nicht geöffnet werden. Du kannst das Quiz hier neu starten."
+                : "Deine gespeicherten Antworten sind gerade nicht verfügbar. Bitte versuche den E-Mail-Link später erneut oder starte das Quiz neu."}
+            </p>
+          ) : null}
+          <QuizQuestion key={question.step} question={question} />
+          {returnPrompt === "open" ? (
+            <ReturningLeadPrompt
+              busy={returnBusy}
+              error={returnError}
+              onContinue={() => void chooseReturn("continue")}
+              onEdit={() => void chooseReturn("edit")}
+            />
+          ) : null}
+        </>
+      )
+    }
+
+    switch (step) {
+      case 9:
+        return <QuizLeadCapture />
+      case 10:
+        return <QuizPreparation />
+      case 11:
+        // Legacy compatibility only. New completions navigate from step 10
+        // directly to the canonical result route.
+        return <QuizResults />
+      case 12:
+        return <QuizGoals />
+      case 14:
+        return <QuizWelcome />
+      case 16:
+        return <ScanInsertProblem />
+      case 17:
+        return <ScanInsertSolution />
+      case 18:
+        return <ScanInsertHome />
+      default:
+        // Unknown step — shouldn't happen with a healthy store. Surface a 404
+        // rather than silently rendering a placeholder (would hide bugs).
+        notFound()
+    }
   }
 }
 
