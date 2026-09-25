@@ -197,3 +197,4 @@ Prototype: `scratchpad/proto-b7/index.html` (throwaway), shown in iOS Simulator 
 - **One uniform option set for every product** (1:1 with `ProductFrequency`): Täglich · 5–6× · 3–4× · 2× · 1× pro Woche · Alle 2 Wochen · 1× im Monat · Seltener · Weiß ich nicht. Shampoo asked like every product („Wie oft nutzt du es?").
 - **Preselect as suggestion only:** conditioner and leave-in preselect the latest shampoo's frequency; she confirms or changes. No coupling afterwards.
 - Heat protectant gets the normal frequency step. Waschtag cadence = shampoo frequency (most frequent if several); no shampoo → cadence open, asked in the call. Wash-frequency fallback on the heat page dropped.
+- **Final page (Nick, 2026-09-25):** no answer-summary („Fertig") screen. Instead a warm closing page: three sections done — Fragebogen, Deine Produkte, Hitze & Styling — „now you're prepared for our meeting" + „Abschicken".
