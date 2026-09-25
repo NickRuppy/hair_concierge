@@ -18,10 +18,7 @@ import {
   isDiscoveryItemFrequency,
   type DiscoveryItemFrequency,
 } from "@/lib/discovery/frequency"
-import {
-  parseDiscoveryHeatStyling,
-  type DiscoveryHeatStylingV1,
-} from "@/lib/discovery/heat-styling"
+import { readDiscoveryHeatStyling, type DiscoveryHeatStylingV1 } from "@/lib/discovery/heat-styling"
 import { filterScanEligibleProductIds } from "@/lib/scan/catalog-eligibility"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
@@ -583,11 +580,7 @@ export async function checkDiscoveryIntakeItemIdentity(
 // --- Projections -------------------------------------------------------------
 
 /** A stored heat answer that no longer validates is not asked yet (`null`), never a failure. */
-export function projectDiscoveryHeatStyling(value: unknown): DiscoveryHeatStylingV1 | null {
-  if (value === null || value === undefined) return null
-  const parsed = parseDiscoveryHeatStyling(value)
-  return parsed.ok ? parsed.value : null
-}
+export const projectDiscoveryHeatStyling = readDiscoveryHeatStyling
 
 function projectIntake(row: IntakeRow): DiscoveryIntake {
   return {

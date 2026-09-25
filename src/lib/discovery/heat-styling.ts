@@ -113,6 +113,16 @@ export function parseDiscoveryHeatStyling(raw: unknown): DiscoveryHeatStylingPar
   return { ok: true, value }
 }
 
+/**
+ * A stored `discovery_intakes.heat_styling` as the readers see it: `null` when not asked —
+ * and when a stored value no longer validates (asked again), never a failure.
+ */
+export function readDiscoveryHeatStyling(value: unknown): DiscoveryHeatStylingV1 | null {
+  if (value === null || value === undefined) return null
+  const parsed = parseDiscoveryHeatStyling(value)
+  return parsed.ok ? parsed.value : null
+}
+
 // --- Cockpit block ---------------------------------------------------------------------
 
 const DRYING_LABELS: Record<DryingRoute, string> = {

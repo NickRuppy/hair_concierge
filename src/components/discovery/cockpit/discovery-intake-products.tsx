@@ -5,8 +5,13 @@ import { useState } from "react"
 
 import { DISCOVERY_INTAKE_GROUPS } from "@/components/discovery/intake/categories"
 import { ScanProductThumb } from "@/components/scan/scan-product-thumb"
-import type { DiscoveryUsage } from "@/lib/discovery/classify"
+import { DISCOVERY_STYLING_PRODUCT_TYPE, type DiscoveryUsage } from "@/lib/discovery/classify"
 import type { DiscoveryCockpitIntakeProductView } from "@/lib/discovery/cockpit"
+import {
+  DISCOVERY_FREQUENCY_LABELS,
+  DISCOVERY_FREQUENCY_OPTIONS,
+  type DiscoveryItemFrequency,
+} from "@/lib/discovery/frequency"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
 import type { DiscoveryResearchStatusKind } from "@/lib/discovery/research-status"
@@ -14,6 +19,7 @@ import type { DiscoveryResearchStatusKind } from "@/lib/discovery/research-statu
 import { beginDiscoveryDecisionWrite, useDiscoveryDecisionWritePending } from "./decision-writes"
 import {
   DISCOVERY_CATEGORY_OPEN_LABEL,
+  DISCOVERY_STYLING_LABEL,
   discoveryCategoryLabel,
   discoveryCockpitUsageOptions,
   discoveryDefaultUsageFor,
@@ -56,6 +62,8 @@ const SAVE_BUSY = "Wird gespeichert …"
 const CANCEL_LABEL = "Abbrechen"
 const SAVE_ERROR = "Nicht gespeichert. Bitte noch einmal."
 const FINALIZED_HINT = "Erst Finalisierung aufheben."
+const FREQUENCY_LABEL = "Wie oft"
+const FREQUENCY_PLACEHOLDER = "Nicht gefragt"
 
 const SHELF_ORDER = DISCOVERY_INTAKE_GROUPS.flatMap((group) =>
   group.categories.map((category) => category.key),
@@ -84,6 +92,7 @@ const TONE: Record<DiscoveryResearchStatusKind, Tone> = {
   no_research: "neutral",
   not_researchable: "neutral",
   type_unknown: "neutral",
+  styling_not_evaluated: "neutral",
   status_unavailable: "neutral",
 }
 
@@ -141,15 +150,56 @@ function shelfSorted(products: DiscoveryCockpitIntakeProductView[]) {
   return [...products].sort((left, right) => shelfRank(left.category) - shelfRank(right.category))
 }
 
-/** How a row names her usage — and the product type when the two differ. */
+/**
+ * How a row names her usage — and the product type when the two differ; a styling product
+ * (batch 7, D2) reads „Styling (nicht bewertet)". Her frequency follows when she was asked.
+ */
 export function discoveryIntakeProductUsageLine(
+  product: Pick<DiscoveryCockpitIntakeProductView, "category" | "usageRole" | "productType"> & {
+    frequencyLabel?: string | null
+  },
+): string {
+  const usage = usageLine(product)
+  return product.frequencyLabel ? `${usage} · ${product.frequencyLabel}` : usage
+}
+
+function usageLine(
   product: Pick<DiscoveryCockpitIntakeProductView, "category" | "usageRole" | "productType">,
 ): string {
+  const productType = product.productType
+  if (productType === DISCOVERY_STYLING_PRODUCT_TYPE) return DISCOVERY_STYLING_LABEL
   if (product.category === null) return DISCOVERY_CATEGORY_OPEN_LABEL
   return (
-    discoveryUsageDifferenceLabel(product.category, product.productType) ??
+    discoveryUsageDifferenceLabel(product.category, productType) ??
     discoveryUsageLabel({ category: product.category, role: product.usageRole })
   )
+}
+
+/**
+ * Saves a frequency correction (batch 7): `PUT /api/admin/beratung/<id>/items/<itemId>/frequency`,
+ * refused while the call is finalised — the same guard as the usage correction.
+ */
+export async function saveDiscoveryItemFrequency(
+  input: { enrollmentId: string; itemId: string; frequency: DiscoveryItemFrequency },
+  fetchImpl: FetchLike = fetch,
+): Promise<{ error: string | null; refresh: boolean }> {
+  let response: Response
+  try {
+    response = await fetchImpl(
+      `/api/admin/beratung/${input.enrollmentId}/items/${input.itemId}/frequency`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ frequency: input.frequency }),
+      },
+    )
+  } catch {
+    return { error: SAVE_ERROR, refresh: false }
+  }
+  const body = response.ok
+    ? null
+    : ((await response.json().catch(() => null)) as { code?: string } | null)
+  return discoveryUsageWriteOutcome(response.ok, body)
 }
 
 /** What a usage answer means for the row: a refusal explains itself, a success refreshes. */
@@ -289,7 +339,7 @@ export function DiscoveryIntakeProducts({
                 </span>
                 <span
                   className={`block text-[12px] ${
-                    row.category === null
+                    row.category === null && row.productType !== DISCOVERY_STYLING_PRODUCT_TYPE
                       ? "font-bold text-[var(--status-danger-text)]"
                       : "text-muted-foreground"
                   }`}
@@ -318,6 +368,14 @@ export function DiscoveryIntakeProducts({
                 </p>
               ) : null}
               {editable ? (
+                <FrequencyEditor
+                  enrollmentId={enrollmentId}
+                  product={row}
+                  finalized={finalized}
+                  blocked={pending !== null || decisionWritePending}
+                />
+              ) : null}
+              {editable && row.productType !== DISCOVERY_STYLING_PRODUCT_TYPE ? (
                 <UsageEditor
                   enrollmentId={enrollmentId}
                   product={row}
@@ -330,6 +388,71 @@ export function DiscoveryIntakeProducts({
         </ul>
       )}
     </section>
+  )
+}
+
+/**
+ * Batch 7: her frequency, correctable after submit — one small select that saves on change
+ * and reloads the cockpit (the routine and its fingerprint may move with it).
+ */
+function FrequencyEditor({
+  enrollmentId,
+  product,
+  finalized,
+  blocked,
+}: {
+  enrollmentId: string
+  product: DiscoveryCockpitIntakeProductView
+  finalized: boolean
+  blocked: boolean
+}) {
+  const router = useRouter()
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function change(value: DiscoveryItemFrequency) {
+    setSaving(true)
+    setError(null)
+    const endWrite = beginDiscoveryDecisionWrite()
+    try {
+      const outcome = await saveDiscoveryItemFrequency({
+        enrollmentId,
+        itemId: product.itemId,
+        frequency: value,
+      })
+      if (outcome.error) setError(outcome.error)
+      if (outcome.refresh) router.refresh()
+    } finally {
+      endWrite()
+      setSaving(false)
+    }
+  }
+
+  return (
+    <label className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground">
+      {FREQUENCY_LABEL}
+      <select
+        value={product.frequency ?? ""}
+        disabled={finalized || saving || blocked}
+        title={finalized ? FINALIZED_HINT : undefined}
+        onChange={(event) => {
+          if (event.target.value) void change(event.target.value as DiscoveryItemFrequency)
+        }}
+        className="rounded-lg border bg-card px-2 py-1 text-xs font-normal text-foreground"
+      >
+        {product.frequency ? null : <option value="">{FREQUENCY_PLACEHOLDER}</option>}
+        {DISCOVERY_FREQUENCY_OPTIONS.map((value) => (
+          <option key={value} value={value}>
+            {DISCOVERY_FREQUENCY_LABELS[value]}
+          </option>
+        ))}
+      </select>
+      {error ? (
+        <span role="status" className="font-normal text-[var(--status-danger-text)]">
+          {error}
+        </span>
+      ) : null}
+    </label>
   )
 }
 
@@ -352,7 +475,10 @@ function UsageEditor({
   const router = useRouter()
   const categoryOpen = product.category === null
   const current = product.category ? { category: product.category, role: product.usageRole } : null
-  const initialUsage = current ?? discoveryDefaultUsageFor(product.productType, product.productName)
+  // Never rendered for a styling product (it has no usage); the guard only narrows the type.
+  const knownType =
+    product.productType === DISCOVERY_STYLING_PRODUCT_TYPE ? null : product.productType
+  const initialUsage = current ?? discoveryDefaultUsageFor(knownType, product.productName)
   const [open, setOpen] = useState(categoryOpen)
   const [productType, setProductType] = useState<PersonalPlanCategory | "">("")
   const [usageValue, setUsageValue] = useState(

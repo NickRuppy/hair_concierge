@@ -14,7 +14,24 @@ import {
   type DiscoveryApplicationGap,
   type DiscoveryApplicationPrint,
 } from "./application"
-import { DISCOVERY_USAGE_ROLES, type DiscoveryUsageRole } from "./classify"
+import {
+  DISCOVERY_STYLING_PRODUCT_TYPE,
+  DISCOVERY_USAGE_ROLES,
+  isDiscoveryProductType,
+  type DiscoveryProductType,
+  type DiscoveryUsageRole,
+} from "./classify"
+import {
+  DISCOVERY_FREQUENCY_LABELS,
+  isDiscoveryItemFrequency,
+  type DiscoveryItemFrequency,
+} from "./frequency"
+import {
+  describeDiscoveryHeatStyling,
+  readDiscoveryHeatStyling,
+  type DiscoveryHeatStylingSummary,
+  type DiscoveryHeatStylingV1,
+} from "./heat-styling"
 import {
   discoveryConcernProfileFacts,
   type DiscoveryConcernProfileFacts,
@@ -23,6 +40,7 @@ import {
   loadDiscoveryIdealRoutine,
   type DiscoveryIdealStep,
   type DiscoveryPreviewInput,
+  type DiscoveryRoutineSource,
   type DiscoveryStepDepth,
 } from "./load-ideal-routine"
 import {
@@ -42,6 +60,7 @@ import {
   type DiscoveryResearchState,
   type DiscoveryResearchStatusKind,
 } from "./research-status"
+import { buildDiscoveryRoutineContext, discoveryIntakeHasRoutineAnswers } from "./routine-context"
 import {
   composeDiscoveryRefinedRoutine,
   describeDiscoveryIntakeItem,
@@ -82,7 +101,7 @@ const DECISIONS_TABLE = "discovery_call_decisions"
 const INTAKE_COLUMNS =
   "id,enrollment_id,user_id,state,submitted_at,call_finalized_at,finalized_source_hash"
 const ITEM_COLUMNS =
-  "id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,created_at,product_type,usage_role"
+  "id,category,source,brand_text,product_name_text,barcode_identifier,product_id,product_submission_id,created_at,product_type,usage_role,frequency"
 const DECISION_COLUMNS = "decision_key,decision,swap_product_id,intake_item_id"
 
 /** Re-exported: the label rules live with the (pure, hashed) composition now. */
@@ -169,6 +188,7 @@ type ItemRow = {
   created_at: string
   product_type?: string | null
   usage_role?: string | null
+  frequency?: string | null
 }
 
 function isDiscoveryUsageRole(value: unknown): value is DiscoveryUsageRole {
@@ -202,9 +222,26 @@ export async function loadDiscoveryCockpitItems(
     productSubmissionId: row.product_submission_id,
     createdAt: row.created_at,
     // Only when set (F4): a legacy row's item object — and so its fingerprint — is unchanged.
-    ...(row.product_type ? { productType: row.product_type as PersonalPlanCategory } : {}),
+    // The styling marker (batch 7, D2) is kept: it keeps the item out of „Kategorie offen".
+    ...(isDiscoveryProductType(row.product_type) ? { productType: row.product_type } : {}),
     ...(isDiscoveryUsageRole(row.usage_role) ? { usageRole: row.usage_role } : {}),
+    // Batch 7: only when asked — NULL (every legacy row) adds no key.
+    ...(isDiscoveryItemFrequency(row.frequency) ? { frequency: row.frequency } : {}),
   }))
+}
+
+/** Her „Hitze & Styling" answers (batch 7); `null` = not asked (every legacy intake). */
+export async function loadDiscoveryIntakeHeatStyling(
+  intakeId: string,
+  client: DiscoveryCockpitAdminClient,
+): Promise<DiscoveryHeatStylingV1 | null> {
+  const { data, error } = await client
+    .from(INTAKES_TABLE)
+    .select("heat_styling")
+    .eq("id", intakeId)
+    .maybeSingle()
+  if (error) throw error
+  return readDiscoveryHeatStyling((data as { heat_styling?: unknown } | null)?.heat_styling)
 }
 
 export async function loadDiscoveryCallDecisions(
@@ -360,6 +397,12 @@ export type DiscoveryCockpitModel = {
    * it (tests): every gate then reads „prüfen".
    */
   concernProfileFacts?: DiscoveryConcernProfileFacts
+  /** Her „Hitze & Styling" answers (batch 7); null/absent = not asked. */
+  heatStyling?: DiscoveryHeatStylingV1 | null
+  /** Whether the Idealroutine ran on her checklist answers (batch 7, discovery-only). */
+  routineSource?: DiscoveryRoutineSource
+  /** The heat protectant waits for heat answers — „Hitzeschutz: im Call fragen" (display only). */
+  heatProtectionDeferred?: boolean
 }
 
 export type DiscoveryCockpitModelResult =
@@ -370,6 +413,7 @@ export type DiscoveryCockpitModelResult =
 export type DiscoveryCockpitDependencies = {
   loadIdealRoutine: typeof loadDiscoveryIdealRoutine
   loadItems: typeof loadDiscoveryCockpitItems
+  loadHeatStyling: typeof loadDiscoveryIntakeHeatStyling
   loadVerdicts: typeof loadParticipantScanVerdicts
   loadDecisions: typeof loadDiscoveryCallDecisions
   loadSwapProducts: (
@@ -387,6 +431,7 @@ export type DiscoveryCockpitDependencies = {
 export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
   loadIdealRoutine: loadDiscoveryIdealRoutine,
   loadItems: loadDiscoveryCockpitItems,
+  loadHeatStyling: loadDiscoveryIntakeHeatStyling,
   loadVerdicts: loadParticipantScanVerdicts,
   loadDecisions: loadDiscoveryCallDecisions,
   loadSwapProducts: loadSwapPresentationRows,
@@ -425,10 +470,24 @@ export async function loadDiscoveryCockpitModel(
 ): Promise<DiscoveryCockpitModelResult> {
   const deps = { ...DISCOVERY_COCKPIT_DEPENDENCIES, ...overrides }
 
-  const ideal = await deps.loadIdealRoutine(admin, input.userId, input.intakeId)
+  // Batch 7 (plan §2.3): her answers are read BEFORE the Idealroutine, because they may shape
+  // it. Only an intake with new answers (heat, or any product frequency) gets a routine
+  // override; every legacy intake runs exactly today's computation — same steps, same
+  // fingerprint. Nothing is written on this path.
+  const capturedItems = await deps.loadItems(input.intakeId, admin)
+  const heatStyling = await deps.loadHeatStyling(input.intakeId, admin)
+  const routineOverride = discoveryIntakeHasRoutineAnswers(capturedItems, heatStyling)
+    ? buildDiscoveryRoutineContext(capturedItems, heatStyling)
+    : null
+
+  const ideal = await deps.loadIdealRoutine(
+    admin,
+    input.userId,
+    input.intakeId,
+    routineOverride ? { routineOverride } : undefined,
+  )
   if (ideal.status !== "ready") return { status: ideal.status }
 
-  const capturedItems = await deps.loadItems(input.intakeId, admin)
   // Auto-link, read-only: research approved onto an eligible product counts as the item's
   // product for everything below — verdicts, binding, labels, the PDF and the fingerprint —
   // without writing `product_id` (the reconcile CLI still can). A failed research read
@@ -529,6 +588,7 @@ export async function loadDiscoveryCockpitModel(
     ownedProducts: discoveryOwnedProductIdentities(verdicts, productIdentities),
     productLines: discoveryProductLinesOf(productIdentities),
     productImages: discoveryProductImagesOf(productIdentities),
+    heatStyling,
   })
   // „So wendest du es an": the production application pipeline over exactly the products
   // this composition prints. A failure degrades (finalize/PDF wait) instead of failing the
@@ -560,6 +620,9 @@ export async function loadDiscoveryCockpitModel(
     research: { items: capturedItems, state: researchState },
     application,
     concernProfileFacts: discoveryConcernProfileFacts(ideal.context?.snapshot),
+    heatStyling,
+    routineSource: ideal.routineSource ?? "quiz_only",
+    heatProtectionDeferred: ideal.heatProtectionDeferred === true,
   }
 }
 
@@ -656,12 +719,19 @@ export type DiscoveryCockpitUnassignedView = {
 /** One captured product in „Eingetragene Produkte" — every row but „benutze ich nicht". */
 export type DiscoveryCockpitIntakeProductView = {
   itemId: string
-  /** Her usage; null = „Kategorie offen" (batch 5, R7). */
+  /** Her usage; null = „Kategorie offen" (batch 5, R7) — or a styling product (batch 7). */
   category: PersonalPlanCategory | null
-  /** The routine role of her usage (oil roles, scalp oil), else null. */
+  /** The routine role of her usage (oil roles, scalp oil, pre-wash conditioner), else null. */
   usageRole: DiscoveryUsageRole | null
-  /** What the product IS (batch 5, F1); null for a legacy row or when nobody knows yet. */
-  productType: PersonalPlanCategory | null
+  /**
+   * What the product IS (batch 5, F1); null for a legacy row or when nobody knows yet.
+   * `styling` (batch 7, D2): listed as „Styling (nicht bewertet)", no usage to correct.
+   */
+  productType: DiscoveryProductType | null
+  /** How often she uses it (batch 7); null = not asked (legacy). */
+  frequency: DiscoveryItemFrequency | null
+  /** „3–4× pro Woche", „Weiß ich nicht"; null when not asked. */
+  frequencyLabel: string | null
   /**
    * Nobody knows what the product is: no type, no catalog product, no research. Only then
    * may the cockpit set its product type (R7) — before research can start.
@@ -697,6 +767,15 @@ export type DiscoveryCockpitView = {
   applicationAvailable: boolean
   /** Printed products without complete verified guidance — finalising waits for them. */
   applicationGaps: DiscoveryApplicationGap[]
+  /** The compact „Hitze & Styling" block (batch 7); null when she was not asked. */
+  heatStyling: DiscoveryHeatStylingSummary | null
+  /**
+   * „Hitzeschutz: im Call fragen": the heat protectant is deferred for lack of heat answers.
+   * Display only — the deferred decision is never a step, so it is in no hash.
+   */
+  heatProtectionAsk: boolean
+  /** Whether the Idealroutine ran on her checklist answers (batch 7). */
+  routineSource: DiscoveryRoutineSource
 }
 
 function optionLabel(
@@ -777,6 +856,8 @@ function intakeProductViews(model: DiscoveryCockpitModel): DiscoveryCockpitIntak
         category: item.category,
         usageRole: item.usageRole ?? null,
         productType: item.productType ?? null,
+        frequency: item.frequency ?? null,
+        frequencyLabel: item.frequency ? DISCOVERY_FREQUENCY_LABELS[item.frequency] : null,
         typeOpen:
           (item.productType ?? null) === null &&
           item.productId === null &&
@@ -893,6 +974,9 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
         : null,
     applicationAvailable: model.application?.status !== "unavailable",
     applicationGaps: model.application?.status === "ready" ? model.application.section.gaps : [],
+    heatStyling: model.heatStyling ? describeDiscoveryHeatStyling(model.heatStyling) : null,
+    heatProtectionAsk: model.heatProtectionDeferred === true,
+    routineSource: model.routineSource ?? "quiz_only",
   }
 }
 
@@ -1112,6 +1196,51 @@ export async function setDiscoveryIntakeItemUsage(
         }
       : {}),
   }
+}
+
+// --- Frequency correction (batch 7, plan §2.2/§2.3) ------------------------------------
+
+export type DiscoveryItemFrequencyOutcome =
+  | "not_found"
+  | "not_submitted"
+  | "finalized"
+  | "item_not_found"
+  | "updated"
+
+const FREQUENCY_OUTCOMES: readonly DiscoveryItemFrequencyOutcome[] = [
+  "not_found",
+  "not_submitted",
+  "finalized",
+  "item_not_found",
+  "updated",
+]
+
+/**
+ * The cockpit's frequency correction after submit: ONE call to
+ * `discovery_admin_set_intake_item_frequency` (migration 20260925120000), refused while
+ * finalised or a draft — the same guard as the usage correction. A frequency moves no
+ * binding, so no decision is cleared; the fingerprint moves with it by design.
+ */
+export async function setDiscoveryIntakeItemFrequency(
+  input: { intakeId: string; itemId: string; frequency: DiscoveryItemFrequency },
+  client: DiscoveryCockpitAdminClient,
+): Promise<{ outcome: DiscoveryItemFrequencyOutcome }> {
+  const { data, error } = await client.rpc("discovery_admin_set_intake_item_frequency", {
+    target_intake_id: input.intakeId,
+    target_item_id: input.itemId,
+    new_frequency: input.frequency,
+  })
+  if (error) throw error
+  const outcome = ((data ?? {}) as { outcome?: string }).outcome
+  if (!FREQUENCY_OUTCOMES.includes(outcome as DiscoveryItemFrequencyOutcome)) {
+    throw new Error("discovery_item_frequency_unexpected_outcome")
+  }
+  return { outcome: outcome as DiscoveryItemFrequencyOutcome }
+}
+
+/** A styling product (batch 7, D2): listed, never evaluated — it has no usage to correct. */
+export function isDiscoveryStylingItem(item: { productType?: DiscoveryProductType | null }) {
+  return item.productType === DISCOVERY_STYLING_PRODUCT_TYPE
 }
 
 /**

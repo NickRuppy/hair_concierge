@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import { DiscoveryConcernRecipeSection } from "@/components/discovery/cockpit/concern-recipe"
 import { DiscoveryCallCockpit } from "@/components/discovery/cockpit/discovery-call-cockpit"
 import { DiscoveryIntakeProducts } from "@/components/discovery/cockpit/discovery-intake-products"
+import { DISCOVERY_STYLING_LABEL } from "@/components/discovery/cockpit/usage-options"
 import {
   DISCOVERY_EMAIL_PENDING_LABEL,
   discoveryCockpitStateKey,
@@ -85,6 +86,11 @@ const UNANSWERED_PREFIX = "Nicht angegeben:"
 const UNANSWERED_SUFFIX = "— im Call fragen."
 const CATEGORY_OPEN_PREFIX = "Kategorie offen:"
 const CATEGORY_OPEN_SUFFIX = "— oben festlegen, dann finalisieren."
+const HEAT_TITLE = "Hitze & Styling"
+const HEAT_DRYING = "Trocknen:"
+const HEAT_NO_TOOLS = "Keine Hitze-Tools"
+const HEAT_PROTECTION_ASK = "Hitzeschutz: im Call fragen"
+const ROUTINE_FROM_ANSWERS = "Mit ihren Angaben aus der Checkliste berechnet (Häufigkeit, Hitze)."
 
 export type DiscoveryCockpitPageDependencies = {
   flagEnabled: () => boolean
@@ -206,6 +212,7 @@ export function createDiscoveryCockpitPage(
           editable={intake.state === "submitted"}
           finalized={intake.callFinalizedAt !== null}
         />
+        <HeatStyling view={view} />
         <IdealRoutine view={view} />
         <DiscoveryCallCockpit
           key={`decisions:${stateKey}`}
@@ -282,13 +289,48 @@ function PreflightBanner({ preflight }: { preflight: DiscoverySourceFactsPreflig
   )
 }
 
-/** Written to be read aloud: step, category, what happens, how often. */
+/** Batch 7: her „Hitze & Styling" answers, compact — only when she was asked. */
+function HeatStyling({ view }: { view: DiscoveryCockpitView }) {
+  const heat = view.heatStyling
+  if (!heat) return null
+  return (
+    <section className="rounded-xl border bg-card">
+      <h2 className="border-b px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+        {HEAT_TITLE}
+      </h2>
+      <div className="flex flex-col gap-1 px-4 py-3 text-[13px] leading-6 text-foreground">
+        <p>{`${HEAT_DRYING} ${heat.drying}`}</p>
+        {heat.tools.length === 0 ? (
+          <p className="text-muted-foreground">{HEAT_NO_TOOLS}</p>
+        ) : (
+          <ul>
+            {heat.tools.map((tool) => (
+              <li key={tool.label}>
+                {[tool.label, tool.frequency, tool.protection].filter(Boolean).join(" · ")}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </section>
+  )
+}
+
+/**
+ * Written to be read aloud: step, category, what happens, how often. A heat protectant still
+ * waiting for heat answers is not a step — the call asks about it instead (F3 quick fix).
+ */
 function IdealRoutine({ view }: { view: DiscoveryCockpitView }) {
   return (
     <section className="rounded-xl border bg-card">
       <h2 className="border-b px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
         {ROUTINE_TITLE}
       </h2>
+      {view.routineSource === "intake_answers" ? (
+        <p className="border-b px-4 py-2 text-[12px] text-muted-foreground">
+          {ROUTINE_FROM_ANSWERS}
+        </p>
+      ) : null}
       <ol className="divide-y">
         {view.steps.map((step, index) => (
           <li key={step.decisionKey} className="flex flex-wrap items-baseline gap-3 px-4 py-2.5">
@@ -303,6 +345,11 @@ function IdealRoutine({ view }: { view: DiscoveryCockpitView }) {
           </li>
         ))}
       </ol>
+      {view.heatProtectionAsk ? (
+        <p className="border-t px-4 py-2.5 text-[13px] font-bold text-[var(--status-pending-text)]">
+          {HEAT_PROTECTION_ASK}
+        </p>
+      ) : null}
     </section>
   )
 }
@@ -338,6 +385,7 @@ function categoryLine(categories: readonly PersonalPlanCategory[]): string {
 function OutsideRoutine({ view, submitted }: { view: DiscoveryCockpitView; submitted: boolean }) {
   const noStep = view.unassigned.filter((entry) => entry.reason === "no_ideal_step")
   const research = view.unassigned.filter((entry) => entry.reason === "research_pending")
+  const styling = view.unassigned.filter((entry) => entry.reason === "styling_not_evaluated")
   const categoryOpen = discoveryCategoryOpenItems(view)
   // An unanswered category WITH a routine step already says so at the step itself; the
   // summary line only carries the ones no step would otherwise mention.
@@ -352,6 +400,7 @@ function OutsideRoutine({ view, submitted }: { view: DiscoveryCockpitView; submi
     unanswered.length === 0 &&
     noStep.length === 0 &&
     research.length === 0 &&
+    styling.length === 0 &&
     categoryOpen.length === 0
   ) {
     return null
@@ -386,6 +435,9 @@ function OutsideRoutine({ view, submitted }: { view: DiscoveryCockpitView; submi
           <p>{`${DISCOVERY_RESEARCH_PENDING_LABEL}: ${research
             .map((entry) => entry.label)
             .join(" · ")}`}</p>
+        ) : null}
+        {styling.length > 0 ? (
+          <p>{`${DISCOVERY_STYLING_LABEL}: ${styling.map((entry) => entry.label).join(" · ")}`}</p>
         ) : null}
       </div>
     </section>

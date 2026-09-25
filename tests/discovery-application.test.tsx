@@ -585,6 +585,7 @@ function modelDeps(loadApplication: (...args: never[]) => Promise<DiscoveryAppli
       context: initialContext,
       previewSource: { personalPlanId: "discovery:x", sourceNeedVersionId: "v1" },
     }),
+    loadHeatStyling: async () => null,
     loadItems: async () => items,
     loadVerdicts: async () => [],
     loadDecisions: async () => decisions,
@@ -1241,6 +1242,7 @@ test("a no-image call with no printed application keeps the pre-batch-6 fingerpr
         context: { snapshot: {} } as never,
         previewSource: { personalPlanId: "p", sourceNeedVersionId: "v" },
       }),
+      loadHeatStyling: async () => null,
       loadItems: async () => [
         item({
           id: "g-i1",

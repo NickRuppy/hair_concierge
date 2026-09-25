@@ -24,6 +24,8 @@ export type DiscoveryCockpitUsageOption = {
 }
 
 export const DISCOVERY_CATEGORY_OPEN_LABEL = "Kategorie offen"
+/** A styling product (batch 7, D2): listed, never evaluated. */
+export const DISCOVERY_STYLING_LABEL = "Styling (nicht bewertet)"
 
 export function discoveryCategoryLabel(category: PersonalPlanCategory): string {
   return DISCOVERY_INTAKE_CATEGORY_COPY[category].label

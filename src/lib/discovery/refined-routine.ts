@@ -4,7 +4,13 @@ import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contract
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
 import type { ScanCatalogPresentationRow } from "@/lib/scan/product-presentation"
 
-import type { DiscoveryUsageRole } from "./classify"
+import {
+  DISCOVERY_STYLING_PRODUCT_TYPE,
+  type DiscoveryProductType,
+  type DiscoveryUsageRole,
+} from "./classify"
+import type { DiscoveryItemFrequency } from "./frequency"
+import type { DiscoveryHeatStylingV1 } from "./heat-styling"
 import { discoveryProductTitle } from "./product-label"
 
 import type { DiscoveryIdealStep } from "./load-ideal-routine"
@@ -54,14 +60,21 @@ export type DiscoveryIntakeItem = {
    * What the product IS when no catalog product carries it (batch 5, F1) — the research
    * submission is created from it, never from `category` (her usage). Present ONLY when the
    * row has one: item objects are part of `sourceHash`, and a key that legacy rows never had
-   * must not move their fingerprint (F4).
+   * must not move their fingerprint (F4). Batch 7 (D2): `styling` = a styling product,
+   * listed as „Styling (nicht bewertet)", never bound, never blocking.
    */
-  productType?: PersonalPlanCategory
+  productType?: DiscoveryProductType
   /**
-   * The routine role of her usage (R9: the oil step's three roles, scalp oil). Present ONLY
-   * when set, for the same fingerprint reason as `productType` (F4).
+   * The routine role of her usage (R9: the oil step's three roles, scalp oil; batch 7 D1: the
+   * pre-wash conditioner). Present ONLY when set, for the same fingerprint reason as
+   * `productType` (F4).
    */
   usageRole?: DiscoveryUsageRole
+  /**
+   * How often she uses it (batch 7). Present ONLY when set (NULL = not asked), so a legacy
+   * item object — and its finalised fingerprint — is unchanged; a new intake's hash covers it.
+   */
+  frequency?: DiscoveryItemFrequency
 }
 
 /**
@@ -90,10 +103,16 @@ export const DISCOVERY_INTAKE_SOURCE_RANK: Record<DiscoveryIntakeItemSource, num
  * - `category_unknown` — her usage is unknown („Weiß ich nicht", batch 5): nothing to bind
  *   it to until the cockpit sets it. The UI renders „Kategorie offen"; finalising is blocked
  *   while any item carries it.
+ * - `styling_not_evaluated` — a styling product (batch 7, D2): listed as „Styling (nicht
+ *   bewertet)", never bound, never blocking finalize. Only new intakes carry it.
  *
  * A typed state, never the German string: the copy lives in the surface, not the model.
  */
-export type DiscoveryUnassignedReason = "research_pending" | "no_ideal_step" | "category_unknown"
+export type DiscoveryUnassignedReason =
+  | "research_pending"
+  | "no_ideal_step"
+  | "category_unknown"
+  | "styling_not_evaluated"
 
 export type DiscoveryUnassignedIntakeProduct = {
   item: DiscoveryIntakeItem
@@ -177,6 +196,16 @@ export function missingDiscoveryIntakeCategories(
   return SUPPORTED_PRODUCT_CATEGORY_KEYS.filter((category) => !answered.has(category))
 }
 
+/**
+ * The role an item binds by (R9). The pre-wash conditioner (batch 7, D1) is intake-only: no
+ * routine step carries that role, so for binding it is a role-less conditioner — positional
+ * per category — and never left unassigned for want of a matching step.
+ */
+function bindingRole(item: DiscoveryIntakeItem): DiscoveryUsageRole | null {
+  const role = item.usageRole ?? null
+  return role === "pre_wash_conditioner" ? null : role
+}
+
 function bindingOrder(left: DiscoveryIntakeItem, right: DiscoveryIntakeItem): number {
   const resolved = Number(right.productId !== null) - Number(left.productId !== null)
   if (resolved !== 0) return resolved
@@ -209,6 +238,12 @@ export function reduceIntakeItemsToSteps(
       if (item.category) declined.add(item.category)
       continue
     }
+    // Before the null-usage check: a styling product has no usage by design (D2) — it is
+    // not „Kategorie offen".
+    if (item.productType === DISCOVERY_STYLING_PRODUCT_TYPE) {
+      unassigned.push({ item, reason: "styling_not_evaluated" })
+      continue
+    }
     if (item.category === null) {
       unassigned.push({ item, reason: "category_unknown" })
       continue
@@ -226,10 +261,11 @@ export function reduceIntakeItemsToSteps(
 
   // An item with a usage role (R9) takes the step of exactly that (category, role) — or none.
   for (const item of ordered) {
-    if (!item.usageRole) continue
+    const role = bindingRole(item)
+    if (!role) continue
     const index = steps.findIndex(
       (step, position) =>
-        !bound.has(position) && step.category === item.category && step.role === item.usageRole,
+        !bound.has(position) && step.category === item.category && step.role === role,
     )
     if (index === -1) continue
     bound.set(index, item)
@@ -240,7 +276,7 @@ export function reduceIntakeItemsToSteps(
   // binds exactly as it always did.
   const queues = new Map<PersonalPlanCategory, DiscoveryIntakeItem[]>()
   for (const item of ordered) {
-    if (item.usageRole) continue
+    if (bindingRole(item)) continue
     const queue = queues.get(item.category)
     if (queue) queue.push(item)
     else queues.set(item.category, [item])
@@ -251,7 +287,9 @@ export function reduceIntakeItemsToSteps(
     item: bound.get(index) ?? queues.get(step.category)?.shift() ?? null,
   }))
   for (const item of ordered) {
-    if (item.usageRole && !taken.has(item.id)) unassigned.push({ item, reason: "no_ideal_step" })
+    if (bindingRole(item) && !taken.has(item.id)) {
+      unassigned.push({ item, reason: "no_ideal_step" })
+    }
   }
   for (const queue of queues.values()) {
     for (const item of queue) unassigned.push({ item, reason: "no_ideal_step" })
@@ -340,6 +378,11 @@ export type DiscoveryRefinedRoutine = {
    * hash no longer matches, i.e. the profile or the catalog drifted since the call.
    */
   sourceHash: string
+  /**
+   * Her heat answers (batch 7), carried so the application fold re-hashes the same inputs.
+   * Present ONLY when she was asked: a legacy routine object and its hash are unchanged.
+   */
+  heatStyling?: DiscoveryHeatStylingV1
 }
 
 export function composeDiscoveryRefinedRoutine(input: {
@@ -355,6 +398,8 @@ export function composeDiscoveryRefinedRoutine(input: {
   productLines?: ReadonlyMap<string, string>
   /** Catalog product id → printable packshot URL (batch 6), for every product a label names. */
   productImages?: ReadonlyMap<string, string>
+  /** Her heat answers (batch 7) — hashed only when she was asked (null/absent = legacy). */
+  heatStyling?: DiscoveryHeatStylingV1 | null
 }): DiscoveryRefinedRoutine {
   const reduction = reduceIntakeItemsToSteps(input.steps, input.items)
   const lineOf = (productId: string | null | undefined) =>
@@ -441,16 +486,16 @@ export function composeDiscoveryRefinedRoutine(input: {
     },
   )
 
-  return {
+  const hashed = {
     steps,
     unassignedIntakeProducts,
     declinedCategories: reduction.declinedCategories,
+    ...(input.heatStyling ? { heatStyling: input.heatStyling } : {}),
+  }
+  return {
+    ...hashed,
     unansweredCategories: reduction.unansweredCategories,
-    sourceHash: discoveryRoutineSourceHash({
-      steps,
-      unassignedIntakeProducts,
-      declinedCategories: reduction.declinedCategories,
-    }),
+    sourceHash: discoveryRoutineSourceHash(hashed),
   }
 }
 
@@ -467,11 +512,15 @@ export function composeDiscoveryRefinedRoutine(input: {
  *
  * `application` (batch 6) is the printed „So wendest du es an" section. It joins the hash
  * only when it prints anything, so a routine without one keeps its finalised fingerprint.
+ *
+ * `heatStyling` (batch 7) joins only when she was asked — like every batch-7 field (item
+ * `frequency` rides on the item objects, present only when set) — so finalised legacy calls
+ * keep their hash and new finalisations cover her answers.
  */
 function discoveryRoutineSourceHash(
   routine: Pick<
     DiscoveryRefinedRoutine,
-    "steps" | "unassignedIntakeProducts" | "declinedCategories"
+    "steps" | "unassignedIntakeProducts" | "declinedCategories" | "heatStyling"
   >,
   application: unknown = null,
 ): string {
@@ -479,6 +528,7 @@ function discoveryRoutineSourceHash(
     steps: routine.steps.map((entry) => ({ ...entry, step: { ...entry.step, depth: undefined } })),
     unassignedIntakeProducts: routine.unassignedIntakeProducts,
     declinedCategories: routine.declinedCategories,
+    ...(routine.heatStyling ? { heatStyling: routine.heatStyling } : {}),
     ...(application ? { application } : {}),
   })
 }

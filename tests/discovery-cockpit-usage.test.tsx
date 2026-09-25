@@ -262,6 +262,7 @@ test("F2: an approved-research conditioner she uses as a mask binds to the mask 
         context,
         previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
       }),
+      loadHeatStyling: async () => null,
       loadItems: async () => [researched],
       loadResearchState: async () => approvedState(),
       loadVerdicts: (client, userId, items, ctx) =>

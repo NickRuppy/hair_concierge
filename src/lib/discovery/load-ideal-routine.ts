@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import { computeNeedPlan } from "@/lib/personal-plan/compute-stage1"
 import {
   CATEGORY_LABELS,
   frequencyLabel,
@@ -25,6 +26,7 @@ import type {
   InitialNeedPlanSnapshot,
   PlanCategoryDecision,
   PlanProductRole,
+  PlanRoutineContext,
 } from "@/lib/personal-plan/types"
 import type { ScanEvaluationContext } from "@/lib/scan/profile-context"
 import { prepareScannerContext } from "@/lib/scan/scanner-context"
@@ -131,9 +133,27 @@ export function discoveryPreviewInput(
   }
 }
 
+/**
+ * Where the Idealroutine's habits came from (batch 7, discovery-only — the shared
+ * `ScanEvaluationContext.snapshotSource` keeps its `"initial" | "refined"` contract):
+ *
+ *  - `quiz_only` — today's computation: the quiz, or a refined participant's own Feinschliff;
+ *  - `intake_answers` — recomputed with her checklist answers (frequency, heat) as the
+ *    routine context (plan §2.3).
+ */
+export type DiscoveryRoutineSource = "quiz_only" | "intake_answers"
+
 export type DiscoveryIdealRoutine = {
   status: "ready"
   steps: DiscoveryIdealStep[]
+  /** Discovery-only: see `DiscoveryRoutineSource`. Absent in older fixtures = `quiz_only`. */
+  routineSource?: DiscoveryRoutineSource
+  /**
+   * The heat protectant is still deferred for lack of heat answers — the step is not in
+   * the Idealroutine, so the cockpit says „Hitzeschutz: im Call fragen" (F3 quick fix).
+   * Display only: deferred decisions never become steps, so this is outside every hash.
+   */
+  heatProtectionDeferred?: boolean
   context: ScanEvaluationContext
   /**
    * Echoed straight off the computed preview response — the identity the previews were
@@ -200,10 +220,59 @@ export function buildDiscoveryIdealSteps(
   return steps
 }
 
+/**
+ * Batch 7 (plan §2.3 Rev. 3): the Idealroutine recomputed with her checklist answers, inside
+ * the discovery module — the shared scanner code stays untouched. Only on the INITIAL path:
+ * a refined participant keeps her real Feinschliff answers. Projection stays `initial_quiz`
+ * because `refined_post_plan` answers `needs_clarification` when the shampoo frequency is
+ * unknown (`compute-stage1.ts`), and decisions read the routine regardless of projection.
+ * Anything but `ready` falls back to the prepared snapshot — never an error. Pure.
+ */
+export function recomputeDiscoverySnapshot(
+  context: Pick<ScanEvaluationContext, "snapshot" | "snapshotSource">,
+  routineOverride: PlanRoutineContext | null | undefined,
+): { snapshot: InitialNeedPlanSnapshot; routineSource: DiscoveryRoutineSource } {
+  const unchanged = { snapshot: context.snapshot, routineSource: "quiz_only" as const }
+  if (!routineOverride || context.snapshotSource !== "initial") return unchanged
+  try {
+    const computed = computeNeedPlan({
+      rawEnvelope: context.snapshot.sourceQuiz,
+      artifactId: context.snapshot.profile.source.artifactId,
+      projection: "initial_quiz",
+      computationVersion: context.snapshot.computationVersion,
+      createdAt: context.snapshot.createdAt,
+      routine: routineOverride,
+    })
+    return computed.status === "ready"
+      ? { snapshot: computed.snapshot, routineSource: "intake_answers" }
+      : unchanged
+  } catch (error) {
+    console.error("[discovery] ideal routine recompute failed, quiz-only routine kept:", error)
+    return unchanged
+  }
+}
+
+/** The heat protectant waits for heat answers nobody gave (plan §2.3, F3 quick fix). */
+export function discoveryHeatProtectionDeferred(snapshot: InitialNeedPlanSnapshot): boolean {
+  return snapshot.decisions.some(
+    (decision) =>
+      decision.category === "heat_protectant" &&
+      decision.resolution === "deferred_until_post_plan_onboarding",
+  )
+}
+
 export async function loadDiscoveryIdealRoutine(
   admin: SupabaseClient,
   userId: string,
   intakeId: string,
+  options: {
+    /**
+     * Batch 7: her checklist answers as a routine context (`buildDiscoveryRoutineContext`),
+     * handed in ONLY for an intake with new answers — `null`/absent runs exactly today's
+     * computation, so every legacy intake keeps its steps and its fingerprint.
+     */
+    routineOverride?: PlanRoutineContext | null
+  } = {},
 ): Promise<DiscoveryIdealRoutineResult> {
   let context
   try {
@@ -215,20 +284,25 @@ export async function loadDiscoveryIdealRoutine(
   }
   if (!context) return { status: "no_usable_source" }
 
+  const { snapshot, routineSource } = recomputeDiscoverySnapshot(context, options.routineOverride)
+
   // All four inputs are named explicitly so no future edit can reintroduce the
   // `stage1-service` / shared-context loading this path must stay clear of. Nothing here
-  // is persisted, because nothing on this path persists.
+  // is persisted, because nothing on this path persists. The previews run on the SAME
+  // snapshot the steps come from, so steps and previews stay consistent.
   const previews = await computeStage1ProductExamplePreviews({
     ...discoveryPreviewInput(intakeId, context),
-    snapshot: context.snapshot,
+    snapshot,
     loadCandidates: createSupabaseStage1ProductExamplePreviewCandidateLoader(admin),
   })
 
   return {
     status: "ready",
-    steps: buildDiscoveryIdealSteps(context.snapshot, previews.previews),
+    steps: buildDiscoveryIdealSteps(snapshot, previews.previews),
+    routineSource,
+    heatProtectionDeferred: discoveryHeatProtectionDeferred(snapshot),
     context: {
-      snapshot: context.snapshot,
+      snapshot,
       snapshotSource: context.snapshotSource,
       refinedVersionId: context.refinedVersionId,
       refinedInputHash: context.refinedInputHash,

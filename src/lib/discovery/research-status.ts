@@ -1,5 +1,7 @@
 import { validateEanInput } from "@/lib/scan/identifier-lookup"
 
+import { DISCOVERY_STYLING_PRODUCT_TYPE } from "./classify"
+
 import type { DiscoveryIntakeItem } from "./refined-routine"
 
 /**
@@ -190,6 +192,8 @@ export function discoveryResearchSubmissionInput(
   item: DiscoveryResearchItem,
 ): DiscoveryResearchSubmissionInput | null {
   if (item.source === "none") return null
+  // A styling product is listed, never evaluated — nothing to research (batch 7, D2).
+  if (item.productType === DISCOVERY_STYLING_PRODUCT_TYPE) return null
   // What the product IS, never how she uses it (F1). A legacy row (tile model) has no
   // product type; there the tile she filed it under was also what the submission got. A
   // product whose type is still unknown („Weiß ich nicht") has neither — and is not
@@ -231,6 +235,7 @@ export type DiscoveryResearchStatusKind =
   | "no_research"
   | "not_researchable"
   | "type_unknown"
+  | "styling_not_evaluated"
   | "status_unavailable"
 
 /** Internal, short, Nick's register — this list is read during the call, not by her. */
@@ -255,6 +260,7 @@ export const DISCOVERY_RESEARCH_STATUS_COPY: Record<DiscoveryResearchStatusKind,
   no_research: "Keine Recherche",
   not_researchable: "Zu wenig Angaben für eine Recherche",
   type_unknown: "Produkttyp offen",
+  styling_not_evaluated: "Styling – nicht bewertet",
   status_unavailable: "Status gerade nicht lesbar",
 }
 
@@ -332,6 +338,9 @@ export function discoveryResearchStatus(
   state: DiscoveryResearchState | null,
 ): DiscoveryResearchStatus {
   if (item.productId !== null) return { kind: "in_catalog", action: null }
+  if (item.productType === DISCOVERY_STYLING_PRODUCT_TYPE) {
+    return { kind: "styling_not_evaluated", action: null }
+  }
 
   if (item.productSubmissionId === null) {
     // „Weiß ich nicht" (batch 5, R7): nobody knows what the product is, so there is nothing to

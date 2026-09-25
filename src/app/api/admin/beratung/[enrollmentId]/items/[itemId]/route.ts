@@ -4,6 +4,7 @@ import { z } from "zod"
 import { DISCOVERY_USAGE_ROLES, isValidDiscoveryUsage } from "@/lib/discovery/classify"
 import {
   discoveryStaleDecisionKeysForUsageChange,
+  isDiscoveryStylingItem,
   loadDiscoveryCockpitModel,
   setDiscoveryIntakeItemUsage,
   type DiscoveryItemUsageOutcome,
@@ -36,6 +37,7 @@ import {
  *   still a draft           → 409 `not_submitted`
  *   bad body / pair         → 400 `invalid_body` | `invalid_usage`
  *   type on a typed item    → 409 `type_known`
+ *   a styling product       → 409 `styling_not_evaluated` (batch 7, D2: no usage)
  *   usage on a type-open item without a type → 400 `product_type_required`
  *   200 `{ outcome: "updated", noneInserted, noneRemoved, decisionsCleared }`
  *
@@ -111,6 +113,8 @@ export function createDiscoveryItemUsageHandler(
     // Scoped to this intake by construction: another intake's item is simply not found.
     const item = model.research?.items.find((entry) => entry.id === itemId) ?? null
     if (!item || item.source === "none") return discoveryCockpitError("not_found", 404)
+    // A styling product (batch 7, D2) is listed, never evaluated: it has no usage to set.
+    if (isDiscoveryStylingItem(item)) return discoveryCockpitError("styling_not_evaluated", 409)
 
     const typeOpen =
       !item.productType && item.productId === null && item.productSubmissionId === null
