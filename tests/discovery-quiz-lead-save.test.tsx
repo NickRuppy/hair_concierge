@@ -347,7 +347,11 @@ function withBrowser(t: { after: (fn: () => void) => void }) {
   const requests: Array<{ url: string; body: Record<string, unknown> }> = []
   const calls: string[] = []
   type Answer = { ok: boolean; status: number; body: unknown }
-  let respond: () => Answer = () => ({ ok: true, status: 200, body: { leadId: "lead-1" } })
+  let respond: () => Answer = () => ({
+    ok: true,
+    status: 200,
+    body: { leadId: "lead-1", journey: "discovery" },
+  })
   let context: () => Promise<Answer> = async () => ({
     ok: true,
     status: 200,
@@ -442,7 +446,11 @@ test("discovery: a failed save surfaces the error for the retry, and the retry p
   assert.equal(useQuizStore.getState().leadId, null, "never skipped over")
   assert.equal(useQuizStore.getState().step, 9)
 
-  browser.respondWith(() => ({ ok: true, status: 200, body: { leadId: "lead-2" } }))
+  browser.respondWith(() => ({
+    ok: true,
+    status: 200,
+    body: { leadId: "lead-2", journey: "discovery" },
+  }))
   saveStep.props.onRetry()
   await settle()
   assert.equal(browser.requests.length, 2)
@@ -458,6 +466,46 @@ test("discovery: a failed save surfaces the error for the retry, and the retry p
   useQuizStore.setState({ answers: { ...answers, thickness: "coarse" } as QuizAnswers })
   saveStep = endingOf(harness.render())
   assert.equal(saveStep.props.saved, false)
+})
+
+test("discovery: a double retry in the same frame posts one lead", async (t) => {
+  const browser = withBrowser(t)
+  browser.respondWith(() => ({ ok: false, status: 503, body: { error: "down" } }))
+  const harness = leadStep("discovery")
+  endingOf(await arrive(harness)).props.onSave()
+  await settle()
+  const failed = endingOf(harness.render())
+  assert.equal(browser.requests.length, 1)
+
+  browser.respondWith(() => ({
+    ok: true,
+    status: 200,
+    body: { leadId: "lead-3", journey: "discovery" },
+  }))
+  // Two taps before any re-render: both handlers still see the old `saving` state.
+  failed.props.onRetry()
+  failed.props.onRetry()
+  await settle()
+  assert.equal(browser.requests.length, 2, "the second tap posted nothing")
+  assert.equal(useQuizStore.getState().leadId, "lead-3")
+})
+
+test("discovery: a lead the server saved as REGULAR never leads to the checklist", async (t) => {
+  // A stale prefetched enrollment answer: the client still thinks „discovery", but the
+  // enrollment was revoked, so the server saved an ordinary lead.
+  const browser = withBrowser(t)
+  browser.respondWith(() => ({ ok: true, status: 200, body: { leadId: "lead-regular" } }))
+  const harness = leadStep("discovery")
+  endingOf(await arrive(harness)).props.onSave()
+  await settle()
+
+  const state = useQuizStore.getState()
+  assert.equal(state.leadId, "lead-regular")
+  assert.equal(state.leadCaptureMode, "regular", "back on the regular journey")
+  assert.equal(state.step, 10, "on to the regular preparation, not the checklist")
+  const tree = harness.render()
+  assert.equal(ofType(tree, QuizDiscoveryLeadSave).length, 0, "no „Geschafft“ ending")
+  assert.deepEqual(router.pushes, [])
 })
 
 test("discovery: a second visit re-checks the enrollment before the save may run", async (t) => {

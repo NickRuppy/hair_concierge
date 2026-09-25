@@ -168,6 +168,7 @@ export function QuizLeadCapture() {
   // successful save finishes it. Otherwise a later, unrelated address would be
   // sent with a consent answer the user never gave for it.
   const consentAnsweredRef = useRef(false)
+  const saveInFlightRef = useRef(false)
   const liveSuggestion = suggestEmailCorrection(lead.email)
 
   useEffect(() => {
@@ -406,7 +407,10 @@ export function QuizLeadCapture() {
     accepted: boolean,
     consentSource: "prompt" | "inherited" = "prompt",
   ) => {
-    if (saving) return
+    // The ref, not the `saving` state: two taps in the same frame (a double retry) both
+    // still read the old state, and each would post its own lead.
+    if (saving || saveInFlightRef.current) return
+    saveInFlightRef.current = true
 
     setLeadField("marketingConsent", accepted)
     consentAnsweredRef.current = consentSource === "prompt"
@@ -497,7 +501,11 @@ export function QuizLeadCapture() {
 
       // The submission is done, so the recovery it belonged to is over too.
       consentAnsweredRef.current = false
-      if (leadCaptureMode === "discovery") {
+      // The server says which journey actually saved the lead. Only a discovery save may
+      // lead on to the checklist — a revoked enrollment (a stale prefetched answer) saves
+      // an ordinary lead and continues the regular way.
+      const savedAsDiscovery = data?.journey === "discovery"
+      if (savedAsDiscovery) {
         lastDiscoveryLeadSave = { leadId: data.leadId, answersKey: discoveryAnswersKey(answers) }
       }
       setLeadId(data.leadId)
@@ -511,11 +519,15 @@ export function QuizLeadCapture() {
         window.location.assign(serverNextHref)
         return
       }
-      if (leadCaptureMode === "discovery") {
+      if (savedAsDiscovery) {
         // Her „Geschafft" is already on screen and its Weiter goes straight to the
         // checklist — there is no preparation step to advance to.
         trackQuizCompleted(answers, data.leadId)
         return
+      }
+      if (leadCaptureMode === "discovery") {
+        setDiscoveryDeclined(true)
+        setRegularLeadCapture()
       }
       goNext()
     } catch {
@@ -523,6 +535,7 @@ export function QuizLeadCapture() {
       if (consentSource === "inherited") consentAnsweredRef.current = false
       returnToEmailStep()
     } finally {
+      saveInFlightRef.current = false
       setSaving(false)
     }
   }

@@ -203,8 +203,13 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
           name: discovery.enrollment.name,
           marketingConsent: parsed.marketingConsent,
           quizAnswers: canonicalizeQuizAnswers(parsed.quizAnswers),
+          now: dependencies.now(),
         }).catch(() => null)
-        return saved ? leadResponse(saved.leadId, false) : discoveryUnavailableResponse()
+        // `journey` tells the client which journey actually saved her lead, so a stale
+        // client-side enrollment answer can never send a regular lead to the checklist.
+        return saved
+          ? NextResponse.json({ leadId: saved.leadId, journey: "discovery" })
+          : discoveryUnavailableResponse()
       }
 
       // The partner journey resolves from the signed-in account, the moderator
@@ -714,18 +719,43 @@ function discoveryUnavailableResponse() {
 }
 
 /**
- * A fresh legacy lead for the participant, always inserted, never deduped: the
- * checklist binds exactly this lead to the enrollment's intake, so handing back
- * a stranger's recent row would bind the wrong answers. Name and e-mail come
- * from the enrollment, not from the submitted body.
+ * The participant's legacy lead. Name and e-mail come from the enrollment, not from the
+ * submitted body. The checklist binds exactly this lead to the enrollment's intake, so it
+ * is never matched against the ordinary dedupe pool — with ONE narrow exception, a replay
+ * guard (batch 8 review): a retry whose first response was lost, or a double retry, finds
+ * her own row from the last minutes — same enrollment name + e-mail, byte-equal canonical
+ * answers, no consent, no partner/moderator attachment — and gets that id back instead of
+ * a duplicate. No migration: the guard reads existing columns only.
  */
+export const DISCOVERY_LEAD_REPLAY_WINDOW_MS = 15 * 60 * 1000
+
 export async function saveDiscoveryQuizLead(input: {
   client: ReturnType<typeof createAdminClient>
   email: string
   name: string
   marketingConsent: boolean
   quizAnswers: QuizAnswers
+  now?: number
 }) {
+  const since = new Date((input.now ?? Date.now()) - DISCOVERY_LEAD_REPLAY_WINDOW_MS)
+  const { data: recent, error: recentError } = await input.client
+    .from("leads")
+    .select("id, quiz_answers")
+    .eq("email", input.email)
+    .eq("name", input.name)
+    .eq("marketing_consent", input.marketingConsent)
+    .is("partner_access_invitation_id", null)
+    .is("moderator_campaign_id", null)
+    .gte("created_at", since.toISOString())
+    .order("created_at", { ascending: false })
+    .limit(MAX_RECENT_DUPLICATE_CANDIDATES)
+  if (recentError) throw recentError
+  const replay = findReusableLead(
+    (recent as Array<{ id: string; quiz_answers: Record<string, unknown> | null }> | null) ?? [],
+    input.quizAnswers,
+  )
+  if (replay) return { leadId: replay.id as string }
+
   const { data, error } = await input.client
     .from("leads")
     .insert({

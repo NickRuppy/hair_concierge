@@ -137,13 +137,16 @@ export function QuizPreparation() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, profile, loading: authLoading } = useAuth()
-  const { answers, lead, leadId, setLeadCaptureSubStep } = useQuizStore()
+  const { answers, lead, leadId, leadCaptureMode, setLeadCaptureSubStep } = useQuizStore()
   const requestBack = useQuizBrowserBack()
   const [checkedAccessKey, setCheckedAccessKey] = useState<string | null>(null)
   const quizCompletedLeadRef = useRef<string | null>(null)
   const resultArtifactLeadRef = useRef<string | null>(null)
   const profileHasAccess = isSubscriptionActive(profile)
-  const isDiscoveryParticipant = hasDiscoveryEnrollmentStamp(user)
+  // The stamp alone can outlive a revoked enrollment; the lead step records which journey
+  // actually saved the lead (a regular save switches the capture mode back to regular).
+  const isDiscoveryParticipant =
+    hasDiscoveryEnrollmentStamp(user) && leadCaptureMode === "discovery"
   // A discovery participant needs no billing access check and no result artifact: her
   // quiz ends on the product checklist (batch 8, plan item 2).
   const accessCheckKey = isDiscoveryParticipant
