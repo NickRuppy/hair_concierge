@@ -288,31 +288,6 @@ export function ScanResearchIntakeForm({
   )
 }
 
-/**
- * The search sheet's own header. `placeholder` keeps its exact box — and the dialog's title
- * for assistive tech — but draws nothing: a caller's `stepHeader` can hold the header slot
- * with it while `stepContent` shows, so the content below never jumps up by a header
- * height (batch 8).
- */
-export function ScanSearchSheetHeader({
-  reason,
-  placeholder = false,
-}: {
-  reason: ScanSearchReason
-  placeholder?: boolean
-}) {
-  return (
-    <div className={cn("px-4 pb-2 pt-1 sm:px-5", placeholder && "invisible")}>
-      <BottomSheetTitle className="text-[17px]">
-        {reason === "timeout" ? TIMEOUT_TITLE : DEFAULT_TITLE}
-      </BottomSheetTitle>
-      {reason === "timeout" ? (
-        <p className="mt-0.5 text-sm leading-6 text-[var(--text-sub)]">{TIMEOUT_SUBLINE}</p>
-      ) : null}
-    </div>
-  )
-}
-
 type RetailerSearchTrigger = "auto" | "submit"
 
 function isAbortError(error: unknown): boolean {
@@ -861,8 +836,14 @@ export function ScanSearchSheet({
               </p>
             </div>
           ) : (
-            // Expanded inline (hook-free) so the header slot holds the title element itself.
-            ScanSearchSheetHeader({ reason })
+            <div className="px-4 pb-2 pt-1 sm:px-5">
+              <BottomSheetTitle className="text-[17px]">
+                {reason === "timeout" ? TIMEOUT_TITLE : DEFAULT_TITLE}
+              </BottomSheetTitle>
+              {reason === "timeout" ? (
+                <p className="mt-0.5 text-sm leading-6 text-[var(--text-sub)]">{TIMEOUT_SUBLINE}</p>
+              ) : null}
+            </div>
           )
         }
       >

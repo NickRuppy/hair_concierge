@@ -17,7 +17,6 @@ import {
 } from "../src/components/discovery/intake/discovery-products-screen"
 import { DiscoveryRoutineScreen } from "../src/components/discovery/intake/discovery-routine-screen"
 import type { DiscoveryIntakeItemView } from "../src/components/discovery/intake/types"
-import { ScanSearchSheet, ScanSearchSheetHeader } from "../src/components/scan/scan-search-sheet"
 import { MOTION_MS } from "../src/lib/motion"
 
 /**
@@ -436,33 +435,4 @@ test("fix 1 (confirm pass): a sheet opened while „Weiter“ waits keeps her on
   assert.equal(isOn(tree, DiscoveryRoutineScreen), false, "no advance under an open sheet")
   assert.equal(sheet(tree).props.open, true, "her new sheet stays")
   assert.deepEqual(ids(tree), ["item-1", "item-mask"])
-})
-
-// --- 8a follow-up: the sheet header slot stays while the steps show ----------------------
-
-test("the add sheet keeps the search header's box (invisible) in the header slot for its steps", () => {
-  const tree = createHarness(() =>
-    DiscoveryAddSheet({
-      open: true,
-      session: 1,
-      flow: null,
-      busy: false,
-      error: null,
-      retailerSearchEnabled: false,
-      handlers: {} as never,
-    }),
-  ).render()
-  const search = find(tree, ScanSearchSheet)
-  const header = search.props.stepHeader as ReactElement<{ reason: string; placeholder: boolean }>
-  assert.equal(header.type, ScanSearchSheetHeader)
-  assert.equal(header.props.placeholder, true)
-  const html = renderToStaticMarkup(header)
-  // Same box and title as the search's own header, drawn invisibly — nothing jumps up.
-  assert.equal(
-    html,
-    renderToStaticMarkup(<ScanSearchSheetHeader reason="manual" />).replace(
-      'class="px-4 pb-2 pt-1 sm:px-5"',
-      'class="px-4 pb-2 pt-1 sm:px-5 invisible"',
-    ),
-  )
 })

@@ -7,7 +7,7 @@ import type { ScanRetailerResult } from "@/app/api/scan/search-retailer/route"
 import type { ScanSearchResult } from "@/app/api/scan/search/route"
 import { REFINEMENT_CATEGORY_OPTIONS } from "@/components/personal-plan-refinement/refinement-options"
 import { Scanner, type ScanDecodedIdentifier, type ScannerRuntime } from "@/components/scan/scanner"
-import { ScanSearchSheet, ScanSearchSheetHeader } from "@/components/scan/scan-search-sheet"
+import { ScanSearchSheet } from "@/components/scan/scan-search-sheet"
 import { BottomSheetTitle } from "@/components/ui/bottom-sheet"
 import { Icon } from "@/components/ui/icon"
 import {
@@ -741,9 +741,6 @@ export function DiscoveryAddSheet({
         autoFocusSearch={inSearch}
         sheetClassName={SHEET_CLASS}
         stepContent={stepContent}
-        // The header slot stays (same box, invisible) while the steps show, so neither the
-        // search → steps slide nor the pinned product header jumps up by a header height.
-        stepHeader={<ScanSearchSheetHeader reason="manual" placeholder />}
         resultsFooter={
           <button
             type="button"
