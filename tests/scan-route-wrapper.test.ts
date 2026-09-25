@@ -10,7 +10,7 @@ import {
   type ScanRouteContext,
   type ScanRouteDeps,
 } from "../src/lib/scan/route"
-import { SCAN_RATE_LIMIT } from "../src/lib/rate-limit"
+import { SCAN_RATE_LIMIT, type RateLimitConfig } from "../src/lib/rate-limit"
 
 const userId = "11111111-1111-4111-8111-111111111111"
 
@@ -79,6 +79,40 @@ test("createScanRoute: rate limited returns 429 with the derived Retry-After", a
   assert.equal(response.status, 429)
   assertRetryAfter(response)
   assert.deepEqual(await response.json(), { error: "rate_limited" })
+})
+
+test("createScanRoute: without an explicit rateLimit the shared SCAN_RATE_LIMIT bucket is checked", async () => {
+  const checked: RateLimitConfig[] = []
+  const handler = buildRoute({
+    deps: baseDeps({
+      checkRateLimit: async (_identifier, config) => {
+        checked.push(config)
+        return { allowed: true }
+      },
+    }),
+  })
+  await handler(request())
+  assert.deepEqual(checked, [SCAN_RATE_LIMIT])
+})
+
+test("createScanRoute: an explicit rateLimit drives both the check and the Retry-After window", async () => {
+  // A 5s window: the default 60s bucket's Retry-After could exceed it, this one cannot.
+  const custom: RateLimitConfig = { prefix: "wrapper-test-bucket", limit: 3, windowMs: 5_000 }
+  const checked: RateLimitConfig[] = []
+  const handler = buildRoute({
+    rateLimit: custom,
+    deps: baseDeps({
+      checkRateLimit: async (_identifier, config) => {
+        checked.push(config)
+        return { allowed: false }
+      },
+    }),
+  })
+  const response = await handler(request())
+  assert.deepEqual(checked, [custom])
+  assert.equal(response.status, 429)
+  const retryAfter = Number(response.headers.get("Retry-After"))
+  assert.ok(retryAfter >= 1 && retryAfter <= 5, `Retry-After ${retryAfter} outside the 5s window`)
 })
 
 test("createScanRoute: rate limiter outage fails closed with 503, no Sentry capture", async () => {

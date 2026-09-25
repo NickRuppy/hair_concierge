@@ -28,18 +28,21 @@ import { ScanProductThumb } from "./scan-product-thumb"
  * the path that always works.
  *
  * Name-only now: barcode entry is gone (`ManualEanField` deleted). Two independent lanes
- * feed the same field:
- * - the live catalog lane, unchanged — debounced 250ms while typing, min 2 chars, GET
- *   `/api/scan/search`.
- * - the dm name-search lane, which only ever fires once the user explicitly submits
- *   (Enter or the round arrow button) AND `retailerSearchEnabled` is true. Submitting
- *   fires both lanes in parallel: a FRESH (non-debounced) catalog request plus the
- *   retailer request.
+ * feed the same field (F2 search ruling, plan Rev. 3 §1.2):
+ * - the live catalog lane — debounced 250ms while typing, min 2 chars, GET
+ *   `/api/scan/search` (typo-tolerant server-side).
+ * - the dm name-search lane (only while `retailerSearchEnabled`) — auto-fires after a
+ *   ~500ms typing pause from 3 chars on, GET `/api/scan/search-retailer` (its own rate
+ *   bucket). Its rows — dm-mapped catalog matches deduped against the live rows, then
+ *   dm-only rows — render in a stable section BELOW the live rows, so live rows never
+ *   reorder when dm lands.
+ * The round arrow / Enter is optional: it cancels both pending debounces and fires both
+ * lanes at once (a 2-char query reaches dm only this way).
  *
- * Each lane owns its own `useLatestRequest` guard (its own "lane token"), so a query
- * change or a resubmit invalidates one lane without racing the other. Every keystroke
- * resets the "submitted" flag back to the plain live-typing state and clears whatever the
- * dm lane had — a fresh submit is required again for it to re-fire.
+ * Each lane owns a `useLatestRequest` guard plus an `AbortController`: a query change,
+ * resubmit or close invalidates AND cancels the lane's in-flight fetch; an abort never
+ * surfaces as an error. Successful responses are cached per sheet session (query → result,
+ * cleared on close), so a repeated query is served without a refetch.
  *
  * The header answers the question the user actually has, which depends on how they got
  * here (plan 2026-09-05): after the 3s timeout the sheet appeared on its own while they
@@ -58,11 +61,14 @@ const FIELD_PLACEHOLDER = "Produktname oder Marke"
 
 const MIN_QUERY_LENGTH = 2
 const DEBOUNCE_MS = 250
+// F2: the dm lane is slower and rate-limited on its own bucket — a longer pause, 3+ chars.
+const RETAILER_AUTO_MIN_QUERY_LENGTH = 3
+const RETAILER_DEBOUNCE_MS = 500
 const ERROR_COPY = "Die Suche klappt gerade nicht."
 const QUIET_INVITATION_COPY = "Drück Suchen für mehr Treffer."
 const POST_SUBMIT_EMPTY_COPY = "Dazu haben wir nichts gefunden."
 const RESEARCH_CTA_LABEL = "Für dich prüfen lassen"
-// Task 8: the persistent recovery link, shown below whatever post-submit results are
+// Task 8: the persistent recovery link, shown below whatever settled search results are
 // displayed — dm's semantic search returns neighbor products for most real queries, so the
 // terminal empty state (and with it its own big CTA) is rarely reached.
 const PERSISTENT_RECOVERY_PROMPT = "Nicht dabei?"
@@ -280,19 +286,10 @@ export function ScanResearchIntakeForm({
   )
 }
 
-/**
- * Merge policy (T4 brief §4): the live lane keeps its own order; any GTIN-mapped catalog
- * hit the retailer route also resolved (its `catalog` array) is appended after, deduped by
- * product id.
- */
-function mergeCatalogResults(
-  live: ScanSearchResult[],
-  retailerCatalog: ScanSearchResult[],
-): ScanSearchResult[] {
-  if (retailerCatalog.length === 0) return live
-  const seen = new Set(live.map((result) => result.id))
-  const appended = retailerCatalog.filter((result) => !seen.has(result.id))
-  return appended.length === 0 ? live : [...live, ...appended]
+type RetailerSearchTrigger = "auto" | "submit"
+
+function isAbortError(error: unknown): boolean {
+  return error instanceof DOMException && error.name === "AbortError"
 }
 
 export function ScanSearchSheet({
@@ -375,9 +372,16 @@ export function ScanSearchSheet({
 
   const catalogRequests = useLatestRequest()
   const retailerRequests = useLatestRequest()
-  // The typing effect's pending debounce timer. Cleared explicitly on submit so a submit
-  // never races a duplicate, debounced fetch for the same query (T4 brief §3).
+  // Each lane's pending debounce timer. Cleared explicitly on submit so a submit never
+  // races a duplicate, debounced fetch for the same query (T4 brief §3).
   const debounceTimeoutRef = useRef<number | null>(null)
+  const retailerDebounceTimeoutRef = useRef<number | null>(null)
+  // F2: each lane's in-flight fetch, cancelled (not just ignored) once superseded.
+  const catalogAbortRef = useRef<AbortController | null>(null)
+  const retailerAbortRef = useRef<AbortController | null>(null)
+  // F2: per-session query → successful response caches, cleared when the sheet closes.
+  const catalogCacheRef = useRef(new Map<string, ScanSearchResult[]>())
+  const retailerCacheRef = useRef(new Map<string, ScanRetailerSearchResponse>())
   // Focus management (task 6 a11y pass). The search field is unmounted/remounted whenever
   // `intakeOpen` toggles (conditional render, not hidden CSS), so "focus returns to the
   // search field on Zurück" is done via a callback ref rather than an effect: the flag is
@@ -393,17 +397,46 @@ export function ScanSearchSheet({
     setRetailerCatalogMatches([])
   }
 
+  function clearPendingDebounces() {
+    for (const timeoutRef of [debounceTimeoutRef, retailerDebounceTimeoutRef]) {
+      if (timeoutRef.current !== null) {
+        window.clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
+    }
+  }
+
+  function abortLane(abortRef: { current: AbortController | null }) {
+    abortRef.current?.abort()
+    abortRef.current = null
+  }
+
+  /** Invalidate + cancel everything in flight on both lanes, pending debounces included. */
+  function cancelBothLanes() {
+    catalogRequests.invalidateAll()
+    retailerRequests.invalidateAll()
+    abortLane(catalogAbortRef)
+    abortLane(retailerAbortRef)
+    clearPendingDebounces()
+  }
+
+  // Unmount: nothing may keep fetching for a sheet that no longer exists.
+  useEffect(
+    () => () => {
+      catalogAbortRef.current?.abort()
+      retailerAbortRef.current?.abort()
+    },
+    [],
+  )
+
   useEffect(() => {
     if (!open) {
       // Invalidate anything still in flight: without it, a response that lands after the
       // sheet closed still writes results/status into a fresh session and the next open
       // flashes the previous query's hits.
-      catalogRequests.invalidateAll()
-      retailerRequests.invalidateAll()
-      if (debounceTimeoutRef.current !== null) {
-        window.clearTimeout(debounceTimeoutRef.current)
-        debounceTimeoutRef.current = null
-      }
+      cancelBothLanes()
+      catalogCacheRef.current.clear()
+      retailerCacheRef.current.clear()
       setQuery("")
       setCatalogResults([])
       setCatalogStatus("idle")
@@ -412,77 +445,134 @@ export function ScanSearchSheet({
       setIntakeBrandText("")
       setIntakeProductNameText("")
     }
-  }, [open, catalogRequests, retailerRequests])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
 
   async function runCatalogSearch(trimmed: string, token: number) {
+    abortLane(catalogAbortRef)
+    const controller = new AbortController()
+    catalogAbortRef.current = controller
     try {
       const response = await fetch(`/api/scan/search?q=${encodeURIComponent(trimmed)}`, {
         cache: "no-store",
+        signal: controller.signal,
       })
       if (!response.ok) throw new Error("search_unavailable")
       const body = (await response.json()) as { results: ScanSearchResult[] }
+      const results = body.results ?? []
+      catalogCacheRef.current.set(trimmed, results)
       if (!catalogRequests.isCurrent(token)) return
-      setCatalogResults(body.results ?? [])
+      setCatalogResults(results)
       setCatalogStatus("ready")
-    } catch {
-      if (!catalogRequests.isCurrent(token)) return
+    } catch (error) {
+      if (isAbortError(error) || !catalogRequests.isCurrent(token)) return
       setCatalogStatus("error")
     }
   }
 
-  async function runRetailerSearch(trimmed: string, token: number) {
-    // Task 6: `scan_retailer_search` fires once per submit, whichever way the lane's
-    // response settles — success, disabled, or failure/timeout. Never the query text.
+  function applyRetailerResponse(body: ScanRetailerSearchResponse) {
+    setRetailerResults(body.retailer ?? [])
+    setRetailerCatalogMatches(body.catalog ?? [])
+    setRetailerStatus(body.retailerOutcome === "disabled" ? "disabled" : "ready")
+  }
+
+  async function runRetailerSearch(trimmed: string, token: number, trigger: RetailerSearchTrigger) {
+    // Task 6: `scan_retailer_search` fires once per dm request, whichever way the lane's
+    // response settles — success, disabled, or failure/timeout (incl. a 429 from its own
+    // rate bucket). Never the query text; never for a cache hit or an aborted request.
+    abortLane(retailerAbortRef)
+    const controller = new AbortController()
+    retailerAbortRef.current = controller
     const startedAt = performance.now()
+    const track = (
+      body: Pick<ScanRetailerSearchResponse, "catalog" | "retailer" | "retailerOutcome">,
+    ) =>
+      analytics.track("scan_retailer_search", {
+        catalogCount: body.catalog.length,
+        retailerCount: body.retailer.length,
+        outcome: body.retailerOutcome,
+        durationMs: Math.round(performance.now() - startedAt),
+        trigger,
+      })
     try {
       const response = await fetch(`/api/scan/search-retailer?q=${encodeURIComponent(trimmed)}`, {
         cache: "no-store",
+        signal: controller.signal,
       })
       if (!response.ok) throw new Error("retailer_search_unavailable")
       const body = (await response.json()) as ScanRetailerSearchResponse
+      if (body.retailerOutcome === "ok") retailerCacheRef.current.set(trimmed, body)
       if (!retailerRequests.isCurrent(token)) return
       if (body.retailerOutcome === "unavailable") {
         setRetailerStatus("error")
         setRetailerResults([])
         setRetailerCatalogMatches([])
-        analytics.track("scan_retailer_search", {
-          catalogCount: 0,
-          retailerCount: 0,
-          outcome: "unavailable",
-          durationMs: Math.round(performance.now() - startedAt),
-        })
+        track({ catalog: [], retailer: [], retailerOutcome: "unavailable" })
         return
       }
-      setRetailerResults(body.retailer ?? [])
-      setRetailerCatalogMatches(body.catalog ?? [])
-      setRetailerStatus(body.retailerOutcome === "disabled" ? "disabled" : "ready")
-      analytics.track("scan_retailer_search", {
-        catalogCount: body.catalog?.length ?? 0,
-        retailerCount: body.retailer?.length ?? 0,
-        outcome: body.retailerOutcome,
-        durationMs: Math.round(performance.now() - startedAt),
+      applyRetailerResponse(body)
+      track({
+        catalog: body.catalog ?? [],
+        retailer: body.retailer ?? [],
+        retailerOutcome: body.retailerOutcome,
       })
-    } catch {
-      if (!retailerRequests.isCurrent(token)) return
+    } catch (error) {
+      if (isAbortError(error) || !retailerRequests.isCurrent(token)) return
       setRetailerStatus("error")
-      analytics.track("scan_retailer_search", {
-        catalogCount: 0,
-        retailerCount: 0,
-        outcome: "unavailable",
-        durationMs: Math.round(performance.now() - startedAt),
-      })
+      track({ catalog: [], retailer: [], retailerOutcome: "unavailable" })
     }
   }
 
-  // Every query change (typing) invalidates both lanes, drops back to unsubmitted state,
-  // and re-arms the live catalog debounce — T4 brief §3. Also fires on mount (query "").
-  useEffect(() => {
-    catalogRequests.invalidateAll()
-    retailerRequests.invalidateAll()
-    if (debounceTimeoutRef.current !== null) {
-      window.clearTimeout(debounceTimeoutRef.current)
-      debounceTimeoutRef.current = null
+  /**
+   * Starts (or re-starts) the catalog lane for `trimmed`: a cache hit is applied at once;
+   * otherwise the lane shows loading and fetches after `debounceMs` (0 = right away).
+   */
+  function startCatalogLane(trimmed: string, debounceMs: number) {
+    const token = catalogRequests.begin()
+    const cached = catalogCacheRef.current.get(trimmed)
+    if (cached) {
+      abortLane(catalogAbortRef)
+      setCatalogResults(cached)
+      setCatalogStatus("ready")
+      return
     }
+    setCatalogStatus("loading")
+    if (debounceMs === 0) {
+      void runCatalogSearch(trimmed, token)
+      return
+    }
+    debounceTimeoutRef.current = window.setTimeout(() => {
+      debounceTimeoutRef.current = null
+      void runCatalogSearch(trimmed, token)
+    }, debounceMs)
+  }
+
+  /** The dm-lane analogue of `startCatalogLane`; the loading row shows while it waits. */
+  function startRetailerLane(trimmed: string, trigger: RetailerSearchTrigger, debounceMs: number) {
+    const token = retailerRequests.begin()
+    const cached = retailerCacheRef.current.get(trimmed)
+    if (cached) {
+      abortLane(retailerAbortRef)
+      applyRetailerResponse(cached)
+      return
+    }
+    setRetailerStatus("loading")
+    setRetailerResults([])
+    setRetailerCatalogMatches([])
+    if (debounceMs === 0) {
+      void runRetailerSearch(trimmed, token, trigger)
+      return
+    }
+    retailerDebounceTimeoutRef.current = window.setTimeout(() => {
+      retailerDebounceTimeoutRef.current = null
+      void runRetailerSearch(trimmed, token, trigger)
+    }, debounceMs)
+  }
+
+  // Every query change (typing) cancels both lanes, drops back to unsubmitted state and
+  // re-arms both debounces — T4 brief §3, F2. Also fires on mount (query "").
+  useEffect(() => {
+    cancelBothLanes()
     resetToUnsubmitted()
 
     const trimmed = query.trim()
@@ -491,18 +581,11 @@ export function ScanSearchSheet({
       setCatalogResults([])
       return
     }
-    const token = catalogRequests.begin()
-    setCatalogStatus("loading")
-    debounceTimeoutRef.current = window.setTimeout(() => {
-      debounceTimeoutRef.current = null
-      void runCatalogSearch(trimmed, token)
-    }, DEBOUNCE_MS)
-    return () => {
-      if (debounceTimeoutRef.current !== null) {
-        window.clearTimeout(debounceTimeoutRef.current)
-        debounceTimeoutRef.current = null
-      }
+    startCatalogLane(trimmed, DEBOUNCE_MS)
+    if (retailerSearchEnabled && trimmed.length >= RETAILER_AUTO_MIN_QUERY_LENGTH) {
+      startRetailerLane(trimmed, "auto", RETAILER_DEBOUNCE_MS)
     }
+    return clearPendingDebounces
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query])
 
@@ -511,22 +594,10 @@ export function ScanSearchSheet({
 
   function handleSubmit() {
     if (!submittable) return
-    if (debounceTimeoutRef.current !== null) {
-      window.clearTimeout(debounceTimeoutRef.current)
-      debounceTimeoutRef.current = null
-    }
+    clearPendingDebounces()
     setSubmitted(true)
-    const catalogToken = catalogRequests.begin()
-    setCatalogStatus("loading")
-    void runCatalogSearch(trimmedQuery, catalogToken)
-
-    if (retailerSearchEnabled) {
-      const retailerToken = retailerRequests.begin()
-      setRetailerStatus("loading")
-      setRetailerResults([])
-      setRetailerCatalogMatches([])
-      void runRetailerSearch(trimmedQuery, retailerToken)
-    }
+    startCatalogLane(trimmedQuery, 0)
+    if (retailerSearchEnabled) startRetailerLane(trimmedQuery, "submit", 0)
 
     // Task 6: submitting via the round button moves DOM focus to it natively — pull it
     // back into the field so typing (or Enter, which never left it) keeps working the same
@@ -549,48 +620,81 @@ export function ScanSearchSheet({
     setIntakeOpen(true)
   }
 
-  const mergedCatalog = mergeCatalogResults(catalogResults, retailerCatalogMatches)
-  // "The dm section exists" (T4 brief §4) once a submit with the lane enabled happened,
-  // unless the server itself answered `disabled` — that renders as if the lane were off.
-  const dmActive = retailerSearchEnabled && submitted && retailerStatus !== "disabled"
+  // Whether the catalog section is ACTUALLY rendering rows right now — `catalogResults`
+  // persists across a fresh loading cycle (nothing clears it until the new response lands),
+  // so the status is part of "rows are on screen" (delta review, Finding 2).
+  const liveRows = catalogStatus === "ready" ? catalogResults : []
+  const showCatalogResults = liveRows.length > 0
+  // The dm lane has been started for this query — typing pause (3+ chars) or submit.
+  // The server answering `disabled` renders as if the lane were off.
+  const dmStarted = retailerSearchEnabled && retailerStatus !== "idle"
+  const dmActive = dmStarted && retailerStatus !== "disabled"
   const dmLoading = dmActive && retailerStatus === "loading"
   const dmFailed = dmActive && retailerStatus === "error"
-  const dmReadyResults = dmActive && retailerStatus === "ready" ? retailerResults : []
+  const dmSettled = dmStarted && retailerStatus !== "loading"
+  // F2: dm-derived rows live in their own section below the live rows, never merged into
+  // them — dm catalog matches deduped against the live rows on screen, then dm-only rows.
+  const liveIds = new Set(liveRows.map((result) => result.id))
+  const dmCatalogRows =
+    dmActive && retailerStatus === "ready"
+      ? retailerCatalogMatches.filter((result) => !liveIds.has(result.id))
+      : []
+  const dmOnlyRows = dmActive && retailerStatus === "ready" ? retailerResults : []
+  const dmHasRows = dmCatalogRows.length > 0 || dmOnlyRows.length > 0
 
-  // Whether the catalog section is ACTUALLY rendering rows right now — not merely whether
-  // `mergedCatalog` (built from stored `catalogResults`/`retailerCatalogMatches` state)
-  // happens to be non-empty. Those two state pieces persist across a re-submit's fresh
-  // loading cycle (nothing clears them until the new response lands), so `mergedCatalog`
-  // alone can stay non-empty while the catalog section is showing loading skeletons or an
-  // error instead of any rows — the single source of truth for "rows are on screen" also
-  // gates the catalog section's own JSX below (delta review, Finding 2).
-  const showCatalogResults = catalogStatus === "ready" && mergedCatalog.length > 0
   const showCatalogLabel = dmActive && showCatalogResults
-  // Pre-submit catalog miss with the dm lane available (T4 brief §6): a quiet nudge, not
-  // the terminal empty state.
+  // Catalog miss on a query the dm lane has not searched (2 chars: below its auto
+  // minimum): a quiet nudge towards the arrow, not the terminal empty state.
   const showQuietInvitation =
-    catalogStatus === "ready" && mergedCatalog.length === 0 && retailerSearchEnabled && !submitted
+    catalogStatus === "ready" &&
+    liveRows.length === 0 &&
+    retailerSearchEnabled &&
+    !submitted &&
+    !dmStarted
   // The terminal empty state (T4 brief §7): both lanes came back empty, or the dm lane is
   // disabled/off entirely and the catalog alone is empty. Never shown while the dm lane is
   // still loading or has failed — those get their own presentation.
   const showTerminalEmptyState =
     catalogStatus === "ready" &&
-    mergedCatalog.length === 0 &&
+    liveRows.length === 0 &&
     !dmLoading &&
     !dmFailed &&
-    dmReadyResults.length === 0 &&
-    (!retailerSearchEnabled || submitted)
+    !dmHasRows &&
+    (!retailerSearchEnabled || dmSettled)
   // Task 8's persistent recovery link: dm's semantic search returns neighbor products for
   // most real queries, so the terminal empty state above (and with it its own recovery CTA)
   // is rarely reached — a user searching a product we can't find otherwise sees only
-  // results that aren't theirs, with no path to research it. Shown once ANY post-submit
-  // results are ACTUALLY DISPLAYED (dm-ready rows and/or rendered catalog rows, either or
-  // both — both already computed the same way their own rendering condition is, so the
-  // link can never appear under a loading/error state with no visible rows) — not
-  // pre-submit (live typing), and not in the terminal empty state (its own CTA owns
-  // recovery there). Works with the retailer flag off too: `dmReadyResults` is always `[]`
-  // in that case, so this reduces to catalog-only results.
-  const showPersistentRecoveryLink = submitted && (showCatalogResults || dmReadyResults.length > 0)
+  // results that aren't theirs, with no path to research it. Shown once the search is
+  // "done" — submitted, or the dm lane's auto search settled — and rows are ACTUALLY
+  // DISPLAYED (live and/or dm-derived); not while only live typing results are up, and not
+  // in the terminal empty state (its own CTA owns recovery there). With the retailer flag
+  // off this reduces to submitted + catalog rows.
+  const showPersistentRecoveryLink = (submitted || dmSettled) && (showCatalogResults || dmHasRows)
+
+  function renderCatalogRow(result: ScanSearchResult) {
+    return (
+      <li key={result.id}>
+        <button
+          type="button"
+          onClick={() => {
+            onSelectProduct(result.id)
+            onSelectProductResult?.(result)
+          }}
+          className="flex w-full items-center gap-3 rounded-[12px] border border-border bg-card px-3 py-2.5 text-left transition-colors hover:border-[var(--brand-plum)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
+        >
+          <ScanProductThumb imageUrl={result.imageUrl} label={result.name} size={44} />
+          <span className="min-w-0">
+            <span className="line-clamp-2 text-[13px] font-semibold leading-snug text-foreground">
+              {scanResultTitle(result)}
+            </span>
+            <span className="mt-0.5 block truncate text-[12px] text-muted-foreground">
+              {result.categoryLabel}
+            </span>
+          </span>
+        </button>
+      </li>
+    )
+  }
 
   return (
     <BottomSheet open={open} onOpenChange={onOpenChange}>
@@ -654,6 +758,10 @@ export function ScanSearchSheet({
                 }}
                 type="search"
                 autoComplete="off"
+                enterKeyHint="search"
+                autoCorrect="off"
+                autoCapitalize="none"
+                spellCheck={false}
                 aria-label={FIELD_PLACEHOLDER}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
@@ -725,65 +833,38 @@ export function ScanSearchSheet({
                       {CATALOG_SECTION_LABEL}
                     </div>
                   ) : null}
-                  <ul className="flex flex-col gap-2">
-                    {mergedCatalog.map((result) => (
-                      <li key={result.id}>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            onSelectProduct(result.id)
-                            onSelectProductResult?.(result)
-                          }}
-                          className="flex w-full items-center gap-3 rounded-[12px] border border-border bg-card px-3 py-2.5 text-left transition-colors hover:border-[var(--brand-plum)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-plum)] focus-visible:ring-offset-2"
-                        >
-                          <ScanProductThumb
-                            imageUrl={result.imageUrl}
-                            label={result.name}
-                            size={44}
-                          />
-                          <span className="min-w-0">
-                            <span className="line-clamp-2 text-[13px] font-semibold leading-snug text-foreground">
-                              {scanResultTitle(result)}
-                            </span>
-                            <span className="mt-0.5 block truncate text-[12px] text-muted-foreground">
-                              {result.categoryLabel}
-                            </span>
-                          </span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
+                  <ul className="flex flex-col gap-2">{liveRows.map(renderCatalogRow)}</ul>
                 </>
               ) : null}
 
               {dmActive ? (
-                <div className={mergedCatalog.length > 0 ? "mt-4" : undefined}>
-                  {dmLoading ? (
-                    <>
-                      <div className="mb-1 mt-1 text-xs font-bold text-[var(--text-sub)]">
-                        {RETAILER_SECTION_LABEL}
-                      </div>
-                      <p className="mb-2 text-xs leading-5 text-[var(--text-sub)]">
-                        {RETAILER_SECTION_SUBLINE}
-                      </p>
-                      <div className="flex flex-col gap-2">
-                        {[0, 1].map((index) => (
-                          <Skeleton key={index} className="h-[64px] w-full rounded-[12px]" />
-                        ))}
-                      </div>
-                    </>
+                <div className={showCatalogResults ? "mt-4" : undefined}>
+                  {dmLoading || dmHasRows ? (
+                    <div className="mb-1 mt-1 text-xs font-bold text-[var(--text-sub)]">
+                      {RETAILER_SECTION_LABEL}
+                    </div>
                   ) : null}
 
-                  {retailerStatus === "ready" && retailerResults.length > 0 ? (
+                  {dmLoading ? <Skeleton className="mt-1 h-[64px] w-full rounded-[12px]" /> : null}
+
+                  {dmCatalogRows.length > 0 ? (
+                    <ul className="mt-1 flex flex-col gap-2">
+                      {dmCatalogRows.map(renderCatalogRow)}
+                    </ul>
+                  ) : null}
+
+                  {dmOnlyRows.length > 0 ? (
                     <>
-                      <div className="mb-1 mt-1 text-xs font-bold text-[var(--text-sub)]">
-                        {RETAILER_SECTION_LABEL}
-                      </div>
-                      <p className="mb-2 text-xs leading-5 text-[var(--text-sub)]">
+                      <p
+                        className={cn(
+                          "mb-2 text-xs leading-5 text-[var(--text-sub)]",
+                          dmCatalogRows.length > 0 ? "mt-3" : null,
+                        )}
+                      >
                         {RETAILER_SECTION_SUBLINE}
                       </p>
                       <ul className="flex flex-col gap-2">
-                        {retailerResults.map((result) => (
+                        {dmOnlyRows.map((result) => (
                           <li key={result.gtin}>
                             <button
                               type="button"

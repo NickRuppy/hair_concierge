@@ -8,6 +8,12 @@ import {
   type ScanRetailerSearchRouteDeps,
 } from "../src/app/api/scan/search-retailer/route"
 
+import {
+  SCAN_RATE_LIMIT,
+  SCAN_RETAILER_SEARCH_RATE_LIMIT,
+  type RateLimitConfig,
+} from "../src/lib/rate-limit"
+
 const userId = "11111111-1111-4111-8111-111111111111"
 
 function baseDeps(
@@ -44,6 +50,33 @@ test("scan search-retailer: rate limited returns 429", async () => {
   )
   const response = await handler(request("?q=ogx"))
   assert.equal(response.status, 429)
+})
+
+test("scan search-retailer: consumes only its own retailer bucket, never the shared scan bucket", async () => {
+  const checked: RateLimitConfig[] = []
+  const handler = createScanRetailerSearchRouteHandler(
+    baseDeps({
+      checkRateLimit: async (_identifier, config) => {
+        checked.push(config)
+        return { allowed: true }
+      },
+    }),
+  )
+  await handler(request("?q=ogx"))
+  assert.deepEqual(checked, [SCAN_RETAILER_SEARCH_RATE_LIMIT])
+  assert.notEqual(SCAN_RETAILER_SEARCH_RATE_LIMIT.prefix, SCAN_RATE_LIMIT.prefix)
+  assert.equal(SCAN_RETAILER_SEARCH_RATE_LIMIT.limit, 40)
+  assert.equal(SCAN_RETAILER_SEARCH_RATE_LIMIT.windowMs, 60_000)
+})
+
+test("scan search-retailer: a 429 carries the retailer bucket's Retry-After", async () => {
+  const handler = createScanRetailerSearchRouteHandler(
+    baseDeps({ checkRateLimit: async () => ({ allowed: false }) }),
+  )
+  const response = await handler(request("?q=ogx"))
+  assert.equal(response.status, 429)
+  const retryAfter = Number(response.headers.get("Retry-After"))
+  assert.ok(retryAfter >= 1 && retryAfter <= SCAN_RETAILER_SEARCH_RATE_LIMIT.windowMs / 1000)
 })
 
 test("scan search-retailer: flag off returns disabled with no dm or catalog calls", async () => {

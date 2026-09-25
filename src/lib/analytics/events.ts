@@ -684,14 +684,17 @@ export type AppEventMap = {
   }
   /**
    * The search sheet's retailer (dm) lane response settling (plan Rev. 6 §4/§8, Task 6) —
-   * fired once per submit, whether the lane succeeded, came back disabled, or failed/timed
-   * out. Never the query text.
+   * fired once per dm request, whether the lane succeeded, came back disabled, or
+   * failed/timed out. `trigger` (F2): `auto` for the typing-pause search, `submit` for
+   * Enter/arrow. Cache hits and superseded (aborted) requests never fire. Never the query
+   * text.
    */
   scan_retailer_search: {
     catalogCount: number
     retailerCount: number
     outcome: "ok" | "disabled" | "unavailable"
     durationMs: number
+    trigger: "auto" | "submit"
   }
   /** A dm-only row tap in the search sheet's retailer section (plan Rev. 6 §4, Task 6). */
   scan_retailer_result_opened: {

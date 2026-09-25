@@ -527,6 +527,7 @@ function toPostHogPayload(eventName: AppEventName, payload: AppEventMap[AppEvent
         retailer_count: data.retailerCount,
         outcome: data.outcome,
         duration_ms: data.durationMs,
+        trigger: data.trigger,
       }
     }
     case "scan_retailer_result_opened": {
