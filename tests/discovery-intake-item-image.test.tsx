@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import { DiscoveryProductList } from "../src/components/discovery/intake/discovery-product-list"
+import { DiscoveryProductCard } from "../src/components/discovery/intake/discovery-products-screen"
 import {
   projectDiscoveryIntakeItemRow,
   toDiscoveryIntakeItemView,
@@ -58,34 +58,35 @@ test("rows without a catalog product (or without a catalog image) degrade to no 
 
 function renderEntry(imageUrl: string | null) {
   return renderToStaticMarkup(
-    <DiscoveryProductList
-      items={[
-        {
-          id: "i1",
-          category: "shampoo",
-          source: "catalog_search",
-          brandText: "Weleda",
-          productNameText: "Hafer Aufbau-Shampoo",
-          barcodeIdentifier: null,
-          imageUrl,
-        },
-      ]}
+    <DiscoveryProductCard
+      item={{
+        id: "i1",
+        category: "shampoo",
+        source: "catalog_search",
+        brandText: "Weleda",
+        productNameText: "Hafer Aufbau-Shampoo",
+        barcodeIdentifier: null,
+        imageUrl,
+        frequency: "weekly_2x",
+      }}
       busy={false}
-      onChange={() => {}}
+      landed={false}
+      onEdit={() => {}}
+      onFrequency={() => {}}
       onRemove={() => {}}
     />,
   )
 }
 
-test("the selected product row shows its packshot", () => {
+test("the product card shows its packshot", () => {
   assert.match(
     renderEntry("https://catalog.example/weleda.jpg"),
     /src="https:\/\/catalog\.example\/weleda\.jpg"/,
   )
 })
 
-test("a selected product without an image keeps the placeholder", () => {
+test("a selected product without an image shows its category icon instead", () => {
   const html = renderEntry(null)
   assert.doesNotMatch(html, /<img/)
-  assert.match(html, /Bild nicht verfügbar/)
+  assert.match(html, /<svg/)
 })

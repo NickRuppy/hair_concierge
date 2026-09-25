@@ -2,9 +2,9 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { renderToStaticMarkup } from "react-dom/server"
 
-import { DiscoveryProductList } from "../src/components/discovery/intake/discovery-product-list"
+import { itemDisplayName, itemSubject } from "../src/components/discovery/intake/add-flow"
+import { DiscoveryProductCard } from "../src/components/discovery/intake/discovery-products-screen"
 import type { DiscoveryIntakeItemView } from "../src/components/discovery/intake/types"
-import { itemDisplayName, itemDisplaySubline } from "../src/components/discovery/intake/usage-flow"
 import { scanResultTitle } from "../src/components/scan/scan-search-sheet"
 import { toScanSearchResult } from "../src/lib/scan/catalog-search"
 import {
@@ -63,10 +63,22 @@ function item(overrides: Partial<DiscoveryIntakeItemView>): DiscoveryIntakeItemV
   }
 }
 
-test("a picked catalog product reads brand + line + name, with no brand subline", () => {
+test("a picked catalog product reads brand + line + name; the card splits brand · line from the name", () => {
   const picked = item({ productLine: "Wahre Schätze" })
   assert.equal(itemDisplayName(picked), "Garnier Wahre Schätze Honig Schätze Shampoo")
-  assert.equal(itemDisplaySubline(picked), null)
+  assert.deepEqual(itemSubject(picked), {
+    brandLine: "Garnier · Wahre Schätze",
+    name: "Honig Schätze Shampoo",
+    imageUrl: null,
+  })
+})
+
+test("the card never repeats the brand in front of the name", () => {
+  assert.equal(
+    itemSubject(item({ brandText: "Balea", productNameText: "Balea Professional Repair Shampoo" }))
+      .name,
+    "Professional Repair Shampoo",
+  )
 })
 
 test("items without a catalog line degrade to brand + name", () => {
@@ -89,7 +101,7 @@ test("items without a catalog line degrade to brand + name", () => {
   )
 })
 
-test("an unnamed scan stays „Gescanntes Produkt“ with its barcode underneath", () => {
+test("an unnamed scan stays „Gescanntes Produkt“ with its barcode as the muted line", () => {
   const scanned = item({
     source: "barcode_unknown",
     brandText: null,
@@ -97,7 +109,8 @@ test("an unnamed scan stays „Gescanntes Produkt“ with its barcode underneath
     barcodeIdentifier: "4005808858149",
   })
   assert.equal(itemDisplayName(scanned), "Gescanntes Produkt")
-  assert.equal(itemDisplaySubline(scanned), "4005808858149")
+  assert.equal(itemSubject(scanned).name, "Gescanntes Produkt")
+  assert.equal(itemSubject(scanned).brandLine, "4005808858149")
 })
 
 test("the joined product line reaches the browser view", () => {
@@ -119,14 +132,18 @@ test("the joined product line reaches the browser view", () => {
   assert.equal(view.productLine, "Wahre Schätze")
 })
 
-test("the selected entry renders the full title", () => {
+test("the product card names brand · line and the product, and labels its edit tap in full", () => {
   const html = renderToStaticMarkup(
-    <DiscoveryProductList
-      items={[item({ productLine: "Wahre Schätze" })]}
+    <DiscoveryProductCard
+      item={item({ productLine: "Wahre Schätze" })}
       busy={false}
-      onChange={() => {}}
+      landed={false}
+      onEdit={() => {}}
+      onFrequency={() => {}}
       onRemove={() => {}}
     />,
   )
-  assert.match(html, /Garnier Wahre Schätze Honig Schätze Shampoo/)
+  assert.match(html, /Garnier · Wahre Schätze/)
+  assert.match(html, />Honig Schätze Shampoo</)
+  assert.match(html, /aria-label="Garnier Wahre Schätze Honig Schätze Shampoo bearbeiten"/)
 })

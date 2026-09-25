@@ -14,7 +14,7 @@ import { isRetailerSearchEnabled } from "@/lib/scan/enrichment/flag"
 import { ensureDiscoveryQuizProjection } from "./quiz-projection"
 
 /**
- * The participant's product checklist — the terminal destination of the
+ * The participant's flow (products → routine → Hitze & Styling → Abschicken) — the terminal destination of the
  * discovery middleware gate, and the only page a participant is meant to spend
  * time on before the call.
  *
@@ -65,6 +65,8 @@ export default async function DiscoveryChecklistPage({
       // projection the items route answers with.
       initialItems={items.map(toDiscoveryIntakeItemView)}
       initialSubmitted={intake.state === "submitted"}
+      // Batch 7: her saved „Hitze & Styling" answers prefill the flow when she comes back.
+      initialHeatStyling={intake.heatStyling ?? null}
       // Threaded from the server exactly like `/scan/page.tsx` does it: the dm
       // lane's flag is not Edge/browser-safe.
       retailerSearchEnabled={isRetailerSearchEnabled()}

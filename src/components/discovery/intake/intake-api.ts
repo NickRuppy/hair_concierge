@@ -1,6 +1,9 @@
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 
+import type { DiscoveryHeatStylingV1 } from "@/lib/discovery/heat-styling"
+
 import type {
+  DiscoveryIntakeHeatStylingBody,
   DiscoveryIntakeItemView,
   DiscoveryIntakeProductBody,
   DiscoveryIntakeUsagePatchBody,
@@ -62,7 +65,7 @@ export async function removeIntakeItem(itemId: string): Promise<void> {
 // --- Flat checklist (batch 5) ------------------------------------------------------
 
 /**
- * Adds one product once her usage answer is in. The server opens research itself (from the
+ * Adds one product once her frequency answer is in (batch 7: the flow's last tap). The server opens research itself (from the
  * product type) — the flat checklist never calls `/api/scan/submit`.
  */
 export async function addIntakeProduct(
@@ -77,7 +80,10 @@ export async function addIntakeProduct(
   return ((await response.json()) as { item: DiscoveryIntakeItemView }).item
 }
 
-/** Changes how she uses a product (pill tap); `productType` only answers „Was ist das?". */
+/**
+ * Edits a product (card tap): usage, frequency — or only the frequency („Wie oft?" on a draft
+ * from the old checklist). `productType` only answers „Was ist das?" on a type-open item.
+ */
 export async function updateIntakeItemUsage(
   itemId: string,
   body: DiscoveryIntakeUsagePatchBody,
@@ -91,7 +97,20 @@ export async function updateIntakeItemUsage(
   return ((await response.json()) as { item: DiscoveryIntakeItemView }).item
 }
 
-/** „Stimmt so – abschicken": the empty categories become „benutzt sie nicht", then submit. */
+/** „Hitze & Styling" (batch 7): always the whole object; the route validates it. */
+export async function saveIntakeHeatStyling(
+  body: DiscoveryIntakeHeatStylingBody,
+): Promise<DiscoveryHeatStylingV1> {
+  const response = await fetch("/api/beratung/intake/heat-styling", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  })
+  if (!response.ok) throw await failure(response)
+  return ((await response.json()) as { heatStyling: DiscoveryHeatStylingV1 }).heatStyling
+}
+
+/** „Abschicken": the empty categories become „benutzt sie nicht", then submit. */
 export async function submitIntakeConfirmingNone(): Promise<{
   submittedAt: string
   confirmedNone: PersonalPlanCategory[]

@@ -3,6 +3,7 @@ import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
 
 import { ScanSearchSheet } from "../src/components/scan/scan-search-sheet"
+import { BottomSheetContent } from "../src/components/ui/bottom-sheet"
 import type { ScanSearchResult } from "../src/app/api/scan/search/route"
 import type { ScanRetailerResult } from "../src/app/api/scan/search-retailer/route"
 
@@ -265,4 +266,75 @@ test("without the new props the sheet behaves exactly as before", async () => {
     restore()
   }
   assert.deepEqual(productIds, [catalogResult.id])
+})
+
+// --- Batch 7: the discovery add sheet's steps inside the SAME open sheet ---------------------
+
+test("batch 7: `stepContent` replaces header and search in the open sheet; the query survives", async () => {
+  const restore = stubFetch()
+  let stepContent: ReactNode = null
+  try {
+    const harness = createHarness(() =>
+      ScanSearchSheet({
+        open: true,
+        reason: "manual",
+        onOpenChange: () => undefined,
+        onSelectProduct: () => undefined,
+        stepContent,
+      }),
+    )
+    await harness.render()
+    const field = findAll(await harness.render(), (element) => element.props.type === "search")[0]
+    field.props.onChange({ target: { value: "elvital" } })
+    await harness.render()
+
+    stepContent = <div data-step="frequency">Wie oft nutzt du es?</div>
+    const stepped = await harness.render()
+    const content = findAll(stepped, (element) => element.type === BottomSheetContent)[0]
+    assert.equal(content.props.header, undefined, "no search header while a step is up")
+    assert.equal(findAll(stepped, (element) => element.props.type === "search").length, 0)
+    assert.equal(
+      findAll(stepped, (element) => element.props["data-step"] === "frequency").length,
+      1,
+    )
+
+    stepContent = null
+    const back = await harness.render()
+    const again = findAll(back, (element) => element.props.type === "search")[0]
+    assert.equal(again.props.value, "elvital", "back to the search finds her query")
+  } finally {
+    restore()
+  }
+})
+
+test("batch 7: `resultsFooter` shows once the catalog lane answered, never before", async () => {
+  const restore = stubFetch()
+  try {
+    const harness = createHarness(() =>
+      ScanSearchSheet({
+        open: true,
+        reason: "manual",
+        onOpenChange: () => undefined,
+        onSelectProduct: () => undefined,
+        autoFocusSearch: true,
+        sheetClassName: "h-[88dvh]",
+        resultsFooter: <button data-footer="typed">Selbst eintragen</button>,
+      }),
+    )
+    const idle = await harness.render()
+    assert.equal(findAll(idle, (element) => element.props["data-footer"] === "typed").length, 0)
+    const content = findAll(idle, (element) => element.type === BottomSheetContent)[0]
+    assert.ok(content.props.initialFocusRef, "the search field takes the focus")
+    assert.match(content.props.className, /h-\[88dvh\]/)
+
+    const field = findAll(idle, (element) => element.props.type === "search")[0]
+    field.props.onChange({ target: { value: "elvital" } })
+    const tree = await harness.render()
+    findAll(tree, (element) => element.props["aria-label"] === "Suchen")[0].props.onClick()
+    await harness.render()
+    const answered = await harness.render()
+    assert.equal(findAll(answered, (element) => element.props["data-footer"] === "typed").length, 1)
+  } finally {
+    restore()
+  }
 })
