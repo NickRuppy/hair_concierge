@@ -93,13 +93,26 @@ export type DiscoveryApplicationCandidate = ApplicationRoutineProductCandidate &
 /**
  * The sheet's printed products as application candidates, in routine order. Only what the
  * document prints: a kept product, a readable swap target, the Idealplan's pick on an open
- * step. An undecided step prints „Noch offen" and has nothing to apply yet.
+ * step. An undecided step prints „Noch offen" and has nothing to apply yet; a dropped
+ * product („Weglassen", batch 9) prints nowhere in the routine.
+ *
+ * Ids (batch 9, Codex P1-1): a step's FIRST entry keeps the step's decision key as its
+ * `itemId` / `applicationInstanceKey` — so a routine with 0–1 products per step compiles
+ * and fingerprints exactly as before — and every further entry of that step gets its own
+ * `<decisionKey>#<intakeItemId>`: the compiler filters conflicting products by `itemId`,
+ * and a shared one would drop a sibling with its conflicting neighbour. Two entries of one
+ * step printing the same catalog product are one printed product (the sheet prints it
+ * once), so the later one is left out — never merged by sharing an id.
  */
 export function discoveryApplicationCandidates(
   routine: Pick<DiscoveryRefinedRoutine, "steps">,
 ): DiscoveryApplicationCandidate[] {
+  const seenKeys = new Set<string>()
+  const printedInStep = new Set<string>()
   return routine.steps.flatMap((entry, index): DiscoveryApplicationCandidate[] => {
     const { step } = entry
+    const first = !seenKeys.has(step.decisionKey)
+    seenKeys.add(step.decisionKey)
     const printed =
       entry.outcome === "kept" && entry.item?.productId && entry.ownedLabel
         ? { productId: entry.item.productId, name: entry.ownedLabel, kind: "owned" as const }
@@ -119,10 +132,15 @@ export function discoveryApplicationCandidates(
               }
             : null
     if (!printed) return []
+    const printedKey = `${step.decisionKey}\u0000${printed.productId}`
+    if (printedInStep.has(printedKey)) return []
+    printedInStep.add(printedKey)
+    const instanceKey =
+      first || !entry.item ? step.decisionKey : `${step.decisionKey}#${entry.item.id}`
     return [
       {
-        itemId: step.decisionKey,
-        applicationInstanceKey: step.decisionKey,
+        itemId: instanceKey,
+        applicationInstanceKey: instanceKey,
         routineOrder: index,
         category: step.category,
         routineRole: step.role,

@@ -218,54 +218,70 @@ test("an enrollment without an intake is a 404, and the admin client is only bui
 
 // --- decisions ------------------------------------------------------------------
 
-test("a keep is stored with the binding the server computed, not one the client sent", async () => {
+function stored(input: DiscoveryCallDecisionInput) {
+  return {
+    outcome: "stored" as const,
+    decision: {
+      decisionKey: input.decisionKey,
+      decision: input.decision,
+      swapProductId: input.decision === "swap" ? input.swapProductId : null,
+      intakeItemId: input.intakeItemId,
+    },
+  }
+}
+
+test("a keep is stored with the binding the server computed; a product not in the step is refused", async () => {
   const written: DiscoveryCallDecisionInput[] = []
-  const response = await createDiscoveryDecisionsHandler(
+  const handler = createDiscoveryDecisionsHandler(
     baseDeps({
-      upsertDecision: async (input: DiscoveryCallDecisionInput) => {
+      setDecision: async (input: DiscoveryCallDecisionInput) => {
         written.push(input)
-        return {
-          decisionKey: input.decisionKey,
-          decision: input.decision,
-          swapProductId: null,
-          intakeItemId: input.intakeItemId,
-        }
+        return stored(input)
       },
     }),
-  )(
+  )
+  const named = await handler(
+    decisionRequest({ decisionKey: DECISION_KEY, intakeItemId: ids.item, decision: "keep" }),
+    params,
+  )
+  assert.equal(named.status, 200)
+  // A deployed old tab names only the step: fine while the step holds one product.
+  const oldTab = await handler(
+    decisionRequest({ decisionKey: DECISION_KEY, decision: "keep" }),
+    params,
+  )
+  assert.equal(oldTab.status, 200)
+  const foreign = await handler(
     decisionRequest({
       decisionKey: DECISION_KEY,
       decision: "keep",
-      // Not part of the contract, and ignored: the binding is the server's.
       intakeItemId: "50000000-0000-4000-8000-0000000000ff",
     }),
     params,
   )
+  assert.equal(foreign.status, 409)
+  assert.equal(await code(foreign), "unknown_item")
 
-  assert.equal(response.status, 200)
-  assert.deepEqual(written, [
-    {
-      intakeId: ids.intake,
-      decisionKey: DECISION_KEY,
-      decision: "keep",
-      swapProductId: null,
-      intakeItemId: ids.item,
-    },
-  ])
+  const expected = {
+    intakeId: ids.intake,
+    decisionKey: DECISION_KEY,
+    decision: "keep",
+    swapProductId: null,
+    intakeItemId: ids.item,
+    siblings: [],
+    expectedCategory: "shampoo",
+    expectedUsageRole: null,
+  }
+  assert.deepEqual(written, [expected, expected])
 })
 
 test("a swap must name a product the cockpit displayed for that very step", async () => {
   const written: DiscoveryCallDecisionInput[] = []
   const handler = createDiscoveryDecisionsHandler(
     baseDeps({
-      upsertDecision: async (input: DiscoveryCallDecisionInput) => {
+      setDecision: async (input: DiscoveryCallDecisionInput) => {
         written.push(input)
-        return {
-          decisionKey: input.decisionKey,
-          decision: input.decision,
-          swapProductId: input.swapProductId,
-          intakeItemId: input.intakeItemId,
-        }
+        return stored(input)
       },
     }),
   )
@@ -273,6 +289,7 @@ test("a swap must name a product the cockpit displayed for that very step", asyn
   const offered = await handler(
     decisionRequest({
       decisionKey: DECISION_KEY,
+      intakeItemId: ids.item,
       decision: "swap",
       swapProductId: ids.alternative,
     }),
@@ -281,7 +298,12 @@ test("a swap must name a product the cockpit displayed for that very step", asyn
   assert.equal(offered.status, 200)
 
   const stranger = await handler(
-    decisionRequest({ decisionKey: DECISION_KEY, decision: "swap", swapProductId: ids.stranger }),
+    decisionRequest({
+      decisionKey: DECISION_KEY,
+      intakeItemId: ids.item,
+      decision: "swap",
+      swapProductId: ids.stranger,
+    }),
     params,
   )
   assert.equal(stranger.status, 400)
@@ -296,7 +318,7 @@ test("a swap must name a product the cockpit displayed for that very step", asyn
 test("a decision key the Idealplan does not carry is refused", async () => {
   const response = await createDiscoveryDecisionsHandler(
     baseDeps({
-      upsertDecision: async () => {
+      setDecision: async () => {
         throw new Error("must not write an orphan decision")
       },
     }),
@@ -313,7 +335,7 @@ test("a malformed body is refused before anything is composed", async () => {
         composed += 1
         return readyModel()
       },
-      upsertDecision: async () => {
+      setDecision: async () => {
         throw new Error("must not write")
       },
     }),
@@ -325,12 +347,33 @@ test("a malformed body is refused before anything is composed", async () => {
     { decisionKey: DECISION_KEY, decision: "swap" },
     { decisionKey: DECISION_KEY, decision: "keep", swapProductId: ids.alternative },
     { decisionKey: DECISION_KEY, decision: "swap", swapProductId: "not-a-uuid" },
+    // „Weglassen" never names a swap target; a product is named by its uuid.
+    { decisionKey: DECISION_KEY, decision: "drop", swapProductId: ids.alternative },
+    { decisionKey: DECISION_KEY, decision: "keep", intakeItemId: "item-1" },
   ]) {
     const response = await handler(decisionRequest(body), params)
     assert.equal(response.status, 400, JSON.stringify(body))
     assert.equal(await code(response), "invalid_body")
   }
   assert.equal(composed, 0)
+})
+
+test("a draft intake takes decisions, as it always did — only finalising needs a submit", async () => {
+  const written: DiscoveryCallDecisionInput[] = []
+  const response = await createDiscoveryDecisionsHandler(
+    baseDeps({
+      loadIntake: async () => ({ ...submittedIntake, state: "draft", submittedAt: null }),
+      setDecision: async (input: DiscoveryCallDecisionInput) => {
+        written.push(input)
+        return stored(input)
+      },
+    }),
+  )(
+    decisionRequest({ decisionKey: DECISION_KEY, intakeItemId: ids.item, decision: "keep" }),
+    params,
+  )
+  assert.equal(response.status, 200)
+  assert.equal(written.length, 1)
 })
 
 test("decisions are frozen while the call is finalised", async () => {
@@ -341,7 +384,7 @@ test("decisions are frozen while the call is finalised", async () => {
         callFinalizedAt: "2026-09-22T12:00:00.000Z",
         finalizedSourceHash: "hash-1",
       }),
-      upsertDecision: async () => {
+      setDecision: async () => {
         throw new Error("must not write while finalised")
       },
     }),
@@ -355,7 +398,7 @@ test("a routine that cannot be composed refuses the write instead of guessing", 
     const response = await createDiscoveryDecisionsHandler(
       baseDeps({
         loadModel: async () => ({ status }),
-        upsertDecision: async () => {
+        setDecision: async () => {
           throw new Error("must not write without a routine")
         },
       }),

@@ -3,13 +3,14 @@ import { semanticHash } from "@/lib/personal-plan/routine/canonicalize"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product-identity"
 import type { ScanCatalogPresentationRow } from "@/lib/scan/product-presentation"
+import { compareProductFrequencies } from "@/lib/vocabulary/frequencies"
 
 import {
   DISCOVERY_STYLING_PRODUCT_TYPE,
   type DiscoveryProductType,
   type DiscoveryUsageRole,
 } from "./classify"
-import type { DiscoveryItemFrequency } from "./frequency"
+import { isKnownProductFrequency, type DiscoveryItemFrequency } from "./frequency"
 import type { DiscoveryHeatStylingV1 } from "./heat-styling"
 import { discoveryProductTitle } from "./product-label"
 
@@ -97,9 +98,10 @@ export const DISCOVERY_INTAKE_SOURCE_RANK: Record<DiscoveryIntakeItemSource, num
  *
  * - `research_pending` — no catalog product resolved yet (controller ruling: such an item
  *   gets no verdict and no binding). The UI renders this as „Noch in Recherche".
- * - `no_ideal_step` — resolved, but its category's ideal steps are already taken (or the
- *   Idealplan has no step for that category at all). The UI renders „kein Schritt im
- *   Idealplan".
+ * - `no_ideal_step` — resolved, but the Idealplan has no step for its category (or, for a
+ *   role-bound item, for its category and role). A same-category product whose step is
+ *   already taken is NOT unassigned (batch 9): it joins that step as a further entry. The UI
+ *   renders „kein Schritt im Idealplan".
  * - `category_unknown` — her usage is unknown („Weiß ich nicht", batch 5): nothing to bind
  *   it to until the cockpit sets it. The UI renders „Kategorie offen"; finalising is blocked
  *   while any item carries it.
@@ -170,6 +172,11 @@ export function describeDiscoveryIntakeItem(
   return DISCOVERY_SCANNED_PRODUCT_LABEL
 }
 
+/**
+ * One entry of a step (batch 9): a step holds one entry per product of hers bound to it —
+ * adjacent, in display order — or exactly one entry with `item: null` when she owns nothing
+ * for it. A step with 0–1 products therefore reads exactly as before batch 9.
+ */
 export type DiscoveryStepBinding = {
   step: DiscoveryIdealStep
   item: DiscoveryIntakeItem | null
@@ -217,11 +224,31 @@ function bindingOrder(left: DiscoveryIntakeItem, right: DiscoveryIntakeItem): nu
 }
 
 /**
- * Positional binding, per category (§4 step-binding rule).
+ * The order of her products within one step (batch 9, R2 — display order only, never a
+ * rule): the more often she uses it, the earlier; an unknown or unasked frequency after
+ * every known one; then the binding order.
+ */
+function entryOrder(left: DiscoveryIntakeItem, right: DiscoveryIntakeItem): number {
+  const leftKnown = isKnownProductFrequency(left.frequency) ? left.frequency : null
+  const rightKnown = isKnownProductFrequency(right.frequency) ? right.frequency : null
+  if (leftKnown && rightKnown) {
+    const byFrequency = compareProductFrequencies(rightKnown, leftKnown) ?? 0
+    if (byFrequency !== 0) return byFrequency
+  } else if (leftKnown || rightKnown) {
+    return leftKnown ? -1 : 1
+  }
+  return bindingOrder(left, right)
+}
+
+/**
+ * Positional binding, per category (§4 step-binding rule), plus the batch-9 extras.
  *
  * Steps keep their Idealplan order (renderedOrder × allowedRoles); items are ordered by
  * `bindingOrder` and handed to the steps of their own category one by one. A step with no
- * item left stays open; an item with no step left — and every item still in research —
+ * item left stays open. An item left over after that joins the FIRST step of its category
+ * (for a role-bound item: of its category and role) as a further entry — she uses several
+ * products there, and each gets its own verdict and decision (batch 9, R1). Only an item
+ * whose category (or role) has no step at all — and every item still in research —
  * surfaces as unassigned instead of disappearing.
  */
 export function reduceIntakeItemsToSteps(
@@ -282,18 +309,33 @@ export function reduceIntakeItemsToSteps(
     else queues.set(item.category, [item])
   }
 
-  const bindings = steps.map((step, index) => ({
-    step,
-    item: bound.get(index) ?? queues.get(step.category)?.shift() ?? null,
-  }))
+  const entries = steps.map((step, index) => {
+    const first = bound.get(index) ?? queues.get(step.category)?.shift() ?? null
+    return first ? [first] : []
+  })
+  // Batch 9: the leftovers join the first step of their category (and role).
+  const join = (item: DiscoveryIntakeItem, index: number) => {
+    if (index === -1) unassigned.push({ item, reason: "no_ideal_step" })
+    else entries[index]!.push(item)
+  }
   for (const item of ordered) {
-    if (bindingRole(item) && !taken.has(item.id)) {
-      unassigned.push({ item, reason: "no_ideal_step" })
-    }
+    const role = bindingRole(item)
+    if (!role || taken.has(item.id)) continue
+    join(
+      item,
+      steps.findIndex((step) => step.category === item.category && step.role === role),
+    )
   }
-  for (const queue of queues.values()) {
-    for (const item of queue) unassigned.push({ item, reason: "no_ideal_step" })
+  for (const [category, queue] of queues) {
+    const index = steps.findIndex((step) => step.category === category)
+    for (const item of queue) join(item, index)
   }
+
+  const bindings = steps.flatMap((step, index): DiscoveryStepBinding[] => {
+    const own = entries[index]!
+    if (own.length === 0) return [{ step, item: null }]
+    return [...own].sort(entryOrder).map((item) => ({ step, item }))
+  })
 
   return {
     bindings,
@@ -306,20 +348,36 @@ export function reduceIntakeItemsToSteps(
 /** One row of `public.discovery_call_decisions` as the read model sees it. */
 export type DiscoveryCallDecision = {
   decisionKey: string
-  decision: "keep" | "swap"
+  decision: "keep" | "swap" | "drop"
   swapProductId: string | null
+  /**
+   * The product the decision is about (batch 9: one decision per step AND product). `null`
+   * only for a step she owns nothing for — such a decision applies only while the step
+   * stays empty (P2-1).
+   */
   intakeItemId: string | null
 }
 
 /**
- * What the call made of one ideal step.
+ * What the call made of one entry of an ideal step (her product in it, or the empty step).
  *
  * - `kept` — Nick kept the participant's product for this step.
  * - `swapped` — Nick replaced it with `swapProduct`.
+ * - `dropped` — „Weglassen" (batch 9): she has several products in this step and leaves
+ *   this one out. Only reachable through a `drop` decision; the sheet files it under
+ *   „Brauchst du nicht mehr".
  * - `undecided` — the participant owns a product here and the call has not ruled yet.
  * - `ideal` — no owned product and no ruling: the Idealplan's own recommendation stands.
  */
-export type DiscoveryStepOutcome = "kept" | "swapped" | "ideal" | "undecided"
+export type DiscoveryStepOutcome = "kept" | "swapped" | "dropped" | "ideal" | "undecided"
+
+/** The composition's key for one decision: (step, product) — `null` = the empty step. */
+export function discoveryDecisionEntryKey(
+  decisionKey: string,
+  intakeItemId: string | null,
+): string {
+  return `${decisionKey}\u0000${intakeItemId ?? ""}`
+}
 
 export type DiscoveryRefinedStep = {
   step: DiscoveryIdealStep
@@ -418,21 +476,34 @@ export function composeDiscoveryRefinedRoutine(input: {
         })
       : describeDiscoveryIntakeItem(item, lineOf(item.productId))
   }
-  const decisionsByKey = new Map(input.decisions.map((entry) => [entry.decisionKey, entry]))
+  // One decision per (step, product) — batch 9. A decision about a product that no longer
+  // sits in that step, or an empty-step decision once a product binds there, matches nothing.
+  const decisionsByEntry = new Map(
+    input.decisions.map((entry) => [
+      discoveryDecisionEntryKey(entry.decisionKey, entry.intakeItemId),
+      entry,
+    ]),
+  )
   const swapProductsById = new Map(input.swapProducts.map((row) => [row.id, row]))
   const recommendationBrandsById = new Map(
     (input.recommendationProducts ?? []).map((row) => [row.id, row.brand] as const),
   )
 
+  // One refined entry per binding: a step with several of her products contributes one
+  // entry per product (adjacent, same `step`) — a step with 0–1 products exactly one, as
+  // before batch 9, so its object and its fingerprint are unchanged.
   const steps = reduction.bindings.map(({ step, item }): DiscoveryRefinedStep => {
-    const decision = decisionsByKey.get(step.decisionKey) ?? null
+    const decision =
+      decisionsByEntry.get(discoveryDecisionEntryKey(step.decisionKey, item?.id ?? null)) ?? null
     // A decision may legitimately exist without a bound item (migration comment on
     // `discovery_call_decisions.intake_item_id`): the step is still decided, it just
     // replaces nothing the participant owns.
     const outcome: DiscoveryStepOutcome = decision
       ? decision.decision === "swap"
         ? "swapped"
-        : "kept"
+        : decision.decision === "drop"
+          ? "dropped"
+          : "kept"
       : item
         ? "undecided"
         : "ideal"

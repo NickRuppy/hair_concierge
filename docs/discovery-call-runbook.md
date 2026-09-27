@@ -322,8 +322,9 @@ Datenbank-Aufruf (`discovery_admin_set_intake_item_usage`):
 - ein „benutzt sie nicht" in der Ziel-Kategorie löschen;
 - bleibt die alte Kategorie ohne Produkt, dort ein „benutzt sie nicht" eintragen — ihr „Stimmt so –
   abschicken" hat die ganze Liste bestätigt, die alte Kategorie ist also ehrlich leer;
-- Entscheidungen löschen, die an diesem Produkt hingen, und die Entscheidungen jedes Schritts, dessen
-  Produkt sich durch die Verschiebung ändert (auch ein verdrängtes). Diese Schritte neu entscheiden.
+- Entscheidungen löschen, die an diesem Produkt hingen, und alle Entscheidungen jedes Schritts, dessen
+  Produkte sich durch die Verschiebung ändern (der alte, der neue und ein verdrängter — auch die
+  Geschwister darin). Diese Schritte neu entscheiden.
 
 Abgelehnt wird: solange finalisiert (`409 finalized` — „Erst Finalisierung aufheben"), solange die
 Checkliste ein Entwurf ist (`409 not_submitted`), ein Produkttyp für ein Produkt mit bekanntem Typ
@@ -339,7 +340,10 @@ Katalog führt das Produkt in einer anderen Kategorie."
 
 **Bindung.** Ein Produkt mit Öl-Rolle (bzw. Kopfhaut-Öl) steht genau am Schritt dieser Rolle —
 gibt es den im Idealplan nicht, steht es unter „kein Schritt im Idealplan". Alles andere wird wie
-bisher der Reihe nach auf die Schritte seiner Kategorie verteilt.
+bisher der Reihe nach auf die Schritte seiner Kategorie verteilt. Bleibt danach ein Produkt übrig
+(zwei Shampoos, drei Leave-ins; Batch 9), steht es als weiteres Produkt im ersten Schritt seiner
+Kategorie (bei einer Rolle: im Schritt dieser Rolle), sortiert nach ihrer Häufigkeit. Unter „kein
+Schritt im Idealplan" steht nur noch, wofür der Idealplan gar keinen Schritt hat.
 
 ## 4. Der Call
 
@@ -352,7 +356,10 @@ bisher der Reihe nach auf die Schritte seiner Kategorie verteilt.
 3. **Pro Schritt**: oben die Erklärung in den Worten des Idealplans — „Warum dieser Schritt",
    „Produkttyp", „Worauf es ankommt", „Warum das zu ihrem Haar passt", „Wie oft · wann". Darunter
    das Produkt der Teilnehmerin mit dem Urteil des Scanners und den Alternativen, dazu genau eine
-   Entscheidung — **behalten** oder **tauschen**. Ihr Produkt und jede Alternative tragen die
+   Entscheidung — **behalten** oder **tauschen**. Hat sie mehrere Produkte im Schritt (Batch 9),
+   steht jedes einzeln darunter, mit ihrer Häufigkeit, eigenem Urteil und eigener Entscheidung;
+   nur dort gibt es zusätzlich **„Weglassen"** — nie für das letzte Produkt im Schritt, und zwei
+   Produkte eines Schritts tauschen nie auf dasselbe Ziel. Ihr Produkt und jede Alternative tragen die
    Vergleichstabelle der iOS-Ergebniskarte (Batch 6): pro Eigenschaft eine Zeile mit Statusscheibe
    (✓ passt, ! mit Einschränkung, ✕ passt nicht, – nicht einschätzbar), dem Wert des Produkts in
    der Statusfarbe und ihrem Ziel in Plum („PRODUKT · DEIN ZIEL"); die Alternativen in der kompakten
@@ -400,7 +407,9 @@ erlaubt, weil der Versand ohnehin von Hand passiert.
 danach gibt der Knopf **„PDF öffnen"** den Weg auf `/admin/beratung/<enrollmentId>/pdf` frei; ohne
 Finalisierung leitet die Seite ins Cockpit zurück.
 
-1. Dokument prüfen. Unentschiedene Schritte stehen als „Noch offen – Empfehlung folgt". Benutzt sie
+1. Dokument prüfen. Unentschiedene Schritte stehen als „Noch offen – Empfehlung folgt". Mehrere
+   Produkte in einem Schritt (Batch 9) stehen untereinander, jedes mit ihrer Häufigkeit; ein
+   weggelassenes steht unter „Brauchst du nicht mehr". Benutzt sie
    ein Produkt anders, als es ist, steht kurz dahinter „· als Haarmaske benutzt" (am Schritt, im
    Regal und in den Listen). Dieser Zusatz ist Teil des Fingerabdrucks; alte Kachel-Dokumente haben
    ihn nie und bleiben unverändert.
@@ -540,8 +549,11 @@ Zwei Stellen, an denen Discovery-Teilnehmerinnen in Zahlen auftauchen, die nicht
   die geprüfte Anwendung („Anwendung fehlt für …"; siehe 4.5).
 - **„Kategorie ändern" ist ausgegraut / „Erst Finalisierung aufheben."** — der Call ist finalisiert.
   Aufheben, korrigieren, betroffene Schritte neu entscheiden, neu finalisieren.
-- **Entscheidung lässt sich nicht speichern (`409`)** — der Call ist finalisiert. Erst die
-  Finalisierung aufheben.
+- **Entscheidung lässt sich nicht speichern (`409`)** — der Call ist finalisiert (`finalized`): erst
+  die Finalisierung aufheben. Oder die Seite ist veraltet (`unknown_item`, `item_required`,
+  `stale_binding` — ein Produkt wurde inzwischen verschoben): neu laden. „Weglassen" wird abgelehnt, wenn es das letzte Produkt im Schritt wäre (`drop_last`), ein
+  Tausch, wenn ein anderes Produkt desselben Schritts schon auf dieses Ziel getauscht ist
+  (`swap_taken`).
 - **PDF öffnet das Cockpit statt des Dokuments** — nicht finalisiert, die Quelle (Marken,
   Anwendung) ist gerade nicht lesbar, oder der aktuelle Stand würde nicht finalisiert werden
   (Kategorie offen, wieder in Recherche, Anwendung fehlt). Der Drift-Banner gilt nur für

@@ -280,7 +280,7 @@ test("an item with no resolved product never binds and never gets a step — it 
   )
 })
 
-test("surplus items past the category's last step are unassigned, not silently dropped", () => {
+test("surplus items past the category's last step join its first step; a stepless category is unassigned", () => {
   const steps = oilSteps()
   const reduction = reduceIntakeItemsToSteps(steps, [
     item({ id: "item-1", productId: "p1", createdAt: "2026-09-20T01:00:00.000Z" }),
@@ -290,13 +290,21 @@ test("surplus items past the category's last step are unassigned, not silently d
     item({ id: "item-5", category: "mask", productId: "p5" }),
   ])
 
+  // Batch 9: nothing is silently dropped, and nothing is filed as „not needed" either — the
+  // fourth oil sits in the first oil step, next to the first.
+  assert.deepEqual(
+    reduction.bindings.map((binding) => [binding.step.role, binding.item?.id ?? null]),
+    [
+      ["pre_wash_fibre_treatment", "item-1"],
+      ["pre_wash_fibre_treatment", "item-4"],
+      ["leave_on_fibre_conditioning", "item-2"],
+      ["dry_finish", "item-3"],
+    ],
+  )
   assert.deepEqual(
     reduction.unassignedIntakeProducts.map((entry) => [entry.item.id, entry.reason]),
-    [
-      ["item-4", "no_ideal_step"],
-      // A whole category the Idealplan has no step for lands here too.
-      ["item-5", "no_ideal_step"],
-    ],
+    // A whole category the Idealplan has no step for stays outside.
+    [["item-5", "no_ideal_step"]],
   )
 })
 
@@ -362,8 +370,12 @@ test("composed outcomes: kept, swapped, undecided for an owned product, ideal fo
     steps,
     items,
     decisions: [
-      callDecision(steps[0]!.decisionKey),
-      callDecision(steps[1]!.decisionKey, { decision: "swap", swapProductId: "swap-1" }),
+      callDecision(steps[0]!.decisionKey, { intakeItemId: "item-a" }),
+      callDecision(steps[1]!.decisionKey, {
+        intakeItemId: "item-b",
+        decision: "swap",
+        swapProductId: "swap-1",
+      }),
     ],
     swapProducts: [swapRow("swap-1")],
   })
@@ -418,7 +430,13 @@ test("a swap whose catalog row was not supplied keeps the outcome but carries no
   const routine = composeDiscoveryRefinedRoutine({
     steps,
     items: [item({ id: "item-a", productId: "product-a" })],
-    decisions: [callDecision(steps[0]!.decisionKey, { decision: "swap", swapProductId: "gone" })],
+    decisions: [
+      callDecision(steps[0]!.decisionKey, {
+        intakeItemId: "item-a",
+        decision: "swap",
+        swapProductId: "gone",
+      }),
+    ],
     swapProducts: [],
   })
 
@@ -465,8 +483,12 @@ test("sourceHash is order-independent and changes when the routine's content cha
     item({ id: "item-b", productId: "product-b", createdAt: "2026-09-20T02:00:00.000Z" }),
   ]
   const decisions = [
-    callDecision(steps[0]!.decisionKey),
-    callDecision(steps[1]!.decisionKey, { decision: "swap", swapProductId: "swap-1" }),
+    callDecision(steps[0]!.decisionKey, { intakeItemId: "item-a" }),
+    callDecision(steps[1]!.decisionKey, {
+      intakeItemId: "item-b",
+      decision: "swap",
+      swapProductId: "swap-1",
+    }),
   ]
   const swapProducts = [swapRow("swap-1")]
 
@@ -483,7 +505,7 @@ test("sourceHash is order-independent and changes when the routine's content cha
   const driftedDecision = composeDiscoveryRefinedRoutine({
     steps,
     items,
-    decisions: [callDecision(steps[0]!.decisionKey)],
+    decisions: [callDecision(steps[0]!.decisionKey, { intakeItemId: "item-a" })],
     swapProducts,
   })
   assert.notEqual(base.sourceHash, driftedDecision.sourceHash)
@@ -494,13 +516,25 @@ test("sourceHash is order-independent and changes when the routine's content cha
   const swapToA = composeDiscoveryRefinedRoutine({
     steps,
     items,
-    decisions: [callDecision(steps[0]!.decisionKey, { decision: "swap", swapProductId: "swap-a" })],
+    decisions: [
+      callDecision(steps[0]!.decisionKey, {
+        intakeItemId: "item-a",
+        decision: "swap",
+        swapProductId: "swap-a",
+      }),
+    ],
     swapProducts: [],
   })
   const swapToB = composeDiscoveryRefinedRoutine({
     steps,
     items,
-    decisions: [callDecision(steps[0]!.decisionKey, { decision: "swap", swapProductId: "swap-b" })],
+    decisions: [
+      callDecision(steps[0]!.decisionKey, {
+        intakeItemId: "item-a",
+        decision: "swap",
+        swapProductId: "swap-b",
+      }),
+    ],
     swapProducts: [],
   })
   assert.equal(swapToA.steps[0]!.swapProduct, null)
@@ -556,7 +590,7 @@ test("the rendered recommendation brand is part of sourceHash, and only where it
 
   // A kept step does not print the recommendation, so its brand must not move the hash.
   const keptItems = [item({ id: "item-a", productId: "product-a" })]
-  const keptDecisions = [callDecision(steps[0]!.decisionKey)]
+  const keptDecisions = [callDecision(steps[0]!.decisionKey, { intakeItemId: "item-a" })]
   const keptA = composeDiscoveryRefinedRoutine({
     steps,
     items: keptItems,
@@ -624,7 +658,7 @@ test("kept, swapped, recommended and unassigned labels carry the product line", 
       productNameText: "Repair Öl",
       createdAt: "2026-09-20T02:00:00.000Z",
     }),
-    // A fourth oil with no step left: unassigned, printed from her own words + the line.
+    // A fourth oil with no step of its own: printed from her own words + the line.
     item({
       id: "item-d",
       productId: "product-d",
@@ -650,8 +684,12 @@ test("kept, swapped, recommended and unassigned labels carry the product line", 
     steps,
     items,
     decisions: [
-      callDecision(steps[0]!.decisionKey),
-      callDecision(steps[1]!.decisionKey, { decision: "swap", swapProductId: "swap-1" }),
+      callDecision(steps[0]!.decisionKey, { intakeItemId: "item-a" }),
+      callDecision(steps[1]!.decisionKey, {
+        intakeItemId: "item-b",
+        decision: "swap",
+        swapProductId: "swap-1",
+      }),
     ],
     swapProducts: [{ ...swapRow("swap-1"), brand: "Wella", name: "Luminous Öl" }],
     recommendationProducts: [{ ...swapRow("ideal-3"), brand: "Garnier" }],
@@ -660,15 +698,16 @@ test("kept, swapped, recommended and unassigned labels carry the product line", 
     productLines,
   })
 
-  // Only three oil steps: item-a is kept, item-b swapped, the third step binds item-d.
-  assert.equal(routine.steps[0]!.ownedLabel, "Garnier Wahre Schätze Honig Schätze Öl")
-  assert.equal(routine.steps[1]!.ownedLabel, "Balea Repair Öl")
-  assert.equal(routine.steps[1]!.swapProductLabel, "Wella Oil Reflections Luminous Öl")
-  assert.equal(routine.steps[2]!.outcome, "undecided")
-  assert.deepEqual(
-    routine.unassignedIntakeProducts.map((entry) => entry.label),
-    ["Nivea Repair & Care Pflege Öl"],
-  )
+  // Only three oil steps: item-a is kept, item-b swapped, the third step binds item-d — and
+  // the fourth oil joins the first oil step as a further entry (batch 9), labelled the same.
+  const entry = (id: string) => routine.steps.find((candidate) => candidate.item?.id === id)!
+  assert.equal(entry("item-a").ownedLabel, "Garnier Wahre Schätze Honig Schätze Öl")
+  assert.equal(entry("item-b").ownedLabel, "Balea Repair Öl")
+  assert.equal(entry("item-b").swapProductLabel, "Wella Oil Reflections Luminous Öl")
+  assert.equal(entry("item-d").outcome, "undecided")
+  assert.equal(entry("item-e").step.decisionKey, steps[0]!.decisionKey)
+  assert.equal(entry("item-e").ownedLabel, "Nivea Repair & Care Pflege Öl")
+  assert.deepEqual(routine.unassignedIntakeProducts, [])
 
   // An open step prints the Idealplan's pick with its line.
   const open = composeDiscoveryRefinedRoutine({
@@ -692,7 +731,7 @@ test("a product line that changes what the paper prints moves sourceHash", () =>
     composeDiscoveryRefinedRoutine({
       steps,
       items: keptItems,
-      decisions: [callDecision(steps[0]!.decisionKey)],
+      decisions: [callDecision(steps[0]!.decisionKey, { intakeItemId: "item-a" })],
       swapProducts: [],
       ownedProducts: [{ itemId: "item-a", brand: "Marke", name: "Öl" }],
       productLines: new Map(line ? [["product-a", line]] : []),
@@ -706,7 +745,7 @@ test("a product line that changes what the paper prints moves sourceHash", () =>
   const renamed = composeDiscoveryRefinedRoutine({
     steps,
     items: keptItems,
-    decisions: [callDecision(steps[0]!.decisionKey)],
+    decisions: [callDecision(steps[0]!.decisionKey, { intakeItemId: "item-a" })],
     swapProducts: [],
     ownedProducts: [{ itemId: "item-a", brand: "Marke", name: "Neues Öl" }],
   })
@@ -716,7 +755,13 @@ test("a product line that changes what the paper prints moves sourceHash", () =>
     composeDiscoveryRefinedRoutine({
       steps,
       items: keptItems,
-      decisions: [callDecision(steps[0]!.decisionKey, { decision: "swap", swapProductId: "s" })],
+      decisions: [
+        callDecision(steps[0]!.decisionKey, {
+          intakeItemId: "item-a",
+          decision: "swap",
+          swapProductId: "s",
+        }),
+      ],
       swapProducts: [swapRow("s")],
       productLines: new Map(line ? [["s", line]] : []),
     })

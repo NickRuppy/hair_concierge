@@ -254,19 +254,23 @@ export async function loadDiscoveryCallDecisions(
     .eq("intake_id", intakeId)
     .order("decision_key", { ascending: true })
   if (error) throw error
-  return (
-    (data as Array<{
-      decision_key: string
-      decision: string
-      swap_product_id: string | null
-      intake_item_id: string | null
-    }> | null) ?? []
-  ).map((row) => ({
+  return ((data as DecisionRow[] | null) ?? []).map(projectCallDecision)
+}
+
+type DecisionRow = {
+  decision_key: string
+  decision: string
+  swap_product_id: string | null
+  intake_item_id: string | null
+}
+
+function projectCallDecision(row: DecisionRow): DiscoveryCallDecision {
+  return {
     decisionKey: row.decision_key,
-    decision: row.decision === "swap" ? "swap" : "keep",
+    decision: row.decision === "swap" ? "swap" : row.decision === "drop" ? "drop" : "keep",
     swapProductId: row.swap_product_id,
     intakeItemId: row.intake_item_id,
-  }))
+  }
 }
 
 const loadSwapPresentationRows = createPresentationRowLoader("discovery_swap_lookup_failed")
@@ -676,6 +680,25 @@ export type DiscoveryCockpitStepView = {
   /** What the participant owns for this step, as the cockpit names it. */
   ownedLabel: string | null
   intakeItemId: string | null
+  /** Her product's catalog product (the one a kept entry prints); null for an empty step. */
+  ownedProductId: string | null
+  /**
+   * Her product's usage role as composed (batch 9): the decision write re-checks it — with
+   * `category` — under the intake lock, so a concurrent usage correction cannot slip past.
+   */
+  ownedUsageRole: DiscoveryUsageRole | null
+  /**
+   * Batch 9: how many entries this step has — one per product of hers in it (adjacent in
+   * `steps`, same `decisionKey`), or 1 for a step she owns nothing or one product for.
+   */
+  stepEntryCount: number
+  /** „3–4× pro Woche" — how often she uses THIS product (batch 7); null when not asked. */
+  ownedFrequencyLabel: string | null
+  /**
+   * „Weglassen" may be chosen (R3): she has ≥2 products in this step, this is one of them,
+   * and at least one sibling is not dropped — a step is never left empty.
+   */
+  canDrop: boolean
   /**
    * No product bound AND the participant never answered this category at all — not the
    * same as „benutze ich nicht". Only meaningful once the checklist is submitted; before
@@ -886,8 +909,16 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
 
   const identities = model.productIdentities ?? new Map<string, DiscoveryProductIdentity>()
   const unanswered = new Set(model.routine.unansweredCategories)
+  // Batch 9: a step's entries (one per product of hers in it), by decision key.
+  const entriesByKey = new Map<string, DiscoveryRefinedRoutine["steps"]>()
+  for (const entry of model.routine.steps) {
+    const siblings = entriesByKey.get(entry.step.decisionKey)
+    if (siblings) siblings.push(entry)
+    else entriesByKey.set(entry.step.decisionKey, [entry])
+  }
   const steps = model.routine.steps.map((refined): DiscoveryCockpitStepView => {
     const { step, item } = refined
+    const stepEntries = entriesByKey.get(step.decisionKey) ?? [refined]
     const verdict = item ? (verdictsByItemId.get(item.id) ?? null) : null
     const alternatives =
       verdict?.status === "verdict" && verdict.payload.kind === "in_catalog"
@@ -900,8 +931,11 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
     )
     const ideal = idealRecommendationOption(step, brandsByProductId, identities)
     // The ruled fallback: with no displayed alternatives the only swap target the cockpit
-    // can honestly offer is the Idealplan's own pick — and never the product already in
-    // the participant's bathroom.
+    // can honestly offer is the Idealplan's own pick — and never a product already in the
+    // participant's bathroom for this step (any of her products in it, batch 9).
+    const ownedInStep = new Set(
+      stepEntries.flatMap((entry) => (entry.item?.productId ? [entry.item.productId] : [])),
+    )
     const swapOptions =
       alternatives.length > 0
         ? alternatives.map((alternative) =>
@@ -911,7 +945,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
               alternativeRows.get(alternative.productId) ?? null,
             ),
           )
-        : ideal && ideal.productId !== item?.productId
+        : ideal && !ownedInStep.has(ideal.productId)
           ? [ideal]
           : []
 
@@ -928,6 +962,14 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       // Every printed label comes from the composition, which fingerprints it.
       ownedLabel: refined.ownedLabel,
       intakeItemId: item?.id ?? null,
+      ownedProductId: item?.productId ?? null,
+      ownedUsageRole: item?.usageRole ?? null,
+      stepEntryCount: stepEntries.length,
+      ownedFrequencyLabel: item?.frequency ? DISCOVERY_FREQUENCY_LABELS[item.frequency] : null,
+      canDrop:
+        item !== null &&
+        stepEntries.length >= 2 &&
+        stepEntries.some((entry) => entry !== refined && entry.outcome !== "dropped"),
       unanswered: !item && unanswered.has(step.category),
       verdict: verdict
         ? verdict.status === "verdict"
@@ -981,14 +1023,18 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
 }
 
 /**
- * What a `swap` on this step may name. Empty means the step offers no swap at all, so
- * every swap for it is refused — the call can still keep, or un-finalize and think again.
+ * What a `swap` of this product (or of the empty step, `intakeItemId` null) may name. Empty
+ * means the entry offers no swap at all, so every swap for it is refused — the call can
+ * still keep, or un-finalize and think again. `null`: no such entry in the view.
  */
 export function discoveryCockpitSwapOptionIds(
   view: DiscoveryCockpitView,
   decisionKey: string,
+  intakeItemId: string | null,
 ): string[] | null {
-  const step = view.steps.find((entry) => entry.decisionKey === decisionKey)
+  const step = view.steps.find(
+    (entry) => entry.decisionKey === decisionKey && entry.intakeItemId === intakeItemId,
+  )
   if (!step) return null
   return step.swapOptions.map((option) => option.productId)
 }
@@ -998,48 +1044,95 @@ export function discoveryCockpitSwapOptionIds(
 export type DiscoveryCallDecisionInput = {
   intakeId: string
   decisionKey: string
-  decision: "keep" | "swap"
+  decision: "keep" | "swap" | "drop"
   swapProductId: string | null
+  /** The product the decision is about, from the SERVER's composition; null = empty step. */
   intakeItemId: string | null
+  /**
+   * The step's other products as the server composed them, each with ITS OWN usage — the
+   * drop invariant counts a sibling only while its usage is still this one (under the lock).
+   */
+  siblings: Array<{
+    itemId: string
+    category: PersonalPlanCategory
+    usageRole: DiscoveryUsageRole | null
+  }>
+  /**
+   * The target's usage (category, role) as the server composed it — re-checked under the
+   * lock (`stale_binding`). Both null for an empty step.
+   */
+  expectedCategory: PersonalPlanCategory | null
+  expectedUsageRole: DiscoveryUsageRole | null
 }
 
+export type DiscoveryCallDecisionOutcome =
+  | "not_found"
+  | "finalized"
+  | "item_not_found"
+  | "stale_binding"
+  | "drop_last"
+  | "swap_taken"
+  | "stored"
+
+export type DiscoveryCallDecisionResult =
+  | { outcome: "stored"; decision: DiscoveryCallDecision }
+  | { outcome: Exclude<DiscoveryCallDecisionOutcome, "stored"> }
+
+const DECISION_OUTCOMES: readonly DiscoveryCallDecisionOutcome[] = [
+  "not_found",
+  "finalized",
+  "item_not_found",
+  "stale_binding",
+  "drop_last",
+  "swap_taken",
+  "stored",
+]
+
 /**
- * One row per (intake, decision key) — the call changes its mind by overwriting, not by
- * accumulating. `intake_item_id` is written from the SERVER's binding, never from the
- * request: the client names a step, not which of the participant's products sits in it.
+ * One row per (intake, step, product) — the call changes its mind by overwriting, not by
+ * accumulating. ONE call to `discovery_admin_set_call_decision` (migration 20260927120000):
+ * under the same intake row lock as the usage correction it refuses a finalised intake
+ * (a draft is decidable, as before), re-checks the composed binding (`stale_binding`),
+ * keeps a step from being dropped empty (`drop_last`, counting only siblings still in the
+ * step) and two products of one step from swapping to the same product (`swap_taken`),
+ * then upserts.
  */
-export async function upsertDiscoveryCallDecision(
+export async function setDiscoveryCallDecision(
   input: DiscoveryCallDecisionInput,
   client: DiscoveryCockpitAdminClient,
-): Promise<DiscoveryCallDecision> {
-  const { data, error } = await client
-    .from(DECISIONS_TABLE)
-    .upsert(
-      {
-        intake_id: input.intakeId,
-        decision_key: input.decisionKey,
-        decision: input.decision,
-        swap_product_id: input.decision === "swap" ? input.swapProductId : null,
-        intake_item_id: input.intakeItemId,
-      },
-      { onConflict: "intake_id,decision_key" },
-    )
-    .select(DECISION_COLUMNS)
-    .maybeSingle()
+): Promise<DiscoveryCallDecisionResult> {
+  const { data, error } = await client.rpc("discovery_admin_set_call_decision", {
+    target_intake_id: input.intakeId,
+    target_decision_key: input.decisionKey,
+    target_item_id: input.intakeItemId,
+    expected_category: input.expectedCategory,
+    expected_usage_role: input.expectedUsageRole,
+    new_decision: input.decision,
+    new_swap_product_id: input.decision === "swap" ? input.swapProductId : null,
+    siblings: input.siblings.map((sibling) => ({
+      id: sibling.itemId,
+      category: sibling.category,
+      usage_role: sibling.usageRole,
+    })),
+  })
   if (error) throw error
-  const row =
-    (data as {
-      decision_key: string
-      decision: string
-      swap_product_id: string | null
-      intake_item_id: string | null
-    } | null) ?? null
-  if (!row) throw new Error("Discovery call decision could not be stored")
+  const row = (data ?? {}) as Partial<DecisionRow> & { outcome?: string }
+  const outcome = row.outcome as DiscoveryCallDecisionOutcome
+  if (!DECISION_OUTCOMES.includes(outcome)) {
+    throw new Error("discovery_call_decision_unexpected_outcome")
+  }
+  if (outcome !== "stored") return { outcome }
+  if (typeof row.decision_key !== "string" || typeof row.decision !== "string") {
+    throw new Error("Discovery call decision could not be stored")
+  }
   return {
-    decisionKey: row.decision_key,
-    decision: row.decision === "swap" ? "swap" : "keep",
-    swapProductId: row.swap_product_id,
-    intakeItemId: row.intake_item_id,
+    outcome,
+    decision: projectCallDecision({
+      decision_key: row.decision_key,
+      decision: row.decision,
+      swap_product_id: row.swap_product_id ?? null,
+      intake_item_id: row.intake_item_id ?? null,
+    }),
   }
 }
 
@@ -1107,19 +1200,31 @@ function composedItems(model: DiscoveryCockpitModel): DiscoveryIntakeItem[] {
   ]
 }
 
+/** Decision key → the sorted ids of her products in that step (batch 9: a set per step). */
+function stepItemSets(
+  bindings: ReadonlyArray<{ step: DiscoveryIdealStep; item: DiscoveryIntakeItem | null }>,
+) {
+  const sets = new Map<string, string[]>()
+  for (const { step, item } of bindings) {
+    const ids = sets.get(step.decisionKey) ?? []
+    if (item) ids.push(item.id)
+    sets.set(step.decisionKey, ids)
+  }
+  return new Map([...sets].map(([key, ids]) => [key, [...ids].sort().join(",")]))
+}
+
 /**
- * F3 — decisions follow the item: the decision keys of every step whose bound item a usage
- * change would change (the item's own old step, the step it lands on, and any step whose
- * item it displaces). Decisions that reference the moved item itself are cleared by id in
- * the same database call; these keys cover the rest. Pure.
+ * F3 — decisions follow the item: the decision keys of every step whose SET of bound
+ * products a usage change would change (the item's own old step, the step it lands on, and
+ * any step it displaces or joins). Conservative (batch 9): the siblings of a changed step are
+ * re-decided too. Decisions that reference the moved item itself are cleared by id in the
+ * same database call; these keys cover the rest. Pure.
  */
 export function discoveryStaleDecisionKeysForUsageChange(
   model: DiscoveryCockpitModel,
   change: DiscoveryItemUsageChange,
 ): string[] {
-  const before = new Map(
-    model.routine.steps.map((entry) => [entry.step.decisionKey, entry.item?.id ?? null] as const),
-  )
+  const before = stepItemSets(model.routine.steps)
   const items = composedItems(model).map((item): DiscoveryIntakeItem => {
     if (item.id !== change.itemId) return item
     const moved: DiscoveryIntakeItem = { ...item, category: change.category }
@@ -1130,12 +1235,10 @@ export function discoveryStaleDecisionKeysForUsageChange(
     if (change.productType === DISCOVERY_STYLING_PRODUCT_TYPE) moved.productSubmissionId = null
     return moved
   })
-  const after = reduceIntakeItemsToSteps(model.steps, items).bindings
-  return after
-    .filter(
-      (binding) => (binding.item?.id ?? null) !== (before.get(binding.step.decisionKey) ?? null),
-    )
-    .map((binding) => binding.step.decisionKey)
+  const after = stepItemSets(reduceIntakeItemsToSteps(model.steps, items).bindings)
+  return [...after]
+    .filter(([key, ids]) => ids !== (before.get(key) ?? ""))
+    .map(([key]) => key)
     .sort()
 }
 

@@ -120,7 +120,8 @@ const items: DiscoveryIntakeItem[] = [
     productNameText: "Alt",
     createdAt: "2026-09-20T10:01:00.000Z",
   }),
-  // A second shampoo: no step left for it → „Brauchst du nicht mehr".
+  // A second shampoo: it joins the shampoo step (batch 9) and the call leaves it out
+  // („Weglassen") → „Brauchst du nicht mehr".
   item({
     id: "i-extra",
     productId: ids.extraShampoo,
@@ -132,6 +133,7 @@ const items: DiscoveryIntakeItem[] = [
 
 const decisions: DiscoveryCallDecision[] = [
   { decisionKey: "shampoo", decision: "keep", swapProductId: null, intakeItemId: "i-shampoo" },
+  { decisionKey: "shampoo", decision: "drop", swapProductId: null, intakeItemId: "i-extra" },
   {
     decisionKey: "conditioner",
     decision: "swap",
@@ -169,7 +171,7 @@ function compose(productImages?: ReadonlyMap<string, string>) {
 
 test("the composition carries each printed product's packshot — and only where it prints", () => {
   const routine = compose(ALL_IMAGES)
-  const [shampoo, conditioner, leaveIn] = routine.steps
+  const [shampoo, extra, conditioner, leaveIn] = routine.steps
   // kept: her product's image.
   assert.equal(shampoo?.ownedImageUrl, IMAGE.keptShampoo)
   // swapped: the new product's image, and her old one for the shelf.
@@ -180,9 +182,10 @@ test("the composition carries each printed product's packshot — and only where
   // Not printed → not carried.
   assert.ok(!("recommendationImageUrl" in shampoo!))
   assert.ok(!("swapProductImageUrl" in shampoo!))
-  // „Brauchst du nicht mehr".
-  const extra = routine.unassignedIntakeProducts.find((entry) => entry.item.id === "i-extra")
-  assert.equal(extra?.imageUrl, IMAGE.extraShampoo)
+  // „Brauchst du nicht mehr": the dropped shampoo carries its own packshot.
+  assert.equal(extra?.item?.id, "i-extra")
+  assert.equal(extra?.outcome, "dropped")
+  assert.equal(extra?.ownedImageUrl, IMAGE.extraShampoo)
 })
 
 test("no images → the exact hash of the composition without the image input (legacy-stable)", () => {

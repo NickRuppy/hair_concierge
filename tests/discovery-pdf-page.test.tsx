@@ -235,6 +235,13 @@ const decisions: DiscoveryCallDecision[] = [
     swapProductId: ids.conditionerSwap,
     intakeItemId: ids.conditionerItem,
   },
+  // Her second shampoo shares the shampoo step (batch 9); the call leaves it out.
+  {
+    decisionKey: shampooStep.decisionKey,
+    decision: "drop",
+    swapProductId: null,
+    intakeItemId: ids.secondShampooItem,
+  },
 ]
 
 const swapProducts: ScanCatalogPresentationRow[] = [
@@ -545,7 +552,7 @@ test("the shelf says what happens to every product she brought", async () => {
   assert.ok(markup.includes("Elvital Öl Magique"))
   assert.ok(markup.includes("Dazu melden wir uns noch."))
 
-  // A product with no step in the Idealroutine leaves the routine, and says so plainly.
+  // A product the call left out („Weglassen") leaves the routine, and says so plainly.
   assert.ok(markup.includes("Brauchst du nicht mehr"))
   assert.ok(markup.includes("Balea Repair Shampoo"))
 

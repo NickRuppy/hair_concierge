@@ -39,6 +39,7 @@ import { discoveryUsageDifferenceLabel } from "./usage-options"
 const COL_PRODUCT = "Ihr Produkt"
 const COL_DECISION = "Entscheidung"
 const KEEP_LABEL = "Behalten"
+const DROP_LABEL = "Weglassen"
 const KEEP_EMPTY_LABEL = "Ohne Produkt weiter"
 const KEEP_EMPTY_HINT = "Schritt bleibt offen."
 const SWAP_PREFIX = "Tauschen zu "
@@ -98,12 +99,32 @@ const VERDICT_FAILURE_COPY: Record<Exclude<DiscoveryVerdictStatus, "verdict">, s
   unavailable: "Bewertung gerade nicht verfügbar.",
 }
 
-type Selection = { decision: "keep" | "swap"; swapProductId: string | null } | null
+type Selection = { decision: "keep" | "swap" | "drop"; swapProductId: string | null } | null
 
 function initialSelection(step: DiscoveryCockpitStepView): Selection {
   if (step.outcome === "kept") return { decision: "keep", swapProductId: null }
   if (step.outcome === "swapped") return { decision: "swap", swapProductId: step.swapProductId }
+  if (step.outcome === "dropped") return { decision: "drop", swapProductId: null }
   return null
+}
+
+/**
+ * One decision per (step, product) (batch 9, Codex P2-2): selection state, radio group and
+ * React key are keyed per entry, so two products of one step never share a radio group.
+ */
+function entryKey(step: Pick<DiscoveryCockpitStepView, "decisionKey" | "intakeItemId">): string {
+  return `${step.decisionKey}:${step.intakeItemId ?? "-"}`
+}
+
+/** The view's entries grouped into their steps, in routine order (adjacent by construction). */
+function groupSteps(steps: DiscoveryCockpitStepView[]): DiscoveryCockpitStepView[][] {
+  const groups: DiscoveryCockpitStepView[][] = []
+  for (const step of steps) {
+    const last = groups.at(-1)
+    if (last && last[0]!.decisionKey === step.decisionKey) last.push(step)
+    else groups.push([step])
+  }
+  return groups
 }
 
 /**
@@ -148,7 +169,8 @@ export function discoveryFinalizeWriteOutcome(
 
 function selectionValue(selection: Selection): string {
   if (!selection) return ""
-  return selection.decision === "keep" ? "keep" : (selection.swapProductId ?? "")
+  if (selection.decision === "swap") return selection.swapProductId ?? ""
+  return selection.decision
 }
 
 export function DiscoveryCallCockpit({
@@ -173,7 +195,7 @@ export function DiscoveryCallCockpit({
 }) {
   const router = useRouter()
   const [selections, setSelections] = useState<Record<string, Selection>>(() =>
-    Object.fromEntries(steps.map((step) => [step.decisionKey, initialSelection(step)])),
+    Object.fromEntries(steps.map((step) => [entryKey(step), initialSelection(step)])),
   )
   const [finalizedAt, setFinalizedAt] = useState<string | null>(initialFinalizedAt)
   const [pending, setPending] = useState<string | null>(null)
@@ -193,13 +215,14 @@ export function DiscoveryCallCockpit({
   const finalizeBlocked = blockHints.length > 0
 
   async function choose(step: DiscoveryCockpitStepView, value: string) {
-    const previous = selections[step.decisionKey] ?? null
+    const key = entryKey(step)
+    const previous = selections[key] ?? null
     const next: Selection =
-      value === "keep"
-        ? { decision: "keep", swapProductId: null }
+      value === "keep" || value === "drop"
+        ? { decision: value, swapProductId: null }
         : { decision: "swap", swapProductId: value }
-    setSelections((current) => ({ ...current, [step.decisionKey]: next }))
-    setPending(step.decisionKey)
+    setSelections((current) => ({ ...current, [key]: next }))
+    setPending(key)
     setError(null)
     const endWrite = beginDiscoveryDecisionWrite()
     try {
@@ -208,6 +231,7 @@ export function DiscoveryCallCockpit({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           decisionKey: step.decisionKey,
+          intakeItemId: step.intakeItemId,
           decision: next.decision,
           swapProductId: next.swapProductId,
         }),
@@ -217,12 +241,12 @@ export function DiscoveryCallCockpit({
         : ((await response.json().catch(() => null)) as { code?: string } | null)
       const outcome = discoveryDecisionWriteOutcome(response.ok, body)
       if (outcome.rollback) {
-        setSelections((current) => ({ ...current, [step.decisionKey]: previous }))
+        setSelections((current) => ({ ...current, [key]: previous }))
       }
       if (outcome.error) setError(outcome.error)
       if (outcome.refresh) router.refresh()
     } catch {
-      setSelections((current) => ({ ...current, [step.decisionKey]: previous }))
+      setSelections((current) => ({ ...current, [key]: previous }))
       setError(WRITE_ERROR)
     } finally {
       endWrite()
@@ -265,38 +289,65 @@ export function DiscoveryCallCockpit({
         <h2 className="border-b px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
           Produkte &amp; Entscheidung
         </h2>
-        {steps.map((step, index) => (
-          <div key={step.decisionKey} className="border-b last:border-0">
-            <div className="flex items-baseline gap-3 border-b bg-muted/40 px-4 py-2.5">
-              <span className="text-xs text-muted-foreground">{index + 1}</span>
-              <span className="text-[15px] font-bold text-foreground">{step.categoryLabel}</span>
-              <span className="text-xs text-muted-foreground">{step.roleLabel}</span>
-              {step.section === "optional" ? (
-                <span className="text-xs text-muted-foreground">· optional</span>
-              ) : null}
-            </div>
-            <StepDepth step={step} />
-            <div className="grid gap-0 md:grid-cols-2">
-              <div className="border-b p-4 md:border-b-0 md:border-r">
-                <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
-                  {COL_PRODUCT}
-                </p>
-                <StepVerdict step={step} submitted={submitted} />
+        {groupSteps(steps).map((entries, index) => {
+          const step = entries[0]!
+          return (
+            <div key={step.decisionKey} className="border-b last:border-0">
+              <div className="flex items-baseline gap-3 border-b bg-muted/40 px-4 py-2.5">
+                <span className="text-xs text-muted-foreground">{index + 1}</span>
+                <span className="text-[15px] font-bold text-foreground">{step.categoryLabel}</span>
+                <span className="text-xs text-muted-foreground">{step.roleLabel}</span>
+                {step.section === "optional" ? (
+                  <span className="text-xs text-muted-foreground">· optional</span>
+                ) : null}
               </div>
-              <div className="p-4">
-                <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
-                  {COL_DECISION}
-                </p>
-                <StepDecision
-                  step={step}
-                  value={selectionValue(selections[step.decisionKey] ?? null)}
-                  disabled={frozen || pending === step.decisionKey}
-                  onChoose={(value) => void choose(step, value)}
-                />
-              </div>
+              <StepDepth step={step} />
+              {entries.map((entry) => {
+                const key = entryKey(entry)
+                // Batch 9: what her other products in this step are set to right now.
+                const siblings = entries
+                  .filter((other) => other !== entry)
+                  .map((other) => selections[entryKey(other)] ?? null)
+                return (
+                  <div key={key} className="grid gap-0 border-b last:border-0 md:grid-cols-2">
+                    <div className="border-b p-4 md:border-b-0 md:border-r">
+                      <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
+                        {COL_PRODUCT}
+                      </p>
+                      {entries.length > 1 && entry.ownedFrequencyLabel ? (
+                        <p className="mb-2 text-[12px] font-bold text-muted-foreground">
+                          {entry.ownedFrequencyLabel}
+                        </p>
+                      ) : null}
+                      <StepVerdict step={entry} submitted={submitted} />
+                    </div>
+                    <div className="p-4">
+                      <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
+                        {COL_DECISION}
+                      </p>
+                      <StepDecision
+                        step={entry}
+                        name={key}
+                        value={selectionValue(selections[key] ?? null)}
+                        // „Weglassen" never empties the step (R3): not while every sibling
+                        // is set to „Weglassen" too. The server re-checks under its lock.
+                        dropAllowed={siblings.some((other) => other?.decision !== "drop")}
+                        // A target a sibling already swaps to is not offered twice.
+                        takenSwapIds={siblings.flatMap((other) =>
+                          other?.decision === "swap" && other.swapProductId
+                            ? [other.swapProductId]
+                            : [],
+                        )}
+                        disabled={frozen || pending === key}
+                        onChoose={(value) => void choose(entry, value)}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
             </div>
-          </div>
-        ))}
+          )
+        })}
       </section>
 
       <div className="flex flex-wrap items-center gap-4 rounded-xl border bg-card p-4">
@@ -427,20 +478,31 @@ function StepVerdict({ step, submitted }: { step: DiscoveryCockpitStepView; subm
 
 function StepDecision({
   step,
+  name,
   value,
+  dropAllowed,
+  takenSwapIds,
   disabled,
   onChoose,
 }: {
   step: DiscoveryCockpitStepView
+  name: string
   value: string
+  dropAllowed: boolean
+  takenSwapIds: readonly string[]
   disabled: boolean
   onChoose: (value: string) => void
 }) {
   const empty = step.intakeItemId === null
+  const swapOptions = step.swapOptions.filter(
+    (option) => option.productId === value || !takenSwapIds.includes(option.productId),
+  )
+  // R3: „Weglassen" only where she has ≥2 products in the step.
+  const offersDrop = !empty && step.stepEntryCount >= 2
   return (
     <div className="flex flex-col gap-2">
       <Choice
-        name={step.decisionKey}
+        name={name}
         value="keep"
         checked={value === "keep"}
         disabled={disabled}
@@ -448,10 +510,10 @@ function StepDecision({
         subtitle={empty ? KEEP_EMPTY_HINT : step.ownedLabel}
         onChoose={onChoose}
       />
-      {step.swapOptions.map((option) => (
+      {swapOptions.map((option) => (
         <Choice
           key={option.productId}
-          name={step.decisionKey}
+          name={name}
           value={option.productId}
           checked={value === option.productId}
           disabled={disabled}
@@ -462,6 +524,16 @@ function StepDecision({
           onChoose={onChoose}
         />
       ))}
+      {offersDrop ? (
+        <Choice
+          name={name}
+          value="drop"
+          checked={value === "drop"}
+          disabled={disabled || (value !== "drop" && !dropAllowed)}
+          title={DROP_LABEL}
+          onChoose={onChoose}
+        />
+      ) : null}
       {step.swapOptions.length === 0 ? (
         <p className="text-[12px] text-muted-foreground">{NO_OPTIONS_HINT}</p>
       ) : null}

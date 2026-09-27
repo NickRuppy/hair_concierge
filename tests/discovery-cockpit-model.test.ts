@@ -9,7 +9,7 @@ import {
   finalizeDiscoveryCall,
   loadDiscoveryCockpitModel,
   unfinalizeDiscoveryCall,
-  upsertDiscoveryCallDecision,
+  setDiscoveryCallDecision,
   type DiscoveryCockpitModel,
 } from "../src/lib/discovery/cockpit"
 import type { DiscoveryIdealStep } from "../src/lib/discovery/load-ideal-routine"
@@ -208,7 +208,7 @@ test("a bound product offers exactly the alternatives the engine displayed", () 
     ["alternative", "alternative"],
   )
   // The route's allow-list is derived from the very options the page renders.
-  assert.deepEqual(discoveryCockpitSwapOptionIds(view, view.steps[0].decisionKey), [
+  assert.deepEqual(discoveryCockpitSwapOptionIds(view, view.steps[0].decisionKey, ids.item), [
     ids.alternativeA,
     ids.alternativeB,
   ])
@@ -256,12 +256,15 @@ test("a step whose verdict failed keeps the Idealplan pick, never the product it
     }),
   )
   assert.deepEqual(sameProduct.steps[0].swapOptions, [])
-  assert.deepEqual(discoveryCockpitSwapOptionIds(sameProduct, sameProduct.steps[0].decisionKey), [])
+  assert.deepEqual(
+    discoveryCockpitSwapOptionIds(sameProduct, sameProduct.steps[0].decisionKey, ids.item),
+    [],
+  )
 })
 
 test("an unknown decision key has no allow-list at all", () => {
   const view = buildDiscoveryCockpitView(model({ steps: [step()], items: [] }))
-  assert.equal(discoveryCockpitSwapOptionIds(view, "decision:oil:dry_finish:gap"), null)
+  assert.equal(discoveryCockpitSwapOptionIds(view, "decision:oil:dry_finish:gap", null), null)
 })
 
 // --- naming and the collapsed blocks -------------------------------------------
@@ -730,14 +733,26 @@ test("un-finalize clears both columns", async () => {
   assert.deepEqual(calls[0].filters, [["id", ids.intake]])
 })
 
-test("a keep never stores a swap target, and the upsert keys on the decision key", async () => {
-  const { client, calls } = recordingClient({
+function rpcClient(result: unknown) {
+  const calls: Array<{ fn: string; args: Record<string, unknown> }> = []
+  const client = {
+    rpc: async (fn: string, args: Record<string, unknown>) => {
+      calls.push({ fn, args })
+      return { data: result, error: null }
+    },
+  }
+  return { client: client as never, calls }
+}
+
+test("a keep never stores a swap target; the write is the one locked RPC per (step, product)", async () => {
+  const { client, calls } = rpcClient({
+    outcome: "stored",
     decision_key: "decision:shampoo:shampoo_everyday:gap",
     decision: "keep",
     swap_product_id: null,
     intake_item_id: ids.item,
   })
-  const stored = await upsertDiscoveryCallDecision(
+  const stored = await setDiscoveryCallDecision(
     {
       intakeId: ids.intake,
       decisionKey: "decision:shampoo:shampoo_everyday:gap",
@@ -745,19 +760,61 @@ test("a keep never stores a swap target, and the upsert keys on the decision key
       // A stale client could still send one; the write drops it.
       swapProductId: ids.alternativeA,
       intakeItemId: ids.item,
+      siblings: [
+        { itemId: "50000000-0000-4000-8000-0000000000aa", category: "shampoo", usageRole: null },
+      ],
+      expectedCategory: "shampoo",
+      expectedUsageRole: null,
     },
     client,
   )
   assert.deepEqual(stored, {
+    outcome: "stored",
+    decision: {
+      decisionKey: "decision:shampoo:shampoo_everyday:gap",
+      decision: "keep",
+      swapProductId: null,
+      intakeItemId: ids.item,
+    },
+  })
+  assert.deepEqual(calls, [
+    {
+      fn: "discovery_admin_set_call_decision",
+      args: {
+        target_intake_id: ids.intake,
+        target_decision_key: "decision:shampoo:shampoo_everyday:gap",
+        target_item_id: ids.item,
+        expected_category: "shampoo",
+        expected_usage_role: null,
+        new_decision: "keep",
+        new_swap_product_id: null,
+        siblings: [
+          { id: "50000000-0000-4000-8000-0000000000aa", category: "shampoo", usage_role: null },
+        ],
+      },
+    },
+  ])
+})
+
+test("the decision write passes refusals through and rejects an unknown answer", async () => {
+  const input = {
+    intakeId: ids.intake,
     decisionKey: "decision:shampoo:shampoo_everyday:gap",
-    decision: "keep",
+    decision: "drop" as const,
     swapProductId: null,
     intakeItemId: ids.item,
-  })
-  assert.equal(calls[0].table, "discovery_call_decisions")
-  assert.equal(calls[0].op, "upsert")
-  assert.equal((calls[0].payload as { swap_product_id: unknown }).swap_product_id, null)
-  assert.deepEqual(calls[0].options, { onConflict: "intake_id,decision_key" })
+    siblings: [],
+    expectedCategory: "shampoo" as const,
+    expectedUsageRole: null,
+  }
+  assert.deepEqual(
+    await setDiscoveryCallDecision(input, rpcClient({ outcome: "drop_last" }).client),
+    { outcome: "drop_last" },
+  )
+  await assert.rejects(
+    setDiscoveryCallDecision(input, rpcClient({ outcome: "surprise" }).client),
+    /discovery_call_decision_unexpected_outcome/,
+  )
 })
 
 // --- product identities (brand + line + name) ----------------------------------------
