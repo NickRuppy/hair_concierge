@@ -252,13 +252,17 @@ test("optional telemetry write failures are captured instead of failing producti
 })
 
 test("optional shadow evaluation failures preserve the production job", async () => {
-  const job = { id: "production-job" }
+  const job = { id: "production-job", lock: "initial" }
+  const refreshedJob = { id: "production-job", lock: "refreshed" }
+  let currentJob = job
   const persistedFailures: string[] = []
 
   const result = await runNonFatalModelEvaluation({
     job,
+    currentJob: () => currentJob,
     targetSuccessfulJudgments: 10,
     run: async () => {
+      currentJob = refreshedJob
       throw new Error("shadow lease refresh failed")
     },
     persistFailure: async (message) => {
@@ -266,7 +270,7 @@ test("optional shadow evaluation failures preserve the production job", async ()
     },
   })
 
-  assert.equal(result.job, job)
+  assert.equal(result.job, refreshedJob)
   assert.deepEqual(result.result, {
     status: "telemetry_failed",
     successfulJudgments: 0,

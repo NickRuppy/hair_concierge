@@ -528,6 +528,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
       if (options.executeCodex) {
         const evaluationRun = await runNonFatalModelEvaluation({
           job: leasedJob,
+          currentJob: () => leasedJob,
           targetSuccessfulJudgments: evaluationRuntimeConfig.targetSuccessfulJudgments,
           run: () =>
             runOptionalModelEvaluation({
@@ -537,6 +538,9 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
               promptPacketPath,
               productionOutput: rawResearchOutput,
               config: evaluationRuntimeConfig,
+              onLeaseRefresh: (refreshedJob) => {
+                leasedJob = refreshedJob
+              },
             }),
           persistFailure: (message) =>
             persistModelJudgmentFailure(options.supabase, leasedJob, message),
@@ -724,6 +728,7 @@ export async function captureOptionalTelemetryFailure(
 
 export async function runNonFatalModelEvaluation<TJob>(params: {
   job: TJob
+  currentJob?: () => TJob
   targetSuccessfulJudgments: number
   run: () => Promise<{ job: TJob; result: ModelEvaluationResult }>
   persistFailure: (message: string) => Promise<unknown>
@@ -733,7 +738,7 @@ export async function runNonFatalModelEvaluation<TJob>(params: {
   } catch (error) {
     await captureOptionalTelemetryFailure(() => params.persistFailure(errorMessage(error)))
     return {
-      job: params.job,
+      job: params.currentJob?.() ?? params.job,
       result: {
         status: "telemetry_failed",
         successfulJudgments: 0,
@@ -750,6 +755,7 @@ async function runOptionalModelEvaluation(params: {
   promptPacketPath: string
   productionOutput: CodexResearchOutput
   config: ModelEvaluationRuntimeConfig
+  onLeaseRefresh?: (job: ProductIntakeResearchJob) => void
 }): Promise<{ job: ProductIntakeResearchJob; result: ModelEvaluationResult }> {
   let leasedJob = params.job
   let successfulJudgments = 0
@@ -805,6 +811,7 @@ async function runOptionalModelEvaluation(params: {
     promptPacketPath: params.promptPacketPath,
     message: "Luna/medium shadow research returned; worker lease refreshed.",
   })
+  params.onLeaseRefresh?.(leasedJob)
   const challengerArtifactError = await captureOptionalTelemetryFailure(() =>
     persistModelRunArtifact(params.supabase, leasedJob, challengerRun),
   )
@@ -850,6 +857,7 @@ async function runOptionalModelEvaluation(params: {
     promptPacketPath: params.promptPacketPath,
     message: "Sol/medium judgment returned; worker lease refreshed.",
   })
+  params.onLeaseRefresh?.(leasedJob)
   const judgeArtifactError = await captureOptionalTelemetryFailure(() =>
     persistModelRunArtifact(params.supabase, leasedJob, judgeRun),
   )

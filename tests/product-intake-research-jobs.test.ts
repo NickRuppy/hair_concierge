@@ -1176,6 +1176,8 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
       workerScript.indexOf("const evaluationRun = await runNonFatalModelEvaluation"),
     "production research must persist before optional shadow evaluation",
   )
+  assert.match(workerScript, /currentJob: \(\) => leasedJob/)
+  assert.match(workerScript, /onLeaseRefresh: \(refreshedJob\) => \{\s*leasedJob = refreshedJob/)
   assert.match(workerScript, /--execute-codex/)
   assert.match(workerScript, /service_tier/)
   assert.match(workerScript, /PRODUCT_INTAKE_CODEX_SERVICE_TIER/)
