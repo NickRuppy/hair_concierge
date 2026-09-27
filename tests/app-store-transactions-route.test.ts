@@ -258,6 +258,22 @@ test("verified data that is not our subscription is rejected without writes", as
   })
 })
 
+test("FW1 an unrelated auto-renewable product of the bundle is 409 invalid_transaction and grants nothing", async () => {
+  await withFake(async (db) => {
+    const response = await post({
+      signedTransactions: [jws(transaction({ productId: "de.chaarlie.other.monthly" }))],
+    })
+    assert.equal(response.status, 409)
+    assert.deepEqual(await response.json(), { error: "invalid_transaction" })
+    assert.equal(db.rpcCalls.length, 0)
+    assert.equal(db.transactions.size, 0)
+    // The same caller's scanner purchase still binds normally afterwards.
+    const ok = await post({ signedTransactions: [jws(transaction())] })
+    assert.equal(ok.status, 200)
+    assert.equal((await ok.json()).access.source, "app_store")
+  })
+})
+
 test("a retryable verification failure (Apple OCSP unreachable) is 503 so the app retries", async () => {
   await withFake(async (db) => {
     const unreachable: AppStoreVerifier = {

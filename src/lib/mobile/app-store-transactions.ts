@@ -35,6 +35,9 @@ async function verifiedRow(verifier: AppStoreVerifier, jws: string) {
   } catch (error) {
     if (error instanceof AppStoreVerificationError && error.code === "retryable")
       throw new MobileError("temporarily_unavailable", 503)
+    // Signed by Apple for this bundle, but not a scanner product: nothing to unlock.
+    if (error instanceof AppStoreStateError && error.code === "unknown_product")
+      throw new MobileError("invalid_transaction", 409)
     if (error instanceof AppStoreVerificationError || error instanceof AppStoreStateError)
       throw new MobileError("invalid_transaction", 400)
     throw error

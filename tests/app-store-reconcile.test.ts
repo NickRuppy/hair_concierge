@@ -129,6 +129,17 @@ test("reconciliation re-verifies Apple's data and writes nothing it cannot verif
   })
 })
 
+test("FW1 reconciliation skips a subscription of another product without writing", async () => {
+  await withFake(async (db) => {
+    const outcomes = await reconcileAppStoreSubscription(createAdminClient(), original, "Sandbox", {
+      apiClient: apiReturning(signedTransactionInfo({ productId: "de.chaarlie.other.yearly" })),
+      verifier,
+    })
+    assert.deepEqual(outcomes, [])
+    assert.equal(db.rpcCalls.length, 0)
+  })
+})
+
 test("the App Store Server API client needs its credentials", () => {
   assert.throws(
     () => appStoreServerAPIClient("Sandbox", {}),

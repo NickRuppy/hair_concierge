@@ -443,6 +443,41 @@ test("a verified payload that is not a storable subscription row is acknowledged
   })
 })
 
+test("FW1 a verified notification for an unrelated product is acknowledged without writes or access", async () => {
+  await withFake(async (db, warnings) => {
+    const foreign = "de.chaarlie.other.monthly"
+    await ok(
+      await deliver(
+        notification("SUBSCRIBED", {
+          subtype: "INITIAL_BUY",
+          transaction: { productId: foreign },
+          renewal: { productId: foreign, autoRenewProductId: foreign },
+        }),
+      ),
+    )
+    // Renewal info alone (e.g. billing retry with grace) cannot grant either.
+    await ok(
+      await deliver(
+        notification("DID_FAIL_TO_RENEW", {
+          subtype: "GRACE_PERIOD",
+          transaction: null,
+          renewal: {
+            productId: foreign,
+            autoRenewProductId: foreign,
+            isInBillingRetryPeriod: true,
+            gracePeriodExpiresDate: now + 10 * day,
+          },
+        }),
+      ),
+    )
+    assert.equal(db.rpcCalls.length, 0)
+    assert.equal(await accessAt(owner, now), false)
+    const logged = JSON.stringify(warnings)
+    assert.match(logged, /unknown_product/)
+    assert.doesNotMatch(logged, new RegExp(owner))
+  })
+})
+
 test("RENEWAL_EXTENDED records the extended expiry", async () => {
   await withFake(async (db) => {
     await ok(await deliver(notification("SUBSCRIBED")))

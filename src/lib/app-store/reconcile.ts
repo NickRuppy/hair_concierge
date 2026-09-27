@@ -2,6 +2,7 @@ import "server-only"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { AppStoreServerAPIClient, Environment } from "@apple/app-store-server-library"
 import { recordVerifiedAppStoreData } from "./notifications"
+import { AppStoreStateError } from "./state"
 import type { AppStoreWriteOutcome } from "./store"
 import {
   AppStoreConfigError,
@@ -63,13 +64,19 @@ export async function reconcileAppStoreSubscription(
         (renewal && renewal.environment !== environment)
       )
         throw new AppStoreVerificationError("invalid_environment")
-      outcomes.push(
-        ...(await recordVerifiedAppStoreData(db, {
-          environment,
-          transaction: transaction?.payload ?? null,
-          renewalInfo: renewal?.payload ?? null,
-        })),
-      )
+      try {
+        outcomes.push(
+          ...(await recordVerifiedAppStoreData(db, {
+            environment,
+            transaction: transaction?.payload ?? null,
+            renewalInfo: renewal?.payload ?? null,
+          })),
+        )
+      } catch (error) {
+        // Another subscription group of the bundle: not a scanner entitlement, skip it.
+        if (error instanceof AppStoreStateError && error.code === "unknown_product") continue
+        throw error
+      }
     }
   }
   return outcomes

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import {
+  APP_STORE_SCANNER_PRODUCT_IDS,
   AppStoreStateError,
   hasActiveAppStoreAccess,
   mergeBySignedDate,
@@ -319,4 +320,43 @@ test("renewal snapshot records renewal intent and the triggering notification", 
     signedDate: new Date(t0 + 1000),
     lastNotificationType: "DID_CHANGE_RENEWAL_STATUS",
   })
+})
+
+test("FW1 only the scanner products are accepted; other products of the bundle are rejected", () => {
+  assert.deepEqual(APP_STORE_SCANNER_PRODUCT_IDS, [
+    "de.chaarlie.scanner.monthly",
+    "de.chaarlie.scanner.yearly",
+  ])
+  assert.equal(
+    tx({ productId: "de.chaarlie.scanner.yearly" }).productId,
+    "de.chaarlie.scanner.yearly",
+  )
+  const unknownProduct = (error: unknown) =>
+    error instanceof AppStoreStateError && error.code === "unknown_product"
+  assert.throws(() => tx({ productId: "de.chaarlie.other.monthly" }), unknownProduct)
+  assert.throws(() => status({ productId: "de.chaarlie.other.monthly" }), unknownProduct)
+  assert.throws(
+    () => status({ productId: undefined, autoRenewProductId: "de.chaarlie.other.yearly" }),
+    unknownProduct,
+  )
+  assert.equal(
+    status({ productId: undefined, autoRenewProductId: undefined }).autoRenewProductId,
+    null,
+  )
+})
+
+test("FW1 access derivation ignores stored rows of any other product, including their renewal status", () => {
+  const foreign = { ...tx(), productId: "de.chaarlie.other.monthly" }
+  assert.equal(access([foreign]), false)
+  const foreignRetry = status({
+    isInBillingRetryPeriod: true,
+    gracePeriodExpiresDate: now.getTime() + day,
+  })
+  assert.equal(
+    access([{ ...foreign, expiresDate: new Date(now.getTime() - day) }], [foreignRetry]),
+    false,
+  )
+  // A status row only counts next to a scanner transaction of the same subscription.
+  assert.equal(access([], [foreignRetry]), false)
+  assert.equal(access([tx({ expiresDate: now.getTime() - day })], [foreignRetry]), true)
 })

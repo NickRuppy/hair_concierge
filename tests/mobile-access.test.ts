@@ -156,6 +156,30 @@ test("deriveAppStoreAccess defaults willRenew/inBillingRetry to false without a 
   })
 })
 
+test("FW1 a stored row of a non-scanner product neither grants access nor shows as the App Store row", async () => {
+  const foreign = transaction({ productId: "de.chaarlie.other.monthly" })
+  assert.equal(deriveAppStoreAccess(snapshot({ transactions: [foreign] }), now), null)
+  const restore = envFixture({ MOBILE_PAYWALL_ENABLED: "true" })
+  try {
+    const result = await resolveMobileAccess({} as never, userId, email, now, {
+      loadAppStoreEntitlement: async () =>
+        snapshot({
+          transactions: [foreign],
+          statuses: [
+            status({
+              inBillingRetry: true,
+              gracePeriodExpiresDate: new Date("2027-01-01T00:00:00Z"),
+            }),
+          ],
+        }),
+      resolvePaidAppAccess: async () => "denied",
+    })
+    assert.deepEqual(result, { status: "none", source: null, appStore: null })
+  } finally {
+    restore()
+  }
+})
+
 // --- resolveMobileAccess -----------------------------------------------------
 
 function throwingClient() {

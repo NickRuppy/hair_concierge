@@ -9,6 +9,20 @@
 export const APP_STORE_ENVIRONMENTS = ["Production", "Sandbox", "Xcode"] as const
 export type AppStoreEnvironment = (typeof APP_STORE_ENVIRONMENTS)[number]
 
+/**
+ * The only products that unlock the scanner (plan §4, group "Chaarlie Scanner"). A
+ * verified auto-renewable subscription of any other product of the bundle is rejected
+ * before a write and never counts toward access.
+ */
+export const APP_STORE_SCANNER_PRODUCT_IDS: readonly string[] = [
+  "de.chaarlie.scanner.monthly",
+  "de.chaarlie.scanner.yearly",
+]
+
+export function isScannerProductId(value: unknown): boolean {
+  return typeof value === "string" && APP_STORE_SCANNER_PRODUCT_IDS.includes(value)
+}
+
 export type AppStoreTransactionRow = {
   transactionId: string
   originalTransactionId: string
@@ -42,7 +56,7 @@ export type AppStoreEntitlementSnapshot = {
 }
 
 export class AppStoreStateError extends Error {
-  constructor(readonly code: "environment_mismatch" | "invalid_payload") {
+  constructor(readonly code: "environment_mismatch" | "invalid_payload" | "unknown_product") {
     super(code)
     this.name = "AppStoreStateError"
   }
@@ -111,6 +125,8 @@ export function transactionSnapshot(
 ): AppStoreTransactionRow {
   const environment = matchEnvironment(payload.environment, context)
   if (payload.type !== AUTO_RENEWABLE) throw new AppStoreStateError("invalid_payload")
+  const productId = requiredId(payload.productId)
+  if (!isScannerProductId(productId)) throw new AppStoreStateError("unknown_product")
   const token = payload.appAccountToken
   if (token !== undefined && (typeof token !== "string" || !UUID.test(token)))
     throw new AppStoreStateError("invalid_payload")
@@ -132,7 +148,7 @@ export function transactionSnapshot(
     transactionId: requiredId(payload.transactionId),
     originalTransactionId: requiredId(payload.originalTransactionId),
     appAccountToken: typeof token === "string" ? token.toLowerCase() : null,
-    productId: requiredId(payload.productId),
+    productId,
     environment,
     purchaseDate: requiredDate(payload.purchaseDate),
     expiresDate: requiredDate(payload.expiresDate),
@@ -149,6 +165,7 @@ export function transactionSnapshot(
 
 type RenewalPayload = {
   originalTransactionId?: unknown
+  productId?: unknown
   autoRenewStatus?: unknown
   autoRenewProductId?: unknown
   isInBillingRetryPeriod?: unknown
@@ -163,6 +180,10 @@ export function renewalStatusSnapshot(
   context: SnapshotContext,
 ): AppStoreSubscriptionStatusRow {
   const environment = matchEnvironment(payload.environment, context)
+  // Renewal info names the subscription's product (and its next one); both must be ours.
+  for (const product of [payload.productId, payload.autoRenewProductId])
+    if (product !== undefined && product !== null && product !== "" && !isScannerProductId(product))
+      throw new AppStoreStateError("unknown_product")
   return {
     originalTransactionId: requiredId(payload.originalTransactionId),
     environment,
@@ -191,16 +212,33 @@ export function mergeBySignedDate<T extends { signedDate: Date }>(
   return incoming
 }
 
+/**
+ * The rows that may count: scanner-product transactions and the renewal status of their
+ * subscriptions. Writes already reject other products; this keeps any row that predates
+ * or bypasses that check from granting or being displayed.
+ */
+export function scannerEntitlementRows(
+  snapshot: AppStoreEntitlementSnapshot,
+): AppStoreEntitlementSnapshot {
+  const transactions = snapshot.transactions.filter((row) => isScannerProductId(row.productId))
+  const originals = new Set(transactions.map((row) => row.originalTransactionId))
+  return {
+    transactions,
+    statuses: snapshot.statuses.filter((row) => originals.has(row.originalTransactionId)),
+  }
+}
+
 export function hasActiveAppStoreAccess(snapshot: AppStoreEntitlementSnapshot, now: Date): boolean {
   const at = now.getTime()
+  const rows = scannerEntitlementRows(snapshot)
   return (
-    snapshot.transactions.some(
+    rows.transactions.some(
       (row) =>
         row.revocationDate === null &&
         row.purchaseDate.getTime() <= at &&
         at < row.expiresDate.getTime(),
     ) ||
-    snapshot.statuses.some(
+    rows.statuses.some(
       (row) =>
         row.inBillingRetry &&
         row.gracePeriodExpiresDate !== null &&

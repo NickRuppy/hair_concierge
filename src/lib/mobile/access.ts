@@ -1,7 +1,11 @@
 import "server-only"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { loadAppStoreEntitlement } from "@/lib/app-store/store"
-import { hasActiveAppStoreAccess, type AppStoreEntitlementSnapshot } from "@/lib/app-store/state"
+import {
+  hasActiveAppStoreAccess,
+  scannerEntitlementRows,
+  type AppStoreEntitlementSnapshot,
+} from "@/lib/app-store/state"
 import { resolvePaidAppAccess } from "@/lib/entitlements/access"
 import { requireMobileUser } from "./auth"
 import { MobileError } from "./errors"
@@ -28,19 +32,20 @@ export type MobileAccessDeps = {
 /**
  * Display-only summary of the account's App Store subscription: the currently-granting
  * transaction (or, absent one, the latest-expiring non-revoked transaction) plus its
- * subscription's renewal status. `null` only when the account has no App Store rows at
- * all — it does not mean "not currently granting" (see `hasActiveAppStoreAccess`, which
- * decides access itself). If every transaction happens to be revoked, the latest-expiring
- * one is still surfaced for display.
+ * subscription's renewal status. Only scanner-product rows count. `null` only when the
+ * account has no such rows at all — it does not mean "not currently granting" (see
+ * `hasActiveAppStoreAccess`, which decides access itself). If every transaction happens
+ * to be revoked, the latest-expiring one is still surfaced for display.
  */
 export function deriveAppStoreAccess(
   snapshot: AppStoreEntitlementSnapshot,
   now: Date,
 ): MobileAppStoreAccess | null {
-  if (snapshot.transactions.length === 0) return null
+  const rows = scannerEntitlementRows(snapshot)
+  if (rows.transactions.length === 0) return null
   const at = now.getTime()
-  const nonRevoked = snapshot.transactions.filter((row) => row.revocationDate === null)
-  const pool = nonRevoked.length > 0 ? nonRevoked : snapshot.transactions
+  const nonRevoked = rows.transactions.filter((row) => row.revocationDate === null)
+  const pool = nonRevoked.length > 0 ? nonRevoked : rows.transactions
   const granting = pool.filter(
     (row) => row.purchaseDate.getTime() <= at && at < row.expiresDate.getTime(),
   )
@@ -48,7 +53,7 @@ export function deriveAppStoreAccess(
   const transaction = candidates.reduce((latest, row) =>
     row.expiresDate.getTime() > latest.expiresDate.getTime() ? row : latest,
   )
-  const status = snapshot.statuses.find(
+  const status = rows.statuses.find(
     (row) => row.originalTransactionId === transaction.originalTransactionId,
   )
   return {
