@@ -92,6 +92,21 @@ export async function upsertAppStoreSubscriptionStatus(
   return writeResult(data, error)
 }
 
+/**
+ * The account an Apple appAccountToken may bind to: the token's account while it still
+ * exists, else null. A deleted account's token survives at Apple, but its rows were
+ * cascade-deleted with the profile and it can no longer own anything.
+ */
+export async function accountForToken(
+  client: SupabaseClient,
+  token: string | null,
+): Promise<string | null> {
+  if (token === null) return null
+  const { data, error } = await client.from("profiles").select("id").eq("id", token).maybeSingle()
+  if (error) throw new Error("app_store_read_failed")
+  return data ? token : null
+}
+
 type TransactionRecord = {
   transaction_id: string
   original_transaction_id: string

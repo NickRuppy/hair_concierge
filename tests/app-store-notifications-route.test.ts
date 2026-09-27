@@ -1,6 +1,9 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { handleAppStoreNotificationPost } from "../src/lib/app-store/notifications"
+import {
+  handleAppStoreNotificationPost,
+  type AppStoreNotificationDeps,
+} from "../src/lib/app-store/notifications"
 import { hasActiveAppStoreAccess } from "../src/lib/app-store/state"
 import { loadAppStoreEntitlement } from "../src/lib/app-store/store"
 import {
@@ -105,10 +108,8 @@ function request(body: unknown) {
     body: typeof body === "string" ? body : JSON.stringify(body),
   })
 }
-const deliver = (
-  signedPayload: string,
-  deps: { verifier?: () => AppStoreVerifier } = { verifier },
-) => handleAppStoreNotificationPost(request({ signedPayload }), deps)
+const deliver = (signedPayload: string, deps: AppStoreNotificationDeps = { verifier }) =>
+  handleAppStoreNotificationPost(request({ signedPayload }), deps)
 
 type Db = ReturnType<typeof createAppStoreSupabase>
 async function withFake(run: (db: Db, warnings: unknown[]) => Promise<void>) {
@@ -439,5 +440,135 @@ test("a verified payload that is not a storable subscription row is acknowledged
     await ok(await deliver(notification("REFUND", { transaction: { type: "Consumable" } })))
     assert.equal(db.rpcCalls.length, 0)
     assert.match(JSON.stringify(warnings), /invalid_payload/)
+  })
+})
+
+test("RENEWAL_EXTENDED records the extended expiry", async () => {
+  await withFake(async (db) => {
+    await ok(await deliver(notification("SUBSCRIBED")))
+    await ok(
+      await deliver(
+        notification("RENEWAL_EXTENDED", {
+          transaction: { expiresDate: now + 35 * day, appAccountToken: undefined },
+        }),
+      ),
+    )
+    assert.equal(
+      db.transactions.get(original)?.expires_date,
+      new Date(now + 35 * day).toISOString(),
+    )
+    assert.equal(db.statuses.get(original)?.last_notification_type, "RENEWAL_EXTENDED")
+    assert.equal(await accessAt(owner, now + 30 * day), true)
+  })
+})
+
+test("OFFER_REDEEMED records the redeemed period for the owner", async () => {
+  await withFake(async (db) => {
+    await ok(
+      await deliver(
+        notification("OFFER_REDEEMED", {
+          subtype: "INITIAL_BUY",
+          transaction: { offerType: 3, offerIdentifier: "WINBACK" },
+        }),
+      ),
+    )
+    assert.equal(db.transactions.get(original)?.user_id, owner)
+    assert.equal(db.transactions.get(original)?.offer_type, 3)
+    assert.equal(db.statuses.get(original)?.last_notification_type, "OFFER_REDEEMED")
+    assert.equal(await accessAt(owner, now), true)
+  })
+})
+
+type Reported = { tags: Record<string, string>; context: unknown; errors: unknown[] }
+function recordingSink() {
+  const reports: Reported[] = []
+  return {
+    reports,
+    sink: {
+      captureException(error: unknown) {
+        reports.at(-1)!.errors.push(error)
+      },
+      withScope(callback: (scope: never) => void) {
+        const report: Reported = { tags: {}, context: null, errors: [] }
+        reports.push(report)
+        callback({
+          setTag: (key: string, value: string) => (report.tags[key] = value),
+          setContext: (_name: string, context: unknown) => (report.context = context),
+          setLevel: () => {},
+        } as never)
+      },
+    },
+  }
+}
+
+test("a non-verification exception during verification is reported without PII and answered 503", async () => {
+  await withFake(async (db) => {
+    const { reports, sink } = recordingSink()
+    const broken: AppStoreVerifier = {
+      verifyTransaction: async () => {
+        throw new Error("unused")
+      },
+      verifyRenewalInfo: async () => {
+        throw new Error("unused")
+      },
+      verifyNotification: async () => {
+        throw new Error(`ENOENT: no such file, open '/var/task/certs' for ${owner}`)
+      },
+    }
+    const response = await deliver(notification("SUBSCRIBED"), { verifier: () => broken, sink })
+    assert.equal(response.status, 503)
+    assert.equal(reports.length, 1)
+    assert.equal(reports[0].tags["app_store.stage"], "verify")
+    assert.deepEqual(reports[0].context, {
+      stage: "verify",
+      error_name: "Error",
+      error_code: null,
+      notification_type: null,
+      environment: null,
+    })
+    assert.equal(String(reports[0].errors[0]), "Error: app_store_notification_verify_failed")
+    assert.doesNotMatch(JSON.stringify(reports), new RegExp(owner))
+    assert.equal(db.rpcCalls.length, 0)
+  })
+})
+
+test("a transient store failure is reported with code, type and environment only", async () => {
+  await withFake(async (db) => {
+    const { reports, sink } = recordingSink()
+    db.state.failWrites = 1
+    const response = await deliver(notification("DID_RENEW"), { verifier, sink })
+    assert.equal(response.status, 503)
+    assert.equal(reports.length, 1)
+    assert.deepEqual(reports[0].context, {
+      stage: "record",
+      error_name: "Error",
+      error_code: "app_store_write_failed",
+      notification_type: "DID_RENEW",
+      environment: "Production",
+    })
+    assert.equal(reports[0].tags["app_store.notification_type"], "DID_RENEW")
+    assert.doesNotMatch(JSON.stringify(reports), new RegExp(`${owner}|${original}`))
+  })
+})
+
+test("a retryable verification failure is reported with its code", async () => {
+  await withFake(async () => {
+    const { reports, sink } = recordingSink()
+    const unreachable: AppStoreVerifier = {
+      verifyTransaction: async () => {
+        throw new Error("unused")
+      },
+      verifyRenewalInfo: async () => {
+        throw new Error("unused")
+      },
+      verifyNotification: async () => {
+        throw new AppStoreVerificationError("retryable")
+      },
+    }
+    assert.equal(
+      (await deliver(notification("SUBSCRIBED"), { verifier: () => unreachable, sink })).status,
+      503,
+    )
+    assert.equal((reports[0].context as { error_code: string }).error_code, "retryable")
   })
 })

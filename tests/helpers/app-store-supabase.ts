@@ -170,6 +170,12 @@ export function createAppStoreSupabase(options: { profiles?: string[]; authUser?
     profiles,
     rpcCalls,
     state,
+    /** Account deletion: both tables reference profiles ON DELETE CASCADE. */
+    deleteProfile(id: string) {
+      profiles.delete(id)
+      for (const table of [transactions, statuses])
+        for (const [key, row] of table) if (row.user_id === id) table.delete(key)
+    },
     install() {
       globalThis.fetch = fakeFetch as typeof fetch
       return () => {

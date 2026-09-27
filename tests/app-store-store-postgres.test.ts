@@ -219,6 +219,12 @@ test(
       ),
       "0,0",
     )
+    // A deleted owner no longer holds the subscription: another account may claim it.
+    assert.equal(await service(upsertTx("t1", other, "2026-09-01T10:00:00Z")), `applied,${other}`)
+    assert.equal(
+      await service(upsertStatus(other, false, "2026-09-01T10:00:00Z")),
+      `applied,${other}`,
+    )
   },
 )
 

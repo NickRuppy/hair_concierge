@@ -136,7 +136,9 @@ test("a purchase whose appAccountToken names another account is refused with 409
       signedTransactions: [jws(transaction({ appAccountToken: otherUserId }))],
     })
     assert.equal(response.status, 409)
-    assert.deepEqual(await response.json(), { error: "owned_by_other_account" })
+    const body = await response.json()
+    assert.equal(body.error, "owned_by_other_account")
+    assert.equal(body.access.status, "none")
     assert.equal(db.rpcCalls.length, 0)
   })
 })
@@ -182,7 +184,9 @@ test("a purchase without a token for a subscription owned by another account is 
       ],
     })
     assert.equal(response.status, 409)
-    assert.deepEqual(await response.json(), { error: "owned_by_other_account" })
+    const body = await response.json()
+    assert.equal(body.error, "owned_by_other_account")
+    assert.equal(body.access.status, "none")
     // Apple's verified state is still recorded, but for the rightful owner.
     assert.equal(db.transactions.get("2000000000000002")?.user_id, otherUserId)
   })
@@ -390,5 +394,68 @@ test("is not behind the scanner gate: a caller without access can post and learn
     assert.equal(access.status, "none")
     assert.equal(access.appStore.expiresAt, new Date(now - day).toISOString())
     assert.equal(db.transactions.size, 1)
+  })
+})
+
+test("a token of a deleted account is claimable by the verified caller (A3 protects living accounts only)", async () => {
+  const deletedUserId = "d0d0d0d0-3333-4333-8333-33333333dead"
+  await withFake(async (db) => {
+    db.profiles.add(deletedUserId)
+    const token = { appAccountToken: deletedUserId }
+    // The deleted account's history: bound period + renewal status, as the webhook stored them.
+    db.transactions.set("2000000000000001", {
+      transaction_id: "2000000000000001",
+      original_transaction_id: "2000000000000001",
+      user_id: deletedUserId,
+      app_account_token: deletedUserId,
+      environment: "Sandbox",
+      signed_date: new Date(now - 2 * day).toISOString(),
+      purchase_date: new Date(now - day).toISOString(),
+      expires_date: new Date(now + 6 * day).toISOString(),
+    })
+    db.statuses.set("2000000000000001", {
+      original_transaction_id: "2000000000000001",
+      user_id: deletedUserId,
+      environment: "Sandbox",
+      signed_date: new Date(now - 2 * day).toISOString(),
+    })
+    // While that account lives, its token is refused.
+    const refused = await post({ signedTransactions: [jws(transaction(token))] })
+    assert.equal(refused.status, 409)
+
+    db.deleteProfile(deletedUserId)
+    assert.equal(db.transactions.size + db.statuses.size, 0, "rows cascade with the profile")
+    const response = await post({ signedTransactions: [jws(transaction(token))] })
+    assert.equal(response.status, 200)
+    const { access } = await response.json()
+    assert.equal(access.status, "active")
+    assert.equal(access.source, "app_store")
+    const write = db.rpcCalls.at(-1)
+    assert.equal(write?.args.p_user_id, userId)
+    assert.equal(db.transactions.get("2000000000000001")?.user_id, userId)
+  })
+})
+
+test("a mixed batch writes the caller's own row and answers 409 with the access it unlocked", async () => {
+  await withFake(async (db) => {
+    const response = await post({
+      signedTransactions: [
+        jws(transaction()),
+        jws(
+          transaction({
+            transactionId: "3000000000000001",
+            originalTransactionId: "3000000000000001",
+            appAccountToken: otherUserId,
+          }),
+        ),
+      ],
+    })
+    assert.equal(response.status, 409)
+    const body = await response.json()
+    assert.equal(body.error, "owned_by_other_account")
+    assert.equal(body.access.status, "active")
+    assert.equal(body.access.source, "app_store")
+    assert.equal(db.transactions.get("2000000000000001")?.user_id, userId)
+    assert.equal(db.transactions.has("3000000000000001"), false)
   })
 })

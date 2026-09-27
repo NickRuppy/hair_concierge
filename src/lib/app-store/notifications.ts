@@ -5,6 +5,10 @@ import type {
   JWSTransactionDecodedPayload,
 } from "@apple/app-store-server-library"
 import { readBoundedJsonBody } from "@/lib/bounded-json-body"
+import {
+  reportAppStoreNotificationFailure,
+  type AppStoreFailureSink,
+} from "@/lib/observability/app-store"
 import { createAdminClient } from "@/lib/supabase/admin"
 import {
   AppStoreStateError,
@@ -13,6 +17,7 @@ import {
   type AppStoreEnvironment,
 } from "./state"
 import {
+  accountForToken,
   upsertAppStoreSubscriptionStatus,
   upsertAppStoreTransaction,
   type AppStoreWriteOutcome,
@@ -39,6 +44,8 @@ const RECORDED_TYPES = new Set([
   "REFUND",
   "REFUND_REVERSED",
   "REVOKE",
+  "RENEWAL_EXTENDED",
+  "OFFER_REDEEMED",
 ])
 
 const MAX_BYTES = 65_536
@@ -50,18 +57,6 @@ export type VerifiedAppStoreData = {
   notificationType?: string
 }
 
-/**
- * Binds only through Apple's signed appAccountToken, and only to an account that still
- * exists (a deleted account's token survives at Apple). Without one, null leaves the row
- * unbound or lets it inherit the subscription's existing owner in SQL.
- */
-async function accountForToken(client: SupabaseClient, token: string | null) {
-  if (token === null) return null
-  const { data, error } = await client.from("profiles").select("id").eq("id", token).maybeSingle()
-  if (error) throw new Error("app_store_read_failed")
-  return data ? token : null
-}
-
 /** Stores Apple-verified subscription data; throws AppStoreStateError before any write. */
 export async function recordVerifiedAppStoreData(
   client: SupabaseClient,
@@ -70,6 +65,8 @@ export async function recordVerifiedAppStoreData(
   const context = { environment: data.environment, notificationType: data.notificationType }
   const transaction = data.transaction ? transactionSnapshot(data.transaction, context) : null
   const status = data.renewalInfo ? renewalStatusSnapshot(data.renewalInfo, context) : null
+  // Binds only through Apple's signed appAccountToken; without one, null lets SQL
+  // inherit the subscription's owner or leave the row unbound.
   const userId = await accountForToken(client, transaction?.appAccountToken ?? null)
   const outcomes: AppStoreWriteOutcome[] = []
   // Transaction first, so the status row inherits the owner it establishes.
@@ -84,7 +81,10 @@ function respond(body: unknown, status: number) {
   return Response.json(body, { status, headers: { "Cache-Control": "no-store" } })
 }
 
-export type AppStoreNotificationDeps = { verifier?: () => AppStoreVerifier }
+export type AppStoreNotificationDeps = {
+  verifier?: () => AppStoreVerifier
+  sink?: AppStoreFailureSink
+}
 
 export async function handleAppStoreNotificationPost(
   request: Request,
@@ -107,6 +107,7 @@ export async function handleAppStoreNotificationPost(
       return respond({ error: "invalid_notification" }, 400)
     }
     // Missing config/certs or Apple's OCSP unreachable: Apple retries later.
+    reportAppStoreNotificationFailure(error, { stage: "verify" }, deps.sink)
     return respond({ error: "temporarily_unavailable" }, 503)
   }
 
@@ -139,6 +140,11 @@ export async function handleAppStoreNotificationPost(
       })
       return respond({ received: true }, 200)
     }
+    reportAppStoreNotificationFailure(
+      error,
+      { stage: "record", notificationType, environment: verified.environment },
+      deps.sink,
+    )
     return respond({ error: "temporarily_unavailable" }, 503)
   }
   return respond({ received: true }, 200)

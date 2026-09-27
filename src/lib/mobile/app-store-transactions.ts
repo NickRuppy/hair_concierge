@@ -1,7 +1,7 @@
 import "server-only"
 import { z } from "zod"
 import { AppStoreStateError, transactionSnapshot } from "@/lib/app-store/state"
-import { upsertAppStoreTransaction } from "@/lib/app-store/store"
+import { accountForToken, upsertAppStoreTransaction } from "@/lib/app-store/store"
 import {
   AppStoreVerificationError,
   appStoreVerifier,
@@ -44,7 +44,8 @@ async function verifiedRow(verifier: AppStoreVerifier, jws: string) {
 /**
  * The app posts Apple-signed transactions right after purchase/restore. Only the
  * caller's own purchases bind: Apple's signed appAccountToken must be the caller's user
- * ID; a purchase without a token binds only while its subscription is unowned (SQL).
+ * ID (or a deleted account's); a purchase without a token binds only while its
+ * subscription is unowned (SQL).
  * Every JWS is verified before anything is written. Answers the fresh bootstrap access.
  */
 export async function handleAppStoreTransactionsPost(
@@ -67,7 +68,14 @@ export async function handleAppStoreTransactionsPost(
     let ownedByOther = false
     let invalid = false
     for (const row of rows) {
-      if (row.appAccountToken !== null && row.appAccountToken !== caller) {
+      // Another living account's token: A3, one subscription per account. A deleted
+      // account's token binds nobody, so the verified caller (holder of the Apple ID)
+      // may claim it.
+      if (
+        row.appAccountToken !== null &&
+        row.appAccountToken !== caller &&
+        (await accountForToken(client, row.appAccountToken)) !== null
+      ) {
         ownedByOther = true
         continue
       }
@@ -82,8 +90,10 @@ export async function handleAppStoreTransactionsPost(
         invalid = true
       }
     }
-    if (ownedByOther) throw new MobileError("owned_by_other_account", 409)
-    if (invalid) throw new MobileError("invalid_transaction", 409)
-    return mobileJSON({ access: await resolveMobileAccess(client, userId, email, new Date()) })
+    if (invalid && !ownedByOther) throw new MobileError("invalid_transaction", 409)
+    const access = await resolveMobileAccess(client, userId, email, new Date())
+    // A mixed batch still wrote the caller's own rows; the 409 carries what they unlocked.
+    if (ownedByOther) return mobileJSON({ error: "owned_by_other_account", access }, 409)
+    return mobileJSON({ access })
   })
 }
