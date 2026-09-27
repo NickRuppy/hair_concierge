@@ -48,6 +48,8 @@ enum DesignReviewScenario: String, Sendable {
     case recoveryUnavailable = "recovery-unavailable"
     case paywall
     case profileAbo = "profile-abo"
+    case deleteNotice = "delete-notice"
+    case deleteConfirm = "delete-confirm"
 
     static var current: Self? {
         guard ProcessInfo.processInfo.arguments.contains("--ui-design-review"),
@@ -103,7 +105,8 @@ struct DesignReviewFixture: View {
         case .research, .researchPending, .researchError, .researchIdentified, .researchIdentifiedPending,
              .researchIdentifiedError, .researchStatusLoading, .researchNoSuggestion, .researchUnsaved:
             model.selectedTab = .search
-        case .profile, .profileLoading, .profileError, .profileEdit, .profileEditError, .profileEditConflict, .profileEditLoading, .profileEditLoadError, .profileEditSaving, .profileEditMissingLength, .profileAbo:
+        case .profile, .profileLoading, .profileError, .profileEdit, .profileEditError, .profileEditConflict, .profileEditLoading, .profileEditLoadError, .profileEditSaving, .profileEditMissingLength, .profileAbo,
+             .deleteNotice, .deleteConfirm:
             model.selectedTab = .profile
         default: break
         }
@@ -137,6 +140,7 @@ struct DesignReviewFixture: View {
                 case .loginLoading: await model.startLogin()
                 case .scanLoading: await model.resolve(.barcode("1234567890123"))
                 case .searchLoading: await model.search()
+                case .deleteNotice, .deleteConfirm: await model.beginAccountDeletion()
                 case .research, .researchPending, .researchError, .researchIdentified, .researchIdentifiedPending,
                      .researchIdentifiedError, .researchStatusLoading, .researchNoSuggestion, .researchUnsaved:
                     await model.resolve(.barcode("4006381333931"))
@@ -238,7 +242,8 @@ actor DesignReviewTransport: HTTPTransport {
             let status: Bootstrap.Status = scenario == .recoveryMissing ? .profile_required : scenario == .recoveryUnavailable ? .temporarily_unavailable : .ready
             var bootstrap = Bootstrap(status: status, profileRevision: "synthetic-design-profile", contextRevision: "synthetic-design-context")
             if scenario == .paywall { bootstrap.access = MobileAccess(status: .inactive, source: nil, appStore: nil) }
-            if scenario == .profileAbo {
+            if scenario == .deleteConfirm { bootstrap.access = MobileAccess(status: .active, source: "web", appStore: nil) }
+            if scenario == .profileAbo || scenario == .deleteNotice {
                 bootstrap.access = MobileAccess(status: .active, source: "app_store", appStore: .init(
                     productId: "de.chaarlie.scanner.yearly", expiresAt: "2027-09-27T10:00:00.000Z",
                     willRenew: true, inBillingRetry: false))
@@ -337,6 +342,8 @@ actor DesignReviewTransport: HTTPTransport {
             if [.researchError, .researchIdentifiedError].contains(scenario) { throw MobileError.unavailable }
             submittedResearch = true
             data = Data("{\"contractVersion\":1,\"kind\":\"pending_submission\",\"submissionId\":\"fixture-submission\",\"headline\":\"In Prüfung\",\"historySaved\":\(scenario != .researchUnsaved)}".utf8)
+        } else if path.hasSuffix("/account/delete/preflight") {
+            data = Data(#"{"webSubscription":\#(scenario == .deleteConfirm)}"#.utf8)
         } else if path.hasSuffix("/auth/start") {
             data = try JSONEncoder().encode(DesignReviewData.attempt)
         } else if path.hasSuffix("/auth/logout") {

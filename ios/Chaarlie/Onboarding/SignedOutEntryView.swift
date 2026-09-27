@@ -40,10 +40,26 @@ struct SignedOutEntryView: View {
                 }.padding(24)
             }
         }
+        .safeAreaInset(edge: .top, spacing: 0) {
+            if let notice = app.signedOutNotice {
+                HStack(spacing: 8) {
+                    Image(systemName: "checkmark.circle.fill").accessibilityHidden(true)
+                    Text(notice).chaarlieSystemFont(14, weight: .medium).accessibilityIdentifier("signedOut.notice")
+                }.foregroundStyle(ChaarlieTheme.plum).padding(.horizontal, 14).padding(.vertical, 10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(ChaarlieTheme.plumIce, in: RoundedRectangle(cornerRadius: ChaarlieTheme.Radius.control, style: .continuous))
+                    .padding(.horizontal, 24).padding(.top, 8)
+                    .chaarlieTransition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+        .animation(ChaarlieTheme.Motion.state, value: app.signedOutNotice)
+        // The notice greets the screen once; the next step moves on without it.
+        .onChange(of: onboarding?.stage) { _, _ in app.dismissSignedOutNotice() }
         .onChange(of: app.attempt) { _, attempt in
             if attempt != nil { onboarding?.suspend(); showingLogin = true }
         }
         .onChange(of: showingLogin) { _, login in
+            app.dismissSignedOutNotice()
             if login { app.registrationCallback = nil }
             else { installRegistrationCallback() }
         }

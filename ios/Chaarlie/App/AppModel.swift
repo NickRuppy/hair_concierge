@@ -17,9 +17,26 @@ final class AppModel {
         }
     }
     enum Tab: Hashable { case scan, search, history, profile }
+    /// "Konto löschen" (§6). The Apple notice comes first only for a renewing App Store
+    /// subscription; the confirmation waits for the preflight so the A1 line is right.
+    enum AccountDeletionStep: Equatable {
+        case subscriptionNotice, loading, preflightFailed
+        case confirm(webSubscription: Bool)
+        case deleting(webSubscription: Bool)
+        var isDeleting: Bool { if case .deleting = self { true } else { false } }
+    }
     let client: MobileClient
     let push: ResearchPushCoordinator
     let store: any StoreService
+    private let drafts: any OnboardingDraftPersistence
+    private(set) var accountDeletion: AccountDeletionStep?
+    private(set) var accountDeletionError: String?
+    /// Created once per confirmation and reused for every retry, so the server replays
+    /// the same deletion instead of starting another. Lives only in memory.
+    private(set) var accountDeletionRequestID: UUID?
+    private var accountDeletionOperation = UUID()
+    /// One-line notice on the signed-out entry screen after a deletion.
+    private(set) var signedOutNotice: String?
     private(set) var purchaseState: PurchaseState = .idle
     private(set) var paywallMessage: String?
     /// The bootstrap's latest access answer. Nil on servers that predate the paywall
@@ -111,10 +128,12 @@ final class AppModel {
     private var resolveFailures: [Tab: (request: ScanRequest, message: String)] = [:]
     private var restorationTask: Task<Void, Never>?
 
-    init(client: MobileClient, push: ResearchPushCoordinator? = nil, store: (any StoreService)? = nil) {
+    init(client: MobileClient, push: ResearchPushCoordinator? = nil, store: (any StoreService)? = nil,
+         drafts: (any OnboardingDraftPersistence)? = nil) {
         self.client = client
         self.push = push ?? ResearchPushCoordinator()
         self.store = store ?? LiveStoreService()
+        self.drafts = drafts ?? KeychainOnboardingDraftStore()
     }
     func restore() async {
         if let active = restorationTask { await active.value; return }
@@ -946,8 +965,91 @@ final class AppModel {
             await activateResearchDelivery()
         } else { requireSubscription() }
     }
+    // MARK: Account deletion
+
+    func beginAccountDeletion() async {
+        guard session != nil, admission == .ready || admission == .paywall, accountDeletion == nil else { return }
+        accountDeletionError = nil
+        // Deleting the account never cancels Apple billing (Guideline 5.1.1(v)).
+        if access?.appStore?.willRenew == true { accountDeletion = .subscriptionNotice }
+        else { await continueAccountDeletion() }
+    }
+    /// "Trotzdem fortfahren", the first step without an Apple subscription, and preflight retry.
+    func continueAccountDeletion() async {
+        switch accountDeletion {
+        case nil, .subscriptionNotice?, .preflightFailed?: break
+        default: return
+        }
+        guard session != nil else { return }
+        let account = generation, operation = UUID()
+        accountDeletionOperation = operation
+        accountDeletion = .loading
+        accountDeletionError = nil
+        do {
+            let preflight = try await client.accountDeletionPreflight()
+            guard account == generation, operation == accountDeletionOperation else { return }
+            accountDeletionRequestID = accountDeletionRequestID ?? UUID()
+            accountDeletion = .confirm(webSubscription: preflight.webSubscription)
+        } catch {
+            guard account == generation, operation == accountDeletionOperation else { return }
+            if error as? MobileError == .unauthorized { await expired(); return }
+            // Never confirm without knowing whether a web subscription ends (A1).
+            accountDeletion = .preflightFailed
+            accountDeletionError = "Das hat nicht geklappt. Bitte versuche es erneut."
+        }
+    }
+    func cancelAccountDeletion() {
+        guard let step = accountDeletion, !step.isDeleting else { return }
+        accountDeletionOperation = UUID()
+        accountDeletion = nil
+        accountDeletionError = nil
+    }
+    func confirmAccountDeletion() async {
+        guard case .confirm(let webSubscription)? = accountDeletion, let requestID = accountDeletionRequestID else { return }
+        let account = generation, operation = UUID()
+        accountDeletionOperation = operation
+        accountDeletion = .deleting(webSubscription: webSubscription)
+        accountDeletionError = nil
+        let failure: MobileError?
+        do {
+            try await client.deleteAccount(requestId: requestID)
+            failure = nil
+        } catch { failure = error as? MobileError ?? .unavailable }
+        guard account == generation, operation == accountDeletionOperation else { return }
+        guard let failure else { await completeAccountDeletion(); return }
+        if failure == .accountDeletionRefused {
+            accountDeletion = .confirm(webSubscription: webSubscription)
+            accountDeletionError = "Dieses Konto kann nicht in der App gelöscht werden."
+            return
+        }
+        // The response may have been lost after the server deleted the account; a retry
+        // then answers 401 because the account is gone. Ask the unauthenticated status.
+        var completed = false, unknown = false
+        do { completed = try await client.accountDeletionIsComplete(requestId: requestID) }
+        catch { unknown = error as? MobileError == .accountDeletionUnknown }
+        guard account == generation, operation == accountDeletionOperation else { return }
+        if completed { await completeAccountDeletion(); return }
+        if failure == .unauthorized, unknown { await expired(); return }
+        accountDeletion = .confirm(webSubscription: webSubscription)
+        accountDeletionError = "Löschen hat nicht geklappt. Bitte versuche es erneut."
+    }
+    /// The account is gone on the server: wipe everything local without contacting it again.
+    private func completeAccountDeletion() async {
+        endSession()
+        await client.clear()
+        try? drafts.save(nil)
+        URLCache.shared.removeAllCachedResponses()
+        signedOutNotice = "Dein Konto wurde gelöscht."
+    }
+    func dismissSignedOutNotice() { signedOutNotice = nil }
+
     func logout(preservingResearchDestination destination: UUID? = nil) async {
         let pushInstallationId = push.installationToRevoke
+        endSession(preservingResearchDestination: destination)
+        await client.logout(pushInstallationId: pushInstallationId)
+    }
+    /// Local sign-out: new generation, StoreKit detached, installation ID rotated. Never waits on the network.
+    private func endSession(preservingResearchDestination destination: UUID? = nil) {
         generation = UUID()
         authOperation = UUID()
         completionAuthority = nil
@@ -966,7 +1068,6 @@ final class AppModel {
         authError = nil
         pendingAccountLink = nil
         admission = .signedOut
-        await client.logout(pushInstallationId: pushInstallationId)
     }
     private func expired(preservingResearchDestination destination: UUID? = nil) async {
         await logout(preservingResearchDestination: destination)
@@ -975,6 +1076,9 @@ final class AppModel {
     private func resetPersonalState() {
         completionAuthority = nil
         access = nil
+        accountDeletionOperation = UUID()
+        accountDeletion = nil; accountDeletionError = nil; accountDeletionRequestID = nil
+        signedOutNotice = nil
         clearProfileEdit()
         profileSavedMessage = nil
         dismissScan()

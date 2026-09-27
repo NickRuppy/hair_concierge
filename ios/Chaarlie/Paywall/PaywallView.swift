@@ -40,7 +40,7 @@ struct PaywallView: View {
         .background(ChaarlieTheme.background.ignoresSafeArea())
         .safeAreaInset(edge: .bottom, spacing: 0) { PaywallFooter(model: model) }
         // A second bottom row squeezes Apple's tiles into the price line, so the account
-        // row sits above the photo. Task 7 adds "Konto löschen" after a separator here.
+        // row sits above the photo.
         .safeAreaInset(edge: .top, spacing: 0) { PaywallAccountRow(model: model) }
         .animation(ChaarlieTheme.Motion.state, value: model.purchaseState)
         .animation(ChaarlieTheme.Motion.state, value: model.paywallMessage)
@@ -143,6 +143,9 @@ private struct PaywallAccountRow: View {
         HStack(spacing: 14) {
             Spacer(minLength: 0)
             Button("Abmelden") { Task { await model.logout() } }.fixedSize()
+            Text("·").accessibilityHidden(true)
+            Button("Konto löschen") { Task { await model.beginAccountDeletion() } }.fixedSize()
+                .accessibilityIdentifier("paywall.delete")
         }
         .chaarlieSystemFont(12, relativeTo: .footnote).foregroundStyle(ChaarlieTheme.muted).buttonStyle(.plain)
         .dynamicTypeSize(...DynamicTypeSize.accessibility2)

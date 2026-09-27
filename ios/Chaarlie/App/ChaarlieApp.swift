@@ -149,6 +149,11 @@ struct RootView: View {
                 .presentationDragIndicator(.visible)
                 .presentationCornerRadius(24)
         }
+        .sheet(isPresented: Binding(get: { model.accountDeletion != nil }, set: { if !$0 { model.cancelAccountDeletion() } })) {
+            AccountDeletionSheet(model: model)
+                .preferredColorScheme(.light)
+                .presentationDetents([.medium, .large]).presentationDragIndicator(.visible).presentationCornerRadius(24)
+        }
         .alert("Mit anderem Konto anmelden?", isPresented: Binding(get: { model.pendingAccountLink != nil }, set: { _ in })) {
             Button("Abmelden und Link öffnen") {
                 let callback = model.pendingAccountLink
