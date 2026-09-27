@@ -550,8 +550,8 @@ Zwei Stellen, an denen Discovery-Teilnehmerinnen in Zahlen auftauchen, die nicht
 - **„Kategorie ändern" ist ausgegraut / „Erst Finalisierung aufheben."** — der Call ist finalisiert.
   Aufheben, korrigieren, betroffene Schritte neu entscheiden, neu finalisieren.
 - **Entscheidung lässt sich nicht speichern (`409`)** — der Call ist finalisiert (`finalized`): erst
-  die Finalisierung aufheben. Oder die Seite ist veraltet (`unknown_item`, `item_required`): neu
-  laden. „Weglassen" wird abgelehnt, wenn es das letzte Produkt im Schritt wäre (`drop_last`), ein
+  die Finalisierung aufheben. Oder die Seite ist veraltet (`unknown_item`, `item_required`,
+  `stale_binding` — ein Produkt wurde inzwischen verschoben): neu laden. „Weglassen" wird abgelehnt, wenn es das letzte Produkt im Schritt wäre (`drop_last`), ein
   Tausch, wenn ein anderes Produkt desselben Schritts schon auf dieses Ziel getauscht ist
   (`swap_taken`).
 - **PDF öffnet das Cockpit statt des Dokuments** — nicht finalisiert, die Quelle (Marken,

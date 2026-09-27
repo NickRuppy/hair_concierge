@@ -680,6 +680,13 @@ export type DiscoveryCockpitStepView = {
   /** What the participant owns for this step, as the cockpit names it. */
   ownedLabel: string | null
   intakeItemId: string | null
+  /** Her product's catalog product (the one a kept entry prints); null for an empty step. */
+  ownedProductId: string | null
+  /**
+   * Her product's usage role as composed (batch 9): the decision write re-checks it — with
+   * `category` — under the intake lock, so a concurrent usage correction cannot slip past.
+   */
+  ownedUsageRole: DiscoveryUsageRole | null
   /**
    * Batch 9: how many entries this step has — one per product of hers in it (adjacent in
    * `steps`, same `decisionKey`), or 1 for a step she owns nothing or one product for.
@@ -955,6 +962,8 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       // Every printed label comes from the composition, which fingerprints it.
       ownedLabel: refined.ownedLabel,
       intakeItemId: item?.id ?? null,
+      ownedProductId: item?.productId ?? null,
+      ownedUsageRole: item?.usageRole ?? null,
       stepEntryCount: stepEntries.length,
       ownedFrequencyLabel: item?.frequency ? DISCOVERY_FREQUENCY_LABELS[item.frequency] : null,
       canDrop:
@@ -1041,13 +1050,19 @@ export type DiscoveryCallDecisionInput = {
   intakeItemId: string | null
   /** The step's other products as the server bound them — the drop invariant's siblings. */
   siblingItemIds: string[]
+  /**
+   * The target's usage (category, role) as the server composed it — re-checked under the
+   * lock (`stale_binding`). Both null for an empty step.
+   */
+  expectedCategory: PersonalPlanCategory | null
+  expectedUsageRole: DiscoveryUsageRole | null
 }
 
 export type DiscoveryCallDecisionOutcome =
   | "not_found"
-  | "not_submitted"
   | "finalized"
   | "item_not_found"
+  | "stale_binding"
   | "drop_last"
   | "swap_taken"
   | "stored"
@@ -1058,9 +1073,9 @@ export type DiscoveryCallDecisionResult =
 
 const DECISION_OUTCOMES: readonly DiscoveryCallDecisionOutcome[] = [
   "not_found",
-  "not_submitted",
   "finalized",
   "item_not_found",
+  "stale_binding",
   "drop_last",
   "swap_taken",
   "stored",
@@ -1069,9 +1084,11 @@ const DECISION_OUTCOMES: readonly DiscoveryCallDecisionOutcome[] = [
 /**
  * One row per (intake, step, product) — the call changes its mind by overwriting, not by
  * accumulating. ONE call to `discovery_admin_set_call_decision` (migration 20260927120000):
- * under the same intake row lock as the usage correction it refuses a finalised or draft
- * intake, keeps a step from being dropped empty (`drop_last`) and two products of one step
- * from swapping to the same product (`swap_taken`), then upserts.
+ * under the same intake row lock as the usage correction it refuses a finalised intake
+ * (a draft is decidable, as before), re-checks the composed binding (`stale_binding`),
+ * keeps a step from being dropped empty (`drop_last`, counting only siblings still in the
+ * step) and two products of one step from swapping to the same product (`swap_taken`),
+ * then upserts.
  */
 export async function setDiscoveryCallDecision(
   input: DiscoveryCallDecisionInput,
@@ -1081,6 +1098,8 @@ export async function setDiscoveryCallDecision(
     target_intake_id: input.intakeId,
     target_decision_key: input.decisionKey,
     target_item_id: input.intakeItemId,
+    expected_category: input.expectedCategory,
+    expected_usage_role: input.expectedUsageRole,
     new_decision: input.decision,
     new_swap_product_id: input.decision === "swap" ? input.swapProductId : null,
     sibling_item_ids: input.siblingItemIds,

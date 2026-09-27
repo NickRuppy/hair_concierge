@@ -37,9 +37,12 @@ import {
  *    for that very product (its verdict's alternatives, or the Idealplan's own pick where
  *    there are none). Nick's ruling: no catalog picker (400).
  *
- * The write itself is one locked database call (`discovery_admin_set_call_decision`): it
- * re-checks the sibling invariants inside the intake row lock, so two tabs cannot race a
- * step empty or onto one swap target (409 `drop_last` / `swap_taken`).
+ * The write itself is one locked database call (`discovery_admin_set_call_decision`). The
+ * composition runs BEFORE that lock, so the call re-checks it inside: the target's usage
+ * must still be the composed one (409 `stale_binding`), and only siblings still in the
+ * step count for a drop — two tabs or a concurrent usage correction cannot race a step
+ * empty or onto one swap target (409 `drop_last` / `swap_taken`). A draft intake takes
+ * decisions like a submitted one; only finalising needs the submit.
  */
 
 const bodySchema = z
@@ -56,9 +59,9 @@ const bodySchema = z
 
 const OUTCOME_STATUS: Record<Exclude<DiscoveryCallDecisionOutcome, "stored">, number> = {
   not_found: 404,
-  not_submitted: 409,
   finalized: 409,
   item_not_found: 409,
+  stale_binding: 409,
   drop_last: 409,
   swap_taken: 409,
 }
@@ -132,6 +135,9 @@ export function createDiscoveryDecisionsHandler(
           swapProductId,
           intakeItemId: entry.intakeItemId,
           siblingItemIds,
+          // A bound product always sits in a step of its own usage category.
+          expectedCategory: entry.intakeItemId ? entry.category : null,
+          expectedUsageRole: entry.intakeItemId ? entry.ownedUsageRole : null,
         },
         admin,
       )

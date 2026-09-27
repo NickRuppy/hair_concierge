@@ -141,12 +141,7 @@ export function discoveryDecisionWriteOutcome(
     rollback: true,
     // Finalised in the meantime (another tab): the stored timestamp is not ours to
     // invent, so the screen says what happened instead of faking it.
-    error:
-      body?.code === "finalized"
-        ? FROZEN_HINT
-        : body?.code === "not_submitted"
-          ? NOT_SUBMITTED_HINT
-          : WRITE_ERROR,
+    error: body?.code === "finalized" ? FROZEN_HINT : WRITE_ERROR,
     refresh: false,
   }
 }

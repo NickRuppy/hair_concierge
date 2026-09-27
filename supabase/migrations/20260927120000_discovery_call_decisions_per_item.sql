@@ -11,18 +11,22 @@
 --     deleted product means nothing;
 --   * discovery_admin_set_call_decision: the cockpit's one decision write. It takes the
 --     same intake row lock as discovery_admin_set_intake_item_usage, so decisions and
---     usage corrections serialize per intake, and checks the step's sibling invariants
---     inside that lock: a drop needs a sibling that stays (drop_last), two products of
---     one step never swap to the same product (swap_taken). The step's siblings come from
---     the app's binding (the database does not know the Idealplan).
+--     usage corrections serialize per intake, and checks the step's invariants inside
+--     that lock. The app composes the binding (the database does not know the Idealplan)
+--     BEFORE the lock, so the write re-checks it: the target's usage (category, role) must
+--     still be the one the app composed (stale_binding), and a drop only counts siblings
+--     that still share the target's usage (drop_last) — a sibling a concurrent usage
+--     correction moved away never keeps a step alive. Two products of one step never swap
+--     to the same product (swap_taken). Like the route before it, a draft intake is
+--     decidable; only a finalised one is frozen.
 --
--- Outcomes (jsonb `outcome`): not_found | not_submitted | finalized | item_not_found |
+-- Outcomes (jsonb `outcome`): not_found | finalized | item_not_found | stale_binding |
 -- drop_last | swap_taken | stored (with the stored row).
 --
 -- Existing rows are compatible: the old key was stricter, and the server always wrote the
 -- step's bound product. NOT compatible with the previously deployed app, whose upsert names
 -- ON CONFLICT (intake_id, decision_key): coordinated cutover, see the plan's Rollout.
--- Reverse: DROP FUNCTION public.discovery_admin_set_call_decision(uuid, text, uuid, text, uuid, uuid[]);
+-- Reverse: DROP FUNCTION public.discovery_admin_set_call_decision(uuid, text, uuid, text, text, text, uuid, uuid[]);
 -- delete 'drop' rows and all but one row per (intake_id, decision_key); restore the old
 -- UNIQUE (intake_id, decision_key), the decision CHECK without 'drop' and ON DELETE SET NULL.
 
@@ -51,6 +55,8 @@ CREATE FUNCTION public.discovery_admin_set_call_decision(
   target_intake_id uuid,
   target_decision_key text,
   target_item_id uuid,
+  expected_category text,
+  expected_usage_role text,
   new_decision text,
   new_swap_product_id uuid,
   sibling_item_ids uuid[]
@@ -61,38 +67,45 @@ SECURITY INVOKER
 SET search_path = ''
 AS $$
 DECLARE
-  intake_state text;
   finalized_at timestamptz;
+  target_category text;
+  target_role text;
   stored_key text;
   stored_decision text;
   stored_swap uuid;
   stored_item uuid;
 BEGIN
-  SELECT intake.state, intake.call_finalized_at INTO intake_state, finalized_at
+  -- Draft or submitted: both decidable (as before batch 9). Finalised: frozen.
+  SELECT intake.call_finalized_at INTO finalized_at
     FROM public.discovery_intakes AS intake
    WHERE intake.id = target_intake_id
      FOR UPDATE;
   IF NOT FOUND THEN
     RETURN jsonb_build_object('outcome', 'not_found');
   END IF;
-  IF intake_state <> 'submitted' THEN
-    RETURN jsonb_build_object('outcome', 'not_submitted');
-  END IF;
   IF finalized_at IS NOT NULL THEN
     RETURN jsonb_build_object('outcome', 'finalized');
   END IF;
 
-  IF target_item_id IS NOT NULL AND NOT EXISTS (
-    SELECT 1 FROM public.discovery_intake_items AS item
+  IF target_item_id IS NOT NULL THEN
+    SELECT item.category, item.usage_role INTO target_category, target_role
+      FROM public.discovery_intake_items AS item
      WHERE item.id = target_item_id
        AND item.intake_id = target_intake_id
-       AND item.source <> 'none'
-  ) THEN
-    RETURN jsonb_build_object('outcome', 'item_not_found');
+       AND item.source <> 'none';
+    IF NOT FOUND THEN
+      RETURN jsonb_build_object('outcome', 'item_not_found');
+    END IF;
+    -- The binding the app composed before the lock still holds for the target itself.
+    IF target_category IS DISTINCT FROM expected_category
+       OR target_role IS DISTINCT FROM expected_usage_role THEN
+      RETURN jsonb_build_object('outcome', 'stale_binding');
+    END IF;
   END IF;
 
-  -- „Weglassen" never empties a step: at least one other product of this intake in the
-  -- step (as the app bound it) must stay, i.e. carry no drop.
+  -- „Weglassen" never empties a step: at least one other product of this intake that is
+  -- still in the step — the same usage (category, role) as the target, read under the
+  -- lock — must stay, i.e. carry no drop.
   IF new_decision = 'drop' AND NOT EXISTS (
     SELECT 1
       FROM unnest(coalesce(sibling_item_ids, ARRAY[]::uuid[])) AS sibling (id)
@@ -100,6 +113,8 @@ BEGIN
         ON item.id = sibling.id
        AND item.intake_id = target_intake_id
        AND item.source <> 'none'
+       AND item.category IS NOT DISTINCT FROM target_category
+       AND item.usage_role IS NOT DISTINCT FROM target_role
      WHERE sibling.id IS DISTINCT FROM target_item_id
        AND NOT EXISTS (
          SELECT 1 FROM public.discovery_call_decisions AS other
@@ -148,12 +163,12 @@ BEGIN
 END;
 $$;
 
-REVOKE ALL ON FUNCTION public.discovery_admin_set_call_decision(uuid, text, uuid, text, uuid, uuid[])
+REVOKE ALL ON FUNCTION public.discovery_admin_set_call_decision(uuid, text, uuid, text, text, text, uuid, uuid[])
   FROM PUBLIC, anon, authenticated;
-GRANT EXECUTE ON FUNCTION public.discovery_admin_set_call_decision(uuid, text, uuid, text, uuid, uuid[])
+GRANT EXECUTE ON FUNCTION public.discovery_admin_set_call_decision(uuid, text, uuid, text, text, text, uuid, uuid[])
   TO service_role;
 
-COMMENT ON FUNCTION public.discovery_admin_set_call_decision(uuid, text, uuid, text, uuid, uuid[]) IS
-  'Cockpit keep/swap/drop for one (step, product) after submission, under the intake row lock: drop never empties a step, siblings never share a swap target.';
+COMMENT ON FUNCTION public.discovery_admin_set_call_decision(uuid, text, uuid, text, text, text, uuid, uuid[]) IS
+  'Cockpit keep/swap/drop for one (step, product) until finalised, under the intake row lock: the composed binding is re-checked, drop never empties a step, siblings never share a swap target.';
 COMMENT ON TABLE public.discovery_call_decisions IS
   'Nick''s keep/swap/drop outcome per routine step (decision_key) and product (intake_item_id; NULL = the step holds none), written only from the admin cockpit.';

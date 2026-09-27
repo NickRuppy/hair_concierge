@@ -761,6 +761,8 @@ test("a keep never stores a swap target; the write is the one locked RPC per (st
       swapProductId: ids.alternativeA,
       intakeItemId: ids.item,
       siblingItemIds: [],
+      expectedCategory: "shampoo",
+      expectedUsageRole: null,
     },
     client,
   )
@@ -780,6 +782,8 @@ test("a keep never stores a swap target; the write is the one locked RPC per (st
         target_intake_id: ids.intake,
         target_decision_key: "decision:shampoo:shampoo_everyday:gap",
         target_item_id: ids.item,
+        expected_category: "shampoo",
+        expected_usage_role: null,
         new_decision: "keep",
         new_swap_product_id: null,
         sibling_item_ids: [],
@@ -796,6 +800,8 @@ test("the decision write passes refusals through and rejects an unknown answer",
     swapProductId: null,
     intakeItemId: ids.item,
     siblingItemIds: [],
+    expectedCategory: "shampoo" as const,
+    expectedUsageRole: null,
   }
   assert.deepEqual(
     await setDiscoveryCallDecision(input, rpcClient({ outcome: "drop_last" }).client),

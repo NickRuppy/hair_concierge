@@ -179,6 +179,8 @@ function cockpitStep(overrides: Partial<DiscoveryCockpitStepView> = {}): Discove
     outcome: "undecided",
     ownedLabel: "Chaarlie Lab Lab Shampoo Alpha",
     intakeItemId: "item-1",
+    ownedProductId: null,
+    ownedUsageRole: null,
     stepEntryCount: 1,
     ownedFrequencyLabel: null,
     canDrop: false,

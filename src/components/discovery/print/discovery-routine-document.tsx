@@ -49,6 +49,8 @@ const NOTE_SWAP_UNNAMED = "Wird ersetzt."
 // --- projection ---------------------------------------------------------------
 
 type PrintProduct = {
+  /** The catalog product printed — what two lines of one step are deduplicated by. */
+  productId: string | null
   name: string
   badge: typeof BADGE_KEEP | typeof BADGE_NEW
   /** „als Haarmaske benutzt" — her product used differently from what it is (F6). */
@@ -89,6 +91,7 @@ function stepProduct(step: DiscoveryCockpitStepView): PrintProduct | null {
     case "kept":
       return step.ownedLabel
         ? {
+            productId: step.ownedProductId,
             name: step.ownedLabel,
             badge: BADGE_KEEP,
             usage: step.ownedUsageLabel,
@@ -98,6 +101,7 @@ function stepProduct(step: DiscoveryCockpitStepView): PrintProduct | null {
     case "swapped":
       return step.swapProductLabel
         ? {
+            productId: step.swapProductId,
             name: step.swapProductLabel,
             badge: BADGE_NEW,
             usage: null,
@@ -108,6 +112,7 @@ function stepProduct(step: DiscoveryCockpitStepView): PrintProduct | null {
       // The fingerprinted label, not a re-derivation: what is printed is what is hashed.
       return step.recommendationLabel
         ? {
+            productId: step.idealRecommendation?.productId ?? null,
             name: step.recommendationLabel,
             badge: BADGE_NEW,
             usage: null,
@@ -124,7 +129,7 @@ function stepProduct(step: DiscoveryCockpitStepView): PrintProduct | null {
  * The view's entries grouped into their steps (batch 9): one printed step per decision key,
  * one line per product of hers that stays in it — kept, swapped or still open. A dropped
  * product („Weglassen") leaves the step for „Brauchst du nicht mehr"; two entries printing
- * the same product print it once.
+ * the same catalog product (by id, never by name) print it once.
  */
 function printSteps(view: DiscoveryCockpitView): PrintStep[] {
   const steps: PrintStep[] = []
@@ -146,7 +151,14 @@ function printSteps(view: DiscoveryCockpitView): PrintStep[] {
     }
     if (step.outcome === "dropped") continue
     const product = stepProduct(step)
-    if (product && printed.lines.some((line) => line.product?.name === product.name)) continue
+    // The same catalog product twice in one step prints once; a line without a known
+    // product id is never merged (two different products may share a printed name).
+    if (
+      product?.productId &&
+      printed.lines.some((line) => line.product?.productId === product.productId)
+    ) {
+      continue
+    }
     printed.lines.push({
       key: step.intakeItemId ?? step.decisionKey,
       product,

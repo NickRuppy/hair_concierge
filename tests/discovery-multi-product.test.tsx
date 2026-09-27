@@ -630,6 +630,8 @@ test("route: the client names (step, product); the server writes it with the ste
       swapProductId: null,
       intakeItemId: ids.itemA,
       siblingItemIds: [ids.itemB],
+      expectedCategory: "shampoo",
+      expectedUsageRole: null,
     },
     {
       intakeId: ids.intake,
@@ -638,6 +640,8 @@ test("route: the client names (step, product); the server writes it with the ste
       swapProductId: ids.swapShampooTwo,
       intakeItemId: ids.itemB,
       siblingItemIds: [ids.itemA],
+      expectedCategory: "shampoo",
+      expectedUsageRole: null,
     },
     {
       intakeId: ids.intake,
@@ -646,6 +650,8 @@ test("route: the client names (step, product); the server writes it with the ste
       swapProductId: null,
       intakeItemId: ids.itemB,
       siblingItemIds: [ids.itemA],
+      expectedCategory: "shampoo",
+      expectedUsageRole: null,
     },
   ])
 })
@@ -656,9 +662,12 @@ test("route: an old tab without intakeItemId works for a single-product step onl
   assert.equal(single.status, 200)
   assert.equal(written[0]!.intakeItemId, ids.itemCond)
   assert.deepEqual(written[0]!.siblingItemIds, [])
-  // An empty step: the one entry with no product.
+  assert.equal(written[0]!.expectedCategory, "conditioner")
+  // An empty step: the one entry with no product — and no usage to re-check.
   assert.equal((await post({ decisionKey: LEAVE, decision: "keep" })).status, 200)
   assert.equal(written[1]!.intakeItemId, null)
+  assert.equal(written[1]!.expectedCategory, null)
+  assert.equal(written[1]!.expectedUsageRole, null)
 
   const ambiguous = await post({ decisionKey: SH, decision: "keep" })
   assert.deepEqual(ambiguous, { status: 409, code: "item_required" })
@@ -722,7 +731,7 @@ test("route: „Weglassen“ only in a step with ≥2 products, and never the la
 })
 
 test("route: the locked write's own refusals come back as 409s", async () => {
-  for (const outcome of ["drop_last", "swap_taken", "finalized", "not_submitted"] as const) {
+  for (const outcome of ["drop_last", "swap_taken", "finalized", "stale_binding"] as const) {
     const { post } = decisionRoute(TWO_SHAMPOOS(), () => ({ outcome }))
     assert.deepEqual(await post({ decisionKey: SH, intakeItemId: ids.itemA, decision: "keep" }), {
       status: 409,
@@ -834,6 +843,27 @@ test("PDF: only an explicit drop files a same-category product under „Brauchst
   assert.ok(markup.includes("2 Produkte in deiner Routine — 2 bleiben."))
 })
 
+test("PDF: two different products with the same printed name both print (dedupe is by product id)", () => {
+  const model = modelOf(
+    [shampooA, shampooB],
+    [swap(SH, ids.itemA, ids.swapShampoo), swap(SH, ids.itemB, ids.swapShampooTwo)],
+  )
+  const view = buildDiscoveryCockpitView(model)
+  const sameName = {
+    ...view,
+    steps: view.steps.map((entry) =>
+      entry.intakeItemId === ids.itemB
+        ? { ...entry, swapProductLabel: "Guhl Leichte Frische Shampoo" }
+        : entry,
+    ),
+  }
+  const markup = renderToStaticMarkup(
+    <DiscoveryRoutineDocument name="Lena M." view={sameName} finalizedAt={null} />,
+  )
+  const routine = markup.slice(0, markup.indexOf("Deine bisherigen Produkte"))
+  assert.equal(routine.split("Guhl Leichte Frische Shampoo").length - 1, 2)
+})
+
 test("PDF: two entries printing the same product print it once", () => {
   const model = modelOf(
     [shampooA, shampooB],
@@ -919,8 +949,4 @@ test("cockpit: a dropped entry starts selected on „Weglassen“; the refusals 
     new RegExp(`disabled="" [^>]*name="decision-${SH}:${ids.itemA}" value="drop"`),
   )
   assert.equal(discoveryDecisionWriteOutcome(false, { code: "drop_last" }).rollback, true)
-  assert.equal(
-    discoveryDecisionWriteOutcome(false, { code: "not_submitted" }).error,
-    "Die Checkliste ist noch nicht abgeschickt.",
-  )
 })

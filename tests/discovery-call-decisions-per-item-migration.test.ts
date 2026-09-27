@@ -101,14 +101,21 @@ async function decide(
     decision: "keep" | "swap" | "drop"
     swap?: string | null
     siblings?: string[]
+    /** The item's usage as the route composed it (default: a role-less shampoo). */
+    expected?: { category: string | null; role: string | null }
   },
 ) {
+  const expected =
+    input.expected ??
+    (input.itemId ? { category: "shampoo", role: null } : { category: null, role: null })
   const result = await pg.query<{ result: Record<string, unknown> }>(
-    "SELECT public.discovery_admin_set_call_decision($1, $2, $3, $4, $5, $6::uuid[]) AS result",
+    "SELECT public.discovery_admin_set_call_decision($1, $2, $3, $4, $5, $6, $7, $8::uuid[]) AS result",
     [
       input.intakeId,
       input.key ?? KEY,
       input.itemId,
+      expected.category,
+      expected.role,
       input.decision,
       input.swap ?? null,
       input.siblings ?? [],
@@ -267,20 +274,99 @@ test("two products of one step never swap to the same product (swap_taken)", asy
   )
 })
 
-test("finalised, draft, unknown intake and a foreign product are refused without a write", async (t) => {
+test("a draft intake is decidable, as before batch 9 — only finalised and unknown intakes refuse", async (t) => {
+  const pg = await migrated(t)
+  const draft = await intake(pg, "draft")
+  const [a, b] = [await shampoo(pg, draft), await shampoo(pg, draft)]
+  assert.equal(
+    (await decide(pg, { intakeId: draft, itemId: a, decision: "keep", siblings: [b] })).outcome,
+    "stored",
+  )
+  assert.equal(
+    (await decide(pg, { intakeId: draft, key: EMPTY_KEY, itemId: null, decision: "keep" })).outcome,
+    "stored",
+  )
+})
+
+test("a sibling moved out of the step between compose and write never counts — drop refused (P1)", async (t) => {
+  const pg = await migrated(t)
+  const intakeId = await intake(pg)
+  const [a, b] = [await shampoo(pg, intakeId), await shampoo(pg, intakeId)]
+  // The route composed {a, b} in the shampoo step; then a usage correction moved b away.
+  await pg.query(
+    "UPDATE public.discovery_intake_items SET category = 'conditioner' WHERE id = $1",
+    [b],
+  )
+  assert.equal(
+    (await decide(pg, { intakeId, itemId: a, decision: "drop", siblings: [b] })).outcome,
+    "drop_last",
+  )
+  // A sibling whose ROLE moved counts as moved too.
+  const [oil, oilSibling] = [await shampoo(pg, intakeId), await shampoo(pg, intakeId)]
+  await pg.query(
+    "UPDATE public.discovery_intake_items SET category = 'oil', usage_role = 'dry_finish' WHERE id = ANY($1::uuid[])",
+    [[oil, oilSibling]],
+  )
+  await pg.query(
+    "UPDATE public.discovery_intake_items SET usage_role = 'pre_wash_fibre_treatment' WHERE id = $1",
+    [oilSibling],
+  )
+  const dryKey = "decision:oil:dry_finish:gap"
+  const oilExpected = { category: "oil", role: "dry_finish" }
+  assert.equal(
+    (
+      await decide(pg, {
+        intakeId,
+        key: dryKey,
+        itemId: oil,
+        decision: "drop",
+        siblings: [oilSibling],
+        expected: oilExpected,
+      })
+    ).outcome,
+    "drop_last",
+  )
+  assert.deepEqual(await rows(pg, intakeId), [])
+})
+
+test("the target itself moved since the route composed it: stale_binding, nothing written (P1)", async (t) => {
+  const pg = await migrated(t)
+  const intakeId = await intake(pg)
+  const [a, b] = [await shampoo(pg, intakeId), await shampoo(pg, intakeId)]
+  await pg.query(
+    "UPDATE public.discovery_intake_items SET category = 'conditioner' WHERE id = $1",
+    [a],
+  )
+  for (const decision of ["keep", "drop"] as const) {
+    assert.equal(
+      (await decide(pg, { intakeId, itemId: a, decision, siblings: [b] })).outcome,
+      "stale_binding",
+    )
+  }
+  assert.equal(
+    (
+      await decide(pg, {
+        intakeId,
+        itemId: a,
+        decision: "keep",
+        expected: { category: "shampoo", role: "shampoo_everyday" },
+      })
+    ).outcome,
+    "stale_binding",
+    "a role that differs is stale as well",
+  )
+  assert.deepEqual(await rows(pg, intakeId), [])
+})
+
+test("finalised, unknown intake and a foreign product are refused without a write", async (t) => {
   const pg = await migrated(t)
   const frozen = await intake(pg, "finalized")
-  const draft = await intake(pg, "draft")
   const live = await intake(pg)
   const foreign = await shampoo(pg, frozen)
 
   assert.equal(
     (await decide(pg, { intakeId: frozen, itemId: foreign, decision: "keep" })).outcome,
     "finalized",
-  )
-  assert.equal(
-    (await decide(pg, { intakeId: draft, itemId: null, decision: "keep" })).outcome,
-    "not_submitted",
   )
   assert.equal(
     (
@@ -296,12 +382,13 @@ test("finalised, draft, unknown intake and a foreign product are refused without
     (await decide(pg, { intakeId: live, itemId: foreign, decision: "keep" })).outcome,
     "item_not_found",
   )
-  for (const id of [frozen, draft, live]) assert.deepEqual(await rows(pg, id), [])
+  for (const id of [frozen, live]) assert.deepEqual(await rows(pg, id), [])
 })
 
 test("the write is service-role only and locks the intake row first", async (t) => {
   const pg = await migrated(t)
-  const signature = "public.discovery_admin_set_call_decision(uuid, text, uuid, text, uuid, uuid[])"
+  const signature =
+    "public.discovery_admin_set_call_decision(uuid, text, uuid, text, text, text, uuid, uuid[])"
   const privileges = await pg.query<{ anon: boolean; member: boolean; service: boolean }>(
     `SELECT has_function_privilege('anon', $1, 'EXECUTE') AS anon,
             has_function_privilege('authenticated', $1, 'EXECUTE') AS member,

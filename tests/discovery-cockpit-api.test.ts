@@ -269,6 +269,8 @@ test("a keep is stored with the binding the server computed; a product not in th
     swapProductId: null,
     intakeItemId: ids.item,
     siblingItemIds: [],
+    expectedCategory: "shampoo",
+    expectedUsageRole: null,
   }
   assert.deepEqual(written, [expected, expected])
 })
@@ -354,6 +356,24 @@ test("a malformed body is refused before anything is composed", async () => {
     assert.equal(await code(response), "invalid_body")
   }
   assert.equal(composed, 0)
+})
+
+test("a draft intake takes decisions, as it always did — only finalising needs a submit", async () => {
+  const written: DiscoveryCallDecisionInput[] = []
+  const response = await createDiscoveryDecisionsHandler(
+    baseDeps({
+      loadIntake: async () => ({ ...submittedIntake, state: "draft", submittedAt: null }),
+      setDecision: async (input: DiscoveryCallDecisionInput) => {
+        written.push(input)
+        return stored(input)
+      },
+    }),
+  )(
+    decisionRequest({ decisionKey: DECISION_KEY, intakeItemId: ids.item, decision: "keep" }),
+    params,
+  )
+  assert.equal(response.status, 200)
+  assert.equal(written.length, 1)
 })
 
 test("decisions are frozen while the call is finalised", async () => {
