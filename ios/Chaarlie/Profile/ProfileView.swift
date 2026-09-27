@@ -91,6 +91,7 @@ struct ProfileView: View {
                             Button("Erneut versuchen") { Task { await model.loadProfile() } }.buttonStyle(ChaarlieButton())
                         }
                     }
+                    SubscriptionRow(model: model)
                     Button("Abmelden") { Task { await model.logout() } }.buttonStyle(ChaarlieButton(outline: true))
                         .accessibilityIdentifier("profile.logout")
                 }.padding(24)

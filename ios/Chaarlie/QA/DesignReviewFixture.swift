@@ -47,6 +47,7 @@ enum DesignReviewScenario: String, Sendable {
     case profileCompletion = "profile-completion"
     case recoveryUnavailable = "recovery-unavailable"
     case paywall
+    case profileAbo = "profile-abo"
 
     static var current: Self? {
         guard ProcessInfo.processInfo.arguments.contains("--ui-design-review"),
@@ -102,7 +103,7 @@ struct DesignReviewFixture: View {
         case .research, .researchPending, .researchError, .researchIdentified, .researchIdentifiedPending,
              .researchIdentifiedError, .researchStatusLoading, .researchNoSuggestion, .researchUnsaved:
             model.selectedTab = .search
-        case .profile, .profileLoading, .profileError, .profileEdit, .profileEditError, .profileEditConflict, .profileEditLoading, .profileEditLoadError, .profileEditSaving, .profileEditMissingLength:
+        case .profile, .profileLoading, .profileError, .profileEdit, .profileEditError, .profileEditConflict, .profileEditLoading, .profileEditLoadError, .profileEditSaving, .profileEditMissingLength, .profileAbo:
             model.selectedTab = .profile
         default: break
         }
@@ -237,6 +238,11 @@ actor DesignReviewTransport: HTTPTransport {
             let status: Bootstrap.Status = scenario == .recoveryMissing ? .profile_required : scenario == .recoveryUnavailable ? .temporarily_unavailable : .ready
             var bootstrap = Bootstrap(status: status, profileRevision: "synthetic-design-profile", contextRevision: "synthetic-design-context")
             if scenario == .paywall { bootstrap.access = MobileAccess(status: .inactive, source: nil, appStore: nil) }
+            if scenario == .profileAbo {
+                bootstrap.access = MobileAccess(status: .active, source: "app_store", appStore: .init(
+                    productId: "de.chaarlie.scanner.yearly", expiresAt: "2027-09-27T10:00:00.000Z",
+                    willRenew: true, inBillingRetry: false))
+            }
             data = try JSONEncoder().encode(bootstrap)
         } else if path.hasSuffix("/profile/complete") {
             if request.httpMethod == "POST" {

@@ -22,6 +22,9 @@ final class AppModel {
     let store: any StoreService
     private(set) var purchaseState: PurchaseState = .idle
     private(set) var paywallMessage: String?
+    /// The bootstrap's latest access answer. Nil on servers that predate the paywall
+    /// or before the first bootstrap; the Profil "Abo" row hides itself then.
+    private(set) var access: MobileAccess?
     private var transactionListener: Task<Void, Never>?
     private var postingTransactionIDs: Set<UInt64> = []
     private var acknowledgedTransactionIDs: Set<UInt64> = []
@@ -294,6 +297,7 @@ final class AppModel {
         do {
             let response = try await client.bootstrap()
             guard account == generation else { return }
+            access = response.access
             switch response.status {
             case .ready: admission = (response.access ?? .open).status == .active ? .ready : .paywall
             case .profile_required: admission = .profileRequired
@@ -309,8 +313,9 @@ final class AppModel {
     }
     /// Completion responses carry no `access` today; the full bootstrap decides then.
     private func admitCompleted(_ response: Bootstrap?) async {
-        guard let access = response?.access else { await bootstrap(); return }
-        admission = access.status == .active ? .ready : .paywall
+        guard let newAccess = response?.access else { await bootstrap(); return }
+        access = newAccess
+        admission = newAccess.status == .active ? .ready : .paywall
         startTransactionListener()
         await admitResearchDelivery(response)
     }
@@ -766,6 +771,22 @@ final class AppModel {
         admission = .paywall
         startTransactionListener()
     }
+    /// Profil's "Abo verwalten" closes Apple's sheet without telling the app what changed;
+    /// this quietly re-asks the server so a cancellation there appears in the row. Never
+    /// drops to `.loading`, so Profil stays visible; only an actual loss of access routes on.
+    func refreshAccountAccess() async {
+        guard admission == .ready else { return }
+        let account = generation
+        do {
+            let response = try await client.bootstrap()
+            guard account == generation, admission == .ready else { return }
+            access = response.access
+            if (response.access ?? .open).status != .active { requireSubscription() }
+        } catch {
+            guard account == generation else { return }
+            if error as? MobileError == .unauthorized { await expired() }
+        }
+    }
     /// Runs for the installed session: first retries unfinished purchases, then
     /// follows renewals, Ask to Buy approvals and purchases made elsewhere.
     func startTransactionListener() {
@@ -915,6 +936,7 @@ final class AppModel {
     }
     private func apply(_ access: MobileAccess) async {
         guard admission == .ready || admission == .paywall else { return }
+        self.access = access
         if access.status == .active {
             guard admission == .paywall else { return }
             paywallMessage = nil
@@ -952,6 +974,7 @@ final class AppModel {
     }
     private func resetPersonalState() {
         completionAuthority = nil
+        access = nil
         clearProfileEdit()
         profileSavedMessage = nil
         dismissScan()
