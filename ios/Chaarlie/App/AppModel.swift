@@ -35,6 +35,9 @@ final class AppModel {
     /// the same deletion instead of starting another. Lives only in memory.
     private(set) var accountDeletionRequestID: UUID?
     private var accountDeletionOperation = UUID()
+    /// After a lost delete response with a non-final server status: every 3 s, ~60 s total.
+    var accountDeletionPollInterval: Duration = .seconds(3)
+    var accountDeletionPollAttempts = 20
     /// One-line notice on the signed-out entry screen after a deletion.
     private(set) var signedOutNotice: String?
     private(set) var purchaseState: PurchaseState = .idle
@@ -1016,35 +1019,51 @@ final class AppModel {
         accountDeletionOperation = operation
         accountDeletion = .deleting(webSubscription: webSubscription)
         accountDeletionError = nil
-        let failure: MobileError?
+        let failure: Error?
         do {
             try await client.deleteAccount(requestId: requestID)
             failure = nil
-        } catch { failure = error as? MobileError ?? .unavailable }
+        } catch { failure = error }
         guard account == generation, operation == accountDeletionOperation else { return }
         guard let failure else { await completeAccountDeletion(); return }
-        if failure == .accountDeletionRefused {
+        if failure as? MobileError == .accountDeletionRefused {
             accountDeletion = .confirm(webSubscription: webSubscription)
             accountDeletionError = "Dieses Konto kann nicht in der App gelöscht werden."
             return
         }
         // The response may have been lost after the server deleted the account; a retry
         // then answers 401 because the account is gone. Ask the unauthenticated status.
-        var completed = false, unknown = false
-        do { completed = try await client.accountDeletionIsComplete(requestId: requestID) }
-        catch { unknown = error as? MobileError == .accountDeletionUnknown }
+        var completed = false, inProgress = false
+        do {
+            completed = try await client.accountDeletionIsComplete(requestId: requestID)
+            inProgress = !completed
+        } catch {}
         guard account == generation, operation == accountDeletionOperation else { return }
+        // Only a lost response (no HTTP answer) can mean the server is still deleting:
+        // follow a non-final status for a while before calling it a failure.
+        if !completed, inProgress, !(failure is MobileError) {
+            for _ in 0..<accountDeletionPollAttempts {
+                try? await Task.sleep(for: accountDeletionPollInterval)
+                guard account == generation, operation == accountDeletionOperation else { return }
+                do { completed = try await client.accountDeletionIsComplete(requestId: requestID) }
+                catch { break }
+                guard account == generation, operation == accountDeletionOperation else { return }
+                if completed { break }
+            }
+        }
         if completed { await completeAccountDeletion(); return }
-        if failure == .unauthorized, unknown { await expired(); return }
+        // A refused session with no completed deletion is an expired login, whatever the status.
+        if failure as? MobileError == .unauthorized { await expired(); return }
         accountDeletion = .confirm(webSubscription: webSubscription)
         accountDeletionError = "Löschen hat nicht geklappt. Bitte versuche es erneut."
     }
     /// The account is gone on the server: wipe everything local without contacting it again.
     private func completeAccountDeletion() async {
-        endSession()
-        await client.clear()
+        // Before the signed-out screen appears, so it can never reload the old draft.
         try? drafts.save(nil)
         URLCache.shared.removeAllCachedResponses()
+        endSession()
+        await client.clear()
         signedOutNotice = "Dein Konto wurde gelöscht."
     }
     func dismissSignedOutNotice() { signedOutNotice = nil }

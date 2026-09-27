@@ -19,6 +19,13 @@ private final class MemoryDraftStore: OnboardingDraftPersistence, @unchecked Sen
     func save(_ draft: OnboardingDraft?) throws { lock.withLock { value = draft } }
 }
 
+private final class DraftSnapshot: @unchecked Sendable {
+    private let lock = NSLock()
+    private var captured: OnboardingDraft?? = .none
+    var value: OnboardingDraft?? { lock.withLock { captured } }
+    func capture(_ draft: OnboardingDraft?) { lock.withLock { if captured == nil { captured = .some(draft) } } }
+}
+
 @MainActor
 final class AccountDeletionTests: XCTestCase {
     private let userID = "0b6f5c1e-8d3a-4c2b-9e1f-2a3b4c5d6e7f"
@@ -289,6 +296,133 @@ final class AccountDeletionTests: XCTestCase {
         try await confirm(other, otherTransport, webSubscription: false)
         other.cancelAccountDeletion()
         XCTAssertNil(other.accountDeletion)
+    }
+
+    // MARK: FW4 — lost response while the server is still deleting
+
+    func testLostResponseWithANonFinalStatusPollsUntilTheDeletionCompletes() async throws {
+        let (model, transport, _, _) = try await signedInModel()
+        model.accountDeletionPollInterval = .milliseconds(10)
+        try await confirm(model, transport, webSubscription: true)
+        let status = try XCTUnwrap(model.accountDeletionRequestID).uuidString.lowercased()
+        let deleting = Task { await model.confirmAccountDeletion() }
+        try await waitFor("delete", transport)
+        await transport.fail("delete")
+        for state in ["requested", "web_billing_cancelled", "requested"] {
+            try await waitFor(status, transport)
+            await transport.complete(status, json: #"{"state":"\#(state)"}"#)
+            XCTAssertEqual(model.accountDeletion, .deleting(webSubscription: true), "Still deleting while \(state)")
+            XCTAssertNil(model.accountDeletionError)
+        }
+        try await waitFor(status, transport)
+        await transport.complete(status, json: #"{"state":"external_cleanup_done"}"#)
+        await deleting.value
+        XCTAssertEqual(model.admission, .signedOut)
+        XCTAssertEqual(model.signedOutNotice, "Dein Konto wurde gelöscht.")
+        let lookups = await transport.requestCount(status)
+        XCTAssertEqual(lookups, 4)
+    }
+    func testPollingGivesUpAfterItsBudgetWithTheRetryMessage() async throws {
+        let (model, transport, _, _) = try await signedInModel()
+        XCTAssertEqual(model.accountDeletionPollInterval, .seconds(3))
+        XCTAssertEqual(model.accountDeletionPollAttempts, 20, "3 s × 20 ≈ 60 s")
+        model.accountDeletionPollInterval = .milliseconds(10)
+        model.accountDeletionPollAttempts = 3
+        try await confirm(model, transport, webSubscription: false)
+        let status = try XCTUnwrap(model.accountDeletionRequestID).uuidString.lowercased()
+        let deleting = Task { await model.confirmAccountDeletion() }
+        try await waitFor("delete", transport)
+        await transport.fail("delete")
+        for _ in 0..<4 {
+            try await waitFor(status, transport)
+            await transport.complete(status, json: #"{"state":"requested"}"#)
+        }
+        await deleting.value
+        XCTAssertEqual(model.accountDeletion, .confirm(webSubscription: false))
+        XCTAssertEqual(model.accountDeletionError, "Löschen hat nicht geklappt. Bitte versuche es erneut.")
+        XCTAssertEqual(model.admission, .ready)
+        let lookups = await transport.requestCount(status)
+        XCTAssertEqual(lookups, 4, "One lookup plus three polls")
+    }
+    func testLogoutStopsPolling() async throws {
+        let (model, transport, _, _) = try await signedInModel()
+        model.accountDeletionPollInterval = .milliseconds(50)
+        try await confirm(model, transport, webSubscription: false)
+        let status = try XCTUnwrap(model.accountDeletionRequestID).uuidString.lowercased()
+        let deleting = Task { await model.confirmAccountDeletion() }
+        try await waitFor("delete", transport)
+        await transport.fail("delete")
+        try await waitFor(status, transport)
+        await transport.complete(status, json: #"{"state":"requested"}"#)
+        let logout = Task { await model.logout() }
+        try await waitFor("logout", transport)
+        await transport.complete("logout", json: "{}")
+        await logout.value
+        await deleting.value
+        try await Task.sleep(for: .milliseconds(150))
+        let lookups = await transport.requestCount(status)
+        XCTAssertEqual(lookups, 1, "No poll after logout")
+        XCTAssertEqual(model.admission, .signedOut)
+        XCTAssertNil(model.accountDeletion)
+        XCTAssertNil(model.signedOutNotice)
+    }
+    func testAServerFailureIsNotPolled() async throws {
+        let (model, transport, _, _) = try await signedInModel()
+        model.accountDeletionPollInterval = .milliseconds(10)
+        try await confirm(model, transport, webSubscription: false)
+        let status = try XCTUnwrap(model.accountDeletionRequestID).uuidString.lowercased()
+        let deleting = Task { await model.confirmAccountDeletion() }
+        try await waitFor("delete", transport)
+        await transport.complete("delete", status: 503, json: #"{"error":"temporarily_unavailable"}"#)
+        try await waitFor(status, transport)
+        await transport.complete(status, json: #"{"state":"web_billing_cancelled"}"#)
+        await deleting.value
+        XCTAssertEqual(model.accountDeletionError, "Löschen hat nicht geklappt. Bitte versuche es erneut.")
+        let lookups = await transport.requestCount(status)
+        XCTAssertEqual(lookups, 1)
+    }
+
+    // MARK: FW5 — a 401 without a completed deletion is an expired login
+
+    func testUnauthorizedWithANonFinalStatusIsAnExpiredLogin() async throws {
+        for (lookupStatus, json) in [(200, #"{"state":"requested"}"#), (200, #"{"state":"web_billing_cancelled"}"#),
+                                     (503, #"{"error":"temporarily_unavailable"}"#)] {
+            let (model, transport, _, _) = try await signedInModel()
+            model.accountDeletionPollInterval = .milliseconds(10)
+            try await confirm(model, transport, webSubscription: false)
+            let status = try XCTUnwrap(model.accountDeletionRequestID).uuidString.lowercased()
+            let deleting = Task { await model.confirmAccountDeletion() }
+            try await waitFor("delete", transport)
+            await transport.complete("delete", status: 401, json: #"{"error":"unauthorized"}"#)
+            try await waitFor("refresh", transport)
+            await transport.complete("refresh", status: 401, json: #"{"error":"unauthorized"}"#)
+            try await waitFor(status, transport)
+            await transport.complete(status, status: lookupStatus, json: json)
+            await deleting.value
+            XCTAssertEqual(model.admission, .signedOut, json)
+            XCTAssertNil(model.signedOutNotice)
+            XCTAssertEqual(model.authError, "Deine Anmeldung ist abgelaufen. Bitte melde dich erneut an.", json)
+        }
+    }
+
+    // MARK: FW6 — no old draft for the signed-out screen
+
+    func testDraftIsGoneBeforeTheSignedOutScreenAppears() async throws {
+        let drafts = MemoryDraftStore(OnboardingDraft(version: 1))
+        let (model, transport, _, _) = try await signedInModel(drafts: drafts)
+        try await confirm(model, transport, webSubscription: false)
+        let deleting = Task { await model.confirmAccountDeletion() }
+        try await waitFor("delete", transport)
+        let draftWhenSignedOut = DraftSnapshot()
+        withObservationTracking { _ = model.admission } onChange: {
+            // Fires as admission is about to change to .signedOut.
+            draftWhenSignedOut.capture(drafts.draft)
+        }
+        await transport.complete("delete", json: #"{"status":"deleted"}"#)
+        await deleting.value
+        XCTAssertEqual(model.admission, .signedOut)
+        let observed = try XCTUnwrap(draftWhenSignedOut.value, "admission changed")
+        XCTAssertNil(observed, "Draft cleared before the signed-out entry could load it")
     }
 
     // MARK: Helpers
