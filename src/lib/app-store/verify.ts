@@ -10,6 +10,7 @@ import {
   type JWSTransactionDecodedPayload,
   type ResponseBodyV2DecodedPayload,
 } from "@apple/app-store-server-library"
+import { localMobileModeEnabled } from "../mobile/pilot"
 import { APP_STORE_ENVIRONMENTS, type AppStoreEnvironment } from "./state"
 
 /**
@@ -18,7 +19,8 @@ import { APP_STORE_ENVIRONMENTS, type AppStoreEnvironment } from "./state"
  * the signature, bundle ID and (Production) app Apple ID checks.
  *
  * `Xcode` is local StoreKit testing: Apple's library accepts it WITHOUT a signature,
- * so it is allowed only when MOBILE_AUTH_MODE=local.
+ * so it is allowed only under the full local-mode predicate (localMobileModeEnabled),
+ * checked both when reading config and again in the factory.
  */
 
 export type AppStoreVerifierConfig = {
@@ -63,7 +65,7 @@ export function readAppStoreVerifierConfig(
   if (
     environments.length === 0 ||
     environments.some((value) => !(APP_STORE_ENVIRONMENTS as readonly string[]).includes(value)) ||
-    (environments.includes("Xcode") && env.MOBILE_AUTH_MODE !== "local")
+    (environments.includes("Xcode") && !localMobileModeEnabled(env))
   )
     throw new AppStoreConfigError()
   const rawAppleId = env.APP_STORE_APP_APPLE_ID
@@ -149,8 +151,16 @@ export type AppStoreVerifier = {
   verifyNotification(signedPayload: string): Promise<VerifiedNotification>
 }
 
+/**
+ * Build config with readAppStoreVerifierConfig. The factory re-checks the Xcode rule
+ * against the live process environment so a hand-built config cannot enable unsigned data.
+ */
 export function createAppStoreVerifier(config: AppStoreVerifierConfig): AppStoreVerifier {
-  if (config.environments.length === 0 || config.rootCertificates.length === 0)
+  if (
+    config.environments.length === 0 ||
+    config.rootCertificates.length === 0 ||
+    (config.environments.includes("Xcode") && !localMobileModeEnabled(process.env))
+  )
     throw new AppStoreConfigError()
   const verifiers = new Map<AppStoreEnvironment, SignedDataVerifier>()
   for (const environment of config.environments) {

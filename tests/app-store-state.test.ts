@@ -151,21 +151,40 @@ test("S7 REFUND_REVERSED clears only that transaction's revocation", () => {
   assert.equal(access([merged]), true)
 })
 
-test("S8 an older signedDate never overwrites newer state; out-of-order renewals both count", () => {
+test("S8 an older signedDate never overwrites newer state for the same row, whatever the arrival order", () => {
+  const arrive = <T extends { signedDate: Date }>(...rows: T[]) =>
+    rows.reduce<T | null>((stored, incoming) => mergeBySignedDate(stored, incoming), null)!
+
+  // Same transaction: the REFUND (newer) is stored before a stale device copy (older) arrives.
   const refunded = tx({ revocationDate: t0 + 5 * day, signedDate: t0 + 5 * day }, "REFUND")
   const staleCopy = tx({ signedDate: t0 + 1000 })
-  const merged = mergeBySignedDate(refunded, staleCopy)
-  assert.equal(merged, refunded)
-  assert.equal(access([merged]), false)
-  assert.equal(mergeBySignedDate(null, staleCopy), staleCopy)
+  assert.equal(arrive(refunded, staleCopy), refunded)
+  assert.equal(arrive(staleCopy, refunded), refunded)
+  assert.equal(access([arrive(refunded, staleCopy)]), false)
   // An identical replay (same signedDate) is idempotent.
-  assert.deepEqual(mergeBySignedDate(refunded, { ...refunded }), refunded)
+  assert.deepEqual(arrive(refunded, { ...refunded }), refunded)
 
-  const retry = status({ isInBillingRetryPeriod: true, signedDate: t0 + 5 * day })
+  // Same renewal transaction: DID_RENEW extended expiresDate (newer) arrives before the
+  // app's earlier copy of that transaction with the original expiresDate (older).
+  const renewed = tx({ expiresDate: now.getTime() + 20 * day, signedDate: now.getTime() - day })
+  const earlierCopy = tx({ expiresDate: now.getTime() - day, signedDate: t0 + 1000 })
+  assert.equal(arrive(renewed, earlierCopy), renewed)
+  assert.equal(access([arrive(renewed, earlierCopy)]), true)
+
+  // Same status row: DID_FAIL_TO_RENEW (retry + grace, newer) arrives before a delayed
+  // DID_RENEW-era renewal info (no retry, older); the grace entitlement survives.
+  const expired = tx({ expiresDate: now.getTime() - day })
+  const retry = status({
+    isInBillingRetryPeriod: true,
+    gracePeriodExpiresDate: now.getTime() + day,
+    signedDate: now.getTime() - 1000,
+  })
   const olderRenewal = status({ isInBillingRetryPeriod: false, signedDate: t0 + 2 * day })
-  assert.equal(mergeBySignedDate(retry, olderRenewal), retry)
+  assert.equal(arrive(retry, olderRenewal), retry)
+  assert.equal(access([expired], [arrive(retry, olderRenewal)]), true)
+  assert.equal(access([expired], [arrive(olderRenewal, retry)]), true)
 
-  // DID_RENEW for period 2 arrives before the late SUBSCRIBED for period 1.
+  // Different periods are separate rows: a late period-1 copy never hides period 2.
   const period2 = tx({
     transactionId: "2000000000000003",
     purchaseDate: t0 + 30 * day,
@@ -173,10 +192,11 @@ test("S8 an older signedDate never overwrites newer state; out-of-order renewals
     signedDate: t0 + 30 * day,
   })
   const latePeriod1 = tx({ expiresDate: now.getTime() - 1, signedDate: t0 + 1000 })
-  assert.equal(access([period2, latePeriod1]), false)
-  const later = new Date(t0 + 31 * day)
   assert.equal(
-    hasActiveAppStoreAccess({ transactions: [period2, latePeriod1], statuses: [] }, later),
+    hasActiveAppStoreAccess(
+      { transactions: [period2, latePeriod1], statuses: [] },
+      new Date(t0 + 31 * day),
+    ),
     true,
   )
 })
@@ -290,6 +310,7 @@ test("renewal snapshot records renewal intent and the triggering notification", 
   )
   assert.deepEqual(row, {
     originalTransactionId: "2000000000000001",
+    environment: "Production",
     autoRenewStatus: false,
     autoRenewProductId: "de.chaarlie.scanner.yearly",
     inBillingRetry: false,

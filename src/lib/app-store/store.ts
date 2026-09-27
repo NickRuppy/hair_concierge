@@ -8,25 +8,52 @@ import type {
 } from "./state"
 
 /**
- * Service-role persistence for App Store entitlements. The newer-wins guard and the
- * bind-once ownership rule live in SQL (app_store_upsert_*), so concurrent writers
- * cannot race a stale payload over a newer one. Upserts return the row owner after
- * the write (null while unbound).
+ * Service-role persistence for App Store entitlements. The newer-wins guard, immutable
+ * row identity (environment, original transaction) and one-account-per-subscription
+ * ownership (plan A3) live in SQL (app_store_upsert_*), serialized per subscription.
  */
+
+/**
+ * `owned_by_other_account`: the subscription is bound to `owner`, not the caller (409);
+ * Apple's state was still recorded for the owner. `stale`: an older signedDate was
+ * ignored. The mismatch outcomes changed nothing and are worth logging.
+ */
+export type AppStoreWriteOutcome =
+  | "applied"
+  | "stale"
+  | "owned_by_other_account"
+  | "environment_mismatch"
+  | "identity_mismatch"
+export type AppStoreWriteResult = { outcome: AppStoreWriteOutcome; owner: string | null }
+
+const OUTCOMES: readonly string[] = [
+  "applied",
+  "stale",
+  "owned_by_other_account",
+  "environment_mismatch",
+  "identity_mismatch",
+]
 
 const iso = (value: Date | null) => (value === null ? null : value.toISOString())
 
-function owner(data: unknown, error: unknown): string | null {
-  if (error || (data !== null && typeof data !== "string"))
+function writeResult(data: unknown, error: unknown): AppStoreWriteResult {
+  const result = data as { outcome?: unknown; owner?: unknown } | null
+  if (
+    error ||
+    !result ||
+    typeof result.outcome !== "string" ||
+    !OUTCOMES.includes(result.outcome) ||
+    (result.owner !== null && typeof result.owner !== "string")
+  )
     throw new Error("app_store_write_failed")
-  return data
+  return { outcome: result.outcome as AppStoreWriteOutcome, owner: result.owner }
 }
 
 export async function upsertAppStoreTransaction(
   client: SupabaseClient,
   row: AppStoreTransactionRow,
   userId: string | null,
-): Promise<string | null> {
+): Promise<AppStoreWriteResult> {
   const { data, error } = await client.rpc("app_store_upsert_transaction", {
     p_transaction_id: row.transactionId,
     p_original_transaction_id: row.originalTransactionId,
@@ -42,17 +69,18 @@ export async function upsertAppStoreTransaction(
     p_revocation_reason: row.revocationReason,
     p_signed_date: iso(row.signedDate),
   })
-  return owner(data, error)
+  return writeResult(data, error)
 }
 
 export async function upsertAppStoreSubscriptionStatus(
   client: SupabaseClient,
   row: AppStoreSubscriptionStatusRow,
   userId: string | null,
-): Promise<string | null> {
+): Promise<AppStoreWriteResult> {
   const { data, error } = await client.rpc("app_store_upsert_subscription_status", {
     p_original_transaction_id: row.originalTransactionId,
     p_user_id: userId,
+    p_environment: row.environment,
     p_auto_renew_status: row.autoRenewStatus,
     p_auto_renew_product_id: row.autoRenewProductId,
     p_in_billing_retry: row.inBillingRetry,
@@ -61,7 +89,7 @@ export async function upsertAppStoreSubscriptionStatus(
     p_signed_date: iso(row.signedDate),
     p_last_notification_type: row.lastNotificationType,
   })
-  return owner(data, error)
+  return writeResult(data, error)
 }
 
 type TransactionRecord = {
@@ -81,6 +109,7 @@ type TransactionRecord = {
 
 type StatusRecord = {
   original_transaction_id: string
+  environment: AppStoreEnvironment
   auto_renew_status: boolean
   auto_renew_product_id: string | null
   in_billing_retry: boolean
@@ -116,7 +145,7 @@ export async function loadAppStoreEntitlement(
     const result = await client
       .from("app_store_subscription_status")
       .select(
-        "original_transaction_id,auto_renew_status,auto_renew_product_id,in_billing_retry,grace_period_expires_date,expiration_intent,signed_date,last_notification_type",
+        "original_transaction_id,environment,auto_renew_status,auto_renew_product_id,in_billing_retry,grace_period_expires_date,expiration_intent,signed_date,last_notification_type",
       )
       .in("original_transaction_id", originals)
     if (result.error || !result.data) throw new Error("app_store_read_failed")
@@ -139,6 +168,7 @@ export async function loadAppStoreEntitlement(
     })),
     statuses: statuses.map((row) => ({
       originalTransactionId: row.original_transaction_id,
+      environment: row.environment,
       autoRenewStatus: row.auto_renew_status,
       autoRenewProductId: row.auto_renew_product_id,
       inBillingRetry: row.in_billing_retry,

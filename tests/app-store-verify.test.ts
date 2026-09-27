@@ -110,6 +110,28 @@ function transaction(overrides: Record<string, unknown> = {}) {
   }
 }
 
+const localMode = {
+  MOBILE_API_ENABLED: "true",
+  MOBILE_AUTH_MODE: "local",
+  NEXT_PUBLIC_SUPABASE_URL: "http://127.0.0.1:54321",
+  MOBILE_AUTH_CALLBACK_URL: "chaarlie-local://auth",
+}
+const localKeys = [...Object.keys(localMode), "MOBILE_PILOT_ENABLED"]
+
+function withProcessEnv<T>(vars: Record<string, string | undefined>, run: () => T): T {
+  const saved = Object.fromEntries(localKeys.map((key) => [key, process.env[key]]))
+  for (const key of localKeys) delete process.env[key]
+  Object.assign(process.env, vars)
+  try {
+    return run()
+  } finally {
+    for (const key of localKeys) {
+      if (saved[key] === undefined) delete process.env[key]
+      else process.env[key] = saved[key]
+    }
+  }
+}
+
 function config(overrides: Partial<AppStoreVerifierConfig> = {}): AppStoreVerifierConfig {
   return {
     bundleId: "de.chaarlie.app",
@@ -166,8 +188,19 @@ test("Xcode (unsigned StoreKit test) data is rejected unless the verifier runs i
     leaf: forged,
   })
   await rejects(createAppStoreVerifier(config()).verifyTransaction(xcode), "invalid_environment")
+  // A hand-built config cannot enable unsigned data outside the full local-mode predicate.
+  for (const env of [{}, { ...localMode, MOBILE_PILOT_ENABLED: "true" }]) {
+    withProcessEnv(env, () =>
+      assert.throws(
+        () => createAppStoreVerifier(config({ environments: ["Xcode"], appAppleId: undefined })),
+        (error: unknown) => error instanceof AppStoreConfigError,
+      ),
+    )
+  }
   // Local StoreKit testing: Apple's library skips the signature for Xcode by design.
-  const local = createAppStoreVerifier(config({ environments: ["Xcode"], appAppleId: undefined }))
+  const local = withProcessEnv(localMode, () =>
+    createAppStoreVerifier(config({ environments: ["Xcode"], appAppleId: undefined })),
+  )
   assert.equal((await local.verifyTransaction(xcode)).environment, "Xcode")
 })
 
@@ -267,7 +300,7 @@ test("configuration fails closed", () => {
       ...base,
       APP_STORE_APP_APPLE_ID: undefined,
       APP_STORE_ENVIRONMENTS: " Sandbox , Xcode ",
-      MOBILE_AUTH_MODE: "local",
+      ...localMode,
     }),
     { bundleId: "de.chaarlie.app", appAppleId: undefined, environments: ["Sandbox", "Xcode"] },
   )
@@ -280,6 +313,20 @@ test("configuration fails closed", () => {
     { APP_STORE_ENVIRONMENTS: "production" },
     { APP_STORE_ENVIRONMENTS: "Sandbox,Xcode" },
     { APP_STORE_ENVIRONMENTS: "Xcode", MOBILE_AUTH_MODE: undefined },
+    // MOBILE_AUTH_MODE=local alone is not local mode: every part of the predicate counts.
+    {
+      APP_STORE_ENVIRONMENTS: "Xcode",
+      ...localMode,
+      NEXT_PUBLIC_SUPABASE_URL: "https://abc.supabase.co",
+    },
+    {
+      APP_STORE_ENVIRONMENTS: "Xcode",
+      ...localMode,
+      NEXT_PUBLIC_SUPABASE_URL: "http://10.0.0.5:54321",
+    },
+    { APP_STORE_ENVIRONMENTS: "Xcode", ...localMode, MOBILE_PILOT_ENABLED: "true" },
+    { APP_STORE_ENVIRONMENTS: "Xcode", ...localMode, MOBILE_AUTH_CALLBACK_URL: "chaarlie://auth" },
+    { APP_STORE_ENVIRONMENTS: "Xcode", ...localMode, MOBILE_API_ENABLED: undefined },
     { APP_STORE_APP_APPLE_ID: undefined },
     { APP_STORE_APP_APPLE_ID: "12ab" },
     { APP_STORE_APP_APPLE_ID: "0" },

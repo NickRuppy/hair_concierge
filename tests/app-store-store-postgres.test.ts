@@ -32,16 +32,31 @@ function docker(args: string[], input?: string): Promise<string> {
   })
 }
 
-const upsertTx = (id: string, user: string | null, signed: string, extra = "NULL, NULL") =>
-  `SELECT coalesce(app_store_upsert_transaction('${id}', '1000', ${user ? `'${user}'` : "NULL"}, NULL,
-    'de.chaarlie.scanner.monthly', 'Production', '2026-09-01T10:00:00Z', '2026-10-01T10:00:00Z',
-    NULL, false, ${extra}, '${signed}')::text, 'unbound');`
-const upsertStatus = (user: string | null, retry: boolean, signed: string) =>
-  `SELECT coalesce(app_store_upsert_subscription_status('1000', ${user ? `'${user}'` : "NULL"}, true,
-    'de.chaarlie.scanner.monthly', ${retry}, NULL, NULL, '${signed}', 'DID_RENEW')::text, 'unbound');`
+const q = (value: string | null) => (value === null ? "NULL" : `'${value}'`)
+const outcome = (call: string) =>
+  `SELECT r->>'outcome' || ',' || coalesce(r->>'owner', 'unbound') FROM (SELECT ${call} AS r) x;`
+function upsertTx(
+  id: string,
+  user: string | null,
+  signed: string,
+  { original = "1000", environment = "Production", revoked = null as string | null } = {},
+) {
+  return outcome(`app_store_upsert_transaction(${q(id)}, ${q(original)}, ${q(user)}, NULL,
+    'de.chaarlie.scanner.monthly', ${q(environment)}, '2026-09-01T10:00:00Z', '2026-10-01T10:00:00Z',
+    NULL, false, ${q(revoked)}, ${revoked ? "0" : "NULL"}, ${q(signed)})`)
+}
+function upsertStatus(
+  user: string | null,
+  retry: boolean,
+  signed: string,
+  { original = "1000", environment = "Production" } = {},
+) {
+  return outcome(`app_store_upsert_subscription_status(${q(original)}, ${q(user)}, ${q(environment)},
+    true, 'de.chaarlie.scanner.monthly', ${retry}, NULL, NULL, ${q(signed)}, 'DID_RENEW')`)
+}
 
 test(
-  "real PostgreSQL: newer-wins guard, bind-once ownership and service-only access",
+  "real PostgreSQL: newer-wins, immutable identity, one account per subscription, service-only",
   { skip: !enabled, timeout: 60000 },
   async (t) => {
     const container = `chaarlie-app-store-${crypto.randomUUID()}`
@@ -75,43 +90,103 @@ test(
     await sql(`
       CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role BYPASSRLS;
       GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
+      CREATE SCHEMA private; GRANT USAGE ON SCHEMA private TO service_role;
       CREATE TABLE public.profiles(id uuid PRIMARY KEY);
       INSERT INTO public.profiles VALUES ('${owner}'), ('${other}');
       ${migration}
     `)
     const service = (input: string) => sql(`SET ROLE service_role; ${input}`)
+    const tx1 = (column: string) =>
+      service(`SELECT ${column} FROM app_store_transactions WHERE transaction_id = 't1';`)
 
-    // Unbound notification write, then the owning app binds it; nobody can rebind.
-    assert.equal(await service(upsertTx("t1", null, "2026-09-01T10:00:01Z")), "unbound")
-    assert.equal(await service(upsertTx("t1", owner, "2026-09-01T10:00:01Z")), owner)
-    assert.equal(await service(upsertTx("t1", other, "2026-09-05T00:00:00Z")), owner)
-    assert.equal(await service(upsertTx("t1", null, "2026-09-06T00:00:00Z")), owner)
+    // Unbound notification write, then the owning app binds it (equal signedDate = replay).
+    assert.equal(await service(upsertTx("t1", null, "2026-09-01T10:00:01Z")), "applied,unbound")
+    assert.equal(await service(upsertTx("t1", owner, "2026-09-01T10:00:01Z")), `applied,${owner}`)
+    // Another account is refused (A3) but Apple's newer state is still recorded for the owner.
+    assert.equal(
+      await service(upsertTx("t1", other, "2026-09-05T00:00:00Z")),
+      `owned_by_other_account,${owner}`,
+    )
+    assert.equal(await tx1("signed_date = '2026-09-05T00:00:00Z'"), "t")
+    assert.equal(await service(upsertTx("t1", null, "2026-09-06T00:00:00Z")), `applied,${owner}`)
 
     // REFUND (newer) sticks; a stale unrevoked copy is ignored; REFUND_REVERSED (newer) clears.
-    await service(upsertTx("t1", null, "2026-09-10T00:00:00Z", "'2026-09-10T00:00:00Z', 0"))
-    await service(upsertTx("t1", null, "2026-09-02T00:00:00Z"))
-    assert.equal(
-      await service(
-        "SELECT revocation_date IS NOT NULL FROM app_store_transactions WHERE transaction_id = 't1';",
-      ),
-      "t",
-    )
+    await service(upsertTx("t1", null, "2026-09-10T00:00:00Z", { revoked: "2026-09-10T00:00:00Z" }))
+    assert.equal(await service(upsertTx("t1", null, "2026-09-02T00:00:00Z")), `stale,${owner}`)
+    assert.equal(await tx1("revocation_date IS NOT NULL"), "t")
     await service(upsertTx("t1", null, "2026-09-11T00:00:00Z"))
+    assert.equal(await tx1("revocation_date IS NULL"), "t")
+
+    // Ownership is per subscription: new periods inherit the owner, others are refused.
     assert.equal(
-      await service(
-        "SELECT revocation_date IS NULL FROM app_store_transactions WHERE transaction_id = 't1';",
-      ),
-      "t",
+      await service(upsertTx("t2", other, "2026-10-01T10:00:00Z")),
+      `owned_by_other_account,${owner}`,
+    )
+    assert.equal(await service(upsertTx("t3", null, "2026-11-01T10:00:00Z")), `applied,${owner}`)
+    assert.equal(
+      await service(upsertTx("t4", other, "2026-09-01T10:00:01Z", { original: "2000" })),
+      `applied,${other}`,
+    )
+    assert.equal(
+      await service(upsertTx("t5", owner, "2026-10-01T10:00:01Z", { original: "2000" })),
+      `owned_by_other_account,${other}`,
     )
 
-    // Status rows follow the same rules.
-    assert.equal(await service(upsertStatus(null, true, "2026-09-10T00:00:00Z")), "unbound")
-    assert.equal(await service(upsertStatus(owner, false, "2026-09-09T00:00:00Z")), owner)
+    // Status rows: inherit the subscription owner, newer-wins, same A3 refusal.
+    assert.equal(
+      await service(upsertStatus(null, true, "2026-09-10T00:00:00Z")),
+      `applied,${owner}`,
+    )
+    assert.equal(
+      await service(upsertStatus(owner, false, "2026-09-09T00:00:00Z")),
+      `stale,${owner}`,
+    )
     assert.equal(
       await service(
         "SELECT in_billing_retry FROM app_store_subscription_status WHERE original_transaction_id = '1000';",
       ),
       "t",
+    )
+    assert.equal(
+      await service(upsertStatus(other, false, "2026-09-12T00:00:00Z")),
+      `owned_by_other_account,${owner}`,
+    )
+
+    // Identity is immutable: environment / original transaction never change on conflict.
+    assert.equal(
+      await service(upsertTx("t1", owner, "2026-12-01T00:00:00Z", { environment: "Sandbox" })),
+      `environment_mismatch,${owner}`,
+    )
+    assert.equal(
+      await service(upsertTx("t1", owner, "2026-12-01T00:00:00Z", { original: "9999" })),
+      `identity_mismatch,${owner}`,
+    )
+    assert.equal(
+      await tx1(
+        "environment || ',' || original_transaction_id || ',' || (signed_date < '2026-12-01')",
+      ),
+      "Production,1000,true",
+    )
+    assert.equal(
+      await service(upsertStatus(owner, false, "2026-12-01T00:00:00Z", { environment: "Sandbox" })),
+      `environment_mismatch,${owner}`,
+    )
+
+    // Concurrent first binds of one subscription by two accounts: exactly one owner wins.
+    const first = sql(`
+      SET ROLE service_role; BEGIN;
+      ${upsertTx("c1", owner, "2026-09-01T10:00:01Z", { original: "3000" })}
+      SELECT pg_sleep(0.4); COMMIT;
+    `)
+    await setTimeout(75)
+    const second = service(upsertTx("c2", other, "2026-09-01T10:00:02Z", { original: "3000" }))
+    const [, secondResult] = await Promise.all([first, second])
+    assert.equal(secondResult, `owned_by_other_account,${owner}`)
+    assert.equal(
+      await service(
+        "SELECT string_agg(DISTINCT user_id::text, ',') FROM app_store_transactions WHERE original_transaction_id = '3000';",
+      ),
+      owner,
     )
 
     // Service-only: RLS on, no grants for client roles, functions not executable by them.
@@ -134,15 +209,13 @@ test(
 
     // Environment is constrained; account deletion cascades.
     await assert.rejects(
-      service(
-        `SELECT app_store_upsert_transaction('t2','1000',NULL,NULL,'p','LocalTesting',now(),now(),NULL,false,NULL,NULL,now());`,
-      ),
+      service(upsertTx("t8", null, "2026-09-01T00:00:00Z", { environment: "LocalTesting" })),
       /check constraint/,
     )
     await sql(`DELETE FROM public.profiles WHERE id = '${owner}';`)
     assert.equal(
       await sql(
-        "SELECT (SELECT count(*) FROM app_store_transactions) || ',' || (SELECT count(*) FROM app_store_subscription_status);",
+        "SELECT (SELECT count(*) FROM app_store_transactions WHERE original_transaction_id <> '2000') || ',' || (SELECT count(*) FROM app_store_subscription_status);",
       ),
       "0,0",
     )
@@ -161,7 +234,8 @@ test("store maps rows to the upsert RPC and reads a user's entitlement back", as
           search: url.search,
           body: init?.body ? JSON.parse(String(init.body)) : null,
         })
-        if (url.pathname.endsWith("/rpc/app_store_upsert_transaction")) return Response.json(owner)
+        if (url.pathname.endsWith("/rpc/app_store_upsert_transaction"))
+          return Response.json({ outcome: "applied", owner })
         if (url.pathname.endsWith("/app_store_transactions"))
           return Response.json([
             {
@@ -182,6 +256,7 @@ test("store maps rows to the upsert RPC and reads a user's entitlement back", as
         return Response.json([
           {
             original_transaction_id: "1000",
+            environment: "Production",
             auto_renew_status: true,
             auto_renew_product_id: "de.chaarlie.scanner.yearly",
             in_billing_retry: false,
@@ -210,7 +285,7 @@ test("store maps rows to the upsert RPC and reads a user's entitlement back", as
     },
     { environment: "Production", notificationType: "SUBSCRIBED" },
   )
-  assert.equal(await upsertAppStoreTransaction(db, row, owner), owner)
+  assert.deepEqual(await upsertAppStoreTransaction(db, row, owner), { outcome: "applied", owner })
   assert.deepEqual(calls[0].body, {
     p_transaction_id: "t1",
     p_original_transaction_id: "1000",

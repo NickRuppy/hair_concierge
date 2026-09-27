@@ -26,6 +26,7 @@ export type AppStoreTransactionRow = {
 
 export type AppStoreSubscriptionStatusRow = {
   originalTransactionId: string
+  environment: AppStoreEnvironment
   autoRenewStatus: boolean
   autoRenewProductId: string | null
   inBillingRetry: boolean
@@ -161,9 +162,10 @@ export function renewalStatusSnapshot(
   payload: RenewalPayload,
   context: SnapshotContext,
 ): AppStoreSubscriptionStatusRow {
-  matchEnvironment(payload.environment, context)
+  const environment = matchEnvironment(payload.environment, context)
   return {
     originalTransactionId: requiredId(payload.originalTransactionId),
+    environment,
     autoRenewStatus: payload.autoRenewStatus === 1,
     autoRenewProductId:
       typeof payload.autoRenewProductId === "string" && payload.autoRenewProductId
@@ -177,7 +179,10 @@ export function renewalStatusSnapshot(
   }
 }
 
-/** Newer-wins for one row key; an equal signedDate is an idempotent replay. */
+/**
+ * Newer-wins for one row key; an equal signedDate is an idempotent replay. Production
+ * enforcement is the SQL guard in app_store_upsert_*; this is its reference form.
+ */
 export function mergeBySignedDate<T extends { signedDate: Date }>(
   existing: T | null,
   incoming: T,
