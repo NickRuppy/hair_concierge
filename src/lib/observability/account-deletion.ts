@@ -93,3 +93,28 @@ export function reportAccountDeletionPurgeFailure(
     /* Telemetry is best effort. */
   }
 }
+
+/**
+ * An open deletion whose account vanished by another path was closed before the routine
+ * cancelled web billing (`requested`): an operator must check for a still billing provider
+ * subscription. Only the machine code and the prior state are reported — no ids or email.
+ */
+export function reportAccountDeletionOrphanClosed(
+  details: { priorState: "requested" | "web_billing_cancelled" },
+  sink: AccountDeletionFailureSink = Sentry,
+): void {
+  try {
+    sink.withScope((scope) => {
+      scope.setLevel?.("warning")
+      scope.setTag("account_deletion.code", "orphan_closed_before_billing_cancel")
+      scope.setTag("account_deletion.prior_state", details.priorState)
+      scope.setContext("account_deletion_orphan", {
+        code: "orphan_closed_before_billing_cancel",
+        prior_state: details.priorState,
+      })
+      sink.captureException(new Error("account_deletion_orphan_closed_before_billing_cancel"))
+    })
+  } catch {
+    /* Telemetry is best effort. */
+  }
+}

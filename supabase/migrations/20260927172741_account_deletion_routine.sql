@@ -101,15 +101,17 @@ BEGIN
       WHERE id = ANY(v_enrollments) AND provider_agreement_id IS NOT NULL
     UNION SELECT provider_agreement_id FROM private.trial_offer_revisions WHERE enrollment_id = ANY(v_enrollments)
     UNION SELECT continuation_agreement_id FROM private.trial_paid_continuations WHERE enrollment_id = ANY(v_enrollments));
+  -- Rows reached through a lead/consent/email are taken only when no other account owns
+  -- them: a live account's intent, consent or purchase is never touched.
   v_consents := ARRAY(SELECT id FROM public.personal_plan_one_time_checkout_consents
-    WHERE user_id = p_user_id OR lead_id = ANY(v_leads));
+    WHERE user_id = p_user_id OR (user_id IS NULL AND lead_id = ANY(v_leads)));
   v_purchases := ARRAY(SELECT id FROM public.billing_one_time_purchases
-    WHERE user_id = p_user_id OR consent_id = ANY(v_consents));
+    WHERE user_id = p_user_id OR (user_id IS NULL AND consent_id = ANY(v_consents)));
   v_attempts := ARRAY(SELECT id FROM private.paypal_trial_checkout_attempts WHERE enrollment_id = ANY(v_enrollments));
   v_checkout_intents := ARRAY(SELECT id FROM public.paypal_checkout_intents
-    WHERE user_id = p_user_id OR lead_id = ANY(v_leads)
+    WHERE user_id = p_user_id OR (user_id IS NULL AND (lead_id = ANY(v_leads)
       OR id IN (SELECT intent_id FROM private.paypal_trial_checkout_attempts WHERE id = ANY(v_attempts))
-      OR (user_id IS NULL AND v_email IS NOT NULL AND lower(btrim(email)) = v_email));
+      OR (v_email IS NOT NULL AND lower(btrim(email)) = v_email))));
   v_mgmt_ops := ARRAY(SELECT id FROM private.trial_management_operations
     WHERE user_id = p_user_id OR enrollment_id = ANY(v_enrollments));
   v_recovery_ops := ARRAY(SELECT id FROM private.trial_paid_recovery_operations
@@ -163,13 +165,12 @@ BEGIN
   -- DELETE: rows that hold personal data but would survive the cascade (SET NULL / no FK),
   -- or that block it (RESTRICT / NO ACTION) and are not retained.
   DELETE FROM public.personal_plan_test_members WHERE user_id = p_user_id;
-  DELETE FROM public.personal_plan_test_enrollments
-    WHERE user_id = p_user_id OR lead_id = ANY(v_leads) OR funnel_session_id = ANY(v_sessions);
-  DELETE FROM public.regular_quiz_test_enrollments
-    WHERE user_id = p_user_id OR lead_id = ANY(v_leads) OR funnel_session_id = ANY(v_sessions);
-  DELETE FROM public.personal_plan_prepared_artifacts WHERE user_id = p_user_id OR lead_id = ANY(v_leads);
+  DELETE FROM public.personal_plan_test_enrollments WHERE user_id = p_user_id;
+  DELETE FROM public.regular_quiz_test_enrollments WHERE user_id = p_user_id;
+  DELETE FROM public.personal_plan_prepared_artifacts
+    WHERE user_id = p_user_id OR (user_id IS NULL AND lead_id = ANY(v_leads));
   DELETE FROM public.personal_plan_quiz_drafts WHERE funnel_session_id = ANY(v_sessions);
-  DELETE FROM public.funnel_events WHERE funnel_session_id = ANY(v_sessions) OR lead_id = ANY(v_leads);
+  DELETE FROM public.funnel_events WHERE funnel_session_id = ANY(v_sessions);
   DELETE FROM private.openai_ads_contexts WHERE session_id = ANY(v_sessions);
   DELETE FROM public.personal_plan_result_returns WHERE lead_id = ANY(v_leads);
   DELETE FROM public.quiz_email_return_links WHERE source_lead_id = ANY(v_leads);
@@ -227,7 +228,8 @@ BEGIN
     WHERE purchase_id = ANY(v_purchases) OR consent_id = ANY(v_consents);
   UPDATE public.paypal_order_intents SET user_id = NULL, email = '', metadata = private.account_deletion_scrub_json(metadata),
       anonymous_subject_id = v_subject, anonymized_at = v_now, purge_after = v_billing
-    WHERE consent_id = ANY(v_consents) OR lead_id = ANY(v_leads) OR user_id = p_user_id;
+    WHERE user_id = p_user_id OR (user_id IS NULL AND (consent_id = ANY(v_consents) OR lead_id = ANY(v_leads)
+      OR (v_email IS NOT NULL AND lower(btrim(email)) = v_email)));
   UPDATE public.paypal_expired_order_reset_audit SET
       anonymous_subject_id = v_subject, anonymized_at = v_now, purge_after = v_billing
     WHERE consent_id = ANY(v_consents);
@@ -347,7 +349,7 @@ BEGIN
     WHERE declaration_id = ANY(v_public_decls);
   UPDATE public.payment_support_cases SET user_id = NULL, lead_id = NULL, resolution_note = NULL,
       anonymous_subject_id = v_subject, anonymized_at = v_now, purge_after = v_evidence
-    WHERE user_id = p_user_id OR lead_id = ANY(v_leads);
+    WHERE user_id = p_user_id OR (user_id IS NULL AND lead_id = ANY(v_leads));
 
   -- Trial anti-abuse fingerprints (Q3 policy switch).
   IF private.account_deletion_policy() = 'erase' THEN
@@ -447,7 +449,7 @@ $$;
 -- runs in its own subtransaction so one failure does not stall the rest (reported by the cron).
 CREATE FUNCTION private.purge_anonymized_records() RETURNS jsonb
 LANGUAGE plpgsql SECURITY DEFINER SET search_path = '' AS $$
-DECLARE t text; n bigint; deleted jsonb := '{}'; failed jsonb := '[]';
+DECLARE t text; n bigint; kept bigint; rid tid; deleted jsonb := '{}'; failed jsonb := '[]'; referenced jsonb := '{}';
 BEGIN
   PERFORM set_config('chaarlie.account_purge', 'on', true);
   FOREACH t IN ARRAY ARRAY[
@@ -476,12 +478,34 @@ BEGIN
       EXECUTE format('DELETE FROM %s WHERE anonymized_at IS NOT NULL AND purge_after < now()', t);
       GET DIAGNOSTICS n = ROW_COUNT;
       IF n > 0 THEN deleted := deleted || jsonb_build_object(t, n); END IF;
-    EXCEPTION WHEN OTHERS THEN
-      failed := failed || to_jsonb(t);
+    EXCEPTION
+      WHEN foreign_key_violation THEN
+        -- Some expired rows are still referenced by rows of another record (e.g. a live
+        -- account's consent on an anonymized lead): delete row by row and keep those until
+        -- the referrer goes. They hold no personal data any more.
+        BEGIN
+          n := 0; kept := 0;
+          FOR rid IN EXECUTE format('SELECT ctid FROM %s WHERE anonymized_at IS NOT NULL AND purge_after < now()', t) LOOP
+            BEGIN
+              EXECUTE format('DELETE FROM %s WHERE ctid = $1', t) USING rid;
+              n := n + 1;
+            EXCEPTION WHEN foreign_key_violation THEN
+              kept := kept + 1;
+            END;
+          END LOOP;
+          IF n > 0 THEN deleted := deleted || jsonb_build_object(t, n); END IF;
+          IF kept > 0 THEN referenced := referenced || jsonb_build_object(t, kept); END IF;
+        EXCEPTION WHEN OTHERS THEN
+          RAISE WARNING 'account deletion purge failed on % (SQLSTATE %)', t, SQLSTATE;
+          failed := failed || to_jsonb(t);
+        END;
+      WHEN OTHERS THEN
+        RAISE WARNING 'account deletion purge failed on % (SQLSTATE %)', t, SQLSTATE;
+        failed := failed || to_jsonb(t);
     END;
   END LOOP;
   PERFORM set_config('chaarlie.account_purge', '', true);
-  RETURN jsonb_build_object('deleted', deleted, 'failed', failed);
+  RETURN jsonb_build_object('deleted', deleted, 'failed', failed, 'stillReferenced', referenced);
 END
 $$;
 
@@ -489,18 +513,22 @@ $$;
 -- request that lost the race to another one): the data is gone, so they move to
 -- data_deleted with the account's storage prefixes and finish through external cleanup,
 -- which clears the stored user id and email.
-CREATE FUNCTION public.account_deletion_close_orphans() RETURNS integer
+CREATE FUNCTION public.account_deletion_close_orphans() RETURNS jsonb
 LANGUAGE plpgsql SECURITY DEFINER SET search_path = '' AS $$
-DECLARE n integer;
+DECLARE v_states jsonb;
 BEGIN
-  UPDATE private.account_deletion_operations op SET state = 'data_deleted', data_deleted_at = now(),
-      updated_at = now(),
-      storage_paths = ARRAY(SELECT o.name FROM storage.objects o WHERE o.bucket_id = 'product-intake'
-        AND (o.name LIKE op.user_id::text || '/%' OR o.name LIKE 'tmp/' || op.user_id::text || '/%') ORDER BY o.name)
-    WHERE op.state IN ('requested', 'web_billing_cancelled')
-      AND NOT EXISTS (SELECT 1 FROM auth.users u WHERE u.id = op.user_id);
-  GET DIAGNOSTICS n = ROW_COUNT;
-  RETURN n;
+  WITH closed AS (
+    UPDATE private.account_deletion_operations op SET state = 'data_deleted', data_deleted_at = now(),
+        updated_at = now(),
+        storage_paths = ARRAY(SELECT o.name FROM storage.objects o WHERE o.bucket_id = 'product-intake'
+          AND (o.name LIKE op.user_id::text || '/%' OR o.name LIKE 'tmp/' || op.user_id::text || '/%') ORDER BY o.name)
+      FROM private.account_deletion_operations prior
+      WHERE prior.request_id = op.request_id AND op.state IN ('requested', 'web_billing_cancelled')
+        AND NOT EXISTS (SELECT 1 FROM auth.users u WHERE u.id = op.user_id)
+      RETURNING prior.state
+  ) SELECT coalesce(jsonb_agg(state ORDER BY state), '[]') INTO v_states FROM closed;
+  -- Prior states only: 'requested' means web billing was never cancelled by the routine.
+  RETURN jsonb_build_object('closed', jsonb_array_length(v_states), 'priorStates', v_states);
 END
 $$;
 

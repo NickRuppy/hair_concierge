@@ -7,7 +7,7 @@ Status: **implemented** with the rulings of 2026-09-27 (section 0). Source of tr
 - Schema: every repository migration (incl. `20260927133426` App Store and the Task 6 migrations `20260927172739_account_deletion_schema` + `20260927172741_account_deletion_routine`), replayed with the local legacy baseline (`scripts/mobile/local-migrations.mjs`) into a disposable `public.ecr.aws/supabase/postgres:17.6.1.106`. Latest definitions win. Production was not queried (repo rule).
 - Covered parents: `auth.users`, `profiles`, `leads`, `funnel_sessions`, `trial_enrollments`, `billing_one_time_purchases`, `product_submissions`, followed transitively (112 child tables, 208 FK edges), plus the email/id-keyed tables without FK in section 3.
 
-Match keys for one deletion: user `U`; account email `E` (`lower(btrim(auth.users.email))`); leads `L` = `user_id = U` or (`user_id IS NULL` and email = `E`); sessions = `user_id = U` or unowned sessions of `L`; enrollments = `trial_enrollments.user_id = U`; the rest follows those ids.
+Rows reached through a lead, consent or email are only taken when no other account owns them (`user_id = U` or `user_id IS NULL` plus the lead/consent/email/attempt match); a live account's intent, consent, purchase, order intent, support case, test enrollment or prepared artifact is never touched. Match keys for one deletion: user `U`; account email `E` (`lower(btrim(auth.users.email))`); leads `L` = `user_id = U` or (`user_id IS NULL` and email = `E`); sessions = `user_id = U` or unowned sessions of `L`; enrollments = `trial_enrollments.user_id = U`; the rest follows those ids.
 
 ## 0. Rulings applied
 
@@ -120,7 +120,8 @@ Provider webhooks after deletion: a PayPal event whose anonymized checkout inten
 - The schema migration sets `lock_timeout = '5s'` and alters billing tables: apply it in a quiet window; a lock timeout aborts cleanly and can be retried.
 - Before production, verify on a Supabase branch: the `postgres` role's DELETE privilege on `auth.audit_log_entries`, `auth.refresh_tokens` and `auth.flow_state` in the hosted GoTrue schema, and the cost of the routine's payload scans (`auth.audit_log_entries`, `rate_limits`) at production size.
 - Concurrency: `account_deletion_begin` and `private.delete_account` share a per-account advisory lock; the cron's `account_deletion_close_orphans` moves open operations whose account disappeared by another path (dashboard/admin deletion) into external cleanup, which clears the stored user id and email.
-- Purge runs per table in its own subtransaction and only deletes anonymized rows (`anonymized_at IS NOT NULL AND purge_after < now()`); failed tables are reported to Sentry by the cron.
+- Purge runs per table in its own subtransaction and only deletes anonymized rows (`anonymized_at IS NOT NULL AND purge_after < now()`); on an FK conflict it deletes row by row and keeps rows another record still references (e.g. an email-matched lead a live account's consent points at; no personal data left), reported as `stillReferenced`. Other failures raise a WARNING with table and SQLSTATE and are reported to Sentry by the cron.
+- An orphaned operation closed while still `requested` (web billing never cancelled by the routine) is reported to Sentry (`orphan_closed_before_billing_cancel`, prior state only): an operator checks the providers for a still billing subscription.
 
 ## 9. Production-only tables (not in migrations)
 

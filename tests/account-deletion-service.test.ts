@@ -268,23 +268,31 @@ test("cron route: bearer auth, orphans closed, 503 while cleanup or purge fails,
       headers: token ? { authorization: `Bearer ${token}` } : {},
     })
   const reports: unknown[] = []
+  const orphanReports: unknown[] = []
   let purges = 0
   const deps = (failed: number, purgeFailed: string[] = []) => ({
     cronSecret: "secret",
-    closeOrphans: async () => 1,
+    closeOrphans: async () => ({
+      closed: 2,
+      priorStates: ["requested", "web_billing_cancelled"] as (
+        | "requested"
+        | "web_billing_cancelled"
+      )[],
+    }),
     retryCleanup: async () => ({ pending: 1, completed: 1 - failed, failed }),
     purge: async () => {
       purges += 1
       return { deleted: { "public.leads": 2 }, failed: purgeFailed }
     },
     reportPurgeFailure: (details: { table: string }) => void reports.push(details),
+    reportOrphanClosed: (details: { priorState: string }) => void orphanReports.push(details),
   })
   assert.equal((await handleAccountDeletionReconcile(request(), deps(0))).status, 401)
   assert.equal((await handleAccountDeletionReconcile(request("nope"), deps(0))).status, 401)
   assert.deepEqual(await handleAccountDeletionReconcile(request("secret"), deps(0)), {
     status: 200,
     body: {
-      orphansClosed: 1,
+      orphansClosed: 2,
       cleanup: { pending: 1, completed: 1, failed: 0 },
       purged: { deleted: { "public.leads": 2 }, failed: [] },
     },
@@ -295,6 +303,9 @@ test("cron route: bearer auth, orphans closed, 503 while cleanup or purge fails,
     503,
   )
   assert.deepEqual(reports, [{ table: "public.leads" }])
+  // Only a close before web billing was cancelled is reported (once per cron run here).
+  assert.equal(orphanReports.length, 3)
+  assert.ok(orphanReports.every((r) => JSON.stringify(r) === '{"priorState":"requested"}'))
   assert.equal(purges, 3)
   assert.equal(
     (

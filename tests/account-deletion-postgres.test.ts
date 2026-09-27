@@ -52,6 +52,7 @@ const PPA = id("ba", 1),
   UPA = id("da", 1),
   SUB_A = id("ea", 1),
   PDA = id("9a", 1),
+  CD2 = id("6d", 2),
   ATA = id("aa", 1),
   SUB_B = id("1b", 1),
   LB = id("2b", 1)
@@ -194,6 +195,16 @@ INSERT INTO public.rate_limits(key, window_id, count, expires_at) VALUES ('chat:
 INSERT INTO auth.audit_log_entries(id, payload) VALUES (gen_random_uuid(), '{"actor_id":"${A}","actor_username":"${EMAIL.A}"}');
 INSERT INTO auth.refresh_tokens(token, user_id) VALUES ('tok-hanna', '${A}');
 INSERT INTO public.conversations(id, user_id, title) VALUES (gen_random_uuid(), '${A}', 'Hannas Frage');
+-- R1: a live account (D) whose own intent, consent and purchase reference the unowned lead
+-- carrying A's email. A's deletion anonymizes the lead but never touches D's rows.
+INSERT INTO public.paypal_checkout_intents(token, interval, source, lead_id, email, user_id, status, expires_at, metadata) VALUES
+  ('tokD2', 'month', 'pricing_page', '${LA2}', '${EMAIL.D}', '${D}', 'approved', now() + interval '1 day', '{}');
+INSERT INTO public.personal_plan_one_time_checkout_consents(id, lead_id, funnel_session_id, user_id, product_kind, offer_variant, copy_version,
+    consent_text, consent_text_sha256, accepted_at) VALUES
+  ('${CD2}', '${LA2}', '${SD}', '${D}', 'personal_plan_once', 'v1', 'v1', 'Ich stimme zu', '${hex("3")}', now());
+INSERT INTO public.billing_one_time_purchases(user_id, provider, product_kind, provider_transaction_id, amount_minor, currency, status, paid_at, consent_id, metadata,
+    refunded_amount_minor, refunded_at) VALUES
+  ('${D}', 'stripe', 'personal_plan_once', 'pi_D2', 2999, 'eur', 'refunded', now(), '${CD2}', '{}', 2999, now());
 INSERT INTO public.personal_plans(id, user_id) VALUES ('${PPA}', '${A}');
 INSERT INTO public.personal_plan_need_versions(id, user_id, personal_plan_id, kind, schema_version, computation_version, input_hash,
     input_snapshot, output_snapshot, stage1_source_kind, stage1_source_lead_id) VALUES
@@ -594,6 +605,18 @@ test(
       await admin(`SELECT count(*) FROM auth.refresh_tokens WHERE user_id = '${A}'`),
       "0",
     )
+    assert.equal(
+      await admin(`SELECT string_agg(concat_ws(':', t, owner = '${D}', anonymized), ',' ORDER BY t) FROM (
+        SELECT 'intent' t, user_id owner, anonymized_at IS NOT NULL anonymized FROM public.paypal_checkout_intents WHERE token = 'tokD2'
+        UNION ALL SELECT 'consent', user_id, anonymized_at IS NOT NULL FROM public.personal_plan_one_time_checkout_consents WHERE id = '${CD2}'
+        UNION ALL SELECT 'purchase', user_id, anonymized_at IS NOT NULL FROM public.billing_one_time_purchases WHERE consent_id = '${CD2}') x`),
+      "consent:t:f,intent:t:f,purchase:t:f",
+      "a live account's rows on a lead with the deleted email stay untouched",
+    )
+    assert.equal(
+      await admin(`SELECT anonymized_at IS NOT NULL FROM public.leads WHERE id = '${LA2}'`),
+      "t",
+    )
     assert.deepEqual(resultA.storagePaths, [])
     assert.equal(await service(`SELECT public.account_deletion_status('${REQ.A}')`), "data_deleted")
 
@@ -830,9 +853,12 @@ test(
     await setTimeout(200)
     const secondRequest = service(
       `SELECT public.account_deletion_begin('${C}', 'c2000000-0000-4000-8000-000000000002')`,
+    ).then(
+      () => "resolved",
+      (error: Error) => error.message,
     )
     await slowDelete
-    await assert.rejects(secondRequest, /account_not_found/)
+    assert.match(await secondRequest, /account_not_found/)
     assert.equal(
       await admin(
         `SELECT count(*) FROM private.account_deletion_operations WHERE state IN ('requested', 'web_billing_cancelled')`,
@@ -848,7 +874,10 @@ test(
       INSERT INTO storage.objects(bucket_id, name) VALUES ('product-intake', '${E}/x/front.jpg');`)
     await service(`SELECT public.account_deletion_begin('${E}', '${REQ_E}')`)
     await admin(`DELETE FROM auth.users WHERE id = '${E}'`)
-    assert.equal(await service(`SELECT public.account_deletion_close_orphans()`), "1")
+    assert.deepEqual(JSON.parse(await service(`SELECT public.account_deletion_close_orphans()`)), {
+      closed: 1,
+      priorStates: ["requested"],
+    })
     assert.deepEqual(
       JSON.parse(await service(`SELECT public.account_deletion_pending_cleanup(20, '${REQ_E}')`)),
       [
@@ -909,8 +938,16 @@ test(
     )
     const purged = JSON.parse(await service(`SELECT public.purge_anonymized_records()`))
     assert.deepEqual(purged.failed, [])
+    // A's email-matched lead stays while D's live consent references it (no personal data left).
+    assert.deepEqual(purged.stillReferenced, { "public.leads": 1 })
+    assert.equal(
+      await admin(
+        `SELECT name || '|' || email || '|' || (user_id IS NULL) FROM public.leads WHERE id = '${LA2}'`,
+      ),
+      "||true",
+    )
     assert.ok(
-      purged.deleted["public.leads"] >= 3 &&
+      purged.deleted["public.leads"] === 2 &&
         purged.deleted["private.trial_cancellation_declarations"] === 1,
       JSON.stringify(purged),
     )
@@ -918,7 +955,8 @@ test(
       await admin(
         `SELECT count(*) FROM (${tagged.map((table) => `SELECT 1 FROM ${table} WHERE anonymous_subject_id IN ('${subjectA}', '${subjectC}') AND purge_after IS NOT NULL`).join(" UNION ALL ")}) x`,
       ),
-      "0",
+      "1",
+      "only the lead a live account still references remains",
     )
     assert.equal(
       await admin(`SELECT count(*) FROM public.leads WHERE anonymous_subject_id = '${subjectB}'`),
@@ -935,6 +973,7 @@ test(
     assert.deepEqual(JSON.parse(await service(`SELECT public.purge_anonymized_records()`)), {
       deleted: {},
       failed: [],
+      stillReferenced: { "public.leads": 1 },
     })
   },
 )
