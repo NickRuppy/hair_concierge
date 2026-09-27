@@ -1,7 +1,8 @@
 -- Account deletion (iOS paywall Task 6): durable operation log, anonymous quiz archive,
 -- anonymization tags on every retained table, and the FK/NOT NULL changes the
 -- inventory (plans/ios-paywall/deletion-inventory.md) requires. The routine itself is
--- in the next migration.
+-- in the next migration. Production: apply in a quiet window (ALTERs on billing tables).
+SET lock_timeout = '5s';
 
 -- One row per client-generated request. user_id is kept only while the deletion is in
 -- progress (external cleanup still needs it) and cleared at external_cleanup_done.
@@ -131,57 +132,86 @@ ALTER TABLE public.product_submissions DROP CONSTRAINT product_submissions_assoc
     AND (source <> 'personal_plan' OR (user_product_id IS NOT NULL AND user_product_usage_id IS NULL)
       OR (anonymized_at IS NOT NULL AND user_id IS NULL AND user_product_id IS NULL)));
 
--- Columns a guarded anonymization write may change, per table: 'null' columns must become
--- NULL (user links), 'scrub' columns may be redacted. Tag columns are always allowed.
+-- Identity keys that must not survive in retained JSON metadata.
+CREATE FUNCTION private.account_deletion_scrub_json(p_value jsonb) RETURNS jsonb
+LANGUAGE sql IMMUTABLE SET search_path = '' AS $$
+  SELECT CASE WHEN jsonb_typeof(p_value) = 'object' THEN p_value - ARRAY[
+    'email', 'customer_email', 'payer_email', 'payer_id', 'payer_name', 'account_email',
+    'subscriber', 'name', 'first_name', 'last_name', 'phone', 'address', 'shipping_address',
+    'user_id', 'lead_id', 'visitor_id', 'ip', 'ip_address', 'user_agent', 'client_user_agent',
+    'fbp', 'fbc'] ELSE p_value END
+$$;
+
+-- Stripe checkout parameters frozen as evidence: the customer email and identity metadata go.
+CREATE FUNCTION private.account_deletion_scrub_stripe_params(p_value jsonb) RETURNS jsonb
+LANGUAGE sql IMMUTABLE SET search_path = '' AS $$
+  SELECT CASE WHEN jsonb_typeof(p_value) <> 'object' THEN p_value ELSE
+    (p_value - 'customer_email')
+    || CASE WHEN p_value ? 'metadata'
+      THEN jsonb_build_object('metadata', private.account_deletion_scrub_json(p_value->'metadata')) ELSE '{}' END
+    || CASE WHEN jsonb_typeof(p_value->'subscription_data') = 'object' AND p_value->'subscription_data' ? 'metadata'
+      THEN jsonb_build_object('subscription_data', (p_value->'subscription_data')
+        || jsonb_build_object('metadata', private.account_deletion_scrub_json(p_value->'subscription_data'->'metadata')))
+      ELSE '{}' END
+  END
+$$;
+
+-- Columns a guarded anonymization write may change, per table, and the only value each may
+-- take: 'owner' = the operation's user (or NULL) → NULL; 'null' → NULL; 'empty_object' → {};
+-- 'empty_array' → []; 'scrub_json' / 'scrub_stripe_params' → exactly the scrubbed old value;
+-- 'subject_if_owner' = the operation's user → the row's new anonymous_subject_id;
+-- 'maintenance' → any (updated_at set by the row's own trigger). Tag columns are set once.
 CREATE FUNCTION private.account_deletion_writable_columns(p_table text) RETURNS jsonb
 LANGUAGE sql IMMUTABLE SET search_path = '' AS $$
   SELECT coalesce(('{
-    "public.billing_one_time_purchases": {"null": ["user_id"], "scrub": ["metadata"]},
-    "public.personal_plan_one_time_checkout_consents": {"null": ["user_id"], "scrub": []},
-    "public.trial_checkout_attempts": {"null": [], "scrub": ["scope_id", "stripe_params"]},
-    "private.paypal_trial_checkout_attempts": {"null": [], "scrub": ["scope_id"]},
-    "private.trial_analytics_contexts": {"null": [], "scrub": ["meta_context"]},
-    "private.trial_cancellation_declarations": {"null": ["user_id"], "scrub": []},
-    "private.trial_management_operations": {"null": ["user_id"], "scrub": []},
-    "private.trial_paid_cancellation_declarations": {"null": ["user_id"], "scrub": []},
-    "private.trial_paid_recovery_operations": {"null": ["user_id"], "scrub": []},
-    "private.paypal_trial_paid_recovery_requests": {"null": ["user_id"], "scrub": []},
-    "private.public_contract_declaration_matches": {"null": ["user_id"], "scrub": []},
-    "public.product_submissions": {"null": ["user_id", "user_product_id", "user_product_usage_id", "source_conversation_id"],
-      "scrub": ["front_image_path", "barcode_image_path", "front_image_validation_metadata", "barcode_image_validation_metadata",
-        "review_notes", "user_facing_resolution_reason", "user_facing_next_step", "intake_history",
-        "personal_plan_request_fingerprint", "updated_at"]}
-  }'::jsonb) -> p_table, '{"null": [], "scrub": []}'::jsonb)
+    "public.billing_one_time_purchases": {"user_id": "owner", "metadata": "scrub_json"},
+    "public.personal_plan_one_time_checkout_consents": {"user_id": "owner"},
+    "public.trial_checkout_attempts": {"scope_id": "subject_if_owner", "stripe_params": "scrub_stripe_params"},
+    "private.paypal_trial_checkout_attempts": {"scope_id": "subject_if_owner"},
+    "private.trial_analytics_contexts": {"meta_context": "empty_object"},
+    "private.trial_cancellation_declarations": {"user_id": "owner"},
+    "private.trial_management_operations": {"user_id": "owner"},
+    "private.trial_paid_cancellation_declarations": {"user_id": "owner"},
+    "private.trial_paid_recovery_operations": {"user_id": "owner"},
+    "private.paypal_trial_paid_recovery_requests": {"user_id": "owner"},
+    "private.public_contract_declaration_matches": {"user_id": "owner"},
+    "public.product_submissions": {"user_id": "owner", "user_product_id": "null", "user_product_usage_id": "null",
+      "source_conversation_id": "null", "front_image_path": "null", "barcode_image_path": "null",
+      "front_image_validation_metadata": "empty_object", "barcode_image_validation_metadata": "empty_object",
+      "review_notes": "null", "user_facing_resolution_reason": "null", "user_facing_next_step": "null",
+      "intake_history": "empty_array", "personal_plan_request_fingerprint": "null",
+      "mobile_result_requested_at": "null", "updated_at": "maintenance"}
+  }'::jsonb) -> p_table, '{}'::jsonb)
 $$;
 
 -- The one exception the billing guards make (Q1). It permits exactly:
 --  * UPDATE inside private.delete_account (transaction-local flag naming an in-progress
---    operation) that sets the tags once, nulls the listed user links, redacts the listed
---    PII columns and changes nothing else;
---  * DELETE inside private.purge_anonymized_records of a row past its purge_after.
+--    operation) of a row that still belongs to that operation's user: the tags are set once,
+--    the listed columns take their redacted value, nothing else changes;
+--  * DELETE inside private.purge_anonymized_records of an anonymized row past purge_after.
 CREATE FUNCTION private.account_deletion_permits(
   p_op text, p_schema text, p_table text, p_old jsonb, p_new jsonb
 ) RETURNS boolean
 LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path = '' AS $$
 DECLARE
   flag text := current_setting('chaarlie.account_deletion', true);
+  v_user uuid;
   writable jsonb;
   k text;
+  rule text;
 BEGIN
   IF p_op = 'DELETE' THEN
     RETURN current_setting('chaarlie.account_purge', true) = 'on'
-      AND p_old IS NOT NULL AND (p_old->>'purge_after') IS NOT NULL
-      AND (p_old->>'purge_after')::timestamptz <= now();
+      AND p_old IS NOT NULL AND (p_old->>'anonymized_at') IS NOT NULL
+      AND (p_old->>'purge_after') IS NOT NULL AND (p_old->>'purge_after')::timestamptz < now();
   END IF;
-  IF p_op <> 'UPDATE' OR p_old IS NULL OR p_new IS NULL OR coalesce(flag, '') = '' THEN
+  IF p_op <> 'UPDATE' OR p_old IS NULL OR p_new IS NULL OR coalesce(flag, '') = ''
+    OR flag !~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' THEN
     RETURN false;
   END IF;
-  IF flag !~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' OR NOT EXISTS (
-    SELECT 1 FROM private.account_deletion_operations
-    WHERE request_id = flag::uuid AND state IN ('requested', 'web_billing_cancelled')
-  ) THEN
-    RETURN false;
-  END IF;
+  SELECT user_id INTO v_user FROM private.account_deletion_operations
+    WHERE request_id = flag::uuid AND state IN ('requested', 'web_billing_cancelled');
+  IF v_user IS NULL THEN RETURN false; END IF;
   IF p_old->>'anonymized_at' IS NOT NULL OR p_new->>'anonymized_at' IS NULL
     OR p_new->>'anonymous_subject_id' IS NULL THEN
     RETURN false;
@@ -190,8 +220,18 @@ BEGIN
   FOR k IN SELECT jsonb_object_keys(p_old || p_new) LOOP
     CONTINUE WHEN (p_old -> k) IS NOT DISTINCT FROM (p_new -> k);
     CONTINUE WHEN k IN ('anonymous_subject_id', 'anonymized_at', 'purge_after');
-    CONTINUE WHEN writable->'null' ? k AND p_new -> k = 'null'::jsonb;
-    CONTINUE WHEN writable->'scrub' ? k;
+    rule := writable->>k;
+    IF rule = 'owner' AND p_new -> k = 'null'::jsonb AND p_old->>k = v_user::text THEN CONTINUE;
+    ELSIF rule = 'null' AND p_new -> k = 'null'::jsonb THEN CONTINUE;
+    ELSIF rule = 'empty_object' AND p_new -> k = '{}'::jsonb THEN CONTINUE;
+    ELSIF rule = 'empty_array' AND p_new -> k = '[]'::jsonb THEN CONTINUE;
+    ELSIF rule = 'scrub_json' AND p_new -> k = private.account_deletion_scrub_json(p_old -> k) THEN CONTINUE;
+    ELSIF rule = 'scrub_stripe_params'
+      AND p_new -> k = private.account_deletion_scrub_stripe_params(p_old -> k) THEN CONTINUE;
+    ELSIF rule = 'subject_if_owner' AND p_old->>k = v_user::text
+      AND p_new -> k = p_new -> 'anonymous_subject_id' THEN CONTINUE;
+    ELSIF rule = 'maintenance' THEN CONTINUE;
+    END IF;
     RETURN false;
   END LOOP;
   RETURN true;
@@ -200,9 +240,11 @@ $$;
 REVOKE ALL ON FUNCTION private.account_deletion_permits(text, text, text, jsonb, jsonb) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION private.account_deletion_permits(text, text, text, jsonb, jsonb) TO service_role;
 REVOKE ALL ON FUNCTION private.account_deletion_retention(text), private.account_deletion_policy(),
-  private.account_deletion_writable_columns(text) FROM PUBLIC, anon, authenticated;
+  private.account_deletion_writable_columns(text), private.account_deletion_scrub_json(jsonb),
+  private.account_deletion_scrub_stripe_params(jsonb) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION private.account_deletion_retention(text), private.account_deletion_policy(),
-  private.account_deletion_writable_columns(text) TO service_role;
+  private.account_deletion_writable_columns(text), private.account_deletion_scrub_json(jsonb),
+  private.account_deletion_scrub_stripe_params(jsonb) TO service_role;
 
 -- GUARDS (generated from the latest definitions; the only change in each is the first line
 -- after BEGIN that asks private.account_deletion_permits). The product-submission foundation
@@ -637,7 +679,9 @@ BEGIN
     RAISE EXCEPTION 'product submission must use exactly one association path';
   END IF;
 
+  -- A kept submission of a deleted account has no owner and no user product (D10).
   IF NEW.source = 'personal_plan'
+      AND NOT (NEW.anonymized_at IS NOT NULL AND NEW.user_id IS NULL AND NEW.user_product_id IS NULL)
       AND (NEW.user_product_id IS NULL OR NEW.user_product_usage_id IS NOT NULL) THEN
     RAISE EXCEPTION 'personal_plan submissions require only user_product_id';
   END IF;

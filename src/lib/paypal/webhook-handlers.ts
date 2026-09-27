@@ -17,6 +17,7 @@ import {
   recordBillingAnalyticsEvent,
 } from "@/lib/billing/analytics-outbox"
 import { applyPlanChangeAtRenewal } from "@/lib/billing/plan-change"
+import { reportDeletedAccountSubscriptionCancelled } from "@/lib/observability/account-deletion"
 import { mirrorBillingSubscriptionToProfile } from "@/lib/billing/entitlements"
 import {
   findBillingSubscriptionByProviderId,
@@ -141,6 +142,8 @@ export interface PayPalWebhookDeps
     typeof activateVerifiedPayPalOrderIntent
   >[2]["finalizeLockedPlan"]
   capturePaymentFailure?: PaymentFailureReporter
+  /** Test seam; production reports to Sentry (provider + event type only). */
+  reportDeletedAccountSubscription?: typeof reportDeletedAccountSubscriptionCancelled
 }
 
 export type PayPalWebhookResult =
@@ -380,9 +383,10 @@ export async function handlePayPalWebhookEvent(
 
 /**
  * A subscription whose account was deleted keeps only its anonymized checkout intent; the
- * billing row cascaded away. Its later provider events (the cancellation the deletion
- * itself triggered, a late sale) are acknowledged without writes so they neither error
- * forever nor provision a new account from the payer data.
+ * billing row cascaded away. Its later provider events are acknowledged without writes so
+ * they neither error forever nor provision a new account from the payer data. A still
+ * billable agreement (e.g. approved before the deletion, activated after it) is cancelled
+ * immediately (A1) and reported; ended ones are a pure no-op.
  */
 async function acknowledgeDeletedAccountSubscription(
   eventType: string,
@@ -402,6 +406,14 @@ async function acknowledgeDeletedAccountSubscription(
       ? await findPayPalCheckoutIntentByToken(deps.supabase, subscription.custom_id.trim())
       : null)
   if (!intent?.anonymized_at) return false
+  if (subscription.status === "ACTIVE" || subscription.status === "SUSPENDED") {
+    const cancel = deps.cancelPayPalSubscription ?? cancelPayPalSubscriptionForWebhook
+    await cancel(subscription.id, "Chaarlie-Konto gelöscht")
+    ;(deps.reportDeletedAccountSubscription ?? reportDeletedAccountSubscriptionCancelled)({
+      provider: "paypal",
+      eventType,
+    })
+  }
   console.info("[paypal:webhook] event for a deleted account acknowledged", { eventType })
   return true
 }

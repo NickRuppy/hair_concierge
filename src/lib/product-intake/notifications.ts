@@ -50,7 +50,7 @@ export type ProductSubmissionForNotification = Pick<
 
 export type ProductIntakeNotificationResult =
   | { sent: true; conversationId: string; messageId: string }
-  | { sent: false; reason: "already_sent" | "no_message_needed" }
+  | { sent: false; reason: "already_sent" | "no_message_needed" | "owner_deleted" }
 
 export type ProductIntakeReviewMessageContext = Partial<MessageContext> & {
   product_intake_review: {
@@ -454,6 +454,8 @@ export async function sendProductIntakeReviewNotification(
   supabase: SupabaseClient,
   submission: ProductSubmissionForNotification,
 ): Promise<ProductIntakeNotificationResult> {
+  // A kept submission of a deleted account has no owner to notify (D10).
+  if (!submission.user_id) return { sent: false, reason: "owner_deleted" }
   const content = buildProductIntakeReviewMessage(submission)
   if (!content) {
     return { sent: false, reason: "no_message_needed" }

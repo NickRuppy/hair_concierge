@@ -262,28 +262,40 @@ test("web cancellation is immediate without proration and a no-op for ended agre
   assert.deepEqual(paypalCalls, ["I-LIVE"])
 })
 
-test("cron route: bearer auth, 503 while cleanup fails, purge runs", async () => {
+test("cron route: bearer auth, orphans closed, 503 while cleanup or purge fails, purge failures reported", async () => {
   const request = (token?: string) =>
     new Request("https://chaarlie.de/api/account-deletion/reconcile", {
       headers: token ? { authorization: `Bearer ${token}` } : {},
     })
+  const reports: unknown[] = []
   let purges = 0
-  const deps = (failed: number) => ({
+  const deps = (failed: number, purgeFailed: string[] = []) => ({
     cronSecret: "secret",
+    closeOrphans: async () => 1,
     retryCleanup: async () => ({ pending: 1, completed: 1 - failed, failed }),
     purge: async () => {
       purges += 1
-      return { "public.leads": 2 }
+      return { deleted: { "public.leads": 2 }, failed: purgeFailed }
     },
+    reportPurgeFailure: (details: { table: string }) => void reports.push(details),
   })
   assert.equal((await handleAccountDeletionReconcile(request(), deps(0))).status, 401)
   assert.equal((await handleAccountDeletionReconcile(request("nope"), deps(0))).status, 401)
   assert.deepEqual(await handleAccountDeletionReconcile(request("secret"), deps(0)), {
     status: 200,
-    body: { cleanup: { pending: 1, completed: 1, failed: 0 }, purged: { "public.leads": 2 } },
+    body: {
+      orphansClosed: 1,
+      cleanup: { pending: 1, completed: 1, failed: 0 },
+      purged: { deleted: { "public.leads": 2 }, failed: [] },
+    },
   })
   assert.equal((await handleAccountDeletionReconcile(request("secret"), deps(1))).status, 503)
-  assert.equal(purges, 2)
+  assert.equal(
+    (await handleAccountDeletionReconcile(request("secret"), deps(0, ["public.leads"]))).status,
+    503,
+  )
+  assert.deepEqual(reports, [{ table: "public.leads" }])
+  assert.equal(purges, 3)
   assert.equal(
     (
       await handleAccountDeletionReconcile(request("secret"), {

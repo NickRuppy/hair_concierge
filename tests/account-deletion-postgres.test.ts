@@ -192,6 +192,7 @@ INSERT INTO public.mobile_auth_attempts(email) VALUES ('${EMAIL.A}'), ('${EMAIL.
 INSERT INTO public.waitlist_signups(campaign, normalized_email, first_name, survey_token_hash) VALUES ('scan', '${EMAIL.A}', 'Hanna', 'h1');
 INSERT INTO public.rate_limits(key, window_id, count, expires_at) VALUES ('chat:${A}', 'w', 1, now() + interval '1 hour');
 INSERT INTO auth.audit_log_entries(id, payload) VALUES (gen_random_uuid(), '{"actor_id":"${A}","actor_username":"${EMAIL.A}"}');
+INSERT INTO auth.refresh_tokens(token, user_id) VALUES ('tok-hanna', '${A}');
 INSERT INTO public.conversations(id, user_id, title) VALUES (gen_random_uuid(), '${A}', 'Hannas Frage');
 INSERT INTO public.personal_plans(id, user_id) VALUES ('${PPA}', '${A}');
 INSERT INTO public.personal_plan_need_versions(id, user_id, personal_plan_id, kind, schema_version, computation_version, input_hash,
@@ -493,6 +494,31 @@ test(
     await admin(
       flagged(`UPDATE public.trial_identity_claims SET ${tag} WHERE enrollment_id = '${TD}'`),
     )
+    // F3: bound to the operation's user and to the redacted value only.
+    await rejects(
+      flagged(
+        `UPDATE public.billing_one_time_purchases SET user_id = NULL, ${tag}, metadata = private.account_deletion_scrub_json(metadata) WHERE consent_id = '${CA}'`,
+      ),
+      /immutable/,
+    )
+    await rejects(
+      flagged(
+        `UPDATE private.trial_cancellation_declarations SET user_id = NULL, ${tag} WHERE id = '${DA}'`,
+      ),
+      /immutable/,
+    )
+    await rejects(
+      flagged(
+        `UPDATE public.billing_one_time_purchases SET user_id = NULL, ${tag}, metadata = '{"x":1}' WHERE consent_id = '${CD}'`,
+      ),
+      /immutable/,
+    )
+    await rejects(
+      flagged(
+        `UPDATE private.trial_analytics_contexts SET meta_context = '{"fbp":"fb.1.1700000000.1"}', ${tag} WHERE enrollment_id = '${TD}'`,
+      ),
+      /immutable/,
+    )
     // Purge exception: only past-retention rows, only inside the purge function's flag.
     await rejects(
       `BEGIN; SELECT set_config('chaarlie.account_purge', 'on', true); DELETE FROM public.paypal_expired_order_reset_audit WHERE id = '${AUD}'; ROLLBACK;`,
@@ -503,7 +529,7 @@ test(
       SET LOCAL session_replication_role = origin; DELETE FROM public.paypal_expired_order_reset_audit WHERE id = '${AUD}'; ROLLBACK;`,
       /append-only/,
     )
-    await admin(`BEGIN; SET LOCAL session_replication_role = replica; UPDATE public.paypal_expired_order_reset_audit SET purge_after = now() - interval '1 second' WHERE id = '${AUD}';
+    await admin(`BEGIN; SET LOCAL session_replication_role = replica; UPDATE public.paypal_expired_order_reset_audit SET purge_after = now() - interval '1 second', anonymized_at = now() WHERE id = '${AUD}';
       SET LOCAL session_replication_role = origin; SELECT set_config('chaarlie.account_purge', 'on', true);
       DELETE FROM public.paypal_expired_order_reset_audit WHERE id = '${AUD}'; ROLLBACK;`)
     await admin(`DELETE FROM private.account_deletion_operations WHERE request_id = '${REQ.G}'`)
@@ -559,6 +585,15 @@ test(
       await service(`SELECT public.delete_account_data('${A}', '${REQ.A}')`),
     )
     assert.equal(resultA.state, "data_deleted")
+    // F5: a replay by another live account learns nothing (no storage paths).
+    await assert.rejects(
+      service(`SELECT public.delete_account_data('${D}', '${REQ.A}')`),
+      /request_id_conflict/,
+    )
+    assert.equal(
+      await admin(`SELECT count(*) FROM auth.refresh_tokens WHERE user_id = '${A}'`),
+      "0",
+    )
     assert.deepEqual(resultA.storagePaths, [])
     assert.equal(await service(`SELECT public.account_deletion_status('${REQ.A}')`), "data_deleted")
 
@@ -773,13 +808,65 @@ test(
     for (const needle of needles("B"))
       assert.deepEqual(await scan(needle), [], `no row anywhere contains ${needle}`)
 
-    // ---------- User C under the erase policy (Q3 switch). ----------
+    // ---------- F7: operator review of owner-less (anonymized) submissions still works. ----------
+    await admin(
+      `UPDATE public.product_submissions SET status = 'rejected', category = 'shampoo' WHERE id = '${SUB_A}'`,
+    )
+    await admin(
+      `UPDATE public.product_submissions SET status = 'needs_more_info' WHERE id = '${SUB_B}'`,
+    )
+
+    // ---------- F2: a concurrent second request cannot leave an open operation behind. ----------
     await admin(
       `CREATE OR REPLACE FUNCTION private.account_deletion_policy() RETURNS text LANGUAGE sql IMMUTABLE SET search_path = '' AS $$ SELECT 'erase'::text $$`,
     )
     await service(
-      `SELECT public.account_deletion_begin('${C}', '${REQ.C}'); SELECT public.account_deletion_mark_billing_cancelled('${REQ.C}'); SELECT public.delete_account_data('${C}', '${REQ.C}'); SELECT public.account_deletion_complete('${REQ.C}')`,
+      `SELECT public.account_deletion_begin('${C}', '${REQ.C}'); SELECT public.account_deletion_mark_billing_cancelled('${REQ.C}')`,
     )
+    const slowDelete = psql(
+      "postgres",
+      `SET ROLE service_role; BEGIN; SELECT public.delete_account_data('${C}', '${REQ.C}'); SELECT pg_sleep(0.6); COMMIT;`,
+    )
+    await setTimeout(200)
+    const secondRequest = service(
+      `SELECT public.account_deletion_begin('${C}', 'c2000000-0000-4000-8000-000000000002')`,
+    )
+    await slowDelete
+    await assert.rejects(secondRequest, /account_not_found/)
+    assert.equal(
+      await admin(
+        `SELECT count(*) FROM private.account_deletion_operations WHERE state IN ('requested', 'web_billing_cancelled')`,
+      ),
+      "0",
+    )
+    await service(`SELECT public.account_deletion_complete('${REQ.C}')`)
+
+    // ---------- F2: an account deleted by another path closes its open operation. ----------
+    const E = "e0000000-0000-4000-8000-00000000000e"
+    const REQ_E = "e2000000-0000-4000-8000-000000000001"
+    await admin(`INSERT INTO auth.users(id, email) VALUES ('${E}', 'eva.dashboard@example.com');
+      INSERT INTO storage.objects(bucket_id, name) VALUES ('product-intake', '${E}/x/front.jpg');`)
+    await service(`SELECT public.account_deletion_begin('${E}', '${REQ_E}')`)
+    await admin(`DELETE FROM auth.users WHERE id = '${E}'`)
+    assert.equal(await service(`SELECT public.account_deletion_close_orphans()`), "1")
+    assert.deepEqual(
+      JSON.parse(await service(`SELECT public.account_deletion_pending_cleanup(20, '${REQ_E}')`)),
+      [
+        {
+          requestId: REQ_E,
+          userId: E,
+          email: "eva.dashboard@example.com",
+          storagePaths: [`${E}/x/front.jpg`],
+          externalAttempts: 0,
+        },
+      ],
+    )
+    await admin(`DELETE FROM storage.objects WHERE name = '${E}/x/front.jpg'`)
+    await service(`SELECT public.account_deletion_complete('${REQ_E}')`)
+    assert.deepEqual(await scan(E), [])
+    assert.deepEqual(await scan("eva.dashboard@example.com"), [])
+
+    // ---------- User C under the erase policy (Q3 switch). ----------
     assert.equal(
       await admin(
         `SELECT count(*) FROM public.trial_identity_claims WHERE claim_digest = '${hex("c")}'`,
@@ -821,8 +908,10 @@ test(
       `SET session_replication_role = replica; ${tagged.map((table) => `UPDATE ${table} SET purge_after = now() - interval '1 second' WHERE anonymous_subject_id IN ('${subjectA}', '${subjectC}') AND purge_after IS NOT NULL;`).join(" ")}`,
     )
     const purged = JSON.parse(await service(`SELECT public.purge_anonymized_records()`))
+    assert.deepEqual(purged.failed, [])
     assert.ok(
-      purged["public.leads"] >= 3 && purged["private.trial_cancellation_declarations"] === 1,
+      purged.deleted["public.leads"] >= 3 &&
+        purged.deleted["private.trial_cancellation_declarations"] === 1,
       JSON.stringify(purged),
     )
     assert.equal(
@@ -843,6 +932,9 @@ test(
       "1",
       "no purge for kept anonymous data",
     )
-    assert.deepEqual(JSON.parse(await service(`SELECT public.purge_anonymized_records()`)), {})
+    assert.deepEqual(JSON.parse(await service(`SELECT public.purge_anonymized_records()`)), {
+      deleted: {},
+      failed: [],
+    })
   },
 )

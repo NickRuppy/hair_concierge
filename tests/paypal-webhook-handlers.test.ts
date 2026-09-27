@@ -820,12 +820,14 @@ test("BILLING.SUBSCRIPTION.CANCELLED acknowledges duplicate subscriptions withou
   assert.equal(paypalIntents[0].provider_subscription_id, "I-active")
 })
 
-test("events for a deleted account's subscription are acknowledged without writes", async () => {
-  for (const eventType of [
-    "BILLING.SUBSCRIPTION.CANCELLED",
-    "BILLING.SUBSCRIPTION.ACTIVATED",
-    "PAYMENT.SALE.COMPLETED",
-  ]) {
+test("events for a deleted account's subscription write nothing; a live agreement is cancelled at once", async () => {
+  for (const [eventType, status, expectCancel] of [
+    ["BILLING.SUBSCRIPTION.CANCELLED", "CANCELLED", false],
+    ["BILLING.SUBSCRIPTION.EXPIRED", "EXPIRED", false],
+    ["BILLING.SUBSCRIPTION.ACTIVATED", "ACTIVE", true],
+    ["PAYMENT.SALE.COMPLETED", "ACTIVE", true],
+    ["BILLING.SUBSCRIPTION.PAYMENT.FAILED", "SUSPENDED", true],
+  ] as const) {
     const { supabase, billing, paypalIntents } = createSupabaseStub({
       billing: [],
       paypalIntents: [
@@ -846,6 +848,7 @@ test("events for a deleted account's subscription are acknowledged without write
       ],
     })
     const cancelled: string[] = []
+    const reports: unknown[] = []
     const result = await handlePayPalWebhookEvent(
       eventType === "PAYMENT.SALE.COMPLETED"
         ? paymentEvent(`WH-deleted-${eventType}`, eventType)
@@ -854,19 +857,17 @@ test("events for a deleted account's subscription are acknowledged without write
         supabase,
         premiumTierId: "tier-premium",
         freeTierId: "tier-free",
-        retrievePayPalSubscription: async () =>
-          subscription(
-            eventType === "BILLING.SUBSCRIPTION.CANCELLED" ? "CANCELLED" : "ACTIVE",
-            futureIso(),
-          ),
+        retrievePayPalSubscription: async () => subscription(status, futureIso()),
         cancelPayPalSubscription: async (subscriptionId) => {
           cancelled.push(subscriptionId)
         },
+        reportDeletedAccountSubscription: (details) => void reports.push(details),
       },
     )
     assert.deepEqual(result, { handled: true }, eventType)
     assert.equal(billing.length, 0, eventType)
-    assert.deepEqual(cancelled, [], eventType)
+    assert.deepEqual(cancelled, expectCancel ? ["I-active"] : [], eventType)
+    assert.deepEqual(reports, expectCancel ? [{ provider: "paypal", eventType }] : [], eventType)
     assert.equal(paypalIntents[0].user_id, null, eventType)
     assert.equal(paypalIntents[0].status, "activated", eventType)
   }

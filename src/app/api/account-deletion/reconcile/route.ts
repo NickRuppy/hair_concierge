@@ -2,18 +2,24 @@ import { NextResponse } from "next/server"
 import { safeBearerTokenMatches } from "@/app/api/billing/payment-monitor/route"
 import { createAccountDeletionDeps } from "@/lib/account-deletion/runtime"
 import { retryAccountDeletionCleanup } from "@/lib/account-deletion/service"
+import { reportAccountDeletionPurgeFailure } from "@/lib/observability/account-deletion"
 import { createAdminClient } from "@/lib/supabase/admin"
 
 export const runtime = "nodejs"
 export const maxDuration = 60
 
+type PurgeResult = { deleted: Record<string, number>; failed: string[] }
+
 type Dependencies = {
   cronSecret?: string
+  /** Moves open operations whose account is already gone into external cleanup. */
+  closeOrphans: () => Promise<number>
   retryCleanup: () => Promise<{ pending: number; completed: number; failed: number }>
-  purge: () => Promise<unknown>
+  purge: () => Promise<PurgeResult>
+  reportPurgeFailure?: typeof reportAccountDeletionPurgeFailure
 }
 
-/** Cron: resume external cleanup of deleted accounts, then purge rows past retention. */
+/** Cron: close orphaned operations, resume external cleanup, purge rows past retention. */
 export async function handleAccountDeletionReconcile(request: Request, deps: Dependencies) {
   if (
     !deps.cronSecret ||
@@ -21,9 +27,15 @@ export async function handleAccountDeletionReconcile(request: Request, deps: Dep
   )
     return { status: 401, body: { error: "unauthorized" } }
   try {
+    const orphansClosed = await deps.closeOrphans()
     const cleanup = await deps.retryCleanup()
     const purged = await deps.purge()
-    return { status: cleanup.failed ? 503 : 200, body: { cleanup, purged } }
+    for (const table of purged.failed)
+      (deps.reportPurgeFailure ?? reportAccountDeletionPurgeFailure)({ table })
+    return {
+      status: cleanup.failed || purged.failed.length ? 503 : 200,
+      body: { orphansClosed, cleanup, purged },
+    }
   } catch {
     return { status: 503, body: { error: "temporarily_unavailable" } }
   }
@@ -33,11 +45,16 @@ export async function GET(request: Request) {
   const client = createAdminClient()
   const result = await handleAccountDeletionReconcile(request, {
     cronSecret: process.env.CRON_SECRET,
+    closeOrphans: async () => {
+      const { data, error } = await client.rpc("account_deletion_close_orphans")
+      if (error) throw new Error("Orphan close failed")
+      return Number(data)
+    },
     retryCleanup: () => retryAccountDeletionCleanup(createAccountDeletionDeps(client)),
     purge: async () => {
       const { data, error } = await client.rpc("purge_anonymized_records")
       if (error) throw new Error("Purge failed")
-      return data
+      return data as PurgeResult
     },
   })
   return NextResponse.json(result.body, {

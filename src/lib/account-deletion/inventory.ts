@@ -83,6 +83,8 @@ export const ACCOUNT_DELETION_TABLE_CLASSES: Readonly<Record<string, AccountDele
   "public.user_products": "cascade",
   "public.waitlist_customerio_outbox": "cascade",
   "auth.audit_log_entries": "delete",
+  "auth.flow_state": "delete",
+  "auth.refresh_tokens": "delete",
   "auth.users": "delete",
   "private.openai_ads_contexts": "delete",
   "public.beta_feedback": "delete",

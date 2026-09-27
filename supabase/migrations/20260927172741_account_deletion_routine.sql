@@ -2,30 +2,6 @@
 -- the one-transaction data routine private.delete_account and the retention purge.
 -- Classification per table: plans/ios-paywall/deletion-inventory.md.
 
--- Identity keys that must not survive in retained JSON metadata.
-CREATE FUNCTION private.account_deletion_scrub_json(p_value jsonb) RETURNS jsonb
-LANGUAGE sql IMMUTABLE SET search_path = '' AS $$
-  SELECT CASE WHEN jsonb_typeof(p_value) = 'object' THEN p_value - ARRAY[
-    'email', 'customer_email', 'payer_email', 'payer_id', 'payer_name', 'account_email',
-    'subscriber', 'name', 'first_name', 'last_name', 'phone', 'address', 'shipping_address',
-    'user_id', 'lead_id', 'visitor_id', 'ip', 'ip_address', 'user_agent', 'client_user_agent',
-    'fbp', 'fbc'] ELSE p_value END
-$$;
-
--- Stripe checkout parameters frozen as evidence: the customer email and identity metadata go.
-CREATE FUNCTION private.account_deletion_scrub_stripe_params(p_value jsonb) RETURNS jsonb
-LANGUAGE sql IMMUTABLE SET search_path = '' AS $$
-  SELECT CASE WHEN jsonb_typeof(p_value) <> 'object' THEN p_value ELSE
-    (p_value - 'customer_email')
-    || CASE WHEN p_value ? 'metadata'
-      THEN jsonb_build_object('metadata', private.account_deletion_scrub_json(p_value->'metadata')) ELSE '{}' END
-    || CASE WHEN jsonb_typeof(p_value->'subscription_data') = 'object' AND p_value->'subscription_data' ? 'metadata'
-      THEN jsonb_build_object('subscription_data', (p_value->'subscription_data')
-        || jsonb_build_object('metadata', private.account_deletion_scrub_json(p_value->'subscription_data'->'metadata')))
-      ELSE '{}' END
-  END
-$$;
-
 -- Starts (or replays) one deletion request. The latest request wins while no data has
 -- been deleted yet; a request id belongs to exactly one account.
 CREATE FUNCTION public.account_deletion_begin(p_user_id uuid, p_request_id uuid) RETURNS jsonb
@@ -93,13 +69,18 @@ BEGIN
   IF p_user_id IS NULL OR p_request_id IS NULL THEN
     RAISE EXCEPTION 'invalid_request' USING ERRCODE = '22023';
   END IF;
+  -- Same per-user lock as account_deletion_begin: a concurrent begin for this account
+  -- waits and then finds the account gone instead of leaving a new open operation behind.
+  PERFORM pg_advisory_xact_lock(hashtextextended('account_deletion:' || p_user_id::text, 0));
   SELECT * INTO op FROM private.account_deletion_operations WHERE request_id = p_request_id FOR UPDATE;
   IF NOT FOUND THEN RAISE EXCEPTION 'operation_not_found' USING ERRCODE = 'P0002'; END IF;
+  -- A completed request no longer names its account; a live caller cannot own it.
+  IF op.user_id IS DISTINCT FROM p_user_id
+    AND (op.user_id IS NOT NULL OR EXISTS (SELECT 1 FROM auth.users WHERE id = p_user_id)) THEN
+    RAISE EXCEPTION 'request_id_conflict' USING ERRCODE = '22023';
+  END IF;
   IF op.state IN ('data_deleted', 'external_cleanup_done') THEN
     RETURN jsonb_build_object('state', op.state, 'storagePaths', to_jsonb(op.storage_paths));
-  END IF;
-  IF op.user_id IS DISTINCT FROM p_user_id THEN
-    RAISE EXCEPTION 'request_id_conflict' USING ERRCODE = '22023';
   END IF;
   IF op.state <> 'web_billing_cancelled' THEN
     RAISE EXCEPTION 'web_billing_not_cancelled' USING ERRCODE = '55000';
@@ -211,6 +192,11 @@ BEGIN
     OR (v_email IS NOT NULL AND strpos(lower(key), v_email) > 0);
   DELETE FROM auth.audit_log_entries WHERE strpos(payload::text, p_user_id::text) > 0
     OR (v_email IS NOT NULL AND strpos(lower(payload::text), v_email) > 0);
+  -- GoTrue tables keyed by user id without a cascading FK (hosted schema; optional here).
+  DELETE FROM auth.refresh_tokens WHERE user_id = p_user_id::text;
+  IF to_regclass('auth.flow_state') IS NOT NULL THEN
+    EXECUTE 'DELETE FROM auth.flow_state WHERE user_id = $1' USING p_user_id;
+  END IF;
   -- Usage rows reference submissions by (id, user_id, category); remove them before the
   -- retained submissions lose their owner.
   DELETE FROM public.user_product_usage WHERE user_id = p_user_id;
@@ -388,7 +374,7 @@ BEGIN
       source_conversation_id = NULL, front_image_path = NULL, barcode_image_path = NULL,
       front_image_validation_metadata = '{}', barcode_image_validation_metadata = '{}',
       review_notes = NULL, user_facing_resolution_reason = NULL, user_facing_next_step = NULL,
-      intake_history = '[]', personal_plan_request_fingerprint = NULL,
+      intake_history = '[]', personal_plan_request_fingerprint = NULL, mobile_result_requested_at = NULL,
       anonymous_subject_id = v_subject, anonymized_at = v_now
     WHERE user_id = p_user_id;
   UPDATE public.scan_resolve_events SET user_id = NULL, anonymous_subject_id = v_subject, anonymized_at = v_now
@@ -457,10 +443,11 @@ RETURNS jsonb LANGUAGE sql STABLE SECURITY DEFINER SET search_path = '' AS $$
     ORDER BY updated_at LIMIT greatest(1, least(coalesce(p_limit, 20), 100))) due
 $$;
 
--- Retention purge: rows past purge_after, children before parents.
+-- Retention purge: anonymized rows past purge_after, children before parents. Each table
+-- runs in its own subtransaction so one failure does not stall the rest (reported by the cron).
 CREATE FUNCTION private.purge_anonymized_records() RETURNS jsonb
 LANGUAGE plpgsql SECURITY DEFINER SET search_path = '' AS $$
-DECLARE t text; n bigint; total jsonb := '{}';
+DECLARE t text; n bigint; deleted jsonb := '{}'; failed jsonb := '[]';
 BEGIN
   PERFORM set_config('chaarlie.account_purge', 'on', true);
   FOREACH t IN ARRAY ARRAY[
@@ -485,27 +472,52 @@ BEGIN
     'public.billing_one_time_purchases', 'public.personal_plan_one_time_checkout_consents',
     'public.paypal_checkout_intents', 'public.trial_enrollments', 'public.funnel_sessions', 'public.leads'
   ] LOOP
-    EXECUTE format('DELETE FROM %s WHERE purge_after <= now()', t);
-    GET DIAGNOSTICS n = ROW_COUNT;
-    IF n > 0 THEN total := total || jsonb_build_object(t, n); END IF;
+    BEGIN
+      EXECUTE format('DELETE FROM %s WHERE anonymized_at IS NOT NULL AND purge_after < now()', t);
+      GET DIAGNOSTICS n = ROW_COUNT;
+      IF n > 0 THEN deleted := deleted || jsonb_build_object(t, n); END IF;
+    EXCEPTION WHEN OTHERS THEN
+      failed := failed || to_jsonb(t);
+    END;
   END LOOP;
   PERFORM set_config('chaarlie.account_purge', '', true);
-  RETURN total;
+  RETURN jsonb_build_object('deleted', deleted, 'failed', failed);
+END
+$$;
+
+-- Open operations whose account disappeared by another path (dashboard/admin deletion, or a
+-- request that lost the race to another one): the data is gone, so they move to
+-- data_deleted with the account's storage prefixes and finish through external cleanup,
+-- which clears the stored user id and email.
+CREATE FUNCTION public.account_deletion_close_orphans() RETURNS integer
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = '' AS $$
+DECLARE n integer;
+BEGIN
+  UPDATE private.account_deletion_operations op SET state = 'data_deleted', data_deleted_at = now(),
+      updated_at = now(),
+      storage_paths = ARRAY(SELECT o.name FROM storage.objects o WHERE o.bucket_id = 'product-intake'
+        AND (o.name LIKE op.user_id::text || '/%' OR o.name LIKE 'tmp/' || op.user_id::text || '/%') ORDER BY o.name)
+    WHERE op.state IN ('requested', 'web_billing_cancelled')
+      AND NOT EXISTS (SELECT 1 FROM auth.users u WHERE u.id = op.user_id);
+  GET DIAGNOSTICS n = ROW_COUNT;
+  RETURN n;
 END
 $$;
 
 CREATE FUNCTION public.purge_anonymized_records() RETURNS jsonb
 LANGUAGE sql SECURITY INVOKER SET search_path = '' AS $$ SELECT private.purge_anonymized_records() $$;
 
-REVOKE ALL ON FUNCTION private.account_deletion_scrub_json(jsonb), private.account_deletion_scrub_stripe_params(jsonb), private.delete_account(uuid, uuid),
+REVOKE ALL ON FUNCTION private.delete_account(uuid, uuid),
   private.purge_anonymized_records() FROM PUBLIC, anon, authenticated;
 REVOKE ALL ON FUNCTION public.account_deletion_begin(uuid, uuid), public.account_deletion_mark_billing_cancelled(uuid),
   public.delete_account_data(uuid, uuid), public.account_deletion_record_external_failure(uuid, text),
   public.account_deletion_complete(uuid), public.account_deletion_status(uuid),
-  public.account_deletion_pending_cleanup(integer, uuid), public.purge_anonymized_records() FROM PUBLIC, anon, authenticated;
-GRANT EXECUTE ON FUNCTION private.account_deletion_scrub_json(jsonb), private.account_deletion_scrub_stripe_params(jsonb), private.delete_account(uuid, uuid),
+  public.account_deletion_pending_cleanup(integer, uuid), public.purge_anonymized_records(),
+  public.account_deletion_close_orphans() FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION private.delete_account(uuid, uuid),
   private.purge_anonymized_records() TO service_role;
 GRANT EXECUTE ON FUNCTION public.account_deletion_begin(uuid, uuid), public.account_deletion_mark_billing_cancelled(uuid),
   public.delete_account_data(uuid, uuid), public.account_deletion_record_external_failure(uuid, text),
   public.account_deletion_complete(uuid), public.account_deletion_status(uuid),
-  public.account_deletion_pending_cleanup(integer, uuid), public.purge_anonymized_records() TO service_role;
+  public.account_deletion_pending_cleanup(integer, uuid), public.purge_anonymized_records(),
+  public.account_deletion_close_orphans() TO service_role;
