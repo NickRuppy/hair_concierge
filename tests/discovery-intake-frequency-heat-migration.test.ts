@@ -137,11 +137,12 @@ test("the batch-7 migration has a unique version that sorts after every migratio
     .map((name) => name.split("_")[0])
   const own = OWN.split("_")[0]
   assert.equal(versions.filter((version) => version === own).length, 1)
-  // Only its own batch-7 follow-up (the styling-aware usage correction) may come later.
+  // Only its own batch-7 follow-up (the styling-aware usage correction) and batch 9's
+  // per-product call decisions may come later.
   assert.deepEqual(
     versions.filter((version) => version > own),
-    ["20260925150000"],
-    "must sort after every migration but its follow-up",
+    ["20260925150000", "20260927120000"],
+    "must sort after every migration but its follow-up and batch 9's",
   )
 })
 
