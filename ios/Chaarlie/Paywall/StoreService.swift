@@ -6,6 +6,11 @@ import StoreKit
 struct StoreTransaction: Equatable, Sendable {
     let id: UInt64
     let signedTransaction: String
+    /// The Chaarlie account the purchase was bound to; nil for purchases made outside the app.
+    let appAccountToken: UUID?
+    init(id: UInt64, signedTransaction: String, appAccountToken: UUID? = nil) {
+        self.id = id; self.signedTransaction = signedTransaction; self.appAccountToken = appAccountToken
+    }
 }
 
 enum PurchaseOutcome: Equatable, Sendable {
@@ -70,7 +75,8 @@ struct LiveStoreService: StoreService {
 
 extension StoreTransaction {
     init(_ result: VerificationResult<Transaction>) {
-        self.init(id: result.unsafePayloadValue.id, signedTransaction: result.jwsRepresentation)
+        self.init(id: result.unsafePayloadValue.id, signedTransaction: result.jwsRepresentation,
+                  appAccountToken: result.unsafePayloadValue.appAccountToken)
     }
 }
 

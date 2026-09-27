@@ -52,7 +52,7 @@ final class AccountSafetyTests: XCTestCase {
     func testHistoryFavoriteIsOptimisticAndRollsBackWithRetry() async throws {
         let transport = ControlledTransport(), client = try client(transport)
         try await client.install(session("favorites"))
-        let model = AppModel(client: client); model.admission = .ready
+        let model = AppModel(client: client, store: FakeStoreService()); model.admission = .ready
         model.historyEntries = [historyEntry()]
         let first = Task { await model.toggleHistoryFavorite(model.historyEntries[0]) }
         try await waitFor("unknown", transport: transport)
@@ -79,7 +79,7 @@ final class AccountSafetyTests: XCTestCase {
     func testFavoritesFilterUsesServerAndRemovesUnfavoritedRowAfterSuccess() async throws {
         let transport = ControlledTransport(), client = try client(transport)
         try await client.install(session("filter"))
-        let model = AppModel(client: client); model.admission = .ready
+        let model = AppModel(client: client, store: FakeStoreService()); model.admission = .ready
         model.historyNextCursor = "old-filter-page"
         let filter = Task { await model.setHistoryFilter(favoritesOnly: true) }
         try await waitFor("history", transport: transport)
@@ -99,7 +99,7 @@ final class AccountSafetyTests: XCTestCase {
     func testClearHistoryRetainsFavoritesAndReloadsTheirPagination() async throws {
         let transport = ControlledTransport(), client = try client(transport)
         try await client.install(session("clear"))
-        let model = AppModel(client: client); model.admission = .ready
+        let model = AppModel(client: client, store: FakeStoreService()); model.admission = .ready
         model.historyEntries = [historyEntry("saved", favorite: true), historyEntry("other")]
         let clear = Task { await model.clearHistory() }
         try await waitFor("history", transport: transport)
@@ -114,7 +114,7 @@ final class AccountSafetyTests: XCTestCase {
     func testResearchStatusCheckingAndPendingPreventSecondSubmit() async throws {
         let transport = ControlledTransport(), client = try client(transport)
         try await client.install(session("pending"))
-        let model = AppModel(client: client); model.admission = .ready
+        let model = AppModel(client: client, store: FakeStoreService()); model.admission = .ready
         model.lastRequest = .barcode("8700216328609")
         let check = Task { await model.checkResearchStatus() }
         try await waitFor("history", transport: transport)
@@ -129,7 +129,7 @@ final class AccountSafetyTests: XCTestCase {
     func testFavoriteRollbackSurvivesOverlappingFilteredReload() async throws {
         let transport = ControlledTransport(), client = try client(transport)
         try await client.install(session("favorite-reload"))
-        let model = AppModel(client: client); model.admission = .ready; model.historyFavoritesOnly = true
+        let model = AppModel(client: client, store: FakeStoreService()); model.admission = .ready; model.historyFavoritesOnly = true
         model.historyEntries = [historyEntry(favorite: true)]
         let toggle = Task { await model.toggleHistoryFavorite(model.historyEntries[0]) }
         try await waitFor("unknown", transport: transport)
@@ -179,7 +179,7 @@ final class AccountSafetyTests: XCTestCase {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("history"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.admission = .ready
         model.selectedTab = .search
         let load = Task { await model.resolve(.barcode("4006381333931")) }
@@ -214,7 +214,7 @@ final class AccountSafetyTests: XCTestCase {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("invalid-barcode"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.admission = .ready; model.selectedTab = .search
         let load = Task { await model.resolve(.barcode("4006381333932")) }
         try await waitFor("resolve", transport: transport)
@@ -228,7 +228,7 @@ final class AccountSafetyTests: XCTestCase {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("race"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.admission = .ready; model.selectedTab = .search
         model.lastRequest = .barcode("4006381333931")
         model.scanResult = try JSONDecoder().decode(ScanResult.self, from: Data(#"{"contractVersion":1,"kind":"submission_required","missingFacts":["unknown_product"]}"#.utf8))
@@ -249,7 +249,7 @@ final class AccountSafetyTests: XCTestCase {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("research"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.admission = .ready
         model.lastRequest = .barcode("4006381333931")
         model.researchChecked = true
@@ -276,7 +276,7 @@ final class AccountSafetyTests: XCTestCase {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("research-fallback"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.admission = .ready
         model.lastRequest = .barcode("4006381333931")
         let check = Task { await model.checkResearchStatus() }
@@ -293,7 +293,7 @@ final class AccountSafetyTests: XCTestCase {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("old"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.admission = .ready
         let load = Task { await model.loadHistory() }
         try await waitFor("history", transport: transport)
@@ -311,7 +311,7 @@ final class AccountSafetyTests: XCTestCase {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("pages"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.admission = .ready
         let load = Task { await model.loadHistory() }
         try await waitFor("history", transport: transport)
@@ -328,7 +328,7 @@ final class AccountSafetyTests: XCTestCase {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("tabs"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.admission = .ready; model.selectedTab = .search; model.searchText = "Shampoo"
         let load = Task { await model.resolve(.product("product")) }
         try await waitFor("resolve", transport: transport)
@@ -344,7 +344,7 @@ final class AccountSafetyTests: XCTestCase {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("tab-errors"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.admission = .ready; model.selectedTab = .search
         let search = Task { await model.resolve(.product("product")) }
         try await waitFor("resolve", transport: transport)
@@ -461,7 +461,7 @@ final class AccountSafetyTests: XCTestCase {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("A"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         let id = UUID().uuidString
         let callback = try XCTUnwrap(URL(string: "chaarlie-local://auth#attemptId=\(id)&tokenHash=abcdefghijklmnop"))
         let link = Task { await model.receive(callback) }
@@ -485,7 +485,7 @@ final class AccountSafetyTests: XCTestCase {
     func testColdRestoreCannotReplaceAnActiveLinkVerification() async throws {
         let transport = ControlledTransport()
         let client = try client(transport)
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         let id = UUID().uuidString
         let callback = try XCTUnwrap(URL(string: "chaarlie-local://auth#attemptId=\(id)&tokenHash=abcdefghijklmnop"))
         let verification = Task { await model.receive(callback) }
@@ -530,7 +530,7 @@ final class AccountSafetyTests: XCTestCase {
         let afterCompletion = await client.currentSession()
         XCTAssertNil(afterCompletion, "Gateway must not install a session itself")
 
-        let app = AppModel(client: client)
+        let app = AppModel(client: client, store: FakeStoreService())
         // Completion carries no access decision; the authoritative bootstrap routes it.
         let finishing = Task { await app.finishRegistration(completion) }
         try await waitFor("bootstrap", transport: transport)
@@ -543,7 +543,7 @@ final class AccountSafetyTests: XCTestCase {
     }
     func testVerifiedIncompleteProfileKeepsCompletionAuthorityOutOfSessionStore() async throws {
         let client = try client(ControlledTransport())
-        let app = AppModel(client: client)
+        let app = AppModel(client: client, store: FakeStoreService())
         let accepted = await app.finishRegistration(.init(status: .profile_required, completionToken: "completion-only-authority", profileRevision: "r1"))
         XCTAssertTrue(accepted)
         XCTAssertEqual(app.admission, .profileRequired)
@@ -554,7 +554,7 @@ final class AccountSafetyTests: XCTestCase {
     func testOrdinaryVerifyRoutesIncompleteProfileToMemoryOnlyCompletionAuthority() async throws {
         let transport = ControlledTransport()
         let client = try client(transport)
-        let app = AppModel(client: client)
+        let app = AppModel(client: client, store: FakeStoreService())
         app.email = "existing@example.test"
         let starting = Task { await app.startLogin() }
         try await waitFor("start", transport: transport)
@@ -598,7 +598,7 @@ final class AccountSafetyTests: XCTestCase {
     func testLateVerifyResponseCannotRestoreSessionAfterLogout() async throws {
         let transport = ControlledTransport()
         let client = try client(transport)
-        let app = AppModel(client: client)
+        let app = AppModel(client: client, store: FakeStoreService())
         app.email = "existing@example.test"
         let starting = Task { await app.startLogin() }
         try await waitFor("start", transport: transport)
@@ -621,7 +621,7 @@ final class AccountSafetyTests: XCTestCase {
     func testLateLimitedCompletionCannotRestoreSessionAfterLogout() async throws {
         let transport = ControlledTransport()
         let client = try client(transport)
-        let app = AppModel(client: client)
+        let app = AppModel(client: client, store: FakeStoreService())
         let accepted = await app.finishRegistration(.init(status: .profile_required, completionToken: "authority", profileRevision: "r1"))
         XCTAssertTrue(accepted)
         let authority = try XCTUnwrap(app.completionAuthority)
@@ -713,7 +713,7 @@ final class AccountSafetyTests: XCTestCase {
         await retrying.value
     }
     func testTabSwitchKeepsResolveFailureUntilExplicitClose() throws {
-        let model = AppModel(client: try client(ControlledTransport()))
+        let model = AppModel(client: try client(ControlledTransport()), store: FakeStoreService())
         model.admission = .ready
         model.lastRequest = .product("selected-product")
         model.scanError = "Die Verbindung ist gerade nicht verfügbar. Versuche es erneut."
@@ -736,7 +736,7 @@ final class AccountSafetyTests: XCTestCase {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("A"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.admission = .ready
         let first = Task { await model.resolve(.barcode("12345678")) }
         try await waitFor("resolve", transport: transport)
@@ -762,7 +762,7 @@ final class AccountSafetyTests: XCTestCase {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("A"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.session = session("A")
         model.admission = .ready
         model.profile = HairProfile(profileRevision: "A", answers: [])
@@ -793,7 +793,7 @@ final class AccountSafetyTests: XCTestCase {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("A"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.admission = .ready
         let first = Task { await model.resolve(.barcode("12345678")) }
         try await waitFor("resolve", transport: transport)
@@ -867,7 +867,7 @@ final class AccountSafetyTests: XCTestCase {
     }
     func testSignedInCallbackRequiresConfirmationAndDeclinePreservesAccount() async throws {
         let client = try client(ControlledTransport())
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.session = session("A")
         model.admission = .ready
         let url = try XCTUnwrap(URL(string: "chaarlie-local://auth#attemptId=\(UUID().uuidString)&tokenHash=abcdefghijklmnop"))
@@ -929,7 +929,7 @@ final class AccountSafetyTests: XCTestCase {
     func testLateVerificationCannotInstallAfterChangingLoginAttempt() async throws {
         let transport = ControlledTransport()
         let client = try client(transport)
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.admission = .signedOut
         model.attempt = AuthAttempt(attemptId: UUID().uuidString, codeLength: 8)
         model.code = "12345678"
@@ -946,7 +946,7 @@ final class AccountSafetyTests: XCTestCase {
         let transport = ControlledTransport()
         let client = try client(transport)
         try await client.install(session("A"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.admission = .ready
         let pending = Task { await model.resolve(.barcode("12345678")) }
         try await waitFor("resolve", transport: transport)
@@ -964,7 +964,7 @@ final class AccountSafetyTests: XCTestCase {
     private func editModel(_ transport: ControlledTransport) async throws -> AppModel {
         let client = try client(transport)
         try await client.install(session("A"))
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         model.session = session("A")
         model.admission = .ready
         model.profile = HairProfile(profileRevision: "2", answers: [])

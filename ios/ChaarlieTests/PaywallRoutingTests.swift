@@ -1,5 +1,6 @@
 import XCTest
 import StoreKit
+import SwiftUI
 @testable import Chaarlie
 
 /// StoreKit stand-in: `SKTestSession` is not reliable from xcodebuild here, so the
@@ -259,11 +260,11 @@ final class PaywallRoutingTests: XCTestCase {
         let store = FakeStoreService()
         let (model, transport, _) = try await signedInModel(store: store)
         model.admission = .paywall
-        model.startTransactionListener()
         await model.handlePurchase(.pending)
         XCTAssertEqual(model.purchaseState, .pending)
         XCTAssertEqual(model.purchaseState.statusText, "Kauf wird bestätigt …")
         store.emit(purchase)
+        model.startTransactionListener()
         try await waitFor("transactions", transport)
         await transport.complete("transactions", json: #"{"access":\#(activeAccess)}"#)
         try await until { model.admission == .ready }
@@ -314,6 +315,7 @@ final class PaywallRoutingTests: XCTestCase {
             XCTAssertEqual(store.finished, [purchase.id], "status \(status)")
             XCTAssertEqual(model.admission, .paywall)
             XCTAssertEqual(model.purchaseState, .idle)
+            XCTAssertEqual(model.paywallMessage, "Der Kauf konnte nicht bestätigt werden. Tippe auf „Wiederherstellen“.")
         }
     }
     func testLateTransactionAcknowledgementAfterLogoutIsIgnored() async throws {
@@ -384,6 +386,170 @@ final class PaywallRoutingTests: XCTestCase {
         XCTAssertEqual(model.paywallMessage, "Kein aktives Abo gefunden.")
     }
 
+    // MARK: Review fixes
+
+    func testEachTransactionIsPostedAloneAndFinishedOnlyAfterItsOwnAcknowledgement() async throws {
+        let invalid = StoreTransaction(id: 1, signedTransaction: "header.invalid.signature")
+        let valid = StoreTransaction(id: 2, signedTransaction: "header.valid.signature")
+        let store = FakeStoreService(unfinished: [invalid, valid])
+        let (model, transport, _) = try await signedInModel(store: store)
+        model.admission = .paywall
+        let retry = Task { await model.retryUnfinishedTransactions() }
+        try await waitFor("transactions", transport)
+        var body = await transport.lastBody("transactions")
+        XCTAssertEqual(try JSONDecoder().decode([String: [String]].self, from: XCTUnwrap(body)), ["signedTransactions": ["header.invalid.signature"]])
+        await transport.complete("transactions", status: 400, json: #"{"error":"invalid_transaction"}"#)
+        try await until { store.finished == [1] }
+        try await waitFor("transactions", transport)
+        body = await transport.lastBody("transactions")
+        XCTAssertEqual(try JSONDecoder().decode([String: [String]].self, from: XCTUnwrap(body)), ["signedTransactions": ["header.valid.signature"]])
+        XCTAssertEqual(store.finished, [1], "The valid purchase waits for its own acknowledgement")
+        await transport.complete("transactions", json: #"{"access":\#(activeAccess)}"#)
+        await retry.value
+        XCTAssertEqual(store.finished, [1, 2])
+        XCTAssertEqual(model.admission, .ready)
+    }
+    func testAnotherAccountsTransactionIsNeitherPostedNorFinishedInTheBackground() async throws {
+        let foreign = StoreTransaction(id: 7, signedTransaction: "header.foreign.signature",
+                                       appAccountToken: UUID(uuidString: "7c9e6679-7425-40de-944b-e07fc1f90ae7"))
+        let foreignUpdate = StoreTransaction(id: 8, signedTransaction: "header.foreign-update.signature",
+                                             appAccountToken: UUID(uuidString: "7c9e6679-7425-40de-944b-e07fc1f90ae7"))
+        let own = StoreTransaction(id: 9, signedTransaction: "header.own.signature",
+                                   appAccountToken: UUID(uuidString: userID.uppercased()))
+        let store = FakeStoreService(unfinished: [foreign])
+        let (model, transport, _) = try await signedInModel(store: store)
+        model.admission = .paywall
+        model.startTransactionListener()
+        store.emit(foreignUpdate)
+        try await Task.sleep(for: .milliseconds(100))
+        var count = await transport.requestCount("transactions")
+        XCTAssertEqual(count, 0)
+        XCTAssertTrue(store.finished.isEmpty, "Left unfinished for the owner's next session")
+        store.emit(own)
+        try await waitFor("transactions", transport)
+        let body = await transport.lastBody("transactions")
+        XCTAssertEqual(try JSONDecoder().decode([String: [String]].self, from: XCTUnwrap(body)), ["signedTransactions": ["header.own.signature"]])
+        await transport.complete("transactions", json: #"{"access":\#(activeAccess)}"#)
+        try await until { store.finished == [9] }
+        count = await transport.requestCount("transactions")
+        XCTAssertEqual(count, 1)
+    }
+    func testRestorePostsAnotherAccountsEntitlementToExplainOwnership() async throws {
+        let foreign = StoreTransaction(id: 7, signedTransaction: "header.foreign.signature",
+                                       appAccountToken: UUID(uuidString: "7c9e6679-7425-40de-944b-e07fc1f90ae7"))
+        let store = FakeStoreService(entitlements: [foreign])
+        let (model, transport, _) = try await signedInModel(store: store)
+        model.admission = .paywall
+        let restoring = Task { await model.restorePurchases() }
+        try await waitFor("transactions", transport)
+        await transport.complete("transactions", status: 409, json: #"{"error":"owned_by_other_account","access":\#(noAccess)}"#)
+        await restoring.value
+        XCTAssertEqual(model.paywallMessage, "Dieses Abo gehört zu einem anderen Chaarlie-Konto.")
+        XCTAssertEqual(model.admission, .paywall)
+        XCTAssertEqual(model.purchaseState, .idle)
+    }
+    func testPurchaseWithInactiveAnswerAsksForRestore() async throws {
+        let store = FakeStoreService(unfinished: [purchase])
+        let (model, transport, _) = try await signedInModel(store: store)
+        model.admission = .paywall
+        let buying = Task { await model.handlePurchase(.purchased(purchase)) }
+        try await waitFor("transactions", transport)
+        await transport.complete("transactions", json: #"{"access":\#(noAccess)}"#)
+        await buying.value
+        XCTAssertEqual(model.admission, .paywall)
+        XCTAssertEqual(model.paywallMessage, "Der Kauf konnte nicht bestätigt werden. Tippe auf „Wiederherstellen“.")
+    }
+    func testBackgroundPostNeverResetsARunningRestore() async throws {
+        let transport = QueueTransport(), client = try queueClient(transport)
+        try await client.install(session(userID))
+        let entitlement = StoreTransaction(id: 1, signedTransaction: "header.entitlement.signature")
+        let unfinished = StoreTransaction(id: 2, signedTransaction: "header.unfinished.signature")
+        let store = FakeStoreService(unfinished: [unfinished], entitlements: [entitlement])
+        let model = AppModel(client: client, store: store)
+        model.session = session(userID); model.admission = .paywall
+        let restoring = Task { await model.restorePurchases() }
+        try await transport.waitFor("entitlement")
+        let background = Task { await model.retryUnfinishedTransactions() }
+        try await transport.waitFor("unfinished")
+        await transport.complete("unfinished", status: 503, json: #"{"error":"temporarily_unavailable"}"#)
+        await background.value
+        XCTAssertEqual(model.purchaseState, .restoring)
+        await model.restorePurchases()
+        XCTAssertEqual(store.syncCount, 1, "No second restore while one is running")
+        await transport.complete("entitlement", json: #"{"access":\#(activeAccess)}"#)
+        await restoring.value
+        XCTAssertEqual(model.admission, .ready)
+        XCTAssertEqual(store.finished, [1])
+    }
+    func testBackgroundOwnershipMessageNeverReachesALaterPaywall() async throws {
+        let store = FakeStoreService()
+        let (model, transport, _) = try await signedInModel(store: store)
+        model.admission = .ready
+        model.startTransactionListener()
+        store.emit(purchase)
+        try await waitFor("transactions", transport)
+        await transport.complete("transactions", status: 409, json: #"{"error":"owned_by_other_account","access":\#(activeAccess)}"#)
+        try await until { store.finished == [purchase.id] }
+        XCTAssertNil(model.paywallMessage)
+        model.searchText = "Shampoo"
+        let search = Task { await model.search() }
+        try await waitFor("search", transport)
+        await transport.complete("search", status: 402, json: #"{"error":"subscription_required"}"#)
+        await search.value
+        XCTAssertEqual(model.admission, .paywall)
+        XCTAssertNil(model.paywallMessage)
+    }
+    func testDeclinedAskToBuyDoesNotBlockTheCheckout() async throws {
+        let (model, _, _) = try await signedInModel()
+        model.admission = .paywall
+        await model.handlePurchase(.pending)
+        model.purchaseStarted()
+        XCTAssertEqual(model.purchaseState, .idle, "A new attempt replaces the pending state")
+        await model.handlePurchase(.pending)
+        await model.retryUnfinishedTransactions()
+        XCTAssertEqual(model.purchaseState, .idle, "Foreground without an unfinished transaction clears pending")
+    }
+    func testHistorySaveRetryStopsAtPaywallWithoutReloadingHistory() async throws {
+        let (model, transport, _) = try await signedInModel()
+        model.admission = .ready
+        model.selectedTab = .history
+        model.pendingHistorySaves = [.barcode("4006381333931")]
+        let retry = Task { await model.retryHistorySaving() }
+        try await waitFor("resolve", transport)
+        await transport.complete("resolve", status: 402, json: #"{"error":"subscription_required"}"#)
+        await retry.value
+        XCTAssertEqual(model.admission, .paywall)
+        XCTAssertFalse(model.historySaveBusy)
+        let history = await transport.requestCount("history")
+        XCTAssertEqual(history, 0)
+    }
+    func testLogoutFromPaywallSignsOutAndStopsListener() async throws {
+        let store = FakeStoreService()
+        let (model, transport, _) = try await signedInModel(store: store)
+        let boot = Task { await model.bootstrap() }
+        try await waitFor("bootstrap", transport)
+        await transport.complete("bootstrap", json: bootstrapJSON(noAccess))
+        await boot.value
+        XCTAssertEqual(model.admission, .paywall)
+        let logout = Task { await model.logout() }
+        try await waitFor("logout", transport)
+        await transport.complete("logout", json: "{}")
+        await logout.value
+        XCTAssertEqual(model.admission, .signedOut)
+        XCTAssertNil(model.purchaseAccountToken)
+        store.emit(purchase)
+        try await Task.sleep(for: .milliseconds(100))
+        let count = await transport.requestCount("transactions")
+        XCTAssertEqual(count, 0)
+    }
+    func testAccessibilityTextShrinksThePhotoHeader() {
+        XCTAssertEqual(PaywallHeader.height(for: .large), 470)
+        XCTAssertEqual(PaywallHeader.height(for: .xxxLarge), 470)
+        for size in [DynamicTypeSize.accessibility1, .accessibility3, .accessibility5] {
+            XCTAssertEqual(PaywallHeader.height(for: size), 240)
+        }
+    }
+
     // MARK: Helpers
 
     private static let entry = HistoryEntry(id: "entry-1", barcodeGtin: "4006381333931", productId: nil, productName: nil,
@@ -414,11 +580,37 @@ final class PaywallRoutingTests: XCTestCase {
         }
         throw NSError(domain: "PaywallTest.RequestDidNotReach.\(path)", code: 1)
     }
+    private func queueClient(_ transport: QueueTransport) throws -> MobileClient {
+        MobileClient(configuration: try MobileConfiguration(baseURL: XCTUnwrap(URL(string: "http://127.0.0.1:3218/api/mobile/v1"))),
+                     transport: transport, store: MemorySessionStore())
+    }
     private func until(_ condition: () -> Bool) async throws {
         for _ in 0..<200 {
             if condition() { return }
             try await Task.sleep(for: .milliseconds(5))
         }
         throw NSError(domain: "PaywallTest.ConditionNotReached", code: 1)
+    }
+}
+
+/// Holds concurrent requests to the same path apart by a marker in their body.
+actor QueueTransport: HTTPTransport {
+    private var pending: [(body: String, continuation: CheckedContinuation<(Data, HTTPURLResponse), Error>)] = []
+    func data(for request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+        let body = request.httpBody.map { String(decoding: $0, as: UTF8.self) } ?? ""
+        return try await withCheckedThrowingContinuation { pending.append((body, $0)) }
+    }
+    func has(_ marker: String) -> Bool { pending.contains { $0.body.contains(marker) } }
+    nonisolated func waitFor(_ marker: String) async throws {
+        for _ in 0..<200 {
+            if await has(marker) { return }
+            try await Task.sleep(for: .milliseconds(5))
+        }
+        throw NSError(domain: "PaywallTest.QueuedRequestDidNotReach.\(marker)", code: 1)
+    }
+    func complete(_ marker: String, status: Int = 200, json: String) {
+        guard let index = pending.firstIndex(where: { $0.body.contains(marker) }) else { return }
+        let continuation = pending.remove(at: index).continuation
+        continuation.resume(returning: (Data(json.utf8), HTTPURLResponse(url: URL(string: "http://localhost/x")!, statusCode: status, httpVersion: nil, headerFields: nil)!))
     }
 }

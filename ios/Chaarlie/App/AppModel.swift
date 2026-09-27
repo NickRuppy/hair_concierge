@@ -673,7 +673,11 @@ final class AppModel {
         } catch {
             guard account == generation, operation == historySaveOperation else { return }
             if error as? MobileError == .unauthorized { await expired(); return }
-            if error as? MobileError == .subscriptionRequired { requireSubscription() }
+            if error as? MobileError == .subscriptionRequired {
+                historySaveBusy = false
+                requireSubscription()
+                return
+            }
         }
         guard account == generation, operation == historySaveOperation else { return }
         historySaveBusy = false
@@ -749,6 +753,8 @@ final class AppModel {
     /// Any gated 402 or an inactive access answer. Profile and history stay on the server.
     private func requireSubscription() {
         guard admission == .ready || admission == .paywall else { return }
+        // A message from a background post while scanning never greets a later paywall visit.
+        if admission == .ready { paywallMessage = nil; purchaseState = .idle }
         dismissScan()
         cancelSearch()
         clearProfileEdit()
@@ -770,7 +776,7 @@ final class AppModel {
             await self?.retryUnfinishedTransactions()
             for await transaction in updates {
                 guard let self, account == self.generation else { return }
-                await self.post([transaction])
+                await self.postInBackground([transaction])
             }
         }
     }
@@ -783,23 +789,46 @@ final class AppModel {
         purchaseState = .idle
         paywallMessage = nil
     }
+    /// Launch, foreground and the explicit retry button.
     func retryUnfinishedTransactions() async {
         guard session != nil, admission == .ready || admission == .paywall else { return }
         let account = generation
-        let transactions = await store.unfinished()
+        let transactions = await store.unfinished().filter(belongsToSession)
         guard account == generation else { return }
-        await post(transactions)
+        // A declined Ask to Buy never produces a transaction; do not wait on it forever.
+        if transactions.isEmpty, purchaseState == .pending { purchaseState = .idle }
+        await postInBackground(transactions)
+    }
+    /// A new purchase attempt replaces any earlier pending or message state.
+    func purchaseStarted() {
+        guard admission == .paywall else { return }
+        if purchaseState == .pending { purchaseState = .idle }
+        paywallMessage = nil
     }
     func handlePurchase(_ outcome: PurchaseOutcome) async {
         guard admission == .paywall else { return }
         paywallMessage = nil
         switch outcome {
-        case .purchased(let transaction): await post([transaction])
+        case .purchased(let transaction):
+            guard isPostable(transaction) else { return }
+            let account = generation
+            purchaseState = .unlocking
+            guard let result = await post(transaction), account == generation else { return }
+            purchaseState = .idle
+            switch result {
+            case .access(let access) where access.status == .active: await apply(access)
+            case .access, .invalid: paywallMessage = "Der Kauf konnte nicht bestätigt werden. Tippe auf „Wiederherstellen“."
+            case .ownedByOther(let access):
+                paywallMessage = "Dieses Abo gehört zu einem anderen Chaarlie-Konto."
+                if let access { await apply(access) }
+            case .failed: purchaseState = .unlockFailed
+            }
         case .pending: purchaseState = .pending
         case .cancelled: break
         case .failed: paywallMessage = "Der Kauf hat nicht geklappt. Bitte versuche es erneut."
         }
     }
+    /// Posts every current entitlement, including another account's, so A3 is explained.
     func restorePurchases() async {
         guard admission == .paywall, session != nil, purchaseState != .restoring, purchaseState != .unlocking else { return }
         let account = generation
@@ -813,63 +842,87 @@ final class AppModel {
         }
         let entitlements = await store.currentEntitlements()
         guard account == generation else { return }
-        guard !entitlements.isEmpty else {
-            purchaseState = .idle
-            paywallMessage = "Kein aktives Abo gefunden."
-            return
-        }
-        await post(entitlements, restoring: true)
-    }
-    /// Finishes a transaction only after the server acknowledged it (200 or a 409 verdict).
-    /// Anything else leaves it unfinished, so StoreKit redelivers it and nobody pays twice.
-    private func post(_ transactions: [StoreTransaction], restoring: Bool = false) async {
-        let batch = Array(transactions.filter {
-            !postingTransactionIDs.contains($0.id) && !acknowledgedTransactionIDs.contains($0.id)
-        }.prefix(20))
-        guard !batch.isEmpty, session != nil else {
-            if restoring { purchaseState = .idle }
-            return
-        }
-        let account = generation
-        batch.forEach { postingTransactionIDs.insert($0.id) }
-        if admission == .paywall, !restoring { purchaseState = .unlocking }
-        var access: MobileAccess?
-        do {
-            access = try await client.postAppStoreTransactions(batch.map(\.signedTransaction))
-        } catch MobileError.appStoreOwnedByOtherAccount(let returned) {
-            access = returned
-            if account == generation { paywallMessage = "Dieses Abo gehört zu einem anderen Chaarlie-Konto." }
-        } catch MobileError.appStoreInvalidTransaction {
-            if account == generation, restoring { paywallMessage = "Kein aktives Abo gefunden." }
-        } catch {
-            guard account == generation else { return }
-            batch.forEach { postingTransactionIDs.remove($0.id) }
-            if error as? MobileError == .unauthorized { await expired(); return }
-            if restoring {
+        var ownedByOther = false, failed = false
+        for transaction in entitlements where isPostable(transaction, restoring: true) {
+            guard let result = await post(transaction), account == generation else { return }
+            // A background post may have unlocked meanwhile.
+            guard admission == .paywall else { purchaseState = .idle; return }
+            switch result {
+            case .access(let access) where access.status == .active:
                 purchaseState = .idle
-                paywallMessage = "Wiederherstellen hat nicht geklappt. Bitte versuche es erneut."
-            } else if admission == .paywall { purchaseState = .unlockFailed }
-            return
+                await apply(access)
+                return
+            case .ownedByOther(let access):
+                ownedByOther = true
+                if let access, access.status == .active { purchaseState = .idle; await apply(access); return }
+            case .failed: failed = true
+            case .access, .invalid: break
+            }
         }
-        for transaction in batch { await store.finish(transaction) }
-        guard account == generation else { return }
-        batch.forEach { postingTransactionIDs.remove($0.id); acknowledgedTransactionIDs.insert($0.id) }
         purchaseState = .idle
-        guard let access else { return }
-        await apply(access, restoring: restoring)
+        paywallMessage = ownedByOther ? "Dieses Abo gehört zu einem anderen Chaarlie-Konto."
+            : failed ? "Wiederherstellen hat nicht geklappt. Bitte versuche es erneut." : "Kein aktives Abo gefunden."
     }
-    private func apply(_ access: MobileAccess, restoring: Bool) async {
+    /// Renewals and relaunch retries only for this account's purchases. Another account's
+    /// transaction stays unfinished for its owner's next session. Never touches a running restore.
+    private func postInBackground(_ transactions: [StoreTransaction]) async {
+        let account = generation
+        for transaction in transactions where belongsToSession(transaction) && isPostable(transaction) {
+            let showsProgress = admission == .paywall && purchaseState != .restoring
+            if showsProgress { purchaseState = .unlocking }
+            guard let result = await post(transaction), account == generation else { return }
+            if showsProgress, purchaseState == .unlocking { purchaseState = result == .failed ? .unlockFailed : .idle }
+            switch result {
+            case .access(let access): await apply(access)
+            case .ownedByOther(let access):
+                if admission == .paywall { paywallMessage = "Dieses Abo gehört zu einem anderen Chaarlie-Konto." }
+                if let access { await apply(access) }
+            case .invalid, .failed: break
+            }
+        }
+    }
+    private enum PostResult: Equatable { case access(MobileAccess), ownedByOther(MobileAccess?), invalid, failed }
+    private func belongsToSession(_ transaction: StoreTransaction) -> Bool {
+        guard let token = transaction.appAccountToken else { return true }
+        return session.flatMap { UUID(uuidString: $0.userId) } == token
+    }
+    private func isPostable(_ transaction: StoreTransaction, restoring: Bool = false) -> Bool {
+        !postingTransactionIDs.contains(transaction.id) && (restoring || !acknowledgedTransactionIDs.contains(transaction.id))
+    }
+    /// Exactly one transaction per request: the server verifies a whole batch before writing,
+    /// so one invalid JWS must never finish a valid one it did not store. Finishes only after
+    /// the server's verdict (200 or 409/400); anything else leaves it for StoreKit to redeliver.
+    /// Nil when the account changed or the session expired.
+    private func post(_ transaction: StoreTransaction) async -> PostResult? {
+        guard session != nil else { return nil }
+        let account = generation
+        postingTransactionIDs.insert(transaction.id)
+        let result: PostResult
+        do { result = .access(try await client.postAppStoreTransactions([transaction.signedTransaction])) }
+        catch MobileError.appStoreOwnedByOtherAccount(let access) { result = .ownedByOther(access) }
+        catch MobileError.appStoreInvalidTransaction { result = .invalid }
+        catch {
+            guard account == generation else { return nil }
+            postingTransactionIDs.remove(transaction.id)
+            if error as? MobileError == .unauthorized { await expired(); return nil }
+            return .failed
+        }
+        await store.finish(transaction)
+        guard account == generation else { return nil }
+        postingTransactionIDs.remove(transaction.id)
+        acknowledgedTransactionIDs.insert(transaction.id)
+        return result
+    }
+    private func apply(_ access: MobileAccess) async {
         guard admission == .ready || admission == .paywall else { return }
         if access.status == .active {
             guard admission == .paywall else { return }
             paywallMessage = nil
+            purchaseState = .idle
             selectedTab = .scan
             admission = .ready
             await activateResearchDelivery()
-        } else {
-            if restoring, paywallMessage == nil { paywallMessage = "Kein aktives Abo gefunden." }
-            requireSubscription()
-        }
+        } else { requireSubscription() }
     }
     func logout(preservingResearchDestination destination: UUID? = nil) async {
         let pushInstallationId = push.installationToRevoke
