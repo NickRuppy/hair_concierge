@@ -531,7 +531,11 @@ final class AccountSafetyTests: XCTestCase {
         XCTAssertNil(afterCompletion, "Gateway must not install a session itself")
 
         let app = AppModel(client: client)
-        let installedReady = await app.finishRegistration(completion)
+        // Completion carries no access decision; the authoritative bootstrap routes it.
+        let finishing = Task { await app.finishRegistration(completion) }
+        try await waitFor("bootstrap", transport: transport)
+        await transport.complete("bootstrap", json: "{\"status\":\"ready\"}")
+        let installedReady = await finishing.value
         XCTAssertTrue(installedReady)
         let installed = await client.currentSession()
         XCTAssertEqual(installed?.userId, userID.uuidString)

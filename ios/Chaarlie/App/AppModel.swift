@@ -4,11 +4,29 @@ import SwiftUI
 @MainActor
 @Observable
 final class AppModel {
-    enum Admission: Equatable { case signedOut, loading, ready, profileRequired, unavailable }
+    enum Admission: Equatable { case signedOut, loading, ready, profileRequired, unavailable, paywall }
+    enum PurchaseState: Equatable {
+        case idle, pending, unlocking, unlockFailed, restoring
+        var statusText: String? {
+            switch self {
+            case .idle: nil
+            case .pending: "Kauf wird bestätigt …"
+            case .unlocking, .unlockFailed: "Kauf erfolgreich – Freischaltung läuft …"
+            case .restoring: "Abo wird wiederhergestellt …"
+            }
+        }
+    }
     enum Tab: Hashable { case scan, search, history, profile }
     let client: MobileClient
     let push: ResearchPushCoordinator
+    let store: any StoreService
+    private(set) var purchaseState: PurchaseState = .idle
+    private(set) var paywallMessage: String?
+    private var transactionListener: Task<Void, Never>?
+    private var postingTransactionIDs: Set<UInt64> = []
+    private var acknowledgedTransactionIDs: Set<UInt64> = []
     private(set) var researchDeliveryEnabled = false
+    private var researchDeliveryOffered = false
     private(set) var pendingResearchDestination: UUID?
     private(set) var researchDestinationBusy = false
     private(set) var researchDestinationError: String?
@@ -90,9 +108,10 @@ final class AppModel {
     private var resolveFailures: [Tab: (request: ScanRequest, message: String)] = [:]
     private var restorationTask: Task<Void, Never>?
 
-    init(client: MobileClient, push: ResearchPushCoordinator? = nil) {
+    init(client: MobileClient, push: ResearchPushCoordinator? = nil, store: (any StoreService)? = nil) {
         self.client = client
         self.push = push ?? ResearchPushCoordinator()
+        self.store = store ?? LiveStoreService()
     }
     func restore() async {
         if let active = restorationTask { await active.value; return }
@@ -175,8 +194,7 @@ final class AppModel {
                 email = ""
                 code = ""
                 authError = nil
-                admission = .ready
-                await admitResearchDelivery(response.bootstrap)
+                await admitCompleted(response.bootstrap)
                 return true
             }
             guard response.session == nil, response.status == .profile_required, response.completionToken?.isEmpty == false,
@@ -212,8 +230,7 @@ final class AppModel {
             } else if session == nil { return false }
             guard account == generation else { return false }
             resetPersonalState()
-            admission = .ready
-            await admitResearchDelivery(response.bootstrap)
+            await admitCompleted(response.bootstrap)
             return true
         } catch { return false }
     }
@@ -278,10 +295,11 @@ final class AppModel {
             let response = try await client.bootstrap()
             guard account == generation else { return }
             switch response.status {
-            case .ready: admission = .ready
+            case .ready: admission = (response.access ?? .open).status == .active ? .ready : .paywall
             case .profile_required: admission = .profileRequired
             case .temporarily_unavailable: admission = .unavailable
             }
+            if admission == .ready || admission == .paywall { startTransactionListener() }
             await admitResearchDelivery(response)
         } catch {
             guard account == generation else { return }
@@ -289,9 +307,20 @@ final class AppModel {
             else { admission = .unavailable }
         }
     }
+    /// Completion responses carry no `access` today; the full bootstrap decides then.
+    private func admitCompleted(_ response: Bootstrap?) async {
+        guard let access = response?.access else { await bootstrap(); return }
+        admission = access.status == .active ? .ready : .paywall
+        startTransactionListener()
+        await admitResearchDelivery(response)
+    }
     private func admitResearchDelivery(_ response: Bootstrap?) async {
+        researchDeliveryOffered = response?.researchDeliveryEnabled == true
+        await activateResearchDelivery()
+    }
+    private func activateResearchDelivery() async {
         let account = generation
-        researchDeliveryEnabled = admission == .ready && response?.researchDeliveryEnabled == true
+        researchDeliveryEnabled = admission == .ready && researchDeliveryOffered
         await push.activate(client: client, enabled: researchDeliveryEnabled)
         guard account == generation else { return }
         if admission == .ready { await openResearchDestination() }
@@ -319,6 +348,7 @@ final class AppModel {
             case .unauthorized:
                 await expired(preservingResearchDestination: destination)
                 return
+            case .subscriptionRequired: requireSubscription()
             case .researchNotReady: researchDestinationError = "Die Einschätzung ist noch nicht verfügbar."
             case .researchNotFound: researchDestinationError = "Dieses Ergebnis gehört nicht zu diesem Konto oder ist nicht mehr verfügbar."
             default: researchDestinationError = "Ergebnis konnte nicht geladen werden. Bitte erneut versuchen."
@@ -457,6 +487,7 @@ final class AppModel {
         } catch {
             guard account == generation, operation == scanOperation else { return }
             if error as? MobileError == .unauthorized { await expired() }
+            else if error as? MobileError == .subscriptionRequired { requireSubscription() }
             else if error as? MobileError == .invalidBarcode { scanError = "Barcode ungültig. Prüfe die 8 oder 13 Ziffern." }
             else { scanError = "Die Verbindung ist gerade nicht verfügbar. Versuche es erneut." }
         }
@@ -478,6 +509,7 @@ final class AppModel {
         } catch {
             guard account == generation, operation == searchOperation else { return }
             if error as? MobileError == .unauthorized { await expired() }
+            else if error as? MobileError == .subscriptionRequired { requireSubscription() }
             else { searchError = "Die Suche ist gerade nicht verfügbar. Bitte versuche es erneut." }
         }
         guard account == generation, operation == searchOperation else { return }
@@ -556,7 +588,8 @@ final class AppModel {
         } catch {
             guard account == generation, operation == historyOperation else { return }
             if error as? MobileError == .unauthorized { await expired(); return }
-            historyError = "Verlauf konnte nicht geladen werden."
+            if error as? MobileError == .subscriptionRequired { requireSubscription() }
+            else { historyError = "Verlauf konnte nicht geladen werden." }
         }
         guard account == generation, operation == historyOperation else { return }
         historyBusy = false
@@ -584,8 +617,11 @@ final class AppModel {
             guard account == generation else { return }
             if error as? MobileError == .unauthorized { await expired(); return }
             updateHistoryFavorite(entry.id, value: original)
-            historyFavoriteRetryId = entry.id
-            historyFavoriteError = "Favorit konnte nicht gespeichert werden. Bitte erneut versuchen."
+            if error as? MobileError == .subscriptionRequired { requireSubscription() }
+            else {
+                historyFavoriteRetryId = entry.id
+                historyFavoriteError = "Favorit konnte nicht gespeichert werden. Bitte erneut versuchen."
+            }
         }
         historyFavoriteBusy.remove(entry.id)
     }
@@ -637,6 +673,7 @@ final class AppModel {
         } catch {
             guard account == generation, operation == historySaveOperation else { return }
             if error as? MobileError == .unauthorized { await expired(); return }
+            if error as? MobileError == .subscriptionRequired { requireSubscription() }
         }
         guard account == generation, operation == historySaveOperation else { return }
         historySaveBusy = false
@@ -656,8 +693,11 @@ final class AppModel {
         } catch {
             guard account == generation, operation == scanOperation else { return }
             if error as? MobileError == .unauthorized { await expired(); return }
-            researchChecked = false
-            researchError = "Prüfstatus konnte nicht geladen werden. Bitte erneut versuchen."
+            if error as? MobileError == .subscriptionRequired { requireSubscription() }
+            else {
+                researchChecked = false
+                researchError = "Prüfstatus konnte nicht geladen werden. Bitte erneut versuchen."
+            }
         }
         guard account == generation, operation == scanOperation else { return }
         researchChecking = false
@@ -689,7 +729,8 @@ final class AppModel {
         } catch {
             guard account == generation, operation == scanOperation else { return }
             if error as? MobileError == .unauthorized { await expired(); return }
-            researchError = "Einreichung noch nicht bestätigt. Bitte erneut versuchen."
+            if error as? MobileError == .subscriptionRequired { requireSubscription() }
+            else { researchError = "Einreichung noch nicht bestätigt. Bitte erneut versuchen." }
         }
         guard account == generation, operation == scanOperation else { return }
         researchBusy = false
@@ -697,6 +738,138 @@ final class AppModel {
     private func resetResearch() {
         researchBusy = false; researchChecking = false; researchChecked = false
         researchPending = false; researchError = nil; researchRequest = nil
+    }
+    // MARK: App Store access
+
+    /// Bound to every purchase as `appAccountToken`. Nil (no installed session) blocks buying.
+    var purchaseAccountToken: UUID? {
+        guard admission == .paywall, let session else { return nil }
+        return UUID(uuidString: session.userId)
+    }
+    /// Any gated 402 or an inactive access answer. Profile and history stay on the server.
+    private func requireSubscription() {
+        guard admission == .ready || admission == .paywall else { return }
+        dismissScan()
+        cancelSearch()
+        clearProfileEdit()
+        // Keep a delivered research link; it opens once access returns.
+        researchDestinationOperation = UUID()
+        researchDestinationBusy = false
+        researchDestinationError = nil
+        researchDeliveryEnabled = false
+        admission = .paywall
+        startTransactionListener()
+    }
+    /// Runs for the installed session: first retries unfinished purchases, then
+    /// follows renewals, Ask to Buy approvals and purchases made elsewhere.
+    func startTransactionListener() {
+        guard transactionListener == nil, session != nil else { return }
+        let account = generation
+        let updates = store.updates()
+        transactionListener = Task { [weak self] in
+            await self?.retryUnfinishedTransactions()
+            for await transaction in updates {
+                guard let self, account == self.generation else { return }
+                await self.post([transaction])
+            }
+        }
+    }
+    /// Logout (and account deletion) detach StoreKit from the old account.
+    func stopTransactionListener() {
+        transactionListener?.cancel()
+        transactionListener = nil
+        postingTransactionIDs = []
+        acknowledgedTransactionIDs = []
+        purchaseState = .idle
+        paywallMessage = nil
+    }
+    func retryUnfinishedTransactions() async {
+        guard session != nil, admission == .ready || admission == .paywall else { return }
+        let account = generation
+        let transactions = await store.unfinished()
+        guard account == generation else { return }
+        await post(transactions)
+    }
+    func handlePurchase(_ outcome: PurchaseOutcome) async {
+        guard admission == .paywall else { return }
+        paywallMessage = nil
+        switch outcome {
+        case .purchased(let transaction): await post([transaction])
+        case .pending: purchaseState = .pending
+        case .cancelled: break
+        case .failed: paywallMessage = "Der Kauf hat nicht geklappt. Bitte versuche es erneut."
+        }
+    }
+    func restorePurchases() async {
+        guard admission == .paywall, session != nil, purchaseState != .restoring, purchaseState != .unlocking else { return }
+        let account = generation
+        purchaseState = .restoring
+        paywallMessage = nil
+        do { try await store.sync() } catch {
+            guard account == generation else { return }
+            purchaseState = .idle
+            if !(error is CancellationError) { paywallMessage = "Wiederherstellen hat nicht geklappt. Bitte versuche es erneut." }
+            return
+        }
+        let entitlements = await store.currentEntitlements()
+        guard account == generation else { return }
+        guard !entitlements.isEmpty else {
+            purchaseState = .idle
+            paywallMessage = "Kein aktives Abo gefunden."
+            return
+        }
+        await post(entitlements, restoring: true)
+    }
+    /// Finishes a transaction only after the server acknowledged it (200 or a 409 verdict).
+    /// Anything else leaves it unfinished, so StoreKit redelivers it and nobody pays twice.
+    private func post(_ transactions: [StoreTransaction], restoring: Bool = false) async {
+        let batch = Array(transactions.filter {
+            !postingTransactionIDs.contains($0.id) && !acknowledgedTransactionIDs.contains($0.id)
+        }.prefix(20))
+        guard !batch.isEmpty, session != nil else {
+            if restoring { purchaseState = .idle }
+            return
+        }
+        let account = generation
+        batch.forEach { postingTransactionIDs.insert($0.id) }
+        if admission == .paywall, !restoring { purchaseState = .unlocking }
+        var access: MobileAccess?
+        do {
+            access = try await client.postAppStoreTransactions(batch.map(\.signedTransaction))
+        } catch MobileError.appStoreOwnedByOtherAccount(let returned) {
+            access = returned
+            if account == generation { paywallMessage = "Dieses Abo gehört zu einem anderen Chaarlie-Konto." }
+        } catch MobileError.appStoreInvalidTransaction {
+            if account == generation, restoring { paywallMessage = "Kein aktives Abo gefunden." }
+        } catch {
+            guard account == generation else { return }
+            batch.forEach { postingTransactionIDs.remove($0.id) }
+            if error as? MobileError == .unauthorized { await expired(); return }
+            if restoring {
+                purchaseState = .idle
+                paywallMessage = "Wiederherstellen hat nicht geklappt. Bitte versuche es erneut."
+            } else if admission == .paywall { purchaseState = .unlockFailed }
+            return
+        }
+        for transaction in batch { await store.finish(transaction) }
+        guard account == generation else { return }
+        batch.forEach { postingTransactionIDs.remove($0.id); acknowledgedTransactionIDs.insert($0.id) }
+        purchaseState = .idle
+        guard let access else { return }
+        await apply(access, restoring: restoring)
+    }
+    private func apply(_ access: MobileAccess, restoring: Bool) async {
+        guard admission == .ready || admission == .paywall else { return }
+        if access.status == .active {
+            guard admission == .paywall else { return }
+            paywallMessage = nil
+            selectedTab = .scan
+            admission = .ready
+            await activateResearchDelivery()
+        } else {
+            if restoring, paywallMessage == nil { paywallMessage = "Kein aktives Abo gefunden." }
+            requireSubscription()
+        }
     }
     func logout(preservingResearchDestination destination: UUID? = nil) async {
         let pushInstallationId = push.installationToRevoke
@@ -706,6 +879,8 @@ final class AppModel {
         dismissResearchDestination()
         pendingResearchDestination = destination
         researchDeliveryEnabled = false
+        researchDeliveryOffered = false
+        stopTransactionListener()
         push.endSession()
         resetPersonalState()
         session = nil

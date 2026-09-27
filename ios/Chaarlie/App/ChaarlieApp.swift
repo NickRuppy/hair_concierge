@@ -39,7 +39,12 @@ struct ChaarlieApp: App {
                         if let url = activity.webpageURL { Task { await model.receive(url) } }
                     }
                     .onChange(of: scenePhase) { _, phase in
-                        if phase == .active { Task { await model.refreshPushRegistration() } }
+                        if phase == .active {
+                            Task {
+                                await model.refreshPushRegistration()
+                                await model.retryUnfinishedTransactions()
+                            }
+                        }
                     }
             } else {
                 ContentUnavailableView("Entwicklungsbuild nicht eingerichtet", systemImage: "gearshape",
@@ -89,6 +94,8 @@ struct RootView: View {
                 }.padding(24).transition(.opacity)
             case .profileRequired:
                 MissingProfileCompletionView(app: model)
+            case .paywall:
+                PaywallView(model: model).transition(.opacity)
             case .unavailable:
                 RecoveryView(title: "Deine Haarangaben konnten nicht geladen werden.",
                     message: "Du bist angemeldet. Bitte versuche es noch einmal.", model: model, retry: true)

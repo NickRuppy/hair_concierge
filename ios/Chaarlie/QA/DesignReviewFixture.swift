@@ -46,6 +46,7 @@ enum DesignReviewScenario: String, Sendable {
     case recoveryMissing = "recovery-missing"
     case profileCompletion = "profile-completion"
     case recoveryUnavailable = "recovery-unavailable"
+    case paywall
 
     static var current: Self? {
         guard ProcessInfo.processInfo.arguments.contains("--ui-design-review"),
@@ -70,7 +71,8 @@ struct DesignReviewFixture: View {
         // Constant loopback URL satisfies the normal configuration contract. The injected
         // transport below handles every request in memory and cannot open a connection.
         let configuration = try! MobileConfiguration(baseURL: URL(string: "http://127.0.0.1:3218/api/mobile/v1")!)
-        let session = scenario.signedOut || scenario == .profileCompletion ? nil : DesignReviewData.session
+        let session = scenario.signedOut || scenario == .profileCompletion ? nil
+            : scenario == .paywall ? DesignReviewData.paywallSession : DesignReviewData.session
         let attempt = [.code, .codeError].contains(scenario) ? DesignReviewData.attempt : nil
         let client = MobileClient(configuration: configuration,
                                   transport: DesignReviewTransport(scenario: scenario, onboardingAnswers: onboardingAnswers),
@@ -148,6 +150,9 @@ private enum DesignReviewData {
     static let attempt = AuthAttempt(attemptId: "11111111-2222-4333-8444-555555555555", codeLength: 8)
     static let session = MobileSession(accessToken: "synthetic-design-access", refreshToken: "synthetic-design-refresh",
                                        expiresAt: 4_102_444_800, userId: "synthetic-design-user")
+    /// Purchases need a UUID account token; this one belongs to no real account.
+    static let paywallSession = MobileSession(accessToken: "synthetic-design-access", refreshToken: "synthetic-design-refresh",
+                                              expiresAt: 4_102_444_800, userId: "00000000-0000-4000-8000-00000000d51e")
     static func editSnapshot(missingLength: Bool = false) throws -> ProfileEditSnapshot {
         guard let fixture = Bundle.main.url(forResource: "profile-edit-v1", withExtension: "json") else { throw MobileError.invalidResponse }
         let snapshot = try JSONDecoder().decode(ProfileEditSnapshot.self, from: Data(contentsOf: fixture))
@@ -230,7 +235,9 @@ actor DesignReviewTransport: HTTPTransport {
         let data: Data
         if path.hasSuffix("/bootstrap") {
             let status: Bootstrap.Status = scenario == .recoveryMissing ? .profile_required : scenario == .recoveryUnavailable ? .temporarily_unavailable : .ready
-            data = try JSONEncoder().encode(Bootstrap(status: status, profileRevision: "synthetic-design-profile", contextRevision: "synthetic-design-context"))
+            var bootstrap = Bootstrap(status: status, profileRevision: "synthetic-design-profile", contextRevision: "synthetic-design-context")
+            if scenario == .paywall { bootstrap.access = MobileAccess(status: .inactive, source: nil, appStore: nil) }
+            data = try JSONEncoder().encode(bootstrap)
         } else if path.hasSuffix("/profile/complete") {
             if request.httpMethod == "POST" {
                 data = try JSONEncoder().encode(RegistrationCompletion(session: DesignReviewData.session,

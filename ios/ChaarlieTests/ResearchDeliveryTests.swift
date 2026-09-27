@@ -271,6 +271,9 @@ final class ResearchDeliveryTests: XCTestCase {
         let response = try JSONDecoder().decode(RegistrationCompletion.self,
             from: Data(#"{"bootstrap":{"status":"ready"}}"#.utf8))
         let finish = Task { await model.finishMissingProfile(response) }
+        // Completion carries no access decision; the authoritative bootstrap routes it.
+        try await waitFor("bootstrap", transport)
+        await transport.complete("bootstrap", json: #"{"status":"ready"}"#)
         try await waitFor(path, transport)
         await transport.complete(path, json: try fixture())
         let completed = await finish.value
