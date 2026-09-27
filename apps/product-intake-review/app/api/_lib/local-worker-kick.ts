@@ -26,6 +26,16 @@ const LOCAL_CODEX_WORKER_COMMAND =
   "npm run products:intake:codex-worker -- --execute-codex --watch --concurrency=2 --poll-ms=5000"
 
 export function kickLocalCodexWorker(): LocalWorkerKickResult {
+  if (/^(1|true|yes|on)$/i.test(process.env.PRODUCT_INTAKE_CODEX_WORKER_EXTERNAL ?? "")) {
+    return {
+      ready: true,
+      started: false,
+      pid: null,
+      command: LOCAL_CODEX_WORKER_COMMAND,
+      reason: "Codex-Worker wird extern verwaltet.",
+    }
+  }
+
   const repoRoot = findRepoRoot(process.cwd())
   if (!repoRoot) {
     return {

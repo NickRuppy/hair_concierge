@@ -1,0 +1,50 @@
+{
+  "version": "pilot-2026-09-25-v1",
+  "references": [
+    {
+      "id": "neqi-lower-edge-residue-fail",
+      "expected_verdict": "rework",
+      "relative_path": "04832d5d-f1fe-4108-a302-93081360e58e/neqi-shampoo-repair-reveal-330-ml-a2fe7474d273.webp",
+      "sha256": "a2fe7474d2731c6d25f0bc9b1b7863c9ef23275333e447d3a4ce3359a5dc2c54",
+      "rationale": "Fail: a pale rectangular background remnant remains across the lower edge, especially at the lower-left corner.",
+      "defects": [
+        {
+          "kind": "edge_residue",
+          "region": "lower_left_and_bottom"
+        }
+      ]
+    },
+    {
+      "id": "neqi-corrected-pass",
+      "expected_verdict": "pass",
+      "relative_path": "04832d5d-f1fe-4108-a302-93081360e58e/neqi-shampoo-repair-reveal-330-ml-22f73cedd994.webp",
+      "sha256": "22f73cedd994edc30f529c6b38cc713f6d0379efc722578a30525b9c68357f49",
+      "rationale": "Pass: the rectangular remnant is gone and the complete bottle edge is clean.",
+      "defects": []
+    },
+    {
+      "id": "weleda-dark-bottle-base-pass",
+      "expected_verdict": "pass",
+      "relative_path": "5fef5e1c-85fe-49d6-816d-5a0d7ffd6f82/weleda-shampoo-rosmarin-revitalising-250-ml-magenta.webp",
+      "sha256": "d7d395e1f728f701b1aa83d6601d2e36c2d1b559547f7562975e3e11531c9063",
+      "rationale": "Pass: the dark bottom is the intrinsic curved green bottle base, not removable shadow or background residue.",
+      "defects": []
+    },
+    {
+      "id": "bali-curls-dark-pump-base-pass",
+      "expected_verdict": "pass",
+      "relative_path": "b68adf7f-22de-4fde-854a-4eb5bf1e4623/bali-curls-lockencreme-hydrating-curl-cream-150-ml-magenta.webp",
+      "sha256": "86217f747c89d1031b7a990100b122679e03d4ba6a61bcd41aac89641f6f15db",
+      "rationale": "Pass: the dark lower contour belongs to the brown pump bottle and is not a floor shadow or cutout tail.",
+      "defects": []
+    },
+    {
+      "id": "pantene-clean-cutout-pass",
+      "expected_verdict": "pass",
+      "relative_path": "a9977e01-3bb9-4548-b2fd-8ddfeff278b6/pantene-pro-v-conditioner-repair-care-350-ml-magenta.webp",
+      "sha256": "c99f8fb7c0620b40dd58ba529ac3c0287914f5a749e87618664b68c9dcfcdd68",
+      "rationale": "Pass: clean complete packaging with no halo, extra packaging, or detached background pixels.",
+      "defects": []
+    }
+  ]
+}

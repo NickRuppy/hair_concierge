@@ -7,6 +7,7 @@ import {
   type ProductIntakeReviewCategoryKey,
 } from "../src/lib/product-intake/category-validators"
 import {
+  PRODUCT_INTAKE_ARTIFACT_KINDS,
   PRODUCT_INTAKE_NON_TERMINAL_JOB_STATUSES,
   PRODUCT_INTAKE_OPEN_SUBMISSION_STATUSES,
   PRODUCT_INTAKE_RETRYABLE_JOB_STATUSES,
@@ -32,6 +33,10 @@ const artifactMigration = readFileSync(
   "supabase/migrations/20260630130000_product_intake_research_artifacts_decisions.sql",
   "utf8",
 )
+const modelEvaluationArtifactMigration = readFileSync(
+  "supabase/migrations/20260925061101_product_intake_model_evaluation_artifacts.sql",
+  "utf8",
+)
 const reworkAttemptsMigration = readFileSync(
   "supabase/migrations/20260701090000_product_intake_rework_resets_attempts.sql",
   "utf8",
@@ -42,6 +47,9 @@ const autoEnqueueMigration = readFileSync(
 )
 const normalizedMigration = migration.toLowerCase().replace(/\s+/g, " ")
 const normalizedArtifactMigration = artifactMigration.toLowerCase().replace(/\s+/g, " ")
+const normalizedModelEvaluationArtifactMigration = modelEvaluationArtifactMigration
+  .toLowerCase()
+  .replace(/\s+/g, " ")
 const normalizedReworkAttemptsMigration = reworkAttemptsMigration.toLowerCase().replace(/\s+/g, " ")
 const normalizedAutoEnqueueMigration = autoEnqueueMigration.toLowerCase().replace(/\s+/g, " ")
 const packageJson = JSON.parse(readFileSync("package.json", "utf8")) as {
@@ -694,6 +702,7 @@ test("review cockpit kicks the local Codex worker after enqueueing work", () => 
   assert.match(workerKickSource, /findRepoRoot/)
   assert.match(workerKickSource, /PRODUCT_INTAKE_CODEX_CONCURRENCY/)
   assert.match(workerKickSource, /PRODUCT_INTAKE_CODEX_WORKER_POLL_MS/)
+  assert.match(workerKickSource, /PRODUCT_INTAKE_CODEX_WORKER_EXTERNAL/)
 
   for (const source of [
     researchRouteSource,
@@ -753,6 +762,19 @@ test("artifact and review decision migration is service-role protected", () => {
     /grant execute on function public\.product_intake_request_rework_job/,
   )
   assert.match(normalizedArtifactMigration, /decision in \( 'approved', 'change_requested'/)
+})
+
+test("model evaluation artifacts are part of the shared Product Intake contract", () => {
+  assert.equal(PRODUCT_INTAKE_ARTIFACT_KINDS.includes("model_run" as never), true)
+  assert.equal(PRODUCT_INTAKE_ARTIFACT_KINDS.includes("model_judgment" as never), true)
+  assert.match(
+    normalizedModelEvaluationArtifactMigration,
+    /drop constraint if exists product_intake_research_artifacts_kind_check/,
+  )
+  assert.match(normalizedModelEvaluationArtifactMigration, /'model_run'/)
+  assert.match(normalizedModelEvaluationArtifactMigration, /'model_judgment'/)
+  assert.doesNotMatch(normalizedModelEvaluationArtifactMigration, /grant .* anon/)
+  assert.doesNotMatch(normalizedModelEvaluationArtifactMigration, /grant .* authenticated/)
 })
 
 test("detail page exposes research artifacts, comments, rework, and preflight controls", () => {
@@ -826,7 +848,7 @@ test("detail page exposes research artifacts, comments, rework, and preflight co
   assert.match(submissionActionsSource, /publishCompleted\s*\?\s*"completedButton"/)
   assert.match(submissionActionsSource, /Entscheidung speichern/)
   assert.match(submissionActionsSource, /Bild passt/)
-  assert.match(submissionActionsSource, /Rohbild freigegeben/)
+  assert.match(submissionActionsSource, /Bildquelle vorbereitet/)
   assert.match(submissionActionsSource, /Bild passt nicht/)
   assert.match(submissionActionsSource, /neues Bild suchen/)
   assert.match(submissionActionsSource, /requestImageSearchRework/)
@@ -1144,7 +1166,18 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /spawnSync\(\s*codexBinary/)
   assert.match(workerScript, /Codex CLI terminated by/)
   assert.match(workerScript, /Codex CLI failed to start/)
-  assert.match(workerScript, /refreshing worker lease before writes/)
+  assert.match(workerScript, /worker lease refreshed/)
+  assert.match(workerScript, /model_run/)
+  assert.match(workerScript, /model_judgment/)
+  assert.match(workerScript, /challenger_medium/)
+  assert.match(workerScript, /preferred_lane/)
+  assert.ok(
+    workerScript.indexOf("const progress = await persistResearchOutput") <
+      workerScript.indexOf("const evaluationRun = await runNonFatalModelEvaluation"),
+    "production research must persist before optional shadow evaluation",
+  )
+  assert.match(workerScript, /currentJob: \(\) => leasedJob/)
+  assert.match(workerScript, /onLeaseRefresh: \(refreshedJob\) => \{\s*leasedJob = refreshedJob/)
   assert.match(workerScript, /--execute-codex/)
   assert.match(workerScript, /service_tier/)
   assert.match(workerScript, /PRODUCT_INTAKE_CODEX_SERVICE_TIER/)

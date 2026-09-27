@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
-import { basename, join } from "node:path"
+import { basename, dirname, join, resolve, sep } from "node:path"
 import { hostname } from "node:os"
 import { spawnSync } from "node:child_process"
 import { createHash } from "node:crypto"
@@ -47,6 +47,7 @@ import { HAIR_THICKNESSES, PROTEIN_MOISTURE_LEVELS } from "@/lib/vocabulary"
 import {
   appendResearchArtifact,
   claimResearchJobs,
+  countResearchArtifacts,
   loadProductIntakeSubmissionDetail,
   normalizeCodexConcurrency,
   resolveReviewDecisionsForSubmission,
@@ -104,6 +105,122 @@ type CodexResearchOutput = {
   artifacts: CodexResearchArtifactOutput[]
   blockers: string[]
   next_stage?: ProductIntakeJobStage
+}
+
+export type ProductIntakeModelLane =
+  | "production_low"
+  | "challenger_medium"
+  | "judge"
+  | "image_judge"
+
+export type ModelEvaluationRuntimeConfig = {
+  enabled: boolean
+  targetSuccessfulJudgments: number
+  challenger: CodexResearchRuntimeConfig
+  judge: CodexResearchRuntimeConfig
+}
+
+type BlindCandidateLabel = "A" | "B"
+type ResearchLane = "production_low" | "challenger_medium"
+
+export type BlindJudgePacket = {
+  candidates: Record<BlindCandidateLabel, JsonRecord>
+  laneByCandidate: Record<BlindCandidateLabel, ResearchLane>
+}
+
+type ModelJudgeDimensionScores = {
+  identity: number
+  evidence: number
+  completeness: number
+  uncertainty: number
+}
+
+export type ModelJudgeVerdict = {
+  preferredCandidate: BlindCandidateLabel | "tie"
+  preferredLane: ResearchLane | "tie"
+  confidence: number
+  scores: Record<BlindCandidateLabel, ModelJudgeDimensionScores>
+  materialIssues: string[]
+  rationale: string
+}
+
+type SuccessfulModelRun<T> = {
+  success: true
+  lane: ProductIntakeModelLane
+  runtimeConfig: CodexResearchRuntimeConfig
+  durationMs: number
+  outputHash: string
+  output: T
+}
+
+type FailedModelRun = {
+  success: false
+  lane: ProductIntakeModelLane
+  runtimeConfig: CodexResearchRuntimeConfig
+  durationMs: number
+  error: string
+}
+
+type MeasuredModelRun<T> = SuccessfulModelRun<T> | FailedModelRun
+
+type ModelEvaluationResult = {
+  status:
+    | "disabled"
+    | "target_reached"
+    | "completed"
+    | "challenger_failed"
+    | "judge_failed"
+    | "telemetry_failed"
+  successfulJudgments: number
+  targetSuccessfulJudgments: number
+  preferredLane?: ResearchLane | "tie"
+}
+
+export type CodexResearchRuntimeConfig = {
+  model: string
+  reasoningEffort: string
+  serviceTier: string | null
+}
+
+export type ImageQualityJudgeRuntimeConfig = CodexResearchRuntimeConfig & {
+  enabled: boolean
+}
+
+export type ImageQualityDefect = {
+  kind: string
+  region: string
+  severity: "minor" | "material" | "critical"
+  explanation: string
+}
+
+export type ImageQualityVerdict = {
+  verdict: "pass" | "rework" | "needs_human_review"
+  confidence: number
+  defects: ImageQualityDefect[]
+  rationale: string
+}
+
+export type ImageQualityReference = {
+  id: string
+  expectedVerdict: "pass" | "rework" | "needs_human_review"
+  imagePath: string
+  rationale: string
+  defects: Array<{ kind: string; region: string }>
+}
+
+export type ImageQualityReferenceSet = {
+  version: string | null
+  references: ImageQualityReference[]
+  warnings: string[]
+}
+
+export type RembgRuntimeConfig = {
+  enabled: boolean
+  dockerBin: string
+  image: string
+  model: "isnet-general-use"
+  modelDir: string
+  timeoutMs: number
 }
 
 type WorkerOptions = {
@@ -171,6 +288,10 @@ const CATEGORY_SPEC_KEYS = {
 } as const
 const CODEX_RESEARCH_TIMEOUT_MS = 5 * 60_000
 const CODEX_APP_BINARY = "/Applications/Codex.app/Contents/Resources/codex"
+const MODEL_EVALUATION_EXPERIMENT_ID = "product_intake_research_effort_v1"
+const REMBG_IMAGE =
+  "danielgatis/rembg@sha256:98e72b790093dec3b21967e22c8eb75a0a67d458fdba7ef5fcc1900cad76396b"
+const REMBG_MODEL = "isnet-general-use" as const
 
 const REQUIRED_CATEGORY_SPEC_KEYS = {
   shampoo: ["product_shampoo_specs", "product_application_protocols"],
@@ -323,6 +444,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
     }
 
     if (job.stage === "image_judging") {
+      let imageLeasedJob = job
       try {
         const updated = await processApprovedImageForReview({
           supabase: options.supabase,
@@ -330,78 +452,135 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
           detail,
           workerId: options.workerId,
           promptPacketPath,
+          executeCodex: options.executeCodex,
+          onLeaseRefresh: (refreshedJob) => {
+            imageLeasedJob = refreshedJob
+          },
         })
         result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Image processing worker failed."
-        const updated = await updateResearchJob(options.supabase, {
-          jobId: job.id,
-          status: "failed",
-          stage: job.stage,
-          progress: {
-            message,
-            prompt_packet_path: promptPacketPath,
-            worker_id: options.workerId,
-            mode: "local_image_processing",
-          },
-          lastError: message,
-          expectedLockedBy: job.locked_by,
-          expectedLockedAt: job.locked_at,
-        })
+        const updated = await updateResearchJob(
+          options.supabase,
+          imageProcessingFailureUpdate({
+            job: imageLeasedJob,
+            error,
+            promptPacketPath,
+            workerId: options.workerId,
+          }),
+        )
         result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
       }
       continue
     }
 
+    let leasedJob = job
     try {
+      const researchRuntimeConfig = codexResearchRuntimeConfig(process.env)
+      const evaluationRuntimeConfig = modelEvaluationRuntimeConfig(process.env)
+      let evaluation: ModelEvaluationResult = {
+        status: "disabled",
+        successfulJudgments: 0,
+        targetSuccessfulJudgments: 0,
+      }
+      let rawResearchOutput: CodexResearchOutput
+
+      if (options.executeCodex) {
+        const productionRun = measureModelRun("production_low", researchRuntimeConfig, () =>
+          runCodexResearch(promptPacketPath, researchRuntimeConfig, "production_low"),
+        )
+        leasedJob = await refreshModelRunLease({
+          supabase: options.supabase,
+          job: leasedJob,
+          workerId: options.workerId,
+          promptPacketPath,
+          message: "Luna/low research returned; worker lease refreshed.",
+        })
+        await persistModelRunArtifact(options.supabase, leasedJob, productionRun)
+        if (!productionRun.success) throw new Error(productionRun.error)
+
+        rawResearchOutput = productionRun.output
+      } else {
+        rawResearchOutput = buildPreviewOnlyOutput(job, detail, promptPacketPath)
+        leasedJob = await refreshModelRunLease({
+          supabase: options.supabase,
+          job: leasedJob,
+          workerId: options.workerId,
+          promptPacketPath,
+          message: "Preview result returned; worker lease refreshed.",
+        })
+      }
+
       const researchOutput = normalizeResearchOutputForCategory(
-        options.executeCodex
-          ? runCodexResearch(promptPacketPath)
-          : buildPreviewOnlyOutput(job, detail, promptPacketPath),
+        rawResearchOutput,
         detail?.category,
         brandResolutionContext,
         detail?.decisions ?? [],
         job.submission_id,
       )
-      const leasedJob = await updateResearchJob(options.supabase, {
-        jobId: job.id,
-        status: "running",
-        stage: job.stage,
-        progress: {
-          message: "Codex research result returned; refreshing worker lease before writes.",
-          prompt_packet_path: promptPacketPath,
-          worker_id: options.workerId,
-          mode: options.executeCodex ? "codex_cli" : "preview_only",
-        },
-        expectedLockedBy: job.locked_by,
-        expectedLockedAt: job.locked_at,
-      })
       const progress = await persistResearchOutput({
         supabase: options.supabase,
         job: leasedJob,
         workerId: options.workerId,
         promptPacketPath,
         researchOutput,
-        executeCodex: options.executeCodex,
+        researchModel: options.executeCodex ? researchRuntimeConfig.model : "codex-worker-preview",
       })
+      if (options.executeCodex) {
+        const evaluationRun = await runNonFatalModelEvaluation({
+          job: leasedJob,
+          currentJob: () => leasedJob,
+          targetSuccessfulJudgments: evaluationRuntimeConfig.targetSuccessfulJudgments,
+          run: () =>
+            runOptionalModelEvaluation({
+              supabase: options.supabase,
+              job: leasedJob,
+              workerId: options.workerId,
+              promptPacketPath,
+              productionOutput: rawResearchOutput,
+              config: evaluationRuntimeConfig,
+              onLeaseRefresh: (refreshedJob) => {
+                leasedJob = refreshedJob
+              },
+            }),
+          persistFailure: (message) =>
+            persistModelJudgmentFailure(options.supabase, leasedJob, message),
+        })
+        leasedJob = evaluationRun.job
+        evaluation = evaluationRun.result
+      }
       const hasFinalPayload = hasFinalResearchPayload(researchOutput.researched_payload)
       const blockers = researchOutput.blockers.filter(Boolean)
-      const nextStatus = blockers.length === 0 && hasFinalPayload ? "waiting_for_review" : "blocked"
-      const nextStage =
-        researchOutput.next_stage ?? (hasFinalPayload ? "preview_build" : "source_research")
+      const autoPrepareImage = shouldAutoPrepareImage({
+        enabled:
+          options.executeCodex &&
+          process.env.PRODUCT_INTAKE_AUTO_PREPARE_IMAGES?.trim().toLowerCase() === "true",
+        researchOutput,
+      })
+      const nextStatus = autoPrepareImage
+        ? "queued"
+        : blockers.length === 0 && hasFinalPayload
+          ? "waiting_for_review"
+          : "blocked"
+      const nextStage = autoPrepareImage
+        ? "image_judging"
+        : (researchOutput.next_stage ?? (hasFinalPayload ? "preview_build" : "source_research"))
 
       const updated = await updateResearchJob(options.supabase, {
         jobId: job.id,
         status: nextStatus,
         stage: nextStage,
         progress: {
-          message:
-            nextStatus === "waiting_for_review"
+          message: autoPrepareImage
+            ? "Research ist bereit. Bildverarbeitung und visueller Bildcheck sind eingereiht."
+            : nextStatus === "waiting_for_review"
               ? "Research preview ist bereit fuer Nick."
               : "Research braucht Aufmerksamkeit, bevor Nick final freigeben kann.",
           prompt_packet_path: promptPacketPath,
           worker_id: options.workerId,
           mode: options.executeCodex ? "codex_cli" : "preview_only",
+          image_selection_mode: autoPrepareImage ? "agent_prepared" : null,
+          next_step: autoPrepareImage ? "process_image_for_combined_review" : null,
+          model_evaluation: evaluation,
           ...progress,
         },
         lastError: blockers.length > 0 ? blockers.join("; ") : null,
@@ -422,8 +601,8 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
           mode: options.executeCodex ? "codex_cli" : "preview_only",
         },
         lastError: message,
-        expectedLockedBy: job.locked_by,
-        expectedLockedAt: job.locked_at,
+        expectedLockedBy: leasedJob.locked_by,
+        expectedLockedAt: leasedJob.locked_at,
       })
       result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
     }
@@ -456,13 +635,345 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
+function measureModelRun<T>(
+  lane: ProductIntakeModelLane,
+  runtimeConfig: CodexResearchRuntimeConfig,
+  execute: () => T,
+): MeasuredModelRun<T> {
+  const startedAt = Date.now()
+  try {
+    const output = execute()
+    return {
+      success: true,
+      lane,
+      runtimeConfig,
+      durationMs: Date.now() - startedAt,
+      outputHash: createHash("sha256").update(JSON.stringify(output)).digest("hex"),
+      output,
+    }
+  } catch (error) {
+    return {
+      success: false,
+      lane,
+      runtimeConfig,
+      durationMs: Date.now() - startedAt,
+      error: error instanceof Error ? error.message : "Unknown Codex model-run failure.",
+    }
+  }
+}
+
+async function refreshModelRunLease(params: {
+  supabase: ReturnType<typeof createSupabaseClientFromEnv>
+  job: ProductIntakeResearchJob
+  workerId: string
+  promptPacketPath: string
+  message: string
+}): Promise<ProductIntakeResearchJob> {
+  return updateResearchJob(params.supabase, {
+    jobId: params.job.id,
+    status: "running",
+    stage: params.job.stage,
+    progress: {
+      ...(params.job.progress ?? {}),
+      message: params.message,
+      prompt_packet_path: params.promptPacketPath,
+      worker_id: params.workerId,
+      mode: "codex_cli",
+    },
+    lastError: null,
+    expectedLockedBy: params.job.locked_by,
+    expectedLockedAt: params.job.locked_at,
+  })
+}
+
+async function persistModelRunArtifact<T>(
+  supabase: ReturnType<typeof createSupabaseClientFromEnv>,
+  job: ProductIntakeResearchJob,
+  run: MeasuredModelRun<T>,
+) {
+  return appendResearchArtifact(supabase, {
+    jobId: job.id,
+    submissionId: job.submission_id,
+    kind: "model_run",
+    status: run.success ? "completed" : "failed",
+    payload: {
+      lane: run.lane,
+      experiment_id: MODEL_EVALUATION_EXPERIMENT_ID,
+      role: run.lane === "judge" ? "judge" : "researcher",
+      model: run.runtimeConfig.model,
+      reasoning_effort: run.runtimeConfig.reasoningEffort,
+      service_tier: run.runtimeConfig.serviceTier ?? "standard",
+      duration_ms: run.durationMs,
+      output_hash: run.success ? run.outputHash : null,
+      output: run.success ? toJsonRecord(run.output) : null,
+      error: run.success ? null : run.error,
+      token_usage: null,
+    },
+    model: run.runtimeConfig.model,
+    promptVersion:
+      run.lane === "judge" ? "product_intake_model_judge_v1" : "product_intake_codex_research_v1",
+  })
+}
+
+export async function captureOptionalTelemetryFailure(
+  write: () => Promise<unknown>,
+): Promise<string | null> {
+  try {
+    await write()
+    return null
+  } catch (error) {
+    return errorMessage(error)
+  }
+}
+
+export async function runNonFatalModelEvaluation<TJob>(params: {
+  job: TJob
+  currentJob?: () => TJob
+  targetSuccessfulJudgments: number
+  run: () => Promise<{ job: TJob; result: ModelEvaluationResult }>
+  persistFailure: (message: string) => Promise<unknown>
+}): Promise<{ job: TJob; result: ModelEvaluationResult }> {
+  try {
+    return await params.run()
+  } catch (error) {
+    await captureOptionalTelemetryFailure(() => params.persistFailure(errorMessage(error)))
+    return {
+      job: params.currentJob?.() ?? params.job,
+      result: {
+        status: "telemetry_failed",
+        successfulJudgments: 0,
+        targetSuccessfulJudgments: params.targetSuccessfulJudgments,
+      },
+    }
+  }
+}
+
+async function runOptionalModelEvaluation(params: {
+  supabase: ReturnType<typeof createSupabaseClientFromEnv>
+  job: ProductIntakeResearchJob
+  workerId: string
+  promptPacketPath: string
+  productionOutput: CodexResearchOutput
+  config: ModelEvaluationRuntimeConfig
+  onLeaseRefresh?: (job: ProductIntakeResearchJob) => void
+}): Promise<{ job: ProductIntakeResearchJob; result: ModelEvaluationResult }> {
+  let leasedJob = params.job
+  let successfulJudgments = 0
+
+  try {
+    successfulJudgments = await countResearchArtifacts(params.supabase, {
+      kind: "model_judgment",
+      status: "completed",
+      payloadContains: { experiment_id: MODEL_EVALUATION_EXPERIMENT_ID },
+    })
+  } catch (error) {
+    await captureOptionalTelemetryFailure(() =>
+      persistModelJudgmentFailure(
+        params.supabase,
+        leasedJob,
+        `Could not count completed model judgments: ${errorMessage(error)}`,
+      ),
+    )
+    return {
+      job: leasedJob,
+      result: {
+        status: "judge_failed",
+        successfulJudgments,
+        targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      },
+    }
+  }
+
+  if (
+    !shouldRunShadowExperiment({
+      enabled: params.config.enabled,
+      successfulJudgments,
+      target: params.config.targetSuccessfulJudgments,
+    })
+  ) {
+    return {
+      job: leasedJob,
+      result: {
+        status: params.config.enabled ? "target_reached" : "disabled",
+        successfulJudgments,
+        targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      },
+    }
+  }
+
+  const challengerRun = measureModelRun("challenger_medium", params.config.challenger, () =>
+    runCodexResearch(params.promptPacketPath, params.config.challenger, "challenger_medium"),
+  )
+  leasedJob = await refreshModelRunLease({
+    supabase: params.supabase,
+    job: leasedJob,
+    workerId: params.workerId,
+    promptPacketPath: params.promptPacketPath,
+    message: "Luna/medium shadow research returned; worker lease refreshed.",
+  })
+  params.onLeaseRefresh?.(leasedJob)
+  const challengerArtifactError = await captureOptionalTelemetryFailure(() =>
+    persistModelRunArtifact(params.supabase, leasedJob, challengerRun),
+  )
+  if (challengerArtifactError) {
+    await captureOptionalTelemetryFailure(() =>
+      persistModelJudgmentFailure(params.supabase, leasedJob, challengerArtifactError),
+    )
+    return {
+      job: leasedJob,
+      result: {
+        status: "telemetry_failed",
+        successfulJudgments,
+        targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      },
+    }
+  }
+
+  if (!challengerRun.success) {
+    await captureOptionalTelemetryFailure(() =>
+      persistModelJudgmentFailure(params.supabase, leasedJob, challengerRun.error),
+    )
+    return {
+      job: leasedJob,
+      result: {
+        status: "challenger_failed",
+        successfulJudgments,
+        targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      },
+    }
+  }
+
+  const blindPacket = buildBlindJudgePacket(
+    toJsonRecord(params.productionOutput),
+    toJsonRecord(challengerRun.output),
+  )
+  const judgeRun = measureModelRun("judge", params.config.judge, () =>
+    runCodexJudge(params.promptPacketPath, blindPacket, params.config.judge),
+  )
+  leasedJob = await refreshModelRunLease({
+    supabase: params.supabase,
+    job: leasedJob,
+    workerId: params.workerId,
+    promptPacketPath: params.promptPacketPath,
+    message: "Sol/medium judgment returned; worker lease refreshed.",
+  })
+  params.onLeaseRefresh?.(leasedJob)
+  const judgeArtifactError = await captureOptionalTelemetryFailure(() =>
+    persistModelRunArtifact(params.supabase, leasedJob, judgeRun),
+  )
+  if (judgeArtifactError) {
+    await captureOptionalTelemetryFailure(() =>
+      persistModelJudgmentFailure(params.supabase, leasedJob, judgeArtifactError, blindPacket),
+    )
+    return {
+      job: leasedJob,
+      result: {
+        status: "telemetry_failed",
+        successfulJudgments,
+        targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      },
+    }
+  }
+
+  if (!judgeRun.success) {
+    await captureOptionalTelemetryFailure(() =>
+      persistModelJudgmentFailure(params.supabase, leasedJob, judgeRun.error, blindPacket),
+    )
+    return {
+      job: leasedJob,
+      result: {
+        status: "judge_failed",
+        successfulJudgments,
+        targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      },
+    }
+  }
+
+  const completedJudgmentError = await captureOptionalTelemetryFailure(() =>
+    appendResearchArtifact(params.supabase, {
+      jobId: leasedJob.id,
+      submissionId: leasedJob.submission_id,
+      kind: "model_judgment",
+      status: "completed",
+      payload: {
+        anonymous_order: blindPacket.laneByCandidate,
+        experiment_id: MODEL_EVALUATION_EXPERIMENT_ID,
+        preferred_candidate: judgeRun.output.preferredCandidate,
+        preferred_lane: judgeRun.output.preferredLane,
+        confidence: judgeRun.output.confidence,
+        scores: judgeRun.output.scores,
+        material_issues: judgeRun.output.materialIssues,
+        rationale: judgeRun.output.rationale,
+        judge_output_hash: judgeRun.outputHash,
+      },
+      confidence: judgeRun.output.confidence,
+      model: params.config.judge.model,
+      promptVersion: "product_intake_model_judge_v1",
+    }),
+  )
+  if (completedJudgmentError) {
+    return {
+      job: leasedJob,
+      result: {
+        status: "telemetry_failed",
+        successfulJudgments,
+        targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      },
+    }
+  }
+
+  return {
+    job: leasedJob,
+    result: {
+      status: "completed",
+      successfulJudgments: successfulJudgments + 1,
+      targetSuccessfulJudgments: params.config.targetSuccessfulJudgments,
+      preferredLane: judgeRun.output.preferredLane,
+    },
+  }
+}
+
+async function persistModelJudgmentFailure(
+  supabase: ReturnType<typeof createSupabaseClientFromEnv>,
+  job: ProductIntakeResearchJob,
+  error: string,
+  blindPacket?: BlindJudgePacket,
+) {
+  return appendResearchArtifact(supabase, {
+    jobId: job.id,
+    submissionId: job.submission_id,
+    kind: "model_judgment",
+    status: "failed",
+    payload: {
+      anonymous_order: blindPacket?.laneByCandidate ?? null,
+      experiment_id: MODEL_EVALUATION_EXPERIMENT_ID,
+      error,
+    },
+    model: null,
+    promptVersion: "product_intake_model_judge_v1",
+  })
+}
+
+function toJsonRecord(value: unknown): JsonRecord {
+  const normalized = normalizeRecord(JSON.parse(JSON.stringify(value)) as unknown)
+  if (!normalized) throw new Error("Expected a JSON object for model-run persistence.")
+  return normalized
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : "Unknown model evaluation failure."
+}
+
 async function processApprovedImageForReview(params: {
   supabase: ReturnType<typeof createSupabaseClientFromEnv>
   job: ProductIntakeResearchJob
   detail: ProductIntakeSubmissionDetail | null
   workerId: string
   promptPacketPath: string
+  executeCodex: boolean
+  onLeaseRefresh?: (job: ProductIntakeResearchJob) => void
 }) {
+  let leasedJob = params.job
   const sourceImageUrl = findApprovedSourceImageUrl(params.detail)
   if (!sourceImageUrl) {
     throw new Error("No approved source image URL found for image processing.")
@@ -499,13 +1010,14 @@ async function processApprovedImageForReview(params: {
   const sourceFile = join(sourceDir, `${sourceSlug}-${sourceSha256.slice(0, 12)}.${sourceExt}`)
   writeFileSync(sourceFile, sourceBytes)
 
-  const preparedCutoutFile = sourceAlreadyTransparent
+  const preparedCutout = sourceAlreadyTransparent
     ? null
-    : runVisionBackgroundRemoval({
+    : runAutomaticBackgroundRemoval({
         sourceFile,
         outputDir: cutoutDir,
         outputSlug: sourceSlug,
       })
+  const preparedCutoutFile = preparedCutout?.file ?? null
   const transparentBackgroundDetected = sourceAlreadyTransparent || Boolean(preparedCutoutFile)
   const backgroundRemovalRequired = !sourceAlreadyTransparent && !preparedCutoutFile
   if (backgroundRemovalRequired) {
@@ -555,16 +1067,14 @@ async function processApprovedImageForReview(params: {
 
   const backgroundAction = sourceAlreadyTransparent
     ? "source_already_transparent"
-    : "vision_background_removed"
+    : preparedCutout?.method === "rembg_isnet_general_use"
+      ? "rembg_isnet_general_use"
+      : "vision_background_removed"
   const finalized = await finalizeProductImageAsset({
     sourceFile,
     preparedCutoutFile,
     label: productLabelForImage(params.detail),
-    outputDir: join(
-      process.cwd(),
-      "apps/product-intake-review/public/product-intake-finalized",
-      params.job.submission_id,
-    ),
+    outputDir: join(finalizedImageOutputRoot(process.env), params.job.submission_id),
     publicPathPrefix: `/product-intake-finalized/${params.job.submission_id}`,
     dateFolder: dateFolderForJob(params.job),
     submissionId: params.job.submission_id,
@@ -573,14 +1083,89 @@ async function processApprovedImageForReview(params: {
     sourceType: "retailer",
     reviewedBy: "codex",
   })
-  const finalImageReady = finalized.qualityGate.status === "pass"
+  const deterministicReady = finalized.qualityGate.status === "pass"
+  const judgeConfig = imageQualityJudgeRuntimeConfig(process.env)
+  const visualJudgeEnabled = judgeConfig.enabled && params.executeCodex
+  let visualVerdict: ImageQualityVerdict | null = null
+  let visualJudgeError: string | null = null
+  let referenceSet: ImageQualityReferenceSet = { version: null, references: [], warnings: [] }
+
+  if (visualJudgeEnabled) {
+    const manifestPath =
+      optionalNonBlankString(process.env.PRODUCT_INTAKE_IMAGE_QA_REFERENCE_MANIFEST) ??
+      join(process.cwd(), "config", "product-intake-image-qa-references.v1.json")
+    const referenceRoot =
+      optionalNonBlankString(process.env.PRODUCT_INTAKE_IMAGE_QA_REFERENCE_ROOT) ??
+      finalizedImageOutputRoot(process.env)
+    const visualRun = measureModelRun("image_judge", judgeConfig, () => {
+      referenceSet = loadImageQualityReferenceSet({
+        manifestPath,
+        rootDir: referenceRoot,
+        maxReferences: 5,
+      })
+      return runCodexImageQualityJudge({
+        promptPacketPath: params.promptPacketPath,
+        currentImagePaths: [sourceFile, finalized.qaFile, finalized.finalFile],
+        runtimeConfig: judgeConfig,
+        referenceSet,
+      })
+    })
+    leasedJob = await refreshModelRunLease({
+      supabase: params.supabase,
+      job: leasedJob,
+      workerId: params.workerId,
+      promptPacketPath: params.promptPacketPath,
+      message: "Sol/medium visual image judgment returned; worker lease refreshed.",
+    })
+    params.onLeaseRefresh?.(leasedJob)
+    if (visualRun.success) {
+      visualVerdict = visualRun.output
+    } else {
+      visualJudgeError = visualRun.error
+    }
+    await captureOptionalTelemetryFailure(() =>
+      appendResearchArtifact(params.supabase, {
+        jobId: leasedJob.id,
+        submissionId: leasedJob.submission_id,
+        kind: "image_judgment",
+        status: visualRun.success ? "completed" : "failed",
+        confidence: visualRun.success ? visualRun.output.confidence : null,
+        payload: {
+          verdict: visualRun.success ? visualRun.output.verdict : "needs_human_review",
+          confidence: visualRun.success ? visualRun.output.confidence : null,
+          defects: visualRun.success ? visualRun.output.defects : [],
+          rationale: visualRun.success
+            ? visualRun.output.rationale
+            : "Visual image judge failed; Nick must inspect the prepared image.",
+          error: visualRun.success ? null : visualRun.error,
+          duration_ms: visualRun.durationMs,
+          output_hash: visualRun.success ? visualRun.outputHash : null,
+          reference_set_version: referenceSet.version,
+          reference_ids: referenceSet.references.map((reference) => reference.id),
+          reference_warnings: referenceSet.warnings,
+          deterministic_quality_gate: finalized.qualityGate,
+          human_approval_required: true,
+        },
+        sourceUrls: [sourceImageUrl],
+        model: judgeConfig.model,
+        promptVersion: "product_intake_image_quality_judge_v1",
+      }),
+    )
+  }
+
+  const preparation = imageQualityPreparationDecision({
+    deterministicReady,
+    judgeEnabled: visualJudgeEnabled,
+    verdict: visualVerdict?.verdict ?? (visualJudgeEnabled ? "needs_human_review" : null),
+  })
+  const finalImageReady = preparation.finalImageReady
 
   const artifact = await appendResearchArtifact(params.supabase, {
     jobId: params.job.id,
     submissionId: params.job.submission_id,
     kind: "processed_image",
-    status: finalImageReady ? "pending_review" : "needs_image_work",
-    confidence: finalImageReady ? 0.9 : 0.4,
+    status: preparation.status,
+    confidence: visualVerdict?.confidence ?? (finalImageReady ? 0.9 : 0.4),
     payload: {
       public_review_url: finalized.finalReviewUrl,
       final_review_url: finalized.finalReviewUrl,
@@ -594,9 +1179,10 @@ async function processApprovedImageForReview(params: {
       thumbnail_public_url: finalized.thumbnailPublicUrl,
       thumbnail_asset_sha256: finalized.thumbnailSha256,
       processing_method: "local_chaarlie_neutral_background_v1",
+      selection_mode: stringValue(params.job.progress?.image_selection_mode) ?? "reviewer_selected",
       final_image_ready: finalImageReady,
       background_action: backgroundAction,
-      background_removed: backgroundAction === "vision_background_removed",
+      background_removed: !sourceAlreadyTransparent,
       source_transparent_background_detected: sourceAlreadyTransparent,
       transparent_background_detected: transparentBackgroundDetected,
       source_transparent_pixel_ratio: sourceAlphaStats.transparentRatio,
@@ -608,10 +1194,25 @@ async function processApprovedImageForReview(params: {
       storage_path: finalized.storagePath,
       planned_public_url: finalized.publicUrl,
       quality_gate: finalized.qualityGate,
+      visual_quality_judgment: visualJudgeEnabled
+        ? {
+            verdict: visualVerdict?.verdict ?? "needs_human_review",
+            confidence: visualVerdict?.confidence ?? null,
+            defects: visualVerdict?.defects ?? [],
+            rationale:
+              visualVerdict?.rationale ??
+              "Visual image judge failed; inspect the raw source, magenta QA, and final render.",
+            error: visualJudgeError,
+            reference_set_version: referenceSet.version,
+            human_approval_required: true,
+          }
+        : null,
       chaarlie_neutral_background: true,
       notes: sourceAlreadyTransparent
         ? "Source image already had a transparent cutout. Final Chaarlie review asset was cropped, size-normalized, QA-rendered on magenta, and composited onto the neutral product background."
-        : "Vision produced a transparent cutout. Final Chaarlie review asset was cropped, size-normalized, QA-rendered on magenta, and composited onto the neutral product background.",
+        : preparedCutout?.method === "rembg_isnet_general_use"
+          ? "The isolated Hetzner rembg worker produced an isnet-general-use cutout. The final Chaarlie review asset was cropped, size-normalized, QA-rendered on magenta, and composited onto the neutral product background."
+          : "Vision produced a transparent cutout. Final Chaarlie review asset was cropped, size-normalized, QA-rendered on magenta, and composited onto the neutral product background.",
     },
     sourceUrls: [sourceImageUrl],
     model: "local-image-finalizer",
@@ -636,9 +1237,33 @@ async function processApprovedImageForReview(params: {
       processed_at: new Date().toISOString(),
     },
     lastError: null,
+    expectedLockedBy: leasedJob.locked_by,
+    expectedLockedAt: leasedJob.locked_at,
+  })
+}
+
+export function imageProcessingFailureUpdate(params: {
+  job: Pick<ProductIntakeResearchJob, "id" | "stage" | "locked_by" | "locked_at">
+  error: unknown
+  promptPacketPath: string
+  workerId: string
+}) {
+  const message =
+    params.error instanceof Error ? params.error.message : "Image processing worker failed."
+  return {
+    jobId: params.job.id,
+    status: "failed" as const,
+    stage: params.job.stage,
+    progress: {
+      message,
+      prompt_packet_path: params.promptPacketPath,
+      worker_id: params.workerId,
+      mode: "local_image_processing",
+    },
+    lastError: message,
     expectedLockedBy: params.job.locked_by,
     expectedLockedAt: params.job.locked_at,
-  })
+  }
 }
 
 async function processedImageAlphaStats(bytes: Buffer) {
@@ -668,7 +1293,7 @@ async function persistResearchOutput(params: {
   workerId: string
   promptPacketPath: string
   researchOutput: CodexResearchOutput
-  executeCodex: boolean
+  researchModel: string
 }) {
   const created = []
   for (const artifact of params.researchOutput.artifacts) {
@@ -680,7 +1305,7 @@ async function persistResearchOutput(params: {
       confidence: artifact.confidence ?? null,
       payload: artifact.payload,
       sourceUrls: artifact.source_urls ?? null,
-      model: params.executeCodex ? "codex-cli" : "codex-worker-preview",
+      model: params.researchModel,
       promptVersion: "product_intake_codex_research_v1",
     })
     created.push(row.id)
@@ -771,7 +1396,7 @@ export function writePromptPacket(
           researched_payload:
             "complete product_submissions.researched_payload object with final.product and final.category_specs when enough evidence exists",
           approval_payload_schema: approvalPayloadContract(detail?.category),
-          artifacts: `array using kind values: ${PRODUCT_INTAKE_ARTIFACT_KINDS.join(", ")}`,
+          artifacts: `array using kind values: ${PRODUCT_INTAKE_ARTIFACT_KINDS.filter(isModelGeneratedArtifactKind).join(", ")}`,
           blockers:
             "array of strings; empty array only when ready for Nick review. Put review caveats in artifact payloads unless they block approval.",
           category_contract: categoryApprovalContract(detail?.category),
@@ -1932,11 +2557,11 @@ function buildPreviewOnlyOutput(
   }
 }
 
-function runCodexResearch(promptPacketPath: string): CodexResearchOutput {
-  const dir = join(process.cwd(), "tmp", "product-intake-codex-worker")
-  const outputPath = promptPacketPath.replace(/\.json$/, ".codex-output.json")
-  const codexBinary = codexBinaryForWorker()
-
+function runCodexResearch(
+  promptPacketPath: string,
+  runtimeConfig: CodexResearchRuntimeConfig,
+  lane: Extract<ProductIntakeModelLane, "production_low" | "challenger_medium">,
+): CodexResearchOutput {
   const prompt = [
     "You are researching one user-submitted hair product for Chaarlie's internal Product Intake Review Cockpit.",
     "Read the JSON prompt packet below. Do not edit repository files, do not write to databases, and do not approve or publish anything.",
@@ -1948,20 +2573,81 @@ function runCodexResearch(promptPacketPath: string): CodexResearchOutput {
     readFileSync(promptPacketPath, "utf8"),
   ].join("\n")
 
+  return normalizeCodexOutput(
+    runCodexJson({
+      outputPath: outputPathForModelLane(promptPacketPath, lane),
+      prompt,
+      runtimeConfig,
+    }),
+  )
+}
+
+function runCodexJudge(
+  promptPacketPath: string,
+  blindPacket: BlindJudgePacket,
+  runtimeConfig: CodexResearchRuntimeConfig,
+): ModelJudgeVerdict {
+  const prompt = [
+    "You are the read-only quality judge for two anonymized Product Intake research drafts.",
+    "Do not research the product again, edit files, write databases, or approve publication.",
+    "Compare only the supplied candidates against this rubric:",
+    "- identity: exact product/package identity and identifier consistency",
+    "- evidence: source authority, traceability, and claim support",
+    "- completeness: required identity, commercial, property, category, and image evidence",
+    "- uncertainty: honest blockers and no false-ready claims",
+    "Return one JSON object with preferred_candidate (A, B, or tie), confidence (0..1), scores for A and B with identity/evidence/completeness/uncertainty each 0..5, material_issues as strings, and a non-empty rationale.",
+    "Candidates are intentionally anonymous; never infer which model produced either candidate.",
+    "",
+    JSON.stringify({ candidates: blindPacket.candidates }),
+  ].join("\n")
+
+  const value = runCodexJson({
+    outputPath: outputPathForModelLane(promptPacketPath, "judge"),
+    prompt,
+    runtimeConfig,
+    webSearch: "disabled",
+  })
+  return normalizeModelJudgeVerdict(value, blindPacket.laneByCandidate)
+}
+
+function runCodexImageQualityJudge(params: {
+  promptPacketPath: string
+  currentImagePaths: [string, string, string]
+  runtimeConfig: CodexResearchRuntimeConfig
+  referenceSet: ImageQualityReferenceSet
+}): ImageQualityVerdict {
+  const value = runCodexJson({
+    outputPath: outputPathForModelLane(params.promptPacketPath, "image_judge"),
+    prompt: buildImageQualityJudgePrompt({ referenceSet: params.referenceSet }),
+    runtimeConfig: params.runtimeConfig,
+    webSearch: "disabled",
+    imagePaths: [
+      ...params.currentImagePaths,
+      ...params.referenceSet.references.map((reference) => reference.imagePath),
+    ],
+  })
+  return normalizeImageQualityVerdict(value)
+}
+
+function runCodexJson(params: {
+  outputPath: string
+  prompt: string
+  runtimeConfig: CodexResearchRuntimeConfig
+  webSearch?: "disabled" | "live"
+  imagePaths?: string[]
+}): JsonRecord {
+  const codexBinary = codexBinaryForWorker()
+
   const run = spawnSync(
     codexBinary,
-    [
-      "exec",
-      "-c",
-      `service_tier="${process.env.PRODUCT_INTAKE_CODEX_SERVICE_TIER ?? "fast"}"`,
-      "--cd",
-      process.cwd(),
-      "--sandbox",
-      "read-only",
-      "--output-last-message",
-      outputPath,
-      prompt,
-    ],
+    codexResearchExecArgs({
+      cwd: process.cwd(),
+      outputPath: params.outputPath,
+      prompt: params.prompt,
+      runtimeConfig: params.runtimeConfig,
+      webSearch: params.webSearch,
+      imagePaths: params.imagePaths,
+    }),
     {
       encoding: "utf8",
       maxBuffer: 1024 * 1024 * 20,
@@ -1986,11 +2672,381 @@ function runCodexResearch(promptPacketPath: string): CodexResearchOutput {
       }`,
     )
   }
-  if (!existsSync(outputPath)) {
-    throw new Error(`Codex CLI did not write ${outputPath}`)
+  if (!existsSync(params.outputPath)) {
+    throw new Error(`Codex CLI did not write ${params.outputPath}`)
   }
 
-  return normalizeCodexOutput(parseJsonObject(readFileSync(outputPath, "utf8")))
+  return parseJsonObject(readFileSync(params.outputPath, "utf8"))
+}
+
+export function codexResearchRuntimeConfig(
+  env: Readonly<Record<string, string | undefined>>,
+): CodexResearchRuntimeConfig {
+  const config = {
+    model: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_RESEARCH_MODEL, "gpt-6-luna"),
+    reasoningEffort: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_RESEARCH_REASONING_EFFORT, "low"),
+    serviceTier: optionalServiceTier(env.PRODUCT_INTAKE_CODEX_SERVICE_TIER),
+  }
+  assertAllowedProductIntakeModel(config.model, "production research")
+  return config
+}
+
+export function modelEvaluationRuntimeConfig(
+  env: Readonly<Record<string, string | undefined>>,
+): ModelEvaluationRuntimeConfig {
+  const challenger = {
+    model: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_CHALLENGER_MODEL, "gpt-6-luna"),
+    reasoningEffort: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_CHALLENGER_REASONING_EFFORT, "medium"),
+    serviceTier: optionalServiceTier(env.PRODUCT_INTAKE_CODEX_CHALLENGER_SERVICE_TIER),
+  }
+  const judge = {
+    model: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_JUDGE_MODEL, "gpt-6-sol"),
+    reasoningEffort: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_JUDGE_REASONING_EFFORT, "medium"),
+    serviceTier: optionalServiceTier(env.PRODUCT_INTAKE_CODEX_JUDGE_SERVICE_TIER),
+  }
+  assertAllowedProductIntakeModel(challenger.model, "shadow challenger")
+  assertAllowedProductIntakeModel(judge.model, "judge")
+
+  return {
+    enabled: env.PRODUCT_INTAKE_CODEX_SHADOW_ENABLED?.trim().toLowerCase() !== "false",
+    targetSuccessfulJudgments: positiveIntegerEnv(env.PRODUCT_INTAKE_CODEX_SHADOW_TARGET, 10),
+    challenger,
+    judge,
+  }
+}
+
+export function imageQualityJudgeRuntimeConfig(
+  env: Readonly<Record<string, string | undefined>>,
+): ImageQualityJudgeRuntimeConfig {
+  const config = {
+    enabled: env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_ENABLED?.trim().toLowerCase() === "true",
+    model: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_MODEL, "gpt-6-sol"),
+    reasoningEffort: nonBlankEnv(env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_REASONING_EFFORT, "medium"),
+    serviceTier: optionalServiceTier(env.PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_SERVICE_TIER),
+  }
+  assertAllowedProductIntakeModel(config.model, "image quality judge")
+  return config
+}
+
+export function shouldAutoPrepareImage(params: {
+  enabled: boolean
+  researchOutput: CodexResearchOutput
+}): boolean {
+  if (!params.enabled || params.researchOutput.blockers.length > 0) return false
+  if (!hasFinalResearchPayload(params.researchOutput.researched_payload)) return false
+
+  const final = normalizeRecord(params.researchOutput.researched_payload?.final)
+  const product = normalizeRecord(final?.product)
+  if (stringValue(product?.image_url)) return true
+
+  return params.researchOutput.artifacts.some(
+    (artifact) =>
+      artifact.kind === "image_candidate" && Boolean(stringValue(artifact.payload.image_url)),
+  )
+}
+
+export function assertAllowedProductIntakeModel(model: string, lane: string): void {
+  if (model.trim().toLowerCase().startsWith("gpt-6-astra")) {
+    throw new Error(`GPT-6 Astra is disabled for Product Intake (${lane}).`)
+  }
+}
+
+function positiveIntegerEnv(value: string | undefined, fallback: number): number {
+  const parsed = Number.parseInt(value?.trim() ?? "", 10)
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback
+}
+
+export function shouldRunShadowExperiment(params: {
+  enabled: boolean
+  successfulJudgments: number
+  target: number
+}): boolean {
+  return params.enabled && params.successfulJudgments < params.target
+}
+
+export function outputPathForModelLane(
+  promptPacketPath: string,
+  lane: ProductIntakeModelLane,
+): string {
+  return promptPacketPath.replace(/\.json$/, `.${lane}.codex-output.json`)
+}
+
+export function buildBlindJudgePacket(
+  production: JsonRecord,
+  challenger: JsonRecord,
+  swap = Math.random() >= 0.5,
+): BlindJudgePacket {
+  if (swap) {
+    return {
+      candidates: { A: challenger, B: production },
+      laneByCandidate: { A: "challenger_medium", B: "production_low" },
+    }
+  }
+  return {
+    candidates: { A: production, B: challenger },
+    laneByCandidate: { A: "production_low", B: "challenger_medium" },
+  }
+}
+
+export function normalizeModelJudgeVerdict(
+  value: JsonRecord,
+  laneByCandidate: BlindJudgePacket["laneByCandidate"],
+): ModelJudgeVerdict {
+  const preferred = value.preferred_candidate
+  if (preferred !== "A" && preferred !== "B" && preferred !== "tie") {
+    throw new Error("Model judge verdict requires preferred_candidate A, B, or tie.")
+  }
+  const confidence = boundedNumber(value.confidence, 0, 1, "confidence")
+  const rawScores = normalizeRecord(value.scores)
+  if (!rawScores) throw new Error("Model judge verdict requires scores.")
+  const scores = {
+    A: normalizeJudgeDimensionScores(rawScores.A, "A"),
+    B: normalizeJudgeDimensionScores(rawScores.B, "B"),
+  }
+  const materialIssues = normalizeStringArray(value.material_issues) ?? []
+  if (typeof value.rationale !== "string" || value.rationale.trim().length === 0) {
+    throw new Error("Model judge verdict requires rationale.")
+  }
+
+  return {
+    preferredCandidate: preferred,
+    preferredLane: preferred === "tie" ? "tie" : laneByCandidate[preferred],
+    confidence,
+    scores,
+    materialIssues,
+    rationale: value.rationale.trim(),
+  }
+}
+
+export function normalizeImageQualityVerdict(value: JsonRecord): ImageQualityVerdict {
+  const verdict = value.verdict
+  if (verdict !== "pass" && verdict !== "rework" && verdict !== "needs_human_review") {
+    throw new Error("Image quality verdict requires verdict pass, rework, or needs_human_review.")
+  }
+  const confidence = boundedNumber(value.confidence, 0, 1, "image_quality.confidence")
+  if (typeof value.rationale !== "string" || value.rationale.trim().length === 0) {
+    throw new Error("Image quality verdict requires a non-empty rationale.")
+  }
+  if (!Array.isArray(value.defects)) {
+    throw new Error("Image quality verdict requires a defects array.")
+  }
+
+  const defects = value.defects.map((item, index): ImageQualityDefect => {
+    const defect = normalizeRecord(item)
+    if (!defect) throw new Error(`Image quality defect ${index} must be an object.`)
+    const kind = nonBlankString(defect.kind, `image_quality.defects[${index}].kind`)
+    const region = nonBlankString(defect.region, `image_quality.defects[${index}].region`)
+    const severity = defect.severity
+    if (severity !== "minor" && severity !== "material" && severity !== "critical") {
+      throw new Error(`Image quality defect ${index} has invalid severity.`)
+    }
+    const explanation = nonBlankString(
+      defect.explanation,
+      `image_quality.defects[${index}].explanation`,
+    )
+    return { kind, region, severity, explanation }
+  })
+
+  if (verdict === "pass" && defects.some((defect) => defect.severity !== "minor")) {
+    throw new Error("Image quality pass cannot contain material or critical defects.")
+  }
+
+  return {
+    verdict,
+    confidence,
+    defects,
+    rationale: value.rationale.trim(),
+  }
+}
+
+export function loadImageQualityReferenceSet(params: {
+  manifestPath: string
+  rootDir: string
+  maxReferences?: number
+}): ImageQualityReferenceSet {
+  if (!existsSync(params.manifestPath)) {
+    return {
+      version: null,
+      references: [],
+      warnings: [`Reference manifest not found: ${params.manifestPath}`],
+    }
+  }
+
+  const manifest = parseJsonObject(readFileSync(params.manifestPath, "utf8"))
+  const version = nonBlankString(manifest.version, "image reference manifest version")
+  if (!Array.isArray(manifest.references)) {
+    throw new Error("Image reference manifest requires a references array.")
+  }
+
+  const root = resolve(params.rootDir)
+  const limit = Math.min(Math.max(params.maxReferences ?? 5, 0), 5)
+  const references: ImageQualityReference[] = []
+  const warnings: string[] = []
+
+  for (const [index, item] of manifest.references.entries()) {
+    if (references.length >= limit) break
+    const entry = normalizeRecord(item)
+    if (!entry) throw new Error(`Image reference ${index} must be an object.`)
+    const id = nonBlankString(entry.id, `image reference ${index} id`)
+    const expectedVerdict = entry.expected_verdict
+    if (
+      expectedVerdict !== "pass" &&
+      expectedVerdict !== "rework" &&
+      expectedVerdict !== "needs_human_review"
+    ) {
+      throw new Error(`Image reference ${id} has an invalid expected verdict.`)
+    }
+    const relativePath = nonBlankString(entry.relative_path, `image reference ${id} relative_path`)
+    const imagePath = resolve(root, relativePath)
+    if (imagePath !== root && !imagePath.startsWith(`${root}${sep}`)) {
+      throw new Error(`Image reference ${id} resolves outside the configured root.`)
+    }
+    if (!existsSync(imagePath)) {
+      warnings.push(`Image reference ${id} is missing: ${imagePath}`)
+      continue
+    }
+    const expectedSha256 = optionalNonBlankString(entry.sha256)
+    if (expectedSha256) {
+      const actualSha256 = createHash("sha256").update(readFileSync(imagePath)).digest("hex")
+      if (actualSha256 !== expectedSha256.toLowerCase()) {
+        warnings.push(`Image reference ${id} failed SHA-256 validation.`)
+        continue
+      }
+    }
+    const rawDefects = Array.isArray(entry.defects) ? entry.defects : []
+    const defects = rawDefects.map((rawDefect, defectIndex) => {
+      const defect = normalizeRecord(rawDefect)
+      if (!defect) throw new Error(`Image reference ${id} defect ${defectIndex} is invalid.`)
+      return {
+        kind: nonBlankString(defect.kind, `image reference ${id} defect kind`),
+        region: nonBlankString(defect.region, `image reference ${id} defect region`),
+      }
+    })
+    references.push({
+      id,
+      expectedVerdict,
+      imagePath,
+      rationale: nonBlankString(entry.rationale, `image reference ${id} rationale`),
+      defects,
+    })
+  }
+
+  return { version, references, warnings }
+}
+
+export function imageQualityPreparationDecision(params: {
+  deterministicReady: boolean
+  judgeEnabled: boolean
+  verdict: ImageQualityVerdict["verdict"] | null
+}): { finalImageReady: boolean; status: "pending_review" | "needs_image_work" } {
+  const finalImageReady = params.judgeEnabled
+    ? params.verdict === "pass"
+    : params.deterministicReady
+  return {
+    finalImageReady,
+    status: finalImageReady ? "pending_review" : "needs_image_work",
+  }
+}
+
+export function buildImageQualityJudgePrompt(params: {
+  referenceSet: ImageQualityReferenceSet
+}): string {
+  return [
+    "You are the read-only visual quality judge for one processed Chaarlie product image.",
+    "Do not edit files, write databases, approve the image, or approve publication.",
+    "The first three attached images are, in order: (1) raw researched source, (2) transparent cutout rendered on magenta QA, and (3) final neutral-background render.",
+    "Any remaining attached images are labeled references described in the JSON below.",
+    "Inspect the whole product perimeter at high attention, especially the bottom and corners.",
+    "Return rework for removable floor shadows or reflections, outer box or secondary packaging, bundles or extra objects, edge residue or halos, rectangular background remnants, jagged edges, detached pixels, or product content cut away by the mask.",
+    "Do not mistake an intrinsic dark bottle base, cap, pump, label edge, or transparent packaging content for removable background residue.",
+    "Return needs_human_review when image identity or edge quality cannot be determined confidently.",
+    "Return exactly one JSON object with verdict (pass, rework, or needs_human_review), confidence (0..1), defects, and rationale.",
+    "Each defect must include kind, region, severity (minor, material, or critical), and explanation. A pass may contain only minor observations.",
+    "Reference examples:",
+    JSON.stringify({
+      version: params.referenceSet.version,
+      examples: params.referenceSet.references.map((reference, index) => ({
+        attachment_index: index + 4,
+        id: reference.id,
+        expected_verdict: reference.expectedVerdict,
+        rationale: reference.rationale,
+        defects: reference.defects,
+      })),
+      warnings: params.referenceSet.warnings,
+    }),
+  ].join("\n")
+}
+
+function normalizeJudgeDimensionScores(
+  value: unknown,
+  candidate: BlindCandidateLabel,
+): ModelJudgeDimensionScores {
+  const scores = normalizeRecord(value)
+  if (!scores) throw new Error(`Model judge verdict requires scores for candidate ${candidate}.`)
+  return {
+    identity: boundedNumber(scores.identity, 0, 5, `${candidate}.identity`),
+    evidence: boundedNumber(scores.evidence, 0, 5, `${candidate}.evidence`),
+    completeness: boundedNumber(scores.completeness, 0, 5, `${candidate}.completeness`),
+    uncertainty: boundedNumber(scores.uncertainty, 0, 5, `${candidate}.uncertainty`),
+  }
+}
+
+function boundedNumber(value: unknown, min: number, max: number, field: string): number {
+  if (typeof value !== "number" || !Number.isFinite(value) || value < min || value > max) {
+    throw new Error(`Model judge verdict has invalid ${field}.`)
+  }
+  return value
+}
+
+function nonBlankEnv(value: string | undefined, fallback: string): string {
+  const normalized = value?.trim()
+  return normalized ? normalized : fallback
+}
+
+function optionalServiceTier(value: string | undefined): string | null {
+  const normalized = value?.trim()
+  return normalized && normalized !== "standard" ? normalized : null
+}
+
+function nonBlankString(value: unknown, field: string): string {
+  if (typeof value !== "string" || value.trim().length === 0) {
+    throw new Error(`${field} must be a non-empty string.`)
+  }
+  return value.trim()
+}
+
+function optionalNonBlankString(value: unknown): string | null {
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : null
+}
+
+export function codexResearchExecArgs(params: {
+  cwd: string
+  outputPath: string
+  prompt: string
+  runtimeConfig: CodexResearchRuntimeConfig
+  webSearch?: "disabled" | "live"
+  imagePaths?: string[]
+}): string[] {
+  return [
+    "exec",
+    "--skip-git-repo-check",
+    "-m",
+    params.runtimeConfig.model,
+    "-c",
+    `model_reasoning_effort="${params.runtimeConfig.reasoningEffort}"`,
+    ...(params.runtimeConfig.serviceTier
+      ? ["-c", `service_tier="${params.runtimeConfig.serviceTier}"`]
+      : []),
+    ...(params.webSearch ? ["-c", `web_search="${params.webSearch}"`] : []),
+    ...(params.imagePaths && params.imagePaths.length > 0 ? ["-i", ...params.imagePaths] : []),
+    "--cd",
+    params.cwd,
+    "--sandbox",
+    "read-only",
+    "--output-last-message",
+    params.outputPath,
+    params.prompt,
+  ]
 }
 
 function normalizeCodexOutput(value: JsonRecord): CodexResearchOutput {
@@ -1999,7 +3055,7 @@ function normalizeCodexOutput(value: JsonRecord): CodexResearchOutput {
         if (!item || typeof item !== "object" || Array.isArray(item)) return []
         const record = item as JsonRecord
         const kind = normalizeArtifactKind(record.kind ?? record.type)
-        if (!isArtifactKind(kind)) return []
+        if (!isModelGeneratedArtifactKind(kind)) return []
         const payload = normalizeRecord(record.payload) ?? artifactPayloadFromRecord(record)
         return [
           {
@@ -2183,6 +3239,118 @@ function runVisionBackgroundRemoval(params: {
   return null
 }
 
+function runAutomaticBackgroundRemoval(params: {
+  sourceFile: string
+  outputDir: string
+  outputSlug: string
+}): { file: string; method: "vision" | "rembg_isnet_general_use" } | null {
+  if (process.platform === "darwin") {
+    const visionFile = runVisionBackgroundRemoval(params)
+    if (visionFile) return { file: visionFile, method: "vision" }
+  }
+
+  const rembg = runRembgContainer({
+    sourceFile: params.sourceFile,
+    outputFile: join(params.outputDir, `${params.outputSlug}-rembg-isnet.png`),
+    config: rembgRuntimeConfig(process.env),
+  })
+  return rembg ? { file: rembg, method: "rembg_isnet_general_use" } : null
+}
+
+export function rembgRuntimeConfig(env: Record<string, string | undefined>): RembgRuntimeConfig {
+  const enabled = /^(1|true|yes|on)$/i.test(env.PRODUCT_INTAKE_REMBG_ENABLED?.trim() ?? "")
+  const parsedTimeout = Number.parseInt(env.PRODUCT_INTAKE_REMBG_TIMEOUT_MS ?? "", 10)
+  const timeoutMs = Number.isFinite(parsedTimeout)
+    ? Math.max(30_000, Math.min(parsedTimeout, 10 * 60_000))
+    : 3 * 60_000
+
+  return {
+    enabled,
+    dockerBin: env.PRODUCT_INTAKE_REMBG_DOCKER_BIN?.trim() || "docker",
+    image: REMBG_IMAGE,
+    model: REMBG_MODEL,
+    modelDir:
+      env.PRODUCT_INTAKE_REMBG_MODEL_DIR?.trim() ||
+      join(process.cwd(), "tmp", "product-intake-rembg-models"),
+    timeoutMs,
+  }
+}
+
+export function finalizedImageOutputRoot(
+  env: Readonly<Record<string, string | undefined>>,
+  cwd = process.cwd(),
+): string {
+  return (
+    env.PRODUCT_INTAKE_FINALIZED_IMAGE_DIR?.trim() ||
+    join(cwd, "apps/product-intake-review/public/product-intake-finalized")
+  )
+}
+
+export function rembgContainerArgs(params: {
+  config: RembgRuntimeConfig
+  sourceFile: string
+  outputFile: string
+}): string[] {
+  const sourceDir = resolve(dirname(params.sourceFile))
+  const outputDir = resolve(dirname(params.outputFile))
+  const modelDir = resolve(params.config.modelDir)
+
+  return [
+    "run",
+    "--rm",
+    "--network=none",
+    "--memory=2500m",
+    "--memory-swap=3g",
+    "--cpus=2",
+    "--pids-limit=256",
+    "--read-only",
+    "--tmpfs=/tmp:rw,nosuid,nodev,size=256m",
+    "--tmpfs=/root/.cache:rw,nosuid,nodev,size=128m",
+    "--env",
+    "NUMBA_CACHE_DIR=/tmp/numba",
+    "--env",
+    "XDG_CACHE_HOME=/tmp/cache",
+    "-v",
+    `${sourceDir}:/input:ro`,
+    "-v",
+    `${outputDir}:/output`,
+    "-v",
+    `${modelDir}:/root/.rembg:ro`,
+    params.config.image,
+    "i",
+    "-m",
+    params.config.model,
+    `/input/${basename(params.sourceFile)}`,
+    `/output/${basename(params.outputFile)}`,
+  ]
+}
+
+function runRembgContainer(params: {
+  config: RembgRuntimeConfig
+  sourceFile: string
+  outputFile: string
+}): string | null {
+  if (!params.config.enabled) return null
+  mkdirSync(dirname(params.outputFile), { recursive: true })
+  mkdirSync(params.config.modelDir, { recursive: true })
+
+  const result = spawnSync(params.config.dockerBin, rembgContainerArgs(params), {
+    cwd: process.cwd(),
+    encoding: "utf8",
+    maxBuffer: 1024 * 1024 * 10,
+    timeout: params.config.timeoutMs,
+  })
+  if (!result.error && result.status === 0 && existsSync(params.outputFile)) {
+    return params.outputFile
+  }
+
+  const detail = [result.error?.message, result.stderr?.trim()]
+    .filter((value): value is string => Boolean(value))
+    .join("; ")
+  console.error(`rembg background removal failed${detail ? `: ${detail}` : "."}`)
+  return null
+}
+
 function normalizeResearchPayload(value: unknown): JsonRecord | null {
   const record = normalizeRecord(value)
   if (!record) return null
@@ -2283,8 +3451,12 @@ function artifactPayloadFromRecord(record: JsonRecord): JsonRecord {
   return payload
 }
 
-function isArtifactKind(value: string): value is ProductIntakeArtifactKind {
-  return PRODUCT_INTAKE_ARTIFACT_KINDS.includes(value as ProductIntakeArtifactKind)
+export function isModelGeneratedArtifactKind(value: string): value is ProductIntakeArtifactKind {
+  return (
+    PRODUCT_INTAKE_ARTIFACT_KINDS.includes(value as ProductIntakeArtifactKind) &&
+    value !== "model_run" &&
+    value !== "model_judgment"
+  )
 }
 
 function isJobStage(value: string): value is ProductIntakeJobStage {

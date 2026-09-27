@@ -597,7 +597,7 @@ async function seedModeratorFixtures(pg: PGlite) {
       INSERT INTO public.personal_plan_test_campaigns
         (id, name, token_hash, starts_at, expires_at, max_activations, access_duration_hours, flow_kind, identity_mode)
       VALUES
-        ($1, 'Moderator campaign', repeat('d', 64), '2026-08-27T00:00:00Z', '2026-09-26T00:00:00Z', 1, 2160, 'personal_plan', 'email_bound')
+        ($1, 'Moderator campaign', repeat('d', 64), now() - interval '1 day', now() + interval '30 days', 1, 2160, 'personal_plan', 'email_bound')
     `,
     [ids.campaign],
   )
@@ -658,7 +658,7 @@ async function seedGuestFixtures(pg: PGlite) {
       INSERT INTO public.personal_plan_test_campaigns
         (id, name, token_hash, starts_at, expires_at, max_activations, access_duration_hours, flow_kind, identity_mode)
       VALUES
-        ($1, 'Guest campaign', repeat('e', 64), '2026-08-27T00:00:00Z', '2026-09-26T00:00:00Z', 10, 168, 'personal_plan', 'guest')
+        ($1, 'Guest campaign', repeat('e', 64), now() - interval '1 day', now() + interval '30 days', 10, 168, 'personal_plan', 'guest')
     `,
     [ids.guestCampaign],
   )
@@ -683,7 +683,7 @@ async function seedGuestFixtures(pg: PGlite) {
       INSERT INTO public.personal_plan_prepared_artifacts
         (id, answer_hash, claim_token_hash, quiz_answers, canonical_profile, fallback_metadata, priorities, diagnostic_scores, public_offer_model, locked_plan, status, lead_id, expires_at, attached_at)
       VALUES
-        (public.test_gen_random_uuid(), repeat('f', 64), repeat('1', 64), '{"answers":["guest"]}'::jsonb, '{}'::jsonb, '{}'::jsonb, '[]'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, 'attached', $1, '2026-09-01T00:00:00Z', '2026-08-27T00:00:00Z')
+        (public.test_gen_random_uuid(), repeat('f', 64), repeat('1', 64), '{"answers":["guest"]}'::jsonb, '{}'::jsonb, '{}'::jsonb, '[]'::jsonb, '{}'::jsonb, '{}'::jsonb, '{}'::jsonb, 'attached', $1, now() + interval '1 day', now())
     `,
     [ids.guestLead],
   )
