@@ -141,7 +141,7 @@ test("the batch-7 migration has a unique version that sorts after every migratio
   // per-product call decisions and the iOS paywall branch's migrations may come later.
   assert.deepEqual(
     versions.filter((version) => version > own).sort(),
-    ["20260925150000", "20260927120000", "20260927133426"],
+    ["20260925150000", "20260927120000", "20260927133426", "20260927172739", "20260927172741"],
     "must sort after every migration but its follow-up, batch 9's and the iOS paywall's",
   )
 })
