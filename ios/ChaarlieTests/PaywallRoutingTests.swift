@@ -547,7 +547,14 @@ final class PaywallRoutingTests: XCTestCase {
         XCTAssertEqual(PaywallHeader.height(for: .xxxLarge), 470)
         for size in [DynamicTypeSize.accessibility1, .accessibility3, .accessibility5] {
             XCTAssertEqual(PaywallHeader.height(for: size), 240)
+            XCTAssertEqual(PaywallHeader.height(for: size, showsStatus: true), 240)
         }
+    }
+    /// FW2: a status row takes its room from the photo, never from Apple's pinned controls.
+    func testPurchaseStatusShrinksThePhotoInsteadOfTheStoreControls() {
+        XCTAssertEqual(PaywallHeader.height(for: .large, showsStatus: true), 340)
+        XCTAssertEqual(PaywallHeader.height(for: .xxxLarge, showsStatus: true), 340)
+        XCTAssertFalse(PaywallHeader.showsStatus(nil))
     }
 
     // MARK: Helpers

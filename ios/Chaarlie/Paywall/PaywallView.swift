@@ -14,7 +14,7 @@ struct PaywallView: View {
     var body: some View {
         Group {
             if let token = model.purchaseAccountToken, let groupID = SubscriptionConfiguration.groupID {
-                SubscriptionStoreView(groupID: groupID) { PaywallHeader() }
+                SubscriptionStoreView(groupID: groupID) { PaywallHeader(model: model) }
                     .containerBackground(for: .subscriptionStoreFullHeight) { ChaarlieTheme.background }
                     .subscriptionStoreControlStyle(.compactPicker)
                     .subscriptionStoreButtonLabel(.action)
@@ -48,21 +48,44 @@ struct PaywallView: View {
 }
 
 struct PaywallHeader: View {
+    /// Nil only in the build without a subscription group, which cannot show a status.
+    var model: AppModel? = nil
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     private static let photo = UIImage(named: "paywall-regal.jpg")
     /// Minimum photo height. Accessibility text sizes shrink it so tiles and the buy button
-    /// stay reachable; the headline may still grow the card, it is never truncated.
-    static func height(for size: DynamicTypeSize) -> CGFloat { size.isAccessibilitySize ? 240 : 470 }
+    /// stay reachable; the headline may still grow the card, it is never truncated. A
+    /// purchase status sits between photo and tiles, so the photo gives up its height:
+    /// Apple's pinned store controls never share their space with our rows.
+    static func height(for size: DynamicTypeSize, showsStatus: Bool = false) -> CGFloat {
+        size.isAccessibilitySize ? 240 : showsStatus ? 340 : 470
+    }
+    static func showsStatus(_ model: AppModel?) -> Bool {
+        guard let model else { return false }
+        return model.purchaseState.statusText != nil || model.paywallMessage != nil
+    }
 
     var body: some View {
+        VStack(spacing: 12) {
+            card
+            if let model, Self.showsStatus(model) { PaywallStatus(model: model).chaarlieTransition(.opacity) }
+        }
+        .padding(.horizontal, 16).padding(.top, 8)
+    }
+
+    private var card: some View {
         VStack(spacing: 8) {
             Text("Sofort wissen, ob es passt.").chaarlieHeading(30).accessibilityAddTraits(.isHeader)
             Text("Jedes Produkt, geprüft für dein Haar.").chaarlieSystemFont(16).foregroundStyle(.white.opacity(0.9))
         }
+        // The largest sizes would outgrow any photo; cap the card text like the footer.
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .fixedSize(horizontal: false, vertical: true)
         .foregroundStyle(.white).multilineTextAlignment(.center)
         .padding(.horizontal, 24).padding(.bottom, 26).padding(.top, 24)
-        .frame(maxWidth: .infinity, minHeight: Self.height(for: dynamicTypeSize), alignment: .bottom)
+        .frame(maxWidth: .infinity, minHeight: Self.height(for: dynamicTypeSize, showsStatus: Self.showsStatus(model)),
+               alignment: .bottom)
+        // Grow with the headline instead of clipping it under the rounded photo.
+        .fixedSize(horizontal: false, vertical: true)
         .accessibilityElement(children: .combine)
         .background {
             ZStack {
@@ -76,7 +99,35 @@ struct PaywallHeader: View {
             .accessibilityHidden(true)
         }
         .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
-        .padding(.horizontal, 16).padding(.top, 8)
+    }
+}
+
+/// Pending, unlocking, retry and message rows. They live in the store's header content,
+/// not the pinned footer: a taller footer squeezed Apple's controls onto the price tiles.
+private struct PaywallStatus: View {
+    @Bindable var model: AppModel
+
+    var body: some View {
+        VStack(spacing: 6) {
+            if let status = model.purchaseState.statusText {
+                if model.purchaseState == .unlockFailed {
+                    VStack(spacing: 0) {
+                        Text(status).chaarlieSystemFont(14, weight: .medium).foregroundStyle(ChaarlieTheme.ink)
+                        Button("Erneut versuchen") { Task { await model.retryUnfinishedTransactions() } }
+                            .chaarlieSystemFont(14, weight: .semibold).foregroundStyle(ChaarlieTheme.plum).frame(minHeight: 44)
+                            .buttonStyle(.plain)
+                    }
+                } else {
+                    BusyLabel(text: status)
+                }
+            }
+            if let message = model.paywallMessage {
+                Text(message).chaarlieSystemFont(14).foregroundStyle(ChaarlieTheme.coral)
+            }
+        }
+        .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
+        .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .contain)
     }
 }
 
@@ -85,34 +136,17 @@ private struct PaywallFooter: View {
     @Environment(\.openURL) private var openURL
 
     var body: some View {
-        VStack(spacing: 8) {
-            if let status = model.purchaseState.statusText {
-                if model.purchaseState == .unlockFailed {
-                    VStack(spacing: 6) {
-                        Text(status).chaarlieSystemFont(14, weight: .medium).foregroundStyle(ChaarlieTheme.ink)
-                        Button("Erneut versuchen") { Task { await model.retryUnfinishedTransactions() } }
-                            .chaarlieSystemFont(14, weight: .semibold).foregroundStyle(ChaarlieTheme.plum).frame(minHeight: 44)
-                    }.multilineTextAlignment(.center).chaarlieTransition(.opacity)
-                } else {
-                    BusyLabel(text: status).chaarlieTransition(.opacity)
-                }
+        // Large text stacks the links instead of breaking words. Status rows live in
+        // PaywallStatus: this pinned footer keeps one height in every purchase state.
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 14) {
+                restoreButton
+                Text("·").accessibilityHidden(true)
+                agbButton
+                Text("·").accessibilityHidden(true)
+                privacyButton
             }
-            if let message = model.paywallMessage {
-                Text(message).chaarlieSystemFont(14).foregroundStyle(ChaarlieTheme.coral)
-                    .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
-                    .chaarlieTransition(.opacity)
-            }
-            // Large text stacks the links instead of breaking words.
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: 14) {
-                    restoreButton
-                    Text("·").accessibilityHidden(true)
-                    agbButton
-                    Text("·").accessibilityHidden(true)
-                    privacyButton
-                }
-                VStack(spacing: 4) { restoreButton; agbButton; privacyButton }
-            }
+            VStack(spacing: 4) { restoreButton; agbButton; privacyButton }
         }
         .chaarlieSystemFont(12, relativeTo: .footnote).foregroundStyle(ChaarlieTheme.muted).buttonStyle(.plain)
         // The pinned footer must leave room for Apple's store controls at the largest sizes.

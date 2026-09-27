@@ -257,6 +257,12 @@ final class AppModel {
         } catch { return false }
     }
 #if DEBUG
+    /// Design review only: renders a paywall status without StoreKit or a server.
+    func installPaywallStatusFixture(_ state: PurchaseState, message: String? = nil) {
+        guard admission == .paywall else { return }
+        purchaseState = state
+        paywallMessage = message
+    }
     func installCompletionFixtureAuthority() {
         guard session == nil else { return }
         completionAuthority = "synthetic-completion-authority"

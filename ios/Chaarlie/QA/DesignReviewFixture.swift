@@ -47,6 +47,9 @@ enum DesignReviewScenario: String, Sendable {
     case profileCompletion = "profile-completion"
     case recoveryUnavailable = "recovery-unavailable"
     case paywall
+    case paywallPending = "paywall-pending"
+    case paywallRetry = "paywall-retry"
+    case paywallMessage = "paywall-message"
     case profileAbo = "profile-abo"
     case deleteNotice = "delete-notice"
     case deleteConfirm = "delete-confirm"
@@ -56,6 +59,7 @@ enum DesignReviewScenario: String, Sendable {
               let value = ProcessInfo.processInfo.environment["CHAARLIE_DESIGN_SCENARIO"] else { return nil }
         return Self(rawValue: value)
     }
+    var isPaywall: Bool { [.paywall, .paywallPending, .paywallRetry, .paywallMessage].contains(self) }
     var signedOut: Bool {
         switch self {
         case .login, .loginLongEmail, .code, .codeError, .loginLoading: true
@@ -75,7 +79,7 @@ struct DesignReviewFixture: View {
         // transport below handles every request in memory and cannot open a connection.
         let configuration = try! MobileConfiguration(baseURL: URL(string: "http://127.0.0.1:3218/api/mobile/v1")!)
         let session = scenario.signedOut || scenario == .profileCompletion ? nil
-            : scenario == .paywall ? DesignReviewData.paywallSession : DesignReviewData.session
+            : scenario.isPaywall ? DesignReviewData.paywallSession : DesignReviewData.session
         let attempt = [.code, .codeError].contains(scenario) ? DesignReviewData.attempt : nil
         let client = MobileClient(configuration: configuration,
                                   transport: DesignReviewTransport(scenario: scenario, onboardingAnswers: onboardingAnswers),
@@ -141,6 +145,14 @@ struct DesignReviewFixture: View {
                 case .scanLoading: await model.resolve(.barcode("1234567890123"))
                 case .searchLoading: await model.search()
                 case .deleteNotice, .deleteConfirm: await model.beginAccountDeletion()
+                case .paywallPending, .paywallRetry, .paywallMessage:
+                    // After the paywall's launch retry, which clears a pending state it cannot confirm.
+                    try? await Task.sleep(for: .seconds(1))
+                    switch scenario {
+                    case .paywallPending: model.installPaywallStatusFixture(.pending)
+                    case .paywallRetry: model.installPaywallStatusFixture(.unlockFailed)
+                    default: model.installPaywallStatusFixture(.idle, message: "Dieses Abo gehört zu einem anderen Chaarlie-Konto.")
+                    }
                 case .research, .researchPending, .researchError, .researchIdentified, .researchIdentifiedPending,
                      .researchIdentifiedError, .researchStatusLoading, .researchNoSuggestion, .researchUnsaved:
                     await model.resolve(.barcode("4006381333931"))
@@ -241,7 +253,7 @@ actor DesignReviewTransport: HTTPTransport {
         if path.hasSuffix("/bootstrap") {
             let status: Bootstrap.Status = scenario == .recoveryMissing ? .profile_required : scenario == .recoveryUnavailable ? .temporarily_unavailable : .ready
             var bootstrap = Bootstrap(status: status, profileRevision: "synthetic-design-profile", contextRevision: "synthetic-design-context")
-            if scenario == .paywall { bootstrap.access = MobileAccess(status: .inactive, source: nil, appStore: nil) }
+            if scenario.isPaywall { bootstrap.access = MobileAccess(status: .inactive, source: nil, appStore: nil) }
             if scenario == .deleteConfirm { bootstrap.access = MobileAccess(status: .active, source: "web", appStore: nil) }
             if scenario == .profileAbo || scenario == .deleteNotice {
                 bootstrap.access = MobileAccess(status: .active, source: "app_store", appStore: .init(
