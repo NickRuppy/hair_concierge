@@ -35,12 +35,29 @@ export const profileSchema = z.object({
   profileRevision: z.string(),
   answers: z.array(z.object({ id: z.string(), label: z.string(), values: z.array(z.string()) })),
 })
+export const mobileAppStoreAccessSchema = z
+  .object({
+    productId: z.string(),
+    expiresAt: z.string(),
+    willRenew: z.boolean(),
+    inBillingRetry: z.boolean(),
+  })
+  .strict()
+export const mobileAccessSchema = z
+  .object({
+    status: z.enum(["active", "none"]),
+    source: z.enum(["app_store", "web", "open"]).nullable(),
+    appStore: mobileAppStoreAccessSchema.nullable(),
+  })
+  .strict()
+export type MobileAccess = z.infer<typeof mobileAccessSchema>
 export const bootstrapSchema = z.discriminatedUnion("status", [
   z.object({
     status: z.literal("ready"),
     profileRevision: z.string(),
     contextRevision: z.string(),
     researchDeliveryEnabled: z.boolean().optional().default(false),
+    access: mobileAccessSchema,
   }),
   z.object({
     status: z.literal("profile_required"),

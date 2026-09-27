@@ -204,8 +204,19 @@ export async function requireRegisteredUser(raw: string, client = createAdminCli
   const envelope = await registeredEnvelope(raw, "access", registrationConfig())
   if (!(await registrationStore(client).enrollment(envelope.email, envelope.userId)))
     throw new MobileError("unauthorized", 401)
-  await providerIdentity(envelope.credential, envelope.email, envelope.userId, envelope.sessionId)
-  return { userId: envelope.userId, token: envelope.credential, client }
+  const identity = await providerIdentity(
+    envelope.credential,
+    envelope.email,
+    envelope.userId,
+    envelope.sessionId,
+  )
+  if (!identity.user.email) throw new MobileError("unauthorized", 401)
+  return {
+    userId: envelope.userId,
+    token: envelope.credential,
+    client,
+    email: identity.user.email.toLowerCase(),
+  }
 }
 export async function refreshRegisteredSession(raw: string, client = createAdminClient()) {
   const config = registrationConfig(),

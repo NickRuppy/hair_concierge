@@ -5,6 +5,7 @@ import {
   mobileRoute,
   requireMobileUser,
 } from "@/lib/mobile/auth"
+import { requireMobileScannerAccess } from "@/lib/mobile/access"
 import { clearMobileHistory, loadMobileHistory } from "@/lib/mobile/history-service"
 
 export function parseHistoryFavoritesFilter(raw: string | null) {
@@ -15,7 +16,7 @@ export function parseHistoryFavoritesFilter(raw: string | null) {
 
 export async function GET(request: Request) {
   return mobileRoute(async () => {
-    const { client, userId } = await requireMobileUser(request)
+    const { client, userId } = await requireMobileScannerAccess(request)
     await mobileRateLimit(client, userId, "mobile-history-read", 60, 60_000)
     const params = new URL(request.url).searchParams
     return mobileJSON(

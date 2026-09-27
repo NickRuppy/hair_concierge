@@ -1,11 +1,6 @@
 import { z } from "zod"
-import {
-  MobileError,
-  mobileJSON,
-  mobileRateLimit,
-  mobileRoute,
-  requireMobileUser,
-} from "@/lib/mobile/auth"
+import { MobileError, mobileJSON, mobileRateLimit, mobileRoute } from "@/lib/mobile/auth"
+import { requireMobileScannerAccess } from "@/lib/mobile/access"
 import { resolveMobileResearchResult } from "@/lib/mobile/research-result-service"
 
 export async function GET(
@@ -13,7 +8,7 @@ export async function GET(
   { params }: { params: Promise<{ submissionId: string }> },
 ) {
   return mobileRoute(async () => {
-    const { client, userId } = await requireMobileUser(request)
+    const { client, userId } = await requireMobileScannerAccess(request)
     await mobileRateLimit(client, userId, "mobile-research-result", 30, 60_000)
     const { submissionId } = await params
     if (!z.uuid().safeParse(submissionId).success) throw new MobileError("invalid_request", 400)

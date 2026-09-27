@@ -4,8 +4,8 @@ import {
   mobileJSON,
   mobileRateLimit,
   mobileRoute,
-  requireMobileUser,
 } from "@/lib/mobile/auth"
+import { requireMobileScannerAccess } from "@/lib/mobile/access"
 import { loadMobileProfile } from "@/lib/mobile/profile-service"
 import { resolveMobileScan } from "@/lib/mobile/scan-service"
 import { recordMobileHistory } from "@/lib/mobile/history-service"
@@ -14,7 +14,7 @@ import { validateEanInput } from "@/lib/scan/identifier-lookup"
 
 export async function POST(request: Request) {
   return mobileRoute(async () => {
-    const { client, userId } = await requireMobileUser(request)
+    const { client, userId } = await requireMobileScannerAccess(request)
     await mobileRateLimit(client, userId, "mobile-scan", 30, 60_000)
     const parsed = mobileScanResolveRequestSchema.safeParse(await mobileBody(request))
     if (!parsed.success) throw new MobileError("invalid_request", 400)

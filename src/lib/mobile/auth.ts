@@ -188,7 +188,13 @@ export async function requireMobileUser(request: Request) {
   const envelope = await mobileCredential(match[1], "access", policy)
   const token = envelope?.credential ?? match[1]
   const identity = await verifiedIdentity(token, policy, envelope)
-  return { userId: identity.user.id, token, client: createAdminClient() }
+  if (!identity.user.email) throw new MobileError("unauthorized", 401)
+  return {
+    userId: identity.user.id,
+    token,
+    client: createAdminClient(),
+    email: identity.user.email.toLowerCase(),
+  }
 }
 
 export async function mobileRateLimit(
