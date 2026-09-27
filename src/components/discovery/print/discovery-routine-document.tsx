@@ -57,12 +57,23 @@ type PrintProduct = {
   imageUrl: string | null
 }
 
+/**
+ * One product line of a step — `product: null` prints „Noch offen". `frequency` is her own
+ * („3–4× pro Woche"), set only when the step prints ≥2 lines (batch 9: it tells her products
+ * apart); a step with one line prints exactly as before.
+ */
+type PrintLine = {
+  key: string
+  product: PrintProduct | null
+  frequency: string | null
+}
+
 type PrintStep = {
   key: string
   categoryLabel: string
   frequencyLabel: string
   why: string
-  product: PrintProduct | null
+  lines: PrintLine[]
 }
 
 /**
@@ -104,20 +115,50 @@ function stepProduct(step: DiscoveryCockpitStepView): PrintProduct | null {
           }
         : null
     case "undecided":
+    case "dropped":
       return null
   }
 }
 
+/**
+ * The view's entries grouped into their steps (batch 9): one printed step per decision key,
+ * one line per product of hers that stays in it — kept, swapped or still open. A dropped
+ * product („Weglassen") leaves the step for „Brauchst du nicht mehr"; two entries printing
+ * the same product print it once.
+ */
 function printSteps(view: DiscoveryCockpitView): PrintStep[] {
-  return view.steps.map((step) => ({
-    key: step.decisionKey,
-    categoryLabel: step.categoryLabel,
-    // Guarded against the plan's internal phrasings (see `discoveryCadenceLabel`).
-    frequencyLabel: discoveryCadenceLabel(step.frequencyLabel),
-    // The role's own sentence — what this step does, in the plan's established wording.
-    why: step.roleDescription ?? step.roleLabel,
-    product: stepProduct(step),
-  }))
+  const steps: PrintStep[] = []
+  const byKey = new Map<string, PrintStep>()
+  for (const step of view.steps) {
+    let printed = byKey.get(step.decisionKey)
+    if (!printed) {
+      printed = {
+        key: step.decisionKey,
+        categoryLabel: step.categoryLabel,
+        // Guarded against the plan's internal phrasings (see `discoveryCadenceLabel`).
+        frequencyLabel: discoveryCadenceLabel(step.frequencyLabel),
+        // The role's own sentence — what this step does, in the plan's established wording.
+        why: step.roleDescription ?? step.roleLabel,
+        lines: [],
+      }
+      byKey.set(step.decisionKey, printed)
+      steps.push(printed)
+    }
+    if (step.outcome === "dropped") continue
+    const product = stepProduct(step)
+    if (product && printed.lines.some((line) => line.product?.name === product.name)) continue
+    printed.lines.push({
+      key: step.intakeItemId ?? step.decisionKey,
+      product,
+      frequency: step.ownedFrequencyLabel,
+    })
+  }
+  for (const printed of steps) {
+    if (printed.lines.length < 2) {
+      printed.lines = printed.lines.map((line) => ({ ...line, frequency: null }))
+    }
+  }
+  return steps
 }
 
 type ShelfEntry = {
@@ -137,7 +178,8 @@ type ShelfEntry = {
  */
 function shelfEntries(view: DiscoveryCockpitView): ShelfEntry[] {
   return view.steps.flatMap((step): ShelfEntry[] => {
-    if (!step.intakeItemId || !step.ownedLabel) return []
+    // A dropped product is not in her routine any more: „Brauchst du nicht mehr" names it.
+    if (!step.intakeItemId || !step.ownedLabel || step.outcome === "dropped") return []
     const owned = {
       key: step.intakeItemId,
       name: step.ownedLabel,
@@ -170,12 +212,16 @@ function sentence(head: string, parts: string[]): string {
   return parts.length === 0 ? `${head}.` : `${head} — ${parts.join(", ")}.`
 }
 
-/** „7 Schritte — 4 bleiben, 3 sind neu." */
+/**
+ * „7 Schritte — 4 bleiben, 3 sind neu." — the parts count the printed product lines (one per
+ * step, unless she keeps several products in one step).
+ */
 function routineSummary(steps: PrintStep[]): string {
   if (steps.length === 0) return FALLBACK_SUB
-  const keep = steps.filter((step) => step.product?.badge === BADGE_KEEP).length
-  const fresh = steps.filter((step) => step.product?.badge === BADGE_NEW).length
-  const open = steps.filter((step) => step.product === null).length
+  const lines = steps.flatMap((step) => step.lines)
+  const keep = lines.filter((line) => line.product?.badge === BADGE_KEEP).length
+  const fresh = lines.filter((line) => line.product?.badge === BADGE_NEW).length
+  const open = lines.filter((line) => line.product === null).length
   return sentence(countLabel(steps.length, "Schritt", "Schritte"), [
     ...(keep > 0 ? [`${keep} ${keep === 1 ? "bleibt" : "bleiben"}`] : []),
     ...(fresh > 0 ? [`${fresh} ${fresh === 1 ? "ist" : "sind"} neu`] : []),
@@ -235,7 +281,30 @@ export function DiscoveryRoutineDocument({
 }) {
   const steps = printSteps(view)
   const shelf = shelfEntries(view)
-  const dropped = view.unassigned.filter((entry) => entry.reason === "no_ideal_step")
+  // „Brauchst du nicht mehr": products whose category has no step, and products the call
+  // explicitly left out („Weglassen", batch 9) — nothing else.
+  const dropped = [
+    ...view.unassigned
+      .filter((entry) => entry.reason === "no_ideal_step")
+      .map((entry) => ({
+        key: entry.itemId,
+        label: entry.label,
+        usage: entry.usageLabel,
+        imageUrl: entry.imageUrl,
+      })),
+    ...view.steps.flatMap((step) =>
+      step.outcome === "dropped" && step.intakeItemId && step.ownedLabel
+        ? [
+            {
+              key: step.intakeItemId,
+              label: step.ownedLabel,
+              usage: step.ownedUsageLabel,
+              imageUrl: step.ownedImageUrl,
+            },
+          ]
+        : [],
+    ),
+  ]
   // Still in research: nothing is known about these yet, so the document promises a follow-up
   // instead of filing them under „brauchst du nicht mehr" — that would be a claim we cannot make.
   // A product whose usage is still open never reaches a finalised sheet (finalising is
@@ -267,25 +336,10 @@ export function DiscoveryRoutineDocument({
                       <span className="dcp-cat">{step.categoryLabel}</span>
                       <span className="dcp-freq">{step.frequencyLabel}</span>
                     </div>
-                    {step.product ? (
-                      <div className="dcp-prod-row">
-                        <ProductThumb imageUrl={step.product.imageUrl} />
-                        <p className="dcp-prod">
-                          {step.product.name}
-                          {step.product.usage ? (
-                            <span className="dcp-usage">{` · ${step.product.usage}`}</span>
-                          ) : null}
-                          <span
-                            className={`dcp-badge ${
-                              step.product.badge === BADGE_KEEP ? "dcp-b-keep" : "dcp-b-new"
-                            }`}
-                          >
-                            {step.product.badge}
-                          </span>
-                        </p>
-                      </div>
-                    ) : (
+                    {step.lines.length === 0 ? (
                       <p className="dcp-prod dcp-prod-open">{OPEN_STEP}</p>
+                    ) : (
+                      step.lines.map((line) => <StepLine key={line.key} line={line} />)
                     )}
                     <p className="dcp-why">{step.why}</p>
                   </li>
@@ -334,9 +388,9 @@ export function DiscoveryRoutineDocument({
               <ul className="dcp-plain">
                 {dropped.map((entry) => (
                   <UnassignedLine
-                    key={entry.itemId}
+                    key={entry.key}
                     label={entry.label}
-                    usage={entry.usageLabel}
+                    usage={entry.usage}
                     imageUrl={entry.imageUrl}
                   />
                 ))}
@@ -377,6 +431,28 @@ export function DiscoveryRoutineDocument({
         </div>
       </div>
     </>
+  )
+}
+
+/** One product line of a step: her product, the new one, or „Noch offen". */
+function StepLine({ line }: { line: PrintLine }) {
+  if (!line.product) return <p className="dcp-prod dcp-prod-open">{OPEN_STEP}</p>
+  return (
+    <div className="dcp-prod-row">
+      <ProductThumb imageUrl={line.product.imageUrl} />
+      <p className="dcp-prod">
+        {line.product.name}
+        {line.product.usage ? (
+          <span className="dcp-usage">{` · ${line.product.usage}`}</span>
+        ) : null}
+        {line.frequency ? <span className="dcp-usage">{` · ${line.frequency}`}</span> : null}
+        <span
+          className={`dcp-badge ${line.product.badge === BADGE_KEEP ? "dcp-b-keep" : "dcp-b-new"}`}
+        >
+          {line.product.badge}
+        </span>
+      </p>
+    </div>
   )
 }
 

@@ -1484,3 +1484,91 @@ test("a second printed role of the same product does not inherit the usage note"
   assert.ok(finish.every(({ entry }) => entry.usage === "als Kopfhautpflege benutzt"))
   assert.ok(damp.every(({ entry }) => entry.usage === undefined))
 })
+
+// --- batch 9: several products in one step ---------------------------------------------------
+
+/**
+ * Computed on origin/main feb9284c (before batch 9): the printed routine of section A with
+ * its compiled application section folded in. A routine with one product per step must keep
+ * this fingerprint — candidate ids, order and the compiled print all unchanged.
+ */
+const APPLICATION_GOLDEN_HASH = "59991c1b7f43b20610b174f84d82d36735dad6591004c7dd843e6b2733b30bc2"
+
+test("batch 9: a one-product-per-step routine keeps its application-section fingerprint (pinned)", () => {
+  assert.equal(
+    withDiscoveryApplicationHash(composeRoutine(), compile().print).sourceHash,
+    APPLICATION_GOLDEN_HASH,
+  )
+})
+
+test("batch 9: two shampoos in one step — a conflict on one never takes its sibling with it", () => {
+  const secondShampoo = "30000000-0000-4000-8000-0000000000b2"
+  const routine = composeDiscoveryRefinedRoutine({
+    steps: [shampooStep, leaveInStep],
+    items: [
+      item({ id: "i-sh-a", productId: ids.keptShampoo, brandText: "A", productNameText: "Pure" }),
+      item({
+        id: "i-sh-b",
+        productId: secondShampoo,
+        brandText: "B",
+        productNameText: "Mild",
+        createdAt: "2026-09-20T11:00:00.000Z",
+      }),
+    ],
+    decisions: [
+      { decisionKey: "d:shampoo", decision: "keep", swapProductId: null, intakeItemId: "i-sh-a" },
+      { decisionKey: "d:shampoo", decision: "keep", swapProductId: null, intakeItemId: "i-sh-b" },
+    ],
+    swapProducts: [],
+    recommendationProducts: [
+      catalogRow(ids.idealLeaveIn, "Leichtes Leave-in", "Garnier", "leave_in"),
+    ],
+  })
+  const candidates = discoveryApplicationCandidates(routine)
+  assert.deepEqual(
+    candidates.map((entry) => entry.itemId),
+    ["d:shampoo", "d:shampoo#i-sh-b", "d:leave_in"],
+  )
+  // Shampoo A demands a conditioner after it, the leave-in forbids one: those two conflict.
+  const conflicting = (
+    value: ProductApplicationPointerV2,
+    policy: "conditioner_after" | "no_conditioner",
+  ) => ({
+    ...value,
+    facts: { ...value.facts, conditionerPolicy: policy },
+  })
+  const plainB = pointer(
+    secondShampoo,
+    {
+      sourceRole: "shampoo_everyday",
+      role: "cleanse",
+      applicationFamily: "standard_rinse_out_cleanse",
+    },
+    "shampoo",
+  )
+  const { print, gaps } = compileDiscoveryApplication({
+    candidates,
+    catalog: catalog(
+      [
+        conflicting(POINTERS.shampoo, "conditioner_after"),
+        plainB,
+        conflicting(POINTERS.leaveIn, "no_conditioner"),
+      ],
+      [
+        productRow(ids.keptShampoo, "shampoo"),
+        productRow(secondShampoo, "shampoo"),
+        productRow(ids.idealLeaveIn, "leave_in"),
+      ],
+    ),
+    dayDefinitions,
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    profile: discoveryApplicationProfile(initialContext),
+  })
+  const printed = print.days.flatMap((day) =>
+    day.steps.flatMap((entry) => (entry.kind === "product" ? [entry.productId] : [])),
+  )
+  assert.ok(printed.includes(secondShampoo), "the sibling without a conflict still prints")
+  assert.ok(!printed.includes(ids.keptShampoo))
+  assert.ok(gaps.some((gap) => gap.productId === ids.keptShampoo))
+  assert.ok(!gaps.some((gap) => gap.productId === secondShampoo))
+})

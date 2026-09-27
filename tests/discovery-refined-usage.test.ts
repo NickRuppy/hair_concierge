@@ -183,8 +183,30 @@ export function composeLegacy(items: DiscoveryIntakeItem[] = LEGACY_ITEMS) {
 
 const LEGACY_GOLDEN_HASH = "708bd65669a5f1c3fdc129944111730be4c3cad9a2fb309a9d50e279189d755c"
 
+/**
+ * The same legacy fixture without its third oil — one product per step, the shape every
+ * intake without same-category duplicates has. Computed on origin/main feb9284c (before
+ * batch 9) and pinned, not recomputed.
+ */
+const LEGACY_ONE_PER_STEP_GOLDEN_HASH =
+  "fb82ec434b2ce6ed9ba5aa3c669c35888a798d82915fdd2e93f7f5273bbf8fc6"
+
 test("F4 golden: a legacy (tile-model) finalized routine keeps its exact sourceHash", () => {
-  assert.equal(composeLegacy().sourceHash, LEGACY_GOLDEN_HASH)
+  assert.equal(
+    composeLegacy(LEGACY_ITEMS.filter((item) => item.id !== "i-oil-3")).sourceHash,
+    LEGACY_ONE_PER_STEP_GOLDEN_HASH,
+  )
+})
+
+test("batch 9: the legacy fixture's third oil joins the first oil step — its hash moves on purpose", () => {
+  // Two oil steps, three oils: before batch 9 the third was „kein Schritt im Idealplan" (and
+  // „Brauchst du nicht mehr" on paper). Now it sits in the first oil step, undecided.
+  const routine = composeLegacy()
+  assert.notEqual(routine.sourceHash, LEGACY_GOLDEN_HASH)
+  const third = routine.steps.find((entry) => entry.item?.id === "i-oil-3")
+  assert.equal(third?.step.decisionKey, stage3DecisionKey("oil", "pre_wash_fibre_treatment", null))
+  assert.equal(third?.outcome, "undecided")
+  assert.ok(!routine.unassignedIntakeProducts.some((entry) => entry.item.id === "i-oil-3"))
 })
 
 test("F4: the legacy fixture's item objects carry no batch-5 keys at all", () => {
@@ -203,7 +225,7 @@ test("F4: a non-null usage role moves the fingerprint (and the binding)", () => 
   )
   const routine = composeLegacy(withRole)
   assert.notEqual(routine.sourceHash, LEGACY_GOLDEN_HASH)
-  // i-oil-2 takes the dry-finish step; i-oil-3 is left without a step.
+  // i-oil-2 takes the dry-finish step; i-oil-3 joins the first oil step (batch 9).
   const dry = routine.steps.find((entry) => entry.step.role === "dry_finish")
   assert.equal(dry?.item?.id, "i-oil-2")
 
@@ -269,12 +291,11 @@ test("a role item never falls back to another role's step; role-less items fill 
     [
       [OIL_PRE, null],
       [OIL_DRY, "dry-1"],
+      // Batch 9: a second dry-finish oil joins its own role's step, never another role's.
+      [OIL_DRY, "dry-2"],
     ],
   )
-  assert.deepEqual(unassigned, [
-    ["damp", "no_ideal_step"],
-    ["dry-2", "no_ideal_step"],
-  ])
+  assert.deepEqual(unassigned, [["damp", "no_ideal_step"]])
 })
 
 test("an unknown usage binds nowhere: `category_unknown`, even with a catalog product", () => {

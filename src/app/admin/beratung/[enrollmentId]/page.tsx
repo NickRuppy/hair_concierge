@@ -321,6 +321,11 @@ function HeatStyling({ view }: { view: DiscoveryCockpitView }) {
  * waiting for heat answers is not a step — the call asks about it instead (F3 quick fix).
  */
 function IdealRoutine({ view }: { view: DiscoveryCockpitView }) {
+  // One line per step — a step holding several of her products has one entry per product.
+  const steps = view.steps.filter(
+    (step, index) =>
+      view.steps.findIndex((other) => other.decisionKey === step.decisionKey) === index,
+  )
   return (
     <section className="rounded-xl border bg-card">
       <h2 className="border-b px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
@@ -332,7 +337,7 @@ function IdealRoutine({ view }: { view: DiscoveryCockpitView }) {
         </p>
       ) : null}
       <ol className="divide-y">
-        {view.steps.map((step, index) => (
+        {steps.map((step, index) => (
           <li key={step.decisionKey} className="flex flex-wrap items-baseline gap-3 px-4 py-2.5">
             <span className="w-4 shrink-0 text-xs text-muted-foreground">{index + 1}</span>
             <span className="w-36 shrink-0 rounded bg-[var(--brand-plum-ice)] px-2 py-0.5 text-center text-xs font-bold text-[var(--brand-plum)]">
@@ -380,7 +385,9 @@ function categoryLine(categories: readonly PersonalPlanCategory[]): string {
  *
  * The no-step line names its products, not just their categories: the participant's
  * document lists every one of them under „Brauchst du nicht mehr", and Nick has to be
- * able to read that list here before he finalises and sends it.
+ * able to read that list here before he finalises and sends it. Only a category without
+ * any step lands here (batch 9): a further product of a category that HAS a step sits in
+ * that step, and one the call drops shows there as „Weglassen".
  */
 function OutsideRoutine({ view, submitted }: { view: DiscoveryCockpitView; submitted: boolean }) {
   const noStep = view.unassigned.filter((entry) => entry.reason === "no_ideal_step")

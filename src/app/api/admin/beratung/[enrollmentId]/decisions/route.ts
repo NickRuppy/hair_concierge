@@ -1,7 +1,11 @@
 import type { NextRequest } from "next/server"
 import { z } from "zod"
 
-import { discoveryCockpitSwapOptionIds, upsertDiscoveryCallDecision } from "@/lib/discovery/cockpit"
+import {
+  discoveryCockpitSwapOptionIds,
+  setDiscoveryCallDecision,
+  type DiscoveryCallDecisionOutcome,
+} from "@/lib/discovery/cockpit"
 
 import {
   discoveryCockpitError,
@@ -14,42 +18,60 @@ import {
 } from "../../shared"
 
 /**
- * `POST /api/admin/beratung/<enrollmentId>/decisions` — one keep/swap ruling for one
- * routine step, upserted by `decision_key`.
+ * `POST /api/admin/beratung/<enrollmentId>/decisions` — one keep/swap/drop ruling for one
+ * product in one routine step (batch 9: a step may hold several of her products, each with
+ * its own decision).
  *
- * Three refusals carry the contract:
+ * The client names the pair (`decisionKey`, `intakeItemId`); the server finds that entry in
+ * a FRESH composition — the same one the cockpit renders — and refuses what it did not show:
  *
  *  - **frozen while finalised** — the PDF is made from a fingerprinted routine, so a
  *    decision landing after „Finalisieren" would silently invalidate it (409).
- *  - **unknown step** — a `decision_key` the participant's Idealplan does not carry is
- *    rejected rather than stored as an orphan the read model would ignore (400).
+ *  - **unknown step** — a `decision_key` the participant's Idealplan does not carry (400).
+ *  - **unknown product** — the step does not hold that product (any more): a stale tab (409).
+ *  - **old tab without `intakeItemId`** — accepted only for a step with exactly one entry;
+ *    otherwise the server cannot know which product is meant (409 `item_required`).
+ *  - **„Weglassen"** — only for one of ≥2 products in a step (409 `drop_single`) and never
+ *    the last one standing (409 `drop_last`).
  *  - **swap target not offered** — a swap may only name a product the cockpit DISPLAYED
- *    for that step (the engine's alternatives, or the Idealplan's own recommendation where
+ *    for that very product (its verdict's alternatives, or the Idealplan's own pick where
  *    there are none). Nick's ruling: no catalog picker (400).
  *
- * `intake_item_id` is never taken from the request: the server writes the item its own
- * binding put in that step, so the stored decision and the composed routine agree.
+ * The write itself is one locked database call (`discovery_admin_set_call_decision`): it
+ * re-checks the sibling invariants inside the intake row lock, so two tabs cannot race a
+ * step empty or onto one swap target (409 `drop_last` / `swap_taken`).
  */
 
 const bodySchema = z
   .object({
     decisionKey: z.string().trim().min(1).max(200),
-    decision: z.enum(["keep", "swap"]),
+    /** Absent: a deployed old tab (single-entry steps only). `null`: the empty step. */
+    intakeItemId: z.string().uuid().nullish(),
+    decision: z.enum(["keep", "swap", "drop"]),
     swapProductId: z.string().uuid().nullish(),
   })
   .refine((body) => (body.decision === "swap") === Boolean(body.swapProductId), {
     message: "swap_product_pair",
   })
 
+const OUTCOME_STATUS: Record<Exclude<DiscoveryCallDecisionOutcome, "stored">, number> = {
+  not_found: 404,
+  not_submitted: 409,
+  finalized: 409,
+  item_not_found: 409,
+  drop_last: 409,
+  swap_taken: 409,
+}
+
 export type DiscoveryDecisionsRouteDependencies = DiscoveryCockpitRouteDependencies & {
-  upsertDecision?: typeof upsertDiscoveryCallDecision
+  setDecision?: typeof setDiscoveryCallDecision
 }
 
 export function createDiscoveryDecisionsHandler(
   overrides: DiscoveryDecisionsRouteDependencies = {},
 ) {
-  const { upsertDecision, ...guardOverrides } = overrides
-  const upsert = upsertDecision ?? upsertDiscoveryCallDecision
+  const { setDecision, ...guardOverrides } = overrides
+  const write = setDecision ?? setDiscoveryCallDecision
 
   return async function POST(
     request: NextRequest,
@@ -69,29 +91,54 @@ export function createDiscoveryDecisionsHandler(
     const composed = await resolveDiscoveryCockpitView(admin, intake, guardOverrides)
     if (!composed.ok) return composed.response
 
-    const step = composed.view.steps.find((entry) => entry.decisionKey === body.data.decisionKey)
-    if (!step) return discoveryCockpitError("unknown_decision_key", 400)
+    const decisionKey = body.data.decisionKey
+    const entries = composed.view.steps.filter((entry) => entry.decisionKey === decisionKey)
+    if (entries.length === 0) return discoveryCockpitError("unknown_decision_key", 400)
+
+    let entry = entries[0]!
+    if (body.data.intakeItemId === undefined) {
+      if (entries.length !== 1) return discoveryCockpitError("item_required", 409)
+    } else {
+      const named = entries.find((candidate) => candidate.intakeItemId === body.data.intakeItemId)
+      if (!named) return discoveryCockpitError("unknown_item", 409)
+      entry = named
+    }
+    const siblingItemIds = entries.flatMap((candidate) =>
+      candidate !== entry && candidate.intakeItemId ? [candidate.intakeItemId] : [],
+    )
+
+    if (body.data.decision === "drop") {
+      if (entry.intakeItemId === null || entries.length < 2) {
+        return discoveryCockpitError("drop_single", 409)
+      }
+      if (!entry.canDrop) return discoveryCockpitError("drop_last", 409)
+    }
 
     const swapProductId = body.data.swapProductId ?? null
     if (body.data.decision === "swap") {
-      const allowed = discoveryCockpitSwapOptionIds(composed.view, body.data.decisionKey) ?? []
+      const allowed =
+        discoveryCockpitSwapOptionIds(composed.view, decisionKey, entry.intakeItemId) ?? []
       if (!swapProductId || !allowed.includes(swapProductId)) {
         return discoveryCockpitError("swap_not_offered", 400)
       }
     }
 
     try {
-      const decision = await upsert(
+      const result = await write(
         {
           intakeId: intake.id,
-          decisionKey: body.data.decisionKey,
+          decisionKey,
           decision: body.data.decision,
           swapProductId,
-          intakeItemId: step.intakeItemId,
+          intakeItemId: entry.intakeItemId,
+          siblingItemIds,
         },
         admin,
       )
-      return discoveryCockpitJson({ decision })
+      if (result.outcome !== "stored") {
+        return discoveryCockpitError(result.outcome, OUTCOME_STATUS[result.outcome])
+      }
+      return discoveryCockpitJson({ decision: result.decision })
     } catch (error) {
       console.error("[discovery] cockpit decision write failed:", error)
       return discoveryCockpitError("unavailable", 503)
