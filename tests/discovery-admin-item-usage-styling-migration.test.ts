@@ -146,11 +146,12 @@ test("the follow-up migration has a unique version that sorts after every migrat
     .map((name) => name.split("_")[0])
   const own = OWN.split("_")[0]
   assert.equal(versions.filter((version) => version === own).length, 1)
-  // Only batch 9's per-product call decisions (20260927120000) may come later.
+  // Only batch 9's per-product call decisions (20260927120000) and the iOS paywall
+  // branch's migrations may come later.
   assert.deepEqual(
-    versions.filter((version) => version > own),
-    ["20260927120000"],
-    "must sort after every migration but batch 9's",
+    versions.filter((version) => version > own).sort(),
+    ["20260927120000", "20260927133426"],
+    "must sort after every migration but batch 9's and the iOS paywall's",
   )
 })
 
