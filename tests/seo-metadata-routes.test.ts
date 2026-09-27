@@ -161,6 +161,7 @@ test("classifies every current protected page and API route", () => {
     "/api/admin/quotes",
     "/api/admin/quotes/example",
     "/api/admin/users",
+    "/api/account-deletion/reconcile",
     "/api/billing/access",
     "/api/billing/reconcile",
     "/api/billing/one-time-activation-status/other",

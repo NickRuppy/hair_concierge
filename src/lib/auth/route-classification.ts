@@ -120,6 +120,8 @@ const PROTECTED_ROUTE_PREFIXES = [
   "/routine",
   "/scan",
   "/tracker",
+  // Account-deletion cron (CRON_SECRET bearer; Task 7 adds the native endpoints under /api/mobile/v1).
+  "/api/account-deletion",
   "/api/admin",
   "/api/billing",
   "/api/chat",
