@@ -1048,8 +1048,15 @@ export type DiscoveryCallDecisionInput = {
   swapProductId: string | null
   /** The product the decision is about, from the SERVER's composition; null = empty step. */
   intakeItemId: string | null
-  /** The step's other products as the server bound them — the drop invariant's siblings. */
-  siblingItemIds: string[]
+  /**
+   * The step's other products as the server composed them, each with ITS OWN usage — the
+   * drop invariant counts a sibling only while its usage is still this one (under the lock).
+   */
+  siblings: Array<{
+    itemId: string
+    category: PersonalPlanCategory
+    usageRole: DiscoveryUsageRole | null
+  }>
   /**
    * The target's usage (category, role) as the server composed it — re-checked under the
    * lock (`stale_binding`). Both null for an empty step.
@@ -1102,7 +1109,11 @@ export async function setDiscoveryCallDecision(
     expected_usage_role: input.expectedUsageRole,
     new_decision: input.decision,
     new_swap_product_id: input.decision === "swap" ? input.swapProductId : null,
-    sibling_item_ids: input.siblingItemIds,
+    siblings: input.siblings.map((sibling) => ({
+      id: sibling.itemId,
+      category: sibling.category,
+      usage_role: sibling.usageRole,
+    })),
   })
   if (error) throw error
   const row = (data ?? {}) as Partial<DecisionRow> & { outcome?: string }

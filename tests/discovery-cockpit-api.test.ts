@@ -268,7 +268,7 @@ test("a keep is stored with the binding the server computed; a product not in th
     decision: "keep",
     swapProductId: null,
     intakeItemId: ids.item,
-    siblingItemIds: [],
+    siblings: [],
     expectedCategory: "shampoo",
     expectedUsageRole: null,
   }

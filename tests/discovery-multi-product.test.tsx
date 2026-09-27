@@ -629,7 +629,7 @@ test("route: the client names (step, product); the server writes it with the ste
       decision: "keep",
       swapProductId: null,
       intakeItemId: ids.itemA,
-      siblingItemIds: [ids.itemB],
+      siblings: [{ itemId: ids.itemB, category: "shampoo", usageRole: null }],
       expectedCategory: "shampoo",
       expectedUsageRole: null,
     },
@@ -639,7 +639,7 @@ test("route: the client names (step, product); the server writes it with the ste
       decision: "swap",
       swapProductId: ids.swapShampooTwo,
       intakeItemId: ids.itemB,
-      siblingItemIds: [ids.itemA],
+      siblings: [{ itemId: ids.itemA, category: "shampoo", usageRole: null }],
       expectedCategory: "shampoo",
       expectedUsageRole: null,
     },
@@ -649,7 +649,7 @@ test("route: the client names (step, product); the server writes it with the ste
       decision: "drop",
       swapProductId: null,
       intakeItemId: ids.itemB,
-      siblingItemIds: [ids.itemA],
+      siblings: [{ itemId: ids.itemA, category: "shampoo", usageRole: null }],
       expectedCategory: "shampoo",
       expectedUsageRole: null,
     },
@@ -661,7 +661,7 @@ test("route: an old tab without intakeItemId works for a single-product step onl
   const single = await post({ decisionKey: COND, decision: "keep" })
   assert.equal(single.status, 200)
   assert.equal(written[0]!.intakeItemId, ids.itemCond)
-  assert.deepEqual(written[0]!.siblingItemIds, [])
+  assert.deepEqual(written[0]!.siblings, [])
   assert.equal(written[0]!.expectedCategory, "conditioner")
   // An empty step: the one entry with no product — and no usage to re-check.
   assert.equal((await post({ decisionKey: LEAVE, decision: "keep" })).status, 200)
@@ -949,4 +949,22 @@ test("cockpit: a dropped entry starts selected on „Weglassen“; the refusals 
     new RegExp(`disabled="" [^>]*name="decision-${SH}:${ids.itemA}" value="drop"`),
   )
   assert.equal(discoveryDecisionWriteOutcome(false, { code: "drop_last" }).rollback, true)
+})
+
+test("route: each sibling travels with its OWN composed usage — raw roles may differ in one step", async () => {
+  const preWash = item({
+    id: "50000000-0000-4000-8000-0000000000c1",
+    category: "conditioner",
+    productId: "30000000-0000-4000-8000-0000000000c1",
+    usageRole: "pre_wash_conditioner",
+    createdAt: "2026-09-20T12:00:00.000Z",
+  })
+  const { post, written } = decisionRoute(modelOf([conditioner, preWash]))
+  const response = await post({ decisionKey: COND, intakeItemId: ids.itemCond, decision: "drop" })
+  assert.equal(response.status, 200)
+  assert.deepEqual(written[0]!.siblings, [
+    { itemId: preWash.id, category: "conditioner", usageRole: "pre_wash_conditioner" },
+  ])
+  assert.equal(written[0]!.expectedCategory, "conditioner")
+  assert.equal(written[0]!.expectedUsageRole, null)
 })

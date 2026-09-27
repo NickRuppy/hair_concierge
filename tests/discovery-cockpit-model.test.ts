@@ -760,7 +760,9 @@ test("a keep never stores a swap target; the write is the one locked RPC per (st
       // A stale client could still send one; the write drops it.
       swapProductId: ids.alternativeA,
       intakeItemId: ids.item,
-      siblingItemIds: [],
+      siblings: [
+        { itemId: "50000000-0000-4000-8000-0000000000aa", category: "shampoo", usageRole: null },
+      ],
       expectedCategory: "shampoo",
       expectedUsageRole: null,
     },
@@ -786,7 +788,9 @@ test("a keep never stores a swap target; the write is the one locked RPC per (st
         expected_usage_role: null,
         new_decision: "keep",
         new_swap_product_id: null,
-        sibling_item_ids: [],
+        siblings: [
+          { id: "50000000-0000-4000-8000-0000000000aa", category: "shampoo", usage_role: null },
+        ],
       },
     },
   ])
@@ -799,7 +803,7 @@ test("the decision write passes refusals through and rejects an unknown answer",
     decision: "drop" as const,
     swapProductId: null,
     intakeItemId: ids.item,
-    siblingItemIds: [],
+    siblings: [],
     expectedCategory: "shampoo" as const,
     expectedUsageRole: null,
   }

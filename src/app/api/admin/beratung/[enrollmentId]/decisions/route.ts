@@ -106,8 +106,17 @@ export function createDiscoveryDecisionsHandler(
       if (!named) return discoveryCockpitError("unknown_item", 409)
       entry = named
     }
-    const siblingItemIds = entries.flatMap((candidate) =>
-      candidate !== entry && candidate.intakeItemId ? [candidate.intakeItemId] : [],
+    // Each sibling with its own composed usage: the write re-checks every one under its lock.
+    const siblings = entries.flatMap((candidate) =>
+      candidate !== entry && candidate.intakeItemId
+        ? [
+            {
+              itemId: candidate.intakeItemId,
+              category: candidate.category,
+              usageRole: candidate.ownedUsageRole,
+            },
+          ]
+        : [],
     )
 
     if (body.data.decision === "drop") {
@@ -134,7 +143,7 @@ export function createDiscoveryDecisionsHandler(
           decision: body.data.decision,
           swapProductId,
           intakeItemId: entry.intakeItemId,
-          siblingItemIds,
+          siblings,
           // A bound product always sits in a step of its own usage category.
           expectedCategory: entry.intakeItemId ? entry.category : null,
           expectedUsageRole: entry.intakeItemId ? entry.ownedUsageRole : null,
