@@ -99,6 +99,7 @@ test("classifies every current public page and route handler", () => {
     "/widerruf",
     "/api/analytics/meta-offer-view",
     "/api/analytics/offer-engaged",
+    "/api/app-store/notifications",
     "/api/auth/callback",
     "/api/auth/free-registration",
     "/api/auth/send-magic-link",

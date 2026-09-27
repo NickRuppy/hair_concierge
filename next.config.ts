@@ -98,6 +98,9 @@ export const nextConfig: NextConfig = {
   },
   outputFileTracingIncludes: {
     "/api/chat": ["./data/agent-guidance/**/*", "./data/agent-v2/guidance/**/*"],
+    // Apple root certificates read at runtime by src/lib/app-store/verify.ts.
+    "/api/mobile/v1/app-store/transactions": ["./src/lib/app-store/certs/**/*"],
+    "/api/app-store/notifications": ["./src/lib/app-store/certs/**/*"],
   },
   async headers() {
     return [

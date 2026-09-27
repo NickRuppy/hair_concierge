@@ -76,6 +76,9 @@ const PUBLIC_API_EXACT_ROUTES = [
   // Calendly signs every delivery (HMAC, replay-window checked in the
   // handler); a session can never exist on an inbound webhook.
   "/api/calendly/webhook",
+  // Apple signs every App Store Server Notification (JWS verified in the handler);
+  // a session can never exist on an inbound webhook.
+  "/api/app-store/notifications",
   // discovery-call toolkit: both are reached from the invite page before a
   // session exists. They authenticate the signed invite credential themselves
   // and refuse a revoked or rotated enrollment.
