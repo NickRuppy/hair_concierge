@@ -35,6 +35,8 @@ export interface PayPalCheckoutIntentRow {
   created_at: string
   updated_at: string
   metadata: Record<string, unknown>
+  /** Set when the owning account was deleted (the intent is retained anonymized). */
+  anonymized_at?: string | null
 }
 
 export interface CreatePayPalCheckoutIntentInput {

@@ -236,6 +236,8 @@ export async function handlePayPalWebhookEvent(
     if (!subscriptionId) throw new Error("PayPal webhook event is missing subscription id")
     const retrieve = deps.retrievePayPalSubscription ?? retrievePayPalSubscriptionForWebhook
     const subscription = await retrieve(subscriptionId)
+    if (await acknowledgeDeletedAccountSubscription(eventType, subscription, deps))
+      return { handled: true }
     if (await acknowledgeCanceledProviderClockVerification(eventType, subscription, deps))
       return { handled: true }
     if (await handlePayPalTrialWebhook(event, subscription, deps)) return { handled: true }
@@ -374,6 +376,34 @@ export async function handlePayPalWebhookEvent(
     await releaseWebhookEventClaim(deps.supabase, "paypal", eventId)
     throw error
   }
+}
+
+/**
+ * A subscription whose account was deleted keeps only its anonymized checkout intent; the
+ * billing row cascaded away. Its later provider events (the cancellation the deletion
+ * itself triggered, a late sale) are acknowledged without writes so they neither error
+ * forever nor provision a new account from the payer data.
+ */
+async function acknowledgeDeletedAccountSubscription(
+  eventType: string,
+  subscription: PayPalSubscription,
+  deps: PayPalWebhookDeps,
+): Promise<boolean> {
+  if (!subscription.id) return false
+  const existing = await findBillingSubscriptionByProviderId(
+    deps.supabase,
+    "paypal",
+    subscription.id,
+  )
+  if (existing) return false
+  const intent =
+    (await findPayPalCheckoutIntentByProviderSubscriptionId(deps.supabase, subscription.id)) ??
+    (subscription.custom_id?.trim()
+      ? await findPayPalCheckoutIntentByToken(deps.supabase, subscription.custom_id.trim())
+      : null)
+  if (!intent?.anonymized_at) return false
+  console.info("[paypal:webhook] event for a deleted account acknowledged", { eventType })
+  return true
 }
 
 async function acknowledgeCanceledProviderClockVerification(

@@ -820,6 +820,58 @@ test("BILLING.SUBSCRIPTION.CANCELLED acknowledges duplicate subscriptions withou
   assert.equal(paypalIntents[0].provider_subscription_id, "I-active")
 })
 
+test("events for a deleted account's subscription are acknowledged without writes", async () => {
+  for (const eventType of [
+    "BILLING.SUBSCRIPTION.CANCELLED",
+    "BILLING.SUBSCRIPTION.ACTIVATED",
+    "PAYMENT.SALE.COMPLETED",
+  ]) {
+    const { supabase, billing, paypalIntents } = createSupabaseStub({
+      billing: [],
+      paypalIntents: [
+        {
+          id: "intent-deleted",
+          token: "token-active",
+          interval: "month",
+          source: "pricing_page",
+          status: "activated",
+          provider_subscription_id: "I-active",
+          lead_id: null,
+          email: null,
+          user_id: null,
+          expires_at: futureIso(),
+          metadata: {},
+          anonymized_at: pastIso(),
+        },
+      ],
+    })
+    const cancelled: string[] = []
+    const result = await handlePayPalWebhookEvent(
+      eventType === "PAYMENT.SALE.COMPLETED"
+        ? paymentEvent(`WH-deleted-${eventType}`, eventType)
+        : event(`WH-deleted-${eventType}`, eventType),
+      {
+        supabase,
+        premiumTierId: "tier-premium",
+        freeTierId: "tier-free",
+        retrievePayPalSubscription: async () =>
+          subscription(
+            eventType === "BILLING.SUBSCRIPTION.CANCELLED" ? "CANCELLED" : "ACTIVE",
+            futureIso(),
+          ),
+        cancelPayPalSubscription: async (subscriptionId) => {
+          cancelled.push(subscriptionId)
+        },
+      },
+    )
+    assert.deepEqual(result, { handled: true }, eventType)
+    assert.equal(billing.length, 0, eventType)
+    assert.deepEqual(cancelled, [], eventType)
+    assert.equal(paypalIntents[0].user_id, null, eventType)
+    assert.equal(paypalIntents[0].status, "activated", eventType)
+  }
+})
+
 test("activation webhook does not rebind an intent that already belongs to another PayPal subscription", async () => {
   const { supabase, billing, paypalIntents } = createSupabaseStub({
     billing: [],
