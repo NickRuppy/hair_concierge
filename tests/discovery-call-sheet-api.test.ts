@@ -34,33 +34,58 @@ const intake: DiscoveryCallIntake = {
 
 type Upsert = { table: string; row: Record<string, unknown>; options: unknown; columns?: string }
 
-/** A Supabase client that records the upsert and echoes the row back (as the DB would). */
-function recordingClient(stored: Record<string, unknown> = {}) {
+const ALL_COLUMNS = [
+  "enrollment_id",
+  "baseline_score",
+  "rescores",
+  "touchpoints",
+  "consult_brief",
+  "habit_commitments",
+  "feedback",
+] as const
+
+/**
+ * A one-table Supabase fake with honest FULL-row replacement: an upsert stores exactly the
+ * row it is given, and every column the row omits becomes NULL — the most destructive
+ * reading of PostgREST's missing-field semantics. A partial save is only safe if the
+ * writer sends the whole row itself.
+ */
+function recordingClient(initial: Record<string, unknown> | null = null) {
   const upserts: Upsert[] = []
+  const reads: string[] = []
+  let stored: Record<string, unknown> | null = initial
+    ? { enrollment_id: ids.enrollment, ...initial }
+    : null
   const client = {
     from(table: string) {
       return {
+        select(columns: string) {
+          return {
+            eq(column: string, value: unknown) {
+              return {
+                async maybeSingle() {
+                  reads.push(`${table}:${column}=${String(value)}`)
+                  return {
+                    data: stored && stored[column] === value ? pick(stored, columns) : null,
+                    error: null,
+                  }
+                },
+              }
+            },
+          }
+        },
         upsert(row: Record<string, unknown>, options: unknown) {
           const call: Upsert = { table, row, options }
           upserts.push(call)
+          stored = Object.fromEntries(
+            ALL_COLUMNS.map((column) => [column, column in row ? row[column] : null]),
+          )
           return {
             select(columns: string) {
               call.columns = columns
               return {
                 async single() {
-                  return {
-                    data: {
-                      baseline_score: null,
-                      rescores: [],
-                      touchpoints: [],
-                      consult_brief: null,
-                      habit_commitments: [],
-                      feedback: null,
-                      ...stored,
-                      ...row,
-                    },
-                    error: null,
-                  }
+                  return { data: pick(stored!, columns), error: null }
                 },
               }
             },
@@ -69,11 +94,27 @@ function recordingClient(stored: Record<string, unknown> = {}) {
       }
     },
   }
-  return { client, upserts }
+  return { client, upserts, reads, stored: () => stored }
 }
 
-function deps(overrides: Record<string, unknown> = {}) {
-  const recorded = recordingClient()
+function pick(row: Record<string, unknown>, columns: string): Record<string, unknown> {
+  return Object.fromEntries(columns.split(",").map((column) => [column.trim(), row[column.trim()]]))
+}
+
+const EMPTY_ROW = {
+  baseline_score: null,
+  rescores: [],
+  touchpoints: [],
+  consult_brief: null,
+  habit_commitments: [],
+  feedback: null,
+}
+
+function deps(
+  overrides: Record<string, unknown> = {},
+  stored: Record<string, unknown> | null = null,
+) {
+  const recorded = recordingClient(stored)
   return {
     recorded,
     deps: {
@@ -206,6 +247,7 @@ test("a valid payload upserts every named column on the enrollment and returns t
   assert.equal(upsert!.table, "discovery_call_sheets")
   assert.deepEqual(upsert!.options, { onConflict: "enrollment_id" })
   assert.deepEqual(upsert!.row, { ...validBody, enrollment_id: ids.enrollment })
+  assert.deepEqual(recorded.reads, [`discovery_call_sheets:enrollment_id=${ids.enrollment}`])
 
   const { callSheet } = (await json(response)) as { callSheet: DiscoveryCallSheet }
   assert.equal(callSheet.baselineScore, 4)
@@ -215,33 +257,78 @@ test("a valid payload upserts every named column on the enrollment and returns t
   assert.equal(callSheet.feedback, "Sehr hilfreich.")
 })
 
-test("a partial save names only its own columns — the other island's are left as stored", async () => {
+test("a partial follow-up save on an existing row keeps the stored score and brief (full row written)", async () => {
+  const brief = {
+    baseline_score: validBody.baseline_score,
+    consult_brief: validBody.consult_brief,
+    habit_commitments: validBody.habit_commitments,
+    rescores: validBody.rescores,
+  }
+  const { deps: d, recorded } = deps({}, { ...EMPTY_ROW, ...brief, feedback: "Alt." })
+  const response = await createDiscoveryCallSheetHandler(d)(
+    patchRequest({ feedback: "Sehr hilfreich.", touchpoints: validBody.touchpoints }),
+    params(),
+  )
+  assert.equal(response.status, 200)
+  // The writer sends EVERY column — nothing is left to missing-field semantics.
+  assert.deepEqual(Object.keys(recorded.upserts[0]!.row).sort(), [...ALL_COLUMNS].sort())
+  assert.deepEqual(recorded.stored(), {
+    enrollment_id: ids.enrollment,
+    ...brief,
+    touchpoints: validBody.touchpoints,
+    feedback: "Sehr hilfreich.",
+  })
+  const { callSheet } = (await json(response)) as { callSheet: DiscoveryCallSheet }
+  assert.equal(callSheet.baselineScore, 4)
+  assert.deepEqual(callSheet.consultBrief, validBrief)
+  assert.equal(callSheet.habitCommitments.length, 1)
+  assert.equal(callSheet.feedback, "Sehr hilfreich.")
+
+  // And the other way round: a brief save keeps the stored follow-up.
+  const again = await createDiscoveryCallSheetHandler(d)(
+    patchRequest({ baseline_score: 6 }),
+    params(),
+  )
+  assert.equal(again.status, 200)
+  assert.equal(recorded.stored()!.baseline_score, 6)
+  assert.equal(recorded.stored()!.feedback, "Sehr hilfreich.")
+  assert.deepEqual(recorded.stored()!.touchpoints, validBody.touchpoints)
+  assert.deepEqual(recorded.stored()!.consult_brief, validBody.consult_brief)
+})
+
+test("a first save on a legacy enrollment with one island's fields writes a full row of defaults", async () => {
   const { deps: d, recorded } = deps()
   const response = await createDiscoveryCallSheetHandler(d)(
-    patchRequest({ feedback: null, touchpoints: [] }),
+    patchRequest({ feedback: "Erster Stand.", touchpoints: [] }),
     params(),
   )
   assert.equal(response.status, 200)
   assert.deepEqual(recorded.upserts[0]!.row, {
-    feedback: null,
-    touchpoints: [],
+    ...EMPTY_ROW,
+    feedback: "Erster Stand.",
     enrollment_id: ids.enrollment,
+  })
+  const { callSheet } = (await json(response)) as { callSheet: DiscoveryCallSheet }
+  assert.deepEqual(callSheet, {
+    baselineScore: null,
+    rescores: [],
+    touchpoints: [],
+    consultBrief: null,
+    habitCommitments: [],
+    feedback: "Erster Stand.",
   })
 })
 
-test("a legacy enrollment without a row, and a finalised call, both save (no freeze)", async () => {
-  for (const loaded of [intake, { ...intake, callFinalizedAt: "2026-09-27T12:00:00.000Z" }]) {
-    const { deps: d, recorded } = deps({ loadIntake: async () => loaded })
-    const response = await createDiscoveryCallSheetHandler(d)(
-      patchRequest({ baseline_score: null }),
-      params(),
-    )
-    assert.equal(response.status, 200)
-    assert.deepEqual(recorded.upserts[0]!.row, {
-      baseline_score: null,
-      enrollment_id: ids.enrollment,
-    })
-  }
+test("a finalised call still saves (no freeze)", async () => {
+  const { deps: d, recorded } = deps({
+    loadIntake: async () => ({ ...intake, callFinalizedAt: "2026-09-27T12:00:00.000Z" }),
+  })
+  const response = await createDiscoveryCallSheetHandler(d)(
+    patchRequest({ baseline_score: null }),
+    params(),
+  )
+  assert.equal(response.status, 200)
+  assert.deepEqual(recorded.upserts[0]!.row, { ...EMPTY_ROW, enrollment_id: ids.enrollment })
 })
 
 test("a failed write is a 503, never a silent success", async () => {
@@ -261,18 +348,39 @@ test("a failed write is a 503, never a silent success", async () => {
   }
 })
 
-test("saveDiscoveryCallSheet surfaces a database error", async () => {
-  const client = {
+test("saveDiscoveryCallSheet surfaces a read or a write error — and writes nothing after a failed read", async () => {
+  let writes = 0
+  const client = (readError: Error | null, writeError: Error | null) => ({
     from: () => ({
-      upsert: () => ({
-        select: () => ({ single: async () => ({ data: null, error: new Error("denied") }) }),
+      select: () => ({
+        eq: () => ({ maybeSingle: async () => ({ data: null, error: readError }) }),
       }),
+      upsert: () => {
+        writes += 1
+        return {
+          select: () => ({ single: async () => ({ data: null, error: writeError }) }),
+        }
+      },
     }),
-  }
+  })
   await assert.rejects(
-    saveDiscoveryCallSheet(ids.enrollment, { feedback: "x" }, client as never),
+    saveDiscoveryCallSheet(
+      ids.enrollment,
+      { feedback: "x" },
+      client(new Error("no read"), null) as never,
+    ),
+    /no read/,
+  )
+  assert.equal(writes, 0)
+  await assert.rejects(
+    saveDiscoveryCallSheet(
+      ids.enrollment,
+      { feedback: "x" },
+      client(null, new Error("denied")) as never,
+    ),
     /denied/,
   )
+  assert.equal(writes, 1)
 })
 
 // --- the §6 contracts -------------------------------------------------------------------

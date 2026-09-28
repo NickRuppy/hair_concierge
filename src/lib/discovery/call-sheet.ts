@@ -93,20 +93,52 @@ export type DiscoveryCallSheetPatch = {
   feedback?: string | null
 }
 
+/** A row that does not exist yet reads as the table's column defaults. */
+const CALL_SHEET_DEFAULTS = {
+  baseline_score: null,
+  rescores: [],
+  touchpoints: [],
+  consult_brief: null,
+  habit_commitments: [],
+  feedback: null,
+} as const
+
 /**
- * Upsert (consult-runsheet T5): a legacy enrollment has no row yet, so the first save
- * inserts it (absent columns take their defaults); later saves update only the columns the
- * patch names — the brief and the follow-up save independently without overwriting each
- * other. Returns the stored row as the parser reads it.
+ * Read-merge-write (consult-runsheet T5): read the stored row (or the column defaults for a
+ * legacy enrollment without one), lay the validated patch over it, and upsert the FULL row.
+ * Every column is written explicitly, so a partial save never depends on how PostgREST
+ * treats omitted columns on the insert or the update path — the brief and the follow-up
+ * save independently, and each keeps what the other stored. Returns the stored row as the
+ * parser reads it.
+ *
+ * Not atomic: two saves that interleave read/write can lose the earlier one. Accepted for a
+ * single admin clicking one „Speichern" at a time; no schema change (RPC) in this slice.
  */
 export async function saveDiscoveryCallSheet(
   enrollmentId: string,
   patch: DiscoveryCallSheetPatch,
   client: SupabaseClient,
 ): Promise<DiscoveryCallSheet> {
+  const { data: stored, error: readError } = await client
+    .from(DISCOVERY_CALL_SHEETS_TABLE)
+    .select(COLUMNS)
+    .eq("enrollment_id", enrollmentId)
+    .maybeSingle()
+  if (readError) throw readError
+  const current: Record<string, unknown> = isRecord(stored) ? stored : {}
+  const row = {
+    baseline_score: current.baseline_score ?? CALL_SHEET_DEFAULTS.baseline_score,
+    rescores: current.rescores ?? CALL_SHEET_DEFAULTS.rescores,
+    touchpoints: current.touchpoints ?? CALL_SHEET_DEFAULTS.touchpoints,
+    consult_brief: current.consult_brief ?? CALL_SHEET_DEFAULTS.consult_brief,
+    habit_commitments: current.habit_commitments ?? CALL_SHEET_DEFAULTS.habit_commitments,
+    feedback: current.feedback ?? CALL_SHEET_DEFAULTS.feedback,
+    ...patch,
+    enrollment_id: enrollmentId,
+  }
   const { data, error } = await client
     .from(DISCOVERY_CALL_SHEETS_TABLE)
-    .upsert({ ...patch, enrollment_id: enrollmentId }, { onConflict: "enrollment_id" })
+    .upsert(row, { onConflict: "enrollment_id" })
     .select(COLUMNS)
     .single()
   if (error) throw error
