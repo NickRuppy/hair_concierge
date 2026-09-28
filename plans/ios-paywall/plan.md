@@ -36,6 +36,7 @@ Non-goals (unchanged): web billing/entitlements and every web page; web self-ser
 | Subscription group | reference name `Chaarlie Scanner` |
 | Products | `de.chaarlie.scanner.monthly` (P1M, 4,99 €) · `de.chaarlie.scanner.yearly` (P1Y, 39,99 €, intro offer free P1W) |
 | Group level | yearly = level 1, monthly = level 2 |
+| Bundle ID | `de.chaarlie.app` (Release; Debug `de.chaarlie.scanner.local`, HostedPilot `de.chaarlie.scanner.pilot`) — D13 |
 | Storefronts | DEU, AUT, CHE, LIE (Apple auto-converts local prices) |
 | Purchase binding | `Product.PurchaseOption.appAccountToken(<Supabase user UUID>)` |
 | Transaction endpoint | `POST /api/mobile/v1/app-store/transactions` body `{ signedTransactions: string[] }` (1–20 JWS, each ≤ 16 KB) |
@@ -45,7 +46,7 @@ Non-goals (unchanged): web billing/entitlements and every web page; web self-ser
 | Delete endpoint | `POST /api/mobile/v1/account/delete` body `{ requestId: UUID, confirm: "delete" }` → `{ status: "deleted" }` |
 | Server env | `MOBILE_PAYWALL_ENABLED`, `APP_STORE_BUNDLE_ID`, `APP_STORE_APP_APPLE_ID`, `APP_STORE_ENVIRONMENTS` (allowed: `Production`, `Sandbox`; `Xcode` only when `MOBILE_AUTH_MODE=local`), `APP_STORE_ISSUER_ID`, `APP_STORE_KEY_ID`, `APP_STORE_PRIVATE_KEY` (Server API, reconciliation only) |
 
-Final bundle ID / product IDs are set in App Store Connect after Apple enrollment; product IDs above are the plan values and are permanent once created in App Store Connect (confirm at setup, §5).
+Bundle ID and product IDs are confirmed (D13) and are created in App Store Connect after Apple enrollment; product IDs are permanent once created there.
 
 ## 5. Decision coverage
 
@@ -63,6 +64,13 @@ Confirmed with Nick (2026-09-27; A1–A3 + journey confirmed in the same convers
 - D10 Deletion = real deletion; before deleting keep an anonymous quiz-answer copy (answers + month + channel only), keep scan events and product submissions with identifiers stripped, anonymize legally required billing/cancellation records (purge after retention), delete leads/funnel remnants, delete person in Customer.io and PostHog.
 - D11 Seller = Haarmony LLC (US), Apple org enrollment pending.
 - D12 (after counterpart review PW-06) Deletion is fully automatic for every account. Parent rows that other tables depend on (leads, funnel sessions, trial enrollments, retained billing/cancellation records) are **anonymized in place instead of deleted**, so no FK chain is rerouted. Every retained row of the deleted person is tagged with one fresh random **anonymous subject ID** (stored nowhere else; never the old user ID, which survives in Stripe/Apple/backups), so kept data stays grouped as one anonymous profile.
+- D13 (2026-09-28) Follow-up rulings:
+  - **Q3** hashed trial anti-abuse fingerprints are kept 3 years; the default stays `keep_hashed` behind `private.account_deletion_policy()`.
+  - **Q5** the production backup tables `profiles_backup_20260822` and `billing_subscriptions_backup_20260822` are kept; Nick accepts the edge case that they still hold emails of later-deleted accounts (documented exception, not a pre-activation drop).
+  - Billing Grace Period **16 days** (App Store Connect setting).
+  - Final bundle ID `de.chaarlie.app` (Release configuration); product IDs `de.chaarlie.scanner.monthly` / `de.chaarlie.scanner.yearly`.
+  - Paywall tiles (supersedes D8's compact picker and Apple's disclosure line): two custom tiles, yearly preselected; the billed amount ("39,99 €/Jahr", "4,99 €/Monat") is the most prominent price, the monthly equivalent ("nur 3,33 €/Monat"), the savings badge ("−33 %") and the trial line ("1 Woche kostenlos") are visibly subordinate (Guideline 3.1.2); our own renewal disclosure for the selected plan sits above the CTA ("Kostenlos testen" with an active free trial, else "Abonnieren").
+  - A dedicated App Store compliance check against the App Review Guidelines is a required step before the first submission.
 
 Inherited from evidence or contract:
 - Apple Guideline 3.1.1 (digital subscriptions via IAP), 3.1.2 (price/term disclosure, restore), 5.1.1(v) (account deletion; deletion does not cancel Apple subscriptions — inform + link to manage).

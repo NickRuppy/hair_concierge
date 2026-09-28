@@ -39,3 +39,12 @@
 - Migrations not applied anywhere but disposable Postgres; production apply needs a quiet window and a Supabase-branch check of hosted GoTrue privileges (runbook §4).
 - Stripe deleted-account detection relies on `lead_id`/`trial_enrollment_id` metadata.
 - Deferred minors (ledger): product IDs duplicated in server allowlist and `SubscriptionRow.swift`; completion responses lack `access` (extra bootstrap); source photo 900 px; opt-in Postgres tests not in CI.
+
+## Addendum 2026-09-28 — Nick's follow-up rulings and custom plan tiles
+
+- **Open with Nick → resolved (D13 in plan §5):** Q3 keep hashed trial fingerprints 3 years (default `keep_hashed` unchanged); Q5 production backup tables `profiles_backup_20260822` / `billing_subscriptions_backup_20260822` kept as a documented, accepted exception. No remaining open item blocks activation from Nick's side; the activation order now includes a dedicated App Store compliance check against the App Review Guidelines before the first submission (runbook §7).
+- Further D13 rulings: Billing Grace Period 16 days; bundle ID `de.chaarlie.app` (Release configuration of the app target only — Debug, HostedPilot and the test targets are unchanged); product IDs `de.chaarlie.scanner.monthly` / `.yearly`.
+- **Plan tiles (D13, supersedes D8's compact picker):** custom `SubscriptionStoreControlStyle` pinned to the store's bottom bar; purchase via `Option.subscribe()` inside `SubscriptionStoreView`, so `.inAppPurchaseOptions` and the start/completion handlers are unchanged. Copy lives in `PaywallPricing` (unit-tested).
+- Checks on the tiles tree: iOS Debug + HostedPilot simulator builds pass; ChaarlieTests (signed simulator, iPhone 17 Pro / iOS 26.5): 205 run, 0 failures, 2 opt-in skips (191 before + 14 `PaywallPricingTests`).
+- Evidence (Xcode-launched Debug build with `Chaarlie.storekit`, real local session at the paywall): `evidence/tiles-yearly-selected.jpg` (trial eligible: "Kostenlos testen"), `evidence/tiles-monthly-selected.jpg` ("Abonnieren", monthly disclosure), `evidence/tiles-ax-xl.jpg` (accessibility-extra-large: tiles stack, the store moves the controls into the scroll view; left unscrolled, right scrolled). Tapping the CTA opens Apple's purchase sheet for the selected product (cancelled, no transaction); the selection survives the cancel.
+- Not re-run: a completed purchase through the new CTA (kept Nick's Xcode StoreKit transaction store untouched); UI tests; the paywall status-row scenarios with the taller tile block.

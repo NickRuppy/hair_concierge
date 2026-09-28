@@ -1,6 +1,6 @@
 # App Store subscriptions & account deletion runbook
 
-Status: code for Tasks 1–7 is implemented on `codex/ios-paywall`, not merged, not deployed. `MOBILE_PAYWALL_ENABLED` defaults off everywhere. Nothing in this document has been executed — it is the checklist for activation. Plan of record: [`plans/ios-paywall/plan.md`](../plans/ios-paywall/plan.md); global constraints and decisions D1–D12/A1–A3: `.superpowers/sdd/plan/constraints.md`; deletion classification: [`plans/ios-paywall/deletion-inventory.md`](../plans/ios-paywall/deletion-inventory.md).
+Status: code for Tasks 1–7 is implemented on `codex/ios-paywall`, not merged, not deployed. `MOBILE_PAYWALL_ENABLED` defaults off everywhere. Nothing in this document has been executed — it is the checklist for activation. Plan of record: [`plans/ios-paywall/plan.md`](../plans/ios-paywall/plan.md); global constraints and decisions D1–D12/A1–A3: `.superpowers/sdd/plan/constraints.md`, follow-up rulings D13 (2026-09-28) in the plan §5; deletion classification: [`plans/ios-paywall/deletion-inventory.md`](../plans/ios-paywall/deletion-inventory.md).
 
 ## 1. Prerequisites owned by Nick
 
@@ -12,7 +12,7 @@ None of the following exist yet; they block everything else in this document.
 | Paid Apps Agreement | Signed in App Store Connect once enrollment completes. |
 | US tax forms (W-9) + bank account | Required before any paid app/IAP can go live. |
 | Small Business Program application | Reduces Apple's commission from 30% to 15% below the program's revenue threshold — apply once enrollment is active. |
-| App Store Connect app record | Final bundle ID set here. The Xcode project currently ships `de.chaarlie.scanner.local` (Debug) and `de.chaarlie.scanner.pilot` (HostedPilot) as placeholders; the Release configuration also still reads `de.chaarlie.scanner.local` — **replace it with the real bundle ID at setup**, and update `APP_STORE_BUNDLE_ID` (§3) to match exactly. |
+| App Store Connect app record | Register the final bundle ID **`de.chaarlie.app`** (D13). The Xcode Release configuration already uses it; Debug (`de.chaarlie.scanner.local`) and HostedPilot (`de.chaarlie.scanner.pilot`) keep their own IDs. `APP_STORE_BUNDLE_ID` (§3) must equal `de.chaarlie.app` exactly. |
 
 ## 2. App Store Connect setup
 
@@ -34,12 +34,12 @@ Enable storefronts **DEU, AUT, CHE, LIE** and let Apple auto-convert the base (D
 
 ### 2.3 Billing Grace Period
 
-**Product decision to confirm with Nick before enabling** — this is not covered by D1–D12. Default suggestion: enable Billing Grace Period with **6 days**. It affects `hasActiveAppStoreAccess`'s `in_billing_retry` branch (`src/lib/app-store/state.ts`) — access continues while `gracePeriodExpiresDate > now`, which only has an effect if Apple actually grants a grace period.
+Enable Billing Grace Period with **16 days** (D13; Apple offers 3, 16 or 28 days). It affects `hasActiveAppStoreAccess`'s `in_billing_retry` branch (`src/lib/app-store/state.ts`) — access continues while `gracePeriodExpiresDate > now`, which only has an effect if Apple actually grants a grace period.
 
 ### 2.4 Localization and review
 
 - German (DE) localization for both products and the subscription group (all UI copy is German per repo convention).
-- One review screenshot per product showing the paywall (`plans/ios-paywall/evidence/task4-paywall-fixture.jpg` is a starting point, not final review art — retake against a real build once the group ID is real).
+- One review screenshot per product showing the paywall (`plans/ios-paywall/evidence/tiles-yearly-selected.jpg` shows the current tiles; not final review art — retake against a real build once the group ID is real).
 
 ### 2.5 App Store Server Notifications V2
 
@@ -78,7 +78,7 @@ All names below are read verbatim from the current code (`src/lib/app-store/veri
 | Variable | Meaning | Safe default before activation |
 |---|---|---|
 | `MOBILE_PAYWALL_ENABLED` | Master rollout flag. `!== "true"` → bootstrap reports `access: {status:"active", source:"open"}` for everyone, no DB read, no route gating. | unset (off) |
-| `APP_STORE_BUNDLE_ID` | Must equal App Store Connect's app bundle ID exactly (`^[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$`). | set once the real bundle ID exists (§1) |
+| `APP_STORE_BUNDLE_ID` | Must equal App Store Connect's app bundle ID exactly (`^[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$`): `de.chaarlie.app` (D13). | set once the app record exists (§1) |
 | `APP_STORE_APP_APPLE_ID` | Numeric App Store app ID. Required whenever `Production` is in `APP_STORE_ENVIRONMENTS`. | unset until App Store Connect assigns it |
 | `APP_STORE_ENVIRONMENTS` | Comma-separated allow-list read by both webhook and transaction routes. Allowed values: `Production`, `Sandbox`, `Xcode`. `Xcode` is accepted **only** when the full local-mode predicate holds (`MOBILE_API_ENABLED=true`, `MOBILE_AUTH_MODE=local`, `MOBILE_PILOT_ENABLED !== "true"`, loopback Supabase URL, `MOBILE_AUTH_CALLBACK_URL=chaarlie-local://auth`) — otherwise the verifier config fails closed. | `Sandbox` only, during sandbox testing; add `Production` at go-live |
 | `APP_STORE_ISSUER_ID`, `APP_STORE_KEY_ID`, `APP_STORE_PRIVATE_KEY` | App Store Connect API key for the reconcile helper (§2.6). PEM may use `\n` escapes. Not required for the paywall or webhook to function — only for manual/cron reconciliation, which is not wired up in this branch. | unset until the reconcile helper is wired to a route/cron |
@@ -106,7 +106,7 @@ All names below are read verbatim from the current code (`src/lib/app-store/veri
 2. **Before production**, verify on a Supabase branch (not production):
    - the `postgres` role's DELETE privilege on `auth.audit_log_entries`, `auth.refresh_tokens` and `auth.flow_state` in the hosted GoTrue schema — the deletion routine deletes rows from these directly (no FK);
    - the cost of the routine's payload scans (`auth.audit_log_entries`, `rate_limits`) at production table size, since these are scanned by user id/email without an index guarantee in the replay used for testing.
-3. **Drop or scrub production-only backup tables before activation** (open with Nick — Q5, deletion-inventory §9): `public.profiles_backup_20260822`, `public.billing_subscriptions_backup_20260822`. These are manual tables invisible to the migration replay; if left in place they retain PII the deletion routine cannot reach.
+3. **Accepted exception — production-only backup tables stay** (Q5, D13, deletion-inventory §9): `public.profiles_backup_20260822` and `public.billing_subscriptions_backup_20260822` are kept. They are manual tables invisible to the migration replay and outside the deletion routine's reach, so they can still hold emails of accounts deleted later; Nick accepted this edge case on 2026-09-28. No drop/scrub step before activation.
 4. **Cron registration**: `/api/account-deletion/reconcile` is already listed in `vercel.json` (`"schedule": "20 * * * *"`) and needs no separate registration step — it activates on the next deploy that includes this branch, independent of `MOBILE_PAYWALL_ENABLED`. It retries external cleanup (Customer.io/PostHog/storage) for in-progress deletions and then purges anonymized rows past `purge_after`.
 
 ### 4.3 Concurrency and failure notes (for the operator running step 1–2, not a gate)
@@ -124,7 +124,7 @@ All names below are read verbatim from the current code (`src/lib/app-store/veri
 3. Capture screenshots via `xcrun simctl io <device> screenshot <path>.png` against the running simulator — not in-app `drawHierarchy` snapshots, which mis-render the iOS 26 glass materials used by `SubscriptionStoreView`.
 4. Drive purchase/refund/expire/Ask-to-Buy scenarios from Xcode's own **Debug ▸ StoreKit ▸ Manage Transactions** (Transaction Manager) window while the app runs. The next bootstrap call or the next 402 from a gated endpoint returns the app to the paywall — there is no separate "refresh" step in the app.
 5. For the full local flow (server included, not just the UI), point the app at the local backend with `MOBILE_PAYWALL_ENABLED=1`, `MOBILE_AUTH_MODE=local`, and add `Xcode` to `APP_STORE_ENVIRONMENTS` (only accepted under the full local-mode predicate — see §3) against a synthetic user with no access.
-6. UI-only rendering (no server, no purchase): launch argument `--ui-design-review` with env `CHAARLIE_DESIGN_SCENARIO=paywall` (or `profile-abo`, `delete-notice`, `delete-confirm`). This shows layout only — transaction posts fail locally in this fixture (no backend), so it renders the "Kauf erfolgreich – Freischaltung läuft …" retry state by design, not as a bug.
+6. UI-only rendering (no server, no purchase): launch argument `--ui-design-review` with env `CHAARLIE_DESIGN_SCENARIO=paywall` (or `profile-abo`, `delete-notice`, `delete-confirm`). Set them in Xcode's scheme editor: an open Xcode project does not reload scheme edits made on disk. This shows layout only — transaction posts fail locally in this fixture (no backend), so it renders the "Kauf erfolgreich – Freischaltung läuft …" retry state by design, not as a bug.
 7. Swift unit tests: use the signed-simulator command from `ios/README.md` (`CODE_SIGNING_ALLOWED=YES CODE_SIGN_IDENTITY=-`, simulator id `26C40D88-109F-4071-A7FF-D0A982963B9C`) — Keychain-backed session tests need the simulator entitlement, which an unsigned build does not have.
 
 ## 6. Sandbox + TestFlight test script
@@ -147,8 +147,9 @@ Run each of these against a TestFlight build with `APP_STORE_ENVIRONMENTS` inclu
 1. **Configure** — §2 (App Store Connect) and §3 (server env), with `MOBILE_PAYWALL_ENABLED` still unset/false.
 2. **Deploy** with the flag off. Nothing changes for the current pilot population.
 3. **Sandbox test** — run §6 against the deployed backend with `Sandbox` (and `Xcode` locally) in `APP_STORE_ENVIRONMENTS`.
-4. **Flip** `MOBILE_PAYWALL_ENABLED=true` and redeploy (same two-step caveat as other flag flips in this repo — see `docs/freemium-flag-flip-runbook.md` for why an env-var change alone is not live on Vercel until the next deployment is built and promoted).
-5. **Monitor** — Sentry (see below) and the funnel described in §6, on real traffic.
+4. **App Store compliance check** — a dedicated review of the build, paywall, metadata and account deletion against the App Review Guidelines (at least 3.1.1, 3.1.2 subscription price/term disclosure and billed-amount prominence, 5.1.1(v)) before the first submission (D13).
+5. **Flip** `MOBILE_PAYWALL_ENABLED=true` and redeploy (same two-step caveat as other flag flips in this repo — see `docs/freemium-flag-flip-runbook.md` for why an env-var change alone is not live on Vercel until the next deployment is built and promoted).
+6. **Monitor** — Sentry (see below) and the funnel described in §6, on real traffic.
 
 **Rollback** = set `MOBILE_PAYWALL_ENABLED` back to off (or unset) and redeploy. Bootstrap immediately reverts to `access: {status:"active", source:"open"}` for everyone and route gating stops (the 402 checks are all downstream of `resolveMobileAccess`, which short-circuits before any DB read when the flag is off). Rollback does not undo: App Store transactions/status rows already recorded (they simply stop being read for access decisions), or any account deletions already completed.
 
@@ -161,15 +162,15 @@ Run each of these against a TestFlight build with `APP_STORE_ENVIRONMENTS` inclu
 | AGB / Datenschutz / Impressum | Must name **Haarmony LLC** as the seller/operator (D11), consistent with the App Store Connect seller name Apple will show at checkout. |
 | Privacy policy — anonymized statistics | Add a sentence describing that quiz answers are retained anonymously (answers + month + channel only, no identifiers) after account deletion, per D10 / deletion-inventory §"Kept anonymous, no purge". |
 | Privacy policy — anonymous subject ID re-identification note | State that other retained records (billing/cancellation evidence, anonymized leads/sessions) are tagged with a random anonymous subject ID that is never derived from or stored against the deleted account's original user ID (D12), and that this ID cannot be used to re-identify the person from Chaarlie's own data. |
-| Privacy policy — trial anti-abuse fingerprints | Open with Nick (Q3): default behavior keeps hashed device/claim fingerprints for 3 years after deletion, unlinked from the account, for trial fraud prevention; the alternative (`erase`) drops them immediately via the existing rights-erasure path. Whichever is chosen needs a corresponding privacy-policy sentence. |
+| Privacy policy — trial anti-abuse fingerprints | Decided (Q3, D13): hashed device/claim fingerprints are kept for 3 years after deletion, unlinked from the account, for trial fraud prevention (`private.account_deletion_policy() = 'keep_hashed'`). Add a corresponding privacy-policy sentence. |
 | Retention periods (A2) | State the two constants explicitly: anonymized billing records retained **10 years**, cancellation evidence **3 years**, then automatic purge. |
 | Billing records after deletion | "Subscription mirror rows are deleted with the account; invoices remain with Stripe/PayPal/Apple as merchant of record." (`billing_subscriptions` and App Store transaction/status rows cascade-delete; the providers hold the legally relevant records independently.) |
 | App Privacy nutrition labels (App Store Connect) | Declare **Purchases** (subscription status) and **Identifiers** (the account's Supabase user ID, sent as `appAccountToken`) as collected/linked. **Usage Data**: none, unless a native analytics SDK is added later (explicitly out of scope per constraints.md §3). |
 
 ## 9. Open items
 
-- **Q3 (open with Nick):** trial anti-abuse fingerprint retention — keep hashed 3 years (default, `private.account_deletion_policy() = 'keep_hashed'`) vs. erase immediately. Needs a decision before the legal checklist (§8) can be finalized.
-- **Q5 (open with Nick):** `profiles_backup_20260822` and `billing_subscriptions_backup_20260822` must be dropped or scrubbed in production before activation (§4.2 step 3) — these are manual backup tables outside the migration history and outside the deletion routine's reach.
+- **Q3 (resolved 2026-09-28, D13):** trial anti-abuse fingerprints are kept hashed for 3 years (`keep_hashed` stays the default); the privacy-policy sentence in §8 is still to be written.
+- **Q5 (resolved 2026-09-28, D13 — accepted exception):** `profiles_backup_20260822` and `billing_subscriptions_backup_20260822` stay in production (§4.2 step 3); they may retain emails of later-deleted accounts.
 - **Live Customer.io/PostHog deletion has never been exercised against real workspaces.** The `User Deleted` Customer.io event and the PostHog `persons/bulk_delete` call are implemented and unit-tested with fakes only. Run one real deletion against sandbox/test accounts in both systems before relying on this for GDPR-style requests. Note: PostHog anonymous distinct IDs that were **never merged into a person** (e.g. pre-login anonymous events) are not covered by `persons/bulk_delete` and will survive.
 - **Stripe deleted-account detection relies on metadata.** The Stripe deleted-account guard (`src/lib/stripe/deleted-account.ts`) only fires when a `checkout.session.completed`/`async_payment_succeeded`/`customer.subscription.updated` event's `trial_enrollment_id` or `lead_id` metadata points at an already-anonymized row. A Stripe event without that metadata for a deleted account's residual checkout session would not be caught by this guard.
 - **Purge retry note.** The retention purge deletes anonymized rows past `purge_after` per table in its own subtransaction; a row still referenced by another live account's data (e.g. a lead shared by email with an unrelated live user) is kept and reported as `stillReferenced`, not deleted — expected behavior, not a bug, but worth knowing when auditing purge completeness.
