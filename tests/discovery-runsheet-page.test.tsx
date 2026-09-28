@@ -22,7 +22,10 @@ import {
   formatRunsheetScore,
   runsheetChecklistLines,
 } from "../src/components/discovery/cockpit/runsheet-parts"
-import { composeRunsheetProducts } from "../src/components/discovery/cockpit/runsheet-products"
+import {
+  composeRunsheetOutsideRoutine,
+  composeRunsheetProducts,
+} from "../src/components/discovery/cockpit/runsheet-products"
 import { parseDiscoveryCallSheet, type DiscoveryCallSheet } from "../src/lib/discovery/call-sheet"
 import {
   buildDiscoveryCockpitView,
@@ -31,6 +34,7 @@ import {
   type DiscoveryCallIntake,
   type DiscoveryCockpitModel,
 } from "../src/lib/discovery/cockpit"
+import { discoveryConcernCoverageInput } from "../src/lib/discovery/concern-recipe-view"
 import type { DiscoveryEnrollment } from "../src/lib/discovery/enrollment"
 import type { DiscoveryIdealStep } from "../src/lib/discovery/load-ideal-routine"
 import type { DiscoveryParticipantVerdict } from "../src/lib/discovery/load-participant-verdicts"
@@ -190,15 +194,18 @@ const verdicts: DiscoveryParticipantVerdict[] = [
   },
 ]
 
-function model(): DiscoveryCockpitModel {
-  const items = [shampooItem, scannedConditioner]
+function model(
+  input: { steps?: DiscoveryIdealStep[]; items?: DiscoveryIntakeItem[] } = {},
+): DiscoveryCockpitModel {
+  const steps = input.steps ?? [shampooStep, conditionerStep]
+  const items = input.items ?? [shampooItem, scannedConditioner]
   return {
     status: "ready",
-    steps: [shampooStep, conditionerStep],
+    steps,
     verdicts,
     previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
     routine: composeDiscoveryRefinedRoutine({
-      steps: [shampooStep, conditionerStep],
+      steps,
       items,
       decisions: [],
       swapProducts: [],
@@ -279,6 +286,12 @@ function entryOf(markup: string, categoryLabel: string): string {
   return phase3.slice(start, phase3.indexOf("Entscheidung", start))
 }
 
+/** The „Nicht in der Idealroutine" footer's markup; "" when the page renders none. */
+function footerOf(markup: string): string {
+  const start = markup.indexOf(">Nicht in der Idealroutine</h2>")
+  return start < 0 ? "" : markup.slice(start, markup.indexOf("</section>", start))
+}
+
 // --- the page ---------------------------------------------------------------------------
 
 test("the runsheet renders its six phases in order", async () => {
@@ -330,7 +343,12 @@ test("join rule is display only: the research gate still holds and still blocks 
   const joined = display.tauschenOderNeu.find((entry) => entry.step.category === "conditioner")
   assert.ok(joined?.research)
   const markup = await renderPage()
+  // F1/F4: the SAME render shows the item inside its category and still blocks finalising —
+  // the gate reads the untouched projection, never the display join.
+  assert.ok(entryOf(markup, "Conditioner").includes("Ihr Produkt — noch in Recherche"))
   assert.ok(markup.includes("Erst Recherche abschließen — 1 Produkt noch in Recherche."))
+  // It lives in the Klären banner, never in „Nicht in der Idealroutine" (T4 c).
+  assert.ok(!footerOf(markup).includes(GTIN))
 })
 
 test("without research the empty step still reads as a gap — the join only fires on research", () => {
@@ -546,6 +564,169 @@ test("join rule (c): research in a category whose step is BOUND to her product j
   const entry = entryOf(markup, "Shampoo")
   assert.ok(entry.includes("Passt nicht zu deinem Haar"))
   assert.ok(!entry.includes("noch in Recherche"))
+})
+
+// --- T4 (b): the recipe's „hat sie" counts what she captured, research included -----------
+
+/** A personal-plan quiz lead with „Trockene Längen" as her main problem (primary: Conditioner). */
+const dryLengthsLead = {
+  id: "60000000-0000-4000-8000-000000000002",
+  quiz_kind: "personal_plan",
+  quiz_answers: {
+    kind: "personal_plan",
+    version: 3,
+    answers: {
+      texture: "straight",
+      thickness: "fine",
+      currentConcerns: ["dry_lengths"],
+      primaryConcern: "dry_lengths",
+    },
+  },
+}
+
+/** The coverage pills of one „Damit anfangen" row of the recipe. */
+function recipePrimaryRow(markup: string, categoryLabel: string): string {
+  const block = markup.slice(markup.indexOf(">Damit anfangen</h3>"))
+  const rows = block.slice(0, block.indexOf("</ul>")).split("<li")
+  const row = rows.find((entry) => entry.includes(`>${categoryLabel}</span>`))
+  assert.ok(row, `no recipe row for ${categoryLabel}`)
+  return row
+}
+
+test("recipe: her scanned conditioner still in research counts as „hat sie“", async () => {
+  const view = buildDiscoveryCockpitView(model())
+  assert.ok(discoveryConcernCoverageInput(view).owned.has("conditioner"))
+  const markup = await renderPage({ loadQuizLead: async () => dryLengthsLead })
+  const row = recipePrimaryRow(markup, "Conditioner")
+  assert.ok(row.includes(">hat sie</span>"), row)
+  assert.ok(!row.includes("hat sie nicht"), row)
+  // Control: without that capture the same row reads „hat sie nicht".
+  const without = await renderPage({
+    loadQuizLead: async () => dryLengthsLead,
+    loadModel: async () => model({ items: [shampooItem] }),
+  })
+  assert.ok(recipePrimaryRow(without, "Conditioner").includes("hat sie nicht"))
+})
+
+// --- T4 (c): „Nicht in der Idealroutine" never contradicts the page above -----------------
+
+function emptyStep(
+  category: DiscoveryIdealStep["category"],
+  role: DiscoveryIdealStep["role"],
+  categoryLabel: string,
+): DiscoveryIdealStep {
+  return {
+    ...conditionerStep,
+    decisionKey: `decision:${category}:${role}:gap`,
+    category,
+    role,
+    categoryLabel,
+    roleLabel: categoryLabel,
+  }
+}
+
+function declinedItem(category: DiscoveryIntakeItem["category"], n: number): DiscoveryIntakeItem {
+  return {
+    id: `50000000-0000-4000-8000-0000000001${String(n).padStart(2, "0")}`,
+    category,
+    source: "none",
+    brandText: null,
+    productNameText: null,
+    barcodeIdentifier: null,
+    productId: null,
+    productSubmissionId: null,
+    createdAt: "2026-09-20T10:10:00.000Z",
+  }
+}
+
+/** Nomi, fuller: Leave-in/Bondbuilder/Kopfhautpflege/Hitzeschutz are steps she has nothing for. */
+function nomiFull(): DiscoveryCockpitModel {
+  return model({
+    steps: [
+      shampooStep,
+      conditionerStep,
+      emptyStep("leave_in", "post_wash_leave_in", "Leave-in"),
+      emptyStep("bondbuilder", "specialized_bond_treatment", "Bondbuilder"),
+      emptyStep("scalp_care", "scalp_comfort", "Kopfhautpflege"),
+      emptyStep("heat_protectant", "pre_heat_protection", "Hitzeschutz"),
+    ],
+    items: [
+      shampooItem,
+      scannedConditioner,
+      // „benutze ich nicht" for three step categories and for oil, which has no step.
+      declinedItem("leave_in", 1),
+      declinedItem("bondbuilder", 2),
+      declinedItem("heat_protectant", 3),
+      declinedItem("oil", 4),
+    ],
+  })
+}
+
+test("footer: never names a category that is a step above — only the genuinely unused ones", async () => {
+  const markup = await renderPage({ loadModel: async () => nomiFull() })
+  const footer = footerOf(markup)
+  assert.ok(footer, "the footer renders")
+  for (const label of ["Leave-in", "Bondbuilder", "Kopfhautpflege", "Hitzeschutz", "Conditioner"]) {
+    assert.ok(!footer.includes(label), `footer names ${label}: ${footer}`)
+  }
+  assert.ok(footer.includes("Öl — benutzt sie nicht. Keine Entscheidung nötig."), footer)
+  // Her product in research lives in the Klären banner only.
+  assert.ok(!footer.includes("Noch in Recherche"))
+  assert.ok(!footer.includes(GTIN))
+  // The unanswered categories without a step are still asked about.
+  assert.ok(footer.includes("Nicht angegeben:"), footer)
+  assert.ok(footer.includes("— im Call fragen."))
+})
+
+test("footer: products the buckets or Klären already show are not listed a second time", () => {
+  const categoryOpen = researchEntry({
+    itemId: "50000000-0000-4000-8000-0000000000b1",
+    category: null,
+    reason: "category_unknown",
+    label: "Balea Wunderpflege",
+  })
+  const noStep = researchEntry({
+    itemId: "50000000-0000-4000-8000-0000000000b2",
+    category: "mask",
+    reason: "no_ideal_step",
+    label: "Garnier Maske",
+  })
+  const styling = researchEntry({
+    itemId: "50000000-0000-4000-8000-0000000000b3",
+    category: null,
+    reason: "styling_not_evaluated",
+    label: "Taft Spray",
+  })
+  const view = buildDiscoveryCockpitView(model())
+  const outside = composeRunsheetOutsideRoutine({
+    steps: view.steps,
+    unassigned: [...view.unassigned, categoryOpen, noStep, styling],
+    // mask has a no-step product (Weglassen), conditioner has a step and research, oil is
+    // genuinely unused.
+    declinedCategories: ["conditioner", "mask", "oil"],
+    unansweredCategories: ["shampoo", "mask", "leave_in"],
+    submitted: true,
+  })
+  assert.deepEqual(outside, { declined: ["oil"], unanswered: ["leave_in"] })
+  // Before submitting, unanswered categories are simply not done yet.
+  assert.deepEqual(
+    composeRunsheetOutsideRoutine({
+      steps: view.steps,
+      unassigned: view.unassigned,
+      declinedCategories: [],
+      unansweredCategories: ["leave_in"],
+      submitted: false,
+    }),
+    { declined: [], unanswered: [] },
+  )
+})
+
+test("footer: nothing genuinely unused — no footer at all", async () => {
+  // A draft has no „Nicht angegeben" yet and she declined nothing: no empty frame.
+  const markup = await renderPage({
+    loadIntake: async () => ({ ...intake, state: "draft", submittedAt: null }),
+  })
+  assert.equal(footerOf(markup), "")
 })
 
 // --- pure helpers -------------------------------------------------------------------------

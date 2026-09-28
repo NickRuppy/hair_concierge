@@ -110,6 +110,43 @@ export function composeRunsheetProducts(input: {
   }
 }
 
+export type RunsheetOutsideRoutine = {
+  /** „benutze ich nicht" categories — „— benutzt sie nicht. Keine Entscheidung nötig." */
+  declined: PersonalPlanCategory[]
+  /** Categories she never answered — „Nicht angegeben: … — im Call fragen." */
+  unanswered: PersonalPlanCategory[]
+}
+
+/**
+ * „Nicht in der Idealroutine" (consult-runsheet T4 c): only categories nothing above
+ * already names. A category is left out when it is a step in the Idealroutine (the step
+ * says for itself what she has) or when one of her products of it sits in a bucket, the
+ * Klären banner or the styling line — `deriveBuckets` files every `unassigned` entry into
+ * exactly one of those, so the projection's categories are the represented ones. Products
+ * are never listed here: no-step products stand under „Weglassen", research and open
+ * categories under „Klären", styling on its own line.
+ *
+ * Unanswered categories count only once she has submitted — before that they are simply
+ * not done yet.
+ */
+export function composeRunsheetOutsideRoutine(input: {
+  steps: ReadonlyArray<{ category: PersonalPlanCategory }>
+  unassigned: ReadonlyArray<{ category: PersonalPlanCategory | null }>
+  declinedCategories: readonly PersonalPlanCategory[]
+  unansweredCategories: readonly PersonalPlanCategory[]
+  submitted: boolean
+}): RunsheetOutsideRoutine {
+  const namedAbove = new Set<PersonalPlanCategory>([
+    ...input.steps.map((step) => step.category),
+    ...input.unassigned.flatMap((entry) => (entry.category ? [entry.category] : [])),
+  ])
+  const unused = (category: PersonalPlanCategory) => !namedAbove.has(category)
+  return {
+    declined: input.declinedCategories.filter(unused),
+    unanswered: input.submitted ? input.unansweredCategories.filter(unused) : [],
+  }
+}
+
 function klaerenEntry(
   entry: RunsheetUnassignedEntry,
   barcodes: ReadonlyMap<string, string | null>,

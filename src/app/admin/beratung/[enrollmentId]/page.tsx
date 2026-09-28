@@ -4,7 +4,6 @@ import { notFound } from "next/navigation"
 import { DiscoveryConcernRecipeSection } from "@/components/discovery/cockpit/concern-recipe"
 import { DiscoveryCallCockpit } from "@/components/discovery/cockpit/discovery-call-cockpit"
 import { DiscoveryIntakeProducts } from "@/components/discovery/cockpit/discovery-intake-products"
-import { DISCOVERY_STYLING_LABEL } from "@/components/discovery/cockpit/usage-options"
 import {
   DISCOVERY_EMAIL_PENDING_LABEL,
   discoveryCockpitStateKey,
@@ -17,7 +16,10 @@ import {
   RUNSHEET_ASK_TOPIC,
   runsheetChecklistLines,
 } from "@/components/discovery/cockpit/runsheet-parts"
-import { composeRunsheetProducts } from "@/components/discovery/cockpit/runsheet-products"
+import {
+  composeRunsheetOutsideRoutine,
+  composeRunsheetProducts,
+} from "@/components/discovery/cockpit/runsheet-products"
 import { DiscoveryRunsheetRoutine } from "@/components/discovery/cockpit/runsheet-routine"
 import {
   DISCOVERY_INTAKE_CATEGORY_COPY,
@@ -35,7 +37,6 @@ import {
   discoveryResearchOpenItems,
   loadDiscoveryCallIntake,
   loadDiscoveryCockpitModel,
-  DISCOVERY_RESEARCH_PENDING_LABEL,
   type DiscoveryCockpitAdminClient,
   type DiscoveryCockpitView,
 } from "@/lib/discovery/cockpit"
@@ -95,11 +96,8 @@ const PREFLIGHT_NO_LEAD = "Zu diesem Konto ist kein Quiz-Lead gebunden."
 const PREFLIGHT_INVALID = "Die Quiz-Antworten sind nicht lesbar."
 const PREFLIGHT_MISSING = "Diese Antworten fehlen für einen vollständigen Plan:"
 const DECLINED_SUFFIX = "— benutzt sie nicht. Keine Entscheidung nötig."
-const NO_STEP_SUFFIX = "— kein Schritt im Idealplan:"
 const UNANSWERED_PREFIX = "Nicht angegeben:"
 const UNANSWERED_SUFFIX = "— im Call fragen."
-const CATEGORY_OPEN_PREFIX = "Kategorie offen:"
-const CATEGORY_OPEN_SUFFIX = "— oben festlegen, dann finalisieren."
 const HEAT_TITLE = "Hitze & Styling"
 const HEAT_DRYING = "Trocknen:"
 const HEAT_NO_TOOLS = "Keine Hitze-Tools"
@@ -423,46 +421,20 @@ function categoryLine(categories: readonly PersonalPlanCategory[]): string {
 }
 
 /**
- * Everything with no decision to make, collapsed: products whose usage is still unknown
- * first („Kategorie offen" — they block finalising until set in the product list),
- * „benutze ich nicht" categories on one grey line, categories the participant left unanswered on the next (only once she has
- * submitted — before that they are simply not done yet — and only those without a routine
- * step, since a step names its own), products outside the
- * Idealroutine on another, and whatever is still being researched on the last — named,
- * so Nick can still mention it.
- *
- * The no-step line names its products, not just their categories: the participant's
- * document lists every one of them under „Brauchst du nicht mehr", and Nick has to be
- * able to read that list here before he finalises and sends it. Only a category without
- * any step lands here (batch 9): a further product of a category that HAS a step sits in
- * that step, and one the call drops shows there as „Weglassen".
+ * „Nicht in der Idealroutine": only the categories nothing above already names (T4 c, see
+ * `composeRunsheetOutsideRoutine`) — „benutze ich nicht" on one grey line, unanswered on
+ * the next. Products never appear here: the buckets, the Klären banner and the styling line
+ * above show each of them once.
  */
 function OutsideRoutine({ view, submitted }: { view: DiscoveryCockpitView; submitted: boolean }) {
-  const noStep = view.unassigned.filter((entry) => entry.reason === "no_ideal_step")
-  const research = view.unassigned.filter((entry) => entry.reason === "research_pending")
-  const styling = view.unassigned.filter((entry) => entry.reason === "styling_not_evaluated")
-  const categoryOpen = discoveryCategoryOpenItems(view)
-  // An unanswered category WITH a routine step already says so at the step itself; the
-  // summary line only carries the ones no step would otherwise mention.
-  const namedAtStep = new Set(
-    view.steps.filter((step) => step.unanswered).map((step) => step.category),
-  )
-  const unanswered = submitted
-    ? view.unansweredCategories.filter((category) => !namedAtStep.has(category))
-    : []
-  if (
-    view.declinedCategories.length === 0 &&
-    unanswered.length === 0 &&
-    noStep.length === 0 &&
-    research.length === 0 &&
-    styling.length === 0 &&
-    categoryOpen.length === 0
-  ) {
-    return null
-  }
-  const noStepCategories = [
-    ...new Set(noStep.flatMap((entry) => (entry.category ? [entry.category] : []))),
-  ]
+  const { declined, unanswered } = composeRunsheetOutsideRoutine({
+    steps: view.steps,
+    unassigned: view.unassigned,
+    declinedCategories: view.declinedCategories,
+    unansweredCategories: view.unansweredCategories,
+    submitted,
+  })
+  if (declined.length === 0 && unanswered.length === 0) return null
 
   return (
     <section className="rounded-xl border bg-card">
@@ -470,29 +442,9 @@ function OutsideRoutine({ view, submitted }: { view: DiscoveryCockpitView; submi
         {OUTSIDE_TITLE}
       </h2>
       <div className="flex flex-col gap-1.5 px-4 py-3 text-[13px] leading-6 text-muted-foreground">
-        {categoryOpen.length > 0 ? (
-          <p className="font-bold text-[var(--status-danger-text)]">{`${CATEGORY_OPEN_PREFIX} ${categoryOpen
-            .map((entry) => entry.label)
-            .join(" · ")} ${CATEGORY_OPEN_SUFFIX}`}</p>
-        ) : null}
-        {view.declinedCategories.length > 0 ? (
-          <p>{`${categoryLine(view.declinedCategories)} ${DECLINED_SUFFIX}`}</p>
-        ) : null}
+        {declined.length > 0 ? <p>{`${categoryLine(declined)} ${DECLINED_SUFFIX}`}</p> : null}
         {unanswered.length > 0 ? (
           <p>{`${UNANSWERED_PREFIX} ${categoryLine(unanswered)} ${UNANSWERED_SUFFIX}`}</p>
-        ) : null}
-        {noStep.length > 0 ? (
-          <p>{`${categoryLine(noStepCategories)} ${NO_STEP_SUFFIX} ${noStep
-            .map((entry) => entry.label)
-            .join(" · ")}`}</p>
-        ) : null}
-        {research.length > 0 ? (
-          <p>{`${DISCOVERY_RESEARCH_PENDING_LABEL}: ${research
-            .map((entry) => entry.label)
-            .join(" · ")}`}</p>
-        ) : null}
-        {styling.length > 0 ? (
-          <p>{`${DISCOVERY_STYLING_LABEL}: ${styling.map((entry) => entry.label).join(" · ")}`}</p>
         ) : null}
       </div>
     </section>
