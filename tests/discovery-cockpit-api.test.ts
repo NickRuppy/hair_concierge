@@ -4,8 +4,11 @@ import { NextRequest, NextResponse } from "next/server"
 
 import { createDiscoveryDecisionsHandler } from "../src/app/api/admin/beratung/[enrollmentId]/decisions/route"
 import { createDiscoveryFinalizeHandler } from "../src/app/api/admin/beratung/[enrollmentId]/finalize/route"
+import { composeRunsheetProducts } from "../src/components/discovery/cockpit/runsheet-products"
 import {
+  buildDiscoveryCockpitView,
   discoveryOwnedProductIdentities,
+  discoveryResearchOpenItems,
   type DiscoveryCallDecisionInput,
   type DiscoveryCallIntake,
   type DiscoveryCockpitModel,
@@ -500,6 +503,61 @@ test("un-finalize clears the pair and needs no composition at all", async () => 
   assert.equal(response.status, 200)
   assert.deepEqual(await response.json(), { callFinalizedAt: null, finalizedSourceHash: null })
   assert.equal(composed, 0)
+})
+
+test("research gate (F1/F4): finalize refuses while the runsheet shows her product in research inside its step", async () => {
+  // Her scanned conditioner is in research; the Idealroutine has an empty conditioner step,
+  // so the runsheet's display join fills that step with „noch in Recherche".
+  const conditionerStep: DiscoveryIdealStep = {
+    ...step,
+    decisionKey: "decision:conditioner:conditioner_rinse_out:gap",
+    category: "conditioner",
+    role: "conditioner_rinse_out",
+    categoryLabel: "Conditioner",
+  }
+  const scanned = {
+    ...intakeItem,
+    id: "50000000-0000-4000-8000-000000000006",
+    category: "conditioner" as const,
+    source: "barcode_unknown" as const,
+    brandText: null,
+    productNameText: null,
+    barcodeIdentifier: "0850018802659",
+    productId: null,
+  }
+  const model: DiscoveryCockpitModel = {
+    ...readyModel(),
+    steps: [step, conditionerStep],
+    routine: composeDiscoveryRefinedRoutine({
+      steps: [step, conditionerStep],
+      items: [intakeItem, scanned],
+      decisions: [],
+      swapProducts: [],
+      ownedProducts: discoveryOwnedProductIdentities([verdict]),
+    }),
+  }
+  const view = buildDiscoveryCockpitView(model)
+  const display = composeRunsheetProducts({ steps: view.steps, unassigned: view.unassigned })
+  assert.ok(
+    display.tauschenOderNeu.some(
+      (entry) => entry.step.category === "conditioner" && entry.research !== null,
+    ),
+  )
+  assert.deepEqual(
+    discoveryResearchOpenItems(view).map((entry) => entry.itemId),
+    [scanned.id],
+  )
+
+  const response = await createDiscoveryFinalizeHandler(
+    baseDeps({
+      loadModel: async () => model,
+      finalize: async () => {
+        throw new Error("a call with a product in research must never be finalised")
+      },
+    }),
+  )(finalizeRequest({ finalized: true }), params)
+  assert.equal(response.status, 409)
+  assert.deepEqual(await response.json(), { code: "research_open" })
 })
 
 test("finalize refuses a body that is not the boolean", async () => {

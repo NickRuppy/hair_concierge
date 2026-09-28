@@ -4,25 +4,40 @@ import { notFound } from "next/navigation"
 import { DiscoveryConcernRecipeSection } from "@/components/discovery/cockpit/concern-recipe"
 import { DiscoveryCallCockpit } from "@/components/discovery/cockpit/discovery-call-cockpit"
 import { DiscoveryIntakeProducts } from "@/components/discovery/cockpit/discovery-intake-products"
-import { DISCOVERY_STYLING_LABEL } from "@/components/discovery/cockpit/usage-options"
 import {
   DISCOVERY_EMAIL_PENDING_LABEL,
   discoveryCockpitStateKey,
   formatDiscoveryTimestamp,
 } from "@/components/discovery/cockpit/format"
 import { DiscoveryQuizAnswersSection } from "@/components/discovery/cockpit/quiz-answers"
+import { DiscoveryRunsheetBrief } from "@/components/discovery/cockpit/runsheet-brief"
+import { DiscoveryRunsheetFollowUp } from "@/components/discovery/cockpit/runsheet-follow-up"
+import {
+  RUNSHEET_ASK_TOPIC,
+  runsheetChecklistLines,
+} from "@/components/discovery/cockpit/runsheet-parts"
+import {
+  composeRunsheetOutsideRoutine,
+  composeRunsheetProducts,
+} from "@/components/discovery/cockpit/runsheet-products"
+import { DiscoveryRunsheetRoutine } from "@/components/discovery/cockpit/runsheet-routine"
 import {
   DISCOVERY_INTAKE_CATEGORY_COPY,
   DISCOVERY_INTAKE_GROUPS,
 } from "@/components/discovery/intake/categories"
 import { requireAdmin } from "@/lib/auth/require-admin"
 import {
+  EMPTY_DISCOVERY_BRIEF_SECTIONS,
+  discoveryHabitCommitmentId,
+  loadDiscoveryCallSheet,
+  type DiscoveryCallSheet,
+} from "@/lib/discovery/call-sheet"
+import {
   buildDiscoveryCockpitView,
   discoveryCategoryOpenItems,
   discoveryResearchOpenItems,
   loadDiscoveryCallIntake,
   loadDiscoveryCockpitModel,
-  DISCOVERY_RESEARCH_PENDING_LABEL,
   type DiscoveryCockpitAdminClient,
   type DiscoveryCockpitView,
 } from "@/lib/discovery/cockpit"
@@ -30,10 +45,12 @@ import {
   UNKNOWN_CONCERN_PROFILE_FACTS,
   buildDiscoveryConcernRecipeView,
   discoveryConcernCoverageInput,
+  type DiscoveryConcernRecipeView,
 } from "@/lib/discovery/concern-recipe-view"
 import { loadDiscoveryEnrollment } from "@/lib/discovery/enrollment"
 import { isDiscoveryCallToolkitEnabled } from "@/lib/discovery/flag"
 import { buildDiscoveryQuizAnswers, type DiscoveryQuizLead } from "@/lib/discovery/quiz-answers"
+import { derivePrepChecklist } from "@/lib/discovery/runsheet"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { createAdminClient } from "@/lib/supabase/admin"
 
@@ -44,14 +61,15 @@ import {
 } from "./preflight"
 
 /**
- * The discovery call cockpit (mockup: `plans/discovery-call-toolkit/evidence/cockpit.html`).
+ * The discovery call cockpit as a call runsheet (consult-runsheet T3, mockup:
+ * `plans/consult-runsheet/evidence/runsheet-mockup-iteration2.html`).
  *
- * One screen for one call: what she captured and where its research stands („Eingetragene
- * Produkte"), the Idealroutine to read out, the engine's verdict on every
- * product the participant owns, one keep/swap decision per routine step, and
- * „Finalisieren" at the bottom. Above all of it (batch 7c, internal only): her quiz answers
- * („Quiz-Antworten") and the research recipe for her main problem („Hauptproblem").
- * Everything the call itself decides on comes from ONE composition
+ * One screen for one call, in Nick's six phases: the head (score tile, „Vor dem Call"),
+ * 1 Eröffnen, 2 Problem (Diagnose with her quiz answers and the „Hauptproblem" recipe, Hebel,
+ * Gewohnheiten), 3 Produkte (Klären banner, „Eingetragene Produkte", the three buckets with
+ * one keep/swap decision per product entry), 4 Routine (her week), 5 Feedback & nächste
+ * Schritte, 6 Abschluss (referral, „Finalisieren", Grenze). The call sheet's inputs are
+ * client state until Task 5 wires saving. Everything the call itself decides on comes from ONE composition
  * (`loadDiscoveryCockpitModel`) — the same one the decisions route validates against, so
  * the screen and the rules behind it cannot drift apart.
  *
@@ -64,7 +82,6 @@ export const dynamic = "force-dynamic"
 export const metadata: Metadata = { robots: { index: false, follow: false } }
 
 const TOOL_LABEL = "Discovery-Cockpit"
-const ROUTINE_TITLE = "Idealroutine"
 const OUTSIDE_TITLE = "Nicht in der Idealroutine"
 const NO_INTAKE = "Diese Teilnehmerin hat die Checkliste noch nicht geöffnet."
 const NO_SOURCE = "Für dieses Konto gibt es noch kein nutzbares Haarprofil. Quiz prüfen."
@@ -81,16 +98,11 @@ const PREFLIGHT_NO_LEAD = "Zu diesem Konto ist kein Quiz-Lead gebunden."
 const PREFLIGHT_INVALID = "Die Quiz-Antworten sind nicht lesbar."
 const PREFLIGHT_MISSING = "Diese Antworten fehlen für einen vollständigen Plan:"
 const DECLINED_SUFFIX = "— benutzt sie nicht. Keine Entscheidung nötig."
-const NO_STEP_SUFFIX = "— kein Schritt im Idealplan:"
 const UNANSWERED_PREFIX = "Nicht angegeben:"
 const UNANSWERED_SUFFIX = "— im Call fragen."
-const CATEGORY_OPEN_PREFIX = "Kategorie offen:"
-const CATEGORY_OPEN_SUFFIX = "— oben festlegen, dann finalisieren."
 const HEAT_TITLE = "Hitze & Styling"
 const HEAT_DRYING = "Trocknen:"
 const HEAT_NO_TOOLS = "Keine Hitze-Tools"
-const HEAT_PROTECTION_ASK = "Hitzeschutz: im Call fragen"
-const ROUTINE_FROM_ANSWERS = "Mit ihren Angaben aus der Checkliste berechnet (Häufigkeit, Hitze)."
 
 export type DiscoveryCockpitPageDependencies = {
   flagEnabled: () => boolean
@@ -102,6 +114,8 @@ export type DiscoveryCockpitPageDependencies = {
   /** Her quiz lead, read once and shared by „Quiz-Antworten" and the preflight. */
   loadQuizLead: typeof loadDiscoveryQuizLead
   loadPreflight: (lead: DiscoveryQuizLead | null) => Promise<DiscoverySourceFactsPreflight>
+  /** The runsheet's own row (`discovery_call_sheets`); null = none yet (every legacy call). */
+  loadCallSheet: typeof loadDiscoveryCallSheet
 }
 
 const DEFAULTS: DiscoveryCockpitPageDependencies = {
@@ -113,6 +127,7 @@ const DEFAULTS: DiscoveryCockpitPageDependencies = {
   loadModel: loadDiscoveryCockpitModel,
   loadQuizLead: loadDiscoveryQuizLead,
   loadPreflight: async (lead) => classifyDiscoverySourceFactsPreflight(lead),
+  loadCallSheet: loadDiscoveryCallSheet,
 }
 
 export function createDiscoveryCockpitPage(
@@ -181,6 +196,17 @@ export function createDiscoveryCockpitPage(
     const preflight: DiscoverySourceFactsPreflight = leadAvailable
       ? await deps.loadPreflight(lead)
       : { status: "ready" }
+    // The runsheet's own row is extra: a failed read leaves its sections empty, it never
+    // takes the call down.
+    let callSheet: DiscoveryCallSheet | null = null
+    // Unread is not „none yet": saving the empty form would overwrite the stored row.
+    let callSheetAvailable = true
+    try {
+      callSheet = await deps.loadCallSheet(enrollmentId, admin)
+    } catch (error) {
+      console.error("[discovery] call sheet lookup failed:", error)
+      callSheetAvailable = false
+    }
     const concernFacts = model.concernProfileFacts ?? UNKNOWN_CONCERN_PROFILE_FACTS
     const concernCoverage = discoveryConcernCoverageInput(view)
     const concernViews =
@@ -189,15 +215,41 @@ export function createDiscoveryCockpitPage(
             (code) => buildDiscoveryConcernRecipeView(code, concernFacts, concernCoverage) ?? [],
           )
         : []
-    // A refresh with a different routine remounts the client islands (see the helper).
+    const mainConcern = quiz?.status === "ready" ? quiz.mainConcern : null
+    const mainRecipe = concernViews.find((entry) => entry.code === mainConcern) ?? null
+    const prepItems = derivePrepChecklist({
+      view,
+      intakeItems: model.research?.items ?? null,
+      callSheet: callSheet ? { baselineScore: callSheet.baselineScore } : null,
+      profile: {
+        chemicalTreatments: concernFacts.chemical_treatment,
+        elasticity: model.hairElasticity ?? null,
+        primaryConcern: mainConcern,
+      },
+    })
+    const researchItems = (model.research?.items ?? []).map((item) => ({
+      id: item.id,
+      barcodeIdentifier: item.barcodeIdentifier,
+    }))
+    // Phase 4 names her product in research where Phase 3 does (the same join).
+    const researchLabels: Record<string, string> = {}
+    for (const entry of composeRunsheetProducts({
+      steps: view.steps,
+      unassigned: view.unassigned,
+      researchItems,
+    }).tauschenOderNeu) {
+      if (entry.research) researchLabels[entry.step.decisionKey] ??= entry.research.label
+    }
+    const sections = callSheet?.consultBrief?.sections ?? EMPTY_DISCOVERY_BRIEF_SECTIONS
+    const washFrequencyLabel =
+      view.intakeProducts.find(
+        (product) => product.category === "shampoo" && product.frequencyLabel,
+      )?.frequencyLabel ?? null
+    // A refresh with a different routine re-syncs the client islands (see the helper).
     const stateKey = discoveryCockpitStateKey(view.sourceHash, intake.callFinalizedAt)
 
     return (
       <Shell name={enrollment.name} email={enrollment.email} status={statusLine}>
-        {quizSection}
-        {quiz?.status === "ready" ? (
-          <DiscoveryConcernRecipeSection views={concernViews} mainConcern={quiz.mainConcern} />
-        ) : null}
         <PreflightBanner preflight={preflight} />
         {!view.researchStatusAvailable ? (
           <Notice text={RESEARCH_UNAVAILABLE} />
@@ -205,29 +257,94 @@ export function createDiscoveryCockpitPage(
           <Notice text={BRANDS_UNAVAILABLE} />
         )}
         {view.applicationAvailable ? null : <Notice text={APPLICATION_UNAVAILABLE} />}
-        <DiscoveryIntakeProducts
-          key={`products:${stateKey}`}
+        <DiscoveryRunsheetBrief
           enrollmentId={enrollmentId}
-          products={view.intakeProducts}
-          editable={intake.state === "submitted"}
-          finalized={intake.callFinalizedAt !== null}
+          saveLocked={!callSheetAvailable}
+          initialBaseline={callSheet?.baselineScore ?? null}
+          initialSections={sections}
+          initialBriefMeta={{
+            generatedAt: callSheet?.consultBrief?.generated_at ?? null,
+            sourceHash: callSheet?.consultBrief?.source_hash ?? null,
+          }}
+          initialCommitments={callSheet?.habitCommitments ?? []}
+          recipeHabits={runsheetRecipeHabits(mainRecipe)}
+          checklist={runsheetChecklistLines(prepItems)}
+          askTopics={prepItems.flatMap((item) =>
+            item.kind === "ask_bleach_cadence" ||
+            item.kind === "ask_detangling" ||
+            item.kind === "ask_where_she_shops"
+              ? [RUNSHEET_ASK_TOPIC[item.kind]]
+              : [],
+          )}
+          quizSection={quizSection}
+          recipeSection={
+            quiz?.status === "ready" ? (
+              <DiscoveryConcernRecipeSection views={concernViews} mainConcern={quiz.mainConcern} />
+            ) : null
+          }
+          heatSection={<HeatStyling view={view} />}
         />
-        <HeatStyling view={view} />
-        <IdealRoutine view={view} />
         <DiscoveryCallCockpit
-          key={`decisions:${stateKey}`}
+          stateKey={stateKey}
           enrollmentId={enrollmentId}
           steps={view.steps}
+          unassigned={view.unassigned}
+          researchItems={researchItems}
+          swapReasons={sections.swapReasons}
+          zielLuecken={sections.zielLuecken}
           submitted={intake.state === "submitted"}
           initialFinalizedAt={intake.callFinalizedAt}
           categoryOpenCount={discoveryCategoryOpenItems(view).length}
           researchOpenCount={discoveryResearchOpenItems(view).length}
           applicationGaps={view.applicationGaps.map((gap) => gap.name)}
+          intakeProducts={
+            <DiscoveryIntakeProducts
+              key={`products:${stateKey}`}
+              enrollmentId={enrollmentId}
+              products={view.intakeProducts}
+              editable={intake.state === "submitted"}
+              finalized={intake.callFinalizedAt !== null}
+            />
+          }
+          outsideRoutine={<OutsideRoutine view={view} submitted={intake.state === "submitted"} />}
+          routinePhase={
+            <DiscoveryRunsheetRoutine
+              view={view}
+              washFrequencyLabel={washFrequencyLabel}
+              researchLabels={researchLabels}
+            />
+          }
+          followUpPhase={
+            <DiscoveryRunsheetFollowUp
+              enrollmentId={enrollmentId}
+              saveLocked={!callSheetAvailable}
+              initialFeedback={callSheet?.feedback ?? null}
+              initialTouchpoints={callSheet?.touchpoints ?? []}
+            />
+          }
+          boundary={mainRecipe?.boundary ?? null}
         />
-        <OutsideRoutine view={view} submitted={intake.state === "submitted"} />
       </Shell>
     )
   }
+}
+
+/**
+ * The recipe's „Ohne Produkt" levers as habit-commitment pre-fill. Ids come from the wording
+ * (`recipe:<concern>:<slug>`), never the position, so a saved commitment keeps its identity
+ * when the recipe's levers move; one wording twice is one commitment.
+ */
+function runsheetRecipeHabits(
+  recipe: DiscoveryConcernRecipeView | null,
+): Array<{ id: string; label: string }> {
+  if (!recipe) return []
+  const seen = new Set<string>()
+  return recipe.levers.flatMap((entry) => {
+    const id = discoveryHabitCommitmentId(`recipe:${recipe.code}`, entry.lever)
+    if (seen.has(id)) return []
+    seen.add(id)
+    return [{ id, label: entry.lever }]
+  })
 }
 
 function Shell({
@@ -316,49 +433,6 @@ function HeatStyling({ view }: { view: DiscoveryCockpitView }) {
   )
 }
 
-/**
- * Written to be read aloud: step, category, what happens, how often. A heat protectant still
- * waiting for heat answers is not a step — the call asks about it instead (F3 quick fix).
- */
-function IdealRoutine({ view }: { view: DiscoveryCockpitView }) {
-  // One line per step — a step holding several of her products has one entry per product.
-  const steps = view.steps.filter(
-    (step, index) =>
-      view.steps.findIndex((other) => other.decisionKey === step.decisionKey) === index,
-  )
-  return (
-    <section className="rounded-xl border bg-card">
-      <h2 className="border-b px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-        {ROUTINE_TITLE}
-      </h2>
-      {view.routineSource === "intake_answers" ? (
-        <p className="border-b px-4 py-2 text-[12px] text-muted-foreground">
-          {ROUTINE_FROM_ANSWERS}
-        </p>
-      ) : null}
-      <ol className="divide-y">
-        {steps.map((step, index) => (
-          <li key={step.decisionKey} className="flex flex-wrap items-baseline gap-3 px-4 py-2.5">
-            <span className="w-4 shrink-0 text-xs text-muted-foreground">{index + 1}</span>
-            <span className="w-36 shrink-0 rounded bg-[var(--brand-plum-ice)] px-2 py-0.5 text-center text-xs font-bold text-[var(--brand-plum)]">
-              {step.categoryLabel}
-            </span>
-            <span className="flex-1 text-sm text-foreground">
-              {step.roleDescription ?? step.roleLabel}
-            </span>
-            <span className="text-xs text-muted-foreground">{step.frequencyLabel}</span>
-          </li>
-        ))}
-      </ol>
-      {view.heatProtectionAsk ? (
-        <p className="border-t px-4 py-2.5 text-[13px] font-bold text-[var(--status-pending-text)]">
-          {HEAT_PROTECTION_ASK}
-        </p>
-      ) : null}
-    </section>
-  )
-}
-
 const SHELF_ORDER = DISCOVERY_INTAKE_GROUPS.flatMap((group) =>
   group.categories.map((category) => category.key),
 )
@@ -375,46 +449,20 @@ function categoryLine(categories: readonly PersonalPlanCategory[]): string {
 }
 
 /**
- * Everything with no decision to make, collapsed: products whose usage is still unknown
- * first („Kategorie offen" — they block finalising until set in the product list),
- * „benutze ich nicht" categories on one grey line, categories the participant left unanswered on the next (only once she has
- * submitted — before that they are simply not done yet — and only those without a routine
- * step, since a step names its own), products outside the
- * Idealroutine on another, and whatever is still being researched on the last — named,
- * so Nick can still mention it.
- *
- * The no-step line names its products, not just their categories: the participant's
- * document lists every one of them under „Brauchst du nicht mehr", and Nick has to be
- * able to read that list here before he finalises and sends it. Only a category without
- * any step lands here (batch 9): a further product of a category that HAS a step sits in
- * that step, and one the call drops shows there as „Weglassen".
+ * „Nicht in der Idealroutine": only the categories nothing above already names (T4 c, see
+ * `composeRunsheetOutsideRoutine`) — „benutze ich nicht" on one grey line, unanswered on
+ * the next. Products never appear here: the buckets, the Klären banner and the styling line
+ * above show each of them once.
  */
 function OutsideRoutine({ view, submitted }: { view: DiscoveryCockpitView; submitted: boolean }) {
-  const noStep = view.unassigned.filter((entry) => entry.reason === "no_ideal_step")
-  const research = view.unassigned.filter((entry) => entry.reason === "research_pending")
-  const styling = view.unassigned.filter((entry) => entry.reason === "styling_not_evaluated")
-  const categoryOpen = discoveryCategoryOpenItems(view)
-  // An unanswered category WITH a routine step already says so at the step itself; the
-  // summary line only carries the ones no step would otherwise mention.
-  const namedAtStep = new Set(
-    view.steps.filter((step) => step.unanswered).map((step) => step.category),
-  )
-  const unanswered = submitted
-    ? view.unansweredCategories.filter((category) => !namedAtStep.has(category))
-    : []
-  if (
-    view.declinedCategories.length === 0 &&
-    unanswered.length === 0 &&
-    noStep.length === 0 &&
-    research.length === 0 &&
-    styling.length === 0 &&
-    categoryOpen.length === 0
-  ) {
-    return null
-  }
-  const noStepCategories = [
-    ...new Set(noStep.flatMap((entry) => (entry.category ? [entry.category] : []))),
-  ]
+  const { declined, unanswered } = composeRunsheetOutsideRoutine({
+    steps: view.steps,
+    unassigned: view.unassigned,
+    declinedCategories: view.declinedCategories,
+    unansweredCategories: view.unansweredCategories,
+    submitted,
+  })
+  if (declined.length === 0 && unanswered.length === 0) return null
 
   return (
     <section className="rounded-xl border bg-card">
@@ -422,29 +470,9 @@ function OutsideRoutine({ view, submitted }: { view: DiscoveryCockpitView; submi
         {OUTSIDE_TITLE}
       </h2>
       <div className="flex flex-col gap-1.5 px-4 py-3 text-[13px] leading-6 text-muted-foreground">
-        {categoryOpen.length > 0 ? (
-          <p className="font-bold text-[var(--status-danger-text)]">{`${CATEGORY_OPEN_PREFIX} ${categoryOpen
-            .map((entry) => entry.label)
-            .join(" · ")} ${CATEGORY_OPEN_SUFFIX}`}</p>
-        ) : null}
-        {view.declinedCategories.length > 0 ? (
-          <p>{`${categoryLine(view.declinedCategories)} ${DECLINED_SUFFIX}`}</p>
-        ) : null}
+        {declined.length > 0 ? <p>{`${categoryLine(declined)} ${DECLINED_SUFFIX}`}</p> : null}
         {unanswered.length > 0 ? (
           <p>{`${UNANSWERED_PREFIX} ${categoryLine(unanswered)} ${UNANSWERED_SUFFIX}`}</p>
-        ) : null}
-        {noStep.length > 0 ? (
-          <p>{`${categoryLine(noStepCategories)} ${NO_STEP_SUFFIX} ${noStep
-            .map((entry) => entry.label)
-            .join(" · ")}`}</p>
-        ) : null}
-        {research.length > 0 ? (
-          <p>{`${DISCOVERY_RESEARCH_PENDING_LABEL}: ${research
-            .map((entry) => entry.label)
-            .join(" · ")}`}</p>
-        ) : null}
-        {styling.length > 0 ? (
-          <p>{`${DISCOVERY_STYLING_LABEL}: ${styling.map((entry) => entry.label).join(" · ")}`}</p>
         ) : null}
       </div>
     </section>

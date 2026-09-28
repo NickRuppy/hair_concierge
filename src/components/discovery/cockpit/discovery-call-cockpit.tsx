@@ -1,23 +1,40 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, type ReactNode } from "react"
 
 import { DISCOVERY_INTAKE_CATEGORY_COPY } from "@/components/discovery/intake/categories"
 import { ScanVerdictSections } from "@/components/scan/scan-verdict-sections"
-import type { DiscoveryCockpitStepView } from "@/lib/discovery/cockpit"
+import type {
+  DiscoveryCockpitStepView,
+  DiscoveryCockpitUnassignedView,
+} from "@/lib/discovery/cockpit"
 import type { DiscoveryVerdictStatus } from "@/lib/discovery/load-participant-verdicts"
 import type { DiscoveryPropertyRow } from "@/lib/discovery/property-rows"
+import { runsheetVerdictFit } from "@/lib/discovery/runsheet"
 
 import { DiscoveryComparisonTable } from "./comparison-table"
 import { beginDiscoveryDecisionWrite } from "./decision-writes"
 import { formatDiscoveryTimestamp } from "./format"
-import { discoveryUsageDifferenceLabel } from "./usage-options"
+import { RunsheetCard, RunsheetCategoryChip, RunsheetChip, RunsheetPhase } from "./runsheet-parts"
+import {
+  composeRunsheetProducts,
+  type RunsheetKlaerenEntry,
+  type RunsheetResearchSlot,
+  type RunsheetStepEntry,
+} from "./runsheet-products"
+import { DISCOVERY_STYLING_LABEL, discoveryUsageDifferenceLabel } from "./usage-options"
 
 /**
- * The call surface: one block per routine step, the engine's verdict on the left, the
- * single interaction on the right — keep what the participant owns, or swap it for one of
- * the products the engine already put in front of them.
+ * The call surface — since the consult runsheet (T3) the runsheet's Phase 3 („Produkte") and
+ * Phase 6 („Abschluss"), with Phases 4 and 5 slotted in between so the decisions and the
+ * finalize control keep sharing one state (a finalize freezes the radios at once).
+ *
+ * Phase 3 files every product entry into „Behalten / Weglassen / Tauschen oder neu"
+ * (`deriveBuckets` + the display joins in `runsheet-products.ts`), each with its category
+ * anchor, verdict and — unchanged — its live decision: the engine's verdict on the left,
+ * the single interaction on the right — keep what the participant owns, or swap it for one
+ * of the products the engine already put in front of them.
  *
  * Voice: this screen is Nick's, not the participant's, so its own copy is third person
  * („Ihr Produkt"). The verdict block underneath is the participant's own scan result,
@@ -35,6 +52,44 @@ import { discoveryUsageDifferenceLabel } from "./usage-options"
  * server-side and refuses anything the cockpit did not display. The optimistic selection
  * here is a convenience; the server is the authority, and a refusal rolls it back.
  */
+
+const PRODUCTS_TITLE = "Produkte"
+const BUCKET_KEEP = "Behalten"
+const BUCKET_DROP = "Weglassen"
+const BUCKET_SWAP = "Tauschen oder neu"
+const EMPTY_KEEP = "Nichts zum Behalten vorgeschlagen."
+const EMPTY_DROP = "Nichts zum Weglassen vorgeschlagen."
+const EMPTY_SWAP = "Nichts zu tauschen, kein neuer Schritt."
+const KLAEREN_TITLE = "Klären"
+const KLAEREN_RESEARCH = "noch in Recherche"
+const KLAEREN_CATEGORY = "Kategorie offen"
+const KLAEREN_NOTE = "Vor dem Call abschließen — sonst bleibt der Schritt ohne Urteil."
+const RESEARCH_SLOT_TITLE = "Ihr Produkt — noch in Recherche"
+const RESEARCH_SLOT_BODY = "Das Urteil folgt, sobald die Recherche abgeschlossen ist."
+const NEW_ENTRY_TITLE = "Neu dazu"
+const OPEN_ENTRY_TITLE = "Offener Schritt"
+const PROPOSAL = "Vorschlag"
+const SWAP_CHIP = "Tauschen"
+const NEW_CHIP = "Neu"
+const OPEN_CHIP = "Schritt offen"
+const NO_STEP_REASON = "Kein Schritt in der Idealroutine."
+const VERDICT_NOT_NEEDED = "Nicht nötig"
+const VERDICT_OPEN = "Noch offen"
+const VERDICT_NONE = "Ohne Urteil"
+const DEPTH_SUMMARY = "Schritt im Idealplan"
+
+const CLOSING_TITLE = "Abschluss"
+const BOUNDARY = "Grenze"
+const REFERRAL_TITLE = "Empfehlungs-Frage"
+const REFERRAL_QUESTION =
+  "„Kennst du zwei, drei Leute, die auch nicht ganz glücklich mit ihren Haaren sind? Wir machen die Calls gerade kostenlos — magst du ihnen kurz diese Nachricht weiterleiten?“"
+/** R20: approved as-is („okay for now") — exact text. */
+export const DISCOVERY_REFERRAL_MESSAGE =
+  "Hey! Ich hatte gerade eine kostenlose Haar-Beratung bei Chaarlie — 30 Minuten, und danach hatte ich einen kompletten Plan mit Produkten, die wirklich zu meinem Haar passen. Falls du auch nicht ganz zufrieden bist: chaarlie.de/lp/call"
+const REFERRAL_MESSAGE = DISCOVERY_REFERRAL_MESSAGE
+const REFERRAL_COPY = "Nachricht kopieren"
+const REFERRAL_COPIED = "Kopiert."
+const REFERRAL_COPY_FAILED = "Kopieren ging nicht — Text markieren und kopieren."
 
 const COL_PRODUCT = "Ihr Produkt"
 const COL_DECISION = "Entscheidung"
@@ -116,17 +171,6 @@ function entryKey(step: Pick<DiscoveryCockpitStepView, "decisionKey" | "intakeIt
   return `${step.decisionKey}:${step.intakeItemId ?? "-"}`
 }
 
-/** The view's entries grouped into their steps, in routine order (adjacent by construction). */
-function groupSteps(steps: DiscoveryCockpitStepView[]): DiscoveryCockpitStepView[][] {
-  const groups: DiscoveryCockpitStepView[][] = []
-  for (const step of steps) {
-    const last = groups.at(-1)
-    if (last && last[0]!.decisionKey === step.decisionKey) last.push(step)
-    else groups.push([step])
-  }
-  return groups
-}
-
 /**
  * What a keep/swap answer means for the panel, pure so it can be tested: a refusal rolls
  * the optimistic choice back with its message; a success refreshes the page, so the panel
@@ -167,6 +211,10 @@ export function discoveryFinalizeWriteOutcome(
   }
 }
 
+function seedSelections(steps: readonly DiscoveryCockpitStepView[]): Record<string, Selection> {
+  return Object.fromEntries(steps.map((step) => [entryKey(step), initialSelection(step)]))
+}
+
 function selectionValue(selection: Selection): string {
   if (!selection) return ""
   if (selection.decision === "swap") return selection.swapProductId ?? ""
@@ -181,6 +229,16 @@ export function DiscoveryCallCockpit({
   categoryOpenCount = 0,
   researchOpenCount = 0,
   applicationGaps = [],
+  unassigned = [],
+  researchItems = null,
+  swapReasons = {},
+  zielLuecken = [],
+  intakeProducts = null,
+  outsideRoutine = null,
+  routinePhase = null,
+  followUpPhase = null,
+  boundary = null,
+  stateKey,
 }: {
   enrollmentId: string
   steps: DiscoveryCockpitStepView[]
@@ -192,15 +250,44 @@ export function DiscoveryCallCockpit({
   researchOpenCount?: number
   /** Printed products without complete verified guidance, by name (batch 6). */
   applicationGaps?: readonly string[]
+  /** The view's `unassigned` projection — read for the buckets, never changed. */
+  unassigned?: DiscoveryCockpitUnassignedView[]
+  /** Her intake rows (id + barcode), for the GTIN of a product in research. */
+  researchItems?: ReadonlyArray<{ id: string; barcodeIdentifier: string | null }> | null
+  /** The consult brief's reasoning per step (`consult_brief.sections.swapReasons`). */
+  swapReasons?: Readonly<Record<string, string>>
+  /** The brief's goal-gap sentences (`consult_brief.sections.zielLuecken`). */
+  zielLuecken?: readonly string[]
+  /** Runsheet slots (consult-runsheet T3): rendered in phase order around the decisions. */
+  intakeProducts?: ReactNode
+  outsideRoutine?: ReactNode
+  routinePhase?: ReactNode
+  followUpPhase?: ReactNode
+  /** The „Grenze" line of her main problem, closing the call. */
+  boundary?: string | null
+  /**
+   * `discoveryCockpitStateKey` of the props: when a refresh delivers a different routine or
+   * finalize state, the selections and the finalize state re-seed from the server. (Before
+   * the runsheet this was a React `key` remount; the slotted Phases 4 and 5 hold unsaved
+   * input and must not remount with it.)
+   */
+  stateKey?: string
 }) {
   const router = useRouter()
   const [selections, setSelections] = useState<Record<string, Selection>>(() =>
-    Object.fromEntries(steps.map((step) => [entryKey(step), initialSelection(step)])),
+    seedSelections(steps),
   )
   const [finalizedAt, setFinalizedAt] = useState<string | null>(initialFinalizedAt)
   const [pending, setPending] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [finalizePending, setFinalizePending] = useState(false)
+  const [syncedKey, setSyncedKey] = useState(stateKey)
+  if (stateKey !== syncedKey) {
+    setSyncedKey(stateKey)
+    setSelections(seedSelections(steps))
+    setFinalizedAt(initialFinalizedAt)
+    setError(null)
+  }
 
   const frozen = finalizedAt !== null
   // Un-finalising is always possible; finalising waits until every product has a usage, is
@@ -213,6 +300,7 @@ export function DiscoveryCallCockpit({
         ...(applicationGaps.length > 0 ? [discoveryApplicationMissingHint(applicationGaps)] : []),
       ]
   const finalizeBlocked = blockHints.length > 0
+  const products = composeRunsheetProducts({ steps, unassigned, researchItems })
 
   async function choose(step: DiscoveryCockpitStepView, value: string) {
     const key = entryKey(step)
@@ -283,125 +371,393 @@ export function DiscoveryCallCockpit({
     }
   }
 
+  /** One product entry with its live decision control (batch 9: keyed per entry). */
+  function renderEntry(entry: RunsheetStepEntry, bucket: BucketId) {
+    const step = entry.step
+    const key = entryKey(step)
+    // Batch 9: what her other products in this step are set to right now.
+    const stepEntries = steps.filter((other) => other.decisionKey === step.decisionKey)
+    const siblings = stepEntries
+      .filter((other) => entryKey(other) !== key)
+      .map((other) => selections[entryKey(other)] ?? null)
+    const selection = selections[key] ?? null
+    const reason = swapReasons[step.decisionKey]
+    return (
+      <div key={key} className="border-b last:border-0">
+        <div className="flex flex-wrap items-center gap-2 bg-muted/40 px-4 py-2.5">
+          <RunsheetCategoryChip category={step.category} label={step.categoryLabel} />
+          <span className="text-[15px] font-bold text-foreground">{entryTitle(entry)}</span>
+          <span className="text-xs text-muted-foreground">{step.roleLabel}</span>
+          {stepEntries.length > 1 && step.ownedFrequencyLabel ? (
+            <span className="text-xs text-muted-foreground">{step.ownedFrequencyLabel}</span>
+          ) : null}
+          {step.section === "optional" ? (
+            <span className="text-xs text-muted-foreground">· optional</span>
+          ) : null}
+          {entry.kind === "owned" ? <VerdictChip step={step} /> : null}
+          <DecisionChip entry={entry} bucket={bucket} selection={selection} />
+        </div>
+        {reason ? (
+          <p className="border-b px-4 py-2 text-[13px] leading-5 text-foreground">{reason}</p>
+        ) : null}
+        <StepDepth step={step} />
+        <div className="grid gap-0 md:grid-cols-2">
+          <div className="border-b p-4 md:border-b-0 md:border-r">
+            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
+              {COL_PRODUCT}
+            </p>
+            {entry.research ? (
+              <ResearchSlot research={entry.research} />
+            ) : (
+              <StepVerdict step={step} submitted={submitted} />
+            )}
+          </div>
+          <div className="p-4">
+            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
+              {COL_DECISION}
+            </p>
+            <StepDecision
+              step={step}
+              name={key}
+              value={selectionValue(selection)}
+              // „Weglassen" never empties the step (R3): not while every sibling
+              // is set to „Weglassen" too. The server re-checks under its lock.
+              dropAllowed={siblings.some((other) => other?.decision !== "drop")}
+              // A target a sibling already swaps to is not offered twice.
+              takenSwapIds={siblings.flatMap((other) =>
+                other?.decision === "swap" && other.swapProductId ? [other.swapProductId] : [],
+              )}
+              disabled={frozen || pending === key}
+              onChoose={(value) => void choose(step, value)}
+            />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
-      <section className="rounded-xl border bg-card">
-        <h2 className="border-b px-4 py-3 text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-          Produkte &amp; Entscheidung
-        </h2>
-        {groupSteps(steps).map((entries, index) => {
-          const step = entries[0]!
-          return (
-            <div key={step.decisionKey} className="border-b last:border-0">
-              <div className="flex items-baseline gap-3 border-b bg-muted/40 px-4 py-2.5">
-                <span className="text-xs text-muted-foreground">{index + 1}</span>
-                <span className="text-[15px] font-bold text-foreground">{step.categoryLabel}</span>
-                <span className="text-xs text-muted-foreground">{step.roleLabel}</span>
-                {step.section === "optional" ? (
-                  <span className="text-xs text-muted-foreground">· optional</span>
-                ) : null}
-              </div>
-              <StepDepth step={step} />
-              {entries.map((entry) => {
-                const key = entryKey(entry)
-                // Batch 9: what her other products in this step are set to right now.
-                const siblings = entries
-                  .filter((other) => other !== entry)
-                  .map((other) => selections[entryKey(other)] ?? null)
-                return (
-                  <div key={key} className="grid gap-0 border-b last:border-0 md:grid-cols-2">
-                    <div className="border-b p-4 md:border-b-0 md:border-r">
-                      <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
-                        {COL_PRODUCT}
-                      </p>
-                      {entries.length > 1 && entry.ownedFrequencyLabel ? (
-                        <p className="mb-2 text-[12px] font-bold text-muted-foreground">
-                          {entry.ownedFrequencyLabel}
-                        </p>
-                      ) : null}
-                      <StepVerdict step={entry} submitted={submitted} />
-                    </div>
-                    <div className="p-4">
-                      <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
-                        {COL_DECISION}
-                      </p>
-                      <StepDecision
-                        step={entry}
-                        name={key}
-                        value={selectionValue(selections[key] ?? null)}
-                        // „Weglassen" never empties the step (R3): not while every sibling
-                        // is set to „Weglassen" too. The server re-checks under its lock.
-                        dropAllowed={siblings.some((other) => other?.decision !== "drop")}
-                        // A target a sibling already swaps to is not offered twice.
-                        takenSwapIds={siblings.flatMap((other) =>
-                          other?.decision === "swap" && other.swapProductId
-                            ? [other.swapProductId]
-                            : [],
-                        )}
-                        disabled={frozen || pending === key}
-                        onChoose={(value) => void choose(entry, value)}
-                      />
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          )
-        })}
-      </section>
-
-      <div className="flex flex-wrap items-center gap-4 rounded-xl border bg-card p-4">
-        <button
-          type="button"
-          onClick={() => void toggleFinalize()}
-          disabled={finalizePending || (!frozen && !submitted) || finalizeBlocked}
-          className="rounded-lg bg-[var(--brand-coral)] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
+      <RunsheetPhase number={3} title={PRODUCTS_TITLE} id="runsheet-phase-3">
+        {products.klaeren.length > 0 ? <KlaerenBanner entries={products.klaeren} /> : null}
+        {intakeProducts}
+        <Bucket
+          title={BUCKET_KEEP}
+          count={productCount(products.behalten.length)}
+          empty={EMPTY_KEEP}
         >
-          {finalizePending ? FINALIZE_BUSY : frozen ? UNFINALIZE_LABEL : FINALIZE_LABEL}
-        </button>
-        {finalizeBlocked ? (
-          <div className="flex flex-col gap-0.5">
-            {blockHints.map((hint) => (
-              <p
-                key={hint}
-                className="text-[13px] font-bold leading-5 text-[var(--status-danger-text)]"
-              >
-                {hint}
-              </p>
-            ))}
-          </div>
-        ) : (
-          <p className="text-[13px] leading-5 text-muted-foreground">{FINALIZE_HINT}</p>
-        )}
-        {frozen ? (
-          // The document exists only for a finalised call, so the link exists only then too —
-          // in a new tab, so the cockpit stays where it is while Nick prints.
-          <a
-            href={`/admin/beratung/${enrollmentId}/pdf`}
-            target="_blank"
-            rel="noopener"
-            className="text-xs font-bold text-[var(--brand-plum)] underline"
-          >
-            {PDF_OPEN}
-          </a>
-        ) : (
-          <span className="text-xs text-muted-foreground">{PDF_LOCKED}</span>
-        )}
-        <span className="ml-auto rounded bg-muted px-2 py-1 text-xs text-muted-foreground">
-          {frozen ? `finalisiert am ${formatDiscoveryTimestamp(finalizedAt)}` : FINALIZE_OPEN}
-        </span>
-      </div>
+          {products.behalten.map((entry) => renderEntry(entry, "behalten"))}
+        </Bucket>
+        <Bucket
+          title={BUCKET_DROP}
+          count={productCount(products.weglassen.length)}
+          empty={EMPTY_DROP}
+        >
+          {products.weglassen.map((entry) =>
+            entry.kind === "unassigned" ? (
+              <UnassignedDropEntry key={entry.unassigned.itemId} entry={entry.unassigned} />
+            ) : (
+              renderEntry(entry, "weglassen")
+            ),
+          )}
+        </Bucket>
+        <Bucket title={BUCKET_SWAP} count={swapCount(products.tauschenOderNeu)} empty={EMPTY_SWAP}>
+          {products.tauschenOderNeu.map((entry) => renderEntry(entry, "tauschenOderNeu"))}
+        </Bucket>
+        {products.styling.length > 0 ? (
+          <p className="text-[13px] text-muted-foreground">{`${DISCOVERY_STYLING_LABEL}: ${products.styling
+            .map((entry) => entry.label)
+            .join(" · ")}`}</p>
+        ) : null}
+        {zielLuecken.map((line) => (
+          <p key={line} className="text-[13px] leading-5 text-muted-foreground">
+            {line}
+          </p>
+        ))}
+        {outsideRoutine}
+      </RunsheetPhase>
 
-      {error ? (
-        <p role="status" className="text-[13px] text-[var(--status-danger-text)]">
-          {error}
-        </p>
-      ) : null}
-      {!submitted ? (
-        <p className="text-[13px] text-muted-foreground">{NOT_SUBMITTED_HINT}</p>
-      ) : null}
+      {routinePhase}
+      {followUpPhase}
+
+      <RunsheetPhase number={6} title={CLOSING_TITLE} id="runsheet-phase-6">
+        <ReferralCard />
+        <div className="flex flex-wrap items-center gap-4 rounded-xl border bg-card p-4">
+          <button
+            type="button"
+            onClick={() => void toggleFinalize()}
+            disabled={finalizePending || (!frozen && !submitted) || finalizeBlocked}
+            className="rounded-lg bg-[var(--brand-coral)] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
+          >
+            {finalizePending ? FINALIZE_BUSY : frozen ? UNFINALIZE_LABEL : FINALIZE_LABEL}
+          </button>
+          {finalizeBlocked ? (
+            <div className="flex flex-col gap-0.5">
+              {blockHints.map((hint) => (
+                <p
+                  key={hint}
+                  className="text-[13px] font-bold leading-5 text-[var(--status-danger-text)]"
+                >
+                  {hint}
+                </p>
+              ))}
+            </div>
+          ) : (
+            <p className="text-[13px] leading-5 text-muted-foreground">{FINALIZE_HINT}</p>
+          )}
+          {frozen ? (
+            // The document exists only for a finalised call, so the link exists only then too —
+            // in a new tab, so the cockpit stays where it is while Nick prints.
+            <a
+              href={`/admin/beratung/${enrollmentId}/pdf`}
+              target="_blank"
+              rel="noopener"
+              className="text-xs font-bold text-[var(--brand-plum)] underline"
+            >
+              {PDF_OPEN}
+            </a>
+          ) : (
+            <span className="text-xs text-muted-foreground">{PDF_LOCKED}</span>
+          )}
+          <span className="ml-auto rounded bg-muted px-2 py-1 text-xs text-muted-foreground">
+            {frozen ? `finalisiert am ${formatDiscoveryTimestamp(finalizedAt)}` : FINALIZE_OPEN}
+          </span>
+        </div>
+
+        {error ? (
+          <p role="status" className="text-[13px] text-[var(--status-danger-text)]">
+            {error}
+          </p>
+        ) : null}
+        {!submitted ? (
+          <p className="text-[13px] text-muted-foreground">{NOT_SUBMITTED_HINT}</p>
+        ) : null}
+        {boundary ? (
+          <p className="rounded-lg bg-[var(--status-danger-bg)] px-3 py-2 text-[12px] leading-5 text-[var(--status-danger-text)]">
+            <span className="font-bold">{`${BOUNDARY}: `}</span>
+            {boundary}
+          </p>
+        ) : null}
+      </RunsheetPhase>
     </>
   )
+}
+
+// --- Phase 3 pieces ------------------------------------------------------------------
+
+type BucketId = "behalten" | "weglassen" | "tauschenOderNeu"
+
+function productCount(count: number): string {
+  return `${count} ${count === 1 ? "Produkt" : "Produkte"}`
+}
+
+/** „2 tauschen · 3 neu" — what the bucket holds, by kind. */
+function swapCount(entries: readonly RunsheetStepEntry[]): string {
+  const owned = entries.filter((entry) => entry.kind === "owned").length
+  const neu = entries.filter((entry) => entry.kind === "neu").length
+  const open = entries.filter((entry) => entry.kind === "offen").length
+  const parts = [
+    ...(owned > 0 ? [`${owned} tauschen`] : []),
+    ...(neu > 0 ? [`${neu} neu`] : []),
+    ...(open > 0 ? [`${open} offen`] : []),
+  ]
+  return parts.length > 0 ? parts.join(" · ") : productCount(0)
+}
+
+function entryTitle(entry: RunsheetStepEntry): string {
+  if (entry.research) return RESEARCH_SLOT_TITLE
+  if (entry.kind === "owned") return entry.step.ownedLabel ?? NO_PRODUCT
+  return entry.kind === "neu" ? NEW_ENTRY_TITLE : OPEN_ENTRY_TITLE
+}
+
+function Bucket({
+  title,
+  count,
+  empty,
+  children,
+}: {
+  title: string
+  count: string
+  empty: string
+  children: ReactNode[]
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-baseline gap-2">
+        <h3 className="text-[15px] font-bold text-foreground">{title}</h3>
+        <span className="text-xs text-muted-foreground">{count}</span>
+      </div>
+      <div className="rounded-xl border bg-card">
+        {children.length === 0 ? (
+          <p className="px-4 py-3 text-[13px] text-muted-foreground">{empty}</p>
+        ) : (
+          children
+        )}
+      </div>
+    </div>
+  )
+}
+
+function KlaerenBanner({ entries }: { entries: readonly RunsheetKlaerenEntry[] }) {
+  return (
+    <div className="rounded-xl border border-[var(--status-pending-text)] bg-[var(--status-pending-bg)] p-4">
+      <p className="text-sm font-bold text-[var(--status-pending-text)]">{KLAEREN_TITLE}</p>
+      <ul className="mt-1.5 flex flex-col gap-1">
+        {entries.map((entry) => (
+          <li
+            key={entry.intakeItemId}
+            className="flex flex-wrap items-center gap-2 text-[13px] leading-5 text-foreground"
+          >
+            <RunsheetCategoryChip category={entry.category} />
+            <span>{entry.gtin ? `${entry.label} (${entry.gtin})` : entry.label}</span>
+            <span className="text-[12px] text-muted-foreground">
+              {entry.reason === "category_unknown" ? KLAEREN_CATEGORY : KLAEREN_RESEARCH}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-1.5 text-[12px] text-foreground">{KLAEREN_NOTE}</p>
+    </div>
+  )
+}
+
+/** The join (binding ruling): her product in research fills the empty step's slot. */
+function ResearchSlot({ research }: { research: RunsheetResearchSlot }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <p className="text-[15px] font-semibold text-foreground">{research.label}</p>
+      {research.gtin ? (
+        <p className="text-[12px] text-muted-foreground">{`GTIN ${research.gtin}`}</p>
+      ) : null}
+      <p className="rounded-[14px] bg-[var(--status-pending-bg)] px-3 py-2 text-[13px] font-bold text-[var(--status-pending-text)]">
+        {RESEARCH_SLOT_BODY}
+      </p>
+    </div>
+  )
+}
+
+function UnassignedDropEntry({ entry }: { entry: DiscoveryCockpitUnassignedView }) {
+  return (
+    <div className="flex flex-wrap items-center gap-2 border-b px-4 py-2.5 last:border-0">
+      <RunsheetCategoryChip category={entry.category} />
+      <span className="text-[15px] font-bold text-foreground">{entry.label}</span>
+      <RunsheetChip tone="neutral">{`${PROPOSAL}: ${DROP_LABEL}`}</RunsheetChip>
+      <span className="w-full text-[12px] text-muted-foreground">{NO_STEP_REASON}</span>
+    </div>
+  )
+}
+
+function VerdictChip({ step }: { step: DiscoveryCockpitStepView }) {
+  const fit = runsheetVerdictFit(step.verdict)
+  const tone = fit === "fits" ? "ok" : fit === "does_not_fit" ? "danger" : "neutral"
+  const verdict = step.verdict
+  const label =
+    verdict?.status === "verdict"
+      ? verdict.payload.kind === "in_catalog"
+        ? verdict.payload.verdictLabel
+        : verdict.payload.mode === "not_needed"
+          ? VERDICT_NOT_NEEDED
+          : VERDICT_OPEN
+      : VERDICT_NONE
+  return <RunsheetChip tone={tone}>{label}</RunsheetChip>
+}
+
+function DecisionChip({
+  entry,
+  bucket,
+  selection,
+}: {
+  entry: RunsheetStepEntry
+  bucket: BucketId
+  selection: Selection
+}) {
+  const empty = entry.step.intakeItemId === null
+  if (selection) {
+    const label =
+      selection.decision === "keep"
+        ? empty
+          ? KEEP_EMPTY_LABEL
+          : KEEP_LABEL
+        : selection.decision === "swap"
+          ? empty
+            ? NEW_CHIP
+            : SWAP_CHIP
+          : DROP_LABEL
+    return <RunsheetChip tone="plum">{label}</RunsheetChip>
+  }
+  // Her product for this step is still in research: nothing to propose yet.
+  if (entry.research) return <RunsheetChip tone="pending">{KLAEREN_RESEARCH}</RunsheetChip>
+  const proposal =
+    entry.kind === "offen"
+      ? OPEN_CHIP
+      : entry.kind === "neu"
+        ? NEW_CHIP
+        : bucket === "behalten"
+          ? KEEP_LABEL
+          : bucket === "weglassen"
+            ? DROP_LABEL
+            : SWAP_CHIP
+  return <RunsheetChip tone="neutral">{`${PROPOSAL}: ${proposal}`}</RunsheetChip>
+}
+
+/** Referral (R20, copy approved as-is): the message and a copy button with a fallback. */
+function ReferralCard() {
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle")
+
+  async function copy() {
+    setCopyState((await copyText(REFERRAL_MESSAGE)) ? "copied" : "failed")
+  }
+
+  return (
+    <RunsheetCard title={REFERRAL_TITLE}>
+      <p className="text-[13px] leading-5 text-foreground">{REFERRAL_QUESTION}</p>
+      <p
+        id="runsheet-referral-message"
+        className="rounded-lg border border-dashed bg-muted/30 px-3 py-2 text-sm leading-6 text-foreground"
+      >
+        {REFERRAL_MESSAGE}
+      </p>
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          id="runsheet-referral-copy"
+          type="button"
+          onClick={() => void copy()}
+          className="rounded-lg border border-[var(--brand-plum)] px-3 py-1.5 text-xs font-bold text-[var(--brand-plum)]"
+        >
+          {REFERRAL_COPY}
+        </button>
+        {copyState !== "idle" ? (
+          <span role="status" className="text-[12px] text-muted-foreground">
+            {copyState === "copied" ? REFERRAL_COPIED : REFERRAL_COPY_FAILED}
+          </span>
+        ) : null}
+      </div>
+    </RunsheetCard>
+  )
+}
+
+/** Clipboard API first; the hidden-textarea fallback for browsers or contexts without it. */
+async function copyText(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text)
+    return true
+  } catch {
+    // fall through to the legacy path
+  }
+  try {
+    const area = document.createElement("textarea")
+    area.value = text
+    area.setAttribute("readonly", "")
+    area.style.position = "fixed"
+    area.style.opacity = "0"
+    document.body.appendChild(area)
+    area.select()
+    const copied = document.execCommand("copy")
+    area.remove()
+    return copied
+  } catch {
+    return false
+  }
 }
 
 function StepVerdict({ step, submitted }: { step: DiscoveryCockpitStepView; submitted: boolean }) {
@@ -617,13 +973,18 @@ function StepDepth({ step }: { step: DiscoveryCockpitStepView }) {
   const entries = candidates.filter((entry): entry is [string, string] => Boolean(entry[1]))
   if (entries.length === 0) return null
   return (
-    <dl className="grid gap-x-6 gap-y-1.5 border-b px-4 py-3 text-[12px] leading-5 md:grid-cols-2">
-      {entries.map(([term, value]) => (
-        <div key={term}>
-          <dt className="font-bold text-muted-foreground">{term}</dt>
-          <dd className="text-foreground">{value}</dd>
-        </div>
-      ))}
-    </dl>
+    <details className="border-b px-4 py-2">
+      <summary className="cursor-pointer text-[12px] font-bold text-muted-foreground">
+        {DEPTH_SUMMARY}
+      </summary>
+      <dl className="grid gap-x-6 gap-y-1.5 py-2 text-[12px] leading-5 md:grid-cols-2">
+        {entries.map(([term, value]) => (
+          <div key={term}>
+            <dt className="font-bold text-muted-foreground">{term}</dt>
+            <dd className="text-foreground">{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </details>
   )
 }

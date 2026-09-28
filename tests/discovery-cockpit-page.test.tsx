@@ -310,15 +310,25 @@ test("the cockpit reads as the call: routine, verdict, one decision per step", a
 
 test("what needs no decision collapses to one grey line each", async () => {
   const markup = await renderCockpit()
-  assert.ok(markup.includes("Nicht in der Idealroutine"))
+  const footerAt = markup.indexOf(">Nicht in der Idealroutine</h2>")
+  assert.ok(footerAt >= 0)
+  const footer = markup.slice(footerAt, markup.indexOf("</section>", footerAt))
   // „benutze ich nicht" — one line, no decision UI.
-  assert.ok(markup.includes("Öl — benutzt sie nicht. Keine Entscheidung nötig."))
-  // The unresolved barcode row keeps its code instead of inventing a name.
-  assert.ok(markup.includes("Noch in Recherche: Gescanntes Produkt · 4005900123456"))
-  // The no-step line NAMES its products: the document lists every one of them under
-  // „Brauchst du nicht mehr", so the category alone would leave Nick sending a list he
-  // never saw.
-  assert.ok(markup.includes("Conditioner — kein Schritt im Idealplan: Balea Feuchtigkeitsspülung"))
+  assert.ok(footer.includes("Öl — benutzt sie nicht. Keine Entscheidung nötig."))
+  // T4 (c): every product is shown once, above — never again in the footer.
+  // The unresolved barcode row keeps its code instead of inventing a name (Klären banner).
+  const klaeren = markup.slice(markup.indexOf(">Klären</p>"), markup.indexOf(">Behalten</h3>"))
+  assert.ok(klaeren.includes("Gescanntes Produkt · 4005900123456"))
+  assert.ok(!footer.includes("4005900123456"))
+  // The no-step product is NAMED under „Weglassen": the document lists every one of them
+  // under „Brauchst du nicht mehr", so Nick must read that list before he sends it.
+  const weglassen = markup.slice(
+    markup.indexOf(">Weglassen</h3>"),
+    markup.indexOf(">Tauschen oder neu</h3>"),
+  )
+  assert.ok(weglassen.includes("Balea Feuchtigkeitsspülung"))
+  assert.ok(weglassen.includes("Kein Schritt in der Idealroutine."))
+  assert.ok(!footer.includes("Balea Feuchtigkeitsspülung"))
 })
 
 test("the cockpit names scalp care the way the participant's checklist does", async () => {
@@ -361,8 +371,9 @@ test("a finalised call renders as finalised", async () => {
   // Finalised: the state line becomes the link to the participant's document.
   assert.ok(markup.includes("PDF öffnen"))
   assert.ok(markup.includes(`href="/admin/beratung/${ids.enrollment}/pdf"`))
-  // Frozen: every radio is disabled until the finalisation is lifted.
-  assert.equal((markup.match(/disabled=""/g) ?? []).length, 4)
+  // Frozen: every radio is disabled until the finalisation is lifted (the runsheet's two
+  // „Speichern" buttons are disabled too — nothing unsaved yet — and are not radios).
+  assert.equal((markup.match(/<input[^>]*disabled=""/g) ?? []).length, 4)
 })
 
 test("the preflight banner names the answers that are still missing", async () => {

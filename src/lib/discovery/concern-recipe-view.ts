@@ -106,6 +106,16 @@ export function discoveryConcernProfileFacts(snapshot: unknown): DiscoveryConcer
   }
 }
 
+/**
+ * Her pull test off the same snapshot (`profile.hair.elasticity`: `snaps`,
+ * `stretches_bounces`, `stretches_stays`) — the runsheet checklist's „Kamm oder Bürste"
+ * trigger (consult-runsheet T3). `null` when it cannot be read.
+ */
+export function discoveryHairElasticity(snapshot: unknown): string | null {
+  const elasticity = field(field(field(snapshot, "profile"), "hair"), "elasticity")
+  return typeof elasticity === "string" ? elasticity : null
+}
+
 export type ConcernRecipeWhenResult = {
   result: "match" | "unknown" | "no_match"
   /** The keys whose fact is unknown (only meaningful for `unknown`). */
