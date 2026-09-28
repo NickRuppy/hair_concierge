@@ -11,7 +11,7 @@ evidence: practice
 
 ## Im Call
 
-> Ehrlich gesagt: Halt ist ein Styling-Thema, das löst dein Pflegeplan nicht allein. Wir machen die Pflege leichter, damit nichts runterzieht; dann kann mehr Stand kommen. Form entsteht dann über Schnitt und Föhn- bzw. Trocknungstechnik; ein Halt-Produkt ist nicht Teil des Plans.
+> Ehrlich gesagt: Halt ist ein Styling-Thema, das löst dein Pflegeplan nicht allein. Wir machen die Pflege leichter, damit nichts runterzieht; so kann mehr Stand kommen. Die Form entsteht über Schnitt und Föhn- bzw. Trocknungstechnik; ein Halt-Produkt ist nicht Teil des Plans.
 
 ## Frage
 

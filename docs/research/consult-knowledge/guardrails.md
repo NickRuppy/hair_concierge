@@ -71,6 +71,7 @@ Regeln:
 - Kein Produkt, keine Kategorie und kein Pflegehebel wird als Antwort auf Haarausfall oder lichter werdendes Haar angeboten. Pflege für die Längen darf laufen, mit dem ausdrücklichen Satz, dass sie den Ausfall nicht behandelt.
 - Kopfhaut-Themen bleiben kosmetisch nur, solange sie mild und unkompliziert sind. Hält es an oder ist es entzündlich: Grenz-Zeile.
 - Keine Diagnosen (siehe G1a). Erlaubt: „das sollte man ärztlich anschauen lassen".
+- Stufenweise kosmetische Schritte (z. B. erst mild, dann Anti-Schuppen-Shampoo) gelten nur, solange kein G2-Trigger vorliegt; mit Trigger direkt ärztlich.
 
 **Trigger für ärztliche Abklärung** (nach `concern-recipes/recipes.md`, Grenze `hair_loss_or_thinning`). Nennt die Teilnehmerin eins davon, verweist der Brief ärztlich statt kosmetisch:
 

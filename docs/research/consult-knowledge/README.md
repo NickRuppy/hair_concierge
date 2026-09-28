@@ -90,7 +90,7 @@ Spalte „Verlässlichkeit": `hoch` = strukturiertes Profil- oder Plan-Feld; `ni
 
 Für `src/lib/discovery/consult-brief/` (T2):
 
-- **Niedrige Verlässlichkeit → Frage zuerst.** Feuert ein Eintrag nur über Flags mit Verlässlichkeit `niedrig`, übernimmt der Brief zuerst die `## Frage` und formuliert die Einsicht als „falls ja, dann …", nicht als Befund.
+- **Niedrige Verlässlichkeit → Frage zuerst.** Wird eine OR-Gruppe nur durch `niedrig`-Flags erfüllt, oder ist ein AND-Element `niedrig`, übernimmt der Brief zuerst die `## Frage` und formuliert die Einsicht als „falls ja, dann …", nicht als Befund.
 - **Überschneidungen zusammenführen.** Feuern `heavy-care-paradox-fine-hair` und `oil-as-finish` gemeinsam, wird daraus ein Punkt (Menge und Platzierung), nicht zwei.
 - **Stärkere Variante gewinnt.** Feuern `ongoing-damage-first` und `heat-on-colored-hair` gemeinsam (z. B. blondiert und gefärbt), gilt nur `ongoing-damage-first`.
 - **Verdicts bleiben unangetastet (G4).** Einträge sprechen Menge, Platzierung und Rhythmus an. Sie kippen weder ein „passt" noch ein „passt nicht".

@@ -11,7 +11,7 @@ Blondiertes, dauergewelltes oder chemisch geglättetes Haar ist strukturell gesc
 
 ## Im Call
 
-> Bei dir bewegt weniger neuer Schaden am meisten, mehr als das nächste Produkt. Solange Lockenstab oder Glätteisen regelmäßig aufs blondierte Haar gehen, kommt Pflege kaum hinterher. Wenn Hitze: nur ins trockene Haar, niedrigere Stufe, ein Durchgang, Hitzeschutz vorher.
+> Bei dir bewegt weniger neuer Schaden am meisten, mehr als das nächste Produkt. Solange Lockenstab oder Glätteisen regelmäßig aufs vorbehandelte Haar gehen, kommt Pflege kaum hinterher. Wenn Hitze: nur ins trockene Haar, niedrigere Stufe, ein Durchgang, Hitzeschutz vorher.
 
 ## Frage
 

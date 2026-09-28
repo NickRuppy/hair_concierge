@@ -7,7 +7,7 @@ evidence: moderate
 
 ## Einsicht
 
-Gefärbtes Haar ohne Aufhellung ist weniger vorgeschädigt als blondiertes, reagiert aber auf regelmäßige Hitze mit rauerer Oberfläche und schneller verblassender Farbe. Glätteisen, Lockenstab und Welleneisen sind hier ein Hebel unter mehreren, kein Hauptthema. Schonender: nur ins volltrockene Haar, niedrigere Stufe, ein Durchgang, Hitzeschutz vorher. Bei gleichzeitiger Blondierung gilt `ongoing-damage-first`.
+Gefärbtes Haar ohne Aufhellung ist weniger vorgeschädigt als blondiertes, reagiert aber auf regelmäßige Hitze mit rauerer Oberfläche und schneller verblassender Farbe. Glätteisen, Lockenstab und Welleneisen sind hier je nach Häufigkeit ein Hebel unter mehreren. Schonender: nur ins volltrockene Haar, niedrigere Stufe, ein Durchgang, Hitzeschutz vorher. Bei gleichzeitiger Blondierung gilt `ongoing-damage-first`.
 
 ## Im Call
 
@@ -16,4 +16,5 @@ Gefärbtes Haar ohne Aufhellung ist weniger vorgeschädigt als blondiertes, reag
 ## Frage
 
 - Welches Gerät, wie oft pro Woche, auf welcher Stufe?
+- Geht das Gerät auch mal ins noch feuchte Haar?
 - Nutzt du Hitzeschutz?
