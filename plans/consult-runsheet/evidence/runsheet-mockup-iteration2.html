@@ -1,0 +1,434 @@
+<title>Cockpit Nomi</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --bg: #f8f4f1;
+    --card: #ffffff;
+    --ink: #2c2127;
+    --muted: #877a80;
+    --line: #e8dfda;
+    --plum: #6d3452;
+    --plum-soft: #f3e9ef;
+    --coral: #d95b45;
+    --coral-soft: #fbe9e4;
+    --ok: #2e7d4f;
+    --ok-bg: #e7f3ec;
+    --warn: #a06400;
+    --warn-bg: #fdf3df;
+    --bad: #b3402e;
+    --bad-bg: #fbeae6;
+    --step: #ead9e2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1d171b; --card: #272024; --ink: #f0e8ec; --muted: #a3949c;
+      --line: #3a3036; --plum: #d79ebd; --plum-soft: #3a2a34; --coral: #e57a63;
+      --coral-soft: #432b26; --ok: #7cc99b; --ok-bg: #24352b; --warn: #e0b060;
+      --warn-bg: #3a3122; --bad: #e08a77; --bad-bg: #412823; --step: #4a3742;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1d171b; --card: #272024; --ink: #f0e8ec; --muted: #a3949c;
+    --line: #3a3036; --plum: #d79ebd; --plum-soft: #3a2a34; --coral: #e57a63;
+    --coral-soft: #432b26; --ok: #7cc99b; --ok-bg: #24352b; --warn: #e0b060;
+    --warn-bg: #3a3122; --bad: #e08a77; --bad-bg: #412823; --step: #4a3742;
+    color-scheme: dark;
+  }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: Inter, system-ui, -apple-system, sans-serif;
+    font-size: 15px; line-height: 1.55;
+    padding-block: 28px 80px; padding-inline: 16px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 34px; }
+  h1, h2, h3 { font-family: "Schibsted Grotesk", Inter, sans-serif; text-wrap: balance; margin: 0; }
+  h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.01em; }
+  h2 { font-size: 20px; font-weight: 700; }
+  h3 { font-size: 15.5px; font-weight: 700; }
+  p { margin: 0; }
+  .eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .eyebrow.plum { color: var(--plum); }
+  section.phase { display: flex; flex-direction: column; gap: 14px; }
+  .phase-head { display: flex; align-items: center; gap: 12px; }
+  .phase-no { flex: none; width: 30px; height: 30px; border-radius: 999px; background: var(--plum); color: #fff; font-family: "Schibsted Grotesk", sans-serif; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 3px 11px; font-size: 12.5px; font-weight: 600; }
+  .chip.bad { background: var(--bad-bg); color: var(--bad); }
+  .chip.warn { background: var(--warn-bg); color: var(--warn); }
+  .chip.ok { background: var(--ok-bg); color: var(--ok); }
+  .chip.plum { background: var(--plum-soft); color: var(--plum); }
+  .chip.coral { background: var(--coral-soft); color: var(--coral); }
+  .chip.neutral { background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+  .cat { display: inline-flex; border-radius: 6px; padding: 2px 8px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; background: var(--plum-soft); color: var(--plum); }
+  .muted { color: var(--muted); }
+  .small { font-size: 13px; }
+
+  header { display: flex; flex-direction: column; gap: 14px; }
+  .head-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px; }
+  .score-tile { display: flex; align-items: center; gap: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 18px; }
+  .score-now { font-family: "Schibsted Grotesk", sans-serif; font-size: 34px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .score-now small { font-size: 16px; font-weight: 700; color: var(--muted); }
+  .score-arrow { color: var(--muted); font-size: 20px; }
+  .score-goal { font-family: "Schibsted Grotesk", sans-serif; font-size: 34px; font-weight: 800; line-height: 1; color: var(--coral); font-variant-numeric: tabular-nums; }
+  .score-goal small { font-size: 16px; font-weight: 700; color: var(--muted); }
+  .score-cap { font-size: 11.5px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; }
+
+  .check { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+  .check:last-child { border-bottom: 0; }
+  .check input { width: 17px; height: 17px; margin-top: 2px; accent-color: var(--plum); flex: none; }
+  .check label { cursor: pointer; }
+
+  details.script { border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; background: var(--card); }
+  details.script summary { cursor: pointer; font-size: 13.5px; font-weight: 700; color: var(--plum); }
+  details.script ul { margin: 10px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+
+  .flags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tension { border-left: 3px solid var(--warn); background: var(--warn-bg); border-radius: 0 10px 10px 0; padding: 10px 14px; font-size: 14px; }
+  details.quiz { border-top: 1px solid var(--line); padding-top: 10px; }
+  details.quiz summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--plum); }
+  details.quiz dl { margin: 12px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; }
+  details.quiz dt { font-size: 12px; color: var(--muted); }
+  details.quiz dd { margin: 0; font-size: 13.5px; font-weight: 600; }
+  @media (max-width: 480px) { details.quiz dl { grid-template-columns: 1fr; } }
+
+  .stairs { display: flex; align-items: flex-end; gap: 6px; padding: 6px 2px 0; }
+  .stair { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; }
+  .stair .bar { width: 100%; border-radius: 8px 8px 3px 3px; background: var(--step); }
+  .stair.base .bar { background: var(--line); }
+  .stair.goal .bar { background: var(--coral); }
+  .stair .val { font-family: "Schibsted Grotesk", sans-serif; font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums; }
+  .stair.goal .val { color: var(--coral); }
+  .rung { display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .rung:last-child { border-bottom: 0; }
+  .rung .n { font-family: "Schibsted Grotesk", sans-serif; font-weight: 800; color: var(--plum); font-size: 15px; }
+  .rung .pts { font-family: "Schibsted Grotesk", sans-serif; font-weight: 800; color: var(--coral); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .rung .why { font-size: 13px; color: var(--muted); }
+
+  .banner { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; border: 1px solid var(--line); border-left: 3px solid var(--warn); background: var(--warn-bg); border-radius: 0 12px 12px 0; padding: 11px 15px; font-size: 14px; }
+
+  .bucket { display: flex; flex-direction: column; gap: 10px; }
+  .bucket-title { display: flex; align-items: baseline; gap: 10px; }
+  .bucket-title .count { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .product { display: flex; flex-direction: column; gap: 10px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .product:first-child { padding-top: 2px; }
+  .product:last-child { border-bottom: 0; padding-bottom: 2px; }
+  .p-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .p-name { font-weight: 700; }
+  .p-meta { font-size: 13px; color: var(--muted); }
+  .verdict-line { font-size: 14px; }
+  .swaps { display: flex; flex-direction: column; gap: 8px; }
+  .swap { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 9px 13px; }
+  .swap .name { font-weight: 600; font-size: 14px; }
+  .swap .price { margin-left: auto; font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .swap .shop { font-size: 12.5px; color: var(--muted); }
+
+  .freq { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .freq .pill { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 6px 14px; font-size: 13.5px; font-weight: 600; color: var(--muted); }
+  .freq .pill.sel { background: var(--plum); border-color: var(--plum); color: #fff; }
+  .week { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px) { .week { grid-template-columns: 1fr; } }
+  .day { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 9px; }
+  .day ol, .day ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  .day .note { font-size: 12.5px; color: var(--muted); }
+  .total { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; border-top: 1px solid var(--line); padding-top: 12px; }
+  .total .sum { font-family: "Schibsted Grotesk", sans-serif; font-weight: 800; font-size: 20px; font-variant-numeric: tabular-nums; }
+
+  textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); font-family: Inter, sans-serif; font-size: 14px; padding: 10px 12px; resize: vertical; min-height: 64px; }
+  textarea:focus-visible { outline: 2px solid var(--plum); outline-offset: 1px; }
+  .touchpoints { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .referral { background: var(--bg); border: 1px dashed var(--line); border-radius: 10px; padding: 12px 14px; font-size: 14px; }
+  .btn { font-family: Inter, sans-serif; font-weight: 700; font-size: 14.5px; border: 0; border-radius: 999px; padding: 11px 22px; background: var(--coral); color: #fff; cursor: pointer; }
+  .btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+  .btn.ghost { background: transparent; color: var(--plum); border: 1.5px solid var(--plum); padding: 9px 18px; }
+  .btn:focus-visible { outline: 2px solid var(--plum); outline-offset: 2px; }
+  .finalize { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .boundary { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div>
+      <p class="eyebrow plum">Discovery-Cockpit · Call-Runsheet</p>
+      <div class="head-row">
+        <div>
+          <h1>Nomi</h1>
+          <p class="small muted">helbing@dcberlin.com · abgeschickt 25.09.2026</p>
+        </div>
+        <div class="score-tile">
+          <div>
+            <p class="score-cap">Heute</p>
+            <p class="score-now">4<small>/10</small></p>
+          </div>
+          <span class="score-arrow">→</span>
+          <div>
+            <p class="score-cap">Mit Plan</p>
+            <p class="score-goal">8<small>/10</small></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <p class="eyebrow" style="margin-bottom:4px">Vor dem Call</p>
+      <div class="check"><input type="checkbox" id="prep1"><label for="prep1">Recherche abschließen — 1 Produkt offen (gescannter Conditioner)</label></div>
+      <div class="check"><input type="checkbox" id="prep2"><label for="prep2">Consult-Brief prüfen (Diagnose, Hebel, Begründungen)</label></div>
+      <div class="check"><input type="checkbox" id="prep3"><label for="prep3">Im Call klären: Blondier-Rhythmus · Kamm oder Bürste · wo sie einkauft</label></div>
+    </div>
+  </header>
+
+  <section class="phase">
+    <div class="phase-head"><span class="phase-no">1</span><h2>Eröffnen</h2></div>
+    <details class="script">
+      <summary>Gesprächseinstieg</summary>
+      <ul>
+        <li>Wer ich bin: entwickle das Produkt, habe viele Routinen gebaut.</li>
+        <li>Ziel heute: ein Plan für gesünderes, schöneres Haar — von ihrer 4 Richtung 10. Haar ist komplex, Unsicherheit ist normal.</li>
+        <li>Ergebnis: ein PDF mit kompletter Routine — Produkte, Reihenfolge, Häufigkeit. „Passt das so für dich?“</li>
+        <li>Score live abfragen und oben eintragen, falls noch offen.</li>
+      </ul>
+    </details>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head"><span class="phase-no">2</span><h2>Problem</h2></div>
+    <div class="card" style="display:flex;flex-direction:column;gap:12px">
+      <p class="eyebrow">Diagnose</p>
+      <p>Feines, dichtes, langes Haar, blondiert. Frizz, wenig Glanz und „strapaziert“ sind <strong>ein</strong> Problem: geschädigte, aufgeraute Längen — und der Schaden läuft weiter (Lockenstab 2×/Wo, Hitzeschutz nur manchmal). Zweites, eigenes Problem: trockene Kopfhaut mit Trockenheitsschuppen — das Anti-Schuppen-Shampoo verstärkt sie eher.</p>
+      <div class="flags">
+        <span class="chip bad">Reißt sofort</span>
+        <span class="chip bad">Blondiert + Lockenstab 2×/Wo</span>
+        <span class="chip warn">Pflege schwer statt stärkend</span>
+      </div>
+      <div class="tension"><strong>Spannungsfeld:</strong> braucht Pflege, wird aber schnell beschwert (fein, „schnell platt“). Also leichte Texturen, kleine Mengen.</div>
+      <details class="quiz">
+        <summary>Alle Quiz-Antworten</summary>
+        <dl>
+          <dt>Haarstruktur</dt><dd>Glatt</dd>
+          <dt>Haardicke</dt><dd>Fein</dd>
+          <dt>Dichte</dt><dd>Viele Haare</dd>
+          <dt>Länge</dt><dd>Lang</dd>
+          <dt>Oberfläche</dt><dd>Leicht uneben</dd>
+          <dt>Elastizität</dt><dd>Reißt sofort</dd>
+          <dt>Kopfhaut</dt><dd>Eher trocken</dd>
+          <dt>Beschwerden</dt><dd>Trockene Schuppen</dd>
+          <dt>Chemisch behandelt</dt><dd>Blondiert / aufgehellt</dd>
+          <dt>Probleme</dt><dd>Strapaziert (Hauptproblem) · Frizz · wenig Glanz · schnell platt</dd>
+          <dt>Ziele</dt><dd>Geschmeidigkeit · Glanz · ausgeglichene Kopfhaut · Form &amp; Halt</dd>
+          <dt>Hitze</dt><dd>Föhnen 2×/Wo · Lockenstab 2×/Wo</dd>
+        </dl>
+      </details>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;gap:16px">
+      <p class="eyebrow">Die drei Hebel · von 4 auf 8</p>
+      <div class="stairs" aria-hidden="true">
+        <div class="stair base"><span class="val">4</span><div class="bar" style="height:34px"></div></div>
+        <div class="stair"><span class="val">5,5</span><div class="bar" style="height:56px"></div></div>
+        <div class="stair"><span class="val">7</span><div class="bar" style="height:74px"></div></div>
+        <div class="stair goal"><span class="val">8</span><div class="bar" style="height:88px"></div></div>
+      </div>
+      <div>
+        <div class="rung">
+          <span class="n">1</span>
+          <div><strong>Schaden stoppen</strong><p class="why">Lockenstab 1×/Wo, mittlere Stufe, Hitzeschutz immer. Blondieren strecken, nie überlappend. Sanft entwirren.</p></div>
+          <span class="pts">+1,5</span>
+        </div>
+        <div class="rung">
+          <span class="n">2</span>
+          <div><strong>Basics stärken statt beschweren</strong><p class="why">Mildes Shampoo, Conditioner nach jeder Wäsche, leichtes Leave-in. Öl nur als Finish in die Spitzen.</p></div>
+          <span class="pts">+1,5</span>
+        </div>
+        <div class="rung">
+          <span class="n">3</span>
+          <div><strong>Gezielt reparieren</strong><p class="why">Leichte Repair-Maske statt reichhaltiger Kur, später Bondbuilder. Spitzen regelmäßig schneiden.</p></div>
+          <span class="pts">+1</span>
+        </div>
+      </div>
+      <p class="small muted">Erfahrungswerte. Kaputte Spitzen wachsen nur raus — mit regelmäßigem Schnitt geht es Richtung 9.</p>
+    </div>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head"><span class="phase-no">3</span><h2>Produkte</h2></div>
+    <div class="banner">Noch in Recherche: gescannter Conditioner (0850018802659) — vor dem Call abschließen, sonst bleibt der Conditioner-Schritt ohne Urteil.</div>
+
+    <div class="bucket">
+      <div class="bucket-title"><h3>Behalten</h3><span class="count">1 Produkt</span></div>
+      <div class="card">
+        <div class="product">
+          <div class="p-top">
+            <span class="cat">Öl</span>
+            <span class="p-name">Garnier Fructis Wunderöl</span>
+            <span class="chip warn">Behalten — anders anwenden</span>
+          </div>
+          <p class="verdict-line">Bleibt, aber als Finish: 1–2 Tropfen in die trockenen Spitzen bei Frizz. Großzügig im feuchten Haar beschwert ihr feines Haar — das erklärt einen Teil von „schnell platt“.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bucket">
+      <div class="bucket-title"><h3>Weglassen</h3><span class="count">0 Produkte</span></div>
+      <div class="card"><p class="small muted">Nichts in ihrer Routine ist überflüssig — die Lücken sind das Thema, nicht der Ballast.</p></div>
+    </div>
+
+    <div class="bucket">
+      <div class="bucket-title"><h3>Tauschen oder neu</h3><span class="count">2 tauschen · 3 neu</span></div>
+      <div class="card">
+        <div class="product">
+          <div class="p-top">
+            <span class="cat">Shampoo</span>
+            <span class="p-name">Sebamed Anti Schuppen</span>
+            <span class="p-meta">2×/Wo</span>
+            <span class="chip bad">Tauschen</span>
+          </div>
+          <p class="verdict-line">Anti-Schuppen wirkt gegen fettige, pilzbedingte Schuppen. Ihre sind Trockenheitsschuppen — die stärkere Reinigung trocknet die Kopfhaut weiter aus und hält die Schuppen am Leben. Milde Urea-Pflege statt Anti-Pilz.</p>
+          <div class="swaps">
+            <div class="swap"><span class="chip ok">Passt</span><span class="name">Sebamed Urea 5% Shampoo</span><span class="shop">dm</span><span class="price">5,45&nbsp;€</span></div>
+            <div class="swap"><span class="chip ok">Passt</span><span class="name">Balea 2in1 Urea 5%</span><span class="shop">dm · Budget</span><span class="price">2,95&nbsp;€</span></div>
+          </div>
+        </div>
+        <div class="product">
+          <div class="p-top">
+            <span class="cat">Maske</span>
+            <span class="p-name">John Frieda Wunder-Reparatur Kur</span>
+            <span class="p-meta">1×/Wo</span>
+            <span class="chip bad">Tauschen</span>
+          </div>
+          <p class="verdict-line">Zu reichhaltig für feines Haar, kaum Repair — schwer, ohne zu stärken. Leichte Bonding-Maske liefert das Gegenteil. Falls sie sich strohig anfühlt: mit Feuchtigkeitspflege abwechseln.</p>
+          <div class="swaps">
+            <div class="swap"><span class="chip ok">Passt</span><span class="name">Gliss Liquid Silk Bonding Maske</span><span class="shop">dm</span><span class="price">4,45&nbsp;€</span></div>
+          </div>
+        </div>
+        <div class="product">
+          <div class="p-top">
+            <span class="cat">Leave-in</span>
+            <span class="p-name">Neu dazu</span>
+            <span class="chip coral">Hebel 2</span>
+          </div>
+          <p class="verdict-line">Schutz und Glätte zwischen den Wäschen — dort verbessert sich „reißt beim Kämmen“ am schnellsten.</p>
+          <div class="swaps">
+            <div class="swap"><span class="chip ok">Passt</span><span class="name">Pantene Pro-V Miracles 7in1 Spray</span><span class="shop">dm · Budget</span><span class="price">4,95&nbsp;€</span></div>
+            <div class="swap"><span class="chip ok">Passt</span><span class="name">Olaplex No.5 Leave-In</span><span class="shop">online</span><span class="price">27,90&nbsp;€</span></div>
+          </div>
+        </div>
+        <div class="product">
+          <div class="p-top">
+            <span class="cat">Hitzeschutz</span>
+            <span class="p-name">Neu dazu</span>
+            <span class="chip coral">Hebel 1</span>
+          </div>
+          <div class="swaps">
+            <div class="swap"><span class="chip ok">Passt</span><span class="name">L’Oréal Elvital Defeat the Heat Spray</span><span class="shop">dm</span><span class="price">6,45&nbsp;€</span></div>
+          </div>
+        </div>
+        <div class="product">
+          <div class="p-top">
+            <span class="cat">Bondbuilder</span>
+            <span class="p-name">Später dazu</span>
+            <span class="chip neutral">Hebel 3 · ab Woche 4</span>
+          </div>
+          <p class="verdict-line">Unterstützung für chemisch geschädigtes Haar — keine Reparatur, und erst wenn die Basics sitzen.</p>
+          <div class="swaps">
+            <div class="swap"><span class="chip ok">Passt</span><span class="name">Balea Professional Plex Care 2in1</span><span class="shop">dm · Budget</span><span class="price">3,95&nbsp;€</span></div>
+            <div class="swap"><span class="chip ok">Passt</span><span class="name">K18 Molecular Repair Mask</span><span class="shop">online · über ihrem Rahmen</span><span class="price">75,00&nbsp;€</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="small muted">Ziel „Form &amp; Halt“: Volumen kommt über die leichtere Pflege und Föhntechnik am Ansatz zurück; echtes Styling-Halt-Produkt ist nicht Teil dieses Plans — offen ansprechen.</p>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head"><span class="phase-no">4</span><h2>Routine</h2></div>
+    <div class="card" style="display:flex;flex-direction:column;gap:14px">
+      <div class="freq">
+        <span class="small" style="font-weight:600">Wäschen pro Woche</span>
+        <span class="pill">1×</span>
+        <span class="pill sel">2×</span>
+        <span class="pill">3×</span>
+        <span class="small muted">heute: 2× — bleibt</span>
+      </div>
+      <div class="week">
+        <div class="day">
+          <h3>Waschtag <span class="muted" style="font-weight:500">· 2×/Woche</span></h3>
+          <ol>
+            <li>Mildes Shampoo (Urea)</li>
+            <li>Conditioner — 1×/Woche ersetzt die Bonding-Maske ihn</li>
+            <li>Leave-in ins handtuchtrockene Haar</li>
+            <li>Hitzeschutz, dann föhnen auf mittlerer Stufe</li>
+          </ol>
+        </div>
+        <div class="day">
+          <h3>Tage ohne Wäsche</h3>
+          <ul>
+            <li>Nichts nötig — bei Frizz 1–2 Tropfen Öl in die Spitzen</li>
+            <li>Lockenstab höchstens 1×/Woche, immer mit Hitzeschutz</li>
+          </ul>
+          <p class="note">Ab Woche 4: Bondbuilder 1×/Woche vor der Wäsche.</p>
+        </div>
+      </div>
+      <div class="total">
+        <span class="small muted">Neue Produkte gesamt (Budget-Auswahl)</span>
+        <span class="sum">18,80&nbsp;€</span>
+      </div>
+      <p class="small muted">Abschlussfrage: „Alles klar so? Passt das in deine Woche?“ — dann festhalten.</p>
+    </div>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head"><span class="phase-no">5</span><h2>Feedback &amp; nächste Schritte</h2></div>
+    <div class="card" style="display:flex;flex-direction:column;gap:12px">
+      <label class="small" for="fb" style="font-weight:600">Ihr Feedback zum Call</label>
+      <textarea id="fb" placeholder="Was war hilfreich? Was hat gefehlt?"></textarea>
+      <p class="eyebrow" style="margin-top:4px">Vereinbarte Touchpoints</p>
+      <div class="touchpoints">
+        <span class="chip plum">11.10. · Kurz-Check per WhatsApp</span>
+        <span class="chip plum">25.10. · Re-Score-Call</span>
+      </div>
+      <p class="small muted">Beim Re-Score wieder 1–10 abfragen — der Verlauf landet neben dem Score oben.</p>
+    </div>
+  </section>
+
+  <section class="phase">
+    <div class="phase-head"><span class="phase-no">6</span><h2>Abschluss</h2></div>
+    <div class="card" style="display:flex;flex-direction:column;gap:14px">
+      <div>
+        <p class="eyebrow" style="margin-bottom:6px">Empfehlungs-Frage</p>
+        <p class="small">„Kennst du zwei, drei Leute, die auch nicht ganz glücklich mit ihren Haaren sind? Wir machen die Calls gerade kostenlos — magst du ihnen kurz diese Nachricht weiterleiten?“</p>
+      </div>
+      <div class="referral" id="refText">Hey! Ich hatte gerade eine kostenlose Haar-Beratung bei Chaarlie — 30 Minuten, und danach hatte ich einen kompletten Plan mit Produkten, die wirklich zu meinem Haar passen. Falls du auch nicht ganz zufrieden bist: chaarlie.de/lp/call</div>
+      <div><button class="btn ghost" id="copyRef" type="button">Nachricht kopieren</button></div>
+      <div class="finalize" style="border-top:1px solid var(--line);padding-top:14px">
+        <button class="btn" disabled>Finalisieren &amp; PDF senden</button>
+        <p class="small muted">Erst Recherche abschließen — 1 Produkt offen.</p>
+      </div>
+      <p class="boundary">Grenze: Kommt vermehrter Ausfall mit Wurzel, lichter werdendes Haar oder eine starke Kopfhautreaktion nach dem Blondieren dazu — ärztlich abklären lassen.</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  document.getElementById("copyRef").addEventListener("click", function () {
+    var btn = this;
+    var text = document.getElementById("refText").textContent.trim();
+    function done(ok) {
+      btn.textContent = ok ? "Kopiert" : "Text markiert — cmd+C";
+      setTimeout(function () { btn.textContent = "Nachricht kopieren"; }, 2000);
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, fallback);
+    } catch (e) { fallback(); }
+    function fallback() {
+      try {
+        var range = document.createRange();
+        range.selectNodeContents(document.getElementById("refText"));
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        done(false);
+      } catch (e) { done(false); }
+    }
+  });
+</script>

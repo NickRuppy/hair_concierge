@@ -252,11 +252,12 @@ async function renderCockpit(
   )
 }
 
-/** The product column of one step block, located by its category heading. */
+/**
+ * The product column of one step block, located by its category anchor chip (since the
+ * consult runsheet T3, every product entry carries its step's category as a chip).
+ */
 function stepBlock(markup: string, categoryLabel: string): string {
-  const start = markup.indexOf(
-    `<span class="text-[15px] font-bold text-foreground">${categoryLabel}</span>`,
-  )
+  const start = markup.indexOf(`text-[var(--brand-plum)]">${categoryLabel}</span>`)
   assert.ok(start >= 0, `no step block for ${categoryLabel}`)
   const end = markup.indexOf("Entscheidung", start)
   return markup.slice(start, end)
@@ -282,7 +283,9 @@ test("a submitted intake's untouched step says so at the step — never „benut
 
 test("the summary line names only the unanswered categories no step already names", async () => {
   const markup = await renderCockpit("submitted")
-  assert.ok(markup.includes("Öl — benutzt sie nicht. Keine Entscheidung nötig."))
+  // Oil is a step that already says she uses nothing for it (consult-runsheet T4 c): the
+  // footer does not repeat it.
+  assert.ok(!markup.includes("Öl — benutzt sie nicht. Keine Entscheidung nötig."))
   // Leave-in and mask are named at their steps; the line carries the six without a step.
   assert.ok(
     markup.includes(
@@ -306,7 +309,9 @@ test("with every unanswered category on a step, the summary line disappears", as
 
 test("before submission an open category is just not done yet — never „benutzt nichts“, no line", async () => {
   const markup = await renderCockpit("draft")
-  assert.ok(markup.includes("Öl — benutzt sie nicht."))
+  // Her „benutze ich nicht" for oil is said at the oil step, not again in the footer (T4 c).
+  assert.ok(stepBlock(markup, "oil").includes(USES_NOTHING))
+  assert.ok(!markup.includes("Öl — benutzt sie nicht."))
   assert.ok(!markup.includes("Nicht angegeben"))
   const leaveIn = stepBlock(markup, "Leave-in")
   assert.ok(leaveIn.includes("Noch nicht ausgefüllt."))

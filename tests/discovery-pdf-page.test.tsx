@@ -5,10 +5,12 @@ import { NextResponse } from "next/server"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { createDiscoveryPdfPage } from "../src/app/admin/beratung/[enrollmentId]/pdf/page"
+import { composeRunsheetProducts } from "../src/components/discovery/cockpit/runsheet-products"
 import { DiscoveryRoutineDocument } from "../src/components/discovery/print/discovery-routine-document"
 import {
   buildDiscoveryCockpitView,
   discoveryOwnedProductIdentities,
+  discoveryResearchOpenItems,
   type DiscoveryCallIntake,
   type DiscoveryCockpitModel,
 } from "../src/lib/discovery/cockpit"
@@ -427,6 +429,33 @@ test("the render gate: only a finalised call has a document", async () => {
     }),
   })
   assert.ok(guidanceMissing.includes(cockpit), guidanceMissing)
+})
+
+test("research gate (F1/F4): a product the runsheet shows inside its category still sends the PDF back", async () => {
+  // The unidentified mask scan is in research while the Idealroutine has an empty mask step:
+  // the runsheet's display join shows it IN that step („noch in Recherche")…
+  const researchingModel: DiscoveryCockpitModel = {
+    ...readyModel(),
+    routine: composeDiscoveryRefinedRoutine({
+      steps,
+      items: allItems,
+      decisions,
+      swapProducts,
+      ownedProducts: discoveryOwnedProductIdentities(verdicts),
+    }),
+  }
+  const view = buildDiscoveryCockpitView(researchingModel)
+  const display = composeRunsheetProducts({ steps: view.steps, unassigned: view.unassigned })
+  const maskSlot = display.tauschenOderNeu.find((entry) => entry.step.category === "mask")
+  assert.equal(maskSlot?.research?.label, "Gescanntes Produkt · 4005900123456")
+  assert.deepEqual(
+    discoveryResearchOpenItems(view).map((entry) => entry.itemId),
+    [ids.barcodeItem],
+  )
+  // …and the document still refuses to exist: it redirects to the cockpit.
+  const digest = await digestOf({ loadModel: async () => researchingModel })
+  assert.ok(digest.startsWith("NEXT_REDIRECT"), digest)
+  assert.ok(digest.includes(`/admin/beratung/${ids.enrollment}`), digest)
 })
 
 // --- the document ---------------------------------------------------------------

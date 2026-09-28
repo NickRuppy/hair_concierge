@@ -161,7 +161,8 @@ test("the migration has a unique version that sorts after every migration", () =
     .map((name) => name.split("_")[0])
   const own = OWN.split("_")[0]
   assert.equal(versions.filter((version) => version === own).length, 1)
-  // Only the iOS paywall branch's migrations may come later.
+  // Only later batches (batch 9, the consult runsheet's call sheets) and the iOS paywall
+  // branch's migrations may come later.
   assert.deepEqual(
     versions.filter((version) => version > own).sort(),
     [
@@ -172,6 +173,7 @@ test("the migration has a unique version that sorts after every migration", () =
       "20260928074426",
       "20260928080932",
       "20260928083245",
+      "20260928120000",
     ],
     "must sort after every migration but the iOS paywall's",
   )
