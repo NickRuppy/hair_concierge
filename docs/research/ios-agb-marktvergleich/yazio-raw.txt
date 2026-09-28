@@ -1,0 +1,563 @@
+Title: Nutzungsbedingungen & Datenschutzerklärung – Yazio Hilfe-Bereich
+URL: https://help.yazio.com/hc/de/articles/203444951-Nutzungsbedingungen-Datenschutzerkl%C3%A4rung
+Source element: <main>
+---
+Hast du Fragen zu Yazio?
+
+Perfekt! Hier bist du genau richtig.
+
+Suche
+Yazio Hilfe-Bereich
+ Allgemein
+ Allgemeine Informationen
+Nutzungsbedingungen & Datenschutzerklärung
+Allgemeine Geschäftsbedingungen
+Widerrufsbelehrung
+Datenschutzerklärung
+Allgemeine Geschäftsbedingungen
+§ 1 Geltungsbereich
+
+(1) Diese Allgemeinen Geschäftsbedingungen (nachfolgend „AGB“) der YAZIO GmbH, Kartäuserstr. 3a, 99084 Erfurt, regeln die Nutzung der YAZIO-Dienste auf der YAZIO-Website yazio.com (nachfolgend „Website“) und der Mobilanwendung (nachfolgend „App“ oder „YAZIO-App“). Sie gelten unabhängig davon, ob die Benutzung kostenlos oder entgeltlich erfolgt.
+
+(2) Im Verhältnis zwischen der YAZIO GmbH (nachfolgend auch „Anbieter“ oder “YAZIO“) und dem Nutzer der YAZIO-Dienste (nachfolgend „Nutzer“) gelten ausschließlich die nachfolgenden Bedingungen in ihrer zum Zeitpunkt der Nutzung bzw. zum Zeitpunkt des Erwerbs gültigen Fassung. Abweichende Bedingungen des Kunden werden nicht anerkannt, es sei denn, der Anbieter stimmt ihrer Geltung ausdrücklich zu.
+
+§ 2 Begriffsbestimmungen
+
+(1) YAZIO bietet seinen Nutzern ein Programm, das auf die Themenkomplexe gesundes Ab- und Zunehmen, Muskelaufbau sowie gesunde Ernährung zugeschnitten ist und über die YAZIO-App sowie über yazio.com vielfältige Möglichkeiten anbietet, sich mit diesen Themenkomplexen vertraut zu machen und (nachfolgend auch „Dienste“). Dies umfasst auch Funktionen, die auf Künstlicher Intelligenz (KI) und maschinellem Lernen basieren („AI Funktion“).
+
+(2) Die Begriffe „Verbraucher“ und „Unternehmer“ werden im Einklang mit den gesetzlichen Definitionen in §§ 13, 14 BGB verstanden. Der Nutzer ist demnach „Verbraucher", soweit die Benutzung oder der Erwerb der YAZIO-App nicht überwiegend seiner gewerblichen oder selbständigen beruflichen Tätigkeit zugerechnet werden kann. Dagegen wird unter „Unternehmer“ jede natürliche oder juristische Person oder rechtsfähige Personengesellschaft verstanden, die bei der Nutzung der YAZIO-App bzw. beim Abschluss des Vertrags in Ausübung ihrer gewerblichen oder selbständigen beruflichen Tätigkeit handelt.
+
+(3) Unter „Vertriebsplattform“ werden die Shops (Stores) von Plattform-Betreibern wie Google („Google Play“) und Apple („App Store“) verstanden, in denen Nutzer die YAZIO-App auswählen und zur Installation herunterladen können.
+
+§ 3 Nutzung der YAZIO-Dienste
+
+(1) Die YAZIO-Dienste können kostenlos oder kostenpflichtig genutzt werden; dies gilt auch insbesondere für die Nutzung der Dienste über die YAZIO-App. Bei der reinen Installation über eine Vertriebsplattform ist die App stets kostenfrei. Eine kostenpflichtige Nutzung setzt stets eine gesonderte, ausdrückliche Zustimmung des Nutzers in der App (s.u. § 5 und § 6) voraus.
+
+(2) Die YAZIO-App kann grundsätzlich auf allen von YAZIO unterstützten Plattformen bzw. Endgeräten, u.a. auf Mobiltelefonen, Smartwatches, Tablets und anderen mobilen Geräten, installiert und betrieben werden. 
+
+(3) Mit der Nutzung der Website bzw. der Installation der App erklärt der Nutzer, mit diesen AGB einverstanden zu sein. Hat der Nutzer die App über die Vertriebsplattform eines Dritten heruntergeladen und greift über die App auf die Dienste von YAZIO zu, so gelten die jeweiligen Geschäfts- bzw. Nutzungsbedingungen der Vertriebsplattform ergänzend; sofern sich hieraus Widersprüche ergeben, gehen die vorliegenden AGB vor.
+
+(4) Der Nutzer bestätigt, dass seine Angaben wahrheitsgemäß, aktuell und vollständig sind. Eine regelmäßige Aktualisierung der persönlichen Informationen wird vorausgesetzt. 
+
+(5) Es ist dem Nutzer nicht gestattet, Technologien, die der geografischen oder sonstigen Zugangskontrolle dienen, zu umgehen, um kostenpflichtige Dienste von YAZIO unberechtigt zu nutzen.
+
+(6) Der Nutzer ist verpflichtet, sein Konto vor unberechtigten Zugriffen und missbräuchlicher Nutzung zu schützen. Der Verdacht sowie etwaige Verstöße sind dem Anbieter unverzüglich mitzuteilen. Eine etwaige Rückerstattung unberechtigter Zahlungen erfolgt erst nach erfolgreicher Meldung des Missbrauchs. 
+
+(7) Sofern der Anbieter missbräuchliches Verhalten eines Nutzers feststellen sollte, ist dieser berechtigt, das betreffende Konto zu schließen. 
+
+(8) Für die Nutzung unserer App müssen Sie mindestens 16 Jahre alt sein, es sei denn, ein Elternteil hat der Installation und der sich anschließenden Nutzung unserer App nach geltendem Recht zugestimmt. Sollte YAZIO erfahren, dass personenbezogene Daten eines/einer Minderjährigen unter dem angegebenen Mindestalter ohne die elterliche Zustimmung erfasst wurden, wird der Anbieter die erforderlichen Schritte veranlassen, diese Daten unverzüglich zu löschen.
+
+(9) Bei der Nutzung bestimmter Dienste (z. B. Chat-Funktionen, personalisiertes Feedback oder automatisierte Ernährungstipps) interagiert der Nutzer mit einem KI-System. YAZIO wird solche AI Funktionen innerhalb der App als solche kenntlich machen, sofern dies nicht aus dem Kontext unmittelbar ersichtlich ist.
+
+§ 4 Gesundheitshinweis zur Nutzung der YAZIO-Dienste
+
+(1) Bei dem Anbieter handelt es sich nicht um eine medizinische Organisation, seine Empfehlungen stellen keine medizinische Beratung dar. Dies gilt ausdrücklich auch für Empfehlungen, Tipps und Analysen, die durch AI Funktion generiert werden. Aufgrund möglicher ungewollter mit der Nutzung der YAZIO-Dienste einhergehender Gewichtsabnahmen wird dem Nutzer vor Nutzung der YAZIO-Dienste im Einzelfall dazu geraten, einen Arzt zu konsultieren, um mit diesem die vom Anbieter individuell ausgesprochenen Empfehlungen abzusprechen. Dies gilt besonders für Nutzer, die sich bereits in ärztlicher Behandlung befinden und verschreibungspflichtige Medikamente zur Behandlung einer klinisch diagnostizierten Krankheit einnehmen. Der Anbieter empfiehlt die Nutzung der YAZIO-Dienste ärztlich begleiten zu lassen und regelmäßige ärztliche Kontrolltermine wahrzunehmen. Der Anbieter übernimmt keine Verantwortung für das Handeln der Nutzer. Sämtliche Inhalte stellen keine Ergänzung oder Ersatz zu bzw. für Informationen eines Arztes oder Apothekers dar. KI-generierte Inhalte können unvollständig oder faktisch unrichtig sein („Halluzinationen“). Der Nutzer ist verpflichtet, diese Informationen vor der Umsetzung auf ihre Plausibilität und Vereinbarkeit mit seinem persönlichen Gesundheitszustand zu prüfen. Mit der Zustimmung zu diesen AGB bestätigt der Nutzer, ausschließlich für seine Gesundheit verantwortlich zu sein. 
+
+(2) Der Anbieter empfiehlt dem Nutzer die Haltung seines Gewichts innerhalb der von der Weltgesundheitsorganisation (WHO) vorgegebenen Richtlinien für gesundes Gewicht, was einem Body-Mass-Index (BMI) zwischen 18,5-25 entspricht. Die Berechnung des BMI kann mit folgender Formel durchgeführt werden: Körpergewicht (in kg) geteilt durch Körpergröße (in m) zum Quadrat.
+
+§ 5 Erstellung eines Nutzerkontos
+
+(1) Die YAZIO-App kann mit oder ohne einem personalisierten Nutzerkonto verwendet werden. Bei Erstellung eines persönlichen Nutzerkontos ist es erforderlich, dass der Nutzer seine E-Mail-Adresse eingibt und ein Passwort vergibt. Der Nutzer kann seinen bestehenden anonymen Account jederzeit in einen persönlichen Account umwandeln, indem er seine E-Mail-Adresse mit dem Nutzerkonto verknüpft. 
+
+(2) Für die Nutzung der YAZIO-App mit der Apple Watch – auch ohne dass diese mit einem iPhone des Nutzers gekoppelt ist – ist lediglich die Erstellung eines Nutzerkontos über „Weiter mit/Sign in with Apple“ erforderlich.
+
+(3) Die Nutzung der YAZIO-App kann auch durch die Verknüpfung der App mit dem Profil des Nutzers bei einem Plattform-Betreiber erfolgen, z. B. mit der Erstellung eines YAZIO-Nutzerkontos über „Weiter mit/Sign in with Google“.
+
+§ 6 Laufzeit und Kündigung unentgeltlicher Dienste
+
+Werden die Dienste von YAZIO unentgeltlich genutzt, kann der Nutzungsvertrag sowohl durch YAZIO als auch den Nutzer mit einer Frist von 14 Tagen an die E-Mail-Adresse help@yazio.com bzw. die vom Nutzer hinterlegte E-Mail-Adresse gekündigt werden. Zudem hat der Nutzer die Möglichkeit, das Konto über die App in den Einstellungen zu löschen.
+
+§ 7 Laufzeit, Laufzeitverlängerung und Kündigung kostenpflichtiger Dienste
+
+(1) YAZIO bietet seinen Nutzern Abonnements mit unterschiedlichen festen Laufzeiten und einem jeweils an die Dauer der Laufzeit angepassten Nutzungsentgelt, das vorab zu leisten ist, um alle Dienste uneingeschränkt nutzen zu können (nachfolgend auch „YAZIO PRO“ oder „PRO-Funktionen“). 
+
+(2) Sofern der Nutzer die Funktionsvielfalt der entgeltlichen Version der YAZIO-App nutzen möchte, kann er die PRO-Funktionen über die YAZIO-Website erwerben sowie die App durch einen sog. „In-App-Kauf“ über eine Vertriebsplattform upgraden. 
+
+(a) Für den Erwerb der PRO-Funktionen auf der Website des Anbieters muss sich der Nutzer mit seiner E-Mail-Adresse sowie seinem Passwort einloggen oder neu registrieren. In seinem Nutzerkonto kann er die unterschiedlichen Abonnements auf der entsprechenden Produktseite einsehen und erwerben. 
+
+(b) Sofern der Nutzer das Upgrade über eine Vertriebsplattform vornimmt, richtet sich die konkrete Vorgehensweise nach den Bedingungen des jeweiligen Plattform-Betreibers. Der Kaufvertrag findet nach den Bedingungen der jeweiligen Vertriebsplattform statt. Nach diesen Bedingungen richtet sich auch, ob der Kaufvertrag zwischen dem Nutzer und der Vertriebsplattform oder aber zwischen dem Nutzer und dem Anbieter zustande kommt.
+
+(3) YAZIO kann seinen Nutzern temporär die Möglichkeit anbieten, das gewählte Abonnement bei dem Abschluss über die Website oder über eine Vertriebsplattform, wie z. B. den Google Play Store oder den App Store, für einen von YAZIO spezifizierten Zeitraum kostenlos zu nutzen (Probe-Abonnement). Das Probe-Abonnement beginnt an dem Tag, an dem der Kaufprozess abgeschlossen wird. Bei Abschluss des Probe-Abonnements wird dem Nutzer die Dauer der Testphase mitgeteilt. Innerhalb der Testphase wird zunächst kein Entgelt abgebucht, YAZIO kann aber verlangen, dass der Nutzer zu Beginn des Probe-Abonnements seine Zahlungsdaten angibt. Sofern der Nutzer das Probe-Abonnement nicht innerhalb der von YAZIO zeitlich bestimmten Testphase kündigt, wandelt sich das Probe-Abonnement automatisch in ein kostenpflichtiges, zeitlich begrenztes Abonnement um. Hierauf wird der Nutzer hingewiesen und muss seine Zustimmung erklären. Dem Nutzer wird das entsprechende Nutzungsentgelt des Abonnements automatisch mit Ablauf des letzten Tages der von YAZIO bestimmten Testphase abgebucht; die PRO-Funktionen werden dem Nutzer nach Abschluss des Kaufs automatisch freigeschaltet. YAZIO kann den Leistungsumfang des Probe-Abonnements jederzeit verändern oder das Angebot eines Probe-Abonnements beenden.
+
+(4) Das zeitlich begrenzte Abonnement läuft mindestens für die vom Nutzer ursprünglich gewählte Laufzeit zuzüglich des ggf. vorangestellten Probe-Abonnement-Zeitraums, der von YAZIO vorgegeben wird.
+
+(5) Der Nutzer kann das Abonnement jederzeit zum Ende der gewählten Laufzeit kündigen. Erfolgt keine Kündigung, verlängert sich das Abonnement auf unbestimmte Zeit zu den Abschlusskonditionen des initialen Abonnements und kann von YAZIO oder vom Nutzer jederzeit mit einer Frist von einem Monat zum Monatsende gekündigt werden. Ist der Nutzer in Vorleistung getreten, werden Differenzbeträge erstattet.
+
+(6) Wurde das Abonnement über yazio.com erworben, ist die Kündigung über die im Footer erreichbare Kündigungsschaltfläche, in der App oder per E-Mail an help@yazio.com zu erklären; erfolgt die Kündigung durch den Anbieter, so ist dem Nutzer über die hinterlegte E-Mail-Adresse zu kündigen. Wurde das Abonnement über eine Vertriebsplattform erworben, so kann die Kündigung des Abonnements, wie in den jeweiligen App-Stores in der Abonnementverwaltung beschrieben, durchgeführt werden. 
+
+(7) Das Recht zur außerordentlichen Kündigung aus wichtigem Grund bleibt unberührt. Ein wichtiger Grund für YAZIO liegt insbesondere dann vor, wenn der Nutzer gegen anwendbares Recht oder gegen wesentliche Vertragspflichten verstößt. Unberührt bleiben zudem die Regelungen von § 10.
+
+(8) Stirbt der Nutzer, sind dessen Erben nach der Maßgabe der Abs. 5-7 zur Kündigung des Abonnements berechtigt.
+
+§ 8 Zahlung des Nutzungsentgelts
+
+(1) Nach dem Kauf der PRO-Funktionen über die YAZIO-Website erhält der Nutzer eine Rechnung über das zu begleichende Nutzungsentgelt, sofern keine andere Zahlungsart vereinbart ist. Entscheidet sich der Nutzer für ein zeitlich begrenztes Abonnement mit einer ggf. vorherigen, von YAZIO bestimmten und dem Nutzer mitgeteilten Testphase (Probe-Abonnement), so wird das Nutzungsentgelt des Abonnements erst mit Ablauf des letzten Tages der Testphase fällig. Nach der Testphase wird das Nutzungsentgelt für die jeweilige Abonnementperiode sofort fällig und ist im Voraus vom Nutzer zu zahlen. Geht dem zeitlich begrenzten Abonnement keine Testphase voraus, so ist das Nutzungsentgelt für die jeweilige Abonnementperiode sofort fällig und nach Abschluss des Kaufs sofort zu zahlen.
+
+(2) Der Nutzer ist verpflichtet, alle aufkommenden Kosten zu zahlen, sofern ein fälliges Entgelt von einem von ihm angegebenen Bankkonto nicht eingezogen werden kann. Sofern geleistete Zahlungen rückbelastet werden oder der Nutzer Entgelte nicht entrichtet, ist YAZIO berechtigt, alle oder den Zugriff auf einzelne Dienste zu sperren.
+
+(3) Die Abrechnung von In-App-Käufen erfolgt über die jeweilige Vertriebsplattform. Es gelten die vom jeweiligen Plattform-Betreiber vorgegebenen Zahlungsbedingungen.
+
+§ 9 Änderungen des Nutzungsentgelts
+
+Der Anbieter behält sich vor, das Nutzungsentgelt für die Abonnement-Optionen zu ändern. Preisänderungen werden erst nach Ende der Abonnement-Laufzeit gültig bzw. wenn die Verlängerung der Abonnements zur Zahlung fällig ist. Bei anstehenden Preiserhöhungen informiert der Anbieter den Nutzer mindestens 30 Tage vor der geplanten Änderung des Nutzungsentgelts. Sollte die Benachrichtigung über die Preiserhöhung weniger als 30 Tage im Voraus erfolgt sein, tritt die Änderung erst nach dem nächsten Zahlungstermin in Kraft.
+
+§ 10 Änderungen, Unterbrechungen, Einstellung der YAZIO-Dienste
+
+(1) Dem Anbieter ist es freigestellt, seine Dienste jederzeit zu ändern und im Zuge dessen z. B. die kostenfreien Dienste der YAZIO-App jederzeit vorübergehend oder auf Dauer ganz oder teilweise zu ändern, zu unterbrechen oder einzustellen. Dies gilt auch für das Angebot von zeitlich begrenzten Abonnements.
+
+(2) Der Anbieter wird den Nutzer mindestens 30 Tage vor der geplanten Änderung, Unterbrechung oder Einstellung kostenpflichtiger Dienste informieren. Die jeweils aktualisierten Nutzungsentgelte veröffentlicht der Anbieter.
+
+(3) Dem Nutzer steht es frei, sein Abonnement außerordentlich zu kündigen, wenn ihn die Änderung, Unterbrechung oder Einstellung des Dienstes unangemessen benachteiligt oder das vertragliche Gleichgewicht zwischen den Parteien anderweitig erheblich gestört ist. Macht der Nutzer von seinem Kündigungsrecht Gebrauch, hat er unter Umständen einen Anspruch auf eine anteilige Rückerstattung für den ungenutzten Teil seines gekündigten Abonnements. Der Anbieter ist ausschließlich für Rückerstattungen, die gemäß diesen Bedingungen gewährt werden, verantwortlich. 
+
+(4) Das Abonnement mit der jeweils gebuchten Laufzeit endet, sofern der Anbieter oder die entsprechende Vertriebsplattform, derer sich der Anbieter bedient, die Erbringung der Dienste oder den Geschäftsbetrieb vollständig einstellt.
+
+(5) Die vorliegenden AGB gelten weiterhin auch für geänderte Dienste. 
+
+§ 11 Einsatz von Künstlicher Intelligenz (AI Funktion)
+
+(1) Um die Dienste bereitzustellen und stetig zu verbessern, setzt YAZIO AI Funktionen ein, um das Nutzererlebnis zu personalisieren. Dies umfasst insbesondere die individuelle Anpassung der Benutzeroberfläche und des Programmablaufs (User Journey) sowie die Bereitstellung von individuellem Feedback und Ernährungstipps basierend auf den Nutzeraktivitäten.
+
+(2) YAZIO nutzt KI-basierte Segmentierungsverfahren, um das Onboarding und andere Teile der Dienste auf die Bedürfnisse spezifischer Nutzergruppen zuzuschneiden.
+
+(3) KI-generierte Inhalte (z. B. automatisierte Mahlzeitenbewertungen oder Motivationstexte) werden nach dem Stand der Technik erstellt. Dennoch übernimmt YAZIO keine Gewähr für die inhaltliche Richtigkeit, Aktualität oder fachliche Eignung dieser automatisiert erstellten Inhalte.
+
+(4) Es ist dem Nutzer untersagt, die AI Funktionen von YAZIO zu nutzen, um eigene Modelle für maschinelles Lernen zu entwickeln oder die zugrunde liegende Technologie durch Reverse Engineering zu analysieren.
+
+§ 12 Sachmängelgewährleistung, Garantie
+
+(1) Soweit der Kaufvertrag zwischen dem Anbieter und dem Nutzer zustande kommt, haftet der Anbieter für Mängel der App nach den hierfür geltenden gesetzlichen Vorschriften, insbesondere nach den allgemeinen Regelungen der §§ 434 ff. BGB. Gegenüber Unternehmern beträgt die Gewährleistungsfrist auf die vom Anbieter zur Verfügung gestellte App zwölf Monate.
+
+(2) Der Anbieter ist bemüht, eine durchweg vollständig und fehlerfreie Verfügbarkeit der YAZIO-App zu ermöglichen, übernimmt hierfür jedoch keine Gewährleistung. 
+
+§ 13 Haftung
+
+(1) Ansprüche des Nutzers auf Schadensersatz sind ausgeschlossen. Hiervon ausgenommen sind Schadensersatzansprüche des Nutzers wegen der Verletzung des Lebens, des Körpers, der Gesundheit oder aus der Verletzung wesentlicher Vertragspflichten (Kardinalpflichten) sowie die Haftung für sonstige Schäden, die auf einer vorsätzlichen oder grob fahrlässigen Pflichtverletzung des Anbieters, seiner gesetzlichen Vertreter oder Erfüllungsgehilfen beruhen.Dies gilt auch für Schäden, die durch AI Funktionen verursacht werden.  Wesentliche Vertragspflichten sind solche, deren Erfüllung zur Erreichung des Ziels des Vertrags notwendig ist.
+
+(2) Bei der Verletzung wesentlicher Vertragspflichten haftet der Anbieter nur auf den vertragstypischen, vorhersehbaren Schaden, wenn dieser einfach fahrlässig verursacht wurde, es sei denn, es handelt sich um Schadensersatzansprüche des Nutzers aus einer Verletzung des Lebens, des Körpers oder der Gesundheit. YAZIO haftet nicht für Schäden, die darauf beruhen, dass der Nutzer KI-generierte Inhalte ungeprüft übernommen hat, sofern die Unrichtigkeit der Information für den Nutzer bei zumutbarer Prüfung erkennbar war.
+
+(3) Die Einschränkungen der Abs. 1 und 2 gelten auch zugunsten der gesetzlichen Vertreter und Erfüllungsgehilfen des Anbieters, wenn Ansprüche direkt gegen diese geltend gemacht werden.
+
+§ 14 Widerrufsbelehrung
+
+(1) Sofern der Vertrag mit YAZIO (und nicht mit dem Plattform-Betreiber) abgeschlossen wird, steht dem Nutzer, sofern er Verbraucher ist, gegenüber dem Anbieter selbst ein gesetzliches Widerrufsrecht zu, über das nachstehend belehrt wird. 
+
+(2) Widerrufsbelehrung
+
+Widerrufsrecht
+
+Sie haben das Recht, binnen vierzehn Tagen ohne Angaben von Gründen diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag des Vertragsschlusses. Um Ihr Widerrufsrecht auszuüben, müssen Sie uns (YAZIO GmbH, Kartäuserstr. 13a, 99084 Erfurt, help@yazio.com, Tel. +49 361 34948399) mittels einer eindeutigen Erklärung (z. B. postalisch oder E-Mail) über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren. Sie können dafür das beigefügte Muster-Widerrufsformular verwenden, das jedoch nicht vorgeschrieben ist. Zur Wahrung der Widerrufsfrist reicht es aus, dass Sie die Mitteilung über die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absenden.
+
+Folgen des Widerrufs
+
+Wenn Sie diesen Vertrag widerrufen, haben wir Ihnen alle Zahlungen, die wir von Ihnen erhalten haben, unverzüglich und spätestens binnen vierzehn Tagen ab dem Tag zurückzuzahlen, an dem die Mitteilung über Ihren Widerruf dieses Vertrags bei uns eingegangen ist. Für diese Rückzahlung verwenden wir dasselbe Zahlungsmittel, das Sie bei der ursprünglichen Transaktion eingesetzt haben, es sei denn, mit Ihnen wurde ausdrücklich etwas anderes vereinbart; in keinem Fall werden Ihnen wegen dieser Rückzahlung Entgelte berechnet.
+
+(3) Muster-Widerrufsformular
+
+(Wenn Sie den Vertrag widerrufen wollen, dann füllen Sie bitte dieses Formular aus und senden Sie es zurück.)
+
+— An: help@yazio.com
+
+ODER
+
+— An: YAZIO GmbH, Kartäuserstr. 13a, 99084 Erfurt, Deutschland, Tel. +49 361 34948399
+
+— Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag über den Kauf der folgenden Waren (*)/ die Erbringung der folgenden Dienstleistung (*)
+
+— Bestellt am (*)/erhalten am (*)
+
+— Name des/der Verbraucher(s)
+
+— Anschrift des/der Verbraucher(s)
+
+— bei YAZIO registrierte E-Mail-Adresse oder Angabe der verwendeten User-ID des/der Verbraucher(s)
+
+ — Unterschrift des/der Verbraucher(s) (nur bei Mitteilung auf Papier)
+
+— Datum
+
+(*) Unzutreffendes streichen
+
+§ 15 EU-Online-Streitbeilegung
+
+Die Europäische Kommission hat eine Internetplattform zur Online-Streitbeilegung (OS) eingerichtet (Art. 14 Abs. 1 ODR-VO und § 36 VSBG). Die Plattform dient als Anlaufstelle zur außergerichtlichen Beilegung von Streitigkeiten über vertragliche Verpflichtungen aus Kaufverträgen, die online geschlossen wurden. Sie können die Plattform unter folgendem Link erreichen: ec.europa.eu/consumers/odr
+
+§ 16 Schlussbestimmungen
+
+(1) Auf Verträge zwischen dem Anbieter und den Nutzer findet das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts Anwendung. Die gesetzlichen Vorschriften zur Beschränkung der Rechtswahl und zur Anwendbarkeit zwingender Vorschriften, insbesondere des Staates, in dem der Nutzer als Verbraucher seinen gewöhnlichen Aufenthalt hat, bleiben unberührt. 
+
+(2) Sofern es sich beim Nutzer um einen Kaufmann, eine juristische Person des öffentlichen Rechts oder um ein öffentlich-rechtliches Sondervermögen handelt, ist Gerichtsstand für alle Streitigkeiten aus Vertragsverhältnissen zwischen dem Nutzer und dem Anbieter der Sitz des Anbieters.
+
+(3) Der Vertrag bleibt auch bei rechtlicher Unwirksamkeit einzelner Punkte in seinen übrigen Teilen verbindlich. Anstelle der unwirksamen Punkte treten, soweit vorhanden, die gesetzlichen Vorschriften. Soweit dies für eine Vertragspartei eine unzumutbare Härte darstellen würde, wird der Vertrag jedoch im Ganzen unwirksam.
+
+(4) YAZIO stellt seinen Nutzern die vorliegenden Allgemeinen Geschäftsbedingungen in verschiedenen Sprachen zur Verfügung. Ausgangspunkt dieser Allgemeinen Geschäftsbedingungen und damit maßgeblich ist allerdings die deutschsprachige Fassung, so dass diese im Falle von Streitigkeiten, Missverständnissen oder Widersprüchen im Verhältnis zu sämtlichen übersetzten Fassungen den Vorrang genießt.
+ 
+
+Impressum
+
+Hilfe & Feedback
+Hilfe zur App: https://help.yazio.com 
+
+Wir machen YAZIO
+YAZIO GmbH
+Kartäuserstr. 13a
+99084 Erfurt
+Deutschland
+
+Eingetragen im Handelsregister
+Gesellschaft mit beschränkter Haftung
+Registergericht: Amtsgericht Jena
+Handelsregisternummer: HRB 507453
+
+Vertreten durch die Geschäftsführer
+Florian Weißenstein, Sebastian Weber
+Umsatzsteuer-ID § 27a UStG: DE282484511
+Für den Inhalt verantwortlich nach § 55 Abs. 2 RStV sind: Florian Weißenstein, Sebastian Weber
+ 
+
+Datenschutzerklärung
+Präambel
+
+Die YAZIO GmbH (im Folgenden: YAZIO, Anbieter) mit Sitz in Erfurt betreibt die Website www.yazio.com (im Folgenden: Website) sowie die YAZIO App, einen digitalen Kalorienzähler (im Folgenden: App, Angebot, Produkt) für Android und iOS.
+
+Die folgenden Datenschutzhinweise informieren darüber, welche Arten von personenbezogenen Daten der YAZIO-Nutzer zu welchen Zwecken in welchem Umfang verarbeitet werden. Die Datenschutzhinweise gelten für alle von YAZIO durchgeführten Verarbeitungen personenbezogener Daten, sowohl im Rahmen der Leistungserbringung als auch insbesondere auf der Website und in der YAZIO App, die die Nutzer auf ihrem mobilen Endgerät installieren können sowie innerhalb externer Onlinepräsenzen, wie z.B. in den Social-Media-Profilen von YAZIO (nachfolgend zusammenfassend bezeichnet als „Onlineangebot“).
+
+1) Verantwortliche Stelle und Datenschutzbeauftragter
+
+Verantwortlich für die Erhebung, Verarbeitung und Nutzung der personenbezogenen Nutzerdaten im Sinne der Datenschutzgrundverordnung (DSGVO) ist
+
+YAZIO GmbH
+Kartäuserstraße 13a
+99084 Erfurt
+Deutschland
+
+help@yazio.com
+
+Neben der verantwortlichen Stelle kann der Nutzer bei Rückfragen zu seinen Daten oder zu dieser Datenschutzerklärung oder der Geltendmachung von Betroffenenrechte auch den Datenschutzbeauftragten von YAZIO kontaktieren:
+
+Prof. Dr. Gernot Schmitt-Gaedke
+c/o lexTM GmbH Rechtsanwaltsgesellschaft
+Friedensstraße 11 (Junior-Haus)
+60311 Frankfurt/Main
+Deutschland
+
+team@lex.tm
+
+2) Verschlüsselung
+
+Alle Daten, sowohl in der Kommunikation mit den Apps, als auch in der Drittanbieterkommunikation, werden sowohl eingehend als auch ausgehend verschlüsselt übertragen. Die verschlüsselte Verbindung bei Nutzung der YAZIO-Website ist in der Adresszeile des genutzten Browsers etwa daran zu erkennen, dass die Browserzeile mit „https://“ beginnt und an dem dort befindlichen Verschlüsselungssymbol. Durch die Verschlüsselung können die übertragenen Daten nicht von Dritten mitgelesen werden.
+
+3) Erhebung, Verarbeitung und Nutzung personenbezogener Daten
+3.1) Personenbezogene Daten
+
+„Personenbezogene Daten“ i.S.d. DSGVO sind alle Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen; als identifizierbar wird eine natürliche Person angesehen, die direkt oder indirekt, insbesondere mittels Zuordnung zu einer Kennung wie einem Namen, zu einer Kennnummer, zu Standortdaten, zu einer Online-Kennung oder zu einem oder mehreren besonderen Merkmalen identifiziert werden kann, die Ausdruck der physischen, physiologischen, genetischen, psychischen, wirtschaftlichen, kulturellen oder sozialen Identität dieser natürlichen Person sind.
+
+Personenbezogene Daten (z. B. E-Mail-Adresse, Ernährungsdaten in der App) werden vom Anbieter nur gemäß den Bestimmungen des geltenden Datenschutzrechtes verarbeitet. Die nachfolgenden Vorschriften informieren über Art, Umfang und Zweck der Erhebung, Verarbeitung und Nutzung personenbezogener Daten.
+
+3.2) Erhebung von Daten bei Nutzung der YAZIO-Website
+
+Beim Besuch der Website www.yazio.com verzeichnet der Web-Server auf Grundlage von YAZIOs berechtigten Interessen nach Art. 6 Abs. 1 lit. f DSGVO automatisch Log-Files, die keiner bestimmten Person zugeordnet werden können, wenn dies für die Funktionsfähigkeit der App erforderlich ist und das Interesse am Schutz der personenbezogenen Daten des Nutzers nicht überwiegt. Diese Daten beinhalten z. B. den Browsertyp und -version, verwendetes Betriebssystem, Referrer URL (die zuvor besuchte Seite), IP-Adresse des anfragenden Rechners, Zugriffsdatum und -uhrzeit der Serveranfrage und die Dateianfrage des Client (Dateiname und URL). Diese Daten werden nur zum Zweck der statistischen Auswertung und aus Sicherheitsgründen (z. B. zur Aufklärung von Missbrauchs- oder Betrugshandlungen) gesammelt und für die Dauer von 7 Tagen gespeichert und danach gelöscht. Sollte eine längere Aufbewahrung der Daten zu Beweiszwecken erforderlich sein, sind sie bis zur endgültigen Klärung des jeweiligen Vorfalls von der Löschung ausgenommen.
+
+3.2.1) Bereitstellung der Website
+
+Die Bereitstellung von informationstechnischer Infrastruktur und verbundenen Dienstleistungen erfolgt durch den Web-Hosting Service der dogado GmbH, Antonio-Segni-Straße 11, 44263 Dortmund. Die dogado GmbH ist ein Cloud-Service-Provider und bietet eine Grundlage für internetbasierte Geschäftsprozesse. Für die Hosting-Tools werden nur die personenbezogenen Daten auf den Servern der dogado GmbH gespeichert, die von YAZIO erfasst werden. Dazu gehören vor allem Meta- und Kommunikationsdaten, Kontaktdaten wie Namen und Adressen, Vertrags- und Zahlungsdaten, sowie Inhaltsdaten (ausgefüllte Formulare). Dabei werden die Daten nur soweit verarbeitet, wie es zur Erfüllung des Hosting-Vertrages notwendig ist. Die Datenschutzbestimmungen und weitere Informationen der dogado GmbH können hier aufgerufen werden: https://www.dogado.de/legal/datenschutz.
+
+3.2.2) Einsatz von Cookies
+
+Um die Nutzung der Websites insgesamt nutzerfreundlicher und effektiver zu gestalten, speichert YAZIO selbst oder durch hierzu von YAZIO beauftragte Dritte auf der Festplatte des Nutzers sog. Cookies, sofern der Nutzer hierin nach Art. 6 Abs. 1 lit. a DSGVO eingewilligt hat.
+
+Ein Cookie ist eine kleine Textdatei, die unter anderem zur Erfassung von Informationen bezüglich der Nutzung einer Webseite dient. Diese Cookies können weder Programme ausführen, noch Viren auf den Computer des Nutzers übertragen. Sie enthalten keine persönlichen Daten, können bestimmten Personen nicht zugeordnet werden und werden, sofern nicht anders beschrieben, spätestens nach einem Jahr automatisch gelöscht. Eine Zusammenführung dieser Daten mit anderen Datenquellen wird nicht vorgenommen.
+
+Die Nutzung von Websites, die der Anbieter betreibt, ist auch ohne Cookies möglich. Im jeweiligen Browser kann das Speichern von Cookies deaktiviert, auf bestimmte Websites beschränkt oder der Browser so eingestellt werden, dass dieser den Nutzer benachrichtigt, sobald ein Cookie gesendet wird. Der Nutzer kann Cookies auch jederzeit von der Festplatte seines PCs löschen.
+
+3.3) Personenbezogene Daten bei Nutzung der YAZIO App
+3.3.1) Pflichtangaben bei der Erstellung eines personalisierten Nutzerkontos
+
+Um die App nutzen zu können, hat der Nutzer als Pflichtangaben “E-Mail-Adresse” und „Passwort“ angeben. Diese dienen der Identifikation des Nutzers und zur Kommunikation zwischen dem Anbieter und dem Nutzer. Die E-Mail-Adresse sowie alle weiteren Daten des Nutzers sind für andere Nutzer nicht einsehbar. Etwas anderes gilt nur dann, wenn der Nutzer das “Buddies Feature” verwendet (vgl. hierzu 3.3.8). Die Speicherung der Daten erfolgt auf Grundlage der Einwilligung eines jeden Nutzers nach Art. 6 Abs. 1 lit. a DSGVO.
+
+3.3.2) Nutzung der App mit der Funktion „Mit Apple anmelden“
+
+iOS-Nutzer können für die Anmeldung in der App auch die Schaltfläche „Mit Apple anmelden“ nutzen. Bei der Anmeldung über die Apple-ID kann die persönliche E-Mail-Adresse verborgen oder aber mit YAZIO geteilt werden. Über „E-Mail-Adresse verbergen“ kann der Nutzer mit dem E-Mail-Relay-Dienst von Apple eine generische Alias-Adresse erzeugen, über die Nachrichten von YAZIO an seine private E-Mail-Adresse weitergeleitet werden. „Mit Apple anmelden“ nutzt die Zwei-Faktor-Authentifizierung, ein zusätzliches Passwort muss nicht vergeben werden. Weitere Informationen zu Funktionsweise und Einstellungen sind abrufbar unter: https://support.apple.com/HT210425.
+
+Die watchOS-App für die Apple Watch kann - sofern keine automatische Koppelung mit dem iPhone des Nutzers erfolgt - zusätzlich über die Apple Watch selbst heruntergeladen und genutzt werden. Hier erfolgt die Registrierung zwingend über die Funktion „Mit Apple anmelden“.
+
+3.3.3) Nutzung der YAZIO App mit der Funktion „Mit Google fortfahren“
+
+Der Nutzer hat die Möglichkeit, einen YAZIO-Account über seinen Google-Account anzulegen oder mit seinem Google-Profil zu verknüpfen. Er kann sich mit seinem Google-Account bei YAZIO registrieren oder anmelden, wenn er bei der Registrierung seines YAZIO-Accounts auf der Website sowie in der App die Schaltfläche „Mit Google fortfahren“ nutzt. Hierbei erhebt und speichert YAZIO über den Google-Account des Nutzers persönliche Daten,wie die E-Mail-Adresse des Nutzers, optional auch Vor- und Nachnamen sowie das Profilbild des Nutzers. Der Nutzer kann auf seinem Google-Account unter Privatsphäre-Einstellungen den Datentransfer an YAZIO individuell anpassen. Weitere Informationen zu Funktionsweise und Einstellungen sind abrufbar unter: https://support.google.com/accounts/answer/2541991
+
+3.3.4) Nutzung der YAZIO App ohne personalisiertes Nutzerkonto
+
+Wird ein bestehendes anonymes Nutzerkonto verwendet, kann dieses jederzeit durch Erstellung eines Zweit-Kontos in einen personalisierten Account umgewandelt werden.
+
+Es ist nicht möglich, einen anonymen Account einem Nutzer zuzuordnen, sodass bei Verlust des mobilen Endgeräts eine Wiederherstellung des Accounts durch YAZIO nicht möglich ist.
+
+3.3.5) Vom Nutzer bereitgestellte Daten
+
+Bei der Erstellung des personalisierten Nutzerkontos kann der Nutzer neben den Pflichtangaben (E-Mail-Adresse und Passwort) optional Vorname, Nachname und Wohnort angeben, die dann von YAZIO erfasst werden.
+
+YAZIO erfasst darüber hinaus vom Nutzer über ein personalisiertes oder über ein anonymes Nutzerkonto bereitgestellte Daten, die bei Nutzung der App eingegeben werden können. Dies umfasst ein Benutzerprofil, das aus den nachfolgend aufgeführten Körper- und Gesundheitsdaten, die jedoch nicht abschließend sind, besteht:
+
+Alter/Geburtsdatum
+Geschlecht
+Körpergröße
+Ernährungsweise (z. B. vegan)
+Ziel (z. B. Gewicht verlieren)
+Art der Aktivität (hoch/niedrig)
+Eingetragene Aktivitäten
+Kalorienzufuhr & Aktivitätskalorien
+Schritte
+Startgewicht, Gewichtsfortschritt & Zielgewicht
+Blutdruck
+Status des App-Nutzers (PRO-Abonnement vorhanden: ja/nein)
+Fastendetails (z. B. gefastete Stunden)
+Wasserzufuhr
+Lieblingsrezepte
+
+Die Erfassung der Daten erfolgt auf Grundlage der Einwilligung des Nutzers nach Art. 6 Abs.1 lit. a DSGVO. Die Bereitstellung der Körperdaten ist erforderlich, um die Funktionen der App nutzen zu können. Insbesondere die Angabe von Startgewicht, Zielgewicht, Geschlecht, Geburtsdatum und Körpergröße ist erforderlich, damit YAZIO das persönliche Kalorienziel des Nutzers berechnen kann. Die bereitgestellten Daten werden zudem zur Bereitstellung personalisierter Tipps, Feedbacks und der individuellen Gestaltung des Nutzererlebnisses (User Journey) unter Einsatz von Künstlicher Intelligenz verarbeitet (siehe hierzu Ziff. 6).
+
+Weitere Daten, wie z. B. die Wasserzufuhr, ermöglichen es dem Nutzer, seine aufgenommene Trinkwassermenge zu tracken. Diese Daten werden ausschließlich zu den benannten Zwecken verwendet und sind für Dritte grundsätzlich nicht einsehbar. Etwas anderes gilt nur dann, wenn der Nutzer das “Buddies Feature” verwendet (vgl. hierzu 3.3.8).
+
+3.3.6) Von YAZIO automatisch erfasste Daten
+
+Bei der Installation der App werden einmalig erfasst:
+
+Datum der Installation,
+Datum der Registrierung,
+Betriebssystem des verwendeten Geräts (Android/iOS)
+Land und Sprache (anhand Locale: Die "Locale" ist ein Einstellungssatz, der die Gebietsschemaparameter (Standortparameter) für Computerprogramme enthält. Dazu gehören in erster Linie die Sprache der Benutzeroberfläche, das Land und Einstellungen zu Zeichensatz, Tastaturlayout, Zahlen- Währungs-, Datums- und Zeitformaten.)
+
+Die Erfassung dieser Daten dient der Verbesserung und Personalisierung unserer Dienste und erfolgt auf Grundlage unserer berechtigten Interessen gemäß Art. 6 Abs. 1 lit. f DSGVO.
+
+3.3.7) Während der App-Nutzung erfasste Daten
+
+Während der Nutzung der App erfasst YAZIO ferner die jeweils
+
+aktuelle IP-Adresse,
+genutzte Version der App,
+aktuelle Zeitzone.
+
+Die Erfassung dieser Daten dient der Verbesserung und Personalisierung der angebotenen Dienste und erfolgt auf Grundlage von YAZIOs berechtigten Interessen gemäß Art. 6 Abs. 1 lit. f DSGVO.
+
+3.3.8) Teilen der Daten mit einem Freund
+
+Jeder Nutzer hat die Möglichkeit, seine unter Ziff. 3.3.5. eingegebenen Daten mit anderen App-Nutzern („Freunde“ bzw. „Buddies“) zu teilen. Um Freunde einzuladen, wird innerhalb des Freunde-Bereichs ein persönlicher Link generiert, der an den/die ausgewählten Freunde weitergeleitet werden kann. Dieser Link ist nur einmal gültig, d.h. auch wenn er an eine Gruppe von Freunden versendet wird, kann er nur einmal, nämlich von dem Freund, der den Link als erstes aufruft, verwendet werden. Zum Teilen des Links stehen die auf dem Gerät des Nutzers installierten Messengerdienste zur Verfügung. Für die jeweiligen Messengerdienste, über die der Link versendet werden kann, gelten die dortigen Datenschutzhinweise und –erklärungen.
+
+Die unter Ziff. 3.3.5. eingegebenen und über einen persönlichen Link geteilten Daten werden den eingeladenen Freunden im Freunde-Bereich angezeigt. Für Freunde in der Freundesliste sind nur die jeweils tagesaktuellen Daten sichtbar, d.h. bereits Daten vom Vortag sind für die Freundesliste nicht mehr sichtbar und einer Rückverfolgung nicht zugänglich.
+
+Dieser Datenaustausch kann jederzeit von den Nutzern oder von dem/den eingeladenen Freund(en) beendet werden. Nach erfolgter Löschung des Freundes aus der Freundesliste werden keine Daten mehr an diesen Freund weitergegeben. Der aus der Freundesliste entfernte Freund erhält keine Benachrichtigung darüber, dass er entfernt wurde.
+
+3.3.9) Vertragsverhältnis und Zahlungsverfahren
+
+Sofern zwischen dem Nutzer und YAZIO ein Vertragsverhältnis begründet, inhaltlich ausgestaltet oder geändert werden soll, speichert YAZIO auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO personenbezogene Daten vom Nutzer (vgl. Auflistung der personenbezogenen Daten unter Ziff. 3.3.5. bis 3.3.7.), soweit dies zur Umsetzung des Vertrages erforderlich ist. Der Nutzer hat die Möglichkeit über einen In-App-Kauf die PRO-Version der YAZIO App im Rahmen eines Abonnements, optional zu Beginn mit einer kostenlosen Testphase von 7 Tagen (Probe-Abonnement), zu erwerben. Sollte sich der Nutzer für den Erwerb der PRO-Version entscheiden, wird er über den Bestellbutton in Abhängigkeit von seinem Betriebssystem direkt in den Apple App Store bzw. Google Play Store oder der Huawei AppGallery weitergeleitet, auch wenn er sich zunächst für die 7-tägige kostenlose Testphase innerhalb des zeitlich begrenzten Abonnements entschieden hat. In diesem Fall wird der entsprechende Betrag des Abonnements automatisch mit Ablauf des 7. Tages der Testphase abgebucht.
+
+Bei der Weiterleitung an den entsprechenden App-Store übermittelt YAZIO das Start- und Enddatum, ggf. das Beendigungsdatum von Abonnements, sowie den Grund der Beendigung (z. B. nach einem etwaigen Widerruf). Die Daten zur Zahlungsabwicklung werden direkt durch die App Stores erhoben. Die Datenschutzerklärungen der App Stores sind hier einsehbar:
+
+Apple App Store: https://www.apple.com/privacy/
+Google Play Store: https://policies.google.com/privacy
+Huawei AppGallery: https://consumer.huawei.com/en/privacy/privacy-policy/
+
+Die PRO-Version der App kann auch über die YAZIO-Website bezogen werden. Je nach ausgewählter Zahlungsoption (Apple Pay, Google Pay, SEPA- oder Kreditkartenzahlung) muss der Nutzer entsprechende Kontodaten angeben, auch wenn er zunächst das 7-tägige Probe-Abonnement nutzt.
+
+Für die Zahlungsgeschäfte gelten die Geschäftsbedingungen und die Datenschutzhinweise der jeweiligen Zahlungsdienstleister, welche innerhalb der jeweiligen Websites bzw. Transaktions-Apps abrufbar sind:
+
+Die weitere Abwicklung läuft über den Zahlungsdienstleister Stripe. Der Service wird von der Stripe Payments Europe Ltd, Block 4, Harcourt Centre, Harcourt Road, Dublin 2, Irland angeboten. YAZIO übermittelt an Stripe im Rahmen des Bestellvorgangs die vom Nutzer mitgeteilten Informationen (Name, E-Mail-Adresse, Kreditkartendaten, Start- und Enddatum sowie ggf. das Beendigungsdatum von Abonnements, Rechnungsbetrag) gemäß Art. 6 Abs. 1 lit. b DSGVO. Die Weitergabe von Nutzerdaten erfolgt ausschließlich zum Zwecke der Zahlungsabwicklung mit dem Payment-Dienstleister Stripe Payments Europe Ltd. und nur insoweit, als sie hierfür erforderlich ist.
+Nähere Informationen zum Datenschutz von Stripe sind unter https://stripe.com/legal abrufbar.
+Bei einer Zahlung über Paypal findet die weitere Abwicklung über Braintree statt, ein Online-Zahlungsportal und Service der PayPal (Europe) S.à.r.l et Cie, S.C.A. mit Sitz in Luxemburg, das YAZIO für die Website nutzt. Hierbei werden personenbezogene Daten des Nutzers wie Name, Adresse, Telefonnummer und E-Mail-Adresse an Braintree/Paypal übermittelt.
+Weitere Informationen zum Datenschutz von Braintree sind unter https://www.braintreepayments.com/legal/braintree-privacy-policy zu finden.
+YAZIO stellt den Nutzern zudem das Mobile-Payment-System Apple Pay, der Apple Inc., One Infinite Loop, 95014 Cupertino, USA in der YAZIO App zur Verfügung. Unter der Verwendung von Apple Pay speichert Apple keine vom Nutzer verwendeten originalen Kredit-, Debit- oder Prepaidkartennummern, Apple hat keinen Zugriff hierauf. Zudem findet keine Sicherung von Transaktionsdaten, die Rückschlüsse auf den Nutzer zulassen, statt.
+Weitere Datenschutzhinweise sind unter https://www.apple.com/privacy/ zu finden.
+Darüber hinaus steht den Nutzern auch das Mobile-Payment-System Google Pay der Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland, zur Verfügung. Google speichert Informationen zu der vom Nutzer getätigten Transaktion und der gewählten Zahlungsmethode (Debit- oder Kreditkarte). Erhoben werden Daten wie Datum, Uhrzeit, Händlerstandort, Händlername und Warenbeschreibung. Diese Daten kann Google mit den Informationen der anderen Google-Dienste zusammenführen, die der Nutzer mit seinem Google-Konto nutzt.
+Unter https://payments.google.com/payments/apis-secure/get_legal_document?ldo=0&ldt=privacynotice sind weitere Informationen abrufbar.
+4) Datenaustausch mit Dritten
+
+YAZIO nimmt den Schutz persönlicher Nutzerdaten sehr ernst. Deswegen behandelt YAZIO personenbezogene Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung. YAZIO erfasst und speichert daher nur Daten, die von Drittanbietern auf Grundlage der jeweiligen Nutzereinwilligung nach Art. 6 Abs. 1 lit. a DSGVO durch diese bereitgestellt werden und übermittelt entsprechende Daten an diese. Dies umfasst auch die Übermittlung von Daten an Anbieter von KI-Technologien (z. B. OpenAI Ireland Ltd.) im Rahmen der Bereitstellung unserer AI Funktion (siehe Ziff. 6). Vorbehaltlich gesetzlicher oder vertraglicher Erlaubnisse, verarbeitet oder lässt YAZIO die Daten in einem Drittland nur beim Vorliegen der besonderen Voraussetzungen der Art. 44 ff. DSGVO verarbeiten. Die Verarbeitung erfolgt z. B. auf Grundlage besonderer Garantien, wie der Beachtung offiziell anerkannter spezieller vertraglicher Verpflichtungen („Standardvertragsklauseln“).
+
+Für Datenübermittlungen in die USA stützt YAZIO sich vorrangig auf das EU-US Trans-Atlantic Data Privacy Framework (DPF), das die EU-Kommission durch einen Angemessenheitsbeschluss als sicheren Rechtsrahmen anerkannt hat. Standardvertragsklauseln können zusätzlich vorliegen. Weitere Informationen zum DPF und eine Liste der zertifizierten Unternehmen kann unter https://www.dataprivacyframework.gov/ (in englischer Sprache) eingesehen werden.
+
+Sollte die EU-Kommission dem Drittland nicht dasselbe Datenschutzniveau wie der EU zumessen, so sorgt YAZIO durch den Einsatz von Standardvertragsklauseln (SCC) und verbindlichen Unternehmensvorschriften für die Aufrechterhaltung des europäischen Datenschutzniveaus gem. Art. 46 Abs. 1, Abs. 2 lit. c DSGVO. Dennoch ist es unter Umständen möglich, dass Behörden in einem Drittstaat zu Kontroll- und Überwachungszwecken auf Nutzerdaten zugreifen und dabei weder wirksame Rechtsbehelfe noch Betroffenenrechte durchsetzbar sein können.
+
+5) Verknüpfung der YAZIO-App 
+
+YAZIO bietet seinen Nutzern die Möglichkeit, die YAZIO-App mit bestimmten Diensten bzw. Geräten zu verknüpfen, wie beispielsweise Apple Health. Sofern der Nutzer diese Verknüpfung herstellt und seine Einwilligung dazu erteilt, können Gesundheits- und Fitnessinformationen, die auf dem Gerät des Nutzers oder in den verbundenen Diensten gespeichert sind (z.B. Schritte, Kalorienverbrauch, Trainingsdaten), mit der YAZIO-App ausgetauscht werden. Diese Daten können genutzt werden, um die Funktionalität der YAZIO-App zu verbessern und dem Nutzer personalisierte Einblicke und Empfehlungen zu bieten.
+
+5.1) Google Fit
+
+Der Nutzer kann die App mit Google Fit, einer Gesundheitsplattform der Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland („Google“) verbinden. Google Fit protokolliert mithilfe von Sensoren des mobilen Geräts oder Aktivitätssensoren die körperlichen Aktivitäten des jeweiligen Nutzers. Folgende Daten können im Fall einer Verknüpfung an YAZIO übermittelt werden:
+
+Gesamtaktivität
+Absolvierte Trainings (Zeitpunkt, Dauer, Typ, Kalorienverbrauch)
+Schritte (Distanz, Schrittanzahl)
+
+YAZIO hat die Möglichkeit jederzeit direkt auf den Datenpool von Google Fit zuzugreifen.
+
+Weitere Datenschutzhinweise, insbesondere zu Zweck und Umfang der Datenerhebung und die weitere Verarbeitung und Nutzung der Daten durch Google Fit sowie die diesbezüglichen Rechte und Einstellungsmöglichkeiten zum Datenschutz sind unter https://policies.google.com/privacy abrufbar.
+
+Die Nutzung von Informationen, die YAZIO von Google-APIs bezieht, und deren Weitergabe an andere Apps erfolgt gemäß der Google API Services-Nutzerdatenrichtlinie, einschließlich der Anforderungen an die eingeschränkte Nutzung.
+
+5.2) Google Health Connect
+
+YAZIO bietet seinen Nutzern die Möglichkeit, die App mit Google Health Connect zu verknüpfen, einer integrierten Plattform für Gesundheitsdaten, die von Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland („Google“) bereitgestellt wird. Google Health Connect ermöglicht die Zusammenführung von Gesundheits- und Wellnessdaten über mehrere Anwendungen hinweg.
+
+Wenn die Nutzer YAZIO mit Health Connect verknüpfen, kann auf die folgenden Datenkategorien zugegriffen und diese gemeinsam genutzt werden:
+
+Aktivitätsdaten
+Körpermaße
+Herz- und Vitaldaten
+Ernährungsdaten
+Allgemeine Gesundheitsdaten
+
+Diese Integration ermöglicht es den Nutzern, ihre Erfahrungen innerhalb der YAZIO-App zu verbessern, indem sie umfassendere Gesundheitseinblicke und personalisierte Empfehlungen auf der Grundlage aggregierter Daten erhalten.
+
+YAZIO hält sich an die Health Connect Zugriff- und Berechtigungsrichtlinie, einschließlich der Anforderungen zur eingeschränkten Nutzung, um sicherzustellen, dass alle erhobenen Daten ausschließlich zur Verbesserung der Benutzerfunktionen der App verwendet werden. Die Nutzer behalten die volle Kontrolle über ihre Daten und können ihre Berechtigungen jederzeit über die YAZIO-App-Einstellungen ändern oder die Verknüpfung mit Health Connect aufheben, wobei sie über mögliche Auswirkungen auf die App-Funktionalität informiert werden.
+
+Weitere Datenschutzhinweise, insbesondere zu Zweck und Umfang der Datenerhebung und der weiteren Verarbeitung und Nutzung der Daten durch Google Health Connect sowie zu Ihren diesbezüglichen Rechten und den verfügbaren Einstellungsmöglichkeiten zum Datenschutz finden Sie unter https://policies.google.com/privacy.
+
+5.3) Apple Health
+
+Die Nutzer haben auch die Möglichkeit, ihre App mit Apple Health, einer mobilen App des Technologiekonzerns Apple Inc., One Infinite Loop, 95014 Cupertino, USA, zu verbinden. Die nachfolgend genannten Daten können im Zuge dessen an YAZIO übermittelt werden:
+
+Gesamtaktivität
+Schritte (Distanz, Schrittanzahl)
+Trainings (Zeitpunkt, Dauer, Typ, Kalorienverbrauch)
+Gewicht, Taillenumfang
+Blutdruck systolisch, Blutdruck diastolisch, Blutglukosewert
+Körperfettanteil
+Menstruationszyklus
+
+Darüber hinaus können die nachfolgend genannten Daten von YAZIO an Apple übermittelt werden:
+
+Gesamtaktivität
+Körperwerte (Gewicht, Taillenumfang, Blutzucker, Blutdruck systolisch und diastolisch, Blutglukosewert, Körperfettanteil)
+Nahrungsenergie, Makronährstoffe, Mikronährstoffe, Vitamine
+
+YAZIO hat die Möglichkeit jederzeit direkt auf den Datenpool von Apple Health zuzugreifen, wenn der Nutzer entsprechende Freigaben erteilt hat. Apple Health sammelt gesundheitsrelevante Nutzerdaten und stellt diese aufbereitet in der App dar. Weitere Datenschutzhinweise sind unter https://www.apple.com/privacy/ zu finden.
+
+5.4) Samsung Health
+
+Weiter können Gesundheits-, Ernährungs- und Fitnessdaten von Nutzern von Samsung Health, einer Plattform von Samsung Electronics, Ltd, 129, Samsung-ro, Yeongtong-gu, Suwon-si, Gyeonggi-do 16677, Republik Korea und Samsung Medison, Pangyogeok-ro, 145, Bundang-gu, Republik Korea, an YAZIO übermittelt werden, wenn der Nutzer die Möglichkeit der Verknüpfung in der YAZIO App nutzt:
+
+Gesamtaktivität
+Absolvierte Trainings
+Schritte (Distanz, Schrittanzahl)
+Gewicht
+
+Samsung Health verwaltet die genannten Nutzerdaten, um seine Nutzer auf dem Weg zu mehr Fitness und Wohlbefinden zu unterstützen. YAZIO hat die Möglichkeit jederzeit direkt auf den Datenpool von Samsung zuzugreifen. Unter https://privacy.samsung.com/privacy/samsung sind weitere Informationen abrufbar.
+
+5.5) Huawei Health
+
+Gesundheits- und Fitnessdaten der Nutzer können von Huawei Health, einer offiziellen App von Huawei, G1, HUAWEI Industrial Base, Bantian, Longgang District, Shenzhen 518129 P.R. China, an YAZIO übermittelt werden, wenn der Nutzer die Möglichkeit der Verknüpfung in der YAZIO App nutzt:
+
+Gesamtaktivität
+Absolvierte Trainings
+Schritte (Distanz, Schrittanzahl)
+Gewicht
+
+Huawei Health überwacht die Gesundheit sowie die körperlichen Aktivitäten der Nutzer. YAZIO hat die Möglichkeit jederzeit direkt auf den Datenpool von Huawei zuzugreifen. Weitere Datenschutzhinweise sind abrufbar unter: https://consumer.huawei.com/minisite/cloudservice/health/privacy-statement.htm?code=HK&language=en_us.
+
+5.6) Fitbit
+
+YAZIO bietet seinen Nutzern weiter die Möglichkeit der Verknüpfung seiner App mit Fitbit. Macht der Nutzer hiervon Gebrauch, so können die nachfolgend aufgeführten Daten der Fitbit Inc., 199 Fremont St 14th Fl, 94105 San Francisco, USA, an YAZIO übermittelt werden:
+
+aktuelles Gewicht des Nutzers
+konsumierte Wassermenge eines Tages
+Trainings, die der Nutzer bei Fitbit aufgezeichnet hat (Zeitpunkt, Dauer, Typ, Kalorienverbrauch)
+Gesamtaktivität (Kalorienverbrauch), Aktivitätsdauer, Schrittanzahl eines Tages
+
+Zudem können die folgenden Daten von YAZIO an Fitbit übermittelt werden:
+
+konsumierte Wassermenge eines Tages
+Nährwerte
+
+Der Fitness-Tracker der Fitbit Inc. dient der Aufzeichnung und Nachverfolgung der von einem Nutzer absolvierten Trainingseinheiten. YAZIO wird von Fitbit benachrichtigt, sobald Daten zum Abruf bereitstehen. Diese werden sodann aktiv von YAZIO eingeholt. Weitere Datenschutzinformationen können https://fitbit.com/legal/privacy-policy entnommen werden.
+
+5.7) Garmin
+
+Nutzt der Nutzer, die von YAZIO zur Verfügung gestellte Möglichkeit, die YAZIO-App mit dem Tracker Garmin zu verknüpfen, so können die nachfolgend aufgeführten Daten der Garmin Switzerland GmbH, Mühlentalstrasse 2, 8200 Schaffhausen, Schweiz, an YAZIO übermittelt werden:
+
+Gewicht des Nutzers
+Trainings, die der Nutzer bei Garmin aufgezeichnet hat (Zeitpunkt, Dauer, Typ, Kalorienverbrauch)
+Gesamtaktivität, zurückgelegte Distanz, Schrittanzahl des Tages
+
+Die GPS-Navigationsgeräte von Garmin dienen u. a. der Aufzeichnung der sportlichen Aktivitäten des Nutzers. YAZIO erhält die über Garmin erfassten Daten unmittelbar per Push, sodass die übermittelten Daten innerhalb weniger Minuten in der App abrufbar sind. Weitere Datenschutzhinweise werden unter https://www.garmin.com/privacy/ bereitgestellt.
+
+5.8) Polar
+
+Die nachfolgend aufgeführten Daten können von der Polar Electro Oy, Professorintie 5, 90440 Kempele, Finnland, an YAZIO übermittelt werden, sofern der Nutzer von der Möglichkeit Gebrauch macht, seine App mit Polar zu verknüpfen:
+
+Aktuelles Gewicht des Nutzers
+Zeitpunkt, Dauer, Typ, Kalorienverbrauch, Distanz, Schrittanzahl von Trainings, die der Nutzer bei Polar aufgezeichnet hat
+Gesamtaktivität (Kalorienverbrauch), Aktivitätsdauer, Schrittanzahl eines Tages
+
+Polar Flow ist eine Fitness-App, die die sportlichen Aktivitäten ihrer Nutzer analysiert und beim Verfolgen der Trainingsfortschritte hilft. YAZIO wird von Polar benachrichtigt, sobald Daten zum Abruf bereitstehen. Diese werden sodann aktiv von YAZIO eingeholt. Weitere Datenschutzhinweise sind unter https://www.polar.com/legal/privacy-notice zu finden.
+
+6) Einsatz von Künstlicher Intelligenz (AI Funktion)
+6.1)
+
+Zur Bereitstellung und stetigen Verbesserung der angebotenen Dienste setzt YAZIO Technologien der Künstlichen Intelligenz (KI) und des maschinellen Lernens ein. Diese dienen dazu, das Nutzererlebnis zu personalisieren, indem YAZIO beispielsweise den Programmablauf (User Journey) individuell anpasst oder maßgeschneidertes Feedback und Ernährungstipps basierend auf den individuellen Aktivitäten, Zielen und körperlichen Angaben des Nutzers erstellt. Dies umfasst auch automatisierte Verfahren zur Segmentierung der Nutzer, um beispielsweise das Onboarding auf Ihre Bedürfnisse zuzuschneiden.
+
+6.2)
+
+Die Personalisierung des Nutzererlebnisses zur Vertragserfüllung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO. 
+
+6.3)
+
+Für die vorgenannten Zwecke verarbeitet YAZIO Profil- und Aktivitätsdaten (z. B. Alter, Geschlecht, Kalorienaufnahme, Mahlzeiteneinträge, Gewichtsfortschritt, Aktivitätslevel, Ziele). Die Verarbeitung erfolgt stets zweckgebunden zur Optimierung des persönlichen Ernährungsplans und zur Bereitstellung der personalisierten App-Funktionen.
+
+6.4)
+
+Als technischer Dienstleister für YAZIOs KI-Funktionen fungiert OpenAI Ireland Ltd., 1st Floor, The Liffey Trust Centre, 117-126 Sheriff Street Upper, Dublin 1, D01 YC43, Irland. Mit diesem Anbieter wurde ein Auftragsverarbeitungsvertrag (DPA) abgeschlossen. Soweit eine Datenübermittlung an Server der OpenAI Inc. in den USA erfolgt, ist diese durch das EU-US Data Privacy Framework oder die Standardvertragsklauseln der EU-Kommission abgesichert.
+
+6.5)
+
+YAZIO stellt sicher, dass die über ihre API-Schnittstelle an OpenAI übermittelten Daten nicht zum Training oder zur Verbesserung der allgemeinen Sprachmodelle von OpenAI verwendet werden. Nutzereingaben verbleiben innerhalb der Verarbeitungsumgebung des Anbieters.
+
+7) Kontakt, Kundensupport & weitere Kommunikation
+7.1) Nutzeranfragen
+
+YAZIO verwendet für die Bearbeitung von Nutzeranfragen, die über die Website gestellt werden, die Kundenserviceplattform “Zendesk” der Zendesk Inc., 989 Market Street #300, San Francisco, CA 94192. Die Nutzer geben in dem auf der Website bereitgestellten Kontaktformular manuell ihre Daten an (Name, E-Mail-Adresse, iOS- bzw. Android-Version, etwaiger PRO-Status, Beschreibung des Problems). Aufgrund dieser Angaben kennt das YAZIO-Supportteam die Nutzerdaten, die in der App des Nutzers hinterlegt sind.
+
+Diese personenbezogenen Daten, die der Nutzer YAZIO im Rahmen dieser Kontaktanfrage zur Verfügung stellt, werden nur für die Beantwortung der Nutzeranfrage bzw. Kontaktaufnahme benötigt und für die damit verbundene technische Administration verwendet. Die Weitergabe an Dritte findet nicht statt.
+
+Sofern der Nutzer in die Speicherung seiner Daten eingewilligt hat, hat er das Recht, eine erteilte Einwilligung mit Wirkung für die Zukunft jederzeit zu widerrufen. In diesem Fall werden seine personenbezogenen Daten umgehend gelöscht. Personenbezogene Daten des Nutzers werden auch ohne dessen Widerruf gelöscht, wenn YAZIO seine Anfrage bearbeitet hat oder der Nutzer die hier erteilte Einwilligung zur Speicherung widerrufen hat. Dies geschieht auch, wenn die Speicherung aus sonstigen gesetzlichen Gründen unzulässig ist.
+
+Zendesk wird auf Grundlage der Einwilligung des Nutzers nach Art. 6 Abs. 1 lit. a DSGVO und eines Auftragsverarbeitungsvertrages gem. Art. 28 Abs. 3 S. 1 DSGVO eingesetzt.
+
+Die Datenschutzbestimmungen von Zendesk kann hier eingesehen werden: https://www.zendesk.com/company/privacy
+
+7.2) Bewerber-Kommunikation
+
+YAZIO setzt auf der Website die Geschäftskommunikationsplattform “Calendly” der Calendly LLC, 1315 Peachtree St NE, Atlanta, GA 30309, USA, ein. Mithilfe von Calendly können im Bewerbungsprozess Termine einfach und unkompliziert vereinbart werden. Der Bewerber hat hierfür Daten wie Name, E-Mail-Adresse und Telefonnummer anzugeben. Diese Daten werden an Calendly ggf. auch an Server außerhalb der Europäischen Union übermittelt. Die Datenverarbeitung zum Zwecke der Terminvereinbarung erfolgt nach Art. 6 Abs. 1 S. 1 lit. a DSGVO, auf Grundlage der vom Nutzer freiwillig erteilten Einwilligung sowie dem Interesse von YAZIO an einer effektiven Terminvereinbarung.
+
+Weitere Informationen zum Datenschutz sind den Datenschutzbestimmungen von Calendly zu entnehmen: https://calendly.com/privacy.
+
+8) Umfragen und Feedback
+8.1) SurveyMonkey
+
+Für Online-Umfragen in der YAZIO App verwendet YAZIO den Service von SurveyMonkey, der Momentive Europe UC, 2nd Floor, Shelbourne Buildings, Shelbourne Rd, Dublin, Irland. Die von YAZIO zur Verfügung gestellten Umfragen dienen dazu, die subjektive Nutzererfahrung, die Meinungen und Wünsche der Nutzer der YAZIO App und des Angebots von YAZIO zu analysieren. Die Teilnahme an einer Online-Umfrage erfolgt freiwillig. Die Daten der Nutzer werden anonymisiert, die IP-Adresse des anfragenden Rechners wird nicht gespeichert. Bei der Beantwortung einer Online-Umfrage erfasst YAZIO die folgenden personenbezogenen Daten: Altersgruppe, Geschlecht, Nettohaushaltseinkommensgruppe, Anzahl der über 18-jährigen Personen im Haushalt. Die Angaben des Nutzers werden zur Auswertung und Analyse bis zur Löschung der Umfrage über SurveyMonkey gespeichert. Rechtsgrundlage für die Nutzung des Services von SurveyMonkey ist Art. 6 Abs. 1 S. 1 lit. a DSGVO.
+
+Nähere Informationen finden sich unter https://www.surveymonkey.com/mp/legal/privacy/.
+
+8.2) Trustpilot
+
+YAZIO hat auf seiner Website “Trustpilot”, ein Tool der Trustpilot A/S, Pilestræde 58, 1112 Kopenhagen, Dänemark, integriert. Trustpilot dient der Verwaltung von Kundenbewertungen und unterstützt Online-Unternehmen im Aufbau einer vertrauenswürdigen Marke sowie in der Kontaktaufnahme mit Kunden. Den Nutzern wird hierdurch die Möglichkeit geboten, die Leistungen von YAZIO zu bewerten. Damit nur verifizierte Nutzer Bewertungen abgeben können, werden die Daten der Nutzer (Name, E-Mail-Adresse, sowie eine Referenznummer) zum Abgleich an Trustpilot weitergegeben. Die Daten können allerdings nur mit vorheriger Einwilligung des Nutzers auf Grundlage des Art. 6 Abs. 1 lit. a DSGVO übermittelt werden.
+
+Weitere Informationen finden sich unter https://legal.trustpilot.com/for-reviewers/end-user-privacy-terms.
+
+8.3) Feature Upvote
+
+Zudem nutzt YAZIO auf seiner Website den Service Feature Upvote der Barbary Software SL, Carrer Doctor Trueta 65 in 08005 Barcelona, Spanien. Es handelt sich um ein Tool, das es ermöglicht, Feedback von Kunden einzuholen. Dieses Feedback wird zentralisiert auf einem online-board angeboten. Dabei werden Name, E-Mail-Adresse, Meta- und Kommunikationsdaten erhoben. IP-Adresse, User-Agent und HTTP-Referrer werden nur zu technischen Zwecken verwendet. Alle anderen Daten werden ausschließlich für die Sicherstellung der Kernfunktionen der Anwendung erhoben. Die Nutzung dieser Daten erfolgt auf Grundlage der Art. 28 Abs. 2 S. 1, 6 Abs. 1 S. 1 lit. f DSGVO.
+
+Die Datenschutzbestimmungen von Feature Upvote können hier eingesehen werden: https://featureupvote.com/gdpr/.
+
+9) Newsletter, Mailings
+
+YAZIO informiert seine Nutzer per E-Mail regelmäßig über aktuelle Ernährungstrends, Rezepte sowie weitere interessante Angebote und Tipps aus dem Bereich Ernährung, Gewichtsreduzierung, etc. Die Anmeldung ist freiwillig und erfolgt über das sog. Double-Opt-In-Verfahren. Nach der Anmeldung erhält der Nutzer eine E-Mail, in der er um Bestätigung seiner Anmeldung gebeten wird. Dies ist notwendig, damit sich ein Dritter nicht unbefugt mit einer ihm fremden E-Mail-Adresse für den Empfang des Newsletters anmelden kann. Um die Anmeldung den rechtlichen Anforderungen entsprechend belegen zu können, wird sie auf Grundlage von YAZIOs berechtigten Interessen gem. Art. 6 Abs. 1 lit. f DSGVO protokolliert.
+
+Im Rahmen der Anmeldung über die Website oder in der App willigt der Nutzer in die Verarbeitung der angegebenen Daten zum Versand bzw. Empfang der E-Mails ein, Art. 6 Abs. 1 lit. a DSGVO. Ferner willigt der Nutzer ein, dass Daten über sein Nutzungsverhalten (nämlich das Öffnen und Anklicken vo
+
+[truncated to 60000 chars]
+
+
+Tab Context:
+- Executed on tabId: seed
+- Available tabs:
+  • tabId seed: "Nutzungsbedingungen & Datenschutzerklärung – Yazio Hilfe-Bereich" ("https://help.yazio.com/hc/de/articles/203444951-Nutzungsbedingungen-Datenschutzerkl%C3%A4rung")
