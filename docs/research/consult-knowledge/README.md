@@ -94,6 +94,7 @@ Für `src/lib/discovery/consult-brief/` (T2):
 - **Überschneidungen zusammenführen.** Feuern `heavy-care-paradox-fine-hair` und `oil-as-finish` gemeinsam, wird daraus ein Punkt (Menge und Platzierung), nicht zwei.
 - **Stärkere Variante gewinnt.** Feuern `ongoing-damage-first` und `heat-on-colored-hair` gemeinsam (z. B. blondiert und gefärbt), gilt nur `ongoing-damage-first`.
 - **Verdicts bleiben unangetastet (G4).** Einträge sprechen Menge, Platzierung und Rhythmus an. Sie kippen weder ein „passt" noch ein „passt nicht".
+- **Eval-Lane.** `npm run test:consult-brief` schickt die drei Golden-Profile (`tests/fixtures/consult-brief/golden-profiles.ts`) gegen die echte API (on demand, nicht in CI) und legt die Briefe als Markdown unter `test-results/consult-brief-eval/<lauf>/` ab. Nach Änderungen an Einträgen, Guardrails oder Prompt laufen lassen; `--record nomi` erneuert die aufgezeichnete Antwort, die `tests/discovery-consult-eval.test.ts` API-frei pinnt.
 
 ## Mining-Prozess
 
