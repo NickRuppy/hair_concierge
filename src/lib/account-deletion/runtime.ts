@@ -3,10 +3,17 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import { readTrialEffectiveContract } from "@/lib/billing/trial-effective-contract"
 import { trackCustomerIoServerEvent } from "@/lib/customerio/server"
 import { reportAccountDeletionCleanupFailure } from "@/lib/observability/account-deletion"
-import { cancelPayPalSubscription, retrievePayPalSubscription } from "@/lib/paypal/subscriptions"
+import {
+  cancelPayPalSubscription,
+  refundPayPalSubscriptionPayment,
+  retrievePayPalPlan,
+  retrievePayPalSubscription,
+} from "@/lib/paypal/subscriptions"
+import { listPayPalTrialTransactions } from "@/lib/paypal/trial-runtime"
 import { PRODUCT_INTAKE_BUCKET } from "@/lib/product-intake/image-validation"
 import { getStripe } from "@/lib/stripe/client"
 import type { AccountDeletionDeps, WebSubscription } from "./service"
+import { refundPayPalSubscriptionWith, refundStripeSubscriptionWith } from "./web-refund"
 
 const STRIPE_ENDED = new Set(["canceled", "incomplete_expired"])
 const PAYPAL_ENDED = new Set(["CANCELLED", "EXPIRED"])
@@ -22,7 +29,10 @@ type PayPalSubscriptions = {
   cancel(id: string, reason: string): Promise<void>
 }
 
-/** A1: immediate cancellation, no proration; already-ended agreements are a no-op. */
+/**
+ * D14: immediate cancellation without provider proration (the unused time is refunded
+ * separately, see web-refund.ts); already-ended agreements are a no-op.
+ */
 export async function cancelWebSubscriptionWith(
   subscription: WebSubscription,
   providers: { stripe: () => StripeSubscriptions; paypal: PayPalSubscriptions },
@@ -100,6 +110,15 @@ export function createAccountDeletionDeps(client: SupabaseClient): AccountDeleti
         stripe: () => getStripe().subscriptions,
         paypal: { retrieve: retrievePayPalSubscription, cancel: cancelPayPalSubscription },
       }),
+    refundWebSubscription: (refund) =>
+      refund.provider === "stripe"
+        ? refundStripeSubscriptionWith(refund, getStripe())
+        : refundPayPalSubscriptionWith(refund, {
+            retrieve: retrievePayPalSubscription,
+            plan: retrievePayPalPlan,
+            transactions: listPayPalTrialTransactions,
+            refund: refundPayPalSubscriptionPayment,
+          }),
     async removeStorageObjects(paths) {
       const { error } = await client.storage.from(PRODUCT_INTAKE_BUCKET).remove(paths)
       if (error) throw error

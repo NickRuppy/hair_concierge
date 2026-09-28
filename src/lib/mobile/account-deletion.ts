@@ -93,7 +93,7 @@ export async function handleAccountDeleteStatus(
   })
 }
 
-/** Whether the confirmation must disclose the immediate web cancellation (A1). */
+/** Whether the confirmation must disclose the immediate web cancellation + pro-rata refund (D14). */
 export async function handleAccountDeletePreflight(
   request: Request,
   deps: MobileAccountDeletionDeps = {},

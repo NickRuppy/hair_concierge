@@ -144,6 +144,26 @@ export interface PayPalWebhookDeps
   capturePaymentFailure?: PaymentFailureReporter
   /** Test seam; production reports to Sentry (provider + event type only). */
   reportDeletedAccountSubscription?: typeof reportDeletedAccountSubscriptionCancelled
+  /** Test seam: is this a subscription (or refunded payment) an account deletion cancelled? */
+  isAccountDeletionWebRefund?: (input: {
+    subscriptionId: string | null
+    paymentRef: string | null
+  }) => Promise<boolean>
+}
+
+/** D14 refunds of a deleted account's subscription: acknowledged, nothing re-provisioned. */
+async function isAccountDeletionWebRefund(
+  deps: PayPalWebhookDeps,
+  input: { subscriptionId: string | null; paymentRef: string | null },
+): Promise<boolean> {
+  if (deps.isAccountDeletionWebRefund) return deps.isAccountDeletionWebRefund(input)
+  const { data, error } = await deps.supabase.rpc("account_deletion_web_refund_known", {
+    p_provider: "paypal",
+    p_subscription_id: input.subscriptionId,
+    p_payment_ref: input.paymentRef,
+  })
+  if (error) throw new Error("Account deletion refund lookup failed")
+  return data === true
 }
 
 export type PayPalWebhookResult =
@@ -559,6 +579,12 @@ async function reconcilePayPalOrderCaptureEvent(
   }
   if (!purchase) {
     if (!isCompleted) {
+      if (await isAccountDeletionWebRefund(deps, { subscriptionId: null, paymentRef: captureId })) {
+        console.info("[paypal:webhook] account deletion refund acknowledged", {
+          eventType: event.event_type,
+        })
+        return
+      }
       throw new Error(`PayPal capture ${captureId} has no one-time purchase to reconcile`)
     }
     return
@@ -1112,6 +1138,12 @@ async function recordLinkedPayPalRefund(event: PayPalWebhookEvent, deps: PayPalW
     subscriptionId,
   )
   if (!billingRow) {
+    if (await isAccountDeletionWebRefund(deps, { subscriptionId, paymentRef: null })) {
+      console.info("[paypal:webhook] account deletion refund acknowledged", {
+        eventType: event.event_type,
+      })
+      return
+    }
     throw new Error(
       `PayPal refund/reversal ${event.id ?? "unknown"} has no local billing row for ${subscriptionId}`,
     )

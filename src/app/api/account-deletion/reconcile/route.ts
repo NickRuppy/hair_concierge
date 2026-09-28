@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server"
 import { safeBearerTokenMatches } from "@/app/api/billing/payment-monitor/route"
 import { createAccountDeletionDeps } from "@/lib/account-deletion/runtime"
-import { retryAccountDeletionCleanup } from "@/lib/account-deletion/service"
+import {
+  retryAccountDeletionCleanup,
+  retryAccountDeletionWebRefunds,
+} from "@/lib/account-deletion/service"
 import {
   reportAccountDeletionOrphanClosed,
   reportAccountDeletionPurgeFailure,
@@ -24,12 +27,17 @@ type Dependencies = {
   /** Moves open operations whose account is already gone into external cleanup. */
   closeOrphans: () => Promise<OrphanResult>
   retryCleanup: () => Promise<{ pending: number; completed: number; failed: number }>
+  /** Settles due pro-rata refunds of web subscriptions cancelled by a deletion (D14). */
+  retryRefunds: () => Promise<{ pending: number; completed: number; failed: number }>
   purge: () => Promise<PurgeResult>
   reportPurgeFailure?: typeof reportAccountDeletionPurgeFailure
   reportOrphanClosed?: typeof reportAccountDeletionOrphanClosed
 }
 
-/** Cron: close orphaned operations, resume external cleanup, purge rows past retention. */
+/**
+ * Cron: close orphaned operations, resume external cleanup, settle due web refunds, purge
+ * rows past retention.
+ */
 export async function handleAccountDeletionReconcile(request: Request, deps: Dependencies) {
   if (
     !deps.cronSecret ||
@@ -43,12 +51,13 @@ export async function handleAccountDeletionReconcile(request: Request, deps: Dep
       if (priorState === "requested")
         (deps.reportOrphanClosed ?? reportAccountDeletionOrphanClosed)({ priorState })
     const cleanup = await deps.retryCleanup()
+    const refunds = await deps.retryRefunds()
     const purged = await deps.purge()
     for (const table of purged.failed)
       (deps.reportPurgeFailure ?? reportAccountDeletionPurgeFailure)({ table })
     return {
-      status: cleanup.failed || purged.failed.length ? 503 : 200,
-      body: { orphansClosed: orphans.closed, cleanup, purged },
+      status: cleanup.failed || refunds.failed || purged.failed.length ? 503 : 200,
+      body: { orphansClosed: orphans.closed, cleanup, refunds, purged },
     }
   } catch {
     return { status: 503, body: { error: "temporarily_unavailable" } }
@@ -65,6 +74,7 @@ export async function GET(request: Request) {
       return data as OrphanResult
     },
     retryCleanup: () => retryAccountDeletionCleanup(createAccountDeletionDeps(client)),
+    retryRefunds: () => retryAccountDeletionWebRefunds(createAccountDeletionDeps(client)),
     purge: async () => {
       const { data, error } = await client.rpc("purge_anonymized_records")
       if (error) throw new Error("Purge failed")

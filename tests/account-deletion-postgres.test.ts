@@ -552,19 +552,23 @@ test(
           'public.delete_account_data(uuid,uuid)', 'public.account_deletion_record_external_failure(uuid,text)',
           'public.account_deletion_complete(uuid)', 'public.account_deletion_status(uuid)',
           'public.account_deletion_pending_cleanup(integer,uuid)', 'public.purge_anonymized_records()',
+          'public.account_deletion_record_web_subscriptions(uuid,jsonb)', 'public.account_deletion_due_web_refunds(integer,uuid)',
+          'public.account_deletion_web_refund_result(text,text,integer,text,text)',
+          'public.account_deletion_web_refund_known(text,text,text)',
           'private.delete_account(uuid,uuid)', 'private.purge_anonymized_records()']) f`),
       "f",
     )
     assert.equal(
       await admin(`SELECT bool_or(has_table_privilege(r, t, p)) FROM unnest(ARRAY['anon', 'authenticated']) r,
-        unnest(ARRAY['private.account_deletion_operations', 'private.anonymous_quiz_answer_archive']) t,
+        unnest(ARRAY['private.account_deletion_operations', 'private.anonymous_quiz_answer_archive',
+          'private.account_deletion_web_refunds']) t,
         unnest(ARRAY['SELECT', 'INSERT', 'UPDATE', 'DELETE']) p`),
       "f",
     )
     assert.equal(
       await admin(`SELECT string_agg(relname || ':' || relrowsecurity, ',' ORDER BY relname) FROM pg_class
-        WHERE relname IN ('account_deletion_operations', 'anonymous_quiz_answer_archive')`),
-      "account_deletion_operations:true,anonymous_quiz_answer_archive:true",
+        WHERE relname IN ('account_deletion_operations', 'anonymous_quiz_answer_archive', 'account_deletion_web_refunds')`),
+      "account_deletion_operations:true,account_deletion_web_refunds:true,anonymous_quiz_answer_archive:true",
     )
 
     // ---------- Web user A (keep_hashed). ----------
@@ -584,9 +588,68 @@ test(
       service(`SELECT public.delete_account_data('${A}', '${REQ.A}')`),
       /web_billing_not_cancelled/,
     )
+    // D14: subscriptions are recorded before the cancel; their refunds become due with the mark.
+    assert.equal(
+      await service(`SELECT public.account_deletion_record_web_subscriptions('${REQ.A}',
+        '[{"provider":"stripe","id":"sub_refund_a"},{"provider":"stripe","id":"sub_refund_a"}]')`),
+      "1",
+    )
+    assert.equal(
+      await service(`SELECT public.account_deletion_due_web_refunds(20, '${REQ.A}')::text`),
+      "[]",
+    )
+    assert.equal(
+      await service(`SELECT public.account_deletion_web_refund_known('stripe', 'sub_refund_a')`),
+      "f",
+    )
     assert.equal(
       await service(`SELECT public.account_deletion_mark_billing_cancelled('${REQ.A}')->>'state'`),
       "web_billing_cancelled",
+    )
+    await assert.rejects(
+      service(`SELECT public.account_deletion_record_web_subscriptions('${REQ.A}', '[]')`),
+      /operation_not_requested/,
+    )
+    const dueA = JSON.parse(
+      await service(`SELECT public.account_deletion_due_web_refunds(20, '${REQ.A}')`),
+    )
+    assert.deepEqual(
+      dueA.map((r: Record<string, unknown>) => [
+        r.provider,
+        r.subscriptionId,
+        r.requestId,
+        r.attempts,
+      ]),
+      [["stripe", "sub_refund_a", REQ.A, 0]],
+    )
+    assert.equal(
+      await service(`SELECT public.account_deletion_web_refund_result('stripe', 'sub_refund_a', NULL, NULL,
+        'stripe_refund_failed')->>'attempts'`),
+      "1",
+    )
+    assert.equal(
+      await service(`SELECT public.account_deletion_web_refund_known('stripe', 'sub_refund_a')`),
+      "t",
+    )
+    assert.equal(
+      await service(`SELECT public.account_deletion_web_refund_result('stripe', 'sub_refund_a', 999, 'pi_refund_a',
+        NULL)->>'state'`),
+      "done",
+    )
+    await assert.rejects(
+      service(
+        `SELECT public.account_deletion_web_refund_result('stripe', 'sub_refund_a', 999, 'pi_refund_a', NULL)`,
+      ),
+      /refund_not_due/,
+    )
+    assert.equal(
+      await service(`SELECT public.account_deletion_due_web_refunds(20, NULL)::text`),
+      "[]",
+    )
+    assert.equal(
+      await service(`SELECT public.account_deletion_web_refund_known('paypal', NULL, 'pi_refund_a') || ','
+        || public.account_deletion_web_refund_known('stripe', NULL, 'pi_refund_a')`),
+      "false,true",
     )
     await assert.rejects(
       service(`SELECT public.delete_account_data('${D}', '${REQ.A}')`),

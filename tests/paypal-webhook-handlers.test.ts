@@ -873,6 +873,56 @@ test("events for a deleted account's subscription write nothing; a live agreemen
   }
 })
 
+test("refund webhooks for a subscription an account deletion cancelled are acknowledged no-ops (D14)", async () => {
+  const lookups: unknown[] = []
+  const known = async (input: { subscriptionId: string | null; paymentRef: string | null }) => {
+    lookups.push(input)
+    return input.subscriptionId === "I-active" || input.paymentRef === "SALE-TX"
+  }
+  const { supabase, billing } = createSupabaseStub({ billing: [] })
+  const deps = {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    recordBillingAnalytics: true,
+    isAccountDeletionWebRefund: known,
+  }
+  assert.deepEqual(
+    await handlePayPalWebhookEvent(
+      paymentEvent("WH-deleted-refund", "PAYMENT.SALE.REFUNDED"),
+      deps,
+    ),
+    { handled: true },
+  )
+  assert.deepEqual(
+    await handlePayPalWebhookEvent(
+      {
+        id: "WH-deleted-capture-refund",
+        event_type: "PAYMENT.CAPTURE.REFUNDED",
+        resource: {
+          id: "REFUND-1",
+          supplementary_data: { related_ids: { capture_id: "SALE-TX" } },
+        },
+      },
+      deps,
+    ),
+    { handled: true },
+  )
+  assert.deepEqual(lookups, [
+    { subscriptionId: "I-active", paymentRef: null },
+    { subscriptionId: null, paymentRef: "SALE-TX" },
+  ])
+  assert.equal(billing.length, 0)
+  // Any other subscription without a local row still fails loudly (retryable).
+  await assert.rejects(
+    handlePayPalWebhookEvent(paymentEvent("WH-unknown-refund", "PAYMENT.SALE.REFUNDED"), {
+      ...deps,
+      isAccountDeletionWebRefund: async () => false,
+    }),
+    /has no local billing row/,
+  )
+})
+
 test("activation webhook does not rebind an intent that already belongs to another PayPal subscription", async () => {
   const { supabase, billing, paypalIntents } = createSupabaseStub({
     billing: [],

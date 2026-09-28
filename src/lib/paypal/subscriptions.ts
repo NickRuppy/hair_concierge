@@ -43,3 +43,31 @@ export async function cancelPayPalSubscription(
     },
   )
 }
+
+/**
+ * Refunds (part of) a subscription payment to the payer. A subscription transaction id is a
+ * capture on the v2 Payments API; older sale-based ids only exist on v1. The request id makes
+ * a retry return the first refund instead of creating a second one.
+ */
+export async function refundPayPalSubscriptionPayment(
+  transactionId: string,
+  amount: { value: string; currency_code: string },
+  requestId: string,
+): Promise<void> {
+  const id = encodeURIComponent(transactionId)
+  const init = (body: unknown): RequestInit => ({
+    method: "POST",
+    signal: AbortSignal.timeout(15_000),
+    headers: { "PayPal-Request-Id": requestId },
+    body: JSON.stringify(body),
+  })
+  try {
+    await paypalRequest<unknown>(`/v2/payments/captures/${id}/refund`, init({ amount }))
+  } catch (error) {
+    if ((error as { status?: unknown }).status !== 404) throw error
+    await paypalRequest<unknown>(
+      `/v1/payments/sale/${id}/refund`,
+      init({ amount: { total: amount.value, currency: amount.currency_code } }),
+    )
+  }
+}

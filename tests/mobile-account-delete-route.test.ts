@@ -68,7 +68,10 @@ function fakeWorld(options: { webSubscriptions?: number } = {}) {
         op!.state = "data_deleted"
         return ok({ state: op!.state })
       case "account_deletion_pending_cleanup":
+      case "account_deletion_due_web_refunds":
         return ok([])
+      case "account_deletion_record_web_subscriptions":
+        return ok(1)
       case "account_deletion_status":
         if (state.statusError) return fail("boom")
         return ok(op?.state ?? null)
@@ -105,6 +108,7 @@ function fakeWorld(options: { webSubscriptions?: number } = {}) {
       }
       cancelled.push(subscription.id)
     },
+    refundWebSubscription: async () => ({ refundedMinor: 0, paymentRef: null }),
     removeStorageObjects: async () => {},
     deleteCustomerIoPerson: async () => {},
     deletePostHogPerson: async () => {},
