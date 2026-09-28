@@ -40,6 +40,41 @@ export function reportAccountDeletionCleanupFailure(
   }
 }
 
+/**
+ * A pro-rata (D14) or post-deletion (R-a) refund of a web subscription keeps failing, or
+ * ended in manual review. Only provider, machine code, attempts and whether it is terminal
+ * are reported — never subscription, payment, request or user ids.
+ */
+export function reportAccountDeletionRefundFailure(
+  details: { provider: "stripe" | "paypal"; errorCode: string; attempts: number; manual: boolean },
+  sink: AccountDeletionFailureSink = Sentry,
+): void {
+  try {
+    const errorCode = MACHINE_CODE.test(details.errorCode) ? details.errorCode : "unknown"
+    sink.withScope((scope) => {
+      scope.setLevel?.("error")
+      scope.setTag("account_deletion.provider", details.provider)
+      scope.setTag("account_deletion.error_code", errorCode)
+      scope.setTag("account_deletion.refund_manual", details.manual ? "true" : "false")
+      scope.setContext("account_deletion_refund", {
+        provider: details.provider,
+        error_code: errorCode,
+        attempts: details.attempts,
+        manual: details.manual,
+      })
+      sink.captureException(
+        new Error(
+          details.manual
+            ? "account_deletion_refund_needs_manual_review"
+            : "account_deletion_refund_failed",
+        ),
+      )
+    })
+  } catch {
+    /* Telemetry is best effort. */
+  }
+}
+
 export type DeletedAccountBillingReport = {
   provider: "stripe" | "paypal"
   /** Webhook event type that surfaced the live subscription (a machine string). */

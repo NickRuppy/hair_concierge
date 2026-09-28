@@ -2,7 +2,10 @@ import "server-only"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { readTrialEffectiveContract } from "@/lib/billing/trial-effective-contract"
 import { trackCustomerIoServerEvent } from "@/lib/customerio/server"
-import { reportAccountDeletionCleanupFailure } from "@/lib/observability/account-deletion"
+import {
+  reportAccountDeletionCleanupFailure,
+  reportAccountDeletionRefundFailure,
+} from "@/lib/observability/account-deletion"
 import {
   cancelPayPalSubscription,
   refundPayPalSubscriptionPayment,
@@ -110,15 +113,19 @@ export function createAccountDeletionDeps(client: SupabaseClient): AccountDeleti
         stripe: () => getStripe().subscriptions,
         paypal: { retrieve: retrievePayPalSubscription, cancel: cancelPayPalSubscription },
       }),
-    refundWebSubscription: (refund) =>
+    refundWebSubscription: (refund, hooks) =>
       refund.provider === "stripe"
         ? refundStripeSubscriptionWith(refund, getStripe())
-        : refundPayPalSubscriptionWith(refund, {
-            retrieve: retrievePayPalSubscription,
-            plan: retrievePayPalPlan,
-            transactions: listPayPalTrialTransactions,
-            refund: refundPayPalSubscriptionPayment,
-          }),
+        : refundPayPalSubscriptionWith(
+            refund,
+            {
+              retrieve: retrievePayPalSubscription,
+              plan: retrievePayPalPlan,
+              transactions: listPayPalTrialTransactions,
+              refund: (id, amount, key) => refundPayPalSubscriptionPayment(id, amount, key),
+            },
+            hooks,
+          ),
     async removeStorageObjects(paths) {
       const { error } = await client.storage.from(PRODUCT_INTAKE_BUCKET).remove(paths)
       if (error) throw error
@@ -135,5 +142,6 @@ export function createAccountDeletionDeps(client: SupabaseClient): AccountDeleti
     },
     deletePostHogPerson,
     reportCleanupFailure: reportAccountDeletionCleanupFailure,
+    reportRefundFailure: reportAccountDeletionRefundFailure,
   }
 }

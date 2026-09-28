@@ -148,6 +148,7 @@ test("the batch-7 migration has a unique version that sorts after every migratio
       "20260927172739",
       "20260927172741",
       "20260928071305",
+      "20260928074426",
     ],
     "must sort after every migration but its follow-up, batch 9's and the iOS paywall's",
   )

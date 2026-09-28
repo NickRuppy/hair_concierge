@@ -11,8 +11,11 @@ import "server-only"
  * 3. Storage photos, the Customer.io person and the PostHog person + events are removed.
  *    A failure leaves `data_deleted`; the cron retries until `external_cleanup_done` and
  *    reports to Sentry from the 5th failed attempt. The account is gone after step 2.
- * 4. The due refunds (unused prepaid time, pro rata) are settled; a failure never blocks the
- *    deletion — the cron retries until done and reports from the 5th failed attempt.
+ * 4. The due refunds (unused prepaid time, pro rata) are settled after the response (the
+ *    route defers the first attempt) and by the cron; a failure never blocks the deletion.
+ *    Sentry from the 5th failed attempt; the 10th failure or a permanent provider error ends
+ *    in `failed_manual` (one report). Post-deletion subscriptions (R-a) share the table and
+ *    are refunded in full.
  */
 
 export type AccountDeletionState =
@@ -45,18 +48,37 @@ export class AccountDeletionCleanupError extends Error {
 
 export type WebSubscription = { provider: "stripe" | "paypal"; id: string }
 
-/** A cancelled web subscription whose pro-rata refund is still to settle. */
+/** A cancelled web subscription whose refund is still to settle. */
 export type WebRefundDue = {
   provider: WebSubscription["provider"]
   subscriptionId: string
-  /** The deletion request that cancelled it (idempotency key source). */
+  /** The deletion request that cancelled it, or a random id (idempotency key source). */
   requestId: string
+  /** `deletion`: pro rata (D14). `post_deletion`: surfaced after deletion, full (R-a). */
+  kind: "deletion" | "post_deletion"
+  /** When the current request recorded it (M6). */
   recordedAt: string
   attempts: number
+  /** The refund last requested from the provider (recognises our own refund on a retry). */
+  plannedMinor: number | null
+  plannedPaymentRef: string | null
 }
 
-/** 0 = nothing to refund (trial, period over, already refunded). */
+/** 0 = nothing to refund (trial, never billed, period over, refunded by someone else). */
 export type WebRefundOutcome = { refundedMinor: number; paymentRef: string | null }
+
+export type WebRefundHooks = {
+  /** Stores the refund about to be requested before the provider call. */
+  plan(input: { amountMinor: number; paymentRef: string }): Promise<void>
+}
+
+/** A provider refusal no retry can fix (disputed charge, unsupported payment): manual review. */
+export class AccountDeletionRefundManualError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = "AccountDeletionRefundManualError"
+  }
+}
 
 export type AccountDeletionTarget = {
   requestId: string
@@ -74,12 +96,18 @@ export type AccountDeletionDeps = {
   listWebSubscriptions(userId: string): Promise<WebSubscription[]>
   /** Cancels immediately without proration; a no-op when already ended. Throws on failure. */
   cancelWebSubscription(subscription: WebSubscription): Promise<void>
-  /** Refunds the unused part of the cancelled subscription's last payment. Throws on failure. */
-  refundWebSubscription(refund: WebRefundDue): Promise<WebRefundOutcome>
+  /** Refunds per `refund.kind` (pro rata / full). Throws on failure. */
+  refundWebSubscription(refund: WebRefundDue, hooks: WebRefundHooks): Promise<WebRefundOutcome>
   removeStorageObjects(paths: string[]): Promise<void>
   deleteCustomerIoPerson(identifier: string, messageId: string): Promise<void>
   deletePostHogPerson(distinctId: string): Promise<void>
   reportCleanupFailure(details: { errorCode: string; attempts: number }): void
+  reportRefundFailure(details: {
+    provider: WebSubscription["provider"]
+    errorCode: string
+    attempts: number
+    manual: boolean
+  }): void
 }
 
 export const ACCOUNT_DELETION_SENTRY_THRESHOLD = 5
@@ -145,8 +173,6 @@ export async function requestAccountDeletion(
     const [target] = await pendingCleanup(deps, { requestId: input.requestId, limit: 1 })
     if (target) current = await runExternalCleanup(target, deps)
   }
-  // Best effort here; the cron settles what is left.
-  await settleWebRefunds(deps, { requestId: input.requestId, limit: 10 }).catch(() => undefined)
   return { state: current }
 }
 
@@ -169,9 +195,17 @@ export async function retryAccountDeletionCleanup(deps: AccountDeletionDeps, lim
   return { pending: targets.length, completed, failed: targets.length - completed }
 }
 
-/** Cron: settle the due pro-rata refunds of cancelled web subscriptions. */
+/** Cron: settle the due refunds of cancelled web subscriptions. */
 export async function retryAccountDeletionWebRefunds(deps: AccountDeletionDeps, limit = 20) {
   return settleWebRefunds(deps, { limit })
+}
+
+/** First attempt for one request, deferred after the response (never awaited by the app). */
+export async function settleAccountDeletionWebRefunds(
+  deps: AccountDeletionDeps,
+  requestId: string,
+) {
+  return settleWebRefunds(deps, { requestId, limit: 10 })
 }
 
 async function settleWebRefunds(
@@ -183,22 +217,41 @@ async function settleWebRefunds(
     p_request_id: input.requestId ?? null,
   })) as unknown as WebRefundDue[]
   let completed = 0
+  let manual = 0
   for (const refund of due ?? []) {
     const key = { p_provider: refund.provider, p_subscription_id: refund.subscriptionId }
     let outcome: WebRefundOutcome | null = null
     try {
-      outcome = await deps.refundWebSubscription(refund)
-    } catch {
+      outcome = await deps.refundWebSubscription(refund, {
+        plan: async ({ amountMinor, paymentRef }) => {
+          await call(deps, "account_deletion_web_refund_plan", {
+            ...key,
+            p_planned_minor: amountMinor,
+            p_payment_ref: paymentRef,
+          })
+        },
+      })
+    } catch (error) {
+      const permanent = error instanceof AccountDeletionRefundManualError
       const errorCode = `${refund.provider}_refund_failed`
       const recorded = await deps.rpc("account_deletion_web_refund_result", {
         ...key,
         p_refunded_minor: null,
         p_payment_ref: null,
         p_error_code: errorCode,
+        p_manual: permanent,
       })
-      const attempts = Number((recorded.data as { attempts?: unknown } | null)?.attempts)
-      if (!recorded.error && attempts >= ACCOUNT_DELETION_SENTRY_THRESHOLD)
-        deps.reportCleanupFailure({ errorCode, attempts })
+      const result = recorded.data as { attempts?: unknown; state?: unknown } | null
+      const attempts = Number(result?.attempts)
+      const terminal = !recorded.error && result?.state === "failed_manual"
+      if (terminal) manual += 1
+      if (terminal || (!recorded.error && attempts >= ACCOUNT_DELETION_SENTRY_THRESHOLD))
+        deps.reportRefundFailure({
+          provider: refund.provider,
+          errorCode,
+          attempts,
+          manual: terminal,
+        })
       continue
     }
     // A lost result is harmless: the retry finds the same refund (idempotency key/provider state).
@@ -211,7 +264,8 @@ async function settleWebRefunds(
     if (!settled.error) completed += 1
   }
   const pending = (due ?? []).length
-  return { pending, completed, failed: pending - completed }
+  // Manual-review rows are settled for the cron (reported once), not failures.
+  return { pending, completed, manual, failed: pending - completed - manual }
 }
 
 async function pendingCleanup(

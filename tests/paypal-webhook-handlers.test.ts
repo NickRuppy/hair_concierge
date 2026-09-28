@@ -849,6 +849,7 @@ test("events for a deleted account's subscription write nothing; a live agreemen
     })
     const cancelled: string[] = []
     const reports: unknown[] = []
+    const refundsRecorded: string[] = []
     const result = await handlePayPalWebhookEvent(
       eventType === "PAYMENT.SALE.COMPLETED"
         ? paymentEvent(`WH-deleted-${eventType}`, eventType)
@@ -859,12 +860,17 @@ test("events for a deleted account's subscription write nothing; a live agreemen
         freeTierId: "tier-free",
         retrievePayPalSubscription: async () => subscription(status, futureIso()),
         cancelPayPalSubscription: async (subscriptionId) => {
+          // R-a: the full refund is recorded before the cancel.
+          assert.deepEqual(refundsRecorded, [subscriptionId], eventType)
           cancelled.push(subscriptionId)
         },
+        recordPostDeletionRefund: async (subscriptionId) =>
+          void refundsRecorded.push(subscriptionId),
         reportDeletedAccountSubscription: (details) => void reports.push(details),
       },
     )
     assert.deepEqual(result, { handled: true }, eventType)
+    assert.deepEqual(refundsRecorded, expectCancel ? ["I-active"] : [], eventType)
     assert.equal(billing.length, 0, eventType)
     assert.deepEqual(cancelled, expectCancel ? ["I-active"] : [], eventType)
     assert.deepEqual(reports, expectCancel ? [{ provider: "paypal", eventType }] : [], eventType)

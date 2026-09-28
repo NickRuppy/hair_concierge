@@ -17,6 +17,7 @@ import {
   recordBillingAnalyticsEvent,
 } from "@/lib/billing/analytics-outbox"
 import { applyPlanChangeAtRenewal } from "@/lib/billing/plan-change"
+import { recordPostDeletionRefund } from "@/lib/account-deletion/post-deletion-refund"
 import { reportDeletedAccountSubscriptionCancelled } from "@/lib/observability/account-deletion"
 import { mirrorBillingSubscriptionToProfile } from "@/lib/billing/entitlements"
 import {
@@ -144,6 +145,8 @@ export interface PayPalWebhookDeps
   capturePaymentFailure?: PaymentFailureReporter
   /** Test seam; production reports to Sentry (provider + event type only). */
   reportDeletedAccountSubscription?: typeof reportDeletedAccountSubscriptionCancelled
+  /** Test seam: records a post-deletion subscription for its full refund (R-a). */
+  recordPostDeletionRefund?: (subscriptionId: string) => Promise<void>
   /** Test seam: is this a subscription (or refunded payment) an account deletion cancelled? */
   isAccountDeletionWebRefund?: (input: {
     subscriptionId: string | null
@@ -427,6 +430,12 @@ async function acknowledgeDeletedAccountSubscription(
       : null)
   if (!intent?.anonymized_at) return false
   if (subscription.status === "ACTIVE" || subscription.status === "SUSPENDED") {
+    // R-a: full refund of its payments (the customer never had access), recorded before the
+    // cancel so a retried delivery (agreement then CANCELLED) cannot miss it.
+    await (
+      deps.recordPostDeletionRefund ??
+      ((id: string) => recordPostDeletionRefund(deps.supabase, "paypal", id))
+    )(subscription.id)
     const cancel = deps.cancelPayPalSubscription ?? cancelPayPalSubscriptionForWebhook
     await cancel(subscription.id, "Chaarlie-Konto gelöscht")
     ;(deps.reportDeletedAccountSubscription ?? reportDeletedAccountSubscriptionCancelled)({

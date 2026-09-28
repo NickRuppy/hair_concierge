@@ -553,7 +553,9 @@ test(
           'public.account_deletion_complete(uuid)', 'public.account_deletion_status(uuid)',
           'public.account_deletion_pending_cleanup(integer,uuid)', 'public.purge_anonymized_records()',
           'public.account_deletion_record_web_subscriptions(uuid,jsonb)', 'public.account_deletion_due_web_refunds(integer,uuid)',
-          'public.account_deletion_web_refund_result(text,text,integer,text,text)',
+          'public.account_deletion_web_refund_result(text,text,integer,text,text,boolean)',
+          'public.account_deletion_web_refund_plan(text,text,integer,text)',
+          'public.account_deletion_record_post_deletion_refund(text,text)',
           'public.account_deletion_web_refund_known(text,text,text)',
           'private.delete_account(uuid,uuid)', 'private.purge_anonymized_records()']) f`),
       "f",
@@ -576,9 +578,20 @@ test(
       service(`SELECT public.delete_account_data('${A}', '${REQ.A}')`),
       /operation_not_found/,
     )
+    // I1: an earlier request recorded (and maybe cancelled) a subscription; the new request
+    // takes it over instead of stranding its refund.
+    const REQ_A0 = "a0f00000-0000-4000-8000-000000000001"
+    await service(`SELECT public.account_deletion_begin('${A}', '${REQ_A0}')`)
+    await service(`SELECT public.account_deletion_record_web_subscriptions('${REQ_A0}',
+      '[{"provider":"paypal","id":"I-MOVE-A"}]')`)
     assert.equal(
       await service(`SELECT public.account_deletion_begin('${A}', '${REQ.A}')->>'state'`),
       "requested",
+    )
+    assert.equal(
+      await admin(`SELECT request_id || '|' || state FROM private.account_deletion_web_refunds
+        WHERE subscription_id = 'I-MOVE-A'`),
+      `${REQ.A}|recorded`,
     )
     await assert.rejects(
       service(`SELECT public.account_deletion_begin('${D}', '${REQ.A}')`),
@@ -614,13 +627,34 @@ test(
       await service(`SELECT public.account_deletion_due_web_refunds(20, '${REQ.A}')`),
     )
     assert.deepEqual(
-      dueA.map((r: Record<string, unknown>) => [
-        r.provider,
-        r.subscriptionId,
-        r.requestId,
-        r.attempts,
-      ]),
-      [["stripe", "sub_refund_a", REQ.A, 0]],
+      dueA
+        .map((r: Record<string, unknown>) => [
+          r.provider,
+          r.subscriptionId,
+          r.requestId,
+          r.kind,
+          r.attempts,
+          r.plannedMinor,
+        ])
+        .sort(),
+      [
+        ["paypal", "I-MOVE-A", REQ.A, "deletion", 0, null],
+        ["stripe", "sub_refund_a", REQ.A, "deletion", 0, null],
+      ],
+    )
+    // M4 plan; I2 a permanent error ends in manual review with a purge date (R-b).
+    await service(
+      `SELECT public.account_deletion_web_refund_plan('paypal', 'I-MOVE-A', 749, 'TX-MOVE')`,
+    )
+    assert.equal(
+      await service(`SELECT public.account_deletion_web_refund_result('paypal', 'I-MOVE-A', NULL, NULL,
+        'paypal_refund_failed', true)->>'state'`),
+      "failed_manual",
+    )
+    assert.equal(
+      await admin(`SELECT planned_minor || '|' || planned_payment_ref || '|' || (purge_after > now() + interval '9 years')
+        FROM private.account_deletion_web_refunds WHERE subscription_id = 'I-MOVE-A'`),
+      "749|TX-MOVE|true",
     )
     assert.equal(
       await service(`SELECT public.account_deletion_web_refund_result('stripe', 'sub_refund_a', NULL, NULL,
@@ -641,6 +675,30 @@ test(
         `SELECT public.account_deletion_web_refund_result('stripe', 'sub_refund_a', 999, 'pi_refund_a', NULL)`,
       ),
       /refund_not_due/,
+    )
+    // The 10th failure ends in manual review without a permanent flag.
+    await service(
+      `SELECT public.account_deletion_record_post_deletion_refund('stripe', 'sub_post_a')`,
+    )
+    for (let attempt = 1; attempt <= 10; attempt++)
+      assert.equal(
+        await service(`SELECT public.account_deletion_web_refund_result('stripe', 'sub_post_a', NULL, NULL,
+          'stripe_refund_failed')->>'state'`),
+        attempt < 10 ? "due" : "failed_manual",
+      )
+    // R-a shares the key: a subscription with a refund row is never recorded twice.
+    assert.equal(
+      await service(
+        `SELECT public.account_deletion_record_post_deletion_refund('stripe', 'sub_refund_a')::text || ','
+          || public.account_deletion_record_post_deletion_refund('stripe', 'sub_post_a')::text`,
+      ),
+      "false,false",
+    )
+    assert.equal(
+      await admin(
+        `SELECT kind FROM private.account_deletion_web_refunds WHERE subscription_id = 'sub_refund_a'`,
+      ),
+      "deletion",
     )
     assert.equal(
       await service(`SELECT public.account_deletion_due_web_refunds(20, NULL)::text`),
@@ -936,11 +994,23 @@ test(
     await admin(`INSERT INTO auth.users(id, email) VALUES ('${E}', 'eva.dashboard@example.com');
       INSERT INTO storage.objects(bucket_id, name) VALUES ('product-intake', '${E}/x/front.jpg');`)
     await service(`SELECT public.account_deletion_begin('${E}', '${REQ_E}')`)
+    await service(`SELECT public.account_deletion_record_web_subscriptions('${REQ_E}',
+      '[{"provider":"stripe","id":"sub_orphan_e"}]')`)
     await admin(`DELETE FROM auth.users WHERE id = '${E}'`)
     assert.deepEqual(JSON.parse(await service(`SELECT public.account_deletion_close_orphans()`)), {
       closed: 1,
       priorStates: ["requested"],
     })
+    // Minor 9: its recorded subscription is now due for its refund.
+    assert.deepEqual(
+      JSON.parse(
+        await service(`SELECT public.account_deletion_due_web_refunds(20, '${REQ_E}')`),
+      ).map((r: Record<string, unknown>) => r.subscriptionId),
+      ["sub_orphan_e"],
+    )
+    await service(
+      `SELECT public.account_deletion_web_refund_result('stripe', 'sub_orphan_e', 0, NULL, NULL)`,
+    )
     assert.deepEqual(
       JSON.parse(await service(`SELECT public.account_deletion_pending_cleanup(20, '${REQ_E}')`)),
       [
@@ -999,8 +1069,18 @@ test(
     await admin(
       `SET session_replication_role = replica; ${tagged.map((table) => `UPDATE ${table} SET purge_after = now() - interval '1 second' WHERE anonymous_subject_id IN ('${subjectA}', '${subjectC}') AND purge_after IS NOT NULL;`).join(" ")}`,
     )
+    // R-b: settled refund rows go after the billing retention.
+    await admin(`UPDATE private.account_deletion_web_refunds SET purge_after = now() - interval '1 second'
+      WHERE subscription_id = 'sub_refund_a'`)
     const purged = JSON.parse(await service(`SELECT public.purge_anonymized_records()`))
     assert.deepEqual(purged.failed, [])
+    assert.equal(purged.deleted["private.account_deletion_web_refunds"], 1)
+    assert.equal(
+      await admin(
+        `SELECT string_agg(subscription_id, ',' ORDER BY subscription_id) FROM private.account_deletion_web_refunds`,
+      ),
+      "I-MOVE-A,sub_orphan_e,sub_post_a",
+    )
     // A's email-matched lead stays while D's live consent references it (no personal data left).
     assert.deepEqual(purged.stillReferenced, { "public.leads": 1 })
     assert.equal(

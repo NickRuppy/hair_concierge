@@ -28,7 +28,13 @@ type Dependencies = {
   closeOrphans: () => Promise<OrphanResult>
   retryCleanup: () => Promise<{ pending: number; completed: number; failed: number }>
   /** Settles due pro-rata refunds of web subscriptions cancelled by a deletion (D14). */
-  retryRefunds: () => Promise<{ pending: number; completed: number; failed: number }>
+  retryRefunds: () => Promise<{
+    pending: number
+    completed: number
+    failed: number
+    /** Ended in manual review this run (reported once; not a failure). */
+    manual?: number
+  }>
   purge: () => Promise<PurgeResult>
   reportPurgeFailure?: typeof reportAccountDeletionPurgeFailure
   reportOrphanClosed?: typeof reportAccountDeletionOrphanClosed
@@ -44,23 +50,41 @@ export async function handleAccountDeletionReconcile(request: Request, deps: Dep
     !safeBearerTokenMatches(request.headers.get("authorization"), deps.cronSecret)
   )
     return { status: 401, body: { error: "unauthorized" } }
-  try {
-    const orphans = await deps.closeOrphans()
-    // Closed before web billing was cancelled: an operator must check the provider.
-    for (const priorState of orphans.priorStates)
-      if (priorState === "requested")
-        (deps.reportOrphanClosed ?? reportAccountDeletionOrphanClosed)({ priorState })
-    const cleanup = await deps.retryCleanup()
-    const refunds = await deps.retryRefunds()
-    const purged = await deps.purge()
-    for (const table of purged.failed)
-      (deps.reportPurgeFailure ?? reportAccountDeletionPurgeFailure)({ table })
-    return {
-      status: cleanup.failed || refunds.failed || purged.failed.length ? 503 : 200,
-      body: { orphansClosed: orphans.closed, cleanup, refunds, purged },
+  // Each step is isolated: one failing (e.g. a provider outage in refunds) never skips the
+  // others; the run answers 503 so the failure stays visible.
+  const step = async <T>(run: () => Promise<T>): Promise<T | null> => {
+    try {
+      return await run()
+    } catch {
+      return null
     }
-  } catch {
-    return { status: 503, body: { error: "temporarily_unavailable" } }
+  }
+  const orphans = await step(deps.closeOrphans)
+  // Closed before web billing was cancelled: an operator must check the provider.
+  for (const priorState of orphans?.priorStates ?? [])
+    if (priorState === "requested")
+      (deps.reportOrphanClosed ?? reportAccountDeletionOrphanClosed)({ priorState })
+  const cleanup = await step(deps.retryCleanup)
+  const refunds = await step(deps.retryRefunds)
+  const purged = await step(deps.purge)
+  for (const table of purged?.failed ?? [])
+    (deps.reportPurgeFailure ?? reportAccountDeletionPurgeFailure)({ table })
+  const healthy =
+    orphans &&
+    cleanup &&
+    refunds &&
+    purged &&
+    !cleanup.failed &&
+    !refunds.failed &&
+    !purged.failed.length
+  return {
+    status: healthy ? 200 : 503,
+    body: {
+      orphansClosed: orphans?.closed ?? null,
+      cleanup: cleanup ?? { error: "temporarily_unavailable" },
+      refunds: refunds ?? { error: "temporarily_unavailable" },
+      purged: purged ?? { error: "temporarily_unavailable" },
+    },
   }
 }
 

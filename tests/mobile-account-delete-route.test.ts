@@ -41,6 +41,8 @@ function fakeWorld(options: { webSubscriptions?: number } = {}) {
   const signOuts: string[] = []
   const rateKeys: string[] = []
   const cancelled: string[] = []
+  const deferred: (() => Promise<unknown>)[] = []
+  const settled: string[] = []
   const ok = (data: unknown) => ({ data, error: null })
   const fail = (message: string) => ({ data: null, error: { message } })
 
@@ -68,7 +70,9 @@ function fakeWorld(options: { webSubscriptions?: number } = {}) {
         op!.state = "data_deleted"
         return ok({ state: op!.state })
       case "account_deletion_pending_cleanup":
+        return ok([])
       case "account_deletion_due_web_refunds":
+        settled.push(args.p_request_id as string)
         return ok([])
       case "account_deletion_record_web_subscriptions":
         return ok(1)
@@ -113,6 +117,7 @@ function fakeWorld(options: { webSubscriptions?: number } = {}) {
     deleteCustomerIoPerson: async () => {},
     deletePostHogPerson: async () => {},
     reportCleanupFailure: () => {},
+    reportRefundFailure: () => {},
   })
 
   const asUser = (userId: string): MobileAccountDeletionDeps => ({
@@ -123,9 +128,10 @@ function fakeWorld(options: { webSubscriptions?: number } = {}) {
     }) as never,
     deletionDeps,
     adminClient: () => client,
+    defer: (task) => void deferred.push(task),
   })
 
-  return { users, ops, state, signOuts, rateKeys, cancelled, asUser, client }
+  return { users, ops, state, signOuts, rateKeys, cancelled, deferred, settled, asUser, client }
 }
 
 function post(body: unknown, headers: Record<string, string> = { authorization: "Bearer t" }) {
@@ -211,6 +217,11 @@ test("deletion answers deleted, revokes the session best effort and rate-limits 
     assert.equal(response.headers.get("cache-control"), "no-store")
     assert.equal(world.users.has(USER), false)
     assert.deepEqual(world.cancelled, ["sub_0"])
+    // M7: the refund attempt runs after the response, never inside it.
+    assert.deepEqual(world.settled, [])
+    assert.equal(world.deferred.length, 1)
+    await world.deferred[0]()
+    assert.deepEqual(world.settled, [REQUEST])
     assert.deepEqual(world.signOuts, ["provider-token"])
     assert.equal(world.rateKeys.length, 1)
     assert.match(world.rateKeys[0], /^mobile-account-delete:/)

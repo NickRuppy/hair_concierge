@@ -1,4 +1,5 @@
 import "server-only"
+import { after } from "next/server"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { z } from "zod"
 import { createAccountDeletionDeps } from "@/lib/account-deletion/runtime"
@@ -6,6 +7,7 @@ import {
   AccountDeletionError,
   getAccountDeletionStatus,
   requestAccountDeletion,
+  settleAccountDeletionWebRefunds,
   type AccountDeletionDeps,
 } from "@/lib/account-deletion/service"
 import { createAdminClient } from "@/lib/supabase/admin"
@@ -25,6 +27,8 @@ export type MobileAccountDeletionDeps = {
   requireUser?: typeof requireMobileUser
   deletionDeps?: (client: SupabaseClient) => AccountDeletionDeps
   adminClient?: () => SupabaseClient
+  /** Runs after the response (next/server `after`); the app never waits on refunds. */
+  defer?: (task: () => Promise<unknown>) => void
 }
 
 function deletionError(error: unknown): never {
@@ -53,10 +57,15 @@ export async function handleAccountDeletePost(
     const input = deleteSchema.safeParse(await mobileBody(request, 1024))
     if (!input.success) throw new MobileError("invalid_request", 400)
 
+    const deletionDeps = (deps.deletionDeps ?? createAccountDeletionDeps)(client)
     const { state } = await requestAccountDeletion(
       { userId, requestId: input.data.requestId },
-      (deps.deletionDeps ?? createAccountDeletionDeps)(client),
+      deletionDeps,
     ).catch(deletionError)
+    // First attempt at the pro-rata web refunds (D14); the reconcile cron settles the rest.
+    ;(deps.defer ?? after)(() =>
+      settleAccountDeletionWebRefunds(deletionDeps, input.data.requestId).catch(() => undefined),
+    )
     // External cleanup may still be pending; the account itself is gone.
     if (state !== "data_deleted" && state !== "external_cleanup_done")
       throw new MobileError("temporarily_unavailable", 503)
