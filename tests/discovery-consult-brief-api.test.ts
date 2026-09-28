@@ -134,11 +134,16 @@ const storedBrief: DiscoveryCallSheetBrief = {
   generated_at: "2026-09-27T10:00:00.000Z",
   generated_by: "agent",
   source_hash: "b".repeat(64),
+  saved_at: "2026-09-27T10:00:00.000Z",
 }
+
+/** The stored brief as a revision (`previous`): the server stamp is not carried. */
+const { saved_at: _storedSavedAt, ...storedRevision } = storedBrief
 
 const storedState = {
   source_hash: storedBrief.source_hash,
   generated_at: storedBrief.generated_at,
+  saved_at: storedBrief.saved_at!,
 }
 
 const EXISTING_ROW = {
@@ -201,6 +206,18 @@ function postRequest(body: unknown, origin: string | null = "https://chaarlie.de
 }
 
 const params = () => ({ params: Promise.resolve({ enrollmentId: ids.enrollment }) })
+
+/** Nick's slice-1 „Speichern" through the real PATCH route (its body has no `previous`). */
+function manualSave(d: ReturnType<typeof deps>["deps"], consultBrief: unknown) {
+  return createDiscoveryCallSheetHandler(d)(
+    new NextRequest(`https://chaarlie.de/api/admin/beratung/${ids.enrollment}/call-sheet`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", origin: "https://chaarlie.de" },
+      body: JSON.stringify({ consult_brief: consultBrief }),
+    }),
+    params(),
+  )
+}
 
 async function json(response: Response): Promise<Record<string, unknown>> {
   return (await response.json()) as Record<string, unknown>
@@ -298,6 +315,10 @@ for (const [name, body] of [
   ["force not a boolean", { expected_state: null, force: "ja" }],
   ["unknown key", { expected_state: null, consult_brief: {} }],
   ["unknown state key", { expected_state: { ...storedState, generated_by: "agent" } }],
+  [
+    "state without saved_at",
+    { expected_state: { source_hash: "x", generated_at: "2026-09-27T10:00:00.000Z" } },
+  ],
   ["not JSON", "{nope"],
 ] as const) {
   test(`a malformed body is refused before any generation: ${name}`, async () => {
@@ -335,6 +356,7 @@ test("a first generation on a legacy enrollment (no row) writes a full row with 
       generated_by: "agent",
       source_hash: SOURCE_HASH,
       previous: null,
+      saved_at: NOW.toISOString(),
     },
   })
   const body = (await json(response)) as { callSheet: DiscoveryCallSheet; sourceHash: string }
@@ -344,6 +366,7 @@ test("a first generation on a legacy enrollment (no row) writes a full row with 
     generated_at: NOW.toISOString(),
     generated_by: "agent",
     source_hash: SOURCE_HASH,
+    saved_at: NOW.toISOString(),
   })
 })
 
@@ -368,10 +391,11 @@ test("a regeneration keeps the other fields and moves the stored brief to `previ
   assert.equal(brief.generated_at, NOW.toISOString())
   assert.deepEqual(brief.sections, generatedSections)
   // Exactly one revision: the stored brief, WITHOUT its own `previous` (older is displaced).
-  assert.deepEqual(brief.previous, storedBrief)
+  assert.deepEqual(brief.previous, storedRevision)
+  assert.equal(brief.saved_at, NOW.toISOString())
   // And the response surfaces it — the page can show the revision.
   const { callSheet } = (await json(response)) as { callSheet: DiscoveryCallSheet }
-  assert.deepEqual(callSheet.consultBrief!.previous, storedBrief)
+  assert.deepEqual(callSheet.consultBrief!.previous, storedRevision)
   assert.equal("previous" in callSheet.consultBrief!.previous!, false)
 })
 
@@ -390,41 +414,58 @@ test("R15 end to end: generate, then a manual slice-1 save keeps the revision", 
     generated_by: "manual",
     source_hash: SOURCE_HASH,
   }
-  const saved = await createDiscoveryCallSheetHandler(d)(
-    new NextRequest(`https://chaarlie.de/api/admin/beratung/${ids.enrollment}/call-sheet`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json", origin: "https://chaarlie.de" },
-      body: JSON.stringify({ consult_brief: edited }),
-    }),
-    params(),
-  )
+  const saved = await manualSave(d, edited)
   assert.equal(saved.status, 200)
-  assert.deepEqual(storedConsultBrief(recorded), { ...edited, previous: storedBrief })
   const { callSheet } = (await json(saved)) as { callSheet: DiscoveryCallSheet }
-  assert.deepEqual(callSheet.consultBrief!.previous, storedBrief)
+  const savedAt = callSheet.consultBrief!.saved_at!
+  assert.match(savedAt, /^\d{4}-\d{2}-\d{2}T/, "the manual save is stamped by the server")
+  assert.deepEqual(storedConsultBrief(recorded), {
+    ...edited,
+    previous: storedRevision,
+    saved_at: savedAt,
+  })
+  assert.deepEqual(callSheet.consultBrief!.previous, storedRevision)
 
   // A second generation displaces that revision with the edited brief — never nested.
   const again = await createDiscoveryConsultBriefHandler(d)(
-    postRequest({ expected_state: { source_hash: SOURCE_HASH, generated_at: NOW.toISOString() } }),
+    postRequest({
+      expected_state: {
+        source_hash: SOURCE_HASH,
+        generated_at: NOW.toISOString(),
+        saved_at: savedAt,
+      },
+    }),
     params(),
   )
   assert.equal(again.status, 200)
   assert.deepEqual(storedConsultBrief(recorded).previous, edited)
 })
 
-test("no freeze: a draft and a finalised call both generate", async () => {
-  for (const variant of [
-    { ...intake, state: "draft" as const, submittedAt: null },
-    { ...intake, callFinalizedAt: "2026-09-27T12:00:00.000Z" },
-  ]) {
-    const { deps: d, recorded } = deps({ overrides: { loadIntake: async () => variant } })
-    const response = await createDiscoveryConsultBriefHandler(d)(
-      postRequest({ expected_state: null }),
-      params(),
-    )
-    assert.equal(response.status, 200)
-    assert.equal(recorded.upserts.length, 1)
-  }
+test("R14: a draft intake is refused (422 draft_intake) before any read or generation", async () => {
+  const draft = { ...intake, state: "draft" as const, submittedAt: null }
+  const { deps: d, recorded, calls } = deps({ overrides: { loadIntake: async () => draft } })
+  const response = await createDiscoveryConsultBriefHandler(d)(
+    postRequest({ expected_state: null }),
+    params(),
+  )
+  assert.equal(response.status, 422)
+  const body = await json(response)
+  assert.equal(body.code, "draft_intake")
+  assert.match(String(body.message), /Checkliste/)
+  assert.equal(calls.sourceReads, 0)
+  assert.equal(calls.generate, 0)
+  assert.equal(recorded.upserts.length, 0)
+})
+
+test("no freeze: a finalised call still generates", async () => {
+  const finalised = { ...intake, callFinalizedAt: "2026-09-27T12:00:00.000Z" }
+  const { deps: d, recorded } = deps({ overrides: { loadIntake: async () => finalised } })
+  const response = await createDiscoveryConsultBriefHandler(d)(
+    postRequest({ expected_state: null }),
+    params(),
+  )
+  assert.equal(response.status, 200)
+  assert.equal(recorded.upserts.length, 1)
 })
 
 // --- concurrency ------------------------------------------------------------------------
@@ -434,6 +475,8 @@ test("a stale expected_state is a 409 with the current state — before any LLM 
     null,
     { ...storedState, source_hash: "c".repeat(64) },
     { ...storedState, generated_at: "2026-09-26T10:00:00.000Z" },
+    // A manual save keeps generated_at/source_hash; only the server stamp tells it apart.
+    { ...storedState, saved_at: "2026-09-26T10:00:00.000Z" },
   ]) {
     const {
       deps: d,
@@ -465,6 +508,16 @@ test("a stale expected_state is a 409 with the current state — before any LLM 
   assert.equal((await json(response)).current, null)
 })
 
+test("a brief stored before saved_at existed matches an expected_state with saved_at null", async () => {
+  const { saved_at: _unused, ...legacyBrief } = storedBrief
+  const { deps: d } = deps({ stored: { ...EXISTING_ROW, consult_brief: legacyBrief } })
+  const response = await createDiscoveryConsultBriefHandler(d)(
+    postRequest({ expected_state: { ...storedState, saved_at: null } }),
+    params(),
+  )
+  assert.equal(response.status, 200)
+})
+
 test("force overwrites a mismatching brief on purpose and keeps it as `previous`", async () => {
   const { deps: d, recorded } = deps({ stored: { ...EXISTING_ROW, consult_brief: storedBrief } })
   const response = await createDiscoveryConsultBriefHandler(d)(
@@ -474,19 +527,26 @@ test("force overwrites a mismatching brief on purpose and keeps it as `previous`
   assert.equal(response.status, 200)
   const brief = storedConsultBrief(recorded)
   assert.equal(brief.generated_by, "agent")
-  assert.deepEqual(brief.previous, storedBrief)
+  assert.deepEqual(brief.previous, storedRevision)
   assert.equal(recorded.stored()!.feedback, EXISTING_ROW.feedback)
 })
 
-test("a brief saved while the LLM ran is a 409 at write time — and nothing is written", async () => {
+/**
+ * The REAL manual-save shape from another tab: the slice-1 island carries `generated_at` and
+ * `source_hash` through unchanged and only flips `generated_by` — so only the server's
+ * `saved_at` stamp tells the write apart.
+ */
+const manualEdit = {
+  sections: { ...storedBrief.sections, diagnose: "In einem anderen Tab überarbeitet." },
+  generated_at: storedBrief.generated_at,
+  generated_by: "manual",
+  source_hash: storedBrief.source_hash,
+}
+
+test("a manual save (unchanged generated_at/source_hash) while the LLM ran is a 409 at write time", async () => {
   const { deps: d, recorded } = deps({ stored: { ...EXISTING_ROW, consult_brief: storedBrief } })
-  const manual = {
-    ...storedBrief,
-    generated_at: "2026-09-28T08:59:00.000Z",
-    generated_by: "manual",
-  }
   d.generate = async () => {
-    recorded.replace({ consult_brief: manual })
+    assert.equal((await manualSave(d, manualEdit)).status, 200)
     return { brief: generatedSections, sourceHash: SOURCE_HASH }
   }
   const response = await createDiscoveryConsultBriefHandler(d)(
@@ -494,24 +554,22 @@ test("a brief saved while the LLM ran is a 409 at write time — and nothing is 
     params(),
   )
   assert.equal(response.status, 409)
-  assert.deepEqual((await json(response)).current, {
-    source_hash: manual.source_hash,
-    generated_at: manual.generated_at,
-    generated_by: "manual",
-  })
-  assert.equal(recorded.upserts.length, 0)
-  assert.deepEqual(storedConsultBrief(recorded), manual)
+  const current = (await json(response)).current as Record<string, unknown>
+  assert.equal(current.source_hash, storedBrief.source_hash)
+  assert.equal(current.generated_at, storedBrief.generated_at)
+  assert.equal(current.generated_by, "manual")
+  assert.notEqual(current.saved_at, storedBrief.saved_at)
+  // Only the manual save wrote; the generation wrote nothing.
+  assert.equal(recorded.upserts.length, 1)
+  const stored = storedConsultBrief(recorded)
+  assert.deepEqual(stored.sections, manualEdit.sections)
+  assert.equal(stored.generated_by, "manual")
 })
 
-test("with force, a brief saved while the LLM ran becomes the revision (never lost)", async () => {
+test("with force, a manual save made while the LLM ran becomes the revision (never lost)", async () => {
   const { deps: d, recorded } = deps({ stored: { ...EXISTING_ROW, consult_brief: storedBrief } })
-  const manual = {
-    ...storedBrief,
-    generated_at: "2026-09-28T08:59:00.000Z",
-    generated_by: "manual",
-  }
   d.generate = async () => {
-    recorded.replace({ consult_brief: manual })
+    assert.equal((await manualSave(d, manualEdit)).status, 200)
     return { brief: generatedSections, sourceHash: SOURCE_HASH }
   }
   const response = await createDiscoveryConsultBriefHandler(d)(
@@ -519,7 +577,14 @@ test("with force, a brief saved while the LLM ran becomes the revision (never lo
     params(),
   )
   assert.equal(response.status, 200)
-  assert.deepEqual(storedConsultBrief(recorded).previous, manual)
+  assert.deepEqual(storedConsultBrief(recorded).previous, manualEdit)
+})
+
+test("saved_at is server-owned: a PATCH that tries to set it is refused", async () => {
+  const { deps: d, recorded } = deps({ stored: { ...EXISTING_ROW, consult_brief: storedBrief } })
+  const response = await manualSave(d, { ...manualEdit, saved_at: "2030-01-01T00:00:00.000Z" })
+  assert.equal(response.status, 400)
+  assert.equal(recorded.upserts.length, 0)
 })
 
 // --- failures write nothing -------------------------------------------------------------

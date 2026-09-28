@@ -111,6 +111,10 @@ const EMPTY_ROW = {
   feedback: null,
 }
 
+/** The server stamp every brief write gets (`saved_at`), pinned for the assertions. */
+const NOW = new Date("2026-09-28T09:00:00.000Z")
+const SAVED_AT = NOW.toISOString()
+
 function deps(
   overrides: Record<string, unknown> = {},
   stored: Record<string, unknown> | null = null,
@@ -123,6 +127,13 @@ function deps(
       requireAdmin: async () => ({ userId: "admin-1" }),
       createAdminClient: () => recorded.client as never,
       loadIntake: async () => intake,
+      saveCallSheet: ((enrollmentId, patch, client) =>
+        saveDiscoveryCallSheet(
+          enrollmentId,
+          patch,
+          client,
+          () => NOW,
+        )) as typeof saveDiscoveryCallSheet,
       ...overrides,
     },
   }
@@ -247,13 +258,18 @@ test("a valid payload upserts every named column on the enrollment and returns t
   const [upsert] = recorded.upserts
   assert.equal(upsert!.table, "discovery_call_sheets")
   assert.deepEqual(upsert!.options, { onConflict: "enrollment_id" })
-  assert.deepEqual(upsert!.row, { ...validBody, enrollment_id: ids.enrollment })
+  assert.deepEqual(upsert!.row, {
+    ...validBody,
+    // Server-owned stamp on every brief write.
+    consult_brief: { ...validBrief, saved_at: SAVED_AT },
+    enrollment_id: ids.enrollment,
+  })
   assert.deepEqual(recorded.reads, [`discovery_call_sheets:enrollment_id=${ids.enrollment}`])
 
   const { callSheet } = (await json(response)) as { callSheet: DiscoveryCallSheet }
   assert.equal(callSheet.baselineScore, 4)
   assert.deepEqual(callSheet.touchpoints, validBody.touchpoints)
-  assert.deepEqual(callSheet.consultBrief, validBrief)
+  assert.deepEqual(callSheet.consultBrief, { ...validBrief, saved_at: SAVED_AT })
   assert.equal(callSheet.habitCommitments[0]!.id, "recipe:dryness:hitzeschutz-immer")
   assert.equal(callSheet.feedback, "Sehr hilfreich.")
 })
@@ -426,26 +442,60 @@ test("a manual brief save after a generation keeps the stored revision (R15)", a
     params(),
   )
   assert.equal(response.status, 200)
-  assert.deepEqual(recorded.stored()!.consult_brief, { ...edited, previous: agentRevision })
+  assert.deepEqual(recorded.stored()!.consult_brief, {
+    ...edited,
+    previous: agentRevision,
+    saved_at: SAVED_AT,
+  })
   const { callSheet } = (await json(response)) as { callSheet: DiscoveryCallSheet }
   assert.deepEqual(callSheet.consultBrief!.previous, agentRevision)
 
   // A save of another column leaves the whole brief (and its revision) alone.
   await createDiscoveryCallSheetHandler(d)(patchRequest({ feedback: "Neu." }), params())
-  assert.deepEqual(recorded.stored()!.consult_brief, { ...edited, previous: agentRevision })
+  assert.deepEqual(recorded.stored()!.consult_brief, {
+    ...edited,
+    previous: agentRevision,
+    saved_at: SAVED_AT,
+  })
 
   // An explicit `previous` is honoured — null clears it.
   await createDiscoveryCallSheetHandler(d)(
     patchRequest({ consult_brief: { ...edited, previous: null } }),
     params(),
   )
-  assert.deepEqual(recorded.stored()!.consult_brief, { ...edited, previous: null })
+  assert.deepEqual(recorded.stored()!.consult_brief, {
+    ...edited,
+    previous: null,
+    saved_at: SAVED_AT,
+  })
 })
 
 test("a brief without a stored revision saves without inventing one", async () => {
   const { deps: d, recorded } = deps({}, { ...EMPTY_ROW, consult_brief: validBrief })
   await createDiscoveryCallSheetHandler(d)(patchRequest({ consult_brief: validBrief }), params())
-  assert.deepEqual(recorded.stored()!.consult_brief, validBrief)
+  assert.deepEqual(recorded.stored()!.consult_brief, { ...validBrief, saved_at: SAVED_AT })
+})
+
+test("saved_at: every brief write is stamped by the server; a column-only save keeps the stamp", async () => {
+  const stamped = { ...validBrief, saved_at: "2026-09-27T10:00:00.000Z" }
+  const { deps: d, recorded } = deps({}, { ...EMPTY_ROW, consult_brief: stamped })
+  await createDiscoveryCallSheetHandler(d)(patchRequest({ feedback: "Neu." }), params())
+  assert.equal(
+    (recorded.stored()!.consult_brief as Record<string, unknown>).saved_at,
+    "2026-09-27T10:00:00.000Z",
+  )
+  await createDiscoveryCallSheetHandler(d)(patchRequest({ consult_brief: validBrief }), params())
+  assert.equal((recorded.stored()!.consult_brief as Record<string, unknown>).saved_at, SAVED_AT)
+  // The parser carries it; a client cannot set it.
+  assert.equal(
+    parseDiscoveryCallSheet({ consult_brief: stamped }).consultBrief!.saved_at,
+    "2026-09-27T10:00:00.000Z",
+  )
+  const refused = await createDiscoveryCallSheetHandler(d)(
+    patchRequest({ consult_brief: { ...validBrief, saved_at: "2030-01-01T00:00:00.000Z" } }),
+    params(),
+  )
+  assert.equal(refused.status, 400)
 })
 
 // --- the §6 contracts -------------------------------------------------------------------

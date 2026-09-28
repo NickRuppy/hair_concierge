@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
-import type { DiscoveryCallSheetPatch } from "@/lib/discovery/call-sheet"
+import type { DiscoveryCallSheet, DiscoveryCallSheetPatch } from "@/lib/discovery/call-sheet"
 
 /**
  * Saving the runsheet's own row (consult-runsheet T5): one explicit „Speichern" per client
@@ -55,8 +55,14 @@ export function useRunsheetSave(enrollmentId: string) {
     setMessage(text)
   }
 
-  /** `onSaved` runs before the refresh, so the island knows its saved state first. */
-  async function save(patch: DiscoveryCallSheetPatch, onSaved: () => void): Promise<void> {
+  /**
+   * `onSaved` runs before the refresh, so the island knows its saved state first; it gets the
+   * stored sheet (e.g. the brief's server stamp `saved_at`).
+   */
+  async function save(
+    patch: DiscoveryCallSheetPatch,
+    onSaved: (stored: Partial<DiscoveryCallSheet> | null) => void,
+  ): Promise<void> {
     setStatus("saving")
     setMessage(null)
     try {
@@ -67,7 +73,7 @@ export function useRunsheetSave(enrollmentId: string) {
       })
       const body = (await response.json().catch(() => null)) as {
         code?: string
-        callSheet?: unknown
+        callSheet?: Partial<DiscoveryCallSheet>
       } | null
       const outcome = discoveryCallSheetWriteOutcome(response.ok, body)
       if (outcome.error) {
@@ -75,7 +81,7 @@ export function useRunsheetSave(enrollmentId: string) {
         return
       }
       setStatus("saved")
-      onSaved()
+      onSaved(body?.callSheet && typeof body.callSheet === "object" ? body.callSheet : null)
       router.refresh()
     } catch {
       fail(RUNSHEET_SAVE_COPY.failed)

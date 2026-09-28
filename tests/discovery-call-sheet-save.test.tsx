@@ -175,6 +175,7 @@ function briefProps(overrides: Record<string, unknown> = {}) {
       generatedAt: "2026-09-27T10:00:00.000Z",
       sourceHash: "abc123",
       generatedBy: "agent",
+      savedAt: "2026-09-27T10:00:00.000Z",
     },
     initialCommitments: [],
     recipeHabits,
@@ -334,6 +335,7 @@ test("brief patch: empty score clears it, German decimals parse, bad points are 
     baselineText: " ",
     diagnose: "x",
     hebel: [{ uid: "a", title: "T", note: "N", points: "0,5" }],
+    lists: { zielLuecken: [], callFragen: [], erwartungen: [] },
     commitments: [],
   }
   const meta = { sections, generatedAt: null, sourceHash: null }
@@ -391,6 +393,7 @@ function generatedSheet(overrides: Partial<DiscoveryCallSheet> = {}): DiscoveryC
       generated_at: GENERATED_AT,
       generated_by: "agent",
       source_hash: "fresh-hash",
+      saved_at: "2026-09-28T08:00:00.000Z",
       previous: {
         sections,
         generated_at: "2026-09-27T10:00:00.000Z",
@@ -427,7 +430,11 @@ test("generate: POSTs expected_state of the loaded brief and takes the new brief
     assert.equal(fetchStub.calls[0]!.url, GENERATE_URL)
     assert.equal(fetchStub.calls[0]!.method, "POST")
     assert.deepEqual(fetchStub.calls[0]!.body, {
-      expected_state: { source_hash: "abc123", generated_at: "2026-09-27T10:00:00.000Z" },
+      expected_state: {
+        source_hash: "abc123",
+        generated_at: "2026-09-27T10:00:00.000Z",
+        saved_at: "2026-09-27T10:00:00.000Z",
+      },
     })
 
     tree = render()
@@ -481,6 +488,7 @@ test("generate: the refresh after it re-syncs to the same brief — no flicker, 
         generatedAt: GENERATED_AT,
         sourceHash: "fresh-hash",
         generatedBy: "agent",
+        savedAt: "2026-09-28T08:00:00.000Z",
       },
       currentSourceHash: "fresh-hash",
     })
@@ -506,7 +514,7 @@ test("generate: a legacy enrollment without a brief says „Brief erstellen“ a
       callFragen: [],
       erwartungen: [],
     },
-    initialBriefMeta: { generatedAt: null, sourceHash: null, generatedBy: null },
+    initialBriefMeta: { generatedAt: null, sourceHash: null, generatedBy: null, savedAt: null },
   })
   const render = createHarness(() => DiscoveryRunsheetBrief(props), router)
   const fetchStub = stubFetch(generated)
@@ -553,7 +561,11 @@ test("generate: 409 asks before overwriting, then retries with force and the sam
     await settle()
     assert.equal(fetchStub.calls.length, 2)
     assert.deepEqual(fetchStub.calls[1]!.body, {
-      expected_state: { source_hash: "abc123", generated_at: "2026-09-27T10:00:00.000Z" },
+      expected_state: {
+        source_hash: "abc123",
+        generated_at: "2026-09-27T10:00:00.000Z",
+        saved_at: "2026-09-27T10:00:00.000Z",
+      },
       force: true,
     })
     tree = render()
@@ -590,6 +602,7 @@ test("generate (R15): a hand-edited brief asks before any request; cancel sends 
       generatedAt: "2026-09-27T10:00:00.000Z",
       sourceHash: "abc123",
       generatedBy: "manual",
+      savedAt: "2026-09-27T10:00:00.000Z",
     },
   })
   const render = createHarness(() => DiscoveryRunsheetBrief(props), router)
@@ -828,7 +841,7 @@ test("stale hint: shown when the stored hash differs from the page's, hidden whe
   assert.equal(
     generateBar(
       tree("changed", {
-        initialBriefMeta: { generatedAt: null, sourceHash: null, generatedBy: null },
+        initialBriefMeta: { generatedAt: null, sourceHash: null, generatedBy: null, savedAt: null },
       }),
     ).props.stale,
     false,
@@ -872,18 +885,31 @@ test("generate: locked while the call sheet is unread", () => {
 
 test("generate helpers: expected state, R15 warning, error lines, apply", () => {
   assert.equal(
-    runsheetExpectedBriefState({ generatedAt: null, sourceHash: null, generatedBy: null }),
+    runsheetExpectedBriefState({
+      generatedAt: null,
+      sourceHash: null,
+      generatedBy: null,
+      savedAt: null,
+    }),
     null,
   )
   // A hand-written brief never generated still exists: it is expected, not „none".
   assert.deepEqual(
-    runsheetExpectedBriefState({ generatedAt: null, sourceHash: null, generatedBy: "manual" }),
-    { source_hash: null, generated_at: null },
+    runsheetExpectedBriefState({
+      generatedAt: null,
+      sourceHash: null,
+      generatedBy: "manual",
+      savedAt: null,
+    }),
+    { source_hash: null, generated_at: null, saved_at: null },
   )
-  const agent = { generatedAt: "t", sourceHash: "h", generatedBy: "agent" as const }
+  const agent = { generatedAt: "t", sourceHash: "h", generatedBy: "agent" as const, savedAt: "s" }
   assert.equal(runsheetReplaceWarning(agent, false), null)
   assert.equal(
-    runsheetReplaceWarning({ generatedAt: null, sourceHash: null, generatedBy: null }, true),
+    runsheetReplaceWarning(
+      { generatedAt: null, sourceHash: null, generatedBy: null, savedAt: null },
+      true,
+    ),
     RUNSHEET_GENERATE_COPY.replaceDirty,
   )
   assert.equal(runsheetGenerateError(null), RUNSHEET_GENERATE_COPY.failed)
@@ -894,20 +920,144 @@ test("generate helpers: expected state, R15 warning, error lines, apply", () => 
     baselineText: "5",
     diagnose: "alt",
     hebel: [],
+    lists: { zielLuecken: [], callFragen: [], erwartungen: [] },
     commitments: [{ id: "h", label: "H", committed: true }],
   }
   const next: RunsheetBriefState = {
     baselineText: "4",
     diagnose: "neu",
     hebel: [{ uid: "g0-0", title: "T", note: "", points: "1" }],
+    lists: { zielLuecken: [], callFragen: [{ uid: "g0-f-0", text: "Frage?" }], erwartungen: [] },
     commitments: [],
   }
-  // Only Diagnose and Hebel are replaced; the typed score and commitments stay.
+  // The brief's content (Diagnose, Hebel, lists) is replaced; score and commitments stay.
   assert.deepEqual(applyGeneratedRunsheetBrief(state, next), {
     ...state,
     diagnose: "neu",
     hebel: next.hebel,
+    lists: next.lists,
   })
+})
+
+// --- the brief's lists + server stamp + R14 (consult-agent final review) -------------------
+
+test("brief lists: Ziel-Lücken, Call-Fragen and Erwartungen render editable from the stored brief", () => {
+  const { router } = fakeRouter()
+  const tree = createHarness(() => DiscoveryRunsheetBrief(briefProps()), router)()
+  assert.equal(byId(tree, "runsheet-zielLuecken-s0-z-0").props.value, "Kein Hitzeschutz")
+  assert.equal(byId(tree, "runsheet-callFragen-s0-f-0").props.value, "Wie oft glättest du?")
+  assert.equal(byId(tree, "runsheet-erwartungen-s0-e-0").props.value, "Erste Wirkung nach 4 Wochen")
+})
+
+test("brief lists: edits mark the brief dirty (R15) and the save round-trips them", async () => {
+  const { router } = fakeRouter()
+  const render = createHarness(() => DiscoveryRunsheetBrief(briefProps()), router)
+  const fetchStub = stubFetch(() => ({ status: 200, body: { callSheet: {} } }))
+  try {
+    let tree = render()
+    byId(tree, "runsheet-callFragen-s0-f-0").props.onChange({
+      target: { value: "Wie oft glättest du pro Woche?" },
+    })
+    tree = render()
+    byId(tree, "runsheet-erwartungen-add").props.onClick()
+    tree = render()
+    byId(tree, "runsheet-erwartungen-n0").props.onChange({
+      target: { value: "Bei stärkerem Haarausfall ärztlich abklären lassen." },
+    })
+    tree = render()
+    // A never-filled row is dropped on save and changes nothing.
+    byId(tree, "runsheet-zielLuecken-add").props.onClick()
+    tree = render()
+    assert.equal(saveBar(tree).props.dirty, true)
+
+    // A list edit is a brief edit: generating asks first.
+    generateBar(tree).props.onGenerate()
+    tree = render()
+    assert.equal(generateBar(tree).props.ui.phase, "confirm_replace")
+    generateBar(tree).props.onCancel()
+    tree = render()
+
+    saveBar(tree).props.onSave()
+    await settle()
+    const brief = (
+      fetchStub.calls[0]!.body as { consult_brief: { sections: Record<string, unknown> } }
+    ).consult_brief
+    assert.deepEqual(brief.sections.zielLuecken, ["Kein Hitzeschutz"])
+    assert.deepEqual(brief.sections.callFragen, ["Wie oft glättest du pro Woche?"])
+    assert.deepEqual(brief.sections.erwartungen, [
+      "Erste Wirkung nach 4 Wochen",
+      "Bei stärkerem Haarausfall ärztlich abklären lassen.",
+    ])
+    assert.deepEqual(brief.sections.swapReasons, sections.swapReasons, "swap reasons carried")
+    tree = render()
+    assert.equal(saveBar(tree).props.dirty, false)
+  } finally {
+    fetchStub.restore()
+  }
+})
+
+test("saved_at: after a manual save the next generation expects the server's new stamp", async () => {
+  const { router } = fakeRouter()
+  const render = createHarness(() => DiscoveryRunsheetBrief(briefProps()), router)
+  const fetchStub = stubFetch((call) =>
+    call.method === "PATCH"
+      ? {
+          status: 200,
+          body: {
+            callSheet: generatedSheet({
+              consultBrief: {
+                ...generatedSheet().consultBrief!,
+                saved_at: "2026-09-28T09:30:00.000Z",
+              },
+            }),
+          },
+        }
+      : generated(),
+  )
+  try {
+    let tree = render()
+    byId(tree, "runsheet-baseline-score").props.onChange({ target: { value: "6" } })
+    tree = render()
+    saveBar(tree).props.onSave()
+    await settle()
+    tree = render()
+    // The saved brief is now hand-edited: R15 asks first.
+    generateBar(tree).props.onGenerate()
+    tree = render()
+    generateBar(tree).props.onConfirm()
+    await settle()
+    const post = fetchStub.calls.find((call) => call.method === "POST")!
+    assert.deepEqual(post.body, {
+      expected_state: {
+        source_hash: "abc123",
+        generated_at: "2026-09-27T10:00:00.000Z",
+        saved_at: "2026-09-28T09:30:00.000Z",
+      },
+    })
+  } finally {
+    fetchStub.restore()
+  }
+})
+
+test("R14: a draft intake cannot generate — the button is disabled with the reason", async () => {
+  const { router } = fakeRouter()
+  const render = createHarness(
+    () => DiscoveryRunsheetBrief(briefProps({ generateBlockedHint: RUNSHEET_GENERATE_COPY.draft })),
+    router,
+  )
+  const fetchStub = stubFetch(generated)
+  try {
+    let tree = render()
+    assert.equal(generateBar(tree).props.disabled, true)
+    assert.equal(generateBar(tree).props.blockedHint, RUNSHEET_GENERATE_COPY.draft)
+    generateBar(tree).props.onGenerate()
+    await settle()
+    tree = render()
+    assert.equal(fetchStub.calls.length, 0)
+    assert.deepEqual(generateBar(tree).props.ui, { phase: "idle" })
+  } finally {
+    fetchStub.restore()
+  }
 })
 
 // --- Phase 5 -----------------------------------------------------------------------------

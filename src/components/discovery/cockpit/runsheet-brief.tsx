@@ -78,7 +78,20 @@ const HABIT_ON_PDF = "für ihr PDF vorgemerkt"
 const HABIT_NEW_PLACEHOLDER = "Weitere Gewohnheit"
 const HABIT_ADD = "Hinzufügen"
 
-const SAVE_SCOPE = "Score, Diagnose, Hebel und Gewohnheiten"
+const BRIEF_LISTS_TITLE = "Für den Call"
+const LIST_REMOVE = "Entfernen"
+const LIST_ADD = "Zeile hinzufügen"
+
+/** The brief's line lists, edited in Phase 2 like the Hebel (consult-agent final review). */
+export const RUNSHEET_BRIEF_LISTS = [
+  { key: "zielLuecken", title: "Ziel-Lücken", empty: "Keine Ziel-Lücken erfasst." },
+  { key: "callFragen", title: "Fragen für den Call", empty: "Keine Fragen erfasst." },
+  { key: "erwartungen", title: "Erwartungen", empty: "Keine Erwartungen erfasst." },
+] as const
+
+export type RunsheetBriefListKey = (typeof RUNSHEET_BRIEF_LISTS)[number]["key"]
+
+const SAVE_SCOPE = "Score, Brief und Gewohnheiten"
 const INVALID_BASELINE = "Nicht gespeichert — Score als ganze Zahl von 1 bis 10 eintragen."
 const INVALID_POINTS = "Nicht gespeichert — Hebel-Punkte als Zahl eintragen, z. B. 1,5."
 
@@ -90,9 +103,9 @@ export const RUNSHEET_GENERATE_COPY = {
   savePaused: "Brief wird erstellt …",
   done: "Brief erstellt.",
   doneKeptEdits:
-    "Brief erstellt — Diagnose und Hebel wurden währenddessen bearbeitet und bleiben wie getippt (nicht gespeichert).",
+    "Brief erstellt — der Brief wurde währenddessen bearbeitet und bleibt wie getippt (nicht gespeichert).",
   stale: "Eingaben haben sich geändert — Brief neu generieren?",
-  replaceDirty: "Nicht gespeicherte Änderungen an Diagnose und Hebel werden ersetzt.",
+  replaceDirty: "Nicht gespeicherte Änderungen am Brief werden ersetzt.",
   replaceManual: "Der von Hand bearbeitete Brief wird ersetzt.",
   keptAsRevision: "Die gespeicherte Fassung bleibt als Revision erhalten.",
   conflict:
@@ -102,6 +115,7 @@ export const RUNSHEET_GENERATE_COPY = {
   failed: "Der Brief konnte gerade nicht erstellt werden. Bitte später erneut versuchen.",
   noSource: "Für dieses Konto gibt es noch kein nutzbares Haarprofil — kein Brief möglich.",
   notFound: "Diese Anmeldung gibt es nicht mehr.",
+  draft: "Erst möglich, wenn die Checkliste abgeschickt ist.",
 } as const
 
 /** The stored brief the island builds on: carried through a manual save, the generate base. */
@@ -110,6 +124,8 @@ export type RunsheetBriefMeta = {
   sourceHash: string | null
   /** null = no brief stored yet. */
   generatedBy: "manual" | "agent" | null
+  /** The server's stamp on the stored brief's last write (null: none, or stored before it). */
+  savedAt: string | null
 }
 
 type RunsheetBriefBase = RunsheetBriefMeta & { sections: DiscoveryCallSheetBriefSections }
@@ -117,10 +133,10 @@ type RunsheetBriefBase = RunsheetBriefMeta & { sections: DiscoveryCallSheetBrief
 /** `expected_state` for the generate route: the stored brief as last seen, or none. */
 export function runsheetExpectedBriefState(
   meta: RunsheetBriefMeta,
-): { source_hash: string | null; generated_at: string | null } | null {
+): { source_hash: string | null; generated_at: string | null; saved_at: string | null } | null {
   return meta.generatedBy === null
     ? null
-    : { source_hash: meta.sourceHash, generated_at: meta.generatedAt }
+    : { source_hash: meta.sourceHash, generated_at: meta.generatedAt, saved_at: meta.savedAt }
 }
 
 /** R15: which warning (if any) must be confirmed before a generation request is sent. */
@@ -157,12 +173,14 @@ export type GenerateUi =
 
 /** `uid` is the row's React key and DOM-id part — stable while rows are added or removed. */
 type HebelRow = { uid: string; title: string; note: string; points: string }
+type ListRow = { uid: string; text: string }
 
-/** What this island edits (everything else in the brief is carried through). */
+/** What this island edits (swap reasons are carried through; Phase 3 owns them). */
 export type RunsheetBriefState = {
   baselineText: string
   diagnose: string
   hebel: HebelRow[]
+  lists: Record<RunsheetBriefListKey, ListRow[]>
   commitments: DiscoveryCallSheetHabitCommitment[]
 }
 
@@ -184,11 +202,25 @@ function seedRunsheetBrief(props: BriefSeed, tag: string): RunsheetBriefState {
       note: entry.note,
       points: entry.points === null ? "" : formatRunsheetScore(entry.points),
     })),
+    lists: {
+      zielLuecken: listRows(props.initialSections.zielLuecken, `${tag}-z`),
+      callFragen: listRows(props.initialSections.callFragen, `${tag}-f`),
+      erwartungen: listRows(props.initialSections.erwartungen, `${tag}-e`),
+    },
     commitments:
       props.initialCommitments.length > 0
         ? props.initialCommitments
         : props.recipeHabits.map((habit) => ({ ...habit, committed: false })),
   }
+}
+
+function listRows(lines: readonly string[], tag: string): ListRow[] {
+  return lines.map((text, index) => ({ uid: `${tag}-${index}`, text }))
+}
+
+/** A list as stored: blank lines are dropped (an added, never-filled row changes nothing). */
+function listLines(rows: readonly ListRow[]): string[] {
+  return rows.map((row) => row.text).filter((text) => text.trim() !== "")
 }
 
 /** Identity of the edited content (row uids excluded): „has anything changed since …?". */
@@ -200,24 +232,30 @@ function runsheetBriefKey(state: RunsheetBriefState): string {
   ])
 }
 
-/** The part a generation replaces: Diagnose and Hebel. */
+/** The part a generation replaces: Diagnose, Hebel and the three lists. */
 function runsheetBriefContentKey(state: RunsheetBriefState): string {
   return JSON.stringify([
     state.diagnose,
     state.hebel.map((row) => [row.title, row.note, row.points.trim()]),
+    RUNSHEET_BRIEF_LISTS.map(({ key }) => listLines(state.lists[key])),
   ])
 }
 
 /**
- * A finished generation laid over the island: Diagnose and Hebel become the generated ones.
- * Score and Gewohnheiten are not the brief's content and are never replaced. (The island
- * skips this when Diagnose or Hebel were edited while the request ran.)
+ * A finished generation laid over the island: the brief's content (Diagnose, Hebel, lists)
+ * becomes the generated one. Score and Gewohnheiten are not the brief's content and are never
+ * replaced. (The island skips this when the brief was edited while the request ran.)
  */
 export function applyGeneratedRunsheetBrief(
   current: RunsheetBriefState,
   generated: RunsheetBriefState,
 ): RunsheetBriefState {
-  return { ...current, diagnose: generated.diagnose, hebel: generated.hebel }
+  return {
+    ...current,
+    diagnose: generated.diagnose,
+    hebel: generated.hebel,
+    lists: generated.lists,
+  }
 }
 
 /**
@@ -245,7 +283,14 @@ export function runsheetBriefPatch(
     patch: {
       baseline_score: baseline,
       consult_brief: {
-        sections: { ...brief.sections, diagnose: state.diagnose, hebel },
+        sections: {
+          ...brief.sections,
+          diagnose: state.diagnose,
+          hebel,
+          zielLuecken: listLines(state.lists.zielLuecken),
+          callFragen: listLines(state.lists.callFragen),
+          erwartungen: listLines(state.lists.erwartungen),
+        },
         generated_at: brief.generatedAt,
         generated_by: "manual",
         source_hash: brief.sourceHash,
@@ -308,8 +353,9 @@ export function DiscoveryRunsheetBrief({
   enrollmentId,
   initialBaseline,
   initialSections,
-  initialBriefMeta = { generatedAt: null, sourceHash: null, generatedBy: null },
+  initialBriefMeta = { generatedAt: null, sourceHash: null, generatedBy: null, savedAt: null },
   currentSourceHash = null,
+  generateBlockedHint = null,
   initialCommitments,
   recipeHabits,
   saveLocked = false,
@@ -329,6 +375,8 @@ export function DiscoveryRunsheetBrief({
    * the page read degraded (quiz lead or call sheet unread) — then no stale hint.
    */
   currentSourceHash?: string | null
+  /** Why generating is not possible here (R14: a draft intake); null = it is. */
+  generateBlockedHint?: string | null
   initialCommitments: DiscoveryCallSheetHabitCommitment[]
   /** The main problem recipe's „Ohne Produkt" levers — the pre-fill for an empty list. */
   recipeHabits: ReadonlyArray<{ id: string; label: string }>
@@ -417,6 +465,13 @@ export function DiscoveryRunsheetBrief({
     contentEdits.current += 1
     setState((current) => ({ ...current, hebel: update(current.hebel) }))
   }
+  function setList(key: RunsheetBriefListKey, update: (rows: ListRow[]) => ListRow[]) {
+    contentEdits.current += 1
+    setState((current) => ({
+      ...current,
+      lists: { ...current.lists, [key]: update(current.lists[key]) },
+    }))
+  }
   function setCommitments(
     update: (rows: DiscoveryCallSheetHabitCommitment[]) => DiscoveryCallSheetHabitCommitment[],
   ) {
@@ -438,19 +493,21 @@ export function DiscoveryRunsheetBrief({
     const sent = state
     const brief = built.patch.consult_brief!
     // Edits typed while the request ran stay „nicht gespeichert“.
-    void save(built.patch, () => {
+    void save(built.patch, (stored) => {
       setSaved(sent)
       setBase({
         sections: brief.sections,
         generatedAt: brief.generated_at,
         sourceHash: brief.source_hash,
         generatedBy: brief.generated_by,
+        // The server's new stamp: the next generation must expect THIS write.
+        savedAt: stored?.consultBrief?.saved_at ?? null,
       })
     })
   }
 
   function handleGenerate() {
-    if (saveLocked || generating) return
+    if (saveLocked || generating || generateBlockedHint) return
     const warning = runsheetReplaceWarning(base, contentDirty)
     if (warning) {
       setGenerateUi({ phase: "confirm_replace", text: warning })
@@ -517,6 +574,7 @@ export function DiscoveryRunsheetBrief({
       generatedAt: brief.generated_at,
       sourceHash: brief.source_hash,
       generatedBy: brief.generated_by,
+      savedAt: brief.saved_at ?? null,
     })
     const hash = typeof body?.sourceHash === "string" ? body.sourceHash : null
     setLiveHash((current) => ({ ...current, value: current.prop === null ? null : hash }))
@@ -635,7 +693,8 @@ export function DiscoveryRunsheetBrief({
               : RUNSHEET_GENERATE_COPY.regenerate
           }
           ui={generateUi}
-          disabled={saveLocked || status === "saving"}
+          disabled={saveLocked || status === "saving" || generateBlockedHint !== null}
+          blockedHint={generateBlockedHint}
           stale={stale}
           onGenerate={handleGenerate}
           onConfirm={handleGenerateConfirm}
@@ -755,6 +814,62 @@ export function DiscoveryRunsheetBrief({
           <p className="text-[12px] text-muted-foreground">{HEBEL_FOOTNOTE}</p>
         </RunsheetCard>
 
+        <RunsheetCard title={BRIEF_LISTS_TITLE}>
+          {RUNSHEET_BRIEF_LISTS.map((list) => (
+            <div key={list.key} className="flex flex-col gap-1.5">
+              <p className="text-[13px] font-bold text-foreground">{list.title}</p>
+              {state.lists[list.key].length === 0 ? (
+                <p className="text-[13px] text-muted-foreground">{list.empty}</p>
+              ) : (
+                <ul className="flex flex-col gap-1.5">
+                  {state.lists[list.key].map((row, index) => (
+                    <li key={row.uid} className="flex items-start gap-2">
+                      <textarea
+                        id={`runsheet-${list.key}-${row.uid}`}
+                        aria-label={`${list.title} ${index + 1}`}
+                        rows={2}
+                        value={row.text}
+                        onChange={(event) =>
+                          setList(list.key, (rows) =>
+                            rows.map((entry) =>
+                              entry.uid === row.uid
+                                ? { ...entry, text: event.target.value }
+                                : entry,
+                            ),
+                          )
+                        }
+                        className="min-w-0 flex-1 rounded border bg-background px-2 py-1 text-[13px] leading-5 text-foreground"
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setList(list.key, (rows) => rows.filter((entry) => entry.uid !== row.uid))
+                        }
+                        className="mt-1 text-[11px] text-muted-foreground underline"
+                      >
+                        {LIST_REMOVE}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div>
+                <button
+                  id={`runsheet-${list.key}-add`}
+                  type="button"
+                  onClick={() => {
+                    const rowUid = `n${nextUid.current++}`
+                    setList(list.key, (rows) => [...rows, { uid: rowUid, text: "" }])
+                  }}
+                  className="rounded-lg border border-[var(--brand-plum)] px-3 py-1 text-xs font-bold text-[var(--brand-plum)]"
+                >
+                  {LIST_ADD}
+                </button>
+              </div>
+            </div>
+          ))}
+        </RunsheetCard>
+
         <RunsheetCard title={HABITS_TITLE}>
           {prefilled ? (
             <p className="text-[12px] text-muted-foreground">{HABITS_FROM_RECIPE}</p>
@@ -840,6 +955,7 @@ export function RunsheetGenerateBar({
   label,
   ui,
   disabled,
+  blockedHint = null,
   stale,
   onGenerate,
   onConfirm,
@@ -847,8 +963,10 @@ export function RunsheetGenerateBar({
 }: {
   label: string
   ui: GenerateUi
-  /** Call sheet unread, or a manual save in flight. */
+  /** Call sheet unread, a manual save in flight, or generating is not possible here. */
   disabled: boolean
+  /** Why generating is not possible (R14: draft intake) — shown instead of any other line. */
+  blockedHint?: string | null
   stale: boolean
   onGenerate: () => void
   onConfirm: () => void
@@ -861,15 +979,17 @@ export function RunsheetGenerateBar({
       : ui.phase === "confirm_conflict"
         ? RUNSHEET_GENERATE_COPY.conflict
         : null
-  const line = pending
-    ? { text: RUNSHEET_GENERATE_COPY.pendingHint, tone: "text-muted-foreground" }
-    : ui.phase === "error"
-      ? { text: ui.text, tone: "text-[var(--status-danger-text)]" }
-      : stale
-        ? { text: RUNSHEET_GENERATE_COPY.stale, tone: "text-[var(--status-pending-text)]" }
-        : ui.phase === "done"
-          ? { text: ui.text, tone: "text-muted-foreground" }
-          : null
+  const line = blockedHint
+    ? { text: blockedHint, tone: "text-muted-foreground" }
+    : pending
+      ? { text: RUNSHEET_GENERATE_COPY.pendingHint, tone: "text-muted-foreground" }
+      : ui.phase === "error"
+        ? { text: ui.text, tone: "text-[var(--status-danger-text)]" }
+        : stale
+          ? { text: RUNSHEET_GENERATE_COPY.stale, tone: "text-[var(--status-pending-text)]" }
+          : ui.phase === "done"
+            ? { text: ui.text, tone: "text-muted-foreground" }
+            : null
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-3">

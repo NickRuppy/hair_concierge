@@ -57,6 +57,11 @@ Nick öffnet ein submitted Enrollment → Phase 2 zeigt leere Brief-Felder + „
 
 Automatisiert: neue test:node-Suiten (T2–T4), volles `npm run ci:verify` auf finalem Baum. Live: einmaliger echter Generate-Lauf gegen ein Test-Enrollment über die Eval-Lane (T5) mit API-Key aus der Repo-Umgebung — der Brief-Inhalt selbst ist danach Nicks Review-Gegenstand im gemeinsamen Walkthrough (Slices 1+2 zusammen, wie mit Nick vereinbart). Migration: keine.
 
+Offene Deploy-Checks (nach dem Deploy, vor dem ersten echten Call):
+
+- **Langfuse-Live-Export:** eine echte Generierung in Produktion auslösen und prüfen, dass der Trace (Generation-Span + Flush) in Langfuse ankommt — lokal nur gegen Fakes verifiziert.
+- **Vercel-Plan-Tier für `maxDuration = 180`:** prüfen, dass der Plan 180 s erlaubt; ein niedrigeres Limit kappt still und bricht lange Generierungen mit einem Timeout ab.
+
 ## 9. Review & Handoff
 
-Worktree `codex/consult-agent`; SDD-Ausführung (Opus-Implementierer); ein Codex-Whole-Branch-Review vor Push (einzige Review-Lane); /ship danach; Merge separat. Rollout: kein Flag nötig — die Route ist admin-only und der Button erscheint nur im Cockpit; ohne API-Key antwortet die Route mit sauberem Fehler. Artefakte: Plan committen; transienten Review-Output verwerfen.
+Worktree `codex/consult-agent`; SDD-Ausführung (Opus-Implementierer); ein Codex-Whole-Branch-Review vor Push (einzige Review-Lane); /ship danach; Merge separat. Rollout: kein Flag nötig — die Route ist admin-only und der Button erscheint nur im Cockpit; ohne API-Key antwortet die Route mit sauberem Fehler. Artefakte: Plan committen; transienten Review-Output verwerfen. Handoff-Liste für Nick enthält die beiden offenen Deploy-Checks aus §8 (Langfuse-Live-Export, Vercel-Plan-Tier für `maxDuration = 180`).

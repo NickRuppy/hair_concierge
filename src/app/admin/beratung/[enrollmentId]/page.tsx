@@ -10,7 +10,10 @@ import {
   formatDiscoveryTimestamp,
 } from "@/components/discovery/cockpit/format"
 import { DiscoveryQuizAnswersSection } from "@/components/discovery/cockpit/quiz-answers"
-import { DiscoveryRunsheetBrief } from "@/components/discovery/cockpit/runsheet-brief"
+import {
+  DiscoveryRunsheetBrief,
+  RUNSHEET_GENERATE_COPY,
+} from "@/components/discovery/cockpit/runsheet-brief"
 import { DiscoveryRunsheetFollowUp } from "@/components/discovery/cockpit/runsheet-follow-up"
 import {
   RUNSHEET_ASK_TOPIC,
@@ -274,8 +277,11 @@ export function createDiscoveryCockpitPage(
             generatedAt: callSheet?.consultBrief?.generated_at ?? null,
             sourceHash: callSheet?.consultBrief?.source_hash ?? null,
             generatedBy: callSheet?.consultBrief?.generated_by ?? null,
+            savedAt: callSheet?.consultBrief?.saved_at ?? null,
           }}
           currentSourceHash={currentSourceHash}
+          // R14: the brief is generated from what she submitted, never from a draft.
+          generateBlockedHint={intake.state === "submitted" ? null : RUNSHEET_GENERATE_COPY.draft}
           initialCommitments={callSheet?.habitCommitments ?? []}
           recipeHabits={runsheetRecipeHabits(mainRecipe)}
           checklist={runsheetChecklistLines(prepItems)}

@@ -47,6 +47,13 @@ export type DiscoveryCallSheetBriefRevision = {
 
 export type DiscoveryCallSheetBrief = DiscoveryCallSheetBriefRevision & {
   /**
+   * When this brief was last written (ISO), stamped server-side by `saveDiscoveryCallSheet` on
+   * EVERY brief write — agent and manual; no client sets it. The generate route's concurrency
+   * check compares it, because a manual save keeps `generated_at`/`source_hash`. Absent on
+   * briefs stored before it existed.
+   */
+  saved_at?: string | null
+  /**
    * The brief a generation replaced (consult-agent T3, R15): exactly ONE revision, never
    * nested. Absent = none stored. A save that does not name it keeps the stored one (see
    * `saveDiscoveryCallSheet`).
@@ -128,6 +135,7 @@ export async function saveDiscoveryCallSheet(
   enrollmentId: string,
   patch: DiscoveryCallSheetPatch,
   client: SupabaseClient,
+  now: () => Date = () => new Date(),
 ): Promise<DiscoveryCallSheet> {
   const { data: stored, error: readError } = await client
     .from(DISCOVERY_CALL_SHEETS_TABLE)
@@ -145,7 +153,13 @@ export async function saveDiscoveryCallSheet(
     feedback: current.feedback ?? CALL_SHEET_DEFAULTS.feedback,
     ...patch,
     ...(patch.consult_brief
-      ? { consult_brief: keepStoredRevision(patch.consult_brief, current.consult_brief) }
+      ? {
+          consult_brief: {
+            ...keepStoredRevision(patch.consult_brief, current.consult_brief),
+            // Server-owned: whatever a caller passed is overwritten.
+            saved_at: now().toISOString(),
+          },
+        }
       : {}),
     enrollment_id: enrollmentId,
   }
@@ -238,7 +252,9 @@ function parseBrief(value: unknown): DiscoveryCallSheetBrief | null {
   if (!brief || !isRecord(value)) return brief
   // One level only: a revision's own `previous` is never read.
   const previous = parseRevision(value.previous)
-  return previous ? { ...brief, previous } : brief
+  const stamped: DiscoveryCallSheetBrief =
+    typeof value.saved_at === "string" ? { ...brief, saved_at: value.saved_at } : brief
+  return previous ? { ...stamped, previous } : stamped
 }
 
 function parseRevision(value: unknown): DiscoveryCallSheetBriefRevision | null {

@@ -9,7 +9,11 @@ import {
 } from "../scripts/eval-consult-brief/checks"
 import { generateConsultBrief } from "../src/lib/discovery/consult-brief/generate"
 import { CONSULT_BOUNDARY_LINE, lintConsultBrief } from "../src/lib/discovery/consult-brief/lint"
-import { consultBriefSectionsSchema } from "../src/lib/discovery/consult-brief/prompt"
+import { consultSourceHash } from "../src/lib/discovery/consult-brief/hash"
+import {
+  CONSULT_BRIEF_PROMPT_VERSION,
+  consultBriefSectionsSchema,
+} from "../src/lib/discovery/consult-brief/prompt"
 import { parseDiscoveryHeatStyling } from "../src/lib/discovery/heat-styling"
 import {
   CONSULT_GOLDEN_PROFILES,
@@ -28,6 +32,7 @@ type RecordedAnswer = {
   profile: string
   model: string
   promptVersion: string
+  sourceHash: string
   raw: string
 }
 
@@ -59,6 +64,14 @@ test("golden profiles assemble through consultBriefSource with valid heat answer
   const curly = consultGoldenSource(consultGoldenProfile("curly-breakage")).input
   assert.deepEqual(curly.boundaryTriggers, ["hair_loss_concern", "hair_loss_assessment"])
   assert.equal(curly.mainConcern?.code, "breakage")
+})
+
+test("the recorded answer is not stale: same prompt version, same input hash — else re-record", () => {
+  // A prompt or input change must fail here until the fixture is re-recorded with the live
+  // lane (`npm run test:consult-brief`), so the offline pin never vouches for an old answer.
+  assert.equal(recorded.promptVersion, CONSULT_BRIEF_PROMPT_VERSION)
+  assert.equal(recorded.sourceHash, consultSourceHash(nomi.input))
+  assert.equal(recorded.sourceHash, nomi.sourceHash)
 })
 
 test("the recorded real answer passes the generator's parse, schema and lint path", async () => {

@@ -28,10 +28,13 @@ import {
  * generieren" (consult-agent T3). Gate order as the call-sheet route: same-origin (403, CSRF)
  * → kill switch (404) → the shared `requireAdmin` (401/403) → the intake the URL names (404).
  *
- * Body: `{ expected_state: { source_hash, generated_at } | null, force?: boolean }` — the brief
- * state the client last saw (null = it saw none).
+ * Body: `{ expected_state: { source_hash, generated_at, saved_at } | null, force?: boolean }` —
+ * the brief state the client last saw (null = it saw none). `saved_at` is the server's stamp on
+ * every brief write, so a manual save (which keeps `generated_at`/`source_hash`) still counts
+ * as a change.
  *
  *   bad body                          → 400 `invalid_body`
+ *   intake not submitted (R14)        → 422 `draft_intake`
  *   no plan to read                   → 503 `no_usable_source` / `temporarily_unavailable`
  *   stored brief ≠ expected_state     → 409 `brief_conflict` + `current` (unless `force`);
  *                                       checked before the LLM call AND again before the write,
@@ -43,8 +46,9 @@ import {
  * Every error carries a German `message` and writes NOTHING. On success the stored brief
  * moves into the new one as `previous` (exactly one revision; its own `previous` is dropped),
  * and the write goes through `saveDiscoveryCallSheet` (read-merge-write: score, commitments,
- * feedback stay as stored; a legacy enrollment without a row gets its first one). No freeze:
- * drafts and finalised calls generate alike, as the brief is Nick's working copy.
+ * feedback stay as stored; a legacy enrollment without a row gets its first one). Only a
+ * submitted intake generates (R14); a finalised call still does — the brief is Nick's working
+ * copy.
  */
 
 /** Generation is bounded at 55 s per attempt; the OpenAI client retries once. */
@@ -54,6 +58,7 @@ const briefState = z
   .object({
     source_hash: z.string().max(200).nullable(),
     generated_at: z.string().max(100).nullable(),
+    saved_at: z.string().max(100).nullable(),
   })
   .strict()
 
@@ -76,6 +81,8 @@ function asRevision(brief: DiscoveryCallSheetBrief | null): DiscoveryCallSheetBr
 }
 
 const MESSAGES = {
+  draft_intake:
+    "Die Checkliste ist noch nicht abgeschickt. Den Brief erst erstellen, wenn sie abgeschickt ist.",
   brief_conflict:
     "Der Brief wurde inzwischen geändert. Bestätigen, um ihn zu überschreiben — die bisherige Fassung bleibt als Revision erhalten.",
   brief_generation_failed:
@@ -116,6 +123,7 @@ function stateOf(brief: DiscoveryCallSheetBrief | null) {
         source_hash: brief.source_hash,
         generated_at: brief.generated_at,
         generated_by: brief.generated_by,
+        saved_at: brief.saved_at ?? null,
       }
     : null
 }
@@ -123,7 +131,9 @@ function stateOf(brief: DiscoveryCallSheetBrief | null) {
 function matchesExpected(stored: DiscoveryCallSheetBrief | null, expected: BriefState | null) {
   if (!stored || !expected) return stored === null && expected === null
   return (
-    stored.source_hash === expected.source_hash && stored.generated_at === expected.generated_at
+    stored.source_hash === expected.source_hash &&
+    stored.generated_at === expected.generated_at &&
+    (stored.saved_at ?? null) === expected.saved_at
   )
 }
 
@@ -165,6 +175,11 @@ export function createDiscoveryConsultBriefHandler(
     const body = bodySchema.safeParse(await readJsonBody(request))
     if (!body.success) return discoveryCockpitError("invalid_body", 400)
     const { expected_state: expected, force = false } = body.data
+
+    // R14: a brief is generated from what she submitted — never from a draft in progress.
+    if (intake.state !== "submitted") {
+      return discoveryCockpitJson({ code: "draft_intake", message: MESSAGES.draft_intake }, 422)
+    }
 
     const conflict = (stored: DiscoveryCallSheetBrief | null) =>
       discoveryCockpitJson(
@@ -221,7 +236,12 @@ export function createDiscoveryConsultBriefHandler(
     }
 
     try {
-      const callSheet = await saveCallSheet(intake.enrollmentId, { consult_brief: brief }, admin)
+      const callSheet = await saveCallSheet(
+        intake.enrollmentId,
+        { consult_brief: brief },
+        admin,
+        now,
+      )
       return discoveryCockpitJson({ callSheet, sourceHash })
     } catch (error) {
       console.error("[discovery] consult brief write failed:", error)

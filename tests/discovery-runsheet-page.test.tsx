@@ -467,6 +467,39 @@ test("stale hint: hidden when the page read degraded (quiz lead unread)", async 
   }
 })
 
+test("brief lists: the stored Ziel-Lücken, Call-Fragen and Erwartungen show in Phase 2", async () => {
+  const withLists: DiscoveryCallSheet = {
+    ...generatedCallSheet(pageHash()),
+    consultBrief: {
+      ...generatedCallSheet(pageHash()).consultBrief!,
+      sections: {
+        ...callSheet.consultBrief!.sections,
+        callFragen: ["Wie oft glättest du?"],
+        erwartungen: ["Erste Wirkung nach 4 Wochen", "Im Zweifel ärztlich abklären lassen."],
+      },
+    },
+  }
+  const markup = await renderPage({ loadCallSheet: async () => withLists })
+  const phase2 = markup.slice(
+    markup.indexOf('id="runsheet-phase-2"'),
+    markup.indexOf('id="runsheet-brief-save"'),
+  )
+  assert.ok(phase2.includes(">Für den Call<"))
+  assert.ok(phase2.includes("Ziel „Form &amp; Halt“: offen ansprechen."))
+  assert.ok(phase2.includes("Wie oft glättest du?"))
+  assert.ok(phase2.includes("Im Zweifel ärztlich abklären lassen."))
+})
+
+test("R14: a draft intake shows the generate button disabled with its reason", async () => {
+  const draft = await renderPage({
+    loadIntake: async () => ({ ...intake, state: "draft", submittedAt: null }),
+  })
+  assert.match(draft, /id="runsheet-brief-generate" type="button" disabled=""/)
+  assert.ok(draft.includes("Erst möglich, wenn die Checkliste abgeschickt ist."))
+  const submitted = await renderPage()
+  assert.ok(!/id="runsheet-brief-generate" type="button" disabled=""/.test(submitted))
+})
+
 test("a failing call-sheet read leaves the runsheet empty instead of failing the call", async () => {
   const original = console.error
   console.error = () => {}
