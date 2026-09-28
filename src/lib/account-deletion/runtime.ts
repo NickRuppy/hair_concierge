@@ -5,6 +5,7 @@ import { trackCustomerIoServerEvent } from "@/lib/customerio/server"
 import {
   reportAccountDeletionCleanupFailure,
   reportAccountDeletionRefundFailure,
+  reportAccountDeletionRefundWaiting,
 } from "@/lib/observability/account-deletion"
 import {
   cancelPayPalSubscription,
@@ -143,5 +144,6 @@ export function createAccountDeletionDeps(client: SupabaseClient): AccountDeleti
     deletePostHogPerson,
     reportCleanupFailure: reportAccountDeletionCleanupFailure,
     reportRefundFailure: reportAccountDeletionRefundFailure,
+    reportRefundWaiting: reportAccountDeletionRefundWaiting,
   }
 }

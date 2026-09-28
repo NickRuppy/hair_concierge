@@ -1,7 +1,14 @@
 import type Stripe from "stripe"
 import type { SupabaseClient } from "@supabase/supabase-js"
-import { recordPostDeletionRefund } from "@/lib/account-deletion/post-deletion-refund"
-import { reportDeletedAccountSubscriptionCancelled } from "@/lib/observability/account-deletion"
+import {
+  recordPostDeletionRefund,
+  webRefundKind,
+  type WebRefundKind,
+} from "@/lib/account-deletion/post-deletion-refund"
+import {
+  reportDeletedAccountSubscriptionCancelled,
+  reportPostDeletionRefundNotRecorded,
+} from "@/lib/observability/account-deletion"
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const ENDED = new Set(["canceled", "incomplete_expired"])
@@ -66,8 +73,11 @@ export async function cancelDeletedAccountStripeSubscription(
     supabase: SupabaseClient
     stripe: { subscriptions: Pick<Stripe["subscriptions"], "retrieve" | "cancel"> }
     report?: typeof reportDeletedAccountSubscriptionCancelled
-    /** Test seam; production records via the service-role RPC. */
-    recordRefund?: (subscriptionId: string, paymentsFrom: string) => Promise<void>
+    /** Test seam; production records via the service-role RPC (false: not recorded). */
+    recordRefund?: (subscriptionId: string, paymentsFrom: string) => Promise<boolean>
+    /** Test seam: the kind of the subscription's existing refund row. */
+    refundKind?: (subscriptionId: string) => Promise<WebRefundKind | null>
+    reportRefundNotRecorded?: typeof reportPostDeletionRefundNotRecorded
   },
 ): Promise<boolean> {
   // The anonymization time is the deletion time: R-a refunds only payments from then on.
@@ -82,10 +92,16 @@ export async function cancelDeletedAccountStripeSubscription(
     if (await boundToLiveAccount(deps.supabase, input.subscriptionId, customerId)) return false
     if (!ENDED.has(subscription.status)) {
       // Recorded before the cancel: a retried webhook finds the subscription ended.
-      await (
+      const recorded = await (
         deps.recordRefund ??
         ((id: string, from: string) => recordPostDeletionRefund(deps.supabase, "stripe", id, from))
       )(input.subscriptionId, deletedAt)
+      // N2: not recorded — fine when it is this subscription's post-deletion refund already.
+      const existingKind = recorded
+        ? null
+        : await (deps.refundKind ?? ((id: string) => webRefundKind(deps.supabase, "stripe", id)))(
+            input.subscriptionId,
+          )
       await deps.stripe.subscriptions.cancel(input.subscriptionId, {
         prorate: false,
         invoice_now: false,
@@ -94,6 +110,12 @@ export async function cancelDeletedAccountStripeSubscription(
         provider: "stripe",
         eventType: input.eventType,
       })
+      if (!recorded && existingKind !== "post_deletion")
+        (deps.reportRefundNotRecorded ?? reportPostDeletionRefundNotRecorded)({
+          provider: "stripe",
+          eventType: input.eventType,
+          existingKind: existingKind ?? "none",
+        })
     }
   }
   console.info("[stripe] event for a deleted account acknowledged", { eventType: input.eventType })

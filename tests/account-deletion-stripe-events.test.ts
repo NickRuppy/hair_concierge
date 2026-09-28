@@ -12,12 +12,17 @@ function fakes(input: {
   anonymized: Record<string, boolean>
   status: string
   live?: { billing?: boolean; profile?: boolean }
+  /** N2: the record RPC's result and the kind of an existing refund row. */
+  recorded?: boolean
+  existingKind?: "deletion" | "post_deletion" | null
 }) {
   const reads: string[] = []
   const cancelled: unknown[] = []
   const reports: unknown[] = []
   const recorded: string[] = []
   const recordedFrom: string[] = []
+  const kindReads: string[] = []
+  const notRecorded: unknown[] = []
   const supabase = {
     from(table: string) {
       let id = ""
@@ -61,7 +66,15 @@ function fakes(input: {
     recordRefund: async (id: string, from: string) => {
       recorded.push(id)
       recordedFrom.push(from)
+      return input.recorded ?? true
     },
+    kindReads,
+    refundKind: async (id: string) => {
+      kindReads.push(id)
+      return input.existingKind ?? null
+    },
+    notRecorded,
+    reportRefundNotRecorded: (d: unknown) => void notRecorded.push(d),
   }
 }
 
@@ -85,6 +98,111 @@ test("a live subscription of a deleted account is cancelled at once and reported
     assert.deepEqual(f.recordedFrom, [DELETED_AT])
     assert.deepEqual(f.reports, [{ provider: "stripe", eventType: "checkout.session.completed" }])
   }
+})
+
+test("N2: a no-op refund record still cancels; reported unless the row is the post-deletion refund already", async () => {
+  const run = async (existingKind: "deletion" | "post_deletion" | null) => {
+    const f = fakes({
+      anonymized: { [LEAD]: true },
+      status: "active",
+      recorded: false,
+      existingKind,
+    })
+    assert.equal(
+      await cancelDeletedAccountStripeSubscription(
+        {
+          eventType: "customer.subscription.updated",
+          subscriptionId: "sub_1",
+          metadata: { lead_id: LEAD },
+        },
+        {
+          supabase: f.supabase,
+          stripe: f.stripe,
+          report: f.report,
+          recordRefund: f.recordRefund,
+          refundKind: f.refundKind,
+          reportRefundNotRecorded: f.reportRefundNotRecorded,
+        },
+      ),
+      true,
+    )
+    assert.deepEqual(f.cancelled, [["sub_1", { prorate: false, invoice_now: false }]])
+    assert.deepEqual(f.kindReads, ["sub_1"])
+    return f.notRecorded
+  }
+  // A retried webhook: its own post-deletion row already exists — nothing to report.
+  assert.deepEqual(await run("post_deletion"), [])
+  // A deletion row that could not be taken over (e.g. paid out already): an operator checks.
+  assert.deepEqual(await run("deletion"), [
+    { provider: "stripe", eventType: "customer.subscription.updated", existingKind: "deletion" },
+  ])
+  assert.deepEqual(await run(null), [
+    { provider: "stripe", eventType: "customer.subscription.updated", existingKind: "none" },
+  ])
+  // Recorded: no kind lookup, no report.
+  const ok = fakes({ anonymized: { [LEAD]: true }, status: "active" })
+  await cancelDeletedAccountStripeSubscription(
+    {
+      eventType: "checkout.session.completed",
+      subscriptionId: "sub_1",
+      metadata: { lead_id: LEAD },
+    },
+    {
+      supabase: ok.supabase,
+      stripe: ok.stripe,
+      report: ok.report,
+      recordRefund: ok.recordRefund,
+      refundKind: ok.refundKind,
+      reportRefundNotRecorded: ok.reportRefundNotRecorded,
+    },
+  )
+  assert.deepEqual(ok.kindReads, [])
+  assert.deepEqual(ok.notRecorded, [])
+})
+
+test("N2: the record helper returns the RPC boolean and the kind is read by RPC", async () => {
+  const f = fakes({ anonymized: { [LEAD]: true }, status: "active" })
+  const calls: unknown[] = []
+  const notRecorded: unknown[] = []
+  const supabase = Object.assign(Object.create(f.supabase), {
+    from: f.supabase.from.bind(f.supabase),
+    rpc: async (name: string, args: unknown) => {
+      calls.push([name, args])
+      if (name === "account_deletion_record_post_deletion_refund")
+        return { data: false, error: null }
+      return { data: "deletion", error: null }
+    },
+  }) as SupabaseClient
+  const stripe = {
+    subscriptions: {
+      retrieve: async () => ({ status: "active", customer: "cus_payer" }),
+      cancel: async (id: string) => void f.cancelled.push(id),
+    },
+  } as never
+  await cancelDeletedAccountStripeSubscription(
+    {
+      eventType: "checkout.session.completed",
+      subscriptionId: "sub_1",
+      metadata: { lead_id: LEAD },
+    },
+    {
+      supabase,
+      stripe,
+      report: f.report,
+      reportRefundNotRecorded: (d) => void notRecorded.push(d),
+    },
+  )
+  assert.deepEqual(calls, [
+    [
+      "account_deletion_record_post_deletion_refund",
+      { p_provider: "stripe", p_subscription_id: "sub_1", p_payments_from: DELETED_AT },
+    ],
+    ["account_deletion_web_refund_kind", { p_provider: "stripe", p_subscription_id: "sub_1" }],
+  ])
+  assert.deepEqual(f.cancelled, ["sub_1"])
+  assert.deepEqual(notRecorded, [
+    { provider: "stripe", eventType: "checkout.session.completed", existingKind: "deletion" },
+  ])
 })
 
 test("an ended subscription of a deleted account is acknowledged without a cancel", async () => {

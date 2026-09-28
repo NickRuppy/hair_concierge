@@ -250,7 +250,6 @@ test("Stripe: not yet cancelled retries; disputed charges and non-PaymentIntent 
 test("Stripe post-deletion (R-a): every paid invoice refunded in full, per-payment keys, never twice", async () => {
   const f = fakeStripe({
     invoices: [
-      { id: "in_old", amount_paid: 1499, paidDay: 12 },
       { id: "in_a", amount_paid: 3999, paidDay: 16 },
       { id: "in_b", amount_paid: 0, paidDay: 16 },
       { id: "in_c", amount_paid: 499, paidDay: 18 },
@@ -259,7 +258,7 @@ test("Stripe post-deletion (R-a): every paid invoice refunded in full, per-payme
       pi_c: [{ amount: 100, status: "succeeded", metadata: {} }],
     },
   })
-  // Deleted on day 15: the payment of day 12 was before the deletion and is never refunded (I-2).
+  // Deleted on day 15: every payment from then on is refunded in full (I-2).
   const post = due({
     kind: "post_deletion",
     recordedAt: new Date(20 * DAY).toISOString(),
@@ -288,6 +287,53 @@ test("Stripe post-deletion (R-a): every paid invoice refunded in full, per-payme
     refundStripeSubscriptionWith({ ...post, paymentsFrom: null }, f.api),
     AccountDeletionRefundManualError,
   )
+})
+
+test("N1: a Stripe payment before the deletion sends R-a to manual review before any refund", async () => {
+  const post = due({
+    kind: "post_deletion",
+    recordedAt: new Date(20 * DAY).toISOString(),
+    paymentsFrom: new Date(15 * DAY).toISOString(),
+  })
+  // Checkout paid on day 14, account deleted on day 15 before the webhook: never skipped.
+  // The earlier payment is listed after the in-scope ones: the scan still precedes any refund.
+  const f = fakeStripe({
+    invoices: [
+      { id: "in_a", amount_paid: 3999, paidDay: 16 },
+      { id: "in_c", amount_paid: 499, paidDay: 18 },
+      { id: "in_checkout", amount_paid: 3999, paidDay: 14 },
+    ],
+  })
+  await assert.rejects(
+    refundStripeSubscriptionWith(post, f.api),
+    (error) =>
+      error instanceof AccountDeletionRefundManualError &&
+      error.message === "Post-deletion subscription has a payment before the deletion",
+  )
+  assert.deepEqual(f.created, [], "no refund call in that run")
+  // A €0 (trial) invoice before the deletion is no payment: today's behaviour.
+  const trial = fakeStripe({
+    invoices: [
+      { id: "in_trial", amount_paid: 0, paidDay: 14 },
+      { id: "in_a", amount_paid: 3999, paidDay: 16 },
+    ],
+  })
+  assert.deepEqual(await refundStripeSubscriptionWith(post, trial.api), {
+    refundedMinor: 3999,
+    paymentRef: "pi_a",
+  })
+  // Payments at/after the deletion only: unchanged, each refunded in full.
+  const later = fakeStripe({
+    invoices: [
+      { id: "in_a", amount_paid: 3999, paidDay: 15 },
+      { id: "in_c", amount_paid: 499, paidDay: 18 },
+    ],
+  })
+  assert.deepEqual(await refundStripeSubscriptionWith(post, later.api), {
+    refundedMinor: 3999 + 499,
+    paymentRef: "pi_c",
+  })
+  assert.equal(later.created.length, 2)
 })
 
 test("Stripe: a processing payment keeps the refund due until it is final (m4)", async () => {
@@ -450,8 +496,8 @@ test("PayPal post-deletion (R-a): payments from the deletion on refunded in full
       { id: "TX-1", status: "COMPLETED", time: "2026-09-18T00:00:00Z", value: "39.99" },
       { id: "TX-0", status: "REFUNDED", time: "2026-09-17T00:00:00Z", value: "4.99" },
       { id: "TX-D", status: "DECLINED", time: "2026-09-17T12:00:00Z" },
-      // Paid before the deletion (Sept 16): never refunded by R-a (I-2).
-      { id: "TX-OLD", status: "COMPLETED", time: "2026-09-10T00:00:00Z", value: "39.99" },
+      // Declined before the deletion: no payment, not in scope (I-2).
+      { id: "TX-OLD", status: "DECLINED", time: "2026-09-15T12:00:00Z", value: "39.99" },
     ],
   })
   const post = {
@@ -501,6 +547,57 @@ test("PayPal post-deletion (R-a): payments from the deletion on refunded in full
     ),
     NOTHING,
   )
+})
+
+test("N1: a PayPal payment before the deletion sends R-a to manual review before any refund", async () => {
+  const post = {
+    ...PAYPAL_DUE,
+    kind: "post_deletion" as const,
+    paymentsFrom: "2026-09-16T00:00:00Z",
+  }
+  for (const status of ["COMPLETED", "PARTIALLY_REFUNDED", "REFUNDED"]) {
+    const f = fakePayPal({
+      transactions: [
+        { id: "TX-2", status: "COMPLETED", time: "2026-09-20T00:00:00Z", value: "4.99" },
+        // Checkout paid hours before the deletion; its webhook arrived after it.
+        { id: "TX-CHECKOUT", status, time: "2026-09-15T20:00:00Z", value: "39.99" },
+      ],
+    })
+    const h = hooks()
+    await assert.rejects(
+      refundPayPalSubscriptionWith(post, f.api, h.value),
+      (error) =>
+        error instanceof AccountDeletionRefundManualError &&
+        error.message === "Post-deletion subscription has a payment before the deletion",
+      status,
+    )
+    assert.deepEqual(f.refunds, [], `${status}: no refund call in that run`)
+    assert.deepEqual(h.plans, [], `${status}: nothing planned`)
+  }
+  // Pending, declined or €0 entries before the deletion are no payment: unchanged.
+  const unpaid = fakePayPal({
+    transactions: [
+      { id: "TX-2", status: "COMPLETED", time: "2026-09-20T00:00:00Z", value: "4.99" },
+      { id: "TX-P", status: "PENDING", time: "2026-09-15T20:00:00Z" },
+      { id: "TX-Z", status: "COMPLETED", time: "2026-09-15T21:00:00Z", value: "0.00" },
+    ],
+  })
+  assert.deepEqual(await refundPayPalSubscriptionWith(post, unpaid.api, hooks().value), {
+    refundedMinor: 499,
+    paymentRef: "TX-2",
+  })
+  // Payments at/after the deletion only: unchanged, each refunded in full.
+  const later = fakePayPal({
+    transactions: [
+      { id: "TX-2", status: "COMPLETED", time: "2026-09-20T00:00:00Z", value: "4.99" },
+      { id: "TX-1", status: "COMPLETED", time: "2026-09-16T00:00:00Z", value: "39.99" },
+    ],
+  })
+  assert.deepEqual(await refundPayPalSubscriptionWith(post, later.api, hooks().value), {
+    refundedMinor: 499 + 3999,
+    paymentRef: "TX-1",
+  })
+  assert.equal(later.refunds.length, 2)
 })
 
 test("PayPal: a pending payment keeps the refund due until it is final (m4)", async () => {

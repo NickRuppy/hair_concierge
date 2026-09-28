@@ -118,9 +118,14 @@ export type AccountDeletionDeps = {
     attempts: number
     manual: boolean
   }): void
+  /** N4: refunds still waiting on a pending payment long after they were recorded. */
+  reportRefundWaiting(details: { waiting: number }): void
 }
 
 export const ACCOUNT_DELETION_SENTRY_THRESHOLD = 5
+
+/** N4: a refund waiting on a pending payment this long is reported (no state change). */
+export const ACCOUNT_DELETION_REFUND_WAITING_REPORT_MS = 14 * 86_400_000
 
 const RPC_ERRORS: AccountDeletionErrorCode[] = [
   "request_id_conflict",
@@ -229,8 +234,14 @@ async function settleWebRefunds(
   let completed = 0
   let manual = 0
   let waiting = 0
+  let staleWaiting = 0
   for (const refund of due ?? []) {
-    const key = { p_provider: refund.provider, p_subscription_id: refund.subscriptionId }
+    // N3: plan/result/waiting only ever touch the row of the request that listed it as due.
+    const key = {
+      p_provider: refund.provider,
+      p_subscription_id: refund.subscriptionId,
+      p_request_id: refund.requestId,
+    }
     let outcome: WebRefundOutcome | null = null
     try {
       outcome = await deps.refundWebSubscription(refund, {
@@ -246,6 +257,10 @@ async function settleWebRefunds(
       // m4: settle only once every payment in scope is final; pending is not a failure.
       if (error instanceof AccountDeletionRefundPendingError) {
         waiting += 1
+        // N4: to the back of the due queue, so waiting rows never starve the others.
+        await deps.rpc("account_deletion_web_refund_waiting", key)
+        if (Date.now() - Date.parse(refund.recordedAt) > ACCOUNT_DELETION_REFUND_WAITING_REPORT_MS)
+          staleWaiting += 1
         continue
       }
       const permanent = error instanceof AccountDeletionRefundManualError
@@ -279,6 +294,8 @@ async function settleWebRefunds(
     })
     if (!settled.error) completed += 1
   }
+  // N4: once per run, however many rows wait that long.
+  if (staleWaiting > 0) deps.reportRefundWaiting({ waiting: staleWaiting })
   const pending = (due ?? []).length
   // Manual-review rows are settled for the cron (reported once), waiting ones retried; neither fails.
   return { pending, completed, manual, waiting, failed: pending - completed - manual - waiting }

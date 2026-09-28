@@ -118,6 +118,7 @@ function fakeWorld(options: { webSubscriptions?: number } = {}) {
     deletePostHogPerson: async () => {},
     reportCleanupFailure: () => {},
     reportRefundFailure: () => {},
+    reportRefundWaiting: () => {},
   })
 
   const asUser = (userId: string): MobileAccountDeletionDeps => ({

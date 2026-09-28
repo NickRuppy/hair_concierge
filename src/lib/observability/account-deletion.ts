@@ -75,6 +75,29 @@ export function reportAccountDeletionRefundFailure(
   }
 }
 
+/**
+ * N4: due refunds that have waited on a still pending provider payment for more than 14 days
+ * since they were recorded. Once per run with the count only — no ids.
+ */
+export function reportAccountDeletionRefundWaiting(
+  details: { waiting: number },
+  sink: AccountDeletionFailureSink = Sentry,
+): void {
+  try {
+    sink.withScope((scope) => {
+      scope.setLevel?.("warning")
+      scope.setTag("account_deletion.code", "refund_waiting_on_pending_payment")
+      scope.setContext("account_deletion_refund_waiting", {
+        code: "refund_waiting_on_pending_payment",
+        waiting: details.waiting,
+      })
+      sink.captureException(new Error("account_deletion_refund_waiting_on_pending_payment"))
+    })
+  } catch {
+    /* Telemetry is best effort. */
+  }
+}
+
 export type DeletedAccountBillingReport = {
   provider: "stripe" | "paypal"
   /** Webhook event type that surfaced the live subscription (a machine string). */
@@ -103,6 +126,38 @@ export function reportDeletedAccountSubscriptionCancelled(
         event_type: eventType,
       })
       sink.captureException(new Error("account_deletion_live_subscription_cancelled"))
+    })
+  } catch {
+    /* Telemetry is best effort. */
+  }
+}
+
+/**
+ * N2: a live subscription of a deleted account was cancelled, but its full refund (R-a) was
+ * not recorded because the subscription already has a deletion refund row it may not take
+ * over (e.g. one that paid something out). An operator checks for a missed charge. Only the
+ * provider, event type and the existing row's kind are reported — never ids or email.
+ */
+export function reportPostDeletionRefundNotRecorded(
+  details: DeletedAccountBillingReport & { existingKind: "deletion" | "none" },
+  sink: AccountDeletionFailureSink = Sentry,
+): void {
+  try {
+    const eventType = /^[a-zA-Z0-9._-]{1,80}$/.test(details.eventType)
+      ? details.eventType
+      : "unknown"
+    const existingKind = details.existingKind === "deletion" ? "deletion" : "none"
+    sink.withScope((scope) => {
+      scope.setLevel?.("error")
+      scope.setTag("account_deletion.provider", details.provider)
+      scope.setTag("account_deletion.event_type", eventType)
+      scope.setTag("account_deletion.existing_refund_kind", existingKind)
+      scope.setContext("account_deletion_post_deletion_refund", {
+        provider: details.provider,
+        event_type: eventType,
+        existing_refund_kind: existingKind,
+      })
+      sink.captureException(new Error("account_deletion_post_deletion_refund_not_recorded"))
     })
   } catch {
     /* Telemetry is best effort. */

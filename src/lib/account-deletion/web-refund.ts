@@ -17,7 +17,9 @@ import {
  *   later refunds the same amount.
  * - `post_deletion` (R-a): a subscription that went live only after its account was deleted
  *   (checkout in flight) — every payment made at/after the deletion (`paymentsFrom`) is
- *   refunded in full; the customer never had access.
+ *   refunded in full; the customer never had access. A paid payment before the deletion
+ *   (checkout paid, account deleted before its webhook) sends the refund to manual review
+ *   before anything is refunded (N1).
  *
  * A payment in scope that is still pending (PayPal PENDING, Stripe PaymentIntent processing)
  * keeps the refund due: it settles only once every payment in scope is final.
@@ -278,17 +280,25 @@ async function refundAllStripePayments(
   const invoices = await stripe.invoices.list({ subscription: refund.subscriptionId, limit: 100 })
   if (invoices.has_more) throw new AccountDeletionRefundManualError("Too many Stripe invoices")
   const from = paymentsFrom(refund)
-  let refunded = 0
-  let paymentRef: string | null = null
+  // N1: every payment is scanned before the first refund, so an out-of-scope one stops the
+  // run before anything is paid out.
+  const inScope: StripeInvoice[] = []
   let pending = false
   for (const invoice of invoices.data) {
     if (invoice.status === "open") {
       if (await stripeInvoiceProcessing(stripe, invoice.id)) pending = true
       continue
     }
+    if (invoice.status !== "paid" || invoice.amount_paid <= 0) continue
     const paidAt = (invoice.status_transitions.paid_at ?? invoice.created) * 1000
-    // I-2: only payments made at/after the deletion; earlier ones were not ours to take back.
-    if (invoice.status !== "paid" || invoice.amount_paid <= 0 || paidAt < from) continue
+    // I-2 scope is payments at/after the deletion; an earlier one (checkout paid, then the
+    // account deleted before its webhook) is never skipped silently: an operator decides.
+    if (paidAt < from) throw new AccountDeletionRefundManualError(PAYMENT_BEFORE_DELETION)
+    inScope.push(invoice)
+  }
+  let refunded = 0
+  let paymentRef: string | null = null
+  for (const invoice of inScope) {
     const intent = await stripePaymentIntent(stripe, invoice.id)
     const existing = await stripeExistingRefunds(stripe, intent, refund)
     const remaining = invoice.amount_paid - existing.total
@@ -308,6 +318,8 @@ async function refundAllStripePayments(
   if (pending) throw new AccountDeletionRefundPendingError("Stripe payment is still processing")
   return { refundedMinor: refunded, paymentRef }
 }
+
+const PAYMENT_BEFORE_DELETION = "Post-deletion subscription has a payment before the deletion"
 
 function paymentsFrom(refund: WebRefundDue) {
   const from = Date.parse(refund.paymentsFrom ?? "")
@@ -354,6 +366,10 @@ function paypalMinor(tx: PayPalTrialTransaction) {
     throw new AccountDeletionRefundManualError("PayPal payment amount")
   return { minor, currency: gross.currency_code }
 }
+
+/** A positive gross amount (never throws; the scan only needs to know money moved). */
+const paypalPaid = (tx: PayPalTrialTransaction) =>
+  Number(tx.amount_with_breakdown?.gross_amount?.value) > 0
 
 const paypalValue = (minor: number) => (minor / 100).toFixed(2)
 const timeOf = (tx: PayPalTrialTransaction) => Date.parse(tx.time ?? "")
@@ -448,6 +464,13 @@ async function refundAllPayPalPayments(
     new Date(from - DAY_MS).toISOString(),
     new Date().toISOString(),
   )
+  // N1: an earlier paid/settled payment stops the run before any refund (operator decides).
+  if (
+    transactions.some(
+      (tx) => PAYPAL_SETTLED.has(tx.status ?? "") && timeOf(tx) < from && paypalPaid(tx),
+    )
+  )
+    throw new AccountDeletionRefundManualError(PAYMENT_BEFORE_DELETION)
   let refunded = 0
   let paymentRef: string | null = null
   let pending = false

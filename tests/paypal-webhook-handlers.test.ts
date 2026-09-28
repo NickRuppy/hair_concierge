@@ -869,7 +869,10 @@ test("events for a deleted account's subscription write nothing; a live agreemen
         recordPostDeletionRefund: async (subscriptionId, paymentsFrom) => {
           refundsRecorded.push(subscriptionId)
           refundsFrom.push(paymentsFrom)
+          return true
         },
+        webRefundKind: async () => assert.fail("recorded: no kind lookup"),
+        reportPostDeletionRefundNotRecorded: () => assert.fail("recorded: nothing to report"),
         reportDeletedAccountSubscription: (details) => void reports.push(details),
       },
     )
@@ -882,6 +885,72 @@ test("events for a deleted account's subscription write nothing; a live agreemen
     assert.deepEqual(reports, expectCancel ? [{ provider: "paypal", eventType }] : [], eventType)
     assert.equal(paypalIntents[0].user_id, null, eventType)
     assert.equal(paypalIntents[0].status, "activated", eventType)
+  }
+})
+
+test("N2: a no-op post-deletion refund record still cancels; reported unless already post_deletion", async () => {
+  const deletedAt = pastIso()
+  for (const [existingKind, expected] of [
+    ["post_deletion", []],
+    [
+      "deletion",
+      [
+        {
+          provider: "paypal",
+          eventType: "BILLING.SUBSCRIPTION.ACTIVATED",
+          existingKind: "deletion",
+        },
+      ],
+    ],
+    [
+      null,
+      [{ provider: "paypal", eventType: "BILLING.SUBSCRIPTION.ACTIVATED", existingKind: "none" }],
+    ],
+  ] as const) {
+    const { supabase } = createSupabaseStub({
+      billing: [],
+      paypalIntents: [
+        {
+          id: "intent-deleted",
+          token: "token-active",
+          interval: "month",
+          source: "pricing_page",
+          status: "activated",
+          provider_subscription_id: "I-active",
+          lead_id: null,
+          email: null,
+          user_id: null,
+          expires_at: futureIso(),
+          metadata: {},
+          anonymized_at: deletedAt,
+        },
+      ],
+    })
+    const cancelled: string[] = []
+    const kindReads: string[] = []
+    const notRecorded: unknown[] = []
+    const result = await handlePayPalWebhookEvent(
+      event(`WH-norecord-${existingKind}`, "BILLING.SUBSCRIPTION.ACTIVATED"),
+      {
+        supabase,
+        premiumTierId: "tier-premium",
+        freeTierId: "tier-free",
+        retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
+        cancelPayPalSubscription: async (subscriptionId) => void cancelled.push(subscriptionId),
+        recordPostDeletionRefund: async () => false,
+        webRefundKind: async (subscriptionId) => {
+          kindReads.push(subscriptionId)
+          return existingKind
+        },
+        reportPostDeletionRefundNotRecorded: (details) => void notRecorded.push(details),
+        reportDeletedAccountSubscription: () => undefined,
+      },
+    )
+    assert.deepEqual(result, { handled: true }, String(existingKind))
+    // The agreement is cancelled either way; only the report depends on the existing row.
+    assert.deepEqual(cancelled, ["I-active"], String(existingKind))
+    assert.deepEqual(kindReads, ["I-active"], String(existingKind))
+    assert.deepEqual(notRecorded, expected, String(existingKind))
   }
 })
 

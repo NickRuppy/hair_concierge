@@ -18,11 +18,13 @@ import {
 import {
   reportAccountDeletionCleanupFailure,
   reportAccountDeletionRefundFailure,
+  reportAccountDeletionRefundWaiting,
 } from "../src/lib/observability/account-deletion"
 
 const USER = "11111111-1111-4111-8111-111111111111"
 const OTHER = "22222222-2222-4222-8222-222222222222"
 const REQUEST = "33333333-3333-4333-8333-333333333333"
+const OTHER_REQUEST = "44444444-4444-4444-8444-444444444444"
 
 type Refund = {
   requestId: string
@@ -33,6 +35,9 @@ type Refund = {
   refundedMinor: number | null
   plannedMinor: number | null
   plannedPaymentRef: string | null
+  recordedAt: string
+  /** Due-queue order (the SQL orders by updated_at). */
+  updatedAt: number
 }
 
 type Op = {
@@ -49,6 +54,8 @@ function fakeDatabase() {
   const ops = new Map<string, Op>()
   const refunds = new Map<string, Refund>()
   let failMark = 0
+  let clock = 0
+  const tick = () => (clock += 1)
   const calls: string[] = []
   const ok = (data: unknown) => ({ data, error: null })
   const fail = (message: string) => ({ data: null, error: { message } })
@@ -98,6 +105,8 @@ function fakeDatabase() {
               refundedMinor: null,
               plannedMinor: null,
               plannedPaymentRef: null,
+              recordedAt: new Date().toISOString(),
+              updatedAt: tick(),
             })
           else if (existing.state === "recorded") existing.requestId = requestId
         }
@@ -119,12 +128,14 @@ function fakeDatabase() {
               ([, r]) =>
                 r.state === "due" && (!args.p_request_id || r.requestId === args.p_request_id),
             )
+            .sort(([, a], [, b]) => a.updatedAt - b.updatedAt)
+            .slice(0, (args.p_limit as number) ?? 20)
             .map(([key, r]) => ({
               provider: key.split(":")[0],
               subscriptionId: key.split(":")[1],
               requestId: r.requestId,
               kind: r.kind,
-              recordedAt: "2026-09-28T10:00:00Z",
+              recordedAt: r.recordedAt,
               paymentsFrom: r.paymentsFrom,
               attempts: r.attempts,
               plannedMinor: r.plannedMinor,
@@ -133,7 +144,9 @@ function fakeDatabase() {
         )
       case "account_deletion_web_refund_result": {
         const r = refunds.get(`${args.p_provider}:${args.p_subscription_id}`)
-        if (r?.state !== "due") return fail("refund_not_due")
+        // N3: only the request that listed the refund settles it.
+        if (r?.state !== "due" || r.requestId !== args.p_request_id) return fail("refund_not_due")
+        r.updatedAt = tick()
         if (args.p_error_code === null) {
           r.state = "done"
           r.refundedMinor = args.p_refunded_minor as number
@@ -165,15 +178,24 @@ function fakeDatabase() {
           refundedMinor: null,
           plannedMinor: null,
           plannedPaymentRef: null,
+          recordedAt: new Date().toISOString(),
+          updatedAt: tick(),
         })
         return ok(true)
       }
       case "account_deletion_web_refund_plan": {
         const r = refunds.get(`${args.p_provider}:${args.p_subscription_id}`)
-        if (r?.state !== "due") return fail("refund_not_due")
+        if (r?.state !== "due" || r.requestId !== args.p_request_id) return fail("refund_not_due")
+        r.updatedAt = tick()
         r.plannedMinor = args.p_planned_minor as number
         r.plannedPaymentRef = args.p_payment_ref as string
         return ok(null)
+      }
+      case "account_deletion_web_refund_waiting": {
+        const r = refunds.get(`${args.p_provider}:${args.p_subscription_id}`)
+        if (r?.state !== "due" || r.requestId !== args.p_request_id) return ok(false)
+        r.updatedAt = tick()
+        return ok(true)
       }
       case "delete_account_data":
         if (op!.state === "web_billing_cancelled") {
@@ -238,6 +260,7 @@ function deps(db: ReturnType<typeof fakeDatabase>, overrides: Partial<AccountDel
       attempts: number
       manual: boolean
     }[],
+    waitingReports: [] as { waiting: number }[],
   }
   const value: AccountDeletionDeps = {
     rpc: db.rpc,
@@ -253,6 +276,7 @@ function deps(db: ReturnType<typeof fakeDatabase>, overrides: Partial<AccountDel
     deletePostHogPerson: async (id) => void log.posthog.push(id),
     reportCleanupFailure: (details) => void log.reports.push(details),
     reportRefundFailure: (details) => void log.refundReports.push(details),
+    reportRefundWaiting: (details) => void log.waitingReports.push(details),
     ...overrides,
   }
   return { value, log }
@@ -752,4 +776,138 @@ test("m4: a pending payment keeps the refund due without counting an attempt", a
   pending = false
   assert.equal((await retryAccountDeletionWebRefunds(d.value)).completed, 1)
   assert.equal(db.refunds.get("paypal:I-HANNA")!.state, "done")
+})
+
+test("N3: plan and result of an earlier request never touch a row taken over meanwhile", async () => {
+  const db = fakeDatabase()
+  const d = deps(db, {
+    refundWebSubscription: async (refund, hooks) => {
+      // e.g. an R-a record took the row over (fresh request id) while this attempt ran.
+      db.refunds.get("paypal:I-HANNA")!.requestId = OTHER_REQUEST
+      await hooks.plan({ amountMinor: 750, paymentRef: "PAY-1" })
+      return { refundedMinor: 750, paymentRef: "PAY-1" }
+    },
+  })
+  await requestAccountDeletion({ userId: USER, requestId: REQUEST }, d.value)
+  const run = await settleAccountDeletionWebRefunds(d.value, REQUEST)
+  assert.equal(run.completed, 0)
+  const row = db.refunds.get("paypal:I-HANNA")!
+  assert.deepEqual(
+    [row.state, row.requestId, row.attempts, row.plannedMinor, row.refundedMinor],
+    ["due", OTHER_REQUEST, 0, null, null],
+  )
+  // A direct result with the wrong request id is refused as well; the right one settles.
+  const key = { p_provider: "paypal", p_subscription_id: "I-HANNA" }
+  const settle = { p_refunded_minor: 0, p_payment_ref: null, p_error_code: null }
+  assert.ok(
+    (
+      await db.rpc("account_deletion_web_refund_result", {
+        ...key,
+        ...settle,
+        p_request_id: REQUEST,
+      })
+    ).error,
+  )
+  assert.equal(row.state, "due")
+  assert.equal(
+    (
+      await db.rpc("account_deletion_web_refund_result", {
+        ...key,
+        ...settle,
+        p_request_id: OTHER_REQUEST,
+      })
+    ).error,
+    null,
+  )
+  assert.equal(row.state, "done")
+})
+
+test("N4: a waiting row moves to the back of the due queue, so the rows behind it are settled", async () => {
+  const db = fakeDatabase()
+  const d = deps(db, {
+    listWebSubscriptions: async () => [
+      { provider: "paypal", id: "I-WAIT" },
+      { provider: "stripe", id: "sub_ok" },
+    ],
+    refundWebSubscription: async (refund) => {
+      if (refund.subscriptionId === "I-WAIT")
+        throw new AccountDeletionRefundPendingError("PayPal payment is still pending")
+      return { refundedMinor: 100, paymentRef: "pi_ok" }
+    },
+  })
+  await requestAccountDeletion({ userId: USER, requestId: REQUEST }, d.value)
+  // Limit 1: the waiting row comes first, then — bumped — the other one.
+  assert.deepEqual(await retryAccountDeletionWebRefunds(d.value, 1), {
+    pending: 1,
+    completed: 0,
+    manual: 0,
+    waiting: 1,
+    failed: 0,
+  })
+  assert.equal((await retryAccountDeletionWebRefunds(d.value, 1)).completed, 1)
+  assert.equal(db.refunds.get("stripe:sub_ok")!.state, "done")
+  assert.equal(db.refunds.get("paypal:I-WAIT")!.state, "due")
+  assert.equal(db.refunds.get("paypal:I-WAIT")!.attempts, 0)
+  // Recorded just now: no stale-waiting report.
+  assert.deepEqual(d.log.waitingReports, [])
+})
+
+test("N4: rows waiting more than 14 days after they were recorded are reported once per run", async () => {
+  const db = fakeDatabase()
+  const d = deps(db, {
+    listWebSubscriptions: async () => [
+      { provider: "paypal", id: "I-OLD-1" },
+      { provider: "paypal", id: "I-OLD-2" },
+      { provider: "paypal", id: "I-NEW" },
+    ],
+    refundWebSubscription: async () => {
+      throw new AccountDeletionRefundPendingError("PayPal payment is still pending")
+    },
+  })
+  await requestAccountDeletion({ userId: USER, requestId: REQUEST }, d.value)
+  const fifteenDaysAgo = new Date(Date.now() - 15 * 86_400_000).toISOString()
+  db.refunds.get("paypal:I-OLD-1")!.recordedAt = fifteenDaysAgo
+  db.refunds.get("paypal:I-OLD-2")!.recordedAt = fifteenDaysAgo
+  db.refunds.get("paypal:I-NEW")!.recordedAt = new Date(Date.now() - 13 * 86_400_000).toISOString()
+  for (let run = 1; run <= 2; run++) {
+    assert.deepEqual(await retryAccountDeletionWebRefunds(d.value), {
+      pending: 3,
+      completed: 0,
+      manual: 0,
+      waiting: 3,
+      failed: 0,
+    })
+    assert.deepEqual(d.log.waitingReports, Array(run).fill({ waiting: 2 }))
+  }
+  // No state change: still due, no attempt counted, no failure report.
+  for (const r of db.refunds.values()) assert.deepEqual([r.state, r.attempts], ["due", 0])
+  assert.deepEqual(d.log.refundReports, [])
+})
+
+test("the stale-waiting Sentry report carries only the count", () => {
+  const captured: { tags: Record<string, string>; context: unknown; error: unknown }[] = []
+  const sink = {
+    withScope(callback: (scope: never) => void) {
+      const entry = {
+        tags: {} as Record<string, string>,
+        context: null as unknown,
+        error: null as unknown,
+      }
+      captured.push(entry)
+      callback({
+        setTag: (k: string, v: string) => void (entry.tags[k] = v),
+        setContext: (_: string, c: unknown) => void (entry.context = c),
+        setLevel: () => undefined,
+      } as never)
+    },
+    captureException(error: unknown) {
+      captured.at(-1)!.error = error
+    },
+  }
+  reportAccountDeletionRefundWaiting({ waiting: 2 }, sink)
+  assert.equal(
+    (captured[0].error as Error).message,
+    "account_deletion_refund_waiting_on_pending_payment",
+  )
+  assert.deepEqual(captured[0].context, { code: "refund_waiting_on_pending_payment", waiting: 2 })
 })

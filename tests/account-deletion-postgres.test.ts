@@ -553,12 +553,36 @@ test(
           'public.account_deletion_complete(uuid)', 'public.account_deletion_status(uuid)',
           'public.account_deletion_pending_cleanup(integer,uuid)', 'public.purge_anonymized_records()',
           'public.account_deletion_record_web_subscriptions(uuid,jsonb)', 'public.account_deletion_due_web_refunds(integer,uuid)',
-          'public.account_deletion_web_refund_result(text,text,integer,text,text,boolean)',
-          'public.account_deletion_web_refund_plan(text,text,integer,text)',
+          'public.account_deletion_web_refund_result(text,text,uuid,integer,text,text,boolean)',
+          'public.account_deletion_web_refund_plan(text,text,uuid,integer,text)',
+          'public.account_deletion_web_refund_waiting(text,text,uuid)',
+          'public.account_deletion_web_refund_kind(text,text)',
           'public.account_deletion_record_post_deletion_refund(text,text,timestamptz)',
           'public.account_deletion_web_refund_known(text,text,text)',
           'private.delete_account(uuid,uuid)', 'private.purge_anonymized_records()']) f`),
       "f",
+    )
+    // N3: the request-less signatures are gone.
+    assert.equal(
+      await admin(`SELECT to_regprocedure('public.account_deletion_web_refund_plan(text,text,integer,text)') IS NULL
+        AND to_regprocedure('public.account_deletion_web_refund_result(text,text,integer,text,text,boolean)') IS NULL`),
+      "t",
+    )
+    assert.equal(
+      await admin(`SELECT bool_and(has_function_privilege('service_role', f, 'EXECUTE'))
+        FROM unnest(ARRAY['public.account_deletion_web_refund_result(text,text,uuid,integer,text,text,boolean)',
+          'public.account_deletion_web_refund_plan(text,text,uuid,integer,text)',
+          'public.account_deletion_web_refund_waiting(text,text,uuid)',
+          'public.account_deletion_web_refund_kind(text,text)']) f`),
+      "t",
+    )
+    assert.equal(
+      await admin(`SELECT bool_and(p.prosecdef AND p.proconfig @> ARRAY['search_path=""'])
+        FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
+        WHERE n.nspname = 'public' AND p.proname IN ('account_deletion_web_refund_result',
+          'account_deletion_web_refund_plan', 'account_deletion_web_refund_waiting',
+          'account_deletion_web_refund_kind')`),
+      "t",
     )
     assert.equal(
       await admin(`SELECT bool_or(has_table_privilege(r, t, p)) FROM unnest(ARRAY['anon', 'authenticated']) r,
@@ -642,12 +666,69 @@ test(
         ["stripe", "sub_refund_a", REQ.A, "deletion", 0, null],
       ],
     )
-    // M4 plan; I2 a permanent error ends in manual review with a purge date (R-b).
-    await service(
-      `SELECT public.account_deletion_web_refund_plan('paypal', 'I-MOVE-A', 749, 'TX-MOVE')`,
+    // N3: plan/result/waiting of another request never touch the row.
+    const OTHER_REQ = "f0f00000-0000-4000-8000-000000000001"
+    const rowMoveA = `SELECT request_id || '|' || state || '|' || attempts || '|' || coalesce(planned_minor::text, '-')
+        || '|' || coalesce(refunded_minor::text, '-') || '|' || updated_at
+      FROM private.account_deletion_web_refunds WHERE subscription_id = 'I-MOVE-A'`
+    const beforeOther = await admin(rowMoveA)
+    await assert.rejects(
+      service(
+        `SELECT public.account_deletion_web_refund_plan('paypal', 'I-MOVE-A', '${OTHER_REQ}', 749, 'TX-MOVE')`,
+      ),
+      /refund_not_due/,
+    )
+    await assert.rejects(
+      service(
+        `SELECT public.account_deletion_web_refund_result('paypal', 'I-MOVE-A', '${OTHER_REQ}', 0, NULL, NULL)`,
+      ),
+      /refund_not_due/,
+    )
+    await assert.rejects(
+      service(
+        `SELECT public.account_deletion_web_refund_result('paypal', 'I-MOVE-A', '${OTHER_REQ}', NULL, NULL,
+        'paypal_refund_failed', true)`,
+      ),
+      /refund_not_due/,
     )
     assert.equal(
-      await service(`SELECT public.account_deletion_web_refund_result('paypal', 'I-MOVE-A', NULL, NULL,
+      await service(
+        `SELECT public.account_deletion_web_refund_waiting('paypal', 'I-MOVE-A', '${OTHER_REQ}')`,
+      ),
+      "f",
+    )
+    assert.equal(await admin(rowMoveA), beforeOther)
+    // N4: a waiting row of the listing request moves to the back of the due queue.
+    await admin(
+      `UPDATE private.account_deletion_web_refunds SET updated_at = now() - interval '1 hour' WHERE subscription_id = 'I-MOVE-A'`,
+    )
+    assert.equal(
+      JSON.parse(await service(`SELECT public.account_deletion_due_web_refunds(1, '${REQ.A}')`))[0]
+        .subscriptionId,
+      "I-MOVE-A",
+    )
+    assert.equal(
+      await service(
+        `SELECT public.account_deletion_web_refund_waiting('paypal', 'I-MOVE-A', '${REQ.A}')`,
+      ),
+      "t",
+    )
+    assert.equal(
+      JSON.parse(await service(`SELECT public.account_deletion_due_web_refunds(1, '${REQ.A}')`))[0]
+        .subscriptionId,
+      "sub_refund_a",
+    )
+    assert.equal(
+      await admin(`SELECT state || '|' || attempts FROM private.account_deletion_web_refunds
+        WHERE subscription_id = 'I-MOVE-A'`),
+      "due|0",
+    )
+    // M4 plan; I2 a permanent error ends in manual review with a purge date (R-b).
+    await service(
+      `SELECT public.account_deletion_web_refund_plan('paypal', 'I-MOVE-A', '${REQ.A}', 749, 'TX-MOVE')`,
+    )
+    assert.equal(
+      await service(`SELECT public.account_deletion_web_refund_result('paypal', 'I-MOVE-A', '${REQ.A}', NULL, NULL,
         'paypal_refund_failed', true)->>'state'`),
       "failed_manual",
     )
@@ -657,7 +738,7 @@ test(
       "749|TX-MOVE|true",
     )
     assert.equal(
-      await service(`SELECT public.account_deletion_web_refund_result('stripe', 'sub_refund_a', NULL, NULL,
+      await service(`SELECT public.account_deletion_web_refund_result('stripe', 'sub_refund_a', '${REQ.A}', NULL, NULL,
         'stripe_refund_failed')->>'attempts'`),
       "1",
     )
@@ -666,13 +747,13 @@ test(
       "t",
     )
     assert.equal(
-      await service(`SELECT public.account_deletion_web_refund_result('stripe', 'sub_refund_a', 999, 'pi_refund_a',
+      await service(`SELECT public.account_deletion_web_refund_result('stripe', 'sub_refund_a', '${REQ.A}', 999, 'pi_refund_a',
         NULL)->>'state'`),
       "done",
     )
     await assert.rejects(
       service(
-        `SELECT public.account_deletion_web_refund_result('stripe', 'sub_refund_a', 999, 'pi_refund_a', NULL)`,
+        `SELECT public.account_deletion_web_refund_result('stripe', 'sub_refund_a', '${REQ.A}', 999, 'pi_refund_a', NULL)`,
       ),
       /refund_not_due/,
     )
@@ -680,9 +761,19 @@ test(
     await service(
       `SELECT public.account_deletion_record_post_deletion_refund('stripe', 'sub_post_a', now())`,
     )
+    const postA = await admin(
+      `SELECT request_id FROM private.account_deletion_web_refunds WHERE subscription_id = 'sub_post_a'`,
+    )
+    // N2: the kind of an existing row tells a retried R-a record from a deletion row.
+    assert.equal(
+      await service(`SELECT public.account_deletion_web_refund_kind('stripe', 'sub_post_a') || ','
+        || public.account_deletion_web_refund_kind('stripe', 'sub_refund_a') || ','
+        || coalesce(public.account_deletion_web_refund_kind('stripe', 'sub_none'), 'null')`),
+      "post_deletion,deletion,null",
+    )
     for (let attempt = 1; attempt <= 10; attempt++)
       assert.equal(
-        await service(`SELECT public.account_deletion_web_refund_result('stripe', 'sub_post_a', NULL, NULL,
+        await service(`SELECT public.account_deletion_web_refund_result('stripe', 'sub_post_a', '${postA}', NULL, NULL,
           'stripe_refund_failed')->>'state'`),
         attempt < 10 ? "due" : "failed_manual",
       )
@@ -1009,7 +1100,7 @@ test(
       ["sub_orphan_e"],
     )
     await service(
-      `SELECT public.account_deletion_web_refund_result('stripe', 'sub_orphan_e', 0, NULL, NULL)`,
+      `SELECT public.account_deletion_web_refund_result('stripe', 'sub_orphan_e', '${REQ_E}', 0, NULL, NULL)`,
     )
     // I-1: settled with nothing paid out (never billed at deletion) → a later R-a record takes it
     // over with the deletion time as its payment scope; once paid out, never again.
@@ -1031,15 +1122,22 @@ test(
     assert.equal(Date.parse(takenOver.paymentsFrom), Date.parse("2026-09-27T10:00:00Z"))
     assert.notEqual(takenOver.requestId, REQ_E, "a fresh idempotency source")
     // m3: every payment of a multi-payment refund is recognised by its webhooks.
-    await service(`SELECT public.account_deletion_web_refund_plan('stripe', 'sub_orphan_e', 3999, 'pi_e1');
-      SELECT public.account_deletion_web_refund_plan('stripe', 'sub_orphan_e', 499, 'pi_e2')`)
+    // N3: the earlier request can no longer settle the taken-over row.
+    await assert.rejects(
+      service(
+        `SELECT public.account_deletion_web_refund_result('stripe', 'sub_orphan_e', '${REQ_E}', 0, NULL, NULL)`,
+      ),
+      /refund_not_due/,
+    )
+    await service(`SELECT public.account_deletion_web_refund_plan('stripe', 'sub_orphan_e', '${takenOver.requestId}', 3999, 'pi_e1');
+      SELECT public.account_deletion_web_refund_plan('stripe', 'sub_orphan_e', '${takenOver.requestId}', 499, 'pi_e2')`)
     assert.equal(
       await service(`SELECT public.account_deletion_web_refund_known('stripe', NULL, 'pi_e1')::text || ','
         || public.account_deletion_web_refund_known('stripe', NULL, 'pi_e2')::text`),
       "true,true",
     )
     await service(
-      `SELECT public.account_deletion_web_refund_result('stripe', 'sub_orphan_e', 4498, 'pi_e2', NULL)`,
+      `SELECT public.account_deletion_web_refund_result('stripe', 'sub_orphan_e', '${takenOver.requestId}', 4498, 'pi_e2', NULL)`,
     )
     assert.equal(
       await service(

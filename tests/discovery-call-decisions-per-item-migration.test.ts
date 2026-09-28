@@ -171,6 +171,7 @@ test("the migration has a unique version that sorts after every migration", () =
       "20260928071305",
       "20260928074426",
       "20260928080932",
+      "20260928083245",
     ],
     "must sort after every migration but the iOS paywall's",
   )
