@@ -43,6 +43,7 @@ import type { DiscoveryIdealStep } from "../src/lib/discovery/load-ideal-routine
 import type { DiscoveryParticipantVerdict } from "../src/lib/discovery/load-participant-verdicts"
 import {
   composeDiscoveryRefinedRoutine,
+  type DiscoveryCallDecision,
   type DiscoveryIntakeItem,
 } from "../src/lib/discovery/refined-routine"
 import type {
@@ -205,6 +206,7 @@ function model(
     steps?: DiscoveryIdealStep[]
     items?: DiscoveryIntakeItem[]
     verdicts?: DiscoveryParticipantVerdict[]
+    decisions?: DiscoveryCallDecision[]
   } = {},
 ): DiscoveryCockpitModel {
   const steps = input.steps ?? [shampooStep, conditionerStep]
@@ -218,7 +220,7 @@ function model(
     routine: composeDiscoveryRefinedRoutine({
       steps,
       items,
-      decisions: [],
+      decisions: input.decisions ?? [],
       swapProducts: [],
       ownedProducts: discoveryOwnedProductIdentities(stepVerdicts),
     }),
@@ -1309,4 +1311,73 @@ test("frequency chips: the shampoo band is the engine's allowed range, not the t
   })
   assert.ok(entryOf(markup, "Shampoo").includes("2×/Wo · Ziel 2–6×/Wo — passt"))
   assert.ok(phase4Of(markup).includes("2×/Wo · Ziel 2–6×/Wo — passt"))
+})
+
+// --- fix round 2: Phase 3 and Phase 4 sum the SAME products (kept/undecided only) -----------
+
+const SHAMPOO_KEY = shampooStep.decisionKey
+
+function shampooDecision(
+  intakeItemId: string,
+  decision: DiscoveryCallDecision["decision"],
+): DiscoveryCallDecision {
+  return {
+    decisionKey: SHAMPOO_KEY,
+    decision,
+    swapProductId: decision === "swap" ? ids.alternative : null,
+    intakeItemId,
+  }
+}
+
+function phase3Of(markup: string): string {
+  return markup.slice(markup.indexOf(">Behalten</h3>"), markup.indexOf('id="runsheet-phase-4"'))
+}
+
+async function twoShampoosDecided(decisions: DiscoveryCallDecision[]): Promise<string> {
+  return renderPage({
+    loadModel: async () =>
+      model({
+        steps: [{ ...shampooStep, frequencyLabel: "2×/Woche" }],
+        items: [
+          { ...shampooItem, frequency: "weekly_1x" },
+          { ...secondShampoo, frequency: "weekly_1x" },
+        ],
+        decisions,
+      }),
+  })
+}
+
+test("frequency chips: undecided 1× + DROPPED 1× vs 2×/week → both phases „zu selten“, chips agree", async () => {
+  const markup = await twoShampoosDecided([shampooDecision(secondShampoo.id, "drop")])
+  const expected = "1×/Wo · Ziel 2×/Wo — zu selten"
+  const phase3 = phase3Of(markup)
+  const phase4 = phase4Of(markup)
+  assert.equal(occurrences(phase3, CHIP_MARK), 1, phase3)
+  assert.ok(phase3.includes(expected), phase3)
+  assert.equal(occurrences(phase4, CHIP_MARK), 1, phase4)
+  assert.ok(phase4.includes(expected), phase4)
+})
+
+test("frequency chips: kept + SWAPPED in one step → the swapped product is out of the sum in both phases", async () => {
+  const markup = await twoShampoosDecided([
+    shampooDecision(shampooItem.id, "keep"),
+    shampooDecision(secondShampoo.id, "swap"),
+  ])
+  const expected = "1×/Wo · Ziel 2×/Wo — zu selten"
+  assert.ok(phase3Of(markup).includes(expected), phase3Of(markup))
+  assert.ok(phase4Of(markup).includes(expected), phase4Of(markup))
+  assert.equal(occurrences(phase3Of(markup), CHIP_MARK), 1)
+  assert.equal(occurrences(phase4Of(markup), CHIP_MARK), 1)
+})
+
+test("frequency chips: two KEPT 1× shampoos vs 2×/week stay one „passt“ per phase", async () => {
+  const markup = await twoShampoosDecided([
+    shampooDecision(shampooItem.id, "keep"),
+    shampooDecision(secondShampoo.id, "keep"),
+  ])
+  const expected = "2×/Wo · Ziel 2×/Wo — passt"
+  assert.equal(occurrences(phase3Of(markup), CHIP_MARK), 1)
+  assert.ok(phase3Of(markup).includes(expected))
+  assert.equal(occurrences(phase4Of(markup), CHIP_MARK), 1)
+  assert.ok(phase4Of(markup).includes(expected))
 })

@@ -11,7 +11,7 @@ import type {
 } from "@/lib/discovery/cockpit"
 import type { DiscoveryVerdictStatus } from "@/lib/discovery/load-participant-verdicts"
 import type { DiscoveryPropertyRow } from "@/lib/discovery/property-rows"
-import { runsheetVerdictFit } from "@/lib/discovery/runsheet"
+import { runsheetEntryInHerWeek, runsheetVerdictFit } from "@/lib/discovery/runsheet"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
 import { DiscoveryComparisonTable } from "./comparison-table"
@@ -393,7 +393,8 @@ export function DiscoveryCallCockpit({
     const key = entryKey(step)
     // Batch 9: what her other products in this step are set to right now.
     const stepEntries = steps.filter((other) => other.decisionKey === step.decisionKey)
-    const ownedInStep = stepEntries.filter((other) => other.intakeItemId !== null)
+    // Her products in her week (kept/undecided) — the same rule Phase 4 sums.
+    const ownedInStep = stepEntries.filter(runsheetEntryInHerWeek)
     const siblings = stepEntries
       .filter((other) => entryKey(other) !== key)
       .map((other) => selections[entryKey(other)] ?? null)

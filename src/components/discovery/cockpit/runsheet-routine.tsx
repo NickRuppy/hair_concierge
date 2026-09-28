@@ -1,6 +1,10 @@
 import type { DiscoveryCockpitStepView, DiscoveryCockpitView } from "@/lib/discovery/cockpit"
 import type { DiscoveryItemFrequency } from "@/lib/discovery/frequency"
-import { deriveStepFrequencyDelta, type WashAllowedRange } from "@/lib/discovery/runsheet"
+import {
+  deriveStepFrequencyDelta,
+  runsheetEntryInHerWeek,
+  type WashAllowedRange,
+} from "@/lib/discovery/runsheet"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
@@ -62,22 +66,19 @@ export type WeekLine = {
   }>
 }
 
-/** The product a step entry puts into her week, as the call has decided it so far. */
+/**
+ * The product a step entry puts into her week, as the call has decided it so far. Her own
+ * product counts exactly when `runsheetEntryInHerWeek` says so — the rule the Phase-3 chip
+ * sums over too, so the two phases can never disagree (fix round 2).
+ */
 function productOf(step: DiscoveryCockpitStepView): WeekLine["products"][number] | null {
+  if (runsheetEntryInHerWeek(step) && step.ownedLabel) {
+    return { label: step.ownedLabel, proposal: false, owned: true, frequency: step.ownedFrequency }
+  }
   switch (step.outcome) {
-    case "kept":
-      return step.intakeItemId === null || !step.ownedLabel
-        ? null
-        : { label: step.ownedLabel, proposal: false, owned: true, frequency: step.ownedFrequency }
     case "swapped":
       return step.swapProductLabel
         ? { label: step.swapProductLabel, proposal: false, owned: false, frequency: null }
-        : null
-    case "dropped":
-      return null
-    case "undecided":
-      return step.ownedLabel
-        ? { label: step.ownedLabel, proposal: false, owned: true, frequency: step.ownedFrequency }
         : null
     case "ideal":
       return step.recommendationLabel
@@ -88,6 +89,10 @@ function productOf(step: DiscoveryCockpitStepView): WeekLine["products"][number]
             frequency: null,
           }
         : null
+    case "kept":
+    case "undecided":
+    case "dropped":
+      return null
   }
 }
 

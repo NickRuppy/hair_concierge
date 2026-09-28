@@ -8,6 +8,7 @@ import {
   IDEAL_CADENCE_LABELS,
   IDEAL_CADENCE_RULES,
   idealCadenceBand,
+  runsheetEntryInHerWeek,
   runsheetWashFrequency,
   type FrequencyDelta,
 } from "../src/lib/discovery/runsheet"
@@ -345,4 +346,23 @@ test("the step depth carries the shampoo decision's allowed range — and only f
     target: null,
   } as unknown as PlanCategoryDecision
   assert.equal("washAllowedRange" in discoveryStepDepth(mask, "intensive_conditioning_mask"), false)
+})
+
+// --- fix round 2: one ownership rule for both phases ----------------------------------------
+
+test("in her week: kept (with intake row) and undecided count; dropped, swapped, ideal do not", () => {
+  const entry = (
+    outcome: Parameters<typeof runsheetEntryInHerWeek>[0]["outcome"],
+    intakeItemId: string | null = "item-1",
+    ownedLabel: string | null = "Sebamed",
+  ) => runsheetEntryInHerWeek({ outcome, intakeItemId, ownedLabel })
+  assert.equal(entry("kept"), true)
+  assert.equal(entry("undecided"), true)
+  assert.equal(entry("dropped"), false)
+  assert.equal(entry("swapped"), false)
+  assert.equal(entry("ideal"), false)
+  // No intake row or no label → nothing of hers to put into the week.
+  assert.equal(entry("kept", null), false)
+  assert.equal(entry("kept", "item-1", null), false)
+  assert.equal(entry("undecided", "item-1", null), false)
 })

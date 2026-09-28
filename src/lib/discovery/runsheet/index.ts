@@ -16,6 +16,7 @@ export {
   IDEAL_CADENCE_RULES,
   idealCadenceBand,
   PAUSED_CADENCE_PREFIX,
+  runsheetEntryInHerWeek,
   runsheetWashFrequency,
   type FrequencyDelta,
   type FrequencyDeltaStatus,

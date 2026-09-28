@@ -1,5 +1,6 @@
 import { PRODUCT_FREQUENCY_METADATA, type ProductFrequency } from "@/lib/vocabulary/frequencies"
 
+import type { DiscoveryCockpitStepView } from "../cockpit"
 import { isKnownProductFrequency, mostFrequentDiscoveryFrequency } from "../frequency"
 
 /**
@@ -215,6 +216,27 @@ export function deriveStepFrequencyDelta(
   const ideal = idealCadenceBand(step.cadenceLabel, step.washFrequency, step.allowedRange)
   if (!ideal) return null
   return { status: compareFrequencyToBand(actual, ideal), ideal, actual }
+}
+
+/**
+ * Whether a step entry is her product IN her week — the one ownership rule both runsheet
+ * phases share (fix round 2), so the Phase-3 and Phase-4 chips sum the same products: kept
+ * (with its intake row) or still undecided. A dropped entry leaves her routine, a swapped one
+ * is replaced by another product — neither counts toward the step's frequency.
+ */
+export function runsheetEntryInHerWeek(
+  step: Pick<DiscoveryCockpitStepView, "outcome" | "intakeItemId" | "ownedLabel">,
+): boolean {
+  switch (step.outcome) {
+    case "kept":
+      return step.intakeItemId !== null && Boolean(step.ownedLabel)
+    case "undecided":
+      return Boolean(step.ownedLabel)
+    case "swapped":
+    case "dropped":
+    case "ideal":
+      return false
+  }
 }
 
 /**
