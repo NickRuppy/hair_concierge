@@ -33,7 +33,7 @@ export function createAppStoreSupabase(options: { profiles?: string[]; authUser?
   const statuses = new Map<string, Row>()
   const profiles = new Set(options.profiles ?? [])
   const rpcCalls: { name: string; args: Row }[] = []
-  const state = { failWrites: 0 }
+  const state = { failWrites: 0, failStatusWrites: 0 }
 
   const time = (value: unknown) => Date.parse(String(value))
   function owner(original: unknown) {
@@ -128,6 +128,10 @@ export function createAppStoreSupabase(options: { profiles?: string[]; authUser?
       rpcCalls.push({ name, args })
       if (state.failWrites > 0) {
         state.failWrites -= 1
+        return Response.json({ message: "connection reset" }, { status: 503 })
+      }
+      if (name === "app_store_upsert_subscription_status" && state.failStatusWrites > 0) {
+        state.failStatusWrites -= 1
         return Response.json({ message: "connection reset" }, { status: 503 })
       }
       return Response.json(

@@ -181,9 +181,16 @@ export function renewalStatusSnapshot(
 ): AppStoreSubscriptionStatusRow {
   const environment = matchEnvironment(payload.environment, context)
   // Renewal info names the subscription's product (and its next one); both must be ours.
-  for (const product of [payload.productId, payload.autoRenewProductId])
-    if (product !== undefined && product !== null && product !== "" && !isScannerProductId(product))
-      throw new AppStoreStateError("unknown_product")
+  // Apple always sends productId for renewal info, so a missing one is rejected exactly
+  // like a non-allowlisted product — never silently allowed through.
+  if (!isScannerProductId(payload.productId)) throw new AppStoreStateError("unknown_product")
+  if (
+    payload.autoRenewProductId !== undefined &&
+    payload.autoRenewProductId !== null &&
+    payload.autoRenewProductId !== "" &&
+    !isScannerProductId(payload.autoRenewProductId)
+  )
+    throw new AppStoreStateError("unknown_product")
   return {
     originalTransactionId: requiredId(payload.originalTransactionId),
     environment,

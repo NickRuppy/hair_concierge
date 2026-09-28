@@ -5,7 +5,10 @@ import {
   createAppStoreVerifier,
   type AppStoreVerifier,
 } from "../src/lib/app-store/verify"
-import { handleAppStoreTransactionsPost } from "../src/lib/mobile/app-store-transactions"
+import {
+  handleAppStoreTransactionsPost,
+  type AppStoreTransactionsDeps,
+} from "../src/lib/mobile/app-store-transactions"
 import { POST as transactionsRoute } from "../src/app/api/mobile/v1/app-store/transactions/route"
 import { chain, jws, trusted } from "./helpers/app-store-jws"
 import { appStoreEnv, createAppStoreSupabase, withEnv } from "./helpers/app-store-supabase"
@@ -95,7 +98,7 @@ async function withFake(
   }
 }
 
-const post = (body: unknown, deps: { verifier?: () => AppStoreVerifier } = { verifier }) =>
+const post = (body: unknown, deps: AppStoreTransactionsDeps = { verifier }) =>
   handleAppStoreTransactionsPost(request(body), deps)
 
 test("the caller's own purchase binds to the caller and returns the fresh bootstrap access", async () => {
@@ -473,5 +476,332 @@ test("a mixed batch writes the caller's own row and answers 409 with the access 
     assert.equal(body.access.source, "app_store")
     assert.equal(db.transactions.get("2000000000000001")?.user_id, userId)
     assert.equal(db.transactions.has("3000000000000001"), false)
+  })
+})
+
+// ---- Signed renewal info posted by the app next to its transaction.
+
+function renewal(overrides: Record<string, unknown> = {}) {
+  return {
+    originalTransactionId: "2000000000000001",
+    productId: "de.chaarlie.scanner.yearly",
+    autoRenewProductId: "de.chaarlie.scanner.yearly",
+    autoRenewStatus: 1,
+    signedDate: now - 500,
+    environment: "Sandbox",
+    ...overrides,
+  }
+}
+const statusWrites = (db: ReturnType<typeof createAppStoreSupabase>) =>
+  db.rpcCalls.filter((call) => call.name === "app_store_upsert_subscription_status")
+
+test("renewal info of the caller's own purchase is stored and answers willRenew right away", async () => {
+  await withFake(async (db) => {
+    const response = await post({
+      signedTransactions: [jws(transaction())],
+      signedRenewalInfos: [jws(renewal())],
+    })
+    assert.equal(response.status, 200)
+    const { access } = await response.json()
+    assert.equal(access.appStore.willRenew, true)
+    assert.equal(access.appStore.inBillingRetry, false)
+    assert.deepEqual(
+      db.rpcCalls.map((call) => call.name),
+      ["app_store_upsert_transaction", "app_store_upsert_subscription_status"],
+    )
+    const status = db.statuses.get("2000000000000001")
+    assert.equal(status?.user_id, userId)
+    assert.equal(status?.auto_renew_status, true)
+    assert.equal(status?.environment, "Sandbox")
+    assert.equal(status?.last_notification_type, null)
+  })
+})
+
+test("without renewal info (older app builds) the purchase still binds and willRenew stays false", async () => {
+  await withFake(async (db) => {
+    for (const body of [
+      { signedTransactions: [jws(transaction())] },
+      { signedTransactions: [jws(transaction())], signedRenewalInfos: [] },
+    ]) {
+      const response = await post(body)
+      assert.equal(response.status, 200)
+      assert.equal((await response.json()).access.appStore.willRenew, false)
+    }
+    assert.equal(statusWrites(db).length, 0)
+  })
+})
+
+test("renewal info for a subscription not proven in the same request is ignored without a write", async () => {
+  await withFake(async (db) => {
+    // Unmatched: names a subscription whose transaction was not posted.
+    const unmatched = await post({
+      signedTransactions: [jws(transaction())],
+      signedRenewalInfos: [jws(renewal({ originalTransactionId: "3000000000000001" }))],
+    })
+    assert.equal(unmatched.status, 200)
+    // Same subscription ID, other environment: not the verified transaction's subscription.
+    const otherEnvironment = await post({
+      signedTransactions: [jws(transaction())],
+      signedRenewalInfos: [jws(renewal({ environment: "Production" }))],
+    })
+    assert.equal(otherEnvironment.status, 200)
+    assert.equal(statusWrites(db).length, 0)
+    assert.equal(db.statuses.size, 0)
+  })
+})
+
+test("renewal info never rides along with another account's purchase", async () => {
+  await withFake(async (db) => {
+    // A living account's token: the transaction is refused, so its renewal info is too.
+    const foreignToken = await post({
+      signedTransactions: [
+        jws(
+          transaction({
+            transactionId: "3000000000000001",
+            originalTransactionId: "3000000000000001",
+            appAccountToken: otherUserId,
+          }),
+        ),
+      ],
+      signedRenewalInfos: [jws(renewal({ originalTransactionId: "3000000000000001" }))],
+    })
+    assert.equal(foreignToken.status, 409)
+    assert.equal(db.rpcCalls.length, 0)
+
+    // A token-less purchase of a subscription another account owns: recorded for the owner,
+    // but the caller's renewal info is not written.
+    db.transactions.set("4000000000000001", {
+      transaction_id: "4000000000000001",
+      original_transaction_id: "4000000000000001",
+      user_id: otherUserId,
+      environment: "Sandbox",
+      signed_date: new Date(now - 2 * day).toISOString(),
+      purchase_date: new Date(now - 2 * day).toISOString(),
+      expires_date: new Date(now + 5 * day).toISOString(),
+    })
+    const ownedElsewhere = await post({
+      signedTransactions: [
+        jws(
+          transaction({
+            transactionId: "4000000000000002",
+            originalTransactionId: "4000000000000001",
+            appAccountToken: undefined,
+          }),
+        ),
+      ],
+      signedRenewalInfos: [
+        jws(renewal({ originalTransactionId: "4000000000000001", autoRenewStatus: 0 })),
+      ],
+    })
+    assert.equal(ownedElsewhere.status, 409)
+    assert.equal(statusWrites(db).length, 0)
+    assert.equal(db.statuses.size, 0)
+  })
+})
+
+test("a forged renewal JWS rejects the whole batch before any write", async () => {
+  await withFake(async (db) => {
+    const response = await post({
+      signedTransactions: [jws(transaction())],
+      signedRenewalInfos: [jws(renewal(), chain())],
+    })
+    assert.equal(response.status, 400)
+    assert.deepEqual(await response.json(), { error: "invalid_transaction" })
+    assert.equal(db.rpcCalls.length, 0)
+  })
+})
+
+test("verified renewal info that is not a scanner status is dropped; the purchase still binds", async () => {
+  await withFake(async (db) => {
+    const response = await post({
+      signedTransactions: [jws(transaction())],
+      signedRenewalInfos: [jws(renewal({ autoRenewProductId: "de.chaarlie.other.monthly" }))],
+    })
+    assert.equal(response.status, 200)
+    assert.equal((await response.json()).access.source, "app_store")
+    assert.equal(statusWrites(db).length, 0)
+    assert.equal(db.transactions.get("2000000000000001")?.user_id, userId)
+  })
+})
+
+test("a retryable renewal verification failure is 503 and writes nothing", async () => {
+  await withFake(async (db) => {
+    const real = verifier()
+    const flaky: AppStoreVerifier = {
+      verifyTransaction: (value) => real.verifyTransaction(value),
+      verifyRenewalInfo: async () => {
+        throw new AppStoreVerificationError("retryable")
+      },
+      verifyNotification: (value) => real.verifyNotification(value),
+    }
+    const response = await post(
+      { signedTransactions: [jws(transaction())], signedRenewalInfos: [jws(renewal())] },
+      { verifier: () => flaky },
+    )
+    assert.equal(response.status, 503)
+    assert.equal(db.rpcCalls.length, 0)
+  })
+})
+
+test("a newer webhook status is not overwritten by older renewal info the app posts", async () => {
+  await withFake(async (db) => {
+    // Apple told the webhook auto-renew was turned off after the app fetched its copy.
+    db.statuses.set("2000000000000001", {
+      original_transaction_id: "2000000000000001",
+      user_id: userId,
+      environment: "Sandbox",
+      auto_renew_status: false,
+      auto_renew_product_id: "de.chaarlie.scanner.yearly",
+      in_billing_retry: false,
+      grace_period_expires_date: null,
+      expiration_intent: null,
+      signed_date: new Date(now - 100).toISOString(),
+      last_notification_type: "DID_CHANGE_RENEWAL_STATUS",
+    })
+    const response = await post({
+      signedTransactions: [jws(transaction())],
+      signedRenewalInfos: [jws(renewal({ signedDate: now - 500 }))],
+    })
+    assert.equal(response.status, 200)
+    assert.equal((await response.json()).access.appStore.willRenew, false)
+    const status = db.statuses.get("2000000000000001")
+    assert.equal(status?.auto_renew_status, false)
+    assert.equal(status?.last_notification_type, "DID_CHANGE_RENEWAL_STATUS")
+
+    // A newer app copy (auto-renew turned back on) does win.
+    const newer = await post({
+      signedTransactions: [jws(transaction())],
+      signedRenewalInfos: [jws(renewal({ signedDate: now }))],
+    })
+    assert.equal((await newer.json()).access.appStore.willRenew, true)
+  })
+})
+
+// ---- M2/M3/M5 fix-round tests (see .superpowers/sdd/plan/renewal-review.md)
+
+type Reported = { tags: Record<string, string>; context: unknown; errors: unknown[] }
+function recordingSink() {
+  const reports: Reported[] = []
+  return {
+    reports,
+    sink: {
+      captureException(error: unknown) {
+        reports.at(-1)!.errors.push(error)
+      },
+      withScope(callback: (scope: never) => void) {
+        const report: Reported = { tags: {}, context: null, errors: [] }
+        reports.push(report)
+        callback({
+          setTag: (key: string, value: string) => (report.tags[key] = value),
+          setContext: (_name: string, context: unknown) => (report.context = context),
+          setLevel: () => {},
+        } as never)
+      },
+    },
+  }
+}
+
+test("M2 a status-write failure after the transaction commits is reported but still answers success", async () => {
+  await withFake(async (db) => {
+    const { reports, sink } = recordingSink()
+    db.state.failStatusWrites = 1
+    const response = await post(
+      { signedTransactions: [jws(transaction())], signedRenewalInfos: [jws(renewal())] },
+      { verifier, sink },
+    )
+    assert.equal(response.status, 200)
+    const { access } = await response.json()
+    assert.equal(access.status, "active")
+    assert.equal(access.source, "app_store")
+    // The transaction commits even though its status write failed.
+    assert.equal(db.transactions.get("2000000000000001")?.user_id, userId)
+    assert.equal(db.statuses.size, 0, "the failed status write left no row")
+    assert.equal(reports.length, 1)
+    assert.deepEqual(reports[0].context, {
+      stage: "record",
+      error_name: "Error",
+      error_code: "app_store_write_failed",
+      notification_type: null,
+      environment: "Sandbox",
+    })
+    assert.doesNotMatch(JSON.stringify(reports), new RegExp(userId))
+  })
+})
+
+test("M3 an expired transaction plus grace-period renewal info grants access through the grace end", async () => {
+  await withFake(async (db) => {
+    const graceEnd = new Date(now + 2 * day)
+    const response = await post({
+      signedTransactions: [
+        jws(transaction({ purchaseDate: now - 10 * day, expiresDate: now - day })),
+      ],
+      signedRenewalInfos: [
+        jws(renewal({ isInBillingRetryPeriod: true, gracePeriodExpiresDate: graceEnd.getTime() })),
+      ],
+    })
+    assert.equal(response.status, 200)
+    const { access } = await response.json()
+    assert.equal(access.status, "active")
+    assert.equal(access.source, "app_store")
+    assert.equal(access.appStore.inBillingRetry, true)
+    // Billing-retry/grace fields map through the app path exactly as the webhook writes them.
+    assert.equal(db.statuses.get("2000000000000001")?.in_billing_retry, true)
+    assert.equal(
+      db.statuses.get("2000000000000001")?.grace_period_expires_date,
+      graceEnd.toISOString(),
+    )
+  })
+})
+
+test("M3 access ends once Apple's grace period has passed", async () => {
+  await withFake(async (db) => {
+    const graceEnd = now - 2 * day
+    const response = await post({
+      signedTransactions: [
+        jws(transaction({ purchaseDate: now - 10 * day, expiresDate: now - 5 * day })),
+      ],
+      signedRenewalInfos: [
+        jws(renewal({ isInBillingRetryPeriod: true, gracePeriodExpiresDate: graceEnd })),
+      ],
+    })
+    assert.equal(response.status, 200)
+    assert.equal((await response.json()).access.status, "none")
+  })
+})
+
+test("M5 renewal info missing productId is dropped like a non-allowlisted product", async () => {
+  await withFake(async (db) => {
+    const response = await post({
+      signedTransactions: [jws(transaction())],
+      signedRenewalInfos: [jws(renewal({ productId: undefined, autoRenewProductId: undefined }))],
+    })
+    assert.equal(response.status, 200)
+    assert.equal((await response.json()).access.source, "app_store")
+    assert.equal(statusWrites(db).length, 0)
+    assert.equal(db.statuses.size, 0)
+  })
+})
+
+test("signedRenewalInfos is bounded like signedTransactions", async () => {
+  await withFake(async (db) => {
+    const one = jws(transaction())
+    for (const signedRenewalInfos of [
+      Array.from({ length: 21 }, () => "x"),
+      ["x".repeat(16_385)],
+      [""],
+      [42],
+      "not-an-array",
+    ]) {
+      const response = await post({ signedTransactions: [one], signedRenewalInfos })
+      assert.equal(response.status, 400)
+      assert.deepEqual(await response.json(), { error: "invalid_request" })
+    }
+    assert.equal(db.rpcCalls.length, 0)
+    // 20 + 20 maximum-size entries pass the body limit and reach verification.
+    const full = await post({
+      signedTransactions: Array.from({ length: 20 }, () => "x".repeat(16_384)),
+      signedRenewalInfos: Array.from({ length: 20 }, () => "x".repeat(16_384)),
+    })
+    assert.deepEqual(await full.json(), { error: "invalid_transaction" })
   })
 })
