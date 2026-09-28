@@ -11,14 +11,42 @@ async function anonymized(
   table: "leads" | "trial_enrollments",
   id?: string | null,
 ) {
-  if (!id || !UUID.test(id)) return false
+  if (!id || !UUID.test(id)) return null
   const { data, error } = await supabase
     .from(table)
     .select("anonymized_at")
     .eq("id", id)
     .maybeSingle()
   if (error) throw error
-  return Boolean((data as { anonymized_at?: string | null } | null)?.anonymized_at)
+  return (data as { anonymized_at?: string | null } | null)?.anonymized_at ?? null
+}
+
+/**
+ * I-2: the subscription belongs to a live account after all — already bound to a billing row,
+ * or paid by the Stripe customer of an existing profile (e.g. its lead was anonymized only by
+ * an email match with a deleted account). Then this is not a deleted account's checkout.
+ */
+async function boundToLiveAccount(
+  supabase: SupabaseClient,
+  subscriptionId: string,
+  customerId: string | null,
+) {
+  const billing = await supabase
+    .from("billing_subscriptions")
+    .select("id")
+    .eq("provider", "stripe")
+    .eq("provider_subscription_id", subscriptionId)
+    .maybeSingle()
+  if (billing.error) throw billing.error
+  if (billing.data) return true
+  if (!customerId) return false
+  const profile = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("stripe_customer_id", customerId)
+    .maybeSingle()
+  if (profile.error) throw profile.error
+  return Boolean(profile.data)
 }
 
 /**
@@ -39,20 +67,25 @@ export async function cancelDeletedAccountStripeSubscription(
     stripe: { subscriptions: Pick<Stripe["subscriptions"], "retrieve" | "cancel"> }
     report?: typeof reportDeletedAccountSubscriptionCancelled
     /** Test seam; production records via the service-role RPC. */
-    recordRefund?: (subscriptionId: string) => Promise<void>
+    recordRefund?: (subscriptionId: string, paymentsFrom: string) => Promise<void>
   },
 ): Promise<boolean> {
-  const deleted =
-    (await anonymized(deps.supabase, "trial_enrollments", input.metadata?.trial_enrollment_id)) ||
+  // The anonymization time is the deletion time: R-a refunds only payments from then on.
+  const deletedAt =
+    (await anonymized(deps.supabase, "trial_enrollments", input.metadata?.trial_enrollment_id)) ??
     (await anonymized(deps.supabase, "leads", input.metadata?.lead_id))
-  if (!deleted) return false
+  if (!deletedAt) return false
   if (input.subscriptionId) {
     const subscription = await deps.stripe.subscriptions.retrieve(input.subscriptionId)
+    const customer = subscription.customer
+    const customerId = typeof customer === "string" ? customer : (customer?.id ?? null)
+    if (await boundToLiveAccount(deps.supabase, input.subscriptionId, customerId)) return false
     if (!ENDED.has(subscription.status)) {
       // Recorded before the cancel: a retried webhook finds the subscription ended.
       await (
-        deps.recordRefund ?? ((id: string) => recordPostDeletionRefund(deps.supabase, "stripe", id))
-      )(input.subscriptionId)
+        deps.recordRefund ??
+        ((id: string, from: string) => recordPostDeletionRefund(deps.supabase, "stripe", id, from))
+      )(input.subscriptionId, deletedAt)
       await deps.stripe.subscriptions.cancel(input.subscriptionId, {
         prorate: false,
         invoice_now: false,

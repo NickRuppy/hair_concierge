@@ -6,11 +6,18 @@ import { cancelDeletedAccountStripeSubscription } from "../src/lib/stripe/delete
 const LEAD = "11111111-1111-4111-8111-111111111111"
 const ENROLLMENT = "22222222-2222-4222-8222-222222222222"
 
-function fakes(input: { anonymized: Record<string, boolean>; status: string }) {
+const DELETED_AT = "2026-09-27T10:00:00Z"
+
+function fakes(input: {
+  anonymized: Record<string, boolean>
+  status: string
+  live?: { billing?: boolean; profile?: boolean }
+}) {
   const reads: string[] = []
   const cancelled: unknown[] = []
   const reports: unknown[] = []
   const recorded: string[] = []
+  const recordedFrom: string[] = []
   const supabase = {
     from(table: string) {
       let id = ""
@@ -19,8 +26,12 @@ function fakes(input: { anonymized: Record<string, boolean>; status: string }) {
         eq: (_: string, value: string) => ((id = value), builder),
         maybeSingle: async () => {
           reads.push(`${table}:${id}`)
+          if (table === "billing_subscriptions")
+            return { data: input.live?.billing ? { id: "billing-1" } : null, error: null }
+          if (table === "profiles")
+            return { data: input.live?.profile ? { id: "user-live" } : null, error: null }
           return {
-            data: { anonymized_at: input.anonymized[id] ? "2026-09-27T10:00:00Z" : null },
+            data: { anonymized_at: input.anonymized[id] ? DELETED_AT : null },
             error: null,
           }
         },
@@ -30,7 +41,7 @@ function fakes(input: { anonymized: Record<string, boolean>; status: string }) {
   } as unknown as SupabaseClient
   const stripe = {
     subscriptions: {
-      retrieve: async () => ({ status: input.status }),
+      retrieve: async () => ({ status: input.status, customer: "cus_payer" }),
       cancel: async (id: string, params: unknown) => {
         // R-a: the full refund is recorded before the cancel.
         assert.deepEqual(recorded, [id])
@@ -46,7 +57,11 @@ function fakes(input: { anonymized: Record<string, boolean>; status: string }) {
     reports,
     recorded,
     report: (d: unknown) => void reports.push(d),
-    recordRefund: async (id: string) => void recorded.push(id),
+    recordedFrom,
+    recordRefund: async (id: string, from: string) => {
+      recorded.push(id)
+      recordedFrom.push(from)
+    },
   }
 }
 
@@ -66,6 +81,8 @@ test("a live subscription of a deleted account is cancelled at once and reported
     )
     assert.deepEqual(f.cancelled, [["sub_1", { prorate: false, invoice_now: false }]])
     assert.deepEqual(f.recorded, ["sub_1"])
+    // I-2: only payments from the deletion (anonymization) on are refunded.
+    assert.deepEqual(f.recordedFrom, [DELETED_AT])
     assert.deepEqual(f.reports, [{ provider: "stripe", eventType: "checkout.session.completed" }])
   }
 })
@@ -152,8 +169,30 @@ test("R-a: a failed refund record keeps the subscription live and the webhook re
   assert.deepEqual(calls, [
     [
       "account_deletion_record_post_deletion_refund",
-      { p_provider: "stripe", p_subscription_id: "sub_1" },
+      { p_provider: "stripe", p_subscription_id: "sub_1", p_payments_from: DELETED_AT },
     ],
   ])
   assert.deepEqual(f.cancelled, [])
+})
+
+test("I-2: a subscription bound to a live account is left to normal processing (no cancel, no refund)", async () => {
+  for (const live of [{ profile: true }, { billing: true }]) {
+    // e.g. the lead was anonymized only by an email match with a deleted account.
+    const f = fakes({ anonymized: { [LEAD]: true }, status: "active", live })
+    assert.equal(
+      await cancelDeletedAccountStripeSubscription(
+        {
+          eventType: "checkout.session.completed",
+          subscriptionId: "sub_1",
+          metadata: { lead_id: LEAD },
+        },
+        { supabase: f.supabase, stripe: f.stripe, report: f.report, recordRefund: f.recordRefund },
+      ),
+      false,
+      JSON.stringify(live),
+    )
+    assert.deepEqual(f.cancelled, [])
+    assert.deepEqual(f.recorded, [])
+    assert.deepEqual(f.reports, [])
+  }
 })

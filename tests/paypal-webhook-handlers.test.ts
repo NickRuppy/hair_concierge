@@ -821,6 +821,7 @@ test("BILLING.SUBSCRIPTION.CANCELLED acknowledges duplicate subscriptions withou
 })
 
 test("events for a deleted account's subscription write nothing; a live agreement is cancelled at once", async () => {
+  const deletedAt = pastIso()
   for (const [eventType, status, expectCancel] of [
     ["BILLING.SUBSCRIPTION.CANCELLED", "CANCELLED", false],
     ["BILLING.SUBSCRIPTION.EXPIRED", "EXPIRED", false],
@@ -843,13 +844,14 @@ test("events for a deleted account's subscription write nothing; a live agreemen
           user_id: null,
           expires_at: futureIso(),
           metadata: {},
-          anonymized_at: pastIso(),
+          anonymized_at: deletedAt,
         },
       ],
     })
     const cancelled: string[] = []
     const reports: unknown[] = []
     const refundsRecorded: string[] = []
+    const refundsFrom: string[] = []
     const result = await handlePayPalWebhookEvent(
       eventType === "PAYMENT.SALE.COMPLETED"
         ? paymentEvent(`WH-deleted-${eventType}`, eventType)
@@ -864,13 +866,17 @@ test("events for a deleted account's subscription write nothing; a live agreemen
           assert.deepEqual(refundsRecorded, [subscriptionId], eventType)
           cancelled.push(subscriptionId)
         },
-        recordPostDeletionRefund: async (subscriptionId) =>
-          void refundsRecorded.push(subscriptionId),
+        recordPostDeletionRefund: async (subscriptionId, paymentsFrom) => {
+          refundsRecorded.push(subscriptionId)
+          refundsFrom.push(paymentsFrom)
+        },
         reportDeletedAccountSubscription: (details) => void reports.push(details),
       },
     )
     assert.deepEqual(result, { handled: true }, eventType)
     assert.deepEqual(refundsRecorded, expectCancel ? ["I-active"] : [], eventType)
+    // I-2: only payments from the deletion (the intent's anonymization) on are refunded.
+    assert.deepEqual(refundsFrom, expectCancel ? [deletedAt] : [], eventType)
     assert.equal(billing.length, 0, eventType)
     assert.deepEqual(cancelled, expectCancel ? ["I-active"] : [], eventType)
     assert.deepEqual(reports, expectCancel ? [{ provider: "paypal", eventType }] : [], eventType)

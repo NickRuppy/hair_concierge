@@ -3,6 +3,7 @@ import type { PayPalPlan, PayPalSubscription } from "@/lib/paypal/subscription-s
 import type { PayPalTrialTransaction } from "@/lib/paypal/trial-runtime"
 import {
   AccountDeletionRefundManualError,
+  AccountDeletionRefundPendingError,
   type WebRefundDue,
   type WebRefundHooks,
   type WebRefundOutcome,
@@ -15,7 +16,11 @@ import {
  *   provider's own end time of the subscription (our immediate cancellation), so a retry days
  *   later refunds the same amount.
  * - `post_deletion` (R-a): a subscription that went live only after its account was deleted
- *   (checkout in flight) — every payment is refunded in full; the customer never had access.
+ *   (checkout in flight) — every payment made at/after the deletion (`paymentsFrom`) is
+ *   refunded in full; the customer never had access.
+ *
+ * A payment in scope that is still pending (PayPal PENDING, Stripe PaymentIntent processing)
+ * keeps the refund due: it settles only once every payment in scope is final.
  *
  * Never twice: provider idempotency keys derive from the stored request id + subscription
  * (+ payment); our own earlier refund is recognised on the provider (Stripe metadata, PayPal
@@ -89,6 +94,8 @@ type StripeInvoice = {
   id: string
   status: string | null
   amount_paid: number
+  created: number
+  status_transitions: { paid_at: number | null }
   lines: { data: { period: { start: number; end: number } }[] }
 }
 
@@ -100,16 +107,18 @@ export type StripeRefundApi = {
     retrieve(id: string): Promise<StripeInvoice>
     list(params: {
       subscription: string
-      status: "paid"
       limit: number
     }): Promise<{ data: StripeInvoice[]; has_more: boolean }>
   }
   invoicePayments: {
     list(params: {
       invoice: string
-      status: "paid"
+      status: "paid" | "open"
       limit: number
     }): Promise<{ data: { payment: { type: string; payment_intent?: Id } }[] }>
+  }
+  paymentIntents: {
+    retrieve(id: string): Promise<{ status: string }>
   }
   refunds: {
     list(params: {
@@ -154,6 +163,21 @@ async function stripePaymentIntent(stripe: StripeRefundApi, invoiceId: string) {
     .find(Boolean)
   if (!intent) throw new AccountDeletionRefundManualError("Stripe payment is not a PaymentIntent")
   return intent
+}
+
+/** m4: an open invoice whose payment is still processing (e.g. SEPA) may yet be paid. */
+async function stripeInvoiceProcessing(stripe: StripeRefundApi, invoiceId: string) {
+  const payments = await stripe.invoicePayments.list({
+    invoice: invoiceId,
+    status: "open",
+    limit: 10,
+  })
+  for (const entry of payments.data) {
+    const intent = entry.payment.type === "payment_intent" && idOf(entry.payment.payment_intent)
+    if (intent && (await stripe.paymentIntents.retrieve(intent)).status === "processing")
+      return true
+  }
+  return false
 }
 
 /** Refunds already on the PaymentIntent: ours (metadata) and in total (counting ones only). */
@@ -224,6 +248,8 @@ export async function refundStripeSubscriptionWith(
   const invoiceId = idOf(subscription.latest_invoice)
   if (!invoiceId) return NOTHING
   const invoice = await stripe.invoices.retrieve(invoiceId)
+  if (invoice.status === "open" && (await stripeInvoiceProcessing(stripe, invoiceId)))
+    throw new AccountDeletionRefundPendingError("Stripe payment is still processing")
   // A trial's €0 invoice, or an unpaid renewal: nothing prepaid.
   if (invoice.status !== "paid" || invoice.amount_paid <= 0) return NOTHING
   const period = invoice.lines.data.map((line) => line.period).sort((a, b) => b.end - a.end)[0]
@@ -249,16 +275,20 @@ async function refundAllStripePayments(
   refund: WebRefundDue,
   stripe: StripeRefundApi,
 ): Promise<WebRefundOutcome> {
-  const invoices = await stripe.invoices.list({
-    subscription: refund.subscriptionId,
-    status: "paid",
-    limit: 100,
-  })
+  const invoices = await stripe.invoices.list({ subscription: refund.subscriptionId, limit: 100 })
   if (invoices.has_more) throw new AccountDeletionRefundManualError("Too many Stripe invoices")
+  const from = paymentsFrom(refund)
   let refunded = 0
   let paymentRef: string | null = null
+  let pending = false
   for (const invoice of invoices.data) {
-    if (invoice.amount_paid <= 0) continue
+    if (invoice.status === "open") {
+      if (await stripeInvoiceProcessing(stripe, invoice.id)) pending = true
+      continue
+    }
+    const paidAt = (invoice.status_transitions.paid_at ?? invoice.created) * 1000
+    // I-2: only payments made at/after the deletion; earlier ones were not ours to take back.
+    if (invoice.status !== "paid" || invoice.amount_paid <= 0 || paidAt < from) continue
     const intent = await stripePaymentIntent(stripe, invoice.id)
     const existing = await stripeExistingRefunds(stripe, intent, refund)
     const remaining = invoice.amount_paid - existing.total
@@ -274,7 +304,16 @@ async function refundAllStripePayments(
     )
     refunded += remaining
   }
+  // Refunds made so far are recognised on the retry (metadata); settle once all are final.
+  if (pending) throw new AccountDeletionRefundPendingError("Stripe payment is still processing")
   return { refundedMinor: refunded, paymentRef }
+}
+
+function paymentsFrom(refund: WebRefundDue) {
+  const from = Date.parse(refund.paymentsFrom ?? "")
+  if (!Number.isFinite(from))
+    throw new AccountDeletionRefundManualError("Post-deletion refund without a deletion time")
+  return from
 }
 
 export type PayPalRefundApi = {
@@ -293,6 +332,8 @@ const PAYPAL_ENDED = new Set(["CANCELLED", "EXPIRED"])
 const PAYPAL_NEVER_BILLED = new Set(["APPROVAL_PENDING", "APPROVED"])
 /** Payments that settle a period; a refunded one means we (or support) refunded already. */
 const PAYPAL_SETTLED = new Set(["COMPLETED", "PARTIALLY_REFUNDED", "REFUNDED"])
+/** m4: may still complete; the refund waits until it is final. */
+const PAYPAL_PENDING = "PENDING"
 /** Day-after collection and PayPal's retries shift a payment after its period start. */
 const PAYPAL_PAYMENT_WINDOW_SLACK_DAYS = 10
 const DAY_MS = 86_400_000
@@ -327,7 +368,7 @@ export async function refundPayPalSubscriptionWith(
   const endedAt = Date.parse(subscription.status_update_time ?? "")
   if (!PAYPAL_ENDED.has(subscription.status ?? "") || !Number.isFinite(endedAt))
     throw new Error("PayPal subscription is not cancelled yet")
-  if (refund.kind === "post_deletion") return refundAllPayPalPayments(refund, subscription, paypal)
+  if (refund.kind === "post_deletion") return refundAllPayPalPayments(refund, paypal, hooks)
   if (subscription.status === "EXPIRED" || endedBeforeDeletion(endedAt, refund)) return NOTHING
   if (!subscription.plan_id)
     throw new AccountDeletionRefundManualError("PayPal subscription has no plan")
@@ -347,9 +388,15 @@ export async function refundPayPalSubscriptionWith(
       new Date(endedAt + 60_000).toISOString(),
     )
   )
-    .filter((tx) => PAYPAL_SETTLED.has(tx.status ?? "") && Number.isFinite(timeOf(tx)))
+    .filter(
+      (tx) =>
+        (PAYPAL_SETTLED.has(tx.status ?? "") || tx.status === PAYPAL_PENDING) &&
+        Number.isFinite(timeOf(tx)),
+    )
     .sort((a, b) => timeOf(b) - timeOf(a))
   const last = settled[0]
+  if (last?.status === PAYPAL_PENDING)
+    throw new AccountDeletionRefundPendingError("PayPal payment is still pending")
   // Trial without a completed payment: cancel only.
   if (!last?.id) return NOTHING
   if (last.status !== "COMPLETED")
@@ -392,33 +439,40 @@ async function refundPayPalPayment(
 
 async function refundAllPayPalPayments(
   refund: WebRefundDue,
-  subscription: PayPalSubscription,
   paypal: PayPalRefundApi,
+  hooks: WebRefundHooks,
 ): Promise<WebRefundOutcome> {
-  const startedAt = Date.parse(subscription.start_time ?? subscription.create_time ?? "")
-  const from = Number.isFinite(startedAt) ? startedAt - DAY_MS : Date.now() - 400 * DAY_MS
+  const from = paymentsFrom(refund)
   const transactions = await paypal.transactions(
     refund.subscriptionId,
-    new Date(from).toISOString(),
+    new Date(from - DAY_MS).toISOString(),
     new Date().toISOString(),
   )
   let refunded = 0
   let paymentRef: string | null = null
+  let pending = false
   for (const tx of transactions) {
-    if (!tx.id) continue
+    // I-2: only payments made at/after the deletion.
+    if (!tx.id || !(timeOf(tx) >= from)) continue
     // Fully refunded (by us on an earlier attempt, or by support): the payer has it back.
     if (tx.status === "REFUNDED") {
       refunded += paypalMinor(tx).minor
       paymentRef = tx.id
     } else if (tx.status === "PARTIALLY_REFUNDED") {
       throw new AccountDeletionRefundManualError("PayPal payment partially refunded")
+    } else if (tx.status === PAYPAL_PENDING) {
+      pending = true
     } else if (tx.status === "COMPLETED") {
       const paid = paypalMinor(tx)
+      // m3: every refunded payment is stored, so each of its refund webhooks is recognised.
+      await hooks.plan({ amountMinor: paid.minor, paymentRef: tx.id })
       refunded += (
         await refundPayPalPayment(paypal, refund, tx.id, paid.minor, paid.currency, true)
       ).refundedMinor
       paymentRef = tx.id
     }
   }
+  // Completed payments are refunded (REFUNDED on the retry); settle once none is pending.
+  if (pending) throw new AccountDeletionRefundPendingError("PayPal payment is still pending")
   return { refundedMinor: refunded, paymentRef }
 }

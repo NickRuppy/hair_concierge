@@ -58,6 +58,8 @@ export type WebRefundDue = {
   kind: "deletion" | "post_deletion"
   /** When the current request recorded it (M6). */
   recordedAt: string
+  /** post_deletion: only payments at/after this time (the account's deletion) are refunded. */
+  paymentsFrom: string | null
   attempts: number
   /** The refund last requested from the provider (recognises our own refund on a retry). */
   plannedMinor: number | null
@@ -70,6 +72,14 @@ export type WebRefundOutcome = { refundedMinor: number; paymentRef: string | nul
 export type WebRefundHooks = {
   /** Stores the refund about to be requested before the provider call. */
   plan(input: { amountMinor: number; paymentRef: string }): Promise<void>
+}
+
+/** A payment in scope is still pending: the refund stays due without counting an attempt. */
+export class AccountDeletionRefundPendingError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = "AccountDeletionRefundPendingError"
+  }
 }
 
 /** A provider refusal no retry can fix (disputed charge, unsupported payment): manual review. */
@@ -218,6 +228,7 @@ async function settleWebRefunds(
   })) as unknown as WebRefundDue[]
   let completed = 0
   let manual = 0
+  let waiting = 0
   for (const refund of due ?? []) {
     const key = { p_provider: refund.provider, p_subscription_id: refund.subscriptionId }
     let outcome: WebRefundOutcome | null = null
@@ -232,6 +243,11 @@ async function settleWebRefunds(
         },
       })
     } catch (error) {
+      // m4: settle only once every payment in scope is final; pending is not a failure.
+      if (error instanceof AccountDeletionRefundPendingError) {
+        waiting += 1
+        continue
+      }
       const permanent = error instanceof AccountDeletionRefundManualError
       const errorCode = `${refund.provider}_refund_failed`
       const recorded = await deps.rpc("account_deletion_web_refund_result", {
@@ -264,8 +280,8 @@ async function settleWebRefunds(
     if (!settled.error) completed += 1
   }
   const pending = (due ?? []).length
-  // Manual-review rows are settled for the cron (reported once), not failures.
-  return { pending, completed, manual, failed: pending - completed - manual }
+  // Manual-review rows are settled for the cron (reported once), waiting ones retried; neither fails.
+  return { pending, completed, manual, waiting, failed: pending - completed - manual - waiting }
 }
 
 async function pendingCleanup(

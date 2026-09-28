@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import {
   AccountDeletionRefundManualError,
+  AccountDeletionRefundPendingError,
   type WebRefundDue,
   type WebRefundHooks,
 } from "../src/lib/account-deletion/service"
@@ -27,6 +28,7 @@ const due = (overrides: Partial<WebRefundDue> = {}): WebRefundDue => ({
   requestId: REQUEST,
   kind: "deletion",
   recordedAt: new Date(10 * DAY).toISOString(),
+  paymentsFrom: null,
   attempts: 0,
   plannedMinor: null,
   plannedPaymentRef: null,
@@ -87,7 +89,9 @@ function fakeStripe(overrides: {
   endedAt?: number | null
   missing?: boolean
   invoice?: { status: string; amount_paid: number }
-  invoices?: { id: string; amount_paid: number }[]
+  /** paidDay: day the invoice was paid (status paid) — or processing: an open invoice. */
+  invoices?: { id: string; amount_paid: number; paidDay?: number; processing?: boolean }[]
+  processingLatest?: boolean
   refunds?: Record<string, FakeStripeRefund[]>
   paymentType?: string
   createError?: { code: string }
@@ -110,13 +114,20 @@ function fakeStripe(overrides: {
       retrieve: async () => ({
         id: "in_1",
         ...(overrides.invoice ?? { status: "paid", amount_paid: 1499 }),
+        created: 0,
+        status_transitions: { paid_at: 0 },
         lines: { data: [{ period: { start: 0, end: 30 * DAY_S } }] },
       }),
       list: async () => ({
         has_more: false,
         data: (overrides.invoices ?? []).map((invoice) => ({
-          ...invoice,
-          status: "paid",
+          id: invoice.id,
+          amount_paid: invoice.processing ? 0 : invoice.amount_paid,
+          status: invoice.processing ? "open" : "paid",
+          created: (invoice.paidDay ?? 20) * DAY_S - 3600,
+          status_transitions: {
+            paid_at: invoice.processing ? null : (invoice.paidDay ?? 20) * DAY_S,
+          },
           lines: { data: [] },
         })),
       }),
@@ -131,6 +142,15 @@ function fakeStripe(overrides: {
             },
           },
         ],
+      }),
+    },
+    paymentIntents: {
+      retrieve: async (id) => ({
+        status:
+          (id === "pi_1" && overrides.processingLatest) ||
+          overrides.invoices?.some((i) => i.processing && `pi_${i.id.replace("in_", "")}` === id)
+            ? "processing"
+            : "requires_payment_method",
       }),
     },
     refunds: {
@@ -230,15 +250,21 @@ test("Stripe: not yet cancelled retries; disputed charges and non-PaymentIntent 
 test("Stripe post-deletion (R-a): every paid invoice refunded in full, per-payment keys, never twice", async () => {
   const f = fakeStripe({
     invoices: [
-      { id: "in_a", amount_paid: 3999 },
-      { id: "in_b", amount_paid: 0 },
-      { id: "in_c", amount_paid: 499 },
+      { id: "in_old", amount_paid: 1499, paidDay: 12 },
+      { id: "in_a", amount_paid: 3999, paidDay: 16 },
+      { id: "in_b", amount_paid: 0, paidDay: 16 },
+      { id: "in_c", amount_paid: 499, paidDay: 18 },
     ],
     refunds: {
       pi_c: [{ amount: 100, status: "succeeded", metadata: {} }],
     },
   })
-  const post = due({ kind: "post_deletion", recordedAt: new Date(20 * DAY).toISOString() })
+  // Deleted on day 15: the payment of day 12 was before the deletion and is never refunded (I-2).
+  const post = due({
+    kind: "post_deletion",
+    recordedAt: new Date(20 * DAY).toISOString(),
+    paymentsFrom: new Date(15 * DAY).toISOString(),
+  })
   assert.deepEqual(await refundStripeSubscriptionWith(post, f.api), {
     refundedMinor: 3999 + 399,
     paymentRef: "pi_c",
@@ -257,6 +283,31 @@ test("Stripe post-deletion (R-a): every paid invoice refunded in full, per-payme
   // Retry: ours are recognised, nothing is created again.
   assert.equal((await refundStripeSubscriptionWith(post, f.api)).refundedMinor, 3999 + 399)
   assert.equal(f.created.length, 2)
+  // Without a deletion time the scope is unknown: manual review, never a guess.
+  await assert.rejects(
+    refundStripeSubscriptionWith({ ...post, paymentsFrom: null }, f.api),
+    AccountDeletionRefundManualError,
+  )
+})
+
+test("Stripe: a processing payment keeps the refund due until it is final (m4)", async () => {
+  const latest = fakeStripe({ invoice: { status: "open", amount_paid: 0 }, processingLatest: true })
+  await assert.rejects(
+    refundStripeSubscriptionWith(due(), latest.api),
+    AccountDeletionRefundPendingError,
+  )
+  const failedLatest = fakeStripe({ invoice: { status: "open", amount_paid: 0 } })
+  assert.deepEqual(await refundStripeSubscriptionWith(due(), failedLatest.api), NOTHING)
+
+  const post = due({ kind: "post_deletion", paymentsFrom: new Date(15 * DAY).toISOString() })
+  const f = fakeStripe({
+    invoices: [
+      { id: "in_a", amount_paid: 3999, paidDay: 16 },
+      { id: "in_sepa", amount_paid: 499, paidDay: 17, processing: true },
+    ],
+  })
+  await assert.rejects(refundStripeSubscriptionWith(post, f.api), AccountDeletionRefundPendingError)
+  assert.equal(f.created.length, 1, "the final payment is refunded already")
 })
 
 function fakePayPal(overrides: {
@@ -392,32 +443,51 @@ test("PayPal deletion: never billed, unknown, expired or already refunded resolv
   )
 })
 
-test("PayPal post-deletion (R-a): every completed payment refunded in full with per-payment request ids", async () => {
+test("PayPal post-deletion (R-a): payments from the deletion on refunded in full, each planned (m3)", async () => {
   const f = fakePayPal({
     transactions: [
-      { id: "TX-1", status: "COMPLETED", time: "2026-09-01T00:00:00Z", value: "39.99" },
-      { id: "TX-0", status: "REFUNDED", time: "2026-08-01T00:00:00Z", value: "4.99" },
-      { id: "TX-D", status: "DECLINED", time: "2026-08-15T00:00:00Z" },
+      { id: "TX-2", status: "COMPLETED", time: "2026-09-20T00:00:00Z", value: "4.99" },
+      { id: "TX-1", status: "COMPLETED", time: "2026-09-18T00:00:00Z", value: "39.99" },
+      { id: "TX-0", status: "REFUNDED", time: "2026-09-17T00:00:00Z", value: "4.99" },
+      { id: "TX-D", status: "DECLINED", time: "2026-09-17T12:00:00Z" },
+      // Paid before the deletion (Sept 16): never refunded by R-a (I-2).
+      { id: "TX-OLD", status: "COMPLETED", time: "2026-09-10T00:00:00Z", value: "39.99" },
     ],
   })
-  const post = { ...PAYPAL_DUE, kind: "post_deletion" as const }
+  const post = {
+    ...PAYPAL_DUE,
+    kind: "post_deletion" as const,
+    paymentsFrom: "2026-09-16T00:00:00Z",
+  }
   const h = hooks()
   assert.deepEqual(await refundPayPalSubscriptionWith(post, f.api, h.value), {
-    refundedMinor: 3999 + 499,
+    refundedMinor: 499 + 3999 + 499,
     paymentRef: "TX-0",
   })
   assert.deepEqual(f.refunds, [
+    [
+      "TX-2",
+      { value: "4.99", currency_code: "EUR" },
+      `account-deletion-refund-${REQUEST}-I-HANNA-TX-2`,
+    ],
     [
       "TX-1",
       { value: "39.99", currency_code: "EUR" },
       `account-deletion-refund-${REQUEST}-I-HANNA-TX-1`,
     ],
   ])
-  assert.ok(f.windows[0][0] <= "2026-07-01T00:00:00Z", "from the agreement start")
+  // m3: each refunded payment is stored before its call (webhooks for all are recognised).
+  assert.deepEqual(h.plans, [
+    { amountMinor: 499, paymentRef: "TX-2" },
+    { amountMinor: 3999, paymentRef: "TX-1" },
+  ])
+  assert.ok(f.windows[0][0] < "2026-09-16T00:00:00Z", "the window starts at the deletion")
   await assert.rejects(
     refundPayPalSubscriptionWith(
       post,
-      fakePayPal({ transactions: [{ ...SEPT, status: "PARTIALLY_REFUNDED" }] }).api,
+      fakePayPal({
+        transactions: [{ ...SEPT, time: "2026-09-18T00:00:00Z", status: "PARTIALLY_REFUNDED" }],
+      }).api,
       h.value,
     ),
     AccountDeletionRefundManualError,
@@ -431,6 +501,33 @@ test("PayPal post-deletion (R-a): every completed payment refunded in full with 
     ),
     NOTHING,
   )
+})
+
+test("PayPal: a pending payment keeps the refund due until it is final (m4)", async () => {
+  const pendingLatest = fakePayPal({
+    transactions: [SEPT, { id: "TX-OCT", status: "PENDING", time: "2026-09-15T00:00:00Z" }],
+  })
+  await assert.rejects(
+    refundPayPalSubscriptionWith(PAYPAL_DUE, pendingLatest.api, hooks().value),
+    AccountDeletionRefundPendingError,
+  )
+  assert.deepEqual(pendingLatest.refunds, [])
+  const post = {
+    ...PAYPAL_DUE,
+    kind: "post_deletion" as const,
+    paymentsFrom: "2026-09-16T00:00:00Z",
+  }
+  const mixed = fakePayPal({
+    transactions: [
+      { id: "TX-1", status: "COMPLETED", time: "2026-09-18T00:00:00Z" },
+      { id: "TX-2", status: "PENDING", time: "2026-09-19T00:00:00Z" },
+    ],
+  })
+  await assert.rejects(
+    refundPayPalSubscriptionWith(post, mixed.api, hooks().value),
+    AccountDeletionRefundPendingError,
+  )
+  assert.equal(mixed.refunds.length, 1, "the completed payment is refunded already")
 })
 
 test("PayPal refund call: v1 sale refund first, v2 capture only on 404, request id on every call (I3)", async () => {

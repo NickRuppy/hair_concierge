@@ -164,7 +164,14 @@ test("the migration has a unique version that sorts after every migration", () =
   // Only the iOS paywall branch's migrations may come later.
   assert.deepEqual(
     versions.filter((version) => version > own).sort(),
-    ["20260927133426", "20260927172739", "20260927172741", "20260928071305", "20260928074426"],
+    [
+      "20260927133426",
+      "20260927172739",
+      "20260927172741",
+      "20260928071305",
+      "20260928074426",
+      "20260928080932",
+    ],
     "must sort after every migration but the iOS paywall's",
   )
 })

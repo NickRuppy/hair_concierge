@@ -11,6 +11,7 @@ import {
   type AccountDeletionState,
   type WebRefundDue,
   AccountDeletionRefundManualError,
+  AccountDeletionRefundPendingError,
   retryAccountDeletionWebRefunds,
   settleAccountDeletionWebRefunds,
 } from "../src/lib/account-deletion/service"
@@ -25,6 +26,8 @@ const REQUEST = "33333333-3333-4333-8333-333333333333"
 
 type Refund = {
   requestId: string
+  kind: "deletion" | "post_deletion"
+  paymentsFrom: string | null
   state: "recorded" | "due" | "done" | "failed_manual"
   attempts: number
   refundedMinor: number | null
@@ -88,6 +91,8 @@ function fakeDatabase() {
           if (!existing)
             refunds.set(`${s.provider}:${s.id}`, {
               requestId,
+              kind: "deletion",
+              paymentsFrom: null,
               state: "recorded",
               attempts: 0,
               refundedMinor: null,
@@ -118,8 +123,9 @@ function fakeDatabase() {
               provider: key.split(":")[0],
               subscriptionId: key.split(":")[1],
               requestId: r.requestId,
-              kind: "deletion",
+              kind: r.kind,
               recordedAt: "2026-09-28T10:00:00Z",
+              paymentsFrom: r.paymentsFrom,
               attempts: r.attempts,
               plannedMinor: r.plannedMinor,
               plannedPaymentRef: r.plannedPaymentRef,
@@ -136,6 +142,31 @@ function fakeDatabase() {
           if (args.p_manual || r.attempts >= 10) r.state = "failed_manual"
         }
         return ok({ state: r.state, attempts: r.attempts })
+      }
+      case "account_deletion_record_post_deletion_refund": {
+        const key = `${args.p_provider}:${args.p_subscription_id}`
+        const existing = refunds.get(key)
+        // I-1: a deletion row that paid nothing out is taken over.
+        if (
+          existing &&
+          !(
+            existing.kind === "deletion" &&
+            existing.state === "done" &&
+            existing.refundedMinor === 0
+          )
+        )
+          return ok(false)
+        refunds.set(key, {
+          requestId: crypto.randomUUID(),
+          kind: "post_deletion",
+          paymentsFrom: args.p_payments_from as string,
+          state: "due",
+          attempts: 0,
+          refundedMinor: null,
+          plannedMinor: null,
+          plannedPaymentRef: null,
+        })
+        return ok(true)
       }
       case "account_deletion_web_refund_plan": {
         const r = refunds.get(`${args.p_provider}:${args.p_subscription_id}`)
@@ -264,6 +295,7 @@ test("a web cancellation failure keeps the account and the state requested; the 
     pending: 1,
     completed: 1,
     manual: 0,
+    waiting: 0,
     failed: 0,
   })
   assert.deepEqual(
@@ -518,6 +550,7 @@ test("a refund failure never blocks the deletion; the cron retries once done and
     pending: 1,
     completed: 1,
     manual: 0,
+    waiting: 0,
     failed: 0,
   })
   assert.equal(db.refunds.get("paypal:I-HANNA")!.refundedMinor, 750)
@@ -526,6 +559,7 @@ test("a refund failure never blocks the deletion; the cron retries once done and
     pending: 0,
     completed: 0,
     manual: 0,
+    waiting: 0,
     failed: 0,
   })
   await requestAccountDeletion({ userId: USER, requestId: REQUEST }, working.value)
@@ -543,9 +577,9 @@ test("the 10th failure or a permanent provider error ends in failed_manual with 
   await requestAccountDeletion({ userId: USER, requestId: REQUEST }, failing.value)
   const runs = []
   for (let run = 0; run < 11; run++) runs.push(await retryAccountDeletionWebRefunds(failing.value))
-  assert.deepEqual(runs[8], { pending: 1, completed: 0, manual: 0, failed: 1 })
-  assert.deepEqual(runs[9], { pending: 1, completed: 0, manual: 1, failed: 0 })
-  assert.deepEqual(runs[10], { pending: 0, completed: 0, manual: 0, failed: 0 })
+  assert.deepEqual(runs[8], { pending: 1, completed: 0, manual: 0, waiting: 0, failed: 1 })
+  assert.deepEqual(runs[9], { pending: 1, completed: 0, manual: 1, waiting: 0, failed: 0 })
+  assert.deepEqual(runs[10], { pending: 0, completed: 0, manual: 0, waiting: 0, failed: 0 })
   assert.equal(db.refunds.get("paypal:I-HANNA")!.state, "failed_manual")
   assert.deepEqual(
     failing.log.refundReports.filter((r) => r.manual),
@@ -564,6 +598,7 @@ test("the 10th failure or a permanent provider error ends in failed_manual with 
     pending: 1,
     completed: 0,
     manual: 1,
+    waiting: 0,
     failed: 0,
   })
   assert.deepEqual(permanent.log.refundReports, [
@@ -652,4 +687,69 @@ test("the refund Sentry report is distinct and carries no ids", () => {
     manual: false,
   })
   assert.equal(captured[1].tags["account_deletion.error_code"], "unknown")
+})
+
+test("I-1: an agreement never billed at deletion (done, 0) is taken over when it activates later and refunded in full", async () => {
+  const db = fakeDatabase()
+  const kinds: string[] = []
+  const neverBilled = deps(db, {
+    refundWebSubscription: async (refund) => {
+      kinds.push(refund.kind)
+      return refund.kind === "deletion"
+        ? { refundedMinor: 0, paymentRef: null }
+        : { refundedMinor: 3999, paymentRef: "TX-1" }
+    },
+  })
+  await requestAccountDeletion({ userId: USER, requestId: REQUEST }, neverBilled.value)
+  await settleAccountDeletionWebRefunds(neverBilled.value, REQUEST)
+  assert.equal(db.refunds.get("paypal:I-HANNA")!.state, "done")
+  assert.equal(db.refunds.get("paypal:I-HANNA")!.refundedMinor, 0)
+  // The payer approves afterwards; the activation webhook records the R-a refund (takeover).
+  const recorded = await db.rpc("account_deletion_record_post_deletion_refund", {
+    p_provider: "paypal",
+    p_subscription_id: "I-HANNA",
+    p_payments_from: "2026-09-28T10:00:00Z",
+  })
+  assert.equal(recorded.data, true)
+  assert.deepEqual(await retryAccountDeletionWebRefunds(neverBilled.value), {
+    pending: 1,
+    completed: 1,
+    manual: 0,
+    waiting: 0,
+    failed: 0,
+  })
+  assert.deepEqual(kinds, ["deletion", "post_deletion"])
+  assert.equal(db.refunds.get("paypal:I-HANNA")!.refundedMinor, 3999)
+  // Paid out once: a further record never reopens it.
+  const again = await db.rpc("account_deletion_record_post_deletion_refund", {
+    p_provider: "paypal",
+    p_subscription_id: "I-HANNA",
+    p_payments_from: "2026-09-28T10:00:00Z",
+  })
+  assert.equal(again.data, false)
+})
+
+test("m4: a pending payment keeps the refund due without counting an attempt", async () => {
+  const db = fakeDatabase()
+  let pending = true
+  const d = deps(db, {
+    refundWebSubscription: async () => {
+      if (pending) throw new AccountDeletionRefundPendingError("PayPal payment is still pending")
+      return { refundedMinor: 750, paymentRef: "PAY-1" }
+    },
+  })
+  await requestAccountDeletion({ userId: USER, requestId: REQUEST }, d.value)
+  for (let run = 0; run < 12; run++)
+    assert.deepEqual(await retryAccountDeletionWebRefunds(d.value), {
+      pending: 1,
+      completed: 0,
+      manual: 0,
+      waiting: 1,
+      failed: 0,
+    })
+  assert.equal(db.refunds.get("paypal:I-HANNA")!.attempts, 0)
+  assert.deepEqual(d.log.refundReports, [])
+  pending = false
+  assert.equal((await retryAccountDeletionWebRefunds(d.value)).completed, 1)
+  assert.equal(db.refunds.get("paypal:I-HANNA")!.state, "done")
 })

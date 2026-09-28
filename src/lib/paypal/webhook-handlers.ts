@@ -146,7 +146,7 @@ export interface PayPalWebhookDeps
   /** Test seam; production reports to Sentry (provider + event type only). */
   reportDeletedAccountSubscription?: typeof reportDeletedAccountSubscriptionCancelled
   /** Test seam: records a post-deletion subscription for its full refund (R-a). */
-  recordPostDeletionRefund?: (subscriptionId: string) => Promise<void>
+  recordPostDeletionRefund?: (subscriptionId: string, paymentsFrom: string) => Promise<void>
   /** Test seam: is this a subscription (or refunded payment) an account deletion cancelled? */
   isAccountDeletionWebRefund?: (input: {
     subscriptionId: string | null
@@ -432,10 +432,11 @@ async function acknowledgeDeletedAccountSubscription(
   if (subscription.status === "ACTIVE" || subscription.status === "SUSPENDED") {
     // R-a: full refund of its payments (the customer never had access), recorded before the
     // cancel so a retried delivery (agreement then CANCELLED) cannot miss it.
+    // Only payments from the deletion (the intent's anonymization) on are refunded (I-2).
     await (
       deps.recordPostDeletionRefund ??
-      ((id: string) => recordPostDeletionRefund(deps.supabase, "paypal", id))
-    )(subscription.id)
+      ((id: string, from: string) => recordPostDeletionRefund(deps.supabase, "paypal", id, from))
+    )(subscription.id, intent.anonymized_at)
     const cancel = deps.cancelPayPalSubscription ?? cancelPayPalSubscriptionForWebhook
     await cancel(subscription.id, "Chaarlie-Konto gelöscht")
     ;(deps.reportDeletedAccountSubscription ?? reportDeletedAccountSubscriptionCancelled)({

@@ -34,6 +34,8 @@ type Dependencies = {
     failed: number
     /** Ended in manual review this run (reported once; not a failure). */
     manual?: number
+    /** A payment in scope is still pending; retried next run (not a failure). */
+    waiting?: number
   }>
   purge: () => Promise<PurgeResult>
   reportPurgeFailure?: typeof reportAccountDeletionPurgeFailure

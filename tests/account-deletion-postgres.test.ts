@@ -555,7 +555,7 @@ test(
           'public.account_deletion_record_web_subscriptions(uuid,jsonb)', 'public.account_deletion_due_web_refunds(integer,uuid)',
           'public.account_deletion_web_refund_result(text,text,integer,text,text,boolean)',
           'public.account_deletion_web_refund_plan(text,text,integer,text)',
-          'public.account_deletion_record_post_deletion_refund(text,text)',
+          'public.account_deletion_record_post_deletion_refund(text,text,timestamptz)',
           'public.account_deletion_web_refund_known(text,text,text)',
           'private.delete_account(uuid,uuid)', 'private.purge_anonymized_records()']) f`),
       "f",
@@ -678,7 +678,7 @@ test(
     )
     // The 10th failure ends in manual review without a permanent flag.
     await service(
-      `SELECT public.account_deletion_record_post_deletion_refund('stripe', 'sub_post_a')`,
+      `SELECT public.account_deletion_record_post_deletion_refund('stripe', 'sub_post_a', now())`,
     )
     for (let attempt = 1; attempt <= 10; attempt++)
       assert.equal(
@@ -689,8 +689,8 @@ test(
     // R-a shares the key: a subscription with a refund row is never recorded twice.
     assert.equal(
       await service(
-        `SELECT public.account_deletion_record_post_deletion_refund('stripe', 'sub_refund_a')::text || ','
-          || public.account_deletion_record_post_deletion_refund('stripe', 'sub_post_a')::text`,
+        `SELECT public.account_deletion_record_post_deletion_refund('stripe', 'sub_refund_a', now())::text || ','
+          || public.account_deletion_record_post_deletion_refund('stripe', 'sub_post_a', now())::text`,
       ),
       "false,false",
     )
@@ -1010,6 +1010,42 @@ test(
     )
     await service(
       `SELECT public.account_deletion_web_refund_result('stripe', 'sub_orphan_e', 0, NULL, NULL)`,
+    )
+    // I-1: settled with nothing paid out (never billed at deletion) → a later R-a record takes it
+    // over with the deletion time as its payment scope; once paid out, never again.
+    await assert.rejects(
+      service(
+        `SELECT public.account_deletion_record_post_deletion_refund('stripe', 'sub_orphan_e', NULL)`,
+      ),
+      /payments_from_required/,
+    )
+    assert.equal(
+      await service(`SELECT public.account_deletion_record_post_deletion_refund('stripe', 'sub_orphan_e',
+        '2026-09-27T10:00:00Z')`),
+      "t",
+    )
+    const takenOver = JSON.parse(
+      await service(`SELECT public.account_deletion_due_web_refunds(20, NULL)`),
+    ).find((r: Record<string, unknown>) => r.subscriptionId === "sub_orphan_e")
+    assert.equal(takenOver.kind, "post_deletion")
+    assert.equal(Date.parse(takenOver.paymentsFrom), Date.parse("2026-09-27T10:00:00Z"))
+    assert.notEqual(takenOver.requestId, REQ_E, "a fresh idempotency source")
+    // m3: every payment of a multi-payment refund is recognised by its webhooks.
+    await service(`SELECT public.account_deletion_web_refund_plan('stripe', 'sub_orphan_e', 3999, 'pi_e1');
+      SELECT public.account_deletion_web_refund_plan('stripe', 'sub_orphan_e', 499, 'pi_e2')`)
+    assert.equal(
+      await service(`SELECT public.account_deletion_web_refund_known('stripe', NULL, 'pi_e1')::text || ','
+        || public.account_deletion_web_refund_known('stripe', NULL, 'pi_e2')::text`),
+      "true,true",
+    )
+    await service(
+      `SELECT public.account_deletion_web_refund_result('stripe', 'sub_orphan_e', 4498, 'pi_e2', NULL)`,
+    )
+    assert.equal(
+      await service(
+        `SELECT public.account_deletion_record_post_deletion_refund('stripe', 'sub_orphan_e', now())`,
+      ),
+      "f",
     )
     assert.deepEqual(
       JSON.parse(await service(`SELECT public.account_deletion_pending_cleanup(20, '${REQ_E}')`)),
