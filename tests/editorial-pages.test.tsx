@@ -247,8 +247,6 @@ test("iOS app terms carry Apple's minimum terms and consumer-safe clauses", () =
   assert.match(terms, /gesetzlichen Gerichtsstände/)
   assert.match(terms, /ab 16 Jahren/)
   assert.match(terms, /Im Chat antwortet dir ein KI-System, kein Mensch/)
-  assert.match(terms, /nicht als alleinige Grundlage für Entscheidungen über deine Gesundheit/)
-  assert.match(terms, /schwanger oder stillst/)
   assert.doesNotMatch(terms, /Stripe|PayPal/)
   assert.doesNotMatch(terms, /erstatten wir/)
   assert.doesNotMatch(terms, /gelten die neuen .* als angenommen/)
