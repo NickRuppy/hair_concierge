@@ -917,9 +917,11 @@ test("cockpit: two products in one step, each with its own radio group, „Wegla
     `decision-${COND}:${ids.itemCond}`,
     `decision-${LEAVE}:-`,
   ])
-  // The step header once, the entries under it.
-  assert.equal(markup.split(">Hauptreinigung<").length - 1, 1)
-  assert.equal(markup.split(">Weglassen<").length - 1, 2)
+  // Runsheet (consult-runsheet T3): entries are filed per product into the buckets, each
+  // carrying its step anchor — the step's role label once per entry of the step.
+  assert.equal(markup.split(">Hauptreinigung<").length - 1, 2)
+  // „Weglassen" is offered on the two shampoo entries only (the bucket heading aside).
+  assert.equal(markup.split('value="drop"').length - 1, 2)
   assert.ok(markup.includes("3–4× pro Woche"))
   assert.ok(markup.includes("2× pro Woche"))
   // Her kept shampoo A is checked; B is undecided — independent selections.
@@ -931,7 +933,8 @@ test("cockpit: two products in one step, each with its own radio group, „Wegla
 
 test("cockpit: a single-product step shows no „Weglassen“ and no frequency line", () => {
   const markup = renderCockpit(modelOf(SINGLE_ITEMS, SINGLE_DECISIONS))
-  assert.ok(!markup.includes("Weglassen"))
+  // No „Weglassen" choice (the runsheet's bucket heading is not one).
+  assert.ok(!markup.includes('value="drop"'))
   assert.ok(!markup.includes("2× pro Woche"))
 })
 

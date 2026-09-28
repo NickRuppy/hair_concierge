@@ -681,7 +681,7 @@ async function renderPage(model: DiscoveryCockpitModel, intake = submittedIntake
   )
 }
 
-test("page: „Kategorie offen“ in the list with type + usage selects, in the summary, and blocking finalize", async () => {
+test("page: „Kategorie offen“ in the list with type + usage selects, in Klären, and blocking finalize", async () => {
   const markup = await renderPage(
     modelOf([
       item({ id: ids.item, category: "mask", productType: "conditioner" }),
@@ -703,10 +703,12 @@ test("page: „Kategorie offen“ in the list with type + usage selects, in the 
   // The moved conditioner reads with both answers and can be corrected.
   assert.ok(markup.includes("Benutzt als Maske · Produkt: Conditioner"))
   assert.ok(markup.includes("Kategorie ändern"))
-  // Summary + finalize block.
-  assert.ok(
-    markup.includes("Kategorie offen: Balea Wunderpflege — oben festlegen, dann finalisieren."),
-  )
+  // The Klären banner names it (consult-runsheet T4 c: once, not again in the footer) and
+  // the finalize bar blocks.
+  const klaeren = markup.slice(markup.indexOf(">Klären</p>"), markup.indexOf(">Behalten</h3>"))
+  assert.ok(klaeren.includes("Balea Wunderpflege"))
+  assert.ok(klaeren.includes("Kategorie offen"))
+  assert.ok(!markup.includes("Kategorie offen: Balea Wunderpflege"))
   assert.ok(markup.includes("Erst Kategorie festlegen — 1 Produkt mit offener Kategorie."))
 })
 
