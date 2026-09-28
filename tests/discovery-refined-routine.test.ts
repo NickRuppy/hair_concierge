@@ -783,3 +783,38 @@ test("without any product line every label is exactly the brand + name label", (
   })
   assert.equal(routine.steps[0]!.recommendationLabel, "Marke A Ideal pre_wash_fibre_treatment")
 })
+
+// --- verdict-layer fix wave (P1): prices never move the fingerprint --------------------------
+
+test("sourceHash ignores the recommendation's commerce (price) but follows its identity", () => {
+  const oil = decision({ category: "oil", roles: OIL_ROLES })
+  const compose = (preview: Stage1ProductExampleRolePreview) =>
+    composeDiscoveryRefinedRoutine({
+      steps: buildDiscoveryIdealSteps(snapshotOf([oil]), [preview]),
+      items: [],
+      decisions: [],
+      swapProducts: [],
+    })
+  const base = recommendationPreview("oil", "pre_wash_fibre_treatment", "ideal-1")
+  if (base.kind !== "recommendation") throw new Error("fixture")
+  const priced = (priceEur: number, priceLabel: string) =>
+    compose({
+      ...base,
+      commerce: {
+        ...base.commerce,
+        priceEur,
+        priceLabel,
+        purchaseLinkStatus: "available",
+        availabilityLabel: "Aktuell verfügbar",
+        productUrl: "https://shop.test/p",
+      },
+    })
+  const unpriced = compose(base)
+  assert.equal(unpriced.steps[0]!.outcome, "ideal")
+  // A price (or availability/link) change is not a new document.
+  assert.equal(priced(2.45, "2,45 €").sourceHash, priced(3.95, "3,95 €").sourceHash)
+  assert.equal(unpriced.sourceHash, priced(2.45, "2,45 €").sourceHash)
+  // A different recommended product is.
+  assert.notEqual(unpriced.sourceHash, compose({ ...base, productId: "ideal-2" }).sourceHash)
+  assert.notEqual(unpriced.sourceHash, compose({ ...base, productName: "Anderes Öl" }).sourceHash)
+})

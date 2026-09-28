@@ -17,12 +17,14 @@ export {
   idealCadenceBand,
   PAUSED_CADENCE_PREFIX,
   runsheetEntryInHerWeek,
+  runsheetWashAnchor,
   runsheetWashFrequency,
   type FrequencyDelta,
   type FrequencyDeltaStatus,
   type IdealCadenceLabel,
   type IdealCadenceRule,
   type WashAllowedRange,
+  type WashAnchor,
   type WeeklyBand,
 } from "./frequency"
 export {

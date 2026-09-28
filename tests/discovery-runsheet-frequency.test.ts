@@ -9,6 +9,7 @@ import {
   IDEAL_CADENCE_RULES,
   idealCadenceBand,
   runsheetEntryInHerWeek,
+  runsheetWashAnchor,
   runsheetWashFrequency,
   type FrequencyDelta,
 } from "../src/lib/discovery/runsheet"
@@ -365,4 +366,95 @@ test("in her week: kept (with intake row) and undecided count; dropped, swapped,
   assert.equal(entry("kept", null), false)
   assert.equal(entry("kept", "item-1", null), false)
   assert.equal(entry("undecided", "item-1", null), false)
+})
+
+// --- fix wave (P2): the wash anchor is an honest range over her shampoos -------------------
+
+function shampooEntry(
+  ownedFrequency: string | null,
+  outcome: "kept" | "undecided" | "dropped" | "swapped" = "undecided",
+  category = "shampoo",
+) {
+  return {
+    category,
+    outcome,
+    intakeItemId: "item",
+    ownedLabel: "Shampoo",
+    ownedFrequency,
+  } as Parameters<typeof runsheetWashAnchor>[0][number]
+}
+
+test("wash anchor: one shampoo → both ends are its own band (unchanged behaviour)", () => {
+  const anchor = runsheetWashAnchor([shampooEntry("weekly_3_4x")])
+  assert.deepEqual(anchor, { single: { min: 3, max: 4 }, combined: { min: 3, max: 4 } })
+  for (const [label, frequency] of [
+    ["nach jeder Haarwäsche", "weekly_1x"],
+    ["nach jeder Haarwäsche", "weekly_3_4x"],
+    ["jede 3. Haarwäsche", "weekly_1x"],
+    ["1× pro Woche", "weekly_2x"],
+  ] as const) {
+    assert.deepEqual(
+      deriveFrequencyDelta({ cadenceLabel: label, frequency, washFrequency: anchor }),
+      delta(label, frequency, "weekly_3_4x"),
+      label,
+    )
+  }
+})
+
+test("wash anchor: two shampoos → [most frequent one, sum]; dropped/swapped/other categories ignored", () => {
+  assert.deepEqual(
+    runsheetWashAnchor([
+      shampooEntry("weekly_1x"),
+      shampooEntry("weekly_1x", "kept"),
+      shampooEntry("daily_1x", "dropped"),
+      shampooEntry("daily_1x", "swapped"),
+      shampooEntry("daily_1x", "undecided", "conditioner"),
+    ]),
+    { single: { min: 1, max: 1 }, combined: { min: 2, max: 2 } },
+  )
+  assert.deepEqual(runsheetWashAnchor([shampooEntry("weekly_1x"), shampooEntry("weekly_3_4x")]), {
+    single: { min: 3, max: 4 },
+    combined: { min: 4, max: 5 },
+  })
+})
+
+test("wash anchor: no in-week shampoo, or one without a known frequency → no anchor", () => {
+  assert.equal(runsheetWashAnchor([]), null)
+  assert.equal(runsheetWashAnchor([shampooEntry("weekly_1x", "dropped")]), null)
+  assert.equal(runsheetWashAnchor([shampooEntry("weekly_1x"), shampooEntry("unknown")]), null)
+  assert.equal(runsheetWashAnchor([shampooEntry("weekly_1x"), shampooEntry(null)]), null)
+})
+
+test("wash anchor: the ends disagree → no chip (the false „passt“ of two 1× shampoos)", () => {
+  const anchor = runsheetWashAnchor([shampooEntry("weekly_1x"), shampooEntry("weekly_1x")])
+  // Same days: 1 wash/week → „passt“; separate days: 2 washes/week → „zu selten“.
+  assert.equal(
+    deriveFrequencyDelta({
+      cadenceLabel: "nach jeder Haarwäsche",
+      frequency: "weekly_1x",
+      washFrequency: anchor,
+    }),
+    null,
+  )
+})
+
+test("wash anchor: both ends agree → a chip on the union band", () => {
+  const anchor = runsheetWashAnchor([shampooEntry("weekly_1x"), shampooEntry("weekly_1x")])
+  assert.deepEqual(
+    deriveFrequencyDelta({
+      cadenceLabel: "nach jeder Haarwäsche",
+      frequency: "weekly_3_4x",
+      washFrequency: anchor,
+    }),
+    { status: "zu_oft", ideal: { min: 1, max: 2 }, actual: 3.5 },
+  )
+  // A fixed band does not depend on the anchor at all.
+  assert.equal(
+    deriveFrequencyDelta({
+      cadenceLabel: "1× pro Woche",
+      frequency: "weekly_1x",
+      washFrequency: anchor,
+    })?.status,
+    "passt",
+  )
 })

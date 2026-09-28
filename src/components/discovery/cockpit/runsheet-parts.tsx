@@ -9,6 +9,7 @@ import {
   type FrequencyDeltaStatus,
   type RunsheetPrepItem,
   type WashAllowedRange,
+  type WashAnchor,
   type WeeklyBand,
 } from "@/lib/discovery/runsheet"
 import { PRODUCT_FREQUENCY_METADATA, type ProductFrequency } from "@/lib/vocabulary/frequencies"
@@ -150,7 +151,7 @@ export function RunsheetFrequencyChip({
 }: {
   cadenceLabel: string
   frequencies: ReadonlyArray<string | null | undefined>
-  washFrequency: ProductFrequency | null
+  washFrequency: ProductFrequency | WashAnchor | null
   allowedRange: WashAllowedRange | null
 }) {
   const delta = deriveStepFrequencyDelta({

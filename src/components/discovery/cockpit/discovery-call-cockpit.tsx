@@ -12,7 +12,11 @@ import type {
 import { cockpitVoice } from "@/lib/discovery/cockpit-copy"
 import type { DiscoveryVerdictStatus } from "@/lib/discovery/load-participant-verdicts"
 import type { DiscoveryPropertyRow } from "@/lib/discovery/property-rows"
-import { runsheetEntryInHerWeek, runsheetVerdictFit } from "@/lib/discovery/runsheet"
+import {
+  runsheetEntryInHerWeek,
+  runsheetVerdictFit,
+  type WashAnchor,
+} from "@/lib/discovery/runsheet"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
 import { DiscoveryComparisonTable } from "./comparison-table"
@@ -281,8 +285,8 @@ export function DiscoveryCallCockpit({
   followUpPhase?: ReactNode
   /** The „Grenze" line of her main problem, closing the call. */
   boundary?: string | null
-  /** Her wash frequency (`runsheetWashFrequency`): the anchor of per-wash frequency chips. */
-  washFrequency?: ProductFrequency | null
+  /** Her wash range (`runsheetWashAnchor`): the anchor of per-wash frequency chips. */
+  washFrequency?: ProductFrequency | WashAnchor | null
   /**
    * `discoveryCockpitStateKey` of the props: when a refresh delivers a different routine or
    * finalize state, the selections and the finalize state re-seed from the server. (Before

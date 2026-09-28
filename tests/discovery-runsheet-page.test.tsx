@@ -1075,12 +1075,47 @@ test("prices: the read model carries the Idealplan recommendation's price onto i
       reasoning: { productCriteria: "Leicht.", fit: "Passt.", frequency: "nach jeder Wäsche" },
     },
   }
-  const view = buildDiscoveryCockpitView(
+  // Fix wave (P2/f): the same 7-day freshness rule as the swap alternatives, read from the
+  // catalog's `price_checked_at` (the preview's commerce carries no date of its own).
+  const priceOf = (priceCheckedAt: string | null | undefined) => {
+    const base = model({ steps: [shampooStep, withPrice], items: [shampooItem] })
+    const view = buildDiscoveryCockpitView({
+      ...base,
+      productIdentities: new Map([
+        [
+          priced.c,
+          {
+            name: "Balea Feuchtigkeitsspülung",
+            brand: "Balea",
+            productLine: null,
+            ...(priceCheckedAt === undefined ? {} : { priceCheckedAt }),
+          },
+        ],
+      ]),
+    })
+    const conditioner = view.steps.find((step) => step.category === "conditioner")
+    assert.equal(
+      conditioner?.swapOptions[0]?.priceLabel,
+      conditioner?.idealRecommendation?.priceLabel,
+    )
+    return conditioner?.idealRecommendation?.priceLabel
+  }
+  const daysAgo = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
+  assert.equal(priceOf(daysAgo(1)), "2,45\u00a0€")
+  assert.equal(priceOf(daysAgo(6.9)), "2,45\u00a0€")
+  // Older than 7 days, never checked, unparsable, or no catalog row at all → no price.
+  assert.equal(priceOf(daysAgo(8)), null)
+  assert.equal(priceOf(null), null)
+  assert.equal(priceOf("not a date"), null)
+  assert.equal(priceOf(undefined), null)
+  const withoutIdentity = buildDiscoveryCockpitView(
     model({ steps: [shampooStep, withPrice], items: [shampooItem] }),
   )
-  const conditioner = view.steps.find((step) => step.category === "conditioner")
-  assert.equal(conditioner?.swapOptions[0]?.priceLabel, "2,45\u00a0€")
-  assert.equal(conditioner?.idealRecommendation?.priceLabel, "2,45\u00a0€")
+  assert.equal(
+    withoutIdentity.steps.find((step) => step.category === "conditioner")?.idealRecommendation
+      ?.priceLabel,
+    null,
+  )
 })
 
 /** StepDecision under a hand-rolled `useState` (no jsdom here — see discovery-call-sheet-save). */
@@ -1458,15 +1493,37 @@ function readableLines(markup: string): string[] {
 }
 
 /**
- * The explicit exceptions (brief T4): spoken or quoted text stays in her voice. Anything in
- * German quotes („…") is a line Nick says or quotes — the Phase-1 script card, the Phase-4
- * closing question, the referral question, the „Nicht damit anfangen" quotes. Plus the
- * three verbatim blocks without quotes: the referral message she forwards, the „So sagst du
- * es" talking point, and the quiz's own questions in „Quiz-Antworten".
+ * The explicit exceptions (brief T4): spoken or quoted text stays in her voice. The German
+ * quotes („…") the page may carry are a NAMED list (fix wave): a new quoted string fails
+ * the test until it is reviewed and added here — no quote is exempt just for being quoted.
+ * Plus the verbatim blocks without quotes: the referral message she forwards, the „So sagst
+ * du es" talking point, and the quiz's own questions in „Quiz-Antworten".
  */
+const QUOTED_EXCEPTIONS = [
+  // Phase 1 script card: the question Nick asks at the end of the intro.
+  "Passt das so für dich?",
+  // Concern recipe: the word Nick explains (a term, not a sentence to her).
+  "Wassermangel",
+  // Consult brief goal gap: the goal's own name, quoted.
+  "Form & Halt",
+  // Phase 4 closing question.
+  "Alles klar so? Passt das in deine Woche?",
+  // Phase 6 referral question.
+  "Kennst du zwei, drei Leute, die auch nicht ganz glücklich mit ihren Haaren sind? Wir machen die Calls gerade kostenlos — magst du ihnen kurz diese Nachricht weiterleiten?",
+]
+
+/** Every „…" string on the page, in page order, without duplicates. */
+function quotedStrings(lines: readonly string[]): string[] {
+  return [
+    ...new Set(lines.flatMap((line) => [...line.matchAll(/„([^“]*)“/g)].map((match) => match[1]!))),
+  ]
+}
+
 function outsideQuotedExceptions(lines: readonly string[], verbatim: readonly string[]): string[] {
   return lines
-    .map((line) => line.replace(/„[^“]*“/g, "«quote»"))
+    .map((line) =>
+      QUOTED_EXCEPTIONS.reduce((text, quote) => text.split(`„${quote}“`).join("«quote»"), line),
+    )
     .filter((line) => !verbatim.includes(line))
 }
 
@@ -1486,6 +1543,8 @@ test("voice: no du/dein in the cockpit's own display outside the quoted exceptio
       ? quiz.groups.flatMap((group) => group.rows.map((row) => row.question))
       : []),
   ]
+  // The quoted strings on the page are exactly the named, reviewed list.
+  assert.deepEqual(quotedStrings(readableLines(markup)), QUOTED_EXCEPTIONS)
   const offenders = outsideQuotedExceptions(readableLines(markup), verbatim).filter((line) =>
     SECOND_PERSON_WORD.test(line),
   )
@@ -1554,4 +1613,37 @@ test("voice: the participant's verdict sections render unchanged without the coc
   assert.ok(cockpit.includes("Das übernimmt bei ihr:"))
   const offenders = readableLines(cockpit).filter((line) => SECOND_PERSON_WORD.test(line))
   assert.deepEqual(offenders, [])
+})
+
+// --- fix wave (P2): cross-step wash anchor is a range over her in-week shampoos ------------
+
+function twoShampoosAndConditioner(conditioner: DiscoveryIntakeItem["frequency"]) {
+  return model({
+    steps: [
+      { ...shampooStep, frequencyLabel: "2×/Woche" },
+      { ...conditionerStep, frequencyLabel: "nach jeder Haarwäsche" },
+    ],
+    items: [
+      { ...shampooItem, frequency: "weekly_1x" },
+      { ...secondShampoo, frequency: "weekly_1x" },
+      { ...catalogConditioner, frequency: conditioner },
+    ],
+  })
+}
+
+test("frequency chips: two 1× shampoos + 1× conditioner „nach jeder Haarwäsche“ → no conditioner chip", async () => {
+  const markup = await renderPage({ loadModel: async () => twoShampoosAndConditioner("weekly_1x") })
+  assert.ok(!entryOf(markup, "Conditioner").includes(CHIP_MARK), entryOf(markup, "Conditioner"))
+  // The shampoo step itself (a fixed band) still gets its chip — once per phase.
+  assert.equal(occurrences(phase3Of(markup), CHIP_MARK), 1)
+  assert.equal(occurrences(phase4Of(markup), CHIP_MARK), 1)
+})
+
+test("frequency chips: two 1× shampoos + 3–4× conditioner → both ends say „zu oft“, chip shown", async () => {
+  const markup = await renderPage({
+    loadModel: async () => twoShampoosAndConditioner("weekly_3_4x"),
+  })
+  const expected = "3–4×/Wo · Ziel 1–2×/Wo — zu oft"
+  assert.ok(entryOf(markup, "Conditioner").includes(expected), entryOf(markup, "Conditioner"))
+  assert.ok(phase4Of(markup).includes(expected))
 })

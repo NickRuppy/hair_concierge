@@ -3,6 +3,7 @@ import "server-only"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import { isStage3PriceFresh } from "@/lib/personal-plan/products/fit-comparison"
 import { createPresentationRowLoader } from "@/lib/scan/presentation-rows"
 import type { ScanCatalogPresentationRow } from "@/lib/scan/product-presentation"
 import type { ScanPresentedVerdictPayload, ScanProductHeader } from "@/lib/scan/types"
@@ -287,6 +288,12 @@ export type DiscoveryProductIdentity = {
    * every product (batch 6) — there it is fingerprinted, via `discoveryProductImagesOf`.
    */
   imageUrl?: string | null
+  /**
+   * When the catalog price was last checked (`products.price_checked_at`): the Idealplan
+   * card shows its price only when this is fresh (verdict-layer fix wave) — the preview's
+   * commerce carries no date of its own.
+   */
+  priceCheckedAt?: string | null
 }
 
 /**
@@ -302,7 +309,9 @@ export async function loadDiscoveryProductIdentities(
   if (productIds.length === 0) return identities
   const { data, error } = await client
     .from("products")
-    .select("id, name, brand, image_url, product_line:product_lines(canonical_name)")
+    .select(
+      "id, name, brand, image_url, price_checked_at, product_line:product_lines(canonical_name)",
+    )
     .in("id", productIds)
   if (error) throw new Error("discovery_product_identity_lookup_failed")
   type LineRelation = { canonical_name: string | null }
@@ -311,6 +320,7 @@ export async function loadDiscoveryProductIdentities(
     name: string
     brand: string | null
     image_url?: string | null
+    price_checked_at?: string | null
     product_line: LineRelation | LineRelation[] | null
   }> | null) ?? []) {
     const relation = Array.isArray(row.product_line) ? row.product_line[0] : row.product_line
@@ -319,6 +329,7 @@ export async function loadDiscoveryProductIdentities(
       brand: row.brand,
       productLine: relation?.canonical_name?.trim() || null,
       imageUrl: row.image_url?.trim() || null,
+      priceCheckedAt: row.price_checked_at ?? null,
     })
   }
   return identities
@@ -877,8 +888,12 @@ function idealRecommendationOption(
     brand,
     label: optionLabel(preview.productId, { name: preview.productName, brand }, identities),
     verdictLabel: SCAN_VERDICT_COPY[preview.verdict].label,
-    // Optional chaining: a preview composed before commerce existed carries none.
-    priceLabel: preview.commerce?.priceLabel ?? null,
+    // The same 7-day rule as the swap alternatives (`isStage3PriceFresh`), dated by the
+    // catalog row: without a fresh check date the card shows no price. Optional chaining:
+    // a preview composed before commerce existed carries none.
+    priceLabel: isStage3PriceFresh(identities.get(preview.productId)?.priceCheckedAt)
+      ? (preview.commerce?.priceLabel ?? null)
+      : null,
     origin: "ideal_recommendation",
     propertyRows: null,
   }

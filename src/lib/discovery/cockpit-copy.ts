@@ -48,7 +48,7 @@ export const COCKPIT_NOT_NEEDED_REASONS: Record<keyof typeof SCAN_NOT_NEEDED_REA
     "deep_cleansing.inclusion.none":
       "Die aktuelle Produktnutzung hinterlässt keine Rückstände, für die eine Tiefenreinigung nötig wäre.",
     "deep_cleansing.inclusion.deferred_load":
-      "Die aktuelle Produktnutzung ist noch nicht erfasst – das klären wir später.",
+      "Die aktuelle Produktnutzung ist noch nicht erfasst — im Call klären.",
     "dry_shampoo.inclusion.none":
       "Der Ansatz fettet nicht so schnell nach, dass sie eine Überbrückung braucht.",
     "dry_shampoo.inclusion.declined_bridge":
@@ -64,7 +64,7 @@ export const COCKPIT_NOT_NEEDED_REASONS: Record<keyof typeof SCAN_NOT_NEEDED_REA
     "scalp_care.inclusion.none":
       "Die Kopfhaut zeigt aktuell nichts, was eine eigene Pflege nötig macht.",
     "scalp_care.inclusion.buildup_deferred":
-      "Die Kopfhaut-Angaben sind noch nicht vollständig – das klären wir später.",
+      "Die Kopfhaut-Angaben sind noch nicht vollständig — im Call klären.",
   }
 
 /**
@@ -133,7 +133,7 @@ const LITERAL_ENTRIES: Array<[string, string]> = [
   ],
   [
     "Deine raueren Spitzen und dein Frizz profitieren von einem gezielten Finish.",
-    "Raue Spitzen und Frizz profitieren bei ihr von einem gezielten Finish.",
+    "Die raueren Spitzen und der Frizz profitieren von einem gezielten Finish.",
   ],
   [
     "Überbrückt einen fettigeren Ansatz, wenn du keinen zusätzlichen Waschtag möchtest.",

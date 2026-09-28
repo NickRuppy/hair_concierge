@@ -134,7 +134,19 @@ export function idealCadenceBand(
   washFrequency: ProductFrequency | null,
   allowedRange?: WashAllowedRange | null,
 ): WeeklyBand | null {
-  const band = labelBand(cadenceLabel, washFrequency)
+  return bandFor(
+    cadenceLabel,
+    washFrequency ? productFrequencyBand(washFrequency) : null,
+    allowedRange,
+  )
+}
+
+function bandFor(
+  cadenceLabel: string,
+  washBand: WeeklyBand | null,
+  allowedRange: WashAllowedRange | null | undefined,
+): WeeklyBand | null {
+  const band = labelBand(cadenceLabel, washBand)
   if (!band || !allowedRange) return band
   return {
     min: PRODUCT_FREQUENCY_METADATA[allowedRange.min].minPerWeek,
@@ -142,10 +154,7 @@ export function idealCadenceBand(
   }
 }
 
-function labelBand(
-  cadenceLabel: string,
-  washFrequency: ProductFrequency | null,
-): WeeklyBand | null {
+function labelBand(cadenceLabel: string, washBand: WeeklyBand | null): WeeklyBand | null {
   const label = cadenceLabel.trim()
   if (label.startsWith(PAUSED_CADENCE_PREFIX.trim()) || !isIdealCadenceLabel(label)) return null
   const rule = IDEAL_CADENCE_RULES[label]
@@ -155,9 +164,9 @@ function labelBand(
     case "no_band":
       return null
     case "per_wash": {
-      if (!washFrequency) return null
-      const wash = PRODUCT_FREQUENCY_METADATA[washFrequency]
-      return { min: wash.minPerWeek / rule.every, max: wash.maxPerWeek / rule.every }
+      if (!washBand) return null
+      const divide = (value: number | null) => (value === null ? null : value / rule.every)
+      return { min: divide(washBand.min), max: divide(washBand.max) }
     }
   }
 }
@@ -178,11 +187,21 @@ export function compareFrequencyToBand(actual: number, band: WeeklyBand): Freque
   return "passt"
 }
 
+/**
+ * How many washes she has per week, honestly (fix wave, P2): with several shampoos the
+ * count lies between her most frequent one (`single` — they share wash days) and their sum
+ * (`combined` — separate days). One shampoo: both ends are its own band.
+ */
+export type WashAnchor = { single: WeeklyBand; combined: WeeklyBand }
+
 type FrequencyDeltaContext = {
   /** The step's cadence as the Idealroutine prints it (`DiscoveryCockpitStepView.frequencyLabel`). */
   cadenceLabel: string
-  /** Her wash frequency (`runsheetWashFrequency`); null when not known. */
-  washFrequency: ProductFrequency | null
+  /**
+   * Her wash count: the range from `runsheetWashAnchor`, or a single frequency (both ends
+   * equal); null when not known.
+   */
+  washFrequency: ProductFrequency | WashAnchor | null
   /** The shampoo step's `idealAllowedRange`; absent/null for every other step. */
   allowedRange?: WashAllowedRange | null
 }
@@ -213,9 +232,61 @@ export function deriveStepFrequencyDelta(
     if (!isKnownProductFrequency(frequency)) return null
     actual += PRODUCT_FREQUENCY_METADATA[frequency].midpointPerWeek
   }
-  const ideal = idealCadenceBand(step.cadenceLabel, step.washFrequency, step.allowedRange)
-  if (!ideal) return null
-  return { status: compareFrequencyToBand(actual, ideal), ideal, actual }
+  const anchor =
+    typeof step.washFrequency === "string"
+      ? {
+          single: productFrequencyBand(step.washFrequency),
+          combined: productFrequencyBand(step.washFrequency),
+        }
+      : step.washFrequency
+  // A per-wash cadence is judged at BOTH ends of her wash range; when the verdict depends on
+  // which end is true, the chip stays away. A fixed band is the same at both ends.
+  const low = bandFor(step.cadenceLabel, anchor?.single ?? null, step.allowedRange)
+  const high = bandFor(step.cadenceLabel, anchor?.combined ?? null, step.allowedRange)
+  if (!low || !high) return null
+  const status = compareFrequencyToBand(actual, low)
+  if (compareFrequencyToBand(actual, high) !== status) return null
+  return { status, ideal: unionBand(low, high), actual }
+}
+
+function unionBand(a: WeeklyBand, b: WeeklyBand): WeeklyBand {
+  return {
+    min: a.min === null || b.min === null ? null : Math.min(a.min, b.min),
+    max: a.max === null || b.max === null ? null : Math.max(a.max, b.max),
+  }
+}
+
+/**
+ * Her wash range from the shampoo entries in her week (`runsheetEntryInHerWeek`, the rule
+ * the chips sum by): `single` = her most frequent shampoo's band, `combined` = the sum of
+ * all of them. Null without an in-week shampoo, or when one of them has no known frequency
+ * (the sum would understate).
+ */
+export function runsheetWashAnchor(
+  steps: ReadonlyArray<
+    Pick<
+      DiscoveryCockpitStepView,
+      "category" | "outcome" | "intakeItemId" | "ownedLabel" | "ownedFrequency"
+    >
+  >,
+): WashAnchor | null {
+  const shampoos = steps.filter(
+    (step) => step.category === "shampoo" && runsheetEntryInHerWeek(step),
+  )
+  if (shampoos.length === 0) return null
+  const known: ProductFrequency[] = []
+  for (const step of shampoos) {
+    if (!isKnownProductFrequency(step.ownedFrequency)) return null
+    known.push(step.ownedFrequency)
+  }
+  const most = mostFrequentDiscoveryFrequency(known)
+  if (!most) return null
+  const combined = { min: 0, max: 0 }
+  for (const frequency of known) {
+    combined.min += PRODUCT_FREQUENCY_METADATA[frequency].minPerWeek
+    combined.max += PRODUCT_FREQUENCY_METADATA[frequency].maxPerWeek
+  }
+  return { single: productFrequencyBand(most), combined }
 }
 
 /**

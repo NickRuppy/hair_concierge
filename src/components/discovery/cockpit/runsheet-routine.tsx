@@ -5,6 +5,7 @@ import {
   deriveStepFrequencyDelta,
   runsheetEntryInHerWeek,
   type WashAllowedRange,
+  type WashAnchor,
 } from "@/lib/discovery/runsheet"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
@@ -144,8 +145,8 @@ export function DiscoveryRunsheetRoutine({
   view: Pick<DiscoveryCockpitView, "steps" | "heatProtectionAsk" | "routineSource">
   /** Her shampoo frequency from the checklist („3–4× pro Woche"); null when not asked. */
   washFrequencyLabel: string | null
-  /** The same as a value (`runsheetWashFrequency`): the anchor of per-wash frequency chips. */
-  washFrequency?: ProductFrequency | null
+  /** Her wash range (`runsheetWashAnchor`): the anchor of per-wash frequency chips. */
+  washFrequency?: ProductFrequency | WashAnchor | null
   /**
    * Her product still in research per step (`decisionKey`, the Phase-3 join): that step
    * names it instead of reading as open or showing a proposal.
@@ -206,7 +207,7 @@ function WeekCard({
   lines: WeekLine[]
   empty: string | null
   researchLabels: Readonly<Record<string, string>>
-  washFrequency: ProductFrequency | null
+  washFrequency: ProductFrequency | WashAnchor | null
 }) {
   if (lines.length === 0 && empty === null) return null
   return (
@@ -244,7 +245,7 @@ function WeekLineFrequencyChips({
   washFrequency,
 }: {
   line: WeekLine
-  washFrequency: ProductFrequency | null
+  washFrequency: ProductFrequency | WashAnchor | null
 }) {
   const frequencies = line.products
     .filter((product) => product.owned)

@@ -51,7 +51,11 @@ import { loadDiscoveryEnrollment } from "@/lib/discovery/enrollment"
 import { isDiscoveryCallToolkitEnabled } from "@/lib/discovery/flag"
 import { DISCOVERY_FREQUENCY_LABELS } from "@/lib/discovery/frequency"
 import { buildDiscoveryQuizAnswers, type DiscoveryQuizLead } from "@/lib/discovery/quiz-answers"
-import { derivePrepChecklist, runsheetWashFrequency } from "@/lib/discovery/runsheet"
+import {
+  derivePrepChecklist,
+  runsheetWashAnchor,
+  runsheetWashFrequency,
+} from "@/lib/discovery/runsheet"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { createAdminClient } from "@/lib/supabase/admin"
 
@@ -242,9 +246,11 @@ export function createDiscoveryCockpitPage(
       if (entry.research) researchLabels[entry.step.decisionKey] ??= entry.research.label
     }
     const sections = callSheet?.consultBrief?.sections ?? EMPTY_DISCOVERY_BRIEF_SECTIONS
-    // Her wash frequency — the anchor of the per-wash frequency chips (verdict-layer T3). The
-    // Phase-4 line names the same value, so the chips and the line never disagree.
+    // Her wash frequency as she stated it (the Phase-4 „heute" line), and her honest wash
+    // range over the shampoos in her week — the anchor of the per-wash frequency chips
+    // (verdict-layer T3, fix wave P2: several shampoos may or may not share wash days).
     const washFrequency = runsheetWashFrequency(view.intakeProducts)
+    const washAnchor = runsheetWashAnchor(view.steps)
     const washFrequencyLabel = washFrequency
       ? DISCOVERY_FREQUENCY_LABELS[washFrequency]
       : (view.intakeProducts.find(
@@ -316,7 +322,7 @@ export function createDiscoveryCockpitPage(
             <DiscoveryRunsheetRoutine
               view={view}
               washFrequencyLabel={washFrequencyLabel}
-              washFrequency={washFrequency}
+              washFrequency={washAnchor}
               researchLabels={researchLabels}
             />
           }
@@ -329,7 +335,7 @@ export function createDiscoveryCockpitPage(
             />
           }
           boundary={mainRecipe?.boundary ?? null}
-          washFrequency={washFrequency}
+          washFrequency={washAnchor}
         />
       </Shell>
     )
