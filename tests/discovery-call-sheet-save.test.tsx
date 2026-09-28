@@ -683,6 +683,75 @@ test("generate: Diagnose typed while the request ran is kept (unsaved), never ov
   }
 })
 
+test("generate: „Speichern“ is paused while the request runs; it works again after success and after an error", async () => {
+  for (const outcome of ["success", "error"] as const) {
+    const { router } = fakeRouter()
+    const render = createHarness(() => DiscoveryRunsheetBrief(briefProps()), router)
+    let release: () => void = () => {}
+    const gate = new Promise<void>((resolve) => (release = resolve))
+    const calls: Array<{ url: string; method: string }> = []
+    const original = globalThis.fetch
+    globalThis.fetch = (async (url: string, init: RequestInit) => {
+      calls.push({ url, method: init.method ?? "GET" })
+      if (url === GENERATE_URL) {
+        await gate
+        return outcome === "success"
+          ? new Response(JSON.stringify(generated().body), { status: 200 })
+          : new Response(JSON.stringify({ code: "brief_generation_failed" }), { status: 502 })
+      }
+      return new Response(JSON.stringify({ callSheet: {} }), { status: 200 })
+    }) as typeof fetch
+    try {
+      let tree = render()
+      byId(tree, "runsheet-baseline-score").props.onChange({ target: { value: "6" } })
+      tree = render()
+      generateBar(tree).props.onGenerate()
+      tree = render()
+      assert.equal(saveBar(tree).props.pausedHint, RUNSHEET_GENERATE_COPY.savePaused)
+      assert.equal(saveBar(tree).props.dirty, true)
+      saveBar(tree).props.onSave()
+      await settle()
+      assert.deepEqual(
+        calls.map((call) => call.method),
+        ["POST"],
+        `${outcome}: no PATCH while generating`,
+      )
+
+      release()
+      await settle()
+      await settle()
+      tree = render()
+      assert.equal(saveBar(tree).props.pausedHint, null, `${outcome}: save unpaused`)
+      saveBar(tree).props.onSave()
+      await settle()
+      assert.deepEqual(
+        calls.map((call) => call.method),
+        ["POST", "PATCH"],
+        `${outcome}: saving works again`,
+      )
+    } finally {
+      globalThis.fetch = original
+    }
+  }
+})
+
+test("save bar: a paused hint disables the button and names why", () => {
+  const bar = RunsheetSaveBar({
+    id: "x",
+    scope: "s",
+    dirty: true,
+    status: "idle",
+    message: null,
+    locked: false,
+    pausedHint: "Brief wird erstellt …",
+    onSave: () => {},
+  })
+  const [button] = findAll(bar, (element) => element.type === "button")
+  assert.equal(button!.props.disabled, true)
+  const [line] = findAll(bar, (element) => element.props.role === "status")
+  assert.equal(line!.props.children, "Brief wird erstellt …")
+})
+
 test("generate: refusals show the German line and keep every edit and the stored brief", async () => {
   const { router, refreshes } = fakeRouter()
   const cases: Array<{ status: number; body: unknown; expected: string }> = [

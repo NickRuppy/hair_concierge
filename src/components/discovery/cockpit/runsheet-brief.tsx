@@ -87,6 +87,7 @@ export const RUNSHEET_GENERATE_COPY = {
   regenerate: "Neu generieren",
   pending: "Erstellt …",
   pendingHint: "Der Brief wird erstellt — das kann bis zu einer Minute dauern.",
+  savePaused: "Brief wird erstellt …",
   done: "Brief erstellt.",
   doneKeptEdits:
     "Brief erstellt — Diagnose und Hebel wurden währenddessen bearbeitet und bleiben wie getippt (nicht gespeichert).",
@@ -423,6 +424,8 @@ export function DiscoveryRunsheetBrief({
   }
 
   function handleSave() {
+    // A save landing mid-generation would be displaced into `previous` by the generation.
+    if (generating) return
     const built = runsheetBriefPatch(state, {
       sections: base.sections,
       generatedAt: base.generatedAt,
@@ -820,6 +823,7 @@ export function DiscoveryRunsheetBrief({
           status={status}
           message={message}
           locked={saveLocked}
+          pausedHint={generating ? RUNSHEET_GENERATE_COPY.savePaused : null}
           onSave={handleSave}
         />
       </RunsheetPhase>

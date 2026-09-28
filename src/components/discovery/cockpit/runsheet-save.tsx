@@ -92,6 +92,7 @@ export function RunsheetSaveBar({
   status,
   message,
   locked,
+  pausedHint = null,
   onSave,
 }: {
   id: string
@@ -102,18 +103,22 @@ export function RunsheetSaveBar({
   message: string | null
   /** The row could not be read: saving would overwrite it with the empty form. */
   locked: boolean
+  /** Saving is paused (e.g. a brief generation is in flight); the line says why. */
+  pausedHint?: string | null
   onSave: () => void
 }) {
   const saving = status === "saving"
   const line = locked
     ? RUNSHEET_SAVE_COPY.locked
-    : status === "error"
-      ? message
-      : dirty
-        ? RUNSHEET_SAVE_COPY.dirty
-        : status === "saved"
-          ? RUNSHEET_SAVE_COPY.saved
-          : null
+    : pausedHint
+      ? pausedHint
+      : status === "error"
+        ? message
+        : dirty
+          ? RUNSHEET_SAVE_COPY.dirty
+          : status === "saved"
+            ? RUNSHEET_SAVE_COPY.saved
+            : null
   const tone =
     locked || status === "error"
       ? "text-[var(--status-danger-text)]"
@@ -125,7 +130,7 @@ export function RunsheetSaveBar({
       <button
         id={id}
         type="button"
-        disabled={locked || saving || !dirty}
+        disabled={locked || pausedHint !== null || saving || !dirty}
         onClick={onSave}
         className="rounded-lg bg-[var(--brand-plum)] px-4 py-2 text-xs font-bold text-white disabled:opacity-40"
       >
