@@ -2,7 +2,11 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import type Stripe from "stripe"
 import type { SupabaseClient } from "@supabase/supabase-js"
-import { handleStripeTrialInvoice } from "../src/lib/stripe/trial-invoice"
+import {
+  handleStripeTrialInvoice,
+  TrialInvoiceBillingLinkPending,
+} from "../src/lib/stripe/trial-invoice"
+import { respondToStripeWebhookFailure } from "../src/lib/stripe/webhook-failure"
 import { createTrialOfferSnapshot } from "../src/lib/billing/trial-offer"
 import type { TrialRuntime } from "../src/lib/billing/trial-runtime"
 import type {
@@ -30,11 +34,12 @@ function fixture() {
   }
   const enrollment = {
     id: enrollmentId,
-    user_id: "user_1",
+    user_id: "user_1" as string | null,
     provider: "stripe",
-    provider_agreement_id: "sub_1",
+    provider_agreement_id: "sub_1" as string | null,
     accepted_offer: createTrialOfferSnapshot("year", runtime.catalog),
     admission_status: "active",
+    access_revoked: false,
     original_trial_end_at: new Date(start * 1000).toISOString(),
   }
   const sub = {
@@ -69,6 +74,8 @@ function fixture() {
   }
   const invoice = {
     id: "in_1",
+    object: "invoice",
+    total: 6999,
     customer: "cus_1",
     livemode: true,
     currency: "eur",
@@ -160,6 +167,11 @@ function fixture() {
       },
     },
   }
+  let billingPresent = true
+  let lookupError: Error | null = null
+  let enrollmentError: Error | null = null
+  let enrollmentPresent = true
+  let effectiveError: Error | null = null
   let linked: Record<string, string> | null = null
   let sourceRepair = false
   const client = {
@@ -172,7 +184,7 @@ function fixture() {
             provider_agreement_id: enrollment.provider_agreement_id,
             revision: 0,
           },
-          error: null,
+          error: effectiveError,
         }
       if (name === "lookup_trial_paid_continuation") return { data: linked, error: null }
       if (name === "is_trial_continuation_source_cancellation")
@@ -209,15 +221,19 @@ function fixture() {
           return Promise.resolve({ data: [], error: null }).then(resolve)
         },
         maybeSingle: async () => ({
-          error: null,
+          error: table === "trial_enrollments" ? enrollmentError : lookupError,
           data:
             table === "billing_analytics_outbox"
               ? recorded.length && result.outcome !== "stale"
                 ? { id: "atomic_trial_event" }
                 : null
               : table === "billing_subscriptions"
-                ? billing
-                : enrollment,
+                ? billingPresent
+                  ? billing
+                  : null
+                : enrollmentPresent
+                  ? enrollment
+                  : null,
         }),
       }
       return builder
@@ -236,6 +252,21 @@ function fixture() {
     recorded,
     analyticsLookups,
     deliveryOutboxIds,
+    setBillingPresent(value: boolean) {
+      billingPresent = value
+    },
+    setLookupError(value: Error | null) {
+      lookupError = value
+    },
+    setEnrollmentError(value: Error) {
+      enrollmentError = value
+    },
+    setEnrollmentPresent(value: boolean) {
+      enrollmentPresent = value
+    },
+    setEffectiveError(value: Error) {
+      effectiveError = value
+    },
     setResult(next: TrialPaymentEventResult) {
       result = next
     },
@@ -287,6 +318,7 @@ function fixture() {
             id: "evt_route",
             type: `invoice.payment_${outcome}`,
             created: start + 60,
+            livemode: true,
             data: { object: invoice },
           } as unknown as Stripe.Event,
           {
@@ -522,4 +554,168 @@ test("late failure retrieving paid truth dispatches Purchase, while absent failu
   await stale.runWebhook("failed", true)
   assert.deepEqual(stale.analyticsLookups, ["stripe:trial_first_payment_failed:in_1"])
   assert.deepEqual(stale.deliveryOutboxIds, [])
+})
+
+test("missing initial binding is typed retryable and restored binding succeeds without payment", async () => {
+  const f = fixture()
+  Object.assign(f.invoice, { billing_reason: "subscription_create", amount_due: 0, amount_paid: 0 })
+  f.sub.status = "trialing"
+  f.setBillingPresent(false)
+  f.enrollment.provider_agreement_id = null
+  await assert.rejects(f.run(), (error: unknown) => {
+    assert.ok(error instanceof TrialInvoiceBillingLinkPending)
+    assert.equal(error.agreementId, "sub_1")
+    assert.equal(error.enrollmentId, f.enrollment.id)
+    return true
+  })
+  assert.equal(f.recorded.length, 0)
+  f.enrollment.provider_agreement_id = "sub_1"
+  await assert.rejects(f.run(), TrialInvoiceBillingLinkPending)
+  f.setBillingPresent(true)
+  assert.equal((await f.run())?.payment, null)
+  assert.equal(f.recorded.length, 0)
+})
+
+for (const [name, mutate] of Object.entries({
+  "database error": (f: ReturnType<typeof fixture>) =>
+    f.setLookupError(new Error("database unavailable")),
+  "candidate database error": (f: ReturnType<typeof fixture>) =>
+    f.setEnrollmentError(new Error("candidate unavailable")),
+  "candidate absent": (f: ReturnType<typeof fixture>) => f.setEnrollmentPresent(false),
+  "effective contract database error": (f: ReturnType<typeof fixture>) => {
+    f.enrollment.provider_agreement_id = "sub_1"
+    f.setEffectiveError(new Error("effective unavailable"))
+  },
+  "wrong mode": (f: ReturnType<typeof fixture>) => {
+    f.sub.livemode = false
+  },
+  "nontrial status": (f: ReturnType<typeof fixture>) => {
+    f.sub.status = "active"
+  },
+  "revoked enrollment": (f: ReturnType<typeof fixture>) => {
+    f.enrollment.access_revoked = true
+  },
+  "released enrollment": (f: ReturnType<typeof fixture>) => {
+    f.enrollment.admission_status = "released"
+  },
+  "blocked enrollment": (f: ReturnType<typeof fixture>) => {
+    f.enrollment.admission_status = "blocked"
+  },
+  "missing active user": (f: ReturnType<typeof fixture>) => {
+    f.enrollment.user_id = ""
+  },
+  "canceled at trial end": (f: ReturnType<typeof fixture>) => {
+    f.sub.cancel_at_period_end = true
+  },
+  "wrong provider": (f: ReturnType<typeof fixture>) => {
+    f.enrollment.provider = "paypal"
+  },
+  "wrong agreement": (f: ReturnType<typeof fixture>) => {
+    f.enrollment.provider_agreement_id = "sub_other"
+  },
+  "missing cohort": (f: ReturnType<typeof fixture>) => {
+    delete f.sub.metadata.trial_cohort
+  },
+  "continuation ambiguity": (f: ReturnType<typeof fixture>) => {
+    f.sub.metadata.trial_continuation_role = "unknown"
+  },
+  "recovery ambiguity": (f: ReturnType<typeof fixture>) => {
+    f.sub.metadata.trial_paid_recovery_operation_id = "op_unknown"
+  },
+})) {
+  test(`${name} never becomes a billing-link-pending warning`, async () => {
+    const f = fixture()
+    f.setBillingPresent(false)
+    f.sub.status = "trialing"
+    f.enrollment.provider_agreement_id = null
+    mutate(f)
+    await assert.rejects(
+      f.run(),
+      (error: unknown) => !(error instanceof TrialInvoiceBillingLinkPending),
+    )
+  })
+}
+
+test("missing runtime with an absent binding retains reconciliation alert", async () => {
+  const f = fixture()
+  f.setBillingPresent(false)
+  f.enrollment.provider_agreement_id = null
+  await assert.rejects(
+    f.run("succeeded", null),
+    (error: unknown) => !(error instanceof TrialInvoiceBillingLinkPending),
+  )
+})
+
+test("actual missing-binding handler failure releases for retry, then binding restoration succeeds", async () => {
+  const f = fixture()
+  Object.assign(f.invoice, {
+    billing_reason: "subscription_create",
+    amount_due: 0,
+    amount_paid: 0,
+    total: 0,
+  })
+  f.sub.status = "trialing"
+  f.setBillingPresent(false)
+  f.enrollment.provider_agreement_id = null
+  const calls: string[] = []
+  const created = Date.parse("2030-01-21T12:01:00Z") / 1000
+  let failure: unknown
+  try {
+    await f.runWebhook("succeeded")
+  } catch (error) {
+    failure = error
+  }
+  assert.ok(failure instanceof TrialInvoiceBillingLinkPending)
+  const response = await respondToStripeWebhookFailure(
+    {
+      id: "evt_route",
+      type: "invoice.payment_succeeded",
+      livemode: true,
+      created,
+      data: { object: f.invoice },
+    } as unknown as Stripe.Event,
+    failure,
+    {
+      now: () => (created + 16) * 1000,
+      releaseClaim: async () => {
+        calls.push("release")
+      },
+      captureFailure: () => {
+        calls.push("capture")
+      },
+      warn: () => {
+        calls.push("warn")
+      },
+      error: () => {
+        calls.push("error")
+      },
+    },
+  )
+  assert.equal(response.status, 500)
+  assert.deepEqual(calls, ["release", "warn"])
+  assert.equal(f.recorded.length, 0)
+  f.enrollment.provider_agreement_id = "sub_1"
+  f.setBillingPresent(true)
+  await f.runWebhook("succeeded")
+  assert.equal(f.recorded.length, 0)
+})
+
+test("existing partial billing row does not become pending", async () => {
+  const f = fixture()
+  f.billing.trial_enrollment_id = null
+  f.enrollment.provider_agreement_id = null
+  await assert.rejects(
+    f.run(),
+    (error: unknown) => !(error instanceof TrialInvoiceBillingLinkPending),
+  )
+})
+
+test("reserved enrollment can wait for initial binding before a user exists", async () => {
+  const f = fixture()
+  f.setBillingPresent(false)
+  f.sub.status = "trialing"
+  f.enrollment.admission_status = "reserved"
+  f.enrollment.user_id = null
+  f.enrollment.provider_agreement_id = null
+  await assert.rejects(f.run(), TrialInvoiceBillingLinkPending)
 })
