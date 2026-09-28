@@ -12,11 +12,18 @@ import type {
 import type { DiscoveryVerdictStatus } from "@/lib/discovery/load-participant-verdicts"
 import type { DiscoveryPropertyRow } from "@/lib/discovery/property-rows"
 import { runsheetVerdictFit } from "@/lib/discovery/runsheet"
+import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
 import { DiscoveryComparisonTable } from "./comparison-table"
 import { beginDiscoveryDecisionWrite } from "./decision-writes"
 import { formatDiscoveryTimestamp } from "./format"
-import { RunsheetCard, RunsheetCategoryChip, RunsheetChip, RunsheetPhase } from "./runsheet-parts"
+import {
+  RunsheetCard,
+  RunsheetCategoryChip,
+  RunsheetChip,
+  RunsheetFrequencyChip,
+  RunsheetPhase,
+} from "./runsheet-parts"
 import {
   composeRunsheetProducts,
   type RunsheetKlaerenEntry,
@@ -244,6 +251,7 @@ export function DiscoveryCallCockpit({
   routinePhase = null,
   followUpPhase = null,
   boundary = null,
+  washFrequency = null,
   stateKey,
 }: {
   enrollmentId: string
@@ -271,6 +279,8 @@ export function DiscoveryCallCockpit({
   followUpPhase?: ReactNode
   /** The „Grenze" line of her main problem, closing the call. */
   boundary?: string | null
+  /** Her wash frequency (`runsheetWashFrequency`): the anchor of per-wash frequency chips. */
+  washFrequency?: ProductFrequency | null
   /**
    * `discoveryCockpitStateKey` of the props: when a refresh delivers a different routine or
    * finalize state, the selections and the finalize state re-seed from the server. (Before
@@ -401,6 +411,13 @@ export function DiscoveryCallCockpit({
             <span className="text-xs text-muted-foreground">· optional</span>
           ) : null}
           {entry.kind === "owned" ? <VerdictChip step={step} /> : null}
+          {entry.kind === "owned" ? (
+            <RunsheetFrequencyChip
+              cadenceLabel={step.frequencyLabel}
+              frequency={step.ownedFrequency}
+              washFrequency={washFrequency}
+            />
+          ) : null}
           <DecisionChip entry={entry} bucket={bucket} selection={selection} />
         </div>
         {reason ? (

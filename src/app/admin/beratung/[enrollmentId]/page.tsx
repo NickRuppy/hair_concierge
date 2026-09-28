@@ -49,8 +49,9 @@ import {
 } from "@/lib/discovery/concern-recipe-view"
 import { loadDiscoveryEnrollment } from "@/lib/discovery/enrollment"
 import { isDiscoveryCallToolkitEnabled } from "@/lib/discovery/flag"
+import { DISCOVERY_FREQUENCY_LABELS } from "@/lib/discovery/frequency"
 import { buildDiscoveryQuizAnswers, type DiscoveryQuizLead } from "@/lib/discovery/quiz-answers"
-import { derivePrepChecklist } from "@/lib/discovery/runsheet"
+import { derivePrepChecklist, runsheetWashFrequency } from "@/lib/discovery/runsheet"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { createAdminClient } from "@/lib/supabase/admin"
 
@@ -241,10 +242,14 @@ export function createDiscoveryCockpitPage(
       if (entry.research) researchLabels[entry.step.decisionKey] ??= entry.research.label
     }
     const sections = callSheet?.consultBrief?.sections ?? EMPTY_DISCOVERY_BRIEF_SECTIONS
-    const washFrequencyLabel =
-      view.intakeProducts.find(
-        (product) => product.category === "shampoo" && product.frequencyLabel,
-      )?.frequencyLabel ?? null
+    // Her wash frequency — the anchor of the per-wash frequency chips (verdict-layer T3). The
+    // Phase-4 line names the same value, so the chips and the line never disagree.
+    const washFrequency = runsheetWashFrequency(view.intakeProducts)
+    const washFrequencyLabel = washFrequency
+      ? DISCOVERY_FREQUENCY_LABELS[washFrequency]
+      : (view.intakeProducts.find(
+          (product) => product.category === "shampoo" && product.frequencyLabel,
+        )?.frequencyLabel ?? null)
     // A refresh with a different routine re-syncs the client islands (see the helper).
     const stateKey = discoveryCockpitStateKey(view.sourceHash, intake.callFinalizedAt)
 
@@ -311,6 +316,7 @@ export function createDiscoveryCockpitPage(
             <DiscoveryRunsheetRoutine
               view={view}
               washFrequencyLabel={washFrequencyLabel}
+              washFrequency={washFrequency}
               researchLabels={researchLabels}
             />
           }
@@ -323,6 +329,7 @@ export function createDiscoveryCockpitPage(
             />
           }
           boundary={mainRecipe?.boundary ?? null}
+          washFrequency={washFrequency}
         />
       </Shell>
     )

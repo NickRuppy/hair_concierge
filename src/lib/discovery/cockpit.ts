@@ -707,6 +707,8 @@ export type DiscoveryCockpitStepView = {
   stepEntryCount: number
   /** „3–4× pro Woche" — how often she uses THIS product (batch 7); null when not asked. */
   ownedFrequencyLabel: string | null
+  /** The same answer as stored (`unknown` = „Weiß ich nicht"); null when not asked. */
+  ownedFrequency: DiscoveryItemFrequency | null
   /**
    * „Weglassen" may be chosen (R3): she has ≥2 products in this step, this is one of them,
    * and at least one sibling is not dropped — a step is never left empty.
@@ -984,6 +986,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       ownedUsageRole: item?.usageRole ?? null,
       stepEntryCount: stepEntries.length,
       ownedFrequencyLabel: item?.frequency ? DISCOVERY_FREQUENCY_LABELS[item.frequency] : null,
+      ownedFrequency: item?.frequency ?? null,
       canDrop:
         item !== null &&
         stepEntries.length >= 2 &&

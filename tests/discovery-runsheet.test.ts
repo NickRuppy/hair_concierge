@@ -99,6 +99,7 @@ function step(input: StepInput): DiscoveryCockpitStepView {
     ownedUsageRole: null,
     stepEntryCount: 1,
     ownedFrequencyLabel: null,
+    ownedFrequency: null,
     canDrop: false,
     unanswered: false,
     verdict: null,

@@ -21,6 +21,7 @@ import {
 } from "../src/components/discovery/cockpit/runsheet-follow-up"
 import {
   formatRunsheetScore,
+  formatRunsheetWeeklyBand,
   runsheetChecklistLines,
 } from "../src/components/discovery/cockpit/runsheet-parts"
 import {
@@ -1142,4 +1143,105 @@ test("sort toggle: „Preis“ reorders ascending, priceless last; „Fit“ res
     step.swapOptions.map((option) => option.productId),
     [priced.a, priced.b, priced.c],
   )
+})
+
+// --- verdict-layer T3: frequency-delta chips ------------------------------------------------
+
+const catalogConditioner: DiscoveryIntakeItem = {
+  id: "50000000-0000-4000-8000-0000000000c1",
+  category: "conditioner",
+  source: "catalog_search",
+  brandText: "Balea",
+  productNameText: "Pflegespülung",
+  barcodeIdentifier: null,
+  productId: "30000000-0000-4000-8000-0000000000c1",
+  productSubmissionId: null,
+  createdAt: "2026-09-20T10:06:00.000Z",
+  frequency: "weekly_1x",
+}
+
+/** The real Idealroutine cadences: shampoo target 1×/Woche, conditioner after every wash. */
+function frequencyModel(
+  input: {
+    shampoo?: DiscoveryIntakeItem["frequency"]
+    conditioner?: DiscoveryIntakeItem["frequency"]
+  } = {},
+): DiscoveryCockpitModel {
+  return model({
+    steps: [
+      { ...shampooStep, frequencyLabel: "1×/Woche" },
+      { ...conditionerStep, frequencyLabel: "nach jeder Haarwäsche" },
+    ],
+    items: [
+      { ...shampooItem, frequency: input.shampoo ?? "weekly_2x" },
+      { ...catalogConditioner, frequency: input.conditioner ?? "weekly_1x" },
+    ],
+  })
+}
+
+/** The chip's own separator — other runsheet copy says „Ziel" too („Ziel heute: …"). */
+const CHIP_MARK = " · Ziel "
+
+function phase4Of(markup: string): string {
+  return markup.slice(
+    markup.indexOf('id="runsheet-phase-4"'),
+    markup.indexOf('id="runsheet-phase-5"'),
+  )
+}
+
+test("frequency chips: none for cadences the Idealroutine never prints (fixture labels)", async () => {
+  const markup = await renderPage()
+  assert.ok(!markup.includes(CHIP_MARK), "no frequency chip without a real cadence")
+})
+
+test("frequency chips: Phase 3 entries show zu oft / zu selten against her wash anchor", async () => {
+  const markup = await renderPage({ loadModel: async () => frequencyModel() })
+  assert.ok(entryOf(markup, "Shampoo").includes("2×/Wo · Ziel 1×/Wo — zu oft"))
+  // „nach jeder Haarwäsche" at her 2×/week wash, conditioner 1×/week.
+  assert.ok(entryOf(markup, "Conditioner").includes("1×/Wo · Ziel 2×/Wo — zu selten"))
+})
+
+test("frequency chips: Phase 4 week lines carry the same chips", async () => {
+  const phase4 = phase4Of(await renderPage({ loadModel: async () => frequencyModel() }))
+  assert.ok(phase4.includes("2×/Wo · Ziel 1×/Wo — zu oft"), phase4)
+  assert.ok(phase4.includes("1×/Wo · Ziel 2×/Wo — zu selten"), phase4)
+})
+
+test("frequency chips: a matching frequency reads „passt“", async () => {
+  const markup = await renderPage({
+    loadModel: async () => frequencyModel({ conditioner: "weekly_2x" }),
+  })
+  assert.ok(entryOf(markup, "Conditioner").includes("2×/Wo · Ziel 2×/Wo — passt"))
+})
+
+test("frequency chips: „Weiß ich nicht“ — no chip for the product, no wash anchor for the rest", async () => {
+  const markup = await renderPage({
+    loadModel: async () => frequencyModel({ shampoo: "unknown" }),
+  })
+  assert.ok(!markup.includes(CHIP_MARK), "no chip without her frequency or wash anchor")
+})
+
+test("frequency chips: a product whose frequency was never asked gets none", async () => {
+  const markup = await renderPage({
+    loadModel: async () =>
+      model({
+        steps: [{ ...shampooStep, frequencyLabel: "1×/Woche" }],
+        items: [{ ...shampooItem, frequency: undefined }],
+      }),
+  })
+  assert.ok(!markup.includes(CHIP_MARK))
+})
+
+test("frequency chips: weekly bands read compactly", () => {
+  const cases: Array<[{ min: number | null; max: number | null }, string]> = [
+    [{ min: 1, max: 1 }, "1×/Wo"],
+    [{ min: 3, max: 4 }, "3–4×/Wo"],
+    [{ min: 1, max: 4 / 3 }, "1–1,3×/Wo"],
+    [{ min: 0.5, max: 0.5 }, "alle 2 Wo"],
+    [{ min: 0.25, max: 0.5 }, "alle 2–4 Wo"],
+    [{ min: 0.75, max: 1 }, "0,8–1×/Wo"],
+    [{ min: 0, max: 0.249 }, "seltener als alle 4 Wo"],
+    [{ min: 2, max: null }, "ab 2×/Wo"],
+  ]
+  for (const [band, text] of cases) assert.equal(formatRunsheetWeeklyBand(band), text)
 })

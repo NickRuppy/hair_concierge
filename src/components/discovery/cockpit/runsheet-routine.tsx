@@ -1,7 +1,10 @@
 import type { DiscoveryCockpitStepView, DiscoveryCockpitView } from "@/lib/discovery/cockpit"
+import type { DiscoveryItemFrequency } from "@/lib/discovery/frequency"
+import { deriveFrequencyDelta } from "@/lib/discovery/runsheet"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
-import { RunsheetCard, RunsheetPhase } from "./runsheet-parts"
+import { RunsheetCard, RunsheetFrequencyChip, RunsheetPhase } from "./runsheet-parts"
 
 /**
  * Phase 4 „Routine" (consult-runsheet T3): her week, composed from the Idealroutine and the
@@ -44,26 +47,33 @@ export type WeekLine = {
   description: string
   frequencyLabel: string
   timingLabel: string | null
-  /** `proposal`: the Idealplan's recommendation for an empty step, not a decision. */
-  products: Array<{ label: string; proposal: boolean }>
+  /**
+   * `proposal`: the Idealplan's recommendation for an empty step, not a decision.
+   * `frequency`: how often she uses it — only for her own product (kept or undecided).
+   */
+  products: Array<{ label: string; proposal: boolean; frequency: DiscoveryItemFrequency | null }>
 }
 
 /** The product a step entry puts into her week, as the call has decided it so far. */
-function productOf(step: DiscoveryCockpitStepView): { label: string; proposal: boolean } | null {
+function productOf(step: DiscoveryCockpitStepView): WeekLine["products"][number] | null {
   switch (step.outcome) {
     case "kept":
       return step.intakeItemId === null || !step.ownedLabel
         ? null
-        : { label: step.ownedLabel, proposal: false }
+        : { label: step.ownedLabel, proposal: false, frequency: step.ownedFrequency }
     case "swapped":
-      return step.swapProductLabel ? { label: step.swapProductLabel, proposal: false } : null
+      return step.swapProductLabel
+        ? { label: step.swapProductLabel, proposal: false, frequency: null }
+        : null
     case "dropped":
       return null
     case "undecided":
-      return step.ownedLabel ? { label: step.ownedLabel, proposal: false } : null
+      return step.ownedLabel
+        ? { label: step.ownedLabel, proposal: false, frequency: step.ownedFrequency }
+        : null
     case "ideal":
       return step.recommendationLabel
-        ? { label: `${PROPOSAL}: ${step.recommendationLabel}`, proposal: true }
+        ? { label: `${PROPOSAL}: ${step.recommendationLabel}`, proposal: true, frequency: null }
         : null
   }
 }
@@ -107,11 +117,14 @@ export function runsheetWeek(steps: readonly DiscoveryCockpitStepView[]): {
 export function DiscoveryRunsheetRoutine({
   view,
   washFrequencyLabel,
+  washFrequency = null,
   researchLabels = {},
 }: {
   view: Pick<DiscoveryCockpitView, "steps" | "heatProtectionAsk" | "routineSource">
   /** Her shampoo frequency from the checklist („3–4× pro Woche"); null when not asked. */
   washFrequencyLabel: string | null
+  /** The same as a value (`runsheetWashFrequency`): the anchor of per-wash frequency chips. */
+  washFrequency?: ProductFrequency | null
   /**
    * Her product still in research per step (`decisionKey`, the Phase-3 join): that step
    * names it instead of reading as open or showing a proposal.
@@ -140,12 +153,14 @@ export function DiscoveryRunsheetRoutine({
             lines={week.washDay}
             empty={null}
             researchLabels={researchLabels}
+            washFrequency={washFrequency}
           />
           <WeekCard
             title={OFF_DAYS}
             lines={week.offDays}
             empty={OFF_DAYS_EMPTY}
             researchLabels={researchLabels}
+            washFrequency={washFrequency}
           />
         </div>
         {view.heatProtectionAsk ? (
@@ -164,11 +179,13 @@ function WeekCard({
   lines,
   empty,
   researchLabels,
+  washFrequency,
 }: {
   title: string
   lines: WeekLine[]
   empty: string | null
   researchLabels: Readonly<Record<string, string>>
+  washFrequency: ProductFrequency | null
 }) {
   if (lines.length === 0 && empty === null) return null
   return (
@@ -187,11 +204,51 @@ function WeekCard({
               <span className="block text-foreground">
                 {runsheetWeekLineText(line, researchLabels[line.decisionKey])}
               </span>
+              <WeekLineFrequencyChips line={line} washFrequency={washFrequency} />
               <span className="block text-[12px] text-muted-foreground">{line.description}</span>
             </li>
           ))}
         </ol>
       )}
     </div>
+  )
+}
+
+/**
+ * Her own products' frequency chips on a week line (verdict-layer T3). With several products
+ * in one step each chip names its product, so the chips cannot be mixed up.
+ */
+function WeekLineFrequencyChips({
+  line,
+  washFrequency,
+}: {
+  line: WeekLine
+  washFrequency: ProductFrequency | null
+}) {
+  // Only products that get a chip — a label without its chip would read as a stray name.
+  const owned = line.products.filter(
+    (product) =>
+      deriveFrequencyDelta({
+        cadenceLabel: line.frequencyLabel,
+        frequency: product.frequency,
+        washFrequency,
+      }) !== null,
+  )
+  if (owned.length === 0) return null
+  return (
+    <span className="mt-1 flex flex-wrap items-center gap-1.5">
+      {owned.map((product, index) => (
+        <span key={`${product.label}:${index}`} className="flex items-center gap-1.5">
+          {line.products.length > 1 ? (
+            <span className="text-[12px] text-muted-foreground">{product.label}</span>
+          ) : null}
+          <RunsheetFrequencyChip
+            cadenceLabel={line.frequencyLabel}
+            frequency={product.frequency}
+            washFrequency={washFrequency}
+          />
+        </span>
+      ))}
+    </span>
   )
 }
