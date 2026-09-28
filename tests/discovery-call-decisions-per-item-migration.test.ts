@@ -161,9 +161,11 @@ test("the migration has a unique version that sorts after every migration", () =
     .map((name) => name.split("_")[0])
   const own = OWN.split("_")[0]
   assert.equal(versions.filter((version) => version === own).length, 1)
-  assert.ok(
-    versions.every((version) => version <= own),
-    "must sort after every migration",
+  // Only the consult runsheet's call sheets (20260928120000) may come later.
+  assert.deepEqual(
+    versions.filter((version) => version > own),
+    ["20260928120000"],
+    "must sort after every migration but the call sheets'",
   )
 })
 
