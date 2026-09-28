@@ -34,6 +34,7 @@ import {
 } from "./heat-styling"
 import {
   discoveryConcernProfileFacts,
+  discoveryHairElasticity,
   type DiscoveryConcernProfileFacts,
 } from "./concern-recipe-view"
 import {
@@ -401,6 +402,11 @@ export type DiscoveryCockpitModel = {
    * it (tests): every gate then reads „prüfen".
    */
   concernProfileFacts?: DiscoveryConcernProfileFacts
+  /**
+   * Her pull test off the same snapshot (consult-runsheet T3: the „Vor dem Call" checklist).
+   * Absent for a model composed without it (tests); null when it cannot be read.
+   */
+  hairElasticity?: string | null
   /** Her „Hitze & Styling" answers (batch 7); null/absent = not asked. */
   heatStyling?: DiscoveryHeatStylingV1 | null
   /** Whether the Idealroutine ran on her checklist answers (batch 7, discovery-only). */
@@ -624,6 +630,7 @@ export async function loadDiscoveryCockpitModel(
     research: { items: capturedItems, state: researchState },
     application,
     concernProfileFacts: discoveryConcernProfileFacts(ideal.context?.snapshot),
+    hairElasticity: discoveryHairElasticity(ideal.context?.snapshot),
     heatStyling,
     routineSource: ideal.routineSource ?? "quiz_only",
     heatProtectionDeferred: ideal.heatProtectionDeferred === true,

@@ -252,11 +252,12 @@ async function renderCockpit(
   )
 }
 
-/** The product column of one step block, located by its category heading. */
+/**
+ * The product column of one step block, located by its category anchor chip (since the
+ * consult runsheet T3, every product entry carries its step's category as a chip).
+ */
 function stepBlock(markup: string, categoryLabel: string): string {
-  const start = markup.indexOf(
-    `<span class="text-[15px] font-bold text-foreground">${categoryLabel}</span>`,
-  )
+  const start = markup.indexOf(`text-[var(--brand-plum)]">${categoryLabel}</span>`)
   assert.ok(start >= 0, `no step block for ${categoryLabel}`)
   const end = markup.indexOf("Entscheidung", start)
   return markup.slice(start, end)
