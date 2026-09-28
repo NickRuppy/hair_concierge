@@ -452,13 +452,13 @@ function dimension(
     targetPosition:
       target === null
         ? null
-        : Array.isArray(target)
+        : isStopIdList(target)
           ? target.length > 1 || presentationKind === "set"
             ? setPosition(target, stops)
             : scalarPosition(target[0], stops)
           : presentationKind === "set"
             ? setPosition([String(target)], stops)
-            : scalarPosition(target as string | boolean, stops),
+            : scalarPosition(target, stops),
     productPositions: entries.map((entry) => ({
       productId: entry.product.productId,
       position: positionForValue(valueFor(entry.facts), presentationKind, stops),
@@ -500,6 +500,11 @@ const BINARY_STOPS = [
   { stopId: "true", label: "ja" },
   { stopId: "false", label: "nein" },
 ] as const
+
+// Array.isArray does not narrow readonly arrays out of a union; a guard keeps the target cast-free.
+function isStopIdList(value: string | boolean | readonly string[]): value is readonly string[] {
+  return Array.isArray(value)
+}
 
 function positionForValue(
   value: string | boolean | readonly string[] | null,
@@ -543,7 +548,7 @@ export function positionsOverlap(
   return leftStops.some((stopId) => rightStops.has(stopId))
 }
 
-/** An accepted categorical set reads primary first: „Feuchtigkeit · Protein ok“. */
+/** An accepted categorical set reads primary first: „Feuchtigkeit · ausgeglichen ok“. */
 export function acceptedSetLabel(labels: readonly string[]): string {
   const [primary, ...accepted] = labels
   return [primary, ...accepted.map((label) => `${label} ok`)].join(" · ")

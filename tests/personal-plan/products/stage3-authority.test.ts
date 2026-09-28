@@ -1012,8 +1012,9 @@ test("Mask v4 fails closed when required canonical functional benefits are missi
 })
 
 // R12 rule-ID fixtures for `mask.care_direction` (slice 3, Task 1). Literal expectations, not
-// derived from the implementation: the accepted set is {target} plus Protein only when the
-// confirmed mask target carries high repair support and does not already ask for Protein.
+// derived from the implementation. Ruling R12 Option A: the accepted set is {target}, widened by
+// exactly one step toward Protein (Feuchtigkeit → ausgeglichen → Protein) when the confirmed mask
+// target carries high repair support; a Protein target never widens.
 // Everything outside the accepted set is a caution (never a fail) for the intensive mask role.
 type MaskDirection = "moisture" | "balanced" | "protein"
 type MaskRepair = "low" | "medium" | "high"
@@ -1048,7 +1049,7 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
     target: "moisture",
     repair: "high",
     result: "pass",
-    accepted: ["moisture", "protein"],
+    accepted: ["moisture", "balanced"],
   },
   {
     ruleId: "R12.b-m-low",
@@ -1066,14 +1067,14 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
     result: "caution",
     accepted: ["moisture"],
   },
-  // Adversarial: high repair widens the set by Protein only — balanced is not smuggled in.
+  // Adversarial vs. "always caution on mismatch": high repair widens one step to ausgeglichen.
   {
     ruleId: "R12.b-m-high",
     product: "balanced",
     target: "moisture",
     repair: "high",
-    result: "caution",
-    accepted: ["moisture", "protein"],
+    result: "pass",
+    accepted: ["moisture", "balanced"],
   },
   // Adversarial vs. "always accept protein": no high repair need → Protein is a caution.
   {
@@ -1092,14 +1093,14 @@ const MASK_CARE_DIRECTION_FIXTURES: Array<{
     result: "caution",
     accepted: ["moisture"],
   },
-  // Adversarial vs. "always caution on mismatch": high repair need accepts Protein.
+  // Adversarial vs. a non-contiguous widening: high repair never jumps two steps to Protein.
   {
     ruleId: "R12.p-m-high",
     product: "protein",
     target: "moisture",
     repair: "high",
-    result: "pass",
-    accepted: ["moisture", "protein"],
+    result: "caution",
+    accepted: ["moisture", "balanced"],
   },
   // Target ausgeglichen
   {

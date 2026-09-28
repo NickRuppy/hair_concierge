@@ -88,15 +88,15 @@ function careDirectionCriterion(
       id,
       label,
       "pass",
-      "Protein ist bei hohem Repair-Bedarf für die Masken-Rolle ebenfalls passend.",
+      "Liegt eine Stufe Richtung Protein neben dem Wunschprofil und passt bei hohem Repair-Bedarf zur Masken-Rolle.",
     )
   return criterion(
     id,
     label,
     "caution",
     careDirectionAxisFitResult(product, target.careDirection) === "caution"
-      ? "Liegt eine Stufe neben der Ziel-Pflegerichtung."
-      : "Die Pflegerichtung ist dem Ziel entgegengesetzt.",
+      ? "Liegt eine Stufe neben dem Wunschprofil."
+      : "Die Pflegerichtung ist dem Wunschprofil entgegengesetzt.",
   )
 }
 

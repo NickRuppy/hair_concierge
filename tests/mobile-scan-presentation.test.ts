@@ -252,7 +252,7 @@ const careDirectionDimension = (
 })
 
 test("set-valued categorical target renders primary first with the accepted extras as „· X ok“", () => {
-  const source = [careDirectionDimension(["moisture", "protein"], "protein")]
+  const source = [careDirectionDimension(["moisture", "balanced"], "balanced")]
   const [row] = mobileRowsFromScanDimensions(
     scanDimensionsForProduct(source, "p"),
     null,
@@ -267,20 +267,20 @@ test("set-valued categorical target renders primary first with the accepted extr
       },
     ],
   )
-  assert.equal(row.targetValue, "Feuchtigkeit · Protein ok")
-  assert.equal(row.productValue, "Protein")
+  assert.equal(row.targetValue, "Feuchtigkeit · ausgeglichen ok")
+  assert.equal(row.productValue, "ausgeglichen")
   assert.equal(row.state, "in_target")
   assert.equal(row.displayStatus, "green")
 
   // Order follows the accepted set (primary first), not the stop order of the rail.
-  const reversed = [careDirectionDimension(["protein", "moisture"], "moisture")]
+  const reversed = [careDirectionDimension(["protein", "balanced"], "balanced")]
   const [reversedRow] = mobileRowsFromScanDimensions(
     scanDimensionsForProduct(reversed, "p"),
     null,
     "ideal",
     reversed,
   )
-  assert.equal(reversedRow.targetValue, "Protein · Feuchtigkeit ok")
+  assert.equal(reversedRow.targetValue, "Protein · ausgeglichen ok")
 })
 
 test("single-valued categorical and set-axis targets render exactly as before", () => {

@@ -2241,7 +2241,7 @@ function assertPayloadFits(value: unknown): void {
 test("mask evidence row names the full accepted care-direction set as the target", () => {
   const input = authorityInput("mask", "intensive_conditioning_mask", {
     productFacts: factsFor("mask", "intensive_conditioning_mask", "owned", {
-      careDirection: "protein",
+      careDirection: "balanced",
       repairSupportLevel: "high",
     }),
     candidates: [],
@@ -2253,7 +2253,7 @@ test("mask evidence row names the full accepted care-direction set as the target
 
   const comparison = buildStage3FitComparison(input)
   const row = comparison.evidenceRows?.find((entry) => entry.rowId === "mask.care_direction")
-  assert.equal(row?.target?.valueLabel, "Feuchtigkeit · Protein ok")
-  assert.equal(row?.productValues[0]?.valueLabel, "Protein")
+  assert.equal(row?.target?.valueLabel, "Feuchtigkeit · ausgeglichen ok")
+  assert.equal(row?.productValues[0]?.valueLabel, "ausgeglichen")
   assert.equal(row?.productValues[0]?.relation, "in_target")
 })

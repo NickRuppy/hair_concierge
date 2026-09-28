@@ -17,17 +17,20 @@ export function careDirectionAxisFitResult(product: string, target: string): Axi
   return product === "balanced" || target === "balanced" ? "caution" : "fail"
 }
 
+const CARE_DIRECTION_SCALE: readonly PlanCareDirection[] = ["moisture", "balanced", "protein"]
+
 /**
- * R12: the care directions an intensive mask may carry for a confirmed mask target, primary
- * (the target itself) first. High repair support additionally accepts Protein; nothing else
- * widens the set. Single source of truth for the mask authority and the comparison target.
+ * R12 (Option A): the care directions an intensive mask may carry for a confirmed mask target,
+ * primary (the target itself) first. High repair support widens the set by exactly one step
+ * toward Protein on the Feuchtigkeit–ausgeglichen–Protein scale, so the set stays contiguous.
+ * Single source of truth for the mask authority and the comparison target.
  */
 export function maskAcceptedCareDirections(target: {
   careDirection: PlanCareDirection
   repairSupportLevel: PlanRepairSupportLevel
 }): PlanCareDirection[] {
-  if (target.repairSupportLevel === "high" && target.careDirection !== "protein")
-    return [target.careDirection, "protein"]
+  const next = CARE_DIRECTION_SCALE[CARE_DIRECTION_SCALE.indexOf(target.careDirection) + 1]
+  if (target.repairSupportLevel === "high" && next) return [target.careDirection, next]
   return [target.careDirection]
 }
 
