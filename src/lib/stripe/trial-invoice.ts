@@ -36,6 +36,20 @@ export class TrialInvoiceReconciliationRequired extends Error {
   }
 }
 
+/** Reporting-only evidence of an absent initial local link, never financial validation. */
+export class TrialInvoiceBillingLinkPending extends TrialInvoiceReconciliationRequired {
+  readonly reason = "billing_link_pending"
+
+  constructor(
+    readonly agreementId: string,
+    readonly enrollmentId: string,
+    readonly livemode: boolean,
+  ) {
+    super()
+    this.name = "TrialInvoiceBillingLinkPending"
+  }
+}
+
 function requireFact(value: unknown): asserts value {
   if (!value) throw new TrialInvoiceReconciliationRequired()
 }
@@ -119,14 +133,33 @@ export async function handleStripeTrialInvoice(
   if (!billing?.trial_enrollment_id && subscription.metadata.trial_enrollment_id) {
     const candidate = await deps.supabase
       .from("trial_enrollments")
-      .select("id,provider,provider_agreement_id")
+      .select("id,user_id,provider,provider_agreement_id,admission_status,access_revoked")
       .eq("id", subscription.metadata.trial_enrollment_id)
       .maybeSingle()
-    requireFact(
-      !candidate.error &&
-        candidate.data?.provider === "stripe" &&
-        candidate.data.provider_agreement_id,
+    requireFact(!candidate.error && candidate.data?.provider === "stripe")
+    // Only an absent initial binding is a reporting candidate. Unknown roles,
+    // existing partial/mismatched billing rows and missing runtime stay errors.
+    const initialLinkPending = Boolean(
+      runtime &&
+      !billing &&
+      subscription.id === agreementId &&
+      subscription.livemode === runtime.livemode &&
+      subscription.status === "trialing" &&
+      subscription.cancel_at_period_end === false &&
+      candidate.data.access_revoked === false &&
+      (candidate.data.admission_status === "reserved" ||
+        (candidate.data.admission_status === "active" &&
+          typeof candidate.data.user_id === "string" &&
+          candidate.data.user_id.length > 0)) &&
+      subscription.metadata.trial_cohort === "trial_v1" &&
+      candidate.data.id === subscription.metadata.trial_enrollment_id &&
+      !Object.keys(subscription.metadata).some(
+        (key) => key.startsWith("trial_continuation_") || key.startsWith("trial_paid_recovery_"),
+      ),
     )
+    if (initialLinkPending && candidate.data.provider_agreement_id === null)
+      throw new TrialInvoiceBillingLinkPending(agreementId, candidate.data.id, runtime!.livemode)
+    requireFact(candidate.data.provider_agreement_id)
     const effective = await readTrialEffectiveContract(deps.supabase, candidate.data.id)
     requireFact(effective.provider === "stripe" && effective.agreementId === agreementId)
     originalAgreementId = candidate.data.provider_agreement_id
@@ -135,6 +168,8 @@ export async function handleStripeTrialInvoice(
       "stripe",
       originalAgreementId,
     )
+    if (initialLinkPending && originalAgreementId === agreementId && !billing)
+      throw new TrialInvoiceBillingLinkPending(agreementId, candidate.data.id, runtime!.livemode)
   }
   requireFact(runtime && billing?.trial_enrollment_id && billing.user_id)
   const enrollmentId = billing.trial_enrollment_id
