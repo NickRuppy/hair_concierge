@@ -235,7 +235,8 @@ test("iOS app terms carry Apple's minimum terms and consumer-safe clauses", () =
   assert.match(terms, /ausschließlich über den In-App-Kauf von Apple/)
   assert.match(terms, /spätestens 24 Stunden vor Ende des laufenden Zeitraums kündigst/)
   assert.match(terms, /nicht automatisch beendet/)
-  assert.match(terms, /Kündigung auch in Textform an uns richten/)
+  assert.match(terms, /Kündigung auch in Textform an uns richten, zum Beispiel per E-Mail/)
+  assert.match(terms, /Wir selbst können für In-App-Käufe keine Erstattungen vornehmen/)
   assert.match(terms, /Widerrufsrecht von 14 Tagen/)
   assert.match(terms, /verzichtet damit nicht auf das Widerrufsrecht/)
 
@@ -247,5 +248,6 @@ test("iOS app terms carry Apple's minimum terms and consumer-safe clauses", () =
   assert.match(terms, /ab 16 Jahren/)
   assert.match(terms, /Im Chat antwortet dir ein KI-System, kein Mensch/)
   assert.doesNotMatch(terms, /Stripe|PayPal/)
+  assert.doesNotMatch(terms, /erstatten wir/)
   assert.doesNotMatch(terms, /gelten die neuen .* als angenommen/)
 })

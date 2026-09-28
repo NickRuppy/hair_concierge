@@ -39,13 +39,11 @@ export default function AgbAppPage() {
                 oder an die oben genannte Anschrift.
               </p>
               <p className="mt-2">
-                (3) Für Verträge, die du über unsere Website chaarlie.de abgeschlossen hast, gelten
-                ausschließlich die{" "}
+                (3) Für Mitgliedschaften, die über unsere Website abgeschlossen wurden, gelten die{" "}
                 <Link href="/agb" className={linkClass}>
                   AGB der Website
                 </Link>
-                . Diese gelten auch dann weiter, wenn du eine solche Mitgliedschaft nach dem
-                Einloggen in der App nutzt.
+                .
               </p>
               <p className="mt-2">
                 (4) Abweichende Bedingungen von Nutzern gelten nicht. Der Vertrag wird in deutscher
@@ -159,9 +157,8 @@ export default function AgbAppPage() {
                 Beeinträchtigt eine Änderung deinen Zugang zur App oder ihre Nutzbarkeit mehr als
                 nur unerheblich, informieren wir dich rechtzeitig vorher in Textform. Du kannst den
                 Vertrag dann innerhalb von 30 Tagen nach dieser Information oder nach der Änderung,
-                je nachdem, was später eintritt, unentgeltlich beenden. Für einen im Voraus
-                bezahlten, danach nicht mehr genutzten Zeitraum erstatten wir dir das anteilige
-                Entgelt.
+                je nachdem, was später eintritt, unentgeltlich beenden. Deine gesetzlichen Rechte
+                bleiben unberührt.
               </p>
             </section>
 
@@ -260,30 +257,15 @@ export default function AgbAppPage() {
                 deine Apple-ID abgerechnet.
               </p>
               <p className="mt-2">
-                (6) Bei einer jährlichen Mitgliedschaft kannst du nach Ablauf des ersten Jahres
-                jederzeit mit einer Frist von einem Monat kündigen. Für den im Voraus bezahlten
-                Zeitraum nach dem Ende deines Vertrags erstatten wir dir das anteilige Entgelt,
-                soweit Apple es nicht bereits erstattet hat. Schreib uns dazu an{" "}
-                <a href="mailto:info@chaarlie.de" className={linkClass}>
-                  info@chaarlie.de
-                </a>
-                .
-              </p>
-              <p className="mt-2">
-                (7) Preiserhöhungen für eine laufende Mitgliedschaft werden nur wirksam, wenn du
+                (6) Preiserhöhungen für eine laufende Mitgliedschaft werden nur wirksam, wenn du
                 ihnen zustimmst. Stimmst du nicht zu, endet die Mitgliedschaft zum Ende des
                 laufenden Zeitraums.
               </p>
               <p className="mt-2">
-                (8) Deine Mitgliedschaft ist an deine Apple-ID und dein Chaarlie-Konto gebunden. Auf
+                (7) Deine Mitgliedschaft ist an deine Apple-ID und dein Chaarlie-Konto gebunden. Auf
                 einem anderen Gerät kannst du sie über „Käufe wiederherstellen&ldquo; in der App
                 erneut aktivieren. Familienfreigabe ist nur möglich, wenn der App Store sie für die
                 Mitgliedschaft ausweist.
-              </p>
-              <p className="mt-2">
-                (9) Hast du bereits eine Mitgliedschaft über unsere Website, brauchst du keine
-                weitere Mitgliedschaft in der App. Hast du versehentlich beide abgeschlossen, melde
-                dich bei uns. Wir helfen dir, eine davon zu beenden.
               </p>
             </section>
 
@@ -303,10 +285,11 @@ export default function AgbAppPage() {
                 <a href="mailto:info@chaarlie.de" className={linkClass}>
                   info@chaarlie.de
                 </a>
-                . Wir bestätigen dir den Eingang und das Vertragsende in Textform. Weil wir
-                App-Store-Abonnements technisch nicht selbst beenden können, erklären wir dir, wie
-                du die Verlängerung bei Apple abschaltest. Wird dir danach trotzdem ein Zeitraum
-                nach dem Vertragsende berechnet, erstatten wir dir diesen Betrag.
+                . Gib dabei bitte die E-Mail-Adresse deines Chaarlie-Kontos an. Wir bestätigen dir
+                den Eingang und das Vertragsende in Textform. Da nur Apple die Abrechnung steuert,
+                zeigen wir dir in unserer Antwort außerdem, wie du die Verlängerung in deinen
+                Apple-Einstellungen abschaltest. Wird dir nach dem Vertragsende trotzdem ein
+                weiterer Zeitraum berechnet, helfen wir dir, die Erstattung bei Apple zu beantragen.
               </p>
               <p className="mt-2">
                 (3) Erstattungen für In-App-Käufe kannst du bei Apple beantragen, zum Beispiel über{" "}
@@ -318,15 +301,14 @@ export default function AgbAppPage() {
                 >
                   reportaproblem.apple.com
                 </a>
-                . Schulden wir dir nach diesen Bedingungen oder nach dem Gesetz eine Erstattung und
-                nimmt Apple sie nicht vor, erstatten wir dir den Betrag direkt.
+                . Da Apple die Zahlung abwickelt, entscheidet Apple über Erstattungen. Wir selbst
+                können für In-App-Käufe keine Erstattungen vornehmen. Deine gesetzlichen Rechte
+                bleiben unberührt.
               </p>
               <p className="mt-2">
-                (4) Wir können eine Mitgliedschaft mit einer Frist von einem Monat zum Ende eines
-                Abrechnungszeitraums kündigen. Die kostenlose Nutzung der App können wir mit einer
-                Frist von vier Wochen beenden. Das Recht beider Seiten zur außerordentlichen
-                Kündigung aus wichtigem Grund bleibt unberührt, zum Beispiel bei schwerem Missbrauch
-                der App.
+                (4) Die kostenlose Nutzung der App können wir mit einer Frist von vier Wochen
+                beenden. Das Recht beider Seiten zur außerordentlichen Kündigung aus wichtigem Grund
+                bleibt unberührt, zum Beispiel bei schwerem Missbrauch der App.
               </p>
             </section>
 
@@ -348,11 +330,11 @@ export default function AgbAppPage() {
                 bereitstellt.
               </p>
               <p className="mt-2">
-                (2) Du kannst deinen Widerruf auch an uns richten, zum Beispiel per E-Mail an{" "}
+                (2) Brauchst du dabei Hilfe, schreib uns an{" "}
                 <a href="mailto:info@chaarlie.de" className={linkClass}>
                   info@chaarlie.de
                 </a>
-                . Auch dann ist der Widerruf wirksam, und wir sorgen für die Rückabwicklung.
+                . Wir zeigen dir, wie du den Widerruf bei Apple einreichst.
               </p>
               <p className="mt-2">
                 (3) Ein kostenloser Testzeitraum ersetzt das Widerrufsrecht nicht. Wer die App nutzt
@@ -443,8 +425,8 @@ export default function AgbAppPage() {
                 (2) Alle anderen Änderungen, insbesondere zu Leistungsumfang, Preis oder Laufzeit,
                 werden nur wirksam, wenn du ihnen ausdrücklich zustimmst, zum Beispiel durch eine
                 Bestätigung in der App. Dein Schweigen gilt nicht als Zustimmung. Stimmst du nicht
-                zu, gelten die bisherigen Bedingungen weiter. Unser Kündigungsrecht nach § 7 Abs. 4
-                bleibt unberührt.
+                zu, gelten die bisherigen Bedingungen weiter. Die Kündigungsrechte nach § 7 bleiben
+                unberührt.
               </p>
               <p className="mt-2">(3) Änderungen der App selbst richten sich nach § 3 Abs. 7.</p>
             </section>
