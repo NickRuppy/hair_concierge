@@ -399,7 +399,8 @@ function nameMatcher(names: readonly string[]): RegExp | null {
   if (cleaned.length === 0) return null
   // Longest first, so a full label wins over its shorter alias.
   cleaned.sort((left, right) => right.length - left.length)
-  return new RegExp(`(?<![\\p{L}\\d])(?:${cleaned.map(escape).join("|")})(?![\\p{L}\\d])`, "giu")
+  // A hyphen joins a compound: „Shampoo" is not named in „Shampoo-Ansatz".
+  return new RegExp(`(?<![\\p{L}\\d-])(?:${cleaned.map(escape).join("|")})(?![\\p{L}\\d-])`, "giu")
 }
 
 function knownNames(input: ConsultInput): string[] {
@@ -416,20 +417,36 @@ function knownNames(input: ConsultInput): string[] {
 const KEEP_CUE = words(
   "behalten|behält|bleib(?:t|en)|kann bleiben|weiter (?:nutzen|benutzen|verwenden|nehmen)|weiter(?:nutzen|benutzen|verwenden)|weiterhin (?:\\p{L}+ )?(?:nutzen|benutzen|verwenden|nehmen)",
 )
-/** Praise, incl. a bare „passt" („passt nicht" and its softened forms excluded). */
+/**
+ * „passt … nicht" as a negation: „nicht" within four plain words after „passt" („passt dafür
+ * nicht", „passt bei feinem Haar ebenfalls nicht" — the T5 evals needed four). The window never crosses punctuation („passt — nicht
+ * ohne Grund" stays praise), never spans a conjunction or a praise word („passt gut und nicht
+ * zu schwer" stays praise), and „nicht nur" is no negation („passt nicht nur gut").
+ */
+const PASST_WINDOW_TOKEN =
+  "(?!(?:und|aber|sondern|oder|doch|gut|super|perfekt|prima|toll|genau|bestens|ideal)(?!\\p{L}))[^\\s.,;:!?()–—-]+"
+const PASST_NEGATION_TAIL = `(?:\\s+${PASST_WINDOW_TOKEN}){0,4}\\s+nicht(?!\\p{L})(?!\\s+nur)`
+const PASST_NEGATED = `passt${PASST_NEGATION_TAIL}`
+
+/** Praise, incl. a bare „passt" (a negated „passt … nicht" excluded). */
 const PRAISE_CUE = words(
-  "passt(?!\\s+(?:(?:eigentlich|leider|eher|gar|überhaupt)\\s+)?nicht)|(?<!nicht\\s)geeignet|funktioniert (?:gut|super|prima|toll|bestens)|klappt (?:gut|super|prima)|ideal|perfekt|top",
+  `passt(?!${PASST_NEGATION_TAIL})|` +
+    "(?<!nicht\\s)geeignet|funktioniert (?:gut|super|prima|toll|bestens)|klappt (?:gut|super|prima)|ideal|perfekt|top",
 )
-const VERDICT_NAMED = words("passt (?:eigentlich |leider |eher )?nicht")
+const VERDICT_NAMED = words(PASST_NEGATED)
 const DISCOURAGE_CUE = words(
-  "weglassen|lass\\p{L}*[^.!?]{0,30} weg|absetzen|nicht mehr (?:nutzen|benutzen|verwenden|nehmen)|austauschen|tauschen|ersetzen|aussortieren|rausnehmen|raus nehmen|rausschmeißen|rauswerfen|wegwerfen|streichen|verzichten|abraten|abgeraten|brauch\\p{L}*(?: \\p{L}+)? (?:nicht|kein\\p{L}*)|passt (?:eigentlich |leider |eher )?nicht",
+  "weglassen|lass\\p{L}*[^.!?]{0,30} weg|absetzen|nicht mehr (?:nutzen|benutzen|verwenden|nehmen)|austauschen|tauschen|ersetzen|aussortieren|rausnehmen|raus nehmen|rausschmeißen|rauswerfen|wegwerfen|streichen|verzichten|abraten|abgeraten|brauch\\p{L}*(?: \\p{L}+)? (?:nicht|kein\\p{L}*)|" +
+    PASST_NEGATED,
 )
 
 function sentences(text: string): string[] {
-  return text
-    .split(/(?<=[.!?])\s+/)
-    .map((entry) => entry.trim())
-    .filter(Boolean)
+  return (
+    text
+      // A semicolon joins two independent main clauses: each is its own sentence for G4.
+      .split(/(?<=[.!?;])\s+/)
+      .map((entry) => entry.trim())
+      .filter(Boolean)
+  )
 }
 
 function clauses(sentence: string): string[] {
@@ -594,10 +611,13 @@ export function lintConsultBrief(
       const named = productMentionList.filter((mention) => mentioned(sentence, mention))
       for (const mention of named) {
         if (flagged.has(mention.product)) continue
-        const scopes =
-          named.length === 1
-            ? [sentence]
-            : clauses(sentence).filter((clause) => mentioned(clause, mention))
+        const own = clauses(sentence).filter((clause) => mentioned(clause, mention))
+        // Its own clause states „passt … nicht": praise elsewhere in the sentence is about
+        // another subject („… passt ein milderer Ansatz besser: X passt nicht").
+        const verdictStated =
+          verdictSide(mention.product) === "passt_nicht" &&
+          own.some((clause) => VERDICT_NAMED.test(clause))
+        const scopes = named.length === 1 && !verdictStated ? [sentence] : own
         if (scopes.some((scope) => contradicts(mention.product, scope))) {
           flagged.add(mention.product)
           findings.push(verdictFinding(location, mention.product, sentence))

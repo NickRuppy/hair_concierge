@@ -619,3 +619,57 @@ test("the recipe excerpt's own wording: known hits pinned", () => {
   }
   assert.deepEqual(hits, KNOWN_RECIPE_HITS)
 })
+
+// --- T5 eval false positive: „passt … nicht" window -------------------------------------------------
+
+test("„passt dafür nicht“ is a negation: the T5 oily-overwash sentence passes", () => {
+  const base = nomiInput()
+  const input = nomiInput({
+    products: [
+      ...base.products,
+      product({
+        bucket: "tauschenOderNeu",
+        decisionKey: "shampoo:x:none",
+        name: "Frischkraft Tiefenrein Shampoo",
+        brand: "Frischkraft",
+        categoryLabel: "Shampoo",
+        verdict: "passt_nicht",
+      }),
+    ],
+  })
+  const brief = cleanBrief()
+  brief.diagnose +=
+    " Die tägliche Wäsche passt grundsätzlich zu ihrer Kopfhaut; das Frischkraft Tiefenrein Shampoo passt dafür nicht."
+  assert.deepEqual(lintConsultBrief(brief, input), [])
+  for (const sentence of [
+    "Das Volumen Shampoo passt hier nicht.",
+    "Das Volumen Shampoo passt so leider nicht.",
+  ]) {
+    assert.equal(flagsVerdict(sentence), false, sentence)
+  }
+})
+
+test("the negation window never weakens praise for a passt-nicht product", () => {
+  for (const sentence of [
+    "Das Volumen Shampoo passt — nicht ohne Grund.",
+    "Das Volumen Shampoo passt gut und nicht zu schwer.",
+    "Das Volumen Shampoo passt nicht nur gut, sondern super.",
+    "Das Volumen Shampoo passt, nicht wahr?",
+  ]) {
+    assert.ok(flagsVerdict(sentence), sentence)
+  }
+})
+
+test("T5 eval round 2: a wide negation window and praise for another subject", () => {
+  for (const sentence of [
+    "Das Volumen Shampoo passt bei feinem Haar ebenfalls nicht als erster Schritt.",
+    "Für die Längen passt ein milderer Ansatz besser: Das Volumen Shampoo passt nicht, das Sanftwerk Mild Shampoo ist der passendere Versuch.",
+    // The exact T5 nomi sentence shape: the category word inside a compound is no mention.
+    "Für die Kopfhaut passt ein milderer Shampoo-Ansatz besser: Glanzwerk Volumen Shampoo passt nicht, Sanftwerk Mild Shampoo ist zunächst der passendere Versuch.",
+  ]) {
+    assert.equal(flagsVerdict(sentence), false, sentence)
+  }
+  // Without the stated verdict the whole sentence still counts (fix round 1a).
+  assert.ok(flagsVerdict("Für die Längen passt es super: Das Volumen Shampoo bleibt."))
+  assert.ok(flagsVerdict("Das Volumen Shampoo, das sie seit Jahren nutzt, kann bleiben."))
+})

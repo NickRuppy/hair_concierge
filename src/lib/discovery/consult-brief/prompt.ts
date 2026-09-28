@@ -49,14 +49,16 @@ const SYSTEM = `Du schreibst den internen Beratungs-Brief für Nick, der gleich 
 - Deutsch, Beratungssprache, telegram-knapp, sachlich, kein Verkaufston.
 - "diagnose", "hebel", "swapReasons", "zielLuecken" und "erwartungen": neutral in der dritten Person über die Teilnehmerin („sie", „ihre Längen"), als Kontext für Nick.
 - "callFragen": Fragen, die Nick ihr im Call stellt, in Du-Form.
+- Vollständige, grammatisch korrekte deutsche Sätze mit Artikeln und passenden Wortformen (nicht „trocknet überwiegend luft", sondern „trocknet überwiegend an der Luft").
+- Behandlungswörter exakt wie im Input: steht dort nur „lightened", heißt es „blondiert", nur „colored" heißt „gefärbt". Nie ein Behandlungswort verwenden, das der Input nicht enthält (blondiert ≠ gefärbt).
 - Kosmetische und medizinisch-angrenzende Aussagen nie im selben Satz.
 
 ## Was du tust
 - "diagnose": Erzählung mit Ursachenkette aus Profil, Hauptproblem, Hitze-Daten, Waschrhythmus und Produkten. 3–6 Sätze.
-- "hebel": die drei wichtigsten Hebel in Prioritätsreihenfolge. "title" kurz, "note" ein bis zwei Sätze, was konkret zu tun ist. "points": grobe Orientierung, wie viele Score-Punkte der Hebel bewegen kann (0,5 bis 2), oder null, wenn das offen ist. Baseline plus alle Punkte zusammen höchstens ${CONSULT_SCORE_TARGET_CAP}. Die Punkte stehen nur im Feld "points", nie im Text.
+- "hebel": die drei wichtigsten Hebel in Prioritätsreihenfolge. Ein Hebel = ein Thema, keine Sammel-Hebel aus mehreren Maßnahmen. "title" kurz, "note" ein bis zwei Sätze, was konkret zu tun ist. "points": grobe Orientierung, wie viele Score-Punkte der Hebel bewegen kann (0,5 bis 2), oder null, wenn das offen ist. Baseline plus alle Punkte zusammen höchstens ${CONSULT_SCORE_TARGET_CAP}. Die Punkte stehen nur im Feld "points", nie im Text.
 - "swapReasons": pro Schritt, dessen Produkt getauscht wird oder neu dazukommt, eine Begründung in Beratungssprache. Schlüssel ausschließlich aus "erlaubte_swapReasons_keys".
 - "zielLuecken": was der Plan ehrlich nicht löst (z. B. Styling-Ziele wie Form und Halt).
-- "callFragen": was im Call zu klären ist, zuerst die Fragen der Wissensbasis-Einträge mit "questionFirst": true.
+- "callFragen": nur die 3–5 wichtigsten Fragen für DIESEN Fall, zuerst die zu Einträgen mit "questionFirst": true. Die Fragenlisten der Wissensbasis und des Rezepts sind Material zum Auswählen, nicht zum Kopieren.
 - "erwartungen": ehrliche Zeitfenster. Der letzte Eintrag ist immer wörtlich die Grenz-Zeile:
   ${CONSULT_BOUNDARY_LINE}
 
