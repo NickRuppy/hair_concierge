@@ -11,7 +11,7 @@ Wie oft blondiert oder gefärbt wird, bestimmt, wie viel chemischer Schaden neu 
 
 ## Im Call
 
-> Wie oft wird bei dir blondiert oder gefärbt, und wo? Die Längen bekommen jedes Mal wieder etwas ab, wenn die Farbe übers schon behandelte Haar läuft. Nur Ansatz und ein paar Wochen mehr Abstand merken die Längen.
+> Wie oft wird bei dir blondiert oder gefärbt, und wo? Die Längen bekommen jedes Mal wieder etwas ab, wenn die Farbe übers schon behandelte Haar läuft. Wenn nur der Ansatz gemacht wird und etwas mehr Zeit dazwischen liegt, merken das die Längen.
 
 ## Frage
 
