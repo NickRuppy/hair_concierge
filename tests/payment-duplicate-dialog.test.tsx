@@ -67,13 +67,23 @@ test("PayPal duplicate responses open the modal instead of redirecting to welcom
   )
 })
 
-test("Stripe duplicate responses are handled in offer and membership reactivation checkout", () => {
-  for (const source of [membershipReactivationSource, resultOfferPricingSource]) {
-    assert.match(source, /ActiveSubscriptionDialog/)
-    assert.match(source, /isCheckoutAccessAlreadyExistsResponse/)
-    assert.match(source, /readCheckoutAccessAlreadyExistsEmail/)
-    assert.match(source, /setDuplicate(?:Dialog)?Open\(true\)/)
-  }
+test("Stripe duplicate responses preserve reactivation handling and recover offer access before payment", () => {
+  assert.match(membershipReactivationSource, /ActiveSubscriptionDialog/)
+  assert.match(membershipReactivationSource, /isCheckoutAccessAlreadyExistsResponse/)
+  assert.match(membershipReactivationSource, /readCheckoutAccessAlreadyExistsEmail/)
+  assert.match(membershipReactivationSource, /setDuplicate(?:Dialog)?Open\(true\)/)
+
+  assert.match(resultOfferPricingSource, /CheckoutAccessRecoveryPanel/)
+  assert.match(resultOfferPricingSource, /fetch\("\/api\/checkout\/eligibility"/)
+  assert.match(resultOfferPricingSource, /body\.status === "existing_access"/)
+  assert.match(resultOfferPricingSource, /setAccessCheck\(body\)/)
+  assert.match(resultOfferPricingSource, /isCheckoutAccessAlreadyExistsResponse\(response, body\)/)
+  assert.match(resultOfferPricingSource, /checkAccess\(attemptId, checkoutInterval, true\)/)
+  assert.match(resultOfferPricingSource, /throw new CheckoutAccessRecoveryError\(\)/)
+  assert.match(
+    resultOfferPricingSource,
+    /body\.status !== "eligible"[\s\S]*getOfferStripePromise\(\)/,
+  )
 })
 
 test("one-time checkout preserves its legacy duplicate modal while feedback V2 is off", () => {

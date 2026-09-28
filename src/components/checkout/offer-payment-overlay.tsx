@@ -76,6 +76,8 @@ export type OfferPaymentOverlayProps = {
   open: boolean
   planName: string
   priceLabel: string
+  headerMode?: "payment" | "access"
+  intentionalNavigationRef?: React.RefObject<boolean>
   onConfirmedAbort: () => void
   onConfirmedPlanChange: () => void
   onDismissRequest?: (reason: OfferPaymentOverlayDismissalReason) => void
@@ -112,6 +114,8 @@ export function OfferPaymentOverlay({
   open,
   planName,
   priceLabel,
+  headerMode = "payment",
+  intentionalNavigationRef,
   onConfirmedAbort,
   onConfirmedPlanChange,
   onContinuePayment,
@@ -220,6 +224,7 @@ export function OfferPaymentOverlay({
   React.useEffect(() => {
     if (!open) return
     const historyGuard = historyGuardRef.current
+    const recoveryNavigationPending = () => intentionalNavigationRef?.current === true
     pushOfferCheckoutHistorySentinel(historyGuard)
     const onPopState = () => {
       if (!historyGuard.ownsSentinel) return
@@ -229,9 +234,12 @@ export function OfferPaymentOverlay({
     window.addEventListener("popstate", onPopState)
     return () => {
       window.removeEventListener("popstate", onPopState)
-      consumeOfferCheckoutHistorySentinel(historyGuard)
+      // Recovery replaces the overlay sentinel itself; a history.back() here could
+      // race that navigation and send the customer back to the checkout instead.
+      if (recoveryNavigationPending()) historyGuard.ownsSentinel = false
+      else consumeOfferCheckoutHistorySentinel(historyGuard)
     }
-  }, [open])
+  }, [intentionalNavigationRef, open])
 
   React.useEffect(() => {
     if (!state.pendingDismissal) return
@@ -249,20 +257,22 @@ export function OfferPaymentOverlay({
     >
       <div className="min-w-0">
         <BottomSheetTitle className="mb-1 text-[17px] font-bold text-[var(--brand-plum-darkest)]">
-          Sicher bezahlen
+          {headerMode === "access" ? "Dein Zugang" : "Sicher bezahlen"}
         </BottomSheetTitle>
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-muted-foreground">
-          <b className="font-bold text-[var(--brand-plum-darkest)]">{planSummary}</b>
-          <span aria-hidden="true">·</span>
-          <button
-            type="button"
-            onClick={() => requestDismissal("plan_change")}
-            disabled={planChangeDisabled}
-            className="font-extrabold text-[var(--brand-plum)] underline-offset-2 hover:underline disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Plan ändern
-          </button>
-        </div>
+        {headerMode === "payment" ? (
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-muted-foreground">
+            <b className="font-bold text-[var(--brand-plum-darkest)]">{planSummary}</b>
+            <span aria-hidden="true">·</span>
+            <button
+              type="button"
+              onClick={() => requestDismissal("plan_change")}
+              disabled={planChangeDisabled}
+              className="font-extrabold text-[var(--brand-plum)] underline-offset-2 hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Plan ändern
+            </button>
+          </div>
+        ) : null}
       </div>
       <button
         type="button"
@@ -270,7 +280,9 @@ export function OfferPaymentOverlay({
         className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-border bg-white text-[var(--brand-plum-darkest)] transition-colors hover:bg-[var(--brand-plum-ice)] focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
       >
         <X className="h-4 w-4" aria-hidden="true" />
-        <span className="sr-only">Zahlung schließen</span>
+        <span className="sr-only">
+          {headerMode === "access" ? "Zugang schließen" : "Zahlung schließen"}
+        </span>
       </button>
     </header>
   )
@@ -297,6 +309,7 @@ export function OfferPaymentOverlay({
         }}
         className={cn(
           "z-[110] h-[calc(100dvh-48px)] max-h-[calc(100dvh-48px)] overflow-hidden rounded-t-[24px] bg-[#fbfaf8] shadow-[0_-12px_36px_rgba(20,12,27,0.24)]",
+          headerMode === "access" && "h-auto",
           "sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:h-auto sm:max-h-[calc(100dvh-64px)] sm:w-[min(620px,calc(100vw-32px))] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[22px] sm:shadow-[0_22px_80px_rgba(20,12,27,0.38)]",
         )}
       >
