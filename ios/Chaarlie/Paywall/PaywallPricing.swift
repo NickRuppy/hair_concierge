@@ -36,14 +36,38 @@ enum PaywallPricing {
     }
     static func badge(percent: Int) -> String { "−\(percent)\u{00A0}%" }
 
-    /// Standard rounding at the currency's precision, never truncated.
+    /// A twelfth of the yearly price, standard rounding at the currency's precision, never truncated.
+    static func monthlyAmount(yearly: Decimal, style: Decimal.FormatStyle.Currency) -> String {
+        (yearly / 12).formatted(style.rounded(rule: .toNearestOrAwayFromZero))
+    }
     static func monthlyEquivalent(yearly: Decimal, style: Decimal.FormatStyle.Currency) -> String {
-        "nur \((yearly / 12).formatted(style.rounded(rule: .toNearestOrAwayFromZero)))/Monat"
+        "nur \(monthlyAmount(yearly: yearly, style: style))/Monat"
     }
 
     static func billed(_ displayPrice: String, per period: PlanPeriod) -> String {
         guard period.value == 1 else { return "\(displayPrice) für \(duration(period))" }
         return "\(displayPrice)/\(unitName(period.unit, plural: false))"
+    }
+
+    /// Only a monthly plan says it can be cancelled monthly.
+    static func cancellationNote(for period: PlanPeriod) -> String? {
+        period == PlanPeriod(value: 1, unit: .month) ? "monatlich kündbar" : nil
+    }
+
+    /// VoiceOver reads the billed price first, then the tile's secondary lines that are shown.
+    static func tileAccessibilityLabel(displayPrice: String, period: PlanPeriod, title: String, savingsPercent: Int?,
+                                       monthlyAmount: String?, trial: PlanPeriod?) -> String {
+        let billed = period.value == 1
+            ? "\(displayPrice) pro \(unitName(period.unit, plural: false))"
+            : "\(displayPrice) für \(duration(period))"
+        let details = [
+            title,
+            savingsPercent.map { "\($0) % günstiger" },
+            monthlyAmount.map { "entspricht \($0) pro Monat" },
+            cancellationNote(for: period),
+            trial.map(Self.trial),
+        ].compactMap { $0 }
+        return "\(billed). \(details.joined(separator: ", "))."
     }
 
     static func title(for period: PlanPeriod, fallback: String) -> String {

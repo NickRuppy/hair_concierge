@@ -86,6 +86,42 @@ final class PaywallPricingTests: XCTestCase {
         XCTAssertEqual(PaywallPricing.disclosure(billed: "4,99\(nbsp)€/Monat", trial: nil),
                        "4,99\(nbsp)€/Monat, verlängert sich automatisch bis zur Kündigung.")
     }
+    // MARK: Cancellation note and VoiceOver
+
+    func testCancellationNoteOnlyForAMonthlyPlan() {
+        XCTAssertEqual(PaywallPricing.cancellationNote(for: month), "monatlich kündbar")
+        XCTAssertNil(PaywallPricing.cancellationNote(for: year))
+        XCTAssertNil(PaywallPricing.cancellationNote(for: PlanPeriod(value: 3, unit: .month)))
+        XCTAssertNil(PaywallPricing.cancellationNote(for: week))
+    }
+    func testMonthlyAmountIsTheBareRoundedTwelfth() {
+        XCTAssertEqual(PaywallPricing.monthlyAmount(yearly: decimal("39.99"), style: eur), "3,33\(nbsp)€")
+    }
+    func testYearlyTileIsReadBilledPriceFirst() {
+        XCTAssertEqual(
+            PaywallPricing.tileAccessibilityLabel(displayPrice: "39,99\(nbsp)€", period: year, title: "Jährlich",
+                                                  savingsPercent: 33, monthlyAmount: "3,33\(nbsp)€", trial: week),
+            "39,99\(nbsp)€ pro Jahr. Jährlich, 33 % günstiger, entspricht 3,33\(nbsp)€ pro Monat, 1 Woche kostenlos.")
+    }
+    func testYearlyTileOmitsHiddenBadgeAndTrial() {
+        XCTAssertEqual(
+            PaywallPricing.tileAccessibilityLabel(displayPrice: "39,99\(nbsp)€", period: year, title: "Jährlich",
+                                                  savingsPercent: nil, monthlyAmount: "3,33\(nbsp)€", trial: nil),
+            "39,99\(nbsp)€ pro Jahr. Jährlich, entspricht 3,33\(nbsp)€ pro Monat.")
+    }
+    func testMonthlyTileIsReadBilledPriceFirst() {
+        XCTAssertEqual(
+            PaywallPricing.tileAccessibilityLabel(displayPrice: "4,99\(nbsp)€", period: month, title: "Monatlich",
+                                                  savingsPercent: nil, monthlyAmount: nil, trial: nil),
+            "4,99\(nbsp)€ pro Monat. Monatlich, monatlich kündbar.")
+    }
+    func testMultiMonthTileNamesTheFullPeriodWithoutMonthlyCancellation() {
+        XCTAssertEqual(
+            PaywallPricing.tileAccessibilityLabel(displayPrice: "12,99\(nbsp)€", period: PlanPeriod(value: 3, unit: .month),
+                                                  title: "Quartal", savingsPercent: nil, monthlyAmount: nil, trial: nil),
+            "12,99\(nbsp)€ für 3 Monate. Quartal.")
+    }
+
     func testActionLabelOffersTheTrialOnlyWhenOneApplies() {
         XCTAssertEqual(PaywallPricing.actionLabel(hasFreeTrial: true), "Kostenlos testen")
         XCTAssertEqual(PaywallPricing.actionLabel(hasFreeTrial: false), "Abonnieren")

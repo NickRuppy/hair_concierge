@@ -7,6 +7,9 @@ import UIKit
 /// through the server.
 struct PaywallView: View {
     @Bindable var model: AppModel
+    /// Set on the CTA tap, cleared when StoreKit reports any result: a second tap before
+    /// Apple's sheet appears must not start a second purchase.
+    @State private var purchaseInFlight = false
 
     static func purchaseOptions(for token: UUID?) -> Set<Product.PurchaseOption> {
         token.map { [.appAccountToken($0)] } ?? []
@@ -17,11 +20,14 @@ struct PaywallView: View {
             if let token = model.purchaseAccountToken, let groupID = SubscriptionConfiguration.groupID {
                 SubscriptionStoreView(groupID: groupID) { PaywallHeader(model: model) }
                     .containerBackground(for: .subscriptionStoreFullHeight) { ChaarlieTheme.background }
-                    .subscriptionStoreControlStyle(PaywallPlanStyle(), placement: .bottomBar)
+                    .subscriptionStoreControlStyle(PaywallPlanStyle(purchaseInFlight: $purchaseInFlight), placement: .bottomBar)
                     .storeButton(.hidden, for: .policies, .restorePurchases)
                     .inAppPurchaseOptions { _ in Self.purchaseOptions(for: token) }
                     .onInAppPurchaseStart { _ in model.purchaseStarted() }
-                    .onInAppPurchaseCompletion { _, result in await model.handlePurchase(PurchaseOutcome(result)) }
+                    .onInAppPurchaseCompletion { _, result in
+                        purchaseInFlight = false
+                        await model.handlePurchase(PurchaseOutcome(result))
+                    }
                     .disabled(model.purchaseState == .unlocking || model.purchaseState == .restoring)
                     .modifier(HiddenScrollEdge())
             } else {
@@ -198,12 +204,12 @@ private struct HiddenScrollEdge: ViewModifier {
 /// largest and boldest price, the monthly equivalent, badge and trial stay smaller and
 /// lighter, and the selected plan's renewal terms sit directly above the button. Purchases still run
 /// through the store view, so `.inAppPurchaseOptions` and the completion handlers apply.
+/// Applied with `placement: .bottomBar`: the default `.automatic` placement puts a custom
+/// style into the scroll view, below the photo and under the footer.
 struct PaywallPlanStyle: SubscriptionStoreControlStyle {
-    /// Borrowed so the controls can pin to the bottom bar like the approved compact picker;
-    /// a custom style's own placement only offers the scroll view.
-    typealias Placement = CompactPickerSubscriptionStoreControlStyle.Placement
+    @Binding var purchaseInFlight: Bool
     func makeBody(configuration: Configuration) -> some View {
-        PaywallPlanControls(configuration: configuration)
+        PaywallPlanControls(configuration: configuration, purchaseInFlight: $purchaseInFlight)
     }
 }
 
@@ -225,6 +231,7 @@ private extension Product.SubscriptionOffer {
 
 private struct PaywallPlanControls: View {
     let configuration: SubscriptionStoreControlStyleConfiguration
+    @Binding var purchaseInFlight: Bool
     @State private var selectedID: Product.ID?
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -235,11 +242,11 @@ private struct PaywallPlanControls: View {
     private var selected: PlanOption? {
         options.first { $0.id == selectedID } ?? options.first
     }
-    private var savingsBadge: String? {
+    private var savingsPercent: Int? {
         func price(_ unit: PlanPeriod.Unit) -> Decimal? {
             configuration.options.first { $0.subscription.planPeriod == PlanPeriod(value: 1, unit: unit) }?.subscription.price
         }
-        return PaywallPricing.savingsPercent(yearly: price(.year), monthly: price(.month)).map(PaywallPricing.badge)
+        return PaywallPricing.savingsPercent(yearly: price(.year), monthly: price(.month))
     }
 
     var body: some View {
@@ -251,39 +258,45 @@ private struct PaywallPlanControls: View {
                     let isSelected = option.id == selected?.id
                     Button { selectedID = option.id } label: {
                         PlanTile(product: option.subscription, trial: option.activeOffer?.freeTrial,
-                                 badge: option.subscription.planPeriod?.unit == .year ? savingsBadge : nil,
+                                 savingsPercent: option.subscription.planPeriod?.unit == .year ? savingsPercent : nil,
                                  isSelected: isSelected)
                     }
                     .buttonStyle(ChaarliePressStyle())
                     .accessibilityAddTraits(isSelected ? [.isSelected] : [])
-                    .sensoryFeedback(.selection, trigger: isSelected)
                 }
             }
             .fixedSize(horizontal: false, vertical: true)
-            if let selected { PurchaseSection(option: selected) }
+            // One haptic per selection change, not one per tile whose state flips.
+            .sensoryFeedback(.selection, trigger: selected?.id)
+            if let selected { PurchaseSection(option: selected, purchaseInFlight: $purchaseInFlight) }
         }
         .fixedSize(horizontal: false, vertical: true)
         // Like the footer: the pinned controls must leave room for the page at the largest sizes.
         .dynamicTypeSize(...DynamicTypeSize.accessibility2)
         .padding(.horizontal, 16).padding(.top, 8).padding(.bottom, 8)
+        // Failsafe: a purchase that never reports back must not lock the only way out.
+        .task(id: purchaseInFlight) {
+            guard purchaseInFlight else { return }
+            try? await Task.sleep(for: .seconds(10))
+            if !Task.isCancelled { purchaseInFlight = false }
+        }
     }
 }
 
 private struct PlanTile: View {
     let product: Product
     let trial: PlanPeriod?
-    let badge: String?
+    let savingsPercent: Int?
     let isSelected: Bool
 
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: ChaarlieTheme.Radius.control, style: .continuous)
-        let period = product.planPeriod ?? PlanPeriod(value: 1, unit: .month)
         VStack(spacing: 4) {
             HStack(spacing: 6) {
                 Text(PaywallPricing.title(for: period, fallback: product.displayName))
                     .chaarlieSystemFont(13, weight: .semibold).foregroundStyle(ChaarlieTheme.plum)
-                if let badge {
-                    Text(badge).chaarlieSystemFont(11, weight: .semibold, relativeTo: .caption)
+                if let savingsPercent {
+                    Text(PaywallPricing.badge(percent: savingsPercent)).chaarlieSystemFont(11, weight: .semibold, relativeTo: .caption)
                         .foregroundStyle(ChaarlieTheme.plum)
                         .padding(.horizontal, 6).padding(.vertical, 2)
                         .background(ChaarlieTheme.plumScale, in: Capsule())
@@ -293,11 +306,11 @@ private struct PlanTile: View {
             // The billed amount is the most prominent price on the tile.
             Text(PaywallPricing.billed(product.displayPrice, per: period))
                 .chaarlieSystemFont(18, weight: .bold, relativeTo: .headline).foregroundStyle(ChaarlieTheme.ink)
-            if period == PlanPeriod(value: 1, unit: .year) {
+            if isYearly {
                 Text(PaywallPricing.monthlyEquivalent(yearly: product.price, style: product.priceFormatStyle))
                     .chaarlieSystemFont(12, relativeTo: .footnote).foregroundStyle(ChaarlieTheme.muted)
-            } else {
-                Text("monatlich kündbar").chaarlieSystemFont(12, relativeTo: .footnote).foregroundStyle(ChaarlieTheme.muted)
+            } else if let note = PaywallPricing.cancellationNote(for: period) {
+                Text(note).chaarlieSystemFont(12, relativeTo: .footnote).foregroundStyle(ChaarlieTheme.muted)
             }
             if let trial {
                 Text(PaywallPricing.trial(trial)).chaarlieSystemFont(12, relativeTo: .footnote).foregroundStyle(ChaarlieTheme.plum)
@@ -310,12 +323,20 @@ private struct PlanTile: View {
         .overlay(shape.strokeBorder(isSelected ? ChaarlieTheme.plum : ChaarlieTheme.border, lineWidth: isSelected ? 2 : 1))
         .contentShape(shape)
         .animation(ChaarlieTheme.Motion.state, value: isSelected)
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(PaywallPricing.tileAccessibilityLabel(
+            displayPrice: product.displayPrice, period: period,
+            title: PaywallPricing.title(for: period, fallback: product.displayName), savingsPercent: savingsPercent,
+            monthlyAmount: isYearly ? PaywallPricing.monthlyAmount(yearly: product.price, style: product.priceFormatStyle) : nil,
+            trial: trial))
     }
+    private var period: PlanPeriod { product.planPeriod ?? PlanPeriod(value: 1, unit: .month) }
+    private var isYearly: Bool { period == PlanPeriod(value: 1, unit: .year) }
 }
 
 private struct PurchaseSection: View {
     let option: PlanOption
+    @Binding var purchaseInFlight: Bool
 
     var body: some View {
         let product = option.subscription
@@ -325,10 +346,15 @@ private struct PurchaseSection: View {
             Text(PaywallPricing.disclosure(billed: billed, trial: trial))
                 .chaarlieSystemFont(12, relativeTo: .footnote).foregroundStyle(ChaarlieTheme.muted)
                 .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
-            Button { option.subscribe() } label: {
+            Button {
+                guard !purchaseInFlight else { return }
+                purchaseInFlight = true
+                option.subscribe()
+            } label: {
                 Text(PaywallPricing.actionLabel(hasFreeTrial: trial != nil))
             }
             .buttonStyle(PaywallBuyButton())
+            .disabled(purchaseInFlight)
             .accessibilityIdentifier("paywall.subscribe")
         }
         .padding(.top, 10)
