@@ -278,10 +278,11 @@ test("the cockpit reads as the call: routine, verdict, one decision per step", a
   assert.ok(markup.includes("3× / Woche"))
   assert.ok(markup.includes("Ins handtuchfeuchte Haar"))
 
-  // The participant's product, with the engine's own verdict copy.
+  // The participant's product, with the engine's verdict in the cockpit's voice (T4).
   assert.ok(markup.includes("Ihr Produkt"))
   assert.ok(markup.includes("Elvital Hyaluron Pure Shampoo"))
-  assert.ok(markup.includes("Passt mit Einschränkung zu deinem Haar"))
+  assert.ok(markup.includes("Passt mit Einschränkung zu ihrem Haar"))
+  assert.ok(!markup.includes("Passt mit Einschränkung zu deinem Haar"))
   assert.ok(markup.includes("Sitzt richtig bei einem Ansatz, der schnell nachfettet."))
 
   // One decision per step: keep plus the displayed alternative.

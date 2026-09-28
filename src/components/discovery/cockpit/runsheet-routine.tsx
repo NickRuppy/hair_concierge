@@ -1,4 +1,5 @@
 import type { DiscoveryCockpitStepView, DiscoveryCockpitView } from "@/lib/discovery/cockpit"
+import { cockpitVoice } from "@/lib/discovery/cockpit-copy"
 import type { DiscoveryItemFrequency } from "@/lib/discovery/frequency"
 import {
   deriveStepFrequencyDelta,
@@ -116,7 +117,8 @@ export function runsheetWeek(steps: readonly DiscoveryCockpitStepView[]): {
       decisionKey: step.decisionKey,
       category: step.category,
       categoryLabel: step.categoryLabel,
-      description: step.roleDescription ?? step.roleLabel,
+      // The role sentence is the plan's own (second person there) — neutral here (T4).
+      description: cockpitVoice(step.roleDescription ?? step.roleLabel),
       frequencyLabel: step.frequencyLabel,
       timingLabel: step.depth?.timingLabel ?? null,
       allowedRange: step.idealAllowedRange,

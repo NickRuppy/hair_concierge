@@ -29,6 +29,7 @@ import {
   composeRunsheetProducts,
 } from "../src/components/discovery/cockpit/runsheet-products"
 import { DiscoveryRunsheetRoutine } from "../src/components/discovery/cockpit/runsheet-routine"
+import { ScanVerdictSections } from "../src/components/scan/scan-verdict-sections"
 import { parseDiscoveryCallSheet, type DiscoveryCallSheet } from "../src/lib/discovery/call-sheet"
 import {
   buildDiscoveryCockpitView,
@@ -37,10 +38,13 @@ import {
   type DiscoveryCallIntake,
   type DiscoveryCockpitModel,
 } from "../src/lib/discovery/cockpit"
+import { cockpitVoice } from "../src/lib/discovery/cockpit-copy"
 import { discoveryConcernCoverageInput } from "../src/lib/discovery/concern-recipe-view"
+import { concernRecipeFor } from "../src/lib/discovery/concern-recipes"
 import type { DiscoveryEnrollment } from "../src/lib/discovery/enrollment"
 import type { DiscoveryIdealStep } from "../src/lib/discovery/load-ideal-routine"
 import type { DiscoveryParticipantVerdict } from "../src/lib/discovery/load-participant-verdicts"
+import { buildDiscoveryQuizAnswers } from "../src/lib/discovery/quiz-answers"
 import {
   composeDiscoveryRefinedRoutine,
   type DiscoveryCallDecision,
@@ -50,6 +54,11 @@ import type {
   ScanAlternativePresentation,
   ScanPresentedVerdictPayload,
 } from "../src/lib/scan/types"
+import {
+  SCAN_NOT_NEEDED_REASON_COPY,
+  scanNotNeededHeadline,
+  scanNotNeededSubtitle,
+} from "../src/lib/scan/verdict-labels"
 
 /**
  * The consult runsheet (T3): the cockpit page in six phases, rendered through its real
@@ -662,7 +671,8 @@ test("join rule (c): research in a category whose step is BOUND to her product j
     </AppRouterContext.Provider>,
   )
   const entry = entryOf(markup, "Shampoo")
-  assert.ok(entry.includes("Passt nicht zu deinem Haar"))
+  // The shared verdict title, in the cockpit's neutral voice (verdict-layer T4).
+  assert.ok(entry.includes("Passt nicht zu ihrem Haar"))
   assert.ok(!entry.includes("noch in Recherche"))
 })
 
@@ -1380,4 +1390,168 @@ test("frequency chips: two KEPT 1× shampoos vs 2×/week stay one „passt“ pe
   assert.ok(phase3Of(markup).includes(expected))
   assert.equal(occurrences(phase4Of(markup), CHIP_MARK), 1)
   assert.ok(phase4Of(markup).includes(expected))
+})
+
+// --- verdict-layer T4 (O4): the cockpit speaks about her, never to her ---------------------
+
+/** Second-person forms as whole words, any case. */
+const SECOND_PERSON_WORD =
+  /(^|[^\p{L}])(du|dein|deine|deinem|deinen|deiner|deines|dir|dich)(?=[^\p{L}]|$)/iu
+
+const DRY_SCALP_FIT =
+  "Deine Kopfhaut ist eher trocken. Deshalb eine milde Reinigung, die ihr nicht zusätzlich Fett entzieht."
+const DANDRUFF_TAIL = " Außerdem soll das Shampoo gezielt gegen Schuppen arbeiten."
+
+/** Nomi with the engine's real second-person sentences on her shampoo step and verdict. */
+function nomiSecondPerson(): DiscoveryCockpitModel {
+  const step: DiscoveryIdealStep = {
+    ...shampooStep,
+    roleDescription: "Regelmäßige Reinigung für deine Kopfhaut.",
+    depth: {
+      purpose: "Reinigt passend zu deiner Kopfhaut und deiner Haaranalyse.",
+      targetType: "Ausgleichend reinigend",
+      productCriteria: "Ausgeglichen reinigen, ohne unnötig stark zu entfetten.",
+      fit: `${DRY_SCALP_FIT}${DANDRUFF_TAIL}`,
+      timingLabel: "Haarwäsche",
+    },
+  }
+  const verdict = verdicts[0]!
+  const secondPersonVerdict: DiscoveryParticipantVerdict = {
+    ...verdict,
+    payload: {
+      ...payload,
+      fitNarrative: {
+        fit: `${DRY_SCALP_FIT}${DANDRUFF_TAIL}`,
+        productCriteria: "Ausgeglichen reinigen, ohne unnötig stark zu entfetten.",
+      },
+      criteria: [
+        {
+          criterionId: "shampoo.scalp_route",
+          label: "Kopfhaut",
+          result: "fail",
+          explanation:
+            "Keine Produktvariante deckt deine Haardicke und Pflegerichtung gemeinsam ab.",
+        },
+      ],
+    },
+  } as DiscoveryParticipantVerdict
+  return model({ steps: [step, conditionerStep], verdicts: [secondPersonVerdict] })
+}
+
+/**
+ * The page's readable text: text nodes plus the attributes a reader meets (aria-label,
+ * placeholder), entities decoded, one line per node.
+ */
+function readableLines(markup: string): string[] {
+  const decode = (text: string) =>
+    text
+      .replace(/&amp;/g, "&")
+      .replace(/&quot;/g, '"')
+      .replace(/&#x27;/g, "'")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+  const attributes = [...markup.matchAll(/(?:aria-label|placeholder)="([^"]*)"/g)].map(
+    (match) => match[1]!,
+  )
+  const text = markup.replace(/<[^>]+>/g, "\n").split("\n")
+  return [...text, ...attributes].map((line) => decode(line).trim()).filter(Boolean)
+}
+
+/**
+ * The explicit exceptions (brief T4): spoken or quoted text stays in her voice. Anything in
+ * German quotes („…") is a line Nick says or quotes — the Phase-1 script card, the Phase-4
+ * closing question, the referral question, the „Nicht damit anfangen" quotes. Plus the
+ * three verbatim blocks without quotes: the referral message she forwards, the „So sagst du
+ * es" talking point, and the quiz's own questions in „Quiz-Antworten".
+ */
+function outsideQuotedExceptions(lines: readonly string[], verbatim: readonly string[]): string[] {
+  return lines
+    .map((line) => line.replace(/„[^“]*“/g, "«quote»"))
+    .filter((line) => !verbatim.includes(line))
+}
+
+test("voice: no du/dein in the cockpit's own display outside the quoted exceptions", async () => {
+  const markup = await renderPage({
+    loadModel: async () => nomiSecondPerson(),
+    loadQuizLead: async () => dryLengthsLead,
+    loadCallSheet: async () => callSheet,
+  })
+  const quiz = buildDiscoveryQuizAnswers(dryLengthsLead)
+  assert.equal(quiz.status, "ready")
+  const verbatim = [
+    DISCOVERY_REFERRAL_MESSAGE,
+    concernRecipeFor("dry_lengths")!.talkingPointDe,
+    "So sagst du es",
+    ...(quiz.status === "ready"
+      ? quiz.groups.flatMap((group) => group.rows.map((row) => row.question))
+      : []),
+  ]
+  const offenders = outsideQuotedExceptions(readableLines(markup), verbatim).filter((line) =>
+    SECOND_PERSON_WORD.test(line),
+  )
+  assert.deepEqual(offenders, [])
+
+  // The fixture really carried second-person sentences: their neutral variants are on screen.
+  assert.ok(markup.includes("Passt nicht zu ihrem Haar"))
+  assert.ok(
+    markup.includes(
+      `Die Kopfhaut ist eher trocken. Deshalb eine milde Reinigung, die ihr nicht zusätzlich Fett entzieht.${DANDRUFF_TAIL}`,
+    ),
+  )
+  assert.ok(markup.includes("Reinigt passend zu ihrer Kopfhaut und ihrer Haaranalyse."))
+  assert.ok(markup.includes("Regelmäßige Reinigung für die Kopfhaut."))
+  assert.ok(
+    markup.includes("Keine Produktvariante deckt ihre Haardicke und Pflegerichtung gemeinsam ab."),
+  )
+  // …and the exceptions really rendered, so the test exercised them.
+  assert.ok(markup.includes("So sagst du es"))
+  assert.ok(markup.includes("Passt das in deine Woche?"))
+  assert.ok(markup.includes(DISCOVERY_REFERRAL_MESSAGE))
+})
+
+test("voice: the participant's verdict sections render unchanged without the cockpit voice", () => {
+  const notNeeded = {
+    kind: "not_needed" as const,
+    mode: "not_needed" as const,
+    status: "neutral" as const,
+    headline: scanNotNeededHeadline("dry_shampoo"),
+    subtitle: scanNotNeededSubtitle("dry_shampoo"),
+    reasons: [SCAN_NOT_NEEDED_REASON_COPY["dry_shampoo.inclusion.none"]!],
+    dimensions: [],
+    coveredBy: [{ label: "Shampoo", detail: "Frische zwischen den Haarwäschen" }],
+    product: {
+      productId: "p-1",
+      name: "Batiste Original",
+      brand: "Batiste",
+      category: "dry_shampoo" as const,
+      categoryLabel: "Trockenshampoo",
+      imageUrl: null,
+      priceLabel: null,
+      purchaseUrl: null,
+    },
+  }
+  const participant = renderToStaticMarkup(<ScanVerdictSections result={notNeeded} />)
+  assert.ok(participant.includes("Du brauchst aktuell kein Trockenshampoo"))
+  assert.ok(participant.includes("Kein Trockenshampoo in deinem Bedarf"))
+  assert.ok(participant.includes("Warum du kein Trockenshampoo brauchst"))
+  assert.ok(
+    participant.includes("Ändert sich dein Haar oder deine Routine, prüfen wir das für dich neu."),
+  )
+  assert.ok(participant.includes("Das übernimmt bei dir:"))
+
+  const cockpit = renderToStaticMarkup(
+    <ScanVerdictSections result={notNeeded} voice={cockpitVoice} />,
+  )
+  assert.ok(cockpit.includes("Aktuell kein Trockenshampoo nötig"))
+  assert.ok(cockpit.includes("Kein Trockenshampoo in ihrem Bedarf"))
+  assert.ok(cockpit.includes("Warum sie kein Trockenshampoo braucht"))
+  assert.ok(
+    cockpit.includes(
+      "Der Ansatz fettet nicht so schnell nach, dass sie eine Überbrückung braucht.",
+    ),
+  )
+  assert.ok(cockpit.includes("Ändert sich ihr Haar oder ihre Routine, prüfen wir das neu."))
+  assert.ok(cockpit.includes("Das übernimmt bei ihr:"))
+  const offenders = readableLines(cockpit).filter((line) => SECOND_PERSON_WORD.test(line))
+  assert.deepEqual(offenders, [])
 })
