@@ -62,6 +62,7 @@ import {
   type DiscoveryResearchStatusKind,
 } from "./research-status"
 import { buildDiscoveryRoutineContext, discoveryIntakeHasRoutineAnswers } from "./routine-context"
+import type { WashAllowedRange } from "./runsheet/frequency"
 import {
   composeDiscoveryRefinedRoutine,
   describeDiscoveryIntakeItem,
@@ -710,6 +711,11 @@ export type DiscoveryCockpitStepView = {
   /** The same answer as stored (`unknown` = „Weiß ich nicht"); null when not asked. */
   ownedFrequency: DiscoveryItemFrequency | null
   /**
+   * The engine's tolerated wash range for a shampoo (`wet_wash_total`) step — the frequency
+   * chip's band (verdict-layer T3); null for every other step.
+   */
+  idealAllowedRange: WashAllowedRange | null
+  /**
    * „Weglassen" may be chosen (R3): she has ≥2 products in this step, this is one of them,
    * and at least one sibling is not dropped — a step is never left empty.
    */
@@ -987,6 +993,7 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       stepEntryCount: stepEntries.length,
       ownedFrequencyLabel: item?.frequency ? DISCOVERY_FREQUENCY_LABELS[item.frequency] : null,
       ownedFrequency: item?.frequency ?? null,
+      idealAllowedRange: step.depth?.washAllowedRange ?? null,
       canDrop:
         item !== null &&
         stepEntries.length >= 2 &&

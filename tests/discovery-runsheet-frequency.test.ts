@@ -1,8 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import { discoveryStepDepth } from "../src/lib/discovery/load-ideal-routine"
 import {
   deriveFrequencyDelta,
+  deriveStepFrequencyDelta,
   IDEAL_CADENCE_LABELS,
   IDEAL_CADENCE_RULES,
   idealCadenceBand,
@@ -10,7 +12,7 @@ import {
   type FrequencyDelta,
 } from "../src/lib/discovery/runsheet"
 import { frequencyLabel } from "../src/lib/personal-plan/decision-presentation"
-import type { PlanFrequencyTarget } from "../src/lib/personal-plan/types"
+import type { PlanCategoryDecision, PlanFrequencyTarget } from "../src/lib/personal-plan/types"
 import { PRODUCT_FREQUENCIES } from "../src/lib/vocabulary/frequencies"
 
 /**
@@ -243,4 +245,104 @@ test("her wash frequency is her most frequent known shampoo frequency", () => {
   assert.equal(runsheetWashFrequency([{ category: "shampoo", frequency: "unknown" }]), null)
   assert.equal(runsheetWashFrequency([{ category: "shampoo", frequency: null }]), null)
   assert.equal(runsheetWashFrequency([]), null)
+})
+
+// --- fix round 1: step granularity (sum) and the engine's allowed wash range ---------------
+
+test("step sum: two 1×/week shampoos against a 2×/week band read as one „passt“", () => {
+  assert.deepEqual(
+    deriveStepFrequencyDelta({
+      cadenceLabel: "2×/Woche",
+      frequencies: ["weekly_1x", "weekly_1x"],
+      washFrequency: "weekly_1x",
+    }),
+    { status: "passt", ideal: { min: 2, max: 2 }, actual: 2 },
+  )
+})
+
+test("step sum: any owned entry without a known frequency → no chip for the step", () => {
+  for (const other of ["unknown", null, undefined]) {
+    assert.equal(
+      deriveStepFrequencyDelta({
+        cadenceLabel: "2×/Woche",
+        frequencies: ["weekly_1x", other],
+        washFrequency: "weekly_2x",
+      }),
+      null,
+      String(other),
+    )
+  }
+  assert.equal(
+    deriveStepFrequencyDelta({ cadenceLabel: "2×/Woche", frequencies: [], washFrequency: null }),
+    null,
+  )
+})
+
+test("step sum: a single entry is the single-product delta", () => {
+  assert.deepEqual(
+    deriveStepFrequencyDelta({
+      cadenceLabel: "nach jeder Haarwäsche",
+      frequencies: ["weekly_1x"],
+      washFrequency: "weekly_2x",
+    }),
+    delta("nach jeder Haarwäsche", "weekly_1x", "weekly_2x"),
+  )
+})
+
+const OILY_RANGE = { min: "weekly_2x", max: "weekly_5_6x" } as const
+
+test("wash target: the engine's allowed range is the band, not the printed target bucket", () => {
+  assert.deepEqual(idealCadenceBand("3-4×/Woche", null, OILY_RANGE), { min: 2, max: 6 })
+  // Oily route, target 3–4×, she washes 2× → inside the engine's tolerance.
+  assert.equal(
+    deriveFrequencyDelta({
+      cadenceLabel: "3-4×/Woche",
+      frequency: "weekly_2x",
+      washFrequency: "weekly_2x",
+      allowedRange: OILY_RANGE,
+    })?.status,
+    "passt",
+  )
+  assert.equal(
+    deriveFrequencyDelta({
+      cadenceLabel: "3-4×/Woche",
+      frequency: "daily_1x",
+      washFrequency: "daily_1x",
+      allowedRange: OILY_RANGE,
+    })?.status,
+    "zu_oft",
+  )
+  // Without the range the target bucket stays the band.
+  assert.equal(delta("3-4×/Woche", "weekly_2x")?.status, "zu_selten")
+})
+
+test("wash target: the range never creates a band where the label has none", () => {
+  for (const label of [
+    "später: 3-4×/Woche",
+    "wird im nächsten Schritt verfeinert",
+    "nach Bedarf",
+  ]) {
+    assert.equal(idealCadenceBand(label, "weekly_2x", OILY_RANGE), null, label)
+  }
+})
+
+test("the step depth carries the shampoo decision's allowed range — and only for wet_wash_total", () => {
+  const shampoo = {
+    category: "shampoo",
+    frequency: {
+      kind: "wet_wash_total",
+      mode: "nearest_boundary",
+      target: "weekly_3_4x",
+      allowedRange: OILY_RANGE,
+      specialWashSubstitution: true,
+    },
+    target: null,
+  } as unknown as PlanCategoryDecision
+  assert.deepEqual(discoveryStepDepth(shampoo, "shampoo_everyday").washAllowedRange, OILY_RANGE)
+  const mask = {
+    category: "mask",
+    frequency: FREQUENCY_TARGETS.mask_regular_interval[0],
+    target: null,
+  } as unknown as PlanCategoryDecision
+  assert.equal("washAllowedRange" in discoveryStepDepth(mask, "intensive_conditioning_mask"), false)
 })

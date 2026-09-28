@@ -4,10 +4,11 @@ import { DISCOVERY_INTAKE_CATEGORY_COPY } from "@/components/discovery/intake/ca
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { isKnownProductFrequency } from "@/lib/discovery/frequency"
 import {
-  deriveFrequencyDelta,
+  deriveStepFrequencyDelta,
   type FrequencyDelta,
   type FrequencyDeltaStatus,
   type RunsheetPrepItem,
+  type WashAllowedRange,
   type WeeklyBand,
 } from "@/lib/discovery/runsheet"
 import { PRODUCT_FREQUENCY_METADATA, type ProductFrequency } from "@/lib/vocabulary/frequencies"
@@ -118,34 +119,51 @@ export function formatRunsheetWeeklyBand(band: WeeklyBand): string {
     : `${formatDecimal(min)}–${formatDecimal(max)}×/Wo`
 }
 
-/** „2×/Wo · Ziel 1×/Wo — zu oft": her answer's band, the step's band, the status. */
+/**
+ * „2×/Wo · Ziel 1×/Wo — zu oft": her answers' band (summed over her products in the step),
+ * the step's band, the status.
+ */
 export function runsheetFrequencyChipLabel(
   delta: FrequencyDelta,
-  frequency: ProductFrequency,
+  frequencies: readonly ProductFrequency[],
 ): string {
-  const metadata = PRODUCT_FREQUENCY_METADATA[frequency]
-  const actual = formatRunsheetWeeklyBand({ min: metadata.minPerWeek, max: metadata.maxPerWeek })
+  let min = 0
+  let max = 0
+  for (const frequency of frequencies) {
+    min += PRODUCT_FREQUENCY_METADATA[frequency].minPerWeek
+    max += PRODUCT_FREQUENCY_METADATA[frequency].maxPerWeek
+  }
+  const actual = formatRunsheetWeeklyBand({ min, max })
   return `${actual} · Ziel ${formatRunsheetWeeklyBand(delta.ideal)} — ${FREQUENCY_STATUS_LABEL[delta.status]}`
 }
 
 /**
- * Her usage frequency next to the step's cadence. Renders nothing without a band or without
- * her (known) frequency — `deriveFrequencyDelta` decides.
+ * One step's frequency chip: her products in the step (summed) next to the step's band.
+ * Renders nothing without a band or when any of her products has no known frequency —
+ * `deriveStepFrequencyDelta` decides.
  */
 export function RunsheetFrequencyChip({
   cadenceLabel,
-  frequency,
+  frequencies,
   washFrequency,
+  allowedRange,
 }: {
   cadenceLabel: string
-  frequency: string | null | undefined
+  frequencies: ReadonlyArray<string | null | undefined>
   washFrequency: ProductFrequency | null
+  allowedRange: WashAllowedRange | null
 }) {
-  const delta = deriveFrequencyDelta({ cadenceLabel, frequency, washFrequency })
-  if (!delta || !isKnownProductFrequency(frequency)) return null
+  const delta = deriveStepFrequencyDelta({
+    cadenceLabel,
+    frequencies,
+    washFrequency,
+    allowedRange,
+  })
+  const known = frequencies.filter(isKnownProductFrequency)
+  if (!delta || known.length !== frequencies.length) return null
   return (
     <RunsheetChip tone={delta.status === "passt" ? "ok" : "pending"}>
-      {runsheetFrequencyChipLabel(delta, frequency)}
+      {runsheetFrequencyChipLabel(delta, known)}
     </RunsheetChip>
   )
 }

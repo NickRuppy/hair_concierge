@@ -11,6 +11,7 @@ export {
 export {
   compareFrequencyToBand,
   deriveFrequencyDelta,
+  deriveStepFrequencyDelta,
   IDEAL_CADENCE_LABELS,
   IDEAL_CADENCE_RULES,
   idealCadenceBand,
@@ -20,6 +21,7 @@ export {
   type FrequencyDeltaStatus,
   type IdealCadenceLabel,
   type IdealCadenceRule,
+  type WashAllowedRange,
   type WeeklyBand,
 } from "./frequency"
 export {

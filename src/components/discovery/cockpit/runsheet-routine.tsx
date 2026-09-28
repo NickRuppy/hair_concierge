@@ -1,6 +1,6 @@
 import type { DiscoveryCockpitStepView, DiscoveryCockpitView } from "@/lib/discovery/cockpit"
 import type { DiscoveryItemFrequency } from "@/lib/discovery/frequency"
-import { deriveFrequencyDelta } from "@/lib/discovery/runsheet"
+import { deriveStepFrequencyDelta, type WashAllowedRange } from "@/lib/discovery/runsheet"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
@@ -47,11 +47,19 @@ export type WeekLine = {
   description: string
   frequencyLabel: string
   timingLabel: string | null
+  /** The shampoo step's tolerated wash range (the frequency chip's band), else null. */
+  allowedRange: WashAllowedRange | null
   /**
    * `proposal`: the Idealplan's recommendation for an empty step, not a decision.
-   * `frequency`: how often she uses it — only for her own product (kept or undecided).
+   * `owned`: her own product (kept or undecided); `frequency`: how often she uses it (null =
+   * not asked, and always null for a product that is not hers).
    */
-  products: Array<{ label: string; proposal: boolean; frequency: DiscoveryItemFrequency | null }>
+  products: Array<{
+    label: string
+    proposal: boolean
+    owned: boolean
+    frequency: DiscoveryItemFrequency | null
+  }>
 }
 
 /** The product a step entry puts into her week, as the call has decided it so far. */
@@ -60,20 +68,25 @@ function productOf(step: DiscoveryCockpitStepView): WeekLine["products"][number]
     case "kept":
       return step.intakeItemId === null || !step.ownedLabel
         ? null
-        : { label: step.ownedLabel, proposal: false, frequency: step.ownedFrequency }
+        : { label: step.ownedLabel, proposal: false, owned: true, frequency: step.ownedFrequency }
     case "swapped":
       return step.swapProductLabel
-        ? { label: step.swapProductLabel, proposal: false, frequency: null }
+        ? { label: step.swapProductLabel, proposal: false, owned: false, frequency: null }
         : null
     case "dropped":
       return null
     case "undecided":
       return step.ownedLabel
-        ? { label: step.ownedLabel, proposal: false, frequency: step.ownedFrequency }
+        ? { label: step.ownedLabel, proposal: false, owned: true, frequency: step.ownedFrequency }
         : null
     case "ideal":
       return step.recommendationLabel
-        ? { label: `${PROPOSAL}: ${step.recommendationLabel}`, proposal: true, frequency: null }
+        ? {
+            label: `${PROPOSAL}: ${step.recommendationLabel}`,
+            proposal: true,
+            owned: false,
+            frequency: null,
+          }
         : null
   }
 }
@@ -101,6 +114,7 @@ export function runsheetWeek(steps: readonly DiscoveryCockpitStepView[]): {
       description: step.roleDescription ?? step.roleLabel,
       frequencyLabel: step.frequencyLabel,
       timingLabel: step.depth?.timingLabel ?? null,
+      allowedRange: step.idealAllowedRange,
       products: [],
     }
     const product = productOf(step)
@@ -215,8 +229,8 @@ function WeekCard({
 }
 
 /**
- * Her own products' frequency chips on a week line (verdict-layer T3). With several products
- * in one step each chip names its product, so the chips cannot be mixed up.
+ * The week line's frequency chip (verdict-layer T3, fix round 1): one per line, on the sum
+ * of her own products in it; none when any of them has no known frequency.
  */
 function WeekLineFrequencyChips({
   line,
@@ -225,30 +239,20 @@ function WeekLineFrequencyChips({
   line: WeekLine
   washFrequency: ProductFrequency | null
 }) {
-  // Only products that get a chip — a label without its chip would read as a stray name.
-  const owned = line.products.filter(
-    (product) =>
-      deriveFrequencyDelta({
-        cadenceLabel: line.frequencyLabel,
-        frequency: product.frequency,
-        washFrequency,
-      }) !== null,
-  )
-  if (owned.length === 0) return null
+  const frequencies = line.products
+    .filter((product) => product.owned)
+    .map((product) => product.frequency)
+  const input = {
+    cadenceLabel: line.frequencyLabel,
+    frequencies,
+    washFrequency,
+    allowedRange: line.allowedRange,
+  }
+  // No empty wrapper when the step gets no chip.
+  if (!deriveStepFrequencyDelta(input)) return null
   return (
     <span className="mt-1 flex flex-wrap items-center gap-1.5">
-      {owned.map((product, index) => (
-        <span key={`${product.label}:${index}`} className="flex items-center gap-1.5">
-          {line.products.length > 1 ? (
-            <span className="text-[12px] text-muted-foreground">{product.label}</span>
-          ) : null}
-          <RunsheetFrequencyChip
-            cadenceLabel={line.frequencyLabel}
-            frequency={product.frequency}
-            washFrequency={washFrequency}
-          />
-        </span>
-      ))}
+      <RunsheetFrequencyChip {...input} />
     </span>
   )
 }

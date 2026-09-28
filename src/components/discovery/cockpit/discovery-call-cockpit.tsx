@@ -393,6 +393,7 @@ export function DiscoveryCallCockpit({
     const key = entryKey(step)
     // Batch 9: what her other products in this step are set to right now.
     const stepEntries = steps.filter((other) => other.decisionKey === step.decisionKey)
+    const ownedInStep = stepEntries.filter((other) => other.intakeItemId !== null)
     const siblings = stepEntries
       .filter((other) => entryKey(other) !== key)
       .map((other) => selections[entryKey(other)] ?? null)
@@ -411,11 +412,14 @@ export function DiscoveryCallCockpit({
             <span className="text-xs text-muted-foreground">· optional</span>
           ) : null}
           {entry.kind === "owned" ? <VerdictChip step={step} /> : null}
-          {entry.kind === "owned" ? (
+          {entry.kind === "owned" && ownedInStep[0] && entryKey(ownedInStep[0]) === key ? (
+            // One chip per step (fix round 1), on her first product in it: the sum of all
+            // her products in the step against the step's band.
             <RunsheetFrequencyChip
               cadenceLabel={step.frequencyLabel}
-              frequency={step.ownedFrequency}
+              frequencies={ownedInStep.map((owned) => owned.ownedFrequency)}
               washFrequency={washFrequency}
+              allowedRange={step.idealAllowedRange}
             />
           ) : null}
           <DecisionChip entry={entry} bucket={bucket} selection={selection} />

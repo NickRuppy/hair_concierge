@@ -115,10 +115,33 @@ function isIdealCadenceLabel(value: string): value is IdealCadenceLabel {
 }
 
 /**
+ * The engine's tolerated wash range (`wet_wash_total.allowedRange`, from the shampoo
+ * decision's scalp-route cadence) — carried by the shampoo step only.
+ */
+export type WashAllowedRange = { min: ProductFrequency; max: ProductFrequency }
+
+/**
  * The weekly band a step's cadence asks for; null = no chip (no band by decision, a paused
  * step, an unknown string, or a per-wash cadence without her wash frequency).
+ *
+ * `allowedRange` (fix round 1, conservatism: no chip warns where the engine tolerates): the
+ * shampoo step's label prints the target bucket, but the engine accepts the whole range, so
+ * the range widens the band. It never creates a band where the label has none.
  */
 export function idealCadenceBand(
+  cadenceLabel: string,
+  washFrequency: ProductFrequency | null,
+  allowedRange?: WashAllowedRange | null,
+): WeeklyBand | null {
+  const band = labelBand(cadenceLabel, washFrequency)
+  if (!band || !allowedRange) return band
+  return {
+    min: PRODUCT_FREQUENCY_METADATA[allowedRange.min].minPerWeek,
+    max: PRODUCT_FREQUENCY_METADATA[allowedRange.max].maxPerWeek,
+  }
+}
+
+function labelBand(
   cadenceLabel: string,
   washFrequency: ProductFrequency | null,
 ): WeeklyBand | null {
@@ -154,18 +177,43 @@ export function compareFrequencyToBand(actual: number, band: WeeklyBand): Freque
   return "passt"
 }
 
-export function deriveFrequencyDelta(entry: {
+type FrequencyDeltaContext = {
   /** The step's cadence as the Idealroutine prints it (`DiscoveryCockpitStepView.frequencyLabel`). */
   cadenceLabel: string
-  /** Her intake answer for this product; null/undefined = not asked, `unknown` = „Weiß ich nicht". */
-  frequency: string | null | undefined
   /** Her wash frequency (`runsheetWashFrequency`); null when not known. */
   washFrequency: ProductFrequency | null
-}): FrequencyDelta | null {
-  if (!isKnownProductFrequency(entry.frequency)) return null
-  const ideal = idealCadenceBand(entry.cadenceLabel, entry.washFrequency)
+  /** The shampoo step's `idealAllowedRange`; absent/null for every other step. */
+  allowedRange?: WashAllowedRange | null
+}
+
+/** One product against its step. */
+export function deriveFrequencyDelta(
+  entry: FrequencyDeltaContext & {
+    /** Her intake answer; null/undefined = not asked, `unknown` = „Weiß ich nicht". */
+    frequency: string | null | undefined
+  },
+): FrequencyDelta | null {
+  return deriveStepFrequencyDelta({ ...entry, frequencies: [entry.frequency] })
+}
+
+/**
+ * A step against its band, on the SUM of all her products in it (fix round 1: one chip per
+ * step — two shampoos she alternates add up). Any product without a known frequency → null:
+ * a partial sum would understate her use.
+ */
+export function deriveStepFrequencyDelta(
+  step: FrequencyDeltaContext & {
+    frequencies: ReadonlyArray<string | null | undefined>
+  },
+): FrequencyDelta | null {
+  if (step.frequencies.length === 0) return null
+  let actual = 0
+  for (const frequency of step.frequencies) {
+    if (!isKnownProductFrequency(frequency)) return null
+    actual += PRODUCT_FREQUENCY_METADATA[frequency].midpointPerWeek
+  }
+  const ideal = idealCadenceBand(step.cadenceLabel, step.washFrequency, step.allowedRange)
   if (!ideal) return null
-  const actual = PRODUCT_FREQUENCY_METADATA[entry.frequency].midpointPerWeek
   return { status: compareFrequencyToBand(actual, ideal), ideal, actual }
 }
 

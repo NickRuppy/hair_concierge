@@ -1245,3 +1245,68 @@ test("frequency chips: weekly bands read compactly", () => {
   ]
   for (const [band, text] of cases) assert.equal(formatRunsheetWeeklyBand(band), text)
 })
+
+// --- fix round 1: one chip per step on the summed frequency; the engine's wash range -----
+
+const secondShampoo: DiscoveryIntakeItem = {
+  ...shampooItem,
+  id: "50000000-0000-4000-8000-0000000000c2",
+  brandText: "Balea",
+  productNameText: "Milde Pflege",
+  productId: "30000000-0000-4000-8000-0000000000c2",
+  createdAt: "2026-09-20T10:07:00.000Z",
+  frequency: "weekly_1x",
+}
+
+function twoShampoos(second: DiscoveryIntakeItem["frequency"]): DiscoveryCockpitModel {
+  return model({
+    steps: [{ ...shampooStep, frequencyLabel: "2×/Woche" }],
+    items: [
+      { ...shampooItem, frequency: "weekly_1x" },
+      { ...secondShampoo, frequency: second },
+    ],
+  })
+}
+
+function occurrences(haystack: string, needle: string): number {
+  return haystack.split(needle).length - 1
+}
+
+test("frequency chips: two 1×/week shampoos vs 2×/week → ONE „passt“ chip per phase", async () => {
+  const markup = await renderPage({ loadModel: async () => twoShampoos("weekly_1x") })
+  const phase3 = markup.slice(
+    markup.indexOf(">Behalten</h3>"),
+    markup.indexOf('id="runsheet-phase-4"'),
+  )
+  assert.equal(occurrences(phase3, CHIP_MARK), 1, phase3)
+  assert.ok(phase3.includes("2×/Wo · Ziel 2×/Wo — passt"))
+  const phase4 = phase4Of(markup)
+  assert.equal(occurrences(phase4, CHIP_MARK), 1, phase4)
+  assert.ok(phase4.includes("2×/Wo · Ziel 2×/Wo — passt"))
+})
+
+test("frequency chips: 1×/week + „Weiß ich nicht“ in one step → no chip (a partial sum understates)", async () => {
+  const markup = await renderPage({ loadModel: async () => twoShampoos("unknown") })
+  assert.ok(!markup.includes(CHIP_MARK))
+})
+
+test("frequency chips: the shampoo band is the engine's allowed range, not the target bucket", async () => {
+  const markup = await renderPage({
+    loadModel: async () =>
+      model({
+        steps: [
+          {
+            ...shampooStep,
+            frequencyLabel: "3-4×/Woche",
+            depth: {
+              ...shampooStep.depth!,
+              washAllowedRange: { min: "weekly_2x", max: "weekly_5_6x" },
+            },
+          },
+        ],
+        items: [{ ...shampooItem, frequency: "weekly_2x" }],
+      }),
+  })
+  assert.ok(entryOf(markup, "Shampoo").includes("2×/Wo · Ziel 2–6×/Wo — passt"))
+  assert.ok(phase4Of(markup).includes("2×/Wo · Ziel 2–6×/Wo — passt"))
+})

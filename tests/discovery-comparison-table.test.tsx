@@ -184,6 +184,7 @@ function cockpitStep(overrides: Partial<DiscoveryCockpitStepView> = {}): Discove
     stepEntryCount: 1,
     ownedFrequencyLabel: null,
     ownedFrequency: null,
+    idealAllowedRange: null,
     canDrop: false,
     unanswered: false,
     verdict: {
