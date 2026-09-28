@@ -85,6 +85,10 @@ function foldBrand(text: string): string {
     .replace(/[’‘´`ʼ]/g, "'")
 }
 
+/** Spelled-out score numbers as whole words („der Acht", not „beachten"). */
+const SPELLED_NUMBER =
+  "(?<!\\p{L})(?:eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn)(?!\\p{L})"
+
 const PERCENT = "\\d+(?:[.,]\\d+)?[\\s\\u00a0\\u202f]?%"
 
 function phrase(
@@ -198,7 +202,9 @@ export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
     "score_figure",
     "G1",
     "dein Score steigt auf",
-    words("score[^.!?]{0,40}\\d|\\d[^.!?]{0,40}score\\p{L}*"),
+    words(
+      `score[^.!?]{0,40}(?:\\d|${SPELLED_NUMBER})|(?:\\d|${SPELLED_NUMBER})[^.!?]{0,40}score\\p{L}*|ziel[^.!?]{0,40}${SPELLED_NUMBER}`,
+    ),
     "score_promise",
   ),
   phrase(
@@ -306,7 +312,7 @@ export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
     "G2",
     "nie relativiert",
     words(
-      "(?:nicht|kein\\p{L}*|unnötig)[^.!?,;:]{0,40}ärztlich\\p{L}*|ärztlich\\p{L}*[^.!?,;:]{0,20}(?:nicht|unnötig)|kein\\p{L}* (?:grund|anlass|bedarf|notwendigkeit)[^.!?]{0,40}ärztlich\\p{L}*",
+      "(?:nicht|kein\\p{L}*|unnötig)[^.!?,;:]{0,40}ärztlich\\p{L}*|ärztlich\\p{L}*[^.!?,;:]{0,20}(?:nicht|unnötig)|kein\\p{L}* (?:grund|anlass|bedarf|notwendigkeit)[^.!?]{0,40}(?:ärztlich\\p{L}*|\\p{L}*ärzt\\p{L}*|\\p{L}*arzt\\p{L}*|untersuch\\p{L}*)|(?:\\p{L}*arzt\\p{L}*|\\p{L}*ärzt\\p{L}*|untersuch\\p{L}*)[^.!?,;:]{0,30}(?:nicht|unnötig)|(?:nicht|kein\\p{L}*|unnötig)[^.!?,;:]{0,40}(?:hautarzt|hautärzt\\p{L}*|untersuchen (?:zu )?lassen)",
     ),
   ),
   // G5 — uncertainty stays internal
@@ -408,15 +414,15 @@ function knownNames(input: ConsultInput): string[] {
 // --- verdict cues (G4) --------------------------------------------------------------------------
 
 const KEEP_CUE = words(
-  "behalten|behält|bleib(?:t|en)|kann bleiben|weiter (?:nutzen|benutzen|verwenden|nehmen)|weiter(?:nutzen|benutzen|verwenden)",
+  "behalten|behält|bleib(?:t|en)|kann bleiben|weiter (?:nutzen|benutzen|verwenden|nehmen)|weiter(?:nutzen|benutzen|verwenden)|weiterhin (?:\\p{L}+ )?(?:nutzen|benutzen|verwenden|nehmen)",
 )
 /** Praise, incl. a bare „passt" („passt nicht" and its softened forms excluded). */
 const PRAISE_CUE = words(
-  "passt(?!\\s+(?:(?:eigentlich|leider|eher|gar|überhaupt)\\s+)?nicht)|(?<!nicht\\s)geeignet|ideal|perfekt|top",
+  "passt(?!\\s+(?:(?:eigentlich|leider|eher|gar|überhaupt)\\s+)?nicht)|(?<!nicht\\s)geeignet|funktioniert (?:gut|super|prima|toll|bestens)|klappt (?:gut|super|prima)|ideal|perfekt|top",
 )
 const VERDICT_NAMED = words("passt (?:eigentlich |leider |eher )?nicht")
 const DISCOURAGE_CUE = words(
-  "weglassen|lass\\p{L}*[^.!?]{0,30} weg|absetzen|nicht mehr (?:nutzen|benutzen|verwenden|nehmen)|austauschen|tauschen|ersetzen|aussortieren|rausnehmen|raus nehmen|streichen|verzichten|abraten|abgeraten|brauch\\p{L}*(?: \\p{L}+)? (?:nicht|kein\\p{L}*)|passt (?:eigentlich |leider |eher )?nicht",
+  "weglassen|lass\\p{L}*[^.!?]{0,30} weg|absetzen|nicht mehr (?:nutzen|benutzen|verwenden|nehmen)|austauschen|tauschen|ersetzen|aussortieren|rausnehmen|raus nehmen|rausschmeißen|rauswerfen|wegwerfen|streichen|verzichten|abraten|abgeraten|brauch\\p{L}*(?: \\p{L}+)? (?:nicht|kein\\p{L}*)|passt (?:eigentlich |leider |eher )?nicht",
 )
 
 function sentences(text: string): string[] {

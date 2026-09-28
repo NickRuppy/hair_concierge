@@ -3,6 +3,7 @@ import test from "node:test"
 
 import type { DiscoveryCallSheetBriefSections } from "../src/lib/discovery/call-sheet"
 import type { ConsultInput, ConsultProduct } from "../src/lib/discovery/consult-brief/input"
+import { CONCERN_RECIPES } from "../src/lib/discovery/concern-recipes"
 import { CONSULT_KNOWLEDGE_ENTRIES } from "../src/lib/discovery/consult-brief/knowledge"
 import { CONSULT_GUARDRAILS_MARKDOWN } from "../src/lib/discovery/consult-brief/knowledge-sources"
 import {
@@ -545,4 +546,76 @@ test("normalization: soft hyphens, zero-width characters, decomposed umlauts, fo
     brief.hebel.push({ title: "Kur", note: `${brand} Maske einmal pro Woche.`, points: 0.5 })
     assert.deepEqual(rules(lintConsultBrief(brief, nomiInput())), ["unknown_product"], brand)
   }
+})
+
+// --- fix round 2: vocabulary gaps (each MUST flag) ------------------------------------------------
+
+test("round 2 G4 vocabulary: funktioniert gut, weiterhin verwenden, rausschmeißen", () => {
+  for (const sentence of [
+    "Das Glanzwerk Volumen Shampoo funktioniert gut.",
+    "Das Volumen Shampoo funktioniert super für sie.",
+    "Das Volumen Shampoo kann sie weiterhin verwenden.",
+    "Das Volumen Shampoo weiterhin nutzen.",
+    "Die Repair Spülung rausschmeißen.",
+    "Die Repair Spülung weglassen.",
+  ]) {
+    assert.ok(flagsVerdict(sentence), sentence)
+  }
+})
+
+test("round 2 score: a spelled-out number near Score or Ziel", () => {
+  for (const sentence of ["Der Score nähert sich der Acht.", "Ziel ist eher eine Neun."]) {
+    assert.ok(
+      findForbiddenPhrases(sentence).some((hit) => hit.rule === "score_promise"),
+      sentence,
+    )
+  }
+  assert.deepEqual(findForbiddenPhrases("Sie soll auf die Spitzen achten."), [])
+})
+
+test("round 2 G2: negated dermatologist / examination phrasings", () => {
+  for (const sentence of [
+    "Ein Termin beim Hautarzt ist hier nicht nötig.",
+    "Kein Anlass, das untersuchen zu lassen.",
+  ]) {
+    assert.ok(
+      findForbiddenPhrases(sentence).some((hit) => hit.id === "boundary_negated"),
+      sentence,
+    )
+  }
+  assert.deepEqual(findForbiddenPhrases("Das sollte man beim Hautarzt untersuchen lassen."), [])
+})
+
+/**
+ * The concern-recipe excerpt that reaches the prompt (`input.ts` `mainConcernExcerpt`): label,
+ * meaning, talking point, primary categories' why, levers, avoid, call questions, boundary.
+ * These hits are phrase-true negations and „avoid" quotes — acceptable as background (prompt
+ * rule 8: never copied), pinned so a new hit shows up here.
+ */
+const KNOWN_RECIPE_HITS: Record<string, string[]> = {
+  frizz_flyaways: ["frizz_free"],
+  low_shine: ["as_new"],
+  hair_damage: ["heal", "heal", "repair", "heal", "as_new", "supplements"],
+  hair_loss_or_thinning: ["against_loss", "supplements", "that_is_surely"],
+  split_ends: ["repair", "seal_split_ends"],
+  tangling: ["repair"],
+}
+
+test("the recipe excerpt's own wording: known hits pinned", () => {
+  const hits: Record<string, string[]> = {}
+  for (const recipe of CONCERN_RECIPES) {
+    const texts = [
+      recipe.labelDe,
+      recipe.meaningDe,
+      recipe.talkingPointDe,
+      ...recipe.primary.categories.map((entry) => entry.why),
+      ...recipe.primary.levers.map((entry) => entry.lever),
+      ...recipe.avoid,
+      ...recipe.callQuestionsDe,
+      ...(recipe.boundary ? [recipe.boundary] : []),
+    ]
+    const found = texts.flatMap((text) => findForbiddenPhrases(text).map((hit) => hit.id))
+    if (found.length > 0) hits[recipe.code] = found
+  }
+  assert.deepEqual(hits, KNOWN_RECIPE_HITS)
 })
