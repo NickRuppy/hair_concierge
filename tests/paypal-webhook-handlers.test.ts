@@ -1083,6 +1083,141 @@ test("refund and reversal events are known log-only events", async () => {
   assert.equal(profiles["user-1"].subscription_status, "active")
 })
 
+test("refund with its original sale falls back to the verified sale subscription link", async () => {
+  const { supabase, analyticsOutbox } = createSupabaseStub({
+    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+  })
+  const saleIds: string[] = []
+  const refund: PayPalWebhookEvent = {
+    id: "WH-refund-sale-fallback",
+    event_type: "PAYMENT.SALE.REFUNDED",
+    resource: { id: "REFUND-sale-fallback", sale_id: "SALE-original" },
+  }
+
+  const result = await handlePayPalWebhookEvent(refund, {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    recordBillingAnalytics: true,
+    retrievePayPalSale: async (saleId) => {
+      saleIds.push(saleId)
+      return { id: saleId, billing_agreement_id: "I-active" }
+    },
+  })
+
+  assert.deepEqual(result, { handled: true })
+  assert.deepEqual(saleIds, ["SALE-original"])
+  const recorded = analyticsOutbox.find((row) => row.event_name === "refund_completed")!
+  assert.equal(recorded.source_object_id, "REFUND-sale-fallback")
+  assert.equal((recorded.payload as Record<string, unknown>).original_sale_id, "SALE-original")
+})
+
+test("refund without a sale retrieves the refund and uses known sale ownership", async () => {
+  const saleId = "SALE-refund-lookup"
+  const { supabase, analyticsOutbox } = createSupabaseStub({
+    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+    analyticsOutbox: [
+      analyticsEvent(`paypal:payment_completed:${saleId}`, "payment_completed", saleId),
+    ],
+  })
+  const refundIds: string[] = []
+
+  await handlePayPalWebhookEvent(
+    {
+      id: "WH-refund-lookup",
+      event_type: "PAYMENT.SALE.REFUNDED",
+      resource: { id: "REFUND-lookup" },
+    },
+    {
+      supabase,
+      premiumTierId: "tier-premium",
+      freeTierId: "tier-free",
+      recordBillingAnalytics: true,
+      retrievePayPalRefund: async (refundId) => {
+        refundIds.push(refundId)
+        return { id: refundId, sale_id: saleId }
+      },
+      retrievePayPalSale: async () => {
+        throw new Error("known sale ownership should avoid a sale lookup")
+      },
+    },
+  )
+
+  assert.deepEqual(refundIds, ["REFUND-lookup"])
+  assert.equal(analyticsOutbox.filter((row) => row.event_name === "refund_completed").length, 1)
+})
+
+test("a mismatched refund lookup releases its webhook claim for a corrected retry", async () => {
+  const saleId = "SALE-refund-retry"
+  const { supabase, calls, analyticsOutbox } = createSupabaseStub({
+    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+    analyticsOutbox: [
+      analyticsEvent(`paypal:payment_completed:${saleId}`, "payment_completed", saleId),
+    ],
+  })
+  let lookupMatches = false
+  const refund: PayPalWebhookEvent = {
+    id: "WH-refund-retry",
+    event_type: "PAYMENT.SALE.REFUNDED",
+    resource: { id: "REFUND-retry" },
+  }
+  const deps = {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    recordBillingAnalytics: true,
+    retrievePayPalRefund: async () => ({
+      id: lookupMatches ? "REFUND-retry" : "REFUND-wrong",
+      sale_id: saleId,
+    }),
+  }
+
+  await assert.rejects(() => handlePayPalWebhookEvent(refund, deps), /missing a subscription link/)
+  assert.equal(
+    calls.some((call) => call.table === "billing_webhook_events" && call.op === "delete"),
+    true,
+  )
+
+  lookupMatches = true
+  assert.deepEqual(await handlePayPalWebhookEvent(refund, deps), { handled: true })
+  assert.equal(analyticsOutbox.filter((row) => row.event_name === "refund_completed").length, 1)
+})
+
+test("partial refunds of one sale retain distinct refund identities", async () => {
+  const saleId = "SALE-partial-refunds"
+  const { supabase, analyticsOutbox } = createSupabaseStub({
+    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+    analyticsOutbox: [
+      analyticsEvent(`paypal:payment_completed:${saleId}`, "payment_completed", saleId),
+    ],
+  })
+  const deps = {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    recordBillingAnalytics: true,
+  }
+
+  for (const refundId of ["REFUND-partial-one", "REFUND-partial-two"]) {
+    await handlePayPalWebhookEvent(
+      {
+        id: `WH-${refundId}`,
+        event_type: "PAYMENT.SALE.REFUNDED",
+        resource: { id: refundId, sale_id: saleId },
+      },
+      deps,
+    )
+  }
+
+  assert.deepEqual(
+    analyticsOutbox
+      .filter((row) => row.event_name === "refund_completed")
+      .map((row) => row.source_object_id)
+      .sort(),
+    ["REFUND-partial-one", "REFUND-partial-two"],
+  )
+})
+
 test("activation refresh keeps the stored interval for legacy PayPal plan ids", async () => {
   const { supabase, billing, profiles } = createSupabaseStub({
     billing: [

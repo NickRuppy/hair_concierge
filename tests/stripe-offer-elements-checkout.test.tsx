@@ -244,7 +244,7 @@ test("Stripe lifecycle seams report mounted before ready and confirmation withou
   const expressMounted = stripeOfferElementsSource.indexOf('reportClientMounted("apple_pay")')
   const expressReady = stripeOfferElementsSource.indexOf("onReady: handleExpressCheckoutReady")
   const paymentLoaderStart = stripeOfferElementsSource.indexOf(
-    "onLoaderStart={() => {\n                  if (!visibleRef.current) return",
+    "onLoaderStart={() => {\n                  if (!visibleRef.current || isAccessRecoveryActive?.()) return",
   )
   const paymentReady = stripeOfferElementsSource.indexOf("onReady={() => {")
   const confirmStarted = stripeOfferElementsSource.indexOf(
@@ -505,7 +505,7 @@ test("cold offer Elements mount normal Express lifecycle without prewarm gates",
   assert.match(stripeOfferElementsSource, /clientSecret\?: string \| null/)
   assert.match(
     stripeOfferElementsSource,
-    /if \(clientSecret\) return Promise\.resolve\(clientSecret\)[\s\S]*return fetchClientSecret\?\.\(\) \?\? null/,
+    /if \(clientSecret\) return Promise\.resolve\(clientSecret\)[\s\S]*const promise = fetchClientSecret\?\.\(\)[\s\S]*if \(!promise\) return null/,
   )
   assert.match(
     stripeOfferElementsSource,
@@ -679,7 +679,7 @@ test("Stripe readiness watchdogs are one-shot, cancel on ready or load error, an
   assert.match(stripeOfferElementsSource, /reportProviderLoadTimeout\("apple_pay"\)/)
   assert.match(
     stripeOfferElementsSource,
-    /onLoaderStart=\{\(\) => \{[\s\S]*if \(!visibleRef\.current\) return[\s\S]*reportProviderLoadStarted\("card_and_more"\)[\s\S]*window\.setTimeout\([\s\S]*reportProviderLoadTimeout\("card_and_more"\)/,
+    /onLoaderStart=\{\(\) => \{[\s\S]*if \(!visibleRef\.current \|\| isAccessRecoveryActive\?\.\(\)\) return[\s\S]*reportProviderLoadStarted\("card_and_more"\)[\s\S]*window\.setTimeout\([\s\S]*reportProviderLoadTimeout\("card_and_more"\)/,
   )
   assert.match(
     stripeOfferElementsSource,
@@ -687,7 +687,7 @@ test("Stripe readiness watchdogs are one-shot, cancel on ready or load error, an
   )
   assert.match(
     stripeOfferElementsSource,
-    /const handlePaymentElementLoadError = useCallback\([\s\S]*if \(!visibleRef\.current\) return[\s\S]*clearPaymentElementReadyTimer\(\)/,
+    /const handlePaymentElementLoadError = useCallback\([\s\S]*if \(!visibleRef\.current \|\| isAccessRecoveryActive\?\.\(\)\) return[\s\S]*clearPaymentElementReadyTimer\(\)/,
   )
   assert.doesNotMatch(stripeOfferElementsSource, /AbortController/)
 })

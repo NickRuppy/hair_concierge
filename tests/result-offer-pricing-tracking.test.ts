@@ -148,6 +148,9 @@ test("membership orchestration is cold and creates a session only for an explici
   assert.match(source, /const stripePromise = getOfferStripePromise\(\)/)
   assert.match(source, /trackStripeJsAvailability\(stripePromise/)
   assert.match(source, /setStripe\(stripePromise\)/)
+  assert.match(source, /fetch\("\/api\/checkout\/eligibility"/)
+  assert.match(source, /body\.status !== "eligible"[\s\S]*getOfferStripePromise\(\)/)
+  assert.match(source, /setAccessCheck\(\{ status: "eligible" \}\)/)
   assert.match(source, /onPaymentMethodSelected=\{\(provider, paymentMethodType\) =>/)
   assert.match(source, /paymentMethodType,/)
   assert.match(source, /trackAppEvent\("offer_plan_selected"/)
@@ -165,7 +168,7 @@ test("membership orchestration is cold and creates a session only for an explici
   assert.match(source, /trackCheckoutLifecycle\(attemptId,[\s\S]*transition: "payment_engaged"/)
   assert.match(
     source,
-    /const retryId = attempts\.retry\(\)[\s\S]*rotateStripeSessionAttemptOnRetryRef\.current[\s\S]*setCheckoutSessionAttemptId\(createFunnelEventId\(\)\)[\s\S]*setCheckoutInterval\(null\)[\s\S]*setCheckoutInterval\(selectedInterval\)/,
+    /const retryId = attempts\.retry\(\)[\s\S]*rotateStripeSessionAttemptOnRetryRef\.current[\s\S]*setCheckoutSessionAttemptId\(createFunnelEventId\(\)\)[\s\S]*void checkAccess\(retryId, checkoutInterval\)/,
   )
   assert.match(
     source,
@@ -194,7 +197,7 @@ test("overlay checkout attempts hide without ending provider identity and resume
   )
   assert.match(
     source,
-    /onConfirmedAbort=\{\(\) =>\s*engaged \|\| !express\s*\? endCheckout\(\{[\s\S]*endReason: "customer_aborted"[\s\S]*\}\)\s*: close\(\)/,
+    /onConfirmedAbort=\{\(\) =>\s*accessCheck\.status === "eligible" && \(engaged \|\| !express\)[\s\S]*\? endCheckout\(\{[\s\S]*endReason: "customer_aborted"[\s\S]*\}\)\s*: close\(\)/,
   )
   assert.match(source, /onPresentationStateChange=\{onOverlayPresentationStateChange\}/)
   assert.match(source, /"overlay_visibility_timeout"/)
