@@ -98,6 +98,7 @@ export type PayPalWebhookEvent = {
     create_time?: string
     billing_agreement_id?: string
     subscription_id?: string
+    sale_id?: string
     payee?: { merchant_id?: string }
     amount?: {
       total?: string
@@ -130,6 +131,8 @@ export interface PayPalWebhookDeps
   premiumTierId: string
   freeTierId: string
   retrievePayPalSubscription?: (subscriptionId: string) => Promise<PayPalSubscription>
+  retrievePayPalRefund?: (refundId: string) => Promise<PayPalRefund>
+  retrievePayPalSale?: (saleId: string) => Promise<PayPalSale>
   cancelPayPalSubscription?: (subscriptionId: string, reason: string) => Promise<void>
   defer?: (work: () => void | Promise<void>) => void
   linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
@@ -159,6 +162,24 @@ type PayPalActivationOutcome =
     }
 
 type PayPalPaymentClassification = "initial" | "renewal" | "historical_noop"
+
+type PayPalAmount = {
+  total?: string
+  value?: string
+  currency?: string
+  currency_code?: string
+}
+
+type PayPalRefund = {
+  id?: string
+  sale_id?: string
+  amount?: PayPalAmount
+}
+
+type PayPalSale = {
+  id?: string
+  billing_agreement_id?: string
+}
 
 const MUTATING_EVENTS = new Set([
   "BILLING.SUBSCRIPTION.ACTIVATED",
@@ -1055,15 +1076,124 @@ async function recordPayPalLifecycleEvent(
 }
 
 async function recordLinkedPayPalRefund(event: PayPalWebhookEvent, deps: PayPalWebhookDeps) {
-  let subscriptionId: string
-  try {
-    subscriptionId = getEventSubscriptionId(event, event.event_type ?? "")
-  } catch {
+  const eventType = event.event_type
+  const sourceObjectId = refundSourceObjectId(event, eventType)
+  const { billingRow, saleId } = await resolvePayPalRefundBillingRow(event, deps)
+
+  await recordPayPalBillingAnalytics(deps, {
+    eventKey: billingAnalyticsEventKey({
+      provider: "paypal",
+      eventName: "refund_completed",
+      sourceObjectId,
+    }),
+    eventName: "refund_completed",
+    billingRow,
+    event,
+    sourceObjectId,
+    payload: {
+      ...billingSubscriptionPayload(billingRow),
+      value: payPalEventAmount(event),
+      currency: payPalEventCurrency(event),
+      payment_event_type: event.event_type,
+      original_sale_id: saleId,
+    },
+  })
+}
+
+async function resolvePayPalRefundBillingRow(
+  event: PayPalWebhookEvent,
+  deps: PayPalWebhookDeps,
+): Promise<{ billingRow: BillingSubscriptionRow; saleId: string | null }> {
+  const agreementId = event.resource?.billing_agreement_id?.trim()
+  const subscriptionId = event.resource?.subscription_id?.trim()
+  if (agreementId && subscriptionId && agreementId !== subscriptionId) {
     throw new Error(
-      `PayPal refund/reversal ${event.id ?? "unknown"} is missing a subscription link`,
+      `PayPal refund/reversal ${event.id ?? "unknown"} has conflicting direct subscription links`,
     )
   }
+  const directSubscriptionId = agreementId || subscriptionId
+  if (directSubscriptionId) {
+    return {
+      billingRow: await requirePayPalBillingRow(deps, directSubscriptionId, event.id),
+      saleId: event.resource?.sale_id?.trim() || null,
+    }
+  }
 
+  try {
+    const eventType = event.event_type
+    let saleId: string
+    if (eventType === "PAYMENT.SALE.REFUNDED") {
+      const refundId = refundSourceObjectId(event, eventType)
+      saleId = event.resource?.sale_id?.trim() ?? ""
+      if (!saleId) {
+        const retrieveRefund = deps.retrievePayPalRefund ?? retrievePayPalRefundForWebhook
+        const refund = await retrieveRefund(refundId)
+        if (refund.id?.trim() !== refundId) {
+          throw new Error(`PayPal refund ${refundId} lookup returned a different refund id`)
+        }
+        assertMatchingPayPalRefundAmounts(event.resource?.amount, refund.amount, refundId)
+        saleId = refund.sale_id?.trim() ?? ""
+      }
+      if (!saleId) throw new Error(`PayPal refund ${refundId} is missing an original sale id`)
+    } else if (eventType === "PAYMENT.SALE.REVERSED") {
+      saleId = event.resource?.id?.trim() ?? ""
+      if (!saleId) throw new Error(`PayPal reversal ${event.id ?? "unknown"} is missing a sale id`)
+    } else {
+      throw new Error(`Unsupported PayPal refund event ${eventType ?? "unknown"}`)
+    }
+
+    const localOwnership = await findPayPalSubscriptionForSuccessfulSale(deps, saleId)
+    if (localOwnership) {
+      const billingRow = await requirePayPalBillingRow(
+        deps,
+        localOwnership.providerSubscriptionId,
+        event.id,
+      )
+      if (billingRow.user_id !== localOwnership.userId) {
+        throw new Error(`PayPal sale ${saleId} has mismatched local billing ownership`)
+      }
+      return { billingRow, saleId }
+    }
+
+    const retrieveSale = deps.retrievePayPalSale ?? retrievePayPalSaleForWebhook
+    const sale = await retrieveSale(saleId)
+    if (sale.id?.trim() !== saleId) {
+      throw new Error(`PayPal sale ${saleId} lookup returned a different sale id`)
+    }
+    const providerSubscriptionId = sale.billing_agreement_id?.trim()
+    if (!providerSubscriptionId) {
+      throw new Error(`PayPal sale ${saleId} is missing a billing agreement link`)
+    }
+    return {
+      billingRow: await requirePayPalBillingRow(deps, providerSubscriptionId, event.id),
+      saleId,
+    }
+  } catch (error) {
+    throw new Error(
+      `PayPal refund/reversal ${event.id ?? "unknown"} is missing a subscription link`,
+      { cause: error },
+    )
+  }
+}
+
+function refundSourceObjectId(event: PayPalWebhookEvent, eventType: string | undefined): string {
+  const sourceObjectId = event.resource?.id?.trim()
+  if (!sourceObjectId) {
+    throw new Error(`PayPal refund/reversal ${event.id ?? "unknown"} is missing a resource id`)
+  }
+  // Refund IDs distinguish partial refunds. Reversal events historically use the
+  // affected sale as their source object, so retain that established dedupe key.
+  if (eventType !== "PAYMENT.SALE.REFUNDED" && eventType !== "PAYMENT.SALE.REVERSED") {
+    throw new Error(`Unsupported PayPal refund event ${eventType ?? "unknown"}`)
+  }
+  return sourceObjectId
+}
+
+async function requirePayPalBillingRow(
+  deps: PayPalWebhookDeps,
+  subscriptionId: string,
+  eventId: string | undefined,
+): Promise<BillingSubscriptionRow> {
   const billingRow = await findBillingSubscriptionByProviderId(
     deps.supabase,
     "paypal",
@@ -1071,27 +1201,82 @@ async function recordLinkedPayPalRefund(event: PayPalWebhookEvent, deps: PayPalW
   )
   if (!billingRow) {
     throw new Error(
-      `PayPal refund/reversal ${event.id ?? "unknown"} has no local billing row for ${subscriptionId}`,
+      `PayPal refund/reversal ${eventId ?? "unknown"} has no local billing row for ${subscriptionId}`,
     )
   }
+  return billingRow
+}
 
-  await recordPayPalBillingAnalytics(deps, {
-    eventKey: billingAnalyticsEventKey({
-      provider: "paypal",
-      eventName: "refund_completed",
-      sourceObjectId: event.resource?.id ?? event.id ?? subscriptionId,
-    }),
-    eventName: "refund_completed",
-    billingRow,
-    event,
-    sourceObjectId: event.resource?.id ?? event.id ?? subscriptionId,
-    payload: {
-      ...billingSubscriptionPayload(billingRow),
-      value: payPalEventAmount(event),
-      currency: payPalEventCurrency(event),
-      payment_event_type: event.event_type,
-    },
+async function findPayPalSubscriptionForSuccessfulSale(
+  deps: PayPalWebhookDeps,
+  saleId: string,
+): Promise<{ providerSubscriptionId: string; userId: string } | null> {
+  const { data, error } = await deps.supabase
+    .from("billing_analytics_outbox")
+    .select("provider_subscription_id,user_id")
+    .eq("provider", "paypal")
+    .in("event_name", ["purchase_completed", "payment_completed"])
+    .eq("source_object_id", saleId)
+
+  if (error) throw error
+  const rows =
+    (data as Array<{ provider_subscription_id: string | null; user_id: string | null }> | null) ??
+    []
+  if (rows.length === 0) return null
+
+  const ownership = rows.map((row) => {
+    const providerSubscriptionId = row.provider_subscription_id?.trim()
+    const userId = row.user_id?.trim()
+    if (!providerSubscriptionId || !userId) {
+      throw new Error(`PayPal sale ${saleId} has incomplete local ownership`)
+    }
+    return { providerSubscriptionId, userId }
   })
+  const firstOwnership = ownership[0]
+  if (
+    ownership.some(
+      (candidate) =>
+        candidate.providerSubscriptionId !== firstOwnership.providerSubscriptionId ||
+        candidate.userId !== firstOwnership.userId,
+    )
+  ) {
+    throw new Error(`PayPal sale ${saleId} has conflicting local subscription ownership`)
+  }
+  return firstOwnership
+}
+
+function assertMatchingPayPalRefundAmounts(
+  eventAmount: PayPalAmount | undefined,
+  refundAmount: PayPalAmount | undefined,
+  refundId: string,
+) {
+  const webhookValue = payPalAmountValue(eventAmount)
+  const providerValue = payPalAmountValue(refundAmount)
+  if (webhookValue !== undefined && providerValue !== undefined && webhookValue !== providerValue) {
+    throw new Error(`PayPal refund ${refundId} lookup amount does not match the webhook`)
+  }
+
+  const webhookCurrency = payPalAmountCurrency(eventAmount)
+  const providerCurrency = payPalAmountCurrency(refundAmount)
+  if (
+    webhookCurrency !== undefined &&
+    providerCurrency !== undefined &&
+    webhookCurrency !== providerCurrency
+  ) {
+    throw new Error(`PayPal refund ${refundId} lookup currency does not match the webhook`)
+  }
+}
+
+function payPalAmountValue(amount: PayPalAmount | undefined): number | undefined {
+  const value = amount?.value ?? amount?.total
+  if (!value) return undefined
+  const parsed = Number(value)
+  return Number.isFinite(parsed) ? parsed : undefined
+}
+
+function payPalAmountCurrency(amount: PayPalAmount | undefined): string | undefined {
+  const value = amount?.currency_code ?? amount?.currency
+  return value?.trim().toUpperCase() || undefined
 }
 
 async function recordPayPalBillingAnalytics(
@@ -1129,15 +1314,11 @@ function payPalEventTimestamp(event: PayPalWebhookEvent) {
 }
 
 function payPalEventAmount(event: PayPalWebhookEvent) {
-  const value = event.resource?.amount?.value ?? event.resource?.amount?.total
-  if (!value) return undefined
-  const amount = Number(value)
-  return Number.isFinite(amount) ? amount : undefined
+  return payPalAmountValue(event.resource?.amount)
 }
 
 function payPalEventCurrency(event: PayPalWebhookEvent) {
-  const value = event.resource?.amount?.currency_code ?? event.resource?.amount?.currency
-  return value?.trim().toUpperCase() || undefined
+  return payPalAmountCurrency(event.resource?.amount)
 }
 
 function getEventSubscriptionId(event: PayPalWebhookEvent, eventType: string): string {
@@ -1163,6 +1344,20 @@ async function retrievePayPalSubscriptionForWebhook(
 ): Promise<PayPalSubscription> {
   const { retrievePayPalSubscription } = await import("@/lib/paypal/subscriptions")
   return retrievePayPalSubscription(subscriptionId)
+}
+
+async function retrievePayPalRefundForWebhook(refundId: string): Promise<PayPalRefund> {
+  const { paypalRequest } = await import("@/lib/paypal/client")
+  return paypalRequest<PayPalRefund>(`/v1/payments/refund/${encodeURIComponent(refundId)}`, {
+    signal: AbortSignal.timeout(15_000),
+  })
+}
+
+async function retrievePayPalSaleForWebhook(saleId: string): Promise<PayPalSale> {
+  const { paypalRequest } = await import("@/lib/paypal/client")
+  return paypalRequest<PayPalSale>(`/v1/payments/sale/${encodeURIComponent(saleId)}`, {
+    signal: AbortSignal.timeout(15_000),
+  })
 }
 
 async function cancelPayPalSubscriptionForWebhook(

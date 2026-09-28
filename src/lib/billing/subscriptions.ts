@@ -25,10 +25,21 @@ export interface ManualAccessGrantRow {
 const OPEN_ENTITLEMENTS = new Set<BillingEntitlementStatus>(["active", "past_due"])
 const ACCESS_ALREADY_EXISTS_ERROR = "User already has access through an existing subscription"
 export class CheckoutAccessAlreadyExistsError extends Error {
-  constructor() {
+  readonly activationPending: boolean
+
+  constructor(options: { activationPending?: boolean } = {}) {
     super(ACCESS_ALREADY_EXISTS_ERROR)
     this.name = "CheckoutAccessAlreadyExistsError"
+    this.activationPending = options.activationPending ?? false
   }
+}
+
+/**
+ * The checkout guard's observable result. Keep this separate from app access:
+ * `paid_pending` blocks another purchase without claiming the plan is ready.
+ */
+export type CheckoutAccessConflict = {
+  activationPending: boolean
 }
 
 /**
@@ -170,24 +181,36 @@ export async function assertCanStartCheckout(
   userId: string,
   now: Date = new Date(),
 ): Promise<void> {
+  const conflict = await resolveCheckoutAccessConflictForUser(supabase, userId, now)
+  if (conflict) throw new CheckoutAccessAlreadyExistsError(conflict)
+}
+
+/**
+ * Uses the same ordered checks as `assertCanStartCheckout`, while making the
+ * expected recovery state available to a checkout preflight.
+ */
+export async function resolveCheckoutAccessConflictForUser(
+  supabase: SupabaseBillingClient,
+  userId: string,
+  now: Date = new Date(),
+): Promise<CheckoutAccessConflict | null> {
   const rows = await findBillingSubscriptionsForUser(supabase, userId)
   if (rows.some((row) => hasCurrentBillingAccess(row, now))) {
-    throw new CheckoutAccessAlreadyExistsError()
+    return { activationPending: false }
   }
 
   const oneTimeAccessState = await resolveOneTimeAccessStateForUser(supabase, userId)
-  if (oneTimeAccessState === "active" || oneTimeAccessState === "paid_pending") {
-    throw new CheckoutAccessAlreadyExistsError()
-  }
+  if (oneTimeAccessState === "active") return { activationPending: false }
+  if (oneTimeAccessState === "paid_pending") return { activationPending: true }
 
   const manualGrant = await findCurrentManualAccessGrant(supabase, { userId }, now)
   if (manualGrant) {
-    throw new CheckoutAccessAlreadyExistsError()
+    return { activationPending: false }
   }
 
   // An expired or malformed trial cohort must not recover access from the
   // legacy profile mirror. It may still start an explicitly paid checkout.
-  if (hasTrialAccessMarker(rows, now)) return
+  if (hasTrialAccessMarker(rows, now)) return null
 
   const { data, error } = await supabase
     .from("profiles")
@@ -199,8 +222,9 @@ export async function assertCanStartCheckout(
   const profile = data as LegacyProfileSubscription | null
 
   if (profile && hasCurrentLegacyProfileAccess(profile, now)) {
-    throw new CheckoutAccessAlreadyExistsError()
+    return { activationPending: false }
   }
+  return null
 }
 
 export async function assertCanStartCheckoutForEmail(
@@ -208,9 +232,19 @@ export async function assertCanStartCheckoutForEmail(
   email: string,
   now: Date = new Date(),
 ): Promise<void> {
+  const conflict = await resolveCheckoutAccessConflictForEmail(supabase, email, now)
+  if (conflict) throw new CheckoutAccessAlreadyExistsError(conflict)
+}
+
+/** Same ordered identity checks as `assertCanStartCheckoutForEmail`. */
+export async function resolveCheckoutAccessConflictForEmail(
+  supabase: SupabaseBillingClient,
+  email: string,
+  now: Date = new Date(),
+): Promise<CheckoutAccessConflict | null> {
   const manualGrant = await findCurrentManualAccessGrant(supabase, { email }, now)
   if (manualGrant) {
-    throw new CheckoutAccessAlreadyExistsError()
+    return { activationPending: false }
   }
 
   const { data, error } = await supabase
@@ -221,9 +255,9 @@ export async function assertCanStartCheckoutForEmail(
 
   if (error) throw error
   const profile = data as LegacyProfileSubscription | null
-  if (!profile?.id) return
+  if (!profile?.id) return null
 
-  await assertCanStartCheckout(supabase, profile.id, now)
+  return resolveCheckoutAccessConflictForUser(supabase, profile.id, now)
 }
 
 export async function hasCurrentAppAccess(
