@@ -75,6 +75,8 @@ import {
 import { handleStripeTrialManagementApprovalCompleted } from "@/lib/stripe/trial-management-approval"
 import { handleStripeTrialInvoice, type TrialInvoiceResult } from "@/lib/stripe/trial-invoice"
 
+import { respondToStripeWebhookFailure } from "@/lib/stripe/webhook-failure"
+
 export const runtime = "nodejs" // raw body required; edge runtime buffers differently
 /**
  * The function lifetime, which `after()` work runs inside too. T14 runs the freemium
@@ -1007,23 +1009,23 @@ export async function POST(req: NextRequest) {
   try {
     await handleStripeWebhookEvent(event, { supabase, stripe, recordBillingAnalytics: true })
   } catch (err) {
-    const message = err instanceof Error ? err.message : "unknown"
-    await releaseWebhookEventClaim(supabase, "stripe", event.id)
-    captureServerPaymentFailure({
-      signal: "payment_webhook_processing_failed",
-      provider: "stripe",
-      boundary: "webhook",
-      errorFamily: "webhook_processing",
-      commerceKind: stripeWebhookCommerceKind(event),
-      origin: "webhook",
-      method: "unknown",
-      truth: "unknown",
-      live: paymentRuntime().stripeLive,
-      isInternalTest: false,
-      providerReferencePresent: Boolean(event.id),
+    return respondToStripeWebhookFailure(event, err, {
+      releaseClaim: () => releaseWebhookEventClaim(supabase, "stripe", event.id),
+      captureFailure: () =>
+        captureServerPaymentFailure({
+          signal: "payment_webhook_processing_failed",
+          provider: "stripe",
+          boundary: "webhook",
+          errorFamily: "webhook_processing",
+          commerceKind: stripeWebhookCommerceKind(event),
+          origin: "webhook",
+          method: "unknown",
+          truth: "unknown",
+          live: paymentRuntime().stripeLive,
+          isInternalTest: false,
+          providerReferencePresent: Boolean(event.id),
+        }),
     })
-    console.error("[stripe] handler error:", err)
-    return new NextResponse(`handler error: ${message}`, { status: 500 })
   }
 
   console.info("[stripe:webhook] handled", {
