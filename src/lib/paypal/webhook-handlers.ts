@@ -1180,6 +1180,10 @@ async function recordLinkedPayPalRefund(event: PayPalWebhookEvent, deps: PayPalW
   const eventType = event.event_type
   const sourceObjectId = refundSourceObjectId(event, eventType)
   const { billingRow, saleId } = await resolvePayPalRefundBillingRow(event, deps)
+  if (!billingRow) {
+    console.info("[paypal:webhook] account deletion refund acknowledged", { eventType })
+    return
+  }
 
   await recordPayPalBillingAnalytics(deps, {
     eventKey: billingAnalyticsEventKey({
@@ -1204,7 +1208,7 @@ async function recordLinkedPayPalRefund(event: PayPalWebhookEvent, deps: PayPalW
 async function resolvePayPalRefundBillingRow(
   event: PayPalWebhookEvent,
   deps: PayPalWebhookDeps,
-): Promise<{ billingRow: BillingSubscriptionRow; saleId: string | null }> {
+): Promise<{ billingRow: BillingSubscriptionRow | null; saleId: string | null }> {
   const agreementId = event.resource?.billing_agreement_id?.trim()
   const subscriptionId = event.resource?.subscription_id?.trim()
   if (agreementId && subscriptionId && agreementId !== subscriptionId) {
@@ -1214,9 +1218,10 @@ async function resolvePayPalRefundBillingRow(
   }
   const directSubscriptionId = agreementId || subscriptionId
   if (directSubscriptionId) {
+    const saleId = event.resource?.sale_id?.trim() || null
     return {
-      billingRow: await requirePayPalBillingRow(deps, directSubscriptionId, event.id),
-      saleId: event.resource?.sale_id?.trim() || null,
+      billingRow: await requirePayPalBillingRow(deps, directSubscriptionId, event.id, saleId),
+      saleId,
     }
   }
 
@@ -1249,8 +1254,9 @@ async function resolvePayPalRefundBillingRow(
         deps,
         localOwnership.providerSubscriptionId,
         event.id,
+        saleId,
       )
-      if (billingRow.user_id !== localOwnership.userId) {
+      if (billingRow && billingRow.user_id !== localOwnership.userId) {
         throw new Error(`PayPal sale ${saleId} has mismatched local billing ownership`)
       }
       return { billingRow, saleId }
@@ -1266,7 +1272,7 @@ async function resolvePayPalRefundBillingRow(
       throw new Error(`PayPal sale ${saleId} is missing a billing agreement link`)
     }
     return {
-      billingRow: await requirePayPalBillingRow(deps, providerSubscriptionId, event.id),
+      billingRow: await requirePayPalBillingRow(deps, providerSubscriptionId, event.id, saleId),
       saleId,
     }
   } catch (error) {
@@ -1290,23 +1296,20 @@ function refundSourceObjectId(event: PayPalWebhookEvent, eventType: string | und
   return sourceObjectId
 }
 
+/** Null: a D14 refund of a deleted account's subscription (no billing row by design). */
 async function requirePayPalBillingRow(
   deps: PayPalWebhookDeps,
   subscriptionId: string,
   eventId: string | undefined,
-): Promise<BillingSubscriptionRow> {
+  saleId: string | null = null,
+): Promise<BillingSubscriptionRow | null> {
   const billingRow = await findBillingSubscriptionByProviderId(
     deps.supabase,
     "paypal",
     subscriptionId,
   )
   if (!billingRow) {
-    if (await isAccountDeletionWebRefund(deps, { subscriptionId, paymentRef: null })) {
-      console.info("[paypal:webhook] account deletion refund acknowledged", {
-        eventType: event.event_type,
-      })
-      return
-    }
+    if (await isAccountDeletionWebRefund(deps, { subscriptionId, paymentRef: saleId })) return null
     throw new Error(
       `PayPal refund/reversal ${eventId ?? "unknown"} has no local billing row for ${subscriptionId}`,
     )

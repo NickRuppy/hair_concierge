@@ -1004,6 +1004,43 @@ test("refund webhooks for a subscription an account deletion cancelled are ackno
   )
 })
 
+test("a sale-only refund of a deleted account's subscription resolves via the sale and is acknowledged (D14)", async () => {
+  // The deleted account's billing and outbox rows are gone, so the verified sale is the only link.
+  const lookups: unknown[] = []
+  const { supabase, billing, analyticsOutbox } = createSupabaseStub({ billing: [] })
+  const deps = {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    recordBillingAnalytics: true,
+    retrievePayPalSale: async (saleId: string) => ({ id: saleId, billing_agreement_id: "I-gone" }),
+    isAccountDeletionWebRefund: async (input: {
+      subscriptionId: string | null
+      paymentRef: string | null
+    }) => {
+      lookups.push(input)
+      return input.subscriptionId === "I-gone"
+    },
+  }
+  const refund: PayPalWebhookEvent = {
+    id: "WH-deleted-sale-refund",
+    event_type: "PAYMENT.SALE.REFUNDED",
+    resource: { id: "REFUND-deleted", sale_id: "SALE-deleted" },
+  }
+
+  assert.deepEqual(await handlePayPalWebhookEvent(refund, deps), { handled: true })
+  assert.deepEqual(lookups, [{ subscriptionId: "I-gone", paymentRef: "SALE-deleted" }])
+  assert.equal(billing.length, 0)
+  assert.equal(analyticsOutbox.filter((row) => row.event_name === "refund_completed").length, 0)
+  await assert.rejects(
+    handlePayPalWebhookEvent(
+      { ...refund, id: "WH-unknown-sale-refund" },
+      { ...deps, isAccountDeletionWebRefund: async () => false },
+    ),
+    /missing a subscription link/,
+  )
+})
+
 test("activation webhook does not rebind an intent that already belongs to another PayPal subscription", async () => {
   const { supabase, billing, paypalIntents } = createSupabaseStub({
     billing: [],
