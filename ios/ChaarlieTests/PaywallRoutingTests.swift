@@ -11,12 +11,18 @@ final class FakeStoreService: StoreService, @unchecked Sendable {
     private var entitlements: [StoreTransaction]
     private var finishedIDs: [UInt64] = []
     private var syncs = 0
+    private var renewalInfos: [UInt64: String]
+    private var subscriptions: [LocalSubscription]
     private let stream: AsyncStream<StoreTransaction>
     private let continuation: AsyncStream<StoreTransaction>.Continuation
 
-    init(unfinished: [StoreTransaction] = [], entitlements: [StoreTransaction] = []) {
+    /// `renewalInfos` is keyed by the subscription's original transaction ID.
+    init(unfinished: [StoreTransaction] = [], entitlements: [StoreTransaction] = [],
+         renewalInfos: [UInt64: String] = [:], subscriptions: [LocalSubscription] = []) {
         pending = unfinished
         self.entitlements = entitlements
+        self.renewalInfos = renewalInfos
+        self.subscriptions = subscriptions
         (stream, continuation) = AsyncStream.makeStream()
     }
     var finished: [UInt64] { lock.withLock { finishedIDs } }
@@ -35,6 +41,10 @@ final class FakeStoreService: StoreService, @unchecked Sendable {
             pending.removeAll { $0.id == transaction.id }
         }
     }
+    func signedRenewalInfo(for transaction: StoreTransaction) async -> String? {
+        lock.withLock { renewalInfos[transaction.originalID] }
+    }
+    func activeSubscriptions() async -> [LocalSubscription] { lock.withLock { subscriptions } }
 }
 
 @MainActor
@@ -555,6 +565,116 @@ final class PaywallRoutingTests: XCTestCase {
         XCTAssertEqual(PaywallHeader.height(for: .large, showsStatus: true), 340)
         XCTAssertEqual(PaywallHeader.height(for: .xxxLarge, showsStatus: true), 340)
         XCTAssertFalse(PaywallHeader.showsStatus(nil))
+    }
+
+    // MARK: Renewal info next to the transaction
+
+    private func postedBody(_ transport: ControlledTransport) async throws -> [String: [String]] {
+        let body = await transport.lastBody("transactions")
+        return try JSONDecoder().decode([String: [String]].self, from: XCTUnwrap(body))
+    }
+    func testPurchasePostsTheSubscriptionsSignedRenewalInfo() async throws {
+        let store = FakeStoreService(unfinished: [purchase], renewalInfos: [purchase.id: "header.renewal-info.signature"])
+        let (model, transport, _) = try await signedInModel(store: store)
+        model.admission = .paywall
+        let buying = Task { await model.handlePurchase(.purchased(purchase)) }
+        try await waitFor("transactions", transport)
+        let posted = try await postedBody(transport)
+        XCTAssertEqual(posted, ["signedTransactions": ["header.purchase.signature"],
+                                "signedRenewalInfos": ["header.renewal-info.signature"]])
+        await transport.complete("transactions", json: #"{"access":\#(activeAccess)}"#)
+        await buying.value
+        XCTAssertEqual(store.finished, [purchase.id])
+        XCTAssertEqual(model.admission, .ready)
+    }
+    func testRenewalInfoIsFoundByTheOriginalTransactionID() async throws {
+        // A renewal period (new transaction ID) of the purchase's subscription.
+        let renewal = StoreTransaction(id: 2_000_000_002, signedTransaction: "header.renewal.signature",
+                                       originalID: purchase.id, subscriptionGroupID: "21500001")
+        let store = FakeStoreService(unfinished: [renewal], renewalInfos: [purchase.id: "header.renewal-info.signature"])
+        let (model, transport, _) = try await signedInModel(store: store)
+        model.admission = .ready
+        // The foreground/launch retry re-posts it together with fresh renewal info.
+        let retry = Task { await model.retryUnfinishedTransactions() }
+        try await waitFor("transactions", transport)
+        let posted = try await postedBody(transport)
+        XCTAssertEqual(posted["signedRenewalInfos"], ["header.renewal-info.signature"])
+        await transport.complete("transactions", json: #"{"access":\#(activeAccess)}"#)
+        await retry.value
+        XCTAssertEqual(store.finished, [renewal.id])
+    }
+    func testRestorePostsRenewalInfoWithEachEntitlement() async throws {
+        let store = FakeStoreService(entitlements: [purchase], renewalInfos: [purchase.id: "header.renewal-info.signature"])
+        let (model, transport, _) = try await signedInModel(store: store)
+        model.admission = .paywall
+        let restoring = Task { await model.restorePurchases() }
+        try await waitFor("transactions", transport)
+        let posted = try await postedBody(transport)
+        XCTAssertEqual(posted["signedRenewalInfos"], ["header.renewal-info.signature"])
+        await transport.complete("transactions", json: #"{"access":\#(activeAccess)}"#)
+        await restoring.value
+        XCTAssertEqual(model.admission, .ready)
+    }
+    func testRejectedBatchIsRepostedWithoutRenewalInfoBeforeFinishing() async throws {
+        for secondStatus in [200, 400] {
+            let store = FakeStoreService(unfinished: [purchase], renewalInfos: [purchase.id: "header.bad-renewal.signature"])
+            let (model, transport, _) = try await signedInModel(store: store)
+            model.admission = .paywall
+            let buying = Task { await model.handlePurchase(.purchased(purchase)) }
+            try await waitFor("transactions", transport)
+            await transport.complete("transactions", status: 400, json: #"{"error":"invalid_transaction"}"#)
+            try await waitFor("transactions", transport)
+            XCTAssertTrue(store.finished.isEmpty, "Renewal info must never get a purchase finished unrecorded")
+            let retried = try await postedBody(transport)
+            XCTAssertEqual(retried, ["signedTransactions": ["header.purchase.signature"]])
+            if secondStatus == 200 {
+                await transport.complete("transactions", json: #"{"access":\#(activeAccess)}"#)
+            } else {
+                await transport.complete("transactions", status: 400, json: #"{"error":"invalid_transaction"}"#)
+            }
+            await buying.value
+            let count = await transport.requestCount("transactions")
+            XCTAssertEqual(count, 2)
+            XCTAssertEqual(store.finished, [purchase.id])
+            XCTAssertEqual(model.admission, secondStatus == 200 ? .ready : .paywall)
+        }
+    }
+    /// M1: the retry-without-renewal-info guard requires `account == generation` at the moment
+    /// the first request's rejection is caught. If the account changes in between (logout or a
+    /// session rotation while the request is in flight), a renewal-caused 400 is not proof the
+    /// transaction itself is invalid — it must be left unfinished rather than dropped.
+    func testAccountChangeDuringTheRenewalRetryLeavesThePurchaseUnfinished() async throws {
+        let store = FakeStoreService(unfinished: [purchase], renewalInfos: [purchase.id: "header.renewal-info.signature"])
+        let (model, transport, _) = try await signedInModel(store: store)
+        model.admission = .paywall
+        let buying = Task { await model.handlePurchase(.purchased(purchase)) }
+        try await waitFor("transactions", transport)
+        let logout = Task { await model.logout() }
+        try await waitFor("logout", transport)
+        await transport.complete("transactions", status: 400, json: #"{"error":"invalid_transaction"}"#)
+        await transport.complete("logout", json: "{}")
+        await logout.value
+        await buying.value
+        XCTAssertTrue(store.finished.isEmpty, "A renewal-caused rejection during an account change must not finish the purchase")
+        let count = await transport.requestCount("transactions")
+        XCTAssertEqual(count, 1, "No retry without renewal info once the account has changed mid-flight")
+    }
+    /// A 409 `owned_by_other_account` is never caused by renewal info riding along (it names the
+    /// transaction, not the renewal info), so it must never trigger the retry-without-renewal path.
+    func testOwnedByOtherAccountWithRenewalInfoIsNotRetriedWithoutIt() async throws {
+        let store = FakeStoreService(unfinished: [purchase], renewalInfos: [purchase.id: "header.renewal-info.signature"])
+        let (model, transport, _) = try await signedInModel(store: store)
+        model.admission = .paywall
+        let buying = Task { await model.handlePurchase(.purchased(purchase)) }
+        try await waitFor("transactions", transport)
+        let posted = try await postedBody(transport)
+        XCTAssertEqual(posted["signedRenewalInfos"], ["header.renewal-info.signature"])
+        await transport.complete("transactions", status: 409, json: #"{"error":"owned_by_other_account","access":\#(noAccess)}"#)
+        await buying.value
+        XCTAssertEqual(store.finished, [purchase.id])
+        XCTAssertEqual(model.paywallMessage, "Dieses Abo gehört zu einem anderen Chaarlie-Konto.")
+        let count = await transport.requestCount("transactions")
+        XCTAssertEqual(count, 1, "owned_by_other_account is never retried without renewal info")
     }
 
     // MARK: Helpers

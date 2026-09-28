@@ -313,9 +313,12 @@ actor MobileClient {
               response.kind == .pending_submission ? response.submissionId != nil : response.productId != nil else { throw MobileError.invalidResponse }
         return response
     }
-    func postAppStoreTransactions(_ signedTransactions: [String]) async throws -> MobileAccess {
+    func postAppStoreTransactions(_ signedTransactions: [String], signedRenewalInfos: [String] = []) async throws -> MobileAccess {
+        var body = ["signedTransactions": signedTransactions]
+        // Optional on the server; omitted when StoreKit had no renewal info.
+        if !signedRenewalInfos.isEmpty { body["signedRenewalInfos"] = signedRenewalInfos }
         let response: AppStoreTransactionsResponse = try await authorized("app-store/transactions", method: "POST",
-            encodedBody: JSONEncoder().encode(["signedTransactions": signedTransactions]))
+            encodedBody: JSONEncoder().encode(body))
         return response.access
     }
     func accountDeletionPreflight() async throws -> AccountDeletionPreflight {

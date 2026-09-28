@@ -941,15 +941,34 @@ final class AppModel {
     /// Exactly one transaction per request: the server verifies a whole batch before writing,
     /// so one invalid JWS must never finish a valid one it did not store. Finishes only after
     /// the server's verdict (200 or 409/400); anything else leaves it for StoreKit to redeliver.
+    /// The subscription's signed renewal info rides along, so willRenew is right before
+    /// Apple's webhook arrives; a rejected batch is re-posted without it, so renewal info can
+    /// never get a purchase finished unrecorded.
     /// Nil when the account changed or the session expired.
     private func post(_ transaction: StoreTransaction) async -> PostResult? {
         guard session != nil else { return nil }
         let account = generation
         postingTransactionIDs.insert(transaction.id)
+        let renewalInfos = await store.signedRenewalInfo(for: transaction).map { [$0] } ?? []
+        guard account == generation else { return nil }
+        let signed = [transaction.signedTransaction]
         let result: PostResult
-        do { result = .access(try await client.postAppStoreTransactions([transaction.signedTransaction])) }
+        do {
+            do { result = .access(try await client.postAppStoreTransactions(signed, signedRenewalInfos: renewalInfos)) }
+            catch MobileError.appStoreInvalidTransaction where !renewalInfos.isEmpty && account == generation {
+                result = .access(try await client.postAppStoreTransactions(signed))
+            }
+        }
         catch MobileError.appStoreOwnedByOtherAccount(let access) { result = .ownedByOther(access) }
-        catch MobileError.appStoreInvalidTransaction { result = .invalid }
+        catch MobileError.appStoreInvalidTransaction {
+            // The retry-without-renewal-info guard above did not fire because the account
+            // changed mid-flight (logout/session rotation between the first request and its
+            // 400). A renewal-caused 400 is not proof the transaction itself is invalid, so
+            // finishing it here would drop a valid purchase unrecorded. Leave it unfinished
+            // for the next Restore or renewal instead.
+            if !renewalInfos.isEmpty && account != generation { return nil }
+            result = .invalid
+        }
         catch {
             guard account == generation else { return nil }
             postingTransactionIDs.remove(transaction.id)
@@ -980,7 +999,17 @@ final class AppModel {
         guard session != nil, admission == .ready || admission == .paywall, accountDeletion == nil else { return }
         accountDeletionError = nil
         // Deleting the account never cancels Apple billing (Guideline 5.1.1(v)).
-        if access?.appStore?.willRenew == true { accountDeletion = .subscriptionNotice }
+        if access?.appStore?.willRenew == true { accountDeletion = .subscriptionNotice; return }
+        // The server may not know the renewal status yet (Apple's webhook lags a fresh
+        // purchase), so StoreKit on this device is asked too; either one shows the notice.
+        let account = generation, operation = UUID()
+        accountDeletionOperation = operation
+        accountDeletion = .loading
+        let subscriptions = await store.activeSubscriptions()
+        let renewing = subscriptions.contains { $0.renews(for: session.flatMap { UUID(uuidString: $0.userId) }) }
+        guard account == generation, operation == accountDeletionOperation, accountDeletion == .loading else { return }
+        accountDeletion = nil
+        if renewing { accountDeletion = .subscriptionNotice }
         else { await continueAccountDeletion() }
     }
     /// "Trotzdem fortfahren", the first step without an Apple subscription, and preflight retry.

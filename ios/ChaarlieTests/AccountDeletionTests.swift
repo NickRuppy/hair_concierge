@@ -1,4 +1,5 @@
 import XCTest
+import StoreKit
 @testable import Chaarlie
 
 @MainActor
@@ -61,6 +62,56 @@ final class AccountDeletionTests: XCTestCase {
             await beginning.value
             XCTAssertEqual(other.accountDeletion, .confirm(webSubscription: false))
         }
+    }
+    func testNoticeFromStoreKitWhileTheServerHasNotHeardTheRenewalStatus() async throws {
+        // A fresh purchase: the server has no renewal status yet, so it answers willRenew false.
+        let own = try XCTUnwrap(UUID(uuidString: userID))
+        for subscription in [LocalSubscription(appAccountToken: own, willAutoRenew: true),
+                             LocalSubscription(appAccountToken: nil, willAutoRenew: true)] {
+            for access in [appStore(willRenew: false), nil] {
+                let store = FakeStoreService(subscriptions: [subscription])
+                let (model, transport, _, _) = try await signedInModel(store: store, access: access)
+                await model.beginAccountDeletion()
+                XCTAssertEqual(model.accountDeletion, .subscriptionNotice, "\(subscription) / \(String(describing: access))")
+                let asked = await transport.requestCount("preflight")
+                XCTAssertEqual(asked, 0, "The notice comes before any server call")
+            }
+        }
+    }
+    func testNoLocalNoticeForAnotherAccountsOrANonRenewingSubscription() async throws {
+        let other = try XCTUnwrap(UUID(uuidString: "7c9e6679-7425-40de-944b-e07fc1f90ae7"))
+        let own = try XCTUnwrap(UUID(uuidString: userID))
+        let store = FakeStoreService(subscriptions: [LocalSubscription(appAccountToken: other, willAutoRenew: true),
+                                                     LocalSubscription(appAccountToken: own, willAutoRenew: false)])
+        let (model, transport, _, _) = try await signedInModel(store: store, access: appStore(willRenew: false))
+        let beginning = Task { await model.beginAccountDeletion() }
+        try await waitFor("preflight", transport)
+        XCTAssertEqual(model.accountDeletion, .loading)
+        await transport.complete("preflight", json: #"{"webSubscription":false}"#)
+        await beginning.value
+        XCTAssertEqual(model.accountDeletion, .confirm(webSubscription: false))
+    }
+    /// M4: `activeSubscriptions()` itself needs a live StoreKit status call to exercise, but the
+    /// decision it makes from a status is a pure function — test that directly instead.
+    func testIsStillBilledCoversBillingRetryWithoutGraceAndIgnoresOtherProducts() throws {
+        for state: Product.SubscriptionInfo.RenewalState in [.subscribed, .inGracePeriod, .inBillingRetryPeriod] {
+            XCTAssertTrue(SubscriptionConfiguration.isStillBilled(productID: "de.chaarlie.scanner.yearly", state: state),
+                          "\(state) still bills a scanner product")
+        }
+        for state: Product.SubscriptionInfo.RenewalState in [.expired, .revoked] {
+            XCTAssertFalse(SubscriptionConfiguration.isStillBilled(productID: "de.chaarlie.scanner.yearly", state: state))
+        }
+        // Limited to our own product IDs even for a still-billing state.
+        XCTAssertFalse(SubscriptionConfiguration.isStillBilled(productID: "de.chaarlie.other.monthly", state: .inBillingRetryPeriod))
+    }
+    func testLocalSubscriptionRenewsOnlyForItsOwnAccountOrWithoutToken() throws {
+        let own = try XCTUnwrap(UUID(uuidString: userID)), other = UUID()
+        XCTAssertTrue(LocalSubscription(appAccountToken: own, willAutoRenew: true).renews(for: own))
+        XCTAssertTrue(LocalSubscription(appAccountToken: nil, willAutoRenew: true).renews(for: own))
+        XCTAssertTrue(LocalSubscription(appAccountToken: nil, willAutoRenew: true).renews(for: nil))
+        XCTAssertFalse(LocalSubscription(appAccountToken: other, willAutoRenew: true).renews(for: own))
+        XCTAssertFalse(LocalSubscription(appAccountToken: other, willAutoRenew: true).renews(for: nil))
+        XCTAssertFalse(LocalSubscription(appAccountToken: own, willAutoRenew: false).renews(for: own))
     }
     func testPaywalledAccountCanStartDeletion() async throws {
         let (model, transport, _, _) = try await signedInModel(access: #"{"status":"none","source":null,"appStore":null}"#)

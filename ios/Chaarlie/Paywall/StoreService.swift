@@ -8,8 +8,13 @@ struct StoreTransaction: Equatable, Sendable {
     let signedTransaction: String
     /// The Chaarlie account the purchase was bound to; nil for purchases made outside the app.
     let appAccountToken: UUID?
-    init(id: UInt64, signedTransaction: String, appAccountToken: UUID? = nil) {
+    /// The subscription this period belongs to; finds its renewal info.
+    let originalID: UInt64
+    let subscriptionGroupID: String?
+    init(id: UInt64, signedTransaction: String, appAccountToken: UUID? = nil,
+         originalID: UInt64? = nil, subscriptionGroupID: String? = nil) {
         self.id = id; self.signedTransaction = signedTransaction; self.appAccountToken = appAccountToken
+        self.originalID = originalID ?? id; self.subscriptionGroupID = subscriptionGroupID
     }
 }
 
@@ -29,6 +34,23 @@ protocol StoreService: Sendable {
     /// Throws `CancellationError` when the person dismisses Apple's sign-in sheet.
     func sync() async throws
     func finish(_ transaction: StoreTransaction) async
+    /// Apple's signed renewal info (auto-renew, billing retry) for the transaction's
+    /// subscription, posted next to it so the server need not wait for Apple's webhook.
+    func signedRenewalInfo(for transaction: StoreTransaction) async -> String?
+    /// The active auto-renewable subscriptions StoreKit knows on this device. Only a local
+    /// fallback for the deletion notice; the server stays the authority on access.
+    func activeSubscriptions() async -> [LocalSubscription]
+}
+
+/// One active subscription as StoreKit reports it on this device (unverified is fine: it
+/// only decides whether an informational notice appears).
+struct LocalSubscription: Equatable, Sendable {
+    let appAccountToken: UUID?
+    let willAutoRenew: Bool
+    /// Apple keeps billing it: this account's purchase, or one made outside the app.
+    func renews(for account: UUID?) -> Bool {
+        willAutoRenew && (appAccountToken == nil || appAccountToken == account)
+    }
 }
 
 enum SubscriptionConfiguration {
@@ -38,6 +60,16 @@ enum SubscriptionConfiguration {
         guard let value = Bundle.main.object(forInfoDictionaryKey: "ChaarlieSubscriptionGroupID") as? String,
               !value.isEmpty, value.allSatisfy(\.isNumber) else { return nil }
         return value
+    }
+    /// The scanner subscription's App Store product identifiers (server allowlist in
+    /// `src/lib/app-store/state.ts`). Kept here too so a status entry for some other
+    /// product sharing the group is never mistaken for a Chaarlie subscription.
+    static let productIDs: Set<String> = ["de.chaarlie.scanner.monthly", "de.chaarlie.scanner.yearly"]
+    /// Apple still bills the account in these renewal states, even once `currentEntitlements`
+    /// has already dropped the transaction (billing retry with no grace period looks expired
+    /// there). A pure decision function so it is testable without a live StoreKit status call.
+    static func isStillBilled(productID: String, state: Product.SubscriptionInfo.RenewalState) -> Bool {
+        productIDs.contains(productID) && [.subscribed, .inGracePeriod, .inBillingRetryPeriod].contains(state)
     }
 }
 
@@ -71,12 +103,37 @@ struct LiveStoreService: StoreService {
             await result.unsafePayloadValue.finish()
         }
     }
+    func signedRenewalInfo(for transaction: StoreTransaction) async -> String? {
+        guard let group = transaction.subscriptionGroupID,
+              let statuses = try? await Product.SubscriptionInfo.status(for: group) else { return nil }
+        // A group can hold several subscriptions (e.g. Family Sharing); take this one's.
+        return statuses.first { $0.transaction.unsafePayloadValue.originalID == transaction.originalID }?
+            .renewalInfo.jwsRepresentation
+    }
+    func activeSubscriptions() async -> [LocalSubscription] {
+        // Apple's own status for the group, not `currentEntitlements`: a subscription in
+        // billing retry with no open grace period has already expired there, even though
+        // Apple keeps charging it for up to 60 days (see `isStillBilled`).
+        guard let group = SubscriptionConfiguration.groupID,
+              let statuses = try? await Product.SubscriptionInfo.status(for: group) else { return [] }
+        var subscriptions: [LocalSubscription] = []
+        for status in statuses {
+            let transaction = status.transaction.unsafePayloadValue
+            guard SubscriptionConfiguration.isStillBilled(productID: transaction.productID, state: status.state)
+            else { continue }
+            subscriptions.append(LocalSubscription(appAccountToken: transaction.appAccountToken,
+                                                   willAutoRenew: status.renewalInfo.unsafePayloadValue.willAutoRenew))
+        }
+        return subscriptions
+    }
 }
 
 extension StoreTransaction {
     init(_ result: VerificationResult<Transaction>) {
-        self.init(id: result.unsafePayloadValue.id, signedTransaction: result.jwsRepresentation,
-                  appAccountToken: result.unsafePayloadValue.appAccountToken)
+        let transaction = result.unsafePayloadValue
+        self.init(id: transaction.id, signedTransaction: result.jwsRepresentation,
+                  appAccountToken: transaction.appAccountToken, originalID: transaction.originalID,
+                  subscriptionGroupID: transaction.subscriptionGroupID)
     }
 }
 
