@@ -123,6 +123,7 @@ function recommendation(productId: string, label: string) {
     brand: null,
     label,
     verdictLabel: "Passt",
+    priceLabel: null,
     origin: "ideal_recommendation" as const,
     propertyRows: null,
   }

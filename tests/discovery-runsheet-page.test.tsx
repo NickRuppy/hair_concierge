@@ -8,6 +8,7 @@ import { createDiscoveryCockpitPage } from "../src/app/admin/beratung/[enrollmen
 import {
   DISCOVERY_REFERRAL_MESSAGE,
   DiscoveryCallCockpit,
+  StepDecision,
 } from "../src/components/discovery/cockpit/discovery-call-cockpit"
 import {
   parseRunsheetBaseline,
@@ -43,7 +44,10 @@ import {
   composeDiscoveryRefinedRoutine,
   type DiscoveryIntakeItem,
 } from "../src/lib/discovery/refined-routine"
-import type { ScanPresentedVerdictPayload } from "../src/lib/scan/types"
+import type {
+  ScanAlternativePresentation,
+  ScanPresentedVerdictPayload,
+} from "../src/lib/scan/types"
 
 /**
  * The consult runsheet (T3): the cockpit page in six phases, rendered through its real
@@ -196,21 +200,26 @@ const verdicts: DiscoveryParticipantVerdict[] = [
 ]
 
 function model(
-  input: { steps?: DiscoveryIdealStep[]; items?: DiscoveryIntakeItem[] } = {},
+  input: {
+    steps?: DiscoveryIdealStep[]
+    items?: DiscoveryIntakeItem[]
+    verdicts?: DiscoveryParticipantVerdict[]
+  } = {},
 ): DiscoveryCockpitModel {
   const steps = input.steps ?? [shampooStep, conditionerStep]
   const items = input.items ?? [shampooItem, scannedConditioner]
+  const stepVerdicts = input.verdicts ?? verdicts
   return {
     status: "ready",
     steps,
-    verdicts,
+    verdicts: stepVerdicts,
     previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
     routine: composeDiscoveryRefinedRoutine({
       steps,
       items,
       decisions: [],
       swapProducts: [],
-      ownedProducts: discoveryOwnedProductIdentities(verdicts),
+      ownedProducts: discoveryOwnedProductIdentities(stepVerdicts),
     }),
     recommendationProducts: [],
     recommendationBrandsAvailable: true,
@@ -482,6 +491,7 @@ test("join rule (a): an empty step WITH an Idealplan recommendation (`neu`) show
     brand: "Balea",
     label: "Balea Feuchtigkeitsspülung",
     verdictLabel: "Passt",
+    priceLabel: null,
     origin: "ideal_recommendation" as const,
     propertyRows: null,
   }
@@ -555,6 +565,7 @@ function twoEmptyConditionerSteps() {
     brand: "Balea",
     label: "Balea Feuchtigkeitsspülung",
     verdictLabel: "Passt",
+    priceLabel: null,
     origin: "ideal_recommendation" as const,
     propertyRows: null,
   }
@@ -899,5 +910,236 @@ test("checklist lines: one research line per product, the asks on one line", () 
       "Consult-Brief prüfen (Diagnose, Hebel, Begründungen)",
       "Im Call klären: wo sie einkauft",
     ],
+  )
+})
+
+// --- verdict-layer T2 (R19): prices on the alternatives, sortable by fit or price -----------
+
+const priced = {
+  a: "30000000-0000-4000-8000-0000000000a1",
+  b: "30000000-0000-4000-8000-0000000000b1",
+  c: "30000000-0000-4000-8000-0000000000c1",
+}
+
+function alternative(productId: string, displayName: string, priceLabel: string | null) {
+  return {
+    productId,
+    displayName,
+    imageUrl: null,
+    priceLabel,
+    netContentLabel: null,
+    verdict: "ideal" as const,
+    verdictLabel: "Passt",
+    brand: null,
+    purchaseUrl: null,
+  }
+}
+
+/** Her shampoo's verdict with these alternatives, in the engine's (fit) order. */
+function verdictsWith(alternatives: ScanAlternativePresentation[]) {
+  if (payload.kind !== "in_catalog") throw new Error("fixture")
+  return [
+    { ...verdicts[0]!, payload: { ...payload, alternatives } },
+  ] as DiscoveryParticipantVerdict[]
+}
+
+const pricedVerdicts = verdictsWith([
+  alternative(priced.a, "Alpha Shampoo", "9,95\u00a0€"),
+  alternative(priced.b, "Beta Shampoo", null),
+  alternative(priced.c, "Gamma Shampoo", "3,45\u00a0€"),
+])
+
+/** Each option's `<label>` markup in the shampoo entry's decision column, in render order. */
+function shampooChoices(markup: string): string[] {
+  const entry = markup.slice(markup.indexOf(">Behalten</h3>"))
+  const decision = entry.slice(entry.indexOf(">Entscheidung<"))
+  const next = decision.indexOf(">Entscheidung<", 1)
+  return (next < 0 ? decision : decision.slice(0, next))
+    .split("<label")
+    .slice(1)
+    .filter((choice) => choice.includes("Tauschen zu"))
+}
+
+test("prices: an alternative with a price shows it, one without shows no price line", async () => {
+  const markup = await renderPage({ loadModel: async () => model({ verdicts: pricedVerdicts }) })
+  const choices = shampooChoices(markup)
+  const alpha = choices.find((choice) => choice.includes("Alpha Shampoo"))
+  const beta = choices.find((choice) => choice.includes("Beta Shampoo"))
+  assert.ok(alpha?.includes("9,95\u00a0€"))
+  assert.ok(beta, "no Beta choice")
+  assert.ok(!beta.includes("€"))
+  // No retailer line: the catalog carries no retailer field.
+  assert.ok(!beta.includes("text-[12px] leading-5 text-muted-foreground"))
+})
+
+test("prices: the default order is the engine's (fit) order — unchanged, „Fit“ active", async () => {
+  const markup = await renderPage({ loadModel: async () => model({ verdicts: pricedVerdicts }) })
+  const order = shampooChoices(markup).map((choice) =>
+    ["Alpha", "Beta", "Gamma"].find((name) => choice.includes(`${name} Shampoo`)),
+  )
+  assert.deepEqual(order, ["Alpha", "Beta", "Gamma"])
+  const key = `${shampooStep.decisionKey}:${ids.shampooItem}`
+  assert.ok(markup.includes(`id="swap-sort-${key}-fit" type="button" aria-pressed="true"`))
+  assert.ok(markup.includes(`id="swap-sort-${key}-price" type="button" aria-pressed="false"`))
+})
+
+test("prices: no toggle where there is nothing to sort (one option, or none priced)", async () => {
+  const unpriced = verdictsWith([
+    alternative(priced.a, "Alpha Shampoo", null),
+    alternative(priced.b, "Beta Shampoo", null),
+  ])
+  for (const stepVerdicts of [verdicts, unpriced]) {
+    const markup = await renderPage({ loadModel: async () => model({ verdicts: stepVerdicts }) })
+    assert.ok(!markup.includes('id="swap-sort-'))
+  }
+})
+
+test("prices: legacy data without price fields renders without a price line or an error", async () => {
+  const { priceLabel: _dropped, ...legacyAlternative } = alternative(
+    priced.a,
+    "Alpha Shampoo",
+    null,
+  )
+  void _dropped
+  const legacyVerdicts = verdictsWith([legacyAlternative as never])
+  const legacyConditioner: DiscoveryIdealStep = {
+    ...conditionerStep,
+    preview: {
+      kind: "recommendation",
+      category: "conditioner",
+      role: "conditioner_rinse_out",
+      decisionKey: conditionerStep.decisionKey,
+      productId: priced.c,
+      productName: "Balea Feuchtigkeitsspülung",
+      imageUrl: null,
+      verdict: "ideal",
+      authorityVersion: "v1",
+      factFingerprint: "fp",
+      reasoning: { productCriteria: "Leicht.", fit: "Passt.", frequency: "nach jeder Wäsche" },
+    } as never,
+  }
+  const legacyModel = model({
+    steps: [shampooStep, legacyConditioner],
+    items: [shampooItem],
+    verdicts: legacyVerdicts,
+  })
+  const view = buildDiscoveryCockpitView(legacyModel)
+  assert.deepEqual(
+    view.steps.map((step) => step.swapOptions.map((option) => option.priceLabel)),
+    [[null], [null]],
+  )
+  const markup = await renderPage({ loadModel: async () => legacyModel })
+  assert.ok(markup.includes("Alpha Shampoo"))
+  assert.ok(markup.includes("Neu: Balea Feuchtigkeitsspülung"))
+  assert.ok(!markup.includes("€"))
+})
+
+test("prices: the read model carries the Idealplan recommendation's price onto its option", () => {
+  const withPrice: DiscoveryIdealStep = {
+    ...conditionerStep,
+    preview: {
+      kind: "recommendation",
+      category: "conditioner",
+      role: "conditioner_rinse_out",
+      decisionKey: conditionerStep.decisionKey,
+      productId: priced.c,
+      productName: "Balea Feuchtigkeitsspülung",
+      imageUrl: "https://catalog.example/conditioner.jpg",
+      verdict: "ideal",
+      authorityVersion: "v1",
+      factFingerprint: "fp",
+      commerce: {
+        priceEur: 2.45,
+        purchaseLinkStatus: "available",
+        netContentValue: null,
+        netContentUnit: null,
+        priceLabel: "2,45\u00a0€",
+        netContentLabel: null,
+        availabilityLabel: null,
+        productUrl: null,
+        affiliateDisclosure: null,
+      },
+      reasoning: { productCriteria: "Leicht.", fit: "Passt.", frequency: "nach jeder Wäsche" },
+    },
+  }
+  const view = buildDiscoveryCockpitView(
+    model({ steps: [shampooStep, withPrice], items: [shampooItem] }),
+  )
+  const conditioner = view.steps.find((step) => step.category === "conditioner")
+  assert.equal(conditioner?.swapOptions[0]?.priceLabel, "2,45\u00a0€")
+  assert.equal(conditioner?.idealRecommendation?.priceLabel, "2,45\u00a0€")
+})
+
+/** StepDecision under a hand-rolled `useState` (no jsdom here — see discovery-call-sheet-save). */
+function stepDecisionHarness(props: React.ComponentProps<typeof StepDecision>) {
+  const internals = (
+    React as unknown as {
+      __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE: { H: unknown }
+    }
+  ).__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE
+  const values: unknown[] = []
+  let cursor = 0
+  const dispatcher = {
+    useState<T>(initial: T): [T, (next: T) => void] {
+      const index = cursor++
+      if (values.length <= index) values[index] = initial
+      return [values[index] as T, (next) => (values[index] = next)]
+    },
+  }
+  return function renderOnce(): React.ReactElement {
+    const previous = internals.H
+    internals.H = dispatcher
+    try {
+      cursor = 0
+      return StepDecision(props) as React.ReactElement
+    } finally {
+      internals.H = previous
+    }
+  }
+}
+
+type AnyElement = React.ReactElement<Record<string, any>>
+
+function flatten(node: React.ReactNode): AnyElement[] {
+  if (Array.isArray(node)) return node.flatMap(flatten)
+  if (!React.isValidElement(node)) return []
+  const element = node as AnyElement
+  return [element, ...React.Children.toArray(element.props.children).flatMap(flatten)]
+}
+
+test("sort toggle: „Preis“ reorders ascending, priceless last; „Fit“ restores the engine order", () => {
+  const view = buildDiscoveryCockpitView(model({ verdicts: pricedVerdicts }))
+  const step = view.steps.find((entry) => entry.category === "shampoo")!
+  const render = stepDecisionHarness({
+    step,
+    name: "k",
+    value: "",
+    dropAllowed: true,
+    takenSwapIds: [],
+    disabled: false,
+    onChoose: () => {},
+  })
+  const optionOrder = (tree: React.ReactElement) =>
+    flatten(tree)
+      .filter((element) => element.props.name === "k" && element.props.value !== "keep")
+      .map((element) => element.props.value)
+  const button = (tree: React.ReactElement, id: string) =>
+    flatten(tree).find((element) => element.props.id === `swap-sort-k-${id}`)!
+
+  let tree = render()
+  assert.deepEqual(optionOrder(tree), [priced.a, priced.b, priced.c])
+  button(tree, "price").props.onClick()
+  tree = render()
+  assert.deepEqual(optionOrder(tree), [priced.c, priced.a, priced.b])
+  assert.equal(button(tree, "price").props["aria-pressed"], true)
+  assert.match(button(tree, "price").props.className, /brand-plum/)
+  assert.doesNotMatch(button(tree, "price").props.className, /coral/)
+  button(tree, "fit").props.onClick()
+  tree = render()
+  assert.deepEqual(optionOrder(tree), [priced.a, priced.b, priced.c])
+  // Display only: the view's own list is never reordered.
+  assert.deepEqual(
+    step.swapOptions.map((option) => option.productId),
+    [priced.a, priced.b, priced.c],
   )
 })

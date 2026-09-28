@@ -23,6 +23,7 @@ import {
   type RunsheetResearchSlot,
   type RunsheetStepEntry,
 } from "./runsheet-products"
+import { sortDiscoverySwapOptions, type DiscoverySwapSort } from "./swap-sort"
 import { DISCOVERY_STYLING_LABEL, discoveryUsageDifferenceLabel } from "./usage-options"
 
 /**
@@ -109,6 +110,11 @@ const FROZEN_HINT =
   "Diese Beratung ist inzwischen finalisiert. Seite neu laden, dann die Finalisierung aufheben."
 const WRITE_ERROR = "Nicht gespeichert. Bitte noch einmal."
 const NO_OPTIONS_HINT = "Keine Alternative im Katalog. Nur behalten oder offen lassen."
+const SORT_LABEL = "Sortieren:"
+const SORT_OPTIONS: ReadonlyArray<[DiscoverySwapSort, string]> = [
+  ["fit", "Fit"],
+  ["price", "Preis"],
+]
 
 const DEPTH_WHY = "Warum dieser Schritt"
 const DEPTH_TYPE = "Produkttyp"
@@ -832,7 +838,8 @@ function StepVerdict({ step, submitted }: { step: DiscoveryCockpitStepView; subm
   )
 }
 
-function StepDecision({
+/** Exported for the sort-toggle test (verdict-layer T2); rendered only by the cockpit. */
+export function StepDecision({
   step,
   name,
   value,
@@ -850,9 +857,13 @@ function StepDecision({
   onChoose: (value: string) => void
 }) {
   const empty = step.intakeItemId === null
-  const swapOptions = step.swapOptions.filter(
+  // R19: „Fit" (the engine's order) by default, „Preis" on demand — display only.
+  const [sort, setSort] = useState<DiscoverySwapSort>("fit")
+  const available = step.swapOptions.filter(
     (option) => option.productId === value || !takenSwapIds.includes(option.productId),
   )
+  const swapOptions = sortDiscoverySwapOptions(available, sort)
+  const sortable = available.length >= 2 && available.some((option) => option.priceLabel)
   // R3: „Weglassen" only where she has ≥2 products in the step.
   const offersDrop = !empty && step.stepEntryCount >= 2
   return (
@@ -866,6 +877,27 @@ function StepDecision({
         subtitle={empty ? KEEP_EMPTY_HINT : step.ownedLabel}
         onChoose={onChoose}
       />
+      {sortable ? (
+        <div className="flex items-center gap-1 text-[12px]">
+          <span className="text-muted-foreground">{SORT_LABEL}</span>
+          {SORT_OPTIONS.map(([id, label]) => (
+            <button
+              key={id}
+              id={`swap-sort-${name}-${id}`}
+              type="button"
+              aria-pressed={sort === id}
+              onClick={() => setSort(id)}
+              className={`rounded-md px-2 py-0.5 font-bold ${
+                sort === id
+                  ? "bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]"
+                  : "text-muted-foreground"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      ) : null}
       {swapOptions.map((option) => (
         <Choice
           key={option.productId}
@@ -876,6 +908,8 @@ function StepDecision({
           // The option as the PDF would print it once chosen — brand + line + name.
           title={`${empty ? NEW_PREFIX : SWAP_PREFIX}${option.label}`}
           pill={option.verdictLabel}
+          // R19: the price where the catalog has one — no placeholder line otherwise.
+          subtitle={option.priceLabel}
           rows={option.propertyRows}
           onChoose={onChoose}
         />

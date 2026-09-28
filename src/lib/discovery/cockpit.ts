@@ -658,6 +658,12 @@ export type DiscoveryCockpitSwapOption = {
    */
   label: string
   verdictLabel: string
+  /**
+   * The catalog's price label („5,45 €") — display only (R19): it may reorder the list on
+   * screen, never a verdict, ranking or bucket. Null when the catalog has no fresh price.
+   * No retailer: the catalog carries no retailer field (only the affiliate link).
+   */
+  priceLabel: string | null
   origin: "alternative" | "ideal_recommendation"
   /** Target-vs-product rows for a displayed alternative; null when there are none. */
   propertyRows: DiscoveryPropertyRow[] | null
@@ -827,6 +833,8 @@ function alternativeOption(
     displayName: string
     brand: string | null
     verdictLabel: string
+    /** Optional: a payload stored before the field existed has none. */
+    priceLabel?: string | null
   },
   identities: ReadonlyMap<string, DiscoveryProductIdentity>,
   propertyRows: DiscoveryPropertyRow[] | null,
@@ -841,6 +849,7 @@ function alternativeOption(
       identities,
     ),
     verdictLabel: alternative.verdictLabel,
+    priceLabel: alternative.priceLabel ?? null,
     origin: "alternative",
     propertyRows,
   }
@@ -860,6 +869,8 @@ function idealRecommendationOption(
     brand,
     label: optionLabel(preview.productId, { name: preview.productName, brand }, identities),
     verdictLabel: SCAN_VERDICT_COPY[preview.verdict].label,
+    // Optional chaining: a preview composed before commerce existed carries none.
+    priceLabel: preview.commerce?.priceLabel ?? null,
     origin: "ideal_recommendation",
     propertyRows: null,
   }
