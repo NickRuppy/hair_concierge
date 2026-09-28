@@ -37,30 +37,45 @@ const WASH_DAY_TIMINGS = new Set([
   "Statt Shampoo",
 ])
 
-type WeekLine = {
+export type WeekLine = {
   decisionKey: string
   category: PersonalPlanCategory
   categoryLabel: string
   description: string
   frequencyLabel: string
   timingLabel: string | null
-  products: string[]
+  /** `proposal`: the Idealplan's recommendation for an empty step, not a decision. */
+  products: Array<{ label: string; proposal: boolean }>
 }
 
 /** The product a step entry puts into her week, as the call has decided it so far. */
-function productOf(step: DiscoveryCockpitStepView): string | null {
+function productOf(step: DiscoveryCockpitStepView): { label: string; proposal: boolean } | null {
   switch (step.outcome) {
     case "kept":
-      return step.intakeItemId === null ? null : step.ownedLabel
+      return step.intakeItemId === null || !step.ownedLabel
+        ? null
+        : { label: step.ownedLabel, proposal: false }
     case "swapped":
-      return step.swapProductLabel
+      return step.swapProductLabel ? { label: step.swapProductLabel, proposal: false } : null
     case "dropped":
       return null
     case "undecided":
-      return step.ownedLabel
+      return step.ownedLabel ? { label: step.ownedLabel, proposal: false } : null
     case "ideal":
-      return step.recommendationLabel ? `${PROPOSAL}: ${step.recommendationLabel}` : null
+      return step.recommendationLabel
+        ? { label: `${PROPOSAL}: ${step.recommendationLabel}`, proposal: true }
+        : null
   }
+}
+
+/**
+ * What a week line names. Her product in research (the Phase-3 slot of this step) wins over
+ * the Idealplan's proposal — Phase 3 says „noch in Recherche", so Phase 4 must not propose.
+ */
+export function runsheetWeekLineText(line: WeekLine, researchLabel: string | undefined): string {
+  const products = researchLabel ? line.products.filter((entry) => !entry.proposal) : line.products
+  if (products.length > 0) return products.map((entry) => entry.label).join(" · ")
+  return researchLabel ? `${researchLabel} — ${IN_RESEARCH}` : STEP_OPEN
 }
 
 export function runsheetWeek(steps: readonly DiscoveryCockpitStepView[]): {
@@ -98,10 +113,10 @@ export function DiscoveryRunsheetRoutine({
   /** Her shampoo frequency from the checklist („3–4× pro Woche"); null when not asked. */
   washFrequencyLabel: string | null
   /**
-   * Her product per category that is still in research (the Phase-3 join): an otherwise
-   * empty step names it instead of reading as open.
+   * Her product still in research per step (`decisionKey`, the Phase-3 join): that step
+   * names it instead of reading as open or showing a proposal.
    */
-  researchLabels?: Partial<Record<PersonalPlanCategory, string>>
+  researchLabels?: Readonly<Record<string, string>>
 }) {
   const week = runsheetWeek(view.steps)
   return (
@@ -153,7 +168,7 @@ function WeekCard({
   title: string
   lines: WeekLine[]
   empty: string | null
-  researchLabels: Partial<Record<PersonalPlanCategory, string>>
+  researchLabels: Readonly<Record<string, string>>
 }) {
   if (lines.length === 0 && empty === null) return null
   return (
@@ -170,11 +185,7 @@ function WeekCard({
                 {` · ${[line.timingLabel, line.frequencyLabel].filter(Boolean).join(" · ")}`}
               </span>
               <span className="block text-foreground">
-                {line.products.length > 0
-                  ? line.products.join(" · ")
-                  : researchLabels[line.category]
-                    ? `${researchLabels[line.category]} — ${IN_RESEARCH}`
-                    : STEP_OPEN}
+                {runsheetWeekLineText(line, researchLabels[line.decisionKey])}
               </span>
               <span className="block text-[12px] text-muted-foreground">{line.description}</span>
             </li>

@@ -26,6 +26,7 @@ import {
   composeRunsheetOutsideRoutine,
   composeRunsheetProducts,
 } from "../src/components/discovery/cockpit/runsheet-products"
+import { DiscoveryRunsheetRoutine } from "../src/components/discovery/cockpit/runsheet-routine"
 import { parseDiscoveryCallSheet, type DiscoveryCallSheet } from "../src/lib/discovery/call-sheet"
 import {
   buildDiscoveryCockpitView,
@@ -391,7 +392,8 @@ test("a call sheet fills the score tile, the staircase and the follow-ups", asyn
   assert.ok(markup.includes("Hebel · von 4 auf 8"))
   assert.ok(markup.includes("Feines, blondiertes Haar mit aufgerauten Längen."))
   assert.ok(markup.includes('value="Schaden stoppen"'))
-  assert.ok(markup.includes("steht auf ihrem PDF"))
+  assert.ok(markup.includes("für ihr PDF vorgemerkt"))
+  assert.ok(!markup.includes("steht auf ihrem PDF"))
   assert.ok(markup.includes("25.10.2026 · Re-Score-Call"))
   assert.ok(markup.includes("Sehr hilfreich."))
   assert.ok(!markup.includes("Baseline-Score abfragen"))
@@ -542,6 +544,78 @@ test("join rule (b): two products of one category in research — the first fill
   const slots = display.tauschenOderNeu.filter((entry) => entry.step.category === "conditioner")
   assert.equal(slots.length, 1, "one slot per empty step, not one per research item")
   assert.equal(slots[0]!.research?.label, `Gescanntes Produkt · ${GTIN}`)
+})
+
+/** Nomi's view with a SECOND empty conditioner step, both carrying an Idealplan proposal. */
+function twoEmptyConditionerSteps() {
+  const view = buildDiscoveryCockpitView(model())
+  const recommendation = {
+    productId: "30000000-0000-4000-8000-00000000000c",
+    name: "Balea Feuchtigkeitsspülung",
+    brand: "Balea",
+    label: "Balea Feuchtigkeitsspülung",
+    verdictLabel: "Passt",
+    origin: "ideal_recommendation" as const,
+    propertyRows: null,
+  }
+  const proposed = (step: (typeof view.steps)[number]) => ({
+    ...step,
+    outcome: "ideal" as const,
+    idealRecommendation: recommendation,
+    recommendationLabel: recommendation.label,
+    swapOptions: [recommendation],
+  })
+  const conditioner = view.steps.find((step) => step.category === "conditioner")
+  assert.ok(conditioner && conditioner.intakeItemId === null, "fixture: empty conditioner step")
+  const second = {
+    ...proposed(conditioner),
+    decisionKey: "decision:conditioner:conditioner_weekly:gap",
+    roleLabel: "Zweiter Conditioner",
+  }
+  const steps = view.steps.flatMap((step) =>
+    step.category === "conditioner" ? [proposed(step), second] : [step],
+  )
+  return { view, steps, first: conditioner.decisionKey, second: second.decisionKey }
+}
+
+test("join rule (d): one product in research fills ONE slot — the first empty step of its category", () => {
+  const { view, steps, first, second } = twoEmptyConditionerSteps()
+  const display = composeRunsheetProducts({ steps, unassigned: view.unassigned })
+  const conditioner = display.tauschenOderNeu.filter(
+    (entry) => entry.step.category === "conditioner",
+  )
+  assert.deepEqual(
+    conditioner.map((entry) => entry.step.decisionKey),
+    [first, second],
+  )
+  assert.deepEqual(conditioner[0]!.research, { label: `Gescanntes Produkt · ${GTIN}`, gtin: null })
+  assert.equal(conditioner[1]!.research, null, "a second empty step gets no research slot")
+})
+
+test("Phase 4 never proposes a product for a line whose Phase-3 slot is in research", () => {
+  const { view, steps, first, second } = twoEmptyConditionerSteps()
+  // As the page builds it: the research label per step, from the Phase-3 join.
+  const researchLabels: Record<string, string> = {}
+  for (const entry of composeRunsheetProducts({ steps, unassigned: view.unassigned })
+    .tauschenOderNeu) {
+    if (entry.research) researchLabels[entry.step.decisionKey] ??= entry.research.label
+  }
+  assert.deepEqual(Object.keys(researchLabels), [first])
+  const markup = renderToStaticMarkup(
+    <DiscoveryRunsheetRoutine
+      view={{ ...view, steps }}
+      washFrequencyLabel={null}
+      researchLabels={researchLabels}
+    />,
+  )
+  const lines = [...markup.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/g)].map((match) => match[1]!)
+  const researchLine = lines.find((line) => line.includes(`Gescanntes Produkt · ${GTIN}`))
+  assert.ok(researchLine, "the research line is in the week")
+  assert.ok(researchLine.includes("noch in Recherche"))
+  assert.ok(!researchLine.includes("Vorschlag"), researchLine)
+  // Exactly one line names her product; the second empty step keeps its own proposal.
+  assert.equal(lines.filter((line) => line.includes("noch in Recherche")).length, 1)
+  assert.equal(lines.filter((line) => line.includes("Vorschlag: Balea")).length, 1)
 })
 
 test("join rule (c): research in a category whose step is BOUND to her product joins nothing", () => {

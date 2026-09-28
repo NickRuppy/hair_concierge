@@ -75,8 +75,18 @@ export function composeRunsheetProducts(input: {
       researchByCategory.set(entry.category, { label: entry.label, gtin: entry.gtin })
     }
   }
+  // One product fills at most ONE slot: the first empty step of its category in step order.
+  // A second empty step of that category stays an ordinary open step.
+  const researchByStep = new Map<string, RunsheetResearchSlot>()
+  const filled = new Set<PersonalPlanCategory>()
+  for (const step of input.steps) {
+    const slot = researchByCategory.get(step.category)
+    if (step.intakeItemId !== null || !slot || filled.has(step.category)) continue
+    filled.add(step.category)
+    researchByStep.set(step.decisionKey, slot)
+  }
   const researchFor = (step: DiscoveryCockpitStepView): RunsheetResearchSlot | null =>
-    step.intakeItemId === null ? (researchByCategory.get(step.category) ?? null) : null
+    step.intakeItemId === null ? (researchByStep.get(step.decisionKey) ?? null) : null
 
   const stepEntry = (
     kind: RunsheetStepEntry["kind"],

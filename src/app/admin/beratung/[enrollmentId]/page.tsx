@@ -232,13 +232,13 @@ export function createDiscoveryCockpitPage(
       barcodeIdentifier: item.barcodeIdentifier,
     }))
     // Phase 4 names her product in research where Phase 3 does (the same join).
-    const researchLabels: Partial<Record<PersonalPlanCategory, string>> = {}
+    const researchLabels: Record<string, string> = {}
     for (const entry of composeRunsheetProducts({
       steps: view.steps,
       unassigned: view.unassigned,
       researchItems,
     }).tauschenOderNeu) {
-      if (entry.research) researchLabels[entry.step.category] ??= entry.research.label
+      if (entry.research) researchLabels[entry.step.decisionKey] ??= entry.research.label
     }
     const sections = callSheet?.consultBrief?.sections ?? EMPTY_DISCOVERY_BRIEF_SECTIONS
     const washFrequencyLabel =

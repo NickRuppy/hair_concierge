@@ -66,7 +66,7 @@ const ASK_PREFIX = "kurz fragen:"
 const HABITS_TITLE = "Gewohnheiten"
 const HABITS_EMPTY = "Noch keine Gewohnheiten erfasst."
 const HABITS_FROM_RECIPE = "Vorschläge aus dem Rezept für ihr Hauptproblem — im Call abhaken."
-const HABIT_ON_PDF = "steht auf ihrem PDF"
+const HABIT_ON_PDF = "für ihr PDF vorgemerkt"
 const HABIT_NEW_PLACEHOLDER = "Weitere Gewohnheit"
 const HABIT_ADD = "Hinzufügen"
 
