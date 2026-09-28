@@ -37,6 +37,7 @@ function product(input: Partial<ConsultProduct> & Pick<ConsultProduct, "name">):
     decision: null,
     swapTarget: null,
     swapOptions: [],
+    brand: null,
     ...input,
   }
 }
@@ -61,6 +62,8 @@ function nomiInput(overrides: Partial<ConsultInput> = {}): ConsultInput {
         decisionKey: CONDITIONER_KEY,
         name: "Pflegehaus Repair Spülung",
         aliases: ["Pflegehaus Repair Spülung", "Repair Spülung"],
+        brand: "Pflegehaus",
+        categoryLabel: "Conditioner",
         verdict: "passt",
       }),
       product({
@@ -68,6 +71,8 @@ function nomiInput(overrides: Partial<ConsultInput> = {}): ConsultInput {
         decisionKey: SHAMPOO_KEY,
         name: "Glanzwerk Volumen Shampoo",
         aliases: ["Glanzwerk Volumen Shampoo", "Volumen Shampoo"],
+        brand: "Glanzwerk",
+        categoryLabel: "Shampoo",
         verdict: "passt_nicht",
         swapOptions: ["Sanftwerk Mild Shampoo"],
       }),
@@ -206,16 +211,24 @@ test("G1b: supplements and drug actives named in guardrails.md are flagged; Glä
   assert.deepEqual(findForbiddenPhrases("Glätteisen und Welleneisen nur ins trockene Haar."), [])
 })
 
-test("the knowledge base's own wording passes the phrase list", () => {
+/**
+ * Known hits in the knowledge base's own wording: phrase-true, kept in the entry (it is a
+ * statement for Nick, not brief text). The prompt forbids score figures in the text, so the
+ * model must not copy it. Pinned, so a new hit shows up here.
+ */
+const KNOWN_KNOWLEDGE_HITS: Record<string, string[]> = {
+  "expectation-windows": ["target_ten"],
+}
+
+test("the knowledge base's own wording passes the phrase list (known hits pinned)", () => {
   for (const entry of CONSULT_KNOWLEDGE_ENTRIES) {
-    for (const text of [entry.einsicht, entry.imCall, ...entry.fragen]) {
-      assert.deepEqual(
-        findForbiddenPhrases(text).map((hit) => hit.id),
-        [],
-        `${entry.id}: ${text.slice(0, 60)}`,
-      )
-    }
+    const hits = [entry.einsicht, entry.imCall, ...entry.fragen].flatMap((text) =>
+      findForbiddenPhrases(text).map((hit) => hit.id),
+    )
+    assert.deepEqual(hits, KNOWN_KNOWLEDGE_HITS[entry.id] ?? [], entry.id)
   }
+  // „Heiligenschein" (frizz halo) is not healing.
+  assert.deepEqual(findForbiddenPhrases("Die Haare bilden einen Heiligenschein."), [])
   // Her description of shedding is not the „mehr Haare" promise.
   assert.deepEqual(findForbiddenPhrases("Mir fallen mehr Haare aus als sonst."), [])
   assert.deepEqual(findForbiddenPhrases("Sie verliert mehr Haare als früher."), [])
@@ -368,13 +381,42 @@ test("adversarial: no ärztlich line despite a hair-loss trigger fails", () => {
   assert.match(findings[0]!.detail ?? "", /hair_loss_concern/)
 })
 
-test("the boundary line is mandatory in every brief, trigger or not (G2)", () => {
+test("the boundary line is mandatory in every brief, verbatim, in erwartungen (G2)", () => {
   const brief = cleanBrief()
   brief.erwartungen = brief.erwartungen.filter((line) => line !== CONSULT_BOUNDARY_LINE)
   assert.deepEqual(rules(lintConsultBrief(brief, nomiInput())), ["boundary_line_missing"])
-  // A shorter doctor sentence in its own words also counts.
-  brief.erwartungen.push("Bei vermehrtem Ausfall mit Wurzel: bitte ärztlich abklären lassen.")
-  assert.deepEqual(lintConsultBrief(brief, nomiInput()), [])
+  // Own words no longer count (ruling: deterministic beats judgment).
+  const ownWords = cleanBrief()
+  ownWords.erwartungen = [
+    ownWords.erwartungen[0]!,
+    "Bei vermehrtem Ausfall mit Wurzel: bitte ärztlich abklären lassen.",
+  ]
+  assert.deepEqual(rules(lintConsultBrief(ownWords, nomiInput())), ["boundary_line_missing"])
+  // In callFragen it does not satisfy the requirement.
+  const asQuestion = cleanBrief()
+  asQuestion.erwartungen = asQuestion.erwartungen.filter((line) => line !== CONSULT_BOUNDARY_LINE)
+  asQuestion.callFragen.push(CONSULT_BOUNDARY_LINE)
+  assert.deepEqual(rules(lintConsultBrief(asQuestion, nomiInput())), ["boundary_line_missing"])
+  // Whitespace differences and a lead-in are fine.
+  const spaced = cleanBrief()
+  spaced.erwartungen[1] = `Grenze:  ${CONSULT_BOUNDARY_LINE.replace(/ /g, "\n ")}`
+  assert.deepEqual(lintConsultBrief(spaced, nomiInput()), [])
+})
+
+test("adversarial: a negated doctor sentence fails anywhere", () => {
+  for (const line of [
+    "Das muss nicht ärztlich abgeklärt werden.",
+    "Kein Grund, das ärztlich anschauen zu lassen.",
+    "Ärztlich ist das nicht nötig.",
+  ]) {
+    const brief = cleanBrief()
+    brief.zielLuecken.push(line)
+    const findings = lintConsultBrief(brief, nomiInput())
+    assert.ok(
+      findings.some((finding) => finding.detail === "boundary_negated"),
+      `${line}: ${JSON.stringify(findings)}`,
+    )
+  }
 })
 
 test("relativizing the boundary fails anywhere in the brief", () => {
@@ -399,4 +441,108 @@ test("score promises fail; the target is capped at 9", () => {
 
   // Without a baseline there is nothing to cap.
   assert.deepEqual(lintConsultBrief(over, nomiInput({ baselineScore: null })), [])
+})
+
+// --- fix round 1: reviewer bypasses (each MUST flag) ---------------------------------------------
+
+function flagsVerdict(extra: string, where: "diagnose" | "erwartung" = "diagnose") {
+  const brief = cleanBrief()
+  if (where === "diagnose") brief.diagnose += ` ${extra}`
+  else brief.erwartungen.unshift(extra)
+  return rules(lintConsultBrief(brief, nomiInput())).includes("verdict_contradiction")
+}
+
+test("G4 bypasses: whole sentence, bare passt, category and brand aliases, per-product exemption", () => {
+  for (const sentence of [
+    // (a) the keep cue sits in another comma clause of a one-product sentence
+    "Das Volumen Shampoo, das sie seit Jahren nutzt, kann bleiben.",
+    // (b) new cues
+    "Das Glanzwerk Volumen Shampoo passt.",
+    "Das Glanzwerk Volumen Shampoo ist geeignet.",
+    "Das Glanzwerk Volumen Shampoo kann sie weiterbenutzen.",
+    // (c) category label and brand + name token
+    "Ihr Shampoo passt super.",
+    "Das Glanzwerk Shampoo passt super.",
+    "Glanzwerk ist top für sie.",
+    // (d) a verdict named for another product does not exempt this one
+    "Die Repair Spülung passt nicht, das Volumen Shampoo bleibt.",
+  ]) {
+    assert.ok(flagsVerdict(sentence), sentence)
+  }
+  for (const sentence of [
+    "Die Repair Spülung rausnehmen.",
+    "Die Repair Spülung streichen.",
+    "Die Repair Spülung braucht sie nicht.",
+    "Ihr Conditioner kann weg, lass ihn weg.",
+  ]) {
+    assert.ok(flagsVerdict(sentence), sentence)
+  }
+})
+
+test("G4: the per-product rules keep their clean cases clean", () => {
+  for (const sentence of [
+    "Das Sanftwerk Mild Shampoo passt besser.",
+    "Das Volumen Shampoo passt nicht zu ihr.",
+    "Die Repair Spülung bleibt, das Volumen Shampoo tauschen.",
+    "Das Volumen Shampoo ist nicht geeignet.",
+  ]) {
+    assert.equal(flagsVerdict(sentence), false, sentence)
+  }
+})
+
+test("G1 inflections and compounds", () => {
+  for (const sentence of [
+    "Die Haarreparatur beginnt sofort.",
+    "Das lässt die Spitzen ausheilen.",
+    "Eine heilende Wirkung auf die Längen.",
+    "Die Regeneration der Längen.",
+    "Mit Garantie glatter.",
+  ]) {
+    assert.ok(findForbiddenPhrases(sentence).length > 0, sentence)
+  }
+})
+
+test("G1b: supplement categories, finasteride and hair-loss brands", () => {
+  for (const sentence of [
+    "Ein Nahrungsergänzungsmittel hilft.",
+    "Haarvitamine dazu.",
+    "Ein Vitaminpräparat nehmen.",
+    "Der Biotinkomplex unterstützt.",
+    "Finasterid kann helfen.",
+    "Regaine auf die Kopfhaut.",
+    "Pantovigar als Kur.",
+    "Priorin für drei Monate.",
+  ]) {
+    assert.ok(
+      findForbiddenPhrases(sentence).some((hit) => hit.guardrail === "G1b"),
+      sentence,
+    )
+  }
+})
+
+test("score promises: score near a digit, points better, a target of 10", () => {
+  for (const sentence of [
+    "Der Score liegt danach bei 7.",
+    "Sie kann sich um 2 Punkte verbessern.",
+    "Das macht zwei Punkte besser.",
+    "Ziel ist eine 10.",
+  ]) {
+    assert.ok(
+      findForbiddenPhrases(sentence).some((hit) => hit.rule === "score_promise"),
+      sentence,
+    )
+  }
+  assert.deepEqual(findForbiddenPhrases("Ziel ist, die Längen geschmeidiger zu machen."), [])
+  assert.deepEqual(findForbiddenPhrases("Kämmbarkeit stabil in 2–4 Wochen."), [])
+})
+
+test("normalization: soft hyphens, zero-width characters, decomposed umlauts, folded brands", () => {
+  assert.ok(findForbiddenPhrases("Die Kur repa\u00adriert die Längen.").length > 0)
+  assert.ok(findForbiddenPhrases("Die Kur re\u200bpariert die Längen.").length > 0)
+  assert.ok(findForbiddenPhrases("Das stellt die Struktur wieder her.".normalize("NFD")).length > 0)
+  for (const brand of ["Kerastase", "L'Oreal", "L’Oréal"]) {
+    const brief = cleanBrief()
+    brief.hebel.push({ title: "Kur", note: `${brand} Maske einmal pro Woche.`, points: 0.5 })
+    assert.deepEqual(rules(lintConsultBrief(brief, nomiInput())), ["unknown_product"], brand)
+  }
 })

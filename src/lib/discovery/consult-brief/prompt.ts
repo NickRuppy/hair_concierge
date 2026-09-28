@@ -66,7 +66,7 @@ const SYSTEM = `Du schreibst den internen Beratungs-Brief für Nick, der gleich 
 3. Nenne nur Produkte, die im Input stehen ("name", "swapTarget", "swapOptions"), mit dem Namen wie dort. Keine anderen Produkte, keine Marken aus dem Allgemeinwissen.
 4. Swap-Reihenfolge und Routine kommen aus den Engines: erklären, nicht umsortieren.
 5. Wissensbasis-Einträge ("knowledge") sind geprüfte Learnings: nutze ihre Einsicht und Formulierungshilfe. Bei "questionFirst": true formulierst du die Einsicht als „falls ja, dann …", nie als Befund. Bei "cautious": true vorsichtig formulieren („kann helfen", „einen Versuch wert").
-6. Keine Evidenzgrade, Prozentwerte, Confidence-Angaben oder Score-Versprechen im Text (G1, G5).
+6. Keine Evidenzgrade, Prozentwerte, Confidence-Angaben, Score-Zahlen oder Score-Versprechen im Text (G1, G5); Zahlen zum Score stehen nur in "points".
 7. Liegen "boundaryTriggers" vor, wird kein Produkt und kein Pflegehebel als Antwort auf Haarausfall angeboten; Pflege für die Längen nur mit dem Satz, dass sie den Ausfall nicht behandelt.
 8. Das Rezept des Hauptproblems ("mainConcern") ist Hintergrund; übernimm seine Formulierungen nicht wörtlich, wenn sie gegen die Guardrails verstoßen.
 

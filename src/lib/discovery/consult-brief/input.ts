@@ -78,6 +78,8 @@ export type ConsultProduct = {
   name: string
   /** Every spelling the lint accepts as a mention of this product (name first). */
   aliases: string[]
+  /** The catalog brand of her product (lint aliases: brand + name token, unique brand). */
+  brand: string | null
   verdict: ConsultProductVerdict
   /** The engine's own label („Passt mit Einschränkung"), only for a catalog verdict. */
   verdictLabel: string | null
@@ -271,6 +273,7 @@ function consultProducts(buckets: RunsheetBuckets): ConsultProduct[] {
           categoryLabel: entry.category ? CATEGORY_LABELS[entry.category] : null,
           name: label,
           aliases: [label],
+          brand: null,
           verdict: UNASSIGNED_VERDICT[entry.reason],
           verdictLabel: null,
           decision: null,
@@ -286,6 +289,7 @@ function consultProducts(buckets: RunsheetBuckets): ConsultProduct[] {
           categoryLabel: entry.step.categoryLabel,
           name: label,
           aliases: entry.label ? [entry.label] : [],
+          brand: null,
           verdict: "neu",
           verdictLabel: null,
           decision: entry.proposed ? null : "swap",
@@ -301,6 +305,7 @@ function consultProducts(buckets: RunsheetBuckets): ConsultProduct[] {
           categoryLabel: entry.step.categoryLabel,
           name,
           aliases: ownedAliases(entry.step, name),
+          brand: entry.step.verdict?.status === "verdict" ? entry.step.verdict.product.brand : null,
           verdict: VERDICT_BY_FIT[entry.verdictFit],
           verdictLabel:
             entry.step.verdict?.status === "verdict" &&

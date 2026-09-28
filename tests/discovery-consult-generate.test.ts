@@ -57,6 +57,7 @@ function input(overrides: Partial<ConsultInput> = {}): ConsultInput {
         categoryLabel: "Shampoo",
         name: "Glanzwerk Volumen Shampoo",
         aliases: ["Glanzwerk Volumen Shampoo"],
+        brand: "Glanzwerk",
         verdict: "passt_nicht",
         verdictLabel: "Passt nicht",
         decision: null,

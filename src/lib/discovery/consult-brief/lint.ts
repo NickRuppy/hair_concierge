@@ -64,6 +64,27 @@ function stem(source: string): RegExp {
   return new RegExp(`(?<![\\p{L}\\d])(?:${source})\\p{L}*`, "iu")
 }
 
+/** Like `stem`, and also inside a compound („Haarreparatur", „ausheilen"). */
+function infix(source: string): RegExp {
+  return new RegExp(`(?<![\\p{L}\\d])\\p{L}*(?:${source})\\p{L}*`, "iu")
+}
+
+/**
+ * Every text is normalized before any matching: NFC, soft hyphens and zero-width characters
+ * removed — otherwise „repa\u00adriert" or a decomposed umlaut slips past every rule.
+ */
+export function normalizeConsultText(text: string): string {
+  return text.normalize("NFC").replace(/[\u00ad\u200b-\u200d\u2060\ufeff]/g, "")
+}
+
+/** Brand comparison only: accents folded, apostrophes unified („L'Oreal" = „L’Oréal"). */
+function foldBrand(text: string): string {
+  return normalizeConsultText(text)
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .replace(/[’‘´`ʼ]/g, "'")
+}
+
 const PERCENT = "\\d+(?:[.,]\\d+)?[\\s\\u00a0\\u202f]?%"
 
 function phrase(
@@ -78,12 +99,13 @@ function phrase(
 
 export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
   // G1 — healing and repair promises
-  phrase("repair", "G1", "reparieren", stem("reparier|reparatur")),
-  phrase("heal", "G1", "heilt", words("heil(?:t|en|ung|st|te|ten|e)?")),
+  phrase("repair", "G1", "reparieren", infix("reparier|reparatur")),
+  // „Heiligenschein" (frizz halo) is not healing.
+  phrase("heal", "G1", "heilt", infix("heil(?!ig)")),
   phrase("as_new", "G1", "wie neu", words("wie neu")),
   phrase("as_before", "G1", "wie früher", words("wie früher")),
   phrase("undo", "G1", "rückgängig machen", stem("rückgängig")),
-  phrase("regenerate", "G1", "regeneriert", stem("regenerier")),
+  phrase("regenerate", "G1", "regeneriert", infix("regenerier|regenerat")),
   phrase(
     "rebuild",
     "G1",
@@ -143,7 +165,7 @@ export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
   ),
   phrase("brings_nothing", "G1", "bringt gar nichts", words("bringt (?:gar |überhaupt )?nichts")),
   // G1 — guarantees
-  phrase("guaranteed", "G1", "garantiert", stem("garantier")),
+  phrase("guaranteed", "G1", "garantiert", infix("garant")),
   phrase("definitely", "G1", "auf jeden Fall", words("auf jeden fall")),
   phrase("hundred_percent", "G1", "100 %", words(`100[\\s\\u00a0\\u202f]?(?:%|prozent)`)),
   phrase("surely_gone", "G1", "sicher weg", words("sicher weg")),
@@ -171,6 +193,33 @@ export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
     "score_promise",
   ),
   phrase("score_delta", "G1", "+2 Punkte", /\+\s?\d+(?:[.,]\d+)?\s?punkt/iu, "score_promise"),
+  // Any score figure in the text: the numbers live in `hebel.points` only (R13, G1).
+  phrase(
+    "score_figure",
+    "G1",
+    "dein Score steigt auf",
+    words("score[^.!?]{0,40}\\d|\\d[^.!?]{0,40}score\\p{L}*"),
+    "score_promise",
+  ),
+  phrase(
+    "points_better",
+    "G1",
+    "+2 Punkte",
+    words(
+      "punkte? (?:besser|höher)|verbesser\\p{L}* (?:sich )?um (?:\\d|ein|zwei|drei)|um (?:\\d+(?:[.,]\\d+)?|einen|zwei|drei) punkte?",
+    ),
+    "score_promise",
+  ),
+  // G3: the target is never 10.
+  phrase(
+    "target_ten",
+    "G1",
+    "du kommst auf 8",
+    words(
+      "(?:ziel|score)[^.!?]{0,30}(?<!\\d)10(?![\\d,.]\\d)|(?<![\\d,.])10(?!\\d)[^.!?]{0,30}(?:ziel|score)",
+    ),
+    "score_promise",
+  ),
   phrase(
     "score_more_points",
     "G1",
@@ -204,7 +253,21 @@ export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
     words("(?:das|es) (?:sind|ist|liegt an den|kommt von den) hormon\\p{L}*|hormonell bedingt"),
   ),
   // G1b — no supplements, no drug actives, no doses
-  phrase("biotin", "G1b", "Biotin", words("biotin")),
+  phrase("biotin", "G1b", "Biotin", infix("biotin")),
+  phrase(
+    "supplements",
+    "G1b",
+    "Nahrungsergänzungsmitteln",
+    infix("nahrungsergänz|haarvitamin|vitaminpräparat|vitamintablette"),
+  ),
+  // Hair-loss drugs and supplement brands (G1b, not the market-brand list: never recommendable).
+  phrase(
+    "hair_loss_brands",
+    "G1b",
+    "Nahrungsergänzungsmitteln",
+    words("regaine|pantovigar|priorin"),
+  ),
+  phrase("finasteride", "G1b", "Arzneiwirkstoffe", stem("finasterid")),
   phrase("zinc", "G1b", "Zink", words("zink")),
   phrase("iron", "G1b", "Eisen", words("eisen(?:präparat\\p{L}*|tablette\\p{L}*)?")),
   phrase("minoxidil", "G1b", "Minoxidil", words("minoxidil")),
@@ -237,6 +300,15 @@ export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
   ),
   phrase("wait_first", "G2", "erst mal abwarten", words("erst ?mal abwarten")),
   phrase("try_first", "G2", "probier vorher", words("probier\\p{L}* (?:vorher|erst|zuerst)")),
+  // A negated doctor sentence („muss nicht ärztlich abgeklärt werden") softens the line.
+  phrase(
+    "boundary_negated",
+    "G2",
+    "nie relativiert",
+    words(
+      "(?:nicht|kein\\p{L}*|unnötig)[^.!?,;:]{0,40}ärztlich\\p{L}*|ärztlich\\p{L}*[^.!?,;:]{0,20}(?:nicht|unnötig)|kein\\p{L}* (?:grund|anlass|bedarf|notwendigkeit)[^.!?]{0,40}ärztlich\\p{L}*",
+    ),
+  ),
   // G5 — uncertainty stays internal
   phrase("evidence_grade", "G5", "moderate Evidenz", stem("evidenz")),
   phrase("study_situation", "G5", "Studienlage schwach", stem("studienlage")),
@@ -249,7 +321,8 @@ export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
 
 /** The forbidden phrases in one text (no product-name exemption — see `lintConsultBrief`). */
 export function findForbiddenPhrases(text: string): ConsultForbiddenPhrase[] {
-  return CONSULT_FORBIDDEN_PHRASES.filter((entry) => entry.pattern.test(text))
+  const normalized = normalizeConsultText(text)
+  return CONSULT_FORBIDDEN_PHRASES.filter((entry) => entry.pattern.test(normalized))
 }
 
 // --- products --------------------------------------------------------------------------------
@@ -335,12 +408,15 @@ function knownNames(input: ConsultInput): string[] {
 // --- verdict cues (G4) --------------------------------------------------------------------------
 
 const KEEP_CUE = words(
-  "behalten|behält|bleib(?:t|en)|kann bleiben|weiter (?:nutzen|benutzen|verwenden|nehmen)|weiter(?:nutzen|verwenden)",
+  "behalten|behält|bleib(?:t|en)|kann bleiben|weiter (?:nutzen|benutzen|verwenden|nehmen)|weiter(?:nutzen|benutzen|verwenden)",
 )
-const PRAISE_CUE = words("passt (?:gut|super|perfekt|prima|toll|genau)|ideal|perfekt|top")
-const VERDICT_NAMED = words("passt (?:eigentlich |leider )?nicht")
+/** Praise, incl. a bare „passt" („passt nicht" and its softened forms excluded). */
+const PRAISE_CUE = words(
+  "passt(?!\\s+(?:(?:eigentlich|leider|eher|gar|überhaupt)\\s+)?nicht)|(?<!nicht\\s)geeignet|ideal|perfekt|top",
+)
+const VERDICT_NAMED = words("passt (?:eigentlich |leider |eher )?nicht")
 const DISCOURAGE_CUE = words(
-  "weglassen|lass\\p{L}*[^.!?]{0,30} weg|absetzen|nicht mehr (?:nutzen|benutzen|verwenden|nehmen)|austauschen|tauschen|ersetzen|aussortieren|verzichten|abraten|abgeraten|passt (?:eigentlich |leider )?nicht",
+  "weglassen|lass\\p{L}*[^.!?]{0,30} weg|absetzen|nicht mehr (?:nutzen|benutzen|verwenden|nehmen)|austauschen|tauschen|ersetzen|aussortieren|rausnehmen|raus nehmen|streichen|verzichten|abraten|abgeraten|brauch\\p{L}*(?: \\p{L}+)? (?:nicht|kein\\p{L}*)|passt (?:eigentlich |leider |eher )?nicht",
 )
 
 function sentences(text: string): string[] {
@@ -357,11 +433,6 @@ function clauses(sentence: string): string[] {
     .filter(Boolean)
 }
 
-function mentions(text: string, product: ConsultProduct): boolean {
-  const matcher = nameMatcher(product.aliases.length > 0 ? product.aliases : [product.name])
-  return matcher ? new RegExp(matcher.source, "iu").test(text) : false
-}
-
 type VerdictSide = "passt" | "passt_nicht"
 
 /** Only products with a settled fit are checked (not `neu`, not unclear, not in research). */
@@ -374,14 +445,64 @@ function decidedAway(product: ConsultProduct): boolean {
   return product.decision === "swap" || product.decision === "drop"
 }
 
-/** Whether `clause` (about `product`) contradicts its verdict; `sentence` holds the context. */
-function contradicts(product: ConsultProduct, clause: string, sentence: string): boolean {
+/** Whether `scope` (a text about `product`) contradicts its verdict. Per product (1d). */
+function contradicts(product: ConsultProduct, scope: string): boolean {
   const side = verdictSide(product)
   if (side === "passt_nicht") {
-    return PRAISE_CUE.test(clause) || (KEEP_CUE.test(clause) && !VERDICT_NAMED.test(sentence))
+    return PRAISE_CUE.test(scope) || (KEEP_CUE.test(scope) && !VERDICT_NAMED.test(scope))
   }
-  if (side === "passt") return !decidedAway(product) && DISCOURAGE_CUE.test(clause)
+  if (side === "passt") return !decidedAway(product) && DISCOURAGE_CUE.test(scope)
   return false
+}
+
+/**
+ * How the brief may name one checked product: its aliases, brand + a word of its name or
+ * category („Glanzwerk Shampoo"), the bare brand when no other checked product shares it,
+ * and the bare category label when it is her only checked product in that category („ihr
+ * Shampoo"). A mention is matched with every OTHER known name cut out first, so „das Sanftwerk
+ * Mild Shampoo" is never read as „ihr Shampoo".
+ */
+type ProductMention = { product: ConsultProduct; own: RegExp; others: RegExp | null }
+
+function productMentions(
+  input: ConsultInput,
+  checked: readonly ConsultProduct[],
+): ProductMention[] {
+  const fold = (value: string) => foldBrand(value).toLowerCase()
+  return checked.flatMap((product) => {
+    const aliases = new Set(product.aliases.length > 0 ? product.aliases : [product.name])
+    aliases.add(product.name)
+    const brand = product.brand?.trim()
+    if (brand) {
+      const tokens = product.name
+        .split(/\s+/)
+        .filter((token) => token.length >= 4 && fold(token) !== fold(brand))
+      for (const token of tokens) aliases.add(`${brand} ${token}`)
+      if (product.categoryLabel) aliases.add(`${brand} ${product.categoryLabel}`)
+      if (
+        checked.filter((other) => other.brand && fold(other.brand) === fold(brand)).length === 1
+      ) {
+        aliases.add(brand)
+      }
+    }
+    const label = product.categoryLabel
+    if (label && checked.filter((other) => other.categoryLabel === label).length === 1) {
+      aliases.add(label)
+    }
+    const own = nameMatcher([...aliases].map(normalizeConsultText))
+    if (!own) return []
+    const others = nameMatcher(
+      knownNames(input)
+        .filter((name) => !aliases.has(name))
+        .map(normalizeConsultText),
+    )
+    return [{ product, own: new RegExp(own.source, "iu"), others }]
+  })
+}
+
+function mentioned(text: string, mention: ProductMention): boolean {
+  const rest = mention.others ? text.replace(mention.others, " ") : text
+  return mention.own.test(rest)
 }
 
 // --- the lint ------------------------------------------------------------------------------------
@@ -406,18 +527,25 @@ function briefTexts(brief: DiscoveryCallSheetBriefSections): BriefText[] {
   ]
 }
 
-const BOUNDARY_SENTENCE = /ärztlich/iu
-const BOUNDARY_ACTION = /abklär|abgeklärt|anschauen|ansehen|untersuchen/iu
+/** Whitespace-normalized, for the verbatim boundary check. */
+function squash(text: string): string {
+  return normalizeConsultText(text).replace(/\s+/g, " ").trim()
+}
 
 export function lintConsultBrief(
   brief: DiscoveryCallSheetBriefSections,
   input: ConsultInput,
 ): ConsultLintFinding[] {
   const findings: ConsultLintFinding[] = []
-  const texts = briefTexts(brief)
-  const names = knownNames(input)
+  const texts = briefTexts(brief).map((entry) => ({
+    ...entry,
+    text: normalizeConsultText(entry.text),
+  }))
+  const names = knownNames(input).map(normalizeConsultText)
   const productNames = nameMatcher(names)
   const checked = input.products.filter((product) => verdictSide(product) !== null)
+  const productMentionList = productMentions(input, checked)
+  const foldedNames = names.map(foldBrand)
   const decisionKeys = new Set(input.products.flatMap((product) => product.decisionKey ?? []))
 
   for (const { location, text, swapKey } of texts) {
@@ -437,30 +565,36 @@ export function lintConsultBrief(
     }
 
     // G4 — invented products: a market brand none of her products carries.
+    const foldedText = foldBrand(text)
     for (const brand of CONSULT_MARKET_BRANDS) {
-      const brandPattern = words(escape(brand))
-      const match = brandPattern.exec(text)
-      if (match && !names.some((name) => brandPattern.test(name))) {
+      const brandPattern = words(escape(foldBrand(brand)))
+      const match = brandPattern.exec(foldedText)
+      if (match && !foldedNames.some((name) => brandPattern.test(name))) {
         findings.push({
           rule: "unknown_product",
           guardrail: "G4",
           location,
-          excerpt: sentences(text).find((sentence) => brandPattern.test(sentence)) ?? match[0],
+          excerpt:
+            sentences(text).find((sentence) => brandPattern.test(foldBrand(sentence))) ?? match[0],
           detail: brand,
         })
       }
     }
 
-    // G4 — verdict contradictions, per named product and clause.
+    // G4 — verdict contradictions, per named product: the whole sentence when it names one
+    // checked product, else the clauses that name it.
     const flagged = new Set<ConsultProduct>()
     for (const sentence of sentences(text)) {
-      for (const clause of clauses(sentence)) {
-        for (const product of checked) {
-          if (flagged.has(product) || !mentions(clause, product)) continue
-          if (contradicts(product, clause, sentence)) {
-            flagged.add(product)
-            findings.push(verdictFinding(location, product, sentence))
-          }
+      const named = productMentionList.filter((mention) => mentioned(sentence, mention))
+      for (const mention of named) {
+        if (flagged.has(mention.product)) continue
+        const scopes =
+          named.length === 1
+            ? [sentence]
+            : clauses(sentence).filter((clause) => mentioned(clause, mention))
+        if (scopes.some((scope) => contradicts(mention.product, scope))) {
+          flagged.add(mention.product)
+          findings.push(verdictFinding(location, mention.product, sentence))
         }
       }
     }
@@ -493,11 +627,15 @@ export function lintConsultBrief(
             ]),
           ),
       )
+      const otherPattern = otherNames ? new RegExp(otherNames.source.normalize("NFC"), "iu") : null
       for (const sentence of sentences(text)) {
-        const about = clauses(sentence).filter(
-          (clause) => !otherNames || !new RegExp(otherNames.source, "iu").test(clause),
-        )
-        if (about.some((clause) => owners.some((product) => contradicts(product, clause, text)))) {
+        // No other product named: the whole sentence is about hers; else only the clauses
+        // that name no other product.
+        const about =
+          !otherPattern || !otherPattern.test(sentence)
+            ? [sentence]
+            : clauses(sentence).filter((clause) => !otherPattern.test(clause))
+        if (about.some((scope) => owners.some((product) => contradicts(product, scope)))) {
           findings.push(verdictFinding(location, owner, sentence))
           break
         }
@@ -505,8 +643,10 @@ export function lintConsultBrief(
     }
   }
 
-  // G2 — the boundary line, in every brief.
-  if (!texts.some(({ text }) => BOUNDARY_SENTENCE.test(text) && BOUNDARY_ACTION.test(text))) {
+  // G2 — the boundary line, verbatim, in `erwartungen` of every brief (ruling: deterministic
+  // beats judgment; Nick rephrases live in the call).
+  const boundaryLine = squash(CONSULT_BOUNDARY_LINE)
+  if (!brief.erwartungen.some((line) => squash(line).includes(boundaryLine))) {
     findings.push({
       rule: "boundary_line_missing",
       guardrail: "G2",
