@@ -394,13 +394,18 @@ function escape(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 }
 
-function nameMatcher(names: readonly string[]): RegExp | null {
+/**
+ * `hyphenJoins`: a hyphen continues the word — used ONLY for a bare category-label alias, so
+ * „Shampoo" is not named in „Shampoo-Ansatz". Brand and name aliases keep plain letter
+ * boundaries, so „Frischkraft-Shampoo" still names Frischkraft.
+ */
+function nameMatcher(names: readonly string[], hyphenJoins = false): RegExp | null {
   const cleaned = [...new Set(names.map((name) => name.trim()).filter(Boolean))]
   if (cleaned.length === 0) return null
   // Longest first, so a full label wins over its shorter alias.
   cleaned.sort((left, right) => right.length - left.length)
-  // A hyphen joins a compound: „Shampoo" is not named in „Shampoo-Ansatz".
-  return new RegExp(`(?<![\\p{L}\\d-])(?:${cleaned.map(escape).join("|")})(?![\\p{L}\\d-])`, "giu")
+  const edge = hyphenJoins ? "[\\p{L}\\d-]" : "[\\p{L}\\d]"
+  return new RegExp(`(?<!${edge})(?:${cleaned.map(escape).join("|")})(?!${edge})`, "giu")
 }
 
 function knownNames(input: ConsultInput): string[] {
@@ -425,7 +430,7 @@ const KEEP_CUE = words(
  */
 const PASST_WINDOW_TOKEN =
   "(?!(?:und|aber|sondern|oder|doch|gut|super|perfekt|prima|toll|genau|bestens|ideal)(?!\\p{L}))[^\\s.,;:!?()–—-]+"
-const PASST_NEGATION_TAIL = `(?:\\s+${PASST_WINDOW_TOKEN}){0,4}\\s+nicht(?!\\p{L})(?!\\s+nur)`
+const PASST_NEGATION_TAIL = `(?:\\s+${PASST_WINDOW_TOKEN}){0,4}\\s+nicht(?!\\p{L})(?!\\s+(?:nur|selten|zuletzt|ohne)(?!\\p{L}))`
 const PASST_NEGATED = `passt${PASST_NEGATION_TAIL}`
 
 /** Praise, incl. a bare „passt" (a negated „passt … nicht" excluded). */
@@ -485,7 +490,13 @@ function contradicts(product: ConsultProduct, scope: string): boolean {
  * Shampoo"). A mention is matched with every OTHER known name cut out first, so „das Sanftwerk
  * Mild Shampoo" is never read as „ihr Shampoo".
  */
-type ProductMention = { product: ConsultProduct; own: RegExp; others: RegExp | null }
+type ProductMention = {
+  product: ConsultProduct
+  own: RegExp
+  /** The bare category label (hyphen-joined compounds excluded); null when not an alias. */
+  category: RegExp | null
+  others: RegExp | null
+}
 
 function productMentions(
   input: ConsultInput,
@@ -500,8 +511,15 @@ function productMentions(
       const tokens = product.name
         .split(/\s+/)
         .filter((token) => token.length >= 4 && fold(token) !== fold(brand))
-      for (const token of tokens) aliases.add(`${brand} ${token}`)
-      if (product.categoryLabel) aliases.add(`${brand} ${product.categoryLabel}`)
+      for (const token of tokens) {
+        aliases.add(`${brand} ${token}`)
+        aliases.add(`${brand}-${token}`)
+      }
+      if (product.categoryLabel) {
+        aliases.add(`${brand} ${product.categoryLabel}`)
+        // „Frischkraft-Shampoo", „K18-Maske"
+        aliases.add(`${brand}-${product.categoryLabel}`)
+      }
       if (
         checked.filter((other) => other.brand && fold(other.brand) === fold(brand)).length === 1
       ) {
@@ -509,23 +527,31 @@ function productMentions(
       }
     }
     const label = product.categoryLabel
-    if (label && checked.filter((other) => other.categoryLabel === label).length === 1) {
-      aliases.add(label)
-    }
+    const categoryAlias =
+      label && checked.filter((other) => other.categoryLabel === label).length === 1
+        ? nameMatcher([normalizeConsultText(label)], true)
+        : null
     const own = nameMatcher([...aliases].map(normalizeConsultText))
     if (!own) return []
     const others = nameMatcher(
       knownNames(input)
-        .filter((name) => !aliases.has(name))
+        .filter((name) => !aliases.has(name) && name !== label)
         .map(normalizeConsultText),
     )
-    return [{ product, own: new RegExp(own.source, "iu"), others }]
+    return [
+      {
+        product,
+        own: new RegExp(own.source, "iu"),
+        category: categoryAlias ? new RegExp(categoryAlias.source, "iu") : null,
+        others,
+      },
+    ]
   })
 }
 
 function mentioned(text: string, mention: ProductMention): boolean {
   const rest = mention.others ? text.replace(mention.others, " ") : text
-  return mention.own.test(rest)
+  return mention.own.test(rest) || (mention.category?.test(rest) ?? false)
 }
 
 // --- the lint ------------------------------------------------------------------------------------
@@ -611,14 +637,31 @@ export function lintConsultBrief(
       const named = productMentionList.filter((mention) => mentioned(sentence, mention))
       for (const mention of named) {
         if (flagged.has(mention.product)) continue
-        const own = clauses(sentence).filter((clause) => mentioned(clause, mention))
+        const all = clauses(sentence)
+        const own = all.filter((clause) => mentioned(clause, mention))
         // Its own clause states „passt … nicht": praise elsewhere in the sentence is about
         // another subject („… passt ein milderer Ansatz besser: X passt nicht").
         const verdictStated =
           verdictSide(mention.product) === "passt_nicht" &&
           own.some((clause) => VERDICT_NAMED.test(clause))
         const scopes = named.length === 1 && !verdictStated ? [sentence] : own
-        if (scopes.some((scope) => contradicts(mention.product, scope))) {
+        // One product, verdict stated: the clauses AFTER its own that name nothing else
+        // continue about it („X passt nicht, ist aber trotzdem ideal") — praise there is the
+        // model contradicting itself. Clauses before it are preamble about another subject.
+        const continuation =
+          named.length === 1 && verdictStated
+            ? all
+                .slice(all.findIndex((clause) => mentioned(clause, mention)) + 1)
+                .filter(
+                  (clause) =>
+                    !mentioned(clause, mention) &&
+                    !(mention.others && new RegExp(mention.others.source, "iu").test(clause)),
+                )
+            : []
+        if (
+          scopes.some((scope) => contradicts(mention.product, scope)) ||
+          continuation.some((clause) => PRAISE_CUE.test(clause))
+        ) {
           flagged.add(mention.product)
           findings.push(verdictFinding(location, mention.product, sentence))
         }

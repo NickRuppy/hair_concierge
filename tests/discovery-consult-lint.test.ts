@@ -673,3 +673,52 @@ test("T5 eval round 2: a wide negation window and praise for another subject", (
   assert.ok(flagsVerdict("Für die Längen passt es super: Das Volumen Shampoo bleibt."))
   assert.ok(flagsVerdict("Das Volumen Shampoo, das sie seit Jahren nutzt, kann bleiben."))
 })
+
+// --- re-review of the T5 loosenings: three holes (each MUST flag) ----------------------------------
+
+test("a brand-hyphen compound names the product; a category-word compound does not", () => {
+  const base = nomiInput()
+  const input = nomiInput({
+    products: [
+      ...base.products,
+      product({
+        bucket: "tauschenOderNeu",
+        decisionKey: "shampoo:x:none",
+        name: "Frischkraft Tiefenrein Shampoo",
+        brand: "Frischkraft",
+        categoryLabel: "Shampoo",
+        verdict: "passt_nicht",
+      }),
+    ],
+  })
+  for (const sentence of [
+    "Das Frischkraft-Shampoo passt super.",
+    "Das Glanzwerk-Shampoo passt super.",
+  ]) {
+    const brief = cleanBrief()
+    brief.diagnose += ` ${sentence}`
+    assert.ok(rules(lintConsultBrief(brief, input)).includes("verdict_contradiction"), sentence)
+  }
+  // „Shampoo-Ansatz" prose is still no mention of her (only) shampoo.
+  assert.equal(flagsVerdict("Ein milderer Shampoo-Ansatz passt besser."), false)
+})
+
+test("negation idioms: „passt nicht selten/zuletzt/ohne …“ is praise", () => {
+  for (const sentence of [
+    "Das Volumen Shampoo passt nicht selten richtig gut.",
+    "Das Volumen Shampoo passt nicht zuletzt wegen des Dufts.",
+    "Das Volumen Shampoo passt nicht ohne Grund.",
+    "Das Volumen Shampoo passt nicht nur gut, sondern super.",
+  ]) {
+    assert.ok(flagsVerdict(sentence), sentence)
+  }
+})
+
+test("one product, verdict stated: praise in a following clause still flags", () => {
+  for (const sentence of [
+    "Das Volumen Shampoo passt nicht, ist aber trotzdem ideal für den Alltag.",
+    "Das Volumen Shampoo passt nicht, aber wirklich perfekt für unterwegs.",
+  ]) {
+    assert.ok(flagsVerdict(sentence), sentence)
+  }
+})
