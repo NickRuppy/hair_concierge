@@ -101,6 +101,12 @@ All names below are read verbatim from the current code (`src/lib/app-store/veri
 | `supabase/migrations/20260927133426_app_store_subscriptions.sql` | `app_store_transactions`, `app_store_subscription_status`, upsert RPCs (Task 1). |
 | `supabase/migrations/20260927172739_account_deletion_schema.sql` | `account_deletion_operations`, `anonymous_quiz_answer_archive`, retention/policy constants, anonymization tags on 47 tables, FK relaxations, the 17 regenerated billing/trial guard functions (Task 6). Sets `lock_timeout = '5s'`. |
 | `supabase/migrations/20260927172741_account_deletion_routine.sql` | Lifecycle RPCs, `private.delete_account`, purge routine, orphan-closing (Task 6 + fix rounds). |
+| `supabase/migrations/20260928071305_account_deletion_web_refunds.sql` | `private.account_deletion_web_refunds` and its RPCs: pro-rata web refund on deletion (D14). |
+| `supabase/migrations/20260928074426_account_deletion_refund_hardening.sql` | Refund plan/known lookups, post-deletion (R-a) refund rows, purge window. |
+| `supabase/migrations/20260928080932_account_deletion_post_deletion_refund_scope.sql` | Post-deletion refunds scoped to payments from the deletion; takeover of a settled-at-0 deletion row. |
+| `supabase/migrations/20260928083245_account_deletion_refund_request_scope.sql` | Refund plan/result scoped to their request; waiting-row rotation; refund-kind read. |
+
+These versions sort **before** `20260928120000_discovery_call_sheets` from main (#619). If that one is already applied in production, `db push` refuses the older local versions until run with `--include-all`; check `npx supabase migration list` first and apply exactly the seven files above.
 
 ### 4.2 Apply procedure
 
