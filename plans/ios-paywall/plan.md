@@ -71,6 +71,7 @@ Confirmed with Nick (2026-09-27; A1–A3 + journey confirmed in the same convers
   - Final bundle ID `de.chaarlie.app` (Release configuration); product IDs `de.chaarlie.scanner.monthly` / `de.chaarlie.scanner.yearly`.
   - Paywall tiles (supersedes D8's compact picker and Apple's disclosure line): two custom tiles, yearly preselected; the billed amount ("39,99 €/Jahr", "4,99 €/Monat") is the most prominent price, the monthly equivalent ("nur 3,33 €/Monat"), the savings badge ("−33 %") and the trial line ("1 Woche kostenlos") are visibly subordinate (Guideline 3.1.2); our own renewal disclosure for the selected plan sits above the CTA ("Kostenlos testen" with an active free trial, else "Abonnieren").
   - A dedicated App Store compliance check against the App Review Guidelines is a required step before the first submission.
+- D14 (2026-09-28, supersedes A1) Deleting the account in the app cancels an active **web** subscription (Stripe/PayPal) immediately **and refunds the unused, prepaid time pro rata** to the original payment method: unused = last paid amount × (period end − cancellation) / (period end − period start), rounded down to cents; trial without a paid charge, a period already over or an already refunded payment → cancel only. Idempotent per deletion request + subscription; a refund failure never blocks the deletion (recorded, retried by the reconcile cron, Sentry from the 5th failure). App Store subscriptions: unchanged, no refund from us (Apple only). Web AGB unchanged (they already promise the pro-rata refund of prepaid fees). Copy: deletion confirmation "Dein Chaarlie-Abo endet sofort. Nicht genutzte Zeit erstatten wir anteilig."; onboarding start "10 Fragen · ca. 2 Minuten", registration button "Konto erstellen" with legal line "Mit „Konto erstellen“ erstellst du dein Konto und akzeptierst unsere AGB. …".
 
 Inherited from evidence or contract:
 - Apple Guideline 3.1.1 (digital subscriptions via IAP), 3.1.2 (price/term disclosure, restore), 5.1.1(v) (account deletion; deletion does not cancel Apple subscriptions — inform + link to manage).
@@ -85,7 +86,7 @@ Implementation defaults (no product consequence):
 - Paywall photo shipped as bundled JPEG (~1200 px) in `ios/Chaarlie/Resources/`.
 - Rate limits via existing `mobileRateLimit`.
 
-- A1 A *web* subscriber who deletes the account in the app has the web subscription cancelled immediately, no prorated refund; the confirmation screen says so.
+- A1 ~~A *web* subscriber who deletes the account in the app has the web subscription cancelled immediately, no prorated refund; the confirmation screen says so.~~ Superseded by D14 (pro-rata refund).
 - A2 Anonymized billing records retained 10 years, cancellation evidence 3 years, then automatic purge (one constant; legal may adjust).
 - A3 One App Store subscription belongs to one Chaarlie account; restore on another account → "Dieses Abo gehört zu einem anderen Chaarlie-Konto."
 - Designed journey §6 signed off.
@@ -114,7 +115,7 @@ Internal revalidation: plan Rev. 2 against `cf7f4604` after Codex plan review (l
 
 **Konto löschen (Profil, bottom):**
 1. If an App Store subscription is active & renewing: sheet "Dein Abo läuft über Apple und wird nicht automatisch gekündigt." → [Abo kündigen] (Apple sheet) / [Trotzdem fortfahren].
-2. Confirmation "Konto endgültig löschen?" — lists: Haarprofil, Scan-Verlauf, Merkliste werden gelöscht; "Zahlungsbelege bewahren wir aus gesetzlichen Gründen anonymisiert auf."; web subscriber variant adds "Dein Chaarlie-Abo wird sofort beendet." (A1) → destructive [Konto löschen].
+2. Confirmation "Konto endgültig löschen?" — lists: Haarprofil, Scan-Verlauf, Merkliste werden gelöscht; "Zahlungsbelege bewahren wir aus gesetzlichen Gründen anonymisiert auf."; web subscriber variant adds "Dein Chaarlie-Abo endet sofort. Nicht genutzte Zeit erstatten wir anteilig." (D14) → destructive [Konto löschen].
 3. Progress → success → local session/keychain/drafts wiped → signed-out entry screen with a one-line notice "Dein Konto wurde gelöscht."
 - Failure → "Löschen hat nicht geklappt. Bitte versuche es erneut." (idempotent via `requestId`).
 

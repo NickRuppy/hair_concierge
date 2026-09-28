@@ -1,6 +1,6 @@
 # App Store subscriptions & account deletion runbook
 
-Status: code for Tasks 1–7 is implemented on `codex/ios-paywall`, not merged, not deployed. `MOBILE_PAYWALL_ENABLED` defaults off everywhere. Nothing in this document has been executed — it is the checklist for activation. Plan of record: [`plans/ios-paywall/plan.md`](../plans/ios-paywall/plan.md); global constraints and decisions D1–D12/A1–A3: `.superpowers/sdd/plan/constraints.md`, follow-up rulings D13 (2026-09-28) in the plan §5; deletion classification: [`plans/ios-paywall/deletion-inventory.md`](../plans/ios-paywall/deletion-inventory.md).
+Status: code for Tasks 1–7 is implemented on `codex/ios-paywall`, not merged, not deployed. `MOBILE_PAYWALL_ENABLED` defaults off everywhere. Nothing in this document has been executed — it is the checklist for activation. Plan of record: [`plans/ios-paywall/plan.md`](../plans/ios-paywall/plan.md); global constraints and decisions D1–D12/A1–A3: `.superpowers/sdd/plan/constraints.md`, follow-up rulings D13 and D14 (2026-09-28; D14 supersedes A1 with a pro-rata web refund) in the plan §5; deletion classification: [`plans/ios-paywall/deletion-inventory.md`](../plans/ios-paywall/deletion-inventory.md).
 
 ## 1. Prerequisites owned by Nick
 
@@ -139,7 +139,7 @@ Run each of these against a TestFlight build with `APP_STORE_ENVIRONMENTS` inclu
 4. **Refund via Sandbox → paywall.** Refund the sandbox transaction (App Store Connect sandbox tester management or Transaction Manager equivalent for TestFlight), then confirm the next bootstrap or the next scan request (402) returns the app to the paywall.
 5. **Expiry.** Let a short sandbox renewal cycle lapse (Sandbox renews every few minutes per Apple's schedule) and confirm access is revoked on the next check.
 6. **Deletion with an active Apple subscription.** From Profil, "Konto löschen" → subscription notice appears only because `access.appStore.willRenew == true` → "Abo kündigen" opens Apple's manage-subscriptions sheet, or "Trotzdem fortfahren" → confirmation → deletion. Confirm the account is gone and the Apple subscription is unaffected (Apple 5.1.1(v): deletion does not cancel Apple subscriptions).
-7. **Deletion of a web subscriber (A1).** A test account with only a web (Stripe/PayPal) subscription and no App Store row deletes without the Apple notice; confirmation screen shows the extra line "Dein Chaarlie-Abo wird sofort beendet."; confirm the web subscription is actually cancelled (no proration) immediately.
+7. **Deletion of a web subscriber (D14).** A test account with only a web (Stripe/PayPal) subscription and no App Store row deletes without the Apple notice; confirmation screen shows the extra line "Dein Chaarlie-Abo endet sofort. Nicht genutzte Zeit erstatten wir anteilig."; confirm in the Stripe/PayPal sandbox that the subscription is cancelled immediately and the unused part of the last payment is refunded pro rata (one refund, `private.account_deletion_web_refunds` row `done`). Requires migration `20260928071305_account_deletion_web_refunds`.
 8. **Web-paid account skips paywall.** A test account with an active web subscription and no App Store purchase bootstraps straight to the scanner (`source: "web"`), never sees the paywall.
 
 ## 7. Activation order + rollback
