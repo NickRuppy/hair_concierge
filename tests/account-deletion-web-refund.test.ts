@@ -11,6 +11,7 @@ import {
   proRataRefundMinor,
   refundPayPalSubscriptionWith,
   refundStripeSubscriptionWith,
+  webRefundIdempotencyKey,
   type PayPalRefundApi,
   type StripeRefundApi,
 } from "../src/lib/account-deletion/web-refund"
@@ -82,6 +83,28 @@ test("billing intervals are calendar-safe across month ends (M5)", () => {
   assert.throws(() => addBillingInterval(0, "FORTNIGHT", 1), AccountDeletionRefundManualError)
 })
 
+test("idempotency keys: short, stable, one per (request, subscription, payment)", () => {
+  const refund = { requestId: REQUEST, subscriptionId: "sub_1QwErTyUiOpAsDfGhJkLzXcV" }
+  const key = webRefundIdempotencyKey(refund, "pi_3QwErTyUiOpAsDfGhJkLzXcV1234")
+  assert.match(key, /^adr-[0-9a-f]{40}$/)
+  assert.ok(key.length <= 50, `${key.length} chars`)
+  // PayPal ids are long too; the key never grows with them.
+  const paypal = { requestId: REQUEST, subscriptionId: "I-" + "X".repeat(60) }
+  assert.equal(webRefundIdempotencyKey(paypal, "S".repeat(60)).length, key.length)
+  assert.equal(webRefundIdempotencyKey(refund, "pi_3QwErTyUiOpAsDfGhJkLzXcV1234"), key)
+  const others = [
+    webRefundIdempotencyKey(refund),
+    webRefundIdempotencyKey(refund, "pi_other"),
+    webRefundIdempotencyKey({ ...refund, requestId: "44444444-4444-4444-8444-444444444444" }),
+    webRefundIdempotencyKey(
+      { ...refund, requestId: "44444444-4444-4444-8444-444444444444" },
+      "pi_3QwErTyUiOpAsDfGhJkLzXcV1234",
+    ),
+    webRefundIdempotencyKey({ ...refund, subscriptionId: "sub_other" }),
+  ]
+  assert.equal(new Set([key, ...others]).size, others.length + 1)
+})
+
 type FakeStripeRefund = { amount: number; status: string; metadata: Record<string, string> | null }
 
 function fakeStripe(overrides: {
@@ -95,6 +118,8 @@ function fakeStripe(overrides: {
   refunds?: Record<string, FakeStripeRefund[]>
   paymentType?: string
   createError?: { code: string }
+  /** Status of every refund the fake creates (Stripe's create response). */
+  createStatus?: string
 }) {
   const created: unknown[] = []
   const refunds = overrides.refunds ?? {}
@@ -161,16 +186,17 @@ function fakeStripe(overrides: {
       create: async (params, options) => {
         if (overrides.createError) throw Object.assign(new Error("refused"), overrides.createError)
         created.push([params, options])
+        const status = overrides.createStatus ?? "succeeded"
         ;(refunds[params.payment_intent] ??= []).push({
           amount: params.amount,
-          status: "succeeded",
+          status,
           metadata: params.metadata,
         })
-        return { id: "re_new" }
+        return { id: "re_new", status }
       },
     },
   }
-  return { api, created }
+  return { api, created, refunds }
 }
 
 const OURS = {
@@ -189,7 +215,9 @@ test("Stripe deletion: pro-rata refund of the latest paid invoice, keyed and tag
   assert.deepEqual(live.created, [
     [
       { payment_intent: "pi_1", amount: 999, reason: "requested_by_customer", metadata: OURS },
-      { idempotencyKey: `account-deletion-refund-${REQUEST}-sub_live` },
+      {
+        idempotencyKey: webRefundIdempotencyKey({ requestId: REQUEST, subscriptionId: "sub_live" }),
+      },
     ],
   ])
   // Retry after a lost result: our refund is found and its actual amount recorded (M4).
@@ -210,7 +238,7 @@ test("Stripe deletion: pro-rata refund of the latest paid invoice, keyed and tag
     assert.deepEqual(await refundStripeSubscriptionWith(due(), f.api), NOTHING, name)
     assert.deepEqual(f.created, [], name)
   }
-  // Refunded by support: never on top, recorded as 0.
+  // Refunded in full by support: never on top, recorded as 0.
   const foreign = fakeStripe({
     refunds: { pi_1: [{ amount: 1499, status: "succeeded", metadata: {} }] },
   })
@@ -219,12 +247,102 @@ test("Stripe deletion: pro-rata refund of the latest paid invoice, keyed and tag
     paymentRef: "pi_1",
   })
   assert.deepEqual(foreign.created, [])
-  // A failed earlier refund returned nothing: it does not count (M4).
-  const failedBefore = fakeStripe({
-    refunds: { pi_1: [{ amount: 999, status: "failed", metadata: OURS }] },
+  // Support's full refund still on its way may yet fail: the row waits instead of settling at 0.
+  const onItsWay = fakeStripe({
+    refunds: { pi_1: [{ amount: 1499, status: "pending", metadata: {} }] },
   })
-  assert.equal((await refundStripeSubscriptionWith(due(), failedBefore.api)).refundedMinor, 999)
-  assert.equal(failedBefore.created.length, 1)
+  await assert.rejects(
+    refundStripeSubscriptionWith(due(), onItsWay.api),
+    AccountDeletionRefundPendingError,
+  )
+  assert.deepEqual(onItsWay.created, [])
+})
+
+test("Stripe deletion: a partial refund by someone else goes to manual review, no top-up", async () => {
+  // Someone else's refund still on its way may yet fail: the row waits, nothing is created.
+  for (const status of ["pending", "requires_action"]) {
+    const waiting = fakeStripe({
+      refunds: { pi_1: [{ amount: 500, status, metadata: {} }] },
+    })
+    await assert.rejects(
+      refundStripeSubscriptionWith(due(), waiting.api),
+      AccountDeletionRefundPendingError,
+      status,
+    )
+    assert.deepEqual(waiting.created, [], status)
+  }
+  for (const status of ["succeeded"]) {
+    const partial = fakeStripe({
+      refunds: { pi_1: [{ amount: 500, status, metadata: {} }] },
+    })
+    await assert.rejects(
+      refundStripeSubscriptionWith(due(), partial.api),
+      (error) =>
+        error instanceof AccountDeletionRefundManualError &&
+        error.message === "Payment partially refunded by someone else",
+      status,
+    )
+    assert.deepEqual(partial.created, [], status)
+  }
+  // Someone else's failed or cancelled refunds returned nothing: ours is made.
+  for (const status of ["failed", "canceled"]) {
+    const returned = fakeStripe({
+      refunds: { pi_1: [{ amount: 500, status, metadata: {} }] },
+    })
+    assert.equal((await refundStripeSubscriptionWith(due(), returned.api)).refundedMinor, 999)
+    assert.equal(returned.created.length, 1, status)
+  }
+})
+
+test("Stripe deletion: only a succeeded refund settles; pending waits, failed goes to manual review", async () => {
+  // Created but still pending (or awaiting action): the row stays due.
+  for (const status of ["pending", "requires_action"]) {
+    const waiting = fakeStripe({ createStatus: status })
+    await assert.rejects(
+      refundStripeSubscriptionWith(due(), waiting.api),
+      AccountDeletionRefundPendingError,
+      status,
+    )
+    assert.equal(waiting.created.length, 1)
+    // Retry while ours is still pending: waits again, never a second refund.
+    await assert.rejects(
+      refundStripeSubscriptionWith(due(), waiting.api),
+      AccountDeletionRefundPendingError,
+      status,
+    )
+    assert.equal(waiting.created.length, 1)
+    // Ours succeeded meanwhile: recorded with its amount.
+    waiting.refunds.pi_1[0].status = "succeeded"
+    assert.deepEqual(await refundStripeSubscriptionWith(due(), waiting.api), {
+      refundedMinor: 999,
+      paymentRef: "pi_1",
+    })
+    assert.equal(waiting.created.length, 1)
+  }
+  // Created and failed at once: manual review.
+  for (const status of ["failed", "canceled"]) {
+    const failed = fakeStripe({ createStatus: status })
+    await assert.rejects(
+      refundStripeSubscriptionWith(due(), failed.api),
+      AccountDeletionRefundManualError,
+      status,
+    )
+  }
+  // Ours failed on an earlier attempt: manual review, never re-created under the same key
+  // (Stripe would replay the failed refund).
+  for (const status of ["failed", "canceled"]) {
+    const failedBefore = fakeStripe({
+      refunds: { pi_1: [{ amount: 999, status, metadata: OURS }] },
+    })
+    await assert.rejects(
+      refundStripeSubscriptionWith(due(), failedBefore.api),
+      (error) =>
+        error instanceof AccountDeletionRefundManualError &&
+        error.message === "Stripe refund failed",
+      status,
+    )
+    assert.deepEqual(failedBefore.created, [], status)
+  }
 })
 
 test("Stripe: not yet cancelled retries; disputed charges and non-PaymentIntent payments go to manual review", async () => {
@@ -275,8 +393,8 @@ test("Stripe post-deletion (R-a): every paid invoice refunded in full, per-payme
       (options as { idempotencyKey: string }).idempotencyKey,
     ]),
     [
-      ["pi_a", 3999, `account-deletion-refund-${REQUEST}-sub_live-pi_a`],
-      ["pi_c", 399, `account-deletion-refund-${REQUEST}-sub_live-pi_c`],
+      ["pi_a", 3999, webRefundIdempotencyKey(post, "pi_a")],
+      ["pi_c", 399, webRefundIdempotencyKey(post, "pi_c")],
     ],
   )
   // Retry: ours are recognised, nothing is created again.
@@ -287,6 +405,56 @@ test("Stripe post-deletion (R-a): every paid invoice refunded in full, per-payme
     refundStripeSubscriptionWith({ ...post, paymentsFrom: null }, f.api),
     AccountDeletionRefundManualError,
   )
+})
+
+test("Stripe post-deletion (R-a): a pending refund keeps the row due; a failed one goes to manual review", async () => {
+  const post = due({
+    kind: "post_deletion",
+    recordedAt: new Date(20 * DAY).toISOString(),
+    paymentsFrom: new Date(15 * DAY).toISOString(),
+  })
+  const invoices = [
+    { id: "in_a", amount_paid: 3999, paidDay: 16 },
+    { id: "in_c", amount_paid: 499, paidDay: 18 },
+  ]
+  // Both refunds are created in the run; neither counts until it succeeded.
+  const pending = fakeStripe({ invoices, createStatus: "pending" })
+  await assert.rejects(
+    refundStripeSubscriptionWith(post, pending.api),
+    AccountDeletionRefundPendingError,
+  )
+  assert.equal(pending.created.length, 2)
+  // One still pending on the retry: waits again, nothing re-created.
+  pending.refunds.pi_a[0].status = "succeeded"
+  await assert.rejects(
+    refundStripeSubscriptionWith(post, pending.api),
+    AccountDeletionRefundPendingError,
+  )
+  assert.equal(pending.created.length, 2)
+  // All succeeded: recorded with their amounts, nothing re-created.
+  pending.refunds.pi_c[0].status = "succeeded"
+  assert.deepEqual(await refundStripeSubscriptionWith(post, pending.api), {
+    refundedMinor: 3999 + 499,
+    paymentRef: "pi_c",
+  })
+  assert.equal(pending.created.length, 2)
+  // Ours failed (at creation, or on an earlier attempt): manual review, never re-created.
+  const failedNow = fakeStripe({ invoices, createStatus: "failed" })
+  await assert.rejects(
+    refundStripeSubscriptionWith(post, failedNow.api),
+    AccountDeletionRefundManualError,
+  )
+  assert.equal(failedNow.created.length, 1, "stops at the first failed refund")
+  const ours = { ...OURS, kind: "post_deletion" }
+  const failedBefore = fakeStripe({
+    invoices,
+    refunds: { pi_a: [{ amount: 3999, status: "canceled", metadata: ours }] },
+  })
+  await assert.rejects(
+    refundStripeSubscriptionWith(post, failedBefore.api),
+    AccountDeletionRefundManualError,
+  )
+  assert.deepEqual(failedBefore.created, [])
 })
 
 test("N1: a Stripe payment before the deletion sends R-a to manual review before any refund", async () => {
@@ -360,6 +528,9 @@ function fakePayPal(overrides: {
   status?: string
   missing?: boolean
   nextBilling?: string
+  /** The agreement's own times (default: started Jul 1, no create_time); null: absent. */
+  createTime?: string | null
+  startTime?: string | null
   transactions?: { id: string; status: string; time: string; value?: string }[]
 }) {
   const refunds: unknown[] = []
@@ -370,7 +541,10 @@ function fakePayPal(overrides: {
       return {
         status: overrides.status ?? "CANCELLED",
         status_update_time: "2026-09-16T00:00:00Z",
-        start_time: "2026-07-01T00:00:00Z",
+        ...(overrides.createTime ? { create_time: overrides.createTime } : {}),
+        ...(overrides.startTime === null
+          ? {}
+          : { start_time: overrides.startTime ?? "2026-07-01T00:00:00Z" }),
         plan_id: "P-MONTH",
         billing_info: overrides.nextBilling ? { next_billing_time: overrides.nextBilling } : {},
       }
@@ -383,7 +557,10 @@ function fakePayPal(overrides: {
     }),
     transactions: async (_id, from, to) => {
       windows.push([from, to])
-      return (overrides.transactions ?? []).map((t) => ({
+      // Like PayPal: only transactions inside the requested window.
+      const inside = (t: { time: string }) =>
+        Date.parse(t.time) >= Date.parse(from) && Date.parse(t.time) <= Date.parse(to)
+      return (overrides.transactions ?? []).filter(inside).map((t) => ({
         id: t.id,
         status: t.status,
         time: t.time,
@@ -416,11 +593,7 @@ test("PayPal deletion: pro-rata refund of the last completed payment, planned fi
   })
   assert.deepEqual(h.plans, [{ amountMinor: 749, paymentRef: "TX-SEPT" }])
   assert.deepEqual(live.refunds, [
-    [
-      "TX-SEPT",
-      { value: "7.49", currency_code: "EUR" },
-      `account-deletion-refund-${REQUEST}-I-HANNA`,
-    ],
+    ["TX-SEPT", { value: "7.49", currency_code: "EUR" }, webRefundIdempotencyKey(PAYPAL_DUE)],
   ])
   assert.ok(live.windows[0][0] < "2026-08-16T00:00:00Z", "window covers one interval back")
 
@@ -476,13 +649,23 @@ test("PayPal deletion: never billed, unknown, expired or already refunded resolv
     ),
     { refundedMinor: 749, paymentRef: "TX-SEPT" },
   )
-  // Someone else's: never on top.
-  const foreign = fakePayPal({ transactions: [refunded] })
+  // Refunded in full by someone else: never on top.
+  const foreign = fakePayPal({ transactions: [{ ...SEPT, status: "REFUNDED" }] })
   assert.deepEqual(await refundPayPalSubscriptionWith(PAYPAL_DUE, foreign.api, hooks().value), {
     refundedMinor: 0,
     paymentRef: "TX-SEPT",
   })
-  assert.deepEqual([...ours.refunds, ...foreign.refunds], [])
+  // Partly refunded by someone else: an operator decides, no automatic top-up.
+  const partial = fakePayPal({ transactions: [refunded] })
+  const partialHooks = hooks()
+  await assert.rejects(
+    refundPayPalSubscriptionWith(PAYPAL_DUE, partial.api, partialHooks.value),
+    (error) =>
+      error instanceof AccountDeletionRefundManualError &&
+      error.message === "Payment partially refunded by someone else",
+  )
+  assert.deepEqual(partialHooks.plans, [])
+  assert.deepEqual([...ours.refunds, ...foreign.refunds, ...partial.refunds], [])
   await assert.rejects(
     refundPayPalSubscriptionWith(PAYPAL_DUE, fakePayPal({ status: "ACTIVE" }).api, hooks().value),
     /not cancelled/,
@@ -511,23 +694,16 @@ test("PayPal post-deletion (R-a): payments from the deletion on refunded in full
     paymentRef: "TX-0",
   })
   assert.deepEqual(f.refunds, [
-    [
-      "TX-2",
-      { value: "4.99", currency_code: "EUR" },
-      `account-deletion-refund-${REQUEST}-I-HANNA-TX-2`,
-    ],
-    [
-      "TX-1",
-      { value: "39.99", currency_code: "EUR" },
-      `account-deletion-refund-${REQUEST}-I-HANNA-TX-1`,
-    ],
+    ["TX-2", { value: "4.99", currency_code: "EUR" }, webRefundIdempotencyKey(post, "TX-2")],
+    ["TX-1", { value: "39.99", currency_code: "EUR" }, webRefundIdempotencyKey(post, "TX-1")],
   ])
   // m3: each refunded payment is stored before its call (webhooks for all are recognised).
   assert.deepEqual(h.plans, [
     { amountMinor: 499, paymentRef: "TX-2" },
     { amountMinor: 3999, paymentRef: "TX-1" },
   ])
-  assert.ok(f.windows[0][0] < "2026-09-16T00:00:00Z", "the window starts at the deletion")
+  // The scan starts a day before the agreement began (no create_time here: its start_time).
+  assert.equal(f.windows[0][0], "2026-06-30T00:00:00.000Z")
   await assert.rejects(
     refundPayPalSubscriptionWith(
       post,
@@ -598,6 +774,47 @@ test("N1: a PayPal payment before the deletion sends R-a to manual review before
     paymentRef: "TX-1",
   })
   assert.equal(later.refunds.length, 2)
+})
+
+test("N1: the PayPal scan starts at the agreement's creation, so an older checkout payment is seen", async () => {
+  const post = {
+    ...PAYPAL_DUE,
+    kind: "post_deletion" as const,
+    paymentsFrom: "2026-09-16T00:00:00Z",
+  }
+  // Agreement created Sept 12, checkout paid Sept 13 (3 days before the deletion).
+  const f = fakePayPal({
+    createTime: "2026-09-12T10:00:00Z",
+    startTime: "2026-09-13T00:00:00Z",
+    transactions: [
+      { id: "TX-2", status: "COMPLETED", time: "2026-09-20T00:00:00Z", value: "4.99" },
+      { id: "TX-CHECKOUT", status: "COMPLETED", time: "2026-09-13T00:00:00Z", value: "39.99" },
+    ],
+  })
+  const h = hooks()
+  await assert.rejects(
+    refundPayPalSubscriptionWith(post, f.api, h.value),
+    (error) =>
+      error instanceof AccountDeletionRefundManualError &&
+      error.message === "Post-deletion subscription has a payment before the deletion",
+  )
+  assert.equal(f.windows[0][0], "2026-09-11T10:00:00.000Z", "create_time minus one day")
+  assert.deepEqual(f.refunds, [])
+  assert.deepEqual(h.plans, [])
+  // Without a creation or start time the scan cannot be complete: manual review, no refund.
+  const unknown = fakePayPal({
+    createTime: null,
+    startTime: null,
+    transactions: [
+      { id: "TX-2", status: "COMPLETED", time: "2026-09-20T00:00:00Z", value: "4.99" },
+    ],
+  })
+  await assert.rejects(
+    refundPayPalSubscriptionWith(post, unknown.api, hooks().value),
+    AccountDeletionRefundManualError,
+  )
+  assert.deepEqual(unknown.windows, [])
+  assert.deepEqual(unknown.refunds, [])
 })
 
 test("PayPal: a pending payment keeps the refund due until it is final (m4)", async () => {

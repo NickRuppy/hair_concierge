@@ -1,4 +1,5 @@
 import "server-only"
+import { createHash } from "node:crypto"
 import type { PayPalPlan, PayPalSubscription } from "@/lib/paypal/subscription-shapes"
 import type { PayPalTrialTransaction } from "@/lib/paypal/trial-runtime"
 import {
@@ -26,8 +27,13 @@ import {
  *
  * Never twice: provider idempotency keys derive from the stored request id + subscription
  * (+ payment); our own earlier refund is recognised on the provider (Stripe metadata, PayPal
- * planned payment) and recorded with its actual amount; a refund by someone else counts as
- * settled. Never-billed or unknown subscriptions resolve to "nothing to refund".
+ * planned payment) and recorded with its actual amount. A full refund by someone else counts
+ * as settled; a partial one on a pro-rata payment goes to manual review (no automatic
+ * top-up). Never-billed or unknown subscriptions resolve to "nothing to refund".
+ *
+ * A Stripe refund counts only once it `succeeded`: a pending one keeps the row due, a failed
+ * or cancelled one goes to manual review (never re-created: the idempotency key would replay
+ * it). A refund that fails after settling is reported from the Stripe webhook (`refund.failed`).
  */
 
 /** A subscription that already ended before this deletion recorded it is not ours to refund. */
@@ -45,12 +51,19 @@ export function proRataRefundMinor(input: {
   return Math.floor((input.paidMinor * unused) / total)
 }
 
+/**
+ * One key per (request, subscription, payment), short enough for every provider header
+ * (PayPal's v1 sale refund caps PayPal-Request-Id well below the raw ids' length): `adr-` +
+ * 40 hex chars of a SHA-256 over the three parts.
+ */
 export function webRefundIdempotencyKey(
   refund: Pick<WebRefundDue, "requestId" | "subscriptionId">,
   paymentRef?: string,
 ) {
-  const base = `account-deletion-refund-${refund.requestId}-${refund.subscriptionId}`
-  return paymentRef ? `${base}-${paymentRef}` : base
+  const digest = createHash("sha256")
+    .update(`${refund.requestId}|${refund.subscriptionId}|${paymentRef ?? ""}`)
+    .digest("hex")
+  return `adr-${digest.slice(0, 40)}`
 }
 
 /** Calendar-safe: Jan 31 + 1 month = Feb 28/29 (the day is clamped to the target month). */
@@ -135,13 +148,17 @@ export type StripeRefundApi = {
         metadata: Record<string, string>
       },
       options: { idempotencyKey: string },
-    ): Promise<{ id: string }>
+    ): Promise<{ id: string; status: string | null }>
   }
 }
 
 const STRIPE_ENDED = new Set(["canceled", "incomplete_expired"])
-/** A failed or cancelled refund returned nothing; it must not count as refunded. */
-const STRIPE_REFUND_COUNTS = new Set(["succeeded", "pending", "requires_action"])
+/** The money may still move (or not): our refund keeps the row due. */
+const STRIPE_REFUND_WAITING = new Set(["pending", "requires_action"])
+/** A failed or cancelled refund returned nothing. */
+const STRIPE_REFUND_FAILED = new Set(["failed", "canceled"])
+/** Someone else's refund counts toward the refunded total only once it succeeded. */
+const STRIPE_FOREIGN_COUNTS = new Set(["succeeded"])
 const STRIPE_PERMANENT = new Set(["charge_disputed", "charge_already_refunded"])
 
 async function stripeSubscription(stripe: StripeRefundApi, id: string) {
@@ -182,7 +199,12 @@ async function stripeInvoiceProcessing(stripe: StripeRefundApi, invoiceId: strin
   return false
 }
 
-/** Refunds already on the PaymentIntent: ours (metadata) and in total (counting ones only). */
+/**
+ * Refunds already on the PaymentIntent. Ours (metadata) settle by status: all succeeded →
+ * their sum; any failed/cancelled → manual review (the same key would only replay it); any
+ * pending → the row stays due (`pending`), as does someone else's refund still on its way.
+ * `foreign` sums someone else's succeeded refunds.
+ */
 async function stripeExistingRefunds(
   stripe: StripeRefundApi,
   intent: string,
@@ -190,30 +212,55 @@ async function stripeExistingRefunds(
 ) {
   const refunds = await stripe.refunds.list({ payment_intent: intent, limit: 100 })
   if (refunds.has_more) throw new AccountDeletionRefundManualError("Too many Stripe refunds")
-  const counting = refunds.data.filter((r) => STRIPE_REFUND_COUNTS.has(r.status ?? ""))
+  const isOurs = (r: StripeRefund) =>
+    r.metadata?.source === "account_deletion" &&
+    r.metadata?.request_id === refund.requestId &&
+    r.metadata?.subscription_id === refund.subscriptionId
+  const ours = refunds.data.filter(isOurs)
+  const foreign = refunds.data.filter(
+    (r) => !isOurs(r) && STRIPE_FOREIGN_COUNTS.has(r.status ?? ""),
+  )
+  // Someone else's refund still on its way may yet fail: wait for its final state before
+  // settling or sizing ours (never on top, never short).
+  const foreignPending = refunds.data.some(
+    (r) => !isOurs(r) && STRIPE_REFUND_WAITING.has(r.status ?? ""),
+  )
   const sum = (list: StripeRefund[]) => list.reduce((total, r) => total + r.amount, 0)
+  if (ours.some((r) => STRIPE_REFUND_FAILED.has(r.status ?? "")))
+    throw new AccountDeletionRefundManualError("Stripe refund failed")
+  const pending = ours.some((r) => STRIPE_REFUND_WAITING.has(r.status ?? ""))
+  if (!pending && ours.some((r) => r.status !== "succeeded"))
+    throw new AccountDeletionRefundManualError("Stripe refund in an unknown state")
   return {
-    ours: sum(
-      counting.filter(
-        (r) =>
-          r.metadata?.source === "account_deletion" &&
-          r.metadata?.request_id === refund.requestId &&
-          r.metadata?.subscription_id === refund.subscriptionId,
-      ),
-    ),
-    total: sum(counting),
+    oursFound: ours.length > 0,
+    pending: pending || foreignPending,
+    ours: sum(ours),
+    foreign: sum(foreign),
   }
 }
 
+/** Only a succeeded refund counts as refunded (see stripeExistingRefunds for the retry). */
+function checkCreatedStripeRefund(status: string | null) {
+  if (status === "succeeded") return
+  if (STRIPE_REFUND_WAITING.has(status ?? ""))
+    throw new AccountDeletionRefundPendingError("Stripe refund is still pending")
+  throw new AccountDeletionRefundManualError(
+    STRIPE_REFUND_FAILED.has(status ?? "")
+      ? "Stripe refund failed"
+      : "Stripe refund in an unknown state",
+  )
+}
+
+/** Returns the created refund's status (succeeded / pending / requires_action / failed / …). */
 async function createStripeRefund(
   stripe: StripeRefundApi,
   refund: WebRefundDue,
   intent: string,
   amount: number,
   idempotencyKey: string,
-) {
+): Promise<string | null> {
   try {
-    await stripe.refunds.create(
+    const created = await stripe.refunds.create(
       {
         payment_intent: intent,
         amount,
@@ -227,6 +274,7 @@ async function createStripeRefund(
       },
       { idempotencyKey },
     )
+    return created.status
   } catch (error) {
     if (STRIPE_PERMANENT.has(String((error as { code?: unknown }).code)))
       throw new AccountDeletionRefundManualError("Stripe refused the refund permanently")
@@ -265,13 +313,22 @@ export async function refundStripeSubscriptionWith(
   if (amount <= 0) return NOTHING
   const intent = await stripePaymentIntent(stripe, invoiceId)
   const existing = await stripeExistingRefunds(stripe, intent, refund)
+  if (existing.pending)
+    throw new AccountDeletionRefundPendingError("Stripe refund is still pending")
   // Ours (a retry after a lost result): record what was actually refunded.
-  if (existing.ours > 0) return { refundedMinor: existing.ours, paymentRef: intent }
-  // Refunded by someone else (support): never on top.
-  if (existing.total > 0) return { refundedMinor: 0, paymentRef: intent }
-  await createStripeRefund(stripe, refund, intent, amount, webRefundIdempotencyKey(refund))
+  if (existing.oursFound) return { refundedMinor: existing.ours, paymentRef: intent }
+  // Refunded in full by someone else (support): never on top.
+  if (existing.foreign >= invoice.amount_paid) return { refundedMinor: 0, paymentRef: intent }
+  // Partly refunded by someone else: an operator decides (no automatic top-up).
+  if (existing.foreign > 0)
+    throw new AccountDeletionRefundManualError(PARTIALLY_REFUNDED_BY_SOMEONE_ELSE)
+  checkCreatedStripeRefund(
+    await createStripeRefund(stripe, refund, intent, amount, webRefundIdempotencyKey(refund)),
+  )
   return { refundedMinor: amount, paymentRef: intent }
 }
+
+const PARTIALLY_REFUNDED_BY_SOMEONE_ELSE = "Payment partially refunded by someone else"
 
 async function refundAllStripePayments(
   refund: WebRefundDue,
@@ -301,21 +358,34 @@ async function refundAllStripePayments(
   for (const invoice of inScope) {
     const intent = await stripePaymentIntent(stripe, invoice.id)
     const existing = await stripeExistingRefunds(stripe, intent, refund)
-    const remaining = invoice.amount_paid - existing.total
-    refunded += existing.ours
     paymentRef = intent
+    // Ours still on its way: settle on a later run (the other payments are refunded now).
+    if (existing.pending) {
+      pending = true
+      continue
+    }
+    refunded += existing.ours
+    // Ours already made (a retry): never a second one under the same key.
+    if (existing.oursFound) continue
+    // Someone else's partial refund: the rest is refunded, the payer never had access.
+    const remaining = invoice.amount_paid - existing.foreign
     if (remaining <= 0) continue
-    await createStripeRefund(
+    const status = await createStripeRefund(
       stripe,
       refund,
       intent,
       remaining,
       webRefundIdempotencyKey(refund, intent),
     )
+    if (STRIPE_REFUND_WAITING.has(status ?? "")) {
+      pending = true
+      continue
+    }
+    checkCreatedStripeRefund(status)
     refunded += remaining
   }
   // Refunds made so far are recognised on the retry (metadata); settle once all are final.
-  if (pending) throw new AccountDeletionRefundPendingError("Stripe payment is still processing")
+  if (pending) throw new AccountDeletionRefundPendingError("Stripe payment or refund is pending")
   return { refundedMinor: refunded, paymentRef }
 }
 
@@ -384,7 +454,8 @@ export async function refundPayPalSubscriptionWith(
   const endedAt = Date.parse(subscription.status_update_time ?? "")
   if (!PAYPAL_ENDED.has(subscription.status ?? "") || !Number.isFinite(endedAt))
     throw new Error("PayPal subscription is not cancelled yet")
-  if (refund.kind === "post_deletion") return refundAllPayPalPayments(refund, paypal, hooks)
+  if (refund.kind === "post_deletion")
+    return refundAllPayPalPayments(refund, subscription, paypal, hooks)
   if (subscription.status === "EXPIRED" || endedBeforeDeletion(endedAt, refund)) return NOTHING
   if (!subscription.plan_id)
     throw new AccountDeletionRefundManualError("PayPal subscription has no plan")
@@ -415,11 +486,15 @@ export async function refundPayPalSubscriptionWith(
     throw new AccountDeletionRefundPendingError("PayPal payment is still pending")
   // Trial without a completed payment: cancel only.
   if (!last?.id) return NOTHING
-  if (last.status !== "COMPLETED")
-    // Ours (a retry after a lost result) or someone else's refund: never on top.
-    return refund.plannedPaymentRef === last.id && refund.plannedMinor
-      ? { refundedMinor: refund.plannedMinor, paymentRef: last.id }
-      : { refundedMinor: 0, paymentRef: last.id }
+  if (last.status !== "COMPLETED") {
+    // Ours (a retry after a lost result): record what was planned and requested.
+    if (refund.plannedPaymentRef === last.id && refund.plannedMinor)
+      return { refundedMinor: refund.plannedMinor, paymentRef: last.id }
+    // Refunded in full by someone else (support): never on top.
+    if (last.status === "REFUNDED") return { refundedMinor: 0, paymentRef: last.id }
+    // Partly refunded by someone else: an operator decides (no automatic top-up).
+    throw new AccountDeletionRefundManualError(PARTIALLY_REFUNDED_BY_SOMEONE_ELSE)
+  }
   const paid = paypalMinor(last)
   // M5: the agreement's billing cycle anchors the paid period where PayPal still reports it.
   const paidAt = timeOf(last)
@@ -453,15 +528,28 @@ async function refundPayPalPayment(
   return { refundedMinor: amount, paymentRef: transactionId }
 }
 
+/**
+ * N1 needs every payment the agreement ever made: the scan starts at the agreement's own
+ * creation (else its start), a day early for time-zone slack. Without either it is unknown.
+ */
+function paypalAgreementSince(subscription: PayPalSubscription) {
+  const created = Date.parse(subscription.create_time ?? "")
+  const since = Number.isFinite(created) ? created : Date.parse(subscription.start_time ?? "")
+  if (!Number.isFinite(since))
+    throw new AccountDeletionRefundManualError("PayPal subscription has no creation time")
+  return since - DAY_MS
+}
+
 async function refundAllPayPalPayments(
   refund: WebRefundDue,
+  subscription: PayPalSubscription,
   paypal: PayPalRefundApi,
   hooks: WebRefundHooks,
 ): Promise<WebRefundOutcome> {
   const from = paymentsFrom(refund)
   const transactions = await paypal.transactions(
     refund.subscriptionId,
-    new Date(from - DAY_MS).toISOString(),
+    new Date(paypalAgreementSince(subscription)).toISOString(),
     new Date().toISOString(),
   )
   // N1: an earlier paid/settled payment stops the run before any refund (operator decides).

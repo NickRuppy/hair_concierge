@@ -76,6 +76,40 @@ export function reportAccountDeletionRefundFailure(
 }
 
 /**
+ * A Stripe refund the account deletion made (metadata source `account_deletion`) failed after
+ * it was sent, possibly after its row was already settled: an operator follows up by hand (no
+ * state changes). Only the refund kind and Stripe's machine failure reason are reported —
+ * never refund, payment, subscription, request or user ids.
+ */
+export function reportAccountDeletionStripeRefundFailed(
+  details: { kind: string | null | undefined; failureReason: string | null | undefined },
+  sink: AccountDeletionFailureSink = Sentry,
+): void {
+  try {
+    const kind =
+      details.kind === "deletion" || details.kind === "post_deletion" ? details.kind : "unknown"
+    const failureReason = MACHINE_CODE.test(details.failureReason ?? "")
+      ? (details.failureReason as string)
+      : "unknown"
+    sink.withScope((scope) => {
+      scope.setLevel?.("error")
+      scope.setTag("account_deletion.provider", "stripe")
+      scope.setTag("account_deletion.code", "refund_failed_after_send")
+      scope.setTag("account_deletion.refund_kind", kind)
+      scope.setContext("account_deletion_refund_failed", {
+        provider: "stripe",
+        code: "refund_failed_after_send",
+        refund_kind: kind,
+        failure_reason: failureReason,
+      })
+      sink.captureException(new Error("account_deletion_refund_failed_after_send"))
+    })
+  } catch {
+    /* Telemetry is best effort. */
+  }
+}
+
+/**
  * N4: due refunds that have waited on a still pending provider payment for more than 14 days
  * since they were recorded. Once per run with the count only — no ids.
  */

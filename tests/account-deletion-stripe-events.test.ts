@@ -1,6 +1,8 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { handleStripeWebhookEvent } from "../src/app/api/stripe/webhook/route"
+import { reportAccountDeletionStripeRefundFailed } from "../src/lib/observability/account-deletion"
 import { cancelDeletedAccountStripeSubscription } from "../src/lib/stripe/deleted-account"
 
 const LEAD = "11111111-1111-4111-8111-111111111111"
@@ -313,4 +315,95 @@ test("I-2: a subscription bound to a live account is left to normal processing (
     assert.deepEqual(f.recorded, [])
     assert.deepEqual(f.reports, [])
   }
+})
+
+test("refund.failed: a failed account-deletion refund is reported for manual follow-up and acknowledged", async () => {
+  const reports: unknown[] = []
+  const touched: string[] = []
+  const deps = {
+    // No state changes: any DB or Stripe access fails the test.
+    supabase: new Proxy({}, { get: (_, key) => void touched.push(`supabase.${String(key)}`) }),
+    stripe: new Proxy({}, { get: (_, key) => void touched.push(`stripe.${String(key)}`) }),
+    defer: () => touched.push("defer"),
+    reportAccountDeletionRefundFailed: (details: unknown) => void reports.push(details),
+  } as never
+  const event = (metadata: Record<string, string>) =>
+    ({
+      id: "evt_refund_failed",
+      type: "refund.failed",
+      created: 1_800_000_000,
+      data: {
+        object: {
+          id: "re_1",
+          object: "refund",
+          status: "failed",
+          failure_reason: "expired_or_canceled_card",
+          payment_intent: "pi_1",
+          metadata,
+        },
+      },
+    }) as never
+  await handleStripeWebhookEvent(
+    event({
+      source: "account_deletion",
+      kind: "post_deletion",
+      request_id: "33333333-3333-4333-8333-333333333333",
+      subscription_id: "sub_live",
+    }),
+    deps,
+  )
+  assert.deepEqual(reports, [{ kind: "post_deletion", failureReason: "expired_or_canceled_card" }])
+  // Any other failed refund keeps today's behaviour (logged as unhandled, not reported).
+  await handleStripeWebhookEvent(event({}), deps)
+  await handleStripeWebhookEvent(event({ source: "support" }), deps)
+  assert.equal(reports.length, 1)
+  assert.deepEqual(touched, [])
+})
+
+test("the failed-refund Sentry report carries only kind and machine failure reason", () => {
+  const captured: { tags: Record<string, string>; context: unknown; error: unknown }[] = []
+  const sink = {
+    withScope(callback: (scope: never) => void) {
+      const entry = {
+        tags: {} as Record<string, string>,
+        context: null as unknown,
+        error: null as unknown,
+      }
+      captured.push(entry)
+      callback({
+        setTag: (k: string, v: string) => void (entry.tags[k] = v),
+        setContext: (_: string, c: unknown) => void (entry.context = c),
+        setLevel: () => undefined,
+      } as never)
+    },
+    captureException(error: unknown) {
+      captured.at(-1)!.error = error
+    },
+  }
+  reportAccountDeletionStripeRefundFailed(
+    { kind: "deletion", failureReason: "expired_or_canceled_card" },
+    sink,
+  )
+  reportAccountDeletionStripeRefundFailed(
+    { kind: "sub_123", failureReason: "hanna@example.com" },
+    sink,
+  )
+  assert.equal((captured[0].error as Error).message, "account_deletion_refund_failed_after_send")
+  assert.deepEqual(captured[0].tags, {
+    "account_deletion.provider": "stripe",
+    "account_deletion.code": "refund_failed_after_send",
+    "account_deletion.refund_kind": "deletion",
+  })
+  assert.deepEqual(captured[0].context, {
+    provider: "stripe",
+    code: "refund_failed_after_send",
+    refund_kind: "deletion",
+    failure_reason: "expired_or_canceled_card",
+  })
+  assert.deepEqual(captured[1].context, {
+    provider: "stripe",
+    code: "refund_failed_after_send",
+    refund_kind: "unknown",
+    failure_reason: "unknown",
+  })
 })

@@ -90,6 +90,8 @@ All names below are read verbatim from the current code (`src/lib/app-store/veri
 
 **Not App Store–specific but load-bearing:** `MOBILE_AUTH_MODE`, `MOBILE_API_ENABLED`, `MOBILE_PILOT_ENABLED`, `MOBILE_AUTH_CALLBACK_URL` gate the `Xcode` environment value above — these already exist for the mobile pilot and should not be changed for this rollout.
 
+**Stripe webhook events:** the Stripe Dashboard webhook endpoint for `/api/stripe/webhook` must subscribe to `refund.failed` before activation. An account-deletion refund (metadata `source=account_deletion`) that fails after it was sent is only surfaced through that event (Sentry `account_deletion.code=refund_failed_after_send`, manual follow-up); without the subscription it fails silently.
+
 ## 4. Database
 
 ### 4.1 Migrations added on this branch (apply in order, via Supabase CLI `db push` only — never MCP, never hand-numbered)
@@ -153,7 +155,7 @@ Run each of these against a TestFlight build with `APP_STORE_ENVIRONMENTS` inclu
 
 **Rollback** = set `MOBILE_PAYWALL_ENABLED` back to off (or unset) and redeploy. Bootstrap immediately reverts to `access: {status:"active", source:"open"}` for everyone and route gating stops (the 402 checks are all downstream of `resolveMobileAccess`, which short-circuits before any DB read when the flag is off). Rollback does not undo: App Store transactions/status rows already recorded (they simply stop being read for access decisions), or any account deletions already completed.
 
-**Post-deploy Sentry check** (repo habit, `CLAUDE.local.md`): after flipping and after any deploy that touches this code, check Sentry (`haircare-fw/hair-concierge`) for new errors in the preceding hour. Watch specifically for the tagged events this feature emits: `account_deletion.error_code`, `account_deletion.purge_table`, `account_deletion.code=orphan_closed_before_billing_cancel`, `account_deletion.provider`/`account_deletion.event_type` (deleted-account subscription still billing), and `app_store.stage`/`app_store.notification_type` (webhook verify/record failures). None of these reports include ids or email — cross-reference by timestamp and tag only.
+**Post-deploy Sentry check** (repo habit, `CLAUDE.local.md`): after flipping and after any deploy that touches this code, check Sentry (`haircare-fw/hair-concierge`) for new errors in the preceding hour. Watch specifically for the tagged events this feature emits: `account_deletion.error_code`, `account_deletion.purge_table`, `account_deletion.code=orphan_closed_before_billing_cancel`, `account_deletion.code=refund_failed_after_send` (a deletion refund Stripe failed after sending), `account_deletion.provider`/`account_deletion.event_type` (deleted-account subscription still billing), and `app_store.stage`/`app_store.notification_type` (webhook verify/record failures). None of these reports include ids or email — cross-reference by timestamp and tag only.
 
 ## 8. Legal checklist (confirm with legal before activation)
 
