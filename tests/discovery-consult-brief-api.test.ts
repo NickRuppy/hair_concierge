@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { NextRequest, NextResponse } from "next/server"
 
+import { createDiscoveryCallSheetHandler } from "../src/app/api/admin/beratung/[enrollmentId]/call-sheet/route"
 import { createDiscoveryConsultBriefHandler } from "../src/app/api/admin/beratung/[enrollmentId]/consult-brief/route"
 import type { DiscoveryCallSheet, DiscoveryCallSheetBrief } from "../src/lib/discovery/call-sheet"
 import {
@@ -366,8 +367,49 @@ test("a regeneration keeps the other fields and moves the stored brief to `previ
   assert.equal(brief.source_hash, SOURCE_HASH)
   assert.equal(brief.generated_at, NOW.toISOString())
   assert.deepEqual(brief.sections, generatedSections)
-  // Exactly one revision: the stored brief, WITHOUT its own `previous`.
+  // Exactly one revision: the stored brief, WITHOUT its own `previous` (older is displaced).
   assert.deepEqual(brief.previous, storedBrief)
+  // And the response surfaces it — the page can show the revision.
+  const { callSheet } = (await json(response)) as { callSheet: DiscoveryCallSheet }
+  assert.deepEqual(callSheet.consultBrief!.previous, storedBrief)
+  assert.equal("previous" in callSheet.consultBrief!.previous!, false)
+})
+
+test("R15 end to end: generate, then a manual slice-1 save keeps the revision", async () => {
+  const { deps: d, recorded } = deps({ stored: { ...EXISTING_ROW, consult_brief: storedBrief } })
+  const generated = await createDiscoveryConsultBriefHandler(d)(
+    postRequest({ expected_state: storedState }),
+    params(),
+  )
+  assert.equal(generated.status, 200)
+
+  // Nick edits and saves through the PATCH route; its body has no `previous`.
+  const edited = {
+    sections: { ...generatedSections, diagnose: "Von Nick überarbeitet." },
+    generated_at: NOW.toISOString(),
+    generated_by: "manual",
+    source_hash: SOURCE_HASH,
+  }
+  const saved = await createDiscoveryCallSheetHandler(d)(
+    new NextRequest(`https://chaarlie.de/api/admin/beratung/${ids.enrollment}/call-sheet`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", origin: "https://chaarlie.de" },
+      body: JSON.stringify({ consult_brief: edited }),
+    }),
+    params(),
+  )
+  assert.equal(saved.status, 200)
+  assert.deepEqual(storedConsultBrief(recorded), { ...edited, previous: storedBrief })
+  const { callSheet } = (await json(saved)) as { callSheet: DiscoveryCallSheet }
+  assert.deepEqual(callSheet.consultBrief!.previous, storedBrief)
+
+  // A second generation displaces that revision with the edited brief — never nested.
+  const again = await createDiscoveryConsultBriefHandler(d)(
+    postRequest({ expected_state: { source_hash: SOURCE_HASH, generated_at: NOW.toISOString() } }),
+    params(),
+  )
+  assert.equal(again.status, 200)
+  assert.deepEqual(storedConsultBrief(recorded).previous, edited)
 })
 
 test("no freeze: a draft and a finalised call both generate", async () => {

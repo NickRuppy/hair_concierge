@@ -37,11 +37,21 @@ export type DiscoveryCallSheetBriefSections = {
   erwartungen: string[]
 }
 
-export type DiscoveryCallSheetBrief = {
+/** One brief version, without a revision of its own. */
+export type DiscoveryCallSheetBriefRevision = {
   sections: DiscoveryCallSheetBriefSections
   generated_at: string | null
   generated_by: "manual" | "agent"
   source_hash: string | null
+}
+
+export type DiscoveryCallSheetBrief = DiscoveryCallSheetBriefRevision & {
+  /**
+   * The brief a generation replaced (consult-agent T3, R15): exactly ONE revision, never
+   * nested. Absent = none stored. A save that does not name it keeps the stored one (see
+   * `saveDiscoveryCallSheet`).
+   */
+  previous?: DiscoveryCallSheetBriefRevision | null
 }
 
 export type DiscoveryCallSheetHabitCommitment = { id: string; label: string; committed: boolean }
@@ -134,6 +144,9 @@ export async function saveDiscoveryCallSheet(
     habit_commitments: current.habit_commitments ?? CALL_SHEET_DEFAULTS.habit_commitments,
     feedback: current.feedback ?? CALL_SHEET_DEFAULTS.feedback,
     ...patch,
+    ...(patch.consult_brief
+      ? { consult_brief: keepStoredRevision(patch.consult_brief, current.consult_brief) }
+      : {}),
     enrollment_id: enrollmentId,
   }
   const { data, error } = await client
@@ -143,6 +156,25 @@ export async function saveDiscoveryCallSheet(
     .single()
   if (error) throw error
   return parseDiscoveryCallSheet(data)
+}
+
+/**
+ * A brief write that does not name `previous` (every manual save: the PATCH body is the
+ * edited brief) keeps the stored revision as it is — no client can drop it by omission. A
+ * write that names it (the generate route, or an explicit `null`) sets it.
+ */
+function keepStoredRevision(
+  brief: DiscoveryCallSheetBrief,
+  stored: unknown,
+): DiscoveryCallSheetBrief {
+  if (brief.previous !== undefined) return brief
+  const kept = { ...brief }
+  delete kept.previous
+  // Passed through exactly as stored (raw JSONB), not re-parsed.
+  if (isRecord(stored) && isRecord(stored.previous)) {
+    kept.previous = stored.previous as DiscoveryCallSheetBriefRevision
+  }
+  return kept
 }
 
 /**
@@ -202,6 +234,14 @@ export function parseDiscoveryCallSheet(row: unknown): DiscoveryCallSheet {
 }
 
 function parseBrief(value: unknown): DiscoveryCallSheetBrief | null {
+  const brief = parseRevision(value)
+  if (!brief || !isRecord(value)) return brief
+  // One level only: a revision's own `previous` is never read.
+  const previous = parseRevision(value.previous)
+  return previous ? { ...brief, previous } : brief
+}
+
+function parseRevision(value: unknown): DiscoveryCallSheetBriefRevision | null {
   if (!isRecord(value)) return null
   const sections = isRecord(value.sections) ? value.sections : {}
   const swapReasons = isRecord(sections.swapReasons)

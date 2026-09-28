@@ -51,7 +51,7 @@ const touchpoint = z
 
 const hebel = z.object({ title: text, note: text, points: z.number().finite().nullable() }).strict()
 
-const consultBrief = z
+const briefRevision = z
   .object({
     sections: z
       .object({
@@ -67,6 +67,12 @@ const consultBrief = z
     generated_by: z.enum(["manual", "agent"]),
     source_hash: z.string().max(200).nullable(),
   })
+  .strict()
+
+// `previous` (one revision, never nested) is optional: a manual save omits it, and
+// `saveDiscoveryCallSheet` then keeps the stored one — no client drops it by omission.
+const consultBrief = briefRevision
+  .extend({ previous: briefRevision.nullable().optional() })
   .strict()
 
 const habitCommitment = z

@@ -5,6 +5,7 @@ import {
   loadDiscoveryCallSheet,
   saveDiscoveryCallSheet,
   type DiscoveryCallSheetBrief,
+  type DiscoveryCallSheetBriefRevision,
 } from "@/lib/discovery/call-sheet"
 import {
   generateConsultBrief,
@@ -64,7 +65,14 @@ type BriefState = z.infer<typeof briefState>
 
 export type StoredConsultBrief = DiscoveryCallSheetBrief & {
   /** The brief this one replaced (one revision, R15); null on a first generation. */
-  previous: DiscoveryCallSheetBrief | null
+  previous: DiscoveryCallSheetBriefRevision | null
+}
+
+/** The stored brief as a revision: its own `previous` is dropped (never nested). */
+function asRevision(brief: DiscoveryCallSheetBrief | null): DiscoveryCallSheetBriefRevision | null {
+  if (!brief) return null
+  const { sections, generated_at, generated_by, source_hash } = brief
+  return { sections, generated_at, generated_by, source_hash }
 }
 
 const MESSAGES = {
@@ -208,8 +216,8 @@ export function createDiscoveryConsultBriefHandler(
       generated_at: now().toISOString(),
       generated_by: "agent",
       source_hash: sourceHash,
-      // The parsed brief carries no `previous` of its own: exactly one revision is kept.
-      previous: stored,
+      // Exactly one revision: the stored brief, without its own `previous`.
+      previous: asRevision(stored),
     }
 
     try {

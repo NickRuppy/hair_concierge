@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { createDiscoveryCallSheetHandler } from "../src/app/api/admin/beratung/[enrollmentId]/call-sheet/route"
 import {
   discoveryHabitCommitmentId,
+  parseDiscoveryCallSheet,
   saveDiscoveryCallSheet,
   type DiscoveryCallSheet,
 } from "../src/lib/discovery/call-sheet"
@@ -383,6 +384,70 @@ test("saveDiscoveryCallSheet surfaces a read or a write error — and writes not
   assert.equal(writes, 1)
 })
 
+// --- the one revision (consult-agent T3 fix round 1, R15) ---------------------------------
+
+const agentRevision = {
+  ...validBrief,
+  sections: { ...validBrief.sections, diagnose: "Frühere Agent-Fassung." },
+  generated_by: "agent",
+}
+
+test("parseDiscoveryCallSheet carries `previous` one level deep, never nested", () => {
+  const parsed = parseDiscoveryCallSheet({
+    consult_brief: {
+      ...validBrief,
+      previous: { ...agentRevision, previous: { ...validBrief, generated_by: "agent" } },
+    },
+  })
+  assert.deepEqual(parsed.consultBrief, { ...validBrief, previous: agentRevision })
+  assert.equal("previous" in parsed.consultBrief!.previous!, false)
+  // No revision stored (or a broken one): no `previous` key at all.
+  assert.equal(
+    "previous" in parseDiscoveryCallSheet({ consult_brief: validBrief }).consultBrief!,
+    false,
+  )
+  assert.equal(
+    "previous" in
+      parseDiscoveryCallSheet({ consult_brief: { ...validBrief, previous: "x" } }).consultBrief!,
+    false,
+  )
+})
+
+test("a manual brief save after a generation keeps the stored revision (R15)", async () => {
+  const generated = { ...validBrief, generated_by: "agent", previous: agentRevision }
+  const { deps: d, recorded } = deps({}, { ...EMPTY_ROW, consult_brief: generated })
+  // The slice-1 client sends the edited brief WITHOUT `previous`.
+  const edited = {
+    ...validBrief,
+    sections: { ...validBrief.sections, diagnose: "Von Nick überarbeitet." },
+  }
+  const response = await createDiscoveryCallSheetHandler(d)(
+    patchRequest({ consult_brief: edited }),
+    params(),
+  )
+  assert.equal(response.status, 200)
+  assert.deepEqual(recorded.stored()!.consult_brief, { ...edited, previous: agentRevision })
+  const { callSheet } = (await json(response)) as { callSheet: DiscoveryCallSheet }
+  assert.deepEqual(callSheet.consultBrief!.previous, agentRevision)
+
+  // A save of another column leaves the whole brief (and its revision) alone.
+  await createDiscoveryCallSheetHandler(d)(patchRequest({ feedback: "Neu." }), params())
+  assert.deepEqual(recorded.stored()!.consult_brief, { ...edited, previous: agentRevision })
+
+  // An explicit `previous` is honoured — null clears it.
+  await createDiscoveryCallSheetHandler(d)(
+    patchRequest({ consult_brief: { ...edited, previous: null } }),
+    params(),
+  )
+  assert.deepEqual(recorded.stored()!.consult_brief, { ...edited, previous: null })
+})
+
+test("a brief without a stored revision saves without inventing one", async () => {
+  const { deps: d, recorded } = deps({}, { ...EMPTY_ROW, consult_brief: validBrief })
+  await createDiscoveryCallSheetHandler(d)(patchRequest({ consult_brief: validBrief }), params())
+  assert.deepEqual(recorded.stored()!.consult_brief, validBrief)
+})
+
 // --- the §6 contracts -------------------------------------------------------------------
 
 const withBrief = (sections: Record<string, unknown>, extra: Record<string, unknown> = {}) => ({
@@ -435,6 +500,8 @@ const violations: Array<[string, unknown]> = [
   ["brief section missing", { consult_brief: { ...validBrief, sections: { diagnose: "x" } } }],
   ["generated_by unknown", withBrief({}, { generated_by: "robot" })],
   ["generated_at not ISO", withBrief({}, { generated_at: "heute" })],
+  ["nested previous", withBrief({}, { previous: { ...validBrief, previous: validBrief } })],
+  ["previous not a brief", withBrief({}, { previous: "alt" })],
   ["feedback not text", { feedback: 5 }],
   ["unknown column", { baseline_score: 4, enrollment_id: ids.enrollment }],
   ["empty patch", {}],
