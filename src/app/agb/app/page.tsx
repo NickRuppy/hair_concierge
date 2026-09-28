@@ -121,7 +121,10 @@ export default function AgbAppPage() {
                 (2) Chaarlie gibt kosmetische Pflegeempfehlungen. Die App ist kein Medizinprodukt,
                 stellt keine Diagnosen und ersetzt keine ärztliche oder dermatologische Beratung.
                 Bei Haarausfall, Kopfhautproblemen, Reizungen, Entzündungen oder Allergien wende
-                dich bitte an eine Ärztin oder einen Arzt.
+                dich bitte an eine Ärztin oder einen Arzt. Hast du bekannte Allergien oder Haut-
+                oder Kopfhauterkrankungen, oder bist du schwanger oder stillst, kläre die Anwendung
+                neuer Produkte bitte vorher ärztlich ab. Wir empfehlen, neue Produkte zuerst an
+                einer kleinen Hautstelle zu testen.
               </p>
               <p className="mt-2">
                 (3) Produktangaben wie Inhaltsstoffe stammen von Herstellern, Händlern oder aus
@@ -182,7 +185,9 @@ export default function AgbAppPage() {
               <p className="mt-2">
                 (3) KI-generierte Inhalte können unvollständig, veraltet oder falsch sein. Bitte
                 prüfe sie, bevor du danach handelst, besonders bei Inhaltsstoffen und
-                Unverträglichkeiten. Die Grenzen aus § 3 Abs. 2 gelten auch hier.
+                Unverträglichkeiten. Die Grenzen aus § 3 Abs. 2 gelten auch hier. Nutze KI-Antworten
+                nicht als alleinige Grundlage für Entscheidungen über deine Gesundheit. Der
+                KI-Berater ist nicht für Notfälle gedacht.
               </p>
               <p className="mt-2">
                 (4) Gib im Chat keine Daten über andere Personen und keine Gesundheitsdaten ein, die
