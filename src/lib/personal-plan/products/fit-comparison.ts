@@ -28,6 +28,7 @@ import {
   positionLabel,
   positionsOverlap,
   renderedDimensions,
+  targetPositionLabel,
   type ComparisonProductEntry,
   type Stage3FitComparisonDimension,
   type Stage3FitComparisonPosition,
@@ -496,7 +497,11 @@ function evidenceRowsFromDimensions(
     target:
       dimension.targetPosition && dimension.targetPosition.kind !== "unknown"
         ? {
-            valueLabel: positionLabel(dimension.targetPosition, dimension.stops),
+            valueLabel: targetPositionLabel(
+              dimension.targetPosition,
+              dimension.stops,
+              dimension.presentationKind,
+            ),
             rationale: targetRationale(dimension.dimensionId),
             profileEvidenceLabels: profileEvidenceLabels(dimension.dimensionId, context).slice(
               0,

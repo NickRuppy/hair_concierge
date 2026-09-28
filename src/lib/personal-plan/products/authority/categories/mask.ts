@@ -8,6 +8,7 @@ import type {
 import type { Stage3CriterionResult } from "../../contracts"
 import type { Stage3AuthorityEvaluation, Stage3AuthorityInput, Stage3MaskFacts } from "../contracts"
 import { candidateDimensionCoverage } from "../../comparison-dimensions"
+import { careDirectionAxisFitResult, maskCareDirectionFitResult } from "./axis-fit"
 import { compareRankableCandidates, type RankableCandidate } from "../../candidate-ranking"
 import {
   commonUnknownFacts,
@@ -45,22 +46,14 @@ function axisResult<T extends string>(
   label: string,
   product: T,
   target: T,
-  values?: readonly T[],
+  values: readonly T[],
 ) {
   if (product === target)
     return criterion(criterionId, label, "pass", "Stimmt mit dem Ziel überein.")
-  if (criterionId === "mask.care_direction") {
-    return criterion(
-      criterionId,
-      label,
-      "pass",
-      "Die verifizierte Pflegerichtung weicht vom Wunschprofil ab, erfüllt aber die intensive Masken-Rolle.",
-    )
-  }
-  const distance = Math.abs(values!.indexOf(product) - values!.indexOf(target))
+  const distance = Math.abs(values.indexOf(product) - values.indexOf(target))
   if (criterionId === "mask.repair_support") {
-    const productIndex = values!.indexOf(product)
-    const targetIndex = values!.indexOf(target)
+    const productIndex = values.indexOf(product)
+    const targetIndex = values.indexOf(target)
     if (productIndex > targetIndex)
       return criterion(criterionId, label, "pass", "Unterstützt stärker als erforderlich.")
     return criterion(
@@ -79,6 +72,31 @@ function axisResult<T extends string>(
     distance === 1
       ? "Liegt eine Stufe neben dem Wunschprofil und bleibt kompatibel."
       : "Liegt zwei Stufen neben dem Wunschprofil.",
+  )
+}
+
+function careDirectionCriterion(
+  product: PlanCareDirection,
+  target: Parameters<typeof maskCareDirectionFitResult>[1],
+) {
+  const id = "mask.care_direction"
+  const label = "Pflegerichtung"
+  if (product === target.careDirection)
+    return criterion(id, label, "pass", "Stimmt mit dem Ziel überein.")
+  if (maskCareDirectionFitResult(product, target) === "pass")
+    return criterion(
+      id,
+      label,
+      "pass",
+      "Protein ist bei hohem Repair-Bedarf für die Masken-Rolle ebenfalls passend.",
+    )
+  return criterion(
+    id,
+    label,
+    "caution",
+    careDirectionAxisFitResult(product, target.careDirection) === "caution"
+      ? "Liegt eine Stufe neben der Ziel-Pflegerichtung."
+      : "Die Pflegerichtung ist dem Ziel entgegengesetzt.",
   )
 }
 
@@ -147,14 +165,7 @@ function evaluateProduct(input: Stage3AuthorityInput<"mask">, product: Stage3Mas
       criterion("mask.care_direction", "Pflegerichtung", "unknown", "Die Pflegerichtung fehlt."),
     )
   else
-    criteria.push(
-      axisResult(
-        "mask.care_direction",
-        "Pflegerichtung",
-        product.spec.careDirection as PlanCareDirection,
-        target.careDirection,
-      ),
-    )
+    criteria.push(careDirectionCriterion(product.spec.careDirection as PlanCareDirection, target))
   if (product.spec.repairSupportLevel === null)
     criteria.push(
       criterion(

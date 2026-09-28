@@ -1762,8 +1762,8 @@ test("an ideal verdict outranks a higher-coverage supportive candidate", () => {
       factsFor("mask", "intensive_conditioning_mask", "fewer-matches-ideal", {
         sortOrder: 5,
         weight: "medium", // one step from target "light" -> mask treats this as "pass"
-        careDirection: "protein", // mask always treats care direction as "pass"
-        repairSupportLevel: "medium", // exact match -> the only displayed-dimension match
+        careDirection: "moisture", // exact match -> the only displayed-dimension match
+        repairSupportLevel: "high", // stronger than target "medium" -> "pass", but no match
       }),
       factsFor("mask", "intensive_conditioning_mask", "more-matches-supportive", {
         sortOrder: 1,
@@ -2237,3 +2237,23 @@ function assertNoRawFactsOrPresentationFields(value: unknown): void {
 function assertPayloadFits(value: unknown): void {
   assert.ok(Buffer.byteLength(JSON.stringify(value), "utf8") <= 64 * 1024)
 }
+
+test("mask evidence row names the full accepted care-direction set as the target", () => {
+  const input = authorityInput("mask", "intensive_conditioning_mask", {
+    productFacts: factsFor("mask", "intensive_conditioning_mask", "owned", {
+      careDirection: "protein",
+      repairSupportLevel: "high",
+    }),
+    candidates: [],
+  })
+  const target = input.categoryDecision.target
+  if (target?.category !== "mask") throw new Error("expected Mask target")
+  target.careDirection = "moisture"
+  target.repairSupportLevel = "high"
+
+  const comparison = buildStage3FitComparison(input)
+  const row = comparison.evidenceRows?.find((entry) => entry.rowId === "mask.care_direction")
+  assert.equal(row?.target?.valueLabel, "Feuchtigkeit · Protein ok")
+  assert.equal(row?.productValues[0]?.valueLabel, "Protein")
+  assert.equal(row?.productValues[0]?.relation, "in_target")
+})

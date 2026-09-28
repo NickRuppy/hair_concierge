@@ -4,6 +4,7 @@ import test from "node:test"
 import { CATEGORY_ROLE_POLICIES } from "../../../src/lib/personal-plan/products/authorities"
 import { BONDBUILDER_TIE_DEFAULT_PRODUCT_ID } from "../../../src/lib/personal-plan/products/authority/categories/bondbuilder"
 import { evaluateStage3Authority } from "../../../src/lib/personal-plan/products/authority/evaluate"
+import { comparisonDimensions } from "../../../src/lib/personal-plan/products/comparison-dimensions"
 import type {
   Stage3AuthorityCommonProductFacts,
   Stage3AuthorityInput,
@@ -926,7 +927,7 @@ test("Mask v4 treats compatible formulation preferences as ideal but keeps hard 
   const compatibleInput = structuredClone(idealInput) as Stage3AuthorityInput<"mask">
   if (compatibleInput.productFacts?.category !== "mask") throw new Error("expected Mask fixture")
   compatibleInput.productFacts.spec.weight = "medium"
-  compatibleInput.productFacts.spec.careDirection = "protein"
+  // R12: care direction is no longer an always-pass axis; see the R12 rule-ID fixtures below.
   compatibleInput.productFacts.spec.repairSupportLevel = "low"
   const compatible = evaluateStage3Authority(compatibleInput as never)
   assert.equal(compatible.status, "known")
@@ -1009,6 +1010,291 @@ test("Mask v4 fails closed when required canonical functional benefits are missi
   if (result.status !== "unknown") return
   assert.ok(result.missingFacts.includes("mask.functional_benefits"))
 })
+
+// R12 rule-ID fixtures for `mask.care_direction` (slice 3, Task 1). Literal expectations, not
+// derived from the implementation: the accepted set is {target} plus Protein only when the
+// confirmed mask target carries high repair support and does not already ask for Protein.
+// Everything outside the accepted set is a caution (never a fail) for the intensive mask role.
+type MaskDirection = "moisture" | "balanced" | "protein"
+type MaskRepair = "low" | "medium" | "high"
+const MASK_CARE_DIRECTION_FIXTURES: Array<{
+  ruleId: string
+  product: MaskDirection
+  target: MaskDirection
+  repair: MaskRepair
+  result: "pass" | "caution"
+  accepted: MaskDirection[]
+}> = [
+  // Target Feuchtigkeit
+  {
+    ruleId: "R12.m-m-low",
+    product: "moisture",
+    target: "moisture",
+    repair: "low",
+    result: "pass",
+    accepted: ["moisture"],
+  },
+  {
+    ruleId: "R12.m-m-medium",
+    product: "moisture",
+    target: "moisture",
+    repair: "medium",
+    result: "pass",
+    accepted: ["moisture"],
+  },
+  {
+    ruleId: "R12.m-m-high",
+    product: "moisture",
+    target: "moisture",
+    repair: "high",
+    result: "pass",
+    accepted: ["moisture", "protein"],
+  },
+  {
+    ruleId: "R12.b-m-low",
+    product: "balanced",
+    target: "moisture",
+    repair: "low",
+    result: "caution",
+    accepted: ["moisture"],
+  },
+  {
+    ruleId: "R12.b-m-medium",
+    product: "balanced",
+    target: "moisture",
+    repair: "medium",
+    result: "caution",
+    accepted: ["moisture"],
+  },
+  // Adversarial: high repair widens the set by Protein only — balanced is not smuggled in.
+  {
+    ruleId: "R12.b-m-high",
+    product: "balanced",
+    target: "moisture",
+    repair: "high",
+    result: "caution",
+    accepted: ["moisture", "protein"],
+  },
+  // Adversarial vs. "always accept protein": no high repair need → Protein is a caution.
+  {
+    ruleId: "R12.p-m-low",
+    product: "protein",
+    target: "moisture",
+    repair: "low",
+    result: "caution",
+    accepted: ["moisture"],
+  },
+  {
+    ruleId: "R12.p-m-medium",
+    product: "protein",
+    target: "moisture",
+    repair: "medium",
+    result: "caution",
+    accepted: ["moisture"],
+  },
+  // Adversarial vs. "always caution on mismatch": high repair need accepts Protein.
+  {
+    ruleId: "R12.p-m-high",
+    product: "protein",
+    target: "moisture",
+    repair: "high",
+    result: "pass",
+    accepted: ["moisture", "protein"],
+  },
+  // Target ausgeglichen
+  {
+    ruleId: "R12.m-b-low",
+    product: "moisture",
+    target: "balanced",
+    repair: "low",
+    result: "caution",
+    accepted: ["balanced"],
+  },
+  {
+    ruleId: "R12.m-b-medium",
+    product: "moisture",
+    target: "balanced",
+    repair: "medium",
+    result: "caution",
+    accepted: ["balanced"],
+  },
+  {
+    ruleId: "R12.m-b-high",
+    product: "moisture",
+    target: "balanced",
+    repair: "high",
+    result: "caution",
+    accepted: ["balanced", "protein"],
+  },
+  {
+    ruleId: "R12.b-b-low",
+    product: "balanced",
+    target: "balanced",
+    repair: "low",
+    result: "pass",
+    accepted: ["balanced"],
+  },
+  {
+    ruleId: "R12.b-b-medium",
+    product: "balanced",
+    target: "balanced",
+    repair: "medium",
+    result: "pass",
+    accepted: ["balanced"],
+  },
+  {
+    ruleId: "R12.b-b-high",
+    product: "balanced",
+    target: "balanced",
+    repair: "high",
+    result: "pass",
+    accepted: ["balanced", "protein"],
+  },
+  {
+    ruleId: "R12.p-b-low",
+    product: "protein",
+    target: "balanced",
+    repair: "low",
+    result: "caution",
+    accepted: ["balanced"],
+  },
+  {
+    ruleId: "R12.p-b-medium",
+    product: "protein",
+    target: "balanced",
+    repair: "medium",
+    result: "caution",
+    accepted: ["balanced"],
+  },
+  {
+    ruleId: "R12.p-b-high",
+    product: "protein",
+    target: "balanced",
+    repair: "high",
+    result: "pass",
+    accepted: ["balanced", "protein"],
+  },
+  // Target Protein — high repair never widens toward Feuchtigkeit (adversarial vs. symmetric widening).
+  {
+    ruleId: "R12.m-p-low",
+    product: "moisture",
+    target: "protein",
+    repair: "low",
+    result: "caution",
+    accepted: ["protein"],
+  },
+  {
+    ruleId: "R12.m-p-medium",
+    product: "moisture",
+    target: "protein",
+    repair: "medium",
+    result: "caution",
+    accepted: ["protein"],
+  },
+  {
+    ruleId: "R12.m-p-high",
+    product: "moisture",
+    target: "protein",
+    repair: "high",
+    result: "caution",
+    accepted: ["protein"],
+  },
+  {
+    ruleId: "R12.b-p-low",
+    product: "balanced",
+    target: "protein",
+    repair: "low",
+    result: "caution",
+    accepted: ["protein"],
+  },
+  {
+    ruleId: "R12.b-p-medium",
+    product: "balanced",
+    target: "protein",
+    repair: "medium",
+    result: "caution",
+    accepted: ["protein"],
+  },
+  {
+    ruleId: "R12.b-p-high",
+    product: "balanced",
+    target: "protein",
+    repair: "high",
+    result: "caution",
+    accepted: ["protein"],
+  },
+  {
+    ruleId: "R12.p-p-low",
+    product: "protein",
+    target: "protein",
+    repair: "low",
+    result: "pass",
+    accepted: ["protein"],
+  },
+  {
+    ruleId: "R12.p-p-medium",
+    product: "protein",
+    target: "protein",
+    repair: "medium",
+    result: "pass",
+    accepted: ["protein"],
+  },
+  {
+    ruleId: "R12.p-p-high",
+    product: "protein",
+    target: "protein",
+    repair: "high",
+    result: "pass",
+    accepted: ["protein"],
+  },
+]
+
+function maskCareDirectionInput(fixture: (typeof MASK_CARE_DIRECTION_FIXTURES)[number]) {
+  const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
+  // input() shares the TARGETS object by reference; never mutate it across fixtures.
+  maskInput.categoryDecision.target = structuredClone(maskInput.categoryDecision.target)
+  if (maskInput.categoryDecision.target?.category !== "mask") throw new Error("expected target")
+  if (maskInput.productFacts?.category !== "mask") throw new Error("expected Mask fixture")
+  maskInput.categoryDecision.target.careDirection = fixture.target
+  maskInput.categoryDecision.target.repairSupportLevel = fixture.repair
+  maskInput.productFacts.spec.careDirection = fixture.product
+  // Every other axis matches exactly so the care direction alone decides the verdict.
+  maskInput.productFacts.spec.repairSupportLevel = fixture.repair
+  return maskInput
+}
+
+for (const fixture of MASK_CARE_DIRECTION_FIXTURES) {
+  test(`${fixture.ruleId}: mask ${fixture.product} vs target ${fixture.target} (repair ${fixture.repair}) → ${fixture.result}`, () => {
+    const maskInput = maskCareDirectionInput(fixture)
+    const result = evaluateStage3Authority(maskInput as never)
+    assert.equal(result.status, "known")
+    if (result.status !== "known") return
+    assert.equal(
+      result.criteria.find((criterion) => criterion.criterionId === "mask.care_direction")?.result,
+      fixture.result,
+    )
+    assert.equal(result.verdict, fixture.result === "pass" ? "ideal" : "supportive")
+
+    const [careDirection] = comparisonDimensions(maskInput as never, [
+      {
+        product: {
+          productId: "owned-1",
+          displayName: "Maske",
+          category: "mask",
+          role: "intensive_conditioning_mask",
+          source: "current",
+        },
+        facts: maskInput.productFacts!,
+      },
+    ]).filter((dimension) => dimension.dimensionId === "mask.care_direction")
+    assert.deepEqual(
+      careDirection?.targetPosition,
+      fixture.accepted.length > 1
+        ? { kind: "supported_stops", stopIds: fixture.accepted }
+        : { kind: "position", stopId: fixture.accepted[0] },
+    )
+  })
+}
 
 test("Mask selects the best image-backed supportive candidate regardless of need tier", () => {
   const maskInput = input("mask", "known") as Stage3AuthorityInput<"mask">
