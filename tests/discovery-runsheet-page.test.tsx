@@ -379,6 +379,10 @@ test("a legacy enrollment without a call sheet renders every new section empty",
   assert.ok(markup.includes("Noch keine Touchpoints vereinbart."))
   assert.ok(!markup.includes("Mit Plan"))
   assert.ok(markup.includes("Baseline-Score abfragen (1–10) und oben eintragen"))
+  // T5: a legacy enrollment saves (upsert) — its save bars are not locked.
+  assert.ok(markup.includes('id="runsheet-brief-save"'))
+  assert.ok(markup.includes('id="runsheet-follow-up-save"'))
+  assert.ok(!markup.includes("Call-Sheet nicht geladen"))
 })
 
 test("a call sheet fills the score tile, the staircase and the follow-ups", async () => {
@@ -404,6 +408,14 @@ test("a failing call-sheet read leaves the runsheet empty instead of failing the
     })
     assert.ok(markup.includes("Noch keine Hebel erfasst."))
     assert.ok(markup.includes("Finalisieren"))
+    // T5: unread is not „none yet" — both save bars are locked, so the empty form cannot
+    // overwrite the stored row.
+    assert.equal(
+      markup.split("Call-Sheet nicht geladen — Seite neu laden, dann speichern.").length - 1,
+      2,
+    )
+    assert.match(markup, /id="runsheet-brief-save" type="button" disabled=""/)
+    assert.match(markup, /id="runsheet-follow-up-save" type="button" disabled=""/)
   } finally {
     console.error = original
   }
@@ -606,6 +618,15 @@ test("recipe: her scanned conditioner still in research counts as „hat sie“"
     loadModel: async () => model({ items: [shampooItem] }),
   })
   assert.ok(recipePrimaryRow(without, "Conditioner").includes("hat sie nicht"))
+})
+
+test("recipe habits pre-fill with ids from their wording, never their position", async () => {
+  const markup = await renderPage({ loadQuizLead: async () => dryLengthsLead })
+  const habitIds = [...markup.matchAll(/id="(runsheet-habit-[^"]+)"/g)].map((match) => match[1]!)
+  const recipeIds = habitIds.filter((id) => id.startsWith("runsheet-habit-recipe--"))
+  assert.ok(recipeIds.length > 0, habitIds.join(", "))
+  for (const id of recipeIds) assert.doesNotMatch(id, /--\d+$/, id)
+  assert.equal(new Set(habitIds).size, habitIds.length)
 })
 
 // --- T4 (c): „Nicht in der Idealroutine" never contradicts the page above -----------------

@@ -3,16 +3,21 @@
 import { useState } from "react"
 
 import type {
+  DiscoveryCallSheetPatch,
   DiscoveryCallSheetTouchpoint,
   DiscoveryCallSheetTouchpointKind,
 } from "@/lib/discovery/call-sheet"
 
 import { RunsheetCard, RunsheetChip, RunsheetEyebrow, RunsheetPhase } from "./runsheet-parts"
+import { RunsheetSaveBar, useRunsheetSave } from "./runsheet-save"
 
 /**
  * Phase 5 „Feedback & nächste Schritte" (consult-runsheet T3): her feedback on the call and
- * the agreed touchpoints. Client state only — saving is Task 5; the shapes are the
- * `discovery_call_sheets.feedback` / `.touchpoints` contracts.
+ * the agreed touchpoints — the `discovery_call_sheets.feedback` / `.touchpoints` contracts.
+ *
+ * Saving (T5): its own „Speichern" sends only these two columns. Re-sync after a refresh as
+ * the brief (`runsheet-brief.tsx`): new server props re-seed the phase only while it holds
+ * no unsaved edits.
  */
 
 const TITLE = "Feedback & nächste Schritte"
@@ -47,15 +52,57 @@ export function formatRunsheetDueOn(value: string): string {
   return `${day}.${month}.${year}`
 }
 
+const SAVE_SCOPE = "Feedback und Touchpoints"
+
+/** The save payload: an empty feedback is stored as none. */
+export function runsheetFollowUpPatch(state: {
+  feedback: string
+  touchpoints: DiscoveryCallSheetTouchpoint[]
+}): DiscoveryCallSheetPatch {
+  return {
+    feedback: state.feedback.trim() === "" ? null : state.feedback,
+    touchpoints: state.touchpoints,
+  }
+}
+
 export function DiscoveryRunsheetFollowUp({
+  enrollmentId,
   initialFeedback,
   initialTouchpoints,
+  saveLocked = false,
 }: {
+  enrollmentId: string
   initialFeedback: string | null
   initialTouchpoints: DiscoveryCallSheetTouchpoint[]
+  /** The row could not be read: an empty form must not overwrite it. */
+  saveLocked?: boolean
 }) {
   const [feedback, setFeedback] = useState(initialFeedback ?? "")
   const [touchpoints, setTouchpoints] = useState(initialTouchpoints)
+  const currentKey = JSON.stringify(runsheetFollowUpPatch({ feedback, touchpoints }))
+  const propsKey = JSON.stringify(
+    runsheetFollowUpPatch({ feedback: initialFeedback ?? "", touchpoints: initialTouchpoints }),
+  )
+  const [savedKey, setSavedKey] = useState(propsKey)
+  const [syncedProps, setSyncedProps] = useState(propsKey)
+  const dirty = currentKey !== savedKey
+  if (propsKey !== syncedProps) {
+    setSyncedProps(propsKey)
+    if (!dirty) {
+      if (propsKey !== currentKey) {
+        setFeedback(initialFeedback ?? "")
+        setTouchpoints(initialTouchpoints)
+      }
+      setSavedKey(propsKey)
+    }
+  }
+  const { status, message, save } = useRunsheetSave(enrollmentId)
+
+  function handleSave() {
+    const sentKey = currentKey
+    // Edits typed while the request ran stay „nicht gespeichert“.
+    void save(runsheetFollowUpPatch({ feedback, touchpoints }), () => setSavedKey(sentKey))
+  }
 
   return (
     <RunsheetPhase number={5} title={TITLE} id="runsheet-phase-5">
@@ -121,6 +168,15 @@ export function DiscoveryRunsheetFollowUp({
           ))}
         </div>
         <p className="text-[12px] text-muted-foreground">{RESCORE_NOTE}</p>
+        <RunsheetSaveBar
+          id="runsheet-follow-up-save"
+          scope={SAVE_SCOPE}
+          dirty={dirty}
+          status={status}
+          message={message}
+          locked={saveLocked}
+          onSave={handleSave}
+        />
       </RunsheetCard>
     </RunsheetPhase>
   )

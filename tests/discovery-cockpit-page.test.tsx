@@ -371,8 +371,9 @@ test("a finalised call renders as finalised", async () => {
   // Finalised: the state line becomes the link to the participant's document.
   assert.ok(markup.includes("PDF öffnen"))
   assert.ok(markup.includes(`href="/admin/beratung/${ids.enrollment}/pdf"`))
-  // Frozen: every radio is disabled until the finalisation is lifted.
-  assert.equal((markup.match(/disabled=""/g) ?? []).length, 4)
+  // Frozen: every radio is disabled until the finalisation is lifted (the runsheet's two
+  // „Speichern" buttons are disabled too — nothing unsaved yet — and are not radios).
+  assert.equal((markup.match(/<input[^>]*disabled=""/g) ?? []).length, 4)
 })
 
 test("the preflight banner names the answers that are still missing", async () => {

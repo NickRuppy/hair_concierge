@@ -4,7 +4,8 @@ import type { SupabaseClient } from "@supabase/supabase-js"
  * The call runsheet's own row (`discovery_call_sheets`, consult-runsheet T1): baseline score,
  * re-scores, touchpoints, consult brief, habit commitments, feedback — one per enrollment.
  *
- * Read side only (T3). The JSONB shapes are application contracts the database does not
+ * Read (T3) and the upsert behind the admin write route (T5, `PATCH
+ * /api/admin/beratung/<enrollmentId>/call-sheet`, which validates the contracts). The JSONB shapes are application contracts the database does not
  * check beyond „is an array", so the parser is defensive: whatever does not match the
  * contract is dropped, and a missing row reads as `null` (every legacy enrollment).
  */
@@ -77,6 +78,60 @@ export async function loadDiscoveryCallSheet(
     .maybeSingle()
   if (error) throw error
   return data ? parseDiscoveryCallSheet(data) : null
+}
+
+/**
+ * A partial write in the table's own column shapes: each column present is set, each absent
+ * column is left as stored. The route validates the contracts before this runs.
+ */
+export type DiscoveryCallSheetPatch = {
+  baseline_score?: number | null
+  rescores?: DiscoveryCallSheetRescore[]
+  touchpoints?: DiscoveryCallSheetTouchpoint[]
+  consult_brief?: DiscoveryCallSheetBrief
+  habit_commitments?: DiscoveryCallSheetHabitCommitment[]
+  feedback?: string | null
+}
+
+/**
+ * Upsert (consult-runsheet T5): a legacy enrollment has no row yet, so the first save
+ * inserts it (absent columns take their defaults); later saves update only the columns the
+ * patch names — the brief and the follow-up save independently without overwriting each
+ * other. Returns the stored row as the parser reads it.
+ */
+export async function saveDiscoveryCallSheet(
+  enrollmentId: string,
+  patch: DiscoveryCallSheetPatch,
+  client: SupabaseClient,
+): Promise<DiscoveryCallSheet> {
+  const { data, error } = await client
+    .from(DISCOVERY_CALL_SHEETS_TABLE)
+    .upsert({ ...patch, enrollment_id: enrollmentId }, { onConflict: "enrollment_id" })
+    .select(COLUMNS)
+    .single()
+  if (error) throw error
+  return parseDiscoveryCallSheet(data)
+}
+
+/**
+ * The stable id of a habit commitment: derived from its wording, never from its position,
+ * so a stored commitment keeps its identity when the recipe's levers are reordered or one
+ * is removed. `scope` is `recipe:<concern>` for a recipe pre-fill and `manual` for one Nick
+ * adds in the call.
+ */
+export function discoveryHabitCommitmentId(scope: string, label: string): string {
+  const slug = label
+    .trim()
+    .toLowerCase()
+    .replace(/ä/g, "ae")
+    .replace(/ö/g, "oe")
+    .replace(/ü/g, "ue")
+    .replace(/ß/g, "ss")
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+  return `${scope}:${slug || "gewohnheit"}`
 }
 
 export function parseDiscoveryCallSheet(row: unknown): DiscoveryCallSheet {

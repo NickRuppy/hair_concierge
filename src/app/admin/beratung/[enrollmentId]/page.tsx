@@ -28,6 +28,7 @@ import {
 import { requireAdmin } from "@/lib/auth/require-admin"
 import {
   EMPTY_DISCOVERY_BRIEF_SECTIONS,
+  discoveryHabitCommitmentId,
   loadDiscoveryCallSheet,
   type DiscoveryCallSheet,
 } from "@/lib/discovery/call-sheet"
@@ -44,6 +45,7 @@ import {
   UNKNOWN_CONCERN_PROFILE_FACTS,
   buildDiscoveryConcernRecipeView,
   discoveryConcernCoverageInput,
+  type DiscoveryConcernRecipeView,
 } from "@/lib/discovery/concern-recipe-view"
 import { loadDiscoveryEnrollment } from "@/lib/discovery/enrollment"
 import { isDiscoveryCallToolkitEnabled } from "@/lib/discovery/flag"
@@ -197,10 +199,13 @@ export function createDiscoveryCockpitPage(
     // The runsheet's own row is extra: a failed read leaves its sections empty, it never
     // takes the call down.
     let callSheet: DiscoveryCallSheet | null = null
+    // Unread is not „none yet": saving the empty form would overwrite the stored row.
+    let callSheetAvailable = true
     try {
       callSheet = await deps.loadCallSheet(enrollmentId, admin)
     } catch (error) {
       console.error("[discovery] call sheet lookup failed:", error)
+      callSheetAvailable = false
     }
     const concernFacts = model.concernProfileFacts ?? UNKNOWN_CONCERN_PROFILE_FACTS
     const concernCoverage = discoveryConcernCoverageInput(view)
@@ -253,13 +258,16 @@ export function createDiscoveryCockpitPage(
         )}
         {view.applicationAvailable ? null : <Notice text={APPLICATION_UNAVAILABLE} />}
         <DiscoveryRunsheetBrief
+          enrollmentId={enrollmentId}
+          saveLocked={!callSheetAvailable}
           initialBaseline={callSheet?.baselineScore ?? null}
           initialSections={sections}
+          initialBriefMeta={{
+            generatedAt: callSheet?.consultBrief?.generated_at ?? null,
+            sourceHash: callSheet?.consultBrief?.source_hash ?? null,
+          }}
           initialCommitments={callSheet?.habitCommitments ?? []}
-          recipeHabits={(mainRecipe?.levers ?? []).map((entry, index) => ({
-            id: `recipe:${mainRecipe!.code}:${index}`,
-            label: entry.lever,
-          }))}
+          recipeHabits={runsheetRecipeHabits(mainRecipe)}
           checklist={runsheetChecklistLines(prepItems)}
           askTopics={prepItems.flatMap((item) =>
             item.kind === "ask_bleach_cadence" ||
@@ -308,6 +316,8 @@ export function createDiscoveryCockpitPage(
           }
           followUpPhase={
             <DiscoveryRunsheetFollowUp
+              enrollmentId={enrollmentId}
+              saveLocked={!callSheetAvailable}
               initialFeedback={callSheet?.feedback ?? null}
               initialTouchpoints={callSheet?.touchpoints ?? []}
             />
@@ -317,6 +327,24 @@ export function createDiscoveryCockpitPage(
       </Shell>
     )
   }
+}
+
+/**
+ * The recipe's „Ohne Produkt" levers as habit-commitment pre-fill. Ids come from the wording
+ * (`recipe:<concern>:<slug>`), never the position, so a saved commitment keeps its identity
+ * when the recipe's levers move; one wording twice is one commitment.
+ */
+function runsheetRecipeHabits(
+  recipe: DiscoveryConcernRecipeView | null,
+): Array<{ id: string; label: string }> {
+  if (!recipe) return []
+  const seen = new Set<string>()
+  return recipe.levers.flatMap((entry) => {
+    const id = discoveryHabitCommitmentId(`recipe:${recipe.code}`, entry.lever)
+    if (seen.has(id)) return []
+    seen.add(id)
+    return [{ id, label: entry.lever }]
+  })
 }
 
 function Shell({
