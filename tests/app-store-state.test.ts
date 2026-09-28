@@ -339,15 +339,12 @@ test("FW1 only the scanner products are accepted; other products of the bundle a
     () => status({ productId: undefined, autoRenewProductId: "de.chaarlie.other.yearly" }),
     unknownProduct,
   )
-  // M5: a missing productId is rejected exactly like a non-allowlisted one. Apple always
-  // sends it for renewal info, so this only ever fires on a malformed or forged payload.
-  assert.throws(
-    () => status({ productId: undefined, autoRenewProductId: undefined }),
-    unknownProduct,
+  // productId is optional in Apple's payload: webhook/reconciliation still store the status
+  // (the app path requires it; see app-store-transactions-route tests).
+  assert.equal(
+    status({ productId: undefined, autoRenewProductId: undefined }).autoRenewProductId,
+    null,
   )
-  assert.throws(() => status({ productId: "" }), unknownProduct)
-  // autoRenewProductId alone stays optional (Apple omits it when there is no next product).
-  assert.equal(status({ autoRenewProductId: undefined }).autoRenewProductId, null)
 })
 
 test("FW1 access derivation ignores stored rows of any other product, including their renewal status", () => {

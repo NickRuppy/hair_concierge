@@ -2,6 +2,7 @@ import "server-only"
 import { z } from "zod"
 import {
   AppStoreStateError,
+  isScannerProductId,
   renewalStatusSnapshot,
   transactionSnapshot,
   type AppStoreSubscriptionStatusRow,
@@ -77,6 +78,9 @@ async function verifiedStatus(
 ): Promise<AppStoreSubscriptionStatusRow | null> {
   try {
     const { environment, payload } = await verifier.verifyRenewalInfo(jws)
+    // Apple's renewal-info check does not pin the bundle; from the app, a named scanner
+    // product plus the same-request originalTransactionId match are what tie it to us.
+    if (!isScannerProductId(payload.productId)) throw new AppStoreStateError("unknown_product")
     return renewalStatusSnapshot(payload, { environment })
   } catch (error) {
     if (error instanceof AppStoreVerificationError && error.code === "retryable")
