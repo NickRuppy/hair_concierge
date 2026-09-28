@@ -62,6 +62,8 @@ const PUBLIC_ROUTE_PREFIXES = [
 ]
 
 const PUBLIC_API_EXACT_ROUTES = [
+  // Checkout preflight validates its session or opaque quiz lead in the handler.
+  "/api/checkout/eligibility",
   "/api/openai-ads/context",
   "/api/billing/contract-declarations",
   "/api/analytics/meta-offer-view",

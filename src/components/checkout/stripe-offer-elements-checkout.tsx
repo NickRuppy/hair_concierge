@@ -17,6 +17,7 @@ import type {
   StripePaymentElementChangeEvent,
 } from "@stripe/stripe-js"
 
+import { isCheckoutAccessRecoveryError } from "@/lib/checkout/access-recovery"
 import { Button } from "@/components/ui/button"
 import { PaymentFeedbackCard } from "@/components/checkout/payment-feedback-card"
 import {
@@ -358,6 +359,7 @@ function StripeOfferElementsCheckoutBody({
   checkoutKey,
   commerceKind,
   preparationFailureReported,
+  isAccessRecoveryActive,
   onBeforeConfirm,
   onFirstPaymentEngagement,
   onClientMounted,
@@ -386,6 +388,7 @@ function StripeOfferElementsCheckoutBody({
   checkoutKey: string
   commerceKind?: PaymentCommerceKind
   preparationFailureReported?: boolean
+  isAccessRecoveryActive?: () => boolean
   lockedProvider?: StripeOfferProvider | null
   onBeforeConfirm?: () => Promise<StripeOfferBeforeConfirmResult>
   onFirstPaymentEngagement?: () => void
@@ -422,6 +425,7 @@ function StripeOfferElementsCheckoutBody({
       commerceKind={commerceKind}
       checkoutResult={checkoutResult}
       preparationFailureReported={preparationFailureReported}
+      isAccessRecoveryActive={isAccessRecoveryActive}
       lockedProvider={lockedProvider}
       onBeforeConfirm={onBeforeConfirm}
       onFirstPaymentEngagement={onFirstPaymentEngagement}
@@ -455,6 +459,7 @@ export function StripeOfferElementsCheckoutContent({
   commerceKind = "unknown",
   checkoutResult,
   preparationFailureReported = false,
+  isAccessRecoveryActive,
   initialApplePayAvailability = "pending",
   lockedProvider,
   onBeforeConfirm,
@@ -488,6 +493,7 @@ export function StripeOfferElementsCheckoutContent({
   commerceKind?: PaymentCommerceKind
   checkoutResult: StripeOfferCheckoutResult
   preparationFailureReported?: boolean
+  isAccessRecoveryActive?: () => boolean
   initialApplePayAvailability?: ApplePayAvailability
   lockedProvider?: StripeOfferProvider | null
   onBeforeConfirm?: () => Promise<StripeOfferBeforeConfirmResult>
@@ -593,22 +599,22 @@ export function StripeOfferElementsCheckoutContent({
 
   const reportClientMounted = useCallback(
     (option: OfferPaymentOption) => {
-      if (!visibleRef.current) return
+      if (!visibleRef.current || isAccessRecoveryActive?.()) return
       if (mountedProviderOptionsRef.current.has(option)) return
       mountedProviderOptionsRef.current.add(option)
       onClientMounted?.("stripe", option)
     },
-    [onClientMounted],
+    [isAccessRecoveryActive, onClientMounted],
   )
 
   const reportProviderReady = useCallback(
     (option: OfferPaymentOption) => {
-      if (!visibleRef.current) return
+      if (!visibleRef.current || isAccessRecoveryActive?.()) return
       if (readyProviderOptionsRef.current.has(option)) return
       readyProviderOptionsRef.current.add(option)
       onProviderReady?.("stripe", option)
     },
-    [onProviderReady],
+    [isAccessRecoveryActive, onProviderReady],
   )
 
   const reportConfirmStarted = useCallback(
@@ -622,17 +628,17 @@ export function StripeOfferElementsCheckoutContent({
 
   const reportProviderLoadStarted = useCallback(
     (option: OfferPaymentOption) => {
-      if (!visibleRef.current) return
+      if (!visibleRef.current || isAccessRecoveryActive?.()) return
       if (providerLoadStartedOptionsRef.current.has(option)) return
       providerLoadStartedOptionsRef.current.add(option)
       onProviderLoadStarted?.("stripe", option)
     },
-    [onProviderLoadStarted],
+    [isAccessRecoveryActive, onProviderLoadStarted],
   )
 
   const reportProviderLoadTimeout = useCallback(
     (option: OfferPaymentOption) => {
-      if (!visibleRef.current) return
+      if (!visibleRef.current || isAccessRecoveryActive?.()) return
       if (providerLoadTimeoutOptionsRef.current.has(option)) return
       providerLoadTimeoutOptionsRef.current.add(option)
       onProviderLoadTimeout?.("stripe", option, "provider_ready_timeout")
@@ -659,6 +665,7 @@ export function StripeOfferElementsCheckoutContent({
       isInternalTest,
       observabilitySource,
       onProviderLoadTimeout,
+      isAccessRecoveryActive,
       stripeLive,
     ],
   )
@@ -720,6 +727,8 @@ export function StripeOfferElementsCheckoutContent({
   useEffect(() => {
     if (
       checkoutResult.type !== "error" ||
+      isAccessRecoveryActive?.() ||
+      isCheckoutAccessRecoveryError(checkoutResult.error) ||
       !visible ||
       preparationFailureReported ||
       isHandledPreparedCheckoutControlError(checkoutResult.error) ||
@@ -754,6 +763,7 @@ export function StripeOfferElementsCheckoutContent({
     isInternalTest,
     observabilitySource,
     preparationFailureReported,
+    isAccessRecoveryActive,
     stripeLive,
     visible,
   ])
@@ -945,17 +955,24 @@ export function StripeOfferElementsCheckoutContent({
 
   const handleExpressCheckoutLoadError = useCallback(
     (event: { error: { code?: string | null; type: string } }) => {
-      if (!visibleRef.current) return
+      if (!visibleRef.current || isAccessRecoveryActive?.()) return
+      if (isCheckoutAccessRecoveryError(event.error)) return
       recordWalletDebugEvent("express_load_error", undefined, event.error.code ?? event.error.type)
       onProviderLoadError?.("stripe", "apple_pay", "provider_load_error")
       closeApplePayAvailability("failed")
     },
-    [closeApplePayAvailability, onProviderLoadError, recordWalletDebugEvent],
+    [
+      closeApplePayAvailability,
+      isAccessRecoveryActive,
+      onProviderLoadError,
+      recordWalletDebugEvent,
+    ],
   )
 
   const handlePaymentElementLoadError = useCallback(
     (event: { error: { code?: string | null; type: string } }) => {
-      if (!visibleRef.current) return
+      if (!visibleRef.current || isAccessRecoveryActive?.()) return
+      if (isCheckoutAccessRecoveryError(event.error)) return
       clearPaymentElementReadyTimer()
       setPaymentElementReady(false)
       recordWalletDebugEvent("payment_load_error", undefined, event.error.code ?? event.error.type)
@@ -989,6 +1006,7 @@ export function StripeOfferElementsCheckoutContent({
       observabilitySource,
       onProviderLoadError,
       preparationFailureReported,
+      isAccessRecoveryActive,
       recordWalletDebugEvent,
       stripeLive,
       visible,
@@ -1208,6 +1226,12 @@ export function StripeOfferElementsCheckoutContent({
     ],
   )
 
+  if (
+    isAccessRecoveryActive?.() ||
+    (checkoutResult.type === "error" && isCheckoutAccessRecoveryError(checkoutResult.error))
+  )
+    return null
+
   if (checkoutResult.type === "error") {
     return (
       <div className="grid gap-3">
@@ -1423,7 +1447,7 @@ export function StripeOfferElementsCheckoutContent({
                 }}
                 onLoadError={handlePaymentElementLoadError}
                 onLoaderStart={() => {
-                  if (!visibleRef.current) return
+                  if (!visibleRef.current || isAccessRecoveryActive?.()) return
                   reportClientMounted("card_and_more")
                   reportProviderLoadStarted("card_and_more")
                   recordWalletDebugEvent("payment_loader_started")
@@ -1471,6 +1495,7 @@ export function StripeOfferElementsCheckout({
   commerceKind = "unknown",
   fetchClientSecret,
   preparationFailureReported = false,
+  isAccessRecoveryActive,
   lockedProvider = null,
   onBeforeConfirm,
   onClientMounted,
@@ -1502,6 +1527,7 @@ export function StripeOfferElementsCheckout({
   commerceKind?: PaymentCommerceKind
   fetchClientSecret?: () => Promise<string>
   preparationFailureReported?: boolean
+  isAccessRecoveryActive?: () => boolean
   lockedProvider?: StripeOfferProvider | null
   onBeforeConfirm?: () => Promise<StripeOfferBeforeConfirmResult>
   onClientMounted?: OfferCheckoutProviderLifecycleCallback
@@ -1532,8 +1558,15 @@ export function StripeOfferElementsCheckout({
 }) {
   const clientSecretPromise = useMemo(() => {
     if (clientSecret) return Promise.resolve(clientSecret)
-    return fetchClientSecret?.() ?? null
-  }, [clientSecret, fetchClientSecret])
+    const promise = fetchClientSecret?.()
+    if (!promise) return null
+    return promise.catch((error: unknown) => {
+      if (isCheckoutAccessRecoveryError(error) || isAccessRecoveryActive?.()) {
+        return new Promise<string>(() => {})
+      }
+      throw error
+    })
+  }, [clientSecret, fetchClientSecret, isAccessRecoveryActive])
   const missingCheckoutFeedback = clientSecretPromise
     ? null
     : paymentFeedback("checkout_not_loaded", {
@@ -1600,6 +1633,7 @@ export function StripeOfferElementsCheckout({
         checkoutKey={checkoutKey}
         commerceKind={commerceKind}
         preparationFailureReported={preparationFailureReported}
+        isAccessRecoveryActive={isAccessRecoveryActive}
         lockedProvider={lockedProvider}
         onBeforeConfirm={onBeforeConfirm}
         onFirstPaymentEngagement={onFirstPaymentEngagement}

@@ -68,6 +68,7 @@ const SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP = [
   "/api/account-deletion/reconcile",
 ]
 const UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP = [
+  "/api/checkout/eligibility",
   "/api/openai-ads/context",
   "/api/billing/contract-declarations",
   "/api/billing/one-time-activation-status",
