@@ -1,9 +1,11 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { useRef, useState, type ReactNode } from "react"
 
 import {
   discoveryHabitCommitmentId,
+  type DiscoveryCallSheet,
   type DiscoveryCallSheetBriefSections,
   type DiscoveryCallSheetHabitCommitment,
   type DiscoveryCallSheetPatch,
@@ -34,6 +36,12 @@ import { RunsheetSaveBar, useRunsheetSave } from "./runsheet-save"
  * unsaved edits — so its own save's refresh changes nothing on screen, a newer stored brief
  * shows up on the next refresh, and a refresh from a decision write mid-typing never wipes
  * what Nick has not saved yet.
+ *
+ * Generating (consult-agent T4): „Brief erstellen" / „Neu generieren" POSTs `…/consult-brief`
+ * with the brief state the island last knew (`expected_state`). A newer stored brief (409)
+ * asks before overwriting (`force`); a hand-edited brief or unsaved Diagnose/Hebel edits ask
+ * before the request is sent (R15). The generated brief replaces Diagnose and Hebel only
+ * when they were not touched while it ran; score and Gewohnheiten edits are never replaced.
  */
 
 const SCORE_BASELINE = "Baseline"
@@ -74,6 +82,78 @@ const SAVE_SCOPE = "Score, Diagnose, Hebel und Gewohnheiten"
 const INVALID_BASELINE = "Nicht gespeichert — Score als ganze Zahl von 1 bis 10 eintragen."
 const INVALID_POINTS = "Nicht gespeichert — Hebel-Punkte als Zahl eintragen, z. B. 1,5."
 
+export const RUNSHEET_GENERATE_COPY = {
+  create: "Brief erstellen",
+  regenerate: "Neu generieren",
+  pending: "Erstellt …",
+  pendingHint: "Der Brief wird erstellt — das kann bis zu einer Minute dauern.",
+  done: "Brief erstellt.",
+  doneKeptEdits:
+    "Brief erstellt — Diagnose und Hebel wurden währenddessen bearbeitet und bleiben wie getippt (nicht gespeichert).",
+  stale: "Eingaben haben sich geändert — Brief neu generieren?",
+  replaceDirty: "Nicht gespeicherte Änderungen an Diagnose und Hebel werden ersetzt.",
+  replaceManual: "Der von Hand bearbeitete Brief wird ersetzt.",
+  keptAsRevision: "Die gespeicherte Fassung bleibt als Revision erhalten.",
+  conflict:
+    "Inzwischen gibt es einen neueren Brief — überschreiben? Die bisherige Fassung bleibt als Revision erhalten.",
+  overwrite: "Überschreiben",
+  cancel: "Abbrechen",
+  failed: "Der Brief konnte gerade nicht erstellt werden. Bitte später erneut versuchen.",
+  noSource: "Für dieses Konto gibt es noch kein nutzbares Haarprofil — kein Brief möglich.",
+  notFound: "Diese Anmeldung gibt es nicht mehr.",
+} as const
+
+/** The stored brief the island builds on: carried through a manual save, the generate base. */
+export type RunsheetBriefMeta = {
+  generatedAt: string | null
+  sourceHash: string | null
+  /** null = no brief stored yet. */
+  generatedBy: "manual" | "agent" | null
+}
+
+type RunsheetBriefBase = RunsheetBriefMeta & { sections: DiscoveryCallSheetBriefSections }
+
+/** `expected_state` for the generate route: the stored brief as last seen, or none. */
+export function runsheetExpectedBriefState(
+  meta: RunsheetBriefMeta,
+): { source_hash: string | null; generated_at: string | null } | null {
+  return meta.generatedBy === null
+    ? null
+    : { source_hash: meta.sourceHash, generated_at: meta.generatedAt }
+}
+
+/** R15: which warning (if any) must be confirmed before a generation request is sent. */
+export function runsheetReplaceWarning(meta: RunsheetBriefMeta, contentDirty: boolean) {
+  if (!contentDirty && meta.generatedBy !== "manual") return null
+  const lead = contentDirty
+    ? RUNSHEET_GENERATE_COPY.replaceDirty
+    : RUNSHEET_GENERATE_COPY.replaceManual
+  return meta.generatedBy === null ? lead : `${lead} ${RUNSHEET_GENERATE_COPY.keptAsRevision}`
+}
+
+type GenerateResponseBody = {
+  code?: string
+  message?: string
+  callSheet?: DiscoveryCallSheet
+  sourceHash?: string
+} | null
+
+/** The German line for a refused generation (the route's own message when it sends one). */
+export function runsheetGenerateError(body: GenerateResponseBody): string {
+  if (typeof body?.message === "string" && body.message.trim() !== "") return body.message
+  if (body?.code === "no_usable_source") return RUNSHEET_GENERATE_COPY.noSource
+  if (body?.code === "not_found") return RUNSHEET_GENERATE_COPY.notFound
+  return RUNSHEET_GENERATE_COPY.failed
+}
+
+export type GenerateUi =
+  | { phase: "idle" }
+  | { phase: "confirm_replace"; text: string }
+  | { phase: "pending" }
+  | { phase: "confirm_conflict" }
+  | { phase: "done"; text: string }
+  | { phase: "error"; text: string }
+
 /** `uid` is the row's React key and DOM-id part — stable while rows are added or removed. */
 type HebelRow = { uid: string; title: string; note: string; points: string }
 
@@ -92,12 +172,13 @@ type BriefSeed = {
   recipeHabits: ReadonlyArray<{ id: string; label: string }>
 }
 
-function seedRunsheetBrief(props: BriefSeed, generation: number): RunsheetBriefState {
+/** `tag` prefixes the Hebel row uids of this seed (`s<generation>`, `g<n>` for a generation). */
+function seedRunsheetBrief(props: BriefSeed, tag: string): RunsheetBriefState {
   return {
     baselineText: props.initialBaseline === null ? "" : String(props.initialBaseline),
     diagnose: props.initialSections.diagnose,
     hebel: props.initialSections.hebel.map((entry, index) => ({
-      uid: `s${generation}-${index}`,
+      uid: `${tag}-${index}`,
       title: entry.title,
       note: entry.note,
       points: entry.points === null ? "" : formatRunsheetScore(entry.points),
@@ -113,10 +194,29 @@ function seedRunsheetBrief(props: BriefSeed, generation: number): RunsheetBriefS
 function runsheetBriefKey(state: RunsheetBriefState): string {
   return JSON.stringify([
     state.baselineText.trim(),
-    state.diagnose,
-    state.hebel.map((row) => [row.title, row.note, row.points.trim()]),
+    runsheetBriefContentKey(state),
     state.commitments,
   ])
+}
+
+/** The part a generation replaces: Diagnose and Hebel. */
+function runsheetBriefContentKey(state: RunsheetBriefState): string {
+  return JSON.stringify([
+    state.diagnose,
+    state.hebel.map((row) => [row.title, row.note, row.points.trim()]),
+  ])
+}
+
+/**
+ * A finished generation laid over the island: Diagnose and Hebel become the generated ones.
+ * Score and Gewohnheiten are not the brief's content and are never replaced. (The island
+ * skips this when Diagnose or Hebel were edited while the request ran.)
+ */
+export function applyGeneratedRunsheetBrief(
+  current: RunsheetBriefState,
+  generated: RunsheetBriefState,
+): RunsheetBriefState {
+  return { ...current, diagnose: generated.diagnose, hebel: generated.hebel }
 }
 
 /**
@@ -207,7 +307,8 @@ export function DiscoveryRunsheetBrief({
   enrollmentId,
   initialBaseline,
   initialSections,
-  initialBriefMeta = { generatedAt: null, sourceHash: null },
+  initialBriefMeta = { generatedAt: null, sourceHash: null, generatedBy: null },
+  currentSourceHash = null,
   initialCommitments,
   recipeHabits,
   saveLocked = false,
@@ -221,7 +322,12 @@ export function DiscoveryRunsheetBrief({
   initialBaseline: number | null
   initialSections: DiscoveryCallSheetBriefSections
   /** The stored brief's generation meta — carried through a manual save unchanged. */
-  initialBriefMeta?: { generatedAt: string | null; sourceHash: string | null }
+  initialBriefMeta?: RunsheetBriefMeta
+  /**
+   * The brief input's fingerprint as the page reads it now (`consultBriefSource`); null when
+   * the page read degraded (quiz lead or call sheet unread) — then no stale hint.
+   */
+  currentSourceHash?: string | null
   initialCommitments: DiscoveryCallSheetHabitCommitment[]
   /** The main problem recipe's „Ohne Produkt" levers — the pre-fill for an empty list. */
   recipeHabits: ReadonlyArray<{ id: string; label: string }>
@@ -242,32 +348,57 @@ export function DiscoveryRunsheetBrief({
   }
   // Added Hebel rows count on from here (seeded rows carry their seed generation instead).
   const nextUid = useRef(0)
-  const [state, setState] = useState<RunsheetBriefState>(() => seedRunsheetBrief(seedProps, 0))
+  const [state, setState] = useState<RunsheetBriefState>(() => seedRunsheetBrief(seedProps, "s0"))
   const [generation, setGeneration] = useState(0)
-  const [savedKey, setSavedKey] = useState(() => runsheetBriefKey(state))
+  // What the server holds for the edited fields (seed, last save, or last generation).
+  const [saved, setSaved] = useState<RunsheetBriefState>(state)
+  const propsBase: RunsheetBriefBase = { ...initialBriefMeta, sections: initialSections }
+  // The stored brief the island builds on; a generation moves it ahead of the refresh.
+  const [base, setBase] = useState<RunsheetBriefBase>(propsBase)
   const propsKey = JSON.stringify([
     initialBaseline,
-    initialSections.diagnose,
-    initialSections.hebel,
+    initialSections,
+    initialBriefMeta,
     initialCommitments,
     recipeHabits,
   ])
   const [syncedProps, setSyncedProps] = useState(propsKey)
   const currentKey = runsheetBriefKey(state)
-  const dirty = currentKey !== savedKey
+  const dirty = currentKey !== runsheetBriefKey(saved)
+  const contentDirty = runsheetBriefContentKey(state) !== runsheetBriefContentKey(saved)
   if (propsKey !== syncedProps) {
     setSyncedProps(propsKey)
+    setBase(propsBase)
     if (!dirty) {
-      const next = seedRunsheetBrief(seedProps, generation + 1)
-      const nextKey = runsheetBriefKey(next)
-      if (nextKey !== currentKey) {
+      const next = seedRunsheetBrief(seedProps, `s${generation + 1}`)
+      if (runsheetBriefKey(next) !== currentKey) {
         setGeneration(generation + 1)
         setState(next)
       }
-      setSavedKey(nextKey)
+      setSaved(next)
     }
   }
+  // The page's current input hash; a generation's own hash stands in until the refresh.
+  const [liveHash, setLiveHash] = useState({
+    prop: currentSourceHash,
+    value: currentSourceHash,
+  })
+  if (liveHash.prop !== currentSourceHash) {
+    setLiveHash({ prop: currentSourceHash, value: currentSourceHash })
+  }
+  // Counts Diagnose/Hebel edits (in handlers), so a finished generation knows whether they
+  // were touched while it ran.
+  const contentEdits = useRef(0)
+  const router = useRouter()
   const { status, message, save, fail } = useRunsheetSave(enrollmentId)
+  const [generateUi, setGenerateUi] = useState<GenerateUi>({ phase: "idle" })
+  const generating = generateUi.phase === "pending"
+  const stale =
+    !generating &&
+    base.generatedBy !== null &&
+    base.sourceHash !== null &&
+    liveHash.value !== null &&
+    base.sourceHash !== liveHash.value
 
   const { baselineText, diagnose, hebel, commitments } = state
   const prefilled = initialCommitments.length === 0 && recipeHabits.length > 0
@@ -278,9 +409,11 @@ export function DiscoveryRunsheetBrief({
     setState((current) => ({ ...current, baselineText: value }))
   }
   function setDiagnose(value: string) {
+    contentEdits.current += 1
     setState((current) => ({ ...current, diagnose: value }))
   }
   function setHebel(update: (rows: HebelRow[]) => HebelRow[]) {
+    contentEdits.current += 1
     setState((current) => ({ ...current, hebel: update(current.hebel) }))
   }
   function setCommitments(
@@ -291,17 +424,104 @@ export function DiscoveryRunsheetBrief({
 
   function handleSave() {
     const built = runsheetBriefPatch(state, {
-      sections: initialSections,
-      generatedAt: initialBriefMeta.generatedAt,
-      sourceHash: initialBriefMeta.sourceHash,
+      sections: base.sections,
+      generatedAt: base.generatedAt,
+      sourceHash: base.sourceHash,
     })
     if ("invalid" in built) {
       fail(built.invalid)
       return
     }
-    const sentKey = currentKey
+    const sent = state
+    const brief = built.patch.consult_brief!
     // Edits typed while the request ran stay „nicht gespeichert“.
-    void save(built.patch, () => setSavedKey(sentKey))
+    void save(built.patch, () => {
+      setSaved(sent)
+      setBase({
+        sections: brief.sections,
+        generatedAt: brief.generated_at,
+        sourceHash: brief.source_hash,
+        generatedBy: brief.generated_by,
+      })
+    })
+  }
+
+  function handleGenerate() {
+    if (saveLocked || generating) return
+    const warning = runsheetReplaceWarning(base, contentDirty)
+    if (warning) {
+      setGenerateUi({ phase: "confirm_replace", text: warning })
+      return
+    }
+    void generate(false)
+  }
+
+  function handleGenerateConfirm() {
+    if (generateUi.phase === "confirm_replace") void generate(false)
+    if (generateUi.phase === "confirm_conflict") void generate(true)
+  }
+
+  function handleGenerateCancel() {
+    const conflict = generateUi.phase === "confirm_conflict"
+    setGenerateUi({ phase: "idle" })
+    // The newer brief shows up (the re-sync keeps unsaved edits).
+    if (conflict) router.refresh()
+  }
+
+  async function generate(force: boolean): Promise<void> {
+    const editsAtRequest = contentEdits.current
+    setGenerateUi({ phase: "pending" })
+    let response: Response
+    let body: GenerateResponseBody
+    try {
+      response = await fetch(`/api/admin/beratung/${enrollmentId}/consult-brief`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          expected_state: runsheetExpectedBriefState(base),
+          ...(force ? { force: true } : {}),
+        }),
+      })
+      body = (await response.json().catch(() => null)) as GenerateResponseBody
+    } catch {
+      setGenerateUi({ phase: "error", text: RUNSHEET_GENERATE_COPY.failed })
+      return
+    }
+    if (response.status === 409 && body?.code === "brief_conflict" && !force) {
+      setGenerateUi({ phase: "confirm_conflict" })
+      return
+    }
+    const callSheet = body?.callSheet
+    const brief = callSheet?.consultBrief
+    if (!response.ok || !callSheet || !brief) {
+      setGenerateUi({ phase: "error", text: runsheetGenerateError(body) })
+      return
+    }
+    const server = seedRunsheetBrief(
+      {
+        initialBaseline: callSheet.baselineScore,
+        initialSections: brief.sections,
+        initialCommitments: callSheet.habitCommitments,
+        recipeHabits,
+      },
+      `g${nextUid.current++}`,
+    )
+    const replaced = contentEdits.current === editsAtRequest
+    if (replaced) setState((current) => applyGeneratedRunsheetBrief(current, server))
+    setSaved(server)
+    setBase({
+      sections: brief.sections,
+      generatedAt: brief.generated_at,
+      sourceHash: brief.source_hash,
+      generatedBy: brief.generated_by,
+    })
+    const hash = typeof body?.sourceHash === "string" ? body.sourceHash : null
+    setLiveHash((current) => ({ ...current, value: current.prop === null ? null : hash }))
+    setGenerateUi({
+      phase: "done",
+      text: replaced ? RUNSHEET_GENERATE_COPY.done : RUNSHEET_GENERATE_COPY.doneKeptEdits,
+    })
+    router.refresh()
   }
 
   const baseline = parseRunsheetBaseline(baselineText)
@@ -405,6 +625,19 @@ export function DiscoveryRunsheetBrief({
       </RunsheetPhase>
 
       <RunsheetPhase number={2} title={PROBLEM_TITLE} id="runsheet-phase-2">
+        <RunsheetGenerateBar
+          label={
+            base.generatedAt === null
+              ? RUNSHEET_GENERATE_COPY.create
+              : RUNSHEET_GENERATE_COPY.regenerate
+          }
+          ui={generateUi}
+          disabled={saveLocked || status === "saving"}
+          stale={stale}
+          onGenerate={handleGenerate}
+          onConfirm={handleGenerateConfirm}
+          onCancel={handleGenerateCancel}
+        />
         <RunsheetCard title={<label htmlFor="runsheet-diagnose">{DIAGNOSE_TITLE}</label>}>
           {diagnose.trim() === "" ? (
             <p className="text-[13px] font-bold text-[var(--status-pending-text)]">
@@ -591,6 +824,97 @@ export function DiscoveryRunsheetBrief({
         />
       </RunsheetPhase>
     </>
+  )
+}
+
+/**
+ * „Brief erstellen" / „Neu generieren" with its line: pending, result, stale hint, or an inline
+ * confirmation (R15 replace warning, 409 overwrite). A secondary action — plum outline, the
+ * coral CTA stays with „Finalisieren".
+ */
+export function RunsheetGenerateBar({
+  label,
+  ui,
+  disabled,
+  stale,
+  onGenerate,
+  onConfirm,
+  onCancel,
+}: {
+  label: string
+  ui: GenerateUi
+  /** Call sheet unread, or a manual save in flight. */
+  disabled: boolean
+  stale: boolean
+  onGenerate: () => void
+  onConfirm: () => void
+  onCancel: () => void
+}) {
+  const pending = ui.phase === "pending"
+  const confirmText =
+    ui.phase === "confirm_replace"
+      ? ui.text
+      : ui.phase === "confirm_conflict"
+        ? RUNSHEET_GENERATE_COPY.conflict
+        : null
+  const line = pending
+    ? { text: RUNSHEET_GENERATE_COPY.pendingHint, tone: "text-muted-foreground" }
+    : ui.phase === "error"
+      ? { text: ui.text, tone: "text-[var(--status-danger-text)]" }
+      : stale
+        ? { text: RUNSHEET_GENERATE_COPY.stale, tone: "text-[var(--status-pending-text)]" }
+        : ui.phase === "done"
+          ? { text: ui.text, tone: "text-muted-foreground" }
+          : null
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          id="runsheet-brief-generate"
+          type="button"
+          disabled={disabled || pending || confirmText !== null}
+          onClick={onGenerate}
+          className="rounded-lg border border-[var(--brand-plum)] px-3 py-1.5 text-xs font-bold text-[var(--brand-plum)] disabled:opacity-40"
+        >
+          {pending ? RUNSHEET_GENERATE_COPY.pending : label}
+        </button>
+        {line && confirmText === null ? (
+          <span role="status" className={`text-[12px] font-bold ${line.tone}`}>
+            {line.text}
+          </span>
+        ) : null}
+      </div>
+      {confirmText ? (
+        <div
+          role="alertdialog"
+          aria-labelledby="runsheet-brief-generate-confirm-text"
+          className="flex flex-wrap items-center gap-3 rounded-lg border border-[var(--status-pending-text)] bg-[var(--status-pending-bg)] px-3 py-2"
+        >
+          <p
+            id="runsheet-brief-generate-confirm-text"
+            className="min-w-0 flex-1 text-[13px] text-foreground"
+          >
+            {confirmText}
+          </p>
+          <button
+            id="runsheet-brief-generate-confirm"
+            type="button"
+            onClick={onConfirm}
+            className="rounded-lg bg-[var(--brand-plum)] px-3 py-1.5 text-xs font-bold text-white"
+          >
+            {ui.phase === "confirm_conflict" ? RUNSHEET_GENERATE_COPY.overwrite : label}
+          </button>
+          <button
+            id="runsheet-brief-generate-cancel"
+            type="button"
+            onClick={onCancel}
+            className="text-xs text-muted-foreground underline"
+          >
+            {RUNSHEET_GENERATE_COPY.cancel}
+          </button>
+        </div>
+      ) : null}
+    </div>
   )
 }
 

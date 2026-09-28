@@ -47,6 +47,7 @@ import {
   discoveryConcernCoverageInput,
   type DiscoveryConcernRecipeView,
 } from "@/lib/discovery/concern-recipe-view"
+import { consultBriefSource } from "@/lib/discovery/consult-brief/source"
 import { loadDiscoveryEnrollment } from "@/lib/discovery/enrollment"
 import { isDiscoveryCallToolkitEnabled } from "@/lib/discovery/flag"
 import { buildDiscoveryQuizAnswers, type DiscoveryQuizLead } from "@/lib/discovery/quiz-answers"
@@ -241,6 +242,13 @@ export function createDiscoveryCockpitPage(
       if (entry.research) researchLabels[entry.step.decisionKey] ??= entry.research.label
     }
     const sections = callSheet?.consultBrief?.sections ?? EMPTY_DISCOVERY_BRIEF_SECTIONS
+    // The brief's stale check compares against the generate route's own fingerprint (the
+    // shared helper, same parts). A degraded read (lead or call sheet unread) hashes
+    // differently from the full one, so it shows no stale hint rather than a false one.
+    const currentSourceHash =
+      leadAvailable && callSheetAvailable
+        ? consultBriefSource({ model, view, quiz, callSheet }).sourceHash
+        : null
     const washFrequencyLabel =
       view.intakeProducts.find(
         (product) => product.category === "shampoo" && product.frequencyLabel,
@@ -265,7 +273,9 @@ export function createDiscoveryCockpitPage(
           initialBriefMeta={{
             generatedAt: callSheet?.consultBrief?.generated_at ?? null,
             sourceHash: callSheet?.consultBrief?.source_hash ?? null,
+            generatedBy: callSheet?.consultBrief?.generated_by ?? null,
           }}
+          currentSourceHash={currentSourceHash}
           initialCommitments={callSheet?.habitCommitments ?? []}
           recipeHabits={runsheetRecipeHabits(mainRecipe)}
           checklist={runsheetChecklistLines(prepItems)}
