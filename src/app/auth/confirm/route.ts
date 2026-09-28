@@ -7,6 +7,7 @@ import type { EmailOtpType } from "@supabase/supabase-js"
 import { isModeratorReturnPath } from "@/lib/auth/moderator-return"
 import { isDiscoveryReturnPath } from "@/lib/auth/discovery-return"
 import { isPartnerAccessReturnPath } from "@/lib/auth/partner-access-return"
+import { isCheckoutRecoveryReturnPath } from "@/lib/checkout/access-recovery"
 import {
   buildFreeRegistrationBindSkippedLandingPath,
   buildFreeRegistrationRecoveryPath,
@@ -327,6 +328,8 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
     if (
       user &&
       !suppressLinking &&
+      // Returning to existing access must not adopt a recent legacy quiz by email.
+      !isCheckoutRecoveryReturnPath(next, origin) &&
       !isModeratorReturnPath(next) &&
       !isPartnerAccessReturnPath(next) &&
       // The discovery claim has not run yet at this point and the participant's

@@ -67,6 +67,7 @@ const SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP = [
   "/api/customerio/profile-sync/reconcile",
 ]
 const UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP = [
+  "/api/checkout/eligibility",
   "/api/openai-ads/context",
   "/api/billing/contract-declarations",
   "/api/billing/one-time-activation-status",
