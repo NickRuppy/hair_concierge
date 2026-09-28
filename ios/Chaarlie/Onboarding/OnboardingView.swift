@@ -168,7 +168,7 @@ struct OnboardingView: View {
                 Button("Haar-Check starten") { model.startQuiz() }
                     .buttonStyle(OnboardingNativeButton()).disabled(model.busy)
                     .accessibilityIdentifier("onboarding.start")
-                Text("10 Fragen · Kostenlos").font(.footnote).foregroundStyle(ChaarlieTheme.muted)
+                Text("10 Fragen · ca. 2 Minuten").font(.footnote).foregroundStyle(ChaarlieTheme.muted)
             }.frame(maxWidth: .infinity)
         }
     }
@@ -386,10 +386,10 @@ struct OnboardingView: View {
             }.buttonStyle(.plain).accessibilityValue(model.marketingOptIn ? "Ausgewählt" : "Nicht ausgewählt")
                 .accessibilityIdentifier("onboarding.marketing")
             Text("Wir senden dir einen Anmeldelink und einen Code.").foregroundStyle(ChaarlieTheme.muted)
-            Text("Mit „Kostenloses Konto erstellen“ beantragst du dein kostenloses Konto und akzeptierst unsere [AGB](https://chaarlie.de/agb). Informationen zur Verarbeitung deiner Daten findest du in unserer [Datenschutzerklärung](https://chaarlie.de/datenschutz).")
+            Text("Mit „Konto erstellen“ erstellst du dein Konto und akzeptierst unsere [AGB](https://chaarlie.de/agb). Informationen zur Verarbeitung deiner Daten findest du in unserer [Datenschutzerklärung](https://chaarlie.de/datenschutz).")
                 .font(.footnote).fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("onboarding.legal-notice")
-            Button("Kostenloses Konto erstellen") {
+            Button("Konto erstellen") {
                 focusedField = nil
                 Task { await model.submit() }
             }.buttonStyle(OnboardingNativeButton(color: ChaarlieTheme.coral)).disabled(!model.canSubmit)

@@ -18,7 +18,7 @@ final class AppModel {
     }
     enum Tab: Hashable { case scan, search, history, profile }
     /// "Konto löschen" (§6). The Apple notice comes first only for a renewing App Store
-    /// subscription; the confirmation waits for the preflight so the A1 line is right.
+    /// subscription; the confirmation waits for the preflight so the D14 line is right.
     enum AccountDeletionStep: Equatable {
         case subscriptionNotice, loading, preflightFailed
         case confirm(webSubscription: Bool)
@@ -1002,7 +1002,7 @@ final class AppModel {
         } catch {
             guard account == generation, operation == accountDeletionOperation else { return }
             if error as? MobileError == .unauthorized { await expired(); return }
-            // Never confirm without knowing whether a web subscription ends (A1).
+            // Never confirm without knowing whether a web subscription ends (D14).
             accountDeletion = .preflightFailed
             accountDeletionError = "Das hat nicht geklappt. Bitte versuche es erneut."
         }

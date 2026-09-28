@@ -57,7 +57,7 @@ struct AccountDeletionSheet: View {
             Text("Zahlungsbelege bewahren wir aus gesetzlichen Gründen anonymisiert auf.")
                 .chaarlieSystemFont(15).foregroundStyle(ChaarlieTheme.muted)
             if webSubscription {
-                Text("Dein Chaarlie-Abo wird sofort beendet.").chaarlieSystemFont(16, weight: .semibold)
+                Text("Dein Chaarlie-Abo endet sofort. Nicht genutzte Zeit erstatten wir anteilig.").chaarlieSystemFont(16, weight: .semibold)
                     .accessibilityIdentifier("delete.webSubscription")
             }
             if let error = model.accountDeletionError {
