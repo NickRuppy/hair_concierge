@@ -139,6 +139,12 @@ export const LEGAL_PAGE_METADATA = {
     description:
       "Allgemeine Geschäftsbedingungen für die Nutzung von Chaarlie und seinen Diensten.",
   }),
+  agbApp: createStaticPageMetadata({
+    pathname: "/agb/app",
+    title: "Nutzungsbedingungen der iOS-App",
+    description:
+      "Nutzungsbedingungen und AGB für die Chaarlie iOS-App und Mitgliedschaften über den App Store.",
+  }),
   widerruf: createStaticPageMetadata({
     pathname: "/widerruf",
     title: "Widerrufsbelehrung",

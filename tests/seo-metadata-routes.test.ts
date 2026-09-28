@@ -72,6 +72,7 @@ test("classifies every current public page and route handler", () => {
   const publicRoutes = [
     "/",
     "/agb",
+    "/agb/app",
     "/auth",
     "/auth/confirm",
     "/auth/update-password",
@@ -366,6 +367,7 @@ test("static public routes have unique metadata and self-canonicals", () => {
     ["/impressum", LEGAL_PAGE_METADATA.impressum],
     ["/datenschutz", LEGAL_PAGE_METADATA.datenschutz],
     ["/agb", LEGAL_PAGE_METADATA.agb],
+    ["/agb/app", LEGAL_PAGE_METADATA.agbApp],
     ["/widerruf", LEGAL_PAGE_METADATA.widerruf],
     ["/methodik", METHODIK_METADATA],
   ] as const

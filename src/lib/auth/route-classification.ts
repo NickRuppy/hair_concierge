@@ -12,6 +12,7 @@ export type RouteEnvironment = {
 const PUBLIC_EXACT_ROUTES = [
   "/",
   "/agb",
+  "/agb/app",
   // discovery-call toolkit: the personal invite link and the magic-link
   // continuation are both opened before an account or a session exists. Exact,
   // so every other /beratung page stays protected below. Both 410/404 while the

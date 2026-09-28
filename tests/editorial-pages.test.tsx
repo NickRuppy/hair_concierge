@@ -10,6 +10,7 @@ import { SiteFooter } from "../src/components/landing/site-footer"
 let MethodikContent: (typeof import("../src/app/methodik/page"))["MethodikContent"]
 let NotFound: (typeof import("../src/app/not-found"))["default"]
 let AgbPage: (typeof import("../src/app/agb/page"))["default"]
+let AgbAppPage: (typeof import("../src/app/agb/app/page"))["default"]
 let WiderrufPage: (typeof import("../src/app/widerruf/page"))["default"]
 let DatenschutzPage: (typeof import("../src/app/datenschutz/page"))["default"]
 
@@ -18,12 +19,14 @@ test.before(async () => {
   const notFoundModule = await import("../src/app/not-found")
   MethodikContent = methodikModule.MethodikContent
   NotFound = notFoundModule.default
-  const [agb, widerruf, datenschutz] = await Promise.all([
+  const [agb, agbApp, widerruf, datenschutz] = await Promise.all([
     import("../src/app/agb/page"),
+    import("../src/app/agb/app/page"),
     import("../src/app/widerruf/page"),
     import("../src/app/datenschutz/page"),
   ])
   AgbPage = agb.default
+  AgbAppPage = agbApp.default
   WiderrufPage = widerruf.default
   DatenschutzPage = datenschutz.default
 })
@@ -214,4 +217,35 @@ test("rendered membership terms disclose approved trial prices and preserve lega
   )
   assert.match(terms, /Widerrufsrecht von 14 Tagen ab Vertragsschluss/)
   assert.match(terms, /Die Nutzung des Tests bedeutet keinen Verzicht auf das Widerrufsrecht/)
+})
+
+test("iOS app terms carry Apple's minimum terms and consumer-safe clauses", () => {
+  const terms = renderedText(renderToStaticMarkup(<AgbAppPage />))
+
+  // Apple minimum EULA terms.
+  assert.match(terms, /ausschließlich zwischen dir und uns geschlossen, nicht mit Apple Inc\./)
+  assert.match(terms, /Apple ist nicht verpflichtet, Wartungs- oder Supportleistungen/)
+  assert.match(terms, /Apple erstattet dir dann einen für die App gezahlten Kaufpreis/)
+  assert.match(terms, /Produkthaftungsansprüche/)
+  assert.match(terms, /Rechte an geistigem Eigentum verletzt, sind allein wir, nicht Apple/)
+  assert.match(terms, /Embargo der US-Regierung/)
+  assert.match(terms, /Apple und ihre Tochtergesellschaften sind Drittbegünstigte/)
+
+  // In-App-Kauf, Kündigung und Widerruf.
+  assert.match(terms, /ausschließlich über den In-App-Kauf von Apple/)
+  assert.match(terms, /spätestens 24 Stunden vor Ende des laufenden Zeitraums kündigst/)
+  assert.match(terms, /nicht automatisch beendet/)
+  assert.match(terms, /Kündigung auch in Textform an uns richten/)
+  assert.match(terms, /Widerrufsrecht von 14 Tagen/)
+  assert.match(terms, /verzichtet damit nicht auf das Widerrufsrecht/)
+
+  // Consumer-law guards: tiered liability, no deemed consent, statutory venue.
+  assert.match(terms, /Verletzung des Lebens, des Körpers oder der Gesundheit/)
+  assert.match(terms, /vertragstypischen, vorhersehbaren Schaden/)
+  assert.match(terms, /Dein Schweigen gilt nicht als Zustimmung/)
+  assert.match(terms, /gesetzlichen Gerichtsstände/)
+  assert.match(terms, /ab 16 Jahren/)
+  assert.match(terms, /Im Chat antwortet dir ein KI-System, kein Mensch/)
+  assert.doesNotMatch(terms, /Stripe|PayPal/)
+  assert.doesNotMatch(terms, /gelten die neuen .* als angenommen/)
 })
