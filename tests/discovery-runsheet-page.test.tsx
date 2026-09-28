@@ -5,7 +5,10 @@ import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { createDiscoveryCockpitPage } from "../src/app/admin/beratung/[enrollmentId]/page"
-import { DISCOVERY_REFERRAL_MESSAGE } from "../src/components/discovery/cockpit/discovery-call-cockpit"
+import {
+  DISCOVERY_REFERRAL_MESSAGE,
+  DiscoveryCallCockpit,
+} from "../src/components/discovery/cockpit/discovery-call-cockpit"
 import {
   parseRunsheetBaseline,
   parseRunsheetPoints,
@@ -425,6 +428,124 @@ test("closing: the approved referral text, the copy button, and the unchanged fi
   assert.ok(phase6.includes("Finalisieren"))
   assert.ok(phase6.includes("PDF: gesperrt"))
   assert.ok(phase6.includes("noch nicht finalisiert"))
+})
+
+// --- join-rule guard cases ------------------------------------------------------------------
+
+/** The view's scanned-conditioner research entry, re-labelled/re-homed for a guard case. */
+function researchEntry(
+  overrides: Partial<ReturnType<typeof buildDiscoveryCockpitView>["unassigned"][number]>,
+) {
+  const view = buildDiscoveryCockpitView(model())
+  const base = view.unassigned.find((entry) => entry.itemId === ids.scannedItem)
+  assert.ok(base, "fixture: scanned conditioner is unassigned research")
+  return { ...base, ...overrides }
+}
+
+test("join rule (a): an empty step WITH an Idealplan recommendation (`neu`) shows her product in research", () => {
+  const view = buildDiscoveryCockpitView(model())
+  const recommendation = {
+    productId: "30000000-0000-4000-8000-00000000000c",
+    name: "Balea Feuchtigkeitsspülung",
+    brand: "Balea",
+    label: "Balea Feuchtigkeitsspülung",
+    verdictLabel: "Passt",
+    origin: "ideal_recommendation" as const,
+    propertyRows: null,
+  }
+  const steps = view.steps.map((step) =>
+    step.category === "conditioner"
+      ? {
+          ...step,
+          outcome: "ideal" as const,
+          idealRecommendation: recommendation,
+          recommendationLabel: recommendation.label,
+          swapOptions: [recommendation],
+        }
+      : step,
+  )
+  const display = composeRunsheetProducts({ steps, unassigned: view.unassigned })
+  const conditioner = display.tauschenOderNeu.filter(
+    (entry) => entry.step.category === "conditioner",
+  )
+  assert.equal(conditioner.length, 1)
+  assert.equal(conditioner[0]!.kind, "neu")
+  assert.deepEqual(conditioner[0]!.research, {
+    label: `Gescanntes Produkt · ${GTIN}`,
+    gtin: null, // already in the label — never twice
+  })
+  // Rendered: the slot names her product, never „Kein Produkt"/„benutzt nichts"; the
+  // „Neu:" choice stays live.
+  const router = { refresh() {}, push() {}, replace() {}, prefetch() {}, back() {}, forward() {} }
+  const markup = renderToStaticMarkup(
+    <AppRouterContext.Provider value={router as never}>
+      <DiscoveryCallCockpit
+        enrollmentId={ids.enrollment}
+        steps={steps}
+        unassigned={view.unassigned}
+        submitted
+        initialFinalizedAt={null}
+      />
+    </AppRouterContext.Provider>,
+  )
+  const entry = entryOf(markup, "Conditioner")
+  assert.ok(entry.includes("Ihr Produkt — noch in Recherche"))
+  assert.ok(!entry.includes("Kein Produkt angegeben"))
+  assert.ok(!markup.includes(USES_NOTHING))
+  assert.ok(markup.includes("Neu: Balea Feuchtigkeitsspülung"))
+})
+
+test("join rule (b): two products of one category in research — the first fills the slot, both stay in Klären", () => {
+  const view = buildDiscoveryCockpitView(model())
+  const second = researchEntry({
+    itemId: "50000000-0000-4000-8000-000000000009",
+    label: "Balea Spülung (Freitext)",
+  })
+  const display = composeRunsheetProducts({
+    steps: view.steps,
+    unassigned: [...view.unassigned, second],
+  })
+  assert.deepEqual(
+    display.klaeren.map((entry) => entry.intakeItemId),
+    [ids.scannedItem, second.itemId],
+  )
+  const slots = display.tauschenOderNeu.filter((entry) => entry.step.category === "conditioner")
+  assert.equal(slots.length, 1, "one slot per empty step, not one per research item")
+  assert.equal(slots[0]!.research?.label, `Gescanntes Produkt · ${GTIN}`)
+})
+
+test("join rule (c): research in a category whose step is BOUND to her product joins nothing", () => {
+  const view = buildDiscoveryCockpitView(model())
+  const shampooResearch = researchEntry({
+    itemId: "50000000-0000-4000-8000-00000000000a",
+    category: "shampoo",
+    label: "Zweites Shampoo (Freitext)",
+  })
+  const unassigned = [...view.unassigned, shampooResearch]
+  const display = composeRunsheetProducts({ steps: view.steps, unassigned })
+  const shampooEntries = [...display.behalten, ...display.tauschenOderNeu].filter(
+    (entry) => entry.step.category === "shampoo",
+  )
+  assert.equal(shampooEntries.length, 1)
+  assert.equal(shampooEntries[0]!.kind, "owned")
+  assert.equal(shampooEntries[0]!.research, null)
+  assert.ok(display.klaeren.some((entry) => entry.intakeItemId === shampooResearch.itemId))
+  // Rendered: her owned shampoo keeps its verdict.
+  const router = { refresh() {}, push() {}, replace() {}, prefetch() {}, back() {}, forward() {} }
+  const markup = renderToStaticMarkup(
+    <AppRouterContext.Provider value={router as never}>
+      <DiscoveryCallCockpit
+        enrollmentId={ids.enrollment}
+        steps={view.steps}
+        unassigned={unassigned}
+        submitted
+        initialFinalizedAt={null}
+      />
+    </AppRouterContext.Provider>,
+  )
+  const entry = entryOf(markup, "Shampoo")
+  assert.ok(entry.includes("Passt nicht zu deinem Haar"))
+  assert.ok(!entry.includes("noch in Recherche"))
 })
 
 // --- pure helpers -------------------------------------------------------------------------
