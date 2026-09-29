@@ -1313,3 +1313,201 @@ test("an open unresolved submission on the same GTIN blocks the apply", async (t
     /open submission GTIN overlap requires review/,
   )
 })
+
+// ---------------------------------------------------------------------------
+// 20260929120000: guidanceKey binding + stale Oil day-set repair.
+// ---------------------------------------------------------------------------
+
+const BINDING_REPAIR_MIGRATION =
+  "supabase/migrations/20260929120000_expansion_protocol_binding_repair.sql"
+const EXECUTOR_MIGRATION = "supabase/migrations/20260902160000_scan_expansion_batch_v1_executor.sql"
+
+async function bindingRepairSql(): Promise<string> {
+  return readFile(new URL(BINDING_REPAIR_MIGRATION, ROOT), "utf8")
+}
+
+const stripFullLineComments = (body: string) =>
+  body
+    .split("\n")
+    .filter((line) => !/^\s*--/.test(line))
+    .join("\n")
+
+/** Read from LIVE production `pg_proc` on 2026-09-29. */
+const PROD_BOUNDARY_DIGEST_READ_2026_09_29 =
+  "be434f6bba1c2655511d059edf5c317787708d2e366304e00e70d2d4c544960b"
+const PROD_READBACK_DIGEST_READ_2026_09_29 =
+  "71758a3d77600790e6ff24fd53782b27b681b30d831dc10403bb2bc85a741194"
+
+async function storedProtocols(pg: PGlite, productId: string) {
+  const result = await pg.query<{ guidance_payload: Record<string, unknown> }>(
+    "SELECT guidance_payload FROM public.product_application_protocols WHERE product_id = $1",
+    [productId],
+  )
+  return result.rows.map((row) => row.guidance_payload)
+}
+
+test("the binding repair changes exactly one call site per body and pins every accepted digest", async () => {
+  const migration = await bindingRepairSql()
+  const boundaryBefore = functionBody(
+    await repairSql(),
+    "product_intake_approve_reviewed_product_before_thumbnail_image",
+  )
+  const readbackBefore = functionBody(
+    await readFile(new URL(EXECUTOR_MIGRATION, ROOT), "utf8"),
+    "scan_expansion_assert_applied_bundle",
+  )
+  const boundaryAfter = functionBody(
+    migration,
+    "product_intake_approve_reviewed_product_before_thumbnail_image",
+  )
+  const readbackAfter = functionBody(migration, "scan_expansion_assert_applied_bundle")
+
+  assert.equal(
+    boundaryBefore.replace(
+      "pg_catalog.jsonb_set(row_data.guidance_payload, '{scope,productId}', pg_catalog.to_jsonb(approved_product_id::text), false),",
+      "public.product_intake_bind_guidance_payload(row_data.guidance_payload, approved_product_id),",
+    ),
+    boundaryAfter,
+    "the boundary changes only its V1 binding call",
+  )
+  assert.equal(
+    stripFullLineComments(
+      readbackBefore.replace(
+        `        AND stored.guidance_payload = pg_catalog.jsonb_set(
+              v_protocol->'guidance_payload', '{scope,productId}',
+              pg_catalog.to_jsonb(p_product_id::text), false
+            )
+`,
+        `        AND stored.guidance_payload = public.product_intake_bind_guidance_payload(
+              v_protocol->'guidance_payload', p_product_id
+            )
+`,
+      ),
+    ),
+    readbackAfter,
+    "the readback changes only its V1 comparison (and drops full-line comments)",
+  )
+
+  // Comment-free post-state bodies: an apply path that strips comments (which is
+  // how prod's readback body got its digest) cannot change them.
+  assert.equal(stripFullLineComments(boundaryAfter), boundaryAfter)
+  assert.equal(stripFullLineComments(readbackAfter), readbackAfter)
+
+  assert.equal(digest(boundaryBefore), PROD_BOUNDARY_DIGEST_READ_2026_09_29)
+  assert.equal(
+    digest(stripFullLineComments(readbackBefore)),
+    PROD_READBACK_DIGEST_READ_2026_09_29,
+    "prod's readback body is the repo body minus full-line comments",
+  )
+  for (const expected of [
+    digest(boundaryBefore),
+    digest(boundaryAfter),
+    digest(readbackBefore),
+    digest(stripFullLineComments(readbackBefore)),
+    digest(readbackAfter),
+  ]) {
+    assert.ok(migration.includes(expected), `the binding repair must pin ${expected}`)
+  }
+})
+
+test("rows stamped before the repair are rebound, still replay, and new approvals bind at the boundary", async (t) => {
+  const pg = await migratedDatabase(t)
+  const prepared = await prepareMaskBatch()
+  await approve(pg, prepared)
+  const [first, second] = prepared.batch.items
+  assert.ok(first && second, "the mask batch has at least two publishable items")
+
+  // Red: the pre-repair boundary binds scope.productId but not guidanceKey.
+  const before = await applyItem(pg, prepared, first.item_key)
+  const firstId = before.rows[0]!.product_id
+  const [stale] = await storedProtocols(pg, firstId)
+  assert.equal((stale!.scope as { productId: string }).productId, firstId)
+  assert.match(String(stale!.guidanceKey), /__PRODUCT_ID__/)
+
+  await pg.exec(await bindingRepairSql())
+
+  const [rebound] = await storedProtocols(pg, firstId)
+  assert.equal(rebound!.guidanceKey, `product-mask-${firstId}`)
+  assert.deepEqual(
+    { ...rebound, guidanceKey: null },
+    { ...stale, guidanceKey: null },
+    "only guidanceKey changed",
+  )
+  const replay = await applyItem(pg, prepared, first.item_key)
+  assert.equal(replay.rows[0]?.outcome, "replayed", "the readback binds the same way")
+
+  const after = await applyItem(pg, prepared, second.item_key)
+  assert.equal(after.rows[0]?.outcome, "applied")
+  const secondId = after.rows[0]!.product_id
+  const [fresh] = await storedProtocols(pg, secondId)
+  assert.equal(fresh!.guidanceKey, `product-mask-${secondId}`)
+  assert.equal((await applyItem(pg, prepared, second.item_key)).rows[0]?.outcome, "replayed")
+
+  // Idempotent re-run over its own post-state.
+  await pg.exec(await bindingRepairSql())
+  assert.equal((await storedProtocols(pg, secondId))[0]!.guidanceKey, `product-mask-${secondId}`)
+
+  await assert.rejects(
+    pg.query(
+      `UPDATE public.product_application_protocols
+       SET guidance_payload = jsonb_set(guidance_payload, '{guidanceKey}', '"product-mask-__PRODUCT_ID__"')
+       WHERE product_id = $1`,
+      [secondId],
+    ),
+    /product_application_protocols_bound_product_id_check/,
+  )
+  await assert.rejects(
+    pg.query(
+      `UPDATE public.product_application_protocols
+       SET guidance_payload_v2 = jsonb_set(guidance_payload_v2, '{scope,productId}', '"__PRODUCT_ID__"')
+       WHERE product_id = $1`,
+      [secondId],
+    ),
+    /product_application_protocols_bound_product_id_check/,
+  )
+
+  const bound = await pg.query<{ missing: unknown; nulled: unknown; absent: unknown }>(
+    `SELECT
+       public.product_intake_bind_guidance_payload(
+         '{"scope":{"productId":"__PRODUCT_ID__"}}', $1) AS missing,
+       public.product_intake_bind_guidance_payload(
+         '{"guidanceKey":null,"scope":{"productId":"__PRODUCT_ID__"}}', $1) AS nulled,
+       public.product_intake_bind_guidance_payload(NULL, $1) AS absent`,
+    [secondId],
+  )
+  assert.deepEqual(bound.rows[0], {
+    missing: { scope: { productId: secondId } },
+    nulled: { guidanceKey: null, scope: { productId: secondId } },
+    absent: null,
+  })
+})
+
+test("the binding repair refuses placeholder rows it cannot attribute and unknown function drift", async (t) => {
+  const pg = await migratedDatabase(t)
+  const prepared = await prepareMaskBatch()
+  await approve(pg, prepared)
+  const applied = await applyItem(pg, prepared, prepared.batch.items[0]!.item_key)
+  const productId = applied.rows[0]!.product_id
+
+  await pg.query(
+    "UPDATE public.product_submissions SET source = 'scan' WHERE approved_product_id = $1",
+    [productId],
+  )
+  await assert.rejects(
+    pg.exec(await bindingRepairSql()),
+    /placeholder guidance rows outside the reviewed expansion shape: 1/,
+  )
+  await pg.exec("ROLLBACK")
+  await pg.query(
+    "UPDATE public.product_submissions SET source = 'catalog_expansion' WHERE approved_product_id = $1",
+    [productId],
+  )
+
+  await forceBoundaryBody(pg, "RAISE NOTICE 'unrelated body';")
+  await assert.rejects(
+    pg.exec(await bindingRepairSql()),
+    /approval boundary body matches no reviewed pre-state/,
+  )
+  await pg.exec("ROLLBACK")
+  assert.match(String((await storedProtocols(pg, productId))[0]!.guidanceKey), /__PRODUCT_ID__/)
+})

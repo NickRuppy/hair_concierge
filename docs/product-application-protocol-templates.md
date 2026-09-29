@@ -918,7 +918,7 @@ statement.** "Am besten auf handtuchtrockenem Haar" is a preference, not either-
   "scope": { "kind": "product", "category": "oil", "productId": "⟨productId⟩" },
   "role": "finish",
   "applicationFamily": "dry_finish",
-  "compatibleDayTypes": ["wash_day", "intensive_care_day", "styling_day", "between_wash_care_day"],
+  "compatibleDayTypes": ["wash_day", "intensive_care_day", "bond_repair_day", "clarifying_wash_day", "styling_day", "between_wash_care_day"],
   "exactGuidanceRequired": true,
   "sequence": { "anchor": "dry_finish", "before": [], "after": [], "conflictsWith": [] },
   "requirements": {
@@ -1268,3 +1268,28 @@ Per product, per derived role:
 - **X6 — Spray-oil dosing copy deferred:** TPL-OIL's canonical droplet dosing does not fit
   pump-spray oils; a canonical spray dosing line is NOT yet ruled. Spray-format oils are
   parked until the copy is decided (parked: Gliss Hitzeschutz Öl-Spray Oil Nutritive).
+
+### Oil day-type rulings (Nick, 2026-09-29)
+
+Reviewed by the hair-care expert lane before adoption (rules agreed; its sequencing,
+pre-wash and heat-claim "musts" were already enforced by the compiler).
+
+- **O1 — Dry use carries non-wash days:** an Oil reaches non-wash days only through a
+  sourced dry-hair use (TPL-OIL-DRYFINISH). Its day set is every wash-family day plus
+  `styling_day` and `between_wash_care_day` — never `refresh_day`. Sequencing already puts
+  `dry_finish` after `heat_tool`.
+- **O2 — Damp leave-on is wash-family only:** TPL-OIL-LEAVEON stays on `wash_day`,
+  `intensive_care_day`, `bond_repair_day`, `clarifying_wash_day`. No `styling_day`.
+- **O3 — No dry-use source, no non-wash day:** an Oil whose German/EU sources only
+  describe damp or pre-wash use gets no TPL-OIL-DRYFINISH stamp (e.g. Balea Oil Repair
+  Intensiv, OGX Coconut Miracle Oil) and therefore no generic between-wash card either
+  (compiler-v2 grants those only to an Oil with a dry-finish pointer). Protocol sources
+  must be German/EU listings.
+- **O4 — No Oil on the Refresh-Tag:** the shared between-wash Oil templates
+  (`oil.*.damp-refresh.v2`, `oil.*.dry-care.v2`) apply to `between_wash_care_day` only
+  (protocol version 3). The Refresh-Tag preset is roots-first (dry shampoo); Leave-in keeps
+  its between-wash methods there.
+- **O5 — Styling day means heat styling:** `styling_day` is direct-contact heat or a
+  dryer brush / hot-air styler and always carries heat protection. A plain blow-dry belongs
+  to the wash-family days and does not by itself require a heat protectant. Heat protection
+  stays a separate, sourced capability (R-E) and never decides an Oil's day set.

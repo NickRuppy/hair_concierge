@@ -614,7 +614,14 @@ const PAYLOAD_BUILDERS: Record<
     },
     role: "finish",
     applicationFamily: "dry_finish",
-    compatibleDayTypes: ["wash_day", "intensive_care_day", "styling_day", "between_wash_care_day"],
+    compatibleDayTypes: [
+      "wash_day",
+      "intensive_care_day",
+      "bond_repair_day",
+      "clarifying_wash_day",
+      "styling_day",
+      "between_wash_care_day",
+    ],
     exactGuidanceRequired: true,
     sequence: {
       anchor: "dry_finish",

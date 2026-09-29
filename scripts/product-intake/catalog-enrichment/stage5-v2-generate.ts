@@ -21,7 +21,7 @@ import {
   productApplicationPointerV2Schema,
   type ProductApplicationPointerV2,
 } from "../../../src/lib/routines/personal-plan/application/contracts-v2"
-import { SHARED_APPLICATION_TEMPLATES_V2 } from "../../../src/lib/routines/personal-plan/application/shared-templates-v2"
+import { SHARED_APPLICATION_TEMPLATES_AT_ARTIFACT_FREEZE_V2 } from "../../../src/lib/routines/personal-plan/application/shared-templates-v2"
 
 const root = process.cwd()
 const sourceRoot = join(root, "data/catalog-enrichment/personal-plan-stage5-v1")
@@ -156,7 +156,10 @@ function artifactItem(
     guidancePayload: row.guidance_payload,
   }),
 ) {
-  const composed = composeProductApplicationProtocolsV2(pointer, SHARED_APPLICATION_TEMPLATES_V2)
+  const composed = composeProductApplicationProtocolsV2(
+    pointer,
+    SHARED_APPLICATION_TEMPLATES_AT_ARTIFACT_FREEZE_V2,
+  )
   if (composed.status === "unresolved") {
     throw new Error(`${row.product_id}:${row.role}:${pointer.applicationFamily}:${composed.reason}`)
   }
@@ -295,14 +298,14 @@ function documentFor(
       rows: items.length,
       products: new Set(items.map((item) => item.product_id).values()).size,
       exact_workflows: items.filter((item) => item.exact_workflow_id !== null).length,
-      family_templates: SHARED_APPLICATION_TEMPLATES_V2.length,
+      family_templates: SHARED_APPLICATION_TEMPLATES_AT_ARTIFACT_FREEZE_V2.length,
       composable_rows: items.filter((item) => item.guidance_payload_v2.runtimeBlockerCode === null)
         .length,
       blocked_rows: items.filter((item) => item.guidance_payload_v2.runtimeBlockerCode !== null)
         .length,
       by_category: byCategory,
     },
-    family_templates: SHARED_APPLICATION_TEMPLATES_V2,
+    family_templates: SHARED_APPLICATION_TEMPLATES_AT_ARTIFACT_FREEZE_V2,
     items,
   }
 }
