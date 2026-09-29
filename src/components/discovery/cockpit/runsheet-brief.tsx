@@ -60,20 +60,26 @@ const OPENING_SCRIPT = [
 ]
 
 const PROBLEM_TITLE = "Problem"
+const MECHANIK_TITLE = "Problem kurz erklärt"
+const MECHANIK_HINT = "Mechanismus und typische Ursachen — allgemein, ohne Personenbezug."
 const DIAGNOSE_TITLE = "Diagnose"
 const DIAGNOSE_EMPTY = "Noch nicht erfasst — Diagnose vor dem Call eintragen."
 const QUIZ_SUMMARY = "Alle Quiz-Antworten"
+const MASSNAHMEN_TITLE = "Maßnahmen"
 const HEBEL_TITLE = "Hebel"
 const HEBEL_EMPTY = "Noch keine Hebel erfasst."
-const HEBEL_ADD = "Hebel hinzufügen"
 const HEBEL_REMOVE = "Entfernen"
 const HEBEL_TITLE_PLACEHOLDER = "Hebel, z. B. Schaden stoppen"
 const HEBEL_NOTE_PLACEHOLDER = "Was konkret sich ändert"
 const HEBEL_POINTS_LABEL = "Punkte"
 const HEBEL_FOOTNOTE = "Erfahrungswerte — grobe Orientierung, keine Messung."
 const ASK_PREFIX = "kurz fragen:"
+/** The two Maßnahmen buckets (R26); rows from pre-v4 briefs render flat above them. */
+export const RUNSHEET_HEBEL_BUCKETS = [
+  { bucket: "produkt", title: "Produkte", add: "Produkt-Hebel hinzufügen" },
+  { bucket: "umgang", title: "Umgang mit dem Haar", add: "Umgang-Hebel hinzufügen" },
+] as const
 const HABITS_TITLE = "Gewohnheiten"
-const HABITS_EMPTY = "Noch keine Gewohnheiten erfasst."
 const HABITS_FROM_RECIPE = "Vorschläge aus dem Rezept fürs Hauptproblem — im Call abhaken."
 const HABIT_ON_PDF = "fürs PDF vorgemerkt"
 const HABIT_NEW_PLACEHOLDER = "Weitere Gewohnheit"
@@ -83,9 +89,11 @@ const BRIEF_LISTS_TITLE = "Für den Call"
 const LIST_REMOVE = "Entfernen"
 const LIST_ADD = "Zeile hinzufügen"
 
-/** The brief's line lists, edited in Phase 2 like the Hebel (consult-agent final review). */
+/**
+ * The brief's line lists, edited in Phase 2 like the Hebel (consult-agent final review).
+ * Ziel-Lücken are gone since v4 (R27): gaps are asked as Call-Fragen.
+ */
 export const RUNSHEET_BRIEF_LISTS = [
-  { key: "zielLuecken", title: "Ziel-Lücken", empty: "Keine Ziel-Lücken erfasst." },
   { key: "callFragen", title: "Fragen für den Call", empty: "Keine Fragen erfasst." },
   { key: "erwartungen", title: "Erwartungen", empty: "Keine Erwartungen erfasst." },
 ] as const
@@ -173,12 +181,20 @@ export type GenerateUi =
   | { phase: "error"; text: string }
 
 /** `uid` is the row's React key and DOM-id part — stable while rows are added or removed. */
-type HebelRow = { uid: string; title: string; note: string; points: string }
+type HebelRow = {
+  uid: string
+  title: string
+  note: string
+  points: string
+  /** `null` = row from a pre-v4 brief; rendered as one flat list, never guessed (R26). */
+  bucket: "produkt" | "umgang" | null
+}
 type ListRow = { uid: string; text: string }
 
 /** What this island edits (swap reasons are carried through; Phase 3 owns them). */
 export type RunsheetBriefState = {
   baselineText: string
+  mechanik: string
   diagnose: string
   hebel: HebelRow[]
   lists: Record<RunsheetBriefListKey, ListRow[]>
@@ -194,17 +210,28 @@ type BriefSeed = {
 
 /** `tag` prefixes the Hebel row uids of this seed (`s<generation>`, `g<n>` for a generation). */
 function seedRunsheetBrief(props: BriefSeed, tag: string): RunsheetBriefState {
-  return {
-    baselineText: props.initialBaseline === null ? "" : String(props.initialBaseline),
-    diagnose: props.initialSections.diagnose,
-    hebel: props.initialSections.hebel.map((entry, index) => ({
+  // Display order = array order = staircase order: bucket-less legacy rows first (flat
+  // list), then Produkte, then Umgang. Within a group the model's impact ranking holds.
+  const bucketRank = { produkt: 1, umgang: 2 }
+  const hebel = props.initialSections.hebel
+    .map((entry, index) => ({
       uid: `${tag}-${index}`,
       title: entry.title,
       note: entry.note,
       points: entry.points === null ? "" : formatRunsheetScore(entry.points),
-    })),
+      bucket: entry.bucket,
+    }))
+    .sort(
+      (a, b) =>
+        (a.bucket === null ? 0 : bucketRank[a.bucket]) -
+        (b.bucket === null ? 0 : bucketRank[b.bucket]),
+    )
+  return {
+    baselineText: props.initialBaseline === null ? "" : String(props.initialBaseline),
+    mechanik: props.initialSections.mechanik,
+    diagnose: props.initialSections.diagnose,
+    hebel,
     lists: {
-      zielLuecken: listRows(props.initialSections.zielLuecken, `${tag}-z`),
       callFragen: listRows(props.initialSections.callFragen, `${tag}-f`),
       erwartungen: listRows(props.initialSections.erwartungen, `${tag}-e`),
     },
@@ -233,11 +260,12 @@ function runsheetBriefKey(state: RunsheetBriefState): string {
   ])
 }
 
-/** The part a generation replaces: Diagnose, Hebel and the three lists. */
+/** The part a generation replaces: Mechanik, Diagnose, Hebel and the lists. */
 function runsheetBriefContentKey(state: RunsheetBriefState): string {
   return JSON.stringify([
+    state.mechanik,
     state.diagnose,
-    state.hebel.map((row) => [row.title, row.note, row.points.trim()]),
+    state.hebel.map((row) => [row.title, row.note, row.points.trim(), row.bucket]),
     RUNSHEET_BRIEF_LISTS.map(({ key }) => listLines(state.lists[key])),
   ])
 }
@@ -253,6 +281,7 @@ export function applyGeneratedRunsheetBrief(
 ): RunsheetBriefState {
   return {
     ...current,
+    mechanik: generated.mechanik,
     diagnose: generated.diagnose,
     hebel: generated.hebel,
     lists: generated.lists,
@@ -278,17 +307,19 @@ export function runsheetBriefPatch(
   for (const row of state.hebel) {
     const points = parseRunsheetPoints(row.points)
     if (points === null && row.points.trim() !== "") return { invalid: INVALID_POINTS }
-    hebel.push({ title: row.title, note: row.note, points })
+    hebel.push({ title: row.title, note: row.note, points, bucket: row.bucket })
   }
+  // `zielLuecken` rides along via the spread: no longer edited here (R27), but a pre-v4
+  // brief's stored lines are not dropped by a manual save.
   return {
     patch: {
       baseline_score: baseline,
       consult_brief: {
         sections: {
           ...brief.sections,
+          mechanik: state.mechanik,
           diagnose: state.diagnose,
           hebel,
-          zielLuecken: listLines(state.lists.zielLuecken),
           callFragen: listLines(state.lists.callFragen),
           erwartungen: listLines(state.lists.erwartungen),
         },
@@ -454,13 +485,17 @@ export function DiscoveryRunsheetBrief({
     liveHash.value !== null &&
     base.sourceHash !== liveHash.value
 
-  const { baselineText, diagnose, hebel, commitments } = state
+  const { baselineText, mechanik, diagnose, hebel, commitments } = state
   const prefilled = initialCommitments.length === 0 && recipeHabits.length > 0
   const [newHabit, setNewHabit] = useState("")
   const [checked, setChecked] = useState<Record<string, boolean>>({})
 
   function setBaselineText(value: string) {
     setState((current) => ({ ...current, baselineText: value }))
+  }
+  function setMechanik(value: string) {
+    contentEdits.current += 1
+    setState((current) => ({ ...current, mechanik: value }))
   }
   function setDiagnose(value: string) {
     contentEdits.current += 1
@@ -604,11 +639,133 @@ export function DiscoveryRunsheetBrief({
     setHebel((rows) => rows.map((row) => (row.uid === uid ? { ...row, ...patch } : row)))
   }
 
+  // Keeps array order = display order = staircase order: a Produkt row lands before the
+  // Umgang group, an Umgang row at the end.
+  function addHebel(bucket: "produkt" | "umgang") {
+    const rowUid = `n${nextUid.current++}`
+    setHebel((rows) => {
+      const row = { uid: rowUid, title: "", note: "", points: "", bucket }
+      if (bucket === "umgang") return [...rows, row]
+      const at = rows.findIndex((entry) => entry.bucket === "umgang")
+      return at === -1 ? [...rows, row] : [...rows.slice(0, at), row, ...rows.slice(at)]
+    })
+  }
+
   function addHabit() {
     if (!newHabit.trim()) return
     setCommitments((current) => addRunsheetCommitment(current, newHabit))
     setNewHabit("")
   }
+
+  const legacyHebel = hebel.filter((row) => row.bucket === null)
+
+  function renderHebelRow(row: HebelRow) {
+    const index = hebel.indexOf(row)
+    return (
+      <li key={row.uid} className="flex items-start gap-2.5 border-b pb-2 last:border-0">
+        <span className="mt-1.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--brand-plum-ice)] text-[11px] font-bold text-[var(--brand-plum)]">
+          {index + 1}
+        </span>
+        <div className="flex min-w-0 flex-1 flex-col gap-1">
+          <input
+            id={`runsheet-hebel-${row.uid}-title`}
+            aria-label={`${HEBEL_TITLE} ${index + 1}`}
+            value={row.title}
+            placeholder={HEBEL_TITLE_PLACEHOLDER}
+            onChange={(event) => updateHebel(row.uid, { title: event.target.value })}
+            className="rounded border bg-background px-2 py-1 text-sm font-bold text-foreground"
+          />
+          <textarea
+            id={`runsheet-hebel-${row.uid}-note`}
+            aria-label={`${HEBEL_TITLE} ${index + 1}: ${HEBEL_NOTE_PLACEHOLDER}`}
+            rows={2}
+            value={row.note}
+            placeholder={HEBEL_NOTE_PLACEHOLDER}
+            onChange={(event) => updateHebel(row.uid, { note: event.target.value })}
+            className="rounded border bg-background px-2 py-1 text-[13px] leading-5 text-foreground"
+          />
+        </div>
+        <div className="flex shrink-0 flex-col items-end gap-1">
+          <label className="flex items-center gap-1 text-[11px] text-muted-foreground">
+            +
+            <input
+              id={`runsheet-hebel-${row.uid}-points`}
+              aria-label={`${HEBEL_TITLE} ${index + 1}: ${HEBEL_POINTS_LABEL}`}
+              inputMode="decimal"
+              value={row.points}
+              placeholder="0"
+              onChange={(event) => updateHebel(row.uid, { points: event.target.value })}
+              className="w-12 rounded border bg-background px-1.5 py-1 text-right text-sm font-bold text-[var(--brand-plum)]"
+            />
+          </label>
+          <button
+            type="button"
+            onClick={() => setHebel((rows) => rows.filter((entry) => entry.uid !== row.uid))}
+            className="text-[11px] text-muted-foreground underline"
+          >
+            {HEBEL_REMOVE}
+          </button>
+        </div>
+      </li>
+    )
+  }
+
+  const habitsBlock = (
+    <div className="flex flex-col gap-1.5 rounded-lg border bg-background/50 px-3 py-2">
+      <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+        {HABITS_TITLE}
+      </p>
+      {prefilled ? <p className="text-[12px] text-muted-foreground">{HABITS_FROM_RECIPE}</p> : null}
+      {commitments.length === 0 ? null : (
+        <ul className="flex flex-col gap-1.5">
+          {commitments.map((habit) => (
+            <li key={habit.id} className="flex flex-wrap items-start gap-2 text-[13px] leading-5">
+              <input
+                id={habitDomId(habit.id)}
+                type="checkbox"
+                checked={habit.committed}
+                onChange={(event) =>
+                  setCommitments((current) =>
+                    current.map((entry) =>
+                      entry.id === habit.id ? { ...entry, committed: event.target.checked } : entry,
+                    ),
+                  )
+                }
+                className="mt-0.5 accent-[var(--brand-plum)]"
+              />
+              <label htmlFor={habitDomId(habit.id)} className="min-w-0 flex-1 text-foreground">
+                {habit.label}
+              </label>
+              {habit.committed ? <RunsheetChip tone="plum">{HABIT_ON_PDF}</RunsheetChip> : null}
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="flex gap-2">
+        <input
+          id="runsheet-habit-new"
+          aria-label={HABIT_NEW_PLACEHOLDER}
+          value={newHabit}
+          placeholder={HABIT_NEW_PLACEHOLDER}
+          onChange={(event) => setNewHabit(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault()
+              addHabit()
+            }
+          }}
+          className="min-w-0 flex-1 rounded border bg-background px-2 py-1 text-[13px] text-foreground"
+        />
+        <button
+          type="button"
+          onClick={addHabit}
+          className="rounded-lg border border-[var(--brand-plum)] px-3 py-1 text-xs font-bold text-[var(--brand-plum)]"
+        >
+          {HABIT_ADD}
+        </button>
+      </div>
+    </div>
+  )
 
   return (
     <>
@@ -705,6 +862,17 @@ export function DiscoveryRunsheetBrief({
           onConfirm={handleGenerateConfirm}
           onCancel={handleGenerateCancel}
         />
+        <RunsheetCard title={<label htmlFor="runsheet-mechanik">{MECHANIK_TITLE}</label>}>
+          <p className="text-[12px] text-muted-foreground">{MECHANIK_HINT}</p>
+          <textarea
+            id="runsheet-mechanik"
+            rows={3}
+            value={mechanik}
+            onChange={(event) => setMechanik(event.target.value)}
+            className="w-full rounded-lg border bg-background px-3 py-2 text-sm leading-6 text-foreground"
+          />
+        </RunsheetCard>
+
         <RunsheetCard title={<label htmlFor="runsheet-diagnose">{DIAGNOSE_TITLE}</label>}>
           {diagnose.trim() === "" ? (
             <p className="text-[13px] font-bold text-[var(--status-pending-text)]">
@@ -734,79 +902,41 @@ export function DiscoveryRunsheetBrief({
         <RunsheetCard
           title={
             baseline !== null && target !== null
-              ? `${HEBEL_TITLE} · von ${formatRunsheetScore(baseline)} auf ${formatRunsheetScore(target)}`
-              : HEBEL_TITLE
+              ? `${MASSNAHMEN_TITLE} · von ${formatRunsheetScore(baseline)} auf ${formatRunsheetScore(target)}`
+              : MASSNAHMEN_TITLE
           }
         >
           {steps ? <Staircase steps={steps} /> : null}
           {hebel.length === 0 ? (
             <p className="text-[13px] text-muted-foreground">{HEBEL_EMPTY}</p>
-          ) : (
-            <ol className="flex flex-col gap-2">
-              {hebel.map((row, index) => (
-                <li key={row.uid} className="flex items-start gap-2.5 border-b pb-2 last:border-0">
-                  <span className="mt-1.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--brand-plum-ice)] text-[11px] font-bold text-[var(--brand-plum)]">
-                    {index + 1}
-                  </span>
-                  <div className="flex min-w-0 flex-1 flex-col gap-1">
-                    <input
-                      id={`runsheet-hebel-${row.uid}-title`}
-                      aria-label={`${HEBEL_TITLE} ${index + 1}`}
-                      value={row.title}
-                      placeholder={HEBEL_TITLE_PLACEHOLDER}
-                      onChange={(event) => updateHebel(row.uid, { title: event.target.value })}
-                      className="rounded border bg-background px-2 py-1 text-sm font-bold text-foreground"
-                    />
-                    <textarea
-                      id={`runsheet-hebel-${row.uid}-note`}
-                      aria-label={`${HEBEL_TITLE} ${index + 1}: ${HEBEL_NOTE_PLACEHOLDER}`}
-                      rows={2}
-                      value={row.note}
-                      placeholder={HEBEL_NOTE_PLACEHOLDER}
-                      onChange={(event) => updateHebel(row.uid, { note: event.target.value })}
-                      className="rounded border bg-background px-2 py-1 text-[13px] leading-5 text-foreground"
-                    />
-                  </div>
-                  <div className="flex shrink-0 flex-col items-end gap-1">
-                    <label className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                      +
-                      <input
-                        id={`runsheet-hebel-${row.uid}-points`}
-                        aria-label={`${HEBEL_TITLE} ${index + 1}: ${HEBEL_POINTS_LABEL}`}
-                        inputMode="decimal"
-                        value={row.points}
-                        placeholder="0"
-                        onChange={(event) => updateHebel(row.uid, { points: event.target.value })}
-                        className="w-12 rounded border bg-background px-1.5 py-1 text-right text-sm font-bold text-[var(--brand-plum)]"
-                      />
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setHebel((rows) => rows.filter((entry) => entry.uid !== row.uid))
-                      }
-                      className="text-[11px] text-muted-foreground underline"
-                    >
-                      {HEBEL_REMOVE}
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          )}
-          <div>
-            <button
-              id="runsheet-hebel-add"
-              type="button"
-              onClick={() => {
-                const rowUid = `n${nextUid.current++}`
-                setHebel((rows) => [...rows, { uid: rowUid, title: "", note: "", points: "" }])
-              }}
-              className="rounded-lg border border-[var(--brand-plum)] px-3 py-1.5 text-xs font-bold text-[var(--brand-plum)]"
-            >
-              {HEBEL_ADD}
-            </button>
-          </div>
+          ) : null}
+          {legacyHebel.length > 0 ? (
+            <ol className="flex flex-col gap-2">{legacyHebel.map(renderHebelRow)}</ol>
+          ) : null}
+          {RUNSHEET_HEBEL_BUCKETS.map((group) => {
+            const rows = hebel.filter((row) => row.bucket === group.bucket)
+            return (
+              <div key={group.bucket} className="flex flex-col gap-2">
+                <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                  {group.title}
+                </p>
+                {rows.length > 0 ? (
+                  <ol className="flex flex-col gap-2">{rows.map(renderHebelRow)}</ol>
+                ) : null}
+                <div>
+                  <button
+                    id={`runsheet-hebel-add-${group.bucket}`}
+                    type="button"
+                    onClick={() => addHebel(group.bucket)}
+                    className="rounded-lg border border-[var(--brand-plum)] px-3 py-1.5 text-xs font-bold text-[var(--brand-plum)]"
+                  >
+                    {group.add}
+                  </button>
+                </div>
+                {group.bucket === "umgang" ? habitsBlock : null}
+              </div>
+            )
+          })}
           {askTopics.length > 0 ? (
             <div className="flex flex-wrap gap-1.5">
               {askTopics.map((topic) => (
@@ -873,67 +1003,6 @@ export function DiscoveryRunsheetBrief({
               </div>
             </div>
           ))}
-        </RunsheetCard>
-
-        <RunsheetCard title={HABITS_TITLE}>
-          {prefilled ? (
-            <p className="text-[12px] text-muted-foreground">{HABITS_FROM_RECIPE}</p>
-          ) : null}
-          {commitments.length === 0 ? (
-            <p className="text-[13px] text-muted-foreground">{HABITS_EMPTY}</p>
-          ) : (
-            <ul className="flex flex-col gap-1.5">
-              {commitments.map((habit) => (
-                <li
-                  key={habit.id}
-                  className="flex flex-wrap items-start gap-2 text-[13px] leading-5"
-                >
-                  <input
-                    id={habitDomId(habit.id)}
-                    type="checkbox"
-                    checked={habit.committed}
-                    onChange={(event) =>
-                      setCommitments((current) =>
-                        current.map((entry) =>
-                          entry.id === habit.id
-                            ? { ...entry, committed: event.target.checked }
-                            : entry,
-                        ),
-                      )
-                    }
-                    className="mt-0.5 accent-[var(--brand-plum)]"
-                  />
-                  <label htmlFor={habitDomId(habit.id)} className="min-w-0 flex-1 text-foreground">
-                    {habit.label}
-                  </label>
-                  {habit.committed ? <RunsheetChip tone="plum">{HABIT_ON_PDF}</RunsheetChip> : null}
-                </li>
-              ))}
-            </ul>
-          )}
-          <div className="flex gap-2">
-            <input
-              id="runsheet-habit-new"
-              aria-label={HABIT_NEW_PLACEHOLDER}
-              value={newHabit}
-              placeholder={HABIT_NEW_PLACEHOLDER}
-              onChange={(event) => setNewHabit(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault()
-                  addHabit()
-                }
-              }}
-              className="min-w-0 flex-1 rounded border bg-background px-2 py-1 text-[13px] text-foreground"
-            />
-            <button
-              type="button"
-              onClick={addHabit}
-              className="rounded-lg border border-[var(--brand-plum)] px-3 py-1 text-xs font-bold text-[var(--brand-plum)]"
-            >
-              {HABIT_ADD}
-            </button>
-          </div>
         </RunsheetCard>
 
         <RunsheetSaveBar

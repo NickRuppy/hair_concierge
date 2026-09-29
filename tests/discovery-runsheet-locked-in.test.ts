@@ -5,11 +5,7 @@ import type {
   DiscoveryCockpitStepView,
   DiscoveryCockpitSwapOption,
 } from "../src/lib/discovery/cockpit"
-import {
-  runsheetLockedIn,
-  runsheetShoppingListText,
-  type RunsheetLockedInSelection,
-} from "../src/lib/discovery/runsheet"
+import { runsheetLockedIn, type RunsheetLockedInSelection } from "../src/lib/discovery/runsheet"
 import type { PersonalPlanCategory } from "../src/lib/personal-plan/products/contracts"
 
 /**
@@ -351,28 +347,6 @@ test("no steps at all: empty, nothing open", () => {
     hasKnownPrice: false,
     openCount: 0,
   })
-})
-
-// --- the copied shopping list -------------------------------------------------------
-
-test("shopping list: „Einkaufsliste:“ and one line per product to buy, with its price", () => {
-  const lockedIn = runsheetLockedIn(
-    nomi({
-      shampoo: { outcome: "swapped", swapProductId: "beta" },
-      mask: { outcome: "swapped", swapProductId: "mask-rec" },
-      conditioner: { outcome: "kept" },
-    }),
-  )
-  assert.equal(
-    runsheetShoppingListText(lockedIn),
-    ["Einkaufsliste:", "Shampoo: Beta Shampoo", `Maske: Olaplex No. 8 — ${EUR("28,00")}`].join(
-      "\n",
-    ),
-  )
-})
-
-test("shopping list: nothing to buy says so", () => {
-  assert.equal(runsheetShoppingListText(runsheetLockedIn(nomi())), "Einkaufsliste: noch leer")
 })
 
 test("Codex F1: a non-EUR price label never enters the euro total", () => {

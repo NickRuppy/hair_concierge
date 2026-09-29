@@ -25,13 +25,28 @@ export type DiscoveryCallSheetTouchpoint = {
   done_at: string | null
 }
 
-export type DiscoveryCallSheetHebel = { title: string; note: string; points: number | null }
+export type DiscoveryCallSheetHebel = {
+  title: string
+  note: string
+  points: number | null
+  /**
+   * Maßnahmen-Bucket (R26): „Produkte" vs „Umgang mit dem Haar". `null` on briefs stored
+   * before v4 — those render as one flat list, never guessed into a bucket.
+   */
+  bucket: "produkt" | "umgang" | null
+}
 
 export type DiscoveryCallSheetBriefSections = {
+  /**
+   * Generic problem intro (R26): what the main problem is, its mechanism, typical causes —
+   * no personal claims. Empty string on briefs stored before v4.
+   */
+  mechanik: string
   diagnose: string
   hebel: DiscoveryCallSheetHebel[]
   /** Keyed by the step's `decisionKey`. */
   swapReasons: Record<string, string>
+  /** No longer generated or edited (R27) — kept so pre-v4 briefs round-trip losslessly. */
   zielLuecken: string[]
   callFragen: string[]
   erwartungen: string[]
@@ -63,19 +78,25 @@ export type DiscoveryCallSheetBrief = DiscoveryCallSheetBriefRevision & {
 
 export type DiscoveryCallSheetHabitCommitment = { id: string; label: string; committed: boolean }
 
+/** R28: how involved the routine may get — asked in the call, two options only. */
+export type DiscoveryCallSheetComplexity = "essenziell" | "normal"
+
 export type DiscoveryCallSheet = {
   baselineScore: number | null
   rescores: DiscoveryCallSheetRescore[]
   touchpoints: DiscoveryCallSheetTouchpoint[]
   consultBrief: DiscoveryCallSheetBrief | null
   habitCommitments: DiscoveryCallSheetHabitCommitment[]
+  complexity: DiscoveryCallSheetComplexity | null
   feedback: string | null
 }
 
 export const DISCOVERY_CALL_SHEETS_TABLE = "discovery_call_sheets"
-const COLUMNS = "baseline_score, rescores, touchpoints, consult_brief, habit_commitments, feedback"
+const COLUMNS =
+  "baseline_score, rescores, touchpoints, consult_brief, habit_commitments, complexity, feedback"
 
 export const EMPTY_DISCOVERY_BRIEF_SECTIONS: DiscoveryCallSheetBriefSections = {
+  mechanik: "",
   diagnose: "",
   hebel: [],
   swapReasons: {},
@@ -107,6 +128,7 @@ export type DiscoveryCallSheetPatch = {
   touchpoints?: DiscoveryCallSheetTouchpoint[]
   consult_brief?: DiscoveryCallSheetBrief
   habit_commitments?: DiscoveryCallSheetHabitCommitment[]
+  complexity?: DiscoveryCallSheetComplexity | null
   feedback?: string | null
 }
 
@@ -117,6 +139,7 @@ const CALL_SHEET_DEFAULTS = {
   touchpoints: [],
   consult_brief: null,
   habit_commitments: [],
+  complexity: null,
   feedback: null,
 } as const
 
@@ -150,6 +173,7 @@ export async function saveDiscoveryCallSheet(
     touchpoints: current.touchpoints ?? CALL_SHEET_DEFAULTS.touchpoints,
     consult_brief: current.consult_brief ?? CALL_SHEET_DEFAULTS.consult_brief,
     habit_commitments: current.habit_commitments ?? CALL_SHEET_DEFAULTS.habit_commitments,
+    complexity: current.complexity ?? CALL_SHEET_DEFAULTS.complexity,
     feedback: current.feedback ?? CALL_SHEET_DEFAULTS.feedback,
     ...patch,
     ...(patch.consult_brief
@@ -243,6 +267,10 @@ export function parseDiscoveryCallSheet(row: unknown): DiscoveryCallSheet {
         ? [{ id: entry.id, label: entry.label, committed: entry.committed === true }]
         : [],
     ),
+    complexity:
+      record.complexity === "essenziell" || record.complexity === "normal"
+        ? record.complexity
+        : null,
     feedback: typeof record.feedback === "string" ? record.feedback : null,
   }
 }
@@ -269,12 +297,14 @@ function parseRevision(value: unknown): DiscoveryCallSheetBriefRevision | null {
     : {}
   return {
     sections: {
+      mechanik: typeof sections.mechanik === "string" ? sections.mechanik : "",
       diagnose: typeof sections.diagnose === "string" ? sections.diagnose : "",
       hebel: arrayOf(sections.hebel).map((entry) => ({
         title: typeof entry.title === "string" ? entry.title : "",
         note: typeof entry.note === "string" ? entry.note : "",
         points:
           typeof entry.points === "number" && Number.isFinite(entry.points) ? entry.points : null,
+        bucket: entry.bucket === "produkt" || entry.bucket === "umgang" ? entry.bucket : null,
       })),
       swapReasons,
       zielLuecken: stringsOf(sections.zielLuecken),

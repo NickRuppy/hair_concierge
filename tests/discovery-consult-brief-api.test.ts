@@ -114,16 +114,20 @@ const SOURCE_HASH = "a".repeat(64)
 const fakeInput = { marker: "consult-input" } as unknown as ConsultInput
 
 const generatedSections = {
+  mechanik: "Trockene Längen entstehen meist durch Hitze, Reibung und Vorschädigung.",
   diagnose: "Feines, blondiertes Haar mit aufgerauten Längen.",
-  hebel: [{ title: "Hitzeschutz", note: "Vor jedem Glätten.", points: 1 }],
+  hebel: [
+    { title: "Hitzeschutz", note: "Vor jedem Glätten.", points: 1, bucket: "produkt" as const },
+  ],
   swapReasons: {},
-  zielLuecken: ["Kein Hitzeschutz"],
+  zielLuecken: [],
   callFragen: ["Wie oft glättest du?"],
   erwartungen: ["Wenn es stärker wird: ärztlich abklären lassen."],
 }
 
 const storedBrief: DiscoveryCallSheetBrief = {
   sections: {
+    mechanik: "Alte Mechanik.",
     diagnose: "Alte Diagnose.",
     hebel: [],
     swapReasons: {},
@@ -349,6 +353,7 @@ test("a first generation on a legacy enrollment (no row) writes a full row with 
     rescores: [],
     touchpoints: [],
     habit_commitments: [],
+    complexity: null,
     feedback: null,
     consult_brief: {
       sections: generatedSections,
@@ -722,6 +727,7 @@ const sheet: DiscoveryCallSheet = {
   touchpoints: [],
   consultBrief: storedBrief,
   habitCommitments: [],
+  complexity: null,
   feedback: "egal für den Hash",
 }
 

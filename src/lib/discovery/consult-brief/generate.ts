@@ -165,8 +165,11 @@ export async function generateConsultBrief(
 
     const parsed = consultBriefSectionsSchema.safeParse(toConsultBriefSections(json))
     if (!parsed.success) return { error: { code: "invalid_schema" } }
+    // zielLuecken is code-owned since v4 (R27): gaps travel as callFragen, the stored
+    // field stays only so pre-v4 briefs round-trip.
     const brief: DiscoveryCallSheetBriefSections = {
       ...parsed.data,
+      zielLuecken: [],
       erwartungen: withBoundaryLine(parsed.data.erwartungen),
     }
     return { raw, brief, findings: lintConsultBrief(brief, input) }

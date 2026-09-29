@@ -1,7 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import type { DiscoveryCallSheetBriefSections } from "../src/lib/discovery/call-sheet"
 import {
   consultBriefJsonSchemaFormat,
   consultBriefSwapKeys,
@@ -18,7 +17,9 @@ import type { ConsultInput } from "../src/lib/discovery/consult-brief/input"
 import { CONSULT_BOUNDARY_LINE } from "../src/lib/discovery/consult-brief/lint"
 import {
   buildConsultBriefPrompt,
+  CONSULT_BRIEF_PROMPT_VERSION,
   consultBriefSectionsSchema,
+  type GeneratedConsultBriefSections,
 } from "../src/lib/discovery/consult-brief/prompt"
 
 /**
@@ -85,22 +86,35 @@ function input(overrides: Partial<ConsultInput> = {}): ConsultInput {
   }
 }
 
-function validSections(): DiscoveryCallSheetBriefSections {
+/** A valid v4 model answer: no zielLuecken (code fills `[]`), every Hebel has a bucket. */
+function validSections(): GeneratedConsultBriefSections {
   return {
+    mechanik:
+      "Trockene, brüchige Längen entstehen meist durch Vorschädigung, Zugbelastung beim Entwirren und zu wenig Pflege.",
     diagnose: "Blondiert, reißt beim Zugtest: Die Längen sind vorgeschädigt.",
     hebel: [
-      { title: "Schonend entwirren", note: "Breiter Kamm, von den Spitzen her.", points: 1 },
+      {
+        title: "Schonend entwirren",
+        note: "Breiter Kamm, von den Spitzen her.",
+        points: 1,
+        bucket: "umgang",
+      },
       {
         title: "Milder waschen",
         note: "Das Sanftwerk Mild Shampoo statt des jetzigen.",
         points: 0.5,
+        bucket: "produkt",
       },
-      { title: "Längen schützen", note: "Nass nur mit Conditioner kämmen.", points: null },
+      {
+        title: "Längen schützen",
+        note: "Nass nur mit Conditioner kämmen.",
+        points: null,
+        bucket: "umgang",
+      },
     ],
     swapReasons: {
       [SHAMPOO_KEY]: "Das jetzige Shampoo passt nicht; das Sanftwerk Mild Shampoo reinigt milder.",
     },
-    zielLuecken: [],
     callFragen: [
       "Womit entwirrst du, nass oder trocken?",
       "Wie oft wäschst du gerade?",
@@ -111,7 +125,7 @@ function validSections(): DiscoveryCallSheetBriefSections {
 }
 
 /** What the model returns under the strict API schema: swapReasons as `{ key, reason }[]`. */
-function apiAnswer(sections: DiscoveryCallSheetBriefSections = validSections()) {
+function apiAnswer(sections: GeneratedConsultBriefSections = validSections()) {
   return {
     ...sections,
     swapReasons: Object.entries(sections.swapReasons).map(([key, reason]) => ({ key, reason })),
@@ -137,15 +151,19 @@ test("the prompt: German, guardrails as hard rules, the exact sections schema, t
   assert.match(system, /Deutsch/)
   assert.match(system, /## G1 — /)
   for (const key of [
+    "mechanik",
     "diagnose",
     "hebel",
+    "bucket",
     "swapReasons",
-    "zielLuecken",
     "callFragen",
     "erwartungen",
   ]) {
     assert.ok(system.includes(`"${key}"`), key)
   }
+  // zielLuecken is code-owned since v4: it never appears in the prompt's schema.
+  assert.equal(system.includes('"zielLuecken"'), false)
+  assert.equal(CONSULT_BRIEF_PROMPT_VERSION, "consult-brief-v4")
   assert.match(system, /dritte[rn]? Person/)
   assert.ok(user.includes(SHAMPOO_KEY))
   assert.ok(user.includes("Glanzwerk Volumen Shampoo"))
@@ -160,6 +178,31 @@ test("the prompt names the allowed swapReasons keys; the score arithmetic is the
   assert.ok(system.includes("Die Ziel-Rechnung und ihre Deckelung macht der Code"))
 })
 
+test("the v4 prompt: mechanik spec, bucket rule, gap-as-question rule, checklist item 5", () => {
+  const { system, user } = buildConsultBriefPrompt(input())
+  assert.ok(
+    system.includes(
+      '"mechanik": 2–3 Sätze, generisch und ohne Personenbezug: das Hauptproblem benannt, der Mechanismus dahinter, die typischen Ursachen',
+    ),
+  )
+  assert.ok(
+    system.includes(
+      'jeder mit "bucket": "produkt" für Produkt-Züge (Tausch, Neuzugang, Weglassen) oder "umgang" für Verhalten (Waschrhythmus, Hitze, Handling)',
+    ),
+  )
+  assert.ok(
+    system.includes(
+      "Liegen ihr Ziel und die realistische Erwartung auseinander, formuliere genau das als Frage",
+    ),
+  )
+  assert.ok(system.includes('"mechanik": ganz ohne Personenbezug'))
+  assert.ok(
+    user.includes(
+      '5. "hebel" und "callFragen" haben je 3 bis 5 Einträge, jeder Hebel den passenden "bucket", und jede Frage ändert den Plan.',
+    ),
+  )
+})
+
 test("the sections schema is strict: exactly the call sheet's shape", () => {
   assert.equal(consultBriefSectionsSchema.safeParse(validSections()).success, true)
   assert.equal(
@@ -170,6 +213,23 @@ test("the sections schema is strict: exactly the call sheet's shape", () => {
     consultBriefSectionsSchema.safeParse({ ...validSections(), hebel: [{ title: "x" }] }).success,
     false,
   )
+  // v4: zielLuecken is no longer part of the generated shape…
+  assert.equal(
+    consultBriefSectionsSchema.safeParse({ ...validSections(), zielLuecken: [] }).success,
+    false,
+  )
+  // …mechanik is required, and every Hebel needs a valid bucket.
+  const { mechanik: _mechanik, ...withoutMechanik } = validSections()
+  assert.equal(consultBriefSectionsSchema.safeParse(withoutMechanik).success, false)
+  const noBucket = validSections()
+  delete (noBucket.hebel[0] as { bucket?: string }).bucket
+  assert.equal(consultBriefSectionsSchema.safeParse(noBucket).success, false)
+  const badBucket = validSections()
+  ;(badBucket.hebel[0] as { bucket: string }).bucket = "sonstiges"
+  assert.equal(consultBriefSectionsSchema.safeParse(badBucket).success, false)
+  const nullBucket = validSections()
+  ;(nullBucket.hebel[0] as { bucket: string | null }).bucket = null
+  assert.equal(consultBriefSectionsSchema.safeParse(nullBucket).success, false)
   assert.equal(consultBriefSectionsSchema.safeParse({ sections: validSections() }).success, false)
 })
 
@@ -179,7 +239,9 @@ test("a valid answer: brief + source hash, one completion with the configured mo
   const { complete, calls } = completing(JSON.stringify(apiAnswer()))
   const result = await generateConsultBrief(input(), { complete, model: "test-model" })
   assert.ok("brief" in result, JSON.stringify(result))
-  assert.deepEqual(result.brief, validSections())
+  // Code owns zielLuecken since v4: always `[]` in the generated brief.
+  assert.deepEqual(result.brief, { ...validSections(), zielLuecken: [] })
+  assert.deepEqual(result.brief.zielLuecken, [])
   assert.equal(result.sourceHash, consultSourceHash(input()))
   assert.equal(calls.length, 1)
   assert.equal(calls[0]!.model, "test-model")
@@ -188,6 +250,18 @@ test("a valid answer: brief + source hash, one completion with the configured mo
     model: "test-model",
     format: consultBriefJsonSchemaFormat([SHAMPOO_KEY]),
   })
+})
+
+test("a v4 answer without mechanik or with a bucket-less Hebel → invalid_schema", async () => {
+  const noMechanik: Record<string, unknown> = { ...apiAnswer() }
+  delete noMechanik.mechanik
+  const noBucket = apiAnswer()
+  delete (noBucket.hebel[1] as { bucket?: string }).bucket
+  for (const answer of [noMechanik, noBucket]) {
+    const { complete } = completing(JSON.stringify(answer))
+    const result = await generateConsultBrief(input(), { complete, model: "m" })
+    assert.deepEqual(result, { error: { code: "invalid_schema" } })
+  }
 })
 
 test("invalid JSON → error, no brief", async () => {
@@ -230,7 +304,7 @@ test("a lint failure, then a clean retry → the retried brief; the retry carrie
   const { complete, calls } = completing(dirtyRaw, JSON.stringify(apiAnswer()))
   const result = await generateConsultBrief(input(), { complete, model: "m" })
   assert.ok("brief" in result, JSON.stringify(result))
-  assert.deepEqual(result.brief, validSections())
+  assert.deepEqual(result.brief, { ...validSections(), zielLuecken: [] })
   assert.equal(calls.length, 2)
   assert.equal(calls[0]!.correction, undefined)
   const correction = calls[1]!.correction
@@ -322,7 +396,16 @@ test("the API schema: strict, every property required, hebel/callFragen 3–5, p
     additionalProperties: boolean
     properties: { points: { type: string[] } }
   }
-  assert.deepEqual(hebelItem.required, ["title", "note", "points"])
+  assert.deepEqual(hebelItem.required, ["title", "note", "points", "bucket"])
+  assert.deepEqual(schema.required.toSorted(), [
+    "callFragen",
+    "diagnose",
+    "erwartungen",
+    "hebel",
+    "mechanik",
+    "swapReasons",
+  ])
+  assert.equal("zielLuecken" in schema.properties, false)
   assert.equal(hebelItem.additionalProperties, false)
   assert.deepEqual(hebelItem.properties.points.type, ["number", "null"])
   const swap = schema.properties.swapReasons as {
@@ -353,6 +436,7 @@ test("no swap keys end to end: an empty swapReasons array becomes an empty recor
     title: "Milder waschen",
     note: "Seltener und sanfter waschen.",
     points: 0.5,
+    bucket: "umgang",
   }
   const { complete, calls } = completing(JSON.stringify(apiAnswer(sections)))
   const result = await generateConsultBrief(noSwaps, { complete, model: "m" })

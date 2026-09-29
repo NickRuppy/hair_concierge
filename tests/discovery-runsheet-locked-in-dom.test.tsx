@@ -1,5 +1,5 @@
 // The jsdom globals must exist before React DOM and @testing-library load.
-import { domWindow, mockClipboard } from "./helpers/dom"
+import "./helpers/dom"
 
 import assert from "node:assert/strict"
 import { afterEach, mock, test } from "node:test"
@@ -19,14 +19,12 @@ import type { PersonalPlanCategory } from "../src/lib/personal-plan/products/con
 
 /**
  * „Für den Plan festgehalten" in a real DOM (jsdom + @testing-library): what the static
- * markup tests cannot show — the copy button's feedback cycle, the clipboard fallback, a
- * re-render with new decisions, and the cockpit's optimistic Entscheidung click with its
- * rollback.
+ * markup tests cannot show — a re-render with new decisions and the cockpit's optimistic
+ * Entscheidung click with its rollback. The copy flow is gone (R29).
  */
 
 afterEach(() => {
   cleanup()
-  mock.timers.reset()
   mock.restoreAll()
 })
 
@@ -140,63 +138,14 @@ function total(): string {
   return document.getElementById("runsheet-locked-in-total")?.textContent ?? ""
 }
 
-/** Lets the clipboard promise's `.then` run and React commit what it set. */
-async function flush() {
-  await act(async () => {
-    await Promise.resolve()
-  })
-}
+// --- R29: no copy flow ---------------------------------------------------------------
 
-// --- „Liste kopieren" ---------------------------------------------------------------
-
-test("copy: the list goes to the clipboard, the button says „Kopiert ✓“, then resets after 1.5 s", async () => {
-  mock.timers.enable({ apis: ["setTimeout"] })
-  const writes = mockClipboard(async () => {})
-  const lockedIn = runsheetLockedIn(steps({ shampoo: swapShampoo }))
-  render(<RunsheetLockedInSection lockedIn={lockedIn} />)
-
-  fireEvent.click(screen.getByRole("button", { name: "Liste kopieren" }))
-  await flush()
-
-  assert.deepEqual(writes, [`Einkaufsliste:\nShampoo: Alpha Shampoo — ${EUR("9,95")}`])
-  assert.ok(screen.getByRole("button", { name: "Kopiert ✓" }))
-  assert.equal(screen.queryByRole("status"), null)
-
-  act(() => mock.timers.tick(1499))
-  assert.ok(screen.getByRole("button", { name: "Kopiert ✓" }))
-  act(() => mock.timers.tick(1))
-  assert.ok(screen.getByRole("button", { name: "Liste kopieren" }))
-})
-
-test("copy: a refused clipboard shows the fallback message and selects the list", async () => {
-  mockClipboard(() => Promise.reject(new Error("denied")))
-  const lockedIn = runsheetLockedIn(steps({ shampoo: swapShampoo }))
-  render(<RunsheetLockedInSection lockedIn={lockedIn} />)
-
-  fireEvent.click(screen.getByRole("button", { name: "Liste kopieren" }))
-  await flush()
-
-  assert.equal(
-    screen.getByRole("status").textContent,
-    "Kopieren ging nicht — die Liste ist markiert, bitte manuell kopieren.",
-  )
-  // The button never claims success.
-  assert.ok(screen.getByRole("button", { name: "Liste kopieren" }))
-  const selection = domWindow.getSelection()
-  assert.ok(selection && selection.rangeCount === 1)
-  const selected = selection.getRangeAt(0).startContainer as HTMLElement
-  assert.ok(selected.textContent?.includes("Neu kaufen"), selected.textContent ?? "")
-  assert.ok(selection.toString().includes("Alpha Shampoo"), selection.toString())
-})
-
-test("copy: no clipboard at all (insecure context) falls back the same way", async () => {
-  Object.defineProperty(domWindow.navigator, "clipboard", { configurable: true, value: undefined })
+test("R29: the section offers no „Liste kopieren“ — the list flows into Phase 4 and the PDF", () => {
   render(<RunsheetLockedInSection lockedIn={runsheetLockedIn(steps({ shampoo: swapShampoo }))} />)
-
-  fireEvent.click(screen.getByRole("button", { name: "Liste kopieren" }))
-  await flush()
-
-  assert.ok(screen.getByRole("status").textContent?.startsWith("Kopieren ging nicht"))
+  assert.equal(screen.queryByRole("button"), null)
+  assert.equal(document.getElementById("runsheet-locked-in-copy"), null)
+  assert.ok(section().textContent?.includes("Die Liste geht so in Phase 4 (Routine) und ins PDF."))
+  assert.ok(groupText("Neu kaufen").includes("Alpha Shampoo"))
 })
 
 // --- a new selection re-renders the section ------------------------------------------

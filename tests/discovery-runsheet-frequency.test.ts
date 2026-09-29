@@ -10,6 +10,7 @@ import {
   idealCadenceBand,
   runsheetEntryInHerWeek,
   runsheetWashAnchor,
+  runsheetWashChangeNote,
   runsheetWashFrequency,
   type FrequencyDelta,
 } from "../src/lib/discovery/runsheet"
@@ -456,5 +457,75 @@ test("wash anchor: both ends agree → a chip on the union band", () => {
       washFrequency: anchor,
     })?.status,
     "passt",
+  )
+})
+
+// --- F2: the wash-change note (consult-iteration-2) ---------------------------------------
+
+const WASH_TARGET_STEP = {
+  frequencyLabel: "3-4×/Woche",
+  idealAllowedRange: { min: "weekly_2x", max: "weekly_3_4x" },
+} as const
+
+function shampoo(frequency: string | null) {
+  return { category: "shampoo", frequency }
+}
+
+test("wash-change note: washing clearly more often than tolerated explains „seltener“", () => {
+  const note = runsheetWashChangeNote(
+    [WASH_TARGET_STEP],
+    [shampoo("weekly_5_6x")],
+    "5-6× pro Woche",
+  )
+  assert.ok(note)
+  assert.match(note, /^Warum seltener \(3-4×\/Woche statt 5-6× pro Woche\)/)
+})
+
+test("wash-change note: washing clearly less often than tolerated explains „öfter“", () => {
+  const note = runsheetWashChangeNote([WASH_TARGET_STEP], [shampoo("weekly_1x")], "1× pro Woche")
+  assert.ok(note)
+  assert.match(note, /^Warum öfter \(3-4×\/Woche statt 1× pro Woche\)/)
+})
+
+test("wash-change note: inside the tolerated range there is no note", () => {
+  assert.equal(
+    runsheetWashChangeNote([WASH_TARGET_STEP], [shampoo("weekly_3_4x")], "3-4× pro Woche"),
+    null,
+  )
+  assert.equal(
+    runsheetWashChangeNote([WASH_TARGET_STEP], [shampoo("weekly_2x")], "2× pro Woche"),
+    null,
+  )
+})
+
+test("wash-change note: several shampoos → silent (the weekly sum is theirs, Codex review)", () => {
+  assert.equal(
+    runsheetWashChangeNote(
+      [WASH_TARGET_STEP],
+      [shampoo("weekly_5_6x"), shampoo("weekly_1x")],
+      "5-6× pro Woche",
+    ),
+    null,
+  )
+})
+
+test("wash-change note: unknown frequency, paused target or no range → silent", () => {
+  assert.equal(runsheetWashChangeNote([WASH_TARGET_STEP], [shampoo(null)], "5-6× pro Woche"), null)
+  assert.equal(runsheetWashChangeNote([WASH_TARGET_STEP], [], "5-6× pro Woche"), null)
+  assert.equal(
+    runsheetWashChangeNote(
+      [{ ...WASH_TARGET_STEP, frequencyLabel: "später: 3-4×/Woche" }],
+      [shampoo("weekly_5_6x")],
+      "5-6× pro Woche",
+    ),
+    null,
+  )
+  assert.equal(
+    runsheetWashChangeNote(
+      [{ frequencyLabel: "3-4×/Woche", idealAllowedRange: null }],
+      [shampoo("weekly_5_6x")],
+      "5-6× pro Woche",
+    ),
+    null,
   )
 })

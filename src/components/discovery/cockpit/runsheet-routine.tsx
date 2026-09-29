@@ -139,12 +139,15 @@ export function runsheetWeek(steps: readonly DiscoveryCockpitStepView[]): {
 export function DiscoveryRunsheetRoutine({
   view,
   washFrequencyLabel,
+  washChangeNote = null,
   washFrequency = null,
   researchLabels = {},
 }: {
   view: Pick<DiscoveryCockpitView, "steps" | "heatProtectionAsk" | "routineSource">
   /** Her shampoo frequency from the checklist („3–4× pro Woche"); null when not asked. */
   washFrequencyLabel: string | null
+  /** Why the wash frequency changes (`runsheetWashChangeNote`, F2); null = no change. */
+  washChangeNote?: string | null
   /** Her wash range (`runsheetWashAnchor`): the anchor of per-wash frequency chips. */
   washFrequency?: ProductFrequency | WashAnchor | null
   /**
@@ -168,6 +171,9 @@ export function DiscoveryRunsheetRoutine({
             </span>
             <span className="text-[12px] text-muted-foreground">{WASH_FREQUENCY_NOTE}</span>
           </p>
+        ) : null}
+        {washChangeNote ? (
+          <p className="text-[13px] leading-5 text-foreground">{washChangeNote}</p>
         ) : null}
         <div className="grid gap-3 md:grid-cols-2">
           <WeekCard

@@ -102,6 +102,8 @@ function nomiInput(overrides: Partial<ConsultInput> = {}): ConsultInput {
 /** A brief that honours every rule — the baseline the adversarial variants break. */
 function cleanBrief(): DiscoveryCallSheetBriefSections {
   return {
+    mechanik:
+      "Trockene, spröde Längen entstehen meist durch Vorschädigung der Haarstruktur, häufige Hitze und zu wenig Feuchtigkeit.",
     diagnose:
       "Blondiert und gefärbt, dazu zweimal pro Woche Lockenstab: Die Längen sind vorgeschädigt, und die Hitze setzt jede Woche neuen Schaden. Das Glanzwerk Volumen Shampoo passt nicht zu ihren Längen.",
     hebel: [
@@ -109,22 +111,27 @@ function cleanBrief(): DiscoveryCallSheetBriefSections {
         title: "Weniger neuer Schaden",
         note: "Lockenstab seltener, nur ins trockene Haar, Hitzeschutz vorher.",
         points: 1.5,
+        bucket: "umgang",
       },
       {
         title: "Mildes Shampoo",
         note: "Sanftwerk Mild Shampoo statt Glanzwerk Volumen Shampoo, nur auf die Kopfhaut.",
         points: 1,
+        bucket: "produkt",
       },
-      { title: "Bondbuilder", note: "Bindwerk Bond Kur im vorgesehenen Rhythmus.", points: 1 },
+      {
+        title: "Bondbuilder",
+        note: "Bindwerk Bond Kur im vorgesehenen Rhythmus.",
+        points: 1,
+        bucket: "produkt",
+      },
     ],
     swapReasons: {
       [SHAMPOO_KEY]:
         "Das jetzige Shampoo passt nicht: Es reinigt kräftig und raut die Längen weiter auf. Das Sanftwerk Mild Shampoo reinigt milder.",
       [CONDITIONER_KEY]: "Die Pflegehaus Repair Spülung passt und bleibt.",
     },
-    zielLuecken: [
-      "Der Glanz kommt mit der Pflege; die gebrochenen Spitzen wachsen raus oder werden geschnitten.",
-    ],
+    zielLuecken: [],
     callFragen: ["Wie oft pro Woche nutzt du den Lockenstab, und auf welcher Stufe?"],
     erwartungen: [
       "Kämmbarkeit: erste Unterschiede nach wenigen Wäschen, stabil in 2–4 Wochen.",
@@ -268,7 +275,12 @@ test("a product name quoted from a verdict may carry „Repair“ or „Reparatu
     ],
   })
   const brief = cleanBrief()
-  brief.hebel.push({ title: "Maske", note: "Heilkraut Reparatur Maske bleibt.", points: 0.5 })
+  brief.hebel.push({
+    title: "Maske",
+    note: "Heilkraut Reparatur Maske bleibt.",
+    points: 0.5,
+    bucket: "produkt",
+  })
   assert.deepEqual(lintConsultBrief(brief, input), [])
 })
 
@@ -289,6 +301,7 @@ test("adversarial: a brief that praises the passt-nicht shampoo fails", () => {
     title: "Shampoo",
     note: "Das Glanzwerk Volumen Shampoo passt super, einfach behalten.",
     points: 1,
+    bucket: "produkt",
   }
   const findings = lintConsultBrief(brief, nomiInput())
   assert.deepEqual(rules(findings), ["verdict_contradiction"])
@@ -317,7 +330,12 @@ test("a swap reason keyed to a passt-nicht step may not say keep", () => {
 
 test("the other direction: advising against a passt product fails", () => {
   const brief = cleanBrief()
-  brief.hebel.push({ title: "Spülung", note: "Die Repair Spülung weglassen.", points: 0.5 })
+  brief.hebel.push({
+    title: "Spülung",
+    note: "Die Repair Spülung weglassen.",
+    points: 0.5,
+    bucket: "produkt",
+  })
   assert.deepEqual(rules(lintConsultBrief(brief, nomiInput())), ["verdict_contradiction"])
 
   const reason = cleanBrief()
@@ -340,6 +358,7 @@ test("amount and placement advice on a passt product is not a contradiction", ()
     title: "Menge",
     note: "Von der Repair Spülung weniger nehmen und nur in die Längen.",
     points: 0.5,
+    bucket: "umgang",
   })
   assert.deepEqual(lintConsultBrief(brief, nomiInput()), [])
 })
@@ -348,7 +367,12 @@ test("amount and placement advice on a passt product is not a contradiction", ()
 
 test("adversarial: a brief with an invented product fails", () => {
   const brief = cleanBrief()
-  brief.hebel.push({ title: "Bond-Kur", note: "Olaplex No. 3 einmal pro Woche.", points: 1 })
+  brief.hebel.push({
+    title: "Bond-Kur",
+    note: "Olaplex No. 3 einmal pro Woche.",
+    points: 1,
+    bucket: "produkt",
+  })
   const findings = lintConsultBrief(brief, nomiInput())
   assert.deepEqual(rules(findings), ["unknown_product"])
   assert.match(findings[0]!.excerpt, /Olaplex/)
@@ -362,7 +386,12 @@ test("a market brand is fine when it is one of her products or options", () => {
     ],
   })
   const brief = cleanBrief()
-  brief.hebel.push({ title: "Olaplex", note: "Olaplex No. 3 Hair Perfector bleibt.", points: 1 })
+  brief.hebel.push({
+    title: "Olaplex",
+    note: "Olaplex No. 3 Hair Perfector bleibt.",
+    points: 1,
+    bucket: "produkt",
+  })
   assert.deepEqual(lintConsultBrief(brief, input), [])
 })
 
@@ -423,7 +452,7 @@ test("adversarial: a negated doctor sentence fails anywhere", () => {
     "Ärztlich ist das nicht nötig.",
   ]) {
     const brief = cleanBrief()
-    brief.zielLuecken.push(line)
+    brief.mechanik += ` ${line}`
     const findings = lintConsultBrief(brief, nomiInput())
     assert.ok(
       findings.some((finding) => finding.detail === "boundary_negated"),
@@ -434,7 +463,7 @@ test("adversarial: a negated doctor sentence fails anywhere", () => {
 
 test("relativizing the boundary fails anywhere in the brief", () => {
   const brief = cleanBrief()
-  brief.zielLuecken.push("Der Ausfall ist wahrscheinlich harmlos, erst mal abwarten.")
+  brief.mechanik += " Der Ausfall ist wahrscheinlich harmlos, erst mal abwarten."
   const findings = lintConsultBrief(brief, nomiInput())
   assert.ok(findings.length >= 1)
   assert.ok(findings.every((finding) => finding.guardrail === "G2"))
@@ -561,7 +590,12 @@ test("normalization: soft hyphens, zero-width characters, decomposed umlauts, fo
   assert.ok(findForbiddenPhrases("Das stellt die Struktur wieder her.".normalize("NFD")).length > 0)
   for (const brand of ["Kerastase", "L'Oreal", "L’Oréal"]) {
     const brief = cleanBrief()
-    brief.hebel.push({ title: "Kur", note: `${brand} Maske einmal pro Woche.`, points: 0.5 })
+    brief.hebel.push({
+      title: "Kur",
+      note: `${brand} Maske einmal pro Woche.`,
+      points: 0.5,
+      bucket: "produkt",
+    })
     assert.deepEqual(rules(lintConsultBrief(brief, nomiInput())), ["unknown_product"], brand)
   }
 })
@@ -848,15 +882,14 @@ test("R22 adversarial: call questions naming a substance pass with and without a
 
 test("R22 in a full brief: the allowed sentences add no finding, the boundary rule stays intact", () => {
   const brief = cleanBrief()
-  brief.zielLuecken.push(
-    "Gegen Haarausfall gibt es ärztliche Wirkstoffe, die nur wirken, solange man sie anwendet — ob so etwas für sie passt, gehört in ärztliche Hand.",
-    "Es gibt ärztliche Optionen wie Minoxidil; ob das für sie passt, klärt die Ärztin.",
-    "Nahrungsergänzung wie Biotin gehört in die ärztliche Abklärung, nicht in den Pflegeplan.",
-  )
+  brief.mechanik +=
+    " Gegen Haarausfall gibt es ärztliche Wirkstoffe, die nur wirken, solange man sie anwendet — ob so etwas für sie passt, gehört in ärztliche Hand." +
+    " Es gibt ärztliche Optionen wie Minoxidil; ob das für sie passt, klärt die Ärztin." +
+    " Nahrungsergänzung wie Biotin gehört in die ärztliche Abklärung, nicht in den Pflegeplan."
   assert.deepEqual(lintConsultBrief(brief, nomiInput()), [])
   // boundary_negated still catches a softened handoff next to a drug mention.
   const softened = cleanBrief()
-  softened.zielLuecken.push("Minoxidil geht auch ohne Arzt, ärztlich ist das nicht nötig.")
+  softened.mechanik += " Minoxidil geht auch ohne Arzt, ärztlich ist das nicht nötig."
   const details = lintConsultBrief(softened, nomiInput()).map((finding) => finding.detail)
   assert.ok(details.includes("boundary_negated"), JSON.stringify(details))
 })
@@ -891,4 +924,20 @@ test("R22 hardening (Codex F1): advice and schedule wording is a recommendation,
   assert.ok(phraseIds("Probier Mino⁣xidil.").includes("minoxidil"))
   // „Wende dich an deine Hautärztin" is the handoff itself, not an application instruction.
   assert.deepEqual(phraseIds("Wende dich mit dem Thema Minoxidil an deine Hautärztin."), [])
+})
+
+// --- v4: mechanik is linted, stored zielLuecken is not ------------------------------------------
+
+test("v4: mechanik is linted like any prose section", () => {
+  const brief = cleanBrief()
+  brief.mechanik += " Die Bond Kur repariert die gebrochenen Längen."
+  const findings = lintConsultBrief(brief, nomiInput())
+  assert.deepEqual(rules(findings), ["forbidden_phrase"])
+  assert.equal(findings[0]!.location, "mechanik")
+})
+
+test("v4: legacy zielLuecken lines on a stored brief are no longer linted", () => {
+  const brief = cleanBrief()
+  brief.zielLuecken = ["Die Bond Kur repariert die gebrochenen Längen."]
+  assert.deepEqual(lintConsultBrief(brief, nomiInput()), [])
 })

@@ -321,3 +321,42 @@ export function runsheetWashFrequency(
     products.filter((product) => product.category === "shampoo").map((p) => p.frequency),
   )
 }
+
+/**
+ * F2 (consult-iteration-2): the one-line „warum ändert sich die Waschfrequenz" for the
+ * Phase-4 header. Her checklist answer vs the shampoo step's tolerated range
+ * (`idealAllowedRange`): clearly outside → a deterministic explanation naming both
+ * frequencies; inside the range, unknown on either side, or a paused shampoo step → null.
+ * With SEVERAL shampoos her weekly wash count is their sum and a single label would
+ * misstate it (Codex review) — the note then stays silent and the chips own the picture.
+ * The note never guesses — same conservatism as the chips.
+ */
+export function runsheetWashChangeNote(
+  steps: ReadonlyArray<Pick<DiscoveryCockpitStepView, "frequencyLabel" | "idealAllowedRange">>,
+  products: ReadonlyArray<{ category: string | null; frequency?: string | null }>,
+  washFrequencyLabel: string | null,
+): string | null {
+  if (!washFrequencyLabel) return null
+  const shampooFrequencies = products
+    .filter((product) => product.category === "shampoo")
+    .map((product) => product.frequency)
+  const single = shampooFrequencies.length === 1 ? shampooFrequencies[0] : null
+  if (!isKnownProductFrequency(single)) return null
+  const washFrequency = single
+  const target = steps.find((step) => step.idealAllowedRange !== null)
+  if (!target?.frequencyLabel || target.frequencyLabel.startsWith(PAUSED_CADENCE_PREFIX)) {
+    return null
+  }
+  const range = target.idealAllowedRange as WashAllowedRange
+  const allowedMin = productFrequencyBand(range.min).min
+  const allowedMax = productFrequencyBand(range.max).max
+  const hers = productFrequencyBand(washFrequency)
+  if (allowedMin === null || allowedMax === null) return null
+  if (hers.min !== null && hers.min > allowedMax) {
+    return `Warum seltener (${target.frequencyLabel} statt ${washFrequencyLabel}): Häufiges Waschen entzieht Fett und trocknet die Längen aus — der größere Abstand beruhigt Kopfhaut und Längen.`
+  }
+  if (hers.max !== null && hers.max < allowedMin) {
+    return `Warum öfter (${target.frequencyLabel} statt ${washFrequencyLabel}): Zwischen den Wäschen sammeln sich Talg und Rückstände — der kürzere Abstand hält die Kopfhaut im Gleichgewicht.`
+  }
+  return null
+}

@@ -673,6 +673,7 @@ type BriefText = { location: string; text: string; swapKey?: string }
 
 function briefTexts(brief: DiscoveryCallSheetBriefSections): BriefText[] {
   return [
+    { location: "mechanik", text: brief.mechanik },
     { location: "diagnose", text: brief.diagnose },
     ...brief.hebel.flatMap((entry, index) => [
       { location: `hebel[${index}].title`, text: entry.title },
@@ -683,7 +684,6 @@ function briefTexts(brief: DiscoveryCallSheetBriefSections): BriefText[] {
       text,
       swapKey: key,
     })),
-    ...brief.zielLuecken.map((text, index) => ({ location: `zielLuecken[${index}]`, text })),
     ...brief.callFragen.map((text, index) => ({ location: `callFragen[${index}]`, text })),
     ...brief.erwartungen.map((text, index) => ({ location: `erwartungen[${index}]`, text })),
   ]

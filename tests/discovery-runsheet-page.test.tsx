@@ -258,15 +258,22 @@ const callSheet: DiscoveryCallSheet = parseDiscoveryCallSheet({
   touchpoints: [{ kind: "rescore_call", due_on: "2026-10-25", done_at: null }],
   consult_brief: {
     sections: {
+      mechanik: "Aufgeraute Längen entstehen meist durch Hitze, Reibung und Vorschädigung.",
       diagnose: "Feines, blondiertes Haar mit aufgerauten Längen.",
       hebel: [
-        { title: "Schaden stoppen", note: "Hitzeschutz immer.", points: 1.5 },
-        { title: "Basics stärken", note: "Conditioner nach jeder Wäsche.", points: 1.5 },
-        { title: "Gezielt reparieren", note: "Leichte Maske.", points: 1 },
+        { title: "Schaden stoppen", note: "Hitzeschutz immer.", points: 1.5, bucket: "umgang" },
+        {
+          title: "Basics stärken",
+          note: "Conditioner nach jeder Wäsche.",
+          points: 1.5,
+          bucket: "umgang",
+        },
+        { title: "Gezielt reparieren", note: "Leichte Maske.", points: 1, bucket: "produkt" },
       ],
       swapReasons: {
         [shampooStep.decisionKey]: "Anti-Schuppen trocknet ihre Kopfhaut weiter aus.",
       },
+      // Stored pre-v4 field: still round-trips, but is no longer displayed or edited.
       zielLuecken: ["Ziel „Form & Halt“: offen ansprechen."],
       callFragen: [],
       erwartungen: [],
@@ -391,14 +398,24 @@ test("buckets: her mismatched shampoo is a proposed swap, with category anchor, 
   assert.ok(entry.includes("Anti-Schuppen trocknet ihre Kopfhaut weiter aus."))
   assert.ok(markup.includes("Tauschen zu Sebamed Urea 5% Shampoo"))
   assert.ok(markup.includes("Nichts zum Behalten vorgeschlagen."))
-  assert.ok(markup.includes("Ziel „Form &amp; Halt“: offen ansprechen."))
+  // v4 (R27): a stored Ziel-Lücke is no longer displayed anywhere.
+  assert.ok(!markup.includes("Form &amp; Halt"))
 })
 
 test("a legacy enrollment without a call sheet renders every new section empty", async () => {
   const markup = await renderPage()
   assert.ok(markup.includes("Noch nicht erfasst — Diagnose vor dem Call eintragen."))
   assert.ok(markup.includes("Noch keine Hebel erfasst."))
-  assert.ok(markup.includes("Noch keine Gewohnheiten erfasst."))
+  // v4: the Gewohnheiten card is dissolved — its checkboxes sit in the Maßnahmen card's
+  // Umgang group, next to two bucket-specific add buttons instead of one „Hebel hinzufügen".
+  assert.ok(!markup.includes("Noch keine Gewohnheiten erfasst."))
+  assert.ok(markup.includes('id="runsheet-mechanik"'))
+  assert.ok(markup.includes('id="runsheet-hebel-add-produkt"'))
+  assert.ok(markup.includes(">Produkt-Hebel hinzufügen<"))
+  assert.ok(markup.includes('id="runsheet-hebel-add-umgang"'))
+  assert.ok(markup.includes(">Umgang-Hebel hinzufügen<"))
+  assert.ok(!markup.includes('id="runsheet-hebel-add"'))
+  assert.ok(markup.includes('id="runsheet-habit-new"'))
   assert.ok(markup.includes("Noch keine Touchpoints vereinbart."))
   assert.ok(!markup.includes("Mit Plan"))
   assert.ok(markup.includes("Baseline-Score abfragen (1–10) und oben eintragen"))
@@ -411,9 +428,24 @@ test("a legacy enrollment without a call sheet renders every new section empty",
 test("a call sheet fills the score tile, the staircase and the follow-ups", async () => {
   const markup = await renderPage({ loadCallSheet: async () => callSheet })
   assert.ok(markup.includes("Mit Plan"))
-  assert.ok(markup.includes("Hebel · von 4 auf 8"))
+  assert.ok(markup.includes("Maßnahmen · von 4 auf 8"))
+  assert.ok(!markup.includes("Hebel · von"))
+  assert.ok(
+    markup.includes("Aufgeraute Längen entstehen meist durch Hitze, Reibung und Vorschädigung."),
+  )
   assert.ok(markup.includes("Feines, blondiertes Haar mit aufgerauten Längen."))
   assert.ok(markup.includes('value="Schaden stoppen"'))
+  // Grouped by bucket: Produkte (Gezielt reparieren) before Umgang mit dem Haar (the rest),
+  // with the habit checkboxes inside the Maßnahmen card's Umgang group.
+  const produkte = markup.indexOf(">Produkte<")
+  const umgang = markup.indexOf(">Umgang mit dem Haar<")
+  assert.ok(produkte >= 0 && umgang > produkte)
+  const reparieren = markup.indexOf('value="Gezielt reparieren"')
+  const schaden = markup.indexOf('value="Schaden stoppen"')
+  assert.ok(produkte < reparieren && reparieren < umgang && umgang < schaden)
+  const habit = markup.indexOf('id="runsheet-habit-h1"')
+  assert.ok(habit > umgang && habit < markup.indexOf(">Für den Call<"))
+  assert.ok(markup.indexOf('id="runsheet-mechanik"') < markup.indexOf('id="runsheet-diagnose"'))
   assert.ok(markup.includes("fürs PDF vorgemerkt"))
   assert.ok(!markup.includes("steht auf ihrem PDF"))
   assert.ok(markup.includes("25.10.2026 · Re-Score-Call"))
@@ -487,7 +519,7 @@ test("stale hint: hidden when the page read degraded (quiz lead unread)", async 
   }
 })
 
-test("brief lists: the stored Ziel-Lücken, Call-Fragen and Erwartungen show in Phase 2", async () => {
+test("brief lists: Call-Fragen and Erwartungen show in Phase 2; Ziel-Lücken are gone (v4)", async () => {
   const withLists: DiscoveryCallSheet = {
     ...generatedCallSheet(pageHash()),
     consultBrief: {
@@ -505,7 +537,8 @@ test("brief lists: the stored Ziel-Lücken, Call-Fragen and Erwartungen show in 
     markup.indexOf('id="runsheet-brief-save"'),
   )
   assert.ok(phase2.includes(">Für den Call<"))
-  assert.ok(phase2.includes("Ziel „Form &amp; Halt“: offen ansprechen."))
+  assert.ok(!phase2.includes("Form &amp; Halt"))
+  assert.ok(!phase2.includes("runsheet-zielLuecken"))
   assert.ok(phase2.includes("Wie oft glättest du?"))
   assert.ok(phase2.includes("Im Zweifel ärztlich abklären lassen."))
 })
@@ -535,7 +568,8 @@ test("a failing call-sheet read leaves the runsheet empty instead of failing the
     // overwrite the stored row.
     assert.equal(
       markup.split("Call-Sheet nicht geladen — Seite neu laden, dann speichern.").length - 1,
-      2,
+      // Two save bars plus the R28 complexity choice (locked while the sheet is unread).
+      3,
     )
     assert.match(markup, /id="runsheet-brief-save" type="button" disabled=""/)
     assert.match(markup, /id="runsheet-follow-up-save" type="button" disabled=""/)
@@ -988,6 +1022,7 @@ test("call sheet parser: legacy/garbage rows degrade to empty, never throw", () 
     touchpoints: [],
     consultBrief: null,
     habitCommitments: [],
+    complexity: null,
     feedback: null,
   })
   const junk = parseDiscoveryCallSheet({
@@ -1001,7 +1036,10 @@ test("call sheet parser: legacy/garbage rows degrade to empty, never throw", () 
   })
   assert.equal(junk.baselineScore, null)
   assert.deepEqual(junk.touchpoints, [])
-  assert.deepEqual(junk.consultBrief?.sections.hebel, [{ title: "", note: "", points: null }])
+  assert.deepEqual(junk.consultBrief?.sections.hebel, [
+    { title: "", note: "", points: null, bucket: null },
+  ])
+  assert.equal(junk.consultBrief?.sections.mechanik, "")
   assert.deepEqual(junk.consultBrief?.sections.swapReasons, {})
   assert.deepEqual(junk.habitCommitments, [])
 })
@@ -1614,8 +1652,6 @@ const QUOTED_EXCEPTIONS = [
   "Passt das so für dich?",
   // Concern recipe: the word Nick explains (a term, not a sentence to her).
   "Wassermangel",
-  // Consult brief goal gap: the goal's own name, quoted.
-  "Form & Halt",
   // Phase 4 closing question.
   "Alles klar so? Passt das in deine Woche?",
   // Phase 6 referral question.
@@ -1907,16 +1943,13 @@ test("locked-in: a product without a price — no price on the row, the sum read
   assert.ok(section.includes(">Preis noch offen<"))
 })
 
-test("locked-in: the copy button is the coral CTA, in the cockpit's own voice", async () => {
+test("locked-in: no copy button (R29), plum section in the cockpit's own voice", async () => {
   const section = lockedInOf(await renderPage())
-  assert.ok(
-    section.includes(
-      'id="runsheet-locked-in-copy" type="button" class="rounded-lg bg-[var(--brand-coral)]',
-    ),
-  )
-  assert.ok(section.includes(">Liste kopieren</button>"))
-  // Plum marks the section; coral appears only on the CTA.
-  assert.equal(occurrences(section, "--brand-coral"), 1)
+  assert.ok(!section.includes("runsheet-locked-in-copy"))
+  assert.ok(!section.includes("Liste kopieren"))
+  assert.ok(!section.includes("<button"))
+  // Plum marks the section; no coral CTA left in it.
+  assert.equal(occurrences(section, "--brand-coral"), 0)
   assert.ok(section.includes("text-[var(--brand-plum)]"))
   assert.ok(!SECOND_PERSON_WORD.test(readableLines(section).join("\n")))
 })

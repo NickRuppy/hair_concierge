@@ -6,7 +6,7 @@ import type { DiscoveryCallDecision } from "../refined-routine"
 /**
  * „Für den Plan festgehalten" (produktphase-lockin T1): the call's decisions compiled into
  * what she buys, keeps, stops using and deliberately goes without — the Phase-3 payoff Nick
- * reads out and copies as a shopping list.
+ * reads out.
  *
  * Pure and read-only, and no new decision mechanics: it reads the same per-entry decisions
  * the Entscheidung radios write (`discovery_call_decisions`). A decision unit is one entry of
@@ -63,8 +63,6 @@ export type RunsheetLockedIn = {
 
 const UNKNOWN_PRODUCT = "Produkt ohne Namen"
 const OWNED_FALLBACK = "Bisheriges Produkt"
-const LIST_TITLE = "Einkaufsliste:"
-const LIST_EMPTY = "Einkaufsliste: noch leer"
 
 const EURO = new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" })
 
@@ -139,19 +137,6 @@ export function runsheetLockedIn(
 
   lockedIn.totalLabel = EURO.format(totalCents / 100)
   return lockedIn
-}
-
-/** „Einkaufsliste:" and one line per product to buy — „Maske: Olaplex No. 8 — 28,00 €". */
-export function runsheetShoppingListText(lockedIn: Pick<RunsheetLockedIn, "buy">): string {
-  if (lockedIn.buy.length === 0) return LIST_EMPTY
-  return [
-    LIST_TITLE,
-    ...lockedIn.buy.map((row) =>
-      row.priceLabel
-        ? `${row.categoryLabel}: ${row.label} — ${row.priceLabel}`
-        : `${row.categoryLabel}: ${row.label}`,
-    ),
-  ].join("\n")
 }
 
 function buyRow(step: DiscoveryCockpitStepView, productId: string): RunsheetLockedInBuyRow {
