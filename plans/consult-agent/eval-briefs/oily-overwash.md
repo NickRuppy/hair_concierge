@@ -2,39 +2,40 @@
 
 > Fettige Kopfhaut, wäscht täglich mit starkem Shampoo; Hauptproblem fettiger/platter Ansatz; wenig Produkte.
 
-Modell `gpt-5.6-luna` · 31.7 s · Baseline 5 · Wissen: expectation-windows, oily-scalp-wash-cadence, wash-frequency-transition
+Modell `gpt-5.6-luna` · 27.6 s · Baseline 5 · Wissen: expectation-windows, oily-scalp-wash-cadence, wash-frequency-transition
 
 ## Diagnose
 
-Ihr glattes Haar wirkt am Ansatz flach oder in den Längen beschwert; genau das ist ihr Hauptproblem. Bei fettiger Kopfhaut ist häufigeres Waschen in Ordnung, und ihr täglicher Rhythmus wird auf 5–6 Wäschen pro Woche geprüft. Das Frischkraft Tiefenrein Shampoo passt nicht; als neuer Conditioner ist die Leichtwerk Light Spülung vorgesehen. Das tägliche Föhnen bietet einen Styling-Hebel: Der Ansatz soll vollständig trocknen und dabei gegen die Fallrichtung angehoben werden.
+Sie hat glattes Haar normaler Stärke und eine fettige Kopfhaut; dadurch kann der Ansatz schneller flach und schwer wirken. Der tägliche Wasch-Rhythmus ist bei fettiger Kopfhaut grundsätzlich möglich, der Plan sieht aber eine schrittweise Umstellung auf 5–6 Wäschen pro Woche vor. Das Frischkraft Tiefenrein Shampoo passt nicht zum vorgesehenen Alltagsschritt. Tägliches Föhnen kann zusätzlich relevant sein; ob dabei Hitzeschutz verwendet wird, ist noch offen. Der Haupthebel liegt daher bei gezielter Reinigung, weniger Gewicht an den Längen und dem Trocknen mit angehobenem Ansatz.
 
 ## Hebel
 
-1. **Frischkraft Tiefenrein Shampoo tauschen** _(1.5 P.)_ — Das Frischkraft Tiefenrein Shampoo passt nicht. Als Optionen stehen Sanftwerk Balance Shampoo und Klarwerk Mildes Alltagsshampoo zur Verfügung; das Shampoo kommt gezielt an die Kopfhaut.
-2. **Leichtwerk Light Spülung gezielt einsetzen** _(1 P.)_ — Die Leichtwerk Light Spülung kommt in kleiner Menge nur in Längen und Spitzen, nicht an den Ansatz. So wird unnötiges Gewicht am Ansatz vermieden.
-3. **Ansatz beim Föhnen anheben** _(0.75 P.)_ — Der Ansatz soll vollständig trocknen und dabei gegen die Fallrichtung angehoben werden. Das ist ein konkreter Styling-Versuch für mehr Ansatzhöhe.
-4. **Schnitt und Längen prüfen** — Falls lange oder schwere Längen das Haar flacher fallen lassen, kann ein passender Schnitt mit Stufen als zusätzlicher Hebel besprochen werden.
+1. **Shampoo für den Alltag tauschen** _(2 P.)_ — Das Frischkraft Tiefenrein Shampoo passt nicht. Vorgesehen ist ein milderes Alltagsshampoo, gezielt an der Kopfhaut; Sanftwerk Balance Shampoo oder Klarwerk Mildes Alltagsshampoo kommen als Optionen infrage.
+2. **Conditioner leicht und sparsam einsetzen** _(1.5 P.)_ — Leichtwerk Light Spülung kommt nur in kleinen Mengen in Längen und Spitzen, niemals an den Ansatz. So kann sie Geschmeidigkeit geben, ohne zusätzliches Gewicht am Ansatz.
+3. **Waschrhythmus schrittweise anpassen** _(1.5 P.)_ — Sie kann zunächst einen Tag strecken und nach 2–4 Wochen prüfen, ob 5–6 Wäschen pro Woche für sie funktionieren. Für diese Wäschen ist ein mildes Alltagsshampoo vorgesehen; das Frischkraft Tiefenrein Shampoo passt nicht.
+4. **Ansatz beim Föhnen anheben** _(1 P.)_ — Sie sollte den Ansatz vollständig trocknen und dabei gegen die Fallrichtung anheben. Ob ein Hitzeschutz sinnvoll eingeplant wird, hängt davon ab, was sie bereits verwendet.
+5. **Rückstände als Ursache prüfen** — Falls sich das Haar schwer oder belegt anfühlt und trotz Waschen schnell platt wird, ist eine einmalige Tiefenreinigung als Versuch vorgesehen.
 
 ## Tausch-Begründungen
 
-- **Frischkraft Tiefenrein Shampoo** (`shampoo:shampoo_everyday:none`): Das Frischkraft Tiefenrein Shampoo passt nicht. Deshalb wird der Shampoo-Schritt mit Sanftwerk Balance Shampoo oder Klarwerk Mildes Alltagsshampoo neu besetzt.
-- **Leichtwerk Light Spülung** (`conditioner:conditioner_rinse_out:none`): Die Leichtwerk Light Spülung ist als neuer Conditioner vorgesehen. Kleine Mengen nur in Längen und Spitzen halten den Ansatz frei von zusätzlichem Pflegegewicht.
+- **Frischkraft Tiefenrein Shampoo** (`shampoo:shampoo_everyday:none`): Das Frischkraft Tiefenrein Shampoo passt nicht zum vorgesehenen Alltagsschritt. Ein milderes Shampoo wie Sanftwerk Balance Shampoo oder Klarwerk Mildes Alltagsshampoo kann den Ansatz gezielt reinigen, ohne den Plan auf einen dauerhaften Tiefenreinigungsschritt zu stützen.
+- **Leichtwerk Light Spülung** (`conditioner:conditioner_rinse_out:none`): Leichtwerk Light Spülung ist als neuer, leichter Conditioner vorgesehen. Kleine Mengen nur in Längen und Spitzen können Geschmeidigkeit geben, ohne den Ansatz zusätzlich zu beschweren.
 
 ## Ziel-Lücken
 
-- Schnitt, Form und Halt bleiben offen, weil dazu noch Angaben fehlen.
-- Die Pflege verändert nicht die Haardichte; falls „platt“ eine geringere Dichte oder einen breiteren Scheitel meint, braucht es einen anderen Prüfweg.
+- Der Plan verändert die Haardichte nicht; falls der Eindruck von weniger Dichte dahintersteht, braucht es eine gesonderte Abklärung.
+- Schnitt, Stufen und konkrete Stylingform bleiben offen und sind mit diesem Pflegeplan nicht vollständig abgedeckt.
+- Wie stark tägliches Föhnen die Längen belastet, hängt auch vom bisher verwendeten Hitzeschutz ab.
 
 ## Call-Fragen
 
-- Ist dein Haar direkt nach dem Waschen platt oder erst nach ein oder zwei Tagen, und stört dich dabei eher die Optik oder das Gefühl von Gewicht?
-- Hast du das Gefühl, dass dein Haar weniger dicht geworden ist oder mehr Kopfhaut durchscheint, oder wirkt es nur schwer und flach?
-- Was benutzt du nach dem Waschen, wie viel davon, und kommt etwas davon an den Ansatz?
-- Wie oft wäschst du aktuell aus welchem Grund, und verwendest du Trockenshampoo oder Styling am Ansatz?
-- Juckt die Kopfhaut anhaltend oder gibt es Rötung, Brennen oder andere Reaktionen?
+- Ist dein Haar direkt nach dem Waschen platt oder erst nach ein, zwei Tagen?
+- Meinst du mit „platt“ eher ein schweres, flaches Gefühl oder wirkt dein Haar auch weniger dicht beziehungsweise scheint mehr Kopfhaut durch?
+- Was benutzt du nach dem Waschen, wie viel davon und kommt etwas an den Ansatz?
+- Verwendest du beim täglichen Föhnen einen Hitzeschutz, und wie trocknest du den Ansatz bisher?
+- Wo kaufst du deine Haarpflege üblicherweise?
 
 ## Erwartungen
 
-- Ob der Ansatz weniger platt wirkt, lässt sich nach 2–4 Wochen mit dem angepassten Waschen und Styling beurteilen; die Kopfhaut wird nach etwa 4 Wochen erneut eingeschätzt.
-- Bereits ungünstig fallende oder schwere Längen verändern sich durch Pflege nicht dauerhaft; Form und Gewicht lassen sich gegebenenfalls über Schnitt und Rauswachsen beeinflussen.
+- Die Wirkung auf Ansatzgefühl und Kopfhaut lässt sich nach etwa 2–4 Wochen sinnvoll prüfen. Eine leichtere, weniger beschwerte Wirkung kann sich bei der passenden Anwendung früher zeigen, sollte aber im Check bestätigt werden.
 - Vermehrter Ausfall mit Wurzel, lichter werdendes Haar oder eine starke Kopfhautreaktion (anhaltendes Jucken, Rötung, Brennen, Schmerzen, nässende oder verkrustete Stellen) gehört ärztlich abgeklärt, dermatologisch oder hausärztlich.

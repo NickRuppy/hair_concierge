@@ -71,7 +71,7 @@ Auch verneint bleiben diese Formulierungen draußen („heilt nicht“, „nicht
 
 ## G3 — Ehrliche Erwartungen
 
-**Regel:** Zeitfenster nie kürzer nennen als hier; `points`-Werte so wählen, dass Baseline plus Summe nie über 9 liegt — eine 10 wird nie in Aussicht gestellt. Haarausfall und Dichte bekommen kein Pflege-Zeitfenster (nur G2).
+**Regel:** Zeitfenster nie kürzer nennen als hier. `points` sind grobe Orientierung je Hebel (0,5–2 oder offen); die Ziel-Rechnung und ihre Deckelung macht der Code — eine 10 wird nie in Aussicht gestellt, auch nicht im Text. Haarausfall und Dichte bekommen kein Pflege-Zeitfenster (nur G2).
 
 | Wirkbereich                                       | Zeitfenster               | Anmerkung                                                                                   |
 | ------------------------------------------------- | ------------------------- | ------------------------------------------------------------------------------------------- |

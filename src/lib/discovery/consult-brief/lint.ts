@@ -21,7 +21,6 @@ import type { ConsultInput, ConsultProduct } from "./input"
 export type ConsultLintRule =
   | "forbidden_phrase"
   | "score_promise"
-  | "score_target_cap"
   | "verdict_contradiction"
   | "unknown_product"
   | "unknown_swap_key"
@@ -840,22 +839,6 @@ export function lintConsultBrief(
           ? `Pflicht, Auslöser im Profil: ${input.boundaryTriggers.join(", ")}`
           : "Pflicht in jedem Brief",
     })
-  }
-
-  // G3 — the target the Hebel points imply stays at 9 or below.
-  if (input.baselineScore !== null) {
-    const target =
-      input.baselineScore +
-      brief.hebel.reduce((sum, entry) => sum + Math.max(0, entry.points ?? 0), 0)
-    if (target > CONSULT_SCORE_TARGET_CAP) {
-      findings.push({
-        rule: "score_target_cap",
-        guardrail: "G3",
-        location: "hebel",
-        excerpt: String(target),
-        detail: `Baseline ${input.baselineScore} + Hebel-Punkte = ${target} > ${CONSULT_SCORE_TARGET_CAP}`,
-      })
-    }
   }
 
   return findings

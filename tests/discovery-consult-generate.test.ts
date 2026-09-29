@@ -8,7 +8,6 @@ import {
   toConsultBriefSections,
 } from "../src/lib/discovery/consult-brief/api-schema"
 import {
-  capHebelPoints,
   CONSULT_BRIEF_DEFAULT_MODEL,
   consultBriefModel,
   generateConsultBrief,
@@ -155,10 +154,10 @@ test("the prompt: German, guardrails as hard rules, the exact sections schema, t
   assert.doesNotMatch(user, /"evidence"/)
 })
 
-test("the prompt names the allowed swapReasons keys and the score cap", () => {
+test("the prompt names the allowed swapReasons keys; the score arithmetic is the code's", () => {
   const { user, system } = buildConsultBriefPrompt(input())
   assert.ok(user.includes(`"${SHAMPOO_KEY}"`))
-  assert.match(system, /9/)
+  assert.ok(system.includes("Die Ziel-Rechnung und ihre Deckelung macht der Code"))
 })
 
 test("the sections schema is strict: exactly the call sheet's shape", () => {
@@ -421,40 +420,4 @@ test("the model: env override, else the strongest configured default", () => {
   assert.equal(consultBriefModel({ CONSULT_BRIEF_MODEL: " gpt-x " }), "gpt-x")
   assert.equal(consultBriefModel({}), CONSULT_BRIEF_DEFAULT_MODEL)
   assert.equal(consultBriefModel({ CONSULT_BRIEF_MODEL: "  " }), CONSULT_BRIEF_DEFAULT_MODEL)
-})
-
-test("capHebelPoints: the G3 cap is enforced in code, least important levers first", () => {
-  const hebel = [
-    { title: "Eins", note: "x", points: 2 },
-    { title: "Zwei", note: "x", points: 1.5 },
-    { title: "Drei", note: "x", points: 1 },
-  ]
-  // Baseline 6 → budget 3: the last lever loses its number, the sum drops to 3.5→ still over?
-  // 2 + 1.5 = 3.5 > 3, so lever two goes to null as well; the top lever keeps its figure.
-  assert.deepEqual(
-    capHebelPoints(hebel, 6).map((entry) => entry.points),
-    [2, null, null],
-  )
-  // Within budget: untouched (and the same array shape).
-  assert.deepEqual(
-    capHebelPoints(hebel, 4).map((entry) => entry.points),
-    [2, 1.5, 1],
-  )
-  // No baseline: nothing to enforce against.
-  assert.deepEqual(
-    capHebelPoints(hebel, null).map((entry) => entry.points),
-    [2, 1.5, 1],
-  )
-  // Null points are skipped, not counted.
-  assert.deepEqual(
-    capHebelPoints(
-      [
-        { title: "Eins", note: "x", points: 2 },
-        { title: "Zwei", note: "x", points: null },
-        { title: "Drei", note: "x", points: 1.5 },
-      ],
-      6,
-    ).map((entry) => entry.points),
-    [2, null, null],
-  )
 })

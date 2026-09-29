@@ -442,18 +442,16 @@ test("relativizing the boundary fails anywhere in the brief", () => {
 
 // --- score ------------------------------------------------------------------------------------
 
-test("score promises fail; the target is capped at 9", () => {
+test("score promises in the text fail; the sum is the display's business, not the lint's", () => {
   const promise = cleanBrief()
   promise.erwartungen.unshift("Mit den drei Hebeln kommst du auf 8, also +4 Punkte.")
   assert.ok(rules(lintConsultBrief(promise, nomiInput())).includes("score_promise"))
 
+  // Points may sum past the cap: the score ladder caps the DISPLAY at 9 (runsheetScoreSteps),
+  // the model's per-lever estimates stay untouched.
   const over = cleanBrief()
   over.hebel[0]!.points = 4
-  // 4 + 4 + 1 + 1 = 10 > 9
-  assert.deepEqual(rules(lintConsultBrief(over, nomiInput())), ["score_target_cap"])
-
-  // Without a baseline there is nothing to cap.
-  assert.deepEqual(lintConsultBrief(over, nomiInput({ baselineScore: null })), [])
+  assert.deepEqual(lintConsultBrief(over, nomiInput()), [])
 })
 
 // --- fix round 1: reviewer bypasses (each MUST flag) ---------------------------------------------

@@ -3,7 +3,6 @@ import { z } from "zod"
 import type { DiscoveryCallSheetBriefSections } from "../call-sheet"
 import type { ConsultInput } from "./input"
 import { CONSULT_GUARDRAILS_MARKDOWN } from "./knowledge-sources"
-import { CONSULT_SCORE_TARGET_CAP } from "./lint"
 
 /**
  * The consult brief's prompt (consult-agent T2, hardened per plans/consult-brief-hardening):
@@ -71,7 +70,7 @@ const SYSTEM = `Du schreibst den internen Beratungs-Brief für Nick, der gleich 
 
 ## Aufgabe
 - "diagnose": Erzählung mit Ursachenkette aus Profil, Hauptproblem, Hitze-Daten, Waschrhythmus und Produkten, 3–6 Sätze. Jede Ursachen-Aussage stützt sich auf ein Feld im <input>. Fehlt eine Angabe, erfinde keine — mach eine callFrage daraus.
-- "hebel": 3 bis 5 Hebel, gereiht nach erwartetem Impact für IHR Hauptproblem. Verhaltens-Hebel und Produkt-Züge zählen gleichberechtigt: Ein zentraler Tausch oder Neuzugang darf ein eigener Hebel sein. Ein Hebel = ein Thema, keine Sammel-Hebel. "title" kurz, "note" ein bis zwei Sätze, was konkret zu tun ist. "points": grobe Orientierung (0,5 bis 2) oder null, wenn offen. Rechne nach: baselineScore plus die Summe ALLER points bleibt höchstens ${CONSULT_SCORE_TARGET_CAP} — bei Baseline 5 dürfen alle Punkte zusammen also höchstens 4 ergeben. Wird es mehr, senke einzelne points oder setze sie auf null. Punkte stehen nur im Feld "points", nie im Text.
+- "hebel": 3 bis 5 Hebel, gereiht nach erwartetem Impact für IHR Hauptproblem. Verhaltens-Hebel und Produkt-Züge zählen gleichberechtigt: Ein zentraler Tausch oder Neuzugang darf ein eigener Hebel sein. Ein Hebel = ein Thema, keine Sammel-Hebel. "title" kurz, "note" ein bis zwei Sätze, was konkret zu tun ist. "points": grobe Orientierung je Hebel (0,5 bis 2) oder null, wenn offen. Die Ziel-Rechnung und ihre Deckelung macht der Code — rechne nichts zusammen. Punkte stehen nur im Feld "points", nie im Text.
 - "swapReasons": pro erlaubtem Key ein Eintrag { "key", "reason" } mit einer Begründung in Beratungssprache, "key" ausschließlich aus <erlaubte_swapReasons_keys>. Ist die Liste leer, ist ein leeres Array die richtige Antwort.
 - "zielLuecken": was der Plan ehrlich nicht löst (z. B. Styling-Ziele wie Form und Halt).
 - "callFragen": genau die 3 bis 5 Fragen, deren Antwort den Plan wirklich ändert — zuerst die zu Einträgen mit "questionFirst": true. Mehrere Detailfragen zum selben Thema werden zu einer zusammengesetzten Frage verdichtet. Die Fragenlisten im Material sind Auswahl-Material, nichts zum Kopieren.
@@ -119,7 +118,6 @@ export function buildConsultBriefPrompt(input: ConsultInput): { system: string; 
     "3. Keine Score-Zahlen, Prozentwerte oder Evidenz-Vokabeln im Text; Häufigkeiten und Zeitfenster (Wochen, Monate) sind erlaubt.",
     "4. Medizinisches nur faktisch — nie empfehlen, dosieren oder Präparat-Marken nennen (G1b), die Entscheidung ärztlich verorten; bei boundaryTriggers kein Pflegehebel gegen Ausfall.",
     '5. "hebel" und "callFragen" haben je 3 bis 5 Einträge, und jede Frage ändert den Plan.',
-    '6. baselineScore plus die Summe aller "points" ist höchstens 9 — nachrechnen.',
     "Antworte nur mit dem JSON-Objekt.",
   ].join("\n")
   return { system: SYSTEM, user }

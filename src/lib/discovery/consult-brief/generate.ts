@@ -11,12 +11,7 @@ import {
 } from "./api-schema"
 import { consultSourceHash } from "./hash"
 import type { ConsultInput } from "./input"
-import {
-  CONSULT_BOUNDARY_LINE,
-  CONSULT_SCORE_TARGET_CAP,
-  lintConsultBrief,
-  type ConsultLintFinding,
-} from "./lint"
+import { CONSULT_BOUNDARY_LINE, lintConsultBrief, type ConsultLintFinding } from "./lint"
 import {
   buildConsultBriefPrompt,
   consultBriefSectionsSchema,
@@ -126,30 +121,6 @@ export function withBoundaryLine(erwartungen: string[]): string[] {
   return [...erwartungen.filter((line) => line.trim() !== boundaryLine), CONSULT_BOUNDARY_LINE]
 }
 
-/**
- * The G3 cap is an engine fact, not model arithmetic: when baseline plus the lever points
- * exceed ${CONSULT_SCORE_TARGET_CAP}, the LEAST important levers (the list is priority-ordered)
- * lose their number first — null means „offen", never a scaled-down fake figure.
- */
-export function capHebelPoints(
-  hebel: DiscoveryCallSheetBriefSections["hebel"],
-  baselineScore: number | null,
-): DiscoveryCallSheetBriefSections["hebel"] {
-  if (baselineScore === null) return hebel
-  const budget = CONSULT_SCORE_TARGET_CAP - baselineScore
-  const sum = hebel.reduce((total, entry) => total + Math.max(0, entry.points ?? 0), 0)
-  if (sum <= budget) return hebel
-  const capped = hebel.map((entry) => ({ ...entry }))
-  let excess = sum - budget
-  for (let index = capped.length - 1; index >= 0 && excess > 0; index--) {
-    const points = capped[index].points
-    if (points === null || points <= 0) continue
-    capped[index].points = null
-    excess -= points
-  }
-  return capped
-}
-
 function correctionInstruction(findings: ConsultLintFinding[]): string {
   const lines = findings.map((finding) => {
     const excerpt = finding.excerpt ? ` „${finding.excerpt}"` : ""
@@ -196,7 +167,6 @@ export async function generateConsultBrief(
     if (!parsed.success) return { error: { code: "invalid_schema" } }
     const brief: DiscoveryCallSheetBriefSections = {
       ...parsed.data,
-      hebel: capHebelPoints(parsed.data.hebel, input.baselineScore),
       erwartungen: withBoundaryLine(parsed.data.erwartungen),
     }
     return { raw, brief, findings: lintConsultBrief(brief, input) }
