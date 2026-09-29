@@ -46,8 +46,8 @@
     "t20_rederivation": [
       {
         "path": "data/research/leave-in-inci/v1.1/corpus/t20-rederived/t20-care-direction-records.json",
-        "bytes": 37947,
-        "sha256": "5a00b869dfb159d47fbd1492f752bb65f67717dc957b6c678371fefef9016d78"
+        "bytes": 38722,
+        "sha256": "cef790827626bce6bee904424611fcdc804d22eee36f51c14973eb7261040d91"
       },
       {
         "path": "data/research/leave-in-inci/v1.1/corpus/t20-rederived/t20-rederivation-notes.md",
@@ -60,8 +60,8 @@
     "builder": "scripts/leave-in-research/build-v1.1-calibration.ts",
     "expected_projections": {
       "path": "data/research/leave-in-inci/v1.1/calibration-expected-projections.json",
-      "bytes": 698303,
-      "sha256": "51251f102131024b706d2555e2de856e796ff06d36c99daf0acc3c12762d7d7b"
+      "bytes": 704936,
+      "sha256": "a3f8271d89cf99c403fee4bfd898befc754bb39a6134c2552ad241c89451f986"
     },
     "envelopes": [
       {
@@ -86,8 +86,8 @@
       },
       {
         "path": "data/research/leave-in-inci/v1.1/calibration-envelopes/slot-05.json",
-        "bytes": 16843,
-        "sha256": "594f32527c2f3646656257016969f3989b7c51a79d9660eb7acd95153520af92"
+        "bytes": 17590,
+        "sha256": "7955d637bd4e1ddb3d50e8e735ccf7e461b6d5848e8456e611e952ecf338ee21"
       },
       {
         "path": "data/research/leave-in-inci/v1.1/calibration-envelopes/slot-06.json",
@@ -124,8 +124,8 @@
   "production_writes": false,
   "lab_fixture": {
     "path": "data/research/leave-in-inci/v1.1/lab-fixture.json",
-    "bytes": 1236362,
-    "sha256": "980e879e5aadc21941cdc77804316419f6450f796bd41196318513d510b5caf5",
+    "bytes": 1237345,
+    "sha256": "13ae4264e56a91edd4d4f166af5de290afefa72acaf3b8246ccaefe8cfcb63fc",
     "verification": "v1.0 Lab fixture overlay (scripts/leave-in-research/build-lab-fixture-v1.1.mjs): the 15 in-category care_direction rows replaced from the T20 records; every other property fingerprint and the 4 excluded records unchanged"
   }
 }

@@ -62,9 +62,9 @@ export const LEAVE_IN_CALIBRATION_V2_T20_PROJECTIONS =
  * batch needs a new reviewed migration.
  */
 export const LEAVE_IN_CALIBRATION_V2_T20_APPROVED_BATCH_FINGERPRINT =
-  "9afe1d156834baf0a390d7d5ca752b460697b1585d016ea35d224cfa101c0be8" as string
+  "059cdca2fb98bde5b4c3b70d0920e93f78bb22eb993f0f207e669b848b1ddd4c" as string
 export const LEAVE_IN_CALIBRATION_V2_T20_COHORT_INDEX_FINGERPRINT =
-  "269c902b0dec3e5abae7c6cfe90b3c2b85e0cc6577345a02a841efeb2249db6d" as string
+  "3a63acc89c081080bda4e4157254836103336a9490d067dd3cf148203727baed" as string
 
 /** The five live products whose production projection moved under T20 / AD-3a. */
 export const LEAVE_IN_CALIBRATION_V2_T20_TARGETS = [

@@ -163,7 +163,17 @@ const fixtureSchema = z
     schemaVersion: z.literal("leave-in-inci-lab-fixture-v2"),
     keyVersion: z.string().trim().min(1),
     derivedFromRun: z.string().trim().min(1),
+    // Approval persistence key only (compared by the staleness check); never
+    // rendered. The v1.1 overlay fixture keeps the v1.0 stamp so untouched
+    // approvals survive — the visible standard is `effectiveStandard`.
     standardVersion: z.string().trim().min(1),
+    effectiveStandard: z
+      .object({
+        version: z.string().trim().min(1),
+        label: z.string().trim().min(1),
+        overlay: z.string().trim().min(1),
+      })
+      .strict(),
     modelVersion: z.string().trim().min(1),
     packetVersion: z.string().trim().min(1),
     generatedAt: z.string().trim().min(1),
@@ -216,7 +226,10 @@ export type LeaveInResearchProductDetail = LeaveInResearchQueueItem & {
   propertyFingerprints: Record<string, string>
   productFingerprint: string
   formulaFingerprint: string
+  /** Approval persistence key — not user-facing. */
   standardVersion: string
+  /** The standard the shown judgments were made under (rendered). */
+  effectiveStandard: string
   keyVersion: string
   canApproveProduct: boolean
   canApproveBoundary: boolean
@@ -228,6 +241,8 @@ export type LeaveInResearchLabData = {
     keyVersion: string
     derivedFromRun: string
     standardVersion: string
+    effectiveStandard: string
+    effectiveStandardOverlay: string
     modelVersion: string
     packetVersion: string
     generatedAt: string
@@ -437,6 +452,7 @@ function buildDetail(
     productFingerprint: product.productFingerprint,
     formulaFingerprint,
     standardVersion: fixture.standardVersion,
+    effectiveStandard: fixture.effectiveStandard.label,
     keyVersion: fixture.keyVersion,
     canApproveProduct: !excluded && reviewStatus !== "approved" && !hasOpenRework,
     canApproveBoundary: excluded && reviewStatus !== "excluded",
@@ -495,6 +511,8 @@ export function getLeaveInResearchLabData(): LeaveInResearchLabData {
       keyVersion: fixture.keyVersion,
       derivedFromRun: fixture.derivedFromRun,
       standardVersion: fixture.standardVersion,
+      effectiveStandard: fixture.effectiveStandard.label,
+      effectiveStandardOverlay: fixture.effectiveStandard.overlay,
       modelVersion: fixture.modelVersion,
       packetVersion: fixture.packetVersion,
       generatedAt: fixture.generatedAt,

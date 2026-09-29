@@ -122,16 +122,18 @@ for (const product of fixture.products) {
     rationaleExtractionGap: false,
     observations: [`T20 species read: ${speciesLine(record)}`],
     counterSignals: cd.mandatory_counter_signal ? [cd.mandatory_counter_signal] : [],
-    reviewNote: cd.review_triggers.length
-      ? `T20 review: ${cd.review_triggers.join(", ")}`
-      : null,
+    reviewNote: cd.review_triggers.length ? `T20 review: ${cd.review_triggers.join(", ")}` : null,
     adjudication: null,
   }
   product.properties[index] = after
   product.propertyFingerprints.care_direction = fingerprintProperty(after)
   product.productFingerprint = fingerprint(product.propertyFingerprints)
 
-  if (cd.confidence === "low" && cd.routes_to_review && !product.uncertainFields.includes("care_direction"))
+  if (
+    cd.confidence === "low" &&
+    cd.routes_to_review &&
+    !product.uncertainFields.includes("care_direction")
+  )
     product.uncertainFields = [...product.uncertainFields, "care_direction"]
 
   const retired = "care_direction_underfires_on_film_led_architecture"
@@ -158,9 +160,19 @@ for (const product of fixture.products) {
   }
   touched += 1
 }
-if (touched !== 15) throw new Error(`expected 15 in-category care_direction rows, touched ${touched}`)
+if (touched !== 15)
+  throw new Error(`expected 15 in-category care_direction rows, touched ${touched}`)
 
 fixture.generatedAt = "2026-09-29"
+// The visible standard. `standardVersion` stays the approval persistence key
+// (see header) and is no longer rendered by the Lab.
+fixture.effectiveStandard = {
+  version: "leave-in-inci-v1.1",
+  label: "leave-in-inci-v1.1 (Standard v1.0 + T20-Overlay)",
+  overlay: "docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md",
+}
 mkdirSync(path.dirname(OUT), { recursive: true })
 writeFileSync(OUT, `${JSON.stringify(fixture, null, 2)}\n`)
-process.stdout.write(`${JSON.stringify({ out: path.relative(ROOT, OUT), careDirectionRowsReopened: touched })}\n`)
+process.stdout.write(
+  `${JSON.stringify({ out: path.relative(ROOT, OUT), careDirectionRowsReopened: touched })}\n`,
+)

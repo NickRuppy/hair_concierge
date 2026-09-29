@@ -3897,7 +3897,9 @@
           "observations": [
             "T20 species read: Film: DIMETHICONE r2, DIMETHICONOL r5"
           ],
-          "counterSignals": [],
+          "counterSignals": [
+            "§9-O6 counter-signal. Marker: PHENOXYETHANOL r6 of 25 (plausible; early — §3.1.1 limit 3 counter-signal). Film species: DIMETHICONE r2, DIMETHICONOL r5. Directional species above the tail: none. Demoted v1.0 leg species above the tail: none (CYCLOPENTASILOXANE r3 is a volatile carrier, POLYACRYLAMIDE r4 a rheology polymer — neither was a v1.0 leg). Subordinate below the marker: PANTHENOL r8 (DH), C13-14 ISOPARAFFIN r9 (volatile), MACADAMIA TERNIFOLIA SEED OIL r13 (DL), QUATERNIUM-80 r14 (silicone quat), BUTYLENE GLYCOL r18 (glycol); HYDROLYZED QUINOA r12 is a plain hydrolysate and no route. No C1/C2 claim is frozen for this record (claims_status none_found_at_C1_C2), so no moisture claim enters even as a counter-signal."
+          ],
           "derivedFrom": [],
           "reviewNote": null,
           "adjudication": null
@@ -4295,7 +4297,7 @@
         "dimension.repair_surface_film": "bd24a593aaab47f3a00d8b8846658689675786d25a73a93e8d39a68eb1bc6f97",
         "dimension.fragrance_scalp_exposure": "a93c0e4c3d3c71297e07e8cf1cfe78d7e41d548981fb7c158c5da035ecda49bf",
         "hinweise": "8ec158749011f3194e75b7a1a3e3f2c0c8f41eef8d64cf7ddff71306e56bd979",
-        "care_direction": "828bcd1d2e602d5837bc997ac3e17abe3d3216f259aa2ce44c6d5794d5ac7f2d",
+        "care_direction": "f04fafd4f602177239da4501c1e23fea2ed0874e895eaefdf74172549260ee47",
         "profile.product_form": "ff6d386c631beef0e88f00cf26ed785ede26be51659ec37c1bfc3ede985431e6",
         "profile.repair_support_level": "cf35cfdd38b5f87fb805277f44d1bec42d867369f4453907c0f6e7373c2b47cd",
         "profile.focus.primary": "8cef519c2ed0dba9d976221e0d84a029d48f3ed402b85e53ec3342e0a9c2ae88",
@@ -4312,7 +4314,7 @@
         "profile.texture_fit.curly": "2e7090e4a208d1b31bde698d3648980936b1a88f978ff8e88bb9cee6c88bb6bf",
         "profile.texture_fit.coily": "9495f71443281ea069e8d20b1c14d6d5cb454cbdf65117e2f3e71c37cd73f82f"
       },
-      "productFingerprint": "8f90ccd5eb687456b57e7100696b7eba376c1c6789ee4353955670c4437821cb"
+      "productFingerprint": "f195a04eaea350393fc59c8fed8593f4f9a3301708ac80f04bea5e481ef4437d"
     },
     {
       "productId": "slot-06-curlsmith-hydrate-plump-leave-in",
@@ -14529,5 +14531,10 @@
       },
       "productFingerprint": "3949500112efcf8d8285e48ec641b8bf09158ac26a0d26f16dbe1f803d51031a"
     }
-  ]
+  ],
+  "effectiveStandard": {
+    "version": "leave-in-inci-v1.1",
+    "label": "leave-in-inci-v1.1 (Standard v1.0 + T20-Overlay)",
+    "overlay": "docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md"
+  }
 }

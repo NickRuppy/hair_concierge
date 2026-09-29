@@ -10,8 +10,8 @@
 
 | Pin | Value |
 |---|---|
-| Batch fingerprint | `9afe1d156834baf0a390d7d5ca752b460697b1585d016ea35d224cfa101c0be8` |
-| Cohort-index (content) fingerprint | `269c902b0dec3e5abae7c6cfe90b3c2b85e0cc6577345a02a841efeb2249db6d` |
+| Batch fingerprint | `059cdca2fb98bde5b4c3b70d0920e93f78bb22eb993f0f207e669b848b1ddd4c` |
+| Cohort-index (content) fingerprint | `3a63acc89c081080bda4e4157254836103336a9490d067dd3cf148203727baed` |
 | Reviewer | `nick` |
 
 ## 1. What the batch does
@@ -56,6 +56,11 @@ Lock order inside the RPC:
 | 3 | Preflight — must be green on a first apply | no | **Nick reads the output** (go / no-go for step 4) |
 | 4 | Apply | yes | **Nick: `--apply --confirm …`** |
 | 5 | Verify | no | **Nick reads the output** (closes the batch) |
+
+**Cross-branch notes (recorded 2026-09-29, no code change):**
+
+- **Migration-ordering allowlists.** The Kevin Murphy branch adds migration `20260929120000`. Whichever branch merges second must add the other's version to the later-version allowlists in the discovery migration tests (`tests/discovery-call-sheets-migration.test.ts`, `…-call-decisions-per-item-…`, `…-admin-item-usage-styling-…`, `…-intake-frequency-heat-…`).
+- **Concurrent v1/v2 applies.** v2-t20 takes the shared `catalog-enrichment:product-apply` advisory lock before any row lock, but the batch-v1 executor (`20260914163000`) does not take it yet. That changes when the separate v1-hardening session lands. Until then, calibration applies stay **operator-sequenced**: never run a v1 replay and the v2-t20 apply at the same time.
 
 Before step 4: Gliss and Neqi carry T20 confidence `low` with the review triggers `moisture_leg_subordinate` and `glycol_only_leg`. Nick accepted the four flips on 2026-09-29. Clearing those two `care_direction` rows in the Lab (now on the v1.1 fixture) is the review record and is recommended before the apply. It is not a technical precondition.
 
@@ -111,8 +116,8 @@ npm run products:intake:leave-in-calibration:apply:v2-t20 -- \
   --reviewed-by nick \
   --reviewed-head <40-char-sha-of-the-reviewed-commit> \
   --expect-migration=applied \
-  --expected-batch-fingerprint 9afe1d156834baf0a390d7d5ca752b460697b1585d016ea35d224cfa101c0be8 \
-  --expected-content-fingerprint 269c902b0dec3e5abae7c6cfe90b3c2b85e0cc6577345a02a841efeb2249db6d
+  --expected-batch-fingerprint 059cdca2fb98bde5b4c3b70d0920e93f78bb22eb993f0f207e669b848b1ddd4c \
+  --expected-content-fingerprint 3a63acc89c081080bda4e4157254836103336a9490d067dd3cf148203727baed
 ```
 
 Without `--apply` the script only prints a dry run. With `--apply` it refuses unless all of the following hold:

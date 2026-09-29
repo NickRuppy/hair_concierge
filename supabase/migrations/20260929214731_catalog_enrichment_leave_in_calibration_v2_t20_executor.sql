@@ -103,9 +103,9 @@ DECLARE
     'personal-plan-catalog-enrichment-leave-in-calibration-v2-t20';
   v_expected_products constant integer := 5;
   v_approved_batch_fingerprint constant text :=
-    '9afe1d156834baf0a390d7d5ca752b460697b1585d016ea35d224cfa101c0be8';
+    '059cdca2fb98bde5b4c3b70d0920e93f78bb22eb993f0f207e669b848b1ddd4c';
   v_approved_cohort_index constant text :=
-    '269c902b0dec3e5abae7c6cfe90b3c2b85e0cc6577345a02a841efeb2249db6d';
+    '3a63acc89c081080bda4e4157254836103336a9490d067dd3cf148203727baed';
   v_allowed_columns constant text[] :=
     ARRAY['care_benefits', 'care_direction', 'functional_benefits'];
   v_projected_columns constant text[] := ARRAY[
@@ -188,10 +188,27 @@ BEGIN
     RAISE EXCEPTION 'leave-in calibration v2-t20 product mapping is not approved';
   END IF;
 
+  -- The batch's ledger key SET must be either empty (first apply) or exactly
+  -- the five approved product keys (replay). A count check alone would accept
+  -- four expected keys plus one foreign key, replay four, apply the fifth and
+  -- leave six rows behind.
   SELECT pg_catalog.count(*) INTO v_existing_count
   FROM public.catalog_enrichment_applied_items applied
   WHERE applied.batch_id = v_batch_id;
-  IF v_existing_count NOT IN (0, v_expected_products) THEN
+  IF v_existing_count <> 0 AND (
+    ARRAY(
+      SELECT applied.product_key
+      FROM public.catalog_enrichment_applied_items applied
+      WHERE applied.batch_id = v_batch_id
+      ORDER BY applied.product_key COLLATE "C"
+    ) IS DISTINCT FROM ARRAY[
+      'leave-in-slot-05-evo-head-mistress',
+      'leave-in-slot-08-gliss-ultimate-repair',
+      'leave-in-slot-09-redken-extreme-anti-snap',
+      'leave-in-slot-10-olaplex-no6-bond-smoother',
+      'leave-in-slot-13-neqi-diamond-glass'
+    ]::text[]
+  ) THEN
     RAISE EXCEPTION 'leave-in calibration v2-t20 partial ledger state';
   END IF;
 

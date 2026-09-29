@@ -348,6 +348,45 @@ test("v2-t20: a partial ledger is refused before any product is touched", async 
 // Guards
 // ---------------------------------------------------------------------------
 
+test("v2-t20: four expected ledger keys plus a foreign key under the batch id is refused", async (t) => {
+  const pg = await migratedDatabase(t)
+  const built = await loadBuilt()
+  await seedPinnedState(pg, built.package)
+  // Four real ledger rows (as if applied) + one foreign product_key; the fifth
+  // product is still at its pinned state. A count-only gate (5 rows) would pass.
+  await pg.query(
+    `INSERT INTO public.products (id, name) VALUES ('00000000-0000-4000-8000-000000000001', 'Fremdprodukt')`,
+  )
+  for (const product of built.package.products.slice(0, 4)) {
+    await pg.query(
+      `INSERT INTO public.catalog_enrichment_applied_items
+         (batch_id, product_key, batch_fingerprint, content_fingerprint, product_id, reviewed_by)
+       VALUES ($1,$2,$3,$4,$5,'nick')`,
+      [
+        LEAVE_IN_CALIBRATION_V2_T20_BATCH_ID,
+        product.product_key,
+        built.fingerprint,
+        product.content_fingerprint,
+        product.product_id,
+      ],
+    )
+  }
+  await pg.query(
+    `INSERT INTO public.catalog_enrichment_applied_items
+       (batch_id, product_key, batch_fingerprint, content_fingerprint, product_id, reviewed_by)
+     VALUES ($1,'leave-in-foreign-key',$2,$3,'00000000-0000-4000-8000-000000000001','nick')`,
+    [LEAVE_IN_CALIBRATION_V2_T20_BATCH_ID, built.fingerprint, "f".repeat(64)],
+  )
+  const before = await digest(pg, "product_leave_in_specs")
+  await assert.rejects(callExecutor(pg, built), /partial ledger state/)
+  assert.equal(
+    await digest(pg, "product_leave_in_specs"),
+    before,
+    "the fifth product is not applied",
+  )
+  assert.equal(await ledgerCount(pg), 5, "no sixth ledger row")
+})
+
 test("v2-t20: the drift guard refuses a target that moved after it was pinned; nothing is written", async (t) => {
   const pg = await migratedDatabase(t)
   const built = await loadBuilt()

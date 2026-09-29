@@ -336,3 +336,33 @@ test("the anchors hold: EVO balanced, Redken protein, ISANA and alverde 7in1 moi
   assert.equal(value("2"), "moisture")
   assert.equal(value("1"), "moisture")
 })
+
+test("§9-O6: every O3/O4 balanced record carries its mandatory counter-signal, flips or not", () => {
+  const o3o4Rows = new Set([
+    "film_leads_moisture_leg",
+    "film_led_neutral",
+    "conditioning_only_neutral",
+  ])
+  const balanced = records.filter(
+    (record) =>
+      record.care_direction.value === "balanced" && o3o4Rows.has(record.care_direction.row),
+  )
+  // EVO (unchanged O4) plus the four flips.
+  assert.deepEqual(balanced.map((record) => String(record.slot)).sort(), [
+    "10",
+    "13",
+    "5",
+    "8",
+    "u1",
+  ])
+  for (const record of balanced) {
+    const signal = record.care_direction.mandatory_counter_signal ?? ""
+    assert.ok(signal.trim().length > 0, `slot ${record.slot}: mandatory counter-signal`)
+    assert.match(signal, /Marker:/, `slot ${record.slot}: names the marker`)
+    assert.match(
+      signal,
+      /Film species:|Directional species/,
+      `slot ${record.slot}: names the species`,
+    )
+  }
+})
