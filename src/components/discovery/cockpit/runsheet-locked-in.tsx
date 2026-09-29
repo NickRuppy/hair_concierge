@@ -23,6 +23,7 @@ const EMPTY = "Noch nichts festgehalten."
 const SKIP_EMPTY_STEP = "Schritt bleibt offen"
 const TOTAL = "Summe neu"
 const TOTAL_FROM = "ab"
+const TOTAL_UNKNOWN = "Preis noch offen"
 const ALL_DECIDED = "Alle Schritte entschieden — bereit für Phase 4."
 const COPY = "Liste kopieren"
 const COPIED = "Kopiert ✓"
@@ -36,11 +37,13 @@ export function runsheetOpenStepsLabel(openCount: number): string {
   return `${openCount} ${openCount === 1 ? "Schritt" : "Schritte"} noch nicht entschieden.`
 }
 
-/** „37,95 €", or „ab 28,00 €" while a product to buy has no price. */
+/** „37,95 €"; „ab 28,00 €" while a buy price is missing; „Preis noch offen" without any. */
 export function runsheetTotalLabel(
-  lockedIn: Pick<RunsheetLockedIn, "totalLabel" | "missingPrices">,
+  lockedIn: Pick<RunsheetLockedIn, "totalLabel" | "missingPrices" | "hasKnownPrice" | "buy">,
 ): string {
-  return lockedIn.missingPrices ? `${TOTAL_FROM} ${lockedIn.totalLabel}` : lockedIn.totalLabel
+  if (!lockedIn.missingPrices) return lockedIn.totalLabel
+  if (lockedIn.buy.length > 0 && !lockedIn.hasKnownPrice) return TOTAL_UNKNOWN
+  return `${TOTAL_FROM} ${lockedIn.totalLabel}`
 }
 
 export function RunsheetLockedInSection({ lockedIn }: { lockedIn: RunsheetLockedIn }) {

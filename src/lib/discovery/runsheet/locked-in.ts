@@ -46,8 +46,10 @@ export type RunsheetLockedIn = {
   skip: RunsheetLockedInSkipRow[]
   /** The sum of the known prices, German („37,95 €"). */
   totalLabel: string
-  /** At least one product to buy has no readable price: the total is a lower bound. */
+  /** At least one product to buy has no readable EUR price: the total is a lower bound. */
   missingPrices: boolean
+  /** At least one buy price made it into the total — false while every price is unknown. */
+  hasKnownPrice: boolean
   /** Decision units without a finished decision. */
   openCount: number
 }
@@ -90,6 +92,7 @@ export function runsheetLockedIn(
     skip: [],
     totalLabel: "",
     missingPrices: false,
+    hasKnownPrice: false,
     openCount: 0,
   }
   let totalCents = 0
@@ -99,9 +102,13 @@ export function runsheetLockedIn(
     const empty = step.intakeItemId === null
     if (selection?.decision === "swap" && selection.swapProductId) {
       const row = buyRow(step, selection.swapProductId)
-      const price = parseDiscoveryPriceLabel(row.priceLabel)
+      // EUR only (Codex F1): a label in another currency never enters the euro total.
+      const price = row.priceLabel?.includes("€") ? parseDiscoveryPriceLabel(row.priceLabel) : null
       if (price === null) lockedIn.missingPrices = true
-      else totalCents += Math.round(price * 100)
+      else {
+        totalCents += Math.round(price * 100)
+        lockedIn.hasKnownPrice = true
+      }
       lockedIn.buy.push(row)
     } else if (selection?.decision === "keep") {
       if (empty) lockedIn.skip.push({ categoryLabel: step.categoryLabel, label: null })

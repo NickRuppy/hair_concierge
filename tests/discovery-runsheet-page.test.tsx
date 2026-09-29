@@ -1863,7 +1863,8 @@ test("locked-in: a product without a price — no price on the row, the sum read
   const buy = section.slice(section.indexOf(">Kauft sie neu<"), section.indexOf(">Behält sie<"))
   assert.ok(buy.includes("Beta Shampoo"), buy)
   assert.ok(!buy.includes("€"))
-  assert.ok(section.includes(">ab 0,00 €<"))
+  // Every buy price unknown: no fake zero lower bound (Codex F2).
+  assert.ok(section.includes(">Preis noch offen<"))
 })
 
 test("locked-in: the copy button is the coral CTA, in the cockpit's own voice", async () => {

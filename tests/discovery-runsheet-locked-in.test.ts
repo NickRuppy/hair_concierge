@@ -147,6 +147,7 @@ test("nothing decided: every group empty, every entry open, zero total", () => {
     skip: [],
     totalLabel: EUR("0,00"),
     missingPrices: false,
+    hasKnownPrice: false,
     openCount: 3,
   })
 })
@@ -187,7 +188,7 @@ test("a new product for an empty step is bought at the recommendation's price", 
   assert.equal(lockedIn.openCount, 1)
 })
 
-test("live selections override the stored outcome — the section follows the clicks", () => {
+test("live selections override the stored outcome (derivation input; click handling itself is untested here)", () => {
   const steps = nomi({ shampoo: { outcome: "kept" } })
   const live: Record<string, RunsheetLockedInSelection> = {
     "decision:shampoo": { decision: "swap", swapProductId: "beta" },
@@ -337,6 +338,7 @@ test("no steps at all: empty, nothing open", () => {
     skip: [],
     totalLabel: EUR("0,00"),
     missingPrices: false,
+    hasKnownPrice: false,
     openCount: 0,
   })
 })
@@ -361,4 +363,21 @@ test("shopping list: „Einkaufsliste:“ and one line per product to buy, with 
 
 test("shopping list: nothing to buy says so", () => {
   assert.equal(runsheetShoppingListText(runsheetLockedIn(nomi())), "Einkaufsliste: noch leer")
+})
+
+test("Codex F1: a non-EUR price label never enters the euro total", () => {
+  const dollar = step({
+    decisionKey: "mask:mask_intensive:none",
+    category: "mask",
+    categoryLabel: "Haarmaske",
+    swapOptions: [option("p-dollar", "Dollar-Maske", "5,45 $")],
+  })
+  const lockedIn = runsheetLockedIn([dollar], () => ({
+    decision: "swap",
+    swapProductId: "p-dollar",
+  }))
+  assert.equal(lockedIn.missingPrices, true)
+  assert.equal(lockedIn.hasKnownPrice, false)
+  // The row still shows the label as delivered; only the sum leaves it out.
+  assert.equal(lockedIn.buy[0]?.priceLabel, "5,45 $")
 })
