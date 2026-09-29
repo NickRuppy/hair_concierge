@@ -279,9 +279,9 @@ test("the cockpit reads as the call: routine, verdict, one decision per step", a
   assert.ok(markup.includes("Ins handtuchfeuchte Haar"))
 
   // The participant's product, with the engine's verdict in the cockpit's voice (T4).
-  assert.ok(markup.includes("Ihr Produkt"))
+  assert.ok(markup.includes("Bisheriges Produkt"))
   assert.ok(markup.includes("Elvital Hyaluron Pure Shampoo"))
-  assert.ok(markup.includes("Passt mit Einschränkung zu ihrem Haar"))
+  assert.ok(markup.includes("Passt mit Einschränkung zum Haarprofil"))
   assert.ok(!markup.includes("Passt mit Einschränkung zu deinem Haar"))
   assert.ok(markup.includes("Sitzt richtig bei einem Ansatz, der schnell nachfettet."))
 
@@ -315,7 +315,7 @@ test("what needs no decision collapses to one grey line each", async () => {
   assert.ok(footerAt >= 0)
   const footer = markup.slice(footerAt, markup.indexOf("</section>", footerAt))
   // „benutze ich nicht" — one line, no decision UI.
-  assert.ok(footer.includes("Öl — benutzt sie nicht. Keine Entscheidung nötig."))
+  assert.ok(footer.includes("Öl — nicht benutzt. Keine Entscheidung nötig."))
   // T4 (c): every product is shown once, above — never again in the footer.
   // The unresolved barcode row keeps its code instead of inventing a name (Klären banner).
   const klaeren = markup.slice(markup.indexOf(">Klären</p>"), markup.indexOf(">Behalten</h3>"))
@@ -355,7 +355,7 @@ test("the cockpit names scalp care the way the participant's checklist does", as
       routine: { ...model.routine, declinedCategories: ["scalp_care"] },
     }),
   })
-  assert.ok(markup.includes("Kopfhautpflege — benutzt sie nicht."))
+  assert.ok(markup.includes("Kopfhautpflege — nicht benutzt."))
   assert.ok(!markup.includes("Kopfhautprodukt"))
 })
 
@@ -492,7 +492,7 @@ test("hair loss as the main problem renders the boundary only", async () => {
   assert.ok(markup.includes("Hauptproblem: Haarausfall oder dünner werdendes Haar"))
   assert.ok(markup.includes("Grenze"))
   assert.ok(!markup.includes("Damit anfangen"))
-  assert.ok(!markup.includes("Für ihr Profil"))
+  assert.ok(!markup.includes("Fürs Profil"))
 })
 
 test("quiz answers show even when the Idealplan cannot be read", async () => {

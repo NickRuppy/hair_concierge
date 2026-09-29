@@ -21,7 +21,7 @@ import { RunsheetSaveBar, useRunsheetSave } from "./runsheet-save"
  */
 
 const TITLE = "Feedback & nächste Schritte"
-const FEEDBACK_LABEL = "Ihr Feedback zum Call"
+const FEEDBACK_LABEL = "Feedback zum Call"
 const FEEDBACK_PLACEHOLDER = "Was war hilfreich? Was hat gefehlt?"
 const TOUCHPOINTS_TITLE = "Vereinbarte Touchpoints"
 const TOUCHPOINTS_EMPTY = "Noch keine Touchpoints vereinbart."

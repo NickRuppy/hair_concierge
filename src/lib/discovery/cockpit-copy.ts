@@ -13,54 +13,52 @@ import {
 /**
  * The cockpit's neutral voice for SHARED verdict copy (verdict-layer T4, O4 closure).
  *
- * The cockpit is Nick's screen and speaks about the participant in the third person. The
- * verdict texts it borrows from the participant surfaces (scan verdict, Idealplan step
- * sentences, role purposes) are second person there and must stay so — this module never
- * changes them. It maps a KNOWN shared string to its neutral cockpit variant at render time;
- * every other string passes through unchanged.
+ * The cockpit is Nick's screen and speaks pronoun-free — labels and notices, no „du", no
+ * „sie"/„ihr" about the participant (Nick's ruling 2026-09-29, replacing the earlier third
+ * person). The verdict texts it borrows from the participant surfaces (scan verdict,
+ * Idealplan step sentences, role purposes) are second person there and must stay so — this
+ * module never changes them. It maps a KNOWN shared string to its neutral cockpit variant at
+ * render time; every other string passes through unchanged.
  *
- * Deliberately an explicit map, not a pronoun regex: „deine Kopfhaut" → „ihre Kopfhaut" reads
- * as the formal „Ihre" at the start of a sentence, so most variants are rewritten
- * neutral-factual („Die Kopfhaut ist eher trocken.") instead of swapped word for word. The
- * only computed entries are the scan's per-category templates, generated from the scan's
- * own functions so their keys can never drift from what the scan renders.
+ * Deliberately an explicit map, not a pronoun regex: each variant is rewritten
+ * neutral-factual („Die Kopfhaut ist eher trocken.", „Passt nicht zum Haarprofil") instead of
+ * swapped word for word. The only computed entries are the scan's per-category templates,
+ * generated from the scan's own functions so their keys can never drift from what the scan
+ * renders.
  */
 
 /** Scan verdict copy (`src/lib/scan/verdict-labels.ts`), keyed by the scan's own values. */
 const SCAN_VERDICT_TITLES: Array<[string, string]> = [
-  [SCAN_VERDICT_COPY.ideal.title, "Passt zu ihrem Haar"],
-  [SCAN_VERDICT_COPY.supportive.title, "Passt mit Einschränkung zu ihrem Haar"],
-  [SCAN_VERDICT_COPY.mismatch.title, "Passt nicht zu ihrem Haar"],
-  [SCAN_SUBTITLE_WITHOUT_TARGETS, "Basierend auf ihrem Haarprofil"],
-  [scanReasonsLabel({ kind: "in_catalog", verdict: "ideal" }), "Warum das zu ihrem Haar passt"],
+  [SCAN_VERDICT_COPY.ideal.title, "Passt zum Haarprofil"],
+  [SCAN_VERDICT_COPY.supportive.title, "Passt mit Einschränkung zum Haarprofil"],
+  [SCAN_VERDICT_COPY.mismatch.title, "Passt nicht zum Haarprofil"],
+  [SCAN_SUBTITLE_WITHOUT_TARGETS, "Basierend auf dem Haarprofil"],
+  [scanReasonsLabel({ kind: "in_catalog", verdict: "ideal" }), "Warum das passt"],
 ]
 
 /** `SCAN_NOT_NEEDED_REASON_COPY`, by reason id — total over the scan's ids (tested). */
 export const COCKPIT_NOT_NEEDED_REASONS: Record<keyof typeof SCAN_NOT_NEEDED_REASON_COPY, string> =
   {
     "conditioner.inclusion.very_short_not_needed":
-      "Bei ihrer Haarlänge braucht es nach der Wäsche keine zusätzliche Längenpflege.",
-    "leave_in.inclusion.no_job":
-      "Laut ihren Angaben gibt es aktuell keine Aufgabe, die ein Leave-in übernehmen müsste.",
+      "Bei dieser Haarlänge braucht es nach der Wäsche keine zusätzliche Längenpflege.",
+    "leave_in.inclusion.no_job": "Aktuell keine Aufgabe, die ein Leave-in übernehmen müsste.",
     "mask.inclusion.no_job": "Die Längen zeigen aktuell keinen erhöhten Pflegebedarf.",
     "bondbuilder.inclusion.no_job":
-      "Laut ihren Angaben gibt es aktuell keine Belastung, die eine gezielte Strukturpflege nötig macht.",
+      "Aktuell keine Belastung, die eine gezielte Strukturpflege nötig macht.",
     "deep_cleansing.inclusion.none":
       "Die aktuelle Produktnutzung hinterlässt keine Rückstände, für die eine Tiefenreinigung nötig wäre.",
     "deep_cleansing.inclusion.deferred_load":
       "Die aktuelle Produktnutzung ist noch nicht erfasst — im Call klären.",
     "dry_shampoo.inclusion.none":
-      "Der Ansatz fettet nicht so schnell nach, dass sie eine Überbrückung braucht.",
-    "dry_shampoo.inclusion.declined_bridge":
-      "Sie möchte kein Trockenshampoo zur Überbrückung nutzen.",
+      "Der Ansatz fettet nicht so schnell nach, dass eine Überbrückung nötig wäre.",
+    "dry_shampoo.inclusion.declined_bridge": "Trockenshampoo zur Überbrückung nicht gewünscht.",
     "heat_protectant.inclusion.ordinary_airflow":
       "Die Hitze-Anwendungen machen keinen eigenen Hitzeschutz nötig.",
-    "heat_protectant.inclusion.no_heat_event": "Sie stylt aktuell ohne Hitze.",
-    "oil.pre_wash_fibre_treatment.no_job": "Vor der Haarwäsche braucht sie aktuell keine Ölpflege.",
+    "heat_protectant.inclusion.no_heat_event": "Aktuell Styling ohne Hitze.",
+    "oil.pre_wash_fibre_treatment.no_job": "Vor der Haarwäsche aktuell keine Ölpflege nötig.",
     "oil.leave_on_fibre_conditioning.no_job":
-      "Im feuchten Haar braucht sie aktuell keine zusätzliche Ölpflege.",
-    "oil.dry_finish.no_job":
-      "Für ein Finish im trockenen Haar gibt es bei ihr aktuell keinen Anlass.",
+      "Im feuchten Haar aktuell keine zusätzliche Ölpflege nötig.",
+    "oil.dry_finish.no_job": "Für ein Finish im trockenen Haar aktuell kein Anlass.",
     "scalp_care.inclusion.none":
       "Die Kopfhaut zeigt aktuell nichts, was eine eigene Pflege nötig macht.",
     "scalp_care.inclusion.buildup_deferred":
@@ -93,7 +91,7 @@ const LITERAL_ENTRIES: Array<[string, string]> = [
   ],
   [
     "Deine Kopfhaut ist eher trocken. Deshalb eine milde Reinigung, die ihr nicht zusätzlich Fett entzieht.",
-    "Die Kopfhaut ist eher trocken. Deshalb eine milde Reinigung, die ihr nicht zusätzlich Fett entzieht.",
+    "Die Kopfhaut ist eher trocken. Deshalb eine milde Reinigung ohne zusätzlichen Fettentzug.",
   ],
   [
     "Deine Kopfhaut ist im Gleichgewicht. Deshalb eine Reinigung, die genau das erhält – nicht zu mild, nicht zu stark.",
@@ -101,7 +99,7 @@ const LITERAL_ENTRIES: Array<[string, string]> = [
   ],
   [
     "Reinigt passend zu deiner Kopfhaut und deiner Haaranalyse.",
-    "Reinigt passend zu ihrer Kopfhaut und ihrer Haaranalyse.",
+    "Reinigt passend zu Kopfhaut und Haaranalyse.",
   ],
   [
     "Glättet deine Längen nach der Wäsche, ohne unnötig zu beschweren.",
@@ -109,7 +107,7 @@ const LITERAL_ENTRIES: Array<[string, string]> = [
   ],
   [
     "Pflege, Glättung und Kämmbarkeit passend zum Gewicht deines Haars.",
-    "Pflege, Glättung und Kämmbarkeit passend zum Gewicht ihres Haars.",
+    "Pflege, Glättung und Kämmbarkeit passend zum Haargewicht.",
   ],
   [
     "Deine Längen brauchen nach der Wäsche eine verlässliche Basispflege.",
@@ -137,7 +135,7 @@ const LITERAL_ENTRIES: Array<[string, string]> = [
   ],
   [
     "Überbrückt einen fettigeren Ansatz, wenn du keinen zusätzlichen Waschtag möchtest.",
-    "Überbrückt einen fettigeren Ansatz, wenn sie keinen zusätzlichen Waschtag möchte.",
+    "Überbrückt einen fettigeren Ansatz ohne zusätzlichen Waschtag.",
   ],
   [
     "Dein Ansatz kann vor dem nächsten geplanten Waschtag nachfetten.",
@@ -186,14 +184,14 @@ const LITERAL_ENTRIES: Array<[string, string]> = [
   // (verdict criterion rows when no comparison table is available).
   [
     "Keine Produktvariante deckt deine Haardicke und Pflegerichtung gemeinsam ab.",
-    "Keine Produktvariante deckt ihre Haardicke und Pflegerichtung gemeinsam ab.",
+    "Keine Produktvariante deckt Haardicke und Pflegerichtung gemeinsam ab.",
   ],
   // Verdict-section chrome — `src/components/scan/scan-verdict-sections.tsx`.
   [
     "Ändert sich dein Haar oder deine Routine, prüfen wir das für dich neu.",
-    "Ändert sich ihr Haar oder ihre Routine, prüfen wir das neu.",
+    "Ändern sich Haar oder Routine, prüfen wir das neu.",
   ],
-  ["Das übernimmt bei dir:", "Das übernimmt bei ihr:"],
+  ["Das übernimmt bei dir:", "Das übernimmt bereits:"],
 ]
 
 /** The scan's per-category `not_needed` templates, generated from the scan's functions. */
@@ -206,10 +204,10 @@ function notNeededEntries(): Array<[string, string]> {
     const headline = scanNotNeededHeadline(category)
     const article = headline.match(/^Du brauchst aktuell (kein|keinen|keine) /)?.[1]
     if (article) entries.push([headline, `Aktuell ${nominative[article]} ${label} nötig`])
-    // „Kein Conditioner in deinem Bedarf" → „Kein Conditioner in ihrem Bedarf"
+    // „Kein Conditioner in deinem Bedarf" → „Kein Conditioner im Bedarf"
     const subtitle = scanNotNeededSubtitle(category)
     if (subtitle.endsWith(" in deinem Bedarf")) {
-      entries.push([subtitle, subtitle.replace(/ in deinem Bedarf$/, " in ihrem Bedarf")])
+      entries.push([subtitle, subtitle.replace(/ in deinem Bedarf$/, " im Bedarf")])
     }
     // „Für Conditioner steht deine Einschätzung noch aus" → „… steht die Einschätzung noch aus"
     const deferred = scanDeferredSubtitle(category)
@@ -219,10 +217,11 @@ function notNeededEntries(): Array<[string, string]> {
         deferred.replace(" steht deine Einschätzung ", " steht die Einschätzung "),
       ])
     }
-    // „Warum du keinen Conditioner brauchst" → „Warum sie keinen Conditioner braucht"
+    // „Warum du keinen Conditioner brauchst" → „Warum kein Conditioner nötig ist"
     const reasons = scanReasonsLabel({ kind: "not_needed", mode: "not_needed", category })
-    if (reasons.startsWith("Warum du ") && reasons.endsWith(" brauchst")) {
-      entries.push([reasons, `Warum sie ${reasons.slice(9, -" brauchst".length)} braucht`])
+    const reasonsArticle = reasons.match(/^Warum du (kein|keinen|keine) /)?.[1]
+    if (reasonsArticle && reasons.endsWith(" brauchst")) {
+      entries.push([reasons, `Warum ${nominative[reasonsArticle]} ${label} nötig ist`])
     }
   }
   return entries

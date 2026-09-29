@@ -346,7 +346,7 @@ test("„Eingetragene Produkte“ opens the cockpit: image, name, shelf and rese
   assert.equal(markup.split("Recherche starten").length - 1, 1)
   assert.ok(markup.includes("npm run products:intake:review-center"))
   // „benutze ich nicht" stays on its own grey line below, not in the list.
-  assert.ok(markup.includes("Öl — benutzt sie nicht."))
+  assert.ok(markup.includes("Öl — nicht benutzt."))
 })
 
 test("the step shows why, type, criteria, fit, and rhythm with timing", async () => {
@@ -374,7 +374,7 @@ test("the step shows why, type, criteria, fit, and rhythm with timing", async ()
     "Produkttyp",
     "Ausgleichend reinigend",
     "Worauf es ankommt",
-    "Warum das zu ihrem Haar passt",
+    "Warum das passt",
     "Deine Kopfhaut fettet schneller nach.",
     "3×/Woche · Haarwäsche",
   ]) {

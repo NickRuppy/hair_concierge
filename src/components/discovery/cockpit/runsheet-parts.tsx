@@ -16,7 +16,8 @@ import { PRODUCT_FREQUENCY_METADATA, type ProductFrequency } from "@/lib/vocabul
 
 /**
  * Shared pieces of the call runsheet (consult-runsheet T3): the phase frame, cards, chips
- * and the checklist copy. Cockpit-owned copy is neutral third person (R6).
+ * and the checklist copy. Cockpit-owned copy is pronoun-free (Nick's ruling 2026-09-29,
+ * replacing R6's third person).
  */
 
 export function RunsheetPhase({
@@ -195,8 +196,8 @@ export const RUNSHEET_ASK_TOPIC: Record<
 > = {
   // The rule also fires for colored-only hair (T2), so the copy names both.
   ask_bleach_cadence: "Färbe-/Blondier-Rhythmus",
-  ask_detangling: "Kamm oder Bürste, wie sie entwirrt",
-  ask_where_she_shops: "wo sie einkauft",
+  ask_detangling: "Entwirren (Kamm oder Bürste)",
+  ask_where_she_shops: "Einkaufsort",
 }
 
 const RESEARCH_OPEN = "Recherche abschließen"

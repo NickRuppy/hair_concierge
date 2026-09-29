@@ -54,7 +54,7 @@ const OPENING_TITLE = "Eröffnen"
 const OPENING_SUMMARY = "Gesprächseinstieg"
 const OPENING_SCRIPT = [
   "Wer ich bin: entwickle das Produkt, habe viele Routinen gebaut.",
-  "Ziel heute: ein Plan für gesünderes, schöneres Haar — von ihrem heutigen Score Richtung 10. Haar ist komplex, Unsicherheit ist normal.",
+  "Ziel heute: ein Plan für gesünderes, schöneres Haar — vom heutigen Score Richtung 10. Haar ist komplex, Unsicherheit ist normal.",
   "Ergebnis: ein PDF mit kompletter Routine — Produkte, Reihenfolge, Häufigkeit. „Passt das so für dich?“",
   "Score live abfragen und oben eintragen, falls noch offen.",
 ]
@@ -74,8 +74,8 @@ const HEBEL_FOOTNOTE = "Erfahrungswerte — grobe Orientierung, keine Messung."
 const ASK_PREFIX = "kurz fragen:"
 const HABITS_TITLE = "Gewohnheiten"
 const HABITS_EMPTY = "Noch keine Gewohnheiten erfasst."
-const HABITS_FROM_RECIPE = "Vorschläge aus dem Rezept für ihr Hauptproblem — im Call abhaken."
-const HABIT_ON_PDF = "für ihr PDF vorgemerkt"
+const HABITS_FROM_RECIPE = "Vorschläge aus dem Rezept fürs Hauptproblem — im Call abhaken."
+const HABIT_ON_PDF = "fürs PDF vorgemerkt"
 const HABIT_NEW_PLACEHOLDER = "Weitere Gewohnheit"
 const HABIT_ADD = "Hinzufügen"
 
