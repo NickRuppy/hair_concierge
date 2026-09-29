@@ -160,8 +160,8 @@ test("the follow-up migration has a unique version that sorts after every migrat
       "20260928080932",
       "20260928083245",
       "20260928120000",
-      "20260929120000",
-      "20260929121000",
+      "20260929230000",
+      "20260929231000",
     ],
     "must sort after every migration but the later batches' and the iOS paywall's and the oil protocol repairs'",
   )

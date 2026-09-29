@@ -23,7 +23,7 @@
 --
 -- Replay note: a replay still compares the reviewed payload, so an item whose
 -- Oil rows were later realigned to a newer day-type ruling (#516, and
--- 20260929121000) no longer replays clean. That is intentional drift reporting.
+-- 20260929231000) no longer replays clean. That is intentional drift reporting.
 --
 -- GUARD — after the repair a CHECK constraint makes a placeholder in either
 -- stored payload impossible, whatever the writer.

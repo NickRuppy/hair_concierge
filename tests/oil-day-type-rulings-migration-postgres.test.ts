@@ -11,7 +11,7 @@ import {
 } from "@/lib/routines/personal-plan/application/shared-templates-v2"
 
 const ROOT = new URL("../", import.meta.url)
-const MIGRATION = "supabase/migrations/20260929121000_oil_day_type_rulings.sql"
+const MIGRATION = "supabase/migrations/20260929231000_oil_day_type_rulings.sql"
 const BETWEEN_WASH_OIL_KEYS = [
   "oil.finish.damp-refresh.v2",
   "oil.finish.dry-care.v2",

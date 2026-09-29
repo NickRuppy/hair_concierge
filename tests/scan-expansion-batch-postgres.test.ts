@@ -1319,7 +1319,7 @@ test("an open unresolved submission on the same GTIN blocks the apply", async (t
 // ---------------------------------------------------------------------------
 
 const BINDING_REPAIR_MIGRATION =
-  "supabase/migrations/20260929120000_expansion_protocol_binding_repair.sql"
+  "supabase/migrations/20260929230000_expansion_protocol_binding_repair.sql"
 const EXECUTOR_MIGRATION = "supabase/migrations/20260902160000_scan_expansion_batch_v1_executor.sql"
 
 async function bindingRepairSql(): Promise<string> {

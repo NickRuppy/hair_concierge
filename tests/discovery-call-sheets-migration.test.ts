@@ -66,7 +66,7 @@ test("the migration has a unique version that sorts after every migration", () =
   assert.equal(versions.filter((version) => version === own).length, 1)
   assert.deepEqual(
     versions.filter((version) => version > own).sort(),
-    ["20260929120000", "20260929121000"],
+    ["20260929230000", "20260929231000"],
     "must sort after every migration but the oil protocol repairs'",
   )
 })
