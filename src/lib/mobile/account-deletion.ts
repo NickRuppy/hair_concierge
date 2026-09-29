@@ -2,6 +2,7 @@ import "server-only"
 import { after } from "next/server"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { z } from "zod"
+import { accountDeletionEnabled } from "@/lib/account-deletion/enabled"
 import { createAccountDeletionDeps } from "@/lib/account-deletion/runtime"
 import {
   AccountDeletionError,
@@ -31,6 +32,10 @@ export type MobileAccountDeletionDeps = {
   defer?: (task: () => Promise<unknown>) => void
 }
 
+function requireEnabled() {
+  if (!accountDeletionEnabled()) throw new MobileError("temporarily_unavailable", 503)
+}
+
 function deletionError(error: unknown): never {
   if (error instanceof AccountDeletionError) {
     if (error.code === "web_billing_cancel_failed")
@@ -53,6 +58,7 @@ export async function handleAccountDeletePost(
 ): Promise<Response> {
   return mobileRoute(async () => {
     const { client, userId, token } = await (deps.requireUser ?? requireMobileUser)(request)
+    requireEnabled()
     await mobileRateLimit(client, userId, "mobile-account-delete", 10, 600_000)
     const input = deleteSchema.safeParse(await mobileBody(request, 1024))
     if (!input.success) throw new MobileError("invalid_request", 400)
@@ -85,6 +91,8 @@ export async function handleAccountDeleteStatus(
   deps: MobileAccountDeletionDeps = {},
 ): Promise<Response> {
   return mobileRoute(async () => {
+    // Unauthenticated lookup: gated before any client or rate-limit work.
+    requireEnabled()
     const client = (deps.adminClient ?? createAdminClient)()
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown"
     await mobileRateLimit(client, ip, "mobile-account-delete-status-ip", 30, 60_000)
@@ -109,6 +117,7 @@ export async function handleAccountDeletePreflight(
 ): Promise<Response> {
   return mobileRoute(async () => {
     const { client, userId } = await (deps.requireUser ?? requireMobileUser)(request)
+    requireEnabled()
     await mobileRateLimit(client, userId, "mobile-account-delete-preflight", 20, 60_000)
     let subscriptions
     try {

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { enableAccountDeletionForTests } from "./helpers/account-deletion-flag"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { POST as deleteRoute } from "../src/app/api/mobile/v1/account/delete/route"
 import { GET as preflightRoute } from "../src/app/api/mobile/v1/account/delete/preflight/route"
@@ -12,6 +13,8 @@ import {
 } from "../src/lib/mobile/account-deletion"
 import { MobileError } from "../src/lib/mobile/errors"
 import { appStoreEnv, withEnv } from "./helpers/app-store-supabase"
+
+enableAccountDeletionForTests()
 
 const USER = "11111111-1111-4111-8111-111111111111"
 const OTHER = "22222222-2222-4222-8222-222222222222"

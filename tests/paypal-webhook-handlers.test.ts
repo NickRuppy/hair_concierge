@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { enableAccountDeletionForTests } from "./helpers/account-deletion-flag"
 import {
   handlePayPalWebhookEvent,
   type PayPalWebhookEvent,
@@ -8,6 +9,8 @@ import type { BillingSubscriptionRow } from "../src/lib/billing/types"
 import type { FreemiumProvisioningResult } from "../src/lib/freemium/plan-provisioning"
 import type { PayPalSubscription } from "../src/lib/paypal/subscription-shapes"
 import { toBillingSubscriptionInputFromPayPal } from "../src/lib/paypal/subscription-shapes"
+
+enableAccountDeletionForTests()
 
 process.env.PAYPAL_PLAN_ID_MONTHLY ??= "P-month"
 

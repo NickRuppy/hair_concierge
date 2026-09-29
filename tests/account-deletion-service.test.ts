@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { enableAccountDeletionForTests } from "./helpers/account-deletion-flag"
 import { handleAccountDeletionReconcile } from "../src/app/api/account-deletion/reconcile/route"
 import { cancelWebSubscriptionWith } from "../src/lib/account-deletion/runtime"
 import {
@@ -20,6 +21,8 @@ import {
   reportAccountDeletionRefundFailure,
   reportAccountDeletionRefundWaiting,
 } from "../src/lib/observability/account-deletion"
+
+enableAccountDeletionForTests()
 
 const USER = "11111111-1111-4111-8111-111111111111"
 const OTHER = "22222222-2222-4222-8222-222222222222"

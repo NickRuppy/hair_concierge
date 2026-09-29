@@ -1,9 +1,12 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { enableAccountDeletionForTests } from "./helpers/account-deletion-flag"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { handleStripeWebhookEvent } from "../src/app/api/stripe/webhook/route"
 import { reportAccountDeletionStripeRefundFailed } from "../src/lib/observability/account-deletion"
 import { cancelDeletedAccountStripeSubscription } from "../src/lib/stripe/deleted-account"
+
+enableAccountDeletionForTests()
 
 const LEAD = "11111111-1111-4111-8111-111111111111"
 const ENROLLMENT = "22222222-2222-4222-8222-222222222222"

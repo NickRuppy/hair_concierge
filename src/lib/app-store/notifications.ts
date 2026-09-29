@@ -4,6 +4,7 @@ import type {
   JWSRenewalInfoDecodedPayload,
   JWSTransactionDecodedPayload,
 } from "@apple/app-store-server-library"
+import { accountDeletionEnabled } from "@/lib/account-deletion/enabled"
 import { readBoundedJsonBody } from "@/lib/bounded-json-body"
 import {
   reportAppStoreNotificationFailure,
@@ -90,6 +91,8 @@ export async function handleAppStoreNotificationPost(
   request: Request,
   deps: AppStoreNotificationDeps = {},
 ): Promise<Response> {
+  // app_store_* tables are not migrated yet: Apple retries a non-2xx later.
+  if (!accountDeletionEnabled()) return respond({ error: "temporarily_unavailable" }, 503)
   const body = await readBoundedJsonBody(request, MAX_BYTES)
   const signedPayload =
     body.ok && body.value && typeof body.value === "object"

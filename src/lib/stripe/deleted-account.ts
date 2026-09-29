@@ -1,5 +1,6 @@
 import type Stripe from "stripe"
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { accountDeletionEnabled } from "@/lib/account-deletion/enabled"
 import {
   recordPostDeletionRefund,
   webRefundKind,
@@ -80,6 +81,8 @@ export async function cancelDeletedAccountStripeSubscription(
     reportRefundNotRecorded?: typeof reportPostDeletionRefundNotRecorded
   },
 ): Promise<boolean> {
+  // Schema not migrated yet (anonymized_at is absent): behave as before the feature existed.
+  if (!accountDeletionEnabled()) return false
   // The anonymization time is the deletion time: R-a refunds only payments from then on.
   const deletedAt =
     (await anonymized(deps.supabase, "trial_enrollments", input.metadata?.trial_enrollment_id)) ??

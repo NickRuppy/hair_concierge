@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { safeBearerTokenMatches } from "@/app/api/billing/payment-monitor/route"
+import { accountDeletionEnabled } from "@/lib/account-deletion/enabled"
 import { createAccountDeletionDeps } from "@/lib/account-deletion/runtime"
 import {
   retryAccountDeletionCleanup,
@@ -52,6 +53,9 @@ export async function handleAccountDeletionReconcile(request: Request, deps: Dep
     !safeBearerTokenMatches(request.headers.get("authorization"), deps.cronSecret)
   )
     return { status: 401, body: { error: "unauthorized" } }
+  // Schema not migrated yet: no RPCs, but the cron stays green.
+  if (!accountDeletionEnabled())
+    return { status: 200, body: { skipped: "account_deletion_disabled" } }
   // Each step is isolated: one failing (e.g. a provider outage in refunds) never skips the
   // others; the run answers 503 so the failure stays visible.
   const step = async <T>(run: () => Promise<T>): Promise<T | null> => {

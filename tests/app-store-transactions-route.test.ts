@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { enableAccountDeletionForTests } from "./helpers/account-deletion-flag"
 import {
   AppStoreVerificationError,
   createAppStoreVerifier,
@@ -12,6 +13,8 @@ import {
 import { POST as transactionsRoute } from "../src/app/api/mobile/v1/app-store/transactions/route"
 import { chain, jws, trusted } from "./helpers/app-store-jws"
 import { appStoreEnv, createAppStoreSupabase, withEnv } from "./helpers/app-store-supabase"
+
+enableAccountDeletionForTests()
 
 const userId = "a1b2c3d4-1111-4111-8111-11111111abcd"
 const otherUserId = "22222222-2222-4222-8222-222222222222"

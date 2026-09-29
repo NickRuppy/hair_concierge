@@ -77,6 +77,7 @@ All names below are read verbatim from the current code (`src/lib/app-store/veri
 
 | Variable | Meaning | Safe default before activation |
 |---|---|---|
+| `ACCOUNT_DELETION_ENABLED` | Server-side kill switch for every path that touches the schema from the migrations in §4.1. Only the exact string `true` enables it; unset or anything else is off. Off: the deleted-account check in the Stripe webhook returns without a DB read or Stripe call, the hourly reconcile cron answers 200 `{skipped: "account_deletion_disabled"}` after its auth check, the mobile deletion endpoints (`/api/mobile/v1/account/delete`, `/[requestId]`, `/preflight`) and `/api/mobile/v1/app-store/transactions` answer 503 `temporarily_unavailable` after auth, the App Store notifications webhook answers 503 (Apple retries later), and the PayPal refund lookup RPC is not called. It exists because the schema lands via `db push` after the code deploys. **It must stay off in every environment whose database lacks the §4.1 migrations.** | unset (off) |
 | `MOBILE_PAYWALL_ENABLED` | Master rollout flag. `!== "true"` → bootstrap reports `access: {status:"active", source:"open"}` for everyone, no DB read, no route gating. | unset (off) |
 | `APP_STORE_BUNDLE_ID` | Must equal App Store Connect's app bundle ID exactly (`^[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$`): `de.chaarlie.app` (D13). | set once the app record exists (§1) |
 | `APP_STORE_APP_APPLE_ID` | Numeric App Store app ID. Required whenever `Production` is in `APP_STORE_ENVIRONMENTS`. | unset until App Store Connect assigns it |
@@ -115,7 +116,7 @@ These versions sort **before** `20260928120000_discovery_call_sheets` from main 
    - the `postgres` role's DELETE privilege on `auth.audit_log_entries`, `auth.refresh_tokens` and `auth.flow_state` in the hosted GoTrue schema — the deletion routine deletes rows from these directly (no FK);
    - the cost of the routine's payload scans (`auth.audit_log_entries`, `rate_limits`) at production table size, since these are scanned by user id/email without an index guarantee in the replay used for testing.
 3. **Accepted exception — production-only backup tables stay** (Q5, D13, deletion-inventory §9): `public.profiles_backup_20260822` and `public.billing_subscriptions_backup_20260822` are kept. They are manual tables invisible to the migration replay and outside the deletion routine's reach, so they can still hold emails of accounts deleted later; Nick accepted this edge case on 2026-09-28. No drop/scrub step before activation.
-4. **Cron registration**: `/api/account-deletion/reconcile` is already listed in `vercel.json` (`"schedule": "20 * * * *"`) and needs no separate registration step — it activates on the next deploy that includes this branch, independent of `MOBILE_PAYWALL_ENABLED`. It retries external cleanup (Customer.io/PostHog/storage) for in-progress deletions and then purges anonymized rows past `purge_after`.
+4. **Cron registration**: `/api/account-deletion/reconcile` is already listed in `vercel.json` (`"schedule": "20 * * * *"`) and needs no separate registration step — it is called from the next deploy that includes this branch, but answers `{skipped: "account_deletion_disabled"}` until `ACCOUNT_DELETION_ENABLED=true` (independent of `MOBILE_PAYWALL_ENABLED`). Once enabled it retries external cleanup (Customer.io/PostHog/storage) for in-progress deletions and then purges anonymized rows past `purge_after`.
 
 ### 4.3 Concurrency and failure notes (for the operator running step 1–2, not a gate)
 
@@ -153,11 +154,12 @@ Run each of these against a TestFlight build with `APP_STORE_ENVIRONMENTS` inclu
 ## 7. Activation order + rollback
 
 1. **Configure** — §2 (App Store Connect) and §3 (server env), with `MOBILE_PAYWALL_ENABLED` still unset/false.
-2. **Deploy** with the flag off. Nothing changes for the current pilot population.
-3. **Sandbox test** — run §6 against the deployed backend with `Sandbox` (and `Xcode` locally) in `APP_STORE_ENVIRONMENTS`.
-4. **App Store compliance check** — a dedicated review of the build, paywall, metadata and account deletion against the App Review Guidelines (at least 3.1.1, 3.1.2 subscription price/term disclosure and billed-amount prominence, 5.1.1(v)) before the first submission (D13).
-5. **Flip** `MOBILE_PAYWALL_ENABLED=true` and redeploy (same two-step caveat as other flag flips in this repo — see `docs/freemium-flag-flip-runbook.md` for why an env-var change alone is not live on Vercel until the next deployment is built and promoted).
-6. **Monitor** — Sentry (see below) and the funnel described in §6, on real traffic.
+2. **Deploy** with `ACCOUNT_DELETION_ENABLED` and `MOBILE_PAYWALL_ENABLED` both off. Nothing changes for the current pilot population, and no code path reads the new schema (the migrations of §4.1 need not be applied yet).
+3. **Apply the migrations** — `db push` per §4.2. Only after it has succeeded, set `ACCOUNT_DELETION_ENABLED=true` and redeploy (same two-step caveat as the flag flip below). Never set it in an environment whose database lacks the §4.1 migrations: the Stripe webhook would then select the missing `anonymized_at` column.
+4. **Sandbox test** — run §6 against the deployed backend with `Sandbox` (and `Xcode` locally) in `APP_STORE_ENVIRONMENTS`.
+5. **App Store compliance check** — a dedicated review of the build, paywall, metadata and account deletion against the App Review Guidelines (at least 3.1.1, 3.1.2 subscription price/term disclosure and billed-amount prominence, 5.1.1(v)) before the first submission (D13).
+6. **Flip** `MOBILE_PAYWALL_ENABLED=true` (only once `ACCOUNT_DELETION_ENABLED=true` is live) and redeploy (same two-step caveat as other flag flips in this repo — see `docs/freemium-flag-flip-runbook.md` for why an env-var change alone is not live on Vercel until the next deployment is built and promoted).
+7. **Monitor** — Sentry (see below) and the funnel described in §6, on real traffic.
 
 **Rollback** = set `MOBILE_PAYWALL_ENABLED` back to off (or unset) and redeploy. Bootstrap immediately reverts to `access: {status:"active", source:"open"}` for everyone and route gating stops (the 402 checks are all downstream of `resolveMobileAccess`, which short-circuits before any DB read when the flag is off). Rollback does not undo: App Store transactions/status rows already recorded (they simply stop being read for access decisions), or any account deletions already completed.
 

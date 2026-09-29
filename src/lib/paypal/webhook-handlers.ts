@@ -17,6 +17,7 @@ import {
   recordBillingAnalyticsEvent,
 } from "@/lib/billing/analytics-outbox"
 import { applyPlanChangeAtRenewal } from "@/lib/billing/plan-change"
+import { accountDeletionEnabled } from "@/lib/account-deletion/enabled"
 import {
   recordPostDeletionRefund,
   webRefundKind,
@@ -173,6 +174,8 @@ async function isAccountDeletionWebRefund(
   deps: PayPalWebhookDeps,
   input: { subscriptionId: string | null; paymentRef: string | null },
 ): Promise<boolean> {
+  // Schema not migrated yet: the RPC is absent, so the caller falls through to its own error.
+  if (!accountDeletionEnabled()) return false
   if (deps.isAccountDeletionWebRefund) return deps.isAccountDeletionWebRefund(input)
   const { data, error } = await deps.supabase.rpc("account_deletion_web_refund_known", {
     p_provider: "paypal",

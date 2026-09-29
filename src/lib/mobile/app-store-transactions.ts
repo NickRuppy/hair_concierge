@@ -1,5 +1,6 @@
 import "server-only"
 import { z } from "zod"
+import { accountDeletionEnabled } from "@/lib/account-deletion/enabled"
 import {
   AppStoreStateError,
   isScannerProductId,
@@ -112,6 +113,8 @@ export async function handleAppStoreTransactionsPost(
 ): Promise<Response> {
   return mobileRoute(async () => {
     const { client, userId, email } = await requireMobileUser(request)
+    // app_store_* tables are not migrated yet: no DB work.
+    if (!accountDeletionEnabled()) throw new MobileError("temporarily_unavailable", 503)
     await mobileRateLimit(client, userId, "mobile-app-store-transactions", 20, 60_000)
     const parsed = transactionsSchema.safeParse(
       await mobileJSONBody(request, 2 * MAX_TRANSACTIONS * MAX_JWS_BYTES + 1024),

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { enableAccountDeletionForTests } from "./helpers/account-deletion-flag"
 import {
   handleAppStoreNotificationPost,
   type AppStoreNotificationDeps,
@@ -15,6 +16,8 @@ import { createAdminClient } from "../src/lib/supabase/admin"
 import { POST as notificationsRoute } from "../src/app/api/app-store/notifications/route"
 import { chain, jws, trusted } from "./helpers/app-store-jws"
 import { appStoreEnv, createAppStoreSupabase, withEnv } from "./helpers/app-store-supabase"
+
+enableAccountDeletionForTests()
 
 const owner = "11111111-1111-4111-8111-111111111111"
 const other = "22222222-2222-4222-8222-222222222222"
