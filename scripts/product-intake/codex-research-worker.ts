@@ -1719,7 +1719,7 @@ function categoryApprovalContract(category: string | null | undefined): JsonReco
   return {
     category_key: "leave_in",
     instruction:
-      "Complete the full Leave-In Standard v1.0 research envelope first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research only the exact leave-in application protocol separately.",
+      "Complete the full Leave-In Standard v1.1 research envelope (Standard v1.0 plus the T20 care_direction overlay) first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research only the exact leave-in application protocol separately.",
     leave_in_research: leaveInResearchPromptContract(),
     required_category_specs: [...CATEGORY_SPEC_KEYS.leave_in],
     aliases: {

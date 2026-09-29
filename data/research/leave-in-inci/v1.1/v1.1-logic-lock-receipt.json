@@ -1,0 +1,104 @@
+{
+  "schema_version": "leave-in-research-logic-lock.v1",
+  "locked_standard_version": "1.1",
+  "locked_at": "2026-09-29",
+  "decision": "approved_and_locked_for_reuse",
+  "ruling": "T20 — Nick, 2026-09-29: Option A adopted as the care_direction rule; Neqi reversal accepted (its glycols are not genuine moisture legs; the T19-era call is superseded); alverde 7in1 stays moisture on its formula with no per-product exception; the four flips (Gliss Express-Repair, Olaplex No.6, Neqi Diamond Glass, Elvital u1 -> balanced) approved. Same session: AD-3a revised so moisture_softness requires care_direction = moisture.",
+  "normative_sources": {
+    "overlay": {
+      "path": "docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md",
+      "sha256": "9c1340357b4c0cf38933340f4592250d10f2cccc1429b0e4d46508d47eee032b",
+      "bytes": 21091
+    },
+    "base_standard": {
+      "version": "1.0",
+      "path": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+      "sha256": "7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace",
+      "bytes": 421855,
+      "note": "byte-identical to the v1.0 lock; v1.1 = base + overlay"
+    },
+    "base_lock_receipt": {
+      "path": "data/research/leave-in-inci/v1.0/v1.0-logic-lock-receipt.json",
+      "sha256": "7510ccf29be21bd8fc9ee640ecc39de53bed90b6bf93bd730b11cf2c7b4dac52"
+    }
+  },
+  "research_method": {
+    "policyId": "leave-in-classification-v1.1",
+    "modelVersion": "leave-in-inci-v1.1",
+    "policySha256": "9c1340357b4c0cf38933340f4592250d10f2cccc1429b0e4d46508d47eee032b",
+    "runbookSha256": "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca",
+    "research_envelope_version": "leave-in-research-envelope-v1.0",
+    "note": "policySha256 pins the overlay, which names the base standard by hash. The envelope shape is unchanged; only the research-method stamp moves, and the adapter refuses v1.0-stamped envelopes."
+  },
+  "changed_scope": {
+    "reopened_fields": ["care_direction"],
+    "unchanged": "every other dimension, lean-profile field, anchor, threshold, gate, evidence bar and German string of Standard v1.0; §5's route dictionary (L1-L9) and every non-care_direction consumer of L1/L3/L4",
+    "care_direction_values": ["protein", "moisture", "balanced", "unknown"],
+    "new_rows": ["film_leads_moisture_leg", "conditioning_only_neutral"],
+    "retained_rows": ["protein_anchor", "substantive_mixed", "moisture_led", "humectant_led_minimum", "film_led_neutral", "evidence_failure"],
+    "new_review_triggers": ["moisture_leg_subordinate", "glycol_only_leg"],
+    "executable_rule": "src/lib/leave-in-research/care-direction-t20.ts"
+  },
+  "reviewed_anchor_patterns": [
+    {
+      "product_id": "slot-05-evo-head-mistress-cuticle-sealer",
+      "care_direction": "balanced",
+      "row": "film_led_neutral",
+      "purpose": "film-led architecture with no directional species above the tail stays balanced (now via §9-O4)"
+    },
+    {
+      "product_id": "slot-09-redken-extreme-anti-snap-leave-in-treatment",
+      "care_direction": "protein",
+      "row": "protein_anchor",
+      "purpose": "the protein anchor decides first and is untouched by T20"
+    },
+    {
+      "product_id": "slot-02-isana-professional-leave-in-conditioner-hyaluron-panthenol",
+      "care_direction": "moisture",
+      "row": "moisture_led",
+      "purpose": "settled humectants (glycerin r3, betaine r6) above the tail with no film stay moisture"
+    },
+    {
+      "product_id": "slot-13-neqi-diamond-glass-ultimate-styling-spray",
+      "care_direction": "balanced",
+      "row": "film_led_neutral",
+      "purpose": "glycols never create the leg on their own; supersedes the v1.0 receipt's moisture anchor for this record (T15's in-category ruling is untouched)"
+    },
+    {
+      "product_id": "slot-08-schwarzkopf-gliss-express-repair-spruehconditioner",
+      "care_direction": "balanced",
+      "row": "film_leads_moisture_leg",
+      "purpose": "a persistent film that outranks the only directional species makes the leg subordinate; adjacent-rank margin keeps it low with review"
+    }
+  ],
+  "validation_basis": {
+    "corpus_records_rederived": 15,
+    "records_changed": 4,
+    "changed": ["slot-08 moisture->balanced (low, review)", "slot-10 moisture->balanced (moderate)", "slot-13 moisture->balanced (low, review)", "u1 moisture->balanced (low, review; not live)"],
+    "records_file": "data/research/leave-in-inci/v1.1/corpus/t20-rederived/t20-care-direction-records.json",
+    "machine_checks": [
+      "every classified species matches the frozen INCI at its rank (tests/leave-in-care-direction-t20.test.ts)",
+      "the executable rule reproduces every record's value, row, margin and O6 confidence (same test)",
+      "v1.1 envelopes differ from v1.0 only in the research-method stamp, care_direction, a care_direction uncertainFields entry and one assumption note (tests/leave-in-production-adapter-calibration.test.ts)",
+      "the v1.0 -> v1.1 production delta is exactly the ruled one (same test)"
+    ],
+    "independent_sealed_lanes": 0,
+    "calibration_note": "Applied by one re-derivation lane with every step machine-checked. Not yet run by two independent sealed lanes; the §9-O1/O2 classification belongs in the next calibration round (the same 'implemented, not yet calibrated' standing T19's film-led row had at adoption)."
+  },
+  "known_limits_retained": [
+    "Where Option A draws the moisture/balanced line is a product judgment with no external ground truth (review confidence low-moderate); the species classes themselves are moderately supported (SR §B.2, §C.2, §D.1, §E.2).",
+    "The Gliss read rests on one rank (Dimethicone r3 vs apricot kernel oil r4); it is low with review.",
+    "Every v1.0 known limit and §17 open evidence gap stays open."
+  ],
+  "separate_gates": {
+    "individual_product_lab_approval": "required",
+    "lab_fixture_update": "done — data/research/leave-in-inci/v1.1/lab-fixture.json (overlay of the frozen v1.0 fixture; the 15 in-category care_direction rows reopened, every other approval kept)",
+    "production_adapter": "updated (research-method pin v1.1; AD-3a revision)",
+    "catalog_apply_batch": "prepared, not applied — batch leave-in-research-calibration-v2-t20, executor migration 20260929214731, runbook plans/leave-in-moisture-balanced/apply-runbook-v2-t20.md",
+    "catalog_activation": false,
+    "production_database_write": false,
+    "user_facing_copy_change": false,
+    "commit_push_or_pr": false
+  },
+  "production_writes": false
+}

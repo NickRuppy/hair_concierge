@@ -245,7 +245,7 @@ export type LeaveInCalibrationReadAdapter = {
  * Required roles come from the PROJECTED `plan_roles` (with `pre_heat_application`
  * mapped to `pre_heat_protection`), because that is what the apply writes.
  */
-function publicationDependencyBlockers(
+export function publicationDependencyBlockers(
   rows: LeaveInCalibrationLiveRows,
   projectedSpecs: Record<string, unknown>,
   projectedThicknesses: readonly string[],

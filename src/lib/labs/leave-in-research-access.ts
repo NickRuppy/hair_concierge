@@ -15,8 +15,14 @@ import {
 
 type Environment = Partial<Pick<NodeJS.ProcessEnv, "NODE_ENV">>
 
+// Standard v1.1 (T20): the fixture is the v1.1 overlay of the frozen v1.0
+// fixture (scripts/leave-in-research/build-lab-fixture-v1.1.mjs). The local,
+// gitignored review state and rework queue stay where Nick's approvals already
+// live, in the v1.0 artifact root — so every approval on an untouched property
+// still matches by fingerprint, and only the reopened care_direction rows need
+// review again.
 const ARTIFACT_DIRECTORY = join(process.cwd(), "data/research/leave-in-inci/v1.0")
-const FIXTURE_FILE = "lab-fixture.json"
+const FIXTURE_PATH = join(process.cwd(), "data/research/leave-in-inci/v1.1/lab-fixture.json")
 
 const hashSchema = z.string().regex(/^[a-f0-9]{64}$/)
 
@@ -157,7 +163,17 @@ const fixtureSchema = z
     schemaVersion: z.literal("leave-in-inci-lab-fixture-v2"),
     keyVersion: z.string().trim().min(1),
     derivedFromRun: z.string().trim().min(1),
+    // Approval persistence key only (compared by the staleness check); never
+    // rendered. The v1.1 overlay fixture keeps the v1.0 stamp so untouched
+    // approvals survive — the visible standard is `effectiveStandard`.
     standardVersion: z.string().trim().min(1),
+    effectiveStandard: z
+      .object({
+        version: z.string().trim().min(1),
+        label: z.string().trim().min(1),
+        overlay: z.string().trim().min(1),
+      })
+      .strict(),
     modelVersion: z.string().trim().min(1),
     packetVersion: z.string().trim().min(1),
     generatedAt: z.string().trim().min(1),
@@ -210,7 +226,10 @@ export type LeaveInResearchProductDetail = LeaveInResearchQueueItem & {
   propertyFingerprints: Record<string, string>
   productFingerprint: string
   formulaFingerprint: string
+  /** Approval persistence key — not user-facing. */
   standardVersion: string
+  /** The standard the shown judgments were made under (rendered). */
+  effectiveStandard: string
   keyVersion: string
   canApproveProduct: boolean
   canApproveBoundary: boolean
@@ -222,6 +241,8 @@ export type LeaveInResearchLabData = {
     keyVersion: string
     derivedFromRun: string
     standardVersion: string
+    effectiveStandard: string
+    effectiveStandardOverlay: string
     modelVersion: string
     packetVersion: string
     generatedAt: string
@@ -261,7 +282,7 @@ export type LeaveInResearchReviewResult =
   | { status: "persistence_failed"; error: string }
 
 function loadFixture(): LeaveInResearchFixture {
-  const raw = JSON.parse(readFileSync(join(ARTIFACT_DIRECTORY, FIXTURE_FILE), "utf8")) as unknown
+  const raw = JSON.parse(readFileSync(FIXTURE_PATH, "utf8")) as unknown
   const fixture = fixtureSchema.parse(raw)
   const ids = fixture.products.map((product) => product.productId)
   if (new Set(ids).size !== ids.length)
@@ -431,6 +452,7 @@ function buildDetail(
     productFingerprint: product.productFingerprint,
     formulaFingerprint,
     standardVersion: fixture.standardVersion,
+    effectiveStandard: fixture.effectiveStandard.label,
     keyVersion: fixture.keyVersion,
     canApproveProduct: !excluded && reviewStatus !== "approved" && !hasOpenRework,
     canApproveBoundary: excluded && reviewStatus !== "excluded",
@@ -489,6 +511,8 @@ export function getLeaveInResearchLabData(): LeaveInResearchLabData {
       keyVersion: fixture.keyVersion,
       derivedFromRun: fixture.derivedFromRun,
       standardVersion: fixture.standardVersion,
+      effectiveStandard: fixture.effectiveStandard.label,
+      effectiveStandardOverlay: fixture.effectiveStandard.overlay,
       modelVersion: fixture.modelVersion,
       packetVersion: fixture.packetVersion,
       generatedAt: fixture.generatedAt,
