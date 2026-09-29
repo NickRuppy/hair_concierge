@@ -95,8 +95,9 @@ export function consultBriefJsonSchemaFormat(
 }
 
 /**
- * The API answer → the stored sections shape: `swapReasons` array → record (first entry per key
- * wins). Anything else passes through unchanged, so the storage schema still rejects it.
+ * The API answer → the stored sections shape: `swapReasons` array → record. Anything else —
+ * including a duplicated key, which would silently eat another step's slot under `maxItems` —
+ * passes through unchanged, so the storage schema still rejects it as `invalid_schema`.
  */
 export function toConsultBriefSections(json: unknown): unknown {
   if (typeof json !== "object" || json === null || Array.isArray(json)) return json
@@ -107,7 +108,8 @@ export function toConsultBriefSections(json: unknown): unknown {
     if (typeof entry !== "object" || entry === null) return json
     const { key, reason } = entry as { key?: unknown; reason?: unknown }
     if (typeof key !== "string" || typeof reason !== "string") return json
-    if (!Object.hasOwn(record, key)) record[key] = reason
+    if (Object.hasOwn(record, key)) return json
+    record[key] = reason
   }
   return { ...json, swapReasons: record }
 }

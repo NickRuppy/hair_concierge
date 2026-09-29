@@ -87,7 +87,7 @@ Auch verneint bleiben diese Formulierungen draußen („heilt nicht“, „nicht
 **Regel:** Der Brief widerspricht keinem Verdict und erfindet keine Produkte.
 
 - Ein Produkt mit „passt nicht“ wird nie gelobt und nie als „behalten“ empfohlen; bleibt es aus gutem Grund (z. B. aufbrauchen), steht „passt nicht“ im selben Satz.
-- Von einem Produkt mit „passt“ wird nicht abgeraten; ein Wissensbasis-Eintrag darf Menge, Platzierung und Rhythmus ansprechen, nie den Verdict kippen.
+- Von einem Produkt mit „passt“ wird nicht abgeraten — außer die Entscheidung im Input ist bereits „tauschen“ oder „weglassen“; dann erklärt der Brief diese Entscheidung. Ein Wissensbasis-Eintrag darf Menge, Platzierung und Rhythmus ansprechen, nie den Verdict kippen.
 - Genannt werden nur Produkte aus dem Input (`name`, `swapTarget`, `swapOptions`), exakt so geschrieben. Fehlt ein passendes Produkt, wird die Kategorie ohne Marke genannt oder eine `callFragen`-Frage daraus — nie ein Produkt aus dem Allgemeinwissen.
 - Swap-Reihenfolge und Routine kommen aus den Engines: erklären, nie umsortieren.
 

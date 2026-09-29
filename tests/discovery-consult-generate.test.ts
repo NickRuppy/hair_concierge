@@ -369,17 +369,29 @@ test("the swap keys match the ones the prompt names", () => {
   assert.deepEqual(consultBriefSwapKeys(input({ products: [] })), [])
 })
 
-test("array → record: the stored shape, first entry per key wins, malformed passes through", () => {
+test("array → record: the stored shape; duplicates and malformed pass through unconverted", () => {
   assert.deepEqual(
     toConsultBriefSections({
       diagnose: "x",
       swapReasons: [
         { key: "a", reason: "eins" },
         { key: "b", reason: "zwei" },
-        { key: "a", reason: "doppelt" },
       ],
     }),
     { diagnose: "x", swapReasons: { a: "eins", b: "zwei" } },
+  )
+  // A duplicated key would silently eat another step's slot under maxItems (Codex F3):
+  // it stays unconverted, so the storage schema rejects it as invalid_schema.
+  const duplicated = {
+    swapReasons: [
+      { key: "a", reason: "eins" },
+      { key: "a", reason: "doppelt" },
+    ],
+  }
+  assert.equal(toConsultBriefSections(duplicated), duplicated)
+  assert.equal(
+    consultBriefSectionsSchema.safeParse(toConsultBriefSections(duplicated)).success,
+    false,
   )
   const malformed = { swapReasons: [{ key: 1, reason: "x" }] }
   assert.equal(toConsultBriefSections(malformed), malformed)

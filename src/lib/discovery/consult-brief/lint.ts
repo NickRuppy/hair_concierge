@@ -76,7 +76,7 @@ function infix(source: string): RegExp {
  * removed — otherwise „repa\u00adriert" or a decomposed umlaut slips past every rule.
  */
 export function normalizeConsultText(text: string): string {
-  return text.normalize("NFC").replace(/[\u00ad\u200b-\u200d\u2060\ufeff]/g, "")
+  return text.normalize("NFC").replace(/[\u00ad\u200b-\u200f\u2060-\u2064\ufeff]/g, "")
 }
 
 /** Brand comparison only: accents folded, apostrophes unified („L'Oreal" = „L’Oréal"). */
@@ -351,13 +351,23 @@ const DOCTOR_TOKEN = new RegExp(
   "iu",
 )
 
-/** The sentence reads as a recommendation of the substance — the handoff does not excuse it. */
+/**
+ * The sentence reads as a recommendation of the substance — the handoff does not excuse it.
+ * Advice markers („solltest") and application schedules („täglich anwenden") count as
+ * recommendation/dosing (G1b bans Anwendungsschemata); the descriptive „solange man sie
+ * anwendet" carries none of these markers and stays allowed.
+ */
 const RECOMMEND_CUE = new RegExp(
   [
     stem("probier|versuch|empfehl|empfiehl|empfohl|besorg|kauf").source,
     words(
       "nimm|nehmen|einnehmen|start\\p{L}* mit|fang\\p{L}* [^.!?]{0,40}an mit|fang\\p{L}* mit [^.!?]{0,40}an",
     ).source,
+    // „wende … an" (anwenden imperative), but not „wende dich an deine Ärztin" — that is the handoff.
+    words(
+      "sollte\\p{L}*|musst|müsst\\p{L}*|am besten|wende (?!dich|sich|euch)[^.!?]{0,20}an(?!\\p{L})|trag\\p{L}* [^.!?]{0,20}auf",
+    ).source,
+    words("täglich|wöchentlich|morgens|abends|\\d+\\s?× (?:täglich|pro tag|pro woche)").source,
   ].join("|"),
   "iu",
 )

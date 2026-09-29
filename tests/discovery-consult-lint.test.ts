@@ -161,6 +161,9 @@ const ALLOWED_OUTSIDE_EXEMPT_CLAUSES = new Set([
   "passt nicht",
   "behalten",
   "passt",
+  // G4's swap/drop exception names the decisions; they are verdict cues, not banned phrases.
+  "tauschen",
+  "weglassen",
   "kann helfen",
   "einen Versuch wert",
   "schauen wir uns an",
@@ -856,4 +859,20 @@ test("R22 regression: soft-hyphen and zero-width evasion of drug names is still 
 test("R22: „Ziel ist 8“ is a score figure; the doctor token ignores „geschwärzt“", () => {
   assert.ok(phraseIds("Ziel ist 8.").includes("score_figure"))
   assert.ok(phraseIds("Minoxidil, die Stelle ist geschwärzt.").includes("minoxidil"))
+})
+
+test("R22 hardening (Codex F1): advice and schedule wording is a recommendation, invisible marks are stripped", () => {
+  // The doctor handoff does not excuse an application instruction.
+  assert.ok(
+    phraseIds("Minoxidil solltest du täglich anwenden, sprich mit deiner Ärztin.").includes(
+      "minoxidil",
+    ),
+  )
+  assert.ok(phraseIds("Minoxidil am besten abends, sagt auch die Ärztin.").includes("minoxidil"))
+  assert.ok(phraseIds("Wende Minoxidil morgens an; ärztlich begleitet.").includes("minoxidil"))
+  // U+200E / U+2063 injected into the drug name still match.
+  assert.ok(phraseIds("Mino‎xidil stoppt den Haarausfall.").includes("minoxidil"))
+  assert.ok(phraseIds("Mino⁣xidil stoppt den Haarausfall.").includes("minoxidil"))
+  // „Wende dich an deine Hautärztin" is the handoff itself, not an application instruction.
+  assert.deepEqual(phraseIds("Wende dich mit dem Thema Minoxidil an deine Hautärztin."), [])
 })
