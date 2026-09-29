@@ -1,0 +1,131 @@
+{
+  "schema_version": "leave-in-stage-a-artifact-manifest.v1.1",
+  "created_at": "2026-09-29",
+  "standard_version": "1.1",
+  "composition": "Standard v1.1 = the byte-frozen Standard v1.0 (normative_base) + the T20 overlay (normative_overlay). v1.0 artifacts stay pinned by data/research/leave-in-inci/v1.0/artifact-manifest.json and are re-verified in CI.",
+  "normative_overlay": {
+    "path": "docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md",
+    "bytes": 21091,
+    "sha256": "9c1340357b4c0cf38933340f4592250d10f2cccc1429b0e4d46508d47eee032b",
+    "verification": "T20 care_direction overlay; names the base standard by sha256; pinned as the adapter research method policySha256"
+  },
+  "normative_base": {
+    "path": "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+    "bytes": 421855,
+    "sha256": "7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace",
+    "verification": "Standard v1.0, unchanged since the 2026-09-13 lock"
+  },
+  "runbook": {
+    "path": "docs/research/leave-in-inci/v1.0/runbook.md",
+    "bytes": 16953,
+    "sha256": "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca",
+    "verification": "unchanged; still the procedure of record"
+  },
+  "base_lock_receipt": {
+    "path": "data/research/leave-in-inci/v1.0/v1.0-logic-lock-receipt.json",
+    "bytes": 8141,
+    "sha256": "7510ccf29be21bd8fc9ee640ecc39de53bed90b6bf93bd730b11cf2c7b4dac52"
+  },
+  "base_artifact_manifest": {
+    "path": "data/research/leave-in-inci/v1.0/artifact-manifest.json",
+    "verification": "every artifact it lists except the README (edited since 2026-09-13, re-pinned here) is byte-identical and re-hashed by tests/leave-in-research-v1-1-lock.test.ts"
+  },
+  "readme": {
+    "path": "docs/research/leave-in-inci/README.md",
+    "bytes": 14293,
+    "sha256": "2c1ed6a7593ec8b9bbd58bc549db8e8fd88ebba0ba91a3d595c3dcd577a64a37",
+    "verification": "README as of the v1.1 lock; recorded for provenance, not CI-enforced (living entry point)"
+  },
+  "logic_lock_receipt": {
+    "path": "data/research/leave-in-inci/v1.1/v1.1-logic-lock-receipt.json",
+    "bytes": 6557,
+    "sha256": "cb56d923319c32ee9e35668b884a20dbba85269a867d8e390171c13bb3771fc7"
+  },
+  "corpus": {
+    "root": "data/research/leave-in-inci/v1.1/corpus",
+    "t20_rederivation": [
+      {
+        "path": "data/research/leave-in-inci/v1.1/corpus/t20-rederived/t20-care-direction-records.json",
+        "bytes": 37947,
+        "sha256": "5a00b869dfb159d47fbd1492f752bb65f67717dc957b6c678371fefef9016d78"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.1/corpus/t20-rederived/t20-rederivation-notes.md",
+        "bytes": 3388,
+        "sha256": "a6f004e5fd440d4bd19dc53bf9f5ffdb606f7ce4ff93ed19a3145dc9108a8e2c"
+      }
+    ]
+  },
+  "calibration": {
+    "builder": "scripts/leave-in-research/build-v1.1-calibration.ts",
+    "expected_projections": {
+      "path": "data/research/leave-in-inci/v1.1/calibration-expected-projections.json",
+      "bytes": 698303,
+      "sha256": "51251f102131024b706d2555e2de856e796ff06d36c99daf0acc3c12762d7d7b"
+    },
+    "envelopes": [
+      {
+        "path": "data/research/leave-in-inci/v1.1/calibration-envelopes/slot-01.json",
+        "bytes": 16837,
+        "sha256": "bb01972c9668b5fda7380b329267d6f6062abd99f4343920fa98e1d3a4c0d70b"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.1/calibration-envelopes/slot-02.json",
+        "bytes": 17097,
+        "sha256": "c255f0ebc7507f55ba4f4da0c0f031dcb2819091851386aa8510b0032d389736"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.1/calibration-envelopes/slot-03.json",
+        "bytes": 17667,
+        "sha256": "4da554d6acd413dd59f65944d8b1c3a71cf8d2031c687d3f428afdfa990e1702"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.1/calibration-envelopes/slot-04.json",
+        "bytes": 16030,
+        "sha256": "70c9b3d4532b32287ba4b78962ccfd2042313a49153ebdaa520ea75a773d6fab"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.1/calibration-envelopes/slot-05.json",
+        "bytes": 16843,
+        "sha256": "594f32527c2f3646656257016969f3989b7c51a79d9660eb7acd95153520af92"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.1/calibration-envelopes/slot-06.json",
+        "bytes": 18106,
+        "sha256": "3c635843ea57298d57f7f35c5f9c143ca2203a6dec6a3b3ce2a584b70823db6c"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.1/calibration-envelopes/slot-08.json",
+        "bytes": 19992,
+        "sha256": "6a67e06b29a9000e277781a8e1ad46087466cbb66a25a5edbbc932cfe26f711c"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.1/calibration-envelopes/slot-09.json",
+        "bytes": 21352,
+        "sha256": "e51ab69d2cfa0122efd75d9d1649158cf37347476e4121e7684b926b46f872b0"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.1/calibration-envelopes/slot-10.json",
+        "bytes": 23885,
+        "sha256": "2fa6efdd00bda34ef4a6b1287cf5f0d09e512a616703db90f7af51aa1f5fb027"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.1/calibration-envelopes/slot-11.json",
+        "bytes": 15123,
+        "sha256": "7edee36ff61b0c91d291c74b453dff2f7ad6815f1ef8ec76b2396d4d61d85200"
+      },
+      {
+        "path": "data/research/leave-in-inci/v1.1/calibration-envelopes/slot-13.json",
+        "bytes": 19513,
+        "sha256": "b63623d0e26307dd6a13eab2c99626f00b4ce4eb1f745b68b1013d1ab7d7881d"
+      }
+    ]
+  },
+  "production_writes": false,
+  "lab_fixture": {
+    "path": "data/research/leave-in-inci/v1.1/lab-fixture.json",
+    "bytes": 1236362,
+    "sha256": "980e879e5aadc21941cdc77804316419f6450f796bd41196318513d510b5caf5",
+    "verification": "v1.0 Lab fixture overlay (scripts/leave-in-research/build-lab-fixture-v1.1.mjs): the 15 in-category care_direction rows replaced from the T20 records; every other property fingerprint and the 4 excluded records unchanged"
+  }
+}

@@ -5,6 +5,8 @@ import path from "node:path"
 import test from "node:test"
 
 import {
+  LEAVE_IN_BASE_STANDARD,
+  LEAVE_IN_OVERLAY_PATH,
   LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD,
   expandLeaveInEligibility,
   leaveInFormulaFingerprintSha256,
@@ -85,7 +87,7 @@ const completeInput = (): LeaveInResearchEnvelope => ({
   },
 })
 
-test("projects the complete v1.0 lean profile into exact current Leave-In fields", () => {
+test("projects the complete v1.1 lean profile into exact current Leave-In fields", () => {
   const input = completeInput()
   const before = structuredClone(input)
   const outcome = projectLeaveInForProduction(input)
@@ -108,12 +110,9 @@ test("projects the complete v1.0 lean profile into exact current Leave-In fields
     care_direction: "balanced",
     repair_support_level: "medium",
     plan_roles: ["post_wash_leave_in", "pre_heat_application"],
-    functional_benefits: [
-      "moisture_softness",
-      "smooth_anti_frizz",
-      "heat_protect",
-      "repair_support",
-    ],
+    // AD-3a revision (2026-09-29): a balanced product gets no moisture_softness,
+    // however high its conditioning level.
+    functional_benefits: ["smooth_anti_frizz", "heat_protect", "repair_support"],
   })
   assert.deepEqual(projection.category_specs.product_leave_in_fit_specs, {
     weight: "medium",
@@ -136,7 +135,7 @@ test("projects the complete v1.0 lean profile into exact current Leave-In fields
   // are different values and both must be emitted on their own side.
   assert.deepEqual(outcome.requiredProtocolRoles, ["post_wash_leave_in", "pre_heat_protection"])
   assert.equal(projection.adapter_version, "leave-in-production-adapter-v1")
-  assert.equal(projection.research_model_version, "leave-in-inci-v1.0")
+  assert.equal(projection.research_model_version, "leave-in-inci-v1.1")
   assert.match(projection.research_input_sha256, /^[a-f0-9]{64}$/)
   assert.match(projection.projection_sha256, /^[a-f0-9]{64}$/)
 })
@@ -518,20 +517,104 @@ test("splits on a comma with a digit on only one side, protecting only digit-com
   assert.equal(normalizeLeaveInInciForFingerprint("1,2-Hexanediol"), "1,2-HEXANEDIOL")
 })
 
-test("pins the exact v1.0 policy and runbook used by the adapter", () => {
+test("pins the exact v1.1 overlay, the frozen v1.0 base and the runbook used by the adapter", () => {
   const hash = (relativePath: string) =>
     createHash("sha256")
       .update(readFileSync(path.resolve(relativePath)))
       .digest("hex")
 
+  assert.equal(LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD.policyId, "leave-in-classification-v1.1")
+  assert.equal(LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD.modelVersion, "leave-in-inci-v1.1")
+  // policySha256 pins the v1.1 overlay document ...
+  assert.equal(
+    hash(LEAVE_IN_OVERLAY_PATH),
+    LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD.policySha256,
+  )
+  // ... which names the byte-frozen v1.0 base it applies to.
   assert.equal(
     hash("docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md"),
-    LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD.policySha256,
+    "7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace",
+  )
+  assert.equal(hash(LEAVE_IN_BASE_STANDARD.path), LEAVE_IN_BASE_STANDARD.sha256)
+  assert.match(
+    readFileSync(path.resolve(LEAVE_IN_OVERLAY_PATH), "utf8"),
+    new RegExp(LEAVE_IN_BASE_STANDARD.sha256),
   )
   assert.equal(
     hash("docs/research/leave-in-inci/v1.0/runbook.md"),
     LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD.runbookSha256,
   )
+})
+
+test("T20: a v1.0-stamped envelope is refused — care_direction must be re-derived under v1.1", () => {
+  const legacy = completeInput() as unknown as { researchMethod: Record<string, string> }
+  legacy.researchMethod = {
+    policyId: "leave-in-classification-v1.0",
+    modelVersion: "leave-in-inci-v1.0",
+    policySha256: LEAVE_IN_BASE_STANDARD.sha256,
+    runbookSha256: LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD.runbookSha256,
+  }
+  const outcome = projectLeaveInForProduction(legacy)
+  assert.equal(outcome.status, "needs_research")
+  if (outcome.status === "needs_research") {
+    assert.match(outcome.reasons.join(" "), /researchMethod\.policyId/)
+    assert.match(outcome.reasons.join(" "), /researchMethod\.policySha256/)
+  }
+})
+
+test("AD-3a revision: moisture_softness requires care_direction = moisture", () => {
+  const functionalBenefits = (
+    careDirection: "moisture" | "balanced" | "protein",
+    conditioningLevel: "low" | "moderate" | "high",
+  ) => {
+    const input = completeInput()
+    input.profile.careDirection = evidence(careDirection)
+    input.profile.conditioningLevel = evidence(conditioningLevel)
+    const outcome = projectLeaveInForProduction(input)
+    assert.equal(outcome.status, "projection_ready")
+    if (outcome.status !== "projection_ready") return []
+    return outcome.productionProjection.category_specs.product_leave_in_specs.functional_benefits
+  }
+
+  // Red proof: high (and moderate) conditioning without a moisture direction no
+  // longer grants moisture_softness — before the revision both did.
+  for (const conditioning of ["moderate", "high"] as const) {
+    assert.ok(
+      !functionalBenefits("balanced", conditioning).includes("moisture_softness"),
+      `balanced + ${conditioning} conditioning must not carry moisture_softness`,
+    )
+    assert.ok(
+      !functionalBenefits("protein", conditioning).includes("moisture_softness"),
+      `protein + ${conditioning} conditioning must not carry moisture_softness`,
+    )
+  }
+  // A moisture direction grants it at every conditioning level.
+  for (const conditioning of ["low", "moderate", "high"] as const) {
+    assert.ok(
+      functionalBenefits("moisture", conditioning).includes("moisture_softness"),
+      `moisture + ${conditioning} conditioning must carry moisture_softness`,
+    )
+  }
+})
+
+test("AD-3a revision: a profile whose only function was moisture_softness now needs research", () => {
+  // Before the revision `moisture_softness` (granted by conditioning >= moderate)
+  // was this profile's only functional benefit: a protein direction with no
+  // repair-support level, no focus route, no film route and no heat claim. It has
+  // a care benefit (protein -> repair bucket) but no function, so the adapter now
+  // refuses rather than inventing one.
+  const input = completeInput()
+  input.profile.careDirection = evidence("protein")
+  input.profile.conditioningLevel = evidence("high")
+  input.profile.focus = evidence({ primary: "general", secondary: [] })
+  input.profile.smoothingRoute = evidence("none")
+  input.profile.repairSupportLevel = evidence("low")
+  input.profile.specialistFunctions = evidence({ providesHeatProtection: false })
+  const outcome = projectLeaveInForProduction(input)
+  assert.equal(outcome.status, "needs_research")
+  if (outcome.status === "needs_research") {
+    assert.match(outcome.reasons.join(" "), /functional_benefits: no functional benefit/)
+  }
 })
 
 test("the ported eligibility expansion reproduces the SQL function's rules", () => {

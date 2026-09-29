@@ -1,0 +1,521 @@
+{
+  "lane": "t20-care-direction-rederivation",
+  "category_standard_version": "leave-in-inci-v1.1",
+  "overlay": "docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md",
+  "ruling": "T20 — Nick, 2026-09-29 (Option A adopted; Neqi reversal accepted; alverde 7in1 stays moisture; the four flips approved)",
+  "generated_at": "2026-09-29",
+  "reopened_fields": ["care_direction"],
+  "method": "Frozen packets only (gold-set calibration-packet.json, unseen-test unseen-packet.json); no web research, no re-captured evidence. For every in-category record the species above the §3.1.1 tail marker (ordinal read where the marker is vacuous or none_visible) that bear on §9 — directional species, persistent films, glycols, and every species v1.0 counted as an L1/L3/L4 leg — are classified per §9-O1/O2 and verified rank-by-rank against the frozen INCI. Unlisted species above the tail are class `other` and cannot move the value. The rule is then applied mechanically (src/lib/leave-in-research/care-direction-t20.ts); tests/leave-in-care-direction-t20.test.ts re-runs it on every record.",
+  "unchanged_fields": "Only care_direction reopens (§16: a standard-version bump reopens only the fields whose rules changed). Every other dimension, profile field, trace and approval of each base record stands unchanged and is not repeated here.",
+  "base_records": {
+    "gold_set": "data/research/leave-in-inci/v1.0/corpus/gold-set/reference-key-v4/reference-key.json (key_version reference-key-2026-09-05-r4)",
+    "u1": "data/research/leave-in-inci/v1.0/corpus/unseen-test/rederived/u1-record.json",
+    "u5": "data/research/leave-in-inci/v1.0/corpus/unseen-test/rederived/u5-record.json",
+    "u4_u6": "data/research/leave-in-inci/v1.0/corpus/unseen-test/lane-a/records.json and lane-b/records.json (both lanes agree on care_direction)"
+  },
+  "records": [
+    {
+      "slot": 8,
+      "brand": "Schwarzkopf GLISS",
+      "product": "Sprüh-Conditioner Express-Repair Ultimate Repair",
+      "live_catalog": true,
+      "base_record": "gold_set",
+      "tail_marker": { "ingredient": "SODIUM BENZOATE", "rank": 14, "list_length": 21, "marker_status": "plausible" },
+      "protein_anchor": false,
+      "species_above_tail": [
+        { "rank": 2, "inci": "TRISILOXANE", "speciesClass": "volatile_carrier" },
+        { "rank": 3, "inci": "DIMETHICONE", "speciesClass": "persistent_film" },
+        { "rank": 4, "inci": "PRUNUS ARMENIACA KERNEL OIL", "speciesClass": "medium_rich_lipid" },
+        { "rank": 5, "inci": "PHENYL TRIMETHICONE", "speciesClass": "persistent_film" },
+        { "rank": 6, "inci": "HYDROLYZED KERATIN", "speciesClass": "other" },
+        { "rank": 7, "inci": "HYDROLYZED PEARL", "speciesClass": "other" },
+        { "rank": 8, "inci": "DIMETHICONOL", "speciesClass": "persistent_film" },
+        { "rank": 9, "inci": "POLYQUATERNIUM-16", "speciesClass": "cationic" },
+        { "rank": 10, "inci": "CETYL PEG/PPG-10/1 DIMETHICONE", "speciesClass": "other" },
+        { "rank": 11, "inci": "CETRIMONIUM CHLORIDE", "speciesClass": "cationic" }
+      ],
+      "care_direction": {
+        "value": "balanced",
+        "confidence": "low",
+        "o6_confidence": "low",
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "film_leads_moisture_leg",
+        "film_lead_margin": 1,
+        "changed": true,
+        "note": "T20 re-derivation (2026-09-29), value CHANGED moisture → balanced. The only directional species above the r14 Sodium Benzoate marker is the medium/rich-band lipid PRUNUS ARMENIACA KERNEL OIL r4 (§9-O1 DL). It is outranked by the persistent film DIMETHICONE r3 and flanked by PHENYL TRIMETHICONE r5 and DIMETHICONOL r8, so the film leads every directional species (§9-O3) and the oil leg is subordinate to it. TRISILOXANE r2 is a volatile carrier (M6) and contributes nothing; POLYQUATERNIUM-16 r9 and CETRIMONIUM CHLORIDE r11 are the cationic conditioning baseline (§9-O2) that COND already scores; HYDROLYZED KERATIN r6 is a plain hydrolysate, so there is no R2 route and no protein anchor (§7.10). GLYCERIN r15 sits below the marker and is subordinate. Confidence `low` under §9-O6: the film-lead margin is one rank (r3 vs r4), below the two-rank bar, so the read is adjacent-rank-fragile and routes to review. Nothing else on this silicone heat primer argues for moisture.",
+        "mandatory_counter_signal": "§9-O6 counter-signal. Marker: SODIUM BENZOATE r14 of 21 (plausible). Film species: DIMETHICONE r3, PHENYL TRIMETHICONE r5, DIMETHICONOL r8. Directional species: PRUNUS ARMENIACA KERNEL OIL r4 (DL), one rank behind the film lead. Demoted v1.0 leg species: POLYQUATERNIUM-16 r9 (L1 cationic), CETRIMONIUM CHLORIDE r11 (L1 cationic). Subordinate below the marker: GLYCERIN r15 (DH). Positioning: sold on keratin repair („Rekonstruktion der Haarstruktur durch flüssiges Keratin“); no C1/C2 moisture claim exists and none enters the read (§9 constraint 3).",
+        "routes_to_review": true,
+        "review_triggers": ["moisture_leg_subordinate"],
+        "resolved_triggers": [
+          { "trigger": "care_direction_underfires_on_film_led_architecture", "resolved": "2026-09-29", "basis": "T20 §9-O3 — the film-lead test now decides this architecture; the defect this trigger flagged is the rule T20 replaces." }
+        ],
+        "superseded_reading": "v1.0 reading, retained verbatim for audit — value `moisture`, confidence `moderate`, evidence_level E2, note: \"§9 constraint 3 - a product sold on keratin repair whose only protein is a plain hydrolysate reads moisture. §9 silicone-led unknown rule under-fires (§17.22) because a material emollient leg (apricot oil r4) is present.\" Superseded 2026-09-29 (T20)."
+      }
+    },
+    {
+      "slot": 10,
+      "brand": "Olaplex",
+      "product": "N°.6 Bond Smoother",
+      "live_catalog": true,
+      "base_record": "gold_set",
+      "tail_marker": { "ingredient": "PHENOXYETHANOL", "rank": 14, "list_length": 46, "marker_status": "plausible" },
+      "protein_anchor": false,
+      "species_above_tail": [
+        { "rank": 2, "inci": "CETEARYL ALCOHOL", "speciesClass": "fatty_alcohol" },
+        { "rank": 3, "inci": "DIMETHICONE", "speciesClass": "persistent_film" },
+        { "rank": 4, "inci": "ISOHEXADECANE", "speciesClass": "volatile_carrier" },
+        { "rank": 5, "inci": "COCO-CAPRYLATE", "speciesClass": "dry_feel_ester" },
+        { "rank": 6, "inci": "NEOPENTYL GLYCOL DIHEPTANOATE", "speciesClass": "dry_feel_ester" },
+        { "rank": 7, "inci": "BEHENTRIMONIUM CHLORIDE", "speciesClass": "cationic" },
+        { "rank": 8, "inci": "ISODODECANE", "speciesClass": "volatile_carrier" },
+        { "rank": 9, "inci": "PHENYL TRIMETHICONE", "speciesClass": "persistent_film" },
+        { "rank": 10, "inci": "PROPANEDIOL", "speciesClass": "multifunctional_glycol" },
+        { "rank": 11, "inci": "BIS-AMINOPROPYL DIGLYCOL DIMALEATE", "speciesClass": "other" },
+        { "rank": 13, "inci": "CETRIMONIUM CHLORIDE", "speciesClass": "cationic" }
+      ],
+      "care_direction": {
+        "value": "balanced",
+        "confidence": "moderate",
+        "o6_confidence": "moderate",
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "film_led_neutral",
+        "film_lead_margin": null,
+        "changed": true,
+        "note": "T20 re-derivation (2026-09-29), value CHANGED moisture → balanced. No directional species sits above the r14 Phenoxyethanol marker: no settled humectant and no medium/rich-band lipid (§9-O1). What v1.0 counted as legs are, under §9-O2, the film's own carriers and slip agents — the dry-feel spreading esters COCO-CAPRYLATE r5 and NEOPENTYL GLYCOL DIHEPTANOATE r6 (SR §D.1 dry-feel band), the volatiles ISOHEXADECANE r4 and ISODODECANE r8 (M6), and the multifunctional glycol PROPANEDIOL r10 — plus the cationic baseline BEHENTRIMONIUM CHLORIDE r7 / CETRIMONIUM CHLORIDE r13. The persistent film DIMETHICONE r3 (with PHENYL TRIMETHICONE r9) leads the care architecture, so §9-O4 gives `balanced` on the `film_led_neutral` row. The LGN pair CETEARYL ALCOHOL r2 + BEHENTRIMONIUM CHLORIDE r7 is genuine conditioning and keeps COND `high`; it does not create a moisture direction. PANTHENOL r41, ALOE BARBADENSIS LEAF JUICE r40 and the plant oils (HELIANTHUS ANNUUS r34, VITIS VINIFERA r39, COCOS NUCIFERA r46) all sit far below the marker and are subordinate. Confidence `moderate` under §9-O6: the marker is plausible and not vacuous, and the only glycol above the tail (PROPANEDIOL r10) ranks behind the film lead (r3), so the read does not rest on demoting a glycol that outranks the film.",
+        "mandatory_counter_signal": "§9-O6 counter-signal. Marker: PHENOXYETHANOL r14 of 46 (plausible). Film species: DIMETHICONE r3, PHENYL TRIMETHICONE r9. Directional species above the tail: none. Demoted v1.0 leg species: COCO-CAPRYLATE r5 (dry-feel ester), NEOPENTYL GLYCOL DIHEPTANOATE r6 (dry-feel ester), BEHENTRIMONIUM CHLORIDE r7 (L1 cationic), PROPANEDIOL r10 (glycol), CETRIMONIUM CHLORIDE r13 (L1 cationic). Subordinate below the marker: HELIANTHUS ANNUUS SEED OIL r34, VITIS VINIFERA SEED OIL r39, ALOE BARBADENSIS LEAF JUICE r40, PANTHENOL r41, COCOS NUCIFERA OIL r46. No C1/C2 moisture claim is frozen for this record.",
+        "routes_to_review": false,
+        "review_triggers": [],
+        "resolved_triggers": [],
+        "superseded_reading": "v1.0 reading, retained verbatim for audit — value `moisture`, confidence `moderate`, evidence_level E2 (no row, no note on the v4 key; the round-3 reference key cited the \"emollient (Coco-Caprylate 5, Neopentyl Glycol Diheptanoate 6) and humectant (Propanediol 10) legs\"). Superseded 2026-09-29 (T20)."
+      }
+    },
+    {
+      "slot": 13,
+      "brand": "Neqi",
+      "product": "Diamond Glass Ultimate Styling Spray",
+      "live_catalog": true,
+      "base_record": "gold_set",
+      "tail_marker": { "ingredient": "ETHYLHEXYLGLYCERIN", "rank": 9, "list_length": 15, "marker_status": "plausible" },
+      "protein_anchor": false,
+      "species_above_tail": [
+        { "rank": 2, "inci": "DIPROPYLENE GLYCOL", "speciesClass": "multifunctional_glycol" },
+        { "rank": 3, "inci": "GARDENIA TAITENSIS FLOWER EXTRACT", "speciesClass": "other" },
+        { "rank": 4, "inci": "LYCIUM BARBARUM FRUIT EXTRACT", "speciesClass": "other" },
+        { "rank": 5, "inci": "MALVA SYLVESTRIS (MALLOW) EXTRACT", "speciesClass": "other" },
+        { "rank": 6, "inci": "PENTYLENE GLYCOL", "speciesClass": "multifunctional_glycol" },
+        { "rank": 7, "inci": "POLYSILICONE-29", "speciesClass": "persistent_film" },
+        { "rank": 8, "inci": "VP/METHACRYLAMIDE/VINYL IMIDAZOLE COPOLYMER", "speciesClass": "other" }
+      ],
+      "care_direction": {
+        "value": "balanced",
+        "confidence": "low",
+        "o6_confidence": "low",
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "film_led_neutral",
+        "film_lead_margin": null,
+        "changed": true,
+        "note": "T20 re-derivation (2026-09-29), value CHANGED moisture → balanced; this reverses the part of T19 that kept Neqi on `moisture` by design (Nick, 2026-09-29: its glycols are not genuine moisture legs). v1.0 reached `moisture` only through two glycols, DIPROPYLENE GLYCOL r2 and PENTYLENE GLYCOL r6. In a formula preserved by the HYDROXYACETOPHENONE r10 / ETHYLHEXYLGLYCERIN r9 system and carrying three botanical extracts at r3–r5, those glycols plausibly serve as solvent, extract carrier and preservative booster; their INCI name does not settle a water-binding role, so under §9-O2 they corroborate a settled humectant and never create the leg on their own. No settled humectant and no medium/rich lipid sits above the r9 marker (GLYCERIN r15 and PROPYLENE GLYCOL r14 are below it). The only persistent film above the tail is POLYSILICONE-29 r7; VP/METHACRYLAMIDE/VINYL IMIDAZOLE COPOLYMER r8 is the supporting fixative T15 already reads as incidental hold. §9-O4 therefore gives `balanced` on the `film_led_neutral` row. Confidence `low` under §9-O6 and routed to review: both glycols outrank the film lead (r2 and r6 vs r7), so the read rests on the glycol demotion.",
+        "mandatory_counter_signal": "§9-O6 counter-signal. Marker: ETHYLHEXYLGLYCERIN r9 of 15 (plausible). Film species: POLYSILICONE-29 r7 (SILICONE QUATERNIUM-18 r11 is below the marker). Directional species above the tail: none. Demoted v1.0 leg species: DIPROPYLENE GLYCOL r2 (glycol), PENTYLENE GLYCOL r6 (glycol) — both outrank the film. Subordinate below the marker: PROPYLENE GLYCOL r14, GLYCERIN r15. Positioning: the C2 page's „Feuchtigkeitsschutz“ (recorded on reference-key-v4 slot 13 and in T19) is a counter-signal only and does not enter the read (§9 constraint 3).",
+        "routes_to_review": true,
+        "review_triggers": ["glycol_only_leg"],
+        "resolved_triggers": [
+          { "trigger": "care_direction_underfires_on_film_led_architecture", "resolved": "2026-09-29", "basis": "T20 §9-O2/§9-O4 — the glycol legs no longer set the direction, so the film-led architecture now reads balanced; the review this trigger routed is replaced by `glycol_only_leg`." }
+        ],
+        "superseded_reading": "v1.0 reading, retained verbatim for audit — value `moisture`, confidence `low`, evidence_level E2, row `humectant_led_minimum`, uncertain: true, note: \"§9 silicone-led unknown rule under-fires (§17.22) - a film-led product with a humectant leg above the tail is labelled moisture while its own C2 page claims 'Feuchtigkeitsschutz'\". T19 (2026-09-12) explicitly kept this record on `moisture`; that part of T19 is superseded by T20 (2026-09-29)."
+      }
+    },
+    {
+      "slot": "u1",
+      "brand": "L'Oréal Paris Elvital",
+      "product": "Elvital Dream Length No Spliss Milk",
+      "live_catalog": false,
+      "base_record": "u1",
+      "tail_marker": { "ingredient": "PHENOXYETHANOL", "rank": 13, "list_length": 31, "marker_status": "plausible" },
+      "protein_anchor": false,
+      "species_above_tail": [
+        { "rank": 2, "inci": "ISOPROPYL MYRISTATE", "speciesClass": "dry_feel_ester" },
+        { "rank": 3, "inci": "DIMETHICONE", "speciesClass": "persistent_film" },
+        { "rank": 4, "inci": "AMODIMETHICONE", "speciesClass": "persistent_film" },
+        { "rank": 5, "inci": "TRIETHANOLAMINE", "speciesClass": "other" },
+        { "rank": 6, "inci": "NIACINAMIDE", "speciesClass": "other" },
+        { "rank": 7, "inci": "RICINUS COMMUNIS SEED OIL / CASTOR SEED OIL", "speciesClass": "medium_rich_lipid" },
+        { "rank": 8, "inci": "HYDROXYPROPYL GUAR", "speciesClass": "other" },
+        { "rank": 10, "inci": "HYDROLYZED WHEAT PROTEIN", "speciesClass": "other" },
+        { "rank": 11, "inci": "HYDROLYZED CORN PROTEIN", "speciesClass": "other" },
+        { "rank": 12, "inci": "HYDROLYZED SOY PROTEIN", "speciesClass": "other" }
+      ],
+      "care_direction": {
+        "value": "balanced",
+        "confidence": "low",
+        "o6_confidence": "moderate",
+        "confidence_step_down": "§2.4.2 tier 1 (T18): the formula of record is a three-source convergence with a preserved outlier capture, and the u1 re-derivation already holds confidence one step below the ceiling on every field that capture could move. care_direction is such a field, so the O6 `moderate` is stepped down to `low`.",
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "film_leads_moisture_leg",
+        "film_lead_margin": 4,
+        "changed": true,
+        "note": "T20 re-derivation (2026-09-29), value CHANGED moisture → balanced. DIMETHICONE r3 and AMODIMETHICONE r4 lead the architecture. ISOPROPYL MYRISTATE r2 is a dry-feel spreading ester (SR §D.1; the standard's L3 table places IPM in the dry-feel band) and is non-directional under §9-O2; NIACINAMIDE r6 is a vitamin whose role on hair is not settled by its name and is class `other`. The only directional species above the r13 marker is RICINUS COMMUNIS SEED OIL r7 (DL), four ranks behind the film lead, so §9-O3 gives `balanced` on the `film_leads_moisture_leg` row. The hydrolysed proteins r10–r12 are plain hydrolysates (no R2 route). PANTHENOL r21 and the cationics BEHENTRIMONIUM CHLORIDE r14 / POLYQUATERNIUM-4 r16 sit below the marker and are subordinate. §9-O6 alone would allow `moderate` (plausible marker, margin 4, no glycol above the tail); the T18 tier-1 step-down makes it `low`. The two sealed unseen-test lanes split on this record (lane A `unknown`, lane B `moisture`), which marks it as a real boundary case.",
+        "mandatory_counter_signal": "§9-O6 counter-signal. Marker: PHENOXYETHANOL r13 of 31 (plausible). Film species: DIMETHICONE r3, AMODIMETHICONE r4. Directional species: RICINUS COMMUNIS SEED OIL r7 (DL). Demoted v1.0 leg species: ISOPROPYL MYRISTATE r2 (dry-feel ester). Subordinate below the marker: BEHENTRIMONIUM CHLORIDE r14, POLYQUATERNIUM-4 r16, PANTHENOL r21, CETRIMONIUM CHLORIDE r27. Positioning: the C2 claim „wirkt intensiv feuchtigkeitsspendend“ is recorded as a counter-signal only (§9 constraint 3). The demoted loreal-paris.de capture (a structurally different 35-ingredient formula) remains the residual formula-source risk named in the base record.",
+        "routes_to_review": true,
+        "review_triggers": ["moisture_leg_subordinate", "formula_or_identity_conflict"],
+        "resolved_triggers": [],
+        "superseded_reading": "v1.0 reading, retained verbatim for audit — value `moisture`, confidence `low`, evidence_level E2, anchor: \"§9 `moisture` — a conditioning + emollient architecture is the material direction and there is NO protein-film route (R2 `none_visible`). Per §9's \\\"how much moisture leg is enough\\\" rule, any ONE of the L1/L3/L4 legs present as architecture is sufficient: here the L3 emollient leg is present above the r13 marker (ISOPROPYL MYRISTATE r2, RICINUS COMMUNIS SEED OIL r7).\" Superseded 2026-09-29 (T20). Not a live catalog product; no production consequence."
+      }
+    },
+    {
+      "slot": 1,
+      "brand": "alverde NATURKOSMETIK",
+      "product": "Leave-In Sprühkur Express 7in1",
+      "live_catalog": true,
+      "base_record": "gold_set",
+      "tail_marker": { "ingredient": "LEVULINIC ACID", "rank": 9, "list_length": 32, "marker_status": "plausible" },
+      "protein_anchor": false,
+      "species_above_tail": [
+        { "rank": 2, "inci": "HELIANTHUS ANNUUS HYBRID OIL", "speciesClass": "medium_rich_lipid" },
+        { "rank": 3, "inci": "ALCOHOL DENAT.", "speciesClass": "other" },
+        { "rank": 4, "inci": "GLYCERIN", "speciesClass": "settled_humectant" },
+        { "rank": 5, "inci": "DICAPRYLYL ETHER", "speciesClass": "dry_feel_ester" },
+        { "rank": 6, "inci": "PENTYLENE GLYCOL", "speciesClass": "multifunctional_glycol" },
+        { "rank": 7, "inci": "INULIN", "speciesClass": "other" },
+        { "rank": 8, "inci": "ISOAMYL LAURATE", "speciesClass": "dry_feel_ester" }
+      ],
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "o6_confidence": null,
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "moisture_led",
+        "film_lead_margin": null,
+        "changed": false,
+        "note": "T20 re-derivation (2026-09-29), value UNCHANGED. HELIANTHUS ANNUUS HYBRID OIL r2 (DL) and GLYCERIN r4 (DH) sit above the r9 marker and no persistent film exists anywhere on the list, so §9-O5 gives `moisture`. The formula reads as a light oil + humectant softness spray; its own claim „geschmeidiges Haargefühl, ohne zu beschweren“ fits that read. Nick ruled 2026-09-29 that this formula reading stands, with no per-product exception. Confidence carried from v1.0 (O5 unchanged).",
+        "routes_to_review": false,
+        "review_triggers": []
+      }
+    },
+    {
+      "slot": 2,
+      "brand": "ISANA PROFESSIONAL",
+      "product": "Leave-In Conditioner Hyaluron & Panthenol",
+      "live_catalog": true,
+      "base_record": "gold_set",
+      "tail_marker": { "ingredient": "SODIUM BENZOATE", "rank": 9, "list_length": 21, "marker_status": "plausible" },
+      "protein_anchor": false,
+      "species_above_tail": [
+        { "rank": 2, "inci": "CETEARYL ALCOHOL", "speciesClass": "fatty_alcohol" },
+        { "rank": 3, "inci": "GLYCERIN", "speciesClass": "settled_humectant" },
+        { "rank": 4, "inci": "DICAPRYLYL ETHER", "speciesClass": "dry_feel_ester" },
+        { "rank": 5, "inci": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "speciesClass": "cationic" },
+        { "rank": 6, "inci": "BETAINE", "speciesClass": "settled_humectant" },
+        { "rank": 7, "inci": "CETRIMONIUM CHLORIDE", "speciesClass": "cationic" },
+        { "rank": 8, "inci": "DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE", "speciesClass": "cationic" }
+      ],
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "o6_confidence": null,
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "moisture_led",
+        "film_lead_margin": null,
+        "changed": false,
+        "note": "T20 re-derivation (2026-09-29), value UNCHANGED — the Hyaluron & Panthenol anchor holds. GLYCERIN r3 and BETAINE r6 (both DH) sit above the r9 marker and no persistent film exists, so §9-O5 gives `moisture`. Confidence carried from v1.0.",
+        "routes_to_review": false,
+        "review_triggers": []
+      }
+    },
+    {
+      "slot": 3,
+      "brand": "Cantu",
+      "product": "Leave-In Haarkur Repair Creme",
+      "live_catalog": true,
+      "base_record": "gold_set",
+      "tail_marker": { "ingredient": "PHENOXYETHANOL", "rank": 28, "list_length": 52, "marker_status": "plausible" },
+      "protein_anchor": false,
+      "species_above_tail": [
+        { "rank": 2, "inci": "CANOLA OIL", "speciesClass": "medium_rich_lipid" },
+        { "rank": 3, "inci": "CETEARYL ALCOHOL", "speciesClass": "fatty_alcohol" },
+        { "rank": 4, "inci": "GLYCERIN", "speciesClass": "settled_humectant" },
+        { "rank": 5, "inci": "BEHENTRIMONIUM METHOSULFATE", "speciesClass": "cationic" },
+        { "rank": 6, "inci": "BUTYROSPERMUM PARKII (SHEA) BUTTER", "speciesClass": "medium_rich_lipid" },
+        { "rank": 7, "inci": "OLEA EUROPAEA FRUIT OIL", "speciesClass": "medium_rich_lipid" },
+        { "rank": 16, "inci": "PANTHENOL", "speciesClass": "settled_humectant" },
+        { "rank": 24, "inci": "SODIUM HYALURONATE", "speciesClass": "settled_humectant" }
+      ],
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "o6_confidence": null,
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "moisture_led",
+        "film_lead_margin": null,
+        "changed": false,
+        "note": "T20 re-derivation (2026-09-29), value UNCHANGED. CANOLA OIL r2, SHEA BUTTER r6 and OLIVE OIL r7 (DL) plus GLYCERIN r4 (DH) sit above the r28 marker; no persistent film exists above the tail, so §9-O5 gives `moisture`. Confidence carried from v1.0.",
+        "routes_to_review": false,
+        "review_triggers": []
+      }
+    },
+    {
+      "slot": 4,
+      "brand": "alverde NATURKOSMETIK",
+      "product": "Nutri-Care 2-Phasen-Sprühkur Bio-Mandel, Bio-Argan",
+      "live_catalog": false,
+      "base_record": "gold_set",
+      "tail_marker": { "ingredient": null, "rank": null, "list_length": 16, "marker_status": "none_visible" },
+      "protein_anchor": false,
+      "species_above_tail": [
+        { "rank": 2, "inci": "GLYCINE SOJA OIL", "speciesClass": "medium_rich_lipid" },
+        { "rank": 3, "inci": "ALCOHOL", "speciesClass": "other" },
+        { "rank": 4, "inci": "GLYCERIN", "speciesClass": "settled_humectant" },
+        { "rank": 5, "inci": "SODIUM LACTATE", "speciesClass": "settled_humectant" },
+        { "rank": 6, "inci": "BETAINE", "speciesClass": "settled_humectant" },
+        { "rank": 7, "inci": "ARGANIA SPINOSA KERNEL OIL", "speciesClass": "medium_rich_lipid" }
+      ],
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "o6_confidence": null,
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "moisture_led",
+        "film_lead_margin": null,
+        "changed": false,
+        "note": "T20 re-derivation (2026-09-29), value UNCHANGED. On the ordinal read the `none_visible` marker requires, GLYCINE SOJA OIL r2 and ARGANIA SPINOSA KERNEL OIL r7 (DL) and GLYCERIN r4 / SODIUM LACTATE r5 / BETAINE r6 (DH) lead the list with no film, so §9-O5 gives `moisture` — the same build as slot 1. Confidence carried from v1.0.",
+        "routes_to_review": false,
+        "review_triggers": []
+      }
+    },
+    {
+      "slot": 5,
+      "brand": "EVO",
+      "product": "Head Mistress Cuticle Sealer",
+      "live_catalog": true,
+      "base_record": "gold_set",
+      "tail_marker": { "ingredient": "PHENOXYETHANOL", "rank": 6, "list_length": 25, "marker_status": "plausible" },
+      "protein_anchor": false,
+      "species_above_tail": [
+        { "rank": 2, "inci": "DIMETHICONE", "speciesClass": "persistent_film" },
+        { "rank": 3, "inci": "CYCLOPENTASILOXANE", "speciesClass": "volatile_carrier" },
+        { "rank": 4, "inci": "POLYACRYLAMIDE", "speciesClass": "other" },
+        { "rank": 5, "inci": "DIMETHICONOL", "speciesClass": "persistent_film" }
+      ],
+      "care_direction": {
+        "value": "balanced",
+        "confidence": "moderate",
+        "o6_confidence": "moderate",
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "film_led_neutral",
+        "film_lead_margin": null,
+        "changed": false,
+        "note": "T20 re-derivation (2026-09-29), value UNCHANGED — the EVO anchor holds, now through §9-O4. DIMETHICONE r2 and DIMETHICONOL r5 are the persistent film above the r6 marker; CYCLOPENTASILOXANE r3 is the volatile carrier and POLYACRYLAMIDE r4 a rheology polymer. No directional species sits above the marker (PANTHENOL r8, MACADAMIA TERNIFOLIA SEED OIL r13 and BUTYLENE GLYCOL r18 are subordinate). Marker plausible and no glycol above the tail, so §9-O6 keeps `moderate`.",
+        "routes_to_review": false,
+        "review_triggers": []
+      }
+    },
+    {
+      "slot": 6,
+      "brand": "Curlsmith",
+      "product": "Hydrate & Plump Leave-In",
+      "live_catalog": true,
+      "base_record": "gold_set",
+      "tail_marker": { "ingredient": "PHENOXYETHANOL", "rank": 36, "list_length": 40, "marker_status": "vacuous" },
+      "protein_anchor": false,
+      "species_above_tail": [
+        { "rank": 2, "inci": "DICAPRYLYL CARBONATE", "speciesClass": "dry_feel_ester" },
+        { "rank": 3, "inci": "CETEARYL ALCOHOL", "speciesClass": "fatty_alcohol" },
+        { "rank": 4, "inci": "COCO-CAPRYLATE/CAPRATE", "speciesClass": "dry_feel_ester" },
+        { "rank": 5, "inci": "RICINUS COMMUNIS (CASTOR) SEED OIL", "speciesClass": "medium_rich_lipid" },
+        { "rank": 6, "inci": "BEHENTRIMONIUM CHLORIDE", "speciesClass": "cationic" },
+        { "rank": 7, "inci": "GLYCERIN", "speciesClass": "settled_humectant" },
+        { "rank": 8, "inci": "PANTHENOL", "speciesClass": "settled_humectant" },
+        { "rank": 9, "inci": "BUTYROSPERMUM PARKII (SHEA) BUTTER", "speciesClass": "medium_rich_lipid" },
+        { "rank": 10, "inci": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL", "speciesClass": "medium_rich_lipid" },
+        { "rank": 11, "inci": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE", "speciesClass": "cationic" },
+        { "rank": 12, "inci": "POLYQUATERNIUM-10", "speciesClass": "cationic" }
+      ],
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "o6_confidence": null,
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "moisture_led",
+        "film_lead_margin": null,
+        "changed": false,
+        "note": "T20 re-derivation (2026-09-29), value UNCHANGED. On the coherence/ordinal read the vacuous r36 marker requires, CASTOR SEED OIL r5, SHEA BUTTER r9 and JOJOBA r10 (DL) and GLYCERIN r7 / PANTHENOL r8 (DH) are an early, coherent directional architecture with no persistent film, so §9-O5 gives `moisture`. The dry-feel esters r2/r4 are demoted but do not decide the value. Confidence carried from v1.0.",
+        "routes_to_review": false,
+        "review_triggers": []
+      }
+    },
+    {
+      "slot": 9,
+      "brand": "Redken",
+      "product": "Extreme Anti-Snap Leave-In Treatment",
+      "live_catalog": true,
+      "base_record": "gold_set",
+      "tail_marker": { "ingredient": "PHENOXYETHANOL", "rank": 3, "list_length": 24, "marker_status": "implausible" },
+      "protein_anchor": true,
+      "species_above_tail": [
+        { "rank": 2, "inci": "POLYACRYLAMIDE", "speciesClass": "other" },
+        { "rank": 4, "inci": "AMODIMETHICONE", "speciesClass": "persistent_film" },
+        { "rank": 8, "inci": "ISOPROPYL MYRISTATE", "speciesClass": "dry_feel_ester" }
+      ],
+      "care_direction": {
+        "value": "protein",
+        "confidence": "low",
+        "o6_confidence": null,
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "protein_anchor",
+        "film_lead_margin": null,
+        "changed": false,
+        "note": "T20 re-derivation (2026-09-29), value UNCHANGED — the Redken anchor holds. R2 is `candidate` under T16 (the implausible r3 marker may not disqualify the HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL route), so the protein anchor decides first. No directional species is read on the ordinal read (ISOPROPYL MYRISTATE r8 is a dry-feel ester), so reading (a) substantive-mixed does not fire. Confidence carried from v1.0.",
+        "routes_to_review": false,
+        "review_triggers": []
+      }
+    },
+    {
+      "slot": 11,
+      "brand": "Balea",
+      "product": "Leichtkämmspray Pure Styling",
+      "live_catalog": false,
+      "base_record": "gold_set",
+      "tail_marker": { "ingredient": "HYDROXYACETOPHENONE", "rank": 7, "list_length": 11, "marker_status": "vacuous" },
+      "protein_anchor": false,
+      "species_above_tail": [
+        { "rank": 2, "inci": "BETAINE", "speciesClass": "settled_humectant" },
+        { "rank": 3, "inci": "PROPYLENE GLYCOL", "speciesClass": "multifunctional_glycol" },
+        { "rank": 4, "inci": "CETRIMONIUM CHLORIDE", "speciesClass": "cationic" },
+        { "rank": 5, "inci": "INULIN", "speciesClass": "other" },
+        { "rank": 6, "inci": "PANTHENOL", "speciesClass": "settled_humectant" }
+      ],
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "low",
+        "o6_confidence": null,
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "moisture_led",
+        "film_lead_margin": null,
+        "changed": false,
+        "note": "T20 re-derivation (2026-09-29), value UNCHANGED. BETAINE r2 and PANTHENOL r6 are settled humectants on the ordinal read (vacuous r7 marker); PROPYLENE GLYCOL r3 corroborates them and CETRIMONIUM CHLORIDE r4 is baseline. No film. §9-O5 gives `moisture`; the humectant-led minimum row and its `low` confidence are unchanged (thin architecture).",
+        "routes_to_review": false,
+        "review_triggers": []
+      }
+    },
+    {
+      "slot": "u4",
+      "brand": "Briogeo",
+      "product": "Superfoods™ Avocado + Kiwi Mega Moisture 3-in-1 Leave-In Spray",
+      "live_catalog": false,
+      "base_record": "u4_u6",
+      "tail_marker": { "ingredient": "POTASSIUM SORBATE", "rank": 31, "list_length": 36, "marker_status": "vacuous" },
+      "protein_anchor": false,
+      "species_above_tail": [
+        { "rank": 2, "inci": "POLYGLYCERYL-6 STEARATE", "speciesClass": "other" },
+        { "rank": 3, "inci": "CETEARYL ALCOHOL", "speciesClass": "fatty_alcohol" },
+        { "rank": 4, "inci": "GLYCERIN", "speciesClass": "settled_humectant" },
+        { "rank": 5, "inci": "CETRIMONIUM CHLORIDE", "speciesClass": "cationic" },
+        { "rank": 6, "inci": "GLYCERYL STEARATE", "speciesClass": "other" },
+        { "rank": 7, "inci": "ISOPROPYL PALMITATE", "speciesClass": "dry_feel_ester" },
+        { "rank": 8, "inci": "PERSEA GRATISSIMA (AVOCADO) OIL", "speciesClass": "medium_rich_lipid" },
+        { "rank": 12, "inci": "PANTHENOL", "speciesClass": "settled_humectant" },
+        { "rank": 13, "inci": "SODIUM PCA", "speciesClass": "settled_humectant" },
+        { "rank": 18, "inci": "THEOBROMA CACAO (COCOA) SEED BUTTER", "speciesClass": "medium_rich_lipid" }
+      ],
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "o6_confidence": null,
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "moisture_led",
+        "film_lead_margin": null,
+        "changed": false,
+        "note": "T20 re-derivation (2026-09-29), value UNCHANGED. GLYCERIN r4, PANTHENOL r12, SODIUM PCA r13 (DH) and AVOCADO OIL r8 / COCOA BUTTER r18 (DL) on the ordinal read; no persistent film. §9-O5 gives `moisture`. Confidence carried from the unseen-test lanes (both `moderate`).",
+        "routes_to_review": false,
+        "review_triggers": []
+      }
+    },
+    {
+      "slot": "u5",
+      "brand": "ISANA PROFESSIONAL (Rossmann house brand)",
+      "product": "Argan Leave-in Conditioner",
+      "live_catalog": false,
+      "base_record": "u5",
+      "tail_marker": { "ingredient": "SODIUM BENZOATE", "rank": 11, "list_length": 18, "marker_status": "vacuous" },
+      "protein_anchor": false,
+      "species_above_tail": [
+        { "rank": 2, "inci": "GLYCERIN", "speciesClass": "settled_humectant" },
+        { "rank": 3, "inci": "RICINUS COMMUNIS SEED OIL", "speciesClass": "medium_rich_lipid" },
+        { "rank": 4, "inci": "PANTHENOL", "speciesClass": "settled_humectant" },
+        { "rank": 5, "inci": "NIACINAMIDE", "speciesClass": "other" },
+        { "rank": 6, "inci": "ARGANIA SPINOSA KERNEL OIL", "speciesClass": "medium_rich_lipid" },
+        { "rank": 7, "inci": "CETEARYL ALCOHOL", "speciesClass": "fatty_alcohol" },
+        { "rank": 9, "inci": "BEHENTRIMONIUM CHLORIDE", "speciesClass": "cationic" }
+      ],
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "o6_confidence": null,
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "moisture_led",
+        "film_lead_margin": null,
+        "changed": false,
+        "note": "T20 re-derivation (2026-09-29), value UNCHANGED. GLYCERIN r2 / PANTHENOL r4 (DH) and CASTOR r3 / ARGAN r6 (DL) lead the ordinal read; no film. §9-O5 gives `moisture`. Confidence carried from the u5 re-derivation.",
+        "routes_to_review": false,
+        "review_triggers": []
+      }
+    },
+    {
+      "slot": "u6",
+      "brand": "amika",
+      "product": "The Shield Anti-Humidity Spray",
+      "live_catalog": false,
+      "base_record": "u4_u6",
+      "tail_marker": { "ingredient": "ETHYLHEXYLGLYCERIN", "rank": 16, "list_length": 32, "marker_status": "plausible" },
+      "protein_anchor": false,
+      "species_above_tail": [
+        { "rank": 1, "inci": "BUTANE", "speciesClass": "volatile_carrier" },
+        { "rank": 2, "inci": "DISILOXANE", "speciesClass": "volatile_carrier" },
+        { "rank": 4, "inci": "PROPANE", "speciesClass": "volatile_carrier" },
+        { "rank": 5, "inci": "HIPPOPHAE RHAMNOIDES (SEA BUCKTHORN/ARGOUSIER) FRUIT/SEED OIL", "speciesClass": "medium_rich_lipid" },
+        { "rank": 6, "inci": "CETEARYL ALCOHOL", "speciesClass": "fatty_alcohol" },
+        { "rank": 7, "inci": "HYDROLYZED VEGETABLE PROTEIN", "speciesClass": "other" },
+        { "rank": 8, "inci": "HYDROLYZED WHEAT PROTEIN", "speciesClass": "other" },
+        { "rank": 9, "inci": "BEHENTRIMONIUM CHLORIDE", "speciesClass": "cationic" },
+        { "rank": 10, "inci": "CETRIMONIUM CHLORIDE", "speciesClass": "cationic" },
+        { "rank": 11, "inci": "CETYL PEG/PPG-10/1 DIMETHICONE", "speciesClass": "other" },
+        { "rank": 12, "inci": "PHENYL TRIMETHICONE", "speciesClass": "persistent_film" },
+        { "rank": 13, "inci": "CINNAMIDOPROPYLTRIMONIUM CHLORIDE", "speciesClass": "cationic" },
+        { "rank": 14, "inci": "OLETH-10", "speciesClass": "other" },
+        { "rank": 15, "inci": "GLYCERIN", "speciesClass": "settled_humectant" }
+      ],
+      "care_direction": {
+        "value": "moisture",
+        "confidence": "moderate",
+        "o6_confidence": null,
+        "evidence_level": "E2",
+        "evidence_scope": "formula",
+        "row": "moisture_led",
+        "film_lead_margin": null,
+        "changed": false,
+        "note": "T20 re-derivation (2026-09-29), value UNCHANGED. SEA BUCKTHORN OIL r5 (DL) sits well ahead of the only persistent film, PHENYL TRIMETHICONE r12, and GLYCERIN r15 (DH) is above the r16 marker, so the film does not lead and §9-O5 gives `moisture` — formula-first, whatever the anti-humidity positioning. Confidence carried from the unseen-test lanes.",
+        "routes_to_review": false,
+        "review_triggers": []
+      }
+    }
+  ],
+  "excluded_records": [
+    { "slot": 7, "product": "Maria Nila Curlicue Cream", "g0_state": "excluded_styling_first", "note": "Emits no care_direction (§2.3.1). Informational only: under T20 it would read moisture (GLYCERIN r3; PVP is a hold polymer, not a care film)." },
+    { "slot": 12, "product": "Kevin Murphy Young.Again Oil", "g0_state": "excluded_anhydrous", "note": "Emits no care_direction (§2.3.1). Informational only: under T20 it would read balanced (DIMETHICONE r2 ahead of safflower oil r6)." },
+    { "slot": "u2", "product": "L'Oréal Paris Elvital ÖL Magique Veredelndes Haaröl", "g0_state": "excluded_anhydrous", "note": "Emits no care_direction (§2.3.1)." },
+    { "slot": "u3", "product": "Alcina (Professional) Föhn Lotion", "g0_state": "excluded_styling_first", "note": "Emits no care_direction (§2.3.1)." }
+  ]
+}

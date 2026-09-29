@@ -15,8 +15,14 @@ import {
 
 type Environment = Partial<Pick<NodeJS.ProcessEnv, "NODE_ENV">>
 
+// Standard v1.1 (T20): the fixture is the v1.1 overlay of the frozen v1.0
+// fixture (scripts/leave-in-research/build-lab-fixture-v1.1.mjs). The local,
+// gitignored review state and rework queue stay where Nick's approvals already
+// live, in the v1.0 artifact root — so every approval on an untouched property
+// still matches by fingerprint, and only the reopened care_direction rows need
+// review again.
 const ARTIFACT_DIRECTORY = join(process.cwd(), "data/research/leave-in-inci/v1.0")
-const FIXTURE_FILE = "lab-fixture.json"
+const FIXTURE_PATH = join(process.cwd(), "data/research/leave-in-inci/v1.1/lab-fixture.json")
 
 const hashSchema = z.string().regex(/^[a-f0-9]{64}$/)
 
@@ -261,7 +267,7 @@ export type LeaveInResearchReviewResult =
   | { status: "persistence_failed"; error: string }
 
 function loadFixture(): LeaveInResearchFixture {
-  const raw = JSON.parse(readFileSync(join(ARTIFACT_DIRECTORY, FIXTURE_FILE), "utf8")) as unknown
+  const raw = JSON.parse(readFileSync(FIXTURE_PATH, "utf8")) as unknown
   const fixture = fixtureSchema.parse(raw)
   const ids = fixture.products.map((product) => product.productId)
   if (new Set(ids).size !== ids.length)

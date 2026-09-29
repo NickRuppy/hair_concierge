@@ -25,7 +25,7 @@ export default function LeaveInResearchLabPage() {
           <p className="mt-3 text-sm leading-6 text-stone-700">
             Die lokale Lab-Ansicht bleibt absichtlich begrenzt: keine Produktionsdatenbank, keine
             Katalogfreigabe und keine Product-Intake-Aktion. Bitte die Fixture unter
-            <code className="mx-1">data/research/leave-in-inci/v1.0/lab-fixture.json</code>
+            <code className="mx-1">data/research/leave-in-inci/v1.1/lab-fixture.json</code>
             prüfen und den lokalen Dev-Server danach neu laden.
           </p>
         </section>
