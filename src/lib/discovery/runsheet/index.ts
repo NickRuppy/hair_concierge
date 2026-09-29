@@ -18,6 +18,7 @@ export {
   PAUSED_CADENCE_PREFIX,
   runsheetEntryInHerWeek,
   runsheetWashAnchor,
+  runsheetWashChangeNote,
   runsheetWashFrequency,
   type FrequencyDelta,
   type FrequencyDeltaStatus,
@@ -29,7 +30,6 @@ export {
 } from "./frequency"
 export {
   runsheetLockedIn,
-  runsheetShoppingListText,
   runsheetStoredSelection,
   type RunsheetLockedIn,
   type RunsheetLockedInBuyRow,

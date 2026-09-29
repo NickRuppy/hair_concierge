@@ -153,8 +153,9 @@ test("the list columns must hold JSON arrays", async (t) => {
       JSON.stringify([{ kind: "text_checkin", due_on: "2026-10-05", done_at: null }]),
       JSON.stringify({
         sections: {
+          mechanik: "x",
           diagnose: "x",
-          hebel: [],
+          hebel: [{ title: "y", note: "z", points: 1, bucket: "produkt" }],
           swapReasons: {},
           zielLuecken: [],
           callFragen: [],

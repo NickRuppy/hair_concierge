@@ -58,6 +58,7 @@ import { buildDiscoveryQuizAnswers, type DiscoveryQuizLead } from "@/lib/discove
 import {
   derivePrepChecklist,
   runsheetWashAnchor,
+  runsheetWashChangeNote,
   runsheetWashFrequency,
 } from "@/lib/discovery/runsheet"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
@@ -267,6 +268,12 @@ export function createDiscoveryCockpitPage(
       : (view.intakeProducts.find(
           (product) => product.category === "shampoo" && product.frequencyLabel,
         )?.frequencyLabel ?? null)
+    // F2: why the wash frequency changes — null when her answer sits inside the tolerated range.
+    const washChangeNote = runsheetWashChangeNote(
+      view.steps,
+      view.intakeProducts,
+      washFrequencyLabel,
+    )
     // A refresh with a different routine re-syncs the client islands (see the helper).
     const stateKey = discoveryCockpitStateKey(view.sourceHash, intake.callFinalizedAt)
 
@@ -318,12 +325,13 @@ export function createDiscoveryCockpitPage(
           unassigned={view.unassigned}
           researchItems={researchItems}
           swapReasons={sections.swapReasons}
-          zielLuecken={sections.zielLuecken}
           submitted={intake.state === "submitted"}
           initialFinalizedAt={intake.callFinalizedAt}
           categoryOpenCount={discoveryCategoryOpenItems(view).length}
           researchOpenCount={discoveryResearchOpenItems(view).length}
           applicationGaps={view.applicationGaps.map((gap) => gap.name)}
+          complexity={callSheet?.complexity ?? null}
+          complexityLocked={!callSheetAvailable}
           intakeProducts={
             <DiscoveryIntakeProducts
               key={`products:${stateKey}`}
@@ -338,6 +346,7 @@ export function createDiscoveryCockpitPage(
             <DiscoveryRunsheetRoutine
               view={view}
               washFrequencyLabel={washFrequencyLabel}
+              washChangeNote={washChangeNote}
               washFrequency={washAnchor}
               researchLabels={researchLabels}
             />

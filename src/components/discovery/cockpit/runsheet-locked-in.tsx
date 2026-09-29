@@ -1,18 +1,19 @@
 "use client"
 
-import { useEffect, useRef, useState, type ReactNode } from "react"
+import type { ReactNode } from "react"
 
-import { runsheetShoppingListText, type RunsheetLockedIn } from "@/lib/discovery/runsheet"
+import type { RunsheetLockedIn } from "@/lib/discovery/runsheet"
 
 import { RunsheetEyebrow } from "./runsheet-parts"
 
 /**
  * „Für den Plan festgehalten" (produktphase-lockin T2): Phase 3's payoff under the buckets —
  * what gets bought (with prices and a sum), kept, left out (her dropped products) and which
- * steps deliberately stay without a product, plus how many decisions are still open and the
- * shopping list to copy. Display only: the cockpit derives `lockedIn` from its live selection
- * state (`runsheetLockedIn`), so the section follows each Entscheidung click at once. Labels
- * are pronoun-free (Nick, 2026-09-29). Plum marks the section, coral only the copy CTA.
+ * steps deliberately stay without a product, plus how many decisions are still open. Display
+ * only: the cockpit derives `lockedIn` from its live selection state (`runsheetLockedIn`), so
+ * the section follows each Entscheidung click at once. Labels are pronoun-free (Nick,
+ * 2026-09-29). Plum marks the section. No copy flow (R29): the list flows into Phase 4 and
+ * the PDF on its own.
  */
 
 const TITLE = "Für den Plan festgehalten"
@@ -26,11 +27,7 @@ const TOTAL = "Summe neu"
 const TOTAL_FROM = "ab"
 const TOTAL_UNKNOWN = "Preis noch offen"
 const ALL_DECIDED = "Alle Schritte entschieden — bereit für Phase 4."
-const COPY = "Liste kopieren"
-const COPIED = "Kopiert ✓"
-const COPY_FAILED = "Kopieren ging nicht — die Liste ist markiert, bitte manuell kopieren."
 const FLOW_NOTE = "Die Liste geht so in Phase 4 (Routine) und ins PDF."
-const COPIED_RESET_MS = 1500
 
 /** „2 Schritte noch nicht entschieden." / „1 Schritt …" */
 export function runsheetOpenStepsLabel(openCount: number): string {
@@ -48,38 +45,6 @@ export function runsheetTotalLabel(
 }
 
 export function RunsheetLockedInSection({ lockedIn }: { lockedIn: RunsheetLockedIn }) {
-  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle")
-  const listRef = useRef<HTMLDivElement>(null)
-  const resetRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  useEffect(
-    () => () => {
-      if (resetRef.current) clearTimeout(resetRef.current)
-    },
-    [],
-  )
-
-  function copy() {
-    const text = runsheetShoppingListText(lockedIn)
-    const fallback = () => {
-      // No clipboard (insecure context, denied permission): select the list so Nick can copy.
-      const node = listRef.current
-      const selection = typeof window === "undefined" ? null : window.getSelection()
-      if (node && selection) selection.selectAllChildren(node)
-      setCopyState("failed")
-    }
-    try {
-      // Called synchronously inside the click, so the user gesture still counts.
-      void navigator.clipboard.writeText(text).then(() => {
-        setCopyState("copied")
-        if (resetRef.current) clearTimeout(resetRef.current)
-        resetRef.current = setTimeout(() => setCopyState("idle"), COPIED_RESET_MS)
-      }, fallback)
-    } catch {
-      fallback()
-    }
-  }
-
   return (
     <section
       aria-labelledby="runsheet-locked-in-title"
@@ -90,7 +55,7 @@ export function RunsheetLockedInSection({ lockedIn }: { lockedIn: RunsheetLocked
         {TITLE}
       </h3>
 
-      <div ref={listRef} className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1.5">
         <RunsheetEyebrow>{GROUP_BUY}</RunsheetEyebrow>
         {lockedIn.buy.length === 0 ? (
           <Empty />
@@ -168,22 +133,6 @@ export function RunsheetLockedInSection({ lockedIn }: { lockedIn: RunsheetLocked
       >
         {runsheetOpenStepsLabel(lockedIn.openCount)}
       </p>
-
-      <div className="flex flex-wrap items-center gap-3">
-        <button
-          id="runsheet-locked-in-copy"
-          type="button"
-          onClick={copy}
-          className="rounded-lg bg-[var(--brand-coral)] px-4 py-2 text-sm font-bold text-white"
-        >
-          {copyState === "copied" ? COPIED : COPY}
-        </button>
-        {copyState === "failed" ? (
-          <span role="status" className="text-[12px] text-muted-foreground">
-            {COPY_FAILED}
-          </span>
-        ) : null}
-      </div>
 
       <p className="text-[12px] text-muted-foreground">{FLOW_NOTE}</p>
     </section>

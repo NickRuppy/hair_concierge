@@ -50,6 +50,7 @@ import {
   type DiscoveryStepDepth,
 } from "./load-ideal-routine"
 import {
+  loadDiscoveryRecommendationPropertyRows,
   loadParticipantScanVerdicts,
   type DiscoveryParticipantVerdict,
   type DiscoveryUsageDifference,
@@ -435,6 +436,12 @@ export type DiscoveryCockpitModel = {
   routineSource?: DiscoveryRoutineSource
   /** The heat protectant waits for heat answers — „Hitzeschutz: im Call fragen" (display only). */
   heatProtectionDeferred?: boolean
+  /**
+   * F1: the Idealplan recommendation's target-vs-product rows, by decision key — only for
+   * steps where the cockpit shows that recommendation and the engine could evaluate it (see
+   * `loadDiscoveryRecommendationPropertyRows`). Display only, never hashed. Absent = no rows.
+   */
+  recommendationPropertyRows?: ReadonlyMap<string, DiscoveryPropertyRow[]>
 }
 
 export type DiscoveryCockpitModelResult =
@@ -458,6 +465,7 @@ export type DiscoveryCockpitDependencies = {
     items: DiscoveryIntakeItem[],
   ) => Promise<DiscoveryResearchState>
   loadApplication: typeof loadDiscoveryApplication
+  loadRecommendationRows: typeof loadDiscoveryRecommendationPropertyRows
 }
 
 export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
@@ -470,6 +478,7 @@ export const DISCOVERY_COCKPIT_DEPENDENCIES: DiscoveryCockpitDependencies = {
   loadProductIdentities: loadDiscoveryProductIdentities,
   loadResearchState: (client, items) => loadDiscoveryResearchState(client, items),
   loadApplication: loadDiscoveryApplication,
+  loadRecommendationRows: loadDiscoveryRecommendationPropertyRows,
 }
 
 /**
@@ -550,6 +559,33 @@ export async function loadDiscoveryCockpitModel(
     swapProducts: [],
   })
   const printedIds = new Set(discoveryPrintedRecommendationIds(outline))
+  // F1: rows for the recommendation wherever the cockpit shows it — a step with no product of
+  // hers („Neu dazu"), or one whose products have no displayed alternative (the recommendation
+  // is then the swap option, see `buildDiscoveryCockpitView`). Display only: a failure drops
+  // the table, never the call.
+  const verdictsByItemId = new Map(verdicts.map((verdict) => [verdict.itemId, verdict]))
+  const recommendationRowKeys = new Set(
+    outline.steps
+      .filter((entry) => {
+        const verdict = entry.item ? verdictsByItemId.get(entry.item.id) : undefined
+        return !(
+          verdict?.status === "verdict" &&
+          verdict.payload.kind === "in_catalog" &&
+          verdict.payload.alternatives.length > 0
+        )
+      })
+      .map((entry) => entry.step.decisionKey),
+  )
+  let recommendationPropertyRows = new Map<string, DiscoveryPropertyRow[]>()
+  try {
+    recommendationPropertyRows = await deps.loadRecommendationRows(
+      admin,
+      ideal.steps.filter((step) => recommendationRowKeys.has(step.decisionKey)),
+      ideal.context,
+    )
+  } catch (error) {
+    console.error("[discovery] recommendation rows unavailable:", error)
+  }
   // One batched catalog read for both: the swap targets and the printed brands.
   const catalogIds = [...new Set([...swapProductIds, ...printedIds])].sort()
   let catalogRows: ScanCatalogPresentationRow[] = []
@@ -657,6 +693,7 @@ export async function loadDiscoveryCockpitModel(
     heatStyling,
     routineSource: ideal.routineSource ?? "quiz_only",
     heatProtectionDeferred: ideal.heatProtectionDeferred === true,
+    recommendationPropertyRows,
   }
 }
 
@@ -688,7 +725,10 @@ export type DiscoveryCockpitSwapOption = {
    */
   priceLabel: string | null
   origin: "alternative" | "ideal_recommendation"
-  /** Target-vs-product rows for a displayed alternative; null when there are none. */
+  /**
+   * Target-vs-product rows for a displayed alternative or (F1) the Idealplan's
+   * recommendation; null when there are none.
+   */
   propertyRows: DiscoveryPropertyRow[] | null
 }
 
@@ -889,6 +929,7 @@ function idealRecommendationOption(
   step: DiscoveryIdealStep,
   brandsByProductId: ReadonlyMap<string, string | null>,
   identities: ReadonlyMap<string, DiscoveryProductIdentity>,
+  propertyRows: DiscoveryPropertyRow[] | null,
 ): DiscoveryCockpitSwapOption | null {
   const preview = step.preview
   if (!preview || preview.kind !== "recommendation") return null
@@ -906,7 +947,8 @@ function idealRecommendationOption(
       ? (preview.commerce?.priceLabel ?? null)
       : null,
     origin: "ideal_recommendation",
-    propertyRows: null,
+    // F1: the recommendation against her target — null when it could not be evaluated.
+    propertyRows,
   }
 }
 
@@ -981,7 +1023,12 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
         (entry) => [entry.productId, entry.rows] as const,
       ),
     )
-    const ideal = idealRecommendationOption(step, brandsByProductId, identities)
+    const ideal = idealRecommendationOption(
+      step,
+      brandsByProductId,
+      identities,
+      model.recommendationPropertyRows?.get(step.decisionKey) ?? null,
+    )
     // The ruled fallback: with no displayed alternatives the only swap target the cockpit
     // can honestly offer is the Idealplan's own pick — and never a product already in the
     // participant's bathroom for this step (any of her products in it, batch 9).

@@ -49,12 +49,21 @@ const touchpoint = z
   })
   .strict()
 
-const hebel = z.object({ title: text, note: text, points: z.number().finite().nullable() }).strict()
+const hebel = z
+  .object({
+    title: text,
+    note: text,
+    points: z.number().finite().nullable(),
+    // `null` = a row from a pre-v4 brief (rendered as one flat list, R26).
+    bucket: z.enum(["produkt", "umgang"]).nullable(),
+  })
+  .strict()
 
 const briefRevision = z
   .object({
     sections: z
       .object({
+        mechanik: text,
         diagnose: text,
         hebel: z.array(hebel).max(LIST_MAX),
         swapReasons: z.record(z.string().max(200), text),
@@ -98,6 +107,8 @@ const bodySchema = z
         message: "duplicate_commitment_id",
       })
       .optional(),
+    // R28: routine complexity, asked in the call — two options only.
+    complexity: z.enum(["essenziell", "normal"]).nullable().optional(),
     feedback: text.nullable().optional(),
   })
   .strict()
