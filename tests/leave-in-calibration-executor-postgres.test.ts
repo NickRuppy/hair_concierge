@@ -255,10 +255,10 @@ async function publicationGateSql(): Promise<string> {
 }
 
 /**
- * The hardening migration patches twelve installed executors in place; only
+ * The hardening migration patches thirteen installed executors in place; only
  * this executor exists here, so the test applies the shared patch helper plus
- * this executor's own block. Every other block's anchors were verified against
- * the live definitions (exactly one match each) before the migration shipped.
+ * this executor's own block. The whole migration, against all thirteen, runs in
+ * tests/catalog-apply-executor-hardening-postgres.test.ts.
  */
 async function hardeningSql(): Promise<{ helper: string; calibration: string }> {
   const sql = await readFile(new URL(HARDENING_MIGRATION, ROOT), "utf8")
