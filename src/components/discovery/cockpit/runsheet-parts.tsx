@@ -2,7 +2,17 @@ import type { ReactNode } from "react"
 
 import { DISCOVERY_INTAKE_CATEGORY_COPY } from "@/components/discovery/intake/categories"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
-import type { RunsheetPrepItem } from "@/lib/discovery/runsheet"
+import { isKnownProductFrequency } from "@/lib/discovery/frequency"
+import {
+  deriveStepFrequencyDelta,
+  type FrequencyDelta,
+  type FrequencyDeltaStatus,
+  type RunsheetPrepItem,
+  type WashAllowedRange,
+  type WashAnchor,
+  type WeeklyBand,
+} from "@/lib/discovery/runsheet"
+import { PRODUCT_FREQUENCY_METADATA, type ProductFrequency } from "@/lib/vocabulary/frequencies"
 
 /**
  * Shared pieces of the call runsheet (consult-runsheet T3): the phase frame, cards, chips
@@ -75,6 +85,87 @@ export function RunsheetChip({ tone, children }: { tone: RunsheetTone; children:
     <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${TONE_CLASS[tone]}`}>
       {children}
     </span>
+  )
+}
+
+// --- frequency-delta chip (verdict-layer T3) ------------------------------------------------
+
+const FREQUENCY_STATUS_LABEL: Record<FrequencyDeltaStatus, string> = {
+  zu_oft: "zu oft",
+  zu_selten: "zu selten",
+  passt: "passt",
+}
+
+/** 1 → „1", 4/3 → „1,3". */
+function formatDecimal(value: number): string {
+  return String(Math.round(value * 10) / 10).replace(".", ",")
+}
+
+/** A weekly band, compact: „2×/Wo", „3–4×/Wo", „alle 2 Wo", „alle 2–4 Wo". */
+export function formatRunsheetWeeklyBand(band: WeeklyBand): string {
+  const { min, max } = band
+  if (max === null) return min === null ? "" : `ab ${formatDecimal(min)}×/Wo`
+  if (min === null || min === 0) {
+    return max >= 1
+      ? `bis ${formatDecimal(max)}×/Wo`
+      : `seltener als alle ${formatDecimal(1 / max)} Wo`
+  }
+  if (max < 1) {
+    return min === max
+      ? `alle ${formatDecimal(1 / min)} Wo`
+      : `alle ${formatDecimal(1 / max)}–${formatDecimal(1 / min)} Wo`
+  }
+  return min === max
+    ? `${formatDecimal(min)}×/Wo`
+    : `${formatDecimal(min)}–${formatDecimal(max)}×/Wo`
+}
+
+/**
+ * „2×/Wo · Ziel 1×/Wo — zu oft": her answers' band (summed over her products in the step),
+ * the step's band, the status.
+ */
+export function runsheetFrequencyChipLabel(
+  delta: FrequencyDelta,
+  frequencies: readonly ProductFrequency[],
+): string {
+  let min = 0
+  let max = 0
+  for (const frequency of frequencies) {
+    min += PRODUCT_FREQUENCY_METADATA[frequency].minPerWeek
+    max += PRODUCT_FREQUENCY_METADATA[frequency].maxPerWeek
+  }
+  const actual = formatRunsheetWeeklyBand({ min, max })
+  return `${actual} · Ziel ${formatRunsheetWeeklyBand(delta.ideal)} — ${FREQUENCY_STATUS_LABEL[delta.status]}`
+}
+
+/**
+ * One step's frequency chip: her products in the step (summed) next to the step's band.
+ * Renders nothing without a band or when any of her products has no known frequency —
+ * `deriveStepFrequencyDelta` decides.
+ */
+export function RunsheetFrequencyChip({
+  cadenceLabel,
+  frequencies,
+  washFrequency,
+  allowedRange,
+}: {
+  cadenceLabel: string
+  frequencies: ReadonlyArray<string | null | undefined>
+  washFrequency: ProductFrequency | WashAnchor | null
+  allowedRange: WashAllowedRange | null
+}) {
+  const delta = deriveStepFrequencyDelta({
+    cadenceLabel,
+    frequencies,
+    washFrequency,
+    allowedRange,
+  })
+  const known = frequencies.filter(isKnownProductFrequency)
+  if (!delta || known.length !== frequencies.length) return null
+  return (
+    <RunsheetChip tone={delta.status === "passt" ? "ok" : "pending"}>
+      {runsheetFrequencyChipLabel(delta, known)}
+    </RunsheetChip>
   )
 }
 

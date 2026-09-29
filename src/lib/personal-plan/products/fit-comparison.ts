@@ -28,6 +28,7 @@ import {
   positionLabel,
   positionsOverlap,
   renderedDimensions,
+  targetPositionLabel,
   type ComparisonProductEntry,
   type Stage3FitComparisonDimension,
   type Stage3FitComparisonPosition,
@@ -252,6 +253,19 @@ function alternativeProductEntries(
 
 const STAGE3_COMMERCE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000
 
+/**
+ * The price-freshness rule every price surface shares: checked within the last 7 days.
+ * A missing or unparsable check date is not fresh.
+ */
+export function isStage3PriceFresh(
+  priceCheckedAt: string | null | undefined,
+  now: number = Date.now(),
+): boolean {
+  if (!priceCheckedAt) return false
+  const checkedAt = Date.parse(priceCheckedAt)
+  return Number.isFinite(checkedAt) && now - checkedAt <= STAGE3_COMMERCE_MAX_AGE_MS
+}
+
 function presentationFor(
   facts: Stage3CategoryProductFacts,
 ): Stage3FitComparisonProduct["presentation"] {
@@ -271,13 +285,10 @@ function freshPriceLabel(facts: Stage3CategoryProductFacts): string | null {
     facts.priceEur === null ||
     facts.priceEur === undefined ||
     facts.purchaseLinkStatus !== "available" ||
-    !facts.priceCheckedAt
+    !isStage3PriceFresh(facts.priceCheckedAt)
   ) {
     return null
   }
-  const checkedAt = Date.parse(facts.priceCheckedAt)
-  if (!Number.isFinite(checkedAt) || Date.now() - checkedAt > STAGE3_COMMERCE_MAX_AGE_MS)
-    return null
   return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(
     facts.priceEur,
   )
@@ -496,7 +507,11 @@ function evidenceRowsFromDimensions(
     target:
       dimension.targetPosition && dimension.targetPosition.kind !== "unknown"
         ? {
-            valueLabel: positionLabel(dimension.targetPosition, dimension.stops),
+            valueLabel: targetPositionLabel(
+              dimension.targetPosition,
+              dimension.stops,
+              dimension.presentationKind,
+            ),
             rationale: targetRationale(dimension.dimensionId),
             profileEvidenceLabels: profileEvidenceLabels(dimension.dimensionId, context).slice(
               0,

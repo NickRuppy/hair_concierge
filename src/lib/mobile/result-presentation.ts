@@ -1,4 +1,7 @@
-import type { Stage3FitComparisonDimension } from "@/lib/personal-plan/products/comparison-dimensions"
+import {
+  acceptedSetLabel,
+  type Stage3FitComparisonDimension,
+} from "@/lib/personal-plan/products/comparison-dimensions"
 import {
   orderedAxisFitResult,
   careDirectionAxisFitResult,
@@ -92,7 +95,10 @@ export function mobileRowsFromScanDimensions(
       axisKind,
       definition: definitionFor(dimension.dimensionId),
       categoryFit,
-      targetValue: valueLabel(dimension, dimension.targetStopIds),
+      targetValue:
+        axisKind === "categorical" && dimension.targetStopIds.length > 1
+          ? acceptedTargetLabel(dimension)
+          : valueLabel(dimension, dimension.targetStopIds),
       productValue:
         axisKind === "set" && dimension.state === "in_target"
           ? dimension.stops.every((stop) => dimension.productStopIds.includes(stop.stopId))
@@ -452,4 +458,12 @@ function valueLabel(dimension: ScanDimension, ids: readonly string[]): string | 
     .filter((stop) => ids.includes(stop.stopId))
     .map((stop) => stop.label)
   return labels.length > 0 ? labels.join(", ") : null
+}
+
+/** Set-valued categorical targets keep the accepted order (primary first): „A · B ok“. */
+function acceptedTargetLabel(dimension: ScanDimension): string | null {
+  const labels = dimension.targetStopIds.flatMap(
+    (id) => dimension.stops.find((stop) => stop.stopId === id)?.label ?? [],
+  )
+  return labels.length > 0 ? acceptedSetLabel(labels) : null
 }

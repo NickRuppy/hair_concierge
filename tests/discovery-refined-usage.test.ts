@@ -188,8 +188,13 @@ const LEGACY_GOLDEN_HASH = "708bd65669a5f1c3fdc129944111730be4c3cad9a2fb309a9d50
  * intake without same-category duplicates has. Computed on origin/main feb9284c (before
  * batch 9) and pinned, not recomputed.
  */
+/**
+ * Re-pinned in the verdict-layer fix wave (P1): the recommendation's `commerce` (price,
+ * availability, link) left the fingerprint, so every routine with a recommendation preview moved
+ * once — an accepted one-time drift for finalized sheets. Previous pin: fb82ec43…bf8fc6.
+ */
 const LEGACY_ONE_PER_STEP_GOLDEN_HASH =
-  "fb82ec434b2ce6ed9ba5aa3c669c35888a798d82915fdd2e93f7f5273bbf8fc6"
+  "5f7cd12aa084bd47dc55b0fa2d01f056902731aeb312d92024a1955ffc9b6509"
 
 test("F4 golden: a legacy (tile-model) finalized routine keeps its exact sourceHash", () => {
   assert.equal(

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 /**
  * The web counterpart of the iOS result card's `ComparisonTable`
  * (`ios/Chaarlie/Assessment/AssessmentSheet.swift`, locked design spec §2), for the call
- * cockpit only: one rounded card, a caps header „PRODUKT · DEIN ZIEL", and per property one
+ * cockpit only: one rounded card, a caps header „PRODUKT · IHR ZIEL", and per property one
  * row — name, a status disc, the product's value in the status colour, her target in plum.
  *
  * Deliberately without the iOS info column: the cockpit has no explanation overlay (yet).
@@ -47,6 +47,12 @@ const STATUS: Record<
 
 const EMPTY_VALUE = "–"
 const UNAVAILABLE = "nicht verfügbar"
+/**
+ * Her target, in the cockpit's third person (verdict-layer T4) — like „Ihr Produkt" next to
+ * it. The iOS card says „Dein Ziel" to the participant; this table is the call's only.
+ */
+const TARGET_HEADER = "Ihr Ziel"
+const TARGET_ARIA = "ihr Ziel"
 
 /** iOS breaks these two at their word joint („Pflege-/gewicht"); a soft hyphen does that. */
 function breakableLabel(label: string): string {
@@ -83,7 +89,7 @@ export function DiscoveryComparisonTable({
         <span />
         <span />
         <span>Produkt</span>
-        <span className="text-[var(--brand-plum)]">Dein Ziel</span>
+        <span className="text-[var(--brand-plum)]">{TARGET_HEADER}</span>
       </div>
       <ul className="divide-y divide-border border-t border-border">
         {rows.map((row) => {
@@ -92,7 +98,7 @@ export function DiscoveryComparisonTable({
             <li
               key={row.dimensionId}
               data-status={row.status}
-              aria-label={`${row.label}, ${status.label}, Produkt: ${row.productValue ?? UNAVAILABLE}, dein Ziel: ${row.targetValue ?? UNAVAILABLE}`}
+              aria-label={`${row.label}, ${status.label}, Produkt: ${row.productValue ?? UNAVAILABLE}, ${TARGET_ARIA}: ${row.targetValue ?? UNAVAILABLE}`}
               className={cn(GRID, gap, "min-h-[52px] px-2.5 py-2.5", status.surface)}
             >
               <span

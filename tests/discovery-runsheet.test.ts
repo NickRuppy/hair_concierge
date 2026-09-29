@@ -99,6 +99,8 @@ function step(input: StepInput): DiscoveryCockpitStepView {
     ownedUsageRole: null,
     stepEntryCount: 1,
     ownedFrequencyLabel: null,
+    ownedFrequency: null,
+    idealAllowedRange: null,
     canDrop: false,
     unanswered: false,
     verdict: null,
@@ -123,6 +125,7 @@ function recommendation(productId: string, label: string) {
     brand: null,
     label,
     verdictLabel: "Passt",
+    priceLabel: null,
     origin: "ideal_recommendation" as const,
     propertyRows: null,
   }

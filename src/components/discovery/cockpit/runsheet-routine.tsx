@@ -1,7 +1,16 @@
 import type { DiscoveryCockpitStepView, DiscoveryCockpitView } from "@/lib/discovery/cockpit"
+import { cockpitVoice } from "@/lib/discovery/cockpit-copy"
+import type { DiscoveryItemFrequency } from "@/lib/discovery/frequency"
+import {
+  deriveStepFrequencyDelta,
+  runsheetEntryInHerWeek,
+  type WashAllowedRange,
+  type WashAnchor,
+} from "@/lib/discovery/runsheet"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
-import { RunsheetCard, RunsheetPhase } from "./runsheet-parts"
+import { RunsheetCard, RunsheetFrequencyChip, RunsheetPhase } from "./runsheet-parts"
 
 /**
  * Phase 4 „Routine" (consult-runsheet T3): her week, composed from the Idealroutine and the
@@ -44,27 +53,48 @@ export type WeekLine = {
   description: string
   frequencyLabel: string
   timingLabel: string | null
-  /** `proposal`: the Idealplan's recommendation for an empty step, not a decision. */
-  products: Array<{ label: string; proposal: boolean }>
+  /** The shampoo step's tolerated wash range (the frequency chip's band), else null. */
+  allowedRange: WashAllowedRange | null
+  /**
+   * `proposal`: the Idealplan's recommendation for an empty step, not a decision.
+   * `owned`: her own product (kept or undecided); `frequency`: how often she uses it (null =
+   * not asked, and always null for a product that is not hers).
+   */
+  products: Array<{
+    label: string
+    proposal: boolean
+    owned: boolean
+    frequency: DiscoveryItemFrequency | null
+  }>
 }
 
-/** The product a step entry puts into her week, as the call has decided it so far. */
-function productOf(step: DiscoveryCockpitStepView): { label: string; proposal: boolean } | null {
+/**
+ * The product a step entry puts into her week, as the call has decided it so far. Her own
+ * product counts exactly when `runsheetEntryInHerWeek` says so — the rule the Phase-3 chip
+ * sums over too, so the two phases can never disagree (fix round 2).
+ */
+function productOf(step: DiscoveryCockpitStepView): WeekLine["products"][number] | null {
+  if (runsheetEntryInHerWeek(step) && step.ownedLabel) {
+    return { label: step.ownedLabel, proposal: false, owned: true, frequency: step.ownedFrequency }
+  }
   switch (step.outcome) {
-    case "kept":
-      return step.intakeItemId === null || !step.ownedLabel
-        ? null
-        : { label: step.ownedLabel, proposal: false }
     case "swapped":
-      return step.swapProductLabel ? { label: step.swapProductLabel, proposal: false } : null
-    case "dropped":
-      return null
-    case "undecided":
-      return step.ownedLabel ? { label: step.ownedLabel, proposal: false } : null
+      return step.swapProductLabel
+        ? { label: step.swapProductLabel, proposal: false, owned: false, frequency: null }
+        : null
     case "ideal":
       return step.recommendationLabel
-        ? { label: `${PROPOSAL}: ${step.recommendationLabel}`, proposal: true }
+        ? {
+            label: `${PROPOSAL}: ${step.recommendationLabel}`,
+            proposal: true,
+            owned: false,
+            frequency: null,
+          }
         : null
+    case "kept":
+    case "undecided":
+    case "dropped":
+      return null
   }
 }
 
@@ -88,9 +118,11 @@ export function runsheetWeek(steps: readonly DiscoveryCockpitStepView[]): {
       decisionKey: step.decisionKey,
       category: step.category,
       categoryLabel: step.categoryLabel,
-      description: step.roleDescription ?? step.roleLabel,
+      // The role sentence is the plan's own (second person there) — neutral here (T4).
+      description: cockpitVoice(step.roleDescription ?? step.roleLabel),
       frequencyLabel: step.frequencyLabel,
       timingLabel: step.depth?.timingLabel ?? null,
+      allowedRange: step.idealAllowedRange,
       products: [],
     }
     const product = productOf(step)
@@ -107,11 +139,14 @@ export function runsheetWeek(steps: readonly DiscoveryCockpitStepView[]): {
 export function DiscoveryRunsheetRoutine({
   view,
   washFrequencyLabel,
+  washFrequency = null,
   researchLabels = {},
 }: {
   view: Pick<DiscoveryCockpitView, "steps" | "heatProtectionAsk" | "routineSource">
   /** Her shampoo frequency from the checklist („3–4× pro Woche"); null when not asked. */
   washFrequencyLabel: string | null
+  /** Her wash range (`runsheetWashAnchor`): the anchor of per-wash frequency chips. */
+  washFrequency?: ProductFrequency | WashAnchor | null
   /**
    * Her product still in research per step (`decisionKey`, the Phase-3 join): that step
    * names it instead of reading as open or showing a proposal.
@@ -140,12 +175,14 @@ export function DiscoveryRunsheetRoutine({
             lines={week.washDay}
             empty={null}
             researchLabels={researchLabels}
+            washFrequency={washFrequency}
           />
           <WeekCard
             title={OFF_DAYS}
             lines={week.offDays}
             empty={OFF_DAYS_EMPTY}
             researchLabels={researchLabels}
+            washFrequency={washFrequency}
           />
         </div>
         {view.heatProtectionAsk ? (
@@ -164,11 +201,13 @@ function WeekCard({
   lines,
   empty,
   researchLabels,
+  washFrequency,
 }: {
   title: string
   lines: WeekLine[]
   empty: string | null
   researchLabels: Readonly<Record<string, string>>
+  washFrequency: ProductFrequency | WashAnchor | null
 }) {
   if (lines.length === 0 && empty === null) return null
   return (
@@ -187,11 +226,41 @@ function WeekCard({
               <span className="block text-foreground">
                 {runsheetWeekLineText(line, researchLabels[line.decisionKey])}
               </span>
+              <WeekLineFrequencyChips line={line} washFrequency={washFrequency} />
               <span className="block text-[12px] text-muted-foreground">{line.description}</span>
             </li>
           ))}
         </ol>
       )}
     </div>
+  )
+}
+
+/**
+ * The week line's frequency chip (verdict-layer T3, fix round 1): one per line, on the sum
+ * of her own products in it; none when any of them has no known frequency.
+ */
+function WeekLineFrequencyChips({
+  line,
+  washFrequency,
+}: {
+  line: WeekLine
+  washFrequency: ProductFrequency | WashAnchor | null
+}) {
+  const frequencies = line.products
+    .filter((product) => product.owned)
+    .map((product) => product.frequency)
+  const input = {
+    cadenceLabel: line.frequencyLabel,
+    frequencies,
+    washFrequency,
+    allowedRange: line.allowedRange,
+  }
+  // No empty wrapper when the step gets no chip.
+  if (!deriveStepFrequencyDelta(input)) return null
+  return (
+    <span className="mt-1 flex flex-wrap items-center gap-1.5">
+      <RunsheetFrequencyChip {...input} />
+    </span>
   )
 }

@@ -2,6 +2,7 @@ import type { PlanProductRole } from "@/lib/personal-plan/types"
 
 import type { PersonalPlanCategory, Stage3CriterionResult } from "./contracts"
 import type { Stage3AuthorityInput, Stage3CategoryProductFacts } from "./authority/contracts"
+import { maskAcceptedCareDirections } from "./authority/categories/axis-fit"
 import { expectedShampooSpecTarget } from "./authority/categories/shampoo-spec-target"
 import { compactCriterionSchema } from "./fit-comparison-schema"
 
@@ -317,7 +318,8 @@ function maskDimensions(
       "Pflegerichtung",
       "categorical",
       CARE_DIRECTION_STOPS,
-      target?.category === "mask" ? target.careDirection : null,
+      // R12: the target carries every direction the mask authority accepts, primary first.
+      target?.category === "mask" ? maskAcceptedCareDirections(target) : null,
       entries,
       (facts) => (facts.category === "mask" ? facts.spec.careDirection : null),
       "Die Pflegerichtung kommt aus Zielprofil und exakten Produktfakten.",
@@ -437,7 +439,7 @@ function dimension(
   label: string,
   presentationKind: Stage3FitComparisonPresentationKind,
   stops: readonly Stage3FitComparisonStop[],
-  target: string | boolean | null,
+  target: string | boolean | readonly string[] | null,
   entries: readonly ComparisonProductEntry[],
   valueFor: (facts: Stage3CategoryProductFacts) => string | boolean | readonly string[] | null,
   reason: string,
@@ -450,9 +452,13 @@ function dimension(
     targetPosition:
       target === null
         ? null
-        : presentationKind === "set"
-          ? setPosition([String(target)], stops)
-          : scalarPosition(target, stops),
+        : isStopIdList(target)
+          ? target.length > 1 || presentationKind === "set"
+            ? setPosition(target, stops)
+            : scalarPosition(target[0], stops)
+          : presentationKind === "set"
+            ? setPosition([String(target)], stops)
+            : scalarPosition(target, stops),
     productPositions: entries.map((entry) => ({
       productId: entry.product.productId,
       position: positionForValue(valueFor(entry.facts), presentationKind, stops),
@@ -495,6 +501,11 @@ const BINARY_STOPS = [
   { stopId: "false", label: "nein" },
 ] as const
 
+// Array.isArray does not narrow readonly arrays out of a union; a guard keeps the target cast-free.
+function isStopIdList(value: string | boolean | readonly string[]): value is readonly string[] {
+  return Array.isArray(value)
+}
+
 function positionForValue(
   value: string | boolean | readonly string[] | null,
   presentationKind: Stage3FitComparisonPresentationKind,
@@ -535,6 +546,25 @@ export function positionsOverlap(
   const leftStops = left.kind === "position" ? [left.stopId] : left.stopIds
   const rightStops = new Set(right.kind === "position" ? [right.stopId] : right.stopIds)
   return leftStops.some((stopId) => rightStops.has(stopId))
+}
+
+/** An accepted categorical set reads primary first: „Feuchtigkeit · ausgeglichen ok“. */
+export function acceptedSetLabel(labels: readonly string[]): string {
+  const [primary, ...accepted] = labels
+  return [primary, ...accepted.map((label) => `${label} ok`)].join(" · ")
+}
+
+/** Target label: categorical targets with several accepted stops name the whole accepted set. */
+export function targetPositionLabel(
+  position: Stage3FitComparisonPosition,
+  stops: readonly Stage3FitComparisonStop[],
+  presentationKind: Stage3FitComparisonPresentationKind,
+): string {
+  if (presentationKind !== "categorical" || position.kind !== "supported_stops")
+    return positionLabel(position, stops)
+  return acceptedSetLabel(
+    position.stopIds.map((id) => stops.find((stop) => stop.stopId === id)?.label ?? id),
+  )
 }
 
 export function positionLabel(
