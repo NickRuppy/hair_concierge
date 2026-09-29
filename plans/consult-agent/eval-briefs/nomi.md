@@ -2,57 +2,44 @@
 
 > Blondiert, fein, reißt sofort; trockene Kopfhaut mit Trockenschuppen; Hauptproblem strapaziert; Lockenstab 2×/Woche, Hitzeschutz manchmal.
 
-Modell `gpt-5.6-luna` · 26.8 s · Baseline 4 · Wissen: ask-bleach-cadence, ask-detangling, dry-flakes-vs-antifungal, expectation-windows, oil-as-finish, ongoing-damage-first
+Modell `gpt-5.6-luna` · 39.6 s · Baseline 4 · Wissen: ask-bleach-cadence, ask-detangling, dry-flakes-vs-antifungal, dry-lengths-softness, expectation-windows, oil-as-finish, ongoing-damage-first
 
 ## Diagnose
 
-Sie hat feines, glattes, blondiertes Haar mit trockenen Längen und geringer Elastizität; die Längen brechen dadurch leichter und fühlen sich rauer an. Föhnen 3–4× pro Woche und Lockenstab oder Welleneisen 2× pro Woche führen bei nur gelegentlichem Hitzeschutz laufend neue Belastung zu. Der größte Hebel liegt deshalb zunächst bei weniger Hitze, sanfterem Entwirren und mehr Gleitfähigkeit durch Conditioner. Die trockenen Schuppen sprechen eher für eine trockene Kopfhaut; das aktuell genutzte Klarwerk Anti-Schuppen Shampoo passt nicht als erster regelmäßiger Schritt, und die reichhaltige Butterhaus Reichhaltige Maske passt nicht als Einstieg bei feinem Haar.
+Sie hat feines, glattes und blondiertes Haar, das schnell reißt; die Kombination spricht für belastete Längen. Föhnen 3–4× pro Woche sowie Lockenstab oder Welleneisen 2× pro Woche können weiteren Schaden begünstigen, besonders wenn Hitzeschutz nur manchmal verwendet wird. Ihre trockenen Längen brauchen vor allem weniger Reibung und regelmäßige Glättung der Oberfläche. Die trockene Kopfhaut mit trockenen Schuppen passt nicht zum Klarwerk Anti-Schuppen Shampoo; Sanftwerk Mild Shampoo ist dafür der passendere Versuch.
 
 ## Hebel
 
-1. **Neue Hitzebelastung reduzieren** _(2 P.)_ — Föhnen und Lockenstab oder Welleneisen seltener einsetzen; bei Hitze nur ins vollständig trockene Haar, niedrigere Stufe, ein Durchgang pro Strähne und Hitzeschutz vorher.
-2. **Reibung und Kämmbruch senken** _(1.5 P.)_ — Leichtwerk Feuchte Spülung bei jeder Wäsche in die Längen geben und abschnittsweise von den Spitzen nach oben entwirren. Ein breiter Kamm oder die Finger und ausreichend Gleitfähigkeit sind wichtiger als kräftigeres Durchbürsten.
-3. **Chemische Belastung und Pflege passend steuern** _(1.5 P.)_ — Beim Call klären, wie oft und wo blondiert oder gefärbt wird; möglichst nur den Ansatz behandeln und Überlappungen vermeiden. Sanftwerk Mild Shampoo zunächst mild auf der Kopfhaut einsetzen, Leichtwerk Feuchte Maske sparsam statt der reichhaltigen Maske verwenden und Glanzhain Haaröl erst nach Klärung der Anwendung als Finish einordnen.
+1. **Hitze reduzieren** _(2 P.)_ — Sie sollte Hitze seltener einsetzen, nur im vollständig trockenen Haar arbeiten, eine niedrigere Stufe wählen und pro Strähne möglichst nur einen Durchgang machen. Hitzeschutz kann den Schaden reduzieren; weniger Hitze bleibt der größere Hebel.
+2. **Conditioner nach jeder Wäsche** _(1.5 P.)_ — Leichtwerk Feuchte Spülung sollte nach jeder Wäsche eingesetzt werden, um Reibung und Kämmkraft zu senken. Das kann die feinen, blondierten Längen geschmeidiger machen und weiteren Kämmbruch reduzieren.
+3. **Blondierabstände und Überlappung prüfen** — Falls beim Blondieren bereits behandelte Längen mitbehandelt werden, kann sie die Abstände strecken und die Überlappung vermeiden. Die konkrete Empfehlung hängt von Rhythmus und Vorgehen ab.
+4. **Schonend entwirren** _(1 P.)_ — Sie sollte abschnittsweise, von den Spitzen nach oben und mit möglichst guter Gleitfähigkeit entwirren. Breiter Kamm oder Finger können einen Versuch wert sein.
+5. **Mildes Shampoo für die Kopfhaut** _(0.5 P.)_ — Klarwerk Anti-Schuppen Shampoo passt nicht; Sanftwerk Mild Shampoo kann sie zunächst nur auf der Kopfhaut verwenden. Die Längen sollten dabei möglichst wenig Reibung durch Shampoo bekommen.
 
 ## Tausch-Begründungen
 
-- **Klarwerk Anti-Schuppen Shampoo** (`shampoo:shampoo_everyday:none`): Klarwerk Anti-Schuppen Shampoo passt nicht als erster regelmäßiger Schritt bei ihrer trockenen Kopfhaut. Sanftwerk Mild Shampoo ist zunächst der mildere Versuch für die Kopfhaut; die Schuppenentwicklung wird anschließend beobachtet.
-- **Leichtwerk Feuchte Spülung** (`conditioner:conditioner_rinse_out:none`): Leichtwerk Feuchte Spülung kommt neu dazu, weil feines, blondiertes Haar mehr Gleitfähigkeit beim Entwirren braucht. Die Anwendung bleibt auf Längen und Spitzen begrenzt.
-- **Butterhaus Reichhaltige Maske** (`mask:mask_intensive:none`): Butterhaus Reichhaltige Maske passt nicht als erster Schritt für ihr feines Haar, weil sie leicht beschweren kann. Leichtwerk Feuchte Maske ist die passendere, leichtere Option für gelegentliche zusätzliche Pflege.
+- **Klarwerk Anti-Schuppen Shampoo** (`shampoo:shampoo_everyday:none`): Klarwerk Anti-Schuppen Shampoo passt nicht zu ihrer trockenen Kopfhaut mit trockenen Schuppen. Sanftwerk Mild Shampoo ist als milder erster Versuch passender.
+- **Leichtwerk Feuchte Spülung** (`conditioner:conditioner_rinse_out:none`): Leichtwerk Feuchte Spülung ist der zentrale Neuzugang, weil Conditioner die Reibung senken und die feinen, blondierten Längen geschmeidiger machen kann.
+- **Butterhaus Reichhaltige Maske** (`mask:mask_intensive:none`): Butterhaus Reichhaltige Maske passt nicht zu ihrem feinen Haar und ist nicht der erste Schritt. Leichtwerk Feuchte Maske wäre die leichtere Option, falls Conditioner allein nicht genügt.
+- **Glanzhain Haaröl** (`oil:oil_finish:none`): Glanzhain Haaröl ist in der Anwendung noch unklar. Bei feinem Haar kann ein sparsames Finish in den trockenen Spitzen einen Versuch wert sein; die Menge und Platzierung sollten zuerst geklärt werden.
 
 ## Ziel-Lücken
 
-- Bereits strukturell geschädigte oder gespaltene Längen werden durch Pflege nicht wieder intakt; sie fühlen sich besser an und brechen weniger weiter, werden aber nur durch Schnitt und Rauswachsen wirklich weniger.
-- Die optimale Frequenz und Platzierung von Glanzhain Haaröl bleibt offen, bis sie die aktuelle Menge und Anwendung beschreibt.
-- Form, Halt und ein bestimmtes Styling-Ergebnis sind durch diesen Plan nicht abgedeckt.
+- Bereits strukturell geschädigte Längen werden durch Pflege nicht wieder intakt; sie wachsen heraus oder werden geschnitten.
+- Die Pflege kann Geschmeidigkeit, Glanz und Kämmbarkeit verbessern, löst aber keine Styling-Ziele wie Form oder Halt.
+- Wie stark sich der Zustand verbessert, hängt davon ab, wie viel neue Hitze- und Blondierbelastung weiter dazukommt.
 
 ## Call-Fragen
 
-- Wie viel Glanzhain Haaröl verwendest du gerade, und wohin: in die Spitzen, in die Längen oder bis zum Ansatz?
-- Gibst du es ins nasse oder ins trockene Haar?
-- Was glaubst du, woher der Schaden kommt – Blondieren, Färben, Hitze oder Kämmen?
-- Wie oft blondierst oder färbst du, und wann war die letzte Behandlung?
-- Findet die Behandlung im Salon oder selbst statt, nur am Ansatz oder auf der ganzen Länge?
-- Womit entwirrst du, und wann – nass, feucht oder trocken?
-- Welches Werkzeug nutzt du: Bürste, feiner Kamm, breiter Kamm oder Finger?
-- Ziehst du von oben durch oder beginnst du an den Spitzen?
-- Wie sehen die Schuppen aus: fein und weiß oder größer, gelblich und fettig?
-- Nutzt du gerade ein Anti-Schuppen-Shampoo, seit wann, und hilft es?
-- Gibt es dicke, silbrige Beläge, auch über den Haaransatz hinaus?
-- Hat Juckreiz oder Rötung nach einem neuen Produkt angefangen?
-- Ist die Kopfhaut gerötet oder juckt sie anhaltend?
-- Welches Gerät nutzt du, wie oft pro Woche und auf welcher Stufe?
-- Geht das Gerät auch mal ins noch feuchte Haar?
-- Wie viele Durchgänge machst du pro Strähne?
-- Nutzt du Hitzeschutz?
-- Wäre an einem der Tage eine Frisur ohne Hitze denkbar?
-- Brechen Haare ab, oder fühlen sie sich vor allem rau und stumpf an?
-- Wo kaufst du deine Haarpflege normalerweise?
+- Wie viel Glanzhain Haaröl verwendest du gerade, wohin und ins nasse oder trockene Haar?
+- Welches Hitze-Gerät nutzt du wie oft und auf welcher Stufe, geht es ins vollständig trockene Haar, wie viele Durchgänge machst du und verwendest du Hitzeschutz?
+- Wie oft wirst du blondiert, wo wird dabei gearbeitet und wann war die letzte Behandlung? Werden nur die Ansätze oder auch bereits behandelte Längen erfasst?
+- Womit und wann entwirrst du dein Haar: nass, feucht oder trocken, mit welchem Werkzeug und beginnst du an den Spitzen oder am Ansatz?
 
 ## Erwartungen
 
-- Beim Kämmen kann sich die Geschmeidigkeit schon nach wenigen Wäschen anders anfühlen; stabil weniger Kämmbruch ist eher innerhalb von 2–4 Wochen zu beurteilen.
-- Die Kopfhaut lässt sich nach etwa 2–4 Wochen neu einschätzen. Wenn die Schuppen dann nicht ruhiger sind, braucht es einen nächsten Schritt.
-- Glanz kommt mit der Oberflächenpflege und bleibt nur, solange die Pflege angewendet wird.
-- Geschädigte Längen insgesamt verändern sich nur über Monate durch Schnitt und Rauswachsen; Haar wächst grob 1 cm pro Monat.
+- Beim Kämmen und bei der Geschmeidigkeit kann sie innerhalb von 2–4 Wochen eine stabilere Veränderung bemerken.
+- Glanz kommt mit der Oberflächenpflege und hält, solange sie gepflegt wird.
+- Die trockene Kopfhaut und trockenen Schuppen sollten innerhalb von 2–4 Wochen überprüft werden.
+- Strukturell geschädigte Längen brauchen Monate; wirklich besser werden sie über Schnitt und Rauswachsen.
 - Vermehrter Ausfall mit Wurzel, lichter werdendes Haar oder eine starke Kopfhautreaktion (anhaltendes Jucken, Rötung, Brennen, Schmerzen, nässende oder verkrustete Stellen) gehört ärztlich abgeklärt, dermatologisch oder hausärztlich.

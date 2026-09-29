@@ -1,7 +1,7 @@
 ---
 id: ask-detangling
 category: question
-conditions: [breakage_signal]
+conditions: [[breakage_signal, tangling_concern]]
 evidence: moderate
 ---
 

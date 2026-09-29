@@ -61,8 +61,8 @@ test("the flag vocabulary and its reliability equal the README table", () => {
   assert.deepEqual(table, { ...CONSULT_FLAG_RELIABILITY })
 })
 
-test("every entry parses: 11 entries, id = file name, sections present, only known flags", () => {
-  assert.equal(CONSULT_KNOWLEDGE_ENTRIES.length, 11)
+test("every entry parses: 24 entries, id = file name, sections present, only known flags", () => {
+  assert.equal(CONSULT_KNOWLEDGE_ENTRIES.length, 24)
   for (const entry of CONSULT_KNOWLEDGE_ENTRIES) {
     assert.ok(CONSULT_KNOWLEDGE_ENTRY_SOURCES[`${entry.id}.md`], entry.id)
     assert.ok(entry.einsicht.length > 0, `${entry.id}: Einsicht`)
@@ -108,7 +108,7 @@ test("invalid frontmatter is an error, never silently skipped", () => {
     () =>
       parseConsultKnowledgeEntry(
         "ask-detangling.md",
-        valid.replace("[breakage_signal]", "[unknown_flag]"),
+        valid.replace("[[breakage_signal, tangling_concern]]", "[unknown_flag]"),
       ),
     /unknown_flag/,
   )
@@ -116,7 +116,7 @@ test("invalid frontmatter is an error, never silently skipped", () => {
     () =>
       parseConsultKnowledgeEntry(
         "ask-detangling.md",
-        valid.replace("[breakage_signal]", "[[[breakage_signal]]]"),
+        valid.replace("[[breakage_signal, tangling_concern]]", "[[[breakage_signal]]]"),
       ),
     /one level/,
   )
@@ -205,7 +205,9 @@ test("question first: an AND element that is niedrig, or an OR group met only by
 
 const NO_FACTS: ConsultFlagFacts = {
   chemicalTreatments: null,
+  hairTexture: null,
   thickness: null,
+  scalpType: null,
   scalpConcerns: null,
   intakeHeatTools: null,
   profileHeatTools: null,
@@ -248,7 +250,32 @@ test("treatments in every stored vocabulary; fine hair from thickness", () => {
 test("dry_scalp_dry_flakes only from the dry-flakes scalp condition, never from a dry scalp type", () => {
   assert.deepEqual(derived({ scalpConcerns: ["dry_dandruff"] }), { dry_scalp_dry_flakes: "hoch" })
   assert.deepEqual(derived({ scalpConcerns: ["dry_flakes"] }), { dry_scalp_dry_flakes: "hoch" })
-  assert.deepEqual(derived({ scalpConcerns: ["oily_dandruff", "irritated"] }), {})
+  assert.deepEqual(derived({ scalpType: "dry" }), {})
+})
+
+test("scalp flags: oily scalp type, oily flakes, irritated — each only from its own value", () => {
+  assert.deepEqual(derived({ scalpType: "oily" }), { oily_scalp: "hoch" })
+  assert.deepEqual(derived({ scalpType: "balanced" }), {})
+  // niedrig: legacy „schuppen" arrives as `oily_dandruff` although the flake kind is unknown.
+  assert.deepEqual(derived({ scalpConcerns: ["oily_dandruff"] }), { oily_scalp_flakes: "niedrig" })
+  assert.deepEqual(derived({ scalpConcerns: ["irritated"] }), { irritated_scalp: "hoch" })
+  // hair_profiles `dandruff` does not say which kind of flakes: no flake flag either way.
+  assert.deepEqual(derived({ scalpConcerns: ["dandruff"] }), {})
+  // Oily flakes do not imply an oily scalp type, and vice versa.
+  assert.deepEqual(derived({ scalpType: "oily", scalpConcerns: [] }), { oily_scalp: "hoch" })
+  assert.deepEqual(derived({ scalpConcerns: ["oily_dandruff", "dry_dandruff", "irritated"] }), {
+    oily_scalp_flakes: "niedrig",
+    dry_scalp_dry_flakes: "hoch",
+    irritated_scalp: "hoch",
+  })
+})
+
+test("texture flags: curly or coily, wavy — straight and unknown stay silent", () => {
+  assert.deepEqual(derived({ hairTexture: "curly" }), { curly_or_coily: "hoch" })
+  assert.deepEqual(derived({ hairTexture: "coily" }), { curly_or_coily: "hoch" })
+  assert.deepEqual(derived({ hairTexture: "wavy" }), { wavy_hair: "hoch" })
+  assert.deepEqual(derived({ hairTexture: "straight" }), {})
+  assert.deepEqual(derived({ hairTexture: null }), {})
 })
 
 test("hot_tool: straightener / curling or wave iron — never the dryer; intake answers win", () => {
@@ -281,7 +308,17 @@ test("concern flags: breakage signal, volume, hold", () => {
     volume_concern: "hoch",
   })
   assert.deepEqual(derived({ concerns: ["lost_shape"] }), { styling_goal_hold: "hoch" })
-  assert.deepEqual(derived({ elasticity: "stretches_bounces", concerns: ["dry_lengths"] }), {})
+  assert.deepEqual(derived({ elasticity: "stretches_bounces", concerns: ["split_ends"] }), {})
+})
+
+test("concern flags: frizz, shine, dry lengths, tangling", () => {
+  assert.deepEqual(derived({ concerns: ["frizz_flyaways"] }), { frizz_concern: "hoch" })
+  assert.deepEqual(derived({ concerns: ["low_shine"] }), { shine_concern: "hoch" })
+  assert.deepEqual(derived({ concerns: ["dry_lengths"] }), { dry_lengths_concern: "hoch" })
+  assert.deepEqual(derived({ concerns: ["tangling"] }), { tangling_concern: "hoch" })
+  assert.deepEqual(derived({ concerns: ["hair_loss_or_thinning", "lost_shape"] }), {
+    styling_goal_hold: "hoch",
+  })
 })
 
 test("wash_frequency_change: current and ideal both known and different", () => {
@@ -298,16 +335,26 @@ test("flags without a structured source are listed and never derived", () => {
   const everything = derived({
     chemicalTreatments: ["lightened", "colored", "permed", "chemically_straightened"],
     thickness: "fine",
-    scalpConcerns: ["dry_dandruff"],
+    scalpType: "oily",
+    scalpConcerns: ["dry_dandruff", "oily_dandruff", "irritated"],
     intakeHeatTools: ["straightener"],
     ownedCategories: ["mask", "oil", "bondbuilder"],
     elasticity: "snaps",
-    concerns: ["low_volume_or_weighed_down", "lost_shape"],
+    concerns: [
+      "low_volume_or_weighed_down",
+      "lost_shape",
+      "frizz_flyaways",
+      "low_shine",
+      "dry_lengths",
+      "tangling",
+    ],
     washFrequency: { current: "daily_1x", ideal: "weekly_2x" },
   })
   assert.equal("oil_on_wet" in everything, false)
+  // Texture is one value: curly and wavy never hold together.
+  const textured = (hairTexture: string) => Object.keys(derived({ hairTexture }))
   assert.deepEqual(
-    Object.keys(everything).sort(),
+    [...Object.keys(everything), ...textured("curly"), ...textured("wavy")].sort(),
     CONSULT_FLAGS.filter((flag) => !UNSOURCED_CONSULT_FLAGS.includes(flag)).sort(),
   )
 })
@@ -358,7 +405,8 @@ test("heavy-care and oil-as-finish fold into one point, with a reference", () =>
   assert.ok(ids.includes("heavy-care-paradox-fine-hair"))
   assert.ok(!ids.includes("oil-as-finish"))
   const heavy = selected.find((entry) => entry.id === "heavy-care-paradox-fine-hair")!
-  assert.deepEqual(heavy.mergedFrom, ["oil-as-finish"])
+  // fine + volume also fires fine-hair-buildup-layering, which folds in as well.
+  assert.deepEqual(heavy.mergedFrom, ["oil-as-finish", "fine-hair-buildup-layering"])
   assert.equal(heavy.questionFirst, true)
   // Oil alone (no volume concern): oil-as-finish stays, question first.
   const oilOnly = selectConsultKnowledge(
@@ -392,7 +440,130 @@ test("the Nomi constellation: bleached + colored + hot tool + breakage", () => {
   assert.deepEqual(ids, [
     "ask-bleach-cadence",
     "ask-detangling",
+    "color-fade-honesty",
     "expectation-windows",
     "ongoing-damage-first",
   ])
+})
+
+// --- seeding batch 2026-09-29 (R25) -------------------------------------------------------
+
+test("ask-detangling fires on a breakage signal OR a tangling concern", () => {
+  const detangling = CONSULT_KNOWLEDGE_ENTRIES.find((entry) => entry.id === "ask-detangling")
+  assert.deepEqual(detangling?.conditions, [["breakage_signal", "tangling_concern"]])
+  assert.ok(selectedIds([["tangling_concern", "hoch"]]).includes("ask-detangling"))
+  assert.ok(selectedIds([["breakage_signal", "hoch"]]).includes("ask-detangling"))
+  assert.ok(!selectedIds([["frizz_concern", "hoch"]]).includes("ask-detangling"))
+})
+
+test("each new flag fires its seeded entry; without it the entry stays silent", () => {
+  const cases: Array<[ConsultFlag[], string]> = [
+    [["oily_scalp"], "oily-scalp-wash-cadence"],
+    [["oily_scalp", "dry_lengths_concern"], "oily-roots-dry-lengths"],
+    [["oily_scalp_flakes"], "oily-flakes-antidandruff"],
+    [["irritated_scalp"], "irritated-scalp-phrasing"],
+    [["frizz_concern"], "frizz-mechanism"],
+    [["frizz_concern"], "ask-frizz-or-breakage"],
+    [["shine_concern"], "shine-surface-reflection"],
+    [["dry_lengths_concern"], "dry-lengths-softness"],
+    [["curly_or_coily"], "curly-coily-care-basics"],
+    [["wavy_hair", "frizz_concern"], "wavy-hair-weight-and-handling"],
+    [["colored", "oily_scalp"], "colored-oily-scalp-tradeoff"],
+    [["colored"], "color-fade-honesty"],
+    [["fine_hair", "volume_concern"], "fine-hair-buildup-layering"],
+  ]
+  for (const [held, id] of cases) {
+    assert.ok(
+      selectedIds(held.map((flag) => [flag, "hoch"])).includes(id),
+      `${id} fires on ${held.join(" + ")}`,
+    )
+    // Drop any one required flag: silent.
+    for (const missing of held) {
+      const rest = held.filter((flag) => flag !== missing)
+      assert.ok(
+        !selectedIds(rest.map((flag) => [flag, "hoch"])).includes(id),
+        `${id} silent without ${missing}`,
+      )
+    }
+  }
+  // Wavy alone (no frizz, volume or hold concern) stays silent; straight hair never fires it.
+  assert.ok(!selectedIds([["wavy_hair", "hoch"]]).includes("wavy-hair-weight-and-handling"))
+})
+
+test("dry-lengths-softness folds into oily-roots-dry-lengths when both fire", () => {
+  const selected = selectConsultKnowledge(
+    flags([
+      ["oily_scalp", "hoch"],
+      ["dry_lengths_concern", "hoch"],
+    ]),
+  )
+  const ids = selected.map((entry) => entry.id)
+  assert.ok(ids.includes("oily-roots-dry-lengths"))
+  assert.ok(!ids.includes("dry-lengths-softness"))
+  const kept = selected.find((entry) => entry.id === "oily-roots-dry-lengths")!
+  assert.deepEqual(kept.mergedFrom, ["dry-lengths-softness"])
+  // Oily roots through another group member (bleached): nothing to fold, no reference.
+  const bleached = selectConsultKnowledge(
+    flags([
+      ["oily_scalp", "hoch"],
+      ["bleached", "hoch"],
+    ]),
+  )
+  assert.deepEqual(bleached.find((entry) => entry.id === "oily-roots-dry-lengths")?.mergedFrom, [])
+  // Dry lengths without an oily scalp: dry-lengths-softness stays on its own.
+  const dryOnly = selectConsultKnowledge(flags([["dry_lengths_concern", "hoch"]]))
+  assert.deepEqual(dryOnly.find((entry) => entry.id === "dry-lengths-softness")?.mergedFrom, [])
+  assert.ok(!dryOnly.some((entry) => entry.id === "oily-roots-dry-lengths"))
+})
+
+test("fine-hair-buildup-layering folds into heavy-care-paradox-fine-hair when both fire", () => {
+  const selected = selectConsultKnowledge(
+    flags([
+      ["fine_hair", "hoch"],
+      ["volume_concern", "hoch"],
+      ["mask_in_routine", "niedrig"],
+    ]),
+  )
+  const ids = selected.map((entry) => entry.id)
+  assert.ok(ids.includes("heavy-care-paradox-fine-hair"))
+  assert.ok(!ids.includes("fine-hair-buildup-layering"))
+  const heavy = selected.find((entry) => entry.id === "heavy-care-paradox-fine-hair")!
+  assert.deepEqual(heavy.mergedFrom, ["fine-hair-buildup-layering"])
+  // With oil as well: both fold into the one point.
+  const withOil = selectConsultKnowledge(
+    flags([
+      ["fine_hair", "hoch"],
+      ["volume_concern", "hoch"],
+      ["mask_in_routine", "niedrig"],
+      ["oil_in_routine", "niedrig"],
+    ]),
+  )
+  assert.deepEqual(
+    withOil.find((entry) => entry.id === "heavy-care-paradox-fine-hair")?.mergedFrom,
+    ["oil-as-finish", "fine-hair-buildup-layering"],
+  )
+  // No mask (heavy-care silent): the layering entry fires on its own, no reference.
+  const noMask = selectConsultKnowledge(
+    flags([
+      ["fine_hair", "hoch"],
+      ["volume_concern", "hoch"],
+    ]),
+  )
+  assert.ok(!noMask.some((entry) => entry.id === "heavy-care-paradox-fine-hair"))
+  assert.deepEqual(
+    noMask.find((entry) => entry.id === "fine-hair-buildup-layering")?.mergedFrom,
+    [],
+  )
+})
+
+test("the two frizz entries stay two points (deliberately not merged)", () => {
+  const selected = selectConsultKnowledge(flags([["frizz_concern", "hoch"]]))
+  const ids = selected.map((entry) => entry.id)
+  assert.ok(ids.includes("frizz-mechanism"))
+  assert.ok(ids.includes("ask-frizz-or-breakage"))
+  for (const entry of selected) assert.deepEqual(entry.mergedFrom, [])
+  for (const rule of [...CONSULT_KNOWLEDGE_MERGES, ...CONSULT_KNOWLEDGE_PRECEDENCE]) {
+    const pair = Object.values(rule)
+    assert.ok(!(pair.includes("frizz-mechanism") && pair.includes("ask-frizz-or-breakage")))
+  }
 })

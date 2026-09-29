@@ -2,43 +2,39 @@
 
 > Lockig, Bruch, trockene Längen, Hitze selten; Hauptproblem Bruch — mit Haarausfall als Nebensignal (G2-Grenze).
 
-Modell `gpt-5.6-luna` · 16.8 s · Baseline 4 · Wissen: ask-detangling, expectation-windows
+Modell `gpt-5.6-luna` · 22.5 s · Baseline 4 · Wissen: ask-detangling, curly-coily-care-basics, dry-lengths-softness, expectation-windows
 
 ## Diagnose
 
-Sie hat lockiges Haar mit schnell reißender Elastizität; das passt zu mechanisch belasteten und trockenen Längen. Bei zweimaligem Waschen pro Woche liegen Waschrhythmus und Grundreinigung bereits passend. Sie trocknet überwiegend luft, nutzt den Diffusor etwa einmal im Monat und verwendet dabei Hitzeschutz; die Hitze ist damit eher ein begrenzter als ein täglicher Belastungsfaktor. Das passende Shampoo, die passende Feuchte Spülung mit Einschränkung und ein neues Leave-in sollen vor allem die Gleitfähigkeit beim Entwirren verbessern. Die Pflege der Längen kann Geschmeidigkeit und weniger Bruch unterstützen. Der Plan behandelt den Ausfall nicht.
+Ihre lockige Haarstruktur verhakt sich leichter und wirkt in den Längen trockener, wodurch Entwirren und Kämmen zentrale Belastungspunkte für den beschriebenen Haarbruch sind. Ihre zweimal wöchentliche Wäsche entspricht bereits dem vorgesehenen Rhythmus. Chemische Behandlungen sind nicht angegeben; die dokumentierte Diffusor-Nutzung von einmal monatlich ist selten, bei dieser Anwendung ist Hitzeschutz vorgesehen. Die Pflege betrifft nur die Längen; der Ausfall gehört ärztlich abgeklärt.
 
 ## Hebel
 
-1. **Gleitfähigkeit für Locken erhöhen** _(2 P.)_ — Die Lockenhof Feuchte Spülung weiter nutzen und das Lockenhof Curl Leave-in in die nassen Längen geben. So kann das Entwirren mit weniger Zug erfolgen.
-2. **Entwirrtechnik anpassen** _(1.5 P.)_ — Mit Pflege im nassen Haar arbeiten, abschnittsweise vorgehen und an den Spitzen beginnen. Breiter Kamm oder Finger sind geeigneter als kräftiges Durchziehen von oben.
-3. **Belastung an den Längen reduzieren** _(1.5 P.)_ — Beim Diffusor niedrige Hitze und wenige Durchgänge beibehalten, nicht rubbeln und straffe Frisuren vermeiden. Stark geschädigte Spitzen bei Bedarf schneiden lassen.
+1. **Conditioner bei jeder Wäsche** _(1.5 P.)_ — Sie verwendet Lockenhof Feuchte Spülung nach jeder Wäsche großzügig in den Längen. Das verbessert die Gleitfähigkeit und kann Kämmbruch reduzieren.
+2. **Leave-in ergänzen** _(1.5 P.)_ — Lockenhof Curl Leave-in ist für ihre lockigen, trockenen Längen einen Versuch wert. Es kann beim Entwirren und Stylen zusätzliche Gleitfähigkeit geben.
+3. **Nass und von den Spitzen entwirren** _(1.5 P.)_ — Sie entwirrt ihre Locken nur nass mit Pflege, abschnittsweise und von den Spitzen nach oben. Ein breiter Kamm oder die Finger sind dafür geeigneter als kräftiges Durchbürsten.
+4. **Hitze niedrig halten** _(0.5 P.)_ — Die seltene Diffusor-Nutzung sollte möglichst mit wenig Hitze und wenigen Durchgängen bleiben. Hitzeschutz reduziert den Schaden; weniger Hitze bleibt der größere Hebel.
 
 ## Tausch-Begründungen
 
-- **Lockenhof Curl Leave-in** (`leave_in:leave_in_everyday:none`): Das Lockenhof Curl Leave-in kommt neu dazu, weil lockige, trockene Längen beim Entwirren zusätzliche Gleitfähigkeit brauchen können. Einen Versuch wert ist es vor allem im nassen Haar vor dem Entwirren und Stylen.
+- **Lockenhof Curl Leave-in** (`leave_in:leave_in_everyday:none`): Lockenhof Curl Leave-in kann ihren lockigen, trockenen Längen mehr Gleitfähigkeit beim Entwirren und Stylen geben; das ist einen Versuch mit Re-Check wert.
 
 ## Ziel-Lücken
 
-- Bereits gebrochene oder stark geschädigte Längen werden durch Pflege nicht wieder intakt; sie wachsen heraus oder werden geschnitten.
-- Der Plan legt keine konkrete Lockenform und keinen dauerhaften Halt fest.
-- Die Ursache und Entwicklung des Ausfalls werden durch Längenpflege nicht geklärt.
+- Form und Halt der Locken gehören zum Styling und sind nicht Teil dieses Pflegeplans.
+- Bereits stark geschädigte Längen werden nur durch Schnitt und Rauswachsen besser.
+- Die Pflege betrifft nur die Längen; der Ausfall gehört ärztlich abgeklärt.
 
 ## Call-Fragen
 
-- Sind es kurze abgebrochene Stücke oder ganze Haare mit Wurzel?
-- Wann bricht es – beim Kämmen, beim Glätten oder beim Zopfmachen?
-- Sind deine Längen blondiert, dauergewellt oder chemisch geglättet?
-- Womit entwirrst du, und wann – nass, feucht oder trocken?
-- Welches Werkzeug nutzt du: Bürste, feinen Kamm, breiten Kamm oder Finger?
-- Entwirrst du von oben durch die Knoten oder beginnst du an den Spitzen?
-- Wo kaufst du deine Haarpflege normalerweise?
-- Gibt es zusätzlich plötzlich deutlich mehr ganze Haare mit Wurzel, kahle oder sichtbar lichte Stellen?
-- Treten an der Kopfhaut anhaltendes Jucken, Rötung, Brennen, Schmerzen, nässende oder verkrustete Stellen auf?
+- Sind es überwiegend kurze abgebrochene Stücke oder ganze Haare mit Wurzel, und hat sich die Haardichte sichtbar verändert?
+- Wie entwirrst du aktuell: mit welchem Werkzeug, nass oder trocken, mit Pflege im Haar oder ohne, und beginnst du an den Spitzen?
+- Nutzt du Lockenhof Feuchte Spülung bei jeder Wäsche, und fühlen sich eher die Spitzen oder die gesamten Längen trocken an?
+- Wie trocknest und stylst du deine Locken nach dem Waschen, und berührt der Diffusor mehr als einmal im Monat dein Haar?
 
 ## Erwartungen
 
-- Kämmbarkeit und Geschmeidigkeit können sich nach wenigen Wäschen bemerkbar machen; stabil weniger Kämmbruch ist eher innerhalb von 2–4 Wochen realistisch.
-- Strukturell geschädigte Längen werden über Monate nur durch Schnitt und Rauswachsen besser; Pflege kann das Gefühl verbessern und weiteren Bruch reduzieren.
-- Glanz kommt mit der Oberflächenpflege und hält nur, solange die Pflege angewendet wird.
+- Weniger Kämmbruch und mehr Geschmeidigkeit sind in 2–4 Wochen sinnvoll prüfbar.
+- Glanz kommt mit der Oberflächenpflege und hält, solange gepflegt wird.
+- Geschädigte Längen insgesamt brauchen Monate; sie werden über Schnitt und Rauswachsen besser.
 - Vermehrter Ausfall mit Wurzel, lichter werdendes Haar oder eine starke Kopfhautreaktion (anhaltendes Jucken, Rötung, Brennen, Schmerzen, nässende oder verkrustete Stellen) gehört ärztlich abgeklärt, dermatologisch oder hausärztlich.

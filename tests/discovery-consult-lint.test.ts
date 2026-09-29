@@ -152,9 +152,10 @@ test("the boundary line itself passes the phrase list", () => {
 
 /**
  * Every „…" quote in guardrails.md is either forbidden (flagged) or allowed (not flagged).
- * Quotes after „Erlaubt", „Stattdessen" or „Ausnahme" on their line are allowed; the rest are
- * forbidden, except these — named in rules that the phrase lint does not own (G4 verdict
- * words, G5's recommended cautious wording).
+ * Quotes after „Erlaubt", „Stattdessen", „Ausnahme" or a „Falsch → Richtig" arrow on their line
+ * are allowed; the rest are forbidden, except these — named in rules that the phrase lint does
+ * not own (G4 verdict words, G5's everyday evidence wording, G1's qualitative score direction,
+ * a quoted product name, the G2 längen-only sentence).
  */
 const ALLOWED_OUTSIDE_EXEMPT_CLAUSES = new Set([
   "passt nicht",
@@ -163,13 +164,19 @@ const ALLOWED_OUTSIDE_EXEMPT_CLAUSES = new Set([
   "kann helfen",
   "einen Versuch wert",
   "schauen wir uns an",
+  "da ist realistisch Luft nach oben",
+  "Repair-Maske",
+  "Die Pflege betrifft nur die Längen; der Ausfall gehört ärztlich abgeklärt.",
+  "gut untersucht",
+  "eher Erfahrungswert aus der Beratung",
+  "dazu gibt es kaum Forschung",
 ])
 
 function guardrailQuotes(): { forbidden: string[]; allowed: string[] } {
   const forbidden: string[] = []
   const allowed: string[] = []
   for (const line of CONSULT_GUARDRAILS_MARKDOWN.split("\n")) {
-    const cut = line.search(/Erlaubt|Stattdessen|Ausnahme/)
+    const cut = line.search(/Erlaubt|Stattdessen|Ausnahme|→/)
     for (const match of line.matchAll(/„([^"“]+)["“]/g)) {
       const quote = match[1]!.replace(/…/g, "").trim()
       const exempt = cut !== -1 && match.index! > cut
@@ -217,9 +224,8 @@ test("G1b: supplements and drug actives named in guardrails.md are flagged; Glä
  * statement for Nick, not brief text). The prompt forbids score figures in the text, so the
  * model must not copy it. Pinned, so a new hit shows up here.
  */
-const KNOWN_KNOWLEDGE_HITS: Record<string, string[]> = {
-  "expectation-windows": ["target_ten"],
-}
+// „expectation-windows" no longer names the 10 (reworded in guardrails v2): no known hits.
+const KNOWN_KNOWLEDGE_HITS: Record<string, string[]> = {}
 
 test("the knowledge base's own wording passes the phrase list (known hits pinned)", () => {
   for (const entry of CONSULT_KNOWLEDGE_ENTRIES) {
@@ -721,4 +727,133 @@ test("one product, verdict stated: praise in a following clause still flags", ()
   ]) {
     assert.ok(flagsVerdict(sentence), sentence)
   }
+})
+
+// --- R22: medical options named, never recommended (G1b v2) ----------------------------------------
+
+function phraseIds(text: string): string[] {
+  return findForbiddenPhrases(text).map((hit) => hit.id)
+}
+
+test("R22: a factual medical mention with a doctor handoff in the same sentence passes", () => {
+  for (const sentence of [
+    "Gegen Haarausfall gibt es ärztliche Wirkstoffe, die nur wirken, solange man sie anwendet — ob so etwas für sie passt, gehört in ärztliche Hand.",
+    "Es gibt ärztliche Optionen wie Minoxidil; ob das für sie passt, klärt die Ärztin.",
+    "Nahrungsergänzung wie Biotin gehört in die ärztliche Abklärung, nicht in den Pflegeplan.",
+    "Ob Zink oder Eisen fehlt, klärt die Hausärztin über ein Blutbild.",
+    "Kortison und medizinisches Ketoconazol sind Sache der Dermatologin.",
+    "Finasterid ist ein ärztlicher Wirkstoff, keine Pflege.",
+    "Ob ein Nahrungsergänzungsmittel sinnvoll ist, gehört in ärztliche Hand.",
+    "Haarausfall stoppen können nur ärztliche Wirkstoffe, und die gehören in dermatologische Hand.",
+  ]) {
+    assert.deepEqual(phraseIds(sentence), [], sentence)
+  }
+})
+
+test("R22: each exempt rule id still fires without a doctor handoff", () => {
+  const cases: Array<[string, string]> = [
+    ["against_loss", "Pflege hilft nicht gegen Haarausfall."],
+    ["stop_loss", "Minoxidil stoppt den Haarausfall."],
+    ["minoxidil", "Minoxidil stoppt den Haarausfall."],
+    ["biotin", "Biotin stärkt die Wurzel."],
+    ["root", "Biotin stärkt die Wurzel."],
+    ["supplements", "Haarvitamine dazu."],
+    ["zinc", "Zink hilft den Haaren."],
+    ["iron", "Eisentabletten gegen den Ausfall."],
+    ["cortisone", "Eine Kortisonlösung beruhigt die Kopfhaut."],
+    ["ketoconazole", "Ketoconazol gegen die Schuppen."],
+    ["finasteride", "Finasterid kann helfen."],
+    // Negated forms stay findings (G1: phrases, not sentence logic).
+    ["minoxidil", "Minoxidil hilft nicht."],
+    ["stop_loss", "Minoxidil stoppt den Haarausfall nicht."],
+    ["against_loss", "Biotin wirkt nicht gegen Haarausfall."],
+  ]
+  for (const [id, sentence] of cases) {
+    assert.ok(phraseIds(sentence).includes(id), `${id}: ${sentence}`)
+  }
+})
+
+test("R22: a recommendation, dose, percent or brand fails even with a doctor token", () => {
+  const cases: Array<[string, string]> = [
+    ["minoxidil", "Probier Minoxidil, das empfehlen auch Ärzte."],
+    ["percent", "2 % Minoxidil, ärztlich empfohlen."],
+    ["minoxidil", "2 % Minoxidil, ärztlich empfohlen."],
+    ["hair_loss_brands", "Regaine hilft, sagt auch die Ärztin."],
+    ["dose", "Biotin 5 mg täglich, sagt die Hautärztin."],
+    ["dose", "Ärztlich abgeklärt: 10 mg Zink."],
+    ["biotin", "Nimm Biotin, das rät auch die Ärztin."],
+    ["biotin", "Die Ärztin empfiehlt Biotin."],
+    ["minoxidil", "Kauf Minoxidil in der Apotheke, dann zur Ärztin."],
+    ["minoxidil", "Starte mit Minoxidil, ärztlich begleitet."],
+    ["iron", "Fang mit Eisentabletten an, die Ärztin prüft später."],
+    ["iron", "Besorg dir Eisen, sagt der Hausarzt."],
+    ["biotin", "Versuch es mit Biotin, bevor du zum Arzt gehst."],
+    // Cosmetic and medical never in one sentence (G6): a care product with a handoff still fails.
+    ["against_loss", "Das Shampoo wirkt gegen Haarausfall, sagt die Hautärztin."],
+    ["biotin", "Ein Biotin-Shampoo, ärztlich geprüft."],
+    // A negated handoff is no handoff.
+    ["minoxidil", "Minoxidil geht auch ohne Arzt."],
+    ["biotin", "Biotin statt zur Hautärztin."],
+    ["zinc", "Für Zink ist kein Arzttermin nötig."],
+  ]
+  for (const [id, sentence] of cases) {
+    assert.ok(phraseIds(sentence).includes(id), `${id}: ${sentence} → ${phraseIds(sentence)}`)
+  }
+})
+
+test("R22 adversarial: the handoff must sit in the SAME sentence", () => {
+  for (const text of [
+    "Minoxidil hilft vielen. Das gehört ärztlich abgeklärt.",
+    "Das gehört ärztlich abgeklärt. Biotin dazu schadet nicht.",
+    // A semicolon ends the sentence for this check too.
+    "Die Ärztin weiß mehr; Minoxidil stoppt den Ausfall.",
+  ]) {
+    assert.ok(
+      findForbiddenPhrases(text).some((hit) => hit.guardrail === "G1b"),
+      text,
+    )
+  }
+})
+
+test("R22 adversarial: a call question with a handoff and an abbreviation passes", () => {
+  const brief = cleanBrief()
+  brief.callFragen.push("Warst du damit schon mal beim Hautarzt, z. B. wegen Minoxidil?")
+  assert.deepEqual(lintConsultBrief(brief, nomiInput()), [])
+  // The same question without the handoff fails.
+  const bare = cleanBrief()
+  bare.callFragen.push("Nimmst du schon was, z. B. Minoxidil?")
+  assert.deepEqual(
+    lintConsultBrief(bare, nomiInput()).map((finding) => finding.detail),
+    ["minoxidil"],
+  )
+})
+
+test("R22 in a full brief: the allowed sentences add no finding, the boundary rule stays intact", () => {
+  const brief = cleanBrief()
+  brief.zielLuecken.push(
+    "Gegen Haarausfall gibt es ärztliche Wirkstoffe, die nur wirken, solange man sie anwendet — ob so etwas für sie passt, gehört in ärztliche Hand.",
+    "Es gibt ärztliche Optionen wie Minoxidil; ob das für sie passt, klärt die Ärztin.",
+    "Nahrungsergänzung wie Biotin gehört in die ärztliche Abklärung, nicht in den Pflegeplan.",
+  )
+  assert.deepEqual(lintConsultBrief(brief, nomiInput()), [])
+  // boundary_negated still catches a softened handoff next to a drug mention.
+  const softened = cleanBrief()
+  softened.zielLuecken.push("Minoxidil geht auch ohne Arzt, ärztlich ist das nicht nötig.")
+  const details = lintConsultBrief(softened, nomiInput()).map((finding) => finding.detail)
+  assert.ok(details.includes("boundary_negated"), JSON.stringify(details))
+})
+
+test("R22 regression: soft-hyphen and zero-width evasion of drug names is still caught", () => {
+  assert.ok(phraseIds("Mino­xidil stoppt den Haarausfall.").includes("minoxidil"))
+  assert.ok(phraseIds("Bio​tin stärkt die Wurzel.").includes("biotin"))
+  // …and a soft hyphen inside the doctor token does not break the handoff.
+  assert.deepEqual(
+    phraseIds("Es gibt ärzt­liche Optionen wie Minoxidil; das klärt die Ärz­tin."),
+    [],
+  )
+})
+
+test("R22: „Ziel ist 8“ is a score figure; the doctor token ignores „geschwärzt“", () => {
+  assert.ok(phraseIds("Ziel ist 8.").includes("score_figure"))
+  assert.ok(phraseIds("Minoxidil, die Stelle ist geschwärzt.").includes("minoxidil"))
 })
