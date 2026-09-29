@@ -300,6 +300,8 @@ test("Nomi: profile, main problem with recipe excerpt, fired entries, heat, wash
     [
       ["ask-bleach-cadence", false],
       ["ask-detangling", false],
+      ["color-fade-honesty", false],
+      ["dry-lengths-softness", false],
       ["expectation-windows", false],
       ["ongoing-damage-first", false],
       ["protein-stiffness-risk", false],
@@ -310,10 +312,12 @@ test("Nomi: profile, main problem with recipe excerpt, fired entries, heat, wash
     "bleached",
     "breakage_signal",
     "colored",
+    "dry_lengths_concern",
     "hot_tool",
     "oil_in_routine",
     "protein_or_bond_care",
     "wash_frequency_change",
+    "wavy_hair",
   ])
 
   assert.equal(input.heat?.tools.length, 2)
@@ -326,6 +330,92 @@ test("Nomi: profile, main problem with recipe excerpt, fired entries, heat, wash
   })
   assert.equal(input.baselineScore, 4)
   assert.deepEqual(input.boundaryTriggers, [])
+})
+
+test("seeding flags come from the snapshot profile: texture, scalp oiliness, scalp concerns", () => {
+  const base = nomiSource()
+  const input = assembleConsultInput(
+    {
+      ...base,
+      model: {
+        ...base.model,
+        concernProfileFacts: {
+          ...base.model.concernProfileFacts!,
+          hair_texture: "curly",
+          scalp_type: "oily",
+        },
+        consultFacts: {
+          ...base.model.consultFacts!,
+          scalpConcerns: ["oily_dandruff", "irritated"],
+        },
+      },
+      quiz: {
+        concerns: ["frizz_flyaways", "low_shine", "dry_lengths", "tangling"],
+        mainConcern: "frizz_flyaways",
+      },
+    },
+    null,
+  )
+  for (const flag of [
+    "curly_or_coily",
+    "oily_scalp",
+    "oily_scalp_flakes",
+    "irritated_scalp",
+    "frizz_concern",
+    "shine_concern",
+    "dry_lengths_concern",
+    "tangling_concern",
+  ] as const) {
+    assert.ok(input.flags.includes(flag), flag)
+  }
+  assert.ok(!input.flags.includes("wavy_hair"))
+  const ids = input.knowledge.map((entry) => entry.id)
+  assert.ok(ids.includes("oily-roots-dry-lengths"))
+  assert.ok(!ids.includes("dry-lengths-softness"), "folded into oily-roots-dry-lengths")
+  assert.deepEqual(
+    input.knowledge.find((entry) => entry.id === "oily-roots-dry-lengths")?.mergedFrom,
+    ["dry-lengths-softness"],
+  )
+  for (const id of [
+    "curly-coily-care-basics",
+    "oily-scalp-wash-cadence",
+    "oily-flakes-antidandruff",
+    "irritated-scalp-phrasing",
+    "frizz-mechanism",
+    "ask-frizz-or-breakage",
+    "shine-surface-reflection",
+    "colored-oily-scalp-tradeoff",
+  ]) {
+    assert.ok(ids.includes(id), id)
+  }
+})
+
+test("unknown texture and scalp facts derive none of the seeding flags", () => {
+  const base = nomiSource()
+  const input = assembleConsultInput(
+    {
+      ...base,
+      model: {
+        ...base.model,
+        concernProfileFacts: {
+          ...base.model.concernProfileFacts!,
+          hair_texture: null,
+          scalp_type: null,
+        },
+        consultFacts: { ...base.model.consultFacts!, scalpConcerns: null },
+      },
+    },
+    null,
+  )
+  for (const flag of [
+    "curly_or_coily",
+    "wavy_hair",
+    "oily_scalp",
+    "oily_scalp_flakes",
+    "irritated_scalp",
+  ] as const) {
+    assert.ok(!input.flags.includes(flag), flag)
+  }
 })
 
 test("products per entry: name, verdict, decisionKey, bucket — plus swap options and research", () => {

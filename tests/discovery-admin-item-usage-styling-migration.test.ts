@@ -146,24 +146,12 @@ test("the follow-up migration has a unique version that sorts after every migrat
     .map((name) => name.split("_")[0])
   const own = OWN.split("_")[0]
   assert.equal(versions.filter((version) => version === own).length, 1)
-  // Only later batches (batch 9, the consult runsheet's call sheets) and the iOS paywall
-  // branch's migrations may come later.
-  assert.deepEqual(
-    versions.filter((version) => version > own).sort(),
-    [
-      "20260927120000",
-      "20260927133426",
-      "20260927172739",
-      "20260927172741",
-      "20260928071305",
-      "20260928074426",
-      "20260928080932",
-      "20260928083245",
-      "20260928120000",
-      "20260929230000",
-      "20260929231000",
-    ],
-    "must sort after every migration but the later batches' and the iOS paywall's and the oil protocol repairs'",
+  // Was "sorts after every migration" when it was the newest; the call-decision, call-sheet, iOS paywall and catalog-hardening
+  // migrations now follow it, so what still matters is that it follows its chain.
+  const predecessors = CHAIN.slice(0, CHAIN.indexOf(OWN)).map((name) => name.split("_")[0])
+  assert.ok(
+    predecessors.every((version) => version < own),
+    "must sort after its prerequisites",
   )
 })
 

@@ -1,4 +1,6 @@
 import {
+  LEAVE_IN_BASE_STANDARD,
+  LEAVE_IN_OVERLAY_PATH,
   LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD,
   LEAVE_IN_PRODUCTION_ADAPTER_VERSION,
   LEAVE_IN_RESEARCH_ENVELOPE_VERSION,
@@ -7,9 +9,15 @@ import {
 export function leaveInResearchPromptContract() {
   return {
     engine: {
-      standard: "Leave-In Standard v1.0",
+      standard: "Leave-In Standard v1.1 (Standard v1.0 plus the T20 care_direction overlay)",
+      standard_sources: {
+        base: LEAVE_IN_BASE_STANDARD.path,
+        overlay: LEAVE_IN_OVERLAY_PATH,
+      },
       envelope_version: LEAVE_IN_RESEARCH_ENVELOPE_VERSION,
       research_method: LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD,
+      care_direction_rule:
+        "T20 (overlay §9-O1–O7): only settled humectants (Glycerin, Betaine, Panthenol, Sodium PCA, Sodium Lactate, Sodium Hyaluronate, Urea, Sorbitol, simple sugars) and non-volatile medium/rich-band lipids (plant oils, butters, Squalane, Jojoba, Caprylic/Capric Triglyceride) above the tail marker can set moisture. Cationics, fatty alcohols, dry-feel esters, volatiles and multifunctional glycols never set a direction. A persistent film that outranks every such species above the tail makes the product balanced (film_leads_moisture_leg); no directional species with a readable architecture is balanced (film_led_neutral or conditioning_only_neutral). A thin read (adjacent-rank film lead, a glycol outranking the film, an unreliable marker) takes low confidence and lists care_direction in uncertainFields. Name every demoted species with its rank in evidenceSignals.",
       scope: "conventional leave-on conditioning Leave-In sold in Germany/EU",
       source_of_truth:
         "The complete research envelope is the durable authority. Current database rows are a derived compatibility projection only.",

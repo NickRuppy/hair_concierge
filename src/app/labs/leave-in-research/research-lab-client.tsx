@@ -129,7 +129,7 @@ export type LeaveInDetail = LeaveInQueueItem & {
   propertyStatuses: Record<string, LeaveInPropertyReviewStatus>
   productFingerprint: string
   formulaFingerprint: string
-  standardVersion: string
+  effectiveStandard: string
   keyVersion: string
   canApproveProduct: boolean
   canApproveBoundary: boolean
@@ -140,7 +140,8 @@ export type LeaveInLabData = {
   meta: {
     keyVersion: string
     derivedFromRun: string
-    standardVersion: string
+    effectiveStandard: string
+    effectiveStandardOverlay: string
     modelVersion: string
     packetVersion: string
     generatedAt: string
@@ -559,7 +560,7 @@ function IdentityHeader({ detail }: { detail: LeaveInDetail }) {
           <br />
           Record: {detail.productFingerprint}
           <br />
-          Standard: {detail.standardVersion} · Key: {detail.keyVersion}
+          Standard: {detail.effectiveStandard} · Key: {detail.keyVersion}
         </p>
         {detail.identity.remainingGap ? (
           <p className="mt-2 text-xs leading-5 text-stone-600">
@@ -1244,8 +1245,9 @@ export function LeaveInResearchLabClient({ data }: { data: LeaveInLabData }) {
               </p>
               <p className="mt-2 text-xs text-stone-500">
                 Key {data.meta.keyVersion} · abgeleitet aus {data.meta.derivedFromRun} · Standard{" "}
-                {data.meta.standardVersion} · Modell {data.meta.modelVersion} · Packet{" "}
-                {data.meta.packetVersion} · erzeugt {data.meta.generatedAt}
+                {data.meta.effectiveStandard} ({data.meta.effectiveStandardOverlay}) · Modell{" "}
+                {data.meta.modelVersion} · Packet {data.meta.packetVersion} · erzeugt{" "}
+                {data.meta.generatedAt}
               </p>
             </div>
             <div>

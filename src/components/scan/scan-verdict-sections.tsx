@@ -87,8 +87,8 @@ export function ScanVerdictSections({
    */
   comparison?: React.ReactNode
   /**
-   * Cockpit-only: maps each sentence to the reader's voice (the cockpit's neutral third
-   * person, `cockpitVoice`). The scan feature never passes it, so every string renders
+   * Cockpit-only: maps each sentence to the reader's voice (the cockpit's pronoun-free
+   * labels, `cockpitVoice`). The scan feature never passes it, so every string renders
    * exactly as written (`tests/scan-result-card-parity.test.tsx`).
    */
   voice?: (text: string) => string

@@ -4,6 +4,8 @@ import test from "node:test"
 
 import { PGlite } from "@electric-sql/pglite"
 
+import { STUB_PREREQUISITES, publicationGateSql } from "./helpers/leave-in-calibration-postgres"
+
 import {
   LEAVE_IN_CALIBRATION_BATCH_ID,
   LEAVE_IN_CALIBRATION_MIGRATION,
@@ -42,216 +44,42 @@ import {
 
 const ROOT = new URL("../", import.meta.url)
 const MIGRATION = `supabase/migrations/${LEAVE_IN_CALIBRATION_MIGRATION}_catalog_enrichment_leave_in_calibration_v1_executor.sql`
-
-const STUB_PREREQUISITES = `
-CREATE ROLE anon;
-CREATE ROLE authenticated;
-CREATE ROLE service_role;
-CREATE SCHEMA IF NOT EXISTS extensions;
-CREATE FUNCTION extensions.digest(value bytea, algorithm text)
-  RETURNS bytea LANGUAGE sql IMMUTABLE AS $$ SELECT sha256(value) $$;
-CREATE OR REPLACE FUNCTION public.update_updated_at_column()
-RETURNS trigger LANGUAGE plpgsql AS $$
-BEGIN NEW.updated_at = now(); RETURN NEW; END;
-$$;
-
-CREATE TABLE public.products (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name text NOT NULL,
-  brand text,
-  category text,
-  affiliate_link text,
-  image_url text,
-  price_eur numeric(10,2),
-  currency text DEFAULT 'EUR',
-  suitable_thicknesses text[] NOT NULL DEFAULT '{}',
-  suitable_concerns text[] DEFAULT '{}',
-  is_active boolean NOT NULL DEFAULT true,
-  lifecycle_status text NOT NULL DEFAULT 'active',
-  category_key text,
-  origin text NOT NULL DEFAULT 'curated',
-  is_chaarlie_recommended boolean NOT NULL DEFAULT false,
-  created_at timestamptz NOT NULL DEFAULT now(),
-  updated_at timestamptz NOT NULL DEFAULT now()
-);
-CREATE TRIGGER set_updated_at_products BEFORE UPDATE ON public.products
-  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
-
-CREATE TABLE public.product_leave_in_specs (
-  product_id uuid PRIMARY KEY REFERENCES public.products(id) ON DELETE CASCADE,
-  format text NOT NULL,
-  weight text NOT NULL,
-  roles text[] NOT NULL DEFAULT '{}',
-  provides_heat_protection boolean,
-  heat_protection_max_c integer,
-  heat_activation_required boolean NOT NULL DEFAULT false,
-  care_benefits text[] NOT NULL DEFAULT '{}',
-  ingredient_flags text[] NOT NULL DEFAULT '{}',
-  application_stage text[] NOT NULL DEFAULT '{towel_dry}',
-  care_direction text,
-  repair_support_level text,
-  plan_roles text[],
-  functional_benefits text[],
-  category_key text NOT NULL DEFAULT 'leave_in',
-  conditioner_relationship text,
-  created_at timestamptz NOT NULL DEFAULT now(),
-  updated_at timestamptz NOT NULL DEFAULT now()
-);
-
-CREATE TABLE public.product_leave_in_fit_specs (
-  product_id uuid PRIMARY KEY REFERENCES public.products(id) ON DELETE CASCADE,
-  weight text NOT NULL,
-  conditioner_relationship text NOT NULL,
-  care_benefits text[] NOT NULL DEFAULT '{}',
-  created_at timestamptz NOT NULL DEFAULT now(),
-  updated_at timestamptz NOT NULL DEFAULT now()
-);
-
-CREATE TABLE public.product_leave_in_eligibility (
-  product_id uuid NOT NULL REFERENCES public.products(id) ON DELETE CASCADE,
-  thickness text NOT NULL,
-  need_bucket text NOT NULL,
-  styling_context text NOT NULL,
-  category_key text NOT NULL DEFAULT 'leave_in',
-  created_at timestamptz NOT NULL DEFAULT now(),
-  updated_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (product_id, thickness, need_bucket, styling_context)
-);
-
-CREATE OR REPLACE FUNCTION public.personal_plan_application_family_identity_v1(
-  p_role text, p_guidance_payload jsonb, p_guidance_payload_v2 jsonb
-) RETURNS text LANGUAGE sql IMMUTABLE SET search_path = '' AS $$
-  SELECT COALESCE(p_guidance_payload_v2->>'applicationFamily', p_guidance_payload->>'applicationFamily')
-$$;
-
-CREATE TABLE public.product_application_protocols (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  product_id uuid NOT NULL REFERENCES public.products(id) ON DELETE CASCADE,
-  category text NOT NULL,
-  role text NOT NULL,
-  cadence jsonb,
-  application_stage text,
-  application_state text,
-  placement text,
-  contact_time_seconds integer,
-  rinse_action text,
-  reapplication text,
-  instruction_modifiers jsonb NOT NULL DEFAULT '[]'::jsonb,
-  source_label text,
-  source_url text,
-  source_text text,
-  guidance_payload jsonb,
-  guidance_payload_v2 jsonb,
-  created_at timestamptz NOT NULL DEFAULT now(),
-  updated_at timestamptz NOT NULL DEFAULT now(),
-  application_family text GENERATED ALWAYS AS (
-    public.personal_plan_application_family_identity_v1(role, guidance_payload, guidance_payload_v2)
-  ) STORED,
-  category_key text GENERATED ALWAYS AS (category) STORED
-);
-
--- Sibling spec tables the curated-publication assertion's single SQL statements
--- reference. Only the leave_in branch ever executes for this cohort, but plpgsql
--- parses the whole statement, so every table has to exist.
-CREATE TABLE public.product_shampoo_specs (
-  product_id uuid REFERENCES public.products(id) ON DELETE CASCADE,
-  thickness text, shampoo_bucket text, scalp_route text, cleansing_intensity text
-);
-CREATE TABLE public.product_conditioner_specs (
-  product_id uuid REFERENCES public.products(id) ON DELETE CASCADE,
-  thickness text, protein_moisture_balance text
-);
-CREATE TABLE public.product_conditioner_rerank_specs (
-  product_id uuid PRIMARY KEY REFERENCES public.products(id) ON DELETE CASCADE,
-  weight text, repair_level text, balance_direction text
-);
-CREATE TABLE public.product_mask_specs (
-  product_id uuid PRIMARY KEY REFERENCES public.products(id) ON DELETE CASCADE,
-  weight text, repair_support_level text, functional_benefits text[]
-);
-CREATE TABLE public.product_oil_specs (
-  product_id uuid PRIMARY KEY REFERENCES public.products(id) ON DELETE CASCADE,
-  weight text, role_support text[], provides_heat_protection boolean
-);
-CREATE TABLE public.product_oil_eligibility (
-  product_id uuid REFERENCES public.products(id) ON DELETE CASCADE,
-  thickness text, oil_subtype text, oil_purpose text, ingredient_flags text[]
-);
-CREATE TABLE public.product_dry_shampoo_specs (
-  product_id uuid PRIMARY KEY REFERENCES public.products(id) ON DELETE CASCADE,
-  primary_effect text, hair_color_fit text, scalp_sensitivity_fit text, format text
-);
-CREATE TABLE public.product_deep_cleansing_shampoo_specs (
-  product_id uuid PRIMARY KEY REFERENCES public.products(id) ON DELETE CASCADE,
-  scalp_type_focus text, reset_intensity text, reset_focus text, color_treated_suitability text
-);
-CREATE TABLE public.product_bondbuilder_specs (
-  product_id uuid PRIMARY KEY REFERENCES public.products(id) ON DELETE CASCADE,
-  bond_repair_intensity text, application_mode text, bond_repair_axis text,
-  treatment_mode text, product_format text, usage_protocol text
-);
-CREATE TABLE public.product_heat_protectant_specs (
-  product_id uuid PRIMARY KEY REFERENCES public.products(id) ON DELETE CASCADE,
-  format text, provides_heat_protection boolean
-);
-CREATE TABLE public.product_scalp_care_specs (
-  product_id uuid PRIMARY KEY REFERENCES public.products(id) ON DELETE CASCADE,
-  primary_role text, presentation_format text, rinse_mode text, application_instructions text
-);
-CREATE TABLE public.personal_plan_product_search_dispositions (
-  product_id uuid PRIMARY KEY REFERENCES public.products(id) ON DELETE CASCADE
-);
-
-CREATE TABLE public.catalog_enrichment_applied_items (
-  batch_id text NOT NULL,
-  product_key text NOT NULL,
-  batch_fingerprint text NOT NULL CHECK (batch_fingerprint ~ '^[a-f0-9]{64}$'),
-  content_fingerprint text NOT NULL CHECK (content_fingerprint ~ '^[a-f0-9]{64}$'),
-  product_id uuid NOT NULL REFERENCES public.products(id) ON DELETE RESTRICT,
-  reviewed_by text NOT NULL,
-  created_at timestamptz NOT NULL DEFAULT now(),
-  PRIMARY KEY (batch_id, product_key)
-);
-`
+const HARDENING_MIGRATION =
+  "supabase/migrations/20260929090000_catalog_apply_executor_null_guards_shared_lock.sql"
+const POINTER_DELTA_MIGRATION =
+  "supabase/migrations/20260914170000_personal_plan_stage5_v2_pointer_delta_executor.sql"
+const SHARED_PRODUCT_APPLY_LOCK =
+  "pg_catalog.hashtextextended('catalog-enrichment:product-apply', 0)"
 
 /**
- * The REAL curated-publication gate, loaded from its own migrations: the V1
- * assertion plus its constraint triggers (20260811212000, sliced before the
- * unrelated user-product function, per the precedent in
- * tests/personal-plan-product-disposition-reversal-postgres.test.ts), then the
- * rename + V2 wrapper (20260813085151, sliced past the one-off OLAPLEX
- * retirement block). This matters because the executor's
- * `UPDATE products SET suitable_thicknesses` is exactly the column the deferred
- * `..._on_visibility_transition` trigger watches — so the gate fires at COMMIT.
+ * The hardening migration patches thirteen installed executors in place; only
+ * this executor exists here, so the test applies the shared patch helper plus
+ * this executor's own block. The whole migration, against all thirteen, runs in
+ * tests/catalog-apply-executor-hardening-postgres.test.ts.
  */
-async function publicationGateSql(): Promise<string> {
-  const gate = await readFile(
-    new URL("supabase/migrations/20260811212000_personal_plan_curated_publication_gate.sql", ROOT),
-    "utf8",
+async function hardeningSql(): Promise<{ helper: string; calibration: string }> {
+  const sql = await readFile(new URL(HARDENING_MIGRATION, ROOT), "utf8")
+  const blockStart = sql.indexOf("-- @harden apply_catalog_enrichment_leave_in_calibration_v1")
+  const blockEnd = sql.indexOf("-- @end", blockStart)
+  assert.ok(blockStart > 0 && blockEnd > blockStart, "hardening migration markers moved")
+  return {
+    helper: sql.slice(sql.indexOf("CREATE FUNCTION pg_temp."), blockStart),
+    calibration: sql.slice(blockStart, blockEnd),
+  }
+}
+
+async function applyHardening(pg: PGlite) {
+  const { helper, calibration } = await hardeningSql()
+  await pg.exec(
+    `BEGIN;\n${helper}\n${calibration}\n` +
+      `DROP FUNCTION pg_temp.harden_catalog_apply_executor(text, text[], text);\nCOMMIT;`,
   )
-  const closure = await readFile(
-    new URL("supabase/migrations/20260813085151_personal_plan_catalog_closure.sql", ROOT),
-    "utf8",
-  )
-  const gateSlice = gate.slice(
-    0,
-    gate.indexOf("CREATE OR REPLACE FUNCTION public.personal_plan_create_or_reuse_user_product"),
-  )
-  const closureFrom = closure.indexOf("-- Preserve the complete V1 publication assertion")
-  const closureSlice = closure.slice(
-    closureFrom,
-    closure.indexOf(
-      "CREATE OR REPLACE FUNCTION public.product_intake_approve_reviewed_product",
-      closureFrom,
-    ),
-  )
-  return `${gateSlice}\n${closureSlice}`
 }
 
 async function migratedDatabase(
   t: { after: (fn: () => Promise<void>) => void },
   transform: (sql: string) => string = (sql) => sql,
-  options: { publicationGate?: boolean } = {},
+  options: { publicationGate?: boolean; hardened?: boolean } = {},
 ): Promise<PGlite> {
   const pg = new PGlite()
   t.after(async () => {
@@ -263,6 +91,7 @@ async function migratedDatabase(
     .replace("CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;", "")
     .replace("CREATE SCHEMA IF NOT EXISTS extensions;", "")
   await pg.exec(transform(sql))
+  if (options.hardened ?? true) await applyHardening(pg)
   return pg
 }
 
@@ -359,18 +188,26 @@ async function seedReviewedState(pg: PGlite, pkg: LeaveInCalibrationPackage) {
 async function callExecutor(
   pg: PGlite,
   built: ReturnType<typeof buildLeaveInCalibrationPackage>,
-  overrides: { json?: string; fingerprint?: string; reviewer?: string } = {},
+  overrides: { json?: string | null; fingerprint?: string | null; reviewer?: string | null } = {},
 ) {
+  // `undefined` means "use the approved value"; an explicit `null` is sent as SQL NULL.
   return pg.query<{
     applied_product_key: string
     applied_product_id: string
     applied_deleted_rows: number
     applied_eligibility_rows: number
   }>(`SELECT * FROM public.${LEAVE_IN_CALIBRATION_RPC}($1, $2, $3)`, [
-    overrides.json ?? built.canonical_json,
-    overrides.fingerprint ?? built.fingerprint,
-    overrides.reviewer ?? "nick",
+    overrides.json === undefined ? built.canonical_json : overrides.json,
+    overrides.fingerprint === undefined ? built.fingerprint : overrides.fingerprint,
+    overrides.reviewer === undefined ? "nick" : overrides.reviewer,
   ])
+}
+
+async function ledgerCount(pg: PGlite): Promise<string> {
+  const ledger = await pg.query<{ count: string }>(
+    `SELECT count(*)::text AS count FROM public.catalog_enrichment_applied_items`,
+  )
+  return ledger.rows[0]!.count
 }
 
 test("the executor migration loads and the RPC applies the whole batch", async (t) => {
@@ -555,6 +392,123 @@ test("the executor refuses an unapproved reviewer, fingerprint, or payload", asy
     `SELECT count(*)::text AS count FROM public.catalog_enrichment_applied_items`,
   )
   assert.equal(ledger.rows[0]!.count, "0")
+})
+
+test("red proof: before hardening, a NULL reviewer or NULL fingerprint slips past the guards", async (t) => {
+  // `x <> 'nick'` and `x !~ '…'` are NULL for NULL input, and IF NULL is not
+  // taken — so the original executor applies the whole approved batch.
+  for (const overrides of [{ reviewer: null }, { fingerprint: null }]) {
+    const pg = await migratedDatabase(t, (sql) => sql, { hardened: false })
+    const built = await loadPackage()
+    await seedReviewedState(pg, built.package)
+    const applied = await callExecutor(pg, built, overrides)
+    assert.equal(applied.rows.length, 9, `${JSON.stringify(overrides)} applied the batch`)
+    assert.equal(await ledgerCount(pg), "9")
+  }
+})
+
+test("after hardening, every NULL approval argument is refused and nothing is written", async (t) => {
+  const pg = await migratedDatabase(t)
+  const built = await loadPackage()
+  await seedReviewedState(pg, built.package)
+
+  await assert.rejects(callExecutor(pg, built, { reviewer: null }), /reviewer must be nick/)
+  await assert.rejects(
+    callExecutor(pg, built, { fingerprint: null }),
+    /batch fingerprint must be lowercase sha256/,
+  )
+  await assert.rejects(
+    callExecutor(pg, built, { json: null }),
+    /batch fingerprint mismatch/,
+    "a NULL payload digests to NULL, which must not equal the expected fingerprint",
+  )
+  await assert.rejects(
+    callExecutor(pg, built, { json: null, fingerprint: null }),
+    /batch fingerprint must be lowercase sha256/,
+  )
+  assert.equal(await ledgerCount(pg), "0")
+})
+
+test("a batch applied by the pre-hardening executor replays unchanged under the hardened one", async (t) => {
+  // Production case: leave-in-research-calibration-v1 may already have run
+  // against the original function before this hardening lands.
+  const pg = await migratedDatabase(t, (sql) => sql, { hardened: false })
+  const built = await loadPackage()
+  await seedReviewedState(pg, built.package)
+  await callExecutor(pg, built)
+  const digest = `SELECT md5(string_agg(t::text, '|' ORDER BY t::text)) AS digest FROM (
+      SELECT product_id::text, thickness, need_bucket, styling_context
+        FROM public.product_leave_in_eligibility
+      UNION ALL SELECT id::text, array_to_string(suitable_thicknesses, ','), '', ''
+        FROM public.products
+      UNION ALL SELECT product_key, batch_fingerprint, content_fingerprint, reviewed_by
+        FROM public.catalog_enrichment_applied_items) t`
+  const before = await pg.query<{ digest: string }>(digest)
+
+  await applyHardening(pg)
+  const replay = await callExecutor(pg, built)
+  assert.equal(replay.rows.length, 9)
+  assert.equal(
+    replay.rows.reduce((total, row) => total + Number(row.applied_deleted_rows), 0),
+    0,
+    "the replay writes nothing",
+  )
+  const after = await pg.query<{ digest: string }>(digest)
+  assert.equal(after.rows[0]!.digest, before.rows[0]!.digest)
+  assert.equal(await ledgerCount(pg), "9")
+})
+
+test("the shared product-apply lock is pinned: same key as the delta executor, taken before any product lock", async (t) => {
+  const hardening = await readFile(new URL(HARDENING_MIGRATION, ROOT), "utf8")
+  const delta = await readFile(new URL(POINTER_DELTA_MIGRATION, ROOT), "utf8")
+  assert.ok(delta.includes(SHARED_PRODUCT_APPLY_LOCK), "delta executor key moved")
+  assert.ok(hardening.includes(SHARED_PRODUCT_APPLY_LOCK), "hardening key diverged from the delta")
+
+  const pg = await migratedDatabase(t)
+  const installed = await pg.query<{ definition: string }>(
+    `SELECT pg_get_functiondef('public.${LEAVE_IN_CALIBRATION_RPC}(text,text,text)'::regprocedure) AS definition`,
+  )
+  const definition = installed.rows[0]!.definition
+  const shared = definition.indexOf(SHARED_PRODUCT_APPLY_LOCK)
+  assert.ok(shared > 0, "installed executor takes the shared lock")
+  assert.equal(definition.lastIndexOf(SHARED_PRODUCT_APPLY_LOCK), shared, "taken exactly once")
+  for (const later of [
+    "hashtextextended('catalog-enrichment:' || v_batch_id, 0)",
+    "FROM public.products WHERE id = v_pid FOR UPDATE",
+    "UPDATE public.products",
+  ]) {
+    const at = definition.indexOf(later)
+    assert.ok(at > shared, `shared lock precedes ${later}`)
+  }
+  assert.doesNotMatch(definition, /p_reviewed_by <> 'nick'|fingerprint <> p_expected/)
+})
+
+test("the hardening patch fails closed when an anchor does not match exactly once", async (t) => {
+  const pg = await migratedDatabase(t)
+  const { helper } = await hardeningSql()
+  await pg.exec("BEGIN")
+  await pg.exec(helper)
+  await assert.rejects(
+    pg.query(`SELECT pg_temp.harden_catalog_apply_executor($1, ARRAY[]::text[], $2)`, [
+      `public.${LEAVE_IN_CALIBRATION_RPC}(text,text,text)`,
+      "no such anchor",
+    ]),
+    /already takes the shared product-apply lock/,
+    "re-running against an already hardened executor is refused",
+  )
+  await pg.exec("ROLLBACK")
+
+  const fresh = await migratedDatabase(t, (sql) => sql, { hardened: false })
+  await fresh.exec("BEGIN")
+  await fresh.exec(helper)
+  await assert.rejects(
+    fresh.query(`SELECT pg_temp.harden_catalog_apply_executor($1, ARRAY[]::text[], $2)`, [
+      `public.${LEAVE_IN_CALIBRATION_RPC}(text,text,text)`,
+      "no such anchor",
+    ]),
+    /expected exactly one match, found 0/,
+  )
+  await fresh.exec("ROLLBACK")
 })
 
 test("the executor refuses a batch that plans a delete and an upsert for the same row", async (t) => {

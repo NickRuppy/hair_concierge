@@ -7,7 +7,7 @@ evidence: practice
 
 ## Einsicht
 
-Wirkung kommt je Bereich unterschiedlich schnell (Zeitfenster in `guardrails.md`, G3). Kämmbarkeit: erste Unterschiede oft schon nach wenigen Wäschen; stabil weniger Kämmbruch und mehr Geschmeidigkeit in 2–4 Wochen. Kopfhaut: 2–4 Wochen, Re-Check nach etwa 4 Wochen. Glanz: kommt mit der Oberflächenpflege und hält nur, solange gepflegt wird. Strukturell geschädigte Längen werden durch Pflege nicht wieder intakt; sie fühlen sich besser an und brechen weniger weiter, wirklich besser werden sie nur über Schnitt und Rauswachsen. Haarausfall und Dichte: kein Pflege-Zeitfenster, nur ärztlich (G2). Das Ziel ist nie eine 10.
+Wirkung kommt je Bereich unterschiedlich schnell (Zeitfenster in `guardrails.md`, G3). Kämmbarkeit: erste Unterschiede oft schon nach wenigen Wäschen; stabil weniger Kämmbruch und mehr Geschmeidigkeit in 2–4 Wochen. Kopfhaut: 2–4 Wochen, Re-Check nach etwa 4 Wochen. Glanz: kommt mit der Oberflächenpflege und hält nur, solange gepflegt wird. Strukturell geschädigte Längen werden durch Pflege nicht wieder intakt; sie fühlen sich besser an und brechen weniger weiter, wirklich besser werden sie nur über Schnitt und Rauswachsen. Haarausfall und Dichte: kein Pflege-Zeitfenster, nur ärztlich (G2). Die Bestnote auf der Skala wird nie in Aussicht gestellt.
 
 ## Im Call
 

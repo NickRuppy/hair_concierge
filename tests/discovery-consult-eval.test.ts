@@ -7,7 +7,8 @@ import {
   evaluateConsultBriefAnswer,
   type ConsultEvalCheck,
 } from "../scripts/eval-consult-brief/checks"
-import { generateConsultBrief } from "../src/lib/discovery/consult-brief/generate"
+import { toConsultBriefSections } from "../src/lib/discovery/consult-brief/api-schema"
+import { generateConsultBrief, withBoundaryLine } from "../src/lib/discovery/consult-brief/generate"
 import { CONSULT_BOUNDARY_LINE, lintConsultBrief } from "../src/lib/discovery/consult-brief/lint"
 import { consultSourceHash } from "../src/lib/discovery/consult-brief/hash"
 import {
@@ -83,9 +84,12 @@ test("the recorded real answer passes the generator's parse, schema and lint pat
   assert.ok("brief" in result, JSON.stringify(result))
   assert.equal(result.sourceHash, nomi.sourceHash)
 
-  const brief = consultBriefSectionsSchema.parse(JSON.parse(recorded.raw))
+  // The stored shape: array → record converted, boundary line appended in code.
+  const parsed = consultBriefSectionsSchema.parse(toConsultBriefSections(JSON.parse(recorded.raw)))
+  const brief = { ...parsed, erwartungen: withBoundaryLine(parsed.erwartungen) }
   assert.deepEqual(lintConsultBrief(brief, nomi.input), [])
   assert.equal(brief.erwartungen.at(-1), CONSULT_BOUNDARY_LINE)
+  assert.ok("brief" in result && result.brief.erwartungen.at(-1) === CONSULT_BOUNDARY_LINE)
 })
 
 test("the eval's checks find nothing in the recorded answer (JSON mode: a bare object)", () => {
@@ -98,26 +102,40 @@ test("the eval's checks catch broken answers", () => {
   assert.deepEqual(checks("```json\n{}\n```"), ["json"])
   assert.ok(checks(mutated((brief) => delete brief.callFragen)).includes("schema"))
 
-  const noBoundary = checks(
+  // The boundary line is appended in code, so a raw answer without it is not a finding —
+  // the evaluated brief still ends with it.
+  const noBoundary = evaluateConsultBriefAnswer(
     mutated((brief) => {
       brief.erwartungen = (brief.erwartungen as string[]).slice(0, -1)
     }),
+    nomi.input,
   )
-  assert.ok(noBoundary.includes("boundary_line"))
-  assert.ok(noBoundary.includes("lint"))
+  assert.deepEqual(noBoundary.findings, [])
+  assert.equal(noBoundary.brief?.erwartungen.at(-1), CONSULT_BOUNDARY_LINE)
 
+  // Fewer than 3 levers is now a schema violation (R23); an out-of-range points value on a
+  // valid lever count is the eval's hebel_shape check.
   assert.deepEqual(
     checks(
       mutated((brief) => {
-        brief.hebel = [{ title: "Zu viel", note: "Punkte außerhalb des Rahmens.", points: 3 }]
+        brief.hebel = [{ title: "Zu wenig", note: "Nur ein Hebel.", points: 1 }]
       }),
     ),
-    ["hebel_shape"],
+    ["schema"],
   )
   assert.deepEqual(
     checks(
       mutated((brief) => {
         brief.hebel = []
+      }),
+    ),
+    ["schema"],
+  )
+  assert.deepEqual(
+    checks(
+      mutated((brief) => {
+        const hebel = brief.hebel as Array<{ points: number | null }>
+        hebel[0] = { ...hebel[0], points: 0.1 }
       }),
     ),
     ["hebel_shape"],
@@ -137,8 +155,16 @@ test("the eval's checks catch broken answers", () => {
   const english = checks(
     mutated((brief) => {
       brief.diagnose = "She has fine hair and it is not the product that is the problem."
-      brief.hebel = [{ title: "Less heat", note: "Use the iron less often.", points: 1 }]
-      brief.callFragen = ["How often do you use the iron?"]
+      brief.hebel = [
+        { title: "Less heat", note: "Use the iron less often.", points: 1 },
+        { title: "Detangle gently", note: "Start at the ends and work upwards.", points: 1 },
+        { title: "Conditioner", note: "Use it after every wash for slip.", points: 1 },
+      ]
+      brief.callFragen = [
+        "How often do you use the iron?",
+        "How do you detangle your hair?",
+        "Where do you buy your hair care?",
+      ]
       brief.zielLuecken = []
       brief.swapReasons = {}
       brief.erwartungen = [CONSULT_BOUNDARY_LINE]

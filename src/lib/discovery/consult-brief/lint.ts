@@ -9,7 +9,9 @@ import type { ConsultInput, ConsultProduct } from "./input"
  *
  * The lint checks phrases, not sentence logic (guardrails G1): a negated forbidden phrase is
  * still a finding. Product names from the input are cut out before the phrase check, so a
- * verdict's „Repair" product can be quoted (G1 exception).
+ * verdict's „Repair" product can be quoted (G1 exception). One sentence-level exception (G1b,
+ * R22): a supplement or drug active may be named factually in a sentence that hands the
+ * decision to a doctor and neither recommends it nor names a care product (`MEDICAL_MENTION_IDS`).
  *
  * Not linted (left to the prompt and Nick's edit pass): whether a product is offered as an
  * answer to hair loss (G2), honest time windows (G3), language register (G6 beyond archaic
@@ -19,7 +21,6 @@ import type { ConsultInput, ConsultProduct } from "./input"
 export type ConsultLintRule =
   | "forbidden_phrase"
   | "score_promise"
-  | "score_target_cap"
   | "verdict_contradiction"
   | "unknown_product"
   | "unknown_swap_key"
@@ -74,7 +75,7 @@ function infix(source: string): RegExp {
  * removed — otherwise „repa\u00adriert" or a decomposed umlaut slips past every rule.
  */
 export function normalizeConsultText(text: string): string {
-  return text.normalize("NFC").replace(/[\u00ad\u200b-\u200d\u2060\ufeff]/g, "")
+  return text.normalize("NFC").replace(/[\u00ad\u200b-\u200f\u2060-\u2064\ufeff]/g, "")
 }
 
 /** Brand comparison only: accents folded, apostrophes unified („L'Oreal" = „L’Oréal"). */
@@ -103,12 +104,12 @@ function phrase(
 
 export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
   // G1 — healing and repair promises
-  phrase("repair", "G1", "reparieren", infix("reparier|reparatur")),
+  phrase("repair", "G1", "repariert", infix("reparier|reparatur")),
   // „Heiligenschein" (frizz halo) is not healing.
   phrase("heal", "G1", "heilt", infix("heil(?!ig)")),
   phrase("as_new", "G1", "wie neu", words("wie neu")),
   phrase("as_before", "G1", "wie früher", words("wie früher")),
-  phrase("undo", "G1", "rückgängig machen", stem("rückgängig")),
+  phrase("undo", "G1", "macht rückgängig", stem("rückgängig")),
   phrase("regenerate", "G1", "regeneriert", infix("regenerier|regenerat")),
   phrase(
     "rebuild",
@@ -185,32 +186,34 @@ export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
   phrase(
     "score_target_promise",
     "G1",
-    "du kommst auf 8",
+    "kommst du auf 8",
     words("komm(?:st|t) (?:du |sie )?(?:sicher |dann )?auf (?:eine )?\\d+"),
     "score_promise",
   ),
   phrase(
     "score_rises",
     "G1",
-    "dein Score steigt auf",
+    "Score-Zahlen, Zielwerte und Deltas",
     words("score (?:steigt|klettert|geht (?:hoch|rauf))"),
     "score_promise",
   ),
-  phrase("score_delta", "G1", "+2 Punkte", /\+\s?\d+(?:[.,]\d+)?\s?punkt/iu, "score_promise"),
-  // Any score figure in the text: the numbers live in `hebel.points` only (R13, G1).
+  phrase("score_delta", "G1", "Deltas", /\+\s?\d+(?:[.,]\d+)?\s?punkt/iu, "score_promise"),
+  // Any score figure in the text: the numbers live in `hebel.points` only (R13, G1). A digit
+  // before „Score" counts within its own clause only — a time window ahead of a semicolon is
+  // not a score figure (guardrails' own „2–4 Wochen; wie weit der Score mitgeht").
   phrase(
     "score_figure",
     "G1",
-    "dein Score steigt auf",
+    "Score-Zahlen",
     words(
-      `score[^.!?]{0,40}(?:\\d|${SPELLED_NUMBER})|(?:\\d|${SPELLED_NUMBER})[^.!?]{0,40}score\\p{L}*|ziel[^.!?]{0,40}${SPELLED_NUMBER}`,
+      `score[^.!?]{0,40}(?:\\d|${SPELLED_NUMBER})|(?:\\d|${SPELLED_NUMBER})[^.!?;]{0,40}score\\p{L}*|ziel[^.!?]{0,40}${SPELLED_NUMBER}|ziel\\p{L}* (?:ist|liegt|wäre) (?:eine |bei |die |auf )?\\d`,
     ),
     "score_promise",
   ),
   phrase(
     "points_better",
     "G1",
-    "+2 Punkte",
+    "Deltas",
     words(
       "punkte? (?:besser|höher)|verbesser\\p{L}* (?:sich )?um (?:\\d|ein|zwei|drei)|um (?:\\d+(?:[.,]\\d+)?|einen|zwei|drei) punkte?",
     ),
@@ -220,7 +223,7 @@ export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
   phrase(
     "target_ten",
     "G1",
-    "du kommst auf 8",
+    "eine 10 wird nie in Aussicht gestellt",
     words(
       "(?:ziel|score)[^.!?]{0,30}(?<!\\d)10(?![\\d,.]\\d)|(?<![\\d,.])10(?!\\d)[^.!?]{0,30}(?:ziel|score)",
     ),
@@ -229,7 +232,7 @@ export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
   phrase(
     "score_more_points",
     "G1",
-    "zwei Punkte mehr",
+    "Deltas",
     words("(?:\\d+(?:[.,]\\d+)?|ein(?:en)?|zwei|drei|vier|fünf|sechs) punkte? mehr"),
     "score_promise",
   ),
@@ -258,21 +261,17 @@ export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
     "das sind Hormone",
     words("(?:das|es) (?:sind|ist|liegt an den|kommt von den) hormon\\p{L}*|hormonell bedingt"),
   ),
-  // G1b — no supplements, no drug actives, no doses
+  // G1b — supplements and drug actives: never recommended or dosed; a factual mention is allowed
+  // only per sentence with a doctor handoff (R22, `MEDICAL_MENTION_IDS`). Brands and doses never.
   phrase("biotin", "G1b", "Biotin", infix("biotin")),
   phrase(
     "supplements",
     "G1b",
-    "Nahrungsergänzungsmitteln",
+    "Nahrungsergänzungsmittel",
     infix("nahrungsergänz|haarvitamin|vitaminpräparat|vitamintablette"),
   ),
   // Hair-loss drugs and supplement brands (G1b, not the market-brand list: never recommendable).
-  phrase(
-    "hair_loss_brands",
-    "G1b",
-    "Nahrungsergänzungsmitteln",
-    words("regaine|pantovigar|priorin"),
-  ),
+  phrase("hair_loss_brands", "G1b", "Bezugsquellen", words("regaine|pantovigar|priorin")),
   phrase("finasteride", "G1b", "Arzneiwirkstoffe", stem("finasterid")),
   phrase("zinc", "G1b", "Zink", words("zink")),
   phrase("iron", "G1b", "Eisen", words("eisen(?:präparat\\p{L}*|tablette\\p{L}*)?")),
@@ -325,10 +324,124 @@ export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
   phrase("bedenke", "G6", "Bedenke", words("bedenke")),
 ]
 
+// --- R22: factual medical mention with a doctor handoff ---------------------------------------
+
+/**
+ * Substances (G1b, ruling R22 — Nick 2026-09-29, loosened): naming a supplement or drug
+ * active factually is allowed anywhere; forbidden stays the sentence that recommends,
+ * doses/schedules, turns the handoff around or mixes it with a care product. `dose`,
+ * `hair_loss_brands` and `percent` are NOT here: brands and dosing never appear.
+ */
+export const MEDICAL_MENTION_IDS: ReadonlySet<string> = new Set([
+  "biotin",
+  "supplements",
+  "zinc",
+  "iron",
+  "minoxidil",
+  "cortisone",
+  "ketoconazole",
+  "finasteride",
+])
+
+/**
+ * Efficacy-against-hair-loss claims: allowed only in a medically framed sentence (a doctor
+ * token or a named drug active) — as care claims they stay G1 promises.
+ */
+export const LOSS_CLAIM_IDS: ReadonlySet<string> = new Set(["against_loss", "stop_loss"])
+
+const DRUG_TOKEN = new RegExp(
+  ["minoxidil", "finasterid\\p{L}*", "[kc]ortison\\p{L}*", "ketoconazol\\p{L}*"].join("|"),
+  "iu",
+)
+
+/** ärztlich, Arzt/Ärztin/Ärzte (incl. Hausarzt, Hautärztin), dermatologisch — not „geschwärzt". */
+const DOCTOR_TOKEN = new RegExp(
+  "(?<![\\p{L}\\d])\\p{L}*(?<!schw)(?:ärzt|arzt)\\p{L}*|(?<![\\p{L}\\d])dermatolog\\p{L}*",
+  "iu",
+)
+
+/**
+ * The sentence reads as a recommendation of the substance — the handoff does not excuse it.
+ * Advice markers („solltest") and application schedules („täglich anwenden") count as
+ * recommendation/dosing (G1b bans Anwendungsschemata); the descriptive „solange man sie
+ * anwendet" carries none of these markers and stays allowed.
+ */
+const RECOMMEND_CUE = new RegExp(
+  [
+    stem("probier|versuch|empfehl|empfiehl|empfohl|besorg|kauf").source,
+    words(
+      "nimm|nehmen|einnehmen|start\\p{L}* mit|fang\\p{L}* [^.!?]{0,40}an mit|fang\\p{L}* mit [^.!?]{0,40}an",
+    ).source,
+    // „wende … an" (anwenden imperative), but not „wende dich an deine Ärztin" — that is the handoff.
+    words(
+      "sollte\\p{L}*|musst|müsst\\p{L}*|am besten|wende (?!dich|sich|euch)[^.!?]{0,20}an(?!\\p{L})|trag\\p{L}* [^.!?]{0,20}auf",
+    ).source,
+    words("täglich|wöchentlich|morgens|abends|\\d+\\s?× (?:täglich|pro tag|pro woche)").source,
+  ].join("|"),
+  "iu",
+)
+
+/** A care product category in the same sentence: cosmetic and medical never mix (G6). */
+const CARE_CATEGORY = new RegExp(
+  [
+    infix("shampoo|spülung|conditioner|serum|seren|tonikum|haarwasser|ampulle|leave-in").source,
+    words("kur|kuren|maske\\p{L}*|haaröl\\p{L}*|öl|öle").source,
+  ].join("|"),
+  "iu",
+)
+
+/**
+ * Sentences for the R22 check. Unlike `sentences`, an abbreviation („z. B.", „ggf.") does not
+ * end a sentence — otherwise „beim Hautarzt, z. B. wegen Minoxidil?" loses its handoff.
+ */
+function medicalSentences(text: string): string[] {
+  return text
+    .split(
+      /(?<=[.!?;])(?<!(?:^|[\s(])\p{L}\.)(?<!(?:^|\s)(?:bzw|ca|evtl|ggf|inkl|usw|etc|vgl|Dr)\.)\s+/iu,
+    )
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+}
+
+/** A handoff turned around: „ohne Arzt", „statt zur Hautärztin", „kein Arzttermin nötig". */
+const NEGATED_HANDOFF = words(
+  "(?:ohne|statt|anstatt|kein\\p{L}*|nicht)(?: \\p{L}+){0,2} \\p{L}*(?:ärzt|arzt|dermatolog)\\p{L}*",
+)
+
+function medicalMentionAllowed(sentence: string): boolean {
+  return (
+    !NEGATED_HANDOFF.test(sentence) &&
+    !RECOMMEND_CUE.test(sentence) &&
+    !CARE_CATEGORY.test(sentence)
+  )
+}
+
+/** A loss claim needs medical framing on top: a doctor token or a named drug active. */
+function lossClaimAllowed(sentence: string): boolean {
+  return (
+    (DOCTOR_TOKEN.test(sentence) || DRUG_TOKEN.test(sentence)) && medicalMentionAllowed(sentence)
+  )
+}
+
+/** The first offending match of one phrase rule in a normalized text, or null. */
+function matchPhrase(entry: ConsultForbiddenPhrase, text: string): RegExpExecArray | null {
+  const perSentence = MEDICAL_MENTION_IDS.has(entry.id)
+    ? medicalMentionAllowed
+    : LOSS_CLAIM_IDS.has(entry.id)
+      ? lossClaimAllowed
+      : null
+  if (!perSentence) return entry.pattern.exec(text)
+  for (const sentence of medicalSentences(text)) {
+    const match = entry.pattern.exec(sentence)
+    if (match && !perSentence(sentence)) return match
+  }
+  return null
+}
+
 /** The forbidden phrases in one text (no product-name exemption — see `lintConsultBrief`). */
 export function findForbiddenPhrases(text: string): ConsultForbiddenPhrase[] {
   const normalized = normalizeConsultText(text)
-  return CONSULT_FORBIDDEN_PHRASES.filter((entry) => entry.pattern.test(normalized))
+  return CONSULT_FORBIDDEN_PHRASES.filter((entry) => matchPhrase(entry, normalized) !== null)
 }
 
 // --- products --------------------------------------------------------------------------------
@@ -601,7 +714,7 @@ export function lintConsultBrief(
     // G1–G6 phrases, with her product names cut out (G1 exception for quoted names).
     const unnamed = productNames ? text.replace(productNames, " ") : text
     for (const entry of CONSULT_FORBIDDEN_PHRASES) {
-      const match = entry.pattern.exec(unnamed)
+      const match = matchPhrase(entry, unnamed)
       if (match) {
         findings.push({
           rule: entry.rule,
@@ -726,22 +839,6 @@ export function lintConsultBrief(
           ? `Pflicht, Auslöser im Profil: ${input.boundaryTriggers.join(", ")}`
           : "Pflicht in jedem Brief",
     })
-  }
-
-  // G3 — the target the Hebel points imply stays at 9 or below.
-  if (input.baselineScore !== null) {
-    const target =
-      input.baselineScore +
-      brief.hebel.reduce((sum, entry) => sum + Math.max(0, entry.points ?? 0), 0)
-    if (target > CONSULT_SCORE_TARGET_CAP) {
-      findings.push({
-        rule: "score_target_cap",
-        guardrail: "G3",
-        location: "hebel",
-        excerpt: String(target),
-        detail: `Baseline ${input.baselineScore} + Hebel-Punkte = ${target} > ${CONSULT_SCORE_TARGET_CAP}`,
-      })
-    }
   }
 
   return findings

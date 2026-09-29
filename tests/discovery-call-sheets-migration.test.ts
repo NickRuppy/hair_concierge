@@ -64,10 +64,12 @@ test("the migration has a unique version that sorts after every migration", () =
     .map((name) => name.split("_")[0])
   const own = OWN.split("_")[0]
   assert.equal(versions.filter((version) => version === own).length, 1)
-  assert.deepEqual(
-    versions.filter((version) => version > own).sort(),
-    ["20260929230000", "20260929231000"],
-    "must sort after every migration but the oil protocol repairs'",
+  // Was "sorts after every migration" when it was the newest; the catalog-hardening
+  // migrations now follow it, so what still matters is that it follows its chain.
+  const predecessors = CHAIN.slice(0, CHAIN.indexOf(OWN)).map((name) => name.split("_")[0])
+  assert.ok(
+    predecessors.every((version) => version < own),
+    "must sort after its prerequisites",
   )
 })
 

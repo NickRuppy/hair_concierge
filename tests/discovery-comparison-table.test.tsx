@@ -66,12 +66,12 @@ function cellsOf(markup: string, attribute: string): string[] {
   return [...markup.matchAll(new RegExp(`${attribute}="([^"]*)"`, "g"))].map((match) => match[1]!)
 }
 
-test("the table has the iOS header: two blank columns, PRODUKT, IHR ZIEL (cockpit voice) in plum", () => {
+test("the table has the iOS header: two blank columns, PRODUKT, ZIEL (cockpit voice) in plum", () => {
   const markup = renderToStaticMarkup(<DiscoveryComparisonTable rows={ROWS} />)
   assert.match(markup, /rounded-\[14px\]/)
   assert.match(markup, /bg-\[#f6f3f0\]/)
   assert.match(markup, />Produkt</)
-  assert.match(markup, /text-\[var\(--brand-plum\)\][^>]*>Ihr Ziel</)
+  assert.match(markup, /text-\[var\(--brand-plum\)\][^>]*>Ziel</)
   // Upper-cased by CSS, like the iOS caps header.
   assert.match(markup, /uppercase/)
 })
@@ -95,16 +95,16 @@ test("each dimension is one row: name, status disc, product value in status colo
 test("in / out / no-target: a missing value reads „–“, never an invented word", () => {
   const markup = renderToStaticMarkup(<DiscoveryComparisonTable rows={ROWS} />)
   // in target: product and target both named.
-  assert.match(markup, /aria-label="Kopfhaut, passt, Produkt: fettig, ihr Ziel: fettig"/)
+  assert.match(markup, /aria-label="Kopfhaut, passt, Produkt: fettig, Ziel: fettig"/)
   // out of target: the miss is named against the target.
   assert.match(
     markup,
-    /aria-label="Pflegegewicht, mit Einschränkung, Produkt: mittel, ihr Ziel: leicht"/,
+    /aria-label="Pflegegewicht, mit Einschränkung, Produkt: mittel, Ziel: leicht"/,
   )
   // no target: the target cell is a dash.
   assert.match(
     markup,
-    /aria-label="Reinigung, nicht einschätzbar, Produkt: mild, ihr Ziel: nicht verfügbar"/,
+    /aria-label="Reinigung, nicht einschätzbar, Produkt: mild, Ziel: nicht verfügbar"/,
   )
   assert.match(markup, /text-\[var\(--brand-plum\)\][^>]*>–</)
   // The long property names may break at their word joint, like iOS („Pflege-/gewicht").
@@ -118,6 +118,125 @@ test("the compact variant (alternatives) uses the smaller value font", () => {
   assert.match(full, /text-\[13px\] font-bold/)
   assert.match(compact, /text-\[12px\] font-bold/)
   assert.doesNotMatch(compact, /text-\[13px\] font-bold/)
+})
+
+test("an alternative without her product: two columns, ALTERNATIVE | ZIEL", () => {
+  const markup = renderToStaticMarkup(<DiscoveryComparisonTable rows={ROWS} compact />)
+  assert.deepEqual(cellsOf(markup, "data-comparison"), ["compact"])
+  assert.match(markup, />Alternative</)
+  assert.doesNotMatch(markup, />Bisheriges Produkt</)
+  assert.doesNotMatch(markup, /data-owned-glyph/)
+  // Empty owned rows are the same as none (Neu-dazu step).
+  const empty = renderToStaticMarkup(
+    <DiscoveryComparisonTable rows={ROWS} compact ownedRows={[]} />,
+  )
+  assert.equal(empty, markup)
+})
+
+test("her own table ignores ownedRows — it stays PRODUKT | ZIEL", () => {
+  const full = renderToStaticMarkup(<DiscoveryComparisonTable rows={ROWS} />)
+  const withOwned = renderToStaticMarkup(<DiscoveryComparisonTable rows={ROWS} ownedRows={ROWS} />)
+  assert.equal(withOwned, full)
+  assert.match(full, />Produkt</)
+})
+
+// --- alternative next to her product (Produktphase T3) -----------------------------
+
+const OWNED: DiscoveryPropertyRow[] = [
+  row({ status: "mismatch", productValue: "trocken" }),
+  row({
+    dimensionId: "conditioner.weight",
+    label: "Pflegegewicht",
+    status: "partial",
+    productValue: "reichhaltig",
+    targetValue: "leicht",
+  }),
+  // An axis only her product has — never shown in the alternative's table.
+  row({
+    dimensionId: "shampoo.silicones",
+    label: "Silikone",
+    status: "match",
+    productValue: "ohne",
+  }),
+]
+
+const ALT: DiscoveryPropertyRow[] = [
+  row({ status: "match", productValue: "fettig" }),
+  row({
+    dimensionId: "conditioner.weight",
+    label: "Pflegegewicht",
+    status: "match",
+    productValue: "leicht",
+    targetValue: "leicht",
+  }),
+  // An axis her product lacks — her cell stays empty.
+  row({
+    dimensionId: "shampoo.cleansing",
+    label: "Reinigung",
+    status: "mismatch",
+    productValue: "stark",
+    targetValue: "mild",
+  }),
+]
+
+function liBodies(markup: string): string[] {
+  return [...markup.matchAll(/<li [\s\S]*?<\/li>/g)].map((match) => match[0])
+}
+
+test("with her product: three columns BISHERIGES PRODUKT | ALTERNATIVE | ZIEL, ZIEL in plum", () => {
+  const markup = renderToStaticMarkup(
+    <DiscoveryComparisonTable rows={ALT} compact ownedRows={OWNED} />,
+  )
+  assert.deepEqual(cellsOf(markup, "data-comparison"), ["compact-owned"])
+  const header = markup.slice(0, markup.indexOf("<ul"))
+  assert.ok(
+    header.indexOf(">Bisheriges Produkt<") < header.indexOf(">Alternative<") &&
+      header.indexOf(">Alternative<") < header.indexOf(">Ziel<"),
+  )
+  assert.match(header, /text-\[var\(--brand-plum\)\][^>]*>Ziel</)
+  assert.match(markup, /grid-cols-\[68px_minmax\(0,1fr\)_minmax\(0,1fr\)_minmax\(0,1fr\)\]/)
+  // Only the alternative's axes, in its order.
+  assert.equal(liBodies(markup).length, 3)
+  assert.doesNotMatch(markup, /Silikone/)
+  // Narrow widths scroll inside the card, never the page.
+  assert.match(markup, /overflow-x-auto/)
+})
+
+test("axes are matched by dimension; a missing axis leaves her cell empty", () => {
+  const markup = renderToStaticMarkup(
+    <DiscoveryComparisonTable rows={ALT} compact ownedRows={OWNED} />,
+  )
+  const [scalp, weight, cleansing] = liBodies(markup)
+  assert.match(scalp!, /data-cell="owned"[^>]*>.*data-owned-glyph="✕".*>trocken</)
+  assert.match(weight!, /data-cell="owned"[^>]*>.*data-owned-glyph="!".*>reichhaltig</)
+  assert.match(cleansing!, /<span aria-hidden="true" data-cell="owned" class="[^"]*"><\/span>/)
+  assert.deepEqual(cellsOf(markup, "data-owned-status"), ["mismatch", "partial", "none"])
+  assert.match(
+    markup,
+    /aria-label="Kopfhaut, passt, bisheriges Produkt: trocken \(passt nicht\), Alternative: fettig, Ziel: fettig"/,
+  )
+  assert.match(markup, /aria-label="Reinigung, passt nicht, Alternative: stark, Ziel: mild"/)
+})
+
+test("row tint and badges follow the alternative; her badge follows her status", () => {
+  const markup = renderToStaticMarkup(
+    <DiscoveryComparisonTable rows={ALT} compact ownedRows={OWNED} />,
+  )
+  assert.deepEqual(cellsOf(markup, "data-status"), ["match", "match", "mismatch"])
+  const [scalp, , cleansing] = liBodies(markup)
+  // Tint on the <li> is the alternative's, even where her product misses.
+  assert.match(scalp!, /^<li [^>]*bg-\[var\(--status-ok-bg\)\]/)
+  assert.match(cleansing!, /^<li [^>]*bg-\[var\(--status-danger-bg\)\]/)
+  // One row glyph per row (the alternative's) plus her glyph where she has the axis.
+  assert.deepEqual(cellsOf(markup, "data-glyph"), ["✓", "✓", "✕"])
+  assert.deepEqual(cellsOf(markup, "data-owned-glyph"), ["✕", "!"])
+  // Filled discs in semantic status colours — never the coral accent.
+  assert.match(
+    scalp!,
+    /data-owned-glyph="✕" class="[^"]*rounded-full[^"]*bg-\[var\(--status-danger-text\)\]/,
+  )
+  assert.match(scalp!, /data-glyph="✓" class="[^"]*rounded-full[^"]*bg-\[var\(--status-ok-text\)\]/)
+  assert.doesNotMatch(markup, /coral/)
 })
 
 test("no rows, no table", () => {
@@ -235,7 +354,7 @@ test("the cockpit shows her product as a comparison table instead of bars and te
     />,
   )
   // Verdict title and badge stay (the title in the cockpit's voice, T4).
-  assert.match(markup, /Passt zu ihrem Haar/)
+  assert.match(markup, /Passt zum Haarprofil/)
   // No slider bars, no batch-4 text rows.
   assert.doesNotMatch(
     markup,
@@ -243,8 +362,10 @@ test("the cockpit shows her product as a comparison table instead of bars and te
   )
   assert.doesNotMatch(markup, /Im Vergleich zum Ziel/)
   assert.doesNotMatch(markup, / statt /)
-  // Her table (4 rows) plus one compact table for the alternative (1 row).
-  assert.deepEqual(cellsOf(markup, "data-comparison"), ["full", "compact"])
+  // Her table (4 rows) plus the alternative's table (1 row) — with her product's column
+  // beside it, since the step carries her verdict rows. Her badges there are
+  // `data-owned-glyph`, so the alternative's glyph count stays 5.
+  assert.deepEqual(cellsOf(markup, "data-comparison"), ["full", "compact-owned"])
   assert.equal(cellsOf(markup, "data-glyph").length, 5)
 })
 

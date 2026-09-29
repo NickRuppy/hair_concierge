@@ -121,7 +121,7 @@ export function composeRunsheetProducts(input: {
 }
 
 export type RunsheetOutsideRoutine = {
-  /** „benutze ich nicht" categories — „— benutzt sie nicht. Keine Entscheidung nötig." */
+  /** „benutze ich nicht" categories — „— nicht benutzt. Keine Entscheidung nötig." */
   declined: PersonalPlanCategory[]
   /** Categories she never answered — „Nicht angegeben: … — im Call fragen." */
   unanswered: PersonalPlanCategory[]

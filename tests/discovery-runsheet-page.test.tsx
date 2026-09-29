@@ -79,7 +79,7 @@ const ids = {
 }
 
 const GTIN = "0850018802659"
-const USES_NOTHING = "Sie benutzt für diesen Schritt aktuell nichts."
+const USES_NOTHING = "Aktuell ohne Produkt in diesem Schritt."
 
 const enrollment: DiscoveryEnrollment = {
   enrollmentId: ids.enrollment,
@@ -344,7 +344,7 @@ test("join rule: her conditioner in research fills the empty conditioner step �
   assert.ok(markup.includes("Klären"))
   assert.ok(markup.includes(`Gescanntes Produkt · ${GTIN}`))
   const entry = entryOf(markup, "Conditioner")
-  assert.ok(entry.includes("Ihr Produkt — noch in Recherche"))
+  assert.ok(entry.includes("Bisheriges Produkt — noch in Recherche"))
   assert.ok(entry.includes(GTIN))
   assert.ok(!entry.includes("Kein Produkt angegeben"))
   assert.ok(!markup.includes(USES_NOTHING))
@@ -368,7 +368,7 @@ test("join rule is display only: the research gate still holds and still blocks 
   const markup = await renderPage()
   // F1/F4: the SAME render shows the item inside its category and still blocks finalising —
   // the gate reads the untouched projection, never the display join.
-  assert.ok(entryOf(markup, "Conditioner").includes("Ihr Produkt — noch in Recherche"))
+  assert.ok(entryOf(markup, "Conditioner").includes("Bisheriges Produkt — noch in Recherche"))
   assert.ok(markup.includes("Erst Recherche abschließen — 1 Produkt noch in Recherche."))
   // It lives in the Klären banner, never in „Nicht in der Idealroutine" (T4 c).
   assert.ok(!footerOf(markup).includes(GTIN))
@@ -414,7 +414,7 @@ test("a call sheet fills the score tile, the staircase and the follow-ups", asyn
   assert.ok(markup.includes("Hebel · von 4 auf 8"))
   assert.ok(markup.includes("Feines, blondiertes Haar mit aufgerauten Längen."))
   assert.ok(markup.includes('value="Schaden stoppen"'))
-  assert.ok(markup.includes("für ihr PDF vorgemerkt"))
+  assert.ok(markup.includes("fürs PDF vorgemerkt"))
   assert.ok(!markup.includes("steht auf ihrem PDF"))
   assert.ok(markup.includes("25.10.2026 · Re-Score-Call"))
   assert.ok(markup.includes("Sehr hilfreich."))
@@ -551,7 +551,7 @@ test("checklist: research with GTIN, bleach cadence and detangling asks from her
   assert.ok(markup.includes(`Recherche abschließen — Gescanntes Produkt · ${GTIN} (Conditioner)`))
   assert.ok(
     markup.includes(
-      "Im Call klären: Färbe-/Blondier-Rhythmus · Kamm oder Bürste, wie sie entwirrt · wo sie einkauft",
+      "Im Call klären: Färbe-/Blondier-Rhythmus · Entwirren (Kamm oder Bürste) · Einkaufsort",
     ),
   )
   // R17: the same asks sit as „kurz fragen" chips in the Hebel card.
@@ -645,7 +645,7 @@ test("join rule (a): an empty step WITH an Idealplan recommendation (`neu`) show
     </AppRouterContext.Provider>,
   )
   const entry = entryOf(markup, "Conditioner")
-  assert.ok(entry.includes("Ihr Produkt — noch in Recherche"))
+  assert.ok(entry.includes("Bisheriges Produkt — noch in Recherche"))
   assert.ok(!entry.includes("Kein Produkt angegeben"))
   assert.ok(!markup.includes(USES_NOTHING))
   assert.ok(markup.includes("Neu: Balea Feuchtigkeitsspülung"))
@@ -774,11 +774,11 @@ test("join rule (c): research in a category whose step is BOUND to her product j
   )
   const entry = entryOf(markup, "Shampoo")
   // The shared verdict title, in the cockpit's neutral voice (verdict-layer T4).
-  assert.ok(entry.includes("Passt nicht zu ihrem Haar"))
+  assert.ok(entry.includes("Passt nicht zum Haarprofil"))
   assert.ok(!entry.includes("noch in Recherche"))
 })
 
-// --- T4 (b): the recipe's „hat sie" counts what she captured, research included -----------
+// --- T4 (b): the recipe's „vorhanden" counts what she captured, research included -----------
 
 /** A personal-plan quiz lead with „Trockene Längen" as her main problem (primary: Conditioner). */
 const dryLengthsLead = {
@@ -805,19 +805,19 @@ function recipePrimaryRow(markup: string, categoryLabel: string): string {
   return row
 }
 
-test("recipe: her scanned conditioner still in research counts as „hat sie“", async () => {
+test("recipe: her scanned conditioner still in research counts as „vorhanden“", async () => {
   const view = buildDiscoveryCockpitView(model())
   assert.ok(discoveryConcernCoverageInput(view).owned.has("conditioner"))
   const markup = await renderPage({ loadQuizLead: async () => dryLengthsLead })
   const row = recipePrimaryRow(markup, "Conditioner")
-  assert.ok(row.includes(">hat sie</span>"), row)
-  assert.ok(!row.includes("hat sie nicht"), row)
-  // Control: without that capture the same row reads „hat sie nicht".
+  assert.ok(row.includes(">vorhanden</span>"), row)
+  assert.ok(!row.includes("nicht vorhanden"), row)
+  // Control: without that capture the same row reads „nicht vorhanden".
   const without = await renderPage({
     loadQuizLead: async () => dryLengthsLead,
     loadModel: async () => model({ items: [shampooItem] }),
   })
-  assert.ok(recipePrimaryRow(without, "Conditioner").includes("hat sie nicht"))
+  assert.ok(recipePrimaryRow(without, "Conditioner").includes("nicht vorhanden"))
 })
 
 test("recipe habits pre-fill with ids from their wording, never their position", async () => {
@@ -890,7 +890,7 @@ test("footer: never names a category that is a step above — only the genuinely
   for (const label of ["Leave-in", "Bondbuilder", "Kopfhautpflege", "Hitzeschutz", "Conditioner"]) {
     assert.ok(!footer.includes(label), `footer names ${label}: ${footer}`)
   }
-  assert.ok(footer.includes("Öl — benutzt sie nicht. Keine Entscheidung nötig."), footer)
+  assert.ok(footer.includes("Öl — nicht benutzt. Keine Entscheidung nötig."), footer)
   // Her product in research lives in the Klären banner only.
   assert.ok(!footer.includes("Noch in Recherche"))
   assert.ok(!footer.includes(GTIN))
@@ -954,7 +954,9 @@ test("footer: nothing genuinely unused — no footer at all", async () => {
 
 test("score helpers: staircase capped at 10, German decimals, strict parsing", () => {
   assert.deepEqual(runsheetScoreSteps(4, [1.5, 1.5, 1]), [4, 5.5, 7, 8])
-  assert.deepEqual(runsheetScoreSteps(8, [3, null]), [8, 10, 10])
+  assert.deepEqual(runsheetScoreSteps(8, [3, null]), [8, 9, 9])
+  // The code does the arithmetic and caps the display at 9; a baseline above stays truthful.
+  assert.deepEqual(runsheetScoreSteps(10, [1]), [10, 10])
   assert.equal(formatRunsheetScore(5.5), "5,5")
   assert.equal(formatRunsheetScore(8), "8")
   assert.equal(parseRunsheetPoints("1,5"), 1.5)
@@ -1023,7 +1025,7 @@ test("checklist lines: one research line per product, the asks on one line", () 
       "Recherche abschließen — Balea Spülung · 4001 (Conditioner)",
       "Baseline-Score abfragen (1–10) und oben eintragen",
       "Consult-Brief prüfen (Diagnose, Hebel, Begründungen)",
-      "Im Call klären: wo sie einkauft",
+      "Im Call klären: Einkaufsort",
     ],
   )
 })
@@ -1146,7 +1148,9 @@ test("prices: legacy data without price fields renders without a price line or a
   const markup = await renderPage({ loadModel: async () => legacyModel })
   assert.ok(markup.includes("Alpha Shampoo"))
   assert.ok(markup.includes("Neu: Balea Feuchtigkeitsspülung"))
-  assert.ok(!markup.includes("€"))
+  // No price anywhere — the locked-in section's zero sum aside (its own tests cover it).
+  const section = lockedInOf(markup)
+  assert.ok(!markup.replace(section, "").includes("€"))
 })
 
 test("prices: the read model carries the Idealplan recommendation's price onto its option", () => {
@@ -1535,6 +1539,9 @@ test("frequency chips: two KEPT 1× shampoos vs 2×/week stay one „passt“ pe
 const SECOND_PERSON_WORD =
   /(^|[^\p{L}])(du|dein|deine|deinem|deinen|deiner|deines|dir|dich)(?=[^\p{L}]|$)/iu
 
+/** Third-person pronouns about the participant (sie, ihr…) — the cockpit is pronoun-free. */
+const THIRD_PERSON_WORD = /(^|[^\p{L}])(sie|ihr|ihre|ihrem|ihren|ihrer|ihres)(?=[^\p{L}]|$)/iu
+
 const DRY_SCALP_FIT =
   "Deine Kopfhaut ist eher trocken. Deshalb eine milde Reinigung, die ihr nicht zusätzlich Fett entzieht."
 const DANDRUFF_TAIL = " Außerdem soll das Shampoo gezielt gegen Schuppen arbeiten."
@@ -1652,18 +1659,26 @@ test("voice: no du/dein in the cockpit's own display outside the quoted exceptio
     SECOND_PERSON_WORD.test(line),
   )
   assert.deepEqual(offenders, [])
+  // Pronoun-free cockpit copy (Nick's ruling 2026-09-29). The consult brief's own lines are
+  // LLM content written about her in the third person on purpose — not cockpit copy.
+  const briefLines = ["Anti-Schuppen trocknet ihre Kopfhaut weiter aus."]
+  const thirdPerson = outsideQuotedExceptions(readableLines(markup), [
+    ...verbatim,
+    ...briefLines,
+  ]).filter((line) => THIRD_PERSON_WORD.test(line))
+  assert.deepEqual(thirdPerson, [])
 
   // The fixture really carried second-person sentences: their neutral variants are on screen.
-  assert.ok(markup.includes("Passt nicht zu ihrem Haar"))
+  assert.ok(markup.includes("Passt nicht zum Haarprofil"))
   assert.ok(
     markup.includes(
-      `Die Kopfhaut ist eher trocken. Deshalb eine milde Reinigung, die ihr nicht zusätzlich Fett entzieht.${DANDRUFF_TAIL}`,
+      `Die Kopfhaut ist eher trocken. Deshalb eine milde Reinigung ohne zusätzlichen Fettentzug.${DANDRUFF_TAIL}`,
     ),
   )
-  assert.ok(markup.includes("Reinigt passend zu ihrer Kopfhaut und ihrer Haaranalyse."))
+  assert.ok(markup.includes("Reinigt passend zu Kopfhaut und Haaranalyse."))
   assert.ok(markup.includes("Regelmäßige Reinigung für die Kopfhaut."))
   assert.ok(
-    markup.includes("Keine Produktvariante deckt ihre Haardicke und Pflegerichtung gemeinsam ab."),
+    markup.includes("Keine Produktvariante deckt Haardicke und Pflegerichtung gemeinsam ab."),
   )
   // …and the exceptions really rendered, so the test exercised them.
   assert.ok(markup.includes("So sagst du es"))
@@ -1705,16 +1720,16 @@ test("voice: the participant's verdict sections render unchanged without the coc
     <ScanVerdictSections result={notNeeded} voice={cockpitVoice} />,
   )
   assert.ok(cockpit.includes("Aktuell kein Trockenshampoo nötig"))
-  assert.ok(cockpit.includes("Kein Trockenshampoo in ihrem Bedarf"))
-  assert.ok(cockpit.includes("Warum sie kein Trockenshampoo braucht"))
+  assert.ok(cockpit.includes("Kein Trockenshampoo im Bedarf"))
+  assert.ok(cockpit.includes("Warum kein Trockenshampoo nötig ist"))
   assert.ok(
-    cockpit.includes(
-      "Der Ansatz fettet nicht so schnell nach, dass sie eine Überbrückung braucht.",
-    ),
+    cockpit.includes("Der Ansatz fettet nicht so schnell nach, dass eine Überbrückung nötig wäre."),
   )
-  assert.ok(cockpit.includes("Ändert sich ihr Haar oder ihre Routine, prüfen wir das neu."))
-  assert.ok(cockpit.includes("Das übernimmt bei ihr:"))
-  const offenders = readableLines(cockpit).filter((line) => SECOND_PERSON_WORD.test(line))
+  assert.ok(cockpit.includes("Ändern sich Haar oder Routine, prüfen wir das neu."))
+  assert.ok(cockpit.includes("Das übernimmt bereits:"))
+  const offenders = readableLines(cockpit).filter(
+    (line) => SECOND_PERSON_WORD.test(line) || THIRD_PERSON_WORD.test(line),
+  )
   assert.deepEqual(offenders, [])
 })
 
@@ -1749,4 +1764,159 @@ test("frequency chips: two 1× shampoos + 3–4× conditioner → both ends say 
   const expected = "3–4×/Wo · Ziel 1–2×/Wo — zu oft"
   assert.ok(entryOf(markup, "Conditioner").includes(expected), entryOf(markup, "Conditioner"))
   assert.ok(phase4Of(markup).includes(expected))
+})
+
+// --- produktphase-lockin T2: „Für den Plan festgehalten" ----------------------------------
+
+/** The locked-in section's markup; "" when the page renders none. */
+function lockedInOf(markup: string): string {
+  const start = markup.indexOf('id="runsheet-locked-in"')
+  return start < 0 ? "" : markup.slice(start, markup.indexOf("</section>", start))
+}
+
+function modelWithDecisions(decisions: DiscoveryCallDecision[]) {
+  return model({ verdicts: pricedVerdicts, decisions })
+}
+
+test("locked-in: sits in Phase 3 right after „Tauschen oder neu“, before Phase 4", async () => {
+  const markup = await renderPage()
+  const swapBucket = markup.indexOf(">Tauschen oder neu</h3>")
+  const section = markup.indexOf('id="runsheet-locked-in"')
+  const phase4 = markup.indexOf('id="runsheet-phase-4"')
+  assert.ok(swapBucket >= 0 && section > swapBucket, `section at ${section}`)
+  assert.ok(phase4 < 0 || section < phase4)
+  assert.ok(section > markup.indexOf('id="runsheet-phase-3"'))
+  assert.ok(lockedInOf(markup).includes(">Für den Plan festgehalten</h3>"))
+})
+
+test("locked-in: nothing decided — four empty groups in order, zero sum, both entries open", async () => {
+  const section = lockedInOf(await renderPage())
+  const groups = ["Neu kaufen", "Behalten", "Weglassen", "Bewusst ohne Produkt"]
+  const positions = groups.map((group) => section.indexOf(`>${group}</p>`))
+  for (const [index, position] of positions.entries()) assert.ok(position >= 0, groups[index])
+  assert.deepEqual(
+    [...positions].sort((a, b) => a - b),
+    positions,
+  )
+  assert.equal(occurrences(section, "Noch nichts festgehalten."), 4)
+  // Pronoun-free labels (Nick, 2026-09-29): no third-person voice left in the section.
+  assert.ok(!/\b(sie|ihr|ihre|ihren)\b/i.test(section.replace(/<[^>]*>/g, " ")), section)
+  assert.ok(section.includes(">Summe neu</span>"))
+  assert.ok(section.includes("0,00 €"))
+  assert.ok(section.includes("2 Schritte noch nicht entschieden."))
+  assert.ok(!section.includes("bereit für Phase 4"))
+})
+
+test("locked-in: stored decisions — the swap is bought with its price, the empty step goes without", async () => {
+  const markup = await renderPage({
+    loadModel: async () =>
+      modelWithDecisions([
+        {
+          decisionKey: shampooStep.decisionKey,
+          intakeItemId: ids.shampooItem,
+          decision: "swap",
+          swapProductId: priced.a,
+        },
+        {
+          decisionKey: conditionerStep.decisionKey,
+          intakeItemId: null,
+          decision: "keep",
+          swapProductId: null,
+        },
+      ]),
+  })
+  const section = lockedInOf(markup)
+  const buy = section.slice(section.indexOf(">Neu kaufen<"), section.indexOf(">Behalten<"))
+  assert.ok(buy.includes("Alpha Shampoo"), buy)
+  assert.ok(buy.includes(">Shampoo</span>"))
+  assert.ok(buy.includes("9,95 €"))
+  const skip = section.slice(
+    section.indexOf(">Bewusst ohne Produkt<"),
+    section.indexOf(">Summe neu<"),
+  )
+  assert.ok(skip.includes(">Conditioner</span>"), skip)
+  assert.ok(skip.includes("Schritt bleibt offen"))
+  const keep = section.slice(section.indexOf(">Behalten<"), section.indexOf(">Weglassen<"))
+  assert.ok(keep.includes("Noch nichts festgehalten."))
+  assert.ok(section.includes('id="runsheet-locked-in-total" class="ml-auto tabular-nums">9,95 €<'))
+  assert.ok(section.includes("Alle Schritte entschieden — bereit für Phase 4."))
+})
+
+test("locked-in: a kept product of hers lands under „Behalten“", async () => {
+  const markup = await renderPage({
+    loadModel: async () =>
+      modelWithDecisions([
+        {
+          decisionKey: shampooStep.decisionKey,
+          intakeItemId: ids.shampooItem,
+          decision: "keep",
+          swapProductId: null,
+        },
+      ]),
+  })
+  const section = lockedInOf(markup)
+  const keep = section.slice(section.indexOf(">Behalten<"), section.indexOf(">Weglassen<"))
+  assert.ok(keep.includes("Sebamed"), keep)
+  assert.ok(section.includes("1 Schritt noch nicht entschieden."))
+})
+
+test("locked-in: a dropped product of hers lands under „Weglassen“ by name, not „Bewusst ohne Produkt“", async () => {
+  const markup = await renderPage({
+    loadModel: async () =>
+      modelWithDecisions([
+        {
+          decisionKey: shampooStep.decisionKey,
+          intakeItemId: ids.shampooItem,
+          decision: "drop",
+          swapProductId: null,
+        },
+      ]),
+  })
+  const section = lockedInOf(markup)
+  const discard = section.slice(
+    section.indexOf(">Weglassen<"),
+    section.indexOf(">Bewusst ohne Produkt<"),
+  )
+  assert.ok(discard.includes("Sebamed"), discard)
+  assert.ok(discard.includes(">Shampoo</span>"), discard)
+  const skip = section.slice(
+    section.indexOf(">Bewusst ohne Produkt<"),
+    section.indexOf(">Summe neu<"),
+  )
+  assert.ok(!skip.includes("Sebamed"), skip)
+  assert.ok(skip.includes("Noch nichts festgehalten."), skip)
+})
+
+test("locked-in: a product without a price — no price on the row, the sum reads „ab …“", async () => {
+  const markup = await renderPage({
+    loadModel: async () =>
+      modelWithDecisions([
+        {
+          decisionKey: shampooStep.decisionKey,
+          intakeItemId: ids.shampooItem,
+          decision: "swap",
+          swapProductId: priced.b,
+        },
+      ]),
+  })
+  const section = lockedInOf(markup)
+  const buy = section.slice(section.indexOf(">Neu kaufen<"), section.indexOf(">Behalten<"))
+  assert.ok(buy.includes("Beta Shampoo"), buy)
+  assert.ok(!buy.includes("€"))
+  // Every buy price unknown: no fake zero lower bound (Codex F2).
+  assert.ok(section.includes(">Preis noch offen<"))
+})
+
+test("locked-in: the copy button is the coral CTA, in the cockpit's own voice", async () => {
+  const section = lockedInOf(await renderPage())
+  assert.ok(
+    section.includes(
+      'id="runsheet-locked-in-copy" type="button" class="rounded-lg bg-[var(--brand-coral)]',
+    ),
+  )
+  assert.ok(section.includes(">Liste kopieren</button>"))
+  // Plum marks the section; coral appears only on the CTA.
+  assert.equal(occurrences(section, "--brand-coral"), 1)
+  assert.ok(section.includes("text-[var(--brand-plum)]"))
+  assert.ok(!SECOND_PERSON_WORD.test(readableLines(section).join("\n")))
 })

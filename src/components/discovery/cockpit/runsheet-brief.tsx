@@ -10,6 +10,7 @@ import {
   type DiscoveryCallSheetHabitCommitment,
   type DiscoveryCallSheetPatch,
 } from "@/lib/discovery/call-sheet"
+import { CONSULT_SCORE_TARGET_CAP } from "@/lib/discovery/consult-brief/lint"
 
 import {
   RunsheetCard,
@@ -53,7 +54,7 @@ const OPENING_TITLE = "Eröffnen"
 const OPENING_SUMMARY = "Gesprächseinstieg"
 const OPENING_SCRIPT = [
   "Wer ich bin: entwickle das Produkt, habe viele Routinen gebaut.",
-  "Ziel heute: ein Plan für gesünderes, schöneres Haar — von ihrem heutigen Score Richtung 10. Haar ist komplex, Unsicherheit ist normal.",
+  "Ziel heute: ein Plan für gesünderes, schöneres Haar — vom heutigen Score Richtung 10. Haar ist komplex, Unsicherheit ist normal.",
   "Ergebnis: ein PDF mit kompletter Routine — Produkte, Reihenfolge, Häufigkeit. „Passt das so für dich?“",
   "Score live abfragen und oben eintragen, falls noch offen.",
 ]
@@ -73,8 +74,8 @@ const HEBEL_FOOTNOTE = "Erfahrungswerte — grobe Orientierung, keine Messung."
 const ASK_PREFIX = "kurz fragen:"
 const HABITS_TITLE = "Gewohnheiten"
 const HABITS_EMPTY = "Noch keine Gewohnheiten erfasst."
-const HABITS_FROM_RECIPE = "Vorschläge aus dem Rezept für ihr Hauptproblem — im Call abhaken."
-const HABIT_ON_PDF = "für ihr PDF vorgemerkt"
+const HABITS_FROM_RECIPE = "Vorschläge aus dem Rezept fürs Hauptproblem — im Call abhaken."
+const HABIT_ON_PDF = "fürs PDF vorgemerkt"
 const HABIT_NEW_PLACEHOLDER = "Weitere Gewohnheit"
 const HABIT_ADD = "Hinzufügen"
 
@@ -337,15 +338,19 @@ export function parseRunsheetBaseline(value: string): number | null {
 }
 
 /**
- * The staircase: baseline, then the running total after each Hebel, capped at the scale's
- * 10. The last value is the „Mit Plan" target.
+ * The staircase: baseline, then the running total after each Hebel. The code does this
+ * arithmetic, never the model, and caps at 9 (G3: a 10 is never held out). The last value is
+ * the „Mit Plan" target.
  */
 export function runsheetScoreSteps(
   baseline: number,
   points: ReadonlyArray<number | null>,
 ): number[] {
+  // A baseline already above the cap stays what it is — the cap limits the promise, not
+  // the truth; the ladder then just never climbs further.
+  const cap = Math.max(CONSULT_SCORE_TARGET_CAP, baseline)
   const steps = [baseline]
-  for (const value of points) steps.push(Math.min(10, steps.at(-1)! + (value ?? 0)))
+  for (const value of points) steps.push(Math.min(cap, steps.at(-1)! + (value ?? 0)))
   return steps
 }
 

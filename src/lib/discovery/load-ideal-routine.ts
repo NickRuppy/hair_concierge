@@ -65,7 +65,7 @@ export type DiscoveryStepDepth = {
   targetType: string | null
   /** „Worauf es ankommt". */
   productCriteria: string | null
-  /** „Warum das zu ihrem Haar passt" (the engine's own second-person sentence). */
+  /** Cockpit depth „Warum das passt" (the engine's own second-person sentence). */
   fit: string | null
   /** When in the wash routine („Nach Shampoo"). */
   timingLabel: string | null
