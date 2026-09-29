@@ -41,6 +41,7 @@ import {
 import { cockpitVoice } from "../src/lib/discovery/cockpit-copy"
 import { discoveryConcernCoverageInput } from "../src/lib/discovery/concern-recipe-view"
 import { concernRecipeFor } from "../src/lib/discovery/concern-recipes"
+import { consultBriefSource } from "../src/lib/discovery/consult-brief/source"
 import type { DiscoveryEnrollment } from "../src/lib/discovery/enrollment"
 import type { DiscoveryIdealStep } from "../src/lib/discovery/load-ideal-routine"
 import type { DiscoveryParticipantVerdict } from "../src/lib/discovery/load-participant-verdicts"
@@ -420,6 +421,105 @@ test("a call sheet fills the score tile, the staircase and the follow-ups", asyn
   assert.ok(!markup.includes("Baseline-Score abfragen"))
 })
 
+// --- consult-agent T4: generate button + stale hint ------------------------------------------
+
+const STALE_HINT = "Eingaben haben sich geändert — Brief neu generieren?"
+
+/** The call sheet as generated from exactly what the page reads (the shared helper's hash). */
+function generatedCallSheet(sourceHash: string): DiscoveryCallSheet {
+  return {
+    ...callSheet,
+    consultBrief: {
+      ...callSheet.consultBrief!,
+      generated_at: "2026-09-28T08:00:00.000Z",
+      generated_by: "agent",
+      source_hash: sourceHash,
+    },
+  }
+}
+
+function pageHash(): string {
+  const cockpitModel = model()
+  return consultBriefSource({
+    model: cockpitModel,
+    view: buildDiscoveryCockpitView(cockpitModel),
+    quiz: buildDiscoveryQuizAnswers(null),
+    callSheet,
+  }).sourceHash
+}
+
+test("generate button: „Brief erstellen“ for a legacy enrollment, „Neu generieren“ once generated", async () => {
+  const legacy = await renderPage()
+  assert.match(legacy, /id="runsheet-brief-generate"[^>]*>Brief erstellen</)
+  assert.ok(!legacy.includes(STALE_HINT))
+  const generated = await renderPage({
+    loadCallSheet: async () => generatedCallSheet(pageHash()),
+  })
+  assert.match(generated, /id="runsheet-brief-generate"[^>]*>Neu generieren</)
+  // It sits in Phase 2, before the Diagnose.
+  const phase2 = generated.indexOf('id="runsheet-phase-2"')
+  const button = generated.indexOf('id="runsheet-brief-generate"')
+  assert.ok(phase2 >= 0 && button > phase2 && button < generated.indexOf('id="runsheet-diagnose"'))
+})
+
+test("stale hint: only when the stored hash differs from the page's own fingerprint", async () => {
+  const fresh = await renderPage({ loadCallSheet: async () => generatedCallSheet(pageHash()) })
+  assert.ok(!fresh.includes(STALE_HINT), "same inputs: the brief is current")
+  const stale = await renderPage({ loadCallSheet: async () => generatedCallSheet("older-hash") })
+  assert.ok(stale.includes(STALE_HINT))
+})
+
+test("stale hint: hidden when the page read degraded (quiz lead unread)", async () => {
+  const original = console.error
+  console.error = () => {}
+  try {
+    const markup = await renderPage({
+      loadCallSheet: async () => generatedCallSheet("older-hash"),
+      loadQuizLead: async () => {
+        throw new Error("lead read failed")
+      },
+    })
+    assert.ok(!markup.includes(STALE_HINT))
+    // The button stays: the route reads for itself.
+    assert.match(markup, /id="runsheet-brief-generate"[^>]*>Neu generieren</)
+  } finally {
+    console.error = original
+  }
+})
+
+test("brief lists: the stored Ziel-Lücken, Call-Fragen and Erwartungen show in Phase 2", async () => {
+  const withLists: DiscoveryCallSheet = {
+    ...generatedCallSheet(pageHash()),
+    consultBrief: {
+      ...generatedCallSheet(pageHash()).consultBrief!,
+      sections: {
+        ...callSheet.consultBrief!.sections,
+        callFragen: ["Wie oft glättest du?"],
+        erwartungen: ["Erste Wirkung nach 4 Wochen", "Im Zweifel ärztlich abklären lassen."],
+      },
+    },
+  }
+  const markup = await renderPage({ loadCallSheet: async () => withLists })
+  const phase2 = markup.slice(
+    markup.indexOf('id="runsheet-phase-2"'),
+    markup.indexOf('id="runsheet-brief-save"'),
+  )
+  assert.ok(phase2.includes(">Für den Call<"))
+  assert.ok(phase2.includes("Ziel „Form &amp; Halt“: offen ansprechen."))
+  assert.ok(phase2.includes("Wie oft glättest du?"))
+  assert.ok(phase2.includes("Im Zweifel ärztlich abklären lassen."))
+})
+
+test("R14: a draft intake shows the generate button disabled with its reason", async () => {
+  const draft = await renderPage({
+    loadIntake: async () => ({ ...intake, state: "draft", submittedAt: null }),
+  })
+  assert.match(draft, /id="runsheet-brief-generate" type="button" disabled=""/)
+  assert.ok(draft.includes("Erst möglich, wenn die Checkliste abgeschickt ist."))
+  const submitted = await renderPage()
+  assert.ok(!/id="runsheet-brief-generate" type="button" disabled=""/.test(submitted))
+})
+
 test("a failing call-sheet read leaves the runsheet empty instead of failing the call", async () => {
   const original = console.error
   console.error = () => {}
@@ -439,6 +539,8 @@ test("a failing call-sheet read leaves the runsheet empty instead of failing the
     )
     assert.match(markup, /id="runsheet-brief-save" type="button" disabled=""/)
     assert.match(markup, /id="runsheet-follow-up-save" type="button" disabled=""/)
+    // T4: generating is locked too — its expected_state would be a guess.
+    assert.match(markup, /id="runsheet-brief-generate" type="button" disabled=""/)
   } finally {
     console.error = original
   }

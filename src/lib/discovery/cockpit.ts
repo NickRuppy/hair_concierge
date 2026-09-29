@@ -34,6 +34,10 @@ import {
   type DiscoveryHeatStylingV1,
 } from "./heat-styling"
 import {
+  discoveryConsultSnapshotFacts,
+  type DiscoveryConsultSnapshotFacts,
+} from "./consult-brief/snapshot-facts"
+import {
   discoveryConcernProfileFacts,
   discoveryHairElasticity,
   type DiscoveryConcernProfileFacts,
@@ -419,6 +423,12 @@ export type DiscoveryCockpitModel = {
    * Absent for a model composed without it (tests); null when it cannot be read.
    */
   hairElasticity?: string | null
+  /**
+   * The consult brief's snapshot facts off the same snapshot (consult-agent T2: concerns,
+   * scalp concerns, heat tools, wash cadence, hair-loss boundary). Absent for a model composed
+   * without it (tests); every field unknown then.
+   */
+  consultFacts?: DiscoveryConsultSnapshotFacts
   /** Her „Hitze & Styling" answers (batch 7); null/absent = not asked. */
   heatStyling?: DiscoveryHeatStylingV1 | null
   /** Whether the Idealroutine ran on her checklist answers (batch 7, discovery-only). */
@@ -643,6 +653,7 @@ export async function loadDiscoveryCockpitModel(
     application,
     concernProfileFacts: discoveryConcernProfileFacts(ideal.context?.snapshot),
     hairElasticity: discoveryHairElasticity(ideal.context?.snapshot),
+    consultFacts: discoveryConsultSnapshotFacts(ideal.context?.snapshot),
     heatStyling,
     routineSource: ideal.routineSource ?? "quiz_only",
     heatProtectionDeferred: ideal.heatProtectionDeferred === true,
