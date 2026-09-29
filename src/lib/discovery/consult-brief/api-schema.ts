@@ -51,8 +51,9 @@ export function consultBriefJsonSchemaFormat(
     schema: {
       type: "object",
       additionalProperties: false,
-      required: ["diagnose", "hebel", "swapReasons", "zielLuecken", "callFragen", "erwartungen"],
+      required: ["mechanik", "diagnose", "hebel", "swapReasons", "callFragen", "erwartungen"],
       properties: {
+        mechanik: { type: "string" },
         diagnose: { type: "string" },
         hebel: {
           type: "array",
@@ -61,7 +62,7 @@ export function consultBriefJsonSchemaFormat(
           items: {
             type: "object",
             additionalProperties: false,
-            required: ["title", "note", "points"],
+            required: ["title", "note", "points", "bucket"],
             properties: {
               title: { type: "string" },
               note: { type: "string" },
@@ -70,6 +71,7 @@ export function consultBriefJsonSchemaFormat(
                 minimum: CONSULT_BRIEF_POINTS_MIN,
                 maximum: CONSULT_BRIEF_POINTS_MAX,
               },
+              bucket: { type: "string", enum: ["produkt", "umgang"] },
             },
           },
         },
@@ -83,7 +85,6 @@ export function consultBriefJsonSchemaFormat(
             properties: { key, reason: { type: "string" } },
           },
         },
-        zielLuecken: stringArray(),
         callFragen: stringArray({
           minItems: CONSULT_BRIEF_CALL_FRAGEN_MIN,
           maxItems: CONSULT_BRIEF_CALL_FRAGEN_MAX,

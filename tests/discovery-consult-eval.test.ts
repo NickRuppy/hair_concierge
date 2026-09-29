@@ -86,7 +86,11 @@ test("the recorded real answer passes the generator's parse, schema and lint pat
 
   // The stored shape: array → record converted, boundary line appended in code.
   const parsed = consultBriefSectionsSchema.parse(toConsultBriefSections(JSON.parse(recorded.raw)))
-  const brief = { ...parsed, erwartungen: withBoundaryLine(parsed.erwartungen) }
+  const brief = {
+    ...parsed,
+    zielLuecken: [],
+    erwartungen: withBoundaryLine(parsed.erwartungen),
+  }
   assert.deepEqual(lintConsultBrief(brief, nomi.input), [])
   assert.equal(brief.erwartungen.at(-1), CONSULT_BOUNDARY_LINE)
   assert.ok("brief" in result && result.brief.erwartungen.at(-1) === CONSULT_BOUNDARY_LINE)
@@ -101,6 +105,16 @@ test("the eval's checks find nothing in the recorded answer (JSON mode: a bare o
 test("the eval's checks catch broken answers", () => {
   assert.deepEqual(checks("```json\n{}\n```"), ["json"])
   assert.ok(checks(mutated((brief) => delete brief.callFragen)).includes("schema"))
+  // v4 (R26): mechanik and a bucket on every Hebel are required; zielLuecken is refused.
+  assert.ok(checks(mutated((brief) => delete brief.mechanik)).includes("schema"))
+  assert.ok(
+    checks(
+      mutated((brief) => {
+        delete (brief.hebel as Array<{ bucket?: string }>)[0]!.bucket
+      }),
+    ).includes("schema"),
+  )
+  assert.ok(checks(mutated((brief) => (brief.zielLuecken = []))).includes("schema"))
 
   // The boundary line is appended in code, so a raw answer without it is not a finding —
   // the evaluated brief still ends with it.
@@ -118,7 +132,7 @@ test("the eval's checks catch broken answers", () => {
   assert.deepEqual(
     checks(
       mutated((brief) => {
-        brief.hebel = [{ title: "Zu wenig", note: "Nur ein Hebel.", points: 1 }]
+        brief.hebel = [{ title: "Zu wenig", note: "Nur ein Hebel.", points: 1, bucket: "umgang" }]
       }),
     ),
     ["schema"],
@@ -154,18 +168,28 @@ test("the eval's checks catch broken answers", () => {
 
   const english = checks(
     mutated((brief) => {
+      brief.mechanik = "Dry ends usually come from heat, friction and too little moisture."
       brief.diagnose = "She has fine hair and it is not the product that is the problem."
       brief.hebel = [
-        { title: "Less heat", note: "Use the iron less often.", points: 1 },
-        { title: "Detangle gently", note: "Start at the ends and work upwards.", points: 1 },
-        { title: "Conditioner", note: "Use it after every wash for slip.", points: 1 },
+        { title: "Less heat", note: "Use the iron less often.", points: 1, bucket: "umgang" },
+        {
+          title: "Detangle gently",
+          note: "Start at the ends and work upwards.",
+          points: 1,
+          bucket: "umgang",
+        },
+        {
+          title: "Conditioner",
+          note: "Use it after every wash for slip.",
+          points: 1,
+          bucket: "produkt",
+        },
       ]
       brief.callFragen = [
         "How often do you use the iron?",
         "How do you detangle your hair?",
         "Where do you buy your hair care?",
       ]
-      brief.zielLuecken = []
       brief.swapReasons = {}
       brief.erwartungen = [CONSULT_BOUNDARY_LINE]
     }),
@@ -179,4 +203,11 @@ test("with a hair-loss trigger, a loss sentence naming a product is flagged", ()
     brief.diagnose = `${brief.diagnose} Gegen den Ausfall hilft das Lockenhof Curl Leave-in.`
   })
   assert.ok(checks(raw, curly).includes("hair_loss_product"))
+})
+
+test("a prompt-contract bump makes every stored brief stale (Codex review, v4)", () => {
+  const { input } = consultGoldenSource(consultGoldenProfile("nomi"))
+  const current = consultSourceHash(input)
+  assert.equal(current, consultSourceHash(input, CONSULT_BRIEF_PROMPT_VERSION))
+  assert.notEqual(current, consultSourceHash(input, "consult-brief-v3"))
 })

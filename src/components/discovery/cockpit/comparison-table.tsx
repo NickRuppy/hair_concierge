@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils"
  * Deliberately without the iOS info column: the cockpit has no explanation overlay (yet).
  * `compact` is the alternatives' variant (smaller value font, „Alternative" column), as on
  * iOS; with `ownedRows` it becomes the three-column „Bisheriges Produkt | Alternative | Ziel".
+ * `productHeader` renames the product column only (F1: „Empfohlenes Produkt" for the
+ * Idealplan's own recommendation) — same table, same design.
  */
 
 const STATUS: Record<
@@ -110,6 +112,7 @@ export function DiscoveryComparisonTable({
   rows,
   compact = false,
   ownedRows = null,
+  productHeader: productHeaderOverride,
 }: {
   rows: readonly DiscoveryPropertyRow[]
   /** The alternatives' variant: smaller value font, product column headed „Alternative". */
@@ -121,13 +124,17 @@ export function DiscoveryComparisonTable({
    * stays the alternative's status.
    */
   ownedRows?: readonly DiscoveryPropertyRow[] | null
+  /** The product column's header, e.g. „Empfohlenes Produkt"; defaults by variant. */
+  productHeader?: string
 }) {
   if (rows.length === 0) return null
   const owned = compact ? ownedByDimension(ownedRows) : null
-  if (owned) return <ComparisonWithOwned rows={rows} owned={owned} />
+  if (owned) {
+    return <ComparisonWithOwned rows={rows} owned={owned} productHeader={productHeaderOverride} />
+  }
   const gap = compact ? "gap-x-1.5" : "gap-x-2"
   const valueSize = compact ? "text-[12px]" : "text-[13px]"
-  const productHeader = compact ? ALTERNATIVE_HEADER : "Produkt"
+  const productHeader = productHeaderOverride ?? (compact ? ALTERNATIVE_HEADER : "Produkt")
   return (
     <div
       data-comparison={compact ? "compact" : "full"}
@@ -194,10 +201,14 @@ export function DiscoveryComparisonTable({
 function ComparisonWithOwned({
   rows,
   owned,
+  productHeader,
 }: {
   rows: readonly DiscoveryPropertyRow[]
   owned: Map<string, DiscoveryPropertyRow>
+  /** Middle-column header; defaults to „Alternative" (F1: „Empfohlenes Produkt"). */
+  productHeader?: string
 }) {
+  const middleHeader = productHeader ?? ALTERNATIVE_HEADER
   const gap = "gap-x-1.5"
   return (
     <div
@@ -216,7 +227,7 @@ function ComparisonWithOwned({
           >
             <span />
             <span>{OWNED_HEADER}</span>
-            <span>{ALTERNATIVE_HEADER}</span>
+            <span>{middleHeader}</span>
             <span className="text-[var(--brand-plum)]">{TARGET_HEADER}</span>
           </div>
           <ul className="divide-y divide-border border-t border-border">
@@ -232,7 +243,7 @@ function ComparisonWithOwned({
                   key={row.dimensionId}
                   data-status={row.status}
                   data-owned-status={hers?.status ?? "none"}
-                  aria-label={`${row.label}, ${status.label}${hersAria}, ${ALTERNATIVE_HEADER}: ${row.productValue ?? UNAVAILABLE}, ${TARGET_ARIA}: ${row.targetValue ?? UNAVAILABLE}`}
+                  aria-label={`${row.label}, ${status.label}${hersAria}, ${middleHeader}: ${row.productValue ?? UNAVAILABLE}, ${TARGET_ARIA}: ${row.targetValue ?? UNAVAILABLE}`}
                   className={cn(GRID_WITH_OWNED, gap, "min-h-[52px] px-2.5 py-2.5", status.surface)}
                 >
                   <span

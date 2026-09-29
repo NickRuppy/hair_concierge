@@ -152,9 +152,16 @@ function fakeRouter() {
 
 const ENROLLMENT = "3f1a6f2e-2b44-4a1e-9a1a-6f2e2b444a1e"
 
+// Stored order = the model's impact ranking (Umgang first); the island DISPLAYS Produkte
+// before Umgang, so the display/save order differs from this array.
+// `zielLuecken` is the pre-v4 field: never shown or edited, but it must survive a save.
 const sections: DiscoveryCallSheetBriefSections = {
+  mechanik: "Trockene Längen entstehen meist durch Hitze und Reibung.",
   diagnose: "Feines Haar.",
-  hebel: [{ title: "Schaden stoppen", note: "Hitzeschutz", points: 2 }],
+  hebel: [
+    { title: "Schaden stoppen", note: "Hitzeschutz", points: 2, bucket: "umgang" },
+    { title: "Mildes Shampoo", note: "Sanftwerk statt Glanzwerk", points: 1, bucket: "produkt" },
+  ],
   swapReasons: { "decision:shampoo:shampoo_everyday:gap": "Zu reichhaltig." },
   zielLuecken: ["Kein Hitzeschutz"],
   callFragen: ["Wie oft glättest du?"],
@@ -187,7 +194,7 @@ function briefProps(overrides: Record<string, unknown> = {}) {
 
 // --- the brief ---------------------------------------------------------------------------
 
-test("brief save: PATCHes score, the edited brief with every other section carried through, and the commitments", async () => {
+test("brief save: PATCHes score, the edited brief (Mechanik, bucketed Hebel, stored zielLuecken carried through), and the commitments", async () => {
   const { router, refreshes } = fakeRouter()
   const props = briefProps()
   const render = createHarness(() => DiscoveryRunsheetBrief(props), router)
@@ -218,7 +225,17 @@ test("brief save: PATCHes score, the edited brief with every other section carri
       consult_brief: {
         sections: {
           ...sections,
-          hebel: [{ title: "Schaden stoppen", note: "Hitzeschutz", points: 1.5 }],
+          // Display order (Produkte, then Umgang), with each row's bucket; zielLuecken
+          // comes through the spread untouched.
+          hebel: [
+            {
+              title: "Mildes Shampoo",
+              note: "Sanftwerk statt Glanzwerk",
+              points: 1,
+              bucket: "produkt",
+            },
+            { title: "Schaden stoppen", note: "Hitzeschutz", points: 1.5, bucket: "umgang" },
+          ],
         },
         generated_at: "2026-09-27T10:00:00.000Z",
         generated_by: "manual",
@@ -309,8 +326,8 @@ test("hebel rows keep their DOM ids when a row above is removed", () => {
     initialSections: {
       ...sections,
       hebel: [
-        { title: "Eins", note: "", points: 1 },
-        { title: "Zwei", note: "", points: 2 },
+        { title: "Eins", note: "", points: 1, bucket: "produkt" },
+        { title: "Zwei", note: "", points: 2, bucket: "produkt" },
       ],
     },
   })
@@ -333,9 +350,10 @@ test("hebel rows keep their DOM ids when a row above is removed", () => {
 test("brief patch: empty score clears it, German decimals parse, bad points are refused", () => {
   const state: RunsheetBriefState = {
     baselineText: " ",
+    mechanik: "M",
     diagnose: "x",
-    hebel: [{ uid: "a", title: "T", note: "N", points: "0,5" }],
-    lists: { zielLuecken: [], callFragen: [], erwartungen: [] },
+    hebel: [{ uid: "a", title: "T", note: "N", points: "0,5", bucket: "umgang" }],
+    lists: { callFragen: [], erwartungen: [] },
     commitments: [],
   }
   const meta = { sections, generatedAt: null, sourceHash: null }
@@ -343,8 +361,11 @@ test("brief patch: empty score clears it, German decimals parse, bad points are 
   assert.ok("patch" in built)
   assert.equal(built.patch.baseline_score, null)
   assert.deepEqual(built.patch.consult_brief!.sections.hebel, [
-    { title: "T", note: "N", points: 0.5 },
+    { title: "T", note: "N", points: 0.5, bucket: "umgang" },
   ])
+  assert.equal(built.patch.consult_brief!.sections.mechanik, "M")
+  // zielLuecken is not edited any more: the stored lines ride along via the spread.
+  assert.deepEqual(built.patch.consult_brief!.sections.zielLuecken, ["Kein Hitzeschutz"])
   assert.equal(built.patch.consult_brief!.generated_by, "manual")
 
   const bad = runsheetBriefPatch(
@@ -379,8 +400,11 @@ function generateBar(tree: ReactNode): AnyElement {
 const GENERATED_AT = "2026-09-28T08:00:00.000Z"
 const generatedSections: DiscoveryCallSheetBriefSections = {
   ...sections,
+  mechanik: "Generierte Mechanik.",
   diagnose: "Generierte Diagnose.",
-  hebel: [{ title: "Generierter Hebel", note: "Neu", points: 1 }],
+  hebel: [{ title: "Generierter Hebel", note: "Neu", points: 1, bucket: "produkt" }],
+  // Code-owned since v4: a generation always stores no gaps.
+  zielLuecken: [],
 }
 
 function generatedSheet(overrides: Partial<DiscoveryCallSheet> = {}): DiscoveryCallSheet {
@@ -402,6 +426,7 @@ function generatedSheet(overrides: Partial<DiscoveryCallSheet> = {}): DiscoveryC
       },
     },
     habitCommitments: [],
+    complexity: null,
     feedback: null,
     ...overrides,
   }
@@ -438,6 +463,7 @@ test("generate: POSTs expected_state of the loaded brief and takes the new brief
     })
 
     tree = render()
+    assert.equal(byId(tree, "runsheet-mechanik").props.value, "Generierte Mechanik.")
     assert.equal(byId(tree, "runsheet-diagnose").props.value, "Generierte Diagnose.")
     assert.equal(byId(tree, "runsheet-hebel-g0-0-title").props.value, "Generierter Hebel")
     assert.equal(saveBar(tree).props.dirty, false)
@@ -461,8 +487,12 @@ test("generate: POSTs expected_state of the loaded brief and takes the new brief
       assert.equal(brief.source_hash, "fresh-hash")
       assert.equal(brief.generated_by, "manual")
       assert.deepEqual((brief.sections as DiscoveryCallSheetBriefSections).hebel, [
-        { title: "Generierter Hebel", note: "Neu", points: 1 },
+        { title: "Generierter Hebel", note: "Neu", points: 1, bucket: "produkt" },
       ])
+      assert.equal(
+        (brief.sections as DiscoveryCallSheetBriefSections).mechanik,
+        "Generierte Mechanik.",
+      )
       assert.ok(!("previous" in brief), "a manual save never sends the revision")
     } finally {
       saveStub.restore()
@@ -507,6 +537,7 @@ test("generate: a legacy enrollment without a brief says „Brief erstellen“ a
   const props = briefProps({
     initialBaseline: null,
     initialSections: {
+      mechanik: "",
       diagnose: "",
       hebel: [],
       swapReasons: {},
@@ -918,21 +949,25 @@ test("generate helpers: expected state, R15 warning, error lines, apply", () => 
 
   const state: RunsheetBriefState = {
     baselineText: "5",
+    mechanik: "alte Mechanik",
     diagnose: "alt",
     hebel: [],
-    lists: { zielLuecken: [], callFragen: [], erwartungen: [] },
+    lists: { callFragen: [], erwartungen: [] },
     commitments: [{ id: "h", label: "H", committed: true }],
   }
   const next: RunsheetBriefState = {
     baselineText: "4",
+    mechanik: "neue Mechanik",
     diagnose: "neu",
-    hebel: [{ uid: "g0-0", title: "T", note: "", points: "1" }],
-    lists: { zielLuecken: [], callFragen: [{ uid: "g0-f-0", text: "Frage?" }], erwartungen: [] },
+    hebel: [{ uid: "g0-0", title: "T", note: "", points: "1", bucket: "produkt" }],
+    lists: { callFragen: [{ uid: "g0-f-0", text: "Frage?" }], erwartungen: [] },
     commitments: [],
   }
-  // The brief's content (Diagnose, Hebel, lists) is replaced; score and commitments stay.
+  // The brief's content (Mechanik, Diagnose, Hebel, lists) is replaced; score and
+  // commitments stay.
   assert.deepEqual(applyGeneratedRunsheetBrief(state, next), {
     ...state,
+    mechanik: "neue Mechanik",
     diagnose: "neu",
     hebel: next.hebel,
     lists: next.lists,
@@ -941,10 +976,14 @@ test("generate helpers: expected state, R15 warning, error lines, apply", () => 
 
 // --- the brief's lists + server stamp + R14 (consult-agent final review) -------------------
 
-test("brief lists: Ziel-Lücken, Call-Fragen and Erwartungen render editable from the stored brief", () => {
+test("brief lists: Call-Fragen and Erwartungen render editable; the Ziel-Lücken list is gone (v4)", () => {
   const { router } = fakeRouter()
   const tree = createHarness(() => DiscoveryRunsheetBrief(briefProps()), router)()
-  assert.equal(byId(tree, "runsheet-zielLuecken-s0-z-0").props.value, "Kein Hitzeschutz")
+  assert.equal(
+    findAll(tree, (element) => String(element.props.id ?? "").startsWith("runsheet-zielLuecken"))
+      .length,
+    0,
+  )
   assert.equal(byId(tree, "runsheet-callFragen-s0-f-0").props.value, "Wie oft glättest du?")
   assert.equal(byId(tree, "runsheet-erwartungen-s0-e-0").props.value, "Erste Wirkung nach 4 Wochen")
 })
@@ -965,9 +1004,6 @@ test("brief lists: edits mark the brief dirty (R15) and the save round-trips the
       target: { value: "Bei stärkerem Haarausfall ärztlich abklären lassen." },
     })
     tree = render()
-    // A never-filled row is dropped on save and changes nothing.
-    byId(tree, "runsheet-zielLuecken-add").props.onClick()
-    tree = render()
     assert.equal(saveBar(tree).props.dirty, true)
 
     // A list edit is a brief edit: generating asks first.
@@ -982,6 +1018,7 @@ test("brief lists: edits mark the brief dirty (R15) and the save round-trips the
     const brief = (
       fetchStub.calls[0]!.body as { consult_brief: { sections: Record<string, unknown> } }
     ).consult_brief
+    // Stored pre-v4 gaps survive a manual save untouched (spread, not edited).
     assert.deepEqual(brief.sections.zielLuecken, ["Kein Hitzeschutz"])
     assert.deepEqual(brief.sections.callFragen, ["Wie oft glättest du pro Woche?"])
     assert.deepEqual(brief.sections.erwartungen, [
@@ -1118,4 +1155,118 @@ test("write outcome: stored, invalid body, gone, anything else", () => {
   )
   assert.equal(discoveryCallSheetWriteOutcome(false, null).error, RUNSHEET_SAVE_COPY.failed)
   assert.equal(discoveryCallSheetWriteOutcome(true, null).error, RUNSHEET_SAVE_COPY.failed)
+})
+
+// --- v4: Mechanik + Maßnahmen buckets ------------------------------------------------------
+
+test("mechanik: shown above the Diagnose, an edit marks the brief dirty and is saved", async () => {
+  const { router } = fakeRouter()
+  const render = createHarness(() => DiscoveryRunsheetBrief(briefProps()), router)
+  const fetchStub = stubFetch(() => ({ status: 200, body: { callSheet: {} } }))
+  try {
+    let tree = render()
+    assert.equal(
+      byId(tree, "runsheet-mechanik").props.value,
+      "Trockene Längen entstehen meist durch Hitze und Reibung.",
+    )
+    assert.equal(saveBar(tree).props.dirty, false)
+    byId(tree, "runsheet-mechanik").props.onChange({ target: { value: "Neue Mechanik." } })
+    tree = render()
+    assert.equal(saveBar(tree).props.dirty, true)
+    // A Mechanik edit is a brief edit: generating asks first (R15).
+    generateBar(tree).props.onGenerate()
+    tree = render()
+    assert.equal(generateBar(tree).props.ui.phase, "confirm_replace")
+    generateBar(tree).props.onCancel()
+    tree = render()
+    saveBar(tree).props.onSave()
+    await settle()
+    const brief = (
+      fetchStub.calls[0]!.body as { consult_brief: { sections: Record<string, unknown> } }
+    ).consult_brief
+    assert.equal(brief.sections.mechanik, "Neue Mechanik.")
+    assert.equal(brief.sections.diagnose, "Feines Haar.")
+  } finally {
+    fetchStub.restore()
+  }
+})
+
+test("Maßnahmen: two bucket-specific add buttons replace the single one", () => {
+  const { router } = fakeRouter()
+  const tree = createHarness(() => DiscoveryRunsheetBrief(briefProps()), router)()
+  assert.equal(byId(tree, "runsheet-hebel-add-produkt").props.children, "Produkt-Hebel hinzufügen")
+  assert.equal(byId(tree, "runsheet-hebel-add-umgang").props.children, "Umgang-Hebel hinzufügen")
+  assert.equal(findAll(tree, (element) => element.props.id === "runsheet-hebel-add").length, 0)
+})
+
+test("Maßnahmen: a Produkt add lands before the Umgang rows, an Umgang add at the end; buckets are saved", async () => {
+  const { router } = fakeRouter()
+  const render = createHarness(() => DiscoveryRunsheetBrief(briefProps()), router)
+  const fetchStub = stubFetch(() => ({ status: 200, body: { callSheet: {} } }))
+  try {
+    let tree = render()
+    byId(tree, "runsheet-hebel-add-umgang").props.onClick()
+    tree = render()
+    byId(tree, "runsheet-hebel-add-produkt").props.onClick()
+    tree = render()
+    // uids are handed out in click order: the Umgang add is n0, the Produkt add n1.
+    byId(tree, "runsheet-hebel-n0-title").props.onChange({ target: { value: "Kopfmassage" } })
+    tree = render()
+    byId(tree, "runsheet-hebel-n1-title").props.onChange({ target: { value: "Leave-in" } })
+    tree = render()
+    saveBar(tree).props.onSave()
+    await settle()
+    const brief = (
+      fetchStub.calls[0]!.body as {
+        consult_brief: { sections: { hebel: Array<{ title: string; bucket: string | null }> } }
+      }
+    ).consult_brief
+    assert.deepEqual(
+      brief.sections.hebel.map((row) => [row.title, row.bucket]),
+      [
+        ["Mildes Shampoo", "produkt"],
+        ["Leave-in", "produkt"],
+        ["Schaden stoppen", "umgang"],
+        ["Kopfmassage", "umgang"],
+      ],
+    )
+  } finally {
+    fetchStub.restore()
+  }
+})
+
+test("Maßnahmen: legacy rows without a bucket stay bucket-less, first in the list, and save as null", async () => {
+  const { router } = fakeRouter()
+  const props = briefProps({
+    initialSections: {
+      ...sections,
+      hebel: [
+        { title: "Neu", note: "", points: 1, bucket: "produkt" },
+        { title: "Alt", note: "", points: 0.5, bucket: null },
+      ],
+    },
+  })
+  const render = createHarness(() => DiscoveryRunsheetBrief(props), router)
+  const fetchStub = stubFetch(() => ({ status: 200, body: { callSheet: {} } }))
+  try {
+    let tree = render()
+    byId(tree, "runsheet-mechanik").props.onChange({ target: { value: "Ergänzt." } })
+    tree = render()
+    saveBar(tree).props.onSave()
+    await settle()
+    const brief = (
+      fetchStub.calls[0]!.body as {
+        consult_brief: { sections: { hebel: Array<{ title: string; bucket: string | null }> } }
+      }
+    ).consult_brief
+    assert.deepEqual(
+      brief.sections.hebel.map((row) => [row.title, row.bucket]),
+      [
+        ["Alt", null],
+        ["Neu", "produkt"],
+      ],
+    )
+  } finally {
+    fetchStub.restore()
+  }
 })

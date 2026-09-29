@@ -10,6 +10,7 @@ import type {
   DiscoveryCockpitUnassignedView,
 } from "@/lib/discovery/cockpit"
 import { cockpitVoice } from "@/lib/discovery/cockpit-copy"
+import type { DiscoveryCallSheetComplexity } from "@/lib/discovery/call-sheet"
 import type { DiscoveryVerdictStatus } from "@/lib/discovery/load-participant-verdicts"
 import type { DiscoveryPropertyRow } from "@/lib/discovery/property-rows"
 import {
@@ -24,6 +25,7 @@ import { DiscoveryComparisonTable } from "./comparison-table"
 import { beginDiscoveryDecisionWrite } from "./decision-writes"
 import { formatDiscoveryTimestamp } from "./format"
 import { RunsheetLockedInSection } from "./runsheet-locked-in"
+import { discoveryCallSheetWriteOutcome, RUNSHEET_SAVE_COPY } from "./runsheet-save"
 import {
   RunsheetCard,
   RunsheetCategoryChip,
@@ -93,6 +95,20 @@ const VERDICT_NOT_NEEDED = "Nicht nötig"
 const VERDICT_OPEN = "Noch offen"
 const VERDICT_NONE = "Ohne Urteil"
 const DEPTH_SUMMARY = "Schritt im Idealplan"
+/** R28: every „Neu dazu" step says whether the routine needs it (`step.section`). */
+const SECTION_LABEL: Record<DiscoveryCockpitStepView["section"], string> = {
+  basis: "Essenziell",
+  optional: "Optional",
+}
+/** F1: the product column of the Idealplan recommendation's comparison table. */
+const RECOMMENDED_HEADER = "Empfohlenes Produkt"
+
+/** R28: asked at the top of Phase 3 — exactly two options, stored on the call sheet. */
+const COMPLEXITY_QUESTION = "Wie aufwendig darf die Routine sein?"
+const COMPLEXITY_OPTIONS: ReadonlyArray<[DiscoveryCallSheetComplexity, string]> = [
+  ["essenziell", "Super essenziell"],
+  ["normal", "Normal"],
+]
 
 const CLOSING_TITLE = "Abschluss"
 const BOUNDARY = "Grenze"
@@ -253,13 +269,14 @@ export function DiscoveryCallCockpit({
   unassigned = [],
   researchItems = null,
   swapReasons = {},
-  zielLuecken = [],
   intakeProducts = null,
   outsideRoutine = null,
   routinePhase = null,
   followUpPhase = null,
   boundary = null,
   washFrequency = null,
+  complexity = null,
+  complexityLocked = false,
   stateKey,
 }: {
   enrollmentId: string
@@ -278,8 +295,6 @@ export function DiscoveryCallCockpit({
   researchItems?: ReadonlyArray<{ id: string; barcodeIdentifier: string | null }> | null
   /** The consult brief's reasoning per step (`consult_brief.sections.swapReasons`). */
   swapReasons?: Readonly<Record<string, string>>
-  /** The brief's goal-gap sentences (`consult_brief.sections.zielLuecken`). */
-  zielLuecken?: readonly string[]
   /** Runsheet slots (consult-runsheet T3): rendered in phase order around the decisions. */
   intakeProducts?: ReactNode
   outsideRoutine?: ReactNode
@@ -289,6 +304,10 @@ export function DiscoveryCallCockpit({
   boundary?: string | null
   /** Her wash range (`runsheetWashAnchor`): the anchor of per-wash frequency chips. */
   washFrequency?: ProductFrequency | WashAnchor | null
+  /** R28: the stored answer to „Wie aufwendig darf die Routine sein?" (call sheet). */
+  complexity?: DiscoveryCallSheetComplexity | null
+  /** The call sheet could not be read: the complexity choice waits for a reload. */
+  complexityLocked?: boolean
   /**
    * `discoveryCockpitStateKey` of the props: when a refresh delivers a different routine or
    * finalize state, the selections and the finalize state re-seed from the server. (Before
@@ -411,6 +430,8 @@ export function DiscoveryCallCockpit({
       .map((other) => selections[entryKey(other)] ?? null)
     const selection = selections[key] ?? null
     const reason = swapReasons[step.decisionKey]
+    // R28: a step the Idealplan adds („Neu dazu") — not her product, not one in research.
+    const addStep = entry.kind === "neu" && !entry.research
     return (
       <div key={key} className="border-b last:border-0">
         <div className="flex flex-wrap items-center gap-2 bg-muted/40 px-4 py-2.5">
@@ -420,7 +441,10 @@ export function DiscoveryCallCockpit({
           {stepEntries.length > 1 && step.ownedFrequencyLabel ? (
             <span className="text-xs text-muted-foreground">{step.ownedFrequencyLabel}</span>
           ) : null}
-          {step.section === "optional" ? (
+          {addStep ? (
+            // R28: deterministic from the Idealplan's need tier — no engine call.
+            <RunsheetChip tone="neutral">{SECTION_LABEL[step.section]}</RunsheetChip>
+          ) : step.section === "optional" ? (
             <span className="text-xs text-muted-foreground">· optional</span>
           ) : null}
           {entry.kind === "owned" ? <VerdictChip step={step} /> : null}
@@ -435,6 +459,12 @@ export function DiscoveryCallCockpit({
             />
           ) : null}
           <DecisionChip entry={entry} bucket={bucket} selection={selection} />
+          {addStep && step.roleDescription ? (
+            // R28: the step's one-sentence benefit, in the cockpit's voice.
+            <span className="w-full text-[12px] leading-5 text-muted-foreground">
+              {cockpitVoice(step.roleDescription)}
+            </span>
+          ) : null}
         </div>
         {reason ? (
           <p className="border-b px-4 py-2 text-[13px] leading-5 text-foreground">
@@ -480,6 +510,11 @@ export function DiscoveryCallCockpit({
   return (
     <>
       <RunsheetPhase number={3} title={PRODUCTS_TITLE} id="runsheet-phase-3">
+        <ComplexityChoice
+          enrollmentId={enrollmentId}
+          initial={complexity}
+          locked={complexityLocked}
+        />
         {products.klaeren.length > 0 ? <KlaerenBanner entries={products.klaeren} /> : null}
         {intakeProducts}
         <Bucket
@@ -511,11 +546,6 @@ export function DiscoveryCallCockpit({
             .map((entry) => entry.label)
             .join(" · ")}`}</p>
         ) : null}
-        {zielLuecken.map((line) => (
-          <p key={line} className="text-[13px] leading-5 text-muted-foreground">
-            {cockpitVoice(line)}
-          </p>
-        ))}
         {outsideRoutine}
       </RunsheetPhase>
 
@@ -586,6 +616,100 @@ export function DiscoveryCallCockpit({
 }
 
 // --- Phase 3 pieces ------------------------------------------------------------------
+
+/**
+ * R28: „Wie aufwendig darf die Routine sein?" — two options, saved per click to the call
+ * sheet (`PATCH …/call-sheet {complexity}`, only that column). Optimistic like the decisions:
+ * a refusal rolls the choice back and says so. The answer changes nothing else yet (routine
+ * variants by complexity are a later slice). Selected = plum, never coral (CTA only).
+ */
+function ComplexityChoice({
+  enrollmentId,
+  initial,
+  locked,
+}: {
+  enrollmentId: string
+  initial: DiscoveryCallSheetComplexity | null
+  locked: boolean
+}) {
+  const [value, setValue] = useState(initial)
+  const [syncedInitial, setSyncedInitial] = useState(initial)
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  // A refresh carrying a different stored answer (another tab) re-seeds the choice.
+  if (initial !== syncedInitial) {
+    setSyncedInitial(initial)
+    setValue(initial)
+  }
+
+  async function choose(next: DiscoveryCallSheetComplexity) {
+    if (next === value || pending) return
+    const previous = value
+    setValue(next)
+    setPending(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/admin/beratung/${enrollmentId}/call-sheet`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ complexity: next }),
+      })
+      const body = (await response.json().catch(() => null)) as {
+        code?: string
+        callSheet?: unknown
+      } | null
+      const outcome = discoveryCallSheetWriteOutcome(response.ok, body)
+      if (outcome.error) {
+        setValue(previous)
+        setError(outcome.error)
+      }
+    } catch {
+      setValue(previous)
+      setError(RUNSHEET_SAVE_COPY.failed)
+    } finally {
+      setPending(false)
+    }
+  }
+
+  return (
+    <div
+      id="runsheet-complexity"
+      role="group"
+      aria-labelledby="runsheet-complexity-question"
+      className="flex flex-wrap items-center gap-2"
+    >
+      <span id="runsheet-complexity-question" className="text-[13px] font-bold text-foreground">
+        {COMPLEXITY_QUESTION}
+      </span>
+      {COMPLEXITY_OPTIONS.map(([id, label]) => (
+        <button
+          key={id}
+          id={`runsheet-complexity-${id}`}
+          type="button"
+          aria-pressed={value === id}
+          disabled={locked || pending}
+          onClick={() => void choose(id)}
+          className={`rounded-full border px-3 py-1 text-xs font-bold disabled:opacity-60 ${
+            value === id
+              ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]"
+              : "border-border bg-card text-muted-foreground"
+          }`}
+        >
+          {label}
+        </button>
+      ))}
+      {locked ? (
+        <span role="status" className="text-[12px] font-bold text-[var(--status-danger-text)]">
+          {RUNSHEET_SAVE_COPY.locked}
+        </span>
+      ) : error ? (
+        <span role="status" className="text-[12px] font-bold text-[var(--status-danger-text)]">
+          {error}
+        </span>
+      ) : null}
+    </div>
+  )
+}
 
 type BucketId = "behalten" | "weglassen" | "tauschenOderNeu"
 
@@ -948,8 +1072,11 @@ export function StepDecision({
           // R19: the price where the catalog has one — no placeholder line otherwise.
           subtitle={option.priceLabel}
           rows={option.propertyRows}
-          // Her product's rows beside the alternative („Bisheriges Produkt | Alternative | Ziel").
+          // Her product's rows beside the option — „Bisheriges Produkt | Alternative | Ziel",
+          // or (F1) „… | Empfohlenes Produkt | Ziel"; without her rows the option stands
+          // alone against the target in two columns.
           ownedRows={step.verdict?.status === "verdict" ? step.verdict.propertyRows : null}
+          productHeader={option.origin === "ideal_recommendation" ? RECOMMENDED_HEADER : undefined}
           onChoose={onChoose}
         />
       ))}
@@ -981,6 +1108,7 @@ function Choice({
   pill,
   rows,
   ownedRows,
+  productHeader,
   onChoose,
 }: {
   name: string
@@ -992,6 +1120,7 @@ function Choice({
   pill?: string
   rows?: DiscoveryPropertyRow[] | null
   ownedRows?: DiscoveryPropertyRow[] | null
+  productHeader?: string
   onChoose: (value: string) => void
 }) {
   return (
@@ -1025,7 +1154,12 @@ function Choice({
         ) : null}
         {rows && rows.length > 0 ? (
           <span className="mt-2 block">
-            <DiscoveryComparisonTable rows={rows} compact ownedRows={ownedRows} />
+            <DiscoveryComparisonTable
+              rows={rows}
+              compact
+              ownedRows={ownedRows}
+              productHeader={productHeader}
+            />
           </span>
         ) : null}
       </span>

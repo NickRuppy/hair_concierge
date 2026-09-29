@@ -62,7 +62,12 @@ export function evaluateConsultBriefAnswer(raw: string, input: ConsultInput): Co
     }
     return { brief: null, findings, jsonShape }
   }
-  const brief = { ...parsed.data, erwartungen: withBoundaryLine(parsed.data.erwartungen) }
+  // Same augment as `generateConsultBrief`: zielLuecken is code-owned since v4 (R27).
+  const brief = {
+    ...parsed.data,
+    zielLuecken: [],
+    erwartungen: withBoundaryLine(parsed.data.erwartungen),
+  }
 
   for (const finding of lintConsultBrief(brief, input)) {
     findings.push({
@@ -87,6 +92,7 @@ export function consultBriefTexts(
   brief: DiscoveryCallSheetBriefSections,
 ): Array<{ location: string; text: string }> {
   return [
+    { location: "mechanik", text: brief.mechanik },
     { location: "diagnose", text: brief.diagnose },
     ...brief.hebel.flatMap((hebel, index) => [
       { location: `hebel[${index}].title`, text: hebel.title },
@@ -96,7 +102,6 @@ export function consultBriefTexts(
       location: `swapReasons.${key}`,
       text,
     })),
-    ...brief.zielLuecken.map((text, index) => ({ location: `zielLuecken[${index}]`, text })),
     ...brief.callFragen.map((text, index) => ({ location: `callFragen[${index}]`, text })),
     ...brief.erwartungen.map((text, index) => ({ location: `erwartungen[${index}]`, text })),
   ]
@@ -310,6 +315,10 @@ export function consultBriefMarkdown(
   const productName = (key: string) =>
     input.products.find((product) => product.decisionKey === key)?.name ?? key
   const lines = [
+    "## Problem kurz erklärt",
+    "",
+    brief.mechanik,
+    "",
     "## Diagnose",
     "",
     brief.diagnose,
@@ -318,7 +327,7 @@ export function consultBriefMarkdown(
     "",
     ...brief.hebel.map(
       (hebel, index) =>
-        `${index + 1}. **${hebel.title}**${hebel.points === null ? "" : ` _(${hebel.points} P.)_`} — ${hebel.note}`,
+        `${index + 1}. [${hebel.bucket ?? "?"}] **${hebel.title}**${hebel.points === null ? "" : ` _(${hebel.points} P.)_`} — ${hebel.note}`,
     ),
     "",
     "## Tausch-Begründungen",
@@ -328,12 +337,6 @@ export function consultBriefMarkdown(
       : Object.entries(brief.swapReasons).map(
           ([key, reason]) => `- **${productName(key)}** (\`${key}\`): ${reason}`,
         )),
-    "",
-    "## Ziel-Lücken",
-    "",
-    ...(brief.zielLuecken.length === 0
-      ? ["_keine_"]
-      : brief.zielLuecken.map((entry) => `- ${entry}`)),
     "",
     "## Call-Fragen",
     "",

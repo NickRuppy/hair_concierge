@@ -4,7 +4,9 @@ import {
   loadScanProductFacts,
   loadStage3RecommendationCandidatesByRole,
 } from "@/lib/personal-plan/products/authority/catalog-facts"
+import type { Stage1ProductExampleRolePreview } from "@/lib/personal-plan/product-preview-contract"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import type { PlanProductRole } from "@/lib/personal-plan/types"
 import {
   isProductSearchQuarantined,
   loadQuarantinedProductIdsAmong,
@@ -323,4 +325,92 @@ async function resolveItemVerdict(
     })
     return { kind: "unavailable", itemId, productId }
   }
+}
+
+// --- F1: rows for the Idealplan's own recommendation ------------------------------------
+
+/**
+ * F1 (consult-iteration-2): target-vs-product rows for the Idealplan's recommendation of a
+ * step — the „Neu dazu" entry and the `ideal_recommendation` swap option — so a new product
+ * reads in the same iOS table as a swap alternative („Empfohlenes Produkt | Ziel").
+ *
+ * The Stage-1 preview (`computeStage1ProductExamplePreviews`) evaluates the recommendation but
+ * keeps only its verdict word, not the criteria or the comparison dimensions. So the rows come
+ * from the SAME engine her own products are graded by — `loadScanVerdict` (the resolve
+ * route's `loadScanVerdictForProduct`) for the recommended product against the step's category
+ * decision, on the context the Idealplan already prepared — and the same builder
+ * (`mobileAssessmentRows`) as `propertyRowsFor`.
+ *
+ * Conservative: rows only when the verdict is `in_catalog`, was evaluated for exactly the
+ * step's role, and yields at least one row. Anything else — no decision, a failed load, a
+ * different best role, no rows — returns no entry, and the cockpit renders no table. Rows are
+ * never invented.
+ */
+export type DiscoveryRecommendationRowStep = {
+  decisionKey: string
+  category: PersonalPlanCategory
+  role: PlanProductRole
+  preview: Stage1ProductExampleRolePreview | null
+}
+
+/** Pure: the rows one recommendation's scan verdict yields for the step's role, else null. */
+export function discoveryRecommendationPropertyRows(
+  category: PersonalPlanCategory,
+  role: PlanProductRole,
+  productId: string,
+  verdict: ScanVerdictPayload,
+): DiscoveryPropertyRow[] | null {
+  if (verdict.kind !== "in_catalog" || verdict.evaluatedRole !== role) return null
+  const rows = discoveryPropertyRows(
+    mobileAssessmentRows(
+      category,
+      role,
+      productId,
+      verdict.mobileDimensions ?? [],
+      verdict.criteria,
+      verdict.fitNarrative?.fit ?? null,
+    ),
+  )
+  return rows.length > 0 ? rows : null
+}
+
+/** Decision key → rows, for every given step whose recommendation is evaluable (see above). */
+export async function loadDiscoveryRecommendationPropertyRows(
+  admin: SupabaseClient,
+  steps: readonly DiscoveryRecommendationRowStep[],
+  context: ScanEvaluationContext,
+  deps: Pick<DiscoveryVerdictDeps, "loadScanVerdict"> = DISCOVERY_VERDICT_DEPS,
+): Promise<Map<string, DiscoveryPropertyRow[]>> {
+  const entries = await Promise.all(
+    steps.map(async (step): Promise<[string, DiscoveryPropertyRow[]] | null> => {
+      const preview = step.preview
+      if (preview?.kind !== "recommendation") return null
+      const decision = context.snapshot.decisions.find((entry) => entry.category === step.category)
+      if (!decision) return null
+      try {
+        const verdict = await deps.loadScanVerdict(
+          admin,
+          step.category,
+          preview.productId,
+          decision,
+          context,
+        )
+        const rows = discoveryRecommendationPropertyRows(
+          step.category,
+          step.role,
+          preview.productId,
+          verdict,
+        )
+        return rows ? [step.decisionKey, rows] : null
+      } catch (error) {
+        console.warn("discovery_recommendation_rows_unavailable", {
+          decisionKey: step.decisionKey,
+          productId: preview.productId,
+          reason: error instanceof Error ? error.message : "unknown",
+        })
+        return null
+      }
+    }),
+  )
+  return new Map(entries.filter((entry): entry is [string, DiscoveryPropertyRow[]] => !!entry))
 }

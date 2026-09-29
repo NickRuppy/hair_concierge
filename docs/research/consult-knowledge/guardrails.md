@@ -104,7 +104,7 @@ Auch verneint bleiben diese Formulierungen draußen („heilt nicht“, „nicht
 ## G6 — Sprache
 
 - Deutsch, Beratungssprache, telegram-knapp, keine archaischen Imperative („Wisse …“, „Bedenke …“).
-- Brief-Felder (`diagnose`, `hebel`, `swapReasons`, `zielLuecken`, `erwartungen`): neutral in der dritten Person über die Teilnehmerin. Du-Form nur in `callFragen` und in den `## Im Call`-Formulierungshilfen der Wissensbasis.
+- Brief-Felder (`diagnose`, `hebel`, `swapReasons`, `erwartungen`): neutral in der dritten Person über die Teilnehmerin; `mechanik` ganz ohne Personenbezug. Du-Form nur in `callFragen` und in den `## Im Call`-Formulierungshilfen der Wissensbasis.
 - Kosmetische und medizinisch-angrenzende Aussagen stehen nie im selben Satz.
 
 ## Falsch → Richtig

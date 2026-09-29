@@ -42,6 +42,7 @@ const ALL_COLUMNS = [
   "touchpoints",
   "consult_brief",
   "habit_commitments",
+  "complexity",
   "feedback",
 ] as const
 
@@ -108,6 +109,7 @@ const EMPTY_ROW = {
   touchpoints: [],
   consult_brief: null,
   habit_commitments: [],
+  complexity: null,
   feedback: null,
 }
 
@@ -157,10 +159,16 @@ async function json(response: Response): Promise<Record<string, unknown>> {
 
 const validBrief = {
   sections: {
+    mechanik: "Aufgeraute Längen entstehen meist durch Hitze, Reibung und Vorschädigung.",
     diagnose: "Feines, blondiertes Haar mit aufgerauten Längen.",
     hebel: [
-      { title: "Schaden stoppen", note: "Hitzeschutz vor jedem Glätten", points: 1.5 },
-      { title: "Pflege", note: "", points: null },
+      {
+        title: "Schaden stoppen",
+        note: "Hitzeschutz vor jedem Glätten",
+        points: 1.5,
+        bucket: "umgang",
+      },
+      { title: "Pflege", note: "", points: null, bucket: "produkt" },
     ],
     swapReasons: { "decision:shampoo:shampoo_everyday:gap": "Zu reichhaltig für feines Haar." },
     zielLuecken: ["Kein Hitzeschutz"],
@@ -262,6 +270,8 @@ test("a valid payload upserts every named column on the enrollment and returns t
     ...validBody,
     // Server-owned stamp on every brief write.
     consult_brief: { ...validBrief, saved_at: SAVED_AT },
+    // Not sent by the body → the writer keeps the stored/default value (null).
+    complexity: null,
     enrollment_id: ids.enrollment,
   })
   assert.deepEqual(recorded.reads, [`discovery_call_sheets:enrollment_id=${ids.enrollment}`])
@@ -293,6 +303,7 @@ test("a partial follow-up save on an existing row keeps the stored score and bri
     enrollment_id: ids.enrollment,
     ...brief,
     touchpoints: validBody.touchpoints,
+    complexity: null,
     feedback: "Sehr hilfreich.",
   })
   const { callSheet } = (await json(response)) as { callSheet: DiscoveryCallSheet }
@@ -332,6 +343,7 @@ test("a first save on a legacy enrollment with one island's fields writes a full
     touchpoints: [],
     consultBrief: null,
     habitCommitments: [],
+    complexity: null,
     feedback: "Erster Stand.",
   })
 })
@@ -544,7 +556,21 @@ const violations: Array<[string, unknown]> = [
     },
   ],
   ["hebel not an array", withBrief({ hebel: { title: "x" } })],
-  ["hebel points as text", withBrief({ hebel: [{ title: "x", note: "", points: "1,5" }] })],
+  [
+    "hebel points as text",
+    withBrief({ hebel: [{ title: "x", note: "", points: "1,5", bucket: "produkt" }] }),
+  ],
+  ["hebel without bucket (v4)", withBrief({ hebel: [{ title: "x", note: "", points: 1 }] })],
+  [
+    "hebel with unknown bucket",
+    withBrief({ hebel: [{ title: "x", note: "", points: 1, bucket: "sonstiges" }] }),
+  ],
+  [
+    "hebel bucket undefined",
+    withBrief({ hebel: [{ title: "x", note: "", points: 1, bucket: undefined }] }),
+  ],
+  ["mechanik missing (v4)", withBrief({ mechanik: undefined })],
+  ["mechanik not text", withBrief({ mechanik: 5 })],
   ["swapReasons not a record", withBrief({ swapReasons: ["x"] })],
   ["zielLuecken not strings", withBrief({ zielLuecken: [1] })],
   ["brief section missing", { consult_brief: { ...validBrief, sections: { diagnose: "x" } } }],
@@ -568,6 +594,27 @@ for (const [name, body] of violations) {
   })
 }
 
+test("v4: a brief with mechanik, buckets (incl. null for legacy rows) and stored zielLuecken passes", async () => {
+  const brief = withBrief({
+    hebel: [
+      { title: "A", note: "", points: 1, bucket: "produkt" },
+      { title: "B", note: "", points: null, bucket: "umgang" },
+      { title: "Alt", note: "", points: 0.5, bucket: null },
+    ],
+    zielLuecken: ["Kein Hitzeschutz"],
+  })
+  const { deps: d, recorded } = deps()
+  const response = await createDiscoveryCallSheetHandler(d)(patchRequest(brief), params())
+  assert.equal(response.status, 200)
+  const stored = recorded.stored()!.consult_brief as { sections: Record<string, unknown> }
+  assert.equal(stored.sections.mechanik, validBrief.sections.mechanik)
+  assert.deepEqual(
+    (stored.sections.hebel as Array<{ bucket: unknown }>).map((entry) => entry.bucket),
+    ["produkt", "umgang", null],
+  )
+  assert.deepEqual(stored.sections.zielLuecken, ["Kein Hitzeschutz"])
+})
+
 test("a body that is not JSON is refused", async () => {
   const { deps: d, recorded } = deps()
   const response = await createDiscoveryCallSheetHandler(d)(patchRequest("{nope"), params())
@@ -588,4 +635,26 @@ test("a commitment id comes from its wording, not its position", () => {
     discoveryHabitCommitmentId("manual", "strasse"),
   )
   assert.equal(discoveryHabitCommitmentId("manual", "!!!"), "manual:gewohnheit")
+})
+
+// --- v3 → v4 read compat ----------------------------------------------------------------
+
+test("an old stored brief without mechanik/bucket parses to mechanik empty and bucket null", () => {
+  const legacy = {
+    ...validBrief,
+    sections: {
+      diagnose: "Alt.",
+      hebel: [{ title: "Schaden stoppen", note: "Hitzeschutz", points: 1 }],
+      swapReasons: {},
+      zielLuecken: ["Kein Hitzeschutz"],
+      callFragen: [],
+      erwartungen: [],
+    },
+  }
+  const sections = parseDiscoveryCallSheet({ consult_brief: legacy }).consultBrief!.sections
+  assert.equal(sections.mechanik, "")
+  assert.deepEqual(sections.hebel, [
+    { title: "Schaden stoppen", note: "Hitzeschutz", points: 1, bucket: null },
+  ])
+  assert.deepEqual(sections.zielLuecken, ["Kein Hitzeschutz"])
 })
