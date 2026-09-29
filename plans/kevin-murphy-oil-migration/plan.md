@@ -289,11 +289,11 @@ Run `plans/kevin-murphy-oil-migration/verify.sql` read-only against production. 
 1. **Locks and duration bounds** (P1-2, round-2 P2):
    - `TimeZone UTC`.
    - `lock_timeout 5s`, which bounds only lock **acquisition** waits.
-   - The ACCESS EXCLUSIVE **hold** from step 3 is bounded separately:
+   - The ACCESS EXCLUSIVE **hold** from step 3 is limited, but not strictly capped:
      - `statement_timeout 10s` caps every statement; each DO block is one statement.
      - `idle_in_transaction_session_timeout 5s` terminates the session, and so rolls everything back, if the client stalls between statements.
-     - On PostgreSQL ≥ 17, `transaction_timeout 30s` caps the whole transaction. It's set conditionally on `server_version_num`, because the local stack is 17 but the production version isn't verified here.
-     - Worst case without `transaction_timeout`: about 6 statements × (10 s + 5 s) ≤ 90 s.
+     - On PostgreSQL ≥ 17, `transaction_timeout 30s` caps the transaction while its timer is armed. It's set conditionally on `server_version_num`, because the local stack is 17 but the production version isn't verified here.
+     - **These timeouts are not a wall-clock guarantee on blocked product reads.** They cover the timed statements and idle gaps (~6 × (10 s + 5 s) ≈ 90 s of coverable time), but PostgreSQL disarms the statement timer before commit processing — and PG 17 disarms the transaction timer before the durable commit — while the lock is still held, so a slow `COMMIT` sits outside every timeout. The operational bound is the reviewed expectation (well under 1 s: one product, keyed lookups, small Personal Plan tables), which the mandatory branch-database rehearsal must confirm by measuring the actual lock-hold time before any production run.
    - The same shared advisory lock and the same Personal Plan and owner `SHARE` table locks as the forward migration, taken **before** the reference check. A plan can no longer acquire an Oil reference between the check and the commit.
 2. **Trigger precheck** (P1-1): `products` has exactly one non-internal trigger calling `update_updated_at_column()`, namely `set_updated_at_products`, and it is enabled.
 3. **Disable the trigger:** `ALTER TABLE public.products DISABLE TRIGGER set_updated_at_products`, before any DML, so `products` has no pending trigger events.

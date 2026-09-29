@@ -33,11 +33,17 @@ BEGIN;
 --   * idle_in_transaction_session_timeout caps any client stall between
 --     statements (the session is terminated, which rolls everything back);
 --   * transaction_timeout (PostgreSQL >= 17 only, set conditionally below) caps
---     the whole transaction.
--- Worst case without transaction_timeout: about 6 statements after the ALTER x
--- (10 s + 5 s) <= 90 s. Reviewed expectation: well under 1 s (one product, keyed
--- lookups, Personal Plan tables of ~100-500 rows). Run it in a low-traffic
--- maintenance moment, as a single psql file, never interactively.
+--     the whole transaction while its timer is armed.
+-- These timeouts bound the timed statements and idle gaps (~6 x (10 s + 5 s)
+-- ~= 90 s of coverable time), but they are NOT a strict wall-clock cap on how
+-- long product reads block: PostgreSQL disarms the statement timer before
+-- commit processing (and PG 17 disarms the transaction timer before the
+-- durable commit) while the ACCESS EXCLUSIVE lock is still held, so a slow
+-- COMMIT is outside every timeout. The real bound is operational: reviewed
+-- expectation well under 1 s (one product, keyed lookups, Personal Plan tables
+-- of ~100-500 rows), REHEARSED on a branch database with the lock-hold time
+-- measured before any production run. Run it in a low-traffic maintenance
+-- moment, as a single psql file, never interactively.
 SET LOCAL lock_timeout = '5s';
 SET LOCAL statement_timeout = '10s';
 SET LOCAL idle_in_transaction_session_timeout = '5s';
