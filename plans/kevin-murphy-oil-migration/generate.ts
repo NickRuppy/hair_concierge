@@ -909,8 +909,18 @@ COMMIT;
 const insertRows = (table: string, rows: Row[], types: Record<string, string>, extra = "") =>
   rows
     .map((row) => {
+      // GENERATED ALWAYS ... STORED columns must be omitted from the INSERT or
+      // PostgreSQL refuses the row ("cannot insert a non-DEFAULT value").
+      // product_leave_in_specs.conditioner_relationship is generated from roles
+      // (20260816130000); the prestate snapshot still carries its value, and the
+      // rollback's full-row verify still compares it, because the database
+      // recomputes the identical value from the restored roles.
       const generated =
-        table === "product_application_protocols" ? ["application_family", "category_key"] : []
+        table === "product_application_protocols"
+          ? ["application_family", "category_key"]
+          : table === "product_leave_in_specs"
+            ? ["conditioner_relationship"]
+            : []
       const unknown = Object.keys(row).filter((col) => !(col in types) && !generated.includes(col))
       assert(unknown.length === 0, `rollback ${table} has unmapped columns: ${unknown.join(", ")}`)
       const cols = Object.keys(types).filter((col) => col in row)
@@ -1085,7 +1095,6 @@ ${insertRows("product_leave_in_specs", prestate.product_leave_in_specs, {
   plan_roles: "text[]",
   functional_benefits: "text[]",
   category_key: "text",
-  conditioner_relationship: "text",
   created_at: T,
   updated_at: T,
 })}

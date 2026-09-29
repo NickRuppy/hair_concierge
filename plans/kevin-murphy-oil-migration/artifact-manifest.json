@@ -8,8 +8,8 @@
   "outputs": {
     "plans/kevin-murphy-oil-migration/target-state.json": "ad0b5725116f3513b527755cc37cc4e3f734020b430aea2b268c097f47ff2dec",
     "supabase/migrations/20260929120000_kevin_murphy_young_again_oil_recategorization.sql": "1d703315d050af9a01c961d3cd10f9c2d44c6d08b8438a1ff046178aab03ac20",
-    "plans/kevin-murphy-oil-migration/rollback.sql": "414b2cc20e248c538a6bd59802e28b12af865dfa64591eb002aa2ccdc592189f",
+    "plans/kevin-murphy-oil-migration/rollback.sql": "3ca7298f41c6d019b0b5cdd003b7c30ea03fd3b4d97423e53d8488730000fa80",
     "plans/kevin-murphy-oil-migration/verify.sql": "0605928902ac143ef3c03eeee98d367dac20449070a7014c441383eebdeb0d17"
   },
-  "combined_sha256": "b575d897a7183519bf5556d649e5e51b546bb86dfc14884c2b442d08a8cbc479"
+  "combined_sha256": "2ae59b2867c919ac7ce6187fe1bf93ad7379e52c7f9947746588374d7cc2c39f"
 }
