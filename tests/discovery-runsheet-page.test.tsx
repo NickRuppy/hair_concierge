@@ -1479,12 +1479,13 @@ function nomiSecondPerson(): DiscoveryCockpitModel {
  */
 function readableLines(markup: string): string[] {
   const decode = (text: string) =>
+    // `&amp;` last, so an encoded entity name is never unescaped twice.
     text
-      .replace(/&amp;/g, "&")
       .replace(/&quot;/g, '"')
       .replace(/&#x27;/g, "'")
       .replace(/&lt;/g, "<")
       .replace(/&gt;/g, ">")
+      .replace(/&amp;/g, "&")
   const attributes = [...markup.matchAll(/(?:aria-label|placeholder)="([^"]*)"/g)].map(
     (match) => match[1]!,
   )
