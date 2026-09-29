@@ -33,6 +33,7 @@ export {
   runsheetStoredSelection,
   type RunsheetLockedIn,
   type RunsheetLockedInBuyRow,
+  type RunsheetLockedInDiscardRow,
   type RunsheetLockedInKeepRow,
   type RunsheetLockedInSelection,
   type RunsheetLockedInSkipRow,

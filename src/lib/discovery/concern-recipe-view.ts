@@ -166,7 +166,7 @@ function keyMatches(
 
 // --- coverage --------------------------------------------------------------------
 
-/** „hat sie" = one of her products is used as or IS that category; „Idealroutine" = a step. */
+/** „vorhanden" = one of her products is used as or IS that category; „Idealroutine" = a step. */
 export type DiscoveryConcernCoverage = { owned: boolean; inRoutine: boolean }
 
 export type DiscoveryConcernCoverageInput = {

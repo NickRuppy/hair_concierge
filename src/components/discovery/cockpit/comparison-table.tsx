@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils"
 /**
  * The web counterpart of the iOS result card's `ComparisonTable`
  * (`ios/Chaarlie/Assessment/AssessmentSheet.swift`, locked design spec §2), for the call
- * cockpit only: one rounded card, a caps header „PRODUKT · IHR ZIEL", and per property one
+ * cockpit only: one rounded card, a caps header „PRODUKT · ZIEL", and per property one
  * row — name, a status disc, the product's value in the status colour, her target in plum.
  *
  * Deliberately without the iOS info column: the cockpit has no explanation overlay (yet).
  * `compact` is the alternatives' variant (smaller value font, „Alternative" column), as on
- * iOS; with `ownedRows` it becomes the three-column „Ihr Produkt | Alternative | Ihr Ziel".
+ * iOS; with `ownedRows` it becomes the three-column „Bisheriges Produkt | Alternative | Ziel".
  */
 
 const STATUS: Record<
@@ -49,11 +49,12 @@ const STATUS: Record<
 const EMPTY_VALUE = "–"
 const UNAVAILABLE = "nicht verfügbar"
 /**
- * Her target, in the cockpit's third person (verdict-layer T4) — like „Ihr Produkt" next to
- * it. The iOS card says „Dein Ziel" to the participant; this table is the call's only.
+ * Her target, as a pronoun-free cockpit label (Nick's ruling 2026-09-29) — like „Bisheriges
+ * Produkt" next to it. The iOS card says „Dein Ziel" to the participant; this table is the
+ * call's only.
  */
-const TARGET_HEADER = "Ihr Ziel"
-const TARGET_ARIA = "ihr Ziel"
+const TARGET_HEADER = "Ziel"
+const TARGET_ARIA = "Ziel"
 
 /** iOS breaks these two at their word joint („Pflege-/gewicht"); a soft hyphen does that. */
 function breakableLabel(label: string): string {
@@ -67,8 +68,8 @@ const GRID = "grid grid-cols-[68px_16px_minmax(0,1fr)_minmax(0,1fr)] items-cente
 const GRID_WITH_OWNED =
   "grid grid-cols-[68px_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] items-center"
 
-const OWNED_HEADER = "Ihr Produkt"
-const OWNED_ARIA = "ihr Produkt"
+const OWNED_HEADER = "Bisheriges Produkt"
+const OWNED_ARIA = "bisheriges Produkt"
 const ALTERNATIVE_HEADER = "Alternative"
 
 function StatusDisc({
@@ -115,7 +116,7 @@ export function DiscoveryComparisonTable({
   compact?: boolean
   /**
    * Cockpit alternatives only: her own product's rows in the same step. When present (and
-   * `compact`), the table gains a leading „Ihr Produkt" column — her value and status per
+   * `compact`), the table gains a leading „Bisheriges Produkt" column — her value and status per
    * axis, matched by `dimensionId`; an axis her product lacks leaves the cell empty. Row tint
    * stays the alternative's status.
    */
@@ -186,7 +187,7 @@ export function DiscoveryComparisonTable({
 }
 
 /**
- * Ihr Produkt | Alternative | Ihr Ziel — fit and comparison in one glance (Produktphase
+ * Bisheriges Produkt | Alternative | Ziel — fit and comparison in one glance (Produktphase
  * mockup V2). Each value cell carries its own status disc; the row is tinted by the
  * alternative. On narrow widths the table scrolls inside its own card, never the page.
  */

@@ -31,6 +31,12 @@ import {
 const SECOND_PERSON =
   /(^|[^\p{L}])(du|dein|deine|deinem|deinen|deiner|deines|dir|dich)(?=[^\p{L}]|$)/iu
 
+/**
+ * Third-person pronouns about the participant (sie, ihr…), as whole words, any case. The
+ * cockpit speaks pronoun-free (Nick's ruling 2026-09-29).
+ */
+const THIRD_PERSON = /(^|[^\p{L}])(sie|ihr|ihre|ihrem|ihren|ihrer|ihres)(?=[^\p{L}]|$)/iu
+
 const CATEGORIES = Object.keys(CATEGORY_COPY) as PersonalPlanCategory[]
 
 const SOURCES = [
@@ -43,23 +49,23 @@ const SOURCES = [
 ].map((file) => readFileSync(path.join(process.cwd(), file), "utf8"))
 
 test("known shared strings map to their neutral variant", () => {
-  assert.equal(cockpitVoice("Passt nicht zu deinem Haar"), "Passt nicht zu ihrem Haar")
-  assert.equal(cockpitVoice("Passt zu deinem Haar"), "Passt zu ihrem Haar")
+  assert.equal(cockpitVoice("Passt nicht zu deinem Haar"), "Passt nicht zum Haarprofil")
+  assert.equal(cockpitVoice("Passt zu deinem Haar"), "Passt zum Haarprofil")
   assert.equal(
     cockpitVoice(
       "Deine Kopfhaut ist eher trocken. Deshalb eine milde Reinigung, die ihr nicht zusätzlich Fett entzieht.",
     ),
-    "Die Kopfhaut ist eher trocken. Deshalb eine milde Reinigung, die ihr nicht zusätzlich Fett entzieht.",
+    "Die Kopfhaut ist eher trocken. Deshalb eine milde Reinigung ohne zusätzlichen Fettentzug.",
   )
-  assert.equal(cockpitVoice("Du stylst aktuell ohne Hitze."), "Sie stylt aktuell ohne Hitze.")
-  assert.equal(cockpitVoice("Das übernimmt bei dir:"), "Das übernimmt bei ihr:")
+  assert.equal(cockpitVoice("Du stylst aktuell ohne Hitze."), "Aktuell Styling ohne Hitze.")
+  assert.equal(cockpitVoice("Das übernimmt bei dir:"), "Das übernimmt bereits:")
 })
 
 test("scan verdict titles come from the scan's own copy object", () => {
-  assert.equal(cockpitVoice(SCAN_VERDICT_COPY.mismatch.title), "Passt nicht zu ihrem Haar")
+  assert.equal(cockpitVoice(SCAN_VERDICT_COPY.mismatch.title), "Passt nicht zum Haarprofil")
   assert.equal(
     cockpitVoice(SCAN_VERDICT_COPY.supportive.title),
-    "Passt mit Einschränkung zu ihrem Haar",
+    "Passt mit Einschränkung zum Haarprofil",
   )
   // Labels without a second person are not in the map and stay exactly as they are.
   assert.equal(cockpitVoice(SCAN_VERDICT_COPY.mismatch.label), "Passt nicht")
@@ -83,13 +89,13 @@ test("per-category not_needed templates are mapped for every category", () => {
     assert.match(headline, new RegExp(`^Aktuell (kein|keine) ${label} nötig$`), category)
     assert.equal(
       cockpitVoice(scanNotNeededSubtitle(category)),
-      scanNotNeededSubtitle(category).replace("in deinem Bedarf", "in ihrem Bedarf"),
+      scanNotNeededSubtitle(category).replace("in deinem Bedarf", "im Bedarf"),
     )
     assert.ok(cockpitVoice(scanDeferredSubtitle(category)).includes("steht die Einschätzung"))
     const reasons = cockpitVoice(
       scanReasonsLabel({ kind: "not_needed", mode: "not_needed", category }),
     )
-    assert.match(reasons, /^Warum sie (kein|keinen|keine) .+ braucht$/, category)
+    assert.match(reasons, /^Warum (kein|keine) .+ nötig ist$/, category)
   }
   // Grammar spot checks: the accusative article turns nominative in the headline only.
   assert.equal(cockpitVoice(scanNotNeededHeadline("conditioner")), "Aktuell kein Conditioner nötig")
@@ -97,13 +103,14 @@ test("per-category not_needed templates are mapped for every category", () => {
     cockpitVoice(
       scanReasonsLabel({ kind: "not_needed", mode: "not_needed", category: "conditioner" }),
     ),
-    "Warum sie keinen Conditioner braucht",
+    "Warum kein Conditioner nötig ist",
   )
 })
 
-test("every neutral variant is free of the second person", () => {
+test("every neutral variant is pronoun-free: no second person, no sie/ihr", () => {
   for (const [shared, neutral] of COCKPIT_VOICE_MAP) {
     assert.ok(!SECOND_PERSON.test(neutral), `still second person: ${neutral} (from ${shared})`)
+    assert.ok(!THIRD_PERSON.test(neutral), `still third person: ${neutral} (from ${shared})`)
   }
 })
 
@@ -154,7 +161,7 @@ test("unknown strings pass through untouched — no blind pronoun rewriting", ()
   }
   assert.equal(cockpitVoiceOrNull(null), null)
   assert.equal(cockpitVoiceOrNull(undefined), null)
-  assert.equal(cockpitVoiceOrNull("Passt zu deinem Haar"), "Passt zu ihrem Haar")
+  assert.equal(cockpitVoiceOrNull("Passt zu deinem Haar"), "Passt zum Haarprofil")
 })
 
 test("the participant's copy objects are not mutated by building the map", () => {

@@ -7,17 +7,18 @@ import { runsheetShoppingListText, type RunsheetLockedIn } from "@/lib/discovery
 import { RunsheetEyebrow } from "./runsheet-parts"
 
 /**
- * „Für ihren Plan festgehalten" (produktphase-lockin T2): Phase 3's payoff under the buckets —
- * what she buys (with prices and a sum), keeps, and deliberately goes without, plus how many
- * decisions are still open and the shopping list to copy. Display only: the cockpit derives
- * `lockedIn` from its live selection state (`runsheetLockedIn`), so the section follows each
- * Entscheidung click at once. Cockpit voice (R6): neutral third person. Plum marks the
- * section, coral only the copy CTA.
+ * „Für den Plan festgehalten" (produktphase-lockin T2): Phase 3's payoff under the buckets —
+ * what gets bought (with prices and a sum), kept, left out (her dropped products) and which
+ * steps deliberately stay without a product, plus how many decisions are still open and the
+ * shopping list to copy. Display only: the cockpit derives `lockedIn` from its live selection
+ * state (`runsheetLockedIn`), so the section follows each Entscheidung click at once. Labels
+ * are pronoun-free (Nick, 2026-09-29). Plum marks the section, coral only the copy CTA.
  */
 
-const TITLE = "Für ihren Plan festgehalten"
-const GROUP_BUY = "Kauft sie neu"
-const GROUP_KEEP = "Behält sie"
+const TITLE = "Für den Plan festgehalten"
+const GROUP_BUY = "Neu kaufen"
+const GROUP_KEEP = "Behalten"
+const GROUP_DISCARD = "Weglassen"
 const GROUP_SKIP = "Bewusst ohne Produkt"
 const EMPTY = "Noch nichts festgehalten."
 const SKIP_EMPTY_STEP = "Schritt bleibt offen"
@@ -121,25 +122,32 @@ export function RunsheetLockedInSection({ lockedIn }: { lockedIn: RunsheetLocked
       </div>
 
       <div className="flex flex-col gap-1.5">
+        <RunsheetEyebrow>{GROUP_DISCARD}</RunsheetEyebrow>
+        {lockedIn.discard.length === 0 ? (
+          <Empty />
+        ) : (
+          lockedIn.discard.map((row, index) => (
+            <Row
+              key={`${row.categoryLabel}-${row.label}-${index}`}
+              name={row.label}
+              detail={row.categoryLabel}
+            />
+          ))
+        )}
+      </div>
+
+      <div className="flex flex-col gap-1.5">
         <RunsheetEyebrow>{GROUP_SKIP}</RunsheetEyebrow>
         {lockedIn.skip.length === 0 ? (
           <Empty />
         ) : (
-          lockedIn.skip.map((row, index) =>
-            row.label ? (
-              <Row
-                key={`${row.categoryLabel}-${row.label}-${index}`}
-                name={row.label}
-                detail={row.categoryLabel}
-              />
-            ) : (
-              <Row
-                key={`${row.categoryLabel}-${index}`}
-                name={row.categoryLabel}
-                detail={SKIP_EMPTY_STEP}
-              />
-            ),
-          )
+          lockedIn.skip.map((row, index) => (
+            <Row
+              key={`${row.categoryLabel}-${index}`}
+              name={row.categoryLabel}
+              detail={SKIP_EMPTY_STEP}
+            />
+          ))
         )}
       </div>
 

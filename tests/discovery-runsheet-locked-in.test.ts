@@ -13,8 +13,8 @@ import {
 import type { PersonalPlanCategory } from "../src/lib/personal-plan/products/contracts"
 
 /**
- * „Für ihren Plan festgehalten" (produktphase-lockin T1): the call's recorded decisions
- * compiled into Kauft sie neu / Behält sie / Bewusst ohne Produkt, one row per decision
+ * „Für den Plan festgehalten" (produktphase-lockin T1): the call's recorded decisions
+ * compiled into Neu kaufen / Behalten / Weglassen / Bewusst ohne Produkt, one row per decision
  * unit (step + her product, batch 9) — never per decisionKey alone. Pure: fixtures are
  * deep-frozen, so any write to the view throws.
  */
@@ -144,6 +144,7 @@ test("nothing decided: every group empty, every entry open, zero total", () => {
   assert.deepEqual(lockedIn, {
     buy: [],
     keep: [],
+    discard: [],
     skip: [],
     totalLabel: EUR("0,00"),
     missingPrices: false,
@@ -164,7 +165,8 @@ test("stored decisions: swap → buy with the chosen product's price, keep → k
     { label: "Alpha Shampoo", categoryLabel: "Shampoo", priceLabel: EUR("9,95") },
   ])
   assert.deepEqual(lockedIn.keep, [{ label: "Balea Spülung", categoryLabel: "Conditioner" }])
-  assert.deepEqual(lockedIn.skip, [{ categoryLabel: "Maske", label: null }])
+  assert.deepEqual(lockedIn.skip, [{ categoryLabel: "Maske" }])
+  assert.deepEqual(lockedIn.discard, [])
   assert.equal(lockedIn.totalLabel, EUR("9,95"))
   assert.equal(lockedIn.missingPrices, false)
   assert.equal(lockedIn.openCount, 0)
@@ -314,11 +316,18 @@ test("multi-product step: each of her products is its own decision unit", () => 
   assert.equal(lockedIn.openCount, 0)
 })
 
-test("multi-product step: a dropped product is „ohne Produkt“ by name, its sibling still counts", () => {
+test("multi-product step: a dropped product is „Weglassen“ by name, never „ohne Produkt“; its sibling still counts", () => {
   const lockedIn = runsheetLockedIn(twoShampoos({ outcome: "kept" }, { outcome: "dropped" }))
   assert.deepEqual(lockedIn.keep, [{ label: "Shampoo A", categoryLabel: "Shampoo" }])
-  assert.deepEqual(lockedIn.skip, [{ categoryLabel: "Shampoo", label: "Shampoo B" }])
+  assert.deepEqual(lockedIn.discard, [{ label: "Shampoo B", categoryLabel: "Shampoo" }])
+  assert.deepEqual(lockedIn.skip, [])
   assert.equal(lockedIn.openCount, 0)
+})
+
+test("a drop on an empty step has no product of hers to discard: it stays „ohne Produkt“", () => {
+  const lockedIn = runsheetLockedIn(nomi({ mask: { outcome: "dropped" } }))
+  assert.deepEqual(lockedIn.discard, [])
+  assert.deepEqual(lockedIn.skip, [{ categoryLabel: "Maske" }])
 })
 
 test("multi-product step: one decided, one open — the open one counts once, not the step", () => {
@@ -335,6 +344,7 @@ test("no steps at all: empty, nothing open", () => {
   assert.deepEqual(runsheetLockedIn([]), {
     buy: [],
     keep: [],
+    discard: [],
     skip: [],
     totalLabel: EUR("0,00"),
     missingPrices: false,

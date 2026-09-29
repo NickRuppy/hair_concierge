@@ -4,19 +4,22 @@ import type { DiscoveryCockpitStepView } from "../cockpit"
 import type { DiscoveryCallDecision } from "../refined-routine"
 
 /**
- * „Für ihren Plan festgehalten" (produktphase-lockin T1): the call's decisions compiled into
- * what she buys, keeps and deliberately goes without — the Phase-3 payoff Nick reads out and
- * copies as a shopping list.
+ * „Für den Plan festgehalten" (produktphase-lockin T1): the call's decisions compiled into
+ * what she buys, keeps, stops using and deliberately goes without — the Phase-3 payoff Nick
+ * reads out and copies as a shopping list.
  *
  * Pure and read-only, and no new decision mechanics: it reads the same per-entry decisions
  * the Entscheidung radios write (`discovery_call_decisions`). A decision unit is one entry of
  * a step — her product in it, or the empty step (batch 9: several of her products in one
  * step each carry their own decision) — exactly the unit `deriveBuckets` files.
  *
- * - swap with a target → „Kauft sie neu", at the chosen product's `priceLabel`;
- * - keep of her product → „Behält sie";
- * - keep of an empty step („Ohne Produkt weiter") → „Bewusst ohne Produkt" (no label);
- * - drop of one of her products → „Bewusst ohne Produkt", named (the step keeps a sibling);
+ * - swap with a target → „Neu kaufen", at the chosen product's `priceLabel`;
+ * - keep of her product → „Behalten";
+ * - drop of one of her products → „Weglassen", named: a recommendation to stop using it
+ *   (the step keeps a sibling);
+ * - keep of an empty step („Ohne Produkt weiter") → „Bewusst ohne Produkt" — only steps
+ *   deliberately left without any product (a drop on an empty step, which the radios don't
+ *   offer, lands here too: there is no product of hers to discard);
  * - anything else (undecided, or a swap without a target) → open.
  *
  * The price is display only (R19). The total sums the prices that parse
@@ -37,12 +40,16 @@ export type RunsheetLockedInBuyRow = {
 
 export type RunsheetLockedInKeepRow = { label: string; categoryLabel: string }
 
-/** `label` names a dropped product of hers; null for an empty step left without one. */
-export type RunsheetLockedInSkipRow = { categoryLabel: string; label: string | null }
+/** A product of hers she stops using (decision drop). */
+export type RunsheetLockedInDiscardRow = { label: string; categoryLabel: string }
+
+/** A step deliberately left without any product. */
+export type RunsheetLockedInSkipRow = { categoryLabel: string }
 
 export type RunsheetLockedIn = {
   buy: RunsheetLockedInBuyRow[]
   keep: RunsheetLockedInKeepRow[]
+  discard: RunsheetLockedInDiscardRow[]
   skip: RunsheetLockedInSkipRow[]
   /** The sum of the known prices, German („37,95 €"). */
   totalLabel: string
@@ -55,7 +62,7 @@ export type RunsheetLockedIn = {
 }
 
 const UNKNOWN_PRODUCT = "Produkt ohne Namen"
-const OWNED_FALLBACK = "Ihr Produkt"
+const OWNED_FALLBACK = "Bisheriges Produkt"
 const LIST_TITLE = "Einkaufsliste:"
 const LIST_EMPTY = "Einkaufsliste: noch leer"
 
@@ -89,6 +96,7 @@ export function runsheetLockedIn(
   const lockedIn: RunsheetLockedIn = {
     buy: [],
     keep: [],
+    discard: [],
     skip: [],
     totalLabel: "",
     missingPrices: false,
@@ -111,17 +119,19 @@ export function runsheetLockedIn(
       }
       lockedIn.buy.push(row)
     } else if (selection?.decision === "keep") {
-      if (empty) lockedIn.skip.push({ categoryLabel: step.categoryLabel, label: null })
+      if (empty) lockedIn.skip.push({ categoryLabel: step.categoryLabel })
       else
         lockedIn.keep.push({
           label: step.ownedLabel ?? OWNED_FALLBACK,
           categoryLabel: step.categoryLabel,
         })
     } else if (selection?.decision === "drop") {
-      lockedIn.skip.push({
-        categoryLabel: step.categoryLabel,
-        label: empty ? null : (step.ownedLabel ?? OWNED_FALLBACK),
-      })
+      if (empty) lockedIn.skip.push({ categoryLabel: step.categoryLabel })
+      else
+        lockedIn.discard.push({
+          label: step.ownedLabel ?? OWNED_FALLBACK,
+          categoryLabel: step.categoryLabel,
+        })
     } else {
       lockedIn.openCount += 1
     }

@@ -51,8 +51,8 @@ import { DISCOVERY_STYLING_LABEL, discoveryUsageDifferenceLabel } from "./usage-
  * the single interaction on the right — keep what the participant owns, or swap it for one
  * of the products the engine already put in front of them.
  *
- * Voice: this screen is Nick's, not the participant's, so it speaks about her in the third
- * person („Ihr Produkt"). The verdict block underneath is the participant's own scan result,
+ * Voice: this screen is Nick's, not the participant's, so it speaks in pronoun-free labels
+ * („Bisheriges Produkt", Nick's ruling 2026-09-29). The verdict block underneath is the participant's own scan result,
  * rendered by the SAME component their scanner uses (`ScanVerdictSections`), and the step
  * detail is the Idealplan's own wording — both second person at the source. The cockpit
  * shows their neutral variants (`cockpitVoice`, verdict-layer T4): a display override for
@@ -80,7 +80,7 @@ const KLAEREN_TITLE = "Klären"
 const KLAEREN_RESEARCH = "noch in Recherche"
 const KLAEREN_CATEGORY = "Kategorie offen"
 const KLAEREN_NOTE = "Vor dem Call abschließen — sonst bleibt der Schritt ohne Urteil."
-const RESEARCH_SLOT_TITLE = "Ihr Produkt — noch in Recherche"
+const RESEARCH_SLOT_TITLE = "Bisheriges Produkt — noch in Recherche"
 const RESEARCH_SLOT_BODY = "Das Urteil folgt, sobald die Recherche abgeschlossen ist."
 const NEW_ENTRY_TITLE = "Neu dazu"
 const OPEN_ENTRY_TITLE = "Offener Schritt"
@@ -107,7 +107,7 @@ const REFERRAL_COPY = "Nachricht kopieren"
 const REFERRAL_COPIED = "Kopiert."
 const REFERRAL_COPY_FAILED = "Kopieren ging nicht — Text markieren und kopieren."
 
-const COL_PRODUCT = "Ihr Produkt"
+const COL_PRODUCT = "Bisheriges Produkt"
 const COL_DECISION = "Entscheidung"
 const KEEP_LABEL = "Behalten"
 const DROP_LABEL = "Weglassen"
@@ -116,7 +116,7 @@ const KEEP_EMPTY_HINT = "Schritt bleibt offen."
 const SWAP_PREFIX = "Tauschen zu "
 const NEW_PREFIX = "Neu: "
 const GAP_TITLE = "Lücke in der Idealroutine"
-const GAP_BODY = "Sie benutzt für diesen Schritt aktuell nichts."
+const GAP_BODY = "Aktuell ohne Produkt in diesem Schritt."
 const UNANSWERED_STEP = "Nicht angegeben — im Call fragen."
 const NOT_YET_FILLED_STEP = "Noch nicht ausgefüllt."
 const NO_PRODUCT = "Kein Produkt angegeben"
@@ -134,7 +134,7 @@ const SORT_OPTIONS: ReadonlyArray<[DiscoverySwapSort, string]> = [
 const DEPTH_WHY = "Warum dieser Schritt"
 const DEPTH_TYPE = "Produkttyp"
 const DEPTH_CRITERIA = "Worauf es ankommt"
-const DEPTH_FIT = "Warum das zu ihrem Haar passt"
+const DEPTH_FIT = "Warum das passt"
 const DEPTH_RHYTHM = "Wie oft · wann"
 
 const FINALIZE_LABEL = "Finalisieren"
@@ -325,7 +325,7 @@ export function DiscoveryCallCockpit({
       ]
   const finalizeBlocked = blockHints.length > 0
   const products = composeRunsheetProducts({ steps, unassigned, researchItems })
-  // „Für ihren Plan festgehalten": the SAME optimistic selections the radios write, so the
+  // „Für den Plan festgehalten": the SAME optimistic selections the radios write, so the
   // section follows each click before the server round-trip (and rolls back with it).
   const lockedIn = runsheetLockedIn(steps, (step) => selections[entryKey(step)] ?? null)
 
@@ -948,7 +948,7 @@ export function StepDecision({
           // R19: the price where the catalog has one — no placeholder line otherwise.
           subtitle={option.priceLabel}
           rows={option.propertyRows}
-          // Her product's rows beside the alternative („Ihr Produkt | Alternative | Ziel").
+          // Her product's rows beside the alternative („Bisheriges Produkt | Alternative | Ziel").
           ownedRows={step.verdict?.status === "verdict" ? step.verdict.propertyRows : null}
           onChoose={onChoose}
         />
