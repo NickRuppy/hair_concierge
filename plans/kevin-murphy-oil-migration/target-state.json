@@ -1,5 +1,5 @@
 {
-  "fingerprint": "54cebf311e42db4e452c9e71a1f6ef4a6b23f878d37a5d028a63a3271b3d50fd",
+  "fingerprint": "c0dafc1dbc7bde13fe37f9ac04666b9596576ef4c40276464a94a431a2039728",
   "schema": "kevin-murphy-oil-recategorization-v2",
   "batch_id": "S5R-03-km-young-again-oil-recategorization",
   "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
@@ -60,6 +60,7 @@
   ],
   "product_application_protocols": [
     {
+      "id": "2f7fe5d8-10e0-47f9-be82-67d93c33d720",
       "category": "oil",
       "role": "leave_on_fibre_conditioning",
       "cadence": null,
@@ -175,6 +176,7 @@
       }
     },
     {
+      "id": "649e906e-c3f6-4f66-af40-fcb89228955c",
       "category": "oil",
       "role": "dry_finish",
       "cadence": null,

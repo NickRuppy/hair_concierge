@@ -18,10 +18,11 @@ Artifacts in this folder:
 | `oil-thickness-comparison.md`                                                                | Ingredient comparison behind the all-three-thickness ruling                                        |
 | `../../supabase/migrations/20260929120000_kevin_murphy_young_again_oil_recategorization.sql` | The prepared, **unapplied** migration (generated — do not hand-edit)                               |
 
-Content fingerprint: `54cebf311e42db4e452c9e71a1f6ef4a6b23f878d37a5d028a63a3271b3d50fd`. Artifact manifest combined hash: `712f301fd24d8bd5213aca8f2da0f58deedd329e3c01fbd46656444ec0faed3f`.
+Content fingerprint: `c0dafc1dbc7bde13fe37f9ac04666b9596576ef4c40276464a94a431a2039728`. Artifact manifest combined hash: `07fae3cd8259a357b086e414d15b48a825c3c05fbdfbb74ce9bbd2f2beb91e6d`.
 
 - Since the Codex-review revision, the fingerprint covers both the target and the preimage guards (snapshot rows, `captured_at`, pinned timestamps), so a re-captured snapshot changes the receipt fingerprint.
-- Previous fingerprints: `3b9410d5…` (all three thicknesses, target-only hash) and `6b34dcb7…` (`normal` only).
+- Previous fingerprints: `54cebf31…` (Codex round 1, before deterministic protocol ids), `3b9410d5…` (all three thicknesses, target-only hash) and `6b34dcb7…` (`normal` only).
+- The two Oil protocol rows get deterministic ids derived from the batch, product and role (`2f7fe5d8-…` leave-on, `649e906e-…` dry finish), so the exact-target checks can pin them.
 - `npx tsx plans/kevin-murphy-oil-migration/generate.ts --check` re-generates in memory and fails if any emitted file, the manifest or the snapshot hash has drifted.
 
 ---
@@ -261,10 +262,14 @@ Run `plans/kevin-murphy-oil-migration/verify.sql` read-only against production. 
 
 **What query 1 proves**, with each check compared byte-exactly (jsonb-normalized) against `target-state.json`:
 
-- **`product_target`:** category, legacy category, tags, all three thicknesses, concern, description, net content and affiliate link. Name, brand, origin, active, lifecycle and recommended are unchanged.
+- **`product_target`:** the **full** product row (`to_jsonb`) equals the snapshot row with exactly the reviewed fields overridden: category, legacy category, tags, all three thicknesses, concern, description and net content. Every other column must still hold its snapshot value.
+  - Two columns are governed omissions, not silent ones.
+  - `updated_at` is bumped by the updated-at trigger on the apply and again on the planned embedding refresh (§8), so it can't identify the target.
+  - `embedding` is never written by the migration and isn't in the snapshot; the rollback clears it (§7).
+- **`oil_rows_untouched_since_apply`:** every `created_at` and `updated_at` on the Oil rows equals the receipt's `created_at`. That covers the spec, eligibility, protocols, evidence and thickness/concern rows. All of them are written in the apply transaction with `now()`, so any later rewrite breaks the equality.
 - **`no_leave_in_spec`, `no_leave_in_fit_spec`, `no_leave_in_eligibility`:** no leave-in authority survived.
 - **`oil_spec_target`, `oil_eligibility_target`:** exact rows, with no extras.
-- **`protocols_target`:** every protocol row of the product, including the full V1 `guidance_payload` and V2 `guidance_payload_v2`, source label, URL and text, and the generated family.
+- **`protocols_target`:** every protocol row of the product, including its **deterministic row id**, the full V1 `guidance_payload` and V2 `guidance_payload_v2`, source label, URL and text, and the generated family. A replaced row with identical content but a new id fails.
 - **`thickness_eligibility_target`, `concern_eligibility_target`:** exactly `oil:coarse, oil:fine, oil:normal` and `oil:styling-oel`, across all categories.
 - **`fact_evidence_target`:** every evidence row of the product, including fact values, source label, URL, text and type, `checked_at`, `batch_id` and both fingerprints.
 - **`receipt_target`:** exactly one receipt for the batch, with the matching fingerprints and `reviewed_by='nick'`.
@@ -281,8 +286,14 @@ Run `plans/kevin-murphy-oil-migration/verify.sql` read-only against production. 
 
 `rollback.sql` is a prepared transaction, not a migration. It is generated alongside the migration and covered by the artifact manifest. What it does, in order:
 
-1. **Locks** (P1-2):
-   - `lock_timeout 5s` and `TimeZone UTC`.
+1. **Locks and duration bounds** (P1-2, round-2 P2):
+   - `TimeZone UTC`.
+   - `lock_timeout 5s`, which bounds only lock **acquisition** waits.
+   - The ACCESS EXCLUSIVE **hold** from step 3 is bounded separately:
+     - `statement_timeout 10s` caps every statement; each DO block is one statement.
+     - `idle_in_transaction_session_timeout 5s` terminates the session, and so rolls everything back, if the client stalls between statements.
+     - On PostgreSQL ≥ 17, `transaction_timeout 30s` caps the whole transaction. It's set conditionally on `server_version_num`, because the local stack is 17 but the production version isn't verified here.
+     - Worst case without `transaction_timeout`: about 6 statements × (10 s + 5 s) ≤ 90 s.
    - The same shared advisory lock and the same Personal Plan and owner `SHARE` table locks as the forward migration, taken **before** the reference check. A plan can no longer acquire an Oil reference between the check and the commit.
 2. **Trigger precheck** (P1-1): `products` has exactly one non-internal trigger calling `update_updated_at_column()`, namely `set_updated_at_products`, and it is enabled.
 3. **Disable the trigger:** `ALTER TABLE public.products DISABLE TRIGGER set_updated_at_products`, before any DML, so `products` has no pending trigger events.
@@ -291,14 +302,16 @@ Run `plans/kevin-murphy-oil-migration/verify.sql` read-only against production. 
      - `ALTER TABLE` holds ACCESS EXCLUSIVE on `products` until COMMIT, so no other session can write products while the trigger is off.
      - A failure rolls the trigger state back with the transaction.
      - `session_replication_role = replica` is deliberately **not** used, because it would also silence FK enforcement and the eligibility compat triggers the restore relies on.
-   - **Trade-off:** products reads block for the duration. It's one short transaction, bounded by `lock_timeout`.
+   - **Trade-off:** reads of **all** products block while the lock is held.
+   - **Operational expectation (reviewed):** the hold stays well under 1 second (one product, keyed lookups, Personal Plan tables of a few hundred rows). Run it in a low-traffic maintenance moment, as a single `psql` file (`-v ON_ERROR_STOP=1 -f`), never interactively.
 4. **Target precheck** (P1-3): the generator's `TARGET_CHECKS`, the same list as the postflight and `verify.sql`.
-   - The complete live Oil state must equal `target-state.json` byte-exactly: spec, eligibility, protocols including payloads and pointers, evidence including fact values, source text and fingerprints, receipt, and thickness/concern rows.
+   - The complete live Oil state must equal `target-state.json` byte-exactly: the full product row, spec, eligibility, protocols including **row ids**, payloads and pointers, evidence including fact values, source text and fingerprints, receipt, and thickness/concern rows. Every Oil row's timestamps must still equal the apply transaction's time.
    - Any post-apply revision makes the rollback refuse instead of silently destroying it.
    - The plan/owner reference check runs under the locks from step 1.
-5. **Delete** the Oil rows and the receipt, with checked counts.
+5. **Delete** the Oil rows and the receipt. Every delete has a checked row count, including the 3 thickness rows and 1 concern row (round-2 P3).
 6. **Restore the exact pre-values:**
-   - `products`: the old category, tags, concerns and description, `net_content NULL`, and `updated_at 2026-08-15T07:47:38.210968+00`. The value sticks because the trigger is off.
+   - `products`: the old category, tags, concerns and description, `net_content NULL`, and `updated_at 2026-08-15T07:47:38.210968+00`. The timestamp sticks because the trigger is off.
+   - `products.embedding` is set to **NULL**. It isn't in the snapshot, so it can't be restored exactly. After the planned refresh it would be an Oil vector, and silently keeping it on the restored Leave-in description is the one wrong option.
    - Every deleted leave-in row, re-inserted with its **original ids and timestamps** from `prestate-2026-09-29.json`:
      - 1 spec
      - 1 fit spec
@@ -312,15 +325,22 @@ Run `plans/kevin-murphy-oil-migration/verify.sql` read-only against production. 
    - The trigger is enabled again (`tgenabled='O'`).
    - The forward migration's own `PRESTATE_CHECKS` pass, which proves re-apply coherence.
    - Full-row equality, timestamps included, of the product row (minus `embedding`) and every restored child row against the snapshot.
+   - `embedding IS NULL`.
    - No forward receipt remains.
    - The publication gate passes.
+
+9. **Mandatory post-rollback step: regenerate the embedding.** This is a separate, Nick-gated one-row write after the rollback commits.
+   - Embed the restored description with the same model and dimensions as `generateEmbedding()` in `scripts/ingest-products.ts` (`text-embedding-3-large`).
+   - Write it to `products.embedding` for this id.
+   - Until then the product is absent from vector search only: `match_products` filters `embedding IS NOT NULL`. The structured leave-in matchers are unaffected.
+   - `scripts/backfill-null-embeddings.ts` covers `content_chunks` only, not `products`, so it does **not** do this.
 
 **Fail-closed caveat:** if an unrelated `products` column (e.g. price) changed after the apply, the full-row check aborts the rollback. The snapshot must then be re-captured and the artifacts regenerated. That's intended: an exact restore over newer data would be a lie.
 
 ## 8. Out of scope: follow-ups this change surfaces (not done)
 
 1. **RAG chunk still says Leave-in.** `content_chunks` id `9cb5fa01-…` (`produktmatrix/leave-in`, normal/performance) lists "Kevin Murphy Young Again". It's regenerated from the Excel product matrix by `scripts/ingest-product-chunks.ts`, which also means the Excel/JSON source still carries the leave-in row. The source needs editing, then a re-ingest.
-2. **`products.embedding` becomes stale.** The description changes, but the migration leaves the embedding alone, and `backfill-null-embeddings.ts` only fills NULLs. Re-embed deliberately, or accept the drift.
+2. **`products.embedding` becomes stale.** The description changes, but the migration leaves the embedding alone, and `backfill-null-embeddings.ts` only covers `content_chunks`. Re-embed deliberately with the `ingest-products.ts` model. Doing so bumps `products.updated_at`, which the exact-target checks deliberately don't pin. If a rollback ever follows, it clears the embedding and §7 step 9 regenerates it.
 3. **Historical data artifacts stay leave-in:** `data/catalog-enrichment/personal-plan-stage5-*/*.json`, the scanner coverage JSONs, and `tests/personal-plan-leave-in-use-case-manifest.test.ts`. They're file-based and unaffected by the DB, so the test stays green. The receipt and ledger rows (10 + 1) stay as history, and any replay of those old batches would now fail its guards. That's intended.
 4. **Gliss Öl-Elixier (`e93d522b…`) bugs seen while reading references.** Its live Oil protocols carry `guidanceKey "product-oil-__PRODUCT_ID__-leave-on"` / `"…-dry"`: the expansion executor substitutes `scope.productId` but not the key. Its leave-on row also lists `styling_day` in `compatibleDayTypes`, which contradicts the ruled TPL-OIL-LEAVEON day set. It's worth checking every expansion Oil for the same two issues.
 5. **YOUNG.AGAIN reformulation.** The EU D5/D6 deadline is 6 June 2027, so INCI and weight need re-verifying once KM reformulates.

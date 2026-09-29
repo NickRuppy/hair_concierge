@@ -159,6 +159,20 @@ function sha256(text: string): string {
   return createHash("sha256").update(text, "utf8").digest("hex")
 }
 
+/**
+ * Deterministic, name-derived row id (sha256 of the seed, formatted as an RFC
+ * 9562 UUID with version/variant bits set so every uuid validator accepts it).
+ * Lets the exact-target checks pin protocol row ids: a replaced row with
+ * identical content but a new id no longer passes.
+ */
+function deterministicUuid(seed: string): string {
+  const hex = sha256(seed).slice(0, 32).split("")
+  hex[12] = "4"
+  hex[16] = ((parseInt(hex[16]!, 16) & 0x3) | 0x8).toString(16)
+  const h = hex.join("")
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20, 32)}`
+}
+
 function sqlText(value: string | null): string {
   if (value === null) return "NULL"
   return `'${value.replaceAll("'", "''")}'`
@@ -271,6 +285,7 @@ const protocols = OIL_SPEC.role_support.map((role) => {
   )
   return {
     template_id: templateId,
+    id: deterministicUuid(`${BATCH_ID}:${PRODUCT_ID}:product_application_protocols:${role}`),
     category: stamped.category,
     role: stamped.role,
     cadence: stamped.cadence,
@@ -411,6 +426,14 @@ const FULL_RESTORE_CHECKS: Check[] = [
     predicate: `(SELECT to_jsonb(p) - 'embedding' FROM public.products p WHERE p.id = ${PID}) = ${sqlJson(pre)}`,
   },
   {
+    // Governed omission: the snapshot does not carry the embedding vector, so
+    // it cannot be restored byte-exactly. The rollback clears it instead of
+    // silently keeping a possibly Oil-derived vector on the restored Leave-in
+    // description; plan.md §7 records the mandatory regeneration step.
+    name: "product_embedding_cleared_for_regeneration",
+    predicate: `(SELECT p.embedding IS NULL FROM public.products p WHERE p.id = ${PID})`,
+  },
+  {
     name: "protocols_full_rows_restored",
     predicate: `${jsonAgg("to_jsonb(t)", "public.product_application_protocols t", "t.id")} = ${sqlJson([...prestate.product_application_protocols].sort(byId))}`,
   },
@@ -502,6 +525,7 @@ const expectedReceipt = [
 const expectedPostProtocols = [...protocols]
   .sort((a, b) => (a.role < b.role ? -1 : 1))
   .map((p) => ({
+    id: p.id,
     category: p.category,
     role: p.role,
     application_family: p.expected_application_family,
@@ -520,7 +544,7 @@ const expectedPostProtocols = [...protocols]
     guidance_payload_v2: p.guidance_payload_v2,
   }))
 const PROTOCOL_PROJECTION = `pg_catalog.jsonb_build_object(
-           'category', category, 'role', role, 'application_family', application_family,
+           'id', id, 'category', category, 'role', role, 'application_family', application_family,
            'cadence', cadence, 'application_stage', application_stage,
            'application_state', application_state, 'placement', placement,
            'contact_time_seconds', contact_time_seconds, 'rinse_action', rinse_action,
@@ -528,23 +552,43 @@ const PROTOCOL_PROJECTION = `pg_catalog.jsonb_build_object(
            'source_label', source_label, 'source_url', source_url, 'source_text', source_text,
            'guidance_payload', guidance_payload, 'guidance_payload_v2', guidance_payload_v2)`
 
+// The product row the migration leaves behind: the snapshot row with exactly
+// the reviewed fields overridden. Two columns are governed omissions, never
+// silent ones:
+//   * updated_at — bumped by set_updated_at_products on the apply AND on the
+//     planned post-apply embedding refresh (plan.md §8), so it cannot identify
+//     the target; every other column is compared exactly instead.
+//   * embedding — the migration never writes it and the snapshot does not carry
+//     it; the rollback clears it and plan.md §7 records the regeneration step.
+const productTargetRow = omit({ ...pre, ...PRODUCT_TARGET }, ["updated_at", "embedding"])
+
+// Every Oil child row is written in the apply transaction, so each created_at /
+// updated_at equals the receipt's created_at (all DEFAULT now() = transaction
+// start). A later rewrite of any Oil row breaks this equality.
+const RECEIPT_CREATED_AT = `(SELECT r.created_at FROM public.catalog_enrichment_applied_items r WHERE r.batch_id = ${sqlText(BATCH_ID)} AND r.product_key = ${sqlText(PRODUCT_KEY)})`
+const OIL_ROW_STAMPS = [
+  ["public.product_oil_specs", ["created_at", "updated_at"]],
+  ["public.product_oil_eligibility", ["created_at", "updated_at"]],
+  ["public.product_application_protocols", ["created_at", "updated_at"]],
+  ["public.personal_plan_catalog_fact_evidence", ["created_at"]],
+  ["public.product_thickness_eligibility", ["created_at"]],
+  ["public.product_concern_eligibility", ["created_at"]],
+] as const
+const oilStampUnion = OIL_ROW_STAMPS.flatMap(([table, cols]) =>
+  cols.map((col) => `SELECT ${col} AS stamp FROM ${table} WHERE product_id = ${PID}`),
+).join("\n          UNION ALL ")
+
 /** The complete generated Oil target, byte-exact (jsonb-normalized). */
 const TARGET_CHECKS: Check[] = [
   {
     name: "product_target",
-    predicate: `EXISTS (SELECT 1 FROM public.products WHERE id = ${PID}
-        AND name = ${sqlText(pre.name as string)} AND brand = ${sqlText(pre.brand as string)}
-        AND category_key = ${sqlText(PRODUCT_TARGET.category_key)}
-        AND category = ${sqlText(PRODUCT_TARGET.category)}
-        AND tags = ${sqlTextArray(PRODUCT_TARGET.tags)}
-        AND suitable_thicknesses = ${sqlTextArray(PRODUCT_TARGET.suitable_thicknesses)}
-        AND suitable_concerns = ${sqlTextArray(PRODUCT_TARGET.suitable_concerns)}
-        AND description = ${sqlText(PRODUCT_TARGET.description)}
-        AND net_content_value = ${PRODUCT_TARGET.net_content_value}
-        AND net_content_unit = ${sqlText(PRODUCT_TARGET.net_content_unit)}
-        AND affiliate_link = ${sqlText(pre.affiliate_link as string)}
-        AND origin = 'curated' AND is_active = true AND lifecycle_status = 'active'
-        AND is_chaarlie_recommended = true)`,
+    predicate: `(SELECT to_jsonb(p) - 'embedding' - 'updated_at' FROM public.products p WHERE p.id = ${PID}) = ${sqlJson(productTargetRow)}`,
+  },
+  {
+    name: "oil_rows_untouched_since_apply",
+    predicate: `(SELECT count(*) FROM (
+          ${oilStampUnion}
+        ) stamps WHERE stamps.stamp IS DISTINCT FROM ${RECEIPT_CREATED_AT}) = 0`,
   },
   {
     name: "no_leave_in_spec",
@@ -639,12 +683,12 @@ SELECT pg_catalog.pg_advisory_xact_lock(
 const protocolInserts = protocols
   .map(
     (p) => `  INSERT INTO public.product_application_protocols (
-    product_id, category, role, cadence, application_stage, application_state,
+    id, product_id, category, role, cadence, application_stage, application_state,
     placement, contact_time_seconds, rinse_action, reapplication,
     instruction_modifiers, source_label, source_url, source_text,
     guidance_payload, guidance_payload_v2
   ) VALUES (
-    v_product_id, ${sqlText(p.category)}, ${sqlText(p.role)}, ${sqlValue(p.cadence, "jsonb")},
+    ${sqlText(p.id)}::uuid, v_product_id, ${sqlText(p.category)}, ${sqlText(p.role)}, ${sqlValue(p.cadence, "jsonb")},
     ${sqlValue(p.application_stage, "text")}, ${sqlValue(p.application_state, "text")},
     ${sqlValue(p.placement, "text")}, ${sqlValue(p.contact_time_seconds, "integer")},
     ${sqlValue(p.rinse_action, "text")}, ${sqlValue(p.reapplication, "text")},
@@ -707,6 +751,9 @@ const migration = `-- Kevin Murphy YOUNG.AGAIN: leave_in -> oil recategorization
 BEGIN;
 
 SET LOCAL lock_timeout = '5s';
+-- product_target compares full product rows via to_jsonb, whose timestamptz text
+-- depends on the session TimeZone; the snapshot was captured in UTC.
+SET LOCAL TimeZone = 'UTC';
 
 ${ADVISORY_LOCK}
 
@@ -895,13 +942,37 @@ const rollback = `-- ROLLBACK for ${BATCH_ID} (fingerprint ${FINGERPRINT}).
 --     write products while the trigger is off, and any failure rolls the trigger
 --     state back with the transaction. session_replication_role is NOT used: it
 --     would also silence FK enforcement and the eligibility compat triggers.
+--   * products.embedding is not in the snapshot, so it is cleared (asserted
+--     NULL) instead of silently kept; regenerate it afterwards (plan.md §7);
 --   * the verify step re-proves the forward migration's own preimage guards plus
 --     full-row equality (timestamps included, TimeZone UTC) against the snapshot,
 --     so a later re-apply of the forward migration passes its guards.
 BEGIN;
 
+-- Duration bounds. ALTER TABLE below holds ACCESS EXCLUSIVE on products (reads
+-- of every product block) until COMMIT, and lock_timeout only bounds lock
+-- ACQUISITION waits, so the hold itself is bounded separately:
+--   * statement_timeout caps every statement (each DO block is one statement);
+--   * idle_in_transaction_session_timeout caps any client stall between
+--     statements (the session is terminated, which rolls everything back);
+--   * transaction_timeout (PostgreSQL >= 17 only, set conditionally below) caps
+--     the whole transaction.
+-- Worst case without transaction_timeout: about 6 statements after the ALTER x
+-- (10 s + 5 s) <= 90 s. Reviewed expectation: well under 1 s (one product, keyed
+-- lookups, Personal Plan tables of ~100-500 rows). Run it in a low-traffic
+-- maintenance moment, as a single psql file, never interactively.
 SET LOCAL lock_timeout = '5s';
+SET LOCAL statement_timeout = '10s';
+SET LOCAL idle_in_transaction_session_timeout = '5s';
 SET LOCAL TimeZone = 'UTC';
+
+DO $duration_bound$
+BEGIN
+  IF pg_catalog.current_setting('server_version_num')::integer >= 170000 THEN
+    PERFORM pg_catalog.set_config('transaction_timeout', '30s', true);
+  END IF;
+END;
+$duration_bound$;
 
 ${ADVISORY_LOCK}
 
@@ -959,7 +1030,11 @@ BEGIN
   GET DIAGNOSTICS v_rows = ROW_COUNT;
   IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: oil spec count %', v_rows; END IF;
   DELETE FROM public.product_concern_eligibility WHERE product_id = v_product_id AND category_key = 'oil';
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> ${PRODUCT_TARGET.suitable_concerns.length} THEN RAISE EXCEPTION 'rollback: oil concern eligibility count %', v_rows; END IF;
   DELETE FROM public.product_thickness_eligibility WHERE product_id = v_product_id AND category_key = 'oil';
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> ${PRODUCT_TARGET.suitable_thicknesses.length} THEN RAISE EXCEPTION 'rollback: oil thickness eligibility count %', v_rows; END IF;
   DELETE FROM public.personal_plan_catalog_fact_evidence
   WHERE product_id = v_product_id AND fact_key = 'oil.authority_facts' AND batch_fingerprint = v_fingerprint;
   GET DIAGNOSTICS v_rows = ROW_COUNT;
@@ -970,6 +1045,9 @@ BEGIN
   IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: receipt count %', v_rows; END IF;
 
   -- ${UPDATED_AT_TRIGGER} is disabled, so updated_at keeps the restored value.
+  -- embedding: governed omission (not in the snapshot). It is cleared rather
+  -- than kept, because after the planned post-apply refresh it would be an Oil
+  -- vector on the restored Leave-in description; plan.md §7 step 9 regenerates it.
   UPDATE public.products
   SET category_key = ${sqlText(pre.category_key as string)},
       category = ${sqlText(pre.category as string)},
@@ -979,6 +1057,7 @@ BEGIN
       description = ${sqlText(pre.description as string)},
       net_content_value = NULL,
       net_content_unit = NULL,
+      embedding = NULL,
       updated_at = ${sqlText(pre.updated_at as string)}::timestamptz
   WHERE id = v_product_id AND category_key = 'oil';
   GET DIAGNOSTICS v_rows = ROW_COUNT;
@@ -1108,6 +1187,10 @@ COMMIT;
 const verify = `-- READ-ONLY post-apply proof for ${BATCH_ID} (fingerprint ${FINGERPRINT}).
 -- Generated by plans/kevin-murphy-oil-migration/generate.ts; the checks are the
 -- migration postflight's own TARGET checks. Every query must return ZERO rows.
+
+-- product_target compares full product rows via to_jsonb, whose timestamptz text
+-- depends on the session TimeZone; the snapshot was captured in UTC.
+SET TimeZone = 'UTC';
 
 -- 1) The complete generated Oil target (product row, no Leave-in authority,
 --    Oil spec, eligibility, both protocols incl. V1/V2 payloads, thickness and
