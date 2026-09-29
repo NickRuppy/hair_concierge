@@ -8,6 +8,7 @@ import { createDiscoveryCockpitPage } from "../src/app/admin/beratung/[enrollmen
 import {
   DISCOVERY_REFERRAL_MESSAGE,
   DiscoveryCallCockpit,
+  StepDecision,
 } from "../src/components/discovery/cockpit/discovery-call-cockpit"
 import {
   parseRunsheetBaseline,
@@ -20,6 +21,7 @@ import {
 } from "../src/components/discovery/cockpit/runsheet-follow-up"
 import {
   formatRunsheetScore,
+  formatRunsheetWeeklyBand,
   runsheetChecklistLines,
 } from "../src/components/discovery/cockpit/runsheet-parts"
 import {
@@ -27,6 +29,7 @@ import {
   composeRunsheetProducts,
 } from "../src/components/discovery/cockpit/runsheet-products"
 import { DiscoveryRunsheetRoutine } from "../src/components/discovery/cockpit/runsheet-routine"
+import { ScanVerdictSections } from "../src/components/scan/scan-verdict-sections"
 import { parseDiscoveryCallSheet, type DiscoveryCallSheet } from "../src/lib/discovery/call-sheet"
 import {
   buildDiscoveryCockpitView,
@@ -35,15 +38,28 @@ import {
   type DiscoveryCallIntake,
   type DiscoveryCockpitModel,
 } from "../src/lib/discovery/cockpit"
+import { cockpitVoice } from "../src/lib/discovery/cockpit-copy"
 import { discoveryConcernCoverageInput } from "../src/lib/discovery/concern-recipe-view"
+import { concernRecipeFor } from "../src/lib/discovery/concern-recipes"
+import { consultBriefSource } from "../src/lib/discovery/consult-brief/source"
 import type { DiscoveryEnrollment } from "../src/lib/discovery/enrollment"
 import type { DiscoveryIdealStep } from "../src/lib/discovery/load-ideal-routine"
 import type { DiscoveryParticipantVerdict } from "../src/lib/discovery/load-participant-verdicts"
+import { buildDiscoveryQuizAnswers } from "../src/lib/discovery/quiz-answers"
 import {
   composeDiscoveryRefinedRoutine,
+  type DiscoveryCallDecision,
   type DiscoveryIntakeItem,
 } from "../src/lib/discovery/refined-routine"
-import type { ScanPresentedVerdictPayload } from "../src/lib/scan/types"
+import type {
+  ScanAlternativePresentation,
+  ScanPresentedVerdictPayload,
+} from "../src/lib/scan/types"
+import {
+  SCAN_NOT_NEEDED_REASON_COPY,
+  scanNotNeededHeadline,
+  scanNotNeededSubtitle,
+} from "../src/lib/scan/verdict-labels"
 
 /**
  * The consult runsheet (T3): the cockpit page in six phases, rendered through its real
@@ -196,21 +212,27 @@ const verdicts: DiscoveryParticipantVerdict[] = [
 ]
 
 function model(
-  input: { steps?: DiscoveryIdealStep[]; items?: DiscoveryIntakeItem[] } = {},
+  input: {
+    steps?: DiscoveryIdealStep[]
+    items?: DiscoveryIntakeItem[]
+    verdicts?: DiscoveryParticipantVerdict[]
+    decisions?: DiscoveryCallDecision[]
+  } = {},
 ): DiscoveryCockpitModel {
   const steps = input.steps ?? [shampooStep, conditionerStep]
   const items = input.items ?? [shampooItem, scannedConditioner]
+  const stepVerdicts = input.verdicts ?? verdicts
   return {
     status: "ready",
     steps,
-    verdicts,
+    verdicts: stepVerdicts,
     previewSource: { personalPlanId: `discovery:${ids.intake}`, sourceNeedVersionId: "v1" },
     routine: composeDiscoveryRefinedRoutine({
       steps,
       items,
-      decisions: [],
+      decisions: input.decisions ?? [],
       swapProducts: [],
-      ownedProducts: discoveryOwnedProductIdentities(verdicts),
+      ownedProducts: discoveryOwnedProductIdentities(stepVerdicts),
     }),
     recommendationProducts: [],
     recommendationBrandsAvailable: true,
@@ -399,6 +421,105 @@ test("a call sheet fills the score tile, the staircase and the follow-ups", asyn
   assert.ok(!markup.includes("Baseline-Score abfragen"))
 })
 
+// --- consult-agent T4: generate button + stale hint ------------------------------------------
+
+const STALE_HINT = "Eingaben haben sich geändert — Brief neu generieren?"
+
+/** The call sheet as generated from exactly what the page reads (the shared helper's hash). */
+function generatedCallSheet(sourceHash: string): DiscoveryCallSheet {
+  return {
+    ...callSheet,
+    consultBrief: {
+      ...callSheet.consultBrief!,
+      generated_at: "2026-09-28T08:00:00.000Z",
+      generated_by: "agent",
+      source_hash: sourceHash,
+    },
+  }
+}
+
+function pageHash(): string {
+  const cockpitModel = model()
+  return consultBriefSource({
+    model: cockpitModel,
+    view: buildDiscoveryCockpitView(cockpitModel),
+    quiz: buildDiscoveryQuizAnswers(null),
+    callSheet,
+  }).sourceHash
+}
+
+test("generate button: „Brief erstellen“ for a legacy enrollment, „Neu generieren“ once generated", async () => {
+  const legacy = await renderPage()
+  assert.match(legacy, /id="runsheet-brief-generate"[^>]*>Brief erstellen</)
+  assert.ok(!legacy.includes(STALE_HINT))
+  const generated = await renderPage({
+    loadCallSheet: async () => generatedCallSheet(pageHash()),
+  })
+  assert.match(generated, /id="runsheet-brief-generate"[^>]*>Neu generieren</)
+  // It sits in Phase 2, before the Diagnose.
+  const phase2 = generated.indexOf('id="runsheet-phase-2"')
+  const button = generated.indexOf('id="runsheet-brief-generate"')
+  assert.ok(phase2 >= 0 && button > phase2 && button < generated.indexOf('id="runsheet-diagnose"'))
+})
+
+test("stale hint: only when the stored hash differs from the page's own fingerprint", async () => {
+  const fresh = await renderPage({ loadCallSheet: async () => generatedCallSheet(pageHash()) })
+  assert.ok(!fresh.includes(STALE_HINT), "same inputs: the brief is current")
+  const stale = await renderPage({ loadCallSheet: async () => generatedCallSheet("older-hash") })
+  assert.ok(stale.includes(STALE_HINT))
+})
+
+test("stale hint: hidden when the page read degraded (quiz lead unread)", async () => {
+  const original = console.error
+  console.error = () => {}
+  try {
+    const markup = await renderPage({
+      loadCallSheet: async () => generatedCallSheet("older-hash"),
+      loadQuizLead: async () => {
+        throw new Error("lead read failed")
+      },
+    })
+    assert.ok(!markup.includes(STALE_HINT))
+    // The button stays: the route reads for itself.
+    assert.match(markup, /id="runsheet-brief-generate"[^>]*>Neu generieren</)
+  } finally {
+    console.error = original
+  }
+})
+
+test("brief lists: the stored Ziel-Lücken, Call-Fragen and Erwartungen show in Phase 2", async () => {
+  const withLists: DiscoveryCallSheet = {
+    ...generatedCallSheet(pageHash()),
+    consultBrief: {
+      ...generatedCallSheet(pageHash()).consultBrief!,
+      sections: {
+        ...callSheet.consultBrief!.sections,
+        callFragen: ["Wie oft glättest du?"],
+        erwartungen: ["Erste Wirkung nach 4 Wochen", "Im Zweifel ärztlich abklären lassen."],
+      },
+    },
+  }
+  const markup = await renderPage({ loadCallSheet: async () => withLists })
+  const phase2 = markup.slice(
+    markup.indexOf('id="runsheet-phase-2"'),
+    markup.indexOf('id="runsheet-brief-save"'),
+  )
+  assert.ok(phase2.includes(">Für den Call<"))
+  assert.ok(phase2.includes("Ziel „Form &amp; Halt“: offen ansprechen."))
+  assert.ok(phase2.includes("Wie oft glättest du?"))
+  assert.ok(phase2.includes("Im Zweifel ärztlich abklären lassen."))
+})
+
+test("R14: a draft intake shows the generate button disabled with its reason", async () => {
+  const draft = await renderPage({
+    loadIntake: async () => ({ ...intake, state: "draft", submittedAt: null }),
+  })
+  assert.match(draft, /id="runsheet-brief-generate" type="button" disabled=""/)
+  assert.ok(draft.includes("Erst möglich, wenn die Checkliste abgeschickt ist."))
+  const submitted = await renderPage()
+  assert.ok(!/id="runsheet-brief-generate" type="button" disabled=""/.test(submitted))
+})
+
 test("a failing call-sheet read leaves the runsheet empty instead of failing the call", async () => {
   const original = console.error
   console.error = () => {}
@@ -418,6 +539,8 @@ test("a failing call-sheet read leaves the runsheet empty instead of failing the
     )
     assert.match(markup, /id="runsheet-brief-save" type="button" disabled=""/)
     assert.match(markup, /id="runsheet-follow-up-save" type="button" disabled=""/)
+    // T4: generating is locked too — its expected_state would be a guess.
+    assert.match(markup, /id="runsheet-brief-generate" type="button" disabled=""/)
   } finally {
     console.error = original
   }
@@ -482,6 +605,7 @@ test("join rule (a): an empty step WITH an Idealplan recommendation (`neu`) show
     brand: "Balea",
     label: "Balea Feuchtigkeitsspülung",
     verdictLabel: "Passt",
+    priceLabel: null,
     origin: "ideal_recommendation" as const,
     propertyRows: null,
   }
@@ -555,6 +679,7 @@ function twoEmptyConditionerSteps() {
     brand: "Balea",
     label: "Balea Feuchtigkeitsspülung",
     verdictLabel: "Passt",
+    priceLabel: null,
     origin: "ideal_recommendation" as const,
     propertyRows: null,
   }
@@ -648,7 +773,8 @@ test("join rule (c): research in a category whose step is BOUND to her product j
     </AppRouterContext.Provider>,
   )
   const entry = entryOf(markup, "Shampoo")
-  assert.ok(entry.includes("Passt nicht zu deinem Haar"))
+  // The shared verdict title, in the cockpit's neutral voice (verdict-layer T4).
+  assert.ok(entry.includes("Passt nicht zu ihrem Haar"))
   assert.ok(!entry.includes("noch in Recherche"))
 })
 
@@ -900,4 +1026,727 @@ test("checklist lines: one research line per product, the asks on one line", () 
       "Im Call klären: wo sie einkauft",
     ],
   )
+})
+
+// --- verdict-layer T2 (R19): prices on the alternatives, sortable by fit or price -----------
+
+const priced = {
+  a: "30000000-0000-4000-8000-0000000000a1",
+  b: "30000000-0000-4000-8000-0000000000b1",
+  c: "30000000-0000-4000-8000-0000000000c1",
+}
+
+function alternative(productId: string, displayName: string, priceLabel: string | null) {
+  return {
+    productId,
+    displayName,
+    imageUrl: null,
+    priceLabel,
+    netContentLabel: null,
+    verdict: "ideal" as const,
+    verdictLabel: "Passt",
+    brand: null,
+    purchaseUrl: null,
+  }
+}
+
+/** Her shampoo's verdict with these alternatives, in the engine's (fit) order. */
+function verdictsWith(alternatives: ScanAlternativePresentation[]) {
+  if (payload.kind !== "in_catalog") throw new Error("fixture")
+  return [
+    { ...verdicts[0]!, payload: { ...payload, alternatives } },
+  ] as DiscoveryParticipantVerdict[]
+}
+
+const pricedVerdicts = verdictsWith([
+  alternative(priced.a, "Alpha Shampoo", "9,95\u00a0€"),
+  alternative(priced.b, "Beta Shampoo", null),
+  alternative(priced.c, "Gamma Shampoo", "3,45\u00a0€"),
+])
+
+/** Each option's `<label>` markup in the shampoo entry's decision column, in render order. */
+function shampooChoices(markup: string): string[] {
+  const entry = markup.slice(markup.indexOf(">Behalten</h3>"))
+  const decision = entry.slice(entry.indexOf(">Entscheidung<"))
+  const next = decision.indexOf(">Entscheidung<", 1)
+  return (next < 0 ? decision : decision.slice(0, next))
+    .split("<label")
+    .slice(1)
+    .filter((choice) => choice.includes("Tauschen zu"))
+}
+
+test("prices: an alternative with a price shows it, one without shows no price line", async () => {
+  const markup = await renderPage({ loadModel: async () => model({ verdicts: pricedVerdicts }) })
+  const choices = shampooChoices(markup)
+  const alpha = choices.find((choice) => choice.includes("Alpha Shampoo"))
+  const beta = choices.find((choice) => choice.includes("Beta Shampoo"))
+  assert.ok(alpha?.includes("9,95\u00a0€"))
+  assert.ok(beta, "no Beta choice")
+  assert.ok(!beta.includes("€"))
+  // No retailer line: the catalog carries no retailer field.
+  assert.ok(!beta.includes("text-[12px] leading-5 text-muted-foreground"))
+})
+
+test("prices: the default order is the engine's (fit) order — unchanged, „Fit“ active", async () => {
+  const markup = await renderPage({ loadModel: async () => model({ verdicts: pricedVerdicts }) })
+  const order = shampooChoices(markup).map((choice) =>
+    ["Alpha", "Beta", "Gamma"].find((name) => choice.includes(`${name} Shampoo`)),
+  )
+  assert.deepEqual(order, ["Alpha", "Beta", "Gamma"])
+  const key = `${shampooStep.decisionKey}:${ids.shampooItem}`
+  assert.ok(markup.includes(`id="swap-sort-${key}-fit" type="button" aria-pressed="true"`))
+  assert.ok(markup.includes(`id="swap-sort-${key}-price" type="button" aria-pressed="false"`))
+})
+
+test("prices: no toggle where there is nothing to sort (one option, or none priced)", async () => {
+  const unpriced = verdictsWith([
+    alternative(priced.a, "Alpha Shampoo", null),
+    alternative(priced.b, "Beta Shampoo", null),
+  ])
+  for (const stepVerdicts of [verdicts, unpriced]) {
+    const markup = await renderPage({ loadModel: async () => model({ verdicts: stepVerdicts }) })
+    assert.ok(!markup.includes('id="swap-sort-'))
+  }
+})
+
+test("prices: legacy data without price fields renders without a price line or an error", async () => {
+  const { priceLabel: _dropped, ...legacyAlternative } = alternative(
+    priced.a,
+    "Alpha Shampoo",
+    null,
+  )
+  void _dropped
+  const legacyVerdicts = verdictsWith([legacyAlternative as never])
+  const legacyConditioner: DiscoveryIdealStep = {
+    ...conditionerStep,
+    preview: {
+      kind: "recommendation",
+      category: "conditioner",
+      role: "conditioner_rinse_out",
+      decisionKey: conditionerStep.decisionKey,
+      productId: priced.c,
+      productName: "Balea Feuchtigkeitsspülung",
+      imageUrl: null,
+      verdict: "ideal",
+      authorityVersion: "v1",
+      factFingerprint: "fp",
+      reasoning: { productCriteria: "Leicht.", fit: "Passt.", frequency: "nach jeder Wäsche" },
+    } as never,
+  }
+  const legacyModel = model({
+    steps: [shampooStep, legacyConditioner],
+    items: [shampooItem],
+    verdicts: legacyVerdicts,
+  })
+  const view = buildDiscoveryCockpitView(legacyModel)
+  assert.deepEqual(
+    view.steps.map((step) => step.swapOptions.map((option) => option.priceLabel)),
+    [[null], [null]],
+  )
+  const markup = await renderPage({ loadModel: async () => legacyModel })
+  assert.ok(markup.includes("Alpha Shampoo"))
+  assert.ok(markup.includes("Neu: Balea Feuchtigkeitsspülung"))
+  assert.ok(!markup.includes("€"))
+})
+
+test("prices: the read model carries the Idealplan recommendation's price onto its option", () => {
+  const withPrice: DiscoveryIdealStep = {
+    ...conditionerStep,
+    preview: {
+      kind: "recommendation",
+      category: "conditioner",
+      role: "conditioner_rinse_out",
+      decisionKey: conditionerStep.decisionKey,
+      productId: priced.c,
+      productName: "Balea Feuchtigkeitsspülung",
+      imageUrl: "https://catalog.example/conditioner.jpg",
+      verdict: "ideal",
+      authorityVersion: "v1",
+      factFingerprint: "fp",
+      commerce: {
+        priceEur: 2.45,
+        purchaseLinkStatus: "available",
+        netContentValue: null,
+        netContentUnit: null,
+        priceLabel: "2,45\u00a0€",
+        netContentLabel: null,
+        availabilityLabel: null,
+        productUrl: null,
+        affiliateDisclosure: null,
+      },
+      reasoning: { productCriteria: "Leicht.", fit: "Passt.", frequency: "nach jeder Wäsche" },
+    },
+  }
+  // Fix wave (P2/f): the same 7-day freshness rule as the swap alternatives, read from the
+  // catalog's `price_checked_at` (the preview's commerce carries no date of its own).
+  const priceOf = (priceCheckedAt: string | null | undefined) => {
+    const base = model({ steps: [shampooStep, withPrice], items: [shampooItem] })
+    const view = buildDiscoveryCockpitView({
+      ...base,
+      productIdentities: new Map([
+        [
+          priced.c,
+          {
+            name: "Balea Feuchtigkeitsspülung",
+            brand: "Balea",
+            productLine: null,
+            ...(priceCheckedAt === undefined ? {} : { priceCheckedAt }),
+          },
+        ],
+      ]),
+    })
+    const conditioner = view.steps.find((step) => step.category === "conditioner")
+    assert.equal(
+      conditioner?.swapOptions[0]?.priceLabel,
+      conditioner?.idealRecommendation?.priceLabel,
+    )
+    return conditioner?.idealRecommendation?.priceLabel
+  }
+  const daysAgo = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
+  assert.equal(priceOf(daysAgo(1)), "2,45\u00a0€")
+  assert.equal(priceOf(daysAgo(6.9)), "2,45\u00a0€")
+  // Older than 7 days, never checked, unparsable, or no catalog row at all → no price.
+  assert.equal(priceOf(daysAgo(8)), null)
+  assert.equal(priceOf(null), null)
+  assert.equal(priceOf("not a date"), null)
+  assert.equal(priceOf(undefined), null)
+  const withoutIdentity = buildDiscoveryCockpitView(
+    model({ steps: [shampooStep, withPrice], items: [shampooItem] }),
+  )
+  assert.equal(
+    withoutIdentity.steps.find((step) => step.category === "conditioner")?.idealRecommendation
+      ?.priceLabel,
+    null,
+  )
+})
+
+/** StepDecision under a hand-rolled `useState` (no jsdom here — see discovery-call-sheet-save). */
+function stepDecisionHarness(props: React.ComponentProps<typeof StepDecision>) {
+  const internals = (
+    React as unknown as {
+      __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE: { H: unknown }
+    }
+  ).__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE
+  const values: unknown[] = []
+  let cursor = 0
+  const dispatcher = {
+    useState<T>(initial: T): [T, (next: T) => void] {
+      const index = cursor++
+      if (values.length <= index) values[index] = initial
+      return [values[index] as T, (next) => (values[index] = next)]
+    },
+  }
+  return function renderOnce(): React.ReactElement {
+    const previous = internals.H
+    internals.H = dispatcher
+    try {
+      cursor = 0
+      return StepDecision(props) as React.ReactElement
+    } finally {
+      internals.H = previous
+    }
+  }
+}
+
+type AnyElement = React.ReactElement<Record<string, any>>
+
+function flatten(node: React.ReactNode): AnyElement[] {
+  if (Array.isArray(node)) return node.flatMap(flatten)
+  if (!React.isValidElement(node)) return []
+  const element = node as AnyElement
+  return [element, ...React.Children.toArray(element.props.children).flatMap(flatten)]
+}
+
+test("sort toggle: „Preis“ reorders ascending, priceless last; „Fit“ restores the engine order", () => {
+  const view = buildDiscoveryCockpitView(model({ verdicts: pricedVerdicts }))
+  const step = view.steps.find((entry) => entry.category === "shampoo")!
+  const render = stepDecisionHarness({
+    step,
+    name: "k",
+    value: "",
+    dropAllowed: true,
+    takenSwapIds: [],
+    disabled: false,
+    onChoose: () => {},
+  })
+  const optionOrder = (tree: React.ReactElement) =>
+    flatten(tree)
+      .filter((element) => element.props.name === "k" && element.props.value !== "keep")
+      .map((element) => element.props.value)
+  const button = (tree: React.ReactElement, id: string) =>
+    flatten(tree).find((element) => element.props.id === `swap-sort-k-${id}`)!
+
+  let tree = render()
+  assert.deepEqual(optionOrder(tree), [priced.a, priced.b, priced.c])
+  button(tree, "price").props.onClick()
+  tree = render()
+  assert.deepEqual(optionOrder(tree), [priced.c, priced.a, priced.b])
+  assert.equal(button(tree, "price").props["aria-pressed"], true)
+  assert.match(button(tree, "price").props.className, /brand-plum/)
+  assert.doesNotMatch(button(tree, "price").props.className, /coral/)
+  button(tree, "fit").props.onClick()
+  tree = render()
+  assert.deepEqual(optionOrder(tree), [priced.a, priced.b, priced.c])
+  // Display only: the view's own list is never reordered.
+  assert.deepEqual(
+    step.swapOptions.map((option) => option.productId),
+    [priced.a, priced.b, priced.c],
+  )
+})
+
+// --- verdict-layer T3: frequency-delta chips ------------------------------------------------
+
+const catalogConditioner: DiscoveryIntakeItem = {
+  id: "50000000-0000-4000-8000-0000000000c1",
+  category: "conditioner",
+  source: "catalog_search",
+  brandText: "Balea",
+  productNameText: "Pflegespülung",
+  barcodeIdentifier: null,
+  productId: "30000000-0000-4000-8000-0000000000c1",
+  productSubmissionId: null,
+  createdAt: "2026-09-20T10:06:00.000Z",
+  frequency: "weekly_1x",
+}
+
+/** The real Idealroutine cadences: shampoo target 1×/Woche, conditioner after every wash. */
+function frequencyModel(
+  input: {
+    shampoo?: DiscoveryIntakeItem["frequency"]
+    conditioner?: DiscoveryIntakeItem["frequency"]
+  } = {},
+): DiscoveryCockpitModel {
+  return model({
+    steps: [
+      { ...shampooStep, frequencyLabel: "1×/Woche" },
+      { ...conditionerStep, frequencyLabel: "nach jeder Haarwäsche" },
+    ],
+    items: [
+      { ...shampooItem, frequency: input.shampoo ?? "weekly_2x" },
+      { ...catalogConditioner, frequency: input.conditioner ?? "weekly_1x" },
+    ],
+  })
+}
+
+/** The chip's own separator — other runsheet copy says „Ziel" too („Ziel heute: …"). */
+const CHIP_MARK = " · Ziel "
+
+function phase4Of(markup: string): string {
+  return markup.slice(
+    markup.indexOf('id="runsheet-phase-4"'),
+    markup.indexOf('id="runsheet-phase-5"'),
+  )
+}
+
+test("frequency chips: none for cadences the Idealroutine never prints (fixture labels)", async () => {
+  const markup = await renderPage()
+  assert.ok(!markup.includes(CHIP_MARK), "no frequency chip without a real cadence")
+})
+
+test("frequency chips: Phase 3 entries show zu oft / zu selten against her wash anchor", async () => {
+  const markup = await renderPage({ loadModel: async () => frequencyModel() })
+  assert.ok(entryOf(markup, "Shampoo").includes("2×/Wo · Ziel 1×/Wo — zu oft"))
+  // „nach jeder Haarwäsche" at her 2×/week wash, conditioner 1×/week.
+  assert.ok(entryOf(markup, "Conditioner").includes("1×/Wo · Ziel 2×/Wo — zu selten"))
+})
+
+test("frequency chips: Phase 4 week lines carry the same chips", async () => {
+  const phase4 = phase4Of(await renderPage({ loadModel: async () => frequencyModel() }))
+  assert.ok(phase4.includes("2×/Wo · Ziel 1×/Wo — zu oft"), phase4)
+  assert.ok(phase4.includes("1×/Wo · Ziel 2×/Wo — zu selten"), phase4)
+})
+
+test("frequency chips: a matching frequency reads „passt“", async () => {
+  const markup = await renderPage({
+    loadModel: async () => frequencyModel({ conditioner: "weekly_2x" }),
+  })
+  assert.ok(entryOf(markup, "Conditioner").includes("2×/Wo · Ziel 2×/Wo — passt"))
+})
+
+test("frequency chips: „Weiß ich nicht“ — no chip for the product, no wash anchor for the rest", async () => {
+  const markup = await renderPage({
+    loadModel: async () => frequencyModel({ shampoo: "unknown" }),
+  })
+  assert.ok(!markup.includes(CHIP_MARK), "no chip without her frequency or wash anchor")
+})
+
+test("frequency chips: a product whose frequency was never asked gets none", async () => {
+  const markup = await renderPage({
+    loadModel: async () =>
+      model({
+        steps: [{ ...shampooStep, frequencyLabel: "1×/Woche" }],
+        items: [{ ...shampooItem, frequency: undefined }],
+      }),
+  })
+  assert.ok(!markup.includes(CHIP_MARK))
+})
+
+test("frequency chips: weekly bands read compactly", () => {
+  const cases: Array<[{ min: number | null; max: number | null }, string]> = [
+    [{ min: 1, max: 1 }, "1×/Wo"],
+    [{ min: 3, max: 4 }, "3–4×/Wo"],
+    [{ min: 1, max: 4 / 3 }, "1–1,3×/Wo"],
+    [{ min: 0.5, max: 0.5 }, "alle 2 Wo"],
+    [{ min: 0.25, max: 0.5 }, "alle 2–4 Wo"],
+    [{ min: 0.75, max: 1 }, "0,8–1×/Wo"],
+    [{ min: 0, max: 0.249 }, "seltener als alle 4 Wo"],
+    [{ min: 2, max: null }, "ab 2×/Wo"],
+  ]
+  for (const [band, text] of cases) assert.equal(formatRunsheetWeeklyBand(band), text)
+})
+
+// --- fix round 1: one chip per step on the summed frequency; the engine's wash range -----
+
+const secondShampoo: DiscoveryIntakeItem = {
+  ...shampooItem,
+  id: "50000000-0000-4000-8000-0000000000c2",
+  brandText: "Balea",
+  productNameText: "Milde Pflege",
+  productId: "30000000-0000-4000-8000-0000000000c2",
+  createdAt: "2026-09-20T10:07:00.000Z",
+  frequency: "weekly_1x",
+}
+
+function twoShampoos(second: DiscoveryIntakeItem["frequency"]): DiscoveryCockpitModel {
+  return model({
+    steps: [{ ...shampooStep, frequencyLabel: "2×/Woche" }],
+    items: [
+      { ...shampooItem, frequency: "weekly_1x" },
+      { ...secondShampoo, frequency: second },
+    ],
+  })
+}
+
+function occurrences(haystack: string, needle: string): number {
+  return haystack.split(needle).length - 1
+}
+
+test("frequency chips: two 1×/week shampoos vs 2×/week → ONE „passt“ chip per phase", async () => {
+  const markup = await renderPage({ loadModel: async () => twoShampoos("weekly_1x") })
+  const phase3 = markup.slice(
+    markup.indexOf(">Behalten</h3>"),
+    markup.indexOf('id="runsheet-phase-4"'),
+  )
+  assert.equal(occurrences(phase3, CHIP_MARK), 1, phase3)
+  assert.ok(phase3.includes("2×/Wo · Ziel 2×/Wo — passt"))
+  const phase4 = phase4Of(markup)
+  assert.equal(occurrences(phase4, CHIP_MARK), 1, phase4)
+  assert.ok(phase4.includes("2×/Wo · Ziel 2×/Wo — passt"))
+})
+
+test("frequency chips: 1×/week + „Weiß ich nicht“ in one step → no chip (a partial sum understates)", async () => {
+  const markup = await renderPage({ loadModel: async () => twoShampoos("unknown") })
+  assert.ok(!markup.includes(CHIP_MARK))
+})
+
+test("frequency chips: the shampoo band is the engine's allowed range, not the target bucket", async () => {
+  const markup = await renderPage({
+    loadModel: async () =>
+      model({
+        steps: [
+          {
+            ...shampooStep,
+            frequencyLabel: "3-4×/Woche",
+            depth: {
+              ...shampooStep.depth!,
+              washAllowedRange: { min: "weekly_2x", max: "weekly_5_6x" },
+            },
+          },
+        ],
+        items: [{ ...shampooItem, frequency: "weekly_2x" }],
+      }),
+  })
+  assert.ok(entryOf(markup, "Shampoo").includes("2×/Wo · Ziel 2–6×/Wo — passt"))
+  assert.ok(phase4Of(markup).includes("2×/Wo · Ziel 2–6×/Wo — passt"))
+})
+
+// --- fix round 2: Phase 3 and Phase 4 sum the SAME products (kept/undecided only) -----------
+
+const SHAMPOO_KEY = shampooStep.decisionKey
+
+function shampooDecision(
+  intakeItemId: string,
+  decision: DiscoveryCallDecision["decision"],
+): DiscoveryCallDecision {
+  return {
+    decisionKey: SHAMPOO_KEY,
+    decision,
+    swapProductId: decision === "swap" ? ids.alternative : null,
+    intakeItemId,
+  }
+}
+
+function phase3Of(markup: string): string {
+  return markup.slice(markup.indexOf(">Behalten</h3>"), markup.indexOf('id="runsheet-phase-4"'))
+}
+
+async function twoShampoosDecided(decisions: DiscoveryCallDecision[]): Promise<string> {
+  return renderPage({
+    loadModel: async () =>
+      model({
+        steps: [{ ...shampooStep, frequencyLabel: "2×/Woche" }],
+        items: [
+          { ...shampooItem, frequency: "weekly_1x" },
+          { ...secondShampoo, frequency: "weekly_1x" },
+        ],
+        decisions,
+      }),
+  })
+}
+
+test("frequency chips: undecided 1× + DROPPED 1× vs 2×/week → both phases „zu selten“, chips agree", async () => {
+  const markup = await twoShampoosDecided([shampooDecision(secondShampoo.id, "drop")])
+  const expected = "1×/Wo · Ziel 2×/Wo — zu selten"
+  const phase3 = phase3Of(markup)
+  const phase4 = phase4Of(markup)
+  assert.equal(occurrences(phase3, CHIP_MARK), 1, phase3)
+  assert.ok(phase3.includes(expected), phase3)
+  assert.equal(occurrences(phase4, CHIP_MARK), 1, phase4)
+  assert.ok(phase4.includes(expected), phase4)
+})
+
+test("frequency chips: kept + SWAPPED in one step → the swapped product is out of the sum in both phases", async () => {
+  const markup = await twoShampoosDecided([
+    shampooDecision(shampooItem.id, "keep"),
+    shampooDecision(secondShampoo.id, "swap"),
+  ])
+  const expected = "1×/Wo · Ziel 2×/Wo — zu selten"
+  assert.ok(phase3Of(markup).includes(expected), phase3Of(markup))
+  assert.ok(phase4Of(markup).includes(expected), phase4Of(markup))
+  assert.equal(occurrences(phase3Of(markup), CHIP_MARK), 1)
+  assert.equal(occurrences(phase4Of(markup), CHIP_MARK), 1)
+})
+
+test("frequency chips: two KEPT 1× shampoos vs 2×/week stay one „passt“ per phase", async () => {
+  const markup = await twoShampoosDecided([
+    shampooDecision(shampooItem.id, "keep"),
+    shampooDecision(secondShampoo.id, "keep"),
+  ])
+  const expected = "2×/Wo · Ziel 2×/Wo — passt"
+  assert.equal(occurrences(phase3Of(markup), CHIP_MARK), 1)
+  assert.ok(phase3Of(markup).includes(expected))
+  assert.equal(occurrences(phase4Of(markup), CHIP_MARK), 1)
+  assert.ok(phase4Of(markup).includes(expected))
+})
+
+// --- verdict-layer T4 (O4): the cockpit speaks about her, never to her ---------------------
+
+/** Second-person forms as whole words, any case. */
+const SECOND_PERSON_WORD =
+  /(^|[^\p{L}])(du|dein|deine|deinem|deinen|deiner|deines|dir|dich)(?=[^\p{L}]|$)/iu
+
+const DRY_SCALP_FIT =
+  "Deine Kopfhaut ist eher trocken. Deshalb eine milde Reinigung, die ihr nicht zusätzlich Fett entzieht."
+const DANDRUFF_TAIL = " Außerdem soll das Shampoo gezielt gegen Schuppen arbeiten."
+
+/** Nomi with the engine's real second-person sentences on her shampoo step and verdict. */
+function nomiSecondPerson(): DiscoveryCockpitModel {
+  const step: DiscoveryIdealStep = {
+    ...shampooStep,
+    roleDescription: "Regelmäßige Reinigung für deine Kopfhaut.",
+    depth: {
+      purpose: "Reinigt passend zu deiner Kopfhaut und deiner Haaranalyse.",
+      targetType: "Ausgleichend reinigend",
+      productCriteria: "Ausgeglichen reinigen, ohne unnötig stark zu entfetten.",
+      fit: `${DRY_SCALP_FIT}${DANDRUFF_TAIL}`,
+      timingLabel: "Haarwäsche",
+    },
+  }
+  const verdict = verdicts[0]!
+  const secondPersonVerdict: DiscoveryParticipantVerdict = {
+    ...verdict,
+    payload: {
+      ...payload,
+      fitNarrative: {
+        fit: `${DRY_SCALP_FIT}${DANDRUFF_TAIL}`,
+        productCriteria: "Ausgeglichen reinigen, ohne unnötig stark zu entfetten.",
+      },
+      criteria: [
+        {
+          criterionId: "shampoo.scalp_route",
+          label: "Kopfhaut",
+          result: "fail",
+          explanation:
+            "Keine Produktvariante deckt deine Haardicke und Pflegerichtung gemeinsam ab.",
+        },
+      ],
+    },
+  } as DiscoveryParticipantVerdict
+  return model({ steps: [step, conditionerStep], verdicts: [secondPersonVerdict] })
+}
+
+/**
+ * The page's readable text: text nodes plus the attributes a reader meets (aria-label,
+ * placeholder), entities decoded, one line per node.
+ */
+function readableLines(markup: string): string[] {
+  const decode = (text: string) =>
+    // `&amp;` last, so an encoded entity name is never unescaped twice.
+    text
+      .replace(/&quot;/g, '"')
+      .replace(/&#x27;/g, "'")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&amp;/g, "&")
+  const attributes = [...markup.matchAll(/(?:aria-label|placeholder)="([^"]*)"/g)].map(
+    (match) => match[1]!,
+  )
+  const text = markup.replace(/<[^>]+>/g, "\n").split("\n")
+  return [...text, ...attributes].map((line) => decode(line).trim()).filter(Boolean)
+}
+
+/**
+ * The explicit exceptions (brief T4): spoken or quoted text stays in her voice. The German
+ * quotes („…") the page may carry are a NAMED list (fix wave): a new quoted string fails
+ * the test until it is reviewed and added here — no quote is exempt just for being quoted.
+ * Plus the verbatim blocks without quotes: the referral message she forwards, the „So sagst
+ * du es" talking point, and the quiz's own questions in „Quiz-Antworten".
+ */
+const QUOTED_EXCEPTIONS = [
+  // Phase 1 script card: the question Nick asks at the end of the intro.
+  "Passt das so für dich?",
+  // Concern recipe: the word Nick explains (a term, not a sentence to her).
+  "Wassermangel",
+  // Consult brief goal gap: the goal's own name, quoted.
+  "Form & Halt",
+  // Phase 4 closing question.
+  "Alles klar so? Passt das in deine Woche?",
+  // Phase 6 referral question.
+  "Kennst du zwei, drei Leute, die auch nicht ganz glücklich mit ihren Haaren sind? Wir machen die Calls gerade kostenlos — magst du ihnen kurz diese Nachricht weiterleiten?",
+]
+
+/** Every „…" string on the page, in page order, without duplicates. */
+function quotedStrings(lines: readonly string[]): string[] {
+  return [
+    ...new Set(lines.flatMap((line) => [...line.matchAll(/„([^“]*)“/g)].map((match) => match[1]!))),
+  ]
+}
+
+function outsideQuotedExceptions(lines: readonly string[], verbatim: readonly string[]): string[] {
+  return lines
+    .map((line) =>
+      QUOTED_EXCEPTIONS.reduce((text, quote) => text.split(`„${quote}“`).join("«quote»"), line),
+    )
+    .filter((line) => !verbatim.includes(line))
+}
+
+test("voice: no du/dein in the cockpit's own display outside the quoted exceptions", async () => {
+  const markup = await renderPage({
+    loadModel: async () => nomiSecondPerson(),
+    loadQuizLead: async () => dryLengthsLead,
+    loadCallSheet: async () => callSheet,
+  })
+  const quiz = buildDiscoveryQuizAnswers(dryLengthsLead)
+  assert.equal(quiz.status, "ready")
+  const verbatim = [
+    DISCOVERY_REFERRAL_MESSAGE,
+    concernRecipeFor("dry_lengths")!.talkingPointDe,
+    "So sagst du es",
+    ...(quiz.status === "ready"
+      ? quiz.groups.flatMap((group) => group.rows.map((row) => row.question))
+      : []),
+  ]
+  // The quoted strings on the page are exactly the named, reviewed list.
+  assert.deepEqual(quotedStrings(readableLines(markup)), QUOTED_EXCEPTIONS)
+  const offenders = outsideQuotedExceptions(readableLines(markup), verbatim).filter((line) =>
+    SECOND_PERSON_WORD.test(line),
+  )
+  assert.deepEqual(offenders, [])
+
+  // The fixture really carried second-person sentences: their neutral variants are on screen.
+  assert.ok(markup.includes("Passt nicht zu ihrem Haar"))
+  assert.ok(
+    markup.includes(
+      `Die Kopfhaut ist eher trocken. Deshalb eine milde Reinigung, die ihr nicht zusätzlich Fett entzieht.${DANDRUFF_TAIL}`,
+    ),
+  )
+  assert.ok(markup.includes("Reinigt passend zu ihrer Kopfhaut und ihrer Haaranalyse."))
+  assert.ok(markup.includes("Regelmäßige Reinigung für die Kopfhaut."))
+  assert.ok(
+    markup.includes("Keine Produktvariante deckt ihre Haardicke und Pflegerichtung gemeinsam ab."),
+  )
+  // …and the exceptions really rendered, so the test exercised them.
+  assert.ok(markup.includes("So sagst du es"))
+  assert.ok(markup.includes("Passt das in deine Woche?"))
+  assert.ok(markup.includes(DISCOVERY_REFERRAL_MESSAGE))
+})
+
+test("voice: the participant's verdict sections render unchanged without the cockpit voice", () => {
+  const notNeeded = {
+    kind: "not_needed" as const,
+    mode: "not_needed" as const,
+    status: "neutral" as const,
+    headline: scanNotNeededHeadline("dry_shampoo"),
+    subtitle: scanNotNeededSubtitle("dry_shampoo"),
+    reasons: [SCAN_NOT_NEEDED_REASON_COPY["dry_shampoo.inclusion.none"]!],
+    dimensions: [],
+    coveredBy: [{ label: "Shampoo", detail: "Frische zwischen den Haarwäschen" }],
+    product: {
+      productId: "p-1",
+      name: "Batiste Original",
+      brand: "Batiste",
+      category: "dry_shampoo" as const,
+      categoryLabel: "Trockenshampoo",
+      imageUrl: null,
+      priceLabel: null,
+      purchaseUrl: null,
+    },
+  }
+  const participant = renderToStaticMarkup(<ScanVerdictSections result={notNeeded} />)
+  assert.ok(participant.includes("Du brauchst aktuell kein Trockenshampoo"))
+  assert.ok(participant.includes("Kein Trockenshampoo in deinem Bedarf"))
+  assert.ok(participant.includes("Warum du kein Trockenshampoo brauchst"))
+  assert.ok(
+    participant.includes("Ändert sich dein Haar oder deine Routine, prüfen wir das für dich neu."),
+  )
+  assert.ok(participant.includes("Das übernimmt bei dir:"))
+
+  const cockpit = renderToStaticMarkup(
+    <ScanVerdictSections result={notNeeded} voice={cockpitVoice} />,
+  )
+  assert.ok(cockpit.includes("Aktuell kein Trockenshampoo nötig"))
+  assert.ok(cockpit.includes("Kein Trockenshampoo in ihrem Bedarf"))
+  assert.ok(cockpit.includes("Warum sie kein Trockenshampoo braucht"))
+  assert.ok(
+    cockpit.includes(
+      "Der Ansatz fettet nicht so schnell nach, dass sie eine Überbrückung braucht.",
+    ),
+  )
+  assert.ok(cockpit.includes("Ändert sich ihr Haar oder ihre Routine, prüfen wir das neu."))
+  assert.ok(cockpit.includes("Das übernimmt bei ihr:"))
+  const offenders = readableLines(cockpit).filter((line) => SECOND_PERSON_WORD.test(line))
+  assert.deepEqual(offenders, [])
+})
+
+// --- fix wave (P2): cross-step wash anchor is a range over her in-week shampoos ------------
+
+function twoShampoosAndConditioner(conditioner: DiscoveryIntakeItem["frequency"]) {
+  return model({
+    steps: [
+      { ...shampooStep, frequencyLabel: "2×/Woche" },
+      { ...conditionerStep, frequencyLabel: "nach jeder Haarwäsche" },
+    ],
+    items: [
+      { ...shampooItem, frequency: "weekly_1x" },
+      { ...secondShampoo, frequency: "weekly_1x" },
+      { ...catalogConditioner, frequency: conditioner },
+    ],
+  })
+}
+
+test("frequency chips: two 1× shampoos + 1× conditioner „nach jeder Haarwäsche“ → no conditioner chip", async () => {
+  const markup = await renderPage({ loadModel: async () => twoShampoosAndConditioner("weekly_1x") })
+  assert.ok(!entryOf(markup, "Conditioner").includes(CHIP_MARK), entryOf(markup, "Conditioner"))
+  // The shampoo step itself (a fixed band) still gets its chip — once per phase.
+  assert.equal(occurrences(phase3Of(markup), CHIP_MARK), 1)
+  assert.equal(occurrences(phase4Of(markup), CHIP_MARK), 1)
+})
+
+test("frequency chips: two 1× shampoos + 3–4× conditioner → both ends say „zu oft“, chip shown", async () => {
+  const markup = await renderPage({
+    loadModel: async () => twoShampoosAndConditioner("weekly_3_4x"),
+  })
+  const expected = "3–4×/Wo · Ziel 1–2×/Wo — zu oft"
+  assert.ok(entryOf(markup, "Conditioner").includes(expected), entryOf(markup, "Conditioner"))
+  assert.ok(phase4Of(markup).includes(expected))
 })

@@ -9,20 +9,33 @@ import type {
   DiscoveryCockpitStepView,
   DiscoveryCockpitUnassignedView,
 } from "@/lib/discovery/cockpit"
+import { cockpitVoice } from "@/lib/discovery/cockpit-copy"
 import type { DiscoveryVerdictStatus } from "@/lib/discovery/load-participant-verdicts"
 import type { DiscoveryPropertyRow } from "@/lib/discovery/property-rows"
-import { runsheetVerdictFit } from "@/lib/discovery/runsheet"
+import {
+  runsheetEntryInHerWeek,
+  runsheetVerdictFit,
+  type WashAnchor,
+} from "@/lib/discovery/runsheet"
+import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
 import { DiscoveryComparisonTable } from "./comparison-table"
 import { beginDiscoveryDecisionWrite } from "./decision-writes"
 import { formatDiscoveryTimestamp } from "./format"
-import { RunsheetCard, RunsheetCategoryChip, RunsheetChip, RunsheetPhase } from "./runsheet-parts"
+import {
+  RunsheetCard,
+  RunsheetCategoryChip,
+  RunsheetChip,
+  RunsheetFrequencyChip,
+  RunsheetPhase,
+} from "./runsheet-parts"
 import {
   composeRunsheetProducts,
   type RunsheetKlaerenEntry,
   type RunsheetResearchSlot,
   type RunsheetStepEntry,
 } from "./runsheet-products"
+import { sortDiscoverySwapOptions, type DiscoverySwapSort } from "./swap-sort"
 import { DISCOVERY_STYLING_LABEL, discoveryUsageDifferenceLabel } from "./usage-options"
 
 /**
@@ -36,11 +49,12 @@ import { DISCOVERY_STYLING_LABEL, discoveryUsageDifferenceLabel } from "./usage-
  * the single interaction on the right — keep what the participant owns, or swap it for one
  * of the products the engine already put in front of them.
  *
- * Voice: this screen is Nick's, not the participant's, so its own copy is third person
- * („Ihr Produkt"). The verdict block underneath is the participant's own scan result,
- * rendered by the SAME component their scanner uses (`ScanVerdictSections`) — its second
- * person is the engine's wording, and re-writing it here would mean the cockpit and the
- * participant's app could say different things about the same product.
+ * Voice: this screen is Nick's, not the participant's, so it speaks about her in the third
+ * person („Ihr Produkt"). The verdict block underneath is the participant's own scan result,
+ * rendered by the SAME component their scanner uses (`ScanVerdictSections`), and the step
+ * detail is the Idealplan's own wording — both second person at the source. The cockpit
+ * shows their neutral variants (`cockpitVoice`, verdict-layer T4): a display override for
+ * known shared strings only, so the verdict itself and the participant's copy never change.
  *
  * Above the two columns, each step explains itself in the Idealplan's own words (why the
  * step, what product type, what matters, why it fits her hair, how often and when), and
@@ -109,6 +123,11 @@ const FROZEN_HINT =
   "Diese Beratung ist inzwischen finalisiert. Seite neu laden, dann die Finalisierung aufheben."
 const WRITE_ERROR = "Nicht gespeichert. Bitte noch einmal."
 const NO_OPTIONS_HINT = "Keine Alternative im Katalog. Nur behalten oder offen lassen."
+const SORT_LABEL = "Sortieren:"
+const SORT_OPTIONS: ReadonlyArray<[DiscoverySwapSort, string]> = [
+  ["fit", "Fit"],
+  ["price", "Preis"],
+]
 
 const DEPTH_WHY = "Warum dieser Schritt"
 const DEPTH_TYPE = "Produkttyp"
@@ -238,6 +257,7 @@ export function DiscoveryCallCockpit({
   routinePhase = null,
   followUpPhase = null,
   boundary = null,
+  washFrequency = null,
   stateKey,
 }: {
   enrollmentId: string
@@ -265,6 +285,8 @@ export function DiscoveryCallCockpit({
   followUpPhase?: ReactNode
   /** The „Grenze" line of her main problem, closing the call. */
   boundary?: string | null
+  /** Her wash range (`runsheetWashAnchor`): the anchor of per-wash frequency chips. */
+  washFrequency?: ProductFrequency | WashAnchor | null
   /**
    * `discoveryCockpitStateKey` of the props: when a refresh delivers a different routine or
    * finalize state, the selections and the finalize state re-seed from the server. (Before
@@ -377,6 +399,8 @@ export function DiscoveryCallCockpit({
     const key = entryKey(step)
     // Batch 9: what her other products in this step are set to right now.
     const stepEntries = steps.filter((other) => other.decisionKey === step.decisionKey)
+    // Her products in her week (kept/undecided) — the same rule Phase 4 sums.
+    const ownedInStep = stepEntries.filter(runsheetEntryInHerWeek)
     const siblings = stepEntries
       .filter((other) => entryKey(other) !== key)
       .map((other) => selections[entryKey(other)] ?? null)
@@ -395,10 +419,22 @@ export function DiscoveryCallCockpit({
             <span className="text-xs text-muted-foreground">· optional</span>
           ) : null}
           {entry.kind === "owned" ? <VerdictChip step={step} /> : null}
+          {entry.kind === "owned" && ownedInStep[0] && entryKey(ownedInStep[0]) === key ? (
+            // One chip per step (fix round 1), on her first product in it: the sum of all
+            // her products in the step against the step's band.
+            <RunsheetFrequencyChip
+              cadenceLabel={step.frequencyLabel}
+              frequencies={ownedInStep.map((owned) => owned.ownedFrequency)}
+              washFrequency={washFrequency}
+              allowedRange={step.idealAllowedRange}
+            />
+          ) : null}
           <DecisionChip entry={entry} bucket={bucket} selection={selection} />
         </div>
         {reason ? (
-          <p className="border-b px-4 py-2 text-[13px] leading-5 text-foreground">{reason}</p>
+          <p className="border-b px-4 py-2 text-[13px] leading-5 text-foreground">
+            {cockpitVoice(reason)}
+          </p>
         ) : null}
         <StepDepth step={step} />
         <div className="grid gap-0 md:grid-cols-2">
@@ -471,7 +507,7 @@ export function DiscoveryCallCockpit({
         ) : null}
         {zielLuecken.map((line) => (
           <p key={line} className="text-[13px] leading-5 text-muted-foreground">
-            {line}
+            {cockpitVoice(line)}
           </p>
         ))}
         {outsideRoutine}
@@ -659,7 +695,7 @@ function VerdictChip({ step }: { step: DiscoveryCockpitStepView }) {
           ? VERDICT_NOT_NEEDED
           : VERDICT_OPEN
       : VERDICT_NONE
-  return <RunsheetChip tone={tone}>{label}</RunsheetChip>
+  return <RunsheetChip tone={tone}>{cockpitVoice(label)}</RunsheetChip>
 }
 
 function DecisionChip({
@@ -787,6 +823,7 @@ function StepVerdict({ step, submitted }: { step: DiscoveryCockpitStepView; subm
         <ScanVerdictSections
           result={{ ...step.verdict.payload, product }}
           productTitle={step.ownedLabel ?? undefined}
+          voice={cockpitVoice}
           comparison={
             step.verdict.propertyRows.length > 0 ? (
               <DiscoveryComparisonTable rows={step.verdict.propertyRows} />
@@ -832,7 +869,8 @@ function StepVerdict({ step, submitted }: { step: DiscoveryCockpitStepView; subm
   )
 }
 
-function StepDecision({
+/** Exported for the sort-toggle test (verdict-layer T2); rendered only by the cockpit. */
+export function StepDecision({
   step,
   name,
   value,
@@ -850,9 +888,13 @@ function StepDecision({
   onChoose: (value: string) => void
 }) {
   const empty = step.intakeItemId === null
-  const swapOptions = step.swapOptions.filter(
+  // R19: „Fit" (the engine's order) by default, „Preis" on demand — display only.
+  const [sort, setSort] = useState<DiscoverySwapSort>("fit")
+  const available = step.swapOptions.filter(
     (option) => option.productId === value || !takenSwapIds.includes(option.productId),
   )
+  const swapOptions = sortDiscoverySwapOptions(available, sort)
+  const sortable = available.length >= 2 && available.some((option) => option.priceLabel)
   // R3: „Weglassen" only where she has ≥2 products in the step.
   const offersDrop = !empty && step.stepEntryCount >= 2
   return (
@@ -866,6 +908,27 @@ function StepDecision({
         subtitle={empty ? KEEP_EMPTY_HINT : step.ownedLabel}
         onChoose={onChoose}
       />
+      {sortable ? (
+        <div className="flex items-center gap-1 text-[12px]">
+          <span className="text-muted-foreground">{SORT_LABEL}</span>
+          {SORT_OPTIONS.map(([id, label]) => (
+            <button
+              key={id}
+              id={`swap-sort-${name}-${id}`}
+              type="button"
+              aria-pressed={sort === id}
+              onClick={() => setSort(id)}
+              className={`rounded-md px-2 py-0.5 font-bold ${
+                sort === id
+                  ? "bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]"
+                  : "text-muted-foreground"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      ) : null}
       {swapOptions.map((option) => (
         <Choice
           key={option.productId}
@@ -875,7 +938,9 @@ function StepDecision({
           disabled={disabled}
           // The option as the PDF would print it once chosen — brand + line + name.
           title={`${empty ? NEW_PREFIX : SWAP_PREFIX}${option.label}`}
-          pill={option.verdictLabel}
+          pill={cockpitVoice(option.verdictLabel)}
+          // R19: the price where the catalog has one — no placeholder line otherwise.
+          subtitle={option.priceLabel}
           rows={option.propertyRows}
           onChoose={onChoose}
         />
@@ -970,7 +1035,10 @@ function StepDepth({ step }: { step: DiscoveryCockpitStepView }) {
     [DEPTH_FIT, depth.fit],
     [DEPTH_RHYTHM, rhythm],
   ]
-  const entries = candidates.filter((entry): entry is [string, string] => Boolean(entry[1]))
+  // The Idealplan's sentences in the cockpit's voice (T4); unknown ones stay as written.
+  const entries = candidates.flatMap(
+    ([term, value]): Array<[string, string]> => (value ? [[term, cockpitVoice(value)]] : []),
+  )
   if (entries.length === 0) return null
   return (
     <details className="border-b px-4 py-2">

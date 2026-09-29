@@ -3,6 +3,7 @@ import "server-only"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import { isStage3PriceFresh } from "@/lib/personal-plan/products/fit-comparison"
 import { createPresentationRowLoader } from "@/lib/scan/presentation-rows"
 import type { ScanCatalogPresentationRow } from "@/lib/scan/product-presentation"
 import type { ScanPresentedVerdictPayload, ScanProductHeader } from "@/lib/scan/types"
@@ -33,6 +34,10 @@ import {
   type DiscoveryHeatStylingV1,
 } from "./heat-styling"
 import {
+  discoveryConsultSnapshotFacts,
+  type DiscoveryConsultSnapshotFacts,
+} from "./consult-brief/snapshot-facts"
+import {
   discoveryConcernProfileFacts,
   discoveryHairElasticity,
   type DiscoveryConcernProfileFacts,
@@ -62,6 +67,7 @@ import {
   type DiscoveryResearchStatusKind,
 } from "./research-status"
 import { buildDiscoveryRoutineContext, discoveryIntakeHasRoutineAnswers } from "./routine-context"
+import type { WashAllowedRange } from "./runsheet/frequency"
 import {
   composeDiscoveryRefinedRoutine,
   describeDiscoveryIntakeItem,
@@ -286,6 +292,12 @@ export type DiscoveryProductIdentity = {
    * every product (batch 6) — there it is fingerprinted, via `discoveryProductImagesOf`.
    */
   imageUrl?: string | null
+  /**
+   * When the catalog price was last checked (`products.price_checked_at`): the Idealplan
+   * card shows its price only when this is fresh (verdict-layer fix wave) — the preview's
+   * commerce carries no date of its own.
+   */
+  priceCheckedAt?: string | null
 }
 
 /**
@@ -301,7 +313,9 @@ export async function loadDiscoveryProductIdentities(
   if (productIds.length === 0) return identities
   const { data, error } = await client
     .from("products")
-    .select("id, name, brand, image_url, product_line:product_lines(canonical_name)")
+    .select(
+      "id, name, brand, image_url, price_checked_at, product_line:product_lines(canonical_name)",
+    )
     .in("id", productIds)
   if (error) throw new Error("discovery_product_identity_lookup_failed")
   type LineRelation = { canonical_name: string | null }
@@ -310,6 +324,7 @@ export async function loadDiscoveryProductIdentities(
     name: string
     brand: string | null
     image_url?: string | null
+    price_checked_at?: string | null
     product_line: LineRelation | LineRelation[] | null
   }> | null) ?? []) {
     const relation = Array.isArray(row.product_line) ? row.product_line[0] : row.product_line
@@ -318,6 +333,7 @@ export async function loadDiscoveryProductIdentities(
       brand: row.brand,
       productLine: relation?.canonical_name?.trim() || null,
       imageUrl: row.image_url?.trim() || null,
+      priceCheckedAt: row.price_checked_at ?? null,
     })
   }
   return identities
@@ -407,6 +423,12 @@ export type DiscoveryCockpitModel = {
    * Absent for a model composed without it (tests); null when it cannot be read.
    */
   hairElasticity?: string | null
+  /**
+   * The consult brief's snapshot facts off the same snapshot (consult-agent T2: concerns,
+   * scalp concerns, heat tools, wash cadence, hair-loss boundary). Absent for a model composed
+   * without it (tests); every field unknown then.
+   */
+  consultFacts?: DiscoveryConsultSnapshotFacts
   /** Her „Hitze & Styling" answers (batch 7); null/absent = not asked. */
   heatStyling?: DiscoveryHeatStylingV1 | null
   /** Whether the Idealroutine ran on her checklist answers (batch 7, discovery-only). */
@@ -631,6 +653,7 @@ export async function loadDiscoveryCockpitModel(
     application,
     concernProfileFacts: discoveryConcernProfileFacts(ideal.context?.snapshot),
     hairElasticity: discoveryHairElasticity(ideal.context?.snapshot),
+    consultFacts: discoveryConsultSnapshotFacts(ideal.context?.snapshot),
     heatStyling,
     routineSource: ideal.routineSource ?? "quiz_only",
     heatProtectionDeferred: ideal.heatProtectionDeferred === true,
@@ -658,6 +681,12 @@ export type DiscoveryCockpitSwapOption = {
    */
   label: string
   verdictLabel: string
+  /**
+   * The catalog's price label („5,45 €") — display only (R19): it may reorder the list on
+   * screen, never a verdict, ranking or bucket. Null when the catalog has no fresh price.
+   * No retailer: the catalog carries no retailer field (only the affiliate link).
+   */
+  priceLabel: string | null
   origin: "alternative" | "ideal_recommendation"
   /** Target-vs-product rows for a displayed alternative; null when there are none. */
   propertyRows: DiscoveryPropertyRow[] | null
@@ -701,6 +730,13 @@ export type DiscoveryCockpitStepView = {
   stepEntryCount: number
   /** „3–4× pro Woche" — how often she uses THIS product (batch 7); null when not asked. */
   ownedFrequencyLabel: string | null
+  /** The same answer as stored (`unknown` = „Weiß ich nicht"); null when not asked. */
+  ownedFrequency: DiscoveryItemFrequency | null
+  /**
+   * The engine's tolerated wash range for a shampoo (`wet_wash_total`) step — the frequency
+   * chip's band (verdict-layer T3); null for every other step.
+   */
+  idealAllowedRange: WashAllowedRange | null
   /**
    * „Weglassen" may be chosen (R3): she has ≥2 products in this step, this is one of them,
    * and at least one sibling is not dropped — a step is never left empty.
@@ -827,6 +863,8 @@ function alternativeOption(
     displayName: string
     brand: string | null
     verdictLabel: string
+    /** Optional: a payload stored before the field existed has none. */
+    priceLabel?: string | null
   },
   identities: ReadonlyMap<string, DiscoveryProductIdentity>,
   propertyRows: DiscoveryPropertyRow[] | null,
@@ -841,6 +879,7 @@ function alternativeOption(
       identities,
     ),
     verdictLabel: alternative.verdictLabel,
+    priceLabel: alternative.priceLabel ?? null,
     origin: "alternative",
     propertyRows,
   }
@@ -860,6 +899,12 @@ function idealRecommendationOption(
     brand,
     label: optionLabel(preview.productId, { name: preview.productName, brand }, identities),
     verdictLabel: SCAN_VERDICT_COPY[preview.verdict].label,
+    // The same 7-day rule as the swap alternatives (`isStage3PriceFresh`), dated by the
+    // catalog row: without a fresh check date the card shows no price. Optional chaining:
+    // a preview composed before commerce existed carries none.
+    priceLabel: isStage3PriceFresh(identities.get(preview.productId)?.priceCheckedAt)
+      ? (preview.commerce?.priceLabel ?? null)
+      : null,
     origin: "ideal_recommendation",
     propertyRows: null,
   }
@@ -973,6 +1018,8 @@ export function buildDiscoveryCockpitView(model: DiscoveryCockpitModel): Discove
       ownedUsageRole: item?.usageRole ?? null,
       stepEntryCount: stepEntries.length,
       ownedFrequencyLabel: item?.frequency ? DISCOVERY_FREQUENCY_LABELS[item.frequency] : null,
+      ownedFrequency: item?.frequency ?? null,
+      idealAllowedRange: step.depth?.washAllowedRange ?? null,
       canDrop:
         item !== null &&
         stepEntries.length >= 2 &&

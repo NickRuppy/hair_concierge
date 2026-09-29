@@ -302,7 +302,12 @@ function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex")
 }
 
-const SINGLE_HASH = "e21b1bc46209f12387c9a7644a49b9fc7b4bd312e63ff36dc2b02cf48d40c4c0"
+/**
+ * Re-pinned in the verdict-layer fix wave (P1): the recommendation's `commerce` (price,
+ * availability, link) left the fingerprint, so every routine with a recommendation preview moved
+ * once — an accepted one-time drift for finalized sheets. Previous pin: e21b1bc4…0c4c0.
+ */
+const SINGLE_HASH = "69f9974079d8f4fcd7c049402ea22d0f35f45c9adfd33f8cb1fd2fa992781e0d"
 const SINGLE_PDF_SHA = "038e9e0a87cab9411d1275f4b4855f9981cfaa2756058d3fd9d79125e9f2d812"
 
 // --- D1: binding ------------------------------------------------------------------------

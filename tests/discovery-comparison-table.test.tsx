@@ -66,12 +66,12 @@ function cellsOf(markup: string, attribute: string): string[] {
   return [...markup.matchAll(new RegExp(`${attribute}="([^"]*)"`, "g"))].map((match) => match[1]!)
 }
 
-test("the table has the iOS header: two blank columns, PRODUKT, DEIN ZIEL in plum", () => {
+test("the table has the iOS header: two blank columns, PRODUKT, IHR ZIEL (cockpit voice) in plum", () => {
   const markup = renderToStaticMarkup(<DiscoveryComparisonTable rows={ROWS} />)
   assert.match(markup, /rounded-\[14px\]/)
   assert.match(markup, /bg-\[#f6f3f0\]/)
   assert.match(markup, />Produkt</)
-  assert.match(markup, /text-\[var\(--brand-plum\)\][^>]*>Dein Ziel</)
+  assert.match(markup, /text-\[var\(--brand-plum\)\][^>]*>Ihr Ziel</)
   // Upper-cased by CSS, like the iOS caps header.
   assert.match(markup, /uppercase/)
 })
@@ -95,16 +95,16 @@ test("each dimension is one row: name, status disc, product value in status colo
 test("in / out / no-target: a missing value reads „–“, never an invented word", () => {
   const markup = renderToStaticMarkup(<DiscoveryComparisonTable rows={ROWS} />)
   // in target: product and target both named.
-  assert.match(markup, /aria-label="Kopfhaut, passt, Produkt: fettig, dein Ziel: fettig"/)
+  assert.match(markup, /aria-label="Kopfhaut, passt, Produkt: fettig, ihr Ziel: fettig"/)
   // out of target: the miss is named against the target.
   assert.match(
     markup,
-    /aria-label="Pflegegewicht, mit Einschränkung, Produkt: mittel, dein Ziel: leicht"/,
+    /aria-label="Pflegegewicht, mit Einschränkung, Produkt: mittel, ihr Ziel: leicht"/,
   )
   // no target: the target cell is a dash.
   assert.match(
     markup,
-    /aria-label="Reinigung, nicht einschätzbar, Produkt: mild, dein Ziel: nicht verfügbar"/,
+    /aria-label="Reinigung, nicht einschätzbar, Produkt: mild, ihr Ziel: nicht verfügbar"/,
   )
   assert.match(markup, /text-\[var\(--brand-plum\)\][^>]*>–</)
   // The long property names may break at their word joint, like iOS („Pflege-/gewicht").
@@ -183,6 +183,8 @@ function cockpitStep(overrides: Partial<DiscoveryCockpitStepView> = {}): Discove
     ownedUsageRole: null,
     stepEntryCount: 1,
     ownedFrequencyLabel: null,
+    ownedFrequency: null,
+    idealAllowedRange: null,
     canDrop: false,
     unanswered: false,
     verdict: {
@@ -198,6 +200,7 @@ function cockpitStep(overrides: Partial<DiscoveryCockpitStepView> = {}): Discove
         brand: "Chaarlie Lab",
         label: "Chaarlie Lab Lab Shampoo Gamma",
         verdictLabel: "Passt",
+        priceLabel: null,
         origin: "alternative",
         propertyRows: [row({ productValue: "fettig" })],
       },
@@ -231,8 +234,8 @@ test("the cockpit shows her product as a comparison table instead of bars and te
       initialFinalizedAt={null}
     />,
   )
-  // Verdict title and badge stay.
-  assert.match(markup, /Passt zu deinem Haar/)
+  // Verdict title and badge stay (the title in the cockpit's voice, T4).
+  assert.match(markup, /Passt zu ihrem Haar/)
   // No slider bars, no batch-4 text rows.
   assert.doesNotMatch(
     markup,

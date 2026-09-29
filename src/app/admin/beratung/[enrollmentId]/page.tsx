@@ -10,7 +10,10 @@ import {
   formatDiscoveryTimestamp,
 } from "@/components/discovery/cockpit/format"
 import { DiscoveryQuizAnswersSection } from "@/components/discovery/cockpit/quiz-answers"
-import { DiscoveryRunsheetBrief } from "@/components/discovery/cockpit/runsheet-brief"
+import {
+  DiscoveryRunsheetBrief,
+  RUNSHEET_GENERATE_COPY,
+} from "@/components/discovery/cockpit/runsheet-brief"
 import { DiscoveryRunsheetFollowUp } from "@/components/discovery/cockpit/runsheet-follow-up"
 import {
   RUNSHEET_ASK_TOPIC,
@@ -47,10 +50,16 @@ import {
   discoveryConcernCoverageInput,
   type DiscoveryConcernRecipeView,
 } from "@/lib/discovery/concern-recipe-view"
+import { consultBriefSource } from "@/lib/discovery/consult-brief/source"
 import { loadDiscoveryEnrollment } from "@/lib/discovery/enrollment"
 import { isDiscoveryCallToolkitEnabled } from "@/lib/discovery/flag"
+import { DISCOVERY_FREQUENCY_LABELS } from "@/lib/discovery/frequency"
 import { buildDiscoveryQuizAnswers, type DiscoveryQuizLead } from "@/lib/discovery/quiz-answers"
-import { derivePrepChecklist } from "@/lib/discovery/runsheet"
+import {
+  derivePrepChecklist,
+  runsheetWashAnchor,
+  runsheetWashFrequency,
+} from "@/lib/discovery/runsheet"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import { createAdminClient } from "@/lib/supabase/admin"
 
@@ -241,10 +250,23 @@ export function createDiscoveryCockpitPage(
       if (entry.research) researchLabels[entry.step.decisionKey] ??= entry.research.label
     }
     const sections = callSheet?.consultBrief?.sections ?? EMPTY_DISCOVERY_BRIEF_SECTIONS
-    const washFrequencyLabel =
-      view.intakeProducts.find(
-        (product) => product.category === "shampoo" && product.frequencyLabel,
-      )?.frequencyLabel ?? null
+    // The brief's stale check compares against the generate route's own fingerprint (the
+    // shared helper, same parts). A degraded read (lead or call sheet unread) hashes
+    // differently from the full one, so it shows no stale hint rather than a false one.
+    const currentSourceHash =
+      leadAvailable && callSheetAvailable
+        ? consultBriefSource({ model, view, quiz, callSheet }).sourceHash
+        : null
+    // Her wash frequency as she stated it (the Phase-4 „heute" line), and her honest wash
+    // range over the shampoos in her week — the anchor of the per-wash frequency chips
+    // (verdict-layer T3, fix wave P2: several shampoos may or may not share wash days).
+    const washFrequency = runsheetWashFrequency(view.intakeProducts)
+    const washAnchor = runsheetWashAnchor(view.steps)
+    const washFrequencyLabel = washFrequency
+      ? DISCOVERY_FREQUENCY_LABELS[washFrequency]
+      : (view.intakeProducts.find(
+          (product) => product.category === "shampoo" && product.frequencyLabel,
+        )?.frequencyLabel ?? null)
     // A refresh with a different routine re-syncs the client islands (see the helper).
     const stateKey = discoveryCockpitStateKey(view.sourceHash, intake.callFinalizedAt)
 
@@ -265,7 +287,12 @@ export function createDiscoveryCockpitPage(
           initialBriefMeta={{
             generatedAt: callSheet?.consultBrief?.generated_at ?? null,
             sourceHash: callSheet?.consultBrief?.source_hash ?? null,
+            generatedBy: callSheet?.consultBrief?.generated_by ?? null,
+            savedAt: callSheet?.consultBrief?.saved_at ?? null,
           }}
+          currentSourceHash={currentSourceHash}
+          // R14: the brief is generated from what she submitted, never from a draft.
+          generateBlockedHint={intake.state === "submitted" ? null : RUNSHEET_GENERATE_COPY.draft}
           initialCommitments={callSheet?.habitCommitments ?? []}
           recipeHabits={runsheetRecipeHabits(mainRecipe)}
           checklist={runsheetChecklistLines(prepItems)}
@@ -311,6 +338,7 @@ export function createDiscoveryCockpitPage(
             <DiscoveryRunsheetRoutine
               view={view}
               washFrequencyLabel={washFrequencyLabel}
+              washFrequency={washAnchor}
               researchLabels={researchLabels}
             />
           }
@@ -323,6 +351,7 @@ export function createDiscoveryCockpitPage(
             />
           }
           boundary={mainRecipe?.boundary ?? null}
+          washFrequency={washAnchor}
         />
       </Shell>
     )

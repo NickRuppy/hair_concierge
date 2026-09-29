@@ -49,6 +49,10 @@ const MARKER_CLASS = SCAN_MARKER_CLASS
  */
 const GOOD_TO_KNOW_TITLE = "Gut zu wissen"
 const GOOD_TO_KNOW_BODY = "Ändert sich dein Haar oder deine Routine, prüfen wir das für dich neu."
+const COVERED_BY_LEAD_IN = "Das übernimmt bei dir:"
+
+/** The scan's own voice: every string as written. */
+const sameText = (text: string) => text
 
 /**
  * What the sections need: a verdict payload of either kind plus the scanned product.
@@ -67,6 +71,7 @@ export function ScanVerdictSections({
   result,
   productTitle,
   comparison,
+  voice = sameText,
 }: {
   result: ScanVerdictSectionsPayload
   /**
@@ -81,6 +86,12 @@ export function ScanVerdictSections({
    * before (`tests/scan-result-card-parity.test.tsx`).
    */
   comparison?: React.ReactNode
+  /**
+   * Cockpit-only: maps each sentence to the reader's voice (the cockpit's neutral third
+   * person, `cockpitVoice`). The scan feature never passes it, so every string renders
+   * exactly as written (`tests/scan-result-card-parity.test.tsx`).
+   */
+  voice?: (text: string) => string
 }) {
   const sections =
     result.kind === "not_needed"
@@ -92,9 +103,17 @@ export function ScanVerdictSections({
       <ProductHeader product={result.product} title={productTitle} />
 
       {result.kind === "in_catalog" ? (
-        <Banner status={result.status} title={result.verdictTitle} subtitle={result.subtitle} />
+        <Banner
+          status={result.status}
+          title={voice(result.verdictTitle)}
+          subtitle={voice(result.subtitle)}
+        />
       ) : (
-        <Banner status={result.status} title={result.headline} subtitle={result.subtitle} />
+        <Banner
+          status={result.status}
+          title={voice(result.headline)}
+          subtitle={voice(result.subtitle)}
+        />
       )}
 
       {comparison ?? null}
@@ -111,30 +130,32 @@ export function ScanVerdictSections({
       result.kind === "in_catalog" &&
       result.dimensions.length === 0 &&
       result.criteria.length > 0 ? (
-        <CriterionRows criteria={result.criteria} />
+        <CriterionRows criteria={result.criteria} voice={voice} />
       ) : null}
 
       {result.kind === "in_catalog" && result.fitNarrative ? (
-        <WhyCard label={scanReasonsLabel({ kind: "in_catalog", verdict: result.verdict })}>
-          <p className="text-sm leading-6 text-foreground">{result.fitNarrative.fit}</p>
+        <WhyCard label={voice(scanReasonsLabel({ kind: "in_catalog", verdict: result.verdict }))}>
+          <p className="text-sm leading-6 text-foreground">{voice(result.fitNarrative.fit)}</p>
           <p className="mt-2 text-[13px] leading-6 text-muted-foreground">
-            {result.fitNarrative.productCriteria}
+            {voice(result.fitNarrative.productCriteria)}
           </p>
         </WhyCard>
       ) : null}
 
       {result.kind === "not_needed" && sections.reasons ? (
         <WhyCard
-          label={scanReasonsLabel({
-            kind: "not_needed",
-            mode: result.mode,
-            category: result.product.category,
-          })}
+          label={voice(
+            scanReasonsLabel({
+              kind: "not_needed",
+              mode: result.mode,
+              category: result.product.category,
+            }),
+          )}
         >
           <ul className="flex flex-col gap-2">
             {result.reasons.map((reason) => (
               <li key={reason} className="text-sm leading-6 text-foreground">
-                {reason}
+                {voice(reason)}
               </li>
             ))}
           </ul>
@@ -146,12 +167,14 @@ export function ScanVerdictSections({
           <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
             {GOOD_TO_KNOW_TITLE}
           </p>
-          <p className="mt-1.5 text-[13px] leading-6 text-muted-foreground">{GOOD_TO_KNOW_BODY}</p>
+          <p className="mt-1.5 text-[13px] leading-6 text-muted-foreground">
+            {voice(GOOD_TO_KNOW_BODY)}
+          </p>
         </section>
       ) : null}
 
       {result.kind === "not_needed" && sections.coveredBy ? (
-        <CoveredBy entries={result.coveredBy} />
+        <CoveredBy entries={result.coveredBy} voice={voice} />
       ) : null}
     </>
   )
@@ -204,7 +227,13 @@ function WhyCard({ label, children }: { label: string; children: React.ReactNode
   )
 }
 
-function CriterionRows({ criteria }: { criteria: Stage3CriterionResult[] }) {
+function CriterionRows({
+  criteria,
+  voice,
+}: {
+  criteria: Stage3CriterionResult[]
+  voice: (text: string) => string
+}) {
   return (
     <section className="flex flex-col gap-2.5 rounded-[14px] border border-border bg-card px-4 py-3.5">
       {criteria.map((criterion) => {
@@ -218,9 +247,9 @@ function CriterionRows({ criteria }: { criteria: Stage3CriterionResult[] }) {
               {marker.marker}
             </span>
             <div className="min-w-0">
-              <p className="text-[13px] font-semibold text-foreground">{criterion.label}</p>
+              <p className="text-[13px] font-semibold text-foreground">{voice(criterion.label)}</p>
               <p className="mt-0.5 text-[12px] leading-5 text-muted-foreground">
-                {criterion.explanation}
+                {voice(criterion.explanation)}
               </p>
             </div>
           </div>
@@ -230,22 +259,30 @@ function CriterionRows({ criteria }: { criteria: Stage3CriterionResult[] }) {
   )
 }
 
-function CoveredBy({ entries }: { entries: Array<{ label: string; detail: string | null }> }) {
+function CoveredBy({
+  entries,
+  voice,
+}: {
+  entries: Array<{ label: string; detail: string | null }>
+  voice: (text: string) => string
+}) {
   return (
     <section>
       {/* Inline lead-in sentence, not a standalone header like "Passende Alternativen"
           above it (copy sign-off 2026-09-01, reverting the earlier header deviation) —
           the colon reads straight into the covering entries below. */}
-      <p className="mb-2 text-[13px] leading-5 text-muted-foreground">Das übernimmt bei dir:</p>
+      <p className="mb-2 text-[13px] leading-5 text-muted-foreground">
+        {voice(COVERED_BY_LEAD_IN)}
+      </p>
       <ul className="flex flex-col gap-2">
         {entries.map((entry) => (
           <li
             key={`${entry.label}|${entry.detail}`}
             className="rounded-[12px] border border-border bg-card px-3 py-2.5"
           >
-            <p className="text-[13px] font-semibold text-foreground">{entry.label}</p>
+            <p className="text-[13px] font-semibold text-foreground">{voice(entry.label)}</p>
             {entry.detail ? (
-              <p className="mt-0.5 text-[12px] text-muted-foreground">{entry.detail}</p>
+              <p className="mt-0.5 text-[12px] text-muted-foreground">{voice(entry.detail)}</p>
             ) : null}
           </li>
         ))}

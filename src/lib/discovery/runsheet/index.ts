@@ -9,6 +9,25 @@ export {
   type RunsheetVerdictFit,
 } from "./buckets"
 export {
+  compareFrequencyToBand,
+  deriveFrequencyDelta,
+  deriveStepFrequencyDelta,
+  IDEAL_CADENCE_LABELS,
+  IDEAL_CADENCE_RULES,
+  idealCadenceBand,
+  PAUSED_CADENCE_PREFIX,
+  runsheetEntryInHerWeek,
+  runsheetWashAnchor,
+  runsheetWashFrequency,
+  type FrequencyDelta,
+  type FrequencyDeltaStatus,
+  type IdealCadenceLabel,
+  type IdealCadenceRule,
+  type WashAllowedRange,
+  type WashAnchor,
+  type WeeklyBand,
+} from "./frequency"
+export {
   derivePrepChecklist,
   RUNSHEET_PREP_RULES,
   type RunsheetPrepChecklistInput,

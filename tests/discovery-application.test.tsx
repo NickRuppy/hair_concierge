@@ -1492,7 +1492,12 @@ test("a second printed role of the same product does not inherit the usage note"
  * its compiled application section folded in. A routine with one product per step must keep
  * this fingerprint — candidate ids, order and the compiled print all unchanged.
  */
-const APPLICATION_GOLDEN_HASH = "59991c1b7f43b20610b174f84d82d36735dad6591004c7dd843e6b2733b30bc2"
+/**
+ * Re-pinned in the verdict-layer fix wave (P1): the recommendation's `commerce` (price,
+ * availability, link) left the fingerprint, so every routine with a recommendation preview moved
+ * once — an accepted one-time drift for finalized sheets. Previous pin: 59991c1b…30bc2.
+ */
+const APPLICATION_GOLDEN_HASH = "a2cbd7318132795469ffcaef4a26b10b5a3f923bf58d1f8ef8452e54e15e8ca8"
 
 test("batch 9: a one-product-per-step routine keeps its application-section fingerprint (pinned)", () => {
   assert.equal(

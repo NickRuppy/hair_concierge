@@ -31,6 +31,7 @@ import type {
 import type { ScanEvaluationContext } from "@/lib/scan/profile-context"
 import { prepareScannerContext } from "@/lib/scan/scanner-context"
 import { readScannerProfileSource } from "@/lib/scan/scanner-context-supabase"
+import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 
 /**
  * The participant's Idealplan, read for the admin cockpit.
@@ -68,6 +69,12 @@ export type DiscoveryStepDepth = {
   fit: string | null
   /** When in the wash routine („Nach Shampoo"). */
   timingLabel: string | null
+  /**
+   * The shampoo decision's tolerated wash range (`wet_wash_total.allowedRange`) — the band of
+   * the runsheet's frequency chip (verdict-layer T3). Present ONLY for a `wet_wash_total`
+   * step; it lives here because `depth` is call-only and stripped from `sourceHash`.
+   */
+  washAllowedRange?: { min: ProductFrequency; max: ProductFrequency }
 }
 
 export type DiscoveryIdealStep = {
@@ -106,6 +113,14 @@ export function discoveryStepDepth(
     productCriteria: presentation?.productCriteria ?? null,
     fit: presentation?.fit ?? null,
     timingLabel: routineRoleTimingLabel(role),
+    ...(decision.frequency?.kind === "wet_wash_total"
+      ? {
+          washAllowedRange: {
+            min: decision.frequency.allowedRange.min,
+            max: decision.frequency.allowedRange.max,
+          },
+        }
+      : {}),
   }
 }
 

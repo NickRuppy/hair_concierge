@@ -230,3 +230,97 @@ test("unbound future dimension is neutral even if raw stops coincide", () => {
   )
   assert.equal(row.displayStatus, "neutral")
 })
+
+const careDirectionDimension = (
+  targetStopIds: string[],
+  productStopId: string,
+): Stage3FitComparisonDimension => ({
+  dimensionId: "mask.care_direction",
+  label: "Pflegerichtung",
+  presentationKind: "categorical",
+  stops: [
+    { stopId: "moisture", label: "Feuchtigkeit" },
+    { stopId: "balanced", label: "ausgeglichen" },
+    { stopId: "protein", label: "Protein" },
+  ],
+  targetPosition:
+    targetStopIds.length === 1
+      ? { kind: "position", stopId: targetStopIds[0] }
+      : { kind: "supported_stops", stopIds: targetStopIds },
+  productPositions: [{ productId: "p", position: { kind: "position", stopId: productStopId } }],
+  reason: "",
+})
+
+test("set-valued categorical target renders primary first with the accepted extras as „· X ok“", () => {
+  const source = [careDirectionDimension(["moisture", "balanced"], "balanced")]
+  const [row] = mobileRowsFromScanDimensions(
+    scanDimensionsForProduct(source, "p"),
+    null,
+    "ideal",
+    source,
+    [
+      {
+        criterionId: "mask.care_direction",
+        label: "Pflegerichtung",
+        result: "pass",
+        explanation: "",
+      },
+    ],
+  )
+  assert.equal(row.targetValue, "Feuchtigkeit · ausgeglichen ok")
+  assert.equal(row.productValue, "ausgeglichen")
+  assert.equal(row.state, "in_target")
+  assert.equal(row.displayStatus, "green")
+
+  // Order follows the accepted set (primary first), not the stop order of the rail.
+  const reversed = [careDirectionDimension(["protein", "balanced"], "balanced")]
+  const [reversedRow] = mobileRowsFromScanDimensions(
+    scanDimensionsForProduct(reversed, "p"),
+    null,
+    "ideal",
+    reversed,
+  )
+  assert.equal(reversedRow.targetValue, "Protein · ausgeglichen ok")
+})
+
+test("single-valued categorical and set-axis targets render exactly as before", () => {
+  const source = [careDirectionDimension(["moisture"], "protein")]
+  const [row] = mobileRowsFromScanDimensions(
+    scanDimensionsForProduct(source, "p"),
+    null,
+    "supportive",
+    source,
+    [
+      {
+        criterionId: "mask.care_direction",
+        label: "Pflegerichtung",
+        result: "caution",
+        explanation: "",
+      },
+    ],
+  )
+  assert.equal(row.targetValue, "Feuchtigkeit")
+  assert.equal(row.displayStatus, "amber")
+
+  const thickness: Stage3FitComparisonDimension = {
+    dimensionId: "shampoo.scalp_route",
+    label: "Kopfhaut-Fokus",
+    presentationKind: "set",
+    stops: [
+      { stopId: "oily", label: "fettig" },
+      { stopId: "dry", label: "trocken" },
+    ],
+    targetPosition: { kind: "supported_stops", stopIds: ["oily", "dry"] },
+    productPositions: [
+      { productId: "p", position: { kind: "supported_stops", stopIds: ["oily"] } },
+    ],
+    reason: "",
+  }
+  const [setRow] = mobileRowsFromScanDimensions(
+    scanDimensionsForProduct([thickness], "p"),
+    null,
+    "ideal",
+    [thickness],
+  )
+  assert.equal(setRow.targetValue, "fettig, trocken")
+})

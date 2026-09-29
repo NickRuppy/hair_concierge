@@ -571,6 +571,17 @@ export function composeDiscoveryRefinedRoutine(input: {
 }
 
 /**
+ * The recommendation as the fingerprint sees it: its identity (product id, name, verdict,
+ * fingerprint …) without `commerce` — price, availability and shop link are live catalog
+ * data the paper does not print (verdict-layer fix wave, P1), so a price update must not
+ * flag a finalised document as drifted. The cockpit still reads `commerce` for display.
+ */
+function hashedPreview(preview: DiscoveryIdealStep["preview"]): unknown {
+  if (!preview || preview.kind !== "recommendation") return preview
+  return { ...preview, commerce: undefined }
+}
+
+/**
  * The fingerprint of everything the sheet prints.
  *
  * `unansweredCategories` is deliberately NOT hashed: it is the complement of the rows the
@@ -579,7 +590,8 @@ export function composeDiscoveryRefinedRoutine(input: {
  * label is part of `steps` / `unassignedIntakeProducts`, so a label that changes (a catalog
  * rename, a new product line) moves the hash with it. The step's call-only `depth` is
  * stripped: the paper does not print it, so a copy change there must not flag every
- * finalised document as drifted.
+ * finalised document as drifted. The recommendation's `commerce` is stripped for the same
+ * reason (`hashedPreview`).
  *
  * `application` (batch 6) is the printed „So wendest du es an" section. It joins the hash
  * only when it prints anything, so a routine without one keeps its finalised fingerprint.
@@ -596,7 +608,10 @@ function discoveryRoutineSourceHash(
   application: unknown = null,
 ): string {
   return semanticHash({
-    steps: routine.steps.map((entry) => ({ ...entry, step: { ...entry.step, depth: undefined } })),
+    steps: routine.steps.map((entry) => ({
+      ...entry,
+      step: { ...entry.step, depth: undefined, preview: hashedPreview(entry.step.preview) },
+    })),
     unassignedIntakeProducts: routine.unassignedIntakeProducts,
     declinedCategories: routine.declinedCategories,
     ...(routine.heatStyling ? { heatStyling: routine.heatStyling } : {}),
