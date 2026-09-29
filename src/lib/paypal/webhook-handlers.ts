@@ -451,7 +451,8 @@ async function acknowledgeDeletedAccountSubscription(
   subscription: PayPalSubscription,
   deps: PayPalWebhookDeps,
 ): Promise<boolean> {
-  if (!subscription.id) return false
+  // Schema not migrated yet: no extra reads, the event runs exactly as before the feature.
+  if (!accountDeletionEnabled() || !subscription.id) return false
   const existing = await findBillingSubscriptionByProviderId(
     deps.supabase,
     "paypal",

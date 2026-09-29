@@ -823,6 +823,50 @@ test("BILLING.SUBSCRIPTION.CANCELLED acknowledges duplicate subscriptions withou
   assert.equal(paypalIntents[0].provider_subscription_id, "I-active")
 })
 
+test("kill switch off: a deleted account's intent is not looked at; no cancel, no refund row", async () => {
+  const previous = process.env.ACCOUNT_DELETION_ENABLED
+  delete process.env.ACCOUNT_DELETION_ENABLED
+  try {
+    const { supabase } = createSupabaseStub({
+      billing: [],
+      paypalIntents: [
+        {
+          id: "intent-deleted",
+          token: "token-active",
+          interval: "month",
+          source: "pricing_page",
+          status: "activated",
+          provider_subscription_id: "I-active",
+          lead_id: null,
+          email: null,
+          user_id: null,
+          expires_at: futureIso(),
+          metadata: {},
+          anonymized_at: pastIso(),
+        },
+      ],
+    })
+    const cancelled: string[] = []
+    const recorded: string[] = []
+    await handlePayPalWebhookEvent(event("WH-switch-off", "BILLING.SUBSCRIPTION.ACTIVATED"), {
+      supabase,
+      premiumTierId: "tier-premium",
+      freeTierId: "tier-free",
+      retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
+      cancelPayPalSubscription: async (id) => void cancelled.push(id),
+      recordPostDeletionRefund: async (id) => {
+        recorded.push(id)
+        return true
+      },
+    }).catch(() => undefined) // the pre-feature activation path may fail on this stub; irrelevant here
+    assert.deepEqual(cancelled, [])
+    assert.deepEqual(recorded, [])
+  } finally {
+    if (previous === undefined) delete process.env.ACCOUNT_DELETION_ENABLED
+    else process.env.ACCOUNT_DELETION_ENABLED = previous
+  }
+})
+
 test("events for a deleted account's subscription write nothing; a live agreement is cancelled at once", async () => {
   const deletedAt = pastIso()
   for (const [eventType, status, expectCancel] of [
