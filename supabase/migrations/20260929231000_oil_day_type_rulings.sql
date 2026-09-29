@@ -10,8 +10,8 @@
 --    expansion, 15 recommended hand-curated from 2026-08-12) still allow
 --    ["wash_day","intensive_care_day","styling_day"]; the ruled set is the four
 --    wash-family days. None of the 21 is heat-capable, so no plan output changes.
--- 2. V1 Oil dry-finish rows (TPL-OIL-DRYFINISH, O1). 35 rows move to every wash-family
---    day plus styling_day and between_wash_care_day. Data consistency only.
+-- 2. V1 Oil dry-finish rows are deliberately untouched: they do not drive plan days, and
+--    the prepared Kevin Murphy migration (20260929120000) pins its own dry-finish row.
 -- 3. Shared between-wash Oil templates (O4) — the one user-visible change. The four
 --    `oil.*` between-wash families stop applying to refresh_day. Active content is
 --    immutable (reject_active_application_content_mutation), so each key's active
@@ -55,38 +55,6 @@ BEGIN
     AND protocol.guidance_payload->'compatibleDayTypes' = c_stale;
 END;
 $oil_leave_on_day_types$;
-
-DO $oil_dry_finish_day_types$
-DECLARE
-  c_ruled constant jsonb :=
-    '["wash_day","intensive_care_day","bond_repair_day","clarifying_wash_day","styling_day","between_wash_care_day"]'::jsonb;
-  c_template constant jsonb :=
-    '["wash_day","intensive_care_day","styling_day","between_wash_care_day"]'::jsonb;
-  c_curated_short constant jsonb :=
-    '["wash_day","styling_day","between_wash_care_day"]'::jsonb;
-  v_unknown integer;
-BEGIN
-  SELECT pg_catalog.count(*)::integer INTO v_unknown
-  FROM public.product_application_protocols protocol
-  WHERE protocol.category = 'oil'
-    AND protocol.role = 'dry_finish'
-    AND protocol.guidance_payload IS NOT NULL
-    AND protocol.guidance_payload->'compatibleDayTypes' IS DISTINCT FROM c_ruled
-    AND protocol.guidance_payload->'compatibleDayTypes' IS DISTINCT FROM c_template
-    AND protocol.guidance_payload->'compatibleDayTypes' IS DISTINCT FROM c_curated_short;
-  IF v_unknown > 0 THEN
-    RAISE EXCEPTION 'oil dry-finish protocols with an unreviewed day set: %', v_unknown;
-  END IF;
-
-  UPDATE public.product_application_protocols protocol
-  SET guidance_payload = pg_catalog.jsonb_set(
-        protocol.guidance_payload, '{compatibleDayTypes}', c_ruled, false
-      )
-  WHERE protocol.category = 'oil'
-    AND protocol.role = 'dry_finish'
-    AND protocol.guidance_payload->'compatibleDayTypes' IN (c_template, c_curated_short);
-END;
-$oil_dry_finish_day_types$;
 
 DO $oil_between_wash_templates$
 DECLARE

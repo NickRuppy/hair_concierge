@@ -20,7 +20,6 @@ const BETWEEN_WASH_OIL_KEYS = [
 ] as const
 
 const WASH_FAMILY = ["wash_day", "intensive_care_day", "bond_repair_day", "clarifying_wash_day"]
-const DRY_FINISH = [...WASH_FAMILY, "styling_day", "between_wash_care_day"]
 
 const STUB = `
 CREATE ROLE anon;
@@ -129,13 +128,6 @@ test("the migration's template literals are the code templates, before and after
       `${key}: v2 literal`,
     )
   }
-  const dryFinish = buildExpansionProtocolRow("TPL-OIL-DRYFINISH", {
-    productId: "__PRODUCT_ID__",
-    evidence: [
-      { sourceUrl: "https://www.dm.de/p/oil", sourceType: "retailer", checkedAt: "2026-09-02" },
-    ],
-  }).guidance_payload as { compatibleDayTypes: string[] }
-  assert.deepEqual(dryFinish.compatibleDayTypes, DRY_FINISH)
 })
 
 test("O4 retires the Refresh-Tag Oil templates as version 2 and publishes version 3", async (t) => {
@@ -211,7 +203,7 @@ test("O4 refuses a version-3 row whose indexed columns drifted", async (t) => {
   await pg.exec("ROLLBACK")
 })
 
-test("O1/O2 realign every reviewed V1 Oil day set and refuse unknown ones", async (t) => {
+test("O2 realigns every V1 Oil leave-on day set, leaves dry-finish rows alone, and refuses unknown sets", async (t) => {
   const pg = await database(t)
   const staleLeaveOn = await seedOil(pg, "leave_on_fibre_conditioning", [
     "wash_day",
@@ -235,8 +227,8 @@ test("O1/O2 realign every reviewed V1 Oil day set and refuse unknown ones", asyn
   for (const [row, expected] of [
     [staleLeaveOn, WASH_FAMILY],
     [ruledLeaveOn, WASH_FAMILY],
-    [templateDry, DRY_FINISH],
-    [shortDry, DRY_FINISH],
+    [templateDry, templateDry.payload.compatibleDayTypes],
+    [shortDry, shortDry.payload.compatibleDayTypes],
   ] as const) {
     const stored = await storedPayload(pg, row.id)
     assert.deepEqual(stored.compatibleDayTypes, expected)
