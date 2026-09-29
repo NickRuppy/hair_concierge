@@ -1,56 +1,179 @@
--- ROLLBACK for S5R-03-km-young-again-oil-recategorization (fingerprint 3b9410d5031f552f1c1a69ee529f828268c8ec963c9a721fdf6b1d8fcfa4bda1).
+-- ROLLBACK for S5R-03-km-young-again-oil-recategorization (fingerprint 54cebf311e42db4e452c9e71a1f6ef4a6b23f878d37a5d028a63a3271b3d50fd).
 -- PREPARED, NOT A MIGRATION. Restores the exact 2026-09-29 Leave-in preimage
 -- (original row ids and timestamps) captured in prestate-2026-09-29.json.
--- Run only on Nick's instruction, as one transaction, and only while the
--- product still carries exactly this migration's Oil target (guarded below).
+-- Run only on Nick's instruction, as one transaction.
+--
+-- Safety properties:
+--   * same advisory lock and Personal Plan / owner SHARE locks as the forward
+--     migration, taken BEFORE the reference check (no check-then-write race);
+--   * refuses unless the live Oil state equals the generated target byte-exactly
+--     (spec, eligibility, protocols incl. V1/V2 payloads, fact provenance incl.
+--     fact values/source text/fingerprints, receipt, thickness/concern rows), so
+--     a post-apply revision is never silently destroyed;
+--   * products.updated_at is restored exactly. The BEFORE UPDATE trigger
+--     set_updated_at_products (00001_initial_schema.sql) would overwrite it with now(),
+--     so exactly that one trigger is disabled for the single restoring UPDATE and
+--     re-enabled before COMMIT (precedent: 20260812143000 /
+--     20260814191843 DISABLE TRIGGER inside the migration transaction). ALTER TABLE
+--     holds ACCESS EXCLUSIVE on products until COMMIT, so no other session can
+--     write products while the trigger is off, and any failure rolls the trigger
+--     state back with the transaction. session_replication_role is NOT used: it
+--     would also silence FK enforcement and the eligibility compat triggers.
+--   * the verify step re-proves the forward migration's own preimage guards plus
+--     full-row equality (timestamps included, TimeZone UTC) against the snapshot,
+--     so a later re-apply of the forward migration passes its guards.
 BEGIN;
 
 SET LOCAL lock_timeout = '5s';
+SET LOCAL TimeZone = 'UTC';
 
+-- Shared catalog-apply serialization lock BEFORE any product row/table lock
+-- (20260914170000_personal_plan_stage5_v2_pointer_delta_executor.sql).
 SELECT pg_catalog.pg_advisory_xact_lock(
   pg_catalog.hashtextextended('catalog-enrichment:product-apply', 0)
 );
 
+-- Hold Personal Plan / ownership sources closed while proving no plan or owner
+-- references the product (precedent: 20260903083832).
+LOCK TABLE public.personal_plan_product_drafts,
+           public.personal_plan_routine_versions,
+           public.personal_plan_routine_proposals,
+           public.personal_plan_portfolio_versions,
+           public.personal_plans,
+           public.personal_plan_refinement_drafts,
+           public.user_products,
+           public.user_product_usage IN SHARE MODE;
+
+DO $trigger_precheck$
+BEGIN
+  IF (SELECT count(*) FROM pg_catalog.pg_trigger t
+      WHERE t.tgrelid = 'public.products'::regclass
+        AND NOT t.tgisinternal
+        AND t.tgfoid = 'public.update_updated_at_column()'::regprocedure) <> 1
+     OR NOT EXISTS (
+       SELECT 1 FROM pg_catalog.pg_trigger t
+       WHERE t.tgrelid = 'public.products'::regclass
+         AND t.tgname = 'set_updated_at_products'
+         AND t.tgenabled = 'O'
+         AND t.tgfoid = 'public.update_updated_at_column()'::regprocedure
+     ) THEN
+    RAISE EXCEPTION 'rollback: products updated_at trigger is not exactly set_updated_at_products (enabled)';
+  END IF;
+END;
+$trigger_precheck$;
+
+-- Before any DML, so products has no pending trigger events yet.
+ALTER TABLE public.products DISABLE TRIGGER set_updated_at_products;
+
+DO $rollback_precheck$
+DECLARE
+  v_product_id constant uuid := '6ad82861-d68e-4e70-a976-78c0f35d087b';
+BEGIN
+  PERFORM 1 FROM public.products WHERE id = v_product_id FOR UPDATE;
+
+  -- The live Oil state must be exactly this migration's generated target.
+  IF (EXISTS (SELECT 1 FROM public.products WHERE id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid
+        AND name = 'Kevin Murphy Young Again' AND brand = 'Kevin Murphy'
+        AND category_key = 'oil'
+        AND category = 'Öle'
+        AND tags = ARRAY['öle']::text[]
+        AND suitable_thicknesses = ARRAY['coarse', 'fine', 'normal']::text[]
+        AND suitable_concerns = ARRAY['styling-oel']::text[]
+        AND description = 'Leichtes Pflegeöl auf Silikonbasis mit Immortelle-Extrakt – nach der Wäsche in handtuchtrockene Längen und Spitzen oder als Finish ins trockene Haar. Mit Hitzeschutz.'
+        AND net_content_value = 100
+        AND net_content_unit = 'ml'
+        AND affiliate_link = 'https://www.hagel-shop.de/kevin-murphy-young-again-leave-in-treatment-100-ml.html'
+        AND origin = 'curated' AND is_active = true AND lifecycle_status = 'active'
+        AND is_chaarlie_recommended = true)) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback refused: live state is not the generated Oil target: product_target';
+  END IF;
+
+  IF (NOT EXISTS (SELECT 1 FROM public.product_leave_in_specs WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid)) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback refused: live state is not the generated Oil target: no_leave_in_spec';
+  END IF;
+
+  IF (NOT EXISTS (SELECT 1 FROM public.product_leave_in_fit_specs WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid)) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback refused: live state is not the generated Oil target: no_leave_in_fit_spec';
+  END IF;
+
+  IF (NOT EXISTS (SELECT 1 FROM public.product_leave_in_eligibility WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid)) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback refused: live state is not the generated Oil target: no_leave_in_eligibility';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object('category_key', category_key, 'weight', weight, 'role_support', to_jsonb(role_support), 'provides_heat_protection', provides_heat_protection)), '[]'::jsonb) FROM public.product_oil_specs WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"category_key":"oil","weight":"light","role_support":["leave_on_fibre_conditioning","dry_finish"],"provides_heat_protection":true}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback refused: live state is not the generated Oil target: oil_spec_target';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object('thickness', thickness, 'oil_subtype', oil_subtype, 'oil_purpose', oil_purpose, 'ingredient_flags', to_jsonb(ingredient_flags), 'category_key', category_key) ORDER BY thickness, oil_subtype), '[]'::jsonb) FROM public.product_oil_eligibility WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"thickness":"coarse","oil_subtype":"styling-oel","oil_purpose":"styling_finish","ingredient_flags":["silicones","oils"],"category_key":"oil"},{"thickness":"fine","oil_subtype":"styling-oel","oil_purpose":"styling_finish","ingredient_flags":["silicones","oils"],"category_key":"oil"},{"thickness":"normal","oil_subtype":"styling-oel","oil_purpose":"styling_finish","ingredient_flags":["silicones","oils"],"category_key":"oil"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback refused: live state is not the generated Oil target: oil_eligibility_target';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
+           'category', category, 'role', role, 'application_family', application_family,
+           'cadence', cadence, 'application_stage', application_stage,
+           'application_state', application_state, 'placement', placement,
+           'contact_time_seconds', contact_time_seconds, 'rinse_action', rinse_action,
+           'reapplication', reapplication, 'instruction_modifiers', instruction_modifiers,
+           'source_label', source_label, 'source_url', source_url, 'source_text', source_text,
+           'guidance_payload', guidance_payload, 'guidance_payload_v2', guidance_payload_v2) ORDER BY role), '[]'::jsonb) FROM public.product_application_protocols WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"category":"oil","role":"dry_finish","application_family":"dry_finish","cadence":null,"application_stage":"dry_finish","application_state":null,"placement":"lengths_ends","contact_time_seconds":null,"rinse_action":"leave_in","reapplication":"not_stated","instruction_modifiers":[],"source_label":"KEVIN.MURPHY Hersteller-Artikel (Anwendung YOUNG.AGAIN)","source_url":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","source_text":"Herstelleranleitung (EN): \"Then, once dry add a few more to finish\"; \"Apply before styling and again on dry hair to smooth flyaways\".","guidance_payload":{"schemaVersion":1,"protocolVersion":1,"locale":"de","guidanceKey":"product-oil-6ad82861-d68e-4e70-a976-78c0f35d087b-dry","scope":{"kind":"product","category":"oil","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"role":"finish","applicationFamily":"dry_finish","compatibleDayTypes":["wash_day","intensive_care_day","styling_day","between_wash_care_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"dry_finish","before":[],"after":[],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":[],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"lengths_ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Wenige Tropfen verwenden."},"cautions":[]},"steps":[{"stepKey":"dose-dry-finish","action":"apply_product","copyTemplateDe":"Wenige Tropfen zwischen den Handflächen verreiben und anwärmen, bis beide Hände dünn benetzt sind."},{"stepKey":"apply-dry-finish","action":"apply_product","copyTemplateDe":"Zuerst in die trockenen Spitzen einarbeiten, dann den Rest über die Längen streichen. Den Ansatz aussparen, nicht ausspülen."}],"evidence":[{"sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer","checkedAt":"2026-09-29"}]},"guidance_payload_v2":{"schemaVersion":2,"contractKind":"product_pointer","scope":{"kind":"product","category":"oil","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"sourceRole":"dry_finish","role":"finish","applicationFamily":"dry_finish","facts":{"applicationState":"dry_hair","applicationArea":"hair_lengths_ends","rinse":"leave_in","contactTime":null,"amount":{"kind":"qualitative","value":"few_drops"},"heat":null,"conditionerPolicy":"not_applicable"},"workflowId":null,"requiredCompanionProductId":null,"runtimeBlockerCode":null,"exactSteps":[],"cautionCodes":[],"evidence":[{"sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer","checkedAt":"2026-09-29"}]}},{"category":"oil","role":"leave_on_fibre_conditioning","application_family":"post_wash_damp_conditioning","cadence":null,"application_stage":"damp_leave_on","application_state":null,"placement":"lengths_ends","contact_time_seconds":null,"rinse_action":"leave_in","reapplication":"not_stated","instruction_modifiers":[],"source_label":"KEVIN.MURPHY Hersteller-Artikel (Anwendung YOUNG.AGAIN)","source_url":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","source_text":"Herstelleranleitung (EN): \"use daily on damp or dry hair. Apply before styling and again on dry hair to smooth flyaways\"; \"add a few pumps to damp hair before air-dry or heat styling.\"","guidance_payload":{"schemaVersion":1,"protocolVersion":1,"locale":"de","guidanceKey":"product-oil-6ad82861-d68e-4e70-a976-78c0f35d087b-leave-on","scope":{"kind":"product","category":"oil","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"role":"leave_in","applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","intensive_care_day","bond_repair_day","clarifying_wash_day"],"exactGuidanceRequired":true,"sequence":{"anchor":"damp_leave_on","before":[],"after":["post_rinse_towel_dry"],"conflictsWith":[]},"requirements":{"requiredCatalogFacts":[],"requiredProtocolFacts":[],"requiredProfileFacts":[]},"protocolFacts":{"applicationArea":"lengths_ends","rinse":"leave_in","contactTimeSeconds":null,"conditionerRelationship":"not_applicable","reapplication":"none","amount":{"kind":"qualitative","copyDe":"Wenige Tropfen verwenden."},"cautions":[]},"steps":[{"stepKey":"dose-damp","action":"apply_product","copyTemplateDe":"Wenige Tropfen zwischen den Handflächen verreiben und anwärmen, bis beide Hände dünn benetzt sind."},{"stepKey":"apply-damp","action":"apply_product","copyTemplateDe":"Zuerst in die handtuchtrockenen Spitzen einarbeiten, dann den Rest über die Längen streichen. Den Ansatz aussparen, nicht ausspülen."}],"evidence":[{"sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer","checkedAt":"2026-09-29"}]},"guidance_payload_v2":{"schemaVersion":2,"contractKind":"product_pointer","scope":{"kind":"product","category":"oil","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"sourceRole":"leave_on_fibre_conditioning","role":"leave_in","applicationFamily":"post_wash_damp_conditioning","facts":{"applicationState":"damp_hair","applicationArea":"hair_lengths_ends","rinse":"leave_in","contactTime":null,"amount":{"kind":"qualitative","value":"few_drops"},"heat":null,"conditionerPolicy":"not_applicable"},"workflowId":null,"requiredCompanionProductId":null,"runtimeBlockerCode":null,"exactSteps":[],"cautionCodes":[],"evidence":[{"sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer","checkedAt":"2026-09-29"}]}}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback refused: live state is not the generated Oil target: protocols_target';
+  END IF;
+
+  IF ((SELECT pg_catalog.array_agg(category_key || ':' || thickness ORDER BY category_key, thickness) FROM public.product_thickness_eligibility WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = ARRAY['oil:coarse', 'oil:fine', 'oil:normal']::text[]) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback refused: live state is not the generated Oil target: thickness_eligibility_target';
+  END IF;
+
+  IF ((SELECT pg_catalog.array_agg(category_key || ':' || concern_key ORDER BY category_key, concern_key) FROM public.product_concern_eligibility WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = ARRAY['oil:styling-oel']::text[]) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback refused: live state is not the generated Oil target: concern_eligibility_target';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg((to_jsonb(t) - 'created_at') ORDER BY t.fact_key, t.source_url), '[]'::jsonb) FROM public.personal_plan_catalog_fact_evidence t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","fact_key":"oil.authority_facts","fact_value":{"weight":"light","provides_heat_protection":true,"ingredient_flags":["silicones","oils"],"inci_basis":"Cyclopentasiloxane, Dimethicone, Dimethiconol, Bis-Cetearyl Amodimethicone, … Carthamus Tinctorius (Safflower) Seed Oil, Citrus Limon (Lemon) Peel Oil, … (silikonbasiertes Leave-in-Öl; Silikone an Position 1–4)"},"source_label":"KEVIN.MURPHY Produktseite DE (EU-Hersteller)","source_url":"https://kevinmurphy.com.au/de/de/km/products-/by-benefit-/rejuvenate-/YOUNG-AGAIN.html","source_text":"\"Die ultimative tägliche Verwöhnpflege für sichtbar verjüngtes Haar – YOUNG.AGAIN ist ein schwereloses Leave-in-Öl, angereichert mit Immortelle.\" \"Verwende es täglich, um Haarbruch vorzubeugen und das Haar vor schädlichen Umwelteinflüssen und Hitze bis zu 230 °C schützen.\" Inhaltsstoffe (EU-Hersteller): Cyclopentasiloxane, Dimethicone, Dimethiconol, Bis-Cetearyl Amodimethicone, Helichrysum Stoechas Flower Extract*, Pyrus Malus (Apple) Fruit Extract, Camellia Sinensis Leaf Extract, Carthamus Tinctorius (Safflower) Seed Oil, Citrus Limon (Lemon) Peel Oil, Citrus Limon (Lemon) Fruit Extract, Vitis Vinifera (Grape) Seed Extract, Saccharum Officinarum (Sugarcane) Extract, Ginkgo Biloba Leaf Extract, Glycerin, Hydrolyzed Soy Protein, Water (Aqua) (Eau), Hexylene Glycol, Butylene Glycol, Cyclohexasiloxane, Betaine, Vanillyl Butyl Ether, Behentrimonium Chloride, Quaternium-91, Myristyl Myristate, Hexapeptide-11, Cetearyl Alcohol, Ethylhexyl Methoxycinnamate, Phenoxyethanol, Potassium Sorbate, Sodium Benzoate, Fragrance (Parfum), Linalool, Limonene, Geraniol, Violet 2 (CI 60725)","source_type":"manufacturer","checked_at":"2026-09-29","batch_id":"S5R-03-km-young-again-oil-recategorization","batch_fingerprint":"54cebf311e42db4e452c9e71a1f6ef4a6b23f878d37a5d028a63a3271b3d50fd","content_fingerprint":"54cebf311e42db4e452c9e71a1f6ef4a6b23f878d37a5d028a63a3271b3d50fd"},{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","fact_key":"oil.authority_facts","fact_value":{"role_support":["leave_on_fibre_conditioning","dry_finish"]},"source_label":"KEVIN.MURPHY Hersteller-Artikel (Anwendung YOUNG.AGAIN)","source_url":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","source_text":"\"add a few pumps to damp hair before air-dry or heat styling. Then, once dry add a few more to finish\"; \"use daily on damp or dry hair. Apply before styling and again on dry hair to smooth flyaways\"","source_type":"manufacturer","checked_at":"2026-09-29","batch_id":"S5R-03-km-young-again-oil-recategorization","batch_fingerprint":"54cebf311e42db4e452c9e71a1f6ef4a6b23f878d37a5d028a63a3271b3d50fd","content_fingerprint":"54cebf311e42db4e452c9e71a1f6ef4a6b23f878d37a5d028a63a3271b3d50fd"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback refused: live state is not the generated Oil target: fact_evidence_target';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg(to_jsonb(r) - 'created_at'), '[]'::jsonb) FROM public.catalog_enrichment_applied_items r WHERE r.batch_id = 'S5R-03-km-young-again-oil-recategorization') = $json$[{"batch_id":"S5R-03-km-young-again-oil-recategorization","product_key":"oil-recategorization:6ad82861-d68e-4e70-a976-78c0f35d087b","batch_fingerprint":"54cebf311e42db4e452c9e71a1f6ef4a6b23f878d37a5d028a63a3271b3d50fd","content_fingerprint":"54cebf311e42db4e452c9e71a1f6ef4a6b23f878d37a5d028a63a3271b3d50fd","product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","reviewed_by":"nick"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback refused: live state is not the generated Oil target: receipt_target';
+  END IF;
+
+  IF EXISTS (SELECT 1 FROM public.user_products WHERE catalog_product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid)
+       OR EXISTS (SELECT 1 FROM public.user_product_usage WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid)
+       OR EXISTS (SELECT 1 FROM public.personal_plan_product_drafts WHERE payload::text LIKE '%6ad82861-d68e-4e70-a976-78c0f35d087b%')
+       OR EXISTS (SELECT 1 FROM public.personal_plan_portfolio_versions WHERE snapshot::text LIKE '%6ad82861-d68e-4e70-a976-78c0f35d087b%')
+       OR EXISTS (SELECT 1 FROM public.personal_plan_routine_versions WHERE payload::text LIKE '%6ad82861-d68e-4e70-a976-78c0f35d087b%')
+       OR EXISTS (SELECT 1 FROM public.personal_plan_routine_proposals WHERE delta::text LIKE '%6ad82861-d68e-4e70-a976-78c0f35d087b%')
+       OR EXISTS (SELECT 1 FROM public.personal_plan_refinement_drafts d WHERE to_jsonb(d)::text LIKE '%6ad82861-d68e-4e70-a976-78c0f35d087b%') THEN
+    RAISE EXCEPTION 'rollback refused: product is referenced by a plan/owner as an Oil; needs a reference migration';
+  END IF;
+END;
+$rollback_precheck$;
+
 DO $rollback$
 DECLARE
   v_product_id constant uuid := '6ad82861-d68e-4e70-a976-78c0f35d087b';
-  v_fingerprint constant text := '3b9410d5031f552f1c1a69ee529f828268c8ec963c9a721fdf6b1d8fcfa4bda1';
+  v_fingerprint constant text := '54cebf311e42db4e452c9e71a1f6ef4a6b23f878d37a5d028a63a3271b3d50fd';
   v_rows integer;
 BEGIN
-  PERFORM 1 FROM public.products WHERE id = v_product_id AND category_key = 'oil' FOR UPDATE;
-  IF NOT FOUND THEN RAISE EXCEPTION 'rollback: product is not an Oil'; END IF;
-
-  IF NOT EXISTS (
-    SELECT 1 FROM public.catalog_enrichment_applied_items
-    WHERE batch_id = 'S5R-03-km-young-again-oil-recategorization' AND product_key = 'oil-recategorization:6ad82861-d68e-4e70-a976-78c0f35d087b'
-      AND batch_fingerprint = v_fingerprint AND product_id = v_product_id
-  ) THEN
-    RAISE EXCEPTION 'rollback: forward receipt missing; refusing to guess the state';
-  END IF;
-
-  -- Refuse if a Personal Plan / owner captured the product as an Oil meanwhile.
-  IF EXISTS (SELECT 1 FROM public.user_products WHERE catalog_product_id = v_product_id)
-       OR EXISTS (SELECT 1 FROM public.user_product_usage WHERE product_id = v_product_id)
-       OR EXISTS (SELECT 1 FROM public.personal_plan_product_drafts WHERE payload::text LIKE '%' || v_product_id::text || '%')
-       OR EXISTS (SELECT 1 FROM public.personal_plan_portfolio_versions WHERE snapshot::text LIKE '%' || v_product_id::text || '%')
-       OR EXISTS (SELECT 1 FROM public.personal_plan_routine_versions WHERE payload::text LIKE '%' || v_product_id::text || '%')
-       OR EXISTS (SELECT 1 FROM public.personal_plan_routine_proposals WHERE delta::text LIKE '%' || v_product_id::text || '%')
-       OR EXISTS (SELECT 1 FROM public.personal_plan_refinement_drafts WHERE to_jsonb(personal_plan_refinement_drafts)::text LIKE '%' || v_product_id::text || '%') THEN
-    RAISE EXCEPTION 'rollback: product is referenced by a plan/owner as an Oil; needs a reference migration';
-  END IF;
-
   DELETE FROM public.product_application_protocols WHERE product_id = v_product_id AND category = 'oil';
   GET DIAGNOSTICS v_rows = ROW_COUNT;
   IF v_rows <> 2 THEN RAISE EXCEPTION 'rollback: oil protocol count %', v_rows; END IF;
   DELETE FROM public.product_oil_eligibility WHERE product_id = v_product_id;
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> 3 THEN RAISE EXCEPTION 'rollback: oil eligibility count %', v_rows; END IF;
   DELETE FROM public.product_oil_specs WHERE product_id = v_product_id;
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: oil spec count %', v_rows; END IF;
   DELETE FROM public.product_concern_eligibility WHERE product_id = v_product_id AND category_key = 'oil';
   DELETE FROM public.product_thickness_eligibility WHERE product_id = v_product_id AND category_key = 'oil';
   DELETE FROM public.personal_plan_catalog_fact_evidence
   WHERE product_id = v_product_id AND fact_key = 'oil.authority_facts' AND batch_fingerprint = v_fingerprint;
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> 2 THEN RAISE EXCEPTION 'rollback: oil evidence count %', v_rows; END IF;
   DELETE FROM public.catalog_enrichment_applied_items
-  WHERE batch_id = 'S5R-03-km-young-again-oil-recategorization' AND product_key = 'oil-recategorization:6ad82861-d68e-4e70-a976-78c0f35d087b';
+  WHERE batch_id = 'S5R-03-km-young-again-oil-recategorization' AND product_key = 'oil-recategorization:6ad82861-d68e-4e70-a976-78c0f35d087b' AND batch_fingerprint = v_fingerprint;
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: receipt count %', v_rows; END IF;
 
+  -- set_updated_at_products is disabled, so updated_at keeps the restored value.
   UPDATE public.products
   SET category_key = 'leave_in',
       category = 'Leave-in',
@@ -61,7 +184,9 @@ BEGIN
       net_content_value = NULL,
       net_content_unit = NULL,
       updated_at = '2026-08-15T07:47:38.210968+00:00'::timestamptz
-  WHERE id = v_product_id;
+  WHERE id = v_product_id AND category_key = 'oil';
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: product restore touched % rows', v_rows; END IF;
 
   INSERT INTO public.product_leave_in_specs (product_id, format, weight, roles, provides_heat_protection, heat_protection_max_c, heat_activation_required, care_benefits, ingredient_flags, application_stage, care_direction, repair_support_level, plan_roles, functional_benefits, category_key, conditioner_relationship, created_at, updated_at)
   VALUES ('6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid, 'serum'::text, 'medium'::text, ARRAY['oil_replacement']::text[], false, NULL::integer, false, ARRAY['anti_frizz', 'shine']::text[], ARRAY['silicones', 'oils']::text[], ARRAY['towel_dry', 'dry_hair', 'post_style']::text[], 'balanced'::text, 'medium'::text, ARRAY['post_wash_leave_in']::text[], ARRAY['moisture_softness', 'repair_support', 'shine_support', 'smooth_anti_frizz']::text[], 'leave_in'::text, 'booster_only'::text, '2026-04-15T20:40:50.488342+00:00'::timestamptz, '2026-08-12T07:43:26.372624+00:00'::timestamptz);
@@ -97,17 +222,117 @@ BEGIN
 END;
 $rollback$;
 
+-- Flush the deferred publication gate / FK checks so products has no pending
+-- trigger events, then re-enable the updated_at trigger.
 SET CONSTRAINTS ALL IMMEDIATE;
+
+ALTER TABLE public.products ENABLE TRIGGER set_updated_at_products;
 
 DO $rollback_verify$
 BEGIN
-  PERFORM public.assert_personal_plan_curated_publication('6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid);
-  IF (SELECT count(*) FROM public.product_application_protocols WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b' AND category = 'leave_in') <> 4
-     OR (SELECT count(*) FROM public.product_leave_in_eligibility WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b') <> 4
-     OR NOT EXISTS (SELECT 1 FROM public.product_leave_in_specs WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b')
-     OR EXISTS (SELECT 1 FROM public.product_oil_specs WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b') THEN
-    RAISE EXCEPTION 'rollback verification failed';
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_catalog.pg_trigger t
+    WHERE t.tgrelid = 'public.products'::regclass
+      AND t.tgname = 'set_updated_at_products'
+      AND t.tgenabled = 'O'
+  ) THEN
+    RAISE EXCEPTION 'rollback verify: set_updated_at_products is not re-enabled';
   END IF;
+
+  -- The forward migration's own preimage guards pass again (re-apply coherence).
+  IF (EXISTS (SELECT 1 FROM public.products WHERE id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid
+        AND name = 'Kevin Murphy Young Again' AND brand = 'Kevin Murphy'
+        AND category_key = 'leave_in' AND category = 'Leave-in'
+        AND origin = 'curated' AND is_active = true AND lifecycle_status = 'active'
+        AND is_chaarlie_recommended = true
+        AND description = 'Kevin Murphy Young Again (Silikone) ist ein Leave-in von Kevin Murphy, empfohlen für mittelstarkes Haar bei Performance-Pflege.'
+        AND tags = ARRAY['leave-in']::text[]
+        AND suitable_thicknesses = ARRAY['normal']::text[]
+        AND suitable_concerns = ARRAY['performance', 'tangling']::text[]
+        AND affiliate_link = 'https://www.hagel-shop.de/kevin-murphy-young-again-leave-in-treatment-100-ml.html'
+        AND net_content_value IS NULL AND net_content_unit IS NULL
+        AND updated_at = '2026-08-15T07:47:38.210968+00:00'::timestamptz)) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: product_preimage';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg((to_jsonb(t) - 'created_at' - 'updated_at') ORDER BY t.id), '[]'::jsonb) FROM public.product_application_protocols t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"id":"058cd3f2-be57-40a1-8fc5-9f09c1b6ea7f","product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","category":"leave_in","role":"post_wash_leave_in","cadence":null,"application_stage":"damp_leave_on","application_state":null,"placement":"lengths_ends","contact_time_seconds":null,"rinse_action":"leave_in","reapplication":"not_stated","instruction_modifiers":[],"source_label":"Kevin Murphy Produktseite","source_url":"https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html","source_text":"Use as a leave-in treatment before styling for moisture and shine.","guidance_payload":{"role":"leave_in","scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"steps":[{"action":"apply_product","stepKey":"dose-kevin-murphy-young-again","copyTemplateDe":"Eine kleine Menge in den Handflächen verteilen."},{"action":"apply_product","stepKey":"apply-kevin-murphy-young-again","copyTemplateDe":"In Längen und Spitzen einarbeiten und danach wie gewünscht stylen."}],"locale":"de","evidence":[{"checkedAt":"2026-08-11","sourceUrl":"https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html","sourceType":"manufacturer"}],"sequence":{"after":["post_cleanse_rinse_off"],"anchor":"damp_leave_on","before":[],"conflictsWith":[]},"guidanceKey":"product-leave-in-6ad82861-d68e-4e70-a976-78c0f35d087b-post-wash","requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProfileFacts":[],"requiredProtocolFacts":[]},"protocolFacts":{"rinse":"leave_in","amount":{"kind":"qualitative","copyDe":"Mit einer kleinen Menge starten."},"cautions":[],"reapplication":"none","applicationArea":"lengths_ends","contactTimeSeconds":null,"conditionerRelationship":"not_applicable"},"schemaVersion":1,"protocolVersion":1,"applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","intensive_care_day","styling_day"],"exactGuidanceRequired":true},"guidance_payload_v2":{"role":"leave_in","facts":{"heat":null,"rinse":"leave_in","amount":null,"contactTime":null,"applicationArea":"hair_lengths_ends","applicationState":"damp_hair","conditionerPolicy":"not_applicable"},"scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"evidence":[{"checkedAt":"2026-08-11","sourceUrl":"https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html","sourceType":"manufacturer"}],"exactSteps":[],"sourceRole":"post_wash_leave_in","workflowId":null,"cautionCodes":[],"contractKind":"product_pointer","schemaVersion":2,"applicationFamily":"post_wash_damp_conditioning","runtimeBlockerCode":null,"requiredCompanionProductId":null},"application_family":"post_wash_damp_conditioning","category_key":"leave_in"},{"id":"40edd227-6ae7-4ab4-b5a5-fe243cfc3a9e","product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","category":"leave_in","role":"post_wash_leave_in","cadence":null,"application_stage":"post_style","application_state":"dry","placement":"lengths_ends","contact_time_seconds":null,"rinse_action":"do_not_rinse","reapplication":"not_stated","instruction_modifiers":[],"source_label":"Hersteller","source_url":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","source_text":"Auf trockenem Haar als Finish anwenden.","guidance_payload":{"role":"leave_in","scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"steps":[{"action":"apply_product","stepKey":"post-style-finish","copyTemplateDe":"Mit einer sehr kleinen Menge beginnen und nach dem Styling sparsam über Längen und Spitzen geben."}],"locale":"de","evidence":[{"checkedAt":"2026-08-14","sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer"}],"sequence":{"after":[],"anchor":"dry_finish","before":[],"conflictsWith":[]},"guidanceKey":"leave-in-use-case-2026-08-14-6ad82861-d68e-4e70-a976-78c0f35d087b-post_style_finish","requirements":{"requiredCatalogFacts":[],"requiredProfileFacts":[],"requiredProtocolFacts":[]},"protocolFacts":{"rinse":"leave_in","amount":null,"cautions":[],"reapplication":"none","applicationArea":"lengths_ends","contactTimeSeconds":null,"conditionerRelationship":"not_applicable"},"schemaVersion":1,"protocolVersion":1,"applicationFamily":"post_style_finish","compatibleDayTypes":["styling_day"],"exactGuidanceRequired":true},"guidance_payload_v2":{"role":"leave_in","facts":{"heat":null,"rinse":"leave_in","amount":null,"contactTime":null,"applicationArea":"hair_lengths_ends","applicationState":"dry_hair","conditionerPolicy":"not_applicable"},"scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"evidence":[{"checkedAt":"2026-08-14","sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer"}],"exactSteps":[],"sourceRole":"post_wash_leave_in","workflowId":null,"cautionCodes":[],"contractKind":"product_pointer","schemaVersion":2,"applicationFamily":"post_style_finish","runtimeBlockerCode":null,"requiredCompanionProductId":null},"application_family":"post_style_finish","category_key":"leave_in"},{"id":"4a4e0bd1-2140-492b-b4f7-e0fe33f46850","product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","category":"leave_in","role":"pre_heat_protection","cadence":null,"application_stage":"pre_heat","application_state":"either","placement":"all_hair","contact_time_seconds":null,"rinse_action":"do_not_rinse","reapplication":"not_stated","instruction_modifiers":[],"source_label":"Hersteller","source_url":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","source_text":"Vor Luft- oder Hitzestyling auf feuchtem oder trockenem Haar anwenden.","guidance_payload":{"role":"heat_protection","scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"steps":[{"action":"apply_product","stepKey":"apply","copyTemplateDe":"Gleichmäßig auf dem vom Hersteller genannten Haarzustand verteilen. Erst danach föhnen oder stylen."}],"locale":"de","evidence":[{"checkedAt":"2026-08-14","sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer"}],"sequence":{"after":[],"anchor":"damp_leave_on","before":[],"conflictsWith":[]},"guidanceKey":"leave-in-use-case-2026-08-14-6ad82861-d68e-4e70-a976-78c0f35d087b-either_state_protection","requirements":{"requiredCatalogFacts":[],"requiredProfileFacts":["heatEvents"],"requiredProtocolFacts":[]},"protocolFacts":{"rinse":"leave_in","amount":null,"cautions":[],"reapplication":"none","applicationArea":"all_hair","contactTimeSeconds":null,"conditionerRelationship":"not_applicable"},"schemaVersion":1,"protocolVersion":1,"applicationFamily":"either_state_protection","compatibleDayTypes":["wash_day","intensive_care_day","bond_repair_day","clarifying_wash_day","refresh_day","between_wash_care_day","styling_day"],"exactGuidanceRequired":true},"guidance_payload_v2":{"role":"heat_protection","facts":{"heat":{"reapplication":"none","supportedStates":["damp_hair","dry_hair"],"activationRequired":false,"maximumClaimedTemperatureC":null},"rinse":"leave_in","amount":null,"contactTime":null,"applicationArea":"root_to_tip_hair","applicationState":"damp_or_dry_hair","conditionerPolicy":"not_applicable"},"scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"evidence":[{"checkedAt":"2026-08-14","sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer"}],"exactSteps":[],"sourceRole":"pre_heat_protection","workflowId":null,"cautionCodes":[],"contractKind":"product_pointer","schemaVersion":2,"applicationFamily":"either_state_protection","runtimeBlockerCode":null,"requiredCompanionProductId":null},"application_family":"either_state_protection","category_key":"leave_in"},{"id":"f013b935-cf01-4e48-b817-0eae91ec8390","product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","category":"leave_in","role":"post_wash_leave_in","cadence":null,"application_stage":"dry_hair","application_state":"dry","placement":"lengths_ends","contact_time_seconds":null,"rinse_action":"do_not_rinse","reapplication":"not_stated","instruction_modifiers":[],"source_label":"Hersteller","source_url":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","source_text":"Auf feuchtem oder trockenem Haar und zwischen Haarwäschen anwenden.","guidance_payload":{"role":"leave_in","scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"steps":[{"action":"apply_product","stepKey":"dry-care","copyTemplateDe":"Mit einer sehr kleinen Menge in trockenen Längen und Spitzen beginnen und nur bei Bedarf ergänzen."}],"locale":"de","evidence":[{"checkedAt":"2026-08-14","sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer"}],"sequence":{"after":[],"anchor":"dry_finish","before":[],"conflictsWith":[]},"guidanceKey":"leave-in-use-case-2026-08-14-6ad82861-d68e-4e70-a976-78c0f35d087b-between_wash_dry_care","requirements":{"requiredCatalogFacts":[],"requiredProfileFacts":[],"requiredProtocolFacts":[]},"protocolFacts":{"rinse":"leave_in","amount":null,"cautions":[],"reapplication":"none","applicationArea":"lengths_ends","contactTimeSeconds":null,"conditionerRelationship":"not_applicable"},"schemaVersion":1,"protocolVersion":1,"applicationFamily":"between_wash_dry_care","compatibleDayTypes":["refresh_day","between_wash_care_day"],"exactGuidanceRequired":true},"guidance_payload_v2":{"role":"leave_in","facts":{"heat":null,"rinse":"leave_in","amount":null,"contactTime":null,"applicationArea":"hair_lengths_ends","applicationState":"dry_hair","conditionerPolicy":"not_applicable"},"scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"evidence":[{"checkedAt":"2026-08-14","sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer"}],"exactSteps":[],"sourceRole":"post_wash_leave_in","workflowId":null,"cautionCodes":[],"contractKind":"product_pointer","schemaVersion":2,"applicationFamily":"between_wash_dry_care","runtimeBlockerCode":null,"requiredCompanionProductId":null},"application_family":"between_wash_dry_care","category_key":"leave_in"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: protocols_preimage';
+  END IF;
+
+  IF ((SELECT max(updated_at) FROM public.product_application_protocols WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = '2026-08-14T15:13:15.562182+00:00'::timestamptz) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: protocols_updated_at_preimage';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg((to_jsonb(t) - 'created_at' - 'updated_at')), '[]'::jsonb) FROM public.product_leave_in_specs t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","format":"serum","weight":"medium","roles":["oil_replacement"],"provides_heat_protection":false,"heat_protection_max_c":null,"heat_activation_required":false,"care_benefits":["anti_frizz","shine"],"ingredient_flags":["silicones","oils"],"application_stage":["towel_dry","dry_hair","post_style"],"care_direction":"balanced","repair_support_level":"medium","plan_roles":["post_wash_leave_in"],"functional_benefits":["moisture_softness","repair_support","shine_support","smooth_anti_frizz"],"category_key":"leave_in","conditioner_relationship":"booster_only"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: leave_in_spec_preimage';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg((to_jsonb(t) - 'created_at' - 'updated_at')), '[]'::jsonb) FROM public.product_leave_in_fit_specs t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","weight":"medium","conditioner_relationship":"booster_only","care_benefits":["detangle_smooth"]}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: leave_in_fit_spec_preimage';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg((to_jsonb(t) - 'created_at' - 'updated_at') ORDER BY t.need_bucket, t.styling_context), '[]'::jsonb) FROM public.product_leave_in_eligibility t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","thickness":"normal","need_bucket":"moisture_anti_frizz","styling_context":"air_dry","category_key":"leave_in"},{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","thickness":"normal","need_bucket":"moisture_anti_frizz","styling_context":"non_heat_style","category_key":"leave_in"},{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","thickness":"normal","need_bucket":"shine_protect","styling_context":"air_dry","category_key":"leave_in"},{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","thickness":"normal","need_bucket":"shine_protect","styling_context":"non_heat_style","category_key":"leave_in"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: leave_in_eligibility_preimage';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg((to_jsonb(t) - 'created_at') ORDER BY t.category_key, t.thickness), '[]'::jsonb) FROM public.product_thickness_eligibility t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","category_key":"leave_in","thickness":"normal"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: thickness_eligibility_preimage';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg((to_jsonb(t) - 'created_at') ORDER BY t.category_key, t.concern_key), '[]'::jsonb) FROM public.product_concern_eligibility t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","category_key":"leave_in","concern_key":"performance"},{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","category_key":"leave_in","concern_key":"tangling"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: concern_eligibility_preimage';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg((to_jsonb(t) - 'created_at') ORDER BY t.fact_key, t.source_url), '[]'::jsonb) FROM public.personal_plan_catalog_fact_evidence t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","fact_key":"leave_in.authority_facts","fact_value":{"plan_roles":["post_wash_leave_in"],"care_direction":"balanced","functional_benefits":["moisture_softness","repair_support","shine_support","smooth_anti_frizz"],"repair_support_level":"medium"},"source_label":"Kevin Murphy Produktseite","source_url":"https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html","source_text":"Weightless leave-in oil; supports softness, nourishment, protection, shine and stronger-feeling hair.","source_type":"manufacturer","checked_at":"2026-08-11","batch_id":"S5-15-leave-in-exact-02","batch_fingerprint":"c37af5e2935e39b74216422683730000e97d4cebb4aa1264f15c546245408492","content_fingerprint":"8e6f7dfbabb63fe395d0feb24f2efd9285f3623f326cf7ef4921f70398e94693"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: fact_evidence_preimage';
+  END IF;
+
+  IF (NOT EXISTS (SELECT 1 FROM public.product_oil_specs WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid)) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: no_oil_spec';
+  END IF;
+
+  IF (NOT EXISTS (SELECT 1 FROM public.product_oil_eligibility WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid)) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: no_oil_eligibility';
+  END IF;
+
+  -- Full-row restoration, timestamps included (TimeZone is UTC).
+  IF ((SELECT to_jsonb(p) - 'embedding' FROM public.products p WHERE p.id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json${"id":"6ad82861-d68e-4e70-a976-78c0f35d087b","name":"Kevin Murphy Young Again","brand":"Kevin Murphy","description":"Kevin Murphy Young Again (Silikone) ist ein Leave-in von Kevin Murphy, empfohlen für mittelstarkes Haar bei Performance-Pflege.","category":"Leave-in","affiliate_link":"https://www.hagel-shop.de/kevin-murphy-young-again-leave-in-treatment-100-ml.html","image_url":"https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/6ad82861-d68e-4e70-a976-78c0f35d087b/27-6ad82861-d68e-4e70-a976-78c0f35d087b-kevin-murphy-kevin-murphy-young-again-c56bcc178434.webp","price_eur":43,"currency":"EUR","tags":["leave-in"],"suitable_thicknesses":["normal"],"suitable_concerns":["performance","tangling"],"is_active":true,"sort_order":69,"created_at":"2026-03-03T12:34:10.880077+00:00","updated_at":"2026-08-15T07:47:38.210968+00:00","short_description":null,"tom_take":null,"lifecycle_status":"active","purchase_link_status":"available","purchase_link_checked_at":"2026-06-10T00:00:00+00:00","price_checked_at":"2026-06-10T00:00:00+00:00","category_key":"leave_in","brand_id":"3e336fa1-50ad-474a-8ec2-35541b6e7a25","product_line_id":null,"origin":"curated","is_chaarlie_recommended":true,"net_content_value":null,"net_content_unit":null,"thumbnail_image_url":"https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/c56bcc1784341e7cf093db84f59f232f4c677a1292521c48144d9a1bf9eca99a.webp"}$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: product_full_row_restored';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg(to_jsonb(t) ORDER BY t.id), '[]'::jsonb) FROM public.product_application_protocols t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"id":"058cd3f2-be57-40a1-8fc5-9f09c1b6ea7f","product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","category":"leave_in","role":"post_wash_leave_in","cadence":null,"application_stage":"damp_leave_on","application_state":null,"placement":"lengths_ends","contact_time_seconds":null,"rinse_action":"leave_in","reapplication":"not_stated","instruction_modifiers":[],"source_label":"Kevin Murphy Produktseite","source_url":"https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html","source_text":"Use as a leave-in treatment before styling for moisture and shine.","created_at":"2026-08-12T07:43:26.372624+00:00","updated_at":"2026-08-13T06:58:13.851968+00:00","guidance_payload":{"role":"leave_in","scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"steps":[{"action":"apply_product","stepKey":"dose-kevin-murphy-young-again","copyTemplateDe":"Eine kleine Menge in den Handflächen verteilen."},{"action":"apply_product","stepKey":"apply-kevin-murphy-young-again","copyTemplateDe":"In Längen und Spitzen einarbeiten und danach wie gewünscht stylen."}],"locale":"de","evidence":[{"checkedAt":"2026-08-11","sourceUrl":"https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html","sourceType":"manufacturer"}],"sequence":{"after":["post_cleanse_rinse_off"],"anchor":"damp_leave_on","before":[],"conflictsWith":[]},"guidanceKey":"product-leave-in-6ad82861-d68e-4e70-a976-78c0f35d087b-post-wash","requirements":{"requiredCatalogFacts":["leave_in.plan_roles"],"requiredProfileFacts":[],"requiredProtocolFacts":[]},"protocolFacts":{"rinse":"leave_in","amount":{"kind":"qualitative","copyDe":"Mit einer kleinen Menge starten."},"cautions":[],"reapplication":"none","applicationArea":"lengths_ends","contactTimeSeconds":null,"conditionerRelationship":"not_applicable"},"schemaVersion":1,"protocolVersion":1,"applicationFamily":"post_wash_damp_conditioning","compatibleDayTypes":["wash_day","intensive_care_day","styling_day"],"exactGuidanceRequired":true},"guidance_payload_v2":{"role":"leave_in","facts":{"heat":null,"rinse":"leave_in","amount":null,"contactTime":null,"applicationArea":"hair_lengths_ends","applicationState":"damp_hair","conditionerPolicy":"not_applicable"},"scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"evidence":[{"checkedAt":"2026-08-11","sourceUrl":"https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html","sourceType":"manufacturer"}],"exactSteps":[],"sourceRole":"post_wash_leave_in","workflowId":null,"cautionCodes":[],"contractKind":"product_pointer","schemaVersion":2,"applicationFamily":"post_wash_damp_conditioning","runtimeBlockerCode":null,"requiredCompanionProductId":null},"application_family":"post_wash_damp_conditioning","category_key":"leave_in"},{"id":"40edd227-6ae7-4ab4-b5a5-fe243cfc3a9e","product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","category":"leave_in","role":"post_wash_leave_in","cadence":null,"application_stage":"post_style","application_state":"dry","placement":"lengths_ends","contact_time_seconds":null,"rinse_action":"do_not_rinse","reapplication":"not_stated","instruction_modifiers":[],"source_label":"Hersteller","source_url":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","source_text":"Auf trockenem Haar als Finish anwenden.","created_at":"2026-08-14T15:13:15.562182+00:00","updated_at":"2026-08-14T15:13:15.562182+00:00","guidance_payload":{"role":"leave_in","scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"steps":[{"action":"apply_product","stepKey":"post-style-finish","copyTemplateDe":"Mit einer sehr kleinen Menge beginnen und nach dem Styling sparsam über Längen und Spitzen geben."}],"locale":"de","evidence":[{"checkedAt":"2026-08-14","sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer"}],"sequence":{"after":[],"anchor":"dry_finish","before":[],"conflictsWith":[]},"guidanceKey":"leave-in-use-case-2026-08-14-6ad82861-d68e-4e70-a976-78c0f35d087b-post_style_finish","requirements":{"requiredCatalogFacts":[],"requiredProfileFacts":[],"requiredProtocolFacts":[]},"protocolFacts":{"rinse":"leave_in","amount":null,"cautions":[],"reapplication":"none","applicationArea":"lengths_ends","contactTimeSeconds":null,"conditionerRelationship":"not_applicable"},"schemaVersion":1,"protocolVersion":1,"applicationFamily":"post_style_finish","compatibleDayTypes":["styling_day"],"exactGuidanceRequired":true},"guidance_payload_v2":{"role":"leave_in","facts":{"heat":null,"rinse":"leave_in","amount":null,"contactTime":null,"applicationArea":"hair_lengths_ends","applicationState":"dry_hair","conditionerPolicy":"not_applicable"},"scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"evidence":[{"checkedAt":"2026-08-14","sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer"}],"exactSteps":[],"sourceRole":"post_wash_leave_in","workflowId":null,"cautionCodes":[],"contractKind":"product_pointer","schemaVersion":2,"applicationFamily":"post_style_finish","runtimeBlockerCode":null,"requiredCompanionProductId":null},"application_family":"post_style_finish","category_key":"leave_in"},{"id":"4a4e0bd1-2140-492b-b4f7-e0fe33f46850","product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","category":"leave_in","role":"pre_heat_protection","cadence":null,"application_stage":"pre_heat","application_state":"either","placement":"all_hair","contact_time_seconds":null,"rinse_action":"do_not_rinse","reapplication":"not_stated","instruction_modifiers":[],"source_label":"Hersteller","source_url":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","source_text":"Vor Luft- oder Hitzestyling auf feuchtem oder trockenem Haar anwenden.","created_at":"2026-08-14T15:13:15.562182+00:00","updated_at":"2026-08-14T15:13:15.562182+00:00","guidance_payload":{"role":"heat_protection","scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"steps":[{"action":"apply_product","stepKey":"apply","copyTemplateDe":"Gleichmäßig auf dem vom Hersteller genannten Haarzustand verteilen. Erst danach föhnen oder stylen."}],"locale":"de","evidence":[{"checkedAt":"2026-08-14","sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer"}],"sequence":{"after":[],"anchor":"damp_leave_on","before":[],"conflictsWith":[]},"guidanceKey":"leave-in-use-case-2026-08-14-6ad82861-d68e-4e70-a976-78c0f35d087b-either_state_protection","requirements":{"requiredCatalogFacts":[],"requiredProfileFacts":["heatEvents"],"requiredProtocolFacts":[]},"protocolFacts":{"rinse":"leave_in","amount":null,"cautions":[],"reapplication":"none","applicationArea":"all_hair","contactTimeSeconds":null,"conditionerRelationship":"not_applicable"},"schemaVersion":1,"protocolVersion":1,"applicationFamily":"either_state_protection","compatibleDayTypes":["wash_day","intensive_care_day","bond_repair_day","clarifying_wash_day","refresh_day","between_wash_care_day","styling_day"],"exactGuidanceRequired":true},"guidance_payload_v2":{"role":"heat_protection","facts":{"heat":{"reapplication":"none","supportedStates":["damp_hair","dry_hair"],"activationRequired":false,"maximumClaimedTemperatureC":null},"rinse":"leave_in","amount":null,"contactTime":null,"applicationArea":"root_to_tip_hair","applicationState":"damp_or_dry_hair","conditionerPolicy":"not_applicable"},"scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"evidence":[{"checkedAt":"2026-08-14","sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer"}],"exactSteps":[],"sourceRole":"pre_heat_protection","workflowId":null,"cautionCodes":[],"contractKind":"product_pointer","schemaVersion":2,"applicationFamily":"either_state_protection","runtimeBlockerCode":null,"requiredCompanionProductId":null},"application_family":"either_state_protection","category_key":"leave_in"},{"id":"f013b935-cf01-4e48-b817-0eae91ec8390","product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","category":"leave_in","role":"post_wash_leave_in","cadence":null,"application_stage":"dry_hair","application_state":"dry","placement":"lengths_ends","contact_time_seconds":null,"rinse_action":"do_not_rinse","reapplication":"not_stated","instruction_modifiers":[],"source_label":"Hersteller","source_url":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","source_text":"Auf feuchtem oder trockenem Haar und zwischen Haarwäschen anwenden.","created_at":"2026-08-14T15:13:15.562182+00:00","updated_at":"2026-08-14T15:13:15.562182+00:00","guidance_payload":{"role":"leave_in","scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"steps":[{"action":"apply_product","stepKey":"dry-care","copyTemplateDe":"Mit einer sehr kleinen Menge in trockenen Längen und Spitzen beginnen und nur bei Bedarf ergänzen."}],"locale":"de","evidence":[{"checkedAt":"2026-08-14","sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer"}],"sequence":{"after":[],"anchor":"dry_finish","before":[],"conflictsWith":[]},"guidanceKey":"leave-in-use-case-2026-08-14-6ad82861-d68e-4e70-a976-78c0f35d087b-between_wash_dry_care","requirements":{"requiredCatalogFacts":[],"requiredProfileFacts":[],"requiredProtocolFacts":[]},"protocolFacts":{"rinse":"leave_in","amount":null,"cautions":[],"reapplication":"none","applicationArea":"lengths_ends","contactTimeSeconds":null,"conditionerRelationship":"not_applicable"},"schemaVersion":1,"protocolVersion":1,"applicationFamily":"between_wash_dry_care","compatibleDayTypes":["refresh_day","between_wash_care_day"],"exactGuidanceRequired":true},"guidance_payload_v2":{"role":"leave_in","facts":{"heat":null,"rinse":"leave_in","amount":null,"contactTime":null,"applicationArea":"hair_lengths_ends","applicationState":"dry_hair","conditionerPolicy":"not_applicable"},"scope":{"kind":"product","category":"leave_in","productId":"6ad82861-d68e-4e70-a976-78c0f35d087b"},"evidence":[{"checkedAt":"2026-08-14","sourceUrl":"https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html","sourceType":"manufacturer"}],"exactSteps":[],"sourceRole":"post_wash_leave_in","workflowId":null,"cautionCodes":[],"contractKind":"product_pointer","schemaVersion":2,"applicationFamily":"between_wash_dry_care","runtimeBlockerCode":null,"requiredCompanionProductId":null},"application_family":"between_wash_dry_care","category_key":"leave_in"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: protocols_full_rows_restored';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg(to_jsonb(t)), '[]'::jsonb) FROM public.product_leave_in_specs t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","format":"serum","weight":"medium","roles":["oil_replacement"],"provides_heat_protection":false,"heat_protection_max_c":null,"heat_activation_required":false,"care_benefits":["anti_frizz","shine"],"ingredient_flags":["silicones","oils"],"application_stage":["towel_dry","dry_hair","post_style"],"created_at":"2026-04-15T20:40:50.488342+00:00","updated_at":"2026-08-12T07:43:26.372624+00:00","care_direction":"balanced","repair_support_level":"medium","plan_roles":["post_wash_leave_in"],"functional_benefits":["moisture_softness","repair_support","shine_support","smooth_anti_frizz"],"category_key":"leave_in","conditioner_relationship":"booster_only"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: leave_in_spec_full_row_restored';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg(to_jsonb(t)), '[]'::jsonb) FROM public.product_leave_in_fit_specs t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","weight":"medium","conditioner_relationship":"booster_only","care_benefits":["detangle_smooth"],"created_at":"2026-04-16T07:56:37.825859+00:00","updated_at":"2026-04-16T07:56:37.825859+00:00"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: leave_in_fit_spec_full_row_restored';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg(to_jsonb(t) ORDER BY t.need_bucket, t.styling_context), '[]'::jsonb) FROM public.product_leave_in_eligibility t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","thickness":"normal","need_bucket":"moisture_anti_frizz","styling_context":"air_dry","created_at":"2026-08-12T07:43:26.372624+00:00","updated_at":"2026-08-12T07:43:26.372624+00:00","category_key":"leave_in"},{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","thickness":"normal","need_bucket":"moisture_anti_frizz","styling_context":"non_heat_style","created_at":"2026-08-12T07:43:26.372624+00:00","updated_at":"2026-08-12T07:43:26.372624+00:00","category_key":"leave_in"},{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","thickness":"normal","need_bucket":"shine_protect","styling_context":"air_dry","created_at":"2026-08-12T07:43:26.372624+00:00","updated_at":"2026-08-12T07:43:26.372624+00:00","category_key":"leave_in"},{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","thickness":"normal","need_bucket":"shine_protect","styling_context":"non_heat_style","created_at":"2026-08-12T07:43:26.372624+00:00","updated_at":"2026-08-12T07:43:26.372624+00:00","category_key":"leave_in"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: leave_in_eligibility_full_rows_restored';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg(to_jsonb(t) ORDER BY t.category_key, t.thickness), '[]'::jsonb) FROM public.product_thickness_eligibility t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","category_key":"leave_in","thickness":"normal","created_at":"2026-08-15T08:56:39.94203+00:00"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: thickness_eligibility_full_rows_restored';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg(to_jsonb(t) ORDER BY t.category_key, t.concern_key), '[]'::jsonb) FROM public.product_concern_eligibility t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","category_key":"leave_in","concern_key":"performance","created_at":"2026-08-15T08:56:39.94203+00:00"},{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","category_key":"leave_in","concern_key":"tangling","created_at":"2026-08-15T08:56:39.94203+00:00"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: concern_eligibility_full_rows_restored';
+  END IF;
+
+  IF ((SELECT coalesce(pg_catalog.jsonb_agg(to_jsonb(t) ORDER BY t.fact_key, t.source_url), '[]'::jsonb) FROM public.personal_plan_catalog_fact_evidence t WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid) = $json$[{"product_id":"6ad82861-d68e-4e70-a976-78c0f35d087b","fact_key":"leave_in.authority_facts","fact_value":{"plan_roles":["post_wash_leave_in"],"care_direction":"balanced","functional_benefits":["moisture_softness","repair_support","shine_support","smooth_anti_frizz"],"repair_support_level":"medium"},"source_label":"Kevin Murphy Produktseite","source_url":"https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html","source_text":"Weightless leave-in oil; supports softness, nourishment, protection, shine and stronger-feeling hair.","source_type":"manufacturer","checked_at":"2026-08-11","batch_id":"S5-15-leave-in-exact-02","batch_fingerprint":"c37af5e2935e39b74216422683730000e97d4cebb4aa1264f15c546245408492","content_fingerprint":"8e6f7dfbabb63fe395d0feb24f2efd9285f3623f326cf7ef4921f70398e94693","created_at":"2026-08-12T07:43:26.372624+00:00"}]$json$::jsonb) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: fact_evidence_full_rows_restored';
+  END IF;
+
+  IF (NOT EXISTS (SELECT 1 FROM public.catalog_enrichment_applied_items WHERE batch_id = 'S5R-03-km-young-again-oil-recategorization')) IS NOT TRUE THEN
+    RAISE EXCEPTION 'rollback verify: no_forward_receipt';
+  END IF;
+
+  PERFORM public.assert_personal_plan_curated_publication('6ad82861-d68e-4e70-a976-78c0f35d087b'::uuid);
 END;
 $rollback_verify$;
 

@@ -1,0 +1,15 @@
+{
+  "schema": "kevin-murphy-oil-artifact-manifest-v1",
+  "generator": "plans/kevin-murphy-oil-migration/generate.ts",
+  "content_fingerprint": "54cebf311e42db4e452c9e71a1f6ef4a6b23f878d37a5d028a63a3271b3d50fd",
+  "inputs": {
+    "plans/kevin-murphy-oil-migration/prestate-2026-09-29.json": "6f6682ccc7d1ad2e8958946376638b354f4f8bebc01fbad1e01fa5373aae9079"
+  },
+  "outputs": {
+    "plans/kevin-murphy-oil-migration/target-state.json": "ce7f7c1b7d45a0b0188f4e86d7d1f61b5388f7e32f906386595fb815395128a3",
+    "supabase/migrations/20260929120000_kevin_murphy_young_again_oil_recategorization.sql": "5b2201709add14bdd0e57e9f2cb3e5b5300731b2630765233cd8d3e14732056d",
+    "plans/kevin-murphy-oil-migration/rollback.sql": "1ee0470587ae5a44a40dea9a0e1e8b6ea08e5e55bbbe1d8c6488d043b883610d",
+    "plans/kevin-murphy-oil-migration/verify.sql": "6050b4776cd2a09a5f6dafce8619191e79d295ee053a792fdaf32f972a7e8837"
+  },
+  "combined_sha256": "712f301fd24d8bd5213aca8f2da0f58deedd329e3c01fbd46656444ec0faed3f"
+}

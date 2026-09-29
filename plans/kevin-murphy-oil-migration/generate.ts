@@ -9,17 +9,22 @@
  * `buildProductApplicationPointerV2` (never hand-written), validates the Oil
  * specs through the Product Intake Oil validator, and then emits:
  *
- *   - target-state.json                         (reviewable target rows)
+ *   - target-state.json                         (reviewable target rows + preimage)
  *   - rollback.sql                              (prepared, NOT a migration)
+ *   - verify.sql                                (read-only zero-row post-apply proof)
  *   - ../../supabase/migrations/20260929120000_kevin_murphy_young_again_oil_recategorization.sql
+ *   - artifact-manifest.json                    (sha256 per input/output + combined hash)
  *
  * Run from the worktree root:
- *   npx tsx plans/kevin-murphy-oil-migration/generate.ts
+ *   npx tsx plans/kevin-murphy-oil-migration/generate.ts           # write + validate
+ *   npx tsx plans/kevin-murphy-oil-migration/generate.ts --check   # validate only, no writes
  *
  * Re-running is deterministic: same snapshot + same constants → byte-identical output.
+ * The validator fails (exit 1) if any emitted file or the manifest drifts from
+ * what the generator produces now, or if the snapshot hash changed.
  */
 import { createHash } from "node:crypto"
-import { readFileSync, writeFileSync } from "node:fs"
+import { existsSync, readFileSync, writeFileSync } from "node:fs"
 import { dirname, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -303,11 +308,148 @@ assert(
 )
 
 // ---------------------------------------------------------------------------
-// 3. Fingerprint the reviewed target content
+// 3. Shared SQL check lists (one source for forward guard/postflight,
+//    rollback precheck/verify, and the read-only verify.sql)
+// ---------------------------------------------------------------------------
+
+type Check = { name: string; predicate: string }
+const PID = `'${PRODUCT_ID}'::uuid`
+const TS = ["created_at", "updated_at"]
+const byId = (a: Row, b: Row) => (String(a.id) < String(b.id) ? -1 : 1)
+const byEligibility = (a: Row, b: Row) =>
+  `${a.need_bucket}|${a.styling_context}` < `${b.need_bucket}|${b.styling_context}` ? -1 : 1
+const byConcern = (a: Row, b: Row) => (String(a.concern_key) < String(b.concern_key) ? -1 : 1)
+const pre = prestate.product
+const maxProtocolUpdatedAt = prestate.product_application_protocols
+  .map((r) => String(r.updated_at))
+  .sort()
+  .at(-1)!
+
+// Content projections (timestamps excluded) the forward guard compares.
+const expectedPre = {
+  protocols: [...prestate.product_application_protocols].sort(byId).map((r) => omit(r, TS)),
+  leaveInSpecs: prestate.product_leave_in_specs.map((r) => omit(r, TS)),
+  fitSpecs: prestate.product_leave_in_fit_specs.map((r) => omit(r, TS)),
+  eligibility: [...prestate.product_leave_in_eligibility]
+    .sort(byEligibility)
+    .map((r) => omit(r, TS)),
+  thickness: prestate.product_thickness_eligibility.map((r) => omit(r, TS)),
+  concern: [...prestate.product_concern_eligibility].sort(byConcern).map((r) => omit(r, TS)),
+  evidence: prestate.personal_plan_catalog_fact_evidence.map((r) => omit(r, ["created_at"])),
+}
+
+const jsonAgg = (expr: string, from: string, order = "") =>
+  `(SELECT coalesce(pg_catalog.jsonb_agg(${expr}${order ? ` ORDER BY ${order}` : ""}), '[]'::jsonb) FROM ${from} WHERE product_id = ${PID})`
+
+/** Exact 2026-09-29 preimage (content; product and protocol timestamps pinned). */
+const PRESTATE_CHECKS: Check[] = [
+  {
+    name: "product_preimage",
+    predicate: `EXISTS (SELECT 1 FROM public.products WHERE id = ${PID}
+        AND name = ${sqlText(pre.name as string)} AND brand = ${sqlText(pre.brand as string)}
+        AND category_key = 'leave_in' AND category = ${sqlText(pre.category as string)}
+        AND origin = 'curated' AND is_active = true AND lifecycle_status = 'active'
+        AND is_chaarlie_recommended = true
+        AND description = ${sqlText(pre.description as string)}
+        AND tags = ${sqlTextArray(pre.tags as string[])}
+        AND suitable_thicknesses = ${sqlTextArray(pre.suitable_thicknesses as string[])}
+        AND suitable_concerns = ${sqlTextArray(pre.suitable_concerns as string[])}
+        AND affiliate_link = ${sqlText(pre.affiliate_link as string)}
+        AND net_content_value IS NULL AND net_content_unit IS NULL
+        AND updated_at = ${sqlText(pre.updated_at as string)}::timestamptz)`,
+  },
+  {
+    name: "protocols_preimage",
+    predicate: `${jsonAgg("(to_jsonb(t) - 'created_at' - 'updated_at')", "public.product_application_protocols t", "t.id")} = ${sqlJson(expectedPre.protocols)}`,
+  },
+  {
+    name: "protocols_updated_at_preimage",
+    predicate: `(SELECT max(updated_at) FROM public.product_application_protocols WHERE product_id = ${PID}) = ${sqlText(maxProtocolUpdatedAt)}::timestamptz`,
+  },
+  {
+    name: "leave_in_spec_preimage",
+    predicate: `${jsonAgg("(to_jsonb(t) - 'created_at' - 'updated_at')", "public.product_leave_in_specs t")} = ${sqlJson(expectedPre.leaveInSpecs)}`,
+  },
+  {
+    name: "leave_in_fit_spec_preimage",
+    predicate: `${jsonAgg("(to_jsonb(t) - 'created_at' - 'updated_at')", "public.product_leave_in_fit_specs t")} = ${sqlJson(expectedPre.fitSpecs)}`,
+  },
+  {
+    name: "leave_in_eligibility_preimage",
+    predicate: `${jsonAgg("(to_jsonb(t) - 'created_at' - 'updated_at')", "public.product_leave_in_eligibility t", "t.need_bucket, t.styling_context")} = ${sqlJson(expectedPre.eligibility)}`,
+  },
+  {
+    name: "thickness_eligibility_preimage",
+    predicate: `${jsonAgg("(to_jsonb(t) - 'created_at')", "public.product_thickness_eligibility t", "t.category_key, t.thickness")} = ${sqlJson(expectedPre.thickness)}`,
+  },
+  {
+    name: "concern_eligibility_preimage",
+    predicate: `${jsonAgg("(to_jsonb(t) - 'created_at')", "public.product_concern_eligibility t", "t.category_key, t.concern_key")} = ${sqlJson(expectedPre.concern)}`,
+  },
+  {
+    name: "fact_evidence_preimage",
+    predicate: `${jsonAgg("(to_jsonb(t) - 'created_at')", "public.personal_plan_catalog_fact_evidence t", "t.fact_key, t.source_url")} = ${sqlJson(expectedPre.evidence)}`,
+  },
+  {
+    name: "no_oil_spec",
+    predicate: `NOT EXISTS (SELECT 1 FROM public.product_oil_specs WHERE product_id = ${PID})`,
+  },
+  {
+    name: "no_oil_eligibility",
+    predicate: `NOT EXISTS (SELECT 1 FROM public.product_oil_eligibility WHERE product_id = ${PID})`,
+  },
+]
+
+/**
+ * Full-row restoration checks (timestamps INCLUDED). Only meaningful under
+ * `SET LOCAL TimeZone = 'UTC'`, where to_jsonb(timestamptz) prints exactly the
+ * PostgREST form captured in the snapshot. Used by the rollback's verify step.
+ */
+const FULL_RESTORE_CHECKS: Check[] = [
+  {
+    name: "product_full_row_restored",
+    predicate: `(SELECT to_jsonb(p) - 'embedding' FROM public.products p WHERE p.id = ${PID}) = ${sqlJson(pre)}`,
+  },
+  {
+    name: "protocols_full_rows_restored",
+    predicate: `${jsonAgg("to_jsonb(t)", "public.product_application_protocols t", "t.id")} = ${sqlJson([...prestate.product_application_protocols].sort(byId))}`,
+  },
+  {
+    name: "leave_in_spec_full_row_restored",
+    predicate: `${jsonAgg("to_jsonb(t)", "public.product_leave_in_specs t")} = ${sqlJson(prestate.product_leave_in_specs)}`,
+  },
+  {
+    name: "leave_in_fit_spec_full_row_restored",
+    predicate: `${jsonAgg("to_jsonb(t)", "public.product_leave_in_fit_specs t")} = ${sqlJson(prestate.product_leave_in_fit_specs)}`,
+  },
+  {
+    name: "leave_in_eligibility_full_rows_restored",
+    predicate: `${jsonAgg("to_jsonb(t)", "public.product_leave_in_eligibility t", "t.need_bucket, t.styling_context")} = ${sqlJson([...prestate.product_leave_in_eligibility].sort(byEligibility))}`,
+  },
+  {
+    name: "thickness_eligibility_full_rows_restored",
+    predicate: `${jsonAgg("to_jsonb(t)", "public.product_thickness_eligibility t", "t.category_key, t.thickness")} = ${sqlJson(prestate.product_thickness_eligibility)}`,
+  },
+  {
+    name: "concern_eligibility_full_rows_restored",
+    predicate: `${jsonAgg("to_jsonb(t)", "public.product_concern_eligibility t", "t.category_key, t.concern_key")} = ${sqlJson([...prestate.product_concern_eligibility].sort(byConcern))}`,
+  },
+  {
+    name: "fact_evidence_full_rows_restored",
+    predicate: `${jsonAgg("to_jsonb(t)", "public.personal_plan_catalog_fact_evidence t", "t.fact_key, t.source_url")} = ${sqlJson(prestate.personal_plan_catalog_fact_evidence)}`,
+  },
+  {
+    name: "no_forward_receipt",
+    predicate: `NOT EXISTS (SELECT 1 FROM public.catalog_enrichment_applied_items WHERE batch_id = ${sqlText(BATCH_ID)})`,
+  },
+]
+
+// ---------------------------------------------------------------------------
+// 4. Fingerprint the reviewed content: target AND the preimage guards
 // ---------------------------------------------------------------------------
 
 const targetContent = {
-  schema: "kevin-murphy-oil-recategorization-v1",
+  schema: "kevin-murphy-oil-recategorization-v2",
   batch_id: BATCH_ID,
   product_id: PRODUCT_ID,
   product: PRODUCT_TARGET,
@@ -326,42 +468,37 @@ const targetContent = {
     product_concern_eligibility: ["performance:leave_in", "tangling:leave_in"],
     personal_plan_catalog_fact_evidence: ["leave_in.authority_facts"],
   },
+  // The guard content is part of the reviewed content: a changed snapshot
+  // (e.g. a re-captured timestamp) must change the receipt fingerprint.
+  preimage: {
+    captured_at: prestate.captured_at,
+    product: pre,
+    protocols_max_updated_at: maxProtocolUpdatedAt,
+    ...expectedPre,
+  },
 }
 const FINGERPRINT = sha256(canonical(targetContent))
 
-writeFileSync(
-  resolve(HERE, "target-state.json"),
-  `${JSON.stringify({ fingerprint: FINGERPRINT, ...targetContent }, null, 2)}\n`,
-)
-
-// ---------------------------------------------------------------------------
-// 4. Pre-state guard projections (exactly what the SQL recomputes live)
-// ---------------------------------------------------------------------------
-
-const TS = ["created_at", "updated_at"]
-const byId = (a: Row, b: Row) => (String(a.id) < String(b.id) ? -1 : 1)
-const expectedPre = {
-  protocols: [...prestate.product_application_protocols].sort(byId).map((r) => omit(r, TS)),
-  leaveInSpecs: prestate.product_leave_in_specs.map((r) => omit(r, TS)),
-  fitSpecs: prestate.product_leave_in_fit_specs.map((r) => omit(r, TS)),
-  eligibility: [...prestate.product_leave_in_eligibility]
-    .sort((a, b) =>
-      `${a.need_bucket}|${a.styling_context}` < `${b.need_bucket}|${b.styling_context}` ? -1 : 1,
-    )
-    .map((r) => omit(r, TS)),
-  thickness: prestate.product_thickness_eligibility.map((r) => omit(r, TS)),
-  concern: [...prestate.product_concern_eligibility]
-    .sort((a, b) => (String(a.concern_key) < String(b.concern_key) ? -1 : 1))
-    .map((r) => omit(r, TS)),
-  evidence: prestate.personal_plan_catalog_fact_evidence.map((r) => omit(r, ["created_at"])),
-}
-const pre = prestate.product
-const maxProtocolUpdatedAt = prestate.product_application_protocols
-  .map((r) => String(r.updated_at))
-  .sort()
-  .at(-1)!
-
-// Post-state projection of the protocols the SQL re-reads (ORDER BY role).
+// Evidence and receipt rows exactly as the SQL re-reads them.
+const expectedEvidence = [...FACT_EVIDENCE]
+  .sort((a, b) => (`${a.fact_key}|${a.source_url}` < `${b.fact_key}|${b.source_url}` ? -1 : 1))
+  .map((row) => ({
+    product_id: PRODUCT_ID,
+    ...row,
+    batch_id: BATCH_ID,
+    batch_fingerprint: FINGERPRINT,
+    content_fingerprint: FINGERPRINT,
+  }))
+const expectedReceipt = [
+  {
+    batch_id: BATCH_ID,
+    product_key: PRODUCT_KEY,
+    batch_fingerprint: FINGERPRINT,
+    content_fingerprint: FINGERPRINT,
+    product_id: PRODUCT_ID,
+    reviewed_by: "nick",
+  },
+]
 const expectedPostProtocols = [...protocols]
   .sort((a, b) => (a.role < b.role ? -1 : 1))
   .map((p) => ({
@@ -382,6 +519,118 @@ const expectedPostProtocols = [...protocols]
     guidance_payload: p.guidance_payload,
     guidance_payload_v2: p.guidance_payload_v2,
   }))
+const PROTOCOL_PROJECTION = `pg_catalog.jsonb_build_object(
+           'category', category, 'role', role, 'application_family', application_family,
+           'cadence', cadence, 'application_stage', application_stage,
+           'application_state', application_state, 'placement', placement,
+           'contact_time_seconds', contact_time_seconds, 'rinse_action', rinse_action,
+           'reapplication', reapplication, 'instruction_modifiers', instruction_modifiers,
+           'source_label', source_label, 'source_url', source_url, 'source_text', source_text,
+           'guidance_payload', guidance_payload, 'guidance_payload_v2', guidance_payload_v2)`
+
+/** The complete generated Oil target, byte-exact (jsonb-normalized). */
+const TARGET_CHECKS: Check[] = [
+  {
+    name: "product_target",
+    predicate: `EXISTS (SELECT 1 FROM public.products WHERE id = ${PID}
+        AND name = ${sqlText(pre.name as string)} AND brand = ${sqlText(pre.brand as string)}
+        AND category_key = ${sqlText(PRODUCT_TARGET.category_key)}
+        AND category = ${sqlText(PRODUCT_TARGET.category)}
+        AND tags = ${sqlTextArray(PRODUCT_TARGET.tags)}
+        AND suitable_thicknesses = ${sqlTextArray(PRODUCT_TARGET.suitable_thicknesses)}
+        AND suitable_concerns = ${sqlTextArray(PRODUCT_TARGET.suitable_concerns)}
+        AND description = ${sqlText(PRODUCT_TARGET.description)}
+        AND net_content_value = ${PRODUCT_TARGET.net_content_value}
+        AND net_content_unit = ${sqlText(PRODUCT_TARGET.net_content_unit)}
+        AND affiliate_link = ${sqlText(pre.affiliate_link as string)}
+        AND origin = 'curated' AND is_active = true AND lifecycle_status = 'active'
+        AND is_chaarlie_recommended = true)`,
+  },
+  {
+    name: "no_leave_in_spec",
+    predicate: `NOT EXISTS (SELECT 1 FROM public.product_leave_in_specs WHERE product_id = ${PID})`,
+  },
+  {
+    name: "no_leave_in_fit_spec",
+    predicate: `NOT EXISTS (SELECT 1 FROM public.product_leave_in_fit_specs WHERE product_id = ${PID})`,
+  },
+  {
+    name: "no_leave_in_eligibility",
+    predicate: `NOT EXISTS (SELECT 1 FROM public.product_leave_in_eligibility WHERE product_id = ${PID})`,
+  },
+  {
+    name: "oil_spec_target",
+    predicate: `${jsonAgg("pg_catalog.jsonb_build_object('category_key', category_key, 'weight', weight, 'role_support', to_jsonb(role_support), 'provides_heat_protection', provides_heat_protection)", "public.product_oil_specs")} = ${sqlJson([{ category_key: "oil", ...OIL_SPEC }])}`,
+  },
+  {
+    name: "oil_eligibility_target",
+    predicate: `${jsonAgg("pg_catalog.jsonb_build_object('thickness', thickness, 'oil_subtype', oil_subtype, 'oil_purpose', oil_purpose, 'ingredient_flags', to_jsonb(ingredient_flags), 'category_key', category_key)", "public.product_oil_eligibility", "thickness, oil_subtype")} = ${sqlJson(OIL_ELIGIBILITY.map((row) => ({ ...row, category_key: "oil" })))}`,
+  },
+  {
+    name: "protocols_target",
+    predicate: `${jsonAgg(PROTOCOL_PROJECTION, "public.product_application_protocols", "role")} = ${sqlJson(expectedPostProtocols)}`,
+  },
+  {
+    name: "thickness_eligibility_target",
+    predicate: `(SELECT pg_catalog.array_agg(category_key || ':' || thickness ORDER BY category_key, thickness) FROM public.product_thickness_eligibility WHERE product_id = ${PID}) = ${sqlTextArray(PRODUCT_TARGET.suitable_thicknesses.map((t) => `oil:${t}`))}`,
+  },
+  {
+    name: "concern_eligibility_target",
+    predicate: `(SELECT pg_catalog.array_agg(category_key || ':' || concern_key ORDER BY category_key, concern_key) FROM public.product_concern_eligibility WHERE product_id = ${PID}) = ${sqlTextArray(PRODUCT_TARGET.suitable_concerns.map((c) => `oil:${c}`))}`,
+  },
+  {
+    name: "fact_evidence_target",
+    predicate: `${jsonAgg("(to_jsonb(t) - 'created_at')", "public.personal_plan_catalog_fact_evidence t", "t.fact_key, t.source_url")} = ${sqlJson(expectedEvidence)}`,
+  },
+  {
+    name: "receipt_target",
+    predicate: `(SELECT coalesce(pg_catalog.jsonb_agg(to_jsonb(r) - 'created_at'), '[]'::jsonb) FROM public.catalog_enrichment_applied_items r WHERE r.batch_id = ${sqlText(BATCH_ID)}) = ${sqlJson(expectedReceipt)}`,
+  },
+]
+
+/** Emits `IF NOT (pred) THEN RAISE` lines for a DO block; NULL counts as failure. */
+function raiseUnless(checks: Check[], prefix: string, indent = "  "): string {
+  return checks
+    .map(
+      (check) =>
+        `${indent}IF (${check.predicate}) IS NOT TRUE THEN\n${indent}  RAISE EXCEPTION '${prefix}: ${check.name}';\n${indent}END IF;`,
+    )
+    .join("\n\n")
+}
+
+/** Read-only zero-row proof: returns the names of failing checks only. */
+function zeroRowQuery(checks: Check[]): string {
+  return `SELECT check_name
+FROM (
+${checks.map((check, i) => `  ${i === 0 ? "" : "UNION ALL "}SELECT ${sqlText(check.name)} AS check_name, (${check.predicate}) AS ok`).join("\n")}
+) checks
+WHERE ok IS NOT TRUE;`
+}
+
+const PLAN_REFERENCE_CHECK = `EXISTS (SELECT 1 FROM public.user_products WHERE catalog_product_id = ${PID})
+       OR EXISTS (SELECT 1 FROM public.user_product_usage WHERE product_id = ${PID})
+       OR EXISTS (SELECT 1 FROM public.personal_plan_product_drafts WHERE payload::text LIKE '%${PRODUCT_ID}%')
+       OR EXISTS (SELECT 1 FROM public.personal_plan_portfolio_versions WHERE snapshot::text LIKE '%${PRODUCT_ID}%')
+       OR EXISTS (SELECT 1 FROM public.personal_plan_routine_versions WHERE payload::text LIKE '%${PRODUCT_ID}%')
+       OR EXISTS (SELECT 1 FROM public.personal_plan_routine_proposals WHERE delta::text LIKE '%${PRODUCT_ID}%')
+       OR EXISTS (SELECT 1 FROM public.personal_plan_refinement_drafts d WHERE to_jsonb(d)::text LIKE '%${PRODUCT_ID}%')`
+
+const PLAN_LOCKS = `-- Hold Personal Plan / ownership sources closed while proving no plan or owner
+-- references the product (precedent: 20260903083832).
+LOCK TABLE public.personal_plan_product_drafts,
+           public.personal_plan_routine_versions,
+           public.personal_plan_routine_proposals,
+           public.personal_plan_portfolio_versions,
+           public.personal_plans,
+           public.personal_plan_refinement_drafts,
+           public.user_products,
+           public.user_product_usage IN SHARE MODE;`
+
+const ADVISORY_LOCK = `-- Shared catalog-apply serialization lock BEFORE any product row/table lock
+-- (20260914170000_personal_plan_stage5_v2_pointer_delta_executor.sql).
+SELECT pg_catalog.pg_advisory_xact_lock(
+  pg_catalog.hashtextextended('catalog-enrichment:product-apply', 0)
+);`
 
 // ---------------------------------------------------------------------------
 // 5. Emit the migration
@@ -389,47 +638,39 @@ const expectedPostProtocols = [...protocols]
 
 const protocolInserts = protocols
   .map(
-    (p) => `    INSERT INTO public.product_application_protocols (
-      product_id, category, role, cadence, application_stage, application_state,
-      placement, contact_time_seconds, rinse_action, reapplication,
-      instruction_modifiers, source_label, source_url, source_text,
-      guidance_payload, guidance_payload_v2
-    ) VALUES (
-      v_product_id, ${sqlText(p.category)}, ${sqlText(p.role)}, ${sqlValue(p.cadence, "jsonb")},
-      ${sqlValue(p.application_stage, "text")}, ${sqlValue(p.application_state, "text")},
-      ${sqlValue(p.placement, "text")}, ${sqlValue(p.contact_time_seconds, "integer")},
-      ${sqlValue(p.rinse_action, "text")}, ${sqlValue(p.reapplication, "text")},
-      ${sqlJson(p.instruction_modifiers)},
-      ${sqlText(p.source_label)},
-      ${sqlText(p.source_url)},
-      ${sqlText(p.source_text)},
-      ${sqlJson(p.guidance_payload)},
-      ${sqlJson(p.guidance_payload_v2)}
-    );`,
+    (p) => `  INSERT INTO public.product_application_protocols (
+    product_id, category, role, cadence, application_stage, application_state,
+    placement, contact_time_seconds, rinse_action, reapplication,
+    instruction_modifiers, source_label, source_url, source_text,
+    guidance_payload, guidance_payload_v2
+  ) VALUES (
+    v_product_id, ${sqlText(p.category)}, ${sqlText(p.role)}, ${sqlValue(p.cadence, "jsonb")},
+    ${sqlValue(p.application_stage, "text")}, ${sqlValue(p.application_state, "text")},
+    ${sqlValue(p.placement, "text")}, ${sqlValue(p.contact_time_seconds, "integer")},
+    ${sqlValue(p.rinse_action, "text")}, ${sqlValue(p.reapplication, "text")},
+    ${sqlJson(p.instruction_modifiers)},
+    ${sqlText(p.source_label)},
+    ${sqlText(p.source_url)},
+    ${sqlText(p.source_text)},
+    ${sqlJson(p.guidance_payload)},
+    ${sqlJson(p.guidance_payload_v2)}
+  );`,
   )
   .join("\n\n")
 
 const eligibilityValues = OIL_ELIGIBILITY.map(
   (row) =>
-    `      (v_product_id, 'oil', ${sqlText(row.thickness)}, ${sqlText(row.oil_subtype)}, ${sqlText(row.oil_purpose)}, ${sqlTextArray(row.ingredient_flags)})`,
+    `    (v_product_id, 'oil', ${sqlText(row.thickness)}, ${sqlText(row.oil_subtype)}, ${sqlText(row.oil_purpose)}, ${sqlTextArray(row.ingredient_flags)})`,
 ).join(",\n")
 
 const evidenceValues = FACT_EVIDENCE.map(
-  (row) => `      (v_product_id, ${sqlText(row.fact_key)},
-       ${sqlJson(row.fact_value)},
-       ${sqlText(row.source_label)},
-       ${sqlText(row.source_url)},
-       ${sqlText(row.source_text)},
-       ${sqlText(row.source_type)}, DATE ${sqlText(row.checked_at)}, v_batch_id, v_fingerprint, v_fingerprint)`,
+  (row) => `    (v_product_id, ${sqlText(row.fact_key)},
+     ${sqlJson(row.fact_value)},
+     ${sqlText(row.source_label)},
+     ${sqlText(row.source_url)},
+     ${sqlText(row.source_text)},
+     ${sqlText(row.source_type)}, DATE ${sqlText(row.checked_at)}, v_batch_id, v_fingerprint, v_fingerprint)`,
 ).join(",\n")
-
-const PLAN_REFERENCE_CHECK = `EXISTS (SELECT 1 FROM public.user_products WHERE catalog_product_id = v_product_id)
-       OR EXISTS (SELECT 1 FROM public.user_product_usage WHERE product_id = v_product_id)
-       OR EXISTS (SELECT 1 FROM public.personal_plan_product_drafts WHERE payload::text LIKE '%' || v_product_id::text || '%')
-       OR EXISTS (SELECT 1 FROM public.personal_plan_portfolio_versions WHERE snapshot::text LIKE '%' || v_product_id::text || '%')
-       OR EXISTS (SELECT 1 FROM public.personal_plan_routine_versions WHERE payload::text LIKE '%' || v_product_id::text || '%')
-       OR EXISTS (SELECT 1 FROM public.personal_plan_routine_proposals WHERE delta::text LIKE '%' || v_product_id::text || '%')
-       OR EXISTS (SELECT 1 FROM public.personal_plan_refinement_drafts WHERE to_jsonb(personal_plan_refinement_drafts)::text LIKE '%' || v_product_id::text || '%')`
 
 const migration = `-- Kevin Murphy YOUNG.AGAIN: leave_in -> oil recategorization (Nick ruling 2026-09-29).
 -- Content fingerprint: ${FINGERPRINT}
@@ -437,8 +678,9 @@ const migration = `-- Kevin Murphy YOUNG.AGAIN: leave_in -> oil recategorization
 -- PREPARED, NOT APPLIED. Generated by plans/kevin-murphy-oil-migration/generate.ts
 -- from the read-only production snapshot captured ${prestate.captured_at}
 -- (plans/kevin-murphy-oil-migration/prestate-2026-09-29.json). Do not hand-edit:
--- change the generator constants and re-run it. Apply only as a targeted,
--- Nick-gated step (no blanket \`supabase db push\`); see plan.md §6.
+-- change the generator constants and re-run it; \`--check\` verifies every emitted
+-- file against artifact-manifest.json. Apply only as a targeted, Nick-gated step
+-- (no blanket \`supabase db push\`); see plan.md §5.
 --
 -- One transaction, one product. The live product is recommended, so the swap is
 -- atomic: the leave-in authority is removed, the category key flips, and the Oil
@@ -456,26 +698,19 @@ const migration = `-- Kevin Murphy YOUNG.AGAIN: leave_in -> oil recategorization
 --   * the publication gate is a DEFERRABLE INITIALLY DEFERRED constraint trigger;
 --     SET CONSTRAINTS ALL IMMEDIATE flushes it before the postflight so a gate
 --     failure aborts here, with the explicit assertion as a second check.
+--
+-- Re-apply after rollback: rollback.sql restores the exact preimage, including
+-- products.updated_at (trigger-safe, asserted), and removes this migration's
+-- receipt, so every preimage guard below matches again and a re-run takes the
+-- fresh path with the same fingerprint. A re-run of an intact apply takes the
+-- receipt path and the postflight re-proves the full target.
 BEGIN;
 
 SET LOCAL lock_timeout = '5s';
 
--- Shared catalog-apply serialization lock BEFORE any product row lock
--- (20260914170000_personal_plan_stage5_v2_pointer_delta_executor.sql).
-SELECT pg_catalog.pg_advisory_xact_lock(
-  pg_catalog.hashtextextended('catalog-enrichment:product-apply', 0)
-);
+${ADVISORY_LOCK}
 
--- Hold Personal Plan / ownership sources closed while proving no plan or owner
--- has captured this product as a Leave-in (precedent: 20260903083832).
-LOCK TABLE public.personal_plan_product_drafts,
-           public.personal_plan_routine_versions,
-           public.personal_plan_routine_proposals,
-           public.personal_plan_portfolio_versions,
-           public.personal_plans,
-           public.personal_plan_refinement_drafts,
-           public.user_products,
-           public.user_product_usage IN SHARE MODE;
+${PLAN_LOCKS}
 
 DO $apply$
 DECLARE
@@ -483,10 +718,8 @@ DECLARE
   v_batch_id constant text := '${BATCH_ID}';
   v_product_key constant text := '${PRODUCT_KEY}';
   v_fingerprint constant text := '${FINGERPRINT}';
-  v_product public.products%ROWTYPE;
   v_receipt public.catalog_enrichment_applied_items%ROWTYPE;
   v_rows integer;
-  v_actual jsonb;
 BEGIN
   -- Replay: a matching receipt means this exact reviewed content already
   -- landed; the postflight below re-verifies the full target state.
@@ -503,45 +736,14 @@ BEGIN
     END IF;
     RETURN;
   END IF;
-
-  -- Product row lock, then exact identity/preimage guards (null-safe).
-  SELECT * INTO v_product
-  FROM public.products
-  WHERE id = v_product_id
-  FOR UPDATE;
-
-  IF NOT FOUND
-     OR v_product.name IS DISTINCT FROM ${sqlText(pre.name as string)}
-     OR v_product.brand IS DISTINCT FROM ${sqlText(pre.brand as string)}
-     OR v_product.category_key IS DISTINCT FROM 'leave_in'
-     OR v_product.category IS DISTINCT FROM ${sqlText(pre.category as string)}
-     OR v_product.origin IS DISTINCT FROM 'curated'
-     OR v_product.is_active IS DISTINCT FROM true
-     OR v_product.lifecycle_status IS DISTINCT FROM 'active'
-     OR v_product.is_chaarlie_recommended IS DISTINCT FROM true
-     OR v_product.description IS DISTINCT FROM ${sqlText(pre.description as string)}
-     OR v_product.tags IS DISTINCT FROM ${sqlTextArray(pre.tags as string[])}
-     OR v_product.suitable_thicknesses IS DISTINCT FROM ${sqlTextArray(pre.suitable_thicknesses as string[])}
-     OR v_product.suitable_concerns IS DISTINCT FROM ${sqlTextArray(pre.suitable_concerns as string[])}
-     OR v_product.affiliate_link IS DISTINCT FROM ${sqlText(pre.affiliate_link as string)}
-     OR v_product.net_content_value IS NOT NULL
-     OR v_product.net_content_unit IS NOT NULL
-     OR v_product.updated_at IS DISTINCT FROM ${sqlText(pre.updated_at as string)}::timestamptz THEN
-    RAISE EXCEPTION 'KM Young Again product identity or preimage changed since the 2026-09-29 snapshot';
+  IF EXISTS (SELECT 1 FROM public.catalog_enrichment_applied_items WHERE batch_id = v_batch_id) THEN
+    RAISE EXCEPTION 'KM Young Again batch has a foreign receipt';
   END IF;
 
-  IF EXISTS (
-    SELECT 1 FROM public.personal_plan_product_search_dispositions
-    WHERE product_id = v_product_id
-  ) THEN
-    RAISE EXCEPTION 'KM Young Again has a Personal Plan search disposition';
-  END IF;
-
-  IF ${PLAN_REFERENCE_CHECK} THEN
-    RAISE EXCEPTION 'KM Young Again has acquired an owner or Personal Plan reference; recategorization needs a reference migration first';
-  END IF;
-
-  -- Child row locks (products before children, matching 20260914163000/170000).
+  -- Product row lock, then child row locks (products before children,
+  -- matching 20260914163000/170000).
+  PERFORM 1 FROM public.products WHERE id = v_product_id FOR UPDATE;
+  IF NOT FOUND THEN RAISE EXCEPTION 'KM Young Again product missing'; END IF;
   PERFORM 1 FROM public.product_application_protocols WHERE product_id = v_product_id FOR UPDATE;
   PERFORM 1 FROM public.product_leave_in_specs WHERE product_id = v_product_id FOR UPDATE;
   PERFORM 1 FROM public.product_leave_in_fit_specs WHERE product_id = v_product_id FOR UPDATE;
@@ -552,63 +754,15 @@ BEGIN
   PERFORM 1 FROM public.product_oil_specs WHERE product_id = v_product_id FOR UPDATE;
   PERFORM 1 FROM public.product_oil_eligibility WHERE product_id = v_product_id FOR UPDATE;
 
-  -- Exact child preimages (content equality; timestamps excluded, see plan.md).
-  SELECT coalesce(pg_catalog.jsonb_agg((to_jsonb(p) - 'created_at' - 'updated_at') ORDER BY p.id), '[]'::jsonb)
-  INTO v_actual
-  FROM public.product_application_protocols p WHERE p.product_id = v_product_id;
-  IF v_actual IS DISTINCT FROM ${sqlJson(expectedPre.protocols)} THEN
-    RAISE EXCEPTION 'KM Young Again protocol preimage changed';
-  END IF;
-  IF (SELECT max(updated_at) FROM public.product_application_protocols WHERE product_id = v_product_id)
-     IS DISTINCT FROM ${sqlText(maxProtocolUpdatedAt)}::timestamptz THEN
-    RAISE EXCEPTION 'KM Young Again protocol rows were rewritten since the snapshot';
+  -- Exact 2026-09-29 preimage (null-safe: a NULL predicate fails).
+${raiseUnless(PRESTATE_CHECKS, "KM Young Again preimage changed")}
+
+  IF EXISTS (SELECT 1 FROM public.personal_plan_product_search_dispositions WHERE product_id = v_product_id) THEN
+    RAISE EXCEPTION 'KM Young Again has a Personal Plan search disposition';
   END IF;
 
-  SELECT coalesce(pg_catalog.jsonb_agg(to_jsonb(s) - 'created_at' - 'updated_at'), '[]'::jsonb)
-  INTO v_actual
-  FROM public.product_leave_in_specs s WHERE s.product_id = v_product_id;
-  IF v_actual IS DISTINCT FROM ${sqlJson(expectedPre.leaveInSpecs)} THEN
-    RAISE EXCEPTION 'KM Young Again Leave-in spec preimage changed';
-  END IF;
-
-  SELECT coalesce(pg_catalog.jsonb_agg(to_jsonb(f) - 'created_at' - 'updated_at'), '[]'::jsonb)
-  INTO v_actual
-  FROM public.product_leave_in_fit_specs f WHERE f.product_id = v_product_id;
-  IF v_actual IS DISTINCT FROM ${sqlJson(expectedPre.fitSpecs)} THEN
-    RAISE EXCEPTION 'KM Young Again Leave-in fit spec preimage changed';
-  END IF;
-
-  SELECT coalesce(pg_catalog.jsonb_agg((to_jsonb(e) - 'created_at' - 'updated_at') ORDER BY e.need_bucket, e.styling_context), '[]'::jsonb)
-  INTO v_actual
-  FROM public.product_leave_in_eligibility e WHERE e.product_id = v_product_id;
-  IF v_actual IS DISTINCT FROM ${sqlJson(expectedPre.eligibility)} THEN
-    RAISE EXCEPTION 'KM Young Again Leave-in eligibility preimage changed';
-  END IF;
-
-  SELECT coalesce(pg_catalog.jsonb_agg((to_jsonb(t) - 'created_at') ORDER BY t.category_key, t.thickness), '[]'::jsonb)
-  INTO v_actual
-  FROM public.product_thickness_eligibility t WHERE t.product_id = v_product_id;
-  IF v_actual IS DISTINCT FROM ${sqlJson(expectedPre.thickness)} THEN
-    RAISE EXCEPTION 'KM Young Again thickness eligibility preimage changed';
-  END IF;
-
-  SELECT coalesce(pg_catalog.jsonb_agg((to_jsonb(c) - 'created_at') ORDER BY c.category_key, c.concern_key), '[]'::jsonb)
-  INTO v_actual
-  FROM public.product_concern_eligibility c WHERE c.product_id = v_product_id;
-  IF v_actual IS DISTINCT FROM ${sqlJson(expectedPre.concern)} THEN
-    RAISE EXCEPTION 'KM Young Again concern eligibility preimage changed';
-  END IF;
-
-  SELECT coalesce(pg_catalog.jsonb_agg((to_jsonb(ev) - 'created_at') ORDER BY ev.fact_key, ev.source_url), '[]'::jsonb)
-  INTO v_actual
-  FROM public.personal_plan_catalog_fact_evidence ev WHERE ev.product_id = v_product_id;
-  IF v_actual IS DISTINCT FROM ${sqlJson(expectedPre.evidence)} THEN
-    RAISE EXCEPTION 'KM Young Again fact evidence preimage changed';
-  END IF;
-
-  IF EXISTS (SELECT 1 FROM public.product_oil_specs WHERE product_id = v_product_id)
-     OR EXISTS (SELECT 1 FROM public.product_oil_eligibility WHERE product_id = v_product_id) THEN
-    RAISE EXCEPTION 'KM Young Again already carries Oil authority';
+  IF ${PLAN_REFERENCE_CHECK} THEN
+    RAISE EXCEPTION 'KM Young Again has acquired an owner or Personal Plan reference; recategorization needs a reference migration first';
   END IF;
 
   -- 1) Remove every (id, 'leave_in') child. Row counts must match the preimage.
@@ -654,8 +808,7 @@ BEGIN
       suitable_concerns = ${sqlTextArray(PRODUCT_TARGET.suitable_concerns)},
       description = ${sqlText(PRODUCT_TARGET.description)},
       net_content_value = ${PRODUCT_TARGET.net_content_value},
-      net_content_unit = ${sqlText(PRODUCT_TARGET.net_content_unit)},
-      updated_at = pg_catalog.now()
+      net_content_unit = ${sqlText(PRODUCT_TARGET.net_content_unit)}
   WHERE id = v_product_id
     AND category_key = 'leave_in';
   GET DIAGNOSTICS v_rows = ROW_COUNT;
@@ -690,95 +843,17 @@ $apply$;
 SET CONSTRAINTS ALL IMMEDIATE;
 
 DO $postflight$
-DECLARE
-  v_product_id constant uuid := '${PRODUCT_ID}';
-  v_fingerprint constant text := '${FINGERPRINT}';
-  v_actual jsonb;
 BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM public.products
-    WHERE id = v_product_id
-      AND category_key = 'oil'
-      AND category = ${sqlText(PRODUCT_TARGET.category)}
-      AND tags = ${sqlTextArray(PRODUCT_TARGET.tags)}
-      AND suitable_thicknesses = ${sqlTextArray(PRODUCT_TARGET.suitable_thicknesses)}
-      AND suitable_concerns = ${sqlTextArray(PRODUCT_TARGET.suitable_concerns)}
-      AND description = ${sqlText(PRODUCT_TARGET.description)}
-      AND net_content_value = ${PRODUCT_TARGET.net_content_value}
-      AND net_content_unit = ${sqlText(PRODUCT_TARGET.net_content_unit)}
-      AND origin = 'curated' AND is_active = true AND lifecycle_status = 'active'
-      AND is_chaarlie_recommended = true
-  ) THEN
-    RAISE EXCEPTION 'KM Young Again postflight: product row is not the reviewed Oil target';
-  END IF;
-
-  IF EXISTS (SELECT 1 FROM public.product_leave_in_specs WHERE product_id = v_product_id)
-     OR EXISTS (SELECT 1 FROM public.product_leave_in_fit_specs WHERE product_id = v_product_id)
-     OR EXISTS (SELECT 1 FROM public.product_leave_in_eligibility WHERE product_id = v_product_id)
-     OR EXISTS (SELECT 1 FROM public.product_application_protocols WHERE product_id = v_product_id AND category <> 'oil')
-     OR EXISTS (SELECT 1 FROM public.product_thickness_eligibility WHERE product_id = v_product_id AND category_key <> 'oil')
-     OR EXISTS (SELECT 1 FROM public.product_concern_eligibility WHERE product_id = v_product_id AND category_key <> 'oil')
-     OR EXISTS (SELECT 1 FROM public.personal_plan_catalog_fact_evidence WHERE product_id = v_product_id AND fact_key <> 'oil.authority_facts') THEN
-    RAISE EXCEPTION 'KM Young Again postflight: Leave-in authority survived';
-  END IF;
-
-  IF NOT EXISTS (
-    SELECT 1 FROM public.product_oil_specs
-    WHERE product_id = v_product_id
-      AND category_key = 'oil'
-      AND weight = ${sqlText(OIL_SPEC.weight)}
-      AND role_support = ${sqlTextArray(OIL_SPEC.role_support)}
-      AND provides_heat_protection IS TRUE
-  ) THEN
-    RAISE EXCEPTION 'KM Young Again postflight: Oil spec mismatch';
-  END IF;
-
-  SELECT coalesce(pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
-           'thickness', thickness, 'oil_subtype', oil_subtype, 'oil_purpose', oil_purpose,
-           'ingredient_flags', to_jsonb(ingredient_flags)) ORDER BY thickness, oil_subtype), '[]'::jsonb)
-  INTO v_actual
-  FROM public.product_oil_eligibility WHERE product_id = v_product_id;
-  IF v_actual IS DISTINCT FROM ${sqlJson(OIL_ELIGIBILITY)} THEN
-    RAISE EXCEPTION 'KM Young Again postflight: Oil eligibility mismatch';
-  END IF;
-
-  SELECT coalesce(pg_catalog.jsonb_agg(pg_catalog.jsonb_build_object(
-           'category', category, 'role', role, 'application_family', application_family,
-           'cadence', cadence, 'application_stage', application_stage,
-           'application_state', application_state, 'placement', placement,
-           'contact_time_seconds', contact_time_seconds, 'rinse_action', rinse_action,
-           'reapplication', reapplication, 'instruction_modifiers', instruction_modifiers,
-           'source_label', source_label, 'source_url', source_url, 'source_text', source_text,
-           'guidance_payload', guidance_payload, 'guidance_payload_v2', guidance_payload_v2
-         ) ORDER BY role), '[]'::jsonb)
-  INTO v_actual
-  FROM public.product_application_protocols WHERE product_id = v_product_id;
-  IF v_actual IS DISTINCT FROM ${sqlJson(expectedPostProtocols)} THEN
-    RAISE EXCEPTION 'KM Young Again postflight: Oil protocols do not equal the generated rows';
-  END IF;
-
-  IF (SELECT pg_catalog.array_agg(thickness ORDER BY thickness) FROM public.product_thickness_eligibility
-      WHERE product_id = v_product_id AND category_key = 'oil') IS DISTINCT FROM ${sqlTextArray(PRODUCT_TARGET.suitable_thicknesses)}
-     OR (SELECT pg_catalog.array_agg(concern_key ORDER BY concern_key) FROM public.product_concern_eligibility
-      WHERE product_id = v_product_id AND category_key = 'oil') IS DISTINCT FROM ${sqlTextArray(PRODUCT_TARGET.suitable_concerns)} THEN
-    RAISE EXCEPTION 'KM Young Again postflight: thickness/concern eligibility not re-projected for oil';
-  END IF;
-
-  IF (SELECT count(*) FROM public.personal_plan_catalog_fact_evidence
-      WHERE product_id = v_product_id AND fact_key = 'oil.authority_facts'
-        AND batch_fingerprint = v_fingerprint AND content_fingerprint = v_fingerprint) <> ${FACT_EVIDENCE.length} THEN
-    RAISE EXCEPTION 'KM Young Again postflight: Oil fact provenance incomplete';
-  END IF;
+  -- The complete generated target, byte-exact (same checks as verify.sql).
+${raiseUnless(TARGET_CHECKS, "KM Young Again postflight")}
 
   -- Explicit second check of the curated-publication gate on the final state.
-  PERFORM public.assert_personal_plan_curated_publication(v_product_id);
+  PERFORM public.assert_personal_plan_curated_publication(${PID});
 END;
 $postflight$;
 
 COMMIT;
 `
-
-writeFileSync(MIGRATION_PATH, migration)
 
 // ---------------------------------------------------------------------------
 // 6. Emit the prepared rollback (NOT a migration; lives in plans/)
@@ -798,18 +873,75 @@ const insertRows = (table: string, rows: Row[], types: Record<string, string>, e
     .join("\n")
 
 const T = "timestamptz"
+const UPDATED_AT_TRIGGER = "set_updated_at_products"
 const rollback = `-- ROLLBACK for ${BATCH_ID} (fingerprint ${FINGERPRINT}).
 -- PREPARED, NOT A MIGRATION. Restores the exact 2026-09-29 Leave-in preimage
 -- (original row ids and timestamps) captured in prestate-2026-09-29.json.
--- Run only on Nick's instruction, as one transaction, and only while the
--- product still carries exactly this migration's Oil target (guarded below).
+-- Run only on Nick's instruction, as one transaction.
+--
+-- Safety properties:
+--   * same advisory lock and Personal Plan / owner SHARE locks as the forward
+--     migration, taken BEFORE the reference check (no check-then-write race);
+--   * refuses unless the live Oil state equals the generated target byte-exactly
+--     (spec, eligibility, protocols incl. V1/V2 payloads, fact provenance incl.
+--     fact values/source text/fingerprints, receipt, thickness/concern rows), so
+--     a post-apply revision is never silently destroyed;
+--   * products.updated_at is restored exactly. The BEFORE UPDATE trigger
+--     ${UPDATED_AT_TRIGGER} (00001_initial_schema.sql) would overwrite it with now(),
+--     so exactly that one trigger is disabled for the single restoring UPDATE and
+--     re-enabled before COMMIT (precedent: 20260812143000 /
+--     20260814191843 DISABLE TRIGGER inside the migration transaction). ALTER TABLE
+--     holds ACCESS EXCLUSIVE on products until COMMIT, so no other session can
+--     write products while the trigger is off, and any failure rolls the trigger
+--     state back with the transaction. session_replication_role is NOT used: it
+--     would also silence FK enforcement and the eligibility compat triggers.
+--   * the verify step re-proves the forward migration's own preimage guards plus
+--     full-row equality (timestamps included, TimeZone UTC) against the snapshot,
+--     so a later re-apply of the forward migration passes its guards.
 BEGIN;
 
 SET LOCAL lock_timeout = '5s';
+SET LOCAL TimeZone = 'UTC';
 
-SELECT pg_catalog.pg_advisory_xact_lock(
-  pg_catalog.hashtextextended('catalog-enrichment:product-apply', 0)
-);
+${ADVISORY_LOCK}
+
+${PLAN_LOCKS}
+
+DO $trigger_precheck$
+BEGIN
+  IF (SELECT count(*) FROM pg_catalog.pg_trigger t
+      WHERE t.tgrelid = 'public.products'::regclass
+        AND NOT t.tgisinternal
+        AND t.tgfoid = 'public.update_updated_at_column()'::regprocedure) <> 1
+     OR NOT EXISTS (
+       SELECT 1 FROM pg_catalog.pg_trigger t
+       WHERE t.tgrelid = 'public.products'::regclass
+         AND t.tgname = '${UPDATED_AT_TRIGGER}'
+         AND t.tgenabled = 'O'
+         AND t.tgfoid = 'public.update_updated_at_column()'::regprocedure
+     ) THEN
+    RAISE EXCEPTION 'rollback: products updated_at trigger is not exactly ${UPDATED_AT_TRIGGER} (enabled)';
+  END IF;
+END;
+$trigger_precheck$;
+
+-- Before any DML, so products has no pending trigger events yet.
+ALTER TABLE public.products DISABLE TRIGGER ${UPDATED_AT_TRIGGER};
+
+DO $rollback_precheck$
+DECLARE
+  v_product_id constant uuid := '${PRODUCT_ID}';
+BEGIN
+  PERFORM 1 FROM public.products WHERE id = v_product_id FOR UPDATE;
+
+  -- The live Oil state must be exactly this migration's generated target.
+${raiseUnless(TARGET_CHECKS, "rollback refused: live state is not the generated Oil target")}
+
+  IF ${PLAN_REFERENCE_CHECK} THEN
+    RAISE EXCEPTION 'rollback refused: product is referenced by a plan/owner as an Oil; needs a reference migration';
+  END IF;
+END;
+$rollback_precheck$;
 
 DO $rollback$
 DECLARE
@@ -817,34 +949,27 @@ DECLARE
   v_fingerprint constant text := '${FINGERPRINT}';
   v_rows integer;
 BEGIN
-  PERFORM 1 FROM public.products WHERE id = v_product_id AND category_key = 'oil' FOR UPDATE;
-  IF NOT FOUND THEN RAISE EXCEPTION 'rollback: product is not an Oil'; END IF;
-
-  IF NOT EXISTS (
-    SELECT 1 FROM public.catalog_enrichment_applied_items
-    WHERE batch_id = '${BATCH_ID}' AND product_key = '${PRODUCT_KEY}'
-      AND batch_fingerprint = v_fingerprint AND product_id = v_product_id
-  ) THEN
-    RAISE EXCEPTION 'rollback: forward receipt missing; refusing to guess the state';
-  END IF;
-
-  -- Refuse if a Personal Plan / owner captured the product as an Oil meanwhile.
-  IF ${PLAN_REFERENCE_CHECK} THEN
-    RAISE EXCEPTION 'rollback: product is referenced by a plan/owner as an Oil; needs a reference migration';
-  END IF;
-
   DELETE FROM public.product_application_protocols WHERE product_id = v_product_id AND category = 'oil';
   GET DIAGNOSTICS v_rows = ROW_COUNT;
   IF v_rows <> ${protocols.length} THEN RAISE EXCEPTION 'rollback: oil protocol count %', v_rows; END IF;
   DELETE FROM public.product_oil_eligibility WHERE product_id = v_product_id;
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> ${OIL_ELIGIBILITY.length} THEN RAISE EXCEPTION 'rollback: oil eligibility count %', v_rows; END IF;
   DELETE FROM public.product_oil_specs WHERE product_id = v_product_id;
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: oil spec count %', v_rows; END IF;
   DELETE FROM public.product_concern_eligibility WHERE product_id = v_product_id AND category_key = 'oil';
   DELETE FROM public.product_thickness_eligibility WHERE product_id = v_product_id AND category_key = 'oil';
   DELETE FROM public.personal_plan_catalog_fact_evidence
   WHERE product_id = v_product_id AND fact_key = 'oil.authority_facts' AND batch_fingerprint = v_fingerprint;
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> ${FACT_EVIDENCE.length} THEN RAISE EXCEPTION 'rollback: oil evidence count %', v_rows; END IF;
   DELETE FROM public.catalog_enrichment_applied_items
-  WHERE batch_id = '${BATCH_ID}' AND product_key = '${PRODUCT_KEY}';
+  WHERE batch_id = '${BATCH_ID}' AND product_key = '${PRODUCT_KEY}' AND batch_fingerprint = v_fingerprint;
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: receipt count %', v_rows; END IF;
 
+  -- ${UPDATED_AT_TRIGGER} is disabled, so updated_at keeps the restored value.
   UPDATE public.products
   SET category_key = ${sqlText(pre.category_key as string)},
       category = ${sqlText(pre.category as string)},
@@ -855,7 +980,9 @@ BEGIN
       net_content_value = NULL,
       net_content_unit = NULL,
       updated_at = ${sqlText(pre.updated_at as string)}::timestamptz
-  WHERE id = v_product_id;
+  WHERE id = v_product_id AND category_key = 'oil';
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows <> 1 THEN RAISE EXCEPTION 'rollback: product restore touched % rows', v_rows; END IF;
 
 ${insertRows("product_leave_in_specs", prestate.product_leave_in_specs, {
   product_id: "uuid",
@@ -944,37 +1071,141 @@ ${insertRows("personal_plan_catalog_fact_evidence", prestate.personal_plan_catal
 END;
 $rollback$;
 
+-- Flush the deferred publication gate / FK checks so products has no pending
+-- trigger events, then re-enable the updated_at trigger.
 SET CONSTRAINTS ALL IMMEDIATE;
+
+ALTER TABLE public.products ENABLE TRIGGER ${UPDATED_AT_TRIGGER};
 
 DO $rollback_verify$
 BEGIN
-  PERFORM public.assert_personal_plan_curated_publication('${PRODUCT_ID}'::uuid);
-  IF (SELECT count(*) FROM public.product_application_protocols WHERE product_id = '${PRODUCT_ID}' AND category = 'leave_in') <> 4
-     OR (SELECT count(*) FROM public.product_leave_in_eligibility WHERE product_id = '${PRODUCT_ID}') <> 4
-     OR NOT EXISTS (SELECT 1 FROM public.product_leave_in_specs WHERE product_id = '${PRODUCT_ID}')
-     OR EXISTS (SELECT 1 FROM public.product_oil_specs WHERE product_id = '${PRODUCT_ID}') THEN
-    RAISE EXCEPTION 'rollback verification failed';
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_catalog.pg_trigger t
+    WHERE t.tgrelid = 'public.products'::regclass
+      AND t.tgname = '${UPDATED_AT_TRIGGER}'
+      AND t.tgenabled = 'O'
+  ) THEN
+    RAISE EXCEPTION 'rollback verify: ${UPDATED_AT_TRIGGER} is not re-enabled';
   END IF;
+
+  -- The forward migration's own preimage guards pass again (re-apply coherence).
+${raiseUnless(PRESTATE_CHECKS, "rollback verify")}
+
+  -- Full-row restoration, timestamps included (TimeZone is UTC).
+${raiseUnless(FULL_RESTORE_CHECKS, "rollback verify")}
+
+  PERFORM public.assert_personal_plan_curated_publication(${PID});
 END;
 $rollback_verify$;
 
 COMMIT;
 `
-writeFileSync(resolve(HERE, "rollback.sql"), rollback)
+
+// ---------------------------------------------------------------------------
+// 7. Emit the read-only post-apply proof
+// ---------------------------------------------------------------------------
+
+const verify = `-- READ-ONLY post-apply proof for ${BATCH_ID} (fingerprint ${FINGERPRINT}).
+-- Generated by plans/kevin-murphy-oil-migration/generate.ts; the checks are the
+-- migration postflight's own TARGET checks. Every query must return ZERO rows.
+
+-- 1) The complete generated Oil target (product row, no Leave-in authority,
+--    Oil spec, eligibility, both protocols incl. V1/V2 payloads, thickness and
+--    concern projection, fact provenance incl. fact values, source text and
+--    fingerprints, receipt) equals target-state.json byte-exactly.
+${zeroRowQuery(TARGET_CHECKS)}
+
+-- 2) No Personal Plan / owner reference was captured as a Leave-in in between.
+SELECT 'plan_or_owner_reference' AS check_name
+WHERE ${PLAN_REFERENCE_CHECK};
+
+-- 3) Scanner identity unchanged: the live EAN still resolves to this product.
+SELECT 'identifier_changed' AS check_name
+WHERE (SELECT pg_catalog.array_agg(canonical_gtin14 ORDER BY canonical_gtin14)
+       FROM public.product_identifiers WHERE product_id = ${PID})
+      IS DISTINCT FROM ARRAY['09339341020356']::text[];
+
+-- 4) Curated-publication gate. The function returns void and RAISES on failure:
+--    expected result is exactly one row with an empty value and no error.
+SELECT public.assert_personal_plan_curated_publication(${PID});
+`
+
+// ---------------------------------------------------------------------------
+// 8. Write (or --check) every emitted file against artifact-manifest.json
+// ---------------------------------------------------------------------------
+
+const rel = (path: string) => path.slice(ROOT.length + 1)
+const outputs: Array<[string, string]> = [
+  [
+    resolve(HERE, "target-state.json"),
+    `${JSON.stringify({ fingerprint: FINGERPRINT, ...targetContent }, null, 2)}\n`,
+  ],
+  [MIGRATION_PATH, migration],
+  [resolve(HERE, "rollback.sql"), rollback],
+  [resolve(HERE, "verify.sql"), verify],
+]
+const PRESTATE_PATH = resolve(HERE, "prestate-2026-09-29.json")
+const manifestBody = {
+  schema: "kevin-murphy-oil-artifact-manifest-v1",
+  generator: rel(fileURLToPath(import.meta.url)),
+  content_fingerprint: FINGERPRINT,
+  inputs: { [rel(PRESTATE_PATH)]: sha256(readFileSync(PRESTATE_PATH, "utf8")) },
+  outputs: Object.fromEntries(outputs.map(([path, text]) => [rel(path), sha256(text)])),
+}
+const manifest = {
+  ...manifestBody,
+  combined_sha256: sha256(canonical(manifestBody)),
+}
+const MANIFEST_PATH = resolve(HERE, "artifact-manifest.json")
+const manifestText = `${JSON.stringify(manifest, null, 2)}\n`
+
+function validateEmitted(): string[] {
+  const problems: string[] = []
+  const onDisk = existsSync(MANIFEST_PATH)
+    ? (JSON.parse(readFileSync(MANIFEST_PATH, "utf8")) as typeof manifest)
+    : null
+  if (!onDisk) problems.push("artifact-manifest.json missing")
+  else if (canonical(onDisk) !== canonical(manifest)) {
+    problems.push("artifact-manifest.json differs from the regenerated manifest")
+  }
+  if (onDisk && onDisk.combined_sha256 !== sha256(canonical(omit(onDisk, ["combined_sha256"])))) {
+    problems.push("artifact-manifest.json combined_sha256 does not match its own body")
+  }
+  for (const [path, text] of outputs) {
+    if (!existsSync(path)) {
+      problems.push(`${rel(path)} missing`)
+      continue
+    }
+    const disk = readFileSync(path, "utf8")
+    if (disk !== text) problems.push(`${rel(path)} differs from generator output`)
+    if (onDisk && onDisk.outputs[rel(path)] !== sha256(disk)) {
+      problems.push(`${rel(path)} sha256 differs from artifact-manifest.json`)
+    }
+  }
+  if (onDisk && onDisk.inputs[rel(PRESTATE_PATH)] !== sha256(readFileSync(PRESTATE_PATH, "utf8"))) {
+    problems.push("prestate snapshot sha256 differs from artifact-manifest.json")
+  }
+  return problems
+}
+
+const checkOnly = process.argv.includes("--check")
+if (!checkOnly) {
+  for (const [path, text] of outputs) writeFileSync(path, text)
+  writeFileSync(MANIFEST_PATH, manifestText)
+}
+const problems = validateEmitted()
 
 console.log(
   JSON.stringify(
     {
+      mode: checkOnly ? "check" : "write",
       fingerprint: FINGERPRINT,
-      migration: MIGRATION_PATH,
-      protocols: protocols.map((p) => ({
-        role: p.role,
-        family: p.expected_application_family,
-        guidanceKey: (p.guidance_payload as Row).guidanceKey,
-        v2Facts: (p.guidance_payload_v2 as Row).facts,
-      })),
+      combined_sha256: manifest.combined_sha256,
+      outputs: manifest.outputs,
+      validator: problems.length === 0 ? "green" : problems,
     },
     null,
     2,
   ),
 )
+if (problems.length > 0) process.exitCode = 1

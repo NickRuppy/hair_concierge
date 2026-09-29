@@ -1,6 +1,6 @@
 # Kevin Murphy YOUNG.AGAIN — Leave-in → Öl (Recategorization Plan)
 
-**Status:** prepared for Nick's review · nothing applied · no commits
+**Status:** prepared for Nick's review · nothing applied · Codex review findings P1-1…P2-6 (2026-09-29) addressed
 **Ruling (Nick, 2026-09-29):** "switch category and research with the respective oil data and put it into oils. It's a leave-in oil, but this is also true for all other oils we have in our oil category."
 **Product:** `products.id = 6ad82861-d68e-4e70-a976-78c0f35d087b` ("Kevin Murphy Young Again")
 **Worktree:** `.worktrees/kevin-murphy-oil-migration` on `codex/kevin-murphy-oil-migration` (base `66b03bcc`)
@@ -11,11 +11,18 @@ Artifacts in this folder:
 | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | `prestate-2026-09-29.json`                                                                   | Read-only SELECT snapshot of every row the swap touches (the rollback source of truth)             |
 | `generate.ts`                                                                                | Deterministic generator: stamps the ruled templates, derives V2 pointers, validates, emits the SQL |
-| `target-state.json`                                                                          | Reviewable target rows + content fingerprint                                                       |
+| `target-state.json`                                                                          | Reviewable target rows, the fingerprinted preimage guards, and the content fingerprint             |
 | `rollback.sql`                                                                               | Prepared rollback (not a migration)                                                                |
+| `verify.sql`                                                                                 | Read-only post-apply proof; every query must return zero rows                                      |
+| `artifact-manifest.json`                                                                     | sha256 of the snapshot input and every emitted file, plus a combined hash                          |
+| `oil-thickness-comparison.md`                                                                | Ingredient comparison behind the all-three-thickness ruling                                        |
 | `../../supabase/migrations/20260929120000_kevin_murphy_young_again_oil_recategorization.sql` | The prepared, **unapplied** migration (generated — do not hand-edit)                               |
 
-Content fingerprint: `3b9410d5031f552f1c1a69ee529f828268c8ec963c9a721fdf6b1d8fcfa4bda1` (regenerated 2026-09-29 for thickness `fine,normal,coarse`; the previous `normal`-only fingerprint was `6b34dcb7ad504db0e6bbd5a751071bd5a07a93d0a1df64ad2f143a54d8869903`). Thickness evidence: `oil-thickness-comparison.md`.
+Content fingerprint: `54cebf311e42db4e452c9e71a1f6ef4a6b23f878d37a5d028a63a3271b3d50fd`. Artifact manifest combined hash: `712f301fd24d8bd5213aca8f2da0f58deedd329e3c01fbd46656444ec0faed3f`.
+
+- Since the Codex-review revision, the fingerprint covers both the target and the preimage guards (snapshot rows, `captured_at`, pinned timestamps), so a re-captured snapshot changes the receipt fingerprint.
+- Previous fingerprints: `3b9410d5…` (all three thicknesses, target-only hash) and `6b34dcb7…` (`normal` only).
+- `npx tsx plans/kevin-murphy-oil-migration/generate.ts --check` re-generates in memory and fails if any emitted file, the manifest or the snapshot hash has drifted.
 
 ---
 
@@ -98,9 +105,9 @@ All values are in `generate.ts` and pass the Product Intake Oil validator (`vali
 | ----------------------------------------- | ------------- | ---------------- | ------------------- |
 | `coarse`, `fine`, `normal` (one row each) | `styling-oel` | `styling_finish` | `{silicones, oils}` |
 
-- **`styling-oel` / `styling_finish`:** positioned on smoothing, flyaways, shine and heat, which are the engine's "styling finish" signals. That's the same slot as Olaplex No.7, Maria Nila and Garnier Wunderöl. ⚖️ An alternative is `trocken-oel` / `light_finish` ("weightless" is also a dry-oil signal). I chose styling because the damp-hair plus heat-styling use is the manufacturer's lead instruction.
+- **`styling-oel` / `styling_finish` (ruled by Nick 2026-09-29):** positioned on smoothing, flyaways, shine and heat, which are the engine's "styling finish" signals. That's the same slot as Olaplex No.7, Maria Nila and Garnier Wunderöl.
 - **`{silicones, oils}`:** safflower seed oil and lemon peel oil are real plant oils in the INCI. This is the same flag set the leave-in spec already carried. Not added: `proteins` (hydrolysed soy protein and hexapeptide sit after water, at trace level) and `humectants` (trace glycerin).
-- **All three thicknesses (revised 2026-09-29, pending Nick's ruling):** see `oil-thickness-comparison.md`. YOUNG.AGAIN is D5-led (volatile) silicone, at least as light as the fine-eligible Olaplex No.7; its INCI twins (Herbal Essences, Pantene Argan, Gliss) carry all three, and the curated sheet itself places the same architecture on coarse (Sleek & Stay, Pantene Coconut, Urban Alchemy). Light-on-coarse is graded by `weight` (adjacent), not excluded by the thickness gate (decision.md: no double-counting). The prepared `normal`-only variant is recoverable by reverting the two generator constants.
+- **All three thicknesses (ruled by Nick 2026-09-29):** see `oil-thickness-comparison.md`. YOUNG.AGAIN is D5-led (volatile) silicone, at least as light as the fine-eligible Olaplex No.7; its INCI twins (Herbal Essences, Pantene Argan, Gliss) carry all three, and the curated sheet itself places the same architecture on coarse (Sleek & Stay, Pantene Coconut, Urban Alchemy). Light-on-coarse is graded by `weight` (adjacent), not excluded by the thickness gate (decision.md: no double-counting). The prepared `normal`-only variant is recoverable by reverting the two generator constants.
 
 ### 3.3 `products` fields
 
@@ -167,7 +174,7 @@ The old `leave_in.authority_facts` row is deleted; rollback restores it exactly.
 
 This is identical to every other Oil.
 
-⚖️ **Pump dispenser vs. "Tropfen" copy.** YOUNG.AGAIN is dosed by pump ("a few pumps"). X6 only parks _spray_ oils. The Gliss Öl-Elixier (dosed as "1-2 Pumpstöße") was stamped with the same droplet template, so I followed that precedent. A pump-specific dosing line would be a new template ruling.
+**Pump dispenser vs. "Tropfen" copy (ruled by Nick 2026-09-29: accepted as-is).** YOUNG.AGAIN is dosed by pump ("a few pumps"). X6 only parks _spray_ oils, and the Gliss Öl-Elixier (dosed as "1-2 Pumpstöße") already carries the same droplet template. A dispenser-neutral rewording of the template stays parked (§9).
 
 **Removed leave-in rows.** DAMP, DRYCARE, `post_style_finish` (a parked family) and the leave-in heat row. None has an Oil equivalent beyond the two above.
 
@@ -197,20 +204,33 @@ That leaves a generated, reviewed one-shot migration in the K18 style.
    - `SET LOCAL lock_timeout='5s'`
    - Shared advisory lock `pg_advisory_xact_lock(hashtextextended('catalog-enrichment:product-apply', 0))`, taken **before** any row lock.
    - `LOCK TABLE … IN SHARE MODE` on the Personal Plan and ownership sources, as in the heat migration.
-2. **Replay:** if a matching receipt exists (same fingerprint, `reviewed_by='nick'`), skip to the postflight.
-3. **Preimage guards (null-safe `IS DISTINCT FROM`):**
-   - Product identity and every field that changes, including `updated_at`.
-   - No disposition, no plan or owner reference.
+2. **Replay:** if a matching receipt exists (same fingerprint, `reviewed_by='nick'`), skip to the postflight. A receipt for the batch under any other key aborts.
+3. **Preimage guards.** These are the generator's shared `PRESTATE_CHECKS`, emitted as `IF (…) IS NOT TRUE THEN RAISE`, so a NULL predicate fails closed:
    - `FOR UPDATE` on the product, then on every child table.
+   - Product identity and every field that changes, including `updated_at`.
    - Exact jsonb content equality of every child preimage against the snapshot, with timestamps excluded. The protocols' `max(updated_at)` is still pinned.
    - No existing Oil rows.
+   - No disposition, and no plan or owner reference.
 4. **Deletes**, each with a checked `ROW_COUNT`: 4 protocols, 4 eligibility rows, 1 spec, 1 fit spec, 2 concern rows, 1 thickness row, 1 evidence row.
 5. **Category flip:** the products UPDATE, guarded `WHERE category_key='leave_in'` with `ROW_COUNT = 1`.
 6. **Inserts:** Oil spec, eligibility, 2 protocols with V1 and V2, 2 evidence rows, and the receipt `S5R-03-km-young-again-oil-recategorization` / `oil-recategorization:<id>`.
 7. **Postflight:**
    - `SET CONSTRAINTS ALL IMMEDIATE`.
-   - Re-read and prove the exact target: the product row, no surviving leave-in authority, the Oil spec, eligibility, protocols (jsonb equality with the generated rows, V2 included), thickness and concern projection, and 2 provenance rows.
+   - Run the generator's shared `TARGET_CHECKS`, the same list that `verify.sql` and the rollback precheck use. Each check proves byte-exact (jsonb-normalized) equality with `target-state.json` for:
+     - the product row
+     - no surviving leave-in authority
+     - the Oil spec and eligibility
+     - both protocols, including the V1 and V2 payloads
+     - the thickness and concern projection
+     - both provenance rows, including fact values, source text and fingerprints
+     - the receipt
    - `PERFORM assert_personal_plan_curated_publication(id)`.
+
+**Re-apply coherence.**
+
+- **After a rollback:** `rollback.sql` restores `products.updated_at` and every child row exactly (asserted), and deletes the receipt. The forward guards match again, and a re-run takes the fresh path with the same fingerprint.
+- **After an intact apply:** a re-run takes the receipt path.
+- **Supabase migration history:** it records the version on the first apply, so a post-rollback re-apply runs this same file as a targeted step. It does not get a new migration version.
 
 **Apply lane (Nick-gated, later):**
 
@@ -226,64 +246,76 @@ That leaves a generated, reviewed one-shot migration in the K18 style.
 - No local Postgres or Docker daemon was available, and a production dry-run would be a write, so the SQL has had **no execution rehearsal**.
 - Recommended before apply: rehearse on a Supabase branch database or a local stack. `SET CONSTRAINTS`, the trigger ordering and the jsonb-equality guards are the parts most worth exercising.
 
-## 6. Verification queries (read-only, run after the Nick-gated apply)
+## 6. Verification: exact read-only proof (run after the Nick-gated apply)
 
-```sql
--- product spine
-SELECT id, category_key, category, tags, suitable_thicknesses, suitable_concerns,
-       description, net_content_value, net_content_unit, is_active, lifecycle_status,
-       is_chaarlie_recommended
-FROM public.products WHERE id = '6ad82861-d68e-4e70-a976-78c0f35d087b';
+Run `plans/kevin-murphy-oil-migration/verify.sql` read-only against production. It is generated, and its checks are the migration postflight's own `TARGET_CHECKS`. Nothing in it is inspected by eye; every check is an exact-equality predicate.
 
--- no leave-in authority left
-SELECT 'specs' t, count(*) FROM public.product_leave_in_specs WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'
-UNION ALL SELECT 'fit', count(*) FROM public.product_leave_in_fit_specs WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'
-UNION ALL SELECT 'elig', count(*) FROM public.product_leave_in_eligibility WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'
-UNION ALL SELECT 'proto_non_oil', count(*) FROM public.product_application_protocols WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b' AND category <> 'oil';
--- expect 0 / 0 / 0 / 0
+**Expected output:**
 
--- oil authority
-SELECT weight, role_support, provides_heat_protection FROM public.product_oil_specs WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b';
-SELECT thickness, oil_subtype, oil_purpose, ingredient_flags FROM public.product_oil_eligibility WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b';
-SELECT role, application_family, guidance_payload->>'guidanceKey' AS key,
-       guidance_payload_v2->>'sourceRole' AS v2_role, guidance_payload_v2#>>'{scope,category}' AS v2_cat,
-       guidance_payload_v2->'runtimeBlockerCode' AS blocker, source_url
-FROM public.product_application_protocols WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b' ORDER BY role;
--- expect dry_finish/dry_finish/-dry and leave_on_fibre_conditioning/post_wash_damp_conditioning/-leave-on, v2_cat oil, blocker null
+| Query                   | Expected                                                                                    |
+| ----------------------- | ------------------------------------------------------------------------------------------- |
+| 1. Full target proof    | **zero rows.** Any row returned names a failing check.                                      |
+| 2. Plan/owner reference | **zero rows**                                                                               |
+| 3. Scanner identifier   | **zero rows.** The EAN set is still exactly `{09339341020356}`.                             |
+| 4. Publication gate     | exactly one row with an empty (void) value and **no error**; the function raises on failure |
 
-SELECT category_key, thickness FROM public.product_thickness_eligibility WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b';  -- oil/coarse, oil/fine, oil/normal
-SELECT category_key, concern_key FROM public.product_concern_eligibility WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'; -- oil/styling-oel
-SELECT fact_key, source_url, batch_id FROM public.personal_plan_catalog_fact_evidence WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b'; -- 2 oil rows
-SELECT * FROM public.catalog_enrichment_applied_items
-WHERE batch_id = 'S5R-03-km-young-again-oil-recategorization';                                  -- 1 receipt
+**What query 1 proves**, with each check compared byte-exactly (jsonb-normalized) against `target-state.json`:
 
--- identity survives (scanner resolves the same EAN to the Oil)
-SELECT identifier_value, canonical_gtin14 FROM public.product_identifiers WHERE product_id = '6ad82861-d68e-4e70-a976-78c0f35d087b';
+- **`product_target`:** category, legacy category, tags, all three thicknesses, concern, description, net content and affiliate link. Name, brand, origin, active, lifecycle and recommended are unchanged.
+- **`no_leave_in_spec`, `no_leave_in_fit_spec`, `no_leave_in_eligibility`:** no leave-in authority survived.
+- **`oil_spec_target`, `oil_eligibility_target`:** exact rows, with no extras.
+- **`protocols_target`:** every protocol row of the product, including the full V1 `guidance_payload` and V2 `guidance_payload_v2`, source label, URL and text, and the generated family.
+- **`thickness_eligibility_target`, `concern_eligibility_target`:** exactly `oil:coarse, oil:fine, oil:normal` and `oil:styling-oel`, across all categories.
+- **`fact_evidence_target`:** every evidence row of the product, including fact values, source label, URL, text and type, `checked_at`, `batch_id` and both fingerprints.
+- **`receipt_target`:** exactly one receipt for the batch, with the matching fingerprints and `reviewed_by='nick'`.
 
--- gate is satisfied (raises if not)
-SELECT public.assert_personal_plan_curated_publication('6ad82861-d68e-4e70-a976-78c0f35d087b');
-```
-
-Also after apply:
+**Also after apply:**
 
 - Run `npx tsx scripts/catalog-authority/audit.ts`, expecting no new issue for this product.
 - Run the V2 pointer coverage audit (`scripts/product-intake/catalog-enrichment/stage5-v2-pointer-coverage-audit.ts`).
-- Drive an Oil recommendation for a normal-thickness profile, check the Anwendung view shows the two Oil cards, and scan EAN 9339341020356 in the Produkt-Scan.
+- Drive an Oil recommendation for each thickness and check the Anwendung view shows the two Oil cards.
+- Scan EAN 9339341020356 in the Produkt-Scan.
 - Check Sentry for new errors (CLAUDE.local.md).
 
 ## 7. Rollback
 
-`rollback.sql` is a prepared transaction, not a migration. What it does, in order:
+`rollback.sql` is a prepared transaction, not a migration. It is generated alongside the migration and covered by the artifact manifest. What it does, in order:
 
-1. Takes the same advisory lock.
-2. Requires the forward receipt and the Oil state. It refuses if any plan or owner has referenced the product as an Oil in the meantime.
-3. Deletes the Oil rows and the receipt.
-4. Restores the **exact** pre-values:
-   - `products`: `category_key='leave_in'`, `category='Leave-in'`, `tags={leave-in}`, `suitable_concerns={performance,tangling}`, the old description, `net_content NULL`, `updated_at 2026-08-15T07:47:38.210968+00`.
-   - All deleted rows, re-inserted with their **original ids and timestamps**, straight from `prestate-2026-09-29.json`: 1 leave-in spec, 1 fit spec, 4 eligibility rows, 4 protocols (ids `058cd3f2…`, `f013b935…`, `40edd227…`, `4a4e0bd1…`), 1 thickness row, 2 concern rows and 1 `leave_in.authority_facts` row.
-5. Flushes the constraints, re-asserts the publication gate and verifies the counts.
+1. **Locks** (P1-2):
+   - `lock_timeout 5s` and `TimeZone UTC`.
+   - The same shared advisory lock and the same Personal Plan and owner `SHARE` table locks as the forward migration, taken **before** the reference check. A plan can no longer acquire an Oil reference between the check and the commit.
+2. **Trigger precheck** (P1-1): `products` has exactly one non-internal trigger calling `update_updated_at_column()`, namely `set_updated_at_products`, and it is enabled.
+3. **Disable the trigger:** `ALTER TABLE public.products DISABLE TRIGGER set_updated_at_products`, before any DML, so `products` has no pending trigger events.
+   - **Precedent:** `20260812143000_personal_plan_legacy_quiz_source.sql` and `20260814191843_…_stage5_v2_authority_reconciliation.sql` both disable one named trigger inside the migration transaction.
+   - **Why it's safe:**
+     - `ALTER TABLE` holds ACCESS EXCLUSIVE on `products` until COMMIT, so no other session can write products while the trigger is off.
+     - A failure rolls the trigger state back with the transaction.
+     - `session_replication_role = replica` is deliberately **not** used, because it would also silence FK enforcement and the eligibility compat triggers the restore relies on.
+   - **Trade-off:** products reads block for the duration. It's one short transaction, bounded by `lock_timeout`.
+4. **Target precheck** (P1-3): the generator's `TARGET_CHECKS`, the same list as the postflight and `verify.sql`.
+   - The complete live Oil state must equal `target-state.json` byte-exactly: spec, eligibility, protocols including payloads and pointers, evidence including fact values, source text and fingerprints, receipt, and thickness/concern rows.
+   - Any post-apply revision makes the rollback refuse instead of silently destroying it.
+   - The plan/owner reference check runs under the locks from step 1.
+5. **Delete** the Oil rows and the receipt, with checked counts.
+6. **Restore the exact pre-values:**
+   - `products`: the old category, tags, concerns and description, `net_content NULL`, and `updated_at 2026-08-15T07:47:38.210968+00`. The value sticks because the trigger is off.
+   - Every deleted leave-in row, re-inserted with its **original ids and timestamps** from `prestate-2026-09-29.json`:
+     - 1 spec
+     - 1 fit spec
+     - 4 eligibility rows
+     - 4 protocols: `058cd3f2…`, `f013b935…`, `40edd227…`, `4a4e0bd1…`
+     - 1 thickness row
+     - 2 concern rows
+     - 1 `leave_in.authority_facts` row
+7. **Re-enable:** `SET CONSTRAINTS ALL IMMEDIATE` flushes the deferred gate and FK events, then `ENABLE TRIGGER set_updated_at_products`.
+8. **Verify:**
+   - The trigger is enabled again (`tgenabled='O'`).
+   - The forward migration's own `PRESTATE_CHECKS` pass, which proves re-apply coherence.
+   - Full-row equality, timestamps included, of the product row (minus `embedding`) and every restored child row against the snapshot.
+   - No forward receipt remains.
+   - The publication gate passes.
 
-After a rollback the forward migration's guards match again, so a later re-apply works.
+**Fail-closed caveat:** if an unrelated `products` column (e.g. price) changed after the apply, the full-row check aborts the rollback. The snapshot must then be re-captured and the artifacts regenerated. That's intended: an exact restore over newer data would be a lie.
 
 ## 8. Out of scope: follow-ups this change surfaces (not done)
 
@@ -293,11 +325,17 @@ After a rollback the forward migration's guards match again, so a later re-apply
 4. **Gliss Öl-Elixier (`e93d522b…`) bugs seen while reading references.** Its live Oil protocols carry `guidanceKey "product-oil-__PRODUCT_ID__-leave-on"` / `"…-dry"`: the expansion executor substitutes `scope.productId` but not the key. Its leave-on row also lists `styling_day` in `compatibleDayTypes`, which contradicts the ruled TPL-OIL-LEAVEON day set. It's worth checking every expansion Oil for the same two issues.
 5. **YOUNG.AGAIN reformulation.** The EU D5/D6 deadline is 6 June 2027, so INCI and weight need re-verifying once KM reformulates.
 
-## 9. Open questions for Nick (⚖️ judgment calls, recommendation first)
+## 9. Settled rulings (Nick, 2026-09-29)
 
-1. **Thickness:** all three (recommended after the ingredient comparison in `oil-thickness-comparison.md`; now what the generated migration carries), `fine,normal` like Olaplex No.7, or `normal` only (the old curated slot)?
-2. **Subtype/purpose:** `styling-oel` / `styling_finish` (recommended), or `trocken-oel` / `light_finish`?
-3. **Pump dosing:** accept the ruled "Wenige Tropfen" copy for a pump oil, following the Gliss precedent (recommended), or treat pump oils like X6 spray oils and park them until a pump dosing line is ruled?
-4. **Product copy:** approve the new `description` text, and keep the name "Kevin Murphy Young Again" (recommended) rather than renaming to "Kevin Murphy Young.Again Treatment Oil".
-5. **`is_chaarlie_recommended`:** stays `true` as the ruling implies. Confirm it should now compete in the normal × Styling-Öl Oil slot alongside Maria Nila, Garnier Wunderöl and L'Oréal Jojoba.
-6. **Follow-ups:** spin off the RAG re-ingest, the embedding refresh and the Gliss guidanceKey/day-type fix as separate tasks?
+- **Category:** YOUNG.AGAIN moves from `leave_in` to `oil`, researched to the Oil standard ("It's a leave-in oil, but this is also true for all other oils we have in our oil category.").
+- **Thickness:** all three (`coarse`, `fine`, `normal`). Evidence: `oil-thickness-comparison.md`.
+- **Slot:** `styling-oel` / `styling_finish`.
+- **Dosing copy:** the ruled "Wenige Tropfen" TPL-OIL copy is accepted as-is for this pump-dispensed oil, following the Gliss precedent.
+
+## 10. Open questions for Nick (⚖️ recommendation first)
+
+1. **Dispenser-neutral template rewording** (parked): should TPL-OIL's droplet dosing line get a dispenser-neutral variant for pump oils? This is a template ruling for all oils, not for this migration.
+2. **Product copy:** approve the new `description` text, and keep the name "Kevin Murphy Young Again" (recommended) rather than renaming to "Kevin Murphy Young.Again Treatment Oil".
+3. **`is_chaarlie_recommended`:** stays `true`, as the ruling implies. Confirm it should now compete in the Styling-Öl Oil slot across all three thicknesses.
+4. **Follow-ups (§8):** spin off the RAG re-ingest, the embedding refresh and the Gliss guidanceKey/day-type fix as separate tasks?
+5. **Rehearsal:** run the migration, `verify.sql` and `rollback.sql` once end-to-end on a Supabase branch database before the production apply? Recommended, because nothing has had an execution rehearsal yet (§5).

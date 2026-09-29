@@ -1,6 +1,6 @@
 {
-  "fingerprint": "3b9410d5031f552f1c1a69ee529f828268c8ec963c9a721fdf6b1d8fcfa4bda1",
-  "schema": "kevin-murphy-oil-recategorization-v1",
+  "fingerprint": "54cebf311e42db4e452c9e71a1f6ef4a6b23f878d37a5d028a63a3271b3d50fd",
+  "schema": "kevin-murphy-oil-recategorization-v2",
   "batch_id": "S5R-03-km-young-again-oil-recategorization",
   "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
   "product": {
@@ -340,6 +340,619 @@
     ],
     "personal_plan_catalog_fact_evidence": [
       "leave_in.authority_facts"
+    ]
+  },
+  "preimage": {
+    "captured_at": "2026-09-29T06:41:49.641Z",
+    "product": {
+      "id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+      "name": "Kevin Murphy Young Again",
+      "brand": "Kevin Murphy",
+      "description": "Kevin Murphy Young Again (Silikone) ist ein Leave-in von Kevin Murphy, empfohlen für mittelstarkes Haar bei Performance-Pflege.",
+      "category": "Leave-in",
+      "affiliate_link": "https://www.hagel-shop.de/kevin-murphy-young-again-leave-in-treatment-100-ml.html",
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-02/6ad82861-d68e-4e70-a976-78c0f35d087b/27-6ad82861-d68e-4e70-a976-78c0f35d087b-kevin-murphy-kevin-murphy-young-again-c56bcc178434.webp",
+      "price_eur": 43,
+      "currency": "EUR",
+      "tags": [
+        "leave-in"
+      ],
+      "suitable_thicknesses": [
+        "normal"
+      ],
+      "suitable_concerns": [
+        "performance",
+        "tangling"
+      ],
+      "is_active": true,
+      "sort_order": 69,
+      "created_at": "2026-03-03T12:34:10.880077+00:00",
+      "updated_at": "2026-08-15T07:47:38.210968+00:00",
+      "short_description": null,
+      "tom_take": null,
+      "lifecycle_status": "active",
+      "purchase_link_status": "available",
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00",
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "category_key": "leave_in",
+      "brand_id": "3e336fa1-50ad-474a-8ec2-35541b6e7a25",
+      "product_line_id": null,
+      "origin": "curated",
+      "is_chaarlie_recommended": true,
+      "net_content_value": null,
+      "net_content_unit": null,
+      "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/c56bcc1784341e7cf093db84f59f232f4c677a1292521c48144d9a1bf9eca99a.webp"
+    },
+    "protocols_max_updated_at": "2026-08-14T15:13:15.562182+00:00",
+    "protocols": [
+      {
+        "id": "058cd3f2-be57-40a1-8fc5-9f09c1b6ea7f",
+        "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+        "category": "leave_in",
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "application_stage": "damp_leave_on",
+        "application_state": null,
+        "placement": "lengths_ends",
+        "contact_time_seconds": null,
+        "rinse_action": "leave_in",
+        "reapplication": "not_stated",
+        "instruction_modifiers": [],
+        "source_label": "Kevin Murphy Produktseite",
+        "source_url": "https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html",
+        "source_text": "Use as a leave-in treatment before styling for moisture and shine.",
+        "guidance_payload": {
+          "role": "leave_in",
+          "scope": {
+            "kind": "product",
+            "category": "leave_in",
+            "productId": "6ad82861-d68e-4e70-a976-78c0f35d087b"
+          },
+          "steps": [
+            {
+              "action": "apply_product",
+              "stepKey": "dose-kevin-murphy-young-again",
+              "copyTemplateDe": "Eine kleine Menge in den Handflächen verteilen."
+            },
+            {
+              "action": "apply_product",
+              "stepKey": "apply-kevin-murphy-young-again",
+              "copyTemplateDe": "In Längen und Spitzen einarbeiten und danach wie gewünscht stylen."
+            }
+          ],
+          "locale": "de",
+          "evidence": [
+            {
+              "checkedAt": "2026-08-11",
+              "sourceUrl": "https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html",
+              "sourceType": "manufacturer"
+            }
+          ],
+          "sequence": {
+            "after": [
+              "post_cleanse_rinse_off"
+            ],
+            "anchor": "damp_leave_on",
+            "before": [],
+            "conflictsWith": []
+          },
+          "guidanceKey": "product-leave-in-6ad82861-d68e-4e70-a976-78c0f35d087b-post-wash",
+          "requirements": {
+            "requiredCatalogFacts": [
+              "leave_in.plan_roles"
+            ],
+            "requiredProfileFacts": [],
+            "requiredProtocolFacts": []
+          },
+          "protocolFacts": {
+            "rinse": "leave_in",
+            "amount": {
+              "kind": "qualitative",
+              "copyDe": "Mit einer kleinen Menge starten."
+            },
+            "cautions": [],
+            "reapplication": "none",
+            "applicationArea": "lengths_ends",
+            "contactTimeSeconds": null,
+            "conditionerRelationship": "not_applicable"
+          },
+          "schemaVersion": 1,
+          "protocolVersion": 1,
+          "applicationFamily": "post_wash_damp_conditioning",
+          "compatibleDayTypes": [
+            "wash_day",
+            "intensive_care_day",
+            "styling_day"
+          ],
+          "exactGuidanceRequired": true
+        },
+        "guidance_payload_v2": {
+          "role": "leave_in",
+          "facts": {
+            "heat": null,
+            "rinse": "leave_in",
+            "amount": null,
+            "contactTime": null,
+            "applicationArea": "hair_lengths_ends",
+            "applicationState": "damp_hair",
+            "conditionerPolicy": "not_applicable"
+          },
+          "scope": {
+            "kind": "product",
+            "category": "leave_in",
+            "productId": "6ad82861-d68e-4e70-a976-78c0f35d087b"
+          },
+          "evidence": [
+            {
+              "checkedAt": "2026-08-11",
+              "sourceUrl": "https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html",
+              "sourceType": "manufacturer"
+            }
+          ],
+          "exactSteps": [],
+          "sourceRole": "post_wash_leave_in",
+          "workflowId": null,
+          "cautionCodes": [],
+          "contractKind": "product_pointer",
+          "schemaVersion": 2,
+          "applicationFamily": "post_wash_damp_conditioning",
+          "runtimeBlockerCode": null,
+          "requiredCompanionProductId": null
+        },
+        "application_family": "post_wash_damp_conditioning",
+        "category_key": "leave_in"
+      },
+      {
+        "id": "40edd227-6ae7-4ab4-b5a5-fe243cfc3a9e",
+        "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+        "category": "leave_in",
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "application_stage": "post_style",
+        "application_state": "dry",
+        "placement": "lengths_ends",
+        "contact_time_seconds": null,
+        "rinse_action": "do_not_rinse",
+        "reapplication": "not_stated",
+        "instruction_modifiers": [],
+        "source_label": "Hersteller",
+        "source_url": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html",
+        "source_text": "Auf trockenem Haar als Finish anwenden.",
+        "guidance_payload": {
+          "role": "leave_in",
+          "scope": {
+            "kind": "product",
+            "category": "leave_in",
+            "productId": "6ad82861-d68e-4e70-a976-78c0f35d087b"
+          },
+          "steps": [
+            {
+              "action": "apply_product",
+              "stepKey": "post-style-finish",
+              "copyTemplateDe": "Mit einer sehr kleinen Menge beginnen und nach dem Styling sparsam über Längen und Spitzen geben."
+            }
+          ],
+          "locale": "de",
+          "evidence": [
+            {
+              "checkedAt": "2026-08-14",
+              "sourceUrl": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html",
+              "sourceType": "manufacturer"
+            }
+          ],
+          "sequence": {
+            "after": [],
+            "anchor": "dry_finish",
+            "before": [],
+            "conflictsWith": []
+          },
+          "guidanceKey": "leave-in-use-case-2026-08-14-6ad82861-d68e-4e70-a976-78c0f35d087b-post_style_finish",
+          "requirements": {
+            "requiredCatalogFacts": [],
+            "requiredProfileFacts": [],
+            "requiredProtocolFacts": []
+          },
+          "protocolFacts": {
+            "rinse": "leave_in",
+            "amount": null,
+            "cautions": [],
+            "reapplication": "none",
+            "applicationArea": "lengths_ends",
+            "contactTimeSeconds": null,
+            "conditionerRelationship": "not_applicable"
+          },
+          "schemaVersion": 1,
+          "protocolVersion": 1,
+          "applicationFamily": "post_style_finish",
+          "compatibleDayTypes": [
+            "styling_day"
+          ],
+          "exactGuidanceRequired": true
+        },
+        "guidance_payload_v2": {
+          "role": "leave_in",
+          "facts": {
+            "heat": null,
+            "rinse": "leave_in",
+            "amount": null,
+            "contactTime": null,
+            "applicationArea": "hair_lengths_ends",
+            "applicationState": "dry_hair",
+            "conditionerPolicy": "not_applicable"
+          },
+          "scope": {
+            "kind": "product",
+            "category": "leave_in",
+            "productId": "6ad82861-d68e-4e70-a976-78c0f35d087b"
+          },
+          "evidence": [
+            {
+              "checkedAt": "2026-08-14",
+              "sourceUrl": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html",
+              "sourceType": "manufacturer"
+            }
+          ],
+          "exactSteps": [],
+          "sourceRole": "post_wash_leave_in",
+          "workflowId": null,
+          "cautionCodes": [],
+          "contractKind": "product_pointer",
+          "schemaVersion": 2,
+          "applicationFamily": "post_style_finish",
+          "runtimeBlockerCode": null,
+          "requiredCompanionProductId": null
+        },
+        "application_family": "post_style_finish",
+        "category_key": "leave_in"
+      },
+      {
+        "id": "4a4e0bd1-2140-492b-b4f7-e0fe33f46850",
+        "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+        "category": "leave_in",
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "application_stage": "pre_heat",
+        "application_state": "either",
+        "placement": "all_hair",
+        "contact_time_seconds": null,
+        "rinse_action": "do_not_rinse",
+        "reapplication": "not_stated",
+        "instruction_modifiers": [],
+        "source_label": "Hersteller",
+        "source_url": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html",
+        "source_text": "Vor Luft- oder Hitzestyling auf feuchtem oder trockenem Haar anwenden.",
+        "guidance_payload": {
+          "role": "heat_protection",
+          "scope": {
+            "kind": "product",
+            "category": "leave_in",
+            "productId": "6ad82861-d68e-4e70-a976-78c0f35d087b"
+          },
+          "steps": [
+            {
+              "action": "apply_product",
+              "stepKey": "apply",
+              "copyTemplateDe": "Gleichmäßig auf dem vom Hersteller genannten Haarzustand verteilen. Erst danach föhnen oder stylen."
+            }
+          ],
+          "locale": "de",
+          "evidence": [
+            {
+              "checkedAt": "2026-08-14",
+              "sourceUrl": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html",
+              "sourceType": "manufacturer"
+            }
+          ],
+          "sequence": {
+            "after": [],
+            "anchor": "damp_leave_on",
+            "before": [],
+            "conflictsWith": []
+          },
+          "guidanceKey": "leave-in-use-case-2026-08-14-6ad82861-d68e-4e70-a976-78c0f35d087b-either_state_protection",
+          "requirements": {
+            "requiredCatalogFacts": [],
+            "requiredProfileFacts": [
+              "heatEvents"
+            ],
+            "requiredProtocolFacts": []
+          },
+          "protocolFacts": {
+            "rinse": "leave_in",
+            "amount": null,
+            "cautions": [],
+            "reapplication": "none",
+            "applicationArea": "all_hair",
+            "contactTimeSeconds": null,
+            "conditionerRelationship": "not_applicable"
+          },
+          "schemaVersion": 1,
+          "protocolVersion": 1,
+          "applicationFamily": "either_state_protection",
+          "compatibleDayTypes": [
+            "wash_day",
+            "intensive_care_day",
+            "bond_repair_day",
+            "clarifying_wash_day",
+            "refresh_day",
+            "between_wash_care_day",
+            "styling_day"
+          ],
+          "exactGuidanceRequired": true
+        },
+        "guidance_payload_v2": {
+          "role": "heat_protection",
+          "facts": {
+            "heat": {
+              "reapplication": "none",
+              "supportedStates": [
+                "damp_hair",
+                "dry_hair"
+              ],
+              "activationRequired": false,
+              "maximumClaimedTemperatureC": null
+            },
+            "rinse": "leave_in",
+            "amount": null,
+            "contactTime": null,
+            "applicationArea": "root_to_tip_hair",
+            "applicationState": "damp_or_dry_hair",
+            "conditionerPolicy": "not_applicable"
+          },
+          "scope": {
+            "kind": "product",
+            "category": "leave_in",
+            "productId": "6ad82861-d68e-4e70-a976-78c0f35d087b"
+          },
+          "evidence": [
+            {
+              "checkedAt": "2026-08-14",
+              "sourceUrl": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html",
+              "sourceType": "manufacturer"
+            }
+          ],
+          "exactSteps": [],
+          "sourceRole": "pre_heat_protection",
+          "workflowId": null,
+          "cautionCodes": [],
+          "contractKind": "product_pointer",
+          "schemaVersion": 2,
+          "applicationFamily": "either_state_protection",
+          "runtimeBlockerCode": null,
+          "requiredCompanionProductId": null
+        },
+        "application_family": "either_state_protection",
+        "category_key": "leave_in"
+      },
+      {
+        "id": "f013b935-cf01-4e48-b817-0eae91ec8390",
+        "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+        "category": "leave_in",
+        "role": "post_wash_leave_in",
+        "cadence": null,
+        "application_stage": "dry_hair",
+        "application_state": "dry",
+        "placement": "lengths_ends",
+        "contact_time_seconds": null,
+        "rinse_action": "do_not_rinse",
+        "reapplication": "not_stated",
+        "instruction_modifiers": [],
+        "source_label": "Hersteller",
+        "source_url": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html",
+        "source_text": "Auf feuchtem oder trockenem Haar und zwischen Haarwäschen anwenden.",
+        "guidance_payload": {
+          "role": "leave_in",
+          "scope": {
+            "kind": "product",
+            "category": "leave_in",
+            "productId": "6ad82861-d68e-4e70-a976-78c0f35d087b"
+          },
+          "steps": [
+            {
+              "action": "apply_product",
+              "stepKey": "dry-care",
+              "copyTemplateDe": "Mit einer sehr kleinen Menge in trockenen Längen und Spitzen beginnen und nur bei Bedarf ergänzen."
+            }
+          ],
+          "locale": "de",
+          "evidence": [
+            {
+              "checkedAt": "2026-08-14",
+              "sourceUrl": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html",
+              "sourceType": "manufacturer"
+            }
+          ],
+          "sequence": {
+            "after": [],
+            "anchor": "dry_finish",
+            "before": [],
+            "conflictsWith": []
+          },
+          "guidanceKey": "leave-in-use-case-2026-08-14-6ad82861-d68e-4e70-a976-78c0f35d087b-between_wash_dry_care",
+          "requirements": {
+            "requiredCatalogFacts": [],
+            "requiredProfileFacts": [],
+            "requiredProtocolFacts": []
+          },
+          "protocolFacts": {
+            "rinse": "leave_in",
+            "amount": null,
+            "cautions": [],
+            "reapplication": "none",
+            "applicationArea": "lengths_ends",
+            "contactTimeSeconds": null,
+            "conditionerRelationship": "not_applicable"
+          },
+          "schemaVersion": 1,
+          "protocolVersion": 1,
+          "applicationFamily": "between_wash_dry_care",
+          "compatibleDayTypes": [
+            "refresh_day",
+            "between_wash_care_day"
+          ],
+          "exactGuidanceRequired": true
+        },
+        "guidance_payload_v2": {
+          "role": "leave_in",
+          "facts": {
+            "heat": null,
+            "rinse": "leave_in",
+            "amount": null,
+            "contactTime": null,
+            "applicationArea": "hair_lengths_ends",
+            "applicationState": "dry_hair",
+            "conditionerPolicy": "not_applicable"
+          },
+          "scope": {
+            "kind": "product",
+            "category": "leave_in",
+            "productId": "6ad82861-d68e-4e70-a976-78c0f35d087b"
+          },
+          "evidence": [
+            {
+              "checkedAt": "2026-08-14",
+              "sourceUrl": "https://kevinmurphy.com.au/us/en/the-leave-in-treatment-designed-for-all-hair-types-blog.html",
+              "sourceType": "manufacturer"
+            }
+          ],
+          "exactSteps": [],
+          "sourceRole": "post_wash_leave_in",
+          "workflowId": null,
+          "cautionCodes": [],
+          "contractKind": "product_pointer",
+          "schemaVersion": 2,
+          "applicationFamily": "between_wash_dry_care",
+          "runtimeBlockerCode": null,
+          "requiredCompanionProductId": null
+        },
+        "application_family": "between_wash_dry_care",
+        "category_key": "leave_in"
+      }
+    ],
+    "leaveInSpecs": [
+      {
+        "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+        "format": "serum",
+        "weight": "medium",
+        "roles": [
+          "oil_replacement"
+        ],
+        "provides_heat_protection": false,
+        "heat_protection_max_c": null,
+        "heat_activation_required": false,
+        "care_benefits": [
+          "anti_frizz",
+          "shine"
+        ],
+        "ingredient_flags": [
+          "silicones",
+          "oils"
+        ],
+        "application_stage": [
+          "towel_dry",
+          "dry_hair",
+          "post_style"
+        ],
+        "care_direction": "balanced",
+        "repair_support_level": "medium",
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "functional_benefits": [
+          "moisture_softness",
+          "repair_support",
+          "shine_support",
+          "smooth_anti_frizz"
+        ],
+        "category_key": "leave_in",
+        "conditioner_relationship": "booster_only"
+      }
+    ],
+    "fitSpecs": [
+      {
+        "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+        "weight": "medium",
+        "conditioner_relationship": "booster_only",
+        "care_benefits": [
+          "detangle_smooth"
+        ]
+      }
+    ],
+    "eligibility": [
+      {
+        "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+        "thickness": "normal",
+        "need_bucket": "moisture_anti_frizz",
+        "styling_context": "air_dry",
+        "category_key": "leave_in"
+      },
+      {
+        "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+        "thickness": "normal",
+        "need_bucket": "moisture_anti_frizz",
+        "styling_context": "non_heat_style",
+        "category_key": "leave_in"
+      },
+      {
+        "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+        "thickness": "normal",
+        "need_bucket": "shine_protect",
+        "styling_context": "air_dry",
+        "category_key": "leave_in"
+      },
+      {
+        "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+        "thickness": "normal",
+        "need_bucket": "shine_protect",
+        "styling_context": "non_heat_style",
+        "category_key": "leave_in"
+      }
+    ],
+    "thickness": [
+      {
+        "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+        "category_key": "leave_in",
+        "thickness": "normal"
+      }
+    ],
+    "concern": [
+      {
+        "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+        "category_key": "leave_in",
+        "concern_key": "performance"
+      },
+      {
+        "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+        "category_key": "leave_in",
+        "concern_key": "tangling"
+      }
+    ],
+    "evidence": [
+      {
+        "product_id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+        "fact_key": "leave_in.authority_facts",
+        "fact_value": {
+          "plan_roles": [
+            "post_wash_leave_in"
+          ],
+          "care_direction": "balanced",
+          "functional_benefits": [
+            "moisture_softness",
+            "repair_support",
+            "shine_support",
+            "smooth_anti_frizz"
+          ],
+          "repair_support_level": "medium"
+        },
+        "source_label": "Kevin Murphy Produktseite",
+        "source_url": "https://kevinmurphy.com.au/th/en/products/by-benefit/rejuvenate/YOUNG-AGAIN.html",
+        "source_text": "Weightless leave-in oil; supports softness, nourishment, protection, shine and stronger-feeling hair.",
+        "source_type": "manufacturer",
+        "checked_at": "2026-08-11",
+        "batch_id": "S5-15-leave-in-exact-02",
+        "batch_fingerprint": "c37af5e2935e39b74216422683730000e97d4cebb4aa1264f15c546245408492",
+        "content_fingerprint": "8e6f7dfbabb63fe395d0feb24f2efd9285f3623f326cf7ef4921f70398e94693"
+      }
     ]
   }
 }
