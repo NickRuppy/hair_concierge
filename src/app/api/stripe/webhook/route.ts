@@ -3,6 +3,8 @@ import { after, NextResponse, type NextRequest } from "next/server"
 import { deferRequiredTrialNotices } from "@/lib/billing/trial-notice-dispatch"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 import { getStripe } from "@/lib/stripe/client"
+import { cancelDeletedAccountStripeSubscription } from "@/lib/stripe/deleted-account"
+import { reportAccountDeletionStripeRefundFailed } from "@/lib/observability/account-deletion"
 import { reconcileStripePriorPaidMembership } from "@/lib/stripe/trial-prior-paid-history"
 import {
   CheckoutActivationError,
@@ -131,6 +133,10 @@ function stripeObjectIsInternalTest(object: unknown): boolean {
     candidate.metadata?.is_internal_test === "true" ||
     candidate.parent?.subscription_details?.metadata?.is_internal_test === "true"
   )
+}
+
+function stripeObjectId(value: string | { id: string } | null | undefined): string | null {
+  return typeof value === "string" ? value : (value?.id ?? null)
 }
 
 export function shouldRecordStripePaymentCompleted(invoice: Stripe.Invoice) {
@@ -379,6 +385,7 @@ type StripeWebhookEventDeps = StripeWebhookProvisioningDeps & {
   recordBillingAnalytics?: boolean
   captureCheckoutException?: typeof captureCheckoutException
   capturePaymentFailure?: PaymentFailureReporter
+  reportAccountDeletionRefundFailed?: typeof reportAccountDeletionStripeRefundFailed
 }
 
 export async function handleStripeWebhookEvent(event: Stripe.Event, deps: StripeWebhookEventDeps) {
@@ -392,6 +399,7 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     recordBillingAnalytics = false,
     captureCheckoutException: captureCheckout = captureCheckoutException,
     capturePaymentFailure: capturePayment = captureServerPaymentFailure,
+    reportAccountDeletionRefundFailed = reportAccountDeletionStripeRefundFailed,
   } = deps
   const timestamp = stripeEventTimestamp(event)
 
@@ -438,6 +446,17 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
         })
         break
       }
+      if (
+        await cancelDeletedAccountStripeSubscription(
+          {
+            eventType: event.type,
+            subscriptionId: stripeObjectId(session.subscription),
+            metadata: session.metadata,
+          },
+          { supabase, stripe },
+        )
+      )
+        break
       let activation
       try {
         activation = await handleCheckoutSessionCompleted(session, {
@@ -511,6 +530,17 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
     }
     case "checkout.session.async_payment_succeeded": {
       const session = event.data.object as unknown as Stripe.Checkout.Session
+      if (
+        await cancelDeletedAccountStripeSubscription(
+          {
+            eventType: event.type,
+            subscriptionId: stripeObjectId(session.subscription),
+            metadata: session.metadata,
+          },
+          { supabase, stripe },
+        )
+      )
+        break
       const activation = await handleCheckoutSessionAsyncPaymentSucceeded(session, {
         supabase,
         stripe,
@@ -634,6 +664,17 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
       const subscription = await stripe.subscriptions.retrieve(eventSubscription.id, {
         expand: ["items.data.price"],
       })
+      if (
+        await cancelDeletedAccountStripeSubscription(
+          {
+            eventType: event.type,
+            subscriptionId: subscription.id,
+            metadata: subscription.metadata,
+          },
+          { supabase, stripe },
+        )
+      )
+        break
       const result = await handleSubscriptionUpdated(subscription, {
         stripe,
         supabase,
@@ -965,6 +1006,20 @@ export async function handleStripeWebhookEvent(event: Stripe.Event, deps: Stripe
             interval: profile.subscription_interval,
           },
         })
+      break
+    }
+    case "refund.failed": {
+      const refund = event.data.object as unknown as Stripe.Refund
+      // A deletion refund (D14/R-a) that failed after it was sent, possibly after its row was
+      // settled: an operator follows up by hand; the event is acknowledged, nothing changes.
+      if (refund.metadata?.source === "account_deletion") {
+        reportAccountDeletionRefundFailed({
+          kind: refund.metadata.kind,
+          failureReason: refund.failure_reason,
+        })
+        break
+      }
+      console.warn("[stripe] unhandled event type:", event.type)
       break
     }
     default:

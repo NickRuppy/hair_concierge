@@ -237,7 +237,7 @@ final class OnboardingUITests: XCTestCase {
         let notice = app.descendants(matching: .any).matching(identifier: "onboarding.legal-notice").firstMatch
         reach(notice, app: app, readableContent: true)
         let noticeText = ([notice.label] + notice.descendants(matching: .staticText).allElementsBoundByIndex.map(\.label)).joined(separator: " ")
-        XCTAssertTrue(noticeText.contains("beantragst du dein kostenloses Konto"))
+        XCTAssertTrue(noticeText.contains("Mit „Konto erstellen“ erstellst du dein Konto"))
         XCTAssertTrue(noticeText.contains("AGB"))
         XCTAssertTrue(noticeText.contains("Datenschutzerklärung"))
         screenshot("account-legal-notice", app: app)
@@ -703,7 +703,7 @@ final class OnboardingUITests: XCTestCase {
         let notice = app.descendants(matching: .any).matching(identifier: "onboarding.legal-notice").firstMatch
         reach(notice, app: app, readableContent: true)
         let noticeText = ([notice.label] + notice.descendants(matching: .staticText).allElementsBoundByIndex.map(\.label)).joined(separator: " ")
-        XCTAssertTrue(noticeText.contains("beantragst du dein kostenloses Konto"))
+        XCTAssertTrue(noticeText.contains("Mit „Konto erstellen“ erstellst du dein Konto"))
         XCTAssertTrue(app.links.matching(identifier: "https://chaarlie.de/agb").firstMatch.exists)
         XCTAssertTrue(app.links.matching(identifier: "https://chaarlie.de/datenschutz").firstMatch.exists)
         XCTAssertLessThan(notice.frame.maxY, app.buttons["onboarding.submit"].frame.minY)

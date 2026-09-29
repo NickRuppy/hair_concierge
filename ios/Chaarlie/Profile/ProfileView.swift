@@ -91,8 +91,13 @@ struct ProfileView: View {
                             Button("Erneut versuchen") { Task { await model.loadProfile() } }.buttonStyle(ChaarlieButton())
                         }
                     }
+                    SubscriptionRow(model: model)
                     Button("Abmelden") { Task { await model.logout() } }.buttonStyle(ChaarlieButton(outline: true))
                         .accessibilityIdentifier("profile.logout")
+                    Button("Konto löschen") { Task { await model.beginAccountDeletion() } }
+                        .chaarlieSystemFont(15, weight: .semibold).foregroundStyle(ChaarlieTheme.coral)
+                        .frame(maxWidth: .infinity, minHeight: 44).contentShape(Rectangle())
+                        .buttonStyle(.plain).accessibilityIdentifier("profile.delete")
                 }.padding(24)
                     .animation(ChaarlieTheme.Motion.state, value: model.profileSavedMessage)
                     .animation(ChaarlieTheme.Motion.state, value: model.profile == nil)

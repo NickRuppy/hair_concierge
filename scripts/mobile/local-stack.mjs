@@ -10,6 +10,7 @@ import {
 import { resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import { spawnSync } from "node:child_process"
+import { localReplayMigrations } from "./local-migrations.mjs"
 
 const root = resolve(fileURLToPath(new URL("../..", import.meta.url)))
 export const stack = resolve(root, "tmp/mobile-stack")
@@ -52,80 +53,9 @@ if (command === "prepare") {
     resolve(root, "scripts/mobile/mobile-login.html"),
     resolve(stack, "supabase/templates/mobile-login.html"),
   )
-  cpSync(resolve(root, "supabase/migrations"), resolve(stack, "supabase/migrations"), {
-    recursive: true,
-  })
-  cpSync(
-    resolve(root, "scripts/mobile/legacy-local-baseline.sql"),
-    resolve(stack, "supabase/migrations/00002_local_legacy_baseline.sql"),
-  )
-  cpSync(
-    resolve(root, "scripts/mobile/legacy-local-rls.sql"),
-    resolve(stack, "supabase/migrations/00003_local_legacy_rls.sql"),
-  )
-  // Historical data corrections depend on curated rows absent from repository seeds.
-  // Keep their version visible while omitting only reviewed DML in this local stack.
-  for (const file of [
-    "20260609204000_hai_124_product_metadata_corrections.sql",
-    "20260810203501_personal_plan_mask_catalog_identity_corrections.sql",
-    "20260814121000_personal_plan_leave_in_use_case_coverage.sql",
-    "20260817121500_shampoo_coarse_oily_monday_coverage.sql",
-    "20260901090000_k18_molecular_repair_hair_mist_readiness.sql",
-    "20260901160000_personal_plan_stage5_v2_oil_authority_reconciliation.sql",
-  ]) {
-    const sql = readFileSync(resolve(root, "supabase/migrations", file), "utf8")
-    if (/^\s*(CREATE|ALTER|DROP|GRANT|REVOKE)\s/im.test(sql))
-      throw new Error("Excluded historical data migration now contains schema changes: " + file)
-    writeFileSync(
-      resolve(stack, "supabase/migrations", file),
-      "-- Local only: historical catalog DML omitted; absent curated source rows.\nSELECT 1;\n",
-    )
-  }
-  const closure = "20260813085151_personal_plan_catalog_closure.sql"
-  const closureSQL = readFileSync(resolve(root, "supabase/migrations", closure), "utf8")
-  const retirement = /DO \$retire_no0\$[\s\S]*?\$retire_no0\$;/
-  const retirementSQL = closureSQL.match(retirement)?.[0]
-  if (!retirementSQL || /^\s*(CREATE|ALTER|DROP|GRANT|REVOKE)\s/im.test(retirementSQL))
-    throw new Error("Historical catalog retirement block changed")
-  writeFileSync(
-    resolve(stack, "supabase/migrations", closure),
-    closureSQL.replace(
-      retirement,
-      "-- Local only: omitted absent OLAPLEX retirement DML; ALL schema/functions below retained.",
-    ),
-  )
-  const reconciliation =
-    "20260814191843_20260814122000_personal_plan_stage5_v2_authority_reconciliation.sql"
-  let reconciliationSQL = readFileSync(resolve(root, "supabase/migrations", reconciliation), "utf8")
-  for (const marker of ["reconcile_reviewed_v1_authority", "reconcile_reviewed_family_authority"]) {
-    const block = new RegExp("DO \\$" + marker + "\\$[\\s\\S]*?\\$" + marker + "\\$;")
-    if (!block.test(reconciliationSQL)) throw new Error("Historical reconciliation block changed")
-    reconciliationSQL = reconciliationSQL.replace(
-      block,
-      "-- Local only: absent reviewed catalog data omitted.",
-    )
-  }
-  // Keep the third block: it changes the executor function definition.
-  writeFileSync(resolve(stack, "supabase/migrations", reconciliation), reconciliationSQL)
-  const convergence = "20260816180000_catalog_authority_retire_legacy_sync_and_validate.sql"
-  const convergenceSQL = readFileSync(resolve(root, "supabase/migrations", convergence), "utf8")
-  const neqi = /DO \$neqi\$[\s\S]*?\$neqi\$;/
-  if (!neqi.test(convergenceSQL)) throw new Error("Historical Neqi data block changed")
-  writeFileSync(
-    resolve(stack, "supabase/migrations", convergence),
-    convergenceSQL.replace(
-      neqi,
-      "-- Local only: absent Neqi projection DML omitted; schema validations retained.",
-    ),
-  )
-  const oil = "20260903083832_simplify_oil_heat_capability.sql"
-  let oilSQL = readFileSync(resolve(root, "supabase/migrations", oil), "utf8")
-  for (const marker of ["preflight", "postflight"]) {
-    const block = new RegExp("DO \\$" + marker + "\\$[\\s\\S]*?\\$" + marker + "\\$;")
-    if (!block.test(oilSQL)) throw new Error("Historical Oil data guard changed")
-    oilSQL = oilSQL.replace(block, "-- Local only: absent exact Oil catalog cohort check omitted.")
-  }
-  writeFileSync(resolve(stack, "supabase/migrations", oil), oilSQL)
+  mkdirSync(resolve(stack, "supabase/migrations"), { recursive: true })
+  for (const { file, sql } of localReplayMigrations(root))
+    writeFileSync(resolve(stack, "supabase/migrations", file), sql)
   console.log("Prepared isolated mobile stack with current migrations; no database started.")
 } else if (command === "start") {
   if (

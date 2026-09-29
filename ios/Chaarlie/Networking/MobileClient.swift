@@ -16,6 +16,24 @@ struct Bootstrap: Codable, Sendable {
     let profileRevision: String?
     let contextRevision: String?
     var researchDeliveryEnabled: Bool? = nil
+    /// Absent on servers that predate the paywall; see `MobileAccess.open`.
+    var access: MobileAccess? = nil
+}
+/// Scanner access decided by the server (App Store subscription or web access).
+struct MobileAccess: Codable, Equatable, Sendable {
+    enum Status: String, Codable, Sendable { case active, inactive = "none" }
+    struct AppStore: Codable, Equatable, Sendable {
+        let productId: String
+        let expiresAt: String
+        let willRenew: Bool
+        let inBillingRetry: Bool
+    }
+    let status: Status
+    /// `app_store`, `web` or `open`; kept as text so a new source never breaks bootstrap.
+    let source: String?
+    let appStore: AppStore?
+    /// Servers without the `access` field grant open scanner access.
+    static let open = MobileAccess(status: .active, source: "open", appStore: nil)
 }
 struct HairProfile: Codable, Sendable {
     struct Answer: Codable, Identifiable, Sendable {
@@ -29,7 +47,19 @@ struct HairProfile: Codable, Sendable {
 
 enum MobileError: Error, Equatable {
     case configuration, unauthorized, invalidResponse, unavailable, stale, invalidCode, invalidBarcode, profileConflict, invalidProfile, profileRequired, researchNotReady, researchNotFound
+    /// HTTP 402 `subscription_required` from a gated scanner route.
+    case subscriptionRequired
+    /// The App Store subscription belongs to another account; carries the caller's access.
+    case appStoreOwnedByOtherAccount(MobileAccess?)
+    /// Apple's signed transaction cannot unlock anything; it is finished, never retried.
+    case appStoreInvalidTransaction
+    /// HTTP 403 `admin_account`: this account cannot be deleted in the app.
+    case accountDeletionRefused
+    /// HTTP 404 from the deletion status lookup: the server never saw this request.
+    case accountDeletionUnknown
 }
+/// Whether the confirmation must disclose the immediate web cancellation (A1).
+struct AccountDeletionPreflight: Decodable, Sendable { let webSubscription: Bool }
 
 enum MobileRuntime: Sendable, Equatable {
     case local
@@ -283,6 +313,28 @@ actor MobileClient {
               response.kind == .pending_submission ? response.submissionId != nil : response.productId != nil else { throw MobileError.invalidResponse }
         return response
     }
+    func postAppStoreTransactions(_ signedTransactions: [String], signedRenewalInfos: [String] = []) async throws -> MobileAccess {
+        var body = ["signedTransactions": signedTransactions]
+        // Optional on the server; omitted when StoreKit had no renewal info.
+        if !signedRenewalInfos.isEmpty { body["signedRenewalInfos"] = signedRenewalInfos }
+        let response: AppStoreTransactionsResponse = try await authorized("app-store/transactions", method: "POST",
+            encodedBody: JSONEncoder().encode(body))
+        return response.access
+    }
+    func accountDeletionPreflight() async throws -> AccountDeletionPreflight {
+        try await authorized("account/delete/preflight")
+    }
+    /// The same requestId replays safely on the server; a retry never starts a second deletion.
+    func deleteAccount(requestId: UUID) async throws {
+        let response: AccountDeletionResponse = try await authorized("account/delete", method: "POST",
+            encodedBody: JSONEncoder().encode(["requestId": requestId.uuidString.lowercased(), "confirm": "delete"]))
+        guard response.status == "deleted" else { throw MobileError.invalidResponse }
+    }
+    /// Unauthenticated on purpose: after a lost response the account, and so the session, may be gone.
+    func accountDeletionIsComplete(requestId: UUID) async throws -> Bool {
+        let response: AccountDeletionStatusResponse = try await decode(raw("account/delete/\(requestId.uuidString.lowercased())"))
+        return response.state == "data_deleted" || response.state == "external_cleanup_done"
+    }
     private func authorized<T: Decodable>(_ path: String, method: String = "GET", encodedBody: Data? = nil,
                                           query: [URLQueryItem] = []) async throws -> T {
         let expected = epoch
@@ -353,6 +405,23 @@ actor MobileClient {
         let (data, response) = try await operation.value
         guard (200..<300).contains(response.statusCode) else {
             if response.statusCode == 401 { throw MobileError.unauthorized }
+            let errorBody = try? JSONDecoder().decode(MobileErrorBody.self, from: data)
+            if response.statusCode == 402, errorBody?.error == "subscription_required" { throw MobileError.subscriptionRequired }
+            if path == "app-store/transactions" {
+                if response.statusCode == 409, errorBody?.error == "owned_by_other_account" {
+                    throw MobileError.appStoreOwnedByOtherAccount(errorBody?.access)
+                }
+                // 400 is Apple verification failure, 409 an environment/identity refusal.
+                if [400, 409].contains(response.statusCode), errorBody?.error == "invalid_transaction" {
+                    throw MobileError.appStoreInvalidTransaction
+                }
+            }
+            if path == "account/delete", response.statusCode == 403, errorBody?.error == "admin_account" {
+                throw MobileError.accountDeletionRefused
+            }
+            if path.hasPrefix("account/delete/"), path != "account/delete/preflight", response.statusCode == 404 {
+                throw MobileError.accountDeletionUnknown
+            }
             if path.hasPrefix("scan/research-result/") {
                 if response.statusCode == 409 { throw MobileError.researchNotReady }
                 if response.statusCode == 404 { throw MobileError.researchNotFound }
@@ -380,3 +449,10 @@ actor MobileClient {
 }
 
 private struct ProfileEditErrorBody: Decodable { let error: String }
+private struct MobileErrorBody: Decodable {
+    let error: String
+    let access: MobileAccess?
+}
+private struct AppStoreTransactionsResponse: Decodable { let access: MobileAccess }
+private struct AccountDeletionResponse: Decodable { let status: String }
+private struct AccountDeletionStatusResponse: Decodable { let state: String }

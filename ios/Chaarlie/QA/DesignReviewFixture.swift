@@ -46,12 +46,20 @@ enum DesignReviewScenario: String, Sendable {
     case recoveryMissing = "recovery-missing"
     case profileCompletion = "profile-completion"
     case recoveryUnavailable = "recovery-unavailable"
+    case paywall
+    case paywallPending = "paywall-pending"
+    case paywallRetry = "paywall-retry"
+    case paywallMessage = "paywall-message"
+    case profileAbo = "profile-abo"
+    case deleteNotice = "delete-notice"
+    case deleteConfirm = "delete-confirm"
 
     static var current: Self? {
         guard ProcessInfo.processInfo.arguments.contains("--ui-design-review"),
               let value = ProcessInfo.processInfo.environment["CHAARLIE_DESIGN_SCENARIO"] else { return nil }
         return Self(rawValue: value)
     }
+    var isPaywall: Bool { [.paywall, .paywallPending, .paywallRetry, .paywallMessage].contains(self) }
     var signedOut: Bool {
         switch self {
         case .login, .loginLongEmail, .code, .codeError, .loginLoading: true
@@ -70,7 +78,8 @@ struct DesignReviewFixture: View {
         // Constant loopback URL satisfies the normal configuration contract. The injected
         // transport below handles every request in memory and cannot open a connection.
         let configuration = try! MobileConfiguration(baseURL: URL(string: "http://127.0.0.1:3218/api/mobile/v1")!)
-        let session = scenario.signedOut || scenario == .profileCompletion ? nil : DesignReviewData.session
+        let session = scenario.signedOut || scenario == .profileCompletion ? nil
+            : scenario.isPaywall ? DesignReviewData.paywallSession : DesignReviewData.session
         let attempt = [.code, .codeError].contains(scenario) ? DesignReviewData.attempt : nil
         let client = MobileClient(configuration: configuration,
                                   transport: DesignReviewTransport(scenario: scenario, onboardingAnswers: onboardingAnswers),
@@ -100,7 +109,8 @@ struct DesignReviewFixture: View {
         case .research, .researchPending, .researchError, .researchIdentified, .researchIdentifiedPending,
              .researchIdentifiedError, .researchStatusLoading, .researchNoSuggestion, .researchUnsaved:
             model.selectedTab = .search
-        case .profile, .profileLoading, .profileError, .profileEdit, .profileEditError, .profileEditConflict, .profileEditLoading, .profileEditLoadError, .profileEditSaving, .profileEditMissingLength:
+        case .profile, .profileLoading, .profileError, .profileEdit, .profileEditError, .profileEditConflict, .profileEditLoading, .profileEditLoadError, .profileEditSaving, .profileEditMissingLength, .profileAbo,
+             .deleteNotice, .deleteConfirm:
             model.selectedTab = .profile
         default: break
         }
@@ -134,6 +144,15 @@ struct DesignReviewFixture: View {
                 case .loginLoading: await model.startLogin()
                 case .scanLoading: await model.resolve(.barcode("1234567890123"))
                 case .searchLoading: await model.search()
+                case .deleteNotice, .deleteConfirm: await model.beginAccountDeletion()
+                case .paywallPending, .paywallRetry, .paywallMessage:
+                    // After the paywall's launch retry, which clears a pending state it cannot confirm.
+                    try? await Task.sleep(for: .seconds(1))
+                    switch scenario {
+                    case .paywallPending: model.installPaywallStatusFixture(.pending)
+                    case .paywallRetry: model.installPaywallStatusFixture(.unlockFailed)
+                    default: model.installPaywallStatusFixture(.idle, message: "Dieses Abo gehört zu einem anderen Chaarlie-Konto.")
+                    }
                 case .research, .researchPending, .researchError, .researchIdentified, .researchIdentifiedPending,
                      .researchIdentifiedError, .researchStatusLoading, .researchNoSuggestion, .researchUnsaved:
                     await model.resolve(.barcode("4006381333931"))
@@ -148,6 +167,9 @@ private enum DesignReviewData {
     static let attempt = AuthAttempt(attemptId: "11111111-2222-4333-8444-555555555555", codeLength: 8)
     static let session = MobileSession(accessToken: "synthetic-design-access", refreshToken: "synthetic-design-refresh",
                                        expiresAt: 4_102_444_800, userId: "synthetic-design-user")
+    /// Purchases need a UUID account token; this one belongs to no real account.
+    static let paywallSession = MobileSession(accessToken: "synthetic-design-access", refreshToken: "synthetic-design-refresh",
+                                              expiresAt: 4_102_444_800, userId: "00000000-0000-4000-8000-00000000d51e")
     static func editSnapshot(missingLength: Bool = false) throws -> ProfileEditSnapshot {
         guard let fixture = Bundle.main.url(forResource: "profile-edit-v1", withExtension: "json") else { throw MobileError.invalidResponse }
         let snapshot = try JSONDecoder().decode(ProfileEditSnapshot.self, from: Data(contentsOf: fixture))
@@ -230,7 +252,15 @@ actor DesignReviewTransport: HTTPTransport {
         let data: Data
         if path.hasSuffix("/bootstrap") {
             let status: Bootstrap.Status = scenario == .recoveryMissing ? .profile_required : scenario == .recoveryUnavailable ? .temporarily_unavailable : .ready
-            data = try JSONEncoder().encode(Bootstrap(status: status, profileRevision: "synthetic-design-profile", contextRevision: "synthetic-design-context"))
+            var bootstrap = Bootstrap(status: status, profileRevision: "synthetic-design-profile", contextRevision: "synthetic-design-context")
+            if scenario.isPaywall { bootstrap.access = MobileAccess(status: .inactive, source: nil, appStore: nil) }
+            if scenario == .deleteConfirm { bootstrap.access = MobileAccess(status: .active, source: "web", appStore: nil) }
+            if scenario == .profileAbo || scenario == .deleteNotice {
+                bootstrap.access = MobileAccess(status: .active, source: "app_store", appStore: .init(
+                    productId: "de.chaarlie.scanner.yearly", expiresAt: "2027-09-27T10:00:00.000Z",
+                    willRenew: true, inBillingRetry: false))
+            }
+            data = try JSONEncoder().encode(bootstrap)
         } else if path.hasSuffix("/profile/complete") {
             if request.httpMethod == "POST" {
                 data = try JSONEncoder().encode(RegistrationCompletion(session: DesignReviewData.session,
@@ -324,6 +354,8 @@ actor DesignReviewTransport: HTTPTransport {
             if [.researchError, .researchIdentifiedError].contains(scenario) { throw MobileError.unavailable }
             submittedResearch = true
             data = Data("{\"contractVersion\":1,\"kind\":\"pending_submission\",\"submissionId\":\"fixture-submission\",\"headline\":\"In Prüfung\",\"historySaved\":\(scenario != .researchUnsaved)}".utf8)
+        } else if path.hasSuffix("/account/delete/preflight") {
+            data = Data(#"{"webSubscription":\#(scenario == .deleteConfirm)}"#.utf8)
         } else if path.hasSuffix("/auth/start") {
             data = try JSONEncoder().encode(DesignReviewData.attempt)
         } else if path.hasSuffix("/auth/logout") {

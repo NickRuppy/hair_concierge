@@ -13,6 +13,35 @@ export { eligibleAccount, openCredential, sealCredential }
 export type { CredentialClaims, PilotConfig }
 export type MobilePolicy = { mode: "local" } | { mode: "pilot"; config: PilotConfig }
 
+/**
+ * The complete local-development predicate: mobile API on, local auth, no pilot, a
+ * loopback Supabase and the local callback. Anything that trusts unsigned local data
+ * must use this, never MOBILE_AUTH_MODE alone.
+ */
+export function localMobileModeEnabled(env: Record<string, string | undefined> = process.env) {
+  if (
+    env.MOBILE_API_ENABLED !== "true" ||
+    env.MOBILE_AUTH_MODE !== "local" ||
+    env.MOBILE_PILOT_ENABLED === "true"
+  )
+    return false
+  try {
+    const target = new URL(env.NEXT_PUBLIC_SUPABASE_URL ?? "")
+    return (
+      target.protocol === "http:" &&
+      ["127.0.0.1", "localhost", "[::1]"].includes(target.hostname) &&
+      !target.username &&
+      !target.password &&
+      target.pathname === "/" &&
+      !target.search &&
+      !target.hash &&
+      env.MOBILE_AUTH_CALLBACK_URL === "chaarlie-local://auth"
+    )
+  } catch {
+    return false
+  }
+}
+
 /** Never infer a raw-token fallback from a missing or invalid pilot setting. */
 export function mobilePolicy(): MobilePolicy {
   if (process.env.MOBILE_API_ENABLED !== "true") throw new MobileError("not_found", 404)
@@ -23,24 +52,7 @@ export function mobilePolicy(): MobilePolicy {
       throw new MobileError("not_found", 404)
     }
   }
-  if (process.env.MOBILE_AUTH_MODE === "local" && process.env.MOBILE_PILOT_ENABLED !== "true") {
-    try {
-      const target = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "")
-      if (
-        target.protocol === "http:" &&
-        ["127.0.0.1", "localhost", "[::1]"].includes(target.hostname) &&
-        !target.username &&
-        !target.password &&
-        target.pathname === "/" &&
-        !target.search &&
-        !target.hash &&
-        process.env.MOBILE_AUTH_CALLBACK_URL === "chaarlie-local://auth"
-      )
-        return { mode: "local" }
-    } catch {
-      /* Fail closed below. */
-    }
-  }
+  if (localMobileModeEnabled(process.env)) return { mode: "local" }
   throw new MobileError("not_found", 404)
 }
 

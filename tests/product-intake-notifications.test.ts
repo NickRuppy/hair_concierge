@@ -199,6 +199,16 @@ test("approved review notification skips without required category specs", async
   assert.ok(!supabase.calls.includes("upsert:conversation_states"))
 })
 
+test("a kept submission of a deleted account skips the notification without claiming", async () => {
+  const supabase = createNotificationSupabaseFake({})
+  const result = await sendProductIntakeReviewNotification(supabase as never, {
+    ...notificationSubmission(),
+    user_id: null as never,
+  })
+  assert.deepEqual(result, { sent: false, reason: "owner_deleted" })
+  assert.deepEqual(supabase.calls, [])
+})
+
 test("review notification claims before inserting assistant message", async () => {
   const supabase = createNotificationSupabaseFake({ claimSucceeds: false })
 

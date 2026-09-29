@@ -62,7 +62,7 @@ final class ResearchDeliveryTests: XCTestCase {
     func testSignedOutDestinationSurvivesLoginBootstrap() async throws {
         let transport = ControlledTransport()
         let client = try makeClient(transport)
-        let model = AppModel(client: client)
+        let model = AppModel(client: client, store: FakeStoreService())
         await model.receive(link)
         XCTAssertEqual(model.admission, .signedOut)
         XCTAssertEqual(model.pendingResearchDestination, identifier)
@@ -202,7 +202,7 @@ final class ResearchDeliveryTests: XCTestCase {
         let coordinator = ResearchPushCoordinator(system: system, installationId: path)
         let transport = ControlledTransport(); let client = try makeClient(transport)
         try await client.install(session())
-        let model = AppModel(client: client, push: coordinator)
+        let model = AppModel(client: client, push: coordinator, store: FakeStoreService())
         let restore = Task { await model.restore() }
         try await waitFor("bootstrap", transport)
         await transport.complete("bootstrap", json: #"{"status":"ready","researchDeliveryEnabled":true}"#)
@@ -271,6 +271,9 @@ final class ResearchDeliveryTests: XCTestCase {
         let response = try JSONDecoder().decode(RegistrationCompletion.self,
             from: Data(#"{"bootstrap":{"status":"ready"}}"#.utf8))
         let finish = Task { await model.finishMissingProfile(response) }
+        // Completion carries no access decision; the authoritative bootstrap routes it.
+        try await waitFor("bootstrap", transport)
+        await transport.complete("bootstrap", json: #"{"status":"ready"}"#)
         try await waitFor(path, transport)
         await transport.complete(path, json: try fixture())
         let completed = await finish.value
@@ -283,7 +286,7 @@ final class ResearchDeliveryTests: XCTestCase {
         let coordinator = ResearchPushCoordinator(system: system, installationId: path)
         let transport = ControlledTransport(); let client = try makeClient(transport)
         try await client.install(session())
-        let model = AppModel(client: client, push: coordinator)
+        let model = AppModel(client: client, push: coordinator, store: FakeStoreService())
         await coordinator.activate(client: client, enabled: true)
         let task = Task { await model.logout() }
         try await waitFor("registration", transport)
@@ -313,7 +316,7 @@ final class ResearchDeliveryTests: XCTestCase {
     private func makeModel() async throws -> (AppModel, ControlledTransport) {
         let transport = ControlledTransport(); let client = try makeClient(transport)
         try await client.install(session())
-        return (AppModel(client: client), transport)
+        return (AppModel(client: client, store: FakeStoreService()), transport)
     }
     private func waitFor(_ path: String, _ transport: ControlledTransport) async throws {
         for _ in 0..<400 {

@@ -3,6 +3,7 @@ import { createHash } from "node:crypto"
 import { createClient, type Session, type SupabaseClient } from "@supabase/supabase-js"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { checkRateLimitWithRpc } from "@/lib/rate-limit"
+import { readBoundedJsonBody } from "@/lib/bounded-json-body"
 import type { MobileSession } from "./contracts"
 import type { MobileAuthDependencies } from "./auth-service"
 
@@ -188,7 +189,13 @@ export async function requireMobileUser(request: Request) {
   const envelope = await mobileCredential(match[1], "access", policy)
   const token = envelope?.credential ?? match[1]
   const identity = await verifiedIdentity(token, policy, envelope)
-  return { userId: identity.user.id, token, client: createAdminClient() }
+  if (!identity.user.email) throw new MobileError("unauthorized", 401)
+  return {
+    userId: identity.user.id,
+    token,
+    client: createAdminClient(),
+    email: identity.user.email.toLowerCase(),
+  }
 }
 
 export async function mobileRateLimit(
@@ -314,35 +321,14 @@ export async function mobileRoute(run: () => Promise<Response>): Promise<Respons
 export async function mobileBody(request: Request, maxBytes = 12288) {
   if (!Number.isSafeInteger(maxBytes) || maxBytes < 1 || maxBytes > 24576)
     throw new MobileError("invalid_request", 400)
+  return mobileJSONBody(request, maxBytes)
+}
+
+/** mobileBody without the small-body ceiling, for the App Store transaction batch. */
+export async function mobileJSONBody(request: Request, maxBytes: number) {
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json"))
     throw new MobileError("invalid_request", 400)
-  if (Number(request.headers.get("content-length") ?? 0) > maxBytes)
-    throw new MobileError("invalid_request", 400)
-  const reader = request.body?.getReader()
-  if (!reader) throw new MobileError("invalid_request", 400)
-  const chunks: Uint8Array[] = []
-  let length = 0
-  while (true) {
-    const { done, value } = await reader.read()
-    if (done) break
-    length += value.byteLength
-    if (length > maxBytes) {
-      await reader.cancel()
-      throw new MobileError("invalid_request", 400)
-    }
-    chunks.push(value)
-  }
-  const bytes = new Uint8Array(length)
-  let offset = 0
-  for (const chunk of chunks) {
-    bytes.set(chunk, offset)
-    offset += chunk.byteLength
-  }
-  const body = new TextDecoder().decode(bytes)
-  if (body.length > maxBytes) throw new MobileError("invalid_request", 400)
-  try {
-    return JSON.parse(body)
-  } catch {
-    throw new MobileError("invalid_request", 400)
-  }
+  const body = await readBoundedJsonBody(request, maxBytes)
+  if (!body.ok) throw new MobileError("invalid_request", 400)
+  return body.value
 }

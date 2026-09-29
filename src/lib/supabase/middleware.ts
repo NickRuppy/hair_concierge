@@ -65,6 +65,7 @@ const SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP = [
   "/api/billing/trial-reminders/reconcile",
   "/api/billing/public-contract-declaration-receipts/reconcile",
   "/api/customerio/profile-sync/reconcile",
+  "/api/account-deletion/reconcile",
 ]
 const UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP = [
   "/api/checkout/eligibility",

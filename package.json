@@ -188,6 +188,7 @@
     "test:playwright:scanner-refinement": "WAIT_ON_TIMEOUT=180000 CI=true CI_SCANNER_REFINEMENT_LAB_ENABLED=true SCANNER_FUNNEL_REFINEMENT_ENABLED=true SCAN_FUNNEL_ENABLED=true FUNNEL_ATTRIBUTION_ENABLED=true FUNNEL_COOKIE_SIGNING_SECRET=local-scanner-refinement-ci PLAYWRIGHT_BASE_URL=http://127.0.0.1:3228 start-server-and-test 'next dev --webpack --hostname 127.0.0.1 --port 3228' http://127.0.0.1:3228 'playwright test tests/scanner-refinement-entry.spec.ts tests/scanner-refinement-offer.spec.ts --project=chromium --project=webkit-mobile-action'"
   },
   "dependencies": {
+    "@apple/app-store-server-library": "^3.1.0",
     "@customerio/cdp-analytics-browser": "^0.4.16",
     "@langfuse/client": "^5.2.0",
     "@langfuse/openai": "^5.2.0",
@@ -249,6 +250,7 @@
     "dompurify": "3.4.0",
     "fast-xml-parser": "5.7.2",
     "follow-redirects": "1.16.0",
+    "form-data": "4.0.6",
     "postcss": "8.5.10",
     "protobufjs": "7.5.5"
   },

@@ -957,3 +957,75 @@ test("stale subscription deletion does not send Customer.io cancellation for a n
   assert.equal(billing[0].entitlement_status, "canceled")
   assert.equal(deferred.length, 0)
 })
+
+test("kill switch off: a checkout with lead metadata activates as before and never queries anonymized_at", async () => {
+  const { deps, profiles } = stubDeps()
+  const previous = process.env.ACCOUNT_DELETION_ENABLED
+  delete process.env.ACCOUNT_DELETION_ENABLED
+  // The production schema has no anonymized_at column until the migrations are applied.
+  const queries: string[] = []
+  const supabase = new Proxy(deps.supabase, {
+    get(target, key, receiver) {
+      if (key === "from")
+        return (table: string) => {
+          const api = target.from(table)
+          return new Proxy(api, {
+            get(inner, method, innerReceiver) {
+              const value = Reflect.get(inner, method, innerReceiver)
+              if (method !== "select" || typeof value !== "function") return value
+              return (...args: unknown[]) => {
+                queries.push(`${table}:${String(args[0])}`)
+                return value.apply(inner, args)
+              }
+            },
+          })
+        }
+      if (key === "rpc")
+        return (name: string) => {
+          queries.push(`rpc:${name}`)
+          throw new Error("no RPC expected")
+        }
+      return Reflect.get(target, key, receiver)
+    },
+  })
+  try {
+    await handleStripeWebhookEvent(
+      {
+        id: "evt_lead_checkout",
+        type: "checkout.session.completed",
+        created: 1_800_000_000,
+        data: {
+          object: {
+            id: "cs_lead",
+            amount_total: 1499,
+            currency: "eur",
+            status: "complete",
+            payment_status: "paid",
+            customer: "cus_lead",
+            customer_details: { email: "lead-buyer@example.com" },
+            subscription: "sub_123",
+            metadata: { lead_id: "11111111-1111-4111-8111-111111111111" },
+          },
+        },
+      } as any,
+      {
+        defer: () => undefined,
+        getPremiumTierId: async () => "tier_premium",
+        linkQuizToProfile: async () => {},
+        stripe: deps.stripe,
+        supabase,
+      },
+    )
+    const profile = Object.values(profiles).find(
+      (candidate: any) => candidate.email === "lead-buyer@example.com",
+    ) as any
+    assert.equal(profile.subscription_status, "active")
+    assert.deepEqual(
+      queries.filter((query) => /anonymized_at|leads:|trial_enrollments:|^rpc:/.test(query)),
+      [],
+    )
+  } finally {
+    if (previous === undefined) delete process.env.ACCOUNT_DELETION_ENABLED
+    else process.env.ACCOUNT_DELETION_ENABLED = previous
+  }
+})

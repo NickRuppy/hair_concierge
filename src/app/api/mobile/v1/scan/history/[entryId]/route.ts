@@ -5,8 +5,8 @@ import {
   mobileJSON,
   mobileRateLimit,
   mobileRoute,
-  requireMobileUser,
 } from "@/lib/mobile/auth"
+import { requireMobileScannerAccess } from "@/lib/mobile/access"
 import { setMobileHistoryFavorite } from "@/lib/mobile/history-service"
 
 const favoriteBodySchema = z.object({ isFavorite: z.boolean() }).strict()
@@ -16,7 +16,7 @@ export async function PATCH(
   { params }: { params: Promise<{ entryId: string }> },
 ) {
   return mobileRoute(async () => {
-    const { client, userId } = await requireMobileUser(request)
+    const { client, userId } = await requireMobileScannerAccess(request)
     await mobileRateLimit(client, userId, "mobile-history-favorite", 30, 60_000)
     const { entryId } = await params
     if (!z.uuid().safeParse(entryId).success) throw new MobileError("invalid_request", 400)

@@ -600,6 +600,25 @@ test("subscription.deleted flips profile to canceled + Free tier", async () => {
   expect(result.matchedCurrentSubscription).toBe(true)
 })
 
+test("subscription events of a deleted account are no-ops (profile and billing row cascaded)", async () => {
+  const { billing, deps, profiles } = stubDeps()
+  const items = {
+    data: [{ price: { interval: "month", interval_count: 1 }, current_period_end: 1_900_000_000 }],
+  }
+  const deleted = await handleSubscriptionDeleted(
+    { id: "sub_gone", customer: "cus_gone", status: "canceled" } as any,
+    { ...deps, freeTierId: "tier-free" } as any,
+  )
+  const updated = await handleSubscriptionUpdated(
+    { id: "sub_gone", customer: "cus_gone", status: "canceled", items } as any,
+    deps,
+  )
+  expect(deleted.matchedCurrentSubscription).toBe(false)
+  expect(updated.matchedCurrentSubscription).toBe(false)
+  expect(billing).toHaveLength(0)
+  expect(Object.keys(profiles)).toHaveLength(0)
+})
+
 test("subscription.deleted does not downgrade a newer active subscription", async () => {
   const { billing, deps, profiles } = stubDeps()
   profiles["u"] = {

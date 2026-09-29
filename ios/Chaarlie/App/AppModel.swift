@@ -4,11 +4,52 @@ import SwiftUI
 @MainActor
 @Observable
 final class AppModel {
-    enum Admission: Equatable { case signedOut, loading, ready, profileRequired, unavailable }
+    enum Admission: Equatable { case signedOut, loading, ready, profileRequired, unavailable, paywall }
+    enum PurchaseState: Equatable {
+        case idle, pending, unlocking, unlockFailed, restoring
+        var statusText: String? {
+            switch self {
+            case .idle: nil
+            case .pending: "Kauf wird bestätigt …"
+            case .unlocking, .unlockFailed: "Kauf erfolgreich – Freischaltung läuft …"
+            case .restoring: "Abo wird wiederhergestellt …"
+            }
+        }
+    }
     enum Tab: Hashable { case scan, search, history, profile }
+    /// "Konto löschen" (§6). The Apple notice comes first only for a renewing App Store
+    /// subscription; the confirmation waits for the preflight so the D14 line is right.
+    enum AccountDeletionStep: Equatable {
+        case subscriptionNotice, loading, preflightFailed
+        case confirm(webSubscription: Bool)
+        case deleting(webSubscription: Bool)
+        var isDeleting: Bool { if case .deleting = self { true } else { false } }
+    }
     let client: MobileClient
     let push: ResearchPushCoordinator
+    let store: any StoreService
+    private let drafts: any OnboardingDraftPersistence
+    private(set) var accountDeletion: AccountDeletionStep?
+    private(set) var accountDeletionError: String?
+    /// Created once per confirmation and reused for every retry, so the server replays
+    /// the same deletion instead of starting another. Lives only in memory.
+    private(set) var accountDeletionRequestID: UUID?
+    private var accountDeletionOperation = UUID()
+    /// After a lost delete response with a non-final server status: every 3 s, ~60 s total.
+    var accountDeletionPollInterval: Duration = .seconds(3)
+    var accountDeletionPollAttempts = 20
+    /// One-line notice on the signed-out entry screen after a deletion.
+    private(set) var signedOutNotice: String?
+    private(set) var purchaseState: PurchaseState = .idle
+    private(set) var paywallMessage: String?
+    /// The bootstrap's latest access answer. Nil on servers that predate the paywall
+    /// or before the first bootstrap; the Profil "Abo" row hides itself then.
+    private(set) var access: MobileAccess?
+    private var transactionListener: Task<Void, Never>?
+    private var postingTransactionIDs: Set<UInt64> = []
+    private var acknowledgedTransactionIDs: Set<UInt64> = []
     private(set) var researchDeliveryEnabled = false
+    private var researchDeliveryOffered = false
     private(set) var pendingResearchDestination: UUID?
     private(set) var researchDestinationBusy = false
     private(set) var researchDestinationError: String?
@@ -90,9 +131,12 @@ final class AppModel {
     private var resolveFailures: [Tab: (request: ScanRequest, message: String)] = [:]
     private var restorationTask: Task<Void, Never>?
 
-    init(client: MobileClient, push: ResearchPushCoordinator? = nil) {
+    init(client: MobileClient, push: ResearchPushCoordinator? = nil, store: (any StoreService)? = nil,
+         drafts: (any OnboardingDraftPersistence)? = nil) {
         self.client = client
         self.push = push ?? ResearchPushCoordinator()
+        self.store = store ?? LiveStoreService()
+        self.drafts = drafts ?? KeychainOnboardingDraftStore()
     }
     func restore() async {
         if let active = restorationTask { await active.value; return }
@@ -175,8 +219,7 @@ final class AppModel {
                 email = ""
                 code = ""
                 authError = nil
-                admission = .ready
-                await admitResearchDelivery(response.bootstrap)
+                await admitCompleted(response.bootstrap)
                 return true
             }
             guard response.session == nil, response.status == .profile_required, response.completionToken?.isEmpty == false,
@@ -212,12 +255,17 @@ final class AppModel {
             } else if session == nil { return false }
             guard account == generation else { return false }
             resetPersonalState()
-            admission = .ready
-            await admitResearchDelivery(response.bootstrap)
+            await admitCompleted(response.bootstrap)
             return true
         } catch { return false }
     }
 #if DEBUG
+    /// Design review only: renders a paywall status without StoreKit or a server.
+    func installPaywallStatusFixture(_ state: PurchaseState, message: String? = nil) {
+        guard admission == .paywall else { return }
+        purchaseState = state
+        paywallMessage = message
+    }
     func installCompletionFixtureAuthority() {
         guard session == nil else { return }
         completionAuthority = "synthetic-completion-authority"
@@ -277,11 +325,13 @@ final class AppModel {
         do {
             let response = try await client.bootstrap()
             guard account == generation else { return }
+            access = response.access
             switch response.status {
-            case .ready: admission = .ready
+            case .ready: admission = (response.access ?? .open).status == .active ? .ready : .paywall
             case .profile_required: admission = .profileRequired
             case .temporarily_unavailable: admission = .unavailable
             }
+            if admission == .ready || admission == .paywall { startTransactionListener() }
             await admitResearchDelivery(response)
         } catch {
             guard account == generation else { return }
@@ -289,9 +339,21 @@ final class AppModel {
             else { admission = .unavailable }
         }
     }
+    /// Completion responses carry no `access` today; the full bootstrap decides then.
+    private func admitCompleted(_ response: Bootstrap?) async {
+        guard let newAccess = response?.access else { await bootstrap(); return }
+        access = newAccess
+        admission = newAccess.status == .active ? .ready : .paywall
+        startTransactionListener()
+        await admitResearchDelivery(response)
+    }
     private func admitResearchDelivery(_ response: Bootstrap?) async {
+        researchDeliveryOffered = response?.researchDeliveryEnabled == true
+        await activateResearchDelivery()
+    }
+    private func activateResearchDelivery() async {
         let account = generation
-        researchDeliveryEnabled = admission == .ready && response?.researchDeliveryEnabled == true
+        researchDeliveryEnabled = admission == .ready && researchDeliveryOffered
         await push.activate(client: client, enabled: researchDeliveryEnabled)
         guard account == generation else { return }
         if admission == .ready { await openResearchDestination() }
@@ -319,6 +381,7 @@ final class AppModel {
             case .unauthorized:
                 await expired(preservingResearchDestination: destination)
                 return
+            case .subscriptionRequired: requireSubscription()
             case .researchNotReady: researchDestinationError = "Die Einschätzung ist noch nicht verfügbar."
             case .researchNotFound: researchDestinationError = "Dieses Ergebnis gehört nicht zu diesem Konto oder ist nicht mehr verfügbar."
             default: researchDestinationError = "Ergebnis konnte nicht geladen werden. Bitte erneut versuchen."
@@ -457,6 +520,7 @@ final class AppModel {
         } catch {
             guard account == generation, operation == scanOperation else { return }
             if error as? MobileError == .unauthorized { await expired() }
+            else if error as? MobileError == .subscriptionRequired { requireSubscription() }
             else if error as? MobileError == .invalidBarcode { scanError = "Barcode ungültig. Prüfe die 8 oder 13 Ziffern." }
             else { scanError = "Die Verbindung ist gerade nicht verfügbar. Versuche es erneut." }
         }
@@ -478,6 +542,7 @@ final class AppModel {
         } catch {
             guard account == generation, operation == searchOperation else { return }
             if error as? MobileError == .unauthorized { await expired() }
+            else if error as? MobileError == .subscriptionRequired { requireSubscription() }
             else { searchError = "Die Suche ist gerade nicht verfügbar. Bitte versuche es erneut." }
         }
         guard account == generation, operation == searchOperation else { return }
@@ -556,7 +621,8 @@ final class AppModel {
         } catch {
             guard account == generation, operation == historyOperation else { return }
             if error as? MobileError == .unauthorized { await expired(); return }
-            historyError = "Verlauf konnte nicht geladen werden."
+            if error as? MobileError == .subscriptionRequired { requireSubscription() }
+            else { historyError = "Verlauf konnte nicht geladen werden." }
         }
         guard account == generation, operation == historyOperation else { return }
         historyBusy = false
@@ -584,8 +650,11 @@ final class AppModel {
             guard account == generation else { return }
             if error as? MobileError == .unauthorized { await expired(); return }
             updateHistoryFavorite(entry.id, value: original)
-            historyFavoriteRetryId = entry.id
-            historyFavoriteError = "Favorit konnte nicht gespeichert werden. Bitte erneut versuchen."
+            if error as? MobileError == .subscriptionRequired { requireSubscription() }
+            else {
+                historyFavoriteRetryId = entry.id
+                historyFavoriteError = "Favorit konnte nicht gespeichert werden. Bitte erneut versuchen."
+            }
         }
         historyFavoriteBusy.remove(entry.id)
     }
@@ -637,6 +706,11 @@ final class AppModel {
         } catch {
             guard account == generation, operation == historySaveOperation else { return }
             if error as? MobileError == .unauthorized { await expired(); return }
+            if error as? MobileError == .subscriptionRequired {
+                historySaveBusy = false
+                requireSubscription()
+                return
+            }
         }
         guard account == generation, operation == historySaveOperation else { return }
         historySaveBusy = false
@@ -656,8 +730,11 @@ final class AppModel {
         } catch {
             guard account == generation, operation == scanOperation else { return }
             if error as? MobileError == .unauthorized { await expired(); return }
-            researchChecked = false
-            researchError = "Prüfstatus konnte nicht geladen werden. Bitte erneut versuchen."
+            if error as? MobileError == .subscriptionRequired { requireSubscription() }
+            else {
+                researchChecked = false
+                researchError = "Prüfstatus konnte nicht geladen werden. Bitte erneut versuchen."
+            }
         }
         guard account == generation, operation == scanOperation else { return }
         researchChecking = false
@@ -689,7 +766,8 @@ final class AppModel {
         } catch {
             guard account == generation, operation == scanOperation else { return }
             if error as? MobileError == .unauthorized { await expired(); return }
-            researchError = "Einreichung noch nicht bestätigt. Bitte erneut versuchen."
+            if error as? MobileError == .subscriptionRequired { requireSubscription() }
+            else { researchError = "Einreichung noch nicht bestätigt. Bitte erneut versuchen." }
         }
         guard account == generation, operation == scanOperation else { return }
         researchBusy = false
@@ -698,14 +776,342 @@ final class AppModel {
         researchBusy = false; researchChecking = false; researchChecked = false
         researchPending = false; researchError = nil; researchRequest = nil
     }
+    // MARK: App Store access
+
+    /// Bound to every purchase as `appAccountToken`. Nil (no installed session) blocks buying.
+    var purchaseAccountToken: UUID? {
+        guard admission == .paywall, let session else { return nil }
+        return UUID(uuidString: session.userId)
+    }
+    /// Any gated 402 or an inactive access answer. Profile and history stay on the server.
+    private func requireSubscription() {
+        guard admission == .ready || admission == .paywall else { return }
+        // A message from a background post while scanning never greets a later paywall visit.
+        if admission == .ready { paywallMessage = nil; purchaseState = .idle }
+        dismissScan()
+        cancelSearch()
+        clearProfileEdit()
+        // Keep a delivered research link; it opens once access returns.
+        researchDestinationOperation = UUID()
+        researchDestinationBusy = false
+        researchDestinationError = nil
+        researchDeliveryEnabled = false
+        admission = .paywall
+        startTransactionListener()
+    }
+    /// Profil's "Abo verwalten" closes Apple's sheet without telling the app what changed;
+    /// this quietly re-asks the server so a cancellation there appears in the row. Never
+    /// drops to `.loading`, so Profil stays visible; only an actual loss of access routes on.
+    func refreshAccountAccess() async {
+        guard admission == .ready else { return }
+        let account = generation
+        do {
+            let response = try await client.bootstrap()
+            guard account == generation, admission == .ready else { return }
+            access = response.access
+            if (response.access ?? .open).status != .active { requireSubscription() }
+        } catch {
+            guard account == generation else { return }
+            if error as? MobileError == .unauthorized { await expired() }
+        }
+    }
+    /// Runs for the installed session: first retries unfinished purchases, then
+    /// follows renewals, Ask to Buy approvals and purchases made elsewhere.
+    func startTransactionListener() {
+        guard transactionListener == nil, session != nil else { return }
+        let account = generation
+        let updates = store.updates()
+        transactionListener = Task { [weak self] in
+            await self?.retryUnfinishedTransactions()
+            for await transaction in updates {
+                guard let self, account == self.generation else { return }
+                await self.postInBackground([transaction])
+            }
+        }
+    }
+    /// Logout (and account deletion) detach StoreKit from the old account.
+    func stopTransactionListener() {
+        transactionListener?.cancel()
+        transactionListener = nil
+        postingTransactionIDs = []
+        acknowledgedTransactionIDs = []
+        purchaseState = .idle
+        paywallMessage = nil
+    }
+    /// Launch, foreground and the explicit retry button.
+    func retryUnfinishedTransactions() async {
+        guard session != nil, admission == .ready || admission == .paywall else { return }
+        let account = generation
+        let transactions = await store.unfinished().filter(belongsToSession)
+        guard account == generation else { return }
+        // A declined Ask to Buy never produces a transaction; do not wait on it forever.
+        if transactions.isEmpty, purchaseState == .pending { purchaseState = .idle }
+        await postInBackground(transactions)
+    }
+    /// A new purchase attempt replaces any earlier pending or message state.
+    func purchaseStarted() {
+        guard admission == .paywall else { return }
+        if purchaseState == .pending { purchaseState = .idle }
+        paywallMessage = nil
+    }
+    func handlePurchase(_ outcome: PurchaseOutcome) async {
+        guard admission == .paywall else { return }
+        paywallMessage = nil
+        switch outcome {
+        case .purchased(let transaction):
+            guard isPostable(transaction) else { return }
+            let account = generation
+            purchaseState = .unlocking
+            guard let result = await post(transaction), account == generation else { return }
+            purchaseState = .idle
+            switch result {
+            case .access(let access) where access.status == .active: await apply(access)
+            case .access, .invalid: paywallMessage = "Der Kauf konnte nicht bestätigt werden. Tippe auf „Wiederherstellen“."
+            case .ownedByOther(let access):
+                paywallMessage = "Dieses Abo gehört zu einem anderen Chaarlie-Konto."
+                if let access { await apply(access) }
+            case .failed: purchaseState = .unlockFailed
+            }
+        case .pending: purchaseState = .pending
+        case .cancelled: break
+        case .failed: paywallMessage = "Der Kauf hat nicht geklappt. Bitte versuche es erneut."
+        }
+    }
+    /// Posts every current entitlement, including another account's, so A3 is explained.
+    func restorePurchases() async {
+        guard admission == .paywall, session != nil, purchaseState != .restoring, purchaseState != .unlocking else { return }
+        let account = generation
+        purchaseState = .restoring
+        paywallMessage = nil
+        do { try await store.sync() } catch {
+            guard account == generation else { return }
+            purchaseState = .idle
+            if !(error is CancellationError) { paywallMessage = "Wiederherstellen hat nicht geklappt. Bitte versuche es erneut." }
+            return
+        }
+        let entitlements = await store.currentEntitlements()
+        guard account == generation else { return }
+        var ownedByOther = false, failed = false
+        for transaction in entitlements where isPostable(transaction, restoring: true) {
+            guard let result = await post(transaction), account == generation else { return }
+            // A background post may have unlocked meanwhile.
+            guard admission == .paywall else { purchaseState = .idle; return }
+            switch result {
+            case .access(let access) where access.status == .active:
+                purchaseState = .idle
+                await apply(access)
+                return
+            case .ownedByOther(let access):
+                ownedByOther = true
+                if let access, access.status == .active { purchaseState = .idle; await apply(access); return }
+            case .failed: failed = true
+            case .access, .invalid: break
+            }
+        }
+        purchaseState = .idle
+        paywallMessage = ownedByOther ? "Dieses Abo gehört zu einem anderen Chaarlie-Konto."
+            : failed ? "Wiederherstellen hat nicht geklappt. Bitte versuche es erneut." : "Kein aktives Abo gefunden."
+    }
+    /// Renewals and relaunch retries only for this account's purchases. Another account's
+    /// transaction stays unfinished for its owner's next session. Never touches a running restore.
+    private func postInBackground(_ transactions: [StoreTransaction]) async {
+        let account = generation
+        for transaction in transactions where belongsToSession(transaction) && isPostable(transaction) {
+            let showsProgress = admission == .paywall && purchaseState != .restoring
+            if showsProgress { purchaseState = .unlocking }
+            guard let result = await post(transaction), account == generation else { return }
+            if showsProgress, purchaseState == .unlocking { purchaseState = result == .failed ? .unlockFailed : .idle }
+            switch result {
+            case .access(let access): await apply(access)
+            case .ownedByOther(let access):
+                if admission == .paywall { paywallMessage = "Dieses Abo gehört zu einem anderen Chaarlie-Konto." }
+                if let access { await apply(access) }
+            case .invalid, .failed: break
+            }
+        }
+    }
+    private enum PostResult: Equatable { case access(MobileAccess), ownedByOther(MobileAccess?), invalid, failed }
+    private func belongsToSession(_ transaction: StoreTransaction) -> Bool {
+        guard let token = transaction.appAccountToken else { return true }
+        return session.flatMap { UUID(uuidString: $0.userId) } == token
+    }
+    private func isPostable(_ transaction: StoreTransaction, restoring: Bool = false) -> Bool {
+        !postingTransactionIDs.contains(transaction.id) && (restoring || !acknowledgedTransactionIDs.contains(transaction.id))
+    }
+    /// Exactly one transaction per request: the server verifies a whole batch before writing,
+    /// so one invalid JWS must never finish a valid one it did not store. Finishes only after
+    /// the server's verdict (200 or 409/400); anything else leaves it for StoreKit to redeliver.
+    /// The subscription's signed renewal info rides along, so willRenew is right before
+    /// Apple's webhook arrives; a rejected batch is re-posted without it, so renewal info can
+    /// never get a purchase finished unrecorded.
+    /// Nil when the account changed or the session expired.
+    private func post(_ transaction: StoreTransaction) async -> PostResult? {
+        guard session != nil else { return nil }
+        let account = generation
+        postingTransactionIDs.insert(transaction.id)
+        let renewalInfos = await store.signedRenewalInfo(for: transaction).map { [$0] } ?? []
+        guard account == generation else { return nil }
+        let signed = [transaction.signedTransaction]
+        let result: PostResult
+        do {
+            do { result = .access(try await client.postAppStoreTransactions(signed, signedRenewalInfos: renewalInfos)) }
+            catch MobileError.appStoreInvalidTransaction where !renewalInfos.isEmpty && account == generation {
+                result = .access(try await client.postAppStoreTransactions(signed))
+            }
+        }
+        catch MobileError.appStoreOwnedByOtherAccount(let access) { result = .ownedByOther(access) }
+        catch MobileError.appStoreInvalidTransaction {
+            // The retry-without-renewal-info guard above did not fire because the account
+            // changed mid-flight (logout/session rotation between the first request and its
+            // 400). A renewal-caused 400 is not proof the transaction itself is invalid, so
+            // finishing it here would drop a valid purchase unrecorded. Leave it unfinished
+            // for the next Restore or renewal instead.
+            if !renewalInfos.isEmpty && account != generation { return nil }
+            result = .invalid
+        }
+        catch {
+            guard account == generation else { return nil }
+            postingTransactionIDs.remove(transaction.id)
+            if error as? MobileError == .unauthorized { await expired(); return nil }
+            return .failed
+        }
+        await store.finish(transaction)
+        guard account == generation else { return nil }
+        postingTransactionIDs.remove(transaction.id)
+        acknowledgedTransactionIDs.insert(transaction.id)
+        return result
+    }
+    private func apply(_ access: MobileAccess) async {
+        guard admission == .ready || admission == .paywall else { return }
+        self.access = access
+        if access.status == .active {
+            guard admission == .paywall else { return }
+            paywallMessage = nil
+            purchaseState = .idle
+            selectedTab = .scan
+            admission = .ready
+            await activateResearchDelivery()
+        } else { requireSubscription() }
+    }
+    // MARK: Account deletion
+
+    func beginAccountDeletion() async {
+        guard session != nil, admission == .ready || admission == .paywall, accountDeletion == nil else { return }
+        accountDeletionError = nil
+        // Deleting the account never cancels Apple billing (Guideline 5.1.1(v)).
+        if access?.appStore?.willRenew == true { accountDeletion = .subscriptionNotice; return }
+        // The server may not know the renewal status yet (Apple's webhook lags a fresh
+        // purchase), so StoreKit on this device is asked too; either one shows the notice.
+        let account = generation, operation = UUID()
+        accountDeletionOperation = operation
+        accountDeletion = .loading
+        let subscriptions = await store.activeSubscriptions()
+        let renewing = subscriptions.contains { $0.renews(for: session.flatMap { UUID(uuidString: $0.userId) }) }
+        guard account == generation, operation == accountDeletionOperation, accountDeletion == .loading else { return }
+        accountDeletion = nil
+        if renewing { accountDeletion = .subscriptionNotice }
+        else { await continueAccountDeletion() }
+    }
+    /// "Trotzdem fortfahren", the first step without an Apple subscription, and preflight retry.
+    func continueAccountDeletion() async {
+        switch accountDeletion {
+        case nil, .subscriptionNotice?, .preflightFailed?: break
+        default: return
+        }
+        guard session != nil else { return }
+        let account = generation, operation = UUID()
+        accountDeletionOperation = operation
+        accountDeletion = .loading
+        accountDeletionError = nil
+        do {
+            let preflight = try await client.accountDeletionPreflight()
+            guard account == generation, operation == accountDeletionOperation else { return }
+            accountDeletionRequestID = accountDeletionRequestID ?? UUID()
+            accountDeletion = .confirm(webSubscription: preflight.webSubscription)
+        } catch {
+            guard account == generation, operation == accountDeletionOperation else { return }
+            if error as? MobileError == .unauthorized { await expired(); return }
+            // Never confirm without knowing whether a web subscription ends (D14).
+            accountDeletion = .preflightFailed
+            accountDeletionError = "Das hat nicht geklappt. Bitte versuche es erneut."
+        }
+    }
+    func cancelAccountDeletion() {
+        guard let step = accountDeletion, !step.isDeleting else { return }
+        accountDeletionOperation = UUID()
+        accountDeletion = nil
+        accountDeletionError = nil
+    }
+    func confirmAccountDeletion() async {
+        guard case .confirm(let webSubscription)? = accountDeletion, let requestID = accountDeletionRequestID else { return }
+        let account = generation, operation = UUID()
+        accountDeletionOperation = operation
+        accountDeletion = .deleting(webSubscription: webSubscription)
+        accountDeletionError = nil
+        let failure: Error?
+        do {
+            try await client.deleteAccount(requestId: requestID)
+            failure = nil
+        } catch { failure = error }
+        guard account == generation, operation == accountDeletionOperation else { return }
+        guard let failure else { await completeAccountDeletion(); return }
+        if failure as? MobileError == .accountDeletionRefused {
+            accountDeletion = .confirm(webSubscription: webSubscription)
+            accountDeletionError = "Dieses Konto kann nicht in der App gelöscht werden."
+            return
+        }
+        // The response may have been lost after the server deleted the account; a retry
+        // then answers 401 because the account is gone. Ask the unauthenticated status.
+        var completed = false, inProgress = false
+        do {
+            completed = try await client.accountDeletionIsComplete(requestId: requestID)
+            inProgress = !completed
+        } catch {}
+        guard account == generation, operation == accountDeletionOperation else { return }
+        // Only a lost response (no HTTP answer) can mean the server is still deleting:
+        // follow a non-final status for a while before calling it a failure.
+        if !completed, inProgress, !(failure is MobileError) {
+            for _ in 0..<accountDeletionPollAttempts {
+                try? await Task.sleep(for: accountDeletionPollInterval)
+                guard account == generation, operation == accountDeletionOperation else { return }
+                do { completed = try await client.accountDeletionIsComplete(requestId: requestID) }
+                catch { break }
+                guard account == generation, operation == accountDeletionOperation else { return }
+                if completed { break }
+            }
+        }
+        if completed { await completeAccountDeletion(); return }
+        // A refused session with no completed deletion is an expired login, whatever the status.
+        if failure as? MobileError == .unauthorized { await expired(); return }
+        accountDeletion = .confirm(webSubscription: webSubscription)
+        accountDeletionError = "Löschen hat nicht geklappt. Bitte versuche es erneut."
+    }
+    /// The account is gone on the server: wipe everything local without contacting it again.
+    private func completeAccountDeletion() async {
+        // Before the signed-out screen appears, so it can never reload the old draft.
+        try? drafts.save(nil)
+        URLCache.shared.removeAllCachedResponses()
+        endSession()
+        await client.clear()
+        signedOutNotice = "Dein Konto wurde gelöscht."
+    }
+    func dismissSignedOutNotice() { signedOutNotice = nil }
+
     func logout(preservingResearchDestination destination: UUID? = nil) async {
         let pushInstallationId = push.installationToRevoke
+        endSession(preservingResearchDestination: destination)
+        await client.logout(pushInstallationId: pushInstallationId)
+    }
+    /// Local sign-out: new generation, StoreKit detached, installation ID rotated. Never waits on the network.
+    private func endSession(preservingResearchDestination destination: UUID? = nil) {
         generation = UUID()
         authOperation = UUID()
         completionAuthority = nil
         dismissResearchDestination()
         pendingResearchDestination = destination
         researchDeliveryEnabled = false
+        researchDeliveryOffered = false
+        stopTransactionListener()
         push.endSession()
         resetPersonalState()
         session = nil
@@ -716,7 +1122,6 @@ final class AppModel {
         authError = nil
         pendingAccountLink = nil
         admission = .signedOut
-        await client.logout(pushInstallationId: pushInstallationId)
     }
     private func expired(preservingResearchDestination destination: UUID? = nil) async {
         await logout(preservingResearchDestination: destination)
@@ -724,6 +1129,10 @@ final class AppModel {
     }
     private func resetPersonalState() {
         completionAuthority = nil
+        access = nil
+        accountDeletionOperation = UUID()
+        accountDeletion = nil; accountDeletionError = nil; accountDeletionRequestID = nil
+        signedOutNotice = nil
         clearProfileEdit()
         profileSavedMessage = nil
         dismissScan()

@@ -17,6 +17,16 @@ import {
   recordBillingAnalyticsEvent,
 } from "@/lib/billing/analytics-outbox"
 import { applyPlanChangeAtRenewal } from "@/lib/billing/plan-change"
+import { accountDeletionEnabled } from "@/lib/account-deletion/enabled"
+import {
+  recordPostDeletionRefund,
+  webRefundKind,
+  type WebRefundKind,
+} from "@/lib/account-deletion/post-deletion-refund"
+import {
+  reportDeletedAccountSubscriptionCancelled,
+  reportPostDeletionRefundNotRecorded,
+} from "@/lib/observability/account-deletion"
 import { mirrorBillingSubscriptionToProfile } from "@/lib/billing/entitlements"
 import {
   findBillingSubscriptionByProviderId,
@@ -144,6 +154,36 @@ export interface PayPalWebhookDeps
     typeof activateVerifiedPayPalOrderIntent
   >[2]["finalizeLockedPlan"]
   capturePaymentFailure?: PaymentFailureReporter
+  /** Test seam; production reports to Sentry (provider + event type only). */
+  reportDeletedAccountSubscription?: typeof reportDeletedAccountSubscriptionCancelled
+  /** Test seam: records a post-deletion subscription for its full refund (R-a); false: not. */
+  recordPostDeletionRefund?: (subscriptionId: string, paymentsFrom: string) => Promise<boolean>
+  /** Test seam: the kind of the subscription's existing account-deletion refund row. */
+  webRefundKind?: (subscriptionId: string) => Promise<WebRefundKind | null>
+  /** Test seam; production reports to Sentry (provider, event type, existing kind only). */
+  reportPostDeletionRefundNotRecorded?: typeof reportPostDeletionRefundNotRecorded
+  /** Test seam: is this a subscription (or refunded payment) an account deletion cancelled? */
+  isAccountDeletionWebRefund?: (input: {
+    subscriptionId: string | null
+    paymentRef: string | null
+  }) => Promise<boolean>
+}
+
+/** D14 refunds of a deleted account's subscription: acknowledged, nothing re-provisioned. */
+async function isAccountDeletionWebRefund(
+  deps: PayPalWebhookDeps,
+  input: { subscriptionId: string | null; paymentRef: string | null },
+): Promise<boolean> {
+  // Schema not migrated yet: the RPC is absent, so the caller falls through to its own error.
+  if (!accountDeletionEnabled()) return false
+  if (deps.isAccountDeletionWebRefund) return deps.isAccountDeletionWebRefund(input)
+  const { data, error } = await deps.supabase.rpc("account_deletion_web_refund_known", {
+    p_provider: "paypal",
+    p_subscription_id: input.subscriptionId,
+    p_payment_ref: input.paymentRef,
+  })
+  if (error) throw new Error("Account deletion refund lookup failed")
+  return data === true
 }
 
 export type PayPalWebhookResult =
@@ -257,6 +297,8 @@ export async function handlePayPalWebhookEvent(
     if (!subscriptionId) throw new Error("PayPal webhook event is missing subscription id")
     const retrieve = deps.retrievePayPalSubscription ?? retrievePayPalSubscriptionForWebhook
     const subscription = await retrieve(subscriptionId)
+    if (await acknowledgeDeletedAccountSubscription(eventType, subscription, deps))
+      return { handled: true }
     if (await acknowledgeCanceledProviderClockVerification(eventType, subscription, deps))
       return { handled: true }
     if (await handlePayPalTrialWebhook(event, subscription, deps)) return { handled: true }
@@ -395,6 +437,63 @@ export async function handlePayPalWebhookEvent(
     await releaseWebhookEventClaim(deps.supabase, "paypal", eventId)
     throw error
   }
+}
+
+/**
+ * A subscription whose account was deleted keeps only its anonymized checkout intent; the
+ * billing row cascaded away. Its later provider events are acknowledged without writes so
+ * they neither error forever nor provision a new account from the payer data. A still
+ * billable agreement (e.g. approved before the deletion, activated after it) is cancelled
+ * immediately (A1) and reported; ended ones are a pure no-op.
+ */
+async function acknowledgeDeletedAccountSubscription(
+  eventType: string,
+  subscription: PayPalSubscription,
+  deps: PayPalWebhookDeps,
+): Promise<boolean> {
+  // Schema not migrated yet: no extra reads, the event runs exactly as before the feature.
+  if (!accountDeletionEnabled() || !subscription.id) return false
+  const existing = await findBillingSubscriptionByProviderId(
+    deps.supabase,
+    "paypal",
+    subscription.id,
+  )
+  if (existing) return false
+  const intent =
+    (await findPayPalCheckoutIntentByProviderSubscriptionId(deps.supabase, subscription.id)) ??
+    (subscription.custom_id?.trim()
+      ? await findPayPalCheckoutIntentByToken(deps.supabase, subscription.custom_id.trim())
+      : null)
+  if (!intent?.anonymized_at) return false
+  if (subscription.status === "ACTIVE" || subscription.status === "SUSPENDED") {
+    // R-a: full refund of its payments (the customer never had access), recorded before the
+    // cancel so a retried delivery (agreement then CANCELLED) cannot miss it.
+    // Only payments from the deletion (the intent's anonymization) on are refunded (I-2).
+    const recorded = await (
+      deps.recordPostDeletionRefund ??
+      ((id: string, from: string) => recordPostDeletionRefund(deps.supabase, "paypal", id, from))
+    )(subscription.id, intent.anonymized_at)
+    // N2: not recorded — fine when it is this subscription's post-deletion refund already.
+    const existingKind = recorded
+      ? null
+      : await (deps.webRefundKind ?? ((id: string) => webRefundKind(deps.supabase, "paypal", id)))(
+          subscription.id,
+        )
+    const cancel = deps.cancelPayPalSubscription ?? cancelPayPalSubscriptionForWebhook
+    await cancel(subscription.id, "Chaarlie-Konto gelöscht")
+    ;(deps.reportDeletedAccountSubscription ?? reportDeletedAccountSubscriptionCancelled)({
+      provider: "paypal",
+      eventType,
+    })
+    if (!recorded && existingKind !== "post_deletion")
+      (deps.reportPostDeletionRefundNotRecorded ?? reportPostDeletionRefundNotRecorded)({
+        provider: "paypal",
+        eventType,
+        existingKind: existingKind ?? "none",
+      })
+  }
+  console.info("[paypal:webhook] event for a deleted account acknowledged", { eventType })
+  return true
 }
 
 async function acknowledgeCanceledProviderClockVerification(
@@ -538,6 +637,12 @@ async function reconcilePayPalOrderCaptureEvent(
   }
   if (!purchase) {
     if (!isCompleted) {
+      if (await isAccountDeletionWebRefund(deps, { subscriptionId: null, paymentRef: captureId })) {
+        console.info("[paypal:webhook] account deletion refund acknowledged", {
+          eventType: event.event_type,
+        })
+        return
+      }
       throw new Error(`PayPal capture ${captureId} has no one-time purchase to reconcile`)
     }
     return
@@ -1079,6 +1184,10 @@ async function recordLinkedPayPalRefund(event: PayPalWebhookEvent, deps: PayPalW
   const eventType = event.event_type
   const sourceObjectId = refundSourceObjectId(event, eventType)
   const { billingRow, saleId } = await resolvePayPalRefundBillingRow(event, deps)
+  if (!billingRow) {
+    console.info("[paypal:webhook] account deletion refund acknowledged", { eventType })
+    return
+  }
 
   await recordPayPalBillingAnalytics(deps, {
     eventKey: billingAnalyticsEventKey({
@@ -1103,7 +1212,7 @@ async function recordLinkedPayPalRefund(event: PayPalWebhookEvent, deps: PayPalW
 async function resolvePayPalRefundBillingRow(
   event: PayPalWebhookEvent,
   deps: PayPalWebhookDeps,
-): Promise<{ billingRow: BillingSubscriptionRow; saleId: string | null }> {
+): Promise<{ billingRow: BillingSubscriptionRow | null; saleId: string | null }> {
   const agreementId = event.resource?.billing_agreement_id?.trim()
   const subscriptionId = event.resource?.subscription_id?.trim()
   if (agreementId && subscriptionId && agreementId !== subscriptionId) {
@@ -1113,9 +1222,10 @@ async function resolvePayPalRefundBillingRow(
   }
   const directSubscriptionId = agreementId || subscriptionId
   if (directSubscriptionId) {
+    const saleId = event.resource?.sale_id?.trim() || null
     return {
-      billingRow: await requirePayPalBillingRow(deps, directSubscriptionId, event.id),
-      saleId: event.resource?.sale_id?.trim() || null,
+      billingRow: await requirePayPalBillingRow(deps, directSubscriptionId, event.id, saleId),
+      saleId,
     }
   }
 
@@ -1148,8 +1258,9 @@ async function resolvePayPalRefundBillingRow(
         deps,
         localOwnership.providerSubscriptionId,
         event.id,
+        saleId,
       )
-      if (billingRow.user_id !== localOwnership.userId) {
+      if (billingRow && billingRow.user_id !== localOwnership.userId) {
         throw new Error(`PayPal sale ${saleId} has mismatched local billing ownership`)
       }
       return { billingRow, saleId }
@@ -1165,7 +1276,7 @@ async function resolvePayPalRefundBillingRow(
       throw new Error(`PayPal sale ${saleId} is missing a billing agreement link`)
     }
     return {
-      billingRow: await requirePayPalBillingRow(deps, providerSubscriptionId, event.id),
+      billingRow: await requirePayPalBillingRow(deps, providerSubscriptionId, event.id, saleId),
       saleId,
     }
   } catch (error) {
@@ -1189,17 +1300,20 @@ function refundSourceObjectId(event: PayPalWebhookEvent, eventType: string | und
   return sourceObjectId
 }
 
+/** Null: a D14 refund of a deleted account's subscription (no billing row by design). */
 async function requirePayPalBillingRow(
   deps: PayPalWebhookDeps,
   subscriptionId: string,
   eventId: string | undefined,
-): Promise<BillingSubscriptionRow> {
+  saleId: string | null = null,
+): Promise<BillingSubscriptionRow | null> {
   const billingRow = await findBillingSubscriptionByProviderId(
     deps.supabase,
     "paypal",
     subscriptionId,
   )
   if (!billingRow) {
+    if (await isAccountDeletionWebRefund(deps, { subscriptionId, paymentRef: saleId })) return null
     throw new Error(
       `PayPal refund/reversal ${eventId ?? "unknown"} has no local billing row for ${subscriptionId}`,
     )
