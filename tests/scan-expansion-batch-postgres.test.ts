@@ -1315,7 +1315,7 @@ test("an open unresolved submission on the same GTIN blocks the apply", async (t
 })
 
 // ---------------------------------------------------------------------------
-// 20260929120000: guidanceKey binding + stale Oil day-set repair.
+// 20260929230000: guidanceKey binding repair.
 // ---------------------------------------------------------------------------
 
 const BINDING_REPAIR_MIGRATION =

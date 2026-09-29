@@ -34,7 +34,7 @@
 -- with its full-line `--` comments removed (applied that way out of band), so both
 -- forms are pinned. The new bodies carry no full-line comments, so a
 -- comment-stripping apply cannot change their digests. Digests are re-derived from
--- the migration files by tests/expansion-protocol-binding-repair-postgres.test.ts.
+-- the migration files by tests/scan-expansion-batch-postgres.test.ts.
 --
 -- OPERATOR NOTE — before applying to production re-read
 --   SELECT proname, encode(sha256(convert_to(prosrc, 'UTF8')), 'hex')
