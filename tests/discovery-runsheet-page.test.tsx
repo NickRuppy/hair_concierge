@@ -1146,7 +1146,9 @@ test("prices: legacy data without price fields renders without a price line or a
   const markup = await renderPage({ loadModel: async () => legacyModel })
   assert.ok(markup.includes("Alpha Shampoo"))
   assert.ok(markup.includes("Neu: Balea Feuchtigkeitsspülung"))
-  assert.ok(!markup.includes("€"))
+  // No price anywhere — the locked-in section's zero sum aside (its own tests cover it).
+  const section = lockedInOf(markup)
+  assert.ok(!markup.replace(section, "").includes("€"))
 })
 
 test("prices: the read model carries the Idealplan recommendation's price onto its option", () => {
@@ -1749,4 +1751,131 @@ test("frequency chips: two 1× shampoos + 3–4× conditioner → both ends say 
   const expected = "3–4×/Wo · Ziel 1–2×/Wo — zu oft"
   assert.ok(entryOf(markup, "Conditioner").includes(expected), entryOf(markup, "Conditioner"))
   assert.ok(phase4Of(markup).includes(expected))
+})
+
+// --- produktphase-lockin T2: „Für ihren Plan festgehalten" --------------------------------
+
+/** The locked-in section's markup; "" when the page renders none. */
+function lockedInOf(markup: string): string {
+  const start = markup.indexOf('id="runsheet-locked-in"')
+  return start < 0 ? "" : markup.slice(start, markup.indexOf("</section>", start))
+}
+
+function modelWithDecisions(decisions: DiscoveryCallDecision[]) {
+  return model({ verdicts: pricedVerdicts, decisions })
+}
+
+test("locked-in: sits in Phase 3 right after „Tauschen oder neu“, before Phase 4", async () => {
+  const markup = await renderPage()
+  const swapBucket = markup.indexOf(">Tauschen oder neu</h3>")
+  const section = markup.indexOf('id="runsheet-locked-in"')
+  const phase4 = markup.indexOf('id="runsheet-phase-4"')
+  assert.ok(swapBucket >= 0 && section > swapBucket, `section at ${section}`)
+  assert.ok(phase4 < 0 || section < phase4)
+  assert.ok(section > markup.indexOf('id="runsheet-phase-3"'))
+  assert.ok(lockedInOf(markup).includes(">Für ihren Plan festgehalten</h3>"))
+})
+
+test("locked-in: nothing decided — three empty groups, zero sum, both entries open", async () => {
+  const section = lockedInOf(await renderPage())
+  for (const group of ["Kauft sie neu", "Behält sie", "Bewusst ohne Produkt"]) {
+    assert.ok(section.includes(`>${group}</p>`), group)
+  }
+  assert.equal(occurrences(section, "Noch nichts festgehalten."), 3)
+  assert.ok(section.includes(">Summe neu</span>"))
+  assert.ok(section.includes("0,00 €"))
+  assert.ok(section.includes("2 Schritte noch nicht entschieden."))
+  assert.ok(!section.includes("bereit für Phase 4"))
+})
+
+test("locked-in: stored decisions — the swap is bought with its price, the empty step goes without", async () => {
+  const markup = await renderPage({
+    loadModel: async () =>
+      modelWithDecisions([
+        {
+          decisionKey: shampooStep.decisionKey,
+          intakeItemId: ids.shampooItem,
+          decision: "swap",
+          swapProductId: priced.a,
+        },
+        {
+          decisionKey: conditionerStep.decisionKey,
+          intakeItemId: null,
+          decision: "keep",
+          swapProductId: null,
+        },
+      ]),
+  })
+  const section = lockedInOf(markup)
+  const buy = section.slice(section.indexOf(">Kauft sie neu<"), section.indexOf(">Behält sie<"))
+  assert.ok(buy.includes("Alpha Shampoo"), buy)
+  assert.ok(buy.includes(">Shampoo</span>"))
+  assert.ok(buy.includes("9,95 €"))
+  const skip = section.slice(
+    section.indexOf(">Bewusst ohne Produkt<"),
+    section.indexOf(">Summe neu<"),
+  )
+  assert.ok(skip.includes(">Conditioner</span>"), skip)
+  assert.ok(skip.includes("Schritt bleibt offen"))
+  const keep = section.slice(
+    section.indexOf(">Behält sie<"),
+    section.indexOf(">Bewusst ohne Produkt<"),
+  )
+  assert.ok(keep.includes("Noch nichts festgehalten."))
+  assert.ok(section.includes('id="runsheet-locked-in-total" class="ml-auto tabular-nums">9,95 €<'))
+  assert.ok(section.includes("Alle Schritte entschieden — bereit für Phase 4."))
+})
+
+test("locked-in: a kept product of hers lands under „Behält sie“", async () => {
+  const markup = await renderPage({
+    loadModel: async () =>
+      modelWithDecisions([
+        {
+          decisionKey: shampooStep.decisionKey,
+          intakeItemId: ids.shampooItem,
+          decision: "keep",
+          swapProductId: null,
+        },
+      ]),
+  })
+  const section = lockedInOf(markup)
+  const keep = section.slice(
+    section.indexOf(">Behält sie<"),
+    section.indexOf(">Bewusst ohne Produkt<"),
+  )
+  assert.ok(keep.includes("Sebamed"), keep)
+  assert.ok(section.includes("1 Schritt noch nicht entschieden."))
+})
+
+test("locked-in: a product without a price — no price on the row, the sum reads „ab …“", async () => {
+  const markup = await renderPage({
+    loadModel: async () =>
+      modelWithDecisions([
+        {
+          decisionKey: shampooStep.decisionKey,
+          intakeItemId: ids.shampooItem,
+          decision: "swap",
+          swapProductId: priced.b,
+        },
+      ]),
+  })
+  const section = lockedInOf(markup)
+  const buy = section.slice(section.indexOf(">Kauft sie neu<"), section.indexOf(">Behält sie<"))
+  assert.ok(buy.includes("Beta Shampoo"), buy)
+  assert.ok(!buy.includes("€"))
+  assert.ok(section.includes(">ab 0,00 €<"))
+})
+
+test("locked-in: the copy button is the coral CTA, in the cockpit's own voice", async () => {
+  const section = lockedInOf(await renderPage())
+  assert.ok(
+    section.includes(
+      'id="runsheet-locked-in-copy" type="button" class="rounded-lg bg-[var(--brand-coral)]',
+    ),
+  )
+  assert.ok(section.includes(">Liste kopieren</button>"))
+  // Plum marks the section; coral appears only on the CTA.
+  assert.equal(occurrences(section, "--brand-coral"), 1)
+  assert.ok(section.includes("text-[var(--brand-plum)]"))
+  assert.ok(!SECOND_PERSON_WORD.test(readableLines(section).join("\n")))
 })

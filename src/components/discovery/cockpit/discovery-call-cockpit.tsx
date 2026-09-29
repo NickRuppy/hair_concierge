@@ -14,6 +14,7 @@ import type { DiscoveryVerdictStatus } from "@/lib/discovery/load-participant-ve
 import type { DiscoveryPropertyRow } from "@/lib/discovery/property-rows"
 import {
   runsheetEntryInHerWeek,
+  runsheetLockedIn,
   runsheetVerdictFit,
   type WashAnchor,
 } from "@/lib/discovery/runsheet"
@@ -22,6 +23,7 @@ import type { ProductFrequency } from "@/lib/vocabulary/frequencies"
 import { DiscoveryComparisonTable } from "./comparison-table"
 import { beginDiscoveryDecisionWrite } from "./decision-writes"
 import { formatDiscoveryTimestamp } from "./format"
+import { RunsheetLockedInSection } from "./runsheet-locked-in"
 import {
   RunsheetCard,
   RunsheetCategoryChip,
@@ -323,6 +325,9 @@ export function DiscoveryCallCockpit({
       ]
   const finalizeBlocked = blockHints.length > 0
   const products = composeRunsheetProducts({ steps, unassigned, researchItems })
+  // „Für ihren Plan festgehalten": the SAME optimistic selections the radios write, so the
+  // section follows each click before the server round-trip (and rolls back with it).
+  const lockedIn = runsheetLockedIn(steps, (step) => selections[entryKey(step)] ?? null)
 
   async function choose(step: DiscoveryCockpitStepView, value: string) {
     const key = entryKey(step)
@@ -500,6 +505,7 @@ export function DiscoveryCallCockpit({
         <Bucket title={BUCKET_SWAP} count={swapCount(products.tauschenOderNeu)} empty={EMPTY_SWAP}>
           {products.tauschenOderNeu.map((entry) => renderEntry(entry, "tauschenOderNeu"))}
         </Bucket>
+        <RunsheetLockedInSection lockedIn={lockedIn} />
         {products.styling.length > 0 ? (
           <p className="text-[13px] text-muted-foreground">{`${DISCOVERY_STYLING_LABEL}: ${products.styling
             .map((entry) => entry.label)
@@ -942,6 +948,8 @@ export function StepDecision({
           // R19: the price where the catalog has one — no placeholder line otherwise.
           subtitle={option.priceLabel}
           rows={option.propertyRows}
+          // Her product's rows beside the alternative („Ihr Produkt | Alternative | Ziel").
+          ownedRows={step.verdict?.status === "verdict" ? step.verdict.propertyRows : null}
           onChoose={onChoose}
         />
       ))}
@@ -972,6 +980,7 @@ function Choice({
   subtitle,
   pill,
   rows,
+  ownedRows,
   onChoose,
 }: {
   name: string
@@ -982,6 +991,7 @@ function Choice({
   subtitle?: string | null
   pill?: string
   rows?: DiscoveryPropertyRow[] | null
+  ownedRows?: DiscoveryPropertyRow[] | null
   onChoose: (value: string) => void
 }) {
   return (
@@ -1015,7 +1025,7 @@ function Choice({
         ) : null}
         {rows && rows.length > 0 ? (
           <span className="mt-2 block">
-            <DiscoveryComparisonTable rows={rows} compact />
+            <DiscoveryComparisonTable rows={rows} compact ownedRows={ownedRows} />
           </span>
         ) : null}
       </span>
