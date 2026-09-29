@@ -328,13 +328,12 @@ export const CONSULT_FORBIDDEN_PHRASES: readonly ConsultForbiddenPhrase[] = [
 // --- R22: factual medical mention with a doctor handoff ---------------------------------------
 
 /**
- * Phrase ids that may stand in a sentence which places the decision with a doctor (guardrails
- * G1b, ruling R22): „Es gibt ärztliche Optionen wie Minoxidil; ob das passt, klärt die Ärztin."
- * `dose`, `hair_loss_brands` and `percent` are NOT here: brands and dosing never appear.
+ * Substances (G1b, ruling R22 — Nick 2026-09-29, loosened): naming a supplement or drug
+ * active factually is allowed anywhere; forbidden stays the sentence that recommends,
+ * doses/schedules, turns the handoff around or mixes it with a care product. `dose`,
+ * `hair_loss_brands` and `percent` are NOT here: brands and dosing never appear.
  */
 export const MEDICAL_MENTION_IDS: ReadonlySet<string> = new Set([
-  "against_loss",
-  "stop_loss",
   "biotin",
   "supplements",
   "zinc",
@@ -344,6 +343,17 @@ export const MEDICAL_MENTION_IDS: ReadonlySet<string> = new Set([
   "ketoconazole",
   "finasteride",
 ])
+
+/**
+ * Efficacy-against-hair-loss claims: allowed only in a medically framed sentence (a doctor
+ * token or a named drug active) — as care claims they stay G1 promises.
+ */
+export const LOSS_CLAIM_IDS: ReadonlySet<string> = new Set(["against_loss", "stop_loss"])
+
+const DRUG_TOKEN = new RegExp(
+  ["minoxidil", "finasterid\\p{L}*", "[kc]ortison\\p{L}*", "ketoconazol\\p{L}*"].join("|"),
+  "iu",
+)
 
 /** ärztlich, Arzt/Ärztin/Ärzte (incl. Hausarzt, Hautärztin), dermatologisch — not „geschwärzt". */
 const DOCTOR_TOKEN = new RegExp(
@@ -401,19 +411,30 @@ const NEGATED_HANDOFF = words(
 
 function medicalMentionAllowed(sentence: string): boolean {
   return (
-    DOCTOR_TOKEN.test(sentence) &&
     !NEGATED_HANDOFF.test(sentence) &&
     !RECOMMEND_CUE.test(sentence) &&
     !CARE_CATEGORY.test(sentence)
   )
 }
 
+/** A loss claim needs medical framing on top: a doctor token or a named drug active. */
+function lossClaimAllowed(sentence: string): boolean {
+  return (
+    (DOCTOR_TOKEN.test(sentence) || DRUG_TOKEN.test(sentence)) && medicalMentionAllowed(sentence)
+  )
+}
+
 /** The first offending match of one phrase rule in a normalized text, or null. */
 function matchPhrase(entry: ConsultForbiddenPhrase, text: string): RegExpExecArray | null {
-  if (!MEDICAL_MENTION_IDS.has(entry.id)) return entry.pattern.exec(text)
+  const perSentence = MEDICAL_MENTION_IDS.has(entry.id)
+    ? medicalMentionAllowed
+    : LOSS_CLAIM_IDS.has(entry.id)
+      ? lossClaimAllowed
+      : null
+  if (!perSentence) return entry.pattern.exec(text)
   for (const sentence of medicalSentences(text)) {
     const match = entry.pattern.exec(sentence)
-    if (match && !medicalMentionAllowed(sentence)) return match
+    if (match && !perSentence(sentence)) return match
   }
   return null
 }

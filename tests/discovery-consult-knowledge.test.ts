@@ -256,15 +256,14 @@ test("dry_scalp_dry_flakes only from the dry-flakes scalp condition, never from 
 test("scalp flags: oily scalp type, oily flakes, irritated — each only from its own value", () => {
   assert.deepEqual(derived({ scalpType: "oily" }), { oily_scalp: "hoch" })
   assert.deepEqual(derived({ scalpType: "balanced" }), {})
-  // niedrig: legacy „schuppen" arrives as `oily_dandruff` although the flake kind is unknown.
-  assert.deepEqual(derived({ scalpConcerns: ["oily_dandruff"] }), { oily_scalp_flakes: "niedrig" })
+  assert.deepEqual(derived({ scalpConcerns: ["oily_dandruff"] }), { oily_scalp_flakes: "hoch" })
   assert.deepEqual(derived({ scalpConcerns: ["irritated"] }), { irritated_scalp: "hoch" })
   // hair_profiles `dandruff` does not say which kind of flakes: no flake flag either way.
   assert.deepEqual(derived({ scalpConcerns: ["dandruff"] }), {})
   // Oily flakes do not imply an oily scalp type, and vice versa.
   assert.deepEqual(derived({ scalpType: "oily", scalpConcerns: [] }), { oily_scalp: "hoch" })
   assert.deepEqual(derived({ scalpConcerns: ["oily_dandruff", "dry_dandruff", "irritated"] }), {
-    oily_scalp_flakes: "niedrig",
+    oily_scalp_flakes: "hoch",
     dry_scalp_dry_flakes: "hoch",
     irritated_scalp: "hoch",
   })

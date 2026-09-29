@@ -65,9 +65,9 @@ export const CONSULT_FLAG_RELIABILITY: Readonly<Record<ConsultFlag, ConsultFlagR
   styling_goal_hold: "hoch",
   wash_frequency_change: "hoch",
   oily_scalp: "hoch",
-  // Legacy „schuppen" reaches the snapshot as `oily_dandruff` although the flake kind is
-  // unknown there — so the brief asks first instead of asserting (Generator-Hinweise).
-  oily_scalp_flakes: "niedrig",
+  // Legacy „schuppen" reaches the snapshot as `oily_dandruff` without the flake kind; those
+  // quizzes are few, and Nick accepts the ambiguity (2026-09-29) — the field counts as defined.
+  oily_scalp_flakes: "hoch",
   irritated_scalp: "hoch",
   frizz_concern: "hoch",
   shine_concern: "hoch",
@@ -395,9 +395,17 @@ export function selectConsultKnowledge(
   }
   for (const { keep, fold } of CONSULT_KNOWLEDGE_MERGES) {
     const kept = fired.get(keep)
-    if (kept && fired.has(fold)) {
+    const folded = fired.get(fold)
+    if (kept && folded) {
+      // One topic stays ONE point in the brief, but nothing is dropped (Nick 2026-09-29):
+      // the folded entry's insight, phrasing and questions travel with the kept one.
       fired.delete(fold)
       kept.mergedFrom.push(fold)
+      kept.einsicht = `${kept.einsicht}\n\n${folded.einsicht}`
+      if (folded.imCall) kept.imCall = `${kept.imCall}\n\n${folded.imCall}`
+      kept.fragen = [...kept.fragen, ...folded.fragen.filter((q) => !kept.fragen.includes(q))]
+      kept.questionFirst = kept.questionFirst || folded.questionFirst
+      kept.cautious = kept.cautious || folded.cautious
     }
   }
   return [...fired.values()]

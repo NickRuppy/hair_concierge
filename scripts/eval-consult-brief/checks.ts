@@ -1,6 +1,6 @@
 import type { DiscoveryCallSheetBriefSections } from "../../src/lib/discovery/call-sheet"
 import { toConsultBriefSections } from "../../src/lib/discovery/consult-brief/api-schema"
-import { withBoundaryLine } from "../../src/lib/discovery/consult-brief/generate"
+import { capHebelPoints, withBoundaryLine } from "../../src/lib/discovery/consult-brief/generate"
 import type { ConsultInput } from "../../src/lib/discovery/consult-brief/input"
 import {
   CONSULT_BOUNDARY_LINE,
@@ -62,7 +62,11 @@ export function evaluateConsultBriefAnswer(raw: string, input: ConsultInput): Co
     }
     return { brief: null, findings, jsonShape }
   }
-  const brief = { ...parsed.data, erwartungen: withBoundaryLine(parsed.data.erwartungen) }
+  const brief = {
+    ...parsed.data,
+    hebel: capHebelPoints(parsed.data.hebel, input.baselineScore),
+    erwartungen: withBoundaryLine(parsed.data.erwartungen),
+  }
 
   for (const finding of lintConsultBrief(brief, input)) {
     findings.push({

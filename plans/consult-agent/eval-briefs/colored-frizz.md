@@ -2,42 +2,42 @@
 
 > Gefärbt (nicht blondiert), fein, wellig, fettige Kopfhaut; Hauptproblem Frizz, dazu wenig Glanz; Glätteisen 1×/Woche ohne Hitzeschutz; wäscht 5–6×, Ideal 3–4×.
 
-Modell `gpt-5.6-luna` · 27.6 s · Baseline 6 · Wissen: ask-bleach-cadence, ask-frizz-or-breakage, color-fade-honesty, colored-oily-scalp-tradeoff, expectation-windows, frizz-mechanism, heat-on-colored-hair, oily-roots-dry-lengths, oily-scalp-wash-cadence, shine-surface-reflection, wash-frequency-transition, wavy-hair-weight-and-handling
+Modell `gpt-5.6-luna` · 30.3 s · Baseline 6 · Wissen: ask-bleach-cadence, ask-frizz-or-breakage, color-fade-honesty, colored-oily-scalp-tradeoff, expectation-windows, frizz-mechanism, heat-on-colored-hair, oily-roots-dry-lengths, oily-scalp-wash-cadence, shine-surface-reflection, wash-frequency-transition, wavy-hair-weight-and-handling
 
 ## Diagnose
 
-Bei ihr treffen feines, welliges und gefärbtes Haar auf Frizz: Wellen können durch Reibung, Luftfeuchtigkeit oder unpassendes Handling auseinanderfallen. Die fettige Kopfhaut braucht regelmäßige Wäsche, während 5–6 Wäschen pro Woche und das nicht passende Frischkraft Tiefenrein Shampoo die Längen stärker mitnehmen können. Das Glätteisen einmal pro Woche ohne Hitzeschutz kann die Oberfläche rauer wirken lassen und die Farbe schneller verblassen lassen. Die Leichtwerk Feuchte Spülung passt als Basis; ein leichtes Leave-in kann die Oberfläche zusätzlich glätten, ohne feines Haar unnötig zu beschweren.
+Ihre feinen, welligen und gefärbten Haare reagieren bei Frizz empfindlich auf Reibung, Bürsten und zu viel Gewicht. Das Glätteisen einmal pro Woche ohne Hitzeschutz kann die Oberfläche zusätzlich rauer wirken lassen und die Farbe schneller verblassen lassen. Bei ihrer fettigen Kopfhaut sind 5–6 Wäschen pro Woche grundsätzlich nachvollziehbar; das Frischkraft Tiefenrein Shampoo passt nicht als regelmäßige Lösung. Conditioner und ein leichtes Leave-in können die Oberfläche glätten, während die Welle nass entwirrt und beim Trocknen wenig angefasst wird.
 
 ## Hebel
 
-1. **Leichtes Leave-in ergänzen** _(0.75 P.)_ — Seidenwerk Glätte Leave-in in die feuchten Längen geben. Bei feinem Haar sollte die Menge sparsam bleiben, damit die Welle nicht unter Gewicht fällt.
-2. **Conditioner konsequent nutzen** _(0.75 P.)_ — Leichtwerk Feuchte Spülung nach jeder Wäsche ab etwa Kinnhöhe auftragen und die Längen damit nass entwirren. Das senkt Reibung und macht die Oberfläche geschmeidiger.
-3. **Wellen schonend behandeln** _(0.5 P.)_ — Die Wellen im nassen Haar entwirren, beim Abtrocknen ausdrücken statt rubbeln und beim Trocknen wenig anfassen. So kann die natürliche Form ruhiger liegen.
-4. **Hitze mit Schutz einsetzen** _(0.5 P.)_ — Beim Glätteisen nur im vollständig trockenen Haar, mit niedrigerer Stufe und einem Durchgang arbeiten. Schutzwerk Hitzeschutzspray vorher verwenden; weniger Hitze bleibt der größere Hebel.
-5. **Alltagsshampoo statt Tiefenreinigung** _(0.5 P.)_ — Frischkraft Tiefenrein Shampoo passt nicht als regelmäßiges Shampoo. Den Waschablauf schrittweise Richtung 3–4 Wäschen pro Woche führen, Shampoo nur an der Kopfhaut verwenden und die Längen nicht extra einschäumen.
+1. **Leichte Oberflächenpflege** _(1 P.)_ — Die Leichtwerk Feuchte Spülung bleibt nach jeder Wäsche in den Längen. Das neue Seidenwerk Glätte Leave-in kann sparsam im feuchten Haar eingesetzt werden, damit feines Haar nicht beschwert wird.
+2. **Welle schonend behandeln** _(0.8 P.)_ — Sie entwirrt ihre Wellen im nassen Haar mit Pflege, drückt das Wasser statt zu rubbeln aus und fasst die Haare beim Trocknen möglichst wenig an. Trockenes Bürsten wird vermieden.
+3. **Shampoo und Waschrhythmus passend trennen** _(0.7 P.)_ — Das Frischkraft Tiefenrein Shampoo passt nicht als regelmäßige Lösung. Ein Wechsel zu Sanftwerk Balance Shampoo oder Klarwerk Mildes Alltagsshampoo, Shampoo nur an der Kopfhaut und Conditioner in den Längen, ist der nächste Zug; gewaschen wird nach Bedarf der Kopfhaut.
+4. **Hitze gezielter einsetzen** _(0.5 P.)_ — Beim Glätteisen bleiben die Haare vollständig trocken, die Stufe möglichst niedrig und es gibt nur einen Durchgang. Das neue Schutzwerk Hitzeschutzspray wird vorher verwendet; weniger Hitze bleibt der größere Hebel.
 
 ## Tausch-Begründungen
 
-- **Frischkraft Tiefenrein Shampoo** (`shampoo:shampoo_everyday:none`): Frischkraft Tiefenrein Shampoo passt nicht als Alltagsshampoo für ihren Waschbedarf. Sanftwerk Balance Shampoo oder Klarwerk Mildes Alltagsshampoo sind dafür die vorgesehenen Alternativen; Shampoo kommt nur an die Kopfhaut.
-- **Seidenwerk Glätte Leave-in** (`leave_in:leave_in_everyday:none`): Seidenwerk Glätte Leave-in ist als neuer, leichter Pflegezug für ihre feinen, welligen Längen gedacht. Es kann Frizz und Reibung zwischen den Wäschen reduzieren, wenn sparsam dosiert wird.
-- **Schutzwerk Hitzeschutzspray** (`heat_protectant:heat_protectant:none`): Schutzwerk Hitzeschutzspray ist bei ihrem wöchentlichen Glätteisen einen Versuch wert. Es reduziert den Schaden, ersetzt aber weder niedrigere Hitze noch weniger Durchgänge.
+- **Frischkraft Tiefenrein Shampoo** (`shampoo:shampoo_everyday:none`): Das Frischkraft Tiefenrein Shampoo passt nicht als regelmäßiges Shampoo bei 5–6 Wäschen pro Woche. Sanftwerk Balance Shampoo oder Klarwerk Mildes Alltagsshampoo passen besser zu einer häufigen Wäsche; die Auswahl kann im Call getroffen werden.
+- **Seidenwerk Glätte Leave-in** (`leave_in:leave_in_everyday:none`): Das neue Seidenwerk Glätte Leave-in ist als leichte Zusatzpflege einen Versuch wert, weil feines, welliges Haar von weniger Reibung profitieren kann, ohne mit schwerer Pflege beschwert zu werden.
+- **Schutzwerk Hitzeschutzspray** (`heat_protectant:heat_protectant:none`): Das neue Schutzwerk Hitzeschutzspray ist sinnvoll, weil sie einmal pro Woche ein Glätteisen ohne Hitzeschutz verwendet. Es reduziert den Schaden, ersetzt aber nicht weniger Hitze.
 
 ## Ziel-Lücken
 
-- Bei feuchtem Wetter kann Frizz trotz Pflege bleiben; ein vollständig frizzfreies Ergebnis ist kein realistisches Ziel.
-- Die Pflege legt nicht fest, ob sie ihre Wellen betonen oder die Haare glatt tragen möchte, und ersetzt keine Styling-Produkte für Form oder Halt.
-- Das Verblassen der Farbe lässt sich bremsen, aber Waschen, Sonne und Hitze beeinflussen weiterhin, wie lange der Farbton hält.
+- Der Plan legt nicht fest, ob sie ihre Welle betonen oder die Haare glatt tragen möchte; Form und Halt bleiben Stylingziele.
+- Bei feuchtem Wetter lässt sich Frizz nicht vollständig verhindern.
+- Die Pflege kann das Verblassen der Farbe bremsen, aber nicht aufhalten.
 
 ## Call-Fragen
 
-- Wo sitzt der Frizz genau: am Oberkopf, am Ansatz, in den Längen oder an den Spitzen, und sind es kurze Haare in verschiedenen Längen oder ganze Längen, die aufbauschen?
-- Bürstest du deine Haare trocken, und wie trocknest du sie nach dem Waschen?
-- Möchtest du deine Welle betonen oder trägst du sie lieber glatt?
+- Wo sitzt der Frizz genau: am Oberkopf, am Ansatz, in den Längen oder an den Spitzen, und stehen dort kurze Haare in verschiedenen Längen ab oder bauschen die ganzen Längen auf?
+- Bürstest du deine Haare trocken, wie trocknest du sie, und möchtest du die Welle betonen oder die Haare eher glatt tragen?
+- Welches Gerät nutzt du beim Glätten, auf welcher Stufe, und gelangt es manchmal ins noch feuchte Haar?
+- Wäschst du 5–6-mal pro Woche, weil der Ansatz das braucht, oder um Styling und Farbe zu entfernen; schäumst du die Längen mit ein?
 - Wie oft wird bei dir gefärbt, wo wird die Farbe aufgetragen, und wann war die letzte Behandlung?
-- Wäschst du 5–6-mal pro Woche, weil der Ansatz schnell fettig wird, oder aus einem anderen Grund?
 
 ## Erwartungen
 
-- Kämmbarkeit und Geschmeidigkeit können sich oft nach wenigen Wäschen, stabiler innerhalb von 2–4 Wochen zeigen. Glanz kommt mit der Oberflächenpflege und bleibt, solange sie gepflegt wird.
-- Bereits raue oder geschädigte Längen werden nur über Schnitt und Rauswachsen über Monate besser; Pflege kann sie geschmeidiger machen und weiteren Bruch reduzieren.
+- Eine ruhigere Oberfläche und bessere Geschmeidigkeit können sich mit der Pflege und dem schonenderen Handling entwickeln; ein fairer Re-Check liegt nach 2–4 Wochen.
+- Glanz kommt mit der Oberflächenpflege und hält, solange sie gepflegt wird.
+- Die bereits behandelten Längen werden durch Pflege nicht wieder intakt; sie wachsen heraus oder werden geschnitten.
 - Vermehrter Ausfall mit Wurzel, lichter werdendes Haar oder eine starke Kopfhautreaktion (anhaltendes Jucken, Rötung, Brennen, Schmerzen, nässende oder verkrustete Stellen) gehört ärztlich abgeklärt, dermatologisch oder hausärztlich.

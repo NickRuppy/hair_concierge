@@ -39,13 +39,13 @@ Auch verneint bleiben diese Formulierungen draußen („heilt nicht“, „nicht
 
 ## G1b — Medizinisches benennen ja, empfehlen nie
 
-**Regel:** Nahrungsergänzungsmittel (Biotin, Zink, Eisen …) und Arzneiwirkstoffe (Minoxidil, Kortison, medizinisches Ketoconazol …) werden nie empfohlen und nie dosiert. Faktisch benennen ist erlaubt, wenn es die Erwartung ehrlich macht — Existenz, grobes Wirkprinzip, Grenze — und derselbe Satz die Entscheidung ärztlich verortet.
+**Regel:** Nahrungsergänzungsmittel (Biotin, Zink, Eisen …) und Arzneiwirkstoffe (Minoxidil, Kortison, medizinisches Ketoconazol …) werden nie empfohlen und nie dosiert. Faktisch benennen ist erlaubt, wo es die Erwartung ehrlich macht — Existenz, grobes Wirkprinzip, Grenze. Die Entscheidung darüber gehört im Brief ärztlich verortet, spätestens im umgebenden Absatz.
 
 **Warum:** Zur ehrlichen Beratung gehört der Satz, dass es gegen Haarausfall ärztliche Optionen gibt und Pflege keine ist. Auswahl, Eignung und Dosierung sind aber Arztsache — alles darüber hinaus wäre Therapieberatung ohne Befund.
 
 **Erlaubt z. B.:** „Gegen Haarausfall gibt es ärztliche Wirkstoffe, die nur wirken, solange man sie anwendet — ob so etwas für sie passt, gehört in ärztliche Hand.“ / „Kosmetische Kopfhaut-Seren dazu sind kaum untersucht.“
 
-**Nie:** „probier Minoxidil“, Dosierungen und Anwendungsschemata, Bezugsquellen, Wirkstoff-Nennung ohne ärztliche Verortung im selben Satz. Kosmetische Anti-Schuppen-Shampoos als Kategorie sind erlaubt; ihre Wirkstoffe werden nicht als Therapie beschrieben.
+**Nie:** „probier Minoxidil“ und jede Empfehlungs- und Anwendungssprache („solltest“, „täglich anwenden“), Dosierungen und Anwendungsschemata, Bezugsquellen und Präparat-Marken, Abraten vom Arztbesuch, Wirkstoff und Pflegeprodukt im selben Satz. „Gegen Haarausfall“ wirkt nur Medizin — nie ein Pflegeprodukt. Kosmetische Anti-Schuppen-Shampoos als Kategorie sind erlaubt; ihre Wirkstoffe werden nicht als Therapie beschrieben.
 
 ## G1c — Keine Inhaltsstoff-Mythen
 
