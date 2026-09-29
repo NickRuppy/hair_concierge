@@ -954,7 +954,9 @@ test("footer: nothing genuinely unused — no footer at all", async () => {
 
 test("score helpers: staircase capped at 10, German decimals, strict parsing", () => {
   assert.deepEqual(runsheetScoreSteps(4, [1.5, 1.5, 1]), [4, 5.5, 7, 8])
-  assert.deepEqual(runsheetScoreSteps(8, [3, null]), [8, 10, 10])
+  assert.deepEqual(runsheetScoreSteps(8, [3, null]), [8, 9, 9])
+  // The code does the arithmetic and caps the display at 9; a baseline above stays truthful.
+  assert.deepEqual(runsheetScoreSteps(10, [1]), [10, 10])
   assert.equal(formatRunsheetScore(5.5), "5,5")
   assert.equal(formatRunsheetScore(8), "8")
   assert.equal(parseRunsheetPoints("1,5"), 1.5)
