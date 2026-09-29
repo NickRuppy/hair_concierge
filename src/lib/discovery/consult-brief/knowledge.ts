@@ -29,6 +29,15 @@ export const CONSULT_FLAGS = [
   "volume_concern",
   "styling_goal_hold",
   "wash_frequency_change",
+  "oily_scalp",
+  "oily_scalp_flakes",
+  "irritated_scalp",
+  "frizz_concern",
+  "shine_concern",
+  "dry_lengths_concern",
+  "tangling_concern",
+  "curly_or_coily",
+  "wavy_hair",
 ] as const
 
 export type ConsultFlag = (typeof CONSULT_FLAGS)[number]
@@ -55,6 +64,17 @@ export const CONSULT_FLAG_RELIABILITY: Readonly<Record<ConsultFlag, ConsultFlagR
   volume_concern: "hoch",
   styling_goal_hold: "hoch",
   wash_frequency_change: "hoch",
+  oily_scalp: "hoch",
+  // Legacy „schuppen" reaches the snapshot as `oily_dandruff` without the flake kind; those
+  // quizzes are few, and Nick accepts the ambiguity (2026-09-29) — the field counts as defined.
+  oily_scalp_flakes: "hoch",
+  irritated_scalp: "hoch",
+  frizz_concern: "hoch",
+  shine_concern: "hoch",
+  dry_lengths_concern: "hoch",
+  tangling_concern: "hoch",
+  curly_or_coily: "hoch",
+  wavy_hair: "hoch",
 }
 
 /**
@@ -215,8 +235,15 @@ export function evaluateConsultConditions(
  * Her facts as the flags read them; `null` = unknown (derives nothing).
  *
  * - `chemicalTreatments`: any stored vocabulary (`hair_profiles`, Idealplan snapshot, raw quiz).
+ * - `hairTexture` / `scalpType`: the snapshot's `profile.hair.texture` / `profile.scalp.oiliness`
+ *   (`concernProfileFacts`). A legacy quiz reaches the snapshot through
+ *   `adaptLegacyQuizAnswersForAssessment`: `structure` keeps its values
+ *   (straight/wavy/curly/coily), `scalp_type` `fettig` becomes `oily`.
  * - `scalpConcerns`: the snapshot's `profile.scalp.concerns` (`dry_dandruff` = the legacy
- *   `scalp_condition` `dry_flakes`, which is accepted too).
+ *   `scalp_condition` `dry_flakes`, which is accepted too; `oily_dandruff`; `irritated`, the
+ *   same value in `hair_profiles`). The unspecified `hair_profiles` `dandruff` says nothing
+ *   about the kind of flakes and derives no flake flag. Caveat: the plan's legacy adapter
+ *   already turns the legacy quiz's unspecified `schuppen` into `oily_dandruff`.
  * - `intakeHeatTools`: the intake's `heat_styling.additionalHeatTools`; `null` = not asked.
  * - `profileHeatTools`: the snapshot's heat-event tools — read only when the intake did not ask.
  * - `ownedCategories`: usage categories and product types of her captured products.
@@ -226,7 +253,9 @@ export function evaluateConsultConditions(
  */
 export type ConsultFlagFacts = {
   chemicalTreatments: readonly string[] | null
+  hairTexture: string | null
   thickness: string | null
+  scalpType: string | null
   scalpConcerns: readonly string[] | null
   intakeHeatTools: readonly string[] | null
   profileHeatTools: readonly string[] | null
@@ -250,7 +279,10 @@ const HOT_TOOLS = new Set([
   "flat_iron",
   "wave_iron",
 ])
+const OILY_FLAKES = new Set(["oily_dandruff"])
+const IRRITATED = new Set(["irritated"])
 const BREAKAGE_CONCERNS = new Set(["breakage", "hair_damage"])
+const CURLY_OR_COILY = new Set(["curly", "coily"])
 /** „Weiß ich nicht" and no answer are not a frequency. */
 const NOT_A_FREQUENCY = new Set(["unknown"])
 
@@ -269,7 +301,12 @@ export function deriveConsultFlags(
   set("permed", any(facts.chemicalTreatments, PERMED))
   set("chemically_straightened", any(facts.chemicalTreatments, STRAIGHTENED))
   set("fine_hair", facts.thickness === "fine")
+  set("curly_or_coily", facts.hairTexture !== null && CURLY_OR_COILY.has(facts.hairTexture))
+  set("wavy_hair", facts.hairTexture === "wavy")
+  set("oily_scalp", facts.scalpType === "oily")
   set("dry_scalp_dry_flakes", any(facts.scalpConcerns, DRY_FLAKES))
+  set("oily_scalp_flakes", any(facts.scalpConcerns, OILY_FLAKES))
+  set("irritated_scalp", any(facts.scalpConcerns, IRRITATED))
   set(
     "hot_tool",
     facts.intakeHeatTools !== null
@@ -285,6 +322,12 @@ export function deriveConsultFlags(
   set("breakage_signal", facts.elasticity === "snaps" || any(facts.concerns, BREAKAGE_CONCERNS))
   set("volume_concern", facts.concerns.includes("low_volume_or_weighed_down"))
   set("styling_goal_hold", facts.concerns.includes("lost_shape"))
+  // `concerns` is already `DiagnosticConcern`: the legacy aliases `frizz` / `dryness` are
+  // resolved upstream (`resolveVisibleDiagnosticConcerns`, the plan input's legacy map).
+  set("frizz_concern", facts.concerns.includes("frizz_flyaways"))
+  set("shine_concern", facts.concerns.includes("low_shine"))
+  set("dry_lengths_concern", facts.concerns.includes("dry_lengths"))
+  set("tangling_concern", facts.concerns.includes("tangling"))
   const { current, ideal } = facts.washFrequency
   set(
     "wash_frequency_change",
@@ -310,6 +353,8 @@ export const CONSULT_KNOWLEDGE_PRECEDENCE: ReadonlyArray<{ winner: string; loser
  */
 export const CONSULT_KNOWLEDGE_MERGES: ReadonlyArray<{ keep: string; fold: string }> = [
   { keep: "heavy-care-paradox-fine-hair", fold: "oil-as-finish" },
+  { keep: "heavy-care-paradox-fine-hair", fold: "fine-hair-buildup-layering" },
+  { keep: "oily-roots-dry-lengths", fold: "dry-lengths-softness" },
 ]
 
 export type FiredConsultKnowledge = {
@@ -350,9 +395,17 @@ export function selectConsultKnowledge(
   }
   for (const { keep, fold } of CONSULT_KNOWLEDGE_MERGES) {
     const kept = fired.get(keep)
-    if (kept && fired.has(fold)) {
+    const folded = fired.get(fold)
+    if (kept && folded) {
+      // One topic stays ONE point in the brief, but nothing is dropped (Nick 2026-09-29):
+      // the folded entry's insight, phrasing and questions travel with the kept one.
       fired.delete(fold)
       kept.mergedFrom.push(fold)
+      kept.einsicht = `${kept.einsicht}\n\n${folded.einsicht}`
+      if (folded.imCall) kept.imCall = `${kept.imCall}\n\n${folded.imCall}`
+      kept.fragen = [...kept.fragen, ...folded.fragen.filter((q) => !kept.fragen.includes(q))]
+      kept.questionFirst = kept.questionFirst || folded.questionFirst
+      kept.cautious = kept.cautious || folded.cautious
     }
   }
   return [...fired.values()]

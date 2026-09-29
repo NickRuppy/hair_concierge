@@ -181,7 +181,9 @@ export function assembleConsultInput(
 
   const flagSet = deriveConsultFlags({
     chemicalTreatments: facts?.chemical_treatment ?? null,
+    hairTexture: facts?.hair_texture ?? null,
     thickness: facts?.thickness ?? null,
+    scalpType: facts?.scalp_type ?? null,
     scalpConcerns: consultFacts?.scalpConcerns ?? null,
     intakeHeatTools: model.heatStyling ? model.heatStyling.additionalHeatTools : null,
     profileHeatTools: consultFacts?.profileHeatTools ?? null,

@@ -29,7 +29,7 @@ import type { ScanPresentedVerdictPayload, ScanVerdict } from "../../../src/lib/
  * Profile facts the input has no field for (density, length) are documented, not encoded.
  */
 
-export type ConsultGoldenProfileId = "nomi" | "oily-overwash" | "curly-breakage"
+export type ConsultGoldenProfileId = "nomi" | "oily-overwash" | "curly-breakage" | "colored-frizz"
 
 export type ConsultGoldenProfile = {
   id: ConsultGoldenProfileId
@@ -407,10 +407,104 @@ const CURLY_BREAKAGE: ConsultGoldenProfile = {
   },
 }
 
+// --- colored-frizz ---------------------------------------------------------------------------
+// The most common uncovered archetype in the live quiz data (2026-09-29 seeding analysis):
+// colored (not bleached) + fine + oily scalp + wavy, main concern frizz. Exercises the seeded
+// entries (frizz, color-fade, oily scalp/wash cadence, wavy handling) and the R22 tone.
+
+const COLORED_FRIZZ_HEAT: DiscoveryHeatStylingV1 = {
+  dryingRoutes: ["air_dry"],
+  additionalHeatTools: ["straightener"],
+  heatEvents: {
+    "heat:straightener": { frequency: "weekly_1x", protectionConsistency: "no" },
+  },
+}
+
+const COLORED_FRIZZ: ConsultGoldenProfile = {
+  id: "colored-frizz",
+  summary:
+    "Gefärbt (nicht blondiert), fein, wellig, fettige Kopfhaut; Hauptproblem Frizz, dazu wenig Glanz; Glätteisen 1×/Woche ohne Hitzeschutz; wäscht 5–6×, Ideal 3–4×.",
+  notEncoded: ["mittellang (Länge)"],
+  parts: {
+    model: {
+      concernProfileFacts: {
+        hair_texture: "wavy",
+        thickness: "fine",
+        scalp_type: "oily",
+        chemical_treatment: ["colored"],
+        damaged: false,
+        heat_styling: true,
+      },
+      hairElasticity: "stretches_stays",
+      heatStyling: COLORED_FRIZZ_HEAT,
+      consultFacts: {
+        concerns: ["frizz_flyaways", "low_shine"],
+        scalpConcerns: [],
+        profileHeatTools: ["straightener"],
+        currentWashFrequency: "weekly_5_6x",
+        idealWashFrequency: "weekly_3_4x",
+        hairLossBoundary: false,
+      },
+    },
+    view: view(
+      [
+        step({
+          decisionKey: "shampoo:shampoo_everyday:none",
+          category: "shampoo",
+          categoryLabel: "Shampoo",
+          frequencyLabel: "5–6× pro Woche",
+          intakeItemId: "cf-shampoo",
+          ownedLabel: "Frischkraft Tiefenrein Shampoo",
+          verdict: inCatalog(
+            "mismatch",
+            { name: "Tiefenrein Shampoo", brand: "Frischkraft" },
+            "Passt nicht",
+          ),
+          swapOptions: [
+            option("prod-sanft-balance", "Sanftwerk Balance Shampoo"),
+            option("prod-klar-mild", "Klarwerk Mildes Alltagsshampoo"),
+          ],
+        }),
+        step({
+          decisionKey: "conditioner:conditioner_rinse_out:none",
+          category: "conditioner",
+          categoryLabel: "Conditioner",
+          intakeItemId: "cf-conditioner",
+          ownedLabel: "Leichtwerk Feuchte Spülung",
+          verdict: inCatalog("ideal", { name: "Feuchte Spülung", brand: "Leichtwerk" }, "Passt"),
+        }),
+        step({
+          decisionKey: "leave_in:leave_in_everyday:none",
+          category: "leave_in",
+          categoryLabel: "Leave-in",
+          frequencyLabel: "Nach jeder Wäsche",
+          idealRecommendation: recommendation("prod-seiden-leavein", "Seidenwerk Glätte Leave-in"),
+          recommendationLabel: "Seidenwerk Glätte Leave-in",
+        }),
+        step({
+          decisionKey: "heat_protectant:heat_protectant:none",
+          category: "heat_protectant",
+          categoryLabel: "Hitzeschutz",
+          frequencyLabel: "Vor jeder Hitze-Anwendung",
+          idealRecommendation: recommendation("prod-schutz-spray", "Schutzwerk Hitzeschutzspray"),
+          recommendationLabel: "Schutzwerk Hitzeschutzspray",
+        }),
+      ],
+      [
+        intakeProduct("cf-shampoo", "shampoo", "Frischkraft Tiefenrein Shampoo", "weekly_5_6x"),
+        intakeProduct("cf-conditioner", "conditioner", "Leichtwerk Feuchte Spülung", "weekly_5_6x"),
+      ],
+    ),
+    quiz: quiz(["frizz_flyaways", "low_shine"], "frizz_flyaways"),
+    callSheet: { baselineScore: 6 },
+  },
+}
+
 export const CONSULT_GOLDEN_PROFILES: readonly ConsultGoldenProfile[] = [
   NOMI,
   OILY_OVERWASH,
   CURLY_BREAKAGE,
+  COLORED_FRIZZ,
 ]
 
 export function consultGoldenProfile(id: ConsultGoldenProfileId): ConsultGoldenProfile {

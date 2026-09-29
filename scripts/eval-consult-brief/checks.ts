@@ -1,4 +1,6 @@
 import type { DiscoveryCallSheetBriefSections } from "../../src/lib/discovery/call-sheet"
+import { toConsultBriefSections } from "../../src/lib/discovery/consult-brief/api-schema"
+import { withBoundaryLine } from "../../src/lib/discovery/consult-brief/generate"
 import type { ConsultInput } from "../../src/lib/discovery/consult-brief/input"
 import {
   CONSULT_BOUNDARY_LINE,
@@ -48,7 +50,9 @@ export function evaluateConsultBriefAnswer(raw: string, input: ConsultInput): Co
     return { brief: null, findings, jsonShape: "unparseable" }
   }
 
-  const parsed = consultBriefSectionsSchema.safeParse(json)
+  // Same post-processing as the generator: strict-schema array → record, boundary line
+  // appended in code — the eval judges what would actually be stored.
+  const parsed = consultBriefSectionsSchema.safeParse(toConsultBriefSections(json))
   if (!parsed.success) {
     for (const issue of parsed.error.issues) {
       findings.push({
@@ -58,7 +62,7 @@ export function evaluateConsultBriefAnswer(raw: string, input: ConsultInput): Co
     }
     return { brief: null, findings, jsonShape }
   }
-  const brief = parsed.data
+  const brief = { ...parsed.data, erwartungen: withBoundaryLine(parsed.data.erwartungen) }
 
   for (const finding of lintConsultBrief(brief, input)) {
     findings.push({

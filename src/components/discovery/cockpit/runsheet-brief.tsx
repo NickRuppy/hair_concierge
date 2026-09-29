@@ -10,6 +10,7 @@ import {
   type DiscoveryCallSheetHabitCommitment,
   type DiscoveryCallSheetPatch,
 } from "@/lib/discovery/call-sheet"
+import { CONSULT_SCORE_TARGET_CAP } from "@/lib/discovery/consult-brief/lint"
 
 import {
   RunsheetCard,
@@ -337,15 +338,19 @@ export function parseRunsheetBaseline(value: string): number | null {
 }
 
 /**
- * The staircase: baseline, then the running total after each Hebel, capped at the scale's
- * 10. The last value is the „Mit Plan" target.
+ * The staircase: baseline, then the running total after each Hebel. The code does this
+ * arithmetic, never the model, and caps at 9 (G3: a 10 is never held out). The last value is
+ * the „Mit Plan" target.
  */
 export function runsheetScoreSteps(
   baseline: number,
   points: ReadonlyArray<number | null>,
 ): number[] {
+  // A baseline already above the cap stays what it is — the cap limits the promise, not
+  // the truth; the ladder then just never climbs further.
+  const cap = Math.max(CONSULT_SCORE_TARGET_CAP, baseline)
   const steps = [baseline]
-  for (const value of points) steps.push(Math.min(10, steps.at(-1)! + (value ?? 0)))
+  for (const value of points) steps.push(Math.min(cap, steps.at(-1)! + (value ?? 0)))
   return steps
 }
 
