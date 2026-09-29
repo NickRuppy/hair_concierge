@@ -64,9 +64,12 @@ test("the migration has a unique version that sorts after every migration", () =
     .map((name) => name.split("_")[0])
   const own = OWN.split("_")[0]
   assert.equal(versions.filter((version) => version === own).length, 1)
+  // Was "sorts after every migration" when it was the newest; the catalog-hardening
+  // migrations now follow it, so what still matters is that it follows its chain.
+  const predecessors = CHAIN.slice(0, CHAIN.indexOf(OWN)).map((name) => name.split("_")[0])
   assert.ok(
-    versions.every((version) => version <= own),
-    "must sort after every migration",
+    predecessors.every((version) => version < own),
+    "must sort after its prerequisites",
   )
 })
 
