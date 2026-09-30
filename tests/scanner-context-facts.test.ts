@@ -442,3 +442,47 @@ test("a corrupt diagnostics document (or its provenance) falls back to the colum
     assert.deepEqual(editableScannerQuizAnswers(read), expectedPrefill, label)
   }
 })
+
+// ---------------------------------------------------------------------------
+// Fix round 3, item 3: a paid v2 source is promoted to v3 only when something must change.
+// ---------------------------------------------------------------------------
+
+function paidV2() {
+  const v2 = structuredClone(COMPLETE_V3_PLAN_ENVELOPE) as unknown as {
+    kind: string
+    version: number
+    answers: Record<string, unknown>
+  }
+  v2.version = 2
+  delete v2.answers.concernRecurrence
+  v2.answers.currentConcerns = ["dry_dull_lengths", "breakage_or_split_ends", "low_shine"]
+  return v2
+}
+
+test("v2: a stale main problem or recurrence in the facts does not promote the source", () => {
+  const v2 = paidV2()
+  const native = facts(v2)
+  const stale = native.currentConcerns!.includes("tangling") ? "frizz_flyaways" : "tangling"
+  const withoutConcerns = { ...native } as Partial<DiagnosticsV1>
+  delete withoutConcerns.currentConcerns
+  const thickness = native.thickness === "coarse" ? "fine" : "coarse"
+  for (const [label, stored] of [
+    ["stale pick", { ...native, primaryConcern: stale }],
+    // A recurrence can only be stale where the facts do not know the concerns (partial facts).
+    [
+      "stale recurrence",
+      { ...withoutConcerns, concernRecurrence: { concernId: stale, frequency: "often" } },
+    ],
+  ] as const) {
+    // Unchanged otherwise: verbatim.
+    const same = prepareScannerContext(paidRead(v2, factsRow(stored as DiagnosticsV1)))
+    assert.equal(scannerSourceHash(same!.source), scannerSourceHash(v2), `${label}: verbatim`)
+    // A real difference (thickness) is rebuilt without a promotion.
+    const rebased = prepareScannerContext(
+      paidRead(v2, factsRow({ ...stored, thickness } as DiagnosticsV1)),
+    )
+    assert.equal(rebased?.source.version, 2, label)
+    assert.equal(rebased?.source.answers.thickness, thickness, label)
+    assert.deepEqual(rebased?.source.answers.currentConcerns, v2.answers.currentConcerns, label)
+  }
+})

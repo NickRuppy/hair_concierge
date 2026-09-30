@@ -321,10 +321,14 @@ function rebaseScannerSourceOnFacts(
   if (base.kind !== "legacy_quiz" && base.version === 2) {
     const concerns = knownFact(facts, "currentConcerns") as string[] | undefined
     const native = normalizeV2Concerns(base.answers.currentConcerns)
+    // Promoted only when something must change: the concerns, or a main problem / recurrence
+    // that survives into the rebuilt concerns (a stale one is dropped below either way).
+    const rebuilt: readonly string[] = concerns ?? native
     if (
       (concerns !== undefined && !sameFactValue(native, concerns)) ||
-      diagnostics.primaryConcern ||
-      diagnostics.concernRecurrence
+      (diagnostics.primaryConcern !== undefined && rebuilt.includes(diagnostics.primaryConcern)) ||
+      (diagnostics.concernRecurrence !== undefined &&
+        rebuilt.includes(diagnostics.concernRecurrence.concernId))
     )
       base = {
         ...base,
