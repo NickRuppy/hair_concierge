@@ -1,5 +1,5 @@
-import type { DiagnosticConcern, DiagnosticGoal } from "@/lib/quiz/diagnostic-input"
-import type { Goal, ProfileConcern } from "@/lib/vocabulary"
+import { resolveVisibleDiagnosticGoals, type DiagnosticConcern } from "@/lib/quiz/diagnostic-input"
+import type { ProfileConcern } from "@/lib/vocabulary"
 import type {
   ChemicalTreatment,
   CuticleCondition,
@@ -25,11 +25,13 @@ import { diagnosticsV1Schema, type DiagnosticsV1 } from "../schema"
  *
  * Deliberately lossy (H3/P4 approve a lossy import): the legacy columns are themselves a
  * projection of richer quiz answers. The translation is the owner-approved migration table M
- * (Nick, 2026-09-30) — see the two tables below: `healthier_hair`/`color_protection` goals and
- * the `oily_scalp` concern are DROPPED rather than guessed at (the scalp type carries oily
- * scalps), a `dandruff` concern is not a hair concern at all but `oily_dandruff` in
- * `scalpConcerns`, and a stored `volume`/`less_volume` goal keeps its direction in
- * `volumeDirection`. A null column omits its field rather than inventing a default.
+ * (Nick, 2026-09-30): goals go through THE one legacy-goal rule the quiz itself uses for old
+ * answers (`resolveVisibleDiagnosticGoals`), so nothing is dropped — `healthier_hair` becomes
+ * `strength_ends`, `color_protection` `shine`; the `oily_scalp` concern is dropped (the scalp
+ * type carries oily scalps), a `dandruff` concern is not a hair concern at all but
+ * `oily_dandruff` in `scalpConcerns`, and a stored `volume`/`less_volume` goal keeps its
+ * direction in `volumeDirection`. A null column omits its field rather than inventing a
+ * default.
  *
  * `scalp_condition` is the one column whose `null` can be a real answer rather than an absent
  * one ("no scalp issue": `link-to-profile.ts` writes null when `has_scalp_issue === false`),
@@ -86,12 +88,11 @@ const COLUMN_TO_CHEMICAL_TREATMENT: Partial<Record<ChemicalTreatment, ChemicalTr
   invert(CHEMICAL_TREATMENT_TO_COLUMN)
 
 /**
- * Migration table M (Nick, 2026-09-30), written out because many-to-one legacy projections have
- * no computable inverse. Every legacy value NOT listed is dropped, never coerced into a
- * neighbour: goals `healthier_hair`/`color_protection` (a row left with no goal keeps an empty
- * list), concern `oily_scalp` (the scalp type carries it). `dandruff` is handled apart (see
- * `DANDRUFF_CONCERN`). Keys are plain strings: historical rows carry values the current
- * vocabulary no longer lists (`defined_curls`, `less_breakage`).
+ * Migration table M (Nick, 2026-09-30) for concerns, written out because many-to-one legacy
+ * projections have no computable inverse. A concern NOT listed is dropped, never coerced into a
+ * neighbour: `oily_scalp` (the scalp type carries it). `dandruff` is handled apart (see
+ * `DANDRUFF_CONCERN`). Goals have no table here: they use the quiz's own legacy-goal rule,
+ * `resolveVisibleDiagnosticGoals` (owner correction, 2026-09-30: one rule in the codebase).
  */
 const COLUMN_CONCERN_TO_DIAGNOSTIC_CONCERN: Partial<
   Record<ProfileConcern | (string & {}), DiagnosticConcern>
@@ -104,21 +105,6 @@ const COLUMN_CONCERN_TO_DIAGNOSTIC_CONCERN: Partial<
   frizz: "frizz_flyaways",
   hair_loss: "hair_loss_or_thinning",
   thinning: "hair_loss_or_thinning",
-}
-
-const COLUMN_GOAL_TO_DIAGNOSTIC_GOAL: Partial<Record<Goal | (string & {}), DiagnosticGoal>> = {
-  moisture: "moisture",
-  shine: "shine",
-  less_frizz: "frizz_surface",
-  curl_definition: "shape_definition",
-  defined_curls: "shape_definition",
-  healthy_scalp: "scalp_balance",
-  anti_breakage: "strength_ends",
-  less_breakage: "strength_ends",
-  strengthen: "strength_ends",
-  less_split_ends: "strength_ends",
-  volume: "volume_balance",
-  less_volume: "volume_balance",
 }
 
 /** Table M: a legacy `dandruff` concern is a SCALP concern — `oily_dandruff` in
@@ -219,7 +205,7 @@ export function legacyColumnsToDiagnostics(
     : undefined
   const chemicalTreatments = mapArray(columns.chemical_treatment, COLUMN_TO_CHEMICAL_TREATMENT)
   const currentConcerns = mapArray(columns.concerns, COLUMN_CONCERN_TO_DIAGNOSTIC_CONCERN)
-  const goals = mapArray(columns.goals, COLUMN_GOAL_TO_DIAGNOSTIC_GOAL)
+  const goals = columns.goals === null ? undefined : resolveVisibleDiagnosticGoals(columns.goals)
   const volumeDirection = goals?.includes("volume_balance")
     ? storedVolumeDirection(columns.goals, columns.desired_volume)
     : undefined

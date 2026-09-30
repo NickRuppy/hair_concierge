@@ -18,6 +18,8 @@ import {
 } from "../src/lib/user-facts/backfill/resolve-stage2-head"
 import { selectDiagnosticsSource } from "../src/lib/user-facts/backfill/select-diagnostics-source"
 import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
+import { resolveVisibleDiagnosticGoals } from "../src/lib/quiz/diagnostic-input"
+import { GOALS } from "../src/lib/vocabulary/concerns-goals"
 import {
   planUserFactsBackfill,
   type LegacyProfileColumns,
@@ -73,7 +75,7 @@ test("legacyColumnsToDiagnostics translates a complete column snapshot into nati
 })
 
 // Migration table M (Nick, 2026-09-30) — the owner-approved legacy-column translation.
-test("migration table M: every approved goal translation, dropped goals leave an empty list", () => {
+test("migration table M: every approved goal translation — nothing is dropped", () => {
   const translate = (goals: string[]) =>
     legacyColumnsToDiagnostics({ ...FULL_DIAGNOSTIC_COLUMNS, goals }, {}).goals
   assert.deepEqual(translate(["moisture"]), ["moisture"])
@@ -88,8 +90,21 @@ test("migration table M: every approved goal translation, dropped goals leave an
   }
   assert.deepEqual(translate(["volume"]), ["volume_balance"])
   assert.deepEqual(translate(["less_volume"]), ["volume_balance"])
-  // DROPPED — never invented into another goal; a row left with none keeps an empty list.
-  assert.deepEqual(translate(["healthier_hair", "color_protection"]), [])
+  // Owner correction (2026-09-30): NOT dropped — the same conversion an old quiz gets.
+  assert.deepEqual(translate(["healthier_hair"]), ["strength_ends"])
+  assert.deepEqual(translate(["color_protection"]), ["shine"])
+  assert.deepEqual(translate(["healthier_hair", "color_protection"]), ["shine", "strength_ends"])
+})
+
+test("migration table M: the backfill applies the ONE legacy-goal rule the quiz uses, for every legacy goal", () => {
+  for (const goal of [...GOALS, "defined_curls", "less_breakage"]) {
+    const translated = legacyColumnsToDiagnostics(
+      { ...FULL_DIAGNOSTIC_COLUMNS, goals: [goal] },
+      {},
+    ).goals
+    assert.deepEqual(translated, resolveVisibleDiagnosticGoals([goal]), goal)
+    assert.equal(translated?.length, 1, `${goal} converts to exactly one quiz goal`)
+  }
 })
 
 test("migration table M: concerns, with dandruff moving to scalpConcerns and oily_scalp dropped", () => {
@@ -174,13 +189,7 @@ test("legacyColumnsToDiagnostics drops unmapped legacy values and dedupes many-t
       ...FULL_DIAGNOSTIC_COLUMNS,
       chemical_treatment: ["colored", "irgendwas"],
       concerns: ["hair_loss", "thinning", "dandruff", "oily_scalp", "tangling"],
-      goals: [
-        "anti_breakage",
-        "strengthen",
-        "less_split_ends",
-        "healthier_hair",
-        "color_protection",
-      ],
+      goals: ["anti_breakage", "strengthen", "less_split_ends", "irgendwas"],
     },
     {},
   )
