@@ -1,4 +1,4 @@
-import { HOST_DENYLIST, isUsableUrl, passesBrandDirect } from "../../affiliate-research/url-gate"
+import { HOST_DENYLIST, isUsableUrl } from "../../affiliate-research/url-gate"
 import type { PriceAuditCandidate, RetailerObservation } from "../contracts"
 
 /**
@@ -89,13 +89,31 @@ export async function observeViaLlm(
     }
   }
 
+  // The availability claim must be a real boolean or null; any other shape
+  // means the answer did not follow the contract and goes to review.
+  const buyableClaim = parsed.buyable_at_stored_link
+  if (
+    buyableClaim !== true &&
+    buyableClaim !== false &&
+    buyableClaim !== null &&
+    buyableClaim !== undefined
+  ) {
+    return {
+      kind: "mismatch",
+      reason: "availability_unknown",
+      evidenceUrl,
+      observedName,
+      observedPriceEur: priceEur,
+    }
+  }
+
   return {
     kind: "confirmed",
     identity: "llm_research",
     priceEur,
     // `false` routes to review in `decide`; an unknown claim never blocks the
     // price write because the LLM lane cannot touch the status anyway.
-    buyable: parsed.buyable_at_stored_link !== false,
+    buyable: buyableClaim !== false,
     buyableSource: "text",
     evidenceUrl,
     observedName,
@@ -103,24 +121,56 @@ export async function observeViaLlm(
 }
 
 /**
- * The CLI prints reasoning/log lines around the answer; take the last
- * parseable JSON object. The contract asks for one flat object, so matching
- * brace-free spans is sufficient and immune to noise like `{ not json }`.
+ * The CLI prints reasoning/log lines around the answer. Scan for balanced
+ * JSON objects (string- and escape-aware, so `"{brace}"` inside a value is
+ * fine), parse each, and keep the LAST one that carries the answer schema's
+ * `found` boolean — log objects without it never win over the final answer.
  */
 export function extractJsonAnswer(output: string): Record<string, unknown> | null {
-  const matches = output.match(/\{[^{}]*\}/g)
-  if (!matches) return null
-  for (let index = matches.length - 1; index >= 0; index--) {
+  let answer: Record<string, unknown> | null = null
+  for (let start = output.indexOf("{"); start !== -1; start = output.indexOf("{", start + 1)) {
+    const end = matchingBrace(output, start)
+    if (end === -1) continue
     try {
-      const parsed: unknown = JSON.parse(matches[index])
-      if (typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)) {
-        return parsed as Record<string, unknown>
+      const parsed: unknown = JSON.parse(output.slice(start, end + 1))
+      if (
+        typeof parsed === "object" &&
+        parsed !== null &&
+        !Array.isArray(parsed) &&
+        typeof (parsed as Record<string, unknown>).found === "boolean"
+      ) {
+        answer = parsed as Record<string, unknown>
       }
+      // Skip past this object either way so inner objects are not re-scanned.
+      start = end
     } catch {
       continue
     }
   }
-  return null
+  return answer
+}
+
+function matchingBrace(text: string, start: number): number {
+  let depth = 0
+  let inString = false
+  let escaped = false
+  for (let index = start; index < text.length; index++) {
+    const char = text[index]
+    if (escaped) {
+      escaped = false
+    } else if (inString) {
+      if (char === "\\") escaped = true
+      else if (char === '"') inString = false
+    } else if (char === '"') {
+      inString = true
+    } else if (char === "{") {
+      depth++
+    } else if (char === "}") {
+      depth--
+      if (depth === 0) return index
+    }
+  }
+  return -1
 }
 
 export function isAcceptableEvidenceUrl(url: string, brand: string | null): boolean {
@@ -131,9 +181,34 @@ export function isAcceptableEvidenceUrl(url: string, brand: string | null): bool
   } catch {
     return false
   }
-  if (HOST_DENYLIST.has(host) || HOST_DENYLIST.has(host.replace(/^www\./, ""))) return false
+  const bare = host.replace(/^www\./, "")
+  // Deny aggregators including their subdomains (olaplex.idealo.de is idealo).
+  for (const denied of HOST_DENYLIST) {
+    if (bare === denied || bare.endsWith(`.${denied}`)) return false
+  }
   // Known retailers, plus the brand's own shop for long-tail products.
-  return isKnownRetailerHost(host) || passesBrandDirect(host, brand)
+  return isKnownRetailerHost(host) || isBrandOwnedHost(bare, brand)
+}
+
+/**
+ * Brand-direct means the REGISTRABLE domain is the brand's, not that the
+ * brand appears anywhere in the host — `olaplex.attacker.example` is not
+ * Olaplex. Crude two-label registrable extraction is enough for the shop
+ * TLDs in this catalog (.de/.com/.at/.nl).
+ */
+export function isBrandOwnedHost(bareHost: string, brand: string | null): boolean {
+  if (!brand) return false
+  const brandSlug = brand.toLowerCase().replace(/[^a-z0-9]/g, "")
+  if (brandSlug.length < 4) return false
+  const labels = bareHost.split(".")
+  if (labels.length < 2) return false
+  const registrableLabel = labels[labels.length - 2].replace(/[^a-z0-9]/g, "")
+  if (registrableLabel.length < 4) return false
+  return (
+    registrableLabel === brandSlug ||
+    registrableLabel.startsWith(brandSlug) ||
+    brandSlug.startsWith(registrableLabel)
+  )
 }
 
 const KNOWN_RETAILER_HOSTS = [

@@ -25,6 +25,8 @@ import {
   buildRunSummary,
   groupCandidatesByHost,
   isSystemicFailure,
+  neutralizeCsvCell,
+  selectLlmEscalations,
   type AuditResult,
 } from "../../src/lib/price-audit/run-support"
 
@@ -292,30 +294,16 @@ function runCodexResearch(prompt: string): Promise<string> {
       if (stderr.length < 1024 * 1024) stderr += chunk.toString()
     })
     child.on("error", reject)
-    child.on("close", (code) => {
-      if (code !== 0 && !stdout)
-        reject(new Error(`codex exec exited ${code}: ${stderr.slice(0, 300)}`))
-      else resolve(`${stdout}\n${stderr}`)
+    child.on("close", (code, signal) => {
+      // A failed or killed research must never authorize a write, whatever it
+      // printed; only the stdout answer channel is parsed, never stderr.
+      if (code !== 0)
+        reject(
+          new Error(`codex exec exited ${code ?? `signal ${signal}`}: ${stderr.slice(0, 300)}`),
+        )
+      else resolve(stdout)
     })
   })
-}
-
-/** Runs LLM research strictly one at a time across all concurrent host groups. */
-function createSequentialLimiter(): <T>(task: () => Promise<T>) => Promise<T> {
-  let chain: Promise<unknown> = Promise.resolve()
-  return (task) => {
-    const next = chain.then(task, task)
-    chain = next.catch(() => undefined)
-    return next
-  }
-}
-
-function createBudget(max: number): { take(): boolean; used(): number } {
-  let used = 0
-  return {
-    take: () => (used < max ? (used++, true) : false),
-    used: () => used,
-  }
 }
 
 function initSentry(): boolean {
@@ -355,9 +343,15 @@ async function flushSentry(enabled: boolean): Promise<void> {
   }
 }
 
+function neutralizeRow(row: CsvRow): CsvRow {
+  return Object.fromEntries(
+    Object.entries(row).map(([key, value]) => [key, neutralizeCsvCell(value)]),
+  )
+}
+
 function reviewProposalCsvRow(result: AuditResult, reason: string): CsvRow {
   const observation = result.observation
-  return {
+  return neutralizeRow({
     id: result.candidate.id,
     name: result.candidate.name,
     brand: result.candidate.brand ?? "",
@@ -374,13 +368,13 @@ function reviewProposalCsvRow(result: AuditResult, reason: string): CsvRow {
           : "",
     evidence_url: observation.kind === "failed" ? "" : (observation.evidenceUrl ?? ""),
     review_action: "manual_review",
-  }
+  })
 }
 
 function autoWriteCsvRow(result: AuditResult, note: string): CsvRow {
   if (result.decision.action !== "auto_write") throw new Error("not an auto_write result")
   const write = result.decision.write
-  return {
+  return neutralizeRow({
     id: result.candidate.id,
     name: result.candidate.name,
     old_price_eur: result.candidate.priceEur == null ? "" : String(result.candidate.priceEur),
@@ -391,7 +385,7 @@ function autoWriteCsvRow(result: AuditResult, note: string): CsvRow {
     purchase_link_checked_at: write.purchaseLinkCheckedAt ?? "",
     applied: result.applied ? "true" : "false",
     note,
-  }
+  })
 }
 
 async function main() {
@@ -418,8 +412,6 @@ async function main() {
   )
 
   const groups = groupCandidatesByHost(candidates)
-  const llmBudget = createBudget(options.llm ? options.llmBudget : 0)
-  const llmLimiter = createSequentialLimiter()
   const results: AuditResult[] = []
   const notes = new Map<string, string>()
   // Non-benign database write errors: any one of these fails the run loudly —
@@ -457,26 +449,6 @@ async function main() {
             }
           }
 
-          // GPT fallback (Nick, 2026-09-30): anything the deterministic path
-          // could not confirm escalates to Codex research in the same run,
-          // budget-capped, one research at a time across all host groups.
-          if (observation.kind !== "confirmed" && options.llm && llmBudget.take()) {
-            const llmObservation = await llmLimiter(() =>
-              observeViaLlm(candidate, { runResearch: runCodexResearch }),
-            )
-            const llmDecision = decide(candidate, llmObservation, {
-              hostAutoWriteEnabled: autoWriteEnabled,
-              now: new Date().toISOString(),
-            })
-            // Keep the LLM outcome when it moved the row forward; a failed or
-            // empty research keeps the (more specific) deterministic reason.
-            if (llmObservation.kind !== "failed") {
-              observation = llmObservation
-              decision = llmDecision
-              notes.set(candidate.id, "source:llm_research")
-            }
-          }
-
           const result: AuditResult = { candidate, host, observation, decision, applied: false }
           if (decision.action === "auto_write") {
             if (isNoOpWrite(result)) {
@@ -508,6 +480,45 @@ async function main() {
       }
     }),
   )
+
+  // GPT fallback phase (Nick, 2026-09-30): after the deterministic pass,
+  // unconfirmed rows escalate to Codex research in GLOBAL audit priority
+  // (recommendation-surfaced first, oldest first) under the run budget, one
+  // research at a time.
+  let llmResearches = 0
+  if (options.llm) {
+    const escalations = selectLlmEscalations(results, options.llmBudget)
+    for (const result of escalations) {
+      llmResearches++
+      try {
+        const llmObservation = await observeViaLlm(result.candidate, {
+          runResearch: runCodexResearch,
+        })
+        // A failed or empty research keeps the (more specific) deterministic reason.
+        if (llmObservation.kind === "failed") continue
+        const llmDecision = decide(result.candidate, llmObservation, {
+          hostAutoWriteEnabled: false,
+          now: new Date().toISOString(),
+        })
+        result.observation = llmObservation
+        result.decision = llmDecision
+        notes.set(result.candidate.id, "source:llm_research")
+        if (llmDecision.action === "auto_write" && options.apply && !isNoOpWrite(result)) {
+          const applied = await applyWrite(supabase, result)
+          result.applied = applied.ok
+          if (!applied.ok) {
+            notes.set(result.candidate.id, `apply_failed:${applied.error}`)
+            if (!applied.benign) dbWriteFailures.push(`${result.candidate.id}: ${applied.error}`)
+            console.error(`write failed for ${result.candidate.id}: ${applied.error}`)
+          }
+        }
+      } catch (error) {
+        console.error(
+          `llm research failed for ${result.candidate.id}: ${error instanceof Error ? error.message : String(error)}`,
+        )
+      }
+    }
+  }
 
   const finishedAt = new Date().toISOString()
   const summary = buildRunSummary(results, { startedAt, finishedAt, apply: options.apply })
@@ -578,7 +589,7 @@ async function main() {
     autoRows.map((result) => autoWriteCsvRow(result, notes.get(result.candidate.id) ?? "")),
   )
 
-  console.log(JSON.stringify({ ...summary.byAction, llm_researches: llmBudget.used() }))
+  console.log(JSON.stringify({ ...summary.byAction, llm_researches: llmResearches }))
   console.log(
     `Artifacts in ${outDir}. ${options.apply ? "Writes applied." : "No writes performed."}`,
   )

@@ -1,5 +1,6 @@
 import type { AuditDecision, PriceAuditCandidate, RetailerObservation } from "./contracts"
 import { adapterHostFor } from "./adapters"
+import { orderAuditCandidates } from "./select"
 
 /**
  * Pure helpers of the runner and the probe script: host grouping, run-summary
@@ -80,4 +81,31 @@ export type ProbeSample = {
 export function evaluateProbeSamples(samples: readonly ProbeSample[]): boolean {
   if (samples.length === 0) return false
   return samples.every((sample) => sample.observation.kind === "confirmed")
+}
+
+/**
+ * A CSV cell that a spreadsheet could execute (leading =, +, -, @, tab) gets a
+ * leading apostrophe. Review CSVs carry LLM- and page-derived text, which is
+ * untrusted; every cell of the audit artifacts goes through this.
+ */
+export function neutralizeCsvCell(value: string): string {
+  return /^[=+\-@\t\r]/.test(value) ? `'${value}` : value
+}
+
+/**
+ * Picks which unconfirmed results get GPT research, in the same global
+ * priority as the audit itself (recommendation-surfaced first, oldest checks
+ * first) — never in host-group completion order.
+ */
+export function selectLlmEscalations(
+  results: readonly AuditResult[],
+  budget: number,
+): AuditResult[] {
+  if (budget <= 0) return []
+  const unconfirmed = results.filter((result) => result.observation.kind !== "confirmed")
+  const byId = new Map(unconfirmed.map((result) => [result.candidate.id, result]))
+  return orderAuditCandidates(unconfirmed.map((result) => result.candidate))
+    .slice(0, budget)
+    .map((candidate) => byId.get(candidate.id))
+    .filter((result): result is AuditResult => result !== undefined)
 }

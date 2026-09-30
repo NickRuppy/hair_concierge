@@ -7,6 +7,8 @@ import {
   evaluateProbeSamples,
   groupCandidatesByHost,
   isSystemicFailure,
+  neutralizeCsvCell,
+  selectLlmEscalations,
   type AuditResult,
 } from "../src/lib/price-audit/run-support"
 
@@ -125,4 +127,61 @@ test("probe passes only when every sample confirmed identity and price", () => {
     false,
   )
   assert.equal(evaluateProbeSamples([]), false)
+})
+
+test("csv cells that could execute as formulas get neutralized", () => {
+  assert.equal(neutralizeCsvCell("=1+1"), "'=1+1")
+  assert.equal(neutralizeCsvCell("+49 123"), "'+49 123")
+  assert.equal(neutralizeCsvCell("-4.49"), "'-4.49")
+  assert.equal(neutralizeCsvCell("@cmd"), "'@cmd")
+  assert.equal(neutralizeCsvCell("Olaplex No.5"), "Olaplex No.5")
+  assert.equal(neutralizeCsvCell(""), "")
+})
+
+test("llm escalation follows global audit priority, not host-group order", () => {
+  const unconfirmed = (id: string, overrides: Partial<AuditResult["candidate"]>): AuditResult => ({
+    candidate: { ...candidate(id, "https://www.rossmann.de/x"), ...overrides, id },
+    host: "rossmann.de",
+    observation: { kind: "failed", reason: "bot_wall" },
+    decision: { action: "review_proposal", reason: "host_not_enabled" },
+    applied: false,
+  })
+  const confirmedResult: AuditResult = {
+    candidate: candidate("done", "https://www.dm.de/p/d/1/x"),
+    host: "dm.de",
+    observation: {
+      kind: "confirmed",
+      identity: "gtin_match",
+      priceEur: 4.95,
+      buyable: true,
+      buyableSource: "structured",
+      evidenceUrl: "https://www.dm.de/p/d/1/x",
+      observedName: "x",
+    },
+    decision: {
+      action: "auto_write",
+      write: { purchaseLinkStatus: "available", purchaseLinkCheckedAt: "2026-09-30T00:00:00.000Z" },
+    },
+    applied: true,
+  }
+  const picked = selectLlmEscalations(
+    [
+      unconfirmed("plain-old", { priceCheckedAt: "2026-06-01T00:00:00.000Z" }),
+      confirmedResult,
+      unconfirmed("rec-new", {
+        isChaarlieRecommended: true,
+        priceCheckedAt: "2026-09-04T00:00:00.000Z",
+      }),
+      unconfirmed("rec-old", {
+        isChaarlieRecommended: true,
+        priceCheckedAt: "2026-06-01T00:00:00.000Z",
+      }),
+    ],
+    2,
+  )
+  assert.deepEqual(
+    picked.map((result) => result.candidate.id),
+    ["rec-old", "rec-new"],
+  )
+  assert.deepEqual(selectLlmEscalations([confirmedResult], 5), [])
 })

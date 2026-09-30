@@ -115,16 +115,50 @@ test("llm adapter reports found=false as not_found and garbage output as failure
   assert.deepEqual(thrown, { kind: "failed", reason: "adapter_unavailable" })
 })
 
-test("evidence gate accepts known retailers and brand-direct shops only", () => {
+test("evidence gate accepts known retailers and brand-owned domains only", () => {
   assert.equal(isAcceptableEvidenceUrl("https://www.dm.de/p/d/1/x", null), true)
   assert.equal(isAcceptableEvidenceUrl("https://olaplex.de/products/no5", "Olaplex"), true)
+  assert.equal(isAcceptableEvidenceUrl("https://eu.curlsmith.com/products/x", "Curlsmith"), true)
   assert.equal(isAcceptableEvidenceUrl("https://www.geizhals.de/x", "Olaplex"), false)
   assert.equal(isAcceptableEvidenceUrl("https://random-blog.example.com/review", "Olaplex"), false)
+  // Brand substring in a foreign host is NOT brand ownership.
+  assert.equal(isAcceptableEvidenceUrl("https://olaplex.attacker.example/x", "Olaplex"), false)
+  // Aggregator subdomains stay denied.
+  assert.equal(isAcceptableEvidenceUrl("https://olaplex.idealo.de/x", "Olaplex"), false)
+  assert.equal(isAcceptableEvidenceUrl("https://sub.geizhals.de/x", "Olaplex"), false)
 })
 
-test("extractJsonAnswer takes the final json object out of noisy cli output", () => {
+test("a malformed availability claim routes to review instead of a write", async () => {
+  const observation = await observeViaLlm(candidate(), {
+    runResearch: async () =>
+      answer({
+        found: true,
+        price_eur: 34.0,
+        buyable_at_stored_link: "false",
+        evidence_url: "https://olaplex.de/products/no5",
+        observed_name: "Olaplex No.5",
+        notes: "",
+      }),
+  })
+  assert.equal(observation.kind, "mismatch")
+  assert.equal(observation.kind === "mismatch" ? observation.reason : null, "availability_unknown")
+})
+
+test("extractJsonAnswer takes the final schema answer out of noisy cli output", () => {
   assert.deepEqual(extractJsonAnswer('log {"a":1} more {"found":true}'), { found: true })
   assert.equal(extractJsonAnswer("nothing here"), null)
+  // Braces inside string values must not break extraction.
+  assert.deepEqual(extractJsonAnswer('x {"found":true,"notes":"has {brace} inside"}'), {
+    found: true,
+    notes: "has {brace} inside",
+  })
+  // A nested log object without the schema key never wins over the answer.
+  assert.deepEqual(extractJsonAnswer('{"log":{"found":"yes"}} then {"found":false,"notes":""}'), {
+    found: false,
+    notes: "",
+  })
+  // Objects lacking the boolean `found` are not answers at all.
+  assert.equal(extractJsonAnswer('{"price_eur":3}'), null)
 })
 
 test("prompt contains the anti-aggregator and default-size rules", () => {
