@@ -83,9 +83,15 @@ export function missingProfileQuestions(profile: Record<string, unknown> | null)
 export function mergeMissingProfileAnswers(
   profile: Record<string, unknown> | null,
   input: Partial<QuizAnswers>,
-): { answers: QuizAnswers; patch: Record<string, unknown> } {
+): {
+  answers: QuizAnswers
+  patch: Record<string, unknown>
+  /** The question groups that were missing and are answered now (clean-switch task 4: the
+   * facts write names exactly these). */
+  missing: (typeof groups)[number][]
+} {
   const submitted = partialAnswersSchema.parse(input) as Partial<QuizAnswers>
-  const missing = missingProfileQuestions(profile)
+  const missing = missingProfileQuestions(profile) as (typeof groups)[number][]
   const merged: Record<string, unknown> = { ...storedProfileQuizAnswers(profile) }
   for (const id of missing) {
     merged[id] = submitted[id as keyof QuizAnswers]
@@ -103,5 +109,6 @@ export function mergeMissingProfileAnswers(
   return {
     answers,
     patch: Object.fromEntries(Object.entries(projected).filter(([key]) => allowed.has(key))),
+    missing,
   }
 }

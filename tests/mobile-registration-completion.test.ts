@@ -78,7 +78,14 @@ test("new registration computes real scanner context and binds exact submission/
   assert.equal(call.p_mode, "create")
   assert.equal(call.p_user_id, owner)
   assert.equal(call.p_quiz_answers.has_scalp_issue, false)
-  assert.equal(call.p_patch.scalp_condition, null)
+  // Clean-switch task 4: facts for the door, no column patch.
+  assert.equal("p_patch" in call, false)
+  assert.deepEqual(call.p_facts.diagnostics.patch.scalpConcerns, [])
+  assert.equal(call.p_facts.diagnostics.patch.source.leadId, call.p_lead_id)
+  assert.deepEqual(call.p_facts.diagnostics.provenance.source, {
+    kind: "legacy_lead",
+    id: call.p_lead_id,
+  })
   assert.equal(call.p_output_snapshot.computationVersion, "stage1-v1")
   assert.equal(call.p_input_snapshot.source.leadId, call.p_lead_id)
   assert.equal(call.p_submission.marketingOptIn, true)
@@ -123,7 +130,7 @@ test("replace preserves unrelated profile fields and uses exact source revision"
   } as never)
   const call = db.calls.at(-1)!.args
   assert.equal(call.p_expected_source_revision, "0")
-  assert.equal(call.p_patch.styling_methods, undefined)
+  assert.equal(call.p_facts.diagnostics.patch.styling_methods, undefined)
   assert.equal(call.p_mode, "replace")
 })
 test("missing-only asks merged helper for allowed patch, ignores supplied present-field replacements", async () => {
@@ -137,7 +144,11 @@ test("missing-only asks merged helper for allowed patch, ignores supplied presen
   })
   const call = db.calls.at(-1)!.args
   assert.equal(call.p_mode, "missing")
-  assert.deepEqual(call.p_patch, { hair_length: "short" })
+  // No stored facts document: the completion writes the whole document (a partial new one
+  // would derive NULL into every other column), built from the merged answers.
+  assert.equal(call.p_facts.diagnostics.patch.hairLength, "short")
+  assert.equal(call.p_facts.diagnostics.patch.thickness, "fine")
+  assert.equal(call.p_facts.diagnostics.provenance.source.kind, "profile_editor")
   assert.equal(call.p_quiz_answers.thickness, "fine")
   assert.equal(call.p_quiz_answers.has_scalp_issue, false)
   assert.equal(call.p_submission, null)

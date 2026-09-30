@@ -4,6 +4,11 @@ import { readFile } from "node:fs/promises"
 import test from "node:test"
 
 import { saveMobileProfileEdit } from "../src/lib/mobile/profile-edit-service"
+import { mergeMissingProfileAnswers } from "../src/lib/mobile/profile-completion-contract"
+import {
+  completeMobileProfile,
+  completeMobileRegistration,
+} from "../src/lib/mobile/registration-completion"
 import {
   mobileEditProfilePatch,
   type ProfileEditRequest,
@@ -16,6 +21,7 @@ import {
   mobileFactsDatabase,
   pgliteRpcClient,
   readRow,
+  registrationIntent,
 } from "./mobile-profile-facts-pglite.fixtures"
 import {
   id,
@@ -25,7 +31,7 @@ import {
 } from "./personal-plan-pglite-migration.fixtures"
 
 /**
- * Golden test, clean-switch task 3: for the existing iOS edit fixtures, the columns
+ * Golden tests, clean-switch tasks 3 + 4: for the existing iOS edit / registration fixtures, the columns
  * `user_facts_save_v1` derives on the real schema equal what the old direct write stored —
  * today's `mobileEditProfilePatch(answers)` — except for these ENUMERATED exceptions, each
  * applied by exactly one rule below. Any other difference fails: it is a finding, not
@@ -186,6 +192,150 @@ test("golden (task 3): iOS edit fixtures derive today's columns up to E1-E4", as
     assert.deepEqual(
       comparable(actual),
       comparable(expectedColumns(answers, before, mobileEditProfilePatch(answers))),
+      name,
+    )
+  }
+})
+
+// ---------------------------------------------------------------------------
+// Task 4: registration create / replace / missing. Today's function wrote
+// `mobileEditProfilePatch(answers)` (create, replace) or the missing-only patch of
+// `mergeMissingProfileAnswers` over the row; the same E1-E4 are the only allowed differences.
+// ---------------------------------------------------------------------------
+
+/** Registration answers the repo already uses: the registration tests' answers and replace
+ * variant, and the iOS onboarding QA fixture (ios/Chaarlie/QA/OnboardingFixture.swift
+ * `completedDraft`). Onboarding offers the quiz's own goal cards only (mobileEditQuestions({})). */
+const REGISTRATION_FIXTURES: Array<[string, QuizAnswers]> = [
+  ["registration answers", BASE],
+  ["registration replace", { ...BASE, thickness: "coarse" }],
+  ["iOS onboarding QA fixture", { ...BASE, fingertest: "glatt", concerns: [], goals: ["shine"] }],
+  [
+    "all eight quiz goals",
+    {
+      ...BASE,
+      goals: [
+        "moisture",
+        "frizz_surface",
+        "shine",
+        "strength_ends",
+        "scalp_balance",
+        "manageability_styling",
+        "shape_definition",
+        "volume_balance",
+      ],
+    },
+  ],
+]
+
+const TABLE_DEFAULTS: Record<string, unknown> = Object.fromEntries(
+  DIAGNOSTICS_COLUMNS.map((column) => [column, E4_ARRAY_COLUMNS.has(column) ? [] : null]),
+)
+
+async function registration(
+  pg: PersonalPlanTestDb,
+  client: ReturnType<typeof pgliteRpcClient>,
+  choice: "create" | "replace",
+  answers: QuizAnswers,
+) {
+  const input = await registrationIntent(pg, client, OWNER, choice, answers as never)
+  await completeMobileRegistration(client as never, OWNER, input.submission.email, input as never)
+}
+
+test("golden (task 4): registration create and replace derive today's columns up to E1-E4", async (t) => {
+  for (const [name, answers] of REGISTRATION_FIXTURES) {
+    const created = await mobileFactsDatabase(t)
+    await insertProfile(created, OWNER)
+    const createClient = pgliteRpcClient(created)
+    await registration(created, createClient, "create", answers)
+    const createdRow = (await readRow(created, OWNER))!
+    assert.deepEqual(
+      comparable(Object.fromEntries(DIAGNOSTICS_COLUMNS.map((c) => [c, createdRow[c]]))),
+      comparable(expectedColumns(answers, TABLE_DEFAULTS, mobileEditProfilePatch(answers))),
+      `create: ${name}`,
+    )
+
+    const replaced = await mobileFactsDatabase(t)
+    await insertProfile(replaced, OWNER)
+    const replaceClient = pgliteRpcClient(replaced)
+    await registration(replaced, replaceClient, "create", {
+      ...BASE,
+      structure: "curly",
+      concerns: ["tangling", "breakage"],
+      goals: ["shape_definition"],
+    })
+    const before = (await readRow(replaced, OWNER))!
+    await registration(replaced, replaceClient, "replace", answers)
+    const row = (await readRow(replaced, OWNER))!
+    assert.deepEqual(
+      comparable(Object.fromEntries(DIAGNOSTICS_COLUMNS.map((c) => [c, row[c]]))),
+      comparable(expectedColumns(answers, before, mobileEditProfilePatch(answers))),
+      `replace: ${name}`,
+    )
+  }
+})
+
+test("golden (task 4): profile completion (missing) derives today's columns up to E1-E4", async (t) => {
+  const cases: Array<[string, (pg: PersonalPlanTestDb) => Promise<void>, Partial<QuizAnswers>]> = [
+    [
+      "legacy row without facts, hair length missing",
+      async (pg) => {
+        await pg.query(
+          `insert into hair_profiles(user_id,hair_texture,thickness,density,cuticle_condition,protein_moisture_balance,scalp_type,scalp_condition,chemical_treatment,concerns,goals) values($1,'wavy','fine','medium','rough','stretches_bounces','balanced',null,ARRAY['natural'],ARRAY['dryness'],ARRAY['moisture'])`,
+          [OWNER],
+        )
+        await pg.query(
+          "insert into public.leads(id,user_id,quiz_kind,quiz_answers,status) values($1,$2,'legacy',$3,'linked')",
+          [LEAD, OWNER, JSON.stringify({ ...BASE, hair_length: undefined })],
+        )
+      },
+      { hair_length: "short" },
+    ],
+    [
+      "facts profile, hair length missing",
+      async (pg) => {
+        const quiz = { ...BASE, hair_length: undefined } as unknown as QuizAnswers
+        await pg.query(
+          "insert into public.leads(id,user_id,quiz_kind,quiz_answers,status) values($1,$2,'legacy',$3,'linked')",
+          [LEAD, OWNER, JSON.stringify(quiz)],
+        )
+        await saveUserFacts(pg, {
+          userId: OWNER,
+          domain: "diagnostics",
+          patch: projectLegacyLeadToFacts({ leadId: LEAD, quizAnswers: quiz }).diagnostics,
+          provenance: {
+            source: { kind: "legacy_lead", id: LEAD },
+            schemaVersion: 1,
+            at: "2026-09-01T00:00:00.000Z",
+          },
+        })
+      },
+      { hair_length: "very_long" },
+    ],
+  ]
+  for (const [name, seedRow, submitted] of cases) {
+    const pg = await mobileFactsDatabase(t)
+    await insertProfile(pg, OWNER)
+    await seedRow(pg)
+    const client = pgliteRpcClient(pg)
+    const read = (await client.rpc("scanner_context_read_source", { p_user_id: OWNER })).data as {
+      profileRevision: string
+      profile: Record<string, unknown>
+    }
+    const before = (await readRow(pg, OWNER))!
+    const merged = mergeMissingProfileAnswers(read.profile, submitted)
+    await completeMobileProfile(client as never, OWNER, {
+      requestId: randomUUID(),
+      expectedProfileRevision: read.profileRevision,
+      answers: submitted,
+    })
+    const row = (await readRow(pg, OWNER))!
+    const expected = expectedColumns(merged.answers, before, merged.patch)
+    // E2 for a row whose pick nobody touched: the door's rule over the merged answers applies
+    // either way (the old column was untouched: NULL here).
+    assert.deepEqual(
+      comparable(Object.fromEntries(DIAGNOSTICS_COLUMNS.map((c) => [c, row[c]]))),
+      comparable(expected),
       name,
     )
   }

@@ -11,7 +11,14 @@ import {
   type ScannerSourceRead,
 } from "@/lib/scan/scanner-context"
 import { readScannerProfileSource } from "@/lib/scan/scanner-context-supabase"
-import { mobileEditProfilePatch } from "./profile-edit-contract"
+import { parseUserFactsRow } from "@/lib/user-facts/read"
+import {
+  MobileProfileFactsError,
+  buildMobileHandEditFacts,
+  buildMobileQuizFacts,
+  toProfileFactsArgument,
+  type MobileFactsWrite,
+} from "./profile-facts-patch"
 import {
   registrationSubmissionSchema,
   registrationSubmissionHash,
@@ -71,18 +78,36 @@ type Binding = {
   p_email: string | null
   p_submission_hash: string | null
 }
+/** Clean-switch task 4: the facts builders' refusals, as this flow's errors. A quiz taken now
+ * that is not the latest (only possible with a future-dated stored quiz) is a conflict, never a
+ * silently dropped registration. */
+function factsError(error: unknown): never {
+  if (error instanceof MobileProfileFactsError) {
+    if (error.code === "not_newer") throw new RegistrationCompletionError("profile_conflict")
+    if (error.code === "invalid_answers")
+      throw new RegistrationCompletionError("invalid_submission")
+  }
+  throw new RegistrationCompletionError("temporarily_unavailable")
+}
+
+function storedFacts(userId: string, source: ScannerSourceRead) {
+  return source.profile ? parseUserFactsRow(userId, source.profile) : null
+}
+
 async function publish(
   client: SupabaseClient,
   binding: Binding,
   source: ScannerSourceRead,
-  patch: Record<string, unknown>,
+  facts: MobileFactsWrite | null,
   answers: QuizAnswers | null,
   submission: RegistrationSubmission | null,
+  leadId: string | null,
 ) {
-  const leadId = binding.p_mode === "create" || binding.p_mode === "replace" ? randomUUID() : null
   // Explicit replacement/completion becomes its own owner-bound source. Do not
   // silently inherit paid answers or pick an unrelated email/newest lead.
-  const profile = { ...source.profile, ...patch }
+  // The scanner context is prepared from the columns the door WILL derive (the parity-tested
+  // TS oracle), so the published context and the stored row agree.
+  const profile = { ...source.profile, ...facts?.columns }
   const prepared =
     binding.p_mode === "keep"
       ? prepareScannerContext(source)
@@ -125,7 +150,7 @@ async function publish(
       ...binding,
       p_expected_profile_revision: source.profileRevision,
       p_expected_source_revision: source.sourceRevision,
-      p_patch: patch,
+      p_facts: facts ? toProfileFactsArgument(facts) : null,
       p_quiz_answers: answers,
       p_lead_id: leadId,
       p_submission: submission,
@@ -184,13 +209,30 @@ export async function completeMobileRegistration(
       (input.choice !== "create" && !source.profile)
     )
       throw new RegistrationCompletionError("profile_conflict")
+    // create / replace are a quiz taken now: the web account link's "latest own quiz wins"
+    // winner write, sourced from the lead this publication inserts. keep writes nothing.
+    const leadId = input.choice === "keep" ? null : randomUUID()
+    let facts: MobileFactsWrite | null = null
+    if (leadId) {
+      try {
+        facts = buildMobileQuizFacts({
+          answers: submission.answers,
+          leadId,
+          stored: storedFacts(userId, source),
+          now: new Date().toISOString(),
+        })
+      } catch (error) {
+        factsError(error)
+      }
+    }
     return await publish(
       client,
       binding,
       source,
-      input.choice === "keep" ? {} : mobileEditProfilePatch(submission.answers),
+      facts,
       input.choice === "keep" ? null : submission.answers,
       submission,
+      leadId,
     )
   } catch (error) {
     if (error instanceof RegistrationCompletionError) throw error
@@ -221,7 +263,23 @@ export async function completeMobileProfile(
     if (source.profileRevision !== input.expectedProfileRevision)
       throw new RegistrationCompletionError("profile_conflict")
     const merged = mergeMissingProfileAnswers(source.profile, input.answers)
-    return await publish(client, binding, source, merged.patch, merged.answers, null)
+    // Completion names only the missing answers (a hand edit of those groups, after "latest
+    // own quiz wins" with the quiz taken now); nothing missing writes nothing, as before.
+    let facts: MobileFactsWrite | null = null
+    if (merged.missing.length > 0) {
+      try {
+        facts = buildMobileHandEditFacts({
+          answers: merged.answers,
+          stored: storedFacts(userId, source),
+          now: new Date().toISOString(),
+          groups: merged.missing,
+          completion: true,
+        })
+      } catch (error) {
+        factsError(error)
+      }
+    }
+    return await publish(client, binding, source, facts, merged.answers, null, null)
   } catch (error) {
     if (error instanceof RegistrationCompletionError) throw error
     if (error instanceof ZodError) throw new RegistrationCompletionError("invalid_submission")

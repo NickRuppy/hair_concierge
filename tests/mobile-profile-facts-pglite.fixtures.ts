@@ -37,6 +37,7 @@ export const MOBILE_MIGRATIONS = [
 
 export const CLEAN_SWITCH_MIGRATIONS = [
   "supabase/migrations/20260930090000_scanner_profile_edit_through_user_facts.sql",
+  "supabase/migrations/20260930090100_mobile_registration_through_user_facts.sql",
 ] as const
 
 const MOBILE_STUBS = `
@@ -130,3 +131,44 @@ export const DIAGNOSTICS_COLUMNS = [
   "desired_volume",
   "primary_concern",
 ] as const
+
+/** A verified registration intent for `userId` plus the completion input the route would pass. */
+export async function registrationIntent(
+  pg: PersonalPlanTestDb,
+  client: ReturnType<typeof pgliteRpcClient>,
+  userId: string,
+  choice: "create" | "replace" | "keep",
+  answers: Record<string, unknown>,
+) {
+  const { registrationSubmissionHash } = await import("../src/lib/mobile/registration-contract")
+  const submission = {
+    requestId: crypto.randomUUID(),
+    email: "registration@example.test",
+    firstName: "New Name",
+    marketingOptIn: true,
+    answers,
+  }
+  const attemptId = crypto.randomUUID(),
+    sendGeneration = crypto.randomUUID()
+  await pg.query(
+    `insert into mobile_registration_intents(id,request_id,request_hash,email,send_generation,provider_user_id,verified_user_id,verified_at)values($1,$2,$3,$4,$5,$6,$6,now())`,
+    [
+      attemptId,
+      submission.requestId,
+      registrationSubmissionHash(submission as never),
+      submission.email,
+      sendGeneration,
+      userId,
+    ],
+  )
+  const source = (await client.rpc("scanner_context_read_source", { p_user_id: userId })).data as {
+    profileRevision: string
+  }
+  return {
+    attemptId,
+    sendGeneration,
+    submission,
+    choice,
+    expectedProfileRevision: source.profileRevision,
+  }
+}
