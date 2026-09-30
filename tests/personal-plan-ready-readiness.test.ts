@@ -454,6 +454,7 @@ test("latest quiz wins: linking a NEWER own legacy lead replaces the existing pr
     projectLegacyLeadToFacts({
       leadId: "lead-legacy",
       quizAnswers: COMPLETE_LEGACY_ANSWERS as never,
+      takenAt: "2026-09-12T08:00:00.000Z",
     }).diagnostics,
   )
   assert.deepEqual((db.tables.hair_profiles[0].diagnostics as Row).goals, ["moisture"])
@@ -593,6 +594,7 @@ test("latest quiz wins: linking a NEWER artifact replaces diagnostics and quiz_c
       envelope: COMPLETE_V3_PLAN_ENVELOPE,
       artifactId: "artifact-1",
       leadId: "lead-pp",
+      takenAt: "2026-09-12T08:00:00.000Z",
     }).diagnostics,
   )
 })

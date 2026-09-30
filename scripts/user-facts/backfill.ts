@@ -358,9 +358,21 @@ async function loadPage(
       storedCareHabits: readStoredCareHabits(profile.care_habits),
       artifact:
         artifactRow && artifactId && artifactLeadId
-          ? { id: artifactId, leadId: artifactLeadId, quizAnswers: artifactRow.quiz_answers }
+          ? {
+              id: artifactId,
+              leadId: artifactLeadId,
+              quizAnswers: artifactRow.quiz_answers,
+              createdAt: readString(artifactRow.created_at),
+            }
           : null,
-      legacyLead: leadRow && leadId ? { id: leadId, quizAnswers: leadRow.quiz_answers } : null,
+      legacyLead:
+        leadRow && leadId
+          ? {
+              id: leadId,
+              quizAnswers: leadRow.quiz_answers,
+              createdAt: readString(leadRow.created_at),
+            }
+          : null,
       plan:
         planRow && planId
           ? ({

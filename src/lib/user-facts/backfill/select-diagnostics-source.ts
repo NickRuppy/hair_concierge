@@ -100,8 +100,9 @@ export type SelectedDiagnosticsSource = {
 }
 
 export type SelectDiagnosticsSourceInput = {
-  artifact: { id: string; leadId: string; quizAnswers: unknown } | null
-  legacyLead: { id: string; quizAnswers: unknown } | null
+  /** `createdAt`: the quiz's own timestamp, stored as `source.takenAt` (wave-1 fix F1). */
+  artifact: { id: string; leadId: string; quizAnswers: unknown; createdAt?: string | null } | null
+  legacyLead: { id: string; quizAnswers: unknown; createdAt?: string | null } | null
   columns: LegacyDiagnosticColumns
 }
 
@@ -173,6 +174,7 @@ export function selectDiagnosticsSource(
         envelope: input.artifact.quizAnswers,
         artifactId: input.artifact.id,
         leadId: input.artifact.leadId,
+        takenAt: input.artifact.createdAt,
       })
       if (!hasDiagnosticSignal(projected.diagnostics)) {
         throw new Error("no_diagnostic_signal")
@@ -202,6 +204,7 @@ export function selectDiagnosticsSource(
       const projected = projectLegacyLeadToFacts({
         leadId: input.legacyLead.id,
         quizAnswers: input.legacyLead.quizAnswers as QuizAnswers,
+        takenAt: input.legacyLead.createdAt,
       })
       if (!hasDiagnosticSignal(projected.diagnostics)) {
         throw new Error("no_diagnostic_signal")

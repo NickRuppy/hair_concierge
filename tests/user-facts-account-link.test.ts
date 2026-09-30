@@ -120,9 +120,69 @@ test("quizSupersedesFacts: no facts, no diagnostics and a legacy_columns documen
       },
     },
   }
-  // Regardless of timestamps: the quiz is older than the backfill run and still wins.
+  // No quiz behind it and no hand edit: the backfill run time is no bar, any quiz wins.
   assert.equal(quizSupersedesFacts(legacyColumns, "2025-01-01T00:00:00.000Z"), true)
   assert.equal(quizSupersedesFacts(legacyColumns, null), true)
+})
+
+test("F3: a hand edit counts on a legacy_columns profile too", () => {
+  const legacyColumns = (editedAt: string) => ({
+    diagnostics: {
+      texture: "coily",
+      source: { kind: "legacy_columns", version: 1, raw: {} },
+    } as DiagnosticsV1,
+    provenance: {
+      diagnostics: {
+        source: { kind: "legacy_columns" as const },
+        schemaVersion: 1,
+        at: "2026-09-20T00:00:00.000Z",
+        editedAt,
+      },
+    },
+  })
+  const edited = legacyColumns("2026-09-22T00:00:00.000Z")
+  assert.equal(quizSupersedesFacts(edited, "2026-09-21T00:00:00.000Z"), false, "edit is newer")
+  assert.equal(quizSupersedesFacts(edited, "2026-09-22T00:00:00.000Z"), false, "same instant")
+  assert.equal(quizSupersedesFacts(edited, "2026-09-23T00:00:00.000Z"), true, "retook the quiz")
+  assert.equal(quizSupersedesFacts(edited, null), false, "unknown quiz time never beats an edit")
+})
+
+test("F1: newer means when the quiz was TAKEN — the stored source.takenAt, not the link time", () => {
+  const facts = (takenAt: string | undefined, at: string, editedAt?: string) => ({
+    diagnostics: {
+      texture: "wavy",
+      source: {
+        kind: "legacy_quiz",
+        version: 1,
+        leadId: "l",
+        raw: {},
+        ...(takenAt ? { takenAt } : {}),
+      },
+    } as DiagnosticsV1,
+    provenance: {
+      diagnostics: {
+        source: { kind: "legacy_lead" as const, id: "l" },
+        schemaVersion: 1,
+        at,
+        ...(editedAt ? { editedAt } : {}),
+      },
+    },
+  })
+  // Quiz taken Tuesday, linked Thursday.
+  const tuesday = "2026-09-22T09:00:00.000Z"
+  const thursday = "2026-09-24T09:00:00.000Z"
+  const linked = facts(tuesday, thursday)
+  assert.equal(quizSupersedesFacts(linked, "2026-09-23T09:00:00.000Z"), true, "taken Wednesday")
+  assert.equal(quizSupersedesFacts(linked, "2026-09-21T09:00:00.000Z"), false, "taken Monday")
+  assert.equal(quizSupersedesFacts(linked, tuesday), false, "the same quiz is not newer")
+  // A hand edit still moves the bar past the stored quiz time.
+  const edited = facts(tuesday, thursday, "2026-09-25T09:00:00.000Z")
+  assert.equal(quizSupersedesFacts(edited, "2026-09-23T09:00:00.000Z"), false)
+  assert.equal(quizSupersedesFacts(edited, "2026-09-26T09:00:00.000Z"), true)
+  // No stored takenAt (facts written before F1): the provenance time is the fallback.
+  const legacy = facts(undefined, thursday)
+  assert.equal(quizSupersedesFacts(legacy, "2026-09-23T09:00:00.000Z"), false)
+  assert.equal(quizSupersedesFacts(legacy, "2026-09-25T09:00:00.000Z"), true)
 })
 
 test("quizSupersedesFacts compares the quiz time against the later of at and editedAt", () => {
@@ -178,6 +238,7 @@ test("an own newer quiz REPLACES an existing real-source profile: upsert, nulls 
   const expected = projectLegacyLeadToFacts({
     leadId: "lead-new",
     quizAnswers: COMPLETE_LEGACY_ANSWERS as never,
+    takenAt: "2026-09-12T00:00:00.000Z",
   }).diagnostics
   const facts = await loadUserFacts(admin, USER_ID)
   assert.ok(facts?.diagnostics)
@@ -377,6 +438,131 @@ test("a first link on an empty profile writes with upsert pinned to revision 0",
   assert.equal(saves[0]!.p_mode, "upsert")
   assert.equal(saves[0]!.p_expected_revision, 0)
   assert.equal(diagnosticsV1Schema.safeParse(rows[0]!.diagnostics).success, true)
+})
+
+// --- F1: the quiz's own timestamp is stored and decides ---------------------------------
+
+const MONDAY = "2026-09-21T09:00:00.000Z"
+const TUESDAY = "2026-09-22T09:00:00.000Z"
+
+function mondayArtifactQuiz() {
+  return {
+    kind: "artifact" as const,
+    artifactId: "artifact-a",
+    leadId: "lead-a",
+    envelope: COMPLETE_V3_PLAN_ENVELOPE,
+    createdAt: MONDAY,
+  }
+}
+
+function tuesdayLeadQuiz() {
+  return {
+    kind: "lead" as const,
+    leadId: "lead-b",
+    quizAnswers: COMPLETE_LEGACY_ANSWERS as never,
+    createdAt: TUESDAY,
+  }
+}
+
+test("F1: quiz A taken Monday, quiz B taken Tuesday — B linked first, A linked later: B stays", async () => {
+  const rows: Row[] = []
+  const { admin } = fakeAdmin(rows)
+
+  assert.equal(
+    await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: tuesdayLeadQuiz() }),
+    "replaced",
+  )
+  assert.equal(
+    await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: mondayArtifactQuiz() }),
+    "preserved",
+    "A was taken before B, however late it is linked",
+  )
+  const facts = await loadUserFacts(admin, USER_ID)
+  assert.equal(facts?.diagnostics?.source.kind, "legacy_quiz")
+  assert.equal(facts?.diagnostics?.source.leadId, "lead-b")
+  assert.deepEqual(
+    facts?.provenance.diagnostics?.preservedCandidates?.map((entry) => [entry.kind, entry.id]),
+    [["artifact", "artifact-a"]],
+  )
+})
+
+test("F1: quiz A (Monday) linked first, quiz B (Tuesday) linked after A's link time: B wins", async () => {
+  const rows: Row[] = []
+  const { admin } = fakeAdmin(rows)
+
+  await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: mondayArtifactQuiz() })
+  // A's link happened "now" (after Tuesday) — the link time must not make B look older.
+  assert.equal(
+    await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: tuesdayLeadQuiz() }),
+    "replaced",
+  )
+  const facts = await loadUserFacts(admin, USER_ID)
+  assert.equal(facts?.diagnostics?.source.leadId, "lead-b")
+})
+
+test("F1: the quiz time is stored as diagnostics.source.takenAt (ISO), never inside raw", async () => {
+  const rows: Row[] = []
+  const { admin, saves } = fakeAdmin(rows)
+
+  await writeAccountLinkFacts(admin, {
+    userId: USER_ID,
+    // Postgres' own timestamptz rendering, as supabase-js returns it.
+    quiz: { ...tuesdayLeadQuiz(), createdAt: "2026-09-22 09:00:00.123456+00" },
+  })
+
+  const source = (saves[0]!.p_patch as Row).source as Row
+  assert.equal(source.takenAt, "2026-09-22T09:00:00.123Z")
+  assert.equal("takenAt" in (source.raw as Row), false)
+  assert.equal(diagnosticsV1Schema.safeParse(rows[0]!.diagnostics).success, true)
+
+  // An unreadable quiz time is simply not stored.
+  const other: Row[] = []
+  const second = fakeAdmin(other)
+  await writeAccountLinkFacts(second.admin, {
+    userId: USER_ID,
+    quiz: { ...tuesdayLeadQuiz(), createdAt: null },
+  })
+  assert.equal("takenAt" in ((second.saves[0]!.p_patch as Row).source as Row), false)
+})
+
+// --- F3: hand edits count; create_only is a pure preserve ------------------------------
+
+test("F3: a hand-edited legacy_columns profile is NOT overwritten by a quiz taken before the edit", async () => {
+  const rows: Row[] = [
+    {
+      user_id: USER_ID,
+      diagnostics: {
+        texture: "coily",
+        source: { kind: "legacy_columns", version: 1, raw: { hair_texture: "coily" } },
+      },
+      facts_revision: 2,
+      facts_provenance: {
+        diagnostics: {
+          source: { kind: "legacy_columns" },
+          schemaVersion: 1,
+          at: "2026-09-25T00:00:00.000Z",
+          editedAt: "2026-09-26T00:00:00.000Z",
+        },
+      },
+    },
+  ]
+  const before = structuredClone(rows[0]!.diagnostics)
+  const { admin, saves } = fakeAdmin(rows)
+
+  const outcome = await writeAccountLinkFacts(admin, {
+    userId: USER_ID,
+    quiz: LEGACY_LEAD_QUIZ("2026-09-20T00:00:00.000Z"),
+  })
+
+  assert.equal(outcome, "preserved")
+  assert.equal(saves[0]!.p_mode, "create_only")
+  const facts = await loadUserFacts(admin, USER_ID)
+  assert.deepEqual(facts?.diagnostics, before, "create_only preserves a legacy_columns document")
+  assert.equal(facts?.revision, 2)
+  assert.deepEqual(
+    facts?.provenance.diagnostics?.preservedCandidates?.map((entry) => [entry.kind, entry.id]),
+    [["lead", "lead-new"]],
+  )
 })
 
 // --- item B: completeness defaults on account link ------------------------------------

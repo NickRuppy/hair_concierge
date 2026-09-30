@@ -536,16 +536,14 @@ BEGIN
   END;
   v_old_provenance := COALESCE(v_profile.facts_provenance -> p_domain, '{}'::jsonb);
 
-  -- (4) create_only (F14/F28): never overwrite a domain the user already has.
-  -- Account linking uses it for a quiz that is NOT newer than the profile's
-  -- last facts change (decision wave 1: a newer own quiz writes with upsert
-  -- instead, decided in TypeScript). The one exception (controller ruling 2026-09-15) is
-  -- diagnostics the backfill itself synthesised from the narrow legacy columns:
-  -- `source.kind = 'legacy_columns'` carries no quiz envelope, so a real
-  -- artifact/lead source always wins over it (plan P4).
-  IF p_mode = 'create_only'
-     AND v_old_domain IS NOT NULL
-     AND NOT (p_domain = 'diagnostics' AND v_old_domain #>> '{source,kind}' = 'legacy_columns') THEN
+  -- (4) create_only (F14/F28): never overwrite a domain the user already has —
+  -- a PURE preserve of any non-null domain that records the incoming candidate.
+  -- TypeScript decides winners and losers (decision wave 1 + wave-1 fix F3,
+  -- Nick 2026-09-30): a winning quiz writes with upsert, a losing one with
+  -- create_only. There is deliberately no source-kind exception here: a
+  -- `legacy_columns` document with a newer hand edit must survive, and only
+  -- TypeScript can see the quiz time that decides that.
+  IF p_mode = 'create_only' AND v_old_domain IS NOT NULL THEN
     v_candidates := public.user_facts_union_preserved_candidates_v1(
       v_old_provenance -> 'preservedCandidates', p_provenance -> 'preservedCandidates');
     IF v_candidates IS NOT NULL THEN
@@ -676,7 +674,7 @@ $$;
 
 COMMENT ON FUNCTION public.user_facts_save_v1(
   uuid, text, jsonb, jsonb, integer, text, uuid, bigint, uuid) IS
-  'The only supported writer of hair_profiles.diagnostics/care_habits/quiz_context and of the 21 legacy columns derived from them. Merges p_patch field-by-field (a top-level JSON null clears that field), merges provenance, bumps facts_revision on every non-preserved write (CAS via p_expected_revision), and recomputes the derived columns owned by p_domain in the same statement. create_only preserves an existing domain, except diagnostics whose source is the backfill''s own legacy_columns, which the patch merges over like a normal write. Returns {status, revision, changed, diagnosticsHash} or a typed conflict.';
+  'The only supported writer of hair_profiles.diagnostics/care_habits/quiz_context and of the 21 legacy columns derived from them. Merges p_patch field-by-field (a top-level JSON null clears that field), merges provenance, bumps facts_revision on every non-preserved write (CAS via p_expected_revision), and recomputes the derived columns owned by p_domain in the same statement. create_only is a pure preserve of any existing domain (it only records the incoming candidate); callers decide winners and write them with upsert. Returns {status, revision, changed, diagnosticsHash} or a typed conflict.';
 
 REVOKE ALL ON FUNCTION public.user_facts_jsonb_text_array_v1(jsonb) FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON FUNCTION public.user_facts_map_vocabulary_array_v1(jsonb, jsonb) FROM PUBLIC, anon, authenticated, service_role;

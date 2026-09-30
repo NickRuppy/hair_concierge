@@ -517,7 +517,7 @@ test("create_only writes normally when the domain is NULL and when there is no r
   assert.equal((await readHairProfile(pg, otherUser))?.hair_texture, "wavy")
 })
 
-test("create_only overwrites diagnostics whose source is the backfill's own legacy_columns", async (t) => {
+test("F3: create_only is a pure preserve — a legacy_columns document is kept and the candidate recorded", async (t) => {
   const pg = await freshDatabase(t)
   // What task 6's backfill writes for an onboarding-only user: facts rebuilt
   // from the narrow columns, with no quiz envelope behind them.
@@ -527,55 +527,46 @@ test("create_only overwrites diagnostics whose source is the backfill's own lega
     scalpOiliness: "dry",
     source: { kind: "legacy_columns", version: 1, leadId: "legacy-1", raw: {} },
   }
+  const backfillProvenance = {
+    source: { kind: "legacy_columns" },
+    schemaVersion: 1,
+    at: "2026-09-14T08:00:00.000Z",
+  }
   await saveUserFacts(pg, {
     userId: USER,
     domain: "diagnostics",
     patch: backfilled,
-    provenance: {
-      source: { kind: "legacy_columns" },
-      schemaVersion: 1,
-      at: "2026-09-14T08:00:00.000Z",
-    },
+    provenance: backfillProvenance,
   })
 
+  // Wave-1 fix round F3: TypeScript decides winners (upsert) and losers
+  // (create_only). A create_only reaching SQL is a loser, whatever the stored
+  // source kind — there is no legacy_columns exception any more.
+  const candidate = { kind: "artifact", id: "artifact-9", at: "2026-09-15T13:00:00.000Z" }
   const linked = await saveUserFacts(pg, {
     userId: USER,
     domain: "diagnostics",
     patch: { texture: "wavy", source: DIAGNOSTICS_SOURCE },
-    provenance: {
-      ...DIAGNOSTICS_PROVENANCE,
-      preservedCandidates: [{ kind: "artifact", id: "artifact-9", at: "2026-09-15T13:00:00.000Z" }],
-    },
+    provenance: { ...DIAGNOSTICS_PROVENANCE, preservedCandidates: [candidate] },
     mode: "create_only",
   })
-  assert.equal(linked.status, "ok")
-  assert.equal(linked.revision, 2)
-  assert.equal(linked.changed, true)
+  assert.equal(linked.status, "preserved")
+  assert.equal(linked.revision, 1)
+  assert.equal(linked.changed, false)
 
   const row = await readHairProfile(pg, USER)
   assert.ok(row)
-  // Field-level merge still applies: `thickness` came only from the backfilled
-  // document and survives the artifact write.
-  assert.deepEqual(row.diagnostics, {
-    texture: "wavy",
-    thickness: "coarse",
-    scalpOiliness: "dry",
-    source: DIAGNOSTICS_SOURCE,
+  assert.deepEqual(row.diagnostics, backfilled)
+  assert.equal(row.hair_texture, "coily")
+  assert.deepEqual(row.facts_provenance, {
+    diagnostics: { ...backfillProvenance, preservedCandidates: [candidate] },
   })
-  assert.equal(row.hair_texture, "wavy")
-  assert.equal(row.thickness, "coarse")
-  // A normal write: the link provenance replaces the backfill's, and the
-  // candidate the caller passed is NOT recorded — this write applied its source
-  // rather than preserving anything.
-  assert.deepEqual(row.facts_provenance, { diagnostics: DIAGNOSTICS_PROVENANCE })
 })
 
 // Decision wave 1 (Nick, 2026-09-30, "latest quiz wins"): the Task 5a C1 goals
-// anti-clobber guard on the create_only + `legacy_columns` path is gone. A quiz
-// that is allowed to write replaces goals like every other field — goals come
-// from the new quiz. (The TS account-link writer now decides "newer own quiz"
-// itself and writes with `upsert`; this pins the SQL side of the same rule.)
-test("create_only + legacy_columns backfill: the linked patch's goals replace existing non-empty goals", async (t) => {
+// anti-clobber guard is gone. A quiz TypeScript lets win writes with `upsert`
+// and replaces goals like every other field.
+test("upsert over a legacy_columns backfill: the linked patch's goals replace existing non-empty goals", async (t) => {
   const pg = await freshDatabase(t)
   const backfilled = {
     texture: "coily",
@@ -599,7 +590,8 @@ test("create_only + legacy_columns backfill: the linked patch's goals replace ex
     domain: "diagnostics",
     patch: { texture: "wavy", goals: ["shine"], source: DIAGNOSTICS_SOURCE },
     provenance: DIAGNOSTICS_PROVENANCE,
-    mode: "create_only",
+    mode: "upsert",
+    expectedRevision: 1,
   })
   assert.equal(linked.status, "ok")
 
@@ -614,46 +606,8 @@ test("create_only + legacy_columns backfill: the linked patch's goals replace ex
     source: DIAGNOSTICS_SOURCE,
   })
   assert.deepEqual(row.goals, ["shine"])
-  // Every other field still follows the normal field-level merge.
   assert.equal(row.hair_texture, "wavy")
   assert.equal(row.thickness, "coarse")
-})
-
-test("create_only + legacy_columns backfill: empty old goals let the linked patch's goals win", async (t) => {
-  const pg = await freshDatabase(t)
-  const backfilled = {
-    texture: "coily",
-    goals: [],
-    source: { kind: "legacy_columns", version: 1, leadId: "legacy-1", raw: {} },
-  }
-  await saveUserFacts(pg, {
-    userId: USER,
-    domain: "diagnostics",
-    patch: backfilled,
-    provenance: {
-      source: { kind: "legacy_columns" },
-      schemaVersion: 1,
-      at: "2026-09-14T08:00:00.000Z",
-    },
-  })
-
-  const linked = await saveUserFacts(pg, {
-    userId: USER,
-    domain: "diagnostics",
-    patch: { texture: "wavy", goals: ["shine"], source: DIAGNOSTICS_SOURCE },
-    provenance: DIAGNOSTICS_PROVENANCE,
-    mode: "create_only",
-  })
-  assert.equal(linked.status, "ok")
-
-  const row = await readHairProfile(pg, USER)
-  assert.ok(row)
-  assert.deepEqual(row.diagnostics, {
-    texture: "wavy",
-    goals: ["shine"],
-    source: DIAGNOSTICS_SOURCE,
-  })
-  assert.deepEqual(row.goals, ["shine"])
 })
 
 test("preservedCandidates is written only by the preserve path", async (t) => {

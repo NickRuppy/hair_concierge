@@ -307,6 +307,8 @@ test("V4: a free bind with a NEWER own quiz replaces the existing diagnostics, g
     envelope: COMPLETE_V3_PLAN_ENVELOPE,
     artifactId: "artifact-1",
     leadId: LEAD_ID,
+    // F1: the quiz's own timestamp is stored beside `raw`.
+    takenAt: ARTIFACT_CREATED_AT,
   }).diagnostics
   assert.deepEqual(replaced.profiles[0]!.diagnostics, expected)
   assert.deepEqual(replaced.updates, [

@@ -2,12 +2,14 @@ import { buildLegacyQuizStage1Source } from "@/lib/personal-plan/input"
 import { DIAGNOSTIC_CONCERNS, type DiagnosticConcern } from "@/lib/quiz/diagnostic-input"
 import type { QuizAnswers } from "@/lib/quiz/types"
 
-import { UnsupportedUserFactsSourceError, diagnosticsV1Schema } from "./schema"
+import { UnsupportedUserFactsSourceError, diagnosticsV1Schema, toTakenAt } from "./schema"
 import type { DiagnosticsV1 } from "./schema"
 
 export type ProjectLegacyLeadInput = {
   leadId: string
   quizAnswers: QuizAnswers
+  /** `leads.created_at` — stored as `source.takenAt` (F1). */
+  takenAt?: string | null
 }
 
 export type ProjectLegacyLeadResult = {
@@ -81,6 +83,7 @@ export function projectLegacyLeadToFacts(input: ProjectLegacyLeadInput): Project
   }
 
   const answers = legacySource.answers
+  const takenAt = toTakenAt(input.takenAt)
   const primaryConcern = legacyPrimaryConcern(input.quizAnswers, answers.currentConcerns ?? [])
   const diagnostics = diagnosticsV1Schema.parse({
     texture: answers.texture,
@@ -95,7 +98,13 @@ export function projectLegacyLeadToFacts(input: ProjectLegacyLeadInput): Project
     goals: answers.goals,
     currentConcerns: answers.currentConcerns,
     ...(primaryConcern ? { primaryConcern } : {}),
-    source: { kind: "legacy_quiz", version: 1, leadId: input.leadId, raw: legacySource },
+    source: {
+      kind: "legacy_quiz",
+      version: 1,
+      leadId: input.leadId,
+      raw: legacySource,
+      ...(takenAt ? { takenAt } : {}),
+    },
   })
 
   return { diagnostics }

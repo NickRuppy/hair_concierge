@@ -27,8 +27,8 @@ import {
  * wins"), shared by `linkQuizToProfile` and the `/plan-bereit` link path.
  *
  * A quiz overwrites the profile only when it is the user's OWN (the callers establish that —
- * email/user_id ownership or an active field-test enrollment — before calling this) and NEWER
- * than the profile's last facts change. A winning quiz REPLACES the diagnostics document (and,
+ * email/user_id ownership or an active field-test enrollment — before calling this) and was
+ * TAKEN after the stored quiz and after any hand edit (`quizSupersedesFacts`). A winning quiz REPLACES the diagnostics document (and,
  * for a personal-plan artifact, quiz_context): fields the new quiz does not carry are cleared
  * with explicit nulls, `source` is the new source, goals come from the new quiz. An older quiz
  * never overwrites: it goes through `create_only`, which records it in
@@ -72,33 +72,41 @@ function parseTime(value: string | null | undefined): number | null {
 }
 
 /**
- * Whether a quiz taken at `quizCreatedAt` may replace the stored diagnostics.
+ * Whether a quiz taken at `quizTakenAt` may replace the stored diagnostics (decision wave 1,
+ * sharpened by wave-1 fixes F1 and F3, Nick 2026-09-30):
+ *
+ *   incoming wins iff takenAt > max(stored quiz time, editedAt ?? -inf)
  *
  * - no facts row / no diagnostics document: no real quiz yet -> write.
- * - a `legacy_columns` document (the backfill's own lossy import, no quiz behind it): no real
- *   quiz yet -> write, regardless of timestamps (its `at` is the backfill run time). This
- *   matches `user_facts_save_v1`, whose `create_only` also merges over `legacy_columns`.
- * - otherwise the quiz must be strictly newer than the later of `provenance.at` and
- *   `provenance.editedAt`. An unknown quiz time, or a document with no readable provenance
- *   time at all, never overwrites (older-never-overwrites is the conservative side).
+ * - the stored quiz time is WHEN THAT QUIZ WAS TAKEN — `diagnostics.source.takenAt` (F1) — and
+ *   only for documents written before F1 the provenance write time `provenance.at`. So a quiz
+ *   taken Monday never beats one taken Tuesday, whichever of the two is linked first.
+ * - a `legacy_columns` document (the backfill's own lossy import) has no quiz behind it, so
+ *   its stored quiz time is -inf (its `at` is the backfill run time, not a quiz): any quiz
+ *   wins — unless a hand edit (`editedAt`) is at least as new as the quiz (F3).
+ * - an unknown quiz time never beats anything but "no quiz at all": the conservative side.
+ *
+ * `create_only` is the losers' path only; `user_facts_save_v1` treats it as a pure preserve.
  */
 export function quizSupersedesFacts(
   facts: Pick<UserFacts, "diagnostics" | "provenance"> | null,
-  quizCreatedAt: string | null | undefined,
+  quizTakenAt: string | null | undefined,
 ): boolean {
   const diagnostics = facts?.diagnostics
   if (!diagnostics) return true
-  if (diagnostics.source.kind === "legacy_columns") return true
-
-  const quizTime = parseTime(quizCreatedAt)
-  if (quizTime === null) return false
 
   const provenance = facts.provenance.diagnostics
-  const changes = [parseTime(provenance?.at), parseTime(provenance?.editedAt)].filter(
-    (time): time is number => time !== null,
-  )
-  if (changes.length === 0) return false
-  return quizTime > Math.max(...changes)
+  const editedTime = parseTime(provenance?.editedAt)
+  const storedQuizTime =
+    diagnostics.source.kind === "legacy_columns"
+      ? null
+      : (parseTime(diagnostics.source.takenAt) ?? parseTime(provenance?.at))
+  const bars = [storedQuizTime, editedTime].filter((time): time is number => time !== null)
+
+  if (diagnostics.source.kind === "legacy_columns" && bars.length === 0) return true
+  const quizTime = parseTime(quizTakenAt)
+  if (quizTime === null || bars.length === 0) return false
+  return quizTime > Math.max(...bars)
 }
 
 /** Per-field provenance for a quiz-sourced diagnostics document: every carried field is
@@ -145,6 +153,7 @@ function project(quiz: AccountLinkQuiz): Projection {
       envelope: quiz.envelope,
       artifactId: quiz.artifactId,
       leadId: quiz.leadId,
+      takenAt: quiz.createdAt,
     })
     return {
       ...applyCompletenessDefaults(diagnostics),
@@ -156,6 +165,7 @@ function project(quiz: AccountLinkQuiz): Projection {
   const { diagnostics } = projectLegacyLeadToFacts({
     leadId: quiz.leadId,
     quizAnswers: quiz.quizAnswers,
+    takenAt: quiz.createdAt,
   })
   return {
     ...applyCompletenessDefaults(diagnostics),

@@ -83,8 +83,8 @@ export type LoadedUserRow = {
    * writer changed the columns after the backfill wrote its facts. */
   storedDiagnostics: DiagnosticsV1 | null
   storedCareHabits: CareHabitsV1 | null
-  artifact: { id: string; leadId: string; quizAnswers: unknown } | null
-  legacyLead: { id: string; quizAnswers: unknown } | null
+  artifact: { id: string; leadId: string; quizAnswers: unknown; createdAt?: string | null } | null
+  legacyLead: { id: string; quizAnswers: unknown; createdAt?: string | null } | null
   plan: BackfillPlanRow | null
   needVersions: readonly BackfillNeedVersionRow[]
   drafts: readonly BackfillDraftRow[]

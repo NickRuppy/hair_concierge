@@ -84,6 +84,19 @@ const diagnosticsSourceBaseFields = {
   leadId: z.string().min(1),
   artifactId: z.string().min(1).optional(),
   raw: z.unknown(),
+  // Wave-1 fix F1 (Nick, 2026-09-30: "newer" means when the quiz was TAKEN): the quiz's own
+  // timestamp — `personal_plan_prepared_artifacts.created_at` / `leads.created_at` — as a
+  // canonical ISO string. Beside `raw`, never inside it (`raw` is the verbatim envelope).
+  // Optional: absent when the quiz time is unknown and on documents written before F1.
+  takenAt: z.string().datetime().optional(),
+}
+
+/** A database timestamp (`2026-09-22 09:00:00.123456+00`, ISO, …) as the canonical ISO string
+ * `takenAt` stores, or `undefined` when it is missing or unreadable. */
+export function toTakenAt(value: string | null | undefined): string | undefined {
+  if (typeof value !== "string") return undefined
+  const time = Date.parse(value)
+  return Number.isNaN(time) ? undefined : new Date(time).toISOString()
 }
 
 export const diagnosticsSourceSchema = z.discriminatedUnion("kind", [

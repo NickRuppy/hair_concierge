@@ -809,11 +809,12 @@ function assertUserFactsWriteApplied(
  */
 async function writeCorrectedLegacySourceFacts(
   supabase: SupabaseClient,
-  input: { userId: string; leadId: string; quizAnswers: QuizAnswers },
+  input: { userId: string; leadId: string; quizAnswers: QuizAnswers; takenAt: string | null },
 ): Promise<void> {
   const { diagnostics } = projectLegacyLeadToFacts({
     leadId: input.leadId,
     quizAnswers: input.quizAnswers,
+    takenAt: input.takenAt,
   })
   const factsResult = await saveUserFacts(supabase, {
     userId: input.userId,
@@ -1020,6 +1021,7 @@ async function linkPlanBereitSource(
         userId: input.userId,
         leadId: lead.id,
         quizAnswers: lead.quiz_answers as QuizAnswers,
+        takenAt: lead.created_at ?? null,
       })
     } else {
       await writeAccountLinkFacts(supabase, {

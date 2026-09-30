@@ -1826,6 +1826,36 @@ test("runUserFactsBackfill --apply hands every planned write to user_facts_save_
   )
 })
 
+test("F1: the backfill stores the winning quiz's own created_at as diagnostics.source.takenAt", async () => {
+  const fake = fakeSupabase(scriptTables())
+  await runUserFactsBackfill(["--apply"], {
+    supabase: fake.client as never,
+    now: NOW,
+    log: () => {},
+  })
+  const source = (fake.rpcs[0]!.params.p_patch as Record<string, unknown>).source as Record<
+    string,
+    unknown
+  >
+  assert.equal(source.kind, "personal_plan_v3")
+  assert.equal(source.takenAt, "2026-08-01T00:00:00.000Z")
+
+  const lead = selectDiagnosticsSource({
+    artifact: null,
+    legacyLead: {
+      id: "lead-legacy",
+      quizAnswers: LEGACY_QUIZ_ANSWERS,
+      createdAt: "2025-03-04T05:06:07+00:00",
+    },
+    columns: FULL_DIAGNOSTIC_COLUMNS,
+  })
+  assert.equal(lead.diagnostics.source.kind, "legacy_quiz")
+  assert.equal(
+    lead.diagnostics.source.kind === "legacy_quiz" ? lead.diagnostics.source.takenAt : null,
+    "2025-03-04T05:06:07.000Z",
+  )
+})
+
 /**
  * Fix round 2, P1: every backfill write is a compare-and-swap. Without
  * `p_expected_revision` the backfill silently overwrites a concurrent live writer and only

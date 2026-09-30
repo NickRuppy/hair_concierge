@@ -2,8 +2,8 @@
  * An in-memory stand-in for `public.user_facts_save_v1`
  * (`supabase/migrations/20260929231300_user_facts_save_v1.sql`) for unit tests that drive the
  * account-link writers through a fake Supabase client. It mirrors the SQL steps those writers
- * depend on — the revision CAS, `create_only` preserve (with the `legacy_columns` exception)
- * and its `preservedCandidates` union, the top-level field-level merge where a JSON null
+ * depend on — the revision CAS, `create_only` preserve (a pure preserve of ANY existing
+ * domain, F3) and its `preservedCandidates` union, the top-level field-level merge where a JSON null
  * clears a key, the `fields` provenance merge (cleared keys drop out) and the revision bump.
  * It never derives legacy columns (that has its own parity test against the real SQL).
  */
@@ -36,12 +36,7 @@ export function simulateUserFactsSave(rows: Row[], args: Row): Row {
   const provenance = args.p_provenance as Row
   const patch = args.p_patch as Row
 
-  const legacyColumnsDiagnostics =
-    domain === "diagnostics" &&
-    isRecord(oldDomain?.source) &&
-    (oldDomain.source as Row).kind === "legacy_columns"
-
-  if (args.p_mode === "create_only" && oldDomain !== null && !legacyColumnsDiagnostics) {
+  if (args.p_mode === "create_only" && oldDomain !== null) {
     const incoming = Array.isArray(provenance.preservedCandidates)
       ? (provenance.preservedCandidates as Row[])
       : []

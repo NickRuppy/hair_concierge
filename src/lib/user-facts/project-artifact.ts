@@ -3,7 +3,12 @@ import {
   parseSupportedPersonalPlanQuizEnvelope,
 } from "@/lib/personal-plan/input"
 
-import { UnsupportedUserFactsSourceError, diagnosticsV1Schema, quizContextV1Schema } from "./schema"
+import {
+  UnsupportedUserFactsSourceError,
+  diagnosticsV1Schema,
+  quizContextV1Schema,
+  toTakenAt,
+} from "./schema"
 import type { DiagnosticsV1, QuizContextV1 } from "./schema"
 
 export type ProjectArtifactInput = {
@@ -12,6 +17,8 @@ export type ProjectArtifactInput = {
   envelope: unknown
   artifactId: string
   leadId: string
+  /** `personal_plan_prepared_artifacts.created_at` — stored as `source.takenAt` (F1). */
+  takenAt?: string | null
 }
 
 export type ProjectArtifactResult = {
@@ -93,6 +100,7 @@ export function projectArtifactToFacts(input: ProjectArtifactInput): ProjectArti
   // Read typed field values from the validated/parsed envelope, but store the caller's
   // original (unreconstructed) object as `raw` below.
   const envelope = parsed.envelope
+  const takenAt = toTakenAt(input.takenAt)
 
   const diagnostics = diagnosticsV1Schema.parse(
     envelope.version === 3
@@ -111,6 +119,7 @@ export function projectArtifactToFacts(input: ProjectArtifactInput): ProjectArti
             leadId: input.leadId,
             artifactId: input.artifactId,
             raw: input.envelope,
+            ...(takenAt ? { takenAt } : {}),
           },
         }
       : {
@@ -122,6 +131,7 @@ export function projectArtifactToFacts(input: ProjectArtifactInput): ProjectArti
             leadId: input.leadId,
             artifactId: input.artifactId,
             raw: input.envelope,
+            ...(takenAt ? { takenAt } : {}),
           },
         },
   )
