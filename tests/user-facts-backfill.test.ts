@@ -7,6 +7,7 @@ import {
   type LegacyDiagnosticColumns,
 } from "../src/lib/user-facts/backfill/legacy-columns-to-diagnostics"
 import {
+  convertLegacyCareColumns,
   legacyColumnsToCareHabits,
   type LegacyCareHabitColumns,
 } from "../src/lib/user-facts/backfill/legacy-columns-to-care-habits"
@@ -21,7 +22,10 @@ import {
   oldWriterColumnsForLead,
   type OldWriterColumns,
 } from "../src/lib/user-facts/backfill/detect-hand-edits"
-import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
+import {
+  deriveCareHabitsColumns,
+  deriveDiagnosticsColumns,
+} from "../src/lib/user-facts/derive-legacy-columns"
 import { resolveVisibleDiagnosticGoals } from "../src/lib/quiz/diagnostic-input"
 import { GOALS } from "../src/lib/vocabulary/concerns-goals"
 import {
@@ -350,6 +354,174 @@ test("legacyColumnsToCareHabits omits heatEvents when heat_styling is null even 
     additionalHeatTools: ["curling_or_wave_iron"],
   })
   assert.equal("wetWashFrequency" in careHabits, false)
+})
+
+// ---------------------------------------------------------------------------
+// The product owner's four care-habit decisions (Nick 2026-09-30), in the ONE conversion
+// ---------------------------------------------------------------------------
+
+test("decision 1: „Nie“ next to selected tools means no heat tools — no sources, no events", () => {
+  const { careHabits, rules } = convertLegacyCareColumns({
+    ...EMPTY_CARE_HABIT_COLUMNS,
+    drying_method: "air_dry",
+    styling_tools: ["flat_iron", "blow_dryer", "diffuser"],
+    heat_styling: "never",
+    uses_heat_protection: true,
+  })
+  assert.deepEqual(careHabits, {
+    dryingRoutes: ["air_dry"],
+    additionalHeatTools: [],
+    heatEvents: {},
+  })
+  assert.deepEqual(rules, ["never_with_tools"])
+  const columns = deriveCareHabitsColumns(careHabits)
+  assert.deepEqual(columns.styling_tools, [])
+  assert.equal(columns.heat_styling, "never")
+  assert.equal(columns.uses_heat_protection, false)
+  assert.equal(columns.drying_method, "air_dry")
+})
+
+test("decision 1: with no drying answer the row derives no tools and never", () => {
+  const { careHabits, rules } = convertLegacyCareColumns({
+    ...EMPTY_CARE_HABIT_COLUMNS,
+    styling_tools: ["curling_iron"],
+    heat_styling: "never",
+    uses_heat_protection: false,
+  })
+  assert.deepEqual(careHabits, { dryingRoutes: [], additionalHeatTools: [], heatEvents: {} })
+  assert.deepEqual(rules, ["never_with_tools"])
+  const columns = deriveCareHabitsColumns(careHabits)
+  assert.deepEqual([columns.styling_tools, columns.heat_styling], [[], "never"])
+})
+
+test("decision 1, unsettled corner: a blow-dry drying answer stays a heat source after the tools are dropped", () => {
+  // The rule drops the TOOLS; `drying_method = blow_dry` is a separate answer and its route is a
+  // heat source natively, so the level has no event to live in (same shape as finding F6).
+  const { careHabits, rules } = convertLegacyCareColumns({
+    ...EMPTY_CARE_HABIT_COLUMNS,
+    drying_method: "blow_dry",
+    styling_tools: ["flat_iron"],
+    heat_styling: "never",
+    uses_heat_protection: false,
+  })
+  assert.deepEqual(careHabits, {
+    dryingRoutes: ["ordinary_blow_dry"],
+    additionalHeatTools: [],
+    heatEvents: {},
+  })
+  assert.deepEqual(rules, ["never_with_tools"])
+  const columns = deriveCareHabitsColumns(careHabits)
+  assert.deepEqual(columns.styling_tools, ["blow_dryer"])
+  assert.equal(columns.heat_styling, null)
+})
+
+test("decision 1 does not fire for an empty tool list or a real level", () => {
+  assert.deepEqual(
+    convertLegacyCareColumns({
+      ...EMPTY_CARE_HABIT_COLUMNS,
+      styling_tools: [],
+      heat_styling: "never",
+    }).rules,
+    [],
+  )
+  assert.deepEqual(
+    convertLegacyCareColumns({
+      ...EMPTY_CARE_HABIT_COLUMNS,
+      styling_tools: ["flat_iron"],
+      heat_styling: "rarely",
+    }).rules,
+    [],
+  )
+})
+
+test("decision 2: dryer-only with protection „Ja“ owns a heat protectant; the column stays true", () => {
+  const { careHabits, rules } = convertLegacyCareColumns({
+    ...EMPTY_CARE_HABIT_COLUMNS,
+    drying_method: "blow_dry",
+    styling_tools: ["blow_dryer"],
+    heat_styling: "several_weekly",
+    uses_heat_protection: true,
+  })
+  assert.deepEqual(careHabits, {
+    currentProductCategories: ["heat_protectant"],
+    dryingRoutes: ["ordinary_blow_dry"],
+    additionalHeatTools: [],
+    heatEvents: { "heat:ordinary_blow_dry": { frequency: "weekly_3_4x" } },
+  })
+  assert.deepEqual(rules, ["dryer_only_protection"])
+  const columns = deriveCareHabitsColumns(careHabits)
+  assert.equal(columns.uses_heat_protection, true)
+  assert.deepEqual(columns.styling_tools, ["blow_dryer"])
+  assert.equal(columns.heat_styling, "several_weekly")
+})
+
+test("decision 2: diffuser-only and a dryer with no level recorded count as dryer-only", () => {
+  const diffuser = convertLegacyCareColumns({
+    ...EMPTY_CARE_HABIT_COLUMNS,
+    styling_tools: ["diffuser"],
+    heat_styling: "once_weekly",
+    uses_heat_protection: true,
+  })
+  assert.deepEqual(diffuser.careHabits.currentProductCategories, ["heat_protectant"])
+  assert.deepEqual(diffuser.rules, ["dryer_only_protection"])
+  assert.equal(deriveCareHabitsColumns(diffuser.careHabits).uses_heat_protection, true)
+
+  const noLevel = convertLegacyCareColumns({
+    ...EMPTY_CARE_HABIT_COLUMNS,
+    drying_method: "blow_dry",
+    styling_tools: [],
+    uses_heat_protection: true,
+  })
+  assert.deepEqual(noLevel.careHabits.currentProductCategories, ["heat_protectant"])
+  assert.equal(deriveCareHabitsColumns(noLevel.careHabits).uses_heat_protection, true)
+})
+
+test("decision 2 does not fire with an iron-type source, without protection, or with no heat", () => {
+  for (const columns of [
+    {
+      styling_tools: ["blow_dryer", "flat_iron"],
+      heat_styling: "daily",
+      uses_heat_protection: true,
+    },
+    { styling_tools: ["blow_dryer"], heat_styling: "daily", uses_heat_protection: false },
+    { styling_tools: ["blow_dryer"], heat_styling: "daily", uses_heat_protection: null },
+    { styling_tools: [], heat_styling: "never", uses_heat_protection: true },
+    { drying_method: "air_dry", uses_heat_protection: true },
+  ] as Partial<LegacyCareHabitColumns>[]) {
+    const converted = convertLegacyCareColumns({ ...EMPTY_CARE_HABIT_COLUMNS, ...columns })
+    assert.equal(converted.careHabits.currentProductCategories, undefined, JSON.stringify(columns))
+    assert.deepEqual(converted.rules, [], JSON.stringify(columns))
+  }
+})
+
+test("decision 3: a heat level with no heat source is dropped (derives NULL)", () => {
+  const { careHabits, rules } = convertLegacyCareColumns({
+    ...EMPTY_CARE_HABIT_COLUMNS,
+    heat_styling: "daily",
+    uses_heat_protection: true,
+  })
+  assert.deepEqual(careHabits, { heatEvents: {} })
+  assert.deepEqual(rules, [])
+  assert.equal(deriveCareHabitsColumns(careHabits).heat_styling, null)
+})
+
+test("decision 4: a towel technique without a material is dropped", () => {
+  const { careHabits } = convertLegacyCareColumns({
+    ...EMPTY_CARE_HABIT_COLUMNS,
+    towel_technique: "gentle_press",
+  })
+  assert.deepEqual(careHabits, {})
+  assert.equal(deriveCareHabitsColumns(careHabits).towel_technique, null)
+})
+
+test("legacyColumnsToCareHabits is the conversion's document", () => {
+  const columns: LegacyCareHabitColumns = {
+    ...EMPTY_CARE_HABIT_COLUMNS,
+    styling_tools: ["blow_dryer"],
+    heat_styling: "rarely",
+    uses_heat_protection: true,
+  }
+  assert.deepEqual(legacyColumnsToCareHabits(columns), convertLegacyCareColumns(columns).careHabits)
 })
 
 // ---------------------------------------------------------------------------
@@ -1951,6 +2123,70 @@ test("runUserFactsBackfill's dry-run line names the completeness defaults a colu
     lines.includes(`  ${SCRIPT_USER} assumed density=medium, hairLength=long`),
     "the DEFAULTS section names the row and its defaults",
   )
+})
+
+test("runUserFactsBackfill lists the care rows reshaped by decisions 1 and 2 under their own heading", async () => {
+  const NEVER_USER = "33333333-3333-4333-8333-333333333301"
+  const DRYER_USER = "33333333-3333-4333-8333-333333333302"
+  const PLAIN_USER = "33333333-3333-4333-8333-333333333303"
+  const empty = { personal_plan_prepared_artifacts: [], leads: [], personal_plans: [] }
+  const fake = fakeSupabase({
+    hair_profiles: [
+      {
+        user_id: NEVER_USER,
+        facts_revision: 0,
+        facts_provenance: {},
+        ...EMPTY_COLUMNS,
+        styling_tools: ["flat_iron"],
+        heat_styling: "never",
+        uses_heat_protection: false,
+      },
+      {
+        user_id: DRYER_USER,
+        facts_revision: 0,
+        facts_provenance: {},
+        ...EMPTY_COLUMNS,
+        styling_tools: ["blow_dryer"],
+        heat_styling: "daily",
+        uses_heat_protection: true,
+      },
+      {
+        user_id: PLAIN_USER,
+        facts_revision: 0,
+        facts_provenance: {},
+        ...EMPTY_COLUMNS,
+        styling_tools: ["flat_iron"],
+        heat_styling: "daily",
+        uses_heat_protection: true,
+      },
+    ],
+    ...empty,
+    personal_plan_need_versions: [],
+    personal_plan_refinement_drafts: [],
+  })
+  const lines: string[] = []
+
+  const summary = await runUserFactsBackfill([], {
+    supabase: fake.client as never,
+    now: NOW,
+    log: (line) => lines.push(line),
+  })
+
+  assert.deepEqual(summary.careRuleRows, { never_with_tools: 1, dryer_only_protection: 1 })
+  assert.ok(
+    lines.includes(
+      `  ${"care habits converted by rule".padEnd(42)} 2 (never_with_tools 1, dryer_only_protection 1)`,
+    ),
+    "the SUMMARY names the count",
+  )
+  const at = lines.indexOf("CARE HABITS: CONVERTED BY RULE (2 rows)")
+  assert.ok(at > 0, "the section exists")
+  assert.deepEqual(lines.slice(at + 1, at + 5), [
+    "  never_with_tools (1) — „Nie“ next to selected tools: no heat tools, no heat events",
+    `    ${NEVER_USER}`,
+    "  dryer_only_protection (1) — dryer/diffuser only with protection „Ja“: heat_protectant added to currentProductCategories",
+    `    ${DRYER_USER}`,
+  ])
 })
 
 test("runUserFactsBackfill --apply hands every planned write to user_facts_save_v1 with upsert semantics", async () => {

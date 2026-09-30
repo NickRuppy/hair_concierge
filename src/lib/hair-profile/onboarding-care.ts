@@ -16,8 +16,10 @@ import {
 } from "@/lib/user-facts/derive-legacy-columns"
 import {
   legacyColumnsToCareHabits,
+  selectsOnlyDryerSources,
   type LegacyCareHabitColumns,
 } from "@/lib/user-facts/backfill/legacy-columns-to-care-habits"
+import { getSelectedStage2HeatEventSources } from "@/lib/personal-plan/refinement/heat-events"
 import type { UserFacts } from "@/lib/user-facts/read"
 import {
   CARE_HABITS_SCHEMA_VERSION,
@@ -41,7 +43,13 @@ import {
  * hand-edit semantics, like `buildHandEditFacts` does for the diagnostics editors:
  *  - a value the step does not name is never touched (partial step = partial patch);
  *  - only a document field whose value changed is written and re-marked `user`;
- *  - a save that leaves all eight derived columns as they are is not an edit: nothing is written;
+ *  - a save that changes none of the document fields the step owns is not an edit: nothing is
+ *    written (fix round 4 I5: decided on the document, not on the derived columns, so a real
+ *    answer the columns cannot show — `air_dry` next to a dryer — is still stored);
+ *  - drying routes the tool list cannot express (`air_dry`) are kept unless the step names a
+ *    different drying method (I4);
+ *  - the product owner's decisions 1 and 2 (Nick 2026-09-30) apply on the fly through the one
+ *    conversion: „Nie“ with tools stores no tools; dryer-only with „Ja“ owns `heat_protectant`;
  *  - a row that has legacy columns but no document gets its whole converted base written with the
  *    edit (the door derives all eight columns from the document, so a partial document would
  *    blank the columns the step did not name).
@@ -49,28 +57,45 @@ import {
  * Deterministic and I/O-free.
  */
 
-const unique = <Element extends z.ZodType<string>>(element: Element) =>
-  z.array(element).transform((list) => [...new Set(list)])
+/** A list answer: string members outside the vocabulary are dropped (a stale stored value the
+ * step hydrated must never fail the save, fix round 4 M1), duplicates collapse, order is kept. */
+const knownList = <Value extends string>(vocabulary: readonly Value[]) =>
+  z
+    .array(z.string())
+    .transform((list) =>
+      [...new Set(list)].filter((item): item is Value =>
+        (vocabulary as readonly string[]).includes(item),
+      ),
+    )
 
-/** The payload: the legacy column values one onboarding step submits. Unnamed = unchanged. */
+/** A single answer: a string outside the vocabulary reads as "not answered in this step" (M1). */
+const knownValue = <Value extends string>(vocabulary: readonly Value[]) =>
+  z
+    .string()
+    .transform((value): Value | undefined =>
+      (vocabulary as readonly string[]).includes(value) ? (value as Value) : undefined,
+    )
+
+/** The payload: the legacy column values one onboarding step submits. Unnamed = unchanged.
+ * Wrong types, unknown keys and an empty body are rejected; a stale VALUE is not (M1). */
 export const onboardingCareSchema = z
-  .object({
-    styling_tools: unique(z.enum(STYLING_TOOLS)),
-    heat_styling: z.enum(HEAT_STYLING_LEVELS),
-    uses_heat_protection: z.boolean().nullable(),
-    towel_material: z.enum(TOWEL_MATERIALS).nullable(),
-    towel_technique: z.enum(TOWEL_TECHNIQUES).nullable(),
-    drying_method: z.enum(DRYING_METHODS).nullable(),
-    brush_type: unique(z.enum(BRUSH_TYPES)).nullable(),
-    night_protection: unique(z.enum(NIGHT_PROTECTIONS)),
-  })
-  .partial()
-  .strict()
-  .superRefine((values, context) => {
-    if (Object.values(values).every((value) => value === undefined)) {
-      context.addIssue({ code: z.ZodIssueCode.custom, message: "Keine Antworten zum Speichern" })
-    }
-  })
+  .record(z.string(), z.unknown())
+  .refine((body) => Object.keys(body).length > 0, { message: "Keine Antworten zum Speichern" })
+  .pipe(
+    z
+      .object({
+        styling_tools: knownList(STYLING_TOOLS),
+        heat_styling: knownValue(HEAT_STYLING_LEVELS),
+        uses_heat_protection: z.boolean().nullable(),
+        towel_material: knownValue(TOWEL_MATERIALS).nullable(),
+        towel_technique: knownValue(TOWEL_TECHNIQUES).nullable(),
+        drying_method: knownValue(DRYING_METHODS).nullable(),
+        brush_type: knownList(BRUSH_TYPES).nullable(),
+        night_protection: knownList(NIGHT_PROTECTIONS),
+      })
+      .partial()
+      .strict(),
+  )
 
 export type OnboardingCareValues = z.infer<typeof onboardingCareSchema>
 
@@ -82,7 +107,8 @@ export type OnboardingCareFactsWrite = {
   /** The eight columns `user_facts_save_v1` derives from the merged document — what the row will
    * hold after the write (the TS oracle, parity-tested against the SQL). */
   columns: CareHabitsDerivedColumns
-  /** Set when the save changes none of the eight derived columns: not an edit, write nothing. */
+  /** Set when the save changes none of the document fields the step owns: not an edit, write
+   * nothing. */
   unchanged?: true
 }
 
@@ -185,6 +211,42 @@ function heatEventsAfter(input: {
   return events as HeatEvents
 }
 
+type DryingRoutes = NonNullable<CareHabitsV1["dryingRoutes"]>
+
+/** Routes the legacy tool list expresses (`blow_dryer`, `diffuser`); every other route (`air_dry`)
+ * only the drying step can name. */
+const TOOL_ROUTES = new Set<string>(["ordinary_blow_dry", "diffuser_or_airflow_shaping"])
+
+/** I4: the routes after the step. The legacy model has ONE drying method, so the conversion
+ * rebuilds the routes from it and the tools; that replaces the stored routes only when the step
+ * names a different drying method. Otherwise the stored routes the tool list cannot express stay,
+ * in their stored order, beside the ones the (possibly edited) tool list and method give. */
+function dryingRoutesAfter(input: {
+  converted: CareHabitsV1["dryingRoutes"]
+  reference: CareHabitsV1
+  refColumns: CareHabitsDerivedColumns
+  values: OnboardingCareValues
+}): CareHabitsV1["dryingRoutes"] {
+  const { converted, reference, refColumns, values } = input
+  const methodReplaced =
+    values.drying_method !== undefined && values.drying_method !== refColumns.drying_method
+  if (methodReplaced || !reference.dryingRoutes) return converted
+  const next = converted ?? []
+  const routes: DryingRoutes = reference.dryingRoutes.filter(
+    (route) => !TOOL_ROUTES.has(route) || next.includes(route),
+  )
+  for (const route of next) if (!routes.includes(route)) routes.push(route)
+  return routes
+}
+
+const sourcesKey = (careHabits: Pick<CareHabitsV1, "dryingRoutes" | "additionalHeatTools">) =>
+  getSelectedStage2HeatEventSources({
+    ...(careHabits.dryingRoutes ? { dryingRoutes: [...careHabits.dryingRoutes] } : {}),
+    ...(careHabits.additionalHeatTools
+      ? { additionalHeatTools: [...careHabits.additionalHeatTools] }
+      : {}),
+  }).join(",")
+
 export function buildOnboardingCareFacts(input: {
   values: OnboardingCareValues
   /** The care_habits document and provenance the row holds; `null` = no row. */
@@ -219,6 +281,16 @@ export function buildOnboardingCareFacts(input: {
   if (values.towel_technique !== undefined) effective.towel_technique = values.towel_technique
   if (values.drying_method !== undefined) effective.drying_method = values.drying_method
   if (values.night_protection !== undefined) effective.night_protection = values.night_protection
+  // Decision 1 („Nie“ with tools = no tools) is about a „Nie“ she gives. A derived `never` only
+  // says no source was selected before — it is no answer about tools she picks now; the frequency
+  // step asks for their level.
+  if (
+    values.heat_styling === undefined &&
+    effective.heat_styling === "never" &&
+    (effective.styling_tools?.length ?? 0) > 0
+  ) {
+    effective.heat_styling = null
+  }
   const converted = legacyColumnsToCareHabits(effective)
 
   // The document fields this step owns, with the value they should hold (null = clear).
@@ -235,7 +307,13 @@ export function buildOnboardingCareFacts(input: {
     values.uses_heat_protection !== undefined ||
     values.drying_method !== undefined
   ) {
-    desired.dryingRoutes = converted.dryingRoutes ?? null
+    const dryingRoutes = dryingRoutesAfter({
+      converted: converted.dryingRoutes,
+      reference,
+      refColumns,
+      values,
+    })
+    desired.dryingRoutes = dryingRoutes ?? null
     desired.additionalHeatTools = converted.additionalHeatTools ?? null
     if (converted.heatEvents !== undefined) {
       desired.heatEvents = heatEventsAfter({
@@ -244,6 +322,31 @@ export function buildOnboardingCareFacts(input: {
         refColumns,
         values,
       })
+    }
+
+    // Decision 2 on the fly: with only dryer/diffuser sources the protection answer lives in
+    // `currentProductCategories` (the existing slot). Touched only when she answers protection
+    // here or her heat sources change — never on a re-save of an unrelated heat step.
+    const after = {
+      ...(dryingRoutes ? { dryingRoutes } : {}),
+      ...(converted.additionalHeatTools
+        ? { additionalHeatTools: converted.additionalHeatTools }
+        : {}),
+    }
+    const sourcesChanged = sourcesKey(after) !== sourcesKey(reference)
+    if (
+      (values.uses_heat_protection !== undefined || sourcesChanged) &&
+      selectsOnlyDryerSources(after)
+    ) {
+      const owned = reference.currentProductCategories ?? []
+      if (effective.uses_heat_protection === true && !owned.includes("heat_protectant")) {
+        desired.currentProductCategories = [...owned, "heat_protectant"]
+      } else if (values.uses_heat_protection === false && owned.includes("heat_protectant")) {
+        const rest = owned.filter((category) => category !== "heat_protectant")
+        // Only the heat protectant was known: „Nein“ leaves the list unanswered, it does not
+        // claim she uses none of the products.
+        desired.currentProductCategories = rest.length > 0 ? rest : null
+      }
     }
   }
 
@@ -257,13 +360,7 @@ export function buildOnboardingCareFacts(input: {
     if (!same(before, value)) changes[field] = value
   }
 
-  const changed =
-    Object.keys(changes).length > 0 &&
-    !same(
-      deriveCareHabitsColumns(mergeCareHabitsPatch(reference, changes as CareHabitsPatch)),
-      refColumns,
-    )
-  if (!changed) {
+  if (Object.keys(changes).length === 0) {
     return {
       patch: {},
       provenance: {

@@ -22,6 +22,7 @@ import {
   type DiagnosticsV1,
 } from "../../src/lib/user-facts/schema"
 import { saveUserFacts } from "../../src/lib/user-facts/save"
+import type { CareConversionRule } from "../../src/lib/user-facts/backfill/legacy-columns-to-care-habits"
 
 /**
  * One-off backfill of the `hair_profiles` fact domains (`diagnostics`, `care_habits`,
@@ -466,6 +467,9 @@ export type BackfillSummary = {
   ambiguousRows: number
   /** Task 7: rows whose planned writes change at least one legacy column. */
   visibleChangeRows: number
+  /** Fix round 4: rows per care-habit decision (1 `never_with_tools`, 2 `dryer_only_protection`)
+   * the planned care write applied. */
+  careRuleRows: Partial<Record<CareConversionRule, number>>
   unresolvable: number
   skipped: number
   applied: number
@@ -478,6 +482,13 @@ export type BackfillSummary = {
 }
 
 type RowOutcome = { row: LoadedUserRow; plan: UserFactsBackfillPlan }
+
+/** The product owner's care-habit decisions 1 and 2 (Nick 2026-09-30), as the report names them. */
+const CARE_RULE_LABELS: Record<CareConversionRule, string> = {
+  never_with_tools: "„Nie“ next to selected tools: no heat tools, no heat events",
+  dryer_only_protection:
+    "dryer/diffuser only with protection „Ja“: heat_protectant added to currentProductCategories",
+}
 
 function countBy<Key extends string>(keys: Key[]): string {
   const counts = new Map<Key, number>()
@@ -519,6 +530,7 @@ function reportLines(
       plan.writes.some((write) => write.domain === "diagnostics" && write.detail?.includes("kept")),
   )
   const sourceNotes = outcomes.filter(({ plan }) => plan.report.sourceNote)
+  const ruleRows = outcomes.filter(({ plan }) => plan.report.careRules.length > 0)
   const tolerated = outcomes.flatMap(({ plan }) => plan.report.tolerated.map((entry) => entry.id))
   const changedColumns = outcomes.flatMap(({ plan }) =>
     plan.report.visibleChanges.map((change) => `${change.domain}.${change.column}`),
@@ -568,6 +580,10 @@ function reportLines(
   row(
     "rows with defaults applied",
     `${withDefaults.length}${assumedFields.length ? ` (${countBy(assumedFields)})` : ""}`,
+  )
+  row(
+    "care habits converted by rule",
+    `${ruleRows.length}${ruleRows.length ? ` (${countBy(ruleRows.flatMap(({ plan }) => plan.report.careRules))})` : ""}`,
   )
   row("rows keeping profile values", kept.length)
   row("rows where a later lead beat the artifact", sourceNotes.length)
@@ -619,6 +635,15 @@ function reportLines(
     for (const change of plan.report.visibleChanges) {
       lines.push(`    ${change.domain}.${change.column}: ${change.before} -> ${change.after}`)
     }
+  }
+
+  lines.push("")
+  lines.push(`CARE HABITS: CONVERTED BY RULE (${ruleRows.length} rows)`)
+  for (const rule of Object.keys(CARE_RULE_LABELS) as CareConversionRule[]) {
+    const users = ruleRows.filter(({ plan }) => plan.report.careRules.includes(rule))
+    if (users.length === 0) continue
+    lines.push(`  ${rule} (${users.length}) — ${CARE_RULE_LABELS[rule]}`)
+    for (const { row: loaded } of users) lines.push(`    ${loaded.userId}`)
   }
 
   lines.push("")
@@ -811,6 +836,13 @@ export async function runUserFactsBackfill(
     handEditedRows: outcomes.filter(({ plan }) => plan.report.editedGroups.length > 0).length,
     ambiguousRows: outcomes.filter(({ plan }) => plan.report.ambiguousGroups.length > 0).length,
     visibleChangeRows: outcomes.filter(({ plan }) => plan.report.visibleChanges.length > 0).length,
+    careRuleRows: outcomes.reduce<Partial<Record<CareConversionRule, number>>>(
+      (counts, { plan }) => {
+        for (const rule of plan.report.careRules) counts[rule] = (counts[rule] ?? 0) + 1
+        return counts
+      },
+      {},
+    ),
     unresolvable: unresolvableLines.length,
     skipped: skipLines.length,
     applied,

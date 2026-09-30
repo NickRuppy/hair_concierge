@@ -547,3 +547,67 @@ test("FINDING F7: a stored protection flag without a heat level is lost on the f
   assert.equal(last.now.uses_heat_protection, false)
   assert.deepEqual(last.now.styling_tools, ["flat_iron"], "the tool itself survives")
 })
+
+// ---------------------------------------------------------------------------
+// Fix round 4: the product owner's decisions and the merge bugs, on the real door + lock
+// ---------------------------------------------------------------------------
+
+async function careDocument(pg: PersonalPlanTestDb) {
+  const row = (await readRow(pg, OWNER))!
+  return row.care_habits as Record<string, unknown>
+}
+
+test("DECISION 1: „Nie“ after selected tools is stored as no heat tools", async (t) => {
+  const trail = await compare(t, null, [
+    { styling_tools: ["flat_iron"] },
+    { heat_styling: "never" },
+  ])
+  const last = trail[trail.length - 1]!
+  assert.deepEqual(last.old.styling_tools, ["flat_iron"], "the old upsert kept the tool")
+  assert.deepEqual(last.now.styling_tools, [])
+  assert.equal(last.now.heat_styling, "never")
+  assert.equal(last.now.uses_heat_protection, false)
+})
+
+test("DECISION 2: dryer only with protection „Ja“ keeps the column true, via heat_protectant", async (t) => {
+  const pg = await mobileFactsDatabase(t, { lock: false })
+  await seedRow(pg)
+  for (const step of [
+    { styling_tools: ["blow_dryer"] },
+    { heat_styling: "daily" },
+    { uses_heat_protection: true },
+  ]) {
+    await saveOnboardingCare(deps(pg), OWNER, values(step))
+  }
+  const columns = await careColumns(pg)
+  assert.equal(columns.uses_heat_protection, true, "the old upsert stored true too")
+  assert.deepEqual(columns.styling_tools, ["blow_dryer"])
+  assert.deepEqual((await careDocument(pg)).currentProductCategories, ["heat_protectant"])
+})
+
+test("I4 + I5 on the real door: air_dry next to a dryer is stored, and a tools edit keeps it", async (t) => {
+  const pg = await mobileFactsDatabase(t, { lock: false })
+  await seedRow(pg)
+  for (const step of [
+    { styling_tools: ["blow_dryer", "flat_iron"] },
+    { heat_styling: "several_weekly" },
+    { drying_method: "air_dry" },
+  ]) {
+    await saveOnboardingCare(deps(pg), OWNER, values(step))
+  }
+  // I5: the air_dry answer derives the same column (the dryer wins the pick) and is still stored.
+  assert.deepEqual((await careDocument(pg)).dryingRoutes, ["air_dry", "ordinary_blow_dry"])
+  assert.equal((await careColumns(pg)).drying_method, "blow_dry")
+
+  // I4: dropping the flat iron keeps the route the tool list cannot express.
+  await saveOnboardingCare(deps(pg), OWNER, values({ styling_tools: ["blow_dryer"] }))
+  const document = await careDocument(pg)
+  assert.deepEqual(document.dryingRoutes, ["air_dry", "ordinary_blow_dry"])
+  assert.deepEqual(document.additionalHeatTools, [])
+  assert.deepEqual((await careColumns(pg)).styling_tools, ["blow_dryer"])
+
+  // A true no-op still writes nothing.
+  const before = (await readRow(pg, OWNER))!.facts_revision
+  await saveOnboardingCare(deps(pg), OWNER, values({ styling_tools: ["blow_dryer"] }))
+  assert.equal((await readRow(pg, OWNER))!.facts_revision, before)
+})

@@ -37,8 +37,22 @@ import { careHabitsV1Schema, type CareHabitsV1 } from "../schema"
  * `brushesCombs` is NOT produced here — `brush_type` is lifted for every user (refined or
  * not) by `plan-row.ts`, because no Stage-2 version ever carried a brush answer.
  *
+ * The product owner's care-habit decisions (Nick 2026-09-30) live here, so the backfill, the
+ * onboarding save and the seed helper all follow them:
+ *  1. `heat_styling = 'never'` next to selected tools: she uses no heat tools — the tool list is
+ *     dropped (no sources from it, no events). A `drying_method` route stays her drying answer.
+ *  2. Only dryer/diffuser sources (no iron-type source) with `uses_heat_protection = true`:
+ *     `heat_protectant` goes into `currentProductCategories` (the existing slot; no product is
+ *     invented), and the derived `uses_heat_protection` reads it (derive-legacy-columns rule 12b).
+ *  3. A heat level with no heat source has no slot: dropped (derives NULL).
+ *  4. A towel technique without a material has no slot: dropped.
+ * `convertLegacyCareColumns` also names which of 1 and 2 fired, for the backfill report.
+ *
  * Pure: no I/O, no `server-only`.
  */
+
+/** Which of the product owner's reshaping decisions (1 and 2 above) the conversion applied. */
+export type CareConversionRule = "never_with_tools" | "dryer_only_protection"
 
 export type LegacyCareHabitColumns = {
   towel_material: string | null
@@ -140,13 +154,60 @@ function translateHeatEvents(
   return events as CareHabitsV1["heatEvents"]
 }
 
-export function legacyColumnsToCareHabits(columns: LegacyCareHabitColumns): CareHabitsV1 {
+/** Decision 1: „Nie“ with selected tools is "no heat tools" — the tool list reads as empty. */
+function applyNeverWithTools(columns: LegacyCareHabitColumns): {
+  columns: LegacyCareHabitColumns
+  fired: boolean
+} {
+  const fired =
+    columns.heat_styling === "never" &&
+    columns.styling_tools !== null &&
+    columns.styling_tools.length > 0
+  return fired ? { columns: { ...columns, styling_tools: [] }, fired } : { columns, fired }
+}
+
+const DRYER_SOURCES = new Set<string>(["ordinary_blow_dry", "diffuser_airflow_shaping"])
+
+/** Decision 2's condition: at least one heat source, every one of them a dryer/diffuser. */
+export function selectsOnlyDryerSources(careHabits: {
+  dryingRoutes?: readonly DryingRoute[]
+  additionalHeatTools?: readonly AdditionalHeatTool[]
+}): boolean {
+  const sources = getSelectedStage2HeatEventSources({
+    ...(careHabits.dryingRoutes ? { dryingRoutes: [...careHabits.dryingRoutes] } : {}),
+    ...(careHabits.additionalHeatTools
+      ? { additionalHeatTools: [...careHabits.additionalHeatTools] }
+      : {}),
+  })
+  return sources.length > 0 && sources.every((source) => DRYER_SOURCES.has(source))
+}
+
+export function convertLegacyCareColumns(input: LegacyCareHabitColumns): {
+  careHabits: CareHabitsV1
+  rules: CareConversionRule[]
+} {
+  const rules: CareConversionRule[] = []
+  const neverWithTools = applyNeverWithTools(input)
+  if (neverWithTools.fired) rules.push("never_with_tools")
+  const columns = neverWithTools.columns
+
   const heatInputs = translateHeatInputs(columns)
   const towel = translateTowel(columns)
   const heatEvents = translateHeatEvents(columns, heatInputs)
   const nightProtection = normalizeNightProtectionValues(columns.night_protection)
 
-  return careHabitsV1Schema.parse({
+  const dryerOnlyProtection =
+    columns.uses_heat_protection === true &&
+    selectsOnlyDryerSources({
+      ...(heatInputs.dryingRoutes ? { dryingRoutes: heatInputs.dryingRoutes } : {}),
+      ...(heatInputs.additionalHeatTools
+        ? { additionalHeatTools: heatInputs.additionalHeatTools }
+        : {}),
+    })
+  if (dryerOnlyProtection) rules.push("dryer_only_protection")
+
+  const careHabits = careHabitsV1Schema.parse({
+    ...(dryerOnlyProtection ? { currentProductCategories: ["heat_protectant"] } : {}),
     ...(towel ? { towel } : {}),
     ...(heatInputs.dryingRoutes ? { dryingRoutes: heatInputs.dryingRoutes } : {}),
     ...(heatInputs.additionalHeatTools
@@ -155,4 +216,9 @@ export function legacyColumnsToCareHabits(columns: LegacyCareHabitColumns): Care
     ...(heatEvents ? { heatEvents } : {}),
     ...(nightProtection ? { nightProtection } : {}),
   })
+  return { careHabits, rules }
+}
+
+export function legacyColumnsToCareHabits(columns: LegacyCareHabitColumns): CareHabitsV1 {
+  return convertLegacyCareColumns(columns).careHabits
 }

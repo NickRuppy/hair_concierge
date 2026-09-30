@@ -26,7 +26,8 @@ import {
 } from "../schema"
 import type { ColumnFinding, ToleratedDifferenceId } from "./detect-hand-edits"
 import {
-  legacyColumnsToCareHabits,
+  convertLegacyCareColumns,
+  type CareConversionRule,
   type LegacyCareHabitColumns,
 } from "./legacy-columns-to-care-habits"
 import {
@@ -157,6 +158,9 @@ export type BackfillRowReport = {
   notes: string[]
   editedAt?: { at: string; basis: "ios_profile_edit" | "profile_updated_at" | "backfill_time" }
   visibleChanges: VisibleColumnChange[]
+  /** The product owner's care-habit decisions 1/2 (Nick 2026-09-30) this row's planned care
+   * write applied — listed apart in the report ("care habits: converted by rule"). */
+  careRules: CareConversionRule[]
 }
 
 export type UserFactsBackfillPlan = {
@@ -520,8 +524,9 @@ function planDiagnosticsAndContext(
   }
 }
 
-/** Care habits keep today's conversion (task 7 addendum: four product decisions pending); the
- * report still lists every column the write changes, erasures included. */
+/** Care habits go through the one conversion, with the product owner's four decisions
+ * (Nick 2026-09-30); the report lists every column the write changes, erasures (decisions 3/4)
+ * included, and the rows decisions 1/2 reshaped under their own heading. */
 function reportCareChanges(
   row: LoadedUserRow,
   patch: CareHabitsPatch,
@@ -555,8 +560,9 @@ function planCareHabits(
       plan.skips.push(gate.reason)
       return
     }
+    const converted = convertLegacyCareColumns(row.columns)
     const patch: CareHabitsPatch = {
-      ...legacyColumnsToCareHabits(row.columns),
+      ...converted.careHabits,
       ...(brushesCombs ? { brushesCombs } : {}),
     }
     if (Object.keys(patch).length === 0) {
@@ -583,6 +589,7 @@ function planCareHabits(
     for (const key of Object.keys(patch)) fields[key] = "unknown_historical"
 
     reportCareChanges(row, patch, plan)
+    plan.report.careRules = converted.rules
     plan.writes.push({
       domain: "care_habits",
       patch,
@@ -665,6 +672,7 @@ export function planUserFactsBackfill(
       tolerated: [],
       notes: [],
       visibleChanges: [],
+      careRules: [],
     },
     skips: [],
     unresolvable: [],

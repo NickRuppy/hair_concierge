@@ -504,9 +504,9 @@ test("a row with no source at all is imported from its columns, with nothing to 
   assert.deepEqual(planned.report.editedGroups, [])
 })
 
-test("care habits keep today's conversion, and every column it changes — erasures included — is listed", () => {
-  // „Nie" next to a selected tool (one of the pending care-habit decisions): the conversion
-  // loses the level, and the report must say so.
+test("care habits follow the owner's decisions, and every column the write changes — erasures included — is listed", () => {
+  // „Nie" next to a selected tool (decision 1, Nick 2026-09-30): she uses no heat tools — the
+  // tool list goes, the level stays „Nie", and the report names the dropped tool and the rule.
   const planned = plan({
     legacyLead: LEAD,
     columns: {
@@ -518,11 +518,32 @@ test("care habits keep today's conversion, and every column it changes — erasu
   })
   assert.deepEqual(
     planned.report.visibleChanges.filter((change) => change.domain === "care_habits"),
-    [{ domain: "care_habits", column: "heat_styling", before: "never", after: "NULL" }],
+    [{ domain: "care_habits", column: "styling_tools", before: "flat_iron", after: "[]" }],
   )
+  assert.deepEqual(planned.report.careRules, ["never_with_tools"])
 
-  // Nothing representable at all (a towel technique without a material): no document is
-  // written, and the row is named instead of silently skipped.
+  // Decision 3 (intended): a heat level with no heat source is dropped — listed as an erasure.
+  const levelOnly = plan({
+    legacyLead: LEAD,
+    columns: {
+      ...LEAD_COLUMNS,
+      heat_styling: "daily",
+      styling_tools: null,
+      drying_method: null,
+      uses_heat_protection: true,
+    },
+  })
+  assert.deepEqual(
+    levelOnly.report.visibleChanges.filter((change) => change.domain === "care_habits"),
+    [
+      { domain: "care_habits", column: "heat_styling", before: "daily", after: "NULL" },
+      { domain: "care_habits", column: "uses_heat_protection", before: "true", after: "false" },
+    ],
+  )
+  assert.deepEqual(levelOnly.report.careRules, [])
+
+  // Decision 4 (intended): nothing representable at all (a towel technique without a
+  // material): no document is written, and the row is named instead of silently skipped.
   const unrepresentable = plan({
     legacyLead: LEAD,
     columns: { ...LEAD_COLUMNS, towel_material: null, towel_technique: "gentle_press" },

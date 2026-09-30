@@ -358,6 +358,174 @@ test("a changed heat level re-levels every source but keeps the protection answe
 })
 
 // ---------------------------------------------------------------------------
+// Fix round 4: merge bugs I4/I5 and the product owner's decisions on the fly
+// ---------------------------------------------------------------------------
+
+const MULTI_ROUTE = doc({
+  dryingRoutes: ["air_dry", "ordinary_blow_dry"],
+  additionalHeatTools: ["straightener"],
+  heatEvents: {
+    "heat:ordinary_blow_dry": { frequency: "weekly_3_4x" },
+    "heat:straightener": { frequency: "weekly_3_4x", protectionConsistency: "always" },
+  },
+})
+
+test("I4: a tools edit keeps the routes the tool list cannot express (air_dry survives)", () => {
+  const write = build({
+    values: { styling_tools: ["blow_dryer"] },
+    careHabits: MULTI_ROUTE,
+    provenance: provenance("feinschliff_draft"),
+  })
+  assert.equal(write.patch.dryingRoutes, undefined, "the routes are not rewritten")
+  assert.deepEqual(write.patch.additionalHeatTools, [])
+  assert.deepEqual(write.patch.heatEvents, {
+    "heat:ordinary_blow_dry": { frequency: "weekly_3_4x" },
+  })
+  const merged = mergeCareHabitsPatch(MULTI_ROUTE, write.patch)
+  assert.deepEqual(merged.dryingRoutes, ["air_dry", "ordinary_blow_dry"])
+  assert.deepEqual(write.columns.styling_tools, ["blow_dryer"])
+  assert.equal(write.columns.drying_method, "blow_dry")
+  // Her single "yes, I protect" answer stays true now that only the dryer is left (decision 2).
+  assert.deepEqual(write.patch.currentProductCategories, ["heat_protectant"])
+  assert.equal(write.columns.uses_heat_protection, true)
+})
+
+test("I4: a re-saved identical drying answer keeps every route", () => {
+  const write = build({ values: { drying_method: "blow_dry" }, careHabits: MULTI_ROUTE })
+  assert.equal(write.unchanged, true)
+})
+
+test("I4: removing the dryer tool keeps air_dry and drops only the dryer route", () => {
+  const stored = doc({
+    dryingRoutes: ["air_dry", "diffuser_or_airflow_shaping", "ordinary_blow_dry"],
+    additionalHeatTools: [],
+    heatEvents: {
+      "heat:ordinary_blow_dry": { frequency: "weekly_1x" },
+      "heat:diffuser_airflow_shaping": { frequency: "weekly_1x", protectionConsistency: "no" },
+    },
+  })
+  const write = build({ values: { styling_tools: ["diffuser"] }, careHabits: stored })
+  const merged = mergeCareHabitsPatch(stored, write.patch)
+  assert.deepEqual(merged.dryingRoutes, ["air_dry", "diffuser_or_airflow_shaping"])
+  assert.deepEqual(write.columns.styling_tools, ["diffuser"])
+})
+
+test("I5 + air_dry next to a dryer: a real answer that derives the same column is still written", () => {
+  const stored = doc({
+    dryingRoutes: ["ordinary_blow_dry"],
+    additionalHeatTools: [],
+    heatEvents: { "heat:ordinary_blow_dry": { frequency: "weekly_1x" } },
+  })
+  const write = build({ values: { drying_method: "air_dry" }, careHabits: stored })
+  assert.equal(write.unchanged, undefined)
+  assert.deepEqual(write.patch, { dryingRoutes: ["air_dry", "ordinary_blow_dry"] })
+  assert.deepEqual(write.provenance.fields, { dryingRoutes: "user" })
+  // The column cannot show it (finding F2: the blow dryer she owns wins the priority pick).
+  assert.equal(write.columns.drying_method, "blow_dry")
+})
+
+test("I5: an unanswered protection slot answered „Nein“ is a real answer, not a no-op", () => {
+  const stored = doc({
+    dryingRoutes: [],
+    additionalHeatTools: ["straightener"],
+    heatEvents: { "heat:straightener": { frequency: "weekly_1x" } },
+  })
+  const write = build({ values: { uses_heat_protection: false }, careHabits: stored })
+  assert.deepEqual(write.patch, {
+    heatEvents: { "heat:straightener": { frequency: "weekly_1x", protectionConsistency: "no" } },
+  })
+  assert.equal(write.columns.uses_heat_protection, false)
+})
+
+test("decision 1 on the fly: „Nie“ after selected tools stores no heat tools", () => {
+  const stored = doc({
+    dryingRoutes: [],
+    additionalHeatTools: ["straightener"],
+    heatEvents: {},
+  })
+  const write = build({ values: { heat_styling: "never" }, careHabits: stored })
+  assert.deepEqual(write.patch, { additionalHeatTools: [] })
+  assert.deepEqual(write.columns.styling_tools, [])
+  assert.equal(write.columns.heat_styling, "never")
+  assert.equal(write.columns.uses_heat_protection, false)
+
+  // Same from a legacy row with no document: the carried base is already converted by rule.
+  const legacy = build({
+    values: { night_protection: [] },
+    careHabits: null,
+    row: { ...LEGACY_ROW, drying_method: "air_dry", heat_styling: "never" },
+  })
+  assert.deepEqual(legacy.columns.styling_tools, [])
+  assert.equal(legacy.columns.heat_styling, "never")
+})
+
+test("decision 1 on the fly: tools picked after a stored „Nie“ are kept — the old level is not an answer about them", () => {
+  const stored = doc({ dryingRoutes: ["air_dry"], additionalHeatTools: [], heatEvents: {} })
+  const write = build({ values: { styling_tools: ["flat_iron"] }, careHabits: stored })
+  assert.deepEqual(write.patch, { additionalHeatTools: ["straightener"] })
+  assert.deepEqual(write.columns.styling_tools, ["flat_iron"])
+  assert.equal(write.columns.heat_styling, null, "the frequency step asks again")
+})
+
+test("decision 2 on the fly: dryer-only „Ja“ adds heat_protectant beside her other products", () => {
+  const stored = doc({
+    currentProductCategories: ["shampoo", "conditioner"],
+    dryingRoutes: ["ordinary_blow_dry"],
+    additionalHeatTools: [],
+    heatEvents: { "heat:ordinary_blow_dry": { frequency: "weekly_3_4x" } },
+  })
+  const yes = build({ values: { uses_heat_protection: true }, careHabits: stored })
+  assert.deepEqual(yes.patch, {
+    currentProductCategories: ["shampoo", "conditioner", "heat_protectant"],
+  })
+  assert.deepEqual(yes.provenance.fields, { currentProductCategories: "user" })
+  assert.equal(yes.columns.uses_heat_protection, true)
+
+  const owned = mergeCareHabitsPatch(stored, yes.patch)
+  assert.equal(build({ values: { uses_heat_protection: true }, careHabits: owned }).unchanged, true)
+
+  const no = build({ values: { uses_heat_protection: false }, careHabits: owned })
+  assert.deepEqual(no.patch, { currentProductCategories: ["shampoo", "conditioner"] })
+  assert.equal(no.columns.uses_heat_protection, false)
+
+  // Only heat_protectant was known: „Nein“ leaves the list unanswered, not "owns nothing".
+  const onlyProtectant = doc({ ...stored, currentProductCategories: ["heat_protectant"] })
+  const cleared = build({ values: { uses_heat_protection: false }, careHabits: onlyProtectant })
+  assert.deepEqual(cleared.patch, { currentProductCategories: null })
+})
+
+test("decision 2 on the fly: a whole fresh flow with only the blow dryer keeps „Ja“", () => {
+  let careHabits: CareHabitsV1 | null = null
+  for (const values of [
+    { styling_tools: ["blow_dryer"] },
+    { heat_styling: "daily" },
+    { uses_heat_protection: true },
+  ] as OnboardingCareValues[]) {
+    const write = build({ values, careHabits })
+    careHabits = mergeCareHabitsPatch(careHabits, write.patch)
+  }
+  assert.deepEqual(careHabits?.currentProductCategories, ["heat_protectant"])
+  assert.equal(deriveCareHabitsColumns(careHabits!).uses_heat_protection, true)
+})
+
+test("decision 2 does not touch the categories with an iron-type tool selected", () => {
+  const write = build({
+    values: { uses_heat_protection: true },
+    careHabits: doc({
+      currentProductCategories: ["shampoo"],
+      dryingRoutes: ["ordinary_blow_dry"],
+      additionalHeatTools: ["straightener"],
+      heatEvents: {
+        "heat:ordinary_blow_dry": { frequency: "weekly_1x" },
+        "heat:straightener": { frequency: "weekly_1x" },
+      },
+    }),
+  })
+  assert.equal(write.patch.currentProductCategories, undefined)
+  assert.equal(write.columns.uses_heat_protection, true)
+})
+
+// ---------------------------------------------------------------------------
 // Rows without a care_habits document
 // ---------------------------------------------------------------------------
 
@@ -441,22 +609,44 @@ test("a legacy_columns-sourced document is an ordinary stored document", () => {
 // Adversarial
 // ---------------------------------------------------------------------------
 
-test("adversarial: unknown values never reach the conversion", () => {
+test("adversarial: a body outside the contract is rejected", () => {
   for (const body of [
-    { styling_tools: ["laser_iron"] },
-    { heat_styling: "sometimes" },
     { uses_heat_protection: "yes" },
-    { towel_material: "bathrobe" },
-    { towel_technique: "rubbeln" },
-    { drying_method: "sun" },
-    { brush_type: ["hands"] },
+    { styling_tools: "flat_iron" },
+    { styling_tools: [3] },
+    { heat_styling: 2 },
     { brush_type: "paddle" },
-    { night_protection: ["loose_braid"] },
     { night_protection: null },
     { userId: "someone-else", towel_material: "frottee" },
     {},
+    [],
   ]) {
     assert.equal(onboardingCareSchema.safeParse(body).success, false, JSON.stringify(body))
+  }
+})
+
+test("M1: a stale stored value outside the vocabulary never fails the step — it is dropped", () => {
+  // Hydrated from an old row: unknown list members are filtered, an unknown single value reads
+  // as "not answered in this step". Unknown values never reach the conversion.
+  assert.deepEqual(parse({ styling_tools: ["laser_iron", "flat_iron", "laser_iron"] }), {
+    styling_tools: ["flat_iron"],
+  })
+  assert.deepEqual(parse({ brush_type: ["hands", "paddle"] }), { brush_type: ["paddle"] })
+  assert.deepEqual(parse({ night_protection: ["loose_braid"] }), { night_protection: [] })
+  for (const body of [
+    { heat_styling: "sometimes" },
+    { towel_material: "bathrobe" },
+    { towel_technique: "rubbeln" },
+    { drying_method: "sun" },
+  ]) {
+    const parsed = parse(body)
+    assert.equal(
+      Object.values(parsed).every((value) => value === undefined),
+      true,
+      JSON.stringify(body),
+    )
+    const write = build({ values: parsed, careHabits: doc({ towel: { material: "frottee" } }) })
+    assert.equal(write.unchanged, true, JSON.stringify(body))
   }
 })
 

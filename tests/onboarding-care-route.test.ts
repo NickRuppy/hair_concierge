@@ -187,17 +187,31 @@ test("handler: 400 for a body that is not JSON or not the contract", async () =>
       return { profile: null }
     },
   })
-  for (const body of [
-    "{",
-    { styling_tools: ["laser"] },
-    {},
-    { userId: "x", night_protection: [] },
-  ]) {
+  for (const body of ["{", { styling_tools: "laser" }, {}, { userId: "x", night_protection: [] }]) {
     const response = await post(request(body))
     assert.equal(response.status, 400, JSON.stringify(body))
     assert.deepEqual(await response.json(), { error: ERR_INVALID_DATA })
   }
   assert.equal(saved, false)
+})
+
+test("M1: a stale stored value the step hydrated never fails the save — dropped, nothing written", async () => {
+  const { deps, calls } = makeDeps()
+  const post = createOnboardingCarePost({
+    getUserId: async () => userId,
+    save: (id, parsed) => saveOnboardingCare(deps, id, parsed),
+  })
+  for (const body of [{ heat_styling: "sometimes" }, { towel_material: "bathrobe" }]) {
+    const response = await post(request(body))
+    assert.equal(response.status, 200, JSON.stringify(body))
+  }
+  assert.deepEqual(calls.door, [], "an unknown single value is no answer: nothing to write")
+
+  // A stale member of a list is filtered out; the rest of the answer is saved.
+  const response = await post(request({ styling_tools: ["laser", "flat_iron"] }))
+  assert.equal(response.status, 200)
+  const door = calls.door[0] as { patch: Record<string, unknown> }
+  assert.deepEqual(door.patch.additionalHeatTools, ["straightener"])
 })
 
 test("handler: the session user is saved, the saved profile comes back, no-store", async () => {
