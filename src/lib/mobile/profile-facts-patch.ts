@@ -1,6 +1,7 @@
 import { quizAnswersSchema } from "@/lib/quiz/validators"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import {
+  hasQuizContextAnswers,
   quizContextReplacementPatch,
   quizSupersedesFacts,
   quizWinnerDiagnosticsWrite,
@@ -176,7 +177,8 @@ export function buildMobileHandEditFacts(input: {
  * A quiz taken now (task 4: registration create / replace): the web account link's winner
  * write for a legacy lead, verbatim — `quizSupersedesFacts` with `takenAt = now`, then
  * `quizWinnerDiagnosticsWrite` (full replacement + completeness defaults) and, when the
- * profile has a quiz_context from an earlier artifact, its clearing replacement (F4).
+ * profile has a quiz_context with answers from an earlier artifact, its clearing replacement
+ * (F4; an already-cleared `{}` counts as absent).
  */
 export function buildMobileQuizFacts(input: {
   answers: QuizAnswers
@@ -203,7 +205,8 @@ export function buildMobileQuizFacts(input: {
   })
 
   let quizContext: MobileFactsWrite["quizContext"]
-  if (input.stored?.quizContext) {
+  // A stored `{}` (an earlier clear) counts as absent: nothing to clear again.
+  if (hasQuizContextAnswers(input.stored?.quizContext)) {
     const patch = quizContextPatchSchema.parse(quizContextReplacementPatch({}))
     quizContext = {
       patch,

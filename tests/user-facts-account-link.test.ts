@@ -307,6 +307,22 @@ test("F4: a winning legacy lead on a profile without quiz_context writes diagnos
   )
 })
 
+test("fix round 1 (D): an already-cleared {} quiz_context counts as absent — no second clearing write", async () => {
+  const rows = [artifactProfile({ at: "2026-09-10T00:00:00.000Z" })]
+  rows[0]!.quiz_context = {}
+  const { admin, saves } = fakeAdmin(rows)
+
+  await writeAccountLinkFacts(admin, {
+    userId: USER_ID,
+    quiz: LEGACY_LEAD_QUIZ("2026-09-12T00:00:00.000Z"),
+  })
+  assert.deepEqual(
+    saves.map((entry) => entry.p_domain),
+    ["diagnostics"],
+  )
+  assert.deepEqual(rows[0]!.quiz_context, {})
+})
+
 test("F4: an OLDER legacy lead leaves quiz_context alone", async () => {
   const rows = [artifactProfile({ at: "2026-09-10T00:00:00.000Z" })]
   const before = structuredClone(rows[0]!.quiz_context)

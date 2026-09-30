@@ -313,6 +313,13 @@ test("registration quiz: a stored quiz_context from an earlier artifact is clear
   })
 })
 
+test("fix round 1 (D): an already-cleared {} quiz_context counts as absent — nothing to clear", () => {
+  const stored = { ...quizFacts(), quizContext: {} as never }
+  const write = buildMobileQuizFacts({ answers: ANSWERS, leadId: "lead-ios", stored, now: NOW })
+  assert.equal(write.quizContext, undefined)
+  assert.deepEqual(toProfileFactsArgument(write), { diagnostics: write.diagnostics })
+})
+
 test("registration quiz on an empty profile writes the full document", () => {
   const write = buildMobileQuizFacts({
     answers: ANSWERS,

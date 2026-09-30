@@ -266,6 +266,40 @@ test("replace clears a quiz_context an earlier artifact left (F4) in the same tr
   })
 })
 
+test("fix round 1 (D): a later replace does not clear the already-cleared {} quiz_context again", async (t) => {
+  const f = await fixture(t)
+  await f.complete(await f.intent())
+  await saveUserFacts(f.db, {
+    userId: owner,
+    domain: "quiz_context",
+    patch: { routineClarity: "clear" },
+    provenance: {
+      source: { kind: "personal_plan_artifact", id: "artifact-1" },
+      schemaVersion: 1,
+      at: "2026-09-02T00:00:00.000Z",
+    },
+  })
+  await f.complete(await f.intent("replace"))
+  const cleared = (await readRow(f.db, owner))!
+  assert.deepEqual(cleared.quiz_context, {})
+  const before = await readClock(f.db, owner)
+  await f.complete(await f.intent("replace", { answers: { ...answers, thickness: "coarse" } }))
+  const after = await readClock(f.db, owner)
+  // Exactly the plain replace: one door write, then the lead (+2 / +1).
+  assert.equal(after.revision - before.revision, BigInt(2))
+  assert.equal(after.profile - before.profile, BigInt(1))
+  const row = (await readRow(f.db, owner))!
+  assert.equal(row.facts_revision, (cleared.facts_revision as number) + 1)
+  assert.deepEqual(row.quiz_context, {})
+  assert.deepEqual(row.facts_provenance, {
+    ...(row.facts_provenance as object),
+    quiz_context: (cleared.facts_provenance as any).quiz_context,
+  })
+  const lastFacts = f.calls.filter((call) => call.name === "mobile_registration_publish").at(-1)!
+    .args.p_facts as Record<string, unknown>
+  assert.deepEqual(Object.keys(lastFacts), ["diagnostics"], "no quiz_context write handed over")
+})
+
 test("C6 source revision CAS and invalid output roll back an absent profile/lead/consent/enrollment", async (t) => {
   const f = await fixture(t)
   const input = await f.intent()

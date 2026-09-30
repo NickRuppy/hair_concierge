@@ -190,6 +190,12 @@ export function quizWinnerDiagnosticsWrite(
   }
 }
 
+/** Whether a stored quiz_context still holds any answer. The `{}` a previous clear leaves behind
+ * (F4) counts as absent, so a later winning legacy quiz does not clear it again (fix round 1, D). */
+export function hasQuizContextAnswers(quizContext: QuizContextV1 | null | undefined): boolean {
+  return Boolean(quizContext) && Object.keys(quizContext as object).length > 0
+}
+
 /** A winning quiz's quiz_context as a full replacement (`{}` clears every field — F4). */
 export function quizContextReplacementPatch(quizContext: QuizContextV1): QuizContextPatch {
   return replacementPatch(quizContext, QUIZ_CONTEXT_FIELDS) as QuizContextPatch
@@ -310,7 +316,8 @@ export async function writeAccountLinkFacts(
     // A winning quiz replaces BOTH domains. An artifact brings its own quiz_context; a legacy
     // lead carries none, so it clears the one a previous artifact left (F4: every field null),
     // and no answer from the previous quiz survives next to the new diagnostics.
-    const quizContext = projection.quizContext ?? (facts?.quizContext ? {} : null)
+    const quizContext =
+      projection.quizContext ?? (hasQuizContextAnswers(facts?.quizContext) ? {} : null)
     if (quizContext) {
       await replaceQuizContext(admin, {
         userId,

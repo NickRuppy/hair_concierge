@@ -22,7 +22,8 @@
 -- Modes:
 --   create   no row yet; p_facts required (full document); the door creates the row.
 --   replace  existing row; p_facts required (full replacement; + quiz_context clearing when the
---            profile has one from an earlier artifact, F4).
+--            profile has a quiz_context with answers from an earlier artifact, F4 — the `{}` an
+--            earlier clear leaves counts as absent and is not cleared again).
 --   missing  p_facts names only the missing answers; NULL when nothing is missing (then nothing
 --            is written, exactly like the former empty patch). May create the row.
 --   keep     p_facts must be NULL; writes nothing.
@@ -34,7 +35,7 @@
 -- Scanner clock deltas (source revision / profile_revision), old -> new:
 --   create                     +2 / +1  ->  +3 / +2   (door INSERT + door UPDATE, then the lead)
 --   replace                    +2 / +1  ->  +2 / +1   (one door UPDATE, then the lead)
---   replace clearing a quiz_context      ->  +3 / +2   (a second door UPDATE)
+--   replace clearing a non-empty quiz_context ->  +3 / +2   (a second door UPDATE)
 --   missing, row exists        +1 / +1  ->  +1 / +1
 --   missing, no row yet        +1 / +1  ->  +2 / +2
 --   keep                        0 /  0  ->   0 /  0
