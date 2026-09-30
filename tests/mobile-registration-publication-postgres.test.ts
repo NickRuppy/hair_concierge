@@ -399,6 +399,44 @@ test("fix round 1 (C): a conflict after a completed door write raises, never ret
   )
 })
 
+test("fix round 1 (B): a non-door creator that wins the absent-row race is refused, not overwritten", async (t) => {
+  const f = await fixture(t)
+  const input = await f.intent()
+  const clock = await readClock(f.db, owner)
+  // A concurrent NON-door writer creates the row first (facts_revision 0, no facts), then the
+  // real door runs: its INSERT loses, its CAS on revision 0 passes, and the clock delta happens
+  // to match. Only the door's own "created" report can tell the publisher it did not create it.
+  await wrapDoor(
+    f.db,
+    `INSERT INTO public.hair_profiles(user_id,hair_texture,goals)
+       VALUES (p_user_id,'straight',ARRAY['shine']) ON CONFLICT DO NOTHING;
+     RETURN ${REAL_DOOR_CALL};`,
+  )
+  await assert.rejects(f.complete(input), /profile_conflict/)
+  // In one PGlite session the simulated writer's row lives in the publication's transaction and
+  // rolls back with it; in production it is committed and nothing of this publication touches it.
+  assert.equal((await f.db.query("select * from hair_profiles")).rows.length, 0)
+  assert.deepEqual(await readClock(f.db, owner), clock)
+  for (const table of [
+    "leads",
+    "mobile_registration_publication_receipts",
+    "scanner_profile_edits",
+  ])
+    assert.equal((await f.db.query(`select * from ${table}`)).rows.length, 0, table)
+  assert.equal(
+    (await f.db.query<any>("select full_name from profiles where id=$1", [owner])).rows[0]
+      .full_name,
+    "Existing",
+  )
+
+  // The same wrapper against a row the door DID create (no competing writer) still publishes.
+  await f.db.exec(`
+    DROP FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid);
+    ALTER FUNCTION public.user_facts_save_v1_real(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid)
+      RENAME TO user_facts_save_v1;`)
+  assert.equal((await f.complete(input)).status, "ready")
+})
+
 test("C8 wrong owner, stale generation, expiry, login intent and unverified binding never publish", async (t) => {
   const f = await fixture(t)
   const input = await f.intent()

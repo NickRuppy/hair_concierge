@@ -89,10 +89,13 @@ BEGIN
   IF p_facts IS NULL THEN RETURN jsonb_build_object('outcome','profile_required'); END IF;
   -- The door creates the row (its own INSERT ... ON CONFLICT DO NOTHING, expected revision 0)
   -- and then writes it: one clock bump for the INSERT plus one per door write. A concurrent
-  -- creator that won the absent-row race is caught by the door's CAS (its row carries a facts
-  -- revision) or by the clock CAS below; either way everything rolls back.
+  -- creator that won the absent-row race is refused, like the old function refused it: a door
+  -- creator by the door's CAS (its row carries a facts revision), a NON-door creator (its row
+  -- is at facts_revision 0, so the CAS passes and the clock delta can match) by the door's own
+  -- report that it did not create the row. Either way everything rolls back.
   v_saved := public.mobile_profile_facts_save_v1(p_user_id,p_facts,false);
-  IF v_saved->>'status' <> 'ok' THEN RAISE EXCEPTION 'registration_cas_conflict' USING ERRCODE='P0002'; END IF;
+  IF v_saved->>'status' <> 'ok' OR NOT COALESCE((v_saved->>'created')::boolean,false)
+  THEN RAISE EXCEPTION 'registration_cas_conflict' USING ERRCODE='P0002'; END IF;
   SELECT to_jsonb(h) INTO v_profile FROM public.hair_profiles h WHERE user_id=p_user_id;
   v_created := true;
   v_delta := 1 + (v_saved->>'writes')::integer;

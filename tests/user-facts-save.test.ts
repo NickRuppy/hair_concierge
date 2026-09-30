@@ -120,6 +120,27 @@ test("saveUserFacts returns each RPC status shape verbatim", async () => {
   }
 })
 
+test("fix round 1 (B): the door's `created` report does not break the ok parse", async () => {
+  for (const created of [true, false]) {
+    const db = new FakeSupabase({
+      data: { status: "ok", revision: 1, changed: true, diagnosticsHash: "hash-1", created },
+      error: null,
+    })
+    const result = await saveUserFacts(db as never, {
+      userId: "user-1",
+      domain: "quiz_context",
+      patch: {},
+      provenance: VALID_PROVENANCE,
+    })
+    assert.deepEqual(result, {
+      status: "ok",
+      revision: 1,
+      changed: true,
+      diagnosticsHash: "hash-1",
+    })
+  }
+})
+
 test("saveUserFacts throws UserFactsValidationError for an invalid patch, without calling the RPC", async () => {
   const unknownKeyDb = new FakeSupabase({ data: null, error: null })
   await assert.rejects(

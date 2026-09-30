@@ -457,6 +457,7 @@ DECLARE
   v_columns jsonb;
   v_changed boolean;
   v_diagnostics jsonb;
+  v_inserted integer := 0;
 BEGIN
   -- (1) Input validation. Nothing is read or written before this passes.
   IF p_domain IS NULL OR p_domain NOT IN ('diagnostics', 'care_habits', 'quiz_context') THEN
@@ -512,6 +513,10 @@ BEGIN
     -- continues against the winner's row, re-checking the CAS below.
     INSERT INTO public.hair_profiles (user_id) VALUES (p_user_id)
       ON CONFLICT (user_id) DO NOTHING;
+    -- Whether THIS call created the row (reported as `created`): a caller that saw no row
+    -- (mobile_registration_publish) must not treat a row some other writer created in between
+    -- as its own — that writer's row can carry facts_revision 0, so the CAS alone cannot tell.
+    GET DIAGNOSTICS v_inserted = ROW_COUNT;
     SELECT * INTO v_profile FROM public.hair_profiles WHERE user_id = p_user_id FOR UPDATE;
     -- Unreachable in practice (the insert either wrote the row or lost to a
     -- concurrent writer whose row is now visible and locked). Raising beats
@@ -668,13 +673,14 @@ BEGIN
     'status', 'ok',
     'revision', v_current_revision + 1,
     'changed', v_changed,
-    'diagnosticsHash', public.user_facts_diagnostics_hash_v1(v_diagnostics));
+    'diagnosticsHash', public.user_facts_diagnostics_hash_v1(v_diagnostics),
+    'created', v_inserted = 1);
 END;
 $$;
 
 COMMENT ON FUNCTION public.user_facts_save_v1(
   uuid, text, jsonb, jsonb, integer, text, uuid, bigint, uuid) IS
-  'The only supported writer of hair_profiles.diagnostics/care_habits/quiz_context and of the 21 legacy columns derived from them. Merges p_patch field-by-field (a top-level JSON null clears that field), merges provenance, bumps facts_revision on every non-preserved write (CAS via p_expected_revision), and recomputes the derived columns owned by p_domain in the same statement. create_only is a pure preserve of any existing domain (it only records the incoming candidate); callers decide winners and write them with upsert. Returns {status, revision, changed, diagnosticsHash} or a typed conflict.';
+  'The only supported writer of hair_profiles.diagnostics/care_habits/quiz_context and of the 21 legacy columns derived from them. Merges p_patch field-by-field (a top-level JSON null clears that field), merges provenance, bumps facts_revision on every non-preserved write (CAS via p_expected_revision), and recomputes the derived columns owned by p_domain in the same statement. create_only is a pure preserve of any existing domain (it only records the incoming candidate); callers decide winners and write them with upsert. Returns {status, revision, changed, diagnosticsHash, created} (created: this call inserted the row) or a typed conflict.';
 
 REVOKE ALL ON FUNCTION public.user_facts_jsonb_text_array_v1(jsonb) FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON FUNCTION public.user_facts_map_vocabulary_array_v1(jsonb, jsonb) FROM PUBLIC, anon, authenticated, service_role;

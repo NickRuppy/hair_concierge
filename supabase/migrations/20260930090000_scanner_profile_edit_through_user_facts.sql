@@ -43,6 +43,7 @@ DECLARE
   v_part jsonb;
   v_result jsonb;
   v_writes integer := 0;
+  v_created boolean := false;
 BEGIN
   IF pg_catalog.jsonb_typeof(p_facts) IS DISTINCT FROM 'object'
      OR NOT (p_facts ? 'diagnostics')
@@ -87,9 +88,12 @@ BEGIN
     END IF;
     v_revision := (v_result ->> 'revision')::integer;
     v_writes := v_writes + 1;
+    v_created := v_created OR COALESCE((v_result ->> 'created')::boolean, false);
   END LOOP;
 
-  RETURN pg_catalog.jsonb_build_object('status', 'ok', 'writes', v_writes, 'revision', v_revision);
+  -- `created`: one of these door calls inserted the hair_profiles row (see the door).
+  RETURN pg_catalog.jsonb_build_object(
+    'status', 'ok', 'writes', v_writes, 'revision', v_revision, 'created', v_created);
 END;
 $$;
 REVOKE ALL ON FUNCTION public.mobile_profile_facts_save_v1(uuid, jsonb, boolean)
