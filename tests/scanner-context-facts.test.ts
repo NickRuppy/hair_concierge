@@ -384,3 +384,61 @@ test("rows without a facts document keep the column path exactly", async () => {
   }
   assert.deepEqual(actual, CHARACTERISATION)
 })
+
+// ---------------------------------------------------------------------------
+// Fix round 3, item 4: a corrupt fact domain the scanner does not read never breaks a scan.
+// ---------------------------------------------------------------------------
+
+test("a corrupt unrelated facts domain does not break the scanner read", () => {
+  const env = PAID_VARIANTS.V11_four_plus_low_shine
+  const row = backfilledRow(env)
+  for (const [label, corrupt] of [
+    ["care_habits", { care_habits: { wetWashFrequency: "nonsense" } }],
+    ["quiz_context", { quiz_context: { routineClarity: 42 } }],
+    [
+      "facts_provenance.care_habits",
+      {
+        facts_provenance: {
+          ...(row.facts_provenance as object),
+          care_habits: { source: { kind: "nobody" } },
+        },
+      },
+    ],
+  ] as const) {
+    const read = paidRead(env, { ...row, ...corrupt })
+    assert.throws(() => parseUserFactsRow("owner", read.profile!), /corrupt/, label)
+    const prepared = prepareScannerContext(read)
+    assert.equal(scannerSourceHash(prepared!.source), scannerSourceHash(env), label)
+    assert.deepEqual(
+      editableScannerQuizAnswers(read),
+      editableScannerQuizAnswers(paidRead(env, row)),
+      label,
+    )
+  }
+})
+
+test("a corrupt diagnostics document (or its provenance) falls back to the column path", () => {
+  const env = PAID_VARIANTS.V0_fixture_split_ends
+  const row = backfilledRow(env)
+  const columnPath = paidRead(env, { ...row, diagnostics: null })
+  const expected = prepareScannerContext(columnPath)
+  const expectedPrefill = editableScannerQuizAnswers(columnPath)
+  for (const [label, corrupt] of [
+    ["diagnostics", { diagnostics: { ...(row.diagnostics as object), texture: "zigzag" } }],
+    [
+      "facts_provenance.diagnostics",
+      {
+        facts_provenance: {
+          diagnostics: {
+            ...(row.facts_provenance as any).diagnostics,
+            fields: { texture: "maybe" },
+          },
+        },
+      },
+    ],
+  ] as const) {
+    const read = paidRead(env, { ...row, ...corrupt })
+    assert.deepEqual(prepareScannerContext(read)?.sourceHash, expected?.sourceHash, label)
+    assert.deepEqual(editableScannerQuizAnswers(read), expectedPrefill, label)
+  }
+})

@@ -41,8 +41,12 @@ import type { QuizAnswers } from "@/lib/quiz/types"
 import { sameFactValue } from "@/lib/user-facts/hand-edit"
 import { projectArtifactToFacts } from "@/lib/user-facts/project-artifact"
 import { diagnosticsToQuizAnswers } from "@/lib/user-facts/quiz-answers"
-import { parseUserFactsRow } from "@/lib/user-facts/read"
-import type { DiagnosticsV1, FieldProvenanceValue } from "@/lib/user-facts/schema"
+import {
+  diagnosticsV1Schema,
+  domainProvenanceSchema,
+  type DiagnosticsV1,
+  type FieldProvenanceValue,
+} from "@/lib/user-facts/schema"
 import type { ScanEvaluationContext } from "./profile-context"
 
 export type ScannerNeedSource = {
@@ -181,7 +185,7 @@ export function editableScannerQuizAnswers(read: ScannerSourceRead): QuizAnswers
   if (!hasCompletedQuizDiagnostics(read.profile as never))
     throw new Error("scan_profile_context_unavailable")
   // One vocabulary: with a facts document the facts ARE her raw selections.
-  const facts = scannerFacts(read.userId, read.profile)
+  const facts = scannerFacts(read.profile)
   if (facts) return factsQuizAnswers(read, facts)
   const current = currentLegacyAnswers(read.profile!)
   const paid = [read.refined, read.initial]
@@ -264,15 +268,19 @@ const BASIC_FACT_FIELDS = [
 ] as const
 type BasicFactField = (typeof BASIC_FACT_FIELDS)[number]
 
-function scannerFacts(
-  userId: string,
-  profile: Record<string, unknown> | null,
-): ScannerFacts | null {
+/** Only the two things the scanner reads are parsed: a corrupt domain it does not read (care
+ * habits, quiz context, their provenance) never breaks a scan, and a corrupt diagnostics document
+ * or diagnostics provenance falls back to the column path, like a row without a document. */
+function scannerFacts(profile: Record<string, unknown> | null): ScannerFacts | null {
   if (!profile || profile.diagnostics === null || profile.diagnostics === undefined) return null
-  const facts = parseUserFactsRow(userId, profile)
-  return facts.diagnostics
-    ? { diagnostics: facts.diagnostics, fields: facts.provenance.diagnostics?.fields ?? {} }
-    : null
+  const diagnostics = diagnosticsV1Schema.safeParse(profile.diagnostics)
+  if (!diagnostics.success) return null
+  const stored = (profile.facts_provenance as Record<string, unknown> | null | undefined)
+    ?.diagnostics
+  if (stored === undefined || stored === null) return { diagnostics: diagnostics.data, fields: {} }
+  const provenance = domainProvenanceSchema.safeParse(stored)
+  if (!provenance.success) return null
+  return { diagnostics: diagnostics.data, fields: provenance.data.fields ?? {} }
 }
 
 /** A fact the profile really knows: absent (a partial document) and `assumed` (a completeness
@@ -480,7 +488,7 @@ function validNeed(
 export function prepareScannerContext(read: ScannerSourceRead): PreparedScannerContext | null {
   if (!hasCompletedQuizDiagnostics(read.profile as never)) return null
   const current = currentLegacyAnswers(read.profile!)
-  const facts = scannerFacts(read.userId, read.profile)
+  const facts = scannerFacts(read.profile)
   const compatible = (source: SupportedStage1Source) =>
     facts ? factsCompatible(source, facts) : sourceCompatible(source, current)
   const rejectedPaidSources: ScannerPaidSourceRejection[] = []
