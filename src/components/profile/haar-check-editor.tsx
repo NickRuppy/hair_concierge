@@ -1,6 +1,6 @@
 "use client"
 
-import type { Dispatch, ReactNode, SetStateAction } from "react"
+import { useRef, type Dispatch, type ReactNode, type SetStateAction } from "react"
 
 import {
   CURRENT_PROBLEMS_TITLE,
@@ -43,26 +43,42 @@ const HAAR_CHECK_CHEMICAL_OPTIONS = quizOptions("chemical_treatments")
 const HAAR_CHECK_SCALP_TYPE_OPTIONS = quizOptions("scalp_oiliness")
 const HAAR_CHECK_SCALP_CONCERN_OPTIONS = quizOptions("scalp_concerns")
 
-/** Shown under the save button while saving is not possible yet. */
+const CHEMICAL_TREATMENTS_TITLE = "Chemische Behandlungen"
+
+/** Shown under the save button while saving is not possible yet; each names the field by its
+ * visible title. */
 const HAAR_CHECK_BLOCK_HINTS: Record<HaarCheckBlock, string> = {
-  problems: "Wähle bei deinen Themen mindestens eines aus oder beschreib es kurz selbst.",
-  main_problem: "Wähle noch aus, was dich am meisten stört.",
-  chemical_treatments: "Wähle bei den chemischen Behandlungen mindestens eine Antwort aus.",
+  problems: `Wähle bei „${CURRENT_PROBLEMS_TITLE}“ mindestens eine Antwort aus oder beschreib dein Thema unter „Etwas anderes“.`,
+  main_problem: `Wähle bei „${CURRENT_PROBLEMS_TITLE}“ noch aus, was dich am meisten stört.`,
+  chemical_treatments: `Wähle bei „${CHEMICAL_TREATMENTS_TITLE}“ mindestens eine Antwort aus.`,
 }
 
+/** The editor field each block points to (keys as registered below). */
+const HAAR_CHECK_BLOCK_FIELDS: Record<HaarCheckBlock, string> = {
+  problems: "concerns",
+  main_problem: "main_problem",
+  chemical_treatments: "chemical_treatment",
+}
+
+const SAVE_HINT_ID = "haar-check-save-hint"
+
+/** A toggle chip; inside a single-choice group it is a `radio` (the SegmentedControl pattern:
+ * `role="radio"` + `aria-checked`, no arrow-key handling). */
 function ChoiceChip({
   active,
   onClick,
   children,
+  radio = false,
 }: {
   active: boolean
   onClick: () => void
   children: ReactNode
+  radio?: boolean
 }) {
   return (
     <button
       type="button"
-      aria-pressed={active}
+      {...(radio ? { role: "radio", "aria-checked": active } : { "aria-pressed": active })}
       onClick={onClick}
       className={cn(
         "min-h-[40px] max-w-full rounded-2xl border px-3 py-2 text-left text-sm leading-snug transition-colors",
@@ -119,6 +135,19 @@ export function HaarCheckEditor({
 }) {
   const problemOptions = getConcernOptions(draft.texture)
   const saveBlock = haarCheckSaveBlock(draft, initialDraft)
+  const fieldNodes = useRef<Record<string, HTMLDivElement | null>>({})
+  const register = (key: string) => (node: HTMLDivElement | null) => {
+    fieldNodes.current[key] = node
+    registerField(key, node)
+  }
+
+  /** „Zur Frage“: bring the field that blocks saving into view and focus its first control. */
+  function showBlockingField(block: HaarCheckBlock) {
+    const node = fieldNodes.current[HAAR_CHECK_BLOCK_FIELDS[block]]
+    if (!node) return
+    node.scrollIntoView({ behavior: "smooth", block: "center" })
+    node.querySelector<HTMLElement>("button, textarea, input")?.focus({ preventScroll: true })
+  }
 
   return (
     <div className="rounded-2xl border border-primary/15 bg-muted/35 p-5">
@@ -127,13 +156,12 @@ export function HaarCheckEditor({
           Haar-Check direkt im Profil aktualisieren
         </p>
         <p className="mt-1 text-sm text-muted-foreground">
-          So musst du nicht noch einmal durch Login- oder Marketing-Schritte. Passe nur die
-          Antworten an, die sich ändern sollen.
+          Passe die Antworten an, die sich geändert haben.
         </p>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <div ref={(node) => registerField("hair_texture", node)}>
+        <div ref={register("hair_texture")}>
           <QuizEditorField
             title="Haarstruktur"
             text="Welche Haarstruktur die meisten deiner Haare haben."
@@ -151,7 +179,7 @@ export function HaarCheckEditor({
           </QuizEditorField>
         </div>
 
-        <div ref={(node) => registerField("thickness", node)}>
+        <div ref={register("thickness")}>
           <QuizEditorField
             title="Haardicke"
             text="Wie sich ein einzelnes Haar bei dir meistens im Vergleich zu einem Nähfaden anfühlt."
@@ -169,10 +197,10 @@ export function HaarCheckEditor({
           </QuizEditorField>
         </div>
 
-        <div ref={(node) => registerField("density", node)}>
+        <div ref={register("density")}>
           <QuizEditorField
             title="Haardichte"
-            text="Wie viele Haare du insgesamt hast - nicht wie dick ein einzelnes Haar ist."
+            text="Wie viele Haare du insgesamt hast – nicht wie dick ein einzelnes Haar ist."
           >
             <SegmentedControl
               options={HAAR_CHECK_DENSITY_OPTIONS}
@@ -187,7 +215,7 @@ export function HaarCheckEditor({
           </QuizEditorField>
         </div>
 
-        <div ref={(node) => registerField("hair_length", node)}>
+        <div ref={register("hair_length")}>
           <QuizEditorField
             title="Haarlänge"
             text="Wie lang deine Haare aktuell sind; bei Locken zählt die sanft gestreckte Länge."
@@ -205,7 +233,7 @@ export function HaarCheckEditor({
           </QuizEditorField>
         </div>
 
-        <div ref={(node) => registerField("cuticle_condition", node)}>
+        <div ref={register("cuticle_condition")}>
           <QuizEditorField title="Oberfläche" text="Wie sich dein Haar im Finger-Test anfühlt.">
             <SegmentedControl
               options={HAAR_CHECK_SURFACE_OPTIONS}
@@ -220,12 +248,13 @@ export function HaarCheckEditor({
           </QuizEditorField>
         </div>
 
-        <div ref={(node) => registerField("protein_moisture_balance", node)}>
+        <div ref={register("protein_moisture_balance")}>
           <QuizEditorField title="Elastizität" text="Wie dein Haar im Zug-Test reagiert.">
-            <div role="radiogroup" className="flex flex-wrap gap-2">
+            <div role="radiogroup" aria-label="Elastizität" className="flex flex-wrap gap-2">
               {HAAR_CHECK_ELASTICITY_OPTIONS.map((option) => (
                 <ChoiceChip
                   key={option.value}
+                  radio
                   active={draft.elasticResponse === option.value}
                   onClick={() =>
                     onDraftChange((current) => ({
@@ -241,9 +270,9 @@ export function HaarCheckEditor({
           </QuizEditorField>
         </div>
 
-        <div ref={(node) => registerField("chemical_treatment", node)} className="xl:col-span-2">
+        <div ref={register("chemical_treatment")} className="xl:col-span-2">
           <QuizEditorField
-            title="Chemische Behandlungen"
+            title={CHEMICAL_TREATMENTS_TITLE}
             text="Was in deinen Längen noch vorhanden ist; Pflege, Bondbuilder und normales Hitzestyling zählen hier nicht."
           >
             <div className="flex flex-wrap gap-2">
@@ -269,7 +298,7 @@ export function HaarCheckEditor({
           </QuizEditorField>
         </div>
 
-        <div ref={(node) => registerField("scalp_type", node)}>
+        <div ref={register("scalp_type")}>
           <QuizEditorField
             title="Kopfhauttyp"
             text="Wie sich deine Kopfhaut zwischen den Haarwäschen verhält."
@@ -287,7 +316,7 @@ export function HaarCheckEditor({
           </QuizEditorField>
         </div>
 
-        <div ref={(node) => registerField("scalp_condition", node)}>
+        <div ref={register("scalp_condition")}>
           <QuizEditorField title="Kopfhaut-Beschwerden" text="Wähle alles aus, was du bemerkst.">
             <div className="flex flex-wrap gap-2">
               {HAAR_CHECK_SCALP_CONCERN_OPTIONS.map((option) => (
@@ -320,7 +349,7 @@ export function HaarCheckEditor({
           </QuizEditorField>
         </div>
 
-        <div ref={(node) => registerField("concerns", node)} className="xl:col-span-2">
+        <div ref={register("concerns")} className="xl:col-span-2">
           <QuizEditorField
             title={CURRENT_PROBLEMS_TITLE}
             text="Wähle alles aus, was du aktuell bemerkst."
@@ -382,11 +411,15 @@ export function HaarCheckEditor({
             ) : null}
 
             {showsMainProblemQuestion(draft) ? (
-              <div className="mt-4 border-t border-border/70 pt-4">
+              <div ref={register("main_problem")} className="mt-4 border-t border-border/70 pt-4">
                 <p className="text-sm font-semibold text-[var(--text-heading)]">
                   {MAIN_PROBLEM_SHEET_TITLE}
                 </p>
-                <div role="radiogroup" className="mt-3 flex flex-wrap gap-2">
+                <div
+                  role="radiogroup"
+                  aria-label={MAIN_PROBLEM_SHEET_TITLE}
+                  className="mt-3 flex flex-wrap gap-2"
+                >
                   {problemOptions
                     .filter((option) =>
                       draft.currentConcerns.includes(
@@ -396,6 +429,7 @@ export function HaarCheckEditor({
                     .map((option) => (
                       <ChoiceChip
                         key={option.value}
+                        radio
                         active={draft.primaryConcern === option.value}
                         onClick={() =>
                           onDraftChange((current) =>
@@ -422,6 +456,7 @@ export function HaarCheckEditor({
           className="w-auto"
           onClick={onSave}
           disabled={saving || saveBlock !== null}
+          aria-describedby={saveBlock ? SAVE_HINT_ID : undefined}
         >
           {saving ? "Speichern..." : "Haar-Check speichern"}
         </Button>
@@ -436,7 +471,16 @@ export function HaarCheckEditor({
         </Button>
       </div>
       {saveBlock ? (
-        <p className="mt-2 text-sm text-muted-foreground">{HAAR_CHECK_BLOCK_HINTS[saveBlock]}</p>
+        <p id={SAVE_HINT_ID} className="mt-2 text-sm text-muted-foreground">
+          {HAAR_CHECK_BLOCK_HINTS[saveBlock]}{" "}
+          <button
+            type="button"
+            onClick={() => showBlockingField(saveBlock)}
+            className="font-medium text-primary underline underline-offset-2"
+          >
+            Zur Frage
+          </button>
+        </p>
       ) : null}
     </div>
   )
