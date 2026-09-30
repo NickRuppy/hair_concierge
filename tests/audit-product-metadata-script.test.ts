@@ -1,7 +1,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { checkStoredLinkBuyability } from "../scripts/audit-product-metadata"
+import { checkStoredLinkBuyability } from "../src/lib/product-metadata/buyability"
 import type { ProductMetadataAuditInput } from "../src/lib/product-metadata/health"
 
 function buildProduct(overrides: Partial<ProductMetadataAuditInput>): ProductMetadataAuditInput {

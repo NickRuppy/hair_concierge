@@ -289,6 +289,17 @@ Safety:
 - Updates happen through a reviewed CSV or id-based migration.
 - Never auto-update when product type or category changes.
 
+> **Amendment 2026-09-30 (recurring price-audit lane, Nick-approved):** the
+> recurring audit (`docs/price-audit.md`, `plans/price-audit-lane.md`) may
+> auto-write `price_eur`, `price_checked_at`, `purchase_link_status` and
+> `purchase_link_checked_at` — and only those — when identity is confirmed
+> (GTIN/stored-link tie) on a probe-gated host and the observation is
+> anomaly-free. The GPT research fallback (same date) may auto-write
+> `price_eur` + `price_checked_at` only, from a gate-passing evidence URL —
+> never `purchase_link_status` or links. Everything else here stands: link
+> *replacements*, category or product-type changes, and all anomalies remain
+> review-only.
+
 Suggested cadence:
 
 - manual run before beta/release

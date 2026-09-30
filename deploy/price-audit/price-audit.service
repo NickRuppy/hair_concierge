@@ -1,0 +1,16 @@
+# Chaarlie price audit — one run (see docs/price-audit.md).
+# Installed on the Hetzner worker next to the product-intake service.
+[Unit]
+Description=Chaarlie recurring price audit (apply mode)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/chaarlie/price-audit/current
+EnvironmentFile=/opt/chaarlie/price-audit/shared/env
+ExecStart=/usr/bin/npm run price-audit -- --apply
+# The 4 GB box also runs the intake worker at concurrency one; stay polite.
+MemoryMax=1G
+Nice=10
+TimeoutStartSec=3h

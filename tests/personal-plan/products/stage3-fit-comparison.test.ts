@@ -434,7 +434,7 @@ test("comparison projects fresh price and structured size without changing autho
   )
 })
 
-test("comparison omits stale or incomplete commerce presentation metadata", () => {
+test("a stale or missing check date never blanks the stored price; a missing price stays null", () => {
   const input = authorityInput("conditioner", "conditioner_rinse_out", {
     productFacts: factsFor("conditioner", "conditioner_rinse_out", "owned", {
       recommendable: false,
@@ -444,6 +444,7 @@ test("comparison omits stale or incomplete commerce presentation metadata", () =
     }),
     candidates: [
       factsFor("conditioner", "conditioner_rinse_out", "candidate", {
+        priceEur: null,
         priceCheckedAt: null,
         netContentValue: null,
         netContentUnit: null,
@@ -454,7 +455,7 @@ test("comparison omits stale or incomplete commerce presentation metadata", () =
   assert.deepEqual(
     comparison.products.map((product) => product.presentation),
     [
-      { priceLabel: null, netContentLabel: null },
+      { priceLabel: "9,00 €", netContentLabel: null },
       { priceLabel: null, netContentLabel: null },
     ],
   )
@@ -2205,7 +2206,7 @@ function commonFacts(
     ],
     factFingerprint: overrides.fingerprint ?? `facts-${productId}`,
     catalogSortOrder: overrides.sortOrder ?? null,
-    priceEur: overrides.priceEur ?? 9,
+    priceEur: overrides.priceEur !== undefined ? overrides.priceEur : 9,
     priceCheckedAt: overrides.priceCheckedAt ?? null,
     purchaseLinkStatus: "available" as const,
     netContentValue: overrides.netContentValue ?? null,
