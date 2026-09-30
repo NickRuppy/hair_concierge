@@ -24,6 +24,7 @@ import {
 } from "../src/lib/profile/goals-draft"
 import { isProfileConflict } from "../src/lib/profile/save-conflict"
 import { readProfileDiagnostics } from "../src/lib/user-facts/profile-diagnostics"
+import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
 import { diagnosticsV1Schema, type DiagnosticsV1 } from "../src/lib/user-facts/schema"
 
 /**
@@ -126,6 +127,21 @@ test("haar-check: the draft is the stored answers in the quiz vocabulary; an unc
   assert.equal(initial.note, "stumpf")
   assert.equal(buildHaarCheckPayload(initial, initial), null)
   assert.equal(haarCheckSaveBlock(initial, initial), null)
+})
+
+test("fix round 6 (I5): a lead-sourced profile prefills the Haar-Check note from the lead's „Etwas anderes“", () => {
+  const { diagnostics } = projectLegacyLeadToFacts({
+    leadId: "lead-note",
+    quizAnswers: {
+      structure: "wavy",
+      thickness: "fine",
+      concerns: ["dry_lengths"],
+      concerns_other_text: " stumpf nach dem Föhnen ",
+    },
+  })
+  const draft = createHaarCheckDraft(readProfileDiagnostics({ diagnostics }))
+  assert.equal(draft.noteOpen, true)
+  assert.equal(draft.note, "stumpf nach dem Föhnen")
 })
 
 test("haar-check: legacy columns preselect through table M (row not backfilled)", () => {

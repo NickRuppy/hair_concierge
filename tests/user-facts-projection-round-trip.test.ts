@@ -485,6 +485,45 @@ test("legacy lead: a primary_concern pick is a stored fact only — source.raw a
   assert.equal(hashViaProductionPath(edited), hashViaProductionPath(expected))
 })
 
+test("fix round 6 (I5): the lead's „Etwas anderes“ note is a stored fact — trimmed, capped at 50 — and source.raw stays byte-identical", () => {
+  const note = `  ${"x".repeat(60)}  `
+  const answers: QuizAnswers = { ...LEGACY_ANSWERS, concerns_other_text: note }
+  const expected = buildLegacyQuizStage1Source({ leadId: "lead-legacy-note", answers })
+  const facts = projectLegacyLeadToFacts({ leadId: "lead-legacy-note", quizAnswers: answers })
+
+  assert.equal(facts.diagnostics.currentConcernsOtherText, "x".repeat(50))
+  assert.deepEqual(facts.diagnostics.source.raw, expected)
+  const raw = toStage1Source({ diagnostics: facts.diagnostics, editedAt: null })
+  assert.deepEqual(raw, expected)
+  assert.equal(hashViaProductionPath(raw), hashViaProductionPath(expected))
+  // Without a note the round trip is exactly what it was.
+  const plain = projectLegacyLeadToFacts({
+    leadId: "lead-legacy-note",
+    quizAnswers: LEGACY_ANSWERS,
+  })
+  assert.equal(
+    hashViaProductionPath(toStage1Source({ diagnostics: plain.diagnostics, editedAt: null })),
+    hashViaProductionPath(expected),
+  )
+
+  assert.equal(
+    "currentConcernsOtherText" in
+      projectLegacyLeadToFacts({
+        leadId: "lead-legacy-blank",
+        quizAnswers: { ...LEGACY_ANSWERS, concerns_other_text: "   " },
+      }).diagnostics,
+    false,
+    "a blank note stays absent",
+  )
+  assert.equal(
+    projectLegacyLeadToFacts({
+      leadId: "lead-legacy-short",
+      quizAnswers: { ...LEGACY_ANSWERS, concerns_other_text: " stumpf " },
+    }).diagnostics.currentConcernsOtherText,
+    "stumpf",
+  )
+})
+
 test("legacy lead: a stale or absent primary_concern pick stays absent", () => {
   const stale = projectLegacyLeadToFacts({
     leadId: "lead-legacy-stale",

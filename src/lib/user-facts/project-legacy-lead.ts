@@ -68,6 +68,20 @@ function legacyPrimaryConcern(
   return mapped && currentConcerns.includes(mapped) ? mapped : undefined
 }
 
+/**
+ * The lead's „Etwas anderes“ note (`quiz_answers.concerns_other_text`) as the stored fact
+ * `currentConcernsOtherText`, bounded like every other writer of it (trimmed, blank dropped,
+ * 50 characters — `normalizeConcernOtherText` in `quiz/normalization.ts`, the quiz draft's
+ * `trim().slice(0, 50)`). A stored fact only, like the main-problem pick:
+ * `buildLegacyQuizStage1Source` does not carry it, so `source.raw` is untouched (fix round 6, I5).
+ */
+function legacyConcernsOtherText(quizAnswers: QuizAnswers): string | undefined {
+  const note = (quizAnswers as { concerns_other_text?: unknown }).concerns_other_text
+  if (typeof note !== "string") return undefined
+  const trimmed = note.trim()
+  return trimmed ? trimmed.slice(0, 50) : undefined
+}
+
 export function projectLegacyLeadToFacts(input: ProjectLegacyLeadInput): ProjectLegacyLeadResult {
   let legacySource: ReturnType<typeof buildLegacyQuizStage1Source>
   try {
@@ -85,6 +99,7 @@ export function projectLegacyLeadToFacts(input: ProjectLegacyLeadInput): Project
   const answers = legacySource.answers
   const takenAt = toTakenAt(input.takenAt)
   const primaryConcern = legacyPrimaryConcern(input.quizAnswers, answers.currentConcerns ?? [])
+  const currentConcernsOtherText = legacyConcernsOtherText(input.quizAnswers)
   const diagnostics = diagnosticsV1Schema.parse({
     texture: answers.texture,
     thickness: answers.thickness,
@@ -98,6 +113,7 @@ export function projectLegacyLeadToFacts(input: ProjectLegacyLeadInput): Project
     goals: answers.goals,
     currentConcerns: answers.currentConcerns,
     ...(primaryConcern ? { primaryConcern } : {}),
+    ...(currentConcernsOtherText ? { currentConcernsOtherText } : {}),
     source: {
       kind: "legacy_quiz",
       version: 1,

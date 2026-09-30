@@ -528,6 +528,16 @@ test("ambiguous: a main problem no editor wrote — the column wins", () => {
   assert.deepEqual(diagnosticsWrite(planned).provenance.fields, { primaryConcern: "user" })
 })
 
+test("fix round 6 (I5): the backfill of a lead with an „Etwas anderes“ note carries the note; nothing else changes", () => {
+  const withNote = { ...LEAD, quizAnswers: { ...LEAD_ANSWERS, concerns_other_text: " stumpf " } }
+  const planned = plan({ legacyLead: withNote, columns: LEAD_COLUMNS })
+  assert.equal(documentOf(planned).currentConcernsOtherText, "stumpf")
+  assert.deepEqual(planned.report.editedGroups, [])
+  assert.deepEqual(planned.report.findings, [])
+  assert.deepEqual(planned.report.visibleChanges, [])
+  assert.equal(diagnosticsWrite(planned).provenance.editedAt, undefined)
+})
+
 test("a row with no source at all is imported from its columns, with nothing to detect", () => {
   const planned = plan({ columns: { ...EMPTY, hair_texture: "straight", goals: ["shine"] } })
   const write = diagnosticsWrite(planned)

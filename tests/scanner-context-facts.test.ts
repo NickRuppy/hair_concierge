@@ -629,7 +629,9 @@ test("a free concern text only a lead carries: shown, unchanged is no edit, a cl
     goals: ["moisture"],
   }
   const diagnostics = projectLegacyLeadToFacts({ leadId: "lead", quizAnswers: lead }).diagnostics
-  assert.equal(diagnostics.currentConcernsOtherText, undefined, "a lead projection has no text")
+  // Fix round 6 (I5): the lead projection carries the text now; the reader's lead fallback
+  // below still serves documents projected before that.
+  assert.equal(diagnostics.currentConcernsOtherText, "Meine Spitzen")
   const read: ScannerSourceRead = {
     ...paidRead(PAID_VARIANTS.V0_fixture_split_ends, factsRow(diagnostics)),
     plan: null,
