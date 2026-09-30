@@ -486,3 +486,62 @@ test("v2: a stale main problem or recurrence in the facts does not promote the s
     assert.deepEqual(rebased?.source.answers.currentConcerns, v2.answers.currentConcerns, label)
   }
 })
+test("v2: a main problem the facts hold for a current concern promotes it to v3", () => {
+  const v2 = paidV2()
+  const native = facts(v2)
+  const pick = native.currentConcerns![0]!
+  const prepared = prepareScannerContext(
+    paidRead(v2, factsRow({ ...native, primaryConcern: pick })),
+  )
+  assert.equal(prepared?.source.version, 3)
+  assert.equal(prepared?.source.answers.primaryConcern, pick)
+  assert.deepEqual(sorted(prepared?.source.answers.currentConcerns), sorted(native.currentConcerns))
+})
+
+// ---------------------------------------------------------------------------
+// Fix round 3, item 2: an unchanged iOS submit never changes the published scanner source (the
+// 14 paid cases: "the iOS prefill round-trips" above). The main problem and recurrence are part of
+// "verbatim", so the read already rebuilds to what the publish produces.
+// ---------------------------------------------------------------------------
+
+async function unchangedSubmit(read: ScannerSourceRead) {
+  const before = prepareScannerContext(read)
+  assert.ok(before, "context before")
+  const db = publishHarness(read)
+  const saved = await publishProfileEdit(
+    db as never,
+    "owner",
+    request(iosEcho(editableScannerQuizAnswers(read))),
+  )
+  assert.deepEqual(db.published[0]!.p_facts.diagnostics.patch, {}, "nothing written")
+  return { before, saved, db }
+}
+
+test("facts with another recurrence / pick than the paid v3 source: read and unchanged submit publish one source", async () => {
+  const paid = PAID_VARIANTS.V5_four_concerns
+  for (const [label, newer] of [
+    [
+      "recurrence",
+      envelope({
+        ...paid.answers,
+        concernRecurrence: { concernId: "tangling", frequency: "sometimes" },
+      }),
+    ],
+    ["no recurrence", envelope({ ...paid.answers, concernRecurrence: undefined })],
+    ["pick", envelope({ ...paid.answers, primaryConcern: "breakage" })],
+  ] as const) {
+    const read = paidRead(paid, backfilledRow(newer))
+    const { before, saved, db } = await unchangedSubmit(read)
+    // The read already rebuilds to what a publish produces: the newer quiz's own answers.
+    assert.equal(scannerSourceHash(before.source.answers), scannerSourceHash(newer.answers), label)
+    assert.equal(scannerSourceHash(saved.prepared.source), scannerSourceHash(before.source), label)
+    assert.equal(prepareScannerContext(db.read)?.sourceHash, saved.prepared.sourceHash, label)
+    // `eligiblePaid` is unchanged (basics only): a bound paid source is not rejected for it.
+    const bound = prepareScannerContext({
+      ...db.read,
+      paidBindings: { initial: db.read.profileRevision },
+    })
+    assert.deepEqual(bound?.rejectedPaidSources, [], label)
+    assert.equal(bound?.sourceHash, saved.prepared.sourceHash, label)
+  }
+})

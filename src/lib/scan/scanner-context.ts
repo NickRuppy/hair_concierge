@@ -297,12 +297,20 @@ function sourceFacts(source: SupportedStage1Source): Partial<DiagnosticsV1> {
     .diagnostics
 }
 
+/** The paid-binding check (`eligiblePaid`): the source's basics match the facts. */
 function factsCompatible(source: SupportedStage1Source, facts: ScannerFacts): boolean {
   const projected = sourceFacts(source)
   return BASIC_FACT_FIELDS.every((field) => {
     const known = knownFact(facts, field)
     return known === undefined || sameFactValue(projected[field], known)
   })
+}
+
+/** Whether a source is used verbatim: rebuilding it on the facts changes nothing — its basics,
+ * and for a personal-plan source also the main problem and recurrence. So the read already yields
+ * what an (unchanged) edit publishes, which rebuilds the source on the facts. */
+function factsVerbatim(source: SupportedStage1Source, facts: ScannerFacts): boolean {
+  return scannerSourceHash(rebaseScannerSourceOnFacts(source, facts)) === scannerSourceHash(source)
 }
 
 /**
@@ -494,7 +502,7 @@ export function prepareScannerContext(read: ScannerSourceRead): PreparedScannerC
   const current = currentLegacyAnswers(read.profile!)
   const facts = scannerFacts(read.profile)
   const compatible = (source: SupportedStage1Source) =>
-    facts ? factsCompatible(source, facts) : sourceCompatible(source, current)
+    facts ? factsVerbatim(source, facts) : sourceCompatible(source, current)
   const rejectedPaidSources: ScannerPaidSourceRejection[] = []
   const eligiblePaid = (need: ScannerNeedSource | null) => {
     if (!read.edit) return true
