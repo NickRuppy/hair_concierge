@@ -623,6 +623,71 @@ test("missing-only on a facts profile names only the missing answer", async (t) 
     assert.deepEqual(row[column], before[column], column)
 })
 
+test("fix round 1 (G) adversarial: missing mode on a backfilled legacy_columns document", async (t) => {
+  const f = await fixture(t)
+  const quiz = { ...answers, hair_length: undefined } as unknown as QuizAnswers
+  const projected = projectLegacyLeadToFacts({ leadId: "x", quizAnswers: quiz }).diagnostics
+  await saveUserFacts(f.db, {
+    userId: owner,
+    domain: "diagnostics",
+    patch: { ...projected, source: { kind: "legacy_columns", version: 1, raw: {} } },
+    provenance: {
+      source: { kind: "legacy_columns" },
+      schemaVersion: 1,
+      at: "2026-09-20T00:00:00.000Z",
+      fields: { texture: "unknown_historical", thickness: "unknown_historical" },
+    },
+  })
+  const before = (await readRow(f.db, owner))!
+  assert.equal(before.hair_length, null, "baseline: hair length is missing")
+  const current = (await f.client.rpc("scanner_context_read_source", { p_user_id: owner }))
+    .data as any
+  await completeMobileProfile(f.client as never, owner, {
+    requestId: randomUUID(),
+    expectedProfileRevision: current.profileRevision,
+    answers: { hair_length: "short", thickness: "coarse" },
+  })
+  const row = (await readRow(f.db, owner))!
+  const facts = parseUserFactsRow(owner, row)
+  // A legacy_columns document cannot be emitted: it is re-sourced as a quiz under "profile".
+  assert.equal(facts.diagnostics?.source.kind, "legacy_quiz")
+  assert.equal(facts.diagnostics?.source.leadId, "profile")
+  assert.equal(facts.diagnostics?.hairLength, "short")
+  assert.ok(facts.provenance.diagnostics?.editedAt)
+  // Only the missing answer is hers now; the supplied thickness is ignored; old markers stay.
+  assert.equal(row.thickness, "fine")
+  assert.deepEqual(facts.provenance.diagnostics?.fields, {
+    texture: "unknown_historical",
+    thickness: "unknown_historical",
+    hairLength: "user",
+  })
+  for (const column of DIAGNOSTICS_COLUMNS.filter((c) => c !== "hair_length"))
+    assert.deepEqual(row[column], before[column], column)
+  assert.deepEqual(derived(row), deriveDiagnosticsColumns(facts.diagnostics!))
+  assert.equal((await f.db.query("select * from leads")).rows.length, 0)
+  assert.ok(await loadSharedScannerContext(f.client as never, owner))
+})
+
+test("fix round 1 (G) adversarial: a registration replay whose first attempt rolled back runs fresh, exactly once", async (t) => {
+  const f = await fixture(t)
+  const input = await f.intent()
+  await wrapDoor(f.db, `RETURN jsonb_build_object('status','revision_conflict','revision',0);`)
+  await assert.rejects(f.complete(input), /profile_conflict/)
+  for (const table of ["hair_profiles", "leads", "mobile_registration_publication_receipts"])
+    assert.equal((await f.db.query(`select * from ${table}`)).rows.length, 0, table)
+  await f.db.exec(`
+    DROP FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid);
+    ALTER FUNCTION public.user_facts_save_v1_real(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid)
+      RENAME TO user_facts_save_v1;`)
+
+  const result = await f.complete(input)
+  assert.equal(result.status, "ready")
+  assert.deepEqual(await f.complete(input), result, "then a byte-equal receipt")
+  assert.equal((await f.db.query("select * from hair_profiles")).rows.length, 1)
+  assert.equal((await f.db.query("select * from leads")).rows.length, 1)
+  assert.equal((await readRow(f.db, owner))!.facts_revision, 1)
+})
+
 async function insertLeadAndFacts(
   db: Awaited<ReturnType<typeof fixture>>["db"],
   quizAnswers: QuizAnswers,

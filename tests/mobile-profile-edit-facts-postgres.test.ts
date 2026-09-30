@@ -5,7 +5,7 @@ import test from "node:test"
 import { saveMobileProfileEdit } from "../src/lib/mobile/profile-edit-service"
 import type { ProfileEditRequest } from "../src/lib/mobile/profile-edit-contract"
 import { loadSharedScannerContext } from "../src/lib/scan/scanner-context-supabase"
-import { quizSupersedesFacts } from "../src/lib/user-facts/account-link"
+import { quizSupersedesFacts, writeAccountLinkFacts } from "../src/lib/user-facts/account-link"
 import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
 import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
 import { parseUserFactsRow } from "../src/lib/user-facts/read"
@@ -13,6 +13,7 @@ import type { QuizAnswers } from "../src/lib/quiz/types"
 import {
   DIAGNOSTICS_COLUMNS,
   mobileFactsDatabase,
+  pgliteAdminClient,
   pgliteRpcClient,
   readClock,
   readRow,
@@ -251,6 +252,92 @@ test("the edit is a hand edit: kept against an older quiz linked later, replaced
     quizSupersedesFacts(facts, new Date(Date.parse(editedAt) + 1000).toISOString()),
     true,
   )
+})
+
+test("fix round 1 (G): after an iOS edit the web account link keeps it against an OLDER lead and yields to a NEWER one", async (t) => {
+  const pg = await mobileFactsDatabase(t)
+  await seedQuizProfile(pg)
+  await edit(pgliteRpcClient(pg), { ...ANSWERS, thickness: "coarse" })
+  const edited = (await readRow(pg, OWNER))!
+  const editedAt = parseUserFactsRow(OWNER, edited).provenance.diagnostics!.editedAt!
+  const admin = pgliteAdminClient(pg) as never
+  const otherQuiz: QuizAnswers = { ...ANSWERS, thickness: "normal", goals: ["shine"] }
+
+  const older = await writeAccountLinkFacts(admin, {
+    userId: OWNER,
+    quiz: {
+      kind: "lead",
+      leadId: id(3, 3),
+      quizAnswers: otherQuiz,
+      createdAt: new Date(Date.parse(editedAt) - 1000).toISOString(),
+    },
+  })
+  assert.equal(older, "preserved")
+  const kept = (await readRow(pg, OWNER))!
+  assert.equal(kept.facts_revision, edited.facts_revision)
+  assert.deepEqual(kept.diagnostics, edited.diagnostics)
+  assert.equal(kept.thickness, "coarse")
+
+  const newer = await writeAccountLinkFacts(admin, {
+    userId: OWNER,
+    quiz: {
+      kind: "lead",
+      leadId: id(4, 4),
+      quizAnswers: otherQuiz,
+      createdAt: new Date(Date.parse(editedAt) + 1000).toISOString(),
+    },
+  })
+  assert.equal(newer, "replaced")
+  const replaced = (await readRow(pg, OWNER))!
+  const facts = parseUserFactsRow(OWNER, replaced)
+  assert.equal(replaced.thickness, "normal")
+  assert.deepEqual(facts.diagnostics?.goals, ["shine"])
+  assert.equal(facts.diagnostics?.source.leadId, id(4, 4))
+  assert.deepEqual(facts.provenance.diagnostics?.source, { kind: "legacy_lead", id: id(4, 4) })
+  assert.equal(facts.provenance.diagnostics?.editedAt, undefined, "the edit is superseded")
+  assert.deepEqual(derivedColumns(replaced), deriveDiagnosticsColumns(facts.diagnostics!))
+})
+
+test("fix round 1 (G) adversarial: a replay whose first attempt rolled back runs fresh, exactly once", async (t) => {
+  const pg = await mobileFactsDatabase(t)
+  await seedQuizProfile(pg)
+  const client = pgliteRpcClient(pg)
+  const expected = await editable(client)
+  const clock = await readClock(pg, OWNER)
+  const row = (await readRow(pg, OWNER))!
+  // First attempt: the door fails mid-publication -> everything rolls back, no receipt.
+  await pg.exec(`
+    ALTER FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid)
+      RENAME TO user_facts_save_v1_real;
+    CREATE FUNCTION public.user_facts_save_v1(p_user_id uuid, p_domain text, p_patch jsonb,
+      p_provenance jsonb, p_expected_revision integer DEFAULT NULL, p_mode text DEFAULT 'upsert',
+      p_source_draft_id uuid DEFAULT NULL, p_expected_draft_revision bigint DEFAULT NULL,
+      p_expected_initial_version_id uuid DEFAULT NULL) RETURNS jsonb LANGUAGE plpgsql AS
+      $$ BEGIN RAISE EXCEPTION 'transient'; END $$;`)
+  const requestId = randomUUID()
+  const answers = { ...ANSWERS, thickness: "coarse" }
+  await assert.rejects(edit(client, answers, { requestId, expectedProfileRevision: expected }), {
+    code: "temporarily_unavailable",
+  })
+  assert.deepEqual(await readClock(pg, OWNER), clock)
+  assert.deepEqual(await readRow(pg, OWNER), row)
+  assert.equal((await pg.query("select * from scanner_profile_edit_receipts")).rows.length, 0)
+  await pg.exec(`
+    DROP FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid);
+    ALTER FUNCTION public.user_facts_save_v1_real(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid)
+      RENAME TO user_facts_save_v1;`)
+
+  // The replay (same request id, same revision) is a fresh publish, applied once.
+  const saved = await edit(client, answers, { requestId, expectedProfileRevision: expected })
+  const after = await readClock(pg, OWNER)
+  assert.equal(after.revision - clock.revision, BigInt(1))
+  assert.equal(after.profile - clock.profile, BigInt(1))
+  assert.equal((await readRow(pg, OWNER))!.facts_revision, (row.facts_revision as number) + 1)
+  assert.deepEqual(
+    await edit(client, answers, { requestId, expectedProfileRevision: expected }),
+    saved,
+  )
+  assert.deepEqual(await readClock(pg, OWNER), after)
 })
 
 test("adversarial: an edit on a profile with NULL diagnostics creates a complete, readable document", async (t) => {
