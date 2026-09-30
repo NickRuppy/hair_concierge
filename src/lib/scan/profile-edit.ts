@@ -1,6 +1,12 @@
 import "server-only"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import type { QuizAnswers } from "@/lib/quiz/types"
+import {
+  buildMobileHandEditFacts,
+  toProfileFactsArgument,
+  type MobileFactsWrite,
+} from "@/lib/mobile/profile-facts-patch"
+import { parseUserFactsRow } from "@/lib/user-facts/read"
 import { readScannerProfileSource } from "./scanner-context-supabase"
 import {
   editableScannerQuizAnswers,
@@ -74,16 +80,31 @@ function result(data: StoredPublication): ProfileEditResult {
   }
 }
 
+export type ProfileEditInput =
+  | {
+      expectedProfileRevision: string
+      requestId: string
+      /** WEB path (src/lib/hair-profile/edit-route.ts): a hair_profiles column patch the SQL
+       * function writes directly. Clean-switch task 5 moves that route onto the door and then
+       * deletes this variant together with the SQL branch that serves it. */
+      patch: Record<string, unknown>
+      quizAnswers?: QuizAnswers
+      saveAsFacts?: false
+    }
+  | {
+      expectedProfileRevision: string
+      requestId: string
+      /** MOBILE path (clean-switch task 3): the complete submitted answers are saved as a hand
+       * edit through `user_facts_save_v1` inside the publish transaction; no column patch. */
+      quizAnswers: QuizAnswers
+      saveAsFacts: true
+    }
+
 /** Auth-verified UID only. The route owns strict patch/quiz validation. */
 export async function publishProfileEdit(
   client: SupabaseClient,
   userId: string,
-  input: {
-    expectedProfileRevision: string
-    requestId: string
-    patch: Record<string, unknown>
-    quizAnswers?: QuizAnswers
-  },
+  input: ProfileEditInput,
 ): Promise<ProfileEditResult> {
   try {
     const requestHash = scannerSourceHash(input)
@@ -99,7 +120,20 @@ export async function publishProfileEdit(
       throw new ProfileEditError("profile_conflict")
     const before = prepareScannerContext(read)
     if (!before) throw new ProfileEditError("profile_required")
-    const profile = { ...read.profile, ...input.patch }
+    // Mobile: the facts are built against the row this read saw; the scanner clock CAS in the
+    // SQL function guarantees the row is unchanged when they are written. The scanner context
+    // is prepared from the columns the door WILL derive (the parity-tested TS oracle), so the
+    // published context and the stored row can never disagree.
+    let facts: MobileFactsWrite | null = null
+    if (input.saveAsFacts) {
+      facts = buildMobileHandEditFacts({
+        answers: input.quizAnswers,
+        stored: parseUserFactsRow(userId, read.profile ?? {}),
+        now: new Date().toISOString(),
+      })
+    }
+    const patch = input.saveAsFacts ? {} : input.patch
+    const profile = { ...read.profile, ...patch, ...facts?.columns }
     const previousQuiz = editableScannerQuizAnswers(read)
     const priorEdit = {
       profileRevision: read.profileRevision,
@@ -138,7 +172,7 @@ export async function publishProfileEdit(
       p_request_hash: requestHash,
       p_expected_profile_revision: input.expectedProfileRevision,
       p_expected_source_revision: read.sourceRevision,
-      p_patch: input.patch,
+      p_patch: patch,
       p_quiz_answers: quizAnswers,
       p_source_hash: prepared.sourceHash,
       p_engine_version: prepared.snapshot.computationVersion,
@@ -150,6 +184,7 @@ export async function publishProfileEdit(
       },
       p_output_snapshot: prepared.snapshot,
       p_snapshot_source: prepared.snapshotSource,
+      ...(facts ? { p_facts: toProfileFactsArgument(facts) } : {}),
     })
     if (publication.error || !publication.data)
       throw new ProfileEditError("temporarily_unavailable")

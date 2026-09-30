@@ -154,7 +154,7 @@ test("a complete source uses the publisher with the server-read revision", async
       return {
         profileRevision: "8",
         contextRevision: "12",
-        profile: { user_id: ownerId, ...input.patch },
+        profile: { user_id: ownerId, ...("patch" in input ? input.patch : {}) },
         prepared: {} as never,
         quizAnswers: {} as never,
       }

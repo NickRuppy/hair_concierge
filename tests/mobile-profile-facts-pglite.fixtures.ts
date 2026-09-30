@@ -1,0 +1,132 @@
+import { readFile } from "node:fs/promises"
+
+import {
+  migratedPersonalPlanDatabase,
+  type PersonalPlanTestDb,
+} from "./personal-plan-pglite-migration.fixtures"
+
+/**
+ * PGlite harness for the two iOS publishers on the REAL schema (clean-switch tasks 3 + 4).
+ *
+ * Built on `migratedPersonalPlanDatabase`: the real personal-plan migrations, the real
+ * `hair_profiles` shape (every column transcribed from its owning migration) with its real
+ * triggers — `set_updated_at_hair_profiles`, the main #611 `primary_concern` trigger — and the
+ * three real user-facts migrations incl. `user_facts_save_v1`. On top of that the real mobile
+ * migrations, in deploy order, which add the third hair_profiles trigger
+ * (`scanner_context_source_changed`, the scanner clock), the scanner tables and both publishers,
+ * then the two clean-switch migrations under test.
+ *
+ * Stubbed (FK targets / columns only these functions touch): `profiles.full_name` and
+ * `public.leads` (id, name, email, marketing_consent, quiz_answers, quiz_kind, status, user_id,
+ * created_at — the columns `mobile_registration_publish` inserts and the scanner read selects).
+ * The scanner trigger is installed on the stub `leads` by the real migration, so lead inserts
+ * move the clock exactly as in production.
+ *
+ * NOT covered (single-connection engine): two-session races. See the task report.
+ */
+
+const ROOT = new URL("../", import.meta.url)
+
+export const MOBILE_MIGRATIONS = [
+  "supabase/migrations/20260916175235_hosted_mobile_scanner_context.sql",
+  "supabase/migrations/20260916175239_hosted_mobile_profile_edit.sql",
+  "supabase/migrations/20260917063601_mobile_registration_intents.sql",
+  "supabase/migrations/20260917063827_mobile_registration_publication.sql",
+  "supabase/migrations/20260917065627_mobile_registration_completion_admission.sql",
+] as const
+
+export const CLEAN_SWITCH_MIGRATIONS = [
+  "supabase/migrations/20260930090000_scanner_profile_edit_through_user_facts.sql",
+] as const
+
+const MOBILE_STUBS = `
+ALTER TABLE public.profiles ADD COLUMN full_name text;
+CREATE TABLE public.leads (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name text,
+  email text,
+  marketing_consent boolean,
+  quiz_answers jsonb,
+  quiz_kind text,
+  status text,
+  user_id uuid REFERENCES public.profiles(id) ON DELETE CASCADE,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+`
+
+export async function mobileFactsDatabase(
+  t: { after: (fn: () => Promise<void>) => void },
+  options: { cleanSwitch?: boolean } = {},
+): Promise<PersonalPlanTestDb> {
+  const pg = await migratedPersonalPlanDatabase(t)
+  await pg.exec(MOBILE_STUBS)
+  const files = [
+    ...MOBILE_MIGRATIONS,
+    ...(options.cleanSwitch === false ? [] : CLEAN_SWITCH_MIGRATIONS),
+  ]
+  for (const file of files) await pg.exec(await readFile(new URL(file, ROOT), "utf8"))
+  return pg
+}
+
+/** A supabase-js-shaped `rpc` over PGlite, using named-argument notation so no signature list
+ * has to be kept in sync with the migrations. */
+export function pgliteRpcClient(pg: PersonalPlanTestDb) {
+  const calls: Array<{ name: string; args: Record<string, unknown> }> = []
+  return {
+    calls,
+    async rpc(name: string, args: Record<string, unknown>) {
+      calls.push({ name, args })
+      const entries = Object.entries(args).filter(([, value]) => value !== undefined)
+      const sql = `select public.${name}(${entries
+        .map(([key], index) => `${key} => $${index + 1}`)
+        .join(",")}) as result`
+      try {
+        const { rows } = await pg.query<{ result: unknown }>(
+          sql,
+          entries.map(([, value]) =>
+            value !== null && typeof value === "object" ? JSON.stringify(value) : value,
+          ),
+        )
+        return { data: rows[0]!.result, error: null }
+      } catch (error) {
+        return { data: null, error }
+      }
+    },
+  }
+}
+
+export async function readClock(pg: PersonalPlanTestDb, userId: string) {
+  const { rows } = await pg.query<{ revision: string; profile_revision: string }>(
+    "select revision::text, profile_revision::text from public.scanner_context_sources where user_id = $1",
+    [userId],
+  )
+  const row = rows[0]
+  return row
+    ? { revision: BigInt(row.revision), profile: BigInt(row.profile_revision) }
+    : { revision: BigInt(0), profile: BigInt(0) }
+}
+
+export async function readRow(pg: PersonalPlanTestDb, userId: string) {
+  const { rows } = await pg.query<Record<string, unknown>>(
+    "select * from public.hair_profiles where user_id = $1",
+    [userId],
+  )
+  return rows[0] ?? null
+}
+
+/** The 13 columns `user_facts_save_v1` derives from `diagnostics`. */
+export const DIAGNOSTICS_COLUMNS = [
+  "hair_texture",
+  "thickness",
+  "density",
+  "hair_length",
+  "cuticle_condition",
+  "protein_moisture_balance",
+  "scalp_type",
+  "scalp_condition",
+  "chemical_treatment",
+  "concerns",
+  "goals",
+  "desired_volume",
+  "primary_concern",
+] as const

@@ -1,11 +1,7 @@
 import "server-only"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { MobileError } from "./auth"
-import {
-  mobileEditQuestions,
-  mobileEditProfilePatch,
-  type ProfileEditRequest,
-} from "./profile-edit-contract"
+import { mobileEditQuestions, type ProfileEditRequest } from "./profile-edit-contract"
 import { mobileProfileAnswers } from "./profile-service"
 import { prepareScannerContext } from "@/lib/scan/scanner-context"
 import {
@@ -31,11 +27,13 @@ export async function saveMobileProfileEdit(
   input: ProfileEditRequest,
 ) {
   try {
+    // Clean-switch task 3: the answers are saved through user_facts_save_v1 (a hand edit);
+    // the door derives the legacy columns, nothing writes them directly.
     const result = await publishProfileEdit(client, userId, {
       expectedProfileRevision: input.expectedProfileRevision,
       requestId: input.requestId,
-      patch: mobileEditProfilePatch(input.answers),
       quizAnswers: input.answers,
+      saveAsFacts: true,
     })
     return {
       profileRevision: result.profileRevision,
