@@ -41,7 +41,7 @@ export const CLEAN_SWITCH_MIGRATIONS = [
   "supabase/migrations/20260930090100_mobile_registration_through_user_facts.sql",
 ] as const
 
-const MOBILE_STUBS = `
+export const MOBILE_STUBS = `
 ALTER TABLE public.profiles ADD COLUMN full_name text;
 CREATE TABLE public.leads (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),

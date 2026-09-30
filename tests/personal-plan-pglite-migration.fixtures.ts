@@ -199,6 +199,12 @@ CREATE TRIGGER set_updated_at_hair_profiles
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 `
 
+/** The same chain for a real PostgreSQL (the Docker two-session proofs in `scripts/mobile/`). */
+export {
+  MIGRATIONS as PERSONAL_PLAN_MIGRATIONS,
+  STUB_PREREQUISITES as PERSONAL_PLAN_STUB_PREREQUISITES,
+}
+
 export type PersonalPlanTestDb = PGlite
 
 /**
