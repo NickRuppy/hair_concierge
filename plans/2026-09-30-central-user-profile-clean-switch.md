@@ -75,6 +75,7 @@ Not in this PR: pointing the Styling / Alltag „bearbeiten" buttons at the Fein
 - Haar-Check editor offers the quiz's 10 concerns (incl. Wenig Glanz, Form geht verloren, Wenig Volumen / beschwert); Kopfhaut-Beschwerden allows several picks.
 - The profile displays the quiz's wording for goals and concerns.
 - 80 profiles show a converted goal name once; 5 show the combined tool label; 127 show hair length „lang".
+- About 109 profiles with exactly one concern and no main problem show that concern as their main problem (the door derives it; the backfill report lists it as one change pattern).
 - iOS: nothing. A profile edit still does not change the plan (PR2).
 
 ## 6. Decision coverage
@@ -131,7 +132,7 @@ Model routing: Opus for 3, 4, 9 (SQL, locking); Sonnet for 5, 6, 7; Opus for 8 (
 ## 11. Rollout (four steps, order matters)
 
 1. **Additive migrations:** `20260929231100` (fact columns), `20260929231200` (facts cursor, draft `origin`), `20260929231300` (`user_facts_save_v1`). The deployed app keeps working: nothing reads or requires them yet.
-2. **Backfill:** `scripts/user-facts/backfill.ts` dry run (the default) → Nick reads the report (summary table first: hand-edited groups, ambiguous rows, every visible column change before → after, defaults, kept values, source choices, erasures, conflicts) → `--apply`. Idempotent and CAS-protected; rerun with `--catch-up` right before step 3 to pick up legacy edits made in between.
+2. **Backfill:** `scripts/user-facts/backfill.ts` dry run (the default) → Nick reads the report (summary table first: hand-edited groups, ambiguous rows, every visible column change before → after, defaults, kept values, source choices, erasures, conflicts) → `--apply`. Idempotent and CAS-protected; rerun with `--catch-up` right before step 3 to pick up legacy edits made in between. For "latest own quiz wins" (§3) the backfill takes a legacy lead's `leads.created_at` as the time the quiz was taken: the stored envelope carries no timestamp, and `updated_at` is ignored (1 production lead has a later one).
 3. **Code deploy TOGETHER with** `20260930090000` and `20260930090100`. Both change the iOS RPC signatures (`p_facts`, `p_quiz_taken_at`): apply them in the same window as the deploy — iOS registration / profile edit fail in the gap between the two; web is unaffected.
 4. **Lock last:** `20260930120000_user_facts_lock.sql` (guard trigger + browser INSERT/UPDATE/TRUNCATE/TRIGGER/REFERENCES revoked). Every direct fact-column writer must be gone by then (seeds and scripts included, task 7B).
 
