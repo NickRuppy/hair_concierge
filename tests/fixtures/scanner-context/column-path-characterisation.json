@@ -1,0 +1,435 @@
+{
+  "V0_fixture_split_ends/mainEra": {
+    "prepared": {
+      "sourceHash": "225c89bd3f66847e1d70f06d4028d1aa06fc8237c2b994608071d5206f7a3c27",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "split_ends"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "510595d0a245bcde3f55e1d703940e74173a372fe1c666985d4615aa759dc823"
+  },
+  "V0_fixture_split_ends/derivedNoDocument": {
+    "prepared": {
+      "sourceHash": "225c89bd3f66847e1d70f06d4028d1aa06fc8237c2b994608071d5206f7a3c27",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "split_ends"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "959cc6ad76e1cbaa010fcad47a8737e3f78ca371dfab9d66d85e555a1abde1e9"
+  },
+  "V1_control_dry_damage/mainEra": {
+    "prepared": {
+      "sourceHash": "9167be20751a917ebe7b12293b4a3e84c6c9205608f6710198c7a84863057e18",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "hair_damage"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "b9bebc5c3ea8377e17e8adacbace643d3db99a2b8a6612bfeb01ac01aa341f58"
+  },
+  "V1_control_dry_damage/derivedNoDocument": {
+    "prepared": {
+      "sourceHash": "9167be20751a917ebe7b12293b4a3e84c6c9205608f6710198c7a84863057e18",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "hair_damage"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "b9bebc5c3ea8377e17e8adacbace643d3db99a2b8a6612bfeb01ac01aa341f58"
+  },
+  "V2_single_concern_nopick/mainEra": {
+    "prepared": {
+      "sourceHash": "99c26221fe2285aa71da1d71a52b3bfd383f70b71dbac98077fc214dbca14552",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "hair_damage"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "d86545e979638e14c2bdf218d3ea498a7b3b32289664c3a27dcaf39af60e1c2b"
+  },
+  "V2_single_concern_nopick/derivedNoDocument": {
+    "prepared": {
+      "sourceHash": "99c26221fe2285aa71da1d71a52b3bfd383f70b71dbac98077fc214dbca14552",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "hair_damage"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "d86545e979638e14c2bdf218d3ea498a7b3b32289664c3a27dcaf39af60e1c2b"
+  },
+  "V3_two_concerns_pick/mainEra": {
+    "prepared": {
+      "sourceHash": "c7620ebea02a53b3df84234dee952cb4cce9dba3e46e15ad7e667fc8545faff5",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "hair_damage"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "2507563f270a5aee6f876562718f0938c74ab3831217086a08b218f0f2b24373"
+  },
+  "V3_two_concerns_pick/derivedNoDocument": {
+    "prepared": {
+      "sourceHash": "c7620ebea02a53b3df84234dee952cb4cce9dba3e46e15ad7e667fc8545faff5",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "hair_damage"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "2507563f270a5aee6f876562718f0938c74ab3831217086a08b218f0f2b24373"
+  },
+  "V4_oily_scalp/mainEra": {
+    "prepared": {
+      "sourceHash": "40a109a2701373d97769d37b600cf3ec862c72a89004a4c588a51e0a48fe290c",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "hair_damage"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "660836cef782e10a4dc1100277b4f3df0fc509a275de98622c6019d9a516f5bd"
+  },
+  "V4_oily_scalp/derivedNoDocument": {
+    "prepared": {
+      "sourceHash": "40a109a2701373d97769d37b600cf3ec862c72a89004a4c588a51e0a48fe290c",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "hair_damage"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "3821f0e2130e8faecc62b545cb3c47dbb16aeb73f9162338188c14eb7e7c3668"
+  },
+  "V5_four_concerns/mainEra": {
+    "prepared": {
+      "sourceHash": "0351b8685934ba87c4630c99fcc7e4dde33cef49d0f5510a824f74dc68031deb",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "breakage",
+        "dry_lengths",
+        "frizz_flyaways",
+        "tangling"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "8e3b18a295840f97ceefdbba7cf94b26abed106c609c0421b3b838a03e65733a"
+  },
+  "V5_four_concerns/derivedNoDocument": {
+    "prepared": {
+      "sourceHash": "0351b8685934ba87c4630c99fcc7e4dde33cef49d0f5510a824f74dc68031deb",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "breakage",
+        "dry_lengths",
+        "frizz_flyaways",
+        "tangling"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "c0383a33752d60932a4258d876529ffe71e22dae15762ca2fa56b1d3c403504c"
+  },
+  "V7_frizz/mainEra": {
+    "prepared": {
+      "sourceHash": "0d832a0f76cea3b8a31a3f58bdd030e483b504c629c701c6948631a072e412ce",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "frizz_flyaways"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "7e3e2a8782a0b0eb0b0120e45e049b600113f343cabe25c589a105c8f256bc73"
+  },
+  "V7_frizz/derivedNoDocument": {
+    "prepared": {
+      "sourceHash": "0d832a0f76cea3b8a31a3f58bdd030e483b504c629c701c6948631a072e412ce",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "frizz_flyaways"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "acbeb03d24dd26cf8fa1b26a8f2b143cb2c75c06c53c9c301f86d83ef4c88ec1"
+  },
+  "V8_low_shine_no_goal/mainEra": {
+    "prepared": {
+      "sourceHash": "8fa84e8a48bf16558168d11abc3214c0d388a7c74d21f70009512baf6deb3b12",
+      "goals": [
+        "moisture"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "low_shine"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "4ca5f929c70cc33a0ecb7316fd041a6007deefc48ca90727cac9e1226bf0913d"
+  },
+  "V8_low_shine_no_goal/derivedNoDocument": {
+    "prepared": {
+      "sourceHash": "8fa84e8a48bf16558168d11abc3214c0d388a7c74d21f70009512baf6deb3b12",
+      "goals": [
+        "moisture"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "low_shine"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "4d1597bf3b71d3e4802304b1154f723908e2015171b28e24329d958a01e794d3"
+  },
+  "V9_goals_manageability/mainEra": {
+    "prepared": {
+      "sourceHash": "accb39ab93cc45b9bb4883f939edbd858fbda1ce163681a0df42aec7200dba63",
+      "goals": [
+        "manageability_styling"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "hair_damage"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "27809e25ba4b32f527dcbbba880c1b0e097ffd0a958ff704243846e626f31c71"
+  },
+  "V9_goals_manageability/derivedNoDocument": {
+    "prepared": {
+      "sourceHash": "d4434027b42d9b4381cdaabd37fb88c76880945584457aab73dfafa48168b1b1",
+      "goals": [
+        "frizz_surface"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "hair_damage"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "751a792d5f7b01749a203712a6360fb0ab61f68d9b543ee0e4585a608ad6b55c"
+  },
+  "V10_hair_loss/mainEra": {
+    "prepared": {
+      "sourceHash": "71e091d6c0e6b90d372ccfa80661553e398b87b2b2c01edf0a163612262a47b0",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "dry_lengths"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "fc26a1371dee8e2cdde719d4dcc17b4ff3ec71642e9960e83a5ceff4f97534ae"
+  },
+  "V10_hair_loss/derivedNoDocument": {
+    "prepared": {
+      "sourceHash": "71e091d6c0e6b90d372ccfa80661553e398b87b2b2c01edf0a163612262a47b0",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "dry_lengths"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "2260bdc8c357a2019b51cf57ad2e3416950d2c1ba301e7108f41e8a092153101"
+  },
+  "V11_four_plus_low_shine/mainEra": {
+    "prepared": {
+      "sourceHash": "36cd2a595589197554f9513300c83755e8f552ab3b69178ed4570164a55a377c",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "breakage",
+        "dry_lengths",
+        "frizz_flyaways",
+        "tangling",
+        "low_shine"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "475d4159eeb8bb4626c102274ee4818781b47dc8e2b2d5ac50290923b7c71e81"
+  },
+  "V11_four_plus_low_shine/derivedNoDocument": {
+    "prepared": {
+      "sourceHash": "ced93d74bf05032ce4b098b3e0a1bb74c3769376945778b9e7ae7316a9ca7595",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "breakage",
+        "dry_lengths",
+        "frizz_flyaways",
+        "tangling"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "c0383a33752d60932a4258d876529ffe71e22dae15762ca2fa56b1d3c403504c"
+  },
+  "V12_neutral_volume_only/mainEra": {
+    "prepared": {
+      "sourceHash": "afdf7327fa319b1dceca4adf3d1d305fa841c96cb1689af3612bdeec03f3e663",
+      "goals": [
+        "volume_balance"
+      ],
+      "currentConcerns": [
+        "hair_damage",
+        "dry_lengths"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "2a06e17e86ba648225f83cd1e0e5c0f217e44929e24ec27d5ddb09fd7228b367"
+  },
+  "V12_neutral_volume_only/derivedNoDocument": {
+    "prepared": null,
+    "editable": "760fb12aab0c3ccae554136f88b42a40e0092cc2417e04247cdd2ce11e3e965f"
+  },
+  "V13_volume_plus_moisture_split/mainEra": {
+    "prepared": {
+      "sourceHash": "1a68646949dbd7b4eacae8c903c243aa2438666ae2cfff6de580423e28ba6b9f",
+      "goals": [
+        "volume_balance",
+        "moisture"
+      ],
+      "currentConcerns": [
+        "split_ends"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "688b4ee1cadd1ba9c93ad436e5ee30fad4490e205b26681ba37e475a787def0d"
+  },
+  "V13_volume_plus_moisture_split/derivedNoDocument": {
+    "prepared": {
+      "sourceHash": "7df677f8b3fff72d4f374f6cc2563e3c636e6b8b58800ed2a4e4bedaf27c485a",
+      "goals": [
+        "moisture"
+      ],
+      "currentConcerns": [
+        "split_ends"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "06291e2cdd3375228c25a3fd285b237679e074480dcf5ab158e3a76958705c02"
+  },
+  "V14_multi_scalp_concerns/mainEra": {
+    "prepared": {
+      "sourceHash": "28780c8cc6003a9c81e60005398cbbb964cf2eda07febb12bb601106d7ae4b5f",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "split_ends"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "28a2c06bc9ec2586defe8160771048af7e86e46b7a218ad4ed9301106c688ef9"
+  },
+  "V14_multi_scalp_concerns/derivedNoDocument": {
+    "prepared": {
+      "sourceHash": "28780c8cc6003a9c81e60005398cbbb964cf2eda07febb12bb601106d7ae4b5f",
+      "goals": [
+        "moisture",
+        "shine"
+      ],
+      "currentConcerns": [
+        "dry_lengths",
+        "split_ends"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "403b6dccf315af6530f5752935987d433306ff24e772e14ed7d972d138ac427a"
+  }
+}

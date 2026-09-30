@@ -7,6 +7,7 @@ import {
   type MobileFactsWrite,
 } from "@/lib/mobile/profile-facts-patch"
 import { buildProfileAnswersFacts, type ProfileAnswers } from "@/lib/hair-profile/profile-answers"
+import { profileAfterDiagnosticsWrite } from "@/lib/user-facts/hand-edit"
 import { parseUserFactsRow } from "@/lib/user-facts/read"
 import { readScannerProfileSource } from "./scanner-context-supabase"
 import {
@@ -138,7 +139,9 @@ export async function publishProfileEdit(
             stored: parseUserFactsRow(userId, read.profile ?? {}),
             now: new Date().toISOString(),
           })
-    const profile = { ...read.profile, ...facts.columns }
+    // The row the door will leave: derived columns AND the merged facts document, which the
+    // scanner reads first (one vocabulary).
+    const profile = profileAfterDiagnosticsWrite(read.profile, facts)
     const previousQuiz = editableScannerQuizAnswers(read)
     const priorEdit = {
       profileRevision: read.profileRevision,
@@ -165,7 +168,11 @@ export async function publishProfileEdit(
         quizAnswers,
         profile,
         input: {
-          source: rebaseScannerSource(before.source, quizAnswers, previousQuiz),
+          // With a facts document the context rebuilds the source from the facts; the lossy
+          // answer-based rebase is only the fallback for a row that still has none.
+          source: profile.diagnostics
+            ? before.source
+            : rebaseScannerSource(before.source, quizAnswers, previousQuiz),
           userRefinementAnswers: before.userRefinementAnswers,
           userRefinementQuestionIds: before.userRefinementQuestionIds,
         },

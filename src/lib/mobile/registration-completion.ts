@@ -11,6 +11,7 @@ import {
   type ScannerSourceRead,
 } from "@/lib/scan/scanner-context"
 import { readScannerProfileSource } from "@/lib/scan/scanner-context-supabase"
+import { profileAfterDiagnosticsWrite } from "@/lib/user-facts/hand-edit"
 import { parseUserFactsRow } from "@/lib/user-facts/read"
 import {
   MobileProfileFactsError,
@@ -108,9 +109,12 @@ async function publish(
 ) {
   // Explicit replacement/completion becomes its own owner-bound source. Do not
   // silently inherit paid answers or pick an unrelated email/newest lead.
-  // The scanner context is prepared from the columns the door WILL derive (the parity-tested
-  // TS oracle), so the published context and the stored row agree.
-  const profile = { ...source.profile, ...facts?.columns }
+  // The scanner context is prepared from the row the door WILL leave — the columns it derives
+  // (the parity-tested TS oracle) and the merged facts document, which the scanner reads first —
+  // so the published context and the stored row agree.
+  const profile = facts
+    ? profileAfterDiagnosticsWrite(source.profile, facts)
+    : { ...source.profile }
   const prepared =
     binding.p_mode === "keep"
       ? prepareScannerContext(source)
@@ -129,11 +133,14 @@ async function publish(
             input:
               binding.p_mode === "missing" && source.edit
                 ? {
-                    source: rebaseScannerSource(
-                      source.edit.input.source,
-                      answers!,
-                      source.edit.quizAnswers,
-                    ),
+                    // With a facts document the context rebuilds the source from the facts.
+                    source: profile?.diagnostics
+                      ? source.edit.input.source
+                      : rebaseScannerSource(
+                          source.edit.input.source,
+                          answers!,
+                          source.edit.quizAnswers,
+                        ),
                     userRefinementAnswers: source.edit.input.userRefinementAnswers,
                     userRefinementQuestionIds: source.edit.input.userRefinementQuestionIds,
                   }

@@ -12,18 +12,21 @@ import {
   ProfileFactsError,
   buildHandEditFacts,
   mergeDiagnosticsPatch,
+  sameFactValue,
   validatedDiagnosticsWrite,
   type HandEditFactsWrite,
   type HandEditField,
   type HandEditValues,
 } from "@/lib/user-facts/hand-edit"
 import { projectLegacyLeadToFacts } from "@/lib/user-facts/project-legacy-lead"
+import { diagnosticsToQuizAnswers } from "@/lib/user-facts/quiz-answers"
 import type { UserFacts } from "@/lib/user-facts/read"
 import {
   DIAGNOSTICS_SCHEMA_VERSION,
   QUIZ_CONTEXT_SCHEMA_VERSION,
   domainProvenanceSchema,
   quizContextPatchSchema,
+  type DiagnosticsV1,
 } from "@/lib/user-facts/schema"
 
 /**
@@ -119,6 +122,40 @@ function legacyVolumeDirection(goals: readonly string[] | undefined): "more" | "
   return null
 }
 
+/** The native field values an answer set names for the given groups (JSON null clears). */
+function namedValues(
+  answers: QuizAnswers,
+  projection: DiagnosticsV1,
+  groups: readonly MobileAnswerGroup[],
+): HandEditValues {
+  const values: HandEditValues = {}
+  for (const group of groups) {
+    for (const field of FIELDS_BY_GROUP[group]) {
+      const value =
+        field === "volumeDirection" ? legacyVolumeDirection(answers.goals) : projection[field]
+      if (field === "primaryConcern" && value === undefined) continue
+      values[field] = value ?? null
+    }
+  }
+  return values
+}
+
+/** What the edit screen showed for a stored document, as the values handing it back would name;
+ * `null` when the shown answers are no complete answer set (nothing to compare against). */
+function shownValues(
+  stored: DiagnosticsV1,
+  groups: readonly MobileAnswerGroup[],
+): HandEditValues | null {
+  const parsed = quizAnswersSchema.safeParse(diagnosticsToQuizAnswers(stored))
+  if (!parsed.success) return null
+  const answers = parsed.data as QuizAnswers
+  const projection = projectLegacyLeadToFacts({
+    leadId: PROFILE_SOURCE_LEAD_ID,
+    quizAnswers: answers,
+  }).diagnostics
+  return namedValues(answers, projection, groups)
+}
+
 /**
  * A hand edit of the answered groups (task 3: all ten; task 4 "missing": the missing ones).
  *
@@ -155,13 +192,21 @@ export function buildMobileHandEditFacts(input: {
   const newSource = !existing || existing.source.kind === "legacy_columns"
   const groups = newSource ? MOBILE_ANSWER_GROUPS : (input.groups ?? MOBILE_ANSWER_GROUPS)
 
-  const values: HandEditValues = {}
-  for (const group of groups) {
-    for (const field of FIELDS_BY_GROUP[group]) {
-      const value =
-        field === "volumeDirection" ? legacyVolumeDirection(answers.goals) : projection[field]
-      if (field === "primaryConcern" && value === undefined) continue
-      values[field] = value ?? null
+  const values = namedValues(answers, projection, groups)
+  if (!newSource) {
+    // The answer format cannot hold every stored fact (several scalp concerns, "natural" beside a
+    // chemical treatment, an absent array): the edit screen shows them through
+    // `diagnosticsToQuizAnswers`. A group handed back exactly as shown is not a change of the
+    // value it could not show — the stored fact stays.
+    const shown = shownValues(existing!, groups)
+    for (const field of Object.keys(values) as HandEditField[]) {
+      if (
+        shown &&
+        field in shown &&
+        sameFactValue(values[field], shown[field]) &&
+        !sameFactValue(shown[field], existing![field])
+      )
+        delete values[field]
     }
   }
   return buildHandEditFacts({

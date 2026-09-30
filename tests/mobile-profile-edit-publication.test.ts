@@ -308,9 +308,17 @@ test("old paid source never restores a discarded detail after basics return; new
     concernId: "dry_lengths",
     frequency: "often",
   })
+  // After the edits the row has a facts document, which the scanner reads first: a changed
+  // basic is a changed fact (the door derives the column from it).
+  const document = db.read.profile!.diagnostics as Record<string, unknown>
+  assert.ok(document, "the edit created the facts document")
   const incompatible = prepareScannerContext({
     ...db.read,
-    profile: { ...db.read.profile, thickness: "coarse" },
+    profile: {
+      ...db.read.profile,
+      thickness: "coarse",
+      diagnostics: { ...document, thickness: "coarse" },
+    },
     paidBindings: { initial: db.read.profileRevision },
   })!
   assert.equal(recurrence(incompatible), undefined)
