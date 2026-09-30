@@ -202,6 +202,48 @@ test("rule 7: desired_volume derives from the mapped goals column", () => {
   assert.equal(deriveDiagnosticsColumns(diagnostics({})).desired_volume, null)
 })
 
+test("rule 7c (migration table M, Nick 2026-09-30): a stored volumeDirection decides volume_balance", () => {
+  // The stored direction beats the hair-type resolver in both directions…
+  const keptLess = deriveDiagnosticsColumns(
+    diagnostics({
+      thickness: "fine",
+      goals: ["moisture", "volume_balance"],
+      volumeDirection: "less",
+    }),
+  )
+  assert.deepEqual(keptLess.goals, ["moisture", "less_volume"])
+  assert.equal(keptLess.desired_volume, "less")
+
+  const keptMore = deriveDiagnosticsColumns(
+    diagnostics({ texture: "coily", goals: ["volume_balance"], volumeDirection: "more" }),
+  )
+  assert.deepEqual(keptMore.goals, ["volume"])
+  assert.equal(keptMore.desired_volume, "more")
+
+  // …and resolves a direction the hair type alone cannot.
+  const unresolvable = deriveDiagnosticsColumns(
+    diagnostics({
+      texture: "straight",
+      thickness: "normal",
+      density: "medium",
+      goals: ["volume_balance"],
+      volumeDirection: "more",
+    }),
+  )
+  assert.deepEqual(unresolvable.goals, ["volume"])
+
+  // Absent: resolved from hair type as before. Without a volume_balance goal it does nothing.
+  assert.deepEqual(
+    deriveDiagnosticsColumns(diagnostics({ thickness: "fine", goals: ["volume_balance"] })).goals,
+    ["volume"],
+  )
+  const noGoal = deriveDiagnosticsColumns(
+    diagnostics({ goals: ["moisture"], volumeDirection: "less" }),
+  )
+  assert.deepEqual(noGoal.goals, ["moisture"])
+  assert.equal(noGoal.desired_volume, null)
+})
+
 // ---------------------------------------------------------------------------
 // Care habits rules 8-16
 // ---------------------------------------------------------------------------

@@ -24,9 +24,12 @@ import { diagnosticsV1Schema, type DiagnosticsV1 } from "../schema"
  * precedence).
  *
  * Deliberately lossy (H3/P4 approve a lossy import): the legacy columns are themselves a
- * projection of richer quiz answers, so legacy-only values with no native equivalent
- * (`dandruff`/`oily_scalp` concerns, `healthier_hair`/`color_protection` goals) are DROPPED
- * rather than guessed at, and a null column omits its field rather than inventing a default.
+ * projection of richer quiz answers. The translation is the owner-approved migration table M
+ * (Nick, 2026-09-30) — see the two tables below: `healthier_hair`/`color_protection` goals and
+ * the `oily_scalp` concern are DROPPED rather than guessed at (the scalp type carries oily
+ * scalps), a `dandruff` concern is not a hair concern at all but `oily_dandruff` in
+ * `scalpConcerns`, and a stored `volume`/`less_volume` goal keeps its direction in
+ * `volumeDirection`. A null column omits its field rather than inventing a default.
  *
  * `scalp_condition` is the one column whose `null` can be a real answer rather than an absent
  * one ("no scalp issue": `link-to-profile.ts` writes null when `has_scalp_issue === false`),
@@ -51,8 +54,9 @@ export type LegacyDiagnosticColumns = {
   concerns: string[] | null
   goals: string[] | null
   /** Derived from `goals` by the write side; carried here so the backfill's erasure check and
-   * the catch-up comparison see every diagnostics-owned column. Nothing reads it back into a
-   * diagnostics field (the direction lives natively in the `volume_balance` goal). */
+   * the catch-up comparison see every diagnostics-owned column. Read back only to break a tie
+   * when the `goals` column stores BOTH `volume` and `less_volume` (table M's
+   * `volumeDirection`). */
   desired_volume: string | null
   /** Main #611 (F1), written by the quiz link since 2026-09-25. Optional so snapshots that
    * predate the column still type-check; an absent value reads as `null`. Imported back as
@@ -82,14 +86,16 @@ const COLUMN_TO_CHEMICAL_TREATMENT: Partial<Record<ChemicalTreatment, ChemicalTr
   invert(CHEMICAL_TREATMENT_TO_COLUMN)
 
 /**
- * Many-to-one legacy concern/goal projections have no computable inverse, so these two tables
- * are written out. They mirror `CONCERN_TO_PROFILE_CONCERN_MAP` / `GOAL_TO_PROFILE_GOAL_MAP`
- * (`src/lib/quiz/normalization.ts`) collapsed onto the native vocabulary, plus the
- * legacy-only values (`thinning`, `strengthen`, `less_split_ends`) that map onto the nearest
- * native family. `dandruff`/`oily_scalp` and `healthier_hair`/`color_protection` have no
- * native equivalent at all and are dropped.
+ * Migration table M (Nick, 2026-09-30), written out because many-to-one legacy projections have
+ * no computable inverse. Every legacy value NOT listed is dropped, never coerced into a
+ * neighbour: goals `healthier_hair`/`color_protection` (a row left with no goal keeps an empty
+ * list), concern `oily_scalp` (the scalp type carries it). `dandruff` is handled apart (see
+ * `DANDRUFF_CONCERN`). Keys are plain strings: historical rows carry values the current
+ * vocabulary no longer lists (`defined_curls`, `less_breakage`).
  */
-const COLUMN_CONCERN_TO_DIAGNOSTIC_CONCERN: Partial<Record<ProfileConcern, DiagnosticConcern>> = {
+const COLUMN_CONCERN_TO_DIAGNOSTIC_CONCERN: Partial<
+  Record<ProfileConcern | (string & {}), DiagnosticConcern>
+> = {
   hair_damage: "hair_damage",
   breakage: "breakage",
   split_ends: "split_ends",
@@ -100,17 +106,40 @@ const COLUMN_CONCERN_TO_DIAGNOSTIC_CONCERN: Partial<Record<ProfileConcern, Diagn
   thinning: "hair_loss_or_thinning",
 }
 
-const COLUMN_GOAL_TO_DIAGNOSTIC_GOAL: Partial<Record<Goal, DiagnosticGoal>> = {
+const COLUMN_GOAL_TO_DIAGNOSTIC_GOAL: Partial<Record<Goal | (string & {}), DiagnosticGoal>> = {
   moisture: "moisture",
   shine: "shine",
   less_frizz: "frizz_surface",
   curl_definition: "shape_definition",
+  defined_curls: "shape_definition",
+  healthy_scalp: "scalp_balance",
   anti_breakage: "strength_ends",
+  less_breakage: "strength_ends",
   strengthen: "strength_ends",
   less_split_ends: "strength_ends",
-  healthy_scalp: "scalp_balance",
   volume: "volume_balance",
   less_volume: "volume_balance",
+}
+
+/** Table M: a legacy `dandruff` concern is a SCALP concern — `oily_dandruff` in
+ * `scalpConcerns`, never a hair concern in `currentConcerns`. */
+const DANDRUFF_CONCERN = "dandruff"
+
+/** Table M, volume direction ("keep the stored direction for existing profiles"): the legacy
+ * `goals` column stored `volume` / `less_volume`, which both collapse onto `volume_balance`.
+ * Both stored at once (historically possible) is decided by the stored `desired_volume`,
+ * else "volume" wins — exactly as `deriveDesiredVolumeFromGoals` decided it. */
+function storedVolumeDirection(
+  goals: readonly string[] | null,
+  desiredVolume: string | null,
+): "more" | "less" | undefined {
+  if (!goals) return undefined
+  const more = goals.includes("volume")
+  const less = goals.includes("less_volume")
+  if (more && less) return desiredVolume === "less" ? "less" : "more"
+  if (more) return "more"
+  if (less) return "less"
+  return undefined
 }
 
 /** A null column is "never answered" -> the field is omitted; a value the native vocabulary
@@ -151,6 +180,16 @@ function translateScalpCondition(
   return concern ? [concern] : undefined
 }
 
+/** `scalp_condition` plus table M's `dandruff` concern (added once, after what the condition
+ * already says). */
+function translateScalpConcerns(columns: LegacyDiagnosticColumns): ScalpConcernInput[] | undefined {
+  const fromCondition = translateScalpCondition(columns.scalp_condition, columns.scalp_type)
+  if (!columns.concerns?.includes(DANDRUFF_CONCERN)) return fromCondition
+  const scalpConcerns = [...(fromCondition ?? [])]
+  if (!scalpConcerns.includes("oily_dandruff")) scalpConcerns.push("oily_dandruff")
+  return scalpConcerns
+}
+
 /** True when the row carries at least one legacy diagnostics answer. A row with nothing in
  * any of the 11 columns must NOT get a synthesised diagnostics document (it would claim
  * knowledge the row does not have and would bump `facts_revision` past the backfill guard). */
@@ -181,6 +220,9 @@ export function legacyColumnsToDiagnostics(
   const chemicalTreatments = mapArray(columns.chemical_treatment, COLUMN_TO_CHEMICAL_TREATMENT)
   const currentConcerns = mapArray(columns.concerns, COLUMN_CONCERN_TO_DIAGNOSTIC_CONCERN)
   const goals = mapArray(columns.goals, COLUMN_GOAL_TO_DIAGNOSTIC_GOAL)
+  const volumeDirection = goals?.includes("volume_balance")
+    ? storedVolumeDirection(columns.goals, columns.desired_volume)
+    : undefined
   const primaryPick = columns.primary_concern
     ? COLUMN_CONCERN_TO_DIAGNOSTIC_CONCERN[columns.primary_concern as ProfileConcern]
     : undefined
@@ -198,14 +240,12 @@ export function legacyColumnsToDiagnostics(
       parseScalar(shape.elasticResponse, columns.protein_moisture_balance),
     ),
     ...defined("scalpOiliness", parseScalar(shape.scalpOiliness, columns.scalp_type)),
-    ...defined(
-      "scalpConcerns",
-      translateScalpCondition(columns.scalp_condition, columns.scalp_type),
-    ),
+    ...defined("scalpConcerns", translateScalpConcerns(columns)),
     ...defined("chemicalTreatments", chemicalTreatments),
     ...defined("currentConcerns", currentConcerns),
     ...defined("primaryConcern", primaryConcern),
     ...defined("goals", goals),
+    ...defined("volumeDirection", volumeDirection),
     source: {
       kind: "legacy_columns" as const,
       version: 1 as const,

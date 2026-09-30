@@ -155,6 +155,7 @@ DECLARE
   v_thickness text := p_diagnostics ->> 'thickness';
   v_density text := p_diagnostics ->> 'density';
   v_surface text := p_diagnostics ->> 'hairSurface';
+  v_volume_direction text := p_diagnostics ->> 'volumeDirection';
   v_scalp_concern text;
   v_scalp_condition text := NULL;
   -- Controller ruling 2026-09-15 (task-2-3-amendment-brief.md): chemical_treatment/
@@ -180,14 +181,21 @@ BEGIN
   END IF;
 
   -- `deriveGoals`: like mapVocabularyArray, except that `volume_balance`
-  -- resolves through `resolveVolumeBalanceGoal` (normalization.ts:300-315)
-  -- against this document's own thickness/density/texture.
+  -- follows `deriveVolumeBalanceGoal`: a stored `volumeDirection` (migration
+  -- table M — only the legacy-columns backfill sets one) keeps the profile's
+  -- direction; otherwise it resolves through `resolveVolumeBalanceGoal`
+  -- (normalization.ts:300-315) against this document's own
+  -- thickness/density/texture.
   IF pg_catalog.jsonb_typeof(p_diagnostics -> 'goals') = 'array' THEN
     FOR v_goal IN
       SELECT element FROM pg_catalog.jsonb_array_elements_text(p_diagnostics -> 'goals') AS element
     LOOP
       IF v_goal = 'volume_balance' THEN
-        IF v_thickness = 'fine' OR v_density = 'low' THEN
+        IF v_volume_direction = 'more' THEN
+          v_mapped := 'volume';
+        ELSIF v_volume_direction = 'less' THEN
+          v_mapped := 'less_volume';
+        ELSIF v_thickness = 'fine' OR v_density = 'low' THEN
           v_mapped := 'volume';
         ELSIF v_thickness = 'coarse' OR v_density = 'high'
               OR v_texture IN ('wavy', 'curly', 'coily') THEN

@@ -98,6 +98,19 @@ function deriveScalpCondition(scalpConcerns: readonly string[] | undefined): str
   return null
 }
 
+/** `volume_balance` -> legacy goal. Migration table M (Nick, 2026-09-30): a stored
+ * `volumeDirection` (only the legacy-columns backfill sets one) keeps the direction the profile
+ * already had; without one the hair-type resolver decides, as for every quiz answer. */
+function deriveVolumeBalanceGoal(diagnostics: DiagnosticsV1): string | null {
+  if (diagnostics.volumeDirection === "more") return "volume"
+  if (diagnostics.volumeDirection === "less") return "less_volume"
+  return resolveVolumeBalanceGoal({
+    thickness: diagnostics.thickness,
+    density: diagnostics.density,
+    structure: diagnostics.texture,
+  })
+}
+
 function deriveGoals(diagnostics: DiagnosticsV1): string[] {
   // Controller ruling 2026-09-15: absent -> [], not null (see DiagnosticsDerivedColumns).
   if (diagnostics.goals === undefined) return []
@@ -107,11 +120,7 @@ function deriveGoals(diagnostics: DiagnosticsV1): string[] {
   for (const value of diagnostics.goals) {
     const mapped =
       value === "volume_balance"
-        ? resolveVolumeBalanceGoal({
-            thickness: diagnostics.thickness,
-            density: diagnostics.density,
-            structure: diagnostics.texture,
-          })
+        ? deriveVolumeBalanceGoal(diagnostics)
         : (GOAL_TO_PROFILE_GOAL_MAP[value] ?? null)
 
     if (!mapped || seen.has(mapped)) continue

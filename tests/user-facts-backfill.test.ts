@@ -17,6 +17,7 @@ import {
   type BackfillNeedVersionRow,
 } from "../src/lib/user-facts/backfill/resolve-stage2-head"
 import { selectDiagnosticsSource } from "../src/lib/user-facts/backfill/select-diagnostics-source"
+import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
 import {
   planUserFactsBackfill,
   type LegacyProfileColumns,
@@ -60,6 +61,8 @@ test("legacyColumnsToDiagnostics translates a complete column snapshot into nati
     chemicalTreatments: ["lightened", "colored"],
     currentConcerns: ["dry_lengths", "frizz_flyaways", "split_ends"],
     goals: ["moisture", "frizz_surface", "volume_balance"],
+    // Migration table M: the stored `volume` goal keeps its direction.
+    volumeDirection: "more",
     source: {
       kind: "legacy_columns",
       version: 1,
@@ -67,6 +70,84 @@ test("legacyColumnsToDiagnostics translates a complete column snapshot into nati
       raw: FULL_DIAGNOSTIC_COLUMNS,
     },
   })
+})
+
+// Migration table M (Nick, 2026-09-30) — the owner-approved legacy-column translation.
+test("migration table M: every approved goal translation, dropped goals leave an empty list", () => {
+  const translate = (goals: string[]) =>
+    legacyColumnsToDiagnostics({ ...FULL_DIAGNOSTIC_COLUMNS, goals }, {}).goals
+  assert.deepEqual(translate(["moisture"]), ["moisture"])
+  assert.deepEqual(translate(["shine"]), ["shine"])
+  assert.deepEqual(translate(["less_frizz"]), ["frizz_surface"])
+  assert.deepEqual(translate(["curl_definition"]), ["shape_definition"])
+  assert.deepEqual(translate(["defined_curls"]), ["shape_definition"])
+  assert.deepEqual(translate(["curl_definition", "defined_curls"]), ["shape_definition"])
+  assert.deepEqual(translate(["healthy_scalp"]), ["scalp_balance"])
+  for (const goal of ["anti_breakage", "less_breakage", "strengthen", "less_split_ends"]) {
+    assert.deepEqual(translate([goal]), ["strength_ends"], goal)
+  }
+  assert.deepEqual(translate(["volume"]), ["volume_balance"])
+  assert.deepEqual(translate(["less_volume"]), ["volume_balance"])
+  // DROPPED — never invented into another goal; a row left with none keeps an empty list.
+  assert.deepEqual(translate(["healthier_hair", "color_protection"]), [])
+})
+
+test("migration table M: concerns, with dandruff moving to scalpConcerns and oily_scalp dropped", () => {
+  const translate = (concerns: string[], overrides: Partial<LegacyDiagnosticColumns> = {}) =>
+    legacyColumnsToDiagnostics(
+      { ...FULL_DIAGNOSTIC_COLUMNS, scalp_condition: null, ...overrides, concerns },
+      {},
+    )
+  for (const concern of ["hair_damage", "breakage", "split_ends", "tangling"]) {
+    assert.deepEqual(translate([concern]).currentConcerns, [concern], concern)
+  }
+  assert.deepEqual(translate(["dryness"]).currentConcerns, ["dry_lengths"])
+  assert.deepEqual(translate(["frizz"]).currentConcerns, ["frizz_flyaways"])
+  assert.deepEqual(translate(["hair_loss", "thinning"]).currentConcerns, ["hair_loss_or_thinning"])
+  assert.deepEqual(translate(["oily_scalp"]).currentConcerns, [])
+  assert.deepEqual(translate(["oily_scalp"]).scalpConcerns, [], "scalp type carries it")
+
+  const dandruff = translate(["dandruff", "breakage"])
+  assert.deepEqual(dandruff.currentConcerns, ["breakage"], "dandruff is NOT a hair concern")
+  assert.deepEqual(dandruff.scalpConcerns, ["oily_dandruff"])
+  // Added to whatever the scalp condition already says, never duplicated.
+  assert.deepEqual(translate(["dandruff"], { scalp_condition: "irritated" }).scalpConcerns, [
+    "irritated",
+    "oily_dandruff",
+  ])
+  assert.deepEqual(translate(["dandruff"], { scalp_condition: "dandruff" }).scalpConcerns, [
+    "oily_dandruff",
+  ])
+  // Even a row that never answered the scalp section records it.
+  assert.deepEqual(translate(["dandruff"], { scalp_type: null }).scalpConcerns, ["oily_dandruff"])
+})
+
+test("migration table M: the stored volume direction becomes volumeDirection, never a new quiz field", () => {
+  const direction = (goals: string[] | null, desired_volume: string | null = null) =>
+    legacyColumnsToDiagnostics({ ...FULL_DIAGNOSTIC_COLUMNS, goals, desired_volume }, {})
+      .volumeDirection
+  assert.equal(direction(["volume"]), "more")
+  assert.equal(direction(["moisture", "less_volume"]), "less")
+  assert.equal(direction(["moisture"]), undefined)
+  assert.equal(direction(null), undefined)
+  // Both stored (historically possible): the stored desired_volume decides, else "volume"
+  // wins exactly as `deriveDesiredVolumeFromGoals` did.
+  assert.equal(direction(["volume", "less_volume"], "less"), "less")
+  assert.equal(direction(["volume", "less_volume"], null), "more")
+
+  // Round trip through the derivation: a fine-haired row that asked for LESS volume keeps it.
+  const fineLess = legacyColumnsToDiagnostics(
+    {
+      ...FULL_DIAGNOSTIC_COLUMNS,
+      thickness: "fine",
+      goals: ["less_volume"],
+      desired_volume: "less",
+    },
+    {},
+  )
+  const derived = deriveDiagnosticsColumns(fineLess)
+  assert.deepEqual(derived.goals, ["less_volume"])
+  assert.equal(derived.desired_volume, "less")
 })
 
 test("legacyColumnsToDiagnostics omits null scalar columns instead of inventing a value", () => {

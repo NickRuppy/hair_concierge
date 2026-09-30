@@ -439,6 +439,31 @@ export const DIAGNOSTICS_DERIVATION_ROWS: readonly DerivationRow[] = [
     name: "rule 7: goals with no volume direction",
     diagnostics: diagnostics({ goals: ["moisture"] }),
   },
+  // Rule 7c (migration table M): a stored volumeDirection decides volume_balance.
+  {
+    name: "rule 7c: volumeDirection less beats a fine-thickness resolution",
+    diagnostics: diagnostics({
+      thickness: "fine",
+      goals: ["moisture", "volume_balance"],
+      volumeDirection: "less",
+    }),
+  },
+  {
+    name: "rule 7c: volumeDirection more beats a coily-texture resolution",
+    diagnostics: diagnostics({
+      texture: "coily",
+      goals: ["volume_balance"],
+      volumeDirection: "more",
+    }),
+  },
+  {
+    name: "rule 7c: volumeDirection resolves an otherwise unresolvable volume_balance",
+    diagnostics: fullDiagnostics({ goals: ["volume_balance"], volumeDirection: "less" }),
+  },
+  {
+    name: "rule 7c: volumeDirection without a volume_balance goal changes nothing",
+    diagnostics: diagnostics({ thickness: "fine", goals: ["shine"], volumeDirection: "less" }),
+  },
   {
     name: "full v3-native document",
     diagnostics: diagnostics({

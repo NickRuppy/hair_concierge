@@ -149,6 +149,12 @@ export const diagnosticsV1Schema = z
     scalpOiliness: personalPlanDurableAnswersBaseSchema.shape.scalpOiliness.optional(),
     scalpConcerns: personalPlanDurableAnswersBaseSchema.shape.scalpConcerns.optional(),
     goals: dedupeArray(personalPlanDurableAnswersBaseSchema.shape.goals.element).optional(),
+    // Migration table M (Nick, 2026-09-30: "keep the stored direction for existing
+    // profiles"): the direction of a `volume_balance` goal as the legacy `goals` column stored
+    // it (`volume` -> "more", `less_volume` -> "less"). Set ONLY by the legacy-columns backfill;
+    // new quiz answers never set it. When present it decides how `volume_balance` derives into
+    // the legacy `goals` / `desired_volume` columns; when absent the hair-type resolver does.
+    volumeDirection: z.enum(["more", "less"]).optional(),
     currentConcerns: personalPlanDurableAnswersBaseSchema.shape.currentConcerns.optional(),
     // Her stated main problem (main #611, F1): the explicit pick only, as the v3 envelope
     // carries it (`canonicalizePersonalPlanAnswers` keeps it only while it is one of
