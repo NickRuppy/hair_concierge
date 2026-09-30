@@ -1,6 +1,7 @@
 import "server-only"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { NextResponse } from "next/server"
 import { hasCompletedQuizDiagnostics } from "@/lib/quiz/completion"
 import { ProfileEditError, publishProfileEdit } from "@/lib/scan/profile-edit"
 import { prepareScannerContext } from "@/lib/scan/scanner-context"
@@ -8,7 +9,12 @@ import { readScannerProfileSource } from "@/lib/scan/scanner-context-supabase"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { parseUserFactsRow } from "@/lib/user-facts/read"
 import type { saveUserFacts } from "@/lib/user-facts/save"
-import { buildProfileAnswersFacts, type ProfileAnswers } from "./profile-answers"
+import { ERR_INVALID_DATA, ERR_UNAUTHORIZED } from "@/lib/vocabulary"
+import {
+  buildProfileAnswersFacts,
+  profileAnswersSchema,
+  type ProfileAnswers,
+} from "./profile-answers"
 
 export async function authenticatedProfileUser(client: {
   auth: { getUser: () => Promise<{ data: { user: { id: string } | null } }> }
@@ -106,5 +112,50 @@ export async function saveProfileAnswers(
     return { kind: "saved", profile: await deps.loadProfileRow(admin, userId) }
   } catch {
     throw new ProfileEditError("temporarily_unavailable")
+  }
+}
+
+const NO_STORE = { "Cache-Control": "no-store" }
+const respond = (body: unknown, status = 200) =>
+  NextResponse.json(body, { status, headers: NO_STORE })
+
+/**
+ * The HTTP handler of `POST /api/profile/answers`: session user, strict quiz-vocabulary body
+ * (400 otherwise, before anything is read), then `saveProfileAnswers`. 409 `profile_conflict`
+ * when the profile changed after this save read it; 503 for everything else that failed.
+ */
+export function createProfileAnswersPost(deps: {
+  getUserId: () => Promise<string | null>
+  save: (userId: string, answers: ProfileAnswers) => Promise<ProfileAnswersSaveResult>
+}) {
+  return async function POST(request: Request) {
+    const userId = await deps.getUserId()
+    if (!userId) return respond({ error: ERR_UNAUTHORIZED }, 401)
+
+    let body: unknown
+    try {
+      body = await request.json()
+    } catch {
+      return respond({ error: ERR_INVALID_DATA }, 400)
+    }
+    const parsed = profileAnswersSchema.safeParse(body)
+    if (!parsed.success) return respond({ error: ERR_INVALID_DATA }, 400)
+
+    try {
+      const result = await deps.save(userId, parsed.data)
+      if (result.kind === "saved") return respond({ hairProfile: result.profile })
+      return respond({
+        hairProfile: result.profile,
+        profileRevision: result.profileRevision,
+        contextRevision: result.contextRevision,
+      })
+    } catch (error) {
+      if (error instanceof ProfileEditError) {
+        const status =
+          error.code === "profile_conflict" ? 409 : error.code === "profile_required" ? 403 : 503
+        return respond({ error: error.code }, status)
+      }
+      return respond({ error: "temporarily_unavailable" }, 503)
+    }
   }
 }

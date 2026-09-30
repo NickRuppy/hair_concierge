@@ -2,10 +2,16 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import * as answersRoute from "../src/app/api/profile/answers/route"
-import { saveProfileAnswers, type ProfileAnswersSaveDeps } from "../src/lib/hair-profile/edit-route"
+import {
+  createProfileAnswersPost,
+  saveProfileAnswers,
+  type ProfileAnswersSaveDeps,
+} from "../src/lib/hair-profile/edit-route"
 import { profileAnswersSchema, type ProfileAnswers } from "../src/lib/hair-profile/profile-answers"
+import { ProfileEditError } from "../src/lib/scan/profile-edit"
 import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
 import { diagnosticsV1Schema } from "../src/lib/user-facts/schema"
+import { ERR_INVALID_DATA } from "../src/lib/vocabulary"
 
 /**
  * Clean-switch task 5: `saveProfileAnswers` — the service behind `POST /api/profile/answers`.
@@ -211,4 +217,80 @@ test("a door failure other than a conflict is temporarily_unavailable", async ()
   await assert.rejects(saveProfileAnswers(deps, userId, answers({ goals: ["shine"] })), {
     code: "temporarily_unavailable",
   })
+})
+
+// ---------------------------------------------------------------------------
+// Fix round 2 (7): the HTTP handler itself
+// ---------------------------------------------------------------------------
+
+function handler(overrides: { userId?: string | null; save?: () => Promise<never> } = {}) {
+  const saves: unknown[] = []
+  const POST = createProfileAnswersPost({
+    getUserId: async () => ("userId" in overrides ? overrides.userId! : userId),
+    save: async (owner, body) => {
+      saves.push({ owner, body })
+      if (overrides.save) return overrides.save()
+      return { kind: "saved", profile: { user_id: owner } }
+    },
+  })
+  return { POST, saves }
+}
+
+const request = (body: unknown) =>
+  new Request("http://localhost/api/profile/answers", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: typeof body === "string" ? body : JSON.stringify(body),
+  })
+
+test("fix round 2 (7) adversarial: a legacy-vocabulary payload is a 400 at the route, nothing is read or saved", async () => {
+  for (const body of [
+    { goals: ["volume"] },
+    { goals: ["less_volume", "healthier_hair"] },
+    { currentConcerns: ["dryness"] },
+    { hair_texture: "wavy" },
+    { concerns: ["frizz"] },
+    { hairSurface: "slightly_rough" },
+    { chemicalTreatments: ["bleached"] },
+    { scalpConcerns: ["dandruff"] },
+    { goals: ["shine"], desired_volume: "more" },
+    {},
+  ]) {
+    const { POST, saves } = handler()
+    const response = await POST(request(body))
+    assert.equal(response.status, 400, JSON.stringify(body))
+    assert.deepEqual(await response.json(), { error: ERR_INVALID_DATA })
+    assert.equal(saves.length, 0, JSON.stringify(body))
+  }
+  const { POST, saves } = handler()
+  assert.equal((await POST(request("{not json"))).status, 400)
+  assert.equal(saves.length, 0)
+})
+
+test("fix round 2 (7): the route answers 401 without a session, 409 on a conflict, 503 otherwise", async () => {
+  const anonymous = handler({ userId: null })
+  assert.equal((await anonymous.POST(request({ goals: ["shine"] }))).status, 401)
+  assert.equal(anonymous.saves.length, 0)
+
+  const conflict = handler({
+    save: async () => {
+      throw new ProfileEditError("profile_conflict")
+    },
+  })
+  const conflicted = await conflict.POST(request({ goals: ["shine"] }))
+  assert.equal(conflicted.status, 409)
+  assert.deepEqual(await conflicted.json(), { error: "profile_conflict" })
+
+  const outage = handler({
+    save: async () => {
+      throw new Error("boom")
+    },
+  })
+  assert.equal((await outage.POST(request({ goals: ["shine"] }))).status, 503)
+
+  const ok = handler()
+  const saved = await ok.POST(request({ goals: ["shine"] }))
+  assert.equal(saved.status, 200)
+  assert.deepEqual(await saved.json(), { hairProfile: { user_id: userId } })
+  assert.deepEqual(ok.saves, [{ owner: userId, body: { goals: ["shine"] } }])
 })
