@@ -879,6 +879,61 @@ export const CARE_HABITS_DERIVATION_ROWS: readonly DerivationRow[] = [
       },
     }),
   },
+  // Rule 12b (Nick 2026-09-30, decision 2): no per-source protection answer -> an owned
+  // heat protectant (currentProductCategories) decides; no heat source -> false.
+  {
+    name: "rule 12b: dryer only, heat protectant owned",
+    careHabits: careHabits({
+      currentProductCategories: ["shampoo", "heat_protectant"],
+      dryingRoutes: ["ordinary_blow_dry"],
+      heatEvents: { "heat:ordinary_blow_dry": { frequency: "weekly_3_4x" } },
+    }),
+  },
+  {
+    name: "rule 12b: dryer only, no heat protectant owned",
+    careHabits: careHabits({
+      currentProductCategories: ["shampoo"],
+      dryingRoutes: ["ordinary_blow_dry"],
+      heatEvents: { "heat:ordinary_blow_dry": { frequency: "weekly_3_4x" } },
+    }),
+  },
+  {
+    name: "rule 12b: dryer selected without a level, heat protectant owned",
+    careHabits: careHabits({
+      currentProductCategories: ["heat_protectant"],
+      dryingRoutes: ["ordinary_blow_dry"],
+    }),
+  },
+  {
+    name: "rule 12b: iron with per-source protection, no category",
+    careHabits: careHabits({
+      additionalHeatTools: ["straightener"],
+      heatEvents: {
+        "heat:straightener": { frequency: "weekly_1x", protectionConsistency: "always" },
+      },
+    }),
+  },
+  {
+    name: "rule 12b: iron answered 'no' beats an owned heat protectant",
+    careHabits: careHabits({
+      currentProductCategories: ["heat_protectant"],
+      additionalHeatTools: ["straightener"],
+      heatEvents: { "heat:straightener": { frequency: "weekly_1x", protectionConsistency: "no" } },
+    }),
+  },
+  {
+    name: "rule 12b: heat protectant owned, no heat at all",
+    careHabits: careHabits({
+      currentProductCategories: ["heat_protectant"],
+      dryingRoutes: ["air_dry"],
+      additionalHeatTools: [],
+      heatEvents: {},
+    }),
+  },
+  {
+    name: "rule 12b: heat protectant owned, heat questions never answered",
+    careHabits: careHabits({ currentProductCategories: ["heat_protectant"] }),
+  },
   {
     name: "rule 12: unsure protection",
     careHabits: careHabits({

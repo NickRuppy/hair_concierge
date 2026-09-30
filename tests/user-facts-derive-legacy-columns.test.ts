@@ -430,6 +430,72 @@ test("rule 12: uses_heat_protection is true only if every protection-carrying ev
   assert.equal(ordinaryPlusAlways.uses_heat_protection, true)
 })
 
+test("rule 12b (Nick 2026-09-30, decision 2): with no per-source protection answer, an owned heat protectant decides", () => {
+  // Dryer-only + heat protectant in the product categories -> true.
+  const dryerOnlyWithCategory = deriveCareHabitsColumns(
+    careHabits({
+      currentProductCategories: ["shampoo", "heat_protectant"],
+      dryingRoutes: ["ordinary_blow_dry"],
+      heatEvents: { "heat:ordinary_blow_dry": { frequency: "weekly_1x" } },
+    }),
+  )
+  assert.equal(dryerOnlyWithCategory.uses_heat_protection, true)
+
+  // Dryer-only without it -> false (unchanged).
+  const dryerOnlyWithout = deriveCareHabitsColumns(
+    careHabits({
+      currentProductCategories: ["shampoo"],
+      dryingRoutes: ["ordinary_blow_dry"],
+      heatEvents: { "heat:ordinary_blow_dry": { frequency: "weekly_1x" } },
+    }),
+  )
+  assert.equal(dryerOnlyWithout.uses_heat_protection, false)
+
+  // A dryer with no heat level recorded yet still counts as a selected heat source.
+  const dryerNoLevelWithCategory = deriveCareHabitsColumns(
+    careHabits({
+      currentProductCategories: ["heat_protectant"],
+      dryingRoutes: ["ordinary_blow_dry"],
+    }),
+  )
+  assert.equal(dryerNoLevelWithCategory.uses_heat_protection, true)
+
+  // An iron with its own per-source answer and no category: the per-source answer decides.
+  const ironAlwaysNoCategory = deriveCareHabitsColumns(
+    careHabits({
+      additionalHeatTools: ["straightener"],
+      heatEvents: {
+        "heat:straightener": { frequency: "weekly_1x", protectionConsistency: "always" },
+      },
+    }),
+  )
+  assert.equal(ironAlwaysNoCategory.uses_heat_protection, true)
+
+  // A per-source answer is more specific than the category: "no" stays no.
+  const ironNoWithCategory = deriveCareHabitsColumns(
+    careHabits({
+      currentProductCategories: ["heat_protectant"],
+      additionalHeatTools: ["straightener"],
+      heatEvents: { "heat:straightener": { frequency: "weekly_1x", protectionConsistency: "no" } },
+    }),
+  )
+  assert.equal(ironNoWithCategory.uses_heat_protection, false)
+
+  // Category present with no heat at all -> false: the column says whether she protects her hair
+  // when she uses heat; with no heat source there is nothing it could describe.
+  for (const noHeat of [
+    careHabits({ currentProductCategories: ["heat_protectant"] }),
+    careHabits({
+      currentProductCategories: ["heat_protectant"],
+      dryingRoutes: ["air_dry"],
+      additionalHeatTools: [],
+      heatEvents: {},
+    }),
+  ]) {
+    assert.equal(deriveCareHabitsColumns(noHeat).uses_heat_protection, false)
+  }
+})
+
 test("rule 13: towel_material/towel_technique copy through, no_towel drops technique, absent -> null", () => {
   const withTechnique = deriveCareHabitsColumns(
     careHabits({ towel: { material: "mikrofaser", technique: "gentle_press" } }),

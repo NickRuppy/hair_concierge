@@ -231,8 +231,14 @@ function deriveHeatColumns(careHabits: CareHabitsV1): HeatColumns {
   // `STAGE2_HEAT_EVENT_SOURCES` in place), so a single pass over it is sufficient.
   const styling_tools = mapVocabularyArray(selectedSources, HEAT_SOURCE_TO_STYLING_TOOL) ?? []
 
+  // Rule 12/12b (Nick 2026-09-30, decision 2): the per-source answers decide when there are any;
+  // a selected heat source with no protection slot or no answer yet (a dryer-only profile) falls
+  // back to an owned heat protectant in `currentProductCategories`. No heat source selected ->
+  // false (above): the column only describes protection while using heat.
   const uses_heat_protection =
-    protectionValues.length > 0 && protectionValues.every((value) => value === "always")
+    protectionValues.length > 0
+      ? protectionValues.every((value) => value === "always")
+      : (careHabits.currentProductCategories ?? []).includes("heat_protectant")
 
   return { heat_styling, styling_tools, uses_heat_protection }
 }

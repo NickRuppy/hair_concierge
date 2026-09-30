@@ -388,9 +388,9 @@ BEGIN
           END IF;
         END IF;
 
-        -- `uses_heat_protection`: true only when at least one event carries a
-        -- protection answer and every such answer is "always". Ordinary blow-dry
-        -- carries none, so it neither helps nor hurts.
+        -- `uses_heat_protection`: when at least one event carries a protection
+        -- answer, true only when every such answer is "always". Ordinary blow-dry
+        -- carries none, so it neither helps nor hurts (see the fallback below).
         v_protection := v_event ->> 'protectionConsistency';
         IF v_protection IS NOT NULL THEN
           v_protection_count := v_protection_count + 1;
@@ -408,7 +408,17 @@ BEGIN
         FROM pg_catalog.unnest(v_selected) AS source;
       v_styling_tools :=
         COALESCE(public.user_facts_map_vocabulary_array_v1(v_selected_json, c_styling_tool), '[]'::jsonb);
-      v_uses_heat_protection := v_protection_count > 0 AND v_all_always;
+      -- Rule 12b (Nick 2026-09-30, decision 2): no protection answer at all among
+      -- the selected sources (a dryer-only profile) -> an owned heat protectant in
+      -- currentProductCategories decides. No selected source -> false (above).
+      IF v_protection_count > 0 THEN
+        v_uses_heat_protection := v_all_always;
+      ELSE
+        v_uses_heat_protection := COALESCE(
+          pg_catalog.jsonb_typeof(p_care_habits -> 'currentProductCategories') = 'array'
+            AND (p_care_habits -> 'currentProductCategories') @> '"heat_protectant"'::jsonb,
+          false);
+      END IF;
     END IF;
   END IF;
 
