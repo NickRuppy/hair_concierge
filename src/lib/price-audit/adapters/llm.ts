@@ -136,41 +136,49 @@ export function extractJsonAnswer(output: string): Record<string, unknown> | nul
   // (e.g. hundreds of thousands of stray braces) cheap: late attempts scan
   // only short suffixes, and the caps bound everything else.
   const text = output.length > MAX_SCAN_CHARS ? output.slice(-MAX_SCAN_CHARS) : output
+  // Forward span walk: each anchor is the OUTERMOST balanced object from the
+  // current position, and the position then jumps past its end — a nested
+  // object can never become an anchor, so nesting is established structurally
+  // rather than heuristically (which proved steerable). The last top-level
+  // object carrying the boolean `found` wins. A char-visit work budget bounds
+  // hostile input: exhausting it returns what was found so far (possibly
+  // null), which honestly lands the row in the review lane.
+  let answer: Record<string, unknown> | null = null
+  let workBudget = SCAN_WORK_BUDGET
   let attempts = 0
-  // The provisional answer stays provisional until the scan shows no earlier
-  // parseable object ENCLOSES it — a nested `found` inside a log object must
-  // never hijack the answer; only the top-level object counts.
-  let candidate: { start: number; end: number; value: Record<string, unknown> } | null = null
-  for (
-    let start = text.lastIndexOf("{");
-    start !== -1 && attempts < MAX_PARSE_ATTEMPTS;
-    start = start === 0 ? -1 : text.lastIndexOf("{", start - 1)
-  ) {
-    attempts++
+  let position = 0
+  while (position < text.length && workBudget > 0 && attempts < MAX_PARSE_ATTEMPTS) {
+    const start = text.indexOf("{", position)
+    if (start === -1) break
     const end = matchingBrace(text, start)
-    if (end === -1) continue
-    let parsed: unknown
-    try {
-      parsed = JSON.parse(text.slice(start, end + 1))
-    } catch {
+    workBudget -= (end === -1 ? text.length : end + 1) - start
+    if (end === -1) {
+      // Unbalanced from this anchor (stray brace in prose/code): skip it.
+      position = start + 1
       continue
     }
-    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) continue
-    const record = parsed as Record<string, unknown>
-    const hasSchema = typeof record.found === "boolean"
-    if (candidate && end > candidate.end) {
-      // This earlier object encloses the candidate: the candidate was nested.
-      // The encloser replaces it when it is itself an answer, else drops it.
-      candidate = hasSchema ? { start, end, value: record } : null
-    } else if (!candidate && hasSchema) {
-      candidate = { start, end, value: record }
+    attempts++
+    try {
+      const parsed: unknown = JSON.parse(text.slice(start, end + 1))
+      if (
+        typeof parsed === "object" &&
+        parsed !== null &&
+        !Array.isArray(parsed) &&
+        typeof (parsed as Record<string, unknown>).found === "boolean"
+      ) {
+        answer = parsed as Record<string, unknown>
+      }
+    } catch {
+      // Balanced but not JSON — move on.
     }
+    position = end + 1
   }
-  return candidate?.value ?? null
+  return answer
 }
 
 const MAX_SCAN_CHARS = 256 * 1024
-const MAX_PARSE_ATTEMPTS = 100
+const MAX_PARSE_ATTEMPTS = 200
+const SCAN_WORK_BUDGET = 8 * MAX_SCAN_CHARS
 
 function matchingBrace(text: string, start: number): number {
   let depth = 0

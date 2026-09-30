@@ -137,11 +137,13 @@ test("evidence gate accepts known retailers, the stored shop host, and exact bra
   assert.equal(isAcceptableEvidenceUrl("https://neqi-hair.com/products/x", "Neqi", null), false)
 })
 
-test("extractJsonAnswer stays linear on large malformed output", () => {
+test("extractJsonAnswer stays bounded on large malformed output", () => {
   const hostile = "{".repeat(200_000)
   const started = performance.now()
   assert.equal(extractJsonAnswer(hostile), null)
-  assert.equal(extractJsonAnswer(`${hostile} {"found":true}`)?.found, true)
+  // A massive brace flood exhausts the work budget: bailing to null is the
+  // honest bounded outcome (the row lands in the review lane).
+  assert.equal(extractJsonAnswer(`${hostile} {"found":true}`), null)
   assert.ok(performance.now() - started < 1_000, "scan must stay fast on hostile input")
 })
 
@@ -184,6 +186,20 @@ test("extractJsonAnswer takes the final schema answer out of noisy cli output", 
   )
   // And a nested answer-shaped object alone is still no answer.
   assert.equal(extractJsonAnswer('{"log":{"found":true,"price_eur":1}}'), null)
+  // Cap-exhaustion steering (review finding): noise braces inside the
+  // wrapper's string must not let its nested payload become the answer.
+  const nestedPayload =
+    '{"found":true,"price_eur":34,"buyable_at_stored_link":true,"evidence_url":"https://olaplex.de/x","observed_name":"x","notes":""}'
+  const wrapper = `{"noise":"${"{".repeat(99)}","log":${nestedPayload}}`
+  assert.deepEqual(extractJsonAnswer(`{"found":false,"notes":""} ${wrapper}`), {
+    found: false,
+    notes: "",
+  })
+  // A few stray prose/code braces before the answer are recovered from.
+  assert.deepEqual(extractJsonAnswer('function f() { code\n{"found":true,"notes":""}'), {
+    found: true,
+    notes: "",
+  })
 })
 
 test("prompt contains the anti-aggregator and default-size rules", () => {
