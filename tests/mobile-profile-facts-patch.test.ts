@@ -125,7 +125,11 @@ test("hand edit: every answer group is named, source and quiz time stay, editedA
 
 test("hand edit: a newer quiz replaces it, an older one does not (plan §3)", () => {
   const stored = quizFacts()
-  const write = buildMobileHandEditFacts({ answers: ANSWERS, stored, now: NOW })
+  const write = buildMobileHandEditFacts({
+    answers: { ...ANSWERS, thickness: "coarse" },
+    stored,
+    now: NOW,
+  })
   const after = {
     diagnostics: merge(stored.diagnostics, write.diagnostics.patch),
     provenance: { diagnostics: write.diagnostics.provenance },
@@ -140,8 +144,8 @@ test("hand edit: a saved legacy volume goal keeps its stored direction; the new 
     stored: quizFacts({ goals: ["volume_balance"], volumeDirection: "less" }),
     now: NOW,
   })
-  assert.deepEqual(kept.diagnostics.patch.goals, ["volume_balance"])
-  assert.equal(kept.diagnostics.patch.volumeDirection, "less")
+  // The stored goal handed back unchanged is no change at all (rule: a no-op is not an edit).
+  assert.deepEqual(kept.diagnostics.patch, {})
   assert.deepEqual(
     kept.columns.goals,
     ["less_volume"],
@@ -192,14 +196,31 @@ test("hand edit: a stated main problem is set when answered and left alone when 
 
 test("hand edit: an unchanged value keeps its provenance marker (an assumed default stays assumed)", () => {
   const stored = quizFacts({}, { density: "assumed", texture: "user" })
-  const write = buildMobileHandEditFacts({ answers: ANSWERS, stored, now: NOW })
-  assert.equal(write.diagnostics.provenance.fields, undefined, "nothing changed, nothing re-marked")
   const changed = buildMobileHandEditFacts({
     answers: { ...ANSWERS, density: "high" },
     stored,
     now: NOW,
   })
   assert.deepEqual(changed.diagnostics.provenance.fields, { density: "user" })
+})
+
+test("hand edit: an edit that changes no value is not an edit (no editedAt, stored provenance verbatim)", () => {
+  const stored = quizFacts({}, { density: "assumed", texture: "user" })
+  const write = buildMobileHandEditFacts({ answers: ANSWERS, stored, now: NOW })
+  assert.deepEqual(write.diagnostics.patch, {})
+  assert.deepEqual(write.diagnostics.provenance, stored.provenance.diagnostics)
+  assert.equal(write.diagnostics.provenance.editedAt, undefined)
+  assert.deepEqual(write.columns, deriveDiagnosticsColumns(stored.diagnostics!))
+
+  // A previous edit's editedAt survives a later no-op edit (its provenance is re-sent as is).
+  const edited = {
+    ...stored,
+    provenance: {
+      diagnostics: { ...stored.provenance.diagnostics!, editedAt: EARLIER },
+    },
+  }
+  const again = buildMobileHandEditFacts({ answers: ANSWERS, stored: edited, now: NOW })
+  assert.equal(again.diagnostics.provenance.editedAt, EARLIER)
 })
 
 test("completion (registration missing mode): only the missing groups are named", () => {

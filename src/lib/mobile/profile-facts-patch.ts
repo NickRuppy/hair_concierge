@@ -5,24 +5,24 @@ import {
   quizSupersedesFacts,
   quizWinnerDiagnosticsWrite,
 } from "@/lib/user-facts/account-link"
+import { deriveDiagnosticsColumns } from "@/lib/user-facts/derive-legacy-columns"
 import {
-  deriveDiagnosticsColumns,
-  type DiagnosticsDerivedColumns,
-} from "@/lib/user-facts/derive-legacy-columns"
+  PROFILE_SOURCE_LEAD_ID,
+  ProfileFactsError,
+  buildHandEditFacts,
+  mergeDiagnosticsPatch,
+  validatedDiagnosticsWrite,
+  type HandEditFactsWrite,
+  type HandEditField,
+  type HandEditValues,
+} from "@/lib/user-facts/hand-edit"
 import { projectLegacyLeadToFacts } from "@/lib/user-facts/project-legacy-lead"
 import type { UserFacts } from "@/lib/user-facts/read"
 import {
   DIAGNOSTICS_SCHEMA_VERSION,
   QUIZ_CONTEXT_SCHEMA_VERSION,
-  diagnosticsPatchSchema,
-  diagnosticsV1Schema,
   domainProvenanceSchema,
   quizContextPatchSchema,
-  type DiagnosticsPatch,
-  type DiagnosticsV1,
-  type DomainProvenance,
-  type FieldProvenanceValue,
-  type QuizContextPatch,
 } from "@/lib/user-facts/schema"
 
 /**
@@ -31,7 +31,8 @@ import {
  * German-keyed) quiz answers. Deterministic and I/O-free; the vocabulary conversion is the
  * existing legacy-lead projection (`projectLegacyLeadToFacts` → `buildLegacyQuizStage1Source`
  * → `resolveVisibleDiagnosticGoals`) — this module only decides WHICH projected fields a write
- * names and with what provenance.
+ * names; the hand-edit rules themselves are shared with the web editors
+ * (`src/lib/user-facts/hand-edit.ts`).
  *
  * Two kinds of write:
  *  - a HAND EDIT (`buildMobileHandEditFacts`): the iOS profile edit, and the registration
@@ -58,10 +59,8 @@ export const MOBILE_ANSWER_GROUPS = [
 ] as const
 export type MobileAnswerGroup = (typeof MOBILE_ANSWER_GROUPS)[number]
 
-type DiagnosticsField = Exclude<keyof DiagnosticsV1, "source">
-
 /** Which native diagnostics fields each question group answers. */
-const FIELDS_BY_GROUP: Record<MobileAnswerGroup, readonly DiagnosticsField[]> = {
+const FIELDS_BY_GROUP: Record<MobileAnswerGroup, readonly HandEditField[]> = {
   structure: ["texture"],
   thickness: ["thickness"],
   density: ["density"],
@@ -74,33 +73,17 @@ const FIELDS_BY_GROUP: Record<MobileAnswerGroup, readonly DiagnosticsField[]> = 
   goals: ["goals", "volumeDirection"],
 }
 
-/** `diagnostics.source.leadId` for a document a hand edit has to create: there is no lead
- * behind it. Same placeholder the scanner uses for an edited source (`rebaseScannerSource`). */
-export const PROFILE_SOURCE_LEAD_ID = "profile"
+export { PROFILE_SOURCE_LEAD_ID }
 
 export type StoredFacts = Pick<
   UserFacts,
   "diagnostics" | "provenance" | "quizContext" | "legacyColumns"
 >
 
-export type MobileFactsWrite = {
-  diagnostics: { patch: DiagnosticsPatch; provenance: DomainProvenance }
-  quizContext?: { patch: QuizContextPatch; provenance: DomainProvenance }
-  /** The 13 diagnostics columns `user_facts_save_v1` derives from the merged document (the TS
-   * oracle, parity-tested against the SQL) — what the row will hold after the write. */
-  columns: DiagnosticsDerivedColumns
-}
+export type MobileFactsWrite = HandEditFactsWrite
 
-export class MobileProfileFactsError extends Error {
-  constructor(
-    readonly code: "invalid_answers" | "not_newer" | "invalid_document",
-    message: string,
-    readonly cause?: unknown,
-  ) {
-    super(message)
-    this.name = "MobileProfileFactsError"
-  }
-}
+/** The builders' refusals; one class with the web editors (`src/lib/user-facts/hand-edit.ts`). */
+export { ProfileFactsError as MobileProfileFactsError }
 
 /** The `p_facts` argument both SQL functions take. */
 export function toProfileFactsArgument(write: MobileFactsWrite): {
@@ -116,7 +99,7 @@ export function toProfileFactsArgument(write: MobileFactsWrite): {
 function parseAnswers(answers: QuizAnswers): QuizAnswers {
   const parsed = quizAnswersSchema.safeParse(answers)
   if (!parsed.success) {
-    throw new MobileProfileFactsError(
+    throw new ProfileFactsError(
       "invalid_answers",
       "mobile profile facts: the answers are not a complete quiz",
       parsed.error,
@@ -133,44 +116,6 @@ function legacyVolumeDirection(goals: readonly string[] | undefined): "more" | "
   if (goals?.includes("volume")) return "more"
   if (goals?.includes("less_volume")) return "less"
   return null
-}
-
-function sameValue(a: unknown, b: unknown): boolean {
-  const canonical = (value: unknown) =>
-    Array.isArray(value) ? JSON.stringify([...value].sort()) : JSON.stringify(value ?? null)
-  return canonical(a) === canonical(b)
-}
-
-/** `user_facts_save_v1`'s merge: the patch over the old document, a top-level null clears. */
-function mergedDocument(old: DiagnosticsV1 | null, patch: DiagnosticsPatch): DiagnosticsV1 {
-  const next: Record<string, unknown> = { ...(old ?? {}), ...patch }
-  for (const [key, value] of Object.entries(patch)) if (value === null) delete next[key]
-  const parsed = diagnosticsV1Schema.safeParse(next)
-  if (!parsed.success) {
-    // Never hand the door a document `loadUserFacts` could not read back.
-    throw new MobileProfileFactsError(
-      "invalid_document",
-      "mobile profile facts: the merged diagnostics document would be invalid",
-      parsed.error,
-    )
-  }
-  return parsed.data
-}
-
-function validated(
-  patch: DiagnosticsPatch,
-  provenance: DomainProvenance,
-): MobileFactsWrite["diagnostics"] {
-  const patchResult = diagnosticsPatchSchema.safeParse(patch)
-  const provenanceResult = domainProvenanceSchema.safeParse(provenance)
-  if (!patchResult.success || !provenanceResult.success) {
-    throw new MobileProfileFactsError(
-      "invalid_document",
-      "mobile profile facts: invalid patch or provenance",
-      patchResult.error ?? provenanceResult.error,
-    )
-  }
-  return { patch: patchResult.data, provenance: provenanceResult.data }
 }
 
 /**
@@ -199,7 +144,7 @@ export function buildMobileHandEditFacts(input: {
   const answers = parseAnswers(input.answers)
   const existing = input.stored?.diagnostics ?? null
   if (input.completion && !quizSupersedesFacts(input.stored, input.now)) {
-    throw new MobileProfileFactsError("not_newer", "mobile profile facts: a newer quiz is stored")
+    throw new ProfileFactsError("not_newer", "mobile profile facts: a newer quiz is stored")
   }
 
   const projection = projectLegacyLeadToFacts({
@@ -209,38 +154,22 @@ export function buildMobileHandEditFacts(input: {
   const newSource = !existing || existing.source.kind === "legacy_columns"
   const groups = newSource ? MOBILE_ANSWER_GROUPS : (input.groups ?? MOBILE_ANSWER_GROUPS)
 
-  const patch: Record<string, unknown> = {}
+  const values: HandEditValues = {}
   for (const group of groups) {
     for (const field of FIELDS_BY_GROUP[group]) {
       const value =
         field === "volumeDirection" ? legacyVolumeDirection(answers.goals) : projection[field]
       if (field === "primaryConcern" && value === undefined) continue
-      patch[field] = value ?? null
+      values[field] = value ?? null
     }
   }
-  const recurrence = existing?.concernRecurrence
-  const nextConcerns = patch.currentConcerns as string[] | null | undefined
-  if (recurrence && nextConcerns !== undefined && !nextConcerns?.includes(recurrence.concernId)) {
-    patch.concernRecurrence = null
-  }
-  if (newSource) patch.source = projection.source
-
-  const fields: Record<string, FieldProvenanceValue> = {}
-  for (const [field, value] of Object.entries(patch)) {
-    if (field === "source" || value === null) continue
-    if (!sameValue(existing?.[field as DiagnosticsField], value)) fields[field] = "user"
-  }
-  const diagnostics = validated(patch as DiagnosticsPatch, {
-    source: { kind: "profile_editor" },
-    schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
-    at: input.now,
-    editedAt: input.now,
-    ...(Object.keys(fields).length > 0 ? { fields } : {}),
+  return buildHandEditFacts({
+    values,
+    stored: existing,
+    storedProvenance: input.stored?.provenance.diagnostics ?? null,
+    newSource: () => projection.source,
+    now: input.now,
   })
-  return {
-    diagnostics,
-    columns: deriveDiagnosticsColumns(mergedDocument(existing, diagnostics.patch)),
-  }
 }
 
 /**
@@ -257,7 +186,7 @@ export function buildMobileQuizFacts(input: {
 }): MobileFactsWrite {
   const answers = parseAnswers(input.answers)
   if (!quizSupersedesFacts(input.stored, input.now)) {
-    throw new MobileProfileFactsError("not_newer", "mobile profile facts: a newer quiz is stored")
+    throw new ProfileFactsError("not_newer", "mobile profile facts: a newer quiz is stored")
   }
   const projection = projectLegacyLeadToFacts({
     leadId: input.leadId,
@@ -266,7 +195,7 @@ export function buildMobileQuizFacts(input: {
   }).diagnostics
   const winner = quizWinnerDiagnosticsWrite(projection, input.stored)
   const provenanceSource = { kind: "legacy_lead" as const, id: input.leadId }
-  const diagnostics = validated(winner.patch, {
+  const diagnostics = validatedDiagnosticsWrite(winner.patch, {
     source: provenanceSource,
     schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
     at: input.now,
@@ -289,7 +218,7 @@ export function buildMobileQuizFacts(input: {
     diagnostics,
     ...(quizContext ? { quizContext } : {}),
     columns: deriveDiagnosticsColumns(
-      mergedDocument(input.stored?.diagnostics ?? null, diagnostics.patch),
+      mergeDiagnosticsPatch(input.stored?.diagnostics ?? null, diagnostics.patch),
     ),
   }
 }

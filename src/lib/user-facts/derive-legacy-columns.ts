@@ -99,7 +99,7 @@ function deriveScalpCondition(scalpConcerns: readonly string[] | undefined): str
 }
 
 /** `volume_balance` -> legacy goal. Migration table M (Nick, 2026-09-30): a stored
- * `volumeDirection` (only the legacy-columns backfill sets one) keeps the direction the profile
+ * `volumeDirection` (the legacy-columns backfill and hand edits set one) keeps the direction the profile
  * already had; without one the hair-type resolver decides, as for every quiz answer. */
 function deriveVolumeBalanceGoal(diagnostics: DiagnosticsV1): string | null {
   if (diagnostics.volumeDirection === "more") return "volume"
