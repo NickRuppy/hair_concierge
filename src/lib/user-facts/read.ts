@@ -84,7 +84,26 @@ export async function loadUserFacts(
     )
   }
   if (!data) return null
+  return parseUserFactsRow(userId, data)
+}
 
+/** The `hair_profiles` columns `parseUserFactsRow` reads. Anything else on the row is ignored. */
+export type UserFactsRow = {
+  diagnostics?: unknown
+  care_habits?: unknown
+  quiz_context?: unknown
+  facts_provenance?: unknown
+  facts_revision?: unknown
+  density?: unknown
+  hair_length?: unknown
+}
+
+/** Parses an already-loaded `hair_profiles` row (e.g. the `profile` object of
+ * `scanner_context_read_source`, which is `to_jsonb(hair_profiles)`) exactly like
+ * `loadUserFacts` does: corrupt domains throw `UserFactsReadError`, absent domains are `null`,
+ * and a row without a `facts_revision` (written before the facts columns existed) counts as
+ * revision 0. */
+export function parseUserFactsRow(userId: string, data: UserFactsRow): UserFacts {
   const diagnostics = parseDomain(diagnosticsV1Schema, data.diagnostics, "diagnostics", userId)
   const careHabits = parseDomain(careHabitsV1Schema, data.care_habits, "care_habits", userId)
   const quizContext = parseDomain(quizContextV1Schema, data.quiz_context, "quiz_context", userId)
@@ -103,7 +122,7 @@ export async function loadUserFacts(
     careHabits,
     quizContext,
     provenance: provenanceResult.data,
-    revision: data.facts_revision,
+    revision: typeof data.facts_revision === "number" ? data.facts_revision : 0,
     legacyColumns: {
       density: typeof data.density === "string" ? data.density : null,
       hair_length: typeof data.hair_length === "string" ? data.hair_length : null,

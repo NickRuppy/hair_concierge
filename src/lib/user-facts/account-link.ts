@@ -156,6 +156,45 @@ function replacementPatch<Field extends string>(
   return patch
 }
 
+/**
+ * The diagnostics write of a WINNING quiz — shared by the web account link and the iOS
+ * registration (clean-switch task 4), so both follow one rule: completeness defaults fill only
+ * the holes the existing profile cannot fill (F2), the patch replaces the whole document (every
+ * field the quiz does not carry is cleared), and per-field provenance marks each field `user`,
+ * `assumed` (a default) or keeps the existing marker (a kept value). Pure: no I/O.
+ */
+export function quizWinnerDiagnosticsWrite(
+  diagnostics: DiagnosticsV1,
+  facts: Pick<UserFacts, "diagnostics" | "provenance" | "legacyColumns"> | null,
+): {
+  patch: DiagnosticsPatch
+  fields: Record<string, FieldProvenanceValue>
+  diagnostics: DiagnosticsV1
+} {
+  const completed = applyCompletenessDefaults(
+    diagnostics,
+    existingCompletenessValues({
+      diagnostics: facts?.diagnostics,
+      fields: facts?.provenance.diagnostics?.fields,
+      columns: facts?.legacyColumns,
+    }),
+  )
+  return {
+    patch: replacementPatch(completed.diagnostics, DIAGNOSTICS_FIELDS) as DiagnosticsPatch,
+    fields: quizDiagnosticsFieldProvenance(
+      completed.diagnostics,
+      completed.assumedFields,
+      completed.keptFields,
+    ),
+    diagnostics: completed.diagnostics,
+  }
+}
+
+/** A winning quiz's quiz_context as a full replacement (`{}` clears every field — F4). */
+export function quizContextReplacementPatch(quizContext: QuizContextV1): QuizContextPatch {
+  return replacementPatch(quizContext, QUIZ_CONTEXT_FIELDS) as QuizContextPatch
+}
+
 type Projection = {
   /** The quiz's own diagnostics, BEFORE completeness defaults: those depend on the existing
    * profile (F2), so they are applied per attempt against the freshly loaded facts. */
@@ -218,22 +257,9 @@ export async function writeAccountLinkFacts(
     const nowIso = new Date().toISOString()
 
     // F2: a default only fills a hole the existing profile cannot fill either.
-    const completed = applyCompletenessDefaults(
+    const { patch: diagnosticsPatch, fields: diagnosticsFields } = quizWinnerDiagnosticsWrite(
       projection.diagnostics,
-      existingCompletenessValues({
-        diagnostics: facts?.diagnostics,
-        fields: facts?.provenance.diagnostics?.fields,
-        columns: facts?.legacyColumns,
-      }),
-    )
-    const diagnosticsPatch = replacementPatch(
-      completed.diagnostics,
-      DIAGNOSTICS_FIELDS,
-    ) as DiagnosticsPatch
-    const diagnosticsFields = quizDiagnosticsFieldProvenance(
-      completed.diagnostics,
-      completed.assumedFields,
-      completed.keptFields,
+      facts,
     )
 
     if (!quizSupersedesFacts(facts, quiz.createdAt)) {
@@ -330,7 +356,7 @@ async function replaceQuizContext(
     candidate: Projection["candidate"]
   },
 ): Promise<void> {
-  const patch = replacementPatch(input.quizContext, QUIZ_CONTEXT_FIELDS) as QuizContextPatch
+  const patch = quizContextReplacementPatch(input.quizContext)
   let expectedRevision = input.expectedRevision
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
