@@ -204,6 +204,55 @@ export function buildHandEditFacts(input: {
   }
 }
 
+/**
+ * The `hair_profiles` row as `user_facts_save_v1` will leave it after a diagnostics write: the
+ * derived columns, the merged document and its merged provenance (the door's steps 5–6: the patch
+ * over the document, a top-level null clears; field markers accumulate, cleared fields drop out).
+ * The scanner context a publisher prepares in the same transaction reads exactly this, so the
+ * published context and the next read agree. An `unchanged` write leaves the row as it is.
+ */
+export function profileAfterDiagnosticsWrite(
+  row: Record<string, unknown> | null,
+  write: Pick<HandEditFactsWrite, "diagnostics" | "columns" | "unchanged">,
+): Record<string, unknown> {
+  const profile = { ...(row ?? {}), ...write.columns }
+  if (write.unchanged) return profile
+  const stored = diagnosticsV1Schema.safeParse(row?.diagnostics)
+  const diagnostics = mergeDiagnosticsPatch(
+    stored.success ? stored.data : null,
+    write.diagnostics.patch,
+  )
+  const oldProvenance = (row?.facts_provenance ?? {}) as Record<string, unknown>
+  const oldFields =
+    ((oldProvenance.diagnostics as DomainProvenance | undefined)?.fields as
+      | Record<string, FieldProvenanceValue>
+      | undefined) ?? {}
+  const fields: Record<string, FieldProvenanceValue> = {
+    ...oldFields,
+    ...(write.diagnostics.provenance.fields ?? {}),
+  }
+  for (const [field, value] of Object.entries(write.diagnostics.patch)) {
+    if (value === null) delete fields[field]
+  }
+  // The written envelope minus its field map (merged above) and candidates (only a preserve adds).
+  const provenance: Partial<DomainProvenance> = { ...write.diagnostics.provenance }
+  delete provenance.fields
+  delete provenance.preservedCandidates
+  const preserved = (oldProvenance.diagnostics as DomainProvenance | undefined)?.preservedCandidates
+  return {
+    ...profile,
+    diagnostics,
+    facts_provenance: {
+      ...oldProvenance,
+      diagnostics: {
+        ...provenance,
+        ...(Object.keys(fields).length > 0 ? { fields } : {}),
+        ...(preserved ? { preservedCandidates: preserved } : {}),
+      },
+    },
+  }
+}
+
 const PLACEHOLDER_SOURCE: DiagnosticsSource = {
   kind: "legacy_quiz",
   version: 1,
