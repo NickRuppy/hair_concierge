@@ -658,7 +658,7 @@ function reportLines(
   )
   row("rows keeping profile values", kept.length)
   row("rows where a later lead beat the artifact", sourceNotes.length)
-  row("rows written by a non-winning quiz's link", lastLinks.length)
+  row("rows an older quiz's link wrote (winner replaces)", lastLinks.length)
   row("tolerated differences (not edits)", tolerated.length ? countBy(tolerated) : "0")
   row("erasures (P4)", summary.erasures)
   row("conflicts (P4)", summary.conflicts)
@@ -747,12 +747,12 @@ function reportLines(
   for (const { row: loaded, plan } of sourceNotes) {
     lines.push(`  ${loaded.userId} ${plan.report.sourceNote}`)
   }
+  // Fix round 6 (I4): the winner replaces what the older quiz's link wrote — every resulting
+  // visible change is repeated here, beside the note, for the owner.
   for (const { row: loaded, plan } of lastLinks) {
     lines.push(`  ${loaded.userId} SOURCE NOTE: ${plan.report.lastLinkNote}`)
-    for (const finding of plan.report.findings.filter((entry) => entry.verdict === "last_link")) {
-      lines.push(
-        `    ${finding.column}: column=${finding.columnValue} winner's old writer=${finding.oldWriterValue}`,
-      )
+    for (const change of plan.report.visibleChanges) {
+      lines.push(`    ${change.domain}.${change.column}: ${change.before} -> ${change.after}`)
     }
   }
 

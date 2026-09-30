@@ -51,8 +51,10 @@ import {
  *     keeps them the same way (F2).
  *  6. A row that is exactly what a NON-winning quiz's link wrote (it was linked last — a lead
  *     linked by email fallback after the paid link, a re-inserted artifact) is that link, not N
- *     edits: its columns still win, as `last_link` (`unknown_historical`, no `editedAt`), and the
- *     report names the mismatch (fix round 5, I4).
+ *     edits: those columns are `last_link` and the WINNER's stated answers replace them (§3: the
+ *     quiz taken later fully replaces; fix round 6, I4 reversed fix round 5's "column wins"). The
+ *     report names the mismatch and lists every visible change. The goals column keeps rule 4's
+ *     "equal to an older own quiz's goals -> ambiguous, the column wins" (open with the owner).
  *
  * Pure: no I/O, no `server-only`.
  */
@@ -143,7 +145,7 @@ export type ColumnFinding = {
   /** `edited`: differs from the old writer (column wins); `ambiguous`: not classifiable, treated
    * as an edit; `kept`: the old writer never wrote it, the column fills the source's gap;
    * `last_link`: differs from the winner's old writer but the whole row is what a NON-winning
-   * quiz's link wrote (it was linked last) — the column wins without edit provenance. */
+   * quiz's link wrote (it was linked last) — the winner's value replaces it (fix round 6, I4). */
   verdict: "edited" | "ambiguous" | "kept" | "last_link"
   columnValue: string
   oldWriterValue: string
@@ -159,8 +161,7 @@ export type HandEditAnalysis = {
   tolerated: { column: ComparedColumn; id: ToleratedDifferenceId }[]
   /** Native fields now carrying a hand-edited (or ambiguous) column value: provenance `user`. */
   userFields: HandEditField[]
-  /** Native fields filled from a column the old writer never wrote, or from the last link of a
-   * non-winning quiz: `unknown_historical`. */
+  /** Native fields filled from a column the old writer never wrote: `unknown_historical`. */
   keptFields: HandEditField[]
   /** Anything else the owner should read (e.g. quiz-only concerns kept beside an edit). */
   notes: string[]
@@ -349,7 +350,7 @@ export type DetectHandEditsInput = {
   olderQuizGoals?: readonly string[][]
   /** What the old writer stored for a NON-winning quiz whose link the whole row still reflects
    * (`columnsMatchOldWriter`): a column that differs from the winner's but equals this one is
-   * that link, not a hand edit (fix round 5, I4). */
+   * that link, not a hand edit, and the winner's value replaces it (fix round 6, I4). */
   lastLink?: OldWriterColumns
 }
 
@@ -441,13 +442,15 @@ export function detectHandEdits(input: DetectHandEditsInput): HandEditAnalysis {
     if (verdict.kind === "tolerated") tolerated.push({ column, id: verdict.id })
     if (
       (verdict.kind === "edited" || verdict.kind === "ambiguous") &&
+      column !== "goals" &&
       input.lastLink &&
       column in input.lastLink &&
       sameColumn(column, value, input.lastLink[column])
     ) {
-      // The row is the last link of a non-winning quiz: its value stays (the visible state is
-      // never changed silently), but nobody edited it — no `user`, no `editedAt`.
-      take(column, keptFields)
+      // The row is the last link of a non-winning quiz: nobody edited it, and §3 says the quiz
+      // taken later fully replaces — the winner's native value stays, and the resulting visible
+      // change is listed for the owner (fix round 6, I4). Goals keep their own rule (open with
+      // the owner): equal to an older own quiz's is ambiguous and the column wins.
       record(column, "last_link", "the column is what a non-winning quiz's link wrote")
     } else if (verdict.kind === "edited") {
       take(column, userFields)

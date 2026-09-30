@@ -67,7 +67,8 @@ import {
  *    quiz wins over it (see `detect-hand-edits.ts`), and the P4 diff below then only shows what
  *    no rule explains.
  *  - fix round 5: a row that is exactly a NON-winning quiz's last link is that link, not edits
- *    (I4); `--catch-up` compares the columns with the STORED document when that document came
+ *    (I4) — and since fix round 6 the winner's answers replace it (§3), with a SOURCE NOTE and
+ *    every visible change in the report; `--catch-up` compares the columns with the STORED document when that document came
  *    from the winning quiz, so only what changed since `--apply` is an edit (I2).
  *
  * Pure: no I/O, no `server-only`.
@@ -141,7 +142,8 @@ export type SelectedDiagnosticsSource = {
   handEdits?: HandEditAnalysis
   /** Set when the quiz-time order put a legacy lead ahead of the attached artifact. */
   sourceOrderNote?: string
-  /** Set when the columns are exactly what a NON-winning quiz's link wrote (fix round 5, I4). */
+  /** Set when the columns are exactly what a NON-winning quiz's link wrote (fix round 5, I4);
+   * the winner replaces them (fix round 6, I4). */
   lastLinkNote?: string
   /** `--catch-up` against the stored document (fix round 5, I2): the stored document's
    * provenance, whose `editedAt` and `user` fields carry over. Absent on a first run and when a
@@ -286,10 +288,12 @@ function candidateId(candidate: Candidate): string {
   return candidate.kind === "artifact" ? candidate.artifact.id : candidate.lead.id
 }
 
+function candidateTakenAt(candidate: Candidate): string | null | undefined {
+  return candidate.kind === "artifact" ? candidate.artifact.createdAt : candidate.lead.createdAt
+}
+
 function candidateLabel(candidate: Candidate): string {
-  const createdAt =
-    candidate.kind === "artifact" ? candidate.artifact.createdAt : candidate.lead.createdAt
-  const taken = toTakenAt(createdAt)
+  const taken = toTakenAt(candidateTakenAt(candidate))
   return `${candidate.kind === "artifact" ? "artifact" : "legacy lead"} ${candidateId(candidate)}${taken ? ` (${taken})` : ""}`
 }
 
@@ -385,7 +389,13 @@ export function selectDiagnosticsSource(
             const written = oldWriterOf(other)
             if (!written || !columnsMatchOldWriter(input.columns, written)) continue
             handEdits = detect(written)
-            lastLinkNote = `columns match quiz ${candidateLabel(other)}, winner is ${candidateLabel(candidate)}: the columns were written by the last link, kept without edit provenance`
+            const winnerTime = takenTime(candidateTakenAt(candidate))
+            const otherTime = takenTime(candidateTakenAt(other))
+            const order =
+              winnerTime !== null && otherTime !== null && winnerTime > otherTime
+                ? "taken later"
+                : "wins by precedence (quiz times unknown)"
+            lastLinkNote = `columns matched quiz ${candidateLabel(other)}, winner ${candidateLabel(candidate)} ${order}: the winner's answers replace the columns; every visible change is listed`
             break
           }
         }

@@ -182,7 +182,8 @@ export type EditTime = {
 /** Everything the dry-run report shows for one row (task 7). */
 export type BackfillRowReport = {
   sourceNote?: string
-  /** The columns are what a non-winning quiz's link wrote (fix round 5, I4). */
+  /** The columns are what a non-winning quiz's link wrote (fix round 5, I4); the winner's answers
+   * replace them and `visibleChanges` lists every change (fix round 6, I4). */
   lastLinkNote?: string
   editedGroups: DiagnosticsAnswerGroup[]
   ambiguousGroups: DiagnosticsAnswerGroup[]
