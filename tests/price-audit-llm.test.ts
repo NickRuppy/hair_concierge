@@ -200,6 +200,17 @@ test("extractJsonAnswer takes the final schema answer out of noisy cli output", 
     found: true,
     notes: "",
   })
+  // Limit exhaustion with unscanned objects left must return null, never a
+  // stale earlier answer (review finding): a later found:false could exist.
+  const positive =
+    '{"found":true,"price_eur":34,"buyable_at_stored_link":true,"evidence_url":"https://olaplex.de/x","observed_name":"x","notes":""}'
+  // Attempt-limit exhaustion via many tiny top-level objects.
+  assert.equal(
+    extractJsonAnswer(`${positive} ${"{} ".repeat(250)}{"found":false,"notes":""}`),
+    null,
+  )
+  // Work-budget exhaustion via an unbalanced brace flood after the answer.
+  assert.equal(extractJsonAnswer(`${positive} ${"{".repeat(250_000)}`), null)
 })
 
 test("prompt contains the anti-aggregator and default-size rules", () => {

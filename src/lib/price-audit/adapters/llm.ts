@@ -140,16 +140,22 @@ export function extractJsonAnswer(output: string): Record<string, unknown> | nul
   // current position, and the position then jumps past its end — a nested
   // object can never become an anchor, so nesting is established structurally
   // rather than heuristically (which proved steerable). The last top-level
-  // object carrying the boolean `found` wins. A char-visit work budget bounds
-  // hostile input: exhausting it returns what was found so far (possibly
-  // null), which honestly lands the row in the review lane.
+  // object carrying the boolean `found` wins — but ONLY when the scan
+  // actually completed. If a work or attempt limit stops the scan while
+  // unscanned objects remain, an earlier answer could be superseded by an
+  // unseen later one, so an incomplete scan always returns null and the row
+  // lands in the review lane.
   let answer: Record<string, unknown> | null = null
   let workBudget = SCAN_WORK_BUDGET
   let attempts = 0
   let position = 0
-  while (position < text.length && workBudget > 0 && attempts < MAX_PARSE_ATTEMPTS) {
+  while (position < text.length) {
     const start = text.indexOf("{", position)
     if (start === -1) break
+    if (workBudget <= 0 || attempts >= MAX_PARSE_ATTEMPTS) {
+      // A `{` remains but the limits are spent: the scan is incomplete.
+      return null
+    }
     const end = matchingBrace(text, start)
     workBudget -= (end === -1 ? text.length : end + 1) - start
     if (end === -1) {
