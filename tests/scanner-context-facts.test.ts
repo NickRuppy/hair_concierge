@@ -545,3 +545,106 @@ test("facts with another recurrence / pick than the paid v3 source: read and unc
     assert.equal(bound?.sourceHash, saved.prepared.sourceHash, label)
   }
 })
+
+// ---------------------------------------------------------------------------
+// Fix round 3, item 1: the free concern text typed on iOS is a fact and is written.
+// ---------------------------------------------------------------------------
+
+test("iOS free concern text: change, clear and unchanged on the facts", async () => {
+  const env = envelope({ currentConcernsOtherText: "Spliss am Pony" })
+  const row = backfilledRow(env)
+  assert.equal(
+    parseUserFactsRow("owner", row).diagnostics?.currentConcernsOtherText,
+    "Spliss am Pony",
+  )
+  const prefill = iosEcho(editableScannerQuizAnswers(paidRead(env, row)))
+  assert.equal(prefill.concerns_other_text, "Spliss am Pony")
+
+  // Unchanged: no edit.
+  assert.equal(
+    buildMobileHandEditFacts({
+      answers: prefill,
+      stored: parseUserFactsRow("owner", row),
+      now: NOW,
+    }).unchanged,
+    true,
+  )
+
+  // Change: written, and the next prefill shows it.
+  const db = publishHarness(paidRead(env, row))
+  await publishProfileEdit(
+    db as never,
+    "owner",
+    request({ ...prefill, concerns_other_text: " Kopfhaut juckt " }),
+  )
+  assert.equal(
+    db.published[0]!.p_facts.diagnostics.patch.currentConcernsOtherText,
+    "Kopfhaut juckt",
+  )
+  assert.deepEqual(db.published[0]!.p_facts.diagnostics.provenance.fields, {
+    currentConcernsOtherText: "user",
+  })
+  assert.equal(
+    parseUserFactsRow("owner", db.read.profile!).diagnostics?.currentConcernsOtherText,
+    "Kopfhaut juckt",
+  )
+  const next = iosEcho(editableScannerQuizAnswers(db.read))
+  assert.equal(next.concerns_other_text, "Kopfhaut juckt")
+
+  // Clear (iOS sends no text): cleared, and it stays cleared on the next load.
+  const cleared = { ...next }
+  delete cleared.concerns_other_text
+  await publishProfileEdit(db as never, "owner", request(cleared, db.read.profileRevision))
+  assert.equal(db.published[1]!.p_facts.diagnostics.patch.currentConcernsOtherText, null)
+  assert.equal(
+    parseUserFactsRow("owner", db.read.profile!).diagnostics?.currentConcernsOtherText,
+    undefined,
+  )
+  assert.equal(editableScannerQuizAnswers(db.read).concerns_other_text, undefined)
+  // A blank text is a clear too.
+  assert.equal(
+    buildMobileHandEditFacts({
+      answers: { ...next, concerns_other_text: "   " },
+      stored: parseUserFactsRow("owner", paidRead(env, row).profile!),
+      now: NOW,
+    }).diagnostics.patch.currentConcernsOtherText,
+    null,
+  )
+})
+
+test("a free concern text only a lead carries: shown, unchanged is no edit, a clear sticks", async () => {
+  const lead: QuizAnswers = {
+    structure: "wavy",
+    thickness: "fine",
+    density: "medium",
+    hair_length: "long",
+    fingertest: "rau",
+    pulltest: "stretches_bounces",
+    scalp_type: "ausgeglichen",
+    has_scalp_issue: false,
+    treatment: ["natur"],
+    concerns: ["dryness"],
+    concerns_other_text: "Meine Spitzen",
+    goals: ["moisture"],
+  }
+  const diagnostics = projectLegacyLeadToFacts({ leadId: "lead", quizAnswers: lead }).diagnostics
+  assert.equal(diagnostics.currentConcernsOtherText, undefined, "a lead projection has no text")
+  const read: ScannerSourceRead = {
+    ...paidRead(PAID_VARIANTS.V0_fixture_split_ends, factsRow(diagnostics)),
+    plan: null,
+    initial: null,
+    leads: [{ id: "lead", user_id: "owner", quiz_kind: "legacy", quiz_answers: lead }],
+  }
+  const prefill = iosEcho(editableScannerQuizAnswers(read))
+  assert.equal(prefill.concerns_other_text, "Meine Spitzen")
+
+  const db = publishHarness(read)
+  await publishProfileEdit(db as never, "owner", request(prefill))
+  assert.deepEqual(db.published[0]!.p_facts.diagnostics.patch, {}, "unchanged: nothing written")
+  assert.equal(editableScannerQuizAnswers(db.read).concerns_other_text, "Meine Spitzen")
+
+  const cleared = { ...prefill }
+  delete cleared.concerns_other_text
+  await publishProfileEdit(db as never, "owner", request(cleared, db.read.profileRevision))
+  assert.equal(editableScannerQuizAnswers(db.read).concerns_other_text, undefined, "stays cleared")
+})

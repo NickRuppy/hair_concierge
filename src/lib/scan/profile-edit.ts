@@ -126,6 +126,7 @@ export async function publishProfileEdit(
     // function guarantees the row is unchanged when they are written. The scanner context is
     // prepared from the columns the door WILL derive (the parity-tested TS oracle), so the
     // published context and the stored row can never disagree.
+    const previousQuiz = editableScannerQuizAnswers(read)
     const facts: MobileFactsWrite =
       "profileAnswers" in input
         ? buildProfileAnswersFacts({
@@ -138,11 +139,11 @@ export async function publishProfileEdit(
             answers: input.quizAnswers,
             stored: parseUserFactsRow(userId, read.profile ?? {}),
             now: new Date().toISOString(),
+            shownOtherText: previousQuiz.concerns_other_text,
           })
     // The row the door will leave: derived columns AND the merged facts document, which the
     // scanner reads first (one vocabulary).
     const profile = profileAfterDiagnosticsWrite(read.profile, facts)
-    const previousQuiz = editableScannerQuizAnswers(read)
     const priorEdit = {
       profileRevision: read.profileRevision,
       quizAnswers: previousQuiz,

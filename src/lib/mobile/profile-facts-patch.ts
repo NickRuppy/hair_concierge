@@ -73,7 +73,7 @@ const FIELDS_BY_GROUP: Record<MobileAnswerGroup, readonly HandEditField[]> = {
   pulltest: ["elasticResponse"],
   treatment: ["chemicalTreatments"],
   scalp_type: ["scalpOiliness", "scalpConcerns"],
-  concerns: ["currentConcerns", "primaryConcern"],
+  concerns: ["currentConcerns", "primaryConcern", "currentConcernsOtherText"],
   goals: ["goals", "volumeDirection"],
 }
 
@@ -132,7 +132,12 @@ function namedValues(
   for (const group of groups) {
     for (const field of FIELDS_BY_GROUP[group]) {
       const value =
-        field === "volumeDirection" ? legacyVolumeDirection(answers.goals) : projection[field]
+        field === "volumeDirection"
+          ? legacyVolumeDirection(answers.goals)
+          : field === "currentConcernsOtherText"
+            ? // The free concern text (max. 50 characters, `quizAnswersSchema`); blank clears.
+              answers.concerns_other_text?.trim() || null
+            : projection[field]
       if (field === "primaryConcern" && value === undefined) continue
       values[field] = value ?? null
     }
@@ -178,6 +183,10 @@ export function buildMobileHandEditFacts(input: {
   now: string
   groups?: readonly MobileAnswerGroup[]
   completion?: boolean
+  /** The free concern text the edit screen showed when the facts hold none (the scanner's
+   * edit-record / lead fallback, `editableScannerQuizAnswers`): handed back unchanged it is no
+   * edit, so an unchanged submit stays a no-op. */
+  shownOtherText?: string | null
 }): MobileFactsWrite {
   const answers = parseAnswers(input.answers)
   const existing = input.stored?.diagnostics ?? null
@@ -209,6 +218,13 @@ export function buildMobileHandEditFacts(input: {
         delete values[field]
     }
   }
+  if (
+    existing &&
+    existing.currentConcernsOtherText === undefined &&
+    input.shownOtherText?.trim() &&
+    values.currentConcernsOtherText === input.shownOtherText.trim()
+  )
+    delete values.currentConcernsOtherText
   return buildHandEditFacts({
     values,
     stored: existing,

@@ -363,18 +363,21 @@ function rebaseScannerSourceOnFacts(
   return { ...base, answers } as SupportedStage1Source
 }
 
-/** The iOS/edit-record answers from the facts, plus the free concern text the facts do not carry
- * (a lead or an iOS edit keeps it only in its answers) while those answers' concerns still match. */
+/** The iOS/edit-record answers from the facts, plus a free concern text the facts do not carry
+ * (a lead projection has none; an edit before fix round 3 kept it only in its answers) while those
+ * answers' concerns still match. The latest edit record is authoritative: once there is one, an
+ * older lead's text never comes back (a text cleared on iOS stays cleared). */
 function factsQuizAnswers(read: ScannerSourceRead, facts: ScannerFacts): QuizAnswers {
   const answers = diagnosticsToQuizAnswers(facts.diagnostics)
   if (answers.concerns_other_text) return answers
   const concerns = facts.diagnostics.currentConcerns
-  const withText = [
-    read.edit?.quizAnswers,
-    ...read.leads
-      .filter((lead) => lead.user_id === read.userId && lead.quiz_kind === "legacy")
-      .map((lead) => lead.quiz_answers),
-  ].find(
+  const withText = (
+    read.edit
+      ? [read.edit.quizAnswers]
+      : read.leads
+          .filter((lead) => lead.user_id === read.userId && lead.quiz_kind === "legacy")
+          .map((lead) => lead.quiz_answers)
+  ).find(
     (raw) =>
       raw?.concerns_other_text &&
       sameFactValue(
