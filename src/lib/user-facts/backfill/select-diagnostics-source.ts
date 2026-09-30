@@ -1,5 +1,6 @@
 import type { QuizAnswers } from "@/lib/quiz/types"
 
+import { applyCompletenessDefaults, type CompletenessDefaultField } from "../completeness-defaults"
 import { deriveDiagnosticsColumns } from "../derive-legacy-columns"
 import { projectArtifactToFacts } from "../project-artifact"
 import { projectLegacyLeadToFacts } from "../project-legacy-lead"
@@ -26,6 +27,12 @@ import {
  *    legacy lead) silently nulls columns legacy readers use. Nick has to see that before
  *    `--apply`, so it is listed across ALL diagnostics-owned columns, not just the six
  *    conflict fields.
+ *
+ * Decision wave 1, item B (Nick, 2026-09-30): the winning projection gets the two completeness
+ * defaults (`applyCompletenessDefaults`: density -> "medium", hair length -> "long") BEFORE the
+ * P4 diff, so the conflict/erasure report shows exactly what the write would store (a default
+ * that replaces a real column value surfaces as a conflict). The signal check runs on the
+ * projection WITHOUT defaults — a default is never a diagnostic signal.
  *
  * Pure: no I/O, no `server-only`.
  */
@@ -82,6 +89,8 @@ export type SelectedDiagnosticsSource = {
   /** The artifact id / lead id the diagnostics came from; absent for the columns branch. */
   sourceId?: string
   diagnostics: DiagnosticsV1
+  /** Completeness defaults applied to `diagnostics`; the planner records each as `assumed`. */
+  assumedFields: CompletenessDefaultField[]
   quizContext?: QuizContextV1
   conflict?: { fields: DiagnosticsColumnConflictField[]; erasures: DiagnosticsColumnErasureField[] }
   /** Higher-precedence sources that exist but could not be projected (reported, never guessed
@@ -167,11 +176,13 @@ export function selectDiagnosticsSource(
       if (!hasDiagnosticSignal(projected.diagnostics)) {
         throw new Error("no_diagnostic_signal")
       }
-      const conflict = detectConflict(projected.diagnostics, input.columns)
+      const { diagnostics, assumedFields } = applyCompletenessDefaults(projected.diagnostics)
+      const conflict = detectConflict(diagnostics, input.columns)
       return {
         sourceKind: "artifact",
         sourceId: input.artifact.id,
-        diagnostics: projected.diagnostics,
+        diagnostics,
+        assumedFields,
         quizContext: projected.quizContext,
         ...(conflict ? { conflict } : {}),
         unusableSources,
@@ -194,11 +205,13 @@ export function selectDiagnosticsSource(
       if (!hasDiagnosticSignal(projected.diagnostics)) {
         throw new Error("no_diagnostic_signal")
       }
-      const conflict = detectConflict(projected.diagnostics, input.columns)
+      const { diagnostics, assumedFields } = applyCompletenessDefaults(projected.diagnostics)
+      const conflict = detectConflict(diagnostics, input.columns)
       return {
         sourceKind: "lead",
         sourceId: input.legacyLead.id,
-        diagnostics: projected.diagnostics,
+        diagnostics,
+        assumedFields,
         ...(conflict ? { conflict } : {}),
         unusableSources,
       }
@@ -212,9 +225,13 @@ export function selectDiagnosticsSource(
   }
 
   const leadId = input.legacyLead?.id ?? input.artifact?.leadId
+  const { diagnostics, assumedFields } = applyCompletenessDefaults(
+    legacyColumnsToDiagnostics(input.columns, leadId ? { leadId } : {}),
+  )
   return {
     sourceKind: "columns",
-    diagnostics: legacyColumnsToDiagnostics(input.columns, leadId ? { leadId } : {}),
+    diagnostics,
+    assumedFields,
     unusableSources,
   }
 }

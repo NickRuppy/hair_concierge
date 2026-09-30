@@ -4,6 +4,7 @@ import type {
 } from "@/lib/personal-plan/refinement/types"
 import { BRUSH_TYPES, type BrushType } from "@/lib/vocabulary/onboarding-care"
 
+import { assumedFieldProvenance } from "../completeness-defaults"
 import { deriveCareHabitsColumns, deriveDiagnosticsColumns } from "../derive-legacy-columns"
 import { toCareHabitsPatch, toFieldProvenance } from "../from-refinement-draft"
 import {
@@ -335,6 +336,9 @@ function planDiagnosticsAndContext(
 
   if (diagnosticsGate.plan) {
     const patch: DiagnosticsPatch = { ...selected.diagnostics }
+    // Decision wave 1, item B: the completeness defaults `selectDiagnosticsSource` applied are
+    // marked `assumed` and named on the dry-run line.
+    const assumed = selected.assumedFields
     plan.writes.push({
       domain: "diagnostics",
       patch,
@@ -342,8 +346,14 @@ function planDiagnosticsAndContext(
         source: { kind: sourceKind, ...(selected.sourceId ? { id: selected.sourceId } : {}) },
         schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
         at: options.now,
+        ...(assumed.length > 0 ? { fields: assumedFieldProvenance(assumed) } : {}),
       },
       fieldCount: countFields(patch),
+      ...(assumed.length > 0
+        ? {
+            detail: `assumed ${assumed.map((field) => `${field}=${patch[field]}`).join(", ")}`,
+          }
+        : {}),
     })
   } else {
     plan.skips.push(diagnosticsGate.reason)

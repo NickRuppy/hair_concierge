@@ -954,7 +954,7 @@ test("planUserFactsBackfill falls back to the legacy care columns only when the 
   )
 })
 
-test("planUserFactsBackfill imports an incomplete column-only row without inventing values, and can write the brush alone", () => {
+test("planUserFactsBackfill imports an incomplete column-only row inventing only the two completeness defaults, and can write the brush alone", () => {
   const plan = planUserFactsBackfill(
     userRow({
       columns: {
@@ -969,9 +969,15 @@ test("planUserFactsBackfill imports an incomplete column-only row without invent
 
   const diagnostics = writeFor(plan, "diagnostics")
   assert.deepEqual(diagnostics.provenance.source, { kind: "legacy_columns" })
+  // Decision wave 1, item B: density -> "medium" and hair length -> "long" are the ONLY
+  // defaults (marked assumed); every other missing column stays absent. `raw` is the column
+  // snapshot, untouched (its density/hair_length stay null).
+  assert.deepEqual(diagnostics.provenance.fields, { density: "assumed", hairLength: "assumed" })
   assert.deepEqual(diagnostics.patch, {
     texture: "coily",
     thickness: "coarse",
+    density: "medium",
+    hairLength: "long",
     source: {
       kind: "legacy_columns",
       version: 1,
@@ -985,6 +991,59 @@ test("planUserFactsBackfill imports an incomplete column-only row without invent
   })
 
   assert.deepEqual(writeFor(plan, "care_habits").patch, { brushesCombs: ["fingers"] })
+  assert.equal(diagnostics.detail, "assumed density=medium, hairLength=long")
+})
+
+test("planUserFactsBackfill defaults only the missing hair length on a columns-only row and records it as assumed", () => {
+  const plan = planUserFactsBackfill(
+    userRow({
+      columns: { ...EMPTY_COLUMNS, hair_texture: "wavy", density: "high" },
+    }),
+    { now: NOW, catchUp: false },
+  )
+
+  const diagnostics = writeFor(plan, "diagnostics")
+  assert.equal(diagnostics.patch.hairLength, "long")
+  assert.equal(diagnostics.patch.density, "high", "a real column value is never replaced")
+  assert.deepEqual(diagnostics.provenance.fields, { hairLength: "assumed" })
+  assert.equal(diagnostics.detail, "assumed hairLength=long")
+  assert.equal(
+    (diagnostics.patch.source?.raw as LegacyProfileColumns).hair_length,
+    null,
+    "source.raw keeps the column snapshot verbatim",
+  )
+})
+
+test("planUserFactsBackfill writes no assumed markers when the winning source is complete", () => {
+  const plan = planUserFactsBackfill(
+    userRow({ artifact: { id: "artifact-1", leadId: "lead-1", quizAnswers: V3_ENVELOPE } }),
+    { now: NOW, catchUp: false },
+  )
+  const diagnostics = writeFor(plan, "diagnostics")
+  assert.equal(diagnostics.provenance.fields, undefined)
+  assert.equal(diagnostics.detail, undefined)
+})
+
+test("selectDiagnosticsSource defaults a lead's missing hair length and reports it against a real column value", () => {
+  const { hair_length: _omitted, ...answersWithoutLength } = LEGACY_QUIZ_ANSWERS
+  void _omitted
+  const selected = selectDiagnosticsSource({
+    artifact: null,
+    legacyLead: { id: "lead-old", quizAnswers: answersWithoutLength },
+    columns: { ...FULL_DIAGNOSTIC_COLUMNS, hair_length: "medium" },
+  })
+
+  assert.equal(selected.sourceKind, "lead")
+  assert.equal(selected.diagnostics.hairLength, "long")
+  assert.deepEqual(selected.assumedFields, ["hairLength"])
+  // The default is what the write would store, so the P4 diff shows it against the column.
+  assert.deepEqual(
+    selected.conflict?.fields.find((field) => field.field === "hair_length"),
+    { field: "hair_length", column: "medium", derived: "long" },
+  )
+  // `raw` is still the built legacy source without a hair length (never a plan on a guess).
+  const raw = selected.diagnostics.source.raw as { answers: { hairLength?: string } }
+  assert.equal(raw.answers.hairLength, undefined)
 })
 
 test("planUserFactsBackfill plans nothing at all for a row with no artifact, no lead and no legacy answers", () => {
@@ -1582,6 +1641,38 @@ test("runUserFactsBackfill prints a per-domain diff and writes nothing in the de
   // list, so the loader has to select it.
   const draftQuery = fake.selects.find((entry) => entry.table === "personal_plan_refinement_drafts")
   assert.equal(draftQuery?.columns.includes("completed_question_ids"), true)
+})
+
+test("runUserFactsBackfill's dry-run line names the completeness defaults a columns-only row gets", async () => {
+  const fake = fakeSupabase({
+    hair_profiles: [
+      {
+        user_id: SCRIPT_USER,
+        facts_revision: 0,
+        facts_provenance: {},
+        ...EMPTY_COLUMNS,
+        hair_texture: "coily",
+        thickness: "coarse",
+      },
+    ],
+    personal_plan_prepared_artifacts: [],
+    leads: [],
+    personal_plans: [],
+    personal_plan_need_versions: [],
+    personal_plan_refinement_drafts: [],
+  })
+  const lines: string[] = []
+
+  await runUserFactsBackfill([], {
+    supabase: fake.client as never,
+    now: NOW,
+    log: (line) => lines.push(line),
+  })
+
+  assert.equal(
+    lines[0],
+    `[dry] ${SCRIPT_USER} diagnostics <- legacy_columns (4 fields; assumed density=medium, hairLength=long)`,
+  )
 })
 
 test("runUserFactsBackfill --apply hands every planned write to user_facts_save_v1 with upsert semantics", async () => {
