@@ -102,3 +102,97 @@ test("goals edit derives persisted desired volume from selected goals", () => {
   assert.equal(deriveDesiredVolumeFromGoals(["shine"], null), null)
   assert.equal(deriveDesiredVolumeFromGoals([], null), null)
 })
+
+// ---------------------------------------------------------------------------
+// Clean-switch task 8: goals, problems and scalp complaints show the quiz's wording
+// ---------------------------------------------------------------------------
+
+function field(key: string) {
+  const config = PROFILE_FIELD_CONFIG.find((entry) => entry.key === key)
+  assert.ok(config, key)
+  return config
+}
+
+const WAVY_DIAGNOSTICS = {
+  texture: "wavy",
+  goals: ["volume_balance", "moisture", "shape_definition"],
+  currentConcerns: ["lost_shape", "dry_lengths"],
+  currentConcernsOtherText: "stumpf nach dem Föhnen",
+  scalpOiliness: "oily",
+  scalpConcerns: ["irritated", "oily_dandruff"],
+  source: { kind: "legacy_quiz", version: 1, leadId: "lead", raw: null },
+}
+
+test("goals show the quiz's wording for her hair texture, in the quiz's order", () => {
+  const profile = makeProfile({
+    hair_texture: "wavy",
+    goals: ["volume", "moisture", "curl_definition"],
+    desired_volume: "more",
+    diagnostics: WAVY_DIAGNOSTICS,
+  })
+  assert.deepEqual(field("goals").getValue(profile), [
+    "Feuchtigkeit ohne Beschweren",
+    "Mehr Wellen-Definition",
+    "Ausgewogenes Volumen",
+  ])
+})
+
+test("goals of a row without facts convert through the one legacy rule", () => {
+  const profile = makeProfile({
+    hair_texture: "curly",
+    goals: ["healthier_hair", "color_protection", "less_volume"],
+    desired_volume: "less",
+  })
+  assert.deepEqual(field("goals").getValue(profile), [
+    "Mehr Glanz",
+    "Weniger Haarbruch und Spliss",
+    "Ausgewogenes Volumen",
+  ])
+  assert.equal(field("goals").getValue(makeProfile()), null)
+})
+
+test("problems show the quiz's full wording plus her own note", () => {
+  const profile = makeProfile({ hair_texture: "wavy", diagnostics: WAVY_DIAGNOSTICS })
+  assert.deepEqual(field("concerns").getValue(profile), [
+    "Trockene oder strohige Längen",
+    "Meine Wellen verlieren schnell ihre Form",
+    "Etwas anderes: stumpf nach dem Föhnen",
+  ])
+})
+
+test("problems of a row without facts convert through table M", () => {
+  const profile = makeProfile({
+    hair_texture: "straight",
+    concerns: ["dryness", "thinning", "dandruff"],
+    scalp_type: "oily",
+  })
+  assert.deepEqual(field("concerns").getValue(profile), [
+    "Trockene oder strohige Längen",
+    "Haarausfall oder dünner werdendes Haar",
+  ])
+  assert.equal(
+    field("concerns").getValue(makeProfile({ hair_texture: "wavy", scalp_type: "oily" })),
+    "Nichts davon",
+  )
+})
+
+test("scalp complaints show every picked complaint with the quiz's wording", () => {
+  const profile = makeProfile({ hair_texture: "wavy", diagnostics: WAVY_DIAGNOSTICS })
+  assert.deepEqual(field("scalp_condition").getValue(profile), [
+    "Fettige Schuppen",
+    "Gereizte oder empfindliche Kopfhaut",
+  ])
+  const none = makeProfile({
+    diagnostics: { ...WAVY_DIAGNOSTICS, scalpConcerns: [] },
+    scalp_type: "oily",
+  })
+  assert.equal(field("scalp_condition").getValue(none), "Keine Beschwerden")
+  assert.equal(field("scalp_condition").getValue(makeProfile()), null)
+})
+
+test("a stored Welleneisen shows the combined tool label", () => {
+  assert.deepEqual(
+    field("styling_tools").getValue(makeProfile({ styling_tools: ["wave_iron", "flat_iron"] })),
+    ["Lockenstab / Welleneisen", "Glätteisen"],
+  )
+})

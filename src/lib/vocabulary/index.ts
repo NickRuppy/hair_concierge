@@ -87,12 +87,7 @@ export type { SourceType } from "./source-labels"
 
 export { ERR_UNAUTHORIZED, ERR_FORBIDDEN, ERR_INVALID_DATA, fehler } from "./errors"
 
-export {
-  TEXTURE_GOAL_PRIORITY,
-  GOAL_LABEL_OVERRIDES,
-  getOrderedGoals,
-  getGoalLabel,
-} from "./onboarding-goals"
+export { TEXTURE_GOAL_PRIORITY, getOrderedGoals } from "./onboarding-goals"
 
 export {
   PRODUCT_FREQUENCIES,

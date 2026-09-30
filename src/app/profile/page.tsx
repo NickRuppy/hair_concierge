@@ -49,17 +49,28 @@ import {
   type ProfileJourneySectionKey,
 } from "@/lib/profile/section-config"
 import { createClient } from "@/lib/supabase/client"
-import type { ChemicalTreatment, HairProfile, ProfileConcern, UserMemoryEntry } from "@/lib/types"
+import type { HairProfile, UserMemoryEntry } from "@/lib/types"
+import { fehler } from "@/lib/vocabulary"
+import { QUESTION_CONFIGS, getConcernOptions } from "@/components/personal-plan-quiz/quiz-data"
+import { TEXTURE_OPTIONS } from "@/components/personal-plan-quiz/texture-question"
+import { MAIN_PROBLEM_SHEET_TITLE } from "@/components/quiz/quiz-main-problem-sheet"
 import {
-  CHEMICAL_TREATMENT_LABELS,
-  PROFILE_CONCERN_LABELS,
-  HAIR_DENSITY_OPTIONS,
-  HAIR_TEXTURE_OPTIONS,
-  HAIR_THICKNESS_OPTIONS,
-  SCALP_CONDITION_LABELS,
-  SCALP_TYPE_LABELS,
-} from "@/lib/types"
-import { CHEMICAL_TREATMENTS, fehler, HAIR_LENGTH_OPTIONS } from "@/lib/vocabulary"
+  PROBLEM_NOTE_MAX_LENGTH,
+  buildHaarCheckPayload,
+  createHaarCheckDraft,
+  haarCheckSaveBlock,
+  pickMainProblem,
+  selectNoScalpConcern,
+  setProblemNote,
+  showsMainProblemQuestion,
+  toggleChemicalTreatment,
+  toggleProblem,
+  toggleProblemNote,
+  toggleScalpConcern,
+  type HaarCheckBlock,
+  type HaarCheckDraft,
+} from "@/lib/profile/haar-check-draft"
+import { readProfileDiagnostics } from "@/lib/user-facts/profile-diagnostics"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/providers/auth-provider"
 import { useToast } from "@/providers/toast-provider"
@@ -125,19 +136,6 @@ type JourneyField = {
   editTarget: ProfileEditTarget | null
 }
 
-type QuizDraft = {
-  hair_texture: string
-  thickness: string
-  density: string
-  hair_length: string
-  cuticle_condition: string
-  protein_moisture_balance: string
-  chemical_treatment: ChemicalTreatment[]
-  scalp_type: string
-  scalp_condition: string
-  concerns: ProfileConcern[]
-}
-
 type QuizSaveNotice =
   | { variant: "success"; title: string; description: string }
   | { variant: "error"; title: string; description: string }
@@ -159,44 +157,57 @@ const SECTION_META_BY_KEY = Object.fromEntries(
   PROFILE_SECTION_META.map((meta) => [meta.key, meta]),
 ) as Record<ProfileJourneySectionKey, (typeof PROFILE_SECTION_META)[number]>
 
-const QUIZ_SURFACE_OPTIONS = [
-  { value: "smooth", label: "Glatt wie Glas" },
-  { value: "slightly_rough", label: "Leicht uneben" },
-  { value: "rough", label: "Rau und huckelig" },
-]
+/** The quiz's own options and wording (clean-switch task 8) — one option source, no copies. */
+function quizOptions(key: keyof typeof QUESTION_CONFIGS) {
+  return (QUESTION_CONFIGS[key]?.options ?? []).map(({ value, label }) => ({ value, label }))
+}
 
-const QUIZ_ELASTICITY_OPTIONS = [
-  { value: "stretches_bounces", label: "Dehnt sich und geht zurück" },
-  { value: "stretches_stays", label: "Dehnt sich, bleibt ausgeleiert" },
-  { value: "snaps", label: "Reißt sofort" },
-]
+const HAAR_CHECK_TEXTURE_OPTIONS = TEXTURE_OPTIONS.map(({ value, label }) => ({ value, label }))
+const HAAR_CHECK_THICKNESS_OPTIONS = quizOptions("thickness")
+const HAAR_CHECK_DENSITY_OPTIONS = quizOptions("density")
+const HAAR_CHECK_LENGTH_OPTIONS = quizOptions("hair_length")
+const HAAR_CHECK_SURFACE_OPTIONS = quizOptions("hair_surface")
+const HAAR_CHECK_ELASTICITY_OPTIONS = quizOptions("elastic_response")
+const HAAR_CHECK_CHEMICAL_OPTIONS = quizOptions("chemical_treatments")
+const HAAR_CHECK_SCALP_TYPE_OPTIONS = quizOptions("scalp_oiliness")
+const HAAR_CHECK_SCALP_CONCERN_OPTIONS = quizOptions("scalp_concerns")
 
-const QUIZ_SCALP_TYPE_OPTIONS = [
-  { value: "oily", label: SCALP_TYPE_LABELS.oily },
-  { value: "balanced", label: SCALP_TYPE_LABELS.balanced },
-  { value: "dry", label: SCALP_TYPE_LABELS.dry },
-]
+/** Shown under the save button while saving is not possible yet. */
+const HAAR_CHECK_BLOCK_HINTS: Record<HaarCheckBlock, string> = {
+  problems: "Wähle bei deinen Themen mindestens eines aus oder beschreib es kurz selbst.",
+  main_problem: "Wähle noch aus, was dich am meisten stört.",
+  chemical_treatments: "Wähle bei den chemischen Behandlungen mindestens eine Antwort aus.",
+}
 
-const QUIZ_SCALP_CONDITION_OPTIONS = [
-  { value: "dandruff", label: SCALP_CONDITION_LABELS.dandruff },
-  { value: "dry_flakes", label: SCALP_CONDITION_LABELS.dry_flakes },
-  { value: "irritated", label: SCALP_CONDITION_LABELS.irritated },
-]
+function draftFromProfile(profile: HairProfile | null): HaarCheckDraft {
+  return createHaarCheckDraft(
+    readProfileDiagnostics(profile as unknown as Record<string, unknown> | null),
+  )
+}
 
-const QUIZ_CHEMICAL_TREATMENT_OPTIONS: Array<{ value: ChemicalTreatment; label: string }> =
-  CHEMICAL_TREATMENTS.map((value) => ({
-    value,
-    label: CHEMICAL_TREATMENT_LABELS[value],
-  }))
-
-const QUIZ_CONCERN_OPTIONS: Array<{ value: ProfileConcern; label: string }> = [
-  { value: "hair_damage", label: PROFILE_CONCERN_LABELS.hair_damage },
-  { value: "split_ends", label: PROFILE_CONCERN_LABELS.split_ends },
-  { value: "breakage", label: PROFILE_CONCERN_LABELS.breakage },
-  { value: "dryness", label: PROFILE_CONCERN_LABELS.dryness },
-  { value: "frizz", label: PROFILE_CONCERN_LABELS.frizz },
-  { value: "tangling", label: PROFILE_CONCERN_LABELS.tangling },
-]
+function ChoiceChip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean
+  onClick: () => void
+  children: ReactNode
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className={cn(
+        "min-h-[40px] max-w-full rounded-2xl border px-3 py-2 text-left text-sm leading-snug transition-colors",
+        active ? "border-primary bg-primary/10 text-primary" : "border-border hover:bg-muted",
+      )}
+    >
+      {children}
+    </button>
+  )
+}
 
 function buildOnboardingHref(
   step: OnboardingStep,
@@ -218,39 +229,6 @@ function buildOnboardingHref(
   return `/onboarding?${params.toString()}`
 }
 
-function createQuizDraft(profile: HairProfile | null): QuizDraft {
-  return {
-    hair_texture: profile?.hair_texture ?? "",
-    thickness: profile?.thickness ?? "",
-    density: profile?.density ?? "",
-    hair_length: profile?.hair_length ?? "",
-    cuticle_condition: profile?.cuticle_condition ?? "",
-    protein_moisture_balance: profile?.protein_moisture_balance ?? "",
-    chemical_treatment: profile?.chemical_treatment ?? [],
-    scalp_type: profile?.scalp_type ?? "",
-    scalp_condition: profile?.scalp_condition ?? "",
-    concerns: profile?.concerns ?? [],
-  }
-}
-
-function toggleChemicalTreatment(
-  currentValues: ChemicalTreatment[],
-  treatment: ChemicalTreatment,
-): ChemicalTreatment[] {
-  if (treatment === "natural") {
-    return currentValues.includes("natural") ? [] : ["natural"]
-  }
-
-  const withoutNatural = currentValues.filter((value) => value !== "natural")
-
-  if (withoutNatural.includes(treatment)) {
-    return withoutNatural.filter((value) => value !== treatment)
-  }
-
-  const next = [...withoutNatural, treatment]
-  return CHEMICAL_TREATMENTS.filter((value) => value !== "natural" && next.includes(value))
-}
-
 function hasProfileFieldValue(value: ProfileFieldValue): boolean {
   return value !== null && (!Array.isArray(value) || value.length > 0)
 }
@@ -267,18 +245,6 @@ export function selectPlanProductRows(
   if (legacyProductRowCount !== 0) return null
   if (routineProducts === null || routineProducts.length === 0) return null
   return routineProducts
-}
-
-function toggleConcern(currentValues: ProfileConcern[], concern: ProfileConcern): ProfileConcern[] {
-  if (currentValues.includes(concern)) {
-    return currentValues.filter((value) => value !== concern)
-  }
-
-  if (currentValues.length >= 3) {
-    return currentValues
-  }
-
-  return [...currentValues, concern]
 }
 
 function getCompletionLabel(filled: number, total: number) {
@@ -531,7 +497,7 @@ export default function ProfilePage() {
   const [routineProducts, setRoutineProducts] = useState<RoutineProductFromPlan[] | null>(null)
   const [quizEditing, setQuizEditing] = useState(false)
   const [quizSaving, setQuizSaving] = useState(false)
-  const [quizDraft, setQuizDraft] = useState<QuizDraft>(() => createQuizDraft(null))
+  const [quizDraft, setQuizDraft] = useState<HaarCheckDraft>(() => draftFromProfile(null))
   const [quizNotice, setQuizNotice] = useState<QuizSaveNotice | null>(null)
   const [pendingQuizFocusKey, setPendingQuizFocusKey] = useState<string | null>(null)
   const quizFieldRefs = useRef<Record<string, HTMLDivElement | null>>({})
@@ -795,7 +761,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (!quizEditing) {
-      setQuizDraft(createQuizDraft(hairProfile))
+      setQuizDraft(draftFromProfile(hairProfile))
     }
   }, [hairProfile, quizEditing])
 
@@ -996,6 +962,10 @@ export default function ProfilePage() {
     router.push(href)
   }
 
+  const quizInitialDraft = useMemo(() => draftFromProfile(hairProfile), [hairProfile])
+  const quizSaveBlock = haarCheckSaveBlock(quizDraft, quizInitialDraft)
+  const quizProblemOptions = getConcernOptions(quizDraft.texture)
+
   function startQuizEditing(fieldKey?: string) {
     // T15: every entry point into Haar-Check editing (the header button, an individual
     // field card via `openTarget`, the "Haarlänge ergänzen" prompt) funnels through here —
@@ -1033,42 +1003,23 @@ export default function ProfilePage() {
   }
 
   function resetQuizEditing() {
-    setQuizDraft(createQuizDraft(hairProfile))
+    setQuizDraft(draftFromProfile(hairProfile))
     setQuizEditing(false)
     setPendingQuizFocusKey(null)
   }
 
   async function handleSaveQuiz() {
-    if (!userId) return
+    if (!userId || quizSaveBlock) return
+
+    // Only the answer groups she changed (clean-switch task 8); nothing changed, nothing sent.
+    const quizPayload = buildHaarCheckPayload(quizDraft, quizInitialDraft)
+    if (!quizPayload) {
+      resetQuizEditing()
+      return
+    }
 
     setQuizSaving(true)
     setQuizNotice(null)
-
-    const quizPayload: Pick<
-      HairProfile,
-      | "hair_texture"
-      | "thickness"
-      | "density"
-      | "hair_length"
-      | "cuticle_condition"
-      | "protein_moisture_balance"
-      | "concerns"
-      | "scalp_type"
-      | "scalp_condition"
-      | "chemical_treatment"
-    > = {
-      hair_texture: (quizDraft.hair_texture || null) as HairProfile["hair_texture"],
-      thickness: (quizDraft.thickness || null) as HairProfile["thickness"],
-      density: (quizDraft.density || null) as HairProfile["density"],
-      hair_length: (quizDraft.hair_length || null) as HairProfile["hair_length"],
-      cuticle_condition: (quizDraft.cuticle_condition || null) as HairProfile["cuticle_condition"],
-      protein_moisture_balance: (quizDraft.protein_moisture_balance ||
-        null) as HairProfile["protein_moisture_balance"],
-      concerns: quizDraft.concerns,
-      scalp_type: (quizDraft.scalp_type || null) as HairProfile["scalp_type"],
-      scalp_condition: (quizDraft.scalp_condition || null) as HairProfile["scalp_condition"],
-      chemical_treatment: quizDraft.chemical_treatment,
-    }
 
     try {
       const response = await fetch("/api/profile/answers", {
@@ -1083,7 +1034,7 @@ export default function ProfilePage() {
 
       const nextProfile = body.hairProfile
       setHairProfile(nextProfile)
-      setQuizDraft(createQuizDraft(nextProfile))
+      setQuizDraft(draftFromProfile(nextProfile))
       setQuizEditing(false)
       setQuizNotice({
         variant: "success",
@@ -1291,10 +1242,13 @@ export default function ProfilePage() {
                         text="Welche Haarstruktur die meisten deiner Haare haben."
                       >
                         <SegmentedControl
-                          options={HAIR_TEXTURE_OPTIONS}
-                          value={quizDraft.hair_texture}
+                          options={HAAR_CHECK_TEXTURE_OPTIONS}
+                          value={quizDraft.texture ?? ""}
                           onChange={(value) =>
-                            setQuizDraft((current) => ({ ...current, hair_texture: value }))
+                            setQuizDraft((current) => ({
+                              ...current,
+                              texture: value as HaarCheckDraft["texture"],
+                            }))
                           }
                         />
                       </QuizEditorField>
@@ -1310,10 +1264,13 @@ export default function ProfilePage() {
                         text="Wie sich ein einzelnes Haar bei dir meistens im Vergleich zu einem Nähfaden anfühlt."
                       >
                         <SegmentedControl
-                          options={HAIR_THICKNESS_OPTIONS}
-                          value={quizDraft.thickness}
+                          options={HAAR_CHECK_THICKNESS_OPTIONS}
+                          value={quizDraft.thickness ?? ""}
                           onChange={(value) =>
-                            setQuizDraft((current) => ({ ...current, thickness: value }))
+                            setQuizDraft((current) => ({
+                              ...current,
+                              thickness: value as HaarCheckDraft["thickness"],
+                            }))
                           }
                         />
                       </QuizEditorField>
@@ -1329,10 +1286,13 @@ export default function ProfilePage() {
                         text="Wie viele Haare du insgesamt hast - nicht wie dick ein einzelnes Haar ist."
                       >
                         <SegmentedControl
-                          options={HAIR_DENSITY_OPTIONS}
-                          value={quizDraft.density}
+                          options={HAAR_CHECK_DENSITY_OPTIONS}
+                          value={quizDraft.density ?? ""}
                           onChange={(value) =>
-                            setQuizDraft((current) => ({ ...current, density: value }))
+                            setQuizDraft((current) => ({
+                              ...current,
+                              density: value as HaarCheckDraft["density"],
+                            }))
                           }
                         />
                       </QuizEditorField>
@@ -1348,10 +1308,13 @@ export default function ProfilePage() {
                         text="Wie lang deine Haare aktuell sind; bei Locken zählt die sanft gestreckte Länge."
                       >
                         <SegmentedControl
-                          options={HAIR_LENGTH_OPTIONS}
-                          value={quizDraft.hair_length}
+                          options={HAAR_CHECK_LENGTH_OPTIONS}
+                          value={quizDraft.hairLength ?? ""}
                           onChange={(value) =>
-                            setQuizDraft((current) => ({ ...current, hair_length: value }))
+                            setQuizDraft((current) => ({
+                              ...current,
+                              hairLength: value as HaarCheckDraft["hairLength"],
+                            }))
                           }
                         />
                       </QuizEditorField>
@@ -1367,12 +1330,12 @@ export default function ProfilePage() {
                         text="Wie sich dein Haar im Finger-Test anfühlt."
                       >
                         <SegmentedControl
-                          options={QUIZ_SURFACE_OPTIONS}
-                          value={quizDraft.cuticle_condition}
+                          options={HAAR_CHECK_SURFACE_OPTIONS}
+                          value={quizDraft.hairSurface ?? ""}
                           onChange={(value) =>
                             setQuizDraft((current) => ({
                               ...current,
-                              cuticle_condition: value,
+                              hairSurface: value as HaarCheckDraft["hairSurface"],
                             }))
                           }
                         />
@@ -1388,16 +1351,23 @@ export default function ProfilePage() {
                         title="Elastizität"
                         text="Wie dein Haar im Zug-Test reagiert."
                       >
-                        <SegmentedControl
-                          options={QUIZ_ELASTICITY_OPTIONS}
-                          value={quizDraft.protein_moisture_balance}
-                          onChange={(value) =>
-                            setQuizDraft((current) => ({
-                              ...current,
-                              protein_moisture_balance: value,
-                            }))
-                          }
-                        />
+                        <div role="radiogroup" className="flex flex-wrap gap-2">
+                          {HAAR_CHECK_ELASTICITY_OPTIONS.map((option) => (
+                            <ChoiceChip
+                              key={option.value}
+                              active={quizDraft.elasticResponse === option.value}
+                              onClick={() =>
+                                setQuizDraft((current) => ({
+                                  ...current,
+                                  elasticResponse:
+                                    option.value as HaarCheckDraft["elasticResponse"],
+                                }))
+                              }
+                            >
+                              {option.label}
+                            </ChoiceChip>
+                          ))}
+                        </div>
                       </QuizEditorField>
                     </div>
 
@@ -1412,33 +1382,24 @@ export default function ProfilePage() {
                         text="Was in deinen Längen noch vorhanden ist; Pflege, Bondbuilder und normales Hitzestyling zählen hier nicht."
                       >
                         <div className="flex flex-wrap gap-2">
-                          {QUIZ_CHEMICAL_TREATMENT_OPTIONS.map((option) => {
-                            const active = quizDraft.chemical_treatment.includes(option.value)
-
-                            return (
-                              <button
-                                key={option.value}
-                                type="button"
-                                onClick={() =>
-                                  setQuizDraft((current) => ({
-                                    ...current,
-                                    chemical_treatment: toggleChemicalTreatment(
-                                      current.chemical_treatment,
-                                      option.value,
-                                    ),
-                                  }))
-                                }
-                                className={cn(
-                                  "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                                  active
-                                    ? "border-primary bg-primary/10 text-primary"
-                                    : "border-border hover:bg-muted",
-                                )}
-                              >
-                                {option.label}
-                              </button>
-                            )
-                          })}
+                          {HAAR_CHECK_CHEMICAL_OPTIONS.map((option) => (
+                            <ChoiceChip
+                              key={option.value}
+                              active={quizDraft.chemicalTreatments.includes(
+                                option.value as HaarCheckDraft["chemicalTreatments"][number],
+                              )}
+                              onClick={() =>
+                                setQuizDraft((current) =>
+                                  toggleChemicalTreatment(
+                                    current,
+                                    option.value as HaarCheckDraft["chemicalTreatments"][number],
+                                  ),
+                                )
+                              }
+                            >
+                              {option.label}
+                            </ChoiceChip>
+                          ))}
                         </div>
                       </QuizEditorField>
                     </div>
@@ -1453,10 +1414,13 @@ export default function ProfilePage() {
                         text="Wie sich deine Kopfhaut zwischen den Haarwäschen verhält."
                       >
                         <SegmentedControl
-                          options={QUIZ_SCALP_TYPE_OPTIONS}
-                          value={quizDraft.scalp_type}
+                          options={HAAR_CHECK_SCALP_TYPE_OPTIONS}
+                          value={quizDraft.scalpOiliness ?? ""}
                           onChange={(value) =>
-                            setQuizDraft((current) => ({ ...current, scalp_type: value }))
+                            setQuizDraft((current) => ({
+                              ...current,
+                              scalpOiliness: value as HaarCheckDraft["scalpOiliness"],
+                            }))
                           }
                         />
                       </QuizEditorField>
@@ -1469,48 +1433,39 @@ export default function ProfilePage() {
                     >
                       <QuizEditorField
                         title="Kopfhaut-Beschwerden"
-                        text="Wähle eine aktive Beschwerde oder markiere, dass aktuell nichts davon zutrifft."
+                        text="Wähle alles aus, was du bemerkst."
                       >
                         <div className="flex flex-wrap gap-2">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setQuizDraft((current) => ({ ...current, scalp_condition: "" }))
-                            }
-                            className={cn(
-                              "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                              quizDraft.scalp_condition === ""
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "border-border hover:bg-muted",
-                            )}
+                          {HAAR_CHECK_SCALP_CONCERN_OPTIONS.map((option) => (
+                            <ChoiceChip
+                              key={option.value}
+                              active={Boolean(
+                                quizDraft.scalpConcerns?.includes(
+                                  option.value as NonNullable<
+                                    HaarCheckDraft["scalpConcerns"]
+                                  >[number],
+                                ),
+                              )}
+                              onClick={() =>
+                                setQuizDraft((current) =>
+                                  toggleScalpConcern(
+                                    current,
+                                    option.value as NonNullable<
+                                      HaarCheckDraft["scalpConcerns"]
+                                    >[number],
+                                  ),
+                                )
+                              }
+                            >
+                              {option.label}
+                            </ChoiceChip>
+                          ))}
+                          <ChoiceChip
+                            active={quizDraft.scalpConcerns?.length === 0}
+                            onClick={() => setQuizDraft((current) => selectNoScalpConcern(current))}
                           >
-                            Keine Beschwerden
-                          </button>
-                          {QUIZ_SCALP_CONDITION_OPTIONS.map((option) => {
-                            const active = quizDraft.scalp_condition === option.value
-
-                            return (
-                              <button
-                                key={option.value}
-                                type="button"
-                                onClick={() =>
-                                  setQuizDraft((current) => ({
-                                    ...current,
-                                    scalp_condition:
-                                      current.scalp_condition === option.value ? "" : option.value,
-                                  }))
-                                }
-                                className={cn(
-                                  "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                                  active
-                                    ? "border-primary bg-primary/10 text-primary"
-                                    : "border-border hover:bg-muted",
-                                )}
-                              >
-                                {option.label}
-                              </button>
-                            )
-                          })}
+                            Nichts davon
+                          </ChoiceChip>
                         </div>
                       </QuizEditorField>
                     </div>
@@ -1523,50 +1478,95 @@ export default function ProfilePage() {
                     >
                       <QuizEditorField
                         title="Haar-Bedenken"
-                        text="Bis zu drei aktuelle Themen für deine Längen und Spitzen."
+                        text="Wähle alles aus, was du aktuell bemerkst."
                       >
                         <div className="flex flex-wrap gap-2">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setQuizDraft((current) => ({ ...current, concerns: [] }))
-                            }
-                            className={cn(
-                              "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors",
-                              quizDraft.concerns.length === 0
-                                ? "border-primary bg-primary/10 text-primary"
-                                : "border-border hover:bg-muted",
-                            )}
+                          {quizProblemOptions.map((option) => (
+                            <ChoiceChip
+                              key={option.value}
+                              active={quizDraft.currentConcerns.includes(
+                                option.value as HaarCheckDraft["currentConcerns"][number],
+                              )}
+                              onClick={() =>
+                                setQuizDraft((current) =>
+                                  toggleProblem(
+                                    current,
+                                    option.value as HaarCheckDraft["currentConcerns"][number],
+                                  ),
+                                )
+                              }
+                            >
+                              {option.label}
+                            </ChoiceChip>
+                          ))}
+                          <ChoiceChip
+                            active={quizDraft.noteOpen}
+                            onClick={() => setQuizDraft((current) => toggleProblemNote(current))}
                           >
-                            Nichts davon
-                          </button>
-                          {QUIZ_CONCERN_OPTIONS.map((option) => {
-                            const active = quizDraft.concerns.includes(option.value)
-                            const disabled = !active && quizDraft.concerns.length >= 3
-
-                            return (
-                              <button
-                                key={option.value}
-                                type="button"
-                                disabled={disabled}
-                                onClick={() =>
-                                  setQuizDraft((current) => ({
-                                    ...current,
-                                    concerns: toggleConcern(current.concerns, option.value),
-                                  }))
-                                }
-                                className={cn(
-                                  "min-h-[40px] rounded-full border px-3 py-2 text-sm transition-colors disabled:opacity-40",
-                                  active
-                                    ? "border-primary bg-primary/10 text-primary"
-                                    : "border-border hover:bg-muted",
-                                )}
-                              >
-                                {option.label}
-                              </button>
-                            )
-                          })}
+                            Etwas anderes
+                          </ChoiceChip>
                         </div>
+
+                        {quizDraft.noteOpen ? (
+                          <div className="mt-3 rounded-xl border border-border/80 bg-background/70 p-3">
+                            <label
+                              htmlFor="haar-check-problem-note"
+                              className="block text-sm font-medium text-foreground"
+                            >
+                              Eigene Notiz
+                            </label>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              Wenn dein Thema nicht in der Liste steht, beschreib es kurz selbst.
+                            </p>
+                            <Textarea
+                              id="haar-check-problem-note"
+                              value={quizDraft.note}
+                              onChange={(event) => {
+                                const value = event.target.value
+                                setQuizDraft((current) => setProblemNote(current, value))
+                              }}
+                              maxLength={PROBLEM_NOTE_MAX_LENGTH}
+                              rows={2}
+                              placeholder="Zum Beispiel: stumpf nach dem Föhnen"
+                              className="mt-2 resize-none text-base"
+                            />
+                            <p className="mt-1 text-right text-xs text-muted-foreground">
+                              {quizDraft.note.length}/{PROBLEM_NOTE_MAX_LENGTH}
+                            </p>
+                          </div>
+                        ) : null}
+
+                        {showsMainProblemQuestion(quizDraft) ? (
+                          <div className="mt-4 border-t border-border/70 pt-4">
+                            <p className="text-sm font-semibold text-[var(--text-heading)]">
+                              {MAIN_PROBLEM_SHEET_TITLE}
+                            </p>
+                            <div role="radiogroup" className="mt-3 flex flex-wrap gap-2">
+                              {quizProblemOptions
+                                .filter((option) =>
+                                  quizDraft.currentConcerns.includes(
+                                    option.value as HaarCheckDraft["currentConcerns"][number],
+                                  ),
+                                )
+                                .map((option) => (
+                                  <ChoiceChip
+                                    key={option.value}
+                                    active={quizDraft.primaryConcern === option.value}
+                                    onClick={() =>
+                                      setQuizDraft((current) =>
+                                        pickMainProblem(
+                                          current,
+                                          option.value as HaarCheckDraft["currentConcerns"][number],
+                                        ),
+                                      )
+                                    }
+                                  >
+                                    {option.label}
+                                  </ChoiceChip>
+                                ))}
+                            </div>
+                          </div>
+                        ) : null}
                       </QuizEditorField>
                     </div>
                   </div>
@@ -1576,7 +1576,7 @@ export default function ProfilePage() {
                       type="button"
                       className="w-auto"
                       onClick={handleSaveQuiz}
-                      disabled={quizSaving}
+                      disabled={quizSaving || quizSaveBlock !== null}
                     >
                       {quizSaving ? "Speichern..." : "Haar-Check speichern"}
                     </Button>
@@ -1590,6 +1590,11 @@ export default function ProfilePage() {
                       Abbrechen
                     </Button>
                   </div>
+                  {quizSaveBlock ? (
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {HAAR_CHECK_BLOCK_HINTS[quizSaveBlock]}
+                    </p>
+                  ) : null}
                 </div>
               ) : (
                 <div className="space-y-4">
