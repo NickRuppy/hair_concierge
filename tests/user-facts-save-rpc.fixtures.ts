@@ -1,6 +1,6 @@
 /**
  * An in-memory stand-in for `public.user_facts_save_v1`
- * (`supabase/migrations/20260915200200_user_facts_save_v1.sql`) for unit tests that drive the
+ * (`supabase/migrations/20260929231300_user_facts_save_v1.sql`) for unit tests that drive the
  * account-link writers through a fake Supabase client. It mirrors the SQL steps those writers
  * depend on — the revision CAS, `create_only` preserve (with the `legacy_columns` exception)
  * and its `preservedCandidates` union, the top-level field-level merge where a JSON null

@@ -14,7 +14,7 @@ import {
 
 /**
  * Executable contract for `public.user_facts_save_v1` (central user profile PR1,
- * migration 20260915200200), run against the REAL migration chain on PGlite.
+ * migration 20260929231300), run against the REAL migration chain on PGlite.
  *
  * Everything asserted here is a literal: the derived legacy columns are written
  * out by hand from the vocabulary tables rather than recomputed in the test, so
@@ -1118,7 +1118,7 @@ test("every derived legacy column documents its owner and its retirement conditi
 
   // Controller ruling 2026-09-15 (task-2-3-amendment-brief.md): concerns/goals/
   // chemical_treatment carry an extra note documenting the absent -> '{}' legacy
-  // projection rule (see migration 20260915200000_user_facts_domains.sql).
+  // projection rule (see migration 20260929231100_user_facts_domains.sql).
   const legacyEmptyArrayNote =
     ". Absent fact projects as '{}' for legacy readers; the facts domain keeps the distinction."
   const LEGACY_EMPTY_ARRAY_COLUMNS = new Set(["chemical_treatment", "concerns", "goals"])

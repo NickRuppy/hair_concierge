@@ -8,7 +8,7 @@
 -- stay, but stop being independently writable: from the follow-up writers
 -- (task 5) onward they are DERIVED PROJECTIONS maintained by exactly one
 -- function, `public.user_facts_save_v1` (migration
--- 20260915200200_user_facts_save_v1.sql). The `COMMENT ON COLUMN` statements
+-- 20260929231300_user_facts_save_v1.sql). The `COMMENT ON COLUMN` statements
 -- below are that contract, in the database, next to the column.
 --
 -- Additive only. DEPLOY ORDER: apply this migration FIRST, then the function
@@ -115,6 +115,10 @@ COMMENT ON COLUMN public.hair_profiles.goals IS
   'Derived projection owned by public.user_facts_save_v1 from hair_profiles.diagnostics; retire when the legacy recommendation engine and chat context read the facts domains directly (follow-up program F1). Absent fact projects as ''{}'' for legacy readers; the facts domain keeps the distinction.';
 COMMENT ON COLUMN public.hair_profiles.desired_volume IS
   'Derived projection owned by public.user_facts_save_v1 from hair_profiles.diagnostics; retire when the legacy recommendation engine and chat context read the facts domains directly (follow-up program F1)';
+-- main #611 (20260925100000_hair_profiles_primary_concern.sql, which this file now
+-- follows): its trigger still drops a value `concerns` no longer contains.
+COMMENT ON COLUMN public.hair_profiles.primary_concern IS
+  'Her stated main problem (legacy concern vocabulary): derived projection owned by public.user_facts_save_v1 from hair_profiles.diagnostics (primaryConcern while selected, else the sole currentConcern). NULL = none stated or no legacy equivalent. Always one of concerns; a stale value is dropped by trigger. Retire with the other derived columns (follow-up program F1)';
 COMMENT ON COLUMN public.hair_profiles.drying_method IS
   'Derived projection owned by public.user_facts_save_v1 from hair_profiles.care_habits; retire when the legacy recommendation engine and chat context read the facts domains directly (follow-up program F1)';
 COMMENT ON COLUMN public.hair_profiles.heat_styling IS

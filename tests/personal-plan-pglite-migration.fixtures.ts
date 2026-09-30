@@ -60,7 +60,7 @@ import { uuid_ossp } from "@electric-sql/pglite/contrib/uuid_ossp"
  *   - 20260825130000 / 20260825140000: the two migrations under test.
  *   - 20260925100000 (main #611): `hair_profiles.primary_concern`, its CHECK and the
  *     BEFORE trigger that drops a pick `concerns` no longer contains.
- *   - 20260915200000 / 20260915200100 / 20260915200200 (central user profile
+ *   - 20260929231100 / 20260929231200 / 20260929231300 (central user profile
  *     PR1): the hair_profiles fact domains, the personal_plans facts cursor +
  *     refinement-draft `origin`, and `public.user_facts_save_v1`.
  */
@@ -86,9 +86,9 @@ const MIGRATIONS = [
   "supabase/migrations/20260925100000_hair_profiles_primary_concern.sql",
   // Central user profile PR1: the fact domains on hair_profiles, the plan-side
   // facts cursor, and the single write function over both.
-  "supabase/migrations/20260915200000_user_facts_domains.sql",
-  "supabase/migrations/20260915200100_personal_plan_facts_cursor.sql",
-  "supabase/migrations/20260915200200_user_facts_save_v1.sql",
+  "supabase/migrations/20260929231100_user_facts_domains.sql",
+  "supabase/migrations/20260929231200_personal_plan_facts_cursor.sql",
+  "supabase/migrations/20260929231300_user_facts_save_v1.sql",
 ] as const
 
 const STUB_PREREQUISITES = `
@@ -138,7 +138,7 @@ CREATE TABLE public.product_submissions (
 );
 
 -- public.hair_profiles as production has it TODAY (before
--- 20260915200000_user_facts_domains.sql, which this harness then applies for
+-- 20260929231100_user_facts_domains.sql, which this harness then applies for
 -- real). Hand-written rather than replayed from the migration chain because
 -- that chain (00001_initial_schema.sql + ~14 later files) also creates leads,
 -- products, conversations, RLS policies and admin functions this harness has no
