@@ -1,17 +1,11 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { readFileSync } from "node:fs"
-import {
-  mobileEditProfilePatch,
-  profileEditRequestSchema,
-} from "../src/lib/mobile/profile-edit-contract"
 
 import * as profileRoute from "../src/app/api/profile/route"
 import * as answersRoute from "../src/app/api/profile/answers/route"
 import { hairProfileFullSchema } from "../src/lib/validators"
 import {
   authenticatedProfileUser,
-  profileAnswersPatchSchema,
   saveCompatibleProfileEdit,
 } from "../src/lib/hair-profile/edit-route"
 
@@ -36,46 +30,11 @@ test("profile route modules expose only supported HTTP handlers", () => {
   assert.deepEqual(Object.keys(answersRoute), ["POST"])
 })
 
-test("web profile schemas preserve full clears and reject protected or invalid answer patches", () => {
+test("PUT /api/profile keeps its full-replace legacy schema (pending decision, clean-switch task 5)", () => {
   assert.equal(
     hairProfileFullSchema.safeParse({ hair_texture: null, thickness: null }).success,
     true,
   )
-  assert.equal(
-    profileAnswersPatchSchema.safeParse({ user_id: userId, goals: ["shine"] }).success,
-    false,
-  )
-  assert.equal(
-    profileAnswersPatchSchema.safeParse({ goals: ["volume", "less_volume"] }).success,
-    false,
-  )
-  assert.equal(profileAnswersPatchSchema.safeParse({ scalp_type: "not-a-scalp" }).success, false)
-})
-
-test("web saves retain existing uncapped regular-quiz goals instead of imposing a new storage limit", () => {
-  const fixture = JSON.parse(
-    readFileSync(new URL("./fixtures/mobile/profile-edit-v1.json", import.meta.url), "utf8"),
-  )
-  const request = profileEditRequestSchema.parse({
-    expectedProfileRevision: "2",
-    requestId: "33333333-3333-4333-8333-333333333333",
-    answers: {
-      ...fixture.answers,
-      goals: [
-        "moisture",
-        "shine",
-        "strength_ends",
-        "shape_definition",
-        "scalp_balance",
-        "volume_balance",
-      ],
-    },
-  })
-  const goals = mobileEditProfilePatch(request.answers).goals
-  assert.equal((goals as string[]).length, 6)
-  const parsed = profileAnswersPatchSchema.safeParse({ goals })
-  assert.equal(parsed.success, true)
-  if (parsed.success) assert.deepEqual(parsed.data.goals, goals)
 })
 
 test("the route auth seam rejects a missing server-session owner", async () => {
@@ -116,6 +75,8 @@ function editDeps(overrides: Partial<Parameters<typeof saveCompatibleProfileEdit
   }
 }
 
+// `saveCompatibleProfileEdit` is PUT /api/profile's writer only; the web editors' route
+// (`POST /api/profile/answers`) is covered by profile-answers-route.test.ts.
 test("incomplete owner source preserves the legacy missing-profile upsert", async () => {
   const { deps, client, writes } = editDeps()
   const result = await saveCompatibleProfileEdit(deps, client, userId, {

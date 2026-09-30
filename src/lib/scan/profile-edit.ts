@@ -6,6 +6,7 @@ import {
   toProfileFactsArgument,
   type MobileFactsWrite,
 } from "@/lib/mobile/profile-facts-patch"
+import { buildProfileAnswersFacts, type ProfileAnswers } from "@/lib/hair-profile/profile-answers"
 import { parseUserFactsRow } from "@/lib/user-facts/read"
 import { readScannerProfileSource } from "./scanner-context-supabase"
 import {
@@ -84,9 +85,9 @@ export type ProfileEditInput =
   | {
       expectedProfileRevision: string
       requestId: string
-      /** WEB path (src/lib/hair-profile/edit-route.ts): a hair_profiles column patch the SQL
-       * function writes directly. Clean-switch task 5 moves that route onto the door and then
-       * deletes this variant together with the SQL branch that serves it. */
+      /** Column patch the SQL function writes directly. Only `PUT /api/profile` (no caller)
+       * still uses it — clean-switch task 5 left that route open, see the task report; delete
+       * this variant together with the SQL branch that serves it once PUT is decided. */
       patch: Record<string, unknown>
       quizAnswers?: QuizAnswers
       saveAsFacts?: false
@@ -98,6 +99,14 @@ export type ProfileEditInput =
        * edit through `user_facts_save_v1` inside the publish transaction; no column patch. */
       quizAnswers: QuizAnswers
       saveAsFacts: true
+    }
+  | {
+      expectedProfileRevision: string
+      requestId: string
+      /** WEB editors (clean-switch task 5, `POST /api/profile/answers`): the quiz-vocabulary
+       * answers are saved as a hand edit through `user_facts_save_v1` inside the publish
+       * transaction (`buildProfileAnswersFacts`); no column patch. */
+      profileAnswers: ProfileAnswers
     }
 
 /** Auth-verified UID only. The route owns strict patch/quiz validation. */
@@ -125,14 +134,23 @@ export async function publishProfileEdit(
     // is prepared from the columns the door WILL derive (the parity-tested TS oracle), so the
     // published context and the stored row can never disagree.
     let facts: MobileFactsWrite | null = null
-    if (input.saveAsFacts) {
+    let patch: Record<string, unknown> = {}
+    if ("profileAnswers" in input) {
+      facts = buildProfileAnswersFacts({
+        answers: input.profileAnswers,
+        stored: parseUserFactsRow(userId, read.profile ?? {}),
+        row: read.profile,
+        now: new Date().toISOString(),
+      })
+    } else if (input.saveAsFacts) {
       facts = buildMobileHandEditFacts({
         answers: input.quizAnswers,
         stored: parseUserFactsRow(userId, read.profile ?? {}),
         now: new Date().toISOString(),
       })
+    } else {
+      patch = input.patch
     }
-    const patch = input.saveAsFacts ? {} : input.patch
     const profile = { ...read.profile, ...patch, ...facts?.columns }
     const previousQuiz = editableScannerQuizAnswers(read)
     const priorEdit = {
@@ -146,7 +164,8 @@ export async function publishProfileEdit(
       },
     }
     const quizAnswers =
-      input.quizAnswers ?? editableScannerQuizAnswers({ ...read, profile, edit: priorEdit })
+      ("quizAnswers" in input ? input.quizAnswers : undefined) ??
+      editableScannerQuizAnswers({ ...read, profile, edit: priorEdit })
     // Carry only the last authoritative explicit details; never reimport a
     // discarded paid answer when an edited basic dimension later returns.
     const prepared = prepareScannerContext({

@@ -1,59 +1,14 @@
 import "server-only"
 
-import { z } from "zod"
+import type { SupabaseClient } from "@supabase/supabase-js"
 import { hasCompletedQuizDiagnostics } from "@/lib/quiz/completion"
 import { ProfileEditError, publishProfileEdit } from "@/lib/scan/profile-edit"
 import { prepareScannerContext } from "@/lib/scan/scanner-context"
 import { readScannerProfileSource } from "@/lib/scan/scanner-context-supabase"
 import { createAdminClient } from "@/lib/supabase/admin"
-import {
-  CHEMICAL_TREATMENTS,
-  CUTICLE_CONDITIONS,
-  GOALS,
-  HAIR_DENSITIES,
-  HAIR_LENGTHS,
-  HAIR_TEXTURES,
-  HAIR_THICKNESSES,
-  PROFILE_CONCERNS,
-  PROTEIN_MOISTURE_LEVELS,
-  SCALP_CONDITIONS,
-  SCALP_TYPES,
-} from "@/lib/vocabulary"
-
-export const profileAnswersPatchSchema = z
-  .object({
-    hair_texture: z.enum(HAIR_TEXTURES).nullable(),
-    thickness: z.enum(HAIR_THICKNESSES).nullable(),
-    density: z.enum(HAIR_DENSITIES).nullable(),
-    hair_length: z.enum(HAIR_LENGTHS).nullable(),
-    cuticle_condition: z.enum(CUTICLE_CONDITIONS).nullable(),
-    protein_moisture_balance: z.enum(PROTEIN_MOISTURE_LEVELS).nullable(),
-    scalp_type: z.enum(SCALP_TYPES).nullable(),
-    scalp_condition: z.enum(SCALP_CONDITIONS).nullable(),
-    chemical_treatment: z.array(z.enum(CHEMICAL_TREATMENTS)),
-    concerns: z.array(z.enum(PROFILE_CONCERNS)),
-    // The existing web picker limits new selections, but its prior direct
-    // upsert also preserved larger prefills from the regular quiz.
-    goals: z.array(z.enum(GOALS)).min(1),
-  })
-  .partial()
-  .strict()
-  .superRefine((patch, ctx) => {
-    if (Object.keys(patch).length === 0)
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Keine Antworten zum Speichern" })
-    if (patch.goals?.includes("volume") && patch.goals.includes("less_volume"))
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["goals"],
-        message: "Mehr und weniger Volumen schliessen sich aus",
-      })
-    if (patch.chemical_treatment?.includes("natural") && patch.chemical_treatment.length > 1)
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["chemical_treatment"],
-        message: "Naturhaar kann nicht mit chemischen Behandlungen kombiniert werden",
-      })
-  })
+import { parseUserFactsRow } from "@/lib/user-facts/read"
+import type { saveUserFacts } from "@/lib/user-facts/save"
+import { buildProfileAnswersFacts, type ProfileAnswers } from "./profile-answers"
 
 export async function authenticatedProfileUser(client: {
   auth: { getUser: () => Promise<{ data: { user: { id: string } | null } }> }
@@ -103,6 +58,11 @@ async function legacyWrite(
 }
 
 /**
+ * `PUT /api/profile` ONLY — the one web writer clean-switch task 5 left on the column path: its
+ * legacy-column schema has no facts expression without new conversions (desired_volume, the care
+ * columns, full-replace clears), so it waits for a decision (see the task-5/8 report). Delete this
+ * together with the web branch of `scanner_profile_edit_publish` once PUT is decided.
+ *
  * The caller has already authenticated the owner and validated its route-specific patch.
  * An unavailable source never falls through to legacy storage. A source that is incomplete
  * before the patch, or a valid explicit clear that makes the resulting profile incomplete,
@@ -145,5 +105,87 @@ export async function saveCompatibleProfileEdit(
     profile: result.profile,
     profileRevision: result.profileRevision,
     contextRevision: result.contextRevision,
+  }
+}
+
+export type ProfileAnswersSaveDeps = ProfileEditRouteDeps & {
+  saveUserFacts: typeof saveUserFacts
+  /** The row after a direct door save (the route answers with the saved profile). */
+  loadProfileRow: (admin: SupabaseClient, userId: string) => Promise<Record<string, unknown> | null>
+  now: () => string
+}
+
+export type ProfileAnswersSaveResult =
+  | { kind: "saved"; profile: Record<string, unknown> | null }
+  | {
+      kind: "published"
+      profile: Record<string, unknown>
+      profileRevision: string
+      contextRevision: string
+    }
+
+/**
+ * `POST /api/profile/answers` (clean-switch task 5): the web editors' save. Every fact reaches
+ * `hair_profiles` only through `user_facts_save_v1`, as a hand edit (`buildProfileAnswersFacts`):
+ *  - a profile that is complete after the edit and has a scanner source goes through
+ *    `scanner_profile_edit_publish`'s facts path, so the scanner context is republished in the
+ *    same transaction;
+ *  - anything else (no row yet, no scanner source, incomplete) goes straight through the door,
+ *    CAS-guarded by the facts revision this save read. A user without a row gets one with exactly
+ *    what she entered (plan §7.5).
+ * An unavailable or corrupt read never falls through to a write.
+ */
+export async function saveProfileAnswers(
+  deps: ProfileAnswersSaveDeps,
+  userId: string,
+  answers: ProfileAnswers,
+): Promise<ProfileAnswersSaveResult> {
+  const admin = deps.createAdminClient()
+  let source
+  let prepared
+  let stored
+  let write
+  try {
+    source = await deps.readScannerProfileSource(admin, userId)
+    prepared = deps.prepareScannerContext(source)
+    stored = source.profile ? parseUserFactsRow(userId, source.profile) : null
+    write = buildProfileAnswersFacts({ answers, stored, row: source.profile, now: deps.now() })
+  } catch {
+    throw new ProfileEditError("temporarily_unavailable")
+  }
+
+  const nextProfile = { ...(source.profile ?? {}), ...write.columns }
+  if (prepared && hasCompletedQuizDiagnostics(nextProfile)) {
+    const result = await deps.publishProfileEdit(admin, userId, {
+      expectedProfileRevision: source.profileRevision,
+      requestId: deps.randomUUID(),
+      profileAnswers: answers,
+    })
+    return {
+      kind: "published",
+      profile: result.profile,
+      profileRevision: result.profileRevision,
+      contextRevision: result.contextRevision,
+    }
+  }
+
+  let saved
+  try {
+    saved = await deps.saveUserFacts(admin, {
+      userId,
+      domain: "diagnostics",
+      patch: write.diagnostics.patch,
+      provenance: write.diagnostics.provenance,
+      expectedRevision: stored?.revision ?? 0,
+    })
+  } catch {
+    throw new ProfileEditError("temporarily_unavailable")
+  }
+  if (saved.status === "revision_conflict") throw new ProfileEditError("profile_conflict")
+  if (saved.status !== "ok") throw new ProfileEditError("temporarily_unavailable")
+  try {
+    return { kind: "saved", profile: await deps.loadProfileRow(admin, userId) }
+  } catch {
+    throw new ProfileEditError("temporarily_unavailable")
   }
 }
