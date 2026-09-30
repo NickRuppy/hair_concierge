@@ -907,7 +907,7 @@ test("recipe as a slide: talking point, Zuerst and Nicht zuerst visible; the res
   const slide = card.slice(0, foldAt)
   const folded = card.slice(foldAt)
   const decode = (text: string) =>
-    text.replaceAll("&quot;", '"').replaceAll("&amp;", "&").replaceAll("&#x27;", "'")
+    text.replaceAll("&quot;", '"').replaceAll("&#x27;", "'").replaceAll("&amp;", "&")
 
   // The slide: the sentence Nick reads aloud, the lead categories with their state, the avoid list.
   assert.ok(slide.includes("So sagst du es"))
