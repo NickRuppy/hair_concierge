@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFile } from "node:fs/promises"
 import test from "node:test"
 
 import { writeAccountLinkFacts } from "../src/lib/user-facts/account-link"
@@ -355,6 +356,11 @@ test("a caller that sets the flag itself: owner and service_role pass (documente
     assert.equal(await privilege(role, "INSERT"), false, `${role} INSERT`)
     assert.equal(await privilege(role, "UPDATE"), false, `${role} UPDATE`)
     assert.equal(await privilege(role, "SELECT"), true, `${role} SELECT stays (RLS decides)`)
+    // Fix round 4: no application use, so the browser roles lose these too.
+    for (const kind of ["TRUNCATE", "TRIGGER", "REFERENCES"]) {
+      assert.equal(await privilege(role, kind), false, `${role} ${kind}`)
+    }
+    assert.equal(await privilege(role, "DELETE"), true, `${role} DELETE stays (RLS decides)`)
   }
   assert.equal(await privilege("service_role", "UPDATE"), true)
 
@@ -436,6 +442,122 @@ test("allowed: conversation_memory, an updated_at touch, a bare insert, deleting
   assert.equal(await readRow(pg, OTHER), null)
   await pg.query("DELETE FROM public.profiles WHERE id = $1", [OWNER])
   assert.equal(await readRow(pg, OWNER), null)
+})
+
+// ---------------------------------------------------------------------------
+// Fix round 4 (lock review): hardening
+// ---------------------------------------------------------------------------
+
+test("a role other than owner/service_role with table privileges writes non-fact columns; facts stay locked", async (t) => {
+  const pg = await lockedWithFacts(t)
+  // Any other role the table is granted to (the guard runs as the WRITER): before the fix the
+  // guard called a function only owner/service_role could execute, so this failed with a
+  // misleading "permission denied for function".
+  await pg.exec(`
+    CREATE ROLE lock_other_writer NOLOGIN BYPASSRLS;
+    GRANT USAGE ON SCHEMA public TO lock_other_writer;
+    GRANT SELECT, INSERT, UPDATE ON public.hair_profiles TO lock_other_writer;
+  `)
+  const asOther = async (sql: string, params: unknown[]) => {
+    await pg.exec("BEGIN")
+    try {
+      await pg.exec("SET LOCAL ROLE lock_other_writer")
+      await pg.query(sql, params)
+      await pg.exec("COMMIT")
+    } catch (error) {
+      await pg.exec("ROLLBACK")
+      throw error
+    }
+  }
+  await asOther("UPDATE public.hair_profiles SET additional_notes = 'notiz' WHERE user_id = $1", [
+    OWNER,
+  ])
+  assert.equal((await readRow(pg, OWNER))!.additional_notes, "notiz")
+  await asOther("INSERT INTO public.hair_profiles (user_id) VALUES ($1)", [OTHER])
+  assert.equal((await readRow(pg, OTHER))!.facts_revision, 0)
+  await rejectsOutsideDoor(
+    asOther("UPDATE public.hair_profiles SET thickness = 'coarse' WHERE user_id = $1", [OWNER]),
+    ["thickness"],
+  )
+})
+
+test("the no-op check compares the stored text: an equal-by-meaning but re-written document is a write", async (t) => {
+  const pg = await lockedWithFacts(t)
+  // `1.0` equals `1` as jsonb, but the stored text changes (and hashes such as
+  // user_facts_diagnostics_hash_v1 hash `::text`).
+  const { rows } = await pg.query<{ same: boolean; text: string }>(
+    `SELECT jsonb_set(facts_provenance, '{diagnostics,schemaVersion}', '1.0'::jsonb) = facts_provenance AS same,
+            jsonb_set(facts_provenance, '{diagnostics,schemaVersion}', '1.0'::jsonb)::text AS text
+       FROM public.hair_profiles WHERE user_id = $1`,
+    [OWNER],
+  )
+  assert.equal(rows[0]!.same, true, "precondition: jsonb equality calls them equal")
+  assert.match(rows[0]!.text, /"schemaVersion": 1\.0/)
+  await rejectsOutsideDoor(
+    pg.query(
+      `UPDATE public.hair_profiles
+          SET facts_provenance = jsonb_set(facts_provenance, '{diagnostics,schemaVersion}', '1.0'::jsonb)
+        WHERE user_id = $1`,
+      [OWNER],
+    ),
+    ["facts_provenance"],
+  )
+  // A value written back exactly as stored stays a no-op (see "allowed: setting a fact column…").
+})
+
+test("SQL NULL vs JSON null on a document: the guard cannot tell them apart, the *_object CHECK closes it", async (t) => {
+  const pg = await lockedWithFacts(t)
+  assert.equal((await readRow(pg, OWNER))!.care_habits, null)
+  await assert.rejects(
+    pg.query("UPDATE public.hair_profiles SET care_habits = 'null'::jsonb WHERE user_id = $1", [
+      OWNER,
+    ]),
+    /hair_profiles_care_habits_object/,
+  )
+})
+
+test("rejected: a non-door insert with an explicit NULL for a column whose default is '{}'", async (t) => {
+  const pg = await lockedWithFacts(t)
+  await rejectsOutsideDoor(
+    pg.query("INSERT INTO public.hair_profiles (user_id, goals) VALUES ($1, NULL)", [OTHER]),
+    ["goals"],
+  )
+  assert.equal(await readRow(pg, OTHER), null)
+})
+
+test("the migration refuses to apply when a before-row trigger sorts after the guard, or a fact column is missing", async (t) => {
+  const late = await migratedPersonalPlanDatabase(t, { lock: false })
+  await late.exec(`
+    CREATE FUNCTION public.lock_test_noop() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RETURN NEW; END $$;
+    CREATE TRIGGER zzz_after_the_guard BEFORE UPDATE ON public.hair_profiles
+      FOR EACH ROW EXECUTE FUNCTION public.lock_test_noop();
+  `)
+  await assert.rejects(applyUserFactsLock(late), (error: GuardError) => {
+    assert.equal(error.message, "hair_profiles_fact_guard_not_last")
+    assert.equal(error.detail, "zzz_after_the_guard")
+    return true
+  })
+  const { rows: guards } = await late.query(
+    "SELECT 1 FROM pg_catalog.pg_trigger WHERE tgname = 'zz_hair_profiles_fact_write_guard'",
+  )
+  assert.equal(guards.length, 0, "a refused apply leaves nothing behind")
+
+  const missing = await migratedPersonalPlanDatabase(t, { lock: false })
+  await missing.exec("ALTER TABLE public.hair_profiles DROP COLUMN brush_type")
+  await assert.rejects(applyUserFactsLock(missing), /hair_profiles_fact_column_missing/)
+})
+
+test("the guard and the apply-time check hold the same fact columns and defaults", async () => {
+  const sql = await readFile(
+    new URL("../supabase/migrations/20260930120000_user_facts_lock.sql", import.meta.url),
+    "utf8",
+  )
+  const literals = [...sql.matchAll(/'(\{\s*"diagnostics": null[\s\S]*?\})'::jsonb/g)].map(
+    (match) => JSON.parse(match[1]!) as Record<string, unknown>,
+  )
+  assert.equal(literals.length, 2, "one literal in the guard, one in the apply-time check")
+  assert.deepEqual(literals[0], literals[1])
+  assert.equal(Object.keys(literals[0]!).length, 26)
 })
 
 // ---------------------------------------------------------------------------

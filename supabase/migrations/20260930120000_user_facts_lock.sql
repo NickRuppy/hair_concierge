@@ -11,8 +11,10 @@
 --
 -- ---------------------------------------------------------------------------------------------
 -- Column classification — every column of hair_profiles (00001 … 20260929231100). The block at
--- the end REFUSES TO APPLY if the live table has a column not listed here, or a fact column
--- whose default differs from `hair_profiles_fact_column_defaults_v1()`.
+-- the end REFUSES TO APPLY if the live table has a column not listed here, a fact column whose
+-- default differs from `hair_profiles_fact_column_defaults_v1()`, a missing fact column, or a
+-- before-row trigger that sorts after the guard. The guard holds the same list as an inline
+-- constant (it runs as the writer, whatever role that is; tests pin the two literals equal).
 --
 --   FACT (26) — written only by the door; guarded:
 --     documents   diagnostics, care_habits, quiz_context, facts_provenance, facts_revision
@@ -40,12 +42,20 @@
 --     rolled back with the (sub)transaction — a caller's SAVEPOINT / plpgsql EXCEPTION block
 --     reverts it, an uncaught error aborts the transaction. Tested both ways.
 --   * anon / authenticated: INSERT and UPDATE on hair_profiles are revoked below (no browser
---     code writes the table any more), so a forged setting gets them nothing.
---   * RESIDUAL HOLE, accepted: a session that can run arbitrary SQL with UPDATE on the table —
---     service_role over a DIRECT database connection, or the owner/superuser — can call
---     set_config itself and write. Through PostgREST neither can: set_config is not an exposed
---     RPC and each request is its own transaction. Such sessions can equally DISABLE TRIGGER;
---     this guard protects against application code, not against database administrators.
+--     code writes the table any more), so a forged setting gets them nothing. TRUNCATE, TRIGGER
+--     and REFERENCES are revoked from them too (no application use).
+--   * RESIDUAL HOLE, accepted: whoever can run arbitrary SQL with UPDATE on the table can call
+--     set_config itself and write. PostgREST clients cannot — set_config is not an exposed RPC
+--     and each request is its own transaction — and service_role cannot log in directly. The
+--     realistic forgers are `postgres` / `supabase_admin` connections (dashboard SQL editor,
+--     migrations, ad-hoc scripts over the database URL) and future SECURITY DEFINER code that
+--     sets the flag or writes the table itself. Such sessions can equally DISABLE TRIGGER; this
+--     guard protects against application code, not against database administrators.
+--   * The no-op test compares the stored TEXT of each fact (`::text`), not jsonb equality: `1.0`
+--     equals `1` as jsonb but is a different stored document (and `user_facts_diagnostics_hash_v1`
+--     hashes `diagnostics::text`). SQL NULL and JSON `null` on the three documents and
+--     facts_provenance look the same to it (`to_jsonb(row)` renders both as `null`); that gap is
+--     closed only by the `hair_profiles_*_object` CHECK constraints from 20260929231100.
 --
 -- Firing order relied on: Postgres fires same-kind row triggers in name order. The guard is
 -- named `zz_…` so it runs AFTER `hair_profiles_primary_concern_contained` (which may rewrite
@@ -62,7 +72,7 @@
 --   DROP TRIGGER zz_hair_profiles_fact_write_guard ON public.hair_profiles;
 --   DROP FUNCTION public.hair_profiles_reject_fact_write_outside_door();
 --   DROP FUNCTION public.hair_profiles_fact_column_defaults_v1();
---   GRANT INSERT, UPDATE ON public.hair_profiles TO anon, authenticated;
+--   GRANT INSERT, UPDATE, TRUNCATE, TRIGGER, REFERENCES ON public.hair_profiles TO anon, authenticated;
 
 -- The fact columns and the value each has in a row nobody wrote facts into (its column default).
 -- An INSERT outside the door must carry exactly these; the door's own `INSERT (user_id)` is
@@ -89,8 +99,20 @@ RETURNS trigger
 LANGUAGE plpgsql SET search_path = ''
 AS $$
 DECLARE
-  v_facts jsonb := public.hair_profiles_fact_column_defaults_v1();
-  v_after jsonb := pg_catalog.to_jsonb(NEW);
+  -- Inline, not a call to hair_profiles_fact_column_defaults_v1(): the guard runs as the writer,
+  -- and a role that may write non-fact columns must not need EXECUTE on anything to do so.
+  c_facts CONSTANT jsonb := '{
+    "diagnostics": null, "care_habits": null, "quiz_context": null,
+    "facts_provenance": {}, "facts_revision": 0,
+    "hair_texture": null, "thickness": null, "density": null, "hair_length": null,
+    "cuticle_condition": null, "protein_moisture_balance": null, "scalp_type": null,
+    "scalp_condition": null, "chemical_treatment": [], "concerns": [], "goals": [],
+    "desired_volume": null, "primary_concern": null,
+    "drying_method": null, "heat_styling": null, "styling_tools": null,
+    "uses_heat_protection": false, "towel_material": null, "towel_technique": null,
+    "night_protection": null, "brush_type": null
+  }'::jsonb;
+  v_after jsonb;
   v_before jsonb;
   v_columns text[];
 BEGIN
@@ -100,13 +122,15 @@ BEGIN
     RETURN NEW;
   END IF;
 
-  v_before := CASE WHEN TG_OP = 'INSERT' THEN v_facts ELSE pg_catalog.to_jsonb(OLD) END;
+  v_after := pg_catalog.to_jsonb(NEW);
+  v_before := CASE WHEN TG_OP = 'INSERT' THEN c_facts ELSE pg_catalog.to_jsonb(OLD) END;
 
+  -- Compared as stored text, not by jsonb meaning (header: `1.0` vs `1`).
   SELECT pg_catalog.array_agg(changed.name ORDER BY changed.name) INTO v_columns
     FROM (
       SELECT fact.name
-        FROM pg_catalog.jsonb_object_keys(v_facts) AS fact(name)
-       WHERE v_after -> fact.name IS DISTINCT FROM v_before -> fact.name
+        FROM pg_catalog.jsonb_object_keys(c_facts) AS fact(name)
+       WHERE (v_after -> fact.name)::text IS DISTINCT FROM (v_before -> fact.name)::text
       UNION ALL
       SELECT 'user_id'
        WHERE TG_OP = 'UPDATE' AND NEW.user_id IS DISTINCT FROM OLD.user_id
@@ -129,16 +153,17 @@ CREATE TRIGGER zz_hair_profiles_fact_write_guard
 COMMENT ON TRIGGER zz_hair_profiles_fact_write_guard ON public.hair_profiles IS
   'Rejects any change of a profile fact column not made by public.user_facts_save_v1 (flag app.user_facts_writer = this row''s user_id). Named zz_ to fire after every other BEFORE row trigger. See 20260930120000_user_facts_lock.sql.';
 
--- The guard runs as whoever writes the row (service_role for the server's non-fact writes), so
--- it must be able to call the column list; nobody else needs it.
-REVOKE ALL ON FUNCTION public.hair_profiles_fact_column_defaults_v1() FROM PUBLIC, anon, authenticated;
-GRANT EXECUTE ON FUNCTION public.hair_profiles_fact_column_defaults_v1() TO service_role;
+-- The column list is read only by the apply-time check below (as the migration owner); the guard
+-- carries its own inline copy.
+REVOKE ALL ON FUNCTION public.hair_profiles_fact_column_defaults_v1() FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON FUNCTION public.hair_profiles_reject_fact_write_outside_door() FROM PUBLIC, anon, authenticated;
 
 -- No browser code writes hair_profiles (reads only); every server writer uses service_role.
--- Revoking the table-level privileges also revokes any column-level ones. SELECT and the RLS
--- policies are unchanged; the insert_own/update_own policies become inert.
-REVOKE INSERT, UPDATE ON public.hair_profiles FROM anon, authenticated;
+-- Revoking the table-level privileges also revokes any column-level ones. SELECT, DELETE and the
+-- RLS policies are unchanged; the insert_own/update_own policies become inert. TRUNCATE, TRIGGER
+-- and REFERENCES have no application use (production grants recorded 2026-09-30: anon,
+-- authenticated, postgres and service_role each held all seven table privileges).
+REVOKE INSERT, UPDATE, TRUNCATE, TRIGGER, REFERENCES ON public.hair_profiles FROM anon, authenticated;
 
 -- Refuse to apply over a table this file does not describe.
 DO $$

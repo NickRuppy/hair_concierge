@@ -133,7 +133,7 @@ Model routing: Opus for 3, 4, 9 (SQL, locking); Sonnet for 5, 6, 7; Opus for 8 (
 1. **Additive migrations:** `20260929231100` (fact columns), `20260929231200` (facts cursor, draft `origin`), `20260929231300` (`user_facts_save_v1`). The deployed app keeps working: nothing reads or requires them yet.
 2. **Backfill:** `scripts/user-facts/backfill.ts` dry run (the default) → Nick reads the report (summary table first: hand-edited groups, ambiguous rows, every visible column change before → after, defaults, kept values, source choices, erasures, conflicts) → `--apply`. Idempotent and CAS-protected; rerun with `--catch-up` right before step 3 to pick up legacy edits made in between.
 3. **Code deploy TOGETHER with** `20260930090000` and `20260930090100`. Both change the iOS RPC signatures (`p_facts`, `p_quiz_taken_at`): apply them in the same window as the deploy — iOS registration / profile edit fail in the gap between the two; web is unaffected.
-4. **Lock last:** `20260930120000_user_facts_lock.sql` (guard trigger + browser INSERT/UPDATE revoked). Every direct fact-column writer must be gone by then (seeds and scripts included, task 7B).
+4. **Lock last:** `20260930120000_user_facts_lock.sql` (guard trigger + browser INSERT/UPDATE/TRUNCATE/TRIGGER/REFERENCES revoked). Every direct fact-column writer must be gone by then (seeds and scripts included, task 7B).
 
 Rolling the code back after step 4 requires removing the lock first:
 
@@ -141,7 +141,7 @@ Rolling the code back after step 4 requires removing the lock first:
 DROP TRIGGER zz_hair_profiles_fact_write_guard ON public.hair_profiles;
 DROP FUNCTION public.hair_profiles_reject_fact_write_outside_door();
 DROP FUNCTION public.hair_profiles_fact_column_defaults_v1();
-GRANT INSERT, UPDATE ON public.hair_profiles TO anon, authenticated;
+GRANT INSERT, UPDATE, TRUNCATE, TRIGGER, REFERENCES ON public.hair_profiles TO anon, authenticated;
 ```
 
 Sentry check after each step.
