@@ -263,6 +263,10 @@ const adjudicationPointSchema = z
   })
   .passthrough()
 
+// Records keep closed adjudication points for documentation; closure lives in the title by convention.
+const isClosedAdjudication = (entry: MaskAdjudicationPoint) =>
+  entry.title.trimStart().toUpperCase().startsWith("CLOSED")
+
 // focusCareVerdict is a small verdict-plus-note record, not a plain string.
 const focusCareVerdictSchema = z
   .object({
@@ -709,7 +713,9 @@ function buildDetail(
     reviewBlockers.push("Der Klassifizierungslauf für dieses Produkt steht noch aus.")
 
   const adjudicationPoints = record?.adjudicationPoints ?? []
-  const openAdjudicationIds = adjudicationPoints.map((entry) => entry.id)
+  const openAdjudicationIds = adjudicationPoints
+    .filter((entry) => !isClosedAdjudication(entry))
+    .map((entry) => entry.id)
 
   const rawInci = product.formulaOfRecord.rawInci
   const normalizedIngredients = rawInci
@@ -872,7 +878,9 @@ export function getMaskResearchLabData(): MaskResearchLabData {
   const initialDetail = details[0]
   if (!initialDetail) throw new Error("Mask cohort contains no primary products")
 
-  const openAdjudications = details.flatMap((detail) => detail.adjudicationPoints)
+  const openAdjudications = details.flatMap((detail) =>
+    detail.adjudicationPoints.filter((entry) => !isClosedAdjudication(entry)),
+  )
   const seen = new Set<string>()
   const dedupedAdjudications = openAdjudications.filter((entry) => {
     if (seen.has(entry.id)) return false
