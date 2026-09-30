@@ -92,6 +92,8 @@ const FULL_ROW = {
   quiz_context: FULL_QUIZ_CONTEXT,
   facts_provenance: { diagnostics: VALID_DIAGNOSTICS_PROVENANCE },
   facts_revision: 4,
+  density: "low",
+  hair_length: null,
 }
 
 test("loadUserFacts returns null when there is no hair_profiles row", async () => {
@@ -113,6 +115,8 @@ test("loadUserFacts parses a full row into typed facts with revision", async () 
     quizContext: FULL_QUIZ_CONTEXT,
     provenance: { diagnostics: VALID_DIAGNOSTICS_PROVENANCE },
     revision: 4,
+    // F2: the two legacy columns the completeness defaults fall back to.
+    legacyColumns: { density: "low", hair_length: null },
   })
 })
 

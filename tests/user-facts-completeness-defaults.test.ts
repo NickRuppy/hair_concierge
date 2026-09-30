@@ -2,7 +2,10 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { parseSupportedStage1Source } from "../src/lib/personal-plan/input"
-import { applyCompletenessDefaults } from "../src/lib/user-facts/completeness-defaults"
+import {
+  applyCompletenessDefaults,
+  existingCompletenessValues,
+} from "../src/lib/user-facts/completeness-defaults"
 import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
 import { toStage1Source } from "../src/lib/user-facts/stage1-source"
 import type { DiagnosticsV1 } from "../src/lib/user-facts/schema"
@@ -100,4 +103,76 @@ test("Stage-1 safety: a lead missing hair length still re-emits a raw source tha
   assert.deepEqual(rawAfter, rawBefore)
   assert.equal((rawAfter as { answers: { hairLength?: string } }).answers.hairLength, undefined)
   assert.equal(parseSupportedStage1Source(rawAfter).ok, false, "no silent plan on a guessed length")
+})
+
+// --- Wave-1 fix F2: a default only fills a hole --------------------------------------------
+
+test("F2: a real existing facts value is kept, with its existing provenance, instead of a default", () => {
+  const existing = existingCompletenessValues({
+    diagnostics: { density: "high", hairLength: "short", source: LEGACY_SOURCE },
+    fields: { density: "user", hairLength: "unknown_historical" },
+    columns: { density: "high", hair_length: "short" },
+  })
+  const { diagnostics, assumedFields, keptFields } = applyCompletenessDefaults(
+    { texture: "wavy", source: LEGACY_SOURCE },
+    existing,
+  )
+  assert.equal(diagnostics.density, "high")
+  assert.equal(diagnostics.hairLength, "short")
+  assert.deepEqual(assumedFields, [])
+  assert.deepEqual(keptFields, [
+    { field: "density", provenance: "user" },
+    { field: "hairLength", provenance: "unknown_historical" },
+  ])
+})
+
+test("F2: an existing value that was itself only assumed is no real value — the default applies", () => {
+  const existing = existingCompletenessValues({
+    diagnostics: { density: "medium", source: LEGACY_SOURCE },
+    fields: { density: "assumed" },
+    // The column is just the projection of that assumed fact.
+    columns: { density: "medium", hair_length: null },
+  })
+  const { diagnostics, assumedFields, keptFields } = applyCompletenessDefaults(
+    { source: LEGACY_SOURCE },
+    existing,
+  )
+  assert.equal(diagnostics.density, "medium")
+  assert.deepEqual(assumedFields, ["density", "hairLength"])
+  assert.deepEqual(keptFields, [])
+})
+
+test("F2: with no facts document the legacy column is the existing value (unknown_historical)", () => {
+  const existing = existingCompletenessValues({
+    diagnostics: null,
+    columns: { density: "low", hair_length: "very_long" },
+  })
+  const { diagnostics, keptFields, assumedFields } = applyCompletenessDefaults(
+    { source: LEGACY_SOURCE },
+    existing,
+  )
+  assert.equal(diagnostics.density, "low")
+  assert.equal(diagnostics.hairLength, "very_long")
+  assert.deepEqual(assumedFields, [])
+  assert.deepEqual(keptFields, [
+    { field: "density", provenance: "unknown_historical" },
+    { field: "hairLength", provenance: "unknown_historical" },
+  ])
+
+  // An unreadable column value is no value at all.
+  const unreadable = existingCompletenessValues({
+    columns: { density: "dicht", hair_length: null },
+  })
+  assert.deepEqual(unreadable, {})
+})
+
+test("F2: a value the winning projection carries is never replaced by the existing one", () => {
+  const { diagnostics, keptFields, assumedFields } = applyCompletenessDefaults(
+    { density: "low", hairLength: "short", source: LEGACY_SOURCE },
+    existingCompletenessValues({ columns: { density: "high", hair_length: "long" } }),
+  )
+  assert.equal(diagnostics.density, "low")
+  assert.equal(diagnostics.hairLength, "short")
+  assert.deepEqual(keptFields, [])
+  assert.deepEqual(assumedFields, [])
 })

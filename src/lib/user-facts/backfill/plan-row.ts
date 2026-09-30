@@ -4,7 +4,7 @@ import type {
 } from "@/lib/personal-plan/refinement/types"
 import { BRUSH_TYPES, type BrushType } from "@/lib/vocabulary/onboarding-care"
 
-import { assumedFieldProvenance } from "../completeness-defaults"
+import { completenessFieldProvenance } from "../completeness-defaults"
 import { deriveCareHabitsColumns, deriveDiagnosticsColumns } from "../derive-legacy-columns"
 import { toCareHabitsPatch, toFieldProvenance } from "../from-refinement-draft"
 import {
@@ -307,6 +307,10 @@ function planDiagnosticsAndContext(
     artifact: row.artifact,
     legacyLead: row.legacyLead,
     columns: row.columns,
+    existingFacts: {
+      diagnostics: row.storedDiagnostics,
+      fields: row.factsProvenance.diagnostics?.fields,
+    },
   })
 
   for (const unusable of selected.unusableSources) {
@@ -338,9 +342,20 @@ function planDiagnosticsAndContext(
 
   if (diagnosticsGate.plan) {
     const patch: DiagnosticsPatch = { ...selected.diagnostics }
-    // Decision wave 1, item B: the completeness defaults `selectDiagnosticsSource` applied are
-    // marked `assumed` and named on the dry-run line.
+    // Decision wave 1, item B + wave-1 fix F2: the completeness defaults are marked `assumed`,
+    // the values kept from the existing profile keep their provenance, and both are named on
+    // the dry-run line.
     const assumed = selected.assumedFields
+    const kept = selected.keptFields
+    const fields = completenessFieldProvenance(assumed, kept)
+    const details = [
+      ...(kept.length > 0
+        ? [`kept ${kept.map(({ field }) => `${field}=${patch[field]}`).join(", ")}`]
+        : []),
+      ...(assumed.length > 0
+        ? [`assumed ${assumed.map((field) => `${field}=${patch[field]}`).join(", ")}`]
+        : []),
+    ]
     plan.writes.push({
       domain: "diagnostics",
       patch,
@@ -348,14 +363,10 @@ function planDiagnosticsAndContext(
         source: { kind: sourceKind, ...(selected.sourceId ? { id: selected.sourceId } : {}) },
         schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
         at: options.now,
-        ...(assumed.length > 0 ? { fields: assumedFieldProvenance(assumed) } : {}),
+        ...(Object.keys(fields).length > 0 ? { fields } : {}),
       },
       fieldCount: countFields(patch),
-      ...(assumed.length > 0
-        ? {
-            detail: `assumed ${assumed.map((field) => `${field}=${patch[field]}`).join(", ")}`,
-          }
-        : {}),
+      ...(details.length > 0 ? { detail: details.join("; ") } : {}),
     })
   } else {
     plan.skips.push(diagnosticsGate.reason)

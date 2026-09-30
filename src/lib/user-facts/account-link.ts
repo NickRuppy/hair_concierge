@@ -4,7 +4,12 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { QuizAnswers } from "@/lib/quiz/types"
 
-import { applyCompletenessDefaults, type CompletenessDefaultField } from "./completeness-defaults"
+import {
+  applyCompletenessDefaults,
+  existingCompletenessValues,
+  type CompletenessDefaultField,
+  type KeptField,
+} from "./completeness-defaults"
 import { projectArtifactToFacts } from "./project-artifact"
 import { projectLegacyLeadToFacts } from "./project-legacy-lead"
 import { loadUserFacts, type UserFacts } from "./read"
@@ -110,16 +115,25 @@ export function quizSupersedesFacts(
 }
 
 /** Per-field provenance for a quiz-sourced diagnostics document: every carried field is
- * `user`, except the completeness defaults, which are `assumed`. Sent in full on every quiz
- * write because `user_facts_save_v1` MERGES `fields` — a stale marker (an `assumed` default, a
- * backfill's `unknown_historical`) only disappears when this write names the field again. */
+ * `user`, except the completeness defaults, which are `assumed`, and the values kept from the
+ * existing profile (F2), which keep the provenance they had (and are left out of the map when
+ * they had none, so nothing claims a `user` answer the quiz never gave). Sent in full on every
+ * quiz write because `user_facts_save_v1` MERGES `fields` — a stale marker (an `assumed`
+ * default, a backfill's `unknown_historical`) only disappears when this write names the field
+ * again. */
 export function quizDiagnosticsFieldProvenance(
   diagnostics: DiagnosticsV1,
   assumedFields: readonly CompletenessDefaultField[] = [],
+  keptFields: readonly KeptField[] = [],
 ): Record<string, FieldProvenanceValue> {
   const fields: Record<string, FieldProvenanceValue> = {}
   for (const field of DIAGNOSTICS_FIELDS) {
     if (diagnostics[field] === undefined) continue
+    const kept = keptFields.find((entry) => entry.field === field)
+    if (kept) {
+      if (kept.provenance) fields[field] = kept.provenance
+      continue
+    }
     fields[field] = (assumedFields as readonly string[]).includes(field) ? "assumed" : "user"
   }
   return fields
@@ -140,8 +154,9 @@ function replacementPatch<Field extends string>(
 }
 
 type Projection = {
+  /** The quiz's own diagnostics, BEFORE completeness defaults: those depend on the existing
+   * profile (F2), so they are applied per attempt against the freshly loaded facts. */
   diagnostics: DiagnosticsV1
-  assumedFields: CompletenessDefaultField[]
   quizContext: QuizContextV1 | null
   provenanceSource: DomainProvenance["source"]
   candidate: { kind: "artifact" | "lead"; id: string }
@@ -156,7 +171,7 @@ function project(quiz: AccountLinkQuiz): Projection {
       takenAt: quiz.createdAt,
     })
     return {
-      ...applyCompletenessDefaults(diagnostics),
+      diagnostics,
       quizContext,
       provenanceSource: { kind: "personal_plan_artifact", id: quiz.artifactId },
       candidate: { kind: "artifact", id: quiz.artifactId },
@@ -168,7 +183,7 @@ function project(quiz: AccountLinkQuiz): Projection {
     takenAt: quiz.createdAt,
   })
   return {
-    ...applyCompletenessDefaults(diagnostics),
+    diagnostics,
     quizContext: null,
     provenanceSource: { kind: "legacy_lead", id: quiz.leadId },
     candidate: { kind: "lead", id: quiz.leadId },
@@ -192,20 +207,31 @@ export async function writeAccountLinkFacts(
 ): Promise<AccountLinkFactsOutcome> {
   const { userId, quiz } = input
   const projection = project(quiz)
-  const diagnosticsPatch = replacementPatch(
-    projection.diagnostics,
-    DIAGNOSTICS_FIELDS,
-  ) as DiagnosticsPatch
-  const diagnosticsFields = quizDiagnosticsFieldProvenance(
-    projection.diagnostics,
-    projection.assumedFields,
-  )
 
   // One reload on a revision_conflict, re-deciding from the fresh facts; a second conflict
   // throws rather than looping against a live concurrent writer.
   for (let attempt = 0; attempt < 2; attempt += 1) {
     const facts = await loadUserFacts(admin, userId)
     const nowIso = new Date().toISOString()
+
+    // F2: a default only fills a hole the existing profile cannot fill either.
+    const completed = applyCompletenessDefaults(
+      projection.diagnostics,
+      existingCompletenessValues({
+        diagnostics: facts?.diagnostics,
+        fields: facts?.provenance.diagnostics?.fields,
+        columns: facts?.legacyColumns,
+      }),
+    )
+    const diagnosticsPatch = replacementPatch(
+      completed.diagnostics,
+      DIAGNOSTICS_FIELDS,
+    ) as DiagnosticsPatch
+    const diagnosticsFields = quizDiagnosticsFieldProvenance(
+      completed.diagnostics,
+      completed.assumedFields,
+      completed.keptFields,
+    )
 
     if (!quizSupersedesFacts(facts, quiz.createdAt)) {
       // Not newer: today's preserve behaviour. `create_only` leaves an existing domain alone

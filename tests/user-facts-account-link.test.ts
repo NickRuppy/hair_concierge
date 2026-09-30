@@ -596,3 +596,71 @@ test("an old lead without density or hair length links with both defaults marked
   assert.equal(raw.answers.density, undefined, "source.raw is the untouched built legacy source")
   assert.equal(raw.answers.hairLength, undefined)
 })
+
+// --- F2: a default only fills a hole --------------------------------------------------------
+
+test("F2: a winning quiz without density keeps the profile's real density (and its provenance)", async () => {
+  const { density: _density, hair_length: _length, ...answers } = COMPLETE_LEGACY_ANSWERS
+  void _density
+  void _length
+  const rows = [artifactProfile({ at: "2026-09-10T00:00:00.000Z" })]
+  const stored = rows[0]!.diagnostics as Row
+  stored.density = "high"
+  stored.hairLength = "very_long"
+  ;((rows[0]!.facts_provenance as Row).diagnostics as Row).fields = {
+    density: "user",
+    hairLength: "assumed",
+  }
+  const { admin, saves } = fakeAdmin(rows)
+
+  const outcome = await writeAccountLinkFacts(admin, {
+    userId: USER_ID,
+    quiz: {
+      kind: "lead",
+      leadId: "lead-new",
+      quizAnswers: answers as never,
+      createdAt: "2026-09-12T00:00:00.000Z",
+    },
+  })
+
+  assert.equal(outcome, "replaced")
+  const patch = saves[0]!.p_patch as Row
+  assert.equal(patch.density, "high", "the real value survives the replacement")
+  assert.equal(patch.hairLength, "long", "an assumed value is no real value: default again")
+  const facts = await loadUserFacts(admin, USER_ID)
+  assert.equal(facts?.provenance.diagnostics?.fields?.density, "user")
+  assert.equal(facts?.provenance.diagnostics?.fields?.hairLength, "assumed")
+})
+
+test("F2: with no facts document yet, the legacy column value fills the hole, not the default", async () => {
+  const { hair_length: _length, ...answers } = COMPLETE_LEGACY_ANSWERS
+  void _length
+  const rows: Row[] = [
+    {
+      user_id: USER_ID,
+      diagnostics: null,
+      facts_revision: 0,
+      facts_provenance: {},
+      density: "high",
+      hair_length: "short",
+    },
+  ]
+  const { admin, saves } = fakeAdmin(rows)
+
+  await writeAccountLinkFacts(admin, {
+    userId: USER_ID,
+    quiz: {
+      kind: "lead",
+      leadId: "lead-new",
+      quizAnswers: answers as never,
+      createdAt: "2026-09-12T00:00:00.000Z",
+    },
+  })
+
+  const patch = saves[0]!.p_patch as Row
+  assert.equal(patch.hairLength, "short")
+  assert.equal(patch.density, "low", "the quiz's own density always wins over the column")
+  const fields = (saves[0]!.p_provenance as Row).fields as Row
+  assert.equal(fields.hairLength, "unknown_historical")
+  assert.equal(fields.density, "user")
+})

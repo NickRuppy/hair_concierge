@@ -1129,7 +1129,7 @@ test("planUserFactsBackfill writes no assumed markers when the winning source is
   assert.equal(diagnostics.detail, undefined)
 })
 
-test("selectDiagnosticsSource defaults a lead's missing hair length and reports it against a real column value", () => {
+test("F2: selectDiagnosticsSource fills a lead's missing hair length from the real column value, not a default", () => {
   const { hair_length: _omitted, ...answersWithoutLength } = LEGACY_QUIZ_ANSWERS
   void _omitted
   const selected = selectDiagnosticsSource({
@@ -1139,16 +1139,54 @@ test("selectDiagnosticsSource defaults a lead's missing hair length and reports 
   })
 
   assert.equal(selected.sourceKind, "lead")
-  assert.equal(selected.diagnostics.hairLength, "long")
-  assert.deepEqual(selected.assumedFields, ["hairLength"])
-  // The default is what the write would store, so the P4 diff shows it against the column.
-  assert.deepEqual(
-    selected.conflict?.fields.find((field) => field.field === "hair_length"),
-    { field: "hair_length", column: "medium", derived: "long" },
+  assert.equal(selected.diagnostics.hairLength, "medium", "the existing value, never 'long'")
+  assert.deepEqual(selected.assumedFields, [])
+  assert.deepEqual(selected.keptFields, [{ field: "hairLength", provenance: "unknown_historical" }])
+  // No P4 conflict or erasure line for a field filled from the existing value.
+  assert.equal(
+    selected.conflict?.fields.some((field) => field.field === "hair_length") ?? false,
+    false,
+  )
+  assert.equal(
+    selected.conflict?.erasures.some((field) => field.field === "hair_length") ?? false,
+    false,
   )
   // `raw` is still the built legacy source without a hair length (never a plan on a guess).
   const raw = selected.diagnostics.source.raw as { answers: { hairLength?: string } }
   assert.equal(raw.answers.hairLength, undefined)
+})
+
+test("F2: only when neither the winner nor the profile has a value does the default apply", () => {
+  const { hair_length: _omitted, ...answersWithoutLength } = LEGACY_QUIZ_ANSWERS
+  void _omitted
+  const selected = selectDiagnosticsSource({
+    artifact: null,
+    legacyLead: { id: "lead-old", quizAnswers: answersWithoutLength },
+    columns: { ...FULL_DIAGNOSTIC_COLUMNS, hair_length: null },
+  })
+  assert.equal(selected.diagnostics.hairLength, "long")
+  assert.deepEqual(selected.assumedFields, ["hairLength"])
+  assert.deepEqual(selected.keptFields, [])
+})
+
+test("F2: planUserFactsBackfill records a kept value with its provenance and names it on the dry-run line", () => {
+  const { hair_length: _omitted, ...answersWithoutLength } = LEGACY_QUIZ_ANSWERS
+  void _omitted
+  const plan = planUserFactsBackfill(
+    userRow({
+      columns: { ...EMPTY_COLUMNS, hair_texture: "curly", hair_length: "short" },
+      legacyLead: { id: "lead-old", quizAnswers: answersWithoutLength },
+    }),
+    { now: NOW, catchUp: false },
+  )
+  const diagnostics = writeFor(plan, "diagnostics")
+  assert.equal(diagnostics.patch.hairLength, "short")
+  assert.deepEqual(diagnostics.provenance.fields, { hairLength: "unknown_historical" })
+  assert.equal(diagnostics.detail, "kept hairLength=short")
+  assert.equal(
+    plan.conflict?.erasures.some((field) => field.field === "hair_length") ?? false,
+    false,
+  )
 })
 
 test("planUserFactsBackfill plans nothing at all for a row with no artifact, no lead and no legacy answers", () => {

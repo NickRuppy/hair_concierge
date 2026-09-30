@@ -40,6 +40,9 @@ export type UserFacts = {
   quizContext: QuizContextV1 | null
   provenance: FactsProvenance
   revision: number
+  /** The two legacy columns the completeness defaults consult when no facts document carries
+   * the value (wave-1 fix F2: a default only fills a hole). Raw column values, unvalidated. */
+  legacyColumns?: { density: string | null; hair_length: string | null }
 }
 
 function parseDomain<Schema extends z.ZodType>(
@@ -68,7 +71,9 @@ export async function loadUserFacts(
 ): Promise<UserFacts | null> {
   const { data, error } = await admin
     .from("hair_profiles")
-    .select("user_id, diagnostics, care_habits, quiz_context, facts_provenance, facts_revision")
+    .select(
+      "user_id, diagnostics, care_habits, quiz_context, facts_provenance, facts_revision, density, hair_length",
+    )
     .eq("user_id", userId)
     .maybeSingle()
 
@@ -99,6 +104,10 @@ export async function loadUserFacts(
     quizContext,
     provenance: provenanceResult.data,
     revision: data.facts_revision,
+    legacyColumns: {
+      density: typeof data.density === "string" ? data.density : null,
+      hair_length: typeof data.hair_length === "string" ? data.hair_length : null,
+    },
   }
 }
 
