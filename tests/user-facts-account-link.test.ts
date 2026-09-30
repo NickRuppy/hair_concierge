@@ -225,7 +225,11 @@ test("an own newer quiz REPLACES an existing real-source profile: upsert, nulls 
   })
 
   assert.equal(outcome, "replaced")
-  assert.equal(saves.length, 1, "a legacy lead writes diagnostics only")
+  // F4: diagnostics, then the previous artifact's quiz_context is cleared.
+  assert.deepEqual(
+    saves.map((entry) => entry.p_domain),
+    ["diagnostics", "quiz_context"],
+  )
   const call = saves[0]!
   assert.equal(call.p_domain, "diagnostics")
   assert.equal(call.p_mode, "upsert")
@@ -250,7 +254,73 @@ test("an own newer quiz REPLACES an existing real-source profile: upsert, nulls 
   assert.equal(facts.provenance.diagnostics?.fields?.currentConcernsOtherText, undefined)
   assert.equal(facts.provenance.diagnostics?.fields?.texture, "user")
   assert.equal(facts.provenance.diagnostics?.fields?.hairLength, "user")
-  assert.equal(facts.revision, 5)
+  assert.equal(facts.revision, 6)
+})
+
+test("F4: a winning legacy lead clears the previous artifact's quiz_context — no old answer survives", async () => {
+  const rows = [artifactProfile({ at: "2026-09-10T00:00:00.000Z" })]
+  assert.ok(Object.keys(rows[0]!.quiz_context as Row).length > 0, "baseline: answers stored")
+  const { admin, saves } = fakeAdmin(rows)
+
+  await writeAccountLinkFacts(admin, {
+    userId: USER_ID,
+    quiz: LEGACY_LEAD_QUIZ("2026-09-12T00:00:00.000Z"),
+  })
+
+  const clear = saves[1]!
+  assert.equal(clear.p_domain, "quiz_context")
+  assert.equal(clear.p_mode, "upsert")
+  assert.equal(clear.p_expected_revision, 5, "pinned to the diagnostics write's revision")
+  const patch = clear.p_patch as Row
+  assert.deepEqual(Object.keys(patch).sort(), [
+    "adaptationConfidence",
+    "blockers",
+    "blockersOtherText",
+    "meaningfulMoment",
+    "previousAttempts",
+    "resultReliability",
+    "routineClarity",
+    "routineStyle",
+  ])
+  assert.equal(
+    Object.values(patch).every((value) => value === null),
+    true,
+    "every field is cleared",
+  )
+  const facts = await loadUserFacts(admin, USER_ID)
+  assert.deepEqual(facts?.quizContext, {})
+  assert.deepEqual(facts?.provenance.quiz_context?.source, { kind: "legacy_lead", id: "lead-new" })
+})
+
+test("F4: a winning legacy lead on a profile without quiz_context writes diagnostics only", async () => {
+  const rows = [artifactProfile({ at: "2026-09-10T00:00:00.000Z" })]
+  rows[0]!.quiz_context = null
+  const { admin, saves } = fakeAdmin(rows)
+
+  await writeAccountLinkFacts(admin, {
+    userId: USER_ID,
+    quiz: LEGACY_LEAD_QUIZ("2026-09-12T00:00:00.000Z"),
+  })
+  assert.deepEqual(
+    saves.map((entry) => entry.p_domain),
+    ["diagnostics"],
+  )
+})
+
+test("F4: an OLDER legacy lead leaves quiz_context alone", async () => {
+  const rows = [artifactProfile({ at: "2026-09-10T00:00:00.000Z" })]
+  const before = structuredClone(rows[0]!.quiz_context)
+  const { admin, saves } = fakeAdmin(rows)
+
+  await writeAccountLinkFacts(admin, {
+    userId: USER_ID,
+    quiz: LEGACY_LEAD_QUIZ("2026-09-01T00:00:00.000Z"),
+  })
+  assert.deepEqual(
+    saves.map((entry) => [entry.p_domain, entry.p_mode]),
+    [["diagnostics", "create_only"]],
+  )
+  assert.deepEqual(rows[0]!.quiz_context, before)
 })
 
 test("an own newer ARTIFACT also replaces quiz_context, pinned to the diagnostics write's revision", async () => {
@@ -400,10 +470,15 @@ test("a revision_conflict reloads once, re-decides and then succeeds", async () 
 
   assert.equal(outcome, "replaced")
   assert.deepEqual(
-    saves.map((call) => call.p_expected_revision),
-    [4, 7],
+    saves.map((call) => [call.p_domain, call.p_expected_revision]),
+    [
+      ["diagnostics", 4],
+      ["diagnostics", 7],
+      // F4: then the previous artifact's quiz_context is cleared.
+      ["quiz_context", 8],
+    ],
   )
-  assert.equal((await loadUserFacts(admin, USER_ID))?.revision, 8)
+  assert.equal((await loadUserFacts(admin, USER_ID))?.revision, 9)
 })
 
 test("a second revision_conflict throws instead of looping", async () => {

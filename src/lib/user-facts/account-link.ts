@@ -33,8 +33,9 @@ import {
  *
  * A quiz overwrites the profile only when it is the user's OWN (the callers establish that —
  * email/user_id ownership or an active field-test enrollment — before calling this) and was
- * TAKEN after the stored quiz and after any hand edit (`quizSupersedesFacts`). A winning quiz REPLACES the diagnostics document (and,
- * for a personal-plan artifact, quiz_context): fields the new quiz does not carry are cleared
+ * TAKEN after the stored quiz and after any hand edit (`quizSupersedesFacts`). A winning quiz
+ * REPLACES the diagnostics document and quiz_context (an artifact's own answers; a legacy lead
+ * clears a previous artifact's, F4): fields the new quiz does not carry are cleared
  * with explicit nulls, `source` is the new source, goals come from the new quiz. An older quiz
  * never overwrites: it goes through `create_only`, which records it in
  * `provenance.preservedCandidates` and leaves the facts untouched.
@@ -288,14 +289,18 @@ export async function writeAccountLinkFacts(
     }
     assertApplied(diagnosticsResult, "diagnostics")
 
-    if (projection.quizContext) {
+    // A winning quiz replaces BOTH domains. An artifact brings its own quiz_context; a legacy
+    // lead carries none, so it clears the one a previous artifact left (F4: every field null),
+    // and no answer from the previous quiz survives next to the new diagnostics.
+    const quizContext = projection.quizContext ?? (facts?.quizContext ? {} : null)
+    if (quizContext) {
       await replaceQuizContext(admin, {
         userId,
-        quizContext: projection.quizContext,
+        quizContext,
         provenanceSource: projection.provenanceSource,
         at: nowIso,
         expectedRevision: diagnosticsResult.revision,
-        candidateArtifactId: projection.candidate.id,
+        candidate: projection.candidate,
       })
     }
     return "replaced"
@@ -305,10 +310,23 @@ export async function writeAccountLinkFacts(
   throw new Error("writeAccountLinkFacts: exhausted its revision_conflict retry")
 }
 
-/** The winning artifact's quiz_context, as a full replacement pinned to the revision the
+/** Whether a stored diagnostics source is the quiz this link wrote. */
+function sourceIsCandidate(
+  source: DiagnosticsV1["source"] | undefined,
+  candidate: Projection["candidate"],
+): boolean {
+  if (!source) return false
+  if (candidate.kind === "artifact") {
+    return "artifactId" in source && source.artifactId === candidate.id
+  }
+  return source.kind === "legacy_quiz" && source.leadId === candidate.id
+}
+
+/** The winning quiz's quiz_context (an artifact's answers, or `{}` to clear a previous
+ * artifact's after a legacy lead won — F4), as a full replacement pinned to the revision the
  * diagnostics write just produced. On a revision_conflict it reloads once: if the diagnostics
- * document no longer comes from this artifact a concurrent writer superseded the whole link
- * and there is nothing left to do; otherwise it retries once against the fresh revision. */
+ * document no longer comes from this quiz a concurrent writer superseded the whole link and
+ * there is nothing left to do; otherwise it retries once against the fresh revision. */
 async function replaceQuizContext(
   admin: SupabaseClient,
   input: {
@@ -317,7 +335,7 @@ async function replaceQuizContext(
     provenanceSource: DomainProvenance["source"]
     at: string
     expectedRevision: number
-    candidateArtifactId: string
+    candidate: Projection["candidate"]
   },
 ): Promise<void> {
   const patch = replacementPatch(input.quizContext, QUIZ_CONTEXT_FIELDS) as QuizContextPatch
@@ -343,15 +361,7 @@ async function replaceQuizContext(
     if (attempt === 1) break
 
     const facts = await loadUserFacts(admin, input.userId)
-    const source = facts?.diagnostics?.source
-    if (
-      !facts ||
-      !source ||
-      !("artifactId" in source) ||
-      source.artifactId !== input.candidateArtifactId
-    ) {
-      return
-    }
+    if (!facts || !sourceIsCandidate(facts.diagnostics?.source, input.candidate)) return
     expectedRevision = facts.revision
   }
   throw new Error("saveUserFacts(quiz_context) hit a second revision_conflict")

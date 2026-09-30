@@ -443,9 +443,15 @@ test("latest quiz wins: linking a NEWER own legacy lead replaces the existing pr
 
   assert.equal(linked.status, "ready")
   const factsCalls = db.rpcs.filter((call) => call.fn === "user_facts_save_v1")
-  assert.equal(factsCalls.length, 1)
-  assert.equal(factsCalls[0].args.p_mode, "upsert")
-  assert.equal(factsCalls[0].args.p_expected_revision, 3)
+  // F4: the winning lead replaces BOTH domains — the earlier artifact's quiz_context is cleared.
+  assert.deepEqual(
+    factsCalls.map((call) => [call.args.p_domain, call.args.p_mode, call.args.p_expected_revision]),
+    [
+      ["diagnostics", "upsert", 3],
+      ["quiz_context", "upsert", 4],
+    ],
+  )
+  assert.deepEqual(db.tables.hair_profiles[0].quiz_context, {})
   const patch = factsCalls[0].args.p_patch as Row
   // Fields the legacy quiz does not carry are cleared, never carried over.
   assert.equal(patch.concernRecurrence, null)
