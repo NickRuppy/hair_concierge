@@ -39,6 +39,16 @@ import {
  *   them free. Any other key throws, so a seed can never silently lose a value.
  *
  * Needs a service-role client (the door is granted to `service_role` only).
+ *
+ * TODO(2026-09-30, PR2): the seeded diagnostics document carries `source.kind: "legacy_columns"`,
+ * which `toStage1Source` refuses (`UnsupportedUserFactsSourceError`). No production caller reads
+ * Stage 1 from the facts yet; once PR2 wires `toStage1SourceFromFacts`, seeded dev / eval / e2e
+ * users throw there. `hand-edit.ts` does not synthesize a source itself (its `newSource` is the
+ * caller's); the web editor's `profileEditorSource` (`src/lib/hair-profile/profile-answers.ts`)
+ * does, as `legacy_quiz` with lead id "profile". PR2 decides whether seeds reuse it — doing so
+ * also changes `quizSupersedesFacts` for seeded users (a `legacy_columns` document yields to any
+ * quiz, a `legacy_quiz` one only to a quiz taken after the seed) and the iOS edit's new-source
+ * branch (`buildMobileHandEditFacts`), so it is not done here.
  */
 
 const DIAGNOSTIC_COLUMNS = [
