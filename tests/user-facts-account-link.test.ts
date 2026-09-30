@@ -561,6 +561,43 @@ test("F1: quiz A taken Monday, quiz B taken Tuesday — B linked first, A linked
   )
 })
 
+test("round 2: a LOSING older artifact writes nothing to quiz_context — B's lead facts stand alone", async () => {
+  const rows: Row[] = []
+  const { admin, saves } = fakeAdmin(rows)
+
+  await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: tuesdayLeadQuiz() })
+  assert.equal(rows[0]!.quiz_context ?? null, null, "baseline: a lead brings no quiz_context")
+  const before = saves.length
+
+  assert.equal(
+    await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: mondayArtifactQuiz() }),
+    "preserved",
+  )
+  assert.deepEqual(
+    saves.slice(before).map((entry) => [entry.p_domain, entry.p_mode]),
+    [["diagnostics", "create_only"]],
+    "the loser only records itself as a preserved candidate on diagnostics",
+  )
+  assert.equal(rows[0]!.quiz_context ?? null, null, "A's answers never land next to B's facts")
+  assert.equal(((rows[0]!.facts_provenance as Row).quiz_context ?? null) as unknown, null)
+})
+
+test("round 2: a LOSING older artifact leaves a quiz_context B cleared to {} untouched", async () => {
+  const rows = [artifactProfile({ at: "2026-09-10T00:00:00.000Z" })]
+  const { admin } = fakeAdmin(rows)
+  // B (Tuesday lead) wins over the old artifact profile and clears its quiz_context (F4).
+  await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: tuesdayLeadQuiz() })
+  assert.deepEqual(rows[0]!.quiz_context, {})
+  const provenanceBefore = structuredClone((rows[0]!.facts_provenance as Row).quiz_context)
+
+  assert.equal(
+    await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: mondayArtifactQuiz() }),
+    "preserved",
+  )
+  assert.deepEqual(rows[0]!.quiz_context, {})
+  assert.deepEqual((rows[0]!.facts_provenance as Row).quiz_context, provenanceBefore)
+})
+
 test("F1: quiz A (Monday) linked first, quiz B (Tuesday) linked after A's link time: B wins", async () => {
   const rows: Row[] = []
   const { admin } = fakeAdmin(rows)

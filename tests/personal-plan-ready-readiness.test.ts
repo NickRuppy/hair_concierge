@@ -532,11 +532,10 @@ test("F28: linking an OLDER artifact preserves the existing artifact-sourced pro
 
   assert.equal(linked.status, "ready")
   const factsCalls = db.rpcs.filter((call) => call.fn === "user_facts_save_v1")
-  assert.equal(factsCalls.length, 2, "diagnostics + quiz_context")
+  // Round 2 ruling: a losing quiz writes nothing to quiz_context, only its candidate record.
+  assert.equal(factsCalls.length, 1, "diagnostics only")
   assert.equal(factsCalls[0].args.p_domain, "diagnostics")
   assert.equal(factsCalls[0].args.p_mode, "create_only")
-  assert.equal(factsCalls[1].args.p_domain, "quiz_context")
-  assert.equal(factsCalls[1].args.p_mode, "create_only")
   assert.deepEqual(
     db.tables.hair_profiles[0].diagnostics,
     before,

@@ -235,8 +235,8 @@ export async function writeAccountLinkFacts(
     )
 
     if (!quizSupersedesFacts(facts, quiz.createdAt)) {
-      // Not newer: today's preserve behaviour. `create_only` leaves an existing domain alone
-      // and records this quiz as a preserved candidate.
+      // Not newer: `create_only` leaves the diagnostics alone and records this quiz as a
+      // preserved candidate there.
       const diagnosticsResult = await saveUserFacts(admin, {
         userId,
         domain: "diagnostics",
@@ -251,20 +251,10 @@ export async function writeAccountLinkFacts(
         mode: "create_only",
       })
       assertApplied(diagnosticsResult, "diagnostics")
-      if (projection.quizContext) {
-        const quizContextResult = await saveUserFacts(admin, {
-          userId,
-          domain: "quiz_context",
-          patch: projection.quizContext,
-          provenance: {
-            source: projection.provenanceSource,
-            schemaVersion: QUIZ_CONTEXT_SCHEMA_VERSION,
-            at: nowIso,
-          },
-          mode: "create_only",
-        })
-        assertApplied(quizContextResult, "quiz_context")
-      }
+      // Round 2 (controller ruling): a losing quiz writes NOTHING to quiz_context. The loser
+      // path only runs over an existing diagnostics document, and a create_only on a NULL
+      // quiz_context would otherwise plant the loser's answers next to the winner's
+      // diagnostics.
       return "preserved"
     }
 
