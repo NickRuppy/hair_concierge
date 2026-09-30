@@ -13,6 +13,7 @@ import {
 } from "../src/app/plan-bereit/readiness"
 import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
 import { diagnosticsV1Schema } from "../src/lib/user-facts/schema"
+import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
 import { projectArtifactToFacts } from "../src/lib/user-facts/project-artifact"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 import { simulateUserFactsSave } from "./user-facts-save-rpc.fixtures"
@@ -1258,7 +1259,21 @@ test("legacy German-valued recovery preserves source answers and projects canoni
     )
     assert.equal(result.status, "ready", field)
     assert.deepEqual((db.tables.leads[0].quiz_answers as Row)[field], value, field)
-    assert.deepEqual(db.tables.hair_profiles[0][profileField], profileValue, field)
+    // Merge adaptation (single write path): the corrected lead is re-projected through
+    // `user_facts_save_v1` as an unconditional upsert, and the legacy column is what the
+    // RPC derives from the stored diagnostics (the fake RPC stores, it does not derive —
+    // derivation parity is `user-facts-derive-parity.test.ts`).
+    const factsCalls = db.rpcs.filter((call) => call.fn === "user_facts_save_v1")
+    assert.equal(factsCalls.length, 1, field)
+    assert.equal(factsCalls[0].args.p_mode, "upsert", field)
+    const stored = diagnosticsV1Schema.parse(db.tables.hair_profiles[0].diagnostics)
+    assert.deepEqual(
+      deriveDiagnosticsColumns(stored)[
+        profileField as keyof ReturnType<typeof deriveDiagnosticsColumns>
+      ],
+      profileValue,
+      field,
+    )
   }
 })
 
@@ -1368,6 +1383,9 @@ test("Personal Plan email returns provision only with facts, attached artifact a
 })
 
 test("exact email return repairs a missing Personal Plan artifact only after the post-access POST", async () => {
+  // Merge adaptation: a complete v3 envelope — the real repair RPC only ever attaches one
+  // that passes `personalPlanDurableAnswersSchema`, and the account-link facts writer
+  // projects the attached artifact's envelope (it no longer stores `canonical_profile`).
   const answers = {
     kind: "personal_plan",
     version: 3,
@@ -1379,8 +1397,17 @@ test("exact email return repairs a missing Personal Plan artifact only after the
       hairSurface: "rough",
       elasticResponse: "snaps",
       scalpOiliness: "dry",
+      scalpConcerns: [],
       goals: ["moisture"],
       chemicalTreatments: ["colored"],
+      currentConcerns: ["dry_lengths"],
+      routineClarity: "partial",
+      resultReliability: "sometimes",
+      adaptationConfidence: "partly",
+      previousAttempts: "some_steps_helped",
+      blockers: ["consistency"],
+      routineStyle: "simple_reliable",
+      meaningfulMoment: "everyday",
     },
   }
   const db = new FakeSupabase(
@@ -1447,6 +1474,11 @@ test("exact email return repairs a missing Personal Plan artifact only after the
   ])
   assert.equal(db.tables.leads[0].user_id, input.userId)
   assert.equal(db.tables.personal_plan_prepared_artifacts.length, 1)
+  // The facts come from the REPAIRED artifact's own envelope.
+  const stored = diagnosticsV1Schema.parse(db.tables.hair_profiles[0].diagnostics)
+  assert.equal(stored.source.kind, "personal_plan_v3")
+  assert.equal("artifactId" in stored.source ? stored.source.artifactId : null, "repaired-artifact")
+  assert.equal(stored.hairLength, "medium")
 })
 
 test("email return will not use a stale Personal Plan artifact as scanner-ready source", async () => {
@@ -1531,11 +1563,7 @@ test("a scan_v1 buyer gets the initial need snapshot provisioned inside the link
   // One resolution per readiness pass, and the link performs two: the link itself
   // and the readiness read it returns. Both see the same lead.
   assert.deepEqual(packageLookups, ["lead-scan", "lead-scan"])
-  // Two provisioning calls, not one: by the time the link's own tail `loadPlanBereitReadiness`
-  // read runs, the lead is already linked and diagnostics facts already written (F28), so that
-  // read ALSO reaches `ready` and provisions again — `provisionStage1Plan` is documented
-  // idempotent precisely so every `ready`-reaching pass may re-run it safely.
-  assert.deepEqual(provisioned, ["user-1", "user-1"])
+  assert.deepEqual(provisioned, ["user-1"])
   // Stage 1 resolves the entitlement through the enrollment, which needs the lead link
   // to exist first — so the link update must already have happened by then.
   assert.deepEqual(
