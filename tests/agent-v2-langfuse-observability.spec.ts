@@ -108,6 +108,25 @@ test("AgentV2 tool summaries avoid raw hidden context", () => {
   assert.doesNotMatch(JSON.stringify({ inputSummary, outputSummary }), /secret|Private|RAW_PRODUCT/)
 })
 
+test("AgentV2 tool summaries expose guidance package ids from loaded guidance output", () => {
+  const outputSummary = summarizeAgentV2ToolOutput("load_advisor_guidance", {
+    packages: [
+      { package_id: "base.answer_contract.v1", markdown_brief: "RAW_GUIDANCE_SHOULD_NOT_LEAK" },
+      { package_id: "category.shampoo.v1", markdown_brief: "RAW_CATEGORY_SHOULD_NOT_LEAK" },
+    ],
+    hard_rules: [{ id: "rule-1", body: "raw rule" }],
+  })
+
+  assert.deepEqual(outputSummary, {
+    name: "load_advisor_guidance",
+    valid_product_ids: [],
+    product_count: null,
+    routine_step_count: null,
+    loaded_guidance_ids: ["base.answer_contract.v1", "category.shampoo.v1"],
+  })
+  assert.doesNotMatch(JSON.stringify(outputSummary), /RAW_GUIDANCE|RAW_CATEGORY|raw rule/)
+})
+
 test("AgentV2 Langfuse observation kill-switch disables observed client path", () => {
   const original = process.env.AGENT_V2_LANGFUSE_OBSERVATION
   try {
