@@ -81,17 +81,9 @@ function result(data: StoredPublication): ProfileEditResult {
   }
 }
 
+/** Every variant saves facts through `user_facts_save_v1` inside the publish transaction; there
+ * is no column patch (clean-switch fix round 1 deleted the last one with `PUT /api/profile`). */
 export type ProfileEditInput =
-  | {
-      expectedProfileRevision: string
-      requestId: string
-      /** Column patch the SQL function writes directly. Only `PUT /api/profile` (no caller)
-       * still uses it — clean-switch task 5 left that route open, see the task report; delete
-       * this variant together with the SQL branch that serves it once PUT is decided. */
-      patch: Record<string, unknown>
-      quizAnswers?: QuizAnswers
-      saveAsFacts?: false
-    }
   | {
       expectedProfileRevision: string
       requestId: string
@@ -129,29 +121,24 @@ export async function publishProfileEdit(
       throw new ProfileEditError("profile_conflict")
     const before = prepareScannerContext(read)
     if (!before) throw new ProfileEditError("profile_required")
-    // Mobile: the facts are built against the row this read saw; the scanner clock CAS in the
-    // SQL function guarantees the row is unchanged when they are written. The scanner context
-    // is prepared from the columns the door WILL derive (the parity-tested TS oracle), so the
+    // The facts are built against the row this read saw; the scanner clock CAS in the SQL
+    // function guarantees the row is unchanged when they are written. The scanner context is
+    // prepared from the columns the door WILL derive (the parity-tested TS oracle), so the
     // published context and the stored row can never disagree.
-    let facts: MobileFactsWrite | null = null
-    let patch: Record<string, unknown> = {}
-    if ("profileAnswers" in input) {
-      facts = buildProfileAnswersFacts({
-        answers: input.profileAnswers,
-        stored: parseUserFactsRow(userId, read.profile ?? {}),
-        row: read.profile,
-        now: new Date().toISOString(),
-      })
-    } else if (input.saveAsFacts) {
-      facts = buildMobileHandEditFacts({
-        answers: input.quizAnswers,
-        stored: parseUserFactsRow(userId, read.profile ?? {}),
-        now: new Date().toISOString(),
-      })
-    } else {
-      patch = input.patch
-    }
-    const profile = { ...read.profile, ...patch, ...facts?.columns }
+    const facts: MobileFactsWrite =
+      "profileAnswers" in input
+        ? buildProfileAnswersFacts({
+            answers: input.profileAnswers,
+            stored: parseUserFactsRow(userId, read.profile ?? {}),
+            row: read.profile,
+            now: new Date().toISOString(),
+          })
+        : buildMobileHandEditFacts({
+            answers: input.quizAnswers,
+            stored: parseUserFactsRow(userId, read.profile ?? {}),
+            now: new Date().toISOString(),
+          })
+    const profile = { ...read.profile, ...facts.columns }
     const previousQuiz = editableScannerQuizAnswers(read)
     const priorEdit = {
       profileRevision: read.profileRevision,
@@ -191,7 +178,7 @@ export async function publishProfileEdit(
       p_request_hash: requestHash,
       p_expected_profile_revision: input.expectedProfileRevision,
       p_expected_source_revision: read.sourceRevision,
-      p_patch: patch,
+      p_facts: toProfileFactsArgument(facts),
       p_quiz_answers: quizAnswers,
       p_source_hash: prepared.sourceHash,
       p_engine_version: prepared.snapshot.computationVersion,
@@ -203,7 +190,6 @@ export async function publishProfileEdit(
       },
       p_output_snapshot: prepared.snapshot,
       p_snapshot_source: prepared.snapshotSource,
-      ...(facts ? { p_facts: toProfileFactsArgument(facts) } : {}),
     })
     if (publication.error || !publication.data)
       throw new ProfileEditError("temporarily_unavailable")

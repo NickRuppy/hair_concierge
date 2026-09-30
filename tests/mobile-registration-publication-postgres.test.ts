@@ -6,8 +6,6 @@ import {
   completeMobileProfile,
 } from "../src/lib/mobile/registration-completion"
 import { registrationSubmissionHash } from "../src/lib/mobile/registration-contract"
-import { mobileEditProfilePatch } from "../src/lib/mobile/profile-edit-contract"
-import { mergeMissingProfileAnswers } from "../src/lib/mobile/profile-completion-contract"
 import { loadSharedScannerContext } from "../src/lib/scan/scanner-context-supabase"
 import { quizSupersedesFacts } from "../src/lib/user-facts/account-link"
 import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
@@ -21,6 +19,10 @@ import {
   readClock,
   readRow,
 } from "./mobile-profile-facts-pglite.fixtures"
+import {
+  legacyMissingProfilePatch,
+  legacyMobileEditProfilePatch,
+} from "./mobile-legacy-profile-patch.oracle"
 import { insertProfile, saveUserFacts } from "./personal-plan-pglite-migration.fixtures"
 
 // Executes the real SQL functions, constraints and triggers on the real schema (clean-switch
@@ -70,9 +72,9 @@ async function fixture(
                 ? {}
                 : args.p_mode === "missing"
                   ? p_facts
-                    ? mergeMissingProfileAnswers(read.profile, quiz).patch
+                    ? legacyMissingProfilePatch(read.profile, quiz).patch
                     : {}
-                  : mobileEditProfilePatch(quiz)
+                  : legacyMobileEditProfilePatch(quiz)
             return real.rpc(name, { ...rest, p_patch: patch })
           },
         }

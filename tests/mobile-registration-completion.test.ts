@@ -4,7 +4,7 @@ import {
   completeMobileRegistration,
   completeMobileProfile,
 } from "../src/lib/mobile/registration-completion"
-import { mobileEditProfilePatch } from "../src/lib/mobile/profile-edit-contract"
+import { legacyMobileEditProfilePatch } from "./mobile-legacy-profile-patch.oracle"
 const owner = "11111111-1111-4111-8111-111111111111"
 const id = "22222222-2222-4222-8222-222222222222"
 const answers = {
@@ -108,7 +108,7 @@ test("mismatched verified email never reads or publishes", async () => {
   assert.equal(db.calls.length, 0)
 })
 test("create cannot overwrite existing profile and keep cannot fabricate completed source", async () => {
-  const db = harness(mobileEditProfilePatch(answers as never))
+  const db = harness(legacyMobileEditProfilePatch(answers as never))
   await assert.rejects(
     completeMobileRegistration(db as never, owner, submission.email, input as never),
     /profile_conflict/,
@@ -123,7 +123,10 @@ test("create cannot overwrite existing profile and keep cannot fabricate complet
   assert.ok(!db.calls.some((c) => c.name === "mobile_registration_publish"))
 })
 test("replace preserves unrelated profile fields and uses exact source revision", async () => {
-  const db = harness({ ...mobileEditProfilePatch(answers as never), styling_methods: ["air_dry"] })
+  const db = harness({
+    ...legacyMobileEditProfilePatch(answers as never),
+    styling_methods: ["air_dry"],
+  })
   await completeMobileRegistration(db as never, owner, submission.email, {
     ...input,
     choice: "replace",
@@ -134,7 +137,7 @@ test("replace preserves unrelated profile fields and uses exact source revision"
   assert.equal(call.p_mode, "replace")
 })
 test("missing-only asks merged helper for allowed patch, ignores supplied present-field replacements", async () => {
-  const profile = mobileEditProfilePatch(answers as never)
+  const profile = legacyMobileEditProfilePatch(answers as never)
   delete profile.hair_length
   const db = harness(profile)
   await completeMobileProfile(db as never, owner, {

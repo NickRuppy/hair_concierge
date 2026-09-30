@@ -2,7 +2,6 @@ import { z } from "zod"
 import type { QuizAnswers } from "@/lib/quiz/types"
 import { quizAnswersSchema } from "@/lib/quiz/validators"
 import { currentLegacyAnswers } from "@/lib/scan/scanner-context"
-import { mobileEditProfilePatch } from "./profile-edit-contract"
 
 const groups = [
   "structure",
@@ -16,18 +15,6 @@ const groups = [
   "concerns",
   "goals",
 ] as const
-const columns: Record<(typeof groups)[number], string[]> = {
-  structure: ["hair_texture"],
-  thickness: ["thickness"],
-  density: ["density"],
-  hair_length: ["hair_length"],
-  fingertest: ["cuticle_condition"],
-  pulltest: ["protein_moisture_balance"],
-  treatment: ["chemical_treatment"],
-  scalp_type: ["scalp_type", "scalp_condition"],
-  concerns: ["concerns"],
-  goals: ["goals", "desired_volume"],
-}
 const partialAnswersSchema = z
   .object(
     Object.fromEntries(
@@ -85,7 +72,6 @@ export function mergeMissingProfileAnswers(
   input: Partial<QuizAnswers>,
 ): {
   answers: QuizAnswers
-  patch: Record<string, unknown>
   /** The question groups that were missing and are answered now (clean-switch task 4: the
    * facts write names exactly these). */
   missing: (typeof groups)[number][]
@@ -104,11 +90,5 @@ export function mergeMissingProfileAnswers(
       merged.concerns_other_text = submitted.concerns_other_text
   }
   const answers = quizAnswersSchema.refine((a) => Boolean(a.goals?.length)).parse(merged)
-  const projected = mobileEditProfilePatch(answers)
-  const allowed = new Set(missing.flatMap((id) => columns[id as (typeof groups)[number]]))
-  return {
-    answers,
-    patch: Object.fromEntries(Object.entries(projected).filter(([key]) => allowed.has(key))),
-    missing,
-  }
+  return { answers, missing }
 }

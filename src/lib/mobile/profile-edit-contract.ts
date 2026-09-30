@@ -1,9 +1,6 @@
 import { z } from "zod"
 import { quizAnswersSchema } from "@/lib/quiz/validators"
 import { quizQuestions, QUIZ_QUESTION_STEPS } from "@/lib/quiz/questions"
-import { projectQuizAnswersToLegacyVocabulary } from "@/lib/quiz/normalization"
-import { buildProfileDataFromQuizAnswers } from "@/lib/quiz/link-to-profile"
-import { deriveDesiredVolumeFromGoals } from "@/lib/hair-profile/derived"
 import { getConcernOptions, getGoalOptions } from "@/components/personal-plan-quiz/quiz-data"
 import { GOAL_LABELS, PROFILE_CONCERN_LABELS, type HairTexture } from "@/lib/vocabulary"
 import type { QuizAnswers } from "@/lib/quiz/types"
@@ -149,12 +146,4 @@ export function mobileEditQuestions(answers: QuizAnswers): EditQuestion[] {
       options: question.options.map(option),
     }
   })
-}
-export function mobileEditProfilePatch(answers: QuizAnswers): Record<string, unknown> {
-  const goals = projectQuizAnswersToLegacyVocabulary(answers).goals
-  return {
-    ...buildProfileDataFromQuizAnswers(answers),
-    goals,
-    desired_volume: deriveDesiredVolumeFromGoals(goals, null),
-  }
 }

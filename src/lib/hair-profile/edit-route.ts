@@ -16,96 +16,12 @@ export async function authenticatedProfileUser(client: {
   return (await client.auth.getUser()).data.user?.id ?? null
 }
 
-export type ProfileEditRouteClient = {
-  from: (table: string) => {
-    upsert: (
-      row: Record<string, unknown>,
-      options: { onConflict: string },
-    ) => { select: () => { single: () => Promise<{ data: unknown; error: unknown }> } }
-  }
-}
-
 export type ProfileEditRouteDeps = {
   createAdminClient: typeof createAdminClient
   readScannerProfileSource: typeof readScannerProfileSource
   prepareScannerContext: typeof prepareScannerContext
   publishProfileEdit: typeof publishProfileEdit
   randomUUID: () => string
-}
-
-export type CompatibleProfileEditResult =
-  | { kind: "legacy"; profile: unknown }
-  | {
-      kind: "published"
-      profile: Record<string, unknown>
-      profileRevision: string
-      contextRevision: string
-    }
-
-async function legacyWrite(
-  client: ProfileEditRouteClient,
-  userId: string,
-  patch: Record<string, unknown>,
-) {
-  return client
-    .from("hair_profiles")
-    .upsert(
-      { user_id: userId, ...patch, updated_at: new Date().toISOString() },
-      { onConflict: "user_id" },
-    )
-    .select()
-    .single()
-}
-
-/**
- * `PUT /api/profile` ONLY — the one web writer clean-switch task 5 left on the column path: its
- * legacy-column schema has no facts expression without new conversions (desired_volume, the care
- * columns, full-replace clears), so it waits for a decision (see the task-5/8 report). Delete this
- * together with the web branch of `scanner_profile_edit_publish` once PUT is decided.
- *
- * The caller has already authenticated the owner and validated its route-specific patch.
- * An unavailable source never falls through to legacy storage. A source that is incomplete
- * before the patch, or a valid explicit clear that makes the resulting profile incomplete,
- * preserves the existing non-scanner upsert behavior.
- */
-export async function saveCompatibleProfileEdit(
-  deps: ProfileEditRouteDeps,
-  client: ProfileEditRouteClient,
-  userId: string,
-  patch: Record<string, unknown>,
-): Promise<CompatibleProfileEditResult> {
-  let source
-  try {
-    source = await deps.readScannerProfileSource(deps.createAdminClient(), userId)
-  } catch {
-    throw new ProfileEditError("temporarily_unavailable")
-  }
-
-  let prepared
-  try {
-    prepared = deps.prepareScannerContext(source)
-  } catch {
-    throw new ProfileEditError("temporarily_unavailable")
-  }
-
-  const nextProfile = { ...(source.profile ?? {}), ...patch }
-  if (!prepared || !hasCompletedQuizDiagnostics(nextProfile)) {
-    const { data, error } = await legacyWrite(client, userId, patch)
-    if (error) throw error
-    return { kind: "legacy", profile: data }
-  }
-
-  const result = await deps.publishProfileEdit(deps.createAdminClient(), userId, {
-    expectedProfileRevision: source.profileRevision,
-    requestId: deps.randomUUID(),
-    patch,
-  })
-  return {
-    kind: "published",
-    profile: result.profile,
-    profileRevision: result.profileRevision,
-    contextRevision: result.contextRevision,
-  }
 }
 
 export type ProfileAnswersSaveDeps = ProfileEditRouteDeps & {

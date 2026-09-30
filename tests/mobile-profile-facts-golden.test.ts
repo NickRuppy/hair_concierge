@@ -4,15 +4,11 @@ import { readFile } from "node:fs/promises"
 import test from "node:test"
 
 import { saveMobileProfileEdit } from "../src/lib/mobile/profile-edit-service"
-import { mergeMissingProfileAnswers } from "../src/lib/mobile/profile-completion-contract"
 import {
   completeMobileProfile,
   completeMobileRegistration,
 } from "../src/lib/mobile/registration-completion"
-import {
-  mobileEditProfilePatch,
-  type ProfileEditRequest,
-} from "../src/lib/mobile/profile-edit-contract"
+import type { ProfileEditRequest } from "../src/lib/mobile/profile-edit-contract"
 import { projectQuizAnswersToLegacyVocabulary } from "../src/lib/quiz/normalization"
 import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
 import type { QuizAnswers } from "../src/lib/quiz/types"
@@ -24,6 +20,10 @@ import {
   registrationIntent,
 } from "./mobile-profile-facts-pglite.fixtures"
 import {
+  legacyMissingProfilePatch,
+  legacyMobileEditProfilePatch,
+} from "./mobile-legacy-profile-patch.oracle"
+import {
   id,
   insertProfile,
   saveUserFacts,
@@ -33,7 +33,7 @@ import {
 /**
  * Golden tests, clean-switch tasks 3 + 4: for the existing iOS edit / registration fixtures, the columns
  * `user_facts_save_v1` derives on the real schema equal what the old direct write stored —
- * today's `mobileEditProfilePatch(answers)` — except for these ENUMERATED exceptions, each
+ * today's `legacyMobileEditProfilePatch(answers)` — except for these ENUMERATED exceptions, each
  * applied by exactly one rule below. Any other difference fails: it is a finding, not
  * something to adapt here.
  *
@@ -191,7 +191,7 @@ test("golden (task 3): iOS edit fixtures derive today's columns up to E1-E4", as
     const actual = Object.fromEntries(DIAGNOSTICS_COLUMNS.map((column) => [column, row[column]]))
     assert.deepEqual(
       comparable(actual),
-      comparable(expectedColumns(answers, before, mobileEditProfilePatch(answers))),
+      comparable(expectedColumns(answers, before, legacyMobileEditProfilePatch(answers))),
       name,
     )
   }
@@ -199,7 +199,7 @@ test("golden (task 3): iOS edit fixtures derive today's columns up to E1-E4", as
 
 // ---------------------------------------------------------------------------
 // Task 4: registration create / replace / missing. Today's function wrote
-// `mobileEditProfilePatch(answers)` (create, replace) or the missing-only patch of
+// `legacyMobileEditProfilePatch(answers)` (create, replace) or the missing-only patch of
 // `mergeMissingProfileAnswers` over the row; the same E1-E4 are the only allowed differences.
 // ---------------------------------------------------------------------------
 
@@ -251,7 +251,7 @@ test("golden (task 4): registration create and replace derive today's columns up
     const createdRow = (await readRow(created, OWNER))!
     assert.deepEqual(
       comparable(Object.fromEntries(DIAGNOSTICS_COLUMNS.map((c) => [c, createdRow[c]]))),
-      comparable(expectedColumns(answers, TABLE_DEFAULTS, mobileEditProfilePatch(answers))),
+      comparable(expectedColumns(answers, TABLE_DEFAULTS, legacyMobileEditProfilePatch(answers))),
       `create: ${name}`,
     )
 
@@ -269,7 +269,7 @@ test("golden (task 4): registration create and replace derive today's columns up
     const row = (await readRow(replaced, OWNER))!
     assert.deepEqual(
       comparable(Object.fromEntries(DIAGNOSTICS_COLUMNS.map((c) => [c, row[c]]))),
-      comparable(expectedColumns(answers, before, mobileEditProfilePatch(answers))),
+      comparable(expectedColumns(answers, before, legacyMobileEditProfilePatch(answers))),
       `replace: ${name}`,
     )
   }
@@ -323,7 +323,7 @@ test("golden (task 4): profile completion (missing) derives today's columns up t
       profile: Record<string, unknown>
     }
     const before = (await readRow(pg, OWNER))!
-    const merged = mergeMissingProfileAnswers(read.profile, submitted)
+    const merged = legacyMissingProfilePatch(read.profile, submitted)
     await completeMobileProfile(client as never, OWNER, {
       requestId: randomUUID(),
       expectedProfileRevision: read.profileRevision,

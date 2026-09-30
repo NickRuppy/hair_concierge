@@ -2,9 +2,9 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import {
   mobileEditQuestions,
-  mobileEditProfilePatch,
   profileEditRequestSchema,
 } from "../src/lib/mobile/profile-edit-contract"
+import { legacyMobileEditProfilePatch } from "./mobile-legacy-profile-patch.oracle"
 const answers = {
   structure: "wavy",
   thickness: "fine",
@@ -68,8 +68,8 @@ test("all ten regular groups preserve saved legacy selections without collapsing
   assert.equal(questions[7].conditionOptions!.length, 3)
   assert.equal(new Set(questions[9].options.map((o) => o.value)).size, questions[9].options.length)
 })
-test("native diagnostic patch projects shared enums while leaving unrelated lifestyle data out", () => {
-  assert.deepEqual(mobileEditProfilePatch(answers), {
+test("golden oracle: the pre-switch iOS column patch projects shared enums, no lifestyle data", () => {
+  assert.deepEqual(legacyMobileEditProfilePatch(answers), {
     hair_texture: "wavy",
     thickness: "fine",
     density: "medium",

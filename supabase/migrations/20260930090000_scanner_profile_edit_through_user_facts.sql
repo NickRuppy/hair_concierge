@@ -1,23 +1,19 @@
 -- Central user profile, clean switch task 3 (plans/2026-09-30-central-user-profile-clean-switch.md
--- §4): the iOS profile edit saves its facts through `public.user_facts_save_v1` inside its own
--- transaction instead of writing hair_profiles columns.
+-- §4): the iOS profile edit (and, since task 5, the web profile editors) save their facts through
+-- `public.user_facts_save_v1` inside this function's transaction instead of writing hair_profiles
+-- columns.
 --
 -- Supersedes `scanner_profile_edit_publish` from 20260916175239_hosted_mobile_profile_edit.sql
--- (applied in production, therefore not edited in place). The only change is the new trailing
--- `p_facts` parameter and the branch it selects:
+-- (applied in production, therefore not edited in place). The column patch is gone: the former
+-- `p_patch` (a hair_profiles column patch written by a dynamic UPDATE) is replaced, in the same
+-- position, by the required `p_facts` — `{"diagnostics": {"patch", "provenance"}}` built by
+-- src/lib/mobile/profile-facts-patch.ts (iOS edit) or src/lib/hair-profile/profile-answers.ts
+-- (web editors) — which is handed to the door exactly once, with the row's current
+-- `facts_revision` (read under this function's row lock) as the expected revision. The door
+-- derives the legacy columns; nothing here writes a fact column. (Its last column-patch caller,
+-- `PUT /api/profile`, was deleted in clean-switch fix round 1.)
 --
---   p_facts IS NULL      WEB path, byte-for-byte the 20260916175239 behaviour: `p_patch` is a
---                        hair_profiles column patch written by a dynamic UPDATE. Its only caller
---                        is src/lib/hair-profile/edit-route.ts; clean-switch task 5 moves that
---                        route onto the door and then deletes this branch (and `p_patch`).
---   p_facts IS NOT NULL  MOBILE path (src/lib/mobile/profile-edit-service.ts): `p_patch` must be
---                        `{}` and the facts `{"diagnostics": {"patch", "provenance"}}` built by
---                        src/lib/mobile/profile-facts-patch.ts are handed to the door exactly
---                        once, with the row's current `facts_revision` (read under this
---                        function's row lock) as the expected revision. The door derives the
---                        legacy columns; nothing here writes a fact column.
---
--- Door status -> this function's outcome (mobile path):
+-- Door status -> this function's outcome:
 --   ok                 -> publication continues as before ("ready").
 --   revision_conflict  -> {"outcome":"profile_conflict"} with nothing written (unreachable under
 --                         the row lock, kept so a future caller change cannot drop an edit).
@@ -101,13 +97,12 @@ DROP FUNCTION public.scanner_profile_edit_publish(
 CREATE FUNCTION public.scanner_profile_edit_publish(
   p_user_id uuid,p_request_id uuid,p_request_hash text,
   p_expected_profile_revision bigint,p_expected_source_revision bigint,
-  p_patch jsonb,p_quiz_answers jsonb,p_source_hash text,p_engine_version text,
-  p_input_snapshot jsonb,p_output_snapshot jsonb,p_snapshot_source text,
-  p_facts jsonb DEFAULT NULL
+  p_facts jsonb,p_quiz_answers jsonb,p_source_hash text,p_engine_version text,
+  p_input_snapshot jsonb,p_output_snapshot jsonb,p_snapshot_source text
 ) RETURNS jsonb
 LANGUAGE plpgsql SECURITY DEFINER SET search_path = '' AS $$
 DECLARE v_clock public.scanner_context_sources; v_profile jsonb; v_receipt jsonb;
-  v_context jsonb; v_published jsonb; v_columns text; v_result jsonb; v_facts jsonb;
+  v_context jsonb; v_published jsonb; v_result jsonb; v_facts jsonb;
 BEGIN
   -- Existing web writes lock hair_profiles then their AFTER trigger locks the
   -- clock. Match that order; never take the clock and then wait on a profile.
@@ -119,30 +114,16 @@ BEGIN
   IF NOT FOUND OR v_clock.profile_revision IS DISTINCT FROM p_expected_profile_revision
     OR v_clock.revision IS DISTINCT FROM p_expected_source_revision THEN RETURN jsonb_build_object('outcome','profile_conflict'); END IF;
   IF p_request_id IS NULL OR p_request_hash IS NULL OR p_request_hash !~ '^[0-9a-f]{64}$'
-    OR jsonb_typeof(p_patch) IS DISTINCT FROM 'object'
-    -- Web path: a non-empty column patch. Mobile path: facts, and an empty column patch.
-    OR (p_facts IS NULL AND p_patch='{}'::jsonb)
-    OR (p_facts IS NOT NULL AND p_patch<>'{}'::jsonb)
+    OR jsonb_typeof(p_facts) IS DISTINCT FROM 'object'
     OR jsonb_typeof(p_quiz_answers) IS DISTINCT FROM 'object'
     OR jsonb_typeof(p_input_snapshot->'source') IS DISTINCT FROM 'object'
     OR jsonb_typeof(p_input_snapshot->'userRefinementAnswers') IS DISTINCT FROM 'object'
     OR jsonb_typeof(p_input_snapshot->'userRefinementQuestionIds') IS DISTINCT FROM 'array'
     THEN RAISE EXCEPTION 'invalid_profile_edit'; END IF;
-  IF p_facts IS NULL THEN
-    -- WEB PATH (clean-switch task 5 removes this branch): direct column patch, verbatim from
-    -- 20260916175239.
-    IF EXISTS(SELECT 1 FROM jsonb_object_keys(p_patch) k WHERE k IN ('id','user_id','created_at','updated_at') OR NOT EXISTS(
-      SELECT 1 FROM pg_catalog.pg_attribute a WHERE a.attrelid='public.hair_profiles'::regclass AND a.attname=k AND a.attnum>0 AND NOT a.attisdropped))
-      THEN RAISE EXCEPTION 'invalid_profile_edit_patch'; END IF;
-    SELECT string_agg(format('%I',k),',' ORDER BY k) INTO v_columns FROM jsonb_object_keys(p_patch) k;
-    EXECUTE format('UPDATE public.hair_profiles SET (%s)=(SELECT %s FROM jsonb_populate_record(NULL::public.hair_profiles,$1)), updated_at=clock_timestamp() WHERE user_id=$2 RETURNING to_jsonb(hair_profiles)',v_columns,v_columns)
-      INTO v_profile USING v_profile || p_patch,p_user_id;
-  ELSE
-    -- MOBILE PATH: one door call; the door writes the facts and derives the columns.
-    v_facts := public.mobile_profile_facts_save_v1(p_user_id,p_facts,false);
-    IF v_facts->>'status' = 'revision_conflict' THEN RETURN jsonb_build_object('outcome','profile_conflict'); END IF;
-    SELECT to_jsonb(h) INTO v_profile FROM public.hair_profiles h WHERE user_id=p_user_id;
-  END IF;
+  -- One door call; the door writes the facts and derives the columns.
+  v_facts := public.mobile_profile_facts_save_v1(p_user_id,p_facts,false);
+  IF v_facts->>'status' = 'revision_conflict' THEN RETURN jsonb_build_object('outcome','profile_conflict'); END IF;
+  SELECT to_jsonb(h) INTO v_profile FROM public.hair_profiles h WHERE user_id=p_user_id;
   -- Even accepting identical basics establishes a new authority boundary and
   -- must invalidate a pre-edit paid binding (including ABA/no-op edits).
   UPDATE public.scanner_context_sources SET revision=revision+1,profile_revision=profile_revision+1
@@ -159,5 +140,5 @@ BEGIN
   RETURN v_result;
 END;
 $$;
-REVOKE ALL ON FUNCTION public.scanner_profile_edit_publish(uuid,uuid,text,bigint,bigint,jsonb,jsonb,text,text,jsonb,jsonb,text,jsonb) FROM PUBLIC,anon,authenticated;
-GRANT EXECUTE ON FUNCTION public.scanner_profile_edit_publish(uuid,uuid,text,bigint,bigint,jsonb,jsonb,text,text,jsonb,jsonb,text,jsonb) TO service_role;
+REVOKE ALL ON FUNCTION public.scanner_profile_edit_publish(uuid,uuid,text,bigint,bigint,jsonb,jsonb,text,text,jsonb,jsonb,text) FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.scanner_profile_edit_publish(uuid,uuid,text,bigint,bigint,jsonb,jsonb,text,text,jsonb,jsonb,text) TO service_role;

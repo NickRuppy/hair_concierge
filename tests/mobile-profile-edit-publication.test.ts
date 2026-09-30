@@ -72,6 +72,9 @@ import { hashPersonalPlanNeedVersionInput } from "../src/lib/personal-plan/persi
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 import { adaptPersonalPlanAnswersForOffer } from "../src/lib/personal-plan-quiz/offer-adapter"
 import { buildProfileDataFromQuizAnswers } from "../src/lib/quiz/link-to-profile"
+import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
+import { mergeDiagnosticsPatch } from "../src/lib/user-facts/hand-edit"
+import { parseUserFactsRow } from "../src/lib/user-facts/read"
 
 function harness(initial: ScannerSourceRead) {
   let read = initial
@@ -107,11 +110,17 @@ function harness(initial: ScannerSourceRead) {
       assert.equal(args.p_expected_source_revision, read.sourceRevision)
       assert.equal(args.p_expected_profile_revision, read.profileRevision)
       const profileRevision = String(Number(read.profileRevision) + 1)
+      // What the door does: merge the facts patch, derive the 13 columns from the document.
+      assert.equal(args.p_patch, undefined, "no column patch reaches the publisher")
+      const diagnostics = mergeDiagnosticsPatch(
+        parseUserFactsRow("owner", read.profile ?? {}).diagnostics,
+        args.p_facts.diagnostics.patch,
+      )
       const result = {
         outcome: "ready",
         profileRevision,
         contextRevision: `context-${profileRevision}`,
-        profile: { ...read.profile, ...args.p_patch },
+        profile: { ...read.profile, ...deriveDiagnosticsColumns(diagnostics), diagnostics },
         quizAnswers: args.p_quiz_answers,
         context: {
           input_snapshot: args.p_input_snapshot,
@@ -137,10 +146,19 @@ function harness(initial: ScannerSourceRead) {
     },
   }
 }
-const request = (extra: Record<string, unknown> = {}) => ({
+// Clean-switch fix round 1 (A): the column-patch input is gone. These requests are the iOS edit
+// (complete answers, saved as facts); `web()` is the web editors' input (changed groups only).
+const request = (extra: Record<string, unknown> = {}, quizAnswers: object = answers) => ({
   expectedProfileRevision: "1",
   requestId: "33333333-3333-4333-8333-333333333333",
-  patch: { thickness: "coarse" },
+  quizAnswers: { ...quizAnswers, thickness: "coarse" },
+  saveAsFacts: true as const,
+  ...extra,
+})
+const web = (extra: Record<string, unknown> = {}) => ({
+  expectedProfileRevision: "1",
+  requestId: "33333333-3333-4333-8333-333333333333",
+  profileAnswers: { thickness: "coarse" as const },
   ...extra,
 })
 test("publisher preserves nonquiz fields, saves raw diagnostic choices/text and retries before stale CAS/computation", async () => {
@@ -152,10 +170,7 @@ test("publisher preserves nonquiz fields, saves raw diagnostic choices/text and 
     goals: ["manageability_styling" as const],
     concerns_other_text: "Meine Spitzen",
   }
-  const input = request({
-    patch: { thickness: "coarse", concerns: [], goals: ["less_frizz"] },
-    quizAnswers,
-  })
+  const input = request({ quizAnswers })
   const saved = await publishProfileEdit(db as never, "owner", input)
   assert.deepEqual(saved.profile.styling_methods, ["air_dry"])
   assert.deepEqual(saved.quizAnswers, quizAnswers)
@@ -170,7 +185,10 @@ test("publisher preserves nonquiz fields, saves raw diagnostic choices/text and 
   assert.deepEqual(await publishProfileEdit(db as never, "owner", input), saved)
   assert.deepEqual(db.calls, ["scanner_profile_edit_receipt"])
   await assert.rejects(
-    publishProfileEdit(db as never, "owner", { ...input, patch: { thickness: "fine" } }),
+    publishProfileEdit(db as never, "owner", {
+      ...input,
+      quizAnswers: { ...quizAnswers, thickness: "fine" },
+    }),
     { code: "profile_conflict" },
   )
 })
@@ -202,12 +220,22 @@ test("saved raw legacy volume direction survives prefill and unrelated web edits
     }),
   )
   assert.deepEqual(editableScannerQuizAnswers(db.read).goals, ["less_volume"])
-  const saved = await publishProfileEdit(db as never, "owner", request())
+  const saved = await publishProfileEdit(db as never, "owner", web())
   assert.deepEqual(saved.quizAnswers.goals, ["less_volume"])
   assert.equal(saved.quizAnswers.concerns_other_text, "Spitzen")
 })
-function paidSource(): ScannerSourceRead {
+// `hair_damage` instead of `split_ends`: the offer adapter adds the legacy goal `less_split_ends`
+// for `split_ends`, which a goals column derived by `user_facts_save_v1` never carries — that paid
+// source would stop being basics-compatible after any facts write (reported in clean-switch fix
+// round 1). These tests are about discarded details and bindings, so their fixture avoids that
+// separate interaction.
+function paidEnvelope() {
   const envelope = structuredClone(COMPLETE_V3_PLAN_ENVELOPE)
+  envelope.answers.currentConcerns = ["dry_lengths", "hair_damage"]
+  return envelope
+}
+function paidSource(): ScannerSourceRead {
+  const envelope = paidEnvelope()
   const computed = computeNeedPlan({
     rawEnvelope: envelope,
     artifactId: "initial",
@@ -242,6 +270,7 @@ function paidSource(): ScannerSourceRead {
     },
   })
 }
+const paidAnswers = () => adaptPersonalPlanAnswersForOffer(paidEnvelope().answers).answers
 function recurrence(prepared: ReturnType<typeof prepareScannerContext>) {
   const answers = prepared?.source.answers
   return answers && "concernRecurrence" in answers ? answers.concernRecurrence : undefined
@@ -249,7 +278,12 @@ function recurrence(prepared: ReturnType<typeof prepareScannerContext>) {
 test("old paid source never restores a discarded detail after basics return; new paid publication requires matching profile revision and basics", async () => {
   const db = harness(paidSource())
   assert.ok(recurrence(prepareScannerContext(db.read)))
-  const first = await publishProfileEdit(db as never, "owner", request({ patch: { concerns: [] } }))
+  // What the iOS edit screen does: prefill from the editable answers, change one group, save.
+  const first = await publishProfileEdit(
+    db as never,
+    "owner",
+    request({ quizAnswers: { ...editableScannerQuizAnswers(db.read), concerns: [] } }),
+  )
   assert.equal(recurrence(first.prepared), undefined)
   const second = await publishProfileEdit(
     db as never,
@@ -257,7 +291,7 @@ test("old paid source never restores a discarded detail after basics return; new
     request({
       requestId: "44444444-4444-4444-8444-444444444444",
       expectedProfileRevision: first.profileRevision,
-      patch: { concerns: ["dryness", "split_ends"] },
+      quizAnswers: { ...editableScannerQuizAnswers(db.read), concerns: ["dryness", "hair_damage"] },
     }),
   )
   assert.equal(recurrence(second.prepared), undefined)
@@ -307,7 +341,7 @@ test("applicable detailed answers survive edits, discarded answers never return,
   const first = await publishProfileEdit(
     db as never,
     "owner",
-    request({ patch: { scalp_condition: null } }),
+    request({ quizAnswers: { ...raw, has_scalp_issue: false, scalp_condition: undefined } }),
   )
   assert.equal(first.prepared.userRefinementAnswers.wetWashFrequency, "weekly_3_4x")
   assert.equal(first.prepared.userRefinementAnswers.scalpIrritationDetail, undefined)
@@ -318,7 +352,7 @@ test("applicable detailed answers survive edits, discarded answers never return,
     request({
       expectedProfileRevision: first.profileRevision,
       requestId: "55555555-5555-4555-8555-555555555555",
-      patch: { scalp_condition: "irritated" },
+      quizAnswers: raw,
     }),
   )
   assert.equal(second.prepared.userRefinementAnswers.wetWashFrequency, "weekly_3_4x")
@@ -371,7 +405,7 @@ test("existing pre-edit input upgrades at unchanged source revision and subseque
 
 test("shared loader exposes rejected paid source without blocking edited context or logging personal values; compatible source emits none", async (t) => {
   const db = harness(paidSource())
-  await publishProfileEdit(db as never, "owner", request({ patch: { thickness: "coarse" } }))
+  await publishProfileEdit(db as never, "owner", request({}, paidAnswers()))
   let read = { ...db.read, paidBindings: { initial: db.read.profileRevision } }
   let lastInput: unknown, lastHash: unknown
   const client = {
@@ -414,11 +448,7 @@ test("shared loader exposes rejected paid source without blocking edited context
   assert.equal(lastHash, hashWithConflict)
   events.length = 0
   const compatibleDb = harness(paidSource())
-  await publishProfileEdit(
-    compatibleDb as never,
-    "owner",
-    request({ patch: { thickness: "fine" } }),
-  )
+  await publishProfileEdit(compatibleDb as never, "owner", request({ quizAnswers: paidAnswers() }))
   read = { ...compatibleDb.read, paidBindings: { initial: compatibleDb.read.profileRevision } }
   await loadSharedScannerContext(client as never, "owner")
   assert.deepEqual(events, [])

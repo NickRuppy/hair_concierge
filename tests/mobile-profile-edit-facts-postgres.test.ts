@@ -3,11 +3,7 @@ import { randomUUID } from "node:crypto"
 import test from "node:test"
 
 import { saveMobileProfileEdit } from "../src/lib/mobile/profile-edit-service"
-import {
-  mobileEditProfilePatch,
-  type ProfileEditRequest,
-} from "../src/lib/mobile/profile-edit-contract"
-import { publishProfileEdit } from "../src/lib/scan/profile-edit"
+import type { ProfileEditRequest } from "../src/lib/mobile/profile-edit-contract"
 import { loadSharedScannerContext } from "../src/lib/scan/scanner-context-supabase"
 import { quizSupersedesFacts } from "../src/lib/user-facts/account-link"
 import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
@@ -21,6 +17,7 @@ import {
   readClock,
   readRow,
 } from "./mobile-profile-facts-pglite.fixtures"
+import { legacyMobileEditProfilePatch } from "./mobile-legacy-profile-patch.oracle"
 import {
   id,
   insertProfile,
@@ -172,17 +169,24 @@ test("old vs new revision deltas are identical for the same edit (+1/+1)", async
   for (const cleanSwitch of [false, true]) {
     const pg = await mobileFactsDatabase(t, { cleanSwitch })
     await seedQuizProfile(pg)
-    const client = pgliteRpcClient(pg)
+    const real = pgliteRpcClient(pg)
+    // The pre-switch function takes the old column patch instead of facts.
+    const client = cleanSwitch
+      ? real
+      : {
+          calls: real.calls,
+          rpc(name: string, args: Record<string, unknown>) {
+            if (name !== "scanner_profile_edit_publish") return real.rpc(name, args)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars -- dropped for the old signature
+            const { p_facts, ...rest } = args
+            return real.rpc(name, {
+              ...rest,
+              p_patch: legacyMobileEditProfilePatch(args.p_quiz_answers as QuizAnswers),
+            })
+          },
+        }
     const before = await readClock(pg, OWNER)
-    if (cleanSwitch) await edit(client, answers)
-    // Today's mobile call, verbatim: the column patch through the web-shaped publisher.
-    else
-      await publishProfileEdit(client as never, OWNER, {
-        expectedProfileRevision: await editable(client),
-        requestId: randomUUID(),
-        patch: mobileEditProfilePatch(answers),
-        quizAnswers: answers,
-      })
+    await edit(client, answers)
     const after = await readClock(pg, OWNER)
     deltas.push([after.revision - before.revision, after.profile - before.profile])
   }
@@ -304,27 +308,40 @@ test("adversarial: an edit on a backfilled legacy_columns profile", async (t) =>
   assert.equal(quizSupersedesFacts(facts, QUIZ_TIME), false)
 })
 
-test("the web path is unchanged: a column patch written directly, facts untouched, +1/+1", async (t) => {
+test("a publish without facts is refused: there is no column-patch path left (fix round 1, A)", async (t) => {
   const pg = await mobileFactsDatabase(t)
   await seedQuizProfile(pg)
   const client = pgliteRpcClient(pg)
-  const before = await readClock(pg, OWNER)
-  const rowBefore = (await readRow(pg, OWNER))!
-  const saved = await publishProfileEdit(client as never, OWNER, {
-    expectedProfileRevision: await editable(client),
-    requestId: randomUUID(),
-    patch: { thickness: "coarse" },
+  const read = (await client.rpc("scanner_context_read_source", { p_user_id: OWNER })).data as {
+    profileRevision: string
+    sourceRevision: string
+  }
+  const clock = await readClock(pg, OWNER)
+  const row = await readRow(pg, OWNER)
+  const result = await client.rpc("scanner_profile_edit_publish", {
+    p_user_id: OWNER,
+    p_request_id: randomUUID(),
+    p_request_hash: "a".repeat(64),
+    p_expected_profile_revision: read.profileRevision,
+    p_expected_source_revision: read.sourceRevision,
+    p_patch: { thickness: "coarse" },
+    p_quiz_answers: ANSWERS,
+    p_source_hash: "b".repeat(64),
+    p_engine_version: "engine",
+    p_input_snapshot: { source: {}, userRefinementAnswers: {}, userRefinementQuestionIds: [] },
+    p_output_snapshot: { computationVersion: "engine" },
+    p_snapshot_source: "initial",
   })
-  assert.equal(saved.profile.thickness, "coarse")
-  const after = await readClock(pg, OWNER)
-  assert.equal(after.profile - before.profile, BigInt(1))
-  assert.equal(after.revision - before.revision, BigInt(1))
-  const row = (await readRow(pg, OWNER))!
-  assert.equal(row.facts_revision, rowBefore.facts_revision)
-  assert.deepEqual(row.diagnostics, rowBefore.diagnostics)
+  assert.ok(result.error, "no p_patch parameter, and p_facts is required")
+  assert.deepEqual(await readClock(pg, OWNER), clock)
+  assert.deepEqual(await readRow(pg, OWNER), row)
+  const { rows } = await pg.query<{ args: string }>(
+    "select pg_get_function_identity_arguments('public.scanner_profile_edit_publish'::regproc) args",
+  )
+  assert.doesNotMatch(rows[0]!.args, /p_patch/)
 })
 
-test("malformed facts or a column patch next to facts roll back, nothing written", async (t) => {
+test("malformed or missing facts roll back, nothing written", async (t) => {
   const pg = await mobileFactsDatabase(t)
   await seedQuizProfile(pg)
   const client = pgliteRpcClient(pg)
@@ -353,12 +370,12 @@ test("malformed facts or a column patch next to facts roll back, nothing written
     },
   }
   for (const args of [
-    { ...base, p_patch: { thickness: "coarse" }, p_facts: facts },
-    { ...base, p_patch: {}, p_facts: { care_habits: facts.diagnostics } },
-    { ...base, p_patch: {}, p_facts: { ...facts, quiz_context: facts.diagnostics } },
-    { ...base, p_patch: {}, p_facts: { diagnostics: { patch: {} } } },
-    { ...base, p_patch: {}, p_facts: { diagnostics: { ...facts.diagnostics, extra: 1 } } },
-    { ...base, p_patch: {}, p_facts: { diagnostics: { patch: {}, provenance: "x" } } },
+    { ...base, p_facts: null },
+    { ...base, p_facts: { care_habits: facts.diagnostics } },
+    { ...base, p_facts: { ...facts, quiz_context: facts.diagnostics } },
+    { ...base, p_facts: { diagnostics: { patch: {} } } },
+    { ...base, p_facts: { diagnostics: { ...facts.diagnostics, extra: 1 } } },
+    { ...base, p_facts: { diagnostics: { patch: {}, provenance: "x" } } },
   ]) {
     const result = await client.rpc("scanner_profile_edit_publish", args)
     assert.ok(result.error, JSON.stringify(args.p_facts))
@@ -367,7 +384,6 @@ test("malformed facts or a column patch next to facts roll back, nothing written
   // A door rejection (invalid provenance -> invalid_input) is raised, not dropped.
   const rejected = await client.rpc("scanner_profile_edit_publish", {
     ...base,
-    p_patch: {},
     p_facts: { diagnostics: { patch: { thickness: "coarse" }, provenance: [] } },
   })
   assert.match(
@@ -392,7 +408,7 @@ test("the helper and the new publisher are service-only", async (t) => {
     ["service_role", true],
   ] as const) {
     const { rows } = await pg.query<{ ok: boolean }>(
-      "select has_function_privilege($1,'public.scanner_profile_edit_publish(uuid,uuid,text,bigint,bigint,jsonb,jsonb,text,text,jsonb,jsonb,text,jsonb)','EXECUTE') ok",
+      "select has_function_privilege($1,'public.scanner_profile_edit_publish(uuid,uuid,text,bigint,bigint,jsonb,jsonb,text,text,jsonb,jsonb,text)','EXECUTE') ok",
       [role],
     )
     assert.equal(rows[0]!.ok, allowed, role)
