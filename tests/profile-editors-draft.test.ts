@@ -16,7 +16,12 @@ import {
   toggleScalpConcern,
   type HaarCheckDraft,
 } from "../src/lib/profile/haar-check-draft"
-import { canSaveGoals, initialGoalSelection, toggleGoal } from "../src/lib/profile/goals-draft"
+import {
+  canSaveGoals,
+  goalsChanged,
+  initialGoalSelection,
+  toggleGoal,
+} from "../src/lib/profile/goals-draft"
 import { readProfileDiagnostics } from "../src/lib/user-facts/profile-diagnostics"
 import { diagnosticsV1Schema, type DiagnosticsV1 } from "../src/lib/user-facts/schema"
 
@@ -96,6 +101,16 @@ test("goals: toggling keeps the quiz order, has no maximum, needs at least one t
   assert.equal(canSaveGoals(selected), true)
   assert.equal(canSaveGoals([]), false)
   assert.deepEqual(toggleGoal(["shine"], "shine", "wavy"), [])
+})
+
+test("fix round 2 (1): the Ziele editor posts only a changed goal set", () => {
+  const initial = initialGoalSelection({ diagnostics: doc() })
+  assert.equal(goalsChanged(initial, initial), false)
+  assert.equal(goalsChanged(initial, [...initial].reverse()), false, "order is not a change")
+  const off = toggleGoal(initial, "shine", "wavy")
+  assert.equal(goalsChanged(initial, off), true)
+  assert.equal(goalsChanged(initial, toggleGoal(off, "shine", "wavy")), false, "toggled back")
+  assert.equal(goalsChanged([], ["shine"]), true)
 })
 
 // ---------------------------------------------------------------------------

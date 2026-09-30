@@ -40,3 +40,12 @@ export function toggleGoal(
 export function canSaveGoals(selected: readonly EditableGoal[]): boolean {
   return selected.length >= 1
 }
+
+/** Whether the goal set differs from the preselection (order is not a change). An unchanged
+ * set is not saved: a hand edit that changes no value is not an edit. */
+export function goalsChanged(
+  initial: readonly EditableGoal[],
+  selected: readonly EditableGoal[],
+): boolean {
+  return initial.length !== selected.length || selected.some((goal) => !initial.includes(goal))
+}

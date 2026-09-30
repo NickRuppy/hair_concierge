@@ -8,7 +8,12 @@ import { getGoalOptions } from "@/components/personal-plan-quiz/quiz-data"
 import { getLegacyQuizGoalIcon } from "@/components/quiz/legacy-quiz-visuals"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
 import { Button } from "@/components/ui/button"
-import { canSaveGoals, toggleGoal, type EditableGoal } from "@/lib/profile/goals-draft"
+import {
+  canSaveGoals,
+  goalsChanged,
+  toggleGoal,
+  type EditableGoal,
+} from "@/lib/profile/goals-draft"
 import type { HairTexture } from "@/lib/vocabulary"
 import { useToast } from "@/providers/toast-provider"
 
@@ -42,6 +47,11 @@ export function EditGoalsFlow({ initialGoals, hairTexture, returnTo }: EditGoals
 
   const handleSave = useCallback(async () => {
     if (saving || !canSaveGoals(selectedGoals)) return
+    // Nothing changed, nothing sent: back to the profile.
+    if (!goalsChanged(initialGoals, selectedGoals)) {
+      router.push(returnTo)
+      return
+    }
 
     setSaving(true)
     try {
@@ -63,7 +73,7 @@ export function EditGoalsFlow({ initialGoals, hairTexture, returnTo }: EditGoals
       })
       setSaving(false)
     }
-  }, [saving, selectedGoals, router, returnTo, toast])
+  }, [saving, selectedGoals, initialGoals, router, returnTo, toast])
 
   return (
     <div>

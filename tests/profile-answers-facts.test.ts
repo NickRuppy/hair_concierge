@@ -8,6 +8,7 @@ import {
 } from "../src/lib/hair-profile/profile-answers"
 import { quizSupersedesFacts } from "../src/lib/user-facts/account-link"
 import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
+import { diagnosticsFromLegacyColumns } from "../src/lib/user-facts/profile-diagnostics"
 import { diagnosticsV1Schema, type DiagnosticsV1 } from "../src/lib/user-facts/schema"
 import type { UserFacts } from "../src/lib/user-facts/read"
 
@@ -432,6 +433,68 @@ test("adversarial: a no-op edit on a legacy_columns document does not re-source 
   })
   assert.deepEqual(write.diagnostics.patch, {})
   assert.equal(write.diagnostics.provenance.editedAt, undefined)
+})
+
+test("fix round 2 (1): a no-op is marked unchanged; a real edit is not", () => {
+  const facts = stored(quizDoc())
+  const noop = buildProfileAnswersFacts({
+    answers: parse({ goals: ["moisture", "shine"] }),
+    stored: facts,
+    row: {},
+    now: NOW,
+  })
+  assert.equal(noop.unchanged, true)
+  const change = buildProfileAnswersFacts({
+    answers: parse({ goals: ["shine"] }),
+    stored: facts,
+    row: {},
+    now: NOW,
+  })
+  assert.equal(change.unchanged, undefined)
+})
+
+test("fix round 2 (1) adversarial: on a row WITHOUT a facts document, an edit equal to what its columns convert to is not an edit", () => {
+  const base = diagnosticsFromLegacyColumns(LEGACY_ROW)!
+  assert.ok(base.goals?.length, "the fixture converts to goals")
+  for (const answers of [
+    { goals: base.goals },
+    { goals: [...base.goals!].reverse() },
+    { texture: base.texture, thickness: base.thickness },
+    { chemicalTreatments: base.chemicalTreatments },
+  ]) {
+    const write = buildProfileAnswersFacts({
+      answers: parse(answers),
+      stored: stored(null),
+      row: LEGACY_ROW,
+      now: NOW,
+    })
+    const label = JSON.stringify(answers)
+    assert.equal(write.unchanged, true, label)
+    assert.deepEqual(write.diagnostics.patch, {}, label)
+    assert.equal(write.diagnostics.provenance.editedAt, undefined, label)
+    assert.equal(write.diagnostics.provenance.fields, undefined, label)
+  }
+  // One changed value is an edit, written over the converted columns with a new source.
+  const edited = buildProfileAnswersFacts({
+    answers: parse({ texture: "wavy" }),
+    stored: stored(null),
+    row: LEGACY_ROW,
+    now: NOW,
+  })
+  assert.equal(edited.unchanged, undefined)
+  assert.equal(edited.diagnostics.provenance.editedAt, NOW)
+  assert.deepEqual(edited.diagnostics.provenance.fields, { texture: "user" })
+})
+
+test("fix round 2 (1): a row with no facts and no legacy answer — any named value is an edit", () => {
+  const write = buildProfileAnswersFacts({
+    answers: parse({ goals: ["shine"] }),
+    stored: stored(null),
+    row: { user_id: "u" },
+    now: NOW,
+  })
+  assert.equal(write.unchanged, undefined)
+  assert.deepEqual(write.diagnostics.patch.goals, ["shine"])
 })
 
 test("adversarial: a complete new document carries an emittable legacy source; an incomplete one none", () => {

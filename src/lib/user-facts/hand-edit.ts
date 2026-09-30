@@ -24,8 +24,9 @@ import {
  * - Only a value that differs from what the profile holds is re-marked `user`; an unchanged value
  *   keeps its marker (an assumed completeness default stays `assumed`). No defaults are added.
  * - A stored `concernRecurrence` whose concern is no longer selected is cleared with the edit.
- * - An edit that changes no stored value writes an empty patch under the stored provenance:
- *   no `editedAt`, no markers, no new source.
+ * - An edit that changes no value the profile holds (its document, or on a row without one what
+ *   its legacy columns convert to) is not an edit: it is marked `unchanged`, with an empty patch
+ *   under the stored provenance — no `editedAt`, no markers, no new source.
  * - A missing document, or a `legacy_columns` backfill document (no quiz envelope, so Stage 1 can
  *   never emit it), gets the caller's `newSource`.
  *
@@ -47,6 +48,8 @@ export type HandEditFactsWrite = {
   /** The 13 diagnostics columns `user_facts_save_v1` derives from the merged document (the TS
    * oracle, parity-tested against the SQL) — what the row will hold after the write. */
   columns: DiagnosticsDerivedColumns
+  /** Set when the edit changes no value the profile holds: not an edit (see `buildHandEditFacts`). */
+  unchanged?: true
 }
 
 export class ProfileFactsError extends Error {
@@ -138,14 +141,16 @@ export function buildHandEditFacts(input: {
     patch.concernRecurrence = null
   }
 
-  // A hand edit that changes no stored value is not an edit (coordinator rule, 2026-09-30): no
+  // A hand edit that changes no value is not an edit (coordinator rule, 2026-09-30): no
   // `editedAt`, no re-marked provenance, nothing re-sourced — otherwise an unchanged user's
-  // Stage-1 emission would flip from `source.raw` to a native envelope. The write still happens
-  // (with the stored provenance, verbatim), so the scanner publication runs as before.
+  // Stage-1 emission would flip from `source.raw` to a native envelope. The comparison is
+  // against what the profile holds: its document, or — on a row without one — what its legacy
+  // columns convert to (`base`). The result is marked `unchanged`; the web save then writes and
+  // publishes nothing, the iOS publication sends the empty patch under the stored provenance.
   const changesStored =
-    !stored ||
+    !reference ||
     Object.entries(patch).some(
-      ([field, value]) => !sameFactValue(stored[field as HandEditField], value),
+      ([field, value]) => !sameFactValue(reference[field as HandEditField], value),
     )
   if (!changesStored) {
     return {
@@ -157,7 +162,8 @@ export function buildHandEditFacts(input: {
           at: input.now,
         },
       ),
-      columns: deriveDiagnosticsColumns(stored as DiagnosticsV1),
+      columns: deriveDiagnosticsColumns(reference),
+      unchanged: true,
     }
   }
 

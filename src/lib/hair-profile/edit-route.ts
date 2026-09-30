@@ -70,6 +70,9 @@ export async function saveProfileAnswers(
     throw new ProfileEditError("temporarily_unavailable")
   }
 
+  // A save that changes no value is not an edit: nothing is written, nothing is published.
+  if (write.unchanged) return { kind: "saved", profile: source.profile }
+
   const nextProfile = { ...(source.profile ?? {}), ...write.columns }
   if (prepared && hasCompletedQuizDiagnostics(nextProfile)) {
     const result = await deps.publishProfileEdit(admin, userId, {

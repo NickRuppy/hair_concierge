@@ -157,6 +157,16 @@ test("a profile that is incomplete after the edit goes through the door, never t
   assert.equal(calls.door.length, 1)
 })
 
+test("fix round 2 (1): a save that changes no value writes nothing and publishes nothing", async () => {
+  for (const prepare of [() => ({}) as never, () => null]) {
+    const { deps, calls } = makeDeps({ prepareScannerContext: prepare })
+    const result = await saveProfileAnswers(deps, userId, answers({ goals: ["moisture"] }))
+    assert.deepEqual(result, { kind: "saved", profile: completeRow })
+    assert.equal(calls.publish.length, 0)
+    assert.equal(calls.door.length, 0)
+  }
+})
+
 test("stale revision: the door's conflict is a profile_conflict, nothing else is written", async () => {
   const { deps, calls } = makeDeps({
     prepareScannerContext: () => null,

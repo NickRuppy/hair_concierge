@@ -11,6 +11,7 @@ import {
 } from "../src/lib/scan/scanner-context-supabase"
 import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
 import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
+import { readProfileDiagnostics } from "../src/lib/user-facts/profile-diagnostics"
 import { parseUserFactsRow } from "../src/lib/user-facts/read"
 import { saveUserFacts as saveUserFactsRpc } from "../src/lib/user-facts/save"
 import type { QuizAnswers } from "../src/lib/quiz/types"
@@ -127,17 +128,54 @@ test("a web edit that changes nothing is not an edit: no editedAt, provenance un
   const pg = await mobileFactsDatabase(t)
   await seedQuizProfile(pg)
   const client = pgliteRpcClient(pg)
-  const before = parseUserFactsRow(OWNER, (await readRow(pg, OWNER))!)
+  const rowBefore = (await readRow(pg, OWNER))!
+  const clockBefore = await readClock(pg, OWNER)
+  const before = parseUserFactsRow(OWNER, rowBefore)
 
-  await saveProfileAnswers(
+  const result = await saveProfileAnswers(
     deps(pg, client),
     OWNER,
     profileAnswersSchema.parse({ goals: ["moisture"] }),
   )
-  const after = parseUserFactsRow(OWNER, (await readRow(pg, OWNER))!)
+  assert.equal(result.kind, "saved")
+  const rowAfter = (await readRow(pg, OWNER))!
+  const after = parseUserFactsRow(OWNER, rowAfter)
   assert.deepEqual(after.diagnostics, before.diagnostics)
   assert.deepEqual(after.provenance, before.provenance)
   assert.equal(after.provenance.diagnostics?.editedAt, undefined)
+  // Fix round 2 (1): nothing is written and nothing is published.
+  assert.deepEqual(rowAfter, rowBefore)
+  assert.deepEqual(await readClock(pg, OWNER), clockBefore)
+})
+
+test("fix round 2 (1) adversarial: an unchanged save on a row WITHOUT a facts document writes nothing", async (t) => {
+  const pg = await mobileFactsDatabase(t)
+  await insertProfile(pg, OWNER)
+  await pg.query(
+    `insert into public.hair_profiles(user_id, hair_texture, thickness, density, hair_length,
+       cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition,
+       chemical_treatment, concerns, goals, desired_volume)
+     values($1,'curly','coarse','high','medium','slightly_rough','snaps','oily',null,
+       array['colored'],array['frizz'],array['less_volume','healthier_hair'],'less')`,
+    [OWNER],
+  )
+  const client = pgliteRpcClient(pg)
+  const rowBefore = (await readRow(pg, OWNER))!
+  const clockBefore = await readClock(pg, OWNER)
+  const converted = readProfileDiagnostics(rowBefore)!
+
+  // What the Ziele editor would show preselected, saved as is.
+  const result = await saveProfileAnswers(
+    deps(pg, client),
+    OWNER,
+    profileAnswersSchema.parse({ goals: converted.goals, texture: converted.texture }),
+  )
+  assert.equal(result.kind, "saved")
+  const rowAfter = (await readRow(pg, OWNER))!
+  assert.deepEqual(rowAfter, rowBefore, "no column, no document, no provenance, no revision")
+  assert.equal(rowAfter.diagnostics, null)
+  assert.equal(rowAfter.facts_revision, rowBefore.facts_revision)
+  assert.deepEqual(await readClock(pg, OWNER), clockBefore)
 })
 
 test("a user without a profile row: the door creates it with exactly what she entered", async (t) => {
