@@ -132,11 +132,12 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   assert.match(readiness, /canLinkDirectQuizLead/)
   // Task 5a (central user profile PR1): the direct `hair_profiles` upsert this
   // used to assert is gone — the link writes go through `writeAccountLinkFacts`
-  // (decision wave 1: latest own quiz wins, older quizzes preserved) and the
-  // hair-length recovery through `saveUserFacts`; `user_facts_save_v1` derives
+  // (decision wave 1: latest own quiz wins, older quizzes preserved) — and since
+  // wave-1 fix round 2 so does the hair-length recovery, as the latest quiz (no
+  // special-case `saveUserFacts` upsert any more); `user_facts_save_v1` derives
   // `hair_profiles` and its legacy columns itself.
   assert.match(readiness, /writeAccountLinkFacts\(supabase, \{/)
-  assert.match(readiness, /saveUserFacts\(supabase, \{/)
+  assert.doesNotMatch(readiness, /saveUserFacts\(/)
   assert.doesNotMatch(readiness, /hair_profiles insert failed/)
   assert.doesNotMatch(readiness, /\.eq\("email", email\.toLowerCase\(\)\)/)
 })

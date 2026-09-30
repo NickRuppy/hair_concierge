@@ -778,7 +778,22 @@ test("legacy readiness asks only the canonical hair-length question when that ex
   assert.equal(readiness.sourceVersion, "2026-08-12T08:00:00.000Z")
 })
 
+/** The stored source minus its `takenAt` — the correction time is "now", not a fixture. */
+function withoutTakenAt(diagnostics: Row): Row {
+  const { takenAt: _takenAt, ...source } = diagnostics.source as Row
+  void _takenAt
+  return { ...diagnostics, source }
+}
+
+/** Round 2: the recovery stamps the CORRECTION time as the quiz time. */
+function assertCorrectionTakenAt(diagnostics: Row, notBefore: number) {
+  const takenAt = (diagnostics.source as Row).takenAt
+  assert.equal(typeof takenAt, "string", "the correction time is stored as source.takenAt")
+  assert.ok(Date.parse(takenAt as string) >= notBefore, "takenAt is the correction time")
+}
+
 test("missing hair length persists against the exact owner-scoped lead with source-version protection", async () => {
+  const testStartedAt = Date.now() - 1
   const db = new FakeSupabase({
     leads: [
       {
@@ -839,9 +854,11 @@ test("missing hair length persists against the exact owner-scoped lead with sour
   assert.equal(provenance.editedAt, undefined)
   assert.equal(provenance.preservedCandidates, undefined)
 
-  // (c) readiness only reports `ready` because the written document is a COMPLETE,
-  // schema-valid diagnostics document — not an accidental source-less shell.
-  assert.equal(diagnosticsV1Schema.safeParse(patch).success, true)
+  // Round 2 ruling: answering the missing question makes that quiz the LATEST one. The
+  // recovery is an ordinary account-link write — full replacement, CAS — with the correction
+  // time as the quiz time.
+  assert.equal(factsCall!.args.p_expected_revision, 0)
+  const stored = diagnosticsV1Schema.parse(db.tables.hair_profiles[0].diagnostics)
   const reprojected = projectLegacyLeadToFacts({
     leadId: "lead-legacy",
     quizAnswers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: "long" } as never,
@@ -855,12 +872,13 @@ test("missing hair length persists against the exact owner-scoped lead with sour
     "elasticResponse",
     "scalpOiliness",
   ] as const) {
-    assert.notEqual(reprojected[field], undefined, `${field} must be projected, not missing`)
+    assert.notEqual(stored[field], undefined, `${field} must be projected, not missing`)
   }
-  assert.deepEqual(patch, reprojected)
+  assertCorrectionTakenAt(stored, testStartedAt)
+  assert.deepEqual(withoutTakenAt(stored), reprojected)
 })
 
-test("missing hair length still corrects the fact when a diagnostics document already exists (I3)", async () => {
+test("round 2: a recovery over OLDER artifact facts wins with full replacement and clears quiz_context", async () => {
   const db = new FakeSupabase({
     leads: [
       {
@@ -869,10 +887,12 @@ test("missing hair length still corrects the fact when a diagnostics document al
         quiz_kind: "legacy",
         quiz_answers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: undefined },
         user_id: "user-1",
+        created_at: "2026-08-01T08:00:00.000Z",
         updated_at: "2026-08-12T08:00:00.000Z",
       },
     ],
-    hair_profiles: [{ user_id: "user-1", diagnostics: { texture: "straight" }, facts_revision: 2 }],
+    // An artifact quiz taken AFTER the lead's own created_at — but before the correction.
+    hair_profiles: [earlierArtifactProfile("2026-09-10T08:00:00.000Z", 2)],
   })
 
   const readiness = await updateMissingPlanBereitSourceFact(db as never, {
@@ -885,23 +905,95 @@ test("missing hair length still corrects the fact when a diagnostics document al
   })
 
   assert.equal(readiness.status, "ready")
-  const factsCall = db.rpcs.find((call) => call.fn === "user_facts_save_v1")
-  assert.ok(factsCall, "the upsert must still land against an existing diagnostics document")
-  assert.equal(factsCall!.args.p_mode, "upsert")
-  // Fix round 2: the corrected lead is the authority, so the SAME full projection is
-  // written whether or not a diagnostics document already exists.
-  const patch = factsCall!.args.p_patch as Row
-  assert.equal((patch.source as Row | undefined)?.kind, "legacy_quiz")
-  assert.equal(patch.hairLength, "long")
+  const factsCalls = db.rpcs.filter((call) => call.fn === "user_facts_save_v1")
   assert.deepEqual(
-    patch,
-    projectLegacyLeadToFacts({
-      leadId: "lead-legacy",
-      quizAnswers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: "long" } as never,
-    }).diagnostics,
+    factsCalls.map((call) => [call.args.p_domain, call.args.p_mode, call.args.p_expected_revision]),
+    [
+      ["diagnostics", "upsert", 2],
+      ["quiz_context", "upsert", 3],
+    ],
   )
-  // The pre-existing `texture` is replaced by the corrected lead's own value.
-  assert.equal((db.tables.hair_profiles[0].diagnostics as Row).texture, "wavy")
+  const patch = factsCalls[0].args.p_patch as Row
+  assert.equal(patch.concernRecurrence, null, "a field the corrected lead lacks is cleared")
+  const stored = db.tables.hair_profiles[0].diagnostics as Row
+  assert.equal(stored.hairLength, "long")
+  assert.equal(stored.texture, "wavy", "the artifact's answers are replaced")
+  assert.equal((stored.source as Row).leadId, "lead-legacy")
+  assert.deepEqual(db.tables.hair_profiles[0].quiz_context, {}, "F4: quiz_context cleared")
+})
+
+test("round 2: a recovery never beats a quiz taken AFTER the correction — preserved", async () => {
+  const profile = earlierArtifactProfile("2026-09-10T08:00:00.000Z", 2)
+  ;(profile.diagnostics as Row).source = {
+    ...((profile.diagnostics as Row).source as Row),
+    takenAt: "2099-01-01T00:00:00.000Z",
+  }
+  const before = structuredClone(profile.diagnostics)
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-legacy",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: undefined },
+        user_id: "user-1",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    hair_profiles: [profile],
+  })
+
+  const readiness = await updateMissingPlanBereitSourceFact(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    sourceVersion: "2026-08-12T08:00:00.000Z",
+    field: "hair_length",
+    value: "long",
+  })
+
+  assert.equal(readiness.status, "ready", "a preserve still settles — no stuck checking")
+  const factsCalls = db.rpcs.filter((call) => call.fn === "user_facts_save_v1")
+  assert.deepEqual(
+    factsCalls.map((call) => [call.args.p_domain, call.args.p_mode]),
+    [["diagnostics", "create_only"]],
+  )
+  assert.deepEqual(db.tables.hair_profiles[0].diagnostics, before)
+})
+
+test("round 2: a hand-edited profile newer than the correction is preserved", async () => {
+  const profile = earlierArtifactProfile("2026-09-10T08:00:00.000Z", 2)
+  ;((profile.facts_provenance as Row).diagnostics as Row).editedAt = "2099-01-01T00:00:00.000Z"
+  const before = structuredClone(profile.diagnostics)
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-legacy",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: undefined },
+        user_id: "user-1",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    hair_profiles: [profile],
+  })
+
+  const readiness = await updateMissingPlanBereitSourceFact(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    sourceVersion: "2026-08-12T08:00:00.000Z",
+    field: "hair_length",
+    value: "long",
+  })
+
+  assert.equal(readiness.status, "ready")
+  assert.deepEqual(db.tables.hair_profiles[0].diagnostics, before)
+  assert.equal(
+    db.rpcs.filter((call) => call.fn === "user_facts_save_v1")[0]?.args.p_mode,
+    "create_only",
+  )
 })
 
 test("the recovery form's real hair length replaces an assumed default and clears the assumed marker", async () => {
@@ -961,7 +1053,8 @@ test("the recovery form's real hair length replaces an assumed default and clear
   )
 })
 
-test("F5: a recovery write that fails AFTER the lead was corrected still lands on the retry", async () => {
+test("F5 / round 2: a recovery write that fails AFTER the lead was corrected still lands on the retry", async () => {
+  const testStartedAt = Date.now() - 1
   const oldAnswers = { ...COMPLETE_LEGACY_ANSWERS, hair_length: undefined }
   // What an earlier account link of this lead wrote: its facts, with an assumed length.
   const linkedWithDefault = {
@@ -1036,12 +1129,13 @@ test("F5: a recovery write that fails AFTER the lead was corrected still lands o
   assert.equal(linked.status, "ready")
   const stored = db.tables.hair_profiles[0].diagnostics as Row
   assert.equal(stored.hairLength, "short")
+  // The retry is an ordinary account-link write whose quiz time is the correction time.
+  assertCorrectionTakenAt(stored, testStartedAt)
   assert.deepEqual(
-    stored,
+    withoutTakenAt(stored),
     projectLegacyLeadToFacts({
       leadId: "lead-legacy",
       quizAnswers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: "short" } as never,
-      takenAt: "2026-08-12T07:00:00.000Z",
     }).diagnostics,
   )
   const fields = ((db.tables.hair_profiles[0].facts_provenance as Row).diagnostics as Row)

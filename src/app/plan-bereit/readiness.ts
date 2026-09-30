@@ -13,12 +13,8 @@ import { createStage1PersistenceService } from "@/lib/personal-plan/persistence/
 import { createStage1SupabaseDependencies } from "@/lib/personal-plan/persistence/stage1-supabase"
 import { buildProfileDataFromPersonalPlanCanonicalProfile } from "@/lib/quiz/link-to-profile"
 import type { QuizAnswers } from "@/lib/quiz/types"
-import { DIAGNOSTICS_SCHEMA_VERSION, projectLegacyLeadToFacts } from "@/lib/user-facts"
-import {
-  quizDiagnosticsFieldProvenance,
-  writeAccountLinkFacts,
-} from "@/lib/user-facts/account-link"
-import { saveUserFacts } from "@/lib/user-facts/save"
+import { projectLegacyLeadToFacts } from "@/lib/user-facts"
+import { writeAccountLinkFacts } from "@/lib/user-facts/account-link"
 
 type PersonalPlanLead = {
   email: string
@@ -274,6 +270,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 type ProjectedHairProfileRow = {
   diagnostics: unknown
   facts_revision: number
+  facts_provenance?: unknown
 }
 
 /**
@@ -288,7 +285,7 @@ async function loadProjectedHairProfile(
 ): Promise<ProjectedHairProfileRow | null> {
   const { data, error } = await supabase
     .from("hair_profiles")
-    .select("diagnostics, facts_revision")
+    .select("diagnostics, facts_revision, facts_provenance")
     .eq("user_id", userId)
     .maybeSingle()
 
@@ -298,34 +295,51 @@ async function loadProjectedHairProfile(
   return (data as ProjectedHairProfileRow | null) ?? null
 }
 
+/** A built legacy Stage-1 answer that says something: defined, and not an empty list. */
+function answered(value: unknown): boolean {
+  return Array.isArray(value) ? value.length > 0 : value !== undefined && value !== null
+}
+
 /**
- * Wave-1 fix F5: whether the stored diagnostics came from THIS legacy lead but not from its
- * current answers — i.e. the missing-fact recovery form corrected the lead row and the facts
- * write after it never landed (it failed, and the user retried). Content-based, never
- * timestamp-based: the stored `source.raw` is the built legacy source of the answers the facts
- * were written from, so it differs from the current lead's exactly when the lead changed after
- * the write. Such facts are not "projected": readiness sends the retry back through the link,
- * which re-lands the corrected lead with the recovery's own upsert.
+ * Wave-1 fix round 2 (controller ruling: "answering the missing question makes that quiz the
+ * latest one"), the NARROW retry predicate. `leads` carries no reliable "answers last changed"
+ * time (see `updateMissingPlanBereitSourceFact`), so the recovery write stamps the correction
+ * time itself; when that write fails, nothing durable remembers the correction. This recognises
+ * it from the facts: the stored diagnostics come from THIS legacy lead, yet the lead now
+ * answers a Stage-1 question the stored `source.raw` left unanswered — only a missing-fact
+ * recovery can do that. Field PRESENCE only, never values, so projector drift cannot trip it.
+ *
+ * A hand edit (`editedAt`) after the failed write is the user's latest word: no retry then.
  */
-function storedFactsPredateLeadCorrection(diagnostics: unknown, lead: PersonalPlanLead): boolean {
+function storedFactsLackRecoveredAnswer(
+  profile: ProjectedHairProfileRow | null,
+  lead: PersonalPlanLead,
+): boolean {
+  const diagnostics = profile?.diagnostics
   if (lead.quiz_kind !== "legacy" || !isRecord(diagnostics) || !isRecord(lead.quiz_answers)) {
     return false
   }
   const source = diagnostics.source
   if (!isRecord(source) || source.kind !== "legacy_quiz" || source.leadId !== lead.id) return false
-  let current: unknown
+  const provenance = isRecord(profile?.facts_provenance) ? profile.facts_provenance : {}
+  const diagnosticsProvenance = isRecord(provenance.diagnostics) ? provenance.diagnostics : {}
+  if (diagnosticsProvenance.editedAt) return false
+
+  const storedAnswers =
+    isRecord(source.raw) && isRecord(source.raw.answers) ? source.raw.answers : {}
+  let currentRaw: unknown
   try {
-    current = projectLegacyLeadToFacts({
+    currentRaw = projectLegacyLeadToFacts({
       leadId: lead.id,
       quizAnswers: lead.quiz_answers as QuizAnswers,
     }).diagnostics.source.raw
   } catch {
     return false
   }
-  // Both sides as JSON would store them (a jsonb round trip drops `undefined` keys).
-  return !isDeepStrictEqual(
-    JSON.parse(JSON.stringify(source.raw ?? null)),
-    JSON.parse(JSON.stringify(current)),
+  const currentAnswers =
+    isRecord(currentRaw) && isRecord(currentRaw.answers) ? currentRaw.answers : {}
+  return Object.entries(currentAnswers).some(
+    ([field, value]) => answered(value) && !answered(storedAnswers[field]),
   )
 }
 
@@ -742,8 +756,8 @@ export async function loadPlanBereitInitialReadiness(
     profile !== null &&
     profile.diagnostics != null &&
     profile.facts_revision > 0 &&
-    // F5: facts from this very lead, written before its recovery correction, are stale.
-    !storedFactsPredateLeadCorrection(profile.diagnostics, candidate.lead)
+    // Round 2: facts from this very lead that miss an answer its recovery supplied are stale.
+    !storedFactsLackRecoveredAnswer(profile, candidate.lead)
 
   if (alreadyProjected) {
     // `ready` is the CTA gate. For a `scan_v1` buyer it must additionally mean "the
@@ -800,68 +814,6 @@ export async function loadPlanBereitReadiness(
   deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
 ): Promise<PlanBereitReadiness> {
   return readinessFromInitial(await loadPlanBereitInitialReadiness(supabase, input, deps))
-}
-
-/**
- * (M1) The corrected-source write (`writeCorrectedLegacySourceFacts`, reached from
- * `updateMissingPlanBereitSourceFact`) passes no `expectedRevision`/`draftBinding`, so `saveUserFacts` should only ever come back `ok` or
- * `preserved` there. A `revision_conflict`/`draft_conflict` would mean
- * something is badly wrong — fail loudly instead of silently proceeding as if
- * the write had applied. (The account-link writes go through
- * `writeAccountLinkFacts`, which handles its own CAS.)
- */
-function assertUserFactsWriteApplied(
-  result: { status: string },
-  domain: "diagnostics" | "quiz_context",
-): void {
-  if (result.status !== "ok" && result.status !== "preserved") {
-    throw new Error(`saveUserFacts(${domain}) returned unexpected status "${result.status}"`)
-  }
-}
-
-/**
- * (I3, task 5a fix round 1; corrected in fix round 2): the missing-fact recovery form is a
- * correction to an already-established source, not a fresh account-link projection — it
- * must land even when a diagnostics document already exists (the lead update is
- * `updated_at`-guarded, so a stale corrector can't race past that either), hence an
- * unconditional `upsert` and not the account-link writer's "newer quiz" decision
- * (`writeAccountLinkFacts`).
- *
- * It writes the WHOLE re-projected lead, not a bare single-field patch. In the normal
- * recovery case the profile has NO diagnostics document yet (readiness was
- * `missing_source_facts` before the link), and a single-field patch would have the RPC
- * create a document without the required `source`: F28 would then report `ready` while
- * `loadUserFacts` throws on the invalid document. Re-projecting the corrected lead also
- * keeps `source.raw` equal to the built legacy source (F26), so Stage-1 hashes exactly what
- * today's path builds from the corrected lead.
- *
- * Decision wave 1, item B: an account link of this lead before the recovery may have stored
- * `hairLength: "long"` as an ASSUMED default. The per-field provenance names every field the
- * corrected lead carries as `user` (the RPC merges `fields`, so a stale `assumed` marker only
- * goes away when this write names the field again).
- */
-async function writeCorrectedLegacySourceFacts(
-  supabase: SupabaseClient,
-  input: { userId: string; leadId: string; quizAnswers: QuizAnswers; takenAt: string | null },
-): Promise<void> {
-  const { diagnostics } = projectLegacyLeadToFacts({
-    leadId: input.leadId,
-    quizAnswers: input.quizAnswers,
-    takenAt: input.takenAt,
-  })
-  const factsResult = await saveUserFacts(supabase, {
-    userId: input.userId,
-    domain: "diagnostics",
-    patch: diagnostics,
-    provenance: {
-      source: { kind: "legacy_lead", id: input.leadId },
-      schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
-      at: new Date().toISOString(),
-      fields: quizDiagnosticsFieldProvenance(diagnostics),
-    },
-    mode: "upsert",
-  })
-  assertUserFactsWriteApplied(factsResult, "diagnostics")
 }
 
 /**
@@ -964,11 +916,14 @@ export async function linkExactPlanBereitSourceToProfile(
 }
 
 /**
- * How the legacy branch writes the lead's diagnostics facts:
- * - `account_link`: `writeAccountLinkFacts` ("latest own quiz wins", decision wave 1).
- * - `corrected_source`: the missing-fact recovery form just corrected this lead, so the
- *   corrected lead is the authority and is re-projected with an unconditional upsert
- *   (see `writeCorrectedLegacySourceFacts`).
+ * Which quiz time the legacy branch hands `writeAccountLinkFacts` ("latest own quiz wins" —
+ * one rule, no special-case write):
+ * - `account_link`: the lead's own `created_at`.
+ * - `corrected_source`: the missing-fact recovery form just corrected this lead. Answering the
+ *   missing question makes that quiz the LATEST one (controller ruling, wave-1 fix round 2),
+ *   so its quiz time is the correction time — now. It then wins like any newer quiz (full
+ *   replacement, quiz_context cleared, CAS) and loses to anything newer (a quiz taken after
+ *   the correction, a later hand edit).
  */
 type LegacyFactsWrite = "account_link" | "corrected_source"
 
@@ -1048,35 +1003,21 @@ async function linkPlanBereitSource(
       }
     }
     // Facts are written only AFTER the lead claim above succeeded (main's ordering), and
-    // only through `user_facts_save_v1` — never a direct `hair_profiles` write.
-    // F5: a retry after a failed recovery write reaches this link as an ordinary
-    // `account_link`; it still has to land the corrected lead, which "latest own quiz wins"
-    // would preserve against the stale facts from the same lead. So the recovery's own
-    // upsert also runs whenever the stored facts predate this lead's correction.
-    const correctedSource =
+    // only through `user_facts_save_v1` — never a direct `hair_profiles` write. A retry after
+    // a failed recovery write reaches here as an ordinary `account_link`; the narrow
+    // predicate recognises the pending correction and stamps the correction time too.
+    const correctionPending =
       legacyFactsWrite === "corrected_source" ||
-      storedFactsPredateLeadCorrection(
-        (await loadProjectedHairProfile(supabase, input.userId))?.diagnostics,
-        lead,
-      )
-    if (correctedSource) {
-      await writeCorrectedLegacySourceFacts(supabase, {
-        userId: input.userId,
+      storedFactsLackRecoveredAnswer(await loadProjectedHairProfile(supabase, input.userId), lead)
+    await writeAccountLinkFacts(supabase, {
+      userId: input.userId,
+      quiz: {
+        kind: "lead",
         leadId: lead.id,
         quizAnswers: lead.quiz_answers as QuizAnswers,
-        takenAt: lead.created_at ?? null,
-      })
-    } else {
-      await writeAccountLinkFacts(supabase, {
-        userId: input.userId,
-        quiz: {
-          kind: "lead",
-          leadId: lead.id,
-          quizAnswers: lead.quiz_answers as QuizAnswers,
-          createdAt: lead.created_at ?? null,
-        },
-      })
-    }
+        createdAt: correctionPending ? new Date().toISOString() : (lead.created_at ?? null),
+      },
+    })
     // The read-back checks projection and provisions Stage 1 once. A failure is
     // surfaced as transient_error there, never as a premature ready state.
     return loadPlanBereitReadiness(supabase, input, deps)
@@ -1232,10 +1173,10 @@ export async function updateMissingPlanBereitSourceFact(
   const remaining = classifyPlanBereitSourceFacts({ ...lead, quiz_answers: nextAnswers })
   if (remaining.status === "ready") {
     // Link/provision only after every required fact is valid; intermediate saves
-    // must not publish a partially populated profile. A corrected legacy lead is
-    // re-projected with an unconditional upsert (`corrected_source`), not the
-    // account-link "newer quiz" decision; a corrected Personal Plan lead is repaired
-    // into a NEW artifact, which is newer than any existing facts by construction.
+    // must not publish a partially populated profile. A corrected legacy lead is linked
+    // as the LATEST quiz (`corrected_source`: its quiz time is the correction time); a
+    // corrected Personal Plan lead is repaired into a NEW artifact, whose `created_at` is
+    // the correction time by construction.
     return linkPlanBereitSource(supabase, input, deps, "corrected_source")
   }
   return loadPlanBereitReadiness(supabase, input, deps)

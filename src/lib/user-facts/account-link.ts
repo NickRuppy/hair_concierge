@@ -59,7 +59,9 @@ export type AccountLinkQuiz =
       kind: "lead"
       leadId: string
       quizAnswers: QuizAnswers
-      /** `leads.created_at` — the quiz timestamp. */
+      /** The quiz time: `leads.created_at`, or — after the /plan-bereit missing-fact recovery
+       * corrected the lead — the correction time (answering the missing question makes that
+       * quiz the latest one; wave-1 fix round 2). */
       createdAt: string | null | undefined
     }
 
