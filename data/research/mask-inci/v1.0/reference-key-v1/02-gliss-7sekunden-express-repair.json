@@ -406,9 +406,9 @@
     },
     {
       "id": "AP-02-DAMAGEFITECHO",
-      "title": "E11's expected damage_fit effect does not follow from the echo table — flagged, not forced",
-      "body": "E11's effect list names damage_fit → {moderately_damaged, highly_damaged}, carried over from AP-02-BONDREADINGS' reading-B description. §9.7 is a deterministic echo table: the specialist row requires conditioning_level `high` WITH a qualifying specialist route. The specialist route now qualifies (bond_route `gluconamide`, repair_support_level `high`), but conditioning_level on this record is `moderate` under every reading — CETRIMONIUM CHLORIDE @9 is the only cationic species anywhere in the formula, so S1 (mandatory for `high`, R3) fails, and the unresolved marker is independently a material counter-signal. §9.7 row 2 therefore gives {healthy, moderately_damaged}, which is what this record carries. Applying the listed effect would require either overriding the echo table for this record or a conditioning_level move no rule supports. WHAT NICK DECIDES: whether E11 was meant to reach damage_fit at all (if so, it needs an explicit product-level override of §9.7, which the standard does not currently provide), or whether the listed effect was simply inherited from the v0.2 reading-B text, which overstated it — the v0.2 damageFit rationale itself already said conditioning_level 'would still have to reach `high` for the specialist row to be available'.",
-      "source": "§9.7 (echo table); §9.5E (R9); §9.1 S1 (R3); plans/mask-inci/round1-rule-rulings.md, Escalation rulings (round-2, 2026-09-30), E11"
+      "title": "CLOSED by Nick (2026-09-30) — the §9.7 derivation stands; damage_fit stays {healthy, moderately_damaged}",
+      "body": "Nick confirmed on 2026-09-30 that E11 does not override the §9.7 damage_fit derivation: the {moderately_damaged, highly_damaged} row requires conditioning_level `high` alongside the specialist route, and this record's conditioning is `moderate` (single cationic, unresolved marker cap). The wider effect list in the original AP-02-BONDREADINGS text was an overstatement, not a rule. Echo fields remain derived per R9 — no per-record override mechanism exists or is wanted. damage_fit: {healthy, moderately_damaged}, as derived.",
+      "source": "§9.7 derivation; R9 echo-field ruling; E11 closure note (round-2, 2026-09-30)"
     }
   ],
   "uncertainFields": [
