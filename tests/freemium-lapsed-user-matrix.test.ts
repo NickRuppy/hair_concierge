@@ -661,6 +661,7 @@ test("the keepsake read carve-out is scoped to GET on /api/chat and nothing else
   assert.equal(isFreemiumKeepsakeReadRoutePath("/api/chat"), true)
   assert.equal(isFreemiumKeepsakeReadRoutePath("/api/chat/conversation-1"), true)
   for (const pathname of [
+    "/api/profile",
     "/api/personal-plan",
     "/api/routine",
     "/api/memory",

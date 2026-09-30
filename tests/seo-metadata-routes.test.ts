@@ -182,6 +182,7 @@ test("classifies every current protected page and API route", () => {
     "/api/product-intake/onboarding/cancel",
     "/api/product-intake/upload",
     "/api/products",
+    "/api/profile",
     "/api/routine",
     "/api/routine/products",
     "/api/routine/products/example",

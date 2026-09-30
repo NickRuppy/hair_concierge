@@ -61,6 +61,8 @@ test("middleware subscription helper requires access for Anwendung and existing 
   assert.equal(requiresSubscriptionPath("/api/tracker/log"), true)
   assert.equal(requiresSubscriptionPath("/profile"), true)
   assert.equal(requiresSubscriptionPath("/profile/edit/goals"), true)
+  assert.equal(requiresSubscriptionPath("/api/profile"), true)
+  assert.equal(requiresSubscriptionPath("/api/profile/update"), true)
   assert.equal(requiresSubscriptionPath("/api/memory"), true)
   assert.equal(requiresSubscriptionPath("/api/memory/entries"), true)
   assert.equal(requiresSubscriptionPath("/plan-start"), true)
