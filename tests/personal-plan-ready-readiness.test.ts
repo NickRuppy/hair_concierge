@@ -962,6 +962,98 @@ test("the recovery form's real hair length replaces an assumed default and clear
   )
 })
 
+test("F5: a recovery write that fails AFTER the lead was corrected still lands on the retry", async () => {
+  const oldAnswers = { ...COMPLETE_LEGACY_ANSWERS, hair_length: undefined }
+  // What an earlier account link of this lead wrote: its facts, with an assumed length.
+  const linkedWithDefault = {
+    ...projectLegacyLeadToFacts({ leadId: "lead-legacy", quizAnswers: oldAnswers as never })
+      .diagnostics,
+    hairLength: "long",
+  }
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-legacy",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: oldAnswers,
+        user_id: "user-1",
+        created_at: "2026-08-12T07:00:00.000Z",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    hair_profiles: [
+      {
+        user_id: "user-1",
+        diagnostics: linkedWithDefault,
+        facts_revision: 1,
+        facts_provenance: {
+          diagnostics: {
+            source: { kind: "legacy_lead", id: "lead-legacy" },
+            schemaVersion: 1,
+            at: "2026-08-12T09:00:00.000Z",
+            fields: { texture: "user", hairLength: "assumed" },
+          },
+        },
+      },
+    ],
+  })
+  // The facts write fails once — after the lead row was already corrected.
+  const realRpc = db.rpc.bind(db)
+  let failNextFactsWrite = true
+  db.rpc = (fn: string, args: Row) => {
+    if (fn === "user_facts_save_v1" && failNextFactsWrite) {
+      failNextFactsWrite = false
+      db.rpcs.push({ fn, args })
+      return Promise.resolve({ data: null, error: { message: "connection reset" } }) as never
+    }
+    return realRpc(fn, args)
+  }
+  const input = {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    expectedQuizSourceKind: "legacy" as const,
+  }
+
+  await assert.rejects(() =>
+    updateMissingPlanBereitSourceFact(db as never, {
+      ...input,
+      sourceVersion: "2026-08-12T08:00:00.000Z",
+      field: "hair_length",
+      value: "short",
+    }),
+  )
+  assert.equal((db.tables.leads[0].quiz_answers as Row).hair_length, "short", "lead corrected")
+  assert.equal((db.tables.hair_profiles[0].diagnostics as Row).hairLength, "long", "facts not")
+
+  // The retry: the page's readiness read must not call this "ready" on the stale facts…
+  const initial = await loadPlanBereitInitialReadiness(db as never, input)
+  assert.equal(initial.status, "checking")
+  assert.equal(initial.initialAction, "link")
+
+  // …and the link POST it triggers lands the corrected lead's facts.
+  const linked = await linkExactPlanBereitSourceToProfile(db as never, input)
+  assert.equal(linked.status, "ready")
+  const stored = db.tables.hair_profiles[0].diagnostics as Row
+  assert.equal(stored.hairLength, "short")
+  assert.deepEqual(
+    stored,
+    projectLegacyLeadToFacts({
+      leadId: "lead-legacy",
+      quizAnswers: { ...COMPLETE_LEGACY_ANSWERS, hair_length: "short" } as never,
+      takenAt: "2026-08-12T07:00:00.000Z",
+    }).diagnostics,
+  )
+  const fields = ((db.tables.hair_profiles[0].facts_provenance as Row).diagnostics as Row)
+    .fields as Row
+  assert.equal(fields.hairLength, "user")
+
+  // Settled: the next read is plain ready, and a further link is a no-op preserve.
+  const again = await loadPlanBereitInitialReadiness(db as never, input)
+  assert.equal(again.status, "ready")
+})
+
 test("foreign exact leads are forbidden and never patched from the recovery form", async () => {
   const db = new FakeSupabase({
     leads: [

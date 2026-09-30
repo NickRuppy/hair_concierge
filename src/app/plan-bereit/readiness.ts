@@ -298,6 +298,37 @@ async function loadProjectedHairProfile(
   return (data as ProjectedHairProfileRow | null) ?? null
 }
 
+/**
+ * Wave-1 fix F5: whether the stored diagnostics came from THIS legacy lead but not from its
+ * current answers — i.e. the missing-fact recovery form corrected the lead row and the facts
+ * write after it never landed (it failed, and the user retried). Content-based, never
+ * timestamp-based: the stored `source.raw` is the built legacy source of the answers the facts
+ * were written from, so it differs from the current lead's exactly when the lead changed after
+ * the write. Such facts are not "projected": readiness sends the retry back through the link,
+ * which re-lands the corrected lead with the recovery's own upsert.
+ */
+function storedFactsPredateLeadCorrection(diagnostics: unknown, lead: PersonalPlanLead): boolean {
+  if (lead.quiz_kind !== "legacy" || !isRecord(diagnostics) || !isRecord(lead.quiz_answers)) {
+    return false
+  }
+  const source = diagnostics.source
+  if (!isRecord(source) || source.kind !== "legacy_quiz" || source.leadId !== lead.id) return false
+  let current: unknown
+  try {
+    current = projectLegacyLeadToFacts({
+      leadId: lead.id,
+      quizAnswers: lead.quiz_answers as QuizAnswers,
+    }).diagnostics.source.raw
+  } catch {
+    return false
+  }
+  // Both sides as JSON would store them (a jsonb round trip drops `undefined` keys).
+  return !isDeepStrictEqual(
+    JSON.parse(JSON.stringify(source.raw ?? null)),
+    JSON.parse(JSON.stringify(current)),
+  )
+}
+
 function isSupportedQuizKind(value: unknown): value is PlanBereitQuizSourceKind {
   return value === "legacy" || value === "personal_plan"
 }
@@ -710,7 +741,9 @@ export async function loadPlanBereitInitialReadiness(
       : candidate.artifact?.user_id === input.userId) &&
     profile !== null &&
     profile.diagnostics != null &&
-    profile.facts_revision > 0
+    profile.facts_revision > 0 &&
+    // F5: facts from this very lead, written before its recovery correction, are stale.
+    !storedFactsPredateLeadCorrection(profile.diagnostics, candidate.lead)
 
   if (alreadyProjected) {
     // `ready` is the CTA gate. For a `scan_v1` buyer it must additionally mean "the
@@ -1016,7 +1049,17 @@ async function linkPlanBereitSource(
     }
     // Facts are written only AFTER the lead claim above succeeded (main's ordering), and
     // only through `user_facts_save_v1` — never a direct `hair_profiles` write.
-    if (legacyFactsWrite === "corrected_source") {
+    // F5: a retry after a failed recovery write reaches this link as an ordinary
+    // `account_link`; it still has to land the corrected lead, which "latest own quiz wins"
+    // would preserve against the stale facts from the same lead. So the recovery's own
+    // upsert also runs whenever the stored facts predate this lead's correction.
+    const correctedSource =
+      legacyFactsWrite === "corrected_source" ||
+      storedFactsPredateLeadCorrection(
+        (await loadProjectedHairProfile(supabase, input.userId))?.diagnostics,
+        lead,
+      )
+    if (correctedSource) {
       await writeCorrectedLegacySourceFacts(supabase, {
         userId: input.userId,
         leadId: lead.id,
