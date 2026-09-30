@@ -1,5 +1,7 @@
 # Central user profile: one source of truth for diagnostics, habits and context
 
+> **2026-09-30:** PR1 scope and staging are superseded by `plans/2026-09-30-central-user-profile-clean-switch.md` (one door, one vocabulary, all writers switched in PR1). §4/§4a contracts below remain valid except where that file overrides them.
+
 Date: 2026-09-15. Status: **Rev. 10 — FINAL. Decision coverage `confirmed`, evidence review confirmed, journey signed off by Nick 2026-09-15. Ready for `implementation-loop` (PR1).**
 Worktree: `.worktrees/care-habits-source-of-truth` on `codex/care-habits-source-of-truth`, base `9f1a3dc4` (== `origin/main` at creation, verified).
 Successor: `plans/2026-09-13-retire-onboarding.md` in `.worktrees/retire-onboarding` (parked; lands after PR3 and Hair Tools #465, rebased).
