@@ -3,10 +3,20 @@ import { randomUUID } from "node:crypto"
 import test from "node:test"
 
 import { saveMobileProfileEdit } from "../src/lib/mobile/profile-edit-service"
+import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
+import { hashPersonalPlanNeedVersionInput } from "../src/lib/personal-plan/persistence"
+import { PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION } from "../src/lib/personal-plan/persistence/stage1-service"
+import { editableScannerQuizAnswers } from "../src/lib/scan/scanner-context"
+import type { ScannerSourceRead } from "../src/lib/scan/scanner-context"
 import type { ProfileEditRequest } from "../src/lib/mobile/profile-edit-contract"
 import { loadSharedScannerContext } from "../src/lib/scan/scanner-context-supabase"
 import { quizSupersedesFacts, writeAccountLinkFacts } from "../src/lib/user-facts/account-link"
 import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
+import {
+  mergeDiagnosticsPatch,
+  profileAfterDiagnosticsWrite,
+} from "../src/lib/user-facts/hand-edit"
+import { projectArtifactToFacts } from "../src/lib/user-facts/project-artifact"
 import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
 import { parseUserFactsRow } from "../src/lib/user-facts/read"
 import type { QuizAnswers } from "../src/lib/quiz/types"
@@ -19,7 +29,9 @@ import {
   readRow,
 } from "./mobile-profile-facts-pglite.fixtures"
 import { legacyMobileEditProfilePatch } from "./mobile-legacy-profile-patch.oracle"
+import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 import {
+  createInitialNeed,
   id,
   insertProfile,
   saveUserFacts,
@@ -500,4 +512,134 @@ test("the helper and the new publisher are service-only", async (t) => {
     )
     assert.equal(rows[0]!.ok, allowed, role)
   }
+})
+
+// ---------------------------------------------------------------------------
+// Fix round 3, item 5: a paid buyer on the real door — publish and the next read agree, and the
+// TS oracle of the door's row (`profileAfterDiagnosticsWrite`) is what the door leaves.
+// ---------------------------------------------------------------------------
+
+async function scannerRead(client: ReturnType<typeof pgliteRpcClient>): Promise<ScannerSourceRead> {
+  return (await client.rpc("scanner_context_read_source", { p_user_id: OWNER }))
+    .data as ScannerSourceRead
+}
+
+test("a paid buyer's iOS edit on the real door: context stable on re-read, the door leaves the oracle's row", async (t) => {
+  const pg = await mobileFactsDatabase(t)
+  await insertProfile(pg, OWNER)
+  // Her paid initial need version from the complete v3 envelope (recurrence on dry_lengths).
+  const envelope = structuredClone(COMPLETE_V3_PLAN_ENVELOPE)
+  const computed = computeNeedPlan({
+    rawEnvelope: envelope,
+    artifactId: "initial",
+    projection: "initial_quiz",
+    computationVersion: PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION,
+    createdAt: "1970-01-01T00:00:00.000Z",
+  })
+  assert.equal(computed.status, "ready")
+  const inputHash = hashPersonalPlanNeedVersionInput({
+    schemaVersion: 1,
+    computationVersion: PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION,
+    inputSnapshot: envelope as never,
+  })
+  const { rows: needRows } = await pg.query<{ result: { outcome: string } }>(
+    `SELECT public.personal_plan_create_or_reuse_initial_need(
+       $1::uuid, NULL, NULL, 1, $2, $3, $4::jsonb, $5::jsonb) AS result`,
+    [
+      OWNER,
+      PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION,
+      inputHash,
+      JSON.stringify(envelope),
+      JSON.stringify((computed as { snapshot: unknown }).snapshot),
+    ],
+  )
+  assert.equal(needRows[0]!.result.outcome, "completed")
+  // Her facts from that envelope: an assumed hair length and a preserved candidate.
+  const { diagnostics } = projectArtifactToFacts({
+    envelope,
+    artifactId: id(5, 5),
+    leadId: id(6, 6),
+    takenAt: QUIZ_TIME,
+  })
+  const saved0 = await saveUserFacts(pg, {
+    userId: OWNER,
+    domain: "diagnostics",
+    patch: diagnostics,
+    provenance: {
+      source: { kind: "personal_plan_artifact", id: id(5, 5) },
+      schemaVersion: 1,
+      at: QUIZ_TIME,
+      fields: { hairLength: "assumed" },
+    },
+  })
+  assert.equal(saved0.status, "ok")
+  // An older quiz linked later loses: recorded as a preserved candidate (create_only).
+  const preserved = await saveUserFacts(pg, {
+    userId: OWNER,
+    domain: "diagnostics",
+    patch: diagnostics,
+    provenance: {
+      source: { kind: "legacy_lead", id: id(8, 8) },
+      schemaVersion: 1,
+      at: QUIZ_TIME,
+      preservedCandidates: [{ kind: "lead", id: id(8, 8), at: QUIZ_TIME }],
+    },
+    mode: "create_only",
+  })
+  assert.equal(preserved.status, "preserved")
+
+  const client = pgliteRpcClient(pg)
+  const read = await scannerRead(client)
+  assert.ok(read.initial, "the paid need version is the current one")
+  const rowBefore = read.profile!
+  assert.equal(
+    parseUserFactsRow(OWNER, rowBefore).provenance.diagnostics?.preservedCandidates?.length,
+    1,
+  )
+  const before = await loadSharedScannerContext(client as never, OWNER)
+  assert.equal(
+    (before?.prepared.source.answers as Record<string, any>).concernRecurrence?.concernId,
+    "dry_lengths",
+  )
+
+  // iOS: drop the concern carrying the recurrence, change the scalp type.
+  const prefill = editableScannerQuizAnswers(read)
+  delete prefill.primary_concern
+  assert.deepEqual([...(prefill.concerns ?? [])].sort(), ["dry_lengths", "split_ends"])
+  const saved = await edit(client, { ...prefill, concerns: ["split_ends"], scalp_type: "fettig" })
+
+  const loaded = await loadSharedScannerContext(client as never, OWNER)
+  assert.equal(loaded?.contextRevision, saved.contextRevision, "the next read republishes nothing")
+  assert.equal(
+    (loaded?.prepared.source.answers as Record<string, any>).concernRecurrence,
+    undefined,
+  )
+
+  const publish = client.calls
+    .filter((call) => call.name === "scanner_profile_edit_publish")
+    .at(-1)!
+  const write = (
+    publish.args.p_facts as {
+      diagnostics: Parameters<typeof profileAfterDiagnosticsWrite>[1]["diagnostics"]
+    }
+  ).diagnostics
+  const expected = profileAfterDiagnosticsWrite(rowBefore, {
+    diagnostics: write,
+    columns: deriveDiagnosticsColumns(
+      mergeDiagnosticsPatch(parseUserFactsRow(OWNER, rowBefore).diagnostics, write.patch),
+    ),
+  })
+  const rowAfter = (await scannerRead(client)).profile!
+  assert.deepEqual(rowAfter.diagnostics, expected.diagnostics)
+  assert.deepEqual(
+    (rowAfter.facts_provenance as Record<string, unknown>).diagnostics,
+    (expected.facts_provenance as Record<string, unknown>).diagnostics,
+  )
+  assert.deepEqual(derivedColumns(rowAfter), derivedColumns(expected))
+  // The facts kept what the edit did not name.
+  const facts = parseUserFactsRow(OWNER, rowAfter)
+  assert.equal(facts.provenance.diagnostics?.fields?.hairLength, "assumed")
+  assert.equal(facts.provenance.diagnostics?.preservedCandidates?.length, 1)
+  assert.equal(facts.diagnostics?.scalpOiliness, "oily")
+  assert.equal(facts.diagnostics?.concernRecurrence, undefined)
 })

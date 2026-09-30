@@ -271,6 +271,11 @@ test("C3/C5 explicit replace leaves paid and unrelated fields intact, changed re
   const paid = await f.db.query("select * from personal_plans")
   const input = await f.intent("replace", { answers: { ...answers, thickness: "coarse" } })
   const result = await f.complete(input)
+  assert.equal(
+    (await loadSharedScannerContext(f.client as never, owner))?.contextRevision,
+    result.contextRevision,
+    "the next read republishes nothing",
+  )
   assert.deepEqual(await f.db.query("select * from personal_plans"), paid)
   const row = (await readRow(f.db, owner))!
   assert.equal(row.towel_material, "mikrofaser")
@@ -286,7 +291,13 @@ test("C3/C5 explicit replace leaves paid and unrelated fields intact, changed re
 test("replace is the latest own quiz: an older web quiz linked later loses, a newer one wins", async (t) => {
   const f = await fixture(t)
   await f.complete(await f.intent())
-  await f.complete(await f.intent("replace", { answers: { ...answers, thickness: "coarse" } }))
+  const replaced = await f.complete(
+    await f.intent("replace", { answers: { ...answers, thickness: "coarse" } }),
+  )
+  assert.equal(
+    (await loadSharedScannerContext(f.client as never, owner))?.contextRevision,
+    replaced.contextRevision,
+  )
   const row = (await readRow(f.db, owner))!
   const facts = parseUserFactsRow(owner, row)
   const leads = (await f.db.query<any>("select id from leads order by created_at, id")).rows
@@ -598,7 +609,10 @@ test("missing-only preserves valid false/empty/NULL and unrelated fields; no con
       .consent,
     null,
   )
-  assert.ok(await loadSharedScannerContext(f.client as never, owner))
+  assert.equal(
+    (await loadSharedScannerContext(f.client as never, owner))?.contextRevision,
+    result.contextRevision,
+  )
 })
 
 test("missing-only on a facts profile names only the missing answer", async (t) => {
@@ -607,12 +621,16 @@ test("missing-only on a facts profile names only the missing answer", async (t) 
   const before = (await readRow(f.db, owner))!
   const current = (await f.client.rpc("scanner_context_read_source", { p_user_id: owner }))
     .data as any
-  await completeMobileProfile(f.client as never, owner, {
+  const result = await completeMobileProfile(f.client as never, owner, {
     requestId: randomUUID(),
     expectedProfileRevision: current.profileRevision,
     answers: { hair_length: "short" },
   })
-  const call = f.calls.at(-1)!.args as any
+  const call = f.calls.findLast((c) => c.name === "mobile_registration_publish")!.args as any
+  assert.equal(
+    (await loadSharedScannerContext(f.client as never, owner))?.contextRevision,
+    result.contextRevision,
+  )
   assert.deepEqual(call.p_facts.diagnostics.patch, { hairLength: "short" })
   const row = (await readRow(f.db, owner))!
   const facts = parseUserFactsRow(owner, row)
@@ -642,7 +660,7 @@ test("fix round 1 (G) adversarial: missing mode on a backfilled legacy_columns d
   assert.equal(before.hair_length, null, "baseline: hair length is missing")
   const current = (await f.client.rpc("scanner_context_read_source", { p_user_id: owner }))
     .data as any
-  await completeMobileProfile(f.client as never, owner, {
+  const result = await completeMobileProfile(f.client as never, owner, {
     requestId: randomUUID(),
     expectedProfileRevision: current.profileRevision,
     answers: { hair_length: "short", thickness: "coarse" },
@@ -665,7 +683,10 @@ test("fix round 1 (G) adversarial: missing mode on a backfilled legacy_columns d
     assert.deepEqual(row[column], before[column], column)
   assert.deepEqual(derived(row), deriveDiagnosticsColumns(facts.diagnostics!))
   assert.equal((await f.db.query("select * from leads")).rows.length, 0)
-  assert.ok(await loadSharedScannerContext(f.client as never, owner))
+  assert.equal(
+    (await loadSharedScannerContext(f.client as never, owner))?.contextRevision,
+    result.contextRevision,
+  )
 })
 
 test("fix round 1 (G) adversarial: a registration replay whose first attempt rolled back runs fresh, exactly once", async (t) => {
