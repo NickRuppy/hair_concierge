@@ -8,6 +8,69 @@ fingerprint, agreement figure or distribution statement carries forward. This ru
 repeatability claim** — the blind lane has not been re-run against v0.2, and the freeze gate (full rerun
 plus an example-disjoint unseen set) is still ahead.
 
+## Current state — Standard v0.4, after round-2 rulings E7–E11 (2026-09-30)
+
+**This section is the current cohort truth.** Everything from "Standing policy this run" down is the v0.2
+regeneration, retained as provenance; the E1–E6 passes are in `changes-from-v0.md` Parts II–III and the E7–E11
+pass in Part IV. Per-record truth is always the record files. Rulings: `plans/mask-inci/round1-rule-rulings.md`,
+"Escalation rulings (round-2, 2026-09-30)".
+
+| # | Product | cond | weight | care_dir | reading | repair | bond_route | primary | secondary | stamp |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 01 | HASK Argan Oil sachet | high | high | moisture | — | low | none | general | — | v0.3 |
+| 02 | Gliss 7sec Express-Repair ⚠ marker unresolved | moderate | moderate | moisture | — | **high** | **gluconamide** | **repair** | — | **v0.4** |
+| 03 | Bali Curls SOS Protein | high | high | moisture | — | low | none | general | — | v0.3 |
+| 04 | Gliss Liquid Silk 4-in-1 | high | moderate | protein | — | high | gluconamide | repair | — | **v0.4** |
+| 05 | Isana Mandelmilch 3in1 | high | high | protein | — | medium | none | repair | — | v0.2 |
+| 06 | MONDAY Smooth Anti-Frizz | moderate | high | moisture | — | low | none | smoothing | — | v0.2 |
+| 07 | Pantene Molecular Bond Repair | moderate | **moderate** | **moisture** | — | low | none | smoothing | — | **v0.4** |
+| 08 | Sante Intense Hydration | moderate | low | balanced | both_substantive | medium | none | moisture | repair | v0.3 |
+| 09 | Balea Aqua Hyaluron 3in1 | moderate | **moderate** | moisture | — | low | none | moisture | — | **v0.4** |
+| 10 | Bali Curls Deep Repair | high | high | moisture | — | low | none | general | **moisture** | **v0.4** |
+| 11 | Elvital Glycolic Gloss ⚠ marker unresolved | moderate | moderate | moisture | — | low | none | shine | — | v0.3 |
+| 12 | Guhl Panthenol 2in1 | moderate | low | moisture | — | low | none | general | — | v0.3 |
+| 13 | Olaplex No.3 | EXCLUDED | — | — | — | — | (maleate, boundary evidence) | — | — | v0.2 |
+
+Bold = moved in the round-2 pass. Records still stamped v0.2/v0.3 were checked against E7–E11 and do not move
+(stamps follow the existing convention: only re-derived records are re-stamped).
+
+**Distributions (12 classified products)**
+
+| Field | After E1–E6 (v0.3) | **After E7–E11 (v0.4)** |
+|---|---|---|
+| `conditioning_level` | high 5 / moderate 7 / low 0 | **high 5 / moderate 7 / low 0** (unchanged) |
+| `weight_potential` | high 5 / moderate 3 / low 4 | **high 5 / moderate 5 / low 2** (07, 09 → moderate; 08, 12 keep low) |
+| `care_direction` | moisture 8 / protein 2 / balanced 2 | **moisture 9 / protein 2 / balanced 1** (08 `both_substantive`; `neither_dominant` 0) |
+| `repair_support_level` | low 9 / medium 2 / high 1 | **low 8 / medium 2 / high 2** (02 → high) |
+| `primary_focus` | general 5 / repair 2 / smoothing 2 / moisture 2 / shine 1 | **general 4 / repair 3 / smoothing 2 / moisture 2 / shine 1** |
+| `secondary_focus` | 08 {repair} | **08 {repair}, 10 {moisture}** |
+| `hair_thickness_fit` `[echo]` | {fine,normal} 4 / full 3 / {normal,coarse} 5 | **{fine,normal} 2 / full 5 / {normal,coarse} 5** |
+| `texture_fit` `[echo]` | {straight,wavy} 4 / {straight,wavy,curly} 4 / {wavy,curly,coily} 4 | **{straight,wavy} 2 / {straight,wavy,curly} 6 / {wavy,curly,coily} 4** |
+| `damage_fit` `[echo]` | {healthy,mod} 10 / {mod,high} 2 | **{healthy,mod} 10 / {mod,high} 2** (unchanged — see #02 flag below) |
+| confidence (108 fields) | 20 high / 88 moderate / 0 low | **20 high / 88 moderate / 0 low** |
+
+`hinweise`: `boundary_position_ingredient` now emitted on 4 records (01, 03 under E1; 04 SERICIN @12 under E8;
+10 PANTHENOL @11 under E1/E10).
+
+**Round-2 deltas, one line each**
+
+- **E7** (full-list cationic count for the leanness conjunct) — #07 weight low → moderate (2 cationics: @3, @11);
+  #09 low → moderate (3 cationics: @4, @11, @12); both echoes re-derived. #08 (1 cationic @4) and #12 (1 cationic @3)
+  verified on their own INCI and keep `low`.
+- **E8** (tail-edge position counts in the §9.3 protein test) — #04 keeps `protein` (SILK @11 + SERICIN @12,
+  PARFUM @13); confidence stays `moderate`; `boundary_position_ingredient` note added (it was missing).
+- **E9** (reading (b) clause 2 needs a silicone *system*) — #07 care_direction balanced/neither_dominant → moisture.
+  **Reading (b) now fires nowhere in the cohort** (§18 Q4's answer for this run).
+- **E10** (moisture secondary under a `general` primary) — #10 gains secondary `moisture` (GLYCERIN @3, BETAINE @9,
+  PANTHENOL @11; moderate confidence, PANTHENOL is a load-bearing boundary species).
+- **E11** (#02 reading B, product-level human resolution) — bond_route none → gluconamide, repair low → high,
+  primary general → repair (cascade re-run on the INCI), verdict nonspecific → repair_supported, all at moderate
+  with the `tail_marker` note retained. **⚠ Not applied: damage_fit stays {healthy, moderately_damaged}** —
+  §9.7's specialist row needs conditioning_level `high` and #02 is `moderate` under every reading (one cationic in the
+  whole formula). Flagged on the record as AP-02-DAMAGEFITECHO for Nick.
+
+---
+
 Standing policy this run: §3.1's cut decides above-tail membership; §3.1.1's plausibility test decides
 whether the marker is read at all; R3's tail-edge exclusion removes `tail_index − 1` species from
 *carrying* §9.1 signals and §9.2 base terms (and, as written, from nothing else).
@@ -140,7 +203,6 @@ width, and (c) the coconut-oil lexicon/standard divergence. All three are marker
 move values in this cohort, and none of them is a threshold inside a field.
 
 ---
-**STALE NOTICE (2026-09-14):** the tables above reflect the v0.2 regeneration and predate the
-E1–E6 escalation passes. Current per-record truth: the record files; delta history:
-`changes-from-v0.md`. Final round-1 distributions: weight high 5 / moderate 3 / low 4;
-focus general 5 / repair 2 / smoothing 2 / moisture 2 / shine 1; `lightness` removed (E6).
+**STALE NOTICE — SUPERSEDED (2026-09-30):** the v0.2 tables in this file are provenance only. The
+current cohort state (Standard v0.4, after E7–E11) is the "Current state" section at the top of this file;
+per-record truth is the record files; delta history is `changes-from-v0.md` (Part IV for round 2).

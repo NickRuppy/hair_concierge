@@ -612,3 +612,67 @@ Still outstanding, and unchanged in kind by this pass:
    (`Dipropylene Glycol` @4, `Panthenol` @6, with `Glycine` @10 not counted) is the **only** thing between it
    and `moisture`. Under v0.2 that near-miss was doubly blocked; it is now singly blocked. Recorded, not acted
    on — the count is the rule and the rule is applied as written.
+
+---
+
+# Part IV — round-2 rulings E7–E11, applied 2026-09-30
+
+Standard of record: **`mask-classification-standard.v0.1.md` at v0.4** (E7–E11 on top of v0.3), passages
+marked `(E<n>, 2026-09-30)`. Ruling ledger: `plans/mask-inci/round1-rule-rulings.md`, section **"Escalation
+rulings (round-2, 2026-09-30)"**. Parts I–III are unchanged provenance. This pass touches **five records** —
+`02`, `04`, `07`, `09`, `10` — each re-stamped `standardVersion: "mask-inci-v0.4"`; `08` and `12` were verified
+against E7 on their own INCI and left untouched. Every moved value was re-verified on the record's own capture
+INCI (blind packet), not taken from the ruling's expected-effects list.
+
+## 7.1 Changed cells (v1.2 → v1.3)
+
+| # | Field | v1.2 → v1.3 | Ruling |
+|---|---|---|---|
+| 02 | `bond_route` | none → **gluconamide** (@11/@12) | **E11** — reading B, product-level human resolution |
+| 02 | `repair_support_level` | low → **high** (moderate conf.) | E11 |
+| 02 | `primary_focus` | general → **repair** (moderate conf.) | E11 — §9.5.2 cascade re-run on the INCI: step 3 `repair` clears on the bond disjunct |
+| 02 | `focus_care_verdict` | nonspecific → **repair_supported** (claimRole corroborating) | E11 consequent |
+| 02 | `bond_specific_support` (§7) | claim_only → **chemistry_candidate** | E11 consequent |
+| 02 | `damage_fit` `[echo]` | **unchanged** {healthy, moderately_damaged} | ⚠ **E11's listed effect NOT applied** — see 7.3 |
+| 02 | adjudication | AP-02-BONDREADINGS **CLOSED by E11**; +AP-02-DAMAGEFITECHO | |
+| 04 | `care_direction` | **unchanged** (`protein`, moderate) | **E8** — SERICIN @12 at tail_index − 1 counts; +`boundary_position_ingredient` note |
+| 04 | adjudication | AP-04-R5TAILEDGE **CLOSED by E8** | |
+| 07 | `weight_potential` | low → **moderate** (light → medium) | **E7** — 2 cationics on the full list (@3, @11) |
+| 07 | `hair_thickness_fit` / `texture_fit` `[echo]` | {fine, normal} → **{fine, normal, coarse}**; {straight, wavy} → **{straight, wavy, curly}** | echo |
+| 07 | `care_direction` | balanced / neither_dominant → **moisture** (moderate) | **E9** — one silicone (@5), no R3/R6a corroboration: not a clause-2 system |
+| 07 | adjudication | AP-07-CATIONICSCOPE **CLOSED by E7**; AP-07-READINGB **CLOSED by E9** | |
+| 09 | `weight_potential` | low → **moderate** (light → medium) | **E7** — 3 cationics on the full list (@4, @11, @12) |
+| 09 | `hair_thickness_fit` / `texture_fit` `[echo]` | as #07 | echo |
+| 09 | adjudication | AP-09-CATIONICSCOPE **CLOSED by E7** | |
+| 10 | `secondary_focus` | [] → **[moisture]** (moderate) | **E10** — cluster GLYCERIN @3, BETAINE @9, PANTHENOL @11 meets criterion 1; +`boundary_position_ingredient` (PANTHENOL @11 load-bearing) |
+| 10 | adjudication | AP-10-SECONDARYSLOT **CLOSED by E10** | |
+
+Verified, not changed: **08** (single cationic `Distearoylethyl Dimonium Chloride` @4 on the full list; `Arginine`
+@11 is a free amino acid, not S1) and **12** (single cationic `Behentrimonium Chloride` @3 on the full list) keep
+`weight_potential: low`. E10 was checked on every other `general` primary (01, 03, 12): none has a criterion-1
+cluster above the tail, so #10 is the only record it moves. E9 was checked on #11: it already failed reading (b)
+at clause 4 and is unaffected.
+
+## 7.2 Distributions after v1.3
+
+`weight_potential` high 5 / moderate 5 / low 2 · `care_direction` moisture 9 / protein 2 / balanced 1 (both_substantive;
+**neither_dominant 0**) · `repair_support_level` low 8 / medium 2 / high 2 · `primary_focus` general 4 / repair 3 /
+smoothing 2 / moisture 2 / shine 1 · `secondary_focus` 08 {repair}, 10 {moisture} · `conditioning_level` and
+`damage_fit` unchanged · confidence 20 high / 88 moderate / 0 low (unchanged). Full table in `summary.md`.
+
+## 7.3 ⚠ FLAG — E11's damage_fit effect does not follow from the echo table
+
+E11 lists damage_fit → {moderately_damaged, highly_damaged} for #02 (carried from AP-02-BONDREADINGS' reading-B text).
+§9.7 grants that row only to `conditioning_level: high` **with** a specialist route. The specialist route now
+qualifies, but #02's conditioning_level is `moderate` under every reading — `Cetrimonium Chloride` @9 is the only
+cationic in the whole formula, so S1 (mandatory for `high`) fails, and the unresolved marker is a material
+counter-signal in its own right. §9.7 row 2 gives {healthy, moderately_damaged}; that is what the record carries.
+The v0.2 record's own damageFit text had already said the specialist row would need conditioning `high`. **Not
+forced; carried as AP-02-DAMAGEFITECHO for Nick** (either a product-level §9.7 override he rules explicitly, or
+the listed effect was an inherited overstatement).
+
+## 7.4 Still outstanding
+
+Records `01`, `03`, `08`, `11`, `12` remain at v0.3 and `05`, `06`, `13` at v0.2 (checked against E7–E11; none moves).
+AP-11-MARKERUNRESOLVED (#11) awaits an evidence re-fetch, not a ruling, and is untouched. The rerun obligation runs
+again from v0.3 to v0.4 (E7, E9, E10 are systemic).

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "mask-research-record-v0.1",
   "lane": "reference_key",
-  "standardVersion": "mask-inci-v0.2",
+  "standardVersion": "mask-inci-v0.4",
   "productId": "04-gliss-liquid-silk-4in1",
   "identity": {
     "brand": "Schwarzkopf Gliss",
@@ -41,7 +41,7 @@
     "rank": 13,
     "index": 13,
     "plausible": true,
-    "anomalyNote": "No §3.1 anomaly. The marker at 13 gives the cohort's second-longest above-tail segment and is what makes the gluconamide pair (@8/@9) qualifying here while the identical pair in #02 (ranks 11/12 against a marker at 8) is not. It also correctly demotes Amodimethicone @14, Butyrospermum Parkii Butter @15 and Prunus Armeniaca Kernel Oil @18 to decorative — the exact pattern lexicon §0.2 records for this product family.  ||  PLAUSIBILITY ASSESSMENT (R2, §3.1.1, added under v0.2): PLAUSIBLE. The full care and weight architecture - CETEARYL ALCOHOL @2, BEHENTRIMONIUM CHLORIDE @4, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE @5, ISOPROPYL MYRISTATE @6, BEHENAMIDOPROPYL DIMETHYLAMINE @7 - outranks PARFUM @13; conventional O/W emulsion with AQUA @1. Neither limb fires. SERICIN @12 sits at tail_index - 1: R3's tail-edge exclusion is scoped to §9.1's S1/S2/S3 and §9.2's base terms and does not reach §9.3's material-R5 test, so Sericin still counts there - recorded as a counter-signal on careDirection rather than silently relied on."
+    "anomalyNote": "No §3.1 anomaly. The marker at 13 gives the cohort's second-longest above-tail segment and is what makes the gluconamide pair (@8/@9) qualifying here while the identical pair in #02 (ranks 11/12 against a marker at 8) is not. It also correctly demotes Amodimethicone @14, Butyrospermum Parkii Butter @15 and Prunus Armeniaca Kernel Oil @18 to decorative — the exact pattern lexicon §0.2 records for this product family.  ||  PLAUSIBILITY ASSESSMENT (R2, §3.1.1, added under v0.2): PLAUSIBLE. The full care and weight architecture - CETEARYL ALCOHOL @2, BEHENTRIMONIUM CHLORIDE @4, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE @5, ISOPROPYL MYRISTATE @6, BEHENAMIDOPROPYL DIMETHYLAMINE @7 - outranks PARFUM @13; conventional O/W emulsion with AQUA @1. Neither limb fires. SERICIN @12 sits at tail_index - 1: R3's tail-edge exclusion is scoped to §9.1's S1/S2/S3 and §9.2's base terms and does not reach §9.3's material-R5 test, so Sericin still counts there - recorded as a counter-signal on careDirection rather than silently relied on.  ||  RE-DERIVED UNDER v0.4 (E8, 2026-09-30): R3's tail-edge exclusion is NOT extended to §9.3's material-R5 test. Following E1's principle, SERICIN @12 (tail_index − 1) counts normally there; the boundary dependence is carried as the careDirection confidence cap at `moderate` and a `boundary_position_ingredient` hinweise note."
   },
   "aboveTailSegment": [
     "1 AQUA",
@@ -171,7 +171,8 @@
         "`high` does not apply: the base-plus-one-alternative structure Nick ruled on 2026-09-04 requires at least one supporting route, and both candidates sit below the tail marker where they earn nothing.",
         "`low` does not apply: it requires a single cationic species (there are three) and no cetearyl-class fatty alcohol in the top three (Cetearyl Alcohol is at 2).",
         "Confirms the intended behaviour of §9.2's counter-signal rules: a 'Bonding/Silk' mask that lists shea butter on pack does not become heavy because of it.",
-        "Re-derived under v0.2 (R4): the value `moderate` STANDS, and both anchors now fail for stated reasons rather than for want of a cationic count. `high` fails on its required core: there is no R4b heavy lipid above the marker at all — ISOPROPYL MYRISTATE @6 is a light ester, GLYCOSPHINGOLIPIDS @10 is a trace family-11 species, and BUTYROSPERMUM PARKII BUTTER @15 and PRUNUS ARMENIACA KERNEL OIL @18 are both tail-side and decorative, exactly the pattern lexicon §0.2 records for this product family. `low` fails on the thin-fatty-base conjunct: CETEARYL ALCOHOL sits at rank 2, inside the top three. Residual = `moderate`."
+        "Re-derived under v0.2 (R4): the value `moderate` STANDS, and both anchors now fail for stated reasons rather than for want of a cationic count. `high` fails on its required core: there is no R4b heavy lipid above the marker at all — ISOPROPYL MYRISTATE @6 is a light ester, GLYCOSPHINGOLIPIDS @10 is a trace family-11 species, and BUTYROSPERMUM PARKII BUTTER @15 and PRUNUS ARMENIACA KERNEL OIL @18 are both tail-side and decorative, exactly the pattern lexicon §0.2 records for this product family. `low` fails on the thin-fatty-base conjunct: CETEARYL ALCOHOL sits at rank 2, inside the top three. Residual = `moderate`.",
+        "Re-checked under v0.3/v0.4 (E4, E7): value `moderate` STANDS, and the `low` refusal now rests on the restated leanness test rather than on the deleted thin-fatty-base conjunct cited above — conjunct 3 fails on THREE cationics (BEHENTRIMONIUM CHLORIDE @4, DISTEAROYLETHYL HYDROXYETHYLMONIUM METHOSULFATE @5, BEHENAMIDOPROPYL DIMETHYLAMINE @7), which is the same count on the above-tail segment and on the full list (E7)."
       ],
       "counterSignals": [
         "Front-of-pack lipid storytelling versus tail-position lipids — the lexicon's canonical false positive for this exact product family.",
@@ -201,11 +202,12 @@
         "`balanced` (a) both-substantive does not apply: only one humectant above the tail.",
         "`balanced` (b) neither-dominant does not apply: clause 1 requires no protein anchor, and there is one.",
         "`moisture` does not apply: it is the coherent direction WITHOUT a material protein-film route, and a two-species R5 route above the tail is one.",
-        "R6's cohort effect is visible here exactly as ruled: 'protein + generic lipids' no longer reaches `balanced`. This is the first `protein` value produced anywhere in the cohort — under v0.1 the field's `protein` bucket was empty across all twelve products, which the v0 run flagged as likely structural unreachability."
+        "R6's cohort effect is visible here exactly as ruled: 'protein + generic lipids' no longer reaches `balanced`. This is the first `protein` value produced anywhere in the cohort — under v0.1 the field's `protein` bucket was empty across all twelve products, which the v0 run flagged as likely structural unreachability.",
+        "Re-checked under v0.4 (E8, 2026-09-30): value `protein` STANDS. The one hinge this record flagged (AP-04-R5TAILEDGE) is ruled: a tail_index − 1 species counts normally in §9.3, exactly as E1 rules for §9.1/§9.2, with the dependence recorded as a confidence cap and a hinweise note."
       ],
       "counterSignals": [
         "D4 heavy-protein-payload counter-signal FIRES (two distinct R5 species above the tail): confidence bound to `moderate` (§13 effect 2), carried in `hinweise` as `protein_payload` (§13.1, R8), and routed under `protein_payload_review`.",
-        "Both R5 species sit at tail_index − 2 and tail_index − 1. R3's tail-edge exclusion is scoped to §9.1's S1/S2/S3 and §9.2's base terms and does NOT reach §9.3's material-R5 test, so SERICIN @12 still counts — but the value would fall to `moisture` if that exclusion were ever extended to §9.3. Recorded as the value's single hinge; see AP-04-R5TAILEDGE.",
+        "BOUNDARY POSITION (E8, 2026-09-30): the material R5 route rests on HYDROLYZED SILK @11 plus SERICIN @12, and SERICIN sits at tail_index − 1 (PARFUM @13). E8 rules that R3's tail-edge exclusion is not extended to §9.3's material-R5 test: following E1, the species counts normally and the dependence costs confidence, not credit. SERICIN is load-bearing — without it HYDROLYZED SILK @11 stands alone, leg (b) fails (not within the first eight above-tail ranks), and the value would be `moisture` — so confidence is capped at `moderate` (already bound there by D4) and a `boundary_position_ingredient` note is emitted.",
         "The humectant leg is a single glycerin — a category base ingredient whose rank carries no moisture signal at all (lexicon family 7)."
       ],
       "limitations": [
@@ -439,9 +441,9 @@
   "adjudicationPoints": [
     {
       "id": "AP-04-R5TAILEDGE",
-      "title": "The new `protein` value rests on a species at tail_index − 1, and R3's tail-edge exclusion does not reach §9.3",
-      "body": "`care_direction: protein` needs a material R5 route, which here is satisfied by leg (a): two distinct qualifying species above the tail, HYDROLYZED SILK @11 and SERICIN @12, against PARFUM @13. SERICIN is exactly a tail_index − 1 species. R3's tail-edge exclusion is drafted for §9.1's S1/S2/S3 and is extended by §9.2 to its two base terms; it is not extended to §9.3's material-R5 test. Read literally, Sericin counts and the value is `protein`. Read by the exclusion's evident purpose — a boundary-band species may not be the species that makes a signal fire — Hydrolyzed Silk @11 would stand alone, leg (b) would fail (rank 11 is not within the first eight above-tail ranks), and the value would be `moisture`, taking `repair` as a focus candidate with it through §9.5.2 step 3's protein-film disjunct. The bond route is unaffected in either reading (the gluconamide pair sits at @8/@9, well clear of the band), so `repair_support_level: high` and the `repair` headline stand regardless. This is a scope question about R3, not about this product, and it should be answered once for the standard rather than per record.",
-      "source": "§9.1 tail-edge exclusion (R3); §9.2 base terms; §9.3 material-R5 test (R6); §18 open question 3"
+      "title": "CLOSED by E8 (2026-09-30) — the tail-edge exclusion does not reach §9.3; SERICIN @12 counts and care_direction stays `protein` at moderate confidence",
+      "body": "Raised under v0.2: `care_direction: protein` rests on a two-species material R5 route, HYDROLYZED SILK @11 + SERICIN @12, and SERICIN sits exactly at tail_index − 1 (PARFUM @13). The point asked whether R3's tail-edge exclusion reached §9.3's material-R5 test; if it did, the value would fall to `moisture`. E1 (2026-09-14) withdrew the exclusion everywhere and made the boundary treatment field-uniform; Nick confirmed the §9.3 half explicitly as E8 on 2026-09-30: the exclusion is NOT extended to the protein test, a tail_index − 1 species counts normally there, and the boundary dependence is recorded as confidence capped at `moderate` plus a `boundary_position_ingredient` hinweise note (now emitted). The value stays `protein`. The bond route (@8/@9) was never in the band, so `repair_support_level: high` and the `repair` headline were unaffected in either reading. Nothing further is needed from Nick on this record.",
+      "source": "§9.3 material-R5 test boundary-position rule (E1, E8 2026-09-30); plans/mask-inci/round1-rule-rulings.md, Escalation rulings (round-2, 2026-09-30), E8"
     }
   ],
   "uncertainFields": [
@@ -449,6 +451,10 @@
     "careDirection"
   ],
   "assumptionNotes": [
+    "Re-derived under v0.4 (E8 boundary-position rule for §9.3's material-R5 test), not patched. Also re-checked against v0.3 (E1 boundary-position rule, E4 restated leanness test, E6 `lightness` removal), which this record had not previously been re-stamped under: no value moves — conditioning_level's S1/S2/S3 carriers sit at ranks 2–10, clear of the band; weight `low` fails conjunct 3 on three cationics on either counting scope (E7 changes nothing here); the `repair` headline never involved `lightness`. E7, E9, E10 and E11 checked and not engaging.",
+    "Fields whose value moved under v0.4: none. Fields whose evidence text changed: careDirection (E8 replaces the R3-scope hinge with a ruled boundary-position cap), tailMarker (E8 note), weightPotential (thresholdReasoning restated for E4/E7). hinweise gains `boundary_position_ingredient` (SERICIN @12). AP-04-R5TAILEDGE CLOSED by E8.",
+    "Review triggers under v0.4 — FIRED: `protein_payload_review` (D4, unchanged), `specialist_damage_fit` (unchanged). NOT fired: `bond_claim_review`, `tail_marker_anomaly`, `tail_marker_unresolved`, `weight_high_conflict`, `low_confidence_field` (the boundary dependence caps at `moderate`, it does not step down).",
+    "— carried forward from reference-key-v1 (Standard v0.2), retained as provenance —",
     "Re-derived under v0.2 (R6 two-readings rule; R3/R4 re-checked; R5 and R7 checked and not reached; R8 `hinweise`; R2 plausibility prong; R9 echo markers), not patched.",
     "Fields whose value moved: careDirection (balanced → protein, R6). conditioningLevel `high` SURVIVES the R3 tail-edge exclusion — three distinct cationics at ranks 4, 5 and 7, none of them in the boundary band — and weightPotential `moderate` survives R4 (no R4b heavy lipid above the tail; the shea butter @15 and apricot kernel oil @18 are tail-side, and the thin-base test fails on cetearyl @2, so `low` is equally unavailable).",
     "Review triggers under v0.2 — FIRED: `protein_payload_review` (D4, unchanged), `specialist_damage_fit` (unchanged; it routes the reviewer to bond_route, which is reviewable). NOT fired: `bond_claim_review` (the pack's bond positioning IS matched by a nameable token pair above the tail), `tail_marker_anomaly`, `tail_marker_unresolved`, `weight_high_conflict`.",
@@ -458,7 +464,7 @@
     "Protocol metadata for traceability only, zero classification credit: contact time 2–3 minutes (mask mode), source aggregated, confidence moderate-high. Under P5 the mask mode takes the conditioner slot (`replaces_conditioner`); the product's own stated Spülung mode does not create a `conditioner_after` sequence.",
     "multi_use envelope recorded per §2.2. Cross-category multi-row architecture is parked out of scope by Nick; mode-scoped classification is forward-compatible with it."
   ],
-  "derivedFrom": "reference-key-v0/04-gliss-liquid-silk-4in1.json (Standard v0.1). Re-derived, not patched, per §12 G7 and §15: R1-R9 are systemic rule changes, so no v0.1 field approval, fingerprint, agreement or distribution statement carries into v0.2.",
+  "derivedFrom": "reference-key-v1/04-gliss-liquid-silk-4in1.json (Standard v0.2), itself derived from reference-key-v0 (Standard v0.1). Re-checked under Standard v0.3 and re-derived under Standard v0.4 (E8), not patched; no value moves on this record.",
   "hinweise": {
     "fired": [
       {
@@ -475,6 +481,11 @@
         "flag": "claim_formula_mismatch",
         "value": "'ölfrei' vs BUTYROSPERMUM PARKII BUTTER @15 and PRUNUS ARMENIACA KERNEL OIL @18",
         "note": "Both species are in the tail and carry no weight credit, so the claim and the credited architecture do not actually conflict on any value. Recorded because the pack statement is not literally true of the ingredient list."
+      },
+      {
+        "flag": "boundary_position_ingredient",
+        "value": "SERICIN @12, one rank above tail_index 13 (PARFUM); load-bearing for care_direction",
+        "note": "care_direction `protein` hinges on a boundary-position ingredient: the material R5 route clears leg (a) only with SERICIN @12 counted as the second distinct species; without it HYDROLYZED SILK @11 stands alone, fails leg (b), and the value would be `moisture`. Under E1/E8 the species counts in full and the uncertainty is carried here and as the field's `moderate` confidence cap. This note moves no value. SERICIN is not load-bearing elsewhere: repair_support_level `high`, damage_fit and the `repair` headline rest on the gluconamide pair @8/@9, and conditioning_level's signals sit at ranks 2–10. (The D4 payload, a counter-signal and not a value, also counts SERICIN.)"
       }
     ]
   },
