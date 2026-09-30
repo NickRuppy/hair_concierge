@@ -20,6 +20,13 @@
 --
 -- Lock order, for anyone adding a second writer: refinement draft FIRST, then
 -- `hair_profiles`. Every path here takes the locks in that order.
+--
+-- The write flag (clean switch task 9): every INSERT/UPDATE of `hair_profiles` below is
+-- bracketed by `set_config('app.user_facts_writer', <user id>, true)` and a reset to ''.
+-- The guard trigger of 20260930120000_user_facts_lock.sql lets a fact column change only while
+-- that flag names the row's user. Normal exits reset it explicitly; on an error in between, the
+-- transaction-local setting is rolled back with the caller's (sub)transaction, so it never
+-- outlives the statement it was set for.
 
 -- ---------------------------------------------------------------------------
 -- Small pure helpers. Internal to this function: REVOKEd from every role
@@ -511,12 +518,14 @@ BEGIN
     -- ON CONFLICT + re-select: a concurrent account link may have created the
     -- row between the select above and this insert. Whoever lost simply
     -- continues against the winner's row, re-checking the CAS below.
+    PERFORM pg_catalog.set_config('app.user_facts_writer', p_user_id::text, true);
     INSERT INTO public.hair_profiles (user_id) VALUES (p_user_id)
       ON CONFLICT (user_id) DO NOTHING;
     -- Whether THIS call created the row (reported as `created`): a caller that saw no row
     -- (mobile_registration_publish) must not treat a row some other writer created in between
     -- as its own — that writer's row can carry facts_revision 0, so the CAS alone cannot tell.
     GET DIAGNOSTICS v_inserted = ROW_COUNT;
+    PERFORM pg_catalog.set_config('app.user_facts_writer', '', true);
     SELECT * INTO v_profile FROM public.hair_profiles WHERE user_id = p_user_id FOR UPDATE;
     -- Unreachable in practice (the insert either wrote the row or lost to a
     -- concurrent writer whose row is now visible and locked). Raising beats
@@ -552,11 +561,13 @@ BEGIN
     v_candidates := public.user_facts_union_preserved_candidates_v1(
       v_old_provenance -> 'preservedCandidates', p_provenance -> 'preservedCandidates');
     IF v_candidates IS NOT NULL THEN
+      PERFORM pg_catalog.set_config('app.user_facts_writer', p_user_id::text, true);
       UPDATE public.hair_profiles
          SET facts_provenance = facts_provenance || pg_catalog.jsonb_build_object(
                p_domain,
                v_old_provenance || pg_catalog.jsonb_build_object('preservedCandidates', v_candidates))
        WHERE user_id = p_user_id;
+      PERFORM pg_catalog.set_config('app.user_facts_writer', '', true);
     END IF;
     RETURN pg_catalog.jsonb_build_object(
       'status', 'preserved',
@@ -614,6 +625,7 @@ BEGIN
   -- (7) Store the domain and recompute ONLY the columns it owns, in the same
   -- statement, from the document just merged. The revision counts WRITES, not
   -- diffs (F04), so it is bumped even when `changed` is false.
+  PERFORM pg_catalog.set_config('app.user_facts_writer', p_user_id::text, true);
   IF p_domain = 'diagnostics' THEN
     v_columns := public.user_facts_derive_diagnostics_columns_v1(v_new_domain);
     UPDATE public.hair_profiles
@@ -666,6 +678,7 @@ BEGIN
            updated_at = pg_catalog.now()
      WHERE user_id = p_user_id;
   END IF;
+  PERFORM pg_catalog.set_config('app.user_facts_writer', '', true);
 
   SELECT diagnostics INTO v_diagnostics FROM public.hair_profiles WHERE user_id = p_user_id;
 
