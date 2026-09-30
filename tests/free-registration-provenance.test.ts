@@ -3,7 +3,9 @@ import test from "node:test"
 
 import { loadFreeRegistrationBindEvidence } from "../src/lib/auth/free-registration-bind-evidence"
 import { linkQuizToProfile } from "../src/lib/quiz/link-to-profile"
+import { projectArtifactToFacts } from "../src/lib/user-facts/project-artifact"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
+import { simulateUserFactsSave } from "./user-facts-save-rpc.fixtures"
 
 /**
  * PR6 Codex review, findings V3 and V4 — at the two seams the route composes.
@@ -16,15 +18,16 @@ import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
  * route reads bind evidence and THEN calls `linkQuizToProfile`. The free path
  * used to write `hair_profiles` create-only at the JS layer, resolving a TOCTOU
  * race with a raw insert and a caught `23505` unique violation. Every
- * account-link write now goes through `saveUserFacts` in `create_only` mode
- * (F14/F28) UNCONDITIONALLY — the `profileWrite` option is a no-op — and the
- * row-creation race itself is resolved entirely inside `user_facts_save_v1`
- * (row lock + `ON CONFLICT DO NOTHING`; covered by task 3's own SQL tests, not
- * this file). What V4 still guarantees: linking never overwrites diagnostics
- * facts the user already has. What CHANGED: linking no longer stands down
- * entirely when facts are preserved — it still claims the lead
- * (`leads.user_id`/`status`), because facts-preservation and lead-claiming are
- * independent concerns in the new architecture.
+ * account-link write now goes through `writeAccountLinkFacts` — the
+ * `profileWrite` option is a no-op — and the row-creation race itself is
+ * resolved entirely inside `user_facts_save_v1` (row lock + `ON CONFLICT DO
+ * NOTHING`; covered by task 3's own SQL tests, not this file).
+ *
+ * Decision wave 1 (Nick, 2026-09-30) replaced "linking never overwrites" with
+ * "latest own quiz wins": a quiz NEWER than the profile's last facts change
+ * replaces the diagnostics (upsert, CAS-pinned); an older one is preserved
+ * (create_only, recorded as a candidate). Either way the lead is claimed
+ * (`leads.user_id`/`status`): facts and lead claiming are independent concerns.
  */
 
 const USER_ID = "20000000-0000-4000-8000-000000000001"
@@ -99,7 +102,7 @@ test("V3: bind evidence reads the lead's free-registration provenance", async ()
   )
 })
 
-// --- V4: the fact write is create-only, and linking always claims the lead -
+// --- V4 (decision wave 1): latest own quiz wins, and linking always claims the lead -
 
 type Row = Record<string, unknown>
 type RpcCall = { fn: string; args: Row }
@@ -107,22 +110,45 @@ type RpcCall = { fn: string; args: Row }
 /**
  * A minimal fake covering exactly the calls the personal-plan branch of
  * `linkQuizToProfile` makes: the lead lookup, the artifact-link RPC, the
- * attached-artifact reload (for `quiz_answers`), the `user_facts_save_v1`
- * write(s), and the final `leads` claim. `existingDiagnostics` seeds whether
- * the simulated `user_facts_save_v1` reports `preserved` (already has
- * diagnostics) or `ok` (fresh write) for the diagnostics domain — mirroring
- * task 3's real create_only rule closely enough for this file's purpose,
- * without re-simulating the whole RPC (that has its own tests).
+ * attached-artifact reload (for `quiz_answers` + `created_at`), the facts load
+ * (`hair_profiles`), the `user_facts_save_v1` write(s) — simulated by
+ * `simulateUserFactsSave`, which mirrors the SQL's CAS / create_only /
+ * merge rules — and the final `leads` claim.
  */
 type RpcResult = { data: unknown; error: { message: string } | null }
 
+const ARTIFACT_CREATED_AT = "2026-09-12T10:00:00.000Z"
+
+/** A stored profile whose diagnostics an earlier artifact link wrote at `at`. */
+function existingProfile(at: string): Row {
+  const { diagnostics, quizContext } = projectArtifactToFacts({
+    envelope: COMPLETE_V3_PLAN_ENVELOPE,
+    artifactId: "artifact-old",
+    leadId: "lead-old",
+  })
+  return {
+    user_id: USER_ID,
+    diagnostics: { ...diagnostics, goals: ["shine"] },
+    quiz_context: quizContext,
+    facts_revision: 2,
+    facts_provenance: {
+      diagnostics: {
+        source: { kind: "personal_plan_artifact", id: "artifact-old" },
+        schemaVersion: 1,
+        at,
+      },
+    },
+  }
+}
+
 function linkAdmin(input: {
-  existingDiagnostics: Row | null
+  profile: Row | null
   /** Overrides every `user_facts_save_v1` response (transport failures, bad statuses). */
   userFactsSaveOverride?: RpcResult
 }) {
   const rpcs: RpcCall[] = []
   const updates: { table: string; values: Row }[] = []
+  const profiles: Row[] = input.profile ? [input.profile] : []
 
   const admin = {
     from(table: string) {
@@ -136,10 +162,15 @@ function linkAdmin(input: {
         async maybeSingle() {
           if (table === "personal_plan_prepared_artifacts") {
             return {
-              data: { id: "artifact-1", quiz_answers: COMPLETE_V3_PLAN_ENVELOPE },
+              data: {
+                id: "artifact-1",
+                quiz_answers: COMPLETE_V3_PLAN_ENVELOPE,
+                created_at: ARTIFACT_CREATED_AT,
+              },
               error: null,
             }
           }
+          if (table === "hair_profiles") return { data: profiles[0] ?? null, error: null }
           return { data: null, error: null }
         },
         async single() {
@@ -151,6 +182,7 @@ function linkAdmin(input: {
                 quiz_kind: "personal_plan",
                 quiz_answers: COMPLETE_V3_PLAN_ENVELOPE,
                 user_id: null,
+                created_at: "2026-09-12T09:00:00.000Z",
               },
               error: null,
             }
@@ -168,31 +200,19 @@ function linkAdmin(input: {
       }
       if (fn === "user_facts_save_v1") {
         if (input.userFactsSaveOverride) return input.userFactsSaveOverride
-        const preserveDiagnostics =
-          args.p_domain === "diagnostics" &&
-          args.p_mode === "create_only" &&
-          input.existingDiagnostics
-        if (preserveDiagnostics) {
-          return {
-            data: { status: "preserved", revision: 1, changed: false, diagnosticsHash: null },
-            error: null,
-          }
-        }
-        return {
-          data: { status: "ok", revision: 1, changed: true, diagnosticsHash: null },
-          error: null,
-        }
+        return { data: simulateUserFactsSave(profiles, args), error: null }
       }
       return { data: null, error: null }
     },
   }
-  return { admin: admin as never, rpcs, updates }
+  return { admin: admin as never, rpcs, updates, profiles }
 }
 
-/** A minimal fake for the LEGACY branch: one lead lookup, one `user_facts_save_v1` call, one claim. */
+/** A minimal fake for the LEGACY branch: one lead lookup, the facts load, the facts write(s), one claim. */
 function legacyLinkAdmin(input: { quizAnswers: Row; userFactsSaveOverride?: RpcResult }) {
   const rpcs: RpcCall[] = []
   const updates: { table: string; values: Row }[] = []
+  const profiles: Row[] = []
 
   const admin = {
     from(table: string) {
@@ -203,6 +223,10 @@ function legacyLinkAdmin(input: { quizAnswers: Row; userFactsSaveOverride?: RpcR
           updates.push({ table, values })
           return chain
         },
+        async maybeSingle() {
+          if (table === "hair_profiles") return { data: profiles[0] ?? null, error: null }
+          return { data: null, error: null }
+        },
         async single() {
           if (table === "leads") {
             return {
@@ -212,6 +236,7 @@ function legacyLinkAdmin(input: { quizAnswers: Row; userFactsSaveOverride?: RpcR
                 quiz_kind: "legacy",
                 quiz_answers: input.quizAnswers,
                 user_id: null,
+                created_at: "2026-09-12T09:00:00.000Z",
               },
               error: null,
             }
@@ -225,17 +250,16 @@ function legacyLinkAdmin(input: { quizAnswers: Row; userFactsSaveOverride?: RpcR
     async rpc(fn: string, args: Row) {
       rpcs.push({ fn, args })
       if (input.userFactsSaveOverride) return input.userFactsSaveOverride
-      return {
-        data: { status: "ok", revision: 1, changed: true, diagnosticsHash: null },
-        error: null,
-      }
+      return { data: simulateUserFactsSave(profiles, args), error: null }
     },
   }
   return { admin: admin as never, rpcs, updates }
 }
 
-test("V4: a free bind preserves existing diagnostics facts and still claims the lead", async () => {
-  const guarded = linkAdmin({ existingDiagnostics: { texture: "straight" } })
+test("V4: a free bind with an OLDER quiz preserves existing diagnostics facts and still claims the lead", async () => {
+  // The profile's last facts change (a later link) is newer than this artifact.
+  const guarded = linkAdmin({ profile: existingProfile("2026-09-13T08:00:00.000Z") })
+  const before = structuredClone(guarded.profiles[0]!.diagnostics)
   await linkQuizToProfile(USER_ID, "lena@example.com", LEAD_ID, {
     admin: guarded.admin,
     profileWrite: "create_only",
@@ -247,32 +271,66 @@ test("V4: a free bind preserves existing diagnostics facts and still claims the 
   assert.equal(factsCalls[0].args.p_mode, "create_only")
   assert.equal(factsCalls[1].args.p_domain, "quiz_context")
   assert.equal(factsCalls[1].args.p_mode, "create_only")
+  assert.deepEqual(guarded.profiles[0]!.diagnostics, before, "an older quiz never overwrites")
+  assert.deepEqual(
+    (
+      (guarded.profiles[0]!.facts_provenance as Row).diagnostics as {
+        preservedCandidates?: Row[]
+      }
+    ).preservedCandidates?.map((entry) => [entry.kind, entry.id]),
+    [["artifact", "artifact-1"]],
+    "the preserved quiz is recorded",
+  )
 
-  // The existing diagnostics domain is preserved (never overwritten) — but
-  // unlike the pre-PR1 stand-down, the lead is still claimed: facts
-  // preservation and lead claiming are independent concerns now.
+  // Facts preservation and lead claiming are independent concerns.
   assert.equal(guarded.updates.length, 1, "the lead claim still happens")
   assert.equal(guarded.updates[0].table, "leads")
   assert.deepEqual(guarded.updates[0].values, { user_id: USER_ID, status: "linked" })
 })
 
-test("V4: profileWrite is a no-op — create_only applies whether or not it is passed", async () => {
-  const withOption = linkAdmin({ existingDiagnostics: null })
+test("V4: a free bind with a NEWER own quiz replaces the existing diagnostics, goals included (latest quiz wins)", async () => {
+  const replaced = linkAdmin({ profile: existingProfile("2026-09-11T08:00:00.000Z") })
+  await linkQuizToProfile(USER_ID, "lena@example.com", LEAD_ID, {
+    admin: replaced.admin,
+    profileWrite: "create_only",
+  })
+
+  const factsCalls = replaced.rpcs.filter((call) => call.fn === "user_facts_save_v1")
+  assert.deepEqual(
+    factsCalls.map((call) => [call.args.p_domain, call.args.p_mode, call.args.p_expected_revision]),
+    [
+      ["diagnostics", "upsert", 2],
+      ["quiz_context", "upsert", 3],
+    ],
+  )
+  const expected = projectArtifactToFacts({
+    envelope: COMPLETE_V3_PLAN_ENVELOPE,
+    artifactId: "artifact-1",
+    leadId: LEAD_ID,
+  }).diagnostics
+  assert.deepEqual(replaced.profiles[0]!.diagnostics, expected)
+  assert.deepEqual(replaced.updates, [
+    { table: "leads", values: { user_id: USER_ID, status: "linked" } },
+  ])
+})
+
+test("V4: profileWrite is a no-op — the same rule applies whether or not it is passed", async () => {
+  const withOption = linkAdmin({ profile: null })
   await linkQuizToProfile(USER_ID, "lena@example.com", LEAD_ID, {
     admin: withOption.admin,
     profileWrite: "create_only",
   })
 
-  const withoutOption = linkAdmin({ existingDiagnostics: null })
+  const withoutOption = linkAdmin({ profile: null })
   await linkQuizToProfile(USER_ID, "lena@example.com", LEAD_ID, { admin: withoutOption.admin })
 
   for (const { rpcs, updates } of [withOption, withoutOption]) {
     const factsCalls = rpcs.filter((call) => call.fn === "user_facts_save_v1")
     assert.equal(factsCalls.length, 2)
-    assert.equal(factsCalls[0].args.p_mode, "create_only")
-    assert.equal(factsCalls[1].args.p_mode, "create_only")
-    // Both paths claim the lead the same way now — `profileWrite` no longer
-    // distinguishes "free" from "paid/legacy" linking at all.
+    // No profile yet: no real quiz on file, so this quiz writes (pinned to revision 0).
+    assert.equal(factsCalls[0].args.p_mode, "upsert")
+    assert.equal(factsCalls[0].args.p_expected_revision, 0)
+    assert.equal(factsCalls[1].args.p_mode, "upsert")
     assert.deepEqual(updates, [{ table: "leads", values: { user_id: USER_ID, status: "linked" } }])
   }
 })
@@ -286,7 +344,7 @@ test("I5-4: a saveUserFacts transport failure on the paid path propagates, and t
   // file can still prove is that a genuine `saveUserFacts` failure propagates
   // instead of being swallowed, and never claims the lead on the way out.
   const failing = linkAdmin({
-    existingDiagnostics: null,
+    profile: null,
     userFactsSaveOverride: { data: null, error: { message: "boom" } },
   })
 
@@ -321,8 +379,8 @@ test("I2: an incomplete legacy lead still links — saveUserFacts gets the parti
   assert.equal(factsCall!.args.p_domain, "diagnostics")
   assert.equal(
     (factsCall!.args.p_patch as Row).texture,
-    undefined,
-    "the missing field stays absent",
+    null,
+    "the missing field is cleared (full replacement), never defaulted",
   )
   assert.deepEqual(legacy.updates, [
     { table: "leads", values: { user_id: USER_ID, status: "linked" } },
@@ -331,13 +389,34 @@ test("I2: an incomplete legacy lead still links — saveUserFacts gets the parti
 
 test("M1: an unexpected saveUserFacts status throws and the lead is not claimed", async () => {
   const weird = linkAdmin({
-    existingDiagnostics: null,
-    userFactsSaveOverride: { data: { status: "revision_conflict", revision: 3 }, error: null },
+    profile: null,
+    userFactsSaveOverride: {
+      data: { status: "draft_conflict", reason: "not_found" },
+      error: null,
+    },
   })
 
   await assert.rejects(
     () => linkQuizToProfile(USER_ID, "lena@example.com", LEAD_ID, { admin: weird.admin }),
-    /saveUserFacts\(diagnostics\) returned unexpected status "revision_conflict"/,
+    /saveUserFacts\(diagnostics\) returned unexpected status "draft_conflict"/,
   )
   assert.deepEqual(weird.updates, [])
+})
+
+test("M1: a revision_conflict on the retry too throws and the lead is not claimed", async () => {
+  const racing = linkAdmin({
+    profile: null,
+    userFactsSaveOverride: { data: { status: "revision_conflict", revision: 3 }, error: null },
+  })
+
+  await assert.rejects(
+    () => linkQuizToProfile(USER_ID, "lena@example.com", LEAD_ID, { admin: racing.admin }),
+    /second revision_conflict/,
+  )
+  assert.equal(
+    racing.rpcs.filter((call) => call.fn === "user_facts_save_v1").length,
+    2,
+    "exactly one reload-and-retry",
+  )
+  assert.deepEqual(racing.updates, [])
 })

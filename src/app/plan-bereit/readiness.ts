@@ -9,12 +9,11 @@ import { createStage1PersistenceService } from "@/lib/personal-plan/persistence/
 import { createStage1SupabaseDependencies } from "@/lib/personal-plan/persistence/stage1-supabase"
 import { buildProfileDataFromPersonalPlanCanonicalProfile } from "@/lib/quiz/link-to-profile"
 import type { QuizAnswers } from "@/lib/quiz/types"
+import { DIAGNOSTICS_SCHEMA_VERSION, projectLegacyLeadToFacts } from "@/lib/user-facts"
 import {
-  DIAGNOSTICS_SCHEMA_VERSION,
-  QUIZ_CONTEXT_SCHEMA_VERSION,
-  projectArtifactToFacts,
-  projectLegacyLeadToFacts,
-} from "@/lib/user-facts"
+  quizDiagnosticsFieldProvenance,
+  writeAccountLinkFacts,
+} from "@/lib/user-facts/account-link"
 import { saveUserFacts } from "@/lib/user-facts/save"
 
 type PersonalPlanLead = {
@@ -23,6 +22,8 @@ type PersonalPlanLead = {
   quiz_answers?: unknown
   quiz_kind: "legacy" | "personal_plan"
   updated_at?: string | null
+  /** The quiz timestamp "latest own quiz wins" compares (legacy path). */
+  created_at?: string | null
   user_id: string | null
 }
 
@@ -30,6 +31,8 @@ type PersonalPlanPreparedArtifact = {
   id: string
   canonical_profile?: unknown
   quiz_answers?: unknown
+  /** The quiz timestamp "latest own quiz wins" compares (personal-plan path). */
+  created_at?: string | null
   user_id: string | null
 }
 
@@ -296,7 +299,7 @@ async function loadExactPlanBereitLead(
 
   const exact = await supabase
     .from("leads")
-    .select("id,email,quiz_kind,quiz_answers,user_id,updated_at")
+    .select("id,email,quiz_kind,quiz_answers,user_id,updated_at,created_at")
     .eq("id", input.leadId)
     .maybeSingle()
 
@@ -362,7 +365,7 @@ async function loadAttachedPersonalPlanArtifact(
 ): Promise<PersonalPlanPreparedArtifact | null> {
   const { data, error } = await supabase
     .from("personal_plan_prepared_artifacts")
-    .select("id,user_id,canonical_profile,quiz_answers")
+    .select("id,user_id,canonical_profile,quiz_answers,created_at")
     .eq("lead_id", leadId)
     .eq("status", "attached")
     .limit(2)
@@ -610,89 +613,12 @@ export async function loadPlanBereitReadiness(
 }
 
 /**
- * Writes a legacy lead's quiz answers into the `diagnostics` fact domain via
- * `saveUserFacts` (create_only, F14/F28): account linking must never overwrite
- * facts the user already has. `hair_profiles` and its legacy columns are
- * derived inside `user_facts_save_v1` itself — this is the only writer left in
- * this file, replacing the direct `hair_profiles` upsert (`persistProfileOutput`).
- */
-async function writeLegacyDiagnosticsFacts(
-  supabase: SupabaseClient,
-  userId: string,
-  leadId: string,
-  quizAnswers: QuizAnswers,
-): Promise<void> {
-  const { diagnostics } = projectLegacyLeadToFacts({ leadId, quizAnswers })
-  const nowIso = new Date().toISOString()
-
-  const result = await saveUserFacts(supabase, {
-    userId,
-    domain: "diagnostics",
-    patch: diagnostics,
-    provenance: {
-      source: { kind: "legacy_lead", id: leadId },
-      schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
-      at: nowIso,
-      preservedCandidates: [{ kind: "lead", id: leadId, at: nowIso }],
-    },
-    mode: "create_only",
-  })
-  assertUserFactsWriteApplied(result, "diagnostics")
-}
-
-/**
- * Writes an attached personal-plan artifact's own `quiz_answers` envelope into
- * the `diagnostics` + `quiz_context` fact domains via `saveUserFacts`
- * (create_only, F14/F28). Same rationale as `writeLegacyDiagnosticsFacts`.
- */
-async function writeArtifactDiagnosticsFacts(
-  supabase: SupabaseClient,
-  userId: string,
-  leadId: string,
-  artifactId: string,
-  quizAnswersEnvelope: unknown,
-): Promise<void> {
-  const { diagnostics, quizContext } = projectArtifactToFacts({
-    envelope: quizAnswersEnvelope,
-    artifactId,
-    leadId,
-  })
-  const nowIso = new Date().toISOString()
-
-  const diagnosticsResult = await saveUserFacts(supabase, {
-    userId,
-    domain: "diagnostics",
-    patch: diagnostics,
-    provenance: {
-      source: { kind: "personal_plan_artifact", id: artifactId },
-      schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
-      at: nowIso,
-      preservedCandidates: [{ kind: "artifact", id: artifactId, at: nowIso }],
-    },
-    mode: "create_only",
-  })
-  assertUserFactsWriteApplied(diagnosticsResult, "diagnostics")
-  const quizContextResult = await saveUserFacts(supabase, {
-    userId,
-    domain: "quiz_context",
-    patch: quizContext,
-    provenance: {
-      source: { kind: "personal_plan_artifact", id: artifactId },
-      schemaVersion: QUIZ_CONTEXT_SCHEMA_VERSION,
-      at: nowIso,
-    },
-    mode: "create_only",
-  })
-  assertUserFactsWriteApplied(quizContextResult, "quiz_context")
-}
-
-/**
- * (M1) Neither `linkExactPlanBereitSourceToProfile` nor
- * `updateMissingPlanBereitSourceFact` passes `expectedRevision`/`draftBinding`,
- * so `saveUserFacts` should only ever come back `ok` or `preserved` here. A
- * `revision_conflict`/`draft_conflict` would mean something is badly wrong —
- * fail loudly instead of silently proceeding to claim the lead/patch the fact
- * as if the write had applied.
+ * (M1) `updateMissingPlanBereitSourceFact` passes no `expectedRevision`/
+ * `draftBinding`, so `saveUserFacts` should only ever come back `ok` or
+ * `preserved` there. A `revision_conflict`/`draft_conflict` would mean
+ * something is badly wrong — fail loudly instead of silently proceeding as if
+ * the write had applied. (The account-link writes go through
+ * `writeAccountLinkFacts`, which handles its own CAS.)
  */
 function assertUserFactsWriteApplied(
   result: { status: string },
@@ -777,13 +703,19 @@ export async function linkExactPlanBereitSourceToProfile(
   if (candidate.status !== "linkable") return candidate
   const { lead } = candidate
 
+  // Decision wave 1 ("latest own quiz wins"): the candidate is this account's own lead
+  // (exact owner or active field-test enrollment, checked above), so it replaces the facts
+  // when it is newer than the profile's last facts change and is preserved otherwise.
   if (lead.quiz_kind === "legacy") {
-    await writeLegacyDiagnosticsFacts(
-      supabase,
-      input.userId,
-      lead.id,
-      lead.quiz_answers as QuizAnswers,
-    )
+    await writeAccountLinkFacts(supabase, {
+      userId: input.userId,
+      quiz: {
+        kind: "lead",
+        leadId: lead.id,
+        quizAnswers: lead.quiz_answers as QuizAnswers,
+        createdAt: lead.created_at ?? null,
+      },
+    })
     if (lead.user_id !== input.userId) {
       const linked = await supabase
         .from("leads")
@@ -824,14 +756,17 @@ export async function linkExactPlanBereitSourceToProfile(
   if (isRecord(result) && candidate.artifact) {
     // The RPC no longer supplies the projection (`canonical_profile`) this write
     // used — the candidate's own attached-artifact load already carries the
-    // `quiz_answers` envelope `projectArtifactToFacts` needs.
-    await writeArtifactDiagnosticsFacts(
-      supabase,
-      input.userId,
-      lead.id,
-      candidate.artifact.id,
-      candidate.artifact.quiz_answers,
-    )
+    // `quiz_answers` envelope and the `created_at` quiz timestamp.
+    await writeAccountLinkFacts(supabase, {
+      userId: input.userId,
+      quiz: {
+        kind: "artifact",
+        artifactId: candidate.artifact.id,
+        leadId: lead.id,
+        envelope: candidate.artifact.quiz_answers,
+        createdAt: candidate.artifact.created_at ?? null,
+      },
+    })
   }
 
   return loadPlanBereitReadiness(supabase, input, deps)
@@ -933,8 +868,8 @@ export async function updateMissingPlanBereitSourceFact(
   // (I3, task 5a fix round 1; corrected in fix round 2): this is a correction to an
   // already-established source, not a fresh account-link projection — it must land even
   // when a diagnostics document already exists (an `updated_at`-guarded lead, so a stale
-  // corrector can't race past that either), hence `upsert` and not
-  // `writeLegacyDiagnosticsFacts`'s `create_only`.
+  // corrector can't race past that either), hence an unconditional `upsert` and not the
+  // account-link writer's "newer quiz" decision (`writeAccountLinkFacts`).
   //
   // It writes the WHOLE re-projected lead, not a bare `{ hairLength }` patch. In the normal
   // recovery case the profile has NO diagnostics document yet (readiness was
@@ -944,6 +879,11 @@ export async function updateMissingPlanBereitSourceFact(
   // keeps `source.raw` equal to the built legacy source (F26), so Stage-1 hashes exactly
   // what today's path builds from the corrected lead. The corrected lead is the authority,
   // so the same full projection is written whether or not a document already exists.
+  //
+  // Decision wave 1, item B: an account link of this lead before the recovery may have
+  // stored `hairLength: "long"` as an ASSUMED default. The per-field provenance names every
+  // field the corrected lead carries as `user` (the RPC merges `fields`, so a stale
+  // `assumed` marker only goes away when this write names the field again).
   const { diagnostics } = projectLegacyLeadToFacts({
     leadId: lead.id,
     quizAnswers: nextAnswers as QuizAnswers,
@@ -956,6 +896,7 @@ export async function updateMissingPlanBereitSourceFact(
       source: { kind: "legacy_lead", id: input.leadId },
       schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
       at: new Date().toISOString(),
+      fields: quizDiagnosticsFieldProvenance(diagnostics),
     },
     mode: "upsert",
   })

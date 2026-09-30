@@ -1,11 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin"
-import {
-  DIAGNOSTICS_SCHEMA_VERSION,
-  QUIZ_CONTEXT_SCHEMA_VERSION,
-  projectArtifactToFacts,
-  projectLegacyLeadToFacts,
-} from "@/lib/user-facts"
-import { saveUserFacts } from "@/lib/user-facts/save"
+import { writeAccountLinkFacts } from "@/lib/user-facts/account-link"
 import { hasCompletedQuizDiagnostics } from "./completion"
 import type { QuizAnswers } from "./types"
 import { normalizeStoredQuizAnswers, projectQuizAnswersToLegacyVocabulary } from "./normalization"
@@ -123,11 +117,10 @@ export function buildProfileDataFromPersonalPlanCanonicalProfile(
 export type LinkQuizToProfileOptions = {
   /**
    * Historically the FREE-registration binding mode (PR6 review, finding V4):
-   * `hair_profiles` writes could CREATE but never overwrite. Task 5a (central
-   * user profile PR1) moved every account-link write onto `saveUserFacts` in
-   * `create_only` mode UNCONDITIONALLY (F14/F28) — the facts domains a user
-   * already has are never overwritten by a link, regardless of this option.
-   * Kept only so existing callers keep type-checking; it is now a no-op.
+   * `hair_profiles` writes could CREATE but never overwrite. Every account-link
+   * write now goes through `writeAccountLinkFacts` ("latest own quiz wins",
+   * decision wave 1, 2026-09-30) regardless of this option. Kept only so
+   * existing callers keep type-checking; it is a no-op.
    */
   profileWrite?: "create_only"
   /** Injection seam for tests; production always builds its own admin client. */
@@ -141,7 +134,9 @@ export type LinkQuizToProfileOptions = {
  *  1. Try direct lead ID lookup (if leadId passed from quiz CTA)
  *  2. Fall back to email lookup (most recent unlinked lead)
  *  3. Project the lead's quiz answers into native diagnostics (+ quiz_context
- *     for a personal-plan lead) and write them via `saveUserFacts` (create_only)
+ *     for a personal-plan lead) and write them via `writeAccountLinkFacts`:
+ *     replaced when this own quiz is newer than the profile's last facts
+ *     change, preserved (create_only) otherwise
  *  4. Set leads.user_id to mark the lead as linked
  */
 export async function linkQuizToProfile(
@@ -161,13 +156,14 @@ export async function linkQuizToProfile(
     quiz_kind: "legacy" | "personal_plan"
     quiz_answers: QuizAnswers | Record<string, unknown> | null
     user_id: string | null
+    created_at: string | null
   } | null = null
 
   // Primary: direct ID lookup
   if (leadId) {
     const { data, error } = await admin
       .from("leads")
-      .select("id, email, quiz_kind, quiz_answers, user_id")
+      .select("id, email, quiz_kind, quiz_answers, user_id, created_at")
       .eq("id", leadId)
       .single()
 
@@ -190,7 +186,7 @@ export async function linkQuizToProfile(
   if (!lead && email) {
     const { data, error } = await admin
       .from("leads")
-      .select("id, email, quiz_kind, quiz_answers, user_id")
+      .select("id, email, quiz_kind, quiz_answers, user_id, created_at")
       .eq("email", email.toLowerCase())
       .eq("quiz_kind", "legacy")
       .is("user_id", null)
@@ -210,13 +206,12 @@ export async function linkQuizToProfile(
     return
   }
 
-  // --- Project the lead's quiz answers into the native fact domains and write
-  // them through `saveUserFacts` in `create_only` mode (F14/F28): account
-  // linking must never overwrite facts the user already has. `hair_profiles`
-  // and its legacy columns are derived inside `user_facts_save_v1` itself —
-  // this function never touches that table directly any more.
-  const nowIso = new Date().toISOString()
-
+  // --- Write the lead's quiz into the native fact domains (decision wave 1,
+  // "latest own quiz wins"): the lead was matched to this account above, so it
+  // is the user's own quiz, and `writeAccountLinkFacts` replaces the facts only
+  // when it is newer than the profile's last facts change. `hair_profiles` and
+  // its legacy columns are derived inside `user_facts_save_v1` itself — this
+  // function never touches that table directly.
   if (lead.quiz_kind === "personal_plan") {
     const { data, error } = await admin.rpc("link_personal_plan_artifact_to_user", {
       p_lead_id: lead.id,
@@ -231,10 +226,11 @@ export async function linkQuizToProfile(
     }
 
     // The RPC above no longer hands back the projection: load the attached
-    // artifact's own `quiz_answers` envelope (mirrors stage1-supabase.ts:121-130).
+    // artifact's own `quiz_answers` envelope (mirrors stage1-supabase.ts:121-130)
+    // and its `created_at` (the quiz timestamp "latest quiz wins" compares).
     const { data: artifact, error: artifactErr } = await admin
       .from("personal_plan_prepared_artifacts")
-      .select("id, quiz_answers")
+      .select("id, quiz_answers, created_at")
       .eq("lead_id", lead.id)
       .eq("user_id", userId)
       .eq("status", "attached")
@@ -246,58 +242,28 @@ export async function linkQuizToProfile(
       throw new Error(`no attached personal plan artifact found for lead ${lead.id} after link`)
     }
 
-    const { diagnostics, quizContext } = projectArtifactToFacts({
-      envelope: artifact.quiz_answers,
-      artifactId: artifact.id as string,
-      leadId: lead.id,
-    })
-
-    const diagnosticsResult = await saveUserFacts(admin, {
+    const outcome = await writeAccountLinkFacts(admin, {
       userId,
-      domain: "diagnostics",
-      patch: diagnostics,
-      provenance: {
-        source: { kind: "personal_plan_artifact", id: artifact.id as string },
-        schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
-        at: nowIso,
-        preservedCandidates: [{ kind: "artifact", id: artifact.id as string, at: nowIso }],
+      quiz: {
+        kind: "artifact",
+        artifactId: artifact.id as string,
+        leadId: lead.id,
+        envelope: artifact.quiz_answers,
+        createdAt: (artifact.created_at as string | null | undefined) ?? null,
       },
-      mode: "create_only",
     })
-    assertUserFactsWriteApplied(diagnosticsResult, "diagnostics")
-    const quizContextResult = await saveUserFacts(admin, {
-      userId,
-      domain: "quiz_context",
-      patch: quizContext,
-      provenance: {
-        source: { kind: "personal_plan_artifact", id: artifact.id as string },
-        schemaVersion: QUIZ_CONTEXT_SCHEMA_VERSION,
-        at: nowIso,
-      },
-      mode: "create_only",
-    })
-    assertUserFactsWriteApplied(quizContextResult, "quiz_context")
-    console.log("[linkQuizToProfile] wrote diagnostics + quiz_context facts for user", userId)
+    console.log("[linkQuizToProfile] diagnostics + quiz_context facts", outcome, "for user", userId)
   } else {
-    const { diagnostics } = projectLegacyLeadToFacts({
-      leadId: lead.id,
-      quizAnswers: lead.quiz_answers as QuizAnswers,
-    })
-
-    const diagnosticsResult = await saveUserFacts(admin, {
+    const outcome = await writeAccountLinkFacts(admin, {
       userId,
-      domain: "diagnostics",
-      patch: diagnostics,
-      provenance: {
-        source: { kind: "legacy_lead", id: lead.id },
-        schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
-        at: nowIso,
-        preservedCandidates: [{ kind: "lead", id: lead.id, at: nowIso }],
+      quiz: {
+        kind: "lead",
+        leadId: lead.id,
+        quizAnswers: lead.quiz_answers as QuizAnswers,
+        createdAt: lead.created_at ?? null,
       },
-      mode: "create_only",
     })
-    assertUserFactsWriteApplied(diagnosticsResult, "diagnostics")
-    console.log("[linkQuizToProfile] wrote diagnostics facts for user", userId)
+    console.log("[linkQuizToProfile] diagnostics facts", outcome, "for user", userId)
   }
 
   // --- Link the lead to the user ---
@@ -314,20 +280,4 @@ export async function linkQuizToProfile(
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value)
-}
-
-/**
- * (M1) Account linking never passes `expectedRevision`/`draftBinding`, so
- * `saveUserFacts` should only ever come back `ok` or `preserved` here. A
- * `revision_conflict`/`draft_conflict` would mean something is badly wrong —
- * fail loudly instead of silently falling through to claim the lead as if the
- * write had applied.
- */
-function assertUserFactsWriteApplied(
-  result: { status: string },
-  domain: "diagnostics" | "quiz_context",
-): void {
-  if (result.status !== "ok" && result.status !== "preserved") {
-    throw new Error(`saveUserFacts(${domain}) returned unexpected status "${result.status}"`)
-  }
 }

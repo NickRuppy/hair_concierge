@@ -11,7 +11,9 @@ import {
 } from "../src/app/plan-bereit/readiness"
 import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
 import { diagnosticsV1Schema } from "../src/lib/user-facts/schema"
+import { projectArtifactToFacts } from "../src/lib/user-facts/project-artifact"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
+import { simulateUserFactsSave } from "./user-facts-save-rpc.fixtures"
 
 test("migration quiz recovery retains the existing hair-length repair and rejects authorization failures", () => {
   assert.equal(needsFreshMigrationQuiz({ status: "invalid_source" }), true)
@@ -168,10 +170,6 @@ class FakeQuery {
   }
 }
 
-function isRow(value: unknown): value is Row {
-  return typeof value === "object" && value !== null && !Array.isArray(value)
-}
-
 class FakeSupabase {
   readonly queries: Array<{ table: string; op: string; column?: string; value?: unknown }> = []
   readonly updates: Array<{
@@ -204,33 +202,14 @@ class FakeSupabase {
   }
 
   /**
-   * A deliberately minimal stand-in for the real `user_facts_save_v1` RPC
-   * (task 3's SQL function): just enough of the create_only/preserve and
-   * revision-bump contract for these readiness tests to exercise F28 without a
-   * real Postgres. It never derives the legacy columns — that derivation has
-   * its own parity test (`tests/user-facts-derive-parity.test.ts`) against the
-   * real RPC — so `hair_profiles` rows here only ever carry `diagnostics` /
-   * `quiz_context` / `facts_revision`, which is all F28 reads.
+   * `user_facts_save_v1` stand-in (`simulateUserFactsSave`): CAS, create_only
+   * preserve, field-level merge with null-clears and the provenance merge, so
+   * the "latest own quiz wins" writes can be asserted on the stored document.
+   * It never derives the legacy columns — that derivation has its own parity
+   * test (`tests/user-facts-derive-parity.test.ts`) against the real RPC.
    */
   private simulateUserFactsSave(args: Row) {
-    const rows = (this.tables.hair_profiles ??= [])
-    let profile = rows.find((row) => row.user_id === args.p_user_id)
-    if (!profile) {
-      profile = { user_id: args.p_user_id, facts_revision: 0 }
-      rows.push(profile)
-    }
-    const revision = (profile.facts_revision as number | undefined) ?? 0
-    const domain = args.p_domain as string
-    const existingDomain = profile[domain]
-
-    if (args.p_mode === "create_only" && existingDomain != null) {
-      return { status: "preserved", revision, changed: false, diagnosticsHash: null }
-    }
-
-    const patch = isRow(args.p_patch) ? args.p_patch : {}
-    profile[domain] = { ...(isRow(existingDomain) ? existingDomain : {}), ...patch }
-    profile.facts_revision = revision + 1
-    return { status: "ok", revision: revision + 1, changed: true, diagnosticsHash: null }
+    return simulateUserFactsSave((this.tables.hair_profiles ??= []), args)
   }
 }
 
@@ -302,43 +281,62 @@ test("legacy readiness stays checking when the persisted profile has no diagnost
   )
 })
 
-// --- F28: diagnostics-presence readiness, independent of write outcome ------
+// --- F28 + decision wave 1 ("latest own quiz wins") ----------------------------
 //
-// Replaces the old field-by-field `profileMatchesProjected` comparison tests:
 // F28 only checks that `hair_profiles.diagnostics` is non-null and
 // `facts_revision > 0` for the owning candidate — not that its content matches
-// what THIS candidate would have projected. That means a profile a totally
-// different, earlier source wrote is "ready" too, and `create_only` never
-// overwrites it (the SQL layer's own parity/adversarial tests cover the
-// derivation and preserve rules in full; this file only has to prove readiness
-// reads the presence predicate correctly and that linking never clobbers it).
+// what THIS candidate would have projected. What a link WRITES follows Nick's
+// 2026-09-30 rule: an own quiz newer than the profile's last facts change
+// replaces the diagnostics (upsert); an older one is preserved (create_only).
 
-test("F28: linking preserves an existing differing legacy profile and reports ready, never sticking on checking", async () => {
-  const db = new FakeSupabase({
-    leads: [
-      {
-        id: "lead-legacy",
-        email: "lea@example.test",
-        quiz_kind: "legacy",
-        quiz_answers: COMPLETE_LEGACY_ANSWERS,
-        user_id: null,
-        updated_at: "2026-09-14T08:00:00.000Z",
-      },
-    ],
-    // Written by an entirely different, earlier source; its content has
-    // nothing to do with this lead's answers. F28 doesn't compare content, and
-    // creation order (before/after this candidate) makes no difference either
-    // — the predicate has no notion of "which came first".
-    hair_profiles: [{ user_id: "user-1", diagnostics: { texture: "straight" }, facts_revision: 3 }],
+/** A stored diagnostics document an earlier, different source wrote at `at`. */
+function earlierArtifactProfile(at: string, revision = 3): Row {
+  const { diagnostics, quizContext } = projectArtifactToFacts({
+    envelope: COMPLETE_V3_PLAN_ENVELOPE,
+    artifactId: "artifact-earlier",
+    leadId: "lead-earlier",
   })
+  return {
+    user_id: "user-1",
+    diagnostics: { ...diagnostics, texture: "straight", goals: ["shine"] },
+    quiz_context: quizContext,
+    facts_revision: revision,
+    facts_provenance: {
+      diagnostics: {
+        source: { kind: "personal_plan_artifact", id: "artifact-earlier" },
+        schemaVersion: 1,
+        at,
+      },
+    },
+  }
+}
 
-  const before = await loadPlanBereitReadiness(db as never, {
+function legacyLead(createdAt: string): Row {
+  return {
+    id: "lead-legacy",
+    email: "lea@example.test",
+    quiz_kind: "legacy",
+    quiz_answers: COMPLETE_LEGACY_ANSWERS,
+    user_id: null,
+    created_at: createdAt,
+    updated_at: "2026-09-14T08:00:00.000Z",
+  }
+}
+
+test("F28: linking an OLDER legacy lead preserves the existing profile and reports ready, never sticking on checking", async () => {
+  const db = new FakeSupabase({
+    leads: [legacyLead("2026-09-01T08:00:00.000Z")],
+    hair_profiles: [earlierArtifactProfile("2026-09-10T08:00:00.000Z")],
+  })
+  const before = structuredClone(db.tables.hair_profiles[0].diagnostics)
+
+  const pending = await loadPlanBereitReadiness(db as never, {
     userId: "user-1",
     email: "lea@example.test",
     leadId: "lead-legacy",
     expectedQuizSourceKind: "legacy",
   })
-  assert.equal(before.status, "source_pending", "not yet linked to this lead/user pair")
+  assert.equal(pending.status, "source_pending", "not yet linked to this lead/user pair")
 
   const linked = await linkExactPlanBereitSourceToProfile(db as never, {
     userId: "user-1",
@@ -354,12 +352,68 @@ test("F28: linking preserves an existing differing legacy profile and reports re
   assert.equal(factsCall!.args.p_domain, "diagnostics")
   assert.deepEqual(
     db.tables.hair_profiles[0].diagnostics,
-    { texture: "straight" },
-    "the existing domain must be preserved, not overwritten",
+    before,
+    "an older quiz must never overwrite the existing domain",
+  )
+  const provenance = (db.tables.hair_profiles[0].facts_provenance as Row).diagnostics as Row
+  assert.deepEqual(
+    (provenance.preservedCandidates as Row[]).map((entry) => [entry.kind, entry.id]),
+    [["lead", "lead-legacy"]],
   )
 })
 
-test("F28: linking preserves an existing differing artifact-sourced profile and reports ready", async () => {
+test("latest quiz wins: linking a NEWER own legacy lead replaces the existing profile, goals included", async () => {
+  const db = new FakeSupabase({
+    leads: [legacyLead("2026-09-12T08:00:00.000Z")],
+    hair_profiles: [earlierArtifactProfile("2026-09-10T08:00:00.000Z")],
+  })
+
+  const linked = await linkExactPlanBereitSourceToProfile(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    expectedQuizSourceKind: "legacy",
+  })
+
+  assert.equal(linked.status, "ready")
+  const factsCalls = db.rpcs.filter((call) => call.fn === "user_facts_save_v1")
+  assert.equal(factsCalls.length, 1)
+  assert.equal(factsCalls[0].args.p_mode, "upsert")
+  assert.equal(factsCalls[0].args.p_expected_revision, 3)
+  const patch = factsCalls[0].args.p_patch as Row
+  // Fields the legacy quiz does not carry are cleared, never carried over.
+  assert.equal(patch.concernRecurrence, null)
+  assert.deepEqual(
+    db.tables.hair_profiles[0].diagnostics,
+    projectLegacyLeadToFacts({
+      leadId: "lead-legacy",
+      quizAnswers: COMPLETE_LEGACY_ANSWERS as never,
+    }).diagnostics,
+  )
+  assert.deepEqual((db.tables.hair_profiles[0].diagnostics as Row).goals, ["moisture"])
+})
+
+test("latest quiz wins: a hand-edited profile loses to a quiz retaken after the edit", async () => {
+  const profile = earlierArtifactProfile("2026-09-01T08:00:00.000Z")
+  ;((profile.facts_provenance as Row).diagnostics as Row).editedAt = "2026-09-10T08:00:00.000Z"
+  const db = new FakeSupabase({
+    leads: [legacyLead("2026-09-11T08:00:00.000Z")],
+    hair_profiles: [profile],
+  })
+
+  await linkExactPlanBereitSourceToProfile(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    expectedQuizSourceKind: "legacy",
+  })
+
+  const factsCall = db.rpcs.find((call) => call.fn === "user_facts_save_v1")
+  assert.equal(factsCall!.args.p_mode, "upsert")
+  assert.equal((db.tables.hair_profiles[0].diagnostics as Row).texture, "wavy")
+})
+
+test("F28: linking an OLDER artifact preserves the existing artifact-sourced profile and reports ready", async () => {
   const db = new FakeSupabase(
     {
       leads: [
@@ -382,11 +436,65 @@ test("F28: linking preserves an existing differing artifact-sourced profile and 
           status: "attached",
           canonical_profile: COMPLETE_LEGACY_ANSWERS,
           quiz_answers: COMPLETE_V3_PLAN_ENVELOPE,
+          created_at: "2026-09-01T08:00:00.000Z",
         },
       ],
-      hair_profiles: [
-        { user_id: "user-1", diagnostics: { texture: "straight" }, facts_revision: 2 },
+      hair_profiles: [earlierArtifactProfile("2026-09-10T08:00:00.000Z", 2)],
+    },
+    {
+      link_personal_plan_artifact_to_user: {
+        data: [{ artifact_id: "artifact-1", canonical_profile: COMPLETE_LEGACY_ANSWERS }],
+        error: null,
+      },
+    },
+  )
+  const before = structuredClone(db.tables.hair_profiles[0].diagnostics)
+
+  const linked = await linkExactPlanBereitSourceToProfile(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-pp",
+    expectedQuizSourceKind: "personal_plan",
+  })
+
+  assert.equal(linked.status, "ready")
+  const factsCalls = db.rpcs.filter((call) => call.fn === "user_facts_save_v1")
+  assert.equal(factsCalls.length, 2, "diagnostics + quiz_context")
+  assert.equal(factsCalls[0].args.p_domain, "diagnostics")
+  assert.equal(factsCalls[0].args.p_mode, "create_only")
+  assert.equal(factsCalls[1].args.p_domain, "quiz_context")
+  assert.equal(factsCalls[1].args.p_mode, "create_only")
+  assert.deepEqual(
+    db.tables.hair_profiles[0].diagnostics,
+    before,
+    "the existing domain must be preserved, not overwritten",
+  )
+})
+
+test("latest quiz wins: linking a NEWER artifact replaces diagnostics and quiz_context", async () => {
+  const db = new FakeSupabase(
+    {
+      leads: [
+        {
+          id: "lead-pp",
+          email: "lea@example.test",
+          quiz_kind: "personal_plan",
+          user_id: null,
+          updated_at: "2026-09-14T08:00:00.000Z",
+        },
       ],
+      personal_plan_prepared_artifacts: [
+        {
+          id: "artifact-1",
+          lead_id: "lead-pp",
+          user_id: "user-1",
+          status: "attached",
+          canonical_profile: COMPLETE_LEGACY_ANSWERS,
+          quiz_answers: COMPLETE_V3_PLAN_ENVELOPE,
+          created_at: "2026-09-12T08:00:00.000Z",
+        },
+      ],
+      hair_profiles: [earlierArtifactProfile("2026-09-10T08:00:00.000Z", 2)],
     },
     {
       link_personal_plan_artifact_to_user: {
@@ -404,30 +512,28 @@ test("F28: linking preserves an existing differing artifact-sourced profile and 
   })
 
   assert.equal(linked.status, "ready")
-  const factsCalls = db.rpcs.filter((call) => call.fn === "user_facts_save_v1")
-  assert.equal(factsCalls.length, 2, "diagnostics + quiz_context")
-  assert.equal(factsCalls[0].args.p_domain, "diagnostics")
-  assert.equal(factsCalls[0].args.p_mode, "create_only")
-  assert.equal(factsCalls[1].args.p_domain, "quiz_context")
+  assert.deepEqual(
+    db.rpcs
+      .filter((call) => call.fn === "user_facts_save_v1")
+      .map((call) => [call.args.p_domain, call.args.p_mode, call.args.p_expected_revision]),
+    [
+      ["diagnostics", "upsert", 2],
+      ["quiz_context", "upsert", 3],
+    ],
+  )
   assert.deepEqual(
     db.tables.hair_profiles[0].diagnostics,
-    { texture: "straight" },
-    "the existing domain must be preserved, not overwritten",
+    projectArtifactToFacts({
+      envelope: COMPLETE_V3_PLAN_ENVELOPE,
+      artifactId: "artifact-1",
+      leadId: "lead-pp",
+    }).diagnostics,
   )
 })
 
 test("F28: linking a user with no existing profile at all creates diagnostics facts and reports ready", async () => {
   const db = new FakeSupabase({
-    leads: [
-      {
-        id: "lead-legacy",
-        email: "lea@example.test",
-        quiz_kind: "legacy",
-        quiz_answers: COMPLETE_LEGACY_ANSWERS,
-        user_id: null,
-        updated_at: "2026-09-14T08:00:00.000Z",
-      },
-    ],
+    leads: [legacyLead("2026-09-12T08:00:00.000Z")],
     hair_profiles: [],
   })
 
@@ -441,7 +547,9 @@ test("F28: linking a user with no existing profile at all creates diagnostics fa
   assert.equal(linked.status, "ready")
   const factsCall = db.rpcs.find((call) => call.fn === "user_facts_save_v1")
   assert.ok(factsCall)
-  assert.equal(factsCall!.args.p_mode, "create_only")
+  // No real quiz on file yet: this quiz writes, CAS-pinned to the missing row's revision 0.
+  assert.equal(factsCall!.args.p_mode, "upsert")
+  assert.equal(factsCall!.args.p_expected_revision, 0)
   assert.ok(db.tables.hair_profiles[0].diagnostics)
   assert.equal(db.tables.hair_profiles[0].facts_revision, 1)
 })
@@ -721,6 +829,63 @@ test("missing hair length still corrects the fact when a diagnostics document al
   )
   // The pre-existing `texture` is replaced by the corrected lead's own value.
   assert.equal((db.tables.hair_profiles[0].diagnostics as Row).texture, "wavy")
+})
+
+test("the recovery form's real hair length replaces an assumed default and clears the assumed marker", async () => {
+  const oldAnswers = { ...COMPLETE_LEGACY_ANSWERS, hair_length: undefined }
+  const linkedWithDefault = {
+    ...projectLegacyLeadToFacts({ leadId: "lead-legacy", quizAnswers: oldAnswers as never })
+      .diagnostics,
+    hairLength: "long",
+  }
+  const db = new FakeSupabase({
+    leads: [
+      {
+        id: "lead-legacy",
+        email: "lea@example.test",
+        quiz_kind: "legacy",
+        quiz_answers: oldAnswers,
+        user_id: "user-1",
+        updated_at: "2026-08-12T08:00:00.000Z",
+      },
+    ],
+    // What an account link of this old lead wrote (decision wave 1, item B).
+    hair_profiles: [
+      {
+        user_id: "user-1",
+        diagnostics: linkedWithDefault,
+        facts_revision: 1,
+        facts_provenance: {
+          diagnostics: {
+            source: { kind: "legacy_lead", id: "lead-legacy" },
+            schemaVersion: 1,
+            at: "2026-08-12T09:00:00.000Z",
+            fields: { texture: "user", hairLength: "assumed" },
+          },
+        },
+      },
+    ],
+  })
+
+  const readiness = await updateMissingPlanBereitSourceFact(db as never, {
+    userId: "user-1",
+    email: "lea@example.test",
+    leadId: "lead-legacy",
+    sourceVersion: "2026-08-12T08:00:00.000Z",
+    field: "hair_length",
+    value: "short",
+  })
+
+  assert.equal(readiness.status, "ready")
+  assert.equal((db.tables.hair_profiles[0].diagnostics as Row).hairLength, "short")
+  const fields = ((db.tables.hair_profiles[0].facts_provenance as Row).diagnostics as Row)
+    .fields as Row
+  assert.equal(fields.hairLength, "user", "no stale assumed marker survives the real answer")
+  assert.equal(
+    Object.values(fields).includes("assumed"),
+    false,
+    "the corrected lead is complete, so nothing is assumed any more",
+  )
 })
 
 test("foreign exact leads are forbidden and never patched from the recovery form", async () => {
