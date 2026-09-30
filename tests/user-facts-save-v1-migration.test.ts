@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
+  applyUserFactsLock,
   createInitialNeed,
   id,
   insertOpenRefinementDraft,
@@ -348,13 +349,16 @@ test("a write recomputes only the columns owned by its own domain", async (t) =>
 })
 
 test("a care_habits write leaves legacy diagnostics columns alone when diagnostics is still NULL", async (t) => {
-  const pg = await freshDatabase(t)
-  // A pre-migration onboarding row: narrow columns filled, no fact domains yet.
+  // A pre-migration onboarding row: narrow columns filled, no fact domains yet — seeded before
+  // the lock (20260930120000), as production rows are.
+  const pg = await migratedPersonalPlanDatabase(t, { lock: false })
+  await insertProfile(pg, USER)
   await pg.query(
     `INSERT INTO public.hair_profiles (user_id, hair_texture, thickness, scalp_condition, goals, desired_volume)
      VALUES ($1, 'coily', 'coarse', 'dandruff', ARRAY['moisture']::text[], 'less')`,
     [USER],
   )
+  await applyUserFactsLock(pg)
 
   await saveUserFacts(pg, {
     userId: USER,

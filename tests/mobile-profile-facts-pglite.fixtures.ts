@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises"
 
 import {
+  applyUserFactsLock,
   migratedPersonalPlanDatabase,
   type PersonalPlanTestDb,
 } from "./personal-plan-pglite-migration.fixtures"
@@ -55,17 +56,24 @@ CREATE TABLE public.leads (
 );
 `
 
+/**
+ * `cleanSwitch: false` runs the PRE-switch publishers (they write fact columns directly), which
+ * the lock rejects by design — so the lock is applied only on the clean-switch chain, and last.
+ * `lock: false` leaves it off for a test that seeds a legacy row first and then calls
+ * `applyUserFactsLock` itself (see personal-plan-pglite-migration.fixtures.ts).
+ */
 export async function mobileFactsDatabase(
   t: { after: (fn: () => Promise<void>) => void },
-  options: { cleanSwitch?: boolean } = {},
+  options: { cleanSwitch?: boolean; lock?: boolean } = {},
 ): Promise<PersonalPlanTestDb> {
-  const pg = await migratedPersonalPlanDatabase(t)
+  const pg = await migratedPersonalPlanDatabase(t, { lock: false })
   await pg.exec(MOBILE_STUBS)
   const files = [
     ...MOBILE_MIGRATIONS,
     ...(options.cleanSwitch === false ? [] : CLEAN_SWITCH_MIGRATIONS),
   ]
   for (const file of files) await pg.exec(await readFile(new URL(file, ROOT), "utf8"))
+  if (options.cleanSwitch !== false && options.lock !== false) await applyUserFactsLock(pg)
   return pg
 }
 

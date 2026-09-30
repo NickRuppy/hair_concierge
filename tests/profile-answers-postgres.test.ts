@@ -29,6 +29,7 @@ import {
   readRow,
 } from "./mobile-profile-facts-pglite.fixtures"
 import {
+  applyUserFactsLock,
   id,
   insertProfile,
   saveUserFacts,
@@ -155,7 +156,8 @@ test("a web edit that changes nothing is not an edit: no editedAt, provenance un
 })
 
 test("fix round 2 (1) adversarial: an unchanged save on a row WITHOUT a facts document writes nothing", async (t) => {
-  const pg = await mobileFactsDatabase(t)
+  // A legacy row as production has it before the lock (rollout step 3), then locked.
+  const pg = await mobileFactsDatabase(t, { lock: false })
   await insertProfile(pg, OWNER)
   await pg.query(
     `insert into public.hair_profiles(user_id, hair_texture, thickness, density, hair_length,
@@ -165,6 +167,7 @@ test("fix round 2 (1) adversarial: an unchanged save on a row WITHOUT a facts do
        array['colored'],array['frizz'],array['less_volume','healthier_hair'],'less')`,
     [OWNER],
   )
+  await applyUserFactsLock(pg)
   const client = pgliteRpcClient(pg)
   const rowBefore = (await readRow(pg, OWNER))!
   const clockBefore = await readClock(pg, OWNER)
@@ -205,7 +208,8 @@ test("a user without a profile row: the door creates it with exactly what she en
 })
 
 test("adversarial: a row with legacy columns but NULL diagnostics keeps every column the edit did not name", async (t) => {
-  const pg = await mobileFactsDatabase(t)
+  // A legacy row as production has it before the lock (rollout step 3), then locked.
+  const pg = await mobileFactsDatabase(t, { lock: false })
   await insertProfile(pg, OWNER)
   await pg.query(
     `insert into public.hair_profiles(user_id, hair_texture, thickness, density, hair_length,
@@ -215,6 +219,7 @@ test("adversarial: a row with legacy columns but NULL diagnostics keeps every co
        array['colored'],array['frizz'],array['less_volume','healthier_hair'],'less')`,
     [OWNER],
   )
+  await applyUserFactsLock(pg)
   const client = pgliteRpcClient(pg)
   await saveProfileAnswers(deps(pg, client), OWNER, profileAnswersSchema.parse({ texture: "wavy" }))
 

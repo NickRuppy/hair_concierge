@@ -25,6 +25,7 @@ import {
   legacyMobileEditProfilePatch,
 } from "./mobile-legacy-profile-patch.oracle"
 import {
+  applyUserFactsLock,
   id,
   insertProfile,
   saveUserFacts,
@@ -361,9 +362,11 @@ test("golden (task 4): profile completion (missing) derives today's columns up t
     ],
   ]
   for (const [name, seedRow, submitted] of cases) {
-    const pg = await mobileFactsDatabase(t)
+    // Seeded as production is before rollout step 3, then locked (the legacy case writes columns).
+    const pg = await mobileFactsDatabase(t, { lock: false })
     await insertProfile(pg, OWNER)
     await seedRow(pg)
+    await applyUserFactsLock(pg)
     const client = pgliteRpcClient(pg)
     const read = (await client.rpc("scanner_context_read_source", { p_user_id: OWNER })).data as {
       profileRevision: string

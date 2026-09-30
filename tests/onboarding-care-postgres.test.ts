@@ -18,6 +18,7 @@ import {
   readRow,
 } from "./mobile-profile-facts-pglite.fixtures"
 import {
+  applyUserFactsLock,
   id,
   insertProfile,
   saveUserFacts,
@@ -78,9 +79,15 @@ function values(body: unknown): OnboardingCareValues {
   return onboardingCareSchema.parse(body)
 }
 
+/** Seeds the profile (and, with `columns`, a legacy row) on a database opened with
+ * `{ lock: false }`, then applies the lock — the order production goes through. */
 async function seedRow(pg: PersonalPlanTestDb, columns?: CareRow) {
   await insertProfile(pg, OWNER)
-  if (!columns) return
+  if (columns) await insertLegacyRow(pg, columns)
+  await applyUserFactsLock(pg)
+}
+
+async function insertLegacyRow(pg: PersonalPlanTestDb, columns: CareRow) {
   await pg.query(
     `INSERT INTO public.hair_profiles
        (user_id, drying_method, heat_styling, styling_tools, uses_heat_protection,
@@ -218,7 +225,7 @@ test("no-op: a save that changes nothing writes nothing (revision, provenance, u
 })
 
 test("no-op on a row with legacy columns and no document: the row is left alone", async (t) => {
-  const pg = await mobileFactsDatabase(t)
+  const pg = await mobileFactsDatabase(t, { lock: false })
   await seedRow(pg, ESTABLISHED)
   const before = (await readRow(pg, OWNER))!
   const client = pgliteRpcClient(pg)
@@ -270,7 +277,7 @@ test("conflict: a concurrent facts write between read and save is a profile_conf
 })
 
 test("a row with legacy columns and no document: a partial step keeps every other column", async (t) => {
-  const pg = await mobileFactsDatabase(t)
+  const pg = await mobileFactsDatabase(t, { lock: false })
   await seedRow(pg, ESTABLISHED)
   await saveOnboardingCare(deps(pg), OWNER, values({ night_protection: [] }))
 
@@ -361,7 +368,7 @@ async function compare(
   start: CareRow | null,
   steps: unknown[],
 ) {
-  const pg = await mobileFactsDatabase(t)
+  const pg = await mobileFactsDatabase(t, { lock: false })
   await seedRow(pg, start ?? undefined)
   let old: CareRow = start ?? BLANK
   const trail: Array<{ step: unknown; old: CareRow; now: CareRow }> = []

@@ -201,9 +201,25 @@ CREATE TRIGGER set_updated_at_hair_profiles
 
 export type PersonalPlanTestDb = PGlite
 
-export async function migratedPersonalPlanDatabase(t: {
-  after: (fn: () => Promise<void>) => void
-}): Promise<PersonalPlanTestDb> {
+/**
+ * Clean-switch task 9: the lock on `hair_profiles` (guard trigger + revoked browser privileges).
+ * Applied LAST in production (after the code deploy and the backfill), so every harness applies
+ * it last too. A test that needs a row a legacy direct writer left (the state production is in
+ * BEFORE the lock) opens the database with `{ lock: false }`, seeds it, and then calls
+ * `applyUserFactsLock` — exactly the rollout order; the guard itself is never relaxed for a seed.
+ */
+export const USER_FACTS_LOCK_MIGRATION = "supabase/migrations/20260930120000_user_facts_lock.sql"
+
+export async function applyUserFactsLock(pg: PersonalPlanTestDb): Promise<void> {
+  await pg.exec(await readFile(new URL(USER_FACTS_LOCK_MIGRATION, ROOT), "utf8"))
+}
+
+export async function migratedPersonalPlanDatabase(
+  t: {
+    after: (fn: () => Promise<void>) => void
+  },
+  options: { lock?: boolean } = {},
+): Promise<PersonalPlanTestDb> {
   const pg = new PGlite({ extensions: { uuid_ossp } })
   t.after(async () => {
     await pg.close()
@@ -212,6 +228,7 @@ export async function migratedPersonalPlanDatabase(t: {
   for (const migration of MIGRATIONS) {
     await pg.exec(await readFile(new URL(migration, ROOT), "utf8"))
   }
+  if (options.lock !== false) await applyUserFactsLock(pg)
   return pg
 }
 

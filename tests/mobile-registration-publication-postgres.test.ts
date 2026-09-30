@@ -25,7 +25,11 @@ import {
   legacyMissingProfilePatch,
   legacyMobileEditProfilePatch,
 } from "./mobile-legacy-profile-patch.oracle"
-import { insertProfile, saveUserFacts } from "./personal-plan-pglite-migration.fixtures"
+import {
+  applyUserFactsLock,
+  insertProfile,
+  saveUserFacts,
+} from "./personal-plan-pglite-migration.fixtures"
 
 // Executes the real SQL functions, constraints and triggers on the real schema (clean-switch
 // task 4: `mobile_registration_publish` saves through `user_facts_save_v1`). Embedded
@@ -52,7 +56,7 @@ type Client = ReturnType<typeof pgliteRpcClient>
  * back into today's column patch so the OLD behaviour can be measured on the same schema. */
 async function fixture(
   t: { after: (fn: () => Promise<void>) => void },
-  options: { cleanSwitch?: boolean } = {},
+  options: { cleanSwitch?: boolean; lock?: boolean } = {},
 ) {
   const db = await mobileFactsDatabase(t, options)
   await insertProfile(db, owner)
@@ -266,7 +270,8 @@ test("C2 keep preserves profile/source/edit rows, records checkbox without a new
 test("C3/C5 explicit replace leaves paid and unrelated fields intact, changed retry refuses overwrite", async (t) => {
   const f = await fixture(t)
   await f.complete(await f.intent())
-  await f.db.query(`update hair_profiles set towel_material='mikrofaser' where user_id=$1`, [owner])
+  // An unrelated care fact another writer saved (through the door — the only way after the lock).
+  await saveCareTowel(f.db, "mikrofaser")
   await f.db.query("insert into personal_plans(id,user_id) values($1,$2)", [randomUUID(), owner])
   const paid = await f.db.query("select * from personal_plans")
   const input = await f.intent("replace", { answers: { ...answers, thickness: "coarse" } })
@@ -506,43 +511,56 @@ test("fix round 1 (C): a conflict after a completed door write raises, never ret
   )
 })
 
-test("fix round 1 (B): a non-door creator that wins the absent-row race is refused, not overwritten", async (t) => {
-  const f = await fixture(t)
-  const input = await f.intent()
-  const clock = await readClock(f.db, owner)
-  // A concurrent NON-door writer creates the row first (facts_revision 0, no facts), then the
-  // real door runs: its INSERT loses, its CAS on revision 0 passes, and the clock delta happens
-  // to match. Only the door's own "created" report can tell the publisher it did not create it.
-  await wrapDoor(
-    f.db,
-    `INSERT INTO public.hair_profiles(user_id,hair_texture,goals)
-       VALUES (p_user_id,'straight',ARRAY['shine']) ON CONFLICT DO NOTHING;
+for (const [variant, lock, competingInsert] of [
+  // Before the lock (rollout steps 1-2) a legacy non-door writer could still put columns in.
+  [
+    "legacy columns, before the lock",
+    false,
+    "INSERT INTO public.hair_profiles(user_id,hair_texture,goals) VALUES (p_user_id,'straight',ARRAY['shine'])",
+  ],
+  // Under the lock a non-door writer can only create the bare row.
+  [
+    "bare row, under the lock",
+    true,
+    "INSERT INTO public.hair_profiles(user_id) VALUES (p_user_id)",
+  ],
+] as const)
+  test(`fix round 1 (B): a non-door creator that wins the absent-row race is refused, not overwritten (${variant})`, async (t) => {
+    const f = await fixture(t, { lock })
+    const input = await f.intent()
+    const clock = await readClock(f.db, owner)
+    // A concurrent NON-door writer creates the row first (facts_revision 0, no facts), then the
+    // real door runs: its INSERT loses, its CAS on revision 0 passes, and the clock delta happens
+    // to match. Only the door's own "created" report can tell the publisher it did not create it.
+    await wrapDoor(
+      f.db,
+      `${competingInsert} ON CONFLICT DO NOTHING;
      RETURN ${REAL_DOOR_CALL};`,
-  )
-  await assert.rejects(f.complete(input), /profile_conflict/)
-  // In one PGlite session the simulated writer's row lives in the publication's transaction and
-  // rolls back with it; in production it is committed and nothing of this publication touches it.
-  assert.equal((await f.db.query("select * from hair_profiles")).rows.length, 0)
-  assert.deepEqual(await readClock(f.db, owner), clock)
-  for (const table of [
-    "leads",
-    "mobile_registration_publication_receipts",
-    "scanner_profile_edits",
-  ])
-    assert.equal((await f.db.query(`select * from ${table}`)).rows.length, 0, table)
-  assert.equal(
-    (await f.db.query<any>("select full_name from profiles where id=$1", [owner])).rows[0]
-      .full_name,
-    "Existing",
-  )
+    )
+    await assert.rejects(f.complete(input), /profile_conflict/)
+    // In one PGlite session the simulated writer's row lives in the publication's transaction and
+    // rolls back with it; in production it is committed and nothing of this publication touches it.
+    assert.equal((await f.db.query("select * from hair_profiles")).rows.length, 0)
+    assert.deepEqual(await readClock(f.db, owner), clock)
+    for (const table of [
+      "leads",
+      "mobile_registration_publication_receipts",
+      "scanner_profile_edits",
+    ])
+      assert.equal((await f.db.query(`select * from ${table}`)).rows.length, 0, table)
+    assert.equal(
+      (await f.db.query<any>("select full_name from profiles where id=$1", [owner])).rows[0]
+        .full_name,
+      "Existing",
+    )
 
-  // The same wrapper against a row the door DID create (no competing writer) still publishes.
-  await f.db.exec(`
+    // The same wrapper against a row the door DID create (no competing writer) still publishes.
+    await f.db.exec(`
     DROP FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid);
     ALTER FUNCTION public.user_facts_save_v1_real(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid)
       RENAME TO user_facts_save_v1;`)
-  assert.equal((await f.complete(input)).status, "ready")
-})
+    assert.equal((await f.complete(input)).status, "ready")
+  })
 
 test("C8 wrong owner, stale generation, expiry, login intent and unverified binding never publish", async (t) => {
   const f = await fixture(t)
@@ -570,6 +588,22 @@ test("C8 wrong owner, stale generation, expiry, login intent and unverified bind
   assert.equal((await f.db.query("select * from hair_profiles")).rows.length, 0)
 })
 
+/** A care fact written through the door, as every writer writes one after the lock. */
+async function saveCareTowel(db: Awaited<ReturnType<typeof fixture>>["db"], material: string) {
+  const saved = await saveUserFacts(db, {
+    userId: owner,
+    domain: "care_habits",
+    patch: { towel: { material } },
+    provenance: {
+      source: { kind: "onboarding" },
+      schemaVersion: 1,
+      at: "2026-09-02T00:00:00.000Z",
+    },
+  })
+  assert.equal(saved.status, "ok")
+}
+
+/** A legacy row; seed it on a `{ lock: false }` fixture and apply the lock afterwards. */
 async function seedLegacyRow(db: Awaited<ReturnType<typeof fixture>>["db"]) {
   // A row a legacy direct writer left (no facts), hair length missing.
   await db.query(
@@ -579,8 +613,9 @@ async function seedLegacyRow(db: Awaited<ReturnType<typeof fixture>>["db"]) {
 }
 
 test("missing-only preserves valid false/empty/NULL and unrelated fields; no consent/lead/enrollment write", async (t) => {
-  const f = await fixture(t)
+  const f = await fixture(t, { lock: false })
   await seedLegacyRow(f.db)
+  await applyUserFactsLock(f.db)
   const current = (await f.client.rpc("scanner_context_read_source", { p_user_id: owner }))
     .data as any
   const input = {
@@ -768,10 +803,8 @@ test("profile CAS rejects a web change after preparation without publishing anot
   const leads = await f.db.query("select * from leads")
   const client = {
     async rpc(name: string, args: Record<string, unknown>) {
-      if (name === "mobile_registration_publish")
-        await f.db.query("update hair_profiles set towel_material='frottee' where user_id=$1", [
-          owner,
-        ])
+      // The web change, as every web writer makes it after the lock: through the door.
+      if (name === "mobile_registration_publish") await saveCareTowel(f.db, "frottee")
       return f.client.rpc(name, args)
     },
   }
@@ -782,7 +815,11 @@ test("profile CAS rejects a web change after preparation without publishing anot
   assert.deepEqual(await f.db.query("select * from leads"), leads)
   const row = (await readRow(f.db, owner))!
   assert.equal(row.thickness, "fine")
-  assert.equal(row.facts_revision, 1, "no facts written")
+  assert.equal(
+    row.facts_revision,
+    2,
+    "the registration's own write + the web change; nothing published",
+  )
   assert.equal(row.towel_material, "frottee")
 })
 
@@ -797,7 +834,9 @@ async function measure(
   cleanSwitch: boolean,
   outcome: string,
 ): Promise<Delta> {
-  const f = await fixture(t, { cleanSwitch })
+  // Set up unlocked (the legacy seed below writes columns), measured under the lock when the
+  // clean-switch functions are installed (the old ones write columns, which the lock rejects).
+  const f = await fixture(t, { cleanSwitch, lock: false })
   if (outcome.startsWith("replace") || outcome === "keep") await f.complete(await f.intent())
   if (outcome === "replace+quiz_context")
     await saveUserFacts(f.db, {
@@ -811,6 +850,7 @@ async function measure(
       },
     })
   if (outcome === "missing (row exists)") await seedLegacyRow(f.db)
+  if (cleanSwitch) await applyUserFactsLock(f.db)
   const before = await readClock(f.db, owner)
   if (outcome.startsWith("missing")) {
     const current = (await f.client.rpc("scanner_context_read_source", { p_user_id: owner }))

@@ -31,6 +31,7 @@ import {
 import { legacyMobileEditProfilePatch } from "./mobile-legacy-profile-patch.oracle"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 import {
+  applyUserFactsLock,
   createInitialNeed,
   id,
   insertProfile,
@@ -353,10 +354,11 @@ test("fix round 1 (G) adversarial: a replay whose first attempt rolled back runs
 })
 
 test("adversarial: an edit on a profile with NULL diagnostics creates a complete, readable document", async (t) => {
-  const pg = await mobileFactsDatabase(t)
+  const pg = await mobileFactsDatabase(t, { lock: false })
   await insertProfile(pg, OWNER)
   await insertLead(pg, ANSWERS)
-  // A row written by a legacy direct writer (no facts), as before the backfill.
+  // A row written by a legacy direct writer (no facts), as before the backfill — seeded before
+  // the lock, as production has it.
   await pg.query(
     `insert into public.hair_profiles(user_id,hair_texture,thickness,density,hair_length,cuticle_condition,
        protein_moisture_balance,scalp_type,scalp_condition,chemical_treatment,concerns,goals,towel_material)
@@ -364,6 +366,7 @@ test("adversarial: an edit on a profile with NULL diagnostics creates a complete
        ARRAY['natural'],ARRAY['dryness'],ARRAY['moisture'],'mikrofaser')`,
     [OWNER],
   )
+  await applyUserFactsLock(pg)
   const client = pgliteRpcClient(pg)
   const before = await readClock(pg, OWNER)
   await edit(client, { ...ANSWERS, hair_length: "short" })
