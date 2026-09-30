@@ -365,3 +365,27 @@ test("F1 model: rows are requested only for steps that show the recommendation",
     console.error = errors
   }
 })
+
+// --- T4 (iteration 3): the option's packshot comes from the identity map -----------------
+
+test("T4 view: the recommendation option carries the catalog packshot, or null without one", () => {
+  const view = buildDiscoveryCockpitView({
+    ...model(),
+    productIdentities: new Map([
+      [
+        recommendedId,
+        {
+          name: "Lab Shampoo Ideal",
+          brand: "Lab",
+          productLine: null,
+          imageUrl: "https://catalog.example/ideal.jpg",
+        },
+      ],
+    ]),
+  })
+  assert.equal(view.steps[0].swapOptions[0].imageUrl, "https://catalog.example/ideal.jpg")
+  assert.equal(view.steps[0].idealRecommendation?.imageUrl, "https://catalog.example/ideal.jpg")
+
+  const bare = buildDiscoveryCockpitView(model())
+  assert.equal(bare.steps[0].swapOptions[0].imageUrl, null)
+})

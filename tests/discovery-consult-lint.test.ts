@@ -308,6 +308,35 @@ test("adversarial: a brief that praises the passt-nicht shampoo fails", () => {
   assert.equal(findings[0]!.location, "hebel[1].note")
 })
 
+test("passt aber/jedoch/doch nicht is a named verdict, not praise", () => {
+  // Iteration 4 (live eval, colored-frizz): the conjunction window excluded „aber", so
+  // „passt aber nicht" counted as a bare „passt" — praise on a passt-nicht product.
+  for (const joiner of ["aber", "jedoch", "doch", "allerdings"]) {
+    const brief = cleanBrief()
+    brief.diagnose = `Das Volumen Shampoo ist erfasst, passt ${joiner} nicht.`
+    assert.deepEqual(rules(lintConsultBrief(brief, nomiInput())), [], joiner)
+  }
+  // „passt gut, hilft aber nicht …" stays praise: the praise word sits before the joiner.
+  const praising = cleanBrief()
+  praising.diagnose = "Das Volumen Shampoo passt gut, hilft aber nicht gegen Schuppen."
+  assert.deepEqual(rules(lintConsultBrief(praising, nomiInput())), ["verdict_contradiction"])
+})
+
+test("das gewählte Shampoo names the plan's pick, the bare category stays hers", () => {
+  // Iteration 4 (live eval, colored-frizz): a deepened technique note about the incoming
+  // product („das gewählte Shampoo bleibt an der Kopfhaut") is no keep-advice for hers.
+  const pick = cleanBrief()
+  pick.hebel[0] = {
+    ...pick.hebel[0]!,
+    note: "Das gewählte Shampoo bleibt an der Kopfhaut, die Längen werden nicht extra eingeschäumt.",
+  }
+  assert.deepEqual(rules(lintConsultBrief(pick, nomiInput())), [])
+  // Without such an attribute, the bare category still maps to her only checked shampoo.
+  const bare = cleanBrief()
+  bare.hebel[0] = { ...bare.hebel[0]!, note: "Das Shampoo bleibt in der Routine." }
+  assert.deepEqual(rules(lintConsultBrief(bare, nomiInput())), ["verdict_contradiction"])
+})
+
 test("keeping a passt-nicht product is allowed only with the verdict named", () => {
   const brief = cleanBrief()
   brief.erwartungen.unshift(
@@ -326,6 +355,33 @@ test("a swap reason keyed to a passt-nicht step may not say keep", () => {
   const brief = cleanBrief()
   brief.swapReasons[SHAMPOO_KEY] = "Kann bleiben, reinigt gut."
   assert.deepEqual(rules(lintConsultBrief(brief, nomiInput())), ["verdict_contradiction"])
+})
+
+test("swap reasons: category-priority talk fails, sequencing and hebel talk stay legal", () => {
+  // Iteration 4: the two live-observed shapes („nachrangig", „nicht als erster Schritt").
+  const priority = cleanBrief()
+  priority.swapReasons[CONDITIONER_KEY] = "Eine Maske bleibt deshalb zunächst nachrangig."
+  const findings = lintConsultBrief(priority, nomiInput())
+  assert.deepEqual(rules(findings), ["swap_reason_priority"])
+  assert.equal(findings[0]!.location, `swapReasons.${CONDITIONER_KEY}`)
+
+  const firstStep = cleanBrief()
+  firstStep.swapReasons[CONDITIONER_KEY] =
+    "Die Repair Spülung passt nicht als erster Schritt bei feinem Haar."
+  assert.ok(rules(lintConsultBrief(firstStep, nomiInput())).includes("swap_reason_priority"))
+
+  // Bare „zuerst" is sequencing, not category priority — and outside swapReasons the
+  // vocabulary belongs to the hebel.
+  const sequencing = cleanBrief()
+  sequencing.swapReasons[SHAMPOO_KEY] =
+    "Das Volumen Shampoo passt nicht; zuerst aufbrauchen, dann tauschen."
+  assert.deepEqual(rules(lintConsultBrief(sequencing, nomiInput())), [])
+  const hebelTalk = cleanBrief()
+  hebelTalk.hebel[0] = {
+    ...hebelTalk.hebel[0]!,
+    note: "Der Conditioner ist der erste Schritt und kommt bei jeder Wäsche in die Längen.",
+  }
+  assert.deepEqual(rules(lintConsultBrief(hebelTalk, nomiInput())), [])
 })
 
 test("the other direction: advising against a passt product fails", () => {

@@ -14,6 +14,11 @@ import type { DiagnosticConcern } from "@/lib/quiz/diagnostic-input"
  * call — talking point, what to lead with, what applies to her profile, what not to lead
  * with, and per category whether she already has it and whether the Idealroutine does.
  *
+ * Laid out as one consultant slide (iteration 3, T1): the talking point, „Zuerst" (lead
+ * categories with vorhanden/nicht vorhanden) and „Nicht zuerst" are visible; the reasons,
+ * evidence tags, levers, profile add-ons and the boundary sit behind native fold-ups.
+ * Content is the recipe's own, unchanged — only grouping and weight differ.
+ *
  * With no stated (or single) main problem, a picker over her selected concerns lets Nick
  * choose in the call. Client state only — nothing is saved.
  */
@@ -22,10 +27,11 @@ const TITLE = "Hauptproblem"
 const PICK_PROMPT = "Kein Hauptproblem angegeben — im Call fragen, dann wählen:"
 const NONE = "Im Quiz kein Haarproblem angegeben."
 const TALKING_POINT = "So sagst du es"
-const PRIMARY = "Damit anfangen"
+const FIRST = "Zuerst"
+const NOT_FIRST = "Nicht zuerst"
+const WHY_FIRST = "Warum zuerst"
 const LEVERS = "Ohne Produkt"
 const CONDITIONAL = "Fürs Profil"
-const AVOID = "Nicht damit anfangen"
 const BOUNDARY = "Grenze"
 const SIGNAL_PREFIX = "nur wenn der Call es bestätigt:"
 const APPLIES = "passt"
@@ -104,13 +110,22 @@ export function DiscoveryConcernRecipeSection({
 }
 
 function Recipe({ view }: { view: DiscoveryConcernRecipeView }) {
+  const hasDetails =
+    view.primaryCategories.length > 0 ||
+    view.levers.length > 0 ||
+    view.conditional.length > 0 ||
+    (!view.boundaryOnly && view.boundary !== null)
+
   return (
     <>
-      <div className="rounded-lg bg-[var(--brand-plum-ice)] px-3 py-2">
+      {/* The slide: what Nick reads aloud, then what comes first and what does not. */}
+      <div className="rounded-r-lg border-l-[3px] border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] px-3 py-2">
         <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-[var(--brand-plum)]">
           {TALKING_POINT}
         </p>
-        <p className="mt-0.5 text-sm leading-6 text-foreground">{view.talkingPoint}</p>
+        <p className="mt-0.5 text-[15px] font-medium leading-6 text-foreground">
+          {view.talkingPoint}
+        </p>
       </div>
 
       {view.boundaryOnly && view.boundary ? (
@@ -121,84 +136,158 @@ function Recipe({ view }: { view: DiscoveryConcernRecipeView }) {
         </Block>
       ) : null}
 
-      {view.primaryCategories.length > 0 ? (
-        <Block title={PRIMARY}>
-          <ul className="divide-y">
-            {view.primaryCategories.map((entry) => (
-              <li
-                key={entry.category}
-                className="flex flex-wrap items-baseline gap-x-3 gap-y-1 py-2"
-              >
-                <CategoryChip label={entry.label} />
-                <Evidence evidence={entry.evidence} />
-                <Coverage coverage={entry.coverage} />
-                <p className="w-full text-[13px] leading-5 text-foreground">{entry.why}</p>
-              </li>
-            ))}
-          </ul>
-        </Block>
-      ) : null}
-
-      {view.levers.length > 0 ? (
-        <Block title={LEVERS}>
-          <ul className="flex flex-col gap-1">
-            {view.levers.map((entry) => (
-              <li key={entry.lever} className="text-[13px] leading-5 text-foreground">
-                {entry.lever} <Evidence evidence={entry.evidence} />
-                {entry.signalCategoryLabel ? (
-                  <span className="ml-2 text-[12px] text-muted-foreground">
-                    {`${SIGNAL_PREFIX} ${entry.signalCategoryLabel}`}
-                  </span>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </Block>
-      ) : null}
-
-      {view.conditional.length > 0 ? (
-        <Block title={CONDITIONAL}>
-          <ul className="divide-y">
-            {view.conditional.map((entry) => (
-              <li
-                key={entry.category}
-                className="flex flex-wrap items-baseline gap-x-3 gap-y-1 py-2"
-              >
-                <CategoryChip label={entry.label} />
-                <Pill tone={entry.status === "applies" ? "ok" : "pending"}>
-                  {entry.status === "applies"
-                    ? APPLIES
-                    : `${CHECK}: ${entry.uncheckedFacts.join(", ")}`}
-                </Pill>
-                <Coverage coverage={entry.coverage} />
-                {entry.reasons.map((reason) => (
-                  <p key={reason.why} className="w-full text-[13px] leading-5 text-foreground">
-                    {reason.why} <Evidence evidence={reason.evidence} />
-                  </p>
+      {view.primaryCategories.length > 0 || view.avoid.length > 0 ? (
+        <div className="grid grid-cols-[auto_1fr] items-baseline gap-x-3 gap-y-2">
+          {view.primaryCategories.length > 0 ? (
+            <>
+              <SlideLabel>{FIRST}</SlideLabel>
+              <ul className="flex flex-wrap gap-1.5">
+                {view.primaryCategories.map((entry) => (
+                  <li
+                    key={entry.category}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-[var(--brand-plum-ice)] py-0.5 pl-2.5 pr-0.5"
+                  >
+                    <span className="text-xs font-bold text-[var(--brand-plum)]">
+                      {entry.label}
+                    </span>
+                    <Pill tone={entry.coverage.owned ? "ok" : "neutral"}>
+                      {entry.coverage.owned ? OWNED : NOT_OWNED}
+                    </Pill>
+                  </li>
                 ))}
-              </li>
-            ))}
-          </ul>
-        </Block>
+              </ul>
+            </>
+          ) : null}
+          {view.avoid.length > 0 ? (
+            <>
+              <SlideLabel>{NOT_FIRST}</SlideLabel>
+              <ul className="flex flex-wrap gap-1.5">
+                {view.avoid.map((entry) => (
+                  <li
+                    key={entry}
+                    className="rounded-md bg-[var(--status-neutral-bg)] px-2 py-0.5 text-[12px] leading-5 text-[var(--status-neutral-text)]"
+                  >
+                    {entry}
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+        </div>
       ) : null}
 
-      {view.avoid.length > 0 ? (
-        <Block title={AVOID}>
-          <ul className="list-disc pl-5 text-[13px] leading-5 text-foreground">
-            {view.avoid.map((entry) => (
-              <li key={entry}>{entry}</li>
-            ))}
-          </ul>
-        </Block>
-      ) : null}
+      {/* Everything else folds away: reasons, evidence, levers, profile add-ons, boundary. */}
+      {hasDetails ? (
+        <div className="flex flex-col gap-1.5 border-t pt-2">
+          {view.primaryCategories.length > 0 ? (
+            <Fold title={WHY_FIRST}>
+              <ul className="divide-y">
+                {view.primaryCategories.map((entry) => (
+                  <li
+                    key={entry.category}
+                    className="flex flex-wrap items-baseline gap-x-3 gap-y-1 py-2"
+                  >
+                    <CategoryChip label={entry.label} />
+                    <Evidence evidence={entry.evidence} />
+                    <Coverage coverage={entry.coverage} />
+                    <p className="w-full text-[13px] leading-5 text-foreground">{entry.why}</p>
+                  </li>
+                ))}
+              </ul>
+            </Fold>
+          ) : null}
 
-      {!view.boundaryOnly && view.boundary ? (
-        <p className="text-[12px] leading-5 text-muted-foreground">
-          <span className="font-bold">{`${BOUNDARY}: `}</span>
-          {view.boundary}
-        </p>
+          {view.levers.length > 0 ? (
+            <Fold title={LEVERS} meta={String(view.levers.length)}>
+              <ul className="flex flex-col gap-1">
+                {view.levers.map((entry) => (
+                  <li key={entry.lever} className="text-[13px] leading-5 text-foreground">
+                    {entry.lever} <Evidence evidence={entry.evidence} />
+                    {entry.signalCategoryLabel ? (
+                      <span className="ml-2 text-[12px] text-muted-foreground">
+                        {`${SIGNAL_PREFIX} ${entry.signalCategoryLabel}`}
+                      </span>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </Fold>
+          ) : null}
+
+          {view.conditional.length > 0 ? (
+            <Fold
+              title={CONDITIONAL}
+              meta={view.conditional.map((entry) => entry.label).join(", ")}
+            >
+              <ul className="divide-y">
+                {view.conditional.map((entry) => (
+                  <li
+                    key={entry.category}
+                    className="flex flex-wrap items-baseline gap-x-3 gap-y-1 py-2"
+                  >
+                    <CategoryChip label={entry.label} />
+                    <Pill tone={entry.status === "applies" ? "ok" : "pending"}>
+                      {entry.status === "applies"
+                        ? APPLIES
+                        : `${CHECK}: ${entry.uncheckedFacts.join(", ")}`}
+                    </Pill>
+                    <Coverage coverage={entry.coverage} />
+                    {entry.reasons.map((reason) => (
+                      <p key={reason.why} className="w-full text-[13px] leading-5 text-foreground">
+                        {reason.why} <Evidence evidence={reason.evidence} />
+                      </p>
+                    ))}
+                  </li>
+                ))}
+              </ul>
+            </Fold>
+          ) : null}
+
+          {!view.boundaryOnly && view.boundary ? (
+            <Fold title={BOUNDARY} quiet>
+              <p className="text-[12px] leading-5 text-muted-foreground">{view.boundary}</p>
+            </Fold>
+          ) : null}
+        </div>
       ) : null}
     </>
+  )
+}
+
+function SlideLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <h3 className="text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
+      {children}
+    </h3>
+  )
+}
+
+/** A native fold-up, as elsewhere in the cockpit; `meta` is a muted hint beside the title. */
+function Fold({
+  title,
+  meta,
+  quiet = false,
+  children,
+}: {
+  title: string
+  meta?: string
+  quiet?: boolean
+  children: React.ReactNode
+}) {
+  return (
+    <details>
+      <summary
+        className={`cursor-pointer text-[12px] font-bold ${
+          quiet ? "text-muted-foreground" : "text-[var(--brand-plum)]"
+        }`}
+      >
+        {title}
+        {meta ? (
+          <span className="ml-1.5 font-normal text-muted-foreground">{`· ${meta}`}</span>
+        ) : null}
+      </summary>
+      <div className="mt-1">{children}</div>
+    </details>
   )
 }
 

@@ -1,9 +1,10 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useState, type ReactNode } from "react"
+import { useRef, useState, type ReactNode } from "react"
 
 import { DISCOVERY_INTAKE_CATEGORY_COPY } from "@/components/discovery/intake/categories"
+import { ScanProductThumb } from "@/components/scan/scan-product-thumb"
 import { ScanVerdictSections } from "@/components/scan/scan-verdict-sections"
 import type {
   DiscoveryCockpitStepView,
@@ -324,6 +325,20 @@ export function DiscoveryCallCockpit({
   const [pending, setPending] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [finalizePending, setFinalizePending] = useState(false)
+  // R28 (iteration 3): the complexity chip's displayed value, lifted here so „Super
+  // essenziell" folds the optional Neu-Schritte. Re-seeds when a refresh brings a
+  // different stored answer; the ticket invalidates an in-flight write's rollback then
+  // (Codex F2: a stale failure must not overwrite the newer server value). Bumping the
+  // ref inside the reseed branch is idempotent — it runs once per changed prop, and an
+  // extra bump only skips a rollback that is stale anyway.
+  const [complexityValue, setComplexityValue] = useState(complexity)
+  const [syncedComplexity, setSyncedComplexity] = useState(complexity)
+  const complexityWriteTicket = useRef(0)
+  if (complexity !== syncedComplexity) {
+    setSyncedComplexity(complexity)
+    setComplexityValue(complexity)
+    complexityWriteTicket.current += 1
+  }
   const [syncedKey, setSyncedKey] = useState(stateKey)
   if (stateKey !== syncedKey) {
     setSyncedKey(stateKey)
@@ -347,6 +362,18 @@ export function DiscoveryCallCockpit({
   // „Für den Plan festgehalten": the SAME optimistic selections the radios write, so the
   // section follows each click before the server round-trip (and rolls back with it).
   const lockedIn = runsheetLockedIn(steps, (step) => selections[entryKey(step)] ?? null)
+  // „Super essenziell" folds the OPTIONAL Neu-Schritte behind one row (display only —
+  // routine variants by complexity stay a later slice). „Normal" and no answer show all.
+  const foldedSwapEntries =
+    complexityValue === "essenziell"
+      ? products.tauschenOderNeu.filter(
+          (entry) => entry.kind === "neu" && !entry.research && entry.step.section === "optional",
+        )
+      : []
+  const shownSwapEntries =
+    foldedSwapEntries.length > 0
+      ? products.tauschenOderNeu.filter((entry) => !foldedSwapEntries.includes(entry))
+      : products.tauschenOderNeu
 
   async function choose(step: DiscoveryCockpitStepView, value: string) {
     const key = entryKey(step)
@@ -472,37 +499,65 @@ export function DiscoveryCallCockpit({
           </p>
         ) : null}
         <StepDepth step={step} />
-        <div className="grid gap-0 md:grid-cols-2">
-          <div className="border-b p-4 md:border-b-0 md:border-r">
-            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
-              {COL_PRODUCT}
-            </p>
-            {entry.research ? (
-              <ResearchSlot research={entry.research} />
-            ) : (
-              <StepVerdict step={step} submitted={submitted} />
-            )}
-          </div>
-          <div className="p-4">
-            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
-              {COL_DECISION}
-            </p>
-            <StepDecision
-              step={step}
-              name={key}
-              value={selectionValue(selection)}
-              // „Weglassen" never empties the step (R3): not while every sibling
-              // is set to „Weglassen" too. The server re-checks under its lock.
-              dropAllowed={siblings.some((other) => other?.decision !== "drop")}
-              // A target a sibling already swaps to is not offered twice.
-              takenSwapIds={siblings.flatMap((other) =>
-                other?.decision === "swap" && other.swapProductId ? [other.swapProductId] : [],
-              )}
-              disabled={frozen || pending === key}
-              onChoose={(value) => void choose(step, value)}
-            />
-          </div>
-        </div>
+        {(() => {
+          const decision = (
+            <div className="p-4">
+              <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
+                {COL_DECISION}
+              </p>
+              <StepDecision
+                step={step}
+                name={key}
+                value={selectionValue(selection)}
+                // „Weglassen" never empties the step (R3): not while every sibling
+                // is set to „Weglassen" too. The server re-checks under its lock.
+                dropAllowed={siblings.some((other) => other?.decision !== "drop")}
+                // A target a sibling already swaps to is not offered twice.
+                takenSwapIds={siblings.flatMap((other) =>
+                  other?.decision === "swap" && other.swapProductId ? [other.swapProductId] : [],
+                )}
+                disabled={frozen || pending === key}
+                onChoose={(value) => void choose(step, value)}
+              />
+            </div>
+          )
+          // A step without her product and without research: the „Bisheriges Produkt:
+          // Kein Produkt angegeben" panel goes (iteration 3) — decision only. The two
+          // load-bearing status lines survive compactly (slice 1: an unanswered checklist
+          // is a question, only an explicit „benutze ich nicht" earns the gap wording).
+          if (entry.kind !== "owned" && !entry.research) {
+            return (
+              <>
+                {step.unanswered ? (
+                  <p className="border-b px-4 py-2 text-[13px] font-bold text-[var(--status-pending-text)]">
+                    {submitted ? UNANSWERED_STEP : NOT_YET_FILLED_STEP}
+                  </p>
+                ) : (
+                  <p className="border-b px-4 py-2 text-[13px] leading-5 text-muted-foreground">
+                    <span className="font-bold text-foreground">{GAP_TITLE}</span>
+                    {` — ${GAP_BODY}`}
+                  </p>
+                )}
+                {decision}
+              </>
+            )
+          }
+          return (
+            <div className="grid gap-0 md:grid-cols-2">
+              <div className="border-b p-4 md:border-b-0 md:border-r">
+                <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
+                  {COL_PRODUCT}
+                </p>
+                {entry.research ? (
+                  <ResearchSlot research={entry.research} />
+                ) : (
+                  <StepVerdict step={step} submitted={submitted} />
+                )}
+              </div>
+              {decision}
+            </div>
+          )
+        })()}
       </div>
     )
   }
@@ -512,7 +567,9 @@ export function DiscoveryCallCockpit({
       <RunsheetPhase number={3} title={PRODUCTS_TITLE} id="runsheet-phase-3">
         <ComplexityChoice
           enrollmentId={enrollmentId}
-          initial={complexity}
+          value={complexityValue}
+          onValue={setComplexityValue}
+          writeTicket={complexityWriteTicket}
           locked={complexityLocked}
         />
         {products.klaeren.length > 0 ? <KlaerenBanner entries={products.klaeren} /> : null}
@@ -538,7 +595,20 @@ export function DiscoveryCallCockpit({
           )}
         </Bucket>
         <Bucket title={BUCKET_SWAP} count={swapCount(products.tauschenOderNeu)} empty={EMPTY_SWAP}>
-          {products.tauschenOderNeu.map((entry) => renderEntry(entry, "tauschenOderNeu"))}
+          {/* ONE array child: `Bucket` decides emptiness by children.length (Codex F3). */}
+          {[
+            ...shownSwapEntries.map((entry) => renderEntry(entry, "tauschenOderNeu")),
+            ...(foldedSwapEntries.length > 0
+              ? [
+                  <details key="runsheet-complexity-folded" id="runsheet-complexity-folded">
+                    <summary className="cursor-pointer px-4 py-2.5 text-[13px] font-bold text-muted-foreground">
+                      {foldedSwapLabel(foldedSwapEntries.length)}
+                    </summary>
+                    {foldedSwapEntries.map((entry) => renderEntry(entry, "tauschenOderNeu"))}
+                  </details>,
+                ]
+              : []),
+          ]}
         </Bucket>
         <RunsheetLockedInSection lockedIn={lockedIn} />
         {products.styling.length > 0 ? (
@@ -620,32 +690,37 @@ export function DiscoveryCallCockpit({
 /**
  * R28: „Wie aufwendig darf die Routine sein?" — two options, saved per click to the call
  * sheet (`PATCH …/call-sheet {complexity}`, only that column). Optimistic like the decisions:
- * a refusal rolls the choice back and says so. The answer changes nothing else yet (routine
- * variants by complexity are a later slice). Selected = plum, never coral (CTA only).
+ * a refusal rolls the choice back and says so. The displayed value lives in the PARENT
+ * (iteration 3): „Super essenziell" folds the optional Neu-Schritte — display only, the
+ * routine variants stay a later slice. Selected = plum, never coral (CTA only).
  */
 function ComplexityChoice({
   enrollmentId,
-  initial,
+  value,
+  onValue,
+  writeTicket,
   locked,
 }: {
   enrollmentId: string
-  initial: DiscoveryCallSheetComplexity | null
+  value: DiscoveryCallSheetComplexity | null
+  /** Every displayed change — optimistic set and rollback — goes through the parent. */
+  onValue: (value: DiscoveryCallSheetComplexity | null) => void
+  /** Bumped by the parent's reseed: a rollback fires only for the still-current write. */
+  writeTicket: { current: number }
   locked: boolean
 }) {
-  const [value, setValue] = useState(initial)
-  const [syncedInitial, setSyncedInitial] = useState(initial)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  // A refresh carrying a different stored answer (another tab) re-seeds the choice.
-  if (initial !== syncedInitial) {
-    setSyncedInitial(initial)
-    setValue(initial)
-  }
 
   async function choose(next: DiscoveryCallSheetComplexity) {
     if (next === value || pending) return
     const previous = value
-    setValue(next)
+    const ticket = ++writeTicket.current
+    const rollback = () => {
+      // A reseed while the request ran carries the newer server value — keep it.
+      if (writeTicket.current === ticket) onValue(previous)
+    }
+    onValue(next)
     setPending(true)
     setError(null)
     try {
@@ -660,11 +735,11 @@ function ComplexityChoice({
       } | null
       const outcome = discoveryCallSheetWriteOutcome(response.ok, body)
       if (outcome.error) {
-        setValue(previous)
+        rollback()
         setError(outcome.error)
       }
     } catch {
-      setValue(previous)
+      rollback()
       setError(RUNSHEET_SAVE_COPY.failed)
     } finally {
       setPending(false)
@@ -712,6 +787,13 @@ function ComplexityChoice({
 }
 
 type BucketId = "behalten" | "weglassen" | "tauschenOderNeu"
+
+/** The fold row under „Super essenziell": how many optional Neu-Schritte are tucked away. */
+function foldedSwapLabel(count: number): string {
+  return count === 1
+    ? "1 optionaler Neu-Schritt eingeklappt (Super essenziell) — aufklappen"
+    : `${count} optionale Neu-Schritte eingeklappt (Super essenziell) — aufklappen`
+}
 
 function productCount(count: number): string {
   return `${count} ${count === 1 ? "Produkt" : "Produkte"}`
@@ -1071,6 +1153,7 @@ export function StepDecision({
           pill={cockpitVoice(option.verdictLabel)}
           // R19: the price where the catalog has one — no placeholder line otherwise.
           subtitle={option.priceLabel}
+          imageUrl={option.imageUrl}
           rows={option.propertyRows}
           // Her product's rows beside the option — „Bisheriges Produkt | Alternative | Ziel",
           // or (F1) „… | Empfohlenes Produkt | Ziel"; without her rows the option stands
@@ -1106,6 +1189,7 @@ function Choice({
   title,
   subtitle,
   pill,
+  imageUrl,
   rows,
   ownedRows,
   productHeader,
@@ -1118,6 +1202,8 @@ function Choice({
   title: string
   subtitle?: string | null
   pill?: string
+  /** The option's packshot; rendered only when present — no placeholder hole. */
+  imageUrl?: string | null
   rows?: DiscoveryPropertyRow[] | null
   ownedRows?: DiscoveryPropertyRow[] | null
   productHeader?: string
@@ -1138,6 +1224,7 @@ function Choice({
         onChange={() => onChoose(value)}
         className="mt-1 accent-[var(--brand-plum)]"
       />
+      {imageUrl ? <ScanProductThumb imageUrl={imageUrl} label={title} size={40} /> : null}
       <span className="min-w-0">
         <span className="text-sm font-semibold text-foreground">
           {title}

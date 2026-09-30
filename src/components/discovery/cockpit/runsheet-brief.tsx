@@ -60,11 +60,14 @@ const OPENING_SCRIPT = [
 ]
 
 const PROBLEM_TITLE = "Problem"
+/** One card (R30b): mechanik and Diagnose come from the same generation and read as one. */
+const PROBLEM_CARD_TITLE = "Problem & Diagnose"
 const MECHANIK_TITLE = "Problem kurz erklärt"
 const MECHANIK_HINT = "Mechanismus und typische Ursachen — allgemein, ohne Personenbezug."
 const DIAGNOSE_TITLE = "Diagnose"
+const DIAGNOSE_HINT = "Die konkrete Ursachenkette — entsteht zusammen mit der Erklärung oben."
 const DIAGNOSE_EMPTY = "Noch nicht erfasst — Diagnose vor dem Call eintragen."
-const QUIZ_SUMMARY = "Alle Quiz-Antworten"
+const QUIZ_SUMMARY = "Alle Antworten"
 const MASSNAHMEN_TITLE = "Maßnahmen"
 const HEBEL_TITLE = "Hebel"
 const HEBEL_EMPTY = "Noch keine Hebel erfasst."
@@ -91,18 +94,29 @@ const LIST_ADD = "Zeile hinzufügen"
 
 /**
  * The brief's line lists, edited in Phase 2 like the Hebel (consult-agent final review).
+ * Each carries a one-line purpose hint under its title (iteration 3, T1).
  * Ziel-Lücken are gone since v4 (R27): gaps are asked as Call-Fragen.
  */
 export const RUNSHEET_BRIEF_LISTS = [
-  { key: "callFragen", title: "Fragen für den Call", empty: "Keine Fragen erfasst." },
-  { key: "erwartungen", title: "Erwartungen", empty: "Keine Erwartungen erfasst." },
+  {
+    key: "callFragen",
+    title: "Fragen für den Call",
+    hint: "Antworten können den Plan ändern — im Call stellen.",
+    empty: "Keine Fragen erfasst.",
+  },
+  {
+    key: "erwartungen",
+    title: "Erwartungen",
+    hint: "Ehrliche Zeitfenster — so im Call aussprechen.",
+    empty: "Keine Erwartungen erfasst.",
+  },
 ] as const
 
 export type RunsheetBriefListKey = (typeof RUNSHEET_BRIEF_LISTS)[number]["key"]
 
 const SAVE_SCOPE = "Score, Brief und Gewohnheiten"
 const INVALID_BASELINE = "Nicht gespeichert — Score als ganze Zahl von 1 bis 10 eintragen."
-const INVALID_POINTS = "Nicht gespeichert — Hebel-Punkte als Zahl eintragen, z. B. 1,5."
+const INVALID_POINTS = "Nicht gespeichert — Hebel-Punkte als Zahl ab 0 eintragen, z. B. 1,5."
 
 export const RUNSHEET_GENERATE_COPY = {
   create: "Brief erstellen",
@@ -354,12 +368,13 @@ function habitDomId(id: string): string {
   return `runsheet-habit-${id.replace(/[^A-Za-z0-9_-]/g, "--")}`
 }
 
-/** „1,5" or „1.5" → 1.5; anything else → null. */
+/** „1,5" or „1.5" → 1.5; anything else → null. Negative points would let the ladder
+ * pierce its cap or sink a flat baseline, so they are refused like non-numbers. */
 export function parseRunsheetPoints(value: string): number | null {
   const normalized = value.trim().replace(",", ".")
   if (normalized === "") return null
   const parsed = Number(normalized)
-  return Number.isFinite(parsed) ? parsed : null
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : null
 }
 
 /** A whole score 1–10, else null. */
@@ -370,18 +385,54 @@ export function parseRunsheetBaseline(value: string): number | null {
 
 /**
  * The staircase: baseline, then the running total after each Hebel. The code does this
- * arithmetic, never the model, and caps at 9 (G3: a 10 is never held out). The last value is
- * the „Mit Plan" target.
+ * arithmetic, never the model, and caps at 9 (G3: a 10 is never held out). When the raw
+ * points overshoot the gap to the cap, they act as weights: every step is scaled down
+ * proportionally (never up — no invented impact), so the relative order holds and no
+ * step flattens to +0 at the cap (R32). Steps are shown at one decimal; the last value
+ * is the „Mit Plan" target, exactly min(cap, baseline + sum).
  */
 export function runsheetScoreSteps(
   baseline: number,
   points: ReadonlyArray<number | null>,
 ): number[] {
   // A baseline already above the cap stays what it is — the cap limits the promise, not
-  // the truth; the ladder then just never climbs further.
+  // the truth; the ladder then just never climbs further. Negative edits never count:
+  // the save refuses them, and the ladder must neither pierce the cap nor sink.
   const cap = Math.max(CONSULT_SCORE_TARGET_CAP, baseline)
+  const gap = cap - baseline
+  const weights = points.map((value) => Math.max(0, value ?? 0))
+  const sum = weights.reduce((total, value) => total + value, 0)
+  if (sum <= gap) {
+    const steps = [baseline]
+    let exact = baseline
+    for (const value of weights) {
+      exact += value
+      steps.push(Math.round(exact * 10) / 10)
+    }
+    return steps
+  }
+  // Overshoot: the gap is spread in tenths by largest remainder, so the relative order
+  // holds, a weighted Hebel keeps visible progress wherever a tenth is left for it, and
+  // the last step is exactly the cap. (Plain rounding of scaled sums could still flatten
+  // a positive step.)
+  const tenthsTotal = Math.round(gap * 10)
+  const quotas = weights.map((value) => (value / sum) * tenthsTotal)
+  const shares = quotas.map(Math.floor)
+  let rest = tenthsTotal - shares.reduce((total, value) => total + value, 0)
+  const byRemainder = quotas
+    .map((quota, index) => ({ index, fraction: quota - Math.floor(quota) }))
+    .sort((a, b) => b.fraction - a.fraction || a.index - b.index)
+  for (const { index } of byRemainder) {
+    if (rest <= 0) break
+    shares[index] += 1
+    rest -= 1
+  }
   const steps = [baseline]
-  for (const value of points) steps.push(Math.min(cap, steps.at(-1)! + (value ?? 0)))
+  let tenths = Math.round(baseline * 10)
+  for (const value of shares) {
+    tenths += value
+    steps.push(tenths / 10)
+  }
   return steps
 }
 
@@ -710,8 +761,9 @@ export function DiscoveryRunsheetBrief({
     )
   }
 
+  // R34: no sub-card frame — compact checkbox lines right under the Umgang group.
   const habitsBlock = (
-    <div className="flex flex-col gap-1.5 rounded-lg border bg-background/50 px-3 py-2">
+    <div className="flex flex-col gap-1.5">
       <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
         {HABITS_TITLE}
       </p>
@@ -862,37 +914,52 @@ export function DiscoveryRunsheetBrief({
           onConfirm={handleGenerateConfirm}
           onCancel={handleGenerateCancel}
         />
-        <RunsheetCard title={<label htmlFor="runsheet-mechanik">{MECHANIK_TITLE}</label>}>
-          <p className="text-[12px] text-muted-foreground">{MECHANIK_HINT}</p>
-          <textarea
-            id="runsheet-mechanik"
-            rows={3}
-            value={mechanik}
-            onChange={(event) => setMechanik(event.target.value)}
-            className="w-full rounded-lg border bg-background px-3 py-2 text-sm leading-6 text-foreground"
-          />
-        </RunsheetCard>
-
-        <RunsheetCard title={<label htmlFor="runsheet-diagnose">{DIAGNOSE_TITLE}</label>}>
-          {diagnose.trim() === "" ? (
-            <p className="text-[13px] font-bold text-[var(--status-pending-text)]">
-              {DIAGNOSE_EMPTY}
-            </p>
-          ) : null}
-          <textarea
-            id="runsheet-diagnose"
-            rows={4}
-            value={diagnose}
-            onChange={(event) => setDiagnose(event.target.value)}
-            className="w-full rounded-lg border bg-background px-3 py-2 text-sm leading-6 text-foreground"
-          />
-          {heatSection}
-          {quizSection ? (
+        <RunsheetCard title={PROBLEM_CARD_TITLE}>
+          <div className="flex flex-col gap-1">
+            <div>
+              <label htmlFor="runsheet-mechanik" className="text-[13px] font-bold text-foreground">
+                {MECHANIK_TITLE}
+              </label>
+              <p className="text-[12px] text-muted-foreground">{MECHANIK_HINT}</p>
+            </div>
+            <textarea
+              id="runsheet-mechanik"
+              rows={3}
+              value={mechanik}
+              onChange={(event) => setMechanik(event.target.value)}
+              className="w-full rounded-lg border bg-background px-3 py-2 text-sm leading-6 text-foreground"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <div>
+              <label htmlFor="runsheet-diagnose" className="text-[13px] font-bold text-foreground">
+                {DIAGNOSE_TITLE}
+              </label>
+              <p className="text-[12px] text-muted-foreground">{DIAGNOSE_HINT}</p>
+            </div>
+            {diagnose.trim() === "" ? (
+              <p className="text-[13px] font-bold text-[var(--status-pending-text)]">
+                {DIAGNOSE_EMPTY}
+              </p>
+            ) : null}
+            <textarea
+              id="runsheet-diagnose"
+              rows={4}
+              value={diagnose}
+              onChange={(event) => setDiagnose(event.target.value)}
+              className="w-full rounded-lg border bg-background px-3 py-2 text-sm leading-6 text-foreground"
+            />
+          </div>
+          {heatSection || quizSection ? (
             <details>
               <summary className="cursor-pointer text-[13px] font-bold text-[var(--brand-plum)]">
                 {QUIZ_SUMMARY}
               </summary>
-              <div className="mt-2">{quizSection}</div>
+              {/* R30: heat & styling reads like every other answer — inside the fold. */}
+              <div className="mt-2 flex flex-col gap-3">
+                {heatSection}
+                {quizSection}
+              </div>
             </details>
           ) : null}
         </RunsheetCard>
@@ -952,7 +1019,10 @@ export function DiscoveryRunsheetBrief({
         <RunsheetCard title={BRIEF_LISTS_TITLE}>
           {RUNSHEET_BRIEF_LISTS.map((list) => (
             <div key={list.key} className="flex flex-col gap-1.5">
-              <p className="text-[13px] font-bold text-foreground">{list.title}</p>
+              <div>
+                <p className="text-[13px] font-bold text-foreground">{list.title}</p>
+                <p className="text-[12px] text-muted-foreground">{list.hint}</p>
+              </div>
               {state.lists[list.key].length === 0 ? (
                 <p className="text-[13px] text-muted-foreground">{list.empty}</p>
               ) : (

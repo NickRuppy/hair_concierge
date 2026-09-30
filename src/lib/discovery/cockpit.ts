@@ -723,6 +723,8 @@ export type DiscoveryCockpitSwapOption = {
    * No retailer: the catalog carries no retailer field (only the affiliate link).
    */
   priceLabel: string | null
+  /** The catalog packshot (`products.image_url`), for the option's thumbnail; null = none. */
+  imageUrl: string | null
   origin: "alternative" | "ideal_recommendation"
   /**
    * Target-vs-product rows for a displayed alternative or (F1) the Idealplan's
@@ -919,6 +921,8 @@ function alternativeOption(
     ),
     verdictLabel: alternative.verdictLabel,
     priceLabel: alternative.priceLabel ?? null,
+    // Already loaded: every alternative's id is in the identity batch (iteration 3).
+    imageUrl: identities.get(alternative.productId)?.imageUrl ?? null,
     origin: "alternative",
     propertyRows,
   }
@@ -943,6 +947,7 @@ function idealRecommendationOption(
     // price-less card; the recurring price audit keeps it honest). Optional chaining:
     // a preview composed before commerce existed carries none.
     priceLabel: preview.commerce?.priceLabel ?? null,
+    imageUrl: identities.get(preview.productId)?.imageUrl ?? null,
     origin: "ideal_recommendation",
     // F1: the recommendation against her target — null when it could not be evaluated.
     propertyRows,

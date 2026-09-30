@@ -126,6 +126,7 @@ function recommendation(productId: string, label: string) {
     label,
     verdictLabel: "Passt",
     priceLabel: null,
+    imageUrl: null,
     origin: "ideal_recommendation" as const,
     propertyRows: null,
   }

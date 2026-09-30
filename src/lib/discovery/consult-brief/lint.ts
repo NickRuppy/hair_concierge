@@ -24,6 +24,7 @@ export type ConsultLintRule =
   | "verdict_contradiction"
   | "unknown_product"
   | "unknown_swap_key"
+  | "swap_reason_priority"
   | "boundary_line_missing"
 
 export type ConsultGuardrail = "G1" | "G1a" | "G1b" | "G1c" | "G2" | "G3" | "G4" | "G5" | "G6"
@@ -543,7 +544,9 @@ const KEEP_CUE = words(
  */
 const PASST_WINDOW_TOKEN =
   "(?!(?:und|aber|sondern|oder|doch|gut|super|perfekt|prima|toll|genau|bestens|ideal)(?!\\p{L}))[^\\s.,;:!?()–—-]+"
-const PASST_NEGATION_TAIL = `(?:\\s+${PASST_WINDOW_TOKEN}){0,4}\\s+nicht(?!\\p{L})(?!\\s+(?:nur|selten|zuletzt|ohne)(?!\\p{L}))`
+// One connective directly after „passt" is still the same negation („passt aber nicht");
+// the window's conjunction ban only guards against praise carried across clauses.
+const PASST_NEGATION_TAIL = `(?:\\s+(?:aber|jedoch|doch|allerdings)(?!\\p{L}))?(?:\\s+${PASST_WINDOW_TOKEN}){0,4}\\s+nicht(?!\\p{L})(?!\\s+(?:nur|selten|zuletzt|ohne)(?!\\p{L}))`
 const PASST_NEGATED = `passt${PASST_NEGATION_TAIL}`
 
 /** Praise, incl. a bare „passt" (a negated „passt … nicht" excluded). */
@@ -662,9 +665,22 @@ function productMentions(
   })
 }
 
+/**
+ * „das gewählte/empfohlene/neue Shampoo" names the plan's pick, never her product — a bare
+ * category with one of these attributes is cut out before the category fallback matches
+ * (iteration 4: the deepened technique notes talk about the incoming product this way).
+ */
+const RECOMMENDED_ATTRIBUTE = "(?<!\\p{L})(?:gewählte|empfohlene|neue|künftige)\\p{L}*"
+
 function mentioned(text: string, mention: ProductMention): boolean {
   const rest = mention.others ? text.replace(mention.others, " ") : text
-  return mention.own.test(rest) || (mention.category?.test(rest) ?? false)
+  if (mention.own.test(rest)) return true
+  if (!mention.category) return false
+  const withoutPicks = rest.replace(
+    new RegExp(`${RECOMMENDED_ATTRIBUTE}\\s+(?:${mention.category.source})`, "giu"),
+    " ",
+  )
+  return mention.category.test(withoutPicks)
 }
 
 // --- the lint ------------------------------------------------------------------------------------
@@ -694,6 +710,17 @@ function squash(text: string): string {
   return normalizeConsultText(text).replace(/\s+/g, " ").trim()
 }
 
+/**
+ * Category-priority talk inside a swap reason (iteration 4, R34-adjacent): a reason argues
+ * the proposed move behind its key, never where the category ranks — that belongs in hebel
+ * or callFragen, and next to the swap UI it reads as second-guessing the engine's decision.
+ * Deliberately narrow (bare „zuerst" stays legal: „zuerst aufbrauchen" is sequencing, not
+ * category priority).
+ */
+const SWAP_REASON_PRIORITY = words(
+  "nachrangig|erste[rnm]? schritt|zweite[rnm]? schritt|nicht zuerst",
+)
+
 export function lintConsultBrief(
   brief: DiscoveryCallSheetBriefSections,
   input: ConsultInput,
@@ -722,6 +749,20 @@ export function lintConsultBrief(
           location,
           excerpt: match[0],
           detail: entry.id,
+        })
+      }
+    }
+
+    // Priority talk in a swap reason — the prompt forbids it, this pins it.
+    if (swapKey !== undefined) {
+      const match = SWAP_REASON_PRIORITY.exec(text)
+      if (match) {
+        findings.push({
+          rule: "swap_reason_priority",
+          guardrail: "G4",
+          location,
+          excerpt:
+            sentences(text).find((sentence) => SWAP_REASON_PRIORITY.test(sentence)) ?? match[0],
         })
       }
     }
