@@ -8,12 +8,15 @@ import {
 } from "@/lib/user-facts/account-link"
 import { deriveDiagnosticsColumns } from "@/lib/user-facts/derive-legacy-columns"
 import {
+  DIAGNOSTICS_ANSWER_GROUPS,
+  FIELDS_BY_ANSWER_GROUP,
   PROFILE_SOURCE_LEAD_ID,
   ProfileFactsError,
   buildHandEditFacts,
   mergeDiagnosticsPatch,
   sameFactValue,
   validatedDiagnosticsWrite,
+  type DiagnosticsAnswerGroup,
   type HandEditFactsWrite,
   type HandEditField,
   type HandEditValues,
@@ -48,34 +51,13 @@ import {
  *    completeness defaults, `legacy_lead` provenance, a stored quiz_context cleared (F4).
  */
 
-/** The ten regular iOS question groups (`mobileEditQuestions`, `missingProfileQuestions`). */
-export const MOBILE_ANSWER_GROUPS = [
-  "structure",
-  "thickness",
-  "density",
-  "hair_length",
-  "fingertest",
-  "pulltest",
-  "treatment",
-  "scalp_type",
-  "concerns",
-  "goals",
-] as const
-export type MobileAnswerGroup = (typeof MOBILE_ANSWER_GROUPS)[number]
+/** The ten regular iOS question groups (`mobileEditQuestions`, `missingProfileQuestions`) — the
+ * shared hand-edit groups (`src/lib/user-facts/hand-edit.ts`). */
+export const MOBILE_ANSWER_GROUPS = DIAGNOSTICS_ANSWER_GROUPS
+export type MobileAnswerGroup = DiagnosticsAnswerGroup
 
 /** Which native diagnostics fields each question group answers. */
-const FIELDS_BY_GROUP: Record<MobileAnswerGroup, readonly HandEditField[]> = {
-  structure: ["texture"],
-  thickness: ["thickness"],
-  density: ["density"],
-  hair_length: ["hairLength"],
-  fingertest: ["hairSurface"],
-  pulltest: ["elasticResponse"],
-  treatment: ["chemicalTreatments"],
-  scalp_type: ["scalpOiliness", "scalpConcerns"],
-  concerns: ["currentConcerns", "primaryConcern", "currentConcernsOtherText"],
-  goals: ["goals", "volumeDirection"],
-}
+const FIELDS_BY_GROUP = FIELDS_BY_ANSWER_GROUP
 
 export { PROFILE_SOURCE_LEAD_ID }
 

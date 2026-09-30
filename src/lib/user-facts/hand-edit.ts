@@ -39,6 +39,36 @@ export const PROFILE_SOURCE_LEAD_ID = "profile"
 
 export type HandEditField = Exclude<keyof DiagnosticsV1, "source">
 
+/** The ten answer groups an editor names (the iOS edit's question groups, `mobileEditQuestions`;
+ * the web editors name whole groups too) and the native diagnostics fields each one answers. The
+ * one-time backfill decides "edited by hand" per group with the same table (task 7). */
+export const DIAGNOSTICS_ANSWER_GROUPS = [
+  "structure",
+  "thickness",
+  "density",
+  "hair_length",
+  "fingertest",
+  "pulltest",
+  "treatment",
+  "scalp_type",
+  "concerns",
+  "goals",
+] as const
+export type DiagnosticsAnswerGroup = (typeof DIAGNOSTICS_ANSWER_GROUPS)[number]
+
+export const FIELDS_BY_ANSWER_GROUP: Record<DiagnosticsAnswerGroup, readonly HandEditField[]> = {
+  structure: ["texture"],
+  thickness: ["thickness"],
+  density: ["density"],
+  hair_length: ["hairLength"],
+  fingertest: ["hairSurface"],
+  pulltest: ["elasticResponse"],
+  treatment: ["chemicalTreatments"],
+  scalp_type: ["scalpOiliness", "scalpConcerns"],
+  concerns: ["currentConcerns", "primaryConcern", "currentConcernsOtherText"],
+  goals: ["goals", "volumeDirection"],
+}
+
 /** The fields an edit names: a value, or `null` to clear the field. Unnamed = unchanged. */
 export type HandEditValues = Partial<Record<HandEditField, unknown>>
 
