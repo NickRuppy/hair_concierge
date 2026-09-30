@@ -1011,6 +1011,108 @@ test("--catch-up (I2): existing user fields and editedAt carry over; only the co
 })
 
 // ---------------------------------------------------------------------------
+// Fix round 6 (I3): --catch-up when the winning quiz changed brings quiz_context along
+// ---------------------------------------------------------------------------
+
+/** A row the backfill wrote from ARTIFACT (diagnostics + quiz_context), as `--catch-up` loads it. */
+function backfilledFromArtifact(overrides: Partial<LoadedUserRow>): LoadedUserRow {
+  const first = plan({ artifact: ARTIFACT, columns: PAID_COLUMNS })
+  const diagnostics = documentOf(first)
+  const context = first.writes.find((write) => write.domain === "quiz_context")!
+  return row({
+    factsRevision: 2,
+    factsProvenance: {
+      diagnostics: diagnosticsWrite(first).provenance as DomainProvenance,
+      quiz_context: context.provenance as DomainProvenance,
+    },
+    storedDomains: { diagnostics: true, care_habits: false, quiz_context: true },
+    storedDiagnostics: diagnostics,
+    storedQuizContext: context.patch as QuizContextV1,
+    artifact: ARTIFACT,
+    columns: { ...EMPTY, ...deriveDiagnosticsColumns(diagnostics) } as LegacyProfileColumns,
+    ...overrides,
+  })
+}
+
+const LEAD_B = { ...LEAD, id: "lead-b", createdAt: "2026-09-10T09:00:00.000Z" }
+
+test("I3: --catch-up — a newer legacy lead linked through the legacy columns wins, and the artifact's quiz_context is cleared", () => {
+  // Main's legacy link of lead B wrote LEAD_COLUMNS directly between --apply and the catch-up.
+  const planned = planUserFactsBackfill(
+    backfilledFromArtifact({ legacyLead: LEAD_B, columns: LEAD_COLUMNS }),
+    { now: "2026-10-02T12:00:00.000Z", catchUp: true },
+  )
+  const write = diagnosticsWrite(planned)
+  assert.deepEqual(write.provenance.source, { kind: "legacy_lead", id: "lead-b" })
+  const context = planned.writes.find((entry) => entry.domain === "quiz_context")
+  assert.ok(context, "the context domain is planned alongside diagnostics")
+  assert.equal(
+    Object.values(context.patch).every((value) => value === null),
+    true,
+    "a legacy lead carries no context: every field cleared",
+  )
+  assert.ok(Object.keys(context.patch).includes("routineClarity"))
+  assert.deepEqual(context.provenance.source, { kind: "legacy_lead", id: "lead-b" })
+  assert.ok(
+    planned.notes.some((note) =>
+      note.startsWith(
+        "quiz_context: catch-up — legacy lead lead-b (2026-09-10T09:00:00.000Z) now wins",
+      ),
+    ),
+    planned.notes.join("\n"),
+  )
+})
+
+test("I3: --catch-up — a newer artifact replaces the stored quiz_context with its own", () => {
+  const envelope = {
+    ...V3_ENVELOPE,
+    answers: { ...V3_ENVELOPE.answers, thickness: "coarse", routineStyle: "flexible_versatile" },
+  }
+  const newer = {
+    id: "artifact-2",
+    leadId: "lead-pp-2",
+    quizAnswers: envelope,
+    createdAt: "2026-09-10T09:00:00.000Z",
+  }
+  const planned = planUserFactsBackfill(
+    backfilledFromArtifact({
+      artifact: newer,
+      columns: {
+        ...EMPTY,
+        ...(oldWriterColumnsForArtifact(newer) as Partial<LegacyProfileColumns>),
+      },
+    }),
+    { now: "2026-10-02T12:00:00.000Z", catchUp: true },
+  )
+  assert.deepEqual(diagnosticsWrite(planned).provenance.source, {
+    kind: "personal_plan_artifact",
+    id: "artifact-2",
+  })
+  const context = planned.writes.find((entry) => entry.domain === "quiz_context")
+  assert.ok(context, "the context domain is planned alongside diagnostics")
+  assert.equal((context.patch as QuizContextV1).routineStyle, "flexible_versatile")
+  assert.deepEqual(context.provenance.source, { kind: "personal_plan_artifact", id: "artifact-2" })
+  assert.equal(
+    planned.skips.some((skip) => skip.startsWith("quiz_context")),
+    false,
+    planned.skips.join("\n"),
+  )
+})
+
+test("I3: --catch-up with an unchanged winner writes no quiz_context", () => {
+  const stored = backfilledFromArtifact({})
+  const planned = planUserFactsBackfill(
+    { ...stored, columns: { ...stored.columns, thickness: "coarse" } },
+    { now: "2026-10-02T12:00:00.000Z", catchUp: true },
+  )
+  assert.ok(diagnosticsWrite(planned), "diagnostics is re-planned")
+  assert.equal(
+    planned.writes.some((entry) => entry.domain === "quiz_context"),
+    false,
+  )
+})
+
+// ---------------------------------------------------------------------------
 // Stage 1 for a hand-edited backfilled row
 // ---------------------------------------------------------------------------
 
@@ -1571,6 +1673,88 @@ test("fix round 6 (I1) on PGlite: a legacy write between the backfill's load and
     (written.facts_provenance as { diagnostics: DomainProvenance }).diagnostics.fields,
     { thickness: "user" },
   )
+})
+
+test("fix round 6 (I3) on PGlite: backfill artifact A, link a newer lead B through the legacy columns, --catch-up -> B's diagnostics and A's context cleared", async (t) => {
+  const pg = await mobileFactsDatabase(t, { lock: false })
+  await pg.exec(ARTIFACT_STUB)
+  const user = id(8, 3)
+  await insertProfile(pg, user)
+  await pg.query(
+    `INSERT INTO public.personal_plan_prepared_artifacts
+       (id, lead_id, user_id, status, created_at, quiz_answers, canonical_profile)
+     VALUES ($1, $2, $3, 'attached', $4, $5, $6)`,
+    [
+      id(9, 5),
+      id(9, 6),
+      user,
+      ARTIFACT.createdAt,
+      JSON.stringify(V3_ENVELOPE),
+      JSON.stringify({ modelVersion: "personal_plan_canonical_v1", ...adaptedCanonical() }),
+    ],
+  )
+  await seedLegacyRow(pg, user, PAID_COLUMNS)
+  const client = pgliteRestClient(pg)
+  const applied = await runUserFactsBackfill(["--apply"], {
+    supabase: client as never,
+    now: NOW,
+    log: () => {},
+  })
+  assert.equal(applied.failures.length, 0, JSON.stringify(applied.failures))
+  assert.ok((await readRow(pg, user))!.quiz_context, "baseline: A's context stored")
+
+  // Main's legacy link of lead B (taken after A), still deployed: it writes the columns directly.
+  const leadB = id(4, 7)
+  await pg.query(
+    `INSERT INTO public.leads (id, email, quiz_answers, quiz_kind, status, user_id, created_at)
+     VALUES ($1, 'lead@example.test', $2, 'legacy', 'linked', $3, '2026-09-10T09:00:00.000Z')`,
+    [leadB, JSON.stringify(LEAD_ANSWERS), user],
+  )
+  await pg.query(
+    `UPDATE public.hair_profiles
+        SET hair_texture = 'curly', thickness = 'coarse', density = 'high', hair_length = 'medium',
+            cuticle_condition = 'rough', protein_moisture_balance = 'snaps',
+            chemical_treatment = '{natural}', scalp_type = 'dry', scalp_condition = 'dry_flakes',
+            concerns = '{dryness,tangling}', primary_concern = 'tangling',
+            goals = '{moisture,curl_definition}', desired_volume = NULL
+      WHERE user_id = $1`,
+    [user],
+  )
+
+  const lines: string[] = []
+  const catchUp = await runUserFactsBackfill(["--apply", "--catch-up"], {
+    supabase: client as never,
+    now: "2026-10-02T12:00:00.000Z",
+    log: (line) => lines.push(line),
+  })
+  assert.equal(catchUp.failures.length, 0, JSON.stringify(catchUp.failures))
+  assert.deepEqual(catchUp.writesByDomain, { diagnostics: 1, quiz_context: 1 })
+  assert.ok(
+    lines.some((line) =>
+      line.includes(
+        `quiz_context: catch-up — legacy lead ${leadB} (2026-09-10T09:00:00.000Z) now wins over the stored artifact`,
+      ),
+    ),
+    lines.join("\n"),
+  )
+  const after = (await readRow(pg, user))!
+  const document = after.diagnostics as DiagnosticsV1
+  assert.equal(document.source.kind, "legacy_quiz")
+  assert.equal(document.source.leadId, leadB)
+  assert.equal(after.hair_texture, "curly")
+  assert.deepEqual(after.quiz_context, {}, "A's quiz context is cleared")
+  assert.deepEqual(
+    (after.facts_provenance as { quiz_context: DomainProvenance }).quiz_context.source,
+    { kind: "legacy_lead", id: leadB },
+  )
+
+  // Idempotent: the next catch-up finds nothing to do.
+  const again = await runUserFactsBackfill(["--apply", "--catch-up"], {
+    supabase: client as never,
+    now: "2026-10-03T12:00:00.000Z",
+    log: () => {},
+  })
+  assert.equal(again.writesPlanned, 0)
 })
 
 /** What the paid preparation stored as `canonical_profile`: the offer adapter over the answers. */

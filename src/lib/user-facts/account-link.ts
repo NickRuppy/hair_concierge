@@ -19,6 +19,8 @@ import {
   QUIZ_CONTEXT_SCHEMA_VERSION,
   diagnosticsV1Schema,
   quizContextV1Schema,
+  sameFactsDocument,
+  sameQuizSourceIdentity,
   type DiagnosticsPatch,
   type DiagnosticsV1,
   type DomainProvenance,
@@ -275,11 +277,11 @@ export async function writeAccountLinkFacts(
     // Idempotent: nothing to bring is zero writes.
     if (
       facts?.diagnostics &&
-      sameQuizSource(facts.diagnostics.source, projection.diagnostics.source)
+      sameQuizSourceIdentity(facts.diagnostics.source, projection.diagnostics.source)
     ) {
       const target =
         projection.quizContext ?? (hasQuizContextAnswers(facts.quizContext) ? {} : null)
-      if (!target || sameDocument(facts.quizContext, target)) return "preserved"
+      if (!target || sameFactsDocument(facts.quizContext, target)) return "preserved"
       await replaceQuizContext(admin, {
         userId,
         quizContext: target,
@@ -362,36 +364,6 @@ export async function writeAccountLinkFacts(
 
   // Unreachable: the loop either returns or throws on its second pass.
   throw new Error("writeAccountLinkFacts: exhausted its revision_conflict retry")
-}
-
-/** Fix round 6 (I2): the same quiz — same kind, same lead / artifact, same taken time. */
-function sameQuizSource(
-  stored: DiagnosticsV1["source"],
-  incoming: DiagnosticsV1["source"],
-): boolean {
-  if (stored.kind === "legacy_columns" || incoming.kind === "legacy_columns") return false
-  return (
-    stored.kind === incoming.kind &&
-    stored.leadId === incoming.leadId &&
-    stored.artifactId === incoming.artifactId &&
-    stored.takenAt === incoming.takenAt
-  )
-}
-
-/** Deep equality independent of object key order (jsonb reorders keys); array order counts. */
-function sameDocument(left: unknown, right: unknown): boolean {
-  const canonical = (value: unknown): unknown =>
-    Array.isArray(value)
-      ? value.map(canonical)
-      : value && typeof value === "object"
-        ? Object.fromEntries(
-            Object.entries(value as Record<string, unknown>)
-              .filter(([, entry]) => entry !== undefined)
-              .sort(([a], [b]) => a.localeCompare(b))
-              .map(([key, entry]) => [key, canonical(entry)]),
-          )
-        : value
-  return JSON.stringify(canonical(left ?? null)) === JSON.stringify(canonical(right ?? null))
 }
 
 /** Whether a stored diagnostics source is the quiz this link wrote. */

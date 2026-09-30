@@ -20,8 +20,10 @@ import {
   careHabitsV1Schema,
   diagnosticsV1Schema,
   factsProvenanceSchema,
+  quizContextV1Schema,
   type CareHabitsV1,
   type DiagnosticsV1,
+  type QuizContextV1,
 } from "../../src/lib/user-facts/schema"
 import { saveUserFacts } from "../../src/lib/user-facts/save"
 import type { CareConversionRule } from "../../src/lib/user-facts/backfill/legacy-columns-to-care-habits"
@@ -196,6 +198,12 @@ function readStoredDiagnostics(value: unknown): DiagnosticsV1 | null {
 function readStoredCareHabits(value: unknown): CareHabitsV1 | null {
   if (value === null || value === undefined) return null
   const parsed = careHabitsV1Schema.safeParse(value)
+  return parsed.success ? parsed.data : null
+}
+
+function readStoredQuizContext(value: unknown): QuizContextV1 | null {
+  if (value === null || value === undefined) return null
+  const parsed = quizContextV1Schema.safeParse(value)
   return parsed.success ? parsed.data : null
 }
 
@@ -413,6 +421,7 @@ async function loadPage(
       },
       storedDiagnostics: readStoredDiagnostics(profile.diagnostics),
       storedCareHabits: readStoredCareHabits(profile.care_habits),
+      storedQuizContext: readStoredQuizContext(profile.quiz_context),
       artifact:
         artifactRow && artifactId && artifactLeadId
           ? {

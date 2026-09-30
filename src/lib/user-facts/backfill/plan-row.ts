@@ -14,6 +14,9 @@ import {
   QUIZ_CONTEXT_SCHEMA_VERSION,
   careHabitsV1Schema,
   diagnosticsV1Schema,
+  quizContextV1Schema,
+  sameFactsDocument,
+  sameQuizSourceIdentity,
   toTakenAt,
   type CareHabitsPatch,
   type CareHabitsV1,
@@ -23,6 +26,7 @@ import {
   type FactsProvenance,
   type FieldProvenanceValue,
   type QuizContextPatch,
+  type QuizContextV1,
 } from "../schema"
 import {
   sameColumn,
@@ -105,6 +109,10 @@ export type LoadedUserRow = {
    * writer changed the columns after the backfill wrote its facts. */
   storedDiagnostics: DiagnosticsV1 | null
   storedCareHabits: CareHabitsV1 | null
+  /** The stored quiz_context (`null`: none, or unreadable — `storedDomains` tells them apart).
+   * Only `--catch-up` reads it: when the winning quiz changed, the context follows it (fix round
+   * 6, I3). */
+  storedQuizContext?: QuizContextV1 | null
   artifact: {
     id: string
     leadId: string
@@ -636,7 +644,20 @@ function planDiagnosticsAndContext(
     plan.skips.push(diagnosticsGate.reason)
   }
 
-  if (selected.quizContext && Object.keys(selected.quizContext).length > 0) {
+  // Fix round 6 (I3): `--catch-up` re-plans diagnostics from a DIFFERENT quiz than the stored
+  // document's (one linked through the legacy columns between --apply and the catch-up). The
+  // context follows it, by the live link's rule: an artifact brings its own, a legacy lead
+  // clears one that holds answers. The ordinary gate would refuse the domain (it owns no legacy
+  // columns), so this case is decided here.
+  const winnerChanged =
+    options.catchUp &&
+    diagnosticsGate.plan &&
+    row.storedDiagnostics !== null &&
+    selected.sourceKind !== "columns" &&
+    !sameQuizSourceIdentity(row.storedDiagnostics.source, selected.diagnostics.source)
+  if (winnerChanged) {
+    planCatchUpQuizContext(row, selected, sourceKind, options, plan)
+  } else if (selected.quizContext && Object.keys(selected.quizContext).length > 0) {
     if (quizContextGate.plan) {
       const patch: QuizContextPatch = { ...selected.quizContext }
       plan.writes.push({
@@ -653,6 +674,71 @@ function planDiagnosticsAndContext(
       plan.skips.push(quizContextGate.reason)
     }
   }
+}
+
+const QUIZ_CONTEXT_FIELDS = Object.keys(quizContextV1Schema.shape)
+
+/** The label the report uses for a stored diagnostics source. */
+function storedSourceLabel(source: DiagnosticsV1["source"]): string {
+  if (source.kind === "legacy_columns") return "legacy columns"
+  const id = source.artifactId ? `artifact ${source.artifactId}` : `legacy lead ${source.leadId}`
+  return source.takenAt ? `${id} (${source.takenAt})` : id
+}
+
+/** Fix round 6 (I3): the quiz_context write of a `--catch-up` whose winning quiz changed. */
+function planCatchUpQuizContext(
+  row: LoadedUserRow,
+  selected: SelectedDiagnosticsSource,
+  sourceKind: "personal_plan_artifact" | "legacy_lead" | "legacy_columns",
+  options: PlanUserFactsBackfillOptions,
+  plan: UserFactsBackfillPlan,
+): void {
+  const taken =
+    "takenAt" in selected.diagnostics.source ? selected.diagnostics.source.takenAt : undefined
+  const winner = `${selected.sourceKind === "artifact" ? "artifact" : "legacy lead"} ${selected.sourceId}${taken ? ` (${taken})` : ""}`
+  const lead = `quiz_context: catch-up — ${winner} now wins over the stored ${storedSourceLabel(row.storedDiagnostics!.source)}`
+  const provenance = row.factsProvenance.quiz_context
+  if (provenance && !BACKFILL_SOURCE_KINDS.has(provenance.source.kind)) {
+    plan.skips.push(
+      `${lead}, but quiz_context was last written by ${provenance.source.kind} (a live writer; never overwritten by the backfill)`,
+    )
+    return
+  }
+  const stored = row.storedQuizContext ?? null
+  if (row.storedDomains.quiz_context && stored === null) {
+    plan.skips.push(`${lead}, but the stored quiz_context is unreadable; left for review`)
+    return
+  }
+  const storedHasAnswers = stored !== null && Object.keys(stored).length > 0
+  // The live link's rule (`writeAccountLinkFacts`): an artifact's own context; a legacy lead
+  // carries none and clears one that holds answers.
+  const target: QuizContextV1 | null =
+    selected.sourceKind === "artifact" ? (selected.quizContext ?? {}) : storedHasAnswers ? {} : null
+  // Already in that state: nothing to write (a rerun is idempotent).
+  if (target === null) return
+  if (stored !== null ? sameFactsDocument(stored, target) : Object.keys(target).length === 0) return
+  const patch: Record<string, unknown> = {}
+  for (const field of QUIZ_CONTEXT_FIELDS) patch[field] = null
+  Object.assign(patch, target)
+  plan.writes.push({
+    domain: "quiz_context",
+    patch: patch as QuizContextPatch,
+    provenance: {
+      source: { kind: sourceKind, ...(selected.sourceId ? { id: selected.sourceId } : {}) },
+      schemaVersion: QUIZ_CONTEXT_SCHEMA_VERSION,
+      at: options.now,
+    },
+    fieldCount: countFields(patch),
+    detail:
+      selected.sourceKind === "artifact"
+        ? "catch-up: the new winner's context replaces the stored one"
+        : "catch-up: a legacy lead carries no context; the stored one is cleared",
+  })
+  plan.notes.push(
+    selected.sourceKind === "artifact"
+      ? `${lead}; its quiz context replaces the stored one`
+      : `${lead}; a legacy lead carries no quiz context, the stored one is cleared`,
+  )
 }
 
 /** Care habits go through the one conversion, with the product owner's four decisions

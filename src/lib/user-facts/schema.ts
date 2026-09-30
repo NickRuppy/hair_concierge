@@ -136,6 +136,36 @@ export const diagnosticsSourceSchema = z.discriminatedUnion("kind", [
 ])
 export type DiagnosticsSource = z.infer<typeof diagnosticsSourceSchema>
 
+/** Whether two diagnostics sources are the SAME quiz: same kind, same lead / artifact, same taken
+ * time (fix round 6, I2/I3 — one rule for the account link's resume and the backfill's
+ * catch-up). A `legacy_columns` snapshot is no quiz and never matches. */
+export function sameQuizSourceIdentity(left: DiagnosticsSource, right: DiagnosticsSource): boolean {
+  if (left.kind === "legacy_columns" || right.kind === "legacy_columns") return false
+  return (
+    left.kind === right.kind &&
+    left.leadId === right.leadId &&
+    left.artifactId === right.artifactId &&
+    left.takenAt === right.takenAt
+  )
+}
+
+/** Deep equality of two stored fact documents, independent of object key order (jsonb reorders
+ * keys); array order counts and an `undefined` value is an absent key. */
+export function sameFactsDocument(left: unknown, right: unknown): boolean {
+  const canonical = (value: unknown): unknown =>
+    Array.isArray(value)
+      ? value.map(canonical)
+      : value && typeof value === "object"
+        ? Object.fromEntries(
+            Object.entries(value as Record<string, unknown>)
+              .filter(([, entry]) => entry !== undefined)
+              .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+              .map(([key, entry]) => [key, canonical(entry)]),
+          )
+        : value
+  return JSON.stringify(canonical(left ?? null)) === JSON.stringify(canonical(right ?? null))
+}
+
 // ---------------------------------------------------------------------------
 // DiagnosticsV1
 // ---------------------------------------------------------------------------
