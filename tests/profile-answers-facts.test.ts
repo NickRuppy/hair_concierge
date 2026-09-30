@@ -378,6 +378,23 @@ test("adversarial: edit on a backfilled legacy_columns profile gets a quiz sourc
   assert.deepEqual(write.columns, deriveDiagnosticsColumns(merged))
 })
 
+test("fix round 1 (F): a re-sourced document's Stage-1 envelope never carries an assumed default", () => {
+  const doc = quizDoc({ source: { kind: "legacy_columns", version: 1, raw: {} } })
+  const edit = (fields: Record<string, "assumed" | "user">) =>
+    buildProfileAnswersFacts({
+      answers: parse({ goals: ["shine", "scalp_balance"] }),
+      stored: stored(doc, fields),
+      row: {},
+      now: NOW,
+    }).diagnostics.patch.source as { kind: string; raw: unknown }
+  // Baseline: complete real answers emit the edited envelope.
+  assert.ok(edit({ hairLength: "user" }).raw)
+  // The stored hair length is only the completeness default: no envelope may carry it.
+  const source = edit({ hairLength: "assumed" })
+  assert.equal(source.kind, "legacy_quiz")
+  assert.equal(source.raw, null)
+})
+
 test("adversarial: an edit that changes nothing is not an edit (no editedAt, no markers, stored provenance kept)", () => {
   const facts = stored(quizDoc(), { density: "assumed" })
   const write = buildProfileAnswersFacts({

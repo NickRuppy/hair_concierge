@@ -151,5 +151,6 @@ export function toStage1SourceFromFacts(facts: UserFacts): SupportedStage1Source
     diagnostics: facts.diagnostics,
     quizContext: facts.quizContext,
     editedAt: facts.provenance.diagnostics?.editedAt,
+    fields: facts.provenance.diagnostics?.fields,
   }) as SupportedStage1Source
 }

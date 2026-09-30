@@ -111,8 +111,12 @@ export function buildHandEditFacts(input: {
    * in full under the edit, so a partial edit never erases the columns it did not name. */
   base?: DiagnosticsV1 | null
   /** The source written when the row has no document or a `legacy_columns` one. May use the
-   * merged document the edit produces (without a source). */
-  newSource: (merged: Omit<DiagnosticsV1, "source">) => DiagnosticsSource
+   * merged document the edit produces (without a source) and the per-field provenance it will
+   * carry (an `assumed` default must never reach a Stage-1 envelope). */
+  newSource: (
+    merged: Omit<DiagnosticsV1, "source">,
+    fields: Readonly<Record<string, FieldProvenanceValue>>,
+  ) => DiagnosticsSource
   now: string
 }): HandEditFactsWrite {
   const stored = input.stored
@@ -157,6 +161,12 @@ export function buildHandEditFacts(input: {
     }
   }
 
+  const fields: Record<string, FieldProvenanceValue> = {}
+  for (const [field, value] of Object.entries(patch)) {
+    if (field === "source" || value === null) continue
+    if (!sameFactValue(reference?.[field as HandEditField], value)) fields[field] = "user"
+  }
+
   if (!stored || stored.source.kind === "legacy_columns") {
     // The merge needs a source to validate; the placeholder never leaves this block.
     const merged: Partial<DiagnosticsV1> = mergeDiagnosticsPatch(stored, {
@@ -164,13 +174,16 @@ export function buildHandEditFacts(input: {
       source: PLACEHOLDER_SOURCE,
     })
     delete merged.source
-    patch.source = input.newSource(merged as Omit<DiagnosticsV1, "source">)
-  }
-
-  const fields: Record<string, FieldProvenanceValue> = {}
-  for (const [field, value] of Object.entries(patch)) {
-    if (field === "source" || value === null) continue
-    if (!sameFactValue(reference?.[field as HandEditField], value)) fields[field] = "user"
+    // The field markers the door will store: the stored ones, minus cleared fields, plus this
+    // edit's (its merge rule, `user_facts_save_v1` step 6).
+    const mergedFields: Record<string, FieldProvenanceValue> = {
+      ...(input.storedProvenance?.fields ?? {}),
+      ...fields,
+    }
+    for (const [field, value] of Object.entries(patch)) {
+      if (value === null) delete mergedFields[field]
+    }
+    patch.source = input.newSource(merged as Omit<DiagnosticsV1, "source">, mergedFields)
   }
   const diagnostics = validatedDiagnosticsWrite(patch as DiagnosticsPatch, {
     source: { kind: "profile_editor" },

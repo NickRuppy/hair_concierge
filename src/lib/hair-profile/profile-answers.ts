@@ -13,6 +13,7 @@ import {
   UserFactsIncompleteError,
   type DiagnosticsSource,
   type DiagnosticsV1,
+  type FieldProvenanceValue,
 } from "@/lib/user-facts/schema"
 import { toStage1Source } from "@/lib/user-facts/stage1-source"
 
@@ -161,16 +162,18 @@ export function buildProfileAnswersFacts(input: {
     stored,
     storedProvenance: input.stored?.provenance.diagnostics ?? null,
     base: baseDocument,
-    newSource: (merged) => profileEditorSource(merged, input.now),
+    newSource: (merged, fields) => profileEditorSource(merged, fields, input.now),
     now: input.now,
   })
 }
 
 /** The source of a document the web editor creates (or re-sources from `legacy_columns`): a
  * `legacy_quiz` envelope under the profile placeholder lead, like the iOS edit's. `raw` is the
- * Stage-1 source the edited document emits when it is complete, `null` while it is not. */
+ * Stage-1 source the edited document emits when it is complete with real answers, `null` while
+ * it is not (a field still only `assumed` counts as missing). */
 function profileEditorSource(
   merged: Omit<DiagnosticsV1, "source">,
+  fields: Readonly<Record<string, FieldProvenanceValue>>,
   now: string,
 ): DiagnosticsSource {
   const source = {
@@ -182,6 +185,8 @@ function profileEditorSource(
     const raw = toStage1Source({
       diagnostics: { ...merged, source: { ...source, raw: null } },
       editedAt: now,
+      // A completeness default is no answer: the envelope stays null until it is a real one.
+      fields,
     })
     return { ...source, raw }
   } catch (error) {

@@ -9,7 +9,12 @@ import {
   toStage1SourceFromFacts,
   type UserFacts,
 } from "../src/lib/user-facts/read"
-import type { CareHabitsV1, DiagnosticsV1, QuizContextV1 } from "../src/lib/user-facts/schema"
+import {
+  UserFactsIncompleteError,
+  type CareHabitsV1,
+  type DiagnosticsV1,
+  type QuizContextV1,
+} from "../src/lib/user-facts/schema"
 
 type ReadResult = { data: Record<string, unknown> | null; error: { message: string } | null }
 
@@ -180,4 +185,49 @@ test("toStage1SourceFromFacts: unedited returns diagnostics.source.raw, edited d
   assert.notDeepEqual(toStage1SourceFromFacts(factsEdited), FULL_DIAGNOSTICS.source.raw)
 
   assert.equal(toStage1SourceFromFacts({ ...factsUnedited, diagnostics: null }), null)
+})
+
+// Fix round 1 (F), plan §3: a completeness default never feeds a plan calculation. An EDITED
+// emission (native envelope) counts a field whose provenance is `assumed` as missing.
+test("fix round 1 (F): an edited emission treats an assumed default as missing, never as an answer", () => {
+  const edited = (
+    fields: Record<string, "user" | "assumed" | "unknown_historical">,
+  ): UserFacts => ({
+    userId: "user-1",
+    diagnostics: FULL_DIAGNOSTICS,
+    careHabits: null,
+    quizContext: FULL_QUIZ_CONTEXT,
+    provenance: {
+      diagnostics: {
+        ...VALID_DIAGNOSTICS_PROVENANCE,
+        editedAt: "2026-09-15T12:00:00.000Z",
+        fields,
+      },
+    },
+    revision: 1,
+  })
+
+  assert.throws(
+    () => toStage1SourceFromFacts(edited({ hairLength: "assumed", density: "assumed" })),
+    (error: unknown) =>
+      error instanceof UserFactsIncompleteError &&
+      JSON.stringify([...error.missingFields].sort()) === JSON.stringify(["density", "hairLength"]),
+  )
+  assert.throws(
+    () =>
+      toStage1Source({
+        diagnostics: FULL_DIAGNOSTICS,
+        quizContext: null,
+        editedAt: "2026-09-15T12:00:00.000Z",
+        fields: { hairLength: "assumed" },
+      }),
+    UserFactsIncompleteError,
+    "the legacy-lead branch too",
+  )
+  // Real answers (and historical imports) still emit.
+  assert.ok(toStage1SourceFromFacts(edited({ hairLength: "user", density: "unknown_historical" })))
+  // An UNEDITED record re-emits `source.raw`, which never carries a default.
+  const unedited = edited({ hairLength: "assumed" })
+  delete unedited.provenance.diagnostics!.editedAt
+  assert.deepEqual(toStage1SourceFromFacts(unedited), FULL_DIAGNOSTICS.source.raw)
 })

@@ -4,6 +4,7 @@ import {
   UnsupportedUserFactsSourceError,
   UserFactsIncompleteError,
   type DiagnosticsV1,
+  type FieldProvenanceValue,
   type QuizContextV1,
 } from "./schema"
 
@@ -11,6 +12,9 @@ export type ToStage1SourceInput = {
   diagnostics: DiagnosticsV1
   quizContext?: QuizContextV1 | null
   editedAt?: string | null
+  /** The diagnostics domain's per-field provenance. A field marked `assumed` (a completeness
+   * default, plan §3) counts as MISSING for an edited emission: a default never feeds a plan. */
+  fields?: Readonly<Record<string, FieldProvenanceValue>> | null
 }
 
 /** The 7 quiz-context fields the v3 envelope requires (`blockersOtherText` stays optional). */
@@ -56,8 +60,13 @@ const REQUIRED_STAGE1_DIAGNOSTIC_FIELDS = [
 type CompleteDiagnostics = DiagnosticsV1 &
   Required<Pick<DiagnosticsV1, (typeof REQUIRED_STAGE1_DIAGNOSTIC_FIELDS)[number]>>
 
-function findMissingDiagnosticFields(diagnostics: DiagnosticsV1): string[] {
-  return REQUIRED_STAGE1_DIAGNOSTIC_FIELDS.filter((field) => diagnostics[field] === undefined)
+function findMissingDiagnosticFields(
+  diagnostics: DiagnosticsV1,
+  fields: ToStage1SourceInput["fields"],
+): string[] {
+  return REQUIRED_STAGE1_DIAGNOSTIC_FIELDS.filter(
+    (field) => diagnostics[field] === undefined || fields?.[field] === "assumed",
+  )
 }
 
 /**
@@ -65,7 +74,9 @@ function findMissingDiagnosticFields(diagnostics: DiagnosticsV1): string[] {
  *
  * - `editedAt` null/undefined: returns `diagnostics.source.raw` UNCHANGED (same key order,
  *   same arrays, same omitted-vs-empty arrays) — no re-canonicalisation.
- * - `editedAt` set: emits a native envelope instead.
+ * - `editedAt` set: emits a native envelope instead. Every required field must be a real value:
+ *   absent, or marked `assumed` in `fields` (a completeness default), throws
+ *   `UserFactsIncompleteError`.
  *   - A v3 envelope when `quizContext` carries all 7 required reflective answers (v2 is
  *     "promoted" to v3 the moment it is edited, since native diagnostics no longer
  *     distinguish v2 from v3 vocabulary).
@@ -93,7 +104,8 @@ export function toStage1Source(input: ToStage1SourceInput): unknown {
   // Completeness for an EDITED emission is enforced here, before either branch below: raw
   // re-emission (above) needs no completeness, but synthesising a native envelope does, and
   // this is the exact boundary the controller ruling names (task 4 fix round 1).
-  const missingFields = findMissingDiagnosticFields(diagnostics)
+  // A completeness default (`assumed`) is no answer (plan §3, fix round 1 F).
+  const missingFields = findMissingDiagnosticFields(diagnostics, input.fields)
   if (missingFields.length > 0) {
     throw new UserFactsIncompleteError(
       `toStage1Source: diagnostics are missing required field(s) for an edited emission: ${missingFields.join(", ")}`,
