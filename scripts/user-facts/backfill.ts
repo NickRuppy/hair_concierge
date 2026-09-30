@@ -71,6 +71,8 @@ const HAIR_PROFILE_COLUMNS = [
   "brush_type",
   "desired_volume",
   "primary_concern",
+  // Fix round 6 (I1): the row-content CAS token, never an edit time.
+  "updated_at",
 ].join(", ")
 
 export type BackfillOptions = {
@@ -400,6 +402,8 @@ async function loadPage(
     rows.push({
       userId,
       factsRevision: typeof profile.facts_revision === "number" ? profile.facts_revision : 0,
+      // Kept as the string PostgREST sent: a Date would drop the microseconds the door compares.
+      loadedUpdatedAt: readString(profile.updated_at),
       factsProvenance: provenance.data,
       columns: toColumns(profile),
       storedDomains: {
@@ -470,7 +474,8 @@ export type BackfillSummary = {
   writesBySource: Record<string, number>
   conflicts: number
   /** Domains a concurrent writer beat us to: `user_facts_save_v1` answered `revision_conflict`
-   * to the CAS this run pinned to the revision it loaded (fix round 2, P1). The row is left
+   * to the CAS this run pinned to the revision and the `updated_at` it loaded (fix round 2, P1;
+   * fix round 6, I1 — a legacy column write bumps only the latter). The row is left
    * for the next run, never retried here — every revision derived from that snapshot is
    * stale. Reported under SKIPPED, not as a failure: a live writer winning the race is the
    * CAS working, not the page breaking. */
@@ -848,6 +853,10 @@ export async function runUserFactsBackfill(
       // revision the page loaded, then whatever each applied write hands back. A fresh row
       // is 0, which `user_facts_save_v1` accepts as "no profile row yet".
       let expectedRevision = row.factsRevision
+      // Fix round 6 (I1): the revision only sees door writes. The deployed legacy writers still
+      // change columns without bumping it (rollout step 2), so every write is also pinned to the
+      // row's `updated_at` as loaded — then to what each applied write hands back.
+      let expectedUpdatedAt = row.loadedUpdatedAt ?? undefined
       // Once a concurrent writer wins the CAS, every revision derived from this row's loaded
       // snapshot is stale — the remaining domains are left for the next run, not guessed at.
       let rowConflicted = false
@@ -878,6 +887,7 @@ export async function runUserFactsBackfill(
             patch: write.patch,
             provenance: write.provenance,
             expectedRevision,
+            ...(expectedUpdatedAt !== undefined ? { expectedUpdatedAt } : {}),
             mode: "upsert",
           } as Parameters<typeof saveUserFacts>[1])
 
@@ -885,6 +895,9 @@ export async function runUserFactsBackfill(
             if (result.status === "preserved") preserved += 1
             else applied += 1
             expectedRevision = result.revision
+            // A result without it keeps the old token: the next write then conflicts, never
+            // writes unguarded.
+            if (result.updatedAt !== undefined) expectedUpdatedAt = result.updatedAt
             writeLine(
               `${describeWrite(write, prefix, row.userId)} -> ${result.status} rev ${result.revision}`,
             )
@@ -892,7 +905,9 @@ export async function runUserFactsBackfill(
             rowConflicted = true
             revisionConflicts += 1
             revisionConflictLines.push(
-              `    ${row.userId} ${write.domain}: revision_conflict (pinned to ${expectedRevision}, row is at ${result.revision}); left for the next run`,
+              result.reason === "updated_at_mismatch"
+                ? `    ${row.userId} ${write.domain}: updated_at changed since the load (loaded ${expectedUpdatedAt}); a write outside the door landed (a legacy writer, or any other row write); nothing written, left for the next run / --catch-up`
+                : `    ${row.userId} ${write.domain}: revision_conflict (pinned to ${expectedRevision}, row is at ${result.revision}); left for the next run`,
             )
             writeLine(
               `${describeWrite(write, prefix, row.userId)} -> revision_conflict rev ${result.revision}`,

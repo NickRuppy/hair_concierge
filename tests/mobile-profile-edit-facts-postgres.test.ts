@@ -233,12 +233,12 @@ test("a door-level revision conflict surfaces as profile_conflict with nothing w
   // Simulate a concurrent facts writer between the function's row read and its door call: a
   // wrapper door that always reports a conflict. (Unreachable under the row lock in practice.)
   await pg.exec(`
-    ALTER FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid)
+    ALTER FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid,timestamptz)
       RENAME TO user_facts_save_v1_real;
     CREATE FUNCTION public.user_facts_save_v1(p_user_id uuid, p_domain text, p_patch jsonb,
       p_provenance jsonb, p_expected_revision integer DEFAULT NULL, p_mode text DEFAULT 'upsert',
       p_source_draft_id uuid DEFAULT NULL, p_expected_draft_revision bigint DEFAULT NULL,
-      p_expected_initial_version_id uuid DEFAULT NULL) RETURNS jsonb LANGUAGE sql AS
+      p_expected_initial_version_id uuid DEFAULT NULL, p_expected_updated_at timestamptz DEFAULT NULL) RETURNS jsonb LANGUAGE sql AS
       $$ SELECT jsonb_build_object('status','revision_conflict','revision',99) $$;`)
   const clock = await readClock(pg, OWNER)
   const row = await readRow(pg, OWNER)
@@ -320,12 +320,12 @@ test("fix round 1 (G) adversarial: a replay whose first attempt rolled back runs
   const row = (await readRow(pg, OWNER))!
   // First attempt: the door fails mid-publication -> everything rolls back, no receipt.
   await pg.exec(`
-    ALTER FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid)
+    ALTER FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid,timestamptz)
       RENAME TO user_facts_save_v1_real;
     CREATE FUNCTION public.user_facts_save_v1(p_user_id uuid, p_domain text, p_patch jsonb,
       p_provenance jsonb, p_expected_revision integer DEFAULT NULL, p_mode text DEFAULT 'upsert',
       p_source_draft_id uuid DEFAULT NULL, p_expected_draft_revision bigint DEFAULT NULL,
-      p_expected_initial_version_id uuid DEFAULT NULL) RETURNS jsonb LANGUAGE plpgsql AS
+      p_expected_initial_version_id uuid DEFAULT NULL, p_expected_updated_at timestamptz DEFAULT NULL) RETURNS jsonb LANGUAGE plpgsql AS
       $$ BEGIN RAISE EXCEPTION 'transient'; END $$;`)
   const requestId = randomUUID()
   const answers = { ...ANSWERS, thickness: "coarse" }
@@ -336,8 +336,8 @@ test("fix round 1 (G) adversarial: a replay whose first attempt rolled back runs
   assert.deepEqual(await readRow(pg, OWNER), row)
   assert.equal((await pg.query("select * from scanner_profile_edit_receipts")).rows.length, 0)
   await pg.exec(`
-    DROP FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid);
-    ALTER FUNCTION public.user_facts_save_v1_real(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid)
+    DROP FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid,timestamptz);
+    ALTER FUNCTION public.user_facts_save_v1_real(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid,timestamptz)
       RENAME TO user_facts_save_v1;`)
 
   // The replay (same request id, same revision) is a fresh publish, applied once.

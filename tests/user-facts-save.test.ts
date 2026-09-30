@@ -100,6 +100,50 @@ test("saveUserFacts maps mode + draftBinding to p_mode:create_only and the three
   })
 })
 
+test("fix round 6 (I1): expectedUpdatedAt maps to p_expected_updated_at; the result carries updatedAt and the conflict reason", async () => {
+  const db = new FakeSupabase({
+    data: {
+      status: "revision_conflict",
+      revision: 3,
+      reason: "updated_at_mismatch",
+    },
+    error: null,
+  })
+  const result = await saveUserFacts(db as never, {
+    userId: "user-1",
+    domain: "diagnostics",
+    patch: VALID_DIAGNOSTICS_PATCH,
+    provenance: VALID_PROVENANCE,
+    expectedRevision: 3,
+    expectedUpdatedAt: "2026-09-30T12:00:00.123456+00:00",
+  })
+  assert.equal(db.rpcCalls[0]!.args.p_expected_updated_at, "2026-09-30T12:00:00.123456+00:00")
+  assert.deepEqual(result, {
+    status: "revision_conflict",
+    revision: 3,
+    reason: "updated_at_mismatch",
+  })
+
+  const ok = new FakeSupabase({
+    data: {
+      status: "ok",
+      revision: 4,
+      changed: true,
+      diagnosticsHash: null,
+      updatedAt: "2026-09-30T12:00:01.5+00:00",
+    },
+    error: null,
+  })
+  const written = await saveUserFacts(ok as never, {
+    userId: "user-1",
+    domain: "diagnostics",
+    patch: VALID_DIAGNOSTICS_PATCH,
+    provenance: VALID_PROVENANCE,
+  })
+  assert.equal(written.status === "ok" ? written.updatedAt : null, "2026-09-30T12:00:01.5+00:00")
+  assert.equal("p_expected_updated_at" in ok.rpcCalls[0]!.args, false, "absent unless given")
+})
+
 test("saveUserFacts returns each RPC status shape verbatim", async () => {
   const canned = [
     { status: "ok", revision: 5, changed: true, diagnosticsHash: "hash-1" },

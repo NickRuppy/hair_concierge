@@ -410,12 +410,12 @@ test("a door-level conflict while creating rolls everything back to profile_conf
   const f = await fixture(t)
   const input = await f.intent()
   await f.db.exec(`
-    ALTER FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid)
+    ALTER FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid,timestamptz)
       RENAME TO user_facts_save_v1_real;
     CREATE FUNCTION public.user_facts_save_v1(p_user_id uuid, p_domain text, p_patch jsonb,
       p_provenance jsonb, p_expected_revision integer DEFAULT NULL, p_mode text DEFAULT 'upsert',
       p_source_draft_id uuid DEFAULT NULL, p_expected_draft_revision bigint DEFAULT NULL,
-      p_expected_initial_version_id uuid DEFAULT NULL) RETURNS jsonb LANGUAGE plpgsql AS $$
+      p_expected_initial_version_id uuid DEFAULT NULL, p_expected_updated_at timestamptz DEFAULT NULL) RETURNS jsonb LANGUAGE plpgsql AS $$
     BEGIN
       -- A concurrent creator won the absent-row race with a facts write of its own.
       INSERT INTO public.hair_profiles(user_id) VALUES (p_user_id) ON CONFLICT DO NOTHING;
@@ -430,12 +430,12 @@ test("a door-level conflict while creating rolls everything back to profile_conf
  * stays callable as `user_facts_save_v1_real`. */
 async function wrapDoor(db: Awaited<ReturnType<typeof fixture>>["db"], body: string) {
   await db.exec(`
-    ALTER FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid)
+    ALTER FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid,timestamptz)
       RENAME TO user_facts_save_v1_real;
     CREATE FUNCTION public.user_facts_save_v1(p_user_id uuid, p_domain text, p_patch jsonb,
       p_provenance jsonb, p_expected_revision integer DEFAULT NULL, p_mode text DEFAULT 'upsert',
       p_source_draft_id uuid DEFAULT NULL, p_expected_draft_revision bigint DEFAULT NULL,
-      p_expected_initial_version_id uuid DEFAULT NULL) RETURNS jsonb LANGUAGE plpgsql AS $$
+      p_expected_initial_version_id uuid DEFAULT NULL, p_expected_updated_at timestamptz DEFAULT NULL) RETURNS jsonb LANGUAGE plpgsql AS $$
     BEGIN ${body} END $$;`)
 }
 
@@ -556,8 +556,8 @@ for (const [variant, lock, competingInsert] of [
 
     // The same wrapper against a row the door DID create (no competing writer) still publishes.
     await f.db.exec(`
-    DROP FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid);
-    ALTER FUNCTION public.user_facts_save_v1_real(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid)
+    DROP FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid,timestamptz);
+    ALTER FUNCTION public.user_facts_save_v1_real(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid,timestamptz)
       RENAME TO user_facts_save_v1;`)
     assert.equal((await f.complete(input)).status, "ready")
   })
@@ -732,8 +732,8 @@ test("fix round 1 (G) adversarial: a registration replay whose first attempt rol
   for (const table of ["hair_profiles", "leads", "mobile_registration_publication_receipts"])
     assert.equal((await f.db.query(`select * from ${table}`)).rows.length, 0, table)
   await f.db.exec(`
-    DROP FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid);
-    ALTER FUNCTION public.user_facts_save_v1_real(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid)
+    DROP FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid,timestamptz);
+    ALTER FUNCTION public.user_facts_save_v1_real(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid,timestamptz)
       RENAME TO user_facts_save_v1;`)
 
   const result = await f.complete(input)

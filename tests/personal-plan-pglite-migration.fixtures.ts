@@ -619,6 +619,7 @@ export type UserFactsSaveResult = {
   changed?: boolean
   diagnosticsHash?: string | null
   reason?: string
+  updatedAt?: string
 }
 
 export type UserFactsSaveInput = {
@@ -631,6 +632,8 @@ export type UserFactsSaveInput = {
   sourceDraftId?: string | null
   expectedDraftRevision?: number | null
   expectedInitialVersionId?: string | null
+  /** Fix round 6 (I1): the row's `updated_at` as loaded (string, microseconds kept). */
+  expectedUpdatedAt?: string | null
 }
 
 /** Calls the RPC with the exact signature task 4's TypeScript client will use. */
@@ -648,7 +651,8 @@ export async function saveUserFacts(
        p_mode => $6::text,
        p_source_draft_id => $7::uuid,
        p_expected_draft_revision => $8::bigint,
-       p_expected_initial_version_id => $9::uuid
+       p_expected_initial_version_id => $9::uuid,
+       p_expected_updated_at => $10::timestamptz
      ) AS result`,
     [
       input.userId,
@@ -660,6 +664,7 @@ export async function saveUserFacts(
       input.sourceDraftId ?? null,
       input.expectedDraftRevision ?? null,
       input.expectedInitialVersionId ?? null,
+      input.expectedUpdatedAt ?? null,
     ],
   )
   return rows[0]!.result

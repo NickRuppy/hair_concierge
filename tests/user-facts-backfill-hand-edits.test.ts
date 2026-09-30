@@ -1197,6 +1197,12 @@ function pgliteRestClient(pg: PersonalPlanTestDb) {
           columns = selected
             .split(",")
             .map((column) => safe(column.trim()))
+            // PostgREST serialises timestamptz with its microseconds; a JS Date would drop them.
+            .map((column) =>
+              column === "updated_at"
+                ? `pg_catalog.to_json(updated_at) #>> '{}' AS updated_at`
+                : column,
+            )
             .join(", ")
           return builder
         },
@@ -1477,6 +1483,94 @@ test("--catch-up on PGlite (I2): apply an untouched paid row, one live thickness
   assert.deepEqual(document.goals, ["moisture", "shine"], "the document's native goals")
   assert.equal(document.primaryConcern, "low_shine")
   assert.deepEqual(document.source.raw, V3_ENVELOPE)
+})
+
+test("fix round 6 (I1) on PGlite: a legacy write between the backfill's load and its write is a conflict — nothing written, reported, the rerun picks it up", async (t) => {
+  // Rollout step 2: the deployed legacy writers still change columns without touching
+  // facts_revision, so the revision alone cannot see them.
+  const pg = await mobileFactsDatabase(t, { lock: false })
+  await pg.exec(ARTIFACT_STUB)
+  const paid = id(8, 2)
+  await insertProfile(pg, paid)
+  await pg.query(
+    `INSERT INTO public.personal_plan_prepared_artifacts
+       (id, lead_id, user_id, status, created_at, quiz_answers, canonical_profile)
+     VALUES ($1, $2, $3, 'attached', $4, $5, $6)`,
+    [
+      id(9, 3),
+      id(9, 4),
+      paid,
+      ARTIFACT.createdAt,
+      JSON.stringify(V3_ENVELOPE),
+      JSON.stringify({ modelVersion: "personal_plan_canonical_v1", ...adaptedCanonical() }),
+    ],
+  )
+  await seedLegacyRow(pg, paid, PAID_COLUMNS)
+
+  const rest = pgliteRestClient(pg)
+  let interleaved = false
+  const racing = {
+    ...rest,
+    async rpc(name: string, args: Record<string, unknown>) {
+      if (!interleaved) {
+        interleaved = true
+        // The legacy iOS edit lands after the page was loaded, before the first door call.
+        await pg.query(`UPDATE public.hair_profiles SET thickness = 'coarse' WHERE user_id = $1`, [
+          paid,
+        ])
+      }
+      return rest.rpc(name, args)
+    },
+  }
+  const lines: string[] = []
+  const raced = await runUserFactsBackfill(["--apply"], {
+    supabase: racing as never,
+    now: NOW,
+    log: (line) => lines.push(line),
+  })
+  assert.equal(raced.failures.length, 0, JSON.stringify(raced.failures))
+  assert.equal(raced.applied, 0)
+  assert.equal(raced.revisionConflicts, 1)
+  assert.ok(
+    lines.some(
+      (line) =>
+        line.startsWith(`    ${paid} diagnostics: updated_at changed since the load`) &&
+        line.includes("left for the next run"),
+    ),
+    lines.filter((line) => line.includes(paid)).join("\n"),
+  )
+  const untouched = (await readRow(pg, paid))!
+  assert.equal(untouched.facts_revision, 0, "nothing written")
+  assert.equal(untouched.diagnostics, null)
+  assert.equal(untouched.quiz_context, null)
+  assert.equal(untouched.thickness, "coarse", "the legacy write stands")
+
+  // The rerun loads the new state: the thickness write is a hand edit and survives; every write
+  // carries the updated_at it was loaded with (or the previous write's).
+  const calls: Record<string, unknown>[] = []
+  const recording = {
+    ...rest,
+    async rpc(name: string, args: Record<string, unknown>) {
+      calls.push(args)
+      return rest.rpc(name, args)
+    },
+  }
+  const rerun = await runUserFactsBackfill(["--apply"], {
+    supabase: recording as never,
+    now: NOW,
+    log: () => {},
+  })
+  assert.equal(rerun.failures.length, 0, JSON.stringify(rerun.failures))
+  assert.equal(rerun.revisionConflicts, 0)
+  assert.equal(rerun.applied, rerun.writesPlanned)
+  assert.ok(calls.length >= 2)
+  for (const call of calls) assert.equal(typeof call.p_expected_updated_at, "string")
+  const written = (await readRow(pg, paid))!
+  assert.equal(written.thickness, "coarse")
+  assert.deepEqual(
+    (written.facts_provenance as { diagnostics: DomainProvenance }).diagnostics.fields,
+    { thickness: "user" },
+  )
 })
 
 /** What the paid preparation stored as `canonical_profile`: the offer adapter over the answers. */

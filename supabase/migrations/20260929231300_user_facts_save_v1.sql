@@ -18,6 +18,20 @@
 -- guard: every fixture row is written through this function on a real Postgres
 -- and compared against the TypeScript oracle.
 --
+-- Row-content guard (fix round 6, I1): `p_expected_revision` only sees writes made through
+-- this function. During rollout step 2 the deployed legacy writers still change columns without
+-- touching `facts_revision`, so a caller that must not overwrite them (the backfill) also passes
+-- `p_expected_updated_at` — the row's `updated_at` exactly as it loaded it (keep it a string end
+-- to end: PostgREST serialises the microseconds, a JS Date would drop them). Any other value is
+-- `revision_conflict` with reason `updated_at_mismatch` (a plain CAS miss is `revision_mismatch`).
+-- The guard is CONSERVATIVE on purpose: `set_updated_at_hair_profiles` bumps `updated_at` on
+-- every UPDATE of the row, including writes of non-fact columns (the chat's
+-- `conversation_memory`), so such a write also conflicts and the row waits for the next run.
+-- Every write through this function sets `updated_at = now()` and returns the new value as
+-- `updatedAt` for the caller's next write. `now()` is the transaction start: two writes in ONE
+-- transaction share it, so the guard is only meaningful across transactions (each RPC call is
+-- its own). Callers that omit the parameter behave exactly as before.
+--
 -- Lock order, for anyone adding a second writer: refinement draft FIRST, then
 -- `hair_profiles`. Every path here takes the locks in that order.
 --
@@ -455,7 +469,8 @@ CREATE OR REPLACE FUNCTION public.user_facts_save_v1(
   p_mode text DEFAULT 'upsert',
   p_source_draft_id uuid DEFAULT NULL,
   p_expected_draft_revision bigint DEFAULT NULL,
-  p_expected_initial_version_id uuid DEFAULT NULL
+  p_expected_initial_version_id uuid DEFAULT NULL,
+  p_expected_updated_at timestamptz DEFAULT NULL
 ) RETURNS jsonb
 LANGUAGE plpgsql SECURITY DEFINER SET search_path = ''
 AS $$
@@ -475,6 +490,7 @@ DECLARE
   v_changed boolean;
   v_diagnostics jsonb;
   v_inserted integer := 0;
+  v_updated_at timestamptz;
 BEGIN
   -- (1) Input validation. Nothing is read or written before this passes.
   IF p_domain IS NULL OR p_domain NOT IN ('diagnostics', 'care_habits', 'quiz_context') THEN
@@ -523,7 +539,13 @@ BEGIN
   SELECT * INTO v_profile FROM public.hair_profiles WHERE user_id = p_user_id FOR UPDATE;
   IF NOT FOUND THEN
     IF p_expected_revision IS NOT NULL AND p_expected_revision <> 0 THEN
-      RETURN pg_catalog.jsonb_build_object('status', 'revision_conflict', 'revision', 0);
+      RETURN pg_catalog.jsonb_build_object(
+        'status', 'revision_conflict', 'revision', 0, 'reason', 'revision_mismatch');
+    END IF;
+    -- The caller loaded a row that is gone now: never recreate it from that stale read.
+    IF p_expected_updated_at IS NOT NULL THEN
+      RETURN pg_catalog.jsonb_build_object(
+        'status', 'revision_conflict', 'revision', 0, 'reason', 'updated_at_mismatch');
     END IF;
     -- ON CONFLICT + re-select: a concurrent account link may have created the
     -- row between the select above and this insert. Whoever lost simply
@@ -550,7 +572,16 @@ BEGIN
   v_current_revision := v_profile.facts_revision;
   IF p_expected_revision IS NOT NULL AND p_expected_revision <> v_current_revision THEN
     RETURN pg_catalog.jsonb_build_object(
-      'status', 'revision_conflict', 'revision', v_current_revision);
+      'status', 'revision_conflict', 'revision', v_current_revision,
+      'reason', 'revision_mismatch');
+  END IF;
+  -- Fix round 6 (I1): the row-content guard. Compared at the stored microsecond precision;
+  -- see the header for why it is conservative.
+  IF p_expected_updated_at IS NOT NULL
+     AND v_profile.updated_at IS DISTINCT FROM p_expected_updated_at THEN
+    RETURN pg_catalog.jsonb_build_object(
+      'status', 'revision_conflict', 'revision', v_current_revision,
+      'reason', 'updated_at_mismatch');
   END IF;
 
   v_old_domain := CASE p_domain
@@ -579,11 +610,13 @@ BEGIN
        WHERE user_id = p_user_id;
       PERFORM pg_catalog.set_config('app.user_facts_writer', '', true);
     END IF;
+    SELECT updated_at INTO v_updated_at FROM public.hair_profiles WHERE user_id = p_user_id;
     RETURN pg_catalog.jsonb_build_object(
       'status', 'preserved',
       'revision', v_current_revision,
       'changed', false,
-      'diagnosticsHash', public.user_facts_diagnostics_hash_v1(v_profile.diagnostics));
+      'diagnosticsHash', public.user_facts_diagnostics_hash_v1(v_profile.diagnostics),
+      'updatedAt', v_updated_at);
   END IF;
 
   -- (Decision wave 1, Nick 2026-09-30: the former Task 5a C1 goals anti-clobber
@@ -690,20 +723,22 @@ BEGIN
   END IF;
   PERFORM pg_catalog.set_config('app.user_facts_writer', '', true);
 
-  SELECT diagnostics INTO v_diagnostics FROM public.hair_profiles WHERE user_id = p_user_id;
+  SELECT diagnostics, updated_at INTO v_diagnostics, v_updated_at
+    FROM public.hair_profiles WHERE user_id = p_user_id;
 
   RETURN pg_catalog.jsonb_build_object(
     'status', 'ok',
     'revision', v_current_revision + 1,
     'changed', v_changed,
     'diagnosticsHash', public.user_facts_diagnostics_hash_v1(v_diagnostics),
-    'created', v_inserted = 1);
+    'created', v_inserted = 1,
+    'updatedAt', v_updated_at);
 END;
 $$;
 
 COMMENT ON FUNCTION public.user_facts_save_v1(
-  uuid, text, jsonb, jsonb, integer, text, uuid, bigint, uuid) IS
-  'The only supported writer of hair_profiles.diagnostics/care_habits/quiz_context and of the 21 legacy columns derived from them. Merges p_patch field-by-field (a top-level JSON null clears that field), merges provenance, bumps facts_revision on every non-preserved write (CAS via p_expected_revision), and recomputes the derived columns owned by p_domain in the same statement. create_only is a pure preserve of any existing domain (it only records the incoming candidate); callers decide winners and write them with upsert. Returns {status, revision, changed, diagnosticsHash, created} (created: this call inserted the row) or a typed conflict.';
+  uuid, text, jsonb, jsonb, integer, text, uuid, bigint, uuid, timestamptz) IS
+  'The only supported writer of hair_profiles.diagnostics/care_habits/quiz_context and of the 21 legacy columns derived from them. Merges p_patch field-by-field (a top-level JSON null clears that field), merges provenance, bumps facts_revision on every non-preserved write (CAS via p_expected_revision), and recomputes the derived columns owned by p_domain in the same statement. create_only is a pure preserve of any existing domain (it only records the incoming candidate); callers decide winners and write them with upsert. Optional p_expected_updated_at: the row''s updated_at as the caller loaded it; any other value (a legacy column write, or any other row write — set_updated_at_hair_profiles bumps it on every UPDATE) is a revision_conflict with reason updated_at_mismatch. Returns {status, revision, changed, diagnosticsHash, created, updatedAt} (created: this call inserted the row; updatedAt: the row''s updated_at after the call, the next p_expected_updated_at) or a typed conflict (revision_conflict carries reason revision_mismatch | updated_at_mismatch).';
 
 REVOKE ALL ON FUNCTION public.user_facts_jsonb_text_array_v1(jsonb) FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON FUNCTION public.user_facts_map_vocabulary_array_v1(jsonb, jsonb) FROM PUBLIC, anon, authenticated, service_role;
@@ -713,6 +748,6 @@ REVOKE ALL ON FUNCTION public.user_facts_derive_diagnostics_columns_v1(jsonb) FR
 REVOKE ALL ON FUNCTION public.user_facts_derive_care_habits_columns_v1(jsonb) FROM PUBLIC, anon, authenticated, service_role;
 
 REVOKE ALL ON FUNCTION public.user_facts_save_v1(
-  uuid, text, jsonb, jsonb, integer, text, uuid, bigint, uuid) FROM PUBLIC, anon, authenticated;
+  uuid, text, jsonb, jsonb, integer, text, uuid, bigint, uuid, timestamptz) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.user_facts_save_v1(
-  uuid, text, jsonb, jsonb, integer, text, uuid, bigint, uuid) TO service_role;
+  uuid, text, jsonb, jsonb, integer, text, uuid, bigint, uuid, timestamptz) TO service_role;

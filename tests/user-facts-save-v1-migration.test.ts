@@ -412,6 +412,126 @@ test("a stale expected revision is rejected without writing anything", async (t)
   assert.deepEqual(await readHairProfile(pg, USER), before)
 })
 
+/** `updated_at` exactly as stored, the way PostgREST serialises it (microseconds kept). */
+async function storedUpdatedAt(pg: PersonalPlanTestDb): Promise<string> {
+  const { rows } = await pg.query<{ at: string }>(
+    `SELECT pg_catalog.to_json(updated_at) #>> '{}' AS at FROM public.hair_profiles WHERE user_id = $1`,
+    [USER],
+  )
+  return rows[0]!.at
+}
+
+test("fix round 6 (I1): p_expected_updated_at catches a legacy write that left facts_revision alone", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t, { lock: false })
+  await insertProfile(pg, USER)
+  const first = await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: FULL_DIAGNOSTICS,
+    provenance: DIAGNOSTICS_PROVENANCE,
+  })
+  assert.equal(first.status, "ok")
+  const loaded = await storedUpdatedAt(pg)
+  assert.equal(first.updatedAt, loaded, "the door hands back the row's new updated_at")
+
+  // A deployed legacy writer (rollout step 2) changes a column directly: no revision bump.
+  await pg.query(`UPDATE public.hair_profiles SET thickness = 'coarse' WHERE user_id = $1`, [USER])
+  const before = await readHairProfile(pg, USER)
+  assert.equal(before?.facts_revision, 1)
+
+  const conflict = await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: { texture: "coily" },
+    provenance: DIAGNOSTICS_PROVENANCE,
+    expectedRevision: 1,
+    expectedUpdatedAt: loaded,
+  })
+  assert.equal(conflict.status, "revision_conflict")
+  assert.equal(conflict.reason, "updated_at_mismatch")
+  assert.equal(conflict.revision, 1)
+  assert.deepEqual(await readHairProfile(pg, USER), before, "nothing written")
+
+  // The same guard against the current value writes, and hands back the next token.
+  const current = await storedUpdatedAt(pg)
+  const ok = await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: { texture: "coily" },
+    provenance: DIAGNOSTICS_PROVENANCE,
+    expectedRevision: 1,
+    expectedUpdatedAt: current,
+  })
+  assert.equal(ok.status, "ok")
+  assert.equal(ok.updatedAt, await storedUpdatedAt(pg))
+  // A plain revision mismatch is told apart from it.
+  const stale = await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: { texture: "wavy" },
+    provenance: DIAGNOSTICS_PROVENANCE,
+    expectedRevision: 1,
+  })
+  assert.equal(stale.status, "revision_conflict")
+  assert.equal(stale.reason, "revision_mismatch")
+
+  // Microsecond precision as stored (PGlite's clock ticks in ms, so the value is set by hand
+  // with the trigger off): the full string matches; the millisecond string a JS Date would
+  // produce does not.
+  await pg.exec(`ALTER TABLE public.hair_profiles DISABLE TRIGGER set_updated_at_hair_profiles`)
+  await pg.query(
+    `UPDATE public.hair_profiles SET updated_at = '2026-09-30 12:00:00.123456+00' WHERE user_id = $1`,
+    [USER],
+  )
+  await pg.exec(`ALTER TABLE public.hair_profiles ENABLE TRIGGER set_updated_at_hair_profiles`)
+  const precise = await storedUpdatedAt(pg)
+  assert.equal(precise, "2026-09-30T12:00:00.123456+00:00")
+  const truncated = await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: { texture: "wavy" },
+    provenance: DIAGNOSTICS_PROVENANCE,
+    expectedUpdatedAt: new Date(precise).toISOString(),
+  })
+  assert.equal(truncated.status, "revision_conflict")
+  assert.equal(truncated.reason, "updated_at_mismatch")
+  const exact = await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: { texture: "wavy" },
+    provenance: DIAGNOSTICS_PROVENANCE,
+    expectedUpdatedAt: precise,
+  })
+  assert.equal(exact.status, "ok")
+})
+
+test("fix round 6 (I1): set_updated_at bumps updated_at on a write of a non-fact column too (the guard is conservative)", async (t) => {
+  const pg = await freshDatabase(t)
+  await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch: FULL_DIAGNOSTICS,
+    provenance: DIAGNOSTICS_PROVENANCE,
+  })
+  const loaded = await storedUpdatedAt(pg)
+  // The chat's memory write: no fact column, still a new updated_at.
+  await pg.query(
+    `UPDATE public.hair_profiles SET conversation_memory = 'mag Locken' WHERE user_id = $1`,
+    [USER],
+  )
+  assert.notEqual(await storedUpdatedAt(pg), loaded)
+  const conflict = await saveUserFacts(pg, {
+    userId: USER,
+    domain: "care_habits",
+    patch: { towel: { material: "mikrofaser" } },
+    provenance: CARE_HABITS_PROVENANCE,
+    expectedUpdatedAt: loaded,
+  })
+  assert.equal(conflict.status, "revision_conflict")
+  assert.equal(conflict.reason, "updated_at_mismatch")
+  assert.equal((await readHairProfile(pg, USER))?.care_habits, null)
+})
+
 test("a missing row counts as revision 0 for the CAS", async (t) => {
   const pg = await freshDatabase(t)
   const result = await saveUserFacts(pg, {
@@ -960,7 +1080,8 @@ test("an unknown domain, a non-object patch or an unknown mode is rejected befor
 
 test("only service_role may execute the write function", async (t) => {
   const pg = await freshDatabase(t)
-  const signature = "public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid)"
+  const signature =
+    "public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid,timestamptz)"
   const { rows } = await pg.query<{ role: string; allowed: boolean }>(
     `SELECT role, pg_catalog.has_function_privilege(role, $1, 'EXECUTE') AS allowed
        FROM pg_catalog.unnest(ARRAY['service_role','anon','authenticated']) AS role`,

@@ -88,6 +88,11 @@ export type LoadedUserRow = {
   /** Only ever used as the CAS baseline for this row's writes (the script pins every write to
    * it). The plan gate is per DOMAIN and never reads it — see `gateDomain`. */
   factsRevision: number
+  /** `hair_profiles.updated_at` exactly as loaded (a string, microseconds kept) — ONLY the
+   * row-content CAS token the script hands the door with every write (fix round 6, I1): the
+   * deployed legacy writers change columns without touching `facts_revision`. Never an edit time
+   * (every write bumps it, the chat's memory included — see `lastProfileEditAt`). */
+  loadedUpdatedAt?: string | null
   factsProvenance: FactsProvenance
   columns: LegacyProfileColumns
   /** Whether the row's `diagnostics` / `care_habits` / `quiz_context` column holds a document

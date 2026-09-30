@@ -60,6 +60,11 @@ export type DraftBinding = {
   expectedInitialVersionId: string
 }
 
+/** `expectedUpdatedAt` (fix round 6, I1): the row's `updated_at` exactly as the caller loaded it
+ * (a string — PostgREST keeps the microseconds, a `Date` would not). When given, any other stored
+ * value is a `revision_conflict` with reason `updated_at_mismatch`; each `ok` / `preserved`
+ * result carries the new `updatedAt` for the next write. Only the backfill passes it: it must not
+ * overwrite a legacy write that left `facts_revision` alone. */
 export type SaveUserFactsInput =
   | {
       userId: string
@@ -69,6 +74,7 @@ export type SaveUserFactsInput =
       expectedRevision?: number
       mode?: "upsert" | "create_only"
       draftBinding?: DraftBinding
+      expectedUpdatedAt?: string
     }
   | {
       userId: string
@@ -78,6 +84,7 @@ export type SaveUserFactsInput =
       expectedRevision?: number
       mode?: "upsert" | "create_only"
       draftBinding?: DraftBinding
+      expectedUpdatedAt?: string
     }
   | {
       userId: string
@@ -87,12 +94,30 @@ export type SaveUserFactsInput =
       expectedRevision?: number
       mode?: "upsert" | "create_only"
       draftBinding?: DraftBinding
+      expectedUpdatedAt?: string
     }
 
 export type SaveUserFactsResult =
-  | { status: "ok"; revision: number; changed: boolean; diagnosticsHash: string | null }
-  | { status: "preserved"; revision: number; changed: false; diagnosticsHash: string | null }
-  | { status: "revision_conflict"; revision: number }
+  | {
+      status: "ok"
+      revision: number
+      changed: boolean
+      diagnosticsHash: string | null
+      updatedAt?: string
+    }
+  | {
+      status: "preserved"
+      revision: number
+      changed: false
+      diagnosticsHash: string | null
+      updatedAt?: string
+    }
+  | {
+      status: "revision_conflict"
+      revision: number
+      /** `updated_at_mismatch`: `expectedUpdatedAt` no longer matches the row. */
+      reason?: "revision_mismatch" | "updated_at_mismatch"
+    }
   | {
       status: "draft_conflict"
       reason: "not_found" | "not_in_progress" | "revision_mismatch" | "stale_source"
@@ -114,16 +139,19 @@ const rpcResultSchema = z.discriminatedUnion("status", [
     revision: z.number(),
     changed: z.boolean(),
     diagnosticsHash: z.string().nullable(),
+    updatedAt: z.string().optional(),
   }),
   z.object({
     status: z.literal("preserved"),
     revision: z.number(),
     changed: z.literal(false),
     diagnosticsHash: z.string().nullable(),
+    updatedAt: z.string().optional(),
   }),
   z.object({
     status: z.literal("revision_conflict"),
     revision: z.number(),
+    reason: z.enum(["revision_mismatch", "updated_at_mismatch"]).optional(),
   }),
   z.object({
     status: z.literal("draft_conflict"),
@@ -166,6 +194,10 @@ export async function saveUserFacts(
     p_source_draft_id: input.draftBinding?.sourceDraftId ?? null,
     p_expected_draft_revision: input.draftBinding?.expectedDraftRevision ?? null,
     p_expected_initial_version_id: input.draftBinding?.expectedInitialVersionId ?? null,
+    // Absent unless given: every other caller's RPC call is unchanged.
+    ...(input.expectedUpdatedAt !== undefined
+      ? { p_expected_updated_at: input.expectedUpdatedAt }
+      : {}),
   })
 
   if (error) {
