@@ -531,6 +531,110 @@ test("a first link on an empty profile writes with upsert pinned to revision 0",
   assert.equal(diagnosticsV1Schema.safeParse(rows[0]!.diagnostics).success, true)
 })
 
+// --- fix round 6 (I2): an interrupted link resumes -------------------------------------
+
+test("I2: B's diagnostics landed, B's context clear failed — the retry clears A's context and leaves diagnostics alone", async () => {
+  const rows = [artifactProfile({ at: "2026-09-10T00:00:00.000Z" })]
+  let failContext = true
+  const { admin, saves } = fakeAdmin(rows, {
+    beforeSave: (_call, args) => {
+      if (args.p_domain === "quiz_context" && failContext) {
+        failContext = false
+        throw new Error("network down")
+      }
+    },
+  })
+  const quizB = LEGACY_LEAD_QUIZ("2026-09-12T00:00:00.000Z")
+
+  await assert.rejects(
+    () => writeAccountLinkFacts(admin, { userId: USER_ID, quiz: quizB }),
+    /network down/,
+  )
+  // The half-published state: B's diagnostics next to A's quiz_context.
+  assert.equal((rows[0]!.diagnostics as DiagnosticsV1).source.leadId, "lead-new")
+  assert.ok(Object.keys(rows[0]!.quiz_context as Row).length > 0)
+  const diagnosticsBefore = structuredClone(rows[0]!.diagnostics)
+  const diagnosticsProvenanceBefore = structuredClone(
+    (rows[0]!.facts_provenance as Row).diagnostics,
+  )
+  const before = saves.length
+
+  assert.equal(await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: quizB }), "replaced")
+  assert.deepEqual(
+    saves.slice(before).map((call) => [call.p_domain, call.p_mode, call.p_expected_revision]),
+    [["quiz_context", "upsert", 5]],
+    "one context write, pinned to the stored revision; no diagnostics write",
+  )
+  assert.deepEqual(rows[0]!.quiz_context, {})
+  assert.deepEqual(rows[0]!.diagnostics, diagnosticsBefore)
+  assert.deepEqual((rows[0]!.facts_provenance as Row).diagnostics, diagnosticsProvenanceBefore)
+  assert.deepEqual((rows[0]!.facts_provenance as Row).quiz_context, {
+    source: { kind: "legacy_lead", id: "lead-new" },
+    schemaVersion: 1,
+    at: ((rows[0]!.facts_provenance as Row).quiz_context as Row).at,
+  })
+
+  // Idempotent: a third link of B is a pure preserve with zero writes.
+  const settled = saves.length
+  assert.equal(await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: quizB }), "preserved")
+  assert.equal(saves.length, settled)
+})
+
+test("I2: an interrupted ARTIFACT link resumes by writing its own quiz context", async () => {
+  const rows = [artifactProfile({ at: "2026-09-10T00:00:00.000Z" })]
+  ;(rows[0]!.quiz_context as Row).blockersOtherText = "alter Text"
+  let failContext = true
+  const { admin, saves } = fakeAdmin(rows, {
+    beforeSave: (_call, args) => {
+      if (args.p_domain === "quiz_context" && failContext) {
+        failContext = false
+        throw new Error("network down")
+      }
+    },
+  })
+  const quizB = {
+    kind: "artifact" as const,
+    artifactId: "artifact-new",
+    leadId: "lead-new",
+    envelope: COMPLETE_V3_PLAN_ENVELOPE,
+    createdAt: "2026-09-12T00:00:00.000Z",
+  }
+  await assert.rejects(() => writeAccountLinkFacts(admin, { userId: USER_ID, quiz: quizB }))
+  const before = saves.length
+
+  assert.equal(await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: quizB }), "replaced")
+  assert.deepEqual(
+    saves.slice(before).map((call) => call.p_domain),
+    ["quiz_context"],
+  )
+  const expected = projectArtifactToFacts({
+    envelope: COMPLETE_V3_PLAN_ENVELOPE,
+    artifactId: "artifact-new",
+    leadId: "lead-new",
+  }).quizContext
+  assert.deepEqual(rows[0]!.quiz_context, expected)
+  assert.equal(await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: quizB }), "preserved")
+  assert.equal(saves.length, before + 1, "the settled re-link writes nothing")
+})
+
+test("I2: a plain re-link of an unchanged source is a pure preserve with zero writes", async () => {
+  const rows: Row[] = []
+  const { admin, saves } = fakeAdmin(rows)
+  assert.equal(
+    await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: tuesdayLeadQuiz() }),
+    "replaced",
+  )
+  const settled = saves.length
+  const snapshot = structuredClone(rows[0])
+
+  assert.equal(
+    await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: tuesdayLeadQuiz() }),
+    "preserved",
+  )
+  assert.equal(saves.length, settled)
+  assert.deepEqual(rows[0], snapshot)
+})
+
 // --- F1: the quiz's own timestamp is stored and decides ---------------------------------
 
 const MONDAY = "2026-09-21T09:00:00.000Z"

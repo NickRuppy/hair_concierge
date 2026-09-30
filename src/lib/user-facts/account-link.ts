@@ -40,6 +40,12 @@ import {
  * never overwrites: it goes through `create_only`, which records it in
  * `provenance.preservedCandidates` and leaves the facts untouched.
  *
+ * Resume rule (fix round 6, I2): diagnostics and quiz_context are two RPCs. When the stored
+ * diagnostics already come from the incoming quiz (same kind, lead / artifact and taken time),
+ * the link is a resume of an earlier one: no diagnostics write, and quiz_context is brought to
+ * the state the full publication leaves (artifact -> its context; legacy lead -> cleared when a
+ * context holds answers), CAS-pinned. An already settled re-link writes nothing.
+ *
  * Completeness defaults (item B: density "medium", hair length "long") are applied to the
  * projection and marked `assumed`; `source.raw` stays the untouched envelope, so an unedited
  * record never feeds a guessed value into Stage 1.
@@ -262,6 +268,29 @@ export async function writeAccountLinkFacts(
     const facts = await loadUserFacts(admin, userId)
     const nowIso = new Date().toISOString()
 
+    // Fix round 6 (I2): the stored diagnostics already come from THIS quiz — a previous link of
+    // it wrote them and may have failed before its quiz_context write. That is a resume, not a
+    // new publication: diagnostics stay as they are (never re-written, so a later hand edit
+    // survives too), and quiz_context is brought to the state the full publication leaves.
+    // Idempotent: nothing to bring is zero writes.
+    if (
+      facts?.diagnostics &&
+      sameQuizSource(facts.diagnostics.source, projection.diagnostics.source)
+    ) {
+      const target =
+        projection.quizContext ?? (hasQuizContextAnswers(facts.quizContext) ? {} : null)
+      if (!target || sameDocument(facts.quizContext, target)) return "preserved"
+      await replaceQuizContext(admin, {
+        userId,
+        quizContext: target,
+        provenanceSource: projection.provenanceSource,
+        at: nowIso,
+        expectedRevision: facts.revision,
+        candidate: projection.candidate,
+      })
+      return "replaced"
+    }
+
     // F2: a default only fills a hole the existing profile cannot fill either.
     const { patch: diagnosticsPatch, fields: diagnosticsFields } = quizWinnerDiagnosticsWrite(
       projection.diagnostics,
@@ -333,6 +362,36 @@ export async function writeAccountLinkFacts(
 
   // Unreachable: the loop either returns or throws on its second pass.
   throw new Error("writeAccountLinkFacts: exhausted its revision_conflict retry")
+}
+
+/** Fix round 6 (I2): the same quiz — same kind, same lead / artifact, same taken time. */
+function sameQuizSource(
+  stored: DiagnosticsV1["source"],
+  incoming: DiagnosticsV1["source"],
+): boolean {
+  if (stored.kind === "legacy_columns" || incoming.kind === "legacy_columns") return false
+  return (
+    stored.kind === incoming.kind &&
+    stored.leadId === incoming.leadId &&
+    stored.artifactId === incoming.artifactId &&
+    stored.takenAt === incoming.takenAt
+  )
+}
+
+/** Deep equality independent of object key order (jsonb reorders keys); array order counts. */
+function sameDocument(left: unknown, right: unknown): boolean {
+  const canonical = (value: unknown): unknown =>
+    Array.isArray(value)
+      ? value.map(canonical)
+      : value && typeof value === "object"
+        ? Object.fromEntries(
+            Object.entries(value as Record<string, unknown>)
+              .filter(([, entry]) => entry !== undefined)
+              .sort(([a], [b]) => a.localeCompare(b))
+              .map(([key, entry]) => [key, canonical(entry)]),
+          )
+        : value
+  return JSON.stringify(canonical(left ?? null)) === JSON.stringify(canonical(right ?? null))
 }
 
 /** Whether a stored diagnostics source is the quiz this link wrote. */
