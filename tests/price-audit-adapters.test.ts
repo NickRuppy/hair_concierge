@@ -231,54 +231,128 @@ test("dm adapter reports an empty search result as not_found", async () => {
   assert.equal(observation.kind === "mismatch" ? observation.reason : null, "not_found")
 })
 
-test("probe gate needs a passing, reviewed, unexpired probe", () => {
+test("json-ld adapter turns a body-read failure into that candidate's failure", async () => {
+  const observation = await observeViaJsonLd(candidate(), {
+    fetch: async () => ({
+      ok: true,
+      status: 200,
+      url: ROSSMANN_URL,
+      text: async () => {
+        throw Object.assign(new Error("body timeout"), { name: "TimeoutError" })
+      },
+    }),
+  })
+  assert.deepEqual(observation, { kind: "failed", reason: "timeout" })
+})
+
+test("json-ld adapter ignores non-EUR aggregate offers instead of writing them", async () => {
+  const observation = await observeViaJsonLd(candidate(), {
+    fetch: pageWithJsonLd({
+      "@type": "Product",
+      name: "GLISS Ultimate Repair Express-Repair-Spülung",
+      gtin13: "4015100813494",
+      offers: {
+        "@type": "AggregateOffer",
+        lowPrice: "4.99",
+        highPrice: "4.99",
+        priceCurrency: "USD",
+        availability: "https://schema.org/InStock",
+      },
+    }),
+  })
+  assert.equal(observation.kind, "mismatch")
+  assert.equal(observation.kind === "mismatch" ? observation.reason : null, "no_price_found")
+})
+
+test("json-ld adapter routes equal-priced offers with conflicting stock to review", async () => {
+  const observation = await observeViaJsonLd(candidate(), {
+    fetch: pageWithJsonLd({
+      "@type": "Product",
+      name: "GLISS Ultimate Repair Express-Repair-Spülung",
+      gtin13: "4015100813494",
+      offers: [
+        { price: "4,99", priceCurrency: "EUR", availability: "https://schema.org/OutOfStock" },
+        { price: "4,99", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
+      ],
+    }),
+  })
+  assert.equal(observation.kind, "mismatch")
+  assert.equal(observation.kind === "mismatch" ? observation.reason : null, "ambiguous_offer")
+})
+
+test("json-ld adapter preserves a negative price's sign for the anomaly guard", async () => {
+  const observation = await observeViaJsonLd(candidate(), {
+    fetch: pageWithJsonLd({
+      "@type": "Product",
+      name: "GLISS Ultimate Repair Express-Repair-Spülung",
+      gtin13: "4015100813494",
+      offers: { price: "-4,49", priceCurrency: "EUR", availability: "https://schema.org/InStock" },
+    }),
+  })
+  assert.equal(observation.kind, "confirmed")
+  assert.equal(observation.kind === "confirmed" ? observation.priceEur : null, -4.49)
+})
+
+test("probe gate needs a passing reviewed unexpired probe whose samples all confirmed", () => {
   const base = mkdtempSync(join(tmpdir(), "price-audit-probe-"))
   mkdirSync(join(base, PROBE_DIR), { recursive: true })
   const now = Date.parse("2026-09-30T12:00:00.000Z")
-  writeFileSync(
-    join(base, PROBE_DIR, "dm.de.json"),
+  const confirmedSample = {
+    productId: "p1",
+    storedPriceEur: 4.95,
+    observation: {
+      kind: "confirmed",
+      identity: "gtin_match",
+      priceEur: 4.95,
+      buyable: true,
+      buyableSource: "structured",
+      evidenceUrl: "https://www.dm.de/p/d/1/x",
+      observedName: "x",
+    },
+  }
+  const failedSample = {
+    productId: "p2",
+    storedPriceEur: null,
+    observation: { kind: "failed", reason: "bot_wall" },
+  }
+  const record = (overrides: Record<string, unknown>) =>
     JSON.stringify({
-      host: "dm.de",
       probedAt: "2026-09-29T00:00:00.000Z",
       enabledForAutoWrite: true,
       reviewedBy: "nick",
       reviewedAt: "2026-09-29T10:00:00.000Z",
-    }),
-  )
+      samples: [confirmedSample],
+      ...overrides,
+    })
+  writeFileSync(join(base, PROBE_DIR, "dm.de.json"), record({ host: "dm.de" }))
   writeFileSync(
     join(base, PROBE_DIR, "rossmann.de.json"),
-    JSON.stringify({
-      host: "rossmann.de",
-      probedAt: "2026-09-29T00:00:00.000Z",
-      enabledForAutoWrite: false,
-      reviewedBy: "nick",
-      reviewedAt: "2026-09-29T10:00:00.000Z",
-    }),
+    record({ host: "rossmann.de", enabledForAutoWrite: false }),
   )
   writeFileSync(
     join(base, PROBE_DIR, "mueller.de.json"),
-    JSON.stringify({
-      host: "mueller.de",
-      probedAt: "2026-09-29T00:00:00.000Z",
-      enabledForAutoWrite: true,
-      reviewedBy: null,
-      reviewedAt: null,
-    }),
+    record({ host: "mueller.de", reviewedBy: null, reviewedAt: null }),
   )
   writeFileSync(
     join(base, PROBE_DIR, "douglas.de.json"),
-    JSON.stringify({
-      host: "douglas.de",
-      probedAt: "2026-06-01T00:00:00.000Z",
-      enabledForAutoWrite: true,
-      reviewedBy: "nick",
-      reviewedAt: "2026-06-01T10:00:00.000Z",
-    }),
+    record({ host: "douglas.de", probedAt: "2026-06-01T00:00:00.000Z" }),
   )
+  writeFileSync(
+    join(base, PROBE_DIR, "hagel-shop.de.json"),
+    record({ host: "hagel-shop.de", samples: [confirmedSample, failedSample] }),
+  )
+  writeFileSync(
+    join(base, PROBE_DIR, "olaplex.de.json"),
+    record({ host: "olaplex.de", samples: [] }),
+  )
+  writeFileSync(join(base, PROBE_DIR, "flaconi.de.json"), record({ host: "dm.de" }))
   assert.equal(hostAutoWriteEnabled("dm.de", base, now), true)
   assert.equal(hostAutoWriteEnabled("rossmann.de", base, now), false, "probe failed")
   assert.equal(hostAutoWriteEnabled("mueller.de", base, now), false, "not reviewed")
   assert.equal(hostAutoWriteEnabled("douglas.de", base, now), false, "probe expired")
-  assert.equal(hostAutoWriteEnabled("flaconi.de", base, now), false, "no probe file")
+  assert.equal(hostAutoWriteEnabled("hagel-shop.de", base, now), false, "a failed sample")
+  assert.equal(hostAutoWriteEnabled("olaplex.de", base, now), false, "no samples")
+  assert.equal(hostAutoWriteEnabled("flaconi.de", base, now), false, "host mismatch in record")
+  assert.equal(hostAutoWriteEnabled("notino.de", base, now), false, "no probe file")
   assert.equal(hostAutoWriteEnabled(null, base, now), false)
 })

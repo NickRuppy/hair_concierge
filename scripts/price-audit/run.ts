@@ -188,13 +188,15 @@ export async function fetchUnambiguousGtins(
 
 /**
  * Id-based update, guarded against concurrent edits (F6): the row must still
- * carry the link and price stamp the observation was made against, and exactly
- * one row must match, or nothing is written.
+ * carry the link, price stamp AND price the observation was made against (an
+ * admin edit changes `price_eur` without touching the stamp), and exactly one
+ * row must match, or nothing is written. A guard miss is `benign` — someone
+ * legitimately edited the row mid-run — while a database error is not.
  */
 async function applyWrite(
   supabase: SupabaseClient,
   result: AuditResult,
-): Promise<{ ok: boolean; error?: string }> {
+): Promise<{ ok: boolean; error?: string; benign?: boolean }> {
   if (result.decision.action !== "auto_write") return { ok: true }
   const write = result.decision.write
   const update: Record<string, unknown> = {
@@ -213,10 +215,14 @@ async function applyWrite(
     result.candidate.priceCheckedAt === null
       ? query.is("price_checked_at", null)
       : query.eq("price_checked_at", result.candidate.priceCheckedAt)
+  query =
+    result.candidate.priceEur === null
+      ? query.is("price_eur", null)
+      : query.eq("price_eur", result.candidate.priceEur)
 
   const { data, error } = await query.select("id")
   if (error) return { ok: false, error: error.message }
-  if (!data || data.length !== 1) return { ok: false, error: "concurrent_change" }
+  if (!data || data.length !== 1) return { ok: false, error: "concurrent_change", benign: true }
   return { ok: true }
 }
 
@@ -336,6 +342,9 @@ async function main() {
   const groups = groupCandidatesByHost(candidates)
   const results: AuditResult[] = []
   const notes = new Map<string, string>()
+  // Non-benign database write errors: any one of these fails the run loudly —
+  // a run whose writes silently fail must never check in "ok".
+  const dbWriteFailures: string[] = []
   await Promise.all(
     [...groups.entries()].map(async ([groupHost, hostCandidates]) => {
       const host = groupHost === "(no-host)" ? null : groupHost
@@ -357,27 +366,44 @@ async function main() {
           })
           continue
         }
-        const { observation } = await observeCandidate(candidate, {
-          dmSearch: (query) => dmClient.searchProducts(query),
-        })
-        const decision = decide(candidate, observation, {
-          hostAutoWriteEnabled: autoWriteEnabled,
-          now: new Date().toISOString(),
-        })
-        const result: AuditResult = { candidate, host, observation, decision, applied: false }
-        if (decision.action === "auto_write") {
-          if (isNoOpWrite(result)) {
-            notes.set(candidate.id, "noop_unchanged_status")
-          } else if (options.apply) {
-            const applied = await applyWrite(supabase, result)
-            result.applied = applied.ok
-            if (!applied.ok) {
-              notes.set(candidate.id, `apply_failed:${applied.error}`)
-              console.error(`write failed for ${candidate.id}: ${applied.error}`)
+        // Any per-candidate crash (adapter bug, unexpected shape) is that
+        // candidate's failure — it must never reject the whole run and leave
+        // earlier database writes without artifacts.
+        try {
+          const { observation } = await observeCandidate(candidate, {
+            dmSearch: (query) => dmClient.searchProducts(query),
+          })
+          const decision = decide(candidate, observation, {
+            hostAutoWriteEnabled: autoWriteEnabled,
+            now: new Date().toISOString(),
+          })
+          const result: AuditResult = { candidate, host, observation, decision, applied: false }
+          if (decision.action === "auto_write") {
+            if (isNoOpWrite(result)) {
+              notes.set(candidate.id, "noop_unchanged_status")
+            } else if (options.apply) {
+              const applied = await applyWrite(supabase, result)
+              result.applied = applied.ok
+              if (!applied.ok) {
+                notes.set(candidate.id, `apply_failed:${applied.error}`)
+                if (!applied.benign) dbWriteFailures.push(`${candidate.id}: ${applied.error}`)
+                console.error(`write failed for ${candidate.id}: ${applied.error}`)
+              }
             }
           }
+          results.push(result)
+        } catch (error) {
+          results.push({
+            candidate,
+            host,
+            observation: { kind: "failed", reason: "adapter_unavailable" },
+            decision: {
+              action: "recheck_failed",
+              reason: `unexpected_error: ${error instanceof Error ? error.message : String(error)}`,
+            },
+            applied: false,
+          })
         }
-        results.push(result)
         await delay(PER_REQUEST_DELAY_MS)
       }
     }),
@@ -457,6 +483,13 @@ async function main() {
     `Artifacts in ${outDir}. ${options.apply ? "Writes applied." : "No writes performed."}`,
   )
 
+  if (dbWriteFailures.length > 0) {
+    sentryCheckIn(sentryEnabled, { monitorSlug: SENTRY_MONITOR_SLUG, status: "error", checkInId })
+    await flushSentry(sentryEnabled)
+    console.error(`Database write failures (${dbWriteFailures.length}):`)
+    for (const failure of dbWriteFailures) console.error(`  ${failure}`)
+    process.exit(2)
+  }
   if (isSystemicFailure(fetchedSummary)) {
     sentryCheckIn(sentryEnabled, { monitorSlug: SENTRY_MONITOR_SLUG, status: "error", checkInId })
     await flushSentry(sentryEnabled)

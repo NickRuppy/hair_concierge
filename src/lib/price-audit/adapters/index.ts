@@ -86,7 +86,17 @@ export function hostAutoWriteEnabled(
   if (!host) return false
   const record = readProbeRecord(host, baseDir)
   if (!record || record.enabledForAutoWrite !== true) return false
+  if (record.host !== host) return false
   if (typeof record.reviewedBy !== "string" || record.reviewedBy.trim() === "") return false
+  // The flag alone is not evidence: the recorded samples themselves must be
+  // non-empty and all confirmed, or the record does not authorize writes.
+  if (!Array.isArray(record.samples) || record.samples.length === 0) return false
+  const allConfirmed = record.samples.every((sample) => {
+    if (typeof sample !== "object" || sample === null) return false
+    const observation = (sample as { observation?: { kind?: unknown } }).observation
+    return observation?.kind === "confirmed"
+  })
+  if (!allConfirmed) return false
   const probedAt = typeof record.probedAt === "string" ? Date.parse(record.probedAt) : Number.NaN
   if (!Number.isFinite(probedAt)) return false
   return now - probedAt <= PROBE_MAX_AGE_DAYS * 24 * 60 * 60 * 1000

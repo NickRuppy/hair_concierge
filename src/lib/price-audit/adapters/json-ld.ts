@@ -58,7 +58,16 @@ export async function observeViaJsonLd(
     return botWallOrRedirect(storedUrl, finalUrl)
   }
 
-  const html = await response.text()
+  let html: string
+  try {
+    html = await response.text()
+  } catch (error) {
+    // A body-read failure is this candidate's failure, never the run's.
+    return {
+      kind: "failed",
+      reason: error instanceof Error && error.name === "TimeoutError" ? "timeout" : "http_error",
+    }
+  }
   const product = extractJsonLdProduct(html)
   if (!product) {
     return {
@@ -236,6 +245,9 @@ function extractOffer(offers: unknown): {
   for (const offer of list) {
     if (!isRecord(offer)) continue
     const type = offer["@type"]
+    // Non-EUR offers never contribute a price, aggregate or plain.
+    const currency = stringOrNull(offer.priceCurrency)
+    if (currency && currency.toUpperCase() !== "EUR") continue
     if (type === "AggregateOffer" || (Array.isArray(type) && type.includes("AggregateOffer"))) {
       // Aggregate low/high prices only count when they collapse to one value.
       const low = parsePrice(offer.lowPrice)
@@ -247,8 +259,6 @@ function extractOffer(offers: unknown): {
       }
       continue
     }
-    const currency = stringOrNull(offer.priceCurrency)
-    if (currency && currency.toUpperCase() !== "EUR") continue
     const price =
       parsePrice(offer.price) ??
       (isRecord(offer.priceSpecification) ? parsePrice(offer.priceSpecification.price) : null)
@@ -257,15 +267,51 @@ function extractOffer(offers: unknown): {
     }
   }
   if (priced.length === 0) return { priceEur: null, availability: null, ambiguousOffer: false }
-  const distinct = new Set(priced.map((offer) => offer.priceEur))
-  if (distinct.size > 1) return { priceEur: null, availability: null, ambiguousOffer: true }
+  const distinctPrices = new Set(priced.map((offer) => offer.priceEur))
+  if (distinctPrices.size > 1) return { priceEur: null, availability: null, ambiguousOffer: true }
+  // Equal prices but conflicting stock signals (e.g. OutOfStock + InStock
+  // variants) must not auto-write either status — route to review.
+  const buyableSignals = new Set(
+    priced
+      .map((offer) => structuredBuyable(offer.availability))
+      .filter((signal): signal is boolean => signal !== null),
+  )
+  if (buyableSignals.size > 1) return { priceEur: null, availability: null, ambiguousOffer: true }
   return { ...priced[0], ambiguousOffer: false }
 }
 
+/**
+ * Maps a schema.org availability string to a structured buyable signal, or
+ * null when the vocabulary gives none.
+ */
+function structuredBuyable(availability: string | null): boolean | null {
+  if (!availability) return null
+  const value = availability.toLowerCase()
+  if (
+    value.includes("instock") ||
+    value.includes("limitedavailability") ||
+    value.includes("onlineonly")
+  ) {
+    return true
+  }
+  if (
+    value.includes("outofstock") ||
+    value.includes("soldout") ||
+    value.includes("discontinued") ||
+    value.includes("instoreonly")
+  ) {
+    return false
+  }
+  return null
+}
+
 function parsePrice(value: unknown): number | null {
+  // Sign-preserving on purpose: a negative price must reach the decision
+  // module's non-positive anomaly guard, not be silently made positive.
   if (typeof value === "number" && Number.isFinite(value)) return value
   if (typeof value === "string") {
-    const normalized = value.replace(",", ".").replace(/[^\d.]/g, "")
+    const normalized = value.replace(/[€\s]|EUR/gi, "").replace(",", ".")
+    if (!/^-?\d+(?:\.\d+)?$/.test(normalized)) return null
     const parsed = Number.parseFloat(normalized)
     if (Number.isFinite(parsed)) return parsed
   }
@@ -331,26 +377,10 @@ function resolveBuyability(
   brand: string | null,
   html: string,
 ): { buyable: boolean; source: "structured" | "text" } | null {
-  if (availability) {
-    const value = availability.toLowerCase()
-    if (
-      value.includes("instock") ||
-      value.includes("limitedavailability") ||
-      value.includes("onlineonly")
-    ) {
-      return { buyable: true, source: "structured" }
-    }
-    // Store-only pages count as unavailable per HAI-124 (online-buyable rule).
-    if (
-      value.includes("outofstock") ||
-      value.includes("soldout") ||
-      value.includes("discontinued") ||
-      value.includes("instoreonly")
-    ) {
-      return { buyable: false, source: "structured" }
-    }
-    // PreOrder and unknown vocabularies fall through to the text classifier.
-  }
+  // Store-only pages count as unavailable per HAI-124 (online-buyable rule).
+  // PreOrder and unknown vocabularies fall through to the text classifier.
+  const structured = structuredBuyable(availability)
+  if (structured !== null) return { buyable: structured, source: "structured" }
   const host = hostOf(finalUrl)
   if (!host) return null
   const classified = classifyKnownRetailerContent(host, brand, normalizeBodyText(html))
