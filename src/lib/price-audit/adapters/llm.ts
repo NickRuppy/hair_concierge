@@ -137,6 +137,10 @@ export function extractJsonAnswer(output: string): Record<string, unknown> | nul
   // only short suffixes, and the caps bound everything else.
   const text = output.length > MAX_SCAN_CHARS ? output.slice(-MAX_SCAN_CHARS) : output
   let attempts = 0
+  // The provisional answer stays provisional until the scan shows no earlier
+  // parseable object ENCLOSES it — a nested `found` inside a log object must
+  // never hijack the answer; only the top-level object counts.
+  let candidate: { start: number; end: number; value: Record<string, unknown> } | null = null
   for (
     let start = text.lastIndexOf("{");
     start !== -1 && attempts < MAX_PARSE_ATTEMPTS;
@@ -145,21 +149,24 @@ export function extractJsonAnswer(output: string): Record<string, unknown> | nul
     attempts++
     const end = matchingBrace(text, start)
     if (end === -1) continue
+    let parsed: unknown
     try {
-      const parsed: unknown = JSON.parse(text.slice(start, end + 1))
-      if (
-        typeof parsed === "object" &&
-        parsed !== null &&
-        !Array.isArray(parsed) &&
-        typeof (parsed as Record<string, unknown>).found === "boolean"
-      ) {
-        return parsed as Record<string, unknown>
-      }
+      parsed = JSON.parse(text.slice(start, end + 1))
     } catch {
-      // Not JSON at this start — keep walking backward.
+      continue
+    }
+    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) continue
+    const record = parsed as Record<string, unknown>
+    const hasSchema = typeof record.found === "boolean"
+    if (candidate && end > candidate.end) {
+      // This earlier object encloses the candidate: the candidate was nested.
+      // The encloser replaces it when it is itself an answer, else drops it.
+      candidate = hasSchema ? { start, end, value: record } : null
+    } else if (!candidate && hasSchema) {
+      candidate = { start, end, value: record }
     }
   }
-  return null
+  return candidate?.value ?? null
 }
 
 const MAX_SCAN_CHARS = 256 * 1024

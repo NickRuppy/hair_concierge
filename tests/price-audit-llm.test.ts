@@ -176,6 +176,14 @@ test("extractJsonAnswer takes the final schema answer out of noisy cli output", 
   })
   // Objects lacking the boolean `found` are not answers at all.
   assert.equal(extractJsonAnswer('{"price_eur":3}'), null)
+  // Regression: a nested boolean `found` inside a later log object must not
+  // hijack an earlier top-level answer.
+  assert.deepEqual(
+    extractJsonAnswer('{"found":false,"notes":""} then {"log":{"found":true,"price_eur":1}}'),
+    { found: false, notes: "" },
+  )
+  // And a nested answer-shaped object alone is still no answer.
+  assert.equal(extractJsonAnswer('{"log":{"found":true,"price_eur":1}}'), null)
 })
 
 test("prompt contains the anti-aggregator and default-size rules", () => {
