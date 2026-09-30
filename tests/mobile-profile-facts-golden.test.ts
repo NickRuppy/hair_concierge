@@ -9,6 +9,7 @@ import {
   completeMobileRegistration,
 } from "../src/lib/mobile/registration-completion"
 import type { ProfileEditRequest } from "../src/lib/mobile/profile-edit-contract"
+import { buildProfilePrimaryConcern } from "../src/lib/quiz/link-to-profile"
 import { projectQuizAnswersToLegacyVocabulary } from "../src/lib/quiz/normalization"
 import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
 import type { QuizAnswers } from "../src/lib/quiz/types"
@@ -39,8 +40,13 @@ import {
  *
  *  E1 goal vocabulary (plan §3 migration table M, via `resolveVisibleDiagnosticGoals`): a legacy
  *     goal the quiz folded into a family derives as that family's column value.
- *  E2 `primary_concern`: the old patch never wrote it; the door derives it (explicit pick while
- *     it is a current concern, else her only concern, else NULL).
+ *  E2 `primary_concern` WITHOUT any main-problem pick (neither in the answers nor, for a hand
+ *     edit, stored): the old patch never wrote it; the door derives it (her only concern, else
+ *     NULL). Narrowed in fix round 1 (G) — with a pick nothing is overridden:
+ *      - a pick in the answers is expected as exactly her stated pick, computed by the web quiz
+ *        link's own projection `buildProfilePrimaryConcern` (the old iOS patch dropped it);
+ *      - a stored pick with answers that carry none (a hand edit) is expected to stay, which is
+ *        what the old, untouched column did (while it is still one of her concerns).
  *  E3 canonical array order: array columns are compared as sets.
  *  E4 `[]` instead of NULL for chemical_treatment / concerns / goals.
  */
@@ -115,11 +121,27 @@ async function fixtureAnswers(): Promise<Array<[string, QuizAnswers]>> {
   ]
 }
 
+/** `primary_concern` per E2 (narrowed): see the header. `handEdit`: the write leaves an unstated
+ * pick alone (iOS edit, completion); a registration quiz replaces the whole document. */
+function expectedPrimaryConcern(
+  answers: QuizAnswers,
+  before: Record<string, unknown>,
+  handEdit: boolean,
+) {
+  const concerns = projectQuizAnswersToLegacyVocabulary({ concerns: answers.concerns }).concerns
+  if (answers.primary_concern !== undefined) return buildProfilePrimaryConcern(answers)
+  const storedPick = before.primary_concern
+  if (handEdit && typeof storedPick === "string" && concerns.includes(storedPick as never))
+    return storedPick
+  return concerns.length === 1 ? concerns[0] : null // E2
+}
+
 /** The columns today's direct write stored, with E1/E2/E4 applied as the only rewrites. */
 function expectedColumns(
   answers: QuizAnswers,
   before: Record<string, unknown>,
   patch: Record<string, unknown>,
+  handEdit = true,
 ) {
   const expected: Record<string, unknown> = {}
   for (const column of DIAGNOSTICS_COLUMNS) {
@@ -127,11 +149,7 @@ function expectedColumns(
     if (column === "goals" && Array.isArray(value)) {
       value = [...new Set(value.map((goal: string) => MIGRATION_TABLE_M[goal] ?? goal))] // E1
     }
-    if (column === "primary_concern") {
-      // E2: the door's rule, not the untouched old column.
-      const concerns = projectQuizAnswersToLegacyVocabulary({ concerns: answers.concerns }).concerns
-      value = concerns.length === 1 ? concerns[0] : null
-    }
+    if (column === "primary_concern") value = expectedPrimaryConcern(answers, before, handEdit)
     if (E4_ARRAY_COLUMNS.has(column) && value === null) value = [] // E4
     expected[column] = value
   }
@@ -148,7 +166,7 @@ function comparable(columns: Record<string, unknown>) {
   )
 }
 
-async function seed(pg: PersonalPlanTestDb) {
+async function seed(pg: PersonalPlanTestDb, overrides: Partial<QuizAnswers> = {}) {
   await insertProfile(pg, OWNER)
   const seedAnswers: QuizAnswers = {
     ...BASE,
@@ -156,6 +174,7 @@ async function seed(pg: PersonalPlanTestDb) {
     thickness: "normal",
     concerns: ["frizz", "tangling"],
     goals: ["shine"],
+    ...overrides,
   }
   await pg.query(
     "insert into public.leads(id,user_id,quiz_kind,quiz_answers,status) values($1,$2,'legacy',$3,'linked')",
@@ -173,12 +192,33 @@ async function seed(pg: PersonalPlanTestDb) {
   })
 }
 
+/** Fix round 1 (G): main-problem picks. The seed's stored pick is `frizz` in the second case. */
+const PICK_FIXTURES: Array<[string, QuizAnswers, Partial<QuizAnswers>]> = [
+  [
+    "explicit main-problem pick",
+    { ...BASE, concerns: ["frizz", "dryness"], primary_concern: "dryness" },
+    {},
+  ],
+  [
+    "stored pick, answers without one (the stored pick stays)",
+    { ...BASE, concerns: ["frizz", "tangling", "dryness"] },
+    { primary_concern: "frizz" },
+  ],
+]
+
 test("golden (task 3): iOS edit fixtures derive today's columns up to E1-E4", async (t) => {
-  for (const [name, answers] of await fixtureAnswers()) {
+  const cases: Array<[string, QuizAnswers, Partial<QuizAnswers>]> = [
+    ...(await fixtureAnswers()).map(
+      ([name, answers]) => [name, answers, {}] as [string, QuizAnswers, Partial<QuizAnswers>],
+    ),
+    ...PICK_FIXTURES,
+  ]
+  for (const [name, answers, seedOverrides] of cases) {
     const pg = await mobileFactsDatabase(t)
-    await seed(pg)
+    await seed(pg, seedOverrides)
     const client = pgliteRpcClient(pg)
     const before = (await readRow(pg, OWNER))!
+    if (seedOverrides.primary_concern) assert.equal(before.primary_concern, "frizz", "seeded pick")
     const read = (await client.rpc("scanner_context_read_source", { p_user_id: OWNER })).data as {
       profileRevision: string
     }
@@ -210,6 +250,11 @@ const REGISTRATION_FIXTURES: Array<[string, QuizAnswers]> = [
   ["registration answers", BASE],
   ["registration replace", { ...BASE, thickness: "coarse" }],
   ["iOS onboarding QA fixture", { ...BASE, fingertest: "glatt", concerns: [], goals: ["shine"] }],
+  // Fix round 1 (G): an explicit main-problem pick.
+  [
+    "explicit main-problem pick",
+    { ...BASE, concerns: ["frizz", "dryness"], primary_concern: "dryness" },
+  ],
   [
     "all eight quiz goals",
     {
@@ -251,7 +296,9 @@ test("golden (task 4): registration create and replace derive today's columns up
     const createdRow = (await readRow(created, OWNER))!
     assert.deepEqual(
       comparable(Object.fromEntries(DIAGNOSTICS_COLUMNS.map((c) => [c, createdRow[c]]))),
-      comparable(expectedColumns(answers, TABLE_DEFAULTS, legacyMobileEditProfilePatch(answers))),
+      comparable(
+        expectedColumns(answers, TABLE_DEFAULTS, legacyMobileEditProfilePatch(answers), false),
+      ),
       `create: ${name}`,
     )
 
@@ -269,7 +316,7 @@ test("golden (task 4): registration create and replace derive today's columns up
     const row = (await readRow(replaced, OWNER))!
     assert.deepEqual(
       comparable(Object.fromEntries(DIAGNOSTICS_COLUMNS.map((c) => [c, row[c]]))),
-      comparable(expectedColumns(answers, before, legacyMobileEditProfilePatch(answers))),
+      comparable(expectedColumns(answers, before, legacyMobileEditProfilePatch(answers), false)),
       `replace: ${name}`,
     )
   }
