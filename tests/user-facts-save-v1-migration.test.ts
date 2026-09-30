@@ -570,13 +570,12 @@ test("create_only overwrites diagnostics whose source is the backfill's own lega
   assert.deepEqual(row.facts_provenance, { diagnostics: DIAGNOSTICS_PROVENANCE })
 })
 
-// Addendum (Task 5a review C1, controller ruling 2026-09-15): on the create_only
-// diagnostics path that PROCEEDS because the old document's source is the
-// backfill's own `legacy_columns`, existing non-empty goals must survive an
-// account-linked patch — mirrors the pre-PR1 link-to-profile rule "only write
-// goals if the user has none yet". Every other field still follows the normal
-// merge, and this applies ONLY to that one path.
-test("create_only + legacy_columns backfill: existing non-empty goals survive the linked patch (goals anti-clobber)", async (t) => {
+// Decision wave 1 (Nick, 2026-09-30, "latest quiz wins"): the Task 5a C1 goals
+// anti-clobber guard on the create_only + `legacy_columns` path is gone. A quiz
+// that is allowed to write replaces goals like every other field — goals come
+// from the new quiz. (The TS account-link writer now decides "newer own quiz"
+// itself and writes with `upsert`; this pins the SQL side of the same rule.)
+test("create_only + legacy_columns backfill: the linked patch's goals replace existing non-empty goals", async (t) => {
   const pg = await freshDatabase(t)
   const backfilled = {
     texture: "coily",
@@ -606,15 +605,15 @@ test("create_only + legacy_columns backfill: existing non-empty goals survive th
 
   const row = await readHairProfile(pg, USER)
   assert.ok(row)
-  // `goals` is dropped from the patch before merging: the stored document (and
-  // therefore the derived `goals` column) keeps the user's existing goal.
+  // The linked quiz's goals win: the stored document (and therefore the derived
+  // `goals` column) carries the new goal, not the backfilled one.
   assert.deepEqual(row.diagnostics, {
     texture: "wavy",
     thickness: "coarse",
-    goals: ["moisture"],
+    goals: ["shine"],
     source: DIAGNOSTICS_SOURCE,
   })
-  assert.deepEqual(row.goals, ["moisture"])
+  assert.deepEqual(row.goals, ["shine"])
   // Every other field still follows the normal field-level merge.
   assert.equal(row.hair_texture, "wavy")
   assert.equal(row.thickness, "coarse")
