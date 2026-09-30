@@ -294,8 +294,11 @@ Safety:
 > auto-write `price_eur`, `price_checked_at`, `purchase_link_status` and
 > `purchase_link_checked_at` — and only those — when identity is confirmed
 > (GTIN/stored-link tie) on a probe-gated host and the observation is
-> anomaly-free. Everything else here stands: link *replacements*, category or
-> product-type changes, and all anomalies remain review-only.
+> anomaly-free. The GPT research fallback (same date) may auto-write
+> `price_eur` + `price_checked_at` only, from a gate-passing evidence URL —
+> never `purchase_link_status` or links. Everything else here stands: link
+> *replacements*, category or product-type changes, and all anomalies remain
+> review-only.
 
 Suggested cadence:
 

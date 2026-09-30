@@ -1,6 +1,6 @@
 # Recurring Price-Audit Lane
 
-Date: 2026-09-30 · Rev. 3 (Rev. 2 = counterpart review; Rev. 3 = display-rule ruling) · Branch: `claude/vigilant-chandrasekhar-fffb22`
+Date: 2026-09-30 · Rev. 4 (Rev. 2 = counterpart review; Rev. 3 = display-rule ruling; Rev. 4 = in-run GPT fallback) · Branch: `claude/vigilant-chandrasekhar-fffb22`
 
 > Rev. 2: counterpart review (internal reviewer pass substituting for the Codex
 > lane, which is down pending a CLI upgrade — one lane, per the fallback rule)
@@ -73,6 +73,7 @@ Confirmed with Nick (2026-09-30, this session):
 3. Runner: the existing Hetzner server ("We have a hetzner server on which we could run this quite well no?"), weekly cadence.
 4. **Display rule (supersedes the earlier 14-day-window choice and settles O2):** the stored price always shows; staleness never blanks it ("I would rather have an old price … rather than unavailable for a lot of products"). `isStage3PriceFresh` and its window are removed; Stage-3-family surfaces keep the `purchase_link_status === "available"` condition, the cockpit card keeps its status-free label (accepted divergence). The audit exists to keep the always-shown price honest.
 5. **O1 settled: dm auto-writes enabled at rollout** — Nick accepts the current dm MCP usage; the probe + reviewed-by sign-off remain the gate.
+6. **GPT fallback in the same run (2026-09-30, Rev. 4):** anything the deterministic adapters cannot confirm escalates immediately to Codex CLI research within the weekly run (not a separate monthly lane — "why should I do an extra task for it?"). Write policy chosen by Nick: **price + stamp only** — GPT results auto-write `price_eur` + `price_checked_at` under the same anomaly guards and a url-gate evidence check; link-status claims go to review; `purchase_link_status` is never written from an LLM answer. Implemented in `src/lib/price-audit/adapters/llm.ts` + runner escalation (budget-capped, sequential).
 
 Inherited from evidence or contract (HAI-124 aligned decisions + repo):
 

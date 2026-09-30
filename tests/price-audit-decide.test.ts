@@ -119,6 +119,39 @@ test("failed observations never write and never stamp", () => {
   assert.deepEqual(decision, { action: "recheck_failed", reason: "bot_wall" })
 })
 
+test("llm research writes the price pair only and skips the host probe gate", () => {
+  const decision = decide(candidate(), confirmed({ identity: "llm_research", priceEur: 5.25 }), {
+    ...opts,
+    hostAutoWriteEnabled: false,
+  })
+  assert.deepEqual(decision, {
+    action: "auto_write",
+    write: { priceEur: 5.25, priceCheckedAt: NOW },
+  })
+})
+
+test("an llm unavailability claim goes to review, never into purchase_link_status", () => {
+  const decision = decide(
+    candidate(),
+    confirmed({ identity: "llm_research", buyable: false, buyableSource: "text" }),
+    opts,
+  )
+  assert.equal(decision.action, "review_proposal")
+  assert.match(
+    decision.action === "review_proposal" ? decision.reason : "",
+    /llm_reports_unavailable/,
+  )
+})
+
+test("llm research prices pass the same anomaly guards", () => {
+  const decision = decide(
+    candidate({ priceEur: 4.95 }),
+    confirmed({ identity: "llm_research", priceEur: 19.99 }),
+    opts,
+  )
+  assert.equal(decision.action, "review_proposal")
+})
+
 test("a host without a passing probe downgrades auto-writes to review proposals", () => {
   const decision = decide(candidate(), confirmed(), { ...opts, hostAutoWriteEnabled: false })
   assert.equal(decision.action, "review_proposal")

@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/node"
+import { spawn } from "node:child_process"
 import { config as loadEnv } from "dotenv"
 import { mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
@@ -12,7 +13,12 @@ import {
   hostAutoWriteEnabled,
   observeCandidate,
 } from "../../src/lib/price-audit/adapters"
-import type { PriceAuditCandidate } from "../../src/lib/price-audit/contracts"
+import type {
+  AuditDecision,
+  PriceAuditCandidate,
+  RetailerObservation,
+} from "../../src/lib/price-audit/contracts"
+import { observeViaLlm } from "../../src/lib/price-audit/adapters/llm"
 import { decide } from "../../src/lib/price-audit/decide"
 import { orderAuditCandidates } from "../../src/lib/price-audit/select"
 import {
@@ -49,14 +55,35 @@ const SENTRY_MONITOR_CONFIG = {
   recoveryThreshold: 1,
 } as const
 
-type CliOptions = { apply: boolean; limit: number | null; host: string | null; probeHosts: boolean }
+type CliOptions = {
+  apply: boolean
+  limit: number | null
+  host: string | null
+  probeHosts: boolean
+  llm: boolean
+  llmBudget: number
+}
+
+const DEFAULT_LLM_BUDGET = 40
 
 function parseArgs(argv: string[]): CliOptions {
-  const options: CliOptions = { apply: false, limit: null, host: null, probeHosts: false }
+  const options: CliOptions = {
+    apply: false,
+    limit: null,
+    host: null,
+    probeHosts: false,
+    llm: false,
+    llmBudget: DEFAULT_LLM_BUDGET,
+  }
+  let noLlm = false
   for (let index = 0; index < argv.length; index++) {
     const arg = argv[index]
     if (arg === "--apply") options.apply = true
     else if (arg === "--probe-hosts") options.probeHosts = true
+    else if (arg === "--llm") options.llm = true
+    else if (arg === "--no-llm") noLlm = true
+    else if (arg === "--llm-budget")
+      options.llmBudget = Number.parseInt(argv[++index] ?? "", 10) || DEFAULT_LLM_BUDGET
     else if (arg === "--limit") options.limit = Number.parseInt(argv[++index] ?? "", 10) || null
     else if (arg === "--host") options.host = argv[++index] ?? null
     else throw new Error(`Unknown argument: ${arg}`)
@@ -64,6 +91,10 @@ function parseArgs(argv: string[]): CliOptions {
   if (options.apply && options.probeHosts) {
     throw new Error("--probe-hosts is observation-only and cannot be combined with --apply")
   }
+  // The GPT fallback costs real research per product, so it runs by default
+  // only in apply mode (the weekly cron); a dry-run opts in with --llm.
+  if (noLlm) options.llm = false
+  else if (options.apply) options.llm = true
   return options
 }
 
@@ -199,12 +230,13 @@ async function applyWrite(
 ): Promise<{ ok: boolean; error?: string; benign?: boolean }> {
   if (result.decision.action !== "auto_write") return { ok: true }
   const write = result.decision.write
-  const update: Record<string, unknown> = {
-    purchase_link_status: write.purchaseLinkStatus,
-    purchase_link_checked_at: write.purchaseLinkCheckedAt,
-  }
+  const update: Record<string, unknown> = {}
+  if (write.purchaseLinkStatus !== undefined) update.purchase_link_status = write.purchaseLinkStatus
+  if (write.purchaseLinkCheckedAt !== undefined)
+    update.purchase_link_checked_at = write.purchaseLinkCheckedAt
   if (write.priceEur !== undefined) update.price_eur = write.priceEur
   if (write.priceCheckedAt !== undefined) update.price_checked_at = write.priceCheckedAt
+  if (Object.keys(update).length === 0) return { ok: true }
 
   let query = supabase.from("products").update(update).eq("id", result.candidate.id)
   query =
@@ -238,6 +270,52 @@ function isNoOpWrite(result: AuditResult): boolean {
 
 function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+/**
+ * Codex CLI research call — the same binary the intake worker uses on the
+ * server. stdin must be closed ("ignore"): with an open pipe, `codex exec`
+ * waits for additional input instead of answering the prompt argument.
+ */
+function runCodexResearch(prompt: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const child = spawn("codex", ["exec", "--sandbox", "read-only", prompt], {
+      stdio: ["ignore", "pipe", "pipe"],
+      timeout: 240_000,
+    })
+    let stdout = ""
+    let stderr = ""
+    child.stdout.on("data", (chunk: Buffer) => {
+      if (stdout.length < 16 * 1024 * 1024) stdout += chunk.toString()
+    })
+    child.stderr.on("data", (chunk: Buffer) => {
+      if (stderr.length < 1024 * 1024) stderr += chunk.toString()
+    })
+    child.on("error", reject)
+    child.on("close", (code) => {
+      if (code !== 0 && !stdout)
+        reject(new Error(`codex exec exited ${code}: ${stderr.slice(0, 300)}`))
+      else resolve(`${stdout}\n${stderr}`)
+    })
+  })
+}
+
+/** Runs LLM research strictly one at a time across all concurrent host groups. */
+function createSequentialLimiter(): <T>(task: () => Promise<T>) => Promise<T> {
+  let chain: Promise<unknown> = Promise.resolve()
+  return (task) => {
+    const next = chain.then(task, task)
+    chain = next.catch(() => undefined)
+    return next
+  }
+}
+
+function createBudget(max: number): { take(): boolean; used(): number } {
+  let used = 0
+  return {
+    take: () => (used < max ? (used++, true) : false),
+    used: () => used,
+  }
 }
 
 function initSentry(): boolean {
@@ -308,9 +386,9 @@ function autoWriteCsvRow(result: AuditResult, note: string): CsvRow {
     old_price_eur: result.candidate.priceEur == null ? "" : String(result.candidate.priceEur),
     new_price_eur: write.priceEur === undefined ? "" : String(write.priceEur),
     old_purchase_link_status: result.candidate.purchaseLinkStatus ?? "",
-    new_purchase_link_status: write.purchaseLinkStatus,
+    new_purchase_link_status: write.purchaseLinkStatus ?? "",
     price_checked_at: write.priceCheckedAt ?? "",
-    purchase_link_checked_at: write.purchaseLinkCheckedAt,
+    purchase_link_checked_at: write.purchaseLinkCheckedAt ?? "",
     applied: result.applied ? "true" : "false",
     note,
   }
@@ -340,6 +418,8 @@ async function main() {
   )
 
   const groups = groupCandidatesByHost(candidates)
+  const llmBudget = createBudget(options.llm ? options.llmBudget : 0)
+  const llmLimiter = createSequentialLimiter()
   const results: AuditResult[] = []
   const notes = new Map<string, string>()
   // Non-benign database write errors: any one of these fails the run loudly —
@@ -353,30 +433,50 @@ async function main() {
       // (F16) unless a supervised run passes --probe-hosts for observation.
       const fetchHost = hasAdapter(host) && (autoWriteEnabled || options.probeHosts)
       for (const candidate of hostCandidates) {
-        if (!fetchHost) {
-          results.push({
-            candidate,
-            host,
-            observation: { kind: "failed", reason: "adapter_unavailable" },
-            decision: {
-              action: "review_proposal",
-              reason: hasAdapter(host) ? "host_not_enabled" : "no_adapter_for_host",
-            },
-            applied: false,
-          })
-          continue
-        }
         // Any per-candidate crash (adapter bug, unexpected shape) is that
         // candidate's failure — it must never reject the whole run and leave
         // earlier database writes without artifacts.
         try {
-          const { observation } = await observeCandidate(candidate, {
-            dmSearch: (query) => dmClient.searchProducts(query),
-          })
-          const decision = decide(candidate, observation, {
-            hostAutoWriteEnabled: autoWriteEnabled,
-            now: new Date().toISOString(),
-          })
+          let observation: RetailerObservation
+          let decision: AuditDecision
+          if (fetchHost) {
+            observation = (
+              await observeCandidate(candidate, {
+                dmSearch: (query) => dmClient.searchProducts(query),
+              })
+            ).observation
+            decision = decide(candidate, observation, {
+              hostAutoWriteEnabled: autoWriteEnabled,
+              now: new Date().toISOString(),
+            })
+          } else {
+            observation = { kind: "failed", reason: "adapter_unavailable" }
+            decision = {
+              action: "review_proposal",
+              reason: hasAdapter(host) ? "host_not_enabled" : "no_adapter_for_host",
+            }
+          }
+
+          // GPT fallback (Nick, 2026-09-30): anything the deterministic path
+          // could not confirm escalates to Codex research in the same run,
+          // budget-capped, one research at a time across all host groups.
+          if (observation.kind !== "confirmed" && options.llm && llmBudget.take()) {
+            const llmObservation = await llmLimiter(() =>
+              observeViaLlm(candidate, { runResearch: runCodexResearch }),
+            )
+            const llmDecision = decide(candidate, llmObservation, {
+              hostAutoWriteEnabled: autoWriteEnabled,
+              now: new Date().toISOString(),
+            })
+            // Keep the LLM outcome when it moved the row forward; a failed or
+            // empty research keeps the (more specific) deterministic reason.
+            if (llmObservation.kind !== "failed") {
+              observation = llmObservation
+              decision = llmDecision
+              notes.set(candidate.id, "source:llm_research")
+            }
+          }
+
           const result: AuditResult = { candidate, host, observation, decision, applied: false }
           if (decision.action === "auto_write") {
             if (isNoOpWrite(result)) {
@@ -404,7 +504,7 @@ async function main() {
             applied: false,
           })
         }
-        await delay(PER_REQUEST_DELAY_MS)
+        if (fetchHost) await delay(PER_REQUEST_DELAY_MS)
       }
     }),
   )
@@ -478,7 +578,7 @@ async function main() {
     autoRows.map((result) => autoWriteCsvRow(result, notes.get(result.candidate.id) ?? "")),
   )
 
-  console.log(JSON.stringify(summary.byAction))
+  console.log(JSON.stringify({ ...summary.byAction, llm_researches: llmBudget.used() }))
   console.log(
     `Artifacts in ${outDir}. ${options.apply ? "Writes applied." : "No writes performed."}`,
   )

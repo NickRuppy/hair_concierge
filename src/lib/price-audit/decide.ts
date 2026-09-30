@@ -26,6 +26,27 @@ export function decide(
     }
   }
 
+  // GPT fallback lane (identity `llm_research`): runs exactly where no probed
+  // adapter could confirm, so the host probe gate does not apply. It may write
+  // the price and its stamp only — a link-status claim from an LLM goes to
+  // review instead of touching the buy CTA (Nick, 2026-09-30).
+  if (observation.identity === "llm_research") {
+    if (!observation.buyable) {
+      return {
+        action: "review_proposal",
+        reason: `llm_reports_unavailable: ${observation.priceEur} EUR @ ${observation.evidenceUrl} — verify link status manually`,
+      }
+    }
+    const llmAnomaly = priceAnomaly(candidate, observation.priceEur)
+    if (llmAnomaly) {
+      return { action: "review_proposal", reason: llmAnomaly }
+    }
+    return {
+      action: "auto_write",
+      write: { priceEur: observation.priceEur, priceCheckedAt: options.now },
+    }
+  }
+
   if (!options.hostAutoWriteEnabled) {
     return {
       action: "review_proposal",

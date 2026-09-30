@@ -22,8 +22,12 @@ export type PriceAuditCandidate = {
 export type RetailerObservation =
   | {
       kind: "confirmed"
-      /** How product identity was established at the retailer. */
-      identity: "gtin_match" | "exact_stored_pdp"
+      /**
+       * How product identity was established at the retailer. `llm_research`
+       * is the GPT fallback lane: it may auto-write the price and its stamp
+       * only — never `purchase_link_status` (Nick, 2026-09-30).
+       */
+      identity: "gtin_match" | "exact_stored_pdp" | "llm_research"
       priceEur: number
       buyable: boolean
       /**
@@ -55,11 +59,12 @@ export type RetailerObservation =
       reason: "http_error" | "timeout" | "bot_wall" | "adapter_unavailable"
     }
 
+/** At least one field is always present; the LLM lane writes only the price pair. */
 export type PriceAuditWrite = {
   priceEur?: number
   priceCheckedAt?: string
-  purchaseLinkStatus: "available" | "unavailable"
-  purchaseLinkCheckedAt: string
+  purchaseLinkStatus?: "available" | "unavailable"
+  purchaseLinkCheckedAt?: string
 }
 
 export type AuditDecision =

@@ -8,7 +8,7 @@ Plan of record: `plans/price-audit-lane.md`. Approved 2026-09-30 (host adapters 
 
 - **dm.de** — identity and commerce via the official dm MCP `searchProducts` (GTIN match **and** the stored link's DAN/GTIN must agree); `purchasable`/`sellout` are the structured availability signals. `getProductDetails` is not used (documented "NOT FOR: prices, availability").
 - **rossmann.de / mueller.de / douglas.de** — stored-PDP fetch with the honest audit user agent, schema.org JSON-LD parsing (GTIN identity, offer price, availability; ambiguous multi-price offers go to review).
-- **Everything else** — no adapter; rows land in the review CSV.
+- **Everything else / anything unconfirmed** — the GPT fallback (Nick, 2026-09-30): whatever the deterministic path could not confirm (no adapter, host not enabled, bot wall, GTIN/link mismatch) escalates in the same run to the Codex CLI (already on the worker), which researches the current price like a human would. Its answer counts only with a gate-passing evidence URL (deny aggregators; known retailers or the brand's own shop) and passes the same anomaly guards. It may auto-write **`price_eur` + `price_checked_at` only** — an LLM claim about link status goes to the review CSV, never into `purchase_link_status`. Budget-capped per run (`--llm-budget`, default 40, oldest/recommendable first); enabled by default only with `--apply` (a dry-run opts in with `--llm`, opt out with `--no-llm`). Products it can't settle land in the review CSV as before.
 
 Honesty rules (enforced in `src/lib/price-audit/decide.ts`, unit-tested):
 
@@ -35,9 +35,9 @@ Supervised observation of a not-yet-enabled host (dry-run only, never combinable
 ## Runner usage
 
 ```bash
-npm run price-audit                     # dry-run, artifacts only, zero writes
-npm run price-audit -- --limit 20       # bounded supervised run
-npm run price-audit -- --apply          # id-based updates (cron mode)
+npm run price-audit                     # dry-run, artifacts only, zero writes, no GPT
+npm run price-audit -- --limit 20 --llm # bounded supervised run incl. GPT fallback
+npm run price-audit -- --apply          # id-based updates + GPT fallback (cron mode)
 ```
 
 Artifacts land in `$PRICE_AUDIT_OUT_DIR/<run-start>/` (default `tmp/price-audit/`): `summary.json`, `review-proposals.csv`, `auto-writes.csv` (old→new per write, with `applied`/`note`). On the server set `PRICE_AUDIT_OUT_DIR=/opt/chaarlie/price-audit/shared/runs` — releases are atomic folders, `tmp/` inside a release is lost on switch. Keep at least 90 days: `auto-writes.csv` is the proof that no stamp happened without a confirmed read.
