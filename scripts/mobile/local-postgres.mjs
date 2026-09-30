@@ -61,8 +61,19 @@ export async function holdProfileWrite(userId, thickness) {
     })
   })
   process.stderr.resume()
+  // The write goes through the door (`user_facts_save_v1`) as a thickness hand edit — the lock
+  // rejects the direct column UPDATE this used to be. The door's own UPDATE holds the same row
+  // lock (and moves the same scanner clock) until COMMIT / ROLLBACK.
+  const at = new Date().toISOString()
+  const provenance = JSON.stringify({
+    source: { kind: "profile_editor" },
+    schemaVersion: 1,
+    at,
+    editedAt: at,
+    fields: { thickness: "user" },
+  })
   process.stdin.write(
-    `BEGIN;\nUPDATE public.hair_profiles SET thickness='${thickness}' WHERE user_id='${userId}';\n\\echo LOCK_HELD\n`,
+    `BEGIN;\nSELECT public.user_facts_save_v1(p_user_id => '${userId}'::uuid, p_domain => 'diagnostics', p_patch => '{"thickness":"${thickness}"}'::jsonb, p_provenance => '${provenance}'::jsonb);\n\\echo LOCK_HELD\n`,
   )
   try {
     await ready

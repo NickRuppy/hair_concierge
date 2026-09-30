@@ -1,6 +1,8 @@
 import { test, expect, type Page } from "@playwright/test"
 import { createClient } from "@supabase/supabase-js"
 
+import { seedHairProfile } from "../src/lib/user-facts/seed-profile"
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
@@ -276,31 +278,26 @@ test.describe.serial("Conditioner chat E2E", () => {
     if (!userId) throw new Error("Missing conditioner E2E user")
     const currentUserId = userId
 
-    const { error: profileError } = await admin.from("hair_profiles").upsert(
-      {
-        user_id: currentUserId,
-        hair_texture: "straight",
-        thickness: "fine",
-        density: "low",
-        concerns: [],
-        products_used: null,
-        heat_styling: "rarely",
-        styling_tools: [],
-        goals: ["shine"],
-        cuticle_condition: "slightly_rough",
-        protein_moisture_balance: "snaps",
-        scalp_type: "balanced",
-        scalp_condition: null,
-        chemical_treatment: ["colored"],
-        desired_volume: "balanced",
-        routine_preference: "balanced",
-        additional_notes: "Bitte nichts Schweres.",
-        conversation_memory: null,
-      },
-      { onConflict: "user_id" },
-    )
-
-    if (profileError) throw profileError
+    // Through the door (`user_facts_save_v1`) — the lock rejects direct fact-column writes.
+    await seedHairProfile(admin, currentUserId, {
+      hair_texture: "straight",
+      thickness: "fine",
+      density: "low",
+      concerns: [],
+      products_used: null,
+      heat_styling: "rarely",
+      styling_tools: [],
+      goals: ["shine"],
+      cuticle_condition: "slightly_rough",
+      protein_moisture_balance: "snaps",
+      scalp_type: "balanced",
+      scalp_condition: null,
+      chemical_treatment: ["colored"],
+      desired_volume: "balanced",
+      routine_preference: "balanced",
+      additional_notes: "Bitte nichts Schweres.",
+      conversation_memory: null,
+    })
 
     const { error: usageError } = await admin.from("user_product_usage").insert([
       {
@@ -368,31 +365,26 @@ test.describe.serial("Conditioner chat E2E", () => {
     if (!userId) throw new Error("Missing conditioner E2E user")
     const currentUserId = userId
 
-    const { error: profileError } = await admin.from("hair_profiles").upsert(
-      {
-        user_id: currentUserId,
-        hair_texture: "straight",
-        thickness: "fine",
-        density: null,
-        concerns: [],
-        products_used: null,
-        heat_styling: "rarely",
-        styling_tools: [],
-        goals: ["shine"],
-        cuticle_condition: "slightly_rough",
-        protein_moisture_balance: "snaps",
-        scalp_type: "balanced",
-        scalp_condition: null,
-        chemical_treatment: ["colored"],
-        desired_volume: "balanced",
-        routine_preference: "balanced",
-        additional_notes: "Bitte nichts Schweres.",
-        conversation_memory: null,
-      },
-      { onConflict: "user_id" },
-    )
-
-    if (profileError) throw profileError
+    // Through the door (`user_facts_save_v1`) — the lock rejects direct fact-column writes.
+    await seedHairProfile(admin, currentUserId, {
+      hair_texture: "straight",
+      thickness: "fine",
+      density: null,
+      concerns: [],
+      products_used: null,
+      heat_styling: "rarely",
+      styling_tools: [],
+      goals: ["shine"],
+      cuticle_condition: "slightly_rough",
+      protein_moisture_balance: "snaps",
+      scalp_type: "balanced",
+      scalp_condition: null,
+      chemical_treatment: ["colored"],
+      desired_volume: "balanced",
+      routine_preference: "balanced",
+      additional_notes: "Bitte nichts Schweres.",
+      conversation_memory: null,
+    })
 
     const { error: usageError } = await admin.from("user_product_usage").insert([
       {

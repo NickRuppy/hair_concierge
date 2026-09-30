@@ -7,6 +7,12 @@ import { loadLocalEnvironment, stack } from "./local-stack.mjs"
 import { prepareScannerContext, type ScannerSourceRead } from "../../src/lib/scan/scanner-context"
 import { MOBILE_PROFILE_GUARD_TABLES } from "./profile-fixture"
 import { holdProfileWrite } from "./local-postgres.mjs"
+import {
+  buildProfileAnswersFacts,
+  profileAnswersSchema,
+} from "../../src/lib/hair-profile/profile-answers"
+import { loadUserFacts } from "../../src/lib/user-facts/read"
+import { saveUserFacts } from "../../src/lib/user-facts/save"
 
 async function main() {
   // Run only after local fixtures/auth sessions and the API on port 3224 are ready.
@@ -125,14 +131,29 @@ async function main() {
     assert.ok(result.data, "Context version missing")
     return result.data
   }
+  /** A thickness edit exactly as the web Haar-Check editor saves one now: a hand edit through
+   * the door (`user_facts_save_v1`, CAS on the loaded revision) — the lock rejects the direct
+   * column write this used to be. Writing the value the profile already holds is no edit and
+   * writes nothing. */
   async function setThickness(userId: string, thickness: unknown) {
-    const result = await admin
-      .from("hair_profiles")
-      .update({ thickness })
-      .eq("user_id", userId)
-      .select("user_id")
-    noError(result.error, "Profile fixture write failed")
-    assert.equal(result.data?.length, 1, "Profile fixture write did not affect exactly one owner")
+    const stored = await loadUserFacts(admin, userId)
+    assert.ok(stored?.diagnostics, "Profile fixture has no facts document")
+    const answers = profileAnswersSchema.parse({ thickness })
+    const write = buildProfileAnswersFacts({
+      answers,
+      stored,
+      row: null,
+      now: new Date().toISOString(),
+    })
+    if (write.unchanged) return
+    const result = await saveUserFacts(admin, {
+      userId,
+      domain: "diagnostics",
+      patch: write.diagnostics.patch,
+      provenance: write.diagnostics.provenance,
+      expectedRevision: stored.revision,
+    })
+    assert.equal(result.status, "ok", "Profile fixture write failed")
   }
   function publicClient(session?: Session) {
     return createClient(
