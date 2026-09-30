@@ -85,6 +85,8 @@ export function startQuizAnalysisReveal(
   return true
 }
 
+// A discovery participant's quiz ends on its own „Geschafft" screen with no analysis beat
+// (`QuizDiscoveryLeadSave`, batch 8) — this view is the regular funnel's only.
 export function QuizAnalysisView({
   commitPending,
   copy = ORGANIC_QUIZ_FUNNEL_COPY,

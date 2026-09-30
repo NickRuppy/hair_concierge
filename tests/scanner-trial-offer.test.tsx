@@ -52,10 +52,30 @@ test("scanner presentation uses the controlled selection and only the compact ta
   assert.deepEqual(selected, ["month"])
 
   const html = renderToStaticMarkup(offer)
-  assert.match(html, /69,99.*im ersten Jahr/i)
-  assert.match(html, /danach 99,99.*Jahr/i)
+  // Both cards anchor on the monthly figure; the year card's subline carries the full amounts.
+  assert.match(html, /5,83\s€/)
+  // Negative lookbehind: the bare 9,99 must not be satisfied by the 99,99 renewal amount.
+  assert.match(html, /(?<![\d,])9,99\s€/)
+  assert.match(html, /Spare 42\s?%/i)
+  assert.match(html, /69,99.*im ersten Jahr, danach 99,99.*Jahr/i)
+  assert.match(html, /Monatlich kündbar/i)
   assert.match(html, /Karte oder PayPal zum Teststart erforderlich/i)
-  assert.doesNotMatch(html, /spare \d+|trial-scanner\.webp|Teste chaarlie/i)
+  assert.doesNotMatch(html, /trial-scanner\.webp|Teste chaarlie/i)
+})
+
+test("scanner presentation without introductory annual price anchors on the renewal equivalent", () => {
+  const html = renderToStaticMarkup(
+    ScannerTrialOffer({
+      onContinue: () => {},
+      onSelect: () => {},
+      pricing: { ...pricing, annualFirstAmountMinor: 9999 },
+      selectedInterval: "year",
+    }),
+  )
+  assert.match(html, /Spare 17\s?%/i)
+  assert.match(html, /8,33\s€/)
+  assert.match(html, /99,99\s€ \/ Jahr/)
+  assert.doesNotMatch(html, /im ersten Jahr|danach/i)
 })
 
 test("scanner presentation propagates pending state and selected dynamic monthly terms", () => {

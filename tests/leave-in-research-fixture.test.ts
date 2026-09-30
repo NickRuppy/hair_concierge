@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { mkdtempSync, rmSync } from "node:fs"
+import { mkdtempSync, readFileSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import test from "node:test"
@@ -39,7 +39,15 @@ test("Leave-In fixture loads, validates and covers both batches", async () =>
     assert.equal(data.summary.inCategory, 15)
     assert.equal(data.summary.excluded, 4)
     assert.equal(data.summary.reviewCounts.needsReview, 19)
+    // Approval persistence key: kept at the v1.0-fixture stamp so approvals survive.
     assert.equal(data.meta.standardVersion, "leave-in-inci-v0.4")
+    // The visible standard is the effective one (v1.1 = v1.0 + T20 overlay).
+    assert.equal(data.meta.effectiveStandard, "leave-in-inci-v1.1 (Standard v1.0 + T20-Overlay)")
+    assert.equal(
+      data.meta.effectiveStandardOverlay,
+      "docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md",
+    )
+    assert.equal(data.initialDetail.effectiveStandard, data.meta.effectiveStandard)
     assert.equal(data.meta.keyVersion, "reference-key-2026-09-05-r4")
     assert.equal(data.meta.derivedFromRun, "reference-key-2026-09-04-r3")
 
@@ -821,3 +829,16 @@ test("Leave-In fixture applies the T17 hard-rule-audit items (H1/H2/H6/H9)", asy
       )
     }
   }))
+
+test("the Lab never renders the approval persistence key as the visible standard", () => {
+  const client = readFileSync(
+    path.resolve("src/app/labs/leave-in-research/research-lab-client.tsx"),
+    "utf8",
+  )
+  assert.ok(
+    !client.includes("standardVersion"),
+    "research-lab-client must not render standardVersion",
+  )
+  assert.match(client, /detail\.effectiveStandard/)
+  assert.match(client, /data\.meta\.effectiveStandard/)
+})

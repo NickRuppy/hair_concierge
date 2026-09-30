@@ -24,12 +24,29 @@ import { HAIR_THICKNESSES, type HairThickness } from "@/lib/vocabulary"
 
 export const LEAVE_IN_RESEARCH_ENVELOPE_VERSION = "leave-in-research-envelope-v1.0" as const
 export const LEAVE_IN_PRODUCTION_ADAPTER_VERSION = "leave-in-production-adapter-v1" as const
+/**
+ * Standard v1.1 = the frozen v1.0 standard plus the T20 overlay (2026-09-29).
+ * `policySha256` pins the v1.1 overlay document, which itself names the v1.0
+ * base by hash; `LEAVE_IN_BASE_STANDARD` pins that base. A v1.0-stamped envelope
+ * is refused (`needs_research`): T20 reopened `care_direction` on every record,
+ * so a pre-T20 direction may not reach the catalog without re-derivation.
+ */
 export const LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD = {
-  policyId: "leave-in-classification-v1.0",
-  modelVersion: "leave-in-inci-v1.0",
-  policySha256: "7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace",
+  policyId: "leave-in-classification-v1.1",
+  modelVersion: "leave-in-inci-v1.1",
+  policySha256: "9c1340357b4c0cf38933340f4592250d10f2cccc1429b0e4d46508d47eee032b",
   runbookSha256: "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca",
 } as const
+
+/** The byte-frozen Standard v1.0 the v1.1 overlay applies to. */
+export const LEAVE_IN_BASE_STANDARD = {
+  path: "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
+  sha256: "7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace",
+} as const
+
+/** The v1.1 overlay document `policySha256` pins. */
+export const LEAVE_IN_OVERLAY_PATH =
+  "docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md" as const
 
 // ---------------------------------------------------------------------------
 // Production vocabularies that live inline in the intake validator
@@ -740,7 +757,7 @@ const PROVISIONAL_IDENTITY_STATUSES = new Set<
 >(["provisional_identity_conflict", "provisional_formula_conflict", "insufficient_information"])
 
 /**
- * Projects complete Leave-In Standard v1.0 research into today's Product Intake
+ * Projects complete Leave-In Standard v1.1 research into today's Product Intake
  * fields. Pure: no I/O, no clock, no randomness, and the research authority is
  * never mutated. The smaller production projection is never the research record.
  */
@@ -980,13 +997,10 @@ export function projectLeaveInForProduction(input: unknown): LeaveInProductionAd
   // AD-3a: functional_benefits.
   const functionalBenefitSet = new Set<LeaveInFunctionalBenefit>()
   if (focusValuesUsed.includes("detangling")) functionalBenefitSet.add("detangle")
-  if (
-    careDirection === "moisture" ||
-    conditioningLevel === "moderate" ||
-    conditioningLevel === "high"
-  ) {
-    functionalBenefitSet.add("moisture_softness")
-  }
+  // AD-3a revision (Nick, 2026-09-29): `moisture_softness` requires
+  // care_direction = moisture. Conditioning level alone no longer grants it, so a
+  // film-led or protein product never satisfies a dry-hair function need.
+  if (careDirection === "moisture") functionalBenefitSet.add("moisture_softness")
   if (careBenefitSet.has("anti_frizz")) functionalBenefitSet.add("smooth_anti_frizz")
   if (providesHeatProtection) functionalBenefitSet.add("heat_protect")
   if (
@@ -1189,7 +1203,7 @@ export function projectLeaveInForProduction(input: unknown): LeaveInProductionAd
     "category_specs.product_leave_in_specs.care_direction": careDirectionRationale,
     "category_specs.product_leave_in_specs.repair_support_level": repairRationale,
     "category_specs.product_leave_in_specs.plan_roles": `post_wash_leave_in is always emitted; pre_heat_application follows the §13.3 heat binary (${providesHeatProtection}). Emitted: ${planRoles.join(", ")}.`,
-    "category_specs.product_leave_in_specs.functional_benefits": `${careBenefitsRationale} AD-3a functional mapping -> ${functionalBenefits.join(", ")}.`,
+    "category_specs.product_leave_in_specs.functional_benefits": `${careBenefitsRationale} AD-3a functional mapping -> ${functionalBenefits.join(", ")}. moisture_softness requires care_direction moisture (AD-3a revision 2026-09-29); care_direction here is ${careDirection}.`,
     "category_specs.product_leave_in_fit_specs": [
       `${weightRationale} fit_specs.weight mirrors specs.weight (${weight}).`,
       rolesRationale,

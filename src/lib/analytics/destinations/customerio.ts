@@ -103,6 +103,13 @@ function toCustomerIoPayload<E extends AppEventName>(eventName: E, payload: AppE
         value: data.value,
       }
     }
+    case "discovery_call_booking_scheduled": {
+      const data = payload as AppEventMap["discovery_call_booking_scheduled"]
+      return {
+        lead_id: data.leadId,
+        offer_variant: data.offerVariant,
+      }
+    }
     case "first_chat_message":
       return {}
     case "onboarding_completed": {

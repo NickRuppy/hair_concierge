@@ -1,5 +1,6 @@
 import { create } from "zustand"
 import { clearQuizDraft, loadQuizDraft, saveQuizDraft } from "./draft"
+import { reconcilePrimaryConcern } from "./primary-concern"
 import { getQuizStepOrder, normalizeQuizStepForPackage } from "./screen-order"
 import type { QuizStep, LeadCaptureMode, LeadCaptureSubStep, QuizAnswers, LeadData } from "./types"
 
@@ -20,6 +21,7 @@ interface QuizState {
   setLeadId: (id: string) => void
   setLeadCaptureSubStep: (sub: LeadCaptureSubStep) => void
   setPartnerLeadIdentity: (identity: { name: string; email: string }) => void
+  setDiscoveryLeadIdentity: (identity: { name: string; email: string }) => void
   setRegularLeadCapture: () => void
   setStep: (step: QuizStep) => void
   setFunnelPackageKey: (key: string | null) => void
@@ -85,6 +87,14 @@ export const useQuizStore = create<QuizState>((set, get) => ({
       } else {
         ;(nextAnswers as Record<string, unknown>)[key] = value
       }
+      // A changed concern selection drops a main-problem pick it no longer contains (F1).
+      if (key === "concerns") {
+        const primaryConcern = reconcilePrimaryConcern(
+          nextAnswers.concerns ?? [],
+          nextAnswers.primary_concern,
+        )
+        if (primaryConcern === undefined) delete nextAnswers.primary_concern
+      }
 
       return { answers: nextAnswers }
     }),
@@ -96,6 +106,14 @@ export const useQuizStore = create<QuizState>((set, get) => ({
   setPartnerLeadIdentity: ({ name, email }) =>
     set((state) => ({
       leadCaptureMode: "partner",
+      leadCaptureSubStep: "consent",
+      lead: { ...state.lead, name, email },
+    })),
+  // The discovery-call analogue: the enrollment owns the identity, so the quiz
+  // jumps straight to consent and the lead route re-validates the address.
+  setDiscoveryLeadIdentity: ({ name, email }) =>
+    set((state) => ({
+      leadCaptureMode: "discovery",
       leadCaptureSubStep: "consent",
       lead: { ...state.lead, name, email },
     })),

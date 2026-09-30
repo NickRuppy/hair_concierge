@@ -1,4 +1,8 @@
 import { redirect } from "next/navigation"
+import { cookies } from "next/headers"
+import { FUNNEL_SESSION_COOKIE } from "@/lib/funnel/cookie"
+import { resolveFunnelCookieContext } from "@/lib/funnel/server"
+import { QUIZ_EMAIL_RETURN_PACKAGE_KEY } from "@/lib/quiz/email-return-context"
 import {
   findOneTimePurchaseEntitlementForUser,
   resolveOneTimeAccessStateForUser as resolveOneTimeAccessState,
@@ -34,9 +38,12 @@ export const dynamic = "force-dynamic"
  * costs the waiting screen its scanner wording: the poll's first response carries
  * the authoritative package, and a failing lookup reports `transient_error` there.
  */
-async function loadPlanBereitFunnelPackageKey(leadId: string | null): Promise<string | null> {
+async function loadPlanBereitFunnelPackageKey(
+  leadId: string | null,
+  funnelSessionId?: string | null,
+): Promise<string | null> {
   if (!leadId) return null
-  const resolution = await resolvePlanBereitFunnelPackage(leadId)
+  const resolution = await resolvePlanBereitFunnelPackage(leadId, undefined, funnelSessionId)
   if (resolution.kind === "unavailable") {
     console.warn("[plan-bereit] funnel package unavailable for lead", leadId)
     return null
@@ -80,6 +87,12 @@ export default async function PersonalPlanReadyPage({
 }) {
   const sp = await searchParams
   const requestedLeadId = typeof sp.lead === "string" ? sp.lead : null
+  const cookieStore = await cookies()
+  const signedFunnel = await resolveFunnelCookieContext(
+    cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
+  )
+  const emailReturnFunnelSessionId =
+    signedFunnel?.packageKey === QUIZ_EMAIL_RETURN_PACKAGE_KEY ? signedFunnel.sessionId : null
   const readyPath = requestedLeadId
     ? `/plan-bereit?lead=${encodeURIComponent(requestedLeadId)}`
     : "/plan-bereit"
@@ -126,7 +139,10 @@ export default async function PersonalPlanReadyPage({
             sourceVersion: null,
             missingFacts: [],
             initialAction: "none",
-            funnelPackageKey: await loadPlanBereitFunnelPackageKey(requestedLeadId),
+            funnelPackageKey: await loadPlanBereitFunnelPackageKey(
+              requestedLeadId,
+              emailReturnFunnelSessionId,
+            ),
           }}
         />
       )
@@ -165,7 +181,10 @@ export default async function PersonalPlanReadyPage({
             sourceVersion: null,
             missingFacts: [],
             initialAction: migration ? "link" : "none",
-            funnelPackageKey: await loadPlanBereitFunnelPackageKey(requestedLeadId),
+            funnelPackageKey: await loadPlanBereitFunnelPackageKey(
+              requestedLeadId,
+              emailReturnFunnelSessionId,
+            ),
           }}
         />
       )
@@ -208,6 +227,7 @@ export default async function PersonalPlanReadyPage({
             initialAction: "poll",
             funnelPackageKey: await loadPlanBereitFunnelPackageKey(
               canonicalLeadId ?? requestedLeadId,
+              emailReturnFunnelSessionId,
             ),
           }}
         />
@@ -225,6 +245,7 @@ export default async function PersonalPlanReadyPage({
             initialAction: "none",
             funnelPackageKey: await loadPlanBereitFunnelPackageKey(
               canonicalLeadId ?? requestedLeadId,
+              emailReturnFunnelSessionId,
             ),
           }}
         />
@@ -236,6 +257,7 @@ export default async function PersonalPlanReadyPage({
             email: user.email,
             leadId: canonicalLeadId,
             expectedQuizSourceKind: enrollmentResult.enrollment?.quizSourceKind ?? null,
+            funnelSessionId: emailReturnFunnelSessionId,
           }).catch((error) => {
             console.warn("[plan-bereit] initial readiness unavailable", error)
             return {

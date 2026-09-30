@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { enableAccountDeletionForTests } from "./helpers/account-deletion-flag"
 import {
   handlePayPalWebhookEvent,
   type PayPalWebhookEvent,
@@ -8,6 +9,8 @@ import type { BillingSubscriptionRow } from "../src/lib/billing/types"
 import type { FreemiumProvisioningResult } from "../src/lib/freemium/plan-provisioning"
 import type { PayPalSubscription } from "../src/lib/paypal/subscription-shapes"
 import { toBillingSubscriptionInputFromPayPal } from "../src/lib/paypal/subscription-shapes"
+
+enableAccountDeletionForTests()
 
 process.env.PAYPAL_PLAN_ID_MONTHLY ??= "P-month"
 
@@ -430,6 +433,170 @@ test("duplicate PayPal webhook event id is skipped before retrieving provider st
   assert.equal(billing.length, 1)
 })
 
+test("canceled provider-only clock verification acknowledges delayed activation and cancellation without billing access", async () => {
+  for (const eventType of ["BILLING.SUBSCRIPTION.ACTIVATED", "BILLING.SUBSCRIPTION.CANCELLED"]) {
+    const { supabase, billing, webhookEvents } = createSupabaseStub({ paypalIntents: [] })
+    let transactionReads = 0
+    const provider = {
+      ...subscription("CANCELLED", null),
+      id: "I-69ESTM9ANYNB",
+      custom_id: "paypal-clock-verification:26973c24-1685-4308-a3d7-8d48c57519a4",
+      create_time: new Date(Date.now() - 86_400_000).toISOString(),
+      billing_info: {
+        outstanding_balance: { value: "0.0", currency_code: "EUR" },
+        // A free trial cycle can complete without any collection.
+        cycle_executions: [{ cycles_completed: 1 }],
+      },
+    }
+    const result = await handlePayPalWebhookEvent(
+      { id: `WH-clock-${eventType}`, event_type: eventType, resource: { id: provider.id } },
+      {
+        supabase,
+        premiumTierId: "tier-premium",
+        freeTierId: "tier-free",
+        retrievePayPalSubscription: async () => provider,
+        listPayPalTrialTransactions: async () => {
+          transactionReads += 1
+          return []
+        },
+      },
+    )
+    assert.deepEqual(result, { handled: true })
+    assert.equal(transactionReads, 1)
+    assert.equal(billing.length, 0)
+    assert.equal(webhookEvents.size, 1)
+  }
+})
+
+test("provider-only clock verification remains observable when the provider state or transaction history is unsafe", async () => {
+  for (const scenario of [
+    "active",
+    "charged",
+    "unmarked",
+    "different-subscription",
+    "transaction-read-failed",
+    "outstanding-balance",
+    "malformed-balance",
+    "missing-balance",
+  ]) {
+    const { supabase, billing, webhookEvents } = createSupabaseStub({ paypalIntents: [] })
+    const provider = {
+      ...subscription(scenario === "active" ? "ACTIVE" : "CANCELLED", null),
+      id: scenario === "different-subscription" ? "I-other-clock" : "I-69ESTM9ANYNB",
+      custom_id:
+        scenario === "unmarked"
+          ? "unrelated"
+          : "paypal-clock-verification:26973c24-1685-4308-a3d7-8d48c57519a4",
+      create_time: new Date(Date.now() - 86_400_000).toISOString(),
+      billing_info: {
+        outstanding_balance:
+          scenario === "missing-balance"
+            ? undefined
+            : {
+                value:
+                  scenario === "outstanding-balance"
+                    ? "1.00"
+                    : scenario === "malformed-balance"
+                      ? ""
+                      : "0.00",
+                currency_code: "EUR",
+              },
+      },
+    }
+    await assert.rejects(() =>
+      handlePayPalWebhookEvent(
+        {
+          id: `WH-clock-unsafe-${scenario}`,
+          event_type: "BILLING.SUBSCRIPTION.ACTIVATED",
+          resource: { id: provider.id },
+        },
+        {
+          supabase,
+          premiumTierId: "tier-premium",
+          freeTierId: "tier-free",
+          retrievePayPalSubscription: async () => provider,
+          listPayPalTrialTransactions: async () => {
+            if (scenario === "transaction-read-failed")
+              throw new Error("PayPal transactions unavailable")
+            return scenario === "charged" ? [{ id: "SALE-1", status: "COMPLETED" }] : []
+          },
+        },
+      ),
+    )
+    assert.equal(billing.length, 0)
+    assert.equal(webhookEvents.size, 0)
+  }
+})
+
+test("a payment sale for a provider-only clock verification never disappears as an unknown subscription", async () => {
+  const { supabase, webhookEvents } = createSupabaseStub({ paypalIntents: [] })
+  const provider = {
+    ...subscription("CANCELLED", null),
+    id: "I-69ESTM9ANYNB",
+    custom_id: "paypal-clock-verification:26973c24-1685-4308-a3d7-8d48c57519a4",
+    create_time: new Date(Date.now() - 86_400_000).toISOString(),
+    billing_info: {
+      outstanding_balance: { value: "0.00", currency_code: "EUR" },
+    },
+  }
+  await assert.rejects(
+    () =>
+      handlePayPalWebhookEvent(
+        {
+          id: "WH-clock-sale",
+          event_type: "PAYMENT.SALE.COMPLETED",
+          resource: { id: "SALE-clock", billing_agreement_id: provider.id },
+        },
+        {
+          supabase,
+          premiumTierId: "tier-premium",
+          freeTierId: "tier-free",
+          retrievePayPalSubscription: async () => provider,
+        },
+      ),
+    /no checkout intent or local row/,
+  )
+  assert.equal(webhookEvents.size, 0)
+})
+
+test("a marked subscription with a billing row follows the normal cancellation handler", async () => {
+  const { supabase, billing } = createSupabaseStub({
+    paypalIntents: [],
+    billing: [{ provider_subscription_id: "I-69ESTM9ANYNB" }],
+  })
+  let transactionReads = 0
+  const provider = {
+    ...subscription("CANCELLED", null),
+    id: "I-69ESTM9ANYNB",
+    custom_id: "paypal-clock-verification:26973c24-1685-4308-a3d7-8d48c57519a4",
+    create_time: new Date(Date.now() - 86_400_000).toISOString(),
+    billing_info: { outstanding_balance: { value: "0.00", currency_code: "EUR" } },
+  }
+  assert.deepEqual(
+    await handlePayPalWebhookEvent(
+      {
+        id: "WH-clock-owned-cancel",
+        event_type: "BILLING.SUBSCRIPTION.CANCELLED",
+        resource: { id: provider.id },
+      },
+      {
+        supabase,
+        premiumTierId: "tier-premium",
+        freeTierId: "tier-free",
+        retrievePayPalSubscription: async () => provider,
+        listPayPalTrialTransactions: async () => {
+          transactionReads += 1
+          return []
+        },
+      },
+    ),
+    { handled: true },
+  )
+  assert.equal(transactionReads, 0)
+  assert.equal(billing[0].provider_status, "CANCELLED")
+  assert.equal(billing[0].entitlement_status, "canceled")
+})
+
 test("PayPal webhook claim is released when side effects fail so retry can recover", async () => {
   const { supabase, billing } = createSupabaseStub()
   let retrieveCount = 0
@@ -654,6 +821,271 @@ test("BILLING.SUBSCRIPTION.CANCELLED acknowledges duplicate subscriptions withou
   assert.deepEqual(result, { handled: true })
   assert.equal(billing.length, 0)
   assert.equal(paypalIntents[0].provider_subscription_id, "I-active")
+})
+
+test("kill switch off: a deleted account's intent is not looked at; no cancel, no refund row", async () => {
+  const previous = process.env.ACCOUNT_DELETION_ENABLED
+  delete process.env.ACCOUNT_DELETION_ENABLED
+  try {
+    const { supabase } = createSupabaseStub({
+      billing: [],
+      paypalIntents: [
+        {
+          id: "intent-deleted",
+          token: "token-active",
+          interval: "month",
+          source: "pricing_page",
+          status: "activated",
+          provider_subscription_id: "I-active",
+          lead_id: null,
+          email: null,
+          user_id: null,
+          expires_at: futureIso(),
+          metadata: {},
+          anonymized_at: pastIso(),
+        },
+      ],
+    })
+    const cancelled: string[] = []
+    const recorded: string[] = []
+    await handlePayPalWebhookEvent(event("WH-switch-off", "BILLING.SUBSCRIPTION.ACTIVATED"), {
+      supabase,
+      premiumTierId: "tier-premium",
+      freeTierId: "tier-free",
+      retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
+      cancelPayPalSubscription: async (id) => void cancelled.push(id),
+      recordPostDeletionRefund: async (id) => {
+        recorded.push(id)
+        return true
+      },
+    }).catch(() => undefined) // the pre-feature activation path may fail on this stub; irrelevant here
+    assert.deepEqual(cancelled, [])
+    assert.deepEqual(recorded, [])
+  } finally {
+    if (previous === undefined) delete process.env.ACCOUNT_DELETION_ENABLED
+    else process.env.ACCOUNT_DELETION_ENABLED = previous
+  }
+})
+
+test("events for a deleted account's subscription write nothing; a live agreement is cancelled at once", async () => {
+  const deletedAt = pastIso()
+  for (const [eventType, status, expectCancel] of [
+    ["BILLING.SUBSCRIPTION.CANCELLED", "CANCELLED", false],
+    ["BILLING.SUBSCRIPTION.EXPIRED", "EXPIRED", false],
+    ["BILLING.SUBSCRIPTION.ACTIVATED", "ACTIVE", true],
+    ["PAYMENT.SALE.COMPLETED", "ACTIVE", true],
+    ["BILLING.SUBSCRIPTION.PAYMENT.FAILED", "SUSPENDED", true],
+  ] as const) {
+    const { supabase, billing, paypalIntents } = createSupabaseStub({
+      billing: [],
+      paypalIntents: [
+        {
+          id: "intent-deleted",
+          token: "token-active",
+          interval: "month",
+          source: "pricing_page",
+          status: "activated",
+          provider_subscription_id: "I-active",
+          lead_id: null,
+          email: null,
+          user_id: null,
+          expires_at: futureIso(),
+          metadata: {},
+          anonymized_at: deletedAt,
+        },
+      ],
+    })
+    const cancelled: string[] = []
+    const reports: unknown[] = []
+    const refundsRecorded: string[] = []
+    const refundsFrom: string[] = []
+    const result = await handlePayPalWebhookEvent(
+      eventType === "PAYMENT.SALE.COMPLETED"
+        ? paymentEvent(`WH-deleted-${eventType}`, eventType)
+        : event(`WH-deleted-${eventType}`, eventType),
+      {
+        supabase,
+        premiumTierId: "tier-premium",
+        freeTierId: "tier-free",
+        retrievePayPalSubscription: async () => subscription(status, futureIso()),
+        cancelPayPalSubscription: async (subscriptionId) => {
+          // R-a: the full refund is recorded before the cancel.
+          assert.deepEqual(refundsRecorded, [subscriptionId], eventType)
+          cancelled.push(subscriptionId)
+        },
+        recordPostDeletionRefund: async (subscriptionId, paymentsFrom) => {
+          refundsRecorded.push(subscriptionId)
+          refundsFrom.push(paymentsFrom)
+          return true
+        },
+        webRefundKind: async () => assert.fail("recorded: no kind lookup"),
+        reportPostDeletionRefundNotRecorded: () => assert.fail("recorded: nothing to report"),
+        reportDeletedAccountSubscription: (details) => void reports.push(details),
+      },
+    )
+    assert.deepEqual(result, { handled: true }, eventType)
+    assert.deepEqual(refundsRecorded, expectCancel ? ["I-active"] : [], eventType)
+    // I-2: only payments from the deletion (the intent's anonymization) on are refunded.
+    assert.deepEqual(refundsFrom, expectCancel ? [deletedAt] : [], eventType)
+    assert.equal(billing.length, 0, eventType)
+    assert.deepEqual(cancelled, expectCancel ? ["I-active"] : [], eventType)
+    assert.deepEqual(reports, expectCancel ? [{ provider: "paypal", eventType }] : [], eventType)
+    assert.equal(paypalIntents[0].user_id, null, eventType)
+    assert.equal(paypalIntents[0].status, "activated", eventType)
+  }
+})
+
+test("N2: a no-op post-deletion refund record still cancels; reported unless already post_deletion", async () => {
+  const deletedAt = pastIso()
+  for (const [existingKind, expected] of [
+    ["post_deletion", []],
+    [
+      "deletion",
+      [
+        {
+          provider: "paypal",
+          eventType: "BILLING.SUBSCRIPTION.ACTIVATED",
+          existingKind: "deletion",
+        },
+      ],
+    ],
+    [
+      null,
+      [{ provider: "paypal", eventType: "BILLING.SUBSCRIPTION.ACTIVATED", existingKind: "none" }],
+    ],
+  ] as const) {
+    const { supabase } = createSupabaseStub({
+      billing: [],
+      paypalIntents: [
+        {
+          id: "intent-deleted",
+          token: "token-active",
+          interval: "month",
+          source: "pricing_page",
+          status: "activated",
+          provider_subscription_id: "I-active",
+          lead_id: null,
+          email: null,
+          user_id: null,
+          expires_at: futureIso(),
+          metadata: {},
+          anonymized_at: deletedAt,
+        },
+      ],
+    })
+    const cancelled: string[] = []
+    const kindReads: string[] = []
+    const notRecorded: unknown[] = []
+    const result = await handlePayPalWebhookEvent(
+      event(`WH-norecord-${existingKind}`, "BILLING.SUBSCRIPTION.ACTIVATED"),
+      {
+        supabase,
+        premiumTierId: "tier-premium",
+        freeTierId: "tier-free",
+        retrievePayPalSubscription: async () => subscription("ACTIVE", futureIso()),
+        cancelPayPalSubscription: async (subscriptionId) => void cancelled.push(subscriptionId),
+        recordPostDeletionRefund: async () => false,
+        webRefundKind: async (subscriptionId) => {
+          kindReads.push(subscriptionId)
+          return existingKind
+        },
+        reportPostDeletionRefundNotRecorded: (details) => void notRecorded.push(details),
+        reportDeletedAccountSubscription: () => undefined,
+      },
+    )
+    assert.deepEqual(result, { handled: true }, String(existingKind))
+    // The agreement is cancelled either way; only the report depends on the existing row.
+    assert.deepEqual(cancelled, ["I-active"], String(existingKind))
+    assert.deepEqual(kindReads, ["I-active"], String(existingKind))
+    assert.deepEqual(notRecorded, expected, String(existingKind))
+  }
+})
+
+test("refund webhooks for a subscription an account deletion cancelled are acknowledged no-ops (D14)", async () => {
+  const lookups: unknown[] = []
+  const known = async (input: { subscriptionId: string | null; paymentRef: string | null }) => {
+    lookups.push(input)
+    return input.subscriptionId === "I-active" || input.paymentRef === "SALE-TX"
+  }
+  const { supabase, billing } = createSupabaseStub({ billing: [] })
+  const deps = {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    recordBillingAnalytics: true,
+    isAccountDeletionWebRefund: known,
+  }
+  assert.deepEqual(
+    await handlePayPalWebhookEvent(
+      paymentEvent("WH-deleted-refund", "PAYMENT.SALE.REFUNDED"),
+      deps,
+    ),
+    { handled: true },
+  )
+  assert.deepEqual(
+    await handlePayPalWebhookEvent(
+      {
+        id: "WH-deleted-capture-refund",
+        event_type: "PAYMENT.CAPTURE.REFUNDED",
+        resource: {
+          id: "REFUND-1",
+          supplementary_data: { related_ids: { capture_id: "SALE-TX" } },
+        },
+      },
+      deps,
+    ),
+    { handled: true },
+  )
+  assert.deepEqual(lookups, [
+    { subscriptionId: "I-active", paymentRef: null },
+    { subscriptionId: null, paymentRef: "SALE-TX" },
+  ])
+  assert.equal(billing.length, 0)
+  // Any other subscription without a local row still fails loudly (retryable).
+  await assert.rejects(
+    handlePayPalWebhookEvent(paymentEvent("WH-unknown-refund", "PAYMENT.SALE.REFUNDED"), {
+      ...deps,
+      isAccountDeletionWebRefund: async () => false,
+    }),
+    /has no local billing row/,
+  )
+})
+
+test("a sale-only refund of a deleted account's subscription resolves via the sale and is acknowledged (D14)", async () => {
+  // The deleted account's billing and outbox rows are gone, so the verified sale is the only link.
+  const lookups: unknown[] = []
+  const { supabase, billing, analyticsOutbox } = createSupabaseStub({ billing: [] })
+  const deps = {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    recordBillingAnalytics: true,
+    retrievePayPalSale: async (saleId: string) => ({ id: saleId, billing_agreement_id: "I-gone" }),
+    isAccountDeletionWebRefund: async (input: {
+      subscriptionId: string | null
+      paymentRef: string | null
+    }) => {
+      lookups.push(input)
+      return input.subscriptionId === "I-gone"
+    },
+  }
+  const refund: PayPalWebhookEvent = {
+    id: "WH-deleted-sale-refund",
+    event_type: "PAYMENT.SALE.REFUNDED",
+    resource: { id: "REFUND-deleted", sale_id: "SALE-deleted" },
+  }
+
+  assert.deepEqual(await handlePayPalWebhookEvent(refund, deps), { handled: true })
+  assert.deepEqual(lookups, [{ subscriptionId: "I-gone", paymentRef: "SALE-deleted" }])
+  assert.equal(billing.length, 0)
+  assert.equal(analyticsOutbox.filter((row) => row.event_name === "refund_completed").length, 0)
+  await assert.rejects(
+    handlePayPalWebhookEvent(
+      { ...refund, id: "WH-unknown-sale-refund" },
+      { ...deps, isAccountDeletionWebRefund: async () => false },
+    ),
+    /missing a subscription link/,
+  )
 })
 
 test("activation webhook does not rebind an intent that already belongs to another PayPal subscription", async () => {
@@ -917,6 +1349,141 @@ test("refund and reversal events are known log-only events", async () => {
   assert.deepEqual(reversed, { handled: false })
   assert.equal(billing[0].entitlement_status, "active")
   assert.equal(profiles["user-1"].subscription_status, "active")
+})
+
+test("refund with its original sale falls back to the verified sale subscription link", async () => {
+  const { supabase, analyticsOutbox } = createSupabaseStub({
+    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+  })
+  const saleIds: string[] = []
+  const refund: PayPalWebhookEvent = {
+    id: "WH-refund-sale-fallback",
+    event_type: "PAYMENT.SALE.REFUNDED",
+    resource: { id: "REFUND-sale-fallback", sale_id: "SALE-original" },
+  }
+
+  const result = await handlePayPalWebhookEvent(refund, {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    recordBillingAnalytics: true,
+    retrievePayPalSale: async (saleId) => {
+      saleIds.push(saleId)
+      return { id: saleId, billing_agreement_id: "I-active" }
+    },
+  })
+
+  assert.deepEqual(result, { handled: true })
+  assert.deepEqual(saleIds, ["SALE-original"])
+  const recorded = analyticsOutbox.find((row) => row.event_name === "refund_completed")!
+  assert.equal(recorded.source_object_id, "REFUND-sale-fallback")
+  assert.equal((recorded.payload as Record<string, unknown>).original_sale_id, "SALE-original")
+})
+
+test("refund without a sale retrieves the refund and uses known sale ownership", async () => {
+  const saleId = "SALE-refund-lookup"
+  const { supabase, analyticsOutbox } = createSupabaseStub({
+    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+    analyticsOutbox: [
+      analyticsEvent(`paypal:payment_completed:${saleId}`, "payment_completed", saleId),
+    ],
+  })
+  const refundIds: string[] = []
+
+  await handlePayPalWebhookEvent(
+    {
+      id: "WH-refund-lookup",
+      event_type: "PAYMENT.SALE.REFUNDED",
+      resource: { id: "REFUND-lookup" },
+    },
+    {
+      supabase,
+      premiumTierId: "tier-premium",
+      freeTierId: "tier-free",
+      recordBillingAnalytics: true,
+      retrievePayPalRefund: async (refundId) => {
+        refundIds.push(refundId)
+        return { id: refundId, sale_id: saleId }
+      },
+      retrievePayPalSale: async () => {
+        throw new Error("known sale ownership should avoid a sale lookup")
+      },
+    },
+  )
+
+  assert.deepEqual(refundIds, ["REFUND-lookup"])
+  assert.equal(analyticsOutbox.filter((row) => row.event_name === "refund_completed").length, 1)
+})
+
+test("a mismatched refund lookup releases its webhook claim for a corrected retry", async () => {
+  const saleId = "SALE-refund-retry"
+  const { supabase, calls, analyticsOutbox } = createSupabaseStub({
+    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+    analyticsOutbox: [
+      analyticsEvent(`paypal:payment_completed:${saleId}`, "payment_completed", saleId),
+    ],
+  })
+  let lookupMatches = false
+  const refund: PayPalWebhookEvent = {
+    id: "WH-refund-retry",
+    event_type: "PAYMENT.SALE.REFUNDED",
+    resource: { id: "REFUND-retry" },
+  }
+  const deps = {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    recordBillingAnalytics: true,
+    retrievePayPalRefund: async () => ({
+      id: lookupMatches ? "REFUND-retry" : "REFUND-wrong",
+      sale_id: saleId,
+    }),
+  }
+
+  await assert.rejects(() => handlePayPalWebhookEvent(refund, deps), /missing a subscription link/)
+  assert.equal(
+    calls.some((call) => call.table === "billing_webhook_events" && call.op === "delete"),
+    true,
+  )
+
+  lookupMatches = true
+  assert.deepEqual(await handlePayPalWebhookEvent(refund, deps), { handled: true })
+  assert.equal(analyticsOutbox.filter((row) => row.event_name === "refund_completed").length, 1)
+})
+
+test("partial refunds of one sale retain distinct refund identities", async () => {
+  const saleId = "SALE-partial-refunds"
+  const { supabase, analyticsOutbox } = createSupabaseStub({
+    billing: [{ user_id: "user-1", provider_subscription_id: "I-active" }],
+    analyticsOutbox: [
+      analyticsEvent(`paypal:payment_completed:${saleId}`, "payment_completed", saleId),
+    ],
+  })
+  const deps = {
+    supabase,
+    premiumTierId: "tier-premium",
+    freeTierId: "tier-free",
+    recordBillingAnalytics: true,
+  }
+
+  for (const refundId of ["REFUND-partial-one", "REFUND-partial-two"]) {
+    await handlePayPalWebhookEvent(
+      {
+        id: `WH-${refundId}`,
+        event_type: "PAYMENT.SALE.REFUNDED",
+        resource: { id: refundId, sale_id: saleId },
+      },
+      deps,
+    )
+  }
+
+  assert.deepEqual(
+    analyticsOutbox
+      .filter((row) => row.event_name === "refund_completed")
+      .map((row) => row.source_object_id)
+      .sort(),
+    ["REFUND-partial-one", "REFUND-partial-two"],
+  )
 })
 
 test("activation refresh keeps the stored interval for legacy PayPal plan ids", async () => {

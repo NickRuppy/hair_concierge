@@ -1,10 +1,13 @@
 import assert from "node:assert/strict"
 import { randomUUID } from "node:crypto"
 import test from "node:test"
+import { createScannerContextRpc } from "./helpers/scanner-context-rpc"
 
 import { createFreeSnapshotService } from "../src/lib/personal-plan/persistence/free-snapshot-service"
 import { createFreeSnapshotSupabaseDependencies } from "../src/lib/personal-plan/persistence/free-snapshot-supabase"
 import { loadScanEvaluationContext } from "../src/lib/scan/profile-context"
+import { buildProfileDataFromPersonalPlanCanonicalProfile } from "../src/lib/quiz/link-to-profile"
+import { adaptPersonalPlanAnswersForOffer } from "../src/lib/personal-plan-quiz/offer-adapter"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 
 /**
@@ -25,6 +28,7 @@ type Row = Record<string, unknown>
 
 function createFakeDatabase() {
   const preparedArtifacts: Row[] = []
+  const hairProfiles: Row[] = []
   const personalPlans = new Map<string, Row>()
   const needVersions = new Map<string, Row>()
   const manualAccessGrants: Row[] = []
@@ -130,6 +134,9 @@ function createFakeDatabase() {
         personal_plan_id: plan.id,
         kind: "initial",
         input_hash: inputHash,
+        input_snapshot: args.p_input_snapshot,
+        schema_version: args.p_schema_version,
+        computation_version: args.p_computation_version,
         output_snapshot: args.p_output_snapshot,
       }
       needVersions.set(need.id as string, need)
@@ -146,6 +153,8 @@ function createFakeDatabase() {
       error: null,
     }
   }
+
+  const scanner = createScannerContextRpc({ hairProfiles, personalPlans, needVersions })
 
   const admin = {
     from(table: string) {
@@ -215,6 +224,8 @@ function createFakeDatabase() {
       return chain
     },
     async rpc(name: string, args: Row) {
+      if (name === "scanner_context_read_source" || name === "scanner_context_publish")
+        return scanner.rpc(name, args)
       if (name === "personal_plan_create_or_reuse_initial_need") {
         return rpcCreateOrReuseInitialNeed(args)
       }
@@ -231,6 +242,8 @@ function createFakeDatabase() {
 
   return {
     admin,
+    hairProfiles,
+    scanner,
     seedAttachedArtifact,
     seedEmailOnlyManualAccessGrant,
     seedActiveModerator,
@@ -241,9 +254,17 @@ function createFakeDatabase() {
 }
 
 test("a free account with no enrollment is provisioned and then passes the scanner's profile-context read (no profile_missing)", async () => {
-  const { admin, seedAttachedArtifact } = createFakeDatabase()
+  const { admin, seedAttachedArtifact, hairProfiles, scanner } = createFakeDatabase()
   const userId = "22222222-2222-4222-8222-222222222222"
   seedAttachedArtifact(userId, COMPLETE_V3_PLAN_ENVELOPE)
+
+  // Profile linking is a separate prerequisite; provisioning does not write it.
+  hairProfiles.push({
+    ...buildProfileDataFromPersonalPlanCanonicalProfile(
+      adaptPersonalPlanAnswersForOffer(COMPLETE_V3_PLAN_ENVELOPE.answers).answers,
+    ),
+    user_id: userId,
+  })
 
   // Before provisioning: this is exactly the read that makes the scan resolve
   // route return 409 profile_missing.
@@ -257,7 +278,56 @@ test("a free account with no enrollment is provisioned and then passes the scann
   assert.ok(context, "expected a scan evaluation context — profile_missing must not fire")
   assert.equal(context?.snapshotSource, "initial")
   assert.equal(context?.snapshot.profile.hair.thickness, "fine")
+  assert.equal(scanner.publications.size, 1)
+  assert.equal(
+    (await loadScanEvaluationContext(admin as never, userId))?.refinedVersionId,
+    context.refinedVersionId,
+  )
+  assert.equal(scanner.publications.size, 1, "scanner publication is idempotent")
 })
+
+test("a provisioned need without linked diagnostics still has no scanner context", async () => {
+  const { admin, seedAttachedArtifact, scanner } = createFakeDatabase()
+  const userId = randomUUID()
+  seedAttachedArtifact(userId, COMPLETE_V3_PLAN_ENVELOPE)
+  const service = createFreeSnapshotService(createFreeSnapshotSupabaseDependencies(admin as never))
+  assert.equal((await service.provisionFreeInitialSnapshot({ userId })).outcome, "provisioned")
+  assert.equal(await loadScanEvaluationContext(admin as never, userId), null)
+  assert.equal(scanner.publications.size, 0)
+})
+
+for (const fault of ["corrupt_need_hash", "stale_publication"] as const) {
+  test(`provisioned scanner context fails closed on ${fault}`, async () => {
+    const { admin, seedAttachedArtifact, hairProfiles, needVersions, scanner } =
+      createFakeDatabase()
+    const userId = randomUUID()
+    seedAttachedArtifact(userId, COMPLETE_V3_PLAN_ENVELOPE)
+    hairProfiles.push({
+      ...buildProfileDataFromPersonalPlanCanonicalProfile(
+        adaptPersonalPlanAnswersForOffer(COMPLETE_V3_PLAN_ENVELOPE.answers).answers,
+      ),
+      user_id: userId,
+    })
+    const service = createFreeSnapshotService(
+      createFreeSnapshotSupabaseDependencies(admin as never),
+    )
+    assert.equal((await service.provisionFreeInitialSnapshot({ userId })).outcome, "provisioned")
+    if (fault === "corrupt_need_hash") [...needVersions.values()][0].input_hash = "invalid"
+    const client = {
+      async rpc(name: string, args: Row) {
+        // A source edit after read must refuse publication of the old evaluation.
+        if (fault === "stale_publication" && name === "scanner_context_publish")
+          hairProfiles[0].thickness = "coarse"
+        return admin.rpc(name, args)
+      },
+    }
+    await assert.rejects(
+      loadScanEvaluationContext(client as never, userId),
+      /scan_profile_context_unavailable/,
+    )
+    assert.equal(scanner.publications.size, 0)
+  })
+}
 
 test("provisioning twice is idempotent: no duplicate need_versions row, enrollment stays null", async () => {
   const { admin, seedAttachedArtifact, needVersions, personalPlans } = createFakeDatabase()

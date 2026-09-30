@@ -105,6 +105,7 @@ test("bond repair wins when overlapping mask and surface signals are present", (
     ...BASE,
     treatment: ["blondiert"],
     concerns: ["dryness", "hair_damage"],
+    primary_concern: "hair_damage",
     fingertest: "rau",
     pulltest: "stretches_stays",
     goals: ["moisture", "strengthen"],

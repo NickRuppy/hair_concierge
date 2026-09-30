@@ -17,6 +17,16 @@ import {
   recordBillingAnalyticsEvent,
 } from "@/lib/billing/analytics-outbox"
 import { applyPlanChangeAtRenewal } from "@/lib/billing/plan-change"
+import { accountDeletionEnabled } from "@/lib/account-deletion/enabled"
+import {
+  recordPostDeletionRefund,
+  webRefundKind,
+  type WebRefundKind,
+} from "@/lib/account-deletion/post-deletion-refund"
+import {
+  reportDeletedAccountSubscriptionCancelled,
+  reportPostDeletionRefundNotRecorded,
+} from "@/lib/observability/account-deletion"
 import { mirrorBillingSubscriptionToProfile } from "@/lib/billing/entitlements"
 import {
   findBillingSubscriptionByProviderId,
@@ -60,6 +70,7 @@ import {
 import type { PayPalSubscription } from "@/lib/paypal/subscription-shapes"
 import { toBillingSubscriptionInputFromPayPal } from "@/lib/paypal/subscription-shapes"
 import { getPayPalIntervalForPlanId } from "@/lib/paypal/plans"
+import { listPayPalTrialTransactions } from "@/lib/paypal/trial-runtime"
 import type { PaymentFailureDetails, PaymentFailureReporter } from "@/lib/observability/payment"
 import { captureServerPaymentFailure } from "@/lib/observability/payment-server"
 import { resolvePaymentRuntime } from "@/lib/billing/payment-runtime-config"
@@ -97,6 +108,7 @@ export type PayPalWebhookEvent = {
     create_time?: string
     billing_agreement_id?: string
     subscription_id?: string
+    sale_id?: string
     payee?: { merchant_id?: string }
     amount?: {
       total?: string
@@ -129,6 +141,8 @@ export interface PayPalWebhookDeps
   premiumTierId: string
   freeTierId: string
   retrievePayPalSubscription?: (subscriptionId: string) => Promise<PayPalSubscription>
+  retrievePayPalRefund?: (refundId: string) => Promise<PayPalRefund>
+  retrievePayPalSale?: (saleId: string) => Promise<PayPalSale>
   cancelPayPalSubscription?: (subscriptionId: string, reason: string) => Promise<void>
   defer?: (work: () => void | Promise<void>) => void
   linkQuizToProfile?: (userId: string, email: string | undefined, leadId?: string) => Promise<void>
@@ -140,6 +154,36 @@ export interface PayPalWebhookDeps
     typeof activateVerifiedPayPalOrderIntent
   >[2]["finalizeLockedPlan"]
   capturePaymentFailure?: PaymentFailureReporter
+  /** Test seam; production reports to Sentry (provider + event type only). */
+  reportDeletedAccountSubscription?: typeof reportDeletedAccountSubscriptionCancelled
+  /** Test seam: records a post-deletion subscription for its full refund (R-a); false: not. */
+  recordPostDeletionRefund?: (subscriptionId: string, paymentsFrom: string) => Promise<boolean>
+  /** Test seam: the kind of the subscription's existing account-deletion refund row. */
+  webRefundKind?: (subscriptionId: string) => Promise<WebRefundKind | null>
+  /** Test seam; production reports to Sentry (provider, event type, existing kind only). */
+  reportPostDeletionRefundNotRecorded?: typeof reportPostDeletionRefundNotRecorded
+  /** Test seam: is this a subscription (or refunded payment) an account deletion cancelled? */
+  isAccountDeletionWebRefund?: (input: {
+    subscriptionId: string | null
+    paymentRef: string | null
+  }) => Promise<boolean>
+}
+
+/** D14 refunds of a deleted account's subscription: acknowledged, nothing re-provisioned. */
+async function isAccountDeletionWebRefund(
+  deps: PayPalWebhookDeps,
+  input: { subscriptionId: string | null; paymentRef: string | null },
+): Promise<boolean> {
+  // Schema not migrated yet: the RPC is absent, so the caller falls through to its own error.
+  if (!accountDeletionEnabled()) return false
+  if (deps.isAccountDeletionWebRefund) return deps.isAccountDeletionWebRefund(input)
+  const { data, error } = await deps.supabase.rpc("account_deletion_web_refund_known", {
+    p_provider: "paypal",
+    p_subscription_id: input.subscriptionId,
+    p_payment_ref: input.paymentRef,
+  })
+  if (error) throw new Error("Account deletion refund lookup failed")
+  return data === true
 }
 
 export type PayPalWebhookResult =
@@ -158,6 +202,24 @@ type PayPalActivationOutcome =
     }
 
 type PayPalPaymentClassification = "initial" | "renewal" | "historical_noop"
+
+type PayPalAmount = {
+  total?: string
+  value?: string
+  currency?: string
+  currency_code?: string
+}
+
+type PayPalRefund = {
+  id?: string
+  sale_id?: string
+  amount?: PayPalAmount
+}
+
+type PayPalSale = {
+  id?: string
+  billing_agreement_id?: string
+}
 
 const MUTATING_EVENTS = new Set([
   "BILLING.SUBSCRIPTION.ACTIVATED",
@@ -235,6 +297,10 @@ export async function handlePayPalWebhookEvent(
     if (!subscriptionId) throw new Error("PayPal webhook event is missing subscription id")
     const retrieve = deps.retrievePayPalSubscription ?? retrievePayPalSubscriptionForWebhook
     const subscription = await retrieve(subscriptionId)
+    if (await acknowledgeDeletedAccountSubscription(eventType, subscription, deps))
+      return { handled: true }
+    if (await acknowledgeCanceledProviderClockVerification(eventType, subscription, deps))
+      return { handled: true }
     if (await handlePayPalTrialWebhook(event, subscription, deps)) return { handled: true }
 
     switch (eventType) {
@@ -373,6 +439,112 @@ export async function handlePayPalWebhookEvent(
   }
 }
 
+/**
+ * A subscription whose account was deleted keeps only its anonymized checkout intent; the
+ * billing row cascaded away. Its later provider events are acknowledged without writes so
+ * they neither error forever nor provision a new account from the payer data. A still
+ * billable agreement (e.g. approved before the deletion, activated after it) is cancelled
+ * immediately (A1) and reported; ended ones are a pure no-op.
+ */
+async function acknowledgeDeletedAccountSubscription(
+  eventType: string,
+  subscription: PayPalSubscription,
+  deps: PayPalWebhookDeps,
+): Promise<boolean> {
+  // Schema not migrated yet: no extra reads, the event runs exactly as before the feature.
+  if (!accountDeletionEnabled() || !subscription.id) return false
+  const existing = await findBillingSubscriptionByProviderId(
+    deps.supabase,
+    "paypal",
+    subscription.id,
+  )
+  if (existing) return false
+  const intent =
+    (await findPayPalCheckoutIntentByProviderSubscriptionId(deps.supabase, subscription.id)) ??
+    (subscription.custom_id?.trim()
+      ? await findPayPalCheckoutIntentByToken(deps.supabase, subscription.custom_id.trim())
+      : null)
+  if (!intent?.anonymized_at) return false
+  if (subscription.status === "ACTIVE" || subscription.status === "SUSPENDED") {
+    // R-a: full refund of its payments (the customer never had access), recorded before the
+    // cancel so a retried delivery (agreement then CANCELLED) cannot miss it.
+    // Only payments from the deletion (the intent's anonymization) on are refunded (I-2).
+    const recorded = await (
+      deps.recordPostDeletionRefund ??
+      ((id: string, from: string) => recordPostDeletionRefund(deps.supabase, "paypal", id, from))
+    )(subscription.id, intent.anonymized_at)
+    // N2: not recorded — fine when it is this subscription's post-deletion refund already.
+    const existingKind = recorded
+      ? null
+      : await (deps.webRefundKind ?? ((id: string) => webRefundKind(deps.supabase, "paypal", id)))(
+          subscription.id,
+        )
+    const cancel = deps.cancelPayPalSubscription ?? cancelPayPalSubscriptionForWebhook
+    await cancel(subscription.id, "Chaarlie-Konto gelöscht")
+    ;(deps.reportDeletedAccountSubscription ?? reportDeletedAccountSubscriptionCancelled)({
+      provider: "paypal",
+      eventType,
+    })
+    if (!recorded && existingKind !== "post_deletion")
+      (deps.reportPostDeletionRefundNotRecorded ?? reportPostDeletionRefundNotRecorded)({
+        provider: "paypal",
+        eventType,
+        existingKind: existingKind ?? "none",
+      })
+  }
+  console.info("[paypal:webhook] event for a deleted account acknowledged", { eventType })
+  return true
+}
+
+async function acknowledgeCanceledProviderClockVerification(
+  eventType: string,
+  subscription: PayPalSubscription,
+  deps: PayPalWebhookDeps,
+): Promise<boolean> {
+  // This subscription was a provider-only live clock check. Keep the exception
+  // tied to its exact ID; the evidence and release criteria live in the plan.
+  if (
+    !["BILLING.SUBSCRIPTION.ACTIVATED", "BILLING.SUBSCRIPTION.CANCELLED"].includes(eventType) ||
+    subscription.id !== "I-69ESTM9ANYNB" ||
+    subscription.status !== "CANCELLED" ||
+    !/^paypal-clock-verification:[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(
+      subscription.custom_id ?? "",
+    )
+  )
+    return false
+
+  const createdAt = Date.parse(subscription.create_time ?? "")
+  const balance = subscription.billing_info?.outstanding_balance
+  if (
+    !Number.isFinite(createdAt) ||
+    createdAt > Date.now() ||
+    !/^0(?:\.0+)?$/.test(balance?.value ?? "") ||
+    !/^[A-Z]{3}$/.test(balance?.currency_code ?? "")
+  )
+    throw new Error(`PayPal clock verification ${subscription.id} requires payment reconciliation`)
+
+  const [intentById, intentByToken, billingRow] = await Promise.all([
+    findPayPalCheckoutIntentByProviderSubscriptionId(deps.supabase, subscription.id),
+    findPayPalCheckoutIntentByToken(deps.supabase, subscription.custom_id!),
+    findBillingSubscriptionByProviderId(deps.supabase, "paypal", subscription.id),
+  ])
+  if (intentById || intentByToken || billingRow) return false
+
+  const from = new Date(createdAt - 1000).toISOString()
+  const transactions = await (deps.listPayPalTrialTransactions ?? listPayPalTrialTransactions)(
+    subscription.id,
+    from,
+    new Date().toISOString(),
+  )
+  if (transactions.length)
+    throw new Error(`PayPal clock verification ${subscription.id} has transactions to reconcile`)
+  console.info("[paypal:webhook] canceled provider-only clock verification acknowledged", {
+    subscriptionId: subscription.id,
+    eventType,
+  })
+  return true
+}
+
 async function reconcilePayPalOneTimeDisputeEvent(
   event: PayPalWebhookEvent,
   deps: PayPalWebhookDeps,
@@ -465,6 +637,12 @@ async function reconcilePayPalOrderCaptureEvent(
   }
   if (!purchase) {
     if (!isCompleted) {
+      if (await isAccountDeletionWebRefund(deps, { subscriptionId: null, paymentRef: captureId })) {
+        console.info("[paypal:webhook] account deletion refund acknowledged", {
+          eventType: event.event_type,
+        })
+        return
+      }
       throw new Error(`PayPal capture ${captureId} has no one-time purchase to reconcile`)
     }
     return
@@ -1003,43 +1181,216 @@ async function recordPayPalLifecycleEvent(
 }
 
 async function recordLinkedPayPalRefund(event: PayPalWebhookEvent, deps: PayPalWebhookDeps) {
-  let subscriptionId: string
-  try {
-    subscriptionId = getEventSubscriptionId(event, event.event_type ?? "")
-  } catch {
-    throw new Error(
-      `PayPal refund/reversal ${event.id ?? "unknown"} is missing a subscription link`,
-    )
-  }
-
-  const billingRow = await findBillingSubscriptionByProviderId(
-    deps.supabase,
-    "paypal",
-    subscriptionId,
-  )
+  const eventType = event.event_type
+  const sourceObjectId = refundSourceObjectId(event, eventType)
+  const { billingRow, saleId } = await resolvePayPalRefundBillingRow(event, deps)
   if (!billingRow) {
-    throw new Error(
-      `PayPal refund/reversal ${event.id ?? "unknown"} has no local billing row for ${subscriptionId}`,
-    )
+    console.info("[paypal:webhook] account deletion refund acknowledged", { eventType })
+    return
   }
 
   await recordPayPalBillingAnalytics(deps, {
     eventKey: billingAnalyticsEventKey({
       provider: "paypal",
       eventName: "refund_completed",
-      sourceObjectId: event.resource?.id ?? event.id ?? subscriptionId,
+      sourceObjectId,
     }),
     eventName: "refund_completed",
     billingRow,
     event,
-    sourceObjectId: event.resource?.id ?? event.id ?? subscriptionId,
+    sourceObjectId,
     payload: {
       ...billingSubscriptionPayload(billingRow),
       value: payPalEventAmount(event),
       currency: payPalEventCurrency(event),
       payment_event_type: event.event_type,
+      original_sale_id: saleId,
     },
   })
+}
+
+async function resolvePayPalRefundBillingRow(
+  event: PayPalWebhookEvent,
+  deps: PayPalWebhookDeps,
+): Promise<{ billingRow: BillingSubscriptionRow | null; saleId: string | null }> {
+  const agreementId = event.resource?.billing_agreement_id?.trim()
+  const subscriptionId = event.resource?.subscription_id?.trim()
+  if (agreementId && subscriptionId && agreementId !== subscriptionId) {
+    throw new Error(
+      `PayPal refund/reversal ${event.id ?? "unknown"} has conflicting direct subscription links`,
+    )
+  }
+  const directSubscriptionId = agreementId || subscriptionId
+  if (directSubscriptionId) {
+    const saleId = event.resource?.sale_id?.trim() || null
+    return {
+      billingRow: await requirePayPalBillingRow(deps, directSubscriptionId, event.id, saleId),
+      saleId,
+    }
+  }
+
+  try {
+    const eventType = event.event_type
+    let saleId: string
+    if (eventType === "PAYMENT.SALE.REFUNDED") {
+      const refundId = refundSourceObjectId(event, eventType)
+      saleId = event.resource?.sale_id?.trim() ?? ""
+      if (!saleId) {
+        const retrieveRefund = deps.retrievePayPalRefund ?? retrievePayPalRefundForWebhook
+        const refund = await retrieveRefund(refundId)
+        if (refund.id?.trim() !== refundId) {
+          throw new Error(`PayPal refund ${refundId} lookup returned a different refund id`)
+        }
+        assertMatchingPayPalRefundAmounts(event.resource?.amount, refund.amount, refundId)
+        saleId = refund.sale_id?.trim() ?? ""
+      }
+      if (!saleId) throw new Error(`PayPal refund ${refundId} is missing an original sale id`)
+    } else if (eventType === "PAYMENT.SALE.REVERSED") {
+      saleId = event.resource?.id?.trim() ?? ""
+      if (!saleId) throw new Error(`PayPal reversal ${event.id ?? "unknown"} is missing a sale id`)
+    } else {
+      throw new Error(`Unsupported PayPal refund event ${eventType ?? "unknown"}`)
+    }
+
+    const localOwnership = await findPayPalSubscriptionForSuccessfulSale(deps, saleId)
+    if (localOwnership) {
+      const billingRow = await requirePayPalBillingRow(
+        deps,
+        localOwnership.providerSubscriptionId,
+        event.id,
+        saleId,
+      )
+      if (billingRow && billingRow.user_id !== localOwnership.userId) {
+        throw new Error(`PayPal sale ${saleId} has mismatched local billing ownership`)
+      }
+      return { billingRow, saleId }
+    }
+
+    const retrieveSale = deps.retrievePayPalSale ?? retrievePayPalSaleForWebhook
+    const sale = await retrieveSale(saleId)
+    if (sale.id?.trim() !== saleId) {
+      throw new Error(`PayPal sale ${saleId} lookup returned a different sale id`)
+    }
+    const providerSubscriptionId = sale.billing_agreement_id?.trim()
+    if (!providerSubscriptionId) {
+      throw new Error(`PayPal sale ${saleId} is missing a billing agreement link`)
+    }
+    return {
+      billingRow: await requirePayPalBillingRow(deps, providerSubscriptionId, event.id, saleId),
+      saleId,
+    }
+  } catch (error) {
+    throw new Error(
+      `PayPal refund/reversal ${event.id ?? "unknown"} is missing a subscription link`,
+      { cause: error },
+    )
+  }
+}
+
+function refundSourceObjectId(event: PayPalWebhookEvent, eventType: string | undefined): string {
+  const sourceObjectId = event.resource?.id?.trim()
+  if (!sourceObjectId) {
+    throw new Error(`PayPal refund/reversal ${event.id ?? "unknown"} is missing a resource id`)
+  }
+  // Refund IDs distinguish partial refunds. Reversal events historically use the
+  // affected sale as their source object, so retain that established dedupe key.
+  if (eventType !== "PAYMENT.SALE.REFUNDED" && eventType !== "PAYMENT.SALE.REVERSED") {
+    throw new Error(`Unsupported PayPal refund event ${eventType ?? "unknown"}`)
+  }
+  return sourceObjectId
+}
+
+/** Null: a D14 refund of a deleted account's subscription (no billing row by design). */
+async function requirePayPalBillingRow(
+  deps: PayPalWebhookDeps,
+  subscriptionId: string,
+  eventId: string | undefined,
+  saleId: string | null = null,
+): Promise<BillingSubscriptionRow | null> {
+  const billingRow = await findBillingSubscriptionByProviderId(
+    deps.supabase,
+    "paypal",
+    subscriptionId,
+  )
+  if (!billingRow) {
+    if (await isAccountDeletionWebRefund(deps, { subscriptionId, paymentRef: saleId })) return null
+    throw new Error(
+      `PayPal refund/reversal ${eventId ?? "unknown"} has no local billing row for ${subscriptionId}`,
+    )
+  }
+  return billingRow
+}
+
+async function findPayPalSubscriptionForSuccessfulSale(
+  deps: PayPalWebhookDeps,
+  saleId: string,
+): Promise<{ providerSubscriptionId: string; userId: string } | null> {
+  const { data, error } = await deps.supabase
+    .from("billing_analytics_outbox")
+    .select("provider_subscription_id,user_id")
+    .eq("provider", "paypal")
+    .in("event_name", ["purchase_completed", "payment_completed"])
+    .eq("source_object_id", saleId)
+
+  if (error) throw error
+  const rows =
+    (data as Array<{ provider_subscription_id: string | null; user_id: string | null }> | null) ??
+    []
+  if (rows.length === 0) return null
+
+  const ownership = rows.map((row) => {
+    const providerSubscriptionId = row.provider_subscription_id?.trim()
+    const userId = row.user_id?.trim()
+    if (!providerSubscriptionId || !userId) {
+      throw new Error(`PayPal sale ${saleId} has incomplete local ownership`)
+    }
+    return { providerSubscriptionId, userId }
+  })
+  const firstOwnership = ownership[0]
+  if (
+    ownership.some(
+      (candidate) =>
+        candidate.providerSubscriptionId !== firstOwnership.providerSubscriptionId ||
+        candidate.userId !== firstOwnership.userId,
+    )
+  ) {
+    throw new Error(`PayPal sale ${saleId} has conflicting local subscription ownership`)
+  }
+  return firstOwnership
+}
+
+function assertMatchingPayPalRefundAmounts(
+  eventAmount: PayPalAmount | undefined,
+  refundAmount: PayPalAmount | undefined,
+  refundId: string,
+) {
+  const webhookValue = payPalAmountValue(eventAmount)
+  const providerValue = payPalAmountValue(refundAmount)
+  if (webhookValue !== undefined && providerValue !== undefined && webhookValue !== providerValue) {
+    throw new Error(`PayPal refund ${refundId} lookup amount does not match the webhook`)
+  }
+
+  const webhookCurrency = payPalAmountCurrency(eventAmount)
+  const providerCurrency = payPalAmountCurrency(refundAmount)
+  if (
+    webhookCurrency !== undefined &&
+    providerCurrency !== undefined &&
+    webhookCurrency !== providerCurrency
+  ) {
+    throw new Error(`PayPal refund ${refundId} lookup currency does not match the webhook`)
+  }
+}
+
+function payPalAmountValue(amount: PayPalAmount | undefined): number | undefined {
+  const value = amount?.value ?? amount?.total
+  if (!value) return undefined
+  const parsed = Number(value)
+  return Number.isFinite(parsed) ? parsed : undefined
+}
+
+function payPalAmountCurrency(amount: PayPalAmount | undefined): string | undefined {
+  const value = amount?.currency_code ?? amount?.currency
+  return value?.trim().toUpperCase() || undefined
 }
 
 async function recordPayPalBillingAnalytics(
@@ -1077,15 +1428,11 @@ function payPalEventTimestamp(event: PayPalWebhookEvent) {
 }
 
 function payPalEventAmount(event: PayPalWebhookEvent) {
-  const value = event.resource?.amount?.value ?? event.resource?.amount?.total
-  if (!value) return undefined
-  const amount = Number(value)
-  return Number.isFinite(amount) ? amount : undefined
+  return payPalAmountValue(event.resource?.amount)
 }
 
 function payPalEventCurrency(event: PayPalWebhookEvent) {
-  const value = event.resource?.amount?.currency_code ?? event.resource?.amount?.currency
-  return value?.trim().toUpperCase() || undefined
+  return payPalAmountCurrency(event.resource?.amount)
 }
 
 function getEventSubscriptionId(event: PayPalWebhookEvent, eventType: string): string {
@@ -1111,6 +1458,20 @@ async function retrievePayPalSubscriptionForWebhook(
 ): Promise<PayPalSubscription> {
   const { retrievePayPalSubscription } = await import("@/lib/paypal/subscriptions")
   return retrievePayPalSubscription(subscriptionId)
+}
+
+async function retrievePayPalRefundForWebhook(refundId: string): Promise<PayPalRefund> {
+  const { paypalRequest } = await import("@/lib/paypal/client")
+  return paypalRequest<PayPalRefund>(`/v1/payments/refund/${encodeURIComponent(refundId)}`, {
+    signal: AbortSignal.timeout(15_000),
+  })
+}
+
+async function retrievePayPalSaleForWebhook(saleId: string): Promise<PayPalSale> {
+  const { paypalRequest } = await import("@/lib/paypal/client")
+  return paypalRequest<PayPalSale>(`/v1/payments/sale/${encodeURIComponent(saleId)}`, {
+    signal: AbortSignal.timeout(15_000),
+  })
 }
 
 async function cancelPayPalSubscriptionForWebhook(

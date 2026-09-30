@@ -186,6 +186,20 @@ local database in the normal workflow. Every row you seed is real: always carry 
 in `metadata`, never sign in with or mutate a customer account, and never widen a rollout flag
 for a local test. When a step here turns out stale, fix this file in the same PR as the fix.
 
+For scan dm-enrichment QA, do not treat `/labs/scan` as persistence proof: its UI can exercise
+the sheet, but `/api/scan/*` uses the real production-backed data path when authenticated. Before
+any controlled smoke, read the current flag and cap, preflight that the labelled QA account and
+barcode have no open scan submission, and use one confirmation only. Record the resulting
+submission ID privately; do not delete, reject, or publish it automatically. A failed smoke means
+switch the flag off and verify a plain unknown-sheet fallback without a dm call.
+
+The server defaults to `SCAN_RETAILER_ENRICHMENT_ENABLED=false`. Its
+`SCAN_RETAILER_ENRICHMENT_TIMEOUT_MS` cap defaults to `1500` ms; only whole
+numbers from `1` to `10000` are valid. Set both in the task worktree's
+`.env.local` and restart the dev server after changes. There is intentionally
+no tracked `.env.example` in this repository: blanket environment-file
+ignoring makes it an unreliable configuration source.
+
 # Partner access QA
 
 Use the dedicated partner route and an isolated/local database migration for creator-flow QA.
@@ -210,3 +224,44 @@ create and claim a partner invitation for that same e-mail and sign in as that a
 gets independent app access from the partner grant instead of being blocked as an ended moderator —
 this exercises the middleware re-check at `src/lib/supabase/middleware.ts` where an active partner
 grant is checked once a moderator membership is found `ended`/`unavailable`.
+
+# Discovery-call QA
+
+The discovery-call toolkit is off by default. For a local walkthrough set both
+`DISCOVERY_CALL_TOOLKIT_ENABLED=true` and a `DISCOVERY_ENROLLMENT_SIGNING_SECRET` of at least 32
+characters in the worktree's `.env.local`, then restart the dev server. With the flag off the
+invite page and its two public APIs answer `410` and the checklist and admin cockpit answer `404`,
+so nothing is reachable to test.
+
+Create the local enrollment with `npm run discovery -- create --name="…" --email="…"` (dry-run
+without `--apply`). Never point the CLI at production for QA: a production write additionally
+requires `ALLOW_DISCOVERY_PRODUCTION_WRITE=1`, `--apply`, `--confirm-project=pqdkhefxsxkyeqelqegq`
+and a matching Supabase URL, and that combination is the operator path, not a QA path. The invite
+credential lives in the URL fragment (`/beratung/einladung#code=…`), so it never reaches a server
+log — copy the whole link, not a truncated one. The participant journey is invite → `/quiz`
+(legacy, never an `/lp/*` link) → `/beratung/produkte` (one flat product list, no category tiles) →
+„Fertig" → review „Passt das so?" → „Stimmt so – abschicken"; the operator side is
+`/admin/beratung`. For the complete operator contract, the environment keys, the manual research
+reconciliation and the two analytics caveats, see `docs/discovery-call-runbook.md`.
+
+The flat checklist needs both batch-5 migrations applied to the local database
+(`20260924120000_discovery_intake_usage_product_type.sql`, then
+`20260924140000_discovery_admin_item_usage.sql`); without them adds, confirm-submit and the cockpit's
+usage correction fail. A complete local walkthrough covers:
+
+1. Add one product each by search, scan and typed name. An oil asks „Wann benutzt du das Öl?", a
+   conditioner/mask/leave-in „Wie benutzt du das?", a shampoo „Wie oft benutzt du das?" — the
+   detected answer is preselected.
+2. Type a name the classifier cannot place and answer „Weiß ich nicht": the item is stored with no
+   product type, no usage and no research submission.
+3. „Fertig" → „Passt das so?" → „Stimmt so – abschicken": every category without a product becomes an
+   explicit „benutzt sie nicht" in the same call.
+4. In the cockpit (`/admin/beratung/<enrollmentId>`): the „Weiß ich nicht" product reads
+   „Kategorie offen" and „Finalisieren" is blocked („Erst Kategorie festlegen"). Set its
+   „Produkttyp" and „Benutzt als" and save: research starts right after the save, from the type
+   (status „In Recherche – wartet"; with too little to research the save still stands).
+5. „Kategorie ändern" on a product with a usage (e.g. conditioner → Maske): its row reads
+   „Benutzt als Maske · Produkt: Conditioner", the vacated category turns into „benutzt sie nicht"
+   and the moved step's decisions are gone. While finalized the correction is refused
+   („Erst Finalisierung aufheben").
+6. Finalize, open the PDF: the moved product carries „als Haarmaske benutzt".

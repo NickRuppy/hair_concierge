@@ -25,6 +25,7 @@ export type PayPalSubscription = {
   }
   billing_info?: {
     next_billing_time?: string
+    outstanding_balance?: { value?: string; currency_code?: string }
     last_payment?: { time?: string; amount?: { value?: string; currency_code?: string } }
     last_failed_payment?: { time?: string; amount?: { value?: string; currency_code?: string } }
   }

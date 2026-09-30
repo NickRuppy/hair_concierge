@@ -46,13 +46,14 @@ test("surface-led results expose scope labels, bucketed positions, concise goal 
   assert.equal(narrative.cta.subline, "Mit passenden Produkten, Reihenfolge und Anwendung.")
 })
 
-test("primary concern ranking prefers hair damage over tangling, split ends, and frizz", () => {
+test("the stated main problem drives the friction row", () => {
   const narrative = buildQuizResultNarrative({
     structure: "wavy",
     thickness: "normal",
     fingertest: "rau",
     pulltest: "stretches_stays",
     concerns: ["hair_damage", "split_ends", "frizz"],
+    primary_concern: "hair_damage",
     goals: ["healthier_hair", "less_frizz"],
   })
 
@@ -66,30 +67,38 @@ test("primary concern ranking prefers hair damage over tangling, split ends, and
   assert.equal(narrative.rows[1]?.tickAfter, "geschützt")
 })
 
-test("treatment boost changes the concern ranking against untreated hair", () => {
+test("treatment no longer re-ranks concerns: only her pick names the main problem", () => {
+  const base = {
+    structure: "curly",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    concerns: ["hair_damage", "dryness"],
+    goals: ["healthy_scalp"],
+  } as const
   const untreated = buildQuizResultNarrative({
-    structure: "curly",
-    thickness: "normal",
-    fingertest: "glatt",
-    pulltest: "stretches_bounces",
-    concerns: ["hair_damage", "dryness"],
-    goals: ["healthy_scalp"],
+    ...base,
+    concerns: [...base.concerns],
+    goals: [...base.goals],
   })
-
   const treated = buildQuizResultNarrative({
-    structure: "curly",
-    thickness: "normal",
-    fingertest: "glatt",
-    pulltest: "stretches_bounces",
+    ...base,
+    concerns: [...base.concerns],
+    goals: [...base.goals],
     treatment: ["gefaerbt"],
-    concerns: ["hair_damage", "dryness"],
-    goals: ["healthy_scalp"],
+  })
+  const treatedWithPick = buildQuizResultNarrative({
+    ...base,
+    concerns: [...base.concerns],
+    goals: [...base.goals],
+    treatment: ["gefaerbt"],
+    primary_concern: "dryness",
   })
 
-  assert.equal(untreated.primaryConcern, "dryness")
-  assert.equal(treated.primaryConcern, "hair_damage")
-  assert.equal(untreated.rows[1]?.before, "Trockenheit")
-  assert.equal(treated.rows[1]?.before, "Haarschäden")
+  assert.equal(untreated.primaryConcern, null)
+  assert.equal(treated.primaryConcern, null)
+  assert.equal(treatedWithPick.primaryConcern, "dryness")
+  assert.equal(treatedWithPick.rows[1]?.before, "Trockenheit")
 })
 
 test("multi-goal intro acknowledges additional selected goals with unter anderem and mirrors the concern", () => {
@@ -217,6 +226,7 @@ test("severe structural signals can mention bondbuilder support in the main leve
     pulltest: "stretches_stays",
     treatment: ["blondiert"],
     concerns: ["breakage", "hair_damage"],
+    primary_concern: "breakage",
     goals: ["anti_breakage", "healthier_hair"],
   })
 

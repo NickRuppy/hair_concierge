@@ -75,6 +75,20 @@ export const SCAN_UNKNOWN_HEADLINE = "Danke dir – das ist neu für uns!"
 export const SCAN_UNKNOWN_BRIDGE = "Barcode gelesen – das Produkt fehlt noch in unserer Datenbank."
 export const SCAN_UNKNOWN_SUBLINE = "Wir nehmen es auf. Dein Ergebnis kommt in den Chat."
 export const SCAN_UNKNOWN_QUESTION = "Wobei benutzt du es?"
+export const SCAN_UNKNOWN_IDENTIFIED_HEADLINE = "Gefunden – jetzt prüfen wir es."
+export const SCAN_UNKNOWN_IDENTIFIED_SUBLINE =
+  "Passt es zu deinem Haar? Das Ergebnis kommt in den Chat."
+export const SCAN_UNKNOWN_CONFIRM_QUESTION = (label: string) => `Benutzt du es als ${label}?`
+export const SCAN_UNKNOWN_CONFIRM_CTA = (label: string) => `Ja, als ${label}`
+export const SCAN_UNKNOWN_CONFIRM_OTHER = "Wofür anderes"
+
+/** Preserve brand styling unless the retailer supplied an entirely uppercase name. */
+export function scanRetailerBrandLabel(brand: string): string {
+  if (brand !== brand.toLocaleUpperCase("de")) return brand
+  return brand
+    .toLocaleLowerCase("de")
+    .replace(/\p{L}[\p{L}\p{M}]*/gu, (word) => word[0].toLocaleUpperCase("de") + word.slice(1))
+}
 
 /** Resolving sheet while the verdict loads (Variante A decode feedback). */
 export const SCAN_RESOLVING_TITLE = "Produkt wird geprüft …"

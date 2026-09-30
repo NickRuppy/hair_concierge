@@ -1,5 +1,7 @@
 "use client"
 
+import { TRUSTPILOT_REVIEWS } from "@/lib/trustpilot-reviews"
+
 import { Fragment, useCallback, useEffect, useRef, useState, type MouseEvent } from "react"
 import Link from "next/link"
 import { ArrowDown, ChevronDown } from "lucide-react"
@@ -28,24 +30,7 @@ import { PersonalPlanFieldTestBanner } from "@/components/personal-plan-quiz/per
 import { BeforeAfterFigure } from "@/components/offer-media/before-after-figure"
 import type { PersonalPlanDiagnosticDimension, PersonalPlanOfferModel } from "./types"
 
-const testimonials = [
-  {
-    context: "34 · feines, welliges, blondiertes Haar",
-    name: "Kim · Endlich verstehe ich meine Haare",
-    quote:
-      "Der Fragebogen ist echt gut und leicht verständlich. Im Chat hat das Antworten super geklappt. Auch die Produktempfehlung fand ich gut.",
-  },
-  {
-    name: "Kerstin · Echte Antworten bekommen",
-    quote:
-      "Ich finde die Interaktion sehr gut: meine Fragen stellen zu können und dann die benötigten Antworten zu bekommen.",
-  },
-  {
-    name: "Sarah · Nie wieder googeln vorm Regal",
-    quote:
-      "Bei den Produkten stehen Preis und Anwendung dabei – und warum sie empfohlen werden. So muss ich nicht erst googeln.",
-  },
-]
+const testimonials = TRUSTPILOT_REVIEWS
 
 const PERSONAL_PLAN_OFFER_REVISION = "personal_plan_v4"
 
@@ -309,24 +294,27 @@ function TestimonialsSection() {
           Erfahrungen
         </p>
         <h2 className="mt-3 font-serif text-4xl leading-tight tracking-[-0.035em]">
-          Das sagen Kundinnen über Chaarlie.
+          Das sagen unsere Nutzer über Chaarlie.
         </h2>
         <div className="mt-7 grid items-stretch gap-3 md:grid-cols-3">
           {testimonials.map((testimonial) => (
             <blockquote
-              className="h-full rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.06)] bg-white p-6 text-left shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.55)]"
+              className="flex h-full flex-col items-center rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.06)] bg-white p-6 text-center shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.55)]"
               key={testimonial.name}
             >
               <span aria-label="5 von 5 Sternen" className="text-[#d96869]">
                 ★★★★★
               </span>
               <strong className="mt-2 block">{testimonial.name}</strong>
-              {"context" in testimonial ? (
-                <span className="mt-1 block text-sm leading-5 text-[rgba(var(--brand-plum-rgb),0.58)]">
-                  {testimonial.context}
-                </span>
-              ) : null}
               <p className="mt-3 text-base leading-7">„{testimonial.quote}“</p>
+              <a
+                className="mt-auto block pt-4 text-sm leading-6 underline underline-offset-4"
+                href={testimonial.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Auszug · Bewertung auf Trustpilot
+              </a>
             </blockquote>
           ))}
         </div>

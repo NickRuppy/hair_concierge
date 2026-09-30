@@ -73,6 +73,12 @@ function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRou
     createAdminClient: () => ({}) as never,
     validateEanInput: () => ({ ok: true, type: "ean", value: "4006381333931" }),
     findOpenScanSubmission: async () => null,
+    resolveRetailerEnrichment: async () => ({
+      enrichment: null,
+      outcome: "disabled",
+      durationMs: null,
+      deadlineMs: null,
+    }),
     createScanResolveAttemptId: () => "attempt-1",
     recordScanResolveAttempt: async () => {},
     completeScanResolveAttempt: async () => {},
@@ -250,6 +256,110 @@ test("scan resolve: identifier miss returns unknown_product with all 10 categori
   assert.deepEqual(body.identifier, { type: "ean", value: "4006381333931" })
   assert.equal(body.categories.length, 10)
   assert.ok(body.categories.every((entry: { key: string; label: string }) => entry.label))
+})
+
+test("scan resolve: exact dm enrichment appears only on a true miss and records lookup outcome", async () => {
+  const attempts = collectAttempts()
+  const calls: string[] = []
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      ...attempts.deps,
+      lookupCatalogProductByIdentifier: async () => null,
+      resolveRetailerEnrichment: (async (value: string) => {
+        calls.push(value)
+        return {
+          outcome: "hit",
+          durationMs: 230,
+          deadlineMs: 1500,
+          enrichment: {
+            source: "dm",
+            fetchedAt: "2026-09-17T10:00:00.000Z",
+            gtin: "04006381333931",
+            dan: "1234567",
+            productName: "Repair Shampoo",
+            brand: "WELEDA",
+            imageUrl: "https://products.dm-static.com/images/repair.jpg",
+            productUrl: "https://dm.de/repair",
+            ingredientsText: "Water | Sensitive formula",
+            description: "Secret description",
+            keyBenefits: "Secret benefits",
+            suggestedCategory: "shampoo",
+          },
+        }
+      }) as never,
+    } as Partial<ScanResolveRouteDeps>),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 200)
+  const body = await response.json()
+  assert.equal(body.kind, "unknown_product")
+  assert.deepEqual(calls, ["4006381333931"])
+  assert.deepEqual(body.identified, {
+    source: "dm",
+    dan: "1234567",
+    productName: "Repair Shampoo",
+    brand: "WELEDA",
+    imageUrl: "https://products.dm-static.com/images/repair.jpg",
+    suggestedCategory: "shampoo",
+  })
+  assert.equal(JSON.stringify(body).includes("Sensitive formula"), false)
+  await attempts.flush()
+  assert.deepEqual((attempts.completions[0] as { dmLookup?: unknown }).dmLookup, {
+    outcome: "hit",
+    durationMs: 230,
+    deadlineMs: 1500,
+  })
+})
+
+test("scan resolve: pending and quarantined paths never ask dm", async () => {
+  const failIfCalled = (async () => {
+    throw new Error("dm must not be called")
+  }) as never
+  const pending = createScanResolveRouteHandler(
+    baseDeps({
+      lookupCatalogProductByIdentifier: async () => null,
+      findOpenScanSubmission: async () => ({ submissionId: "sub-1", status: "pending_review" }),
+      resolveRetailerEnrichment: failIfCalled,
+    } as Partial<ScanResolveRouteDeps>),
+  )
+  const pendingResponse = await pending(
+    request({ identifier: { type: "ean", value: "4006381333931" } }),
+  )
+  assert.equal((await pendingResponse.json()).kind, "pending_submission")
+
+  const quarantined = createScanResolveRouteHandler(
+    baseDeps({
+      isProductSearchQuarantined: async () => true,
+      resolveRetailerEnrichment: failIfCalled,
+    } as Partial<ScanResolveRouteDeps>),
+  )
+  const quarantinedResponse = await quarantined(
+    request({ identifier: { type: "ean", value: "4006381333931" } }),
+  )
+  assert.equal((await quarantinedResponse.json()).kind, "unknown_product")
+})
+
+test("scan resolve: an unexpected dm throw preserves the plain sheet and records failure", async () => {
+  const attempts = collectAttempts()
+  const handler = createScanResolveRouteHandler(
+    baseDeps({
+      ...attempts.deps,
+      lookupCatalogProductByIdentifier: async () => null,
+      resolveRetailerEnrichment: (async () => {
+        throw new Error("sensitive dm URL / barcode")
+      }) as never,
+    } as Partial<ScanResolveRouteDeps>),
+  )
+  const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+  assert.equal(response.status, 200)
+  const body = await response.json()
+  assert.equal(body.kind, "unknown_product")
+  assert.equal(body.identified, undefined)
+  await attempts.flush()
+  assert.equal(
+    (attempts.completions[0] as { dmLookup?: { outcome: string } }).dmLookup?.outcome,
+    "unexpected",
+  )
 })
 
 test("scan resolve: productId not found is 404", async () => {
@@ -739,6 +849,7 @@ test("attempt telemetry: catalog miss completes as unknown_product", async () =>
       terminalOutcome: "unknown_product",
       matchedProductId: null,
       failureStage: null,
+      dmLookup: { outcome: "disabled", durationMs: null, deadlineMs: null },
     },
   ])
 })

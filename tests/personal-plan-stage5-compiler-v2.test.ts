@@ -512,17 +512,75 @@ test("V2 compiler generalizes a conventional damp Oil role and adapts rich Oil d
           rinse: "leave_in",
         },
       }),
+      pointer({
+        scope: { kind: "product", category: "oil", productId },
+        sourceRole: "dry_finish",
+        role: "finish",
+        applicationFamily: "dry_finish",
+        facts: {
+          ...pointer().facts,
+          applicationState: "dry_hair",
+          applicationArea: "hair_lengths_ends",
+          rinse: "leave_in",
+        },
+      }),
     ],
   })
 
   assert.deepEqual(result.pointerIssues, [])
+  assert.equal(
+    result.days
+      .find(({ key }) => key === "refresh_day")
+      ?.productBlocks.some((block) => block.productId === productId) ?? false,
+    false,
+    "no Oil on the Refresh-Tag",
+  )
   const steps = result.days
-    .find(({ key }) => key === "refresh_day")
+    .find(({ key }) => key === "between_wash_care_day")
     ?.productBlocks.find((block) => block.productId === productId)?.steps
   assert.ok(steps)
   assert.ok(steps.some(({ copyDe }) => copyDe.includes("Mit 1 Tropfen")))
   assert.ok(steps.some(({ copyDe }) => copyDe.includes("reichhaltigen Öl")))
   assert.ok(steps.some(({ copyDe }) => copyDe.includes("besonders sparsam")))
+})
+
+test("V2 compiler gives a damp-only Oil no between-wash card (O3)", () => {
+  const result = compileApplicationViewV2({
+    input: input("oil", "leave_in") as never,
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [
+      supportingShampooPointer(),
+      pointer({
+        scope: { kind: "product", category: "oil", productId },
+        sourceRole: "leave_on_fibre_conditioning",
+        role: "leave_in",
+        applicationFamily: "post_wash_damp_conditioning",
+        facts: {
+          ...pointer().facts,
+          applicationState: "damp_hair",
+          applicationArea: "hair_lengths_ends",
+          rinse: "leave_in",
+        },
+      }),
+    ],
+  })
+
+  assert.deepEqual(result.pointerIssues, [])
+  for (const key of ["refresh_day", "between_wash_care_day"] as const) {
+    assert.equal(
+      result.days
+        .find((day) => day.key === key)
+        ?.productBlocks.some((block) => block.productId === productId) ?? false,
+      false,
+      key,
+    )
+  }
+  assert.ok(
+    result.days
+      .find((day) => day.key === "wash_day")
+      ?.productBlocks.some((block) => block.productId === productId),
+    "the damp Oil keeps its wash-day step",
+  )
 })
 
 test("V2 compiler groups one Oil selected for finish and leave-in roles only once", () => {

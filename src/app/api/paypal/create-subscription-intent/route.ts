@@ -64,6 +64,7 @@ export const PayPalSubscriptionIntentRequestSchema = z
   .object({
     interval: z.enum(["month", "quarter", "year"]),
     leadId: z.string().uuid().nullable().optional(),
+    funnelSessionId: z.string().uuid().optional(),
     source: z.enum(["pricing_page", "quiz_result_offer", "premium_sheet"]),
     funnelEventId: z.string().uuid().optional(),
     checkoutAttemptId: z.string().uuid().optional(),
@@ -79,6 +80,7 @@ export const PayPalSubscriptionIntentRequestSchema = z
       {
         source,
         leadId,
+        funnelSessionId,
         checkoutContext,
         returnDestination,
         recoveryOnly,
@@ -121,6 +123,12 @@ export const PayPalSubscriptionIntentRequestSchema = z
           path: ["source"],
         })
       }
+      if (funnelSessionId && (source !== "quiz_result_offer" || !leadId))
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "an exact funnel session requires a quiz-result lead",
+          path: ["funnelSessionId"],
+        })
     },
   )
 
@@ -178,6 +186,55 @@ type PayPalSubscriptionIntentDeps = {
   createTrialCheckout?: typeof createDurablePayPalTrialCheckout
   cookies?: typeof cookies
   resolveFunnelCookieContext?: typeof resolveFunnelCookieContext
+  resolveFunnelContextForLead?: typeof resolveFunnelContextForLead
+  recordFunnelEvent?: typeof recordFunnelEvent
+}
+
+class PayPalFunnelSessionMismatchError extends Error {}
+
+export async function resolvePayPalFunnelContext({
+  cookieStore,
+  funnelSessionId,
+  leadId,
+  resolveCookieContext,
+  resolveLeadContext,
+}: {
+  cookieStore: Awaited<ReturnType<typeof cookies>>
+  funnelSessionId?: string
+  leadId: string | null
+  resolveCookieContext: typeof resolveFunnelCookieContext
+  resolveLeadContext: typeof resolveFunnelContextForLead
+}) {
+  const cookieContext = await resolveCookieContext(cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)
+  const exactContext =
+    cookieContext?.packageKey === "customerio_scan_return_v1" && funnelSessionId && leadId
+      ? await resolveLeadContext(leadId, funnelSessionId)
+      : null
+  // Only this campaign needs a mandatory exact lead/session binding. The
+  // regular checkout must still work if an optional analytics attachment
+  // failed after lead capture.
+  if (cookieContext?.packageKey === "customerio_scan_return_v1") {
+    if (
+      !funnelSessionId ||
+      !cookieContext ||
+      !exactContext ||
+      exactContext.packageKey !== "customerio_scan_return_v1" ||
+      cookieContext.packageKey !== "customerio_scan_return_v1" ||
+      cookieContext.sessionId !== funnelSessionId ||
+      exactContext.sessionId !== funnelSessionId ||
+      cookieContext.visitorId !== exactContext.visitorId ||
+      exactContext.testKind ||
+      exactContext.fieldTestCampaignId
+    )
+      throw new PayPalFunnelSessionMismatchError("funnel session mismatch")
+    return exactContext
+  }
+  const fallback = cookieContext ?? (leadId ? await resolveLeadContext(leadId) : null)
+  // An absent/replaced cookie must never recover email attribution from a
+  // bare lead ID. That would bypass the proof supplied by the return journey.
+  if (fallback?.packageKey === "customerio_scan_return_v1")
+    throw new PayPalFunnelSessionMismatchError("funnel session mismatch")
+  return fallback
 }
 export async function POST(request: Request) {
   return handlePayPalSubscriptionIntent(request)
@@ -201,6 +258,7 @@ export async function handlePayPalSubscriptionIntent(
   const {
     interval,
     leadId,
+    funnelSessionId,
     source,
     funnelEventId,
     checkoutAttemptId,
@@ -301,10 +359,13 @@ export async function handlePayPalSubscriptionIntent(
           normalizedIdentity: verifiedEmail,
         })
       const cookieStore = await (deps.cookies ?? cookies)()
-      const funnelContext =
-        (await (deps.resolveFunnelCookieContext ?? resolveFunnelCookieContext)(
-          cookieStore.get(FUNNEL_SESSION_COOKIE)?.value,
-        )) ?? (resolvedLeadId ? await resolveFunnelContextForLead(resolvedLeadId) : null)
+      const funnelContext = await resolvePayPalFunnelContext({
+        cookieStore,
+        funnelSessionId,
+        leadId: resolvedLeadId,
+        resolveCookieContext: deps.resolveFunnelCookieContext ?? resolveFunnelCookieContext,
+        resolveLeadContext: deps.resolveFunnelContextForLead ?? resolveFunnelContextForLead,
+      })
       const result = await (deps.createTrialCheckout ?? createDurablePayPalTrialCheckout)(
         {
           scope: user?.id ? { kind: "user", id: user.id } : { kind: "lead", id: resolvedLeadId! },
@@ -345,6 +406,12 @@ export async function handlePayPalSubscriptionIntent(
           ...(resolvedLeadId ? { lead_id: resolvedLeadId } : {}),
           metadata: {
             ...metadata,
+            ...(funnelContext
+              ? {
+                  funnel_session_id: funnelContext.sessionId,
+                  funnel_package_key: funnelContext.packageKey,
+                }
+              : {}),
             ...(checkoutContext
               ? {
                   checkout_context: checkoutContext,
@@ -356,7 +423,7 @@ export async function handlePayPalSubscriptionIntent(
         .eq("token", result.token)
       if (contextError) throw contextError
       if (funnelContext)
-        await recordFunnelEvent({
+        await (deps.recordFunnelEvent ?? recordFunnelEvent)({
           context: funnelContext,
           eventId: funnelEventId ?? crypto.randomUUID(),
           milestone: "checkout_started",
@@ -404,13 +471,14 @@ export async function handlePayPalSubscriptionIntent(
       return NextResponse.json({ error: "paypal plan not configured" }, { status: 500 })
     }
 
-    const leadFunnelContext = resolvedLeadId
-      ? await resolveFunnelContextForLead(resolvedLeadId)
-      : null
-    const cookieStore = await cookies()
-    const funnelContext =
-      (await resolveFunnelCookieContext(cookieStore.get(FUNNEL_SESSION_COOKIE)?.value)) ??
-      leadFunnelContext
+    const cookieStore = await (deps.cookies ?? cookies)()
+    const funnelContext = await resolvePayPalFunnelContext({
+      cookieStore,
+      funnelSessionId,
+      leadId: resolvedLeadId,
+      resolveCookieContext: deps.resolveFunnelCookieContext ?? resolveFunnelCookieContext,
+      resolveLeadContext: deps.resolveFunnelContextForLead ?? resolveFunnelContextForLead,
+    })
     const funnelTouch = funnelContext
       ? await resolvePendingFunnelTouchValue(
           cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
@@ -567,7 +635,7 @@ export async function handlePayPalSubscriptionIntent(
     }
 
     const funnelRecorded = funnelContext
-      ? await recordFunnelEvent({
+      ? await (deps.recordFunnelEvent ?? recordFunnelEvent)({
           context: funnelContext,
           eventId: funnelEventId ?? crypto.randomUUID(),
           milestone: "checkout_started",
@@ -600,6 +668,8 @@ export async function handlePayPalSubscriptionIntent(
     }
     return response
   } catch (error) {
+    if (error instanceof PayPalFunnelSessionMismatchError)
+      return NextResponse.json({ error: "funnel_session_mismatch" }, { status: 409 })
     captureCheckoutException(error, {
       provider: "paypal",
       stage: "paypal_create_subscription_intent",

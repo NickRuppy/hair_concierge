@@ -4,7 +4,6 @@ import { FormEvent, useEffect, useRef, useState } from "react"
 import { PersonalPlanJourneyHeader } from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import type { HairLength } from "@/lib/vocabulary/hair-length"
 import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
 import {
   shouldStartStage1ProductPreviewWarmup,
@@ -116,10 +115,14 @@ export function PersonalPlanReadyClient({
   })
   // The poll's payload is the freshest server resolution, so the destination follows
   // it rather than the first render's value.
-  const scanFunnel = readiness.funnelPackageKey === SCAN_FUNNEL_PACKAGE_KEY
+  const scanFunnel =
+    readiness.funnelPackageKey === SCAN_FUNNEL_PACKAGE_KEY ||
+    readiness.funnelPackageKey === "customerio_scan_return_v1"
   const [retryKey, setRetryKey] = useState(0)
   const [retryAction, setRetryAction] = useState<PlanBereitInitialAction | null>(null)
-  const [selectedHairLength, setSelectedHairLength] = useState<HairLength | null>(null)
+  const [selectedValues, setSelectedValues] = useState<string[]>([])
+  const [completedFacts, setCompletedFacts] = useState(0)
+  const factHeadingRef = useRef<HTMLHeadingElement>(null)
   const [isSavingFact, setIsSavingFact] = useState(false)
   const [openingBeatDone, setOpeningBeatDone] = useState(false)
   const [openingSlowHint, setOpeningSlowHint] = useState(false)
@@ -152,8 +155,21 @@ export function PersonalPlanReadyClient({
   }, [retryKey])
 
   const currentLeadId = readiness.leadId ?? leadId
-  const missingHairLength =
-    readiness.missingFacts.find((fact) => fact.field === "hair_length") ?? null
+  const missingFact = readiness.missingFacts[0] ?? null
+  useEffect(() => {
+    setSelectedValues([])
+    if (completedFacts > 0) factHeadingRef.current?.focus()
+  }, [missingFact?.field, completedFacts])
+
+  function toggleFactValue(value: string) {
+    setSelectedValues((current) => {
+      if (missingFact?.selectionMode !== "multi") return [value]
+      if (current.includes(value)) return current.filter((item) => item !== value)
+      if (missingFact.field === "treatment")
+        return value === "natur" ? [value] : [...current.filter((item) => item !== "natur"), value]
+      return [...current, value]
+    })
+  }
 
   useEffect(() => {
     const activeInitialAction = retryAction ?? initialAction
@@ -222,9 +238,16 @@ export function PersonalPlanReadyClient({
     }
   }, [initialAction, initialLeadId, leadId, retryAction, retryKey])
 
-  async function submitMissingHairLength(event: FormEvent<HTMLFormElement>) {
+  async function submitMissingFact(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (!currentLeadId || !readiness.sourceVersion || !selectedHairLength) return
+    if (
+      !currentLeadId ||
+      !readiness.sourceVersion ||
+      !missingFact ||
+      !selectedValues.length ||
+      isSavingFact
+    )
+      return
     setIsSavingFact(true)
     try {
       const response = await fetch(
@@ -234,8 +257,8 @@ export function PersonalPlanReadyClient({
           headers: { Accept: "application/json", "Content-Type": "application/json" },
           cache: "no-store",
           body: JSON.stringify({
-            field: "hair_length",
-            value: selectedHairLength,
+            field: missingFact.field,
+            value: missingFact.selectionMode === "multi" ? selectedValues : selectedValues[0],
             sourceVersion: readiness.sourceVersion,
           }),
         },
@@ -252,6 +275,15 @@ export function PersonalPlanReadyClient({
         return
       }
       setReadiness((current) => toClientReadiness(body, currentLeadId, current.funnelPackageKey))
+      if (
+        body.status === "missing_source_facts" &&
+        body.missingFacts?.[0]?.field !== missingFact.field
+      )
+        setCompletedFacts((count) => count + 1)
+      if (body.status === "source_pending" || body.status === "checking") {
+        setRetryAction("link")
+        setRetryKey((key) => key + 1)
+      }
     } catch {
       setReadiness((current) => ({ ...current, status: "transient_error" }))
     } finally {
@@ -267,9 +299,9 @@ export function PersonalPlanReadyClient({
     readiness.status === "timeout" ||
     readiness.status === "transient_error" ||
     readiness.status === "paid_pending" ||
-    (readiness.status === "missing_source_facts" && missingHairLength === null)
+    (readiness.status === "missing_source_facts" && missingFact === null)
   const showWaiting = readiness.status === "checking" || readiness.status === "source_pending"
-  const showMissingFact = readiness.status === "missing_source_facts" && missingHairLength !== null
+  const showMissingFact = readiness.status === "missing_source_facts" && missingFact !== null
   const showSupport = readiness.status === "invalid_source" || readiness.status === "forbidden"
 
   useEffect(() => {
@@ -392,41 +424,57 @@ export function PersonalPlanReadyClient({
               {showMissingFact ? (
                 <>
                   <div className="space-y-4">
-                    <h1 className="font-header text-4xl leading-tight">Eine Angabe fehlt noch.</h1>
+                    <h1 className="font-header text-4xl leading-tight">
+                      {readiness.missingFacts.length === 1
+                        ? "Eine Angabe fehlt noch."
+                        : "Ein paar Angaben fehlen noch."}
+                    </h1>
                     <p className="mx-auto max-w-sm text-base leading-7 text-[var(--text-sub)]">
-                      Beantworte noch eine kurze Frage, damit wir deinen Haarplan vorbereiten
-                      können.
+                      {readiness.missingFacts.length === 1
+                        ? "Beantworte noch eine kurze Frage, damit wir deinen Haarplan vorbereiten können."
+                        : "Wir ergänzen nur, was noch fehlt. Deine gespeicherten Antworten bleiben erhalten."}
                     </p>
                   </div>
                   <form
                     className="space-y-4 rounded-3xl border border-border bg-card p-5 text-left"
-                    onSubmit={submitMissingHairLength}
+                    onSubmit={submitMissingFact}
                   >
                     <div className="space-y-2">
-                      <h2 className="text-base font-semibold text-foreground">
-                        {missingHairLength.question}
+                      {completedFacts + readiness.missingFacts.length > 1 ? (
+                        <p className="text-sm text-[var(--text-sub)]" aria-live="polite">
+                          Angabe {completedFacts + 1} von{" "}
+                          {completedFacts + readiness.missingFacts.length}
+                        </p>
+                      ) : null}
+                      <h2
+                        ref={factHeadingRef}
+                        tabIndex={-1}
+                        className="text-base font-semibold text-foreground focus:outline-none"
+                      >
+                        {missingFact.question}
                       </h2>
                       <p className="text-sm leading-6 text-[var(--text-sub)]">
-                        {missingHairLength.helper}
+                        {missingFact.helper}
                       </p>
                     </div>
                     <div className="grid gap-2">
-                      {missingHairLength.options.map((option) => (
+                      {missingFact.options.map((option) => (
                         <label
                           key={option.value}
                           className={cn(
                             "flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-medium",
-                            selectedHairLength === option.value
+                            selectedValues.includes(option.value)
                               ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] text-[var(--brand-plum)]"
                               : "border-border bg-background text-foreground",
                           )}
                         >
                           <input
-                            type="radio"
-                            name="hair_length"
+                            type={missingFact.selectionMode === "multi" ? "checkbox" : "radio"}
+                            name={missingFact.field}
                             value={option.value}
-                            checked={selectedHairLength === option.value}
-                            onChange={() => setSelectedHairLength(option.value)}
+                            checked={selectedValues.includes(option.value)}
+                            onChange={() => toggleFactValue(option.value)}
+                            disabled={isSavingFact}
                             className="h-4 w-4 accent-[var(--brand-plum)]"
                           />
                           <span>{option.label}</span>
@@ -437,7 +485,7 @@ export function PersonalPlanReadyClient({
                       type="submit"
                       variant="funnelCta"
                       className="w-full"
-                      disabled={!selectedHairLength || isSavingFact}
+                      disabled={!selectedValues.length || isSavingFact}
                     >
                       {isSavingFact ? "Speichern..." : "Weiter"}
                     </Button>

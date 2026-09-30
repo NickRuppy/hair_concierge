@@ -181,7 +181,9 @@ test("personal-plan quiz UI reflects the approved visual journey constraints", (
   assert.doesNotMatch(fullSurface, /Persönliche Haaranalyse für deinen Haarpflegeplan/)
   assert.doesNotMatch(fullSurface, /Um dich wohlzufühlen mit gesundem und schönem Haar/)
   assert.match(quiz, /4\.000\+[\s\S]*Antworten aus unserer Haarpflege-Umfrage/)
-  assert.match(data, /L\. · Chaarlie-Kundin/)
+  assert.match(data, /EARLY_PROOF_TESTIMONIAL = TRUSTPILOT_REVIEWS\[0\]/)
+  assert.match(quiz, /href=\{EARLY_PROOF_TESTIMONIAL\.url\}/)
+  assert.match(quiz, /Auszug · Bewertung auf Trustpilot/)
   assert.match(quiz, /Hast du schon Produkte gekauft, die dann doch nicht gepasst haben\?/)
   assert.match(quiz, /Wie wichtig ist dir dein Haargefühl\?/)
   assert.match(quiz, /Sehr wichtig/)
@@ -239,7 +241,8 @@ test("personal-plan concern notes are standalone, bounded, and do not restore a 
     quiz.indexOf('if (screen === "admission_recurrence")'),
   )
 
-  assert.match(quiz, /resolvePrimaryPersonalPlanConcern/)
+  // F1: the recurrence follows her stated main problem, not an inferred ranking.
+  assert.match(quiz, /resolveStatedPersonalPlanConcern/)
   assert.match(quiz, /standaloneOtherText/)
   assert.match(quiz, /continueValidity/)
   assert.match(quiz, /maxLength: 50/)

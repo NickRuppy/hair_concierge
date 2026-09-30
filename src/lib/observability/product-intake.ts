@@ -26,7 +26,13 @@ export interface ProductIntakeSentryDetails {
   intakeMethod?: string | null
   status?: string | null
   reason?: string | null
-  notificationResult?: "sent" | "already_sent" | "no_message_needed" | "failed" | null
+  notificationResult?:
+    | "sent"
+    | "already_sent"
+    | "no_message_needed"
+    | "owner_deleted"
+    | "failed"
+    | null
   committed?: boolean | null
 }
 

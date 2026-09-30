@@ -7,6 +7,7 @@ import {
   type ProductIntakeReviewCategoryKey,
 } from "../src/lib/product-intake/category-validators"
 import {
+  PRODUCT_INTAKE_ARTIFACT_KINDS,
   PRODUCT_INTAKE_NON_TERMINAL_JOB_STATUSES,
   PRODUCT_INTAKE_OPEN_SUBMISSION_STATUSES,
   PRODUCT_INTAKE_RETRYABLE_JOB_STATUSES,
@@ -18,6 +19,11 @@ import {
   finalImageUploadDecisionFromArtifacts,
 } from "../apps/product-intake-review/app/api/submissions/[submissionId]/publish/final-image-handoff"
 import { buildReviewPropertyRows } from "../apps/product-intake-review/app/submissions/[submissionId]/review-property-rows"
+import {
+  createRetailerEnrichmentWarningReporter,
+  parseRetailerEnrichmentPacket,
+  retailerEnrichmentPacketFromIntakeHistory,
+} from "../scripts/product-intake/retailer-enrichment-packet"
 
 const migration = readFileSync(
   "supabase/migrations/20260630120000_product_intake_research_jobs.sql",
@@ -25,6 +31,10 @@ const migration = readFileSync(
 )
 const artifactMigration = readFileSync(
   "supabase/migrations/20260630130000_product_intake_research_artifacts_decisions.sql",
+  "utf8",
+)
+const modelEvaluationArtifactMigration = readFileSync(
+  "supabase/migrations/20260925061101_product_intake_model_evaluation_artifacts.sql",
   "utf8",
 )
 const reworkAttemptsMigration = readFileSync(
@@ -37,6 +47,9 @@ const autoEnqueueMigration = readFileSync(
 )
 const normalizedMigration = migration.toLowerCase().replace(/\s+/g, " ")
 const normalizedArtifactMigration = artifactMigration.toLowerCase().replace(/\s+/g, " ")
+const normalizedModelEvaluationArtifactMigration = modelEvaluationArtifactMigration
+  .toLowerCase()
+  .replace(/\s+/g, " ")
 const normalizedReworkAttemptsMigration = reworkAttemptsMigration.toLowerCase().replace(/\s+/g, " ")
 const normalizedAutoEnqueueMigration = autoEnqueueMigration.toLowerCase().replace(/\s+/g, " ")
 const packageJson = JSON.parse(readFileSync("package.json", "utf8")) as {
@@ -114,6 +127,97 @@ const REVIEW_CATEGORY_KEYS: ProductIntakeReviewCategoryKey[] = [
   "heat_protectant",
   "scalp_care",
 ]
+
+test("worker packet keeps only exact-GTIN dm provenance and makes retailer images candidates", () => {
+  const history = [
+    {
+      at: "2026-09-17T10:00:01.000Z",
+      source: "retailer_enrichment",
+      retailer: "dm",
+      enrichment: {
+        source: "dm",
+        fetchedAt: "2026-09-17T10:00:00.000Z",
+        gtin: "4001638530378",
+        dan: "1234567",
+        productName: "Exact product",
+        brand: "DM",
+        imageUrl: "https://products.dm-static.com/images/example.png",
+        productUrl: "https://www.dm.de/example",
+        ingredientsText: "Aqua",
+        suggestedCategory: "mask",
+      },
+    },
+  ]
+
+  const packet = retailerEnrichmentPacketFromIntakeHistory(history, {
+    type: "ean",
+    value: "4001638530378",
+  })
+
+  assert.deepEqual(packet, {
+    source: "dm",
+    fetched_at: "2026-09-17T10:00:00.000Z",
+    gtin: "4001638530378",
+    dan: "1234567",
+    product_name: "Exact product",
+    brand: "DM",
+    ingredients_text: "Aqua",
+    product_url: "https://www.dm.de/example",
+    image_url_candidate: "https://products.dm-static.com/images/example.png",
+    suggested_category: "mask",
+  })
+  assert.equal("image_url" in (packet ?? {}), false)
+
+  const mismatch = retailerEnrichmentPacketFromIntakeHistory(history, {
+    type: "ean",
+    value: "4006381333931",
+  })
+  assert.equal(mismatch, null)
+})
+
+test("worker packet reports an exact-GTIN mismatch without preserving a packet or leaking payload", () => {
+  const parsed = parseRetailerEnrichmentPacket(
+    [
+      {
+        source: "retailer_enrichment",
+        retailer: "dm",
+        enrichment: {
+          source: "dm",
+          fetchedAt: "2026-09-17T10:00:00.000Z",
+          gtin: "4001638530378",
+          dan: "1234567",
+          productName: "Secret product name",
+        },
+      },
+    ],
+    { type: "ean", value: "4006381333931" },
+  )
+
+  assert.deepEqual(parsed, { packet: null, warning: "gtin_mismatch" })
+
+  const emitted: Array<{ message: string; fields: Record<string, string> }> = []
+  let now = 1_000
+  const report = createRetailerEnrichmentWarningReporter({
+    now: () => now,
+    emit: (message, fields) => emitted.push({ message, fields }),
+  })
+
+  report(parsed.warning)
+  report(parsed.warning)
+  now += 60_000
+  report(parsed.warning)
+
+  assert.deepEqual(emitted, [
+    {
+      message: "product_intake_retailer_enrichment_warning",
+      fields: { reason: "gtin_mismatch", source: "dm" },
+    },
+    {
+      message: "product_intake_retailer_enrichment_warning",
+      fields: { reason: "gtin_mismatch", source: "dm" },
+    },
+  ])
+})
 
 const ARRAY_SPEC_TABLES = new Set([
   "product_shampoo_specs",
@@ -598,6 +702,7 @@ test("review cockpit kicks the local Codex worker after enqueueing work", () => 
   assert.match(workerKickSource, /findRepoRoot/)
   assert.match(workerKickSource, /PRODUCT_INTAKE_CODEX_CONCURRENCY/)
   assert.match(workerKickSource, /PRODUCT_INTAKE_CODEX_WORKER_POLL_MS/)
+  assert.match(workerKickSource, /PRODUCT_INTAKE_CODEX_WORKER_EXTERNAL/)
 
   for (const source of [
     researchRouteSource,
@@ -657,6 +762,19 @@ test("artifact and review decision migration is service-role protected", () => {
     /grant execute on function public\.product_intake_request_rework_job/,
   )
   assert.match(normalizedArtifactMigration, /decision in \( 'approved', 'change_requested'/)
+})
+
+test("model evaluation artifacts are part of the shared Product Intake contract", () => {
+  assert.equal(PRODUCT_INTAKE_ARTIFACT_KINDS.includes("model_run" as never), true)
+  assert.equal(PRODUCT_INTAKE_ARTIFACT_KINDS.includes("model_judgment" as never), true)
+  assert.match(
+    normalizedModelEvaluationArtifactMigration,
+    /drop constraint if exists product_intake_research_artifacts_kind_check/,
+  )
+  assert.match(normalizedModelEvaluationArtifactMigration, /'model_run'/)
+  assert.match(normalizedModelEvaluationArtifactMigration, /'model_judgment'/)
+  assert.doesNotMatch(normalizedModelEvaluationArtifactMigration, /grant .* anon/)
+  assert.doesNotMatch(normalizedModelEvaluationArtifactMigration, /grant .* authenticated/)
 })
 
 test("detail page exposes research artifacts, comments, rework, and preflight controls", () => {
@@ -730,7 +848,7 @@ test("detail page exposes research artifacts, comments, rework, and preflight co
   assert.match(submissionActionsSource, /publishCompleted\s*\?\s*"completedButton"/)
   assert.match(submissionActionsSource, /Entscheidung speichern/)
   assert.match(submissionActionsSource, /Bild passt/)
-  assert.match(submissionActionsSource, /Rohbild freigegeben/)
+  assert.match(submissionActionsSource, /Bildquelle vorbereitet/)
   assert.match(submissionActionsSource, /Bild passt nicht/)
   assert.match(submissionActionsSource, /neues Bild suchen/)
   assert.match(submissionActionsSource, /requestImageSearchRework/)
@@ -1048,7 +1166,18 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /spawnSync\(\s*codexBinary/)
   assert.match(workerScript, /Codex CLI terminated by/)
   assert.match(workerScript, /Codex CLI failed to start/)
-  assert.match(workerScript, /refreshing worker lease before writes/)
+  assert.match(workerScript, /worker lease refreshed/)
+  assert.match(workerScript, /model_run/)
+  assert.match(workerScript, /model_judgment/)
+  assert.match(workerScript, /challenger_medium/)
+  assert.match(workerScript, /preferred_lane/)
+  assert.ok(
+    workerScript.indexOf("const progress = await persistResearchOutput") <
+      workerScript.indexOf("const evaluationRun = await runNonFatalModelEvaluation"),
+    "production research must persist before optional shadow evaluation",
+  )
+  assert.match(workerScript, /currentJob: \(\) => leasedJob/)
+  assert.match(workerScript, /onLeaseRefresh: \(refreshedJob\) => \{\s*leasedJob = refreshedJob/)
   assert.match(workerScript, /--execute-codex/)
   assert.match(workerScript, /service_tier/)
   assert.match(workerScript, /PRODUCT_INTAKE_CODEX_SERVICE_TIER/)
@@ -1072,6 +1201,8 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /derive Shampoo protocol roles from the reviewed Shampoo buckets/i)
   assert.match(workerScript, /A schuppen-only Shampoo is complete without shampoo_everyday/i)
   assert.match(workerScript, /loadBrandResolutionCatalogForWorker/)
+  assert.match(workerScript, /retailer_enrichment/)
+  assert.match(workerScript, /scanned_identifier_type, scanned_identifier_value, intake_history/)
   assert.match(workerScript, /brand_resolution_context/)
   assert.match(workerScript, /resolveBrandFromText/)
   assert.match(workerScript, /brands"\)\.select\("id, canonical_name, normalized_name"\)/)

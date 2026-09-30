@@ -8,6 +8,7 @@ import {
 } from "@/components/checkout/plan-reference-prices"
 import { ResultOfferPricing } from "@/components/quiz/result-offer-pricing"
 import { QuizResultsView } from "@/components/quiz/quiz-results-view"
+import { ScannerRefinedOffer } from "@/components/scan-regal-offer/scanner-refined-offer"
 import {
   PersonalPlanOffer,
   PersonalPlanPaidContinuation,
@@ -55,6 +56,8 @@ export function ResultPageClient({
   pricingCatalog,
   trialOfferPricing = null,
   scannerRefinementEnabled = false,
+  returningScannerOffer = false,
+  returningProfileIncomplete = true,
 }: {
   showQuizRestart?: boolean
   leadId: string
@@ -81,10 +84,49 @@ export function ResultPageClient({
   pricingCatalog?: SubscriptionPricingCatalog
   scannerRefinementEnabled?: boolean
   trialOfferPricing?: TrialOfferPricing | null
+  /** Server proves the exact email-return session belongs to this lead. */
+  returningScannerOffer?: boolean
+  returningProfileIncomplete?: boolean
 }) {
   const resolvedEntryContext = entryContext ?? (focusRoutine ? "routine_return" : "saved_result")
   const resolvedPricingCatalog = pricingCatalog ?? "standard"
   const pricingCatalogWasProvided = pricingCatalog !== undefined
+
+  if (
+    returningScannerOffer &&
+    offerVariant === "scan-regal-v1" &&
+    trialOfferPricing &&
+    !hasAccess &&
+    !fieldTest &&
+    !moderatorTest &&
+    !fieldTestUnavailable &&
+    !regularFieldTest &&
+    !regularFieldTestUnavailable &&
+    !partnerAccess &&
+    !partnerAccessUnavailable
+  ) {
+    return (
+      <ScannerRefinedOffer
+        leadId={leadId}
+        quizAnswers={quizAnswers}
+        savedProfileIncomplete={returningProfileIncomplete}
+        entryContext={resolvedEntryContext}
+        offerTracking={offerTracking}
+        offerVariant={offerVariant}
+        isInternalTest={isInternalTest}
+        trialOfferPricing={trialOfferPricing}
+        pricingSlot={
+          <ResultOfferPricing
+            presentation="scanner"
+            leadId={leadId}
+            offerTracking={offerTracking}
+            pricingCatalog={resolvedPricingCatalog}
+            trialOfferPricing={trialOfferPricing}
+          />
+        }
+      />
+    )
+  }
 
   if (quizKind === "personal_plan") {
     if (hasAccess) {

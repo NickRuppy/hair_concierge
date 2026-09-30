@@ -1,7 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import { renderCustomerIoTriggerTemplate } from "./helpers/customerio-liquid"
-import { buildTrialRequiredNoticeMessage } from "../src/lib/billing/trial-required-notices"
+import {
+  buildTrialRequiredNoticeMessage,
+  parseTrialRequiredNoticeSnapshot,
+} from "../src/lib/billing/trial-required-notices"
 import {
   dispatchTrialRequiredNotices,
   type TrialNoticeClaim,
@@ -32,8 +35,51 @@ const claim: TrialNoticeClaim = {
   kind: "contract_confirmation",
   snapshot,
 }
+test("PayPal confirmation notices retain and validate the winning authorization provenance", () => {
+  const api = {
+    ...snapshot,
+    provider: "paypal",
+    authorization_proof_kind: "api_confirmation",
+    authorization_clock_kind: "server_confirmation",
+    authorization_confirmed_at: snapshot.authorizedAt,
+  }
+  assert.deepEqual(parseTrialRequiredNoticeSnapshot(api, "contract_confirmation"), api)
+  assert.match(
+    buildTrialRequiredNoticeMessage("contract_confirmation", api).receipt_text,
+    /Autorisierung bestätigt am: 14\. September 2026 um 12:00:00 MESZ/,
+  )
+  for (const patch of [
+    { authorization_clock_kind: "provider_event" },
+    { authorization_confirmed_at: "2026-09-14T09:59:59Z" },
+    { authorization_confirmed_at: undefined },
+    { authorization_proof_kind: "unknown" },
+    { provider: "stripe" },
+  ])
+    assert.equal(
+      parseTrialRequiredNoticeSnapshot({ ...api, ...patch }, "contract_confirmation"),
+      null,
+    )
+  const webhook = {
+    ...snapshot,
+    provider: "paypal",
+    authorization_proof_kind: "webhook",
+    authorization_clock_kind: "provider_event",
+  }
+  assert.deepEqual(parseTrialRequiredNoticeSnapshot(webhook, "contract_confirmation"), webhook)
+  assert.equal(
+    parseTrialRequiredNoticeSnapshot(
+      { ...webhook, authorization_confirmed_at: snapshot.authorizedAt },
+      "contract_confirmation",
+    ),
+    null,
+  )
+  assert.ok(
+    parseTrialRequiredNoticeSnapshot({ ...snapshot, provider: "paypal" }, "contract_confirmation"),
+  )
+})
 test("contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction", () => {
   const message = buildTrialRequiredNoticeMessage("contract_confirmation", snapshot)
+  assert.equal(message.subject, "Dein Chaarlie-Test ist gestartet")
   assert.match(message.receipt_text, /69,99/)
   assert.match(message.receipt_text, /99,99/)
   assert.match(message.receipt_text, /21\. September 2026 um 12:00:00 MESZ/)
@@ -69,6 +115,14 @@ test("cancel receipt acknowledges declaration even when provider operation is pe
   assert.match(m.receipt_text, /Eingegangen am: 15\. September/)
   assert.match(m.receipt_text, /technische Bearbeitung beim Zahlungsanbieter noch läuft/)
   assert.match(m.receipt_text, /21\. September/)
+  assert.equal(m.requiredNotice?.eyebrow, "Kündigung eingegangen")
+  assert.equal(m.requiredNotice?.title, "Nach dem Test entstehen keine Kosten.")
+  assert.deepEqual(m.requiredNotice?.facts, [
+    { label: "Zugang bis", value: "21. September 2026" },
+    { label: "Danach berechnet", value: "0,00 €" },
+    { label: "Mitgliedschaft", value: "Jahresmitgliedschaft" },
+  ])
+  assert.match(m.requiredNotice?.status ?? "", /Bearbeitung beim Zahlungsanbieter/)
 })
 test("paid receipt rejects zero/mismatched amounts and uses late-success time; annual is never a monthly reminder", () => {
   const paid = {
@@ -79,10 +133,39 @@ test("paid receipt rejects zero/mismatched amounts and uses late-success time; a
     paidThroughAt: "2027-09-24T10:00:00Z",
     amountMinor: 6999,
   }
-  assert.match(
-    buildTrialRequiredNoticeMessage("payment_receipt", paid).receipt_text,
-    /24\. September 2026/,
-  )
+  const firstPaid = buildTrialRequiredNoticeMessage("payment_receipt", paid)
+  assert.match(firstPaid.receipt_text, /24\. September 2026/)
+  assert.deepEqual(firstPaid.paymentReceipt, {
+    phase: "first_paid",
+    plan: "Jahresmitgliedschaft",
+    amount: "69,99 €",
+    paidOn: "24. September 2026",
+    paidAt: "24. September 2026 um 12:00:00 MESZ",
+    paidThroughOn: "24. September 2027",
+    paidThrough: "24. September 2027 um 12:00:00 MESZ",
+    provider: "Stripe",
+    contractId: snapshot.contractId,
+    paymentId: claim.attempt_id,
+  })
+  const renewal = buildTrialRequiredNoticeMessage("payment_receipt", {
+    ...paid,
+    phase: "renewal",
+    occurredAt: "2027-09-24T10:00:00Z",
+    paidThroughAt: "2028-09-24T10:00:00Z",
+    amountMinor: 9999,
+  })
+  assert.deepEqual(renewal.paymentReceipt, {
+    phase: "renewal",
+    plan: "Jahresmitgliedschaft",
+    amount: "99,99 €",
+    paidOn: "24. September 2027",
+    paidAt: "24. September 2027 um 12:00:00 MESZ",
+    paidThroughOn: "24. September 2028",
+    paidThrough: "24. September 2028 um 12:00:00 MESZ",
+    provider: "Stripe",
+    contractId: snapshot.contractId,
+    paymentId: claim.attempt_id,
+  })
   assert.throws(
     () => buildTrialRequiredNoticeMessage("payment_receipt", { ...paid, amountMinor: 0 }),
     /Invalid/,
@@ -138,11 +221,11 @@ test("missing configuration claims nothing; verified owner alone chooses recipie
   assert.equal(outcomes[0]!.status, "queued")
 })
 test("ambiguous/HTTP/error sends park once; settlement failure never retries provider", async () => {
-  for (const error of [
-    new CustomerIoAmbiguousDeliveryError("timeout"),
-    new CustomerIoHttpError(503),
-    new Error("network"),
-  ]) {
+  for (const [error, errorCode] of [
+    [new CustomerIoAmbiguousDeliveryError("timeout"), "customerio_delivery_ambiguous"],
+    [new CustomerIoHttpError(503), "customerio_http_unconfirmed"],
+    [new Error("network"), "customerio_delivery_unconfirmed"],
+  ] as const) {
     let sends = 0
     const outcomes: TrialNoticeOutcome[] = []
     const result = await dispatchTrialRequiredNotices({
@@ -162,7 +245,7 @@ test("ambiguous/HTTP/error sends park once; settlement failure never retries pro
     })
     assert.equal(result.supportRequired, 1)
     assert.equal(sends, 1)
-    assert.equal(outcomes[0]!.status, "support_required")
+    assert.deepEqual(outcomes, [{ status: "support_required", errorCode }])
   }
   let sends = 0
   await assert.rejects(
@@ -240,7 +323,7 @@ test("inline required notice keeps arbitrary declaration content as escaped data
     receipt_text:
       'Kündigung bestätigt: 69,99 €\nhttps://chaarlie.de/kuendigen\n<img src=x onerror=alert(1)> {{ customer.email }} & "Text"',
   }
-  const payload = buildRequiredNoticeEmail({
+  const payload = await buildRequiredNoticeEmail({
     email: "owner@example.test",
     messageId: "required_v1",
     sender: "Chaarlie <info@chaarlie.de>",
@@ -288,12 +371,36 @@ test("committed change confirmation names original deadline and does not restore
   assert.match(m.receipt_text, /Deine Kündigung bleibt wirksam/)
   assert.doesNotMatch(m.receipt_text, /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/)
   assert.match(m.receipt_text, /21\. September 2026/)
+  assert.equal(m.requiredNotice?.title, "Deine Laufzeit wurde geändert.")
+  assert.deepEqual(m.requiredNotice?.facts, [
+    { label: "Neue Laufzeit", value: "Jahresmitgliedschaft" },
+    { label: "Test endet", value: "21. September 2026" },
+    { label: "Danach berechnet", value: "0,00 €" },
+  ])
+  assert.equal(m.requiredNotice?.secondaryAction, undefined)
+  assert.equal(m.requiredNotice?.appendReceiptTextLabel, "Vollständige Vertragsbedingungen")
   const restored = buildTrialRequiredNoticeMessage("contract_change", {
     ...changed,
     changeKind: "restore",
     cancelAtPeriodEnd: false,
   })
   assert.match(restored.receipt_text, /Kündigung wurde auf deinen Wunsch aufgehoben/)
+  assert.equal(restored.requiredNotice?.title, "Deine Kündigung wurde aufgehoben.")
+  assert.equal(restored.requiredNotice?.secondaryAction?.kind, "cancel")
+  assert.deepEqual(restored.requiredNotice?.facts, [
+    { label: "Mitgliedschaft", value: "Jahresmitgliedschaft" },
+    { label: "Test endet", value: "21. September 2026" },
+    { label: "Erste Zahlung", value: "69,99 € am 21. September 2026" },
+  ])
+  assert.throws(
+    () =>
+      buildTrialRequiredNoticeMessage("contract_change", {
+        ...changed,
+        changeKind: "restore",
+        cancelAtPeriodEnd: true,
+      }),
+    /Invalid required notice snapshot/,
+  )
 })
 
 test("paid cancellation receipt preserves paid access and pending provider work without trial-only promises", () => {
@@ -312,6 +419,15 @@ test("paid cancellation receipt preserves paid access and pending provider work 
     message.receipt_text,
     /danach beginnt kein kostenpflichtiger Zeitraum|Testzugang/,
   )
+  assert.equal(
+    message.requiredNotice?.title,
+    "Dein Zugang bleibt bis zum 21. September 2027 bestehen.",
+  )
+  assert.deepEqual(message.requiredNotice?.facts, [
+    { label: "Bezahlter Zugang bis", value: "21. September 2027" },
+    { label: "Wirksames Vertragsende", value: "21. September 2027" },
+    { label: "Mitgliedschaft", value: "Jahresmitgliedschaft" },
+  ])
   assert.throws(
     () =>
       buildTrialRequiredNoticeMessage("paid_cancellation_receipt", {
@@ -320,6 +436,25 @@ test("paid cancellation receipt preserves paid access and pending provider work 
       }),
     /Invalid/,
   )
+})
+
+test("annual notice leads with amount, date and post-year cancellation terms", () => {
+  const message = buildTrialRequiredNoticeMessage("annual_renewal", {
+    ...snapshot,
+    renewalAt: "2027-09-21T10:00:00Z",
+    amountMinor: 9999,
+  })
+  assert.equal(
+    message.requiredNotice?.title,
+    "Deine nächste Zahlung ist für den 21. September 2027 vorgesehen.",
+  )
+  assert.deepEqual(message.requiredNotice?.facts, [
+    { label: "Betrag", value: "99,99 € inkl. Steuern" },
+    { label: "Vorgesehen am", value: "21. September 2027" },
+    { label: "Mitgliedschaft", value: "Jahresmitgliedschaft" },
+  ])
+  assert.match(message.requiredNotice?.status ?? "", /keine neue feste Jahresbindung/)
+  assert.equal(message.requiredNotice?.secondaryAction?.kind, "cancel")
 })
 
 test("PayPal contract confirmation states the day-after first-charge date instead of the trial-end moment", () => {
@@ -360,4 +495,43 @@ test("PayPal contract confirmation with a frozen midnight trial end names one da
       }),
     /Invalid/,
   )
+})
+
+test("PDF encoding failure is definitively unsent and classified as preparation failure", async () => {
+  const { sendTrialRequiredNotice } = await import("../src/lib/customerio/trial-required-notices")
+  const outcomes: TrialNoticeOutcome[] = []
+  let fetches = 0
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async () => {
+    fetches++
+    throw new Error("Unexpected provider request")
+  }
+  try {
+    const result = await dispatchTrialRequiredNotices({
+      messageId: "required",
+      apiKeyPresent: true,
+      sender: "Chaarlie <info@chaarlie.de>",
+      enqueueAnnual: async () => {},
+      claim: async () => [claim],
+      recipient: async () => "x@example.test",
+      send: (input) =>
+        sendTrialRequiredNotice({
+          ...input,
+          message: {
+            ...input.message,
+            receipt_text: input.message.receipt_text + "\n😀",
+          },
+        }),
+      settle: async (_claim, outcome) => {
+        outcomes.push(outcome)
+      },
+    })
+    assert.equal(result.supportRequired, 1)
+    assert.equal(fetches, 0)
+    assert.deepEqual(outcomes, [
+      { status: "support_required", errorCode: "notice_preparation_failed" },
+    ])
+  } finally {
+    globalThis.fetch = originalFetch
+  }
 })

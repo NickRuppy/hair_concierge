@@ -47,20 +47,23 @@ export function ScannerTrialOffer({
             {annualSelected ? "✓" : ""}
           </span>
           <span className="min-w-0">
-            <span className="block text-[15px] font-bold">Jahr</span>
+            <span className="flex items-center gap-1.5 text-[15px] font-bold">
+              Jahr
+              <span className="rounded-full bg-[#7657a2] px-2 py-0.5 text-[10px] font-bold leading-[1.4] text-white">
+                Spare {terms.annualSavingsPercent} %
+              </span>
+            </span>
             <span className="mt-1 block text-[11px] leading-[1.5] text-[#624c76]">
               {terms.hasIntroductoryAnnualPrice
-                ? `Danach ${terms.annualRenewal} / Jahr`
-                : "Jährliche Zahlung"}
+                ? `${terms.annualFirst} im ersten Jahr, danach ${terms.annualRenewal} / Jahr`
+                : `${terms.annualFirst} / Jahr`}
             </span>
           </span>
           <span className="ml-auto shrink-0 text-right">
             <span className="block text-[20px] font-bold leading-none max-[360px]:text-[18px]">
-              {terms.annualFirst}
+              {terms.annualMonthlyEquivalent}
             </span>
-            <span className="mt-1 block text-[11px] leading-[1.5] text-[#624c76]">
-              {terms.hasIntroductoryAnnualPrice ? "im ersten Jahr" : "/ Jahr"}
-            </span>
+            <span className="mt-1 block text-[11px] leading-[1.5] text-[#624c76]">/ Monat</span>
           </span>
         </button>
 
@@ -84,7 +87,12 @@ export function ScannerTrialOffer({
           >
             {!annualSelected ? "✓" : ""}
           </span>
-          <span className="text-[15px] font-bold">Monat</span>
+          <span className="min-w-0">
+            <span className="block text-[15px] font-bold">Monat</span>
+            <span className="mt-1 block text-[11px] leading-[1.5] text-[#624c76]">
+              Monatlich kündbar
+            </span>
+          </span>
           <span className="ml-auto shrink-0 text-right">
             <span className="block text-[20px] font-bold leading-none max-[360px]:text-[18px]">
               {terms.monthly}

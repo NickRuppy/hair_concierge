@@ -64,8 +64,15 @@ export function presentScanVerdictPayload(
 ): ScanPresentedVerdictPayload {
   if (verdict.kind === "not_needed") return verdict
   const byId = new Map(rows.map((row) => [row.id, row]))
+  const {
+    mobileDimensions: _mobileDimensions,
+    mobileAuthority: _mobileAuthority,
+    ...wireVerdict
+  } = verdict
+  void _mobileDimensions
+  void _mobileAuthority
   return {
-    ...verdict,
+    ...wireVerdict,
     alternatives: verdict.alternatives.map((alternative): ScanAlternativePresentation => {
       const row = byId.get(alternative.productId)
       // Field list spelled out (not `...alternative`) on purpose: `ScanAlternative` also

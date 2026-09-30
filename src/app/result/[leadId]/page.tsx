@@ -15,6 +15,7 @@ import { ResultPageClient } from "./result-client"
 import { isScannerFunnelRefinementEnabled } from "@/lib/funnel/scanner-refinement"
 import { parsePersonalPlanOfferModel } from "@/components/personal-plan-offer/model"
 import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
+import { PersonalPlanOfferRecovery } from "@/components/personal-plan-offer/personal-plan-offer"
 import { hasCurrentAppAccess } from "@/lib/billing/subscriptions"
 import { recordPersonalPlanOneTimeFirstAccess } from "@/lib/billing/personal-plan-one-time-first-access"
 import { normalizeStoredQuizAnswers } from "@/lib/quiz/normalization"
@@ -30,6 +31,8 @@ import {
   recordFunnelEvent,
   assignPersonalPlanOneTimeQa,
   resolveFunnelContextForLead,
+  resolveFunnelCookieContext,
+  lookupFunnelContextForLead,
   resolveOrganicOfferMediaExperiment,
   resolvePersonalPlanPricingExperiment,
 } from "@/lib/funnel/server"
@@ -37,9 +40,11 @@ import {
   isFunnelAttributionEnabled,
   isPersonalPlanLaunchPricingEnabled,
   isPersonalPlanResultReturnEnabled,
+  isQuizEmailReturnEnabled,
 } from "@/lib/funnel/flags"
 import { resolveSubscriptionPricingCatalog } from "@/lib/billing/pricing-catalog"
 import type { FunnelCookieContext } from "@/lib/funnel/cookie"
+import { FUNNEL_SESSION_COOKIE } from "@/lib/funnel/cookie"
 import type { OfferEntryContext } from "@/lib/analytics/events"
 import {
   isPersonalPlanResultReturnForLead,
@@ -230,6 +235,33 @@ async function hasTrustedPersonalPlanResultReturn(input: {
   return isPersonalPlanResultReturnForLead(resolution, input.lead.id)
 }
 
+async function getEmailReturnContext(lead: LeadResultRow, hasAccess: boolean) {
+  if (
+    !isQuizEmailReturnEnabled() ||
+    hasAccess ||
+    lead.moderator_campaign_id ||
+    lead.partner_access_invitation_id
+  )
+    return null
+  const cookie = await resolveFunnelCookieContext(
+    (await cookies()).get(FUNNEL_SESSION_COOKIE)?.value,
+  )
+  if (cookie?.packageKey !== "customerio_scan_return_v1") return null
+  const lookup = await lookupFunnelContextForLead(lead.id, cookie.sessionId)
+  if (lookup.kind === "unavailable") throw new Error("Email return session unavailable")
+  const context = lookup.context
+  if (
+    !context ||
+    context.packageKey !== "customerio_scan_return_v1" ||
+    context.sessionId !== cookie.sessionId ||
+    context.visitorId !== cookie.visitorId ||
+    context.testKind ||
+    context.fieldTestCampaignId
+  )
+    return null
+  return context
+}
+
 async function resolveRegularQuizFieldTestOfferState(input: {
   hasAccess: boolean
   lead: LeadResultRow
@@ -295,11 +327,14 @@ export default async function ResultPage({ params, searchParams }: Props) {
     getLeadResult(leadId),
     getAuthenticatedResultAccess(),
   ])
+  if (!lead) notFound()
+  const emailReturnContext = await getEmailReturnContext(lead, authenticatedAccess.hasAccess)
   const resultCampaign = lead?.moderator_campaign_id
     ? await loadModeratorResultCampaign(leadId)
     : null
   const resultFunnel =
-    lead?.quiz_kind === "personal_plan" || resultCampaign?.kind === "moderator"
+    !emailReturnContext &&
+    (lead?.quiz_kind === "personal_plan" || resultCampaign?.kind === "moderator")
       ? await loadPersonalPlanResultFunnel(leadId)
       : null
   if (resultCampaign?.kind === "unavailable") return <PersonalPlanFieldTestEnded unavailable />
@@ -340,11 +375,18 @@ export default async function ResultPage({ params, searchParams }: Props) {
         : entry === "result_email"
           ? "result_email"
           : "saved_result"
-  const quizAnswers = lead?.quiz_kind === "legacy" ? parseQuizAnswers(lead.quiz_answers) : null
+  const parsedQuizAnswers = lead.quiz_kind === "legacy" ? parseQuizAnswers(lead.quiz_answers) : null
+  // The ordinary result still requires the full stored-answer contract. A
+  // verified return can display its saved facts while deferring missing facts.
+  const quizAnswers =
+    parsedQuizAnswers ??
+    (emailReturnContext && lead.quiz_kind === "legacy"
+      ? normalizeStoredQuizAnswers((lead.quiz_answers as Record<string, unknown> | null) ?? null)
+      : null)
   const personalPlanOffer =
     lead?.quiz_kind === "personal_plan" ? await getPersonalPlanPublicOfferModel(lead.id) : null
 
-  if (!lead || (lead.quiz_kind === "legacy" && !quizAnswers)) {
+  if (lead.quiz_kind === "legacy" && !quizAnswers) {
     notFound()
   }
 
@@ -384,7 +426,7 @@ export default async function ResultPage({ params, searchParams }: Props) {
   const funnelContext =
     hasAccess && !partnerIntent
       ? null
-      : (persistedFunnel ?? (await resolveFunnelContextForLead(leadId)))
+      : (emailReturnContext ?? persistedFunnel ?? (await resolveFunnelContextForLead(leadId)))
   const fieldTestCookie = (await cookies()).get(PERSONAL_PLAN_FIELD_TEST_CAMPAIGN_COOKIE)?.value
   const fieldTestAuthorization =
     lead.quiz_kind === "personal_plan"
@@ -453,8 +495,24 @@ export default async function ResultPage({ params, searchParams }: Props) {
         }),
       )
   }
-  const offerVariant =
-    lead.quiz_kind === "personal_plan"
+  const returningScannerOffer = Boolean(
+    emailReturnContext &&
+    trialOfferPricing &&
+    isScannerFunnelRefinementEnabled() &&
+    !fieldTestAuthorization &&
+    !fieldTestUnavailable &&
+    !regularFieldTestState.authorization &&
+    !regularFieldTestState.unavailable &&
+    !partnerIntent,
+  )
+  // A stopped or unconfigured trial must not send a partial saved profile into
+  // the ordinary diagnostic renderer or advertise different commercial terms.
+  if (emailReturnContext && (!trialOfferPricing || !isScannerFunnelRefinementEnabled())) {
+    return <PersonalPlanOfferRecovery leadId={lead.id} />
+  }
+  const offerVariant = returningScannerOffer
+    ? "scan-regal-v1"
+    : lead.quiz_kind === "personal_plan"
       ? fieldTestAuthorization || fieldTestUnavailable
         ? PERSONAL_PLAN_PRICING_EXPERIMENT.baseVariant
         : await resolvePersonalPlanPricingExperiment({ session: personalPlanSession })
@@ -527,6 +585,10 @@ export default async function ResultPage({ params, searchParams }: Props) {
         offerVariant={offerVariant}
         pricingCatalog={pricingCatalog}
         trialOfferPricing={trialOfferPricing}
+        returningScannerOffer={returningScannerOffer}
+        returningProfileIncomplete={
+          !parsedQuizAnswers?.hair_length || !parsedQuizAnswers.goals?.length
+        }
         scannerRefinementEnabled={isScannerFunnelRefinementEnabled()}
         showQuizRestart={
           lead.quiz_kind === "personal_plan" && !hasAccess && isPersonalPlanResultReturnEnabled()

@@ -181,15 +181,16 @@ export default function DatenschutzPage() {
                   </p>
                   <p className="mt-2">
                     Für die technische Leistungsüberwachung nutzen wir Vercel Speed Insights. Dabei
-                    werden anonyme Messwerte zu einer auf sieben App-Bereiche begrenzten, von
-                    Parametern und Kennungen bereinigten Route und URL, Netzwerkgeschwindigkeit,
-                    Browser, Gerätetyp und Betriebssystem, Land sowie Web Vitals einschließlich der
-                    Elementzuordnung verarbeitet. Andere Bereiche werden nicht erfasst. Die
-                    Messpunkte werden weder einer einzelnen Person noch einer IP-Adresse oder
-                    Sitzung zugeordnet und erlauben keine Rekonstruktion des Nutzungsverhaltens über
-                    Seiten hinweg. Die Verarbeitung erfolgt bereits vor einer Cookie-Auswahl auf
-                    Grundlage unseres berechtigten Interesses nach Art. 6 Abs. 1 lit. f DSGVO, die
-                    Verfügbarkeit und Geschwindigkeit der Website zu überwachen und zu verbessern.
+                    werden anonyme Messwerte für die Startseite, das Quiz und die öffentlichen
+                    Landingpages sowie für sieben App-Bereiche verarbeitet: die von Parametern und
+                    Kennungen bereinigten Route und URL, Netzwerkgeschwindigkeit, Browser, Gerätetyp
+                    und Betriebssystem, Land sowie Web Vitals einschließlich der Elementzuordnung.
+                    Andere Bereiche werden nicht erfasst. Die Messpunkte werden weder einer
+                    einzelnen Person noch einer IP-Adresse oder Sitzung zugeordnet und erlauben
+                    keine Rekonstruktion des Nutzungsverhaltens über Seiten hinweg. Die Verarbeitung
+                    erfolgt bereits vor einer Cookie-Auswahl auf Grundlage unseres berechtigten
+                    Interesses nach Art. 6 Abs. 1 lit. f DSGVO, die Verfügbarkeit und
+                    Geschwindigkeit der Website zu überwachen und zu verbessern.
                   </p>
                 </div>
                 <div>

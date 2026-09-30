@@ -1,6 +1,7 @@
 import assert from "node:assert/strict"
 import { randomUUID } from "node:crypto"
 import test from "node:test"
+import { createScannerContextRpc } from "./helpers/scanner-context-rpc"
 
 import { createFreeRegistrationPostHandler } from "../src/app/api/auth/free-registration/route"
 import { createAuthConfirmGetHandler } from "../src/app/auth/confirm/route"
@@ -124,6 +125,9 @@ function createJourneyDatabase() {
         personal_plan_id: plan.id,
         kind: "initial",
         input_hash: inputHash,
+        input_snapshot: args.p_input_snapshot,
+        schema_version: args.p_schema_version,
+        computation_version: args.p_computation_version,
         output_snapshot: args.p_output_snapshot,
       }
       needVersions.set(need.id as string, need)
@@ -139,6 +143,8 @@ function createJourneyDatabase() {
       error: null,
     }
   }
+
+  const scanner = createScannerContextRpc({ hairProfiles, personalPlans, needVersions, leads })
 
   const admin = {
     from(table: string) {
@@ -202,6 +208,8 @@ function createJourneyDatabase() {
       return chain
     },
     async rpc(name: string, args: Row) {
+      if (name === "scanner_context_read_source" || name === "scanner_context_publish")
+        return scanner.rpc(name, args)
       if (name === "personal_plan_create_or_reuse_initial_need") {
         return rpcCreateOrReuseInitialNeed(args)
       }

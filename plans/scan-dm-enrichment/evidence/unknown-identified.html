@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Unbekanntes Produkt – heute vs. Vorschlag</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: hsl(30 27% 98%);
+    --fg: hsl(15 6% 22%);
+    --sub: hsl(20 5% 39%);
+    --border: hsl(30 10% 89%);
+    --plum: #6b50a0;
+    --plum-light: #c8b8e0;
+    --plum-ice: #f2eefa;
+    --display: "Playfair Display", Georgia, serif;
+    --body: "Plus Jakarta Sans", Arial, sans-serif;
+  }
+  body { margin: 0; background: #e9e6e1; font-family: var(--body); color: var(--fg); padding: 32px 24px; }
+  .row { display: flex; gap: 32px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+  .col { width: 375px; }
+  .caption { font-size: 13px; color: var(--sub); margin: 0 0 10px 4px; letter-spacing: .02em; text-transform: uppercase; font-weight: 700; }
+  .phone { width: 375px; height: 880px; border-radius: 28px; overflow: hidden; position: relative; background: #2b2b2b url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="375" height="880"><rect width="375" height="880" fill="%23303030"/><rect x="60" y="120" width="255" height="180" rx="8" fill="none" stroke="%23ffffff" stroke-opacity=".5" stroke-width="3" stroke-dasharray="40 175"/></svg>') no-repeat; }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; background: var(--bg); border-radius: 22px 22px 0 0; padding: 12px 20px 24px; }
+  .grab { width: 40px; height: 4px; border-radius: 2px; background: var(--border); margin: 0 auto 16px; }
+  h2 { font-family: var(--display); font-weight: 500; font-size: 24px; line-height: 1.15; margin: 0; }
+  p { margin: 0; font-size: 14px; line-height: 24px; }
+  .sub { color: var(--sub); margin-top: 4px; }
+  .q { font-size: 15px; font-weight: 600; line-height: 24px; margin: 16px 0 12px; }
+  .card { min-height: 56px; display: flex; align-items: center; border: 1px solid var(--border); background: #fff; border-radius: 12px; padding: 12px; font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .more { border: 1px dashed var(--plum-light); color: var(--plum); font-size: 15px; font-weight: 600; justify-content: space-between; background: transparent; }
+  .code { text-align: center; font-size: 12px; color: var(--sub); font-variant-numeric: tabular-nums; margin-top: 8px; }
+  .product { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
+  .product img { width: 48px; height: 48px; border-radius: 10px; border: 1px solid var(--border); object-fit: cover; background: #fff; }
+  .product .name { font-size: 15px; font-weight: 700; line-height: 20px; }
+  .product .brand { font-size: 13px; color: var(--sub); line-height: 18px; }
+  .cta { display:flex; align-items:center; justify-content:center; min-height:52px; border-radius:14px; background:#d4616a; color:#fff; font-size:16px; font-weight:700; margin-bottom:10px; }
+  .other { display:flex; align-items:center; justify-content:center; min-height:44px; color:var(--plum); font-size:15px; font-weight:600; }
+  .note { max-width: 1190px; margin: 28px auto 0; font-size: 13px; color: var(--sub); line-height: 20px; }
+</style>
+</head>
+<body>
+<div class="row">
+  <div class="col">
+    <p class="caption">Heute</p>
+    <div class="phone">
+      <div class="sheet">
+        <div class="grab"></div>
+        <h2>Danke dir – das ist neu für uns!</h2>
+        <p style="margin-top:8px">Barcode gelesen – das Produkt fehlt noch in unserer Datenbank.</p>
+        <p class="sub">Wir nehmen es auf. Dein Ergebnis kommt in den Chat.</p>
+        <p class="q">Wobei benutzt du es?</p>
+        <div class="card">Shampoo</div>
+        <div class="card">Conditioner</div>
+        <div class="card">Leave-in</div>
+        <div class="card">Haarmaske</div>
+        <div class="card">Haaröl</div>
+        <div class="card more"><span>Weitere Produktarten</span><span>⌄</span></div>
+        <p class="code">Barcode 4001638530378</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <p class="caption">Vorschlag A · dm kennt es, Kategorie erkannt</p>
+    <div class="phone">
+      <div class="sheet">
+        <div class="grab"></div>
+        <div class="product">
+          <img src="https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1778021596/assets/pas/images/f0298591-7c42-4ea1-82b3-a95531ff3f04/weleda-shampoo-rosmarin-revitalising" alt="" />
+          <div>
+            <div class="name">Shampoo Rosmarin Revitalising, 250 ml</div>
+            <div class="brand">Weleda</div>
+          </div>
+        </div>
+        <h2>Gefunden – jetzt prüfen wir es.</h2>
+        <p class="sub">Passt es zu deinem Haar? Das Ergebnis kommt in den Chat.</p>
+        <p class="q">Benutzt du es als Shampoo?</p>
+        <div class="cta">Ja, als Shampoo</div>
+        <div class="other">Wofür anderes</div>
+        <p class="code" style="margin-top:16px">Barcode 4001638530378</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <p class="caption">Vorschlag B · dm kennt es, Kategorie unklar</p>
+    <div class="phone">
+      <div class="sheet">
+        <div class="grab"></div>
+        <div class="product">
+          <img src="https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1781994206/assets/pas/images/dc7659e8-af09-4a5b-85e4-b7637e444652/alverde-naturkosmetik-shampoo-nutri-care" alt="" />
+          <div>
+            <div class="name">Nutri Care 2in1, 200 ml</div>
+            <div class="brand">alverde Naturkosmetik</div>
+          </div>
+        </div>
+        <h2>Gefunden – jetzt prüfen wir es.</h2>
+        <p class="sub">Passt es zu deinem Haar? Das Ergebnis kommt in den Chat.</p>
+        <p class="q">Wobei benutzt du es?</p>
+        <div class="card">Shampoo</div>
+        <div class="card">Conditioner</div>
+        <div class="card">Leave-in</div>
+        <div class="card">Haarmaske</div>
+        <div class="card">Haaröl</div>
+        <div class="card more"><span>Weitere Produktarten</span><span>⌄</span></div>
+        <p class="code">Barcode 4001638530378</p>
+      </div>
+    </div>
+  </div>
+</div>
+<p class="note">A: der Produktname nennt die Produktart eindeutig → eine Bestätigung, „Wofür anderes“ klappt das Raster auf. B: keine eindeutige Produktart im Namen (hier ein 2in1, zur Illustration) → Raster wie heute. Kennt dm den Barcode nicht, bleibt die linke Variante unverändert. Nach dem Tippen folgt immer die heutige „Eingereicht!“-Ansicht.</p>
+</body>
+</html>

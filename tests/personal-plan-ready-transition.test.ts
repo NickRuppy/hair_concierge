@@ -98,7 +98,7 @@ test("readiness failures are recoverable and the ready CTA stays explicit", () =
   )
   assert.match(client, /markPersonalPlanStageNavigation\("\/plan-start"\)/)
   assert.doesNotMatch(client, /PersonalPlanChapterTransition/)
-  assert.match(client, /missingHairLength\.question/)
+  assert.match(client, /missingFact\.question/)
   assert.match(readiness, /Wie lang sind deine Haare aktuell/)
   assert.match(client, /method: "PATCH"/)
   assert.doesNotMatch(client, /storyComplete && readiness === "ready"/)

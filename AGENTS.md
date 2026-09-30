@@ -49,6 +49,10 @@ Use formal Goal mode only when the user explicitly asks for it and the implement
 
 ## Domain skills
 
+### `design`
+
+Use `$design` when creating or materially refining UI, or reviewing visual and interaction quality. It routes to the appropriate specialist within the existing workflow. Routine text-only edits and backend work do not require it.
+
 ### `hair-care-expert`
 
 Use for external hair-care research, evidence-sensitive rules, myth or overreach audits, medically adjacent boundaries, and evidence review of rough specs. Keep external evidence independent from internal methodology unless the user explicitly asks for reconciliation. It is valid to conclude that evidence is weak or inconclusive.

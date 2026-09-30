@@ -15,6 +15,56 @@ const quizAnswers: QuizAnswers = {
   goals: ["shine"],
 }
 
+const returnTrialPricing = {
+  trialDays: 7,
+  monthlyAmountMinor: 999,
+  annualFirstAmountMinor: 6999,
+  annualRenewalAmountMinor: 9999,
+}
+
+for (const quizKind of ["legacy", "personal_plan"] as const) {
+  test(`verified email return presents the scanner trial for incomplete ${quizKind} answers`, () => {
+    const html = renderToStaticMarkup(
+      <ResultPageClient
+        leadId="11111111-1111-4111-8111-111111111111"
+        name="Lea"
+        quizKind={quizKind}
+        quizAnswers={null}
+        focusRoutine={false}
+        hasAccess={false}
+        returningScannerOffer
+        offerVariant="scan-regal-v1"
+        trialOfferPricing={returnTrialPricing}
+      />,
+    )
+    assert.match(html, /So funktioniert der Scanner/)
+    assert.match(html, /Teste Chaarlie 7 Tage kostenlos/)
+    assert.match(html, /nach dem Start deiner Testphase/)
+    assert.doesNotMatch(html, /Dein Haarprofil steht|data-organic-diagnostic-row="/)
+    assert.match(html, /9,99/)
+  })
+}
+
+test("email-return presentation preserves existing access and unavailable field tests", () => {
+  for (const overrides of [{ hasAccess: true }, { fieldTestUnavailable: true }]) {
+    const html = renderToStaticMarkup(
+      <ResultPageClient
+        leadId="11111111-1111-4111-8111-111111111111"
+        name="Lea"
+        quizKind="personal_plan"
+        quizAnswers={null}
+        focusRoutine={false}
+        hasAccess={false}
+        returningScannerOffer
+        offerVariant="scan-regal-v1"
+        trialOfferPricing={returnTrialPricing}
+        {...overrides}
+      />,
+    )
+    assert.doesNotMatch(html, /So funktioniert der Scanner|Teste Chaarlie/)
+  }
+})
+
 test("result page client sends manually granted users to onboarding instead of the paid offer", () => {
   const html = renderToStaticMarkup(
     <ResultPageClient

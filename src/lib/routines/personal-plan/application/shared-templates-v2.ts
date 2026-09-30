@@ -25,12 +25,13 @@ function template(input: {
   compatibleDayTypes: ApplicationDayTypeKey[]
   anchor: Anchor
   steps: Step[]
+  protocolVersion?: number
 }): ApplicationFamilyTemplateV2 {
   return applicationFamilyTemplateV2Schema.parse({
     schemaVersion: 2,
     contractKind: "family_template",
     guidanceKey: input.guidanceKey,
-    protocolVersion: 2,
+    protocolVersion: input.protocolVersion ?? 2,
     locale: "de",
     scope: { kind: "application_family", category: input.category },
     role: input.role,
@@ -232,7 +233,8 @@ export const SHARED_APPLICATION_TEMPLATES_V2 = [
     category: "oil",
     role: "finish",
     applicationFamily: "between_wash_damp_refresh",
-    compatibleDayTypes: ["refresh_day", "between_wash_care_day"],
+    compatibleDayTypes: ["between_wash_care_day"],
+    protocolVersion: 3,
     anchor: "damp_leave_on",
     steps: [
       {
@@ -248,7 +250,8 @@ export const SHARED_APPLICATION_TEMPLATES_V2 = [
     category: "oil",
     role: "finish",
     applicationFamily: "between_wash_dry_care",
-    compatibleDayTypes: ["refresh_day", "between_wash_care_day"],
+    compatibleDayTypes: ["between_wash_care_day"],
+    protocolVersion: 3,
     anchor: "dry_finish",
     steps: [
       {
@@ -264,7 +267,8 @@ export const SHARED_APPLICATION_TEMPLATES_V2 = [
     category: "oil",
     role: "leave_in",
     applicationFamily: "between_wash_damp_refresh",
-    compatibleDayTypes: ["refresh_day", "between_wash_care_day"],
+    compatibleDayTypes: ["between_wash_care_day"],
+    protocolVersion: 3,
     anchor: "damp_leave_on",
     steps: [
       {
@@ -280,7 +284,8 @@ export const SHARED_APPLICATION_TEMPLATES_V2 = [
     category: "oil",
     role: "leave_in",
     applicationFamily: "between_wash_dry_care",
-    compatibleDayTypes: ["refresh_day", "between_wash_care_day"],
+    compatibleDayTypes: ["between_wash_care_day"],
+    protocolVersion: 3,
     anchor: "dry_finish",
     steps: [
       {
@@ -555,3 +560,28 @@ export const SHARED_APPLICATION_TEMPLATES_V2 = [
 export const SHARED_APPLICATION_TEMPLATE_BY_KEY_V2 = new Map(
   SHARED_APPLICATION_TEMPLATES_V2.map((entry) => [entry.guidanceKey, entry]),
 )
+
+const REFRESH_DAY_OIL_TEMPLATE_KEYS = new Set([
+  "oil.finish.damp-refresh.v2",
+  "oil.finish.dry-care.v2",
+  "oil.leave-in.damp-refresh.v2",
+  "oil.leave-in.dry-care.v2",
+])
+
+/**
+ * The registry as embedded in the frozen Stage 5 V2 pointer artifact
+ * (data/catalog-enrichment/personal-plan-stage5-v2). Its bytes are fingerprinted by
+ * reviewed pointer deltas, so templates revised after the freeze keep their superseded
+ * version here: the four between-wash Oil families before ruling O4 (2026-09-29)
+ * still allowed the Refresh-Tag as protocol version 2.
+ */
+export const SHARED_APPLICATION_TEMPLATES_AT_ARTIFACT_FREEZE_V2: readonly ApplicationFamilyTemplateV2[] =
+  SHARED_APPLICATION_TEMPLATES_V2.map((entry) =>
+    REFRESH_DAY_OIL_TEMPLATE_KEYS.has(entry.guidanceKey)
+      ? applicationFamilyTemplateV2Schema.parse({
+          ...entry,
+          protocolVersion: 2,
+          compatibleDayTypes: ["refresh_day", "between_wash_care_day"],
+        })
+      : entry,
+  )

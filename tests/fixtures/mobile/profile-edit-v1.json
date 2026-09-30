@@ -1,0 +1,702 @@
+{
+  "profileRevision": "2",
+  "answers": {
+    "structure": "wavy",
+    "thickness": "fine",
+    "density": "medium",
+    "hair_length": "long",
+    "fingertest": "rau",
+    "pulltest": "stretches_bounces",
+    "scalp_type": "ausgeglichen",
+    "has_scalp_issue": false,
+    "treatment": [
+      "natur"
+    ],
+    "concerns": [
+      "dryness"
+    ],
+    "goals": [
+      "less_volume"
+    ],
+    "concerns_other_text": "Meine Spitzen"
+  },
+  "questions": [
+    {
+      "id": "structure",
+      "title": "Welche Haarstruktur haben die meisten deiner Haare?",
+      "instruction": "Wähle die natürliche Form deiner Haare, so gut du sie erkennen kannst. Wenn deine Längen chemisch geglättet oder dauergewellt sind, hilft der unbehandelte Ansatz als Orientierung.",
+      "selectionMode": "single",
+      "options": [
+        {
+          "value": "straight",
+          "label": "Glatt",
+          "description": "Die Strähne hängt glatt runter"
+        },
+        {
+          "value": "wavy",
+          "label": "Wellig",
+          "description": "Bildet eine S-Kurve, keine 3D-Windung"
+        },
+        {
+          "value": "curly",
+          "label": "Lockig",
+          "description": "Formt sich zu einer deutlichen 3D-Locke"
+        },
+        {
+          "value": "coily",
+          "label": "Kraus",
+          "description": "Enge Windungen, die sich in sich selbst drehen"
+        }
+      ]
+    },
+    {
+      "id": "thickness",
+      "title": "Wie dick fühlt sich ein einzelnes Haar bei dir meistens an?",
+      "instruction": "Vergleiche ein einzelnes Haar mit einem Nähfaden.",
+      "selectionMode": "single",
+      "options": [
+        {
+          "value": "fine",
+          "label": "Fein",
+          "description": "Kaum spürbar – dünner als ein Nähfaden"
+        },
+        {
+          "value": "normal",
+          "label": "Mittel",
+          "description": "Spürbar – ähnlich wie ein Nähfaden"
+        },
+        {
+          "value": "coarse",
+          "label": "Dick",
+          "description": "Deutlich spürbar – dicker als ein Nähfaden"
+        }
+      ]
+    },
+    {
+      "id": "density",
+      "title": "Wie dicht ist dein Haar insgesamt?",
+      "instruction": "Schau zum Beispiel auf Scheitel, Zopf-Umfang und wie viel Kopfhaut sichtbar ist.",
+      "selectionMode": "single",
+      "options": [
+        {
+          "value": "low",
+          "label": "Wenig Haare",
+          "description": "Der Scheitel wirkt breiter oder die Kopfhaut scheint schnell durch."
+        },
+        {
+          "value": "medium",
+          "label": "Mittlere Dichte",
+          "description": "Du hast weder auffällig wenig noch auffällig viele Haare."
+        },
+        {
+          "value": "high",
+          "label": "Viele Haare",
+          "description": "Dein Haar fühlt sich insgesamt voll an, ein Zopf wirkt eher dick."
+        }
+      ]
+    },
+    {
+      "id": "hair_length",
+      "title": "Wie lang sind deine Haare aktuell?",
+      "instruction": "Bei Locken oder Coils zählt die sanft gestreckte Länge einer Strähne.\n\nWenn du zwischen zwei Längen liegst, wähle die längere Option.",
+      "selectionMode": "single",
+      "options": [
+        {
+          "value": "very_short",
+          "label": "Sehr kurz",
+          "description": "Maschinenschnitt bis Pixie, etwa bis zu den Ohren."
+        },
+        {
+          "value": "short",
+          "label": "Kurz",
+          "description": "Bob-Länge, unter den Ohren bis knapp über die Schultern."
+        },
+        {
+          "value": "medium",
+          "label": "Mittellang",
+          "description": "Schulterlänge bis Brusthöhe oder untere Schulterblätter."
+        },
+        {
+          "value": "long",
+          "label": "Lang",
+          "description": "Unter Brust oder Schulterblättern bis ungefähr zur Taille."
+        },
+        {
+          "value": "very_long",
+          "label": "Sehr lang",
+          "description": "Taille oder länger."
+        }
+      ]
+    },
+    {
+      "id": "fingertest",
+      "title": "Wie fühlt sich deine Haaroberfläche an?",
+      "instruction": "Fahre langsam mit zwei Fingern über ein sauberes, trockenes Haar: glatt, leicht uneben oder rau?",
+      "selectionMode": "single",
+      "options": [
+        {
+          "value": "glatt",
+          "label": "Glatt wie Glas",
+          "description": "Die Finger gleiten gleichmäßig durch"
+        },
+        {
+          "value": "leicht_uneben",
+          "label": "Leicht uneben",
+          "description": "Kleine Hügel spürbar, nicht durchgehend"
+        },
+        {
+          "value": "rau",
+          "label": "Richtig rau und huckelig",
+          "description": "Durchgehend rau und uneben"
+        }
+      ]
+    },
+    {
+      "id": "pulltest",
+      "title": "Wie elastisch ist dein Haar?",
+      "instruction": "Nimm dasselbe Haar. Klemm es zwischen Ringfinger und Zeigefinger auf der einen Seite und zwischen Ringfinger und Mittelfinger auf der anderen. Zieh jetzt vorsichtig – wirklich mit Gefühl, nicht reißen. Beobachte genau, was passiert.",
+      "selectionMode": "single",
+      "options": [
+        {
+          "value": "stretches_bounces",
+          "label": "Dehnt sich und geht zurück",
+          "description": "Federt in den Ursprungszustand zurück"
+        },
+        {
+          "value": "stretches_stays",
+          "label": "Dehnt sich, bleibt ausgeleiert",
+          "description": "Kommt nicht mehr zurück – bleibt länglich"
+        },
+        {
+          "value": "snaps",
+          "label": "Reißt sofort",
+          "description": "Bricht bei leichtem Zug direkt ab"
+        }
+      ]
+    },
+    {
+      "id": "treatment",
+      "title": "Sind deine Haare chemisch behandelt?",
+      "instruction": "Gemeint ist alles, was Farbe oder Form länger verändert hat: Färben/Tönen, Aufhellen, Dauerwelle oder Glättung. Deine natürliche Struktur hast du schon angegeben.",
+      "selectionMode": "multi",
+      "options": [
+        {
+          "value": "natur",
+          "label": "Naturhaar",
+          "description": "Keine Farbe, kein Blondieren – unbehandelt"
+        },
+        {
+          "value": "gefaerbt",
+          "label": "Gefärbt / getönt",
+          "description": "Farbveränderung, aber kein Aufhellen"
+        },
+        {
+          "value": "blondiert",
+          "label": "Blondiert / aufgehellt",
+          "description": "Gebleacht, Strähnchen oder Balayage"
+        },
+        {
+          "value": "dauerwelle",
+          "label": "Dauerwelle",
+          "description": "Chemisch dauerhaft gewellte oder gelockte Längen"
+        },
+        {
+          "value": "chemisch_geglaettet",
+          "label": "Chemisch geglättet",
+          "description": "Relaxer, dauerhafte Glättung, Keratin-Glättung oder Brazilian Blowout"
+        }
+      ]
+    },
+    {
+      "id": "scalp_type",
+      "title": "Wie fühlt sich deine Kopfhaut normalerweise an?",
+      "instruction": "Denk dabei an deine Kopfhaut und Ansätze – nicht an trockene Längen oder Spitzen.",
+      "selectionMode": "single",
+      "options": [
+        {
+          "value": "fettig",
+          "label": "Eher fettig",
+          "description": "Meine Ansätze werden meist nach 1–2 Tagen ölig"
+        },
+        {
+          "value": "ausgeglichen",
+          "label": "Ausgeglichen",
+          "description": "Meine Kopfhaut fühlt sich weder fettig noch trocken an"
+        },
+        {
+          "value": "trocken",
+          "label": "Eher trocken",
+          "description": "Meine Kopfhaut spannt manchmal oder fühlt sich rau an"
+        }
+      ],
+      "conditionOptions": [
+        {
+          "value": "schuppen",
+          "label": "Schuppen",
+          "description": "Weiße oder gelbliche Flocken"
+        },
+        {
+          "value": "trockene_schuppen",
+          "label": "Trockene Schuppen",
+          "description": "Kleine, weiße, trockene Flocken — Kopfhaut spannt"
+        },
+        {
+          "value": "gereizt",
+          "label": "Gereizte Kopfhaut",
+          "description": "Jucken, Rötungen oder Brennen"
+        }
+      ]
+    },
+    {
+      "id": "concerns",
+      "title": "Was beschäftigt dich gerade?",
+      "instruction": "Wähle alles aus, was aktuell auf dein Haar zutrifft.",
+      "selectionMode": "multi",
+      "options": [
+        {
+          "value": "dry_lengths",
+          "label": "Trockene oder strohige Längen"
+        },
+        {
+          "value": "frizz_flyaways",
+          "label": "Frizz oder viele abstehende Haare"
+        },
+        {
+          "value": "low_shine",
+          "label": "Wenig Glanz"
+        },
+        {
+          "value": "hair_damage",
+          "label": "Mein Haar wirkt insgesamt strapaziert oder geschädigt"
+        },
+        {
+          "value": "hair_loss_or_thinning",
+          "label": "Haarausfall oder dünner werdendes Haar",
+          "description": "Mir fallen mehr Haare auf als sonst oder mein Haar wirkt weniger dicht."
+        },
+        {
+          "value": "breakage",
+          "label": "Mein Haar bricht in den Längen ab",
+          "description": "Einzelne Haare reißen oberhalb der Spitzen ab."
+        },
+        {
+          "value": "split_ends",
+          "label": "Meine Spitzen sind sichtbar gespalten oder ausgefranst",
+          "description": "Die Enden einzelner Haare teilen sich sichtbar."
+        },
+        {
+          "value": "tangling",
+          "label": "Schnelles Verknoten"
+        },
+        {
+          "value": "lost_shape",
+          "label": "Meine Wellen verlieren schnell ihre Form"
+        },
+        {
+          "value": "low_volume_or_weighed_down",
+          "label": "Mein Ansatz wirkt flach oder meine Längen schnell beschwert"
+        },
+        {
+          "value": "dryness",
+          "label": "Trockenheit"
+        }
+      ],
+      "optionsByTexture": {
+        "straight": [
+          {
+            "value": "dry_lengths",
+            "label": "Trockene oder strohige Längen"
+          },
+          {
+            "value": "frizz_flyaways",
+            "label": "Frizz oder viele abstehende Haare"
+          },
+          {
+            "value": "low_shine",
+            "label": "Wenig Glanz"
+          },
+          {
+            "value": "hair_damage",
+            "label": "Mein Haar wirkt insgesamt strapaziert oder geschädigt"
+          },
+          {
+            "value": "hair_loss_or_thinning",
+            "label": "Haarausfall oder dünner werdendes Haar",
+            "description": "Mir fallen mehr Haare auf als sonst oder mein Haar wirkt weniger dicht."
+          },
+          {
+            "value": "breakage",
+            "label": "Mein Haar bricht in den Längen ab",
+            "description": "Einzelne Haare reißen oberhalb der Spitzen ab."
+          },
+          {
+            "value": "split_ends",
+            "label": "Meine Spitzen sind sichtbar gespalten oder ausgefranst",
+            "description": "Die Enden einzelner Haare teilen sich sichtbar."
+          },
+          {
+            "value": "tangling",
+            "label": "Schnelles Verknoten"
+          },
+          {
+            "value": "lost_shape",
+            "label": "Mein Haar verliert schnell Form und Halt"
+          },
+          {
+            "value": "low_volume_or_weighed_down",
+            "label": "Mein Haar wirkt schnell platt oder beschwert"
+          },
+          {
+            "value": "dryness",
+            "label": "Trockenheit"
+          }
+        ],
+        "wavy": [
+          {
+            "value": "dry_lengths",
+            "label": "Trockene oder strohige Längen"
+          },
+          {
+            "value": "frizz_flyaways",
+            "label": "Frizz oder viele abstehende Haare"
+          },
+          {
+            "value": "low_shine",
+            "label": "Wenig Glanz"
+          },
+          {
+            "value": "hair_damage",
+            "label": "Mein Haar wirkt insgesamt strapaziert oder geschädigt"
+          },
+          {
+            "value": "hair_loss_or_thinning",
+            "label": "Haarausfall oder dünner werdendes Haar",
+            "description": "Mir fallen mehr Haare auf als sonst oder mein Haar wirkt weniger dicht."
+          },
+          {
+            "value": "breakage",
+            "label": "Mein Haar bricht in den Längen ab",
+            "description": "Einzelne Haare reißen oberhalb der Spitzen ab."
+          },
+          {
+            "value": "split_ends",
+            "label": "Meine Spitzen sind sichtbar gespalten oder ausgefranst",
+            "description": "Die Enden einzelner Haare teilen sich sichtbar."
+          },
+          {
+            "value": "tangling",
+            "label": "Schnelles Verknoten"
+          },
+          {
+            "value": "lost_shape",
+            "label": "Meine Wellen verlieren schnell ihre Form"
+          },
+          {
+            "value": "low_volume_or_weighed_down",
+            "label": "Mein Ansatz wirkt flach oder meine Längen schnell beschwert"
+          },
+          {
+            "value": "dryness",
+            "label": "Trockenheit"
+          }
+        ],
+        "curly": [
+          {
+            "value": "dry_lengths",
+            "label": "Trockene oder strohige Längen"
+          },
+          {
+            "value": "frizz_flyaways",
+            "label": "Frizz oder viele abstehende Haare"
+          },
+          {
+            "value": "low_shine",
+            "label": "Wenig Glanz"
+          },
+          {
+            "value": "hair_damage",
+            "label": "Mein Haar wirkt insgesamt strapaziert oder geschädigt"
+          },
+          {
+            "value": "hair_loss_or_thinning",
+            "label": "Haarausfall oder dünner werdendes Haar",
+            "description": "Mir fallen mehr Haare auf als sonst oder mein Haar wirkt weniger dicht."
+          },
+          {
+            "value": "breakage",
+            "label": "Mein Haar bricht in den Längen ab",
+            "description": "Einzelne Haare reißen oberhalb der Spitzen ab."
+          },
+          {
+            "value": "split_ends",
+            "label": "Meine Spitzen sind sichtbar gespalten oder ausgefranst",
+            "description": "Die Enden einzelner Haare teilen sich sichtbar."
+          },
+          {
+            "value": "tangling",
+            "label": "Schnelles Verknoten"
+          },
+          {
+            "value": "lost_shape",
+            "label": "Meine Locken verlieren schnell ihre Definition"
+          },
+          {
+            "value": "low_volume_or_weighed_down",
+            "label": "Form oder Volumen wirken schnell ungleichmäßig"
+          },
+          {
+            "value": "dryness",
+            "label": "Trockenheit"
+          }
+        ],
+        "coily": [
+          {
+            "value": "dry_lengths",
+            "label": "Trockene oder strohige Längen"
+          },
+          {
+            "value": "frizz_flyaways",
+            "label": "Frizz oder viele abstehende Haare"
+          },
+          {
+            "value": "low_shine",
+            "label": "Wenig Glanz"
+          },
+          {
+            "value": "hair_damage",
+            "label": "Mein Haar wirkt insgesamt strapaziert oder geschädigt"
+          },
+          {
+            "value": "hair_loss_or_thinning",
+            "label": "Haarausfall oder dünner werdendes Haar",
+            "description": "Mir fallen mehr Haare auf als sonst oder mein Haar wirkt weniger dicht."
+          },
+          {
+            "value": "breakage",
+            "label": "Mein Haar bricht in den Längen ab",
+            "description": "Einzelne Haare reißen oberhalb der Spitzen ab."
+          },
+          {
+            "value": "split_ends",
+            "label": "Meine Spitzen sind sichtbar gespalten oder ausgefranst",
+            "description": "Die Enden einzelner Haare teilen sich sichtbar."
+          },
+          {
+            "value": "tangling",
+            "label": "Schnelles Verknoten"
+          },
+          {
+            "value": "lost_shape",
+            "label": "Meine Definition hält nicht so, wie ich es möchte"
+          },
+          {
+            "value": "low_volume_or_weighed_down",
+            "label": "Form oder Volumen verteilen sich nicht so, wie ich es möchte"
+          },
+          {
+            "value": "dryness",
+            "label": "Trockenheit"
+          }
+        ]
+      }
+    },
+    {
+      "id": "goals",
+      "title": "Was wünschst du dir für deine Haare?",
+      "instruction": "Wähle alles aus, was dir wichtig ist.",
+      "selectionMode": "multi",
+      "options": [
+        {
+          "value": "moisture",
+          "label": "Feuchtigkeit ohne Beschweren"
+        },
+        {
+          "value": "frizz_surface",
+          "label": "Weniger Frizz"
+        },
+        {
+          "value": "shine",
+          "label": "Mehr Glanz"
+        },
+        {
+          "value": "strength_ends",
+          "label": "Weniger Haarbruch und Spliss"
+        },
+        {
+          "value": "scalp_balance",
+          "label": "Ausgeglichene Kopfhaut"
+        },
+        {
+          "value": "manageability_styling",
+          "label": "Leichteres Styling"
+        },
+        {
+          "value": "shape_definition",
+          "label": "Mehr Wellen-Definition"
+        },
+        {
+          "value": "volume_balance",
+          "label": "Ausgewogenes Volumen"
+        },
+        {
+          "value": "less_volume",
+          "label": "Weniger Volumen"
+        }
+      ],
+      "optionsByTexture": {
+        "straight": [
+          {
+            "value": "moisture",
+            "label": "Feuchtigkeit ohne Beschweren"
+          },
+          {
+            "value": "frizz_surface",
+            "label": "Mehr Geschmeidigkeit, weniger abstehende Haare"
+          },
+          {
+            "value": "shine",
+            "label": "Mehr Glanz"
+          },
+          {
+            "value": "strength_ends",
+            "label": "Weniger Haarbruch und Spliss"
+          },
+          {
+            "value": "scalp_balance",
+            "label": "Ausgeglichene Kopfhaut"
+          },
+          {
+            "value": "manageability_styling",
+            "label": "Leichteres Styling"
+          },
+          {
+            "value": "shape_definition",
+            "label": "Mehr Form und Halt"
+          },
+          {
+            "value": "volume_balance",
+            "label": "Ausgewogenes Volumen"
+          },
+          {
+            "value": "less_volume",
+            "label": "Weniger Volumen"
+          }
+        ],
+        "wavy": [
+          {
+            "value": "moisture",
+            "label": "Feuchtigkeit ohne Beschweren"
+          },
+          {
+            "value": "frizz_surface",
+            "label": "Weniger Frizz"
+          },
+          {
+            "value": "shine",
+            "label": "Mehr Glanz"
+          },
+          {
+            "value": "strength_ends",
+            "label": "Weniger Haarbruch und Spliss"
+          },
+          {
+            "value": "scalp_balance",
+            "label": "Ausgeglichene Kopfhaut"
+          },
+          {
+            "value": "manageability_styling",
+            "label": "Leichteres Styling"
+          },
+          {
+            "value": "shape_definition",
+            "label": "Mehr Wellen-Definition"
+          },
+          {
+            "value": "volume_balance",
+            "label": "Ausgewogenes Volumen"
+          },
+          {
+            "value": "less_volume",
+            "label": "Weniger Volumen"
+          }
+        ],
+        "curly": [
+          {
+            "value": "moisture",
+            "label": "Intensive Feuchtigkeit"
+          },
+          {
+            "value": "frizz_surface",
+            "label": "Weniger Frizz"
+          },
+          {
+            "value": "shine",
+            "label": "Mehr Glanz"
+          },
+          {
+            "value": "strength_ends",
+            "label": "Weniger Haarbruch und Spliss"
+          },
+          {
+            "value": "scalp_balance",
+            "label": "Ausgeglichene Kopfhaut"
+          },
+          {
+            "value": "manageability_styling",
+            "label": "Leichteres Entwirren und Styling"
+          },
+          {
+            "value": "shape_definition",
+            "label": "Mehr Locken-Definition"
+          },
+          {
+            "value": "volume_balance",
+            "label": "Ausgewogenes Volumen"
+          },
+          {
+            "value": "less_volume",
+            "label": "Weniger Volumen"
+          }
+        ],
+        "coily": [
+          {
+            "value": "moisture",
+            "label": "Feuchtigkeit länger bewahren"
+          },
+          {
+            "value": "frizz_surface",
+            "label": "Mehr Geschmeidigkeit, weniger Frizz"
+          },
+          {
+            "value": "shine",
+            "label": "Mehr Glanz"
+          },
+          {
+            "value": "strength_ends",
+            "label": "Weniger Haarbruch und bessere Längenretention"
+          },
+          {
+            "value": "scalp_balance",
+            "label": "Ausgeglichene Kopfhaut"
+          },
+          {
+            "value": "manageability_styling",
+            "label": "Leichteres Entwirren und Styling"
+          },
+          {
+            "value": "shape_definition",
+            "label": "Mehr Definition"
+          },
+          {
+            "value": "volume_balance",
+            "label": "Ausgewogenes Volumen"
+          },
+          {
+            "value": "less_volume",
+            "label": "Weniger Volumen"
+          }
+        ]
+      }
+    }
+  ]
+}

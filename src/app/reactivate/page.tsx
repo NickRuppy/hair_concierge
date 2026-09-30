@@ -113,7 +113,7 @@ export default async function ReactivatePage({
       supabase
         .from("hair_profiles")
         .select(
-          "hair_texture, thickness, density, hair_length, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, concerns, goals",
+          "hair_texture, thickness, density, hair_length, cuticle_condition, protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment, concerns, primary_concern, goals",
         )
         .eq("user_id", user.id)
         .maybeSingle(),

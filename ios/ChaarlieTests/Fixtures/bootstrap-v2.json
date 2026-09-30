@@ -1,0 +1,16 @@
+{
+  "status": "ready",
+  "profileRevision": "42",
+  "contextRevision": "context-42",
+  "researchDeliveryEnabled": false,
+  "access": {
+    "status": "active",
+    "source": "app_store",
+    "appStore": {
+      "productId": "de.chaarlie.scanner.yearly",
+      "expiresAt": "2027-09-27T10:00:00.000Z",
+      "willRenew": true,
+      "inBillingRetry": false
+    }
+  }
+}

@@ -37,7 +37,24 @@ const DEFAULT_QUIZ_FUNNEL_COPY: QuizFunnelCopy = {
   analysisLoadingHeadline: "Deine Haaranalyse wird erstellt.",
 }
 
+function discoveryCallCommitHeading(name: string): string {
+  const normalized = name.trim()
+  return normalized
+    ? `${normalized}, bereit für dein persönliches Gespräch?`
+    : "Bereit für dein persönliches Gespräch?"
+}
+
 const QUIZ_FUNNEL_COPY: Record<string, QuizFunnelCopy> = {
+  discovery_call_v1: {
+    ...DEFAULT_QUIZ_FUNNEL_COPY,
+    infoStripLead: "Deine Vorbereitung auf unser Gespräch.",
+    infoStripBody:
+      "10 kurze Fragen zu deinem Haar. So sprechen wir im Gespräch direkt über deine Situation – nicht über Basics.",
+    leadCaptureHeadline: "Dein Haarprofil ist fertig.",
+    commitHeading: discoveryCallCommitHeading,
+    commitButton: "Ja, Termin aussuchen",
+    analysisLoadingHeadline: "Wir bereiten dein Haarprofil für das Gespräch vor.",
+  },
   scan_v1: {
     ...DEFAULT_QUIZ_FUNNEL_COPY,
     infoStripBody: "10 schnelle Fragen zur Basis, dann prüft der Scanner deine Produkte.",

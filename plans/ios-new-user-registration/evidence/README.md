@@ -1,0 +1,4 @@
+# Inherited approved native evidence
+These three actual native screenshots are copied unchanged from the prior onboarding slice, not new live signup proof. They document the existing account form, verification screen and explicit existing-profile choice whose behavior Nick/parent approved and reaffirmed on 2026-09-17. Source: ios-native-onboarding/plans/ios-scanner/onboarding/evidence (length-account subdirectory for account/verification). Original plan records native mockup and journey review. New transport implementation preserves this surface; later verification must distinguish actual connected behavior from these historical synthetic screenshots.
+
+`profile-completion-local.png`: current Debug simulator fixture, captured 2026-09-17 and inspected by implementation owner. Shows the authenticated one-question missing-only surface with existing German quiz components. Synthetic in-memory fixture; it is not evidence of provider delivery or a physical-device journey.

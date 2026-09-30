@@ -15,6 +15,7 @@ export type MetaStandardEvent =
   | "CompleteRegistration"
   | "InitiateCheckout"
   | "Purchase"
+  | "Schedule"
   | "Subscribe"
   | "ViewContent"
 
@@ -406,6 +407,22 @@ export function trackMetaOfferViewed(
       ...funnelPackageProperties(packageKey),
     },
     { ...options, eventID },
+  )
+}
+
+/** Discovery-call funnel conversion: a completed Calendly booking. */
+export function trackMetaBookingScheduled(
+  eventID?: string | null,
+  packageKey?: string | null,
+  options: Pick<BrowserTargets, "win"> = {},
+) {
+  return trackMetaEvent(
+    "Schedule",
+    {
+      content_name: "discovery_call_booking",
+      ...funnelPackageProperties(packageKey),
+    },
+    { ...options, eventID: eventID ?? undefined },
   )
 }
 

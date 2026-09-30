@@ -13,7 +13,7 @@ import type {
   SupabaseBillingAnalyticsClient,
 } from "../src/lib/billing/types"
 
-test("Slack state lookup failure preserves its queue and does not interrupt other deliveries", async () => {
+test("Slack rows cannot consume the Node batch limit or interrupt other deliveries", async () => {
   const { supabase, deliveries } = createSupabaseStub()
   await createBillingAnalyticsEvent(
     supabase,
@@ -30,10 +30,8 @@ test("Slack state lookup failure preserves its queue and does not interrupt othe
   deliveries[0].destination = "slack"
   const sent: string[] = []
   await dispatchBillingAnalyticsDueWithStats(supabase, {
+    limit: 1,
     dependencies: {
-      isSlackEnabled: async () => {
-        throw new Error("private lookup error")
-      },
       deliver: async (destination) => {
         sent.push(destination)
         return { ok: true }
@@ -776,110 +774,44 @@ test("OpenAI skips are terminal and counted without reading a customer profile",
   assert.equal(calls, 1)
 })
 
-test("paused Slack leaves queued attempts untouched across repeated webhook and cron dispatch", async () => {
-  const { supabase, deliveries } = createSupabaseStub()
-  const event = await createBillingAnalyticsEvent(
-    supabase,
-    {
-      eventKey: "stripe:purchase_completed:slack-paused",
-      eventName: "purchase_completed",
-      userId: "user-123",
-      provider: "stripe",
-      occurredAt: new Date().toISOString(),
-      payload: { value: 9.99, currency: "EUR" },
-    },
-    { dispatch: false, destinations: ["posthog"] },
-  )
-  deliveries[0].destination = "slack"
-  let sent = 0
-  const dependencies = {
-    isSlackEnabled: async () => false,
-    deliver: async () => {
-      sent++
-      return { ok: true }
-    },
-  }
-  for (let i = 0; i < 6; i++) {
+test("Node dispatch leaves all Supabase-owned Slack states untouched", async () => {
+  for (const status of [
+    "pending",
+    "failed",
+    "processing",
+    "delivered",
+    "failed_permanent",
+    "skipped",
+  ] as const) {
+    const { supabase, deliveries } = createSupabaseStub()
+    const event = await createBillingAnalyticsEvent(
+      supabase,
+      {
+        eventKey: `stripe:purchase_completed:slack-${status}`,
+        eventName: "purchase_completed",
+        userId: "user-123",
+        provider: "stripe",
+        occurredAt: new Date().toISOString(),
+        payload: { value: 9.99, currency: "EUR" },
+      },
+      { dispatch: false, destinations: ["posthog"] },
+    )
+    const row = deliveries[0]
+    row.destination = "slack"
+    row.status = status
+    row.attempts = 2
+    row.processing_started_at = "2020-01-01T00:00:00Z"
+    const before = structuredClone(row)
+    let calls = 0
+    const dependencies = {
+      deliver: async () => {
+        calls++
+        return { ok: true }
+      },
+    }
     await dispatchBillingAnalyticsDueWithStats(supabase, { destination: "slack", dependencies })
     await dispatchBillingAnalyticsEvent(supabase, event, ["slack"], dependencies)
+    assert.equal(calls, 0)
+    assert.deepEqual(row, before)
   }
-  assert.equal(sent, 0)
-  assert.equal(deliveries[0].status, "pending")
-  assert.equal(deliveries[0].attempts, 0)
-  assert.equal(deliveries[0].processing_started_at, null)
-  await dispatchBillingAnalyticsDueWithStats(supabase, {
-    destination: "slack",
-    dependencies: { ...dependencies, isSlackEnabled: async () => true },
-  })
-  assert.equal(sent, 1)
-  assert.equal(deliveries[0].status, "delivered")
-})
-
-test("Slack rate limits preserve the requested retry delay and sanitize unexpected errors", async () => {
-  const { supabase, deliveries } = createSupabaseStub()
-  const event = await createBillingAnalyticsEvent(
-    supabase,
-    {
-      eventKey: "stripe:purchase_completed:slack-rate-limit",
-      eventName: "purchase_completed",
-      userId: "user-123",
-      provider: "stripe",
-      occurredAt: new Date().toISOString(),
-      payload: { value: 9.99, currency: "EUR" },
-    },
-    { dispatch: false, destinations: ["posthog"] },
-  )
-  deliveries[0].destination = "slack"
-  const before = Date.now()
-  await dispatchBillingAnalyticsEvent(supabase, event, ["slack"], {
-    isSlackEnabled: async () => true,
-    deliver: async () => ({ ok: false, retryAfterSeconds: 600, error: "slack_rate_limited" }),
-  })
-  assert.equal(deliveries[0].status, "failed")
-  assert.ok(Date.parse(deliveries[0].next_attempt_at!) >= before + 600_000)
-  deliveries[0].next_attempt_at = null
-  await dispatchBillingAnalyticsEvent(supabase, event, ["slack"], {
-    isSlackEnabled: async () => true,
-    deliver: async () => {
-      throw new Error("secret-webhook customer@example.com")
-    },
-  })
-  assert.equal(deliveries[0].last_error, "slack_delivery_failed")
-})
-
-test("Slack webhook redelivery respects retry-at and a midflight pause preserves the queue", async () => {
-  const { supabase, deliveries } = createSupabaseStub()
-  const event = await createBillingAnalyticsEvent(
-    supabase,
-    {
-      eventKey: "stripe:purchase_completed:slack-pause-race",
-      eventName: "purchase_completed",
-      userId: "user-123",
-      provider: "stripe",
-      occurredAt: new Date().toISOString(),
-      payload: { value: 9.99, currency: "EUR" },
-    },
-    { dispatch: false, destinations: ["posthog"] },
-  )
-  const row = deliveries[0]
-  row.destination = "slack"
-  row.status = "failed"
-  row.attempts = 2
-  row.next_attempt_at = new Date(Date.now() + 600_000).toISOString()
-  let calls = 0
-  const dependencies = {
-    isSlackEnabled: async () => true,
-    deliver: async () => {
-      calls++
-      return { ok: false, paused: true, error: "slack_paused" }
-    },
-  }
-  await dispatchBillingAnalyticsEvent(supabase, event, ["slack"], dependencies)
-  assert.equal(calls, 0)
-  row.next_attempt_at = null
-  await dispatchBillingAnalyticsEvent(supabase, event, ["slack"], dependencies)
-  assert.equal(calls, 1)
-  assert.equal(row.attempts, 2)
-  assert.equal(row.status, "failed")
-  assert.equal(row.processing_started_at, null)
 })

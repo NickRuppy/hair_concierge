@@ -12,7 +12,36 @@ import {
   shouldStartNewFunnelSession,
   isPrefetchRequest,
 } from "../src/proxy"
-import { getFunnelPackageBySlug, type FunnelPackage } from "../src/lib/funnel/packages"
+import {
+  getFunnelPackageByKey,
+  getFunnelPackageBySlug,
+  type FunnelPackage,
+} from "../src/lib/funnel/packages"
+
+test("an enabled email-return package survives the ordinary quiz without attributing a token GET", () => {
+  const emailPackage = getFunnelPackageByKey("customerio_scan_return_v1")
+  assert.ok(emailPackage)
+  assert.equal(emailPackage.channel, "email")
+  assert.equal(emailPackage.slug, null)
+  assert.equal(emailPackage.offerVariant, "scan-regal-v1")
+  assert.equal(isAttributableFunnelPackage(emailPackage, false, false, true), true)
+  assert.equal(isAttributableFunnelPackage(emailPackage, false, false, false), false)
+  assert.equal(resolveAttributablePackageForPath("/quiz/return", false, false), null)
+
+  const organicPackage = resolveAttributablePackageForPath("/quiz", false, false)
+  assert.ok(organicPackage)
+  assert.equal(
+    shouldStartNewFunnelSession({
+      existingPackageKey: emailPackage.key,
+      explicitlySelectsPackage: false,
+      personalPlanEnabled: false,
+      scanFunnelEnabled: false,
+      emailReturnEnabled: true,
+      selectedPackage: organicPackage,
+    }),
+    false,
+  )
+})
 
 test("retired routine links keep only safe campaign parameters", () => {
   assert.equal(

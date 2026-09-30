@@ -3,6 +3,8 @@ import { writeAccountLinkFacts } from "@/lib/user-facts/account-link"
 import { hasCompletedQuizDiagnostics } from "./completion"
 import type { QuizAnswers } from "./types"
 import { normalizeStoredQuizAnswers, projectQuizAnswersToLegacyVocabulary } from "./normalization"
+import { resolveStatedPrimaryConcern } from "./primary-concern"
+import type { ProfileConcern } from "@/lib/vocabulary"
 
 export function canLinkDirectQuizLead(
   lead: { email: string; userId: string | null },
@@ -88,6 +90,22 @@ export function buildProfileDataFromQuizAnswers(answers: QuizAnswers): Record<st
   }
 
   return profileData
+}
+
+/**
+ * `hair_profiles.primary_concern` (F1): her stated main problem in the same legacy
+ * vocabulary as `concerns` — `null` when she stated none or it has no legacy equivalent.
+ *
+ * Deliberately NOT part of `buildProfileDataFromQuizAnswers`: that projection is also the
+ * mobile registration/edit patch, whose RPC accepts only a fixed column list. Only the
+ * quiz-link write below carries it.
+ */
+export function buildProfilePrimaryConcern(
+  answers: Pick<QuizAnswers, "concerns" | "primary_concern">,
+): ProfileConcern | null {
+  const stated = resolveStatedPrimaryConcern(answers)
+  if (!stated) return null
+  return projectQuizAnswersToLegacyVocabulary({ concerns: [stated] }).concerns[0] ?? null
 }
 
 export function buildProfileDataFromPersonalPlanCanonicalProfile(

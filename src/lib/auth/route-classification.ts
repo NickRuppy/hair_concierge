@@ -12,6 +12,12 @@ export type RouteEnvironment = {
 const PUBLIC_EXACT_ROUTES = [
   "/",
   "/agb",
+  // discovery-call toolkit: the personal invite link and the magic-link
+  // continuation are both opened before an account or a session exists. Exact,
+  // so every other /beratung page stays protected below. Both 410/404 while the
+  // DISCOVERY_CALL_TOOLKIT_ENABLED flag is off.
+  "/beratung/einladung",
+  "/beratung/weiter",
   "/datenschutz",
   "/icon",
   "/impressum",
@@ -21,6 +27,7 @@ const PUBLIC_EXACT_ROUTES = [
   "/opengraph-image",
   "/pricing",
   "/quiz",
+  "/quiz/return",
   // freemium-scanner-first T18: free registration happens before an account
   // exists. The page itself 404s while the feature flag is off.
   "/registrierung",
@@ -38,6 +45,9 @@ const PUBLIC_EXACT_ROUTES = [
 
 const PUBLIC_ROUTE_PREFIXES = [
   "/auth",
+  // The email handoff renders only a generic, noindex app-opening page. The
+  // authenticated native result endpoint remains protected under /api/mobile/v1.
+  "/app/research",
   "/lp",
   "/partner",
   "/result",
@@ -52,6 +62,8 @@ const PUBLIC_ROUTE_PREFIXES = [
 ]
 
 const PUBLIC_API_EXACT_ROUTES = [
+  // Checkout preflight validates its session or opaque quiz lead in the handler.
+  "/api/checkout/eligibility",
   "/api/openai-ads/context",
   "/api/billing/contract-declarations",
   "/api/analytics/meta-offer-view",
@@ -63,6 +75,17 @@ const PUBLIC_API_EXACT_ROUTES = [
   "/api/auth/send-magic-link",
   "/api/auth/send-setup-link",
   "/api/auth/set-checkout-password",
+  // Calendly signs every delivery (HMAC, replay-window checked in the
+  // handler); a session can never exist on an inbound webhook.
+  "/api/calendly/webhook",
+  // Apple signs every App Store Server Notification (JWS verified in the handler);
+  // a session can never exist on an inbound webhook.
+  "/api/app-store/notifications",
+  // discovery-call toolkit: both are reached from the invite page before a
+  // session exists. They authenticate the signed invite credential themselves
+  // and refuse a revoked or rotated enrollment.
+  "/api/beratung/claim",
+  "/api/beratung/resolve",
   // A paid buyer reaches this capability before an account/session exists.
   // Keep it exact: all other billing APIs remain behind the billing prefix.
   "/api/billing/one-time-activation-status",
@@ -81,8 +104,15 @@ const PUBLIC_API_EXACT_ROUTES = [
 ]
 
 const PROTECTED_ROUTE_PREFIXES = [
+  // Native handlers validate their own bearer credentials.
+  "/api/mobile/v1",
   "/admin",
   "/anwendung",
+  // discovery-call toolkit: the checklist, the intake API and the admin cockpit
+  // all require a session. The two public invite pages and their two public APIs
+  // above are exact carve-outs and are matched first.
+  "/beratung",
+  "/api/beratung",
   "/chat",
   "/onboarding",
   "/plan-bereit",
@@ -92,6 +122,8 @@ const PROTECTED_ROUTE_PREFIXES = [
   "/routine",
   "/scan",
   "/tracker",
+  // Account-deletion cron (CRON_SECRET bearer; Task 7 adds the native endpoints under /api/mobile/v1).
+  "/api/account-deletion",
   "/api/admin",
   "/api/billing",
   "/api/chat",

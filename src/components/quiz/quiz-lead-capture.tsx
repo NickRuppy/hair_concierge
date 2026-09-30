@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useQuizStore } from "@/lib/quiz/store"
 import { useQuizFunnelPackageKey } from "@/components/quiz/quiz-funnel-package-provider"
 import { getQuizFunnelCopy } from "@/lib/quiz/funnel-copy"
@@ -8,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { QuizProgressBar } from "./quiz-progress-bar"
 import { QuizConsentSheet } from "./quiz-consent-sheet"
+import { QuizDiscoveryLeadSave } from "./quiz-discovery-lead-save"
 import { ArrowLeft } from "lucide-react"
 import { Icon } from "@/components/ui/icon"
 import { trackAppEvent } from "@/lib/analytics/track-app-event"
@@ -29,10 +31,28 @@ import {
   PARTNER_QUIZ_CONTEXT_ENDPOINT,
 } from "@/lib/partner-access/quiz-context"
 import {
+  buildDiscoveryChecklistPath,
+  DISCOVERY_CHECKLIST_PATH,
+  hasDiscoveryEnrollmentStamp,
+} from "@/lib/discovery/participant"
+import {
+  prefetchDiscoveryQuizContext,
+  takeDiscoveryQuizContext,
+} from "@/lib/quiz/discovery-context-prefetch"
+import { useDelayedLoader } from "@/lib/motion-loader"
+import { hasLockedLeadIdentity } from "@/lib/quiz/lead-capture-mode"
+import {
   isMigrationQuizRecoverySearch,
   resolveLeadCaptureRecoveryNextHref,
   resolveLeadCaptureServerNextHref,
 } from "@/lib/quiz/migration-prefill-init"
+import { QUIZ_EMAIL_RETURN_PACKAGE_KEY } from "@/lib/quiz/email-return-constants"
+import {
+  canInheritQuizEmailReturnConsent,
+  parseQuizEmailReturnEditIdentity,
+  type QuizEmailReturnEditIdentity,
+} from "@/lib/quiz/email-return-edit"
+import { trackQuizCompleted } from "./quiz-preparation"
 
 function isValidEmail(email: string) {
   return EMAIL_ADDRESS_PATTERN.test(email.trim().toLowerCase())
@@ -41,6 +61,58 @@ function isValidEmail(email: string) {
 /** Shown on blur of a malformed address — the server never sees that request. */
 const INVALID_EMAIL_MESSAGE = "Bitte eine gültige E-Mail-Adresse eingeben."
 
+/**
+ * The discovery lead this browser last saved, and the answers it was saved for.
+ * Browser-only (written after a successful save, never during a server render):
+ * it lets a Back onto the lead step recognise that nothing changed since the
+ * save, instead of posting a duplicate lead and bouncing forward again.
+ */
+let lastDiscoveryLeadSave: { leadId: string; answersKey: string } | null = null
+
+function discoveryAnswersKey(answers: Parameters<typeof canonicalizeQuizAnswers>[0]): string {
+  return JSON.stringify(canonicalizeQuizAnswers(answers))
+}
+
+type LeadCaptureUser = Parameters<typeof hasDiscoveryEnrollmentStamp>[0] & {
+  id?: string | null
+}
+
+/**
+ * The two context lookups the lead step may need, derived from the auth state alone — so
+ * the very first render already knows whether this is a partner creator, a discovery
+ * invitee or a regular visitor (no one-frame name form for anyone who never sees it).
+ */
+function getLeadCaptureLookupKeys(authLoading: boolean, user: LeadCaptureUser | null) {
+  const partnerLookupKey = getPartnerQuizContextLookupKey({
+    authLoading,
+    hasMetadataHint: hasPartnerAccessQuizHint(user),
+    search: typeof window === "undefined" ? "" : window.location.search,
+    userId: user?.id ?? null,
+  })
+  // A discovery participant carries their own `app_metadata` stamp and never the
+  // partner marker, so the two lookups are mutually exclusive. Partner keeps
+  // precedence, which leaves the creator flow byte-identical: this key is only
+  // ever non-null on a run the partner lookup has already called `regular`.
+  const discoveryLookupKey =
+    partnerLookupKey === "regular" && hasDiscoveryEnrollmentStamp(user) && user?.id
+      ? `discovery:${user.id}`
+      : null
+  return { partnerLookupKey, discoveryLookupKey }
+}
+
+/**
+ * Rendered next to the last question (batch 8, plan item 2): starts an invitee's enrollment
+ * check early, so the lead step's „Geschafft" rarely has to wait for it.
+ */
+export function QuizDiscoveryContextPrefetch() {
+  const { user, loading: authLoading } = useAuth()
+  const { discoveryLookupKey } = getLeadCaptureLookupKeys(authLoading, user)
+  useEffect(() => {
+    if (discoveryLookupKey) prefetchDiscoveryQuizContext(discoveryLookupKey)
+  }, [discoveryLookupKey])
+  return null
+}
+
 export function QuizLeadCapture() {
   const { user, loading: authLoading } = useAuth()
   const {
@@ -48,10 +120,12 @@ export function QuizLeadCapture() {
     leadCaptureMode,
     setLeadCaptureSubStep,
     setPartnerLeadIdentity,
+    setDiscoveryLeadIdentity,
     setRegularLeadCapture,
     lead,
     setLeadField,
     answers,
+    leadId,
     setLeadId,
     goNext,
     goBack,
@@ -62,8 +136,27 @@ export function QuizLeadCapture() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
   const [serverSuggestion, setServerSuggestion] = useState<string | null>(null)
-  const [contextStatus, setContextStatus] = useState<"checking" | "ready" | "unavailable">("ready")
+  const { partnerLookupKey, discoveryLookupKey } = getLeadCaptureLookupKeys(authLoading, user)
+  // Checking from the first render whenever a lookup will run, so nobody who is about to
+  // be recognised as a creator or invitee sees the regular name form for a frame.
+  const [contextStatus, setContextStatus] = useState<"checking" | "ready" | "unavailable">(() =>
+    partnerLookupKey !== "regular" || discoveryLookupKey ? "checking" : "ready",
+  )
   const [contextAttempt, setContextAttempt] = useState(0)
+  // The store outlives this component, so a SECOND visit to the lead step mounts
+  // with `leadCaptureMode: "discovery"` already set and `contextStatus` at its
+  // "ready" default — and the save step's own effect would run before the context
+  // effect below re-checks the enrollment. Discovery capture therefore waits for a
+  // participant answer from THIS mount.
+  const [discoveryContextConfirmed, setDiscoveryContextConfirmed] = useState(false)
+  // The enrollment check answered `regular` for a stamped account (revoked enrollment):
+  // she gets the regular capture after all.
+  const [discoveryDeclined, setDiscoveryDeclined] = useState(false)
+  const [returnContextStatus, setReturnContextStatus] = useState<"checking" | "ready">(
+    funnelPackageKey === QUIZ_EMAIL_RETURN_PACKAGE_KEY ? "checking" : "ready",
+  )
+  const [returnIdentity, setReturnIdentity] = useState<QuizEmailReturnEditIdentity | null>(null)
+  const [returnConsentRejected, setReturnConsentRejected] = useState(false)
   const emailInputRef = useRef<HTMLInputElement>(null)
   // A rejected address sends the user back to the e-mail step. The consent
   // question was already answered by then, so it must not be asked a second
@@ -75,21 +168,16 @@ export function QuizLeadCapture() {
   // successful save finishes it. Otherwise a later, unrelated address would be
   // sent with a consent answer the user never gave for it.
   const consentAnsweredRef = useRef(false)
+  const saveInFlightRef = useRef(false)
   const liveSuggestion = suggestEmailCorrection(lead.email)
-  const contextLookupKey = getPartnerQuizContextLookupKey({
-    authLoading,
-    hasMetadataHint: hasPartnerAccessQuizHint(user),
-    search: typeof window === "undefined" ? "" : window.location.search,
-    userId: user?.id ?? null,
-  })
 
   useEffect(() => {
-    if (contextLookupKey === "checking") {
+    if (partnerLookupKey === "checking") {
       setContextStatus("checking")
       return
     }
 
-    if (contextLookupKey === "regular") {
+    if (partnerLookupKey === "regular" && !discoveryLookupKey) {
       setRegularLeadCapture()
       setContextStatus("ready")
       return
@@ -97,15 +185,17 @@ export function QuizLeadCapture() {
 
     let active = true
     setContextStatus("checking")
-    void fetch(PARTNER_QUIZ_CONTEXT_ENDPOINT, {
-      headers: { Accept: "application/json" },
-      cache: "no-store",
-      credentials: "same-origin",
-    })
-      .then(async (response) => {
-        if (!response.ok) return { status: "unavailable" } as const
-        return parsePartnerQuizContextPayload(await response.json().catch(() => null))
-      })
+    const lookup = discoveryLookupKey
+      ? takeDiscoveryQuizContext(discoveryLookupKey)
+      : fetch(PARTNER_QUIZ_CONTEXT_ENDPOINT, {
+          headers: { Accept: "application/json" },
+          cache: "no-store",
+          credentials: "same-origin",
+        }).then(async (response) => {
+          if (!response.ok) return { status: "unavailable" } as const
+          return parsePartnerQuizContextPayload(await response.json().catch(() => null))
+        })
+    void lookup
       .then((payload) => {
         if (!active) return
         if (payload.status === "creator") {
@@ -113,7 +203,14 @@ export function QuizLeadCapture() {
           setContextStatus("ready")
           return
         }
+        if (payload.status === "participant") {
+          setDiscoveryLeadIdentity({ name: payload.name, email: payload.email })
+          setDiscoveryContextConfirmed(true)
+          setContextStatus("ready")
+          return
+        }
         if (payload.status === "regular") {
+          if (discoveryLookupKey) setDiscoveryDeclined(true)
           setRegularLeadCapture()
           setContextStatus("ready")
           return
@@ -127,7 +224,62 @@ export function QuizLeadCapture() {
     return () => {
       active = false
     }
-  }, [contextAttempt, contextLookupKey, setPartnerLeadIdentity, setRegularLeadCapture])
+  }, [
+    contextAttempt,
+    discoveryLookupKey,
+    partnerLookupKey,
+    setDiscoveryLeadIdentity,
+    setPartnerLeadIdentity,
+    setRegularLeadCapture,
+  ])
+
+  useEffect(() => {
+    if (funnelPackageKey !== QUIZ_EMAIL_RETURN_PACKAGE_KEY) {
+      setReturnContextStatus("ready")
+      setReturnIdentity(null)
+      setReturnConsentRejected(false)
+      return
+    }
+
+    let active = true
+    setReturnContextStatus("checking")
+    void fetch("/api/quiz/email-return/context?mode=edit", {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+      credentials: "same-origin",
+    })
+      .then(async (response) => {
+        if (!response.ok) return null
+        return parseQuizEmailReturnEditIdentity(await response.json().catch(() => null))
+      })
+      .then((identity) => {
+        if (!active) return
+        if (!identity) {
+          setReturnIdentity(null)
+          setReturnConsentRejected(true)
+          setReturnContextStatus("ready")
+          return
+        }
+        const currentLead = useQuizStore.getState().lead
+        if (!currentLead.name.trim() && identity.name) setLeadField("name", identity.name)
+        if (!currentLead.email.trim()) {
+          setLeadField("email", identity.email)
+          setLeadField("marketingConsent", identity.marketingConsent)
+        }
+        setReturnIdentity(identity)
+        setReturnContextStatus("ready")
+      })
+      .catch(() => {
+        if (!active) return
+        setReturnIdentity(null)
+        setReturnConsentRejected(true)
+        setReturnContextStatus("ready")
+      })
+
+    return () => {
+      active = false
+    }
+  }, [funnelPackageKey, setLeadField])
 
   useEffect(() => {
     if (leadCaptureSubStep !== "email") return
@@ -174,6 +326,10 @@ export function QuizLeadCapture() {
     }
     setError("")
     setServerSuggestion(null)
+    if (canInheritQuizEmailReturnConsent(returnIdentity, lead.email, returnConsentRejected)) {
+      void handleConsent(true, "inherited")
+      return
+    }
     if (consentAnsweredRef.current) {
       void handleConsent(lead.marketingConsent)
       return
@@ -200,7 +356,9 @@ export function QuizLeadCapture() {
     // is what moves the user to the e-mail step once the response lands.
     if (saving && !isRecoveryBack) return
     if (leadCaptureSubStep === "consent") {
-      if (leadCaptureMode === "partner") {
+      // A locked identity (partner, discovery) has no e-mail step behind the
+      // consent sheet, so Back leaves lead capture entirely.
+      if (hasLockedLeadIdentity(leadCaptureMode)) {
         consentAnsweredRef.current = false
         goBack()
         return
@@ -221,6 +379,7 @@ export function QuizLeadCapture() {
     }
   }, [goBack, leadCaptureMode, leadCaptureSubStep, saving, setLeadCaptureSubStep])
   const requestBack = useQuizBrowserBack(handleBack)
+  const router = useRouter()
 
   /**
    * Where a failed save puts the user: always the e-mail step, with the server
@@ -229,10 +388,11 @@ export function QuizLeadCapture() {
    * The retry after a rejection is submitted from the e-mail step itself, so a
    * second rejection must not move at all — a Back request from there would
    * step on to the name screen and clear both the message and the suggestion.
-   * Partner capture has no e-mail step; its error stays on the consent sheet.
+   * Locked-identity capture (partner, discovery) has no e-mail step; its error
+   * stays on the consent sheet.
    */
   const returnToEmailStep = () => {
-    if (leadCaptureMode === "partner") return
+    if (hasLockedLeadIdentity(leadCaptureMode)) return
     if (leadCaptureSubStep !== "consent") return
     // Routed through the Back request so the browser history depth stays in
     // sync; the consent branch of `handleBack` keeps the error and suggestion.
@@ -243,11 +403,17 @@ export function QuizLeadCapture() {
     requestBack()
   }
 
-  const handleConsent = async (accepted: boolean) => {
-    if (saving) return
+  const handleConsent = async (
+    accepted: boolean,
+    consentSource: "prompt" | "inherited" = "prompt",
+  ) => {
+    // The ref, not the `saving` state: two taps in the same frame (a double retry) both
+    // still read the old state, and each would post its own lead.
+    if (saving || saveInFlightRef.current) return
+    saveInFlightRef.current = true
 
     setLeadField("marketingConsent", accepted)
-    consentAnsweredRef.current = true
+    consentAnsweredRef.current = consentSource === "prompt"
     setSaving(true)
     setError("")
 
@@ -260,6 +426,7 @@ export function QuizLeadCapture() {
           name: lead.name.trim(),
           email: lead.email.trim().toLowerCase(),
           marketingConsent: accepted,
+          marketingConsentSource: consentSource,
           quizAnswers: canonicalizeQuizAnswers(answers),
           funnelEventId,
           migrationRecovery: isMigrationQuizRecoverySearch(window.location.search),
@@ -280,16 +447,35 @@ export function QuizLeadCapture() {
         if (res.status === 422) {
           const detail: unknown = data
           if (
+            consentSource === "inherited" &&
+            detail &&
+            typeof detail === "object" &&
+            "code" in detail &&
+            detail.code === "return_consent_unavailable"
+          ) {
+            consentAnsweredRef.current = false
+            setReturnConsentRejected(true)
+            setLeadField("marketingConsent", false)
+            setError("")
+            setServerSuggestion(null)
+            setLeadCaptureSubStep("consent")
+            return
+          }
+          if (
             detail &&
             typeof detail === "object" &&
             "code" in detail &&
             detail.code === "invited_email_mismatch"
           ) {
             setServerSuggestion(null)
+            // One message per mode: a locked identity cannot be corrected by the
+            // person in front of the screen, a regular one can.
             setError(
               leadCaptureMode === "partner"
                 ? "Dein persönlicher Zugang konnte gerade nicht bestätigt werden."
-                : "Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos.",
+                : leadCaptureMode === "discovery"
+                  ? "Deine Einladung konnte gerade nicht bestätigt werden."
+                  : "Bitte verwende die E-Mail-Adresse deines eingeladenen Kontos.",
             )
             returnToEmailStep()
             window.scrollTo(0, 0)
@@ -305,6 +491,7 @@ export function QuizLeadCapture() {
           }
           setServerSuggestion(suggestion)
           setError(rejection?.error ?? EMAIL_DELIVERABILITY_REJECTION_MESSAGE)
+          if (consentSource === "inherited") consentAnsweredRef.current = false
           returnToEmailStep()
           window.scrollTo(0, 0)
           return
@@ -314,6 +501,13 @@ export function QuizLeadCapture() {
 
       // The submission is done, so the recovery it belonged to is over too.
       consentAnsweredRef.current = false
+      // The server says which journey actually saved the lead. Only a discovery save may
+      // lead on to the checklist — a revoked enrollment (a stale prefetched answer) saves
+      // an ordinary lead and continues the regular way.
+      const savedAsDiscovery = data?.journey === "discovery"
+      if (savedAsDiscovery) {
+        lastDiscoveryLeadSave = { leadId: data.leadId, answersKey: discoveryAnswersKey(answers) }
+      }
       setLeadId(data.leadId)
       trackAppEvent("quiz_lead_captured", {
         leadId: data.leadId,
@@ -325,16 +519,101 @@ export function QuizLeadCapture() {
         window.location.assign(serverNextHref)
         return
       }
+      if (savedAsDiscovery) {
+        // Her „Geschafft" is already on screen and its Weiter goes straight to the
+        // checklist — there is no preparation step to advance to.
+        trackQuizCompleted(answers, data.leadId)
+        return
+      }
+      if (leadCaptureMode === "discovery") {
+        setDiscoveryDeclined(true)
+        setRegularLeadCapture()
+      }
       goNext()
     } catch {
       setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.")
+      if (consentSource === "inherited") consentAnsweredRef.current = false
       returnToEmailStep()
     } finally {
+      saveInFlightRef.current = false
       setSaving(false)
     }
   }
 
-  if (contextLookupKey === "checking" || contextStatus !== "ready") {
+  const discoveryAwaitingContext = leadCaptureMode === "discovery" && !discoveryContextConfirmed
+  const inviteeEnding =
+    (discoveryLookupKey !== null || leadCaptureMode === "discovery") && !discoveryDeclined
+  const discoverySaved =
+    leadId !== null &&
+    lastDiscoveryLeadSave?.leadId === leadId &&
+    lastDiscoveryLeadSave.answersKey === discoveryAnswersKey(answers)
+
+  // The loader for the context lookups: its text only after 300 ms (batch 8 loader rule).
+  const contextLoaderVisible = useDelayedLoader(
+    partnerLookupKey === "checking" ||
+      (!inviteeEnding && (contextStatus === "checking" || returnContextStatus === "checking")),
+  )
+
+  useEffect(() => {
+    if (!inviteeEnding) return
+    router.prefetch(DISCOVERY_CHECKLIST_PATH)
+    if (leadId) router.prefetch(buildDiscoveryChecklistPath(leadId))
+  }, [inviteeEnding, leadId, router])
+
+  // A discovery participant never sees the name, e-mail or consent screens: „Geschafft"
+  // shows at once, and the enrollment check plus the profile save (`marketingConsent:
+  // false` — discovery leads are kept out of every marketing pipeline) run behind it.
+  if (inviteeEnding && partnerLookupKey !== "checking") {
+    return (
+      <div className="flex flex-col" key="discovery-ending">
+        <div className="mb-4 flex items-center gap-3">
+          {/* Never dimmed for the background save — a Back tap during it is ignored. */}
+          <button
+            onClick={requestBack}
+            aria-label="Zurück"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+            type="button"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+          <div className="flex-1">
+            <QuizProgressBar current={QUIZ_TOTAL_QUESTIONS} total={QUIZ_TOTAL_QUESTIONS} />
+          </div>
+        </div>
+        <QuizDiscoveryLeadSave
+          canSave={leadCaptureMode === "discovery" && discoveryContextConfirmed}
+          error={
+            contextStatus === "unavailable"
+              ? "Deine Angaben konnten gerade nicht geladen werden."
+              : saving
+                ? ""
+                : error
+          }
+          onContinue={() => {
+            if (!leadId) return
+            trackAppEvent("quiz_analysis_commitment", { choice: "ja", leadId })
+            router.push(buildDiscoveryChecklistPath(leadId))
+          }}
+          onRetry={() => {
+            if (contextStatus === "unavailable") {
+              setContextAttempt((attempt) => attempt + 1)
+              return
+            }
+            void handleConsent(false)
+          }}
+          onSave={() => void handleConsent(false)}
+          saved={discoverySaved}
+        />
+      </div>
+    )
+  }
+
+  if (
+    partnerLookupKey === "checking" ||
+    contextStatus !== "ready" ||
+    returnContextStatus !== "ready" ||
+    discoveryAwaitingContext
+  ) {
     return (
       <div className="flex flex-col">
         <div className="mb-4 flex items-center gap-3">
@@ -350,9 +629,12 @@ export function QuizLeadCapture() {
             <QuizProgressBar current={QUIZ_TOTAL_QUESTIONS} total={QUIZ_TOTAL_QUESTIONS} />
           </div>
         </div>
-        {contextLookupKey === "checking" || contextStatus === "checking" ? (
+        {partnerLookupKey === "checking" ||
+        contextStatus === "checking" ||
+        returnContextStatus === "checking" ||
+        (discoveryAwaitingContext && contextStatus === "ready") ? (
           <p className="text-center text-sm text-muted-foreground" role="status">
-            Dein Zugang wird geladen …
+            {contextLoaderVisible ? "Dein Zugang wird geladen …" : null}
           </p>
         ) : (
           <div className="rounded-2xl border border-border bg-background p-5 text-center shadow-sm">
@@ -372,23 +654,27 @@ export function QuizLeadCapture() {
     )
   }
 
+  const progressHeader = (
+    <div className="flex items-center gap-3 mb-4">
+      <button
+        onClick={saving ? undefined : requestBack}
+        aria-label="Zurück"
+        aria-disabled={saving}
+        disabled={saving}
+        className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors disabled:pointer-events-none disabled:opacity-40"
+      >
+        <ArrowLeft className="h-5 w-5" />
+      </button>
+      <div className="flex-1">
+        <QuizProgressBar current={QUIZ_TOTAL_QUESTIONS} total={QUIZ_TOTAL_QUESTIONS} />
+      </div>
+    </div>
+  )
+
   return (
     <div className="flex flex-col" key={leadCaptureSubStep}>
       {/* Progress bar */}
-      <div className="flex items-center gap-3 mb-4">
-        <button
-          onClick={saving ? undefined : requestBack}
-          aria-label="Zurück"
-          aria-disabled={saving}
-          disabled={saving}
-          className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors disabled:pointer-events-none disabled:opacity-40"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-        <div className="flex-1">
-          <QuizProgressBar current={QUIZ_TOTAL_QUESTIONS} total={QUIZ_TOTAL_QUESTIONS} />
-        </div>
-      </div>
+      {progressHeader}
 
       {/* Plum banner */}
       <div
@@ -501,7 +787,8 @@ export function QuizLeadCapture() {
       )}
 
       {/* Consent inline card */}
-      {leadCaptureMode === "partner" && error ? (
+      {/* A locked identity never reaches the e-mail step, so its errors are shown here. */}
+      {hasLockedLeadIdentity(leadCaptureMode) && error ? (
         <p
           className="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-700"
           role="alert"

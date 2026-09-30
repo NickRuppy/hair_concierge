@@ -1,7 +1,11 @@
 import { expect, test, type Page } from "@playwright/test"
 
 import { SCAN_CONFIRM_LABEL, SCAN_HINT_DEFAULT, SCAN_HINT_SPOTTED } from "../src/lib/scan/guidance"
-import { SCAN_UNKNOWN_BRIDGE, SCAN_UNKNOWN_SUBLINE } from "../src/lib/scan/verdict-labels"
+import {
+  SCAN_UNKNOWN_BRIDGE,
+  SCAN_UNKNOWN_HEADLINE,
+  SCAN_UNKNOWN_SUBLINE,
+} from "../src/lib/scan/verdict-labels"
 
 import {
   EAN_PRODUCT_A,
@@ -9,6 +13,7 @@ import {
   EAN_UNKNOWN,
   PENDING_SUBMISSION,
   PRODUCT_A_ID,
+  UNKNOWN_RESULT,
   REVEALED_ALTERNATIVES,
   REVEALED_ALTERNATIVE_NAME,
   maskedResolvePayloadFor,
@@ -35,6 +40,109 @@ import {
  */
 
 const LAB_PATH = "/labs/scan"
+
+test("dm identified: compact confirmation, proxied image, category override and explicit submit", async ({
+  page,
+}, testInfo) => {
+  await page.setViewportSize({ width: 375, height: 812 })
+  const api = await installScanApi(page)
+  const pageErrors: string[] = []
+  const directRetailerRequests: string[] = []
+  page.on("pageerror", (error) => pageErrors.push(error.message))
+  page.on("request", (request) => {
+    if (new URL(request.url()).hostname === "products.dm-static.com")
+      directRetailerRequests.push(request.url())
+  })
+  await page.route("**/api/scan/resolve", (route) =>
+    route.fulfill({
+      json: {
+        ...UNKNOWN_RESULT,
+        identified: {
+          source: "dm",
+          dan: "1234567",
+          productName: "Shampoo Rosmarin Revitalising, 250 ml",
+          brand: "WELEDA",
+          imageUrl: "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/example",
+          suggestedCategory: "shampoo",
+        },
+      },
+    }),
+  )
+  // Assert the browser uses our optimizer, with a deterministic image response; no retailer/DB traffic.
+  await page.route("**/_next/image?**", (route) =>
+    route.fulfill({
+      contentType: "image/png",
+      body: Buffer.from(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aVh8AAAAASUVORK5CYII=",
+        "base64",
+      ),
+    }),
+  )
+  await openLab(page)
+  await waitForScanningLoop(page)
+  await emit(page, EAN_UNKNOWN)
+  const dialog = page.getByRole("dialog").filter({ hasText: "Gefunden – jetzt prüfen wir es." })
+  await expect(dialog.getByText("Weleda", { exact: true })).toBeVisible()
+  await expect(dialog.getByRole("button", { name: "Ja, als Shampoo" })).toBeVisible()
+  const displayedImage = new URL((await dialog.locator("img").getAttribute("src"))!, page.url())
+  expect(displayedImage.origin).toBe(new URL(page.url()).origin)
+  expect(displayedImage.pathname).toBe("/_next/image")
+  const dimensions = await dialog.evaluate((element) => {
+    const scroller = element.querySelector(".overflow-y-auto")!
+    return {
+      height: element.getBoundingClientRect().height,
+      scroll: scroller.scrollHeight - scroller.clientHeight,
+    }
+  })
+  await page.screenshot({ path: testInfo.outputPath("dm-confirmation-375.png") })
+  expect(dimensions.scroll).toBeLessThanOrEqual(1)
+  expect(dimensions.height).toBeLessThanOrEqual(406)
+  expect(api.submitBodies).toEqual([])
+  await dialog.getByRole("button", { name: "Wofür anderes" }).click()
+  await expect(dialog.getByText("Wobei benutzt du es?", { exact: true })).toBeVisible()
+  await expect(dialog.getByRole("button", { name: "Shampoo", exact: true })).toHaveCount(0)
+  expect(api.submitBodies).toEqual([])
+  await dialog.getByRole("button", { name: "Conditioner", exact: true }).click()
+  await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "pending")
+  expect(api.submitBodies).toEqual([
+    { identifier: { type: "ean", value: EAN_UNKNOWN }, category: "conditioner" },
+  ])
+  expect(directRetailerRequests).toEqual([])
+  expect(pageErrors).toEqual([])
+})
+
+test("dm identified: ambiguous category and missing image stay usable, closing does not submit", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 812 })
+  const api = await installScanApi(page)
+  await page.route("**/api/scan/resolve", (route) =>
+    route.fulfill({
+      json: {
+        ...UNKNOWN_RESULT,
+        identified: {
+          source: "dm",
+          dan: "1234567",
+          productName: "Nutri Care 2in1, 200 ml",
+          brand: "alverde Naturkosmetik",
+          imageUrl: null,
+          suggestedCategory: null,
+        },
+      },
+    }),
+  )
+  await openLab(page)
+  await waitForScanningLoop(page)
+  await emit(page, EAN_UNKNOWN)
+  await expect(page.getByText("Nutri Care 2in1, 200 ml", { exact: true })).toBeVisible()
+  await expect(
+    page.getByRole("img", { name: "Nutri Care 2in1, 200 ml: Bild nicht verfügbar" }),
+  ).toBeVisible()
+  await expect(page.getByRole("button", { name: "Shampoo", exact: true })).toBeVisible()
+  await closeSheetContaining(page, "Nutri Care 2in1").click()
+  await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "scanning")
+  expect(api.submitBodies).toEqual([])
+})
 
 // Long enough to prove a negative without being so long that a legitimately-delayed
 // transition (the 3s search fallback) would land inside the window.
@@ -193,10 +301,21 @@ async function installScanApi(page: Page): Promise<ScanApiController> {
 
 async function openLab(
   page: Page,
-  boot: { holdCamera?: boolean; denyCamera?: string; tier?: "free" | "premium" } = {},
+  boot: {
+    holdCamera?: boolean
+    denyCamera?: string
+    tier?: "free" | "premium"
+    /**
+     * Task 7: stands in for the SERVER-derived `retailerSearchEnabled` prop
+     * `/scan/page.tsx` passes in production — see `scan-lab-client.tsx`'s
+     * `__SCAN_LAB_RETAILER_SEARCH_ENABLED` doc comment. Omitted, the search sheet's dm
+     * lane stays inert (`false`), same as every other caller.
+     */
+    retailerSearchEnabled?: boolean
+  } = {},
 ): Promise<void> {
   await page.addInitScript(
-    ({ holdCamera, denyCamera, tier }) => {
+    ({ holdCamera, denyCamera, tier, retailerSearchEnabled }) => {
       window.localStorage.setItem(
         "chaarlie_cookie_consent_v1",
         JSON.stringify({ essential: true, analytics: false, marketing: false, ts: Date.now() }),
@@ -206,8 +325,14 @@ async function openLab(
       // Fix round 1 (F1): stands in for the SERVER-derived `tier` prop `/scan/page.tsx`
       // passes in production — see `scan-lab-client.tsx`'s `__SCAN_LAB_TIER` doc comment.
       if (tier) window.__SCAN_LAB_TIER = tier
+      if (retailerSearchEnabled) window.__SCAN_LAB_RETAILER_SEARCH_ENABLED = true
     },
-    { holdCamera: boot.holdCamera ?? false, denyCamera: boot.denyCamera ?? "", tier: boot.tier },
+    {
+      holdCamera: boot.holdCamera ?? false,
+      denyCamera: boot.denyCamera ?? "",
+      tier: boot.tier,
+      retailerSearchEnabled: boot.retailerSearchEnabled ?? false,
+    },
   )
   await page.goto(LAB_PATH)
   await page.waitForFunction(() => Boolean(window.__scanLab))
@@ -447,7 +572,7 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
       (sample) => sample.step === "scanning" && sample.calls === 0,
     )
 
-    await closeSheetContaining(page, "Ohne Scan finden").click()
+    await closeSheetContaining(page, "Produkt finden").click()
     await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "result")
     await expect(page.getByText("Lab Shampoo Alpha")).toBeVisible()
     expect(api.resolveBodies).toHaveLength(1)
@@ -489,7 +614,7 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     )
 
     // And it was not consumed either: the same code, never moved, still resolves once.
-    await closeSheetContaining(page, "Ohne Scan finden").click()
+    await closeSheetContaining(page, "Produkt finden").click()
     await emit(page, EAN_PRODUCT_A)
     await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "result")
     await expect(page.getByText("Lab Shampoo Alpha")).toBeVisible()
@@ -583,7 +708,7 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     // The FIRST failure pops the fallback the user actually needs.
     await expect(flowRoot(page)).toHaveAttribute("data-scan-auxiliary", "search")
 
-    await closeSheetContaining(page, "Ohne Scan finden").click()
+    await closeSheetContaining(page, "Produkt finden").click()
     await page.getByRole("button", { name: "Kamera erneut versuchen" }).click()
 
     await expect(flowRoot(page)).toHaveAttribute("data-scan-camera", "live")
@@ -750,6 +875,7 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
   test("copy: the unknown sheet bridges from the read barcode to the missing product", async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 375, height: 812 })
     await installScanApi(page)
     await openLab(page)
     await waitForScanningLoop(page)
@@ -769,6 +895,21 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     )
     expect(order.bridge).toBeGreaterThanOrEqual(0)
     expect(order.bridge).toBeLessThan(order.subline)
+
+    // The close button must not cover the last words of the fallback heading on a phone.
+    const dialog = page.getByRole("dialog").filter({ hasText: SCAN_UNKNOWN_HEADLINE })
+    const heading = dialog.locator("h2.font-header")
+    const close = dialog.getByRole("button", { name: "Schließen" }).first()
+    const headingBox = await heading.boundingBox()
+    const closeBox = await close.boundingBox()
+    const headingPaddingRight = await heading.evaluate((element) =>
+      Number.parseFloat(getComputedStyle(element).paddingRight),
+    )
+    expect(headingBox).not.toBeNull()
+    expect(closeBox).not.toBeNull()
+    expect(headingBox!.x + headingBox!.width - headingPaddingRight).toBeLessThanOrEqual(
+      closeBox!.x - 8,
+    )
   })
 
   /* ------------------------------------------- T9: the free tier's verdict states */
@@ -971,7 +1112,155 @@ test.describe("/scan client flow (fake camera + fake detector)", () => {
     await expect(flowRoot(page)).toHaveAttribute("data-scan-auxiliary", "search")
 
     // Nothing failed to read here — the user simply asked for the search.
-    await expect(page.getByRole("heading", { name: "Ohne Scan finden" })).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Produkt finden" })).toBeVisible()
     await expect(page.getByRole("heading", { name: "Barcode nicht lesbar?" })).toHaveCount(0)
+  })
+
+  /* ------------------------------------------- T7: search-sheet retailer lane + intake */
+
+  test("T7 retailer search: the dm lane renders next to the catalog, and a dm-row tap reaches the unknown sheet", async ({
+    page,
+  }) => {
+    await installScanApi(page)
+    await openLab(page, { retailerSearchEnabled: true })
+    await waitForScanningLoop(page)
+
+    await page.route("**/api/scan/search?*", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          results: [
+            {
+              id: PRODUCT_A_ID,
+              name: "Lab Shampoo Alpha",
+              brand: "Chaarlie Lab",
+              category: "shampoo",
+              categoryLabel: "Shampoo",
+              imageUrl: null,
+            },
+          ],
+          truncated: false,
+        }),
+      }),
+    )
+    const dmGtin = "4006381333962"
+    const dmName = "Weleda Shampoo Rosmarin"
+    await page.route("**/api/scan/search-retailer?*", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          catalog: [],
+          retailer: [{ gtin: dmGtin, name: dmName, brand: "WELEDA", categoryLabel: "Shampoo" }],
+          retailerOutcome: "ok",
+        }),
+      }),
+    )
+
+    await page.getByRole("button", { name: "Produkt suchen" }).click()
+    await expect(page.getByRole("heading", { name: "Produkt finden" })).toBeVisible()
+
+    await page.getByLabel("Produktname oder Marke").fill("weleda")
+    await page.getByRole("button", { name: "Suchen" }).click()
+
+    // Both sections render: the catalog carries the `In deinem Chaarlie-Katalog` label
+    // only once the dm lane is active, and the dm-only row sits under its own heading.
+    await expect(page.getByText("In deinem Chaarlie-Katalog")).toBeVisible()
+    await expect(page.getByText("Lab Shampoo Alpha")).toBeVisible()
+    await expect(page.getByText("Weitere Treffer")).toBeVisible()
+    await expect(page.getByText(dmName)).toBeVisible()
+
+    await page.route("**/api/scan/resolve", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(UNKNOWN_RESULT),
+      }),
+    )
+
+    await page.getByRole("button", { name: new RegExp(dmName) }).click()
+
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "unknown")
+    // Twice on purpose (same as the other unknown-sheet coverage above): the sheet's
+    // sr-only dialog title and the visible heading both carry the bridge headline.
+    await expect(page.getByText(SCAN_UNKNOWN_HEADLINE)).toHaveCount(2)
+  })
+
+  test("T7 recovery intake: an empty submit reaches the research intake and a pending submission", async ({
+    page,
+  }) => {
+    await installScanApi(page)
+    await openLab(page, { retailerSearchEnabled: true })
+    await waitForScanningLoop(page)
+
+    await page.route("**/api/scan/search?*", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ results: [], truncated: false }),
+      }),
+    )
+    await page.route("**/api/scan/search-retailer?*", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ catalog: [], retailer: [], retailerOutcome: "ok" }),
+      }),
+    )
+
+    await page.getByRole("button", { name: "Produkt suchen" }).click()
+    const query = "Unbekanntes Wunderserum"
+    await page.getByLabel("Produktname oder Marke").fill(query)
+    await page.getByRole("button", { name: "Suchen" }).click()
+
+    // Both lanes came back empty after an explicit submit: the terminal empty state, not
+    // the quiet pre-submit invitation.
+    await expect(page.getByText("Dazu haben wir nichts gefunden.")).toBeVisible()
+    await page.getByRole("button", { name: "Für dich prüfen lassen" }).click()
+
+    await expect(page.getByRole("heading", { name: "Wir prüfen es für dich" })).toBeVisible()
+    await expect(page.getByLabel("Produktname")).toHaveValue(query)
+
+    await page.getByLabel("Marke").fill("Chaarlie Lab")
+
+    await page.route("**/api/scan/submit", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(PENDING_SUBMISSION),
+      }),
+    )
+
+    await page.getByRole("button", { name: "Shampoo", exact: true }).click()
+
+    await expect(flowRoot(page)).toHaveAttribute("data-scan-step", "pending")
+    await expect(
+      page.getByText("Meist innerhalb von 24 Stunden – wir melden uns im Chat."),
+    ).toBeVisible()
+    // The search sheet is closed, not stacked underneath the pending sheet — exactly one
+    // dialog is on screen, and it is not the search sheet.
+    await expect(page.getByRole("dialog")).toHaveCount(1)
+    await expect(page.getByRole("heading", { name: "Produkt finden" })).toHaveCount(0)
+  })
+
+  test("T7 flag off: submitting a search never calls the retailer lane", async ({ page }) => {
+    await installScanApi(page)
+    await openLab(page)
+    await waitForScanningLoop(page)
+
+    const retailerRequests: string[] = []
+    page.on("request", (request) => {
+      if (request.url().includes("/api/scan/search-retailer")) retailerRequests.push(request.url())
+    })
+
+    await page.getByRole("button", { name: "Produkt suchen" }).click()
+    await page.getByLabel("Produktname oder Marke").fill("weleda")
+    await page.getByRole("button", { name: "Suchen" }).click()
+
+    // The default installer's catalog stub is empty, and with the flag off the terminal
+    // empty state does not wait on a dm lane that will never fire — a solid settle point.
+    await expect(page.getByText("Dazu haben wir nichts gefunden.")).toBeVisible()
+    expect(retailerRequests).toEqual([])
   })
 })

@@ -117,7 +117,7 @@ test("organic offer renders the approved calm hierarchy with exactly one supplie
   assert.match(html, /Vorher und[\s\S]*nachher[\s\S]*mit Chaarlie/)
   assert.match(html, /So beschreiben es Frauen in unserer Umfrage/)
   assert.match(html, /Über 4\.000 Frauen haben uns geantwortet/)
-  assert.match(html, /Das sagen Kundinnen über Chaarlie/)
+  assert.match(html, /Das sagen unsere Nutzer über Chaarlie/)
   assert.match(html, /14 Tage Geld-zurück-Garantie/)
   assert.match(html, /Häufige Fragen/)
   assert.equal((html.match(/data-offer-faq=/g) ?? []).length, 5)

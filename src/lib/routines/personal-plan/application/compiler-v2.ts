@@ -376,11 +376,24 @@ function itemWithPointerFacts(
 function withUniversalBetweenWashMethods(
   item: NormalizedRoutineItem,
   pointers: readonly ProductApplicationPointerV2[],
+  productPointers: readonly ProductApplicationPointerV2[],
 ): ProductApplicationPointerV2[] {
   const isLeaveIn = item.category === "leave_in" && item.role === "leave_in"
   const isConventionalOilRole =
     item.category === "oil" && (item.role === "finish" || item.role === "leave_in")
   if (!isLeaveIn && !isConventionalOilRole) return [...pointers]
+  // O3: an Oil reaches non-wash days only through a sourced dry-hair use.
+  if (
+    isConventionalOilRole &&
+    !productPointers.some(
+      (pointer) =>
+        pointer.scope.productId === item.productId &&
+        pointer.scope.category === "oil" &&
+        pointer.applicationFamily === "dry_finish" &&
+        pointer.runtimeBlockerCode === null,
+    )
+  )
+    return [...pointers]
   const conventional = pointers.find(
     (pointer) =>
       (isLeaveIn
@@ -455,7 +468,7 @@ export function compileApplicationViewV2({
       })
       return []
     }
-    matches = withUniversalBetweenWashMethods(item, matches)
+    matches = withUniversalBetweenWashMethods(item, matches, productPointers)
     return matches.flatMap((pointer) => {
       if (
         pointer.requiredCompanionProductId !== null &&

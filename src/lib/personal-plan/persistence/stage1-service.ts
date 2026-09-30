@@ -24,6 +24,7 @@ export type Stage1Entitlement = {
     | "partner"
     | "migration"
     | "freemium"
+    | "trial"
     | null
 }
 

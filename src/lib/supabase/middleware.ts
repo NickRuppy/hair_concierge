@@ -29,6 +29,12 @@ import {
   type RouteEnvironment,
 } from "@/lib/auth/route-classification"
 import { isFreemiumScannerFirstEnabled } from "@/lib/entitlements/flag"
+import { isDiscoveryCallToolkitEnabled } from "@/lib/discovery/flag"
+import {
+  DISCOVERY_ACCESS_KIND,
+  DISCOVERY_CHECKLIST_PATH,
+  DISCOVERY_ENROLLMENT_METADATA_KEY,
+} from "@/lib/discovery/participant"
 
 const AUTHENTICATED_APP_ROUTE_PREFIXES = ["/anwendung", "/chat", "/routine", "/scan", "/tracker"]
 export const AUTHENTICATED_SESSION_RESPONSE_HEADER = "x-chaarlie-authenticated-session"
@@ -56,11 +62,12 @@ const SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP = [
   "/api/billing/stripe-trial-continuation/reconcile",
   "/api/billing/trial-required-notices/reconcile",
   "/api/billing/trial-reminders/reconcile",
-  "/api/billing/slack-notifications/reconcile",
   "/api/billing/public-contract-declaration-receipts/reconcile",
   "/api/customerio/profile-sync/reconcile",
+  "/api/account-deletion/reconcile",
 ]
 const UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP = [
+  "/api/checkout/eligibility",
   "/api/openai-ads/context",
   "/api/billing/contract-declarations",
   "/api/billing/one-time-activation-status",
@@ -241,6 +248,39 @@ export function isPartnerAccessGuest(user: { app_metadata?: Record<string, unkno
   )
 }
 
+/**
+ * A claimed discovery-call participant, read from the JWT alone (no database
+ * round trip in the Edge runtime). The stamp is written only by
+ * `POST /api/beratung/claim` and cleared again by `revokeDiscoveryEnrollment`,
+ * which is what makes a revocation take effect here.
+ */
+export function isDiscoveryParticipant(user: { app_metadata?: Record<string, unknown> }) {
+  return (
+    user.app_metadata?.access_kind === DISCOVERY_ACCESS_KIND &&
+    typeof user.app_metadata?.[DISCOVERY_ENROLLMENT_METADATA_KEY] === "string"
+  )
+}
+
+/**
+ * Everything a participant needs for invite → quiz → checklist, and nothing
+ * else. `/api/scan` is on the list because the checklist reuses the Produkt-Scan
+ * identify endpoints; the gate returns before the subscription paywall, so those
+ * stay reachable for an account with no subscription and the freemium flag off.
+ */
+const DISCOVERY_PARTICIPANT_ROUTE_PREFIXES = [
+  "/beratung",
+  "/api/beratung",
+  "/quiz",
+  "/api/quiz",
+  "/api/scan",
+]
+
+export function isDiscoveryParticipantAllowedPath(pathname: string) {
+  return DISCOVERY_PARTICIPANT_ROUTE_PREFIXES.some((prefix) =>
+    pathMatchesRoutePrefix(pathname, prefix),
+  )
+}
+
 export function getFieldTestEndedRoute(user: { app_metadata?: Record<string, unknown> }) {
   return user.app_metadata?.field_test_flow === "regular_quiz"
     ? "/test/quiz/beendet"
@@ -407,6 +447,7 @@ export function createUpdateSession(
     }
 
     if (
+      pathMatchesRoutePrefix(pathname, "/api/mobile/v1") ||
       SERVER_AUTHENTICATED_ROUTES_WITHOUT_SESSION_LOOKUP.includes(pathname) ||
       UNAUTHENTICATED_EXACT_ROUTES_WITHOUT_SESSION_LOOKUP.includes(pathname) ||
       ROUTES_WITHOUT_AUTH_LOOKUP.some((route) => pathMatchesRoutePrefix(pathname, route))
@@ -475,6 +516,29 @@ export function createUpdateSession(
     if (isForcedAuthLogin) {
       return supabaseResponse
     }
+
+    // --- Discovery-call participant gate ------------------------------------
+    // Two conditions, both required, so this block is provably inert for every
+    // ordinary user: the kill switch must be on AND the account must carry the
+    // claim stamp. A participant holds no subscription, so the gate has to
+    // return BEFORE the paywall below — otherwise their quiz and the
+    // checklist's scanner calls would bounce to /reactivate.
+    //
+    // The bounce target is itself allow-listed, which makes it terminal: a
+    // participant who wanders onto a member route lands on the checklist and
+    // stops there instead of ping-ponging. With the flag off the block does
+    // nothing at all and an enrolled account follows the ordinary paywall to
+    // /reactivate, which is also loop-free.
+    if (isDiscoveryCallToolkitEnabled() && isDiscoveryParticipant(user)) {
+      if (isDiscoveryParticipantAllowedPath(pathname)) {
+        return supabaseResponse
+      }
+      const url = request.nextUrl.clone()
+      url.pathname = DISCOVERY_CHECKLIST_PATH
+      url.search = ""
+      return redirectWithSupabaseCookies(url, supabaseResponse)
+    }
+    // --- End discovery-call participant gate ---------------------------------
 
     // Mark user as returning (survives session expiry, 1 year)
     if (!request.cookies.has("hc_returning")) {
@@ -675,6 +739,7 @@ export function createUpdateSession(
         moderatorAccess === "active" &&
         intakeState !== "ready" &&
         pathMatchesRoutePrefix(pathname, "/chat")
+      let personalPlanPaidAccessCheckAttempted = false
       try {
         const frontier = await (
           dependencies.loadPersonalPlanRoutingFrontier ?? loadPersonalPlanRoutingFrontierForUser
@@ -709,9 +774,27 @@ export function createUpdateSession(
           )
           return redirectWithSupabaseCookies(url, supabaseResponse)
         }
+        if (
+          !hasActivePersonalPlanEntitlement &&
+          hasPaidAppAccessResult &&
+          frontier.kind === "personal_plan" &&
+          intakeState === "needs_onboarding" &&
+          isPersonalPlanOnboardingBypassRoute(pathname)
+        ) {
+          // The frontier already verifies the owner's enrollment provenance and
+          // rollout eligibility, including trials. Reuse that authority rather
+          // than maintaining a second list of Personal Plan purchase types here.
+          // General app access can come from a manual grant, so require the
+          // independent billing/one-time access check before adding this bypass.
+          // Stored routine pointers and trial history alone never grant access.
+          personalPlanPaidAccessCheckAttempted = true
+          hasActivePersonalPlanEntitlement =
+            (await dependencies.hasCurrentPaidAppAccess?.(supabase, { userId: user.id })) ?? false
+        }
       } catch (error) {
         console.warn("[personal-plan] routing frontier unavailable", error)
         if (
+          personalPlanPaidAccessCheckAttempted ||
           moderatorLegacyEntry ||
           getPersonalPlanFrontierRedirect(pathname, {
             kind: "recovery",

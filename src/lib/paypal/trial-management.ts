@@ -1,5 +1,9 @@
 import { readTrialEffectiveContract } from "../billing/trial-effective-contract"
-import { paypalTrialCollectionStart, paypalTrialNextBillingMatches } from "./trial-collection-start"
+import {
+  paypalTrialCollectionStart,
+  paypalTrialNextBillingMatches,
+  paypalTrialProviderStart,
+} from "./trial-collection-start"
 import {
   findBillingSubscriptionByProviderId,
   upsertBillingSubscription,
@@ -52,6 +56,8 @@ type FrozenRequest = {
   requestSentAt: string | null
   targetAgreementId: string | null
   approvalUrl: string | null
+  sourceStartTime: string | null
+  targetStartTime: string | null
 }
 export type PayPalTrialManagementDeps = {
   supabase: SupabaseClient
@@ -82,6 +88,23 @@ function parseRequest(value: unknown): FrozenRequest {
   ])
     if (typeof row[key] !== "string" || !row[key])
       throw new Error("PayPal trial management request unavailable")
+  for (const key of ["source_start_time", "target_start_time"])
+    if (row[key] != null && typeof row[key] !== "string")
+      throw new Error("PayPal trial management schedule unavailable")
+  const sourceStartTime = (row.source_start_time as string | null | undefined) ?? null
+  const targetStartTime = (row.target_start_time as string | null | undefined) ?? null
+  const requestId = row.request_id as string
+  const isV2 = requestId === `paypal-trial-management:${row.operation_id}:v2`
+  if (
+    (requestId.endsWith(":v2") && !isV2) ||
+    (sourceStartTime === null) !== (targetStartTime === null) ||
+    (sourceStartTime !== null &&
+      (!Number.isFinite(Date.parse(sourceStartTime)) ||
+        !Number.isFinite(Date.parse(targetStartTime!)))) ||
+    (isV2 && (sourceStartTime === null || targetStartTime === null)) ||
+    (!isV2 && (sourceStartTime !== null || targetStartTime !== null))
+  )
+    throw new Error("PayPal trial management schedule unavailable")
   return {
     operationId: row.operation_id as string,
     enrollmentId: row.enrollment_id as string,
@@ -96,7 +119,20 @@ function parseRequest(value: unknown): FrozenRequest {
     requestSentAt: typeof row.request_sent_at === "string" ? row.request_sent_at : null,
     targetAgreementId: typeof row.target_agreement_id === "string" ? row.target_agreement_id : null,
     approvalUrl: typeof row.approval_url === "string" ? row.approval_url : null,
+    sourceStartTime,
+    targetStartTime,
   }
+}
+function assertFrozenRequest(operation: TrialManagementOperation, request: FrozenRequest) {
+  if (request.operationId !== operation.id || request.enrollmentId !== operation.enrollmentId)
+    throw new Error("PayPal trial management request binding mismatch")
+  if (request.sourceStartTime === null || request.targetStartTime === null) return
+  const targetStart =
+    operation.kind === "restore"
+      ? paypalTrialProviderStart(operation.originalTrialEndAt)
+      : request.sourceStartTime
+  if (!sameTime(request.targetStartTime, targetStart))
+    throw new Error("PayPal trial management schedule mismatch")
 }
 async function providerRpc(
   deps: PayPalTrialManagementDeps,
@@ -108,7 +144,7 @@ async function providerRpc(
   return data
 }
 async function loadRequest(deps: PayPalTrialManagementDeps, operationId: string, userId: string) {
-  const row = await providerRpc(deps, "get_paypal_trial_management_request", {
+  const row = await providerRpc(deps, "get_paypal_trial_management_request_v2", {
     p_operation_id: operationId,
     p_user_id: userId,
   })
@@ -170,13 +206,15 @@ function assertFutureTrial(
   subscription: PayPalSubscription,
   operation: TrialManagementOperation,
   requireActive = true,
+  expectedStartTime?: string | null,
 ) {
-  // Day-after collection: start_time sits at the collection start (legacy
-  // agreements at the second-exact trial end), and the batch time is verified
-  // at the provider's own granularity.
-  const scheduledStart =
-    sameTime(subscription.start_time, operation.originalTrialEndAt) ||
-    sameTime(subscription.start_time, paypalTrialCollectionStart(operation.originalTrialEndAt))
+  // V2 schedules have an immutable exact provider time. Legacy agreements use
+  // their historical trial-end/collection-start shapes. The billing batch is
+  // separately verified against the disclosed trial end.
+  const scheduledStart = expectedStartTime
+    ? sameTime(subscription.start_time, expectedStartTime)
+    : sameTime(subscription.start_time, operation.originalTrialEndAt) ||
+      sameTime(subscription.start_time, paypalTrialCollectionStart(operation.originalTrialEndAt))
   if (
     Date.parse(operation.originalTrialEndAt) <= Date.now() ||
     !scheduledStart ||
@@ -200,6 +238,17 @@ function assertEffectivePlan(
   assertPlanMatchesAcceptedOffer(
     subscription.plan ? { ...subscription.plan, status: "ACTIVE" } : null,
     { offer: target ? operation.targetOffer : operation.sourceOffer, productId: request.productId },
+  )
+}
+function assertSourcePlanBeforeFreeze(
+  subscription: PayPalSubscription,
+  operation: TrialManagementOperation,
+  productId: string,
+) {
+  if (!subscription.plan_id) throw new Error("PayPal trial management source plan unavailable")
+  assertPlanMatchesAcceptedOffer(
+    subscription.plan ? { ...subscription.plan, status: "ACTIVE" } : null,
+    { offer: operation.sourceOffer, productId },
   )
 }
 async function assertNoPayment(
@@ -242,6 +291,7 @@ export async function beginPayPalTrialManagement(
       operation.sourceAgreementId,
     )
     assertOwned(source, operation, operation.sourceAgreementId)
+    assertSourcePlanBeforeFreeze(source, operation, catalog.productId)
     const sourcePlanId = source.plan_id
     const targetPlanId =
       operation.targetOffer.interval === "month" ? catalog.monthPlanId : catalog.yearPlanId
@@ -252,16 +302,18 @@ export async function beginPayPalTrialManagement(
       productId: catalog.productId,
     })
     frozen = parseRequest(
-      await providerRpc(deps, "freeze_paypal_trial_management_request", {
+      await providerRpc(deps, "freeze_paypal_trial_management_request_v2", {
         p_operation_id: operation.id,
         p_user_id: operation.userId,
         p_source_plan_id: sourcePlanId,
         p_target_plan_id: targetPlanId,
+        p_source_start_time: source.start_time,
         p_return_url: returnUrl(input.returnUrl),
         p_cancel_url: returnUrl(input.cancelUrl),
       }),
     )
   }
+  assertFrozenRequest(operation, frozen)
   await assertAttested(frozen, deps)
   if (frozen.targetAgreementId) return reconcilePayPalTrialManagement(input, deps)
   const source = await (deps.retrieve ?? retrievePayPalTrialSubscription)(
@@ -271,7 +323,7 @@ export async function beginPayPalTrialManagement(
   if (operation.kind === "switch" && source.plan_id === frozen.targetPlanId && frozen.requestSentAt)
     return reconcilePayPalTrialManagement(input, deps)
   assertEffectivePlan(source, operation, frozen, false)
-  assertFutureTrial(source, operation, operation.kind === "switch")
+  assertFutureTrial(source, operation, operation.kind === "switch", frozen.sourceStartTime)
   if (operation.kind === "restore" && source.status !== "CANCELLED")
     throw new Error("PayPal trial restore source remains collectible")
   await assertNoPayment(source.id!, operation, deps)
@@ -299,8 +351,10 @@ export async function beginPayPalTrialManagement(
     ...(operation.kind === "restore"
       ? {
           // Replacement agreements collect on the same day-after schedule the
-          // original was verified against.
-          start_time: paypalTrialCollectionStart(operation.originalTrialEndAt),
+          // source was verified against. The v2 value is immutable across a
+          // lost response; legacy requests retain their original midnight body.
+          start_time:
+            frozen.targetStartTime ?? paypalTrialCollectionStart(operation.originalTrialEndAt),
           custom_id: `trial-management:${operation.id}`,
         }
       : {}),
@@ -355,6 +409,7 @@ export async function reconcilePayPalTrialManagement(
   }
   const frozen = await loadRequest(deps, operation.id, operation.userId)
   if (!frozen) return pending(operation)
+  assertFrozenRequest(operation, frozen)
   await assertAttested(frozen, deps)
   const targetId =
     frozen.targetAgreementId ?? (operation.kind === "switch" ? operation.sourceAgreementId : null)
@@ -388,7 +443,7 @@ export async function reconcilePayPalTrialManagement(
   }
   assertOwned(target, operation, targetId)
   assertEffectivePlan(target, operation, frozen, true)
-  assertFutureTrial(target, operation)
+  assertFutureTrial(target, operation, true, frozen.targetStartTime)
   await assertNoPayment(targetId, operation, deps)
   if (operation.kind === "restore") {
     const source = await (deps.retrieve ?? retrievePayPalTrialSubscription)(
@@ -397,6 +452,7 @@ export async function reconcilePayPalTrialManagement(
     assertOwned(source, operation, operation.sourceAgreementId)
     if (source.status !== "CANCELLED")
       throw new Error("PayPal trial restoration source remains collectible")
+    assertFutureTrial(source, operation, false, frozen.sourceStartTime)
     await assertNoPayment(source.id!, operation, deps)
   }
   const committed = await commitTrialManagementOperation(deps.supabase, {
@@ -440,6 +496,7 @@ export async function abandonPayPalTrialManagement(
   }
   const frozen = await loadRequest(deps, operation.id, operation.userId)
   if (frozen) {
+    assertFrozenRequest(operation, frozen)
     await assertAttested(frozen, deps)
     // There is no documented cancel-pending-revision API. An old approval link could still apply later.
     if (operation.kind === "switch" && frozen.requestSentAt) return pending(operation)
@@ -457,7 +514,7 @@ export async function abandonPayPalTrialManagement(
   if (operation.kind === "switch") {
     if (!frozen) return pending(operation)
     assertEffectivePlan(source, operation, frozen, false)
-    assertFutureTrial(source, operation)
+    assertFutureTrial(source, operation, true, frozen.sourceStartTime)
   }
   const abandoned = await abandonTrialManagementOperation(deps.supabase, {
     ...input,

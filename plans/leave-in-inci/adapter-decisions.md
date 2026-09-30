@@ -40,7 +40,27 @@ The adapter writes `heat_protection_max_c: null` always (§13.3). The degree-log
 
 ## AD-3a — `care_benefits[]` derivation detail (implementation default under AD-3's authority)
 
-specs.care_benefits ∪= focus routes (primary+secondary: smoothing→anti_frizz, detangling→detangling, curl_definition→curl_definition, repair→repair, shine→shine, heat_styling→(none — heat is not a care_benefit), volume_lightness→volume) + care_direction moisture→moisture / protein→protein (balanced adds none) + repair_support_level ≥ medium→repair + smoothing_route ∈ {silicone_film, cationic_alignment} present→anti_frizz. Empty after all rules → `needs_research` naming the gap. fit_specs.care_benefits (4-value vocab): provides_heat_protection→heat_protect, focus curl_definition→curl_definition, repair_support_level ≥ medium or focus repair→repair, focus detangling or smoothing→detangle_smooth. functional_benefits per the study's mapping (moisture_softness from care_direction=moisture or conditioning_level ≥ moderate).
+specs.care_benefits ∪= focus routes (primary+secondary: smoothing→anti_frizz, detangling→detangling, curl_definition→curl_definition, repair→repair, shine→shine, heat_styling→(none — heat is not a care_benefit), volume_lightness→volume) + care_direction moisture→moisture / protein→protein (balanced adds none) + repair_support_level ≥ medium→repair + smoothing_route ∈ {silicone_film, cationic_alignment} present→anti_frizz. Empty after all rules → `needs_research` naming the gap. fit_specs.care_benefits (4-value vocab): provides_heat_protection→heat_protect, focus curl_definition→curl_definition, repair_support_level ≥ medium or focus repair→repair, focus detangling or smoothing→detangle_smooth. functional_benefits per the study's mapping (moisture_softness from care_direction=moisture or conditioning_level ≥ moderate). **[Revised 2026-09-29 — see AD-3a revision below: the conditioning-level clause is removed.]**
+
+## AD-3a revision — `moisture_softness` requires `care_direction = moisture` (ruled 2026-09-29)
+
+**Ruling (Nick, 2026-09-29, with T20):** the `moisture_softness` functional benefit now **requires `care_direction = moisture`**. `conditioning_level ≥ moderate` on its own no longer grants it.
+
+**Why.** Under the original clause every leave-in with moderate or high conditioning carried `moisture_softness` ("Feuchtigkeit & Geschmeidigkeit"), whatever its care direction. That meant a film-led performance product still satisfied the personal plan's dry-hair function requirement after T20 moved its `care_direction` to `balanced`: the care-direction axis became cautious, but the function axis still said "treats dryness" (`plans/leave-in-moisture-balanced/moisture-balanced-review.md` §7, open question 3). Conditioning is already carried by COND, by `fit_specs.care_benefits` (`detangle_smooth` baseline) and by AD-4's `replacement_capable`. It is not a moisture function.
+
+**Rule now.** `functional_benefits ∋ moisture_softness` ⇔ `care_direction = moisture`. Every other AD-3a clause is unchanged: specs/fit `care_benefits`, the `detangle_smooth` baseline, `smooth_anti_frizz`, `heat_protect`, `repair_support`, `curl_shape_support`, `shine_support`, `detangle`.
+
+**Consequence on the calibration set (v1.1 projections, `data/research/leave-in-inci/v1.1/calibration-expected-projections.json`).** Five products lose `moisture_softness`:
+
+- EVO (slot 5, already `balanced`) — AD-3a revision alone;
+- Redken (slot 9, `protein`) — AD-3a revision alone;
+- Gliss (slot 8), Olaplex No.6 (slot 10) and Neqi (slot 13) — T20 flip plus the revision.
+
+Each keeps at least one other functional benefit (`smooth_anti_frizz`, plus `heat_protect` / `repair_support`), so none falls to `needs_research`. No eligibility row changes: `moisture_anti_frizz` is still reached through `anti_frizz`. Full per-product delta: `plans/leave-in-moisture-balanced/t20-catalog-delta.md`.
+
+**New refusal path (fail-closed, AD-2 shape).** A profile whose only functional benefit used to be the conditioning-granted `moisture_softness` now carries none, and the adapter returns `needs_research`. Example: `balanced`/`protein` direction, focus `general`, no film route, no heat, `repair_support_level: low`. No corpus record has this shape. It is recorded here so a refusal is recognised as this revision and not as a bug.
+
+**Adapter version.** `leave-in-production-adapter-v1` is kept, following the AD-6 precedent: a ruled AD change without a version bump. Provenance stays unambiguous because every projection also carries `research_model_version: leave-in-inci-v1.1`, and the adapter refuses v1.0-stamped envelopes.
 
 ## Context rulings (same session)
 

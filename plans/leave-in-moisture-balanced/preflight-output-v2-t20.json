@@ -1,0 +1,129 @@
+
+{
+  "mode": "preflight",
+  "writes": false,
+  "batch_id": "leave-in-research-calibration-v2-t20",
+  "project_id": "pqdkhefxsxkyeqelqegq",
+  "ok": true,
+  "products": [
+    {
+      "product_key": "leave-in-slot-05-evo-head-mistress",
+      "slot": "slot-05",
+      "target_product_id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+      "ok": true,
+      "errors": [],
+      "publication_blockers": [],
+      "target_fingerprint_matches": true,
+      "live_fingerprint": "eb63bc3109f3b7a0b03c02ba4f70ba2ea9cb0fef4dc26fa9bbb6320d89d9628a",
+      "changed_spec_columns": [
+        "functional_benefits"
+      ],
+      "invariant_violations": [],
+      "execution_order": [
+        {
+          "type": "upsert",
+          "table": "product_leave_in_specs",
+          "rows": 1
+        }
+      ]
+    },
+    {
+      "product_key": "leave-in-slot-08-gliss-ultimate-repair",
+      "slot": "slot-08",
+      "target_product_id": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+      "ok": true,
+      "errors": [],
+      "publication_blockers": [],
+      "target_fingerprint_matches": true,
+      "live_fingerprint": "c6cadce99d8ab59b34075f61c109231023338bed81e3a3c3073ddcc5e0aba795",
+      "changed_spec_columns": [
+        "care_benefits",
+        "care_direction",
+        "functional_benefits"
+      ],
+      "invariant_violations": [],
+      "execution_order": [
+        {
+          "type": "upsert",
+          "table": "product_leave_in_specs",
+          "rows": 1
+        }
+      ]
+    },
+    {
+      "product_key": "leave-in-slot-09-redken-extreme-anti-snap",
+      "slot": "slot-09",
+      "target_product_id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "ok": true,
+      "errors": [],
+      "publication_blockers": [],
+      "target_fingerprint_matches": true,
+      "live_fingerprint": "686659cabd4a050328fb9e6e88d7a6b011a8f02cd8be8978f47fd3fbfa463583",
+      "changed_spec_columns": [
+        "functional_benefits"
+      ],
+      "invariant_violations": [],
+      "execution_order": [
+        {
+          "type": "upsert",
+          "table": "product_leave_in_specs",
+          "rows": 1
+        }
+      ]
+    },
+    {
+      "product_key": "leave-in-slot-10-olaplex-no6-bond-smoother",
+      "slot": "slot-10",
+      "target_product_id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+      "ok": true,
+      "errors": [],
+      "publication_blockers": [],
+      "target_fingerprint_matches": true,
+      "live_fingerprint": "18d025e058880d70706d83c4282a847aa11b856ff91a59f884add6a1187c1797",
+      "changed_spec_columns": [
+        "care_benefits",
+        "care_direction",
+        "functional_benefits"
+      ],
+      "invariant_violations": [],
+      "execution_order": [
+        {
+          "type": "upsert",
+          "table": "product_leave_in_specs",
+          "rows": 1
+        }
+      ]
+    },
+    {
+      "product_key": "leave-in-slot-13-neqi-diamond-glass",
+      "slot": "slot-13",
+      "target_product_id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "ok": true,
+      "errors": [],
+      "publication_blockers": [],
+      "target_fingerprint_matches": true,
+      "live_fingerprint": "fe9c97fefe17c2ff1a170ff0a3de7aa4e23ae672d284e5a9088e64bfcb65f824",
+      "changed_spec_columns": [
+        "care_benefits",
+        "care_direction",
+        "functional_benefits"
+      ],
+      "invariant_violations": [],
+      "execution_order": [
+        {
+          "type": "upsert",
+          "table": "product_leave_in_specs",
+          "rows": 1
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "products": 5,
+    "productsOk": 5,
+    "staleFingerprints": 0,
+    "publicationBlockers": 0,
+    "invariantViolations": 0,
+    "eligibilityOperations": 0
+  }
+}

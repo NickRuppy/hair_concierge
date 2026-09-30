@@ -3,7 +3,6 @@ import {
   loadFrozenTrialManagementCatalog,
 } from "../billing/trial-management-operations"
 import "server-only"
-import { frozenPayPalTrialStart } from "./trial-collection-start"
 import {
   freezeTrialAnalyticsContext,
   type TrialAnalyticsContextInput,
@@ -19,6 +18,7 @@ import { isTrialEnrollmentAllowed, type TrialRuntime } from "../billing/trial-ru
 import type { PayPalCheckoutSource } from "./checkout-intents"
 import {
   bindPayPalTrialCheckoutReference,
+  payPalTrialCheckoutSchedule,
   createPayPalTrialCheckoutAttempt,
   freezePayPalTrialCheckoutAttempt,
   findPayPalTrialCheckoutAttemptByScope,
@@ -46,7 +46,7 @@ type Input = {
   source: PayPalCheckoutSource
 }
 
-type Subscription = { id?: string; plan_id?: string; custom_id?: string }
+type Subscription = { id?: string; plan_id?: string; custom_id?: string; start_time?: string }
 type Deps = {
   supabase: SupabaseClient
   runtime: PayPalTrialRuntime | null
@@ -154,7 +154,7 @@ export async function createDurablePayPalTrialCheckout(input: Input, deps: Deps)
       appId: planCatalog.appId,
       productId: planCatalog.productId,
       planId: frozenPlanId,
-      requestId: `paypal-trial:${attempt.id}:v1`,
+      requestId: `paypal-trial:${attempt.id}:v2`,
     })
   }
 
@@ -177,7 +177,7 @@ export async function createDurablePayPalTrialCheckout(input: Input, deps: Deps)
         planId: attempt.paypalPlanId,
         customId: attempt.intentToken,
         requestId: attempt.requestId,
-        startTime: frozenPayPalTrialStart(attempt.requestExpiresAt),
+        startTime: payPalTrialCheckoutSchedule(attempt).providerStartTime,
         offer: attempt.offer,
       })
   if (
@@ -185,7 +185,9 @@ export async function createDurablePayPalTrialCheckout(input: Input, deps: Deps)
     subscription.id.trim() === "" ||
     (boundReference !== null && subscription.id !== boundReference) ||
     subscription.plan_id !== attempt.paypalPlanId ||
-    subscription.custom_id !== attempt.intentToken
+    subscription.custom_id !== attempt.intentToken ||
+    Date.parse(subscription.start_time ?? "") !==
+      Date.parse(payPalTrialCheckoutSchedule(attempt).providerStartTime)
   ) {
     throw new Error("PayPal trial subscription mismatch")
   }

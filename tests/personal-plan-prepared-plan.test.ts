@@ -175,13 +175,16 @@ test("prepared artifact keeps email priority separate from the offer assessment"
   const artifact = buildPersonalPlanPreparedArtifact(
     canonicalizePersonalPlanAnswers({
       ...completeAnswers,
+      // F1: the email names her STATED main problem, not the assessment's central priority.
+      primaryConcern: "low_shine",
       blockersOtherText: "<b>raw free text must never reach the email</b>",
     }),
   )
 
   assert.equal(artifact.priorities[0].isCentral, true)
   assert.equal(artifact.publicOfferModel.primaryMessage.kind, "concern")
-  assert.equal(artifact.publicOfferModel.primaryMessage.label, artifact.priorities[0].title)
+  assert.equal(artifact.publicOfferModel.primaryMessage.label, "Wenig Glanz")
+  assert.notEqual(artifact.publicOfferModel.primaryMessage.label, artifact.priorities[0].title)
   assert.doesNotMatch(JSON.stringify(artifact.publicOfferModel.primaryMessage), /raw free text|<b>/)
   assert.equal(artifact.publicOfferModel.modelVersion, "personal_plan_offer_v2")
   assert.equal(

@@ -394,7 +394,9 @@ test.describe.serial("@ci tracker page regressions", () => {
     await openTracker(page)
     const trigger = page.getByRole("button", { name: /Routine eintragen|Bearbeiten/ }).first()
     await trigger.focus()
-    await openSheet(page)
+    // Opened by keyboard, the sheet starts on its close X (a tap-open starts on the title).
+    await page.keyboard.press("Enter")
+    await expect(page.getByRole("dialog", { name: "Routine eintragen" })).toBeVisible()
     await expect(page.locator("body")).toHaveCSS("overflow", "hidden")
     await expect(page.getByRole("button", { name: "Schließen" })).toBeFocused()
     await page.keyboard.press("Escape")

@@ -19,12 +19,12 @@ review is batched (per-product cockpit vs. sealed batch). The documentation
 lanes below own those variation points. Each fact and each learning has
 exactly one owning document; the others link to it.
 
-| Lane | Use when | Owning document |
-| --- | --- | --- |
-| Single-product intake | One user-submitted or manually added product goes through research → review → guarded publish | This document (skill: `product-intake`) |
-| Batch scan-DB expansion | A wave of 30-40 scannable, non-recommended products is added through the expansion pipeline | `docs/scan-db-expansion-playbook.md` (recipe, wave learnings, selection signals) |
-| Formula research engines | Deep INCI-based classification of a Shampoo/Conditioner, or engine/standard maintenance | `docs/research/README.md` (skill: `product-research-engine`) |
-| Catalog data contract | What tables own which facts, read/write boundaries | `docs/catalog-authority.md` |
+| Lane                     | Use when                                                                                      | Owning document                                                                  |
+| ------------------------ | --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Single-product intake    | One user-submitted or manually added product goes through research → review → guarded publish | This document (skill: `product-intake`)                                          |
+| Batch scan-DB expansion  | A wave of 30-40 scannable, non-recommended products is added through the expansion pipeline   | `docs/scan-db-expansion-playbook.md` (recipe, wave learnings, selection signals) |
+| Formula research engines | Deep INCI-based classification of a Shampoo/Conditioner, or engine/standard maintenance       | `docs/research/README.md` (skill: `product-research-engine`)                     |
+| Catalog data contract    | What tables own which facts, read/write boundaries                                            | `docs/catalog-authority.md`                                                      |
 
 Learnings ownership: wave-process learnings belong in the expansion playbook;
 protocol/template rulings belong in the rulings ledger the playbook names;
@@ -259,18 +259,18 @@ Every final payload must include:
 
 Supported categories and required spec tables:
 
-| Category key             | Required category specs                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `shampoo`                | `product_shampoo_specs[]`: one or more rows with `thickness` (`fine`, `normal`, `coarse`), `shampoo_bucket` (`schuppen`, `irritationen`, `normal`, `dehydriert-fettig`, `trocken`), `scalp_route` (`oily`, `balanced`, `dry`, `dandruff`, `dry_flakes`, `irritated`), optional `cleansing_intensity` (`gentle`, `regular`, `clarifying`)                                                                                                                       |
-| `conditioner`            | `product_conditioner_specs[]`: `thickness`, `protein_moisture_balance` (`snaps`, `stretches_bounces`, `stretches_stays`); plus `product_conditioner_rerank_specs`: `weight` (`light`, `medium`, `rich`), `repair_level` (`low`, `medium`, `high`), `balance_direction` (`protein`, `moisture`, `balanced`, or `null`), `ingredient_flags`                                                                                                                      |
-| `mask`                   | `product_mask_specs`: `weight` (`light`, `medium`, `rich`), `concentration` (`low`, `medium`, `high`), `balance_direction`, `ingredient_flags`, `repair_support_level` (`low`, `medium`, `high`), `functional_benefits` (`smoothing_frizz_control`, `detangling_slip`, `shine`)                                                                                                                                                                                |
-| `leave_in`               | `product_leave_in_specs`: `format` (`spray`, `milk`, `lotion`, `cream`, `serum`), `weight`, `roles`, `provides_heat_protection` (binary only; degrees cut over 2026-09-14, AD-6), `heat_activation_required`, `care_benefits`, `ingredient_flags`, `application_stage`; plus `product_leave_in_fit_specs`; plus `product_leave_in_eligibility[]`                                                                                                                                       |
-| `oil`                    | `product_oil_specs`: `weight` (`light`, `medium`, `rich`), `role_support` (`pre_wash_fibre_treatment`, `leave_on_fibre_conditioning`, `dry_finish`), and independent binary `provides_heat_protection` (source-verified claim only; never a fourth role); plus `product_oil_eligibility[]`: `thickness`, `oil_subtype` (`natuerliches-oel`, `styling-oel`, `trocken-oel`), `oil_purpose` (`pre_wash_oiling`, `styling_finish`, `light_finish`, or `null`), `ingredient_flags`                                                             |
-| `dry_shampoo`            | `product_dry_shampoo_specs`: `primary_effect` (`classic_refresh`, `volume_texture`, `sensitive_refresh`), `hair_color_fit` (`universal`, `blonde_light`, `brown`, `dark`), `scalp_sensitivity_fit` (`sensitive_ok`, `normal_only`), `format` (`aerosol_spray`, `powder`, `foam_or_liquid`)                                                                                                                                                                     |
-| `deep_cleansing_shampoo` | `product_deep_cleansing_shampoo_specs`: `scalp_type_focus` (`oily`, `balanced`, `dry`), `reset_intensity` (`gentle`, `medium`, `strong`), `reset_focus` (`product_sebum_buildup`, `metal_mineral_hard_water`, `broad_spectrum_detox`), `color_treated_suitability` (`suitable`, `unsuitable_or_unknown`)                                                                                                                                                       |
-| `bondbuilder`            | `product_bondbuilder_specs`: `bond_repair_intensity` (`maintenance`, `intensive`), `application_mode` (`pre_shampoo`, `post_wash_leave_in`), `bond_repair_axis` (`disulfide_crosslink`, `peptide_chain`), `treatment_mode` (`rinse_out`, `leave_in`), `product_format` (`cream_treatment`, `primer_treatment`, `leave_in_mask`, `spray_treatment`), `usage_protocol` (`olaplex_3plus`, `olaplex_0_booster`, `olaplex_3_legacy`, `k18_leave_in`, `epres_spray`) |
-| `heat_protectant`        | `product_heat_protectant_specs`: `format` (`spray`), `provides_heat_protection` (`true`, `false`, or `null` only while unresolved)                                                                                                                                                                                                                                                                                                                             |
-| `scalp_care`             | `product_scalp_care_specs`: `primary_role` (`scalp_comfort`, `scalp_flake_oil_adjunct`, `density_claim_tonic`, `scalp_exfoliant`), `presentation_format` (`serum`, `tonic`, `lotion_or_fluid`, `oil`, `scrub`, `other`, `unknown`), `rinse_mode` (`leave_on`, `rinse_off`), exact `application_instructions`                                                                                                                                                   |
+| Category key             | Required category specs                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `shampoo`                | `product_shampoo_specs[]`: one or more rows with `thickness` (`fine`, `normal`, `coarse`), `shampoo_bucket` (`schuppen`, `irritationen`, `normal`, `dehydriert-fettig`, `trocken`), `scalp_route` (`oily`, `balanced`, `dry`, `dandruff`, `dry_flakes`, `irritated`), optional `cleansing_intensity` (`gentle`, `regular`, `clarifying`)                                                                                                                                      |
+| `conditioner`            | `product_conditioner_specs[]`: `thickness`, `protein_moisture_balance` (`snaps`, `stretches_bounces`, `stretches_stays`); plus `product_conditioner_rerank_specs`: `weight` (`light`, `medium`, `rich`), `repair_level` (`low`, `medium`, `high`), `balance_direction` (`protein`, `moisture`, `balanced`, or `null`), `ingredient_flags`                                                                                                                                     |
+| `mask`                   | `product_mask_specs`: `weight` (`light`, `medium`, `rich`), `concentration` (`low`, `medium`, `high`), `balance_direction`, `ingredient_flags`, `repair_support_level` (`low`, `medium`, `high`), `functional_benefits` (`smoothing_frizz_control`, `detangling_slip`, `shine`)                                                                                                                                                                                               |
+| `leave_in`               | `product_leave_in_specs`: `format` (`spray`, `milk`, `lotion`, `cream`, `serum`), `weight`, `roles`, `provides_heat_protection` (binary only; degrees cut over 2026-09-14, AD-6), `heat_activation_required`, `care_benefits`, `ingredient_flags`, `application_stage`; plus `product_leave_in_fit_specs`; plus `product_leave_in_eligibility[]`                                                                                                                              |
+| `oil`                    | `product_oil_specs`: `weight` (`light`, `medium`, `rich`), `role_support` (`pre_wash_fibre_treatment`, `leave_on_fibre_conditioning`, `dry_finish`), and independent binary `provides_heat_protection` (source-verified claim only; never a fourth role); plus `product_oil_eligibility[]`: `thickness`, `oil_subtype` (`natuerliches-oel`, `styling-oel`, `trocken-oel`), `oil_purpose` (`pre_wash_oiling`, `styling_finish`, `light_finish`, or `null`), `ingredient_flags` |
+| `dry_shampoo`            | `product_dry_shampoo_specs`: `primary_effect` (`classic_refresh`, `volume_texture`, `sensitive_refresh`), `hair_color_fit` (`universal`, `blonde_light`, `brown`, `dark`), `scalp_sensitivity_fit` (`sensitive_ok`, `normal_only`), `format` (`aerosol_spray`, `powder`, `foam_or_liquid`)                                                                                                                                                                                    |
+| `deep_cleansing_shampoo` | `product_deep_cleansing_shampoo_specs`: `scalp_type_focus` (`oily`, `balanced`, `dry`), `reset_intensity` (`gentle`, `medium`, `strong`), `reset_focus` (`product_sebum_buildup`, `metal_mineral_hard_water`, `broad_spectrum_detox`), `color_treated_suitability` (`suitable`, `unsuitable_or_unknown`)                                                                                                                                                                      |
+| `bondbuilder`            | `product_bondbuilder_specs`: `bond_repair_intensity` (`maintenance`, `intensive`), `application_mode` (`pre_shampoo`, `post_wash_leave_in`), `bond_repair_axis` (`disulfide_crosslink`, `peptide_chain`), `treatment_mode` (`rinse_out`, `leave_in`), `product_format` (`cream_treatment`, `primer_treatment`, `leave_in_mask`, `spray_treatment`), `usage_protocol` (`olaplex_3plus`, `olaplex_0_booster`, `olaplex_3_legacy`, `k18_leave_in`, `epres_spray`)                |
+| `heat_protectant`        | `product_heat_protectant_specs`: `format` (`spray`), `provides_heat_protection` (`true`, `false`, or `null` only while unresolved)                                                                                                                                                                                                                                                                                                                                            |
+| `scalp_care`             | `product_scalp_care_specs`: `primary_role` (`scalp_comfort`, `scalp_flake_oil_adjunct`, `density_claim_tonic`, `scalp_exfoliant`), `presentation_format` (`serum`, `tonic`, `lotion_or_fluid`, `oil`, `scrub`, `other`, `unknown`), `rinse_mode` (`leave_on`, `rinse_off`), exact `application_instructions`                                                                                                                                                                  |
 
 Every category also requires `product_application_protocols`. The exact roles
 are derived from the stored category facts; the normal minimums are:
@@ -450,6 +450,34 @@ What this cockpit intentionally must not do:
 - Notify users unless the guarded publish route or the legacy approval command
   has actually completed.
 
+### Retailer enrichment (dm) on scan submissions
+
+An unknown scan may carry a `retailer_enrichment` entry in the existing
+`product_submissions.intake_history`. It is a dm-sourced research lead created
+only after the user confirms a category; it does not create a second queue or a
+catalog product. The worker exposes it in its prompt packet only when the
+returned GTIN canonicalizes to the submission's scanned GTIN.
+
+Treat its identity, ingredient text, product URL, image URL, and suggested
+category as provenance-tagged draft evidence. Independently verify the product
+before proposing a final payload, record conflicts in the normal review
+decisions, and never regard user category confirmation as a quality verdict.
+The dm image URL is a raw candidate only: it still needs the usual visual
+review, processing, and guarded `product-images` upload. It must never become
+the final catalog `image_url`.
+
+The monitored public trial does not settle dm's terms for continuing public or
+commercial display and storage. Reassess those terms before treating this as
+an indefinite source; the intake approval boundary remains unchanged.
+
+The lookup is controlled by server-only environment values: set
+`SCAN_RETAILER_ENRICHMENT_ENABLED=true` only for the monitored trial; it is
+otherwise off. `SCAN_RETAILER_ENRICHMENT_TIMEOUT_MS` is the full-operation
+cap in milliseconds, defaults safely to `1500`, and accepts only whole values
+from `1` through `10000`. The repository deliberately has no tracked
+`.env.example` because its blanket environment-file ignore prevents it from
+being a reliable source of configuration.
+
 The internal app is local no-login for development. Do not deploy it publicly
 without a deployment-level protection gate.
 
@@ -459,13 +487,14 @@ Required migrations before the action buttons work:
 - `supabase/migrations/20260630130000_product_intake_research_artifacts_decisions.sql`
 - `supabase/migrations/20260701090000_product_intake_rework_resets_attempts.sql`
 - `supabase/migrations/20260701100000_product_intake_auto_enqueue.sql`
+- `supabase/migrations/20260925061101_product_intake_model_evaluation_artifacts.sql`
 
 ## Required Environment
 
 Use the product-intake worktree until this stack has merged:
 
 ```bash
-cd /Users/nick/AI_work/hair_conscierge/.worktrees/product-intake-full-flow-smoke
+cd /Users/nick/AI_work/hair_conscierge/.worktrees/product-intake-model-routing
 ```
 
 Supabase project:
@@ -473,6 +502,110 @@ Supabase project:
 ```text
 pqdkhefxsxkyeqelqegq
 ```
+
+Codex research worker defaults:
+
+```text
+PRODUCT_INTAKE_CODEX_RESEARCH_MODEL=gpt-6-luna
+PRODUCT_INTAKE_CODEX_RESEARCH_REASONING_EFFORT=low
+# Leave PRODUCT_INTAKE_CODEX_SERVICE_TIER unset for Standard processing.
+PRODUCT_INTAKE_CODEX_SHADOW_ENABLED=true
+PRODUCT_INTAKE_CODEX_SHADOW_TARGET=10
+PRODUCT_INTAKE_CODEX_CHALLENGER_MODEL=gpt-6-luna
+PRODUCT_INTAKE_CODEX_CHALLENGER_REASONING_EFFORT=medium
+PRODUCT_INTAKE_CODEX_JUDGE_MODEL=gpt-6-sol
+PRODUCT_INTAKE_CODEX_JUDGE_REASONING_EFFORT=medium
+PRODUCT_INTAKE_AUTO_PREPARE_IMAGES=false
+PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_ENABLED=false
+PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_MODEL=gpt-6-sol
+PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_REASONING_EFFORT=medium
+PRODUCT_INTAKE_CODEX_CONCURRENCY=1
+PRODUCT_INTAKE_REMBG_ENABLED=true
+PRODUCT_INTAKE_REMBG_MODEL_DIR=/opt/chaarlie/product-intake/shared/rembg
+# Review-app service only: do not spawn a second detached worker.
+PRODUCT_INTAKE_CODEX_WORKER_EXTERNAL=true
+PRODUCT_INTAKE_FINALIZED_IMAGE_DIR=/opt/chaarlie/product-intake/shared/finalized-images
+PRODUCT_INTAKE_IMAGE_QA_REFERENCE_ROOT=/opt/chaarlie/product-intake/shared/finalized-images
+# Optional override; otherwise use config/product-intake-image-qa-references.v1.json.
+# PRODUCT_INTAKE_IMAGE_QA_REFERENCE_MANIFEST=/absolute/path/to/manifest.json
+```
+
+The worker applies these defaults itself so an unattended deployment does not
+depend on a personal Codex configuration file. Override them only for a bounded
+evaluation or rework lane. GPT-6 Astra is hard-rejected on every Product Intake
+model lane, including environment overrides.
+
+For the first 10 successfully judged eligible jobs, the production draft still
+comes only from Luna/low. Luna/medium runs as a shadow challenger on the same
+prompt packet, and Sol/medium judges the two outputs in randomized anonymous
+order with web search disabled; the judge compares the supplied evidence rather
+than performing a third research pass. The challenger and judge can write only `model_run` and
+`model_judgment` telemetry artifacts; neither can replace
+`product_submissions.researched_payload`, alter blockers/readiness, approve a
+review decision, or publish a catalog product. Malformed or failed shadow/judge
+runs are recorded when the telemetry store is available and do not block a
+valid Luna/low draft from reaching Nick. A telemetry-write failure is reduced to
+`model_evaluation.status=telemetry_failed` in job progress; lease loss still
+fails closed because another worker may own the job.
+
+The worker refreshes the durable job lease after every model call. The target
+is based on completed `model_judgment` artifacts. A deployment with multiple
+worker processes can exceed 10 by at most the number of simultaneously eligible
+workers because the count is intentionally not a distributed reservation
+system; review the evidence once the target is reached and disable the shadow
+lane or explicitly promote a new production setting.
+
+During this bounded window, expect roughly three model calls per eligible job
+instead of one and correspondingly higher cost and wall-clock time. Compare the
+durable lane duration, output hash, failures, judge preference, rubric scores,
+and material issues before changing the production researcher. Token usage is
+nullable until the Codex CLI exposes stable machine-readable usage metadata.
+
+Set `PRODUCT_INTAKE_CODEX_SERVICE_TIER=fast` only for a deliberately expedited
+run; the routine worker stays on Standard processing by omission.
+
+The 4 GB Hetzner worker must stay at concurrency one while local image
+processing is enabled. Research and background removal share that one worker
+slot; they do not run side by side. The Linux image path is opt-in and uses the
+digest-pinned `danielgatis/rembg` container with `isnet-general-use`, no runtime
+network, and fixed CPU/RAM/process limits. Pre-pull the pinned image and
+pre-download the model into `PRODUCT_INTAKE_REMBG_MODEL_DIR` before starting the
+network-disabled worker. Keep the model directory outside release folders so a
+release switch does not download it again.
+
+Run the review app and worker as separate supervised services. The review app
+uses `PRODUCT_INTAKE_CODEX_WORKER_EXTERNAL=true`, so queue actions do not spawn
+an unmanaged duplicate worker. Store finalized review images under
+`PRODUCT_INTAKE_FINALIZED_IMAGE_DIR`, outside the active release, and expose
+them through the review app's validated dynamic image route. This keeps both
+existing and newly created assets available across atomic release switches and
+without an application restart.
+
+Automatic image preparation and visual judgment are separate opt-ins. Enable
+`PRODUCT_INTAKE_AUTO_PREPARE_IMAGES=true` only when a complete, unblocked
+research result with a renderable exact candidate should proceed directly to
+serial image processing. This records `selection_mode=agent_prepared`; it does
+not create a `raw.image` approval or satisfy the final image gate.
+
+Enable `PRODUCT_INTAKE_CODEX_IMAGE_JUDGE_ENABLED=true` to attach the raw source,
+magenta QA, and neutral render to Sol/medium with web search disabled. The
+strict verdict is `pass`, `rework`, or `needs_human_review` and explicitly
+checks shadows/reflections, outer or secondary packaging, extra objects, edge
+residue/halos, rectangular remnants, jagged edges, and accidentally removed
+product content. A pass makes the prepared asset ready for Nick's check but
+never writes `final.image` approval. Rework stays in image work; judge failure
+or uncertainty stays available through the existing manual override path.
+
+The optional reference manifest is capped at five examples. Its paths must
+resolve below `PRODUCT_INTAKE_IMAGE_QA_REFERENCE_ROOT`; supplied SHA-256 values
+must match. The initial set contains the failed and corrected NEQI edge case
+plus accepted clean and dark-base pilot examples. Missing or invalid references
+are skipped and never grant approval. Do not add customer-uploaded photos or
+automatically turn review decisions into reference/training data.
+
+Preparing these settings and the migration does not authorize the Hetzner
+service to claim the live production queue. Apply the migration and activate
+the always-on worker only in a separately authorized production step.
 
 Required database/storage prerequisites:
 
@@ -848,6 +981,30 @@ Use `isnet-general-use` for haze or gradients:
 
 Do not use `@imgly/background-removal-node` for final output. It can write
 palette-mode PNGs with degraded alpha.
+
+On the Hetzner Linux worker, Apple Vision is unavailable. When
+`PRODUCT_INTAKE_REMBG_ENABLED=true`, the existing `image_judging` job runs the
+same `isnet-general-use` model through an isolated Docker container. The worker
+passes clean-alpha sources through unchanged, runs the container only for flat
+sources, then uses the same finalizer and magenta QA as the local path. A failed
+container run produces `needs_image_work`; it never approves an image or falls
+through to catalog publication.
+
+Measured pilot envelope on the 4 GB server:
+
+- about 1.9 GiB peak container memory;
+- about 4.2 GB container storage plus a 179 MB model cache;
+- about 45 seconds cold container/Python startup and roughly 3 seconds per
+  image once the model is loaded;
+- one image-processing job at a time, with the container stopped afterward so
+  it consumes no idle RAM.
+
+The first five live review candidates produced three automatic quality-gate
+passes and two `needs_image_work` outcomes. All five produced neutral and
+magenta review assets; none received a final-image decision, upload, or catalog
+handoff. The only flat source that required `rembg` took about 58 seconds
+end-to-end in the serial production worker; clean-alpha pass-through candidates
+completed in roughly 7-10 seconds each.
 
 #### Step 6.5: Handle Baked Shadows
 

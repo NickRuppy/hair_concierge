@@ -2,7 +2,12 @@ import { NextResponse } from "next/server"
 import type { ZodType } from "zod"
 
 import { captureScanException, type ScanRoute } from "@/lib/observability/scan"
-import { checkRateLimit, fixedWindowRetryAfterSeconds, SCAN_RATE_LIMIT } from "@/lib/rate-limit"
+import {
+  checkRateLimit,
+  fixedWindowRetryAfterSeconds,
+  SCAN_RATE_LIMIT,
+  type RateLimitConfig,
+} from "@/lib/rate-limit"
 
 /**
  * Shared scaffolding for the five scan routes (resolve, search, submit, save, wishlist):
@@ -47,6 +52,11 @@ export function createScanRoute<TBody>(config: {
   parse: (request: Request) => Promise<ScanParseResult<TBody>>
   handler: (ctx: ScanRouteContext<TBody>) => Promise<NextResponse>
   failureReason: string
+  /**
+   * The bucket checked (and the window `Retry-After` is derived from). Defaults to the
+   * shared `SCAN_RATE_LIMIT`; only the dm search lane passes its own.
+   */
+  rateLimit?: RateLimitConfig
   /** Runs before the Sentry capture on a handler throw — e.g. resolve's attempt telemetry. */
   onError?: (error: unknown, ctx: ScanRouteContext<TBody>) => Promise<void>
 }): (request: Request) => Promise<NextResponse> {
@@ -54,7 +64,8 @@ export function createScanRoute<TBody>(config: {
     const userId = await config.deps.getUserId()
     if (!userId) return scanFail("unauthorized", 401)
 
-    const limited = await config.deps.checkRateLimit(userId, SCAN_RATE_LIMIT)
+    const rateLimit = config.rateLimit ?? SCAN_RATE_LIMIT
+    const limited = await config.deps.checkRateLimit(userId, rateLimit)
     if (!limited.allowed) {
       const unavailable = limited.error === "service_unavailable"
       return scanFail(
@@ -62,7 +73,7 @@ export function createScanRoute<TBody>(config: {
         unavailable ? 503 : 429,
         unavailable
           ? undefined
-          : { "Retry-After": String(fixedWindowRetryAfterSeconds(SCAN_RATE_LIMIT)) },
+          : { "Retry-After": String(fixedWindowRetryAfterSeconds(rateLimit)) },
       )
     }
 

@@ -1,5 +1,6 @@
 "use client"
 
+import { MOTION_MS } from "@/lib/motion"
 import { useState, useCallback, useEffect, useRef } from "react"
 import { useQuizStore } from "@/lib/quiz/store"
 import { QuizOptionCard } from "./quiz-option-card"
@@ -12,28 +13,34 @@ type Phase = "type" | "gate" | "condition"
 import type { IconName } from "@/components/ui/icon"
 import { useQuizBrowserBack, useQuizBrowserHistoryEntry } from "./quiz-browser-history"
 
-const SCALP_TYPES: { value: string; label: string; description: string; icon: IconName }[] = [
-  {
-    value: "fettig",
-    label: "Eher fettig",
-    description: "Meine Ansätze werden meist nach 1–2 Tagen ölig",
-    icon: "scalp-oily",
-  },
-  {
-    value: "ausgeglichen",
-    label: "Ausgeglichen",
-    description: "Meine Kopfhaut fühlt sich weder fettig noch trocken an",
-    icon: "scalp-normal",
-  },
-  {
-    value: "trocken",
-    label: "Eher trocken",
-    description: "Meine Kopfhaut spannt manchmal oder fühlt sich rau an",
-    icon: "scalp-dry",
-  },
-]
+export const SCALP_TYPES: { value: string; label: string; description: string; icon: IconName }[] =
+  [
+    {
+      value: "fettig",
+      label: "Eher fettig",
+      description: "Meine Ansätze werden meist nach 1–2 Tagen ölig",
+      icon: "scalp-oily",
+    },
+    {
+      value: "ausgeglichen",
+      label: "Ausgeglichen",
+      description: "Meine Kopfhaut fühlt sich weder fettig noch trocken an",
+      icon: "scalp-normal",
+    },
+    {
+      value: "trocken",
+      label: "Eher trocken",
+      description: "Meine Kopfhaut spannt manchmal oder fühlt sich rau an",
+      icon: "scalp-dry",
+    },
+  ]
 
-const SCALP_CONDITIONS: { value: string; label: string; description: string; icon: IconName }[] = [
+export const SCALP_CONDITIONS: {
+  value: string
+  label: string
+  description: string
+  icon: IconName
+}[] = [
   {
     value: "schuppen",
     label: "Schuppen",
@@ -105,7 +112,7 @@ export function QuizScalpQuestion() {
         setAnimateGate(true)
         setPhase("gate")
         setAdvancing(false)
-      }, 300)
+      }, MOTION_MS.settle)
     },
     [advancing, pushBrowserHistoryEntry, setAnswer],
   )
@@ -120,7 +127,7 @@ export function QuizScalpQuestion() {
         setAdvancing(true)
         setTimeout(() => {
           goNext()
-        }, 300)
+        }, MOTION_MS.settle)
       } else {
         setAnswer("has_scalp_issue", true)
         setAnswer("scalp_condition", undefined)
@@ -143,7 +150,7 @@ export function QuizScalpQuestion() {
       setAdvancing(true)
       setTimeout(() => {
         goNext()
-      }, 400)
+      }, MOTION_MS.settle)
     },
     [setAnswer, goNext, advancing],
   )

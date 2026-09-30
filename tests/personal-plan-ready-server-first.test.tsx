@@ -13,6 +13,60 @@ const clientSource = readFileSync(
 )
 const pageSource = readFileSync(new URL("../src/app/plan-bereit/page.tsx", import.meta.url), "utf8")
 
+test("email recovery renders only the current missing group with an honest remaining count", () => {
+  const html = renderToStaticMarkup(
+    React.createElement(PersonalPlanReadyClient, {
+      leadId: "return-lead",
+      initialReadiness: {
+        status: "missing_source_facts",
+        leadId: "return-lead",
+        quizSourceKind: "personal_plan",
+        sourceVersion: "v1",
+        initialAction: "none",
+        funnelPackageKey: "customerio_scan_return_v1",
+        missingFacts: [
+          {
+            field: "goals",
+            question: "Deine Ziele?",
+            helper: "Mehrere möglich",
+            selectionMode: "multi",
+            options: [{ value: "shine", label: "Mehr Glanz" }],
+          },
+          {
+            field: "hair_length",
+            question: "Deine Länge?",
+            helper: "",
+            options: HAIR_LENGTH_OPTIONS,
+          },
+        ],
+      },
+    }),
+  )
+  assert.match(html, /Angabe 1 von 2/)
+  assert.match(html, /Deine Ziele\?/)
+  assert.match(html, /type="checkbox"/)
+  assert.doesNotMatch(html, /Deine Länge\?/)
+  assert.doesNotMatch(html, /href="\/scan/)
+})
+
+test("a ready email return buyer gets the scanner destination for Personal Plan sources too", () => {
+  const html = renderToStaticMarkup(
+    React.createElement(PersonalPlanReadyClient, {
+      leadId: "return-lead",
+      initialReadiness: {
+        status: "ready",
+        leadId: "return-lead",
+        quizSourceKind: "personal_plan",
+        sourceVersion: "v1",
+        missingFacts: [],
+        initialAction: "none",
+        funnelPackageKey: "customerio_scan_return_v1",
+      },
+    }),
+  )
+  assert.match(html, /href="\/scan\?welcome=scan"/)
+})
+
 test("server-first pending envelope renders approved static copy and no-JS recovery", () => {
   const html = renderToStaticMarkup(
     React.createElement(PersonalPlanReadyClient, {

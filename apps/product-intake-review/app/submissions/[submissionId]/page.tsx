@@ -280,13 +280,38 @@ export default async function SubmissionDetailPage({ params }: DetailPageProps) 
                     </div>
                   </>
                 ) : null}
+                {reviewModel.visualQualityVerdict ? (
+                  <div className="reviewNote">
+                    <strong>
+                      Visueller Judge: {visualQualityVerdictLabel(reviewModel.visualQualityVerdict)}
+                    </strong>
+                    {reviewModel.visualQualityConfidence !== null ? (
+                      <span>
+                        {` · Confidence: ${formatConfidence(reviewModel.visualQualityConfidence)}`}
+                      </span>
+                    ) : null}
+                    {reviewModel.visualQualityRationale ? (
+                      <p>{reviewModel.visualQualityRationale}</p>
+                    ) : null}
+                    {reviewModel.visualQualityDefects.length > 0 ? (
+                      <ul>
+                        {reviewModel.visualQualityDefects.map((defect, index) => (
+                          <li key={`${defect.kind}:${defect.region}:${index}`}>
+                            {defect.kind} · {defect.region} · {defect.severity}
+                            {defect.explanation ? `: ${defect.explanation}` : ""}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </div>
+                ) : null}
                 <p className="reviewNote">{reviewModel.processedImageNote}</p>
               </div>
             ) : reviewModel.imageSelected ? (
               <div className="processedImageBlock pendingBlock">
                 <strong>Bildverarbeitung wartet</strong>
                 <p>
-                  Das Rohbild ist freigegeben. Sobald der Worker gelaufen ist, erscheint hier das
+                  Die Bildquelle ist vorbereitet. Sobald der Worker gelaufen ist, erscheint hier das
                   verarbeitete Bild fuer den finalen Check.
                 </p>
               </div>
@@ -768,7 +793,7 @@ function describeJobActivity(job: ProductIntakeResearchJob | null) {
           tone: "waiting",
           label: "Bildverarbeitung wartet auf Worker",
           description:
-            "Das Rohbild ist freigegeben; der Worker muss jetzt das finale Review-Bild erstellen.",
+            "Die Bildquelle ist vorbereitet; der Worker muss jetzt das finale Review-Bild erstellen.",
           detail,
           worker,
         } as const
@@ -966,9 +991,11 @@ function buildReviewModel(
   const processedImageCreatedTime = latestProcessedImageArtifact
     ? new Date(latestProcessedImageArtifact.created_at).getTime()
     : 0
+  const agentPreparedImage =
+    stringValue(latestProcessedImageArtifact?.payload.selection_mode) === "agent_prepared"
   const processedImageValid =
     Boolean(latestProcessedImageArtifact) &&
-    rawImageApproved &&
+    (rawImageApproved || agentPreparedImage) &&
     !rawImageRejected &&
     (imageCandidateCreatedTime === null ||
       processedImageCreatedTime >= imageCandidateCreatedTime) &&
@@ -984,6 +1011,7 @@ function buildReviewModel(
     processedImageReady ? processedImageArtifact?.created_at : undefined,
   )
   const propertiesDecision = latestDecision(decisions, "final.properties")
+  const visualQualityJudgment = recordValue(processedImageArtifact?.payload.visual_quality_judgment)
   const artifactImageUrl = stringValue(imageArtifact?.payload.image_url)
   const productImageUrl = stringValue(product?.image_url)
   const imageUrl = productImageUrl ?? artifactImageUrl
@@ -998,7 +1026,7 @@ function buildReviewModel(
     categorySpecs,
     arrayValue(finalPayload?.identifiers) ?? [],
   )
-  const imageSelected = rawImageApproved
+  const imageSelected = rawImageApproved || agentPreparedImage
   const imageSearchRequested = rawImageDecision === "image_rejected"
   const finalImageApproved = finalImageDecision === "image_approved"
   const propertiesApproved =
@@ -1021,13 +1049,34 @@ function buildReviewModel(
     imageSourceUrl,
     imageConfidence: imageArtifact?.confidence ?? null,
     imageEvidence: stringValue(imageArtifact?.payload.evidence),
-    imageDecision: rawImageDecision ?? legacyImageDecision,
+    imageDecision:
+      rawImageDecision ?? (agentPreparedImage ? "Automatisch vorbereitet" : legacyImageDecision),
     imageSearchRequested,
     imageSelected,
     processedImageUrl: stringValue(processedImageArtifact?.payload.public_review_url),
     processedQaUrl: stringValue(processedImageArtifact?.payload.qa_review_url),
     processedImageReady,
     processedImageNeedsWork,
+    visualQualityVerdict: stringValue(visualQualityJudgment?.verdict),
+    visualQualityConfidence:
+      typeof visualQualityJudgment?.confidence === "number"
+        ? visualQualityJudgment.confidence
+        : null,
+    visualQualityRationale: stringValue(visualQualityJudgment?.rationale),
+    visualQualityDefects: Array.isArray(visualQualityJudgment?.defects)
+      ? visualQualityJudgment.defects.flatMap((item) => {
+          const defect = recordValue(item)
+          if (!defect) return []
+          return [
+            {
+              kind: stringValue(defect.kind) ?? "unknown",
+              region: stringValue(defect.region) ?? "unknown",
+              severity: stringValue(defect.severity) ?? "unknown",
+              explanation: stringValue(defect.explanation) ?? "",
+            },
+          ]
+        })
+      : [],
     processedImageNote:
       qualityGateReason(processedImageArtifact) ??
       stringValue(processedImageArtifact?.payload.notes) ??
@@ -1280,6 +1329,19 @@ function formatConfidence(value: number | null) {
   return typeof value === "number" ? `${Math.round(value * 100)}%` : "-"
 }
 
+function visualQualityVerdictLabel(value: string) {
+  switch (value) {
+    case "pass":
+      return "bereit fuer deinen Check"
+    case "rework":
+      return "Nacharbeit empfohlen"
+    case "needs_human_review":
+      return "manueller Check erforderlich"
+    default:
+      return value
+  }
+}
+
 function describeReviewProgress(
   reviewModel: ReturnType<typeof buildReviewModel>,
   jobStatus: string,
@@ -1326,7 +1388,7 @@ function describeJobProgress(
         percent: 55,
         label: "Bildverarbeitung ist eingereiht",
         description:
-          "Das Rohbild ist freigegeben; der Worker erstellt als naechstes das verarbeitete Bild.",
+          "Die Bildquelle ist vorbereitet; der Worker erstellt als naechstes das verarbeitete Bild.",
       }
     }
     if (status === "running") {

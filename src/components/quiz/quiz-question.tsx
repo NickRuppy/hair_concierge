@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
+import { MOTION_MS } from "@/lib/motion"
 import { useQuizStore } from "@/lib/quiz/store"
 import type { QuizQuestion as QuizQuestionType } from "@/lib/quiz/types"
 import { QuizOptionCard } from "./quiz-option-card"
@@ -19,7 +20,8 @@ import {
   useScannerFunnelRefinementEnabled,
 } from "./quiz-funnel-package-provider"
 
-const AUTO_ADVANCE_MS = 260
+/** The one settle delay after a single-tap answer (batch 8 motion spec). */
+const AUTO_ADVANCE_MS = MOTION_MS.settle
 
 const ANSWER_KEY_MAP: Record<number, keyof import("@/lib/quiz/types").QuizAnswers> = {
   2: "structure",

@@ -1,3 +1,5 @@
+import { TRUSTPILOT_REVIEWS } from "@/lib/trustpilot-reviews"
+
 import type {
   PersonalPlanQuizAnswers,
   PersonalPlanQuizConcern,
@@ -697,28 +699,6 @@ export const DAILY_TIME_OPTIONS: QuizOption[] = [
   { value: "20_plus_minutes", label: "20+ Minuten" },
 ]
 
-export const PREPARATION_TESTIMONIALS = [
-  {
-    role: "Verstehen",
-    source: "M. · Chaarlie-Kundin",
-    quote:
-      "Ich hatte schon so viele Tipps ausprobiert. Durch Chaarlie habe ich zum ersten Mal verstanden, was meine Haare wirklich brauchen.",
-  },
-  {
-    role: "Personalisieren",
-    source: "S. · Chaarlie-Kundin",
-    quote:
-      "Mein Haarpflegeplan fühlt sich wirklich auf meine Haare abgestimmt an – nicht wie eine allgemeine Routine, die für alle gleich ist.",
-  },
-  {
-    role: "Umsetzen",
-    source: "J. · Chaarlie-Kundin",
-    quote:
-      "Endlich weiß ich, welche Schritte für meine Haare wichtig sind und in welcher Reihenfolge. Das macht meine Haarpflege so viel einfacher.",
-  },
-] as const
+export const PREPARATION_TESTIMONIALS = TRUSTPILOT_REVIEWS
 
-export const EARLY_PROOF_TESTIMONIAL = {
-  source: "L. · Chaarlie-Kundin",
-  quote: "Der Fragebogen ist echt gut und leicht verständlich.",
-} as const
+export const EARLY_PROOF_TESTIMONIAL = TRUSTPILOT_REVIEWS[0]

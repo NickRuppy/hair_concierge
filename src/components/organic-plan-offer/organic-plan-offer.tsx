@@ -1,5 +1,7 @@
 "use client"
 
+import { TRUSTPILOT_REVIEWS } from "@/lib/trustpilot-reviews"
+
 import { Fragment } from "react"
 import Link from "next/link"
 import { ArrowDown, ChevronDown } from "lucide-react"
@@ -66,23 +68,7 @@ const surveyStats = [
   ["63%", "suchen Klarheit, welche Produkte wirklich passen", "#9a7cbd"],
 ] as const
 
-const testimonials = [
-  {
-    name: "Kim · Endlich verstehe ich meine Haare",
-    quote:
-      "Der Fragebogen ist echt gut und leicht verständlich. Auch die Produktempfehlung fand ich gut.",
-  },
-  {
-    name: "Kerstin · Echte Antworten bekommen",
-    quote:
-      "Ich finde die Interaktion sehr gut: meine Fragen stellen zu können und dann die benötigten Antworten zu bekommen.",
-  },
-  {
-    name: "Sarah · Nie wieder googeln vorm Regal",
-    quote:
-      "Bei den Produkten stehen Preis, Anwendung und der Grund dabei, warum sie empfohlen werden.",
-  },
-] as const
+const testimonials = TRUSTPILOT_REVIEWS
 
 const faqItems = [
   [
@@ -556,15 +542,15 @@ export function OrganicPlanOffer({
         <section className="px-4 py-7 sm:py-14" data-offer-section="testimonials">
           <div className="mx-auto max-w-4xl text-center">
             <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[rgba(var(--brand-plum-rgb),0.60)]">
-              Stimmen aus der Beta
+              Bewertungen auf Trustpilot
             </p>
             <h2 className="mt-3 font-serif text-4xl leading-tight tracking-[-0.035em]">
-              Das sagen Kundinnen über Chaarlie.
+              Das sagen unsere Nutzer über Chaarlie.
             </h2>
             <div className="mt-7 grid items-stretch gap-3 md:grid-cols-3">
               {testimonials.map((testimonial) => (
                 <blockquote
-                  className="h-full rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.06)] bg-white p-6 text-left shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.55)]"
+                  className="flex h-full flex-col items-center rounded-[1.5rem] border border-[rgba(var(--brand-plum-rgb),0.06)] bg-white p-6 text-center shadow-[0_16px_42px_-34px_rgba(var(--brand-plum-rgb),0.55)]"
                   key={testimonial.name}
                 >
                   <span aria-label="5 von 5 Sternen" className="text-[#d96869]">
@@ -572,6 +558,14 @@ export function OrganicPlanOffer({
                   </span>
                   <strong className="mt-2 block">{testimonial.name}</strong>
                   <p className="mt-3 text-base leading-7">„{testimonial.quote}“</p>
+                  <a
+                    className="mt-auto block pt-4 text-sm leading-6 underline underline-offset-4"
+                    href={testimonial.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Auszug · Bewertung auf Trustpilot
+                  </a>
                 </blockquote>
               ))}
             </div>

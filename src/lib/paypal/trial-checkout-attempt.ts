@@ -5,6 +5,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import type { TrialCheckoutScope } from "../billing/trial-checkout-attempt"
 import { parseTrialOfferSnapshot, type TrialOfferSnapshot } from "../billing/trial-offer"
 import type { PayPalCheckoutSource } from "./checkout-intents"
+import { frozenPayPalTrialStart, paypalTrialProviderStart } from "./trial-collection-start"
 
 export type PayPalTrialCheckoutAttempt = Readonly<{
   id: string
@@ -19,9 +20,14 @@ export type PayPalTrialCheckoutAttempt = Readonly<{
   paypalPlanId: string | null
   requestId: string | null
   requestExpiresAt: string | null
+  trialEndAt: string | null
+  providerStartTime: string | null
   providerReference: string | null
   authorizationSucceededAt: string | null
   activationEventId: string | null
+  authorizationProofKind: "webhook" | "api_confirmation" | null
+  apiConfirmationId: string | null
+  apiConfirmedAt: string | null
 }>
 
 type Client = Pick<SupabaseClient, "rpc">
@@ -50,6 +56,56 @@ function parse(value: unknown): PayPalTrialCheckoutAttempt {
     throw new Error("PayPal trial checkout attempt unavailable")
   }
 
+  const trialEndAt = item.trial_end_at ?? null
+  const providerStartTime = item.provider_start_time ?? null
+  const isV2 = typeof item.request_id === "string" && item.request_id.endsWith(":v2")
+  if (
+    (trialEndAt !== null && typeof trialEndAt !== "string") ||
+    (providerStartTime !== null && typeof providerStartTime !== "string") ||
+    ((trialEndAt !== null || providerStartTime !== null) && !isV2) ||
+    (isV2 &&
+      (item.request_id !== `paypal-trial:${item.id}:v2` ||
+        typeof trialEndAt !== "string" ||
+        typeof providerStartTime !== "string" ||
+        Date.parse(trialEndAt) !== Date.parse(frozenPayPalTrialStart(item.request_expires_at)) ||
+        Date.parse(providerStartTime) !== Date.parse(paypalTrialProviderStart(trialEndAt))))
+  )
+    throw new Error("PayPal trial frozen schedule unavailable")
+
+  const authorizationSucceededAt = item.authorization_succeeded_at ?? null
+  const activationEventId = item.activation_event_id ?? null
+  const apiConfirmationId = item.api_confirmation_id ?? null
+  const apiConfirmedAt = item.api_confirmed_at ?? null
+  const finiteTime = (value: unknown): value is string =>
+    typeof value === "string" && Number.isFinite(Date.parse(value))
+  // Missing provenance is a rolling-deployment legacy row, never API evidence.
+  const authorizationProofKind =
+    item.authorization_proof_kind === undefined
+      ? authorizationSucceededAt !== null && activationEventId !== null
+        ? "webhook"
+        : null
+      : item.authorization_proof_kind
+  const validProof =
+    authorizationProofKind === null
+      ? authorizationSucceededAt === null &&
+        activationEventId === null &&
+        apiConfirmationId === null &&
+        apiConfirmedAt === null
+      : authorizationProofKind === "webhook"
+        ? finiteTime(authorizationSucceededAt) &&
+          typeof activationEventId === "string" &&
+          activationEventId.trim().length > 0 &&
+          apiConfirmationId === null &&
+          apiConfirmedAt === null
+        : authorizationProofKind === "api_confirmation" &&
+          finiteTime(authorizationSucceededAt) &&
+          finiteTime(apiConfirmedAt) &&
+          Date.parse(authorizationSucceededAt) === Date.parse(apiConfirmedAt) &&
+          activationEventId === null &&
+          typeof apiConfirmationId === "string" &&
+          /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(apiConfirmationId)
+  if (!validProof) throw new Error("PayPal trial authorization proof unavailable")
+
   return {
     id: item.id,
     enrollmentId: item.enrollment_id,
@@ -63,10 +119,14 @@ function parse(value: unknown): PayPalTrialCheckoutAttempt {
     paypalPlanId: typeof item.paypal_plan_id === "string" ? item.paypal_plan_id : null,
     requestId: typeof item.request_id === "string" ? item.request_id : null,
     requestExpiresAt: item.request_expires_at,
-    authorizationSucceededAt:
-      typeof item.authorization_succeeded_at === "string" ? item.authorization_succeeded_at : null,
-    activationEventId:
-      typeof item.activation_event_id === "string" ? item.activation_event_id : null,
+    trialEndAt,
+    providerStartTime,
+    authorizationSucceededAt: authorizationSucceededAt as string | null,
+    activationEventId: activationEventId as string | null,
+    authorizationProofKind:
+      authorizationProofKind as PayPalTrialCheckoutAttempt["authorizationProofKind"],
+    apiConfirmationId: apiConfirmationId as string | null,
+    apiConfirmedAt: apiConfirmedAt as string | null,
     providerReference: typeof item.provider_reference === "string" ? item.provider_reference : null,
   }
 }
@@ -88,7 +148,7 @@ export function createPayPalTrialCheckoutAttempt(
     source: PayPalCheckoutSource
   },
 ) {
-  return call(client, "create_paypal_trial_checkout_attempt", {
+  return call(client, "create_paypal_trial_checkout_attempt_v2", {
     p_scope_kind: input.scope.kind,
     p_scope_id: input.scope.id,
     p_client_attempt_id: input.clientAttemptId,
@@ -103,7 +163,7 @@ export function freezePayPalTrialCheckoutAttempt(
   client: Client,
   input: { attemptId: string; appId: string; productId: string; planId: string; requestId: string },
 ) {
-  return call(client, "freeze_paypal_trial_checkout_attempt", {
+  return call(client, "freeze_paypal_trial_checkout_attempt_v2", {
     p_attempt_id: input.attemptId,
     p_app_id: input.appId,
     p_product_id: input.productId,
@@ -123,7 +183,9 @@ export function bindPayPalTrialCheckoutReference(
 }
 
 export async function findPayPalTrialCheckoutAttempt(client: Client, token: string) {
-  const { data, error } = await client.rpc("get_paypal_trial_checkout_attempt", { p_token: token })
+  const { data, error } = await client.rpc("get_paypal_trial_checkout_attempt_v2", {
+    p_token: token,
+  })
   if (error) throw new Error("PayPal trial checkout attempt unavailable")
   return data ? parse(data) : null
 }
@@ -138,6 +200,50 @@ export function pinPayPalTrialActivation(
     p_event_id: input.eventId,
     p_authorized_at: input.authorizedAt,
   })
+}
+
+/** Only temporary database availability failures are safe to fall back from. */
+export class PayPalTrialConfirmationUnavailableError extends Error {}
+
+export async function confirmPayPalTrialActivation(
+  client: Client,
+  input: {
+    token: string
+    agreementId: string
+    confirmationId: string
+    appId: string
+    planId: string
+    providerStartTime: string
+    nextBillingTime: string
+  },
+) {
+  const { data, error, status } = await client.rpc("confirm_paypal_trial_activation", {
+    p_token: input.token,
+    p_agreement_id: input.agreementId,
+    p_confirmation_id: input.confirmationId,
+    p_app_id: input.appId,
+    p_plan_id: input.planId,
+    p_provider_start_time: input.providerStartTime,
+    p_next_billing_time: input.nextBillingTime,
+  })
+  if (error) {
+    if (
+      // PostgREST preserves HTTP status but has no service error code for a
+      // fetch rejection or plain gateway response. Structured integrity and
+      // permission codes take precedence even if a gateway labels them 5xx.
+      (!error.code && (status === 0 || status === 429 || status >= 500)) ||
+      /^(08|53)/.test(error.code ?? "") ||
+      ["40001", "40P01", "57014", "57P01", "PGRST000", "PGRST001", "PGRST002", "PGRST003"].includes(
+        error.code ?? "",
+      )
+    )
+      throw new PayPalTrialConfirmationUnavailableError(
+        "PayPal trial API confirmation temporarily unavailable",
+        { cause: error },
+      )
+    throw new Error("PayPal trial API confirmation failed", { cause: error })
+  }
+  return parse(data)
 }
 
 export type PayPalTrialPlanCatalog = {
@@ -188,11 +294,17 @@ export async function findPayPalTrialCheckoutAttemptByScope(
   scope: TrialCheckoutScope,
   clientAttemptId: string,
 ) {
-  const { data, error } = await client.rpc("get_paypal_trial_checkout_attempt_by_scope", {
+  const { data, error } = await client.rpc("get_paypal_trial_checkout_attempt_by_scope_v2", {
     p_scope_kind: scope.kind,
     p_scope_id: scope.id,
     p_client_attempt_id: clientAttemptId,
   })
   if (error) throw new Error("PayPal trial checkout attempt unavailable")
   return data ? parse(data) : null
+}
+
+/** Decoded immutable schedule; only historical v1 rows derive their midnight. */
+export function payPalTrialCheckoutSchedule(attempt: PayPalTrialCheckoutAttempt) {
+  const trialEndAt = attempt.trialEndAt ?? frozenPayPalTrialStart(attempt.requestExpiresAt)
+  return { trialEndAt, providerStartTime: attempt.providerStartTime ?? trialEndAt }
 }

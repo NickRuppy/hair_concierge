@@ -69,6 +69,11 @@ export type OfferSectionId =
   | "product_story_products"
   | "testimonials"
   | "subscription_explanation"
+  // `discovery-call-v1` sections that have no plan/scanner counterpart. The
+  // booking calendar replaces pricing as the conversion surface.
+  | "video"
+  | "booking"
+  | "free_explanation"
   | "pricing"
   | "guarantee"
   | "faq"
@@ -82,6 +87,7 @@ export type OfferCtaId =
   | "support_continue"
   | "locked_plan"
   | "pricing_primary"
+  | "hero_primary"
   | "change_plan"
   | "field_test_activation"
   | "partner_access_activation"
@@ -312,6 +318,28 @@ export type OfferCommerceProperties =
   | MembershipCommerceProperties
   | OneTimePersonalPlanCommerceProperties
 
+/**
+ * Quiz-entry snapshot shared by the scanner and discovery-call funnels.
+ * `scannerTrackingVersion` keeps its historical name — the scanner shipped it
+ * first and its PostHog queries reference the property.
+ */
+export type QuizViewSnapshotPayload = FunnelAnalyticsEnvelope & {
+  entryAt?: string
+  entryPath?: string
+  isResumed: boolean
+  isInternalTest?: boolean
+  quizStep: number
+  quizViewId: string
+  scannerTrackingVersion: 1
+  testKind?: FunnelTestKind | null
+  utmCampaign?: string
+  utmContent?: string
+  utmMedium?: string
+  utmSource?: string
+  utmTerm?: string
+  viewedAt: string
+}
+
 export type AppEventMap = {
   chat_product_recommendation_shown: {
     productCount: number
@@ -358,6 +386,10 @@ export type AppEventMap = {
       source: "pricing_page" | "quiz_result_offer"
       value?: number
     }
+  discovery_call_booking_scheduled: FunnelAnalyticsEnvelope & {
+    leadId?: string | null
+    offerVariant?: string
+  }
   first_chat_message: Record<string, never>
   onboarding_completed: {
     userId: string
@@ -604,6 +636,13 @@ export type AppEventMap = {
     reason: EmailDeliverabilityFailure
     suggestionPresent: boolean
   }
+  quiz_email_return_prompt_viewed: {
+    funnelPackageKey: "customerio_scan_return_v1"
+  }
+  quiz_email_return_choice: {
+    choice: "continue" | "edit"
+    funnelPackageKey: "customerio_scan_return_v1"
+  }
   /**
    * Ein Funnel-Einschub im Quiz wurde gesehen. Einschübe sind keine Fragen und
    * bleiben deshalb aus `quiz_step_viewed` heraus.
@@ -616,22 +655,10 @@ export type AppEventMap = {
     stepName: string
     stepNumber: number
   }
-  scanner_quiz_viewed: FunnelAnalyticsEnvelope & {
-    entryAt?: string
-    entryPath?: string
-    isResumed: boolean
-    isInternalTest?: boolean
-    quizStep: number
-    quizViewId: string
-    scannerTrackingVersion: 1
-    testKind?: FunnelTestKind | null
-    utmCampaign?: string
-    utmContent?: string
-    utmMedium?: string
-    utmSource?: string
-    utmTerm?: string
-    viewedAt: string
-  }
+  scanner_quiz_viewed: QuizViewSnapshotPayload
+  // Same quiz-entry snapshot for the discovery-call funnel; separate event
+  // name so the scanner dashboards keep their unfiltered queries intact.
+  discovery_call_quiz_viewed: QuizViewSnapshotPayload
   quiz_step_viewed: {
     stepName: string
     stepNumber: number
@@ -649,9 +676,42 @@ export type AppEventMap = {
     inCatalog: boolean
     snapshotSource: string
   }
-  scan_not_found: Record<string, never>
+  scan_not_found: {
+    identified: boolean
+    suggestedCategory: PersonalPlanCategory | null
+    scanInteractionId: string
+    msToUnknownSheetReady: number
+  }
+  /**
+   * The search sheet's retailer (dm) lane response settling (plan Rev. 6 §4/§8, Task 6) —
+   * fired once per dm request, whether the lane succeeded, came back disabled, or
+   * failed/timed out. `trigger` (F2): `auto` for the typing-pause search, `submit` for
+   * Enter/arrow. Cache hits and superseded (aborted) requests never fire. Never the query
+   * text.
+   */
+  scan_retailer_search: {
+    catalogCount: number
+    retailerCount: number
+    outcome: "ok" | "disabled" | "unavailable"
+    durationMs: number
+    trigger: "auto" | "submit"
+  }
+  /** A dm-only row tap in the search sheet's retailer section (plan Rev. 6 §4, Task 6). */
+  scan_retailer_result_opened: {
+    categoryLabel: string | null
+  }
   scan_submission_created: {
-    category: string
+    category: PersonalPlanCategory
+    suggestedCategory: PersonalPlanCategory | null
+    selectionPath: "one_tap" | "grid"
+    scanInteractionId: string
+    msConfirmationToPending: number
+    /**
+     * Which intake surface produced this submission (plan Rev. 6 §4, Task 5): the
+     * barcode-scan unknown-product flow (`"scan"`, the only value before this task) or the
+     * search sheet's name-based research recovery (`"name_search"`, no scanned identifier).
+     */
+    intakePath: "scan" | "name_search"
   }
   scan_fallback_search_used: {
     trigger: string

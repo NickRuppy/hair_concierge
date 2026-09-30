@@ -5,7 +5,9 @@ import type { PersonalPlanJourneyAccess } from "@/lib/personal-plan/journey-acce
 import { NextResponse } from "next/server"
 import type { EmailOtpType } from "@supabase/supabase-js"
 import { isModeratorReturnPath } from "@/lib/auth/moderator-return"
+import { isDiscoveryReturnPath } from "@/lib/auth/discovery-return"
 import { isPartnerAccessReturnPath } from "@/lib/auth/partner-access-return"
+import { isCheckoutRecoveryReturnPath } from "@/lib/checkout/access-recovery"
 import {
   buildFreeRegistrationBindSkippedLandingPath,
   buildFreeRegistrationRecoveryPath,
@@ -130,7 +132,10 @@ function sanitizeAuthIntendedPath(rawNext: string | null, origin: string): strin
     const sanitizedDestination = `${redirectUrl.pathname}${redirectUrl.search}${redirectUrl.hash}`
     if (
       /(?:access|refresh)?_?token|token_hash|code|error/i.test(redirectUrl.hash) &&
-      !isPartnerAccessReturnPath(sanitizedDestination)
+      !isPartnerAccessReturnPath(sanitizedDestination) &&
+      // The discovery handoff is opaque base64url and can contain "code",
+      // "token" or "error" by chance; stripping it would break the claim.
+      !isDiscoveryReturnPath(sanitizedDestination)
     ) {
       redirectUrl.hash = ""
     }
@@ -323,8 +328,14 @@ export async function handleAuthConfirm(request: Request, deps: AuthConfirmDeps)
     if (
       user &&
       !suppressLinking &&
+      // Returning to existing access must not adopt a recent legacy quiz by email.
+      !isCheckoutRecoveryReturnPath(next, origin) &&
       !isModeratorReturnPath(next) &&
-      !isPartnerAccessReturnPath(next)
+      !isPartnerAccessReturnPath(next) &&
+      // The discovery claim has not run yet at this point and the participant's
+      // own quiz comes after it, so linking here would project a stale legacy
+      // lead into `hair_profiles` before either.
+      !isDiscoveryReturnPath(next)
     ) {
       try {
         await deps.linkQuizToProfile(

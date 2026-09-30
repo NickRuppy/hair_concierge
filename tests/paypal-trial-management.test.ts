@@ -1,4 +1,7 @@
-import { paypalTrialCollectionStart } from "../src/lib/paypal/trial-collection-start"
+import {
+  paypalTrialCollectionStart,
+  paypalTrialProviderStart,
+} from "../src/lib/paypal/trial-collection-start"
 import assert from "node:assert/strict"
 import test from "node:test"
 import { createTrialOfferSnapshot } from "../src/lib/billing/trial-offer"
@@ -12,7 +15,22 @@ import { buildPayPalDeferredTrialPlanRequest } from "../src/lib/paypal/trial-pla
 const USER = "11111111-1111-4111-8111-111111111111",
   ENROLLMENT = "22222222-2222-4222-8222-222222222222",
   OP = "33333333-3333-4333-8333-333333333333"
-function fixture(kind: "switch" | "restore" = "restore") {
+function fixture(
+  kind: "switch" | "restore" = "restore",
+  options: {
+    v2Schedule?: boolean
+    legacyFrozen?: boolean
+    alignedTrialEnd?: boolean
+    corruptSchedule?:
+      | "partial"
+      | "non_string"
+      | "missing"
+      | "altered_target"
+      | "legacy_pair"
+      | "bad_v2_key"
+    corruptBinding?: boolean
+  } = {},
+) {
   const catalog = {
     monthPriceId: "price_month",
     yearPriceId: "price_year",
@@ -20,7 +38,9 @@ function fixture(kind: "switch" | "restore" = "restore") {
   }
   const sourceOffer = createTrialOfferSnapshot(kind === "restore" ? "year" : "month", catalog),
     targetOffer = createTrialOfferSnapshot("year", catalog)
-  const deadline = new Date(Date.now() + 4 * 86400000).toISOString()
+  const deadline = options.alignedTrialEnd
+    ? new Date((Math.floor(Date.now() / 86400000) + 5) * 86400000).toISOString()
+    : new Date(Date.now() + 4 * 86400000).toISOString()
   const operation: any = {
     id: OP,
     enrollmentId: ENROLLMENT,
@@ -52,8 +72,33 @@ function fixture(kind: "switch" | "restore" = "restore") {
       productId: "PROD",
     }),
   }
+  const providerStart = paypalTrialProviderStart(deadline)
+  if (options.v2Schedule) {
+    source.start_time = providerStart
+    source.billing_info.next_billing_time = new Date(
+      Date.parse(paypalTrialCollectionStart(deadline)) + 10 * 60 * 60 * 1000,
+    ).toISOString()
+  }
   const subscriptions: Record<string, any> = { "I-old": source }
-  let frozen: any = null,
+  let frozen: any = options.legacyFrozen
+      ? {
+          operation_id: options.corruptBinding ? "foreign-operation" : OP,
+          enrollment_id: ENROLLMENT,
+          app_id: "APP",
+          product_id: "PROD",
+          source_plan_id: source.plan_id,
+          target_plan_id: "P-year",
+          request_id: `paypal-trial-management:${OP}`,
+          request_expires_at: new Date(Date.now() + 72 * 3600000).toISOString(),
+          return_url: "https://chaarlie.de/profile?trial_operation=" + OP,
+          cancel_url: "https://chaarlie.de/profile?trial_operation=" + OP,
+          request_sent_at: null,
+          target_agreement_id: null,
+          approval_url: null,
+          source_start_time: options.corruptSchedule === "legacy_pair" ? source.start_time : null,
+          target_start_time: options.corruptSchedule === "legacy_pair" ? providerStart : null,
+        }
+      : null,
     commitAllowed = true,
     guardAllowed = true,
     failProjection = false
@@ -166,23 +211,53 @@ function fixture(kind: "switch" | "restore" = "restore") {
             },
             error: null,
           }
-        if (name === "get_paypal_trial_management_request")
+        if (
+          name === "get_paypal_trial_management_request" ||
+          name === "get_paypal_trial_management_request_v2"
+        )
           return { data: frozen ? { ...frozen } : null, error: null }
-        if (name === "freeze_paypal_trial_management_request") {
+        if (
+          name === "freeze_paypal_trial_management_request" ||
+          name === "freeze_paypal_trial_management_request_v2"
+        ) {
+          const isV2 = name === "freeze_paypal_trial_management_request_v2"
+          const frozenOperationId = options.corruptBinding ? "foreign-operation" : OP
           frozen = {
-            operation_id: OP,
+            operation_id: frozenOperationId,
             enrollment_id: ENROLLMENT,
             app_id: "APP",
             product_id: "PROD",
             source_plan_id: args.p_source_plan_id,
             target_plan_id: args.p_target_plan_id,
-            request_id: `request-${OP}`,
+            request_id:
+              options.corruptSchedule === "bad_v2_key"
+                ? `paypal-trial-management:foreign:${OP}:v2`
+                : `paypal-trial-management:${frozenOperationId}${isV2 ? ":v2" : ""}`,
             request_expires_at: new Date(Date.now() + 72 * 3600000).toISOString(),
             return_url: args.p_return_url,
             cancel_url: args.p_cancel_url,
             request_sent_at: null,
             target_agreement_id: null,
             approval_url: null,
+            source_start_time:
+              isV2 && options.corruptSchedule === "non_string"
+                ? 42
+                : isV2 && options.corruptSchedule === "missing"
+                  ? null
+                  : isV2
+                    ? args.p_source_start_time
+                    : null,
+            target_start_time: isV2
+              ? options.corruptSchedule === "partial" || options.corruptSchedule === "missing"
+                ? null
+                : options.corruptSchedule === "non_string"
+                  ? 43
+                  : options.corruptSchedule === "altered_target"
+                    ? new Date(Date.parse(providerStart) + 60 * 60 * 1000).toISOString()
+                    : options.v2Schedule || kind === "restore"
+                      ? providerStart
+                      : args.p_source_start_time
+              : null,
           }
           return { data: { ...frozen }, error: null }
         }
@@ -284,13 +359,13 @@ function fixture(kind: "switch" | "restore" = "restore") {
   }
 }
 
-test("restore requests no-free replacement at original deadline and cancellation remains effective until verified approval", async () => {
+test("restore requests its frozen no-free replacement schedule and cancellation remains effective until verified approval", async () => {
   const f = fixture()
   const result = await beginPayPalTrialManagement(f.input, f.deps)
   assert.equal(result.status, "approval_required")
   assert.equal(f.tables.trial_enrollments[0].cancel_at_period_end, true)
   const request = f.calls.find((c) => c.path)
-  assert.equal(request.body.start_time, paypalTrialCollectionStart(f.deadline))
+  assert.equal(request.body.start_time, f.frozen().target_start_time)
   assert.equal(request.body.plan.billing_cycles[0].pricing_scheme.fixed_price.value, "69.99")
   assert.equal(request.body.plan.billing_cycles[1].pricing_scheme.fixed_price.value, "99.99")
   assert.equal(f.operation.status, "pending")
@@ -308,6 +383,119 @@ test("restore requests no-free replacement at original deadline and cancellation
       .trial_management_superseded_by,
     "I-new",
   )
+})
+
+test("noon-scheduled restore preserves its frozen provider start while accepting the provider's 10:00 billing batch", async () => {
+  const f = fixture("restore", { v2Schedule: true })
+  const result = await beginPayPalTrialManagement(f.input, f.deps)
+  assert.equal(result.status, "approval_required")
+  const request = f.calls.find((c) => c.path)
+  assert.equal(request.body.start_time, f.frozen().target_start_time)
+  assert.equal(
+    f.calls.some((c) => c.rpc === "freeze_paypal_trial_management_request_v2"),
+    true,
+  )
+  f.approve()
+  f.subscriptions["I-new"].billing_info.next_billing_time = new Date(
+    Date.parse(paypalTrialCollectionStart(f.deadline)) + 10 * 60 * 60 * 1000,
+  ).toISOString()
+  assert.equal((await reconcilePayPalTrialManagement(f.input, f.deps)).status, "committed")
+})
+
+test("an aligned midnight trial end freezes a same-date noon restore start", async () => {
+  const f = fixture("restore", { alignedTrialEnd: true })
+  await beginPayPalTrialManagement(f.input, f.deps)
+  const request = f.calls.find((c) => c.path)
+  assert.equal(request.body.start_time, paypalTrialProviderStart(f.deadline))
+  assert.equal(request.body.start_time.slice(0, 10), f.deadline.slice(0, 10))
+  assert.equal(request.body.start_time.slice(11), "12:00:00.000Z")
+})
+
+test("a legacy frozen restore retains its original midnight request body", async () => {
+  const f = fixture("restore", { legacyFrozen: true })
+  const result = await beginPayPalTrialManagement(f.input, f.deps)
+  assert.equal(result.status, "approval_required")
+  assert.equal(f.calls.find((c) => c.path).body.start_time, paypalTrialCollectionStart(f.deadline))
+  assert.equal(
+    f.calls.some((c) => c.rpc === "freeze_paypal_trial_management_request_v2"),
+    false,
+  )
+})
+
+test("switch preserves its frozen noon source schedule without a start-time patch", async () => {
+  const f = fixture("switch", { v2Schedule: true })
+  await beginPayPalTrialManagement(f.input, f.deps)
+  const request = f.calls.find((c) => c.path)
+  assert.equal("start_time" in request.body, false)
+  assert.equal(f.frozen().source_start_time, f.source.start_time)
+  assert.equal(f.frozen().target_start_time, f.source.start_time)
+  f.approve()
+  assert.equal((await reconcilePayPalTrialManagement(f.input, f.deps)).status, "committed")
+})
+
+test("a restore target whose start differs from its frozen schedule is rejected", async () => {
+  const f = fixture("restore", { v2Schedule: true })
+  await beginPayPalTrialManagement(f.input, f.deps)
+  f.approve()
+  f.subscriptions["I-new"].start_time = f.deadline
+  await assert.rejects(() => reconcilePayPalTrialManagement(f.input, f.deps), /deadline/)
+  assert.equal(f.operation.status, "pending")
+})
+
+test("a source changed after its v2 freeze cannot create a replacement", async () => {
+  const f = fixture("restore", { v2Schedule: true })
+  const retrieve = f.deps.retrieve
+  let sourceReads = 0
+  f.deps.retrieve = async (id: string) => {
+    const subscription = await retrieve(id)
+    if (id === "I-old" && ++sourceReads === 2) subscription.start_time = f.deadline
+    return subscription
+  }
+  await assert.rejects(() => beginPayPalTrialManagement(f.input, f.deps), /deadline/)
+  assert.equal(
+    f.calls.some((c) => c.path),
+    false,
+  )
+})
+
+test("corrupt frozen schedules and bindings cannot create a replacement", async () => {
+  for (const [label, options, error] of [
+    ["partial", { corruptSchedule: "partial" }, /schedule unavailable/],
+    ["non-string", { corruptSchedule: "non_string" }, /schedule unavailable/],
+    ["v2 missing", { corruptSchedule: "missing" }, /schedule unavailable/],
+    ["wrong v2 key", { corruptSchedule: "bad_v2_key" }, /schedule unavailable/],
+    ["legacy pair", { legacyFrozen: true, corruptSchedule: "legacy_pair" }, /schedule unavailable/],
+    ["altered target", { corruptSchedule: "altered_target" }, /schedule mismatch/],
+    ["binding", { corruptBinding: true }, /binding mismatch/],
+  ] as const) {
+    const f = fixture("restore", options)
+    await assert.rejects(() => beginPayPalTrialManagement(f.input, f.deps), error, label)
+    assert.equal(
+      f.calls.some((c) => c.path),
+      false,
+      label,
+    )
+  }
+})
+
+test("management keeps the trial-end billing bounds even when the provider start is noon", async () => {
+  for (const boundary of ["before_trial_end", "window_end"] as const) {
+    const f = fixture("restore", { v2Schedule: true })
+    await beginPayPalTrialManagement(f.input, f.deps)
+    f.approve()
+    f.subscriptions["I-new"].billing_info.next_billing_time =
+      boundary === "before_trial_end"
+        ? new Date(Date.parse(f.deadline) - 1).toISOString()
+        : new Date(
+            Date.parse(paypalTrialCollectionStart(f.deadline)) + 48 * 60 * 60 * 1000,
+          ).toISOString()
+    await assert.rejects(
+      () => reconcilePayPalTrialManagement(f.input, f.deps),
+      /deadline/,
+      boundary,
+    )
+    assert.equal(f.operation.status, "pending")
+  }
 })
 
 test("switch needs payer reapproval and never rewrites or patches the original trial deadline", async () => {
@@ -368,6 +556,7 @@ test("lost create response retries exact frozen request within documented idempo
   const requests = f.calls.filter((c) => c.path)
   assert.equal(requests.length, 2)
   assert.deepEqual(requests[0], requests[1])
+  assert.equal(requests[0].requestId, `paypal-trial-management:${OP}:v2`)
 })
 
 test("fresh cancellation wins commit CAS and replacement is neutralized without clearing old cancellation", async () => {

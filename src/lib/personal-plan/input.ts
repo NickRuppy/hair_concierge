@@ -44,10 +44,11 @@ const v3EnvelopeSchema = z
   .strict()
 
 const v2AnswersSchema = personalPlanDurableAnswersBaseSchema
-  .omit({ currentConcerns: true, concernRecurrence: true })
+  .omit({ currentConcerns: true, concernRecurrence: true, primaryConcern: true })
   .extend({
     currentConcerns: z.array(z.enum(legacyConcernValues)).optional(),
     concernRecurrence: z.undefined().optional(),
+    primaryConcern: z.undefined().optional(),
   })
   .strict()
 

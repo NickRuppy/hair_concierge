@@ -1,5 +1,7 @@
 # PayPal trial: creation-time collection start
 
+> Scheduling assumption superseded by [the verified noon repair](paypal-trial-scheduling-verification.md). D1–D3 below remain the customer contract; the prior claim that a midnight provider start guarantees same-date collection was disproven in production.
+
 ## Contract and decision coverage
 
 Status: confirmed. Scope: make PayPal trial activation verifiable by fixing the collection date when checkout is created, instead of patching `start_time` after approval (PR #568's patch approach was proven dead by webhook WH-3V548547RB010763M: PayPal applies the patched start but never recomputes `next_billing_time`). Stripe is unchanged. No offer-page surface, timing, or user-visible feedback changes; the confirmation email's PayPal trial-end sentence is corrected so the legal record matches the ruled contract.
