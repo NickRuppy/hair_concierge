@@ -4,6 +4,8 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 import { createAdminClient } from "../../src/lib/supabase/admin"
 import {
   planUserFactsBackfill,
+  type EditTime,
+  type EditTimeBasis,
   type LegacyProfileColumns,
   type LoadedUserRow,
   type PlannedFactsWrite,
@@ -69,7 +71,6 @@ const HAIR_PROFILE_COLUMNS = [
   "brush_type",
   "desired_volume",
   "primary_concern",
-  "updated_at",
 ].join(", ")
 
 export type BackfillOptions = {
@@ -224,7 +225,10 @@ type LoadedPage = {
    * NOT here: without readable provenance the catch-up gate cannot be evaluated safely, so the
    * row is reported and left alone rather than written blind. */
   rows: LoadedUserRow[]
-  /** Everything the loader itself refuses or disambiguates, printed under SKIPPED. */
+  /** Rows the loader refuses (printed and counted under SKIPPED). */
+  skips: string[]
+  /** What the loader disambiguated (several leads, artifacts, plans): informational, printed
+   * under NOTES and never counted as skips. */
   notes: string[]
   /** Profiles the page actually read (blocked rows included), for the limit and the cursor. */
   count: number
@@ -250,7 +254,7 @@ async function loadPage(
   const userIds = profiles
     .map((row) => readString(row.user_id))
     .filter((value): value is string => value !== null)
-  if (userIds.length === 0) return { rows: [], notes: [], count: 0, lastUserId: null }
+  if (userIds.length === 0) return { rows: [], skips: [], notes: [], count: 0, lastUserId: null }
 
   const [artifacts, leads, plans, profileEdits] = await Promise.all([
     runQuery(
@@ -277,11 +281,13 @@ async function loadPage(
       "personal_plans",
     ),
     // Task 7: the iOS edit / registration leaves one row per user; the time of its publication
-    // is the created_at of the context version it points at (the table has no timestamp).
+    // is the created_at of the context version it points at (the table has no timestamp), and
+    // `profile_snapshot` is the row it left (fix round 5: only columns still equal to it date
+    // from that publication).
     runQuery(
       client
         .from<Record<string, unknown>>("scanner_profile_edits")
-        .select("user_id, context_version_id")
+        .select("user_id, context_version_id, profile_snapshot")
         .in("user_id", userIds),
       "scanner_profile_edits",
     ),
@@ -302,11 +308,21 @@ async function loadPage(
   const editVersionTime = new Map(
     editVersions.map((row) => [readString(row.id), readString(row.created_at)] as const),
   )
-  const lastEditAtByUser = new Map<string, string | null>()
+  const lastEditByUser = new Map<
+    string,
+    { at: string | null; snapshot: Record<string, unknown> | null }
+  >()
   for (const edit of profileEdits) {
     const userId = readString(edit.user_id)
     if (userId) {
-      lastEditAtByUser.set(userId, editVersionTime.get(readString(edit.context_version_id)) ?? null)
+      const snapshot = edit.profile_snapshot
+      lastEditByUser.set(userId, {
+        at: editVersionTime.get(readString(edit.context_version_id)) ?? null,
+        snapshot:
+          typeof snapshot === "object" && snapshot !== null && !Array.isArray(snapshot)
+            ? (snapshot as Record<string, unknown>)
+            : null,
+      })
     }
   }
 
@@ -344,6 +360,7 @@ async function loadPage(
   const versionsByPlan = groupBy(needVersions, "personal_plan_id")
   const draftsByPlan = groupBy(drafts, "personal_plan_id")
 
+  const skips: string[] = []
   const notes: string[] = []
   const rows: LoadedUserRow[] = []
 
@@ -376,7 +393,7 @@ async function loadPage(
 
     const provenance = factsProvenanceSchema.safeParse(profile.facts_provenance ?? {})
     if (!provenance.success) {
-      notes.push(`${userId}: facts_provenance is unreadable; left untouched for review`)
+      skips.push(`${userId}: facts_provenance is unreadable; left untouched for review`)
       continue
     }
 
@@ -416,8 +433,8 @@ async function loadPage(
           ? [{ id, quizAnswers: lead.quiz_answers, createdAt: readString(lead.created_at) }]
           : []
       }),
-      updatedAt: readString(profile.updated_at),
-      lastProfileEditAt: lastEditAtByUser.get(userId) ?? null,
+      lastProfileEditAt: lastEditByUser.get(userId)?.at ?? null,
+      lastProfileEditSnapshot: lastEditByUser.get(userId)?.snapshot ?? null,
       plan:
         planRow && planId
           ? ({
@@ -434,7 +451,7 @@ async function loadPage(
     })
   }
 
-  return { rows, notes, count: profiles.length, lastUserId: userIds.at(-1) ?? null }
+  return { rows, skips, notes, count: profiles.length, lastUserId: userIds.at(-1) ?? null }
 }
 
 function describeWrite(write: PlannedFactsWrite, prefix: string, userId: string): string {
@@ -471,7 +488,11 @@ export type BackfillSummary = {
    * the planned care write applied. */
   careRuleRows: Partial<Record<CareConversionRule, number>>
   unresolvable: number
+  /** Domains or rows deliberately left alone. Informational lines are NOT skips (`notes`). */
   skipped: number
+  /** Informational lines (several leads/artifacts/plans, a source that fell through, a
+   * catch-up source change), printed under NOTES. */
+  notes: number
   applied: number
   /** `user_facts_save_v1` returned `preserved`, i.e. it declined the write and kept what was
    * there. Not an applied change. */
@@ -490,6 +511,15 @@ const CARE_RULE_LABELS: Record<CareConversionRule, string> = {
     "dryer/diffuser only with protection „Ja“: heat_protectant added to currentProductCategories",
 }
 
+/** How the report names an `editedAt` basis and its candidates (fix round 5, I3). */
+const EDIT_TIME_LABELS: Record<EditTimeBasis, string> = {
+  ios_profile_edit: "iOS edit",
+  after_quiz: "quiz taken + 1 ms",
+  after_backfill: "backfill write",
+  stored_edited_at: "stored editedAt",
+  backfill_time: "run time",
+}
+
 function countBy<Key extends string>(keys: Key[]): string {
   const counts = new Map<Key, number>()
   for (const key of keys) counts.set(key, (counts.get(key) ?? 0) + 1)
@@ -503,9 +533,47 @@ function sourceLabel(plan: UserFactsBackfillPlan): string {
   return source.id ? `${source.kind} ${source.id}` : source.kind
 }
 
+function editTimeLine(editedAt: EditTime | undefined): string {
+  if (!editedAt) return ""
+  const candidates = (Object.keys(EDIT_TIME_LABELS) as EditTimeBasis[])
+    .filter((basis) => basis !== "backfill_time")
+    .map((basis) => {
+      const at = editedAt.candidates[basis as Exclude<EditTimeBasis, "backfill_time">]
+      return basis === "ios_profile_edit" || basis === "after_quiz" || at
+        ? `${EDIT_TIME_LABELS[basis]} ${at ?? "none"}`
+        : null
+    })
+    .filter((entry): entry is string => entry !== null)
+  return ` — editedAt ${editedAt.at} (${EDIT_TIME_LABELS[editedAt.basis]}; candidates: ${candidates.join(", ")})`
+}
+
+/** Order-free rendering, so one change pattern counts once however the arrays were ordered. */
+function patternValue(value: string): string {
+  return value.includes(",") ? value.split(",").sort().join(",") : value
+}
+
+/** The "change pattern -> count" table (fix round 5): every visible column change grouped by
+ * column and before -> after, most frequent first. */
+function changePatterns(outcomes: RowOutcome[]): { key: string; count: number }[] {
+  const counts = new Map<string, number>()
+  for (const { plan } of outcomes) {
+    for (const change of plan.report.visibleChanges) {
+      const key =
+        change.pattern === "primary_concern_only_concern"
+          ? `${change.domain}.${change.column}: NULL -> her only concern (the door names it the main problem)`
+          : `${change.domain}.${change.column}: ${patternValue(change.before)} -> ${patternValue(change.after)}`
+      counts.set(key, (counts.get(key) ?? 0) + 1)
+    }
+  }
+  return [...counts.entries()]
+    .map(([key, count]) => ({ key, count }))
+    .sort((left, right) => right.count - left.count || left.key.localeCompare(right.key))
+}
+
 /**
- * The owner's sign-off report (task 7): a summary table first, then one section per question he
- * has to answer, each listing user ids. Pure formatting over the plans.
+ * The owner's sign-off report (task 7): a summary table first, then the change-pattern table,
+ * then one section per question he has to answer, each listing user ids. Pure formatting over
+ * the plans.
  */
 function reportLines(
   outcomes: RowOutcome[],
@@ -514,6 +582,7 @@ function reportLines(
     conflictLines: string[]
     unresolvableLines: string[]
     skipLines: string[]
+    noteLines: string[]
     revisionConflictLines: string[]
   },
 ): string[] {
@@ -530,6 +599,7 @@ function reportLines(
       plan.writes.some((write) => write.domain === "diagnostics" && write.detail?.includes("kept")),
   )
   const sourceNotes = outcomes.filter(({ plan }) => plan.report.sourceNote)
+  const lastLinks = outcomes.filter(({ plan }) => plan.report.lastLinkNote)
   const ruleRows = outcomes.filter(({ plan }) => plan.report.careRules.length > 0)
   const tolerated = outcomes.flatMap(({ plan }) => plan.report.tolerated.map((entry) => entry.id))
   const changedColumns = outcomes.flatMap(({ plan }) =>
@@ -542,6 +612,7 @@ function reportLines(
         .map(([field]) => field),
     ),
   )
+  const patterns = changePatterns(outcomes)
 
   const row = (label: string, value: string | number) =>
     lines.push(`  ${label.padEnd(42)} ${value}`)
@@ -587,11 +658,13 @@ function reportLines(
   )
   row("rows keeping profile values", kept.length)
   row("rows where a later lead beat the artifact", sourceNotes.length)
+  row("rows written by a non-winning quiz's link", lastLinks.length)
   row("tolerated differences (not edits)", tolerated.length ? countBy(tolerated) : "0")
   row("erasures (P4)", summary.erasures)
   row("conflicts (P4)", summary.conflicts)
   row("unresolvable", summary.unresolvable)
   row("skipped", summary.skipped)
+  row("notes (informational, not skips)", summary.notes)
   if (summary.mode === "apply") {
     row("applied / preserved", `${summary.applied} / ${summary.preserved}`)
     row("concurrent-writer conflicts", summary.revisionConflicts)
@@ -599,13 +672,16 @@ function reportLines(
   }
 
   lines.push("")
+  lines.push(`CHANGE PATTERNS (${patterns.length}) — column: before -> after, rows`)
+  for (const { key, count } of patterns) lines.push(`  ${key.padEnd(90)} ${count}`)
+
+  lines.push("")
   lines.push(
     `HAND-EDITED GROUPS (${edited.length} rows) — the column wins; editedAt marks the edit`,
   )
   for (const { row: loaded, plan } of edited) {
-    const at = plan.report.editedAt
     lines.push(
-      `  ${loaded.userId} [${sourceLabel(plan)}] ${plan.report.editedGroups.join(", ")}${at ? ` — editedAt ${at.at} (${at.basis})` : ""}`,
+      `  ${loaded.userId} [${sourceLabel(plan)}] ${plan.report.editedGroups.join(", ")}${editTimeLine(plan.report.editedAt)}`,
     )
     for (const finding of plan.report.findings.filter((entry) => entry.verdict === "edited")) {
       lines.push(
@@ -618,14 +694,17 @@ function reportLines(
   lines.push("")
   lines.push(`AMBIGUOUS (${ambiguous.length} rows) — not classifiable, treated as hand edits`)
   for (const { row: loaded, plan } of ambiguous) {
+    const alsoEdited = plan.report.editedGroups.length > 0
     lines.push(
-      `  ${loaded.userId} [${sourceLabel(plan)}] ${plan.report.ambiguousGroups.join(", ")}`,
+      `  ${loaded.userId} [${sourceLabel(plan)}] ${plan.report.ambiguousGroups.join(", ")}${alsoEdited ? "" : editTimeLine(plan.report.editedAt)}`,
     )
     for (const finding of plan.report.findings.filter((entry) => entry.verdict === "ambiguous")) {
       lines.push(
         `    ${finding.column}: column=${finding.columnValue} old writer=${finding.oldWriterValue} — ${finding.reason}`,
       )
     }
+    // An edited row printed its notes above already.
+    if (!alsoEdited) for (const note of plan.report.notes) lines.push(`    note: ${note}`)
   }
 
   lines.push("")
@@ -662,9 +741,19 @@ function reportLines(
   }
 
   lines.push("")
-  lines.push(`SOURCE CHOICE (${sourceNotes.length} rows) — latest own quiz wins`)
+  lines.push(
+    `SOURCE CHOICE (${new Set([...sourceNotes, ...lastLinks]).size} rows) — latest own quiz wins`,
+  )
   for (const { row: loaded, plan } of sourceNotes) {
     lines.push(`  ${loaded.userId} ${plan.report.sourceNote}`)
+  }
+  for (const { row: loaded, plan } of lastLinks) {
+    lines.push(`  ${loaded.userId} SOURCE NOTE: ${plan.report.lastLinkNote}`)
+    for (const finding of plan.report.findings.filter((entry) => entry.verdict === "last_link")) {
+      lines.push(
+        `    ${finding.column}: column=${finding.columnValue} winner's old writer=${finding.oldWriterValue}`,
+      )
+    }
   }
 
   lines.push("")
@@ -678,6 +767,9 @@ function reportLines(
   lines.push(...extra.skipLines)
   lines.push(`  CONFLICTS (concurrent writer) (${summary.revisionConflicts})`)
   lines.push(...extra.revisionConflictLines)
+  lines.push("")
+  lines.push(`NOTES (${extra.noteLines.length}) — informational, not skips`)
+  lines.push(...extra.noteLines)
   return lines
 }
 
@@ -695,6 +787,7 @@ export async function runUserFactsBackfill(
   let erasureRows = 0
   const unresolvableLines: string[] = []
   const skipLines: string[] = []
+  const noteLines: string[] = []
   const revisionConflictLines: string[] = []
   let revisionConflicts = 0
   const failures: BackfillSummary["failures"] = []
@@ -718,7 +811,8 @@ export async function runUserFactsBackfill(
     const page = await loadPage(deps.supabase, { userId: options.userId, cursor, pageSize })
     if (page.count === 0) break
 
-    for (const line of page.notes) skipLines.push(`  ${line}`)
+    for (const line of page.skips) skipLines.push(`  ${line}`)
+    for (const line of page.notes) noteLines.push(`  ${line}`)
 
     for (const row of page.rows) {
       const plan: UserFactsBackfillPlan = planUserFactsBackfill(row, {
@@ -748,6 +842,7 @@ export async function runUserFactsBackfill(
       }
       for (const reason of plan.unresolvable) unresolvableLines.push(`  ${row.userId} ${reason}`)
       for (const reason of plan.skips) skipLines.push(`  ${row.userId} ${reason}`)
+      for (const note of plan.notes) noteLines.push(`  ${row.userId} ${note}`)
 
       // The revision this row is pinned to for its next write (CAS, fix round 2 P1): the
       // revision the page loaded, then whatever each applied write hands back. A fresh row
@@ -845,6 +940,7 @@ export async function runUserFactsBackfill(
     ),
     unresolvable: unresolvableLines.length,
     skipped: skipLines.length,
+    notes: noteLines.length,
     applied,
     preserved,
     failures,
@@ -857,6 +953,7 @@ export async function runUserFactsBackfill(
     conflictLines,
     unresolvableLines,
     skipLines,
+    noteLines,
     revisionConflictLines,
   })) {
     log(line)

@@ -1443,7 +1443,6 @@ test("task 7: a v2 artifact whose old-writer output cannot be recomputed: a diff
         concerns: ["dryness"],
         goals: ["moisture", "shine"],
       },
-      updatedAt: "2026-09-01T10:00:00.000Z",
     }),
     { now: NOW, catchUp: false },
   )
@@ -1453,7 +1452,9 @@ test("task 7: a v2 artifact whose old-writer output cannot be recomputed: a diff
   assert.deepEqual(diagnostics.patch.currentConcerns, ["dry_lengths"])
   assert.equal(diagnostics.patch.texture, "coily")
   assert.deepEqual(diagnostics.provenance.fields, { texture: "user" })
-  assert.equal(diagnostics.provenance.editedAt, "2026-09-01T10:00:00.000Z")
+  // No quiz time and no iOS publication: only the run time is known (never updated_at).
+  assert.equal(diagnostics.provenance.editedAt, NOW)
+  assert.equal(plan.report.editedAt?.basis, "backfill_time")
   assert.equal(plan.conflict, undefined)
   assert.deepEqual(plan.report.ambiguousGroups, ["structure"])
   assert.deepEqual(plan.report.findings, [
@@ -1472,7 +1473,13 @@ test("task 7: a v2 artifact whose old-writer output cannot be recomputed: a diff
     { column: "primary_concern", id: "primary_concern_unwritten" },
   ])
   assert.deepEqual(plan.report.visibleChanges, [
-    { domain: "diagnostics", column: "primary_concern", before: "NULL", after: "dryness" },
+    {
+      domain: "diagnostics",
+      column: "primary_concern",
+      before: "NULL",
+      after: "dryness",
+      pattern: "primary_concern_only_concern",
+    },
   ])
 })
 
@@ -1758,7 +1765,7 @@ test("catch-up leaves a backfilled row alone while its legacy columns still matc
   ])
 })
 
-test("round 2: in --catch-up a field the winner lacks is filled from the NEWER column, not the stale stored fact", () => {
+test("round 2 + fix round 5 (I2): in --catch-up a column changed since the stored document is the NEWER value — a hand edit of that one field", () => {
   const { hair_length: _omitted, ...answersWithoutLength } = LEGACY_QUIZ_ANSWERS
   void _omitted
   const legacyLead = { id: "lead-old", quizAnswers: answersWithoutLength }
@@ -1794,7 +1801,10 @@ test("round 2: in --catch-up a field the winner lacks is filled from the NEWER c
     "diagnostics",
   )
   assert.equal(diagnostics.patch.hairLength, "short", "the column is the newer real value")
-  assert.deepEqual(diagnostics.provenance.fields, { hairLength: "unknown_historical" })
+  // Catch-up compares with the stored document: the change since `--apply` is an edit, dated
+  // after the backfill's own write (the lead carries no quiz time).
+  assert.deepEqual(diagnostics.provenance.fields, { hairLength: "user" })
+  assert.equal(diagnostics.provenance.editedAt, "2026-09-15T00:00:00.000Z")
 
   // Default mode is unchanged: the stored fact still comes first there.
   const defaultMode = selectDiagnosticsSource({

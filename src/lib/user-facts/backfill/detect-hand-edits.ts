@@ -49,6 +49,10 @@ import {
  *     an edit: its value fills the gap when the source is silent (`kept`, provenance
  *     `unknown_historical`); density and hair length are left to the completeness step, which
  *     keeps them the same way (F2).
+ *  6. A row that is exactly what a NON-winning quiz's link wrote (it was linked last — a lead
+ *     linked by email fallback after the paid link, a re-inserted artifact) is that link, not N
+ *     edits: its columns still win, as `last_link` (`unknown_historical`, no `editedAt`), and the
+ *     report names the mismatch (fix round 5, I4).
  *
  * Pure: no I/O, no `server-only`.
  */
@@ -125,6 +129,8 @@ export const TOLERATED_DIFFERENCES = {
     "none of the columns the old writer fills carries a value: this quiz never reached the row (the link failed or never ran), so the source fills it — listed as a visible change",
   primary_concern_unwritten:
     "primary_concern is NULL although the quiz named a main problem: the column exists since 2026-09-25, the iOS writers never wrote it and its trigger drops a pick a later concerns write left stale",
+  goals_never_written:
+    "goals are empty although the old writer had goals: main's plan-bereit link (readiness.ts persistProfileOutput) never wrote goals, and neither old editor could save empty goals — the source fills them, listed as a visible change",
 } as const
 export type ToleratedDifferenceId = keyof typeof TOLERATED_DIFFERENCES
 
@@ -135,8 +141,10 @@ export type ColumnFinding = {
   group: DiagnosticsAnswerGroup
   column: ComparedColumn
   /** `edited`: differs from the old writer (column wins); `ambiguous`: not classifiable, treated
-   * as an edit; `kept`: the old writer never wrote it, the column fills the source's gap. */
-  verdict: "edited" | "ambiguous" | "kept"
+   * as an edit; `kept`: the old writer never wrote it, the column fills the source's gap;
+   * `last_link`: differs from the winner's old writer but the whole row is what a NON-winning
+   * quiz's link wrote (it was linked last) — the column wins without edit provenance. */
+  verdict: "edited" | "ambiguous" | "kept" | "last_link"
   columnValue: string
   oldWriterValue: string
   reason?: string
@@ -151,7 +159,8 @@ export type HandEditAnalysis = {
   tolerated: { column: ComparedColumn; id: ToleratedDifferenceId }[]
   /** Native fields now carrying a hand-edited (or ambiguous) column value: provenance `user`. */
   userFields: HandEditField[]
-  /** Native fields filled from a column the old writer never wrote: `unknown_historical`. */
+  /** Native fields filled from a column the old writer never wrote, or from the last link of a
+   * non-winning quiz: `unknown_historical`. */
   keptFields: HandEditField[]
   /** Anything else the owner should read (e.g. quiz-only concerns kept beside an edit). */
   notes: string[]
@@ -245,7 +254,7 @@ function normalizeColumn(column: ComparedColumn, value: ColumnValue | undefined)
   return typeof value === "string" ? value : null
 }
 
-function sameColumn(
+export function sameColumn(
   column: ComparedColumn,
   left: ColumnValue | undefined,
   right: ColumnValue | undefined,
@@ -264,6 +273,17 @@ export function renderColumnValue(value: ColumnValue | undefined): string {
   if (value === null) return "NULL"
   if (Array.isArray(value)) return value.length > 0 ? value.join(",") : "[]"
   return value
+}
+
+/** `goals_never_written`: an empty goals column is never a hand edit — neither old editor could
+ * save empty goals (`edit-route.ts` `.min(1)`, `profile-edit-contract.ts`), and main's plan-bereit
+ * link never wrote the column at all. */
+function goalsNeverWritten(
+  column: ComparedColumn,
+  value: ColumnValue | undefined,
+  reference: ColumnValue | undefined,
+): boolean {
+  return column === "goals" && !carriesValue(value) && carriesValue(reference)
 }
 
 type Verdict =
@@ -290,6 +310,9 @@ function compareColumn(
   }
   const oldValue = expected[column]
   if (sameColumn(column, value, oldValue)) return { kind: "match" }
+  if (goalsNeverWritten(column, value, oldValue)) {
+    return { kind: "tolerated", id: "goals_never_written" }
+  }
 
   if (column === "scalp_condition" && oldValue === "none" && value === null) {
     return { kind: "tolerated", id: "scalp_condition_none_migration" }
@@ -324,6 +347,30 @@ export type DetectHandEditsInput = {
   oldWriter: OldWriterColumns | null
   /** The goals the old writer projected for the user's OTHER own quizzes. */
   olderQuizGoals?: readonly string[][]
+  /** What the old writer stored for a NON-winning quiz whose link the whole row still reflects
+   * (`columnsMatchOldWriter`): a column that differs from the winner's but equals this one is
+   * that link, not a hand edit (fix round 5, I4). */
+  lastLink?: OldWriterColumns
+}
+
+/**
+ * Whether the row is exactly what the old writer stored for a quiz: every column it wrote
+ * matches (after the tolerated differences), and it wrote at least one value the row carries —
+ * i.e. that quiz's link was the last write and nothing was edited after it.
+ */
+export function columnsMatchOldWriter(
+  columns: LegacyDiagnosticColumns,
+  oldWriter: OldWriterColumns,
+): boolean {
+  let carried = false
+  for (const column of COMPARED_COLUMNS) {
+    if (!(column in oldWriter)) continue
+    const value = (columns[column] ?? null) as ColumnValue
+    const verdict = compareColumn(column, value, oldWriter, [])
+    if (verdict.kind !== "match" && verdict.kind !== "tolerated") return false
+    if (verdict.kind === "match" && carriesValue(value)) carried = true
+  }
+  return carried
 }
 
 export function detectHandEdits(input: DetectHandEditsInput): HandEditAnalysis {
@@ -336,10 +383,10 @@ export function detectHandEdits(input: DetectHandEditsInput): HandEditAnalysis {
   const findings: ColumnFinding[] = []
   const tolerated: HandEditAnalysis["tolerated"] = []
   const notes: string[] = []
-  const takenColumns = new Set<ComparedColumn>()
+  const takenColumns = new Map<ComparedColumn, Set<HandEditField>>()
 
   const take = (column: ComparedColumn, into: Set<HandEditField>) => {
-    takenColumns.add(column)
+    takenColumns.set(column, into)
     for (const field of FIELDS_OF_COLUMN[column]) {
       if (converted[field] === undefined) delete doc[field]
       else {
@@ -384,13 +431,25 @@ export function detectHandEdits(input: DetectHandEditsInput): HandEditAnalysis {
             ? { kind: "match" }
             : column === "primary_concern" && value === null
               ? { kind: "tolerated", id: "primary_concern_unwritten" }
-              : {
-                  kind: "ambiguous",
-                  reason: "the old writer's output for this source cannot be recomputed",
-                }
+              : goalsNeverWritten(column, value, nativeDerived[column])
+                ? { kind: "tolerated", id: "goals_never_written" }
+                : {
+                    kind: "ambiguous",
+                    reason: "the old writer's output for this source cannot be recomputed",
+                  }
 
     if (verdict.kind === "tolerated") tolerated.push({ column, id: verdict.id })
-    if (verdict.kind === "edited") {
+    if (
+      (verdict.kind === "edited" || verdict.kind === "ambiguous") &&
+      input.lastLink &&
+      column in input.lastLink &&
+      sameColumn(column, value, input.lastLink[column])
+    ) {
+      // The row is the last link of a non-winning quiz: its value stays (the visible state is
+      // never changed silently), but nobody edited it — no `user`, no `editedAt`.
+      take(column, keptFields)
+      record(column, "last_link", "the column is what a non-winning quiz's link wrote")
+    } else if (verdict.kind === "edited") {
       take(column, userFields)
       record(column, "edited")
     } else if (verdict.kind === "ambiguous") {
@@ -441,7 +500,7 @@ export function detectHandEdits(input: DetectHandEditsInput): HandEditAnalysis {
     if (columns.concerns?.includes("dandruff")) {
       const scalp = [...((doc.scalpConcerns as string[] | undefined) ?? [])]
       if (!scalp.includes("oily_dandruff")) doc.scalpConcerns = [...scalp, "oily_dandruff"]
-      userFields.add("scalpConcerns")
+      takenColumns.get("concerns")!.add("scalpConcerns")
     }
   }
   const currentConcerns = (doc.currentConcerns as string[] | undefined) ?? []

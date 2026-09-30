@@ -24,7 +24,12 @@ import {
   type FieldProvenanceValue,
   type QuizContextPatch,
 } from "../schema"
-import type { ColumnFinding, ToleratedDifferenceId } from "./detect-hand-edits"
+import {
+  sameColumn,
+  type ColumnFinding,
+  type HandEditAnalysis,
+  type ToleratedDifferenceId,
+} from "./detect-hand-edits"
 import {
   convertLegacyCareColumns,
   type CareConversionRule,
@@ -45,6 +50,7 @@ import {
   selectDiagnosticsSource,
   type DiagnosticsColumnConflictField,
   type DiagnosticsColumnErasureField,
+  type SelectedDiagnosticsSource,
 } from "./select-diagnostics-source"
 
 /**
@@ -68,9 +74,8 @@ import {
  *
  *  - diagnostics (task 7): the winning quiz is the one TAKEN last, and every column a user edited
  *    by hand after it wins over it (`detect-hand-edits.ts`) — provenance `user` for those
- *    fields and `editedAt` = the best known edit time (the iOS edit's publication, else
- *    `hair_profiles.updated_at`), so a quiz taken later still replaces the edit and an older one
- *    does not (`quizSupersedesFacts`). Everything the owner signs off is collected in `report`.
+ *    fields and `editedAt` = the edit's known lower bound (`editTime`, fix round 5 ruling), so a
+ *    quiz taken later still replaces the edit and an older one does not (`quizSupersedesFacts`). Everything the owner signs off is collected in `report`.
  *
  * No I/O, no `server-only`.
  */
@@ -106,11 +111,14 @@ export type LoadedUserRow = {
   /** The NEWEST legacy lead; `olderLegacyLeads` holds the rest, newest first. */
   legacyLead: { id: string; quizAnswers: unknown; createdAt?: string | null } | null
   olderLegacyLeads?: { id: string; quizAnswers: unknown; createdAt?: string | null }[]
-  /** `hair_profiles.updated_at`: the edit time when nothing better is known. */
-  updatedAt?: string | null
   /** When the user's last iOS profile edit / registration was published
-   * (`scanner_profile_edits` -> its context version's `created_at`). */
+   * (`scanner_profile_edits` -> its context version's `created_at`). `hair_profiles.updated_at`
+   * is deliberately NOT an edit time: every write bumps it, the chat's `conversation_memory`
+   * included (fix round 5, I3). */
   lastProfileEditAt?: string | null
+  /** `scanner_profile_edits.profile_snapshot`: the whole `hair_profiles` row that iOS
+   * publication left. Only an edited column that still equals it dates from that publication. */
+  lastProfileEditSnapshot?: Record<string, unknown> | null
   plan: BackfillPlanRow | null
   needVersions: readonly BackfillNeedVersionRow[]
   drafts: readonly BackfillDraftRow[]
@@ -146,17 +154,42 @@ export type VisibleColumnChange = {
   column: string
   before: string
   after: string
+  /** Set when many rows share one change whose `after` differs per row (the report's pattern
+   * table groups by it instead of by the values). */
+  pattern?: "primary_concern_only_concern"
+}
+
+/** How the planned `editedAt` was chosen (fix round 5 ruling on I3). */
+export type EditTimeBasis =
+  /** The edited columns equal the iOS publication's `profile_snapshot`: its context version time. */
+  | "ios_profile_edit"
+  /** Only known to be newer than the winning quiz: its `takenAt` + 1 ms. */
+  | "after_quiz"
+  /** `--catch-up`: changed since the backfill wrote the document: its `at`. */
+  | "after_backfill"
+  /** `--catch-up`: the stored document's `editedAt` carries over. */
+  | "stored_edited_at"
+  /** Nothing known at all (a quiz without a time): the run time. */
+  | "backfill_time"
+
+export type EditTime = {
+  at: string
+  basis: EditTimeBasis
+  /** Every candidate time, printed in the report beside the chosen one. */
+  candidates: Partial<Record<Exclude<EditTimeBasis, "backfill_time">, string>>
 }
 
 /** Everything the dry-run report shows for one row (task 7). */
 export type BackfillRowReport = {
   sourceNote?: string
+  /** The columns are what a non-winning quiz's link wrote (fix round 5, I4). */
+  lastLinkNote?: string
   editedGroups: DiagnosticsAnswerGroup[]
   ambiguousGroups: DiagnosticsAnswerGroup[]
   findings: ColumnFinding[]
   tolerated: { column: string; id: ToleratedDifferenceId }[]
   notes: string[]
-  editedAt?: { at: string; basis: "ios_profile_edit" | "profile_updated_at" | "backfill_time" }
+  editedAt?: EditTime
   visibleChanges: VisibleColumnChange[]
   /** The product owner's care-habit decisions 1/2 (Nick 2026-09-30) this row's planned care
    * write applied — listed apart in the report ("care habits: converted by rule"). */
@@ -169,6 +202,9 @@ export type UserFactsBackfillPlan = {
   report: BackfillRowReport
   /** Domains (or whole rows) deliberately left alone, with the reason. */
   skips: string[]
+  /** Informational lines about a planned write (a source that fell through, a catch-up source
+   * change) — never counted as skips. */
+  notes: string[]
   /** Domains whose source could not be resolved at all; these need a human, not a guess. */
   unresolvable: string[]
   conflict?: {
@@ -372,13 +408,87 @@ function visibleChanges(
     }))
 }
 
-/** The best known time of the hand edit (brief: the iOS edit's timestamp, else `updated_at`). */
-function editTime(row: LoadedUserRow, now: string): NonNullable<BackfillRowReport["editedAt"]> {
+function plusOneMillisecond(iso: string | undefined): string | undefined {
+  return iso ? new Date(Date.parse(iso) + 1).toISOString() : undefined
+}
+
+function latest(
+  times: readonly (readonly [EditTimeBasis, string | undefined])[],
+): { at: string; basis: EditTimeBasis } | undefined {
+  let best: { at: string; basis: EditTimeBasis } | undefined
+  for (const [basis, at] of times) {
+    if (at && (!best || Date.parse(at) > Date.parse(best.at))) best = { at, basis }
+  }
+  return best
+}
+
+/**
+ * The `editedAt` of a backfilled hand edit (fix round 5 ruling on I3). Only a LOWER bound of the
+ * edit is known, and never from `hair_profiles.updated_at` (every write bumps it, the chat's
+ * memory included — a quiz taken before a chat but linked after the backfill would lose):
+ *  - a web / ambiguous edit is only known to be newer than the winning quiz: its `takenAt` + 1 ms
+ *    (in `--catch-up` also newer than the backfill's own write of the document: its `at`);
+ *  - an iOS publication (`scanner_profile_edits`) dates exactly the edited columns that still
+ *    equal its `profile_snapshot`; an edited column that differs from the snapshot is newer than
+ *    that publication: max(iOS time, the bound above).
+ * One `editedAt` per domain: the latest over the edited groups; in `--catch-up` the stored
+ * `editedAt` carries over and is never lowered.
+ */
+function editTime(
+  row: LoadedUserRow,
+  selected: SelectedDiagnosticsSource,
+  handEdits: HandEditAnalysis,
+  now: string,
+): EditTime | undefined {
+  const stored = toTakenAt(selected.catchUpBase?.editedAt ?? undefined)
+  const changed = handEdits.findings.filter(
+    (finding) => finding.verdict === "edited" || finding.verdict === "ambiguous",
+  )
+  if (changed.length === 0) {
+    return stored
+      ? { at: stored, basis: "stored_edited_at", candidates: { stored_edited_at: stored } }
+      : undefined
+  }
+
+  const source = selected.diagnostics.source
+  const afterQuiz = plusOneMillisecond("takenAt" in source ? toTakenAt(source.takenAt) : undefined)
+  const afterBackfill = selected.catchUpBase ? toTakenAt(selected.catchUpBase.at) : undefined
   const ios = toTakenAt(row.lastProfileEditAt)
-  if (ios) return { at: ios, basis: "ios_profile_edit" }
-  const updated = toTakenAt(row.updatedAt)
-  if (updated) return { at: updated, basis: "profile_updated_at" }
-  return { at: now, basis: "backfill_time" }
+  const snapshot = row.lastProfileEditSnapshot ?? null
+  const columns = row.columns as unknown as Record<string, string | string[] | null>
+
+  const groupTimes: [EditTimeBasis, string | undefined][] = []
+  for (const group of new Set(changed.map((finding) => finding.group))) {
+    const inSnapshot =
+      ios !== undefined &&
+      snapshot !== null &&
+      changed
+        .filter((finding) => finding.group === group)
+        .every((finding) =>
+          sameColumn(
+            finding.column,
+            columns[finding.column] ?? null,
+            (snapshot[finding.column] ?? null) as string | string[] | null,
+          ),
+        )
+    const time = inSnapshot
+      ? { at: ios, basis: "ios_profile_edit" as const }
+      : latest([
+          ["ios_profile_edit", ios],
+          ["after_quiz", afterQuiz],
+          ["after_backfill", afterBackfill],
+        ])
+    if (time) groupTimes.push([time.basis, time.at])
+  }
+
+  const chosen = latest([...groupTimes, ["stored_edited_at", stored]])
+  const candidates: EditTime["candidates"] = {
+    ...(ios ? { ios_profile_edit: ios } : {}),
+    ...(afterQuiz ? { after_quiz: afterQuiz } : {}),
+    ...(afterBackfill ? { after_backfill: afterBackfill } : {}),
+    ...(stored ? { stored_edited_at: stored } : {}),
+  }
+  return chosen ? { ...chosen, candidates } : { at: now, basis: "backfill_time", candidates }
 }
 
 function planDiagnosticsAndContext(
@@ -403,15 +513,18 @@ function planDiagnosticsAndContext(
     existingFacts: {
       diagnostics: row.storedDiagnostics,
       fields: row.factsProvenance.diagnostics?.fields,
+      provenance: row.factsProvenance.diagnostics ?? null,
     },
     catchUp: options.catchUp,
   })
 
+  // Informational: the row still gets its write from the next source.
   for (const unusable of selected.unusableSources) {
-    plan.skips.push(
+    plan.notes.push(
       `diagnostics: ${unusable.kind} ${unusable.id} could not be projected (${unusable.reason}); fell through to ${selected.sourceKind}`,
     )
   }
+  if (selected.catchUpNote) plan.notes.push(`diagnostics: ${selected.catchUpNote}`)
 
   // A columns-only import needs the row to actually carry a legacy answer; otherwise the
   // "document" would be nothing but a source envelope and would still consume the
@@ -436,6 +549,7 @@ function planDiagnosticsAndContext(
 
   const handEdits = selected.handEdits
   if (selected.sourceOrderNote) plan.report.sourceNote = selected.sourceOrderNote
+  if (selected.lastLinkNote) plan.report.lastLinkNote = selected.lastLinkNote
 
   if (diagnosticsGate.plan) {
     const patch: DiagnosticsPatch = { ...selected.diagnostics }
@@ -454,14 +568,16 @@ function planDiagnosticsAndContext(
     // wrote that fills its gap is `unknown_historical`.
     const assumed = selected.assumedFields
     const kept = selected.keptFields
+    // `--catch-up` against the stored document: its field markers carry over (a field the new
+    // document no longer holds drops out), then the edits made since are marked on top.
     const fields: Record<string, FieldProvenanceValue> = {}
+    for (const [field, value] of Object.entries(selected.catchUpBase?.fields ?? {})) {
+      if ((patch as Record<string, unknown>)[field] != null) fields[field] = value
+    }
     for (const field of handEdits?.userFields ?? []) fields[field] = "user"
     for (const field of handEdits?.keptFields ?? []) fields[field] = "unknown_historical"
     Object.assign(fields, completenessFieldProvenance(assumed, kept))
-    const edited =
-      handEdits !== undefined &&
-      handEdits.editedGroups.length + handEdits.ambiguousGroups.length > 0
-    const editedAt = edited ? editTime(row, options.now) : undefined
+    const editedAt = handEdits ? editTime(row, selected, handEdits, options.now) : undefined
     const details = [
       ...(kept.length > 0
         ? [`kept ${kept.map(({ field }) => `${field}=${patch[field]}`).join(", ")}`]
@@ -499,6 +615,15 @@ function planDiagnosticsAndContext(
         DIAGNOSTICS_OWNED_COLUMNS,
         row.columns as unknown as Record<string, unknown>,
         after,
+      ).map((change) =>
+        // The door derives her only concern as the main problem when she named none: one
+        // pattern for the whole population, whatever that concern is (plan §5).
+        change.column === "primary_concern" &&
+        change.before === "NULL" &&
+        after.concerns.length === 1 &&
+        after.primary_concern === after.concerns[0]
+          ? { ...change, pattern: "primary_concern_only_concern" as const }
+          : change,
       ),
     )
   } else {
@@ -675,6 +800,7 @@ export function planUserFactsBackfill(
       careRules: [],
     },
     skips: [],
+    notes: [],
     unresolvable: [],
   }
 

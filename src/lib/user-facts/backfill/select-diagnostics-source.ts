@@ -13,10 +13,13 @@ import { projectLegacyLeadToFacts } from "../project-legacy-lead"
 import {
   toTakenAt,
   type DiagnosticsV1,
+  type DomainProvenance,
   type FieldProvenanceValue,
   type QuizContextV1,
 } from "../schema"
 import {
+  COMPARED_COLUMNS,
+  columnsMatchOldWriter,
   detectHandEdits,
   oldWriterColumnsForArtifact,
   oldWriterColumnsForLead,
@@ -63,6 +66,9 @@ import {
  *    `detectHandEdits` BEFORE the completeness fills, so every column a user changed after that
  *    quiz wins over it (see `detect-hand-edits.ts`), and the P4 diff below then only shows what
  *    no rule explains.
+ *  - fix round 5: a row that is exactly a NON-winning quiz's last link is that link, not edits
+ *    (I4); `--catch-up` compares the columns with the STORED document when that document came
+ *    from the winning quiz, so only what changed since `--apply` is an edit (I2).
  *
  * Pure: no I/O, no `server-only`.
  */
@@ -135,6 +141,14 @@ export type SelectedDiagnosticsSource = {
   handEdits?: HandEditAnalysis
   /** Set when the quiz-time order put a legacy lead ahead of the attached artifact. */
   sourceOrderNote?: string
+  /** Set when the columns are exactly what a NON-winning quiz's link wrote (fix round 5, I4). */
+  lastLinkNote?: string
+  /** `--catch-up` against the stored document (fix round 5, I2): the stored document's
+   * provenance, whose `editedAt` and `user` fields carry over. Absent on a first run and when a
+   * different quiz than the stored one now wins. */
+  catchUpBase?: DomainProvenance
+  /** `--catch-up` where a different quiz than the stored document's now wins. */
+  catchUpNote?: string
 }
 
 type LegacyLeadCandidate = { id: string; quizAnswers: unknown; createdAt?: string | null }
@@ -159,6 +173,9 @@ export type SelectDiagnosticsSourceInput = {
   existingFacts?: {
     diagnostics: DiagnosticsV1 | null
     fields?: Record<string, FieldProvenanceValue>
+    /** The stored domain provenance: in `--catch-up` it names the quiz the stored document came
+     * from, so the columns are compared with that document rather than the quiz's old writer. */
+    provenance?: DomainProvenance | null
   }
   /** `--catch-up`: the columns changed after the stored facts, so they are the newer existing
    * value (wave-1 fix round 2). */
@@ -269,6 +286,31 @@ function candidateId(candidate: Candidate): string {
   return candidate.kind === "artifact" ? candidate.artifact.id : candidate.lead.id
 }
 
+function candidateLabel(candidate: Candidate): string {
+  const createdAt =
+    candidate.kind === "artifact" ? candidate.artifact.createdAt : candidate.lead.createdAt
+  const taken = toTakenAt(createdAt)
+  return `${candidate.kind === "artifact" ? "artifact" : "legacy lead"} ${candidateId(candidate)}${taken ? ` (${taken})` : ""}`
+}
+
+/** Whether the stored document came from this candidate (its provenance names it). */
+function storedFrom(provenance: DomainProvenance | null | undefined, candidate: Candidate) {
+  const source = provenance?.source
+  if (!source?.id) return false
+  return candidate.kind === "artifact"
+    ? source.kind === "personal_plan_artifact" && source.id === candidate.artifact.id
+    : source.kind === "legacy_lead" && source.id === candidate.lead.id
+}
+
+/** The stored document's own derived columns: exactly what the door wrote into the row — the
+ * "old writer" of a `--catch-up` run (fix round 5, I2). */
+function storedDocumentColumns(stored: DiagnosticsV1): OldWriterColumns {
+  const derived = deriveDiagnosticsColumns(stored)
+  const written: OldWriterColumns = {}
+  for (const column of COMPARED_COLUMNS) written[column] = derived[column]
+  return written
+}
+
 export function selectDiagnosticsSource(
   input: SelectDiagnosticsSourceInput,
 ): SelectedDiagnosticsSource {
@@ -299,22 +341,66 @@ export function selectDiagnosticsSource(
       if (!hasDiagnosticSignal(projected.diagnostics)) {
         throw new Error("no_diagnostic_signal")
       }
-      const olderQuizGoals = candidates
-        .filter((other) => other !== candidate)
-        .map((other) => oldWriterOf(other)?.goals)
-        .filter((goals): goals is string[] => Array.isArray(goals) && goals.length > 0)
-      const handEdits = detectHandEdits({
-        native: projected.diagnostics,
-        columns: input.columns,
-        oldWriter: oldWriterOf(candidate),
-        olderQuizGoals,
-      })
+      const storedProvenance = input.existingFacts?.provenance
+      const storedDocument = input.existingFacts?.diagnostics
+      const catchUpBase =
+        input.catchUp === true && storedDocument && storedFrom(storedProvenance, candidate)
+          ? storedProvenance!
+          : undefined
+      let handEdits: HandEditAnalysis
+      let lastLinkNote: string | undefined
+      if (catchUpBase) {
+        // After `--apply` the columns are the door's derivation of the stored document: only a
+        // column that differs from it changed since, and every other one keeps the document's
+        // native value.
+        handEdits = detectHandEdits({
+          native: storedDocument!,
+          columns: input.columns,
+          oldWriter: storedDocumentColumns(storedDocument!),
+        })
+      } else {
+        const others = candidates.filter((other) => other !== candidate)
+        const olderQuizGoals = others
+          .map((other) => oldWriterOf(other)?.goals)
+          .filter((goals): goals is string[] => Array.isArray(goals) && goals.length > 0)
+        const detect = (lastLink?: OldWriterColumns) =>
+          detectHandEdits({
+            native: projected.diagnostics,
+            columns: input.columns,
+            oldWriter: oldWriterOf(candidate),
+            olderQuizGoals,
+            ...(lastLink ? { lastLink } : {}),
+          })
+        handEdits = detect()
+        // The row may reflect the LAST LINK rather than the winner (fix round 5, I4). A
+        // goals-only difference is not that: main's link kept existing goals when a later quiz
+        // was linked (the goals rule in `detect-hand-edits.ts` lists it as ambiguous).
+        const differsBeyondGoals = handEdits.findings.some(
+          (finding) =>
+            (finding.verdict === "edited" || finding.verdict === "ambiguous") &&
+            finding.column !== "goals",
+        )
+        if (differsBeyondGoals) {
+          for (const other of others) {
+            const written = oldWriterOf(other)
+            if (!written || !columnsMatchOldWriter(input.columns, written)) continue
+            handEdits = detect(written)
+            lastLinkNote = `columns match quiz ${candidateLabel(other)}, winner is ${candidateLabel(candidate)}: the columns were written by the last link, kept without edit provenance`
+            break
+          }
+        }
+      }
       const { diagnostics, assumedFields, keptFields } = applyCompletenessDefaults(
         handEdits.diagnostics,
         existing,
       )
       const conflict = detectConflict(diagnostics, input.columns)
       const winnerIsFirst = candidate === candidates[0]
+      const storedSource = storedProvenance?.source
+      const catchUpNote =
+        input.catchUp === true && storedDocument && !catchUpBase && storedSource
+          ? `catch-up: ${candidateLabel(candidate)} now wins over the stored ${storedSource.kind}${storedSource.id ? ` ${storedSource.id}` : ""}; compared with its old writer like a first run`
+          : undefined
       return {
         sourceKind: candidate.kind,
         sourceId: candidateId(candidate),
@@ -329,6 +415,9 @@ export function selectDiagnosticsSource(
         unusableSources,
         handEdits,
         ...(note && winnerIsFirst ? { sourceOrderNote: note } : {}),
+        ...(lastLinkNote ? { lastLinkNote } : {}),
+        ...(catchUpBase ? { catchUpBase } : {}),
+        ...(catchUpNote ? { catchUpNote } : {}),
       }
     } catch (error) {
       unusableSources.push({
