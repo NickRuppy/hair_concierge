@@ -124,6 +124,7 @@ function option(productId: string, label: string) {
     origin: "alternative" as const,
     propertyRows: null,
     priceLabel: null,
+    imageUrl: null,
   }
 }
 

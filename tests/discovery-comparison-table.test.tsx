@@ -320,6 +320,7 @@ function cockpitStep(overrides: Partial<DiscoveryCockpitStepView> = {}): Discove
         label: "Chaarlie Lab Lab Shampoo Gamma",
         verdictLabel: "Passt",
         priceLabel: null,
+        imageUrl: null,
         origin: "alternative",
         propertyRows: [row({ productValue: "fettig" })],
       },

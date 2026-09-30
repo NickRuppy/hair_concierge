@@ -42,6 +42,7 @@ function option(
     label,
     verdictLabel: "Passt",
     priceLabel,
+    imageUrl: null,
     origin,
     propertyRows: null,
   }

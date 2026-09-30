@@ -50,6 +50,7 @@ function recommendation(propertyRows: DiscoveryPropertyRow[] | null): DiscoveryC
     label: "Olaplex No. 8",
     verdictLabel: "Passt",
     priceLabel: null,
+    imageUrl: null,
     origin: "ideal_recommendation",
     propertyRows,
   }
@@ -133,18 +134,20 @@ function renderCockpit(
     back() {},
     forward() {},
   }
-  return render(
+  const ui = (p: typeof props) => (
     <AppRouterContext.Provider value={router as never}>
       <DiscoveryCallCockpit
         enrollmentId="enrollment-1"
-        steps={props.steps ?? addSteps()}
+        steps={p.steps ?? addSteps()}
         submitted
         initialFinalizedAt={null}
-        complexity={props.complexity ?? null}
-        complexityLocked={props.complexityLocked ?? false}
+        complexity={p.complexity ?? null}
+        complexityLocked={p.complexityLocked ?? false}
       />
-    </AppRouterContext.Provider>,
+    </AppRouterContext.Provider>
   )
+  const view = render(ui(props))
+  return { ...view, rerenderWith: (p: typeof props) => view.rerender(ui(p)) }
 }
 
 function deferredFetch() {
@@ -295,4 +298,99 @@ test("F1: the recommendation shows „Empfohlenes Produkt | Ziel“ — two colu
 test("F1: no rows, no table — nothing is invented", () => {
   renderCockpit({ steps: addSteps(null) })
   assert.equal(document.querySelector("[data-comparison]"), null)
+})
+
+// --- Iteration 3: „Super essenziell" folds the optional Neu-Schritte ----------------------
+
+test("Iteration 3: „Super essenziell“ klappt optionale Neu-Schritte ein, „Normal“ zeigt alles", () => {
+  renderCockpit({ complexity: "essenziell" })
+  const fold = document.getElementById("runsheet-complexity-folded")
+  assert.ok(fold, "fold row exists under Super essenziell")
+  const summary = fold!.querySelector("summary")
+  assert.ok(
+    summary?.textContent?.includes("1 optionaler Neu-Schritt eingeklappt (Super essenziell)"),
+  )
+  // The optional Öl step sits inside the fold; the essential Maske step stays outside it.
+  assert.ok(fold!.textContent!.includes("Öl"))
+  assert.ok(!fold!.contains(entryOf("Maske")))
+
+  cleanup()
+  renderCockpit({ complexity: "normal" })
+  assert.equal(document.getElementById("runsheet-complexity-folded"), null)
+
+  cleanup()
+  renderCockpit()
+  assert.equal(document.getElementById("runsheet-complexity-folded"), null)
+})
+
+test("Iteration 3: choosing „Super essenziell“ folds at once — optimistic, before the save lands", () => {
+  deferredFetch()
+  renderCockpit()
+  assert.equal(document.getElementById("runsheet-complexity-folded"), null)
+  fireEvent.click(option("Super essenziell"))
+  assert.ok(document.getElementById("runsheet-complexity-folded"))
+})
+
+test("Iteration 3: a step without her product shows no „Bisheriges Produkt“-panel, but keeps the unanswered honesty line", () => {
+  renderCockpit({
+    steps: [
+      ...addSteps(),
+      step({
+        decisionKey: "decision:leave_in",
+        category: "leave_in",
+        categoryLabel: "Leave-in",
+        section: "optional",
+        unanswered: true,
+        swapOptions: [
+          { ...recommendation(null), productId: "rec-leave-in", label: "Leichtes Leave-in" },
+        ],
+        idealRecommendation: {
+          ...recommendation(null),
+          productId: "rec-leave-in",
+          label: "Leichtes Leave-in",
+        },
+      }),
+    ],
+  })
+  const leaveIn = entryOf("Leave-in")
+  assert.ok(!leaveIn.textContent!.includes("Kein Produkt angegeben"))
+  assert.ok(leaveIn.textContent!.includes("Nicht angegeben — im Call fragen."))
+})
+
+// --- Codex F2: a stale rollback never overwrites a newer server value --------------------
+
+test("F2: a refresh during a pending write wins over the write's failure rollback", async () => {
+  const request = deferredFetch()
+  const view = renderCockpit()
+  fireEvent.click(option("Normal"))
+  assert.equal(option("Normal").getAttribute("aria-pressed"), "true")
+  // A router refresh lands while the PATCH runs and carries the same answer from the server.
+  view.rerenderWith({ complexity: "normal" })
+  await act(async () => {
+    request.settle(new Response(JSON.stringify({ code: "nope" }), { status: 500 }))
+  })
+  // No rollback to null: the server value is newer than the failed write.
+  assert.equal(option("Normal").getAttribute("aria-pressed"), "true")
+  assert.equal(option("Super essenziell").getAttribute("aria-pressed"), "false")
+})
+
+// --- T4 (iteration 3): option thumbnails ---------------------------------------------------
+
+test("T4: an option with a packshot shows the thumbnail; without one there is no placeholder", () => {
+  const withImage = addSteps().map((entry) =>
+    entry.categoryLabel === "Maske"
+      ? {
+          ...entry,
+          swapOptions: entry.swapOptions.map((o) => ({ ...o, imageUrl: "https://cdn.test/k.png" })),
+        }
+      : entry,
+  )
+  renderCockpit({ steps: withImage })
+  const mask = entryOf("Maske")
+  const img = mask.querySelector("img")
+  assert.ok(img, "thumbnail rendered")
+  assert.equal(img!.getAttribute("src"), "https://cdn.test/k.png")
+  const oil = entryOf("Öl")
+  assert.equal(oil.querySelector("img"), null)
+  assert.equal(oil.querySelector('[role="img"]'), null)
 })

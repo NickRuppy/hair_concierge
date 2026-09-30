@@ -28,7 +28,10 @@ import {
   composeRunsheetOutsideRoutine,
   composeRunsheetProducts,
 } from "../src/components/discovery/cockpit/runsheet-products"
-import { DiscoveryRunsheetRoutine } from "../src/components/discovery/cockpit/runsheet-routine"
+import {
+  DiscoveryRunsheetRoutine,
+  runsheetWeek,
+} from "../src/components/discovery/cockpit/runsheet-routine"
 import { ScanVerdictSections } from "../src/components/scan/scan-verdict-sections"
 import { parseDiscoveryCallSheet, type DiscoveryCallSheet } from "../src/lib/discovery/call-sheet"
 import {
@@ -537,6 +540,17 @@ test("brief lists: Call-Fragen and Erwartungen show in Phase 2; Ziel-Lücken are
     markup.indexOf('id="runsheet-brief-save"'),
   )
   assert.ok(phase2.includes(">Für den Call<"))
+  // Each list says what it is for (iteration 3, T1).
+  assert.ok(
+    phase2.includes(
+      '>Fragen für den Call</p><p class="text-[12px] text-muted-foreground">Antworten können den Plan ändern — im Call stellen.</p>',
+    ),
+  )
+  assert.ok(
+    phase2.includes(
+      '>Erwartungen</p><p class="text-[12px] text-muted-foreground">Ehrliche Zeitfenster — so im Call aussprechen.</p>',
+    ),
+  )
   assert.ok(!phase2.includes("Form &amp; Halt"))
   assert.ok(!phase2.includes("runsheet-zielLuecken"))
   assert.ok(phase2.includes("Wie oft glättest du?"))
@@ -605,6 +619,33 @@ test("routine: wash day and in-between days, today's wash frequency, no price ro
   assert.ok(!phase4.includes("€"))
 })
 
+test("routine: each day is a table — Schritt | Produkt | Wann | Zweck, one row per step", async () => {
+  const markup = await renderPage()
+  const phase4 = markup.slice(
+    markup.indexOf('id="runsheet-phase-4"'),
+    markup.indexOf('id="runsheet-phase-5"'),
+  )
+  const tables = [...phase4.matchAll(/<table[^>]*>([\s\S]*?)<\/table>/g)].map((m) => m[1]!)
+  assert.ok(tables.length > 0, phase4)
+  const week = runsheetWeek(buildDiscoveryCockpitView(model()).steps)
+  const expected = [week.washDay, week.offDays].filter((lines) => lines.length > 0)
+  assert.equal(tables.length, expected.length)
+  for (const [index, table] of tables.entries()) {
+    const headers = [...table.matchAll(/<th scope="col"[^>]*>([^<]*)<\/th>/g)].map((m) => m[1])
+    assert.deepEqual(headers, ["Schritt", "Produkt", "Wann", "Zweck"])
+    const body = table.slice(table.indexOf("<tbody"))
+    const rows = [...body.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)].map((m) => m[1]!)
+    const lines = expected[index]!
+    assert.equal(rows.length, lines.length)
+    for (const [row, line] of rows.map((row, i) => [row, lines[i]!] as const)) {
+      // Each row is one step: its category heads the row, its cadence sits in „Wann“.
+      assert.match(row, /^<th scope="row"/)
+      assert.ok(row.includes(`>${line.categoryLabel}</th>`), row)
+      assert.ok(row.includes(line.frequencyLabel), row)
+    }
+  }
+})
+
 test("closing: the approved referral text, the copy button, and the unchanged finalize bar", async () => {
   const markup = await renderPage()
   assert.equal(
@@ -640,6 +681,7 @@ test("join rule (a): an empty step WITH an Idealplan recommendation (`neu`) show
     label: "Balea Feuchtigkeitsspülung",
     verdictLabel: "Passt",
     priceLabel: null,
+    imageUrl: null,
     origin: "ideal_recommendation" as const,
     propertyRows: null,
   }
@@ -714,6 +756,7 @@ function twoEmptyConditionerSteps() {
     label: "Balea Feuchtigkeitsspülung",
     verdictLabel: "Passt",
     priceLabel: null,
+    imageUrl: null,
     origin: "ideal_recommendation" as const,
     propertyRows: null,
   }
@@ -767,7 +810,7 @@ test("Phase 4 never proposes a product for a line whose Phase-3 slot is in resea
       researchLabels={researchLabels}
     />,
   )
-  const lines = [...markup.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/g)].map((match) => match[1]!)
+  const lines = [...markup.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)].map((match) => match[1]!)
   const researchLine = lines.find((line) => line.includes(`Gescanntes Produkt · ${GTIN}`))
   assert.ok(researchLine, "the research line is in the week")
   assert.ok(researchLine.includes("noch in Recherche"))
@@ -830,9 +873,9 @@ const dryLengthsLead = {
   },
 }
 
-/** The coverage pills of one „Damit anfangen" row of the recipe. */
+/** The coverage pill of one „Zuerst" chip on the recipe slide. */
 function recipePrimaryRow(markup: string, categoryLabel: string): string {
-  const block = markup.slice(markup.indexOf(">Damit anfangen</h3>"))
+  const block = markup.slice(markup.indexOf(">Zuerst</h3>"))
   const rows = block.slice(0, block.indexOf("</ul>")).split("<li")
   const row = rows.find((entry) => entry.includes(`>${categoryLabel}</span>`))
   assert.ok(row, `no recipe row for ${categoryLabel}`)
@@ -852,6 +895,44 @@ test("recipe: her scanned conditioner still in research counts as „vorhanden�
     loadModel: async () => model({ items: [shampooItem] }),
   })
   assert.ok(recipePrimaryRow(without, "Conditioner").includes("nicht vorhanden"))
+})
+
+test("recipe as a slide: talking point, Zuerst and Nicht zuerst visible; the rest folded", async () => {
+  const markup = await renderPage({ loadQuizLead: async () => dryLengthsLead })
+  const recipe = concernRecipeFor("dry_lengths")!
+  const start = markup.indexOf("Hauptproblem: ")
+  const card = markup.slice(start, markup.indexOf("</section>", start))
+  const foldAt = card.indexOf("<details")
+  assert.ok(foldAt > 0, "the recipe has fold-ups")
+  const slide = card.slice(0, foldAt)
+  const folded = card.slice(foldAt)
+  const decode = (text: string) =>
+    text.replaceAll("&quot;", '"').replaceAll("&amp;", "&").replaceAll("&#x27;", "'")
+
+  // The slide: the sentence Nick reads aloud, the lead categories with their state, the avoid list.
+  assert.ok(slide.includes("So sagst du es"))
+  assert.ok(decode(slide).includes(recipe.talkingPointDe))
+  assert.ok(slide.includes(">Zuerst</h3>"))
+  assert.ok(slide.includes(">Conditioner</span>"))
+  assert.match(slide, />(nicht )?vorhanden</)
+  assert.ok(slide.includes(">Nicht zuerst</h3>"))
+  for (const entry of recipe.avoid) assert.ok(decode(slide).includes(entry), entry)
+  // No reasons, evidence tags, routine coverage or boundary on the slide.
+  assert.ok(!slide.includes("belegt)"))
+  assert.ok(!slide.includes("in der Idealroutine"))
+  for (const entry of recipe.primary.categories) assert.ok(!decode(slide).includes(entry.why))
+  assert.ok(!decode(slide).includes(recipe.boundary!))
+
+  // Everything else stays reachable behind the fold-ups.
+  assert.ok(folded.includes("Warum zuerst"))
+  assert.ok(folded.includes("belegt)"))
+  assert.ok(folded.includes("in der Idealroutine"))
+  for (const entry of recipe.primary.categories) assert.ok(decode(folded).includes(entry.why))
+  assert.ok(folded.includes("Ohne Produkt"))
+  for (const entry of recipe.primary.levers)
+    assert.ok(decode(folded).includes(entry.lever), entry.lever)
+  assert.ok(folded.includes(">Grenze"))
+  assert.ok(decode(folded).includes(recipe.boundary!))
 })
 
 test("recipe habits pre-fill with ids from their wording, never their position", async () => {
