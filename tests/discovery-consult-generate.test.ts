@@ -163,7 +163,7 @@ test("the prompt: German, guardrails as hard rules, the exact sections schema, t
   }
   // zielLuecken is code-owned since v4: it never appears in the prompt's schema.
   assert.equal(system.includes('"zielLuecken"'), false)
-  assert.equal(CONSULT_BRIEF_PROMPT_VERSION, "consult-brief-v4")
+  assert.equal(CONSULT_BRIEF_PROMPT_VERSION, "consult-brief-v5")
   assert.match(system, /dritte[rn]? Person/)
   assert.ok(user.includes(SHAMPOO_KEY))
   assert.ok(user.includes("Glanzwerk Volumen Shampoo"))

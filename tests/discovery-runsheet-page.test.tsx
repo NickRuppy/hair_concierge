@@ -1067,11 +1067,29 @@ test("footer: nothing genuinely unused — no footer at all", async () => {
 
 // --- pure helpers -------------------------------------------------------------------------
 
-test("score helpers: staircase capped at 10, German decimals, strict parsing", () => {
+test("score helpers: staircase scales onto the gap, German decimals, strict parsing", () => {
+  // Sum within the gap to 9: raw points hold, nothing is inflated.
   assert.deepEqual(runsheetScoreSteps(4, [1.5, 1.5, 1]), [4, 5.5, 7, 8])
+  // Overshoot: the gap is spread in tenths by largest remainder (R32) — the relative
+  // order holds, the target is exactly the cap, and no weighted step flattens to +0
+  // while a tenth is left for it.
   assert.deepEqual(runsheetScoreSteps(8, [3, null]), [8, 9, 9])
-  // The code does the arithmetic and caps the display at 9; a baseline above stays truthful.
+  assert.deepEqual(runsheetScoreSteps(4, [2, 2, 2]), [4, 5.7, 7.4, 9])
+  assert.deepEqual(runsheetScoreSteps(7, [2, 1, 1]), [7, 8, 8.5, 9])
+  // Five in-range weights into a gap of 1: plain rounding would flatten the 0.5er —
+  // the tenth-apportionment keeps every weighted Hebel visibly moving (Codex F2).
+  assert.deepEqual(runsheetScoreSteps(8, [2, 2, 0.5, 2, 2]), [8, 8.3, 8.5, 8.6, 8.8, 9])
+  // The code does the arithmetic and caps the display at 9; a baseline at or above
+  // stays truthful and the ladder stays flat.
+  assert.deepEqual(runsheetScoreSteps(9, [1, 1]), [9, 9, 9])
   assert.deepEqual(runsheetScoreSteps(10, [1]), [10, 10])
+  // No weights at all: nothing to spread.
+  assert.deepEqual(runsheetScoreSteps(5, [null, null]), [5, 5, 5])
+  // Negative edits never count (Codex F1): the ladder neither pierces the cap between
+  // steps nor sinks a flat baseline — and the save refuses the value outright.
+  assert.deepEqual(runsheetScoreSteps(8, [3, -1]), [8, 9, 9])
+  assert.deepEqual(runsheetScoreSteps(10, [-1]), [10, 10])
+  assert.equal(parseRunsheetPoints("-1"), null)
   assert.equal(formatRunsheetScore(5.5), "5,5")
   assert.equal(formatRunsheetScore(8), "8")
   assert.equal(parseRunsheetPoints("1,5"), 1.5)
