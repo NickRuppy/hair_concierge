@@ -199,7 +199,17 @@ export function backfilledRow(env: unknown): Record<string, unknown> {
       storedDomains: { diagnostics: false, care_habits: false, quiz_context: false },
       storedDiagnostics: null,
       storedCareHabits: null,
-      artifact: { id: "a", leadId: "l", quizAnswers: env, createdAt: "2026-08-01T00:00:00.000Z" },
+      artifact: {
+        id: "a",
+        leadId: "l",
+        quizAnswers: env,
+        createdAt: "2026-08-01T00:00:00.000Z",
+        // What the paid preparation stored and main's link projected (the backfill loads it).
+        canonicalProfile: {
+          modelVersion: "personal_plan_canonical_v1",
+          ...adaptPersonalPlanAnswersForOffer((env as Envelope).answers).answers,
+        },
+      },
       legacyLead: null,
       plan: null,
       needVersions: [],

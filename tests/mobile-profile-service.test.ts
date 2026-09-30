@@ -6,6 +6,7 @@ import { buildLegacyQuizStage1Source } from "../src/lib/personal-plan/input"
 import { hashPersonalPlanNeedVersionInput } from "../src/lib/personal-plan/persistence"
 import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
 import { seedMobileProfileFixtures } from "../scripts/mobile/profile-fixture"
+import { withSimulatedDoor } from "./user-facts-save-rpc.fixtures"
 import { createRefinedNeedSnapshot } from "../src/lib/personal-plan/refinement/production-persistence-gateway"
 import { deriveStage2TriggerContext } from "../src/lib/personal-plan/refinement/stage1-adapter"
 import { resolveAssumedAnswers } from "../src/lib/personal-plan/refinement/assumed-defaults"
@@ -431,7 +432,7 @@ test("synthetic profile fixture refuses non-local target and seeds sources accep
       }
     },
   }
-  const ids = await seedMobileProfileFixtures(fixtureClient as never, {
+  const ids = await seedMobileProfileFixtures(withSimulatedDoor(rows, fixtureClient) as never, {
     free: "free",
     detailed: "detailed",
     incomplete: "incomplete",

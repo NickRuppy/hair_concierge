@@ -8,6 +8,9 @@
  * It never derives legacy columns (that has its own parity test against the real SQL).
  */
 
+import { deriveLegacyColumns } from "../src/lib/user-facts/derive-legacy-columns"
+import type { CareHabitsV1, DiagnosticsV1 } from "../src/lib/user-facts/schema"
+
 type Row = Record<string, unknown>
 
 function isRecord(value: unknown): value is Row {
@@ -86,5 +89,60 @@ export function simulateUserFactsSave(rows: Row[], args: Row): Row {
     revision: revision + 1,
     changed: JSON.stringify(nextDomain) !== JSON.stringify(oldDomain),
     diagnosticsHash: null,
+  }
+}
+
+/**
+ * Clean-switch task 7B: an in-memory client whose `hair_profiles` writes go through the door, for
+ * unit tests of seeders that now save profiles via `saveUserFacts` / `writeAccountLinkFacts`
+ * (e.g. `scripts/mobile/profile-fixture.ts`). Wraps a table-collecting fake: adds the one
+ * guarded read (`from(t).select(cols).eq(col, v).maybeSingle()`) and `rpc("user_facts_save_v1")`
+ * via `simulateUserFactsSave`, then derives the legacy columns with the parity-tested TS oracle,
+ * as the SQL door does. Rows land in `rows.hair_profiles` in write order.
+ */
+export function withSimulatedDoor<
+  Client extends { from: (table: string) => Record<string, unknown> },
+>(rows: Record<string, Row[]>, client: Client) {
+  return {
+    ...client,
+    from(table: string) {
+      return {
+        ...client.from(table),
+        select(columns: string) {
+          return {
+            eq(column: string, value: unknown) {
+              return {
+                async maybeSingle() {
+                  const row = (rows[table] ?? []).find((entry) => entry[column] === value)
+                  if (!row) return { data: null, error: null }
+                  const picked = Object.fromEntries(
+                    columns.split(",").map((name) => [name.trim(), row[name.trim()] ?? null]),
+                  )
+                  return { data: picked, error: null }
+                },
+              }
+            },
+          }
+        },
+      }
+    },
+    async rpc(name: string, args: Row) {
+      if (name !== "user_facts_save_v1")
+        throw new Error(`withSimulatedDoor: unexpected rpc ${name}`)
+      const table = (rows.hair_profiles ??= [])
+      const result = simulateUserFactsSave(table, args)
+      if (result.status === "ok") {
+        const row = table.find((entry) => entry.user_id === args.p_user_id)!
+        row.facts_provenance ??= {}
+        Object.assign(
+          row,
+          deriveLegacyColumns({
+            diagnostics: (row.diagnostics ?? null) as DiagnosticsV1 | null,
+            careHabits: (row.care_habits ?? null) as CareHabitsV1 | null,
+          }),
+        )
+      }
+      return { data: result, error: null }
+    },
   }
 }
