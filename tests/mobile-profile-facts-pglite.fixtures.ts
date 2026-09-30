@@ -96,6 +96,58 @@ export function pgliteRpcClient(pg: PersonalPlanTestDb) {
   }
 }
 
+/** `pgliteRpcClient` plus the one table read `loadUserFacts` makes
+ * (`from(t).select(cols).eq(col, v).maybeSingle()`), so the web account link
+ * (`writeAccountLinkFacts`) runs against the same real schema. */
+export function pgliteAdminClient(pg: PersonalPlanTestDb) {
+  const rpc = pgliteRpcClient(pg)
+  return {
+    ...rpc,
+    from(table: string) {
+      let columns = "*"
+      let filter: [string, unknown] | null = null
+      const query = {
+        select(selected: string) {
+          columns = selected
+          return query
+        },
+        eq(column: string, value: unknown) {
+          filter = [column, value]
+          return query
+        },
+        async maybeSingle() {
+          const safe = (name: string) => {
+            if (!/^[a-z_]+$/.test(name)) throw new Error(`unsupported identifier ${name}`)
+            return name
+          }
+          const list =
+            columns === "*"
+              ? "*"
+              : columns
+                  .split(",")
+                  .map((c) => safe(c.trim()))
+                  .join(",")
+          const { rows } = await pg.query<Record<string, unknown>>(
+            `select ${list} from public.${safe(table)} where ${safe(filter![0])} = $1`,
+            [filter![1]],
+          )
+          return { data: rows[0] ?? null, error: null }
+        },
+      }
+      return query
+    },
+  }
+}
+
+/** A lead's `created_at` as PostgREST serialises it (ISO, microseconds kept). */
+export async function leadCreatedAt(pg: PersonalPlanTestDb, leadId: string): Promise<string> {
+  const { rows } = await pg.query<{ created_at: string }>(
+    "select to_json(created_at) #>> '{}' as created_at from public.leads where id = $1",
+    [leadId],
+  )
+  return rows[0]!.created_at
+}
+
 export async function readClock(pg: PersonalPlanTestDb, userId: string) {
   const { rows } = await pg.query<{ revision: string; profile_revision: string }>(
     "select revision::text, profile_revision::text from public.scanner_context_sources where user_id = $1",

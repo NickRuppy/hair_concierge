@@ -102,6 +102,9 @@ async function publish(
   answers: QuizAnswers | null,
   submission: RegistrationSubmission | null,
   leadId: string | null,
+  /** create / replace: the one time of the quiz taken now — the facts' `source.takenAt` and the
+   * inserted lead's `created_at`. */
+  quizTakenAt: string | null = null,
 ) {
   // Explicit replacement/completion becomes its own owner-bound source. Do not
   // silently inherit paid answers or pick an unrelated email/newest lead.
@@ -153,6 +156,7 @@ async function publish(
       p_facts: facts ? toProfileFactsArgument(facts) : null,
       p_quiz_answers: answers,
       p_lead_id: leadId,
+      p_quiz_taken_at: quizTakenAt,
       p_submission: submission,
       p_source_hash: prepared.sourceHash,
       p_engine_version: prepared.snapshot.computationVersion,
@@ -212,6 +216,7 @@ export async function completeMobileRegistration(
     // create / replace are a quiz taken now: the web account link's "latest own quiz wins"
     // winner write, sourced from the lead this publication inserts. keep writes nothing.
     const leadId = input.choice === "keep" ? null : randomUUID()
+    const quizTakenAt = leadId ? new Date().toISOString() : null
     let facts: MobileFactsWrite | null = null
     if (leadId) {
       try {
@@ -219,7 +224,7 @@ export async function completeMobileRegistration(
           answers: submission.answers,
           leadId,
           stored: storedFacts(userId, source),
-          now: new Date().toISOString(),
+          now: quizTakenAt!,
         })
       } catch (error) {
         factsError(error)
@@ -233,6 +238,7 @@ export async function completeMobileRegistration(
       input.choice === "keep" ? null : submission.answers,
       submission,
       leadId,
+      quizTakenAt,
     )
   } catch (error) {
     if (error instanceof RegistrationCompletionError) throw error

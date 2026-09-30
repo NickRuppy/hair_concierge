@@ -7,14 +7,16 @@ import {
 } from "../src/lib/mobile/registration-completion"
 import { registrationSubmissionHash } from "../src/lib/mobile/registration-contract"
 import { loadSharedScannerContext } from "../src/lib/scan/scanner-context-supabase"
-import { quizSupersedesFacts } from "../src/lib/user-facts/account-link"
+import { quizSupersedesFacts, writeAccountLinkFacts } from "../src/lib/user-facts/account-link"
 import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
 import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
 import { parseUserFactsRow } from "../src/lib/user-facts/read"
 import type { QuizAnswers } from "../src/lib/quiz/types"
 import {
   DIAGNOSTICS_COLUMNS,
+  leadCreatedAt,
   mobileFactsDatabase,
+  pgliteAdminClient,
   pgliteRpcClient,
   readClock,
   readRow,
@@ -63,7 +65,8 @@ async function fixture(
           calls: real.calls,
           async rpc(name: string, args: Record<string, unknown>) {
             if (name !== "mobile_registration_publish") return real.rpc(name, args)
-            const { p_facts, ...rest } = args
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars -- not in the old signature
+            const { p_facts, p_quiz_taken_at, ...rest } = args
             const read = (await real.rpc("scanner_context_read_source", { p_user_id: owner }))
               .data as { profile: Record<string, unknown> | null }
             const quiz = args.p_quiz_answers as QuizAnswers
@@ -176,6 +179,65 @@ test("create saves the quiz through the door: facts sourced from the new lead, c
   // The same lead the scanner source and the stored quiz were built from.
   const edit = (await f.db.query<any>("select profile_snapshot from scanner_profile_edits")).rows[0]
   assert.equal(edit.profile_snapshot.facts_revision, 1)
+})
+
+test("fix round 1 (E): the iOS quiz and its lead carry one timestamp — a web re-link of that lead is a pure preserve", async (t) => {
+  const f = await fixture(t)
+  await f.complete(await f.intent())
+  const row = (await readRow(f.db, owner))!
+  const lead = (await f.db.query<any>("select id, quiz_answers from leads")).rows[0]
+  const createdAt = await leadCreatedAt(f.db, lead.id)
+  const takenAt = (parseUserFactsRow(owner, row).diagnostics!.source as { takenAt?: string })
+    .takenAt!
+  assert.equal(Date.parse(createdAt), Date.parse(takenAt), "leads.created_at == source.takenAt")
+
+  const outcome = await writeAccountLinkFacts(pgliteAdminClient(f.db) as never, {
+    userId: owner,
+    quiz: { kind: "lead", leadId: lead.id, quizAnswers: lead.quiz_answers, createdAt },
+  })
+  assert.equal(outcome, "preserved")
+  const after = (await readRow(f.db, owner))!
+  assert.equal(after.facts_revision, row.facts_revision, "no new revision")
+  assert.deepEqual(after.diagnostics, row.diagnostics)
+})
+
+test("fix round 1 (E): the quiz time is validated — required, equal to the facts' takenAt, never in the future", async (t) => {
+  const future = new Date(Date.now() + 24 * 3600 * 1000).toISOString()
+  const variants: Array<[string, (args: Record<string, any>) => void]> = [
+    ["missing", (args) => (args.p_quiz_taken_at = null)],
+    [
+      "differs from the facts",
+      (args) =>
+        (args.p_quiz_taken_at = new Date(Date.parse(args.p_quiz_taken_at) + 1).toISOString()),
+    ],
+    [
+      "in the future",
+      (args) => {
+        args.p_quiz_taken_at = future
+        args.p_facts.diagnostics.patch.source.takenAt = future
+      },
+    ],
+  ]
+  for (const [name, mutate] of variants) {
+    const f = await fixture(t)
+    const input = await f.intent()
+    const client = {
+      rpc(fn: string, args: Record<string, any>) {
+        if (fn === "mobile_registration_publish") {
+          args = structuredClone(args)
+          mutate(args)
+        }
+        return f.client.rpc(fn, args)
+      },
+    }
+    await assert.rejects(
+      completeMobileRegistration(client as never, owner, input.submission.email, input as never),
+      /temporarily_unavailable/,
+      name,
+    )
+    for (const table of ["hair_profiles", "leads", "mobile_registration_publication_receipts"])
+      assert.equal((await f.db.query(`select * from ${table}`)).rows.length, 0, `${name}: ${table}`)
+  }
 })
 
 test("C2 keep preserves profile/source/edit rows, records checkbox without a new lead", async (t) => {
@@ -595,7 +657,7 @@ test("all publication privileges are denied to anon/authenticated", async (t) =>
     assert.equal(
       (
         await f.db.query<{ ok: boolean }>(
-          `select has_function_privilege($1,'public.mobile_registration_publish(uuid,uuid,text,text,uuid,uuid,text,text,bigint,bigint,jsonb,jsonb,uuid,jsonb,text,text,jsonb,jsonb,text)','EXECUTE') ok`,
+          `select has_function_privilege($1,'public.mobile_registration_publish(uuid,uuid,text,text,uuid,uuid,text,text,bigint,bigint,jsonb,jsonb,uuid,timestamptz,jsonb,text,text,jsonb,jsonb,text)','EXECUTE') ok`,
           [role],
         )
       ).rows[0].ok,

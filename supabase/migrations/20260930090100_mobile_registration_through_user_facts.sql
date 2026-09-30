@@ -9,7 +9,9 @@
 -- — `{"diagnostics": {"patch", "provenance"}, "quiz_context"?: {...}}` built by
 -- src/lib/mobile/profile-facts-patch.ts — and handed to the door by
 -- `public.mobile_profile_facts_save_v1` (20260930090000), which passes the row's current
--- `facts_revision` as the expected revision.
+-- `facts_revision` as the expected revision. A new `p_quiz_taken_at` (after `p_lead_id`) is the
+-- one timestamp of a quiz taken now: the facts carry it as `diagnostics.source.takenAt` and the
+-- lead is inserted with it as `created_at`, so the two can never disagree (fix round 1, E).
 --
 -- What TypeScript decides and what SQL enforces: the "latest own quiz wins" rule and the
 -- completeness defaults live only in TypeScript (`quizSupersedesFacts`,
@@ -49,7 +51,7 @@ CREATE FUNCTION public.mobile_registration_publish(
  p_user_id uuid,p_request_id uuid,p_request_hash text,p_mode text,
  p_attempt_id uuid,p_send_generation uuid,p_email text,p_submission_hash text,
  p_expected_profile_revision bigint,p_expected_source_revision bigint,
- p_facts jsonb,p_quiz_answers jsonb,p_lead_id uuid,p_submission jsonb,
+ p_facts jsonb,p_quiz_answers jsonb,p_lead_id uuid,p_quiz_taken_at timestamptz,p_submission jsonb,
  p_source_hash text,p_engine_version text,p_input_snapshot jsonb,p_output_snapshot jsonb,p_snapshot_source text
 ) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path='' AS $$
 DECLARE v_profile jsonb; v_clock public.scanner_context_sources; v_receipt jsonb;
@@ -71,6 +73,13 @@ BEGIN
   OR (p_mode='keep' AND p_facts IS NOT NULL)
   OR (p_mode IN ('create','replace') AND jsonb_typeof(p_facts) IS DISTINCT FROM 'object')
   OR (p_mode <> 'keep' AND jsonb_typeof(p_quiz_answers) IS DISTINCT FROM 'object')
+  -- One timestamp for the quiz taken now (fix round 1, E): the lead is inserted with exactly the
+  -- time the facts carry as diagnostics.source.takenAt, so a later web re-link of this lead is
+  -- not "newer" than itself. Required for create/replace, absent otherwise, never in the future.
+  OR (p_mode IN ('create','replace') AND (p_quiz_taken_at IS NULL
+    OR p_quiz_taken_at > pg_catalog.clock_timestamp() + interval '5 minutes'
+    OR (p_facts->'diagnostics'->'patch'->'source'->>'takenAt')::timestamptz IS DISTINCT FROM p_quiz_taken_at))
+  OR (p_mode NOT IN ('create','replace') AND p_quiz_taken_at IS NOT NULL)
   OR jsonb_typeof(p_input_snapshot->'source') IS DISTINCT FROM 'object'
   OR jsonb_typeof(p_input_snapshot->'userRefinementAnswers') IS DISTINCT FROM 'object'
   OR jsonb_typeof(p_input_snapshot->'userRefinementQuestionIds') IS DISTINCT FROM 'array'
@@ -118,8 +127,8 @@ BEGIN
    WHERE user_id=p_user_id AND profile_revision=v_clock.profile_revision AND NOT v_created;
   IF p_mode IN ('create','replace') THEN
    IF p_lead_id IS NULL OR p_input_snapshot->'source'->>'leadId' IS DISTINCT FROM p_lead_id::text THEN RAISE EXCEPTION 'invalid_registration_lead'; END IF;
-   INSERT INTO public.leads(id,name,email,marketing_consent,quiz_answers,quiz_kind,status,user_id)
-    VALUES(p_lead_id,p_submission->>'firstName',p_email,(p_submission->>'marketingOptIn')::boolean,p_quiz_answers,'legacy','linked',p_user_id);
+   INSERT INTO public.leads(id,name,email,marketing_consent,quiz_answers,quiz_kind,status,user_id,created_at)
+    VALUES(p_lead_id,p_submission->>'firstName',p_email,(p_submission->>'marketingOptIn')::boolean,p_quiz_answers,'legacy','linked',p_user_id,p_quiz_taken_at);
   END IF;
  END IF;
  SELECT * INTO v_clock FROM public.scanner_context_sources WHERE user_id=p_user_id;
@@ -149,5 +158,5 @@ EXCEPTION WHEN no_data_found THEN
  RETURN jsonb_build_object('outcome','profile_conflict');
 END;
 $$;
-REVOKE ALL ON FUNCTION public.mobile_registration_publish(uuid,uuid,text,text,uuid,uuid,text,text,bigint,bigint,jsonb,jsonb,uuid,jsonb,text,text,jsonb,jsonb,text) FROM PUBLIC,anon,authenticated;
-GRANT EXECUTE ON FUNCTION public.mobile_registration_publish(uuid,uuid,text,text,uuid,uuid,text,text,bigint,bigint,jsonb,jsonb,uuid,jsonb,text,text,jsonb,jsonb,text) TO service_role;
+REVOKE ALL ON FUNCTION public.mobile_registration_publish(uuid,uuid,text,text,uuid,uuid,text,text,bigint,bigint,jsonb,jsonb,uuid,timestamptz,jsonb,text,text,jsonb,jsonb,text) FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.mobile_registration_publish(uuid,uuid,text,text,uuid,uuid,text,text,bigint,bigint,jsonb,jsonb,uuid,timestamptz,jsonb,text,text,jsonb,jsonb,text) TO service_role;
