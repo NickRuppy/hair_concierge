@@ -74,6 +74,13 @@ BEGIN
     v_result := public.user_facts_save_v1(
       p_user_id, v_domain, v_part -> 'patch', v_part -> 'provenance', v_revision, 'upsert');
     IF v_result ->> 'status' = 'revision_conflict' THEN
+      -- A conflict AFTER a completed door write must never come back as a status: a caller
+      -- without an EXCEPTION block (scanner_profile_edit_publish) could RETURN on it and commit
+      -- the half-written facts. Raise instead; the whole publication rolls back (P0002 is the
+      -- registration publisher's profile_conflict).
+      IF v_writes > 0 THEN
+        RAISE EXCEPTION 'profile_facts_partial_conflict' USING ERRCODE = 'P0002';
+      END IF;
       RETURN pg_catalog.jsonb_build_object('status', 'revision_conflict', 'writes', v_writes);
     ELSIF v_result ->> 'status' IS DISTINCT FROM 'ok' THEN
       RAISE EXCEPTION 'profile_facts_rejected' USING DETAIL = v_result::text;

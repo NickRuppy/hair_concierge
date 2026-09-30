@@ -314,6 +314,91 @@ test("a door-level conflict while creating rolls everything back to profile_conf
     assert.equal((await f.db.query(`select * from ${table}`)).rows.length, 0, table)
 })
 
+/** Renames the real door and installs `body` (plpgsql) as `user_facts_save_v1`; the real one
+ * stays callable as `user_facts_save_v1_real`. */
+async function wrapDoor(db: Awaited<ReturnType<typeof fixture>>["db"], body: string) {
+  await db.exec(`
+    ALTER FUNCTION public.user_facts_save_v1(uuid,text,jsonb,jsonb,integer,text,uuid,bigint,uuid)
+      RENAME TO user_facts_save_v1_real;
+    CREATE FUNCTION public.user_facts_save_v1(p_user_id uuid, p_domain text, p_patch jsonb,
+      p_provenance jsonb, p_expected_revision integer DEFAULT NULL, p_mode text DEFAULT 'upsert',
+      p_source_draft_id uuid DEFAULT NULL, p_expected_draft_revision bigint DEFAULT NULL,
+      p_expected_initial_version_id uuid DEFAULT NULL) RETURNS jsonb LANGUAGE plpgsql AS $$
+    BEGIN ${body} END $$;`)
+}
+
+const REAL_DOOR_CALL =
+  "public.user_facts_save_v1_real(p_user_id,p_domain,p_patch,p_provenance,p_expected_revision,p_mode)"
+
+test("fix round 1 (C): a conflict after a completed door write raises, never returns a status", async (t) => {
+  const f = await fixture(t)
+  await f.complete(await f.intent())
+  await saveUserFacts(f.db, {
+    userId: owner,
+    domain: "quiz_context",
+    patch: { routineClarity: "clear" },
+    provenance: {
+      source: { kind: "personal_plan_artifact", id: "artifact-1" },
+      schemaVersion: 1,
+      at: "2026-09-02T00:00:00.000Z",
+    },
+  })
+  // diagnostics goes through the real door; quiz_context then reports a concurrent writer.
+  await wrapDoor(
+    f.db,
+    `IF p_domain = 'quiz_context' THEN
+       RETURN jsonb_build_object('status','revision_conflict','revision',99);
+     END IF;
+     RETURN ${REAL_DOOR_CALL};`,
+  )
+  const facts = {
+    diagnostics: {
+      patch: { thickness: "coarse" },
+      provenance: {
+        source: { kind: "profile_editor" },
+        schemaVersion: 1,
+        at: "2026-09-03T00:00:00.000Z",
+      },
+    },
+    quiz_context: {
+      patch: { routineClarity: null },
+      provenance: {
+        source: { kind: "profile_editor" },
+        schemaVersion: 1,
+        at: "2026-09-03T00:00:00.000Z",
+      },
+    },
+  }
+  // The helper itself: never a return a caller without an EXCEPTION block could pass on.
+  await f.db.exec("BEGIN")
+  await assert.rejects(
+    f.db.query("select public.mobile_profile_facts_save_v1($1,$2,true)", [
+      owner,
+      JSON.stringify(facts),
+    ]),
+    (error: { code?: string }) => error.code === "P0002",
+  )
+  await f.db.exec("ROLLBACK")
+
+  // Through the registration replace: everything rolls back to profile_conflict.
+  const row = await readRow(f.db, owner)
+  const clock = await readClock(f.db, owner)
+  const leads = (await f.db.query("select * from leads")).rows.length
+  const receipts = (await f.db.query("select * from mobile_registration_publication_receipts")).rows
+    .length
+  await assert.rejects(
+    f.complete(await f.intent("replace", { answers: { ...answers, thickness: "coarse" } })),
+    /profile_conflict/,
+  )
+  assert.deepEqual(await readRow(f.db, owner), row)
+  assert.deepEqual(await readClock(f.db, owner), clock)
+  assert.equal((await f.db.query("select * from leads")).rows.length, leads)
+  assert.equal(
+    (await f.db.query("select * from mobile_registration_publication_receipts")).rows.length,
+    receipts,
+  )
+})
+
 test("C8 wrong owner, stale generation, expiry, login intent and unverified binding never publish", async (t) => {
   const f = await fixture(t)
   const input = await f.intent()
