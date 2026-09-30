@@ -22,6 +22,7 @@ import {
   initialGoalSelection,
   toggleGoal,
 } from "../src/lib/profile/goals-draft"
+import { isProfileConflict } from "../src/lib/profile/save-conflict"
 import { readProfileDiagnostics } from "../src/lib/user-facts/profile-diagnostics"
 import { diagnosticsV1Schema, type DiagnosticsV1 } from "../src/lib/user-facts/schema"
 
@@ -252,4 +253,20 @@ test("haar-check adversarial: a stored stale main problem is not preselected and
   )
   assert.equal(initial.primaryConcern, undefined)
   assert.equal(haarCheckSaveBlock(initial, initial), "main_problem")
+})
+
+test("fix round 2 (5): a 409 profile_conflict is told apart from every other failure", async () => {
+  const json = (status: number, body: unknown) =>
+    new Response(JSON.stringify(body), {
+      status,
+      headers: { "Content-Type": "application/json" },
+    })
+  assert.equal(await isProfileConflict(json(409, { error: "profile_conflict" })), true)
+  const conflict = json(409, { error: "profile_conflict" })
+  await isProfileConflict(conflict)
+  assert.deepEqual(await conflict.json(), { error: "profile_conflict" }, "body stays readable")
+  assert.equal(await isProfileConflict(json(503, { error: "temporarily_unavailable" })), false)
+  assert.equal(await isProfileConflict(json(409, { error: "other" })), false)
+  assert.equal(await isProfileConflict(new Response("nope", { status: 409 })), false)
+  assert.equal(await isProfileConflict(json(200, { hairProfile: {} })), false)
 })

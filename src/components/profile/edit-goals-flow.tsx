@@ -14,6 +14,7 @@ import {
   toggleGoal,
   type EditableGoal,
 } from "@/lib/profile/goals-draft"
+import { PROFILE_CONFLICT_NOTICE, isProfileConflict } from "@/lib/profile/save-conflict"
 import type { HairTexture } from "@/lib/vocabulary"
 import { useToast } from "@/providers/toast-provider"
 
@@ -61,6 +62,15 @@ export function EditGoalsFlow({ initialGoals, hairTexture, returnTo }: EditGoals
         body: JSON.stringify({ goals: selectedGoals }),
         cache: "no-store",
       })
+      if (await isProfileConflict(response)) {
+        toast({
+          title: PROFILE_CONFLICT_NOTICE.title,
+          description: PROFILE_CONFLICT_NOTICE.description,
+          variant: "destructive",
+        })
+        setSaving(false)
+        return
+      }
       if (!response.ok) throw new Error("goals save failed")
 
       router.push(returnTo)

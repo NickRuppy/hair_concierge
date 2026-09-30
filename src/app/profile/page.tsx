@@ -57,6 +57,7 @@ import {
   haarCheckSaveBlock,
   type HaarCheckDraft,
 } from "@/lib/profile/haar-check-draft"
+import { PROFILE_CONFLICT_NOTICE, isProfileConflict } from "@/lib/profile/save-conflict"
 import { readProfileDiagnostics } from "@/lib/user-facts/profile-diagnostics"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/providers/auth-provider"
@@ -948,6 +949,11 @@ export default function ProfilePage() {
         body: JSON.stringify(quizPayload),
         cache: "no-store",
       })
+      if (await isProfileConflict(response)) {
+        setQuizNotice({ variant: "error", ...PROFILE_CONFLICT_NOTICE })
+        toast({ title: PROFILE_CONFLICT_NOTICE.title, variant: "destructive" })
+        return
+      }
       if (!response.ok) throw new Error("profile answers save failed")
       const body = (await response.json()) as { hairProfile?: HairProfile }
       if (!body.hairProfile) throw new Error("profile answers save returned no profile")
