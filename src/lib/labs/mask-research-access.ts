@@ -267,6 +267,24 @@ const adjudicationPointSchema = z
 const isClosedAdjudication = (entry: MaskAdjudicationPoint) =>
   entry.title.trimStart().toUpperCase().startsWith("CLOSED")
 
+// One-line row summary: the rationale's first sentence, so the table stays scannable and the
+// full evidence chain lives in the expandable detail panel (leave-in `reasoningShort` pattern).
+function shortReasoning(rationale: string | null | undefined): string | null {
+  if (!rationale) return null
+  let text = rationale.trim()
+  // Re-derived records open with a versioning preamble ("Re-derived under v0.3 (…)."),
+  // which says nothing about the value — skip it for the row summary.
+  for (let guard = 0; guard < 3; guard += 1) {
+    const preamble = text.match(/^Re-derived under v[\s\S]{0,200}?[.!?](?=\s)/i)
+    if (!preamble) break
+    text = text.slice(preamble[0].length).trim()
+  }
+  if (!text) text = rationale.trim()
+  const match = text.match(/^[\s\S]{20,}?[.!?](?=\s|$)/)
+  const first = match ? match[0].trim() : text
+  return first.length > 220 ? `${first.slice(0, 220).trimEnd()}…` : first
+}
+
 // focusCareVerdict is a small verdict-plus-note record, not a plain string.
 const focusCareVerdictSchema = z
   .object({
@@ -447,6 +465,7 @@ export type MaskProperty = {
   evidenceLevel: string | null
   evidenceScope: string | null
   rationale: string | null
+  reasoningShort: string | null
   evidenceSignals: string[]
   derivation: string | null
   thresholdReasoning: string[]
@@ -502,7 +521,7 @@ export type MaskProductDetail = MaskQueueItem & {
     conflicts: Array<{ type: string; description: string; resolution?: string }>
   }
   reviewRoutingNotes: string[]
-  adjudicationPoints: MaskAdjudicationPoint[]
+  adjudicationPoints: Array<MaskAdjudicationPoint & { closed: boolean }>
   assumptionNotes: string[]
   properties: MaskProperty[]
   propertyStatuses: Record<string, MaskPropertyReviewStatus>
@@ -542,7 +561,7 @@ export type MaskResearchLabData = {
     }
   }
   openG0Question: string | null
-  openAdjudications: MaskAdjudicationPoint[]
+  openAdjudications: Array<MaskAdjudicationPoint & { closed: boolean }>
   queueItems: MaskQueueItem[]
   initialDetail: MaskProductDetail
 }
@@ -619,6 +638,7 @@ function buildProperties(
       evidenceLevel: null,
       evidenceScope: null,
       rationale: record.g0.rationale ?? null,
+      reasoningShort: shortReasoning(record.g0.rationale),
       evidenceSignals: record.g0.evidenceSignals,
       derivation: null,
       thresholdReasoning: [],
@@ -647,6 +667,7 @@ function buildProperties(
         evidenceLevel: field.evidenceLevel ?? null,
         evidenceScope: field.evidenceScope ?? null,
         rationale: field.rationale ?? null,
+        reasoningShort: shortReasoning(field.rationale),
         evidenceSignals: field.evidenceSignals,
         derivation: field.derivation ?? null,
         thresholdReasoning: field.thresholdReasoning,
@@ -712,9 +733,12 @@ function buildDetail(
   if (runStatus === "pending")
     reviewBlockers.push("Der Klassifizierungslauf für dieses Produkt steht noch aus.")
 
-  const adjudicationPoints = record?.adjudicationPoints ?? []
+  const adjudicationPoints = (record?.adjudicationPoints ?? []).map((entry) => ({
+    ...entry,
+    closed: isClosedAdjudication(entry),
+  }))
   const openAdjudicationIds = adjudicationPoints
-    .filter((entry) => !isClosedAdjudication(entry))
+    .filter((entry) => !entry.closed)
     .map((entry) => entry.id)
 
   const rawInci = product.formulaOfRecord.rawInci
@@ -879,7 +903,7 @@ export function getMaskResearchLabData(): MaskResearchLabData {
   if (!initialDetail) throw new Error("Mask cohort contains no primary products")
 
   const openAdjudications = details.flatMap((detail) =>
-    detail.adjudicationPoints.filter((entry) => !isClosedAdjudication(entry)),
+    detail.adjudicationPoints.filter((entry) => !entry.closed),
   )
   const seen = new Set<string>()
   const dedupedAdjudications = openAdjudications.filter((entry) => {

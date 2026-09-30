@@ -13,6 +13,7 @@ export type MaskAdjudicationPoint = {
   title: string
   body: string
   source: string
+  closed: boolean
 }
 
 export type MaskAgreementCell = {
@@ -44,6 +45,7 @@ export type MaskProperty = {
   evidenceLevel: string | null
   evidenceScope: string | null
   rationale: string | null
+  reasoningShort: string | null
   evidenceSignals: string[]
   derivation: string | null
   thresholdReasoning: string[]
@@ -413,6 +415,12 @@ function PropertyDetailPanel({ property }: { property: MaskProperty }) {
       />
       <ListSection title="Gegensignale" items={property.counterSignals} tone="amber" />
       <ListSection title="Einschränkungen" items={property.limitations} tone="neutral" />
+      {property.evidenceScope ? (
+        <p className="text-[13px] leading-6 text-stone-700">
+          <span className="font-semibold">Evidenz-Scope:</span> {property.evidenceScope}
+        </p>
+      ) : null}
+      <p className="font-mono text-[11px] text-stone-500">{property.path}</p>
     </div>
   )
 }
@@ -637,20 +645,16 @@ function DetailPanel({
                   </button>
                 ))}
             </span>
-            <p className="mt-0.5 font-mono text-[11px] text-stone-500">{property.path}</p>
           </td>
           <td className="px-2 py-2">
             <p className="font-semibold text-stone-950">{property.value}</p>
-            {property.confidence || property.evidenceLevel || property.evidenceScope ? (
+            {property.confidence || property.evidenceLevel ? (
               <p className="mt-1 flex flex-wrap gap-1">
                 {property.confidence ? (
                   <MetaChip title="Konfidenz">Konf. {property.confidence}</MetaChip>
                 ) : null}
                 {property.evidenceLevel ? (
                   <MetaChip title="Evidenzlevel">{property.evidenceLevel}</MetaChip>
-                ) : null}
-                {property.evidenceScope ? (
-                  <MetaChip title="Evidenz-Scope">{property.evidenceScope}</MetaChip>
                 ) : null}
               </p>
             ) : null}
@@ -661,20 +665,24 @@ function DetailPanel({
                 data-mask-derived-annotation={annotation.field}
                 title="Deterministische Projektion dieser Eigenschaft — wird mit ihr freigegeben, nicht separat geprüft."
               >
-                → ergibt: {annotation.label}:{" "}
-                <span className="font-medium text-stone-700">{annotation.value}</span>
-                {annotation.note ? (
-                  <span className="block text-stone-500">{annotation.note}</span>
-                ) : null}
+                <span title={annotation.note ?? undefined}>
+                  → ergibt: {annotation.label}:{" "}
+                  <span className="font-medium text-stone-700">{annotation.value}</span>
+                </span>
               </p>
             ))}
           </td>
           <td className="px-3 py-2 text-[13px] leading-6 text-stone-800">
-            {property.rationale
-              ? property.rationale.length > 220
-                ? `${property.rationale.slice(0, 220)}…`
-                : property.rationale
-              : "Keine Begründung hinterlegt."}
+            {property.reasoningShort ?? "Keine Begründung hinterlegt."}
+            {property.rationale && property.rationale !== property.reasoningShort ? (
+              <button
+                type="button"
+                onClick={() => toggleExpanded(property.path)}
+                className="ml-1 text-[12px] font-medium text-stone-500 underline hover:text-stone-800"
+              >
+                mehr
+              </button>
+            ) : null}
           </td>
           <td className="px-2 py-2">
             <span className="block text-[11px] font-medium text-stone-600">
@@ -843,31 +851,63 @@ function DetailPanel({
       ) : null}
 
       {detail.reviewRoutingNotes.length ? (
-        <section className="mt-5 rounded-md border border-sky-200 bg-sky-50 p-4">
-          <h3 className="font-semibold text-stone-950">Review-Routing-Hinweise</h3>
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-6 text-stone-800">
+        <details className="mt-5 rounded-md border border-sky-200 bg-sky-50">
+          <summary className="cursor-pointer px-4 py-2 text-sm font-semibold text-stone-950">
+            Review-Routing-Hinweise ({detail.reviewRoutingNotes.length})
+          </summary>
+          <ul className="list-disc space-y-1 px-4 pb-3 pl-9 text-sm leading-6 text-stone-800">
             {detail.reviewRoutingNotes.map((entry) => (
               <li key={entry}>{entry}</li>
             ))}
           </ul>
-        </section>
+        </details>
       ) : null}
 
-      {detail.adjudicationPoints.length ? (
+      {detail.adjudicationPoints.some((entry) => !entry.closed) ? (
         <section className="mt-5 rounded-md border border-rose-200 bg-rose-50 p-4">
           <h3 className="font-semibold text-rose-950">
-            Offene Adjudikationspunkte an diesem Produkt ({detail.adjudicationPoints.length})
+            Offene Adjudikationspunkte (
+            {detail.adjudicationPoints.filter((entry) => !entry.closed).length})
           </h3>
           <ul className="mt-2 space-y-2">
-            {detail.adjudicationPoints.map((entry) => (
-              <li key={entry.id} className="rounded-md border border-rose-200 bg-white p-3">
-                <h4 className="font-semibold text-rose-950">{entry.title}</h4>
-                <p className="mt-1 text-sm leading-6 text-stone-800">{entry.body}</p>
-                <p className="mt-1 text-xs text-stone-500">Quelle: {entry.source}</p>
-              </li>
-            ))}
+            {detail.adjudicationPoints
+              .filter((entry) => !entry.closed)
+              .map((entry) => (
+                <li key={entry.id}>
+                  <details className="rounded-md border border-rose-200 bg-white p-3">
+                    <summary className="cursor-pointer font-semibold text-rose-950">
+                      {entry.title}
+                    </summary>
+                    <p className="mt-1 text-sm leading-6 text-stone-800">{entry.body}</p>
+                    <p className="mt-1 text-xs text-stone-500">Quelle: {entry.source}</p>
+                  </details>
+                </li>
+              ))}
           </ul>
         </section>
+      ) : null}
+      {detail.adjudicationPoints.some((entry) => entry.closed) ? (
+        <details className="mt-3 rounded-md border border-stone-200 bg-white">
+          <summary className="cursor-pointer px-4 py-2 text-sm font-semibold text-stone-700">
+            Geklärte Adjudikationspunkte (
+            {detail.adjudicationPoints.filter((entry) => entry.closed).length})
+          </summary>
+          <ul className="space-y-2 px-4 pb-4">
+            {detail.adjudicationPoints
+              .filter((entry) => entry.closed)
+              .map((entry) => (
+                <li key={entry.id}>
+                  <details className="rounded-md border border-stone-200 bg-stone-50 p-3">
+                    <summary className="cursor-pointer text-sm font-medium text-stone-800">
+                      {entry.title}
+                    </summary>
+                    <p className="mt-1 text-sm leading-6 text-stone-700">{entry.body}</p>
+                    <p className="mt-1 text-xs text-stone-500">Quelle: {entry.source}</p>
+                  </details>
+                </li>
+              ))}
+          </ul>
+        </details>
       ) : null}
 
       <details className="mt-5 rounded-md border border-stone-200 bg-white">
@@ -923,14 +963,16 @@ function DetailPanel({
       ) : null}
 
       {detail.assumptionNotes.length ? (
-        <section className="mt-5 rounded-md border border-stone-200 bg-white p-4">
-          <h3 className="font-semibold">Annahmen</h3>
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-6 text-stone-800">
+        <details className="mt-5 rounded-md border border-stone-200 bg-white">
+          <summary className="cursor-pointer px-4 py-2 text-sm font-semibold">
+            Annahmen ({detail.assumptionNotes.length})
+          </summary>
+          <ul className="list-disc space-y-1 px-4 pb-3 pl-9 text-sm leading-6 text-stone-800">
             {detail.assumptionNotes.map((entry) => (
               <li key={entry}>{entry}</li>
             ))}
           </ul>
-        </section>
+        </details>
       ) : null}
 
       {reworkPath === null ? (
@@ -1174,9 +1216,11 @@ export function MaskResearchLabClient({ data }: { data: MaskLabData }) {
             <div>
               <h1 className="text-3xl font-semibold">Mask Research Lab</h1>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-stone-700">
-                Prüfe alle {summary.products} Gold-Set-Produkte der Kalibrierungskohorte Eigenschaft
-                für Eigenschaft. Jede Zeile trägt Wert, Konfidenz, Evidenzlevel und die Begründung
-                aus der Evidenzkette. Keine Katalogfreigabe, keine Product-Intake-Aktion.
+                So funktioniert&apos;s: Produkt links wählen → pro Zeile{" "}
+                <span className="font-semibold text-emerald-800">✓ freigeben</span> oder{" "}
+                <span className="font-semibold text-amber-800">↺ Nacharbeit</span> (
+                <span className="font-mono">›</span> zeigt die volle Evidenz) → am Ende{" "}
+                <span className="font-semibold">„Gesamtes Produkt freigeben“</span>.
               </p>
               <p className="mt-2 text-xs text-stone-500">
                 Standard {data.meta.standardVersion} · Kohorte {data.meta.cohortId} · Key{" "}
@@ -1217,27 +1261,30 @@ export function MaskResearchLabClient({ data }: { data: MaskLabData }) {
         </header>
 
         {data.openG0Question ? (
-          <section className="rounded-md border border-rose-200 bg-rose-50 p-4">
-            <h2 className="font-semibold text-rose-950">Offene G0-Frage der Kohorte</h2>
-            <p className="mt-1 text-sm leading-6 text-rose-950">{data.openG0Question}</p>
-          </section>
+          <details className="rounded-md border border-stone-200 bg-white">
+            <summary className="cursor-pointer px-4 py-2 text-sm font-semibold text-stone-700">
+              G0-Frage der Kohorte (beantwortet — Details)
+            </summary>
+            <p className="px-4 pb-3 text-sm leading-6 text-stone-700">{data.openG0Question}</p>
+          </details>
         ) : null}
 
         {data.openAdjudications.length ? (
           <section className="rounded-md border border-rose-200 bg-rose-50 p-4">
             <h2 className="font-semibold text-rose-950">
-              Offene Adjudikationspunkte ({data.openAdjudications.length})
+              Offene Adjudikationspunkte ({data.openAdjudications.length}) — erscheinen auch am
+              betroffenen Produkt
             </h2>
-            <p className="mt-1 text-sm leading-6 text-rose-950">
-              Diese Punkte sind in den Records bewusst offen. Sie erscheinen zusätzlich direkt am
-              betroffenen Produkt, damit du sie im Kontext entscheiden kannst.
-            </p>
-            <ul className="mt-3 space-y-2">
+            <ul className="mt-2 space-y-2">
               {data.openAdjudications.map((entry) => (
-                <li key={entry.id} className="rounded-md border border-rose-200 bg-white p-3">
-                  <h3 className="font-semibold text-rose-950">{entry.title}</h3>
-                  <p className="mt-1 text-sm leading-6 text-stone-800">{entry.body}</p>
-                  <p className="mt-1 text-xs text-stone-500">Quelle: {entry.source}</p>
+                <li key={entry.id}>
+                  <details className="rounded-md border border-rose-200 bg-white p-3">
+                    <summary className="cursor-pointer font-semibold text-rose-950">
+                      {entry.title}
+                    </summary>
+                    <p className="mt-1 text-sm leading-6 text-stone-800">{entry.body}</p>
+                    <p className="mt-1 text-xs text-stone-500">Quelle: {entry.source}</p>
+                  </details>
                 </li>
               ))}
             </ul>
