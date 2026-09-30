@@ -283,6 +283,57 @@ export const DIAGNOSTICS_DERIVATION_ROWS: readonly DerivationRow[] = [
   },
 
   // -------------------------------------------------------------------------
+  // Rule 5b (main #611): primary_concern — explicit pick, else sole concern
+  // -------------------------------------------------------------------------
+  {
+    name: "rule 5b: explicit pick among several concerns",
+    diagnostics: diagnostics({
+      currentConcerns: ["dry_lengths", "breakage"],
+      primaryConcern: "breakage",
+    }),
+  },
+  {
+    name: "rule 5b: explicit pick projects into the concerns vocabulary (dry_lengths -> dryness)",
+    diagnostics: diagnostics({
+      currentConcerns: ["tangling", "dry_lengths"],
+      primaryConcern: "dry_lengths",
+    }),
+  },
+  {
+    name: "rule 5b: explicit pick hair_loss_or_thinning -> hair_loss",
+    diagnostics: diagnostics({
+      currentConcerns: ["frizz_flyaways", "hair_loss_or_thinning"],
+      primaryConcern: "hair_loss_or_thinning",
+    }),
+  },
+  {
+    name: "rule 5b: explicit pick without a legacy equivalent -> null",
+    diagnostics: diagnostics({
+      currentConcerns: ["low_shine", "breakage"],
+      primaryConcern: "low_shine",
+    }),
+  },
+  {
+    name: "rule 5b: stale pick with several concerns -> null",
+    diagnostics: diagnostics({
+      currentConcerns: ["breakage", "tangling"],
+      primaryConcern: "frizz_flyaways",
+    }),
+  },
+  {
+    name: "rule 5b: stale pick with a sole concern -> the sole concern",
+    diagnostics: diagnostics({ currentConcerns: ["tangling"], primaryConcern: "breakage" }),
+  },
+  {
+    name: "rule 5b: sole concern, no pick -> the sole concern",
+    diagnostics: diagnostics({ currentConcerns: ["split_ends"] }),
+  },
+  {
+    name: "rule 5b: pick but currentConcerns absent -> null",
+    diagnostics: diagnostics({ primaryConcern: "breakage" }),
+  },
+
+  // -------------------------------------------------------------------------
   // Rules 6-7: goals, volume_balance resolution, desired_volume
   // -------------------------------------------------------------------------
   {

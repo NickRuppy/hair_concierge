@@ -134,6 +134,30 @@ test("legacyColumnsToDiagnostics reads a null scalp_condition as no scalp concer
   assert.equal("scalpConcerns" in unrecognised, false)
 })
 
+test("legacyColumnsToDiagnostics imports primary_concern (main #611) only while it is one of the imported concerns", () => {
+  const picked = legacyColumnsToDiagnostics(
+    { ...FULL_DIAGNOSTIC_COLUMNS, concerns: ["dryness", "breakage"], primary_concern: "dryness" },
+    {},
+  )
+  assert.equal(picked.primaryConcern, "dry_lengths")
+
+  const stale = legacyColumnsToDiagnostics(
+    { ...FULL_DIAGNOSTIC_COLUMNS, concerns: ["breakage", "tangling"], primary_concern: "frizz" },
+    {},
+  )
+  assert.equal(stale.primaryConcern, undefined)
+
+  const noEquivalent = legacyColumnsToDiagnostics(
+    { ...FULL_DIAGNOSTIC_COLUMNS, concerns: ["dandruff", "breakage"], primary_concern: "dandruff" },
+    {},
+  )
+  assert.equal(noEquivalent.primaryConcern, undefined)
+
+  // A snapshot that predates the column: absent, never invented.
+  const predates = legacyColumnsToDiagnostics(FULL_DIAGNOSTIC_COLUMNS, {})
+  assert.equal(predates.primaryConcern, undefined)
+})
+
 test("hasLegacyDiagnosticSignal separates an empty legacy row from one carrying any answer", () => {
   const empty: LegacyDiagnosticColumns = {
     hair_texture: null,

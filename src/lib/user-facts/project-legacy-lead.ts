@@ -1,4 +1,5 @@
 import { buildLegacyQuizStage1Source } from "@/lib/personal-plan/input"
+import { DIAGNOSTIC_CONCERNS, type DiagnosticConcern } from "@/lib/quiz/diagnostic-input"
 import type { QuizAnswers } from "@/lib/quiz/types"
 
 import { UnsupportedUserFactsSourceError, diagnosticsV1Schema } from "./schema"
@@ -32,6 +33,39 @@ export type ProjectLegacyLeadResult = {
  * `UnsupportedUserFactsSourceError` ONLY when `quizAnswers` is not a usable record at all, i.e.
  * `buildLegacyQuizStage1Source` itself cannot run.
  */
+/** The two legacy quiz concern codes whose diagnostic equivalent has a different name —
+ * mirrors `LEGACY_CONCERN_TO_DIAGNOSTIC` in `personal-plan-quiz/offer-adapter.ts`, which is
+ * how `buildLegacyQuizStage1Source` builds `currentConcerns`; every other legacy code is
+ * already a diagnostic concern. */
+const LEGACY_PRIMARY_CONCERN_ALIASES: Partial<Record<string, DiagnosticConcern>> = {
+  dryness: "dry_lengths",
+  frizz: "frizz_flyaways",
+}
+
+/**
+ * The lead's explicit main-problem pick (main #611, `quiz_answers.primary_concern`) in the
+ * native diagnostic vocabulary — only while it is one of the projected `currentConcerns`
+ * (a stale pick is dropped, never rejected). A single selected concern without a pick stays
+ * absent: the derived `hair_profiles.primary_concern` column resolves "her only concern"
+ * itself, so the stored fact is exactly what she stated.
+ *
+ * Carried as a stored fact only: the Stage-1 legacy source (`source.raw`) is untouched,
+ * because `buildLegacyQuizStage1Source` does not carry it.
+ */
+function legacyPrimaryConcern(
+  quizAnswers: QuizAnswers,
+  currentConcerns: readonly string[],
+): DiagnosticConcern | undefined {
+  const pick = (quizAnswers as { primary_concern?: unknown }).primary_concern
+  if (typeof pick !== "string") return undefined
+  const mapped =
+    LEGACY_PRIMARY_CONCERN_ALIASES[pick] ??
+    ((DIAGNOSTIC_CONCERNS as readonly string[]).includes(pick)
+      ? (pick as DiagnosticConcern)
+      : undefined)
+  return mapped && currentConcerns.includes(mapped) ? mapped : undefined
+}
+
 export function projectLegacyLeadToFacts(input: ProjectLegacyLeadInput): ProjectLegacyLeadResult {
   let legacySource: ReturnType<typeof buildLegacyQuizStage1Source>
   try {
@@ -47,6 +81,7 @@ export function projectLegacyLeadToFacts(input: ProjectLegacyLeadInput): Project
   }
 
   const answers = legacySource.answers
+  const primaryConcern = legacyPrimaryConcern(input.quizAnswers, answers.currentConcerns ?? [])
   const diagnostics = diagnosticsV1Schema.parse({
     texture: answers.texture,
     thickness: answers.thickness,
@@ -59,6 +94,7 @@ export function projectLegacyLeadToFacts(input: ProjectLegacyLeadInput): Project
     scalpConcerns: answers.scalpConcerns,
     goals: answers.goals,
     currentConcerns: answers.currentConcerns,
+    ...(primaryConcern ? { primaryConcern } : {}),
     source: { kind: "legacy_quiz", version: 1, leadId: input.leadId, raw: legacySource },
   })
 

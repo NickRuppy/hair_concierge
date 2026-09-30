@@ -64,6 +64,7 @@ export const DIAGNOSTICS_OWNED_COLUMNS = [
   "concerns",
   "goals",
   "desired_volume",
+  "primary_concern",
 ] as const
 
 export type DiagnosticsColumnConflictField = {

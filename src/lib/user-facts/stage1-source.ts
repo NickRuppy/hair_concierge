@@ -109,6 +109,11 @@ export function toStage1Source(input: ToStage1SourceInput): unknown {
       density: completeDiagnostics.density,
       goals: completeDiagnostics.goals,
       currentConcerns: completeDiagnostics.currentConcerns,
+      // `canonicalizePersonalPlanAnswers` drops a pick that is no longer one of
+      // `currentConcerns` (main #611), exactly like the quiz's own submission path.
+      ...(completeDiagnostics.primaryConcern
+        ? { primaryConcern: completeDiagnostics.primaryConcern }
+        : {}),
       ...(completeDiagnostics.concernRecurrence
         ? { concernRecurrence: { ...completeDiagnostics.concernRecurrence } }
         : {}),
@@ -140,6 +145,8 @@ export function toStage1Source(input: ToStage1SourceInput): unknown {
 
   // Legacy lead: no reflective quiz context to promote into a v3 envelope. `completeDiagnostics`
   // is already verified complete by the guard above, so no `!` assertions are needed here.
+  // `primaryConcern` is deliberately NOT emitted: `buildLegacyQuizStage1Source` does not carry
+  // it, so an edited legacy emission must hash exactly like the built legacy source.
   return {
     kind: "legacy_quiz" as const,
     version: 1 as const,

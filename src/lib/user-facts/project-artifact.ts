@@ -99,6 +99,9 @@ export function projectArtifactToFacts(input: ProjectArtifactInput): ProjectArti
       ? {
           ...baseDiagnosticFields(envelope.answers),
           currentConcerns: [...(envelope.answers.currentConcerns ?? [])],
+          ...(envelope.answers.primaryConcern
+            ? { primaryConcern: envelope.answers.primaryConcern }
+            : {}),
           ...(envelope.answers.concernRecurrence
             ? { concernRecurrence: envelope.answers.concernRecurrence }
             : {}),

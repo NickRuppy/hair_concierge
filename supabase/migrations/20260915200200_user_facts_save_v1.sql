@@ -113,9 +113,9 @@ AS $$
 $$;
 
 -- ---------------------------------------------------------------------------
--- Derivation: diagnostics -> its 12 legacy columns.
+-- Derivation: diagnostics -> its 13 legacy columns.
 -- Mirrors `deriveDiagnosticsColumns` (derive-legacy-columns.ts:79-146).
--- Returns a jsonb object with all 12 keys always present; a JSON null means the
+-- Returns a jsonb object with all 13 keys always present; a JSON null means the
 -- column is SQL NULL — EXCEPT `chemical_treatment`/`concerns`/`goals`, which are
 -- always a jsonb array (possibly empty) and never JSON null (controller ruling
 -- 2026-09-15, task-2-3-amendment-brief.md: legacy readers rely on the historical
@@ -166,6 +166,8 @@ DECLARE
   v_goal text;
   v_mapped text;
   v_desired_volume text := NULL;
+  v_primary_pick text := p_diagnostics ->> 'primaryConcern';
+  v_primary_concern text := NULL;
 BEGIN
   -- `deriveScalpCondition`: a priority pick, not a mapping of the whole list.
   IF pg_catalog.jsonb_typeof(p_diagnostics -> 'scalpConcerns') = 'array' THEN
@@ -214,6 +216,19 @@ BEGIN
     END IF;
   END IF;
 
+  -- `derivePrimaryConcern` (main #611, F1): the explicit pick while it is one of
+  -- currentConcerns, else her only concern, else NULL — in the `concerns` column
+  -- vocabulary (NULL when it has no legacy equivalent).
+  IF pg_catalog.jsonb_typeof(p_diagnostics -> 'currentConcerns') = 'array'
+     AND pg_catalog.jsonb_array_length(p_diagnostics -> 'currentConcerns') > 0 THEN
+    IF v_primary_pick IS NOT NULL
+       AND p_diagnostics -> 'currentConcerns' @> pg_catalog.to_jsonb(v_primary_pick) THEN
+      v_primary_concern := c_concern ->> v_primary_pick;
+    ELSIF pg_catalog.jsonb_array_length(p_diagnostics -> 'currentConcerns') = 1 THEN
+      v_primary_concern := c_concern ->> (p_diagnostics -> 'currentConcerns' ->> 0);
+    END IF;
+  END IF;
+
   RETURN pg_catalog.jsonb_build_object(
     'hair_texture', v_texture,
     'thickness', v_thickness,
@@ -236,7 +251,8 @@ BEGIN
         public.user_facts_map_vocabulary_array_v1(p_diagnostics -> 'currentConcerns', c_concern),
         '[]'::jsonb),
     'goals', v_goals,
-    'desired_volume', v_desired_volume
+    'desired_volume', v_desired_volume,
+    'primary_concern', v_primary_concern
   );
 END;
 $$;
@@ -607,6 +623,9 @@ BEGIN
            concerns = public.user_facts_jsonb_text_array_v1(v_columns -> 'concerns'),
            goals = public.user_facts_jsonb_text_array_v1(v_columns -> 'goals'),
            desired_volume = v_columns ->> 'desired_volume',
+           -- main #611 (20260925100000_hair_profiles_primary_concern.sql): its BEFORE
+           -- trigger still drops a value `concerns` does not contain.
+           primary_concern = v_columns ->> 'primary_concern',
            updated_at = pg_catalog.now()
      WHERE user_id = p_user_id;
   ELSIF p_domain = 'care_habits' THEN
@@ -649,7 +668,7 @@ $$;
 
 COMMENT ON FUNCTION public.user_facts_save_v1(
   uuid, text, jsonb, jsonb, integer, text, uuid, bigint, uuid) IS
-  'The only supported writer of hair_profiles.diagnostics/care_habits/quiz_context and of the 20 legacy columns derived from them. Merges p_patch field-by-field (a top-level JSON null clears that field), merges provenance, bumps facts_revision on every non-preserved write (CAS via p_expected_revision), and recomputes the derived columns owned by p_domain in the same statement. create_only preserves an existing domain, except diagnostics whose source is the backfill''s own legacy_columns, which the patch merges over like a normal write. Returns {status, revision, changed, diagnosticsHash} or a typed conflict.';
+  'The only supported writer of hair_profiles.diagnostics/care_habits/quiz_context and of the 21 legacy columns derived from them. Merges p_patch field-by-field (a top-level JSON null clears that field), merges provenance, bumps facts_revision on every non-preserved write (CAS via p_expected_revision), and recomputes the derived columns owned by p_domain in the same statement. create_only preserves an existing domain, except diagnostics whose source is the backfill''s own legacy_columns, which the patch merges over like a normal write. Returns {status, revision, changed, diagnosticsHash} or a typed conflict.';
 
 REVOKE ALL ON FUNCTION public.user_facts_jsonb_text_array_v1(jsonb) FROM PUBLIC, anon, authenticated, service_role;
 REVOKE ALL ON FUNCTION public.user_facts_map_vocabulary_array_v1(jsonb, jsonb) FROM PUBLIC, anon, authenticated, service_role;

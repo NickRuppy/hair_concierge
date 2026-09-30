@@ -54,6 +54,11 @@ export type LegacyDiagnosticColumns = {
    * the catch-up comparison see every diagnostics-owned column. Nothing reads it back into a
    * diagnostics field (the direction lives natively in the `volume_balance` goal). */
   desired_volume: string | null
+  /** Main #611 (F1), written by the quiz link since 2026-09-25. Optional so snapshots that
+   * predate the column still type-check; an absent value reads as `null`. Imported back as
+   * `primaryConcern` only when it is one of the imported `currentConcerns` (a sole concern is
+   * re-derived by the write side anyway). */
+  primary_concern?: string | null
 }
 
 /** Inverses of the task-2 forward tables, built from those tables so the two can never drift.
@@ -176,6 +181,11 @@ export function legacyColumnsToDiagnostics(
   const chemicalTreatments = mapArray(columns.chemical_treatment, COLUMN_TO_CHEMICAL_TREATMENT)
   const currentConcerns = mapArray(columns.concerns, COLUMN_CONCERN_TO_DIAGNOSTIC_CONCERN)
   const goals = mapArray(columns.goals, COLUMN_GOAL_TO_DIAGNOSTIC_GOAL)
+  const primaryPick = columns.primary_concern
+    ? COLUMN_CONCERN_TO_DIAGNOSTIC_CONCERN[columns.primary_concern as ProfileConcern]
+    : undefined
+  const primaryConcern =
+    primaryPick && currentConcerns?.includes(primaryPick) ? primaryPick : undefined
 
   return diagnosticsV1Schema.parse({
     ...defined("texture", parseScalar(shape.texture, columns.hair_texture)),
@@ -194,6 +204,7 @@ export function legacyColumnsToDiagnostics(
     ),
     ...defined("chemicalTreatments", chemicalTreatments),
     ...defined("currentConcerns", currentConcerns),
+    ...defined("primaryConcern", primaryConcern),
     ...defined("goals", goals),
     source: {
       kind: "legacy_columns" as const,

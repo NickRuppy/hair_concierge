@@ -58,6 +58,8 @@ import { uuid_ossp } from "@electric-sql/pglite/contrib/uuid_ossp"
  *   - 20260825120000 (answer provenance): applied for real deploy-order
  *     fidelity even though neither RPC under test reads its column.
  *   - 20260825130000 / 20260825140000: the two migrations under test.
+ *   - 20260925100000 (main #611): `hair_profiles.primary_concern`, its CHECK and the
+ *     BEFORE trigger that drops a pick `concerns` no longer contains.
  *   - 20260915200000 / 20260915200100 / 20260915200200 (central user profile
  *     PR1): the hair_profiles fact domains, the personal_plans facts cursor +
  *     refinement-draft `origin`, and `public.user_facts_save_v1`.
@@ -79,6 +81,9 @@ const MIGRATIONS = [
   "supabase/migrations/20260825120000_personal_plan_refinement_answer_provenance.sql",
   "supabase/migrations/20260825130000_personal_plan_complete_stage2_module.sql",
   "supabase/migrations/20260825140000_personal_plan_refinement_recompute_activation.sql",
+  // main #611: `hair_profiles.primary_concern` + its stale-pick trigger. Applied for real
+  // (it only ALTERs hair_profiles) because `user_facts_save_v1` derives that column.
+  "supabase/migrations/20260925100000_hair_profiles_primary_concern.sql",
   // Central user profile PR1: the fact domains on hair_profiles, the plan-side
   // facts cursor, and the single write function over both.
   "supabase/migrations/20260915200000_user_facts_domains.sql",
@@ -656,6 +661,7 @@ export type HairProfileRow = {
   concerns: string[] | null
   goals: string[] | null
   desired_volume: string | null
+  primary_concern: string | null
   drying_method: string | null
   heat_styling: string | null
   styling_tools: string[] | null
@@ -675,7 +681,7 @@ export async function readHairProfile(
     `SELECT diagnostics, care_habits, quiz_context, facts_provenance, facts_revision,
             hair_texture, thickness, density, hair_length, cuticle_condition,
             protein_moisture_balance, scalp_type, scalp_condition, chemical_treatment,
-            concerns, goals, desired_volume, drying_method, heat_styling, styling_tools,
+            concerns, goals, desired_volume, primary_concern, drying_method, heat_styling, styling_tools,
             uses_heat_protection, towel_material, towel_technique, night_protection,
             brush_type, updated_at
        FROM public.hair_profiles WHERE user_id = $1`,

@@ -206,6 +206,40 @@ test("rule 7: desired_volume derives from the mapped goals column", () => {
 // Care habits rules 8-16
 // ---------------------------------------------------------------------------
 
+test("rule 7b (main #611): primary_concern — explicit pick, else sole concern, in the concerns vocabulary", () => {
+  const derive = (overrides: Partial<DiagnosticsV1>) =>
+    deriveDiagnosticsColumns(diagnostics(overrides)).primary_concern
+
+  assert.equal(
+    derive({ currentConcerns: ["breakage", "dry_lengths"], primaryConcern: "dry_lengths" }),
+    "dryness",
+  )
+  assert.equal(
+    derive({
+      currentConcerns: ["frizz_flyaways", "hair_loss_or_thinning"],
+      primaryConcern: "hair_loss_or_thinning",
+    }),
+    "hair_loss",
+  )
+  // Sole concern without a pick (the quiz only asks with two or more).
+  assert.equal(derive({ currentConcerns: ["frizz_flyaways"] }), "frizz")
+  // A pick with no legacy equivalent, no pick among several, a stale pick: null.
+  assert.equal(
+    derive({ currentConcerns: ["low_shine", "breakage"], primaryConcern: "low_shine" }),
+    null,
+  )
+  assert.equal(derive({ currentConcerns: ["breakage", "tangling"] }), null)
+  assert.equal(
+    derive({ currentConcerns: ["breakage", "tangling"], primaryConcern: "split_ends" }),
+    null,
+  )
+  // A stale pick never beats the sole concern.
+  assert.equal(derive({ currentConcerns: ["tangling"], primaryConcern: "split_ends" }), "tangling")
+  // Absent or empty concerns: null.
+  assert.equal(derive({ primaryConcern: "breakage" }), null)
+  assert.equal(derive({ currentConcerns: [] }), null)
+})
+
 test("rule 8: drying_method is a priority pick over dryingRoutes", () => {
   assert.equal(
     deriveCareHabitsColumns(

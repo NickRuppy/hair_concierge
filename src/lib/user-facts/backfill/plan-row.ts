@@ -209,8 +209,10 @@ function legacyColumnsDivergedFromStoredFacts(
   const changed = ownedColumns.filter(
     (column) =>
       !columnValuesEqual(
-        (row.columns as unknown as Record<string, unknown>)[column],
-        derived[column],
+        // `?? null`: an optional column (`primary_concern`) absent from an older snapshot
+        // reads as SQL NULL, like the derived side's "nothing".
+        (row.columns as unknown as Record<string, unknown>)[column] ?? null,
+        derived[column] ?? null,
       ),
   )
 

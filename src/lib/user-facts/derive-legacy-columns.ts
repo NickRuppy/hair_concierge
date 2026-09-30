@@ -51,6 +51,9 @@ export type DiagnosticsDerivedColumns = {
   concerns: string[]
   goals: string[]
   desired_volume: "more" | "less" | null
+  /** Main #611 (F1): her stated main problem in the `concerns` column vocabulary — see
+   * `derivePrimaryConcern`. */
+  primary_concern: string | null
 }
 
 export type CareHabitsDerivedColumns = {
@@ -118,6 +121,26 @@ function deriveGoals(diagnostics: DiagnosticsV1): string[] {
   return result
 }
 
+/**
+ * `hair_profiles.primary_concern` (main #611, F1), mirroring `buildProfilePrimaryConcern`
+ * (`src/lib/quiz/link-to-profile.ts`), which the quiz link used to write directly: her explicit
+ * pick while it is one of `currentConcerns`, else her only concern, else nothing — projected
+ * into the same legacy vocabulary as `concerns`, `null` when it has no legacy equivalent
+ * (low_shine, lost_shape, low_volume_or_weighed_down). Absent `currentConcerns` -> `null`
+ * (the `concerns` column is `[]` then, and the column's trigger would drop any pick anyway).
+ */
+function derivePrimaryConcern(diagnostics: DiagnosticsV1): string | null {
+  const concerns = diagnostics.currentConcerns
+  if (!concerns || concerns.length === 0) return null
+  const stated =
+    diagnostics.primaryConcern && concerns.includes(diagnostics.primaryConcern)
+      ? diagnostics.primaryConcern
+      : concerns.length === 1
+        ? concerns[0]
+        : null
+  return stated ? (CONCERN_TO_PROFILE_CONCERN_MAP[stated] ?? null) : null
+}
+
 export function deriveDiagnosticsColumns(diagnostics: DiagnosticsV1): DiagnosticsDerivedColumns {
   const goals = deriveGoals(diagnostics)
 
@@ -141,6 +164,7 @@ export function deriveDiagnosticsColumns(diagnostics: DiagnosticsV1): Diagnostic
     // "more" | "less" | null (never "balanced": that value only ever comes from
     // the fallback slot, which is `null` here).
     desired_volume: deriveDesiredVolumeFromGoals(goals, null) as "more" | "less" | null,
+    primary_concern: derivePrimaryConcern(diagnostics),
   }
 }
 

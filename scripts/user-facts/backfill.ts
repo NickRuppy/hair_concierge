@@ -67,6 +67,7 @@ const HAIR_PROFILE_COLUMNS = [
   "night_protection",
   "brush_type",
   "desired_volume",
+  "primary_concern",
 ].join(", ")
 
 export type BackfillOptions = {
@@ -174,6 +175,7 @@ function toColumns(row: Record<string, unknown>): LegacyProfileColumns {
     night_protection: readStringArray(row.night_protection),
     brush_type: readStringArray(row.brush_type),
     desired_volume: readString(row.desired_volume),
+    primary_concern: readString(row.primary_concern),
   }
 }
 

@@ -99,9 +99,20 @@ const V3_WITH_EMPTY_ARRAYS = {
   },
 } as const
 
+const V3_WITH_PRIMARY_CONCERN = {
+  kind: "personal_plan",
+  version: 3,
+  answers: {
+    ...V3_WITH_RECURRENCE.answers,
+    // main #611 (F1): her explicit main-problem pick, one of currentConcerns.
+    primaryConcern: "split_ends",
+  },
+} as const
+
 for (const [label, envelope] of [
   ["with concernRecurrence + otherText", V3_WITH_RECURRENCE],
   ["with empty scalpConcerns/currentConcerns", V3_WITH_EMPTY_ARRAYS],
+  ["with a primaryConcern pick", V3_WITH_PRIMARY_CONCERN],
 ] as const) {
   test(`v3 round-trip (${label}): unedited re-emission deep-equals the source envelope and hashes identically`, () => {
     const facts = projectArtifactToFacts({ envelope, artifactId: "artifact-v3", leadId: "lead-v3" })
@@ -211,6 +222,71 @@ test("v3 raw re-emission preserves out-of-canonical-order arrays; native edit ca
 
   assert.deepEqual(edited, expectedCanonical)
   assert.notDeepEqual(edited, OUT_OF_ORDER_V3_ENVELOPE)
+  assert.equal(parseSupportedStage1Source(edited).ok, true)
+})
+
+// ---------------------------------------------------------------------------
+// 2b. main #611 primaryConcern: carried natively, lossless on a native re-emission
+// ---------------------------------------------------------------------------
+
+function canonicalV3Envelope(primaryConcern?: "dry_lengths" | "split_ends" | "breakage") {
+  return canonicalizePersonalPlanAnswers({
+    ...CANONICAL_V3_ANSWERS,
+    goals: [...CANONICAL_V3_ANSWERS.goals],
+    currentConcerns: [...CANONICAL_V3_ANSWERS.currentConcerns],
+    chemicalTreatments: [...CANONICAL_V3_ANSWERS.chemicalTreatments],
+    scalpConcerns: [...CANONICAL_V3_ANSWERS.scalpConcerns],
+    blockers: [...CANONICAL_V3_ANSWERS.blockers],
+    ...(primaryConcern ? { primaryConcern } : {}),
+  })
+}
+
+for (const [label, primaryConcern] of [
+  ["without primaryConcern", undefined],
+  ["with primaryConcern", "split_ends"],
+] as const) {
+  test(`v3 native re-emission (${label}) is lossless and hashes identically`, () => {
+    const envelope = canonicalV3Envelope(primaryConcern)
+    assert.equal("primaryConcern" in envelope.answers, primaryConcern !== undefined)
+
+    const facts = projectArtifactToFacts({
+      envelope,
+      artifactId: "artifact-primary",
+      leadId: "lead-primary",
+    })
+    assert.equal(facts.diagnostics.primaryConcern, primaryConcern)
+
+    const edited = toStage1Source({
+      diagnostics: facts.diagnostics,
+      quizContext: facts.quizContext,
+      editedAt: "2026-01-04T00:00:00.000Z",
+    })
+    assert.deepEqual(edited, envelope)
+    assert.equal(parseSupportedStage1Source(edited).ok, true)
+    assert.equal(hashViaProductionPath(edited), hashViaProductionPath(envelope))
+
+    const raw = toStage1Source({
+      diagnostics: facts.diagnostics,
+      quizContext: facts.quizContext,
+      editedAt: null,
+    })
+    assert.equal(hashViaProductionPath(raw), hashViaProductionPath(envelope))
+  })
+}
+
+test("v3 native re-emission drops a primaryConcern that is no longer one of currentConcerns", () => {
+  const facts = projectArtifactToFacts({
+    envelope: canonicalV3Envelope("split_ends"),
+    artifactId: "artifact-stale-primary",
+    leadId: "lead-stale-primary",
+  })
+  const edited = toStage1Source({
+    diagnostics: { ...facts.diagnostics, currentConcerns: ["dry_lengths", "breakage"] },
+    quizContext: facts.quizContext,
+    editedAt: "2026-01-05T00:00:00.000Z",
+  }) as { answers: Record<string, unknown> }
+
+  assert.equal("primaryConcern" in edited.answers, false)
   assert.equal(parseSupportedStage1Source(edited).ok, true)
 })
 
@@ -381,6 +457,46 @@ test("legacy round-trip: an edit with one changed field emits a legacy_quiz shap
   assert.equal(edited.kind, "legacy_quiz")
   assert.equal(edited.answers.texture, "straight")
   assert.equal(parseSupportedStage1Source(edited).ok, true)
+})
+
+test("legacy lead: a primary_concern pick is a stored fact only — source.raw and the legacy emission stay unchanged", () => {
+  const answers: QuizAnswers = {
+    ...LEGACY_ANSWERS,
+    concerns: ["dryness", "tangling"],
+    primary_concern: "dryness",
+  }
+  const expected = buildLegacyQuizStage1Source({ leadId: "lead-legacy-primary", answers })
+  const facts = projectLegacyLeadToFacts({ leadId: "lead-legacy-primary", quizAnswers: answers })
+
+  // Mapped into the native vocabulary, like `currentConcerns` (dryness -> dry_lengths).
+  assert.equal(facts.diagnostics.primaryConcern, "dry_lengths")
+  assert.ok(facts.diagnostics.currentConcerns?.includes("dry_lengths"))
+  // `buildLegacyQuizStage1Source` does not carry the pick, so neither does the source.
+  assert.deepEqual(facts.diagnostics.source.raw, expected)
+  const raw = toStage1Source({ diagnostics: facts.diagnostics, editedAt: null })
+  assert.equal(hashViaProductionPath(raw), hashViaProductionPath(expected))
+
+  const edited = toStage1Source({
+    diagnostics: facts.diagnostics,
+    editedAt: "2026-01-06T00:00:00.000Z",
+  }) as { kind: string; answers: Record<string, unknown> }
+  assert.equal(edited.kind, "legacy_quiz")
+  assert.equal("primaryConcern" in edited.answers, false)
+  assert.equal(hashViaProductionPath(edited), hashViaProductionPath(expected))
+})
+
+test("legacy lead: a stale or absent primary_concern pick stays absent", () => {
+  const stale = projectLegacyLeadToFacts({
+    leadId: "lead-legacy-stale",
+    quizAnswers: { ...LEGACY_ANSWERS, primary_concern: "breakage" },
+  })
+  assert.equal(stale.diagnostics.primaryConcern, undefined)
+
+  const sole = projectLegacyLeadToFacts({
+    leadId: "lead-legacy-sole",
+    quizAnswers: { ...LEGACY_ANSWERS, concerns: ["tangling"] },
+  })
+  assert.equal(sole.diagnostics.primaryConcern, undefined)
 })
 
 // ---------------------------------------------------------------------------

@@ -150,6 +150,13 @@ export const diagnosticsV1Schema = z
     scalpConcerns: personalPlanDurableAnswersBaseSchema.shape.scalpConcerns.optional(),
     goals: dedupeArray(personalPlanDurableAnswersBaseSchema.shape.goals.element).optional(),
     currentConcerns: personalPlanDurableAnswersBaseSchema.shape.currentConcerns.optional(),
+    // Her stated main problem (main #611, F1): the explicit pick only, as the v3 envelope
+    // carries it (`canonicalizePersonalPlanAnswers` keeps it only while it is one of
+    // `currentConcerns`). Deliberately NO "must be one of currentConcerns" refine, unlike
+    // `concernRecurrence`: main drops a stale pick, never rejects it, so a later
+    // `currentConcerns` edit must not start failing writes — the derived
+    // `hair_profiles.primary_concern` column ignores a stale pick instead.
+    primaryConcern: personalPlanDurableAnswersBaseSchema.shape.primaryConcern,
     concernRecurrence: personalPlanDurableAnswersBaseSchema.shape.concernRecurrence,
     currentConcernsOtherText: personalPlanDurableAnswersBaseSchema.shape.currentConcernsOtherText,
     source: diagnosticsSourceSchema,
