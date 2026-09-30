@@ -17,6 +17,10 @@ import {
   type BackfillNeedVersionRow,
 } from "../src/lib/user-facts/backfill/resolve-stage2-head"
 import { selectDiagnosticsSource } from "../src/lib/user-facts/backfill/select-diagnostics-source"
+import {
+  oldWriterColumnsForLead,
+  type OldWriterColumns,
+} from "../src/lib/user-facts/backfill/detect-hand-edits"
 import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
 import { resolveVisibleDiagnosticGoals } from "../src/lib/quiz/diagnostic-input"
 import { GOALS } from "../src/lib/vocabulary/concerns-goals"
@@ -716,6 +720,33 @@ const LEGACY_QUIZ_ANSWERS = {
   treatment: ["natur", "gefaerbt"],
 }
 
+/** The columns main's old writer left for a source (task 7): every compared column it wrote,
+ * NULL for the rest. */
+function linkedColumns(
+  written: OldWriterColumns | null,
+  overrides: Partial<LegacyDiagnosticColumns> = {},
+): LegacyDiagnosticColumns {
+  return {
+    hair_texture: null,
+    thickness: null,
+    density: null,
+    hair_length: null,
+    cuticle_condition: null,
+    protein_moisture_balance: null,
+    scalp_type: null,
+    scalp_condition: null,
+    chemical_treatment: null,
+    concerns: null,
+    goals: null,
+    desired_volume: null,
+    primary_concern: null,
+    ...(written as Partial<LegacyDiagnosticColumns>),
+    ...overrides,
+  }
+}
+
+const LEAD_COLUMNS = linkedColumns(oldWriterColumnsForLead(LEGACY_QUIZ_ANSWERS))
+
 test("selectDiagnosticsSource prefers the attached artifact over lead and columns and carries the quiz context with it", () => {
   const selected = selectDiagnosticsSource({
     artifact: { id: "artifact-1", leadId: "lead-1", quizAnswers: V3_ENVELOPE },
@@ -744,7 +775,7 @@ test("selectDiagnosticsSource falls back to the legacy lead, then to the legacy 
   const fromLead = selectDiagnosticsSource({
     artifact: null,
     legacyLead: { id: "lead-legacy", quizAnswers: LEGACY_QUIZ_ANSWERS },
-    columns: FULL_DIAGNOSTIC_COLUMNS,
+    columns: LEAD_COLUMNS,
   })
   assert.equal(fromLead.sourceKind, "lead")
   assert.equal(fromLead.sourceId, "lead-legacy")
@@ -763,65 +794,65 @@ test("selectDiagnosticsSource falls back to the legacy lead, then to the legacy 
   assert.equal(fromColumns.conflict, undefined)
 })
 
-test("selectDiagnosticsSource records the P4 conflict when the winning source disagrees with a non-null legacy column", () => {
-  const selected = selectDiagnosticsSource({
-    artifact: { id: "artifact-1", leadId: "lead-1", quizAnswers: V3_ENVELOPE },
-    legacyLead: null,
-    columns: {
-      ...FULL_DIAGNOSTIC_COLUMNS,
-      hair_texture: "curly",
-      scalp_condition: "irritated",
-      density: null,
-      desired_volume: "more",
-    },
-  })
-
-  assert.equal(selected.sourceKind, "artifact")
-  assert.deepEqual(selected.conflict, {
-    fields: [
-      { field: "hair_texture", column: "curly", derived: "wavy" },
-      { field: "scalp_condition", column: "irritated", derived: "dandruff" },
-    ],
-    erasures: [{ field: "desired_volume", column: "more" }],
-  })
-})
-
-test("selectDiagnosticsSource lists every diagnostics-owned column a partial winner would blank out", () => {
+test("task 7: a column the old writer wrote differently is a hand edit that wins, never a P4 conflict", () => {
   const selected = selectDiagnosticsSource({
     artifact: null,
-    // An incomplete legacy lead is a legitimate winner (task 5a ruling) but projects PARTIAL
-    // diagnostics, and `user_facts_save_v1` rewrites every diagnostics-owned column from the
-    // merged document — so these columns would be nulled without anyone seeing it.
-    legacyLead: {
-      id: "lead-partial",
-      quizAnswers: {
-        structure: "curly",
-        thickness: "coarse",
-        density: "high",
-        hair_length: "medium",
-        fingertest: "rau",
-        pulltest: "snaps",
-        concerns: ["dry_lengths"],
-      },
-    },
-    columns: { ...FULL_DIAGNOSTIC_COLUMNS, desired_volume: "more" },
+    legacyLead: { id: "lead-legacy", quizAnswers: LEGACY_QUIZ_ANSWERS },
+    columns: { ...LEAD_COLUMNS, hair_texture: "wavy", scalp_condition: "irritated" },
   })
 
   assert.equal(selected.sourceKind, "lead")
-  assert.deepEqual(selected.conflict?.erasures, [
-    { field: "scalp_type", column: "oily" },
-    { field: "scalp_condition", column: "dandruff" },
-    { field: "chemical_treatment", column: "bleached,colored" },
-    { field: "goals", column: "moisture,less_frizz,volume" },
-    { field: "desired_volume", column: "more" },
-  ])
-  // The value conflicts are reported independently of the erasures.
-  assert.deepEqual(selected.conflict?.fields, [
-    { field: "hair_texture", column: "wavy", derived: "curly" },
-    { field: "thickness", column: "fine", derived: "coarse" },
-    { field: "density", column: "medium", derived: "high" },
-    { field: "hair_length", column: "long", derived: "medium" },
-  ])
+  assert.equal(selected.conflict, undefined)
+  assert.equal(selected.diagnostics.texture, "wavy")
+  assert.deepEqual(selected.diagnostics.scalpConcerns, ["irritated"])
+  assert.deepEqual(selected.handEdits?.editedGroups, ["structure", "scalp_type"])
+})
+
+test("task 7: a partial winner no longer blanks the columns it never wrote; only a value the one conversion drops is an erasure", () => {
+  const partialLead = {
+    structure: "curly",
+    thickness: "coarse",
+    density: "high",
+    hair_length: "medium",
+    fingertest: "rau",
+    pulltest: "snaps",
+    concerns: ["dry_lengths"],
+  }
+  const selected = selectDiagnosticsSource({
+    artifact: null,
+    legacyLead: { id: "lead-partial", quizAnswers: partialLead },
+    // Scalp, treatment and goals came from an earlier writer; the concerns were edited by hand
+    // to the legacy-only `oily_scalp`, which table M drops (the scalp type carries it).
+    columns: linkedColumns(oldWriterColumnsForLead(partialLead), {
+      scalp_type: "oily",
+      scalp_condition: "dandruff",
+      chemical_treatment: ["bleached", "colored"],
+      goals: ["moisture", "less_frizz", "volume"],
+      concerns: ["oily_scalp"],
+      // Main's column trigger dropped the pick the concerns edit left stale.
+      primary_concern: null,
+    }),
+  })
+
+  assert.equal(selected.sourceKind, "lead")
+  assert.equal(selected.diagnostics.scalpOiliness, "oily")
+  assert.deepEqual(selected.diagnostics.scalpConcerns, ["oily_dandruff"])
+  assert.deepEqual(selected.diagnostics.chemicalTreatments, ["lightened", "colored"])
+  assert.deepEqual(selected.diagnostics.goals, ["moisture", "frizz_surface", "volume_balance"])
+  assert.deepEqual(
+    selected.handEdits?.findings.map((finding) => [finding.column, finding.verdict]),
+    [
+      ["chemical_treatment", "kept"],
+      ["scalp_type", "kept"],
+      ["scalp_condition", "kept"],
+      ["concerns", "edited"],
+      ["goals", "kept"],
+    ],
+  )
+  assert.deepEqual(selected.conflict, {
+    fields: [],
+    erasures: [{ field: "concerns", column: "oily_scalp" }],
+  })
 })
 
 test("selectDiagnosticsSource steps past an unusable source instead of guessing, and reports it", () => {
@@ -1144,7 +1175,9 @@ test("F2: selectDiagnosticsSource fills a lead's missing hair length from the re
   const selected = selectDiagnosticsSource({
     artifact: null,
     legacyLead: { id: "lead-old", quizAnswers: answersWithoutLength },
-    columns: { ...FULL_DIAGNOSTIC_COLUMNS, hair_length: "medium" },
+    columns: linkedColumns(oldWriterColumnsForLead(answersWithoutLength), {
+      hair_length: "medium",
+    }),
   })
 
   assert.equal(selected.sourceKind, "lead")
@@ -1171,7 +1204,7 @@ test("F2: only when neither the winner nor the profile has a value does the defa
   const selected = selectDiagnosticsSource({
     artifact: null,
     legacyLead: { id: "lead-old", quizAnswers: answersWithoutLength },
-    columns: { ...FULL_DIAGNOSTIC_COLUMNS, hair_length: null },
+    columns: linkedColumns(oldWriterColumnsForLead(answersWithoutLength)),
   })
   assert.equal(selected.diagnostics.hairLength, "long")
   assert.deepEqual(selected.assumedFields, ["hairLength"])
@@ -1183,7 +1216,11 @@ test("F2: planUserFactsBackfill records a kept value with its provenance and nam
   void _omitted
   const plan = planUserFactsBackfill(
     userRow({
-      columns: { ...EMPTY_COLUMNS, hair_texture: "curly", hair_length: "short" },
+      columns: {
+        ...EMPTY_COLUMNS,
+        ...linkedColumns(oldWriterColumnsForLead(answersWithoutLength)),
+        hair_length: "short",
+      },
       legacyLead: { id: "lead-old", quizAnswers: answersWithoutLength },
     }),
     { now: NOW, catchUp: false },
@@ -1206,7 +1243,7 @@ test("planUserFactsBackfill plans nothing at all for a row with no artifact, no 
   assert.deepEqual(plan.unresolvable, [])
 })
 
-test("planUserFactsBackfill surfaces the v2 artifact source and the P4 column conflict on the same row", () => {
+test("task 7: a v2 artifact whose old-writer output cannot be recomputed: a differing column is ambiguous and wins", () => {
   const v2Envelope = {
     kind: "personal_plan",
     version: 2,
@@ -1215,23 +1252,56 @@ test("planUserFactsBackfill surfaces the v2 artifact source and the P4 column co
       currentConcerns: ["dry_dull_lengths", "scalp_imbalance"],
     },
   }
-
+  // No stored canonical_profile and no v3 envelope to rebuild it from: the source's own derived
+  // columns stand in for the old writer.
   const plan = planUserFactsBackfill(
     userRow({
       artifact: { id: "artifact-v2", leadId: "lead-2", quizAnswers: v2Envelope },
-      columns: { ...EMPTY_COLUMNS, hair_texture: "coily", thickness: "fine" },
+      columns: {
+        ...EMPTY_COLUMNS,
+        hair_texture: "coily",
+        thickness: "fine",
+        density: "medium",
+        hair_length: "long",
+        cuticle_condition: "slightly_rough",
+        protein_moisture_balance: "stretches_stays",
+        scalp_type: "oily",
+        scalp_condition: "dandruff",
+        chemical_treatment: ["colored"],
+        concerns: ["dryness"],
+        goals: ["moisture", "shine"],
+      },
+      updatedAt: "2026-09-01T10:00:00.000Z",
     }),
     { now: NOW, catchUp: false },
   )
 
-  assert.equal(writeFor(plan, "diagnostics").patch.source?.kind, "personal_plan_v2")
-  assert.deepEqual(writeFor(plan, "diagnostics").patch.currentConcerns, ["dry_lengths"])
-  assert.deepEqual(plan.conflict, {
-    sourceKind: "artifact",
-    sourceId: "artifact-v2",
-    fields: [{ field: "hair_texture", column: "coily", derived: "wavy" }],
-    erasures: [],
-  })
+  const diagnostics = writeFor(plan, "diagnostics")
+  assert.equal(diagnostics.patch.source?.kind, "personal_plan_v2")
+  assert.deepEqual(diagnostics.patch.currentConcerns, ["dry_lengths"])
+  assert.equal(diagnostics.patch.texture, "coily")
+  assert.deepEqual(diagnostics.provenance.fields, { texture: "user" })
+  assert.equal(diagnostics.provenance.editedAt, "2026-09-01T10:00:00.000Z")
+  assert.equal(plan.conflict, undefined)
+  assert.deepEqual(plan.report.ambiguousGroups, ["structure"])
+  assert.deepEqual(plan.report.findings, [
+    {
+      group: "structure",
+      column: "hair_texture",
+      verdict: "ambiguous",
+      columnValue: "coily",
+      oldWriterValue: "<cannot be recomputed>",
+      reason: "the old writer's output for this source cannot be recomputed",
+    },
+  ])
+  // Nothing visible changes except the main-problem column, which postdates the quiz link and
+  // now shows her only concern (`primary_concern_unwritten`).
+  assert.deepEqual(plan.report.tolerated, [
+    { column: "primary_concern", id: "primary_concern_unwritten" },
+  ])
+  assert.deepEqual(plan.report.visibleChanges, [
+    { domain: "diagnostics", column: "primary_concern", before: "NULL", after: "dryness" },
+  ])
 })
 
 test("planUserFactsBackfill attributes a Stage-3-revised head to the Stage-2 version it revises, via a still-current module receipt", () => {
@@ -1521,18 +1591,19 @@ test("round 2: in --catch-up a field the winner lacks is filled from the NEWER c
   void _omitted
   const legacyLead = { id: "lead-old", quizAnswers: answersWithoutLength }
   // What the backfill wrote from this lead earlier, with the length the column had then.
+  const linked = linkedColumns(oldWriterColumnsForLead(answersWithoutLength))
   const stored = {
     ...selectDiagnosticsSource({
       artifact: null,
       legacyLead,
-      columns: { ...FULL_DIAGNOSTIC_COLUMNS, hair_length: "medium" },
+      columns: { ...linked, hair_length: "medium" },
     }).diagnostics,
   }
   assert.equal(stored.hairLength, "medium")
   const row = userRow({
     factsRevision: 1,
     // A live legacy writer changed the column afterwards — the reason catch-up runs at all.
-    columns: { ...EMPTY_COLUMNS, ...FULL_DIAGNOSTIC_COLUMNS, hair_length: "short" },
+    columns: { ...EMPTY_COLUMNS, ...linked, hair_length: "short" },
     storedDomains: { diagnostics: true, care_habits: false, quiz_context: false },
     storedDiagnostics: stored,
     legacyLead,
@@ -1557,7 +1628,7 @@ test("round 2: in --catch-up a field the winner lacks is filled from the NEWER c
   const defaultMode = selectDiagnosticsSource({
     artifact: null,
     legacyLead,
-    columns: { ...FULL_DIAGNOSTIC_COLUMNS, hair_length: "short" },
+    columns: { ...linked, hair_length: "short" },
     existingFacts: { diagnostics: stored, fields: { hairLength: "user" } },
   })
   assert.equal(defaultMode.diagnostics.hairLength, "medium")
@@ -1806,7 +1877,11 @@ test("runUserFactsBackfill prints a per-domain diff and writes nothing in the de
   assert.equal(summary.erasures, 0)
   assert.equal(summary.pageComplete, true)
 
-  assert.deepEqual(lines.slice(0, 3), [
+  // Task 7: the owner's report comes first, the planned writes after it.
+  assert.deepEqual(lines.slice(0, 3), ["USER FACTS BACKFILL REPORT (dry-run)", "", "SUMMARY"])
+  const writesAt = lines.indexOf("PLANNED WRITES (3)")
+  assert.ok(writesAt > 0)
+  assert.deepEqual(lines.slice(writesAt + 1, writesAt + 4), [
     `[dry] ${SCRIPT_USER} diagnostics <- personal_plan_artifact artifact-1 (11 fields)`,
     `[dry] ${SCRIPT_USER} quiz_context <- personal_plan_artifact artifact-1 (7 fields)`,
     `[dry] ${SCRIPT_USER} care_habits <- refined_version version-stage2 (8 fields; provenance completed_draft)`,
@@ -1869,8 +1944,12 @@ test("runUserFactsBackfill's dry-run line names the completeness defaults a colu
   })
 
   assert.equal(
-    lines[0],
+    lines[lines.indexOf("PLANNED WRITES (1)") + 1],
     `[dry] ${SCRIPT_USER} diagnostics <- legacy_columns (4 fields; assumed density=medium, hairLength=long)`,
+  )
+  assert.ok(
+    lines.includes(`  ${SCRIPT_USER} assumed density=medium, hairLength=long`),
+    "the DEFAULTS section names the row and its defaults",
   )
 })
 
@@ -2022,23 +2101,28 @@ test("a revision_conflict stops that row for the whole run and is reported as a 
   )
 })
 
-test("runUserFactsBackfill prints conflicts and erasures on separate labelled lines and counts them apart", async () => {
+test("runUserFactsBackfill prints P4 erasures on their own labelled line and counts them apart", async () => {
+  const partialLead = {
+    structure: "curly",
+    thickness: "coarse",
+    density: "high",
+    hair_length: "medium",
+    fingertest: "rau",
+    pulltest: "snaps",
+    concerns: ["dry_lengths"],
+  }
   const fake = fakeSupabase({
     hair_profiles: [
       {
         user_id: SCRIPT_USER,
         facts_revision: 0,
         facts_provenance: {},
-        ...FULL_DIAGNOSTIC_COLUMNS,
-        desired_volume: "more",
-        towel_material: null,
-        towel_technique: null,
-        drying_method: null,
-        styling_tools: null,
-        heat_styling: null,
-        uses_heat_protection: null,
-        night_protection: null,
-        brush_type: null,
+        ...EMPTY_COLUMNS,
+        ...linkedColumns(oldWriterColumnsForLead(partialLead), {
+          // Edited by hand to a legacy concern migration table M drops.
+          concerns: ["oily_scalp"],
+          primary_concern: null,
+        }),
       },
     ],
     personal_plan_prepared_artifacts: [],
@@ -2047,15 +2131,7 @@ test("runUserFactsBackfill prints conflicts and erasures on separate labelled li
         id: "lead-partial",
         user_id: SCRIPT_USER,
         created_at: "2026-07-01T00:00:00.000Z",
-        quiz_answers: {
-          structure: "curly",
-          thickness: "coarse",
-          density: "high",
-          hair_length: "medium",
-          fingertest: "rau",
-          pulltest: "snaps",
-          concerns: ["dry_lengths"],
-        },
+        quiz_answers: partialLead,
       },
     ],
     personal_plans: [],
@@ -2068,18 +2144,13 @@ test("runUserFactsBackfill prints conflicts and erasures on separate labelled li
     log: (line) => lines.push(line),
   })
 
-  assert.equal(summary.conflicts, 1)
+  assert.equal(summary.conflicts, 0)
   assert.equal(summary.erasures, 1)
-  assert.equal(lines.includes("P4 CONFLICTS (1 conflicts, 1 erasures)"), true)
+  assert.equal(summary.handEditedRows, 1)
+  assert.equal(lines.includes("P4 CONFLICTS (0 conflicts, 1 erasures)"), true)
   assert.equal(
     lines.includes(
-      `  ${SCRIPT_USER} diagnostics from lead lead-partial: hair_texture columns=wavy derived=curly; thickness columns=fine derived=coarse; density columns=medium derived=high; hair_length columns=long derived=medium`,
-    ),
-    true,
-  )
-  assert.equal(
-    lines.includes(
-      `  ${SCRIPT_USER} diagnostics from lead lead-partial: erasure scalp_type columns=oily derived=<none>; erasure scalp_condition columns=dandruff derived=<none>; erasure chemical_treatment columns=bleached,colored derived=<none>; erasure goals columns=moisture,less_frizz,volume derived=<none>; erasure desired_volume columns=more derived=<none>`,
+      `  ${SCRIPT_USER} diagnostics from lead lead-partial: erasure concerns columns=oily_scalp derived=<none>`,
     ),
     true,
   )

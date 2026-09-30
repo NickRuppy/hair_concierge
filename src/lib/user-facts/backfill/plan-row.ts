@@ -7,10 +7,14 @@ import { BRUSH_TYPES, type BrushType } from "@/lib/vocabulary/onboarding-care"
 import { completenessFieldProvenance } from "../completeness-defaults"
 import { deriveCareHabitsColumns, deriveDiagnosticsColumns } from "../derive-legacy-columns"
 import { toCareHabitsPatch, toFieldProvenance } from "../from-refinement-draft"
+import { mergeDiagnosticsPatch, type DiagnosticsAnswerGroup } from "../hand-edit"
 import {
   CARE_HABITS_SCHEMA_VERSION,
   DIAGNOSTICS_SCHEMA_VERSION,
   QUIZ_CONTEXT_SCHEMA_VERSION,
+  careHabitsV1Schema,
+  diagnosticsV1Schema,
+  toTakenAt,
   type CareHabitsPatch,
   type CareHabitsV1,
   type DiagnosticsV1,
@@ -20,6 +24,7 @@ import {
   type FieldProvenanceValue,
   type QuizContextPatch,
 } from "../schema"
+import type { ColumnFinding, ToleratedDifferenceId } from "./detect-hand-edits"
 import {
   legacyColumnsToCareHabits,
   type LegacyCareHabitColumns,
@@ -60,6 +65,12 @@ import {
  *    domain that already holds a document is only re-opened by `--catch-up`, and only when
  *    the backfill itself wrote it and its legacy columns have changed since.
  *
+ *  - diagnostics (task 7): the winning quiz is the one TAKEN last, and every column a user edited
+ *    by hand after it wins over it (`detect-hand-edits.ts`) — provenance `user` for those
+ *    fields and `editedAt` = the best known edit time (the iOS edit's publication, else
+ *    `hair_profiles.updated_at`), so a quiz taken later still replaces the edit and an older one
+ *    does not (`quizSupersedesFacts`). Everything the owner signs off is collected in `report`.
+ *
  * No I/O, no `server-only`.
  */
 
@@ -83,8 +94,22 @@ export type LoadedUserRow = {
    * writer changed the columns after the backfill wrote its facts. */
   storedDiagnostics: DiagnosticsV1 | null
   storedCareHabits: CareHabitsV1 | null
-  artifact: { id: string; leadId: string; quizAnswers: unknown; createdAt?: string | null } | null
+  artifact: {
+    id: string
+    leadId: string
+    quizAnswers: unknown
+    createdAt?: string | null
+    /** `personal_plan_prepared_artifacts.canonical_profile`: what main's paid link projected. */
+    canonicalProfile?: unknown
+  } | null
+  /** The NEWEST legacy lead; `olderLegacyLeads` holds the rest, newest first. */
   legacyLead: { id: string; quizAnswers: unknown; createdAt?: string | null } | null
+  olderLegacyLeads?: { id: string; quizAnswers: unknown; createdAt?: string | null }[]
+  /** `hair_profiles.updated_at`: the edit time when nothing better is known. */
+  updatedAt?: string | null
+  /** When the user's last iOS profile edit / registration was published
+   * (`scanner_profile_edits` -> its context version's `created_at`). */
+  lastProfileEditAt?: string | null
   plan: BackfillPlanRow | null
   needVersions: readonly BackfillNeedVersionRow[]
   drafts: readonly BackfillDraftRow[]
@@ -113,9 +138,31 @@ export type PlannedFactsWrite =
       detail?: string
     }
 
+/** A legacy column the planned writes would change, before -> after (order and `[]`/NULL
+ * differences are not changes). */
+export type VisibleColumnChange = {
+  domain: "diagnostics" | "care_habits"
+  column: string
+  before: string
+  after: string
+}
+
+/** Everything the dry-run report shows for one row (task 7). */
+export type BackfillRowReport = {
+  sourceNote?: string
+  editedGroups: DiagnosticsAnswerGroup[]
+  ambiguousGroups: DiagnosticsAnswerGroup[]
+  findings: ColumnFinding[]
+  tolerated: { column: string; id: ToleratedDifferenceId }[]
+  notes: string[]
+  editedAt?: { at: string; basis: "ios_profile_edit" | "profile_updated_at" | "backfill_time" }
+  visibleChanges: VisibleColumnChange[]
+}
+
 export type UserFactsBackfillPlan = {
   userId: string
   writes: PlannedFactsWrite[]
+  report: BackfillRowReport
   /** Domains (or whole rows) deliberately left alone, with the reason. */
   skips: string[]
   /** Domains whose source could not be resolved at all; these need a human, not a guess. */
@@ -286,7 +333,48 @@ function liftBrushesCombs(brushType: string[] | null): BrushType[] | undefined {
 }
 
 function countFields(patch: Record<string, unknown>): number {
-  return Object.keys(patch).filter((key) => key !== "source").length
+  return Object.entries(patch).filter(([key, value]) => key !== "source" && value !== null).length
+}
+
+const DIAGNOSTICS_DOCUMENT_FIELDS = Object.keys(diagnosticsV1Schema.shape).filter(
+  (field) => field !== "source",
+)
+
+function renderValue(value: unknown): string {
+  if (value === null || value === undefined) return "NULL"
+  if (Array.isArray(value)) return value.length > 0 ? value.join(",") : "[]"
+  return String(value)
+}
+
+/** Order-free, `[]` equals NULL: the canonical forms the plan's migration table accepts. */
+function canonicalColumn(value: unknown): string {
+  if (Array.isArray(value)) return value.length > 0 ? JSON.stringify([...value].sort()) : "null"
+  return JSON.stringify(value ?? null)
+}
+
+function visibleChanges(
+  domain: VisibleColumnChange["domain"],
+  columns: readonly string[],
+  before: Record<string, unknown>,
+  after: Record<string, unknown>,
+): VisibleColumnChange[] {
+  return columns
+    .filter((column) => canonicalColumn(before[column]) !== canonicalColumn(after[column]))
+    .map((column) => ({
+      domain,
+      column,
+      before: renderValue(before[column]),
+      after: renderValue(after[column]),
+    }))
+}
+
+/** The best known time of the hand edit (brief: the iOS edit's timestamp, else `updated_at`). */
+function editTime(row: LoadedUserRow, now: string): NonNullable<BackfillRowReport["editedAt"]> {
+  const ios = toTakenAt(row.lastProfileEditAt)
+  if (ios) return { at: ios, basis: "ios_profile_edit" }
+  const updated = toTakenAt(row.updatedAt)
+  if (updated) return { at: updated, basis: "profile_updated_at" }
+  return { at: now, basis: "backfill_time" }
 }
 
 function planDiagnosticsAndContext(
@@ -306,6 +394,7 @@ function planDiagnosticsAndContext(
   const selected = selectDiagnosticsSource({
     artifact: row.artifact,
     legacyLead: row.legacyLead,
+    olderLegacyLeads: row.olderLegacyLeads,
     columns: row.columns,
     existingFacts: {
       diagnostics: row.storedDiagnostics,
@@ -341,14 +430,34 @@ function planDiagnosticsAndContext(
         ? ("legacy_lead" as const)
         : ("legacy_columns" as const)
 
+  const handEdits = selected.handEdits
+  if (selected.sourceOrderNote) plan.report.sourceNote = selected.sourceOrderNote
+
   if (diagnosticsGate.plan) {
     const patch: DiagnosticsPatch = { ...selected.diagnostics }
+    // A stored document (only `--catch-up` re-plans one) is REPLACED, not merged into: a field
+    // the new document drops must not survive from the old one.
+    if (row.storedDiagnostics) {
+      for (const field of DIAGNOSTICS_DOCUMENT_FIELDS) {
+        if ((patch as Record<string, unknown>)[field] === undefined) {
+          ;(patch as Record<string, unknown>)[field] = null
+        }
+      }
+    }
     // Decision wave 1, item B + wave-1 fix F2: the completeness defaults are marked `assumed`,
     // the values kept from the existing profile keep their provenance, and both are named on
-    // the dry-run line.
+    // the dry-run line. Task 7: a hand-edited column's field is `user`, a column the quiz never
+    // wrote that fills its gap is `unknown_historical`.
     const assumed = selected.assumedFields
     const kept = selected.keptFields
-    const fields = completenessFieldProvenance(assumed, kept)
+    const fields: Record<string, FieldProvenanceValue> = {}
+    for (const field of handEdits?.userFields ?? []) fields[field] = "user"
+    for (const field of handEdits?.keptFields ?? []) fields[field] = "unknown_historical"
+    Object.assign(fields, completenessFieldProvenance(assumed, kept))
+    const edited =
+      handEdits !== undefined &&
+      handEdits.editedGroups.length + handEdits.ambiguousGroups.length > 0
+    const editedAt = edited ? editTime(row, options.now) : undefined
     const details = [
       ...(kept.length > 0
         ? [`kept ${kept.map(({ field }) => `${field}=${patch[field]}`).join(", ")}`]
@@ -364,11 +473,30 @@ function planDiagnosticsAndContext(
         source: { kind: sourceKind, ...(selected.sourceId ? { id: selected.sourceId } : {}) },
         schemaVersion: DIAGNOSTICS_SCHEMA_VERSION,
         at: options.now,
+        ...(editedAt ? { editedAt: editedAt.at } : {}),
         ...(Object.keys(fields).length > 0 ? { fields } : {}),
       },
       fieldCount: countFields(patch),
       ...(details.length > 0 ? { detail: details.join("; ") } : {}),
     })
+
+    if (handEdits) {
+      plan.report.editedGroups = handEdits.editedGroups
+      plan.report.ambiguousGroups = handEdits.ambiguousGroups
+      plan.report.findings = handEdits.findings
+      plan.report.tolerated = handEdits.tolerated
+      plan.report.notes.push(...handEdits.notes)
+    }
+    if (editedAt) plan.report.editedAt = editedAt
+    const after = deriveDiagnosticsColumns(mergeDiagnosticsPatch(row.storedDiagnostics, patch))
+    plan.report.visibleChanges.push(
+      ...visibleChanges(
+        "diagnostics",
+        DIAGNOSTICS_OWNED_COLUMNS,
+        row.columns as unknown as Record<string, unknown>,
+        after,
+      ),
+    )
   } else {
     plan.skips.push(diagnosticsGate.reason)
   }
@@ -390,6 +518,27 @@ function planDiagnosticsAndContext(
       plan.skips.push(quizContextGate.reason)
     }
   }
+}
+
+/** Care habits keep today's conversion (task 7 addendum: four product decisions pending); the
+ * report still lists every column the write changes, erasures included. */
+function reportCareChanges(
+  row: LoadedUserRow,
+  patch: CareHabitsPatch,
+  plan: UserFactsBackfillPlan,
+): void {
+  const merged: Record<string, unknown> = { ...(row.storedCareHabits ?? {}), ...patch }
+  for (const [key, value] of Object.entries(patch)) if (value === null) delete merged[key]
+  const parsed = careHabitsV1Schema.safeParse(merged)
+  if (!parsed.success) return
+  plan.report.visibleChanges.push(
+    ...visibleChanges(
+      "care_habits",
+      CARE_HABITS_OWNED_COLUMNS,
+      row.columns as unknown as Record<string, unknown>,
+      deriveCareHabitsColumns(parsed.data),
+    ),
+  )
 }
 
 function planCareHabits(
@@ -416,6 +565,7 @@ function planCareHabits(
     const fields: Record<string, FieldProvenanceValue> = {}
     for (const key of Object.keys(patch)) fields[key] = "unknown_historical"
 
+    reportCareChanges(row, patch, plan)
     plan.writes.push({
       domain: "care_habits",
       patch,
@@ -469,6 +619,7 @@ function planCareHabits(
   }
   if (brushesCombs) fields.brushesCombs = "unknown_historical"
 
+  reportCareChanges(row, patch, plan)
   plan.writes.push({
     domain: "care_habits",
     patch,
@@ -490,6 +641,14 @@ export function planUserFactsBackfill(
   const plan: UserFactsBackfillPlan = {
     userId: row.userId,
     writes: [],
+    report: {
+      editedGroups: [],
+      ambiguousGroups: [],
+      findings: [],
+      tolerated: [],
+      notes: [],
+      visibleChanges: [],
+    },
     skips: [],
     unresolvable: [],
   }

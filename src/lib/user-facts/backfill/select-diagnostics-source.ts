@@ -10,7 +10,19 @@ import {
 import { deriveDiagnosticsColumns } from "../derive-legacy-columns"
 import { projectArtifactToFacts } from "../project-artifact"
 import { projectLegacyLeadToFacts } from "../project-legacy-lead"
-import type { DiagnosticsV1, FieldProvenanceValue, QuizContextV1 } from "../schema"
+import {
+  toTakenAt,
+  type DiagnosticsV1,
+  type FieldProvenanceValue,
+  type QuizContextV1,
+} from "../schema"
+import {
+  detectHandEdits,
+  oldWriterColumnsForArtifact,
+  oldWriterColumnsForLead,
+  type HandEditAnalysis,
+  type OldWriterColumns,
+} from "./detect-hand-edits"
 import {
   legacyColumnsToDiagnostics,
   type LegacyDiagnosticColumns,
@@ -41,6 +53,16 @@ import {
  * an erasure — and only when there is none from the default (density -> "medium", hair length
  * -> "long", marked assumed). The signal check runs on the projection WITHOUT either fill — a
  * filled value is never a diagnostic signal.
+ *
+ * Clean-switch task 7 (plan 2026-09-30 §3):
+ *  - "latest own quiz wins": the candidates are ordered by the time each quiz was TAKEN — a
+ *    legacy lead taken after the attached artifact wins over it, and an older lead is still a
+ *    fallback when every newer quiz is unusable. Without both timestamps the order stays
+ *    artifact -> newest lead -> older leads.
+ *  - "a hand edit newer than a quiz is kept": the winner's projection runs through
+ *    `detectHandEdits` BEFORE the completeness fills, so every column a user changed after that
+ *    quiz wins over it (see `detect-hand-edits.ts`), and the P4 diff below then only shows what
+ *    no rule explains.
  *
  * Pure: no I/O, no `server-only`.
  */
@@ -95,6 +117,8 @@ export type UnusableDiagnosticsSource = {
 
 export type SelectedDiagnosticsSource = {
   sourceKind: "artifact" | "lead" | "columns"
+  /** The artifact's lead or the lead itself; absent for the columns branch. */
+  sourceLeadId?: string
   /** The artifact id / lead id the diagnostics came from; absent for the columns branch. */
   sourceId?: string
   diagnostics: DiagnosticsV1
@@ -107,12 +131,28 @@ export type SelectedDiagnosticsSource = {
   /** Higher-precedence sources that exist but could not be projected (reported, never guessed
    * around). */
   unusableSources: UnusableDiagnosticsSource[]
+  /** Which columns were edited by hand after the winning quiz (artifact / lead only). */
+  handEdits?: HandEditAnalysis
+  /** Set when the quiz-time order put a legacy lead ahead of the attached artifact. */
+  sourceOrderNote?: string
 }
+
+type LegacyLeadCandidate = { id: string; quizAnswers: unknown; createdAt?: string | null }
 
 export type SelectDiagnosticsSourceInput = {
   /** `createdAt`: the quiz's own timestamp, stored as `source.takenAt` (wave-1 fix F1). */
-  artifact: { id: string; leadId: string; quizAnswers: unknown; createdAt?: string | null } | null
-  legacyLead: { id: string; quizAnswers: unknown; createdAt?: string | null } | null
+  artifact: {
+    id: string
+    leadId: string
+    quizAnswers: unknown
+    createdAt?: string | null
+    /** The `canonical_profile` main's paid link projected into the columns (task 7). */
+    canonicalProfile?: unknown
+  } | null
+  /** The user's NEWEST legacy lead. */
+  legacyLead: LegacyLeadCandidate | null
+  /** The user's other legacy leads, newest first: fallbacks, and evidence for the goals rule. */
+  olderLegacyLeads?: readonly LegacyLeadCandidate[]
   columns: LegacyDiagnosticColumns
   /** The diagnostics document already stored on the row (only in `--catch-up`) and its
    * per-field provenance: F2's "facts, else legacy column" existing value. */
@@ -182,6 +222,53 @@ function detectConflict(
   return fields.length > 0 || erasures.length > 0 ? { fields, erasures } : undefined
 }
 
+type Candidate =
+  | { kind: "artifact"; artifact: NonNullable<SelectDiagnosticsSourceInput["artifact"]> }
+  | { kind: "lead"; lead: LegacyLeadCandidate }
+
+function takenTime(value: string | null | undefined): number | null {
+  const iso = toTakenAt(value)
+  return iso ? Date.parse(iso) : null
+}
+
+/** "Latest own quiz wins" (plan §3): the lead only moves ahead of the artifact when both quiz
+ * times are known and the lead's is later. */
+function orderCandidates(input: SelectDiagnosticsSourceInput): {
+  candidates: Candidate[]
+  note?: string
+} {
+  const leads: Candidate[] = [
+    ...(input.legacyLead ? [input.legacyLead] : []),
+    ...(input.olderLegacyLeads ?? []),
+  ].map((lead) => ({ kind: "lead" as const, lead }))
+  if (!input.artifact) return { candidates: leads }
+  const artifact: Candidate = { kind: "artifact", artifact: input.artifact }
+  const artifactTime = takenTime(input.artifact.createdAt)
+  const leadTime = takenTime(input.legacyLead?.createdAt)
+  if (input.legacyLead && artifactTime !== null && leadTime !== null && leadTime > artifactTime) {
+    const newer = leads.filter(
+      (candidate) =>
+        candidate.kind === "lead" && (takenTime(candidate.lead.createdAt) ?? 0) > artifactTime,
+    )
+    const older = leads.filter((candidate) => !newer.includes(candidate))
+    return {
+      candidates: [...newer, artifact, ...older],
+      note: `legacy lead ${input.legacyLead.id} (${toTakenAt(input.legacyLead.createdAt)}) was taken after artifact ${input.artifact.id} (${toTakenAt(input.artifact.createdAt)}): the lead wins`,
+    }
+  }
+  return { candidates: [artifact, ...leads] }
+}
+
+function oldWriterOf(candidate: Candidate): OldWriterColumns | null {
+  return candidate.kind === "artifact"
+    ? oldWriterColumnsForArtifact(candidate.artifact)
+    : oldWriterColumnsForLead(candidate.lead.quizAnswers)
+}
+
+function candidateId(candidate: Candidate): string {
+  return candidate.kind === "artifact" ? candidate.artifact.id : candidate.lead.id
+}
+
 export function selectDiagnosticsSource(
   input: SelectDiagnosticsSourceInput,
 ): SelectedDiagnosticsSource {
@@ -192,70 +279,61 @@ export function selectDiagnosticsSource(
     columns: input.columns,
     preferColumns: input.catchUp === true,
   })
+  const { candidates, note } = orderCandidates(input)
 
-  if (input.artifact) {
+  for (const candidate of candidates) {
     try {
-      const projected = projectArtifactToFacts({
-        envelope: input.artifact.quizAnswers,
-        artifactId: input.artifact.id,
-        leadId: input.artifact.leadId,
-        takenAt: input.artifact.createdAt,
-      })
+      const projected =
+        candidate.kind === "artifact"
+          ? projectArtifactToFacts({
+              envelope: candidate.artifact.quizAnswers,
+              artifactId: candidate.artifact.id,
+              leadId: candidate.artifact.leadId,
+              takenAt: candidate.artifact.createdAt,
+            })
+          : projectLegacyLeadToFacts({
+              leadId: candidate.lead.id,
+              quizAnswers: candidate.lead.quizAnswers as QuizAnswers,
+              takenAt: candidate.lead.createdAt,
+            })
       if (!hasDiagnosticSignal(projected.diagnostics)) {
         throw new Error("no_diagnostic_signal")
       }
+      const olderQuizGoals = candidates
+        .filter((other) => other !== candidate)
+        .map((other) => oldWriterOf(other)?.goals)
+        .filter((goals): goals is string[] => Array.isArray(goals) && goals.length > 0)
+      const handEdits = detectHandEdits({
+        native: projected.diagnostics,
+        columns: input.columns,
+        oldWriter: oldWriterOf(candidate),
+        olderQuizGoals,
+      })
       const { diagnostics, assumedFields, keptFields } = applyCompletenessDefaults(
-        projected.diagnostics,
+        handEdits.diagnostics,
         existing,
       )
       const conflict = detectConflict(diagnostics, input.columns)
+      const winnerIsFirst = candidate === candidates[0]
       return {
-        sourceKind: "artifact",
-        sourceId: input.artifact.id,
+        sourceKind: candidate.kind,
+        sourceId: candidateId(candidate),
+        sourceLeadId: candidate.kind === "artifact" ? candidate.artifact.leadId : candidate.lead.id,
         diagnostics,
         assumedFields,
         keptFields,
-        quizContext: projected.quizContext,
+        ...("quizContext" in projected
+          ? { quizContext: (projected as { quizContext: QuizContextV1 }).quizContext }
+          : {}),
         ...(conflict ? { conflict } : {}),
         unusableSources,
+        handEdits,
+        ...(note && winnerIsFirst ? { sourceOrderNote: note } : {}),
       }
     } catch (error) {
       unusableSources.push({
-        kind: "artifact",
-        id: input.artifact.id,
-        reason: messageOf(error),
-      })
-    }
-  }
-
-  if (input.legacyLead) {
-    try {
-      const projected = projectLegacyLeadToFacts({
-        leadId: input.legacyLead.id,
-        quizAnswers: input.legacyLead.quizAnswers as QuizAnswers,
-        takenAt: input.legacyLead.createdAt,
-      })
-      if (!hasDiagnosticSignal(projected.diagnostics)) {
-        throw new Error("no_diagnostic_signal")
-      }
-      const { diagnostics, assumedFields, keptFields } = applyCompletenessDefaults(
-        projected.diagnostics,
-        existing,
-      )
-      const conflict = detectConflict(diagnostics, input.columns)
-      return {
-        sourceKind: "lead",
-        sourceId: input.legacyLead.id,
-        diagnostics,
-        assumedFields,
-        keptFields,
-        ...(conflict ? { conflict } : {}),
-        unusableSources,
-      }
-    } catch (error) {
-      unusableSources.push({
-        kind: "lead",
-        id: input.legacyLead.id,
+        kind: candidate.kind,
+        id: candidateId(candidate),
         reason: messageOf(error),
       })
     }
