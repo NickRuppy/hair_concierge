@@ -5,15 +5,23 @@ import type { PersonalPlanQuizSubmissionEnvelope } from "../src/lib/personal-pla
 import { buildProfileDataFromPersonalPlanCanonicalProfile } from "../src/lib/quiz/link-to-profile"
 import type { ScannerSourceRead } from "../src/lib/scan/scanner-context"
 import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
+import { writeAccountLinkFacts } from "../src/lib/user-facts/account-link"
+import { planUserFactsBackfill } from "../src/lib/user-facts/backfill/plan-row"
 import { mergeDiagnosticsPatch } from "../src/lib/user-facts/hand-edit"
-import { projectArtifactToFacts } from "../src/lib/user-facts/project-artifact"
 import { parseUserFactsRow } from "../src/lib/user-facts/read"
 import type { DiagnosticsV1, FieldProvenanceValue } from "../src/lib/user-facts/schema"
+import { pgliteAdminClient } from "./mobile-profile-facts-pglite.fixtures"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
+import {
+  id,
+  insertProfile,
+  migratedPersonalPlanDatabase,
+} from "./personal-plan-pglite-migration.fixtures"
 
 /**
  * Shared fixtures of the scanner facts-compatibility suite (clean switch, scanner regression):
- * paid v3 envelopes, the paid-plan read the scanner sees, and a fake `scanner_profile_edit_publish`
+ * paid v3 envelopes, the paid-plan read the scanner sees, the backfilled / account-linked row, and
+ * a fake `scanner_profile_edit_publish`
  * that does what the door does (merge the facts patch, derive the columns from the document).
  */
 
@@ -169,11 +177,93 @@ export function factsRow(
   }
 }
 
-/** A backfilled paid buyer: the facts projected from her paid envelope, door-derived columns. */
+/**
+ * A backfilled paid buyer, built through the real backfill planner (`planUserFactsBackfill` ->
+ * `selectDiagnosticsSource`) over the row the pre-switch account link left (main-era columns,
+ * attached artifact = her paid envelope), with its planned writes applied as the door applies
+ * them: the patch merged into the document, the columns derived from it, the provenance stored.
+ */
 export function backfilledRow(env: unknown): Record<string, unknown> {
-  return factsRow(
-    projectArtifactToFacts({ envelope: env, artifactId: "a", leadId: "l" }).diagnostics,
+  const columns = {
+    ...LEGACY_CARE_COLUMNS,
+    desired_volume: null,
+    primary_concern: null,
+    ...mainEraColumns(env as Envelope),
+  }
+  const plan = planUserFactsBackfill(
+    {
+      userId: "owner",
+      factsRevision: 0,
+      factsProvenance: {},
+      columns: columns as never,
+      storedDomains: { diagnostics: false, care_habits: false, quiz_context: false },
+      storedDiagnostics: null,
+      storedCareHabits: null,
+      artifact: { id: "a", leadId: "l", quizAnswers: env, createdAt: "2026-08-01T00:00:00.000Z" },
+      legacyLead: null,
+      plan: null,
+      needVersions: [],
+      drafts: [],
+    },
+    { now: "2026-09-20T00:00:00.000Z", catchUp: false },
   )
+  if (plan.unresolvable.length > 0) throw new Error(`backfill: ${plan.unresolvable.join("; ")}`)
+  const row: Record<string, unknown> = { ...columns, facts_provenance: {}, facts_revision: 0 }
+  for (const write of plan.writes) {
+    if (write.domain === "diagnostics") {
+      const diagnostics = mergeDiagnosticsPatch(null, write.patch)
+      Object.assign(row, deriveDiagnosticsColumns(diagnostics), { diagnostics })
+    } else if (write.domain === "quiz_context") {
+      row.quiz_context = write.patch
+    } else {
+      row.care_habits = write.patch
+    }
+    row.facts_provenance = {
+      ...(row.facts_provenance as object),
+      [write.domain]: write.provenance,
+    }
+    row.facts_revision = (row.facts_revision as number) + 1
+  }
+  if (!row.diagnostics) throw new Error("backfill planned no diagnostics write")
+  return row
+}
+
+const LEGACY_CARE_COLUMNS = {
+  towel_material: null,
+  towel_technique: null,
+  drying_method: null,
+  styling_tools: null,
+  heat_styling: null,
+  uses_heat_protection: null,
+  night_protection: null,
+  brush_type: null,
+}
+
+/** A new paid buyer's row after the web account link (`writeAccountLinkFacts`) on the REAL door
+ * (PGlite `user_facts_save_v1`), as `scanner_context_read_source` returns it (`to_jsonb`). */
+export async function accountLinkedRow(
+  t: { after: (fn: () => Promise<void>) => void },
+  env: unknown,
+): Promise<Record<string, unknown>> {
+  const pg = await migratedPersonalPlanDatabase(t)
+  const userId = id(7, 7)
+  await insertProfile(pg, userId)
+  const outcome = await writeAccountLinkFacts(pgliteAdminClient(pg) as never, {
+    userId,
+    quiz: {
+      kind: "artifact",
+      artifactId: "a",
+      leadId: "l",
+      envelope: env,
+      createdAt: "2026-08-01T00:00:00.000Z",
+    },
+  })
+  if (outcome !== "replaced") throw new Error(`account link: ${outcome}`)
+  const { rows } = await pg.query<{ row: Record<string, unknown> }>(
+    "select to_jsonb(h) as row from public.hair_profiles h where user_id = $1",
+    [userId],
+  )
+  return rows[0]!.row
 }
 
 /** A fake `scanner_profile_edit_publish` / receipt / read pair, doing what the door does. */

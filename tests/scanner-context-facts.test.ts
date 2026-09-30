@@ -19,6 +19,7 @@ import { parseUserFactsRow } from "../src/lib/user-facts/read"
 import type { DiagnosticsV1 } from "../src/lib/user-facts/schema"
 import {
   PAID_VARIANTS,
+  accountLinkedRow,
   backfilledRow,
   envelope,
   factsRow,
@@ -648,3 +649,50 @@ test("a free concern text only a lead carries: shown, unchanged is no edit, a cl
   await publishProfileEdit(db as never, "owner", request(cleared, db.read.profileRevision))
   assert.equal(editableScannerQuizAnswers(db.read).concerns_other_text, undefined, "stays cleared")
 })
+
+// ---------------------------------------------------------------------------
+// Fix round 3, item 6: the rows above come from the real backfill planner; one real account link.
+// ---------------------------------------------------------------------------
+
+test("the backfilled fixture row is what the backfill planner writes for a paid buyer", () => {
+  for (const [name, env] of Object.entries(PAID_VARIANTS)) {
+    const row = backfilledRow(env)
+    const provenance = row.facts_provenance as Record<string, any>
+    assert.deepEqual(
+      provenance.diagnostics.source,
+      { kind: "personal_plan_artifact", id: "a" },
+      name,
+    )
+    assert.equal(provenance.diagnostics.fields, undefined, `${name}: nothing assumed`)
+    assert.ok(row.quiz_context, `${name}: quiz context written`)
+    const diagnostics = parseUserFactsRow("owner", row).diagnostics!
+    assert.equal(diagnostics.source.kind, "personal_plan_v3", name)
+    const { source: _source, ...answers } = diagnostics
+    const { source: _projected, ...projected } = facts(env)
+    assert.deepEqual(answers, projected, `${name}: the artifact's facts`)
+  }
+})
+
+for (const name of ["V11_four_plus_low_shine", "V3_two_concerns_pick"] as const) {
+  test(`${name}: a buyer linked through writeAccountLinkFacts (real door) keeps her paid source`, async (t) => {
+    const env = PAID_VARIANTS[name]!
+    const row = await accountLinkedRow(t, env)
+    const read = paidRead(env, row)
+    const prepared = prepareScannerContext(read)
+    assert.equal(scannerSourceHash(prepared!.source), scannerSourceHash(env))
+    assert.deepEqual(prepared!.rejectedPaidSources, [])
+    const write = buildMobileHandEditFacts({
+      answers: iosEcho(editableScannerQuizAnswers(read)),
+      stored: parseUserFactsRow("owner", row),
+      now: NOW,
+    })
+    assert.equal(write.unchanged, true, JSON.stringify(write.diagnostics.patch))
+    const db = publishHarness(read)
+    const saved = await publishProfileEdit(
+      db as never,
+      "owner",
+      request(iosEcho(editableScannerQuizAnswers(read))),
+    )
+    assert.equal(scannerSourceHash(saved.prepared.source), scannerSourceHash(env))
+  })
+}
