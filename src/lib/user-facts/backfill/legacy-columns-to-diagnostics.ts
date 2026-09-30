@@ -113,8 +113,9 @@ const DANDRUFF_CONCERN = "dandruff"
 
 /** Table M, volume direction ("keep the stored direction for existing profiles"): the legacy
  * `goals` column stored `volume` / `less_volume`, which both collapse onto `volume_balance`.
- * Both stored at once (historically possible) is decided by the stored `desired_volume`,
- * else "volume" wins — exactly as `deriveDesiredVolumeFromGoals` decided it. */
+ * Both stored at once (historically possible) is decided by the profile's own stored
+ * `desired_volume` column when it says "less"; otherwise "volume" wins. (Unlike
+ * `deriveDesiredVolumeFromGoals`, which only ever looks at the goals and lets "volume" win.) */
 function storedVolumeDirection(
   goals: readonly string[] | null,
   desiredVolume: string | null,

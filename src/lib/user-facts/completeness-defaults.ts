@@ -69,16 +69,27 @@ function parseField(field: CompletenessDefaultField, value: unknown): string | u
  *  - otherwise the legacy column counts (`unknown_historical`: nothing about it is provable) —
  *    unless it is merely the derived projection of that same assumed fact.
  *  - a value outside the native vocabulary is no value at all.
+ *  - `preferColumns` (the backfill's `--catch-up`, wave-1 fix round 2): that mode only runs
+ *    because a live legacy writer changed the columns AFTER the stored facts were written, so
+ *    a column value is the newer real value and comes first; the stored fact is the fallback.
  */
 export function existingCompletenessValues(input: {
   diagnostics?: DiagnosticsV1 | null
   fields?: Record<string, FieldProvenanceValue> | null
   columns?: { density?: string | null; hair_length?: string | null } | null
+  preferColumns?: boolean
 }): ExistingCompletenessValues {
   const existing: ExistingCompletenessValues = {}
   for (const field of COMPLETENESS_FIELDS) {
     const factsValue = parseField(field, input.diagnostics?.[field])
     const factsProvenance = input.fields?.[field]
+    if (input.preferColumns) {
+      const newerColumn = parseField(field, input.columns?.[COLUMN_OF[field]])
+      if (newerColumn !== undefined) {
+        existing[field] = { value: newerColumn, provenance: "unknown_historical" }
+        continue
+      }
+    }
     if (factsValue !== undefined && factsProvenance !== "assumed") {
       existing[field] = {
         value: factsValue,

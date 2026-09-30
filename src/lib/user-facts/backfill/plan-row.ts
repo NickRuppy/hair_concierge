@@ -311,6 +311,7 @@ function planDiagnosticsAndContext(
       diagnostics: row.storedDiagnostics,
       fields: row.factsProvenance.diagnostics?.fields,
     },
+    catchUp: options.catchUp,
   })
 
   for (const unusable of selected.unusableSources) {

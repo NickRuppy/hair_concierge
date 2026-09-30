@@ -1516,6 +1516,53 @@ test("catch-up leaves a backfilled row alone while its legacy columns still matc
   ])
 })
 
+test("round 2: in --catch-up a field the winner lacks is filled from the NEWER column, not the stale stored fact", () => {
+  const { hair_length: _omitted, ...answersWithoutLength } = LEGACY_QUIZ_ANSWERS
+  void _omitted
+  const legacyLead = { id: "lead-old", quizAnswers: answersWithoutLength }
+  // What the backfill wrote from this lead earlier, with the length the column had then.
+  const stored = {
+    ...selectDiagnosticsSource({
+      artifact: null,
+      legacyLead,
+      columns: { ...FULL_DIAGNOSTIC_COLUMNS, hair_length: "medium" },
+    }).diagnostics,
+  }
+  assert.equal(stored.hairLength, "medium")
+  const row = userRow({
+    factsRevision: 1,
+    // A live legacy writer changed the column afterwards — the reason catch-up runs at all.
+    columns: { ...EMPTY_COLUMNS, ...FULL_DIAGNOSTIC_COLUMNS, hair_length: "short" },
+    storedDomains: { diagnostics: true, care_habits: false, quiz_context: false },
+    storedDiagnostics: stored,
+    legacyLead,
+    factsProvenance: {
+      diagnostics: {
+        source: { kind: "legacy_lead", id: "lead-old" },
+        schemaVersion: 1,
+        at: "2026-09-15T00:00:00.000Z",
+        fields: { hairLength: "user" },
+      },
+    },
+  })
+
+  const diagnostics = writeFor(
+    planUserFactsBackfill(row, { now: NOW, catchUp: true }),
+    "diagnostics",
+  )
+  assert.equal(diagnostics.patch.hairLength, "short", "the column is the newer real value")
+  assert.deepEqual(diagnostics.provenance.fields, { hairLength: "unknown_historical" })
+
+  // Default mode is unchanged: the stored fact still comes first there.
+  const defaultMode = selectDiagnosticsSource({
+    artifact: null,
+    legacyLead,
+    columns: { ...FULL_DIAGNOSTIC_COLUMNS, hair_length: "short" },
+    existingFacts: { diagnostics: stored, fields: { hairLength: "user" } },
+  })
+  assert.equal(defaultMode.diagnostics.hairLength, "medium")
+})
+
 test("catch-up re-plans only the domain whose columns a legacy writer changed", () => {
   const towelChanged = planUserFactsBackfill(
     backfilledRow({ columns: { ...BACKFILLED_COLUMNS, towel_material: "mikrofaser" } }),

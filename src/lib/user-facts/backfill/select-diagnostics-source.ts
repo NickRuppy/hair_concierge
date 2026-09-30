@@ -120,6 +120,9 @@ export type SelectDiagnosticsSourceInput = {
     diagnostics: DiagnosticsV1 | null
     fields?: Record<string, FieldProvenanceValue>
   }
+  /** `--catch-up`: the columns changed after the stored facts, so they are the newer existing
+   * value (wave-1 fix round 2). */
+  catchUp?: boolean
 }
 
 function messageOf(error: unknown): string {
@@ -187,6 +190,7 @@ export function selectDiagnosticsSource(
     diagnostics: input.existingFacts?.diagnostics,
     fields: input.existingFacts?.fields,
     columns: input.columns,
+    preferColumns: input.catchUp === true,
   })
 
   if (input.artifact) {
