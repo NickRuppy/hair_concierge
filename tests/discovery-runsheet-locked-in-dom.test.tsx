@@ -41,6 +41,7 @@ function option(productId: string, label: string, priceLabel: string | null) {
     label,
     verdictLabel: "Passt",
     priceLabel,
+    imageUrl: null,
     origin: "alternative",
     propertyRows: null,
   } satisfies DiscoveryCockpitSwapOption

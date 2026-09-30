@@ -475,13 +475,15 @@ test("a new participant with a stated main problem gets its recipe for her profi
   assert.ok(markup.includes("Hauptproblem: Trockene oder strohige Längen"))
   assert.ok(!markup.includes("Kein Hauptproblem angegeben"))
   assert.ok(markup.includes("So sagst du es"))
-  assert.ok(markup.includes("Damit anfangen"))
+  assert.ok(markup.includes(">Zuerst</h3>"))
   // Coarse curls: the mask applies; heat styling is unknown, so the protectant is „prüfen".
   assert.ok(markup.includes("Haarmaske"))
   assert.ok(markup.includes("prüfen: Hitzestyling"))
   // The Idealroutine has a leave-in step.
   assert.ok(markup.includes("in der Idealroutine"))
-  assert.ok(markup.includes("Nicht damit anfangen"))
+  assert.ok(markup.includes(">Nicht zuerst</h3>"))
+  // Profile add-ons fold away under „Fürs Profil".
+  assert.match(markup, /<details><summary[^>]*>Fürs Profil/)
 })
 
 test("hair loss as the main problem renders the boundary only", async () => {
@@ -491,7 +493,7 @@ test("hair loss as the main problem renders the boundary only", async () => {
   })
   assert.ok(markup.includes("Hauptproblem: Haarausfall oder dünner werdendes Haar"))
   assert.ok(markup.includes("Grenze"))
-  assert.ok(!markup.includes("Damit anfangen"))
+  assert.ok(!markup.includes(">Zuerst</h3>"))
   assert.ok(!markup.includes("Fürs Profil"))
 })
 

@@ -91,11 +91,22 @@ const LIST_ADD = "Zeile hinzufügen"
 
 /**
  * The brief's line lists, edited in Phase 2 like the Hebel (consult-agent final review).
+ * Each carries a one-line purpose hint under its title (iteration 3, T1).
  * Ziel-Lücken are gone since v4 (R27): gaps are asked as Call-Fragen.
  */
 export const RUNSHEET_BRIEF_LISTS = [
-  { key: "callFragen", title: "Fragen für den Call", empty: "Keine Fragen erfasst." },
-  { key: "erwartungen", title: "Erwartungen", empty: "Keine Erwartungen erfasst." },
+  {
+    key: "callFragen",
+    title: "Fragen für den Call",
+    hint: "Antworten können den Plan ändern — im Call stellen.",
+    empty: "Keine Fragen erfasst.",
+  },
+  {
+    key: "erwartungen",
+    title: "Erwartungen",
+    hint: "Ehrliche Zeitfenster — so im Call aussprechen.",
+    empty: "Keine Erwartungen erfasst.",
+  },
 ] as const
 
 export type RunsheetBriefListKey = (typeof RUNSHEET_BRIEF_LISTS)[number]["key"]
@@ -952,7 +963,10 @@ export function DiscoveryRunsheetBrief({
         <RunsheetCard title={BRIEF_LISTS_TITLE}>
           {RUNSHEET_BRIEF_LISTS.map((list) => (
             <div key={list.key} className="flex flex-col gap-1.5">
-              <p className="text-[13px] font-bold text-foreground">{list.title}</p>
+              <div>
+                <p className="text-[13px] font-bold text-foreground">{list.title}</p>
+                <p className="text-[12px] text-muted-foreground">{list.hint}</p>
+              </div>
               {state.lists[list.key].length === 0 ? (
                 <p className="text-[13px] text-muted-foreground">{list.empty}</p>
               ) : (

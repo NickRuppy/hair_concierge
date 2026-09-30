@@ -28,6 +28,9 @@ const WASH_FREQUENCY_NOTE = "Rhythmus im Call bestätigen — die Woche rechnet 
 const WASH_DAY = "Waschtag"
 const OFF_DAYS = "Tage ohne Wäsche"
 const OFF_DAYS_EMPTY = "Nichts nötig."
+/** The week table's columns (iteration 3): step, product, timing + cadence, purpose. */
+const WEEK_COLUMNS = ["Schritt", "Produkt", "Wann", "Zweck"] as const
+const EMPTY_CELL = "–"
 const ROUTINE_FROM_ANSWERS = "Aus den Angaben der Checkliste berechnet (Häufigkeit, Hitze)."
 const HEAT_PROTECTION_ASK = "Hitzeschutz: im Call fragen"
 const PROPOSAL = "Vorschlag"
@@ -175,7 +178,8 @@ export function DiscoveryRunsheetRoutine({
         {washChangeNote ? (
           <p className="text-[13px] leading-5 text-foreground">{washChangeNote}</p>
         ) : null}
-        <div className="grid gap-3 md:grid-cols-2">
+        {/* Stacked, not side by side: each day's four-column table needs the full width. */}
+        <div className="flex flex-col gap-3">
           <WeekCard
             title={WASH_DAY}
             lines={week.washDay}
@@ -222,22 +226,69 @@ function WeekCard({
       {lines.length === 0 ? (
         <p className="text-[13px] text-muted-foreground">{empty}</p>
       ) : (
-        <ol className="flex flex-col gap-2">
-          {lines.map((line) => (
-            <li key={line.decisionKey} className="text-[13px] leading-5">
-              <span className="font-bold text-foreground">{line.categoryLabel}</span>
-              <span className="text-muted-foreground">
-                {` · ${[line.timingLabel, line.frequencyLabel].filter(Boolean).join(" · ")}`}
-              </span>
-              <span className="block text-foreground">
-                {runsheetWeekLineText(line, researchLabels[line.decisionKey])}
-              </span>
-              <WeekLineFrequencyChips line={line} washFrequency={washFrequency} />
-              <span className="block text-[12px] text-muted-foreground">{line.description}</span>
-            </li>
-          ))}
-        </ol>
+        <WeekTable lines={lines} researchLabels={researchLabels} washFrequency={washFrequency} />
       )}
+    </div>
+  )
+}
+
+/**
+ * One row per week line — Schritt | Produkt | Wann | Zweck — with visible row separators, so
+ * where one product ends is instantly clear (Nick, iteration 3). Borders and the caps header
+ * follow the comparison table; on narrow widths the table scrolls inside its card, never
+ * the page.
+ */
+function WeekTable({
+  lines,
+  researchLabels,
+  washFrequency,
+}: {
+  lines: WeekLine[]
+  researchLabels: Readonly<Record<string, string>>
+  washFrequency: ProductFrequency | WashAnchor | null
+}) {
+  return (
+    <div className="overflow-hidden rounded-[14px] border border-border bg-card">
+      <div className="overflow-x-auto">
+        <table data-week-table="" className="w-full min-w-[560px] border-collapse text-left">
+          <thead className="bg-[#f6f3f0]">
+            <tr>
+              {WEEK_COLUMNS.map((column) => (
+                <th
+                  key={column}
+                  scope="col"
+                  className="px-2.5 py-[9px] text-[12px] font-bold uppercase tracking-[0.08em] text-foreground"
+                >
+                  {column}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border border-t border-border">
+            {lines.map((line) => (
+              <tr key={line.decisionKey} className="align-top text-[13px] leading-5">
+                <th
+                  scope="row"
+                  className="w-[120px] px-2.5 py-2.5 text-left font-bold text-foreground"
+                >
+                  {line.categoryLabel}
+                </th>
+                <td className="px-2.5 py-2.5 text-foreground">
+                  {runsheetWeekLineText(line, researchLabels[line.decisionKey])}
+                </td>
+                <td className="w-[170px] px-2.5 py-2.5 text-muted-foreground">
+                  {[line.timingLabel, line.frequencyLabel].filter(Boolean).join(" · ") ||
+                    EMPTY_CELL}
+                  <WeekLineFrequencyChips line={line} washFrequency={washFrequency} />
+                </td>
+                <td className="px-2.5 py-2.5 text-[12px] text-muted-foreground">
+                  {line.description}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
