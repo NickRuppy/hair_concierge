@@ -251,26 +251,11 @@ function alternativeProductEntries(
   }))
 }
 
-const STAGE3_COMMERCE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000
-
-/**
- * The price-freshness rule every price surface shares: checked within the last 7 days.
- * A missing or unparsable check date is not fresh.
- */
-export function isStage3PriceFresh(
-  priceCheckedAt: string | null | undefined,
-  now: number = Date.now(),
-): boolean {
-  if (!priceCheckedAt) return false
-  const checkedAt = Date.parse(priceCheckedAt)
-  return Number.isFinite(checkedAt) && now - checkedAt <= STAGE3_COMMERCE_MAX_AGE_MS
-}
-
 function presentationFor(
   facts: Stage3CategoryProductFacts,
 ): Stage3FitComparisonProduct["presentation"] {
   return {
-    priceLabel: freshPriceLabel(facts),
+    priceLabel: priceLabel(facts),
     netContentLabel:
       facts.netContentValue !== null &&
       facts.netContentValue !== undefined &&
@@ -280,12 +265,16 @@ function presentationFor(
   }
 }
 
-function freshPriceLabel(facts: Stage3CategoryProductFacts): string | null {
+/**
+ * The stored price always shows while the link is buyable — a stale check date
+ * never blanks it (Nick, 2026-09-30: an outdated price beats a price-less
+ * card; the recurring price audit keeps the stored value honest).
+ */
+function priceLabel(facts: Stage3CategoryProductFacts): string | null {
   if (
     facts.priceEur === null ||
     facts.priceEur === undefined ||
-    facts.purchaseLinkStatus !== "available" ||
-    !isStage3PriceFresh(facts.priceCheckedAt)
+    facts.purchaseLinkStatus !== "available"
   ) {
     return null
   }

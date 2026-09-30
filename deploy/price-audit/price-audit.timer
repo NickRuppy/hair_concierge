@@ -1,0 +1,14 @@
+# Weekly price audit, Monday 04:30 Europe/Berlin (see docs/price-audit.md).
+# Persistent=true runs a missed tick at the next boot/start so a skipped
+# week only delays the refresh (prices always show; the audit keeps them honest).
+[Unit]
+Description=Weekly Chaarlie price audit
+
+[Timer]
+OnCalendar=Mon 04:30 Europe/Berlin
+Persistent=true
+RandomizedDelaySec=10m
+Unit=price-audit.service
+
+[Install]
+WantedBy=timers.target

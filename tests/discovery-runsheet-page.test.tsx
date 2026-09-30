@@ -1219,8 +1219,9 @@ test("prices: the read model carries the Idealplan recommendation's price onto i
       reasoning: { productCriteria: "Leicht.", fit: "Passt.", frequency: "nach jeder Wäsche" },
     },
   }
-  // Fix wave (P2/f): the same 7-day freshness rule as the swap alternatives, read from the
-  // catalog's `price_checked_at` (the preview's commerce carries no date of its own).
+  // Since 2026-09-30 the stored price always shows (an outdated price beats a
+  // price-less card; the recurring price audit keeps it honest) — the catalog's
+  // `price_checked_at` no longer gates the label.
   const priceOf = (priceCheckedAt: string | null | undefined) => {
     const base = model({ steps: [shampooStep, withPrice], items: [shampooItem] })
     const view = buildDiscoveryCockpitView({
@@ -1246,19 +1247,18 @@ test("prices: the read model carries the Idealplan recommendation's price onto i
   }
   const daysAgo = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
   assert.equal(priceOf(daysAgo(1)), "2,45\u00a0€")
-  assert.equal(priceOf(daysAgo(6.9)), "2,45\u00a0€")
-  // Older than 7 days, never checked, unparsable, or no catalog row at all → no price.
-  assert.equal(priceOf(daysAgo(8)), null)
-  assert.equal(priceOf(null), null)
-  assert.equal(priceOf("not a date"), null)
-  assert.equal(priceOf(undefined), null)
+  // Stale, never checked, unparsable, or no check date at all → the price still shows.
+  assert.equal(priceOf(daysAgo(90)), "2,45\u00a0€")
+  assert.equal(priceOf(null), "2,45\u00a0€")
+  assert.equal(priceOf("not a date"), "2,45\u00a0€")
+  assert.equal(priceOf(undefined), "2,45\u00a0€")
   const withoutIdentity = buildDiscoveryCockpitView(
     model({ steps: [shampooStep, withPrice], items: [shampooItem] }),
   )
   assert.equal(
     withoutIdentity.steps.find((step) => step.category === "conditioner")?.idealRecommendation
       ?.priceLabel,
-    null,
+    "2,45\u00a0€",
   )
 })
 
