@@ -142,3 +142,4 @@ Rolling the code back after step 3 requires removing the lock first. Sentry chec
 - iOS revision-counter arithmetic changes without a Docker concurrency proof here — low user risk (no usage); proof required before iOS traffic.
 - The lock breaks any unmerged branch that writes profile columns directly — listed in §9.
 - Backfill correctness — dry-run diff reviewed by Nick; idempotent; CAS.
+- A web edit on a row that has no facts document yet writes the converted columns plus the edit under a source built from the edit, replacing what would have been the backfill's `legacy_columns` snapshot. Accepted: after rollout step 1 every row has a document before the new code deploys (step 2). An unchanged save on such a row writes nothing.
