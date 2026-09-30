@@ -4,7 +4,10 @@ import { join } from "node:path"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 
 import { writeCsv, type CsvRow } from "../src/lib/affiliate-research/csv"
-import { isUsableUrl, passesBrandDirect } from "../src/lib/affiliate-research/url-gate"
+import {
+  checkStoredLinkBuyability,
+  type BuyabilityStatus,
+} from "../src/lib/product-metadata/buyability"
 import {
   auditProductMetadata,
   type ExpectedPriceCheck,
@@ -17,14 +20,9 @@ const SELECT_COLUMNS =
 
 const OUT_DIR = "tmp/product-metadata-audit"
 const KNOWN_PRICE_CHECKS_PATH = "data/product-metadata-audit/known-price-checks.json"
-const USER_AGENT =
-  "ChaarlieProductMetadataAudit/1.0 (+read-only purchase link review; contact: product metadata audit)"
-
 type KnownPriceCheck = ExpectedPriceCheck & {
   source_name?: string
 }
-
-type BuyabilityStatus = "available" | "unavailable" | null
 
 type ProductRow = ProductMetadataAuditInput
 
@@ -140,110 +138,6 @@ async function fetchProducts(supabase: SupabaseClient): Promise<ProductRow[]> {
   }
 
   return all
-}
-
-function normalizeBodyText(value: string): string {
-  return value.toLowerCase().replace(/\s+/g, " ")
-}
-
-function includesAny(text: string, needles: string[]): boolean {
-  return needles.some((needle) => text.includes(needle))
-}
-
-const UNAVAILABLE_PHRASES = [
-  "ausverkauft",
-  "online momentan nicht verfügbar",
-  "online nicht verfügbar",
-  "nicht online verfügbar",
-  "nicht verfügbar",
-  "nicht lieferbar",
-  "out of stock",
-  "sold out",
-]
-
-function classifyKnownRetailerContent(
-  host: string,
-  brand: string | null,
-  text: string,
-): BuyabilityStatus {
-  if (host === "rossmann.de" || host.endsWith(".rossmann.de")) {
-    if (includesAny(text, UNAVAILABLE_PHRASES)) return "unavailable"
-    if (includesAny(text, ["in den warenkorb", "zum warenkorb"])) return "available"
-    return null
-  }
-
-  if (host === "mueller.de" || host.endsWith(".mueller.de")) {
-    if (includesAny(text, UNAVAILABLE_PHRASES)) return "unavailable"
-    if (text.includes("lieferbar") && text.includes("in den warenkorb")) return "available"
-    return null
-  }
-
-  if (host === "dm.de" || host.endsWith(".dm.de")) {
-    if (includesAny(text, UNAVAILABLE_PHRASES)) return "unavailable"
-    if (includesAny(text, ["lieferbar", "online verfügbar", "in den warenkorb"])) return "available"
-    return null
-  }
-
-  const usesGenericBeautyRule =
-    host === "douglas.de" ||
-    host.endsWith(".douglas.de") ||
-    host === "notino.de" ||
-    host.endsWith(".notino.de") ||
-    host === "flaconi.de" ||
-    host.endsWith(".flaconi.de") ||
-    host === "hagel-shop.de" ||
-    host.endsWith(".hagel-shop.de") ||
-    host === "epres-hair.de" ||
-    host.endsWith(".epres-hair.de") ||
-    passesBrandDirect(host, brand)
-
-  if (!usesGenericBeautyRule) return null
-
-  if (includesAny(text, UNAVAILABLE_PHRASES)) return "unavailable"
-
-  if (
-    includesAny(text, [
-      "in den warenkorb",
-      "zum warenkorb",
-      "in den einkaufswagen",
-      "auf lager",
-      "vorrätig",
-      "lieferbar",
-      "in stock",
-      "add to cart",
-      "add to bag",
-    ])
-  ) {
-    return "available"
-  }
-
-  return null
-}
-
-export async function checkStoredLinkBuyability(row: ProductRow): Promise<BuyabilityStatus> {
-  if (typeof row.affiliate_link !== "string" || !isUsableUrl(row.affiliate_link)) {
-    return "unavailable"
-  }
-
-  const url = row.affiliate_link.trim()
-  const host = new URL(url).hostname.toLowerCase()
-
-  try {
-    const response = await fetch(url, {
-      headers: {
-        "User-Agent": USER_AGENT,
-        "Accept-Language": "de-DE,de;q=0.9,en;q=0.6",
-      },
-      signal: AbortSignal.timeout(15_000),
-    })
-
-    if (!response.ok) return null
-
-    const text = normalizeBodyText(await response.text())
-    return classifyKnownRetailerContent(host, row.brand, text)
-  } catch {
-    return null
-  }
 }
 
 function toCsvValue(value: unknown): string {

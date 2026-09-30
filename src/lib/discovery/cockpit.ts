@@ -3,7 +3,6 @@ import "server-only"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
-import { isStage3PriceFresh } from "@/lib/personal-plan/products/fit-comparison"
 import { createPresentationRowLoader } from "@/lib/scan/presentation-rows"
 import type { ScanCatalogPresentationRow } from "@/lib/scan/product-presentation"
 import type { ScanPresentedVerdictPayload, ScanProductHeader } from "@/lib/scan/types"
@@ -294,9 +293,9 @@ export type DiscoveryProductIdentity = {
    */
   imageUrl?: string | null
   /**
-   * When the catalog price was last checked (`products.price_checked_at`): the Idealplan
-   * card shows its price only when this is fresh (verdict-layer fix wave) — the preview's
-   * commerce carries no date of its own.
+   * When the catalog price was last checked (`products.price_checked_at`). Kept for
+   * diagnostics/PDF wiring; since 2026-09-30 it no longer gates the Idealplan card's
+   * price — the stored price always shows and the recurring audit keeps it honest.
    */
   priceCheckedAt?: string | null
 }
@@ -944,12 +943,10 @@ function idealRecommendationOption(
     brand,
     label: optionLabel(preview.productId, { name: preview.productName, brand }, identities),
     verdictLabel: SCAN_VERDICT_COPY[preview.verdict].label,
-    // The same 7-day rule as the swap alternatives (`isStage3PriceFresh`), dated by the
-    // catalog row: without a fresh check date the card shows no price. Optional chaining:
+    // The stored price always shows (Nick, 2026-09-30: an outdated price beats a
+    // price-less card; the recurring price audit keeps it honest). Optional chaining:
     // a preview composed before commerce existed carries none.
-    priceLabel: isStage3PriceFresh(identities.get(preview.productId)?.priceCheckedAt)
-      ? (preview.commerce?.priceLabel ?? null)
-      : null,
+    priceLabel: preview.commerce?.priceLabel ?? null,
     imageUrl: identities.get(preview.productId)?.imageUrl ?? null,
     origin: "ideal_recommendation",
     // F1: the recommendation against her target — null when it could not be evaluated.
