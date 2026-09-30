@@ -300,18 +300,35 @@ test("old paid source never restores a discarded detail after basics return; new
     recurrence(prepareScannerContext({ ...db.read, paidBindings: { initial: "1" } })),
     undefined,
   )
-  const eligible = prepareScannerContext({
-    ...db.read,
-    paidBindings: { initial: db.read.profileRevision },
-  })!
-  assert.deepEqual(recurrence(eligible), {
-    concernId: "dry_lengths",
-    frequency: "often",
-  })
   // After the edits the row has a facts document, which the scanner reads first: a changed
   // basic is a changed fact (the door derives the column from it).
   const document = db.read.profile!.diagnostics as Record<string, unknown>
   assert.ok(document, "the edit created the facts document")
+  // A paid publication bound to the current revision with matching basics stays eligible. Fix
+  // round 3 (item 2): its recurrence is used only where the facts carry it — these facts (the
+  // edits cleared it) do not, so the read already gives what an unchanged edit would publish.
+  const eligible = prepareScannerContext({
+    ...db.read,
+    paidBindings: { initial: db.read.profileRevision },
+  })!
+  assert.deepEqual(eligible.rejectedPaidSources, [])
+  assert.equal(recurrence(eligible), undefined)
+  const withRecurrence = prepareScannerContext({
+    ...db.read,
+    profile: {
+      ...db.read.profile,
+      diagnostics: {
+        ...document,
+        concernRecurrence: { concernId: "dry_lengths", frequency: "often" },
+      },
+    },
+    paidBindings: { initial: db.read.profileRevision },
+  })!
+  assert.deepEqual(withRecurrence.rejectedPaidSources, [])
+  assert.deepEqual(recurrence(withRecurrence), {
+    concernId: "dry_lengths",
+    frequency: "often",
+  })
   const incompatible = prepareScannerContext({
     ...db.read,
     profile: {
