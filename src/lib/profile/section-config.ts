@@ -1,27 +1,18 @@
-import {
-  CHEMICAL_TREATMENT_LABELS,
-  CUTICLE_CONDITION_LABELS,
-  HAIR_DENSITY_OPTIONS,
-  HAIR_TEXTURE_OPTIONS,
-  HAIR_THICKNESS_OPTIONS,
-  HEAT_STYLING_OPTIONS,
-  PROTEIN_MOISTURE_LABELS,
-  SCALP_TYPE_LABELS,
-  STYLING_TOOL_LABELS,
-} from "@/lib/types"
+import { HEAT_STYLING_OPTIONS, STYLING_TOOL_LABELS } from "@/lib/types"
 import type { HairProfile } from "@/lib/types"
 import {
+  CURRENT_PROBLEMS_TITLE,
   QUESTION_CONFIGS,
   getConcernOptions,
   getGoalOptions,
   type QuizOption,
 } from "@/components/personal-plan-quiz/quiz-data"
+import { TEXTURE_OPTIONS } from "@/components/personal-plan-quiz/texture-question"
 import { readProfileDiagnostics } from "@/lib/user-facts/profile-diagnostics"
 import type { OnboardingStep } from "@/lib/onboarding/store"
 import {
   BRUSH_TYPE_LABELS,
   DRYING_METHOD_LABELS,
-  HAIR_LENGTH_OPTIONS,
   NIGHT_PROTECTION_LABELS,
   TOWEL_MATERIAL_LABELS,
   TOWEL_TECHNIQUE_LABELS,
@@ -135,11 +126,21 @@ const PROFILE_STYLING_TOOL_LABELS: Record<string, string> = {
   wave_iron: "Lockenstab / Welleneisen",
 }
 
-/** Clean-switch task 8: goals, problems and scalp complaints show the quiz's own wording (per hair
- * texture, in the quiz's order), read from the stored facts — or, for a row the backfill has not
- * reached, from what its columns convert to (`readProfileDiagnostics`). */
+/** Clean-switch task 8 + fix round 2: every Haar-Check field and the goals show the quiz's own
+ * wording (per hair texture, in the quiz's order), read from the stored facts — or, for a row the
+ * backfill has not reached, from what its columns convert to (`readProfileDiagnostics`). The one
+ * option source is the quiz (`quiz-data.ts`, `texture-question.ts`); no profile label tables. */
 function quizLabels(options: QuizOption[], values: readonly string[]): string[] {
   return options.filter((option) => values.includes(option.value)).map((option) => option.label)
+}
+
+function quizLabel(options: QuizOption[], value: string | undefined): string | null {
+  if (!value) return null
+  return options.find((option) => option.value === value)?.label ?? null
+}
+
+function quizQuestionOptions(key: keyof typeof QUESTION_CONFIGS): QuizOption[] {
+  return QUESTION_CONFIGS[key]?.options ?? []
 }
 
 function profileDiagnostics(profile: HairProfile | null) {
@@ -155,6 +156,7 @@ function goalLabels(profile: HairProfile | null): string[] | null {
   )
 }
 
+/** No problem and no note is an open answer (the quiz has no „Nichts davon" here). */
 function problemLabels(profile: HairProfile | null): ProfileFieldValue {
   if (!profile) return null
   const diagnostics = profileDiagnostics(profile)
@@ -165,14 +167,20 @@ function problemLabels(profile: HairProfile | null): ProfileFieldValue {
   )
   const note = diagnostics.currentConcernsOtherText?.trim()
   if (note) labels.push(`Etwas anderes: ${note}`)
-  return labels.length > 0 ? labels : "Nichts davon"
+  return labels.length > 0 ? labels : null
 }
 
 function scalpConcernLabels(profile: HairProfile | null): ProfileFieldValue {
   const scalpConcerns = profileDiagnostics(profile)?.scalpConcerns
   if (!scalpConcerns) return null
-  if (scalpConcerns.length === 0) return "Keine Beschwerden"
-  return quizLabels(QUESTION_CONFIGS.scalp_concerns?.options ?? [], scalpConcerns)
+  if (scalpConcerns.length === 0) return "Nichts davon"
+  return quizLabels(quizQuestionOptions("scalp_concerns"), scalpConcerns)
+}
+
+function chemicalTreatmentLabels(profile: HairProfile | null): ProfileFieldValue {
+  const treatments = profileDiagnostics(profile)?.chemicalTreatments
+  if (!treatments?.length) return null
+  return quizLabels(quizQuestionOptions("chemical_treatments"), treatments)
 }
 
 export const PROFILE_SECTION_META: ProfileSectionMeta[] = [
@@ -214,28 +222,31 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     label: "Haarstruktur",
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
-    getValue: (profile) => optionLabel(profile?.hair_texture, HAIR_TEXTURE_OPTIONS),
+    getValue: (profile) => quizLabel(TEXTURE_OPTIONS, profileDiagnostics(profile)?.texture),
   },
   {
     key: "thickness",
     label: "Haardicke",
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
-    getValue: (profile) => optionLabel(profile?.thickness, HAIR_THICKNESS_OPTIONS),
+    getValue: (profile) =>
+      quizLabel(quizQuestionOptions("thickness"), profileDiagnostics(profile)?.thickness),
   },
   {
     key: "density",
     label: "Haardichte",
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
-    getValue: (profile) => optionLabel(profile?.density, HAIR_DENSITY_OPTIONS),
+    getValue: (profile) =>
+      quizLabel(quizQuestionOptions("density"), profileDiagnostics(profile)?.density),
   },
   {
     key: "hair_length",
     label: "Haarlänge",
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
-    getValue: (profile) => optionLabel(profile?.hair_length, HAIR_LENGTH_OPTIONS),
+    getValue: (profile) =>
+      quizLabel(quizQuestionOptions("hair_length"), profileDiagnostics(profile)?.hairLength),
   },
   {
     key: "cuticle_condition",
@@ -243,9 +254,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
     getValue: (profile) =>
-      profile?.cuticle_condition
-        ? (CUTICLE_CONDITION_LABELS[profile.cuticle_condition] ?? profile.cuticle_condition)
-        : null,
+      quizLabel(quizQuestionOptions("hair_surface"), profileDiagnostics(profile)?.hairSurface),
   },
   {
     key: "protein_moisture_balance",
@@ -253,22 +262,17 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
     getValue: (profile) =>
-      profile?.protein_moisture_balance
-        ? (PROTEIN_MOISTURE_LABELS[profile.protein_moisture_balance] ??
-          profile.protein_moisture_balance)
-        : null,
+      quizLabel(
+        quizQuestionOptions("elastic_response"),
+        profileDiagnostics(profile)?.elasticResponse,
+      ),
   },
   {
     key: "chemical_treatment",
     label: "Chemische Behandlungen",
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
-    getValue: (profile) =>
-      profile?.chemical_treatment?.length
-        ? profile.chemical_treatment.map(
-            (treatment) => CHEMICAL_TREATMENT_LABELS[treatment] ?? treatment,
-          )
-        : null,
+    getValue: (profile) => chemicalTreatmentLabels(profile),
   },
   {
     key: "scalp_type",
@@ -276,7 +280,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
     getValue: (profile) =>
-      profile?.scalp_type ? (SCALP_TYPE_LABELS[profile.scalp_type] ?? profile.scalp_type) : null,
+      quizLabel(quizQuestionOptions("scalp_oiliness"), profileDiagnostics(profile)?.scalpOiliness),
   },
   {
     key: "scalp_condition",
@@ -287,7 +291,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
   },
   {
     key: "concerns",
-    label: "Haar-Bedenken",
+    label: CURRENT_PROBLEMS_TITLE,
     sectionKey: "quiz",
     editTarget: { kind: "quiz" },
     getValue: (profile) => problemLabels(profile),

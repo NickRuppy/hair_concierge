@@ -128,6 +128,7 @@ import {
 } from "@/lib/personal-plan-quiz/preparation-client"
 
 import {
+  CURRENT_PROBLEMS_TITLE,
   DAILY_TIME_OPTIONS,
   EARLY_PROOF_TESTIMONIAL,
   PREPARATION_TESTIMONIALS,
@@ -2826,7 +2827,7 @@ export function PersonalPlanQuiz({
       const question = renderQuestion(
         {
           field: "currentConcerns",
-          title: "Was beschäftigt dich gerade?",
+          title: CURRENT_PROBLEMS_TITLE,
           helper: "Wähle alles aus, was du aktuell bemerkst.",
           options: concernOptions,
           multi: true,

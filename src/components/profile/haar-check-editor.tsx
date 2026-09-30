@@ -2,7 +2,11 @@
 
 import type { Dispatch, ReactNode, SetStateAction } from "react"
 
-import { QUESTION_CONFIGS, getConcernOptions } from "@/components/personal-plan-quiz/quiz-data"
+import {
+  CURRENT_PROBLEMS_TITLE,
+  QUESTION_CONFIGS,
+  getConcernOptions,
+} from "@/components/personal-plan-quiz/quiz-data"
 import { TEXTURE_OPTIONS } from "@/components/personal-plan-quiz/texture-question"
 import { MAIN_PROBLEM_SHEET_TITLE } from "@/components/quiz/quiz-main-problem-sheet"
 import { Button } from "@/components/ui/button"
@@ -317,7 +321,10 @@ export function HaarCheckEditor({
         </div>
 
         <div ref={(node) => registerField("concerns", node)} className="xl:col-span-2">
-          <QuizEditorField title="Haar-Bedenken" text="Wähle alles aus, was du aktuell bemerkst.">
+          <QuizEditorField
+            title={CURRENT_PROBLEMS_TITLE}
+            text="Wähle alles aus, was du aktuell bemerkst."
+          >
             <div className="flex flex-wrap gap-2">
               {problemOptions.map((option) => (
                 <ChoiceChip

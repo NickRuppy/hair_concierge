@@ -350,6 +350,10 @@ const SHARED_CONCERNS: Array<QuizOption & { value: PersonalPlanQuizConcern }> = 
   },
 ]
 
+/** The quiz's question for the current problems (`current_problems`); the profile's Haar-Check
+ * view and editor title the field with it. */
+export const CURRENT_PROBLEMS_TITLE = "Was beschäftigt dich gerade?"
+
 export function getConcernOptions(texture: PersonalPlanQuizAnswers["texture"]): QuizOption[] {
   const labels = TEXTURE_CONCERN_LABELS[texture ?? "wavy"]
   return [

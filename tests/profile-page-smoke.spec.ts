@@ -211,7 +211,7 @@ test.describe.serial("@ci Profile page smoke", () => {
     await expect(page.getByText("Weitere Produkte")).toHaveCount(0)
     await expect(page.getByText("Aus Haar-Check")).toHaveCount(0)
     await expect(page.getByText("Aus Onboarding")).toHaveCount(0)
-    await expect(page.locator("#profile-section-quiz").getByText("10/10 vollständig")).toBeVisible()
+    await expect(page.locator("#profile-section-quiz").getByText("9/10 vollständig")).toBeVisible()
     await expect(
       page.getByRole("button").filter({ hasText: "Haarlänge" }).filter({ hasText: "Lang" }),
     ).toBeVisible()
@@ -234,17 +234,30 @@ test.describe.serial("@ci Profile page smoke", () => {
     await expect(page.getByText("Haar-Check direkt im Profil aktualisieren")).toBeVisible()
     await expect(page.getByRole("button", { name: "Haar-Check speichern" })).toBeVisible()
     await page.getByRole("radio", { name: "Viele Haare" }).click()
-    await page.getByRole("button", { name: "Keine Beschwerden" }).click()
+    await page
+      .locator("div")
+      .filter({ hasText: /^Kopfhaut-Beschwerden/ })
+      .getByRole("button", { name: "Nichts davon" })
+      .click()
+    await page.getByRole("button", { name: "Trockene oder strohige Längen" }).click()
     await page.getByRole("button", { name: "Naturhaar" }).click()
     await page.getByRole("button", { name: "Haar-Check speichern" }).click()
     await expect(page.getByText("Haar-Check gespeichert").first()).toBeVisible()
     await expect(
       page.getByRole("button").filter({ hasText: "Haardichte" }).getByText("Viele Haare"),
     ).toBeVisible()
-    await expect(page.getByText("Keine Beschwerden")).toBeVisible()
+    await expect(
+      page
+        .getByRole("button")
+        .filter({ hasText: "Kopfhaut-Beschwerden" })
+        .getByText("Nichts davon"),
+    ).toBeVisible()
     await expect(page.getByText("Naturhaar")).toBeVisible()
     await expect(
-      page.getByRole("button").filter({ hasText: "Haar-Bedenken" }).getByText("Nichts davon"),
+      page
+        .getByRole("button")
+        .filter({ hasText: "Was beschäftigt dich gerade?" })
+        .getByText("Trockene oder strohige Längen"),
     ).toBeVisible()
 
     const { data: densityRow, error: densityError } = await admin
