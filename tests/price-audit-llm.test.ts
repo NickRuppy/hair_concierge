@@ -115,17 +115,34 @@ test("llm adapter reports found=false as not_found and garbage output as failure
   assert.deepEqual(thrown, { kind: "failed", reason: "adapter_unavailable" })
 })
 
-test("evidence gate accepts known retailers and brand-owned domains only", () => {
+test("evidence gate accepts known retailers, the stored shop host, and exact brand domains", () => {
   assert.equal(isAcceptableEvidenceUrl("https://www.dm.de/p/d/1/x", null), true)
   assert.equal(isAcceptableEvidenceUrl("https://olaplex.de/products/no5", "Olaplex"), true)
   assert.equal(isAcceptableEvidenceUrl("https://eu.curlsmith.com/products/x", "Curlsmith"), true)
   assert.equal(isAcceptableEvidenceUrl("https://www.geizhals.de/x", "Olaplex"), false)
   assert.equal(isAcceptableEvidenceUrl("https://random-blog.example.com/review", "Olaplex"), false)
-  // Brand substring in a foreign host is NOT brand ownership.
+  // Brand substrings/prefixes in a foreign host are NOT brand ownership.
   assert.equal(isAcceptableEvidenceUrl("https://olaplex.attacker.example/x", "Olaplex"), false)
-  // Aggregator subdomains stay denied.
+  assert.equal(isAcceptableEvidenceUrl("https://olaplex-scam.com/x", "Olaplex"), false)
+  assert.equal(isAcceptableEvidenceUrl("https://olap.com/x", "Olaplex"), false)
+  // Aggregator subdomains stay denied, even as the stored host.
   assert.equal(isAcceptableEvidenceUrl("https://olaplex.idealo.de/x", "Olaplex"), false)
   assert.equal(isAcceptableEvidenceUrl("https://sub.geizhals.de/x", "Olaplex"), false)
+  assert.equal(isAcceptableEvidenceUrl("https://www.idealo.de/x", "Olaplex", "idealo.de"), false)
+  // The product's own stored shop host is a DB-verified alias.
+  assert.equal(
+    isAcceptableEvidenceUrl("https://www.neqi-hair.com/products/x", "Neqi", "neqi-hair.com"),
+    true,
+  )
+  assert.equal(isAcceptableEvidenceUrl("https://neqi-hair.com/products/x", "Neqi", null), false)
+})
+
+test("extractJsonAnswer stays linear on large malformed output", () => {
+  const hostile = "{".repeat(200_000)
+  const started = performance.now()
+  assert.equal(extractJsonAnswer(hostile), null)
+  assert.equal(extractJsonAnswer(`${hostile} {"found":true}`)?.found, true)
+  assert.ok(performance.now() - started < 1_000, "scan must stay fast on hostile input")
 })
 
 test("a malformed availability claim routes to review instead of a write", async () => {

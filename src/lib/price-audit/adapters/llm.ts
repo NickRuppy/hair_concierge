@@ -78,7 +78,10 @@ export async function observeViaLlm(
     }
   }
 
-  if (!evidenceUrl || !isAcceptableEvidenceUrl(evidenceUrl, candidate.brand)) {
+  if (
+    !evidenceUrl ||
+    !isAcceptableEvidenceUrl(evidenceUrl, candidate.brand, storedLinkHost(candidate.affiliateLink))
+  ) {
     // No verifiable, gate-passing source — the number alone is not evidence.
     return {
       kind: "mismatch",
@@ -127,28 +130,40 @@ export async function observeViaLlm(
  * `found` boolean — log objects without it never win over the final answer.
  */
 export function extractJsonAnswer(output: string): Record<string, unknown> | null {
-  let answer: Record<string, unknown> | null = null
-  for (let start = output.indexOf("{"); start !== -1; start = output.indexOf("{", start + 1)) {
-    const end = matchingBrace(output, start)
+  // The answer is the LAST schema object in the transcript, so walk the `{`
+  // positions backward from the end and return the first parse that carries
+  // the boolean `found`. A size cap and an attempt cap keep hostile input
+  // (e.g. hundreds of thousands of stray braces) cheap: late attempts scan
+  // only short suffixes, and the caps bound everything else.
+  const text = output.length > MAX_SCAN_CHARS ? output.slice(-MAX_SCAN_CHARS) : output
+  let attempts = 0
+  for (
+    let start = text.lastIndexOf("{");
+    start !== -1 && attempts < MAX_PARSE_ATTEMPTS;
+    start = start === 0 ? -1 : text.lastIndexOf("{", start - 1)
+  ) {
+    attempts++
+    const end = matchingBrace(text, start)
     if (end === -1) continue
     try {
-      const parsed: unknown = JSON.parse(output.slice(start, end + 1))
+      const parsed: unknown = JSON.parse(text.slice(start, end + 1))
       if (
         typeof parsed === "object" &&
         parsed !== null &&
         !Array.isArray(parsed) &&
         typeof (parsed as Record<string, unknown>).found === "boolean"
       ) {
-        answer = parsed as Record<string, unknown>
+        return parsed as Record<string, unknown>
       }
-      // Skip past this object either way so inner objects are not re-scanned.
-      start = end
     } catch {
-      continue
+      // Not JSON at this start — keep walking backward.
     }
   }
-  return answer
+  return null
 }
+
+const MAX_SCAN_CHARS = 256 * 1024
+const MAX_PARSE_ATTEMPTS = 100
 
 function matchingBrace(text: string, start: number): number {
   let depth = 0
@@ -173,7 +188,11 @@ function matchingBrace(text: string, start: number): number {
   return -1
 }
 
-export function isAcceptableEvidenceUrl(url: string, brand: string | null): boolean {
+export function isAcceptableEvidenceUrl(
+  url: string,
+  brand: string | null,
+  storedHost: string | null = null,
+): boolean {
   if (!isUsableUrl(url)) return false
   let host: string
   try {
@@ -186,15 +205,30 @@ export function isAcceptableEvidenceUrl(url: string, brand: string | null): bool
   for (const denied of HOST_DENYLIST) {
     if (bare === denied || bare.endsWith(`.${denied}`)) return false
   }
-  // Known retailers, plus the brand's own shop for long-tail products.
-  return isKnownRetailerHost(host) || isBrandOwnedHost(bare, brand)
+  // Known retailers; the product's OWN stored shop host (DB-verified, covers
+  // oddly-named brand shops like neqi-hair.com); or the brand's exact domain.
+  if (isKnownRetailerHost(host)) return true
+  if (storedHost && (bare === storedHost || bare.endsWith(`.${storedHost}`))) return true
+  return isBrandOwnedHost(bare, brand)
+}
+
+export function storedLinkHost(affiliateLink: string | null): string | null {
+  if (!affiliateLink) return null
+  try {
+    return new URL(affiliateLink).hostname.toLowerCase().replace(/^www\./, "")
+  } catch {
+    return null
+  }
 }
 
 /**
- * Brand-direct means the REGISTRABLE domain is the brand's, not that the
- * brand appears anywhere in the host — `olaplex.attacker.example` is not
- * Olaplex. Crude two-label registrable extraction is enough for the shop
- * TLDs in this catalog (.de/.com/.at/.nl).
+ * Brand-direct means the REGISTRABLE domain IS the brand — exactly, after
+ * stripping separators. `olaplex.attacker.example`, `olaplex-scam.com` and
+ * `olap.com` are not Olaplex; prefix or substring matching would let an
+ * injected answer smuggle its own host past the gate. Shops whose domain is
+ * not the plain brand name are covered by the stored-link-host alias above.
+ * Crude two-label registrable extraction is enough for this catalog's shop
+ * TLDs (.de/.com/.at/.nl).
  */
 export function isBrandOwnedHost(bareHost: string, brand: string | null): boolean {
   if (!brand) return false
@@ -203,12 +237,7 @@ export function isBrandOwnedHost(bareHost: string, brand: string | null): boolea
   const labels = bareHost.split(".")
   if (labels.length < 2) return false
   const registrableLabel = labels[labels.length - 2].replace(/[^a-z0-9]/g, "")
-  if (registrableLabel.length < 4) return false
-  return (
-    registrableLabel === brandSlug ||
-    registrableLabel.startsWith(brandSlug) ||
-    brandSlug.startsWith(registrableLabel)
-  )
+  return registrableLabel === brandSlug
 }
 
 const KNOWN_RETAILER_HOSTS = [
