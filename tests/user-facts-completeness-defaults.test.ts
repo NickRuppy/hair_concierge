@@ -176,3 +176,19 @@ test("F2: a value the winning projection carries is never replaced by the existi
   assert.deepEqual(keptFields, [])
   assert.deepEqual(assumedFields, [])
 })
+
+test("catch-up: a column that only mirrors an assumed default is not promoted to a real value", () => {
+  // The stored hair length is the default ("assumed"); the legacy column is just its derived
+  // projection. Catch-up prefers newer columns, but this one is not newer — it stays a default.
+  const mirrored = existingCompletenessValues({
+    diagnostics: { hairLength: "long", density: "medium", source: LEGACY_SOURCE },
+    fields: { hairLength: "assumed", density: "assumed" },
+    columns: { hair_length: "long", density: "high" },
+    preferColumns: true,
+  })
+  // hairLength: same value as the assumed fact -> no real value. density: differs -> newer column.
+  assert.deepEqual(mirrored, { density: { value: "high", provenance: "unknown_historical" } })
+
+  const { assumedFields } = applyCompletenessDefaults({ source: LEGACY_SOURCE }, mirrored)
+  assert.deepEqual(assumedFields, ["hairLength"])
+})

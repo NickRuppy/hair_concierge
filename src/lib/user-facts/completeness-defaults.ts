@@ -85,7 +85,9 @@ export function existingCompletenessValues(input: {
     const factsProvenance = input.fields?.[field]
     if (input.preferColumns) {
       const newerColumn = parseField(field, input.columns?.[COLUMN_OF[field]])
-      if (newerColumn !== undefined) {
+      // ...unless it is merely the derived projection of an assumed fact (not newer, not real).
+      const mirrorsAssumedFact = factsProvenance === "assumed" && newerColumn === factsValue
+      if (newerColumn !== undefined && !mirrorsAssumedFact) {
         existing[field] = { value: newerColumn, provenance: "unknown_historical" }
         continue
       }
