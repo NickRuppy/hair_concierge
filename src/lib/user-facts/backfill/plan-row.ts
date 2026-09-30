@@ -559,7 +559,24 @@ function planCareHabits(
       ...legacyColumnsToCareHabits(row.columns),
       ...(brushesCombs ? { brushesCombs } : {}),
     }
-    if (Object.keys(patch).length === 0) return
+    if (Object.keys(patch).length === 0) {
+      // Values the one conversion cannot hold at all: nothing to write, but never silent.
+      const carried = CARE_HABITS_OWNED_COLUMNS.filter((column) => {
+        const value = (row.columns as unknown as Record<string, unknown>)[column]
+        return Array.isArray(value) ? value.length > 0 : typeof value === "string"
+      })
+      if (carried.length > 0) {
+        plan.skips.push(
+          `care_habits: the care columns carry values the conversion cannot represent (${carried
+            .map(
+              (column) =>
+                `${column}=${renderValue((row.columns as unknown as Record<string, unknown>)[column])}`,
+            )
+            .join(", ")}); no document written — the next care write replaces them`,
+        )
+      }
+      return
+    }
 
     // Legacy columns carry no per-answer provenance at all — nothing here is provable.
     const fields: Record<string, FieldProvenanceValue> = {}

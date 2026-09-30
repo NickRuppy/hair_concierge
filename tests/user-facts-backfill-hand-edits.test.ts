@@ -504,6 +504,38 @@ test("a row with no source at all is imported from its columns, with nothing to 
   assert.deepEqual(planned.report.editedGroups, [])
 })
 
+test("care habits keep today's conversion, and every column it changes — erasures included — is listed", () => {
+  // „Nie" next to a selected tool (one of the pending care-habit decisions): the conversion
+  // loses the level, and the report must say so.
+  const planned = plan({
+    legacyLead: LEAD,
+    columns: {
+      ...LEAD_COLUMNS,
+      heat_styling: "never",
+      styling_tools: ["flat_iron"],
+      uses_heat_protection: false,
+    },
+  })
+  assert.deepEqual(
+    planned.report.visibleChanges.filter((change) => change.domain === "care_habits"),
+    [{ domain: "care_habits", column: "heat_styling", before: "never", after: "NULL" }],
+  )
+
+  // Nothing representable at all (a towel technique without a material): no document is
+  // written, and the row is named instead of silently skipped.
+  const unrepresentable = plan({
+    legacyLead: LEAD,
+    columns: { ...LEAD_COLUMNS, towel_material: null, towel_technique: "gentle_press" },
+  })
+  assert.equal(
+    unrepresentable.writes.some((write) => write.domain === "care_habits"),
+    false,
+  )
+  assert.deepEqual(unrepresentable.skips, [
+    "care_habits: the care columns carry values the conversion cannot represent (towel_technique=gentle_press); no document written — the next care write replaces them",
+  ])
+})
+
 // ---------------------------------------------------------------------------
 // The tolerated differences, one by one
 // ---------------------------------------------------------------------------
