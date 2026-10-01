@@ -254,8 +254,9 @@ test("a legacy lead as the source: compared and rebuilt on the facts", () => {
   }
   const diagnostics = projectLegacyLeadToFacts({ leadId: "lead", quizAnswers: lead }).diagnostics
   const row = factsRow(diagnostics)
-  // Door-derived columns lose `volume` on neutral hair and `low_shine`.
-  assert.deepEqual(row.goals, ["less_frizz"])
+  // Door-derived columns lose `low_shine`; her explicit „Mehr Volumen“ keeps `volume` even on
+  // neutral hair (fix round 11: an explicit pick is never re-derived from hair type).
+  assert.deepEqual(row.goals, ["less_frizz", "volume"])
   const read: ScannerSourceRead = {
     ...paidRead(PAID_VARIANTS.V0_fixture_split_ends, row),
     plan: null,
@@ -265,7 +266,8 @@ test("a legacy lead as the source: compared and rebuilt on the facts", () => {
   const prepared = prepareScannerContext(read)
   assert.deepEqual(prepared?.source, buildLegacyQuizStage1Source({ leadId: "lead", answers: lead }))
   const prefill = editableScannerQuizAnswers(read)
-  assert.deepEqual(sorted(prefill.goals), ["frizz_surface", "volume_balance"])
+  // The stored direction is handed back as the legacy goal it came from (and kept unchanged).
+  assert.deepEqual(sorted(prefill.goals), ["frizz_surface", "volume"])
   assert.equal(
     buildMobileHandEditFacts({
       answers: iosEcho(prefill),
