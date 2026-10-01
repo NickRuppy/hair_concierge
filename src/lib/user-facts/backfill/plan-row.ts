@@ -243,6 +243,20 @@ const BACKFILL_SOURCE_KINDS = new Set<DomainProvenance["source"]["kind"]>([
   "refined_version",
 ])
 
+/**
+ * The ownership rule for `quiz_context` (plan §3; fix round 7, B). A context written by the
+ * account link or by this backfill — provenance `personal_plan_artifact` / `legacy_lead` —
+ * belongs to the quiz it came from and follows the latest-quiz rule: when a later-taken quiz
+ * wins, the backfill's catch-up MAY replace or clear it. A context
+ * written by any other kind — a user edit (`feinschliff_draft`, `onboarding`, `profile_editor`),
+ * `account_link`, or a kind added later — and a stored context without any provenance are NEVER
+ * touched by the backfill.
+ */
+const QUIZ_OWNED_CONTEXT_KINDS = new Set<DomainProvenance["source"]["kind"]>([
+  "personal_plan_artifact",
+  "legacy_lead",
+])
+
 const BRUSH_TYPE_VALUES = new Set<string>(BRUSH_TYPES)
 
 type DomainGate = { plan: true } | { plan: false; reason: string }
@@ -698,9 +712,17 @@ function planCatchUpQuizContext(
   const winner = `${selected.sourceKind === "artifact" ? "artifact" : "legacy lead"} ${selected.sourceId}${taken ? ` (${taken})` : ""}`
   const lead = `quiz_context: catch-up — ${winner} now wins over the stored ${storedSourceLabel(row.storedDiagnostics!.source)}`
   const provenance = row.factsProvenance.quiz_context
-  if (provenance && !BACKFILL_SOURCE_KINDS.has(provenance.source.kind)) {
+  // The ownership guard (see QUIZ_OWNED_CONTEXT_KINDS): only a context the account link or the
+  // backfill wrote follows the new winner; a user edit's context is never replaced.
+  if (provenance && !QUIZ_OWNED_CONTEXT_KINDS.has(provenance.source.kind)) {
     plan.skips.push(
       `${lead}, but quiz_context was last written by ${provenance.source.kind} (a live writer; never overwritten by the backfill)`,
+    )
+    return
+  }
+  if (!provenance && row.storedDomains.quiz_context) {
+    plan.skips.push(
+      `${lead}, but the stored quiz_context carries no quiz_context provenance (no known writer; left for review)`,
     )
     return
   }

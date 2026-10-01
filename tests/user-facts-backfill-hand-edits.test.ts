@@ -1113,6 +1113,57 @@ test("I3: --catch-up with an unchanged winner writes no quiz_context", () => {
 })
 
 // ---------------------------------------------------------------------------
+// Fix round 7 (B): the quiz_context ownership rule
+// ---------------------------------------------------------------------------
+
+const CATCH_UP_NOW = "2026-10-02T12:00:00.000Z"
+
+function contextWrites(planned: UserFactsBackfillPlan) {
+  return planned.writes.filter(
+    (entry): entry is Extract<PlannedFactsWrite, { domain: "quiz_context" }> =>
+      entry.domain === "quiz_context",
+  )
+}
+
+for (const kind of ["feinschliff_draft", "onboarding", "profile_editor", "account_link"] as const) {
+  test(`fix round 7 (B): --catch-up with a changed winner never replaces a ${kind} context`, () => {
+    const stored = backfilledFromArtifact({ legacyLead: LEAD_B, columns: LEAD_COLUMNS })
+    const planned = planUserFactsBackfill(
+      {
+        ...stored,
+        factsProvenance: {
+          ...stored.factsProvenance,
+          quiz_context: { source: { kind }, schemaVersion: 1, at: "2026-09-20T09:00:00.000Z" },
+        },
+      },
+      { now: CATCH_UP_NOW, catchUp: true },
+    )
+    assert.ok(diagnosticsWrite(planned), "diagnostics still follow the new winner")
+    assert.equal(contextWrites(planned).length, 0, planned.notes.join("\n"))
+    assert.ok(
+      planned.skips.some(
+        (skip) => skip.includes(`last written by ${kind}`) && skip.includes("never overwritten"),
+      ),
+      planned.skips.join("\n"),
+    )
+  })
+}
+
+test("fix round 7 (B): --catch-up with a changed winner never replaces a stored context that carries no provenance", () => {
+  const stored = backfilledFromArtifact({ legacyLead: LEAD_B, columns: LEAD_COLUMNS })
+  const { quiz_context: _dropped, ...provenance } = stored.factsProvenance
+  const planned = planUserFactsBackfill(
+    { ...stored, factsProvenance: provenance },
+    { now: CATCH_UP_NOW, catchUp: true },
+  )
+  assert.equal(contextWrites(planned).length, 0, planned.notes.join("\n"))
+  assert.ok(
+    planned.skips.some((skip) => skip.includes("no quiz_context provenance")),
+    planned.skips.join("\n"),
+  )
+})
+
+// ---------------------------------------------------------------------------
 // Stage 1 for a hand-edited backfilled row
 // ---------------------------------------------------------------------------
 
