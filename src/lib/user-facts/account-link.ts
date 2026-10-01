@@ -256,6 +256,21 @@ function sameQuizRaw(stored: unknown, incoming: unknown): boolean {
   return isDeepStrictEqual(parsed(stored), parsed(incoming))
 }
 
+/** Quiz answers that become facts but are not part of `source.raw` (a legacy lead's main problem
+ * and „Etwas anderes" note). Once the profile was edited by hand (`editedAt`) the stored values
+ * no longer say what the quiz answered, so they are not compared. */
+const QUIZ_ANSWERS_OUTSIDE_RAW = ["primaryConcern", "currentConcernsOtherText"] as const
+
+function sameQuizAnswersOutsideRaw(
+  facts: NonNullable<Awaited<ReturnType<typeof loadUserFacts>>>,
+  incoming: DiagnosticsV1,
+): boolean {
+  if (facts.provenance.diagnostics?.editedAt) return true
+  return QUIZ_ANSWERS_OUTSIDE_RAW.every(
+    (field) => (facts.diagnostics?.[field] ?? null) === (incoming[field] ?? null),
+  )
+}
+
 /** Account linking never passes a draft binding, so a `draft_conflict` (or anything but
  * ok/preserved once revision conflicts are handled) means something is badly wrong. */
 function assertApplied(
@@ -288,10 +303,12 @@ export async function writeAccountLinkFacts(
     // Fix round 7 (C): the SAME quiz, not only the same id and time — a lead's answers can change
     // under its id without `created_at` moving (the partner-access save). Changed answers fall
     // through to the ordinary path below (not newer -> preserved candidate; newer -> replace).
+    // Fix round 8 (C): that includes the quiz answers `source.raw` does not carry.
     if (
       facts?.diagnostics &&
       sameQuizSourceIdentity(facts.diagnostics.source, projection.diagnostics.source) &&
-      sameQuizRaw(facts.diagnostics.source.raw, projection.diagnostics.source.raw)
+      sameQuizRaw(facts.diagnostics.source.raw, projection.diagnostics.source.raw) &&
+      sameQuizAnswersOutsideRaw(facts, projection.diagnostics)
     ) {
       const target =
         projection.quizContext ?? (hasQuizContextAnswers(facts.quizContext) ? {} : null)

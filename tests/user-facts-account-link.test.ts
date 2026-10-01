@@ -972,3 +972,50 @@ test("F2: with no facts document yet, the legacy column value fills the hole, no
   assert.equal(fields.hairLength, "unknown_historical")
   assert.equal(fields.density, "user")
 })
+
+for (const [label, before, after] of [
+  [
+    "the main problem",
+    { concerns: ["tangling", "dry_lengths"], primary_concern: "tangling" },
+    { concerns: ["tangling", "dry_lengths"], primary_concern: "dry_lengths" },
+  ],
+  [
+    "the „Etwas anderes“ note",
+    { concerns_other_text: "old note" },
+    { concerns_other_text: "new note" },
+  ],
+] as const) {
+  test(`fix round 8 (C): same lead id + time, only ${label} changed (not part of raw) is no resume — the candidate is recorded`, async () => {
+    const rows: Row[] = []
+    const { admin, saves } = fakeAdmin(rows)
+    const quiz = (answers: object) => ({
+      ...tuesdayLeadQuiz(),
+      quizAnswers: { ...COMPLETE_LEGACY_ANSWERS, ...answers } as never,
+    })
+    assert.equal(
+      await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: quiz(before) }),
+      "replaced",
+    )
+    const diagnosticsBefore = structuredClone(rows[0]!.diagnostics)
+    const settled = saves.length
+
+    assert.equal(
+      await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: quiz(after) }),
+      "preserved",
+    )
+    assert.deepEqual(
+      saves.slice(settled).map((call) => [call.p_domain, call.p_mode]),
+      [["diagnostics", "create_only"]],
+      "changed quiz answers outside raw: the ordinary loser path, never the resume shortcut",
+    )
+    assert.deepEqual(rows[0]!.diagnostics, diagnosticsBefore, "the stored facts stay unchanged")
+
+    // The unchanged quiz linked again is still a pure resume: zero writes.
+    const again = saves.length
+    assert.equal(
+      await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: quiz(before) }),
+      "preserved",
+    )
+    assert.equal(saves.length, again, "unchanged quiz: zero writes")
+  })
+}
