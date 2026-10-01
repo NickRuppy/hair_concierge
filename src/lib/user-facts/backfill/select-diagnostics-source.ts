@@ -29,7 +29,9 @@ import {
 } from "./detect-hand-edits"
 import {
   legacyColumnsToDiagnostics,
+  storedColumnVolumeDirection,
   type LegacyDiagnosticColumns,
+  type StoredColumnVolumeDirection,
 } from "./legacy-columns-to-diagnostics"
 
 /**
@@ -134,6 +136,9 @@ export type SelectedDiagnosticsSource = {
   assumedFields: CompletenessDefaultField[]
   /** Fields filled from the existing profile instead (F2), with the provenance they keep. */
   keptFields: KeptField[]
+  /** Fix round 11: the winner's `volume_balance` states no direction, so the one the columns
+   * store is kept (`storedColumnVolumeDirection`). */
+  keptVolumeDirection?: StoredColumnVolumeDirection
   quizContext?: QuizContextV1
   conflict?: { fields: DiagnosticsColumnConflictField[]; erasures: DiagnosticsColumnErasureField[] }
   /** Higher-precedence sources that exist but could not be projected (reported, never guessed
@@ -423,10 +428,24 @@ export function selectDiagnosticsSource(
           }
         }
       }
-      const { diagnostics, assumedFields, keptFields } = applyCompletenessDefaults(
-        handEdits.diagnostics,
-        existing,
-      )
+      const completed = applyCompletenessDefaults(handEdits.diagnostics, existing)
+      const { assumedFields, keptFields } = completed
+      // Fix round 11 (owner ruling, plan §3 "the stored direction is kept for existing
+      // profiles"): a winner whose `volume_balance` states no direction — a paid quiz, a newer
+      // lead's card — keeps the direction the profile's columns store (the old writer resolved
+      // it at link time), also when the goals are an older own quiz's link. An explicit pick in
+      // the winner's own answers (the legacy-lead projection) or a hand-edited goals column
+      // already carries one; no `volume_balance`, no direction. `--catch-up` against the stored
+      // document keeps that document's own direction (or none).
+      const keptVolumeDirection =
+        !catchUpBase &&
+        completed.diagnostics.goals?.includes("volume_balance") &&
+        completed.diagnostics.volumeDirection === undefined
+          ? storedColumnVolumeDirection(input.columns)
+          : undefined
+      const diagnostics: DiagnosticsV1 = keptVolumeDirection
+        ? { ...completed.diagnostics, volumeDirection: keptVolumeDirection.value }
+        : completed.diagnostics
       const conflict = detectConflict(diagnostics, input.columns)
       const winnerIsFirst = candidate === candidates[0]
       const storedSource = storedProvenance?.source
@@ -441,6 +460,7 @@ export function selectDiagnosticsSource(
         diagnostics,
         assumedFields,
         keptFields,
+        ...(keptVolumeDirection ? { keptVolumeDirection } : {}),
         ...("quizContext" in projected
           ? { quizContext: (projected as { quizContext: QuizContextV1 }).quizContext }
           : {}),

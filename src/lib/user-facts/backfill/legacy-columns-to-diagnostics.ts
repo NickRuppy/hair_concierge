@@ -196,6 +196,30 @@ export function hasLegacyDiagnosticSignal(columns: LegacyDiagnosticColumns): boo
   )
 }
 
+export type StoredColumnVolumeDirection = {
+  value: "more" | "less"
+  /** Which stored column said it: the `goals` column's `volume` / `less_volume`, else (no
+   * direction in the goals) `desired_volume`. */
+  from: "goals" | "desired_volume"
+}
+
+/**
+ * Fix round 11 (owner ruling, plan §3 "the stored direction is kept for existing profiles"): the
+ * direction the profile's columns store — what the OLD writer resolved at link time for a quiz
+ * whose `volume_balance` states none. The goals column first (table M's rule above), else a
+ * stored `desired_volume` of `more` / `less`; a `balanced` one is no direction.
+ */
+export function storedColumnVolumeDirection(
+  columns: Pick<LegacyDiagnosticColumns, "goals" | "desired_volume">,
+): StoredColumnVolumeDirection | undefined {
+  const fromGoals = storedVolumeDirection(columns.goals, columns.desired_volume)
+  if (fromGoals) return { value: fromGoals, from: "goals" }
+  if (columns.desired_volume === "more" || columns.desired_volume === "less") {
+    return { value: columns.desired_volume, from: "desired_volume" }
+  }
+  return undefined
+}
+
 export function legacyColumnsToDiagnostics(
   columns: LegacyDiagnosticColumns,
   options: { leadId?: string },

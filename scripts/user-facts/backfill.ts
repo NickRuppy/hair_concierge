@@ -671,6 +671,13 @@ function reportLines(
     `${ruleRows.length}${ruleRows.length ? ` (${countBy(ruleRows.flatMap(({ plan }) => plan.report.careRules))})` : ""}`,
   )
   row("rows keeping profile values", kept.length)
+  const keptDirections = outcomes.flatMap(({ plan }) =>
+    plan.report.keptVolumeDirection ? [plan.report.keptVolumeDirection.value] : [],
+  )
+  row(
+    "stored volume directions kept",
+    `${keptDirections.length}${keptDirections.length ? ` (${countBy(keptDirections)})` : ""}`,
+  )
   row("rows where a later lead beat the artifact", sourceNotes.length)
   row("rows an older quiz's link wrote (winner replaces)", lastLinks.length)
   row("tolerated differences (not edits)", tolerated.length ? countBy(tolerated) : "0")

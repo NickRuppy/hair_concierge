@@ -43,6 +43,7 @@ import {
 import {
   hasLegacyDiagnosticSignal,
   type LegacyDiagnosticColumns,
+  type StoredColumnVolumeDirection,
 } from "./legacy-columns-to-diagnostics"
 import {
   resolveStage2Head,
@@ -209,6 +210,9 @@ export type BackfillRowReport = {
   /** The product owner's care-habit decisions 1/2 (Nick 2026-09-30) this row's planned care
    * write applied — listed apart in the report ("care habits: converted by rule"). */
   careRules: CareConversionRule[]
+  /** Fix round 11: the volume direction kept from the stored columns (the winner's
+   * `volume_balance` stated none). */
+  keptVolumeDirection?: StoredColumnVolumeDirection
 }
 
 export type UserFactsBackfillPlan = {
@@ -606,6 +610,9 @@ function planDiagnosticsAndContext(
     for (const field of handEdits?.userFields ?? []) fields[field] = "user"
     for (const field of handEdits?.keptFields ?? []) fields[field] = "unknown_historical"
     Object.assign(fields, completenessFieldProvenance(assumed, kept))
+    // Fix round 11: a direction kept from the stored columns is history, like a kept column.
+    const keptVolume = selected.keptVolumeDirection
+    if (keptVolume) fields.volumeDirection = "unknown_historical"
     const editedAt = handEdits ? editTime(row, selected, handEdits, options.now) : undefined
     const details = [
       ...(kept.length > 0
@@ -613,6 +620,15 @@ function planDiagnosticsAndContext(
         : []),
       ...(assumed.length > 0
         ? [`assumed ${assumed.map((field) => `${field}=${patch[field]}`).join(", ")}`]
+        : []),
+      ...(keptVolume
+        ? [
+            `kept volumeDirection=${keptVolume.value} (stored ${
+              keptVolume.from === "goals"
+                ? `goals: ${keptVolume.value === "more" ? "volume" : "less_volume"}`
+                : `desired_volume: ${keptVolume.value}`
+            })`,
+          ]
         : []),
     ]
     plan.writes.push({
@@ -637,6 +653,7 @@ function planDiagnosticsAndContext(
       plan.report.notes.push(...handEdits.notes)
     }
     if (editedAt) plan.report.editedAt = editedAt
+    if (keptVolume) plan.report.keptVolumeDirection = keptVolume
     const after = deriveDiagnosticsColumns(mergeDiagnosticsPatch(row.storedDiagnostics, patch))
     plan.report.visibleChanges.push(
       ...visibleChanges(

@@ -2215,3 +2215,241 @@ test("fix round 7 (A) on PGlite: the catch-up's context write fails once — the
 function adaptedCanonical(): Record<string, unknown> {
   return { ...adaptPersonalPlanAnswersForOffer(V3_ENVELOPE.answers as never).answers }
 }
+
+// ---------------------------------------------------------------------------
+// Fix round 11: the stored volume direction is kept (owner ruling, plan §3)
+// ---------------------------------------------------------------------------
+
+/** A paid quiz whose `volume_balance` card states no direction; curly hair, so the hair-type
+ * resolver would say „weniger Volumen“. */
+const VOLUME_ENVELOPE = {
+  ...V3_ENVELOPE,
+  answers: {
+    ...V3_ENVELOPE.answers,
+    texture: "curly",
+    thickness: "normal",
+    density: "medium",
+    goals: ["moisture", "volume_balance"],
+  },
+} as const
+/** What the paid link stored then: the adapter of the time resolved the card to "volume". */
+const VOLUME_CANONICAL = {
+  ...adaptPersonalPlanAnswersForOffer(VOLUME_ENVELOPE.answers as never).answers,
+  goals: ["volume", "moisture"],
+}
+const VOLUME_ARTIFACT = {
+  id: "artifact-vol",
+  leadId: "lead-pp-vol",
+  quizAnswers: VOLUME_ENVELOPE,
+  createdAt: "2026-08-01T09:00:00.000Z",
+  canonicalProfile: VOLUME_CANONICAL,
+}
+/** Hand-written: the paid link's columns for that quiz. */
+const VOLUME_PAID_COLUMNS: LegacyProfileColumns = {
+  ...PAID_COLUMNS,
+  hair_texture: "curly",
+  thickness: "normal",
+  density: "medium",
+  goals: ["volume", "moisture"],
+  desired_volume: "more",
+}
+
+test("fix round 11 (rule 2): a paid quiz's volume_balance on curly hair keeps the stored direction `volume` — kept, listed, no visible goals change", () => {
+  const planned = plan({ artifact: VOLUME_ARTIFACT, columns: VOLUME_PAID_COLUMNS })
+  const write = diagnosticsWrite(planned)
+  const document = documentOf(planned)
+
+  assert.deepEqual(planned.report.editedGroups, [], "no hand edit: the paid link wrote the goals")
+  assert.deepEqual(document.goals, ["moisture", "volume_balance"])
+  assert.equal(document.volumeDirection, "more", "the stored direction is kept")
+  const derived = deriveDiagnosticsColumns(document)
+  assert.deepEqual([...derived.goals].sort(), ["moisture", "volume"])
+  assert.equal(derived.desired_volume, "more")
+  assert.deepEqual(
+    planned.report.visibleChanges.filter((change) =>
+      ["goals", "desired_volume"].includes(change.column),
+    ),
+    [],
+    "neither goals nor desired_volume change",
+  )
+  assert.equal(write.provenance.fields?.volumeDirection, "unknown_historical")
+  assert.ok(
+    write.detail?.includes("kept volumeDirection=more (stored goals: volume)"),
+    `the kept direction is named on the dry-run line: ${write.detail}`,
+  )
+  assert.deepEqual(planned.report.keptVolumeDirection, { value: "more", from: "goals" })
+
+  // No goals column with a direction: the stored desired_volume decides.
+  const fromDesired = plan({
+    artifact: {
+      ...VOLUME_ARTIFACT,
+      canonicalProfile: { ...VOLUME_CANONICAL, goals: ["moisture"] },
+    },
+    columns: { ...VOLUME_PAID_COLUMNS, goals: ["moisture"], desired_volume: "less" },
+  })
+  assert.equal(documentOf(fromDesired).volumeDirection, "less")
+  assert.deepEqual(fromDesired.report.keptVolumeDirection, {
+    value: "less",
+    from: "desired_volume",
+  })
+
+  // A stored `balanced` is not representable: hair type decides, nothing kept (unchanged erasure).
+  const balanced = plan({
+    artifact: {
+      ...VOLUME_ARTIFACT,
+      canonicalProfile: { ...VOLUME_CANONICAL, goals: ["moisture"] },
+    },
+    columns: { ...VOLUME_PAID_COLUMNS, goals: ["moisture"], desired_volume: "balanced" },
+  })
+  assert.equal(documentOf(balanced).volumeDirection, undefined)
+  assert.equal(balanced.report.keptVolumeDirection, undefined)
+})
+
+/** A legacy lead row whose goals column is what an OLDER own quiz's link wrote. */
+function olderQuizLinkRow(input: {
+  winnerAnswers: Record<string, unknown>
+  olderGoals: string[]
+  columns: LegacyProfileColumns
+}) {
+  return plan({
+    legacyLead: { id: "lead-1", quizAnswers: input.winnerAnswers, createdAt: LEAD.createdAt },
+    olderLegacyLeads: [
+      {
+        id: "lead-old",
+        quizAnswers: { ...input.winnerAnswers, goals: input.olderGoals },
+        createdAt: "2026-05-01T00:00:00.000Z",
+      },
+    ],
+    columns: input.columns,
+  })
+}
+
+test("fix round 11 (rule 2): an older quiz's link — a winner's volume_balance without a stated direction keeps the stored `less_volume`; a winner's explicit `volume` wins", () => {
+  // Fine, low density: the hair-type resolver would say „mehr Volumen“.
+  const fine = { ...LEAD_ANSWERS, thickness: "fine", density: "low" }
+  const kept = olderQuizLinkRow({
+    winnerAnswers: { ...fine, goals: ["moisture", "volume_balance"] },
+    olderGoals: ["less_volume"],
+    columns: { ...LEAD_COLUMNS, thickness: "fine", density: "low", goals: ["less_volume"] },
+  })
+  assert.ok(kept.report.lastLinkNote?.startsWith("goals matched quiz legacy lead lead-old"))
+  assert.deepEqual(kept.report.editedGroups, [])
+  assert.equal(documentOf(kept).volumeDirection, "less", "the stored direction is kept")
+  assert.deepEqual([...deriveDiagnosticsColumns(documentOf(kept)).goals].sort(), [
+    "less_volume",
+    "moisture",
+  ])
+  assert.deepEqual(kept.report.keptVolumeDirection, { value: "less", from: "goals" })
+
+  // Curly, coarse, high (hair type: less) — her explicit „Mehr Volumen“ wins over the stored one.
+  const explicit = olderQuizLinkRow({
+    winnerAnswers: { ...LEAD_ANSWERS, goals: ["volume", "moisture"] },
+    olderGoals: ["less_volume"],
+    columns: { ...LEAD_COLUMNS, goals: ["less_volume"] },
+  })
+  assert.ok(explicit.report.lastLinkNote, "the older quiz's link")
+  assert.equal(documentOf(explicit).volumeDirection, "more", "her own answer")
+  assert.ok(
+    deriveDiagnosticsColumns(documentOf(explicit)).goals.includes("volume"),
+    "the derived goals carry volume",
+  )
+  assert.equal(explicit.report.keptVolumeDirection, undefined, "nothing kept from the column")
+})
+
+test("fix round 11 (rule 3): a winner without any volume goal invents no direction — the stored `volume` goes, listed as a visible change", () => {
+  const planned = olderQuizLinkRow({
+    winnerAnswers: LEAD_ANSWERS,
+    olderGoals: ["volume"],
+    columns: { ...LEAD_COLUMNS, goals: ["volume"], desired_volume: "more" },
+  })
+  const document = documentOf(planned)
+  assert.ok(planned.report.lastLinkNote, "the older quiz's link")
+  assert.equal(document.volumeDirection, undefined, "no direction invented")
+  assert.ok(!document.goals?.includes("volume_balance"), "the winner's answer: no volume goal")
+  assert.equal(planned.report.keptVolumeDirection, undefined)
+  const goalsChange = planned.report.visibleChanges.find((change) => change.column === "goals")
+  assert.ok(goalsChange, "the dropped goal is a visible change")
+  assert.equal(goalsChange.before, "volume")
+})
+
+test("fix round 11 (rule 4): the dry-run report lists the kept direction with a count, and the change-pattern table shows no goals change for that row", async () => {
+  const user = "55555555-5555-4555-8555-555555555555"
+  const tables: Record<string, Record<string, unknown>[]> = {
+    hair_profiles: [
+      { user_id: user, facts_revision: 0, facts_provenance: {}, ...VOLUME_PAID_COLUMNS },
+    ],
+    personal_plan_prepared_artifacts: [
+      {
+        id: VOLUME_ARTIFACT.id,
+        lead_id: VOLUME_ARTIFACT.leadId,
+        user_id: user,
+        status: "ready",
+        created_at: VOLUME_ARTIFACT.createdAt,
+        quiz_answers: VOLUME_ENVELOPE,
+        canonical_profile: VOLUME_CANONICAL,
+      },
+    ],
+  }
+  const lines: string[] = []
+  await runUserFactsBackfill([], {
+    supabase: tableClient(tables) as never,
+    now: NOW,
+    log: (line) => lines.push(line),
+  })
+  assert.ok(
+    lines.includes(`  ${"stored volume directions kept".padEnd(42)} 1 (more 1)`),
+    `counted in the summary:\n${lines.slice(0, 25).join("\n")}`,
+  )
+  const keptAt = lines.findIndex((line) => line.startsWith("DEFAULTS AND KEPT PROFILE VALUES"))
+  const keptLine = lines.slice(keptAt + 1).find((line) => line.startsWith(`  ${user} `))
+  assert.ok(
+    keptLine?.includes("kept volumeDirection=more (stored goals: volume)"),
+    `listed under DEFAULTS AND KEPT PROFILE VALUES: ${keptLine}`,
+  )
+  assert.ok(
+    !lines.some((line) => line.includes("diagnostics.goals:") || line.includes("desired_volume:")),
+    "no goals / desired_volume change anywhere in the report",
+  )
+})
+
+test("fix round 11 (rule 5) on PGlite: apply the kept direction through the door, then the rerun and --catch-up plan nothing for diagnostics", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t, { lock: false })
+  const userId = id(7, 3)
+  await insertProfile(pg, userId)
+  await seedLegacyRow(pg, userId, VOLUME_PAID_COLUMNS)
+  await applyUserFactsLock(pg)
+
+  const first = plan({ userId, artifact: VOLUME_ARTIFACT, columns: VOLUME_PAID_COLUMNS })
+  const after = await applyPlanThroughDoor(pg, userId, first)
+  assert.deepEqual(
+    [...(after.goals as string[])].sort(),
+    ["moisture", "volume"],
+    "SQL door kept volume",
+  )
+  assert.equal(after.desired_volume, "more")
+
+  const stored = after.diagnostics as DiagnosticsV1
+  const provenance = (after.facts_provenance as { diagnostics: DomainProvenance }).diagnostics
+  const columns = Object.fromEntries(
+    Object.keys(EMPTY).map((column) => [column, after[column] ?? null]),
+  ) as unknown as LegacyProfileColumns
+  for (const catchUp of [false, true]) {
+    const rerun = planUserFactsBackfill(
+      row({
+        userId,
+        factsRevision: Number(after.facts_revision),
+        factsProvenance: { diagnostics: provenance },
+        storedDomains: { diagnostics: true, care_habits: false, quiz_context: true },
+        storedDiagnostics: stored,
+        artifact: VOLUME_ARTIFACT,
+        columns,
+      }),
+      { now: "2026-10-02T12:00:00.000Z", catchUp },
+    )
+    assert.deepEqual(
+      rerun.writes.filter((write) => write.domain === "diagnostics"),
+      [],
+      `${catchUp ? "--catch-up" : "the rerun"} plans no diagnostics write`,
+    )
+  }
+})
