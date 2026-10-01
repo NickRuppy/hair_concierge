@@ -635,6 +635,82 @@ test("I2: a plain re-link of an unchanged source is a pure preserve with zero wr
   assert.deepEqual(rows[0], snapshot)
 })
 
+/** The same JSON value with every object's keys in reverse order (what a jsonb round trip may do). */
+function reverseKeys(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(reverseKeys)
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Row)
+        .reverse()
+        .map(([key, entry]) => [key, reverseKeys(entry)]),
+    )
+  }
+  return value
+}
+
+test("fix round 7 (C): same lead id + same takenAt but CHANGED answers is no resume — the ordinary path records the candidate", async () => {
+  const rows: Row[] = []
+  const { admin, saves } = fakeAdmin(rows)
+  assert.equal(
+    await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: tuesdayLeadQuiz() }),
+    "replaced",
+  )
+  const diagnosticsBefore = structuredClone(rows[0]!.diagnostics)
+  const settled = saves.length
+
+  // A partner-access save rewrote the lead's answers under the same id; created_at stayed.
+  const changed = {
+    ...tuesdayLeadQuiz(),
+    quizAnswers: { ...COMPLETE_LEGACY_ANSWERS, thickness: "coarse" } as never,
+  }
+  assert.equal(await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: changed }), "preserved")
+  assert.deepEqual(
+    saves.slice(settled).map((call) => [call.p_domain, call.p_mode]),
+    [["diagnostics", "create_only"]],
+    "not newer (same takenAt): the ordinary loser path, never the resume shortcut",
+  )
+  assert.deepEqual(
+    ((saves[settled]!.p_provenance as Row).preservedCandidates as Row[]).map((entry) => [
+      entry.kind,
+      entry.id,
+    ]),
+    [["lead", "lead-b"]],
+  )
+  const facts = await loadUserFacts(admin, USER_ID)
+  assert.deepEqual(
+    facts?.provenance.diagnostics?.preservedCandidates?.map((entry) => [entry.kind, entry.id]),
+    [["lead", "lead-b"]],
+    "the changed quiz is recorded as a preserved candidate",
+  )
+  assert.deepEqual(rows[0]!.diagnostics, diagnosticsBefore, "the stored facts stay unchanged")
+})
+
+test("fix round 7 (C): unchanged answers whose stored raw has reordered keys still resume — zero writes", async () => {
+  const rows: Row[] = []
+  const { admin, saves } = fakeAdmin(rows)
+  assert.equal(
+    await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: tuesdayLeadQuiz() }),
+    "replaced",
+  )
+  const stored = rows[0]!.diagnostics as DiagnosticsV1
+  const reordered = reverseKeys(stored.source.raw)
+  assert.notEqual(
+    JSON.stringify(reordered),
+    JSON.stringify(stored.source.raw),
+    "precondition: the key order really differs",
+  )
+  rows[0]!.diagnostics = { ...stored, source: { ...stored.source, raw: reordered } }
+  const snapshot = structuredClone(rows[0])
+  const settled = saves.length
+
+  assert.equal(
+    await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: tuesdayLeadQuiz() }),
+    "preserved",
+  )
+  assert.equal(saves.length, settled, "a settled re-link of the same quiz writes nothing")
+  assert.deepEqual(rows[0], snapshot)
+})
+
 // --- F1: the quiz's own timestamp is stored and decides ---------------------------------
 
 const MONDAY = "2026-09-21T09:00:00.000Z"

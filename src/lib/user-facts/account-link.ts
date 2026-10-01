@@ -1,5 +1,7 @@
 import "server-only"
 
+import { isDeepStrictEqual } from "node:util"
+
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { QuizAnswers } from "@/lib/quiz/types"
@@ -43,7 +45,8 @@ import {
  * `provenance.preservedCandidates` and leaves the facts untouched.
  *
  * Resume rule (fix round 6, I2): diagnostics and quiz_context are two RPCs. When the stored
- * diagnostics already come from the incoming quiz (same kind, lead / artifact and taken time),
+ * diagnostics already come from the incoming quiz (same kind, lead / artifact and taken time,
+ * and — fix round 7, C — the same answers: `source.raw` deep-equal, key order aside),
  * the link is a resume of an earlier one: no diagnostics write, and quiz_context is brought to
  * the state the full publication leaves (artifact -> its context; legacy lead -> cleared when a
  * context holds answers), CAS-pinned. An already settled re-link writes nothing.
@@ -246,6 +249,13 @@ function project(quiz: AccountLinkQuiz): Projection {
   }
 }
 
+/** Whether two `source.raw` envelopes are the same answers: compared as parsed JSON values (the
+ * stored one came back from jsonb), so key order and `undefined`-valued keys do not count. */
+function sameQuizRaw(stored: unknown, incoming: unknown): boolean {
+  const parsed = (value: unknown): unknown => JSON.parse(JSON.stringify(value ?? null))
+  return isDeepStrictEqual(parsed(stored), parsed(incoming))
+}
+
 /** Account linking never passes a draft binding, so a `draft_conflict` (or anything but
  * ok/preserved once revision conflicts are handled) means something is badly wrong. */
 function assertApplied(
@@ -275,9 +285,13 @@ export async function writeAccountLinkFacts(
     // new publication: diagnostics stay as they are (never re-written, so a later hand edit
     // survives too), and quiz_context is brought to the state the full publication leaves.
     // Idempotent: nothing to bring is zero writes.
+    // Fix round 7 (C): the SAME quiz, not only the same id and time — a lead's answers can change
+    // under its id without `created_at` moving (the partner-access save). Changed answers fall
+    // through to the ordinary path below (not newer -> preserved candidate; newer -> replace).
     if (
       facts?.diagnostics &&
-      sameQuizSourceIdentity(facts.diagnostics.source, projection.diagnostics.source)
+      sameQuizSourceIdentity(facts.diagnostics.source, projection.diagnostics.source) &&
+      sameQuizRaw(facts.diagnostics.source.raw, projection.diagnostics.source.raw)
     ) {
       const target =
         projection.quizContext ?? (hasQuizContextAnswers(facts.quizContext) ? {} : null)
