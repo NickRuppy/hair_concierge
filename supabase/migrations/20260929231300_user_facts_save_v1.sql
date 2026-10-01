@@ -37,7 +37,7 @@
 --
 -- The write flag (clean switch task 9): every INSERT/UPDATE of `hair_profiles` below is
 -- bracketed by `set_config('app.user_facts_writer', <user id>, true)` and a reset to ''.
--- The guard trigger of 20260930120000_user_facts_lock.sql lets a fact column change only while
+-- The guard trigger of supabase/pending/20260930120000_user_facts_lock.sql lets a fact column change only while
 -- that flag names the row's user. Normal exits reset it explicitly; on an error in between, the
 -- transaction-local setting is rolled back with the caller's (sub)transaction, so it never
 -- outlives the statement it was set for.

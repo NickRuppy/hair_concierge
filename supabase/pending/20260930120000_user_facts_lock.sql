@@ -3,6 +3,8 @@
 -- write of a profile fact on `public.hair_profiles` that `public.user_facts_save_v1` did not
 -- make. A permanent guard, not a sync bridge.
 --
+-- This migration ships as its own follow-up PR; parked in supabase/pending/ until then.
+--
 -- APPLY LAST (rollout step 3): after the additive migrations + backfill (step 1) and the code
 -- deploy (step 2). Applied earlier, every still-deployed legacy writer (old onboarding browser
 -- upsert, old /api/profile/answers column write, old mobile publishers' column patch) fails with

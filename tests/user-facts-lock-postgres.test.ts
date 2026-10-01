@@ -549,7 +549,7 @@ test("the migration refuses to apply when a before-row trigger sorts after the g
 
 test("the guard and the apply-time check hold the same fact columns and defaults", async () => {
   const sql = await readFile(
-    new URL("../supabase/migrations/20260930120000_user_facts_lock.sql", import.meta.url),
+    new URL("../supabase/pending/20260930120000_user_facts_lock.sql", import.meta.url),
     "utf8",
   )
   const literals = [...sql.matchAll(/'(\{\s*"diagnostics": null[\s\S]*?\})'::jsonb/g)].map(

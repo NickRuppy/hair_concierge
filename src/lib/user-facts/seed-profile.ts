@@ -24,7 +24,7 @@ import {
  * THE seeding helper for dev users, the chat eval, local fixture scripts and Playwright specs
  * (clean-switch task 7B): a `hair_profiles` row described in the legacy column vocabulary is
  * written THROUGH THE DOOR (`user_facts_save_v1`, via `saveUserFacts`), so it carries real fact
- * documents and survives the lock (`20260930120000_user_facts_lock.sql`), which rejects every
+ * documents and survives the lock (`supabase/pending/20260930120000_user_facts_lock.sql`), which rejects every
  * other write of a fact column.
  *
  * - The columns are converted with the ONE legacy->native conversion the backfill uses

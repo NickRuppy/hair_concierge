@@ -210,11 +210,12 @@ export type PersonalPlanTestDb = PGlite
 /**
  * Clean-switch task 9: the lock on `hair_profiles` (guard trigger + revoked browser privileges).
  * Applied LAST in production (after the code deploy and the backfill), so every harness applies
- * it last too. A test that needs a row a legacy direct writer left (the state production is in
+ * it last too. The file is parked in `supabase/pending/` (it ships as its own follow-up PR), so
+ * this constant — not the migrations directory — is how every harness finds it. A test that needs a row a legacy direct writer left (the state production is in
  * BEFORE the lock) opens the database with `{ lock: false }`, seeds it, and then calls
  * `applyUserFactsLock` — exactly the rollout order; the guard itself is never relaxed for a seed.
  */
-export const USER_FACTS_LOCK_MIGRATION = "supabase/migrations/20260930120000_user_facts_lock.sql"
+export const USER_FACTS_LOCK_MIGRATION = "supabase/pending/20260930120000_user_facts_lock.sql"
 
 export async function applyUserFactsLock(pg: PersonalPlanTestDb): Promise<void> {
   await pg.exec(await readFile(new URL(USER_FACTS_LOCK_MIGRATION, ROOT), "utf8"))
