@@ -12,13 +12,16 @@ import {
   type AcceptIdealPlanInput,
   type DirectAcceptanceSeenRole,
   type DirectAcceptanceStage3Gateway,
+  type SaveCareHabitsFacts,
 } from "../src/lib/personal-plan/direct-acceptance/accept"
+import type { SaveUserFactsResult } from "../src/lib/user-facts/save"
 import {
   DIRECT_ACCEPTANCE_WET_WASH_FREQUENCY,
   buildDirectAcceptanceStage2Defaults,
   directAcceptanceAssumptions,
 } from "../src/lib/personal-plan/direct-acceptance/defaults"
 import { createPersistedStage2RefinementGateway } from "../src/lib/personal-plan/refinement/production-persistence-gateway"
+import { Stage2RefinementError } from "../src/lib/personal-plan/refinement/gateway"
 import { buildPlanRoutineContextFromCompletedRefinement } from "../src/lib/personal-plan/refinement/stage1-adapter"
 import { deriveStage2TriggerContext } from "../src/lib/personal-plan/refinement/stage1-adapter"
 import { resolveStage2RefinementContract } from "../src/lib/personal-plan/refinement/question-path"
@@ -888,11 +891,29 @@ function createFakeStage3Gateway(options: {
   }
 }
 
+type SaveFactsInput = Parameters<SaveCareHabitsFacts>[0]
+
+/**
+ * A fake `saveFacts` that records every call. `completeSyntheticRefinement` always calls
+ * this (and returns/throws) before the Stage-3 gateway is ever touched, so a passing
+ * `stage3Calls` assertion starting at `loadOrCreate` already proves the ordering — no
+ * shared call log needed here.
+ */
+function createFakeSaveFacts(options: { result?: SaveUserFactsResult } = {}) {
+  const calls: SaveFactsInput[] = []
+  const saveFacts: SaveCareHabitsFacts = async (input) => {
+    calls.push(structuredClone(input))
+    return options.result ?? { status: "ok", revision: 1, changed: true, diagnosticsHash: null }
+  }
+  return { saveFacts, calls }
+}
+
 type Harness = {
   deps: AcceptIdealPlanDeps
   db: RefinementDb
   stage3Calls: Stage3Call[]
   planState: { activeRoutineVersionId: string | null }
+  saveFactsCalls: SaveFactsInput[]
 }
 
 function createHarness(
@@ -902,20 +923,25 @@ function createHarness(
     activeRoutineVersionId?: string | null
     evaluations?: Stage3AuthorityEvaluation[]
     failProvenanceWrite?: boolean
+    saveFacts?: SaveCareHabitsFacts
+    saveFactsResult?: SaveUserFactsResult
   } = {},
 ): Harness {
   const db = overrides.db ?? createRefinementDb()
   const stage3Calls: Stage3Call[] = []
   const planState = { activeRoutineVersionId: overrides.activeRoutineVersionId ?? null }
+  const fakeSaveFacts = createFakeSaveFacts({ result: overrides.saveFactsResult })
 
   return {
     db,
     stage3Calls,
     planState,
+    saveFactsCalls: fakeSaveFacts.calls,
     deps: {
       userId: USER_ID,
       flags: overrides.flags ?? { stage2Enabled: true, stage3Enabled: true, stage4Enabled: true },
       refinementPersistence: db.persistence,
+      saveFacts: overrides.saveFacts ?? fakeSaveFacts.saveFacts,
       planState: {
         async loadActiveRoutineVersionId() {
           return planState.activeRoutineVersionId
@@ -1317,6 +1343,7 @@ test("a real Stage 2 replaying the defaults completes as a clean re-refinement",
   const gateway = createPersistedStage2RefinementGateway({
     userId: USER_ID,
     persistence: harness.db.persistence,
+    saveFacts: createFakeSaveFacts().saveFacts,
   })
   const completedSession = await gateway.load()
   assert.equal(completedSession.status, "complete")
@@ -1360,6 +1387,7 @@ test("a real Stage 2 that changes an answer produces a successor refined source"
   const gateway = createPersistedStage2RefinementGateway({
     userId: USER_ID,
     persistence: harness.db.persistence,
+    saveFacts: createFakeSaveFacts().saveFacts,
   })
   const completedSession = await gateway.load()
   const reopened = await gateway.saveAnswer({
@@ -1492,4 +1520,132 @@ test("a lost completion response replays as already_completed, not a constraint 
     refinedVersionId: accepted.refinedVersionId,
   })
   assert.equal(harness.db.needVersions.length, 1)
+})
+
+/**
+ * Task 5b, item 2: direct acceptance never calls `completeModule` — only the terminal
+ * `complete()` inside `completeSyntheticRefinement` — so it writes `care_habits` facts
+ * itself, right before that call, bound to the synthetic draft it just saved. Every
+ * synthetic default answer is `"assumed"` provenance.
+ */
+test("direct acceptance writes care_habits facts (all assumed) before completing the synthetic draft", async () => {
+  const harness = createHarness()
+
+  await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+
+  const expectedDefaults = buildDirectAcceptanceStage2Defaults(labTriggerContext())
+  assert.equal(harness.saveFactsCalls.length, 1)
+  const call = harness.saveFactsCalls[0]!
+  assert.equal(call.userId, USER_ID)
+  assert.equal(call.domain, "care_habits")
+  assert.deepEqual(call.patch, expectedDefaults.answers)
+  assert.deepEqual(call.provenance.source, {
+    kind: "feinschliff_draft",
+    id: harness.db.drafts[0]!.id,
+  })
+  // Every field the synthetic defaults answered is "assumed" — nothing here is a real
+  // user answer, including the heatEvents aggregate.
+  const fieldValues = Object.values(call.provenance.fields ?? {})
+  assert.ok(fieldValues.length > 0)
+  assert.ok(fieldValues.every((value) => value === "assumed"))
+  assert.deepEqual(call.draftBinding, {
+    sourceDraftId: harness.db.drafts[0]!.id,
+    expectedDraftRevision: harness.db.drafts[0]!.revision,
+    expectedInitialVersionId: INITIAL_NEED_VERSION_ID,
+  })
+})
+
+test("a draft_conflict from saveFacts aborts direct acceptance before any Stage 3 write", async () => {
+  const harness = createHarness({
+    saveFactsResult: { status: "draft_conflict", reason: "revision_mismatch" },
+  })
+
+  await assert.rejects(
+    acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) => error instanceof DirectAcceptanceError && error.code === "conflict",
+  )
+
+  assert.equal(harness.stage3Calls.length, 0)
+  assert.equal(harness.db.needVersions.length, 0)
+})
+
+test("a revision_conflict from saveFacts also aborts direct acceptance", async () => {
+  const harness = createHarness({
+    saveFactsResult: { status: "revision_conflict", revision: 9 },
+  })
+
+  await assert.rejects(
+    acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) => error instanceof DirectAcceptanceError && error.code === "conflict",
+  )
+
+  assert.equal(harness.stage3Calls.length, 0)
+  assert.equal(harness.db.needVersions.length, 0)
+})
+
+/**
+ * Fix round 1, M5: a missing `saveFacts` must fail loud in direct acceptance too — the
+ * shared service throws a plain `Error` at its own write point, which is exactly where
+ * `completeSyntheticRefinement` now wires `deps.saveFacts` through (no separate manual
+ * write to duplicate the check in).
+ */
+test("acceptIdealPlan throws a plain Error when saveFacts is missing, before any Stage 3 write", async () => {
+  const harness = createHarness()
+  const depsWithoutSaveFacts = { ...harness.deps, saveFacts: undefined }
+
+  await assert.rejects(
+    acceptIdealPlan(depsWithoutSaveFacts, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) =>
+      error instanceof Error &&
+      !(error instanceof DirectAcceptanceError) &&
+      /requires saveFacts/.test(error.message),
+  )
+  assert.equal(harness.stage3Calls.length, 0)
+  assert.equal(harness.db.needVersions.length, 0)
+})
+
+/** Fix round 1, M2: `provenance.at` uses the injected clock in direct acceptance too. */
+test("direct acceptance's facts write uses the injected now() for provenance.at", async () => {
+  const fixedNow = () => new Date("2026-09-16T09:00:00.000Z")
+  const harness = createHarness()
+  const depsWithClock = { ...harness.deps, now: fixedNow }
+
+  await acceptIdealPlan(depsWithClock, { seenRoles: SEEN_ROLES() })
+
+  assert.equal(harness.saveFactsCalls.length, 1)
+  assert.equal(harness.saveFactsCalls[0]!.provenance.at, "2026-09-16T09:00:00.000Z")
+})
+
+/**
+ * Fix round 2, ruling 1: only a `revision_conflict` that ORIGINATES FROM THE FACTS
+ * WRITE may be mapped to `DirectAcceptanceError("conflict")`. A real revision race
+ * inside `persistence.complete` itself (e.g. the completion RPC's own `stale_source`,
+ * "The initial need changed; reload refinement") is a DIFFERENT origin and must
+ * propagate exactly as it did before this task — raw, uncaught by `accept.ts`, so the
+ * route's freemium-provisioning classification sees it as `temporarily_unavailable`,
+ * not a 409 conflict.
+ */
+test("a non-facts revision conflict from persistence.complete propagates raw, not as DirectAcceptanceError", async () => {
+  const harness = createHarness()
+  // The facts write succeeds (default fake); force the completion RPC itself to report a
+  // real race, mirroring what `stale_source`/a lost revision CAS looked like before this
+  // task ever added a facts write or a try/catch around this call.
+  const rawConflict = new Stage2RefinementError(
+    "revision_conflict",
+    "The initial need changed; reload refinement",
+  )
+  harness.db.persistence.complete = async () => {
+    throw rawConflict
+  }
+
+  await assert.rejects(
+    acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) => {
+      assert.equal(error, rawConflict, "the exact same error instance must propagate, untranslated")
+      assert.ok(!(error instanceof DirectAcceptanceError))
+      return true
+    },
+  )
+  // The facts write itself must have gone through fine — only the RPC failed.
+  assert.equal(harness.saveFactsCalls.length, 1)
 })

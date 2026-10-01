@@ -12,11 +12,27 @@ export type Stage2RefinementErrorCode =
   | "unsupported_snapshot_version"
   | "snapshot_too_large"
 
+/**
+ * Discriminates WHERE a `revision_conflict` originated, for callers that must handle one
+ * origin differently from another without changing `code` (the stage-2 route's 409
+ * mapping switches on `code` alone and must stay identical). Today the only tagged origin
+ * is the `care_habits` facts write (task 5b fix round 2, I-round-2): direct acceptance
+ * maps a facts-originated conflict to its own `DirectAcceptanceError("conflict")`, but
+ * every other `revision_conflict` (a real draft/session race, or the completion RPC's own
+ * `stale_source`) is untagged and must propagate exactly as it did before that mapping
+ * existed.
+ */
+export type Stage2RefinementErrorDetail = {
+  source: "facts"
+  status: "draft_conflict" | "revision_conflict"
+}
+
 export class Stage2RefinementError extends Error {
   constructor(
     public readonly code: Stage2RefinementErrorCode,
     message: string = code,
     public readonly savedSession?: Stage2RefinementSession,
+    public readonly detail?: Stage2RefinementErrorDetail,
   ) {
     super(message)
     this.name = "Stage2RefinementError"

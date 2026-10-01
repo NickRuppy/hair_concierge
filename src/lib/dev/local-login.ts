@@ -1,5 +1,7 @@
 import type { SupabaseClient, User } from "@supabase/supabase-js"
 
+import { seedHairProfile } from "@/lib/user-facts/seed-profile"
+
 export const LOCAL_DEV_LOGIN_FLAG = "LOCAL_DEV_LOGIN_ENABLED"
 
 const DEFAULT_LOCAL_EMAIL = "local-dev@hairconscierge.test"
@@ -145,9 +147,10 @@ async function seedLocalDevProfile(
     throw new Error(`Could not seed local dev profile: ${profileError.message}`)
   }
 
-  const { error: hairProfileError } = await admin.from("hair_profiles").upsert(
-    {
-      user_id: userId,
+  // Through the door (`user_facts_save_v1`): the dev user gets real fact documents, and the
+  // seed keeps working once the lock rejects direct fact-column writes.
+  try {
+    await seedHairProfile(admin, userId, {
       hair_texture: "wavy",
       thickness: "fine",
       density: "medium",
@@ -158,7 +161,6 @@ async function seedLocalDevProfile(
       scalp_type: "balanced",
       scalp_condition: null,
       chemical_treatment: ["colored"],
-      desired_volume: "balanced",
       heat_styling: "never",
       styling_tools: [],
       towel_material: "mikrofaser",
@@ -167,11 +169,11 @@ async function seedLocalDevProfile(
       brush_type: ["wide_tooth_comb"],
       night_protection: [],
       uses_heat_protection: false,
-    },
-    { onConflict: "user_id" },
-  )
-  if (hairProfileError) {
-    throw new Error(`Could not seed local dev hair profile: ${hairProfileError.message}`)
+    })
+  } catch (error) {
+    throw new Error(
+      `Could not seed local dev hair profile: ${error instanceof Error ? error.message : String(error)}`,
+    )
   }
 
   const { error: routineError } = await admin.from("user_product_usage").upsert(

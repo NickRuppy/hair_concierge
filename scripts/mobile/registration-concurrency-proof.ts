@@ -1,81 +1,33 @@
-/** Real two-session proof. Hard-pinned to the disposable registration stack.
- * Run only after the owner has started/prepared that local stack:
+/** Real two-session proof on the REAL migration chain (clean-switch task 7B: ported from a
+ * pre-prepared local stack and the removed `p_patch` signature to the disposable, network-less
+ * `postgres:17` proof container, a fresh database, and the lock applied):
  * node --import ./tests/server-only-register.cjs --import tsx scripts/mobile/registration-concurrency-proof.ts --run-local
- * Uses synthetic accounts and exact-owner cleanup. Never loads dotenv or secrets.
+ * Uses synthetic accounts. Never loads dotenv or secrets, never targets the active local stack.
  */
 import assert from "node:assert/strict"
 import { randomUUID } from "node:crypto"
-import { execFile, spawn } from "node:child_process"
-import { promisify } from "node:util"
+import { spawn } from "node:child_process"
 import { setTimeout as delay } from "node:timers/promises"
 import { completeMobileRegistration } from "../../src/lib/mobile/registration-completion"
 import {
   registrationSubmissionHash,
   type RegistrationSubmission,
 } from "../../src/lib/mobile/registration-contract"
+import { createProofDatabase, docker, literal, namedCallSql, psqlArgs } from "./proof-database"
 
-const docker = "/opt/homebrew/bin/docker"
-const container = "supabase_db_ios-registration-local-proof"
-const context = ["--context", "colima-chaarlie"]
-const baseArgs = [
-  ...context,
-  "exec",
-  "-i",
-  container,
-  "psql",
-  "-X",
-  "-U",
-  "postgres",
-  "-d",
-  "postgres",
-  "-Atq",
-  "-v",
-  "ON_ERROR_STOP=1",
-]
-const run = promisify(execFile)
+const database = "registration_proof"
+const baseArgs = psqlArgs(database)
 const runId = randomUUID().slice(0, 8)
 const owners: string[] = []
-const literal = (value: unknown): string =>
-  value === null || value === undefined
-    ? "NULL"
-    : `'${(typeof value === "object" ? JSON.stringify(value) : String(value)).replaceAll("'", "''")}'`
-const signatures: Record<string, string[]> = {
-  scanner_context_read_source: ["p_user_id"],
-  mobile_registration_publication_receipt: [
-    "p_user_id",
-    "p_request_id",
-    "p_request_hash",
-    "p_mode",
-    "p_attempt_id",
-    "p_send_generation",
-    "p_email",
-    "p_submission_hash",
-  ],
-  mobile_registration_publish: [
-    "p_user_id",
-    "p_request_id",
-    "p_request_hash",
-    "p_mode",
-    "p_attempt_id",
-    "p_send_generation",
-    "p_email",
-    "p_submission_hash",
-    "p_expected_profile_revision",
-    "p_expected_source_revision",
-    "p_patch",
-    "p_quiz_answers",
-    "p_lead_id",
-    "p_submission",
-    "p_source_hash",
-    "p_engine_version",
-    "p_input_snapshot",
-    "p_output_snapshot",
-    "p_snapshot_source",
-  ],
-}
+/** The RPCs this proof may call (named-argument notation: no signature list to drift). */
+const allowedRpcs = new Set([
+  "scanner_context_read_source",
+  "mobile_registration_publication_receipt",
+  "mobile_registration_publish",
+])
 function rpcSQL(name: string, args: Record<string, unknown>) {
-  assert.ok(signatures[name], "unapproved fixture RPC")
-  return `SELECT public.${name}(${signatures[name].map((k) => literal(args[k])).join(",")});`
+  assert.ok(allowedRpcs.has(name), "unapproved fixture RPC")
+  return namedCallSql(name, args)
 }
 function connection(label: string) {
   const child = spawn(docker, baseArgs, { stdio: ["pipe", "pipe", "pipe"] })
@@ -174,20 +126,15 @@ async function seedOwner() {
   const userId = randomUUID(),
     email = `native-race-${randomUUID()}@example.test`
   owners.push(userId)
-  await sql(
-    `INSERT INTO auth.users(id,email,aud,role,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,created_at,updated_at) VALUES(${literal(userId)},${literal(email)},'authenticated','authenticated',now(),'{"provider":"email","providers":["email"]}','{}',now(),now());`,
-  )
-  assert.equal(
-    await sql(`SELECT count(*) FROM public.profiles WHERE id=${literal(userId)};`),
-    "1",
-    "real Auth insert trigger establishes shared profile",
-  )
+  // The stub `profiles` stands in for the Auth-trigger row (the real Auth schema is not part of
+  // the migration chain).
+  await sql(`INSERT INTO public.profiles(id) VALUES(${literal(userId)});`)
   return { userId, email }
 }
 async function intent(
   account: Awaited<ReturnType<typeof seedOwner>>,
   choice: "create" | "replace" = "create",
-  thickness = "fine",
+  thickness: "fine" | "normal" | "coarse" = "fine",
 ) {
   const submission: RegistrationSubmission = {
     requestId: randomUUID(),
@@ -263,20 +210,13 @@ async function concurrent(
 }
 async function main() {
   assert.ok(process.argv.includes("--run-local"), "Explicit --run-local is required")
-  const inspection = JSON.parse((await run(docker, [...context, "inspect", container])).stdout)[0]
-  assert.equal(inspection.Name, "/" + container)
-  const ports = inspection.NetworkSettings.Ports["5432/tcp"] as Array<{ HostPort: string }>
-  assert.ok(
-    ports.some((p) => p.HostPort === "56322"),
-    "Refuse any database except isolated port56322",
-  )
-  assert.ok(!ports.some((p) => p.HostPort === "54322"))
+  await createProofDatabase(database, { lock: true })
   assert.equal(
     await sql(
-      "SELECT to_regprocedure('public.mobile_registration_publish(uuid,uuid,text,text,uuid,uuid,text,text,bigint,bigint,jsonb,jsonb,uuid,jsonb,text,text,jsonb,jsonb,text)') IS NOT NULL;",
+      "SELECT count(*) > 0 FROM pg_proc WHERE proname='mobile_registration_publish' AND 'p_facts'=ANY(proargnames) AND 'p_quiz_taken_at'=ANY(proargnames);",
     ),
     "t",
-    "parent must prepare real schema first",
+    "the clean-switch registration publisher (p_facts, p_quiz_taken_at) is installed",
   )
   console.log("PostgreSQL publication proof:", await sql("SHOW server_version;"))
   try {
@@ -376,11 +316,11 @@ async function main() {
     if (owners.length) {
       const ids = owners.map(literal).join(",")
       await sql(
-        `DELETE FROM public.leads WHERE user_id IN (${ids});DELETE FROM public.mobile_registration_intents WHERE provider_user_id IN (${ids}) OR verified_user_id IN (${ids});DELETE FROM auth.users WHERE id IN (${ids});`,
+        `DELETE FROM public.leads WHERE user_id IN (${ids});DELETE FROM public.mobile_registration_intents WHERE provider_user_id IN (${ids}) OR verified_user_id IN (${ids});DELETE FROM public.profiles WHERE id IN (${ids});`,
       )
       assert.equal(await sql(`SELECT count(*) FROM public.profiles WHERE id IN (${ids});`), "0")
       console.log(
-        "CLEANUP: only this run's synthetic accounts/intents/leads removed; parent provider fixtures untouched",
+        "CLEANUP: only this run's synthetic accounts/intents/leads removed (the proof database is rebuilt on every run)",
       )
     }
   }

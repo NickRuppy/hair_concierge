@@ -3,7 +3,6 @@ export {
   HAIR_THICKNESSES,
   HAIR_TEXTURE_LABELS,
   HAIR_THICKNESS_LABELS,
-  HAIR_TEXTURE_OPTIONS,
   HAIR_THICKNESS_OPTIONS,
   HAIR_TEXTURE_ADJECTIVE,
   HAIR_THICKNESS_ADJECTIVE,
@@ -38,7 +37,6 @@ export {
   PROTEIN_MOISTURE_LABELS,
   HAIR_DENSITIES,
   HAIR_DENSITY_LABELS,
-  HAIR_DENSITY_OPTIONS,
   SCALP_TYPES,
   SCALP_TYPE_LABELS,
   SCALP_CONDITIONS,
@@ -87,12 +85,7 @@ export type { SourceType } from "./source-labels"
 
 export { ERR_UNAUTHORIZED, ERR_FORBIDDEN, ERR_INVALID_DATA, fehler } from "./errors"
 
-export {
-  TEXTURE_GOAL_PRIORITY,
-  GOAL_LABEL_OVERRIDES,
-  getOrderedGoals,
-  getGoalLabel,
-} from "./onboarding-goals"
+export { TEXTURE_GOAL_PRIORITY, getOrderedGoals } from "./onboarding-goals"
 
 export {
   PRODUCT_FREQUENCIES,

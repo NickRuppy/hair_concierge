@@ -36,6 +36,9 @@ const VISIBLE_CONCERN_ALIASES: Readonly<Record<string, DiagnosticConcern>> = {
   frizz: "frizz_flyaways",
 }
 
+/** THE legacy-goal -> quiz-goal rule (old drafts, legacy leads and — migration table M, Nick
+ * 2026-09-30 — the legacy `hair_profiles.goals` column backfill all read old goals through it).
+ * `defined_curls` / `less_breakage` are historical column spellings of the same families. */
 const VISIBLE_GOAL_ALIASES: Readonly<Record<string, DiagnosticGoal>> = {
   volume: "volume_balance",
   less_volume: "volume_balance",
@@ -44,9 +47,11 @@ const VISIBLE_GOAL_ALIASES: Readonly<Record<string, DiagnosticGoal>> = {
   color_protection: "shine",
   healthy_scalp: "scalp_balance",
   curl_definition: "shape_definition",
+  defined_curls: "shape_definition",
   less_split_ends: "strength_ends",
   strengthen: "strength_ends",
   anti_breakage: "strength_ends",
+  less_breakage: "strength_ends",
 }
 
 /** Maps an old resumable draft into the current visible concern cards. */

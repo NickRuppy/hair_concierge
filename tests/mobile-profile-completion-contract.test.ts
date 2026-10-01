@@ -45,7 +45,9 @@ test("M3/M4/M6 length-only preserves explicit scalp none and empty concerns", ()
       scalp_condition: "gereizt",
     },
   )
-  assert.deepEqual(merged.patch, { hair_length: "short" })
+  // Only the missing group is answered by the completion (clean-switch: the facts write names it).
+  assert.deepEqual(merged.missing, ["hair_length"])
+  assert.equal(merged.answers.hair_length, "short")
   assert.equal(merged.answers.thickness, "fine")
   assert.deepEqual(merged.answers.concerns, [])
   assert.equal(merged.answers.has_scalp_issue, false)
@@ -64,12 +66,16 @@ test("M9/M11 partial completion cannot change existing fields and must provide a
     { ...profile, scalp_type: null },
     { scalp_type: "trocken", has_scalp_issue: false },
   )
-  assert.deepEqual(merged.patch, { scalp_type: "dry", scalp_condition: null })
+  assert.deepEqual(merged.missing, ["scalp_type"])
+  assert.equal(merged.answers.scalp_type, "trocken")
+  assert.equal(merged.answers.has_scalp_issue, false)
   assert.throws(() =>
     mergeMissingProfileAnswers(
       { ...profile, scalp_type: null },
       { scalp_type: "trocken", has_scalp_issue: true },
     ),
   )
-  assert.deepEqual(mergeMissingProfileAnswers(profile, { thickness: "coarse" }).patch, {})
+  const complete = mergeMissingProfileAnswers(profile, { thickness: "coarse" })
+  assert.deepEqual(complete.missing, [])
+  assert.equal(complete.answers.thickness, "fine")
 })

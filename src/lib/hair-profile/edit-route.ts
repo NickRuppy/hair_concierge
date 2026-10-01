@@ -1,73 +1,25 @@
 import "server-only"
 
-import { z } from "zod"
+import type { SupabaseClient } from "@supabase/supabase-js"
+import { NextResponse } from "next/server"
 import { hasCompletedQuizDiagnostics } from "@/lib/quiz/completion"
 import { ProfileEditError, publishProfileEdit } from "@/lib/scan/profile-edit"
 import { prepareScannerContext } from "@/lib/scan/scanner-context"
 import { readScannerProfileSource } from "@/lib/scan/scanner-context-supabase"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { parseUserFactsRow } from "@/lib/user-facts/read"
+import type { saveUserFacts } from "@/lib/user-facts/save"
+import { ERR_INVALID_DATA, ERR_UNAUTHORIZED } from "@/lib/vocabulary"
 import {
-  CHEMICAL_TREATMENTS,
-  CUTICLE_CONDITIONS,
-  GOALS,
-  HAIR_DENSITIES,
-  HAIR_LENGTHS,
-  HAIR_TEXTURES,
-  HAIR_THICKNESSES,
-  PROFILE_CONCERNS,
-  PROTEIN_MOISTURE_LEVELS,
-  SCALP_CONDITIONS,
-  SCALP_TYPES,
-} from "@/lib/vocabulary"
-
-export const profileAnswersPatchSchema = z
-  .object({
-    hair_texture: z.enum(HAIR_TEXTURES).nullable(),
-    thickness: z.enum(HAIR_THICKNESSES).nullable(),
-    density: z.enum(HAIR_DENSITIES).nullable(),
-    hair_length: z.enum(HAIR_LENGTHS).nullable(),
-    cuticle_condition: z.enum(CUTICLE_CONDITIONS).nullable(),
-    protein_moisture_balance: z.enum(PROTEIN_MOISTURE_LEVELS).nullable(),
-    scalp_type: z.enum(SCALP_TYPES).nullable(),
-    scalp_condition: z.enum(SCALP_CONDITIONS).nullable(),
-    chemical_treatment: z.array(z.enum(CHEMICAL_TREATMENTS)),
-    concerns: z.array(z.enum(PROFILE_CONCERNS)),
-    // The existing web picker limits new selections, but its prior direct
-    // upsert also preserved larger prefills from the regular quiz.
-    goals: z.array(z.enum(GOALS)).min(1),
-  })
-  .partial()
-  .strict()
-  .superRefine((patch, ctx) => {
-    if (Object.keys(patch).length === 0)
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Keine Antworten zum Speichern" })
-    if (patch.goals?.includes("volume") && patch.goals.includes("less_volume"))
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["goals"],
-        message: "Mehr und weniger Volumen schliessen sich aus",
-      })
-    if (patch.chemical_treatment?.includes("natural") && patch.chemical_treatment.length > 1)
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["chemical_treatment"],
-        message: "Naturhaar kann nicht mit chemischen Behandlungen kombiniert werden",
-      })
-  })
+  buildProfileAnswersFacts,
+  profileAnswersSchema,
+  type ProfileAnswers,
+} from "./profile-answers"
 
 export async function authenticatedProfileUser(client: {
   auth: { getUser: () => Promise<{ data: { user: { id: string } | null } }> }
 }) {
   return (await client.auth.getUser()).data.user?.id ?? null
-}
-
-export type ProfileEditRouteClient = {
-  from: (table: string) => {
-    upsert: (
-      row: Record<string, unknown>,
-      options: { onConflict: string },
-    ) => { select: () => { single: () => Promise<{ data: unknown; error: unknown }> } }
-  }
 }
 
 export type ProfileEditRouteDeps = {
@@ -78,8 +30,15 @@ export type ProfileEditRouteDeps = {
   randomUUID: () => string
 }
 
-export type CompatibleProfileEditResult =
-  | { kind: "legacy"; profile: unknown }
+export type ProfileAnswersSaveDeps = ProfileEditRouteDeps & {
+  saveUserFacts: typeof saveUserFacts
+  /** The row after a direct door save (the route answers with the saved profile). */
+  loadProfileRow: (admin: SupabaseClient, userId: string) => Promise<Record<string, unknown> | null>
+  now: () => string
+}
+
+export type ProfileAnswersSaveResult =
+  | { kind: "saved"; profile: Record<string, unknown> | null }
   | {
       kind: "published"
       profile: Record<string, unknown>
@@ -87,63 +46,116 @@ export type CompatibleProfileEditResult =
       contextRevision: string
     }
 
-async function legacyWrite(
-  client: ProfileEditRouteClient,
+/**
+ * `POST /api/profile/answers` (clean-switch task 5): the web editors' save. Every fact reaches
+ * `hair_profiles` only through `user_facts_save_v1`, as a hand edit (`buildProfileAnswersFacts`):
+ *  - a profile that is complete after the edit and has a scanner source goes through
+ *    `scanner_profile_edit_publish`'s facts path, so the scanner context is republished in the
+ *    same transaction;
+ *  - anything else (no row yet, no scanner source, incomplete) goes straight through the door,
+ *    CAS-guarded by the facts revision this save read. A user without a row gets one with exactly
+ *    what she entered (plan §7.5).
+ * An unavailable or corrupt read never falls through to a write.
+ */
+export async function saveProfileAnswers(
+  deps: ProfileAnswersSaveDeps,
   userId: string,
-  patch: Record<string, unknown>,
-) {
-  return client
-    .from("hair_profiles")
-    .upsert(
-      { user_id: userId, ...patch, updated_at: new Date().toISOString() },
-      { onConflict: "user_id" },
-    )
-    .select()
-    .single()
+  answers: ProfileAnswers,
+): Promise<ProfileAnswersSaveResult> {
+  const admin = deps.createAdminClient()
+  let source
+  let prepared
+  let stored
+  let write
+  try {
+    source = await deps.readScannerProfileSource(admin, userId)
+    prepared = deps.prepareScannerContext(source)
+    stored = source.profile ? parseUserFactsRow(userId, source.profile) : null
+    write = buildProfileAnswersFacts({ answers, stored, row: source.profile, now: deps.now() })
+  } catch {
+    throw new ProfileEditError("temporarily_unavailable")
+  }
+
+  // A save that changes no value is not an edit: nothing is written, nothing is published.
+  if (write.unchanged) return { kind: "saved", profile: source.profile }
+
+  const nextProfile = { ...(source.profile ?? {}), ...write.columns }
+  if (prepared && hasCompletedQuizDiagnostics(nextProfile)) {
+    const result = await deps.publishProfileEdit(admin, userId, {
+      expectedProfileRevision: source.profileRevision,
+      requestId: deps.randomUUID(),
+      profileAnswers: answers,
+    })
+    return {
+      kind: "published",
+      profile: result.profile,
+      profileRevision: result.profileRevision,
+      contextRevision: result.contextRevision,
+    }
+  }
+
+  let saved
+  try {
+    saved = await deps.saveUserFacts(admin, {
+      userId,
+      domain: "diagnostics",
+      patch: write.diagnostics.patch,
+      provenance: write.diagnostics.provenance,
+      expectedRevision: stored?.revision ?? 0,
+    })
+  } catch {
+    throw new ProfileEditError("temporarily_unavailable")
+  }
+  if (saved.status === "revision_conflict") throw new ProfileEditError("profile_conflict")
+  if (saved.status !== "ok") throw new ProfileEditError("temporarily_unavailable")
+  try {
+    return { kind: "saved", profile: await deps.loadProfileRow(admin, userId) }
+  } catch {
+    throw new ProfileEditError("temporarily_unavailable")
+  }
 }
 
+const NO_STORE = { "Cache-Control": "no-store" }
+const respond = (body: unknown, status = 200) =>
+  NextResponse.json(body, { status, headers: NO_STORE })
+
 /**
- * The caller has already authenticated the owner and validated its route-specific patch.
- * An unavailable source never falls through to legacy storage. A source that is incomplete
- * before the patch, or a valid explicit clear that makes the resulting profile incomplete,
- * preserves the existing non-scanner upsert behavior.
+ * The HTTP handler of `POST /api/profile/answers`: session user, strict quiz-vocabulary body
+ * (400 otherwise, before anything is read), then `saveProfileAnswers`. 409 `profile_conflict`
+ * when the profile changed after this save read it; 503 for everything else that failed.
  */
-export async function saveCompatibleProfileEdit(
-  deps: ProfileEditRouteDeps,
-  client: ProfileEditRouteClient,
-  userId: string,
-  patch: Record<string, unknown>,
-): Promise<CompatibleProfileEditResult> {
-  let source
-  try {
-    source = await deps.readScannerProfileSource(deps.createAdminClient(), userId)
-  } catch {
-    throw new ProfileEditError("temporarily_unavailable")
-  }
+export function createProfileAnswersPost(deps: {
+  getUserId: () => Promise<string | null>
+  save: (userId: string, answers: ProfileAnswers) => Promise<ProfileAnswersSaveResult>
+}) {
+  return async function POST(request: Request) {
+    const userId = await deps.getUserId()
+    if (!userId) return respond({ error: ERR_UNAUTHORIZED }, 401)
 
-  let prepared
-  try {
-    prepared = deps.prepareScannerContext(source)
-  } catch {
-    throw new ProfileEditError("temporarily_unavailable")
-  }
+    let body: unknown
+    try {
+      body = await request.json()
+    } catch {
+      return respond({ error: ERR_INVALID_DATA }, 400)
+    }
+    const parsed = profileAnswersSchema.safeParse(body)
+    if (!parsed.success) return respond({ error: ERR_INVALID_DATA }, 400)
 
-  const nextProfile = { ...(source.profile ?? {}), ...patch }
-  if (!prepared || !hasCompletedQuizDiagnostics(nextProfile)) {
-    const { data, error } = await legacyWrite(client, userId, patch)
-    if (error) throw error
-    return { kind: "legacy", profile: data }
-  }
-
-  const result = await deps.publishProfileEdit(deps.createAdminClient(), userId, {
-    expectedProfileRevision: source.profileRevision,
-    requestId: deps.randomUUID(),
-    patch,
-  })
-  return {
-    kind: "published",
-    profile: result.profile,
-    profileRevision: result.profileRevision,
-    contextRevision: result.contextRevision,
+    try {
+      const result = await deps.save(userId, parsed.data)
+      if (result.kind === "saved") return respond({ hairProfile: result.profile })
+      return respond({
+        hairProfile: result.profile,
+        profileRevision: result.profileRevision,
+        contextRevision: result.contextRevision,
+      })
+    } catch (error) {
+      if (error instanceof ProfileEditError) {
+        const status =
+          error.code === "profile_conflict" ? 409 : error.code === "profile_required" ? 403 : 503
+        return respond({ error: error.code }, status)
+      }
+      return respond({ error: "temporarily_unavailable" }, 503)
+    }
   }
 }

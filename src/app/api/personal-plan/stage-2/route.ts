@@ -282,11 +282,14 @@ const handlers = createStage2RouteHandlers({
   enabled: () => isPersonalPlanAppV1Enabled(),
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadStage2Access: loadPersonalPlanStage2AccessForUser,
-  gatewayFor: (userId) =>
-    createPersistedStage2RefinementGateway({
+  gatewayFor: (userId) => {
+    const admin = createAdminClient()
+    return createPersistedStage2RefinementGateway({
       userId,
-      persistence: createSupabaseStage2RefinementPersistence(createAdminClient()),
-    }),
+      persistence: createSupabaseStage2RefinementPersistence(admin),
+      admin,
+    })
+  },
   runHabitsRecompute: async ({ userId, refinedVersionId }) => {
     const admin = createAdminClient()
     // Cheapest existing read that exposes `active_routine_version_id` (see

@@ -45,3 +45,8 @@ test("historical goal aliases reach the same assessment families as the visible 
   assert.deepEqual(visibleGoals, ["shine", "strength_ends"])
   assert.deepEqual(assessment.goals, visibleGoals)
 })
+
+test("historical legacy-column goal spellings map onto their families too (migration table M)", () => {
+  assert.deepEqual(resolveVisibleDiagnosticGoals(["defined_curls"]), ["shape_definition"])
+  assert.deepEqual(resolveVisibleDiagnosticGoals(["less_breakage"]), ["strength_ends"])
+})

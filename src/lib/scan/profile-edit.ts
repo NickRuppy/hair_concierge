@@ -1,6 +1,14 @@
 import "server-only"
 import type { SupabaseClient } from "@supabase/supabase-js"
 import type { QuizAnswers } from "@/lib/quiz/types"
+import {
+  buildMobileHandEditFacts,
+  toProfileFactsArgument,
+  type MobileFactsWrite,
+} from "@/lib/mobile/profile-facts-patch"
+import { buildProfileAnswersFacts, type ProfileAnswers } from "@/lib/hair-profile/profile-answers"
+import { profileAfterDiagnosticsWrite } from "@/lib/user-facts/hand-edit"
+import { parseUserFactsRow } from "@/lib/user-facts/read"
 import { readScannerProfileSource } from "./scanner-context-supabase"
 import {
   editableScannerQuizAnswers,
@@ -74,16 +82,31 @@ function result(data: StoredPublication): ProfileEditResult {
   }
 }
 
+/** Every variant saves facts through `user_facts_save_v1` inside the publish transaction; there
+ * is no column patch (clean-switch fix round 1 deleted the last one with `PUT /api/profile`). */
+export type ProfileEditInput =
+  | {
+      expectedProfileRevision: string
+      requestId: string
+      /** MOBILE path (clean-switch task 3): the complete submitted answers are saved as a hand
+       * edit through `user_facts_save_v1` inside the publish transaction; no column patch. */
+      quizAnswers: QuizAnswers
+      saveAsFacts: true
+    }
+  | {
+      expectedProfileRevision: string
+      requestId: string
+      /** WEB editors (clean-switch task 5, `POST /api/profile/answers`): the quiz-vocabulary
+       * answers are saved as a hand edit through `user_facts_save_v1` inside the publish
+       * transaction (`buildProfileAnswersFacts`); no column patch. */
+      profileAnswers: ProfileAnswers
+    }
+
 /** Auth-verified UID only. The route owns strict patch/quiz validation. */
 export async function publishProfileEdit(
   client: SupabaseClient,
   userId: string,
-  input: {
-    expectedProfileRevision: string
-    requestId: string
-    patch: Record<string, unknown>
-    quizAnswers?: QuizAnswers
-  },
+  input: ProfileEditInput,
 ): Promise<ProfileEditResult> {
   try {
     const requestHash = scannerSourceHash(input)
@@ -99,8 +122,28 @@ export async function publishProfileEdit(
       throw new ProfileEditError("profile_conflict")
     const before = prepareScannerContext(read)
     if (!before) throw new ProfileEditError("profile_required")
-    const profile = { ...read.profile, ...input.patch }
+    // The facts are built against the row this read saw; the scanner clock CAS in the SQL
+    // function guarantees the row is unchanged when they are written. The scanner context is
+    // prepared from the columns the door WILL derive (the parity-tested TS oracle), so the
+    // published context and the stored row can never disagree.
     const previousQuiz = editableScannerQuizAnswers(read)
+    const facts: MobileFactsWrite =
+      "profileAnswers" in input
+        ? buildProfileAnswersFacts({
+            answers: input.profileAnswers,
+            stored: parseUserFactsRow(userId, read.profile ?? {}),
+            row: read.profile,
+            now: new Date().toISOString(),
+          })
+        : buildMobileHandEditFacts({
+            answers: input.quizAnswers,
+            stored: parseUserFactsRow(userId, read.profile ?? {}),
+            now: new Date().toISOString(),
+            shownOtherText: previousQuiz.concerns_other_text,
+          })
+    // The row the door will leave: derived columns AND the merged facts document, which the
+    // scanner reads first (one vocabulary).
+    const profile = profileAfterDiagnosticsWrite(read.profile, facts)
     const priorEdit = {
       profileRevision: read.profileRevision,
       quizAnswers: previousQuiz,
@@ -112,7 +155,8 @@ export async function publishProfileEdit(
       },
     }
     const quizAnswers =
-      input.quizAnswers ?? editableScannerQuizAnswers({ ...read, profile, edit: priorEdit })
+      ("quizAnswers" in input ? input.quizAnswers : undefined) ??
+      editableScannerQuizAnswers({ ...read, profile, edit: priorEdit })
     // Carry only the last authoritative explicit details; never reimport a
     // discarded paid answer when an edited basic dimension later returns.
     const prepared = prepareScannerContext({
@@ -125,7 +169,11 @@ export async function publishProfileEdit(
         quizAnswers,
         profile,
         input: {
-          source: rebaseScannerSource(before.source, quizAnswers, previousQuiz),
+          // With a facts document the context rebuilds the source from the facts; the lossy
+          // answer-based rebase is only the fallback for a row that still has none.
+          source: profile.diagnostics
+            ? before.source
+            : rebaseScannerSource(before.source, quizAnswers, previousQuiz),
           userRefinementAnswers: before.userRefinementAnswers,
           userRefinementQuestionIds: before.userRefinementQuestionIds,
         },
@@ -138,7 +186,7 @@ export async function publishProfileEdit(
       p_request_hash: requestHash,
       p_expected_profile_revision: input.expectedProfileRevision,
       p_expected_source_revision: read.sourceRevision,
-      p_patch: input.patch,
+      p_facts: toProfileFactsArgument(facts),
       p_quiz_answers: quizAnswers,
       p_source_hash: prepared.sourceHash,
       p_engine_version: prepared.snapshot.computationVersion,

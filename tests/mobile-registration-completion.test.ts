@@ -4,7 +4,7 @@ import {
   completeMobileRegistration,
   completeMobileProfile,
 } from "../src/lib/mobile/registration-completion"
-import { mobileEditProfilePatch } from "../src/lib/mobile/profile-edit-contract"
+import { legacyMobileEditProfilePatch } from "./mobile-legacy-profile-patch.oracle"
 const owner = "11111111-1111-4111-8111-111111111111"
 const id = "22222222-2222-4222-8222-222222222222"
 const answers = {
@@ -78,7 +78,14 @@ test("new registration computes real scanner context and binds exact submission/
   assert.equal(call.p_mode, "create")
   assert.equal(call.p_user_id, owner)
   assert.equal(call.p_quiz_answers.has_scalp_issue, false)
-  assert.equal(call.p_patch.scalp_condition, null)
+  // Clean-switch task 4: facts for the door, no column patch.
+  assert.equal("p_patch" in call, false)
+  assert.deepEqual(call.p_facts.diagnostics.patch.scalpConcerns, [])
+  assert.equal(call.p_facts.diagnostics.patch.source.leadId, call.p_lead_id)
+  assert.deepEqual(call.p_facts.diagnostics.provenance.source, {
+    kind: "legacy_lead",
+    id: call.p_lead_id,
+  })
   assert.equal(call.p_output_snapshot.computationVersion, "stage1-v1")
   assert.equal(call.p_input_snapshot.source.leadId, call.p_lead_id)
   assert.equal(call.p_submission.marketingOptIn, true)
@@ -101,7 +108,7 @@ test("mismatched verified email never reads or publishes", async () => {
   assert.equal(db.calls.length, 0)
 })
 test("create cannot overwrite existing profile and keep cannot fabricate completed source", async () => {
-  const db = harness(mobileEditProfilePatch(answers as never))
+  const db = harness(legacyMobileEditProfilePatch(answers as never))
   await assert.rejects(
     completeMobileRegistration(db as never, owner, submission.email, input as never),
     /profile_conflict/,
@@ -116,18 +123,21 @@ test("create cannot overwrite existing profile and keep cannot fabricate complet
   assert.ok(!db.calls.some((c) => c.name === "mobile_registration_publish"))
 })
 test("replace preserves unrelated profile fields and uses exact source revision", async () => {
-  const db = harness({ ...mobileEditProfilePatch(answers as never), styling_methods: ["air_dry"] })
+  const db = harness({
+    ...legacyMobileEditProfilePatch(answers as never),
+    styling_methods: ["air_dry"],
+  })
   await completeMobileRegistration(db as never, owner, submission.email, {
     ...input,
     choice: "replace",
   } as never)
   const call = db.calls.at(-1)!.args
   assert.equal(call.p_expected_source_revision, "0")
-  assert.equal(call.p_patch.styling_methods, undefined)
+  assert.equal(call.p_facts.diagnostics.patch.styling_methods, undefined)
   assert.equal(call.p_mode, "replace")
 })
 test("missing-only asks merged helper for allowed patch, ignores supplied present-field replacements", async () => {
-  const profile = mobileEditProfilePatch(answers as never)
+  const profile = legacyMobileEditProfilePatch(answers as never)
   delete profile.hair_length
   const db = harness(profile)
   await completeMobileProfile(db as never, owner, {
@@ -137,7 +147,11 @@ test("missing-only asks merged helper for allowed patch, ignores supplied presen
   })
   const call = db.calls.at(-1)!.args
   assert.equal(call.p_mode, "missing")
-  assert.deepEqual(call.p_patch, { hair_length: "short" })
+  // No stored facts document: the completion writes the whole document (a partial new one
+  // would derive NULL into every other column), built from the merged answers.
+  assert.equal(call.p_facts.diagnostics.patch.hairLength, "short")
+  assert.equal(call.p_facts.diagnostics.patch.thickness, "fine")
+  assert.equal(call.p_facts.diagnostics.provenance.source.kind, "profile_editor")
   assert.equal(call.p_quiz_answers.thickness, "fine")
   assert.equal(call.p_quiz_answers.has_scalp_issue, false)
   assert.equal(call.p_submission, null)

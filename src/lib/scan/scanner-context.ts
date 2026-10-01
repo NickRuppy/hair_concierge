@@ -3,6 +3,7 @@ import { createHash } from "node:crypto"
 import { computeNeedPlan } from "@/lib/personal-plan/compute-stage1"
 import {
   buildLegacyQuizStage1Source,
+  normalizeV2Concerns,
   parseSupportedStage1Source,
   hashSupportedPersonalPlanQuizEnvelope,
 } from "@/lib/personal-plan/input"
@@ -27,13 +28,25 @@ import type {
   Stage2QuestionId,
 } from "@/lib/personal-plan/refinement/types"
 import type { InitialNeedPlanSnapshot, SupportedStage1Source } from "@/lib/personal-plan/types"
-import { adaptPersonalPlanAnswersForOffer } from "@/lib/personal-plan-quiz/offer-adapter"
+import {
+  adaptLegacyQuizAnswersForAssessment,
+  adaptPersonalPlanAnswersForOffer,
+} from "@/lib/personal-plan-quiz/offer-adapter"
 import { hasCompletedQuizDiagnostics } from "@/lib/quiz/completion"
 import {
   normalizeStoredQuizAnswers,
   projectQuizAnswersToLegacyVocabulary,
 } from "@/lib/quiz/normalization"
 import type { QuizAnswers } from "@/lib/quiz/types"
+import { sameFactValue } from "@/lib/user-facts/hand-edit"
+import { projectArtifactToFacts } from "@/lib/user-facts/project-artifact"
+import { diagnosticsToQuizAnswers } from "@/lib/user-facts/quiz-answers"
+import {
+  diagnosticsV1Schema,
+  domainProvenanceSchema,
+  type DiagnosticsV1,
+  type FieldProvenanceValue,
+} from "@/lib/user-facts/schema"
 import type { ScanEvaluationContext } from "./profile-context"
 
 export type ScannerNeedSource = {
@@ -171,6 +184,9 @@ export function currentLegacyAnswers(profile: Record<string, unknown>): QuizAnsw
 export function editableScannerQuizAnswers(read: ScannerSourceRead): QuizAnswers {
   if (!hasCompletedQuizDiagnostics(read.profile as never))
     throw new Error("scan_profile_context_unavailable")
+  // One vocabulary: with a facts document the facts ARE her raw selections.
+  const facts = scannerFacts(read.profile)
+  if (facts) return factsQuizAnswers(read, facts)
   const current = currentLegacyAnswers(read.profile!)
   const paid = [read.refined, read.initial]
     .map((need) =>
@@ -224,6 +240,154 @@ function normalizedBasics(answers: QuizAnswers): unknown {
     concerns: [...legacy.concerns].sort(),
     concerns_other_text: undefined,
   }
+}
+
+// ---------------------------------------------------------------------------
+// Facts path (clean switch): a profile with a `diagnostics` document is compared with and
+// rebuilt from its native facts. Rows without one keep the column + offer-adapter path below.
+// ---------------------------------------------------------------------------
+
+type ScannerFacts = {
+  diagnostics: DiagnosticsV1
+  fields: Readonly<Record<string, FieldProvenanceValue>>
+}
+
+/** The facts "basics" — exactly the fields `eligiblePaid` compares (not the main problem). */
+const BASIC_FACT_FIELDS = [
+  "texture",
+  "thickness",
+  "density",
+  "hairLength",
+  "hairSurface",
+  "elasticResponse",
+  "scalpOiliness",
+  "scalpConcerns",
+  "chemicalTreatments",
+  "currentConcerns",
+  "goals",
+] as const
+type BasicFactField = (typeof BASIC_FACT_FIELDS)[number]
+
+/** Only the two things the scanner reads are parsed: a corrupt domain it does not read (care
+ * habits, quiz context, their provenance) never breaks a scan, and a corrupt diagnostics document
+ * or diagnostics provenance falls back to the column path, like a row without a document. */
+function scannerFacts(profile: Record<string, unknown> | null): ScannerFacts | null {
+  if (!profile || profile.diagnostics === null || profile.diagnostics === undefined) return null
+  const diagnostics = diagnosticsV1Schema.safeParse(profile.diagnostics)
+  if (!diagnostics.success) return null
+  const stored = (profile.facts_provenance as Record<string, unknown> | null | undefined)
+    ?.diagnostics
+  if (stored === undefined || stored === null) return { diagnostics: diagnostics.data, fields: {} }
+  const provenance = domainProvenanceSchema.safeParse(stored)
+  if (!provenance.success) return null
+  return { diagnostics: diagnostics.data, fields: provenance.data.fields ?? {} }
+}
+
+/** A fact the profile really knows: absent (a partial document) and `assumed` (a completeness
+ * default, which only fills a gap and never replaces an answer) are unknown. */
+function knownFact(facts: ScannerFacts, field: BasicFactField): unknown {
+  if (facts.fields[field] === "assumed") return undefined
+  return facts.diagnostics[field]
+}
+
+/** A Stage-1 source's answers in the native facts vocabulary. */
+function sourceFacts(source: SupportedStage1Source): Partial<DiagnosticsV1> {
+  if (source.kind === "legacy_quiz") return source.answers as Partial<DiagnosticsV1>
+  return projectArtifactToFacts({ envelope: source, artifactId: "scanner", leadId: "scanner" })
+    .diagnostics
+}
+
+/** The paid-binding check (`eligiblePaid`): the source's basics match the facts. */
+function factsCompatible(source: SupportedStage1Source, facts: ScannerFacts): boolean {
+  const projected = sourceFacts(source)
+  return BASIC_FACT_FIELDS.every((field) => {
+    const known = knownFact(facts, field)
+    return known === undefined || sameFactValue(projected[field], known)
+  })
+}
+
+/** Whether a source is used verbatim: rebuilding it on the facts changes nothing — its basics,
+ * and for a personal-plan source also the main problem and recurrence. So the read already yields
+ * what an (unchanged) edit publishes, which rebuilds the source on the facts. */
+function factsVerbatim(source: SupportedStage1Source, facts: ScannerFacts): boolean {
+  return scannerSourceHash(rebaseScannerSourceOnFacts(source, facts)) === scannerSourceHash(source)
+}
+
+/**
+ * The source rebuilt from the facts: every basic the facts know replaces the source's value where
+ * they differ (unknown ones keep the source's); a personal-plan source also takes the facts' main
+ * problem and recurrence, while its quiz-context answers stay. A legacy Stage-1 source has no slot
+ * for those two. A v2 envelope whose concerns must change becomes v3 (its concern vocabulary
+ * cannot hold them), as `toStage1Source` does for an edited v2. Idempotent.
+ */
+function rebaseScannerSourceOnFacts(
+  source: SupportedStage1Source,
+  facts: ScannerFacts,
+): SupportedStage1Source {
+  const diagnostics = facts.diagnostics
+  let base = source
+  if (base.kind !== "legacy_quiz" && base.version === 2) {
+    const concerns = knownFact(facts, "currentConcerns") as string[] | undefined
+    const native = normalizeV2Concerns(base.answers.currentConcerns)
+    // Promoted only when something must change: the concerns, or a main problem / recurrence
+    // that survives into the rebuilt concerns (a stale one is dropped below either way).
+    const rebuilt: readonly string[] = concerns ?? native
+    if (
+      (concerns !== undefined && !sameFactValue(native, concerns)) ||
+      (diagnostics.primaryConcern !== undefined && rebuilt.includes(diagnostics.primaryConcern)) ||
+      (diagnostics.concernRecurrence !== undefined &&
+        rebuilt.includes(diagnostics.concernRecurrence.concernId))
+    )
+      base = {
+        ...base,
+        version: 3,
+        answers: { ...base.answers, currentConcerns: native },
+      } as SupportedStage1Source
+  }
+  const projected = sourceFacts(base)
+  const answers = { ...base.answers } as Record<string, unknown>
+  for (const field of BASIC_FACT_FIELDS) {
+    const known = knownFact(facts, field)
+    if (known === undefined || sameFactValue(projected[field], known)) continue
+    answers[field] = Array.isArray(known) ? [...known].sort() : known
+  }
+  if (base.kind !== "legacy_quiz") {
+    const concerns = answers.currentConcerns as string[]
+    if (diagnostics.primaryConcern && concerns.includes(diagnostics.primaryConcern))
+      answers.primaryConcern = diagnostics.primaryConcern
+    else delete answers.primaryConcern
+    if (diagnostics.concernRecurrence && concerns.includes(diagnostics.concernRecurrence.concernId))
+      answers.concernRecurrence = { ...diagnostics.concernRecurrence }
+    else delete answers.concernRecurrence
+  }
+  return { ...base, answers } as SupportedStage1Source
+}
+
+/** The iOS/edit-record answers from the facts, plus a free concern text the facts do not carry
+ * (a lead projection has none; an edit before fix round 3 kept it only in its answers) while those
+ * answers' concerns still match. The latest edit record is authoritative: once there is one, an
+ * older lead's text never comes back (a text cleared on iOS stays cleared). */
+function factsQuizAnswers(read: ScannerSourceRead, facts: ScannerFacts): QuizAnswers {
+  const answers = diagnosticsToQuizAnswers(facts.diagnostics)
+  if (answers.concerns_other_text) return answers
+  const concerns = facts.diagnostics.currentConcerns
+  const withText = (
+    read.edit
+      ? [read.edit.quizAnswers]
+      : read.leads
+          .filter((lead) => lead.user_id === read.userId && lead.quiz_kind === "legacy")
+          .map((lead) => lead.quiz_answers)
+  ).find(
+    (raw) =>
+      raw?.concerns_other_text &&
+      sameFactValue(
+        adaptLegacyQuizAnswersForAssessment(normalizeStoredQuizAnswers(raw)).currentConcerns,
+        concerns,
+      ),
+  )
+  return withText
+    ? { ...answers, concerns_other_text: normalizeStoredQuizAnswers(withText).concerns_other_text }
+    : answers
 }
 
 function sourceCompatible(source: SupportedStage1Source, current: QuizAnswers): boolean {
@@ -339,6 +503,9 @@ function validNeed(
 export function prepareScannerContext(read: ScannerSourceRead): PreparedScannerContext | null {
   if (!hasCompletedQuizDiagnostics(read.profile as never)) return null
   const current = currentLegacyAnswers(read.profile!)
+  const facts = scannerFacts(read.profile)
+  const compatible = (source: SupportedStage1Source) =>
+    facts ? factsVerbatim(source, facts) : sourceCompatible(source, current)
   const rejectedPaidSources: ScannerPaidSourceRejection[] = []
   const eligiblePaid = (need: ScannerNeedSource | null) => {
     if (!read.edit) return true
@@ -352,6 +519,7 @@ export function prepareScannerContext(read: ScannerSourceRead): PreparedScannerC
     if (boundProfileRevision !== read.profileRevision) return reject("profile_revision_mismatch")
     const parsed = parseSupportedStage1Source(need.output_snapshot?.sourceQuiz)
     if (!parsed.ok) return reject("unsupported_paid_source")
+    if (facts) return factsCompatible(parsed.source, facts) || reject("basic_answers_mismatch")
     const fresh = buildLegacyQuizStage1Source({
       leadId: "profile",
       answers: editableScannerQuizAnswers(read),
@@ -387,15 +555,17 @@ export function prepareScannerContext(read: ScannerSourceRead): PreparedScannerC
   const edited = read.edit ? parseSupportedStage1Source(read.edit.input.source) : null
   if (edited && !edited.ok) throw new Error("scan_profile_context_unavailable")
   const paidSource =
-    refined && sourceCompatible(refined, current)
-      ? refined
-      : initial && sourceCompatible(initial, current)
-        ? initial
-        : null
+    refined && compatible(refined) ? refined : initial && compatible(initial) ? initial : null
   let source: SupportedStage1Source | null =
     paidSource ??
     (edited?.ok
-      ? rebaseScannerSource(edited.source, editableScannerQuizAnswers(read), read.edit!.quizAnswers)
+      ? facts
+        ? rebaseScannerSourceOnFacts(edited.source, facts)
+        : rebaseScannerSource(
+            edited.source,
+            editableScannerQuizAnswers(read),
+            read.edit!.quizAnswers,
+          )
       : null)
   // A completed owner source is required even if a legacy profile row happens
   // to contain all diagnostics. No email matching, arbitrary newest lead or defaults.
@@ -420,7 +590,7 @@ export function prepareScannerContext(read: ScannerSourceRead): PreparedScannerC
     .filter((entry) => parseSupportedStage1Source(entry.source).ok)
   if (!source && !initial && !refined && eligible.length === 0) return null
   if (!source) {
-    const candidates = eligible.filter((entry) => sourceCompatible(entry.source, current))
+    const candidates = eligible.filter((entry) => compatible(entry.source))
     if (
       !initial &&
       !refined &&
@@ -429,12 +599,18 @@ export function prepareScannerContext(read: ScannerSourceRead): PreparedScannerC
       throw new Error("scan_profile_context_unavailable")
     const prior =
       refined ?? initial ?? candidates.sort((a, b) => a.id.localeCompare(b.id))[0]?.source
-    source = prior
-      ? rebaseScannerSource(prior, current)
-      : buildLegacyQuizStage1Source({
-          leadId: eligible.map((entry) => entry.id).sort()[0],
-          answers: current,
-        })
+    if (facts) {
+      // Rebuilt from the facts on the prior source, or on the owner's first lead: a value the
+      // facts do not really know (absent, assumed) keeps that lead's answer.
+      const onto = prior ?? [...eligible].sort((a, b) => a.id.localeCompare(b.id))[0].source
+      source = rebaseScannerSourceOnFacts(onto, facts)
+    } else
+      source = prior
+        ? rebaseScannerSource(prior, current)
+        : buildLegacyQuizStage1Source({
+            leadId: eligible.map((entry) => entry.id).sort()[0],
+            answers: current,
+          })
     if (!parseSupportedStage1Source(source).ok) return null
   }
   const base = computeNeedPlan({

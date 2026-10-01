@@ -4,6 +4,7 @@ import test from "node:test"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { seedMobileProfileFixtures } from "../scripts/mobile/profile-fixture"
+import { withSimulatedDoor } from "./user-facts-save-rpc.fixtures"
 import {
   discoveryPreviewInput,
   loadDiscoveryIdealRoutine,
@@ -236,7 +237,7 @@ async function usableScannerSource(): Promise<ScannerSourceRead> {
       }
     },
   }
-  await seedMobileProfileFixtures(seedClient as never, {
+  await seedMobileProfileFixtures(withSimulatedDoor(rows, seedClient) as never, {
     free: "free",
     detailed: "owner",
     incomplete: "incomplete",

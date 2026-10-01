@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { loadScanEvaluationContext } from "../src/lib/scan/profile-context"
 import { seedMobileProfileFixtures } from "../scripts/mobile/profile-fixture"
+import { withSimulatedDoor } from "./user-facts-save-rpc.fixtures"
 import type { ScannerSourceRead } from "../src/lib/scan/scanner-context"
 
 /** Real source builders, RPC boundary only mocked. No production provider. */
@@ -26,7 +27,7 @@ async function fixture() {
       }
     },
   }
-  await seedMobileProfileFixtures(client as never, {
+  await seedMobileProfileFixtures(withSimulatedDoor(rows, client) as never, {
     free: "free",
     detailed: "owner",
     incomplete: "incomplete",

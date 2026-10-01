@@ -11,6 +11,8 @@ import { compileInitialRoutineCandidate } from "../../src/lib/personal-plan/rout
 import { routinePayloadV1Schema } from "../../src/lib/personal-plan/routine/contracts"
 import { semanticHash } from "../../src/lib/personal-plan/routine/canonicalize"
 import type { QuizAnswers } from "../../src/lib/quiz/types"
+import { writeAccountLinkFacts } from "../../src/lib/user-facts/account-link"
+import { seedHairProfile } from "../../src/lib/user-facts/seed-profile"
 
 export const mobileProfileFixtureAnswers: QuizAnswers = {
   structure: "wavy",
@@ -97,11 +99,6 @@ export async function seedMobileProfileFixtures(
     cancel_at_period_end: false,
     metadata: { local_test: true, seed_source: "mobile_profile_fixture" },
   })
-  await insert("hair_profiles", [
-    { user_id: userIds.free, ...mobileProfileFixtureProfile },
-    { user_id: userIds.detailed, ...mobileProfileFixtureProfile },
-    { user_id: userIds.incomplete, hair_texture: "straight", thickness: "fine" },
-  ])
   await insert("leads", [
     {
       id: ids.freeLead,
@@ -122,6 +119,20 @@ export async function seedMobileProfileFixtures(
       marketing_consent: false,
     },
   ])
+  // Profiles through the door (`user_facts_save_v1`; the lock rejects direct fact-column writes):
+  // the two lead users exactly as the account link writes a linked legacy lead (their columns
+  // derive to `mobileProfileFixtureProfile`), the incomplete one from its two columns.
+  const takenAt = new Date().toISOString()
+  for (const [userId, leadId] of [
+    [userIds.free, ids.freeLead],
+    [userIds.detailed, ids.detailedLead],
+  ] as const) {
+    await writeAccountLinkFacts(client, {
+      userId,
+      quiz: { kind: "lead", leadId, quizAnswers: mobileProfileFixtureAnswers, createdAt: takenAt },
+    })
+  }
+  await seedHairProfile(client, userIds.incomplete, { hair_texture: "straight", thickness: "fine" })
   const source = buildLegacyQuizStage1Source({
     leadId: ids.detailedLead,
     answers: mobileProfileFixtureAnswers,

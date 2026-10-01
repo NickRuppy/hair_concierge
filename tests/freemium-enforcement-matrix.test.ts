@@ -117,25 +117,25 @@ test("flag on: a free authenticated user is still denied /api/profile (non-admit
 
 /**
  * T15 (freemium-scanner-first PR5): the profile page's Haar-Check corner lock relies on
- * PUT /api/profile (the route the inline quiz editor's save eventually reaches) staying
- * premium-gated — the row above only ever exercised GET. Middleware gates the whole
- * `/api/profile` prefix regardless of method (matrix note: "method-agnostic"), but this is
- * the first test that actually proves PUT, not just GET.
+ * the profile editors' save (`POST /api/profile/answers` since the clean switch; formerly
+ * `PUT /api/profile`, deleted) staying premium-gated — the row above only ever exercised GET.
+ * Middleware gates the whole `/api/profile` prefix regardless of method (matrix note:
+ * "method-agnostic"); this proves a write, not just GET.
  */
-test("flag on: a free authenticated user is still denied PUT /api/profile (non-admitted, subscription_required)", async () => {
+test("flag on: a free authenticated user is still denied POST /api/profile/answers (non-admitted, subscription_required)", async () => {
   await withFlagOn(async () => {
     const response = await createFreeUserMiddleware()(
-      new NextRequest("https://chaarlie.de/api/profile", { method: "PUT" }),
+      new NextRequest("https://chaarlie.de/api/profile/answers", { method: "POST" }),
     )
     assert.equal(response.status, 403)
     assert.deepEqual(await response.json(), { error: "subscription_required" })
   })
 })
 
-test("flag on: a paid authenticated user reaches PUT /api/profile unchanged", async () => {
+test("flag on: a paid authenticated user reaches POST /api/profile/answers unchanged", async () => {
   await withFlagOn(async () => {
     const response = await createPaidUserMiddleware()(
-      new NextRequest("https://chaarlie.de/api/profile", { method: "PUT" }),
+      new NextRequest("https://chaarlie.de/api/profile/answers", { method: "POST" }),
     )
     assert.equal(response.status, 200)
     assert.equal(response.headers.get("location"), null)

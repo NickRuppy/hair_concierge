@@ -11,11 +11,10 @@ import { SCAN_FUNNEL_PACKAGE_KEY } from "@/lib/quiz/screen-order"
 import { lookupFunnelContextForLead, type FunnelLeadContextLookup } from "@/lib/funnel/server"
 import { createStage1PersistenceService } from "@/lib/personal-plan/persistence/stage1-service"
 import { createStage1SupabaseDependencies } from "@/lib/personal-plan/persistence/stage1-supabase"
-import {
-  buildProfileDataFromPersonalPlanCanonicalProfile,
-  buildProfileDataFromQuizAnswers,
-} from "@/lib/quiz/link-to-profile"
+import { buildProfileDataFromPersonalPlanCanonicalProfile } from "@/lib/quiz/link-to-profile"
 import type { QuizAnswers } from "@/lib/quiz/types"
+import { projectLegacyLeadToFacts } from "@/lib/user-facts"
+import { writeAccountLinkFacts } from "@/lib/user-facts/account-link"
 
 type PersonalPlanLead = {
   email: string
@@ -23,6 +22,8 @@ type PersonalPlanLead = {
   quiz_answers?: unknown
   quiz_kind: "legacy" | "personal_plan"
   updated_at?: string | null
+  /** The quiz timestamp "latest own quiz wins" compares (legacy path). */
+  created_at?: string | null
   user_id: string | null
 }
 
@@ -30,6 +31,8 @@ type PersonalPlanPreparedArtifact = {
   id: string
   canonical_profile?: unknown
   quiz_answers?: unknown
+  /** The quiz timestamp "latest own quiz wins" compares (personal-plan path). */
+  created_at?: string | null
   user_id: string | null
 }
 
@@ -253,23 +256,9 @@ export function isValidPlanBereitFactPatch(field: string, value: unknown): boole
   return fact.selectionMode === "multi" ? Array.isArray(value) : typeof value === "string"
 }
 
-const PROFILE_PROJECTION_FIELDS = [
-  "hair_texture",
-  "thickness",
-  "hair_length",
-  "density",
-  "cuticle_condition",
-  "protein_moisture_balance",
-  "scalp_type",
-  "scalp_condition",
-  "concerns",
-  "chemical_treatment",
-] as const
-
 type LinkablePlanBereitSource = {
   status: "linkable"
   lead: PersonalPlanLead
-  projectedProfile: Record<string, unknown>
   artifact: PersonalPlanPreparedArtifact | null
   funnelPackage: PlanBereitFunnelPackageResolution
 }
@@ -278,56 +267,80 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value)
 }
 
-function hasOwn(value: Record<string, unknown>, key: string): boolean {
-  return Object.prototype.hasOwnProperty.call(value, key)
+type ProjectedHairProfileRow = {
+  diagnostics: unknown
+  facts_revision: number
+  facts_provenance?: unknown
 }
 
-function structurallyEqual(left: unknown, right: unknown): boolean {
-  if (Array.isArray(left) || Array.isArray(right)) {
-    return (
-      Array.isArray(left) &&
-      Array.isArray(right) &&
-      left.length === right.length &&
-      left.every((item, index) => structurallyEqual(item, right[index]))
-    )
-  }
-  if (isRecord(left) || isRecord(right)) {
-    if (!isRecord(left) || !isRecord(right)) return false
-    const leftKeys = Object.keys(left)
-    const rightKeys = Object.keys(right)
-    return (
-      leftKeys.length === rightKeys.length &&
-      leftKeys.every((key) => hasOwn(right, key) && structurallyEqual(left[key], right[key]))
-    )
-  }
-  return Object.is(left, right)
-}
-
-function profileMatchesProjected(
-  profile: unknown,
-  projectedProfile: Record<string, unknown>,
-): boolean {
-  if (!isRecord(profile)) return false
-  return PROFILE_PROJECTION_FIELDS.every((field) => {
-    if (!hasOwn(projectedProfile, field)) return true
-    return structurallyEqual(projectedProfile[field], profile[field])
-  })
-}
-
+/**
+ * F28: readiness only needs to know whether diagnostics facts exist, not what
+ * they contain — the field-by-field column comparison this used to do
+ * (`profileMatchesProjected`) is gone along with the direct `hair_profiles`
+ * writes it existed to validate.
+ */
 async function loadProjectedHairProfile(
   supabase: SupabaseClient,
   userId: string,
-): Promise<Record<string, unknown> | null> {
+): Promise<ProjectedHairProfileRow | null> {
   const { data, error } = await supabase
     .from("hair_profiles")
-    .select(PROFILE_PROJECTION_FIELDS.join(","))
+    .select("diagnostics, facts_revision, facts_provenance")
     .eq("user_id", userId)
     .maybeSingle()
 
   if (error) {
     throw new Error(`plan-bereit profile readiness failed: ${error.message}`)
   }
-  return (data as Record<string, unknown> | null) ?? null
+  return (data as ProjectedHairProfileRow | null) ?? null
+}
+
+/** A built legacy Stage-1 answer that says something: defined, and not an empty list. */
+function answered(value: unknown): boolean {
+  return Array.isArray(value) ? value.length > 0 : value !== undefined && value !== null
+}
+
+/**
+ * Wave-1 fix round 2 (controller ruling: "answering the missing question makes that quiz the
+ * latest one"), the NARROW retry predicate. `leads` carries no reliable "answers last changed"
+ * time (see `updateMissingPlanBereitSourceFact`), so the recovery write stamps the correction
+ * time itself; when that write fails, nothing durable remembers the correction. This recognises
+ * it from the facts: the stored diagnostics come from THIS legacy lead, yet the lead now
+ * answers a Stage-1 question the stored `source.raw` left unanswered — only a missing-fact
+ * recovery can do that. Field PRESENCE only, never values, so projector drift cannot trip it.
+ *
+ * A hand edit (`editedAt`) after the failed write is the user's latest word: no retry then.
+ */
+function storedFactsLackRecoveredAnswer(
+  profile: ProjectedHairProfileRow | null,
+  lead: PersonalPlanLead,
+): boolean {
+  const diagnostics = profile?.diagnostics
+  if (lead.quiz_kind !== "legacy" || !isRecord(diagnostics) || !isRecord(lead.quiz_answers)) {
+    return false
+  }
+  const source = diagnostics.source
+  if (!isRecord(source) || source.kind !== "legacy_quiz" || source.leadId !== lead.id) return false
+  const provenance = isRecord(profile?.facts_provenance) ? profile.facts_provenance : {}
+  const diagnosticsProvenance = isRecord(provenance.diagnostics) ? provenance.diagnostics : {}
+  if (diagnosticsProvenance.editedAt) return false
+
+  const storedAnswers =
+    isRecord(source.raw) && isRecord(source.raw.answers) ? source.raw.answers : {}
+  let currentRaw: unknown
+  try {
+    currentRaw = projectLegacyLeadToFacts({
+      leadId: lead.id,
+      quizAnswers: lead.quiz_answers as QuizAnswers,
+    }).diagnostics.source.raw
+  } catch {
+    return false
+  }
+  const currentAnswers =
+    isRecord(currentRaw) && isRecord(currentRaw.answers) ? currentRaw.answers : {}
+  return Object.entries(currentAnswers).some(
+    ([field, value]) => answered(value) && !answered(storedAnswers[field]),
+  )
 }
 
 function isSupportedQuizKind(value: unknown): value is PlanBereitQuizSourceKind {
@@ -440,7 +453,7 @@ async function loadExactPlanBereitLead(
 
   const exact = await supabase
     .from("leads")
-    .select("id,email,quiz_kind,quiz_answers,user_id,updated_at")
+    .select("id,email,quiz_kind,quiz_answers,user_id,updated_at,created_at")
     .eq("id", input.leadId)
     .maybeSingle()
 
@@ -511,7 +524,7 @@ async function loadAttachedPersonalPlanArtifact(
 ): Promise<PersonalPlanPreparedArtifact | null> {
   const { data, error } = await supabase
     .from("personal_plan_prepared_artifacts")
-    .select("id,user_id,canonical_profile,quiz_answers")
+    .select("id,user_id,canonical_profile,quiz_answers,created_at")
     .eq("lead_id", leadId)
     .eq("status", "attached")
     .limit(2)
@@ -642,13 +655,14 @@ async function loadPlanBereitLinkCandidate(
       }
     }
     try {
+      // Completeness gate only (F28 no longer stores this projection): an
+      // incomplete canonical profile still throws and falls through to
+      // `invalid_source`, exactly as before.
+      buildProfileDataFromPersonalPlanCanonicalProfile(artifact.canonical_profile)
       return {
         status: "linkable",
         lead,
         artifact,
-        projectedProfile: buildProfileDataFromPersonalPlanCanonicalProfile(
-          artifact.canonical_profile,
-        ),
         funnelPackage,
       }
     } catch {
@@ -700,7 +714,6 @@ async function loadPlanBereitLinkCandidate(
     status: "linkable",
     lead,
     artifact: null,
-    projectedProfile: buildProfileDataFromQuizAnswers(lead.quiz_answers as QuizAnswers),
     funnelPackage,
   }
 }
@@ -727,12 +740,24 @@ export async function loadPlanBereitInitialReadiness(
   }
 
   const profile = await loadProjectedHairProfile(supabase, input.userId)
+  // F28: diagnostics facts existing (non-null, at least one write) is the whole
+  // readiness predicate now — independent of candidate creation order, and of
+  // which candidate (or an entirely different source) actually wrote them.
+  // Ownership/link checks are unchanged.
+  // (M4) `facts_revision > 0` as "has been written at least once" relies on
+  // `user_facts_save_v1` being the ONLY writer of `hair_profiles.facts_revision`
+  // — true today (task 3), and the historical-user backfill also writes through
+  // that same RPC (`source.kind: "legacy_columns"`), so the invariant holds for
+  // backfilled rows too, not just fresh account links.
   const alreadyProjected =
-    candidate.lead.quiz_kind === "legacy"
-      ? candidate.lead.user_id === input.userId &&
-        profileMatchesProjected(profile, candidate.projectedProfile)
-      : candidate.artifact?.user_id === input.userId &&
-        profileMatchesProjected(profile, candidate.projectedProfile)
+    (candidate.lead.quiz_kind === "legacy"
+      ? candidate.lead.user_id === input.userId
+      : candidate.artifact?.user_id === input.userId) &&
+    profile !== null &&
+    profile.diagnostics != null &&
+    profile.facts_revision > 0 &&
+    // Round 2: facts from this very lead that miss an answer its recovery supplied are stale.
+    !storedFactsLackRecoveredAnswer(profile, candidate.lead)
 
   if (alreadyProjected) {
     // `ready` is the CTA gate. For a `scan_v1` buyer it must additionally mean "the
@@ -789,20 +814,6 @@ export async function loadPlanBereitReadiness(
   deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
 ): Promise<PlanBereitReadiness> {
   return readinessFromInitial(await loadPlanBereitInitialReadiness(supabase, input, deps))
-}
-
-async function persistProfileOutput(
-  supabase: SupabaseClient,
-  userId: string,
-  profileData: Record<string, unknown>,
-) {
-  const output: Record<string, unknown> = { ...profileData, user_id: userId }
-  delete output.goals
-
-  const persisted = await supabase.from("hair_profiles").upsert(output, { onConflict: "user_id" })
-  if (persisted.error) {
-    throw new Error(`hair_profiles upsert failed: ${persisted.error.message}`)
-  }
 }
 
 /**
@@ -901,6 +912,27 @@ export async function linkExactPlanBereitSourceToProfile(
   input: ExactReadinessInput,
   deps: PlanBereitProvisioningDependencies = planBereitProvisioningDefaults,
 ): Promise<PlanBereitReadiness> {
+  return linkPlanBereitSource(supabase, input, deps, "account_link")
+}
+
+/**
+ * Which quiz time the legacy branch hands `writeAccountLinkFacts` ("latest own quiz wins" —
+ * one rule, no special-case write):
+ * - `account_link`: the lead's own `created_at`.
+ * - `corrected_source`: the missing-fact recovery form just corrected this lead. Answering the
+ *   missing question makes that quiz the LATEST one (controller ruling, wave-1 fix round 2),
+ *   so its quiz time is the correction time — now. It then wins like any newer quiz (full
+ *   replacement, quiz_context cleared, CAS) and loses to anything newer (a quiz taken after
+ *   the correction, a later hand edit).
+ */
+type LegacyFactsWrite = "account_link" | "corrected_source"
+
+async function linkPlanBereitSource(
+  supabase: SupabaseClient,
+  input: ExactReadinessInput,
+  deps: PlanBereitProvisioningDependencies,
+  legacyFactsWrite: LegacyFactsWrite,
+): Promise<PlanBereitReadiness> {
   let candidate = await loadPlanBereitLinkCandidate(supabase, input, deps)
   if (
     candidate.status === "source_pending" &&
@@ -947,6 +979,9 @@ export async function linkExactPlanBereitSourceToProfile(
   if (candidate.status !== "linkable") return candidate
   const { lead } = candidate
 
+  // Decision wave 1 ("latest own quiz wins"): the candidate is this account's own lead
+  // (exact owner or active field-test enrollment, checked above), so it replaces the facts
+  // when it is newer than the profile's last facts change and is preserved otherwise.
   if (lead.quiz_kind === "legacy") {
     if (lead.user_id !== input.userId) {
       const linked = await supabase
@@ -967,7 +1002,22 @@ export async function linkExactPlanBereitSourceToProfile(
         }
       }
     }
-    await persistProfileOutput(supabase, input.userId, candidate.projectedProfile)
+    // Facts are written only AFTER the lead claim above succeeded (main's ordering), and
+    // only through `user_facts_save_v1` — never a direct `hair_profiles` write. A retry after
+    // a failed recovery write reaches here as an ordinary `account_link`; the narrow
+    // predicate recognises the pending correction and stamps the correction time too.
+    const correctionPending =
+      legacyFactsWrite === "corrected_source" ||
+      storedFactsLackRecoveredAnswer(await loadProjectedHairProfile(supabase, input.userId), lead)
+    await writeAccountLinkFacts(supabase, {
+      userId: input.userId,
+      quiz: {
+        kind: "lead",
+        leadId: lead.id,
+        quizAnswers: lead.quiz_answers as QuizAnswers,
+        createdAt: correctionPending ? new Date().toISOString() : (lead.created_at ?? null),
+      },
+    })
     // The read-back checks projection and provisions Stage 1 once. A failure is
     // surfaced as transient_error there, never as a premature ready state.
     return loadPlanBereitReadiness(supabase, input, deps)
@@ -981,12 +1031,20 @@ export async function linkExactPlanBereitSourceToProfile(
     throw new Error(`personal plan artifact link failed: ${artifactLink.error.message}`)
   }
   const result = Array.isArray(artifactLink.data) ? artifactLink.data[0] : artifactLink.data
-  if (isRecord(result) && "canonical_profile" in result) {
-    await persistProfileOutput(
-      supabase,
-      input.userId,
-      buildProfileDataFromPersonalPlanCanonicalProfile(result.canonical_profile),
-    )
+  if (isRecord(result) && candidate.artifact) {
+    // The RPC no longer supplies the projection (`canonical_profile`) this write
+    // used — the candidate's own attached-artifact load already carries the
+    // `quiz_answers` envelope and the `created_at` quiz timestamp.
+    await writeAccountLinkFacts(supabase, {
+      userId: input.userId,
+      quiz: {
+        kind: "artifact",
+        artifactId: candidate.artifact.id,
+        leadId: lead.id,
+        envelope: candidate.artifact.quiz_answers,
+        createdAt: candidate.artifact.created_at ?? null,
+      },
+    })
   }
 
   return loadPlanBereitReadiness(supabase, input, deps)
@@ -1115,8 +1173,11 @@ export async function updateMissingPlanBereitSourceFact(
   const remaining = classifyPlanBereitSourceFacts({ ...lead, quiz_answers: nextAnswers })
   if (remaining.status === "ready") {
     // Link/provision only after every required fact is valid; intermediate saves
-    // must not publish a partially populated profile.
-    return linkExactPlanBereitSourceToProfile(supabase, input, deps)
+    // must not publish a partially populated profile. A corrected legacy lead is linked
+    // as the LATEST quiz (`corrected_source`: its quiz time is the correction time); a
+    // corrected Personal Plan lead is repaired into a NEW artifact, whose `created_at` is
+    // the correction time by construction.
+    return linkPlanBereitSource(supabase, input, deps, "corrected_source")
   }
   return loadPlanBereitReadiness(supabase, input, deps)
 }

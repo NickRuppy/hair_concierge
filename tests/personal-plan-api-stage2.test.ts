@@ -799,3 +799,37 @@ test("Stage 2 completion is a separate strict POST with owner-derived success, c
     assert.deepEqual([response.status, await response.json()], [status, { error: code }])
   }
 })
+
+/**
+ * Fix round 1, I1: every production `gatewayFor` that can reach `complete()` or
+ * `completeModule()` must wire the facts writer — otherwise the shared service throws
+ * (M5). Unit-testing the real wiring end-to-end would need a live Supabase client, so
+ * this asserts the source directly: both routes build ONE `admin` client and pass it to
+ * BOTH `createSupabaseStage2RefinementPersistence` and `createPersistedStage2RefinementGateway`
+ * (which derives `saveFacts` from it — see `production-persistence-gateway.ts`).
+ */
+test("both stage-2 routes construct their gateway with the facts writer (admin wired through)", async () => {
+  const { readFile } = await import("node:fs/promises")
+  const gatewayWiredWithAdmin =
+    /const admin = createAdminClient\(\)[\s\S]{0,200}createPersistedStage2RefinementGateway\(\{[\s\S]{0,200}admin,?\s*\}\)/
+
+  const routeSource = await readFile(
+    new URL("../src/app/api/personal-plan/stage-2/route.ts", import.meta.url),
+    "utf8",
+  )
+  assert.match(
+    routeSource,
+    gatewayWiredWithAdmin,
+    "stage-2/route.ts must wire admin into createPersistedStage2RefinementGateway (serves both completeAfterSave and completeModuleAfterSave)",
+  )
+
+  const completeRouteSource = await readFile(
+    new URL("../src/app/api/personal-plan/stage-2/complete/route.ts", import.meta.url),
+    "utf8",
+  )
+  assert.match(
+    completeRouteSource,
+    gatewayWiredWithAdmin,
+    "stage-2/complete/route.ts must wire admin into createPersistedStage2RefinementGateway",
+  )
+})

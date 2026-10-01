@@ -1,6 +1,8 @@
 import { expect, test, type Page, type Route } from "@playwright/test"
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 
+import { seedHairProfile } from "../src/lib/user-facts/seed-profile"
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -305,21 +307,18 @@ test.describe.serial("@ci tracker page regressions", () => {
           },
           { onConflict: "provider,provider_subscription_id" },
         ),
-        admin.from("hair_profiles").upsert(
-          {
-            user_id: userId,
-            hair_texture: "wavy",
-            thickness: "fine",
-            density: "medium",
-            cuticle_condition: "smooth",
-            protein_moisture_balance: "stretches_bounces",
-            scalp_type: "balanced",
-            scalp_condition: [],
-            chemical_treatment: [],
-            concerns: [],
-          },
-          { onConflict: "user_id" },
-        ),
+        // Through the door (`user_facts_save_v1`) — the lock rejects direct fact-column writes.
+        seedHairProfile(admin, userId, {
+          hair_texture: "wavy",
+          thickness: "fine",
+          density: "medium",
+          cuticle_condition: "smooth",
+          protein_moisture_balance: "stretches_bounces",
+          scalp_type: "balanced",
+          scalp_condition: [],
+          chemical_treatment: [],
+          concerns: [],
+        }).then(() => ({ error: null })),
       ])
     if (profileError) throw profileError
     if (billingError && billingError.code !== "PGRST205") throw billingError

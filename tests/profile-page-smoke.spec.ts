@@ -1,6 +1,8 @@
 import { test, expect } from "@playwright/test"
 import { createClient } from "@supabase/supabase-js"
 
+import { seedHairProfile } from "../src/lib/user-facts/seed-profile"
+
 const baseUrl = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000"
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -15,25 +17,6 @@ if (!supabaseUrl || !serviceRoleKey) {
 const admin = createClient(supabaseUrl, serviceRoleKey, {
   auth: { autoRefreshToken: false, persistSession: false },
 })
-
-async function upsertHairProfileWithDryingCompat(payload: Record<string, unknown>) {
-  const { error } = await admin.from("hair_profiles").upsert(payload, { onConflict: "user_id" })
-
-  if (error?.code === "22P02" && typeof payload.drying_method === "string") {
-    const { error: retryError } = await admin.from("hair_profiles").upsert(
-      {
-        ...payload,
-        drying_method: [payload.drying_method],
-      },
-      { onConflict: "user_id" },
-    )
-
-    if (!retryError) return
-    throw retryError
-  }
-
-  if (error) throw error
-}
 
 test.describe.serial("@ci Profile page smoke", () => {
   const email = `playwright-profile-${Date.now()}@hairconscierge.test`
@@ -90,8 +73,8 @@ test.describe.serial("@ci Profile page smoke", () => {
 
     if (billingError && billingError.code !== "PGRST205") throw billingError
 
-    await upsertHairProfileWithDryingCompat({
-      user_id: userId,
+    // Through the door (`user_facts_save_v1`) — the lock rejects direct fact-column writes.
+    await seedHairProfile(admin, userId, {
       hair_texture: "wavy",
       thickness: "fine",
       density: "medium",
@@ -211,7 +194,7 @@ test.describe.serial("@ci Profile page smoke", () => {
     await expect(page.getByText("Weitere Produkte")).toHaveCount(0)
     await expect(page.getByText("Aus Haar-Check")).toHaveCount(0)
     await expect(page.getByText("Aus Onboarding")).toHaveCount(0)
-    await expect(page.locator("#profile-section-quiz").getByText("10/10 vollständig")).toBeVisible()
+    await expect(page.locator("#profile-section-quiz").getByText("9/10 vollständig")).toBeVisible()
     await expect(
       page.getByRole("button").filter({ hasText: "Haarlänge" }).filter({ hasText: "Lang" }),
     ).toBeVisible()
@@ -234,17 +217,30 @@ test.describe.serial("@ci Profile page smoke", () => {
     await expect(page.getByText("Haar-Check direkt im Profil aktualisieren")).toBeVisible()
     await expect(page.getByRole("button", { name: "Haar-Check speichern" })).toBeVisible()
     await page.getByRole("radio", { name: "Viele Haare" }).click()
-    await page.getByRole("button", { name: "Keine Beschwerden" }).click()
+    await page
+      .locator("div")
+      .filter({ hasText: /^Kopfhaut-Beschwerden/ })
+      .getByRole("button", { name: "Nichts davon" })
+      .click()
+    await page.getByRole("button", { name: "Trockene oder strohige Längen" }).click()
     await page.getByRole("button", { name: "Naturhaar" }).click()
     await page.getByRole("button", { name: "Haar-Check speichern" }).click()
     await expect(page.getByText("Haar-Check gespeichert").first()).toBeVisible()
     await expect(
       page.getByRole("button").filter({ hasText: "Haardichte" }).getByText("Viele Haare"),
     ).toBeVisible()
-    await expect(page.getByText("Keine Beschwerden")).toBeVisible()
+    await expect(
+      page
+        .getByRole("button")
+        .filter({ hasText: "Kopfhaut-Beschwerden" })
+        .getByText("Nichts davon"),
+    ).toBeVisible()
     await expect(page.getByText("Naturhaar")).toBeVisible()
     await expect(
-      page.getByRole("button").filter({ hasText: "Haar-Bedenken" }).getByText("Nichts davon"),
+      page
+        .getByRole("button")
+        .filter({ hasText: "Was beschäftigt dich gerade?" })
+        .getByText("Trockene oder strohige Längen"),
     ).toBeVisible()
 
     const { data: densityRow, error: densityError } = await admin

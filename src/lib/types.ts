@@ -109,9 +109,7 @@ export type {
 }
 
 export {
-  HAIR_TEXTURE_OPTIONS,
   HAIR_THICKNESS_OPTIONS,
-  HAIR_DENSITY_OPTIONS,
   PROFILE_CONCERN_OPTIONS,
   GOAL_OPTIONS,
   PRODUCT_FREQUENCY_OPTIONS,
@@ -183,6 +181,9 @@ export interface HairProfile {
   uses_heat_protection: boolean
   additional_notes: string | null
   conversation_memory: string | null
+  /** The stored diagnostics facts document (quiz vocabulary); read it through
+   * `readProfileDiagnostics` (`src/lib/user-facts/profile-diagnostics.ts`). */
+  diagnostics?: unknown
   created_at: string
   updated_at: string
 }
