@@ -7,6 +7,12 @@ import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-l
 import { loadUserFacts } from "../src/lib/user-facts/read"
 import { diagnosticsV1Schema, type DiagnosticsV1 } from "../src/lib/user-facts/schema"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
+import { pgliteAdminClient, readRow } from "./mobile-profile-facts-pglite.fixtures"
+import {
+  id,
+  insertProfile,
+  migratedPersonalPlanDatabase,
+} from "./personal-plan-pglite-migration.fixtures"
 import { simulateUserFactsSave } from "./user-facts-save-rpc.fixtures"
 
 /**
@@ -1074,3 +1080,73 @@ for (const [label, before, after] of [
     assert.equal(saves.length, again, "unchanged quiz after a hand edit: zero writes")
   })
 }
+
+// --- fix round 11: a legacy lead's explicit volume direction -----------------------------
+
+/** Curly, coarse, high density: the hair-type resolver says „weniger Volumen“. */
+const CURLY_VOLUME_ANSWERS = {
+  ...COMPLETE_LEGACY_ANSWERS,
+  structure: "curly",
+  thickness: "coarse",
+  density: "high",
+  goals: ["volume", "moisture"],
+}
+
+test("fix round 11 (rule 1) on PGlite: the live link of a legacy lead with an explicit volume goal on curly hair derives the goals column volume", async (t) => {
+  const pg = await migratedPersonalPlanDatabase(t)
+  const user = id(7, 1)
+  await insertProfile(pg, user)
+  const outcome = await writeAccountLinkFacts(pgliteAdminClient(pg) as never, {
+    userId: user,
+    quiz: {
+      kind: "lead",
+      leadId: id(7, 2),
+      quizAnswers: CURLY_VOLUME_ANSWERS as never,
+      createdAt: "2026-09-01T00:00:00.000Z",
+    },
+  })
+  assert.equal(outcome, "replaced")
+  const row = (await readRow(pg, user))!
+  assert.deepEqual(
+    [...(row.goals as string[])].sort(),
+    ["moisture", "volume"],
+    "her explicit pick, not the hair-type less_volume",
+  )
+  assert.equal(row.desired_volume, "more")
+  assert.equal((row.diagnostics as DiagnosticsV1).volumeDirection, "more")
+})
+
+test("fix round 11: same lead id + same takenAt but a CHANGED volume direction is no resume (raw carries only volume_balance)", async () => {
+  const rows: Row[] = []
+  const { admin, saves } = fakeAdmin(rows)
+  const quiz = {
+    kind: "lead" as const,
+    leadId: "lead-dir",
+    quizAnswers: CURLY_VOLUME_ANSWERS as never,
+    createdAt: TUESDAY,
+  }
+  assert.equal(await writeAccountLinkFacts(admin, { userId: USER_ID, quiz }), "replaced")
+  const settled = saves.length
+  // Unchanged: a pure resume, zero writes.
+  assert.equal(await writeAccountLinkFacts(admin, { userId: USER_ID, quiz }), "preserved")
+  assert.equal(saves.length, settled, "an unchanged re-link writes nothing")
+
+  const changed = {
+    ...quiz,
+    quizAnswers: { ...CURLY_VOLUME_ANSWERS, goals: ["less_volume", "moisture"] } as never,
+  }
+  const before = (rows[0]!.diagnostics as DiagnosticsV1).source.raw
+  assert.deepEqual(
+    projectLegacyLeadToFacts({ leadId: "lead-dir", quizAnswers: changed.quizAnswers }).diagnostics
+      .source.raw,
+    before,
+    "precondition: the raw Stage-1 source is identical",
+  )
+  assert.equal(await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: changed }), "preserved")
+  assert.deepEqual(
+    saves.slice(settled).map((call) => [call.p_domain, call.p_mode]),
+    [["diagnostics", "create_only"]],
+    "the ordinary loser path records the changed quiz, never the resume shortcut",
+  )
+  assert.equal((rows[0]!.diagnostics as DiagnosticsV1).volumeDirection, "more", "facts unchanged")
+})

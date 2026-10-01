@@ -127,6 +127,9 @@ export const diagnosticsSourceSchema = z.discriminatedUnion("kind", [
         .object({
           primaryConcern: z.string().nullable(),
           currentConcernsOtherText: z.string().nullable(),
+          // Fix round 11: the volume direction an older quiz's `volume` / `less_volume` goal
+          // stated (raw carries only `volume_balance`). Absent: none stated.
+          volumeDirection: z.enum(["more", "less"]).optional(),
         })
         .strict()
         .optional(),

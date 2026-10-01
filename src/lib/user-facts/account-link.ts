@@ -258,8 +258,9 @@ function sameQuizRaw(stored: unknown, incoming: unknown): boolean {
 }
 
 /** A legacy lead's answers that become facts but are not part of `source.raw` (main problem,
- * „Etwas anderes" note). The projection keeps them on the source (`statedOutsideRaw`), apart from
- * the editable facts, so the comparison holds after a hand edit too. A stored source without
+ * „Etwas anderes" note, the volume direction of a legacy `volume` / `less_volume` goal). The
+ * projection keeps them on the source (`statedOutsideRaw`), apart from the editable facts, so
+ * the comparison holds after a hand edit too. A stored source without
  * that record (an artifact, or a source a hand edit synthesised) has nothing more to compare. */
 function sameQuizAnswersOutsideRaw(
   stored: DiagnosticsSource,
@@ -271,7 +272,8 @@ function sameQuizAnswersOutsideRaw(
   if (!storedStated) return false
   return (
     storedStated.primaryConcern === incomingStated.primaryConcern &&
-    storedStated.currentConcernsOtherText === incomingStated.currentConcernsOtherText
+    storedStated.currentConcernsOtherText === incomingStated.currentConcernsOtherText &&
+    storedStated.volumeDirection === incomingStated.volumeDirection
   )
 }
 

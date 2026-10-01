@@ -13,6 +13,7 @@ import {
 import { PERSONAL_PLAN_STAGE1_COMPUTATION_VERSION } from "../src/lib/personal-plan/persistence/stage1-service"
 import { canonicalizePersonalPlanAnswers } from "../src/lib/personal-plan-quiz/persistence"
 import type { QuizAnswers } from "../src/lib/quiz/types"
+import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
 import { projectArtifactToFacts } from "../src/lib/user-facts/project-artifact"
 import { projectLegacyLeadToFacts } from "../src/lib/user-facts/project-legacy-lead"
 import {
@@ -522,6 +523,77 @@ test("fix round 6 (I5): the lead's „Etwas anderes“ note is a stored fact —
     }).diagnostics.currentConcernsOtherText,
     "stumpf",
   )
+})
+
+test("fix round 11 (rule 1): a legacy lead's explicit volume / less_volume goal states the direction — never re-derived from hair type; source.raw stays byte-identical", () => {
+  // Curly, coarse, high density: the hair-type resolver would say „weniger Volumen“.
+  const more: QuizAnswers = { ...LEGACY_ANSWERS, goals: ["volume", "moisture"] }
+  const expectedMore = buildLegacyQuizStage1Source({ leadId: "lead-vol-more", answers: more })
+  const factsMore = projectLegacyLeadToFacts({ leadId: "lead-vol-more", quizAnswers: more })
+  assert.deepEqual(factsMore.diagnostics.goals, ["moisture", "volume_balance"])
+  assert.equal(factsMore.diagnostics.volumeDirection, "more", "her explicit pick")
+  assert.ok(
+    deriveDiagnosticsColumns(factsMore.diagnostics).goals.includes("volume"),
+    "the derived goals column keeps volume",
+  )
+  assert.deepEqual(factsMore.diagnostics.source.raw, expectedMore)
+  const rawMore = toStage1Source({ diagnostics: factsMore.diagnostics, editedAt: null })
+  assert.deepEqual(rawMore, expectedMore)
+  assert.equal(hashViaProductionPath(rawMore), hashViaProductionPath(expectedMore))
+  // The raw Stage-1 source carries only `volume_balance`: the direction is kept beside it.
+  assert.deepEqual(
+    (factsMore.diagnostics.source as { statedOutsideRaw?: unknown }).statedOutsideRaw,
+    { primaryConcern: null, currentConcernsOtherText: null, volumeDirection: "more" },
+  )
+
+  // Fine hair (the resolver would say „mehr Volumen“) with an explicit less_volume.
+  const less: QuizAnswers = {
+    ...LEGACY_ANSWERS,
+    structure: "straight",
+    thickness: "fine",
+    density: "low",
+    goals: ["less_volume"],
+  }
+  const factsLess = projectLegacyLeadToFacts({ leadId: "lead-vol-less", quizAnswers: less })
+  assert.equal(factsLess.diagnostics.volumeDirection, "less")
+  assert.deepEqual(deriveDiagnosticsColumns(factsLess.diagnostics).goals, ["less_volume"])
+  assert.deepEqual(deriveDiagnosticsColumns(factsLess.diagnostics).desired_volume, "less")
+
+  // Neutral hair (normal, medium, straight): the resolver yields nothing — the pick keeps it.
+  const neutral: QuizAnswers = {
+    ...LEGACY_ANSWERS,
+    structure: "straight",
+    thickness: "normal",
+    density: "medium",
+    goals: ["volume", "shine"],
+  }
+  const factsNeutral = projectLegacyLeadToFacts({ leadId: "lead-vol-n", quizAnswers: neutral })
+  assert.ok(
+    deriveDiagnosticsColumns(factsNeutral.diagnostics).goals.includes("volume"),
+    "an explicit volume goal on neutral hair is not dropped",
+  )
+
+  // Both stated: "volume" wins (the `deriveDesiredVolumeFromGoals` tie rule).
+  const both = projectLegacyLeadToFacts({
+    leadId: "lead-vol-both",
+    quizAnswers: { ...LEGACY_ANSWERS, goals: ["less_volume", "volume"] },
+  })
+  assert.equal(both.diagnostics.volumeDirection, "more")
+
+  // The quiz's own volume_balance card states no direction: hair type decides, as before.
+  const card = projectLegacyLeadToFacts({
+    leadId: "lead-vol-card",
+    quizAnswers: { ...LEGACY_ANSWERS, goals: ["volume_balance"] },
+  })
+  assert.equal(card.diagnostics.volumeDirection, undefined, "no explicit pick, no direction")
+  assert.deepEqual(
+    (card.diagnostics.source as { statedOutsideRaw?: unknown }).statedOutsideRaw,
+    { primaryConcern: null, currentConcernsOtherText: null },
+    "nothing stated outside raw beyond the existing fields",
+  )
+  // No volume goal at all: no direction.
+  const none = projectLegacyLeadToFacts({ leadId: "lead-vol-0", quizAnswers: LEGACY_ANSWERS })
+  assert.equal(none.diagnostics.volumeDirection, undefined)
 })
 
 test("legacy lead: a stale or absent primary_concern pick stays absent", () => {

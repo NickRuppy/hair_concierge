@@ -82,6 +82,30 @@ function legacyConcernsOtherText(quizAnswers: QuizAnswers): string | undefined {
   return trimmed ? trimmed.slice(0, 50) : undefined
 }
 
+/**
+ * The volume direction the lead stated herself (fix round 11, owner ruling plan §3 "the stored
+ * direction is kept"): an older quiz asked „Mehr Volumen“ / „Weniger Volumen“ as the legacy goals
+ * `volume` / `less_volume`, which both collapse onto the native `volume_balance` — so the
+ * direction is kept as `volumeDirection` and never re-derived from hair type. Both stated:
+ * "volume" wins, the `deriveDesiredVolumeFromGoals` tie rule. The quiz's own `volume_balance`
+ * card states no direction (hair type decides). Only while the projected goals carry
+ * `volume_balance`.
+ *
+ * `buildLegacyQuizStage1Source` carries only `volume_balance`, so `source.raw` cannot tell the
+ * direction: it is kept in `statedOutsideRaw` too, so a re-link still tells a changed quiz apart.
+ */
+function legacyVolumeDirection(
+  quizAnswers: QuizAnswers,
+  goals: readonly string[] | undefined,
+): "more" | "less" | undefined {
+  if (!goals?.includes("volume_balance")) return undefined
+  const stated = (quizAnswers as { goals?: unknown }).goals
+  if (!Array.isArray(stated)) return undefined
+  if (stated.includes("volume")) return "more"
+  if (stated.includes("less_volume")) return "less"
+  return undefined
+}
+
 export function projectLegacyLeadToFacts(input: ProjectLegacyLeadInput): ProjectLegacyLeadResult {
   let legacySource: ReturnType<typeof buildLegacyQuizStage1Source>
   try {
@@ -100,6 +124,7 @@ export function projectLegacyLeadToFacts(input: ProjectLegacyLeadInput): Project
   const takenAt = toTakenAt(input.takenAt)
   const primaryConcern = legacyPrimaryConcern(input.quizAnswers, answers.currentConcerns ?? [])
   const currentConcernsOtherText = legacyConcernsOtherText(input.quizAnswers)
+  const volumeDirection = legacyVolumeDirection(input.quizAnswers, answers.goals)
   const diagnostics = diagnosticsV1Schema.parse({
     texture: answers.texture,
     thickness: answers.thickness,
@@ -111,6 +136,7 @@ export function projectLegacyLeadToFacts(input: ProjectLegacyLeadInput): Project
     scalpOiliness: answers.scalpOiliness,
     scalpConcerns: answers.scalpConcerns,
     goals: answers.goals,
+    ...(volumeDirection ? { volumeDirection } : {}),
     currentConcerns: answers.currentConcerns,
     ...(primaryConcern ? { primaryConcern } : {}),
     ...(currentConcernsOtherText ? { currentConcernsOtherText } : {}),
@@ -123,6 +149,8 @@ export function projectLegacyLeadToFacts(input: ProjectLegacyLeadInput): Project
       statedOutsideRaw: {
         primaryConcern: primaryConcern ?? null,
         currentConcernsOtherText: currentConcernsOtherText ?? null,
+        // Absent when she stated none, so a source projected before fix round 11 reads the same.
+        ...(volumeDirection ? { volumeDirection } : {}),
       },
     },
   })
