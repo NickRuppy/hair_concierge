@@ -284,6 +284,7 @@ test("registration quiz: the latest own quiz replaces the whole document like th
       answers: { ...ANSWERS, thickness: "coarse" } as never,
     }),
     takenAt: NOW,
+    statedOutsideRaw: { primaryConcern: null, currentConcernsOtherText: null },
   })
   assert.equal(patch.thickness, "coarse")
   assert.equal(patch.primaryConcern, null, "fields the new quiz does not carry are cleared")
@@ -391,6 +392,7 @@ test("adversarial: an edit on a profile with NULL diagnostics writes a complete,
       version: 1,
       leadId: "profile",
       raw: buildLegacyQuizStage1Source({ leadId: "profile", answers: ANSWERS as never }),
+      statedOutsideRaw: { primaryConcern: null, currentConcernsOtherText: null },
     })
     assert.ok(diagnosticsV1Schema.safeParse(merge(null, patch)).success)
     assert.equal(write.diagnostics.provenance.fields?.texture, "user")
