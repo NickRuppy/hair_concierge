@@ -8,6 +8,7 @@ import { completenessFieldProvenance } from "../completeness-defaults"
 import { deriveCareHabitsColumns, deriveDiagnosticsColumns } from "../derive-legacy-columns"
 import { toCareHabitsPatch, toFieldProvenance } from "../from-refinement-draft"
 import { mergeDiagnosticsPatch, type DiagnosticsAnswerGroup } from "../hand-edit"
+import { projectArtifactToFacts } from "../project-artifact"
 import {
   CARE_HABITS_SCHEMA_VERSION,
   DIAGNOSTICS_SCHEMA_VERSION,
@@ -247,7 +248,7 @@ const BACKFILL_SOURCE_KINDS = new Set<DomainProvenance["source"]["kind"]>([
  * The ownership rule for `quiz_context` (plan §3; fix round 7, B). A context written by the
  * account link or by this backfill — provenance `personal_plan_artifact` / `legacy_lead` —
  * belongs to the quiz it came from and follows the latest-quiz rule: when a later-taken quiz
- * wins, the backfill's catch-up MAY replace or clear it. A context
+ * wins, the backfill (catch-up, or the consistency repair) MAY replace or clear it. A context
  * written by any other kind — a user edit (`feinschliff_draft`, `onboarding`, `profile_editor`),
  * `account_link`, or a kind added later — and a stored context without any provenance are NEVER
  * touched by the backfill.
@@ -671,6 +672,8 @@ function planDiagnosticsAndContext(
     !sameQuizSourceIdentity(row.storedDiagnostics.source, selected.diagnostics.source)
   if (winnerChanged) {
     planCatchUpQuizContext(row, selected, sourceKind, options, plan)
+  } else if (planQuizContextConsistencyRepair(row, options, plan)) {
+    // Decided there: the stored context belongs to another quiz than the stored diagnostics.
   } else if (selected.quizContext && Object.keys(selected.quizContext).length > 0) {
     if (quizContextGate.plan) {
       const patch: QuizContextPatch = { ...selected.quizContext }
@@ -761,6 +764,121 @@ function planCatchUpQuizContext(
       ? `${lead}; its quiz context replaces the stored one`
       : `${lead}; a legacy lead carries no quiz context, the stored one is cleared`,
   )
+}
+
+/** Whether a quiz_context provenance names the quiz a diagnostics source comes from. The context
+ * provenance carries only the id (no taken time): an artifact by its id, a legacy lead by its
+ * lead id on a `legacy_quiz` source. */
+function contextNamesQuiz(provenance: DomainProvenance, source: DiagnosticsV1["source"]): boolean {
+  if (source.kind === "legacy_columns") return false
+  if (provenance.source.kind === "personal_plan_artifact") {
+    return source.artifactId !== undefined && source.artifactId === provenance.source.id
+  }
+  if (provenance.source.kind === "legacy_lead") {
+    return (
+      source.kind === "legacy_quiz" &&
+      source.artifactId === undefined &&
+      source.leadId === provenance.source.id
+    )
+  }
+  return false
+}
+
+function contextProvenanceLabel(provenance: DomainProvenance): string {
+  const what = provenance.source.kind === "personal_plan_artifact" ? "artifact" : "legacy lead"
+  return `${what} ${provenance.source.id ?? "(no id)"}`
+}
+
+/**
+ * Fix round 7 (A): the context domain decided on its own consistency, in a plain re-run and in
+ * `--catch-up` alike. A link or catch-up writes diagnostics and quiz_context in two RPCs; when
+ * the second failed, the stored context still belongs to the PREVIOUS quiz while diagnostics
+ * already come from the new winner — and since the diagnostics columns match, no other gate
+ * would ever reopen the row. So: when the stored context was written by the account link or the
+ * backfill (QUIZ_OWNED_CONTEXT_KINDS) and names another quiz than `diagnostics.source`, it is
+ * brought to the live link's target for the DIAGNOSTICS' quiz — an artifact's own context, read
+ * from that artifact; a legacy lead's `{}` when the context holds answers. CAS-pinned by the
+ * script like every write. Returns whether this rule decided the domain (a consistent pair, a
+ * user-edit context or no stored diagnostics: `false`, the ordinary path runs).
+ */
+function planQuizContextConsistencyRepair(
+  row: LoadedUserRow,
+  options: PlanUserFactsBackfillOptions,
+  plan: UserFactsBackfillPlan,
+): boolean {
+  const diagnostics = row.storedDiagnostics
+  const provenance = row.factsProvenance.quiz_context
+  if (!diagnostics || diagnostics.source.kind === "legacy_columns") return false
+  // The ownership guard (see QUIZ_OWNED_CONTEXT_KINDS): a user edit's context is never touched.
+  if (!provenance || !QUIZ_OWNED_CONTEXT_KINDS.has(provenance.source.kind)) return false
+  if (contextNamesQuiz(provenance, diagnostics.source)) return false
+
+  const source = diagnostics.source
+  const quiz = source.artifactId ? `artifact ${source.artifactId}` : `legacy lead ${source.leadId}`
+  const lead = `quiz_context: the stored context comes from ${contextProvenanceLabel(provenance)}, the stored diagnostics from ${quiz}`
+
+  const stored = row.storedQuizContext ?? null
+  if (row.storedDomains.quiz_context && stored === null) {
+    plan.skips.push(`${lead}; the stored quiz_context is unreadable; left for review`)
+    return true
+  }
+
+  let target: QuizContextV1 | null
+  if (source.artifactId) {
+    if (row.artifact?.id !== source.artifactId) {
+      plan.skips.push(
+        `${lead}; that artifact is not the attached one, so its context cannot be read; left for review`,
+      )
+      return true
+    }
+    try {
+      target = projectArtifactToFacts({
+        envelope: row.artifact.quizAnswers,
+        artifactId: row.artifact.id,
+        leadId: row.artifact.leadId,
+        takenAt: row.artifact.createdAt,
+      }).quizContext
+    } catch (error) {
+      plan.skips.push(
+        `${lead}; the artifact could not be projected (${error instanceof Error ? error.message : String(error)}); left for review`,
+      )
+      return true
+    }
+  } else {
+    // A legacy lead carries no context and clears one that holds answers.
+    target = stored !== null && Object.keys(stored).length > 0 ? {} : null
+  }
+  // Already in the target state: nothing to write (idempotent).
+  if (target === null) return true
+  if (stored !== null ? sameFactsDocument(stored, target) : Object.keys(target).length === 0) {
+    return true
+  }
+
+  const patch: Record<string, unknown> = {}
+  for (const field of QUIZ_CONTEXT_FIELDS) patch[field] = null
+  Object.assign(patch, target)
+  const artifactSource = source.artifactId !== undefined
+  plan.writes.push({
+    domain: "quiz_context",
+    patch: patch as QuizContextPatch,
+    provenance: {
+      source: artifactSource
+        ? { kind: "personal_plan_artifact", id: source.artifactId! }
+        : { kind: "legacy_lead", id: source.leadId },
+      schemaVersion: QUIZ_CONTEXT_SCHEMA_VERSION,
+      at: options.now,
+    },
+    fieldCount: countFields(patch),
+    detail: artifactSource
+      ? "consistency: the diagnostics' artifact context replaces the stored one"
+      : "consistency: the diagnostics' legacy lead carries no context; the stored one is cleared",
+  })
+  plan.notes.push(
+    artifactSource
+      ? `${lead}; that artifact's context replaces the stored one`
+      : `${lead}; a legacy lead carries no quiz context, the stored one is cleared`,
+  )
+  return true
 }
 
 /** Care habits go through the one conversion, with the product owner's four decisions

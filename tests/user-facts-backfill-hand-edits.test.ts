@@ -1113,16 +1113,188 @@ test("I3: --catch-up with an unchanged winner writes no quiz_context", () => {
 })
 
 // ---------------------------------------------------------------------------
-// Fix round 7 (B): the quiz_context ownership rule
+// Fix round 7 (A, B): the context domain is decided on its own consistency with diagnostics
 // ---------------------------------------------------------------------------
 
 const CATCH_UP_NOW = "2026-10-02T12:00:00.000Z"
+const RERUN_NOW = "2026-10-03T12:00:00.000Z"
+
+/** The state a failed catch-up leaves: lead B's diagnostics landed, replacing artifact A's
+ * context failed — A's context (with answers) stays next to B's diagnostics. */
+function halfPublishedLeadB(overrides: Partial<LoadedUserRow> = {}): LoadedUserRow {
+  const base = backfilledFromArtifact({ legacyLead: LEAD_B, columns: LEAD_COLUMNS })
+  const catchUp = planUserFactsBackfill(base, { now: CATCH_UP_NOW, catchUp: true })
+  const diagnostics = documentOf(catchUp)
+  return {
+    ...base,
+    factsRevision: 3,
+    factsProvenance: {
+      ...base.factsProvenance,
+      diagnostics: diagnosticsWrite(catchUp).provenance as DomainProvenance,
+    },
+    storedDiagnostics: diagnostics,
+    columns: { ...EMPTY, ...deriveDiagnosticsColumns(diagnostics) } as LegacyProfileColumns,
+    ...overrides,
+  }
+}
 
 function contextWrites(planned: UserFactsBackfillPlan) {
   return planned.writes.filter(
     (entry): entry is Extract<PlannedFactsWrite, { domain: "quiz_context" }> =>
       entry.domain === "quiz_context",
   )
+}
+
+for (const catchUp of [false, true]) {
+  const mode = catchUp ? "--catch-up" : "plain re-run"
+  test(`fix round 7 (A, ${mode}): B's diagnostics next to A's context — the context is cleared to B's target, diagnostics untouched`, () => {
+    const stored = halfPublishedLeadB()
+    assert.ok(
+      Object.keys(stored.storedQuizContext ?? {}).length > 0,
+      "precondition: A's context holds answers",
+    )
+    const planned = planUserFactsBackfill(stored, { now: RERUN_NOW, catchUp })
+    assert.deepEqual(
+      planned.writes.map((entry) => entry.domain),
+      ["quiz_context"],
+      `one context write, no diagnostics write\n${planned.skips.join("\n")}`,
+    )
+    const [context] = contextWrites(planned)
+    assert.equal(
+      Object.values(context!.patch).every((value) => value === null),
+      true,
+      "a legacy lead carries no context: every field cleared",
+    )
+    assert.deepEqual(context!.provenance.source, { kind: "legacy_lead", id: "lead-b" })
+    assert.ok(
+      planned.notes.some((note) =>
+        note.startsWith(
+          "quiz_context: the stored context comes from artifact artifact-1, the stored diagnostics from legacy lead lead-b",
+        ),
+      ),
+      planned.notes.join("\n"),
+    )
+  })
+
+  test(`fix round 7 (A, ${mode}): a consistent pair plans nothing (idempotent after the repair)`, () => {
+    const repaired = halfPublishedLeadB({
+      factsRevision: 4,
+      storedQuizContext: {},
+      factsProvenance: {
+        ...halfPublishedLeadB().factsProvenance,
+        quiz_context: {
+          source: { kind: "legacy_lead", id: "lead-b" },
+          schemaVersion: 1,
+          at: RERUN_NOW,
+        },
+      },
+    })
+    const planned = planUserFactsBackfill(repaired, { now: "2026-10-04T12:00:00.000Z", catchUp })
+    assert.deepEqual(planned.writes, [], planned.skips.join("\n"))
+
+    const untouched = planUserFactsBackfill(backfilledFromArtifact({}), {
+      now: RERUN_NOW,
+      catchUp,
+    })
+    assert.equal(contextWrites(untouched).length, 0, "artifact A + its own context: consistent")
+  })
+
+  test(`fix round 7 (A, ${mode}): diagnostics from a newer ARTIFACT next to A's context — the context becomes that artifact's own`, () => {
+    const envelope = {
+      ...V3_ENVELOPE,
+      answers: { ...V3_ENVELOPE.answers, thickness: "coarse", routineStyle: "flexible_versatile" },
+    }
+    const newer = {
+      id: "artifact-2",
+      leadId: "lead-pp-2",
+      quizAnswers: envelope,
+      createdAt: "2026-09-10T09:00:00.000Z",
+    }
+    const base = backfilledFromArtifact({
+      artifact: newer,
+      columns: {
+        ...EMPTY,
+        ...(oldWriterColumnsForArtifact(newer) as Partial<LegacyProfileColumns>),
+      },
+    })
+    const catchUpPlan = planUserFactsBackfill(base, { now: CATCH_UP_NOW, catchUp: true })
+    const diagnostics = documentOf(catchUpPlan)
+    const stored: LoadedUserRow = {
+      ...base,
+      factsRevision: 3,
+      factsProvenance: {
+        ...base.factsProvenance,
+        diagnostics: diagnosticsWrite(catchUpPlan).provenance as DomainProvenance,
+      },
+      storedDiagnostics: diagnostics,
+      columns: { ...EMPTY, ...deriveDiagnosticsColumns(diagnostics) } as LegacyProfileColumns,
+    }
+    const planned = planUserFactsBackfill(stored, { now: RERUN_NOW, catchUp })
+    assert.deepEqual(
+      planned.writes.map((entry) => entry.domain),
+      ["quiz_context"],
+      planned.skips.join("\n"),
+    )
+    const [context] = contextWrites(planned)
+    assert.equal((context!.patch as QuizContextV1).routineStyle, "flexible_versatile")
+    assert.deepEqual(context!.provenance.source, {
+      kind: "personal_plan_artifact",
+      id: "artifact-2",
+    })
+  })
+
+  test(`fix round 7 (A, ${mode}): diagnostics from an artifact that is not the attached one — its context cannot be read, left for review`, () => {
+    const stored = halfPublishedLeadB()
+    const foreign = backfilledFromArtifact({}).storedDiagnostics!
+    const planned = planUserFactsBackfill(
+      {
+        ...stored,
+        storedDiagnostics: {
+          ...foreign,
+          source: {
+            ...foreign.source,
+            artifactId: "artifact-elsewhere",
+          } as DiagnosticsV1["source"],
+        },
+        columns: { ...EMPTY, ...deriveDiagnosticsColumns(foreign) } as LegacyProfileColumns,
+      },
+      { now: RERUN_NOW, catchUp },
+    )
+    assert.equal(contextWrites(planned).length, 0, planned.notes.join("\n"))
+    assert.ok(
+      planned.skips.some(
+        (skip) =>
+          skip.startsWith("quiz_context: the stored context comes from artifact artifact-1") &&
+          skip.includes("left for review"),
+      ),
+      planned.skips.join("\n"),
+    )
+  })
+
+  // B: the ownership rule. A context the account link or the backfill wrote follows the
+  // latest-quiz rule; a context any user-edit (or unknown) writer wrote is never touched.
+  for (const kind of [
+    "feinschliff_draft",
+    "onboarding",
+    "profile_editor",
+    "account_link",
+  ] as const) {
+    test(`fix round 7 (B, ${mode}): a ${kind} context next to inconsistent diagnostics is never touched`, () => {
+      const stored = halfPublishedLeadB()
+      const planned = planUserFactsBackfill(
+        {
+          ...stored,
+          factsProvenance: {
+            ...stored.factsProvenance,
+            quiz_context: { source: { kind }, schemaVersion: 1, at: "2026-09-20T09:00:00.000Z" },
+          },
+        },
+        { now: RERUN_NOW, catchUp },
+      )
+      assert.equal(contextWrites(planned).length, 0, planned.notes.join("\n"))
+      assert.equal(planned.writes.length, 0, "nothing else is planned either")
+    })
+  }
 }
 
 for (const kind of ["feinschliff_draft", "onboarding", "profile_editor", "account_link"] as const) {
@@ -1162,6 +1334,27 @@ test("fix round 7 (B): --catch-up with a changed winner never replaces a stored 
     planned.skips.join("\n"),
   )
 })
+
+for (const kind of ["personal_plan_artifact", "legacy_lead"] as const) {
+  test(`fix round 7 (B): a ${kind} context (account link / backfill) follows the latest quiz — repaired when it names another quiz`, () => {
+    const stored = halfPublishedLeadB()
+    const planned = planUserFactsBackfill(
+      {
+        ...stored,
+        factsProvenance: {
+          ...stored.factsProvenance,
+          quiz_context: {
+            source: { kind, id: "some-earlier-quiz" },
+            schemaVersion: 1,
+            at: "2026-09-20T09:00:00.000Z",
+          },
+        },
+      },
+      { now: RERUN_NOW, catchUp: false },
+    )
+    assert.equal(contextWrites(planned).length, 1, planned.skips.join("\n"))
+  })
+}
 
 // ---------------------------------------------------------------------------
 // Stage 1 for a hand-edited backfilled row
@@ -1806,6 +1999,129 @@ test("fix round 6 (I3) on PGlite: backfill artifact A, link a newer lead B throu
     log: () => {},
   })
   assert.equal(again.writesPlanned, 0)
+})
+
+test("fix round 7 (A) on PGlite: the catch-up's context write fails once — the rerun brings the context to B's target, diagnostics untouched; then nothing", async (t) => {
+  const pg = await mobileFactsDatabase(t, { lock: false })
+  await pg.exec(ARTIFACT_STUB)
+  const user = id(8, 4)
+  await insertProfile(pg, user)
+  await pg.query(
+    `INSERT INTO public.personal_plan_prepared_artifacts
+       (id, lead_id, user_id, status, created_at, quiz_answers, canonical_profile)
+     VALUES ($1, $2, $3, 'attached', $4, $5, $6)`,
+    [
+      id(9, 7),
+      id(9, 8),
+      user,
+      ARTIFACT.createdAt,
+      JSON.stringify(V3_ENVELOPE),
+      JSON.stringify({ modelVersion: "personal_plan_canonical_v1", ...adaptedCanonical() }),
+    ],
+  )
+  await seedLegacyRow(pg, user, PAID_COLUMNS)
+  const client = pgliteRestClient(pg)
+  const applied = await runUserFactsBackfill(["--apply"], {
+    supabase: client as never,
+    now: NOW,
+    log: () => {},
+  })
+  assert.equal(applied.failures.length, 0, JSON.stringify(applied.failures))
+  const contextA = (await readRow(pg, user))!.quiz_context as Record<string, unknown>
+  assert.ok(Object.keys(contextA ?? {}).length > 0, "baseline: A's context with answers stored")
+
+  // Main's legacy link of lead B (taken after A), still deployed: it writes the columns directly.
+  const leadB = id(4, 8)
+  await pg.query(
+    `INSERT INTO public.leads (id, email, quiz_answers, quiz_kind, status, user_id, created_at)
+     VALUES ($1, 'lead@example.test', $2, 'legacy', 'linked', $3, '2026-09-10T09:00:00.000Z')`,
+    [leadB, JSON.stringify(LEAD_ANSWERS), user],
+  )
+  await pg.query(
+    `UPDATE public.hair_profiles
+        SET hair_texture = 'curly', thickness = 'coarse', density = 'high', hair_length = 'medium',
+            cuticle_condition = 'rough', protein_moisture_balance = 'snaps',
+            chemical_treatment = '{natural}', scalp_type = 'dry', scalp_condition = 'dry_flakes',
+            concerns = '{dryness,tangling}', primary_concern = 'tangling',
+            goals = '{moisture,curl_definition}', desired_volume = NULL
+      WHERE user_id = $1`,
+    [user],
+  )
+
+  // The catch-up: B's diagnostics land, the context write fails once (an RPC error).
+  let failed = false
+  const failingOnce = {
+    ...client,
+    async rpc(name: string, args: Record<string, unknown>) {
+      if (!failed && args.p_domain === "quiz_context") {
+        failed = true
+        return { data: null, error: { message: "injected quiz_context failure" } }
+      }
+      return client.rpc(name, args)
+    },
+  }
+  const catchUp = await runUserFactsBackfill(["--apply", "--catch-up"], {
+    supabase: failingOnce as never,
+    now: "2026-10-02T12:00:00.000Z",
+    log: () => {},
+  })
+  assert.equal(failed, true, "the context write was attempted and failed")
+  assert.deepEqual(
+    catchUp.failures.map((failure) => failure.domain),
+    ["quiz_context"],
+    JSON.stringify(catchUp.failures),
+  )
+  const halfway = (await readRow(pg, user))!
+  assert.equal((halfway.diagnostics as DiagnosticsV1).source.leadId, leadB)
+  assert.deepEqual(halfway.quiz_context, contextA, "A's context still next to B's diagnostics")
+
+  // Plain rerun: the context domain is decided on its own consistency — one write.
+  const calls: Record<string, unknown>[] = []
+  const recording = {
+    ...client,
+    async rpc(name: string, args: Record<string, unknown>) {
+      calls.push(args)
+      return client.rpc(name, args)
+    },
+  }
+  const lines: string[] = []
+  const rerun = await runUserFactsBackfill(["--apply"], {
+    supabase: recording as never,
+    now: "2026-10-03T12:00:00.000Z",
+    log: (line) => lines.push(line),
+  })
+  assert.equal(rerun.failures.length, 0, JSON.stringify(rerun.failures))
+  assert.deepEqual(rerun.writesByDomain, { quiz_context: 1 }, lines.join("\n"))
+  assert.equal(rerun.applied, 1)
+  assert.deepEqual(
+    calls.map((call) => call.p_domain),
+    ["quiz_context"],
+    "exactly one door call",
+  )
+  assert.equal(calls[0]!.p_expected_revision, halfway.facts_revision, "CAS-pinned to the load")
+  assert.equal(typeof calls[0]!.p_expected_updated_at, "string", "pinned to updated_at as well")
+  const repaired = (await readRow(pg, user))!
+  assert.deepEqual(repaired.quiz_context, {}, "a legacy lead carries no context: cleared")
+  assert.deepEqual(
+    (repaired.facts_provenance as { quiz_context: DomainProvenance }).quiz_context.source,
+    { kind: "legacy_lead", id: leadB },
+  )
+  assert.deepEqual(repaired.diagnostics, halfway.diagnostics, "diagnostics untouched")
+  assert.deepEqual(
+    (repaired.facts_provenance as { diagnostics: DomainProvenance }).diagnostics,
+    (halfway.facts_provenance as { diagnostics: DomainProvenance }).diagnostics,
+    "diagnostics provenance untouched",
+  )
+
+  // Third run, in either mode: nothing left to do.
+  for (const args of [["--apply"], ["--apply", "--catch-up"]]) {
+    const third = await runUserFactsBackfill(args, {
+      supabase: client as never,
+      now: "2026-10-04T12:00:00.000Z",
+      log: () => {},
+    })
+    assert.equal(third.writesPlanned, 0, `${args.join(" ")} plans nothing`)
+  }
 })
 
 /** What the paid preparation stored as `canonical_profile`: the offer adapter over the answers. */
