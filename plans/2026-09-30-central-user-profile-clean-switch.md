@@ -76,6 +76,7 @@ Not in this PR: pointing the Styling / Alltag „bearbeiten" buttons at the Fein
 - The profile displays the quiz's wording for goals and concerns.
 - 80 profiles show a converted goal name once; 5 show the combined tool label; 127 show hair length „lang".
 - About 109 profiles with exactly one concern and no main problem show that concern as their main problem (the door derives it; the backfill report lists it as one change pattern).
+- For users with more than one own quiz whose profile still shows an older quiz's goals, the goals change to the newest quiz's (at most 21 users have more than one quiz; owner ruling, fix round 10).
 - iOS: nothing. A profile edit still does not change the plan (PR2).
 
 ## 6. Decision coverage

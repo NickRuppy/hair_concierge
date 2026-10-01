@@ -23,6 +23,7 @@ import {
   detectHandEdits,
   oldWriterColumnsForArtifact,
   oldWriterColumnsForLead,
+  sameColumn,
   type HandEditAnalysis,
   type OldWriterColumns,
 } from "./detect-hand-edits"
@@ -142,8 +143,9 @@ export type SelectedDiagnosticsSource = {
   handEdits?: HandEditAnalysis
   /** Set when the quiz-time order put a legacy lead ahead of the attached artifact. */
   sourceOrderNote?: string
-  /** Set when the columns are exactly what a NON-winning quiz's link wrote (fix round 5, I4);
-   * the winner replaces them (fix round 6, I4). */
+  /** Set when the columns are exactly what a NON-winning quiz's link wrote (fix round 5, I4), or
+   * the goals are what an older own quiz's link wrote (fix round 10); the winner replaces them
+   * (fix round 6, I4). */
   lastLinkNote?: string
   /** `--catch-up` against the stored document (fix round 5, I2): the stored document's
    * provenance, whose `editedAt` and `user` fields carry over. Absent on a first run and when a
@@ -376,9 +378,16 @@ export function selectDiagnosticsSource(
             ...(lastLink ? { lastLink } : {}),
           })
         handEdits = detect()
+        const order = (other: Candidate) => {
+          const winnerTime = takenTime(candidateTakenAt(candidate))
+          const otherTime = takenTime(candidateTakenAt(other))
+          return winnerTime !== null && otherTime !== null && winnerTime > otherTime
+            ? "taken later"
+            : "wins by precedence (quiz times unknown)"
+        }
         // The row may reflect the LAST LINK rather than the winner (fix round 5, I4). A
         // goals-only difference is not that: main's link kept existing goals when a later quiz
-        // was linked (the goals rule in `detect-hand-edits.ts` lists it as ambiguous).
+        // was linked — `detect-hand-edits.ts` already lists such goals as `last_link`.
         const differsBeyondGoals = handEdits.findings.some(
           (finding) =>
             (finding.verdict === "edited" || finding.verdict === "ambiguous") &&
@@ -389,14 +398,28 @@ export function selectDiagnosticsSource(
             const written = oldWriterOf(other)
             if (!written || !columnsMatchOldWriter(input.columns, written)) continue
             handEdits = detect(written)
-            const winnerTime = takenTime(candidateTakenAt(candidate))
-            const otherTime = takenTime(candidateTakenAt(other))
-            const order =
-              winnerTime !== null && otherTime !== null && winnerTime > otherTime
-                ? "taken later"
-                : "wins by precedence (quiz times unknown)"
-            lastLinkNote = `columns matched quiz ${candidateLabel(other)}, winner ${candidateLabel(candidate)} ${order}: the winner's answers replace the columns; every visible change is listed`
+            lastLinkNote = `columns matched quiz ${candidateLabel(other)}, winner ${candidateLabel(candidate)} ${order(other)}: the winner's answers replace the columns; every visible change is listed`
             break
+          }
+        }
+        // Fix round 10 (owner ruling): goals equal to an older own quiz's are replaced by the
+        // winner's like every other last-link column — with a SOURCE NOTE naming both quizzes.
+        if (
+          !lastLinkNote &&
+          handEdits.findings.some(
+            (finding) => finding.column === "goals" && finding.verdict === "last_link",
+          )
+        ) {
+          const goalsQuiz = others.find((other) => {
+            const goals = oldWriterOf(other)?.goals
+            return (
+              Array.isArray(goals) &&
+              goals.length > 0 &&
+              sameColumn("goals", input.columns.goals ?? null, goals)
+            )
+          })
+          if (goalsQuiz) {
+            lastLinkNote = `goals matched quiz ${candidateLabel(goalsQuiz)}, winner ${candidateLabel(candidate)} ${order(goalsQuiz)}: the winner's goals replace them; the visible change is listed`
           }
         }
       }

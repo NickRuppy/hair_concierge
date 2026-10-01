@@ -500,7 +500,85 @@ test("latest own quiz wins across kinds: a legacy lead taken after the attached 
   assert.equal(diagnosticsWrite(unknownTime).provenance.source.kind, "personal_plan_artifact")
 })
 
-test("ambiguous: goals equal an OLDER own quiz's (main kept existing goals on relink) — the column wins and the row is listed", () => {
+test("fix round 10 (owner ruling): goals equal an OLDER own quiz's are that quiz's last link — the newer quiz's goals replace them, no user provenance, a SOURCE NOTE naming both quizzes, the visible change listed", async () => {
+  const older = {
+    id: "lead-old",
+    quizAnswers: { ...LEAD_ANSWERS, goals: ["shine"] },
+    createdAt: "2026-05-01T00:00:00.000Z",
+  }
+  const columns = { ...LEAD_COLUMNS, goals: ["shine"] }
+  const planned = plan({ legacyLead: LEAD, olderLegacyLeads: [older], columns })
+  const write = diagnosticsWrite(planned)
+
+  assert.deepEqual(planned.report.editedGroups, [])
+  assert.deepEqual(planned.report.ambiguousGroups, [], "not a hand edit, not ambiguous")
+  assert.deepEqual(
+    planned.report.findings.map(({ column, verdict }) => ({ column, verdict })),
+    [{ column: "goals", verdict: "last_link" }],
+  )
+  assert.deepEqual(documentOf(planned).goals, ["moisture", "shape_definition"], "the winner's")
+  assert.equal(write.provenance.fields, undefined, "no `user` provenance")
+  assert.equal(write.provenance.editedAt, undefined, "no editedAt")
+  assert.equal(
+    planned.report.lastLinkNote,
+    "goals matched quiz legacy lead lead-old (2026-05-01T00:00:00.000Z), winner legacy lead lead-1 (2026-07-01T09:00:00.000Z) taken later: the winner's goals replace them; the visible change is listed",
+  )
+  const goalsChange = planned.report.visibleChanges.find((change) => change.column === "goals")
+  assert.ok(goalsChange, "the goals change is a visible change")
+  assert.equal(goalsChange.before, "shine")
+  assert.deepEqual(goalsChange.after.split(",").sort(), ["curl_definition", "moisture"])
+  assert.deepEqual(
+    planned.report.visibleChanges.map((change) => change.column),
+    ["goals"],
+    "nothing else changes",
+  )
+
+  // The dry-run report: the SOURCE NOTE with the change beside it, counted in the summary and in
+  // the change-pattern table.
+  const user = "44444444-4444-4444-8444-444444444444"
+  const tables: Record<string, Record<string, unknown>[]> = {
+    hair_profiles: [{ user_id: user, facts_revision: 0, facts_provenance: {}, ...columns }],
+    leads: [
+      { id: older.id, user_id: user, created_at: older.createdAt, quiz_answers: older.quizAnswers },
+      { id: LEAD.id, user_id: user, created_at: LEAD.createdAt, quiz_answers: LEAD_ANSWERS },
+    ],
+  }
+  const lines: string[] = []
+  const summary = await runUserFactsBackfill([], {
+    supabase: tableClient(tables) as never,
+    now: NOW,
+    log: (line) => lines.push(line),
+  })
+  assert.equal(summary.ambiguousRows, 0, "no ambiguous row")
+  assert.equal(summary.handEditedRows, 0, "no hand-edited row")
+  const noteAt = lines.findIndex((line) =>
+    line.includes(`${user} SOURCE NOTE: goals matched quiz legacy lead lead-old`),
+  )
+  assert.ok(noteAt > 0, "the SOURCE NOTE is printed")
+  assert.equal(
+    lines[noteAt + 1],
+    `    diagnostics.goals: ${goalsChange.before} -> ${goalsChange.after}`,
+    "the visible change is printed beside the note",
+  )
+  assert.ok(
+    lines.includes(`  ${"rows an older quiz's link wrote (winner replaces)".padEnd(42)} 1`),
+    "counted in the summary",
+  )
+  const patternsAt = lines.findIndex((line) => line.startsWith("CHANGE PATTERNS ("))
+  const patternRows = lines
+    .slice(
+      patternsAt + 1,
+      lines.findIndex((line, index) => index > patternsAt && line === ""),
+    )
+    .map((line) => line.trim().replace(/\s+(\d+)$/, " | $1"))
+  assert.deepEqual(
+    patternRows,
+    ["diagnostics.goals: shine -> curl_definition,moisture | 1"],
+    "counted in the change-pattern table",
+  )
+})
+
+test("fix round 10: goals that match NEITHER the winner's old writer NOR any older own quiz are still a hand edit and win", () => {
   const older = {
     id: "lead-old",
     quizAnswers: { ...LEAD_ANSWERS, goals: ["shine"] },
@@ -509,13 +587,15 @@ test("ambiguous: goals equal an OLDER own quiz's (main kept existing goals on re
   const planned = plan({
     legacyLead: LEAD,
     olderLegacyLeads: [older],
-    columns: { ...LEAD_COLUMNS, goals: ["shine"] },
+    columns: { ...LEAD_COLUMNS, goals: ["volume", "moisture"], desired_volume: "more" },
   })
-  assert.deepEqual(planned.report.editedGroups, [])
-  assert.deepEqual(planned.report.ambiguousGroups, ["goals"])
-  assert.match(planned.report.findings[0]?.reason ?? "", /OLDER own quiz/)
-  assert.deepEqual(documentOf(planned).goals, ["shine"])
-  assert.ok(diagnosticsWrite(planned).provenance.editedAt, "treated as a hand edit")
+  const write = diagnosticsWrite(planned)
+  assert.deepEqual(planned.report.editedGroups, ["goals"])
+  assert.deepEqual(planned.report.ambiguousGroups, [])
+  assert.equal(planned.report.lastLinkNote, undefined, "no last link")
+  assert.deepEqual(documentOf(planned).goals, ["moisture", "volume_balance"], "the column wins")
+  assert.deepEqual(write.provenance.fields, { goals: "user", volumeDirection: "user" })
+  assert.equal(write.provenance.editedAt, "2026-07-01T09:00:00.001Z")
 })
 
 test("ambiguous: a main problem no editor wrote — the column wins", () => {
@@ -871,9 +951,8 @@ test("last link (fix round 6, I4): columns an OLDER quiz's link wrote — the wi
   assert.equal(document.primaryConcern, "low_shine")
   assert.deepEqual(document.scalpConcerns, ["oily_dandruff", "irritated"])
   assert.ok(
-    planned.report.findings
-      .filter((finding) => finding.column !== "goals")
-      .every((finding) => finding.verdict === "last_link"),
+    planned.report.findings.every((finding) => finding.verdict === "last_link"),
+    "every differing column, the goals included, is the older quiz's link (fix round 10)",
   )
   // Every resulting visible change is listed for the owner.
   const after = deriveDiagnosticsColumns(document) as unknown as Record<string, unknown>
@@ -882,17 +961,20 @@ test("last link (fix round 6, I4): columns an OLDER quiz's link wrote — the wi
       JSON.stringify(canonical(after)[column]) !==
       JSON.stringify(canonical(LEAD_COLUMNS as unknown as Record<string, unknown>)[column]),
   )
-  assert.ok(changed.includes("hair_texture") && changed.includes("thickness"))
+  assert.ok(
+    changed.includes("hair_texture") && changed.includes("thickness") && changed.includes("goals"),
+    "texture, thickness and goals change visibly",
+  )
   assert.deepEqual(
     planned.report.visibleChanges.map((change) => change.column).sort(),
     [...changed].sort(),
   )
-  // Still open with the owner, so unchanged: goals equal to an OLDER own quiz's are ambiguous
-  // and the column wins (the goals group only).
-  assert.deepEqual(planned.report.ambiguousGroups, ["goals"])
-  assert.deepEqual(document.goals, ["moisture", "shape_definition"])
-  assert.deepEqual(write.provenance.fields, { goals: "user" })
-  assert.equal(write.provenance.editedAt, "2026-08-01T09:00:00.001Z")
+  // Fix round 10 (owner ruling): goals equal to the OLDER quiz's are its link too — the winner's
+  // goals replace them; nothing is a hand edit, so no `user` field and no editedAt.
+  assert.deepEqual(planned.report.ambiguousGroups, [])
+  assert.deepEqual(document.goals, ["moisture", "shine"], "the winner's picked goals")
+  assert.equal(write.provenance.fields, undefined)
+  assert.equal(write.provenance.editedAt, undefined)
 
   // The dry-run report prints the SOURCE NOTE and every visible change beside it.
   const user = "33333333-3333-4333-8333-333333333333"
@@ -935,8 +1017,13 @@ test("last link (fix round 6, I4): columns an OLDER quiz's link wrote — the wi
     legacyLead: LEAD,
     columns: { ...LEAD_COLUMNS, hair_length: "short" },
   })
-  assert.equal(editedAfter.report.lastLinkNote, undefined)
-  assert.ok(editedAfter.report.editedGroups.includes("hair_length"))
+  assert.ok(editedAfter.report.editedGroups.includes("hair_length"), "hair length is an edit")
+  // ... while its goals are still the older quiz's: only they get the note (fix round 10).
+  assert.equal(
+    editedAfter.report.lastLinkNote,
+    "goals matched quiz legacy lead lead-1 (2026-07-01T09:00:00.000Z), winner artifact artifact-1 (2026-08-01T09:00:00.000Z) taken later: the winner's goals replace them; the visible change is listed",
+  )
+  assert.deepEqual(documentOf(editedAfter).goals, ["moisture", "shine"], "the winner's goals")
 })
 
 test("--catch-up (I2): applied untouched paid row + one live thickness write -> only thickness is an edit; goals keep the document's native values", () => {

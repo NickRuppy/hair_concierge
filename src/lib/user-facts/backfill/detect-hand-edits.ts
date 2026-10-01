@@ -53,8 +53,10 @@ import {
  *     linked by email fallback after the paid link, a re-inserted artifact) is that link, not N
  *     edits: those columns are `last_link` and the WINNER's stated answers replace them (§3: the
  *     quiz taken later fully replaces; fix round 6, I4 reversed fix round 5's "column wins"). The
- *     report names the mismatch and lists every visible change. The goals column keeps rule 4's
- *     "equal to an older own quiz's goals -> ambiguous, the column wins" (open with the owner).
+ *     report names the mismatch and lists every visible change. Goals equal to an OLDER own
+ *     quiz's goals (main kept existing goals when a later quiz was linked) are that quiz's link
+ *     too, even when the rest of the row is not: `last_link`, the winner's goals replace them
+ *     (fix round 10, owner ruling — it ended fix round 6's "ambiguous, the column wins").
  *
  * Pure: no I/O, no `server-only`.
  */
@@ -145,7 +147,8 @@ export type ColumnFinding = {
   /** `edited`: differs from the old writer (column wins); `ambiguous`: not classifiable, treated
    * as an edit; `kept`: the old writer never wrote it, the column fills the source's gap;
    * `last_link`: differs from the winner's old writer but the whole row is what a NON-winning
-   * quiz's link wrote (it was linked last) — the winner's value replaces it (fix round 6, I4). */
+   * quiz's link wrote (it was linked last), or goals equal to an older own quiz's (fix round
+   * 10) — the winner's value replaces it (fix round 6, I4). */
   verdict: "edited" | "ambiguous" | "kept" | "last_link"
   columnValue: string
   oldWriterValue: string
@@ -190,7 +193,7 @@ function pickCompared(data: Record<string, unknown>): OldWriterColumns {
  * main's `linkQuizToProfile` for a legacy lead: `buildProfileDataFromQuizAnswers` over the
  * normalized answers, `primary_concern` whenever the answers carry concerns, and the projected
  * legacy goals when there are any (main wrote them only onto a profile without goals — see the
- * `goals` ambiguity rule). The iOS registration wrote the same projection plus the goals
+ * older-own-quiz goals rule, rule 6). The iOS registration wrote the same projection plus the goals
  * (`mobileEditProfilePatch`). `null` when the answers are no record at all (main skipped the link).
  */
 export function oldWriterColumnsForLead(quizAnswers: unknown): OldWriterColumns | null {
@@ -293,6 +296,7 @@ type Verdict =
   | { kind: "not_written" }
   | { kind: "edited" }
   | { kind: "ambiguous"; reason: string }
+  | { kind: "older_quiz_goals" }
 
 function compareColumn(
   column: ComparedColumn,
@@ -326,11 +330,9 @@ function compareColumn(
     }
   }
   if (column === "goals" && olderQuizGoals.some((goals) => sameColumn("goals", value, goals))) {
-    return {
-      kind: "ambiguous",
-      reason:
-        "the goals equal an OLDER own quiz's: main kept existing goals when a later quiz was linked",
-    }
+    // Fix round 10 (owner ruling): main kept existing goals when a later quiz was linked, so
+    // goals equal to an OLDER own quiz's are that quiz's link, not a hand edit.
+    return { kind: "older_quiz_goals" }
   }
   return { kind: "edited" }
 }
@@ -346,7 +348,8 @@ export type DetectHandEditsInput = {
   columns: LegacyDiagnosticColumns
   /** What the old writer stored for that source; `null` when it cannot be recomputed. */
   oldWriter: OldWriterColumns | null
-  /** The goals the old writer projected for the user's OTHER own quizzes. */
+  /** The goals the old writer projected for the user's OTHER own quizzes: goals equal to one of
+   * them are that quiz's link (`last_link`), never a hand edit (fix round 10). */
   olderQuizGoals?: readonly string[][]
   /** What the old writer stored for a NON-winning quiz whose link the whole row still reflects
    * (`columnsMatchOldWriter`): a column that differs from the winner's but equals this one is
@@ -440,17 +443,20 @@ export function detectHandEdits(input: DetectHandEditsInput): HandEditAnalysis {
                   }
 
     if (verdict.kind === "tolerated") tolerated.push({ column, id: verdict.id })
-    if (
+    if (verdict.kind === "older_quiz_goals") {
+      // Fix round 10 (owner ruling): the goals are what an OLDER own quiz's link wrote — like
+      // every other last-link column the winner's native goals stay (§3), no `user` provenance,
+      // and the visible change is listed for the owner.
+      record(column, "last_link", "the goals are what an older own quiz's link wrote")
+    } else if (
       (verdict.kind === "edited" || verdict.kind === "ambiguous") &&
-      column !== "goals" &&
       input.lastLink &&
       column in input.lastLink &&
       sameColumn(column, value, input.lastLink[column])
     ) {
       // The row is the last link of a non-winning quiz: nobody edited it, and §3 says the quiz
       // taken later fully replaces — the winner's native value stays, and the resulting visible
-      // change is listed for the owner (fix round 6, I4). Goals keep their own rule (open with
-      // the owner): equal to an older own quiz's is ambiguous and the column wins.
+      // change is listed for the owner (fix round 6, I4).
       record(column, "last_link", "the column is what a non-winning quiz's link wrote")
     } else if (verdict.kind === "edited") {
       take(column, userFields)
