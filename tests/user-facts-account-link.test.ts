@@ -1150,3 +1150,39 @@ test("fix round 11: same lead id + same takenAt but a CHANGED volume direction i
   )
   assert.equal((rows[0]!.diagnostics as DiagnosticsV1).volumeDirection, "more", "facts unchanged")
 })
+
+test("fix round 11: a stored source WITHOUT a recorded volume direction is no resume for the same lead's explicit pick (no wildcard)", async () => {
+  // Pins the documented behaviour: a missing `statedOutsideRaw.volumeDirection` is not a
+  // wildcard. No stored production source has this shape (facts were first written by the code
+  // that records the direction); if one ever did, the link takes the ordinary path.
+  const rows: Row[] = []
+  const { admin, saves } = fakeAdmin(rows)
+  const quiz = {
+    ...tuesdayLeadQuiz(),
+    quizAnswers: { ...COMPLETE_LEGACY_ANSWERS, goals: ["volume"] } as never,
+  }
+  assert.equal(await writeAccountLinkFacts(admin, { userId: USER_ID, quiz }), "replaced")
+  const stored = rows[0]!.diagnostics as DiagnosticsV1
+  assert.equal(stored.volumeDirection, "more", "the explicit pick is kept as the direction")
+  assert.equal(
+    (stored.source as { statedOutsideRaw?: { volumeDirection?: string } }).statedOutsideRaw
+      ?.volumeDirection,
+    "more",
+    "and recorded on the source",
+  )
+
+  // Simulate a source stored before the direction was recorded.
+  const legacyShaped = structuredClone(stored) as DiagnosticsV1 & {
+    source: { statedOutsideRaw?: Record<string, unknown> }
+  }
+  delete legacyShaped.source.statedOutsideRaw!.volumeDirection
+  rows[0]!.diagnostics = legacyShaped
+  const settled = saves.length
+
+  assert.equal(await writeAccountLinkFacts(admin, { userId: USER_ID, quiz }), "preserved")
+  assert.deepEqual(
+    saves.slice(settled).map((call) => [call.p_domain, call.p_mode]),
+    [["diagnostics", "create_only"]],
+    "ordinary path: the quiz is recorded as a candidate, never silently treated as the same",
+  )
+})

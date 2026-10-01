@@ -261,7 +261,14 @@ function sameQuizRaw(stored: unknown, incoming: unknown): boolean {
  * „Etwas anderes" note, the volume direction of a legacy `volume` / `less_volume` goal). The
  * projection keeps them on the source (`statedOutsideRaw`), apart from the editable facts, so
  * the comparison holds after a hand edit too. A stored source without
- * that record (an artifact, or a source a hand edit synthesised) has nothing more to compare. */
+ * that record (an artifact, or a source a hand edit synthesised) has nothing more to compare.
+ *
+ * `volumeDirection` is only present when the lead stated one. A source stored BEFORE the
+ * direction was recorded would lack the key and compare as "changed" against the same lead's
+ * explicit pick (ordinary path, never a resume). No stored source has that shape: production
+ * held no facts document when this was introduced (verified 2026-10-01, 0 of 292 profiles), and
+ * every writer since records it. A missing key is deliberately NOT a wildcard — that would hide
+ * a real change of direction. */
 function sameQuizAnswersOutsideRaw(
   stored: DiagnosticsSource,
   incoming: DiagnosticsSource,
