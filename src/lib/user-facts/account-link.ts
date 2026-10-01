@@ -24,6 +24,7 @@ import {
   sameFactsDocument,
   sameQuizSourceIdentity,
   type DiagnosticsPatch,
+  type DiagnosticsSource,
   type DiagnosticsV1,
   type DomainProvenance,
   type FieldProvenanceValue,
@@ -256,18 +257,21 @@ function sameQuizRaw(stored: unknown, incoming: unknown): boolean {
   return isDeepStrictEqual(parsed(stored), parsed(incoming))
 }
 
-/** Quiz answers that become facts but are not part of `source.raw` (a legacy lead's main problem
- * and „Etwas anderes" note). Once the profile was edited by hand (`editedAt`) the stored values
- * no longer say what the quiz answered, so they are not compared. */
-const QUIZ_ANSWERS_OUTSIDE_RAW = ["primaryConcern", "currentConcernsOtherText"] as const
-
+/** A legacy lead's answers that become facts but are not part of `source.raw` (main problem,
+ * „Etwas anderes" note). The projection keeps them on the source (`statedOutsideRaw`), apart from
+ * the editable facts, so the comparison holds after a hand edit too. A stored source without
+ * that record (an artifact, or a source a hand edit synthesised) has nothing more to compare. */
 function sameQuizAnswersOutsideRaw(
-  facts: NonNullable<Awaited<ReturnType<typeof loadUserFacts>>>,
-  incoming: DiagnosticsV1,
+  stored: DiagnosticsSource,
+  incoming: DiagnosticsSource,
 ): boolean {
-  if (facts.provenance.diagnostics?.editedAt) return true
-  return QUIZ_ANSWERS_OUTSIDE_RAW.every(
-    (field) => (facts.diagnostics?.[field] ?? null) === (incoming[field] ?? null),
+  const storedStated = stored.kind === "legacy_quiz" ? stored.statedOutsideRaw : undefined
+  const incomingStated = incoming.kind === "legacy_quiz" ? incoming.statedOutsideRaw : undefined
+  if (!incomingStated) return true
+  if (!storedStated) return false
+  return (
+    storedStated.primaryConcern === incomingStated.primaryConcern &&
+    storedStated.currentConcernsOtherText === incomingStated.currentConcernsOtherText
   )
 }
 
@@ -308,7 +312,7 @@ export async function writeAccountLinkFacts(
       facts?.diagnostics &&
       sameQuizSourceIdentity(facts.diagnostics.source, projection.diagnostics.source) &&
       sameQuizRaw(facts.diagnostics.source.raw, projection.diagnostics.source.raw) &&
-      sameQuizAnswersOutsideRaw(facts, projection.diagnostics)
+      sameQuizAnswersOutsideRaw(facts.diagnostics.source, projection.diagnostics.source)
     ) {
       const target =
         projection.quizContext ?? (hasQuizContextAnswers(facts.quizContext) ? {} : null)

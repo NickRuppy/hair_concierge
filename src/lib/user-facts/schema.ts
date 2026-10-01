@@ -119,6 +119,17 @@ export const diagnosticsSourceSchema = z.discriminatedUnion("kind", [
       kind: z.literal("legacy_quiz"),
       version: z.literal(1),
       ...diagnosticsSourceBaseFields,
+      // The lead's answers that become facts but are not part of `raw` (the Stage-1 legacy
+      // source does not carry them): kept here, apart from the editable facts, so a re-link can
+      // tell "the same quiz again" from "the quiz's answers changed" even after a hand edit.
+      // Never read by Stage 1 and never part of the hash.
+      statedOutsideRaw: z
+        .object({
+          primaryConcern: z.string().nullable(),
+          currentConcernsOtherText: z.string().nullable(),
+        })
+        .strict()
+        .optional(),
     })
     .strict(),
   // Backfill-only (controller ruling 2026-09-15): synthesised for users with neither a

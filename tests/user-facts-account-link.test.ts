@@ -1019,3 +1019,58 @@ for (const [label, before, after] of [
     assert.equal(saves.length, again, "unchanged quiz: zero writes")
   })
 }
+
+for (const [label, before, after] of [
+  [
+    "the main problem",
+    { concerns: ["tangling", "dry_lengths"], primary_concern: "tangling" },
+    { concerns: ["tangling", "dry_lengths"], primary_concern: "dry_lengths" },
+  ],
+  [
+    "the „Etwas anderes“ note",
+    { concerns_other_text: "old note" },
+    { concerns_other_text: "new note" },
+  ],
+] as const) {
+  test(`fix round 9 (C): after an unrelated hand edit, the same lead with only ${label} changed is still no resume`, async () => {
+    const rows: Row[] = []
+    const { admin, saves } = fakeAdmin(rows)
+    const quiz = (answers: object) => ({
+      ...tuesdayLeadQuiz(),
+      quizAnswers: { ...COMPLETE_LEGACY_ANSWERS, ...answers } as never,
+    })
+    assert.equal(
+      await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: quiz(before) }),
+      "replaced",
+    )
+    // A hand edit of an unrelated field (density), newer than the quiz.
+    const row = rows[0]!
+    row.diagnostics = { ...(row.diagnostics as Row), density: "high" }
+    const provenance = row.facts_provenance as Row
+    provenance.diagnostics = {
+      ...(provenance.diagnostics as Row),
+      editedAt: "2099-01-01T00:00:00.000Z",
+    }
+    const diagnosticsBefore = structuredClone(row.diagnostics)
+    const settled = saves.length
+
+    assert.equal(
+      await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: quiz(after) }),
+      "preserved",
+    )
+    assert.deepEqual(
+      saves.slice(settled).map((call) => [call.p_domain, call.p_mode]),
+      [["diagnostics", "create_only"]],
+      "changed quiz answers are recorded as a candidate even after a hand edit",
+    )
+    assert.deepEqual(rows[0]!.diagnostics, diagnosticsBefore, "the hand-edited facts stay")
+
+    // The unchanged quiz is still a pure resume after the hand edit: zero writes.
+    const again = saves.length
+    assert.equal(
+      await writeAccountLinkFacts(admin, { userId: USER_ID, quiz: quiz(before) }),
+      "preserved",
+    )
+    assert.equal(saves.length, again, "unchanged quiz after a hand edit: zero writes")
+  })
+}

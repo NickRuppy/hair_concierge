@@ -120,6 +120,10 @@ export function projectLegacyLeadToFacts(input: ProjectLegacyLeadInput): Project
       leadId: input.leadId,
       raw: legacySource,
       ...(takenAt ? { takenAt } : {}),
+      statedOutsideRaw: {
+        primaryConcern: primaryConcern ?? null,
+        currentConcernsOtherText: currentConcernsOtherText ?? null,
+      },
     },
   })
 
