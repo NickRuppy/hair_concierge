@@ -1,0 +1,19 @@
+{
+  "standard_version": "bondbuilder-inci-v0.3",
+  "frozen_date": "2026-09-30",
+  "purpose": "calibration replay only",
+  "sha256": {
+    "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/blind-packet.v0.1.json": "8bf4726eaa5a96723ac9243369cbd1c93a713945cc103964c6a0add8bccd1c40",
+    "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/evidence-packet.v0.1.json": "d550115248bf129fd90ac6a9ed2f5fcb50039318e6f0ed1528fc466094aacd35",
+    "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.2/source-amendments.json": "075bb732ddcaf660732b959ddc9221a9b20aab00d147f0f9ca01d263ec5575b1",
+    "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/build-packets.mjs": "87958739897fb11d7b09c889f5db3d794d53c4dfcea9a1fb1dbbe6be8685b233",
+    "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/evidence-packet.v0.3.json": "07a228339ec17cb9d1b6526057f42bfddecf87d6dcf96425a734c1b0991ffadd",
+    "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/blind-packet.v0.3.json": "855dd8a8c6f574bf76063b192c99e6ca3764da6370578342d28a8740ee88838e",
+    "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/rule-only-control.json": "9aa8d89d2352dce78a3d179af914819f193e2979866286436a05454c2f95eb16",
+    "docs/research/bondbuilder-inci/v1.0/bondbuilder-classification-standard.v0.1.md": "712e629f0d92f4d9bafdf3f5fcce151628feb0819b777eb329ec3870c62a2968",
+    "docs/research/bondbuilder-inci/v1.0/bondbuilder-classification-standard.v0.3.md": "76bd8118b5d1c9485fff8b90bc1c77b7fadc98e5896892d0bb62aa888fa63e06",
+    "docs/research/bondbuilder-inci/v1.0/runbook.v0.3.md": "69e6817e008b03ec35e93cd8133bc92b5825375ed3bd1853e74e7f5e9ffa09cb",
+    "docs/research/bondbuilder-inci/v1.0/researcher-prompt.v0.3.md": "8edb2d0a5a5e6db98d9baf24122550a8bcc62d4477230360dba636d2ffc4c5fe"
+  },
+  "activation": false
+}

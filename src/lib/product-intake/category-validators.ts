@@ -43,6 +43,7 @@ import { canonicalizeGtin, SUPPORTED_PRODUCT_CATEGORY_KEYS } from "@/lib/product
 import { buildProductApplicationPointerV2 } from "@/lib/product-intake/catalog-enrichment/stage5-v2-builder"
 import { deriveShampooProtocolRoles } from "@/lib/product-intake/shampoo-protocol-roles"
 import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
+import { validateBondbuilderResearchProfile } from "@/lib/bondbuilder-research/production-adapter"
 
 export const PRODUCT_INTAKE_PRODUCT_ID_PLACEHOLDER = "__PRODUCT_ID__" as const
 
@@ -140,12 +141,16 @@ type ProductIntakeSpecRowByTable = {
     color_treated_suitability: string
   }
   product_bondbuilder_specs: {
-    bond_repair_intensity: string
-    application_mode: string
-    bond_repair_axis: string
-    treatment_mode: string
-    product_format: string
-    usage_protocol: string
+    bond_repair_intensity?: string | null
+    application_mode?: string | null
+    bond_repair_axis?: string | null
+    treatment_mode?: string | null
+    product_format?: string | null
+    usage_protocol?: string | null
+    technology_family?: string
+    claim_trust_level?: string
+    trust_basis?: string
+    research_profile?: unknown
   }
   product_heat_protectant_specs: {
     format: "spray"
@@ -664,14 +669,85 @@ const bondbuilderSpecsSchema = z
   .object({
     product_bondbuilder_specs: z
       .object({
-        bond_repair_intensity: z.enum(PRODUCT_BOND_REPAIR_INTENSITIES),
-        application_mode: z.enum(PRODUCT_BOND_APPLICATION_MODES),
-        bond_repair_axis: z.enum(PRODUCT_BOND_REPAIR_AXES),
-        treatment_mode: z.enum(PRODUCT_BOND_TREATMENT_MODES),
-        product_format: z.enum(PRODUCT_BOND_PRODUCT_FORMATS),
-        usage_protocol: z.enum(PRODUCT_BOND_USAGE_PROTOCOLS),
+        bond_repair_intensity: z.enum(PRODUCT_BOND_REPAIR_INTENSITIES).nullable().optional(),
+        application_mode: z.enum(PRODUCT_BOND_APPLICATION_MODES).nullable().optional(),
+        bond_repair_axis: z.enum(PRODUCT_BOND_REPAIR_AXES).nullable().optional(),
+        treatment_mode: z.enum(PRODUCT_BOND_TREATMENT_MODES).nullable().optional(),
+        product_format: z.enum(PRODUCT_BOND_PRODUCT_FORMATS).nullable().optional(),
+        usage_protocol: z.enum(PRODUCT_BOND_USAGE_PROTOCOLS).nullable().optional(),
+        technology_family: z
+          .enum([
+            "sulfur_targeting_dimaleate",
+            "designed_peptide",
+            "maleate_ester",
+            "acid_calcium_management",
+            "gluconamide_gluconate",
+          ])
+          .optional(),
+        claim_trust_level: z.enum(["high", "medium", "low"]).optional(),
+        trust_basis: z.enum(["owner_anchor", "owner_calibration", "owner_default"]).optional(),
+        research_profile: z.unknown().optional(),
       })
-      .strict(),
+      .strict()
+      .superRefine((specs, ctx) => {
+        const newKeys = [
+          "technology_family",
+          "claim_trust_level",
+          "trust_basis",
+          "research_profile",
+        ] as const
+        const legacyKeys = [
+          "bond_repair_intensity",
+          "application_mode",
+          "bond_repair_axis",
+          "treatment_mode",
+          "product_format",
+          "usage_protocol",
+        ] as const
+        const hasNewContractField = newKeys.some((key) => specs[key] !== undefined)
+        if (!hasNewContractField) {
+          for (const key of legacyKeys) {
+            if (specs[key] === undefined || specs[key] === null) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: [key],
+                message: "Legacy Bondbuilder specs must be complete",
+              })
+            }
+          }
+          return
+        }
+        for (const key of newKeys) {
+          if (specs[key] === undefined || specs[key] === null) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: [key],
+              message: "Bondbuilder research fields must be present together",
+            })
+          }
+        }
+        if (specs.research_profile === undefined || specs.research_profile === null) return
+        const validation = validateBondbuilderResearchProfile(specs.research_profile)
+        if (!validation.success) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["research_profile"],
+            message: validation.errors.join("; "),
+          })
+          return
+        }
+        if (
+          validation.profile.assessment.technology_family !== specs.technology_family ||
+          validation.profile.assessment.claim_trust_level !== specs.claim_trust_level ||
+          validation.profile.assessment.trust_basis !== specs.trust_basis
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["research_profile"],
+            message: "Bondbuilder scalar fields must match the profile",
+          })
+        }
+      }),
     product_relationships: z.unknown().optional(),
   })
   .strict()
@@ -1252,4 +1328,68 @@ export function validateProductIntakeApprovalPayload(
     ],
     normalizedPayload: parsed.data,
   }
+}
+
+/** Payload validation only; callers must separately establish trusted submission
+ * ownership. No executable protocol is admitted or silently discarded here. */
+export function validateBondbuilderOwnerIntakePayload(
+  value: unknown,
+): ProductIntakeApprovalValidationResult {
+  const parsed = approvalPayloadSchema.safeParse(value)
+  if (!parsed.success) return invalidCategoryResult(parseErrors(parsed.error))
+  if (parsed.data.final.product.category_key !== "bondbuilder")
+    return invalidCategoryResult(["final.product.category_key"])
+  const rationaleValidation = validateFieldRationales(parsed.data.final)
+  if (rationaleValidation) return rationaleValidation
+  const suppliedProtocols = parsed.data.final.category_specs.product_application_protocols
+  if (
+    suppliedProtocols !== undefined &&
+    (!Array.isArray(suppliedProtocols) || suppliedProtocols.length !== 0)
+  ) {
+    return invalidCategoryResult(["final.category_specs.product_application_protocols"])
+  }
+  const categoryValidation = validateBondbuilder({
+    ...parsed.data.final,
+    category_specs: Object.fromEntries(
+      Object.entries(parsed.data.final.category_specs).filter(
+        ([key]) => key !== "product_application_protocols",
+      ),
+    ),
+  })
+  if (!categoryValidation.ok) return categoryValidation
+  const specs = parsed.data.final.category_specs.product_bondbuilder_specs as Record<
+    string,
+    unknown
+  >
+  const validation = validateBondbuilderResearchProfile(specs.research_profile)
+  if (!validation.success)
+    return invalidCategoryResult([
+      "final.category_specs.product_bondbuilder_specs.research_profile",
+    ])
+  const profile = validation.profile
+  if (
+    profile.assessment.claim_trust_level !== "low" ||
+    profile.assessment.trust_basis !== "owner_default"
+  ) {
+    return invalidCategoryResult([
+      "final.category_specs.product_bondbuilder_specs.claim_trust_level",
+    ])
+  }
+  if (specs.usage_protocol != null)
+    return invalidCategoryResult(["final.category_specs.product_bondbuilder_specs.usage_protocol"])
+  const product = parsed.data.final.product
+  if (
+    profile.identity.product_id !== null ||
+    product.canonical_brand !== profile.identity.brand ||
+    [product.canonical_brand, product.product_line, product.clean_name]
+      .filter(Boolean)
+      .join(" ") !== profile.identity.product_name
+  ) {
+    return invalidCategoryResult(["final.product.clean_name"])
+  }
+  if (product.suitable_thicknesses?.length)
+    return invalidCategoryResult(["final.product.suitable_thicknesses"])
+  // A missing executable protocol is itself a concrete compatibility hold;
+  // a model-supplied holds flag is neither necessary nor sufficient authority.
+  return { ...categoryValidation, normalizedPayload: parsed.data }
 }

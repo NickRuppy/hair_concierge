@@ -1,0 +1,39 @@
+{
+  "standard_version": "bondbuilder-inci-v0.4",
+  "lane_id": "lane-b",
+  "amendment_id": "source-amendment-01",
+  "slot_id": "V04",
+  "input_receipt": [
+    {
+      "path": "/Users/nick/.codex/worktrees/bondbuilder-research-engine/hair_conscierge/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/source-amendment-01.json",
+      "sha256": "fa9232355a32c00e37b80a99f4fdf18a0a65b0d9551cc89b1477a9c33bae9fa9"
+    },
+    {
+      "path": "/Users/nick/.codex/worktrees/bondbuilder-research-engine/hair_conscierge/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-b/records.json",
+      "sha256": "1270f34e813c3c60cf3bfe0a0c6ab42a074d1c9d8e33451dd37e221e743ce6da"
+    }
+  ],
+  "no_web": true,
+  "classification_unchanged": true,
+  "aftercare_facts": [
+    {
+      "action": "Use the Metal DX mask for intensive care if desired.",
+      "requirement": "optional",
+      "placement": "After the serum treatment and its thorough rinse.",
+      "source_ids": ["S13"]
+    },
+    {
+      "action": "Use the matching Absolut Repair Molecular leave-in for the producer's recommended best-results routine.",
+      "requirement": "recommended",
+      "placement": "Afterward in the aftercare sequence, following the optional Metal DX mask when used; the mask remains optional.",
+      "source_ids": ["S13"]
+    }
+  ],
+  "retained_limits": [
+    "S13 restores aftercare order omitted from the original compressed observation. This is a supplement, not a complete replay or a new category/trust assessment.",
+    "S13 supplies no mask dose, dwell or mask-rinse instructions; none is inferred.",
+    "Optional mask and recommended leave-in are not mandatory purchases, exclusive dependencies or demonstrated requirements for molecular efficacy. Best-results wording remains attributed producer advice.",
+    "Cadence remains unstated and diameter fit unknown. V04 remains category_review with technology_family, claim_trust_level, trust_basis and policy_reference null, as in the sealed lane-b record.",
+    "The source remains the same DE page version, not an actual-pack verification. No web lookup or original-output mutation occurred."
+  ]
+}

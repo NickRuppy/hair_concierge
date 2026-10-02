@@ -1,0 +1,43 @@
+{
+  "checked_date": "2026-10-02",
+  "project_id": "pqdkhefxsxkyeqelqegq",
+  "read_only": true,
+  "production_writes": 0,
+  "base": "3abfe00a7843882f01009de701affa7b1dff697f",
+  "function_definition_md5": [
+    {
+      "proname": "product_intake_approve_reviewed_product",
+      "arguments": "p_submission_id uuid, p_final_payload jsonb, p_spec_operations jsonb, p_reviewed_by text, p_reviewed_at timestamp with time zone, p_review_notes text",
+      "definition_md5": "46f20a2b0aa35f5f4b786fd29082fcc2"
+    },
+    {
+      "proname": "product_intake_approve_reviewed_product_before_net_content",
+      "arguments": "p_submission_id uuid, p_final_payload jsonb, p_spec_operations jsonb, p_reviewed_by text, p_reviewed_at timestamp with time zone, p_review_notes text",
+      "definition_md5": "b6fec38ed0a44a27c87c7b394e4cc63f"
+    },
+    {
+      "proname": "product_intake_approve_reviewed_product_before_scanned_identifi",
+      "arguments": "p_submission_id uuid, p_final_payload jsonb, p_spec_operations jsonb, p_reviewed_by text, p_reviewed_at timestamp with time zone, p_review_notes text",
+      "definition_md5": "21c75990f7c2803fd724e74addc1f56c"
+    },
+    {
+      "proname": "product_intake_approve_reviewed_product_before_thumbnail_image",
+      "arguments": "p_submission_id uuid, p_final_payload jsonb, p_spec_operations jsonb, p_reviewed_by text, p_reviewed_at timestamp with time zone, p_review_notes text",
+      "definition_md5": "88cc887730fdd284580187316127b489"
+    },
+    {
+      "proname": "product_intake_approve_reviewed_product_legacy",
+      "arguments": "p_submission_id uuid, p_final_payload jsonb, p_spec_operations jsonb, p_reviewed_by text, p_reviewed_at timestamp with time zone, p_review_notes text",
+      "definition_md5": "774ccdfef98c81d840808dcc8584c351"
+    },
+    {
+      "proname": "product_intake_approve_reviewed_product_without_canonical_guida",
+      "arguments": "p_submission_id uuid, p_final_payload jsonb, p_spec_operations jsonb, p_reviewed_by text, p_reviewed_at timestamp with time zone, p_review_notes text",
+      "definition_md5": "0aae647baae332027b26fa9f462ece5c"
+    }
+  ],
+  "shared_guidance_binder_present": false,
+  "required_binding_repair": "20260929230000_expansion_protocol_binding_repair.sql",
+  "migration_apply_ready": false,
+  "blocker": "Live shared binder absent; reconcile migration ledger and exact effective function bodies before the guarded Bondbuilder migration. Definition MD5 receipts are observations, not a substitute for required prosrc SHA-256 guards."
+}

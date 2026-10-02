@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { productSchema } from "../src/lib/validators"
+import { makeBondbuilderProfile } from "./fixtures/bondbuilder-research/profile"
 
 function buildBaseProduct(overrides: Record<string, unknown>) {
   return {
@@ -37,6 +38,53 @@ test("product schema accepts bondbuilder support specs", () => {
   )
 
   assert.equal(parsed.success, true)
+})
+
+test("product schema accepts a verified full Bondbuilder profile with nullable unmapped legacy fields", () => {
+  const profile = makeBondbuilderProfile()
+  const parsed = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Bondbuilder",
+      bondbuilder_specs: {
+        technology_family: "maleate_ester",
+        claim_trust_level: "high",
+        trust_basis: "owner_anchor",
+        research_profile: profile,
+        application_mode: "pre_shampoo",
+        treatment_mode: "rinse_out",
+        bond_repair_intensity: null,
+        bond_repair_axis: null,
+        product_format: null,
+        usage_protocol: null,
+      },
+    }),
+  )
+
+  assert.equal(parsed.success, true)
+})
+
+test("product schema rejects a forged Bondbuilder scalar grade and incomplete new contract", () => {
+  const profile = makeBondbuilderProfile()
+  const forged = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Bondbuilder",
+      bondbuilder_specs: {
+        technology_family: "maleate_ester",
+        claim_trust_level: "low",
+        trust_basis: "owner_default",
+        research_profile: profile,
+      },
+    }),
+  )
+  const incomplete = productSchema.safeParse(
+    buildBaseProduct({
+      category: "Bondbuilder",
+      bondbuilder_specs: { technology_family: "maleate_ester" },
+    }),
+  )
+
+  assert.equal(forged.success, false)
+  assert.equal(incomplete.success, false)
 })
 
 test("product schema accepts canonical leave-in fit specs", () => {

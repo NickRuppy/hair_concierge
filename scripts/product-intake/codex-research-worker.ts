@@ -69,6 +69,8 @@ import { applyConditionerResearchAdapter } from "@/lib/product-intake/conditione
 import { conditionerResearchPromptContract } from "@/lib/product-intake/conditioner-research-prompt-contract"
 import { applyLeaveInResearchAdapter } from "@/lib/product-intake/leave-in-research-adapter"
 import { leaveInResearchPromptContract } from "@/lib/product-intake/leave-in-research-prompt-contract"
+import { applyBondbuilderResearchAdapterForWorker } from "@/lib/product-intake/bondbuilder-research-adapter"
+import { bondbuilderResearchPromptContract } from "@/lib/product-intake/bondbuilder-research-prompt-contract"
 import {
   createRetailerEnrichmentWarningReporter,
   parseRetailerEnrichmentPacket,
@@ -1818,6 +1820,7 @@ function bondbuilderApprovalContract(): JsonRecord {
     product_application_protocols: applicationProtocolResearchContract("bondbuilder", [
       "specialized_bond_treatment",
     ]),
+    future_research_engine_contract: bondbuilderResearchPromptContract(),
   }
 }
 
@@ -1939,6 +1942,18 @@ function normalizeResearchOutputForCategory(
       final,
       artifacts: output.artifacts,
       expectedResearchId,
+    })
+    blockers.push(...adapterResult.blockers)
+  }
+
+  // The method-lock gate is server-owned and enforced after model output.
+  // Neither an unsolicited envelope nor direct profile fields can activate it.
+  // Legacy output is unchanged; explicit offline projection stays available.
+  if (categoryKey === "bondbuilder" && final) {
+    const adapterResult = applyBondbuilderResearchAdapterForWorker({
+      final,
+      artifacts: output.artifacts,
+      expectedSubmissionId: expectedResearchId,
     })
     blockers.push(...adapterResult.blockers)
   }

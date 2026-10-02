@@ -1,0 +1,649 @@
+{
+  "schema_version": "bondbuilder-blind-records-v0.1",
+  "standard_version": "bondbuilder-inci-v0.1",
+  "lexicon_version": "bondbuilder-lexicon-v0.1",
+  "lane_id": "lane-a",
+  "stage": "A",
+  "sealed": true,
+  "seal_date": "2026-09-30",
+  "input_receipt": [
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/bondbuilder-classification-standard.v0.1.md",
+      "sha256": "712e629f0d92f4d9bafdf3f5fcce151628feb0819b777eb329ec3870c62a2968"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/blind-packet.v0.1.json",
+      "sha256": "8bf4726eaa5a96723ac9243369cbd1c93a713945cc103964c6a0add8bccd1c40"
+    }
+  ],
+  "confidence_scope": "Marker confidence concerns exact presence in the supplied capture; candidate confidence concerns compatibility with the lexicon, never efficacy or final category. Target-formula applicability is separate. Architecture is bounded interpretation of listed ingredients.",
+  "common_limitations": [
+    "The lane received normalized lists and declared raw/formula hashes, not raw capture text or named source evidence; declared hashes were transcribed, not recomputed against raw captures.",
+    "Positive observations refer only to supplied captures. Absence statements are capture-scoped and are not conclusive product-level exclusions without complete authoritative target-formula verification.",
+    "Identity, targeted treatment intent, source-based application, claim trust, supported outcomes and fit are deliberately deferred to Stage B.",
+    "No concentrations, pH, effective doses, supplier identity, efficacy ranking, molecular endpoints or product identities were inferred.",
+    "Record-level limiting factor is the target-formula applicability limit together with absent named role/use evidence; high marker confidence does not clear any hold."
+  ],
+  "recognition_incidents": [
+    {
+      "id": "BI-01",
+      "slot_id": "A02",
+      "description": "The diethylhexyl maleate four-ingredient concentrate triggered a possible epres brand association from prior ingredient knowledge. No exact product/version was assigned and the association was not used as evidence."
+    },
+    {
+      "id": "BI-02",
+      "slot_id": "A04",
+      "description": "sh-Oligopeptide-78 triggered a K18 brand association from prior ingredient knowledge. No product, directions, claims or external evidence were imported."
+    },
+    {
+      "id": "BI-03",
+      "slot_id": "A07",
+      "description": "Bis-aminopropyl diglycol dimaleate triggered an OLAPLEX brand association from prior ingredient knowledge. No product/version, directions, claims or external evidence were imported."
+    }
+  ],
+  "deferred_fields": [
+    "boundary_status",
+    "technology_family_final",
+    "claim_trust_level",
+    "supported_outcome",
+    "application_facts",
+    "fit_assessment"
+  ],
+  "records": [
+    {
+      "slot_id": "A01",
+      "formula_status": "source_version_resolved",
+      "input_flags": [
+        "supplied_pack_not_verified"
+      ],
+      "raw_inci_sha256": "3f6d3873570520d1ebaa558db7991cec7b05171a333737e6c5a471953455b0ab",
+      "formula_fingerprint_sha256": "13715e76da3df36492e021fe9068510b02afb71873d2ce7ea0b2adafbd9527e1",
+      "recognized_marker_sets": [
+        {
+          "family": "gluconamide_gluconate",
+          "ingredients": [
+            "hydroxypropylgluconamide",
+            "hydroxypropylammonium gluconate"
+          ],
+          "scope": "primary_capture",
+          "specificity": "specific_lexicon_clue",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Presence is directly observable in this supplied capture only; target identity and authority are separate."
+          }
+        }
+      ],
+      "technology_candidates": [
+        {
+          "family": "gluconamide_gluconate",
+          "status": "provisional_formula_candidate",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Both required members are separately present; supplier, dose, targeted role and benefit remain unestablished."
+          }
+        }
+      ],
+      "architecture_observations": [
+        {
+          "listed_ingredient_observations": [
+            "Water, butylene glycol and glycerin are listed.",
+            "Cetearyl alcohol, behenyl alcohol, several oils, squalane and caprylic/capric triglyceride are listed.",
+            "Behentrimonium chloride and cationic guar/polymer ingredients are listed."
+          ],
+          "interpretation": "Compatible with an aqueous, lipid-containing conditioning formulation. This architecture neither establishes nor excludes a specialized treatment role.",
+          "confidence": {
+            "value": "moderate",
+            "limiting_factor": "INCI alone does not establish physical format, deposition, richness on hair, use directions or specialized intent."
+          }
+        }
+      ],
+      "counter_signals": [
+        "Octyldodecyl citrate crosspolymer is not sodium citrate; lactic acid and tartaric acid do not satisfy the citric-acid lexicon clue.",
+        "No additional recognized family marker is observed in the supplied list."
+      ],
+      "target_formula_applicability_confidence": {
+        "value": "moderate",
+        "limiting_factor": "Source version is marked resolved, but the supplied pack is not verified."
+      },
+      "input_holds_and_limitations": [
+        "Preserve supplied_pack_not_verified; do not equate the resolved source formula with verification of the supplied pack.",
+        "Targeted role, application, fit and empirical outcomes await Stage B."
+      ]
+    },
+    {
+      "slot_id": "A02",
+      "formula_status": "source_version_resolved",
+      "input_flags": [
+        "concentrate_not_diluted_formula",
+        "dilution_quantity_gap",
+        "catalog_binding_not_verified"
+      ],
+      "raw_inci_sha256": "df67885977548ed909d06b732de76166b43b2514cff64b1240c5f73d77641106",
+      "formula_fingerprint_sha256": "e921881bd4f21bb59f731c7f0fc1de697028bd6519cfa271a4aca1ccb75db0d2",
+      "recognized_marker_sets": [
+        {
+          "family": "maleate_ester",
+          "ingredients": [
+            "diethylhexyl maleate"
+          ],
+          "scope": "primary_capture",
+          "specificity": "specific_lexicon_clue",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Presence is directly observable in this supplied capture only; target identity and authority are separate."
+          }
+        }
+      ],
+      "technology_candidates": [
+        {
+          "family": "maleate_ester",
+          "status": "provisional_formula_candidate",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Exact lexicon ingredient is present; ingredient order establishes no effective dose and the in-use diluted composition is unknown."
+          }
+        }
+      ],
+      "architecture_observations": [
+        {
+          "listed_ingredient_observations": [
+            "The four supplied ingredients are diethylhexyl maleate, oleyl alcohol, alcohol denat. and stearamidopropyl dimethylamine.",
+            "No water is listed in this concentrate capture.",
+            "Packet explicitly identifies a concentrate, not the diluted formula."
+          ],
+          "interpretation": "Non-aqueous-as-listed, alcohol/fatty-alcohol-containing concentrate architecture with a conditioning amine. Its in-use architecture cannot be reconstructed without the dilution protocol.",
+          "confidence": {
+            "value": "moderate",
+            "limiting_factor": "No quantitative dilution, application or aqueous phase information is supplied; do not infer the treatment's final concentration or pH."
+          }
+        }
+      ],
+      "counter_signals": [
+        "Diethylhexyl maleate is distinct from bis-aminopropyl diglycol dimaleate; no cross-family evidence transfer.",
+        "No additional recognized family marker is observed in the supplied list."
+      ],
+      "target_formula_applicability_confidence": {
+        "value": "moderate",
+        "limiting_factor": "Source concentrate version is marked resolved; catalog binding and in-use dilution remain unverified."
+      },
+      "input_holds_and_limitations": [
+        "Preserve all three input flags.",
+        "Dilution quantity gap blocks reconstruction of the in-use formulation and any protocol-readiness conclusion.",
+        "No final treatment format, rinse sequence or cadence can be assigned."
+      ],
+      "blinding_incident_ids": [
+        "BI-01"
+      ]
+    },
+    {
+      "slot_id": "A03",
+      "formula_status": "conflict_hold",
+      "input_flags": [
+        "material_same_market_formula_conflict"
+      ],
+      "raw_inci_sha256": "5974d3798fc1e9db35e32cb1ecd9d666e3f08baa9e9cabd7173067ba7184cb92",
+      "formula_fingerprint_sha256": "33cdd458146668090375159d54ee4afd69c688627dd2b920bbb34596a083cfd5",
+      "alternative_capture": {
+        "raw_inci_sha256": "1b7dde77c6067231ce009b330c2474d7f677edd08688471092589e94fd390c0b",
+        "formula_fingerprint_sha256": "4a18ed3c6c724f3a79124871d2be9a576e5037ece1a8e90ad6cb5dbdf86c66cf"
+      },
+      "recognized_marker_sets": [
+        {
+          "family": "acid_calcium_management",
+          "ingredients": [
+            "citric acid",
+            "sodium citrate"
+          ],
+          "scope": "primary_capture",
+          "specificity": "generic_acid_with_supporting_marker",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Presence is directly observable in this supplied capture only; target identity and authority are separate."
+          }
+        },
+        {
+          "family": "acid_calcium_management",
+          "ingredients": [
+            "citric acid",
+            "sodium citrate"
+          ],
+          "scope": "alternative_capture",
+          "specificity": "generic_acid_with_supporting_marker",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Presence is directly observable in this supplied capture only; target identity and authority are separate."
+          }
+        }
+      ],
+      "technology_candidates": [
+        {
+          "family": "acid_calcium_management",
+          "status": "provisional_formula_candidate",
+          "confidence": {
+            "value": "low",
+            "limiting_factor": "Both captures contain citric acid and sodium citrate, but neither establishes specialized treatment intent or calcium-management activity; the material same-market formula conflict remains."
+          }
+        }
+      ],
+      "architecture_observations": [
+        {
+          "scope": "primary_capture",
+          "listed_ingredient_observations": [
+            "Water, behentrimonium chloride and cetearyl alcohol are listed.",
+            "Sodium citrate precedes citric acid in this capture.",
+            "Polyquaternium-37, potato starch modified, panthenol and stearamidopropyl dimethylamine are listed."
+          ],
+          "interpretation": "Compatible with a conditioning formulation containing an acid/citrate system.",
+          "confidence": {
+            "value": "moderate",
+            "limiting_factor": "The system's pH, concentrations and specialized role are unknown; this capture cannot be selected as authoritative within Stage A."
+          }
+        },
+        {
+          "scope": "alternative_capture",
+          "listed_ingredient_observations": [
+            "Water, cetearyl alcohol, glycerin, behentrimonium chloride and stearyl alcohol are listed.",
+            "Citric acid precedes sodium citrate in this capture.",
+            "Cetyl esters, polyquaternium-10 and hydroxypropyl guar are listed."
+          ],
+          "interpretation": "Also compatible with a conditioning formulation containing an acid/citrate system, but with a materially different listed base and polymer system.",
+          "confidence": {
+            "value": "moderate",
+            "limiting_factor": "Shared markers do not make these captures the same formula or resolve their authority."
+          }
+        }
+      ],
+      "counter_signals": [
+        "Ordinary acidic conditioning remains a plausible explanation for both ingredient architectures.",
+        "Marker agreement across captures is not identity/formula agreement.",
+        "No other recognized family marker is observed in either supplied list."
+      ],
+      "target_formula_applicability_confidence": {
+        "value": "low",
+        "limiting_factor": "Explicit material same-market formula conflict; neither capture can be bound to the target with confidence."
+      },
+      "input_holds_and_limitations": [
+        "Retain conflict_hold and material_same_market_formula_conflict unchanged.",
+        "Keep both captures separate; do not splice, choose one, or downgrade the conflict because the family clues agree.",
+        "Finalization remains blocked pending source/identity resolution."
+      ]
+    },
+    {
+      "slot_id": "A04",
+      "formula_status": "source_version_resolved",
+      "input_flags": [
+        "foreign_variant_differs",
+        "catalog_binding_not_verified"
+      ],
+      "raw_inci_sha256": "b5e8142fcd8f54ce4e23ca5d9204667d3df9ebeeacc51d3e32fd49c7f7ede9bc",
+      "formula_fingerprint_sha256": "fb3bb64f17eaa4f63be6d86900a913c2f7f2a6775c4854eb5c5e40b397692773",
+      "recognized_marker_sets": [
+        {
+          "family": "designed_peptide",
+          "ingredients": [
+            "sh-oligopeptide-78"
+          ],
+          "scope": "primary_capture",
+          "specificity": "specific_lexicon_clue",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Presence is directly observable in this supplied capture only; target identity and authority are separate."
+          }
+        },
+        {
+          "family": "acid_calcium_management",
+          "ingredients": [
+            "citric acid"
+          ],
+          "scope": "primary_capture",
+          "specificity": "generic_acid_only",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Presence is directly observable in this supplied capture only; target identity and authority are separate."
+          }
+        }
+      ],
+      "technology_candidates": [
+        {
+          "family": "designed_peptide",
+          "status": "provisional_formula_candidate",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "The exact designed-peptide marker is present; this does not establish peptide action, effective concentration or finished-product benefit."
+          }
+        },
+        {
+          "family": "acid_calcium_management",
+          "status": "provisional_formula_candidate",
+          "confidence": {
+            "value": "low",
+            "limiting_factor": "Citric acid is only a secondary generic clue here; no targeted acid/calcium architecture or use is established."
+          }
+        }
+      ],
+      "architecture_observations": [
+        {
+          "listed_ingredient_observations": [
+            "Water, alcohol denat. and propylene glycol are listed.",
+            "Cetearyl alcohol, dicaprylyl ether, cetyl esters and behentrimonium chloride are listed.",
+            "The designed peptide occurs alongside hydrolyzed wheat protein and hydrolyzed wheat starch."
+          ],
+          "interpretation": "Compatible with an aqueous/alcohol-containing conditioning formulation carrying a specific peptide plus generic hydrolyzed materials.",
+          "confidence": {
+            "value": "moderate",
+            "limiting_factor": "No solvent percentage, peptide dose, format, contact time, rinse requirement or outcome follows from this list."
+          }
+        }
+      ],
+      "counter_signals": [
+        "Hydrolyzed wheat protein and starch are not substitutes for the specific designed-peptide marker.",
+        "Secondary citric acid does not establish a second effective repair technology."
+      ],
+      "target_formula_applicability_confidence": {
+        "value": "moderate",
+        "limiting_factor": "Resolved source version does not verify catalog binding or equivalence with a differing foreign variant."
+      },
+      "input_holds_and_limitations": [
+        "Retain foreign_variant_differs and catalog_binding_not_verified.",
+        "Do not transfer directions or evidence between differing market variants without an explicit applicability bridge."
+      ],
+      "blinding_incident_ids": [
+        "BI-02"
+      ]
+    },
+    {
+      "slot_id": "A05",
+      "formula_status": "identity_formula_hold",
+      "input_flags": [
+        "wrong_size_capture",
+        "manufacturer_block_mismatch",
+        "target_formula_unresolved"
+      ],
+      "raw_inci_sha256": "0c4c919a9fcd08e8ff0a5fa4b259a3c7c5340022de56270f5e9f1e3d8a58fb9c",
+      "formula_fingerprint_sha256": "ce2a560edbe517a3a4a2580f04d8b1ae6813176639525dac8bc2cee76b2fff6f",
+      "recognized_marker_sets": [
+        {
+          "family": "acid_calcium_management",
+          "ingredients": [
+            "citric acid",
+            "glycine"
+          ],
+          "scope": "primary_capture",
+          "specificity": "generic_acid_with_supporting_marker",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Presence is directly observable in this supplied capture only; target identity and authority are separate."
+          }
+        }
+      ],
+      "technology_candidates": [
+        {
+          "family": "acid_calcium_management",
+          "status": "provisional_formula_candidate",
+          "confidence": {
+            "value": "low",
+            "limiting_factor": "The supplied capture has citric acid plus glycine, but its binding to the intended target is unresolved and specialized architecture/use is unconfirmed."
+          }
+        }
+      ],
+      "architecture_observations": [
+        {
+          "listed_ingredient_observations": [
+            "Water, glycerin and propylene glycol are listed.",
+            "Glycine, citric acid and sodium hydroxide are listed.",
+            "PEG-40 hydrogenated castor oil, polysorbates, cetrimonium chloride, quaternium-80 and guar derivatives are listed.",
+            "Hydrolyzed vegetable protein PG-propyl silanetriol is listed; no cetearyl/cetyl/stearyl alcohol or oil base is listed."
+          ],
+          "interpretation": "Compatible with a humectant/solubilizer/polymer-containing aqueous conditioning architecture in this capture. The acid and alkali ingredients do not establish the finished pH.",
+          "confidence": {
+            "value": "moderate",
+            "limiting_factor": "This description applies only to the captured list; wrong-size and manufacturer-block flags prevent attribution to the intended product. Physical texture and delivery format remain unknown."
+          }
+        }
+      ],
+      "counter_signals": [
+        "Glycine alone is a generic amino-acid ingredient; the protein derivative is not the designed-peptide marker.",
+        "A mismatched manufacturer block cannot become authority through convenient marker compatibility."
+      ],
+      "target_formula_applicability_confidence": {
+        "value": "low",
+        "limiting_factor": "Explicit wrong-size capture, manufacturer-block mismatch and unresolved target formula."
+      },
+      "input_holds_and_limitations": [
+        "Retain identity_formula_hold and all three input flags unchanged.",
+        "Do not treat capture observations as properties of the intended target.",
+        "No formula correction, source substitution or synthetic merged formula is attempted."
+      ]
+    },
+    {
+      "slot_id": "A06",
+      "formula_status": "source_version_resolved",
+      "input_flags": [
+        "old_new_claim_copy_conflict",
+        "supplied_pack_not_verified"
+      ],
+      "raw_inci_sha256": "482b3e1c0a5317613e0202b8156fdc00058e90d1366c83232fd3c286fc341c36",
+      "formula_fingerprint_sha256": "e5e9b5e7c3d8882f12622bda11a67ace0ef1aeb37b9660bf881231966815ae00",
+      "recognized_marker_sets": [
+        {
+          "family": "acid_calcium_management",
+          "ingredients": [
+            "citric acid",
+            "arginine",
+            "betaine"
+          ],
+          "scope": "primary_capture",
+          "specificity": "generic_acid_with_supporting_markers",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Presence is directly observable in this supplied capture only; target identity and authority are separate."
+          }
+        }
+      ],
+      "technology_candidates": [
+        {
+          "family": "acid_calcium_management",
+          "status": "provisional_formula_candidate",
+          "confidence": {
+            "value": "moderate",
+            "limiting_factor": "Citric acid plus both named supporting ingredients makes this a compatible formula candidate; specialized use, calcium-management intent and product/version applicability are still unconfirmed."
+          }
+        }
+      ],
+      "architecture_observations": [
+        {
+          "listed_ingredient_observations": [
+            "Water, cetearyl alcohol, citric acid and behentrimonium chloride are listed.",
+            "Arginine, betaine, glycerin, cetyl esters and shea butter are listed.",
+            "Aminopropyl dimethicone, bis(C13-15 alkoxy) PG-amodimethicone, cationic polymer ingredients and EDTA are listed.",
+            "Potassium hydroxide is also listed."
+          ],
+          "interpretation": "Compatible with a fatty-alcohol/cationic conditioning architecture containing silicones, an acid/amino-acid/betaine set and an additional chelating ingredient. Conditioning and mineral-binding possibilities are not demonstrations of targeted repair.",
+          "confidence": {
+            "value": "moderate",
+            "limiting_factor": "pH, ingredient levels, metal removal, hair deposition and treatment role cannot be established from ingredient rank or EDTA presence."
+          }
+        }
+      ],
+      "counter_signals": [
+        "EDTA is an architecture observation, not an additional lexicon technology family.",
+        "Chlorhexidine digluconate is not hydroxypropylammonium gluconate and does not supply the required gluconamide/gluconate pair.",
+        "Supportive ingredients do not exclude ordinary acidic conditioning."
+      ],
+      "target_formula_applicability_confidence": {
+        "value": "moderate",
+        "limiting_factor": "Source formula is marked resolved, but supplied pack and old/new claim-copy applicability remain unresolved."
+      },
+      "input_holds_and_limitations": [
+        "Retain source_version_resolved as supplied; do not silently rewrite it into a resolved product identity.",
+        "Retain old_new_claim_copy_conflict and supplied_pack_not_verified.",
+        "Claim/version conflict prevents choosing applicable old/new benefit statements until Stage B evidence resolves their relevance."
+      ]
+    },
+    {
+      "slot_id": "A07",
+      "formula_status": "source_version_resolved",
+      "input_flags": [
+        "foreign_variant_differs",
+        "catalog_binding_not_verified"
+      ],
+      "raw_inci_sha256": "9e801dd87d1033ebb223727270ae1dfd3d3c570df830ffee0d02a9e502bb08e4",
+      "formula_fingerprint_sha256": "f46416be72085b4f7022400daacf8d4d298de519fd9ef1ad008adc9dcd685dce",
+      "recognized_marker_sets": [
+        {
+          "family": "sulfur_targeting_dimaleate",
+          "ingredients": [
+            "bis-aminopropyl diglycol dimaleate"
+          ],
+          "scope": "primary_capture",
+          "specificity": "specific_lexicon_clue",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Presence is directly observable in this supplied capture only; target identity and authority are separate."
+          }
+        },
+        {
+          "family": "acid_calcium_management",
+          "ingredients": [
+            "citric acid"
+          ],
+          "scope": "primary_capture",
+          "specificity": "generic_acid_only",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Presence is directly observable in this supplied capture only; target identity and authority are separate."
+          }
+        }
+      ],
+      "technology_candidates": [
+        {
+          "family": "sulfur_targeting_dimaleate",
+          "status": "provisional_formula_candidate",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Exact specific lexicon marker is present; the family label is a provisional clue, not a finding of sulfur-bond action or restoration."
+          }
+        },
+        {
+          "family": "acid_calcium_management",
+          "status": "provisional_formula_candidate",
+          "confidence": {
+            "value": "low",
+            "limiting_factor": "Citric acid is a secondary generic clue; the supplied architecture does not establish a separate targeted acid/calcium treatment."
+          }
+        }
+      ],
+      "architecture_observations": [
+        {
+          "listed_ingredient_observations": [
+            "Water, multiple fatty alcohols and multiple cationic conditioning ingredients are listed.",
+            "Shea butter, oils, triglyceride, esters, polymers, glycerin, propanediol and panthenol are listed.",
+            "Trisodium ethylenediamine disuccinate, sodium metabisulfite and citric acid are listed alongside the dimaleate marker."
+          ],
+          "interpretation": "Compatible with a lipid-containing, cationic conditioning formulation carrying the specific dimaleate marker. Chelating/reducing ingredient presence cannot identify finished-product repair pathways.",
+          "confidence": {
+            "value": "moderate",
+            "limiting_factor": "No ingredient doses, treatment format, dwell time, pH or measured contribution of the marker can be established from this list."
+          }
+        }
+      ],
+      "counter_signals": [
+        "Sodium metabisulfite and the specific dimaleate marker do not prove native-disulfide restoration.",
+        "The chelating ingredient and citric acid do not independently establish multiple effective repair technologies."
+      ],
+      "target_formula_applicability_confidence": {
+        "value": "moderate",
+        "limiting_factor": "Source version is marked resolved; differing foreign variant and unverified catalog binding remain material limits."
+      },
+      "input_holds_and_limitations": [
+        "Retain foreign_variant_differs and catalog_binding_not_verified.",
+        "No evidence or application directions can be transferred from a foreign variant by marker match alone."
+      ],
+      "blinding_incident_ids": [
+        "BI-03"
+      ]
+    },
+    {
+      "slot_id": "A08",
+      "formula_status": "market_hold",
+      "input_flags": [
+        "target_market_formula_not_verified"
+      ],
+      "raw_inci_sha256": "4afb4135d8c1f4e39df722bc9ddb26c0f5515d0a1b1749abae21bc9ed2f2b331",
+      "formula_fingerprint_sha256": "3f98a1b13f2ae27c4532436df745de868e4bb2b835f3ac09b3daf2237d7bddbd",
+      "recognized_marker_sets": [
+        {
+          "family": "gluconamide_gluconate",
+          "ingredients": [
+            "hydroxypropylgluconamide",
+            "hydroxypropylammonium gluconate"
+          ],
+          "scope": "primary_capture",
+          "specificity": "specific_lexicon_clue",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Presence is directly observable in this supplied capture only; target identity and authority are separate."
+          }
+        },
+        {
+          "family": "acid_calcium_management",
+          "ingredients": [
+            "citric acid",
+            "arginine"
+          ],
+          "scope": "primary_capture",
+          "specificity": "generic_acid_with_supporting_marker",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Presence is directly observable in this supplied capture only; target identity and authority are separate."
+          }
+        }
+      ],
+      "technology_candidates": [
+        {
+          "family": "gluconamide_gluconate",
+          "status": "provisional_formula_candidate",
+          "confidence": {
+            "value": "high",
+            "limiting_factor": "Both required ingredients appear in this capture; the target-market formula and exact product applicability remain on hold."
+          }
+        },
+        {
+          "family": "acid_calcium_management",
+          "status": "provisional_formula_candidate",
+          "confidence": {
+            "value": "low",
+            "limiting_factor": "Citric acid and arginine are secondary clues only; no specialized acid/calcium role can be established."
+          }
+        }
+      ],
+      "architecture_observations": [
+        {
+          "listed_ingredient_observations": [
+            "Water, glycerin, behentrimonium chloride, polysorbates and cationic guar/polymer ingredients are listed.",
+            "Wheat protein, hydrolyzed keratin and the complete gluconamide/gluconate pair are listed.",
+            "Wheat germ oil, cetearyl nonanoate, caprylic/capric triglyceride, panthenol, arginine, citrate-free phosphate salts and organic acids are listed."
+          ],
+          "interpretation": "Compatible with an aqueous conditioning/protein/polymer architecture carrying the recognized pair. The co-occurring proteins cannot be used to attribute a finished-product benefit specifically to the pair.",
+          "confidence": {
+            "value": "moderate",
+            "limiting_factor": "No texture, rinse status, concentrations or effects can be inferred; the entire description applies only to the supplied market-unverified capture."
+          }
+        }
+      ],
+      "counter_signals": [
+        "Generic wheat protein and hydrolyzed keratin are not the designed-peptide clue.",
+        "Arginine and citric acid do not establish a second effective technology.",
+        "No supplier identity or concentration follows from the pair."
+      ],
+      "target_formula_applicability_confidence": {
+        "value": "low",
+        "limiting_factor": "Explicit market_hold: target-market formula is not verified."
+      },
+      "input_holds_and_limitations": [
+        "Retain market_hold and target_market_formula_not_verified unchanged.",
+        "Do not equate a foreign or unverified-market capture with a verified DE/EU target formula."
+      ]
+    }
+  ]
+}

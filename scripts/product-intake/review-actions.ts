@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { join } from "node:path"
+import { isDeepStrictEqual } from "node:util"
 
 import { sendProductIntakeReviewNotification } from "@/lib/product-intake/notifications"
 import { captureProductIntakeException } from "@/lib/observability/product-intake"
@@ -8,7 +9,10 @@ import type {
   ProductIntakeResearchedPayload,
   ProductIntakeTargetSpecOperation,
 } from "@/lib/product-intake/category-validators"
-import { dryRunProductIntakeReadyForReview } from "@/lib/product-intake/review-workflow"
+import {
+  dryRunProductIntakeReadyForReview,
+  validateBondbuilderOwnerSubmissionApproval,
+} from "@/lib/product-intake/review-workflow"
 import type { ProductSubmission } from "@/lib/types"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
@@ -67,6 +71,9 @@ export function validateSubmissionReady(submission: ReviewActionSubmission) {
     id: submission.id,
     category: submission.category,
     researched_payload: submission.researched_payload,
+    user_id: submission.user_id,
+    source: submission.source,
+    status: submission.status,
   })
 }
 
@@ -104,6 +111,9 @@ export function dryRunResearchedPayload(params: {
     id: params.submission.id,
     category: params.submission.category,
     researched_payload: params.researchedPayload,
+    user_id: params.submission.user_id,
+    source: params.submission.source,
+    status: params.submission.status,
   })
   const nextStatus = params.markReady && dryRun.ok ? "ready_for_review" : "researching"
 
@@ -182,14 +192,40 @@ export async function approveReviewedSubmission(params: {
   reviewedAt: string
   reviewNotes: string | null
 }): Promise<ApprovalRpcResult> {
-  const { data, error } = await params.supabase.rpc("product_intake_approve_reviewed_product", {
-    p_submission_id: params.submission.id,
-    p_final_payload: params.finalPayload,
-    p_spec_operations: params.specOperations,
-    p_reviewed_by: params.reviewedBy,
-    p_reviewed_at: params.reviewedAt,
-    p_review_notes: params.reviewNotes,
-  })
+  const ownerAdmission = validateBondbuilderOwnerSubmissionApproval(params.submission)
+  const selected = ownerAdmission.ok
+    ? ownerAdmission.validation
+    : validateSubmissionReady(params.submission)
+  if (params.submission.status !== "ready_for_review" || !selected.ok) {
+    throw new Error("approval_validation_failed: stored submission is not ready for approval")
+  }
+  if (
+    !isDeepStrictEqual(selected.normalizedPayload.final, params.finalPayload) ||
+    !isDeepStrictEqual(selected.targetSpecOperations, params.specOperations)
+  ) {
+    throw new Error(
+      "approval_payload_mismatch: caller payload does not match the validated stored submission",
+    )
+  }
+  const usesOwnerBondbuilderPath = ownerAdmission.ok
+  const { data, error } = usesOwnerBondbuilderPath
+    ? await params.supabase.rpc("product_intake_approve_bondbuilder_owner_v1", {
+        p_submission_id: params.submission.id,
+        p_owner_user_id: ownerAdmission.ownerUserId,
+        p_final_payload: selected.normalizedPayload.final,
+        p_spec_operations: selected.targetSpecOperations,
+        p_reviewed_by: params.reviewedBy,
+        p_reviewed_at: params.reviewedAt,
+        p_review_notes: params.reviewNotes,
+      })
+    : await params.supabase.rpc("product_intake_approve_reviewed_product", {
+        p_submission_id: params.submission.id,
+        p_final_payload: selected.normalizedPayload.final,
+        p_spec_operations: selected.targetSpecOperations,
+        p_reviewed_by: params.reviewedBy,
+        p_reviewed_at: params.reviewedAt,
+        p_review_notes: params.reviewNotes,
+      })
 
   if (error) {
     captureProductIntakeException(error, {

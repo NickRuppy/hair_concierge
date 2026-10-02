@@ -1,0 +1,611 @@
+{
+  "standard_version": "bondbuilder-inci-v0.3",
+  "lane_id": "lane-b",
+  "stage": "C",
+  "input_receipt": [
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/bondbuilder-classification-standard.v0.1.md",
+      "sha256": "712e629f0d92f4d9bafdf3f5fcce151628feb0819b777eb329ec3870c62a2968"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/bondbuilder-classification-standard.v0.3.md",
+      "sha256": "76bd8118b5d1c9485fff8b90bc1c77b7fadc98e5896892d0bb62aa888fa63e06"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/researcher-prompt.v0.3.md",
+      "sha256": "8edb2d0a5a5e6db98d9baf24122550a8bcc62d4477230360dba636d2ffc4c5fe"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/evidence-packet.v0.3.json",
+      "sha256": "07a228339ec17cb9d1b6526057f42bfddecf87d6dcf96425a734c1b0991ffadd"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-b/blind-records.json",
+      "sha256": "ec741e04a6d8116e90d1cfb1bbe6a34f952580da7ea4d3bde9d98cb998c8e073"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-b/blind-notes.md",
+      "sha256": "cfd826200adb5652f6b3b76c69c0feca45d42c1c077487ef2e846568cdf54a35"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-b/control-records.json",
+      "sha256": "d09d18e67c0e1f65a668a512504a0d266488d68fb0023b486774dc83d43902ee"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-b/control-notes.md",
+      "sha256": "d03b62b847db68d2255574a43217547e76ad923eef4d200dfd44b5eb4253288c"
+    }
+  ],
+  "no_web": true,
+  "records": [
+    {
+      "pilot_id": "P07",
+      "slot_id": "A01",
+      "boundary_status": "in_scope",
+      "technology_family": "gluconamide_gluconate",
+      "claim_trust_level": null,
+      "trust_basis": null,
+      "holds": {
+        "identity": [
+          "Supplied pack not verified; DE 150 ml R04 source-version identity is resolved."
+        ],
+        "boundary": [],
+        "claim_trust": [
+          "The amended packet still supplies no interpretable supplier strengthening result or adequately described product result sufficient to resolve the low/medium boundary."
+        ],
+        "protocol": [],
+        "fit": [
+          "Product-specific fit is unassessed; no hair-pattern/thickness suitability or global recommendation readiness assigned."
+        ]
+      },
+      "classification_confidence": "low",
+      "confidence_by_property": {
+        "identity": "high",
+        "boundary": "high",
+        "technology_family": "high",
+        "claim_trust": "low",
+        "protocol": "high",
+        "fit": "low"
+      },
+      "assessed_benefit": "Practical hair-shaft strengthening from the targeted pre-shampoo treatment; no native-bond restoration claim.",
+      "supporting_source_ids": [
+        "R04",
+        "E02",
+        "E06"
+      ],
+      "counterevidence": [
+        "R04 compares curly hair against shampoo without conditioner, so conditioning/deposition can contribute materially.",
+        "E02 explicitly leaves the full strengthening mechanism unknown; it is model chemistry, not a hair-efficacy study.",
+        "E06 provides partial testing methods but no inspected graphs or interpretable numerical outcome in this packet."
+      ],
+      "applicability_bridge": "R04 resolves the exact DE 150 ml source-version formula with both required markers and dry 5–10-minute pre-shampoo use. E02 provides model-chemistry plausibility; E06 describes relevant fatigue/formulation tests but accessible material does not reveal sufficient efficacy results. Follow-up did not recover the poster. Unknown dose alone is not the blocker: interpretable reinforcement support remains missing, while the manufacturer comparison permits conditioning/deposition confounding.",
+      "neighboring_grade_rationale": {
+        "high": "No converging product/use evidence adequate for high.",
+        "medium": "Plausible if the supplier efficacy results or adequately described product testing substantiate reinforcement; the packet only describes partial methods and a comparator-dependent claim.",
+        "low": "Not defensible as evidence of weak practical benefit because relevant results remain uninspected and no sustained-practice evidence route is supplied.",
+        "decision": "Hold, with established boundary/technology retained."
+      },
+      "limitations": [
+        "Ashland involvement in E02/E06 and manufacturer origin of R04 are disclosed, not automatic exclusions.",
+        "No sustained informed product-specific experience statements are supplied for this treatment after the amended bounded search.",
+        "No supplier identity, effective dose or universal cadence inferred.",
+        "Research source-version judgment only; supplied pack/catalog reconciliation and product-specific fit remain separate. No effect-size ranking, personal guarantee or native-bond reconstruction is inferred.",
+        "Pivotal gap: sufficiently interpretable reinforcing outcomes from the existing relevant technology/product evidence, or a sufficient informed-practice route. The specific inaccessible poster is not mandatory if another adequate route is supplied; absent creator takes are neutral."
+      ],
+      "research_admission_candidate": false,
+      "application_facts": {
+        "hair_state": "dry",
+        "phase": "before shampoo",
+        "wait_minutes_range": [
+          5,
+          10
+        ],
+        "rinse_before_shampoo": true,
+        "cadence": "source recommends alongside weekly intensive masque day; no universal researched cadence inferred",
+        "source_id": "R04"
+      },
+      "concise_de": "Die Rezeptur passt zu einer gezielten Bondbuilding-Behandlung. Auch nach der ergänzten Recherche fehlen entscheidende Ergebnisdetails für eine belastbare Vertrauenseinstufung der stärkenden Wirkung.",
+      "deeper_de": "Das Gluconamid/Gluconat-Paar ist in der deutschen 150-ml-Quellenrezeptur enthalten. Der Herstellervergleich mit Shampoo ohne Conditioner trennt Pflegeeffekte nicht von einer darüber hinausgehenden Verstärkung. Die Lieferantenquelle beschreibt passende Tests, ihre Ergebnisse bleiben aber nur unvollständig zugänglich. Die Kategorie ist geklärt; das Vertrauen bleibt offen, ohne daraus fehlende Wirkung abzuleiten."
+    },
+    {
+      "pilot_id": "P03",
+      "slot_id": "A02",
+      "boundary_status": "in_scope",
+      "technology_family": "maleate_ester",
+      "claim_trust_level": null,
+      "trust_basis": null,
+      "holds": {
+        "identity": [
+          "Starter/refill catalog binding is not reconciled; the four-ingredient concentrate source version is corroborated."
+        ],
+        "boundary": [],
+        "claim_trust": [
+          "Patent cosmetic outcomes and the available longer-use review do not yet establish practical reinforcement; no sufficient empirical or sustained informed reinforcement-experience route is accessible."
+        ],
+        "protocol": [],
+        "fit": [
+          "Product-specific fit is unassessed; no hair-pattern/thickness suitability or global recommendation readiness assigned."
+        ]
+      },
+      "classification_confidence": "low",
+      "confidence_by_property": {
+        "identity": "high",
+        "boundary": "high",
+        "technology_family": "high",
+        "claim_trust": "low",
+        "protocol": "high",
+        "fit": "low"
+      },
+      "assessed_benefit": "Practical repair/reinforcement during dilute-and-spray use; assess separately from claimed disulfide repair and continued molecular action after drying.",
+      "supporting_source_ids": [
+        "E07",
+        "R07",
+        "R13",
+        "N05",
+        "N08",
+        "N09",
+        "N12"
+      ],
+      "counterevidence": [
+        "Patent examples use different companion formulations and qualitative shine/softness/combability/frizz outcomes, not a demonstrated retail reinforcement endpoint.",
+        "N12 reports months of weekly use but predominantly softness and ease of use; concurrent routine changes and full-line use limit attribution. Possible weight with extended wear or incomplete cleansing is a usability limitation.",
+        "N09 contains only accessible video metadata/routine inclusion; no original benefit statement, duration or verdict was inspected."
+      ],
+      "applicability_bridge": "R07/R13 establish the matching maleate-ester concentrate and intended at-home role. N05 now supplies the intended-bottle preparation and 150 ml finished-treatment volume, resolving the earlier protocol quantity gap without deriving an effective active dose. E07 supports plausible chemistry but its formulation/outcomes do not establish retail reinforcement. N12 supplies sustained first-person cosmetic experience on coloured hair, including use with other shampoos, yet chiefly reports sensory benefit and no sufficiently informative reinforcement observation. That is useful practical evidence, but it cannot alone bridge the claimed repair/reinforcement benefit. N08/N09 add promotional/routine context only.",
+      "neighboring_grade_rationale": {
+        "high": "No converging reinforcement evidence or convincing exact-product/use efficacy bridge.",
+        "medium": "A material alternative for a broadly defined cosmetic experience, but the assessed benefit is reinforcement; available sustained use reports mainly softness/ease and does not sufficiently establish that benefit alongside prototype-only chemistry.",
+        "low": "The bounded search found limited support, but pivotal practical reinforcement information is still unavailable; no dependable no-benefit or weak-benefit conclusion follows from inaccessible original takes.",
+        "decision": "Trust remains held; dilution protocol hold is resolved independently."
+      },
+      "limitations": [
+        "N12 is an affiliate-disclosed lifestyle/beauty review; relevant hair-science expertise is not verified. Affiliation is disclosed rather than treated as disqualifying, and unsupported mechanism/origin/nail statements are not used.",
+        "N08 confirms Abbey's promotional code only; compensation is not inferred. N09 is not a verified endorsement or repeated-use statement.",
+        "Pivotal gap: sufficiently informative reinforcement outcomes, empirical or sustained informed practice. No particular creator or laboratory report is mandatory; missing optional creators alone does not cause the hold.",
+        "N05 supersedes the stale generic product source.note about unresolved quantity: use the intended bottle/fill instruction, one 15 ml vial to 150 ml finished treatment, no double dose, use within up to two months. Do not derive a universal custom-bottle ratio.",
+        "Patent evidence belongs to inventor/patent-holder interests. No retail disulfide-repair test report was found in the bounded search; that does not prove none exists.",
+        "Source-version research only; exact local kit/catalog binding and fit remain unresolved."
+      ],
+      "research_admission_candidate": false,
+      "application_facts": {
+        "hair_state": "dry, unwashed",
+        "phase": "before eventual cleansing; optional extended wear",
+        "wait_minutes_min": 10,
+        "rinse": "cleanse/style as usual after treatment; manufacturer permits leave-in until later wash",
+        "cadence": "1–2 times weekly",
+        "dilution": "one15ml vial in intended epres spray bottle; fill with water per supplied bottle instructions to150ml finished treatment; no double dose",
+        "source_id": "N05",
+        "mixed_product_use_by": "up to2months after mixing"
+      },
+      "concise_de": "Die Verdünnung im vorgesehenen epres-Sprüher ist jetzt belegt. Für die verstärkende Wirkung bleibt das Vertrauen offen: Der längere Erfahrungsbericht beschreibt vor allem Weichheit und einfache Anwendung.",
+      "deeper_de": "Ein 15-ml-Fläschchen ergibt laut Herstelleranleitung im vorgesehenen Sprüher 150 ml fertige Behandlung; eine doppelte Dosierung ist nicht vorgesehen. Der verfügbare Bericht über monatelange Anwendung ist nützlich, berichtet aber überwiegend sensorische Vorteile und legt Affiliate-Links offen. Zusammen mit den Patentbeispielen reicht das noch nicht für eine sichere Aussage zur Haarverstärkung oder Disulfidreparatur. Eine bloße Erwähnung in einem nicht zugänglichen Video zählt nicht als Wirksamkeitsurteil."
+    },
+    {
+      "pilot_id": "P05",
+      "slot_id": "A03",
+      "boundary_status": "research_hold",
+      "technology_family": null,
+      "claim_trust_level": null,
+      "trust_basis": null,
+      "holds": {
+        "identity": [
+          "Material same-market formula conflict between R02 and R09 is unresolved."
+        ],
+        "boundary": [
+          "Target-product boundary and technology cannot be finalized before the conflicting formulas are resolved."
+        ],
+        "claim_trust": [
+          "Unresolved exact target formula prevents a dependable product applicability bridge."
+        ],
+        "protocol": [
+          "R09 application facts are retained, but applicability to the unresolved canonical target formula is not established.",
+          "Cadence is absent."
+        ],
+        "fit": [
+          "Product-specific fit is unassessed; no hair-pattern/thickness suitability or global recommendation readiness assigned."
+        ]
+      },
+      "classification_confidence": "low",
+      "confidence_by_property": {
+        "identity": "low",
+        "boundary": "low",
+        "technology_family": "low",
+        "claim_trust": "low",
+        "protocol": "low",
+        "fit": "low"
+      },
+      "assessed_benefit": "Claimed acid-based strengthening of the exact Redken target treatment.",
+      "supporting_source_ids": [
+        "E01",
+        "R02",
+        "R09",
+        "N07"
+      ],
+      "counterevidence": [
+        "Both source captures contain acid markers but differ materially in remaining composition.",
+        "E01 tests citric-acid technology and does not identify this bottle; matching markers cannot resolve conflicting local identities.",
+        "N07 clarifies that acid results depend on pre-existing chemical damage, but does not resolve the local formula conflict."
+      ],
+      "applicability_bridge": "R02/R09 establish a targeted treatment role, and own sealed A03 observations retain citric acid/sodium citrate in both captures. No canonical target formula is selected, so E01's empirical technology findings cannot yet be assigned to this exact product version.",
+      "neighboring_grade_rationale": {
+        "high": "Unresolved target formula rules out a finalized high judgment.",
+        "medium": "Technology-level support cannot bridge an unresolved target formula.",
+        "low": "A source conflict is not evidence of ineffective treatment.",
+        "decision": "Identity-driven research hold; technology remains null while blind acid candidates are preserved."
+      },
+      "limitations": [
+        "Manufacturer priority alone does not erase the materially different retailer capture.",
+        "Formula code is not a GTIN.",
+        "Research source-version judgment only; supplied pack/catalog reconciliation and product-specific fit remain separate. No effect-size ranking, personal guarantee or native-bond reconstruction is inferred.",
+        "Amended follow-up reconfirms the manufacturer capture without tying it to the conflicting retailer identity; the conflict remains pivotal. Additional creator evidence would not resolve this identity hold."
+      ],
+      "research_admission_candidate": false,
+      "application_facts": {
+        "hair_state": "damp",
+        "phase": "before shampoo",
+        "wait_minutes_range": [
+          5,
+          10
+        ],
+        "rinse_before_shampoo": true,
+        "cadence": null,
+        "source_id": "R09"
+      },
+      "concise_de": "Die beiden deutschen Zutatenlisten widersprechen sich wesentlich. Deshalb bleiben die Einordnung und das Vertrauen für die genaue Produktversion offen.",
+      "deeper_de": "Zitronensäure und Natriumcitrat stehen in beiden erfassten Listen. Diese gemeinsamen Hinweise lösen den Rezepturkonflikt aber nicht. Die Anwendung von fünf bis zehn Minuten vor dem Shampoo stammt aus der Händlerquelle und bleibt als Quellenangabe erhalten, ohne damit die passende Produktversion festzulegen."
+    },
+    {
+      "pilot_id": "P02",
+      "slot_id": "A04",
+      "boundary_status": "in_scope",
+      "technology_family": "designed_peptide",
+      "claim_trust_level": null,
+      "trust_basis": null,
+      "holds": {
+        "identity": [
+          "DE source-version 50 ml identity is resolved; global variant differs and catalog binding is unverified."
+        ],
+        "boundary": [],
+        "claim_trust": [
+          "N06 clarifies that apparent surface changes and largely excipient-related spectral findings do not supply a dependable reinforcement endpoint; the tensile increase is not clearly significant and no sufficient experience route is accessible."
+        ],
+        "protocol": [
+          "Cadence is absent from the original packet; source-specific optional conditioner sequence needs compatibility review."
+        ],
+        "fit": [
+          "Product-specific fit is unassessed; no hair-pattern/thickness suitability or global recommendation readiness assigned."
+        ]
+      },
+      "classification_confidence": "low",
+      "confidence_by_property": {
+        "identity": "high",
+        "boundary": "high",
+        "technology_family": "high",
+        "claim_trust": "low",
+        "protocol": "moderate",
+        "fit": "low"
+      },
+      "assessed_benefit": "Practical strengthening/reinforcement of damaged hair from the DE-listed K18 mask; no reconstructed polypeptide backbone claim.",
+      "supporting_source_ids": [
+        "E04",
+        "E05",
+        "R06",
+        "R11",
+        "N06",
+        "N09"
+      ],
+      "counterevidence": [
+        "N06 confirms that only No.0 tensile improvement is explicitly described as significant; K18's increase is not clearly significant. No.0 findings are not transferred.",
+        "N06 attributes K18 spectral changes largely to excipients; observed surface/appearance changes do not establish protein reconstruction.",
+        "The study remains small, nonstandard in dose/handling and without vehicle/conditioner control; nonsignificance is not proof of no useful effect.",
+        "E04 is generic extracted-keratin peptide binding; N09 inaccessible video metadata supplies no practical verdict."
+      ],
+      "applicability_bridge": "E05/N06 test the matching 21-ingredient R11 mask and a four-minute reaction, so exact-formula empirical relevance is preserved. The amended endpoint audit narrows what that relevance supports: surface appearance changes are observed, but tensile improvement is not clearly significant and spectral findings are largely excipient-associated. A nonstandard 10% dose and heavily bleached tresses also limit ordinary-use transfer. This does not refute practical repair, but there is still insufficient interpretable reinforcement support or sustained informed experience to resolve the neighboring-tier judgment. N09's routine inclusion is not an experience statement.",
+      "neighboring_grade_rationale": {
+        "high": "No converging robust practical reinforcement evidence or convincing consumer-use bridge.",
+        "medium": "Exact-formula empirical relevance is real, but the new endpoint audit weakens a reinforcement reading of the unspecified surface/structural observations in Stage B.",
+        "low": "One small, imperfectly applicable study with an unclear tensile significance result does not reliably establish that the practical claim is weak; inaccessible practice information may matter.",
+        "decision": "Retain trust hold, now with a more precise endpoint limitation; boundary and designed-peptide family remain finalized."
+      },
+      "limitations": [
+        "N06/E05 are the same study, not two independent experiments. University authors report ERDF/POCI, Amyris and university support and no competing interests.",
+        "E04 funding/COI are not audited; generic peptide binding does not prove reconstruction.",
+        "Pivotal gap: dependable reinforcement support relevant to ordinary use, which may be empirical or sustained informed experience. No exact-bottle trial or specific creator is mandated.",
+        "N09 and the 2026 open lead are not grade-bearing. Their access failure is not evidence of ineffectiveness; the available evidence already remains insufficient for a dependable tier.",
+        "DE source-version identity remains resolved, while foreign variant, catalog binding, missing cadence and product-specific fit remain separate limitations."
+      ],
+      "research_admission_candidate": false,
+      "application_facts": {
+        "hair_state": "towel-dried",
+        "phase": "after shampoo",
+        "conditioner_before": false,
+        "wait_minutes": 4,
+        "rinse": false,
+        "conditioner_after": "local source describes optional conditioner after wait, then rinsing conditioner",
+        "cadence": null,
+        "source_id": "R11"
+      },
+      "concise_de": "Die gezielte Peptidbehandlung bleibt klar eingeordnet. Die genauere Studienprüfung klärt die Vertrauensfrage jedoch nicht: Sichtbare Oberflächeneffekte belegen noch keine belastbare Haarverstärkung.",
+      "deeper_de": "Die untersuchte Zutatenliste passt zur erfassten deutschen Maske. Bei K18 ist der Zugfestigkeitsanstieg nicht ausdrücklich als signifikant beschrieben; spektrale Veränderungen werden überwiegend Hilfsstoffen zugeschrieben. Das beweist weder fehlende Wirkung noch eine Wiederherstellung der ursprünglichen Keratinstruktur. Ein nicht zugängliches Routinevideo liefert kein zusätzliches Wirkungsurteil."
+    },
+    {
+      "pilot_id": "P08",
+      "slot_id": "A05",
+      "boundary_status": "in_scope",
+      "technology_family": "acid_calcium_management",
+      "claim_trust_level": "medium",
+      "trust_basis": "research_judgment",
+      "holds": {
+        "identity": [
+          "Exact 250 ml DE research source-version identity is now resolved by N01/N02; physical supplied pack and live catalog binding remain unverified."
+        ],
+        "boundary": [],
+        "claim_trust": [],
+        "protocol": [
+          "Required no-rinse layering with specified Première shampoo needs downstream compatibility review; cadence remains absent."
+        ],
+        "fit": [
+          "Product-specific fit is unassessed; no hair-pattern/thickness suitability or global recommendation readiness assigned."
+        ]
+      },
+      "classification_confidence": "moderate",
+      "confidence_by_property": {
+        "identity": "high",
+        "boundary": "high",
+        "technology_family": "high",
+        "claim_trust": "moderate",
+        "protocol": "moderate",
+        "fit": "low"
+      },
+      "assessed_benefit": "Plausible contribution to practical reinforcement/calcium management in chemically damaged hair when the exact 250 ml treatment is used in its prescribed layered protocol; no isolated-product effect size or native restoration claim.",
+      "supporting_source_ids": [
+        "E01",
+        "N07",
+        "N01",
+        "N02",
+        "R10",
+        "R15"
+      ],
+      "counterevidence": [
+        "Broad 99% restoration/headline claims concern routine-level context or uninspected marketing, not a demonstrated isolated-product outcome.",
+        "N07 does not name this bottle and lacks full dose, pH, vehicle, sample and statistical detail.",
+        "The prescribed treatment-plus-shampoo layering prevents attribution of whole-routine benefits to the treatment alone."
+      ],
+      "applicability_bridge": "N01 provides the exact 250 ml DE complete treatment formula and wet five-minute no-rinse-before-specified-shampoo use, corroborated by N02. This resolves the source-version mismatch without using a 45 ml list as size-equivalence proof; the visibly unrelated shampoo block is displaced. The formula contains the Stage-A observed citric acid with glycine in a targeted calcium-management treatment. E01/N07 report empirical acid reinforcement and calcium reduction on chemically damaged fibres, supporting a qualitative contribution from this compatible treatment used as directed. Five minutes of treatment contact before the specified layered shampoo is consistent with the intended role, but is not asserted to reproduce the uninspected study protocol. Under v0.3, unknown effective dose/pH alone does not negate this reasoned, bounded technology bridge. No isolated-product magnitude or system result is transferred; an established incompatible effective regimen would change this judgment.",
+      "neighboring_grade_rationale": {
+        "high": "Exact finished-product evidence and controlled attribution sufficient for high remain absent.",
+        "medium": "New exact-size formula/use resolution permits the empirical acid-technology bridge for a narrow practical contribution in the prescribed protocol.",
+        "low": "Would disregard relevant reported primary empirical reinforcement findings and a now-resolved compatible targeted formula.",
+        "decision": "Move from identity-driven hold to medium research judgment; retain downstream layering/fit/pack limitations."
+      },
+      "limitations": [
+        "N01/N02 are retailer formula/protocol sources, not efficacy trials. Their corroboration resolves the research target only.",
+        "N07/E01 are the same L’Oréal-affiliated study, not independent replication; the authors declare no conflict.",
+        "Unknown study dose/pH/vehicle is an applicability limitation, not a known match or an automatic hold. Fuller methods could change the bridge if they show incompatibility.",
+        "Missing creator opinions are optional because the empirical route is sufficient for this bounded medium judgment.",
+        "Preserve no-rinse-before-Première-shampoo sequence and missing cadence; no substitute generic rinse-first protocol.",
+        "Source-version admission candidacy only; physical pack/catalog, product-specific fit and downstream protocol compatibility remain separate."
+      ],
+      "research_admission_candidate": true,
+      "application_facts": {
+        "hair_state": "wet",
+        "phase": "before shampoo",
+        "wait_minutes": 5,
+        "rinse_before_shampoo": false,
+        "required_sequence": "layer specified Première shampoo directly over treatment, then rinse",
+        "cadence": null,
+        "source_id": "N01"
+      },
+      "concise_de": "Die deutsche 250-ml-Quellenrezeptur ist jetzt geklärt. Für einen begrenzten Beitrag zur Haarverstärkung in der vorgesehenen Anwendung ist mittleres Vertrauen vertretbar.",
+      "deeper_de": "Zwei genaue 250-ml-Händlerquellen bestätigen die Behandlung mit Zitronensäure und Glycin. Relevante Säureforschung stützt eine vorsichtige Einschätzung zur Verstärkung chemisch geschädigter Haare. Sie beweist weder einen bestimmten Effekt dieser Flasche noch die beworbenen Ergebnisse der ganzen Routine. Nach fünf Minuten wird das vorgesehene Première-Shampoo direkt darübergegeben, ohne die Behandlung vorher auszuspülen."
+    },
+    {
+      "pilot_id": "P04",
+      "slot_id": "A06",
+      "boundary_status": "in_scope",
+      "technology_family": "acid_calcium_management",
+      "claim_trust_level": "medium",
+      "trust_basis": "research_judgment",
+      "holds": {
+        "identity": [
+          "Supplied pack remains unverified; current DE source-version formula converges between R01/R08."
+        ],
+        "boundary": [],
+        "claim_trust": [],
+        "protocol": [
+          "Cadence is absent; downstream recommendation/protocol compatibility remains unassessed."
+        ],
+        "fit": [
+          "Product-specific fit is unassessed; no hair-pattern/thickness suitability or global recommendation readiness assigned."
+        ]
+      },
+      "classification_confidence": "moderate",
+      "confidence_by_property": {
+        "identity": "high",
+        "boundary": "high",
+        "technology_family": "high",
+        "claim_trust": "moderate",
+        "protocol": "moderate",
+        "fit": "low"
+      },
+      "assessed_benefit": "Plausible practical reinforcement of chemically damaged hair from the targeted citric-acid/amino-acid pre-shampoo treatment; no quantified retail benefit or native-bond restoration.",
+      "supporting_source_ids": [
+        "E01",
+        "R01",
+        "R08",
+        "N07"
+      ],
+      "counterevidence": [
+        "E01 abstract does not name the pilot bottle and full dose/formulation/protocol were not audited.",
+        "Current product test methods are not exposed; the six-application footnote does not itself establish isolated-product efficacy.",
+        "Old 12% and current 22% complex copy disagree; neither is citric-acid concentration."
+      ],
+      "applicability_bridge": "E01 is relevant primary empirical evidence reporting reinforcement and calcium reduction in chemically treated hair using thermal, mechanical, diffraction and elemental methods. R01/R08 converge on a citric-acid/arginine/betaine formula, and R01 confirms a targeted acid treatment with damp five-minute pre-shampoo use. This is a defensible qualitative technology-to-compatible-product bridge for a bounded practical benefit under v0.3. Unknown exact active dose and unavailable full methods limit strength and may change the judgment if an incompatible effective regimen emerges, but the packet supplies no such incompatibility. No numerical study result is transferred. N07 clarifies mechanical/thermal/calcium endpoints and dependence on pre-existing chemical damage. It is an amendment to E01, not independent corroboration; full conditions remain unknown rather than a verified match.",
+      "neighboring_grade_rationale": {
+        "high": "No converging exact-product/protocol validation adequate to distinguish the broader repair promise.",
+        "medium": "Relevant reported empirical technology outcomes plus verified compatible formula and targeted use support the narrow practical reinforcement judgment.",
+        "low": "Would discount actual relevant empirical reinforcement findings and converging local formula/use evidence.",
+        "decision": "Medium by the empirical route, not an experience route or complex-percentage inference."
+      },
+      "limitations": [
+        "E01 authors are L’Oréal Research & Innovation; declared no conflict is recorded alongside company affiliation.",
+        "No sufficiently informative creator-experience route is supplied; it is optional because the empirical route supports this bounded medium judgment.",
+        "Old/new copy conflict remains a claim-version limitation, not a formula conflict after source convergence.",
+        "Research source-version judgment only; supplied pack/catalog reconciliation and product-specific fit remain separate. No effect-size ranking, personal guarantee or native-bond reconstruction is inferred.",
+        "E01/N07 are one study. New endpoint detail refines the explanation without changing the Stage B grade. Unknown full conditions could be pivotal if they reveal incompatible use requirements, but no such incompatibility is supplied."
+      ],
+      "research_admission_candidate": true,
+      "application_facts": {
+        "hair_state": "damp",
+        "phase": "before shampoo",
+        "wait_minutes": 5,
+        "rinse_before_shampoo": true,
+        "cadence": null,
+        "source_id": "R01"
+      },
+      "concise_de": "Für eine begrenzte stärkende Wirkung ist mittleres Vertrauen vertretbar. Die passende Säure-/Aminosäure-Rezeptur und relevante Forschung stützen das; ein bestimmtes Ergebnis für diese Flasche ist damit nicht bewiesen.",
+      "deeper_de": "Die Forschung berichtet Verstärkung und Calciumreduktion an chemisch behandeltem Haar. Die aktuelle deutsche Quellenrezeptur passt zum gezielten Ansatz. Weil genaue Studienbedingungen und ein ausführlicher Produkttest fehlen, werden weder Wirkstärke noch Prozentangaben übertragen. Die beworbenen 12 beziehungsweise 22 Prozent bezeichnen einen Komplex, nicht die reine Zitronensäuremenge."
+    },
+    {
+      "pilot_id": "P01",
+      "slot_id": "A07",
+      "boundary_status": "in_scope",
+      "technology_family": "sulfur_targeting_dimaleate",
+      "claim_trust_level": "high",
+      "trust_basis": "owner_anchor",
+      "holds": {
+        "identity": [
+          "DE source-version identity is resolved; foreign formula differs and live catalog binding remains unverified."
+        ],
+        "boundary": [],
+        "claim_trust": [],
+        "protocol": [],
+        "fit": [
+          "Product-specific fit is unassessed; no hair-pattern/thickness suitability or global recommendation readiness assigned."
+        ]
+      },
+      "classification_confidence": "moderate",
+      "confidence_by_property": {
+        "identity": "high",
+        "boundary": "high",
+        "technology_family": "high",
+        "claim_trust": "high",
+        "empirical_support": "low",
+        "protocol": "high",
+        "fit": "low"
+      },
+      "assessed_benefit": "Practical cosmetic repair/reinforcement of damaged hair for the exact eligible No.3PLUS source-version anchor; not universal superiority or demonstrated native-bond restoration.",
+      "supporting_source_ids": [
+        "E03",
+        "E05",
+        "R05",
+        "R12",
+        "N06",
+        "N10",
+        "N11"
+      ],
+      "counterevidence": [
+        "E03 is a model/commercial-agent abstract and cannot establish exact current-product molecular action; it reports no cortex disulfide-content increase or direct sulfa-Michael evidence within its tested scope.",
+        "E05 tests OLAPLEX No.0, not No.3PLUS.",
+        "R05/R12 claims do not expose a detailed current-formula test report.",
+        "N06 does not add any No.3PLUS experiment. N10/N11 establish ambassador/promotion context and a brand-hosted favourites selection, not repeated-use results."
+      ],
+      "applicability_bridge": "R12 identifies the exact No.3PLUS treatment and its compatible dimaleate formula with wet three-minute pre-shampoo use. This satisfies exact source-version eligibility for the named v0.3 owner anchor. High trust derives from that explicit settled ruling, not an invented empirical transfer from No.0, a model maleate or an uninspected predecessor study. R05's different global variant is contextual only. N10 names Tom Hannemann and Dejan Garz as ambassadors; N11 includes No.3PLUS in Dejan's brand-hosted favourites with a promotion. Neither is a new independent trial or sufficient original practice statement. The owner-anchor basis remains unchanged.",
+      "neighboring_grade_rationale": {
+        "high": "Assigned from the v0.3 owner_anchor ruling for the eligible No.3PLUS identity; this is not independently validated upper-tier research performance.",
+        "medium": "Would reopen the settled owner calibration solely because current empirical bridging remains limited, contrary to the authorized rule.",
+        "low": "Neither the bounded model counterevidence nor missing current test report supports downgrading the settled anchor.",
+        "decision": "High owner anchor with empirical limits and independent fit/catalog holds."
+      },
+      "limitations": [
+        "High claim_trust confidence denotes faithful anchor assignment, not high empirical certainty; record confidence is moderate because formula-market and empirical generalization are limited.",
+        "Original No.3 is an authorized contextual anchor in the method, not an added ninth product; the amended packet supplies no audited original-No.3 trial to invent.",
+        "No empirical superiority, automatic recommendation order or fit inference follows from anchor status.",
+        "Research source-version judgment only; supplied pack/catalog reconciliation and product-specific fit remain separate. No effect-size ranking, personal guarantee or native-bond reconstruction is inferred.",
+        "Ambassador and promotional relationships are disclosed without inferring undisclosed payment. Inaccessible optional creator takes do not reopen the settled anchor assignment."
+      ],
+      "research_admission_candidate": true,
+      "application_facts": {
+        "hair_state": "wet",
+        "phase": "before shampoo",
+        "wait_minutes": 3,
+        "rinse_before_shampoo": true,
+        "cadence": "every 1–3 washes per local page",
+        "source_id": "R12"
+      },
+      "concise_de": "No.3PLUS erhält hohes Vertrauen als ausdrücklich festgelegter Kalibrierungsanker. Das ist keine neue experimentelle Bestätigung aller Reparaturversprechen und sagt nichts über die individuelle Eignung aus.",
+      "deeper_de": "Die erfasste deutsche Rezeptur enthält den passenden Dimaleat-Baustein und gehört zur vorgesehenen No.3PLUS-Behandlung. Die hohe Einstufung beruht auf der festgelegten Ankerentscheidung. Die vorliegende Studie zu No.0 und ältere Modellversuche ersetzen keinen direkten Versuch mit dieser aktuellen Rezeptur. Abweichende internationale Rezepturen werden nicht gleichgesetzt."
+    },
+    {
+      "pilot_id": "P06",
+      "slot_id": "A08",
+      "boundary_status": "in_scope",
+      "technology_family": "gluconamide_gluconate",
+      "claim_trust_level": null,
+      "trust_basis": null,
+      "holds": {
+        "identity": [
+          "N03 DE storefront source-version formula is resolved with explicit normalization and N04 same-identifier corroboration; physical DE pack, catalog binding and current local supply remain unverified."
+        ],
+        "boundary": [],
+        "claim_trust": [
+          "Source identity is now resolved, but partial supplier evidence and a confounded three-product system claim do not provide a sufficient serum-specific practical reinforcement bridge."
+        ],
+        "protocol": [
+          "Overnight source directions are established by N03; downstream overnight protocol compatibility remains unassessed."
+        ],
+        "fit": [
+          "Product-specific fit is unassessed; no hair-pattern/thickness suitability or global recommendation readiness assigned."
+        ]
+      },
+      "classification_confidence": "low",
+      "confidence_by_property": {
+        "identity": "moderate",
+        "boundary": "moderate",
+        "technology_family": "high",
+        "claim_trust": "low",
+        "protocol": "high",
+        "fit": "low"
+      },
+      "assessed_benefit": "Practical strengthening/reinforcement from the source-resolved DE storefront sealing serum used overnight; distinguish serum benefit from the UK shampoo-conditioner-serum system claim.",
+      "supporting_source_ids": [
+        "E02",
+        "E06",
+        "R03",
+        "R14",
+        "N03",
+        "N04"
+      ],
+      "counterevidence": [
+        "R03's five-wash comparison tests shampoo, conditioner and serum together against non-conditioning shampoo, not isolated serum.",
+        "E02 provides model chemistry and explicitly unresolved strengthening mechanism; E06 available material supplies partial methods without interpretable efficacy results.",
+        "N03/N04 establish formula/source identity, not serum efficacy, and physical-pack equivalence remains unverified."
+      ],
+      "applicability_bridge": "N03 supplies the exact 50 ml DE storefront formula, source-listed identifier and overnight use. N04 corroborates the same-identifier ingredient order and supports explicit translation/punctuation repairs; neither replaces the retained raw list or establishes worldwide equality. The sealed amended A08 pair observations therefore support a finalized gluconamide/gluconate family and targeted serum boundary. Trust remains separate: E06's incomplete supplier outcomes plus E02 mechanism plausibility and R03 system benefit do not resolve practical serum reinforcement. The obstacle is not unmeasured retail concentration or the presence of generic proteins; it is the missing interpretable benefit/application bridge.",
+      "neighboring_grade_rationale": {
+        "high": "No converging serum-specific reinforcement support under a convincing use bridge.",
+        "medium": "A resolved matching source formula and targeted role are necessary but do not transform partial supplier methods and a multi-product system comparison into sufficient practical reinforcement support.",
+        "low": "Would overinterpret inaccessible efficacy information and confounding as evidence of weak or absent effect.",
+        "decision": "Resolve category/technology to in_scope/gluconamide_gluconate; retain trust hold for evidence reasons, independently of residual pack/catalog/fit limitations."
+      },
+      "limitations": [
+        "Explicit normalization repairs preserve translated botanical oils, tocopheryl acetate, protected 1,2-Hexanediol and Caprylic/Capric compound; no ingredients are invented or merged across incompatible formulas.",
+        "The dated same-identifier Norway list corroborates the DE repair; it is not a physical DE label or worldwide formula-equivalence proof.",
+        "Ashland supplier participation in E02/E06 is disclosed and not automatically disqualifying.",
+        "Pivotal gap: interpretable technology/product reinforcement evidence with a defensible serum/use bridge, or sufficient sustained informed experience. No particular inaccessible poster or creator is mandatory if another adequate route becomes available.",
+        "Overnight use remains required by the source; no daytime or rinse-off replacement is inferred. Pack/catalog/local availability and fit remain separate readiness questions."
+      ],
+      "research_admission_candidate": false,
+      "application_facts": {
+        "hair_state": "damp or dry",
+        "phase": "before bed",
+        "wait": "overnight",
+        "rinse": false,
+        "cadence": "1–2 times weekly",
+        "source_id": "N03"
+      },
+      "concise_de": "Die deutsche Händler-Quellenrezeptur ist jetzt ausreichend geklärt und passt zur gezielten Behandlung über Nacht. Das Vertrauen in eine eigenständige verstärkende Wirkung des Serums bleibt offen.",
+      "deeper_de": "Die korrigierte Zutatenliste enthält das Gluconamid/Gluconat-Paar; eine Händlerquelle mit derselben Artikelkennung stützt die dokumentierten Schreib- und Trennzeichenkorrekturen. Das ersetzt keine geprüfte deutsche Packung. Der beworbene Fünf-Wäschen-Vorteil gilt für Shampoo, Conditioner und Serum zusammen. Solange die eigenständige Verstärkung nicht ausreichend gestützt ist, bleibt die Vertrauenseinstufung offen."
+    }
+  ]
+}

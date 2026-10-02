@@ -1,0 +1,1014 @@
+{
+  "standard_version": "bondbuilder-inci-v0.4",
+  "lane_id": "lane-b",
+  "stage": "B",
+  "input_receipt": [
+    {
+      "path": "/Users/nick/.codex/worktrees/bondbuilder-research-engine/hair_conscierge/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/standard.md",
+      "sha256": "031d32585ff0e2d5d1cdf77985d85188097fbf69354a4977eb93944ec2c93e10"
+    },
+    {
+      "path": "/Users/nick/.codex/worktrees/bondbuilder-research-engine/hair_conscierge/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/named-evidence.json",
+      "sha256": "e2feb6e930fb8a5231dab3c753dce9aea52b2252301e37cc006fde386c4e5cb5"
+    },
+    {
+      "path": "/Users/nick/.codex/worktrees/bondbuilder-research-engine/hair_conscierge/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-b/blind-records.json",
+      "sha256": "b63f57d1219e7c6580c01f57d7dbd900ca87d8daa0424d1bad05f96d44c6b304"
+    }
+  ],
+  "no_web": true,
+  "recognition_incidents": [
+    "Own sealed Stage A recorded possible product associations for V01, V03 and V04. No outside product knowledge was used; Stage B identities and findings derive from the authorized named packet."
+  ],
+  "limitations": [
+    "Only the three receipted Stage B files were read; all shell-computed hashes matched. No external sources were opened. Source IDs refer to the packet's inspected-source observations, not fresh lane access.",
+    "This is bounded offline source-version research. Every actual_pack_verified value remains false; catalog matches and current approvals were not evaluated.",
+    "The packet's search limits include no inspected original starting-panel opinion or independent current-product peer-reviewed efficacy trial. Missing evidence is not proof of no effect.",
+    "Policy false recommendation values are simulations only. No curated candidate is established, no database flag is changed, and no adapter, intake, method-lock or production readiness is claimed.",
+    "Unknown diameter fit is kept separate from category and owner-policy findings. Source-backed application facts do not certify runtime mappings."
+  ],
+  "records": [
+    {
+      "slot_id": "V01",
+      "identity": {
+        "manufacturer": "Curlsmith",
+        "name": "Bond Curl Rehab Salve",
+        "market": "EU with DE corroboration",
+        "size_ml": 237,
+        "gtin": null,
+        "source_version": "EU/DE pages accessed 2026-10-02",
+        "actual_pack_verified": false
+      },
+      "boundary_status": "in_scope",
+      "technology_family": "gluconamide_gluconate",
+      "claim_trust_level": "low",
+      "trust_basis": "owner_default",
+      "policy_reference": "owner-submission-policy-2026-10-01",
+      "holds": {
+        "identity": [],
+        "boundary": [],
+        "claim_trust": [],
+        "protocol": [
+          "Applied physical texture is unstated in S01/S02; a strict format projection remains unresolved. Conditional porosity branches must remain conditional, with no universal weekly schedule (standard §6)."
+        ],
+        "fit": [
+          "Diameter-specific suitability is unknown; no fine/normal/coarse assignment can be made from the packet (standard §8)."
+        ]
+      },
+      "classification_confidence": "moderate",
+      "confidence_by_property": {
+        "identity": "high",
+        "boundary": "high",
+        "technology": "high",
+        "policy": "high",
+        "protocol": "high",
+        "fit": "low"
+      },
+      "assessed_benefit": "A plausible targeted cosmetic reinforcement treatment: S01/S02 establish the current formula pair and pre-shampoo role. S07/S08 provide commercial technology-level context for ionic/hydrogen-interaction reinforcement, not demonstrated Curlsmith product efficacy. S09 reports curl definition and shine; S10/S11 are mixed historical anecdotes. No product-alone measured repair magnitude or native-bond restoration is established.",
+      "supporting_source_ids": [
+        "S01",
+        "S02",
+        "S06",
+        "S07",
+        "S08",
+        "S09",
+        "S11"
+      ],
+      "counter_source_ids": [
+        "S10"
+      ],
+      "applicability_bridge": "S01 binds the complete Stage A formula to the EU 237 ml source version; S02 corroborates the DE sequence and directions without proving batch equality. The observed pair plus S01's specialized reinforcement role supports gluconamide_gluconate under standard §§1/4. S07/S08 explain compatibility at technology level only. S01's Citric Acid lacks a distinct acid/calcium targeted-use bridge and is not retained as a final family.",
+      "evidence_limitations": [
+        "S01/S02 describe source versions, not a supplied/scanned pack; GTIN is unstated. No worldwide or batch equality follows.",
+        "S06 discloses a January 2021 user study of 120 volunteers, but full methods, comparator and current-formula equivalence are unavailable; not an inspected peer-reviewed trial.",
+        "S07 is supplier example formula Z351-25B, not verification of Curlsmith supplier, concentration or efficacy. S08 is a commercial technology statement and award, not an independent product trial.",
+        "S09 is a sponsored, affiliate-linked historical written creator comparison; linked video was not watched, and current EU formula equivalence is unknown.",
+        "S10 includes dry feel/detangling difficulty and a differing response; S11 involves alternating products. Neither establishes causation, a protein rule or diameter fit.",
+        "Low is prescribed by owner-submission-policy-2026-10-01, not inferred from these research limitations. No exact owner promotion is supplied.",
+        "S06's medium-porosity 30-minute editorial differs from selected S01/S02's 20 minutes. It remains a separate variant.",
+        "Packet search limits report no inspected exact starting-panel opinion or independent current-product peer-reviewed efficacy trial. Missing opinions are neutral."
+      ],
+      "research_admission_candidate": false,
+      "new_submission_recommended": false,
+      "application_facts": {
+        "selected_direction_source_id": "S01",
+        "placement": {
+          "value": "pre_shampoo",
+          "source_ids": [
+            "S01",
+            "S02"
+          ],
+          "limitations": []
+        },
+        "physical_format": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "S01 explicitly limits the title 'salve'; the packet does not establish an applied texture."
+          ]
+        },
+        "hair_state": {
+          "value": [
+            "wet",
+            "not washed first"
+          ],
+          "source_ids": [
+            "S01"
+          ],
+          "limitations": []
+        },
+        "application_area": {
+          "value": "Root to tip; coat evenly and detangle.",
+          "source_ids": [
+            "S01"
+          ],
+          "limitations": []
+        },
+        "amount": {
+          "value": "Apply generously.",
+          "source_ids": [
+            "S01"
+          ],
+          "limitations": [
+            "No numerical dose is stated."
+          ]
+        },
+        "dilution": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "No dilution instruction is provided by selected S01."
+          ]
+        },
+        "contact_time": {
+          "value": {
+            "kind": "conditional",
+            "minutes_min": null,
+            "minutes_max": null,
+            "branches": [
+              {
+                "condition": "low porosity",
+                "minutes_min": 15,
+                "minutes_max": 15
+              },
+              {
+                "condition": "medium porosity",
+                "minutes_min": 20,
+                "minutes_max": 20
+              },
+              {
+                "condition": "high porosity",
+                "minutes_min": 30,
+                "minutes_max": 30
+              }
+            ]
+          },
+          "source_ids": [
+            "S01",
+            "S02"
+          ],
+          "limitations": [
+            "No longer-wear permission is established; S06's differing medium-porosity time is retained separately."
+          ]
+        },
+        "working_time": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "S01 gives coating/detangling steps but no timed active working interval."
+          ]
+        },
+        "sequence": [
+          {
+            "action": "Wet hair without washing first.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S01"
+            ]
+          },
+          {
+            "action": "Apply generously root to tip, coat evenly and detangle.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S01"
+            ]
+          },
+          {
+            "action": "Leave for 15/20/30 minutes according to low/medium/high porosity.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S01",
+              "S02"
+            ]
+          },
+          {
+            "action": "Rinse, then shampoo and condition.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S01",
+              "S02"
+            ]
+          }
+        ],
+        "conditioner": {
+          "value": {
+            "before": "Not stated; no prohibition inferred.",
+            "after": "Condition after shampoo as part of the selected instructions.",
+            "after_timing": "After rinsing the treatment and shampooing."
+          },
+          "source_ids": [
+            "S01",
+            "S02"
+          ],
+          "limitations": [
+            "Instructional use is not proof Conditioner is necessary for molecular efficacy."
+          ]
+        },
+        "cadence": {
+          "value": {
+            "kind": "conditional",
+            "times_per_week_min": null,
+            "times_per_week_max": null,
+            "washes_min": null,
+            "washes_max": null,
+            "branches": [
+              {
+                "condition": "low porosity",
+                "kind": "wash_interval",
+                "times_per_week_min": null,
+                "times_per_week_max": null,
+                "washes_min": 4,
+                "washes_max": 5
+              },
+              {
+                "condition": "medium porosity",
+                "kind": "wash_interval",
+                "times_per_week_min": null,
+                "times_per_week_max": null,
+                "washes_min": 3,
+                "washes_max": 4
+              },
+              {
+                "condition": "high porosity",
+                "kind": "wash_interval",
+                "times_per_week_min": null,
+                "times_per_week_max": null,
+                "washes_min": 2,
+                "washes_max": 3
+              }
+            ]
+          },
+          "source_ids": [
+            "S01",
+            "S02"
+          ],
+          "limitations": [
+            "No separate initial/maintenance course or universal weekly interval is stated."
+          ]
+        },
+        "brand_partners": {
+          "value": [
+            {
+              "name_or_role": "Matching Curlsmith shampoo and conditioner",
+              "requirement": "recommended"
+            }
+          ],
+          "source_ids": [
+            "S06"
+          ],
+          "limitations": [
+            "Supporting editorial recommendation; not an exclusive requirement or proof of alternative equivalence."
+          ]
+        },
+        "source_variants": [
+          {
+            "source_id": "S01",
+            "selected": true,
+            "summary": "Current EU primary: low/medium/high porosity 15/20/30 minutes every 4–5/3–4/2–3 washes; rinse, shampoo, condition."
+          },
+          {
+            "source_id": "S02",
+            "selected": false,
+            "summary": "Current DE corroboration of all three selected branches and sequence."
+          },
+          {
+            "source_id": "S06",
+            "selected": false,
+            "summary": "Editorial variant: minimum 15 minutes and 30 for medium/high porosity; same conditional wash intervals; matching shampoo/conditioner recommended. Not merged into S01."
+          }
+        ]
+      },
+      "fit_assessment": {
+        "fine": null,
+        "normal": null,
+        "coarse": null,
+        "rationale": "The packet contains no independent diameter-specific evidence. Manufacturer damage, curl, porosity or all-type positioning does not establish fine/normal/coarse suitability (standard §§7–8).",
+        "source_ids": [
+          "S01",
+          "S06",
+          "S09",
+          "S10",
+          "S11"
+        ]
+      },
+      "manufacturer_positioning": "Curlsmith positions it for weak/damaged curls (S01; named packet V01); S06's generic all-type editorial positioning is attributed, not independent diameter suitability.",
+      "intended_role": "Targeted pre-shampoo cosmetic reinforcement treatment (S01/S02), without an efficacy-strength assignment.",
+      "concise_de": "Gezielte Vorwäsche-Behandlung mit Gluconamid/Gluconat-Paar [S01/S02]. Die Einstufung „low“ folgt der Neuprodukt-Regel des Owners; sie ist kein Wirksamkeitsurteil. Nutzen und Passung bleiben begrenzt belegt.",
+      "deeper_de": "Die aktuelle EU-Rezeptur enthält Hydroxypropylgluconamide und Hydroxypropylammonium Gluconate; die DE-Seite bestätigt die Reihenfolge [S01/S02]. Das passt zusammen mit dem gezielten Behandlungszweck zur Gluconamid/Gluconat-Familie. Lieferantenangaben betreffen die Technologie, nicht einen belegten Effekt dieser Rezeptur [S07/S08]. Historische Erfahrungen zu Glanz und Lockendefinition sind kosmetische Einzelbeobachtungen; es gibt auch Berichte über trockenes Gefühl [S09–S11]. Für die Anwendung gelten je nach Porosität 15, 20 oder 30 Minuten; danach ausspülen, shampoonieren und Conditioner verwenden [S01/S02]. Die abweichende redaktionelle Zeit bleibt separat [S06]. Die Owner-Regel setzt neue aufgelöste Produkte zunächst auf low und nicht empfohlen; daraus folgt weder Wirkungslosigkeit noch eine Empfehlung für alle Haardurchmesser.",
+      "stage_a_to_final_changes": [
+        "Preserved literal Stage A markers: Hydroxypropylgluconamide; Hydroxypropylammonium Gluconate; Citric Acid (S01; own sealed Stage A V01).",
+        "Retained gluconamide_gluconate: the observed pair is bound to a specialized pre-shampoo reinforcement role by S01/S02, satisfying standard §§1/4.",
+        "Dropped acid_calcium_management as a final family: Citric Acid remains observed, but S01/S02 supply no specific acid/calcium targeted-use bridge; generic acid presence cannot qualify under standard §4.",
+        "Finalized source-version in_scope and low/owner_default by owner-submission-policy-2026-10-01; no exact owner ruling applies. Curated research candidacy is false under standard §8's owner-reviewed medium/high floor.",
+        "All Stage A source_version_not_actual_pack limits remain. Named identity does not verify a scanned bottle (S01/S02)."
+      ]
+    },
+    {
+      "slot_id": "V02",
+      "identity": {
+        "manufacturer": "dm / Balea",
+        "name": "Balea Professional Haarkur Keratin Repair",
+        "market": "DE",
+        "size_ml": 300,
+        "gtin": "4070765002003",
+        "source_version": "dm article 1688653 accessed 2026-10-02",
+        "actual_pack_verified": false
+      },
+      "boundary_status": "out_of_scope",
+      "technology_family": null,
+      "claim_trust_level": null,
+      "trust_basis": null,
+      "policy_reference": null,
+      "holds": {
+        "identity": [],
+        "boundary": [],
+        "claim_trust": [],
+        "protocol": [
+          "S03 does not establish shampoo/conditioner ordering; precise ordered routine placement cannot be finalized. Physical format is also unstated."
+        ],
+        "fit": [
+          "Diameter-specific suitability is unknown; no fine/normal/coarse assignment can be made from the packet (standard §8)."
+        ]
+      },
+      "classification_confidence": "moderate",
+      "confidence_by_property": {
+        "identity": "high",
+        "boundary": "high",
+        "technology": null,
+        "policy": null,
+        "protocol": "moderate",
+        "fit": "low"
+      },
+      "assessed_benefit": "S03 makes cosmetic keratin/peptide and Pro-Strength claims for damaged hair. The supplied evidence supports describing a generic repair/conditioning treatment, not a qualified specific bondbuilder technology or independently measured repair benefit.",
+      "supporting_source_ids": [
+        "S03"
+      ],
+      "counter_source_ids": [],
+      "applicability_bridge": "S03 binds V02 to dm's DE 300 ml article 1688653 and listed GTIN 4070765002003. The complete formula has no frozen lexicon markers; generic proteins/peptides and Pro-Strength branding do not qualify under standard §§1/4. This is a resolved source-version exclusion, not an identity hold.",
+      "evidence_limitations": [
+        "S03's listed GTIN is not a scanned pack. The supplied identity is the dated dm source version.",
+        "S03 supplies maker claims, not independent efficacy methods or data. No negative efficacy conclusion is implied by category exclusion.",
+        "S03 does not specify shampoo/conditioner ordering, numerical dose, dilution or physical texture.",
+        "No exact owner ruling or applicable in-scope default grade exists; family, trust, basis and policy reference remain null (standard §§1/3/5).",
+        "new_submission_recommended=false simulates the packet policy only; catalog matches and existing approvals were not evaluated or changed."
+      ],
+      "research_admission_candidate": false,
+      "new_submission_recommended": false,
+      "application_facts": {
+        "selected_direction_source_id": "S03",
+        "placement": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "S03 does not specify shampoo ordering."
+          ]
+        },
+        "physical_format": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "S03 does not state physical texture; Haarkur is a role/title."
+          ]
+        },
+        "hair_state": {
+          "value": [
+            "damp"
+          ],
+          "source_ids": [
+            "S03"
+          ],
+          "limitations": []
+        },
+        "application_area": {
+          "value": "Lengths and ends; spread gently.",
+          "source_ids": [
+            "S03"
+          ],
+          "limitations": []
+        },
+        "amount": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "S03 states distribution but no quantitative or qualitative dose."
+          ]
+        },
+        "dilution": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "S03 supplies no dilution instruction."
+          ]
+        },
+        "contact_time": {
+          "value": {
+            "kind": "range",
+            "minutes_min": 2,
+            "minutes_max": 3,
+            "branches": []
+          },
+          "source_ids": [
+            "S03"
+          ],
+          "limitations": [
+            "Longer wear is not stated."
+          ]
+        },
+        "working_time": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "S03 provides no timed active application interval."
+          ]
+        },
+        "sequence": [
+          {
+            "action": "Spread gently through damp lengths and ends.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S03"
+            ]
+          },
+          {
+            "action": "Leave for 2–3 minutes.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S03"
+            ]
+          },
+          {
+            "action": "Rinse thoroughly.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S03"
+            ]
+          }
+        ],
+        "conditioner": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "S03 does not specify Conditioner before, after or timing."
+          ]
+        },
+        "cadence": {
+          "value": {
+            "kind": "weekly",
+            "times_per_week_min": 1,
+            "times_per_week_max": 2,
+            "washes_min": null,
+            "washes_max": null,
+            "branches": []
+          },
+          "source_ids": [
+            "S03"
+          ],
+          "limitations": [
+            "No separate initial/maintenance course is stated."
+          ]
+        },
+        "brand_partners": {
+          "value": [],
+          "source_ids": [],
+          "limitations": [
+            "No brand partner is stated in S03; absence does not establish equivalence."
+          ]
+        },
+        "source_variants": [
+          {
+            "source_id": "S03",
+            "selected": true,
+            "summary": "Selected DE directions: damp lengths/ends, 1–2 times weekly, 2–3 minutes, thorough rinse; no shampoo/conditioner ordering."
+          }
+        ]
+      },
+      "fit_assessment": {
+        "fine": null,
+        "normal": null,
+        "coarse": null,
+        "rationale": "The packet contains no independent diameter-specific evidence. Manufacturer damage, curl, porosity or all-type positioning does not establish fine/normal/coarse suitability (standard §§7–8).",
+        "source_ids": [
+          "S03"
+        ]
+      },
+      "manufacturer_positioning": "Balea positions it for brittle/structurally damaged hair (S03; named packet V02); no independent diameter-specific suitability is supplied.",
+      "intended_role": "Generic rinse-out keratin/protein repair care for damaged hair (S03), outside this specialized category.",
+      "concise_de": "Eine Keratin-/Protein-Haarkur ohne passenden Marker der festgelegten Bondbuilder-Familien [S03]. Daher außerhalb dieser Kategorie; das ist kein Urteil über ihren Pflegeeffekt. 1–2-mal wöchentlich, 2–3 Minuten, dann gründlich ausspülen [S03].",
+      "deeper_de": "Die vollständige Rezeptur enthält keinen Marker der fünf definierten Familien. GLYCINE SOJA OIL ist kein Glycine; LACTIC ACID ist kein Citric Acid. Allgemeine Proteine und das Pro-Strength-Marketing reichen für diese Kategorie nicht aus [S03; Standard §§1/4]. Deshalb werden weder Technologie-Familie noch Bondbuilder-Vertrauensstufe vergeben. Die Herstelleranwendung bleibt nutzbar: sanft in feuchte Längen und Spitzen verteilen, 1–2-mal pro Woche 2–3 Minuten einwirken lassen und gründlich ausspülen [S03]. Die Reihenfolge zu Shampoo und Conditioner ist nicht angegeben. Eine belegte Eignung nach Haardurchmesser lässt sich aus dem Paket nicht ableiten.",
+      "stage_a_to_final_changes": [
+        "Preserved Stage A empty marker/candidate arrays: S03's complete formula has no qualifying or supporting lexicon markers.",
+        "The named S03 role and keratin/peptide/Pro-Strength claims resolve exclusion as generic protein/conditioning care under standard §§1/4; no new family is inferred.",
+        "GLYCINE SOJA OIL is not Glycine and LACTIC ACID is not Citric Acid (own sealed Stage A V02; S03).",
+        "Out-of-scope status leaves technology/trust/basis/policy null and curated candidacy false. Source_version_not_actual_pack remains (S03)."
+      ]
+    },
+    {
+      "slot_id": "V03",
+      "identity": {
+        "manufacturer": "Garnier / L'Oréal",
+        "name": "Fructis Schadenlöscher Pro-Keratin Filler Deep Repair Intensive Haarkur",
+        "market": "DE",
+        "size_ml": 200,
+        "gtin": null,
+        "source_version": "formula 1261267 / FIL Z70029743/2, page accessed 2026-10-02",
+        "actual_pack_verified": false
+      },
+      "boundary_status": "out_of_scope",
+      "technology_family": null,
+      "claim_trust_level": null,
+      "trust_basis": null,
+      "policy_reference": null,
+      "holds": {
+        "identity": [],
+        "boundary": [],
+        "claim_trust": [],
+        "protocol": [
+          "S04 supplies no cadence, so a scheduled occurrence cannot be finalized. Physical texture, dose and Conditioner relationship also remain unknown."
+        ],
+        "fit": [
+          "Diameter-specific suitability is unknown; no fine/normal/coarse assignment can be made from the packet (standard §8)."
+        ]
+      },
+      "classification_confidence": "moderate",
+      "confidence_by_property": {
+        "identity": "high",
+        "boundary": "high",
+        "technology": null,
+        "policy": null,
+        "protocol": "moderate",
+        "fit": "low"
+      },
+      "assessed_benefit": "S04 describes cosmetic conditioning, filling and strengthening associated with Pro-Keratin and marula oil. Those maker claims do not establish acid/calcium repair or a measured product-alone repair benefit.",
+      "supporting_source_ids": [
+        "S04"
+      ],
+      "counter_source_ids": [],
+      "applicability_bridge": "S04 binds Stage A V03 to the exact DE 200 ml source version and formula identifiers 1261267 / Z70029743/2. CITRIC ACID and GLYCINE remain observed. The inspected positioning centers on generic Pro-Keratin/marula conditioning, with no targeted acid/calcium role; the candidate fails the standard §§1/4 use bridge. Formula codes are not GTINs.",
+      "evidence_limitations": [
+        "S04 is a current manufacturer source version, not an actual pack; GTIN is unstated.",
+        "S04 supplies no specific calcium-management/citric-acid repair role, dose, final pH or independent outcome data.",
+        "S04's rich-formula description does not certify cream texture; numerical dose and cadence are unstated.",
+        "Exclusion concerns this category boundary, not absence of ordinary conditioning benefit. Owner default low cannot substitute for category qualification (standard §§1/5).",
+        "new_submission_recommended=false is the packet policy simulation; no existing approval or catalog row was inspected or modified."
+      ],
+      "research_admission_candidate": false,
+      "new_submission_recommended": false,
+      "application_facts": {
+        "selected_direction_source_id": "S04",
+        "placement": {
+          "value": "before_or_after_shampoo",
+          "source_ids": [
+            "S04"
+          ],
+          "limitations": []
+        },
+        "physical_format": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "S04's rich-formula description and Haarkur title do not establish physical texture."
+          ]
+        },
+        "hair_state": {
+          "value": [
+            "damp"
+          ],
+          "source_ids": [
+            "S04"
+          ],
+          "limitations": []
+        },
+        "application_area": {
+          "value": "Massage through lengths and ends.",
+          "source_ids": [
+            "S04"
+          ],
+          "limitations": []
+        },
+        "amount": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "S04 provides no numerical or qualitative dose."
+          ]
+        },
+        "dilution": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "S04 provides no dilution instruction."
+          ]
+        },
+        "contact_time": {
+          "value": {
+            "kind": "fixed",
+            "minutes_min": 5,
+            "minutes_max": 5,
+            "branches": []
+          },
+          "source_ids": [
+            "S04"
+          ],
+          "limitations": [
+            "No longer-wear permission is stated."
+          ]
+        },
+        "working_time": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "Massage is instructed by S04 but its duration is unstated."
+          ]
+        },
+        "sequence": [
+          {
+            "action": "Apply before or after shampoo to damp hair.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S04"
+            ]
+          },
+          {
+            "action": "Massage through lengths and ends.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S04"
+            ]
+          },
+          {
+            "action": "Leave for 5 minutes.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S04"
+            ]
+          },
+          {
+            "action": "Use towel or shower-cap warmth.",
+            "requirement": "optional",
+            "source_ids": [
+              "S04"
+            ]
+          },
+          {
+            "action": "Rinse thoroughly with lukewarm water.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S04"
+            ]
+          }
+        ],
+        "conditioner": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "S04 does not specify Conditioner before, after or timing."
+          ]
+        },
+        "cadence": {
+          "value": {
+            "kind": "unknown",
+            "times_per_week_min": null,
+            "times_per_week_max": null,
+            "washes_min": null,
+            "washes_max": null,
+            "branches": []
+          },
+          "source_ids": [],
+          "limitations": [
+            "Cadence is unstated in S04; no weekly interval is inferred."
+          ]
+        },
+        "brand_partners": {
+          "value": [],
+          "source_ids": [],
+          "limitations": [
+            "No brand partner is stated in S04; no equivalence inference."
+          ]
+        },
+        "source_variants": [
+          {
+            "source_id": "S04",
+            "selected": true,
+            "summary": "Both before-shampoo and after-shampoo use are selected alternatives: damp lengths/ends, 5 minutes, optional towel/cap warmth, thorough lukewarm rinse."
+          }
+        ]
+      },
+      "fit_assessment": {
+        "fine": null,
+        "normal": null,
+        "coarse": null,
+        "rationale": "The packet contains no independent diameter-specific evidence. Manufacturer damage, curl, porosity or all-type positioning does not establish fine/normal/coarse suitability (standard §§7–8).",
+        "source_ids": [
+          "S04"
+        ]
+      },
+      "manufacturer_positioning": "Garnier positions the treatment for damaged hair (S04; named packet V03); this does not establish fine/normal/coarse fit.",
+      "intended_role": "Generic Pro-Keratin/marula repair and conditioning treatment usable before or after shampoo (S04).",
+      "concise_de": "Citric Acid und Glycine sind vorhanden, doch die beschriebene Pro-Keratin-/Marula-Pflege belegt keinen gezielten Säure-/Calcium-Ansatz [S04]. Daher außerhalb dieser Bondbuilder-Kategorie. Vor oder nach Shampoo: 5 Minuten auf feuchtem Haar, dann ausspülen [S04].",
+      "deeper_de": "Die anonym erkannten Marker CITRIC ACID und GLYCINE bleiben erhalten. Die benannte Quelle beschreibt Pro-Keratin, Marulaöl sowie pflegende und stärkende Wirkungen, aber keine gezielte Säure-/Calcium-Technologie [S04]. Nach Standard §§1/4 reicht eine solche Rezepturspur nicht zur Aufnahme in die Kategorie. Das Produkt erhält daher keine Bondbuilder-Familie oder Vertrauensstufe. Laut Hersteller vor oder nach Shampoo in feuchte Längen und Spitzen einmassieren, 5 Minuten einwirken lassen und mit lauwarmem Wasser gründlich ausspülen; Wärme durch Handtuch oder Duschhaube ist optional [S04]. Häufigkeit, numerische Menge und eine belegte Passung nach Haardurchmesser bleiben offen.",
+      "stage_a_to_final_changes": [
+        "Preserved literal markers CITRIC ACID and GLYCINE from sealed Stage A V03 and S04.",
+        "Dropped acid_calcium_management as final family: S04 has generic Pro-Keratin/marula conditioning claims and no acid/calcium targeted-use bridge; standard §§1/4 exclude generic acidic/protein care.",
+        "Hydrolyzed proteins and CHLORHEXIDINE DIGLUCONATE do not become alternative lexicon technologies (own Stage A V03; S04).",
+        "Final out_of_scope has null technology/trust/basis/policy and false curated candidacy. Formula codes are retained as source-version identifiers, not a GTIN; pack verification remains false (S04)."
+      ]
+    },
+    {
+      "slot_id": "V04",
+      "identity": {
+        "manufacturer": "L'Oréal Professionnel",
+        "name": "Absolut Repair Molecular Rinse-Off Serum",
+        "market": "DE",
+        "size_ml": null,
+        "gtin": null,
+        "source_version": "exact named DE product page accessed 2026-10-02",
+        "actual_pack_verified": false
+      },
+      "boundary_status": "category_review",
+      "technology_family": null,
+      "claim_trust_level": null,
+      "trust_basis": null,
+      "policy_reference": null,
+      "holds": {
+        "identity": [],
+        "boundary": [
+          "S05's specialized peptide-bonder claim is not mapped to a recognized family by the packet; category review is required under standard §§1/4."
+        ],
+        "claim_trust": [
+          "Default low cannot finalize until in-scope category applicability resolves; no exact owner ruling is supplied (owner-submission-policy-2026-10-01; standard §5)."
+        ],
+        "protocol": [
+          "S05 does not state cadence; exact scheduled recurrence remains unknown. Research facts do not certify runtime enum compatibility (standard §§3/6)."
+        ],
+        "fit": [
+          "Diameter-specific suitability is unknown; no fine/normal/coarse assignment can be made from the packet (standard §8)."
+        ]
+      },
+      "classification_confidence": "low",
+      "confidence_by_property": {
+        "identity": "high",
+        "boundary": "low",
+        "technology": "low",
+        "policy": null,
+        "protocol": "moderate",
+        "fit": "low"
+      },
+      "assessed_benefit": "S05 claims molecular repair with a branded 2% peptide-bonder/five-amino-acid complex, but the packet does not resolve that technology into a recognized family. The two-years-damage headline is a shampoo+serum+leave-in system result; a separate claim concerns 15 serum applications. S12 adds distinct historical professional and home-care system tests. None establishes one-use serum-alone superiority or a verified molecular endpoint.",
+      "supporting_source_ids": [
+        "S05",
+        "S12"
+      ],
+      "counter_source_ids": [],
+      "applicability_bridge": "S05 resolves the exact named DE product-page source version and binds the observed Glycine, Citric Acid and Arginine. Its specialized molecular-treatment claim warrants category_review under standard §1 because 'peptide bonders' does not identify sh-Oligopeptide-78 and no acid/calcium role is described. Neither generic amino acids nor Citric Acid supplies the missing technology bridge. S12 is historical system evidence with unverified current-formula equivalence.",
+      "evidence_limitations": [
+        "S05 does not supply size/GTIN or an actual pack; source-version identity can resolve while bottle-level binding remains unverified.",
+        "The branded 2% complex claim in S05 is not an ingredient dose and does not establish a designed peptide or acid/calcium mechanism.",
+        "S05's system headline cannot be assigned to serum alone; the separate 15-application statement is not a one-use result. Protocol, comparator and data are unavailable.",
+        "S12's salon pre-treatment plus five shampoos and two-week home shampoo+serum+leave-in consumer test are distinct scopes; neither is current-serum-alone evidence.",
+        "No exact owner ruling exists. Owner default low is deferred until category applicability resolves (standard §§1/3/5); no adverse efficacy judgment is substituted.",
+        "The packet contains no original inspected starting-panel opinion or independent current-product peer-reviewed trial; missing optional opinions remain neutral.",
+        "new_submission_recommended=false simulates packet policy, with no catalog match, approval change or production action."
+      ],
+      "research_admission_candidate": false,
+      "new_submission_recommended": false,
+      "application_facts": {
+        "selected_direction_source_id": "S05",
+        "placement": {
+          "value": "post_shampoo",
+          "source_ids": [
+            "S05"
+          ],
+          "limitations": [
+            "The source recommends this placement after matching shampoo; it does not establish compulsory use of that brand."
+          ]
+        },
+        "physical_format": {
+          "value": "Serum-like texture.",
+          "source_ids": [
+            "S05"
+          ],
+          "limitations": []
+        },
+        "hair_state": {
+          "value": [
+            "wet"
+          ],
+          "source_ids": [
+            "S05"
+          ],
+          "limitations": []
+        },
+        "application_area": {
+          "value": "Normally lengths and ends; very damaged hair may receive root-to-tip application.",
+          "source_ids": [
+            "S05"
+          ],
+          "limitations": []
+        },
+        "amount": {
+          "value": "Divide into two sections; use 2–3 pumps on one section and repeat on the other section.",
+          "source_ids": [
+            "S05"
+          ],
+          "limitations": [
+            "No conversion to millilitres or pump volume is supported."
+          ]
+        },
+        "dilution": {
+          "value": null,
+          "source_ids": [],
+          "limitations": [
+            "S05 provides no dilution instruction."
+          ]
+        },
+        "contact_time": {
+          "value": {
+            "kind": "no_wait",
+            "minutes_min": null,
+            "minutes_max": null,
+            "branches": []
+          },
+          "source_ids": [
+            "S05"
+          ],
+          "limitations": [
+            "No separate dwell is required after active working. This is not a claim of zero total hair contact or permission for longer wear."
+          ]
+        },
+        "working_time": {
+          "value": {
+            "minutes_min": 1,
+            "minutes_max": 2
+          },
+          "source_ids": [
+            "S05"
+          ],
+          "limitations": [
+            "Active working time is distinct from an additional dwell."
+          ]
+        },
+        "sequence": [
+          {
+            "action": "Use in place of a rinse-out mask.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S05"
+            ]
+          },
+          {
+            "action": "Use after the matching shampoo.",
+            "requirement": "recommended",
+            "source_ids": [
+              "S05"
+            ]
+          },
+          {
+            "action": "Detangle wet hair and divide into two sections.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S05"
+            ]
+          },
+          {
+            "action": "Apply 2–3 pumps to one section and repeat on the other; normally lengths/ends.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S05"
+            ]
+          },
+          {
+            "action": "For very damaged hair, root-to-tip application may be used.",
+            "requirement": "optional",
+            "source_ids": [
+              "S05"
+            ]
+          },
+          {
+            "action": "Work through for 1–2 minutes; no separate dwell is required.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S05"
+            ]
+          },
+          {
+            "action": "Rinse thoroughly.",
+            "requirement": "instruction",
+            "source_ids": [
+              "S05"
+            ]
+          },
+          {
+            "action": "Supporting option: Metal DX mask for intensive care; exact timing is not stated in the packet.",
+            "requirement": "optional",
+            "source_ids": [
+              "S05"
+            ]
+          },
+          {
+            "action": "Supporting recommendation: matching leave-in; no further timing detail is supplied in the packet.",
+            "requirement": "recommended",
+            "source_ids": [
+              "S05"
+            ]
+          }
+        ],
+        "conditioner": {
+          "value": {
+            "before": "Not stated; no prohibition inferred.",
+            "after": "No separate Conditioner instruction is stated; an intensive-care Metal DX mask is optional.",
+            "after_timing": "Not expressly timed in the packet; optional mask mention does not create a Conditioner timing rule."
+          },
+          "source_ids": [
+            "S05"
+          ],
+          "limitations": [
+            "Replacement of a rinse-out mask does not establish a universal Conditioner prohibition or requirement."
+          ]
+        },
+        "cadence": {
+          "value": {
+            "kind": "unknown",
+            "times_per_week_min": null,
+            "times_per_week_max": null,
+            "washes_min": null,
+            "washes_max": null,
+            "branches": []
+          },
+          "source_ids": [],
+          "limitations": [
+            "S05 gives no cadence; 15 applications is an evidence-test scope, not a prescribed course."
+          ]
+        },
+        "brand_partners": {
+          "value": [
+            {
+              "name_or_role": "Matching Absolut Repair Molecular shampoo",
+              "requirement": "recommended"
+            },
+            {
+              "name_or_role": "Metal DX mask for intensive care",
+              "requirement": "optional"
+            },
+            {
+              "name_or_role": "Matching Absolut Repair Molecular leave-in",
+              "requirement": "recommended"
+            }
+          ],
+          "source_ids": [
+            "S05"
+          ],
+          "limitations": [
+            "Recommendations do not prove exclusive brand dependence or alternative equivalence."
+          ]
+        },
+        "source_variants": [
+          {
+            "source_id": "S05",
+            "selected": true,
+            "summary": "Selected DE page: mask-replacement role, recommended after matching shampoo, two sections with 2–3 pumps each, 1–2 minutes working, no separate dwell, rinse; optional Metal DX mask and recommended matching leave-in."
+          }
+        ]
+      },
+      "fit_assessment": {
+        "fine": null,
+        "normal": null,
+        "coarse": null,
+        "rationale": "The packet contains no independent diameter-specific evidence. Manufacturer damage, curl, porosity or all-type positioning does not establish fine/normal/coarse suitability (standard §§7–8).",
+        "source_ids": [
+          "S05"
+        ]
+      },
+      "manufacturer_positioning": "L'Oréal Professionnel describes suitability for damaged types/color states (S05; named packet V04). This is attributed maker positioning, not independent diameter fit.",
+      "intended_role": "Specialized rinse-off molecular-repair treatment used in place of a rinse-out mask, pending technology/category resolution (S05).",
+      "concise_de": "Die behauptete „Peptide-Bonder“-Technologie lässt sich im Paket keiner der fünf Familien sicher zuordnen [S05]. Deshalb Kategorieprüfung, noch keine Vertrauensstufe. In nassem Haar 1–2 Minuten durcharbeiten, ohne zusätzliche Einwirkzeit gründlich ausspülen [S05].",
+      "deeper_de": "Glycine, Citric Acid und Arginine bleiben als Rezepturbeobachtungen erhalten. Der Hersteller nennt „2 % Peptide Bonders“ und fünf Aminosäuren; das identifiziert weder sh-Oligopeptide-78 noch eine gezielte Säure-/Calcium-Funktion [S05]. Die Technologie benötigt deshalb Kategorieprüfung statt einer automatischen Einstufung als low. Die beworbene Schadenskorrektur stammt teils aus einem Shampoo-Serum-Leave-in-System; eine weitere Aussage betrifft 15 Serum-Anwendungen [S05]. Historische Service- und Heimtests bleiben getrennt [S12]. Empfohlen ist die Anwendung nach dem passenden Shampoo: nasses Haar entwirren, zwei Sektionen bilden, je Sektion 2–3 Pumpstöße verteilen, 1–2 Minuten durcharbeiten und ohne zusätzliche Einwirkzeit ausspülen [S05]. Die Wochenhäufigkeit und unabhängige Passung nach Haardurchmesser sind nicht geklärt.",
+      "stage_a_to_final_changes": [
+        "Preserved literal Stage A V04 markers Glycine, Citric Acid and Arginine, bound to S05.",
+        "Withheld acid_calcium_management finalization: S05 provides no specific acid/calcium role; the Stage A clue does not establish category membership (standard §§1/4).",
+        "No designed_peptide assignment: S05's proprietary 'peptide bonders' claim does not identify sh-Oligopeptide-78. Specialized but unrecognized technology routes to category_review (standard §1).",
+        "Category/trust applicability remains unresolved, so family/trust/basis/policy are null; no owner-default grade is issued before category qualification. Curated candidacy is false.",
+        "Source_version_not_actual_pack remains; missing size/GTIN does not erase resolved named DE source-version findings (S05)."
+      ]
+    }
+  ]
+}

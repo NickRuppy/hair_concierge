@@ -1,0 +1,4 @@
+# Frozen research packets retain their sealed bytes, including historical EOF
+# blank lines. Other whitespace diagnostics stay enabled; source is unaffected.
+data/research/bondbuilder-inci/** whitespace=-blank-at-eof
+plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/** whitespace=-blank-at-eof
