@@ -267,6 +267,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: SHAMPOO_SOURCE_MANAGED_MESSAGE }, { status: 409 })
   }
 
+  if (parsed.data.bondbuilder_specs?.research_profile) {
+    return NextResponse.json(
+      { error: "Bondbuilder-Forschungsprofile müssen über den geschützten Intake-Prozess angelegt werden." },
+      { status: 409 },
+    )
+  }
+
   const {
     conditioner_specs,
     leave_in_specs,

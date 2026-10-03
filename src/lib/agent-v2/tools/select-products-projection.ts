@@ -8,6 +8,7 @@ import type {
   UnsupportedRequestedSignal,
 } from "@/lib/agent/tools/select-products"
 import type { SelectableProductCategory } from "@/lib/agent/contracts"
+import type { BondbuilderChatResearch } from "@/lib/bondbuilder/research-facts"
 
 export interface AgentV2SelectProductsProjection {
   tool_name: "select_products"
@@ -28,6 +29,7 @@ export interface AgentV2SelectProductsProjection {
     caveat: string | null
     supported_claims: SupportedProductClaim[]
     unsupported_requested_signals: UnsupportedRequestedSignal[]
+    bondbuilder_research?: BondbuilderChatResearch
   }>
   missing_required_data: SelectedProductsMissingInfo[]
   constraint_blockers: UnsupportedRequestedSignal[]
@@ -68,6 +70,7 @@ export function projectSelectProductsForAgentV2(
       caveat: product.caveat,
       supported_claims: product.supported_claims,
       unsupported_requested_signals: product.unsupported_requested_signals,
+      ...(product.bondbuilder_research ? { bondbuilder_research: product.bondbuilder_research } : {}),
     })),
     missing_required_data: projection.missing_info,
     constraint_blockers: [...projection.unsupported_requested_signals, ...productSignals],
@@ -81,6 +84,8 @@ export function projectSelectProductsForAgentV2(
       "selected_products.profile_basis",
       "selected_products.category_guidance",
       "selected_products.caveat",
+      ...(projection.products.some(product => product.bondbuilder_research)
+        ? ["selected_products.bondbuilder_research"] : []),
       ...(options.includeCareBalanceContext ? ["selected_products.care_balance_context"] : []),
     ],
     trace: {

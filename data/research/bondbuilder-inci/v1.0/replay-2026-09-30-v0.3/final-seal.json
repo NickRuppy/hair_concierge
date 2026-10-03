@@ -1,0 +1,30 @@
+{
+  "standard_version": "bondbuilder-inci-v0.3",
+  "status": "research_handoff_sealed_owner_review_pending",
+  "purpose": "Immutable completed replay handoff, not method lock or activation",
+  "checks": [
+    "two independent lanes each completed A/B/C",
+    "prior stages sealed before new named evidence",
+    "six8row JSON artifacts and complete stage/file coverage required",
+    "all source IDs,input receipts,raw and formula hashes and exact protocol copies verified",
+    "root adjudication retains all core lane decisions; normalization ledger explicit",
+    "historical v0.1/v0.2 frozen bytes unchanged",
+    "comparison separates prescribed anchor and actual non-anchor denominator"
+  ],
+  "sha256": {
+    "comparison.json": "98cd94160f2afcb461cc018050cdef0b0da3af78b46f56d21c9a56a7e6ad72b9",
+    "adjudication.json": "a255dfc88e89af3f915fe9656ec1bb3a0554adcf20c454f35c2af65802272072",
+    "findings.md": "5e411527289308eab928e46c7061c46057381f5876765d7824bd118b30bc1a51",
+    "compare.mjs": "3a6eaa16869c6d48f68bc534a7aa3f286794da9bc04a6dc8b4ae05de951b29aa",
+    "verify.mjs": "2eb370c57c27d8783f97b37f4ff8c5d5066c95702e3042229d0bffc8428966c7",
+    "stage-a-seal.json": "95f3bb00cee38bc0c7ee7362a9d0dd4a9b935d88f0afde16967f7f56b2b092d7",
+    "stage-b-seal.json": "1164e51961f7068c07881177b1c1b97459f86f8e85aae6b0236bcbdbc948f441",
+    "stage-c-seal.json": "111e6a14d100eee88f700c221c4e53513c1f7125c614b2e62fed0f9a746d1fb7",
+    "freeze-receipt.v0.3.json": "c0a682da382957a3d46af2a55f7389cd8f68a46217b9348a435b8e375fd002ab",
+    "rule-only-control.json": "9aa8d89d2352dce78a3d179af914819f193e2979866286436a05454c2f95eb16"
+  },
+  "activation": false,
+  "production_writes": false,
+  "catalog_approval": false,
+  "unseen_validation": false
+}

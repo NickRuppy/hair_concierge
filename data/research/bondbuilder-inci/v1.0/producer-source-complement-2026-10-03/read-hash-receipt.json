@@ -1,0 +1,69 @@
+{
+  "receipt_version": "producer-direction-complement-read-receipt-v1",
+  "date": "2026-10-03",
+  "worktree": "/Users/nick/.codex/worktrees/bondbuilder-research-engine/hair_conscierge",
+  "branch": "codex/bondbuilder-research-engine",
+  "head_at_capture": "317aa78065c3d3016babf873b5362ea86d7b7ff7",
+  "owned_create_only_directory": "data/research/bondbuilder-inci/v1.0/producer-source-complement-2026-10-03/",
+  "written_files": [
+    "source-captures.json",
+    "read-hash-receipt.json"
+  ],
+  "read_boundary": {
+    "repository_evidence": [
+      {
+        "path": "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3/named-packet.json",
+        "sha256": "a82c738399a0a02830b7a5b3c98faca55169cac04668f4452ba3d98082ef8acd",
+        "use": "Identity/source-lead discovery. Initial read exposed first 220 lines, including source-version provenance and formula-conflict metadata; subsequent extraction printed URLs only. No formula assessment was made or used."
+      }
+    ],
+    "instructions_read": [
+      ".agents/skills/hair-care-expert/SKILL.md",
+      ".agents/skills/branch-gate/SKILL.md"
+    ],
+    "memory_context": "Quick registry check reinforced immutable research-only boundaries; no memory-derived producer protocol was used.",
+    "not_read": [
+      "owner profile file contents",
+      "independent lane assessment file contents",
+      "sealed prior outcome file contents"
+    ],
+    "source_access": "Fresh web inspection during this task; checked/accessed date is retrieval date, not publication or revision date. full_text means the page text was available and its relevant producer-direction sections were inspected; it is not a physical-pack inspection. inspected_excerpt is explicitly limited to the producer text visible in search results."
+  },
+  "source_capture": {
+    "file": "source-captures.json",
+    "sha256": "119c41872f603c6274a57db8724d2aad79052292a0e4bd070c8e80c29640122c",
+    "bytes": 16937,
+    "source_count": 13,
+    "covered_slots": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08"
+    ],
+    "access_counts": {
+      "full_text": 12,
+      "inspected_excerpt": 1,
+      "uninspected": 0
+    }
+  },
+  "verification": [
+    "JSON parsed successfully.",
+    "13 unique source IDs; all eight requested slot IDs covered.",
+    "Every capture has URL, publisher, checked/accessed dates, market, access, observations and limitations.",
+    "Only producer application facts are retained; source text is paraphrased.",
+    "No tests or runtime changes needed for a source-only record."
+  ],
+  "unresolved_gaps": [
+    "OGX DE directions and exact DE/EU pack equivalence remain unresolved; UK source is explicitly a complement.",
+    "L'Oréal DE full-page follow-up retrieval failed; its official search excerpt is labelled accordingly.",
+    "No physical bottle labels inspected. OLAPLEX 100 ml, L'Oréal 200 ml and Redken 190 ml sizes are not independently established by inspected direction text.",
+    "epres numerical added-water volume and spray-bottle capacity remain unknown; only intended-bottle dilution is supported.",
+    "Unstated texture, amount, cadence and distribution details remain unfilled.",
+    "K18 market/article cadence variants remain separate; Aveda overlapping damage bands are preserved."
+  ],
+  "immutable_handoff": "New supplement only. The parent owns any later freeze/merge into a subsequent source amendment. Existing sealed history was not rewritten."
+}

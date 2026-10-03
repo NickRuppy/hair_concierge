@@ -1,0 +1,36 @@
+{
+  "receipt_version": "bondbuilder-stage-a-seal-v0.1",
+  "sealed_date": "2026-09-30",
+  "stage_b_not_yet_dispatched": true,
+  "verification": {
+    "eight_unique_slots_both_lanes": true,
+    "input_flags_statuses_preserved": true,
+    "no_final_trust_boundary_or_efficacy_assignments": true,
+    "recognition_incidents_both_lanes": [
+      "A02",
+      "A04",
+      "A07"
+    ],
+    "interpretation": "Names hidden; distinctive chemistry recognized. Not experimentally blinded efficacy research."
+  },
+  "files": [
+    {
+      "path": "lane-a/blind-records.json",
+      "sha256": "f57ce35ae86bed74fe58a58ba7158bc8cdb470bb86315d37cd800652703b7b7f"
+    },
+    {
+      "path": "lane-a/blind-notes.md",
+      "sha256": "df02caf1bf2ab0bf879088a64e2ad28edce191c6b830559ceb9e29b4801a7709"
+    },
+    {
+      "path": "lane-b/blind-records.json",
+      "sha256": "37b64ae290fb403d1835ec4c45e16e89a86dfd175102941454d39754fb7b2761"
+    },
+    {
+      "path": "lane-b/blind-notes.md",
+      "sha256": "1307b5591164c6cdbd118602b9f8e92b0014008f55973d10b80808ab7e5c58a1"
+    }
+  ],
+  "rule": "Retain these exact outputs. Any evidence-stage interpretation delta is logged separately; no marker or conflict overwrite.",
+  "acceptance": "Local fidelity checks only, not calibrated method or engine-lock acceptance."
+}

@@ -1,0 +1,13 @@
+{
+  "created_at": "2026-10-02T09:12:23.801Z",
+  "hashes": {
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-a/blind-records.json": "6061cd19dcc74cea3d4d7b9db4ae300099007405110e221229ade6787db77451",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-a/blind-notes.md": "e2ac3c18a0c767b0419e1df2b6ee504026184e1880d2df0c9dbc8c581b6af590",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-b/blind-records.json": "b63f57d1219e7c6580c01f57d7dbd900ca87d8daa0424d1bad05f96d44c6b304",
+    "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-b/blind-notes.md": "7f26d0c1bb174f6278f3a535d8a93cbffe49a19a9ef7073a461e35ac2c6d2101"
+  },
+  "stage": "A",
+  "no_unblinding_before_both_lanes_stopped": true,
+  "no_web_reported": true
+}
+
