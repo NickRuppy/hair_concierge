@@ -3,7 +3,8 @@
 -- write of a profile fact on `public.hair_profiles` that `public.user_facts_save_v1` did not
 -- make. A permanent guard, not a sync bridge.
 --
--- This migration ships as its own follow-up PR; parked in supabase/pending/ until then.
+-- Shipped as its own follow-up PR after the code deploy and the backfill (it was parked in
+-- supabase/pending/ as 20260930120000 until then).
 --
 -- APPLY LAST (rollout step 3): after the additive migrations + backfill (step 1) and the code
 -- deploy (step 2). Applied earlier, every still-deployed legacy writer (old onboarding browser
@@ -37,7 +38,7 @@
 -- ---------------------------------------------------------------------------------------------
 -- Mechanism. The door sets the transaction-local setting `app.user_facts_writer` to the user id
 -- it is writing immediately before each of its INSERT/UPDATE statements and resets it to ''
--- immediately after (20260929231300, edited in place — unapplied). The guard below allows a
+-- immediately after (20260929231300). The guard below allows a
 -- fact change only when that setting equals the row's user_id. Not role-based (the iOS
 -- publishers run as the same owner as the door) and not pg_trigger_depth()-based.
 --   * No leak: normal exits reset explicitly; on an error between set and reset, the setting is
@@ -153,7 +154,7 @@ CREATE TRIGGER zz_hair_profiles_fact_write_guard
   FOR EACH ROW EXECUTE FUNCTION public.hair_profiles_reject_fact_write_outside_door();
 
 COMMENT ON TRIGGER zz_hair_profiles_fact_write_guard ON public.hair_profiles IS
-  'Rejects any change of a profile fact column not made by public.user_facts_save_v1 (flag app.user_facts_writer = this row''s user_id). Named zz_ to fire after every other BEFORE row trigger. See 20260930120000_user_facts_lock.sql.';
+  'Rejects any change of a profile fact column not made by public.user_facts_save_v1 (flag app.user_facts_writer = this row''s user_id). Named zz_ to fire after every other BEFORE row trigger. See 20261003120000_user_facts_lock.sql.';
 
 -- The column list is read only by the apply-time check below (as the migration owner); the guard
 -- carries its own inline copy.

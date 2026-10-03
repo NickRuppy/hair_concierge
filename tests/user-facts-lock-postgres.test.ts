@@ -27,7 +27,7 @@ import {
 } from "./personal-plan-pglite-migration.fixtures"
 
 /**
- * Clean-switch task 9: the lock on `hair_profiles` (migration 20260930120000_user_facts_lock.sql)
+ * Clean-switch task 9: the lock on `hair_profiles` (migration 20261003120000_user_facts_lock.sql)
  * on the real schema in PGlite. Every fact column (the three documents, `facts_provenance`,
  * `facts_revision` and the 21 derived legacy columns) can change only inside
  * `user_facts_save_v1`; every other column stays writable; browser roles lose INSERT/UPDATE.
@@ -549,7 +549,7 @@ test("the migration refuses to apply when a before-row trigger sorts after the g
 
 test("the guard and the apply-time check hold the same fact columns and defaults", async () => {
   const sql = await readFile(
-    new URL("../supabase/pending/20260930120000_user_facts_lock.sql", import.meta.url),
+    new URL("../supabase/migrations/20261003120000_user_facts_lock.sql", import.meta.url),
     "utf8",
   )
   const literals = [...sql.matchAll(/'(\{\s*"diagnostics": null[\s\S]*?\})'::jsonb/g)].map(
