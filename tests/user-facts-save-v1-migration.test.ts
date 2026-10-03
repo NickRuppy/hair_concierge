@@ -350,7 +350,7 @@ test("a write recomputes only the columns owned by its own domain", async (t) =>
 
 test("a care_habits write leaves legacy diagnostics columns alone when diagnostics is still NULL", async (t) => {
   // A pre-migration onboarding row: narrow columns filled, no fact domains yet — seeded before
-  // the lock (20260930120000), as production rows are.
+  // the lock (20261003120000), as production rows are.
   const pg = await migratedPersonalPlanDatabase(t, { lock: false })
   await insertProfile(pg, USER)
   await pg.query(
