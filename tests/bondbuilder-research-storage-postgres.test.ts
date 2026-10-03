@@ -3,7 +3,15 @@ import { readFile } from "node:fs/promises"
 import test from "node:test"
 import { migratedDatabase } from "./scan-expansion-batch-postgres.test"
 import { fact, makeBondbuilderProfile, sealProfile } from "./fixtures/bondbuilder-research/profile"
-import { normalizeBondbuilderInci } from "../src/lib/bondbuilder-research/production-adapter"
+import {
+  normalizeBondbuilderInci,
+  validateBondbuilderResearchProfile,
+} from "../src/lib/bondbuilder-research/production-adapter"
+import {
+  BOND_ACCEPTED_METHOD_PINS,
+  BOND_CURRENT_METHOD_PINS,
+  BOND_METHOD_PINS,
+} from "../src/lib/bondbuilder-research/registry"
 
 const ROOT = new URL("../", import.meta.url)
 const PRODUCT = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb"
@@ -42,6 +50,58 @@ test("Bondbuilder profile hash preserves JavaScript numeric serialization at the
     await pg.query<{ digest: string }>("SELECT bondbuilder_profile_digest_v1($1) digest", [p])
   ).rows[0].digest
   assert.equal(digest, p.review.profile_sha256)
+})
+test("Bondbuilder persists exactly the TypeScript historical and prepared-current method tuples in SQL", async (t) => {
+  const pg = await database(t)
+  const sqlPins = (
+    await pg.query<{ pins: typeof BOND_ACCEPTED_METHOD_PINS }>(
+      "SELECT public.bondbuilder_accepted_method_pins_v1() pins",
+    )
+  ).rows[0].pins
+  assert.deepEqual(sqlPins, BOND_ACCEPTED_METHOD_PINS)
+
+  for (const pins of BOND_ACCEPTED_METHOD_PINS) {
+    const profile = makeBondbuilderProfile()
+    Object.assign(profile.method, pins)
+    sealProfile(profile)
+    assert.equal(validateBondbuilderResearchProfile(profile).success, true, pins.method_version)
+    assert.equal(
+      (await pg.query<{ valid: boolean }>("SELECT public.bondbuilder_profile_valid_v1($1) valid", [
+        profile,
+      ])).rows[0].valid,
+      true,
+      pins.method_version,
+    )
+    await pg.query("SELECT public.bondbuilder_write_spec_v1($1,$2)", [PRODUCT, spec(profile)])
+    const stored = (
+      await pg.query<{ research_profile: ReturnType<typeof makeBondbuilderProfile> }>(
+        "SELECT research_profile FROM product_bondbuilder_specs WHERE product_id=$1",
+        [PRODUCT],
+      )
+    ).rows[0].research_profile
+    assert.deepEqual(
+      Object.fromEntries(Object.keys(pins).map((key) => [key, stored.method[key as keyof typeof pins]])),
+      pins,
+      pins.method_version,
+    )
+  }
+
+  const mixed = makeBondbuilderProfile()
+  Object.assign(mixed.method, BOND_CURRENT_METHOD_PINS, {
+    standard_sha256: BOND_METHOD_PINS.standard_sha256,
+  })
+  sealProfile(mixed)
+  assert.equal(validateBondbuilderResearchProfile(mixed).success, false)
+  assert.equal(
+    (await pg.query<{ valid: boolean }>("SELECT public.bondbuilder_profile_valid_v1($1) valid", [
+      mixed,
+    ])).rows[0].valid,
+    false,
+  )
+  await assert.rejects(
+    pg.query("SELECT public.bondbuilder_write_spec_v1($1,$2)", [PRODUCT, spec(mixed)]),
+    /invalid Bondbuilder profile or product identity/,
+  )
 })
 async function database(t: Parameters<typeof migratedDatabase>[0]) {
   const pg = await migratedDatabase(t)

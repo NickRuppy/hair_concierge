@@ -15,7 +15,12 @@ import {
   fact,
   unknownFact,
 } from "./fixtures/bondbuilder-research/profile"
-import { BOND_DEFAULT_POLICY, BOND_OWNER_REGISTRY } from "../src/lib/bondbuilder-research/registry"
+import {
+  BOND_CURRENT_METHOD_PINS,
+  BOND_DEFAULT_POLICY,
+  BOND_METHOD_PINS,
+  BOND_OWNER_REGISTRY,
+} from "../src/lib/bondbuilder-research/registry"
 import { runBondbuilderProductionAdapterCli } from "../scripts/bondbuilder-research/project-production-adapter"
 
 const hash = (s: string) => createHash("sha256").update(s).digest("hex")
@@ -64,6 +69,24 @@ test("new exact identity remains default low even when copying a high technology
   input.profile.assessment.policy_reference = "owner-review-2026-09-30:P03"
   sealProfile(input.profile)
   assert.match(projectBondbuilderForProduction(input).errors.join(" "), /unverified_owner_grade/)
+})
+
+test("accepts only complete historical or prepared-current method pin tuples", () => {
+  for (const pins of [BOND_METHOD_PINS, BOND_CURRENT_METHOD_PINS]) {
+    const profile = makeBondbuilderEnvelope().profile
+    Object.assign(profile.method, pins)
+    sealProfile(profile)
+    assert.equal(validateBondbuilderResearchProfile(profile).success, true, pins.method_version)
+  }
+
+  const mixed = makeBondbuilderEnvelope().profile
+  Object.assign(mixed.method, BOND_CURRENT_METHOD_PINS, {
+    standard_sha256: BOND_METHOD_PINS.standard_sha256,
+  })
+  sealProfile(mixed)
+  const result = validateBondbuilderResearchProfile(mixed)
+  assert.equal(result.success, false)
+  if (!result.success) assert.match(result.errors.join(" "), /unapproved pin/)
 })
 
 test("conditional cadence, physical format unknowns, source scope and unsupported facts survive with coverage", () => {

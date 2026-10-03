@@ -1,4 +1,5 @@
 import { projectBondbuilderForProduction } from "@/lib/bondbuilder-research/production-adapter"
+import { BOND_CURRENT_METHOD_PINS } from "@/lib/bondbuilder-research/registry"
 import { BONDBUILDER_RESEARCH_ENGINE_ENABLED } from "./bondbuilder-research-prompt-contract"
 
 type MutableRecord = Record<string, unknown>
@@ -34,6 +35,7 @@ export function applyBondbuilderResearchAdapter(input: {
   final: MutableRecord
   artifacts: BondbuilderResearchArtifact[]
   expectedSubmissionId?: string
+  expectedMethodVersion?: string
 }): { blockers: string[]; warnings: string[] } {
   const artifact = input.artifacts.find(
     (candidate) =>
@@ -60,6 +62,20 @@ export function applyBondbuilderResearchAdapter(input: {
         `bondbuilder research adapter: submission_id must match Product Intake submission ${input.expectedSubmissionId}`,
       ],
       warnings: [],
+    }
+  }
+
+  if (input.expectedMethodVersion) {
+    const profile = (envelope as MutableRecord).profile
+    const method = profile && typeof profile === "object" && !Array.isArray(profile)
+      ? (profile as MutableRecord).method : null
+    const version = method && typeof method === "object" && !Array.isArray(method)
+      ? (method as MutableRecord).method_version : null
+    if (version !== input.expectedMethodVersion) {
+      return {
+        blockers: [`bondbuilder research adapter: method_version must match ${input.expectedMethodVersion}`],
+        warnings: [],
+      }
     }
   }
 
@@ -112,5 +128,8 @@ export function applyBondbuilderResearchAdapterForWorker(
   if (!BONDBUILDER_RESEARCH_ENGINE_ENABLED) {
     return { blockers: ["bondbuilder research engine routing is disabled until the method is owner-locked"], warnings: [] }
   }
-  return applyBondbuilderResearchAdapter(input)
+  return applyBondbuilderResearchAdapter({
+    ...input,
+    expectedMethodVersion: BOND_CURRENT_METHOD_PINS.method_version,
+  })
 }

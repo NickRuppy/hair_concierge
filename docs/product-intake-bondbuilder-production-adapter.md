@@ -1,13 +1,13 @@
 # Bondbuilder Production Adapter v1
 
-Status: **implemented local projection; provisional v0.4 fixture pins; live routing disabled**. This is not a locked method, catalogue approval or production write.
+Status: **implemented local projection; exact historical v0.4/current candidate v0.5 pins; live routing disabled**. This is not a locked method, catalogue approval or production write.
 
 ## Authority and location
 
 | Layer | Owning location |
 | --- | --- |
 | Category index, versions and research status | [Bondbuilder engine](research/bondbuilder-inci/README.md) |
-| Next proposed method | `docs/research/bondbuilder-inci/draft-v0.5/` — unsealed and unexecuted |
+| Current candidate method | `docs/research/bondbuilder-inci/v0.5/` — frozen and replayed, coverage/owner lock pending |
 | Frozen calibration/validation provenance | `data/research/bondbuilder-inci/v1.0/` |
 | Canonical eight reviewed envelopes | [Owner consolidation manifest](../data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/manifest.json) |
 | Strict profile/envelope and registry authority | `src/lib/bondbuilder-research/{contracts,registry,production-adapter}.ts` |
@@ -20,7 +20,9 @@ The canonical envelopes retain complete original profile objects, hashes and ori
 
 The envelope is `{version: "bondbuilder-research-envelope-v1", submission_id: UUID|null, profile}`. The full profile retains method, exact identity/formula, assessment, technology reference, typed application/cadence, scientific/practical evidence, German explanations, source registry, independent fit, holds and review authority. The contracts file owns the closed schema; a short prompt summary cannot replace it.
 
-The adapter validates `BOND_METHOD_PINS`, complete ordered raw/list hashes, profile digest, source closure, literal markers, exact identity/source-version and the trusted owner registry. An unfamiliar eligible identity defaults to `low` / `owner_default`; a model-authored registry reference or technology match cannot award a higher grade. Owner rulings are policy provenance, not guaranteed efficacy. In the worker, `submission_id` must equal the actual submission; standalone replay permits null because it is offline.
+The adapter validates whole `BOND_ACCEPTED_METHOD_PINS` tuples, complete ordered raw/list hashes, profile digest, source closure, literal markers, exact identity/source-version and the trusted owner registry. Offline history accepts v0.4; prepared future intake additionally requires `BOND_CURRENT_METHOD_PINS` v0.5 and exact submission ID. Mixed-release tuples fail in TypeScript and SQL. An unfamiliar eligible identity defaults to `low` / `owner_default`; a technology match cannot award a higher grade. Owner rulings are policy provenance, not guaranteed efficacy. Standalone replay permits null submission ID because it is offline.
+
+Reference `formula_sha256` is the trusted reference's normalized formula digest, not its raw-text digest. `shared_markers` must copy exact lowercase literals present in both ordered normalized formula lists. Do not copy display-case INCI spellings into this field. The October 3 run preserves the original refused profiles and an explicit casing-only amendment; the adapter itself does not silently normalize or relax the reference binding.
 
 ## Full retention and projection
 

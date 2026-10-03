@@ -6,6 +6,7 @@ import {
   type BondbuilderResearchProfile,
 } from "./contracts"
 import {
+  BOND_ACCEPTED_METHOD_PINS,
   BOND_DEFAULT_POLICY,
   BOND_METHOD_PINS,
   BOND_OWNER_REGISTRY,
@@ -74,9 +75,13 @@ export function validateBondbuilderResearchProfile(input: unknown): BondbuilderP
     }
   const p = parsed.data,
     errors: string[] = []
-  for (const [key, value] of Object.entries(BOND_METHOD_PINS))
-    if (p.method[key as keyof typeof BOND_METHOD_PINS] !== value)
-      errors.push(`method.${key}: unapproved pin`)
+  const methodPinKeys = Object.keys(BOND_METHOD_PINS) as Array<keyof typeof BOND_METHOD_PINS>
+  if (
+    !BOND_ACCEPTED_METHOD_PINS.some((pins) =>
+      methodPinKeys.every((key) => p.method[key] === pins[key]),
+    )
+  )
+    errors.push("method: unapproved pin tuple")
   const digest = bondbuilderProfileSha256(p)
   if (p.review.profile_sha256 !== digest || p.method.output_sha256 !== digest)
     errors.push("profile_digest_mismatch")

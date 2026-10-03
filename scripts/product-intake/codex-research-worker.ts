@@ -1803,6 +1803,19 @@ function deepCleansingShampooApprovalContract(): JsonRecord {
 }
 
 function bondbuilderApprovalContract(): JsonRecord {
+  const researchContract = bondbuilderResearchPromptContract()
+  if (researchContract.enabled) {
+    return {
+      category_key: "bondbuilder",
+      instruction:
+        "Complete the full Bondbuilder research profile first. Emit it only as property_synthesis.bondbuilder_research_envelope; the deterministic adapter owns the derived database projection. Research exact producer application directions separately.",
+      bondbuilder_research: researchContract,
+      product_application_protocols: applicationProtocolResearchContract("bondbuilder", [
+        "specialized_bond_treatment",
+      ]),
+    }
+  }
+
   return {
     category_key: "bondbuilder",
     instruction:
@@ -1820,7 +1833,9 @@ function bondbuilderApprovalContract(): JsonRecord {
     product_application_protocols: applicationProtocolResearchContract("bondbuilder", [
       "specialized_bond_treatment",
     ]),
-    future_research_engine_contract: bondbuilderResearchPromptContract(),
+    // Preparation metadata only. The inactive lane retains the exact legacy
+    // output contract above until the server-owned method lock is installed.
+    future_research_engine_contract: researchContract,
   }
 }
 

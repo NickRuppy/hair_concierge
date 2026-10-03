@@ -1,0 +1,208 @@
+{
+  "version": "bondbuilder-method-assembly-report-v1",
+  "run": "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3",
+  "profiles": [
+    {
+      "lane": "lane-a",
+      "slot_id": "P01",
+      "path": "lane-a/assembled/P01.json",
+      "sha256": "85eced7bca2ee564ec322ac124c1e0cea0cc4235bdd2c908270ea7e0bb9b05b8"
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "P02",
+      "path": "lane-a/assembled/P02.json",
+      "sha256": "db15ee0051e8448e3216eab5a2d111996fc89794b89eedeb6273d738f1201fe1"
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "P03",
+      "path": "lane-a/assembled/P03.json",
+      "sha256": "a764f6f1164a7a67048bdfcc3047a8293bd319c4a465fe2847133dbf1db117d8"
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "P04",
+      "path": "lane-a/assembled/P04.json",
+      "sha256": "b54ea32c11c6a61d90d93b5e267ecf18a499f5b28a823a0f7e524692d04714ba"
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "P05",
+      "path": "lane-a/assembled/P05.json",
+      "sha256": "3a54c03e06386198341e53800bdc0bdbb0ff7a9b4c69f5240edb7904afa33009"
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "P06",
+      "path": "lane-a/assembled/P06.json",
+      "sha256": "0f4359918f7f0879ecc904fc7970361bff6250c5de2ce8cae5aa5e492c13dd56"
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "P07",
+      "path": "lane-a/assembled/P07.json",
+      "sha256": "c7d225ac614f2ccde53fa5bd69481d8cbf588af9f458cce6f036ca4437efafea"
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "P08",
+      "path": "lane-a/assembled/P08.json",
+      "sha256": "82f9915ba616536d17e8864ab68212e708608a5abc4e787f671e0b0c74a2ac03"
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "V01",
+      "path": "lane-a/assembled/V01.json",
+      "sha256": "168bfbe7572e52a79b6229f22be6614284e7534c9b2ecb216e4a919ac88b65b3"
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "V02",
+      "path": "lane-a/assembled/V02.json",
+      "sha256": "a2d3f3f5dfd6a0cdf3e25b93fa8220d631debcdaa8bf51643c79cb0aa86f1be3"
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "V03",
+      "path": "lane-a/assembled/V03.json",
+      "sha256": "0bc6e6f55255ef8d064329a0d765b3dba23d959f7b10246805b28d3965e7efca"
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "V04",
+      "path": "lane-a/assembled/V04.json",
+      "sha256": "d41e6fc692f03c277ad438c17d4807f5142842065b1b6f5edb695ce6e35e59a6"
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P01",
+      "path": "lane-b/assembled/P01.json",
+      "sha256": "150e59a6676e3807af4270e9223ca26f9f04d453f31056a7789e41901394ce7f"
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P02",
+      "path": "lane-b/assembled/P02.json",
+      "sha256": "3f28781f19a7c51fe0e0c30421981b7612b35ed1cff67eded4d6d9a16119a0b2"
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P03",
+      "path": "lane-b/assembled/P03.json",
+      "sha256": "cd08b426317a169bb0c784628305a27f41635880bb59f18e22d41ff3989f1538"
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P04",
+      "path": "lane-b/assembled/P04.json",
+      "sha256": "19cfa8453b98af099e5dfdfcb89bcda91002470289395015fdeabe2565527b9c"
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P05",
+      "path": "lane-b/assembled/P05.json",
+      "sha256": "c14ea59b27ed4d0846b05362ce05f3facb4098e1628c6d9e4910fd86d3928b98"
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P06",
+      "path": "lane-b/assembled/P06.json",
+      "sha256": "9588a64f096f6e0fa27f59f1fece8e7c0648327c5208af99e306706538c65c0c"
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P07",
+      "path": "lane-b/assembled/P07.json",
+      "sha256": "cadf6f5ba75428b26ab2cd0c1e3ff8ffa3ad4f9c94c551940dec8049b7eb8c67"
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P08",
+      "path": "lane-b/assembled/P08.json",
+      "sha256": "ae300e84ddf8fe51b69f9c41ec1846f27d17e6f7617b986620b0c8457baac9b9"
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "V01",
+      "path": "lane-b/assembled/V01.json",
+      "sha256": "4150e0dd8e35ca5a70424d8a30c0814cd118f2c020324a96ca8af7aace998e73"
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "V02",
+      "path": "lane-b/assembled/V02.json",
+      "sha256": "308496faf45c2e2e1ba07c4bc53f9d46631cb6b8e0dc7ffaeced937d588c2886"
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "V03",
+      "path": "lane-b/assembled/V03.json",
+      "sha256": "6358d5f50cd36048fda36e2cbe9fc0b0af855307a1e054bbe4b60694c4e02fa8"
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "V04",
+      "path": "lane-b/assembled/V04.json",
+      "sha256": "78c050aacf1f3e9c909c12f51fd3b5dcc0778c13d1f631403c7809aaef3aae88"
+    }
+  ],
+  "marker_exclusions": [
+    {
+      "lane": "lane-a",
+      "slot_id": "V02",
+      "observed_ingredients": [
+        "LACTIC ACID",
+        "GLYCINE SOJA OIL",
+        "HYDROLYZED KERATIN",
+        "HYDROLYZED WHEAT PROTEIN",
+        "HYDROLYZED SOY PROTEIN",
+        "HYDROLYZED CORN PROTEIN"
+      ]
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P07",
+      "observed_ingredients": [
+        "Octyldodecyl Citrate Crosspolymer",
+        "Lactic Acid",
+        "Tartaric Acid"
+      ]
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P08",
+      "observed_ingredients": [
+        "HYDROLYZED VEGETABLE PROTEIN PG-PROPYL SILANETRIOL"
+      ]
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "V02",
+      "observed_ingredients": [
+        "LACTIC ACID",
+        "GLYCINE SOJA OIL",
+        "HYDROLYZED KERATIN",
+        "HYDROLYZED WHEAT PROTEIN",
+        "HYDROLYZED SOY PROTEIN",
+        "HYDROLYZED CORN PROTEIN"
+      ]
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "V03",
+      "observed_ingredients": [
+        "HYDROLYZED CORN PROTEIN",
+        "HYDROLYZED SOY PROTEIN",
+        "HYDROLYZED WHEAT PROTEIN"
+      ]
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "V04",
+      "observed_ingredients": [
+        "Hydroxypropyltrimonium Hydrolyzed Wheat Protein"
+      ]
+    }
+  ]
+}
