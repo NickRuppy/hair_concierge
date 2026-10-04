@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react"
 import { getGoalOptions } from "@/components/personal-plan-quiz/quiz-data"
 import { getLegacyQuizGoalIcon } from "@/components/quiz/legacy-quiz-visuals"
 import { QuizOptionCard } from "@/components/quiz/quiz-option-card"
+import { useProfileHasPersonalPlan } from "@/components/profile/profile-routine-access"
 import { Button } from "@/components/ui/button"
 import {
   canSaveGoals,
@@ -14,8 +15,11 @@ import {
   toggleGoal,
   type EditableGoal,
 } from "@/lib/profile/goals-draft"
+import { markRoutinePlanUpdatedPending } from "@/lib/personal-plan/routine/plan-updated-signal"
 import { PROFILE_CONFLICT_NOTICE, isProfileConflict } from "@/lib/profile/save-conflict"
+import { cn } from "@/lib/utils"
 import type { HairTexture } from "@/lib/vocabulary"
+import { useAuth } from "@/providers/auth-provider"
 import { useToast } from "@/providers/toast-provider"
 
 /** The quiz's goals helper (iOS goals question, „Wähle alles aus, was dir wichtig ist."). */
@@ -35,6 +39,9 @@ interface EditGoalsFlowProps {
 export function EditGoalsFlow({ initialGoals, hairTexture, returnTo }: EditGoalsFlowProps) {
   const router = useRouter()
   const { toast } = useToast()
+  const { user } = useAuth()
+  const userId = user?.id ?? null
+  const hasPersonalPlan = useProfileHasPersonalPlan()
   const [selectedGoals, setSelectedGoals] = useState<EditableGoal[]>(initialGoals)
   const [saving, setSaving] = useState(false)
   const options = useMemo(() => getGoalOptions(hairTexture ?? undefined), [hairTexture])
@@ -73,6 +80,13 @@ export function EditGoalsFlow({ initialGoals, hairTexture, returnTo }: EditGoals
       }
       if (!response.ok) throw new Error("goals save failed")
 
+      // The body only matters for the plan outcome; a body that is not JSON must not turn a
+      // saved edit into an error.
+      const body = (await response.json().catch(() => null)) as {
+        plan?: { outcome?: string }
+      } | null
+      if (body?.plan?.outcome === "applied" && userId) markRoutinePlanUpdatedPending(userId)
+
       router.push(returnTo)
       router.refresh()
     } catch (err) {
@@ -83,7 +97,7 @@ export function EditGoalsFlow({ initialGoals, hairTexture, returnTo }: EditGoals
       })
       setSaving(false)
     }
-  }, [saving, selectedGoals, initialGoals, router, returnTo, toast])
+  }, [saving, selectedGoals, initialGoals, router, returnTo, toast, userId])
 
   return (
     <div>
@@ -100,7 +114,7 @@ export function EditGoalsFlow({ initialGoals, hairTexture, returnTo }: EditGoals
       <h1 className="mb-2 font-header text-3xl leading-tight text-foreground">Deine Haarziele</h1>
       <p className="mb-6 text-sm text-[var(--text-sub)]">{GOALS_HELPER}</p>
 
-      <div className="mb-8 flex flex-col gap-3">
+      <div className={cn("flex flex-col gap-3", hasPersonalPlan ? "mb-4" : "mb-8")}>
         {options.map((option, index) => (
           <QuizOptionCard
             key={option.value}
@@ -114,6 +128,12 @@ export function EditGoalsFlow({ initialGoals, hairTexture, returnTo }: EditGoals
           />
         ))}
       </div>
+
+      {hasPersonalPlan ? (
+        <p className="mb-4 text-sm text-muted-foreground">
+          Beim Speichern berechnen wir deinen Plan mit den neuen Angaben neu.
+        </p>
+      ) : null}
 
       <Button
         type="button"

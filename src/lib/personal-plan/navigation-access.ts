@@ -70,6 +70,16 @@ export type AuthenticatedAppNavigationAccess =
        */
       hasRoutineAccess: boolean
       /**
+       * Whether a `personal_plans` row exists for this user (journey access
+       * `kind === "personal_plan"`). `kind: "personal_plan"` on this object is
+       * broader: it also covers `personal_plan_start` (paid, no plan row yet)
+       * and the synthetic free-tier nav. For the free-tier nav it is `false` because no
+       * journey access is loaded — NOT because no plan exists (a lapsed or freemium user
+       * can own one); the profile layout resolves the tier-independent fact itself, see
+       * `loadProfileHasPersonalPlan` in `profile-plan-ownership.ts`.
+       */
+      hasPersonalPlan: boolean
+      /**
        * Tabs to show the never-visited dot on (Task 2.9, decision 14).
        * Always a subset of `items`' keys — computed from the same list, so
        * a currently-ungated tab never dots — and never contains "routine"
@@ -138,6 +148,7 @@ export function toAuthenticatedAppNavigationAccess(
       access.kind === "personal_plan" ? access.hasPendingRoutineProposal === true : false,
     unvisitedNavSurfaces,
     hasRoutineAccess: access.allowed.stage4,
+    hasPersonalPlan: access.kind === "personal_plan",
     // A `personal_plan` / `personal_plan_start` journey access is only ever
     // resolved for a user with current paid app access (see
     // `resolvePersonalPlanJourneyAccess`) — always "premium", independent of
@@ -161,6 +172,7 @@ function freeTierPersonalPlanNavigationAccess(): AuthenticatedAppNavigationAcces
     items: PERSONAL_PLAN_NAVIGATION_ITEMS,
     hasPendingRoutineProposal: false,
     hasRoutineAccess: false,
+    hasPersonalPlan: false,
     unvisitedNavSurfaces: EMPTY_UNVISITED_NAV_SURFACES,
     tier: "free",
   }
@@ -179,6 +191,15 @@ function freeTierPersonalPlanNavigationAccess(): AuthenticatedAppNavigationAcces
  */
 export function hasRoutineTabAccess(access: AuthenticatedAppNavigationAccess): boolean {
   return access.kind === "personal_plan" && access.hasRoutineAccess
+}
+
+/**
+ * Whether the user already has a Personal Plan (a `personal_plans` row), as
+ * opposed to being a buyer who is still on the way to one. Gates the
+ * „Plan wird neu berechnet“ notice on the profile editors.
+ */
+export function hasPersonalPlanRecord(access: AuthenticatedAppNavigationAccess): boolean {
+  return access.kind === "personal_plan" && access.hasPersonalPlan
 }
 
 export async function resolveAuthenticatedAppNavigationAccess(

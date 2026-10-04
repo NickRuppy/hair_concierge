@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises"
 import { PGlite } from "@electric-sql/pglite"
 import { uuid_ossp } from "@electric-sql/pglite/contrib/uuid_ossp"
 
+import { commercePrerequisitesSql } from "./personal-plan-migration-admission.fixtures"
+
 /**
  * Shared PGlite harness for the two Stage-2/Stage-3 activation RPCs added in
  * PR 1 (`personal_plan_complete_stage2_module`,
@@ -221,18 +223,108 @@ export async function applyUserFactsLock(pg: PersonalPlanTestDb): Promise<void> 
   await pg.exec(await readFile(new URL(USER_FACTS_LOCK_MIGRATION, ROOT), "utf8"))
 }
 
+/**
+ * Opt-in chain extension (`{ stage1Sources: true }`, central user profile PR2 task 2): the
+ * Stage-1 source identity of an initial Need version and the migration-enrolment admission,
+ * from the REAL files, each spliced into the chain right after the entry it follows in deploy
+ * order, plus `personal_plan_rebase_on_facts_v1` at the end.
+ *
+ *   20260812143000  `personal_plan_need_versions.stage1_source_kind` / `stage1_source_lead_id`
+ *                   (+ the initial-source CHECK) and the 10-argument
+ *                   `personal_plan_create_or_reuse_initial_need`. Deploy position: after
+ *                   20260811154526, before 20260817085000.
+ *   20260828104243  `personal_plan_migration_enrollments`, the paid-migration admission RPCs
+ *                   and the LATEST `personal_plan_create_or_reuse_initial_need` (the migration
+ *                   short-circuit, F02). Deploy position: after 20260825140000, before
+ *                   20260925100000.
+ *   20261003150000  `personal_plan_rebase_on_facts_v1` (the migration under test). Nothing in
+ *                   it touches `hair_profiles` DDL, so its position relative to the lock is
+ *                   immaterial; it is applied last in the list, before the lock.
+ *
+ * Why opt-in and not the default chain: the new CHECK makes every initial version name a real
+ * source (a prepared artifact or a legacy lead), so `createInitialNeed` (NULL artifact) and every
+ * suite built on it would stop working; `personal-plan-unified-migrations.test.ts` applies these
+ * two files ITSELF on top of the default chain (with the same commerce stubs), and
+ * `mobile-profile-facts-pglite.fixtures.ts` creates its own `public.leads`. Changing the default
+ * would therefore rewrite ~20 unrelated suites and the Docker proofs (`scripts/mobile/
+ * proof-database.ts`); the opt-in leaves them byte-identical.
+ *
+ * Shape-only stubs it adds (FK targets / tables the two files' SQL-language functions are
+ * validated against at CREATE time — `check_function_bodies` is on): `public.gen_random_uuid()`
+ * (the commerce stub's column default), the `commercePrerequisitesSql` tables shared with the
+ * admission suites (`leads`, `funnel_sessions`, the one-time checkout / purchase tables,
+ * `billing_subscriptions`, `manual_access_grants`, the test enrolments,
+ * `personal_plan_prepared_artifacts`), `auth.users`, the `private` schema, and the
+ * `profiles` columns the paid-migration authority reads. Exactly the set
+ * `personal-plan-unified-migrations.test.ts` already composes over this chain.
+ */
+const STAGE1_SOURCE_MIGRATIONS: ReadonlyArray<{ after: string; file: string }> = [
+  {
+    after: "supabase/migrations/20260811154526_personal_plan_initial_routine_activation_v1.sql",
+    file: "supabase/migrations/20260812143000_personal_plan_legacy_quiz_source.sql",
+  },
+  {
+    after: "supabase/migrations/20260825140000_personal_plan_refinement_recompute_activation.sql",
+    file: "supabase/migrations/20260828104243_personal_plan_paid_migration_admission.sql",
+  },
+]
+
+export const PERSONAL_PLAN_REBASE_ON_FACTS_MIGRATION =
+  "supabase/migrations/20261003150000_personal_plan_rebase_on_facts.sql"
+
+/**
+ * W01: the 10-argument `personal_plan_create_or_reuse_initial_need` no longer re-points a plan the
+ * facts lane has rebased (`applied_facts_revision` set). Opt-in chain only — the default chain has
+ * no 10-argument creator. Applied right after the rebase migration, before the lock.
+ */
+export const PERSONAL_PLAN_CREATE_INITIAL_KEEPS_REBASED_HEAD_MIGRATION =
+  "supabase/migrations/20261003150100_personal_plan_create_initial_keeps_rebased_head.sql"
+
+const STAGE1_SOURCE_STUB_PREREQUISITES = `
+CREATE FUNCTION public.gen_random_uuid() RETURNS uuid LANGUAGE sql
+  AS $$ SELECT extensions.uuid_generate_v4() $$;
+CREATE SCHEMA IF NOT EXISTS private;
+CREATE TABLE auth.users (id uuid PRIMARY KEY, email text, email_confirmed_at timestamptz);
+ALTER TABLE public.profiles
+  ADD COLUMN email text,
+  ADD COLUMN subscription_status text,
+  ADD COLUMN current_period_end timestamptz,
+  ADD COLUMN created_at timestamptz DEFAULT now(),
+  ADD COLUMN updated_at timestamptz DEFAULT now();
+${commercePrerequisitesSql}
+`
+
+/** The migration files in the order a database is built, for the given options. */
+function migrationChain(options: { stage1Sources?: boolean }): string[] {
+  if (!options.stage1Sources) return [...MIGRATIONS]
+  const chain: string[] = []
+  for (const migration of MIGRATIONS) {
+    chain.push(migration)
+    for (const extra of STAGE1_SOURCE_MIGRATIONS) {
+      if (extra.after === migration) chain.push(extra.file)
+    }
+  }
+  for (const extra of STAGE1_SOURCE_MIGRATIONS) {
+    if (!chain.includes(extra.file)) throw new Error(`chain anchor missing for ${extra.file}`)
+  }
+  chain.push(PERSONAL_PLAN_REBASE_ON_FACTS_MIGRATION)
+  chain.push(PERSONAL_PLAN_CREATE_INITIAL_KEEPS_REBASED_HEAD_MIGRATION)
+  return chain
+}
+
 export async function migratedPersonalPlanDatabase(
   t: {
     after: (fn: () => Promise<void>) => void
   },
-  options: { lock?: boolean } = {},
+  options: { lock?: boolean; stage1Sources?: boolean } = {},
 ): Promise<PersonalPlanTestDb> {
   const pg = new PGlite({ extensions: { uuid_ossp } })
   t.after(async () => {
     await pg.close()
   })
   await pg.exec(STUB_PREREQUISITES)
-  for (const migration of MIGRATIONS) {
+  if (options.stage1Sources) await pg.exec(STAGE1_SOURCE_STUB_PREREQUISITES)
+  for (const migration of migrationChain(options)) {
     await pg.exec(await readFile(new URL(migration, ROOT), "utf8"))
   }
   if (options.lock !== false) await applyUserFactsLock(pg)
@@ -274,6 +366,161 @@ export async function createInitialNeed(
        $1::uuid, NULL, NULL, 1, 'v1', $2, '{"a":1}'::jsonb, '{"b":1}'::jsonb
      ) AS result`,
     [input.userId, input.inputHash],
+  )
+  return rows[0]!.result
+}
+
+/** `{ stage1Sources: true }` only: a legacy-quiz lead owned by the user (shape-only stub row). */
+export async function insertLegacyQuizLead(
+  pg: PersonalPlanTestDb,
+  input: { leadId: string; userId: string },
+): Promise<void> {
+  await pg.query(
+    `INSERT INTO public.leads (id, email, quiz_kind, status, user_id)
+     VALUES ($1, $2, 'legacy', 'linked', $3)`,
+    [input.leadId, `${input.userId}@example.test`, input.userId],
+  )
+}
+
+/**
+ * `{ stage1Sources: true }` only: the real 10-argument
+ * `personal_plan_create_or_reuse_initial_need` with a legacy-quiz source (the 8-argument
+ * wrapper used by `createInitialNeed` needs a prepared artifact once 20260812143000 applies).
+ */
+export async function createLegacyQuizInitialNeed(
+  pg: PersonalPlanTestDb,
+  input: {
+    userId: string
+    leadId: string
+    inputHash: string
+    enrollmentPurchaseSourceId?: string | null
+  },
+): Promise<InitialNeedResult> {
+  const { rows } = await pg.query<{ result: InitialNeedResult }>(
+    `SELECT public.personal_plan_create_or_reuse_initial_need(
+       $1::uuid, $2::uuid, NULL, 1, 'v1', $3, '{"a":1}'::jsonb, '{"b":1}'::jsonb,
+       'legacy_quiz_lead', $4::uuid
+     ) AS result`,
+    [input.userId, input.enrollmentPurchaseSourceId ?? null, input.inputHash, input.leadId],
+  )
+  return rows[0]!.result
+}
+
+// ---------------------------------------------------------------------------
+// Central user profile (PR2): `public.personal_plan_rebase_on_facts_v1`
+// (`{ stage1Sources: true }` only)
+// ---------------------------------------------------------------------------
+
+export type RebaseOnFactsResult =
+  | {
+      status: "rebased"
+      initialNeedVersionId: string
+      refinedNeedVersionId: string | null
+      cloneDraftId: string | null
+      revision: number
+      factsRevision: number
+    }
+  | { status: "unchanged"; initialNeedVersionId: string; revision: number }
+  | { status: "plan_revision_conflict"; currentRevision: number }
+  | { status: "facts_revision_conflict"; currentRevision: number }
+  | {
+      status: "draft_conflict"
+      currentDraftId: string | null
+      currentDraftRevision: number | null
+    }
+  | { status: "initial_conflict"; existingId: string }
+  | { status: "invalid_source"; reasonCode: string }
+
+export type RebaseOnFactsInput = {
+  userId: string
+  personalPlanId: string
+  expectedPlanRevision: number | null
+  expectedFactsRevision: number | null
+  initialId: string | null
+  schemaVersion?: number
+  computationVersion?: string
+  initialInputHash: string
+  initialInputSnapshot?: unknown
+  initialOutputSnapshot?: unknown
+  sourceDraftId?: string | null
+  expectedDraftRevision?: number | null
+  clone?: {
+    answers: unknown
+    completedQuestionIds: readonly string[]
+    answerProvenance: unknown
+  } | null
+  /** Rev. 4 step 4a: the care-habits facts written through the door inside the rebase. */
+  careHabits?: { patch: unknown; provenance: unknown } | null
+  refined?: {
+    schemaVersion?: number
+    computationVersion?: string
+    inputHash: string
+    inputSnapshot?: unknown
+    outputSnapshot?: unknown
+  } | null
+}
+
+function textArrayLiteral(values: readonly string[]): string {
+  return `{${values
+    .map((value) => `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"`)
+    .join(",")}}`
+}
+
+/** Calls the RPC by named notation, exactly the parameter names the TypeScript lane uses. */
+export async function rebaseOnFacts(
+  pg: PersonalPlanTestDb,
+  input: RebaseOnFactsInput,
+): Promise<RebaseOnFactsResult> {
+  const json = (value: unknown) => (value === undefined ? null : JSON.stringify(value))
+  const { rows } = await pg.query<{ result: RebaseOnFactsResult }>(
+    `SELECT public.personal_plan_rebase_on_facts_v1(
+       p_user_id => $1::uuid,
+       p_personal_plan_id => $2::uuid,
+       p_expected_plan_revision => $3::bigint,
+       p_expected_facts_revision => $4::integer,
+       p_initial_id => $5::uuid,
+       p_schema_version => $6::integer,
+       p_computation_version => $7::text,
+       p_initial_input_hash => $8::text,
+       p_initial_input_snapshot => $9::jsonb,
+       p_initial_output_snapshot => $10::jsonb,
+       p_source_draft_id => $11::uuid,
+       p_expected_draft_revision => $12::bigint,
+       p_clone_answers => $13::jsonb,
+       p_clone_completed_question_ids => $14::text[],
+       p_clone_answer_provenance => $15::jsonb,
+       p_care_habits_patch => $16::jsonb,
+       p_care_habits_provenance => $17::jsonb,
+       p_refined_schema_version => $18::integer,
+       p_refined_computation_version => $19::text,
+       p_refined_input_hash => $20::text,
+       p_refined_input_snapshot => $21::jsonb,
+       p_refined_output_snapshot => $22::jsonb
+     ) AS result`,
+    [
+      input.userId,
+      input.personalPlanId,
+      input.expectedPlanRevision,
+      input.expectedFactsRevision,
+      input.initialId,
+      input.schemaVersion ?? 1,
+      input.computationVersion ?? "v1",
+      input.initialInputHash,
+      json(input.initialInputSnapshot ?? { facts: "initial" }),
+      json(input.initialOutputSnapshot ?? { need: "initial" }),
+      input.sourceDraftId ?? null,
+      input.expectedDraftRevision ?? null,
+      input.clone ? json(input.clone.answers) : null,
+      input.clone ? textArrayLiteral(input.clone.completedQuestionIds) : null,
+      input.clone ? json(input.clone.answerProvenance) : null,
+      input.careHabits ? json(input.careHabits.patch) : null,
+      input.careHabits ? json(input.careHabits.provenance) : null,
+      input.refined ? (input.refined.schemaVersion ?? 1) : null,
+      input.refined ? (input.refined.computationVersion ?? "v1") : null,
+      input.refined ? input.refined.inputHash : null,
+      input.refined ? json(input.refined.inputSnapshot ?? { refined: "input" }) : null,
+      input.refined ? json(input.refined.outputSnapshot ?? { refined: "output" }) : null,
+    ],
   )
   return rows[0]!.result
 }
@@ -717,4 +964,83 @@ export async function readHairProfile(
     [userId],
   )
   return rows[0] ?? null
+}
+
+// ---------------------------------------------------------------------------
+// Central user profile (PR2 task 4): lineage / activation / concurrency proofs
+// ---------------------------------------------------------------------------
+
+/** The `{ stage1Sources: true }` chain and its stubs, for the real-Postgres two-session proof. */
+export const PERSONAL_PLAN_STAGE1_SOURCE_STUB_PREREQUISITES = STAGE1_SOURCE_STUB_PREREQUISITES
+export function personalPlanMigrationChain(options: { stage1Sources?: boolean }): string[] {
+  return migrationChain(options)
+}
+
+/**
+ * A PostgREST-shaped read client over PGlite for the services the facts-rebase proofs drive for
+ * real: `classifyModuleDrivenRefinedVersion` (a LIST read awaited as a thenable — unlike
+ * `pgliteReactivationClient`, whose thenable yields one row) and
+ * `createSupabaseRoutineSourceSyncRepository` (`loadPlan`, `claim`, `finish`). Only `select` +
+ * `eq` + `maybeSingle` / list, and the two outbox RPCs; anything else throws, so a service
+ * reaching an unexpected surface fails loudly instead of reading nothing.
+ */
+export function pgliteLineageClient(pg: PersonalPlanTestDb) {
+  return {
+    from(table: string) {
+      return {
+        select(columns: string) {
+          const filters: Array<[string, unknown]> = []
+          async function rows() {
+            const where = filters
+              .map(([column], index) => `${column} = $${index + 1}`)
+              .join(" AND ")
+            const { rows: found } = await pg.query<Record<string, unknown>>(
+              `SELECT ${columns} FROM public.${table}${where ? ` WHERE ${where}` : ""}`,
+              filters.map(([, value]) => value),
+            )
+            return found
+          }
+          const chain = {
+            eq(column: string, value: unknown) {
+              filters.push([column, value])
+              return chain
+            },
+            async maybeSingle() {
+              const found = await rows()
+              if (found.length > 1) return { data: null, error: new Error("multiple rows") }
+              return { data: found[0] ?? null, error: null }
+            },
+            then(
+              resolve: (value: { data: unknown; error: unknown }) => unknown,
+              reject?: (reason: unknown) => unknown,
+            ) {
+              return rows().then((found) => resolve({ data: found, error: null }), reject)
+            },
+          }
+          return chain
+        },
+      }
+    },
+    async rpc(functionName: string, args: Record<string, unknown>) {
+      if (functionName === "personal_plan_claim_owner_routine_source_changes") {
+        const { rows } = await pg.query<Record<string, unknown>>(
+          `SELECT * FROM public.personal_plan_claim_owner_routine_source_changes(
+             p_user_id => $1::uuid, p_personal_plan_id => $2::uuid,
+             p_limit => $3::integer, p_lease_seconds => $4::integer)`,
+          [args.p_user_id, args.p_personal_plan_id, args.p_limit, args.p_lease_seconds],
+        )
+        return { data: rows, error: null }
+      }
+      if (functionName === "personal_plan_finish_routine_source_change") {
+        const { rows } = await pg.query<{ result: boolean }>(
+          `SELECT public.personal_plan_finish_routine_source_change(
+             p_outbox_id => $1::uuid, p_lease_token => $2::uuid,
+             p_processed_revision => $3::bigint, p_error_code => $4::text) AS result`,
+          [args.p_outbox_id, args.p_lease_token, args.p_processed_revision, args.p_error_code],
+        )
+        return { data: rows[0]!.result, error: null }
+      }
+      throw new Error(`pgliteLineageClient: unsupported rpc ${functionName}`)
+    },
+  }
 }

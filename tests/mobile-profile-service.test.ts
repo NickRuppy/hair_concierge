@@ -238,6 +238,7 @@ test("refined owner preserves explicit detailed answers, refreshes assumptions a
         result_refined_need_version_id: "refined",
         revision: 1,
         status: "complete",
+        updated_at: "2026-01-01T00:00:00Z",
         answers: resolved.answers,
         completed_question_ids: resolved.orderedQuestionIds,
         answer_provenance: Object.fromEntries(
@@ -389,6 +390,7 @@ test("complete habits preserve reported heat when only a product question is ass
         result_refined_need_version_id: null,
         revision: 1,
         status: "in_progress",
+        updated_at: "2026-01-01T00:00:00Z",
         module_projections: { habits: { needVersionId: "refined", projectedAtRevision: 1 } },
         answers: resolution.answers,
         completed_question_ids: userIds,

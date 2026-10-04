@@ -143,6 +143,13 @@ export type Stage2ModuleProjection = {
   needVersionId: string
   projectedAtRevision: number
   stage3Handoff: boolean
+  /**
+   * Lineage tag of a SYSTEM projection: the facts rebase writes entries for a
+   * new refined version with `"facts_rebase"`, carrying the source draft's
+   * `stage3Handoff` unchanged. Absent for a projection the user's own module
+   * completion produced. No other value is ever kept.
+   */
+  origin?: "facts_rebase"
 }
 export type Stage2ModuleProjections = Partial<Record<Stage2Module, Stage2ModuleProjection>>
 

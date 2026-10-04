@@ -19,7 +19,10 @@ import type { ProfileMembershipState } from "@/lib/billing/trial-membership"
 import { ManageSubscriptionButton } from "@/components/profile/manage-subscription-button"
 import { MemoryToggleControl } from "@/components/profile/memory-toggle-control"
 import { useProfilePageTier } from "@/components/profile/profile-page-tier"
-import { useProfileRoutineAccess } from "@/components/profile/profile-routine-access"
+import {
+  useProfileHasPersonalPlan,
+  useProfileRoutineAccess,
+} from "@/components/profile/profile-routine-access"
 import { ProfilePlanSwitcher } from "@/components/profile/profile-plan-switcher"
 import {
   filterRetainedPersonalPlanProductRows,
@@ -63,6 +66,7 @@ import { cn } from "@/lib/utils"
 import { useAuth } from "@/providers/auth-provider"
 import { useToast } from "@/providers/toast-provider"
 import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
+import { markRoutinePlanUpdatedPending } from "@/lib/personal-plan/routine/plan-updated-signal"
 import {
   buildHairProfileSection,
   hasRefinementDeferredRoles,
@@ -393,6 +397,7 @@ export default function ProfilePage() {
   // reached Stage 4 — the Routine tab is hidden for them and `/routine` renders
   // its unavailable state. Same signal, so the two can never disagree.
   const hasRoutineAccess = useProfileRoutineAccess()
+  const hasPersonalPlan = useProfileHasPersonalPlan()
   // T15: server-resolved tier for the Haar-Check edit lock and the Verfeinerungs-Teaser —
   // see `ProfilePageTierProvider` (set in `layout.tsx` from `loadAuthenticatedAppPageTier`).
   const tier = useProfilePageTier()
@@ -955,8 +960,13 @@ export default function ProfilePage() {
         return
       }
       if (!response.ok) throw new Error("profile answers save failed")
-      const body = (await response.json()) as { hairProfile?: HairProfile }
+      const body = (await response.json()) as {
+        hairProfile?: HairProfile
+        plan?: { outcome?: string }
+      }
       if (!body.hairProfile) throw new Error("profile answers save returned no profile")
+      // The plan was recomputed on this save: the Routine tab shows „Plan aktualisiert“ once.
+      if (body.plan?.outcome === "applied" && userId) markRoutinePlanUpdatedPending(userId)
 
       const nextProfile = body.hairProfile
       setHairProfile(nextProfile)
@@ -1156,6 +1166,7 @@ export default function ProfilePage() {
                   registerField={(key, node) => {
                     quizFieldRefs.current[key] = node
                   }}
+                  showPlanRecomputeNotice={hasPersonalPlan}
                 />
               ) : (
                 <div className="space-y-4">

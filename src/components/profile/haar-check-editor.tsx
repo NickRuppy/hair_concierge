@@ -124,6 +124,7 @@ export function HaarCheckEditor({
   onSave,
   onCancel,
   registerField,
+  showPlanRecomputeNotice = false,
 }: {
   draft: HaarCheckDraft
   initialDraft: HaarCheckDraft
@@ -132,6 +133,8 @@ export function HaarCheckEditor({
   onSave: () => void
   onCancel: () => void
   registerField: (key: string, node: HTMLDivElement | null) => void
+  /** Plan users only: saving recomputes their Personal Plan, so say so above the buttons. */
+  showPlanRecomputeNotice?: boolean
 }) {
   const problemOptions = getConcernOptions(draft.texture)
   const saveBlock = haarCheckSaveBlock(draft, initialDraft)
@@ -450,7 +453,12 @@ export function HaarCheckEditor({
         </div>
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-2">
+      {showPlanRecomputeNotice ? (
+        <p className="mt-6 text-sm text-muted-foreground">
+          Beim Speichern berechnen wir deinen Plan mit den neuen Angaben neu.
+        </p>
+      ) : null}
+      <div className={cn(showPlanRecomputeNotice ? "mt-3" : "mt-6", "flex flex-wrap gap-2")}>
         <Button
           type="button"
           className="w-auto"

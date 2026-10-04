@@ -11,7 +11,11 @@ const userId = "11111111-1111-4111-8111-111111111111"
 // is gone; the web editors save through `POST /api/profile/answers` (profile-answers-route.test.ts).
 test("profile route modules expose only supported HTTP handlers", () => {
   assert.deepEqual(Object.keys(profileRoute).sort(), ["GET"])
-  assert.deepEqual(Object.keys(answersRoute), ["POST"])
+  // `maxDuration` is route config (the plan rebase + routine recompute run inline), not a handler.
+  assert.deepEqual(
+    Object.keys(answersRoute).filter((key) => key !== "maxDuration"),
+    ["POST"],
+  )
 })
 
 test("the route auth seam rejects a missing server-session owner", async () => {
