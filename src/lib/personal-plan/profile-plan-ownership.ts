@@ -1,6 +1,5 @@
 import "server-only"
 
-import { resolvePersonalPlanMigrationAdmission } from "@/lib/personal-plan/migration-admission"
 import {
   hasPersonalPlanRecord,
   loadCachedAuthenticatedAppUserId,
@@ -58,37 +57,5 @@ export function loadProfileHasPersonalPlan(
   return resolveProfileHasPersonalPlan(navigation, {
     loadUserId: loadCachedAuthenticatedAppUserId,
     hasPlanRow: hasPersonalPlanRowForUser,
-  })
-}
-
-/**
- * Lets the Profil tab point a paying member without a plan at `/plan-bereit`,
- * where the migration runs. Costs one read-only RPC, only for viewers without a plan.
- */
-export async function resolveProfilePlanMigrationAvailable(
-  hasPersonalPlan: boolean,
-  deps: {
-    loadUserId: () => Promise<string | null>
-    loadMigrationStatus: (
-      userId: string,
-    ) => Promise<"ineligible" | "candidate" | "pending_source" | "ready">
-  },
-): Promise<boolean> {
-  if (hasPersonalPlan) return false
-  try {
-    const userId = await deps.loadUserId()
-    if (!userId) return false
-    const status = await deps.loadMigrationStatus(userId)
-    return status === "candidate" || status === "pending_source" || status === "ready"
-  } catch {
-    return false
-  }
-}
-
-export function loadProfilePlanMigrationAvailable(hasPersonalPlan: boolean): Promise<boolean> {
-  return resolveProfilePlanMigrationAvailable(hasPersonalPlan, {
-    loadUserId: loadCachedAuthenticatedAppUserId,
-    loadMigrationStatus: async (userId) =>
-      (await resolvePersonalPlanMigrationAdmission({ client: createAdminClient(), userId })).status,
   })
 }

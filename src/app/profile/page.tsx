@@ -21,7 +21,6 @@ import { MemoryToggleControl } from "@/components/profile/memory-toggle-control"
 import { useProfilePageTier } from "@/components/profile/profile-page-tier"
 import {
   useProfileHasPersonalPlan,
-  useProfilePlanMigrationAvailable,
   useProfileRoutineAccess,
 } from "@/components/profile/profile-routine-access"
 import { ProfilePlanSwitcher } from "@/components/profile/profile-plan-switcher"
@@ -368,7 +367,6 @@ export default function ProfilePage() {
   // its unavailable state. Same signal, so the two can never disagree.
   const hasRoutineAccess = useProfileRoutineAccess()
   const hasPersonalPlan = useProfileHasPersonalPlan()
-  const planMigrationAvailable = useProfilePlanMigrationAvailable()
   // T15: server-resolved tier for the Haar-Check edit lock and the Verfeinerungs-Teaser —
   // see `ProfilePageTierProvider` (set in `layout.tsx` from `loadAuthenticatedAppPageTier`).
   const tier = useProfilePageTier()
@@ -1193,24 +1191,6 @@ export default function ProfilePage() {
               )}
             </CardContent>
           </Card>
-
-          {!hasPersonalPlan && planMigrationAvailable ? (
-            <div id="profile-plan-migration-prompt">
-              <InlinePromptCard
-                title="Dein persönlicher Plan fehlt noch"
-                text="Mit deinem Plan kannst du Styling, Alltag und Produkte hier anpassen."
-                action={
-                  <Button
-                    type="button"
-                    className="w-auto"
-                    onClick={() => router.push("/plan-bereit")}
-                  >
-                    Plan erstellen
-                  </Button>
-                }
-              />
-            </div>
-          ) : null}
 
           <Card
             id="profile-section-products"
