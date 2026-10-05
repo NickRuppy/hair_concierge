@@ -1,0 +1,106 @@
+[
+  {
+    "key": "innersense-brand",
+    "url": "https://innersensebeauty.com/collections/treatment/products/harmonic-treatment-oil",
+    "checked_at": "2026-10-04T08:01:06.868194+00:00",
+    "status": 200,
+    "final_url": "https://innersensebeauty.com/collections/treatment/products/harmonic-treatment-oil",
+    "bytes": 840097
+  },
+  {
+    "key": "innersense-brand-json",
+    "url": "https://innersensebeauty.com/products/harmonic-treatment-oil.js",
+    "checked_at": "2026-10-04T08:01:06.868727+00:00",
+    "status": 200,
+    "final_url": "https://innersensebeauty.com/products/harmonic-treatment-oil.js",
+    "bytes": 9056
+  },
+  {
+    "key": "innersense-belladonna",
+    "url": "https://www.belladonna-naturkosmetik.de/innersense-harmonic-treatment-oil-118-ml/850006575039",
+    "checked_at": "2026-10-04T08:01:06.868918+00:00",
+    "status": 200,
+    "final_url": "https://www.belladonna-naturkosmetik.de/innersense-harmonic-treatment-oil-118-ml/850006575039",
+    "bytes": 1001411
+  },
+  {
+    "key": "innersense-hagel118",
+    "url": "https://www.hagel-shop.de/innersense-harmonic-treatment-oil-118-ml.html",
+    "checked_at": "2026-10-04T08:01:06.869121+00:00",
+    "status": 200,
+    "final_url": "https://www.hagel-shop.de/innersense-harmonic-treatment-oil-118-ml.html",
+    "bytes": 368815
+  },
+  {
+    "key": "innersense-hagel29",
+    "url": "https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html",
+    "checked_at": "2026-10-04T08:01:06.869317+00:00",
+    "status": 200,
+    "final_url": "https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html",
+    "bytes": 371403
+  },
+  {
+    "key": "lovely-dm",
+    "url": "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+    "checked_at": "2026-10-04T08:01:06.869500+00:00",
+    "status": 200,
+    "final_url": "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+    "bytes": 11376
+  },
+  {
+    "key": "lovely-old-dm",
+    "url": "https://www.dm.de/langhaarmaedchen-shampoo-lovely-long-p4067796002621.html",
+    "checked_at": "2026-10-04T08:01:06.869662+00:00",
+    "status": 200,
+    "final_url": "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+    "bytes": 11376
+  },
+  {
+    "key": "herbal-dm",
+    "url": "https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera",
+    "checked_at": "2026-10-04T08:01:07.020447+00:00",
+    "status": 200,
+    "final_url": "https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera",
+    "bytes": 11376
+  },
+  {
+    "key": "herbal-mueller",
+    "url": "https://www.mueller.de/p/herbal-essences-feuchtigkeit-aloe-vera-pflegespuelung-IPN2963442/",
+    "checked_at": "2026-10-04T08:01:07.023387+00:00",
+    "status": 200,
+    "final_url": "https://www.mueller.de/p/herbal-essences-feuchtigkeit-aloe-vera-pflegespuelung-IPN2963442/",
+    "bytes": 355205
+  },
+  {
+    "key": "rossmann-innersense",
+    "url": "https://www.rossmann.de/de/search?text=Innersense%20Harmonic%20Treatment%20Oil",
+    "checked_at": "2026-10-04T08:01:07.055067+00:00",
+    "status": 200,
+    "final_url": "https://www.rossmann.de/de/search?text=Innersense%20Harmonic%20Treatment%20Oil",
+    "bytes": 3038
+  },
+  {
+    "key": "mueller-innersense",
+    "url": "https://www.mueller.de/search/?q=Innersense%20Harmonic%20Treatment%20Oil",
+    "checked_at": "2026-10-04T08:01:07.130295+00:00",
+    "status": 200,
+    "final_url": "https://www.mueller.de/search/?q=Innersense%20Harmonic%20Treatment%20Oil",
+    "bytes": 326799
+  },
+  {
+    "key": "amazon-innersense",
+    "url": "https://www.amazon.de/s?k=Innersense+Harmonic+Treatment+Oil",
+    "checked_at": "2026-10-04T08:01:07.133212+00:00",
+    "status": 200,
+    "final_url": "https://www.amazon.de/s?k=Innersense+Harmonic+Treatment+Oil",
+    "bytes": 2340
+  },
+  {
+    "key": "brand-home",
+    "url": "https://innersensebeauty.com/",
+    "checked_at": "2026-10-04T08:01:07.141761+00:00",
+    "status": 200,
+    "final_url": "https://innersensebeauty.com/",
+    "bytes": 641552
+  }
+]

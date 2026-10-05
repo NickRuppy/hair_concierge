@@ -1,0 +1,15 @@
+{
+  "records": [
+    {
+      "receipt": {
+        "mode": "rolled_back_dry_run",
+        "checked_at": "2026-10-03T14:04:59.380154+00:00",
+        "rows_verified": 5,
+        "aliases_exercised": 3,
+        "identifier_writes": 0,
+        "noncommercial_changes": 0,
+        "committed_product_writes": 0
+      }
+    }
+  ]
+}

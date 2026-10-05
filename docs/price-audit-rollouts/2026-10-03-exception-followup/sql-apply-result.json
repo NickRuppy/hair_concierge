@@ -1,0 +1,13 @@
+[
+  {
+    "receipt": {
+      "mode": "apply",
+      "checked_at": "2026-10-03T13:27:52.243949+00:00",
+      "rows_verified": 21,
+      "aliases_exercised": 1,
+      "identifier_writes": 1,
+      "noncommercial_changes": 0,
+      "committed_product_writes": 21
+    }
+  }
+]

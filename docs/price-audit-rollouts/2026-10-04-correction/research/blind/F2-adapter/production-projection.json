@@ -1,0 +1,70 @@
+{
+  "omittedResearchProperties": [
+    "conditioning_level",
+    "primary_focus",
+    "secondary_focus",
+    "damage_fit",
+    "texture_fit"
+  ],
+  "productionProjection": {
+    "adapter_version": "conditioner-production-adapter-v1",
+    "category_specs": {
+      "product_conditioner_rerank_specs": {
+        "balance_direction": "balanced",
+        "ingredient_flags": [
+          "oils",
+          "proteins",
+          "humectants"
+        ],
+        "repair_level": "medium",
+        "weight": "medium"
+      },
+      "product_conditioner_specs": [
+        {
+          "protein_moisture_balance": "stretches_bounces",
+          "thickness": "fine"
+        },
+        {
+          "protein_moisture_balance": "stretches_bounces",
+          "thickness": "normal"
+        },
+        {
+          "protein_moisture_balance": "stretches_bounces",
+          "thickness": "coarse"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_conditioner_rerank_specs": "Moderate deposition/weight potential from early fatty alcohol and nonvolatile sunflower oil; protein adds a possible film but does not prove heavy or persistent residue. Low understates the early nonvolatile oil accompanying the fatty base. High would overstate persistence/delivery: no silicone film or clearly dominant early cationic deposition system; multiple lipid names are not separate technologies. Evidence: #2 Cetearyl Alcohol, #3 Helianthus Annuus Hybrid Oil, #7 Hydrolyzed Wheat Protein, #18 Brassicyl Isoleucinate Esylate. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Medium temporary damage-support potential from the distinct hydrolyzed wheat protein film route in a conditioning emulsion. This is not structural repair. Low misses a named hydrolyzed-protein film candidate beyond baseline lubrication. High requires a materially stronger named bond route, absent in this packet. Evidence: #7 Hydrolyzed Wheat Protein, #2 Cetearyl Alcohol, #18 Brassicyl Isoleucinate Esylate. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Balanced is the best comparative prior: a distinct hydrolyzed wheat protein route sits alongside an early oil plus glycerin/betaine moisture-softness architecture. Moisture alone loses the plausible distinct R5 route at #7 in a rinse-out deposition context. Protein alone overstates dominance over oil #3 and humectants #4/#5; the protein percentage and substantivity remain unknown. Evidence: #3 Helianthus Annuus Hybrid Oil, #4 Glycerin, #5 Betaine, #7 Hydrolyzed Wheat Protein. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Ingredient flags are deterministic presence signals from the complete normalized INCI: oils, proteins, humectants.",
+      "category_specs.product_conditioner_rerank_specs.balance_direction": "Balanced is the best comparative prior: a distinct hydrolyzed wheat protein route sits alongside an early oil plus glycerin/betaine moisture-softness architecture. Moisture alone loses the plausible distinct R5 route at #7 in a rinse-out deposition context. Protein alone overstates dominance over oil #3 and humectants #4/#5; the protein percentage and substantivity remain unknown. Evidence: #3 Helianthus Annuus Hybrid Oil, #4 Glycerin, #5 Betaine, #7 Hydrolyzed Wheat Protein. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data.",
+      "category_specs.product_conditioner_rerank_specs.ingredient_flags": "Deterministic presence flags from the normalized complete INCI: oils, proteins, humectants. Presence flags do not establish concentration or finished-product performance.",
+      "category_specs.product_conditioner_rerank_specs.repair_level": "Medium temporary damage-support potential from the distinct hydrolyzed wheat protein film route in a conditioning emulsion. This is not structural repair. Low misses a named hydrolyzed-protein film candidate beyond baseline lubrication. High requires a materially stronger named bond route, absent in this packet. Evidence: #7 Hydrolyzed Wheat Protein, #2 Cetearyl Alcohol, #18 Brassicyl Isoleucinate Esylate. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data.",
+      "category_specs.product_conditioner_rerank_specs.weight": "Moderate deposition/weight potential from early fatty alcohol and nonvolatile sunflower oil; protein adds a possible film but does not prove heavy or persistent residue. Low understates the early nonvolatile oil accompanying the fatty base. High would overstate persistence/delivery: no silicone film or clearly dominant early cationic deposition system; multiple lipid names are not separate technologies. Evidence: #2 Cetearyl Alcohol, #3 Helianthus Annuus Hybrid Oil, #7 Hydrolyzed Wheat Protein, #18 Brassicyl Isoleucinate Esylate. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data.",
+      "category_specs.product_conditioner_specs": "Broad fit prior includes all three diameters because the selected weight prior is moderate. Fine is retained because high persistent deposition is not established. Coarse is included by the moderate-weight policy; restricting to fine/medium would apply the low-weight rule incorrectly. Evidence: derived: weightPotential=moderate. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Balanced is the best comparative prior: a distinct hydrolyzed wheat protein route sits alongside an early oil plus glycerin/betaine moisture-softness architecture. Moisture alone loses the plausible distinct R5 route at #7 in a rinse-out deposition context. Protein alone overstates dominance over oil #3 and humectants #4/#5; the protein percentage and substantivity remain unknown. Evidence: #3 Helianthus Annuus Hybrid Oil, #4 Glycerin, #5 Betaine, #7 Hydrolyzed Wheat Protein. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Current compatibility mapping: balanced -> stretches_bounces.",
+      "category_specs.product_conditioner_specs[0]": "Broad fit prior includes all three diameters because the selected weight prior is moderate. Fine is retained because high persistent deposition is not established. Coarse is included by the moderate-weight policy; restricting to fine/medium would apply the low-weight rule incorrectly. Evidence: derived: weightPotential=moderate. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Balanced is the best comparative prior: a distinct hydrolyzed wheat protein route sits alongside an early oil plus glycerin/betaine moisture-softness architecture. Moisture alone loses the plausible distinct R5 route at #7 in a rinse-out deposition context. Protein alone overstates dominance over oil #3 and humectants #4/#5; the protein percentage and substantivity remain unknown. Evidence: #3 Helianthus Annuus Hybrid Oil, #4 Glycerin, #5 Betaine, #7 Hydrolyzed Wheat Protein. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Current compatibility mapping: balanced -> stretches_bounces. Emitted row: fine/stretches_bounces.",
+      "category_specs.product_conditioner_specs[1]": "Broad fit prior includes all three diameters because the selected weight prior is moderate. Fine is retained because high persistent deposition is not established. Coarse is included by the moderate-weight policy; restricting to fine/medium would apply the low-weight rule incorrectly. Evidence: derived: weightPotential=moderate. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Balanced is the best comparative prior: a distinct hydrolyzed wheat protein route sits alongside an early oil plus glycerin/betaine moisture-softness architecture. Moisture alone loses the plausible distinct R5 route at #7 in a rinse-out deposition context. Protein alone overstates dominance over oil #3 and humectants #4/#5; the protein percentage and substantivity remain unknown. Evidence: #3 Helianthus Annuus Hybrid Oil, #4 Glycerin, #5 Betaine, #7 Hydrolyzed Wheat Protein. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Current compatibility mapping: balanced -> stretches_bounces. Emitted row: normal/stretches_bounces.",
+      "category_specs.product_conditioner_specs[2]": "Broad fit prior includes all three diameters because the selected weight prior is moderate. Fine is retained because high persistent deposition is not established. Coarse is included by the moderate-weight policy; restricting to fine/medium would apply the low-weight rule incorrectly. Evidence: derived: weightPotential=moderate. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Balanced is the best comparative prior: a distinct hydrolyzed wheat protein route sits alongside an early oil plus glycerin/betaine moisture-softness architecture. Moisture alone loses the plausible distinct R5 route at #7 in a rinse-out deposition context. Protein alone overstates dominance over oil #3 and humectants #4/#5; the protein percentage and substantivity remain unknown. Evidence: #3 Helianthus Annuus Hybrid Oil, #4 Glycerin, #5 Betaine, #7 Hydrolyzed Wheat Protein. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Current compatibility mapping: balanced -> stretches_bounces. Emitted row: coarse/stretches_bounces.",
+      "product.suitable_thicknesses": "Broad fit prior includes all three diameters because the selected weight prior is moderate. Fine is retained because high persistent deposition is not established. Coarse is included by the moderate-weight policy; restricting to fine/medium would apply the low-weight rule incorrectly. Evidence: derived: weightPotential=moderate. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+    },
+    "projection_sha256": "a377c2a6449cb783e0425c76de994a662d30b0ce59e998c6feb1b577c3da84a1",
+    "research_input_sha256": "3cfa297b00efd6f1db35fc6b6d5e0ab64a2b583339b36e8995808346665c138a",
+    "research_model_version": "conditioner-inci-v1.6",
+    "suitable_thicknesses": [
+      "fine",
+      "normal",
+      "coarse"
+    ]
+  },
+  "requiredProtocolRole": "conditioner_rinse_out",
+  "status": "projection_ready",
+  "summary": {
+    "productName": "alverde NATURKOSMETIK Conditioner Glanz, 200 ml",
+    "researchId": "F2"
+  },
+  "version": "conditioner-production-adapter-v1",
+  "warnings": [
+    "primary_focus is uncertain in a retained research-only field; it does not change the current production projection.",
+    "secondary_focus is uncertain in a retained research-only field; it does not change the current production projection.",
+    "care_direction is uncertain and affects a mapped production field; review the projection before approval."
+  ]
+}

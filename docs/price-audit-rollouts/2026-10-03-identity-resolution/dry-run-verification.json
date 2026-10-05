@@ -1,0 +1,12 @@
+{
+  "verified_at": "2026-10-03T14:06:03.133597+00:00",
+  "mode": "dry",
+  "catalog_rows_checked": 371,
+  "protected_rows_unchanged": 371,
+  "target_rows_verified": 5,
+  "committed_product_writes": 0,
+  "new_identifiers": 0,
+  "existing_identifiers_preserved": true,
+  "untargeted_rows_unchanged": 366,
+  "all_checks_passed": true
+}

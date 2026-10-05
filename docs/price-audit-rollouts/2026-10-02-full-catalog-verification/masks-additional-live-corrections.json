@@ -1,0 +1,131 @@
+{
+  "cohort": "masks_treatments",
+  "generated_at": "2026-10-02T15:13:13.580Z",
+  "purpose": "Replacement live-PDP evidence for five mask/treatment records whose prior proposed URLs were category, brand, redirected, or store-selected pages. Prices are the displayed single-item article price before shipping; no checkout was submitted.",
+  "records": [
+    {
+      "id": "27fafbbd-9a89-4335-aed0-5cf5a081ef5c",
+      "name": "Isana Professional Plex Maske",
+      "target": "ISANA PROFESSIONAL Plex Maske, 125 ml, registered GTIN 4305615975948.",
+      "verdict": "current_buyable_preferred_offer_confirmed",
+      "current_offer": {
+        "retailer": "rossmann.de",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-maske/p/4305615975948",
+        "price_eur": 2.49,
+        "package_value": 125,
+        "package_unit": "ml",
+        "observed_barcode": "4305615975948",
+        "availability": "Live direct PDP showed “Zum Warenkorb hinzufügen”; delivery Tue 06.10.26–Wed 07.10.26 and free delivery to Wunschfiliale."
+      },
+      "source_quote": "Live Rossmann rendered PDP: “ISANA PROFESSIONAL Plex Maske”, “125 ml (1 L = 19,92 €)”, “2 . 49 € Artikelpreis 2,49 €”, “Zum Warenkorb hinzufügen”, and the stated delivery window. Exact GTIN is the direct product URL identifier and the registered catalog identifier.",
+      "alternate_checks": [
+        {
+          "retailer": "rossmann.de",
+          "result": "Prior category/brand URL was rejected; this receipt uses the direct /p/4305615975948 PDP."
+        }
+      ],
+      "source_access_limits": "The rendered PDP did not visibly print a GTIN field; identity is established by its exact GTIN product URL together with the registered catalog GTIN. No cart or checkout action was taken.",
+      "checked_at": "2026-10-02T15:13:13.580Z"
+    },
+    {
+      "id": "2544de60-e295-47ec-98a1-6b4ca58ce4be",
+      "name": "Kopfhautpeeling Tiefenreinigung",
+      "target": "ISANA PROFESSIONAL Kopfhautpeeling Tiefenreinigung, 150 ml, registered GTIN 4068134100023.",
+      "verdict": "current_buyable_preferred_offer_confirmed",
+      "current_offer": {
+        "retailer": "rossmann.de",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-kopfhautpeeling-tiefenreinigung/p/4068134100023",
+        "price_eur": 2.99,
+        "package_value": 150,
+        "package_unit": "ml",
+        "observed_barcode": "4068134100023",
+        "availability": "Live direct PDP showed “Zum Warenkorb hinzufügen”; delivery Tue 06.10.26–Wed 07.10.26 and free delivery to Wunschfiliale."
+      },
+      "source_quote": "Live Rossmann rendered PDP: “ISANA PROFESSIONAL Kopfhautpeeling Tiefenreinigung”, “150 ml (1 L = 19,93 €)”, “2 . 99 € Artikelpreis 2,99 €”, “Zum Warenkorb hinzufügen”, and the stated delivery window. Exact GTIN is the direct product URL identifier and the registered catalog identifier.",
+      "alternate_checks": [
+        {
+          "retailer": "rossmann.de",
+          "result": "Prior category/brand URL was rejected; this receipt uses the direct /p/4068134100023 PDP."
+        }
+      ],
+      "source_access_limits": "The rendered PDP did not visibly print a GTIN field; identity is established by its exact GTIN product URL together with the registered catalog GTIN. No cart or checkout action was taken.",
+      "checked_at": "2026-10-02T15:13:13.580Z"
+    },
+    {
+      "id": "1bf36485-3fe8-4fe0-9a03-b2bf7b451f0c",
+      "name": "Being (by ZURU) Mega Moisture Haarmaske",
+      "target": "Being Mega Moisture Haarmaske, 354 ml, registered GTIN 4895248006008.",
+      "verdict": "current_buyable_preferred_offer_confirmed",
+      "current_offer": {
+        "retailer": "rossmann.de",
+        "url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-moisture-haarmaske/p/4895248006008",
+        "price_eur": 6.79,
+        "package_value": 354,
+        "package_unit": "ml",
+        "observed_barcode": "4895248006008",
+        "availability": "Live direct PDP marked “Nur Online”, showed “Zum Warenkorb hinzufügen”, delivery Tue 06.10.26–Wed 07.10.26, and free delivery to Wunschfiliale."
+      },
+      "source_quote": "Live Rossmann rendered PDP: “Being Mega Moisture Haarmaske”, “354 ml (1 L = 19,18 €)”, “6 . 79 € Artikelpreis 6,79 €”, “Zum Warenkorb hinzufügen”, and the stated delivery window. Exact GTIN is the direct product URL identifier and the registered catalog identifier.",
+      "alternate_checks": [
+        {
+          "retailer": "rossmann.de",
+          "result": "Prior brand-category URL was rejected; this receipt uses the direct /p/4895248006008 PDP."
+        }
+      ],
+      "source_access_limits": "The rendered PDP did not visibly print a GTIN field; identity is established by its exact GTIN product URL together with the registered catalog GTIN. No cart or checkout action was taken.",
+      "checked_at": "2026-10-02T15:13:13.580Z"
+    },
+    {
+      "id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "target": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung, 200 ml.",
+      "verdict": "current_offer_not_verified",
+      "current_offer": {
+        "retailer": null,
+        "url": null,
+        "price_eur": null,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcode": null,
+        "availability": "No live, direct, buyable German retailer PDP was verified in this bounded follow-up."
+      },
+      "source_quote": "Live official Guhl product page https://www.guhl.com/produkt/panthenol-reparatur/ identifies the “2in1 Kur & Spülung” as 200 ml and lists dm, Rossmann, Müller and Amazon as retailers, but gives no current purchasable offer or price.",
+      "alternate_checks": [
+        {
+          "retailer": "hagel-shop.de",
+          "result": "The prior proposed URL resolves to a Masken/Kuren category page, so it cannot verify this item."
+        },
+        {
+          "retailer": "mueller.de",
+          "result": "The former exact PPN3052207 product URL is no longer a usable live exact PDP; this is not evidence of discontinuation."
+        }
+      ],
+      "source_access_limits": "Manufacturer identity and 200 ml package are current, but no price, barcode, or buyability is asserted. Category/redirect pages and failed/obsolete PDP access are not treated as availability evidence.",
+      "checked_at": "2026-10-02T15:13:13.580Z"
+    },
+    {
+      "id": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+      "name": "Jean&Len Tiefenreparatur Haarkur",
+      "target": "Jean&Len Haarkur Kokosöl/Macadamia / Tiefenreparatur, 250 ml, registered GTIN 4262401737824.",
+      "verdict": "current_buyable_preferred_offer_confirmed",
+      "current_offer": {
+        "retailer": "mueller.de",
+        "url": "https://www.mueller.de/p/jean-len-haarkur-kokosoel-macadamia-PPN3097814/",
+        "price_eur": 5.49,
+        "package_value": 250,
+        "package_unit": "ml",
+        "observed_barcode": "4262401737824",
+        "availability": "Live direct Müller PDP showed “Lieferbar in 2-3 Werktagen” and “In den Warenkorb”."
+      },
+      "source_quote": "Live Müller rendered PDP: “Jean&Len Haarkur Kokosöl/Macadamia”, “250 ml”, “5,49 €”, “Lieferbar in 2-3 Werktagen”, and “In den Warenkorb”. Its product schema/image path contains GTIN 4262401737824; the page description identifies it as the Tiefenreparatur Haarkur with coconut oil and macadamia.",
+      "alternate_checks": [
+        {
+          "retailer": "budni.de",
+          "result": "Prior price depended on selected store and was not used as a current online offer."
+        }
+      ],
+      "source_access_limits": "The direct Müller PDP and its page source establish the GTIN/product/package relationship. No checkout was submitted.",
+      "checked_at": "2026-10-02T15:13:13.580Z"
+    }
+  ]
+}

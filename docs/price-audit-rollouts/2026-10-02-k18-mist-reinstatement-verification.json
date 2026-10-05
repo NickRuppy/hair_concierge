@@ -1,0 +1,40 @@
+{
+  "verified_at": "2026-10-02T10:37:45.992Z",
+  "authorization": "signature mask = Bondbuilder; mist = Leave-in; can be a regular Leave-in",
+  "product_id": "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+  "category": "Leave-in",
+  "category_key": "leave_in",
+  "is_chaarlie_recommended": true,
+  "price_eur": 62.95,
+  "package": {
+    "value": 150,
+    "unit": "ml"
+  },
+  "link": "https://www.look-beautiful.de/professional-molecular-repair-hair-mist-sw13531",
+  "barcodes": [
+    {
+      "value": "858511001142",
+      "canonical_gtin14": "00858511001142"
+    },
+    {
+      "value": "858511001463",
+      "canonical_gtin14": "00858511001463"
+    }
+  ],
+  "publication_readiness_assertion": "passed before and after recommendation reinstatement",
+  "unrelated_product_fields_preserved": true,
+  "identifiers_preserved": true,
+  "category_and_protocol_rows_preserved": 15,
+  "not_quarantined": true,
+  "updated_at": "2026-10-02T10:37:09.795762+00:00",
+  "signature_mask": {
+    "id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+    "name": "K18 Leave-In Molecular Repair Hair Mask",
+    "category": "Bondbuilder",
+    "category_key": "bondbuilder",
+    "is_chaarlie_recommended": true,
+    "price_eur": "56.25",
+    "net_content_value": "50",
+    "net_content_unit": "ml"
+  }
+}

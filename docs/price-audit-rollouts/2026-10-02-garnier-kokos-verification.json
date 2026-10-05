@@ -1,0 +1,33 @@
+{
+  "verified_at": "2026-10-02T12:20:15.890Z",
+  "product_id": "8c3eda97-5009-40bb-959b-1a7d90f48b09",
+  "name": "Garnier Wahre Schätze Kokosmilch & Macadamia Nährende Spülung",
+  "category": "Conditioner",
+  "category_key": "conditioner",
+  "price_eur": 2.49,
+  "price_changed": false,
+  "package": {
+    "value": 200,
+    "unit": "ml"
+  },
+  "link": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-spuelung-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462327",
+  "purchase_link_status": "available",
+  "description": "Garnier Wahre Schätze Kokosmilch & Macadamia Nährende Spülung ist eine ausspülbare Pflegespülung für normales bis trockenes Haar.",
+  "is_chaarlie_recommended": true,
+  "barcodes": [
+    {
+      "value": "3600542462327",
+      "canonical_gtin14": "03600542462327"
+    },
+    {
+      "value": "3600542462839",
+      "canonical_gtin14": "03600542462839"
+    }
+  ],
+  "price_checked_at": "2026-10-02T12:19:27.673+00:00",
+  "purchase_link_checked_at": "2026-10-02T12:19:27.673+00:00",
+  "unrelated_product_fields_preserved": true,
+  "existing_identifiers_preserved": true,
+  "category_and_protocol_rows_preserved": 6,
+  "not_quarantined": true
+}

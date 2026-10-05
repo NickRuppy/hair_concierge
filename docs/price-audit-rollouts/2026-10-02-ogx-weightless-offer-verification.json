@@ -1,0 +1,483 @@
+{
+  "project_id": "pqdkhefxsxkyeqelqegq",
+  "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+  "applied_at": "2026-10-02T13:36:01.722Z",
+  "independently_verified_at": "2026-10-02T13:36:43.846Z",
+  "checks": {
+    "exact_offer": true,
+    "explicit_package": true,
+    "numeric_price_unchanged": true,
+    "fresh_check_dates": true,
+    "all_other_product_fields_preserved": true,
+    "all_identifier_rows_preserved": true,
+    "related_rows_preserved": true,
+    "available": true,
+    "active": true,
+    "recommended": true,
+    "not_quarantined": true
+  },
+  "source": {
+    "url": "https://www.hagel-shop.de/ogx-renewing-argan-oil-of-morocco-oil-weightless-reviving-dry-oil-118-ml.html",
+    "title": "OGX Renewing Argan Oil of Morocco Oil Weightless Reviving Dry Oil 118 ml",
+    "ean": "3574661563350",
+    "price_eur": 8.95,
+    "package": {
+      "value": 118,
+      "unit": "ml"
+    },
+    "availability": "http://schema.org/InStock",
+    "evidence": "EAN in Hagel product details HTML; price, name, currency and availability in JSON-LD Product/Offer"
+  },
+  "before": {
+    "product": {
+      "id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "name": "OGX Argan weightless Öl",
+      "tags": [
+        "öle"
+      ],
+      "brand": "OGX",
+      "origin": "curated",
+      "brand_id": "3bef8ddb-49c4-47a4-9103-faca256bb34a",
+      "category": "Öle",
+      "currency": "EUR",
+      "tom_take": null,
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-03/aa349c07-1add-44d4-9161-d99190182e5c/31-aa349c07-1add-44d4-9161-d99190182e5c-ogx-ogx-argan-weightless-ol-1f6eb28774b9.webp",
+      "is_active": true,
+      "price_eur": 8.95,
+      "created_at": "2026-03-03T12:34:40.179979+00:00",
+      "sort_order": 151,
+      "updated_at": "2026-08-15T07:48:47.645074+00:00",
+      "description": "OGX Argan weightless Öl (Silikone) ist ein Öle von OGX, empfohlen für mittelstarkes Haar bei trocken-oel.",
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/ogx-haaroel-moroccan-argan-oil-weightless-dry-out-oil-p22796976208.html",
+      "product_line_id": null,
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "short_description": null,
+      "suitable_concerns": [
+        "trocken-oel"
+      ],
+      "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/1f6eb28774b9ffe7b214d480fbe5d85bcb1358df88a142a63e232d7345e2b376.webp",
+      "purchase_link_status": "available",
+      "suitable_thicknesses": [
+        "normal"
+      ],
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    "identifiers": [
+      {
+        "id": "5f8cb22d-e6f1-4af4-b1c8-5ca7d5243177",
+        "source": "scanner-catalog-coverage-2026-08-26",
+        "created_at": "2026-09-01T06:33:35.923066+00:00",
+        "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+        "updated_at": "2026-09-01T06:33:35.923066+00:00",
+        "identifier_type": "ean",
+        "canonical_gtin14": "03574661563350",
+        "identifier_value": "3574661563350",
+        "normalized_identifier_value": "3574661563350"
+      }
+    ],
+    "not_quarantined": true,
+    "unchanged_fields_fingerprint": "d62a0c0be49a1b1a95579baebcfcca8b"
+  },
+  "after": {
+    "product": {
+      "id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "name": "OGX Argan weightless Öl",
+      "tags": [
+        "öle"
+      ],
+      "brand": "OGX",
+      "origin": "curated",
+      "brand_id": "3bef8ddb-49c4-47a4-9103-faca256bb34a",
+      "category": "Öle",
+      "currency": "EUR",
+      "tom_take": null,
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-03/aa349c07-1add-44d4-9161-d99190182e5c/31-aa349c07-1add-44d4-9161-d99190182e5c-ogx-ogx-argan-weightless-ol-1f6eb28774b9.webp",
+      "is_active": true,
+      "price_eur": 8.95,
+      "created_at": "2026-03-03T12:34:40.179979+00:00",
+      "sort_order": 151,
+      "updated_at": "2026-10-02T13:36:13.39163+00:00",
+      "description": "OGX Argan weightless Öl (Silikone) ist ein Öle von OGX, empfohlen für mittelstarkes Haar bei trocken-oel.",
+      "category_key": "oil",
+      "affiliate_link": "https://www.hagel-shop.de/ogx-renewing-argan-oil-of-morocco-oil-weightless-reviving-dry-oil-118-ml.html",
+      "product_line_id": null,
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-10-02T13:36:01.722+00:00",
+      "net_content_value": 118,
+      "short_description": null,
+      "suitable_concerns": [
+        "trocken-oel"
+      ],
+      "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/1f6eb28774b9ffe7b214d480fbe5d85bcb1358df88a142a63e232d7345e2b376.webp",
+      "purchase_link_status": "available",
+      "suitable_thicknesses": [
+        "normal"
+      ],
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-10-02T13:36:01.722+00:00"
+    },
+    "identifiers": [
+      {
+        "id": "5f8cb22d-e6f1-4af4-b1c8-5ca7d5243177",
+        "source": "scanner-catalog-coverage-2026-08-26",
+        "created_at": "2026-09-01T06:33:35.923066+00:00",
+        "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+        "updated_at": "2026-09-01T06:33:35.923066+00:00",
+        "identifier_type": "ean",
+        "canonical_gtin14": "03574661563350",
+        "identifier_value": "3574661563350",
+        "normalized_identifier_value": "3574661563350"
+      }
+    ],
+    "not_quarantined": true,
+    "unchanged_fields_fingerprint": "d62a0c0be49a1b1a95579baebcfcca8b"
+  },
+  "related_rows_before": [
+    {
+      "row": {
+        "id": "11f1f54d-ef35-4695-89ca-c321d1d49b7d",
+        "role": "dry_finish",
+        "cadence": null,
+        "category": "oil",
+        "placement": "all_hair",
+        "created_at": "2026-08-12T08:03:19.322286+00:00",
+        "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+        "source_url": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil",
+        "updated_at": "2026-08-13T06:58:13.851968+00:00",
+        "source_text": "Hersteller: weightless healing dry oil spray; Styling durch Aufsprühen für Glanz und Frizz-Kontrolle abschließen.",
+        "category_key": "oil",
+        "rinse_action": "leave_in",
+        "source_label": "OGX Produktseite",
+        "reapplication": "not_stated",
+        "guidance_payload": {
+          "role": "finish",
+          "scope": {
+            "kind": "product",
+            "category": "oil",
+            "productId": "aa349c07-1add-44d4-9161-d99190182e5c"
+          },
+          "steps": [
+            {
+              "action": "apply_product",
+              "stepKey": "mist-ogx-argan-dry",
+              "copyTemplateDe": "Nach dem Styling leicht über das Haar sprühen."
+            },
+            {
+              "action": "apply_product",
+              "stepKey": "finish-ogx-argan-dry",
+              "copyTemplateDe": "Als Glanz- und Frizz-Finish verteilen."
+            }
+          ],
+          "locale": "de",
+          "evidence": [
+            {
+              "checkedAt": "2026-08-11",
+              "sourceUrl": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil",
+              "sourceType": "manufacturer"
+            }
+          ],
+          "sequence": {
+            "after": [],
+            "anchor": "dry_finish",
+            "before": [],
+            "conflictsWith": []
+          },
+          "guidanceKey": "product-oil-aa349c07-1add-44d4-9161-d99190182e5c-dry",
+          "requirements": {
+            "requiredCatalogFacts": [
+              "oil.v2.weight",
+              "oil.v2.role_support"
+            ],
+            "requiredProfileFacts": [],
+            "requiredProtocolFacts": []
+          },
+          "protocolFacts": {
+            "rinse": "leave_in",
+            "amount": {
+              "kind": "qualitative",
+              "copyDe": "Leicht aufsprühen."
+            },
+            "cautions": [],
+            "reapplication": "none",
+            "applicationArea": "all_hair",
+            "contactTimeSeconds": null,
+            "conditionerRelationship": "not_applicable"
+          },
+          "schemaVersion": 1,
+          "protocolVersion": 1,
+          "applicationFamily": "dry_finish",
+          "compatibleDayTypes": [
+            "wash_day",
+            "intensive_care_day",
+            "styling_day",
+            "between_wash_care_day"
+          ],
+          "exactGuidanceRequired": true
+        },
+        "application_stage": "dry_finish",
+        "application_state": null,
+        "application_family": "dry_finish",
+        "guidance_payload_v2": {
+          "role": "finish",
+          "facts": {
+            "heat": null,
+            "rinse": "leave_in",
+            "amount": null,
+            "contactTime": null,
+            "applicationArea": "hair_lengths_ends",
+            "applicationState": "dry_hair",
+            "conditionerPolicy": "not_applicable"
+          },
+          "scope": {
+            "kind": "product",
+            "category": "oil",
+            "productId": "aa349c07-1add-44d4-9161-d99190182e5c"
+          },
+          "evidence": [
+            {
+              "checkedAt": "2026-08-11",
+              "sourceUrl": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil",
+              "sourceType": "manufacturer"
+            }
+          ],
+          "exactSteps": [],
+          "sourceRole": "dry_finish",
+          "workflowId": null,
+          "cautionCodes": [],
+          "contractKind": "product_pointer",
+          "schemaVersion": 2,
+          "applicationFamily": "dry_finish",
+          "runtimeBlockerCode": null,
+          "requiredCompanionProductId": null
+        },
+        "contact_time_seconds": null,
+        "instruction_modifiers": []
+      },
+      "table": "product_application_protocols"
+    },
+    {
+      "row": {
+        "created_at": "2026-08-15T08:56:39.94203+00:00",
+        "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+        "concern_key": "trocken-oel",
+        "category_key": "oil"
+      },
+      "table": "product_concern_eligibility"
+    },
+    {
+      "row": {
+        "thickness": "normal",
+        "created_at": "2026-03-21T21:04:15.617005+00:00",
+        "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+        "updated_at": "2026-03-21T21:04:15.617005+00:00",
+        "oil_purpose": "light_finish",
+        "oil_subtype": "trocken-oel",
+        "category_key": "oil",
+        "ingredient_flags": [
+          "silicones"
+        ]
+      },
+      "table": "product_oil_eligibility"
+    },
+    {
+      "row": {
+        "weight": "light",
+        "created_at": "2026-08-12T08:03:19.322286+00:00",
+        "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+        "updated_at": "2026-08-12T08:03:19.322286+00:00",
+        "category_key": "oil",
+        "role_support": [
+          "dry_finish"
+        ],
+        "provides_heat_protection": null
+      },
+      "table": "product_oil_specs"
+    },
+    {
+      "row": {
+        "thickness": "normal",
+        "created_at": "2026-08-15T08:56:39.94203+00:00",
+        "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+        "category_key": "oil"
+      },
+      "table": "product_thickness_eligibility"
+    }
+  ],
+  "related_rows_after": [
+    {
+      "row": {
+        "id": "11f1f54d-ef35-4695-89ca-c321d1d49b7d",
+        "role": "dry_finish",
+        "cadence": null,
+        "category": "oil",
+        "placement": "all_hair",
+        "created_at": "2026-08-12T08:03:19.322286+00:00",
+        "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+        "source_url": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil",
+        "updated_at": "2026-08-13T06:58:13.851968+00:00",
+        "source_text": "Hersteller: weightless healing dry oil spray; Styling durch Aufsprühen für Glanz und Frizz-Kontrolle abschließen.",
+        "category_key": "oil",
+        "rinse_action": "leave_in",
+        "source_label": "OGX Produktseite",
+        "reapplication": "not_stated",
+        "guidance_payload": {
+          "role": "finish",
+          "scope": {
+            "kind": "product",
+            "category": "oil",
+            "productId": "aa349c07-1add-44d4-9161-d99190182e5c"
+          },
+          "steps": [
+            {
+              "action": "apply_product",
+              "stepKey": "mist-ogx-argan-dry",
+              "copyTemplateDe": "Nach dem Styling leicht über das Haar sprühen."
+            },
+            {
+              "action": "apply_product",
+              "stepKey": "finish-ogx-argan-dry",
+              "copyTemplateDe": "Als Glanz- und Frizz-Finish verteilen."
+            }
+          ],
+          "locale": "de",
+          "evidence": [
+            {
+              "checkedAt": "2026-08-11",
+              "sourceUrl": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil",
+              "sourceType": "manufacturer"
+            }
+          ],
+          "sequence": {
+            "after": [],
+            "anchor": "dry_finish",
+            "before": [],
+            "conflictsWith": []
+          },
+          "guidanceKey": "product-oil-aa349c07-1add-44d4-9161-d99190182e5c-dry",
+          "requirements": {
+            "requiredCatalogFacts": [
+              "oil.v2.weight",
+              "oil.v2.role_support"
+            ],
+            "requiredProfileFacts": [],
+            "requiredProtocolFacts": []
+          },
+          "protocolFacts": {
+            "rinse": "leave_in",
+            "amount": {
+              "kind": "qualitative",
+              "copyDe": "Leicht aufsprühen."
+            },
+            "cautions": [],
+            "reapplication": "none",
+            "applicationArea": "all_hair",
+            "contactTimeSeconds": null,
+            "conditionerRelationship": "not_applicable"
+          },
+          "schemaVersion": 1,
+          "protocolVersion": 1,
+          "applicationFamily": "dry_finish",
+          "compatibleDayTypes": [
+            "wash_day",
+            "intensive_care_day",
+            "styling_day",
+            "between_wash_care_day"
+          ],
+          "exactGuidanceRequired": true
+        },
+        "application_stage": "dry_finish",
+        "application_state": null,
+        "application_family": "dry_finish",
+        "guidance_payload_v2": {
+          "role": "finish",
+          "facts": {
+            "heat": null,
+            "rinse": "leave_in",
+            "amount": null,
+            "contactTime": null,
+            "applicationArea": "hair_lengths_ends",
+            "applicationState": "dry_hair",
+            "conditionerPolicy": "not_applicable"
+          },
+          "scope": {
+            "kind": "product",
+            "category": "oil",
+            "productId": "aa349c07-1add-44d4-9161-d99190182e5c"
+          },
+          "evidence": [
+            {
+              "checkedAt": "2026-08-11",
+              "sourceUrl": "https://www.ogxbeauty.com/products/renewing-argan-oil-of-morocco-weightless-healing-dry-oil",
+              "sourceType": "manufacturer"
+            }
+          ],
+          "exactSteps": [],
+          "sourceRole": "dry_finish",
+          "workflowId": null,
+          "cautionCodes": [],
+          "contractKind": "product_pointer",
+          "schemaVersion": 2,
+          "applicationFamily": "dry_finish",
+          "runtimeBlockerCode": null,
+          "requiredCompanionProductId": null
+        },
+        "contact_time_seconds": null,
+        "instruction_modifiers": []
+      },
+      "table": "product_application_protocols"
+    },
+    {
+      "row": {
+        "created_at": "2026-08-15T08:56:39.94203+00:00",
+        "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+        "concern_key": "trocken-oel",
+        "category_key": "oil"
+      },
+      "table": "product_concern_eligibility"
+    },
+    {
+      "row": {
+        "thickness": "normal",
+        "created_at": "2026-03-21T21:04:15.617005+00:00",
+        "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+        "updated_at": "2026-03-21T21:04:15.617005+00:00",
+        "oil_purpose": "light_finish",
+        "oil_subtype": "trocken-oel",
+        "category_key": "oil",
+        "ingredient_flags": [
+          "silicones"
+        ]
+      },
+      "table": "product_oil_eligibility"
+    },
+    {
+      "row": {
+        "weight": "light",
+        "created_at": "2026-08-12T08:03:19.322286+00:00",
+        "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+        "updated_at": "2026-08-12T08:03:19.322286+00:00",
+        "category_key": "oil",
+        "role_support": [
+          "dry_finish"
+        ],
+        "provides_heat_protection": null
+      },
+      "table": "product_oil_specs"
+    },
+    {
+      "row": {
+        "thickness": "normal",
+        "created_at": "2026-08-15T08:56:39.94203+00:00",
+        "product_id": "aa349c07-1add-44d4-9161-d99190182e5c",
+        "category_key": "oil"
+      },
+      "table": "product_thickness_eligibility"
+    }
+  ]
+}

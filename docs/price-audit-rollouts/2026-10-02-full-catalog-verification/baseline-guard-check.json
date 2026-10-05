@@ -1,0 +1,10 @@
+{
+  "readback_at": "2026-10-03 10:32:25 UTC",
+  "baseline_count": 347,
+  "readback_count": 347,
+  "removed": [],
+  "added": [],
+  "drift_count": 0,
+  "drift": [],
+  "method": "Read-only latest SQL snapshot versus research baseline; numeric SQL values and equivalent timestamps normalized. GTIN comparison includes ean/gtin/barcode numeric values only; PZN is not a GTIN. All recognition identifiers, including PZN/SKUs/URLs, retained in catalog-readback-final.json for preservation guards. No UPDATE or transaction dry-run was executed. Earlier pre-apply-catalog-readback.json used incomplete gtin-only filtering and is superseded."
+}

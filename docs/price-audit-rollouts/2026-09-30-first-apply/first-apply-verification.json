@@ -1,0 +1,180 @@
+{
+  "verifiedAt": "2026-09-30T17:48:09.763Z",
+  "exitCode": 0,
+  "runDirectory": "/opt/chaarlie/price-audit/shared/runs/2026-09-30T17-21-01.617Z",
+  "summary": {
+    "startedAt": "2026-09-30T17:21:01.617Z",
+    "finishedAt": "2026-09-30T17:46:28.930Z",
+    "apply": true,
+    "total": 347,
+    "byAction": {
+      "auto_write": 82,
+      "review_proposal": 263,
+      "recheck_failed": 2
+    },
+    "byHost": {
+      "dm.de": {
+        "auto_write": 36,
+        "review_proposal": 180,
+        "recheck_failed": 0
+      },
+      "rossmann.de": {
+        "auto_write": 12,
+        "review_proposal": 51,
+        "recheck_failed": 0
+      },
+      "olaplex.de": {
+        "auto_write": 4,
+        "review_proposal": 0,
+        "recheck_failed": 0
+      },
+      "douglas.de": {
+        "auto_write": 8,
+        "review_proposal": 6,
+        "recheck_failed": 0
+      },
+      "shop-apotheke.com": {
+        "auto_write": 1,
+        "review_proposal": 0,
+        "recheck_failed": 0
+      },
+      "hagel-shop.de": {
+        "auto_write": 10,
+        "review_proposal": 1,
+        "recheck_failed": 0
+      },
+      "urban-alchemy.com": {
+        "auto_write": 0,
+        "review_proposal": 2,
+        "recheck_failed": 0
+      },
+      "flaconi.de": {
+        "auto_write": 0,
+        "review_proposal": 3,
+        "recheck_failed": 0
+      },
+      "de.nuxe.com": {
+        "auto_write": 0,
+        "review_proposal": 1,
+        "recheck_failed": 0
+      },
+      "eu.curlsmith.com": {
+        "auto_write": 0,
+        "review_proposal": 2,
+        "recheck_failed": 0
+      },
+      "amazon.de": {
+        "auto_write": 0,
+        "review_proposal": 3,
+        "recheck_failed": 0
+      },
+      "nutreeoil.com": {
+        "auto_write": 0,
+        "review_proposal": 1,
+        "recheck_failed": 0
+      },
+      "wella.com": {
+        "auto_write": 0,
+        "review_proposal": 1,
+        "recheck_failed": 0
+      },
+      "neqi-hair.com": {
+        "auto_write": 0,
+        "review_proposal": 1,
+        "recheck_failed": 0
+      },
+      "epres-hair.de": {
+        "auto_write": 0,
+        "review_proposal": 1,
+        "recheck_failed": 0
+      },
+      "jeanlen.de": {
+        "auto_write": 0,
+        "review_proposal": 3,
+        "recheck_failed": 0
+      },
+      "theordinary.com": {
+        "auto_write": 0,
+        "review_proposal": 1,
+        "recheck_failed": 0
+      },
+      "duitsevoordeeldrogist.nl": {
+        "auto_write": 0,
+        "review_proposal": 1,
+        "recheck_failed": 0
+      },
+      "cosmeterie.at": {
+        "auto_write": 0,
+        "review_proposal": 1,
+        "recheck_failed": 0
+      },
+      "bali-care.com": {
+        "auto_write": 0,
+        "review_proposal": 1,
+        "recheck_failed": 0
+      },
+      "rossmann.dk": {
+        "auto_write": 0,
+        "review_proposal": 1,
+        "recheck_failed": 0
+      },
+      "schwarzkopf.de": {
+        "auto_write": 0,
+        "review_proposal": 1,
+        "recheck_failed": 0
+      },
+      "nivea.de": {
+        "auto_write": 0,
+        "review_proposal": 1,
+        "recheck_failed": 0
+      },
+      "mueller.de": {
+        "auto_write": 11,
+        "review_proposal": 0,
+        "recheck_failed": 2
+      }
+    },
+    "reasons": {
+      "not_found: beobachtet unbekannt @ keine URL": 1,
+      "llm_reports_unavailable: 5.95 EUR @ https://www.dm.de/p/d/1455746/jean-und-len-haaroel-repair-keratin-und-mandel — verify link status manually": 1,
+      "llm_reports_unavailable: 2.75 EUR @ https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine — verify link status manually": 1,
+      "llm_reports_unavailable: 5.95 EUR @ https://www.dm.de/p/d/2973205/neqi-haarkur-treatment-treasures-peptide-power — verify link status manually": 1,
+      "not_found: beobachtet Balea Trockenshampoo Schaum Kopfhaut Sensitive, 150 ml @ https://www.dm.de/p/d/2974661/balea-trockenshampoo-schaum-kopfhaut-sensitive": 1,
+      "price delta 44% (12.49 -> 17.95 EUR) exceeds 30%": 1,
+      "llm_reports_unavailable: 1.45 EUR @ https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel — verify link status manually": 1,
+      "llm_reports_unavailable: 1.95 EUR @ https://www.dm.de/p/d/1711758/balea-trockenshampoo-kopfhaut-sensitive — verify link status manually": 1,
+      "llm_reports_unavailable: 2.75 EUR @ https://www.dm.de/p/d/1417521/balea-professional-haarmaske-3in1-aqua-hyaluron — verify link status manually": 2,
+      "llm_reports_unavailable: 3.75 EUR @ https://www.dm.de/p/d/1551780/batiste-trockenshampoo-original — verify link status manually": 1,
+      "price delta 85% (3.75 -> 6.95 EUR) exceeds 30%": 1,
+      "price delta 62% (3.99 -> 6.45 EUR) exceeds 30%": 1,
+      "llm_reports_unavailable: 5.95 EUR @ https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske — verify link status manually": 1,
+      "no_price_found: beobachtet OGX Renewing + Argan Oil of Morocco Weightless Reviving Dry Oil, 118 ml @ https://en.zalando.de/ogx/": 1,
+      "llm_reports_unavailable: 9.95 EUR @ https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost — verify link status manually": 1,
+      "llm_reports_unavailable: 2.95 EUR @ https://www.dm.de/p/d/3119223/syoss-haarkur-lamination-intense-glaze — verify link status manually": 1,
+      "llm_reports_unavailable: 6.95 EUR @ https://www.dm.de/p/d/3042328/wahre-schaetze-haaroel-curl-revival-elixir — verify link status manually": 1,
+      "llm_reports_unavailable: 2.45 EUR @ https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken — verify link status manually": 1,
+      "host_not_enabled": 208,
+      "not_found: beobachtet Alterra Haarmaske (20 ml) @ https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122": 1,
+      "not_found: beobachtet unbekannt @ https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127?error=productNotAvailableError": 1,
+      "not_found: beobachtet unbekannt @ https://www.rossmann.de/de/pflege-und-duft-gliss-aqua-revive-feuchtigkeit-4-in-1-bonding-haarmaske/p/4015100813555": 1,
+      "llm_reports_unavailable: 6.99 EUR @ https://www.flaconi.de/haare/sante/intense-hydration/sante-intense-hydration-haarmaske.html — verify link status manually": 1,
+      "not_found: beobachtet Redken All Soft Mega Curls Hydramelt Treatment, 150 ml @ https://www.douglas.de/de/p/5010905038": 1,
+      "llm_reports_unavailable: 19.59 EUR @ https://www.douglas.de/de/p/5011693052 — verify link status manually": 1,
+      "price delta 33% (75 -> 49.99 EUR) exceeds 30%": 1,
+      "llm_reports_unavailable: 16 EUR @ https://www.douglas.de/de/p/5011481841 — verify link status manually": 1,
+      "not_found: beobachtet K18 Professional Molecular Repair Hair Mist, 150 ml @ https://www.shop-apotheke.com/beauty/upm2E3FWK/k18-professional-molecular-repair-hair-mist.htm": 1,
+      "no_price_found: beobachtet OUAI Leave in Conditioner, 140 ml @ https://www.sephora.de/p/leave-in-conditioner-P3282012.html": 1,
+      "no_adapter_for_host": 26,
+      "http_error": 2
+    }
+  },
+  "proposedWrites": 82,
+  "appliedRows": 82,
+  "appliedPriceRefreshes": 80,
+  "appliedStatusOnly": 2,
+  "appliedLlmPriceRefreshes": 71,
+  "appliedRecommendedPriceRefreshes": 79,
+  "notApplied": [],
+  "dbWriteFailuresLogged": 0,
+  "databaseMismatches": []
+}

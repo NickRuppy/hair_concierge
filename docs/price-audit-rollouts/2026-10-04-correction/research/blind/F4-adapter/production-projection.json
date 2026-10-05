@@ -1,0 +1,71 @@
+{
+  "omittedResearchProperties": [
+    "conditioning_level",
+    "primary_focus",
+    "secondary_focus",
+    "damage_fit",
+    "texture_fit"
+  ],
+  "productionProjection": {
+    "adapter_version": "conditioner-production-adapter-v1",
+    "category_specs": {
+      "product_conditioner_rerank_specs": {
+        "balance_direction": "balanced",
+        "ingredient_flags": [
+          "oils",
+          "proteins",
+          "humectants"
+        ],
+        "repair_level": "medium",
+        "weight": "medium"
+      },
+      "product_conditioner_specs": [
+        {
+          "protein_moisture_balance": "stretches_bounces",
+          "thickness": "fine"
+        },
+        {
+          "protein_moisture_balance": "stretches_bounces",
+          "thickness": "normal"
+        },
+        {
+          "protein_moisture_balance": "stretches_bounces",
+          "thickness": "coarse"
+        }
+      ]
+    },
+    "field_rationales": {
+      "category_specs.product_conditioner_rerank_specs": "Moderate is the prescribed lean matching fallback: blind formula-only higher deposition was already uncertain, and the exact current product explicitly describes a finish without weighing hair down. Preserve the direct higher-potential trace and uncertainty; this claim does not prove low deposition. Low is not supported: early ester #4 plus cationic/fatty base #3/#5 and oil cluster #8-12 remain a substantive payload. High would turn the unresolved formula-versus-intended-finish conflict into restrictive matching; the standard explicitly requires moderate fallback here. Evidence: #3 Cetearyl Alcohol, #4 Isopropyl Palmitate, #5 Behentrimonium Chloride, #8-12 oil cluster, Exact product description: finish without weighing hair down; source https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Medium temporary fibre-film support potential from hydrolyzed keratin in a cationic conditioning chassis. Low would ignore the specific protein route beyond lubrication. High is rejected because no materially stronger named bond route is visible; keratin naming does not prove structural repair. Evidence: #7 Hydrolyzed Keratin, #5 Behentrimonium Chloride. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Balanced comparative care: a distinct hydrolyzed keratin route coexists with prominent glycerin/panthenol and a coherent ester/oil softness architecture. Moisture alone understates the distinct named keratin film candidate in a plausible cationic delivery context. Protein alone does not capture the earlier humectant/emollient pattern; order cannot quantify route dominance. Evidence: #2 Glycerin, #4 Isopropyl Palmitate, #6 Panthenol, #7 Hydrolyzed Keratin, #8-12 oils. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Ingredient flags are deterministic presence signals from the complete normalized INCI: oils, proteins, humectants.",
+      "category_specs.product_conditioner_rerank_specs.balance_direction": "Balanced comparative care: a distinct hydrolyzed keratin route coexists with prominent glycerin/panthenol and a coherent ester/oil softness architecture. Moisture alone understates the distinct named keratin film candidate in a plausible cationic delivery context. Protein alone does not capture the earlier humectant/emollient pattern; order cannot quantify route dominance. Evidence: #2 Glycerin, #4 Isopropyl Palmitate, #6 Panthenol, #7 Hydrolyzed Keratin, #8-12 oils. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data.",
+      "category_specs.product_conditioner_rerank_specs.ingredient_flags": "Deterministic presence flags from the normalized complete INCI: oils, proteins, humectants. Presence flags do not establish concentration or finished-product performance.",
+      "category_specs.product_conditioner_rerank_specs.repair_level": "Medium temporary fibre-film support potential from hydrolyzed keratin in a cationic conditioning chassis. Low would ignore the specific protein route beyond lubrication. High is rejected because no materially stronger named bond route is visible; keratin naming does not prove structural repair. Evidence: #7 Hydrolyzed Keratin, #5 Behentrimonium Chloride. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data.",
+      "category_specs.product_conditioner_rerank_specs.weight": "Moderate is the prescribed lean matching fallback: blind formula-only higher deposition was already uncertain, and the exact current product explicitly describes a finish without weighing hair down. Preserve the direct higher-potential trace and uncertainty; this claim does not prove low deposition. Low is not supported: early ester #4 plus cationic/fatty base #3/#5 and oil cluster #8-12 remain a substantive payload. High would turn the unresolved formula-versus-intended-finish conflict into restrictive matching; the standard explicitly requires moderate fallback here. Evidence: #3 Cetearyl Alcohol, #4 Isopropyl Palmitate, #5 Behentrimonium Chloride, #8-12 oil cluster, Exact product description: finish without weighing hair down; source https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data.",
+      "category_specs.product_conditioner_specs": "All three diameter priors follow the moderate lean weight fallback; fine is retained while the deposition conflict is unresolved. Retaining only medium/coarse would retain the restrictive high-weight consequence after selecting the mandatory moderate fallback. This broad prior is not proof of universally light finish; dosage and unresolved deposition remain relevant. Evidence: derived: weightPotential=moderate under section 10.1 fallback. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Balanced comparative care: a distinct hydrolyzed keratin route coexists with prominent glycerin/panthenol and a coherent ester/oil softness architecture. Moisture alone understates the distinct named keratin film candidate in a plausible cationic delivery context. Protein alone does not capture the earlier humectant/emollient pattern; order cannot quantify route dominance. Evidence: #2 Glycerin, #4 Isopropyl Palmitate, #6 Panthenol, #7 Hydrolyzed Keratin, #8-12 oils. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Current compatibility mapping: balanced -> stretches_bounces.",
+      "category_specs.product_conditioner_specs[0]": "All three diameter priors follow the moderate lean weight fallback; fine is retained while the deposition conflict is unresolved. Retaining only medium/coarse would retain the restrictive high-weight consequence after selecting the mandatory moderate fallback. This broad prior is not proof of universally light finish; dosage and unresolved deposition remain relevant. Evidence: derived: weightPotential=moderate under section 10.1 fallback. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Balanced comparative care: a distinct hydrolyzed keratin route coexists with prominent glycerin/panthenol and a coherent ester/oil softness architecture. Moisture alone understates the distinct named keratin film candidate in a plausible cationic delivery context. Protein alone does not capture the earlier humectant/emollient pattern; order cannot quantify route dominance. Evidence: #2 Glycerin, #4 Isopropyl Palmitate, #6 Panthenol, #7 Hydrolyzed Keratin, #8-12 oils. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Current compatibility mapping: balanced -> stretches_bounces. Emitted row: fine/stretches_bounces.",
+      "category_specs.product_conditioner_specs[1]": "All three diameter priors follow the moderate lean weight fallback; fine is retained while the deposition conflict is unresolved. Retaining only medium/coarse would retain the restrictive high-weight consequence after selecting the mandatory moderate fallback. This broad prior is not proof of universally light finish; dosage and unresolved deposition remain relevant. Evidence: derived: weightPotential=moderate under section 10.1 fallback. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Balanced comparative care: a distinct hydrolyzed keratin route coexists with prominent glycerin/panthenol and a coherent ester/oil softness architecture. Moisture alone understates the distinct named keratin film candidate in a plausible cationic delivery context. Protein alone does not capture the earlier humectant/emollient pattern; order cannot quantify route dominance. Evidence: #2 Glycerin, #4 Isopropyl Palmitate, #6 Panthenol, #7 Hydrolyzed Keratin, #8-12 oils. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Current compatibility mapping: balanced -> stretches_bounces. Emitted row: normal/stretches_bounces.",
+      "category_specs.product_conditioner_specs[2]": "All three diameter priors follow the moderate lean weight fallback; fine is retained while the deposition conflict is unresolved. Retaining only medium/coarse would retain the restrictive high-weight consequence after selecting the mandatory moderate fallback. This broad prior is not proof of universally light finish; dosage and unresolved deposition remain relevant. Evidence: derived: weightPotential=moderate under section 10.1 fallback. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Balanced comparative care: a distinct hydrolyzed keratin route coexists with prominent glycerin/panthenol and a coherent ester/oil softness architecture. Moisture alone understates the distinct named keratin film candidate in a plausible cationic delivery context. Protein alone does not capture the earlier humectant/emollient pattern; order cannot quantify route dominance. Evidence: #2 Glycerin, #4 Isopropyl Palmitate, #6 Panthenol, #7 Hydrolyzed Keratin, #8-12 oils. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data. Current compatibility mapping: balanced -> stretches_bounces. Emitted row: coarse/stretches_bounces.",
+      "product.suitable_thicknesses": "All three diameter priors follow the moderate lean weight fallback; fine is retained while the deposition conflict is unresolved. Retaining only medium/coarse would retain the restrictive high-weight consequence after selecting the mandatory moderate fallback. This broad prior is not proof of universally light finish; dosage and unresolved deposition remain relevant. Evidence: derived: weightPotential=moderate under section 10.1 fallback. Limit: INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+    },
+    "projection_sha256": "7d034bec54abcda539da0dfb96ae095d5f0004c0cc562b86fc48cda68795b4a1",
+    "research_input_sha256": "473117d94cd45ff338fecae5a8e647ae23fb20e2fd5e1cd7c1134ce804b7fd6b",
+    "research_model_version": "conditioner-inci-v1.6",
+    "suitable_thicknesses": [
+      "fine",
+      "normal",
+      "coarse"
+    ]
+  },
+  "requiredProtocolRole": "conditioner_rinse_out",
+  "status": "projection_ready",
+  "summary": {
+    "productName": "Balea PROFESSIONAL Conditioner Oil Repair Intensiv, 200 ml",
+    "researchId": "F4"
+  },
+  "version": "conditioner-production-adapter-v1",
+  "warnings": [
+    "weight_potential is uncertain and affects a mapped production field; review the projection before approval.",
+    "hair_thickness_fit is uncertain and affects a mapped production field; review the projection before approval.",
+    "texture_fit is uncertain in a retained research-only field; it does not change the current production projection.",
+    "care_direction is uncertain and affects a mapped production field; review the projection before approval."
+  ]
+}

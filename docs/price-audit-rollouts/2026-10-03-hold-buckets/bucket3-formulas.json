@@ -1,0 +1,1858 @@
+{
+  "version": "bucket3-current-formula-investigation-v1",
+  "recorded_at": "2026-10-03T15:30:06.910620+00:00",
+  "scope": "read-only live catalog/public research; tmp-only evidence and local deterministic replay",
+  "reusable_rule_proposal": [
+    "Freeze exact current DE identity, pack, identifiers, raw INCI, normalized sequence, source timestamps and fingerprint; preserve historical version.",
+    "Separate declaration changes from demonstrated formulation/performance changes. New GTIN or ingredient order does not alone prove distinct performance; same name/URL/DAN does not prove formula continuity.",
+    "Run owning current category method against frozen formula independently of existing labels; no Mask pseudo-engine.",
+    "Compare every proposed stored property, eligibility, protocol, image and commerce field against live old row.",
+    "Choose metadata/continuity update only when identity/formula continuity is evidenced and approved; material package/formula differences become a separate reviewed version/candidate. No silent old-barcode aliasing.",
+    "Use dm > Rossmann > Müller > brand-direct > Amazon DE, then reputable fallback; exact package can vary but URL+price+package must bind to the same fresh purchasable offer.",
+    "Report research, catalog intake, global recommendation and live lifecycle separately. Approval/readiness never propagates from one gate to another."
+  ],
+  "records": [
+    {
+      "product_id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "name": "Langhaarmädchen Beautiful Curls Shampoo",
+      "current_identity": {
+        "market": "DE",
+        "old_gtin": "4067796150735",
+        "current_gtin": "4070765004649",
+        "old_package": "300 ml",
+        "current_package": "300 ml",
+        "current_gtin_currently_owned_in_catalog": false,
+        "ownership_checked_at": "2026-10-03T15:30:06.910620+00:00",
+        "formula_identity_is_not_barcode_identity": true
+      },
+      "formula_comparison": {
+        "key": "shampoo",
+        "captured_at": "2026-10-03T15:30:06.910620+00:00",
+        "old_raw_inci": "Aqua, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Aloe Barbadensis Leaf Juice Powder, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate",
+        "current_raw_inci": "Ingredients: Aqua, Aloe Barbadensis Leaf Juice, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate",
+        "old_normalized_ingredients": [
+          "Aqua",
+          "Cocamidopropyl Betaine",
+          "Sodium Cocoyl Isethionate",
+          "Sodium Chloride",
+          "Aloe Barbadensis Leaf Juice Powder",
+          "Arginine",
+          "Serine",
+          "Linum Usitatissimum Seed Extract",
+          "Parfum",
+          "Glycerin",
+          "Glyceryl Oleate",
+          "PCA",
+          "Glycine",
+          "Histidine",
+          "Coconut Acid",
+          "Glycol Distearate",
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "Sodium Isethionate",
+          "Coco-Glucoside",
+          "Sodium PCA",
+          "Glyceryl Stearate",
+          "Aspartic Acid",
+          "Alanine",
+          "Valine",
+          "Isoleucine",
+          "Proline",
+          "Threonine",
+          "Phenylalanine",
+          "Phenoxyethanol",
+          "Ethylhexylglycerin",
+          "Benzoic Acid",
+          "Citric Acid",
+          "Sodium Lactate"
+        ],
+        "current_normalized_ingredients": [
+          "Aqua",
+          "Aloe Barbadensis Leaf Juice",
+          "Cocamidopropyl Betaine",
+          "Sodium Cocoyl Isethionate",
+          "Sodium Chloride",
+          "Arginine",
+          "Serine",
+          "Linum Usitatissimum Seed Extract",
+          "Parfum",
+          "Glycerin",
+          "Glyceryl Oleate",
+          "PCA",
+          "Glycine",
+          "Histidine",
+          "Coconut Acid",
+          "Glycol Distearate",
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "Sodium Isethionate",
+          "Coco-Glucoside",
+          "Sodium PCA",
+          "Glyceryl Stearate",
+          "Aspartic Acid",
+          "Alanine",
+          "Valine",
+          "Isoleucine",
+          "Proline",
+          "Threonine",
+          "Phenylalanine",
+          "Phenoxyethanol",
+          "Ethylhexylglycerin",
+          "Benzoic Acid",
+          "Citric Acid",
+          "Sodium Lactate"
+        ],
+        "raw_current_sha256": "c685a3e6c12d447d1d0cb6cbccec858f132b8a432fd06e156793d883e4f66671",
+        "ordered_normalized_sha256": "859d5357fc56e09fe7d35719d60a5e15aebbbbd49f344dad19bbced125141d73",
+        "old_only": [
+          "Aloe Barbadensis Leaf Juice Powder"
+        ],
+        "current_only": [
+          "Aloe Barbadensis Leaf Juice"
+        ],
+        "position_changes": [
+          {
+            "ingredient": "Cocamidopropyl Betaine",
+            "old_rank": 2,
+            "current_rank": 3
+          },
+          {
+            "ingredient": "Sodium Cocoyl Isethionate",
+            "old_rank": 3,
+            "current_rank": 4
+          },
+          {
+            "ingredient": "Sodium Chloride",
+            "old_rank": 4,
+            "current_rank": 5
+          }
+        ]
+      },
+      "current_source": {
+        "url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+        "type": "manufacturer_own_brand",
+        "fresh_details_checked_at": "2026-10-03T15:26:52.368Z",
+        "raw_details": {
+          "dan": "1678985",
+          "gtin": "4070765004649",
+          "productName": "Shampoo Beautiful Curls, 300 ml",
+          "brand": "LANGHAARMÄDCHEN",
+          "found": "true",
+          "errorMessage": "",
+          "productUrl": "https://www.dm.de/applink/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls?appPageType=productdetails&appProductId=1678985&wt_mc=dm-mcp",
+          "image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1787433840/assets/pas/images/aed4c271-f785-4d60-80a1-6e528686971c/langhaarmaedchen-shampoo-beautiful-curls",
+          "imageBackgroundColor": "#F9F4F1",
+          "productType": "NON_FOOD",
+          "weight": "334g",
+          "volume": "0.56l",
+          "description": "Das LANGHAARMÄDCHEN Shampoo Beautiful Curls reinigt schonend und pflegt natürlich gewelltes sowie gelocktes Haar. Die Formulierung mit Aloe Vera und Leinsamen-Extrakt verleiht den Locken eine beeindruckende Sprungkraft. Zusätzlich sorgt die Rezeptur für einen gesunden Glanz und natürliches Volumen direkt am Ansatz. Das Shampoo ist ideal für die Anwendung der Curly Girl Methode geeignet und verhilft zu einer definierten und gepflegten Lockenpracht. Dank des enthaltenen Aminosäuren-Komplexes ist es für alle Stufen der Haarporosität geeignet.",
+          "keyBenefits": "[Shampoo für Locken und Wellen;Mit Aloe Vera und Leinsamen-Extrakt;Ideal für die Curly Girl Methode geeignet;Verleiht Sprungkraft;Ohne Silikone und Sulfattenside]",
+          "countryOfOrigin": "Deutschland",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "Ingredients: Aqua, Aloe Barbadensis Leaf Juice, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate",
+          "applicationInstructions": "Sanft ins Haar einmassieren, kurz einwirken lassen und gründlich ausspülen.",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "[vegan;ohne Silikone]",
+          "isSustainable": "false"
+        }
+      },
+      "purchase_offer": {
+        "url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+        "shop": "dm",
+        "gtin": "4070765004649",
+        "package": "300 ml",
+        "price_eur": 4.95,
+        "purchasable": true,
+        "sellout": false,
+        "checked_at": "2026-10-03T15:26:52.368Z",
+        "proof": "fresh public official dm MCP search, exact GTIN + DAN + package match",
+        "selected_search_row": {
+          "gtin": "4070765004649",
+          "dan": "1678985",
+          "brand": "LANGHAARMÄDCHEN",
+          "title": "Shampoo Beautiful Curls, 300 ml",
+          "details": "",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls?appPageType=productdetails&appProductId=1678985&wt_mc=dm-mcp",
+          "category": "Shampoo > Locken Produkte > Haarpflege",
+          "highlights": "Shampoo für Locken und Wellen, Mit Aloe Vera und Leinsamen-Extrakt, Ideal für die Curly Girl Methode geeignet, Verleiht ",
+          "description": "Das LANGHAARMÄDCHEN Shampoo Beautiful Curls reinigt schonend und pflegt natürlich gewelltes sowie gelocktes Haar. Die Formulierung mit Aloe Vera und L",
+          "vegan": "true",
+          "bio": "false",
+          "glutenFree": "false",
+          "lactoseFree": "false",
+          "naturalCosmetics": "false",
+          "fragranceFree": "false",
+          "alcoholFree": "false",
+          "parabenFree": "false",
+          "sulfateFree": "false",
+          "preservativeFree": "false",
+          "dyeFree": "false",
+          "oilFree": "false",
+          "sugarFree": "false",
+          "nutFree": "false",
+          "soyFree": "false",
+          "siliconeFree": "true",
+          "vegetarian": "false",
+          "waterproof": "false",
+          "new": "false",
+          "limitedEdition": "false",
+          "dmBrand": "true",
+          "sellout": "false",
+          "onlineOnly": "false",
+          "exclusiveDm": "false",
+          "purchasable": "true"
+        },
+        "applies_to_existing_historical_catalog_identity": false
+      },
+      "stored": {
+        "id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "product": {
+          "id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+          "name": "Langhaarmädchen Beautiful Curls Shampoo",
+          "tags": [
+            "shampoo"
+          ],
+          "brand": "Langhaarmädchen",
+          "origin": "curated",
+          "brand_id": "6ed96032-6722-46ca-94a6-ae4d5fe8bb1e",
+          "category": "Shampoo",
+          "currency": "EUR",
+          "tom_take": null,
+          "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/1623a993-3ff4-43be-82c1-95a1ee57ec52/19-1623a993-3ff4-43be-82c1-95a1ee57ec52-langhaarmadchen-langhaarmadchen-beautiful-curls-shampoo-2d2218ab9a2e.webp",
+          "is_active": true,
+          "price_eur": 4.95,
+          "created_at": "2026-03-03T12:35:01.792239+00:00",
+          "sort_order": 213,
+          "updated_at": "2026-09-30T19:59:37.176471+00:00",
+          "description": "Laghaarmädchen Beautiful Curls ist ein Shampoo von Laghaarmädchen, empfohlen für dickes Haar bei normale Pflege.",
+          "category_key": "shampoo",
+          "affiliate_link": "https://www.dm.de/langhaarmaedchen-shampoo-beautiful-curls-p4067796150735.html",
+          "product_line_id": null,
+          "lifecycle_status": "active",
+          "net_content_unit": null,
+          "price_checked_at": "2026-09-30T19:59:37.066+00:00",
+          "net_content_value": null,
+          "short_description": null,
+          "suitable_concerns": [
+            "normal"
+          ],
+          "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/2d2218ab9a2eaafcf30acddbb06d7e21ee79f5908501502b5cc032e6df4ab046.webp",
+          "purchase_link_status": "available",
+          "suitable_thicknesses": [
+            "coarse"
+          ],
+          "is_chaarlie_recommended": true,
+          "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+        },
+        "shampoo": [
+          {
+            "thickness": "coarse",
+            "product_id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+            "scalp_route": "balanced",
+            "category_key": "shampoo",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "gentle"
+          }
+        ],
+        "conditioner": null,
+        "conditioner_rerank": null,
+        "mask": null,
+        "identifiers": [
+          {
+            "id": "e9329e27-cf5d-4cea-9f99-1c7da7555e8b",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "product_id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04067796150735",
+            "identifier_value": "4067796150735",
+            "normalized_identifier_value": "4067796150735"
+          }
+        ],
+        "protocols": [
+          {
+            "role": "shampoo_everyday",
+            "source_url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+            "guidance_payload_v2": {
+              "role": "cleanse",
+              "facts": {
+                "heat": null,
+                "rinse": "rinse_out",
+                "amount": null,
+                "contactTime": {
+                  "kind": "label_directed"
+                },
+                "applicationArea": "scalp_roots",
+                "applicationState": "wet_hair",
+                "conditionerPolicy": "not_applicable"
+              },
+              "scope": {
+                "kind": "product",
+                "category": "shampoo",
+                "productId": "1623a993-3ff4-43be-82c1-95a1ee57ec52"
+              },
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-11",
+                  "sourceUrl": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+                  "sourceType": "retailer"
+                }
+              ],
+              "exactSteps": [],
+              "sourceRole": "shampoo_everyday",
+              "workflowId": null,
+              "cautionCodes": [],
+              "contractKind": "product_pointer",
+              "schemaVersion": 2,
+              "applicationFamily": "targeted_treatment_shampoo",
+              "runtimeBlockerCode": null,
+              "requiredCompanionProductId": null
+            },
+            "contact_time_seconds": null
+          }
+        ]
+      },
+      "readiness": {
+        "research_status": "provisional_comparison_needs_blind_confirmation",
+        "catalog_intake_ready": false,
+        "global_recommendation_ready": false,
+        "current_live_row_is_active_and_recommended": true,
+        "no_production_change_applied": true,
+        "blockers": [
+          "No approved formula/identity transition decision",
+          "No fresh blind-method validation",
+          "Current pack image not finalized/approved",
+          "Exact current-version protocol and final payload not approved",
+          "No catalog preflight/promotion dry-run performed"
+        ]
+      },
+      "protocol_candidate": {
+        "role": "shampoo_everyday",
+        "raw_directions": "Sanft ins Haar einmassieren, kurz einwirken lassen und gründlich ausspülen.",
+        "source_url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+        "contact_time_seconds": null
+      },
+      "image_candidate": {
+        "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1787433840/assets/pas/images/aed4c271-f785-4d60-80a1-6e528686971c/langhaarmaedchen-shampoo-beautiful-curls",
+        "exact_current_pack_source": true,
+        "cached_and_visually_approved": false,
+        "finalized_chaarlie_asset_approved": false
+      },
+      "historical_source": {
+        "path": "data/research/shampoo-inci/v1.3/products/langhaarmaedchen-beautiful-curls/formula-source.json",
+        "captured_at": "2026-08-10T00:00:00+02:00",
+        "old_exact_gtin_corroboration": "https://www.dm.at/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+        "caveat": "AT old-GTIN page is corroboration only; current DE formula governs new GTIN."
+      },
+      "material_delta": "Aloe Barbadensis Leaf Juice Powder #5 becomes Aloe Barbadensis Leaf Juice #2. CAPB/SCI/salt shift #2/3/4 -> #3/4/5; the remaining sequence from Arginine onward is unchanged. Do not infer stronger aloe dose from reconstitution/declaration form.",
+      "research_candidate": {
+        "version": "shampoo-production-light-v1",
+        "researchMethod": {
+          "policyId": "shampoo-classification-v1.4",
+          "modelVersion": "shampoo-inci-v1.4",
+          "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+          "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+        },
+        "identity": {
+          "productId": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+          "market": "DE",
+          "exactProductName": "LANGHAARMÄDCHEN Shampoo Beautiful Curls",
+          "exactPackSize": "300 ml",
+          "gtinAliases": [
+            "4070765004649"
+          ],
+          "capturedAt": "2026-10-03T15:25:37.616792+00:00",
+          "confidence": "high",
+          "conflictStatus": "none",
+          "sources": [
+            {
+              "url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+              "tier": "manufacturer_de",
+              "capturedAt": "2026-10-03T15:25:37.616792+00:00"
+            }
+          ]
+        },
+        "formula": {
+          "status": "canonical",
+          "canonicalInci": "Aqua, Aloe Barbadensis Leaf Juice, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate",
+          "inciFingerprintSha256": "035618f19bfb5a9212f606183db706f2f5d6e7cd31e6624e154abbf03e382e1c",
+          "canonicalSource": "manufacturer_de",
+          "evidenceRefs": [
+            "current-de-inci"
+          ],
+          "sources": [
+            {
+              "url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+              "tier": "manufacturer_de",
+              "capturedAt": "2026-10-03T15:25:37.616792+00:00"
+            }
+          ]
+        },
+        "properties": {
+          "cleansingStrength": {
+            "value": "low",
+            "confidence": "moderate",
+            "rationale": "CAPB #3 plus Sodium Cocoyl Isethionate #4 and Coco-Glucoside #19 form a mild amphoteric/isethionate/nonionic wash system, with Glyceryl Oleate #11 as a refatting counterbalance. Effective anionic cleansing is present, but no sulfate/olefin reset chassis supports strong; low is preferred to moderate within the INCI-only uncertainty.",
+            "evidenceRefs": [
+              "current-de-inci",
+              "formula-architecture"
+            ]
+          },
+          "conditioningLevel": {
+            "value": "moderate",
+            "confidence": "moderate",
+            "rationale": "Cationic guar #17 plus Glyceryl Oleate #11 and Glyceryl Stearate #21 support bounded rinse-off conditioning. Amino acids/humectants support hydration context but are not counted as a structural protein repair system. No rich silicone/quat/fatty-alcohol chassis supports high.",
+            "evidenceRefs": [
+              "current-de-inci",
+              "formula-architecture"
+            ]
+          },
+          "weightPotential": {
+            "value": "moderate",
+            "confidence": "moderate",
+            "rationale": "One substantive cationic-guar route with refatting esters and weak reset makes bounded deposition plausible; no silicone, butter or rich conditioner chassis supports high. Low is a realistic neighboring possibility because deposition amount is unknown; moderate is a provisional whole-formula call, not a polymer-presence rule.",
+            "evidenceRefs": [
+              "current-de-inci",
+              "formula-architecture"
+            ]
+          },
+          "focusPrimary": {
+            "value": "general",
+            "confidence": "moderate",
+            "rationale": "Curl support is the dominant positioning but not a v1.4 focus enum. The mixed care/refatting/humectant system supports general care; do not force repair, volume or scalp-active from amino-acid or curl claims.",
+            "evidenceRefs": [
+              "current-de-inci",
+              "formula-architecture"
+            ]
+          },
+          "focusSecondary": {
+            "value": [],
+            "confidence": "high",
+            "rationale": "Empty default retained: shine and root-volume wording does not establish distinct independent product routes beyond the general care architecture.",
+            "evidenceRefs": [
+              "current-de-inci",
+              "formula-architecture"
+            ]
+          },
+          "usageRole": {
+            "value": "regular",
+            "confidence": "high",
+            "rationale": "Ordinary rinse-out shampoo directions; no product-specific daily-use, reset or active-treatment trigger. Low cleansing alone does not set frequent.",
+            "evidenceRefs": [
+              "current-de-inci",
+              "formula-architecture"
+            ]
+          },
+          "scalpComfortTarget": {
+            "value": "not_targeted",
+            "confidence": "high",
+            "rationale": "Exact positioning concerns curls/waves, not sensitive or uncomfortable scalp. Aloe does not create a targeted scalp intent.",
+            "evidenceRefs": [
+              "current-de-inci",
+              "formula-architecture"
+            ]
+          },
+          "dandruffSupport": {
+            "value": "not_supported",
+            "confidence": "high",
+            "rationale": "Complete declared formula contains neither Piroctone Olamine nor Climbazole.",
+            "evidenceRefs": [
+              "current-de-inci",
+              "formula-architecture"
+            ]
+          }
+        },
+        "thicknesses": [
+          {
+            "thickness": "fine",
+            "fit": "conditional",
+            "confidence": "moderate",
+            "rationale": "Bounded persistent conditioning plus mild reset may reduce movement on fine hair; suitable finish/dose is unknown, so do not promote binary ideal yet.",
+            "evidenceRefs": [
+              "formula-architecture"
+            ]
+          },
+          {
+            "thickness": "normal",
+            "fit": "ideal",
+            "confidence": "moderate",
+            "rationale": "Mild cleansing plus moderate care/deposition supports normal-diameter hair without the richest coating architecture.",
+            "evidenceRefs": [
+              "formula-architecture"
+            ]
+          },
+          {
+            "thickness": "coarse",
+            "fit": "ideal",
+            "confidence": "moderate",
+            "rationale": "Moderate rinse-off care and mild cleansing support coarse-diameter hair; shampoo alone is not claimed to replace conditioning.",
+            "evidenceRefs": [
+              "formula-architecture"
+            ]
+          }
+        ],
+        "scalpTargets": {
+          "primary": {
+            "target": "ordinary",
+            "confidence": "high",
+            "rationale": "No scalp-problem positioning; general balanced scalp route. Dry lengths/curls do not imply dry scalp.",
+            "positioningEvidenceRefs": [
+              "current-de-positioning"
+            ],
+            "formulaEvidenceRefs": [
+              "formula-architecture"
+            ]
+          }
+        },
+        "positioning": {
+          "explicitResetPositioning": false,
+          "evidenceRefs": [
+            "current-de-positioning"
+          ]
+        }
+      },
+      "adapter_replay": {
+        "status": "property_lane_ready",
+        "payload": {
+          "category_specs": {
+            "product_shampoo_specs": [
+              {
+                "cleansing_intensity": "gentle",
+                "scalp_route": "balanced",
+                "shampoo_bucket": "normal",
+                "thickness": "normal"
+              },
+              {
+                "cleansing_intensity": "gentle",
+                "scalp_route": "balanced",
+                "shampoo_bucket": "normal",
+                "thickness": "coarse"
+              }
+            ]
+          },
+          "field_rationales": {
+            "category_specs.product_shampoo_specs": {
+              "confidence": "high",
+              "evidenceRefs": [
+                "current-de-positioning",
+                "formula-architecture"
+              ],
+              "rationale": "No scalp-problem positioning; general balanced scalp route. Dry lengths/curls do not imply dry scalp."
+            },
+            "category_specs.product_shampoo_specs.cleansing_intensity": {
+              "confidence": "moderate",
+              "evidenceRefs": [
+                "current-de-inci",
+                "formula-architecture"
+              ],
+              "rationale": "CAPB #3 plus Sodium Cocoyl Isethionate #4 and Coco-Glucoside #19 form a mild amphoteric/isethionate/nonionic wash system, with Glyceryl Oleate #11 as a refatting counterbalance. Effective anionic cleansing is present, but no sulfate/olefin reset chassis supports strong; low is preferred to moderate within the INCI-only uncertainty. Observed intensity: gentle."
+            },
+            "product.suitable_thicknesses": {
+              "confidence": "moderate",
+              "evidenceRefs": [
+                "formula-architecture",
+                "formula-architecture",
+                "formula-architecture"
+              ],
+              "rationale": "Ideal: normal — Mild cleansing plus moderate care/deposition supports normal-diameter hair without the richest coating architecture. coarse — Moderate rinse-off care and mild cleansing support coarse-diameter hair; shampoo alone is not claimed to replace conditioning. Conditional (not emitted): fine — Bounded persistent conditioning plus mild reset may reduce movement on fine hair; suitable finish/dose is unknown, so do not promote binary ideal yet."
+            },
+            "required_protocol_roles": {
+              "confidence": "high",
+              "evidenceRefs": [
+                "current-de-positioning"
+              ],
+              "rationale": "Roles derived from reviewed buckets: shampoo_everyday."
+            },
+            "research.properties.cleansingStrength": {
+              "confidence": "moderate",
+              "evidenceRefs": [
+                "current-de-inci",
+                "formula-architecture"
+              ],
+              "rationale": "CAPB #3 plus Sodium Cocoyl Isethionate #4 and Coco-Glucoside #19 form a mild amphoteric/isethionate/nonionic wash system, with Glyceryl Oleate #11 as a refatting counterbalance. Effective anionic cleansing is present, but no sulfate/olefin reset chassis supports strong; low is preferred to moderate within the INCI-only uncertainty."
+            },
+            "research.properties.conditioningLevel": {
+              "confidence": "moderate",
+              "evidenceRefs": [
+                "current-de-inci",
+                "formula-architecture"
+              ],
+              "rationale": "Cationic guar #17 plus Glyceryl Oleate #11 and Glyceryl Stearate #21 support bounded rinse-off conditioning. Amino acids/humectants support hydration context but are not counted as a structural protein repair system. No rich silicone/quat/fatty-alcohol chassis supports high."
+            },
+            "research.properties.dandruffSupport": {
+              "confidence": "high",
+              "evidenceRefs": [
+                "current-de-inci",
+                "formula-architecture"
+              ],
+              "rationale": "Complete declared formula contains neither Piroctone Olamine nor Climbazole."
+            },
+            "research.properties.focusPrimary": {
+              "confidence": "moderate",
+              "evidenceRefs": [
+                "current-de-inci",
+                "formula-architecture"
+              ],
+              "rationale": "Curl support is the dominant positioning but not a v1.4 focus enum. The mixed care/refatting/humectant system supports general care; do not force repair, volume or scalp-active from amino-acid or curl claims."
+            },
+            "research.properties.focusSecondary": {
+              "confidence": "high",
+              "evidenceRefs": [
+                "current-de-inci",
+                "formula-architecture"
+              ],
+              "rationale": "Empty default retained: shine and root-volume wording does not establish distinct independent product routes beyond the general care architecture."
+            },
+            "research.properties.scalpComfortTarget": {
+              "confidence": "high",
+              "evidenceRefs": [
+                "current-de-inci",
+                "formula-architecture"
+              ],
+              "rationale": "Exact positioning concerns curls/waves, not sensitive or uncomfortable scalp. Aloe does not create a targeted scalp intent."
+            },
+            "research.properties.usageRole": {
+              "confidence": "high",
+              "evidenceRefs": [
+                "current-de-inci",
+                "formula-architecture"
+              ],
+              "rationale": "Ordinary rinse-out shampoo directions; no product-specific daily-use, reset or active-treatment trigger. Low cleansing alone does not set frequent."
+            },
+            "research.properties.weightPotential": {
+              "confidence": "moderate",
+              "evidenceRefs": [
+                "current-de-inci",
+                "formula-architecture"
+              ],
+              "rationale": "One substantive cationic-guar route with refatting esters and weak reset makes bounded deposition plausible; no silicone, butter or rich conditioner chassis supports high. Low is a realistic neighboring possibility because deposition amount is unknown; moderate is a provisional whole-formula call, not a polymer-presence rule."
+            }
+          },
+          "required_protocol_roles": [
+            "shampoo_everyday"
+          ],
+          "suitable_thicknesses": [
+            "normal",
+            "coarse"
+          ]
+        },
+        "warnings": [],
+        "semantic_status": "Provisional consequences only, not blind-method approval."
+      },
+      "stored_vs_candidate": "Stored coarse only; candidate normal+coarse (fine conditional). Both use normal/balanced/gentle and shampoo_everyday.",
+      "recommended_handling": "Keep a new immutable formula evidence version. Do not add current GTIN as an alias or change commerce yet. The narrow aloe declaration change can be compatible with continuity, but is not a proven metadata-only relabel. Prefer existing-product metadata refresh only after exact transition evidence and reviewed formula comparison; otherwise propose a distinct current version without rewriting old barcode evidence. Do not automatically duplicate solely because GTIN changed.",
+      "human_decisions": [
+        "After formula recheck, accept same product continuity plus new immutable formula provenance, or choose distinct current catalog version.",
+        "Approve exact property differences (especially normal eligibility) and exact image/protocol/commerce package before any write."
+      ]
+    },
+    {
+      "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "name": "Alverde Conditioner Glanz",
+      "current_identity": {
+        "market": "DE",
+        "old_gtin": "4066447592085",
+        "current_gtin": "4066447919202",
+        "old_package": "200 ml",
+        "current_package": "200 ml",
+        "current_gtin_currently_owned_in_catalog": false,
+        "ownership_checked_at": "2026-10-03T15:30:06.910620+00:00",
+        "formula_identity_is_not_barcode_identity": true
+      },
+      "formula_comparison": {
+        "key": "conditioner",
+        "captured_at": "2026-10-03T15:30:06.910620+00:00",
+        "old_raw_inci": "Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil, Glycerin, Betaine, Arginine, Rosa Damascena Flower Water, Levulinic Acid, Parfum, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Hydrolyzed Wheat Protein, Alcohol, Glyceryl Caprylate, p-Anisic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide",
+        "current_raw_inci": "Ingredients: Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil1, Glycerin, Betaine, Arginine, Hydrolyzed Wheat Protein, Rosa Damascena Flower Water 1, Parfum, Pelargonium Graveolens Flower Oil, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Alcohol, Levulinic Acid, Glyceryl Caprylate, p-Anisic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide",
+        "old_normalized_ingredients": [
+          "Aqua",
+          "Cetearyl Alcohol",
+          "Helianthus Annuus Hybrid Oil",
+          "Glycerin",
+          "Betaine",
+          "Arginine",
+          "Rosa Damascena Flower Water",
+          "Levulinic Acid",
+          "Parfum",
+          "Brassica Alcohol",
+          "Sodium Levulinate",
+          "Cetearyl Glucoside",
+          "Hydrolyzed Wheat Protein",
+          "Alcohol",
+          "Glyceryl Caprylate",
+          "p-Anisic Acid",
+          "Brassicyl Isoleucinate Esylate",
+          "Citric Acid",
+          "Sodium Hydroxide"
+        ],
+        "current_normalized_ingredients": [
+          "Aqua",
+          "Cetearyl Alcohol",
+          "Helianthus Annuus Hybrid Oil",
+          "Glycerin",
+          "Betaine",
+          "Arginine",
+          "Hydrolyzed Wheat Protein",
+          "Rosa Damascena Flower Water",
+          "Parfum",
+          "Pelargonium Graveolens Flower Oil",
+          "Brassica Alcohol",
+          "Sodium Levulinate",
+          "Cetearyl Glucoside",
+          "Alcohol",
+          "Levulinic Acid",
+          "Glyceryl Caprylate",
+          "p-Anisic Acid",
+          "Brassicyl Isoleucinate Esylate",
+          "Citric Acid",
+          "Sodium Hydroxide"
+        ],
+        "raw_current_sha256": "415557ee77af9e9305eb7e8280ec43a9fa30c614c26d4605de4ee92aade59408",
+        "ordered_normalized_sha256": "ca52f423b555b7c648a1456dbc52fe47811a0e1261df2cffdba6fe0c19471e0f",
+        "old_only": [],
+        "current_only": [
+          "Pelargonium Graveolens Flower Oil"
+        ],
+        "position_changes": [
+          {
+            "ingredient": "Rosa Damascena Flower Water",
+            "old_rank": 7,
+            "current_rank": 8
+          },
+          {
+            "ingredient": "Levulinic Acid",
+            "old_rank": 8,
+            "current_rank": 15
+          },
+          {
+            "ingredient": "Brassica Alcohol",
+            "old_rank": 10,
+            "current_rank": 11
+          },
+          {
+            "ingredient": "Sodium Levulinate",
+            "old_rank": 11,
+            "current_rank": 12
+          },
+          {
+            "ingredient": "Cetearyl Glucoside",
+            "old_rank": 12,
+            "current_rank": 13
+          },
+          {
+            "ingredient": "Hydrolyzed Wheat Protein",
+            "old_rank": 13,
+            "current_rank": 7
+          },
+          {
+            "ingredient": "Glyceryl Caprylate",
+            "old_rank": 15,
+            "current_rank": 16
+          },
+          {
+            "ingredient": "p-Anisic Acid",
+            "old_rank": 16,
+            "current_rank": 17
+          },
+          {
+            "ingredient": "Brassicyl Isoleucinate Esylate",
+            "old_rank": 17,
+            "current_rank": 18
+          },
+          {
+            "ingredient": "Citric Acid",
+            "old_rank": 18,
+            "current_rank": 19
+          },
+          {
+            "ingredient": "Sodium Hydroxide",
+            "old_rank": 19,
+            "current_rank": 20
+          }
+        ]
+      },
+      "current_source": {
+        "url": "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz",
+        "type": "manufacturer_own_brand",
+        "fresh_details_checked_at": "2026-10-03T15:26:53.307Z",
+        "raw_details": {
+          "dan": "1714048",
+          "gtin": "4066447919202",
+          "productName": "Conditioner Glanz, 200 ml",
+          "brand": "alverde NATURKOSMETIK",
+          "found": "true",
+          "errorMessage": "",
+          "productUrl": "https://www.dm.de/applink/p/d/1714048/alverde-naturkosmetik-conditioner-glanz?appPageType=productdetails&appProductId=1714048&wt_mc=dm-mcp",
+          "image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1780531661/assets/pas/images/bdcc939d-11c3-4db8-8081-eb75e6b9ab90/alverde-naturkosmetik-conditioner-glanz",
+          "imageBackgroundColor": "#F9F1F3",
+          "productType": "NON_FOOD",
+          "weight": "225g",
+          "volume": "0.342l",
+          "description": "Der alverde NATURKOSMETIK Conditioner Glanz Bio-Rose ist ideal für die Pflege von stumpfem und glanzlosem Haar. Die Formulierung mit Bio-Rosenblütenwasser und pflanzlichem Protein kann das Haar kräftigen und die Kämmbarkeit spürbar verbessern. Zudem verleiht die Glanz-Spülung dem Haar eine geschmeidige Textur und einen strahlenden Glanz bis in die Spitzen. Die zertifizierte Naturkosmetik ohne Silikone pflegt das Haar auf sanfte Weise und unterstützt seine natürliche Schönheit.\n",
+          "keyBenefits": "[Pflegespülung für mehr Glanz;Für stumpfes & glanzloses Haar;Zertifizierte Naturkosmetik;Verleiht natürlichen Glanz & Geschmeidigkeit;Ohne Silikone]",
+          "countryOfOrigin": "Deutschland",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "Ingredients: Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil1, Glycerin, Betaine, Arginine, Hydrolyzed Wheat Protein, Rosa Damascena Flower Water 1, Parfum, Pelargonium Graveolens Flower Oil, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Alcohol, Levulinic Acid, Glyceryl Caprylate, p-Anisic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide",
+          "applicationInstructions": "In das feuchte Haar einmassieren und kurz einwirken lassen.  Anschließend gründlich ausspülen.",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "[vegan;ohne Silikone;Naturkosmetik]",
+          "isSustainable": "true"
+        }
+      },
+      "purchase_offer": {
+        "url": "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz",
+        "shop": "dm",
+        "gtin": "4066447919202",
+        "package": "200 ml",
+        "price_eur": 1.25,
+        "purchasable": false,
+        "sellout": false,
+        "checked_at": "2026-10-03T15:26:53.307Z",
+        "proof": "fresh public official dm MCP search, exact GTIN + DAN + package match",
+        "selected_search_row": {
+          "gtin": "4066447919202",
+          "dan": "1714048",
+          "brand": "alverde NATURKOSMETIK",
+          "title": "Conditioner Glanz, 200 ml",
+          "details": "",
+          "price": "1,25 €",
+          "appLink": "https://www.dm.de/applink/p/d/1714048/alverde-naturkosmetik-conditioner-glanz?appPageType=productdetails&appProductId=1714048&wt_mc=dm-mcp",
+          "category": "Conditioner > Haarpflege",
+          "highlights": "Pflegespülung für mehr Glanz, Für stumpfes & glanzloses Haar, Zertifizierte Naturkosmetik, Verleiht natürlichen Glanz & ",
+          "description": "Der alverde NATURKOSMETIK Conditioner Glanz Bio-Rose ist ideal für die Pflege von stumpfem und glanzlosem Haar. Die Formulierung mit Bio-Rosenblütenwa",
+          "vegan": "true",
+          "bio": "true",
+          "glutenFree": "false",
+          "lactoseFree": "false",
+          "naturalCosmetics": "true",
+          "fragranceFree": "false",
+          "alcoholFree": "false",
+          "parabenFree": "false",
+          "sulfateFree": "false",
+          "preservativeFree": "false",
+          "dyeFree": "false",
+          "oilFree": "false",
+          "sugarFree": "false",
+          "nutFree": "false",
+          "soyFree": "false",
+          "siliconeFree": "true",
+          "vegetarian": "false",
+          "waterproof": "false",
+          "new": "false",
+          "limitedEdition": "false",
+          "dmBrand": "true",
+          "sellout": "false",
+          "onlineOnly": "false",
+          "exclusiveDm": "false",
+          "purchasable": "false"
+        },
+        "applies_to_existing_historical_catalog_identity": false
+      },
+      "stored": {
+        "id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+        "product": {
+          "id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+          "name": "Alverde Conditioner Glanz",
+          "tags": [
+            "conditioner (drogerie)"
+          ],
+          "brand": "Alverde",
+          "origin": "curated",
+          "brand_id": "59ecb4ba-6747-4f59-afa9-39dab85e9d6b",
+          "category": "Conditioner",
+          "currency": "EUR",
+          "tom_take": null,
+          "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/79ce764e-7acf-48ba-b0be-c6d977a81cd0/03-79ce764e-7acf-48ba-b0be-c6d977a81cd0-alverde-alverde-glanz-adef825a89e5.webp",
+          "is_active": true,
+          "price_eur": 1.35,
+          "created_at": "2026-03-03T12:33:52.44529+00:00",
+          "sort_order": 14,
+          "updated_at": "2026-08-15T07:47:54.590858+00:00",
+          "description": "Alverde Glanz ist ein Conditioner (Drogerie) von Alverde, empfohlen für feines Haar bei Performance-Pflege.",
+          "category_key": "conditioner",
+          "affiliate_link": "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz-rosenbluetenwasser-und-pflanzlichem-protein",
+          "product_line_id": null,
+          "lifecycle_status": "active",
+          "net_content_unit": null,
+          "price_checked_at": "2026-06-11T00:00:00+00:00",
+          "net_content_value": null,
+          "short_description": null,
+          "suitable_concerns": [
+            "performance"
+          ],
+          "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/adef825a89e5ff214d32429659f448802e1f59de7bab6bccfa1b2263c8ede11c.webp",
+          "purchase_link_status": "available",
+          "suitable_thicknesses": [
+            "fine"
+          ],
+          "is_chaarlie_recommended": true,
+          "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+        },
+        "shampoo": null,
+        "conditioner": [
+          {
+            "thickness": "fine",
+            "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+            "category_key": "conditioner",
+            "protein_moisture_balance": "stretches_bounces"
+          }
+        ],
+        "conditioner_rerank": [
+          {
+            "weight": "light",
+            "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+            "category_key": "conditioner",
+            "repair_level": "low",
+            "ingredient_flags": [],
+            "balance_direction": "balanced"
+          }
+        ],
+        "mask": null,
+        "identifiers": [
+          {
+            "id": "92fab279-5fc4-4fc6-b1ef-1eaa9655e74d",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04066447592085",
+            "identifier_value": "4066447592085",
+            "normalized_identifier_value": "4066447592085"
+          }
+        ],
+        "protocols": [
+          {
+            "role": "conditioner_rinse_out",
+            "source_url": "https://www.dm.at/p/d/1714048/alverde-naturkosmetik-conditioner-glanz",
+            "guidance_payload_v2": {
+              "role": "condition",
+              "facts": {
+                "heat": null,
+                "rinse": "rinse_out",
+                "amount": null,
+                "contactTime": null,
+                "applicationArea": "hair_lengths_ends",
+                "applicationState": "wet_hair",
+                "conditionerPolicy": "not_applicable"
+              },
+              "scope": {
+                "kind": "product",
+                "category": "conditioner",
+                "productId": "79ce764e-7acf-48ba-b0be-c6d977a81cd0"
+              },
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-11",
+                  "sourceUrl": "https://www.dm.at/p/d/1714048/alverde-naturkosmetik-conditioner-glanz",
+                  "sourceType": "retailer"
+                }
+              ],
+              "exactSteps": [],
+              "sourceRole": "conditioner_rinse_out",
+              "workflowId": null,
+              "cautionCodes": [],
+              "contractKind": "product_pointer",
+              "schemaVersion": 2,
+              "applicationFamily": "standard_rinse_out_conditioning",
+              "runtimeBlockerCode": null,
+              "requiredCompanionProductId": null
+            },
+            "contact_time_seconds": null
+          }
+        ]
+      },
+      "readiness": {
+        "research_status": "provisional_comparison_needs_blind_confirmation",
+        "catalog_intake_ready": false,
+        "global_recommendation_ready": false,
+        "current_live_row_is_active_and_recommended": true,
+        "no_production_change_applied": true,
+        "blockers": [
+          "No approved formula/identity transition decision",
+          "No fresh blind-method validation",
+          "Current pack image not finalized/approved",
+          "Exact current-version protocol and final payload not approved",
+          "No catalog preflight/promotion dry-run performed",
+          "No verified current German online purchase offer"
+        ]
+      },
+      "protocol_candidate": {
+        "role": "conditioner_rinse_out",
+        "raw_directions": "In das feuchte Haar einmassieren und kurz einwirken lassen.  Anschließend gründlich ausspülen.",
+        "source_url": "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz",
+        "contact_time_seconds": null
+      },
+      "image_candidate": {
+        "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1780531661/assets/pas/images/bdcc939d-11c3-4db8-8081-eb75e6b9ab90/alverde-naturkosmetik-conditioner-glanz",
+        "exact_current_pack_source": true,
+        "cached_and_visually_approved": false,
+        "finalized_chaarlie_asset_approved": false
+      },
+      "historical_source": {
+        "path": "docs/price-audit-rollouts/2026-10-03-identity-resolution/identity-dm.json",
+        "earlier_source_url": "https://www.dm.ro/p/d/1714048/alverde-naturkosmetik-balsam-de-par-pentru-stralucire",
+        "caveat": "Earlier receipt preserves old INCI; re-open today now shows NEW GTIN/current formula, so do not cite the current Romanian PDP as historical-GTIN proof. Exact old German-pack formula remains unverified."
+      },
+      "material_delta": "Pelargonium Graveolens Flower Oil newly declared #10; Hydrolyzed Wheat Protein #13 -> #7; Levulinic Acid #8 -> #15; other positional shifts in full diff. Organic footnote markers are normalized separately. No ingredient from the preserved old list disappears. Concentration and actual formulation change remain unknown.",
+      "research_candidate": {
+        "version": "conditioner-research-envelope-v1.6",
+        "researchMethod": {
+          "policyId": "conditioner-classification-v1.6",
+          "modelVersion": "conditioner-inci-v1.6",
+          "policySha256": "688ca25ca534f98789d0b300fbc5f3008a5c0652fe63af276dfda6ced79f3135",
+          "runbookSha256": "6a66780ef23a7595cfbeab07fe9f671a92a58d177b92c734a8d6f736833165e8"
+        },
+        "identity": {
+          "researchId": "bucket3-alverde-current-4066447919202",
+          "market": "DE/EU",
+          "exactProductName": "alverde NATURKOSMETIK Conditioner Glanz 200 ml",
+          "categoryBoundaryStatus": "eligible",
+          "confidence": "high",
+          "sourceIds": [
+            "current-de-inci"
+          ]
+        },
+        "formula": {
+          "status": "verified",
+          "rawInci": "Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil1, Glycerin, Betaine, Arginine, Hydrolyzed Wheat Protein, Rosa Damascena Flower Water 1, Parfum, Pelargonium Graveolens Flower Oil, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Alcohol, Levulinic Acid, Glyceryl Caprylate, p-Anisic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide",
+          "normalizedIngredients": [
+            "Aqua",
+            "Cetearyl Alcohol",
+            "Helianthus Annuus Hybrid Oil1",
+            "Glycerin",
+            "Betaine",
+            "Arginine",
+            "Hydrolyzed Wheat Protein",
+            "Rosa Damascena Flower Water 1",
+            "Parfum",
+            "Pelargonium Graveolens Flower Oil",
+            "Brassica Alcohol",
+            "Sodium Levulinate",
+            "Cetearyl Glucoside",
+            "Alcohol",
+            "Levulinic Acid",
+            "Glyceryl Caprylate",
+            "p-Anisic Acid",
+            "Brassicyl Isoleucinate Esylate",
+            "Citric Acid",
+            "Sodium Hydroxide"
+          ],
+          "formulaFingerprintSha256": "2ddede573b699c268afdedb72619a6e3312c2fa3e7f46f801b3123439bf9efa0",
+          "rawInciSha256": "2e31e1e9d27934e33d331977090cdc6e2cecc0cf42bbbe04be6c87bf19caf624",
+          "sourceIds": [
+            "current-de-inci"
+          ]
+        },
+        "profile": {
+          "conditioningLevel": {
+            "value": "moderate",
+            "confidence": "moderate",
+            "rationale": "Conventional Brassica Alcohol/Brassicyl Isoleucinate Esylate conditioning context plus fatty alcohol and sunflower lipid supports ordinary substantive care.",
+            "evidenceSignals": [
+              "Cetearyl Alcohol #2",
+              "Helianthus Annuus Hybrid Oil #3",
+              "Brassica Alcohol #11",
+              "Brassicyl Isoleucinate Esylate #18"
+            ],
+            "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+            "thresholdReasoning": [
+              "More than low: coherent cationic/fatty-alcohol plus lipid conditioning architecture.",
+              "Not high: no measured endpoint or multiple independent deposition systems strong enough to substantiate a high band."
+            ],
+            "limitations": [
+              "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+              "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+            ]
+          },
+          "weightPotential": {
+            "value": "moderate",
+            "confidence": "moderate",
+            "rationale": "Early sunflower lipid and fatty alcohol base make bounded deposition plausible; silicone-free is not a low-weight guarantee.",
+            "evidenceSignals": [
+              "Cetearyl Alcohol #2",
+              "Helianthus Annuus Hybrid Oil #3",
+              "Glycerin #4",
+              "Brassicyl Isoleucinate Esylate #18"
+            ],
+            "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+            "thresholdReasoning": [
+              "Not low by default: meaningful lipid/base context goes beyond a minimal light rinse.",
+              "Not high: no convergent rich silicone/butter/high-slip architecture or finished-product deposition evidence."
+            ],
+            "limitations": [
+              "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+              "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+            ]
+          },
+          "careDirection": {
+            "value": "balanced",
+            "confidence": "moderate",
+            "rationale": "Substantive lipid/humectant softness architecture coexists with a plausible hydrolyzed-wheat-protein film route in the upper formula.",
+            "evidenceSignals": [
+              "Helianthus Annuus Hybrid Oil #3",
+              "Glycerin #4",
+              "Betaine #5",
+              "Hydrolyzed Wheat Protein #7"
+            ],
+            "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+            "thresholdReasoning": [
+              "Moisture-only would ignore the distinct plausible protein film route; this call is uncertain because dose and substantivity are unmeasured.",
+              "Protein dominance is unsupported alongside the prominent emollient/humectant architecture."
+            ],
+            "limitations": [
+              "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+              "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+            ]
+          },
+          "repairSupportLevel": {
+            "value": "medium",
+            "confidence": "moderate",
+            "rationale": "Hydrolyzed wheat protein in the conditioning context supplies a candidate temporary film route beyond routine lubrication.",
+            "evidenceSignals": [
+              "Hydrolyzed Wheat Protein #7",
+              "conditioning base #2/#11/#18"
+            ],
+            "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+            "thresholdReasoning": [
+              "Low remains the neighboring alternative if the protein is only label-level; provisional medium follows the distinct R5 route, not the claim of strength.",
+              "High requires named bond chemistry; none is visible."
+            ],
+            "limitations": [
+              "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+              "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+            ]
+          },
+          "primaryFocus": {
+            "value": "smoothing",
+            "confidence": "moderate",
+            "rationale": "Lipid relubrication beyond the ordinary base is the clearest supported dry-surface differentiator.",
+            "evidenceSignals": [
+              "Helianthus Annuus Hybrid Oil #3",
+              "Cetearyl Alcohol #2",
+              "Brassicyl Isoleucinate Esylate #18"
+            ],
+            "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+            "thresholdReasoning": [
+              "General is the alternative if the extra lipid route is not substantive.",
+              "Glanz naming alone does not establish distinct optical evidence; shine is not selected from brand copy."
+            ],
+            "limitations": [
+              "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+              "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+            ]
+          },
+          "secondaryFocus": {
+            "value": [],
+            "confidence": "high",
+            "rationale": "No second distinct endpoint clears the threshold without reusing the same surface-film evidence.",
+            "evidenceSignals": [
+              "Same M1/M3 surface-care architecture"
+            ],
+            "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+            "thresholdReasoning": [
+              "Empty is a complete value.",
+              "No separate optical, curl, color or repair positioning plus independently substantial specialist route."
+            ],
+            "limitations": [
+              "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+              "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+            ]
+          },
+          "hairThicknessFit": {
+            "value": [
+              "fine",
+              "medium",
+              "coarse"
+            ],
+            "confidence": "moderate",
+            "rationale": "Moderate weight yields the broad three-diameter prior; this is a dose/finish prior, not a universal guarantee.",
+            "evidenceSignals": [
+              "Upstream weightPotential=moderate"
+            ],
+            "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+            "thresholdReasoning": [
+              "Low weight would restrict the standard prior to fine/medium.",
+              "High weight would remove fine; high was not supported."
+            ],
+            "limitations": [
+              "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+              "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+            ]
+          },
+          "damageFit": {
+            "value": [
+              "healthy",
+              "moderately_damaged"
+            ],
+            "confidence": "moderate",
+            "rationale": "Moderate conditioning maps to the general two-state damage prior despite a candidate protein route.",
+            "evidenceSignals": [
+              "Upstream conditioningLevel=moderate"
+            ],
+            "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+            "thresholdReasoning": [
+              "Low conditioning would map to healthy only.",
+              "Specialist highly_damaged set additionally requires high conditioning; not established."
+            ],
+            "limitations": [
+              "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+              "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+            ]
+          },
+          "textureFit": {
+            "value": [
+              "straight",
+              "wavy",
+              "curly"
+            ],
+            "confidence": "moderate",
+            "rationale": "Balanced conditioning/deposition supports the standard broad texture prior.",
+            "evidenceSignals": [
+              "Moderate conditioning and moderate weight"
+            ],
+            "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+            "thresholdReasoning": [
+              "Not the low-weight/lightness straight/wavy-only archetype.",
+              "Coily-inclusive high-slip/high-deposition architecture is not established."
+            ],
+            "limitations": [
+              "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+              "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+            ]
+          },
+          "uncertainFields": [
+            "weight_potential",
+            "care_direction",
+            "repair_support_level",
+            "primary_focus"
+          ],
+          "assumptionNotes": [
+            "Current DE own-brand PDP is authority for new GTIN4066447919202; no continuity with old GTIN is assumed.",
+            "The raw source includes Oil1 / Water 1 organic-footnote artifacts; kept verbatim in adapter input so fingerprint integrity remains reproducible."
+          ]
+        }
+      },
+      "adapter_replay": {
+        "status": "projection_ready",
+        "productionProjection": {
+          "adapter_version": "conditioner-production-adapter-v1",
+          "category_specs": {
+            "product_conditioner_rerank_specs": {
+              "balance_direction": "balanced",
+              "ingredient_flags": [
+                "oils",
+                "proteins",
+                "humectants"
+              ],
+              "repair_level": "medium",
+              "weight": "medium"
+            },
+            "product_conditioner_specs": [
+              {
+                "protein_moisture_balance": "stretches_bounces",
+                "thickness": "fine"
+              },
+              {
+                "protein_moisture_balance": "stretches_bounces",
+                "thickness": "normal"
+              },
+              {
+                "protein_moisture_balance": "stretches_bounces",
+                "thickness": "coarse"
+              }
+            ]
+          },
+          "field_rationales": {
+            "category_specs.product_conditioner_rerank_specs": "Early sunflower lipid and fatty alcohol base make bounded deposition plausible; silicone-free is not a low-weight guarantee. Not low by default: meaningful lipid/base context goes beyond a minimal light rinse. Not high: no convergent rich silicone/butter/high-slip architecture or finished-product deposition evidence. Evidence: Cetearyl Alcohol #2, Helianthus Annuus Hybrid Oil #3, Glycerin #4, Brassicyl Isoleucinate Esylate #18. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required. Hydrolyzed wheat protein in the conditioning context supplies a candidate temporary film route beyond routine lubrication. Low remains the neighboring alternative if the protein is only label-level; provisional medium follows the distinct R5 route, not the claim of strength. High requires named bond chemistry; none is visible. Evidence: Hydrolyzed Wheat Protein #7, conditioning base #2/#11/#18. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required. Substantive lipid/humectant softness architecture coexists with a plausible hydrolyzed-wheat-protein film route in the upper formula. Moisture-only would ignore the distinct plausible protein film route; this call is uncertain because dose and substantivity are unmeasured. Protein dominance is unsupported alongside the prominent emollient/humectant architecture. Evidence: Helianthus Annuus Hybrid Oil #3, Glycerin #4, Betaine #5, Hydrolyzed Wheat Protein #7. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required. Ingredient flags are deterministic presence signals from the complete normalized INCI: oils, proteins, humectants.",
+            "category_specs.product_conditioner_rerank_specs.balance_direction": "Substantive lipid/humectant softness architecture coexists with a plausible hydrolyzed-wheat-protein film route in the upper formula. Moisture-only would ignore the distinct plausible protein film route; this call is uncertain because dose and substantivity are unmeasured. Protein dominance is unsupported alongside the prominent emollient/humectant architecture. Evidence: Helianthus Annuus Hybrid Oil #3, Glycerin #4, Betaine #5, Hydrolyzed Wheat Protein #7. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required.",
+            "category_specs.product_conditioner_rerank_specs.ingredient_flags": "Deterministic presence flags from the normalized complete INCI: oils, proteins, humectants. Presence flags do not establish concentration or finished-product performance.",
+            "category_specs.product_conditioner_rerank_specs.repair_level": "Hydrolyzed wheat protein in the conditioning context supplies a candidate temporary film route beyond routine lubrication. Low remains the neighboring alternative if the protein is only label-level; provisional medium follows the distinct R5 route, not the claim of strength. High requires named bond chemistry; none is visible. Evidence: Hydrolyzed Wheat Protein #7, conditioning base #2/#11/#18. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required.",
+            "category_specs.product_conditioner_rerank_specs.weight": "Early sunflower lipid and fatty alcohol base make bounded deposition plausible; silicone-free is not a low-weight guarantee. Not low by default: meaningful lipid/base context goes beyond a minimal light rinse. Not high: no convergent rich silicone/butter/high-slip architecture or finished-product deposition evidence. Evidence: Cetearyl Alcohol #2, Helianthus Annuus Hybrid Oil #3, Glycerin #4, Brassicyl Isoleucinate Esylate #18. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required.",
+            "category_specs.product_conditioner_specs": "Moderate weight yields the broad three-diameter prior; this is a dose/finish prior, not a universal guarantee. Low weight would restrict the standard prior to fine/medium. High weight would remove fine; high was not supported. Evidence: Upstream weightPotential=moderate. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required. Substantive lipid/humectant softness architecture coexists with a plausible hydrolyzed-wheat-protein film route in the upper formula. Moisture-only would ignore the distinct plausible protein film route; this call is uncertain because dose and substantivity are unmeasured. Protein dominance is unsupported alongside the prominent emollient/humectant architecture. Evidence: Helianthus Annuus Hybrid Oil #3, Glycerin #4, Betaine #5, Hydrolyzed Wheat Protein #7. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required. Current compatibility mapping: balanced -> stretches_bounces.",
+            "category_specs.product_conditioner_specs[0]": "Moderate weight yields the broad three-diameter prior; this is a dose/finish prior, not a universal guarantee. Low weight would restrict the standard prior to fine/medium. High weight would remove fine; high was not supported. Evidence: Upstream weightPotential=moderate. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required. Substantive lipid/humectant softness architecture coexists with a plausible hydrolyzed-wheat-protein film route in the upper formula. Moisture-only would ignore the distinct plausible protein film route; this call is uncertain because dose and substantivity are unmeasured. Protein dominance is unsupported alongside the prominent emollient/humectant architecture. Evidence: Helianthus Annuus Hybrid Oil #3, Glycerin #4, Betaine #5, Hydrolyzed Wheat Protein #7. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required. Current compatibility mapping: balanced -> stretches_bounces. Emitted row: fine/stretches_bounces.",
+            "category_specs.product_conditioner_specs[1]": "Moderate weight yields the broad three-diameter prior; this is a dose/finish prior, not a universal guarantee. Low weight would restrict the standard prior to fine/medium. High weight would remove fine; high was not supported. Evidence: Upstream weightPotential=moderate. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required. Substantive lipid/humectant softness architecture coexists with a plausible hydrolyzed-wheat-protein film route in the upper formula. Moisture-only would ignore the distinct plausible protein film route; this call is uncertain because dose and substantivity are unmeasured. Protein dominance is unsupported alongside the prominent emollient/humectant architecture. Evidence: Helianthus Annuus Hybrid Oil #3, Glycerin #4, Betaine #5, Hydrolyzed Wheat Protein #7. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required. Current compatibility mapping: balanced -> stretches_bounces. Emitted row: normal/stretches_bounces.",
+            "category_specs.product_conditioner_specs[2]": "Moderate weight yields the broad three-diameter prior; this is a dose/finish prior, not a universal guarantee. Low weight would restrict the standard prior to fine/medium. High weight would remove fine; high was not supported. Evidence: Upstream weightPotential=moderate. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required. Substantive lipid/humectant softness architecture coexists with a plausible hydrolyzed-wheat-protein film route in the upper formula. Moisture-only would ignore the distinct plausible protein film route; this call is uncertain because dose and substantivity are unmeasured. Protein dominance is unsupported alongside the prominent emollient/humectant architecture. Evidence: Helianthus Annuus Hybrid Oil #3, Glycerin #4, Betaine #5, Hydrolyzed Wheat Protein #7. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required. Current compatibility mapping: balanced -> stretches_bounces. Emitted row: coarse/stretches_bounces.",
+            "product.suitable_thicknesses": "Moderate weight yields the broad three-diameter prior; this is a dose/finish prior, not a universal guarantee. Low weight would restrict the standard prior to fine/medium. High weight would remove fine; high was not supported. Evidence: Upstream weightPotential=moderate. Limit: INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data. Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+          },
+          "projection_sha256": "fdf81b9f7d3d2f9aaa190c82a20749f8c070cd68349a19c381832e33b350966c",
+          "research_input_sha256": "cbdbd3ad4c0b3902f54e865f9e951c356a101376bd20a98691ab615d2b4a9666",
+          "research_model_version": "conditioner-inci-v1.6",
+          "suitable_thicknesses": [
+            "fine",
+            "normal",
+            "coarse"
+          ]
+        },
+        "warnings": [
+          "weight_potential is uncertain and affects a mapped production field; review the projection before approval.",
+          "care_direction is uncertain and affects a mapped production field; review the projection before approval.",
+          "repair_support_level is uncertain and affects a mapped production field; review the projection before approval.",
+          "primary_focus is uncertain in a retained research-only field; it does not change the current production projection."
+        ],
+        "semantic_status": "Provisional consequences only, not blind-method approval."
+      },
+      "stored_vs_candidate": "Stored fine only/light/low/balanced/no flags. Candidate fine+normal+coarse/medium/medium/balanced/[oils,proteins,humectants], compatibility remains stretches_bounces for each diameter.",
+      "recommended_handling": "Not a commerce-only patch. Freeze new-GTIN current formula and re-evaluate under v1.6 before deciding lineage. Prefer separate formula-version review; automatic alias merge rejected because protein placement and fragrance exposure changed. Same-product update remains possible only after continuity decision. Current online purchase blocker remains independent of formula readiness.",
+      "purchase_search_limits": {
+        "preferred_hosts_checked": [
+          "dm.de",
+          "rossmann.de",
+          "mueller.de",
+          "brand-direct (dm own brand)",
+          "amazon.de"
+        ],
+        "additional_hosts_checked": [
+          "douglas.de",
+          "hagel-shop.de",
+          "flaconi.de",
+          "notino.de",
+          "otto.de"
+        ],
+        "method": "Targeted name/GTIN web searches; no verified exact German purchasable alternative found. Absence from search results is not proof of shop absence.",
+        "foreign_offer": "dm.at current GTIN €2.35 indexed listing exists but German delivery/purchasability not verified; not selected."
+      },
+      "human_decisions": [
+        "Accept or reject provisional medium weight/medium temporary film support and expanded thickness eligibility after blind confirmation.",
+        "Resolve same-product continuity versus distinct current version; retain old provenance.",
+        "Choose to retain unavailable purchase state until exact DE offer appears; do not manufacture a price-only update."
+      ]
+    },
+    {
+      "product_id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+      "name": "Schaebens Argan-Öl Haarmaske",
+      "current_identity": {
+        "market": "DE",
+        "old_gtin": "4003573025018",
+        "current_gtin": "4003573125015",
+        "old_package": "20 ml",
+        "current_package": "2 x 7 ml = 14 ml",
+        "current_gtin_currently_owned_in_catalog": false,
+        "ownership_checked_at": "2026-10-03T15:30:06.910620+00:00",
+        "formula_identity_is_not_barcode_identity": true
+      },
+      "formula_comparison": {
+        "key": "mask",
+        "captured_at": "2026-10-03T15:30:06.910620+00:00",
+        "old_raw_inci": "Aqua, Cetearyl Alcohol, Glycerin, Tripelargonin, Behenamidopropyl Dimethylamine, Dicaprylyl Ether, Lauryl Alcohol, Macadamia Ternifolia Seed Oil, Argania Spinosa Kernel Oil, Biotin, Glycolic Acid, Hydrolyzed Rice Protein, Illite, Malic Acid, Niacinamide, Pelvetia Canaliculata Extract, Salicylic Acid, Theobroma Cacao Seed Butter, Tocopherol, Tocopheryl Acetate, Anhydroxylitol, Cetyl Esters, Citric Acid, Dextrin, Ethylhexylglycerin, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydroxypropyl Starch Phosphate, Lactic Acid, Maltitol, Parfum, Phenoxyethanol, Sodium Benzoate, Sorbic Acid, Xylitol, Xylitylglucoside.",
+        "current_raw_inci": "Ingredients: Aqua, Cetearyl Alcohol, Glycerin, Stearamidopropyl Dimethylamine, Argania Spinosa Kernel Oil, Macadamia Ternifolia Seed Oil, Coco-Caprylate/Caprate, Maltitol, Biotin, Glycolic Acid, Hydrolyzed Rice Protein, Malic Acid, Niacinamide, Pelvetia Canaliculata Extract, Salicylic Acid, Theobroma Cacao Seed Butter, Anhydroxylitol, Behentrimonium Chloride, Calcium Aluminum, Borosilicate, Cetrimonium Chloride, Cetyl Esters, Citric Acid, Guar Hydroxypropyltrimonium Chloride, Isoamyl Laurate, Isopropyl Alcohol, Lactic Acid, Mica, Oleyl Alcohol, Parfum, Potassium Sorbate, Silica, Sodium Benzoate, Sodium Citrate, Tin Oxide, Xylitol, Xylitylglucoside, Tetramethyl, Acetyloctahydronaphthalenes, CI 77491, CI 77891.",
+        "old_normalized_ingredients": [
+          "Aqua",
+          "Cetearyl Alcohol",
+          "Glycerin",
+          "Tripelargonin",
+          "Behenamidopropyl Dimethylamine",
+          "Dicaprylyl Ether",
+          "Lauryl Alcohol",
+          "Macadamia Ternifolia Seed Oil",
+          "Argania Spinosa Kernel Oil",
+          "Biotin",
+          "Glycolic Acid",
+          "Hydrolyzed Rice Protein",
+          "Illite",
+          "Malic Acid",
+          "Niacinamide",
+          "Pelvetia Canaliculata Extract",
+          "Salicylic Acid",
+          "Theobroma Cacao Seed Butter",
+          "Tocopherol",
+          "Tocopheryl Acetate",
+          "Anhydroxylitol",
+          "Cetyl Esters",
+          "Citric Acid",
+          "Dextrin",
+          "Ethylhexylglycerin",
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "Hydroxypropyl Starch Phosphate",
+          "Lactic Acid",
+          "Maltitol",
+          "Parfum",
+          "Phenoxyethanol",
+          "Sodium Benzoate",
+          "Sorbic Acid",
+          "Xylitol",
+          "Xylitylglucoside"
+        ],
+        "current_normalized_ingredients": [
+          "Aqua",
+          "Cetearyl Alcohol",
+          "Glycerin",
+          "Stearamidopropyl Dimethylamine",
+          "Argania Spinosa Kernel Oil",
+          "Macadamia Ternifolia Seed Oil",
+          "Coco-Caprylate/Caprate",
+          "Maltitol",
+          "Biotin",
+          "Glycolic Acid",
+          "Hydrolyzed Rice Protein",
+          "Malic Acid",
+          "Niacinamide",
+          "Pelvetia Canaliculata Extract",
+          "Salicylic Acid",
+          "Theobroma Cacao Seed Butter",
+          "Anhydroxylitol",
+          "Behentrimonium Chloride",
+          "Calcium Aluminum Borosilicate",
+          "Cetrimonium Chloride",
+          "Cetyl Esters",
+          "Citric Acid",
+          "Guar Hydroxypropyltrimonium Chloride",
+          "Isoamyl Laurate",
+          "Isopropyl Alcohol",
+          "Lactic Acid",
+          "Mica",
+          "Oleyl Alcohol",
+          "Parfum",
+          "Potassium Sorbate",
+          "Silica",
+          "Sodium Benzoate",
+          "Sodium Citrate",
+          "Tin Oxide",
+          "Xylitol",
+          "Xylitylglucoside",
+          "Tetramethyl Acetyloctahydronaphthalenes",
+          "CI 77491",
+          "CI 77891"
+        ],
+        "raw_current_sha256": "22c6fb964a5ccd9e1251361c23e182ee10a355850da4a71e83f35465801c2ae3",
+        "ordered_normalized_sha256": "1934c5192cc62964abec8332180b597c6386fc3fca36d243ae7216e0bafef133",
+        "old_only": [
+          "Tripelargonin",
+          "Behenamidopropyl Dimethylamine",
+          "Dicaprylyl Ether",
+          "Lauryl Alcohol",
+          "Illite",
+          "Tocopherol",
+          "Tocopheryl Acetate",
+          "Dextrin",
+          "Ethylhexylglycerin",
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "Hydroxypropyl Starch Phosphate",
+          "Phenoxyethanol",
+          "Sorbic Acid"
+        ],
+        "current_only": [
+          "Stearamidopropyl Dimethylamine",
+          "Coco-Caprylate/Caprate",
+          "Behentrimonium Chloride",
+          "Calcium Aluminum Borosilicate",
+          "Cetrimonium Chloride",
+          "Guar Hydroxypropyltrimonium Chloride",
+          "Isoamyl Laurate",
+          "Isopropyl Alcohol",
+          "Mica",
+          "Oleyl Alcohol",
+          "Potassium Sorbate",
+          "Silica",
+          "Sodium Citrate",
+          "Tin Oxide",
+          "Tetramethyl Acetyloctahydronaphthalenes",
+          "CI 77491",
+          "CI 77891"
+        ],
+        "position_changes": [
+          {
+            "ingredient": "Macadamia Ternifolia Seed Oil",
+            "old_rank": 8,
+            "current_rank": 6
+          },
+          {
+            "ingredient": "Argania Spinosa Kernel Oil",
+            "old_rank": 9,
+            "current_rank": 5
+          },
+          {
+            "ingredient": "Biotin",
+            "old_rank": 10,
+            "current_rank": 9
+          },
+          {
+            "ingredient": "Glycolic Acid",
+            "old_rank": 11,
+            "current_rank": 10
+          },
+          {
+            "ingredient": "Hydrolyzed Rice Protein",
+            "old_rank": 12,
+            "current_rank": 11
+          },
+          {
+            "ingredient": "Malic Acid",
+            "old_rank": 14,
+            "current_rank": 12
+          },
+          {
+            "ingredient": "Niacinamide",
+            "old_rank": 15,
+            "current_rank": 13
+          },
+          {
+            "ingredient": "Pelvetia Canaliculata Extract",
+            "old_rank": 16,
+            "current_rank": 14
+          },
+          {
+            "ingredient": "Salicylic Acid",
+            "old_rank": 17,
+            "current_rank": 15
+          },
+          {
+            "ingredient": "Theobroma Cacao Seed Butter",
+            "old_rank": 18,
+            "current_rank": 16
+          },
+          {
+            "ingredient": "Anhydroxylitol",
+            "old_rank": 21,
+            "current_rank": 17
+          },
+          {
+            "ingredient": "Cetyl Esters",
+            "old_rank": 22,
+            "current_rank": 21
+          },
+          {
+            "ingredient": "Citric Acid",
+            "old_rank": 23,
+            "current_rank": 22
+          },
+          {
+            "ingredient": "Lactic Acid",
+            "old_rank": 28,
+            "current_rank": 26
+          },
+          {
+            "ingredient": "Maltitol",
+            "old_rank": 29,
+            "current_rank": 8
+          },
+          {
+            "ingredient": "Parfum",
+            "old_rank": 30,
+            "current_rank": 29
+          },
+          {
+            "ingredient": "Xylitol",
+            "old_rank": 34,
+            "current_rank": 35
+          },
+          {
+            "ingredient": "Xylitylglucoside",
+            "old_rank": 35,
+            "current_rank": 36
+          }
+        ]
+      },
+      "current_source": {
+        "url": "https://www.dm.de/p/d/3132757/schaebens-haarmaske-arganoel-2x7-ml",
+        "type": "retailer",
+        "fresh_details_checked_at": "2026-10-03T15:26:54.025Z",
+        "raw_details": {
+          "dan": "3132757",
+          "gtin": "4003573125015",
+          "productName": "Haarmaske Arganöl (2x7 ml), 14 ml",
+          "brand": "Schaebens",
+          "found": "true",
+          "errorMessage": "",
+          "productUrl": "https://www.dm.de/applink/p/d/3132757/schaebens-haarmaske-arganoel-2x7-ml?appPageType=productdetails&appProductId=3132757&wt_mc=dm-mcp",
+          "image": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1786832609/assets/pas/images/da1385d2-fb67-4556-8607-000400abda80/schaebens-haarmaske-arganoel-2x7-ml",
+          "imageBackgroundColor": "#F9F4F1",
+          "productType": "NON_FOOD",
+          "weight": "16g",
+          "volume": "0.029l",
+          "description": "Die Schaebens Haarmaske Arganöl ist eine intensive Pflege, die speziell für die Bedürfnisse von beanspruchtem Haar entwickelt wurde. Die Formel mit Macadamianussöl kann Haarbruch entgegenwirken und sorgt für einen effektiven Frizz-Control-Effekt. Das Haar wird spürbar geschmeidiger und lässt sich leichter kämmen. Zudem verleiht die pflegende Haarmaske mit Arganöl ein seidig-glattes Haargefühl und bändigt widerspenstige Strähnen. Für ein gepflegtes und glänzendes Erscheinungsbild der Haare, vom Ansatz bis in die Spitzen.",
+          "keyBenefits": "[Intensiv pflegende Haarmaske;Mit Anti-Haarbruch-Formel;Sorgt für einen Frizz-Control-Effekt;Angereichert mit Arganöl und Macadamianussöl]",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "Ingredients: Aqua, Cetearyl Alcohol, Glycerin, Stearamidopropyl Dimethylamine, Argania Spinosa Kernel Oil, Macadamia Ternifolia Seed Oil, Coco-Caprylate/Caprate, Maltitol, Biotin, Glycolic Acid, Hydrolyzed Rice Protein, Malic Acid, Niacinamide, Pelvetia Canaliculata Extract, Salicylic Acid, Theobroma Cacao Seed Butter, Anhydroxylitol, Behentrimonium Chloride, Calcium Aluminum, Borosilicate, Cetrimonium Chloride, Cetyl Esters, Citric Acid, Guar Hydroxypropyltrimonium Chloride, Isoamyl Laurate, Isopropyl Alcohol, Lactic Acid, Mica, Oleyl Alcohol, Parfum, Potassium Sorbate, Silica, Sodium Benzoate, Sodium Citrate, Tin Oxide, Xylitol, Xylitylglucoside, Tetramethyl, Acetyloctahydronaphthalenes, CI 77491, CI 77891.",
+          "applicationInstructions": "Anwendung Nach der Haarwäsche sanft in die feuchten Haarlängen und Spitzen einmassieren. 5 Minuten einwirken lassen und gut ausspülen.  Hinweise: Augenkontakt vermeiden. Bei Kontakt mit den Augen sofort mit viel Wasser ausspülen.",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": "false"
+        }
+      },
+      "purchase_offer": {
+        "url": "https://www.dm.de/p/d/3132757/schaebens-haarmaske-arganoel-2x7-ml",
+        "shop": "dm",
+        "gtin": "4003573125015",
+        "package": "2 x 7 ml = 14 ml",
+        "price_eur": 0.95,
+        "purchasable": true,
+        "sellout": false,
+        "checked_at": "2026-10-03T15:26:54.025Z",
+        "proof": "fresh public official dm MCP search, exact GTIN + DAN + package match",
+        "selected_search_row": {
+          "gtin": "4003573125015",
+          "dan": "3132757",
+          "brand": "Schaebens",
+          "title": "Haarmaske Arganöl (2x7 ml), 14 ml",
+          "details": "",
+          "price": "0,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3132757/schaebens-haarmaske-arganoel-2x7-ml?appPageType=productdetails&appProductId=3132757&wt_mc=dm-mcp",
+          "category": "Haarkur & Haarmaske > Haarpflege",
+          "highlights": "Intensiv pflegende Haarmaske, Mit Anti-Haarbruch-Formel, Sorgt für einen Frizz-Control-Effekt, Angereichert mit Arganöl ",
+          "description": "Die Schaebens Haarmaske Arganöl ist eine intensive Pflege, die speziell für die Bedürfnisse von beanspruchtem Haar entwickelt wurde. Die Formel mit Ma",
+          "vegan": "false",
+          "bio": "false",
+          "glutenFree": "false",
+          "lactoseFree": "false",
+          "naturalCosmetics": "false",
+          "fragranceFree": "false",
+          "alcoholFree": "false",
+          "parabenFree": "false",
+          "sulfateFree": "false",
+          "preservativeFree": "false",
+          "dyeFree": "false",
+          "oilFree": "false",
+          "sugarFree": "false",
+          "nutFree": "false",
+          "soyFree": "false",
+          "siliconeFree": "false",
+          "vegetarian": "false",
+          "waterproof": "false",
+          "new": "false",
+          "limitedEdition": "false",
+          "dmBrand": "false",
+          "sellout": "false",
+          "onlineOnly": "false",
+          "exclusiveDm": "false",
+          "purchasable": "true"
+        },
+        "applies_to_existing_historical_catalog_identity": false
+      },
+      "stored": {
+        "id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+        "product": {
+          "id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+          "name": "Schaebens Argan-Öl Haarmaske",
+          "tags": [
+            "maske"
+          ],
+          "brand": "Schaebens",
+          "origin": "curated",
+          "brand_id": "cafd122c-9dea-4339-80c9-20436bf23d24",
+          "category": "Maske",
+          "currency": "EUR",
+          "tom_take": null,
+          "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-03/3ce9a9da-4d58-4a66-a424-f8818960b5dc/44-3ce9a9da-4d58-4a66-a424-f8818960b5dc-schaebens-schaebens-argan-ol-haarmaske-bdd835a609d0.webp",
+          "is_active": true,
+          "price_eur": 1.49,
+          "created_at": "2026-03-03T12:34:20.857962+00:00",
+          "sort_order": 99,
+          "updated_at": "2026-08-15T07:46:42.024664+00:00",
+          "description": "Schaebens Argan-Öl Haarmaske ist ein Maske von Schaebens, empfohlen für feines Haar bei Performance-Pflege.",
+          "category_key": "mask",
+          "affiliate_link": "https://www.dm.de/schaebens-haarmaske-arganoel-p4003573025018.html",
+          "product_line_id": null,
+          "lifecycle_status": "active",
+          "net_content_unit": null,
+          "price_checked_at": "2026-06-10T00:00:00+00:00",
+          "net_content_value": null,
+          "short_description": null,
+          "suitable_concerns": [
+            "performance"
+          ],
+          "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/bdd835a609d0a23a6c5282a95156164dfa055d12e06e06998dd99c9672185a0c.webp",
+          "purchase_link_status": "available",
+          "suitable_thicknesses": [
+            "fine"
+          ],
+          "is_chaarlie_recommended": true,
+          "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+        },
+        "shampoo": null,
+        "conditioner": null,
+        "conditioner_rerank": null,
+        "mask": [
+          {
+            "weight": "medium",
+            "product_id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+            "category_key": "mask",
+            "concentration": "medium",
+            "ingredient_flags": [],
+            "balance_direction": "balanced",
+            "functional_benefits": [
+              "shine",
+              "smoothing_frizz_control"
+            ],
+            "repair_support_level": "low"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "a343203d-65b8-44b7-aebe-823e842604ab",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "product_id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04003573025018",
+            "identifier_value": "4003573025018",
+            "normalized_identifier_value": "4003573025018"
+          }
+        ],
+        "protocols": [
+          {
+            "role": "intensive_conditioning_mask",
+            "source_url": "https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel",
+            "guidance_payload_v2": {
+              "role": "intensive_care",
+              "facts": {
+                "heat": null,
+                "rinse": "rinse_out",
+                "amount": null,
+                "contactTime": {
+                  "kind": "seconds",
+                  "seconds": 300
+                },
+                "applicationArea": "hair_lengths_ends",
+                "applicationState": "wet_hair",
+                "conditionerPolicy": "replaces_conditioner"
+              },
+              "scope": {
+                "kind": "product",
+                "category": "mask",
+                "productId": "3ce9a9da-4d58-4a66-a424-f8818960b5dc"
+              },
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-10",
+                  "sourceUrl": "https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel",
+                  "sourceType": "retailer"
+                }
+              ],
+              "exactSteps": [],
+              "sourceRole": "intensive_conditioning_mask",
+              "workflowId": null,
+              "cautionCodes": [],
+              "contractKind": "product_pointer",
+              "schemaVersion": 2,
+              "applicationFamily": "post_shampoo_rinse_out_mask",
+              "runtimeBlockerCode": null,
+              "requiredCompanionProductId": null
+            },
+            "contact_time_seconds": 300
+          }
+        ]
+      },
+      "readiness": {
+        "research_status": "partial_ordinary_intake_research",
+        "catalog_intake_ready": false,
+        "global_recommendation_ready": false,
+        "current_live_row_is_active_and_recommended": true,
+        "no_production_change_applied": true,
+        "blockers": [
+          "No approved formula/identity transition decision",
+          "Mask concentration, balance and thickness eligibility unresolved",
+          "Current pack image not finalized/approved",
+          "Exact current-version protocol and final payload not approved",
+          "No catalog preflight/promotion dry-run performed"
+        ]
+      },
+      "protocol_candidate": {
+        "role": "intensive_conditioning_mask",
+        "raw_directions": "Anwendung Nach der Haarwäsche sanft in die feuchten Haarlängen und Spitzen einmassieren. 5 Minuten einwirken lassen und gut ausspülen.  Hinweise: Augenkontakt vermeiden. Bei Kontakt mit den Augen sofort mit viel Wasser ausspülen.",
+        "source_url": "https://www.dm.de/p/d/3132757/schaebens-haarmaske-arganoel-2x7-ml",
+        "contact_time_seconds": 300
+      },
+      "image_candidate": {
+        "source_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1786832609/assets/pas/images/da1385d2-fb67-4556-8607-000400abda80/schaebens-haarmaske-arganoel-2x7-ml",
+        "exact_current_pack_source": true,
+        "cached_and_visually_approved": false,
+        "finalized_chaarlie_asset_approved": false
+      },
+      "historical_source": {
+        "path": "docs/price-audit-rollouts/2026-10-03-identity-resolution/schaebens-package-comparison.json",
+        "url": "https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel",
+        "old_gtin": "4003573025018",
+        "old_size": "20 ml"
+      },
+      "manufacturer_source": {
+        "url": "https://www.schaebens.de/produkte/arganoel-haarmaske/",
+        "supports": "Current 2x7ml pack, full declared formula, five-minute rinse-out directions.",
+        "access_note": "Web primary page verified; direct urllib fetch returned403. No finished-product efficacy study reviewed."
+      },
+      "material_delta": "13 removed and17 added declared ingredients after punctuation normalization; new amidoamine/quat/polymer base, different esters and pigments, plus new GTIN and14ml sachet pack. This is not old20ml commerce continuity.",
+      "normalization_caveat": "Raw dm splits Calcium Aluminum, Borosilicate; brand writes Calcium Aluminum Borosilicate. Both sources split Tetramethyl, Acetyloctahydronaphthalenes; interpreted as the conventional ingredient token for comparison only, raw strings preserved. Do not claim exact pack label verification.",
+      "ordinary_intake_candidate": {
+        "product_mask_specs": {
+          "weight": {
+            "candidate": "medium",
+            "confidence": "moderate",
+            "rationale": "Fatty alcohol, cationic base, oils and esters support emollient mask potential; actual deposition is unknown. No mask engine applied."
+          },
+          "concentration": {
+            "candidate": null,
+            "status": "unknown",
+            "rationale": "No measured active concentration or category-specific evidence rule supports a confident low/medium/high from INCI rank."
+          },
+          "balance_direction": {
+            "candidate": null,
+            "status": "needs_review",
+            "rationale": "Humectant/emollient architecture and rice protein coexist; no approved Mask classification engine may be inferred from Conditioner v1.6."
+          },
+          "ingredient_flags": {
+            "candidate": [
+              "polymers",
+              "oils",
+              "proteins",
+              "humectants"
+            ],
+            "rationale": "Presence-only: cationic guar; argan/macadamia/cocoa; hydrolyzed rice protein; glycerin/maltitol/xylitol."
+          },
+          "repair_support_level": {
+            "candidate": "low",
+            "status": "provisional",
+            "rationale": "Ordinary care protection is supported. Anti-breakage claim and rice-protein presence do not prove higher repair efficacy. Requires ordinary Mask property review; no automatic Conditioner medium rule."
+          },
+          "functional_benefits": {
+            "candidate": [
+              "smoothing_frizz_control",
+              "detangling_slip",
+              "shine"
+            ],
+            "rationale": "Exact dm/brand positioning plus compatible conditioning architecture. Potential/claimed benefits, not quantitative efficacy."
+          }
+        },
+        "suitable_thicknesses": {
+          "candidate": null,
+          "status": "needs_research",
+          "rationale": "Old fine-only eligibility cannot transfer; medium texture alone does not supply verified Mask diameter eligibility."
+        }
+      },
+      "recommended_handling": "Propose distinct current catalog version/product for GTIN4003573125015, 2x7ml. Keep historical UUID/barcode4003573025018/20ml evidence intact. No alias and no overwrite of old identity. Complete ordinary Mask intake, exact new image and required facts before review. Separate decision needed on continued recommendation/lifecycle of old unavailable row.",
+      "human_decisions": [
+        "Approve preparing a separate current14ml catalog candidate, or keep it outside catalog.",
+        "Decide old20ml lifecycle/recommendation treatment independently; current work made no deactivation.",
+        "Review completed Mask properties and image before guarded final handoff."
+      ]
+    }
+  ],
+  "verification": {
+    "fresh_dm_checked": "2026-10-03T15:26:52Z–15:26:54Z",
+    "all3_current_inci_equal_fresh_dm_details": true,
+    "candidate_gtin_ownership_query": "No existing product_identifiers rows for04070765004649/04066447919202/04003573125015",
+    "adapter_replay_results": {
+      "shampoo": "property_lane_ready",
+      "conditioner": "projection_ready"
+    },
+    "semantic_limit": "These statuses validate provisional envelopes and deterministic mapping, not certified blind research or human approval.",
+    "unchanged_research_history": true,
+    "db_writes": false,
+    "repo_writes": false,
+    "queue_worker_server_timer_writes": false
+  },
+  "artifact_directory": "/tmp/chaarlie-buckets/bucket3"
+}

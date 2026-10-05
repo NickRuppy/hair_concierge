@@ -1,0 +1,27 @@
+{
+  "method": "Live browser selected offer, enabled cart and delivery October 6-7. Same registered identity and package; no variant substitution.",
+  "records": [
+    {
+      "id": "961e3935-f823-44e7-8601-900c62855d3d",
+      "url": "https://www.rossmann.de/de/pflege-und-duft-syoss-intense-keratin-haarmaske/p/4015100860863",
+      "price_eur": 4.99,
+      "package_value": 400,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "4015100860863"
+      ],
+      "checked_at": "2026-10-03T10:54:59.985Z"
+    },
+    {
+      "id": "f7144789-8302-42b1-a5b1-e761402c1b7c",
+      "url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-grow-abundant-anti-haarverlust-spuelung/p/8006530059299",
+      "price_eur": 7.99,
+      "package_value": 250,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "8006530059299"
+      ],
+      "checked_at": "2026-10-03T10:56:14.649Z"
+    }
+  ]
+}

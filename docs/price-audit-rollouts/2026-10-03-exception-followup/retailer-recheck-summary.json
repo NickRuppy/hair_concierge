@@ -1,0 +1,505 @@
+{
+  "method": "Fresh unauthenticated direct-PDP recheck. Generic marketplace/group/variant prices were not accepted. Preferred-source search did not establish a buyable replacement for the two documented dm-unavailable ordinary-care products; search-cache observations are intentionally not treated as fresh commercial evidence.",
+  "counts": {
+    "confirmed_live_exact_primary": 9,
+    "transport_blocked_needs_browser_or_prior_evidence": 4,
+    "marketplace_hold_transport_limited": 2,
+    "transport_challenge_needs_browser_or_prior_evidence": 3
+  },
+  "records": [
+    {
+      "id": "05e68c32-f096-457f-8b88-5cd3c0934873",
+      "name": "Jean&Len Repair Keratin & Mandel",
+      "category_key": "oil",
+      "primary_url": "https://www.jeanlen.de/keratin-haaroel",
+      "checked_at": "2026-10-03T13:13:44.650312+00:00",
+      "title": "Keratin Haaröl | Jean&Len",
+      "registered_gtins": [
+        "4262401733253"
+      ],
+      "expected_offer": {
+        "price_eur": 3.99,
+        "package_value": 100,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4262401733253"
+        ]
+      },
+      "observed_gtins": [
+        "4262401733253"
+      ],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "confirmed_live_exact_primary",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 3.99,
+        "package_value": 100,
+        "package_unit": "ml",
+        "stock": "positive purchase/stock evidence on exact PDP"
+      },
+      "policy_reason": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established."
+    },
+    {
+      "id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "category_key": "conditioner",
+      "primary_url": "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+      "checked_at": "2026-10-03T13:13:43.472045+00:00",
+      "registered_gtins": [
+        "4072600703403"
+      ],
+      "expected_offer": {
+        "price_eur": 2.8,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4072600703403"
+        ]
+      },
+      "observed_gtins": [],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "transport_blocked_needs_browser_or_prior_evidence",
+      "match": null,
+      "actual_offer": null,
+      "fetch_error": "HTTP Error 403: Forbidden",
+      "policy_reason": "Exact retailer URL rejected unauthenticated GET. This is an access limitation, not changed-price or unavailability evidence."
+    },
+    {
+      "id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "name": "BioGourmet Distelöl",
+      "category_key": "oil",
+      "primary_url": "https://www.greenist.de/biogourmet-bio-disteloel-250ml.html",
+      "checked_at": "2026-10-03T13:13:44.560893+00:00",
+      "title": "Distelöl nativ kaltgepresst, Bio-Speiseöl | BioGourmet",
+      "registered_gtins": [
+        "4039057414863"
+      ],
+      "expected_offer": {
+        "price_eur": 6.29,
+        "package_value": 250,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4039057414863"
+        ]
+      },
+      "observed_gtins": [],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "confirmed_live_exact_primary",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 6.29,
+        "package_value": 250,
+        "package_unit": "ml",
+        "stock": "positive purchase/stock evidence on exact PDP"
+      },
+      "policy_reason": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established."
+    },
+    {
+      "id": "315ae9f5-ad1a-4159-b307-2413338c8052",
+      "name": "Herbal Essences Haarmaske Blütensanft",
+      "category_key": "mask",
+      "primary_url": "https://www.office-partner.de/herbal-essences-rose-haarmaske-300-ml-n2000020455",
+      "checked_at": "2026-10-03T13:13:43.953766+00:00",
+      "title": "Herbal Essences Rose Haarmaske 300 ml | office-partner.de",
+      "registered_gtins": [
+        "8700216212724"
+      ],
+      "expected_offer": {
+        "price_eur": 5.58,
+        "package_value": 300,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "8700216212724"
+        ]
+      },
+      "observed_gtins": [
+        "8700216212724"
+      ],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "confirmed_live_exact_primary",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 5.58,
+        "package_value": 300,
+        "package_unit": "ml",
+        "stock": "positive purchase/stock evidence on exact PDP"
+      },
+      "policy_reason": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established."
+    },
+    {
+      "id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "name": "MoriVeda Premium Moringaöl",
+      "category_key": "oil",
+      "primary_url": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+      "checked_at": "2026-10-03T13:13:44.732059+00:00",
+      "registered_gtins": [
+        "4251762160037"
+      ],
+      "expected_offer": {
+        "price_eur": 16.99,
+        "package_value": 100,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4251762160037"
+        ]
+      },
+      "observed_gtins": [],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "marketplace_hold_transport_limited",
+      "match": null,
+      "actual_offer": null,
+      "fetch_error": "<urlopen error _ssl.c:1112: The handshake operation timed out>",
+      "policy_reason": "Keep the existing marketplace hold. Failed transport is not availability evidence; no direct preferred exact offer was established in this pass."
+    },
+    {
+      "id": "4506954b-128a-473c-866f-54a300ff23f4",
+      "name": "Hair Biology Full & Shining Conditioner",
+      "category_key": "conditioner",
+      "primary_url": "https://www.galaxus.de/de/s6/product/hair-biology-haarspuelung-full-shining-160-ml-160-ml-conditioner-13128066",
+      "checked_at": "2026-10-03T13:13:43.626633+00:00",
+      "registered_gtins": [
+        "8001841216997"
+      ],
+      "expected_offer": {
+        "price_eur": 5.24,
+        "package_value": 160,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "8001841216997"
+        ]
+      },
+      "observed_gtins": [],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "transport_blocked_needs_browser_or_prior_evidence",
+      "match": null,
+      "actual_offer": null,
+      "fetch_error": "HTTP Error 403: Forbidden",
+      "policy_reason": "Exact retailer URL rejected unauthenticated GET. This is an access limitation, not changed-price or unavailability evidence."
+    },
+    {
+      "id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+      "category_key": "oil",
+      "primary_url": "https://nalda.de/products/4550516493590",
+      "checked_at": "2026-10-03T13:13:45.149103+00:00",
+      "title": "Fino Premium Touch Penetration Essence Hair Oil 70ml von Fino | Artikel kaufen | Nalda",
+      "registered_gtins": [
+        "4550516493590"
+      ],
+      "expected_offer": {
+        "price_eur": 14.63,
+        "package_value": 70,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4550516493590"
+        ]
+      },
+      "observed_gtins": [
+        "4550516493590"
+      ],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "confirmed_live_exact_primary",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 14.63,
+        "package_value": 70,
+        "package_unit": "ml",
+        "stock": "positive purchase/stock evidence on exact PDP"
+      },
+      "policy_reason": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established."
+    },
+    {
+      "id": "695414e1-3435-4304-943b-76677408980c",
+      "name": "Maria Nila Structure Repair Leave-In",
+      "category_key": "leave_in",
+      "primary_url": "https://www.cosmeterie.de/maria-nila/structure-repair-leave-in-cream-1",
+      "checked_at": "2026-10-03T13:13:43.957451+00:00",
+      "title": "Maria Nila Structure Repair Leave-In Cream, 200 ml - Cosmeterie",
+      "registered_gtins": [
+        "7391681036079"
+      ],
+      "expected_offer": {
+        "price_eur": 32.0,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "7391681036079"
+        ]
+      },
+      "observed_gtins": [
+        "7391681036079"
+      ],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "confirmed_live_exact_primary",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 32.0,
+        "package_value": 200,
+        "package_unit": "ml",
+        "stock": "positive purchase/stock evidence on exact PDP"
+      },
+      "policy_reason": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established."
+    },
+    {
+      "id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+      "category_key": "shampoo",
+      "primary_url": "https://www.hagel-shop.de/monday-haircare-volume-shampoo-350-ml.html",
+      "checked_at": "2026-10-03T13:13:43.221511+00:00",
+      "title": "MONDAY Haircare Volume Shampoo 350 ml günstig kaufen | HAGEL Online Shop",
+      "registered_gtins": [
+        "4897097266343"
+      ],
+      "expected_offer": {
+        "price_eur": 7.95,
+        "package_value": 350,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4897097266343"
+        ]
+      },
+      "observed_gtins": [],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "confirmed_live_exact_primary",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 7.95,
+        "package_value": 350,
+        "package_unit": "ml",
+        "stock": "positive purchase/stock evidence on exact PDP"
+      },
+      "policy_reason": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established."
+    },
+    {
+      "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "name": "Gliss Aqua Revive",
+      "category_key": "mask",
+      "primary_url": "https://www.douglas.de/de/p/m003070896",
+      "checked_at": "2026-10-03T13:13:43.703809+00:00",
+      "registered_gtins": [],
+      "expected_offer": {
+        "price_eur": 12.98,
+        "package_value": 400,
+        "package_unit": "ml",
+        "observed_gtin": []
+      },
+      "observed_gtins": [],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "marketplace_hold_transport_limited",
+      "match": null,
+      "actual_offer": null,
+      "fetch_error": "HTTP Error 400: Bad Request",
+      "policy_reason": "Keep the existing marketplace hold. Failed transport is not availability evidence; no direct preferred exact offer was established in this pass."
+    },
+    {
+      "id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "category_key": "mask",
+      "primary_url": "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+      "checked_at": "2026-10-03T13:13:43.804045+00:00",
+      "registered_gtins": [],
+      "expected_offer": {
+        "price_eur": 2.8,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_gtin": []
+      },
+      "observed_gtins": [],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "transport_blocked_needs_browser_or_prior_evidence",
+      "match": null,
+      "actual_offer": null,
+      "fetch_error": "HTTP Error 403: Forbidden",
+      "policy_reason": "Exact retailer URL rejected unauthenticated GET. This is an access limitation, not changed-price or unavailability evidence."
+    },
+    {
+      "id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "name": "OUAI Leave In Conditioner",
+      "category_key": "leave_in",
+      "primary_url": "https://www.sephora.de/p/leave-in-conditioner-426531.html",
+      "checked_at": "2026-10-03T13:13:44.442267+00:00",
+      "registered_gtins": [
+        "815402023119"
+      ],
+      "expected_offer": {
+        "price_eur": 30.45,
+        "package_value": 140,
+        "package_unit": "ml",
+        "observed_gtin": []
+      },
+      "observed_gtins": [],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "transport_blocked_needs_browser_or_prior_evidence",
+      "match": null,
+      "actual_offer": null,
+      "fetch_error": "HTTP Error 403: Forbidden",
+      "policy_reason": "Exact retailer URL rejected unauthenticated GET. This is an access limitation, not changed-price or unavailability evidence."
+    },
+    {
+      "id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "name": "Guhl Bond+ Reparatur Spülung",
+      "category_key": "conditioner",
+      "primary_url": "https://m.drogeriedepot.de/neue-produkte/guhl-conditioner-bond-reparatur-p-75039.html?active_tab=def&offset_def=96&offset_new=696",
+      "checked_at": "2026-10-03T13:13:43.221863+00:00",
+      "title": "Spülung - Guhl Drogeriedepot.de",
+      "registered_gtins": [
+        "4072600701218"
+      ],
+      "expected_offer": {
+        "price_eur": 5.99,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_gtin": []
+      },
+      "observed_gtins": [
+        "4072600701218"
+      ],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "confirmed_live_exact_primary",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 5.99,
+        "package_value": 200,
+        "package_unit": "ml",
+        "stock": "positive purchase/stock evidence on exact PDP"
+      },
+      "policy_reason": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established."
+    },
+    {
+      "id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "name": "OGX Bond Protein Repair",
+      "category_key": "oil",
+      "primary_url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+      "checked_at": "2026-10-03T13:13:45.117224+00:00",
+      "title": "Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear) - 18.68 € | Boozt.com",
+      "registered_gtins": [
+        "3574661818481"
+      ],
+      "expected_offer": {
+        "price_eur": 18.68,
+        "package_value": 50,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "3574661818481"
+        ]
+      },
+      "observed_gtins": [
+        "3574661818481"
+      ],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "confirmed_live_exact_primary",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 18.68,
+        "package_value": 50,
+        "package_unit": "ml",
+        "stock": "positive purchase/stock evidence on exact PDP"
+      },
+      "policy_reason": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established."
+    },
+    {
+      "id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "name": "Syoss Haarkur Lamination Intense Glaze",
+      "category_key": "mask",
+      "primary_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-haar-laminierungs-kur-intense-glaze/p/4015100867213",
+      "checked_at": "2026-10-03T13:13:43.936185+00:00",
+      "title": "Client Challenge",
+      "registered_gtins": [
+        "4015100867213"
+      ],
+      "expected_offer": {
+        "price_eur": 4.99,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4015100867213"
+        ]
+      },
+      "observed_gtins": [],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "transport_challenge_needs_browser_or_prior_evidence",
+      "match": null,
+      "actual_offer": null,
+      "fetch_error": null,
+      "policy_reason": "Exact retailer URL returned a client challenge shell, so this GET does not revalidate price, package, or stock."
+    },
+    {
+      "id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+      "category_key": "shampoo",
+      "primary_url": "https://www.drogeriedepot.de/haarpflege-farben/haar-shampoo/head-shoulders-shampoo-derma-x-pro-sensitive-pflege-pr-077537/",
+      "checked_at": "2026-10-03T13:13:43.221021+00:00",
+      "title": "Head & Shoulders Shampoo Derma x Pro Sensitive Pflege | 77537 von Procter & Gamble GmbH",
+      "registered_gtins": [
+        "8700216496032"
+      ],
+      "expected_offer": {
+        "price_eur": 5.59,
+        "package_value": 250,
+        "package_unit": "ml",
+        "observed_gtin": "8700216496032"
+      },
+      "observed_gtins": [],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "confirmed_live_exact_primary",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 5.59,
+        "package_value": 250,
+        "package_unit": "ml",
+        "stock": "positive purchase/stock evidence on exact PDP"
+      },
+      "policy_reason": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established."
+    },
+    {
+      "id": "e859d6e0-e991-4081-84b5-b81862c82475",
+      "name": "Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo",
+      "category_key": "shampoo",
+      "primary_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025/",
+      "checked_at": "2026-10-03T13:13:43.221717+00:00",
+      "title": "Client Challenge",
+      "registered_gtins": [
+        "4015100895025"
+      ],
+      "expected_offer": {
+        "price_eur": 4.99,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4015100895025"
+        ]
+      },
+      "observed_gtins": [],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "transport_challenge_needs_browser_or_prior_evidence",
+      "match": null,
+      "actual_offer": null,
+      "fetch_error": null,
+      "policy_reason": "Exact retailer URL returned a client challenge shell, so this GET does not revalidate price, package, or stock."
+    },
+    {
+      "id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+      "name": "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+      "category_key": "leave_in",
+      "primary_url": "https://www.dm.de/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer",
+      "checked_at": "2026-10-03T13:13:44.481104+00:00",
+      "title": "dm-drogerie markt - dauerhaft günstig online kaufen",
+      "registered_gtins": [],
+      "expected_offer": {
+        "price_eur": 2.75,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4070765027518"
+        ]
+      },
+      "observed_gtins": [],
+      "evidence_file": "/tmp/chaarlie-exceptions-retailer-recheck.json",
+      "status": "transport_challenge_needs_browser_or_prior_evidence",
+      "match": null,
+      "actual_offer": null,
+      "fetch_error": null,
+      "policy_reason": "Exact retailer URL returned a client challenge shell, so this GET does not revalidate price, package, or stock."
+    }
+  ]
+}

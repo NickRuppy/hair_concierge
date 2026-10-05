@@ -1,0 +1,147 @@
+{
+  "checked_at": "2026-10-04T08:09:57.428716+00:00",
+  "method": "Independent manual transcription from readable retailer-hosted printed rear label; compare ingredient positions to fresh exact-GTIN dm MCP result. Normalize whitespace/case/trailing full stop only; no synonym substitution or ingredient removal.",
+  "stored_gtin": "8700216211598",
+  "current_gtin": "8700216210546",
+  "label_url": "https://superpharmstorage.blob.core.windows.net/hybris/products/desktop/large/8700216211598_2.jpg",
+  "label_file": "herbal-stored-back-large.jpg",
+  "full_ordered_transcription": "Aqua, Stearyl Alcohol, Behentrimonium Chloride, Bis-Aminopropyl Dimethicone, Cetyl Alcohol, Parfum, Isopropyl Alcohol, Benzyl Alcohol, Sodium Benzoate, Disodium EDTA, Polysorbate 20, Citric Acid, Limonene, Histidine, Aloe Barbadensis Leaf Juice, Hydroxycitronellal, Geraniol, Alpha-Isomethyl Ionone, Linalool, Citronellol, Citral",
+  "ingredients_old": 21,
+  "ingredients_current": 21,
+  "ordered_equal": true,
+  "rows": [
+    {
+      "position": 1,
+      "stored_GTin_label": "Aqua",
+      "current_DE_dm": "Aqua",
+      "equal_normalized": true
+    },
+    {
+      "position": 2,
+      "stored_GTin_label": "Stearyl Alcohol",
+      "current_DE_dm": "Stearyl Alcohol",
+      "equal_normalized": true
+    },
+    {
+      "position": 3,
+      "stored_GTin_label": "Behentrimonium Chloride",
+      "current_DE_dm": "Behentrimonium Chloride",
+      "equal_normalized": true
+    },
+    {
+      "position": 4,
+      "stored_GTin_label": "Bis-Aminopropyl Dimethicone",
+      "current_DE_dm": "Bis-Aminopropyl Dimethicone",
+      "equal_normalized": true
+    },
+    {
+      "position": 5,
+      "stored_GTin_label": "Cetyl Alcohol",
+      "current_DE_dm": "Cetyl Alcohol",
+      "equal_normalized": true
+    },
+    {
+      "position": 6,
+      "stored_GTin_label": "Parfum",
+      "current_DE_dm": "Parfum",
+      "equal_normalized": true
+    },
+    {
+      "position": 7,
+      "stored_GTin_label": "Isopropyl Alcohol",
+      "current_DE_dm": "Isopropyl Alcohol",
+      "equal_normalized": true
+    },
+    {
+      "position": 8,
+      "stored_GTin_label": "Benzyl Alcohol",
+      "current_DE_dm": "Benzyl Alcohol",
+      "equal_normalized": true
+    },
+    {
+      "position": 9,
+      "stored_GTin_label": "Sodium Benzoate",
+      "current_DE_dm": "Sodium Benzoate",
+      "equal_normalized": true
+    },
+    {
+      "position": 10,
+      "stored_GTin_label": "Disodium EDTA",
+      "current_DE_dm": "Disodium EDTA",
+      "equal_normalized": true
+    },
+    {
+      "position": 11,
+      "stored_GTin_label": "Polysorbate 20",
+      "current_DE_dm": "Polysorbate 20",
+      "equal_normalized": true
+    },
+    {
+      "position": 12,
+      "stored_GTin_label": "Citric Acid",
+      "current_DE_dm": "Citric Acid",
+      "equal_normalized": true
+    },
+    {
+      "position": 13,
+      "stored_GTin_label": "Limonene",
+      "current_DE_dm": "Limonene",
+      "equal_normalized": true
+    },
+    {
+      "position": 14,
+      "stored_GTin_label": "Histidine",
+      "current_DE_dm": "Histidine",
+      "equal_normalized": true
+    },
+    {
+      "position": 15,
+      "stored_GTin_label": "Aloe Barbadensis Leaf Juice",
+      "current_DE_dm": "Aloe Barbadensis Leaf Juice",
+      "equal_normalized": true
+    },
+    {
+      "position": 16,
+      "stored_GTin_label": "Hydroxycitronellal",
+      "current_DE_dm": "Hydroxycitronellal",
+      "equal_normalized": true
+    },
+    {
+      "position": 17,
+      "stored_GTin_label": "Geraniol",
+      "current_DE_dm": "Geraniol",
+      "equal_normalized": true
+    },
+    {
+      "position": 18,
+      "stored_GTin_label": "Alpha-Isomethyl Ionone",
+      "current_DE_dm": "Alpha-Isomethyl Ionone",
+      "equal_normalized": true
+    },
+    {
+      "position": 19,
+      "stored_GTin_label": "Linalool",
+      "current_DE_dm": "Linalool",
+      "equal_normalized": true
+    },
+    {
+      "position": 20,
+      "stored_GTin_label": "Citronellol",
+      "current_DE_dm": "Citronellol",
+      "equal_normalized": true
+    },
+    {
+      "position": 21,
+      "stored_GTin_label": "Citral",
+      "current_DE_dm": "Citral",
+      "equal_normalized": true
+    }
+  ],
+  "identity_corroboration": {
+    "brand": "Herbal Essences on front",
+    "variant": "Hebrew front identifies aloe moisture-nourishing conditioner; back describes jasmine scent and rinse-out/optional leave-in",
+    "size": "250mlprinted rear",
+    "barcode": "8700216211598printed rear"
+  },
+  "conclusion": "Materially resolved at complete ingredient declaration +brand/variant/size level. Supports a reviewable cross-market recognition association under multi-barcode policy. Does not prove identical concentrations, chronological succession, or that every historical batch had this formula."
+}

@@ -1,0 +1,496 @@
+{
+  "checked_at": "2026-10-04T08:58:29.654404Z",
+  "catalog_rows": 18,
+  "physical_products": 16,
+  "commerce_rows_updated": 4,
+  "actual_price_changes": 1,
+  "barcodes_added": 3,
+  "remaining_commerce_rows": 14,
+  "replacement_candidate_slots": 14,
+  "unique_replacement_candidates": 11,
+  "sante_exact_backorder_decision_pending": true,
+  "no_new_products_activated": true,
+  "existing_category_properties_and_protocols_preserved": true,
+  "recommendation_flags_preserved": true,
+  "rows": [
+    {
+      "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "name": "Gliss Aqua Revive",
+      "category_key": "mask",
+      "selected_replacement": null,
+      "applied_commerce": {
+        "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+        "url": "https://www.nutritienda.com/de/gliss/gliss-aqua-revive-4-in-1-maske-400-ml",
+        "price": 4.5,
+        "size": 400,
+        "checked_at": "2026-10-04T08:47:43.291Z"
+      },
+      "applied_additional_barcodes": [
+        {
+          "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+          "gtin": "8410436457873",
+          "source": "https://www.nutritienda.com/de/gliss/gliss-aqua-revive-4-in-1-maske-400-ml"
+        }
+      ],
+      "state": "applied_exact_commerce",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "41e09958-5a1f-4997-b99b-f8384b7a8c0c",
+      "name": "Balea Trockenshampoo Kopfhaut Sensitive",
+      "category_key": "dry_shampoo",
+      "selected_replacement": {
+        "name": "Batiste Trockenshampoo Sensible Kopfhaut, leichter Duft",
+        "category": "dry_shampoo",
+        "gtin": "5010724004777",
+        "size": "200 ml",
+        "price_eur": 3.95,
+        "link": "https://www.dm.de/p/d/3048778/batiste-trockenshampoo-sensible-kopfhaut-leichter-duft",
+        "cart": "dm MCP current purchasable=true",
+        "difference": "different brand/formula; retains dry-shampoo and sensitive-scalp positioning",
+        "evidence_ref": "unique_candidate_evidence.Batiste_5010724004777",
+        "source_ref": "sources/dm/final-offers.json",
+        "review_state": "selection and independent product readiness pending; original properties not inherited"
+      },
+      "state": "distinct_replacement_selection_pending",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "name": "Balea Professional Ultimate Volume",
+      "category_key": "shampoo",
+      "selected_replacement": {
+        "name": "Balea PROFESSIONAL Shampoo Hydra Volume",
+        "category": "shampoo",
+        "gtin": "4066447990126",
+        "size": "250 ml",
+        "price_eur": 1.35,
+        "link": "https://www.dm.de/p/d/3126236/balea-professional-shampoo-hydra-volume",
+        "cart": "dm MCP current purchasable=true",
+        "difference": "same brand/category and volume focus; current Hydra Volume identity is distinct from legacy Ultimate Volume",
+        "evidence_ref": "unique_candidate_evidence.HydraVolume_4066447990126",
+        "source_ref": "sources/dm/final-offers.json",
+        "review_state": "selection and independent product readiness pending; original properties not inherited"
+      },
+      "state": "distinct_replacement_selection_pending",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "name": "Hair Biology Revitalize & Soothe",
+      "category_key": "shampoo",
+      "selected_replacement": {
+        "name": "GUHL Shampoo Kopfhaut Sensitiv, 250 ml",
+        "category": "shampoo",
+        "gtin": "4072600283172",
+        "shop": "dm",
+        "url": "https://www.dm.de/p/d/1446989/guhl-shampoo-kopfhaut-sensitiv",
+        "pack_size_ml": 250,
+        "whole_pack_price_eur": 3.95,
+        "currency": "EUR",
+        "price_includes_vat": true,
+        "shipping_extra": true,
+        "checked_at": "2026-10-04T08:49:05.304Z",
+        "orderability": "in_stock",
+        "cart_proof": {
+          "control": "In den Warenkorb",
+          "enabled": true,
+          "stock_text": "Lieferbar",
+          "delivery": "Standardversand 2–3 Werktage",
+          "basket_mutated": false
+        },
+        "full_inci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Betaine, Glycerin, Panthenol, Lactic Acid, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Glyceryl Oleate, Sorbitan Caprylate, Erythritol, Sodium Chloride, Tetrasodium Glutamate Diacetate, Piroctone Olamine, Maltodextrin, Citric Acid, Mentha Aquatica Leaf Extract, Tilia Cordata Flower Extract, Sodium Benzoate, Parfum, CI 42090, Caramel",
+        "directions": "Eine kleine Menge sanft ins nasse Haar einmassieren. Gut ausspülen.",
+        "ingredient_and_directions_source": "https://www.dm.de/p/d/1446989/guhl-shampoo-kopfhaut-sensitiv",
+        "raw_front_image_source": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1000,w_1000/v1758748757/assets/pas/images/549d76c8-73af-45e4-81e7-85a93e672749/guhl-shampoo-kopfhaut-sensitiv",
+        "raw_front_image_path": "/Users/nick/AI_work/hair_conscierge/.worktrees/price-audit-rollout-receipt/docs/price-audit-rollouts/2026-10-04-bucket1-sourcing/sources/brands/guhl-front.webp",
+        "identity_evidence": "Exact GTIN, brand, category, selected pack on primary retailer PDP/tile; downloaded front visually inspected.",
+        "review_state": "prepared replacement candidate only; not catalog approval or activation",
+        "source_ref": "sources/brands/brands.json",
+        "tradeoff": "Guhl is a distinct shampoo for sensitive/dry scalp, not Hair Biology Meno Balance and not a same-formula or volume-effect equivalent. Existing product properties and recommendation status remain untouched."
+      },
+      "state": "distinct_replacement_selection_pending",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "name": "Balea Natural Beauty Hibiskus",
+      "category_key": "conditioner",
+      "selected_replacement": {
+        "brand": "Balea",
+        "line": "Beauty Essentials",
+        "name": "Feuchtigkeitsspendende Spuelung mit Aloe Vera & Kokosmilch",
+        "category_key": "conditioner",
+        "gtin": "4070765053326",
+        "retailer_sku": "3155215",
+        "size_ml": 350,
+        "price_eur": 1.45,
+        "currency": "EUR",
+        "url": "https://www.dm.de/p/d/3155215/balea-conditioner-feuchtigkeitsspendend-beauty-essentials",
+        "seller": "dm",
+        "stock": "Lieferbar; Standardversand 2-3 Werktage",
+        "buy_enabled": true,
+        "checked_at": "2026-10-04T08:40:42.248Z",
+        "inci": "INGREDIENTS: AQUA • CETEARYL ALCOHOL • ISOPROPYL PALMITATE • STEARAMIDOPROPYL DIMETHYLAMINE • STEARYL ALCOHOL • HELIANTHUS ANNUUS HYBRID  OIL • PANTHENOL • ALOE BARBADENSIS LEAF JUICE POWDER • COCOS NUCIFERA FRUIT EXTRACT • COCOS NUCIFERA OIL • GLYCERIN • CETRIMONIUM CHLORIDE • POTASSIUM SORBATE • GLYCERYL OLEATE • COCO-GLUCOSIDE • TOCOPHEROL • PARFUM • HYDROGENATED PALM GLYCERIDES CITRATE • CITRIC ACID • BENZOIC ACID.",
+        "directions": "versorgt das Haar mit einer Extraportion Feuchtigkeit und verbessert die Kämmbarkeit, ohne zu beschweren. Nach der Haarwäsche in die feuchten Haarlängen einmassieren und kurz einwirken lassen. Gründlich ausspülen.",
+        "front_image_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_440,w_500/v1783590316/assets/pas/images/2cd564f5-c3ec-466c-aa51-b07953fefd76/balea-conditioner-feuchtigkeitsspendend-beauty-essentials",
+        "front_image_file": "hibiskus-replacement-live-front.img",
+        "identity_difference": "Distinct Beauty Essentials Aloe Vera & Kokosmilch variant, not Hibiskus Natural Beauty. Different article and barcode.",
+        "formula_difference": "New declaration has isopropyl palmitate, stearyl alcohol, sunflower hybrid oil and aloe; old has glyceryl stearate, coco-caprylate/caprate, hydrolyzed rice protein and hibiscus. Not a barcode alias and not a proven successor.",
+        "decision_needed": "Select this distinct product as a preferred-shop replacement through the root reviewed maintenance path; do not overwrite original identity/identifiers or silently inherit category facts.",
+        "source_ref": "sources/identity/identity-offers.json"
+      },
+      "applied_commerce": null,
+      "applied_additional_barcodes": [
+        {
+          "id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+          "gtin": "4058172926181",
+          "source": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-bio-hibiskus-extrakt-und-cocosmilch"
+        }
+      ],
+      "state": "distinct_replacement_selection_pending",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "name": "Garnier Hair Food Macadamia",
+      "category_key": "conditioner",
+      "selected_replacement": null,
+      "applied_commerce": {
+        "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+        "url": "https://www.amazon.de/dp/B0BH7ZW2T4",
+        "price": 5.95,
+        "size": 400,
+        "checked_at": "2026-10-04T08:44:12.402Z"
+      },
+      "applied_additional_barcodes": [],
+      "state": "applied_exact_commerce",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "name": "Nivea Volumen & Kraft",
+      "category_key": "conditioner",
+      "selected_replacement": {
+        "name": "NIVEA Conditioner Power Repair, 200 ml",
+        "category": "conditioner",
+        "gtin": "4006000192598",
+        "shop": "dm",
+        "url": "https://www.dm.de/p/d/1620990/nivea-conditioner-power-repair",
+        "pack_size_ml": 200,
+        "whole_pack_price_eur": 2.95,
+        "currency": "EUR",
+        "price_includes_vat": true,
+        "shipping_extra": true,
+        "checked_at": "2026-10-04T08:43:20.492Z",
+        "orderability": "in_stock",
+        "cart_proof": {
+          "control": "In den Warenkorb",
+          "enabled": true,
+          "stock_text": "Lieferbar",
+          "delivery": "Standardversand 2–3 Werktage",
+          "basket_mutated": false
+        },
+        "full_inci": "Aqua, Cetyl Alcohol, Myristyl Alcohol, Stearamidopropyl Dimethylamine, Cetrimonium Chloride, Squalane, Gardenia Taitensis Flower Extract, Cocos Nucifera Oil, Panthenol, Pentaerythrityl Tetraisostearate, Isoamyl Laurate, Coco-Betaine, Pantolactone, Hydroxyethylcellulose, Sodium Citrate, Citric Acid, Sodium Chloride, Disodium Phosphate, Sodium Phosphate, Lactic Acid, Tocopherol, Hydroxyacetophenone, Parfum",
+        "directions": "Nach dem Shampoo 1–2 walnussgroße Portionen in die feuchten Haarlängen und Spitzen verteilen. Kopfhaut und Ansatz aussparen. Eine Minute einwirken lassen und gründlich mit lauwarmem Wasser ausspülen. (Quellgetreue Zusammenfassung.)",
+        "ingredient_and_directions_source": "https://www.dm.de/p/d/1620990/nivea-conditioner-power-repair",
+        "raw_front_image_source": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1000,w_1000/v1756855769/assets/pas/images/38053712-225a-4eea-9ef9-316dcda9e9c1/nivea-conditioner-power-repair",
+        "raw_front_image_path": "/Users/nick/AI_work/hair_conscierge/.worktrees/price-audit-rollout-receipt/docs/price-audit-rollouts/2026-10-04-bucket1-sourcing/sources/brands/nivea-power-repair-front.webp",
+        "identity_evidence": "Exact GTIN, brand, category, selected pack on primary retailer PDP/tile; downloaded front visually inspected.",
+        "review_state": "prepared replacement candidate only; not catalog approval or activation",
+        "source_ref": "sources/brands/brands.json",
+        "tradeoff": "Nivea Power Repair preserves brand and rinse-out conditioner category but targets repair, not volume; different GTIN/formula. Nivea Volumen & Kraft shampoo was rejected as wrong category."
+      },
+      "state": "distinct_replacement_selection_pending",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+      "name": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+      "category_key": "mask",
+      "selected_replacement": {
+        "name": "Garnier Fructis Haarmaske Aloe Vera Hair Food 3in1",
+        "gtin": "3600542511049",
+        "shop": "dm",
+        "size_ml": 400,
+        "price_eur": 5.95,
+        "url": "https://www.dm.de/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+        "evidence_ref": "../brands/garnier-aloe-tile.json",
+        "existing_mask_catalog_id": "52264c47-f339-49db-9fb2-207d1ad3b470",
+        "difference": "Different brand and formula; moisture-use alternative, not a barcode alias. Current front labels Neue Formel; no automatic formula/eligibility inheritance",
+        "decision": "Distinct replacement selection remains for Nick; do not overwrite legacy identity or flags",
+        "source_ref": "sources/rossmann/exact-checks.json"
+      },
+      "state": "distinct_replacement_selection_pending",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+      "name": "Balea Natural Beauty 3in1 Locken",
+      "category_key": "mask",
+      "selected_replacement": {
+        "name": "Balea Haarmaske Intensivpflege 3in1",
+        "category": "mask",
+        "gtin": "4066447982817",
+        "size": "300 ml",
+        "price_eur": 1.95,
+        "link": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+        "cart": "dm MCP current purchasable=true",
+        "difference": "same 3in1 mask use, but repair/Mandelöl-Vanille positioning instead of curl-focused Natural Beauty",
+        "evidence_ref": "unique_candidate_evidence.Intensivpflege_4066447982817",
+        "source_ref": "sources/dm/final-offers.json",
+        "review_state": "selection and independent product readiness pending; original properties not inherited"
+      },
+      "state": "distinct_replacement_selection_pending",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "name": "Balea Professional Glow & Shine",
+      "category_key": "mask",
+      "selected_replacement": null,
+      "applied_commerce": {
+        "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+        "url": "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine-laminier-kur",
+        "price": 2.75,
+        "size": 200,
+        "checked_at": "2026-10-04T08:44:40.711Z"
+      },
+      "applied_additional_barcodes": [
+        {
+          "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+          "gtin": "4070765006483",
+          "source": "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine-laminier-kur"
+        }
+      ],
+      "state": "applied_exact_commerce",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "name": "Balea Aqua Hyaluron 3 in 1",
+      "category_key": "mask",
+      "selected_replacement": {
+        "for_category": "mask",
+        "name": "Balea Haarmaske Intensivpflege 3in1",
+        "gtin": "4066447982817",
+        "size": "300 ml",
+        "price_eur": 1.95,
+        "link": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+        "cart": "purchasable=true",
+        "difference": "same 3in1 mask class; repair rather than Aqua-Hyaluron moisture positioning",
+        "evidence_ref": "unique_candidate_evidence.Intensivpflege_4066447982817",
+        "source_ref": "sources/dm/final-offers.json",
+        "review_state": "selection and independent product readiness pending; original properties not inherited"
+      },
+      "state": "distinct_replacement_selection_pending",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "17c50884-3c17-479a-848a-10447464e086",
+      "name": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+      "category_key": "mask",
+      "selected_replacement": {
+        "name": "Wahre Schätze Haarkur 1-Minute Traube, 340 ml",
+        "category": "mask",
+        "gtin": "3600542656191",
+        "shop": "dm",
+        "url": "https://www.dm.de/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube",
+        "pack_size_ml": 340,
+        "whole_pack_price_eur": 4.95,
+        "currency": "EUR",
+        "price_includes_vat": true,
+        "shipping_extra": true,
+        "checked_at": "2026-10-04T08:43:42.851Z",
+        "orderability": "in_stock",
+        "cart_proof": {
+          "control": "In den Warenkorb",
+          "enabled": true,
+          "stock_text": "Lieferbar",
+          "delivery": "Standardversand 2–3 Werktage",
+          "basket_mutated": false
+        },
+        "full_inci": "AQUA / WATER • GLYCERIN • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • SORBITAN ISOSTEARATE • PARFUM / FRAGRANCE • MYRISTYL ALCOHOL • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • VITIS VINIFERA FRUIT WATER / GRAPE FRUIT WATER • VITIS VINIFERA SEED OIL / GRAPE SEED OIL • ROSMARINUS OFFICINALIS EXTRACT / ROSEMARY EXTRACT • AMODIMETHICONE • SODIUM CHLORIDE • SODIUM HYDROXIDE • COCO-BETAINE • CITRIC ACID • LACTIC ACID • TARTARIC ACID • CETYL ESTERS • TOCOPHEROL • PHENOXYETHANOL • BENZOIC ACID • CI 17200 / RED 33 • LINALOOL • LINALYL ACETATE • TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL • LIMONENE • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • CARVONE • HEXYL CINNAMAL",
+        "directions": "Nach der Haarwäsche großzügig auf dem nassen Haar verteilen, eine Minute einwirken lassen, mit warmem klarem Wasser gründlich ausspülen; Quelle empfiehlt abschließend passenden Conditioner. (Quellgetreue Zusammenfassung.)",
+        "ingredient_and_directions_source": "https://www.dm.de/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube",
+        "raw_front_image_source": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1000,w_1000/v1764672892/assets/pas/images/513ce4aa-7073-408d-86cf-b8f6aa27490f/wahre-schaetze-haarkur-1-minute-traube",
+        "raw_front_image_path": "/Users/nick/AI_work/hair_conscierge/.worktrees/price-audit-rollout-receipt/docs/price-audit-rollouts/2026-10-04-bucket1-sourcing/sources/brands/garnier-traube-front.webp",
+        "identity_evidence": "Exact GTIN, brand, category, selected pack on primary retailer PDP/tile; downloaded front visually inspected.",
+        "review_state": "prepared replacement candidate only; not catalog approval or activation",
+        "source_ref": "sources/brands/brands.json",
+        "tradeoff": "Traube keeps brand, mask category,1-minute use and340ml size. Different formula/positioning; contains Amodimethicone unlike silicone-free Aktivkohle. Do not transfer scalp/charcoal or no-silicone properties."
+      },
+      "state": "distinct_replacement_selection_pending",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "name": "Isana 3in1 Milchprotein & Mandel",
+      "category_key": "mask",
+      "selected_replacement": {
+        "name": "Schwarzkopf GLISS Haarmaske 4in1 Total Repair",
+        "gtin": "4015100813517",
+        "shop": "dm",
+        "size_ml": 400,
+        "price_eur": 5.75,
+        "url": "https://www.dm.de/p/d/1431891/schwarzkopf-gliss-haarmaske-4in1-total-repair",
+        "evidence_ref": "../dm/final-offers.json#unique_candidate_evidence",
+        "difference": "Distinct multi-use repair mask with hydrolyzed keratin declaration, rather than ISANA milk-protein/almond formula; no equivalent concentration/fit asserted",
+        "decision": "Distinct replacement selection remains for Nick; do not overwrite legacy identity or flags",
+        "source_ref": "sources/rossmann/exact-checks.json"
+      },
+      "state": "distinct_replacement_selection_pending",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "869abd97-a499-4f39-97e5-2722773e46ae",
+      "name": "Sante Intense Hydration",
+      "category_key": "mask",
+      "selected_replacement": {
+        "name": "GARNIER FRUCTIS Haarmaske Aloe Vera Hair Food 3in1, trockenes Haar, 400 ml",
+        "category": "mask",
+        "gtin": "3600542511049",
+        "shop": "dm",
+        "url": "https://www.dm.de/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+        "pack_size_ml": 400,
+        "whole_pack_price_eur": 5.95,
+        "currency": "EUR",
+        "price_includes_vat": true,
+        "shipping_extra": true,
+        "checked_at": "2026-10-04T08:44:10.073Z",
+        "orderability": "in_stock",
+        "cart_proof": {
+          "control": "In den Warenkorb",
+          "enabled": true,
+          "stock_text": "Lieferbar",
+          "delivery": "Standardversand 2–3 Werktage",
+          "basket_mutated": false
+        },
+        "full_inci": "AQUA / WATER • CETEARYL ALCOHOL • GLYCERIN • ISOPROPYL MYRISTATE • GLYCINE SOJA OIL / SOYBEAN OIL • STEARAMIDOPROPYL DIMETHYLAMINE • ALOE BARBADENSIS LEAF JUICE POWDER • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • GLYCERYL LINOLEATE • GLYCERYL LINOLENATE • GLYCERYL OLEATE • COCO-CAPRYLATE/CAPRATE • ASCORBYL GLUCOSIDE • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CAPRYLYL GLYCOL • TARTARIC ACID • CETYL ESTERS • TOCOPHEROL • SALICYLIC ACID • LINALOOL • GERANIOL • GERANYL ACETATE • ROSE KETONES • TRIMETHYLCYCLOPENTENYL METHYLISOPENTENOL • CITRONELLOL • BENZYL ALCOHOL • PARFUM / FRAGRANCE",
+        "directions": "Kopfhautpflege: kleine Menge direkt auf die Kopfhaut geben und sanft einmassieren. Maske: großzügig in feuchten Längen und Spitzen verteilen, 5–10 Minuten einwirken lassen und gründlich ausspülen. Leave-in: kleine Menge in die handtuchtrockenen Spitzen geben, nicht ausspülen. (Quellgetreue Zusammenfassung der aktuellen dm-Anwendung, keine Übertragung auf Bestandsprodukte.)",
+        "ingredient_and_directions_source": "https://www.dm.de/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+        "raw_front_image_source": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1000,w_1000/v1788991845/assets/pas/images/d0f83b33-9459-43be-8aa9-89a2da9b2498/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+        "raw_front_image_path": "/Users/nick/AI_work/hair_conscierge/.worktrees/price-audit-rollout-receipt/docs/price-audit-rollouts/2026-10-04-bucket1-sourcing/sources/brands/garnier-aloe-front.webp",
+        "identity_evidence": "Exact GTIN, brand, category, selected pack on primary retailer PDP/tile; downloaded front visually inspected.",
+        "review_state": "prepared replacement candidate only; not catalog approval or activation",
+        "source_ref": "sources/brands/brands.json",
+        "tradeoff": "Aloe Hair Food is a concrete available moisture-mask alternative; different brand/formula and no certified-natural or three-protein-complex equivalence. Prefer exact Taleoo150ml if a restock-delay purchase link is acceptable."
+      },
+      "exact_backorder_offer": {
+        "url": "https://taleoo.de/sante-intense-hydration-maske-hyaluron-150ml-63237",
+        "shop": "Taleoo",
+        "gtin": "4055297220682",
+        "pack_size_ml": 150,
+        "whole_pack_price_eur": 6.64,
+        "currency": "EUR",
+        "price_includes_vat": true,
+        "shipping_extra": true,
+        "checked_at": "2026-10-04T08:48:44.624Z",
+        "orderability": "backorder_restock_delay",
+        "cart_proof": {
+          "control": "In den Warenkorb (icon suffix)",
+          "enabled": true,
+          "stock_text": "In einigen Tagen wieder lieferbar.",
+          "basket_mutated": false
+        },
+        "qualification": "Exact product and live enabled cart, but restock promise only; do not mark in_stock or guaranteed dispatch."
+      },
+      "state": "exact_backorder_decision_pending",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "e3571e45-1126-4431-bef8-43153ef64c20",
+      "name": "alverde NATURKOSMETIK Haarkur 4in1 Repair & Care Wunderkur",
+      "category_key": "mask",
+      "selected_replacement": {
+        "name": "Schwarzkopf GLISS Haarmaske 4in1 Total Repair",
+        "category": "mask",
+        "gtin": "4015100813517",
+        "size": "400 ml",
+        "price_eur": 5.75,
+        "link": "https://www.dm.de/p/d/1431891/schwarzkopf-gliss-haarmaske-4in1-total-repair",
+        "cart": "dm MCP current purchasable=true",
+        "difference": "same 4in1 repair-mask use; distinct non-natural-cosmetics formula and larger pack",
+        "evidence_ref": "unique_candidate_evidence.GlissTotalRepair_4015100813517",
+        "source_ref": "sources/dm/final-offers.json",
+        "review_state": "selection and independent product readiness pending; original properties not inherited"
+      },
+      "state": "distinct_replacement_selection_pending",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "96f4cf13-7a71-4924-b44e-9d5612d55d32",
+      "name": "alverde NATURKOSMETIK Haarmaske Hydro Feuchtigkeit",
+      "category_key": "mask",
+      "selected_replacement": {
+        "name": "L'ORÉAL PARiS ELVITAL Haarmaske Hydra Hyaluronic",
+        "category": "mask",
+        "gtin": "3600524245849",
+        "size": "300 ml",
+        "price_eur": 4.95,
+        "link": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
+        "cart": "dm MCP current purchasable=true",
+        "difference": "same moisture-mask purpose and hyaluron positioning; distinct brand and non-natural-cosmetics formula",
+        "evidence_ref": "unique_candidate_evidence.ElvitalHydra_3600524245849",
+        "source_ref": "sources/dm/final-offers.json",
+        "review_state": "selection and independent product readiness pending; original properties not inherited"
+      },
+      "state": "distinct_replacement_selection_pending",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "name": "Balea Aqua Hyaluron 3in1",
+      "category_key": "leave_in",
+      "selected_replacement": {
+        "for_category": "leave_in",
+        "name": "Balea PROFESSIONAL Feuchtigkeitsfiller Aqua Hyaluron",
+        "gtin": "4070765026894",
+        "size": "50 ml",
+        "price_eur": 2.95,
+        "link": "https://www.dm.de/p/d/3151631/balea-professional-feuchtigkeitsfiller-aqua-hyaluron",
+        "cart": "purchasable=true",
+        "difference": "same brand and Aqua-Hyaluron moisture purpose, but a filler/leave-in rather than 3in1 mask",
+        "evidence_ref": "unique_candidate_evidence.AquaFiller_4070765026894",
+        "source_ref": "sources/dm/final-offers.json",
+        "review_state": "selection and independent product readiness pending; original properties not inherited"
+      },
+      "state": "distinct_replacement_selection_pending",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    },
+    {
+      "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "name": "Garnier Hair Food Macadamia",
+      "category_key": "leave_in",
+      "selected_replacement": null,
+      "applied_commerce": {
+        "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+        "url": "https://www.amazon.de/dp/B0BH7ZW2T4",
+        "price": 5.95,
+        "size": 400,
+        "checked_at": "2026-10-04T08:44:12.402Z"
+      },
+      "applied_additional_barcodes": [],
+      "state": "applied_exact_commerce",
+      "existing_classifications_changed": false,
+      "recommendation_status_changed": false
+    }
+  ]
+}

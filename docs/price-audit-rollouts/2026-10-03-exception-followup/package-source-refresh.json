@@ -1,0 +1,278 @@
+{
+  "records": [
+    {
+      "id": "314d9881-4fcc-47b5-81e1-58e41779081e",
+      "name": "Garnier Traube Hydraboost",
+      "requested_url": "https://www.douglas.de/de/p/5012008156",
+      "checked_at": "2026-10-03T13:14:30.734564+00:00",
+      "expected": {
+        "price_eur": 2.89,
+        "package_value": 200,
+        "package_unit": "ml",
+        "barcodes": [],
+        "availability": null
+      },
+      "previous_source_file": null,
+      "previous_source_method": null,
+      "fetch_error": "HTTP Error 400: Bad Request"
+    },
+    {
+      "id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "name": "Innersense29",
+      "requested_url": "https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html",
+      "checked_at": "2026-10-03T13:14:31.036094+00:00",
+      "expected": {
+        "price_eur": 29,
+        "package_value": 29,
+        "package_unit": "ml",
+        "barcodes": [],
+        "availability": null
+      },
+      "previous_source_file": null,
+      "previous_source_method": null,
+      "http_status": 200,
+      "final_url": "https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html",
+      "content_type": "text/html; charset=UTF-8",
+      "structured_products": [
+        {
+          "@type": "Product",
+          "name": "INNERSENSE Harmonic Treatment Oil 29 ml",
+          "description": "Natürliches & intensives Pflegeöl ",
+          "offers": {
+            "@type": "http://schema.org/Offer",
+            "price": 29,
+            "url": "https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html",
+            "priceCurrency": "EUR",
+            "availability": "http://schema.org/InStock",
+            "shippingDetails": {
+              "deliveryTime": {
+                "businessDays": {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    ""
+                  ]
+                },
+                "@type": "ShippingDeliveryTime"
+              },
+              "@type": "OfferShippingDetails"
+            }
+          }
+        }
+      ],
+      "expected_price_mentions": {
+        "29": [
+          ".referrer}}var Nt=r(2646);const Lt=new Map;function Mt(e,t,r,n,i=!0,s){if(\"object\"!=typeof t||!t||\"string\"!=typeof r||!r||\"function\"!=typeof t[r])return(0,l.R)(29);const a=function(e){return(e||R.ee).get(\"logger\")}(e),o=(0,Pe.YM)(a,void 0,s),c=new Nt.y(R.P);c.level=n.level,c.customAttributes=n.customAttributes,c.autoCaptured=i;const d=t[r]?.[Pe.Jt]||t[r];return Lt.set(d,c),o.inPlace(t,[r],\"wrap-logg",
+          "bind(r,5288)))}}new F({features:[nt,K,G,vt,Et,Y,Oe,_t,It,Rt],loaderType:\"spa\"})})()})();</script>\n<meta name=\"title\" content=\"INNERSENSE Harmonic Treatment Oil 29 ml günstig kaufen | HAGEL Online Shop\"/>\n<meta name=\"description\" content=\"INNERSENSE Harmonic Treatment Oil 29 ml ➤ günstig im Online Shop kaufen. ✓ Schnelle Lieferung ✓ Kostenlose Beratung ★ Jetzt bei HAGEL sparen!\"/>\n<meta name=\"robots\"",
+          "tle\" content=\"INNERSENSE Harmonic Treatment Oil 29 ml günstig kaufen | HAGEL Online Shop\"/>\n<meta name=\"description\" content=\"INNERSENSE Harmonic Treatment Oil 29 ml ➤ günstig im Online Shop kaufen. ✓ Schnelle Lieferung ✓ Kostenlose Beratung ★ Jetzt bei HAGEL sparen!\"/>\n<meta name=\"robots\" content=\"INDEX,FOLLOW\"/>\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>\n<meta name=\"form",
+          "name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>\n<meta name=\"format-detection\" content=\"telephone=no\"/>\n<title>INNERSENSE Harmonic Treatment Oil 29 ml günstig kaufen | HAGEL Online Shop</title>\n<link  rel=\"stylesheet\" type=\"text/css\"  media=\"all\" href=\"https://www.hagel-shop.de/static/version1790052548/frontend/Hagel/base/de_DE/css/styles-m.min.css\" />\n<link  rel=\"stylesheet\" type=\"te",
+          "el/base/de_DE/fonts/EncodeSansCondensed-Medium.woff2\" />\n<link  rel=\"alternate\" hreflang=\"de\" href=\"https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html\" />\n<link  rel=\"alternate\" hreflang=\"de-AT\" href=\"https://www.hagel-shop.at/innersense-harmonic-treatment-oil-29-ml.html\" />\n<link  rel=\"canonical\" href=\"https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html\" />\n<l",
+          "p.de/innersense-harmonic-treatment-oil-29-ml.html\" />\n<link  rel=\"alternate\" hreflang=\"de-AT\" href=\"https://www.hagel-shop.at/innersense-harmonic-treatment-oil-29-ml.html\" />\n<link  rel=\"canonical\" href=\"https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html\" />\n<link  rel=\"icon\" type=\"image/x-icon\" href=\"https://www.hagel-shop.de/static/version1790052548/frontend/Hagel/base/de_DE/Ma",
+          "s://www.hagel-shop.at/innersense-harmonic-treatment-oil-29-ml.html\" />\n<link  rel=\"canonical\" href=\"https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html\" />\n<link  rel=\"icon\" type=\"image/x-icon\" href=\"https://www.hagel-shop.de/static/version1790052548/frontend/Hagel/base/de_DE/Magento_Theme/favicon.png\" />\n<link  rel=\"shortcut icon\" type=\"image/x-icon\" href=\"https://www.hagel-shop.",
+          "y MagePal -->\n\n    \n\n\n\n<meta name=\"apple-itunes-app\"\n      content=\"app-id=1136740250, app-argument=https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html\">\n\n<meta property=\"og:type\" content=\"product\" />\n<meta property=\"og:site_name\" content=\"Salon&#x20;Hagel&#x20;GmbH\" />\n<meta property=\"og:title\"\n      content=\"INNERSENSE&#x20;Harmonic&#x20;Treatment&#x20;Oil&#x20;29&#x20;ml&#x20;g",
+          " property=\"og:site_name\" content=\"Salon&#x20;Hagel&#x20;GmbH\" />\n<meta property=\"og:title\"\n      content=\"INNERSENSE&#x20;Harmonic&#x20;Treatment&#x20;Oil&#x20;29&#x20;ml&#x20;g&#xFC;nstig&#x20;kaufen&#x20;&#x7C;&#x20;HAGEL&#x20;Online&#x20;Shop\" />\n<meta property=\"og:image\"\n      content=\"https://www.hagel-shop.de/media/catalog/product/1/2/12076976.jpg?quality=80&amp;bg-color=255,255,255&amp;fit=bo",
+          "bounds&amp;height=265&amp;width=265&amp;canvas=265:265\" />\n<meta property=\"og:description\"\n      content=\"INNERSENSE&#x20;Harmonic&#x20;Treatment&#x20;Oil&#x20;29&#x20;ml&#x20;&#x27A4;&#x20;g&#xFC;nstig&#x20;im&#x20;Online&#x20;Shop&#x20;kaufen.&#x20;&#x2713;&#x20;Schnelle&#x20;Lieferung&#x20;&#x2713;&#x20;Kostenlose&#x20;Beratung&#x20;&#x2605;&#x20;Jetzt&#x20;bei&#x20;HAGEL&#x20;sparen&#x21;\" />\n<m",
+          "#x20;&#x2605;&#x20;Jetzt&#x20;bei&#x20;HAGEL&#x20;sparen&#x21;\" />\n<meta property=\"og:url\" content=\"https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html\" />\n    <meta property=\"product:price:amount\" content=\"29\"/>\n    <meta property=\"product:price:currency\"\n      content=\"EUR\"/>\n    <meta property=\"og:updated_time\" content=\"2026-08-31T08:07:56+00:00\">\n                        \n     ",
+          "\n<meta property=\"og:url\" content=\"https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html\" />\n    <meta property=\"product:price:amount\" content=\"29\"/>\n    <meta property=\"product:price:currency\"\n      content=\"EUR\"/>\n    <meta property=\"og:updated_time\" content=\"2026-08-31T08:07:56+00:00\">\n                        \n                </head>\n    <body data-container=\"body\"\n          data-"
+        ],
+        "29,00": [
+          "  id=\"product-price-5798631\"                data-price-amount=\"29\"\n        data-price-type=\"finalPrice\"\n        class=\"price-wrapper \"\n    ><span class=\"price\">29,00 €</span></span>\n        </span>\n\n</div>    <div class=\"base-price-detail\">\n                    <span class=\"czbp-detail-price-1\">1.160,00 €</span> / <span class=\"czbp-detail-unit-1\">1 Liter</span>\n                            inkl. MwSt.   ",
+          "egular_price\":29,\"minimal_regular_price\":29,\"special_price\":null,\"minimal_price\":29,\"regular_price\":29,\"formatted_prices\":{\"final_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"minimal_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"max_regular_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"minimal_regular_pri",
+          "ll,\"minimal_price\":29,\"regular_price\":29,\"formatted_prices\":{\"final_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"minimal_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"max_regular_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"minimal_regular_price\":null,\"special_price\":null,\"regular_price\":\"<span class=\\\"p",
+          "l_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"minimal_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"max_regular_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"minimal_regular_price\":null,\"special_price\":null,\"regular_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"__disableTmpl\":true},\"extension",
+          ":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"minimal_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"max_regular_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"minimal_regular_price\":null,\"special_price\":null,\"regular_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"__disableTmpl\":true},\"extension_attributes\":{\"msrp\":{\"msrp_price\":\"<span class=\\\"price\\\">28,00\\u00a0\\",
+          ",\"max_regular_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"minimal_regular_price\":null,\"special_price\":null,\"regular_price\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"__disableTmpl\":true},\"extension_attributes\":{\"msrp\":{\"msrp_price\":\"<span class=\\\"price\\\">28,00\\u00a0\\u20ac<\\/span>\",\"is_applicable\":\"\",\"is_shown_price_on_gesture\":\"\",\"msrp_message\":\"\",\"explanation_message\":\"Our price ",
+          "ce\":\"<span class=\\\"price\\\">24,37\\u00a0\\u20ac<\\/span>\",\"__disableTmpl\":true},\"__disableTmpl\":true},\"weee_attributes\":[],\"weee_adjustment\":\"<span class=\\\"price\\\">29,00\\u00a0\\u20ac<\\/span>\",\"baseprice_html\":\"<div class=\\\"czbp-detail-0\\\"><span class=\\\"czbp-detail-price-0\\\">1.160,00\\u00a0\\u20ac<\\/span> \\/ <span class=\\\"czbp-detail-unit-0\\\">1 Liter<\\/span><\\/div>\",\"__disableTmpl\":true},\"__disableTmpl\":true},"
+        ],
+        "29.0": [],
+        "29.00": [
+          "1\",\"Name\":\"INNERSENSE Harmonic Treatment Oil 29 ml\",\"SKU\":\"12076976\",\"URL\":\"https:\\/\\/www.hagel-shop.de\\/innersense-harmonic-treatment-oil-29-ml.html\",\"Price\":\"29.00\",\"FinalPrice\":\"29.00\",\"Categories\":[\"Haarpflege\",\"Hautpflege\",\"Nature\",\"Waschen & Pflegen\",\"K\\u00f6rper\",\"Hagel Nature\",\"Hagel Nature\",\"Haarpflege\",\"INNERSENSE\",\"Haare F\\u00e4rben\",\"Haar\\u00f6le\",\"Waschen & Pflegen\",\"Stylen\",\"Haar\\u00f6le\"",
+          " Harmonic Treatment Oil 29 ml\",\"SKU\":\"12076976\",\"URL\":\"https:\\/\\/www.hagel-shop.de\\/innersense-harmonic-treatment-oil-29-ml.html\",\"Price\":\"29.00\",\"FinalPrice\":\"29.00\",\"Categories\":[\"Haarpflege\",\"Hautpflege\",\"Nature\",\"Waschen & Pflegen\",\"K\\u00f6rper\",\"Hagel Nature\",\"Hagel Nature\",\"Haarpflege\",\"INNERSENSE\",\"Haare F\\u00e4rben\",\"Haar\\u00f6le\",\"Waschen & Pflegen\",\"Stylen\",\"Haar\\u00f6le\",\"Reisegr\\u00f6\\u00df",
+          "ture\",\"Haarpflege\",\"INNERSENSE\",\"Haare F\\u00e4rben\",\"Haar\\u00f6le\",\"Waschen & Pflegen\",\"Stylen\",\"Haar\\u00f6le\",\"Reisegr\\u00f6\\u00dfen\"],\"StoreId\":\"1\",\"$value\":\"29.00\",\"ImageURL\":\"https:\\/\\/www.hagel-shop.de\\/media\\/catalog\\/product\\/1\\/2\\/12076976.jpg?width=265&height=265&canvas=265,265&quality=80&bg-color=255,255,255&fit=bounds\"}]);\n      klaviyo.push(['trackViewedItem', {\"Title\":\"INNERSENSE Harmonic ",
+          " Nature\",\"Haarpflege\",\"INNERSENSE\",\"Haare F\\u00e4rben\",\"Haar\\u00f6le\",\"Waschen & Pflegen\",\"Stylen\",\"Haar\\u00f6le\",\"Reisegr\\u00f6\\u00dfen\"],\"Metadata\":{\"Price\":\"29.00\"},\"StoreId\":\"1\",\"ImageURL\":\"https:\\/\\/www.hagel-shop.de\\/media\\/catalog\\/product\\/1\\/2\\/12076976.jpg?width=265&height=265&canvas=265,265&quality=80&bg-color=255,255,255&fit=bounds\"}]);\n  });\n</script>\n<script type=\"text/x-magento-init\">\n  "
+        ]
+      },
+      "expected_package_mentions": {
+        "29ml": [],
+        "29 Milliliter": [],
+        "29 ml": [
+          "vt,Et,Y,Oe,_t,It,Rt],loaderType:\"spa\"})})()})();</script>\n<meta name=\"title\" content=\"INNERSENSE Harmonic Treatment Oil 29 ml günstig kaufen | HAGEL Online Shop\"/>\n<meta name=\"description\" content=\"INNERSENSE Harmonic Treatment Oil 29 ml ➤ günstig im Online Shop kaufen. ✓ Schnelle Lieferung ✓ Kostenlose ",
+          "ent Oil 29 ml günstig kaufen | HAGEL Online Shop\"/>\n<meta name=\"description\" content=\"INNERSENSE Harmonic Treatment Oil 29 ml ➤ günstig im Online Shop kaufen. ✓ Schnelle Lieferung ✓ Kostenlose Beratung ★ Jetzt bei HAGEL sparen!\"/>\n<meta name=\"robots\" content=\"INDEX,FOLLOW\"/>\n<meta name=\"viewport\" content",
+          "dth, initial-scale=1\"/>\n<meta name=\"format-detection\" content=\"telephone=no\"/>\n<title>INNERSENSE Harmonic Treatment Oil 29 ml günstig kaufen | HAGEL Online Shop</title>\n<link  rel=\"stylesheet\" type=\"text/css\"  media=\"all\" href=\"https://www.hagel-shop.de/static/version1790052548/frontend/Hagel/base/de_DE/",
+          "        <li class=\"item product\">\n                                            <strong>INNERSENSE Harmonic Treatment Oil 29 ml</strong>\n                                    </li>\n                    </ul>\n    </div>\n<div class=\"header-wrapper\"><header class=\"page-header\"><div class=\"header-info-bar\"><style",
+          "         >\n        <span class=\"base\" data-ui-id=\"page-title-wrapper\" itemprop=\"name\">INNERSENSE Harmonic Treatment Oil 29 ml</span>    </h1>\n    </div>\n        <div class=\"product-reviews-summary\"  \n         >\n                    <div class=\"rating-summary\">\n                <div class=\"rating-result\" ti",
+          "                                    <strong class=\"colon\">Beschreibung</strong> <span>INNERSENSE Harmonic Treatment Oil 29 ml</span>\n                                            </span>\n                </div>\n                <div class=\"data item content \"\n                     aria-labelledby=\"tab-label-d",
+          "                                   <strong class=\"colon\">Eigenschaften</strong> <span>INNERSENSE Harmonic Treatment Oil 29 ml</span>\n                                            </span>\n                </div>\n                <div class=\"data item content \"\n                     aria-labelledby=\"tab-label-a",
+          "                  <th class=\"col label\" scope=\"row\">Menge</th>\n                    <td class=\"col data\" data-th=\"Menge\">29 ml</td>\n                </tr>\n                            <tr>\n                    <th class=\"col label\" scope=\"row\">Marke</th>\n                    <td class=\"col data\" data-th=\"Mark"
+        ]
+      },
+      "title": "",
+      "price_stock_contexts": [
+        "Zum Anfang der Bildergalerie springen INNERSENSE Harmonic Treatment Oil 29 ml 100 % of 100 1 Artikelnummer 12076976 Natürliches & intensives Pflegeöl 29,00 € 1.160,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle Lieferung Kostenlose Lieferung ab 39€ Bestellgeschenke Echte Friseure",
+        " der Bildergalerie springen INNERSENSE Harmonic Treatment Oil 29 ml 100 % of 100 1 Artikelnummer 12076976 Natürliches & intensives Pflegeöl 29,00 € 1.160,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle Lieferung Kostenlose Lieferung ab 39€ Bestellgeschenke Echte Friseure - Echte Ex",
+        "ERSENSE Harmonic Treatment Oil 29 ml 100 % of 100 1 Artikelnummer 12076976 Natürliches & intensives Pflegeöl 29,00 € 1.160,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle Lieferung Kostenlose Lieferung ab 39€ Bestellgeschenke Echte Friseure - Echte Experten Die Bewertungen werden vor",
+        "29 ml 100 % of 100 1 Artikelnummer 12076976 Natürliches & intensives Pflegeöl 29,00 € 1.160,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle Lieferung Kostenlose Lieferung ab 39€ Bestellgeschenke Echte Friseure - Echte Experten Die Bewertungen werden vor Ihrer Veröffentlichung nicht auf ihr",
+        "sionelles Produkt kaufe, welches für die Verwendung geschulten Personals entwickelt wurde. Alle Preise inkl. MwSt. | Versandkostenfrei ab 39 €, sonst 4,99 €. Geschenkgutscheine: ohne MwSt. & ohne Versandkosten. * Für alle Rabattcodes gilt: Nicht gültig für Produkte der Marken Dyson, Beneganic, Urban Alchemy, INSIGHT sowie für Geschenkgutscheine und nicht mit anderen Rabattaktionen kombinierbar. Es gilt "
+      ],
+      "identity_contexts": [
+        " INNERSENSE Harmonic Treatment Oil 29 ml günstig kaufen | HAGEL Online Shop The store will not work correctly when cookies are disabled. 15% auf alles* mit dem Code HSD15 25% auf Wella Code in der App Home Alle Marken INNERSENSE Haarpflege ",
+        " Home Alle Marken INNERSENSE Haarpflege Waschen & Pflegen Haaröle INNERSENSE Harmonic Treatment Oil 29 ml Gratis Versand ab 39€ 60 Tage Rückgaberecht Echte Friseure - echte Experten Schnelle Lieferung mit DHL Navigation umschalten Suche 0 }\"> Löschen Konto Merkzettel Warenkorb Menü Alle Marken Unsere Top",
+        " der Bildergalerie springen Zum Anfang der Bildergalerie springen INNERSENSE Harmonic Treatment Oil 29 ml 100 % of 100 1 Artikelnummer 12076976 Natürliches & intensives Pflegeöl 29,00 € 1.160,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Wha",
+        "odukte tatsächlich gar nicht erworben/genutzt haben. Beschreibung INNERSENSE Harmonic Treatment Oil 29 ml Beschreibung Das INNERSENSE Harmonic Treatment Oil ist ein intensives Pflegeöl, das auf der Methode der Schwingungstherapie basiert und so Haut, Kopfhaut und Haare mit Nährstoffen versorgt. Es besteh",
+        " von synthetischer Inhaltsstoffe Zurück zum Produkt Eigenschaften INNERSENSE Harmonic Treatment Oil 29 ml Eigenschaften Mehr Informationen Menge 29 ml Marke INNERSENSE Produkttyp Haar-Öl, Körperöl Wirkung Feuchtigkeitsspendend, Nährend, Pflegend Inhaltsstoffe Carthamus Tinctorius (Safflower) Seed Oil*, O",
+        "rodukt Eigenschaften INNERSENSE Harmonic Treatment Oil 29 ml Eigenschaften Mehr Informationen Menge 29 ml Marke INNERSENSE Produkttyp Haar-Öl, Körperöl Wirkung Feuchtigkeitsspendend, Nährend, Pflegend Inhaltsstoffe Carthamus Tinctorius (Safflower) Seed Oil*, Oenothera Biennis (Evening Primrose) Oil*, Cit",
+        "SR Hersteller C Faces Handelsges. oHG, Borsteler Chaussee 85-99a, 22453 Hamburg, DE, info@cfaces.de EAN 852415001833 Zurück zum Produkt Herstellerinformationen Herstellerinformationen Die Produktinformationen werden geladen... Die Produktinformationen vom Hersteller konnten nicht geladen werden. Zurück",
+        " Olaplex Paul Mitchell Beliebte Produkte RefectoCil Augenbrauen & Wimpernfarbe Goldwell Elumen Lock 250ml Olaplex Pflegeduo No. 4+ No. 5 Wella EIMI Pearl Styler XXL K18 Leave-In Repair Mask Moroccanoil Arganöl Panasonic Haarschneidemaschine Unbrush Haarbürste dyson airwrap Hagel Selection Shampoo Top Kat"
+      ],
+      "challenge": false,
+      "body_chars": 9231
+    },
+    {
+      "id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+      "name": "Wella95",
+      "requested_url": "https://www.hagel-shop.de/wella-wp-ultimate-repair-leave-in-treatment-95-ml.html",
+      "checked_at": "2026-10-03T13:14:31.294299+00:00",
+      "expected": {
+        "price_eur": 19.38,
+        "package_value": 95,
+        "package_unit": "ml",
+        "barcodes": [],
+        "availability": null
+      },
+      "previous_source_file": null,
+      "previous_source_method": null,
+      "http_status": 200,
+      "final_url": "https://www.hagel-shop.de/wella-wp-ultimate-repair-leave-in-treatment-95-ml.html",
+      "content_type": "text/html; charset=UTF-8",
+      "structured_products": [
+        {
+          "@type": "Product",
+          "name": "Wella Ultimate Repair Leave-In Treatment 95 ml",
+          "description": "<p>Intensive Pflege & Schutz in einem Schritt</p>",
+          "offers": {
+            "@type": "http://schema.org/Offer",
+            "price": 19.38,
+            "url": "https://www.hagel-shop.de/wella-wp-ultimate-repair-leave-in-treatment-95-ml.html",
+            "priceCurrency": "EUR",
+            "availability": "http://schema.org/InStock",
+            "shippingDetails": {
+              "deliveryTime": {
+                "businessDays": {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    ""
+                  ]
+                },
+                "@type": "ShippingDeliveryTime"
+              },
+              "@type": "OfferShippingDetails"
+            }
+          }
+        }
+      ],
+      "expected_price_mentions": {
+        "19,38": [
+          "d=\"product-price-6025189\"                data-price-amount=\"19.38\"\n        data-price-type=\"finalPrice\"\n        class=\"price-wrapper \"\n    ><span class=\"price\">19,38 €</span></span>\n        </span>\n    </span>\n    <span class=\"old-price\">\n        \n\n<span class=\"price-container price-final_price&#x20;tax&#x20;weee\"\n        >\n            <span class=\"price-label\">Normalpreis</span>\n        <span  id=\"old",
+          "e\":19.38,\"minimal_regular_price\":19.38,\"special_price\":null,\"minimal_price\":19.38,\"regular_price\":32.3,\"formatted_prices\":{\"final_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"minimal_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"max_regular_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"minimal_regular_pri",
+          "inimal_price\":19.38,\"regular_price\":32.3,\"formatted_prices\":{\"final_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"minimal_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"max_regular_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"minimal_regular_price\":null,\"special_price\":null,\"regular_price\":\"<span class=\\\"p",
+          "l_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"minimal_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"max_regular_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"minimal_regular_price\":null,\"special_price\":null,\"regular_price\":\"<span class=\\\"price\\\">32,30\\u00a0\\u20ac<\\/span>\",\"__disableTmpl\":true},\"extension",
+          ":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"minimal_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"max_regular_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"minimal_regular_price\":null,\"special_price\":null,\"regular_price\":\"<span class=\\\"price\\\">32,30\\u00a0\\u20ac<\\/span>\",\"__disableTmpl\":true},\"extension_attributes\":{\"msrp\":{\"msrp_price\":\"<span class=\\\"price\\\">0,00\\u00a0\\u",
+          "ce\":\"<span class=\\\"price\\\">27,14\\u00a0\\u20ac<\\/span>\",\"__disableTmpl\":true},\"__disableTmpl\":true},\"weee_attributes\":[],\"weee_adjustment\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"baseprice_html\":\"<div class=\\\"czbp-detail-0\\\"><span class=\\\"czbp-detail-price-0\\\">204,00\\u00a0\\u20ac<\\/span> \\/ <span class=\\\"czbp-detail-unit-0\\\">1 Liter<\\/span><\\/div>\",\"__disableTmpl\":true},\"__disableTmpl\":true},\"i"
+        ],
+        "19.38": [
+          "perty=\"og:url\" content=\"https://www.hagel-shop.de/wella-wp-ultimate-repair-leave-in-treatment-95-ml.html\" />\n    <meta property=\"product:price:amount\" content=\"19.38\"/>\n    <meta property=\"product:price:currency\"\n      content=\"EUR\"/>\n    <meta property=\"og:updated_time\" content=\"2026-09-15T08:56:05+00:00\">\n                        \n                </head>\n    <body data-container=\"body\"\n          data-",
+          "tax&#x20;weee\"\n        >\n            <span class=\"price-label\">Sonderangebot</span>\n        <span  id=\"product-price-6025189\"                data-price-amount=\"19.38\"\n        data-price-type=\"finalPrice\"\n        class=\"price-wrapper \"\n    ><span class=\"price\">19,38 €</span></span>\n        </span>\n    </span>\n    <span class=\"old-price\">\n        \n\n<span class=\"price-container price-final_price&#x20;tax&",
+          "catalog\\/product\\/1\\/2\\/12131876.jpg?quality=80&bg-color=255,255,255&fit=bounds&height=&width=&canvas=:\",\"offers\":{\"@type\":\"http:\\/\\/schema.org\\/Offer\",\"price\":19.38,\"url\":\"https:\\/\\/www.hagel-shop.de\\/wella-wp-ultimate-repair-leave-in-treatment-95-ml.html\",\"priceCurrency\":\"EUR\",\"availability\":\"http:\\/\\/schema.org\\/InStock\",\"shippingDetails\":{\"deliveryTime\":{\"businessDays\":{\"@type\":\"OpeningHoursSpecifi",
+          "-In Treatment 95 ml\",\"SKU\":\"12131876\",\"URL\":\"https:\\/\\/www.hagel-shop.de\\/wella-wp-ultimate-repair-leave-in-treatment-95-ml.html\",\"Price\":\"32.30\",\"FinalPrice\":\"19.38\",\"Categories\":[\"Haarpflege\",\"Wella\",\"Waschen & Pflegen\",\"Reparatur & St\\u00e4rkung\",\"Conditioner\",\"Haarkur\",\"Leave-In Pflege\",\"Care\",\"Ultimate Care\",\"Ultimate Repair\"],\"StoreId\":\"1\",\"$value\":\"32.30\",\"ImageURL\":\"https:\\/\\/www.hagel-shop.de\\",
+          "cC5kZS93ZWxsYS13cC11bHRpbWF0ZS1yZXBhaXItbGVhdmUtaW4tdHJlYXRtZW50LTk1LW1sLmh0bWw~\\\"}}\",\"required_options\":null,\"__disableTmpl\":true},\"price_info\":{\"final_price\":19.38,\"max_price\":19.38,\"max_regular_price\":19.38,\"minimal_regular_price\":19.38,\"special_price\":null,\"minimal_price\":19.38,\"regular_price\":32.3,\"formatted_prices\":{\"final_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<spa",
+          "11bHRpbWF0ZS1yZXBhaXItbGVhdmUtaW4tdHJlYXRtZW50LTk1LW1sLmh0bWw~\\\"}}\",\"required_options\":null,\"__disableTmpl\":true},\"price_info\":{\"final_price\":19.38,\"max_price\":19.38,\"max_regular_price\":19.38,\"minimal_regular_price\":19.38,\"special_price\":null,\"minimal_price\":19.38,\"regular_price\":32.3,\"formatted_prices\":{\"final_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<span class=\\\"price\\\">",
+          "dmUtaW4tdHJlYXRtZW50LTk1LW1sLmh0bWw~\\\"}}\",\"required_options\":null,\"__disableTmpl\":true},\"price_info\":{\"final_price\":19.38,\"max_price\":19.38,\"max_regular_price\":19.38,\"minimal_regular_price\":19.38,\"special_price\":null,\"minimal_price\":19.38,\"regular_price\":32.3,\"formatted_prices\":{\"final_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\"",
+          "h0bWw~\\\"}}\",\"required_options\":null,\"__disableTmpl\":true},\"price_info\":{\"final_price\":19.38,\"max_price\":19.38,\"max_regular_price\":19.38,\"minimal_regular_price\":19.38,\"special_price\":null,\"minimal_price\":19.38,\"regular_price\":32.3,\"formatted_prices\":{\"final_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"minimal_price\":\"<span class=",
+          "bleTmpl\":true},\"price_info\":{\"final_price\":19.38,\"max_price\":19.38,\"max_regular_price\":19.38,\"minimal_regular_price\":19.38,\"special_price\":null,\"minimal_price\":19.38,\"regular_price\":32.3,\"formatted_prices\":{\"final_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"minimal_price\":\"<span class=\\\"price\\\">19,38\\u00a0\\u20ac<\\/span>\",\"max_r",
+          "87\",\"3656\",\"5217\",\"5272\",\"5498\",\"9795\",\"12477\",\"13740\",\"14034\",\"2313\"],\"productType\":\"simple\",\"pricing\":{\"regularPrice\":32.3,\"minimalPrice\":null,\"specialPrice\":19.38},\"canonicalUrl\":\"https:\\/\\/www.hagel-shop.de\\/wella-wp-ultimate-repair-leave-in-treatment-95-ml.html?___store=hagel_de\",\"mainImageUrl\":\"https:\\/\\/www.hagel-shop.de\\/media\\/catalog\\/product\\/1\\/2\\/12131876.jpg\"})\n    });</script>\n<script ty",
+          "y\":\"EUR\",\"item_category\":\"Conditioner\",\"item_category2\":\"Haarpflege\",\"item_category3\":\"Wella\",\"item_category4\":\"Waschen & Pflegen\",\"item_brand\":\"Wella\",\"price\":19.38}],\"currency\":\"EUR\",\"value\":16.29},\"_clear\":true}],\n                    \"productLists\": []                });\n            });\n        </script>\n<script type=\"text/x-magento-init\">\n    {\n        \"*\": {\n            \"addToCartGa4DataLayer\": {\n"
+        ]
+      },
+      "expected_package_mentions": {
+        "95ml": [],
+        "95 Milliliter": [],
+        "95 ml": [
+          ",Oe,_t,It,Rt],loaderType:\"spa\"})})()})();</script>\n<meta name=\"title\" content=\"Wella Ultimate Repair Leave-In Treatment 95 ml günstig kaufen | HAGEL Online Shop\"/>\n<meta name=\"description\" content=\"Wella Ultimate Repair Leave-In Treatment 95 ml ➤ günstig im Online Shop kaufen. ✓ Schnelle Lieferung ✓ Kost",
+          " 95 ml günstig kaufen | HAGEL Online Shop\"/>\n<meta name=\"description\" content=\"Wella Ultimate Repair Leave-In Treatment 95 ml ➤ günstig im Online Shop kaufen. ✓ Schnelle Lieferung ✓ Kostenlose Beratung ★ Jetzt bei HAGEL sparen!\"/>\n<meta name=\"robots\" content=\"INDEX,FOLLOW\"/>\n<meta name=\"viewport\" content",
+          "itial-scale=1\"/>\n<meta name=\"format-detection\" content=\"telephone=no\"/>\n<title>Wella Ultimate Repair Leave-In Treatment 95 ml günstig kaufen | HAGEL Online Shop</title>\n<link  rel=\"stylesheet\" type=\"text/css\"  media=\"all\" href=\"https://www.hagel-shop.de/static/version1790052548/frontend/Hagel/base/de_DE/",
+          " <li class=\"item product\">\n                                            <strong>Wella Ultimate Repair Leave-In Treatment 95 ml</strong>\n                                    </li>\n                    </ul>\n    </div>\n<div class=\"header-wrapper\"><header class=\"page-header\"><div class=\"header-info-bar\"><style",
+          "  >\n        <span class=\"base\" data-ui-id=\"page-title-wrapper\" itemprop=\"name\">Wella Ultimate Repair Leave-In Treatment 95 ml</span>    </h1>\n    </div>\n    <div class=\"product-reviews-summary empty\">\n        <div class=\"reviews-actions\">\n            <a class=\"action add\" href=\"https://www.hagel-shop.de/",
+          "                             <strong class=\"colon\">Beschreibung</strong> <span>Wella Ultimate Repair Leave-In Treatment 95 ml</span>\n                                            </span>\n                </div>\n                <div class=\"data item content \"\n                     aria-labelledby=\"tab-label-d",
+          "                            <strong class=\"colon\">Eigenschaften</strong> <span>Wella Ultimate Repair Leave-In Treatment 95 ml</span>\n                                            </span>\n                </div>\n                <div class=\"data item content \"\n                     aria-labelledby=\"tab-label-a",
+          "                  <th class=\"col label\" scope=\"row\">Menge</th>\n                    <td class=\"col data\" data-th=\"Menge\">95 ml</td>\n                </tr>\n                            <tr>\n                    <th class=\"col label\" scope=\"row\">Marke</th>\n                    <td class=\"col data\" data-th=\"Mark"
+        ]
+      },
+      "title": "",
+      "price_stock_contexts": [
+        "r Leave-In Treatment 95 ml Sei der erste, der dieses Produkt bewertet Artikelnummer 12131876 Intensive Pflege & Schutz in einem Schritt Sonderangebot 19,38 € Normalpreis 32,30 € 204,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle Lieferung Kostenlose Lieferung ab 39€ Bestellgesche",
+        " 95 ml Sei der erste, der dieses Produkt bewertet Artikelnummer 12131876 Intensive Pflege & Schutz in einem Schritt Sonderangebot 19,38 € Normalpreis 32,30 € 204,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle Lieferung Kostenlose Lieferung ab 39€ Bestellgeschenke Echte Friseure -",
+        "ei der erste, der dieses Produkt bewertet Artikelnummer 12131876 Intensive Pflege & Schutz in einem Schritt Sonderangebot 19,38 € Normalpreis 32,30 € 204,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle Lieferung Kostenlose Lieferung ab 39€ Bestellgeschenke Echte Friseure - Echte Ex",
+        "t bewertet Artikelnummer 12131876 Intensive Pflege & Schutz in einem Schritt Sonderangebot 19,38 € Normalpreis 32,30 € 204,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle Lieferung Kostenlose Lieferung ab 39€ Bestellgeschenke Echte Friseure - Echte Experten Die Bewertungen werden vor",
+        "76 Intensive Pflege & Schutz in einem Schritt Sonderangebot 19,38 € Normalpreis 32,30 € 204,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle Lieferung Kostenlose Lieferung ab 39€ Bestellgeschenke Echte Friseure - Echte Experten Die Bewertungen werden vor Ihrer Veröffentlichung nicht auf ihr",
+        "sionelles Produkt kaufe, welches für die Verwendung geschulten Personals entwickelt wurde. Alle Preise inkl. MwSt. | Versandkostenfrei ab 39 €, sonst 4,99 €. Geschenkgutscheine: ohne MwSt. & ohne Versandkosten. * Für alle Rabattcodes gilt: Nicht gültig für Produkte der Marken Dyson, Beneganic, Urban Alchemy, INSIGHT sowie für Geschenkgutscheine und nicht mit anderen Rabattaktionen kombinierbar. Es gilt "
+      ],
+      "identity_contexts": [
+        " Wella Ultimate Repair Leave-In Treatment 95 ml günstig kaufen | HAGEL Online Shop The store will not work correctly when cookies are disabled. 15% auf alles* mit dem Code HSD15 25% auf Wella Code in der App Home Alle Marken Wella Haarpflege Wasch",
+        "Alle Marken Wella Haarpflege Waschen & Pflegen Conditioner Wella Ultimate Repair Leave-In Treatment 95 ml Gratis Versand ab 39€ 60 Tage Rückgaberecht Echte Friseure - echte Experten Schnelle Lieferung mit DHL Navigation umschalten Suche 0 }\"> Löschen Konto Merkzettel Warenkorb Menü Alle Marken Unsere Top",
+        "alerie springen 40 % Zum Anfang der Bildergalerie springen Wella Ultimate Repair Leave-In Treatment 95 ml Sei der erste, der dieses Produkt bewertet Artikelnummer 12131876 Intensive Pflege & Schutz in einem Schritt Sonderangebot 19,38 € Normalpreis 32,30 € 204,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 We",
+        "tatsächlich gar nicht erworben/genutzt haben. Beschreibung Wella Ultimate Repair Leave-In Treatment 95 ml Beschreibung Das Wella Ultimate Repair Leave In Treatment ist der perfekte Abschluss deiner Haarpflegeroutine. Es schützt das Haar zuverlässig vor Haarbruch, UV Strahlung und Hitzeschäden bis zu 230°",
+        "äufiger verwendet werden. Zurück zum Produkt Eigenschaften Wella Ultimate Repair Leave-In Treatment 95 ml Eigenschaften Mehr Informationen Menge 95 ml Marke Wella Produkttyp Haar-Serum Haartyp alle Haartypen Wirkung Anti-Frizz, Anti-Spliss, Feuchtigkeitsspendend, Geschmeidigkeit, Glanz, Hitzeschutz, Kräf",
+        "Eigenschaften Wella Ultimate Repair Leave-In Treatment 95 ml Eigenschaften Mehr Informationen Menge 95 ml Marke Wella Produkttyp Haar-Serum Haartyp alle Haartypen Wirkung Anti-Frizz, Anti-Spliss, Feuchtigkeitsspendend, Geschmeidigkeit, Glanz, Hitzeschutz, Kräftigend, Leave-in, Pflegend, Reduziert Haarbru",
+        "ny GmbH (WPC/Wella Care), Deutsche-Telekom-Allee 9, 64295 Darmstadt, DE, bestellservice@cotyinc.com EAN 4068359081183 Zurück zum Produkt Herstellerinformationen Herstellerinformationen Die Produktinformationen werden geladen... Die Produktinformationen vom Hersteller konnten nicht geladen werden. Zurüc",
+        " Olaplex Paul Mitchell Beliebte Produkte RefectoCil Augenbrauen & Wimpernfarbe Goldwell Elumen Lock 250ml Olaplex Pflegeduo No. 4+ No. 5 Wella EIMI Pearl Styler XXL K18 Leave-In Repair Mask Moroccanoil Arganöl Panasonic Haarschneidemaschine Unbrush Haarbürste dyson airwrap Hagel Selection Shampoo Top Kat"
+      ],
+      "challenge": false,
+      "body_chars": 11287
+    },
+    {
+      "id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "name": "Epres kit",
+      "requested_url": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+      "checked_at": "2026-10-03T13:14:31.613829+00:00",
+      "expected": {
+        "price_eur": 48,
+        "package_value": 30,
+        "package_unit": "ml",
+        "barcodes": [],
+        "availability": null
+      },
+      "previous_source_file": null,
+      "previous_source_method": null,
+      "http_status": 200,
+      "final_url": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+      "content_type": "text/html; charset=utf-8",
+      "structured_products": [],
+      "expected_price_mentions": {
+        "48": [
+          "r-Behandlung mit Sprühflasche</H1><div id=\"div28684_2\" class=\"details-price\">\r\n<span id=\"txt28683_2\" ><SPAN id=\"txt28683_2_Price\"  class=\"new h6 regular-font\" >48,00</SPAN><SPAN id=\"txt28683_2_PricePost\"  class=\"new h6 regular-font\" > €</SPAN></span><span class=\"h5\"><span  id=\"txt2344_1\" class=\"new h6 regular-font pl-3\">Verfügbar</span>\r\n</span><P id=\"fld5089\" >inkl. 19% MwSt.</P><hr id=\"hr5102\" cla"
+        ],
+        "48,00": [
+          "r-Behandlung mit Sprühflasche</H1><div id=\"div28684_2\" class=\"details-price\">\r\n<span id=\"txt28683_2\" ><SPAN id=\"txt28683_2_Price\"  class=\"new h6 regular-font\" >48,00</SPAN><SPAN id=\"txt28683_2_PricePost\"  class=\"new h6 regular-font\" > €</SPAN></span><span class=\"h5\"><span  id=\"txt2344_1\" class=\"new h6 regular-font pl-3\">Verfügbar</span>\r\n</span><P id=\"fld5089\" >inkl. 19% MwSt.</P><hr id=\"hr5102\" class="
+        ],
+        "48.0": [],
+        "48.00": []
+      },
+      "expected_package_mentions": {
+        "30 ml": [],
+        "30ml": [],
+        "30 Milliliter": []
+      },
+      "title": "",
+      "price_stock_contexts": [
+        "en ändern“ am Ende der Seite klicken. Nur technisch notwenige Cookies Alle akzeptieren Impressum | Datenschutzerklärung Ihr Warenkorb ist leer Gesamt 0,00 € Versandkostenfrei ab 29,00 € +49 (0) 761 76990766 shop@kevinmurphy.de Versandkostenfrei ab 29,00 € Für Professionals Suchen SHOP INNOVATION WER SIND WIR? Mein Konto Merkzettel Gutschein kaufen Warenkorb SHOP INNOVATION WER SIND WIR? Starterkit für d",
+        " klicken. Nur technisch notwenige Cookies Alle akzeptieren Impressum | Datenschutzerklärung Ihr Warenkorb ist leer Gesamt 0,00 € Versandkostenfrei ab 29,00 € +49 (0) 761 76990766 shop@kevinmurphy.de Versandkostenfrei ab 29,00 € Für Professionals Suchen SHOP INNOVATION WER SIND WIR? Mein Konto Merkzettel Gutschein kaufen Warenkorb SHOP INNOVATION WER SIND WIR? Starterkit für die Bond-Repair-Behandlung mit",
+        " Datenschutzerklärung Ihr Warenkorb ist leer Gesamt 0,00 € Versandkostenfrei ab 29,00 € +49 (0) 761 76990766 shop@kevinmurphy.de Versandkostenfrei ab 29,00 € Für Professionals Suchen SHOP INNOVATION WER SIND WIR? Mein Konto Merkzettel Gutschein kaufen Warenkorb SHOP INNOVATION WER SIND WIR? Starterkit für die Bond-Repair-Behandlung mit Sprühflasche 48,00 € Verfügbar inkl. 19% MwSt. Vsl. Lieferung: in 2-3",
+        "R SIND WIR? Mein Konto Merkzettel Gutschein kaufen Warenkorb SHOP INNOVATION WER SIND WIR? Starterkit für die Bond-Repair-Behandlung mit Sprühflasche 48,00 € Verfügbar inkl. 19% MwSt. Vsl. Lieferung: in 2-3 Werktagen Kostenloser Versand: ab 29,00 € Kostenloser Rückversand: 14 Tage Rückgaberecht Zahlungsarten: Kreditkarte, PayPal, SEPA Lastschrift Produktdetails Unsere bahnbrechende Haarbehandlung sorgt i",
+        "IR? Mein Konto Merkzettel Gutschein kaufen Warenkorb SHOP INNOVATION WER SIND WIR? Starterkit für die Bond-Repair-Behandlung mit Sprühflasche 48,00 € Verfügbar inkl. 19% MwSt. Vsl. Lieferung: in 2-3 Werktagen Kostenloser Versand: ab 29,00 € Kostenloser Rückversand: 14 Tage Rückgaberecht Zahlungsarten: Kreditkarte, PayPal, SEPA Lastschrift Produktdetails Unsere bahnbrechende Haarbehandlung sorgt in einem ei",
+        "Starterkit für die Bond-Repair-Behandlung mit Sprühflasche 48,00 € Verfügbar inkl. 19% MwSt. Vsl. Lieferung: in 2-3 Werktagen Kostenloser Versand: ab 29,00 € Kostenloser Rückversand: 14 Tage Rückgaberecht Zahlungsarten: Kreditkarte, PayPal, SEPA Lastschrift Produktdetails Unsere bahnbrechende Haarbehandlung sorgt in einem einfachen Schritt für eine tiefgreifende und dauerhafte Reparatur der Haarstruktur."
+      ],
+      "identity_contexts": [],
+      "challenge": false,
+      "body_chars": 6039
+    }
+  ]
+}

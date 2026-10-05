@@ -1,0 +1,314 @@
+{
+  "generated_at": "2026-10-04T08:07:54.784099+00:00",
+  "scope": "Approved identity/source research only; no repo,DB,queue,worker,server or recommendation-status changes",
+  "contract": "docs/product-intake-research-ops.md in price-audit-rollout-receipt worktree",
+  "current_payload_kind": "Research inputs plus exact missing facts; not publish-ready final payloads",
+  "records": [
+    {
+      "existing_product_id_for_review_context_only": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "record_kind": "current_version_research_input_NOT_publish_payload",
+      "identity": {
+        "canonical_brand_proposed": "Langhaarmädchen",
+        "product_line_proposed": "Lovely Long",
+        "clean_name_proposed": "Shampoo",
+        "category_key": "shampoo",
+        "gtin": "4066447864694",
+        "market": "DE",
+        "package_ml": 300,
+        "canonical_brand_db_check": "not performed in bounded source-research slice"
+      },
+      "commerce": {
+        "affiliate_link": "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+        "price_eur": 4.95,
+        "currency": "EUR",
+        "package_ml": 300,
+        "purchasable": true,
+        "checked_at": "2026-10-04T08:00:30.921Z",
+        "source": "dm-fresh.json / dm-parsed.json; highest-priority shop matched"
+      },
+      "formula": {
+        "raw_inci": "Ingredients: AQUA | SODIUM LAURETH SULFATE | COCAMIDOPROPYL BETAINE | SODIUM CHLORIDE | GLYCERIN | HYDROLYZED WHEAT PROTEIN | ARGANIA SPINOSA KERNEL OIL | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | BIS|(ISOSTEAROYL/OLEOYL ISOPROPYL) DIMONIUM METHOSULFATE | COCO|GLUCOSIDE | PRUNUS AMYGDALUS DULCIS FLOWER EXTRACT | PISUM SATIVUM SPROUT EXTRACT | CITRIC ACID | BENZOIC ACID | GLYCOL DISTEARATE | HYDROGENATED CASTOR OIL | LAURETH|2 | PARFUM | HEXYL CINNAMAL | SODIUM BENZOATE | PHENOXYETHANOL.",
+        "source_url": "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+        "checked_at": "2026-10-04T08:00:30.473Z",
+        "status": "current retailer exact-GTIN list frozen for next research"
+      },
+      "protocol_source": {
+        "raw_directions": "Sanft ins Haar und in die Kopfhaut einmassieren, kurz einwirken lassen und gründlich ausspülen",
+        "source_url": "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+        "schema_protocol_generated": false
+      },
+      "raw_image_candidate_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1787640756/assets/pas/images/5fad0000-7733-4fa1-8ba6-3c882ad33f37/langhaarmaedchen-shampoo-lovely-long",
+      "image_status": "not reviewed/finalized in this slice",
+      "identifier_merge_proposal": [],
+      "existing_product_mutation_proposal": {},
+      "readiness": {
+        "current_identity_research_candidate_ready": true,
+        "catalog_intake_ready": false,
+        "global_recommendation_ready": false,
+        "property_lane_ready": false
+      },
+      "remaining": [
+        "Exact catalog identity/version decision; keep stored scanner identifier unchanged",
+        "Run category formula research and deterministic production projection on this frozen current-version input",
+        "Verify category thickness eligibility and exact role protocol schema",
+        "Review/finalize product image and validate full intake payload",
+        "Nick exact final handoff approval; separate promotion readiness check"
+      ],
+      "stored_gtin": "4067796002621",
+      "historical_bridge": {
+        "status": "not_proved",
+        "old_exact_dm_lookup": "not found",
+        "old_dm_url": "redirects to current DAN1559584; insufficient formula continuity",
+        "primary_history_lead": {
+          "url": "https://content.services.dmtech.com/rootpage-dm-shop-it-it/resource/blob/2689784/7ee8942e0821a3eb299912f74c60fa0a/lista-smaltimento-imballo-data.pdf",
+          "search_index_fact": "4067796002621 = LHM Shampoo Lovely Long300ml",
+          "live_fetch": "404; web.open inaccessible",
+          "limitation": "Italian recycling metadata only; no DE old INCI or transition statement"
+        },
+        "secondary_lead": {
+          "url": "https://deste.uz/product/shampoo-lovely-long-300-ml-a81508504",
+          "fact": "Old GTIN and current-looking INCI co-listed",
+          "rejected_as_bridge": "Non-DE forwarding mirror; cannot establish provenance/time or continuity"
+        },
+        "archive_lookup": "CDX timed out; no historical snapshot recovered",
+        "missing": "Official exact-DE old-package INCI or dated manufacturer/dm continuity statement connecting both GTINs"
+      },
+      "property_next_lane": "Shampoo v1.4 + Production Light v1; do not transfer stored route/thickness facts"
+    },
+    {
+      "existing_product_id_for_review_context_only": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+      "record_kind": "current_version_research_input_NOT_publish_payload",
+      "identity": {
+        "canonical_brand_proposed": "Herbal Essences",
+        "product_line_proposed": null,
+        "clean_name_proposed": "Feuchtigkeit Aloe Vera Pflegespülung",
+        "category_key": "conditioner",
+        "gtin": "8700216210546",
+        "market": "DE",
+        "package_ml": 250,
+        "canonical_brand_db_check": "not performed in bounded source-research slice"
+      },
+      "commerce": {
+        "affiliate_link": "https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera",
+        "price_eur": 3.95,
+        "currency": "EUR",
+        "package_ml": 250,
+        "purchasable": true,
+        "checked_at": "2026-10-04T08:00:31.287Z",
+        "source": "dm-fresh.json / dm-parsed.json; highest-priority shop matched"
+      },
+      "formula": {
+        "raw_inci": "Ingredients: Aqua, Stearyl Alcohol, Behentrimonium Chloride, Bis-Aminopropyl Dimethicone, Cetyl Alcohol, Parfum, Isopropyl Alcohol, Benzyl Alcohol, Sodium Benzoate, Disodium EDTA, Polysorbate 20, Citric Acid, Limonene, Histidine, Aloe Barbadensis Leaf Juice, Hydroxycitronellal, Geraniol, Alpha-Isomethyl Ionone, Linalool, Citronellol, Citral",
+        "source_url": "https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera",
+        "checked_at": "2026-10-04T08:00:30.473Z",
+        "status": "current retailer exact-GTIN list frozen for next research"
+      },
+      "protocol_source": {
+        "raw_directions": "Anwendung: Warum nicht das Ausspülen überspringen? Unsere Formel kann auch als Leave-in genutzt werden, bitte passe die Dosierung entsprechend an. Solltest du ausspülen: Pflegespülung in das nasse Haar von den mittleren Längen bis in die Spitzen einmassieren und danach ausspülen.",
+        "source_url": "https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera",
+        "schema_protocol_generated": false
+      },
+      "raw_image_candidate_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1747529305/assets/pas/images/68437583-ead5-4bbb-81dc-4b39ed4b08f2/herbal-essences-conditioner-feuchtigkeit-aloe-vera",
+      "image_status": "not reviewed/finalized in this slice",
+      "identifier_merge_proposal": [],
+      "existing_product_mutation_proposal": {},
+      "readiness": {
+        "current_identity_research_candidate_ready": true,
+        "catalog_intake_ready": false,
+        "global_recommendation_ready": false,
+        "property_lane_ready": false,
+        "declaration_level_identity_resolved": true,
+        "association_review_ready": true
+      },
+      "remaining": [
+        "Review exact cross-market recognition association supported by same complete declaration/brand/variant/size; preserve stored identifier",
+        "Run category formula research and deterministic production projection on this frozen current-version input",
+        "Verify category thickness eligibility and exact role protocol schema",
+        "Review/finalize product image and validate full intake payload",
+        "Nick exact final handoff approval; separate promotion readiness check"
+      ],
+      "stored_gtin": "8700216211598",
+      "historical_bridge": {
+        "status": "materially_resolved_at_declaration_level_reviewable_cross_market_association",
+        "old_exact_dm_lookup": "not found",
+        "retailer_page": "https://shop.super-pharm.co.il/care/hair-care/conditioner/%D7%9E%D7%A8%D7%9B%D7%9A-%D7%90%D7%9C%D7%95%D7%95%D7%A8%D7%94-%D7%9C%D7%9C%D7%90-%D7%A1%D7%95%D7%9C%D7%A4%D7%98%D7%99%D7%9D/p/681048",
+        "back_label_url": "https://superpharmstorage.blob.core.windows.net/hybris/products/desktop/large/8700216211598_2.jpg",
+        "back_label_local": "herbal-stored-back-large.jpg",
+        "checked_at": "2026-10-04T08:07:54.784099+00:00",
+        "visually_verified": [
+          "Barcode8700216211598",
+          "250ml",
+          "Hebrew/Arabic regional label",
+          "Full ingredient sequence matches dm current list including Bis-Aminopropyl Dimethicone and terminal Citral"
+        ],
+        "old_label_inci_transcription": "Aqua, Stearyl Alcohol, Behentrimonium Chloride, Bis-Aminopropyl Dimethicone, Cetyl Alcohol, Parfum, Isopropyl Alcohol, Benzyl Alcohol, Sodium Benzoate, Disodium EDTA, Polysorbate 20, Citric Acid, Limonene, Histidine, Aloe Barbadensis Leaf Juice, Hydroxycitronellal, Geraniol, Alpha-Isomethyl Ionone, Linalool, Citronellol, Citral",
+        "transcription_method": "Direct visual comparison of enlarged original CDN image; not OCR or copied retailer description",
+        "meaning": "Materially resolved at complete ingredient declaration +brand/variant/size level. Supports a reviewable cross-market recognition association under multi-barcode policy. Does not prove identical concentrations, chronological succession, or that every historical batch had this formula.",
+        "missing": "No further manufacturer transition statement is required solely because of geography. Exact association review and current category/protocol research remain pending.",
+        "normalized_comparison": "herbal-ordered-inci-comparison.json:21of21positions identical"
+      },
+      "current_corroboration": {
+        "url": "https://www.mueller.de/p/herbal-essences-feuchtigkeit-aloe-vera-pflegespuelung-IPN2963442/",
+        "gtin": "8700216210546",
+        "package_ml": 250,
+        "price_eur": 3.95,
+        "home_delivery": true,
+        "raw": "herbal-mueller.html",
+        "inci": "Matches dm ordered list",
+        "protocol": "Rinse-out wet mid-lengths to ends; rinse; optional leave-in dosage adjustment without quantitative dosage"
+      },
+      "property_next_lane": "Conditioner Standard v1.6 + Production Adapter v1 for rinse-out only; leave-in claim does not authorize extra leave-in category",
+      "reviewable_association_proposal": {
+        "existing_product_id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+        "retain_identifier": "8700216211598",
+        "additional_recognition_identifier": "8700216210546",
+        "type": "ean",
+        "basis": "Same brand, aloe conditioner variant,250ml,complete21ingredient ordered printed declaration match; primary on-pack evidence hosted by retailer.",
+        "commerce_variant": {
+          "gtin": "8700216210546",
+          "package_ml": 250,
+          "shop": "dm",
+          "price_eur": 3.95
+        },
+        "decision_status": "ready_for_exact_identity_review; not approved or applied",
+        "caveats": [
+          "Cross-market recognition, not chronological replacement claim",
+          "Do not infer concentrations from matching INCI",
+          "Do not overwrite existing category facts before current conditioner research review"
+        ]
+      },
+      "exact_property_blockers": [
+        "Conditioner Standardv1.6 full research envelope and deterministic adapter output not produced",
+        "product_conditioner_specs thickness/balance matching rows and product_conditioner_rerank_specs weight/repair_level/balance_direction/ingredient_flags must come from adapter",
+        "suitable_thicknesses must come from adapter",
+        "conditioner_rinse_out protocol schema row must encode wet hair,mid-lengths to ends,rinse; no invented timing or quantitative dose",
+        "Final processed image and validation/review receipt not produced"
+      ]
+    },
+    {
+      "existing_product_id_for_review_context_only": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "record_kind": "manufacturer_declared_formula_candidate_NOT_exact_DE_version_resolved",
+      "stored_gtin": "850006575039",
+      "identity": {
+        "canonical_brand_proposed": "Innersense",
+        "clean_name_proposed": "Harmonic Treatment Oil",
+        "category_key": "oil",
+        "package_ml_proposed_for_review": 118,
+        "gtin_candidate": "850006575039",
+        "identity_status": "same118mlidentifier has competing retailer formula lists; barcode alone does not disambiguate version"
+      },
+      "formula": {
+        "raw_inci": "Helianthus Annuus (Sunflower) Seed Oil*, Carthamus Tinctorius (Safflower) Seed Oil*, Camellia Oleifera (Seed) Oil*, Simmondsia Chinensis (Jojoba) Seed Oil*, Calophyllum Inophyllum (Tamanu) Seed Oil*, Tocopherol, Lavandula Hybrida (lavender) Oil, Citrus sinensis (Sweet Orange) Oil, Pelargonium graveolens (Geranium) Oil, Juniperus virginiana (Cedarwood) Oil, Spanish Thymus mastichina (Marjoram) Oil, Bulgarian Lavendula angustifolia (Lavender), Boswellia carterii (Frankincense) Oil.",
+        "source_url": "https://innersensebeauty.com/collections/treatment/products/harmonic-treatment-oil",
+        "source_file": "innersense-brand.html",
+        "checked_at": "2026-10-04T08:01:06.868194+00:00",
+        "status": "manufacturer-declared current candidate, pending DE stock/batch confirmation",
+        "internal_conflict": "Brand description and Key Ingredients retain Evening Primrose absent from Full Ingredient List. Belladonna similarly retains legacy claims."
+      },
+      "commerce_candidates": [
+        {
+          "priority": "brand-direct",
+          "url": "https://innersensebeauty.com/collections/treatment/products/harmonic-treatment-oil",
+          "package_ml": 118,
+          "available": false,
+          "price_usd": 70,
+          "barcode": null,
+          "source": "innersense-brand-json.html",
+          "limitation": "US/USD page; DE exact offer unverified. /en-de/products endpoint404."
+        },
+        {
+          "priority": "brand-direct",
+          "package_ml": 29,
+          "available": true,
+          "price_usd": 26,
+          "barcode": null,
+          "source": "innersense-brand-json.html",
+          "limitation": "Separate size; no proposed swap or German EUR offer"
+        },
+        {
+          "priority": "reputable specialist; strongest current-list corroboration, provisional",
+          "url": "https://www.belladonna-naturkosmetik.de/innersense-harmonic-treatment-oil-118-ml/850006575039",
+          "package_ml": 118,
+          "price_eur": 79,
+          "purchasable": true,
+          "identifier": "850006575039",
+          "identifier_label": "Artikel-Nr.; also image asset EAN filename, not a visible back barcode",
+          "formula": "Manufacturer full INCI match",
+          "risk": "Internally conflicting old claims; no current stock back-label INCI"
+        },
+        {
+          "priority": "reputable specialist; legacy-list alternative only",
+          "url": "https://www.hagel-shop.de/innersense-harmonic-treatment-oil-118-ml.html",
+          "package_ml": 118,
+          "price_eur": 63.2,
+          "purchasable": true,
+          "gtin": "850006575039",
+          "formula": "Safflower/eveningprimrose list conflicts with manufacturer declared full INCI"
+        },
+        {
+          "priority": "separate travel version; not chosen",
+          "url": "https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html",
+          "package_ml": 29,
+          "price_eur": 29,
+          "gtin": "852415001833",
+          "formula": "Legacy safflower/eveningprimrose list",
+          "risk": "Unit price1160EUR/l implies25ml while title and Menge say29ml; do not use arithmetic to override package"
+        }
+      ],
+      "preferred_search_audit": {
+        "dm": "Fresh official MCP name search: no exact result",
+        "rossmann": "Fresh direct search returns Client Challenge; UNVERIFIED, not absent",
+        "mueller": "Fresh name search broad6items; no exact Harmonic PDP observed",
+        "brand_direct": "Exact PDP/variant JSON checked;118ml unavailable; German delivery/EUR offer unverified",
+        "amazon_de": "Direct search returned unusable challenge/script shell; explicit site search yielded no exact usable result; UNVERIFIED, not absent"
+      },
+      "protocol_evidence": {
+        "manufacturer": "Directions1–2pumps for body skin; description mentions scalp before shampoo; no exact fibre application protocol",
+        "german_retailer": "Hagel and Belladonna say1–2drops in damp or dry hair ends; scalp10–15min then cleanse. Keep as retailer evidence pending exact formula identity.",
+        "role_limits": [
+          "Do not map scalp pretreatment to pre_wash_fibre_treatment",
+          "leave_on_fibre_conditioning and dry_finish candidate support requires exact-version protocol review",
+          "Do not infer heat protection or weight from INCI presence, package, or price"
+        ]
+      },
+      "image_evidence": {
+        "front": "innersense-pack.webp visually confirms4fl oz/118ml and name, no barcode or INCI",
+        "second": "innersense-second.webp is29ml lifestyle image embedded in118ml PDP; reject as118ml identity evidence",
+        "finalized": false
+      },
+      "exact_missing_properties": [
+        "Current DE118mlstock/batch back label showing GTIN and full INCI, or manufacturer/distributor confirmation",
+        "Finished-blend weight, suitable_thicknesses, reviewed oil eligibility",
+        "Exact role_support and source-backed schema protocols",
+        "Source-verified binary heat-protection determination",
+        "Finalized catalog image and exact final handoff review"
+      ],
+      "identifier_merge_proposal": [],
+      "existing_product_mutation_proposal": {},
+      "readiness": {
+        "current_identity_research_candidate_ready": false,
+        "manufacturer_formula_candidate_ready": true,
+        "catalog_intake_ready": false,
+        "global_recommendation_ready": false
+      },
+      "recommendation": "Retain118mlas the review target to avoid unsolicited size change; resolve actual DE formula before selecting final offer or projecting properties. No recommendation-status mutation."
+    }
+  ],
+  "mutations": [],
+  "verification": [
+    "Fresh dm directMCP queried stored+currentGTINs and canonical names",
+    "Responses parsed using repository TOON parser",
+    "Manufacturer and German specialist HTML+variantJSON captured with timestamp manifests",
+    "Herbal stored-GTIN back-label visually read and compared",
+    "Innersense118mlfront and29mllifestyle images inspected",
+    "JSON consistency checks passed",
+    "Herbal independent manual label transcription compared21of21ingredient positions; exact declaration-level association prepared for review"
+  ],
+  "limits": [
+    "No liveDB audit in this bounded slice; readiness is for proposed version candidates, not a new claim about existing live rows",
+    "No automatic recommendation pause",
+    "No old/current alias merges",
+    "Preferred-shop access failures are unknown outcomes",
+    "No category research engine run; exact next lanes and required fields listed"
+  ]
+}

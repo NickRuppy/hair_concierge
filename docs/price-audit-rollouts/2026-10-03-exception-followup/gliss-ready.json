@@ -1,0 +1,15 @@
+{
+  "kind":"read-only fresh exact offer verification",
+  "id":"e859d6e0-e991-4081-84b5-b81862c82475",
+  "catalog_identity":"Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo",
+  "category_key":"shampoo",
+  "checked_at":"2026-10-03T13:19:18.354Z",
+  "url":"https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025",
+  "title":"Gliss Sealing Shampoo Sealing Miracle",
+  "gtin":"4015100895025",
+  "package":"200 ml",
+  "price_eur":4.99,
+  "stock":"In den Warenkorb; JSON-LD InStock; delivery 06.10.2026-07.10.2026",
+  "price_context":"public single-item price, no coupon/reference condition",
+  "result":"EXACT_MATCH_READY"
+}

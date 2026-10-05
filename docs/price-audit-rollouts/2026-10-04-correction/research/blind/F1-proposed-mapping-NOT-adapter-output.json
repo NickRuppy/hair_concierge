@@ -1,0 +1,16 @@
+{
+  "status": "conditional_proposal_identity_and_positioning_unbound",
+  "cleansing_intensity": "gentle",
+  "suitable_thicknesses": [
+    "fine",
+    "normal"
+  ],
+  "scalp_route": null,
+  "shampoo_bucket": null,
+  "required_protocol_roles": null,
+  "blockers": [
+    "Exact identity, GTIN, pack size and source provenance absent by blind design",
+    "Claim-gated focus, usageRole, scalpComfortTarget and scalp target unresolved",
+    "No canonical payload may be emitted before these gates are reconciled"
+  ]
+}

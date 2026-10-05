@@ -1,0 +1,40 @@
+{
+  "cohort": "masks_treatments",
+  "generated_at": "2026-10-02T15:31:32.618Z",
+  "purpose": "Live recovery receipt for the final NEQI price-source conflict. This does not promote a supplier-stock/pre-order offer as immediately in-stock.",
+  "records": [
+    {
+      "id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+      "name": "NEQI Treatment Treasure Build Boost",
+      "target": "100 ml; registered GTIN 4063528086303.",
+      "verdict": "needs_preorder_availability_decision",
+      "current_offer": {
+        "retailer": "mapeja.de",
+        "url": "https://mapeja.de/neqi-treatment-treasure-build-boost-100ml/",
+        "price_eur": 9.3,
+        "package_value": 100,
+        "package_unit": "ml",
+        "observed_barcode": "4063528086303",
+        "availability": "Live rendered PDP says “auf Lager beim Lieferanten (3-5 Tage)” and exposes “ZUM WARENKORB HINZUFÜGEN”; its live JSON-LD Offer instead declares schema.org/PreOrder."
+      },
+      "source_quote": "Live Mapeja PDP: “NEQI Treatment Treasure Build Boost 100ml”; EAN 4063528086303; “auf Lager beim Lieferanten (3-5 Tage)”; “9.3 EUR mit Mehrwertsteuer”; and “ZUM WARENKORB HINZUFÜGEN”. Live JSON-LD on the same page has price 9.3 EUR, the same GTIN, and availability \"http://schema.org/PreOrder\".",
+      "alternate_checks": [
+        {
+          "retailer": "cosmeterie.de",
+          "url": "https://www.cosmeterie.de/neqi/treatment-treasure-build-boost",
+          "price_eur": 9.95,
+          "package": "100 ml",
+          "barcode": "4063528086303",
+          "availability": "Live direct PDP says “Auf Lager ab 16. Oktober” and “Dieser Artikel ist aktuell nicht in unserem Lager, trifft jedoch bald ein”; an “In den Warenkorb” control is shown and delivery is stated up to Mon 19 Oct. This corroborates exact identity, but is also future-stock rather than immediate in-stock."
+        },
+        {
+          "retailer": "neqi-hair.com",
+          "url": "https://neqi-hair.com/products/treatment-treasure-build-boost",
+          "availability": "Live brand collection lists Treatment Treasure Build Boost but the storefront showed CHF pricing, so it is not used as a EUR German offer."
+        }
+      ],
+      "source_access_limits": "Both live German retailer PDPs permit a cart action, but both describe supplier/future stock. Mapeja explicitly conflicts: rendered text says supplier stock in 3–5 days while structured Offer data says PreOrder. No checkout was submitted and no immediate in-stock claim is made.",
+      "checked_at": "2026-10-02T15:31:32.618Z"
+    }
+  ]
+}

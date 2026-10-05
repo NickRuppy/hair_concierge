@@ -1,0 +1,274 @@
+{
+  "method": "Read-only fresh official dm MCP product searches. Exact recovery requires registered GTIN/title/package; absence from a search is not retirement proof. Alternatives are distinct products and require Nick approval; no price, GTIN or formula is inherited.",
+  "checked_at": "2026-10-03T13:58:51.539Z",
+  "counts": {
+    "affected_rows": 13,
+    "physical_products": 12,
+    "exact_safe_recoveries": 0,
+    "same_named_different_package": 1,
+    "no_exact_current_offer": 10,
+    "formula_conflict_group_rows": 2
+  },
+  "records": [
+    {
+      "id": "41e09958-5a1f-4997-b99b-f8384b7a8c0c",
+      "name": "Trockenshampoo Kopfhaut Sensitive",
+      "category": "dry_shampoo",
+      "availability": "no_exact_current_offer",
+      "reason": "The only current sensitive-scalp result is a different foam format/150 ml; do not inherit the old spray price or GTIN.",
+      "checked_at": "2026-10-03T13:57:43.762Z",
+      "exact_offer": null,
+      "alternative": {
+        "gtin": "4066447989540",
+        "dan": "2974661",
+        "title": "Trockenshampoo Schaum Kopfhaut Sensitive, 150 ml",
+        "whole_package_price_eur": 1.45,
+        "url": "https://www.dm.de/p/d/2974661/balea-trockenshampoo-schaum-kopfhaut-sensitive",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommendation": "Propose Balea Trockenshampoo Schaum Kopfhaut Sensitive as a distinct replacement.",
+      "confidence": "high that no exact match was returned by this focused dm search; low on global retirement"
+    },
+    {
+      "id": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "name": "Balea Professional Ultimate Volume",
+      "category": "shampoo",
+      "availability": "no_exact_current_offer",
+      "reason": "No exact Ultimate Volume article was returned; product may be absent or not indexed.",
+      "checked_at": "2026-10-03T13:57:43.766Z",
+      "exact_offer": null,
+      "alternative": {
+        "gtin": "4066447990126",
+        "dan": "3126236",
+        "title": "Shampoo Hydra Volume, 250 ml",
+        "whole_package_price_eur": 1.35,
+        "url": "https://www.dm.de/p/d/3126236/balea-professional-shampoo-hydra-volume",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommendation": "Propose Balea Professional Shampoo Hydra Volume as a distinct replacement.",
+      "confidence": "high that no exact match was returned by this focused dm search; low on global retirement"
+    },
+    {
+      "id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "name": "Balea Natural Beauty Hibiskus",
+      "category": "conditioner",
+      "availability": "no_exact_current_offer",
+      "reason": "No exact Hibiskus candidate was returned; old/candidate barcode hold remains separate.",
+      "checked_at": "2026-10-03T13:57:43.766Z",
+      "exact_offer": null,
+      "alternative": {
+        "gtin": "4066447238938",
+        "dan": "1625965",
+        "title": "Conditioner Avocadoöl & Mangobutter natural beauty, 350 ml",
+        "whole_package_price_eur": 1.45,
+        "url": "https://www.dm.de/p/d/1625965/balea-conditioner-avocadooel-und-mangobutter-natural-beauty",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommendation": "Propose Balea Natural Beauty Conditioner Avocadoöl & Mangobutter as a distinct replacement.",
+      "confidence": "high that no exact match was returned by this focused dm search; low on global retirement"
+    },
+    {
+      "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "name": "Balea Professional Glow & Shine",
+      "category": "mask",
+      "availability": "no_exact_current_offer",
+      "reason": "No exact 200 ml Glow & Shine treatment was returned.",
+      "checked_at": "2026-10-03T13:57:43.766Z",
+      "exact_offer": null,
+      "alternative": {
+        "gtin": "4066447982817",
+        "dan": "1671219",
+        "title": "Haarmaske Intensivpflege 3in1, 300 ml",
+        "whole_package_price_eur": 1.95,
+        "url": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommendation": "Propose already-cataloged Balea 3 in 1 Intensivmaske as a distinct mask replacement.",
+      "confidence": "high that no exact match was returned by this focused dm search; low on global retirement"
+    },
+    {
+      "id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+      "name": "Balea Natural Beauty 3in1 Locken",
+      "category": "mask",
+      "availability": "no_exact_current_offer",
+      "reason": "No exact curl 3in1 mask was returned.",
+      "checked_at": "2026-10-03T13:57:44.297Z",
+      "exact_offer": null,
+      "alternative": {
+        "gtin": "4066447982817",
+        "dan": "1671219",
+        "title": "Haarmaske Intensivpflege 3in1, 300 ml",
+        "whole_package_price_eur": 1.95,
+        "url": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommendation": "Propose already-cataloged Balea 3 in 1 Intensivmaske as a distinct mask replacement.",
+      "confidence": "high that no exact match was returned by this focused dm search; low on global retirement"
+    },
+    {
+      "id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "name": "Balea Aqua Hyaluron 3 in 1",
+      "category": "mask",
+      "availability": "no_exact_current_offer",
+      "reason": "Exact Aqua Hyaluron 3in1 mask was not returned.",
+      "checked_at": "2026-10-03T13:57:44.430Z",
+      "exact_offer": null,
+      "alternative": {
+        "gtin": "4066447982817",
+        "dan": "1671219",
+        "title": "Haarmaske Intensivpflege 3in1, 300 ml",
+        "whole_package_price_eur": 1.95,
+        "url": "https://www.dm.de/p/d/1671219/balea-haarmaske-intensivpflege-3in1",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommendation": "Propose already-cataloged Balea 3 in 1 Intensivmaske as a distinct mask replacement.",
+      "confidence": "high that no exact match was returned by this focused dm search; low on global retirement"
+    },
+    {
+      "id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "name": "Balea Aqua Hyaluron 3in1",
+      "category": "leave_in",
+      "availability": "no_exact_current_offer",
+      "reason": "Exact Aqua Hyaluron 3in1 leave-in was not returned.",
+      "checked_at": "2026-10-03T13:57:45.292Z",
+      "exact_offer": null,
+      "alternative": {
+        "gtin": "4070765026894",
+        "dan": "3151631",
+        "title": "Feuchtigkeitsfiller Aqua Hyaluron, 50 ml",
+        "whole_package_price_eur": 2.95,
+        "url": "https://www.dm.de/p/d/3151631/balea-professional-feuchtigkeitsfiller-aqua-hyaluron",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommendation": "Propose Balea Feuchtigkeitsfiller Aqua Hyaluron as a distinct leave-in/moisture replacement.",
+      "confidence": "high that no exact match was returned by this focused dm search; low on global retirement"
+    },
+    {
+      "id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+      "name": "Schaebens Argan-Öl Haarmaske",
+      "category": "mask",
+      "availability": "same_named_product_different_package",
+      "reason": "Current result is the same named Arganöl mask as 2×7 ml/14 ml, not the old 20 ml pack; package/formula continuity is not assumed.",
+      "checked_at": "2026-10-03T13:57:44.507Z",
+      "exact_offer": null,
+      "alternative": {
+        "gtin": "4003573125015",
+        "dan": "3132757",
+        "title": "Haarmaske Arganöl (2x7 ml), 14 ml",
+        "whole_package_price_eur": 0.95,
+        "url": "https://www.dm.de/p/d/3132757/schaebens-haarmaske-arganoel-2x7-ml",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommendation": "Offer this 14 ml pack as a distinct package decision, not an automatic update.",
+      "confidence": "high on name/package; no formula continuity claim"
+    },
+    {
+      "id": "e3571e45-1126-4431-bef8-43153ef64c20",
+      "name": "alverde 4in1 Repair & Care Wunderkur",
+      "category": "mask",
+      "availability": "no_exact_current_offer",
+      "reason": "No exact alverde 4in1 repair treatment was returned.",
+      "checked_at": "2026-10-03T13:57:44.533Z",
+      "exact_offer": null,
+      "alternative": {
+        "gtin": "4015100814095",
+        "dan": "1534911",
+        "title": "Haarkur Total Repair 1 Min Express-Kur, 200 ml",
+        "whole_package_price_eur": 3.45,
+        "url": "https://www.dm.de/p/d/1534911/schwarzkopf-gliss-haarkur-total-repair-1-min-express-kur",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommendation": "Propose GLISS Total Repair 1-Minute Express-Kur as a distinct repair-mask replacement.",
+      "confidence": "high that no exact match was returned by this focused dm search; low on global retirement"
+    },
+    {
+      "id": "96f4cf13-7a71-4924-b44e-9d5612d55d32",
+      "name": "alverde Hydro Mask",
+      "category": "mask",
+      "availability": "no_exact_current_offer",
+      "reason": "No exact alverde hydro mask was returned.",
+      "checked_at": "2026-10-03T13:57:44.819Z",
+      "exact_offer": null,
+      "alternative": {
+        "gtin": "3600524245849",
+        "dan": "3122676",
+        "title": "Haarmaske Hydra Hyaluronic, 300 ml",
+        "whole_package_price_eur": 4.95,
+        "url": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommendation": "Propose L’Oréal Elvital Hydra Hyaluronic Haarmaske as a distinct hydration-mask replacement.",
+      "confidence": "high that no exact match was returned by this focused dm search; low on global retirement"
+    },
+    {
+      "id": "17c50884-3c17-479a-848a-10447464e086",
+      "name": "Garnier Aktivkohle mask",
+      "category": "mask",
+      "availability": "no_exact_current_offer",
+      "reason": "No exact Aktivkohle treatment was returned.",
+      "checked_at": "2026-10-03T13:57:44.824Z",
+      "exact_offer": null,
+      "alternative": {
+        "gtin": "3600542656191",
+        "dan": "3115711",
+        "title": "Haarkur 1-Minute Traube, 340 ml",
+        "whole_package_price_eur": 4.95,
+        "url": "https://www.dm.de/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommendation": "Propose already-cataloged Wahre Schätze 1-Minute Traube as a distinct mask replacement.",
+      "confidence": "high that no exact match was returned by this focused dm search; low on global retirement"
+    },
+    {
+      "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "name": "Garnier Hair Food Macadamia",
+      "category": "conditioner",
+      "availability": "formula_conflict_no_exact_offer",
+      "reason": "Macadamia has a known formula conflict; no exact dm offer was returned.",
+      "checked_at": "2026-10-03T13:57:45.103Z",
+      "exact_offer": null,
+      "alternative": {
+        "gtin": "3600542511148",
+        "dan": "1676321",
+        "title": "Haarkur Kakao Butter Hair Food 3in1 Maske, 400 ml",
+        "whole_package_price_eur": 5.95,
+        "url": "https://www.dm.de/p/d/1676321/garnier-fructis-haarkur-kakao-butter-hair-food-3in1-maske",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommendation": "Propose Garnier Kakao Butter Hair Food 3in1 Maske as a distinct 400 ml conditioner-use replacement.",
+      "confidence": "high that no exact match was returned by this focused dm search; low on global retirement"
+    },
+    {
+      "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "name": "Garnier Hair Food Macadamia",
+      "category": "leave_in",
+      "availability": "formula_conflict_no_exact_offer",
+      "reason": "Same physical Macadamia product as conditioner row; report once. No exact dm offer was returned.",
+      "checked_at": "2026-10-03T13:57:45.108Z",
+      "exact_offer": null,
+      "alternative": {
+        "gtin": "3600542511148",
+        "dan": "1676321",
+        "title": "Haarkur Kakao Butter Hair Food 3in1 Maske, 400 ml",
+        "whole_package_price_eur": 5.95,
+        "url": "https://www.dm.de/p/d/1676321/garnier-fructis-haarkur-kakao-butter-hair-food-3in1-maske",
+        "purchasable": true,
+        "sellout": false
+      },
+      "recommendation": "Same distinct Kakao Butter Hair Food 3in1 proposal can be evaluated for leave-in use; it is not a formula/identity replacement.",
+      "confidence": "high that no exact match was returned by this focused dm search; low on global retirement"
+    }
+  ]
+}

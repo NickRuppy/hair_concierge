@@ -1,0 +1,99 @@
+{
+  "audited_at": "2026-10-02T00:00:00.000Z",
+  "scope": "Source-quality audit of the 71 leave-in/heat records classified verified_exact in leaveins_heat-research-evidence.json. This file does not change any offer, classification, price, GTIN, or recommendation.",
+  "time_precision_note": "Several `checked_at` values ending in T00:00:00.000Z were date-only placeholders written during the research pass. They do not assert that an observation occurred at midnight. Exact timestamps from the dm structured helper are genuine helper retrieval timestamps; other recorded exact-minute times record the research pass but not a durable raw retailer fetch receipt.",
+  "summary": {
+    "verified_exact_records_audited": 71,
+    "dm_structured_exact_response_records": 25,
+    "direct_schema_or_microdata_fetch_records": 3,
+    "cached_search_index_only_high_risk": 8,
+    "date_only_placeholder_records": 12,
+    "recommended_action": "Parent live-fetch batch should recheck every non-dm URL. Prioritize the eight cached-search-only records below; treat their prior price and availability as leads, not live proof."
+  },
+  "direct_schema_or_microdata_fetch_ids": [
+    "1b8f56b9-b186-4bed-a65c-f582ac0e9453",
+    "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+    "45f4fe15-c439-476d-8a86-3b2aac5053bd"
+  ],
+  "cached_search_index_only_high_risk": [
+    {
+      "id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+      "product": "ISANA PROFESSIONAL Leave-In Conditioner Hyaluron & Panthenol",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-leave-in-conditioner-hyaluron-und-care/p/4305615946733",
+      "recorded_checked_at": "2026-10-02T00:00:00.000Z",
+      "cached_source_crawl_age": "Nextag/Rossmann index search crawled 3 days before retrieval",
+      "why_uncertain": "Price €2.49 and 1-business-day availability were taken from a cached retailer index, not a current Rossmann primary response."
+    },
+    {
+      "id": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+      "product": "Moroccanoil All In One Leave In Conditioner",
+      "source_url": "https://www.hair24.de/Moroccanoil-All-in-One-Leave-In-Conditioner-160-ml",
+      "recorded_checked_at": "2026-10-02T00:00:00.000Z",
+      "cached_source_crawl_age": "search-result crawl age was not retained in the evidence artifact",
+      "why_uncertain": "€28.80, availability and GTIN were captured from a search-indexed Hair24 result without a saved primary-page response."
+    },
+    {
+      "id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "product": "OUAI Leave In Conditioner",
+      "source_url": "https://www.sephora.de/p/leave-in-conditioner-426531.html",
+      "recorded_checked_at": "2026-10-02T00:00:00.000Z",
+      "cached_source_crawl_age": "Sephora search result crawled 3 weeks before retrieval",
+      "why_uncertain": "€26.45 and availability were taken from the cached Sephora search result. The primary page did not display the catalog GTIN, so live confirmation must also rule out a current variant change."
+    },
+    {
+      "id": "cb228f9d-4e46-4302-9a6f-92c393eda1bd",
+      "product": "Hydra Protect Hitzeschutzspray",
+      "source_url": "https://www.rossmann.de/de/pflege-und-duft-schwarzkopf-taft-hitzeschutz-spray-aloe-boost/p/4015100893403",
+      "recorded_checked_at": "2026-10-02T00:00:00.000Z",
+      "cached_source_crawl_age": "Rossmann comparison/index result crawled about 2 weeks before retrieval",
+      "why_uncertain": "€3.99 and delivery were index-derived only. The catalog wording is legacy while GTIN resolves to current Aloe Boost, so live page confirmation is needed for both sellability and product presentation."
+    },
+    {
+      "id": "67d95443-490d-47fb-876e-8d9eecf015ae",
+      "product": "Jean&Len Leave-In Haarmaske Peptide Intense Repair",
+      "source_url": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+      "recorded_checked_at": "2026-10-02T00:00:00.000Z",
+      "cached_source_crawl_age": "dm search result crawled 3 weeks before retrieval",
+      "why_uncertain": "Exact GTIN/name/package was strong, but €5.25 and delivery status came from cached search output rather than a structured dm response or current primary fetch."
+    },
+    {
+      "id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "product": "Neqi Diamond Glass Ultimate Styling Spray",
+      "source_url": "https://www.maquibeauty.de/neqi-diamond-glass-stylingspray-styling-spray-ultimate-p-91427.html",
+      "recorded_checked_at": "2026-10-02T00:00:00.000Z",
+      "cached_source_crawl_age": "Maquillalia DE search result crawled 3 weeks before retrieval",
+      "why_uncertain": "Exact GTIN/package and €12.95 were search-indexed only; order-dispatch wording is not a current primary fetch receipt."
+    },
+    {
+      "id": "d840b368-3416-4104-9ccb-0e5a656a4929",
+      "product": "Schwarzkopf Gliss Haarkur Night Elixier Ultimate Repair",
+      "source_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+      "recorded_checked_at": "2026-10-02T00:00:00.000Z",
+      "cached_source_crawl_age": "dm search result crawled 3 weeks before retrieval",
+      "why_uncertain": "Exact GTIN/name/package was strong, but €7.45 and current delivery status were captured from cached dm search output only."
+    },
+    {
+      "id": "dc9f6662-b51b-4011-91ae-494c2d254f11",
+      "product": "Wahre Schätze Leave-In Haarkur Avocado",
+      "source_url": "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado",
+      "recorded_checked_at": "2026-10-02T00:00:00.000Z",
+      "cached_source_crawl_age": "dm search result crawled 3 weeks before retrieval",
+      "why_uncertain": "Exact GTIN/name/package was strong, but €2.95 and current delivery status were captured from cached dm search output only."
+    }
+  ],
+  "date_only_placeholder_ids": [
+    "0b21f996-bb42-4b10-89bd-4881c4346d53",
+    "0756a919-5fab-4b6c-a5da-8cb810869b6f",
+    "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+    "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd",
+    "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+    "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
+    "cb228f9d-4e46-4302-9a6f-92c393eda1bd",
+    "3175b0a5-1be7-430f-b3d9-22ab3b4c11d2",
+    "67d95443-490d-47fb-876e-8d9eecf015ae",
+    "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+    "d840b368-3416-4104-9ccb-0e5a656a4929",
+    "dc9f6662-b51b-4011-91ae-494c2d254f11"
+  ],
+  "other_non_dm_recheck_scope": "The remaining non-dm URLs were recorded as retailer PDP/search checks with exact identity evidence but lack a retained live raw-page receipt in this file. They are not classified cached-search-only from the available trail; nevertheless, availability and price remain time-sensitive and belong in the parent's live-fetch batch."
+}
