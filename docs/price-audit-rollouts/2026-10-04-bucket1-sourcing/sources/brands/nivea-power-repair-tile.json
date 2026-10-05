@@ -1,0 +1,83 @@
+{
+  "checked_at": "2026-10-04T08:43:11.402575+00:00",
+  "source": "https://products.dm.de/product/products/tiles/DE/dans/1620990",
+  "product": {
+    "a11yLabel": "Marke: NIVEA; Produktname: Conditioner Power Repair, 200 ml; Preis: 2,95 €; Grundpreis: 0,2 l (14,75 € je 1 l)",
+    "brand": {
+      "name": "NIVEA"
+    },
+    "dan": 1620990,
+    "gtin": 4006000192598,
+    "hideCouponEyecatcher": false,
+    "images": [
+      {
+        "alt": "Conditioner Power Repair NIVEA",
+        "backgroundColor": "#F1F4F9",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1756855769/assets/pas/images/38053712-225a-4eea-9ef9-316dcda9e9c1/nivea-conditioner-power-repair"
+      },
+      {
+        "alt": "Conditioner Power Repair NIVEA",
+        "backgroundColor": "#F1F3F9",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1756855775/assets/pas/images/4cf000a0-8b8c-4ce8-8042-7983e215db5e/nivea-conditioner-power-repair"
+      },
+      {
+        "alt": "Conditioner Power Repair NIVEA",
+        "backgroundColor": "#F9F5F1",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1756937928/assets/pas/images/4ccf1df4-4959-440b-a5cb-00544cf66762/nivea-conditioner-power-repair"
+      },
+      {
+        "alt": "Conditioner Power Repair NIVEA",
+        "backgroundColor": "#F1F4F9",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1756937919/assets/pas/images/cbc48461-de44-4ae8-87d1-b29de025e124/nivea-conditioner-power-repair"
+      },
+      {
+        "alt": "Conditioner Power Repair NIVEA",
+        "backgroundColor": "#F9F3F1",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1785879218/assets/pas/images/641dab38-3618-478c-a944-fa33d2c9a6ad/nivea-conditioner-power-repair"
+      }
+    ],
+    "isPharmacy": false,
+    "netPrice": {
+      "prefix": "Einzelpreis",
+      "price": {
+        "current": {
+          "value": "2,48 €"
+        }
+      },
+      "tileInfos": [
+        "0,2 l (12,39 € je 1 l)"
+      ]
+    },
+    "price": {
+      "prefix": "Einzelpreis",
+      "price": {
+        "current": {
+          "value": "2,95 €"
+        }
+      },
+      "tileInfos": [
+        "0,2 l (14,75 € je 1 l)"
+      ]
+    },
+    "self": "/p/d/1620990/nivea-conditioner-power-repair",
+    "title": {
+      "tileHeadline": "Conditioner Power Repair, 200 ml"
+    },
+    "trackingData": {
+      "brand": "NIVEA",
+      "categories": [
+        "Conditioner"
+      ],
+      "currency": "EUR",
+      "isPharmacy": false,
+      "price": 2.95
+    }
+  },
+  "raw_front_image_source": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1000,w_1000/v1756855769/assets/pas/images/38053712-225a-4eea-9ef9-316dcda9e9c1/nivea-conditioner-power-repair",
+  "raw_front_image_path": "/Users/nick/AI_work/hair_conscierge/.worktrees/price-audit-rollout-receipt/docs/price-audit-rollouts/2026-10-04-bucket1-sourcing/sources/brands/nivea-power-repair-front.webp"
+}

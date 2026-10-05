@@ -1,0 +1,36 @@
+{
+  "method": "Hydrated browser exact primary product block, registeredGTIN,whole-package public price,enabledcart and standard delivery. No catalog writes.",
+  "records": [
+    {
+      "id": "cd76afea-d332-4b1d-b44b-7de5bef9034f",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/3086968/eucerin-eucerin-dermo-capillaire-5-prozent-urea-kopfhautberuhigendes-intensiv-tonikum",
+      "price_eur": 16.95,
+      "package_value": 100,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "4005800036620"
+      ],
+      "pzn": "09508065",
+      "availability": "Lieferbar; enabled cart; standard delivery2-3businessdays; sold by dm-med",
+      "checked_at": "2026-10-03T11:17:20.601Z",
+      "source_method": "Hydrated exact dm-med PDP; registeredGTIN4005800036620,PZN09508065,100ml16.95EUR and online stock",
+      "reason": "Exact preferred dm-med offer verified. Keep current preferred link and16.95EUR; fill known100ml package."
+    },
+    {
+      "id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/3080142/neqi-leave-in-spray-diamond-glass-ultimate",
+      "price_eur": 12.95,
+      "package_value": 180,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "4063528094575"
+      ],
+      "availability": "Lieferbar; enabled cart; standard delivery2-3businessdays",
+      "checked_at": "2026-10-03T11:18:43.800Z",
+      "source_method": "Hydrated exact dm PDP; registeredGTIN4063528094575,Ultimate180ml12.95EUR and online stock",
+      "reason": "Keep exact preferred dm Ultimate180ml12.95EUR. Hagel9.95 candidate hasGTIN4063528078469 and lacksUltimate designation; different variant is excluded. Maquibeauty11.01Oct2 offer superseded by preferred live dm."
+    }
+  ]
+}

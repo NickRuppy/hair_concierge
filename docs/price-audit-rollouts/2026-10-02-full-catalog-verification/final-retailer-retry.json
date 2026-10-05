@@ -1,0 +1,17 @@
+{
+  "method": "Focused live GET retry after transient timeout; primary selected price/package/stock contexts only.",
+  "records": [
+    {
+      "id": "cd76afea-d332-4b1d-b44b-7de5bef9034f",
+      "url": "https://www.shop-apotheke.com/beauty/9508065/eucerin-dermocapillaire-urea-kopfhautberuhigendes-intensiv-tonikum-beruhigt-trockene-und-juckende-kopfhaut-spendet-feuchtigkeit.htm",
+      "checked_at": "2026-10-03T11:05:59.349366+00:00",
+      "error": "<urlopen error _ssl.c:1112: The handshake operation timed out>"
+    },
+    {
+      "id": "42a2fe20-bd7e-49a3-a880-8ae89015a5c9",
+      "url": "https://www.maquibeauty.de/neqi-diamond-glass-stylingspray-styling-spray-ultimate-p-91427.html",
+      "checked_at": "2026-10-03T11:05:59.350183+00:00",
+      "error": "<urlopen error _ssl.c:1112: The handshake operation timed out>"
+    }
+  ]
+}

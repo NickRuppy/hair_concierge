@@ -1,0 +1,15 @@
+{
+  "kind":"read-only dm pre-apply residual refresh",
+  "method":"hydrated exact dm product-detail pages; visible whole-package price, GTIN, Lieferbar, In den Warenkorb, and standard delivery; no cart interaction",
+  "scope":{"records":7,"exact_matches":7,"changed":0,"errors":0},
+  "records":[
+    {"id":"3901b2cf-6888-4363-9d5b-a695c0b3170b","checked_at":"2026-10-03T11:40:46.108Z","price_eur":9.95,"package":"300 ml","gtin":"4270004570113"},
+    {"id":"380fec2b-6ecd-499d-987e-d273ad3085b1","checked_at":"2026-10-03T11:40:47.778Z","price_eur":16.95,"package":"250 ml","gtin":"4270000814433"},
+    {"id":"67d95443-490d-47fb-876e-8d9eecf015ae","checked_at":"2026-10-03T11:40:49.342Z","price_eur":5.25,"package":"100 ml","gtin":"4262500780288"},
+    {"id":"d840b368-3416-4104-9ccb-0e5a656a4929","checked_at":"2026-10-03T11:40:50.898Z","price_eur":7.45,"package":"100 ml","gtin":"4015100813951"},
+    {"id":"dc9f6662-b51b-4011-91ae-494c2d254f11","checked_at":"2026-10-03T11:40:52.468Z","price_eur":2.95,"package":"200 ml","gtin":"3600542639200"},
+    {"id":"8df49303-e1c9-4519-9a5f-4f9bc276ab5a","checked_at":"2026-10-03T11:40:54.059Z","price_eur":9.95,"package":"100 ml","gtin":"4260625261996"},
+    {"id":"f0168972-dcd4-4593-aeb5-38d12343468a","checked_at":"2026-10-03T11:40:55.628Z","price_eur":4.95,"package":"100 ml","gtin":"4084500085350"}
+  ],
+  "stock_and_delivery":"All seven: Lieferbar, visible In den Warenkorb, Standardversand 2-3 Werktage."
+}

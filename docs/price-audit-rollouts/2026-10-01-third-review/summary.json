@@ -1,0 +1,192 @@
+{
+  "startedAt": "2026-10-01T08:54:41.348Z",
+  "finishedAt": "2026-10-01T09:20:42.572Z",
+  "apply": false,
+  "total": 347,
+  "byAction": {
+    "auto_write": 54,
+    "review_proposal": 293,
+    "recheck_failed": 0
+  },
+  "byHost": {
+    "dm.de": {
+      "auto_write": 23,
+      "review_proposal": 193,
+      "recheck_failed": 0
+    },
+    "douglas.de": {
+      "auto_write": 1,
+      "review_proposal": 12,
+      "recheck_failed": 0
+    },
+    "rossmann.de": {
+      "auto_write": 18,
+      "review_proposal": 45,
+      "recheck_failed": 0
+    },
+    "flaconi.de": {
+      "auto_write": 1,
+      "review_proposal": 3,
+      "recheck_failed": 0
+    },
+    "amazon.de": {
+      "auto_write": 0,
+      "review_proposal": 3,
+      "recheck_failed": 0
+    },
+    "wella.com": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "hagel-shop.de": {
+      "auto_write": 0,
+      "review_proposal": 11,
+      "recheck_failed": 0
+    },
+    "jeanlen.de": {
+      "auto_write": 0,
+      "review_proposal": 3,
+      "recheck_failed": 0
+    },
+    "theordinary.com": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "olaplex.de": {
+      "auto_write": 0,
+      "review_proposal": 4,
+      "recheck_failed": 0
+    },
+    "shop-apotheke.com": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "urban-alchemy.com": {
+      "auto_write": 0,
+      "review_proposal": 2,
+      "recheck_failed": 0
+    },
+    "de.nuxe.com": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "eu.curlsmith.com": {
+      "auto_write": 0,
+      "review_proposal": 2,
+      "recheck_failed": 0
+    },
+    "nutreeoil.com": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "neqi-hair.com": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "epres-hair.de": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "duitsevoordeeldrogist.nl": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "cosmeterie.at": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "bali-care.com": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "rossmann.dk": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "schwarzkopf.de": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "nivea.de": {
+      "auto_write": 0,
+      "review_proposal": 1,
+      "recheck_failed": 0
+    },
+    "mueller.de": {
+      "auto_write": 11,
+      "review_proposal": 2,
+      "recheck_failed": 0
+    }
+  },
+  "reasons": {
+    "not_found: beobachtet unbekannt @ keine URL": 1,
+    "llm_reports_unavailable: 5.95 EUR @ https://www.dm.de/p/d/1455746/jean-und-len-haaroel-repair-keratin-und-mandel — verify link status manually": 1,
+    "llm_reports_unavailable: 5.95 EUR @ https://www.dm.de/p/d/2973205/neqi-haarkur-treatment-treasures-peptide-power — verify link status manually": 1,
+    "llm_reports_unavailable: 1.45 EUR @ https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel — verify link status manually": 1,
+    "llm_reports_unavailable: 1.95 EUR @ https://www.dm.de/p/d/1711758/balea-trockenshampoo-kopfhaut-sensitive — verify link status manually": 1,
+    "llm_reports_unavailable: 2.75 EUR @ https://www.dm.de/p/d/1417521/balea-professional-haarmaske-3in1-aqua-hyaluron — verify link status manually": 2,
+    "llm_reports_unavailable: 3.75 EUR @ https://www.dm.de/p/d/1551780/batiste-trockenshampoo-original — verify link status manually": 1,
+    "llm_reports_unavailable: 5.95 EUR @ https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske — verify link status manually": 2,
+    "llm_reports_unavailable: 9.95 EUR @ https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost — verify link status manually": 1,
+    "llm_reports_unavailable: 2.95 EUR @ https://www.dm.de/p/d/3119223/syoss-haarkur-lamination-intense-glaze — verify link status manually": 1,
+    "llm_reports_unavailable: 6.95 EUR @ https://www.dm.de/p/d/3042328/wahre-schaetze-haaroel-curl-revival-elixir — verify link status manually": 1,
+    "llm_reports_unavailable: 2.45 EUR @ https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken — verify link status manually": 1,
+    "not_found: beobachtet Balea Conditioner Natural Beauty Bio-Hibiskus-Extrakt und Cocosmilch, 350 ml @ https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-bio-hibiskus-extrakt-und-cocosmilch": 1,
+    "llm_reports_unavailable: 4.95 EUR @ https://www.dm.de/p/d/1335946/sante-naturally-conditioner-deep-repair — verify link status manually": 1,
+    "llm_reports_unavailable: 2.75 EUR @ https://www.dm.de/p/d/1670195/wahre-schaetze-shampoo-sanfte-hafermilch — verify link status manually": 1,
+    "llm_reports_unavailable: 3.95 EUR @ https://www.dm.de/p/d/1688644/guhl-shampoo-hyaluron-pflege — verify link status manually": 1,
+    "llm_reports_unavailable: 6.95 EUR @ https://www.dm.de/p/d/1475016/hask-shampoo-argan-oil — verify link status manually": 1,
+    "llm_reports_unavailable: 9.95 EUR @ https://www.dm.de/p/d/3063729/dejan-garz-shampoo-the-foundation — verify link status manually": 1,
+    "llm_reports_unavailable: 6.95 EUR @ https://www.dm.de/p/d/1622385/hask-conditioner-curl-care — verify link status manually": 1,
+    "llm_reports_unavailable: 4.95 EUR @ https://www.dm.de/p/d/1585350/hair-biology-conditioner-full-und-shining — verify link status manually": 1,
+    "llm_reports_unavailable: 4.95 EUR @ https://www.dm.de/p/d/3047029/syoss-shampoo-intense-curls — verify link status manually": 1,
+    "not_found: beobachtet Herbal Essences Conditioner Feuchtigkeit Aloe Vera, 250 ml @ https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera": 1,
+    "llm_reports_unavailable: 3.99 EUR @ https://www.rossmann.de/de/pflege-und-duft-sante-sensitive-care-shampoo/p/4055297221467 — verify link status manually": 1,
+    "llm_reports_unavailable: 2.75 EUR @ https://www.dm.de/p/d/3058599/pantene-pro-v-shampoo-volumen-pur — verify link status manually": 1,
+    "llm_reports_unavailable: 5.95 EUR @ https://www.dm.de/p/d/1336165/pantene-pro-v-conditioner-miracles-bond-repair — verify link status manually": 1,
+    "not_found: beobachtet alverde NATURKOSMETIK Conditioner Glanz, 200 ml @ https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz": 1,
+    "llm_reports_unavailable: 4.95 EUR @ https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe — verify link status manually": 1,
+    "llm_reports_unavailable: 2.95 EUR @ https://www.dm.de/p/d/3047028/syoss-conditioner-intense-curls — verify link status manually": 1,
+    "llm_reports_unavailable: 6.95 EUR @ https://www.dm.de/p/d/1475001/hask-conditioner-repairing-argan-oil — verify link status manually": 1,
+    "llm_reports_unavailable: 6.95 EUR @ https://www.dm.de/p/d/1443762/ogx-shampoo-strenght-und-lenght-keratin-oil — verify link status manually": 1,
+    "llm_reports_unavailable: 6.95 EUR @ https://www.dm.de/p/d/1622384/hask-shampoo-curl-care — verify link status manually": 1,
+    "llm_reports_unavailable: 1.25 EUR @ https://www.dm.de/p/d/1703262/balea-professional-shampoo-ultimate-volume — verify link status manually": 1,
+    "not_found: beobachtet Balea PROFESSIONAL Conditioner Oil Repair Intensiv, 200 ml @ https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv": 1,
+    "price delta 32% (2.99 -> 3.95 EUR) exceeds 30%": 1,
+    "llm_reports_unavailable: 4.95 EUR @ https://www.dm.de/p/d/1679241/wahre-schaetze-haarkur-1-minute-aktivkohle-fettige-kopfhaut — verify link status manually": 1,
+    "not_found: beobachtet got2b Hitzeschutzspray Schutzengel, 200 ml @ https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel": 1,
+    "llm_reports_unavailable: 2.95 EUR @ https://www.dm.de/p/d/3101587/balea-hitzeschutzspray-ultralight — verify link status manually": 1,
+    "host_not_enabled": 201,
+    "not_found: beobachtet Redken All Soft Mega Curls Hydramelt Treatment, 150 ml @ https://www.douglas.de/de/p/5010905038": 1,
+    "no_price_found: beobachtet K18 Professional Molecular Repair Hair Mist, 150 ml @ https://www.look-beautiful.de/professional-molecular-repair-hair-mist-sw13531": 1,
+    "no_price_found: beobachtet OUAI Leave in Conditioner, 140 ml @ https://www.sephora.de/p/leave-in-conditioner-P3282012.html": 1,
+    "not_found: beobachtet Haarmaske @ https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122": 1,
+    "not_found: beobachtet Isana Haarmaske 3in1 Mandelmilch, Milchprotein & Mandel @ https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127?info=text.product.notAvailable.error": 1,
+    "llm_reports_unavailable: 13.89 EUR @ https://www.douglas.de/de/p/m003070896 — verify link status manually": 1,
+    "no_price_found: beobachtet Santé – naturally. Intense Hydration Maske, 150 ml @ https://www.ecco-verde.at/sante-naturally/intense-hydration-maske": 1,
+    "not_found: beobachtet unbekannt @ https://www.rossmann.de/de/pflege-und-duft-neqi-volume-victory-shampoo/p/4063528078377": 1,
+    "no_price_found: beobachtet Volume Victory Conditioner @ https://neqi-hair.com/products/volume-victory-conditioner": 1,
+    "llm_reports_unavailable: 4.49 EUR @ https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-dermaxpro-haarshampoo-sensitive-pflege/p/8700216496032 — verify link status manually": 1,
+    "price delta 37% (8.95 -> 5.6 EUR) exceeds 30%": 1,
+    "no_adapter_for_host": 35,
+    "no_price_found: beobachtet Shiseido Fino Premium Touch Penetration Essence Haaröl @ https://www.glowup.de/products/shiseido-fino-premium-touch-penetration-essence-haarol": 1,
+    "not_found: beobachtet OGX Bond Protein Repair 3-in-1 Oil Mist, 50 ml @ https://www.amazon.de/OGX-Spr%C3%BChnebel-besch%C3%A4digtes-Technology-Dual-Action-Reparaturtechnologie/dp/B0DQLHGGYJ": 1,
+    "not_found: beobachtet Guhl Bond+ Reparatur Spülung @ https://www.amazon.de/Guhl-BOND-REPARATUR-Sp%C3%BClung-Rotalgenextrakt/dp/B0CWJHVKV5": 1,
+    "llm_reports_unavailable: 21.72 EUR @ https://www.shop-apotheke.com/beauty/upmFKXM79/wella-ultimate-repair-protective-leave-in.htm — verify link status manually": 1,
+    "llm_reports_unavailable: 2.95 EUR @ https://www.hagel-shop.de/hask-argan-oil-repairing-shine-oil-18-ml-5815315.html — verify link status manually": 1,
+    "no_price_found: beobachtet Guhl Panthenol + Reparatur 2IN1 Kur & Spülung 200ml @ https://produkte.globus.de/koerperpflege-gesundheit-kosmetik/haarpflege/shampoo-spuelung-kur/4072600703403/spuelung-kur-2in1-panthenol-reparatur": 1,
+    "llm_reports_unavailable: 4.99 EUR @ https://www.hagel-shop.de/guhl-panthenol-reparatur-2-in-1-kur-spulung-200-ml.html — verify link status manually": 1
+  }
+}

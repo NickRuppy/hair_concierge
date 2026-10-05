@@ -1,0 +1,27 @@
+{
+  "method": "Hydrated browser selected package, price, enabled cart and dated delivery; coupon/UVP/reference prices excluded. Existing identity evidence retained.",
+  "records": [
+    {
+      "id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "price_eur": 56.25,
+      "package_value": 50,
+      "package_unit": "ml",
+      "checked_at": "2026-10-03T11:00:53Z",
+      "availability": "50ml selected; Auf Lager; enabled cart; delivery Oct7-8",
+      "reason": "Flaconi selected50ml56.25EUR;75EURisUVP. OptionalMYSTERYcoupon excluded.",
+      "source_method": "Fresh hydrated Flaconi selected50ml radio and unconditional price; earlier exact barcode evidence retained",
+      "evidence_file": "high-end-final-browser-refresh.json"
+    },
+    {
+      "id": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+      "price_eur": 12.8,
+      "package_value": 50,
+      "package_unit": "ml",
+      "checked_at": "2026-10-03T11:00:53Z",
+      "availability": "50mlMini; Online auf Lager; enabled cart; delivery Oct6-8",
+      "reason": "Douglas selected50mlMini unconditional sale12.80EUR;16EURisUVP and16.99is30dayreference. Same approved50mlbasepackage.",
+      "source_method": "Fresh hydrated Douglas direct offer50mlMini12.80EUR,online stock and dated delivery",
+      "evidence_file": "high-end-final-browser-refresh.json"
+    }
+  ]
+}

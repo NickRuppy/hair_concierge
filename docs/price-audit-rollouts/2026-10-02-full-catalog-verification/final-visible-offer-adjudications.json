@@ -1,0 +1,48 @@
+{
+  "method": "Manual primary-page adjudication of selected offers; no inferred recommendation-card price or hidden-template availability.",
+  "records": [
+    {
+      "id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "name": "Neqi Volume Victory Conditioner",
+      "brand": "Neqi",
+      "category_key": "conditioner",
+      "recommended": true,
+      "baseline_price_eur": 9.95,
+      "baseline_package_value": null,
+      "baseline_package_unit": null,
+      "baseline_url": "https://www.rossmann.de/de/pflege-und-duft-neqi-nq-volume-victory-conditioner-250ml/p/4063528078407",
+      "registered_gtins": [
+        "4063528078407"
+      ],
+      "classification": "verified_exact",
+      "proposed_url": "https://neqi-hair.com/products/volume-victory-conditioner",
+      "price_eur": 9.95,
+      "package_value": 250,
+      "package_unit": "ml",
+      "observed_barcodes": [],
+      "availability": "enabled In den Warenkorb legen; brand minimum basket19.90EUR",
+      "checked_at": "2026-10-03T11:05:59Z",
+      "timestamp_precision": "time",
+      "source_method": "Hydrated brand PDP9.95EUR,Inhalt250ml and enabled purchase control; hidden Nicht verfügbar template ignored",
+      "source_file": "final-visible-offer-adjudications.json",
+      "reason": "Fresh brand selected250ml9.95EUR offer; minimum total basket19.90EUR is a retailer order condition, not the bottle price.",
+      "review_reasons": [],
+      "price_delta_pct": 0.0,
+      "identity_basis": "exact_product_variant_package; barcode not displayed",
+      "review_status": "ready_for_dry_run",
+      "changes": [
+        "affiliate_link",
+        "net_content"
+      ],
+      "retailer_review_required": false,
+      "evidence_file": "final-visible-offer-adjudications.json"
+    }
+  ],
+  "kit_identity_source": {
+    "url": "https://epresbeauty.co.uk/products/bond-repair-treatment",
+    "purpose": "Identity only; not a GBP commerce offer",
+    "contents": "spray bottle plus two15mlconcentrate bottles",
+    "commerce_url": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+    "commerce_price_eur": 48
+  }
+}

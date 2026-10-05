@@ -1,0 +1,22 @@
+{
+  "sha256": {
+    "README.md": "dcf5d5ae19daaa971c3728fd368b7cfeead6d5b1c6a22f422aeefa98d98e7831",
+    "applied-offers.csv": "e30c2a2aba6d2ac2a16e09515bbe9aef543feee6da631a36948ec3a0f6fa6359",
+    "apply-result.json": "42b7f8b23c3a82046f28190b6d17dd8c66d92f44ca57df420de328a2dad15716",
+    "approved-apply-payload.json": "15da39642c3e62971612dc3449a16bc19e9c3ad9b0193d16bb000d96efed6230",
+    "approved-apply.sql": "00aa6dd73c013a614154224a13ae13cdc9315c6072ecbb0061ee664460fe80f5",
+    "approved-dry-run.sql": "ab98f1e3d7502c6a506354eccd68d1902e9c526f37b73d6dd850bd5b467370d3",
+    "approved-manifest.json": "97328eab72cc0f53d118335ed7de1a93f9dd263ca002aa6cf9e07ba00f84b930",
+    "cacay-preferred-host-checks.json": "c54e5337de0e2939be2d3f08afa5de4e9a0c061f3bb1d4c4923ffa21de5b1fe6",
+    "dry-run-result.json": "00fd35e77bfba61744fa7c20c401c2f37fe756e9c34c9489f4617088006a2e50",
+    "dry-run-verification.json": "3300067a3227663dfa8aa83dceaee2c8cd90903da5adfe7b911c8055f2c00209",
+    "neqi-current-dm-check.json": "7002bc0cc361b95d77ad64d3cc88e08ea1c5fc6fa9b34ec861a510a41b35e999",
+    "neqi-preferred-host-checks.json": "de7874070bb29b9de71437cc9fb5e9a8e1bbfeba0c9bd3766c86dd6dd5c922e8",
+    "parent-current-brand-variants.json": "67668776620eab09293f972ad4bdd97672bc1301996411251ae1b636fd155f9b",
+    "post-apply-readback.json": "39871620c75ca80edfd9faeb15ef2715f10127345aaf11f4092259d955ca9208",
+    "post-apply-verification.json": "c9080aba4c97f8e95ce419bf753241fe1087dbf1560d493a4b5fab0114744438",
+    "post-dry-run-readback.json": "f659c30c178a32154774576f266576684f903d93fa3fcc81e064f95fae1c387b",
+    "pre-apply-readback.json": "a99047e9d22feb99179e2a119f423ac9030a27bf17d78be6640b958a6eaabffd",
+    "remaining-holds.json": "75d39ee50780c7a7d5295daef5b13e848f5a84331bc4c24c819f5f8c6baf9505"
+  }
+}

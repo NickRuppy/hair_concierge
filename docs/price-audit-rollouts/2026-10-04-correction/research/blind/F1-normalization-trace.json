@@ -1,0 +1,8 @@
+{
+  "original_raw_inci": "Ingredients: Aqua, Aloe Barbadensis Leaf Juice, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate",
+  "original_raw_sha256": "c685a3e6c12d447d1d0cb6cbccec858f132b8a432fd06e156793d883e4f66671",
+  "canonical_inci": "Aqua, Aloe Barbadensis Leaf Juice, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate",
+  "canonical_inci_sha256": "035618f19bfb5a9212f606183db706f2f5d6e7cd31e6624e154abbf03e382e1c",
+  "derivation": "Remove non-ingredient Ingredients: heading and join exact ordered packet ingredients using comma-space. Shampoo adapter fingerprints exact canonical string UTF-8 bytes, unlike Conditioner normalized-text algorithm.",
+  "original_sequence_fingerprint_retained_in": "frozen-F1.json"
+}

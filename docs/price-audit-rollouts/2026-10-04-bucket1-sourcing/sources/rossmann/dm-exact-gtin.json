@@ -1,0 +1,78 @@
+[
+  {
+    "status": "fulfilled",
+    "value": {
+      "gtin": "4068134014122",
+      "checked_at": "2026-10-04T08:45:42.262Z",
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4068134014122",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ]
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "gtin": "4305615627441",
+      "checked_at": "2026-10-04T08:45:42.266Z",
+      "rows": [
+        {
+          "dan": "",
+          "gtin": "4305615627441",
+          "productName": "",
+          "brand": "",
+          "found": "false",
+          "errorMessage": "Product not found",
+          "productUrl": "",
+          "image": "",
+          "imageBackgroundColor": "",
+          "productType": "",
+          "weight": "",
+          "volume": "",
+          "description": "",
+          "keyBenefits": "",
+          "countryOfOrigin": "",
+          "foodIngredients": "",
+          "preparation": "",
+          "nutritionFacts": "",
+          "allergens": "",
+          "additives": "",
+          "nonFoodIngredients": "",
+          "applicationInstructions": "",
+          "warnings": "",
+          "hazardWarnings": "",
+          "careLabel": "",
+          "productFeatures": "",
+          "isSustainable": ""
+        }
+      ]
+    }
+  }
+]

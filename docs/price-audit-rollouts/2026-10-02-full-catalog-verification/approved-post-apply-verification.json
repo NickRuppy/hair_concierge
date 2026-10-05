@@ -1,0 +1,28 @@
+{
+  "verified_at": "2026-10-03T11:49:46.883988+00:00",
+  "result": "pass",
+  "database_rows_read": 371,
+  "approved_rows_applied_and_verified": 292,
+  "numeric_prices_changed": 71,
+  "numeric_prices_unchanged": 221,
+  "links_replaced": 131,
+  "missing_package_sizes_filled": 193,
+  "fresh_price_stamps": 292,
+  "held_active_rows_unchanged": 55,
+  "inactive_rows_unchanged": 24,
+  "all_identifier_fingerprints_unchanged": 371,
+  "all_noncommercial_product_fingerprints_unchanged": 371,
+  "errors": [],
+  "preservation_note": "Only approved commercial fields changed, plus the existing automatic updated_at trigger. Purchase-link statuses/checkstamps, product properties, categories, recommendations, lifecycle/activation and every recognition identifier are preserved.",
+  "counterpart_review": {
+    "status": "timed_out_without_verdict",
+    "model": "claude-opus-4-8",
+    "effort": "high",
+    "timeout_seconds": 180,
+    "review_mode": "read-only bounded SQL review; no review approval claimed"
+  },
+  "sql_sha256": {
+    "approved-catalog-corrections-dry-run.sql": "d6be2bb860db573b1c8d54912aaef6492025265418e35f9ae05b09859a514caf",
+    "approved-catalog-corrections-apply.sql": "81140852e95b467c59340e7044190d17c18fdcc99640ada0a243d5e91936912a"
+  }
+}

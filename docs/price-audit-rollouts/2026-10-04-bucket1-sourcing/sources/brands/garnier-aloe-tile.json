@@ -1,0 +1,98 @@
+{
+  "checked_at": "2026-10-04T08:43:14.338051+00:00",
+  "source": "https://products.dm.de/product/products/tiles/DE/dans/1676340",
+  "product": {
+    "a11yLabel": "Marke: GARNIER FRUCTIS; Produktname: Haarmaske Aloe Vera Hair Food 3in1, trockenes Haar, 400 ml; Preis: 5,95 €; Grundpreis: 0,4 l (14,88 € je 1 l)",
+    "brand": {
+      "name": "GARNIER FRUCTIS"
+    },
+    "dan": 1676340,
+    "gtin": 3600542511049,
+    "hideCouponEyecatcher": false,
+    "images": [
+      {
+        "alt": "Haarmaske Aloe Vera Hair Food 3in1, trockenes Haar GARNIER FRUCTIS",
+        "backgroundColor": "#F1F9F5",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1788991845/assets/pas/images/d0f83b33-9459-43be-8aa9-89a2da9b2498/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar"
+      },
+      {
+        "alt": "Haarmaske Aloe Vera Hair Food 3in1, trockenes Haar GARNIER FRUCTIS",
+        "backgroundColor": "#F1F9F7",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1747603387/assets/pas/images/f6a8ddf5-3d99-4e6e-9c3e-3ce17c5a376f/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar"
+      },
+      {
+        "alt": "Haarmaske Aloe Vera Hair Food 3in1, trockenes Haar GARNIER FRUCTIS",
+        "backgroundColor": "#F1F9F8",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1747603382/assets/pas/images/c900a8df-f977-4567-8033-f0469a5f2805/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar"
+      },
+      {
+        "alt": "Haarmaske Aloe Vera Hair Food 3in1, trockenes Haar GARNIER FRUCTIS",
+        "backgroundColor": "#F1F9F5",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1751682512/assets/pas/images/e6428145-1eb0-478f-ace4-96607003b615/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar"
+      },
+      {
+        "alt": "Haarmaske Aloe Vera Hair Food 3in1, trockenes Haar GARNIER FRUCTIS",
+        "backgroundColor": "#F1F9F5",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1747603378/assets/pas/images/7cdb73e4-c999-4691-a4d8-a40348949171/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar"
+      },
+      {
+        "alt": "Haarmaske Aloe Vera Hair Food 3in1, trockenes Haar GARNIER FRUCTIS",
+        "backgroundColor": "#F1F9F7",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1747603391/assets/pas/images/aebb18ef-5069-4624-b5f3-0338c66438d7/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar"
+      },
+      {
+        "alt": "Haarmaske Aloe Vera Hair Food 3in1, trockenes Haar GARNIER FRUCTIS",
+        "backgroundColor": "#F1F9F8",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1747603396/assets/pas/images/0c572cd3-42a8-4d68-bebc-176f0de79ecc/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar"
+      }
+    ],
+    "infoHint": {
+      "text": "Hinweise"
+    },
+    "isPharmacy": false,
+    "netPrice": {
+      "prefix": "Einzelpreis",
+      "price": {
+        "current": {
+          "value": "5,00 €"
+        }
+      },
+      "tileInfos": [
+        "0,4 l (12,50 € je 1 l)"
+      ]
+    },
+    "price": {
+      "prefix": "Einzelpreis",
+      "price": {
+        "current": {
+          "value": "5,95 €"
+        }
+      },
+      "tileInfos": [
+        "0,4 l (14,88 € je 1 l)"
+      ]
+    },
+    "self": "/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+    "title": {
+      "tileHeadline": "Haarmaske Aloe Vera Hair Food 3in1, trockenes Haar, 400 ml"
+    },
+    "trackingData": {
+      "brand": "GARNIER FRUCTIS",
+      "categories": [
+        "Haarkur & Haarmaske"
+      ],
+      "currency": "EUR",
+      "isPharmacy": false,
+      "price": 5.95
+    }
+  },
+  "raw_front_image_source": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1000,w_1000/v1788991845/assets/pas/images/d0f83b33-9459-43be-8aa9-89a2da9b2498/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar",
+  "raw_front_image_path": "/Users/nick/AI_work/hair_conscierge/.worktrees/price-audit-rollout-receipt/docs/price-audit-rollouts/2026-10-04-bucket1-sourcing/sources/brands/garnier-aloe-front.webp"
+}

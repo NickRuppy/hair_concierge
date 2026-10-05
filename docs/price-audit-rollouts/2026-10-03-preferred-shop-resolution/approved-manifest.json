@@ -1,0 +1,130 @@
+{
+  "prepared_at": "2026-10-03T14:28:30.021109+00:00",
+  "authorization": "Nick explicitly prioritizes preferred shops, accepts any exact-product package size and price, and requires shop purchaseability. This settles the prior package/supplier questions within the authorized pricing pass.",
+  "records": [
+    {
+      "id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+      "name": "Neqi Build Boost",
+      "before": {
+        "readback_at": "2026-10-03 14:23:41.108359+00",
+        "id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+        "name": "Neqi Build Boost",
+        "brand": "Neqi",
+        "category_key": "mask",
+        "currency": "EUR",
+        "price_eur": "9.99",
+        "price_checked_at": "2026-06-10 00:00:00+00",
+        "affiliate_link": "https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-10 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "edbbbe2835c6882443d11d3d817e40ac",
+        "noncommercial_fingerprint": "4c68cd1b3cbabfee9b129d4a57c1e597",
+        "gtins": [
+          {
+            "value": "4063528086303",
+            "canonical_gtin14": "04063528086303"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "26d4ee91-84a5-4d40-be60-a8e04c644564",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:03:37.28665+00:00",
+            "product_id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+            "updated_at": "2026-08-28T08:03:37.28665+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04063528086303",
+            "identifier_value": "4063528086303",
+            "normalized_identifier_value": "4063528086303"
+          }
+        ],
+        "identifier_fingerprint": "0d810fa097a077d655246e3176a73dfc"
+      },
+      "verified_offer": {
+        "url": "https://neqi-hair.com/products/treatment-treasure-build-boost?variant=49565683122522",
+        "retailer": "brand-direct",
+        "package_value": 100,
+        "package_unit": "ml",
+        "price_eur": 9.95,
+        "gtin": "4063528086303",
+        "variant_id": 49565683122522
+      },
+      "source_checked_at": "2026-10-03T14:25:22.708501+00:00",
+      "proposed": {
+        "price_eur": 9.95,
+        "price_checked_at": "2026-10-03T14:25:22.708501+00:00",
+        "affiliate_link": "https://neqi-hair.com/products/treatment-treasure-build-boost?variant=49565683122522",
+        "net_content_value": 100,
+        "net_content_unit": "ml"
+      },
+      "note": "Preferred available exact brand-direct offer; exact registered GTIN;19.90EURminimum basket; current dm MCP did not return the exactGTIN/DAN, Rossmann challenged and Müller exact-code search returned no match."
+    },
+    {
+      "id": "78e6f1b2-7262-46af-b689-a92af6702739",
+      "name": "NUTREEOIL Cacay Öl",
+      "before": {
+        "readback_at": "2026-10-03 14:23:41.108359+00",
+        "id": "78e6f1b2-7262-46af-b689-a92af6702739",
+        "name": "NUTREEOIL Cacay Öl",
+        "brand": "NUTREEOIL",
+        "category_key": "oil",
+        "currency": "EUR",
+        "price_eur": "34.99",
+        "price_checked_at": "2026-09-30 19:56:10.154+00",
+        "affiliate_link": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-10 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "408b0f1654be54752d26757d6b665ffd",
+        "noncommercial_fingerprint": "a15a58dcd10ed83216c458eb66693db2",
+        "gtins": [
+          {
+            "value": "4260541540014",
+            "canonical_gtin14": "04260541540014"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "0afa1975-c601-4b52-8171-086e0553790e",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:56:25.620343+00:00",
+            "product_id": "78e6f1b2-7262-46af-b689-a92af6702739",
+            "updated_at": "2026-08-28T08:56:25.620343+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04260541540014",
+            "identifier_value": "4260541540014",
+            "normalized_identifier_value": "4260541540014"
+          }
+        ],
+        "identifier_fingerprint": "8b5c8223a5531de1155c571d69a92e61"
+      },
+      "verified_offer": {
+        "url": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml?variant=39805169467440",
+        "retailer": "brand-direct",
+        "package_value": 15,
+        "package_unit": "ml",
+        "price_eur": 24.99,
+        "gtin": "4260541540014",
+        "variant_id": 39805169467440
+      },
+      "source_checked_at": "2026-10-03T14:25:22.728884+00:00",
+      "proposed": {
+        "price_eur": 24.99,
+        "price_checked_at": "2026-10-03T14:25:22.728884+00:00",
+        "affiliate_link": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml?variant=39805169467440",
+        "net_content_value": 15,
+        "net_content_unit": "ml"
+      },
+      "note": "Brand direct is first preferred source for oil. Exact official15ml variant assigns existingGTIN4260541540014;30ml unavailable. Prior30ml assumption from page handle was not variant-level proof. Select15ml via explicitvariantURL. No barcode change."
+    }
+  ]
+}

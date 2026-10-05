@@ -1,0 +1,28 @@
+{
+  "checked_at": "2026-10-03T14:25:22.728884+00:00",
+  "preference_order": [
+    "brand-direct",
+    "Amazon DE",
+    "dm",
+    "Rossmann"
+  ],
+  "selected_source": "brand-direct",
+  "source_url": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml.js",
+  "selected_variant": {
+    "id": 39805169467440,
+    "title": "15ml",
+    "sku": "002",
+    "barcode": "4260541540014",
+    "price": 2499,
+    "available": true,
+    "requires_shipping": true,
+    "requires_selling_plan": false,
+    "weight": 61
+  },
+  "selected_url": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml?variant=39805169467440",
+  "catalog_registered_ean": "4260541540014",
+  "catalog_net_content_before": null,
+  "prior_assumed_package": "30ml from old page handle; not a stored size or proved barcode mapping",
+  "decision": "Exact registered EAN is currently published on available15mlvariant. Retain it; fill missing purchase size15ml and use24.99EUR whole-package price. Brand direct ranks first for oil, so no lower-tier retail offer displaces it.",
+  "source_method": "Parent fresh public manufacturer Shopify product JSON and variant-selected primary PDP; child inferred timestamps were not retained."
+}

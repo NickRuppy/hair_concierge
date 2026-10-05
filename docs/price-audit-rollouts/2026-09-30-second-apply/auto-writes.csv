@@ -1,0 +1,58 @@
+id,name,old_price_eur,new_price_eur,old_purchase_link_status,new_purchase_link_status,price_checked_at,purchase_link_checked_at,applied,note
+1f3920fe-c91e-4298-a40e-99dccd13ea30,Balea Professional Glow & Shine,2.75,2.75,available,,2026-09-30T19:46:54.094Z,,true,source:llm_research
+27fe4310-c1b8-4b02-a59e-cb9aa1f3314a,Trockenshampoo Schaum Kopfhaut Sensitive,1.45,1.45,available,,2026-09-30T19:47:17.299Z,,true,source:llm_research
+02113cc7-80c4-45a5-a56b-738ac96f4f02,Gliss Kur Aqua Revive Conditioner,2.95,2.95,available,,2026-09-30T19:58:35.748Z,,true,source:llm_research
+02afbd03-1c7d-467c-8a07-a8b226d6f535,Guhl Kopfhaut Sensitive,3.99,3.95,available,,2026-09-30T19:58:51.404Z,,true,source:llm_research
+088b1427-ed22-424e-8cfd-ea2578120ae6,Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege,4.95,4.95,available,,2026-09-30T19:59:03.958Z,,true,source:llm_research
+0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c,Balea Tiefenreinigung,1.25,1.25,available,,2026-09-30T19:59:25.096Z,,true,source:llm_research
+1623a993-3ff4-43be-82c1-95a1ee57ec52,Langhaarmädchen Beautiful Curls Shampoo,4.95,4.95,available,,2026-09-30T19:59:37.066Z,,true,source:llm_research
+1bfa5b02-26d9-457b-a5e6-445cc2284490,OGX Bond Protein Repair Conditioner,6.95,6.95,available,,2026-09-30T20:00:12.070Z,,true,source:llm_research
+215522e5-95a6-469f-bc34-1fa74b311a23,Nivea Power Repair Conditioner,2.95,2.95,available,,2026-09-30T20:00:32.949Z,,true,source:llm_research
+2a159694-6799-4be7-a0aa-572757c94801,Langhaarmädchen Lovely Long Conditioner,4.95,4.95,available,,2026-09-30T20:00:48.216Z,,true,source:llm_research
+303b4c0c-53a4-46de-883d-c29e448ee590,Sebamed Anti Schuppen,3.99,4.95,available,,2026-09-30T20:00:59.311Z,,true,source:llm_research
+35ae622e-1458-42bf-a44d-1b23ecfd5516,Neqi Repair Reveal Conditioner,9.95,9.95,available,,2026-09-30T20:01:10.599Z,,true,source:llm_research
+35d81c4a-dbb0-474b-a068-2e1562adb0a8,Langhaarmädchen Beautiful Curls Conditioner,4.95,4.95,available,,2026-09-30T20:01:30.850Z,,true,source:llm_research
+3901b2cf-6888-4363-9d5b-a695c0b3170b,Dejan Garz The Foundation Conditioner,9.95,9.95,available,,2026-09-30T20:01:57.921Z,,true,source:llm_research
+3d94c017-9edb-4ba0-accd-4772e262f012,Lavera Basis Sensitiv,4.99,4.95,available,,2026-09-30T20:02:10.389Z,,true,source:llm_research
+3f3c7d89-9e7b-4e91-85f7-d3c58d304918,Biotin & Collagen Shampoo,6.99,6.95,available,,2026-09-30T20:02:21.861Z,,true,source:llm_research
+483b41d6-632c-4efe-9bcc-488c80bf5bb7,Balea Med Ultra Sensitive Conditioner,1.75,1.75,available,,2026-09-30T20:02:45.280Z,,true,source:llm_research
+4fca59e5-fbc4-4132-a821-dac6ff0cdb68,OGX Biotin & Collagen Conditioner,6.95,6.95,available,,2026-09-30T20:03:35.191Z,,true,source:llm_research
+515de93c-1c77-465d-ae0d-2a8d6ddb3d73,Swiss-O-Par Teebaumöl,2.35,2.45,available,,2026-09-30T20:03:45.964Z,,true,source:llm_research
+51a0b647-2794-49a3-96e1-e7695432561e,Sebamed Urea 5%,4.99,5.95,available,,2026-09-30T20:04:05.357Z,,true,source:llm_research
+57bae8c8-0ebd-4722-b955-c760d8ffcdbb,Sante Glossy Shine,4.99,3.95,available,,2026-09-30T20:04:16.179Z,,true,source:llm_research
+5effc311-25d7-44dd-8c16-b93c182068d3,Pantene Anti Schuppen,3.49,3.95,available,,2026-09-30T20:04:32.323Z,,true,source:llm_research
+63239c38-5633-4062-9e8d-d528ee71502a,Bali Curls Moisturising Conditioner,8.95,8.95,available,,2026-09-30T20:04:46.627Z,,true,source:llm_research
+716a4f4e-6ba4-4742-a1cf-75e90ae1da3f,Head & Shoulders Anti Schuppen Sensitive,3.95,3.95,available,,2026-09-30T20:05:21.274Z,,true,source:llm_research
+7200bb0b-7463-433b-86c8-744f5c1431de,Wahre Schätze Aktivkohle,2.49,2.75,available,,2026-09-30T20:05:48.301Z,,true,source:llm_research
+7373656d-5fd7-46e8-81a3-2ef29e3c4c18,Pantene Grow Abundance,7.99,7.95,available,,2026-09-30T20:06:14.627Z,,true,source:llm_research
+744de604-d266-453b-a56b-eea92c5ca565,Guhl Anti Schuppen,3.99,3.95,available,,2026-09-30T20:06:25.843Z,,true,source:llm_research
+7e95671b-41a7-4f5c-9188-e535e46678ba,Sebamed Anti Schuppen Plus,3.99,4.95,available,,2026-09-30T20:06:59.184Z,,true,source:llm_research
+970aff48-a7a7-46e8-bad5-4f0600631329,Pomélo+Co Molecular Repair Conditioner,9.95,9.95,available,,2026-09-30T20:07:11.875Z,,true,source:llm_research
+98d08c22-97d2-4e06-872f-9f9447530452,Pantene Pro-V Miracles Hydra Glow Conditioner,3.95,3.95,available,,2026-09-30T20:07:23.004Z,,true,source:llm_research
+9bfad335-a086-45a0-9af7-f26b36b4ecff,Guhl Kraft & Fülle,4.99,4.95,available,,2026-09-30T20:07:35.087Z,,true,source:llm_research
+9d8d4709-4041-495e-98ee-e0261fa30e27,Schauma Anti Schuppen,1.99,1.95,available,,2026-09-30T20:07:47.399Z,,true,source:llm_research
+a6730d6f-df2f-4ebf-8013-eb39162f15df,Balea Professional Aqua Hyaluron Conditioner,1.25,1.25,available,,2026-09-30T20:08:55.697Z,,true,source:llm_research
+a79513be-e34b-4a1e-b7eb-b3d4b58160be,Balea Ultra Sensitive,1.75,1.75,available,,2026-09-30T20:09:07.909Z,,true,source:llm_research
+b000d235-1fc6-434c-9ba1-f1207d36cded,Balea 2 in 1 Urea 5%,1.95,1.75,available,,2026-09-30T20:09:20.072Z,,true,source:llm_research
+c2d7eb89-9a2e-4476-bb89-c0f33a2aa501,OGX Renewing Argan Oil of Morocco Conditioner,6.95,6.95,available,,2026-09-30T20:10:12.638Z,,true,source:llm_research
+cd7461cc-7fde-40dd-8d39-fca1aa8f30bf,Guhl Frische und Leichtigkeit,3.99,3.95,available,,2026-09-30T20:10:22.850Z,,true,source:llm_research
+45f4fe15-c439-476d-8a86-3b2aac5053bd,Urban Alchemy Repair & Revive Leave-In Spray,22.9,22.9,available,,2026-09-30T19:53:31.484Z,,true,source:llm_research
+5ad6c978-fd27-469e-9f26-ff3f05b9f67a,Urban Alchemy Smooth Supreme Öl Serum,22.9,22.9,available,,2026-09-30T19:53:43.383Z,,true,source:llm_research
+695414e1-3435-4304-943b-76677408980c,Maria Nila Structure Repair Leave-In,32,23.25,available,,2026-09-30T19:54:23.743Z,,true,source:llm_research
+5767f7a6-757c-40fa-b990-8e0a1abaea17,Nuxe Huile Prodigieuse Öl,38.9,38.9,available,,2026-09-30T19:54:38.313Z,,true,source:llm_research
+648ba537-5180-440e-81ad-2b310b447d87,Curlsmith Hydrate & Plump Leave-In,25,21,available,,2026-09-30T19:54:52.492Z,,true,source:llm_research
+8715f0f5-9104-46ec-b450-e73f1441c1fa,Curlsmith Weightless Air Dry Cream,25,21,available,,2026-09-30T19:55:02.763Z,,true,source:llm_research
+78e6f1b2-7262-46af-b689-a92af6702739,NUTREEOIL Cacay Öl,34.99,34.99,available,,2026-09-30T19:56:10.154Z,,true,source:llm_research
+9f94c225-61ec-455d-b303-f39e885e222a,Neqi Build Boost Leave-In Balm,9.95,9.95,available,,2026-09-30T19:56:49.373Z,,true,source:llm_research
+f8a63590-9d80-454a-8008-e2a56321e64c,Epres Bond Repair Treatment,48,48,available,,2026-09-30T19:57:10.564Z,,true,source:llm_research
+29e36443-93ff-4b62-9cf0-55ad9f89f530,BioGourmet Distelöl,5.99,,unavailable,unavailable,,2026-09-30T19:45:31.812Z,false,noop_unchanged_status
+517dca50-5d55-4038-ba1d-f9b745708327,Allgäuer Ölmühle Bio Traubenkernöl,7.99,,unavailable,unavailable,,2026-09-30T19:45:34.059Z,false,noop_unchanged_status
+07120c73-0171-4a2a-9d07-facd9ce90d8c,Weleda Hydra Shine Gloss Drops Alpen-Lein,9.95,9.95,available,available,2026-09-30T19:45:40.650Z,2026-09-30T19:45:40.650Z,true,
+19aea9c4-4b90-4ec4-8cb6-90cb270010f7,benecos BIO Körperöl Macadamianussöl,8.99,8.99,available,available,2026-09-30T19:45:42.970Z,2026-09-30T19:45:42.970Z,true,
+1dce2c18-6a45-4017-a748-e3a7f1cba36f,Primavera Calendulaöl Bio,15.9,15.9,available,available,2026-09-30T19:45:45.279Z,2026-09-30T19:45:45.279Z,true,
+3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b,benecos BIO Körperöl Wunderbaumsamenöl,4.99,4.99,available,available,2026-09-30T19:45:47.603Z,2026-09-30T19:45:47.603Z,true,
+5827a3b9-a488-4c74-b13a-4d655f94f1c3,Pantene Pro-V Miracles 7in1 Öl-Spray,8.95,8.95,available,available,2026-09-30T19:45:49.913Z,2026-09-30T19:45:49.913Z,true,
+70ea52bc-2194-4bb3-82a8-3f4a2aede041,Dr. Scheller Reines Arganöl,8.45,8.45,available,available,2026-09-30T19:45:52.157Z,2026-09-30T19:45:52.157Z,true,
+a11855eb-64e5-438f-8880-1d3573efa9fa,benecos BIO Körperöl Aprikosenkernöl,6.99,6.99,available,available,2026-09-30T19:45:54.461Z,2026-09-30T19:45:54.461Z,true,
+ca4ae209-79d2-4f4d-8e44-46e586cec62d,benecos BIO Körperöl Mandelöl,8.99,8.99,available,available,2026-09-30T19:45:56.926Z,2026-09-30T19:45:56.926Z,true,
+931892fb-cc29-4e50-b402-6aae0a494389,Pantene Pro-V Moisture Boost Pflegespülung,8.95,8.95,available,available,2026-09-30T19:45:59.388Z,2026-09-30T19:45:59.388Z,true,

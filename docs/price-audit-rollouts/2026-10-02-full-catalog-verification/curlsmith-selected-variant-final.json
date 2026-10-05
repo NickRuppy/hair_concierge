@@ -1,0 +1,112 @@
+{
+  "id": "8715f0f5-9104-46ec-b450-e73f1441c1fa",
+  "checked_at": "2026-10-03T10:38:59.059284+00:00",
+  "url": "https://de.curlsmith.com/products/weightless-air-dry-cream?shpxid=534e5b55-f862-4f67-b4ea-d68292aaca39",
+  "selected_variant": {
+    "id": 39480225300629,
+    "title": "Full 237 ml",
+    "option1": "Full 237 ml",
+    "option2": null,
+    "option3": null,
+    "sku": "CSLIQ10083",
+    "requires_shipping": true,
+    "taxable": true,
+    "featured_image": {
+      "id": 85668618338688,
+      "product_id": 5239131340949,
+      "position": 2,
+      "created_at": "2026-07-01T10:25:29+02:00",
+      "updated_at": "2026-07-01T10:25:33+02:00",
+      "alt": null,
+      "width": 2000,
+      "height": 2000,
+      "src": "//de.curlsmith.com/cdn/shop/files/WeightlessAirDryCream--DE.jpg?v=1782894333",
+      "variant_ids": [
+        39480225300629
+      ]
+    },
+    "available": true,
+    "name": "Weightless Air Dry Cream - Full 237 ml",
+    "public_title": "Full 237 ml",
+    "options": [
+      "Full 237 ml"
+    ],
+    "price": 2100,
+    "weight": 200,
+    "compare_at_price": null,
+    "inventory_management": "shopify",
+    "barcode": "850048197626",
+    "featured_media": {
+      "alt": null,
+      "id": 69441261371776,
+      "position": 2,
+      "preview_image": {
+        "aspect_ratio": 1.0,
+        "height": 2000,
+        "width": 2000,
+        "src": "//de.curlsmith.com/cdn/shop/files/WeightlessAirDryCream--DE.jpg?v=1782894333"
+      }
+    },
+    "requires_selling_plan": false,
+    "selling_plan_allocations": [
+      {
+        "price_adjustments": [
+          {
+            "position": 1,
+            "price": 1785
+          }
+        ],
+        "price": 1785,
+        "compare_at_price": 2100,
+        "per_delivery_price": 1785,
+        "selling_plan_id": 712943403392,
+        "selling_plan_group_id": "c2f0ba18f95718de69a30a0f29aaba48e46de885"
+      },
+      {
+        "price_adjustments": [
+          {
+            "position": 1,
+            "price": 1785
+          }
+        ],
+        "price": 1785,
+        "compare_at_price": 2100,
+        "per_delivery_price": 1785,
+        "selling_plan_id": 712943501696,
+        "selling_plan_group_id": "15889316b27b54e69ad990e2b3850c103b868f04"
+      },
+      {
+        "price_adjustments": [
+          {
+            "position": 1,
+            "price": 1785
+          }
+        ],
+        "price": 1785,
+        "compare_at_price": 2100,
+        "per_delivery_price": 1785,
+        "selling_plan_id": 712943436160,
+        "selling_plan_group_id": "242f6c6d320445f37cd1c1a78935f21f7af4d143"
+      },
+      {
+        "price_adjustments": [
+          {
+            "position": 1,
+            "price": 1785
+          }
+        ],
+        "price": 1785,
+        "compare_at_price": 2100,
+        "per_delivery_price": 1785,
+        "selling_plan_id": 712943468928,
+        "selling_plan_group_id": "a4217e0750ab24940611a7ac31fdb86525f8f562"
+      }
+    ],
+    "quantity_rule": {
+      "min": 1,
+      "max": null,
+      "increment": 1
+    }
+  },
+  "note": "Generic JSON-LD 11 EUR is mini 59 ml and excluded. Selected full 237 ml is 21 EUR, available, barcode 850048197626."
+}
