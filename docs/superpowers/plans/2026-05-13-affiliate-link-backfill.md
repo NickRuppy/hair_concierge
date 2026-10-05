@@ -1,5 +1,7 @@
 # Affiliate Link Backfill Implementation Plan
 
+> **Historical (removed 2026-10-05).** This one-off backfill ran once (PR #123, 2026-05-26). Its subagent fan-out pieces — `scripts/validate-slice.ts`, `scripts/aggregate-affiliate-research.ts`, `src/lib/affiliate-research/slice-validator.ts`, and `src/lib/affiliate-research/aggregate.ts` — were deleted because nothing used them anymore, and the aggregator's shop ranking predated the universal purchase-shop order. `url-gate.ts` and `csv.ts` remain (live callers). `export-missing-affiliate-links.ts` and `write-affiliate-links.ts` remain as legacy tooling; nothing produces `data/affiliate-research/approved.csv` anymore, so the writer needs a separately prepared, human-reviewed CSV with the same seven-column header. Purchase links now come from the product-intake worker and the price-audit lane.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build the four scripts that drive the affiliate-link backfill workflow described in `docs/superpowers/specs/2026-05-13-affiliate-link-backfill-design.md`, so that we can dispatch research subagents and write reviewed URLs back to `products.affiliate_link`.
