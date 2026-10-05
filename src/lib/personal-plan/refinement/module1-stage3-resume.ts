@@ -26,6 +26,14 @@ import { stage2ModuleStates } from "./module-status"
  *   the draft itself, so an absent draft is a resume target, not a blocker;
  * - **while** an `active` Stage-3 draft is open — reloading inside Stage 3.
  *
+ * A `products` entry written by a facts rebase (`origin: "facts_rebase"`) is the
+ * exception to the "absent draft is a resume target" rule: the rebase carries the
+ * source's persistent `stage3Handoff` flag onto a NEW refined version for which no
+ * Stage-3 draft exists, but it is a system operation — it never started a Stage-3
+ * leg, and the user may long since have finished Stage 3 on the previous version.
+ * It resumes only once a product draft row for that version exists (then the
+ * status rule below applies unchanged).
+ *
  * A `completed` or `stale` Stage-3 draft is deliberately NOT a resume target: the
  * marker is persistent and never resets, so resuming on it alone would keep
  * pulling a user who already finished Stage 3 back into it instead of letting
@@ -67,6 +75,9 @@ export async function loadModule1Stage3Resume(
       .limit(1)
       .maybeSingle()
     if (error) return null
+
+    // A rebased entry with no product draft row never began a Stage-3 leg.
+    if (!data && projection.origin === "facts_rebase") return null
 
     const draftStatus = data ? String((data as { status?: unknown }).status ?? "") : null
     if (draftStatus === "completed" || draftStatus === "stale") return null

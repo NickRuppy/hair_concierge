@@ -250,6 +250,131 @@ test("assumed (direct-accept) answers alone never look like a completed products
   )
 })
 
+/**
+ * R11 (PR2 facts rebase). A system rebase clones the refinement draft onto a new
+ * plan version and writes `origin: "facts_rebase"` projection entries for a NEW
+ * refined version, carrying the source's persistent `stage3Handoff` flag. No
+ * Stage-3 product draft exists for that version, so without the origin check the
+ * bridge-reload rescue would send a user who already finished Stage 3 back in.
+ */
+const rebasedProjections = {
+  products: {
+    needVersionId: ids.refined,
+    projectedAtRevision: 1,
+    stage3Handoff: true,
+    origin: "facts_rebase",
+  },
+  habits: {
+    needVersionId: ids.refined,
+    projectedAtRevision: 1,
+    stage3Handoff: false,
+    origin: "facts_rebase",
+  },
+}
+
+test("a rebased products entry without any Stage-3 draft does not resume (R11)", async () => {
+  assert.equal(
+    await resumeFor({
+      personal_plans: [planRow()],
+      personal_plan_need_versions: [needVersionRow()],
+      personal_plan_refinement_drafts: [
+        refinementDraftRow({ module_projections: rebasedProjections }),
+      ],
+      personal_plan_product_drafts: [],
+    }),
+    null,
+  )
+})
+
+test("a rebased products entry resumes as soon as a live Stage-3 draft exists for it", async () => {
+  assert.deepEqual(
+    await resumeFor({
+      personal_plans: [planRow()],
+      personal_plan_need_versions: [needVersionRow()],
+      personal_plan_refinement_drafts: [
+        refinementDraftRow({ module_projections: rebasedProjections }),
+      ],
+      personal_plan_product_drafts: [stage3DraftRow({ status: "active" })],
+    }),
+    { refinedVersionId: ids.refined },
+  )
+})
+
+test("a rebased products entry with a completed or stale Stage-3 draft does not resume", async () => {
+  for (const status of ["completed", "stale"]) {
+    assert.equal(
+      await resumeFor({
+        personal_plans: [planRow()],
+        personal_plan_need_versions: [needVersionRow()],
+        personal_plan_refinement_drafts: [
+          refinementDraftRow({ module_projections: rebasedProjections }),
+        ],
+        personal_plan_product_drafts: [stage3DraftRow({ status })],
+      }),
+      null,
+      `status ${status} must not resume`,
+    )
+  }
+})
+
+test("a rebased draft whose Stage-3 draft belongs to another owner or version still does not resume", async () => {
+  assert.equal(
+    await resumeFor({
+      personal_plans: [planRow()],
+      personal_plan_need_versions: [needVersionRow()],
+      personal_plan_refinement_drafts: [
+        refinementDraftRow({ module_projections: rebasedProjections }),
+      ],
+      personal_plan_product_drafts: [
+        stage3DraftRow({ user_id: "someone-else" }),
+        stage3DraftRow({ refined_need_version_id: "another-version" }),
+      ],
+    }),
+    null,
+  )
+})
+
+test("an entry without origin keeps the rescue before the first Stage-3 draft exists (pin)", async () => {
+  assert.deepEqual(
+    await resumeFor({
+      personal_plans: [planRow()],
+      personal_plan_need_versions: [needVersionRow()],
+      personal_plan_refinement_drafts: [
+        refinementDraftRow({
+          module_projections: {
+            products: { needVersionId: ids.refined, projectedAtRevision: 1, stage3Handoff: true },
+          },
+        }),
+      ],
+      personal_plan_product_drafts: [],
+    }),
+    { refinedVersionId: ids.refined },
+  )
+})
+
+test("an unknown origin value is not treated as a rebase: the user-handoff rescue stays", async () => {
+  assert.deepEqual(
+    await resumeFor({
+      personal_plans: [planRow()],
+      personal_plan_need_versions: [needVersionRow()],
+      personal_plan_refinement_drafts: [
+        refinementDraftRow({
+          module_projections: {
+            products: {
+              needVersionId: ids.refined,
+              projectedAtRevision: 1,
+              stage3Handoff: true,
+              origin: "user",
+            },
+          },
+        }),
+      ],
+      personal_plan_product_drafts: [],
+    }),
+    { refinedVersionId: ids.refined },
+  )
+})
+
 test("a plan without a personal plan row resolves to no resume, not a throw", async () => {
   assert.equal(await resumeFor({}), null)
 })
@@ -457,6 +582,71 @@ test("a failing resume read degrades to Stage 2 instead of taking the page down"
   )
   assert.deepEqual(state.state === "production" ? state.initialJourney : null, {
     stage: "stage2",
+    planAccepted: true,
+  })
+})
+
+// ———————————— /plan-start state for a rebased draft on an accepted plan (R06, R11) ————————————
+
+test("rebased `complete` clone on an accepted plan redirects to /routine (R06)", async () => {
+  const completeSession: Stage2RefinementSession = {
+    ...inProgressSession(),
+    revision: 10,
+    status: "complete",
+    completedQuestionIds: ["current_product_categories", "wet_wash_frequency"],
+    path: {
+      ...inProgressSession().path,
+      completedQuestionIds: ["current_product_categories", "wet_wash_frequency"],
+      firstUnresolvedQuestionId: null,
+    },
+    completedHandoff: { refinedVersionId: ids.refined, nextHref: "/plan-start" },
+  }
+  const state = await resolvePlanStartPageState(
+    depsWithResume(
+      async () => {
+        throw new Error("the Stage-3 resume read must not matter for a complete draft")
+      },
+      { loadExistingRefinementSession: async () => completeSession },
+    ),
+  )
+  assert.deepEqual(state, { state: "routine_redirect" })
+})
+
+test("rebased in-progress clone (products done, habits open, no Stage-3 draft) shows Stage 2, not Stage 3 (R11)", async () => {
+  const client = makeClient({
+    personal_plans: [planRow()],
+    personal_plan_need_versions: [needVersionRow()],
+    personal_plan_refinement_drafts: [
+      refinementDraftRow({ module_projections: rebasedProjections }),
+    ],
+    personal_plan_product_drafts: [],
+  })
+  const state = await resolvePlanStartPageState(
+    // The REAL resume loader over the in-memory tables a rebase produces.
+    depsWithResume((userId) => loadModule1Stage3Resume(client as never, userId)),
+  )
+  assert.deepEqual(state.state === "production" ? state.initialJourney : null, {
+    stage: "stage2",
+    planAccepted: true,
+  })
+})
+
+test("the same rebased clone resumes Stage 3 once a live Stage-3 draft exists on its refined version", async () => {
+  const client = makeClient({
+    personal_plans: [planRow()],
+    personal_plan_need_versions: [needVersionRow()],
+    personal_plan_refinement_drafts: [
+      refinementDraftRow({ module_projections: rebasedProjections }),
+    ],
+    personal_plan_product_drafts: [stage3DraftRow({ status: "active" })],
+  })
+  const state = await resolvePlanStartPageState(
+    depsWithResume((userId) => loadModule1Stage3Resume(client as never, userId)),
+  )
+  assert.deepEqual(state.state === "production" ? state.initialJourney : null, {
+    stage: "stage3",
+    refinedVersionId: ids.refined,
+    refineModule: "products",
     planAccepted: true,
   })
 })

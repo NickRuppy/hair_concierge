@@ -12,6 +12,7 @@ import {
 import { createProductionRoutineSourceSyncService } from "../src/lib/personal-plan/routine/production-sync-service"
 import type { ProposedProductPortfolio } from "../src/lib/personal-plan/products/contracts"
 import type { RoutineCompiledPayload } from "../src/lib/personal-plan/routine-candidate-compiler"
+import { classifyModuleDrivenRefinedVersion } from "../src/lib/personal-plan/refinement-recompute/module-driven-classification"
 
 const claim = {
   outboxId: "outbox-a",
@@ -495,6 +496,69 @@ test("a non-module-driven refined need keeps today's terminal behavior", async (
       terminalCode: "terminal_refinement_pending_stage3",
     },
   ])
+})
+
+test("a facts-rebased clone's projection (origin facts_rebase) classifies module_driven through the REAL classifier, and the lane recomputes the rebased refined version", async () => {
+  // Central user profile PR2 (task 4): the row shape `personal_plan_rebase_on_facts_v1` writes —
+  // an in-progress clone whose `habits` entry names the rebased version and carries the extra
+  // `projectedAt` / `origin` fields — next to the staled source draft naming the old version.
+  const rows = [
+    {
+      module_projections: {
+        habits: { needVersionId: "refined-a", projectedAtRevision: 0, stage3Handoff: false },
+      },
+      result_refined_need_version_id: null,
+    },
+    {
+      module_projections: {
+        habits: {
+          needVersionId: "refined-b",
+          projectedAtRevision: 0,
+          projectedAt: "2026-10-03T12:00:00.000Z",
+          stage3Handoff: false,
+          origin: "facts_rebase",
+        },
+      },
+      result_refined_need_version_id: null,
+    },
+  ]
+  const lineageClient = {
+    from(table: string) {
+      const query = {
+        select: () => query,
+        eq: () => query,
+        maybeSingle: async () => {
+          assert.equal(table, "personal_plans")
+          return { data: { current_refined_need_version_id: "refined-b" }, error: null }
+        },
+        then(resolve: (value: { data: unknown; error: unknown }) => unknown) {
+          assert.equal(table, "personal_plan_refinement_drafts")
+          return Promise.resolve({ data: rows, error: null }).then(resolve)
+        },
+      }
+      return query
+    },
+  }
+  const db = repository({
+    async claim() {
+      return [refinedClaim]
+    },
+  })
+  const lane = recomputeLane({
+    classify: (input) =>
+      classifyModuleDrivenRefinedVersion({ client: lineageClient as never, ...input }),
+  })
+
+  const result = await createRoutineSourceSyncService({
+    repository: db,
+    refinementRecompute: lane,
+  }).sync({ userId: "owner-a" })
+
+  assert.equal(result.status, "processed")
+  assert.deepEqual(lane.recomputed, [
+    { userId: "owner-a", personalPlanId: "plan-a", refinedVersionId: "refined-b" },
+  ])
+  assert.deepEqual(db.finished, [{ errorCode: null }])
 })
 
 test("a plan without an active Routine never reaches the classification read", async () => {
@@ -1579,6 +1643,155 @@ test("the sync route passes the healed-recompute signal through to the client", 
       },
     ],
   )
+})
+
+const stage4Journey = {
+  kind: "personal_plan" as const,
+  frontier: "stage4" as const,
+  allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
+  nextHref: "/routine" as const,
+  personalPlanId: "plan-a",
+}
+const processedSync = {
+  status: "processed" as const,
+  processed: 1,
+  terminalized: 0,
+  deferred: 0,
+  unfinished: 0,
+  proposalStaged: false,
+  recomputeApplied: true,
+}
+
+test("the sync route rebases the plan on the profile facts before the outbox drain", async () => {
+  const events: string[] = []
+  const response = await createPersonalPlanRoutineSyncRouteHandlers({
+    enabled: () => true,
+    getUserId: async () => "owner-a",
+    loadJourneyAccess: async () => stage4Journey,
+    syncPlanWithFacts: async (input) => {
+      events.push(`lane:${input.userId}`)
+      return {
+        status: "rebased",
+        personalPlanId: "plan-a",
+        initialNeedVersionId: "initial-2",
+        refinedVersionId: "refined-2",
+        activeRoutineVersionId: "routine-1",
+      }
+    },
+    service: () => {
+      events.push("service")
+      return {
+        sync: async () => {
+          events.push("drain")
+          return processedSync
+        },
+      } as never
+    },
+  }).POST()
+
+  assert.deepEqual(events, ["lane:owner-a", "service", "drain"])
+  // The lane result is only logged; the body is the drain's, unchanged.
+  assert.deepEqual([response.status, await response.json()], [200, processedSync])
+})
+
+test("the sync route never runs the lane for a caller that is not allowed to sync", async () => {
+  const events: string[] = []
+  for (const handlers of [
+    createPersonalPlanRoutineSyncRouteHandlers({
+      enabled: () => true,
+      getUserId: async () => null,
+      loadJourneyAccess: async () => stage4Journey,
+      syncPlanWithFacts: async () => {
+        events.push("lane")
+        return { status: "no_plan" }
+      },
+      service: () => ({}) as never,
+    }),
+    createPersonalPlanRoutineSyncRouteHandlers({
+      enabled: () => true,
+      getUserId: async () => "owner-a",
+      loadJourneyAccess: async () => ({ kind: "legacy" }),
+      syncPlanWithFacts: async () => {
+        events.push("lane")
+        return { status: "no_plan" }
+      },
+      service: () => ({}) as never,
+    }),
+  ]) {
+    await handlers.POST()
+  }
+  assert.deepEqual(events, [])
+})
+
+test("a lane that throws or is unavailable never fails the sync", async () => {
+  for (const lane of [
+    async () => {
+      throw new Error("lane boom")
+    },
+    async () => ({
+      status: "unavailable" as const,
+      reason: "conflict" as const,
+      retryable: true,
+    }),
+  ]) {
+    let drains = 0
+    const response = await createPersonalPlanRoutineSyncRouteHandlers({
+      enabled: () => true,
+      getUserId: async () => "owner-a",
+      loadJourneyAccess: async () => stage4Journey,
+      syncPlanWithFacts: lane,
+      service: () =>
+        ({
+          sync: async () => {
+            drains += 1
+            return processedSync
+          },
+        }) as never,
+    }).POST()
+    assert.deepEqual([response.status, await response.json()], [200, processedSync])
+    assert.equal(drains, 1)
+  }
+})
+
+test("the sync route logs the lane status without leaking it to the client", async () => {
+  const originalInfo = console.info
+  const infos: Array<[string, Record<string, unknown>]> = []
+  console.info = ((event: string, details: Record<string, unknown>) => {
+    infos.push([event, details])
+  }) as typeof console.info
+  try {
+    await createPersonalPlanRoutineSyncRouteHandlers({
+      enabled: () => true,
+      getUserId: async () => "owner-a",
+      loadJourneyAccess: async () => stage4Journey,
+      syncPlanWithFacts: async () => ({
+        status: "unavailable",
+        reason: "facts_not_computable",
+        retryable: false,
+      }),
+      service: () => ({ sync: async () => processedSync }) as never,
+    }).POST()
+  } finally {
+    console.info = originalInfo
+  }
+  const log = infos.find(([event]) => event === "personal_plan_routine_sync_api")
+  assert.deepEqual(log?.[1], {
+    event: "plan_sync",
+    status: "unavailable",
+    reason: "facts_not_computable",
+    retryable: false,
+  })
+  assert.equal(JSON.stringify(infos).includes("owner-a"), false)
+})
+
+test("without a lane dep the sync route behaves as before", async () => {
+  const response = await createPersonalPlanRoutineSyncRouteHandlers({
+    enabled: () => true,
+    getUserId: async () => "owner-a",
+    loadJourneyAccess: async () => stage4Journey,
+    service: () => ({ sync: async () => processedSync }) as never,
+  }).POST()
+  assert.deepEqual([response.status, await response.json()], [200, processedSync])
 })
 
 /**

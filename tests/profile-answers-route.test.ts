@@ -8,6 +8,10 @@ import {
   type ProfileAnswersSaveDeps,
 } from "../src/lib/hair-profile/edit-route"
 import { profileAnswersSchema, type ProfileAnswers } from "../src/lib/hair-profile/profile-answers"
+import type {
+  SyncPlanWithFacts,
+  SyncPlanWithFactsResult,
+} from "../src/lib/personal-plan/facts-recompute/types"
 import { ProfileEditError } from "../src/lib/scan/profile-edit"
 import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-columns"
 import { diagnosticsV1Schema } from "../src/lib/user-facts/schema"
@@ -94,8 +98,12 @@ function makeDeps(overrides: Partial<ProfileAnswersSaveDeps> & { row?: unknown }
   return { deps, calls }
 }
 
-test("the answers route exposes only POST", () => {
-  assert.deepEqual(Object.keys(answersRoute), ["POST"])
+test("the answers route exposes only POST (plus the maxDuration route config)", () => {
+  assert.deepEqual(
+    Object.keys(answersRoute).filter((key) => key !== "maxDuration"),
+    ["POST"],
+  )
+  assert.equal(answersRoute.maxDuration, 60)
 })
 
 test("a complete profile is saved through the publisher's facts path with the server-read revision", async () => {
@@ -293,4 +301,321 @@ test("fix round 2 (7): the route answers 401 without a session, 409 on a conflic
   assert.equal(saved.status, 200)
   assert.deepEqual(await saved.json(), { hairProfile: { user_id: userId } })
   assert.deepEqual(ok.saves, [{ owner: userId, body: { goals: ["shine"] } }])
+})
+
+// ---------------------------------------------------------------------------
+// Central profile PR2 task 5(a): a saved profile moves the plan
+// (plans/2026-10-03-central-user-profile-pr2.md §4a "Profile route response")
+// ---------------------------------------------------------------------------
+
+type RoutineInput = { userId: string; personalPlanId: string; refinedVersionId: string }
+type RoutineResult = { status: "applied" | "unchanged" | "unavailable" }
+
+function planDeps(
+  lane: SyncPlanWithFactsResult | (() => Promise<SyncPlanWithFactsResult>),
+  routine?: RoutineResult | (() => Promise<RoutineResult>),
+  overrides: Partial<ProfileAnswersSaveDeps> = {},
+) {
+  const calls = { lane: [] as unknown[], routine: [] as RoutineInput[] }
+  const syncPlanWithFacts: SyncPlanWithFacts = async (input) => {
+    calls.lane.push(input)
+    return typeof lane === "function" ? lane() : lane
+  }
+  const recomputeRoutine = async (input: RoutineInput): Promise<RoutineResult> => {
+    calls.routine.push(input)
+    if (routine === undefined) throw new Error("recompute not expected")
+    return typeof routine === "function" ? routine() : routine
+  }
+  const { deps } = makeDeps({ syncPlanWithFacts, recomputeRoutine, ...overrides })
+  return { deps, calls }
+}
+
+const rebased = (
+  overrides: Partial<Extract<SyncPlanWithFactsResult, { status: "rebased" }>> = {},
+): SyncPlanWithFactsResult => ({
+  status: "rebased",
+  personalPlanId: "plan-1",
+  initialNeedVersionId: "initial-2",
+  refinedVersionId: "refined-2",
+  activeRoutineVersionId: "routine-1",
+  ...overrides,
+})
+
+/** Both save paths: the scanner publish path (default) and the facts door path. */
+const SAVE_PATHS = [
+  { name: "publish path", overrides: {} as Partial<ProfileAnswersSaveDeps>, kind: "published" },
+  {
+    name: "door path",
+    overrides: { prepareScannerContext: () => null } as Partial<ProfileAnswersSaveDeps>,
+    kind: "saved",
+  },
+] as const
+
+test("plan sync: without the dep the result carries no plan field (today's behaviour)", async () => {
+  for (const path of SAVE_PATHS) {
+    const { deps } = makeDeps(path.overrides)
+    const result = await saveProfileAnswers(deps, userId, answers({ goals: ["shine"] }))
+    assert.equal(result.kind, path.kind)
+    assert.equal("plan" in result, false, path.name)
+  }
+})
+
+test("plan sync: both save paths call the lane exactly once, after the save", async () => {
+  for (const path of SAVE_PATHS) {
+    const order: string[] = []
+    const { deps, calls } = planDeps({ status: "no_plan" }, undefined, {
+      ...path.overrides,
+      publishProfileEdit: async (...args) => {
+        order.push("save")
+        return makeDeps().deps.publishProfileEdit(...args)
+      },
+      saveUserFacts: async () => {
+        order.push("save")
+        return { status: "ok", revision: 5, changed: true, diagnosticsHash: null }
+      },
+      syncPlanWithFacts: async () => {
+        order.push("lane")
+        return { status: "no_plan" }
+      },
+    })
+    await saveProfileAnswers(deps, userId, answers({ goals: ["shine"] }))
+    assert.deepEqual(order, ["save", "lane"], path.name)
+    assert.equal(calls.routine.length, 0)
+  }
+})
+
+test("plan sync: the lane is called with the session user", async () => {
+  const { deps, calls } = planDeps({ status: "no_plan" })
+  await saveProfileAnswers(deps, userId, answers({ goals: ["shine"] }))
+  assert.deepEqual(calls.lane, [{ userId }])
+})
+
+test("plan sync: no_plan leaves the plan field out", async () => {
+  for (const path of SAVE_PATHS) {
+    const { deps } = planDeps({ status: "no_plan" }, undefined, path.overrides)
+    const result = await saveProfileAnswers(deps, userId, answers({ goals: ["shine"] }))
+    assert.equal("plan" in result, false, path.name)
+  }
+})
+
+test("plan sync: a save that changes no value never calls the lane and has no plan field", async () => {
+  for (const prepare of [() => ({}) as never, () => null]) {
+    const { deps, calls } = planDeps(
+      rebased(),
+      { status: "applied" },
+      {
+        prepareScannerContext: prepare,
+      },
+    )
+    const result = await saveProfileAnswers(deps, userId, answers({ goals: ["moisture"] }))
+    assert.deepEqual(result, { kind: "saved", profile: completeRow })
+    assert.equal(calls.lane.length, 0)
+    assert.equal(calls.routine.length, 0)
+  }
+})
+
+test("plan sync: unchanged lane result -> outcome unchanged, no routine recompute", async () => {
+  for (const path of SAVE_PATHS) {
+    const { deps, calls } = planDeps(
+      { status: "unchanged", personalPlanId: "plan-1" },
+      undefined,
+      path.overrides,
+    )
+    const result = await saveProfileAnswers(deps, userId, answers({ goals: ["shine"] }))
+    assert.deepEqual(result.plan, { outcome: "unchanged" }, path.name)
+    assert.equal(calls.routine.length, 0)
+  }
+})
+
+test("plan sync: rebased without an active routine -> applied, recompute not called", async () => {
+  const { deps, calls } = planDeps(rebased({ activeRoutineVersionId: null }))
+  const result = await saveProfileAnswers(deps, userId, answers({ goals: ["shine"] }))
+  assert.deepEqual(result.plan, { outcome: "applied" })
+  assert.equal(calls.routine.length, 0)
+})
+
+test("plan sync: rebased without a refined version -> applied, recompute not called", async () => {
+  const { deps, calls } = planDeps(rebased({ refinedVersionId: null }))
+  const result = await saveProfileAnswers(deps, userId, answers({ goals: ["shine"] }))
+  assert.deepEqual(result.plan, { outcome: "applied" })
+  assert.equal(calls.routine.length, 0)
+})
+
+test("plan sync: rebased with an active routine recomputes it on the new refined version", async () => {
+  for (const [routine, outcome] of [
+    ["applied", "applied"],
+    ["unchanged", "unchanged"],
+    ["unavailable", "unavailable"],
+  ] as const) {
+    for (const path of SAVE_PATHS) {
+      const { deps, calls } = planDeps(rebased(), { status: routine }, path.overrides)
+      const result = await saveProfileAnswers(deps, userId, answers({ goals: ["shine"] }))
+      assert.deepEqual(result.plan, { outcome }, `${path.name} / ${routine}`)
+      assert.deepEqual(calls.routine, [
+        { userId, personalPlanId: "plan-1", refinedVersionId: "refined-2" },
+      ])
+    }
+  }
+})
+
+test("plan sync: rebased with an active routine but no recompute dep is unavailable", async () => {
+  const { deps } = makeDeps({ syncPlanWithFacts: async () => rebased() })
+  const result = await saveProfileAnswers(deps, userId, answers({ goals: ["shine"] }))
+  assert.deepEqual(result.plan, { outcome: "unavailable" })
+})
+
+test("plan sync: an unavailable lane result -> unavailable, no recompute, reason never leaks", async () => {
+  const { deps, calls } = planDeps({
+    status: "unavailable",
+    reason: "facts_not_computable",
+    retryable: false,
+  })
+  const result = await saveProfileAnswers(deps, userId, answers({ goals: ["shine"] }))
+  assert.deepEqual(result.plan, { outcome: "unavailable" })
+  assert.equal(calls.routine.length, 0)
+})
+
+test("plan sync: a throwing lane never fails the save", async () => {
+  for (const path of SAVE_PATHS) {
+    const { deps } = planDeps(
+      async () => {
+        throw new Error("lane boom")
+      },
+      undefined,
+      path.overrides,
+    )
+    const result = await saveProfileAnswers(deps, userId, answers({ goals: ["shine"] }))
+    assert.equal(result.kind, path.kind)
+    assert.deepEqual(result.plan, { outcome: "unavailable" }, path.name)
+  }
+})
+
+test("plan sync: a throwing routine recompute never fails the save", async () => {
+  const { deps } = planDeps(rebased(), async () => {
+    throw new Error("routine boom")
+  })
+  const result = await saveProfileAnswers(deps, userId, answers({ goals: ["shine"] }))
+  assert.equal(result.kind, "published")
+  assert.deepEqual(result.plan, { outcome: "unavailable" })
+})
+
+test("plan sync: a failed save never calls the lane", async () => {
+  const lane = { calls: 0 }
+  const syncPlanWithFacts: SyncPlanWithFacts = async () => {
+    lane.calls += 1
+    return rebased()
+  }
+  const failures: Array<[Partial<ProfileAnswersSaveDeps>, string]> = [
+    [
+      {
+        prepareScannerContext: () => null,
+        saveUserFacts: async () => ({ status: "revision_conflict", revision: 9 }),
+      },
+      "profile_conflict",
+    ],
+    [
+      {
+        prepareScannerContext: () => null,
+        saveUserFacts: async () => ({ status: "draft_conflict", reason: "not_found" }),
+      },
+      "temporarily_unavailable",
+    ],
+    [
+      {
+        publishProfileEdit: async () => {
+          throw new ProfileEditError("profile_conflict")
+        },
+      },
+      "profile_conflict",
+    ],
+    [
+      {
+        readScannerProfileSource: async () => {
+          throw new Error("database unavailable")
+        },
+      },
+      "temporarily_unavailable",
+    ],
+    [
+      {
+        prepareScannerContext: () => null,
+        loadProfileRow: async () => {
+          throw new Error("read back failed")
+        },
+      },
+      "temporarily_unavailable",
+    ],
+  ]
+  for (const [overrides, code] of failures) {
+    const { deps } = makeDeps({ ...overrides, syncPlanWithFacts })
+    await assert.rejects(saveProfileAnswers(deps, userId, answers({ goals: ["shine"] })), { code })
+  }
+  assert.equal(lane.calls, 0)
+})
+
+test("plan sync: the lane and routine outcome are logged without user data", async () => {
+  const originalInfo = console.info
+  const infos: Array<[string, Record<string, unknown>]> = []
+  console.info = ((event: string, details: Record<string, unknown>) => {
+    infos.push([event, details])
+  }) as typeof console.info
+  try {
+    const { deps } = planDeps(rebased(), { status: "unavailable" })
+    await saveProfileAnswers(deps, userId, answers({ goals: ["shine"] }))
+  } finally {
+    console.info = originalInfo
+  }
+  const timing = infos.find(([event]) => event === "personal_plan_transition_performance")
+  assert.equal(timing?.[1].operation, "profile_answers_plan_sync")
+  assert.equal(timing?.[1].outcome, "unavailable")
+  const log = infos.find(([event]) => event === "profile_answers_api")
+  assert.deepEqual(log?.[1], {
+    event: "plan_sync",
+    lane: "rebased",
+    routine: "unavailable",
+    outcome: "unavailable",
+  })
+  assert.equal(JSON.stringify(infos).includes(userId), false)
+})
+
+test("plan sync: the 200 body carries plan on both response shapes and omits it otherwise", async () => {
+  const saved = createProfileAnswersPost({
+    getUserId: async () => userId,
+    save: async () => ({
+      kind: "saved",
+      profile: { user_id: userId },
+      plan: { outcome: "applied" },
+    }),
+  })
+  const savedResponse = await saved(request({ goals: ["shine"] }))
+  assert.equal(savedResponse.status, 200)
+  assert.deepEqual(await savedResponse.json(), {
+    hairProfile: { user_id: userId },
+    plan: { outcome: "applied" },
+  })
+
+  const published = createProfileAnswersPost({
+    getUserId: async () => userId,
+    save: async () => ({
+      kind: "published",
+      profile: { user_id: userId },
+      profileRevision: "8",
+      contextRevision: "ctx-9",
+      plan: { outcome: "unavailable" },
+    }),
+  })
+  assert.deepEqual(await (await published(request({ goals: ["shine"] }))).json(), {
+    hairProfile: { user_id: userId },
+    profileRevision: "8",
+    contextRevision: "ctx-9",
+    plan: { outcome: "unavailable" },
+  })
+
+  const without = createProfileAnswersPost({
+    getUserId: async () => userId,
+    save: async () => ({ kind: "saved", profile: { user_id: userId } }),
+  })
+  assert.deepEqual(await (await without(request({ goals: ["shine"] }))).json(), {
+    hairProfile: { user_id: userId },
+  })
 })

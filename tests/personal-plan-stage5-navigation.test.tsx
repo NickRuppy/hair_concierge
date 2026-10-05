@@ -11,6 +11,7 @@ import type {
   PersonalPlanLifecycleClient,
 } from "../src/lib/personal-plan/lifecycle/repository"
 import {
+  hasPersonalPlanRecord,
   resolveAuthenticatedAppNavigationAccess,
   schedulePersonalPlanNavSurfaceVisit,
   toAuthenticatedAppNavigationAccess,
@@ -19,6 +20,7 @@ import {
   type SchedulePersonalPlanNavSurfaceVisitDeps,
 } from "../src/lib/personal-plan/navigation-access"
 import type { PersonalPlanJourneyAccess } from "../src/lib/personal-plan/journey-access"
+import { resolveProfileHasPersonalPlan } from "../src/lib/personal-plan/profile-plan-ownership"
 
 function personalPlanAccess(
   stage4: boolean,
@@ -52,6 +54,7 @@ test("Personal Plan navigation always exposes the same five tabs in the signed o
       items: fixedItems,
       unvisitedNavSurfaces: new Set(),
       hasRoutineAccess: stage4,
+      hasPersonalPlan: true,
       tier: "premium",
     })
   }
@@ -255,6 +258,28 @@ test("with no unvisited surfaces, no dot renders at all", () => {
     createElement(PersonalPlanNavigationView, { items: navigation.items, pathname: "/chat" }),
   )
   assert.doesNotMatch(html, /data-nav-unvisited-dot/)
+})
+
+test("hasPersonalPlan is true only when a personal_plans row exists, not for a buyer still at plan start", () => {
+  assert.equal(
+    hasPersonalPlanRecord(toAuthenticatedAppNavigationAccess(personalPlanAccess(false, false))),
+    true,
+  )
+  assert.equal(
+    hasPersonalPlanRecord(toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true))),
+    true,
+  )
+
+  const planStart = toAuthenticatedAppNavigationAccess({
+    kind: "personal_plan_start",
+    frontier: "stage1",
+    nextHref: "/plan-start",
+    allowed: { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false },
+  })
+  // Same five-tab shell as a plan owner, but nothing to recompute yet.
+  assert.equal(planStart.kind, "personal_plan")
+  assert.equal(hasPersonalPlanRecord(planStart), false)
+  assert.equal(hasPersonalPlanRecord({ kind: "legacy" }), false)
 })
 
 test("legacy, paid-pending, and navigation read failures keep exactly one legacy Header", async () => {
@@ -558,6 +583,7 @@ test("flag on, legacy journey kind, no paid app access: promotes to the free-tie
       items: freeTierFixedItems,
       hasPendingRoutineProposal: false,
       hasRoutineAccess: false,
+      hasPersonalPlan: false,
       unvisitedNavSurfaces: new Set(),
       tier: "free",
     })
@@ -659,6 +685,7 @@ test("the shell picks the five-tab nav (with locks) for a free-tier navigation o
     items: freeTierFixedItems as PersonalPlanNavigationItem[],
     hasPendingRoutineProposal: false,
     hasRoutineAccess: false,
+    hasPersonalPlan: false,
     unvisitedNavSurfaces: new Set(),
     tier: "free",
   }
@@ -672,4 +699,97 @@ test("the shell picks the five-tab nav (with locks) for a free-tier navigation o
   assert.doesNotMatch(html, /data-legacy-header/)
   assert.match(html, /aria-label="Personal-Plan-Navigation \(mobil\)"/)
   assert.equal((html.match(/data-nav-lock-badge="true"/g) ?? []).length, 3)
+})
+
+// --- W05: the profile layout's "this save recomputes your plan" fact, tier-independent ---
+
+const freeTierNavigation: AuthenticatedAppNavigationAccess = {
+  kind: "personal_plan",
+  items: freeTierFixedItems as PersonalPlanNavigationItem[],
+  hasPendingRoutineProposal: false,
+  hasRoutineAccess: false,
+  hasPersonalPlan: false,
+  unvisitedNavSurfaces: new Set(),
+  tier: "free",
+}
+
+function ownershipDeps(hasPlanRow: (userId: string) => Promise<boolean>) {
+  const calls: string[] = []
+  return {
+    calls,
+    deps: {
+      loadUserId: async () => "user-1" as string | null,
+      hasPlanRow: async (userId: string) => {
+        calls.push(userId)
+        return hasPlanRow(userId)
+      },
+    },
+  }
+}
+
+test("W05: a free-tier user WITH a personal_plans row has a plan (one owner-scoped read)", async () => {
+  const { calls, deps } = ownershipDeps(async () => true)
+  assert.equal(await resolveProfileHasPersonalPlan(freeTierNavigation, deps), true)
+  assert.deepEqual(calls, ["user-1"])
+})
+
+test("W05: a free-tier user without a plan row has no plan", async () => {
+  const { calls, deps } = ownershipDeps(async () => false)
+  assert.equal(await resolveProfileHasPersonalPlan(freeTierNavigation, deps), false)
+  assert.deepEqual(calls, ["user-1"])
+})
+
+test("W05: a throwing plan read degrades to false, never breaks the layout", async () => {
+  const { deps } = ownershipDeps(async () => {
+    throw new Error("db down")
+  })
+  assert.equal(await resolveProfileHasPersonalPlan(freeTierNavigation, deps), false)
+  assert.equal(
+    await resolveProfileHasPersonalPlan(freeTierNavigation, {
+      ...deps,
+      loadUserId: async () => {
+        throw new Error("auth down")
+      },
+    }),
+    false,
+  )
+})
+
+test("W05: a free-tier navigation without a resolvable user id is false and reads nothing", async () => {
+  const { calls, deps } = ownershipDeps(async () => true)
+  assert.equal(
+    await resolveProfileHasPersonalPlan(freeTierNavigation, {
+      ...deps,
+      loadUserId: async () => null,
+    }),
+    false,
+  )
+  assert.deepEqual(calls, [])
+})
+
+test("W05: paid users keep the journey-derived value and the new read is never called", async () => {
+  const { calls, deps } = ownershipDeps(async () => {
+    throw new Error("must not be called for a paid user")
+  })
+  assert.equal(
+    await resolveProfileHasPersonalPlan(
+      toAuthenticatedAppNavigationAccess(personalPlanAccess(true, false)),
+      deps,
+    ),
+    true,
+  )
+  assert.equal(
+    await resolveProfileHasPersonalPlan(
+      toAuthenticatedAppNavigationAccess({
+        kind: "personal_plan_start",
+        frontier: "stage1",
+        nextHref: "/plan-start",
+        allowed: { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false },
+      }),
+      deps,
+    ),
+    false,
+  )
+  assert.equal(await resolveProfileHasPersonalPlan({ kind: "legacy" }, deps), false)
+  assert.deepEqual(calls, [])
 })

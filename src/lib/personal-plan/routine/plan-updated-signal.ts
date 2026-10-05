@@ -49,3 +49,43 @@ export function withoutRoutinePlanUpdatedSignal(
   const query = params.toString()
   return query ? `${pathname}?${query}` : pathname
 }
+
+/**
+ * The same one-shot signal for a save that happens on a page the user does
+ * not leave (the profile editors): there is no `/routine` href to carry the
+ * URL param, so the editor leaves a `sessionStorage` mark instead and the
+ * Routine client consumes it on its next mount. Every access is guarded — a
+ * blocked storage or a server render simply means no toast.
+ *
+ * The mark is bound to the user who saved: `sessionStorage` is tab-wide and
+ * sign-out does not clear it, so an unowned marker would show account A's
+ * „Plan aktualisiert" to account B signing in in the same tab. The stored value
+ * is the owner's user id; consuming as anyone else discards it.
+ */
+const ROUTINE_PLAN_UPDATED_PENDING_KEY = "chaarlie_plan_updated_pending"
+
+export function markRoutinePlanUpdatedPending(userId: string): void {
+  try {
+    if (typeof window === "undefined" || !userId) return
+    window.sessionStorage.setItem(ROUTINE_PLAN_UPDATED_PENDING_KEY, userId)
+  } catch {
+    // No storage, no toast: the plan itself is already updated.
+  }
+}
+
+/**
+ * Reads and clears the pending mark; `true` at most once per mark, and only
+ * for the user who set it. A foreign or legacy (unowned „1") marker is removed
+ * and yields `false`.
+ */
+export function consumeRoutinePlanUpdatedPending(userId: string): boolean {
+  try {
+    if (typeof window === "undefined") return false
+    const stored = window.sessionStorage.getItem(ROUTINE_PLAN_UPDATED_PENDING_KEY)
+    if (stored === null) return false
+    window.sessionStorage.removeItem(ROUTINE_PLAN_UPDATED_PENDING_KEY)
+    return userId !== "" && stored === userId
+  } catch {
+    return false
+  }
+}

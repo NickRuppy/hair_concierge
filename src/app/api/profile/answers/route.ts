@@ -4,6 +4,9 @@ import {
   saveProfileAnswers,
   type ProfileAnswersSaveDeps,
 } from "@/lib/hair-profile/edit-route"
+import { createProductionSyncPlanWithFacts } from "@/lib/personal-plan/facts-recompute"
+import { recomputeRoutineAfterHabitsCompletion } from "@/lib/personal-plan/refinement-recompute/orchestrator"
+import { createProductionStage3RecomputeDeps } from "@/lib/personal-plan/refinement-recompute/production-deps"
 import { publishProfileEdit } from "@/lib/scan/profile-edit"
 import { prepareScannerContext } from "@/lib/scan/scanner-context"
 import { readScannerProfileSource } from "@/lib/scan/scanner-context-supabase"
@@ -28,6 +31,14 @@ const profileAnswersDeps: ProfileAnswersSaveDeps = {
   },
   randomUUID: () => crypto.randomUUID(),
   now: () => new Date().toISOString(),
+  // A saved profile moves the user's plan (central profile PR2). The admin client is built per
+  // call, like the other routes; both deps are never-fail from the save's point of view.
+  syncPlanWithFacts: (input) => createProductionSyncPlanWithFacts(createAdminClient())(input),
+  recomputeRoutine: ({ userId, personalPlanId, refinedVersionId }) =>
+    recomputeRoutineAfterHabitsCompletion(
+      createProductionStage3RecomputeDeps({ userId, admin: createAdminClient() }),
+      { userId, personalPlanId, refinedVersionId },
+    ),
 }
 
 /** The web profile editors' save (Haar-Check inline editor, Ziele editor): the quiz's
@@ -39,3 +50,7 @@ export const POST = createProfileAnswersPost({
     ),
   save: (userId, answers) => saveProfileAnswers(profileAnswersDeps, userId, answers),
 })
+
+// A plan rebase plus the inline routine recompute can outlast the default ceiling; same shape and
+// reason as `personal-plan/stage-2/route.ts`'s habits recompute.
+export const maxDuration = 60

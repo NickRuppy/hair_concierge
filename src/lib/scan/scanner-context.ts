@@ -70,6 +70,8 @@ export type ScannerRefinementSource = {
   module_projections?: Record<string, { needVersionId: string; projectedAtRevision: number }>
   revision: number
   status: "in_progress" | "complete" | "stale"
+  // Orders complete drafts like the refinement persistence ("latest complete").
+  updated_at: string
 }
 export type ScannerSourceRead = {
   userId: string
@@ -637,16 +639,27 @@ export function prepareScannerContext(read: ScannerSourceRead): PreparedScannerC
   let snapshotSource: "initial" | "refined" = "initial"
   if (refined) {
     const need = read.refined!
+    // A facts rebase can return a plan to an earlier state (A -> B -> A) and reuse the refined
+    // version, so a historical draft and a newly cloned draft on the same initial version can both
+    // carry it. Pick the draft the refinement persistence loads: the in-progress one, else the
+    // latest complete one. Stale drafts are never current.
     const matching = read.refinements.filter(
       (draft) =>
+        draft.status !== "stale" &&
         draft.base_initial_need_version_id === read.plan!.current_initial_need_version_id &&
         (draft.result_refined_need_version_id === need.id ||
           Object.values(draft.module_projections ?? {}).some(
             (projection) => projection.needVersionId === need.id,
           )),
     )
-    if (matching.length !== 1) throw new Error("scan_profile_context_unavailable")
-    const draft = matching[0]
+    const draft =
+      matching.find((candidate) => candidate.status === "in_progress") ??
+      matching.reduce<ScannerRefinementSource | undefined>(
+        (latest, candidate) =>
+          !latest || candidate.updated_at > latest.updated_at ? candidate : latest,
+        undefined,
+      )
+    if (!draft) throw new Error("scan_profile_context_unavailable")
     const terminalPublication =
       draft.status === "complete" && draft.result_refined_need_version_id === need.id
     const currentModulePublication =

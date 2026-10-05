@@ -12,20 +12,35 @@ import { createContext, useContext, type ReactNode } from "react"
  */
 const ProfileRoutineAccessContext = createContext(false)
 
+/**
+ * Server-resolved „a Personal Plan row exists for this user" fact (central
+ * profile PR2): the profile editors only announce the plan recompute for these
+ * users. Defaults to `false`, like the routine fact above.
+ */
+const ProfileHasPersonalPlanContext = createContext(false)
+
 export function ProfileRoutineAccessProvider({
   hasRoutineAccess,
+  hasPersonalPlan = false,
   children,
 }: {
   hasRoutineAccess: boolean
+  hasPersonalPlan?: boolean
   children: ReactNode
 }) {
   return (
     <ProfileRoutineAccessContext.Provider value={hasRoutineAccess}>
-      {children}
+      <ProfileHasPersonalPlanContext.Provider value={hasPersonalPlan}>
+        {children}
+      </ProfileHasPersonalPlanContext.Provider>
     </ProfileRoutineAccessContext.Provider>
   )
 }
 
 export function useProfileRoutineAccess(): boolean {
   return useContext(ProfileRoutineAccessContext)
+}
+
+export function useProfileHasPersonalPlan(): boolean {
+  return useContext(ProfileHasPersonalPlanContext)
 }
