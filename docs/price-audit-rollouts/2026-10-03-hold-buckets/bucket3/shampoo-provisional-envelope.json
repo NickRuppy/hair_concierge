@@ -1,0 +1,166 @@
+{
+  "version": "shampoo-production-light-v1",
+  "researchMethod": {
+    "policyId": "shampoo-classification-v1.4",
+    "modelVersion": "shampoo-inci-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "identity": {
+    "productId": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+    "market": "DE",
+    "exactProductName": "LANGHAARMÄDCHEN Shampoo Beautiful Curls",
+    "exactPackSize": "300 ml",
+    "gtinAliases": [
+      "4070765004649"
+    ],
+    "capturedAt": "2026-10-03T15:25:37.616792+00:00",
+    "confidence": "high",
+    "conflictStatus": "none",
+    "sources": [
+      {
+        "url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+        "tier": "manufacturer_de",
+        "capturedAt": "2026-10-03T15:25:37.616792+00:00"
+      }
+    ]
+  },
+  "formula": {
+    "status": "canonical",
+    "canonicalInci": "Aqua, Aloe Barbadensis Leaf Juice, Cocamidopropyl Betaine, Sodium Cocoyl Isethionate, Sodium Chloride, Arginine, Serine, Linum Usitatissimum Seed Extract, Parfum, Glycerin, Glyceryl Oleate, PCA, Glycine, Histidine, Coconut Acid, Glycol Distearate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Isethionate, Coco-Glucoside, Sodium PCA, Glyceryl Stearate, Aspartic Acid, Alanine, Valine, Isoleucine, Proline, Threonine, Phenylalanine, Phenoxyethanol, Ethylhexylglycerin, Benzoic Acid, Citric Acid, Sodium Lactate",
+    "inciFingerprintSha256": "035618f19bfb5a9212f606183db706f2f5d6e7cd31e6624e154abbf03e382e1c",
+    "canonicalSource": "manufacturer_de",
+    "evidenceRefs": [
+      "current-de-inci"
+    ],
+    "sources": [
+      {
+        "url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+        "tier": "manufacturer_de",
+        "capturedAt": "2026-10-03T15:25:37.616792+00:00"
+      }
+    ]
+  },
+  "properties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "CAPB #3 plus Sodium Cocoyl Isethionate #4 and Coco-Glucoside #19 form a mild amphoteric/isethionate/nonionic wash system, with Glyceryl Oleate #11 as a refatting counterbalance. Effective anionic cleansing is present, but no sulfate/olefin reset chassis supports strong; low is preferred to moderate within the INCI-only uncertainty.",
+      "evidenceRefs": [
+        "current-de-inci",
+        "formula-architecture"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Cationic guar #17 plus Glyceryl Oleate #11 and Glyceryl Stearate #21 support bounded rinse-off conditioning. Amino acids/humectants support hydration context but are not counted as a structural protein repair system. No rich silicone/quat/fatty-alcohol chassis supports high.",
+      "evidenceRefs": [
+        "current-de-inci",
+        "formula-architecture"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One substantive cationic-guar route with refatting esters and weak reset makes bounded deposition plausible; no silicone, butter or rich conditioner chassis supports high. Low is a realistic neighboring possibility because deposition amount is unknown; moderate is a provisional whole-formula call, not a polymer-presence rule.",
+      "evidenceRefs": [
+        "current-de-inci",
+        "formula-architecture"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "rationale": "Curl support is the dominant positioning but not a v1.4 focus enum. The mixed care/refatting/humectant system supports general care; do not force repair, volume or scalp-active from amino-acid or curl claims.",
+      "evidenceRefs": [
+        "current-de-inci",
+        "formula-architecture"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty default retained: shine and root-volume wording does not establish distinct independent product routes beyond the general care architecture.",
+      "evidenceRefs": [
+        "current-de-inci",
+        "formula-architecture"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Ordinary rinse-out shampoo directions; no product-specific daily-use, reset or active-treatment trigger. Low cleansing alone does not set frequent.",
+      "evidenceRefs": [
+        "current-de-inci",
+        "formula-architecture"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Exact positioning concerns curls/waves, not sensitive or uncomfortable scalp. Aloe does not create a targeted scalp intent.",
+      "evidenceRefs": [
+        "current-de-inci",
+        "formula-architecture"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete declared formula contains neither Piroctone Olamine nor Climbazole.",
+      "evidenceRefs": [
+        "current-de-inci",
+        "formula-architecture"
+      ]
+    }
+  },
+  "thicknesses": [
+    {
+      "thickness": "fine",
+      "fit": "conditional",
+      "confidence": "moderate",
+      "rationale": "Bounded persistent conditioning plus mild reset may reduce movement on fine hair; suitable finish/dose is unknown, so do not promote binary ideal yet.",
+      "evidenceRefs": [
+        "formula-architecture"
+      ]
+    },
+    {
+      "thickness": "normal",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "Mild cleansing plus moderate care/deposition supports normal-diameter hair without the richest coating architecture.",
+      "evidenceRefs": [
+        "formula-architecture"
+      ]
+    },
+    {
+      "thickness": "coarse",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "Moderate rinse-off care and mild cleansing support coarse-diameter hair; shampoo alone is not claimed to replace conditioning.",
+      "evidenceRefs": [
+        "formula-architecture"
+      ]
+    }
+  ],
+  "scalpTargets": {
+    "primary": {
+      "target": "ordinary",
+      "confidence": "high",
+      "rationale": "No scalp-problem positioning; general balanced scalp route. Dry lengths/curls do not imply dry scalp.",
+      "positioningEvidenceRefs": [
+        "current-de-positioning"
+      ],
+      "formulaEvidenceRefs": [
+        "formula-architecture"
+      ]
+    }
+  },
+  "positioning": {
+    "explicitResetPositioning": false,
+    "evidenceRefs": [
+      "current-de-positioning"
+    ]
+  }
+}

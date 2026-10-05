@@ -1,0 +1,33 @@
+{
+  "verified_at": "2026-10-02T13:23:53.612Z",
+  "product_id": "c9b231ee-77b5-45b7-8127-7a85d3ae7dd0",
+  "name": "Kopfhaut-Feuchtigkeitspflege Leave-In Serum",
+  "brand": "Head & Shoulders",
+  "category_key": "scalp_care",
+  "price_eur": 5.95,
+  "price_changed": false,
+  "package": {
+    "value": 145,
+    "unit": "ml"
+  },
+  "link": "https://www.dm.de/p/d/2482723/head-und-shoulders-leave-in-serum-derma-x-pro-kopfhaut-feuchtigkeitspflege",
+  "purchase_link_status": "available",
+  "is_chaarlie_recommended": true,
+  "barcodes": [
+    {
+      "value": "8006530455787",
+      "canonical_gtin14": "08006530455787"
+    },
+    {
+      "value": "8700216495981",
+      "canonical_gtin14": "08700216495981"
+    }
+  ],
+  "retailer_sku": "dm:2482723",
+  "price_checked_at": "2026-10-02T13:22:47.792+00:00",
+  "purchase_link_checked_at": "2026-10-02T13:22:47.792+00:00",
+  "unrelated_product_fields_preserved": true,
+  "existing_identifiers_preserved": true,
+  "category_and_protocol_rows_preserved": 2,
+  "not_quarantined": true
+}

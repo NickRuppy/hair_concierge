@@ -1,0 +1,265 @@
+{
+  "applied": true,
+  "method": "guarded DML from reviewed dry-run subset",
+  "targeted": 39,
+  "verified_prices": 39,
+  "verified_other_fields": 39,
+  "prices": [
+    {
+      "id": "3f3542c0-e82b-4306-a9e0-85df313a78cf",
+      "name": "Anti-Haarverlust Serum",
+      "price_eur": 13.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "d0180955-c3a0-4f53-8744-fbeb2c241688",
+      "name": "Anti-Haarverlust Spülung",
+      "price_eur": 6.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "ead1333b-6839-464d-b272-673d39bb95a4",
+      "name": "Balea Aqua Hyaluron",
+      "price_eur": 1.25,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+      "name": "Balea Kopfhaut Sensitive Shampoo",
+      "price_eur": 1.25,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+      "name": "Balea Med Anti Schuppen",
+      "price_eur": 2.45,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "d8ac8909-91a1-46b3-9fa6-2ff66b78fb66",
+      "name": "Cantu Conditioner Cream",
+      "price_eur": 6.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "07895098-a301-4137-b5c6-9061589b1800",
+      "name": "Deep Cleansing Shampoo",
+      "price_eur": 11.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "71302fae-decd-4b10-80ea-148d5998e2fa",
+      "name": "Defeat the Heat Hitzeschutzspray",
+      "price_eur": 4.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "5516009a-eecb-42dd-87f6-07c560161136",
+      "name": "Garnier Fructis Hair Food Aloe Vera Feuchtigkeits-Spülung",
+      "price_eur": 3.99,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "99de5b38-3e80-4360-889c-2505f46a7243",
+      "name": "Garnier Wahre Schätze Argan-Mandelcreme Spülung",
+      "price_eur": 2.49,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "82f9dcba-0422-4932-a879-c2bec0113e55",
+      "name": "Gliss Ultimate Repair Spülung",
+      "price_eur": 2.99,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "f8c47bf8-a075-4568-a9ab-aa336b7ae50a",
+      "name": "Hitzeschutzspray",
+      "price_eur": 3.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "7964b930-7e88-4f93-89d3-fa437f8e753c",
+      "name": "Isana Professional Arganöl & Pflege Spülung",
+      "price_eur": 1.29,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "e1ad37be-9330-49b4-8add-872a30324122",
+      "name": "Jean&Len Conditioner Keratin/Mandel",
+      "price_eur": 3.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "945ecca3-c4f0-4426-9af5-a5a8482b3b27",
+      "name": "Klärendes Serum",
+      "price_eur": 8.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "cd76afea-d332-4b1d-b44b-7de5bef9034f",
+      "name": "Kopfhautberuhigendes Intensiv-Tonikum",
+      "price_eur": 16.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "2544de60-e295-47ec-98a1-6b4ca58ce4be",
+      "name": "Kopfhautpeeling Tiefenreinigung",
+      "price_eur": 2.99,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "e51cfce0-fd76-4873-a868-cc3ca0301cbc",
+      "name": "Kopfhautpflege Peeling Tiefenreinigung",
+      "price_eur": 2.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "35d2cc66-6d5a-49c1-9a9f-c03bf6942ab0",
+      "name": "Kopfhautpflege Serum Sensitive",
+      "price_eur": 2.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "name": "Langhaarmädchen Lovely Long",
+      "price_eur": 4.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd",
+      "name": "Leave-In Moisturizing Mist",
+      "price_eur": 11.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "50951ef2-e16a-4a51-85c5-a709aa64c03a",
+      "name": "Maria Nila Coils & Curls Oil in Cream",
+      "price_eur": 22.5,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "ffd37427-0cb6-4d6a-8b83-ea904bf2b1d7",
+      "name": "Monday Moisture Conditioner",
+      "price_eur": 5.75,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "95e47992-b45b-4847-ba87-b8c3e608fc63",
+      "name": "Neqi Moisture Mystery Conditioner",
+      "price_eur": 8.99,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+      "name": "OGX Renewing + Argan Oil of Morocco Shampoo",
+      "price_eur": 6.99,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "name": "Pantene Hydra Glow Shampoo",
+      "price_eur": 3.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "25931499-63ac-4076-b88c-8c23a38f0fa5",
+      "name": "Pomélo+Co Shine Therapy Conditioner",
+      "price_eur": 8.99,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18",
+      "name": "Professional Shampoo Tiefenreinigung",
+      "price_eur": 1.29,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "name": "Rosemary Mint Shampoo",
+      "price_eur": 7.99,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+      "name": "Salthouse Anti Fett",
+      "price_eur": 3.99,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+      "name": "Salthouse Anti Juckreiz",
+      "price_eur": 3.99,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+      "name": "Salthouse Anti Schuppen",
+      "price_eur": 3.99,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "d2bb79a8-add1-4b74-9d4f-c03449175147",
+      "name": "Sante Intense Hydration Conditioner",
+      "price_eur": 3.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "name": "Sebamed Every-Day Shampoo",
+      "price_eur": 3.99,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "375ee7a0-3262-4b99-8e48-4f327c6e09aa",
+      "name": "Shampoo Tiefenreinigung",
+      "price_eur": 1.25,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+      "name": "Syoss Intense Curls Haarmaske",
+      "price_eur": 4.99,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "ed382d40-6166-4d39-be2d-eab5a24793a6",
+      "name": "Syoss Intense Keratin Conditioner",
+      "price_eur": 3.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "898a5a1e-1cf1-4812-8f9e-f14563a740ca",
+      "name": "Tiefenreinigung Shampoo",
+      "price_eur": 2.45,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    },
+    {
+      "id": "05753f93-907f-427d-a4dc-0a690ff3a76d",
+      "name": "Tiefenreinigungs-Shampoo",
+      "price_eur": 5.95,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00"
+    }
+  ],
+  "counts_before": {
+    "active": 347,
+    "fresh_active": 132,
+    "recommended": 238,
+    "fresh_recommended": 131
+  },
+  "counts_after": {
+    "active": 347,
+    "fresh_active": 171,
+    "recommended": 238,
+    "fresh_recommended": 170
+  },
+  "intake_worker": {
+    "active": true,
+    "baseline_pid": 151026,
+    "post_apply_pid": 151026
+  },
+  "weekly_timer": {
+    "active": true,
+    "next_tick": "2026-10-05T02:33:34Z"
+  },
+  "local_validation": "PGlite success, preservation, idempotence, atomic drift/outlier/trigger refusal; counterpart defect verified and removed before writes"
+}

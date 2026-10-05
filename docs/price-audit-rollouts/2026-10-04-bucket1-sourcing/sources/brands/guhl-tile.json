@@ -1,0 +1,65 @@
+{
+  "checked_at": "2026-10-04T08:43:10.930902+00:00",
+  "source": "https://products.dm.de/product/products/tiles/DE/dans/1446989",
+  "product": {
+    "a11yLabel": "Marke: GUHL; Produktname: Shampoo Kopfhaut Sensitiv, 250 ml; Preis: 3,95 €; Grundpreis: 0,25 l (15,80 € je 1 l)",
+    "brand": {
+      "name": "GUHL"
+    },
+    "dan": 1446989,
+    "gtin": 4072600283172,
+    "hideCouponEyecatcher": false,
+    "images": [
+      {
+        "alt": "Shampoo Kopfhaut Sensitiv GUHL",
+        "backgroundColor": "#F1F8F9",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1758748757/assets/pas/images/549d76c8-73af-45e4-81e7-85a93e672749/guhl-shampoo-kopfhaut-sensitiv"
+      },
+      {
+        "alt": "Shampoo Kopfhaut Sensitiv GUHL",
+        "backgroundColor": "#F1F9F3",
+        "isAiGenerated": false,
+        "tileSrc": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_320,w_320/v1758748725/assets/pas/images/77d43192-03c2-4133-a456-f2c92f8cf8de/guhl-shampoo-kopfhaut-sensitiv"
+      }
+    ],
+    "isPharmacy": false,
+    "netPrice": {
+      "prefix": "Einzelpreis",
+      "price": {
+        "current": {
+          "value": "3,32 €"
+        }
+      },
+      "tileInfos": [
+        "0,25 l (13,28 € je 1 l)"
+      ]
+    },
+    "price": {
+      "prefix": "Einzelpreis",
+      "price": {
+        "current": {
+          "value": "3,95 €"
+        }
+      },
+      "tileInfos": [
+        "0,25 l (15,80 € je 1 l)"
+      ]
+    },
+    "self": "/p/d/1446989/guhl-shampoo-kopfhaut-sensitiv",
+    "title": {
+      "tileHeadline": "Shampoo Kopfhaut Sensitiv, 250 ml"
+    },
+    "trackingData": {
+      "brand": "GUHL",
+      "categories": [
+        "Shampoo"
+      ],
+      "currency": "EUR",
+      "isPharmacy": false,
+      "price": 3.95
+    }
+  },
+  "raw_front_image_source": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1000,w_1000/v1758748757/assets/pas/images/549d76c8-73af-45e4-81e7-85a93e672749/guhl-shampoo-kopfhaut-sensitiv",
+  "raw_front_image_path": "/Users/nick/AI_work/hair_conscierge/.worktrees/price-audit-rollout-receipt/docs/price-audit-rollouts/2026-10-04-bucket1-sourcing/sources/brands/guhl-front.webp"
+}

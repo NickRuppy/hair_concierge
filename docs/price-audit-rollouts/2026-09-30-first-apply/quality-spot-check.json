@@ -1,0 +1,27 @@
+{
+  "verifiedOn": "2026-09-30",
+  "source": "Independent live web page reads during apply",
+  "samples": [
+    {
+      "product": "got2b Trockenshampoo Extra Volumen, 200 ml",
+      "researchPriceEur": 3.99,
+      "verifiedPriceEur": 3.99,
+      "evidenceUrl": "https://www.rossmann.de/de/pflege-und-duft-got2b-trockenshampoo-trocken-waesche-extra-volumen/p/4015100800227",
+      "result": "match; eligible retailer PDP; delivery information shown"
+    },
+    {
+      "product": "Gliss Ultimate Repair Express-Repair-Sp\u00fclung, 200 ml",
+      "researchPriceEur": 4.99,
+      "verifiedPriceEur": 4.99,
+      "evidenceUrl": "https://www.rossmann.de/de/pflege-und-duft-gliss-ultimate-repair-express-repair-spuelung/p/4015100813494",
+      "result": "match; eligible retailer PDP; delivery information shown"
+    },
+    {
+      "product": "OLAPLEX No.3PLUS Complete Repair Treatment",
+      "researchPriceEur": 34,
+      "verifiedPriceEur": 34,
+      "evidenceUrl": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
+      "result": "match; brand-owned German PDP; regular price and add-to-cart shown"
+    }
+  ]
+}

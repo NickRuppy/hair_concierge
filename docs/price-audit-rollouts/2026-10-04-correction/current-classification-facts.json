@@ -1,0 +1,550 @@
+{
+  "records": [
+    {
+      "product": {
+        "id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "name": "Langhaarmädchen Beautiful Curls Shampoo",
+        "tags": [
+          "shampoo"
+        ],
+        "brand": "Langhaarmädchen",
+        "origin": "curated",
+        "brand_id": "6ed96032-6722-46ca-94a6-ae4d5fe8bb1e",
+        "category": "Shampoo",
+        "currency": "EUR",
+        "tom_take": null,
+        "embedding": "[-0.02773381,0.04419201,-0.03037179,0.09851573,-0.023520045,-0.049491312,-0.022843042,-0.016761681,0.014859066,0.083388194,0.020671962,-0.023998618,-0.05205926,-0.027780501,-0.011059674,0.0014707324,-0.031328935,-0.04458887,-0.06335822,0.038472492,-0.01257126,-0.0005413112,0.016936768,0.02179252,0.046386432,0.048977725,0.020088337,0.0044180336,0.031749144,-0.004038678,0.006670822,0.015804537,0.059202816,-0.0021112596,-0.076338015,0.004648565,0.003846082,0.015314293,0.06858749,-0.091699,0.03602127,0.097115025,-0.10206416,0.02495576,0.014275442,-0.08740353,0.013843561,0.14296453,0.0064898985,0.023998618,-0.009373001,-0.016493212,0.018197395,0.0074703866,0.030955415,0.03163242,-0.07204254,0.23886561,0.018045653,0.002780968,-0.076197945,-0.052572846,0.016878406,0.059809785,-0.04916448,0.016878406,0.04106378,0.04496239,0.015267603,0.15239589,-0.024512207,-0.054954033,-0.12737009,0.010289291,-0.027477017,-0.017205235,-0.01435715,-0.025959594,0.04265124,-0.054533824,0.03263625,0.020473529,0.058455776,0.0044180336,0.08282791,-0.033033118,-0.055561002,-0.060229994,0.07264951,-0.008287461,0.0074878954,0.03181918,0.044332076,0.0018588423,-0.10635963,0.01052274,-0.007382843,0.026263079,0.07540422,0.05117215,-0.040200017,-0.044542182,-0.07605787,0.010604448,-0.030581895,0.09814221,0.007797216,0.01431046,0.049444623,-0.11691155,-0.034667265,0.009267949,0.038775977,0.00569617,-0.0051942533,0.06886763,-0.06728017,0.004741945,-0.03144566,0.011258107,0.023951927,-0.012968125,-0.0020849966,0.03648817,-0.004333408,0.013131539,-0.03756204,0.006653313,0.05584114,0.01896778,-0.10757357,0.032542873,-0.04260455,0.0509387,-0.059996545,-0.019014468,0.08717008,-0.07405021,0.021815864,-0.038775977,0.00501333,-0.06513243,0.07923279,0.093053006,-0.027570397,-0.02368346,-0.016831715,-0.031352278,-0.05098539,-0.00064855214,0.027173532,-0.05761536,-0.06200421,-0.097488545,-0.02104548,0.008176572,0.027687121,-0.09982304,0.0022469524,0.005862503,-0.016154712,0.11214918,0.035484336,0.010411852,0.08497565,0.11905929,0.018535897,-0.007913941,-0.015781192,0.060183305,0.03074531,0.15379658,0.052152637,0.011088856,0.014427184,0.08394847,0.0014554122,-0.01732196,0.041320577,0.023473356,-0.0039336258,0.05780212,0.06373174,0.0017727579,0.035087474,0.04598957,0.032729633,0.09426694,0.01016673,-0.039196186,0.033593394,0.08637635,-0.005185499,-0.03770211,-0.018652622,0.029157853,-0.017123528,0.022889731,0.058595847,-0.009460544,-0.024278756,-0.08731014,0.05229271,-0.0021827535,-0.035694443,-0.023928583,-0.02052022,-0.027850537,0.029064473,0.008911938,0.013831888,0.033266567,0.013236592,0.01963311,-0.0029064473,0.023344958,-0.020823704,0.024979105,0.05700839,0.0052934694,0.060836963,-0.083761714,0.023625098,-0.019551404,-0.01170166,-0.0014152881,-0.020963773,0.041157164,-0.015652794,0.07218261,0.016913423,0.052012566,-0.009571433,-0.046526503,-0.010061678,0.043118138,0.020788686,-0.07400352,-0.043795142,0.046012912,0.035040785,-0.042301066,0.022539558,-0.051965877,-0.0022717563,-0.036698274,0.09636799,-0.09683489,0.023625098,-0.033593394,-0.10607949,0.0014787572,-0.03732859,0.0010424983,0.017380321,0.09814221,0.10776033,-0.025399314,0.0016487377,-0.015851228,0.014975791,-0.027266912,0.04024671,0.01548938,0.02043851,-0.047436956,-0.028877715,-0.01963311,-0.06905439,-0.110374965,0.039803155,-0.024465516,0.037445314,-0.0049316227,0.016306454,-0.027196877,0.06615961,0.03917284,0.08357495,0.008083192,0.0652725,0.011631626,0.06503905,0.036464825,-0.0013605733,-0.04580281,-0.10178402,-0.047460303,-0.07652477,-0.002019339,0.045966223,-0.018349137,0.022889731,-0.072135925,-0.0058070584,0.00974652,0.04519584,0.07320979,0.046643227,0.037818834,-0.0010512527,-0.009052007,-0.017065166,-0.061443932,-0.039803155,-0.034760643,0.0059996545,-0.002163786,-0.021675793,0.08343488,-0.07246275,-0.03536761,-0.0939868,0.019014468,-0.041554026,0.1014105,-0.042861342,0.029834857,-0.034713954,-0.0053109783,0.043888524,0.01165497,0.021360638,-0.057475287,0.08147391,-0.0041262214,-0.097862065,-0.047203507,0.12148716,-0.017975619,-0.09534081,0.0509387,0.025072485,0.005591118,0.018734328,-0.0112464335,0.02283137,0.07260282,0.007937286,-0.00614556,-0.092399344,0.041554026,0.03347667,0.062704556,0.02602963,-0.008515074,-0.035694443,-0.0196798,0.008001485,0.08987809,0.000914101,-0.012734675,-0.0030523534,0.05644811,0.030208377,0.07260282,0.08852408,0.019983284,-0.048744272,0.08637635,-0.04972476,0.10215754,-0.049631383,-0.08231433,0.05738191,-0.020006629,0.03441047,-0.10635963,-0.0020412249,0.0001510127,0.0011964291,-0.036091305,0.014789031,0.027967261,-0.093800046,-0.0033791827,0.036885034,-0.06396519,-0.026636599,-0.030792,-0.0009848655,0.0902983,-0.050611872,0.027150188]",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/1623a993-3ff4-43be-82c1-95a1ee57ec52/19-1623a993-3ff4-43be-82c1-95a1ee57ec52-langhaarmadchen-langhaarmadchen-beautiful-curls-shampoo-2d2218ab9a2e.webp",
+        "is_active": true,
+        "price_eur": 4.95,
+        "created_at": "2026-03-03T12:35:01.792239+00:00",
+        "sort_order": 213,
+        "updated_at": "2026-09-30T19:59:37.176471+00:00",
+        "description": "Laghaarmädchen Beautiful Curls ist ein Shampoo von Laghaarmädchen, empfohlen für dickes Haar bei normale Pflege.",
+        "category_key": "shampoo",
+        "affiliate_link": "https://www.dm.de/langhaarmaedchen-shampoo-beautiful-curls-p4067796150735.html",
+        "product_line_id": null,
+        "lifecycle_status": "active",
+        "net_content_unit": null,
+        "price_checked_at": "2026-09-30T19:59:37.066+00:00",
+        "net_content_value": null,
+        "short_description": null,
+        "suitable_concerns": [
+          "normal"
+        ],
+        "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/2d2218ab9a2eaafcf30acddbb06d7e21ee79f5908501502b5cc032e6df4ab046.webp",
+        "purchase_link_status": "available",
+        "suitable_thicknesses": [
+          "coarse"
+        ],
+        "is_chaarlie_recommended": true,
+        "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+      },
+      "shampoo": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-03-16T19:31:13.587192+00:00",
+          "product_id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+          "updated_at": "2026-03-16T19:31:13.587192+00:00",
+          "scalp_route": "balanced",
+          "category_key": "shampoo",
+          "shampoo_bucket": "normal",
+          "cleansing_intensity": "gentle"
+        }
+      ],
+      "protocols": [
+        {
+          "id": "ce5ea587-c5e8-4faf-aeba-97d8f0ab9a6f",
+          "role": "shampoo_everyday",
+          "cadence": null,
+          "category": "shampoo",
+          "placement": "all_hair",
+          "created_at": "2026-08-12T06:17:13.504094+00:00",
+          "product_id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+          "source_url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+          "updated_at": "2026-08-13T06:58:13.851968+00:00",
+          "source_text": "Exact source evidence for Langhaarmädchen Beautiful Curls Shampoo: shampoo everyday protocol; whole-hair application; rinse-out use.",
+          "category_key": "shampoo",
+          "rinse_action": "rinse_out",
+          "source_label": "Aktuelle Händler-Produktseite",
+          "reapplication": "not_stated",
+          "guidance_payload": {
+            "role": "cleanse",
+            "scope": {
+              "kind": "product",
+              "category": "shampoo",
+              "productId": "1623a993-3ff4-43be-82c1-95a1ee57ec52"
+            },
+            "steps": [
+              {
+                "action": "apply_product",
+                "stepKey": "apply-shampoo",
+                "copyTemplateDe": "Sanft ins Haar einmassieren."
+              },
+              {
+                "action": "wait",
+                "stepKey": "wait-shampoo",
+                "copyTemplateDe": "Kurz einwirken lassen."
+              },
+              {
+                "action": "rinse",
+                "stepKey": "rinse-shampoo",
+                "copyTemplateDe": "Gründlich ausspülen."
+              }
+            ],
+            "locale": "de",
+            "evidence": [
+              {
+                "checkedAt": "2026-08-11",
+                "sourceUrl": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+                "sourceType": "retailer"
+              }
+            ],
+            "sequence": {
+              "after": [],
+              "anchor": "wet_cleanse",
+              "before": [
+                "post_cleanse_rinse_off"
+              ],
+              "conflictsWith": []
+            },
+            "guidanceKey": "product-shampoo-everyday-1623a993-3ff4-43be-82c1-95a1ee57ec52",
+            "requirements": {
+              "requiredCatalogFacts": [],
+              "requiredProfileFacts": [],
+              "requiredProtocolFacts": []
+            },
+            "protocolFacts": {
+              "rinse": "rinse_out",
+              "amount": null,
+              "cautions": [],
+              "reapplication": "none",
+              "applicationArea": "all_hair",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable"
+            },
+            "schemaVersion": 1,
+            "protocolVersion": 1,
+            "applicationFamily": "targeted_treatment_shampoo",
+            "compatibleDayTypes": [
+              "wash_day"
+            ],
+            "exactGuidanceRequired": true
+          },
+          "application_stage": "wet_cleanse",
+          "application_state": null,
+          "application_family": "targeted_treatment_shampoo",
+          "guidance_payload_v2": {
+            "role": "cleanse",
+            "facts": {
+              "heat": null,
+              "rinse": "rinse_out",
+              "amount": null,
+              "contactTime": {
+                "kind": "label_directed"
+              },
+              "applicationArea": "scalp_roots",
+              "applicationState": "wet_hair",
+              "conditionerPolicy": "not_applicable"
+            },
+            "scope": {
+              "kind": "product",
+              "category": "shampoo",
+              "productId": "1623a993-3ff4-43be-82c1-95a1ee57ec52"
+            },
+            "evidence": [
+              {
+                "checkedAt": "2026-08-11",
+                "sourceUrl": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+                "sourceType": "retailer"
+              }
+            ],
+            "exactSteps": [],
+            "sourceRole": "shampoo_everyday",
+            "workflowId": null,
+            "cautionCodes": [],
+            "contractKind": "product_pointer",
+            "schemaVersion": 2,
+            "applicationFamily": "targeted_treatment_shampoo",
+            "runtimeBlockerCode": null,
+            "requiredCompanionProductId": null
+          },
+          "contact_time_seconds": null,
+          "instruction_modifiers": []
+        }
+      ],
+      "conditioner": [],
+      "conditioner_rerank": []
+    },
+    {
+      "product": {
+        "id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+        "name": "Alverde Conditioner Glanz",
+        "tags": [
+          "conditioner (drogerie)"
+        ],
+        "brand": "Alverde",
+        "origin": "curated",
+        "brand_id": "59ecb4ba-6747-4f59-afa9-39dab85e9d6b",
+        "category": "Conditioner",
+        "currency": "EUR",
+        "tom_take": null,
+        "embedding": "[0.025728839,0.055312186,-0.029968798,0.009485703,-0.041339595,-0.09766359,0.003667805,-0.03045061,-0.014972353,0.06991114,-0.04403775,0.026017927,0.003749111,-0.04577228,-0.05150586,0.052517667,-0.06899569,-0.015333714,0.008582302,0.018561864,-0.074777454,0.017851189,0.0573358,0.0007001352,0.029029261,0.034305118,-0.005083132,0.014285769,0.008648552,0.028884718,-0.08460645,-0.040905964,0.10387898,0.020525254,-0.06119031,0.049289517,0.046639543,0.019947078,0.032691043,-0.023909993,-0.037653722,0.05401129,-0.09766359,-0.027607912,0.013514868,-0.07458472,0.062105756,0.08475099,-0.008907527,-0.005748637,0.0055679567,-0.038063265,0.024319535,-0.0067333435,-0.059744872,0.012695785,-0.0800774,0.25304842,-0.008046285,0.053047664,-0.03784645,-0.02213933,-0.04401366,0.04977133,0.002514464,-0.022223646,0.052710395,0.056757625,0.0777647,0.15504758,0.014418268,0.043555938,-0.09183365,0.054926734,-0.047049087,0.0031528668,-0.0050680754,-0.06682753,-0.020308439,-0.020705935,0.0346183,0.0035654197,-0.026547922,-0.005504719,0.12305516,-0.057769436,0.049169064,-0.06764661,0.029101534,-0.012623513,-0.057817616,0.05410765,-0.03972552,-0.014875991,-0.04218277,0.018453456,0.0026830987,0.07550017,0.029246077,0.00065270666,0.010696259,-0.05463765,-0.06335847,0.03794281,0.07709015,0.14743492,-0.007010386,-0.0873046,0.046976812,-0.07887287,-0.017393466,-0.027945181,0.03399194,0.029005172,0.0521804,0.08836459,-0.022970457,-0.033943757,0.0016095581,0.03372694,0.034835115,-0.045892734,0.016899608,0.11226254,0.041797318,0.03326922,-0.06388847,0.012623513,0.05222858,0.0067875474,-0.14126772,-0.024596578,-0.024596578,0.090340026,-0.09241182,0.023379998,0.07598198,-0.017658465,-0.026981555,-0.0041827434,-0.003613601,-0.11814066,0.08465463,0.0062214164,-0.03425694,-0.0687066,0.0070585674,0.025777021,-0.086292796,-0.051987674,0.072946556,-0.009196615,-0.020187985,-0.08725642,-0.033341493,0.02306682,0.032666955,-0.1340405,-0.0070525445,-0.027704274,0.0074018594,0.064852096,-0.03644919,0.004794044,0.014478494,0.027656093,0.034281027,0.0767047,-0.008582302,0.04582046,0.054782193,0.077041976,0.041291416,-0.059841234,0.04218277,0.087400965,0.06403301,-0.054204017,-0.0022780744,-0.058010343,-0.008901504,0.027463367,0.083594635,-0.017273013,0.008859345,0.008949685,0.060997587,0.034112394,-0.008931617,-0.003947859,-0.03365467,0.026234744,0.021717742,0.021139566,-0.0029420734,0.05829943,-0.06673116,-0.019272538,0.061575763,-0.01577939,-0.023283636,-0.10137355,0.081089206,0.016008252,-0.014394177,-0.018007778,0.060708497,-0.03189605,-0.0356542,0.013358278,0.014261679,-0.02376545,-0.014610994,0.12796965,-0.005884147,-0.008684688,-0.055890363,0.015839618,-0.050638597,0.023825675,-0.00034724447,-0.011551478,-0.03866553,-0.048084985,0.020501163,-0.0055649457,-0.024957938,-0.063262105,0.04037597,0.090340026,-0.07265747,0.009521838,-0.018320957,-0.06220212,0.05613127,0.078969225,-0.024211127,-0.10118083,0.013683503,0.022295918,0.026186561,-0.014261679,0.034232847,-0.0056793764,0.06003396,-0.039195526,0.1002172,-0.100988105,0.005278869,-0.002342818,-0.068465695,-0.019609809,-0.10387898,0.03967734,0.07583744,0.08971367,0.053770382,-0.0024617657,-0.07684925,0.021681607,0.007389814,-0.04473638,0.08412463,0.009154456,-0.035172384,0.054589465,-0.052324943,-0.063021205,0.015153034,-0.058443975,0.056950353,-0.029776072,0.016514156,0.047265902,0.0054234127,0.010955234,0.0063719833,0.06345484,0.037774175,-0.020754116,0.04146005,-0.0867746,0.03999052,-0.03037834,0.019633899,-0.007775265,-0.024741122,-0.087690055,-0.008479917,-0.0034660457,0.01449054,0.030980606,0.036690097,-0.05550491,-0.025969746,-0.0351242,0.018320957,0.06991114,0.035244655,0.023115002,-0.0034901362,-0.059600327,0.0042760945,-0.032281503,-0.009172524,0.093279086,-0.04538683,-0.019031633,-0.011587614,0.018272776,-0.032642864,-0.033052403,0.03466648,-0.021007067,-0.051554043,0.06769479,-0.03295604,0.04897634,-0.0008582302,0.05401129,0.025271116,-0.04076142,-0.054974917,-0.06003396,0.033702854,0.07858378,-0.033461947,-0.041243233,0.11775521,0.0015854675,-0.07988467,0.03531693,0.019356856,0.0483018,-0.0250543,-0.02828245,0.041532323,-0.012599423,-0.005354152,-0.043122306,-0.06745388,0.01017831,0.0066911844,-0.019405037,0.009142411,-0.03608783,-0.013623276,-0.07048931,0.015225305,-0.030113341,0.001130756,-0.04478456,0.013502822,-0.021549108,0.056613084,-0.009377294,-0.072946556,0.018068004,0.034738753,0.028402904,0.007775265,0.033413764,0.031052878,-0.016598474,0.05839579,-0.047699533,-0.021886377,0.0034299097,0.052662212,0.033847395,-0.059889413,0.0002473058,0.025945656,0.08518462,-0.09294182,-0.0104433065,0.10493898,-0.018766634,-0.05979305,0.047024995,-0.04254413,0.091014564,0.053095844,-0.0057275575]",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/79ce764e-7acf-48ba-b0be-c6d977a81cd0/03-79ce764e-7acf-48ba-b0be-c6d977a81cd0-alverde-alverde-glanz-adef825a89e5.webp",
+        "is_active": true,
+        "price_eur": 1.35,
+        "created_at": "2026-03-03T12:33:52.44529+00:00",
+        "sort_order": 14,
+        "updated_at": "2026-08-15T07:47:54.590858+00:00",
+        "description": "Alverde Glanz ist ein Conditioner (Drogerie) von Alverde, empfohlen für feines Haar bei Performance-Pflege.",
+        "category_key": "conditioner",
+        "affiliate_link": "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz-rosenbluetenwasser-und-pflanzlichem-protein",
+        "product_line_id": null,
+        "lifecycle_status": "active",
+        "net_content_unit": null,
+        "price_checked_at": "2026-06-11T00:00:00+00:00",
+        "net_content_value": null,
+        "short_description": null,
+        "suitable_concerns": [
+          "performance"
+        ],
+        "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/adef825a89e5ff214d32429659f448802e1f59de7bab6bccfa1b2263c8ede11c.webp",
+        "purchase_link_status": "available",
+        "suitable_thicknesses": [
+          "fine"
+        ],
+        "is_chaarlie_recommended": true,
+        "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+      },
+      "shampoo": [],
+      "protocols": [
+        {
+          "id": "6e92f227-2353-4585-823e-392089c67232",
+          "role": "conditioner_rinse_out",
+          "cadence": null,
+          "category": "conditioner",
+          "placement": "all_hair",
+          "created_at": "2026-08-12T06:17:18.071285+00:00",
+          "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+          "source_url": "https://www.dm.at/p/d/1714048/alverde-naturkosmetik-conditioner-glanz",
+          "updated_at": "2026-08-13T06:58:13.851968+00:00",
+          "source_text": "Exact source evidence for Alverde Conditioner Glanz: conditioner rinse out protocol; whole-hair application; rinse-out use.",
+          "category_key": "conditioner",
+          "rinse_action": "rinse_out",
+          "source_label": "Händler-Produktseite",
+          "reapplication": "not_stated",
+          "guidance_payload": {
+            "role": "condition",
+            "scope": {
+              "kind": "product",
+              "category": "conditioner",
+              "productId": "79ce764e-7acf-48ba-b0be-c6d977a81cd0"
+            },
+            "steps": [
+              {
+                "action": "apply_product",
+                "stepKey": "apply-conditioner",
+                "copyTemplateDe": "Im feuchten Haar verteilen."
+              },
+              {
+                "action": "wait",
+                "stepKey": "wait-conditioner",
+                "copyTemplateDe": "Kurz einwirken lassen."
+              },
+              {
+                "action": "rinse",
+                "stepKey": "rinse-conditioner",
+                "copyTemplateDe": "Gründlich ausspülen."
+              }
+            ],
+            "locale": "de",
+            "evidence": [
+              {
+                "checkedAt": "2026-08-11",
+                "sourceUrl": "https://www.dm.at/p/d/1714048/alverde-naturkosmetik-conditioner-glanz",
+                "sourceType": "retailer"
+              }
+            ],
+            "sequence": {
+              "after": [
+                "wet_cleanse"
+              ],
+              "anchor": "post_cleanse_rinse_off",
+              "before": [],
+              "conflictsWith": []
+            },
+            "guidanceKey": "product-conditioner-79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+            "requirements": {
+              "requiredCatalogFacts": [],
+              "requiredProfileFacts": [],
+              "requiredProtocolFacts": []
+            },
+            "protocolFacts": {
+              "rinse": "rinse_out",
+              "amount": null,
+              "cautions": [],
+              "reapplication": "none",
+              "applicationArea": "all_hair",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable"
+            },
+            "schemaVersion": 1,
+            "protocolVersion": 1,
+            "applicationFamily": "standard_rinse_out_conditioning",
+            "compatibleDayTypes": [
+              "wash_day"
+            ],
+            "exactGuidanceRequired": true
+          },
+          "application_stage": "post_cleanse_rinse_off",
+          "application_state": null,
+          "application_family": "standard_rinse_out_conditioning",
+          "guidance_payload_v2": {
+            "role": "condition",
+            "facts": {
+              "heat": null,
+              "rinse": "rinse_out",
+              "amount": null,
+              "contactTime": null,
+              "applicationArea": "hair_lengths_ends",
+              "applicationState": "wet_hair",
+              "conditionerPolicy": "not_applicable"
+            },
+            "scope": {
+              "kind": "product",
+              "category": "conditioner",
+              "productId": "79ce764e-7acf-48ba-b0be-c6d977a81cd0"
+            },
+            "evidence": [
+              {
+                "checkedAt": "2026-08-11",
+                "sourceUrl": "https://www.dm.at/p/d/1714048/alverde-naturkosmetik-conditioner-glanz",
+                "sourceType": "retailer"
+              }
+            ],
+            "exactSteps": [],
+            "sourceRole": "conditioner_rinse_out",
+            "workflowId": null,
+            "cautionCodes": [],
+            "contractKind": "product_pointer",
+            "schemaVersion": 2,
+            "applicationFamily": "standard_rinse_out_conditioning",
+            "runtimeBlockerCode": null,
+            "requiredCompanionProductId": null
+          },
+          "contact_time_seconds": null,
+          "instruction_modifiers": []
+        }
+      ],
+      "conditioner": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "conditioner_rerank": [
+        {
+          "weight": "light",
+          "created_at": "2026-04-15T18:20:39.745941+00:00",
+          "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+          "updated_at": "2026-04-28T12:54:04.13078+00:00",
+          "category_key": "conditioner",
+          "repair_level": "low",
+          "ingredient_flags": [],
+          "balance_direction": "balanced"
+        }
+      ]
+    },
+    {
+      "product": {
+        "id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+        "name": "Balea Professional Oil Repair Intensiv Spülung",
+        "tags": [
+          "conditioner (drogerie)"
+        ],
+        "brand": "Balea",
+        "origin": "curated",
+        "brand_id": "58bcafd6-a884-4337-8c8d-8d8369f2117c",
+        "category": "Conditioner",
+        "currency": "EUR",
+        "tom_take": null,
+        "embedding": "[0.020719782,0.022868589,-0.02061174,0.083647415,0.011260228,0.010023764,-0.037502084,-0.011128179,0.058197856,0.07389975,0.024993386,-0.016230095,-0.0263619,-0.063143715,-0.03145181,0.015929982,0.003145181,0.016638247,-0.037742175,-0.037622128,-0.055508845,-0.049458575,0.08393552,0.053876232,0.029002892,0.009321501,0.045713168,0.032748297,-0.00064936886,-0.053348035,-0.059494343,-0.029963253,0.0080970405,0.094307415,-0.008595228,-0.0008478184,-0.04487285,-0.023288745,0.054980647,0.027370278,0.014189329,0.02074379,-0.08479985,0.013397031,0.028882846,-0.050370917,0.05056299,0.09238669,0.0023393785,0.011548337,-0.011224215,-0.10237444,-0.032604244,0.023924984,-0.014081288,0.04487285,-0.054212358,0.30539468,-0.009783674,-0.011062155,-0.02977118,-0.05997452,-0.03642168,0.046817582,0.045305014,0.016422167,0.037982263,0.040167086,0.025113432,0.12984076,-0.05027488,-0.024201088,-0.08811309,0.018835073,-0.0644402,0.068857856,-0.022268362,-0.018630996,0.04336028,-0.039926995,0.06578471,0.1089049,-0.038006272,-0.017250478,0.02734627,-0.04391249,0.042808075,-0.07500417,0.046145327,0.014105297,-0.051043168,0.010335881,0.017886717,-0.03320447,-0.04813808,0.022352394,-0.0044626757,0.041511588,0.051763438,0.025449557,0.008049022,-0.04511294,-0.08537606,0.01855897,0.08407957,0.10996129,0.034837082,-0.055652898,0.026529962,-0.04758587,-0.05536479,-0.019855456,0.058101818,-0.004225587,0.045809202,0.053155962,-0.023156697,-0.004870829,-0.040095057,0.049410556,0.046505466,-0.052435692,0.025689647,0.059926506,0.025977755,0.082158856,-0.10400706,-0.01163837,0.06218335,-0.040143076,-0.12984076,0.012676761,-0.06079083,0.053876232,-0.11860454,0.047513843,0.097956784,0.004507693,0.0016506199,-0.014573473,0.1009339,-0.054212358,0.05834191,0.07519624,0.06227939,0.021019893,-0.03025136,-0.020251606,-0.046433438,0.11226616,0.07995003,-0.032316137,-0.03562938,-0.040167086,-0.021980254,0.011764418,0.040623255,-0.15058455,-0.035701405,0.026025774,0.015161694,0.040431183,0.035893477,0.027874468,-0.011386276,0.049266502,0.048210103,0.03051546,0.040455192,0.033084426,-0.0064164097,0.07716498,0.0036313636,-0.020071538,0.06247146,0.027778432,0.042351905,-0.031643882,-0.020659758,-0.028642757,-0.010503945,0.0410074,0.11457103,-0.0124246655,0.026169827,-0.017610613,-0.009447548,0.048474204,0.021235975,-0.003589348,-0.034957126,0.07260326,-0.023420796,0.014153315,0.033780687,-0.039350778,-0.048450194,0.020419668,0.10957715,-0.036205597,-0.013072909,-0.09656426,0.0032262115,-0.0019897472,-0.049698662,-0.0021908227,0.038270373,0.048570238,0.011128179,-0.015041648,0.03642168,-0.008499192,0.002124798,0.095603906,0.04736979,0.00094460475,-0.02439316,0.0044536726,-0.0033402543,0.08859327,0.009891715,-0.05901416,-0.034020774,-0.054020286,0.053300016,-0.029459063,-0.0071246754,-0.06347984,-0.014261356,0.10967319,0.02537753,0.0154978195,0.041295506,-0.09733255,-0.03661375,0.01807879,-0.039446812,-0.10026165,-0.029218972,0.046265375,-0.015978001,0.039158706,-0.0069025923,-0.027106179,0.04194375,0.033012398,0.048234113,-0.049218483,0.013216963,-0.041799698,-0.103430845,-0.05123524,0.006380396,0.1054476,0.09137832,0.086480476,0.042111814,-0.017454555,-0.038270373,-0.020227596,0.041175462,-0.022064285,0.023144692,-0.040887356,0.035965506,0.005744157,-0.033036407,0.00564512,-0.027826449,-0.06866579,0.09910922,0.017238474,0.042808075,-0.020383654,0.041607626,0.029050909,0.022544466,0.10083787,0.08340732,-0.00551307,0.042399924,-0.01379318,0.0041445564,0.00817507,0.0053059924,-0.04561713,-0.0019552342,-0.014813563,0.050899114,-0.040143076,0.0025329513,0.08777697,0.031811945,-0.07735705,-0.023408791,-0.040623255,0.047465824,0.063239746,0.03315645,0.05301191,-0.028378658,0.0009078409,0.0024849332,-0.01707041,-0.02684208,0.0075748446,-0.017502572,-0.053348035,-0.07841345,-0.035125192,-0.056037042,0.043552354,-0.012388652,-0.020539714,0.0022028273,0.07471606,-0.0013415038,-0.007496815,0.013373022,0.02513744,-0.06583272,0.017610613,-0.09128228,-0.06352786,-0.02561762,0.035821453,-0.045329023,-0.019615367,0.17257681,0.026409918,-0.036685776,0.029483072,0.01139828,-0.011464305,-0.0070586507,-0.031571858,-0.024261111,0.0010834069,-0.1102494,-0.0806703,-0.05954236,-0.03001127,0.03959087,0.05051497,0.014309374,-0.053540107,0.019615367,-0.054740556,-0.028714783,0.027106179,0.0010473933,-0.09656426,-0.061078936,0.050947133,0.03658974,-0.0287628,-0.021584105,-0.016494194,-0.017910726,0.04883434,-0.017970748,-0.014321378,-0.027442306,-0.06981822,-0.011818438,0.028930865,0.041391544,-0.017106423,0.04023911,0.04026312,0.02612181,0.010107796,0.08662453,0.045785192,-0.086576514,-0.010389902,0.05762164,-0.03776618,0.051763438,0.0006467429,-0.020287618,0.06079083,-0.005597102,-0.024825323]",
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/e7cde77e-e9d5-4976-a8ed-830c8a30c62a/06-e7cde77e-e9d5-4976-a8ed-830c8a30c62a-balea-balea-oil-repair-662414bac91b.webp",
+        "is_active": true,
+        "price_eur": 1.25,
+        "created_at": "2026-03-03T12:33:58.311159+00:00",
+        "sort_order": 31,
+        "updated_at": "2026-08-15T07:49:44.692573+00:00",
+        "description": "Balea Oil Repair ist ein Conditioner (Drogerie) von Balea, empfohlen für dickes Haar bei Proteinbedarf.",
+        "category_key": "conditioner",
+        "affiliate_link": "https://www.dm.de/balea-professional-spuelung-oil-repair-intensiv-p4066447365443.html",
+        "product_line_id": "7acc1a31-fe34-4e3a-8ee9-634a0761943c",
+        "lifecycle_status": "active",
+        "net_content_unit": null,
+        "price_checked_at": "2026-06-11T00:00:00+00:00",
+        "net_content_value": null,
+        "short_description": null,
+        "suitable_concerns": [
+          "protein",
+          "hair_damage",
+          "breakage"
+        ],
+        "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/662414bac91b50271d7268ea7c326328734f0cf5566e180aab3a192555edfbcf.webp",
+        "purchase_link_status": "available",
+        "suitable_thicknesses": [
+          "coarse"
+        ],
+        "is_chaarlie_recommended": true,
+        "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+      },
+      "shampoo": [],
+      "protocols": [
+        {
+          "id": "d6878b1c-aaa3-4b8c-81cd-6896de1d89b4",
+          "role": "conditioner_rinse_out",
+          "cadence": null,
+          "category": "conditioner",
+          "placement": "all_hair",
+          "created_at": "2026-08-12T06:17:18.071285+00:00",
+          "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+          "source_url": "https://vivavoss.com/products/conditioner-oil-repair-intensiv-200-ml",
+          "updated_at": "2026-08-13T06:58:13.851968+00:00",
+          "source_text": "Exact source evidence for Balea Professional Oil Repair Intensiv Spülung: conditioner rinse out protocol; whole-hair application; rinse-out use.",
+          "category_key": "conditioner",
+          "rinse_action": "rinse_out",
+          "source_label": "Händler-Produktseite",
+          "reapplication": "not_stated",
+          "guidance_payload": {
+            "role": "condition",
+            "scope": {
+              "kind": "product",
+              "category": "conditioner",
+              "productId": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a"
+            },
+            "steps": [
+              {
+                "action": "apply_product",
+                "stepKey": "apply-conditioner",
+                "copyTemplateDe": "Sanft in das nasse Haar einmassieren."
+              },
+              {
+                "action": "wait",
+                "stepKey": "wait-conditioner",
+                "copyTemplateDe": "Kurz einwirken lassen."
+              },
+              {
+                "action": "rinse",
+                "stepKey": "rinse-conditioner",
+                "copyTemplateDe": "Mit lauwarmem Wasser sorgfältig ausspülen."
+              }
+            ],
+            "locale": "de",
+            "evidence": [
+              {
+                "checkedAt": "2026-08-11",
+                "sourceUrl": "https://vivavoss.com/products/conditioner-oil-repair-intensiv-200-ml",
+                "sourceType": "retailer"
+              }
+            ],
+            "sequence": {
+              "after": [
+                "wet_cleanse"
+              ],
+              "anchor": "post_cleanse_rinse_off",
+              "before": [],
+              "conflictsWith": []
+            },
+            "guidanceKey": "product-conditioner-e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+            "requirements": {
+              "requiredCatalogFacts": [],
+              "requiredProfileFacts": [],
+              "requiredProtocolFacts": []
+            },
+            "protocolFacts": {
+              "rinse": "rinse_out",
+              "amount": null,
+              "cautions": [],
+              "reapplication": "none",
+              "applicationArea": "all_hair",
+              "contactTimeSeconds": null,
+              "conditionerRelationship": "not_applicable"
+            },
+            "schemaVersion": 1,
+            "protocolVersion": 1,
+            "applicationFamily": "standard_rinse_out_conditioning",
+            "compatibleDayTypes": [
+              "wash_day"
+            ],
+            "exactGuidanceRequired": true
+          },
+          "application_stage": "post_cleanse_rinse_off",
+          "application_state": null,
+          "application_family": "standard_rinse_out_conditioning",
+          "guidance_payload_v2": {
+            "role": "condition",
+            "facts": {
+              "heat": null,
+              "rinse": "rinse_out",
+              "amount": null,
+              "contactTime": null,
+              "applicationArea": "hair_lengths_ends",
+              "applicationState": "wet_hair",
+              "conditionerPolicy": "not_applicable"
+            },
+            "scope": {
+              "kind": "product",
+              "category": "conditioner",
+              "productId": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a"
+            },
+            "evidence": [
+              {
+                "checkedAt": "2026-08-11",
+                "sourceUrl": "https://vivavoss.com/products/conditioner-oil-repair-intensiv-200-ml",
+                "sourceType": "retailer"
+              }
+            ],
+            "exactSteps": [],
+            "sourceRole": "conditioner_rinse_out",
+            "workflowId": null,
+            "cautionCodes": [],
+            "contractKind": "product_pointer",
+            "schemaVersion": 2,
+            "applicationFamily": "standard_rinse_out_conditioning",
+            "runtimeBlockerCode": null,
+            "requiredCompanionProductId": null
+          },
+          "contact_time_seconds": null,
+          "instruction_modifiers": []
+        }
+      ],
+      "conditioner": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "conditioner_rerank": [
+        {
+          "weight": "rich",
+          "created_at": "2026-04-15T18:20:39.745941+00:00",
+          "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+          "updated_at": "2026-04-28T12:54:04.13078+00:00",
+          "category_key": "conditioner",
+          "repair_level": "high",
+          "ingredient_flags": [],
+          "balance_direction": "protein"
+        }
+      ]
+    }
+  ],
+  "checked_at": "2026-10-04T08:17:26.978605+00:00"
+}
+

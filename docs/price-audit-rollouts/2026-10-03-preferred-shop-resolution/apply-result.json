@@ -1,0 +1,14 @@
+{
+  "records": [
+    {
+      "receipt": {
+        "mode": "apply",
+        "checked_at": "2026-10-03T14:30:29.415091+00:00",
+        "rows_verified": 2,
+        "identifier_writes": 0,
+        "noncommercial_changes": 0,
+        "committed_product_writes": 2
+      }
+    }
+  ]
+}

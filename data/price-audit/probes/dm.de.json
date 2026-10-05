@@ -1,0 +1,68 @@
+{
+  "host": "dm.de",
+  "probedAt": "2026-09-30T16:00:57.844Z",
+  "enabledForAutoWrite": false,
+  "reviewedBy": null,
+  "reviewedAt": null,
+  "samples": [
+    {
+      "productId": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "storedPriceEur": 2.25,
+      "observation": {
+        "kind": "mismatch",
+        "reason": "gtin_mismatch",
+        "evidenceUrl": "https://www.dm.de/nivea-conditioner-volumen-und-kraft-p4005900918031.html",
+        "observedName": "Haarspray Diamant Volumen, 250 ml",
+        "observedPriceEur": null
+      }
+    },
+    {
+      "productId": "0307c903-84f9-46b4-8f1f-a51c2b1f38ff",
+      "storedPriceEur": 5.95,
+      "observation": {
+        "kind": "mismatch",
+        "reason": "gtin_mismatch",
+        "evidenceUrl": "https://www.dm.de/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar-p3600542511049.html",
+        "observedName": null,
+        "observedPriceEur": null
+      }
+    },
+    {
+      "productId": "05e68c32-f096-457f-8b88-5cd3c0934873",
+      "storedPriceEur": 6.95,
+      "observation": {
+        "kind": "mismatch",
+        "reason": "gtin_mismatch",
+        "evidenceUrl": "https://www.dm.de/jean-und-len-haaroel-repair-keratin-und-mandel-p4262401733253.html",
+        "observedName": "Conditioner Repair Keratin Mandel, 300 ml",
+        "observedPriceEur": null
+      }
+    },
+    {
+      "productId": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5",
+      "storedPriceEur": 4.95,
+      "observation": {
+        "kind": "confirmed",
+        "identity": "gtin_match",
+        "priceEur": 4.95,
+        "buyable": true,
+        "buyableSource": "structured",
+        "evidenceUrl": "https://www.dm.de/p/d/1612745/pantene-pro-v-haaroel-coconut-infused-oil",
+        "observedName": "Haaröl Coconut Infused Oil, 100 ml"
+      }
+    },
+    {
+      "productId": "1c43bc07-e3c6-4b8a-9b62-943147052e07",
+      "storedPriceEur": 2.75,
+      "observation": {
+        "kind": "confirmed",
+        "identity": "gtin_match",
+        "priceEur": 2.75,
+        "buyable": true,
+        "buyableSource": "structured",
+        "evidenceUrl": "https://www.dm.de/p/d/1700841/balea-professional-haaroel-oil-repair-intensiv",
+        "observedName": "Haaröl Oil Repair Intensiv, 100 ml"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1880 @@
+{
+  "method": "Fresh unauthenticated GET of exact approved specialist/Müller PDPs; exact price and package matched only in product-specific page data. See raw collector for bounded evidence.",
+  "counts": {
+    "confirmed_live_exact_offer": 59,
+    "source_blocked_needs_browser_recheck": 2
+  },
+  "records": [
+    {
+      "id": "01b11043-5c87-43d2-95b5-f1cabd845423",
+      "name": "SANTE Deep Repair Conditioner",
+      "url": "https://www.mueller.de/p/sante-deep-repair-conditioner-IPN2994111/",
+      "checked_at": "2026-10-03T11:38:34.213335+00:00",
+      "expected": {
+        "price_eur": 3.95,
+        "package_value": 150,
+        "package_unit": "ml",
+        "barcodes": [
+          "4055297220088"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 3.95,
+        "package_value": 150,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4055297220088"
+        ]
+      },
+      "title": "",
+      "product_names": "SANTE DEEP REPAIR Conditioner",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "0756a919-5fab-4b6c-a5da-8cb810869b6f",
+      "name": "Living Proof Restore Repair Leave-In",
+      "url": "https://www.cosmeterie.de/living-proof/restore-repair-leave-in",
+      "checked_at": "2026-10-03T11:38:36.437744+00:00",
+      "expected": {
+        "price_eur": 30.0,
+        "package_value": 118,
+        "package_unit": "ml",
+        "barcodes": [
+          "858544005575"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 30.0,
+        "package_value": 118,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "0858544005575"
+        ]
+      },
+      "title": "",
+      "product_names": "Living Proof Restore Repair Leave-In, 118 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "0d5a4af5-d046-4378-b608-515c9d1d66ec",
+      "name": "Redken All Soft Mega Curls Leave-In",
+      "url": "https://ellashaarshop.de/collections/leave-in-pflege/products/redken-all-soft-mega-curls-hydramelt-treatment",
+      "checked_at": "2026-10-03T11:38:37.248811+00:00",
+      "expected": {
+        "price_eur": 27.62,
+        "package_value": 150,
+        "package_unit": "ml",
+        "barcodes": [
+          "3474637135638"
+        ],
+        "availability": "available"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 27.62,
+        "package_value": 150,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "3474637135638"
+        ]
+      },
+      "title": "",
+      "product_names": "",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "name": "Wahre Schätze Sanfte Hafermilch",
+      "url": "https://www.mueller.de/p/garnier-wahre-schaetze-shampoo-sanfte-hafermilch-6535810325/",
+      "checked_at": "2026-10-03T11:38:40.377639+00:00",
+      "expected": {
+        "price_eur": 1.95,
+        "package_value": 300,
+        "package_unit": "ml",
+        "barcodes": [
+          "3600542461658"
+        ],
+        "availability": "Lieferung nach Hause; Lieferbar2-3Werktage"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 1.95,
+        "package_value": 300,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "3600542461658"
+        ]
+      },
+      "title": "",
+      "product_names": "Garnier Wahre Schätze Shampoo sanfte Hafermilch",
+      "note": "Müller exact PDP exposes campaignPrice €1.95 for 300 ml and current-price label €1.95; its generic JSON-LD still says €2.79 and is stale."
+    },
+    {
+      "id": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+      "name": "EVO Head Mistress",
+      "url": "https://www.beautykaufen.de/products/evo-cuticle-sealer",
+      "checked_at": "2026-10-03T11:38:35.809603+00:00",
+      "expected": {
+        "price_eur": 30,
+        "package_value": 150,
+        "package_unit": "ml",
+        "barcodes": [
+          "9349769013144"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 30,
+        "package_value": 150,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "9349769013144",
+          "9349769006979"
+        ]
+      },
+      "title": "",
+      "product_names": "EVO Head Mistress Cuticle Sealer EVO Head Mistress Cuticle Sealer 150ml EVO Head Mistress Cuticle Sealer 30ml - Travelsize",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4",
+      "name": "Color WOW Money Mist",
+      "url": "https://www.cocooncenter.de/color-wow-money-mist-spray/115987.html",
+      "checked_at": "2026-10-03T11:38:34.877258+00:00",
+      "expected": {
+        "price_eur": 35.2,
+        "package_value": 150,
+        "package_unit": "ml",
+        "barcodes": [
+          "5060150185731"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 35.2,
+        "package_value": 150,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "5060150185731"
+        ]
+      },
+      "title": "",
+      "product_names": "Color Wow Money Mist Spray",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+      "name": "Guhl Hyaluron+",
+      "url": "https://www.mueller.de/p/guhl-hyaluron-pflege-feuchtigkeits-shampoo-250-ml-IPN2887702/",
+      "checked_at": "2026-10-03T11:38:39.775334+00:00",
+      "expected": {
+        "price_eur": 3.95,
+        "package_value": 250,
+        "package_unit": "ml",
+        "barcodes": [
+          "4072600720219"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 3.95,
+        "package_value": 250,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4072600720219"
+        ]
+      },
+      "title": "",
+      "product_names": "GUHL HYALURON & PFLEGE Feuchtigkeits-Shampoo 250 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "name": "Hask Shampoo Argan Oil",
+      "url": "https://www.hagel-shop.de/hask-argan-oil-repairing-shampoo-355-ml-5815312.html",
+      "checked_at": "2026-10-03T11:38:40.167268+00:00",
+      "expected": {
+        "price_eur": 7.95,
+        "package_value": 355,
+        "package_unit": "ml",
+        "barcodes": [
+          "071164343166"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 7.95,
+        "package_value": 355,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "Hask Argan Oil Repairing Shampoo 355 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "name": "benecos BIO Körperöl Macadamianussöl",
+      "url": "https://www.mueller.de/p/benecos-bio-koerperoel-macadamianussoel-IPN2878442/",
+      "checked_at": "2026-10-03T11:38:39.422302+00:00",
+      "expected": {
+        "price_eur": 8.99,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "barcodes": [
+          "4260198097596"
+        ],
+        "availability": "https://schema.org/LimitedAvailability"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 8.99,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4260198097596"
+        ]
+      },
+      "title": "",
+      "product_names": "benecos BIO Körperöl Macadamianussöl",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "1b8f56b9-b186-4bed-a65c-f582ac0e9453",
+      "name": "Hitzeschutzspray beat the heat",
+      "url": "https://www.jeanlen.de/hitzeschutzspray-beat-the-heat",
+      "checked_at": "2026-10-03T11:38:34.512948+00:00",
+      "expected": {
+        "price_eur": 3.99,
+        "package_value": 100,
+        "package_unit": "ml",
+        "barcodes": [
+          "4262500781476"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 3.99,
+        "package_value": 100,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4262500781476"
+        ]
+      },
+      "title": "",
+      "product_names": "Hitzeschutzspray beat the heat, 100 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "name": "Primavera Calendulaöl Bio",
+      "url": "https://www.mueller.de/p/primavera-calendulaoel-bio-IPN2893577/",
+      "checked_at": "2026-10-03T11:38:39.151665+00:00",
+      "expected": {
+        "price_eur": 15.9,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "barcodes": [
+          "4086900743540"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 15.9,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4086900743540"
+        ]
+      },
+      "title": "",
+      "product_names": "Primavera Calendulaöl bio",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "name": "Redken Extreme Anti-Snap",
+      "url": "https://www.hagel-shop.de/redken-extreme-anti-snap-250-ml-5814965.html",
+      "checked_at": "2026-10-03T11:38:37.650632+00:00",
+      "expected": {
+        "price_eur": 26.1,
+        "package_value": 250,
+        "package_unit": "ml",
+        "barcodes": [
+          "884486453402"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 26.1,
+        "package_value": 250,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "884486453402"
+        ]
+      },
+      "title": "",
+      "product_names": "Redken Extreme Anti-Snap 250 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "2bafeb7e-6610-4efc-a8e8-a402071b2ed9",
+      "name": "Curlsmith Multitasking Conditioner 3 in 1",
+      "url": "https://www.hagel-shop.de/curlsmith-multi-tasking-conditioner-237ml-12128539.html",
+      "checked_at": "2026-10-03T11:38:35.416974+00:00",
+      "expected": {
+        "price_eur": 17.85,
+        "package_value": 237,
+        "package_unit": "ml",
+        "barcodes": [
+          "850005417637"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 17.85,
+        "package_value": 237,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "CURLSMITH Multi-Tasking Conditioner 237 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "3175b0a5-1be7-430f-b3d9-22ab3b4c11d2",
+      "name": "Being Major Moisture Leave-In Conditioner",
+      "url": "https://www.hagel-shop.de/being-major-moisture-feuchtigkeit-leave-in-conditioner-354-ml-12133576.html",
+      "checked_at": "2026-10-03T11:38:34.769873+00:00",
+      "expected": {
+        "price_eur": 7.95,
+        "package_value": 354,
+        "package_unit": "ml",
+        "barcodes": [
+          "4895248005988"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 7.95,
+        "package_value": 354,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "being MAJOR MOISTURE Feuchtigkeit Leave-In Conditioner 354 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "37c65daf-cc2e-44ba-a976-ac0239c11f7d",
+      "name": "Hask Curl Care Conditioner",
+      "url": "https://www.hagel-shop.de/hask-curl-care-detangling-conditioner-355-ml.html",
+      "checked_at": "2026-10-03T11:38:33.956092+00:00",
+      "expected": {
+        "price_eur": 7.95,
+        "package_value": 355,
+        "package_unit": "ml",
+        "barcodes": [
+          "071164304211"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 7.95,
+        "package_value": 355,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "Hask Curl Care Detangling Conditioner 355 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "name": "K18 Leave-In Molecular Repair Hair Mask",
+      "url": "https://www.flaconi.de/haare/k18/leave-in-molecular/k18-leave-in-molecular-repair-hair-mask-haarkur.html?variant=80074805-50",
+      "checked_at": "2026-10-03T11:38:33.780905+00:00",
+      "expected": {
+        "price_eur": 56.25,
+        "package_value": 50,
+        "package_unit": "ml",
+        "barcodes": [
+          "858511001128"
+        ],
+        "availability": "50ml selected; Auf Lager; enabled cart; delivery Oct7-8"
+      },
+      "http_status": null,
+      "fetch_error": "HTTP Error 403: Forbidden",
+      "previous_source_file": "high-end-final-browser-refresh.json",
+      "status": "source_blocked_needs_browser_recheck",
+      "match": null,
+      "actual_offer": null,
+      "note": "The exact URL rejected unauthenticated GET. This is an access limitation, not evidence of changed price or availability."
+    },
+    {
+      "id": "39ec1b2d-4aa0-4c4e-b581-9b6d5efea530",
+      "name": "Redken One United",
+      "url": "https://www.number-one.de/Redken-One-United-Multi-Benefit-Treatment-150-ml",
+      "checked_at": "2026-10-03T11:38:37.846684+00:00",
+      "expected": {
+        "price_eur": 26,
+        "package_value": 150,
+        "package_unit": "ml",
+        "barcodes": [
+          "3474637102555"
+        ],
+        "availability": "available"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 26,
+        "package_value": 150,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+      "name": "benecos BIO Körperöl Wunderbaumsamenöl",
+      "url": "https://www.mueller.de/p/benecos-bio-koerperoel-wunderbaumsamenoel-IPN2878448/",
+      "checked_at": "2026-10-03T11:38:39.667943+00:00",
+      "expected": {
+        "price_eur": 4.99,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "barcodes": [
+          "4260198097534"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 4.99,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4260198097534"
+        ]
+      },
+      "title": "",
+      "product_names": "benecos BIO Körperöl Wunderbaumsamenöl",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+      "name": "OLAPLEX No.3PLUS Complete Repair Treatment",
+      "url": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
+      "checked_at": "2026-10-03T11:38:33.782360+00:00",
+      "expected": {
+        "price_eur": 34,
+        "package_value": 100,
+        "package_unit": "ml",
+        "barcodes": [
+          "810177860273"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 34,
+        "package_value": 100,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "810177860273"
+        ]
+      },
+      "title": "",
+      "product_names": "Original OLAPLEX® N°.3PLUS Complete Repair Treatment",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+      "name": "KoRo MCT Öl",
+      "url": "https://www.korodrogerie.de/bio-mct-oel-500-ml",
+      "checked_at": "2026-10-03T11:38:38.652204+00:00",
+      "expected": {
+        "price_eur": 17.5,
+        "package_value": 500,
+        "package_unit": "ml",
+        "barcodes": [
+          "4260718296232"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 17.5,
+        "package_value": 500,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4260718296232"
+        ]
+      },
+      "title": "",
+      "product_names": "Bio MCT Öl 500 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "42b9eba7-d0e3-4d02-ae2b-7a1612a561fe",
+      "name": "EVO Happy Campers",
+      "url": "https://www.hagel-shop.de/evo-happy-campers-wearable-treatment-200-ml-5826170.html",
+      "checked_at": "2026-10-03T11:38:35.655264+00:00",
+      "expected": {
+        "price_eur": 24.92,
+        "package_value": 200,
+        "package_unit": "ml",
+        "barcodes": [
+          "9349769009550"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 24.92,
+        "package_value": 200,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "evo Happy Campers Wearable Treatment 200 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "43cb9fbf-4b04-4554-a86a-7cb168536233",
+      "name": "Authentic Beauty Concept Hydrate Spray",
+      "url": "https://www.hagel-shop.de/authentic-beauty-concept-hydrate-spray-conditioner-250-ml.html",
+      "checked_at": "2026-10-03T11:38:34.553739+00:00",
+      "expected": {
+        "price_eur": 38.6,
+        "package_value": 250,
+        "package_unit": "ml",
+        "barcodes": [
+          "42392606"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 38.6,
+        "package_value": 250,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "Authentic Beauty Concept  Hydrate Spray Conditioner 250 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "45f4fe15-c439-476d-8a86-3b2aac5053bd",
+      "name": "Urban Alchemy Repair & Revive Leave-In Spray",
+      "url": "https://urban-alchemy.com/products/repair-revive-leave-in-spray-150-ml",
+      "checked_at": "2026-10-03T11:38:37.884407+00:00",
+      "expected": {
+        "price_eur": 22.9,
+        "package_value": 150,
+        "package_unit": "ml",
+        "barcodes": [
+          "4063528079923"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 22.9,
+        "package_value": 150,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4063528079923"
+        ]
+      },
+      "title": "",
+      "product_names": "Repair Revive Leave-in Spray",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "4827c174-92e9-4121-ab70-843d5c037ad0",
+      "name": "Olaplex No.5 Leave-In",
+      "url": "https://www.number-one.de/Olaplex-No5-Moisturize-Mend-Leave-In-Conditioner-100-ml",
+      "checked_at": "2026-10-03T11:38:36.803358+00:00",
+      "expected": {
+        "price_eur": 24.95,
+        "package_value": 100,
+        "package_unit": "ml",
+        "barcodes": [
+          "850056933285"
+        ],
+        "availability": "available"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 24.95,
+        "package_value": 100,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "4a45948b-53a6-48ac-9c02-20718c1d19c4",
+      "name": "Being Big Hair Shampoo",
+      "url": "https://www.hagel-shop.de/being-big-hair-volumen-shampoo-354-ml-12133562.html?___store=hagel_de",
+      "checked_at": "2026-10-03T11:38:39.748436+00:00",
+      "expected": {
+        "price_eur": 7.95,
+        "package_value": 354,
+        "package_unit": "ml",
+        "barcodes": [
+          "4895248005872"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 7.95,
+        "package_value": 354,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "being BIG HAIR Volumen Shampoo 354 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "4e99706a-2232-4ee6-ba1b-9ca1029a7364",
+      "name": "Olaplex No.6 Bond Smoother",
+      "url": "https://olaplex.de/products/olaplex-no-6-bond-smoother",
+      "checked_at": "2026-10-03T11:38:36.808930+00:00",
+      "expected": {
+        "price_eur": 32,
+        "package_value": 100,
+        "package_unit": "ml",
+        "barcodes": [
+          "850018802796"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 32,
+        "package_value": 100,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "850018802796"
+        ]
+      },
+      "title": "",
+      "product_names": "Original OLAPLEX® N°6 Bond Smoother",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "50951ef2-e16a-4a51-85c5-a709aa64c03a",
+      "name": "Maria Nila Coils & Curls Oil in Cream",
+      "url": "https://mapeja.de/maria-nila-c-s-coils-curls-oil-in-cream-100ml/",
+      "checked_at": "2026-10-03T11:38:36.466612+00:00",
+      "expected": {
+        "price_eur": 22.3,
+        "package_value": 100,
+        "package_unit": "ml",
+        "barcodes": [
+          "7391681403741"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 22.3,
+        "package_value": 100,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "7391681403741"
+        ]
+      },
+      "title": "",
+      "product_names": "Maria Nila C&S Coils & Curls Oil-In-Cream 100ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "name": "Allgäuer Ölmühle Bio Traubenkernöl",
+      "url": "https://www.mueller.de/p/allgaeuer-oelmuehle-bio-traubenkernoel-223549/",
+      "checked_at": "2026-10-03T11:38:38.325734+00:00",
+      "expected": {
+        "price_eur": 7.99,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "barcodes": [
+          "4260389030401"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 7.99,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4260389030401"
+        ]
+      },
+      "title": "",
+      "product_names": "Allgäuer Ölmühle Bio Traubenkernöl",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "5767f7a6-757c-40fa-b990-8e0a1abaea17",
+      "name": "Nuxe Huile Prodigieuse Öl",
+      "url": "https://de.nuxe.com/products/wichtiger-ol%c2%ae-1",
+      "checked_at": "2026-10-03T11:38:38.970706+00:00",
+      "expected": {
+        "price_eur": 38.9,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "barcodes": [
+          "3264680009754"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 38.9,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "3264680009754"
+        ]
+      },
+      "title": "",
+      "product_names": "Huile Prodigieuse® 100ml - Trockenöl Gesicht, Körper, Haare Huile Prodigieuse® 100ml - Trockenöl Gesicht, Körper, Haare",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "5827a3b9-a488-4c74-b13a-4d655f94f1c3",
+      "name": "Pantene Pro-V Miracles 7in1 Öl-Spray",
+      "url": "https://www.mueller.de/p/pantene-pro-v-miracles-oel-spray-7-in-1-IPN2992303/",
+      "checked_at": "2026-10-03T11:38:39.077764+00:00",
+      "expected": {
+        "price_eur": 8.95,
+        "package_value": 145.0,
+        "package_unit": "ml",
+        "barcodes": [
+          "8700216178402"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 8.95,
+        "package_value": 145.0,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "8700216178402"
+        ]
+      },
+      "title": "",
+      "product_names": "Pantene Pro-V miracles Öl-Spray 7 in 1",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "58aa2f19-b23a-4e09-ab0f-68c359371c9e",
+      "name": "Multi-Peptide Serum for Hair Density",
+      "url": "https://theordinary.com/de-de/multi-peptide-serum-for-hair-density-hair-scalp-treatment-100434.html",
+      "checked_at": "2026-10-03T11:38:39.731585+00:00",
+      "expected": {
+        "price_eur": 26.5,
+        "package_value": 60,
+        "package_unit": "ml",
+        "barcodes": [],
+        "availability": true
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 26.5,
+        "package_value": 60,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "Multi-Peptide Serum for Hair Density",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3",
+      "name": "HASK Keratin 5-in-1 Spray",
+      "url": "https://www.beautykaufen.de/products/keratin-smoothing-leave-in-spray",
+      "checked_at": "2026-10-03T11:38:35.872146+00:00",
+      "expected": {
+        "price_eur": 9.95,
+        "package_value": 175,
+        "package_unit": "ml",
+        "barcodes": [
+          "0071164302248"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 9.95,
+        "package_value": 175,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "0071164302248"
+        ]
+      },
+      "title": "",
+      "product_names": "HASK Keratin Smoothing 5-in-1  Leave-In Spray - 175ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a",
+      "name": "Urban Alchemy Smooth Supreme Öl Serum",
+      "url": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+      "checked_at": "2026-10-03T11:38:39.218366+00:00",
+      "expected": {
+        "price_eur": 22.9,
+        "package_value": 75.0,
+        "package_unit": "ml",
+        "barcodes": [
+          "4063528079978"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 22.9,
+        "package_value": 75.0,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4063528079978"
+        ]
+      },
+      "title": "",
+      "product_names": "Smooth Supreme Öl Serum",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "648ba537-5180-440e-81ad-2b310b447d87",
+      "name": "Curlsmith Hydrate & Plump Leave-In",
+      "url": "https://www.hagel-shop.de/curlsmith-hydrate-plump-leave-in-237-ml-12135900.html",
+      "checked_at": "2026-10-03T11:38:34.982408+00:00",
+      "expected": {
+        "price_eur": 17.85,
+        "package_value": 237,
+        "package_unit": "ml",
+        "barcodes": [
+          "850035298718"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 17.85,
+        "package_value": 237,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "CURLSMITH Hydrate & Plump Leave-in 237 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+      "name": "Neqi Volume Victory",
+      "url": "https://www.hagel-shop.de/neqi-volume-victory-shampoo-330-ml-12129028.html?___store=hagel_de",
+      "checked_at": "2026-10-03T11:38:40.243127+00:00",
+      "expected": {
+        "price_eur": 9.95,
+        "package_value": 330,
+        "package_unit": "ml",
+        "barcodes": [
+          "4063528078377"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 9.95,
+        "package_value": 330,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "NEQI Volume Victory Shampoo 330 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "696401be-16b5-4261-836f-28b57c1ecd59",
+      "name": "It’s a 10 Miracle Leave-In",
+      "url": "https://www.hagel-shop.de/it-s-a-10-miracle-leave-in-product-295-7-ml.html",
+      "checked_at": "2026-10-03T11:38:36.225247+00:00",
+      "expected": {
+        "price_eur": 40.48,
+        "package_value": 295.7,
+        "package_unit": "ml",
+        "barcodes": [
+          "898571000211"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 40.48,
+        "package_value": 295.7,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "It's a 10 Miracle Leave-in Product 295,7 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+      "name": "Kevin Murphy Young Again",
+      "url": "https://www.hagel-shop.de/kevin-murphy-young-again-leave-in-treatment-100-ml.html",
+      "checked_at": "2026-10-03T11:38:38.647415+00:00",
+      "expected": {
+        "price_eur": 43.0,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "barcodes": [
+          "9339341020356"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 43.0,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "Kevin.Murphy Young.Again. Leave-In Treatment 100 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "70ea52bc-2194-4bb3-82a8-3f4a2aede041",
+      "name": "Dr. Scheller Reines Arganöl",
+      "url": "https://www.mueller.de/p/dr-scheller-reines-arganoel-2859166/",
+      "checked_at": "2026-10-03T11:38:38.605639+00:00",
+      "expected": {
+        "price_eur": 8.45,
+        "package_value": 30.0,
+        "package_unit": "ml",
+        "barcodes": [
+          "4051424570040"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 8.45,
+        "package_value": 30.0,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4051424570040"
+        ]
+      },
+      "title": "",
+      "product_names": "DR.SCHELLER Reines Arganöl",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "71d9bccb-74c7-499c-b5de-13ceef57ecde",
+      "name": "Pantene Pro-V Miracles Bond Repair Conditioner",
+      "url": "https://www.mueller.de/p/pantene-pro-v-miracles-molecular-bond-repair-pflegespuelung-IPN2964988/",
+      "checked_at": "2026-10-03T11:38:34.115599+00:00",
+      "expected": {
+        "price_eur": 5.95,
+        "package_value": 160,
+        "package_unit": "ml",
+        "barcodes": [
+          "8700216151535"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 5.95,
+        "package_value": 160,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "8700216151535"
+        ]
+      },
+      "title": "",
+      "product_names": "Pantene Pro-V miracles molecular Bond Repair Pflegespülung",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+      "name": "Moroccanoil All In One Leave In Conditioner",
+      "url": "https://www.douglas.de/de/p/5011481841",
+      "checked_at": "2026-10-03T11:38:36.592195+00:00",
+      "expected": {
+        "price_eur": 12.8,
+        "package_value": 50,
+        "package_unit": "ml",
+        "barcodes": [],
+        "availability": "50mlMini; Online auf Lager; enabled cart; delivery Oct6-8"
+      },
+      "http_status": null,
+      "fetch_error": "HTTP Error 400: Bad Request",
+      "previous_source_file": "high-end-final-browser-refresh.json",
+      "status": "source_blocked_needs_browser_recheck",
+      "match": null,
+      "actual_offer": null,
+      "note": "The exact URL rejected unauthenticated GET. This is an access limitation, not evidence of changed price or availability."
+    },
+    {
+      "id": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+      "name": "Maria Nila True Soft Argan Oil",
+      "url": "https://www.hagel-shop.de/maria-nila-true-soft-argan-oil-100-ml.html",
+      "checked_at": "2026-10-03T11:38:38.923003+00:00",
+      "expected": {
+        "price_eur": 27.75,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "barcodes": [
+          "7391681036376"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 27.75,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "Maria Nila True Soft Argan Oil 100 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "name": "HASK Argan Conditioning Treatment Haarkur",
+      "url": "https://www.hagel-shop.de/hask-argan-oil-repairing-deep-conditioner-sachet-50-ml.html",
+      "checked_at": "2026-10-03T11:38:37.911652+00:00",
+      "expected": {
+        "price_eur": 2.95,
+        "package_value": 50,
+        "package_unit": "ml",
+        "barcodes": [
+          "071164333068"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 2.95,
+        "package_value": 50,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "Hask Argan Oil Repairing Deep Conditioner Sachet 50 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "7d65ed50-898c-40c3-8865-ebe5688774c8",
+      "name": "It’s a 10 Miracle Leave-In Lite",
+      "url": "https://www.hagel-shop.de/it-s-a-10-miracle-leave-in-conditioner-lite-120-ml.html",
+      "checked_at": "2026-10-03T11:38:36.247989+00:00",
+      "expected": {
+        "price_eur": 21.16,
+        "package_value": 120,
+        "package_unit": "ml",
+        "barcodes": [
+          "898571000433"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 21.16,
+        "package_value": 120,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "It's a 10 Miracle Leave In- Conditioner Lite 120 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "8182ee3f-cfe9-4a31-8b2f-a6a52c7e7abe",
+      "name": "Bali Curls Moisturising Conditioner 75 ml",
+      "url": "https://www.mueller.de/p/bali-curls-moisturising-conditioner-reisegroesse-75ml-PPN3184965/",
+      "checked_at": "2026-10-03T11:38:33.782620+00:00",
+      "expected": {
+        "price_eur": 3.95,
+        "package_value": 75,
+        "package_unit": "ml",
+        "barcodes": [],
+        "availability": "available"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 3.95,
+        "package_value": 75,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4262391991626"
+        ]
+      },
+      "title": "",
+      "product_names": "Bali Curls Moisturising Conditioner Reisegröße 75ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "8715f0f5-9104-46ec-b450-e73f1441c1fa",
+      "name": "Curlsmith Weightless Air Dry Cream",
+      "url": "https://eu.curlsmith.com/products/weightless-air-dry-cream",
+      "checked_at": "2026-10-03T11:38:35.437907+00:00",
+      "expected": {
+        "price_eur": 21,
+        "package_value": 237,
+        "package_unit": "ml",
+        "barcodes": [
+          "850048197626"
+        ],
+        "availability": "available"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "curlsmith-selected-variant-final.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 21,
+        "package_value": 237,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "850048197626",
+          "850048197787",
+          "850048197367"
+        ]
+      },
+      "title": "",
+      "product_names": "Weightless Air Dry Cream",
+      "note": "Shopify selected variant 39480225300629: Full 237 ml, €21.00, barcode 850048197626, available:true. Generic product JSON-LD low price (€11) is the excluded 59 ml mini."
+    },
+    {
+      "id": "8f84eae5-222d-4bbf-9ab0-f30361882a95",
+      "name": "K18 Hair Professional Molecular Repair Hair Mist",
+      "url": "https://www.look-beautiful.de/professional-molecular-repair-hair-mist-sw13531",
+      "checked_at": "2026-10-03T11:38:36.269757+00:00",
+      "expected": {
+        "price_eur": 62.95,
+        "package_value": 150,
+        "package_unit": "ml",
+        "barcodes": [
+          "858511001142"
+        ],
+        "availability": "available"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 62.95,
+        "package_value": 150,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "915aa362-6479-41f2-bb59-0260493b3d58",
+      "name": "Paul Mitchell Full Circle Leave-In",
+      "url": "https://www.hagel-shop.de/paul-mitchell-full-circle-leave-in-cream-150-ml.html",
+      "checked_at": "2026-10-03T11:38:37.091859+00:00",
+      "expected": {
+        "price_eur": 26.45,
+        "package_value": 150,
+        "package_unit": "ml",
+        "barcodes": [
+          "009531139159"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 26.45,
+        "package_value": 150,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "Paul Mitchell Full Circle Leave-In Cream 150 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "931892fb-cc29-4e50-b402-6aae0a494389",
+      "name": "Pantene Pro-V Moisture Boost Pflegespülung",
+      "url": "https://www.mueller.de/p/pantene-pro-v-moisture-boost-pflegespuelung-PPN3150289/",
+      "checked_at": "2026-10-03T11:38:34.190991+00:00",
+      "expected": {
+        "price_eur": 8.95,
+        "package_value": 200,
+        "package_unit": "ml",
+        "barcodes": [
+          "8700216939140"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 8.95,
+        "package_value": 200,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "8700216939140"
+        ]
+      },
+      "title": "",
+      "product_names": "Pantene Pro-V Moisture Boost Pflegespülung ",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "952a4834-e451-4dc3-ba19-ebb8927eb5e4",
+      "name": "Neqi Volume Victory Conditioner",
+      "url": "https://neqi-hair.com/products/volume-victory-conditioner",
+      "checked_at": "2026-10-03T11:38:34.035508+00:00",
+      "expected": {
+        "price_eur": 9.95,
+        "package_value": 250,
+        "package_unit": "ml",
+        "barcodes": [],
+        "availability": "enabled In den Warenkorb legen; brand minimum basket19.90EUR"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "final-visible-offer-adjudications.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 9.95,
+        "package_value": 250,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "Volume Victory Conditioner",
+      "note": "Shopify product and selected default variant both report €9.95 and available:true. The page contains generic Nicht verfügbar template text, which is not this variant’s stock state."
+    },
+    {
+      "id": "9b664b11-fd11-47e3-9b7e-76e34736b43e",
+      "name": "Alcina Hyaluron 2.0",
+      "url": "https://www.number-one.de/Alcina-Hyaluron-20-Spray-125-ml",
+      "checked_at": "2026-10-03T11:38:34.545777+00:00",
+      "expected": {
+        "price_eur": 12.6,
+        "package_value": 125,
+        "package_unit": "ml",
+        "barcodes": [
+          "4008666199522"
+        ],
+        "availability": "available"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 12.6,
+        "package_value": 125,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "9f94c225-61ec-455d-b303-f39e885e222a",
+      "name": "Neqi Build Boost Leave-In Balm",
+      "url": "https://neqi-hair.com/products/build-boost-balm?variant=52259787538778",
+      "checked_at": "2026-10-03T11:38:36.646230+00:00",
+      "expected": {
+        "price_eur": 9.95,
+        "package_value": 75,
+        "package_unit": "ml",
+        "barcodes": [
+          "4063528097651"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 9.95,
+        "package_value": 75,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4063528097651"
+        ]
+      },
+      "title": "",
+      "product_names": "Build Boost Leave-In Balm",
+      "note": "Shopify selected variant 52259787538778 reports €9.95, barcode 4063528097651, and available:true."
+    },
+    {
+      "id": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+      "name": "benecos BIO Körperöl Aprikosenkernöl",
+      "url": "https://www.mueller.de/p/benecos-bio-koerperoel-aprikosenkernoel-IPN2878067/",
+      "checked_at": "2026-10-03T11:38:39.402502+00:00",
+      "expected": {
+        "price_eur": 6.99,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "barcodes": [
+          "4260198097541"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 6.99,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4260198097541"
+        ]
+      },
+      "title": "",
+      "product_names": "benecos BIO Körperöl Aprikosenkernöl",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "a3b21686-fe35-46f1-b560-b8a563dc96ae",
+      "name": "Redken Acidic Color Gloss Leave-In",
+      "url": "https://www.bellaffair.de/redken-acidic-color-gloss-leave-in-spray",
+      "checked_at": "2026-10-03T11:38:37.214284+00:00",
+      "expected": {
+        "price_eur": 34.95,
+        "package_value": 190,
+        "package_unit": "ml",
+        "barcodes": [
+          "3474637174170"
+        ],
+        "availability": "available"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 34.95,
+        "package_value": 190,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "Redken Acidic Color Gloss Leave-In Spray",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "name": "OGX Argan weightless Öl",
+      "url": "https://www.hagel-shop.de/ogx-renewing-argan-oil-of-morocco-oil-weightless-reviving-dry-oil-118-ml.html",
+      "checked_at": "2026-10-03T11:38:38.989080+00:00",
+      "expected": {
+        "price_eur": 8.95,
+        "package_value": 118.0,
+        "package_unit": "ml",
+        "barcodes": [
+          "3574661563350"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 8.95,
+        "package_value": 118.0,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "OGX Renewing Argan Oil of Morocco Oil Weightless Reviving Dry Oil 118 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "b139d4e8-6f26-4096-a1b9-d9efcb02d2ec",
+      "name": "EVO Day of Grace Leave-In",
+      "url": "https://www.hagel-shop.de/evo-day-of-grace-pre-style-primer-200-ml-5826168.html",
+      "checked_at": "2026-10-03T11:38:35.589981+00:00",
+      "expected": {
+        "price_eur": 24.92,
+        "package_value": 200,
+        "package_unit": "ml",
+        "barcodes": [
+          "9349769009598"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 24.92,
+        "package_value": 200,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "evo Day of Grace Pre Style Primer 200 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+      "name": "Jean&Len Tiefenreparatur Haarkur",
+      "url": "https://www.mueller.de/p/jean-len-haarkur-kokosoel-macadamia-PPN3097814/",
+      "checked_at": "2026-10-03T11:38:38.131705+00:00",
+      "expected": {
+        "price_eur": 5.49,
+        "package_value": 250,
+        "package_unit": "ml",
+        "barcodes": [
+          "4262401737824"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 5.49,
+        "package_value": 250,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4262401737824"
+        ]
+      },
+      "title": "",
+      "product_names": "Jean&Len Haarkur Kokosöl/Macadamia",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "b4bcb392-22a7-4642-bcdf-1949ca959f67",
+      "name": "Hask Argan Oil Repairing Conditioner",
+      "url": "https://www.hagel-shop.de/hask-argan-oil-repairing-conditioner-355-ml-5815313.html",
+      "checked_at": "2026-10-03T11:38:33.783048+00:00",
+      "expected": {
+        "price_eur": 7.95,
+        "package_value": 355,
+        "package_unit": "ml",
+        "barcodes": [],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 7.95,
+        "package_value": 355,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "Hask Argan Oil Repairing Conditioner 355 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd",
+      "name": "Leave-In Moisturizing Mist",
+      "url": "https://www.hagel-shop.de/neqi-x-tbp-leave-in-mist-180-ml.html",
+      "checked_at": "2026-10-03T11:38:36.363316+00:00",
+      "expected": {
+        "price_eur": 12.95,
+        "package_value": 180,
+        "package_unit": "ml",
+        "barcodes": [
+          "4063528103222"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 12.95,
+        "package_value": 180,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "NEQI x TBP Leave in Mist 180 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "name": "Hask Curl Care Shampoo",
+      "url": "https://www.hagel-shop.de/hask-curl-care-moisturizing-shampoo-355-ml.html",
+      "checked_at": "2026-10-03T11:38:39.960265+00:00",
+      "expected": {
+        "price_eur": 7.95,
+        "package_value": 355,
+        "package_unit": "ml",
+        "barcodes": [
+          "071164304112"
+        ],
+        "availability": "http://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 7.95,
+        "package_value": 355,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": []
+      },
+      "title": "",
+      "product_names": "Hask Curl Care Moisturizing Shampoo 355 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+      "name": "benecos BIO Körperöl Mandelöl",
+      "url": "https://www.mueller.de/p/benecos-bio-koerperoel-mandeloel-IPN2878446/",
+      "checked_at": "2026-10-03T11:38:39.467504+00:00",
+      "expected": {
+        "price_eur": 8.99,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "barcodes": [
+          "4260198097572"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 8.99,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4260198097572"
+        ]
+      },
+      "title": "",
+      "product_names": "benecos BIO Körperöl Mandelöl",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    },
+    {
+      "id": "d46c16fa-1ca6-45dd-bab4-af96217c5480",
+      "name": "Pantene Pro-V Pantene Pro-V Serum Shot mit Collagen Peptiden",
+      "url": "https://www.ohfeliz.de/pantene-pro-v/haarkur-1-minute-wunder-ampulle",
+      "checked_at": "2026-10-03T11:38:38.240500+00:00",
+      "expected": {
+        "price_eur": 1.99,
+        "package_value": 15,
+        "package_unit": "ml",
+        "barcodes": [
+          "4084500390089"
+        ],
+        "availability": "https://schema.org/InStock"
+      },
+      "http_status": 200,
+      "fetch_error": null,
+      "previous_source_file": "retailer-final-price-refresh.json",
+      "status": "confirmed_live_exact_offer",
+      "match": true,
+      "actual_offer": {
+        "price_eur": 1.99,
+        "package_value": 15,
+        "package_unit": "ml",
+        "availability": "positive purchase/stock evidence on exact PDP",
+        "published_gtins": [
+          "4084500390089"
+        ]
+      },
+      "title": "",
+      "product_names": "PANTENE PRO-V Serum Shot mit Collagen Peptiden, 15 ml",
+      "note": "Fresh exact-PDP GET retained the proposed whole-package price and exact package in product-specific page data."
+    }
+  ]
+}

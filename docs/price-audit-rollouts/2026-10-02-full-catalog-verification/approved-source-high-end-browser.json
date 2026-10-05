@@ -1,0 +1,8 @@
+{
+  "kind":"read-only specialty retailer pre-apply refresh",
+  "method":"hydrated selected retailer PDPs; visible selected pack, public whole-bottle price, stock/cart, and delivery. No cart interaction.",
+  "records":[
+    {"id":"38dace91-0fba-49ee-a93f-ac36e488fe4b","retailer":"Flaconi","url":"https://www.flaconi.de/haare/k18/leave-in-molecular/k18-leave-in-molecular-repair-hair-mask-haarkur.html?variant=80074805-50","checked_window_utc":"2026-10-03T11:41Z","product":"K18 Leave-In Molecular Repair Hair Mask","selected_package":"50 ml","price_eur":56.25,"gtin":"858511001128","stock":"In den Warenkorb enabled","delivery":"Mi. 07.10.2026-Do. 08.10.2026","price_context":"Public €56.25. €75.00 shown separately as UVP; MYSTERY 11% code excluded.","result":"EXACT_MATCH"},
+    {"id":"7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6","retailer":"Douglas","url":"https://www.douglas.de/de/p/5011481841","checked_at":"2026-10-03T11:42:39.224Z","product":"Moroccanoil Hydration All in One Leave-In-Conditioner","selected_package":"50 ml - Mini","price_eur":12.80,"stock":"Online: auf Lager; IN DEN WARENKORB","delivery":"Di. 06.10.2026-Do. 08.10.2026","price_context":"Public €12.80. €16.00 is UVP and €16.99 is 30-day low/reference; both excluded.","result":"EXACT_MATCH"}
+  ]
+}

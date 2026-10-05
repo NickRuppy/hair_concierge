@@ -1,0 +1,30 @@
+{
+  "verifiedAt": "2026-10-02T09:02:01.030Z",
+  "productId": "2bafeb7e-6610-4efc-a8e8-a402071b2ed9",
+  "offer": {
+    "priceEur": 17.85,
+    "link": "https://www.hagel-shop.de/curlsmith-multi-tasking-conditioner-237ml-12128539.html",
+    "packageValue": 237,
+    "packageUnit": "ml",
+    "priceCheckedAt": "2026-10-02T09:01:08.256+00:00",
+    "purchaseLinkStatus": "available",
+    "purchaseLinkCheckedAt": "2026-10-02T09:01:08.256+00:00",
+    "category": "leave_in"
+  },
+  "barcodes": [
+    {
+      "barcode": "850005417637",
+      "canonicalGtin14": "00850005417637"
+    },
+    {
+      "barcode": "0850005417781",
+      "canonicalGtin14": "00850005417781"
+    },
+    {
+      "barcode": "0850005417804",
+      "canonicalGtin14": "00850005417804"
+    }
+  ],
+  "unrelatedProductFieldsPreserved": true,
+  "allIdentifierRowsPreserved": true
+}

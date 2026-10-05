@@ -1,0 +1,284 @@
+{
+  "scope": "16identity/formula holds; public catalog facts only, no user submission data",
+  "records": [
+    {
+      "product_id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "fact_key": "conditioner.authority_facts",
+      "fact_value": {
+        "curation": "internal",
+        "curated_by": "nick",
+        "category_key": "conditioner",
+        "canonical_thicknesses": [
+          "fine"
+        ]
+      },
+      "source_label": "Interne Kuratierung (Nick)",
+      "source_url": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-08-16-provenance-grandfather/README.md",
+      "source_text": "Katalog-Eigenschaften dieses Produkts wurden intern kuratiert und am 16.08.2026 von Nick bestätigt. Grandfathering-Beleg mit vollständiger Produktliste: siehe Quelle. Externe Produktseiten-Evidenz wird bei zukünftigen Änderungen oder Konflikten nachgezogen.",
+      "source_type": "internal_verified",
+      "checked_at": "2026-08-16",
+      "batch_id": "GF-20260816-provenance-grandfather",
+      "content_fingerprint": "8cff1bf6cce05f8072f6b5378cbfc132ab45232566d44917890e213ca24c52dc"
+    },
+    {
+      "product_id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "fact_key": "shampoo.authority_facts",
+      "fact_value": {
+        "curation": "internal",
+        "curated_by": "nick",
+        "category_key": "shampoo",
+        "canonical_thicknesses": [
+          "coarse"
+        ]
+      },
+      "source_label": "Interne Kuratierung (Nick)",
+      "source_url": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-08-16-provenance-grandfather/README.md",
+      "source_text": "Katalog-Eigenschaften dieses Produkts wurden intern kuratiert und am 16.08.2026 von Nick bestätigt. Grandfathering-Beleg mit vollständiger Produktliste: siehe Quelle. Externe Produktseiten-Evidenz wird bei zukünftigen Änderungen oder Konflikten nachgezogen.",
+      "source_type": "internal_verified",
+      "checked_at": "2026-08-16",
+      "batch_id": "GF-20260816-provenance-grandfather",
+      "content_fingerprint": "df208f2a48c4a991e4d915f78f0840790cc1b899101352db9d7aa41d420be5e3"
+    },
+    {
+      "product_id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "fact_key": "mask.authority_facts",
+      "fact_value": {
+        "functional_benefits": [
+          "shine",
+          "smoothing_frizz_control"
+        ],
+        "repair_support_level": "low"
+      },
+      "source_label": "Aktuelle Händler-Produktseite",
+      "source_url": "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine",
+      "source_text": "Exact Balea Professional Glow & Shine source positions the mask for glow/shine and smooth finish, not repair.",
+      "source_type": "retailer",
+      "checked_at": "2026-08-11",
+      "batch_id": "S5-18-mask-exact-01",
+      "content_fingerprint": "2bf5ed5179c3c1577c4d4bc2b220653d72c481e7713ba17cfe8467592afafbba"
+    },
+    {
+      "product_id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+      "fact_key": "dry_shampoo.authority_facts",
+      "fact_value": {
+        "curation": "internal",
+        "curated_by": "nick",
+        "category_key": "dry_shampoo",
+        "canonical_thicknesses": null
+      },
+      "source_label": "Interne Kuratierung (Nick)",
+      "source_url": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-08-16-provenance-grandfather/README.md",
+      "source_text": "Katalog-Eigenschaften dieses Produkts wurden intern kuratiert und am 16.08.2026 von Nick bestätigt. Grandfathering-Beleg mit vollständiger Produktliste: siehe Quelle. Externe Produktseiten-Evidenz wird bei zukünftigen Änderungen oder Konflikten nachgezogen.",
+      "source_type": "internal_verified",
+      "checked_at": "2026-08-16",
+      "batch_id": "GF-20260816-provenance-grandfather",
+      "content_fingerprint": "88c96c67dd7aa268ea60057b0702794bb5a074b32d804b32cf59c14af700495f"
+    },
+    {
+      "product_id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "fact_key": "shampoo.authority_facts",
+      "fact_value": {
+        "curation": "internal",
+        "curated_by": "nick",
+        "category_key": "shampoo",
+        "canonical_thicknesses": [
+          "normal"
+        ]
+      },
+      "source_label": "Interne Kuratierung (Nick)",
+      "source_url": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-08-16-provenance-grandfather/README.md",
+      "source_text": "Katalog-Eigenschaften dieses Produkts wurden intern kuratiert und am 16.08.2026 von Nick bestätigt. Grandfathering-Beleg mit vollständiger Produktliste: siehe Quelle. Externe Produktseiten-Evidenz wird bei zukünftigen Änderungen oder Konflikten nachgezogen.",
+      "source_type": "internal_verified",
+      "checked_at": "2026-08-16",
+      "batch_id": "GF-20260816-provenance-grandfather",
+      "content_fingerprint": "c45ccbde52ff2cdf874614cefae82e914245a3b044da31763a257d001c47a8e0"
+    },
+    {
+      "product_id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "fact_key": "conditioner.authority_facts",
+      "fact_value": {
+        "curation": "internal",
+        "curated_by": "nick",
+        "category_key": "conditioner",
+        "canonical_thicknesses": [
+          "coarse"
+        ]
+      },
+      "source_label": "Interne Kuratierung (Nick)",
+      "source_url": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-08-16-provenance-grandfather/README.md",
+      "source_text": "Katalog-Eigenschaften dieses Produkts wurden intern kuratiert und am 16.08.2026 von Nick bestätigt. Grandfathering-Beleg mit vollständiger Produktliste: siehe Quelle. Externe Produktseiten-Evidenz wird bei zukünftigen Änderungen oder Konflikten nachgezogen.",
+      "source_type": "internal_verified",
+      "checked_at": "2026-08-16",
+      "batch_id": "GF-20260816-provenance-grandfather",
+      "content_fingerprint": "4ac85264a0aee55bbae54637a35796f9ca50918c9c91d379cda53b0e40345a7f"
+    },
+    {
+      "product_id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+      "fact_key": "conditioner.authority_facts",
+      "fact_value": {
+        "curation": "internal",
+        "curated_by": "nick",
+        "category_key": "conditioner",
+        "canonical_thicknesses": [
+          "normal"
+        ]
+      },
+      "source_label": "Interne Kuratierung (Nick)",
+      "source_url": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-08-16-provenance-grandfather/README.md",
+      "source_text": "Katalog-Eigenschaften dieses Produkts wurden intern kuratiert und am 16.08.2026 von Nick bestätigt. Grandfathering-Beleg mit vollständiger Produktliste: siehe Quelle. Externe Produktseiten-Evidenz wird bei zukünftigen Änderungen oder Konflikten nachgezogen.",
+      "source_type": "internal_verified",
+      "checked_at": "2026-08-16",
+      "batch_id": "GF-20260816-provenance-grandfather",
+      "content_fingerprint": "6e24f70296ace4c101fb8a085393972fdf597a5834681f182f80105c518d08e8"
+    },
+    {
+      "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "fact_key": "conditioner.authority_facts",
+      "fact_value": {
+        "curation": "internal",
+        "curated_by": "nick",
+        "category_key": "conditioner",
+        "canonical_thicknesses": [
+          "fine"
+        ]
+      },
+      "source_label": "Interne Kuratierung (Nick)",
+      "source_url": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-08-16-provenance-grandfather/README.md",
+      "source_text": "Katalog-Eigenschaften dieses Produkts wurden intern kuratiert und am 16.08.2026 von Nick bestätigt. Grandfathering-Beleg mit vollständiger Produktliste: siehe Quelle. Externe Produktseiten-Evidenz wird bei zukünftigen Änderungen oder Konflikten nachgezogen.",
+      "source_type": "internal_verified",
+      "checked_at": "2026-08-16",
+      "batch_id": "GF-20260816-provenance-grandfather",
+      "content_fingerprint": "8cff1bf6cce05f8072f6b5378cbfc132ab45232566d44917890e213ca24c52dc"
+    },
+    {
+      "product_id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "fact_key": "oil.authority_facts",
+      "fact_value": {
+        "weight": "medium",
+        "role_support": [
+          "dry_finish"
+        ]
+      },
+      "source_label": "Niche Beauty Produktseite",
+      "source_url": "https://www.niche-beauty.com/en-se/products/innersense-harmonic-treatment-oil/624-011",
+      "source_text": "Retailer-Anleitung zum exakten Produkt: für Glanz 1 bis 2 Tropfen durch mittlere Längen bis Spitzen geben; separate Herstellerseite belegt das exakte Produkt, aber primär mit Körper- und Kopfhaut-Anwendung.",
+      "source_type": "retailer",
+      "checked_at": "2026-08-11",
+      "batch_id": "S5-17-oil-exact-02",
+      "content_fingerprint": "738775dd76e546f8ceaee9d38e4d5085b1d929e93a56f3eca35d97dbfa286c8f"
+    },
+    {
+      "product_id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+      "fact_key": "heat_protectant.authority_facts",
+      "fact_value": {
+        "curation": "internal",
+        "curated_by": "nick",
+        "category_key": "heat_protectant",
+        "canonical_thicknesses": null
+      },
+      "source_label": "Interne Kuratierung (Nick)",
+      "source_url": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-08-16-provenance-grandfather/README.md",
+      "source_text": "Katalog-Eigenschaften dieses Produkts wurden intern kuratiert und am 16.08.2026 von Nick bestätigt. Grandfathering-Beleg mit vollständiger Produktliste: siehe Quelle. Externe Produktseiten-Evidenz wird bei zukünftigen Änderungen oder Konflikten nachgezogen.",
+      "source_type": "internal_verified",
+      "checked_at": "2026-08-16",
+      "batch_id": "GF-20260816-provenance-grandfather",
+      "content_fingerprint": "dcf80aaaccad20542294d709fd5f4356fa624464d7d63573be768b1773164e1d"
+    },
+    {
+      "product_id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "fact_key": "conditioner.authority_facts",
+      "fact_value": {
+        "curation": "internal",
+        "curated_by": "nick",
+        "category_key": "conditioner",
+        "canonical_thicknesses": [
+          "fine"
+        ]
+      },
+      "source_label": "Interne Kuratierung (Nick)",
+      "source_url": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-08-16-provenance-grandfather/README.md",
+      "source_text": "Katalog-Eigenschaften dieses Produkts wurden intern kuratiert und am 16.08.2026 von Nick bestätigt. Grandfathering-Beleg mit vollständiger Produktliste: siehe Quelle. Externe Produktseiten-Evidenz wird bei zukünftigen Änderungen oder Konflikten nachgezogen.",
+      "source_type": "internal_verified",
+      "checked_at": "2026-08-16",
+      "batch_id": "GF-20260816-provenance-grandfather",
+      "content_fingerprint": "8cff1bf6cce05f8072f6b5378cbfc132ab45232566d44917890e213ca24c52dc"
+    },
+    {
+      "product_id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "fact_key": "leave_in.authority_facts",
+      "fact_value": {
+        "plan_roles": [
+          "post_wash_leave_in"
+        ],
+        "care_direction": "moisture",
+        "functional_benefits": [
+          "moisture_softness",
+          "smooth_anti_frizz"
+        ],
+        "repair_support_level": "low"
+      },
+      "source_label": "Garnier Produktseite",
+      "source_url": "https://www.garnier.com.au/about-our-brands/fructis/hair-food/fructis-hair-food-smoothing-macadamia",
+      "source_text": "Multi-use mask; leave-in use on damp or dry hair, mid-lengths and ends.",
+      "source_type": "manufacturer",
+      "checked_at": "2026-08-11",
+      "batch_id": "S5-15-leave-in-exact-02",
+      "content_fingerprint": "5cd8796e8515c72503becf7af16fa3a33d58ecbf40616d7ce9a1bcab1715dfa6"
+    },
+    {
+      "product_id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "fact_key": "shampoo.authority_facts",
+      "fact_value": {
+        "curation": "internal",
+        "curated_by": "nick",
+        "category_key": "shampoo",
+        "canonical_thicknesses": [
+          "normal"
+        ]
+      },
+      "source_label": "Interne Kuratierung (Nick)",
+      "source_url": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-08-16-provenance-grandfather/README.md",
+      "source_text": "Katalog-Eigenschaften dieses Produkts wurden intern kuratiert und am 16.08.2026 von Nick bestätigt. Grandfathering-Beleg mit vollständiger Produktliste: siehe Quelle. Externe Produktseiten-Evidenz wird bei zukünftigen Änderungen oder Konflikten nachgezogen.",
+      "source_type": "internal_verified",
+      "checked_at": "2026-08-16",
+      "batch_id": "GF-20260816-provenance-grandfather",
+      "content_fingerprint": "c45ccbde52ff2cdf874614cefae82e914245a3b044da31763a257d001c47a8e0"
+    },
+    {
+      "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "fact_key": "conditioner.authority_facts",
+      "fact_value": {
+        "curation": "internal",
+        "curated_by": "nick",
+        "category_key": "conditioner",
+        "canonical_thicknesses": [
+          "coarse"
+        ]
+      },
+      "source_label": "Interne Kuratierung (Nick)",
+      "source_url": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-08-16-provenance-grandfather/README.md",
+      "source_text": "Katalog-Eigenschaften dieses Produkts wurden intern kuratiert und am 16.08.2026 von Nick bestätigt. Grandfathering-Beleg mit vollständiger Produktliste: siehe Quelle. Externe Produktseiten-Evidenz wird bei zukünftigen Änderungen oder Konflikten nachgezogen.",
+      "source_type": "internal_verified",
+      "checked_at": "2026-08-16",
+      "batch_id": "GF-20260816-provenance-grandfather",
+      "content_fingerprint": "4ac85264a0aee55bbae54637a35796f9ca50918c9c91d379cda53b0e40345a7f"
+    },
+    {
+      "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+      "fact_key": "heat_protectant.authority_facts",
+      "fact_value": {
+        "curation": "internal",
+        "curated_by": "nick",
+        "category_key": "heat_protectant",
+        "canonical_thicknesses": null
+      },
+      "source_label": "Interne Kuratierung (Nick)",
+      "source_url": "https://github.com/NickRuppy/hair_concierge/blob/main/docs/ops/catalog-repairs/2026-08-16-provenance-grandfather/README.md",
+      "source_text": "Katalog-Eigenschaften dieses Produkts wurden intern kuratiert und am 16.08.2026 von Nick bestätigt. Grandfathering-Beleg mit vollständiger Produktliste: siehe Quelle. Externe Produktseiten-Evidenz wird bei zukünftigen Änderungen oder Konflikten nachgezogen.",
+      "source_type": "internal_verified",
+      "checked_at": "2026-08-16",
+      "batch_id": "GF-20260816-provenance-grandfather",
+      "content_fingerprint": "dcf80aaaccad20542294d709fd5f4356fa624464d7d63573be768b1773164e1d"
+    }
+  ]
+}

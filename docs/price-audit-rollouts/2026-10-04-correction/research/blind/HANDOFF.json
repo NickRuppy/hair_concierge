@@ -1,0 +1,248 @@
+{
+  "completed_at_utc": "2026-10-04T08:13:10.808744+00:00",
+  "scope": "Property-lane research only; no catalog/global readiness or promotion; no repository/database changes.",
+  "blind_integrity": "PASS: anonymous raw/ordered inputs frozen, all 19 blind artifacts hash-identical after unblind, no old labels/dossiers/projections read.",
+  "authority_hashes": "authority-sha256.json",
+  "source_capture_hashes": {
+    "F1": "57baf6dba9f018500dec28e3a0833a5f30478fe02d039500718dd41a44f10bac",
+    "F2": "fd2752411949607b0274d6a2ce965c4a34a2ac4cad2b2db64807659038638570",
+    "F3": "4df9cf1fd468282b4cbcdb895b423653004a4a3ac94a0ecf3c13f1d4dda82fc1",
+    "F4": "18e79e056bf1473dae472ac8d0f272ee9afd1006eb4aed2590388ddb0220ffd6"
+  },
+  "canonical_adapter_runs": [
+    {
+      "candidate": "F1",
+      "name": "LANGHAARMÄDCHEN Shampoo Beautiful Curls, 300 ml",
+      "status": "property_lane_ready",
+      "research_values": {
+        "cleansingStrength": "low",
+        "conditioningLevel": "moderate",
+        "weightPotential": "low",
+        "focusPrimary": "general",
+        "focusSecondary": [
+          "shine"
+        ],
+        "usageRole": "regular",
+        "scalpComfortTarget": "not_targeted",
+        "dandruffSupport": "not_supported"
+      },
+      "projected_properties": {
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "gentle",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "gentle",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            }
+          ]
+        },
+        "required_protocol_roles": [
+          "shampoo_everyday"
+        ],
+        "suitable_thicknesses": [
+          "fine",
+          "normal"
+        ]
+      },
+      "warnings": [],
+      "envelope": "F1-post-unblind-envelope.json",
+      "envelope_file_sha256": "c8cee228ce13d626e4665f990f171055db2ef1070b337d6c5b8b32471869d7b3",
+      "projection": "F1-adapter/production-light.json",
+      "projection_file_sha256": "7f13e3b2c89b8393176ad24bd37df9bcf8ad80a09c2b2edfc05e5587a8d479ff",
+      "command": "npm run research:shampoo:production-light -- --input /tmp/chaarlie-buckets-2026-10-04/blind/F1-post-unblind-envelope.json --output /tmp/chaarlie-buckets-2026-10-04/blind/F1-adapter",
+      "exit_code": 0
+    },
+    {
+      "candidate": "F2",
+      "name": "alverde NATURKOSMETIK Conditioner Glanz, 200 ml",
+      "status": "projection_ready",
+      "research_values": {
+        "conditioningLevel": "moderate",
+        "weightPotential": "moderate",
+        "careDirection": "balanced",
+        "repairSupportLevel": "medium",
+        "primaryFocus": "repair",
+        "secondaryFocus": [
+          "smoothing"
+        ],
+        "hairThicknessFit": [
+          "fine",
+          "medium",
+          "coarse"
+        ],
+        "damageFit": [
+          "healthy",
+          "moderately_damaged"
+        ],
+        "textureFit": [
+          "straight",
+          "wavy",
+          "curly"
+        ]
+      },
+      "projected_properties": {
+        "category_specs": {
+          "product_conditioner_rerank_specs": {
+            "balance_direction": "balanced",
+            "ingredient_flags": [
+              "oils",
+              "proteins",
+              "humectants"
+            ],
+            "repair_level": "medium",
+            "weight": "medium"
+          },
+          "product_conditioner_specs": [
+            {
+              "protein_moisture_balance": "stretches_bounces",
+              "thickness": "fine"
+            },
+            {
+              "protein_moisture_balance": "stretches_bounces",
+              "thickness": "normal"
+            },
+            {
+              "protein_moisture_balance": "stretches_bounces",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "suitable_thicknesses": [
+          "fine",
+          "normal",
+          "coarse"
+        ]
+      },
+      "warnings": [
+        "primary_focus is uncertain in a retained research-only field; it does not change the current production projection.",
+        "secondary_focus is uncertain in a retained research-only field; it does not change the current production projection.",
+        "care_direction is uncertain and affects a mapped production field; review the projection before approval."
+      ],
+      "envelope": "F2-post-unblind-envelope.json",
+      "envelope_file_sha256": "a7ad31d2414dfdea85477a32a492b037859008eed09c80b46a19a0fd59eaacd8",
+      "projection": "F2-adapter/production-projection.json",
+      "projection_file_sha256": "9104b840ea9cfe86df4d0523c51672c843f05c3e4e6f74f97cd734b72e6114ca",
+      "command": "npm run research:conditioner:production-adapter -- --input /tmp/chaarlie-buckets-2026-10-04/blind/F2-post-unblind-envelope.json --output /tmp/chaarlie-buckets-2026-10-04/blind/F2-adapter",
+      "exit_code": 0
+    },
+    {
+      "candidate": "F4",
+      "name": "Balea PROFESSIONAL Conditioner Oil Repair Intensiv, 200 ml",
+      "status": "projection_ready",
+      "research_values": {
+        "conditioningLevel": "high",
+        "weightPotential": "moderate",
+        "careDirection": "balanced",
+        "repairSupportLevel": "medium",
+        "primaryFocus": "repair",
+        "secondaryFocus": [
+          "smoothing"
+        ],
+        "hairThicknessFit": [
+          "fine",
+          "medium",
+          "coarse"
+        ],
+        "damageFit": [
+          "moderately_damaged",
+          "highly_damaged"
+        ],
+        "textureFit": [
+          "straight",
+          "wavy",
+          "curly"
+        ]
+      },
+      "projected_properties": {
+        "category_specs": {
+          "product_conditioner_rerank_specs": {
+            "balance_direction": "balanced",
+            "ingredient_flags": [
+              "oils",
+              "proteins",
+              "humectants"
+            ],
+            "repair_level": "medium",
+            "weight": "medium"
+          },
+          "product_conditioner_specs": [
+            {
+              "protein_moisture_balance": "stretches_bounces",
+              "thickness": "fine"
+            },
+            {
+              "protein_moisture_balance": "stretches_bounces",
+              "thickness": "normal"
+            },
+            {
+              "protein_moisture_balance": "stretches_bounces",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "suitable_thicknesses": [
+          "fine",
+          "normal",
+          "coarse"
+        ]
+      },
+      "warnings": [
+        "weight_potential is uncertain and affects a mapped production field; review the projection before approval.",
+        "hair_thickness_fit is uncertain and affects a mapped production field; review the projection before approval.",
+        "texture_fit is uncertain in a retained research-only field; it does not change the current production projection.",
+        "care_direction is uncertain and affects a mapped production field; review the projection before approval."
+      ],
+      "envelope": "F4-post-unblind-envelope.json",
+      "envelope_file_sha256": "396287be10cd5de7f00406e274c78aaaaa9dcb9e8f544fc0e8c2e3fc2eb7a8cc",
+      "projection": "F4-adapter/production-projection.json",
+      "projection_file_sha256": "56cd310cc47b41dda6d6ef989160490c4f12092bda12dc875c841e6366f7ff48",
+      "command": "npm run research:conditioner:production-adapter -- --input /tmp/chaarlie-buckets-2026-10-04/blind/F4-post-unblind-envelope.json --output /tmp/chaarlie-buckets-2026-10-04/blind/F4-adapter",
+      "exit_code": 0
+    }
+  ],
+  "mask": {
+    "candidate": "F3",
+    "status": "partial_formula_evidence_only",
+    "ingredient_flags": [
+      "polymers",
+      "oils",
+      "proteins",
+      "humectants"
+    ],
+    "claim_backed_functional_benefit_proposal": [
+      "smoothing_frizz_control",
+      "detangling_slip",
+      "shine"
+    ],
+    "unresolved": [
+      "weight",
+      "concentration",
+      "balance_direction",
+      "repair_support_level",
+      "suitable_thicknesses",
+      "texture_fit"
+    ],
+    "evidence": "F3-post-unblind-ordinary-research.json"
+  },
+  "verification": [
+    "All three canonical filesystem adapter commands exit 0",
+    "All 19 frozen blind artifact hashes unchanged",
+    "F1/F2/F3/F4 original raw INCI byte-equal to current root-bound official source",
+    "Conditioner cleaned raw/ordered sequence and two hash algorithms agree",
+    "Current standard/runbook hashes exactly match canonical adapter pins"
+  ],
+  "limitations": [
+    "Single blind assessor; no independent multi-lane batch agreement metric.",
+    "All mechanistic product calls remain INCI-only E2; supplier ingredient research is not finished-product efficacy.",
+    "Conditioner uncertainty warnings require human property review despite projection_ready.",
+    "Root verified exact current source; this assessor did not independently retrieve product pages.",
+    "Protocols and scientific claims acceptance outside formula scope; no exact dosage, concentration, pH, measured repair or color-treatment suitability inferred."
+  ]
+}
