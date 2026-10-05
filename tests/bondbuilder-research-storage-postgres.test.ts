@@ -35,9 +35,12 @@ test("Bondbuilder new-submission INCI normalization agrees across TypeScript and
     "Aqua,, Glycerin,",
   ]
   for (const raw of formulas) {
-    const sql = (await pg.query<{ ingredients: string[] }>(
-      "SELECT public.bondbuilder_normalize_inci_v1($1) AS ingredients", [raw],
-    )).rows[0].ingredients
+    const sql = (
+      await pg.query<{ ingredients: string[] }>(
+        "SELECT public.bondbuilder_normalize_inci_v1($1) AS ingredients",
+        [raw],
+      )
+    ).rows[0].ingredients
     assert.deepEqual(sql, normalizeBondbuilderInci(raw), JSON.stringify(raw))
   }
 })
@@ -66,9 +69,11 @@ test("Bondbuilder persists exactly the TypeScript historical and prepared-curren
     sealProfile(profile)
     assert.equal(validateBondbuilderResearchProfile(profile).success, true, pins.method_version)
     assert.equal(
-      (await pg.query<{ valid: boolean }>("SELECT public.bondbuilder_profile_valid_v1($1) valid", [
-        profile,
-      ])).rows[0].valid,
+      (
+        await pg.query<{ valid: boolean }>("SELECT public.bondbuilder_profile_valid_v1($1) valid", [
+          profile,
+        ])
+      ).rows[0].valid,
       true,
       pins.method_version,
     )
@@ -80,7 +85,9 @@ test("Bondbuilder persists exactly the TypeScript historical and prepared-curren
       )
     ).rows[0].research_profile
     assert.deepEqual(
-      Object.fromEntries(Object.keys(pins).map((key) => [key, stored.method[key as keyof typeof pins]])),
+      Object.fromEntries(
+        Object.keys(pins).map((key) => [key, stored.method[key as keyof typeof pins]]),
+      ),
       pins,
       pins.method_version,
     )
@@ -93,9 +100,11 @@ test("Bondbuilder persists exactly the TypeScript historical and prepared-curren
   sealProfile(mixed)
   assert.equal(validateBondbuilderResearchProfile(mixed).success, false)
   assert.equal(
-    (await pg.query<{ valid: boolean }>("SELECT public.bondbuilder_profile_valid_v1($1) valid", [
-      mixed,
-    ])).rows[0].valid,
+    (
+      await pg.query<{ valid: boolean }>("SELECT public.bondbuilder_profile_valid_v1($1) valid", [
+        mixed,
+      ])
+    ).rows[0].valid,
     false,
   )
   await assert.rejects(
@@ -668,6 +677,67 @@ test("Bondbuilder migration refuses unrepaired lineage before schema mutation", 
     ).rows[0].n,
     0,
   )
+})
+test("Bondbuilder storage migrates the exact deployed scalp-care publication lineage without changing other category guards", async (t) => {
+  const pg = await migratedDatabase(t)
+  const scalpMigration = await readFile(
+    new URL(
+      "supabase/migrations/20260812102000_personal_plan_scalp_care_thickness_applicability.sql",
+      ROOT,
+    ),
+    "utf8",
+  )
+  const declaration =
+    "CREATE OR REPLACE FUNCTION public.assert_personal_plan_curated_publication(p_product_id uuid)"
+  const deployedFunction = scalpMigration
+    .slice(scalpMigration.indexOf(declaration))
+    .replace(
+      declaration,
+      declaration.replace("curated_publication(", "curated_publication_v1_without_v2("),
+    )
+  await pg.exec(deployedFunction)
+  const before = (
+    await pg.query<{ body: string; digest: string }>(
+      "SELECT prosrc body, encode(sha256(convert_to(prosrc,'UTF8')),'hex') digest FROM pg_proc WHERE oid='public.assert_personal_plan_curated_publication_v1_without_v2(uuid)'::regprocedure",
+    )
+  ).rows[0]
+  assert.equal(before.digest, "a3f7c5bf541a992a3b97ef8aa45714f0e7786e1643492b23c9d0bf3975840914")
+  await pg.exec(
+    await readFile(
+      new URL("supabase/migrations/20260929230000_expansion_protocol_binding_repair.sql", ROOT),
+      "utf8",
+    ),
+  )
+  const storageMigration = await readFile(
+    new URL("supabase/migrations/20261002132306_bondbuilder_research_profile_storage.sql", ROOT),
+    "utf8",
+  )
+  await pg.exec(deployedFunction.replace("$function$;", "-- unknown deployment drift\n$function$;"))
+  await assert.rejects(pg.exec(storageMigration), /Bondbuilder curated assertion lineage changed/)
+  await pg.exec("ROLLBACK")
+  assert.equal(
+    (
+      await pg.query<{ count: number }>(
+        "SELECT count(*)::integer count FROM information_schema.columns WHERE table_name='product_bondbuilder_specs' AND column_name='research_profile'",
+      )
+    ).rows[0].count,
+    0,
+  )
+  await pg.exec(deployedFunction)
+  await pg.exec(storageMigration)
+  const after = (
+    await pg.query<{ body: string }>(
+      "SELECT prosrc body FROM pg_proc WHERE oid='public.assert_personal_plan_curated_publication_v1_without_v2(uuid)'::regprocedure",
+    )
+  ).rows[0].body
+  // The public migration contract permits only the Bondbuilder facts arm and
+  // its new pre-disposition guard to change; all other category behavior stays byte-exact.
+  const nonBondArms = (body: string) =>
+    body
+      .slice(body.indexOf("  v_has_facts := CASE"))
+      .replace(/WHEN 'bondbuilder' THEN[\s\S]*?(?=    WHEN 'heat_protectant')/, "")
+  assert.equal(nonBondArms(after), nonBondArms(before.body))
+  assert.match(after, /WHEN 'bondbuilder' THEN public\.bondbuilder_curated_facts_ready_v1/)
 })
 test("Bondbuilder normal reviewed ABI writes the complete profile and preserves repaired protocol binding", async (t) => {
   const pg = await database(t)

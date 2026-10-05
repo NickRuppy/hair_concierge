@@ -391,7 +391,9 @@ DO $publication$
 DECLARE body text; old text:=E'WHEN ''bondbuilder'' THEN EXISTS (SELECT 1 FROM public.product_bondbuilder_specs bb WHERE bb.product_id = v_product.id\n      AND bb.application_mode IS NOT NULL AND bb.treatment_mode IS NOT NULL\n      AND bb.product_format IS NOT NULL AND bb.usage_protocol IS NOT NULL)';
 BEGIN
  SELECT prosrc INTO body FROM pg_proc WHERE oid='public.assert_personal_plan_curated_publication_v1_without_v2(uuid)'::regprocedure;
- IF encode(sha256(convert_to(body,'UTF8')),'hex')<>'cd57f65d964529ac154def1ad628cad7badb7192de79b33a7815e0e1b456eb62' OR strpos(body,old)=0 THEN RAISE EXCEPTION 'Bondbuilder curated assertion lineage changed'; END IF;
+ -- Accept only the original repository guard or the byte-exact deployed guard
+ -- from 20260812102000 (scalp-care thickness applicability). Preserve its other arms.
+ IF encode(sha256(convert_to(body,'UTF8')),'hex') NOT IN ('cd57f65d964529ac154def1ad628cad7badb7192de79b33a7815e0e1b456eb62','a3f7c5bf541a992a3b97ef8aa45714f0e7786e1643492b23c9d0bf3975840914') OR strpos(body,old)=0 THEN RAISE EXCEPTION 'Bondbuilder curated assertion lineage changed'; END IF;
  body:=replace(body,old,'WHEN ''bondbuilder'' THEN public.bondbuilder_curated_facts_ready_v1(v_product.id)');
  body:=replace(body,E'  IF EXISTS (\n    SELECT 1\n    FROM public.personal_plan_product_search_dispositions disposition',E'  IF v_product.category_key = ''bondbuilder'' AND EXISTS (SELECT 1 FROM public.product_bondbuilder_specs WHERE product_id=v_product.id AND research_profile IS NOT NULL) AND NOT public.bondbuilder_curated_facts_ready_v1(v_product.id) THEN\n    RAISE EXCEPTION ''curated publication requires reviewed Bondbuilder facts, fit and exact source-bound protocol'';\n  END IF;\n\n  IF EXISTS (\n    SELECT 1\n    FROM public.personal_plan_product_search_dispositions disposition');
  EXECUTE format('CREATE OR REPLACE FUNCTION public.assert_personal_plan_curated_publication_v1_without_v2(p_product_id uuid) RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = '''' AS %L',body);

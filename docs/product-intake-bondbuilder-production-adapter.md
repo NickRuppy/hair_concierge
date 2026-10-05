@@ -1,18 +1,18 @@
 # Bondbuilder Production Adapter v1
 
-Status: **implemented local projection; exact historical v0.4/current candidate v0.5 pins; live routing disabled**. This is not a locked method, catalogue approval or production write.
+Status: **implemented local projection and applied database storage; eight approved pilot profiles stored; exact historical v0.4/current candidate v0.5 pins; automatic routing disabled**. Adapter validity alone is not method lock, catalogue approval or production-write authority.
 
 ## Authority and location
 
-| Layer | Owning location |
-| --- | --- |
-| Category index, versions and research status | [Bondbuilder engine](research/bondbuilder-inci/README.md) |
-| Current candidate method | `docs/research/bondbuilder-inci/v0.5/` — frozen and replayed, coverage/owner lock pending |
-| Frozen calibration/validation provenance | `data/research/bondbuilder-inci/v1.0/` |
-| Canonical eight reviewed envelopes | [Owner consolidation manifest](../data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/manifest.json) |
-| Strict profile/envelope and registry authority | `src/lib/bondbuilder-research/{contracts,registry,production-adapter}.ts` |
-| Submission adapter and server-owned activation gate | `src/lib/product-intake/bondbuilder-research-adapter.ts`, `bondbuilder-research-prompt-contract.ts` |
-| Identity, image, commercial fields and guarded publish | [Product Intake](product-intake-research-ops.md) |
+| Layer                                                  | Owning location                                                                                                     |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| Category index, versions and research status           | [Bondbuilder engine](research/bondbuilder-inci/README.md)                                                           |
+| Current candidate method                               | `docs/research/bondbuilder-inci/v0.5/` — frozen and replayed, coverage/owner lock pending                           |
+| Frozen calibration/validation provenance               | `data/research/bondbuilder-inci/v1.0/`                                                                              |
+| Canonical eight reviewed envelopes                     | [Owner consolidation manifest](../data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/manifest.json) |
+| Strict profile/envelope and registry authority         | `src/lib/bondbuilder-research/{contracts,registry,production-adapter}.ts`                                           |
+| Submission adapter and server-owned activation gate    | `src/lib/product-intake/bondbuilder-research-adapter.ts`, `bondbuilder-research-prompt-contract.ts`                 |
+| Identity, image, commercial fields and guarded publish | [Product Intake](product-intake-research-ops.md)                                                                    |
 
 The canonical envelopes retain complete original profile objects, hashes and original artifact references. Their manifest records exact source-artifact and envelope byte digests. Original staged items and 23 raw source files remain untouched at `plans/bondbuilder-research-engine/owner-batch-2026-10-02/`. Extraction is not new research or a new blind run.
 
@@ -26,13 +26,13 @@ Reference `formula_sha256` is the trusted reference's normalized formula digest,
 
 ## Full retention and projection
 
-| Research truth | Current storage/use |
-| --- | --- |
-| Entire strict profile, including unsupported facts and provenance | `product_bondbuilder_specs.research_profile` |
-| Family, trust tier and basis | `technology_family`, `claim_trust_level`, `trust_basis`; must agree with the profile |
-| Producer-bound placement/format/timing/conditioner/sequence | Typed source-bound protocol projection; missing execution facts stay held |
-| Initial/maintenance/conditional frequency | Full typed cadence; only supported unbranched producer labels become display copy, never extra wash scheduling |
-| Facts unsupported by today's runtime | Exhaustive `direct` / `mapped` / `retained_only` / `held` coverage receipt, not omitted data |
+| Research truth                                                    | Current storage/use                                                                                            |
+| ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Entire strict profile, including unsupported facts and provenance | `product_bondbuilder_specs.research_profile`                                                                   |
+| Family, trust tier and basis                                      | `technology_family`, `claim_trust_level`, `trust_basis`; must agree with the profile                           |
+| Producer-bound placement/format/timing/conditioner/sequence       | Typed source-bound protocol projection; missing execution facts stay held                                      |
+| Initial/maintenance/conditional frequency                         | Full typed cadence; only supported unbranched producer labels become display copy, never extra wash scheduling |
+| Facts unsupported by today's runtime                              | Exhaustive `direct` / `mapped` / `retained_only` / `held` coverage receipt, not omitted data                   |
 
 No intensity, repair axis, efficacy score, thickness eligibility or recommendation is invented. Complete legacy rows remain compatible. Profile-only enrichment preserves existing product identity, commercial data, legacy facts, fit approvals and executable protocols through a guarded transactional preimage check. A valid low/default owner submission may retain research without an executable routine protocol; it remains user-submitted and not recommended. Normal approval remains strict.
 
@@ -52,4 +52,6 @@ Writes `research-envelope.json` and `production-projection.json` (complete outco
 
 The worker enforces its server-owned disabled gate after model output, including unsolicited envelopes and direct new fields. Ordinary Product Intake remains authoritative. Activation requires a separately locked/validated method with matching pins, exact source-market/product bindings, migration prerequisites, verified consumers and an explicit activation decision. Do not flip the flag merely because offline fixtures pass.
 
-Prepared migration: `20261002132306_bondbuilder_research_profile_storage.sql`. Shared binding-repair prerequisite: `20260929230000_expansion_protocol_binding_repair.sql`. Both were unapplied in read-only release preflight. Do not run a blind database push. Migration, catalogue apply, promotion and deployment are separate approvals. The [implementation receipt](../plans/bondbuilder-research-engine/implementation-receipt-2026-10-02.md) records verified behaviour and remaining limits.
+Applied 2026-10-04 after explicit production and cross-program repair approval: `20260929230000_expansion_protocol_binding_repair.sql`, `20261002132306_bondbuilder_research_profile_storage.sql`, and `20261003141320_bondbuilder_internal_catalogue_admission.sql`. Canonical history and raw function/permission checks passed. The [production handoff](../plans/bondbuilder-research-engine/production-handoff-2026-10-04.md) records research-only enrichment of three existing anchors and five inactive/non-recommended new rows. Do not run a blind database push. Migration, catalogue apply, promotion and deployment are separate approvals. The historical [implementation receipt](../plans/bondbuilder-research-engine/implementation-receipt-2026-10-02.md) remains unchanged.
+
+Internally curated products without a real owner submission have a separate [staged admission lane](research/bondbuilder-inci/internal-catalogue-admission.md), with `20261003141320_bondbuilder_internal_catalogue_admission.sql` as the additive follow-up. `npm run products:intake:bondbuilder:prepare` verifies the eight SHA-approved packages offline. Its requests do not authorize migration, upload, apply, fit/protocol publication or recommendation activation. The generic scan-expansion category/template contract is unchanged.
