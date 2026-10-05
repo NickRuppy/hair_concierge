@@ -1301,7 +1301,7 @@ export default function ProfilePage() {
                           <p className="text-sm font-semibold text-[var(--text-heading)]">
                             {row.categoryLabel}
                           </p>
-                          {row.needsUserDetails ? (
+                          {hasPersonalPlan && row.needsUserDetails ? (
                             <p className="mt-1 text-xs text-muted-foreground">
                               Details fehlen noch
                             </p>
@@ -1464,8 +1464,10 @@ export default function ProfilePage() {
                             ? () => openTarget("styling", field.editTarget)
                             : undefined
                         }
-                        tone={isMissing ? "attention" : "default"}
-                        className={isMissing ? "md:col-span-2 xl:col-span-3" : undefined}
+                        tone={isMissing && hasPersonalPlan ? "attention" : "default"}
+                        className={
+                          isMissing && hasPersonalPlan ? "md:col-span-2 xl:col-span-3" : undefined
+                        }
                       >
                         {isMissing ? (
                           <ProfileFieldValue
@@ -1527,8 +1529,10 @@ export default function ProfilePage() {
                             ? () => openTarget("routine", field.editTarget)
                             : undefined
                         }
-                        tone={isMissing ? "attention" : "default"}
-                        className={isMissing ? "md:col-span-2 xl:col-span-3" : undefined}
+                        tone={isMissing && hasPersonalPlan ? "attention" : "default"}
+                        className={
+                          isMissing && hasPersonalPlan ? "md:col-span-2 xl:col-span-3" : undefined
+                        }
                       >
                         {isMissing ? (
                           <ProfileFieldValue

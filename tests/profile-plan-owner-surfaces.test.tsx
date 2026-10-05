@@ -210,6 +210,16 @@ test("without a plan all three sections render static values with no edit naviga
   assert.equal(clickHandlers(root).length, 0)
 })
 
+test("open values look neutral without a plan and ask for attention with one", () => {
+  const withoutPlan = surface().html
+  assert.doesNotMatch(withoutPlan, /brand-coral|col-span-2|Details fehlen noch/)
+
+  const owner = surface({ hasPersonalPlan: true }).html
+  assert.match(owner, /brand-coral/)
+  assert.match(owner, /col-span-2/)
+  assert.match(owner, /Details fehlen noch/)
+})
+
 test("plan-owner headers and legacy cards open Feinschliff, with the brush exception", async (t) => {
   const { root, navigations } = surface({ hasPersonalPlan: true })
   const detailsHandlers = clickHandlers(root, "Details ergänzen")
