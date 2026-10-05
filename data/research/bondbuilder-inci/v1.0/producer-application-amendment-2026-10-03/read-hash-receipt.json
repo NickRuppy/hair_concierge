@@ -1,0 +1,244 @@
+{
+  "version": "producer-application-amendment-read-hash-receipt-v1",
+  "date": "2026-10-03",
+  "status": "complete_proposal_not_applied",
+  "worktree": "/Users/nick/.codex/worktrees/bondbuilder-research-engine/hair_conscierge",
+  "branch": "codex/bondbuilder-research-engine",
+  "owned_directory": "data/research/bondbuilder-inci/v1.0/producer-application-amendment-2026-10-03/",
+  "read_inputs": [
+    {
+      "path": "src/lib/bondbuilder-research/contracts.ts",
+      "sha256": "f1ab8e92c50cc64af0231855cc225dd64722b9d2b6618c50af3fbaa56e1b1eab",
+      "read_scope": "Complete contract definitions."
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3/lane-a/stage-b.json",
+      "sha256": "e00e46c43bfc2a400a6d7afc129e4d547dc3b6431b259fa48d269cb3b217129b",
+      "read_scope": "Complete P01-P08 application objects and their source/unknown context; non-application fields are outside amendment authority."
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3/named-packet.json",
+      "sha256": "a82c738399a0a02830b7a5b3c98faca55169cac04668f4452ba3d98082ef8acd",
+      "read_scope": "P01-P08 identity/source leads and all corresponding application/variant source records used by those application objects."
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/producer-source-complement-2026-10-03/source-captures.json",
+      "sha256": "119c41872f603c6274a57db8724d2aad79052292a0e4bd070c8e80c29640122c",
+      "read_scope": "All thirteen captures, observations, metadata and limitations completely."
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/producer-source-complement-2026-10-03/read-hash-receipt.json",
+      "sha256": "b5431b4ce85166fa809d5fb7d5988fd674bf911d728f5442b6b9ffd4bd118bbe",
+      "read_scope": "Complete prior capture receipt."
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3/frozen-inputs/src/lib/bondbuilder-research/contracts.ts",
+      "sha256": "f1ab8e92c50cc64af0231855cc225dd64722b9d2b6618c50af3fbaa56e1b1eab",
+      "read_scope": "Complete bytes verified identical to read current contract; validation uses that identical schema."
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3/lane-a/assembled/P01.json",
+      "sha256": "85eced7bca2ee564ec322ac124c1e0cea0cc4235bdd2c908270ea7e0bb9b05b8",
+      "read_scope": "Machine-read existing profile for exact Stage B application equality and in-memory schema/source-closure validation; no saved profile mutation."
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3/lane-a/assembled/P02.json",
+      "sha256": "db15ee0051e8448e3216eab5a2d111996fc89794b89eedeb6273d738f1201fe1",
+      "read_scope": "Machine-read existing profile for exact Stage B application equality and in-memory schema/source-closure validation; no saved profile mutation."
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3/lane-a/assembled/P03.json",
+      "sha256": "a764f6f1164a7a67048bdfcc3047a8293bd319c4a465fe2847133dbf1db117d8",
+      "read_scope": "Machine-read existing profile for exact Stage B application equality and in-memory schema/source-closure validation; no saved profile mutation."
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3/lane-a/assembled/P04.json",
+      "sha256": "b54ea32c11c6a61d90d93b5e267ecf18a499f5b28a823a0f7e524692d04714ba",
+      "read_scope": "Machine-read existing profile for exact Stage B application equality and in-memory schema/source-closure validation; no saved profile mutation."
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3/lane-a/assembled/P05.json",
+      "sha256": "3a54c03e06386198341e53800bdc0bdbb0ff7a9b4c69f5240edb7904afa33009",
+      "read_scope": "Machine-read existing profile for exact Stage B application equality and in-memory schema/source-closure validation; no saved profile mutation."
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3/lane-a/assembled/P06.json",
+      "sha256": "0f4359918f7f0879ecc904fc7970361bff6250c5de2ce8cae5aa5e492c13dd56",
+      "read_scope": "Machine-read existing profile for exact Stage B application equality and in-memory schema/source-closure validation; no saved profile mutation."
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3/lane-a/assembled/P07.json",
+      "sha256": "c7d225ac614f2ccde53fa5bd69481d8cbf588af9f458cce6f036ca4437efafea",
+      "read_scope": "Machine-read existing profile for exact Stage B application equality and in-memory schema/source-closure validation; no saved profile mutation."
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3/lane-a/assembled/P08.json",
+      "sha256": "82f9915ba616536d17e8864ab68212e708608a5abc4e787f671e0b0c74a2ac03",
+      "read_scope": "Machine-read existing profile for exact Stage B application equality and in-memory schema/source-closure validation; no saved profile mutation."
+    }
+  ],
+  "input_exclusions": [
+    "No newly edited live-prepared prompt read or used.",
+    "No Lane B output used.",
+    "No new browsing required; source facts come from the thirteen immutable captures and retained original named sources."
+  ],
+  "output": {
+    "path": "data/research/bondbuilder-inci/v1.0/producer-application-amendment-2026-10-03/application-amendments.json",
+    "sha256": "4d0e8f1fd0129de4cb6c859d5a1d35598ff63f557379ae9e2012d621c96cb8b9"
+  },
+  "counts": {
+    "slots": 8,
+    "research_source_records": 13,
+    "fact_wrapper_replacements": 56,
+    "metadata_replacements": 24,
+    "classification_replacements": 0,
+    "fit_replacements": 0
+  },
+  "by_slot": [
+    {
+      "slot_id": "P01",
+      "fact_wrapper_replacements": 7,
+      "metadata_replacements": 3,
+      "remaining_unknown_fields": [
+        "applied_format",
+        "state_modifiers",
+        "distribution",
+        "longer_wear",
+        "dilution"
+      ],
+      "limits": [
+        "Overnight described as unnecessary does not establish overnight prohibition; longer_wear remains unknown.",
+        "No separate distribution technique, physical format, dose volume or state modifier inferred."
+      ]
+    },
+    {
+      "slot_id": "P02",
+      "fact_wrapper_replacements": 11,
+      "metadata_replacements": 3,
+      "remaining_unknown_fields": [
+        "applied_format",
+        "longer_wear",
+        "dilution"
+      ],
+      "limits": [
+        "US cream description does not establish the DE physical format.",
+        "Optional conditioner and its rinse are a dependent branch; schema optional flags alone cannot enforce this dependency."
+      ]
+    },
+    {
+      "slot_id": "P03",
+      "fact_wrapper_replacements": 4,
+      "metadata_replacements": 3,
+      "remaining_unknown_fields": [],
+      "limits": [
+        "Existing N05 150 ml dilution remains unchanged. New current pages neither confirm a numeric finished volume nor contradict it.",
+        "Two calendar months is not converted to a fixed day count.",
+        "Global overnight permission does not bind an inspected DE physical starter label."
+      ]
+    },
+    {
+      "slot_id": "P04",
+      "fact_wrapper_replacements": 8,
+      "metadata_replacements": 3,
+      "remaining_unknown_fields": [
+        "applied_format",
+        "state_modifiers",
+        "distribution",
+        "longer_wear",
+        "dilution",
+        "cadence"
+      ],
+      "limits": [
+        "Scalp coverage is explicit but the enum has no scalp-specific value; preserve scalp wording in the field rationale and sequence.",
+        "No cadence is imported from older Rescue/editorial pages."
+      ]
+    },
+    {
+      "slot_id": "P05",
+      "fact_wrapper_replacements": 9,
+      "metadata_replacements": 3,
+      "remaining_unknown_fields": [
+        "applied_format",
+        "state_modifiers",
+        "distribution",
+        "longer_wear",
+        "amount",
+        "dilution",
+        "cadence"
+      ],
+      "limits": [
+        "Specialized pre-shampoo treatment role is explicitly producer-supported, independent of formula classification.",
+        "Exact selected R09 formula-version protocol equivalence remains unverified; producer protocol is a bounded same-name DE complement."
+      ]
+    },
+    {
+      "slot_id": "P06",
+      "fact_wrapper_replacements": 9,
+      "metadata_replacements": 3,
+      "remaining_unknown_fields": [
+        "placement",
+        "applied_format",
+        "dilution"
+      ],
+      "limits": [
+        "No unique wash-relative placement selected from bedtime damp/dry and after-cleansing range guidance.",
+        "Applied format remains null: serum is a product-format label but independently described physical texture is absent under the existing lane criterion.",
+        "UK cadence is not a DE cadence; use remains cross-market."
+      ]
+    },
+    {
+      "slot_id": "P07",
+      "fact_wrapper_replacements": 6,
+      "metadata_replacements": 3,
+      "remaining_unknown_fields": [
+        "state_modifiers",
+        "distribution",
+        "longer_wear",
+        "amount",
+        "dilution"
+      ],
+      "limits": [
+        "Moderate damage appears in both producer bands; do not turn them into mutually exclusive thresholds.",
+        "Quantity and specific distribution technique remain unknown."
+      ]
+    },
+    {
+      "slot_id": "P08",
+      "fact_wrapper_replacements": 2,
+      "metadata_replacements": 3,
+      "remaining_unknown_fields": [
+        "applied_format",
+        "state_modifiers",
+        "longer_wear",
+        "amount",
+        "dilution",
+        "cadence"
+      ],
+      "limits": [
+        "New manufacturer damp wording and generous-amount statement are not substituted for selected exact-target retailer wet directions and dose unknown.",
+        "No 15–25 ml quantitative dose or US weekly cadence is imported."
+      ]
+    }
+  ],
+  "verification": {
+    "command_kind": "npx tsx in-memory schema validation and node:crypto SHA-256 checks",
+    "passed": true,
+    "errors": [],
+    "checks": [
+      "Every before-wrapper and metadata before-value exactly equals original Lane A Stage B application field.",
+      "Every assembled Lane A P01-P08 application exactly matches its Stage B baseline.",
+      "Eight proposed application objects pass bondbuilderApplicationSchema.",
+      "Eight profiles with only application replacements plus appended research_sources pass bondbuilderResearchProfileSchema, including recursive inspected-source closure.",
+      "Thirteen unique added source IDs bind to same-slot immutable capture ID, URL, access and checked date.",
+      "All input hashes still match after proposal creation.",
+      "Current and frozen-r3 contract bytes hash identically."
+    ],
+    "limitations": [
+      "Schema/source closure is structural verification, not final scientific adjudication or an envelope seal.",
+      "Old assessment application reasoning and protocol holds were not rewritten; parent must reconcile derived commentary/holds if assembling new profiles.",
+      "Optional sequence flags cannot alone enforce K18 conditional rinse dependency; its step note and wrapper limitation retain that dependency."
+    ]
+  },
+  "write_boundary": "Only two new proposal/receipt JSON files created. No original capture, frozen input, Stage A/B output, assembled envelope, code, database or external state changed.",
+  "handoff": "Parent owns assembly, projection, derived reasoning/hold reconciliation, adjudication and seals. Proposal is final; no further edits by this worker."
+}

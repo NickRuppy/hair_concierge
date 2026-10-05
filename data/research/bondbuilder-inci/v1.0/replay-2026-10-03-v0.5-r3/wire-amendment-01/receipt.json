@@ -1,0 +1,802 @@
+{
+  "version": "bondbuilder-method-wire-amendment-receipt-v1",
+  "purpose": "transparent serialization repair only; not fresh blind validation, efficacy evidence, ranking, default-tier decision, or activation",
+  "run": "data/research/bondbuilder-inci/v1.0/replay-2026-10-03-v0.5-r3",
+  "original_seal_lineage": [
+    "lane-a/stage-a-seal.json",
+    "lane-a/stage-b-seal.json",
+    "lane-b/stage-a-seal.json",
+    "lane-b/stage-b-seal.json"
+  ],
+  "envelopes": [
+    {
+      "lane": "lane-a",
+      "slot_id": "P01",
+      "original_path": "lane-a/assembled/P01.json",
+      "original_sha256": "85eced7bca2ee564ec322ac124c1e0cea0cc4235bdd2c908270ea7e0bb9b05b8",
+      "amended_path": "wire-amendment-01/lane-a/P01.json",
+      "amended_sha256": "58d94b518299c7a78a1398892cbc11e11f60faea47ad79938be0e36558ceb024",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Bis-Aminopropyl Diglycol Dimaleate",
+          "after": "bis-aminopropyl diglycol dimaleate"
+        }
+      ]
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "P02",
+      "original_path": "lane-a/assembled/P02.json",
+      "original_sha256": "db15ee0051e8448e3216eab5a2d111996fc89794b89eedeb6273d738f1201fe1",
+      "amended_path": "wire-amendment-01/lane-a/P02.json",
+      "amended_sha256": "fa82993b6b80fcba713531e8409ccafd18d25140c78072784f3510b768edff32",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "sh-Oligopeptide-78",
+          "after": "sh-oligopeptide-78"
+        }
+      ]
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "P03",
+      "original_path": "lane-a/assembled/P03.json",
+      "original_sha256": "a764f6f1164a7a67048bdfcc3047a8293bd319c4a465fe2847133dbf1db117d8",
+      "amended_path": "wire-amendment-01/lane-a/P03.json",
+      "amended_sha256": "ddf786fde0c625f6a1b33066e7a81c471abe09c082dd09f46efc97d3a7cbeaf4",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Diethylhexyl Maleate",
+          "after": "diethylhexyl maleate"
+        }
+      ]
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "P04",
+      "original_path": "lane-a/assembled/P04.json",
+      "original_sha256": "b54ea32c11c6a61d90d93b5e267ecf18a499f5b28a823a0f7e524692d04714ba",
+      "amended_path": "wire-amendment-01/lane-a/P04.json",
+      "amended_sha256": "bf7d46d5579f96c3dfdc87d8a109c5c74154ab7188dc2ac977cbd378653ed954",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Citric Acid",
+          "after": "citric acid"
+        },
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Arginine",
+          "after": "arginine"
+        },
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Betaine",
+          "after": "betaine"
+        }
+      ]
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "P05",
+      "original_path": "lane-a/assembled/P05.json",
+      "original_sha256": "3a54c03e06386198341e53800bdc0bdbb0ff7a9b4c69f5240edb7904afa33009",
+      "amended_path": "wire-amendment-01/lane-a/P05.json",
+      "amended_sha256": "6d3b2b4960df9ead88417309dd4bfd35fcf51e9624587a8817d6b672c22fe20b",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Citric Acid",
+          "after": "citric acid"
+        }
+      ]
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "P06",
+      "original_path": "lane-a/assembled/P06.json",
+      "original_sha256": "0f4359918f7f0879ecc904fc7970361bff6250c5de2ce8cae5aa5e492c13dd56",
+      "amended_path": "wire-amendment-01/lane-a/P06.json",
+      "amended_sha256": "9786a7215227ebfbfd60ec8d7b25e9c2db918b7466e087fd04994b612735282d",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Hydroxypropylgluconamide",
+          "after": "hydroxypropylgluconamide"
+        },
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Hydroxypropylammonium Gluconate",
+          "after": "hydroxypropylammonium gluconate"
+        }
+      ]
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "P07",
+      "original_path": "lane-a/assembled/P07.json",
+      "original_sha256": "c7d225ac614f2ccde53fa5bd69481d8cbf588af9f458cce6f036ca4437efafea",
+      "amended_path": "wire-amendment-01/lane-a/P07.json",
+      "amended_sha256": "5990da99330d141b5382ac7516f87d0401daa44459f96625af08d0bde10fe6e0",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Hydroxypropylgluconamide",
+          "after": "hydroxypropylgluconamide"
+        },
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Hydroxypropylammonium Gluconate",
+          "after": "hydroxypropylammonium gluconate"
+        }
+      ]
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "P08",
+      "original_path": "lane-a/assembled/P08.json",
+      "original_sha256": "82f9915ba616536d17e8864ab68212e708608a5abc4e787f671e0b0c74a2ac03",
+      "amended_path": "wire-amendment-01/lane-a/P08.json",
+      "amended_sha256": "d4d5da85dfc2368b6dab16110054ab5ea827602bfab252942fe4200dfec64687",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Citric Acid",
+          "after": "citric acid"
+        }
+      ]
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "V01",
+      "original_path": "lane-a/assembled/V01.json",
+      "original_sha256": "168bfbe7572e52a79b6229f22be6614284e7534c9b2ecb216e4a919ac88b65b3",
+      "amended_path": "wire-amendment-01/lane-a/V01.json",
+      "amended_sha256": "19387249e388629b2fb5492d733aa3f3be1c80bc0103cd15a903a253538e4d93",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Hydroxypropylgluconamide",
+          "after": "hydroxypropylgluconamide"
+        },
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Hydroxypropylammonium Gluconate",
+          "after": "hydroxypropylammonium gluconate"
+        }
+      ]
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "V02",
+      "original_path": "lane-a/assembled/V02.json",
+      "original_sha256": "a2d3f3f5dfd6a0cdf3e25b93fa8220d631debcdaa8bf51643c79cb0aa86f1be3",
+      "amended_path": "wire-amendment-01/lane-a/V02.json",
+      "amended_sha256": "a2d3f3f5dfd6a0cdf3e25b93fa8220d631debcdaa8bf51643c79cb0aa86f1be3",
+      "changes": []
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "V03",
+      "original_path": "lane-a/assembled/V03.json",
+      "original_sha256": "0bc6e6f55255ef8d064329a0d765b3dba23d959f7b10246805b28d3965e7efca",
+      "amended_path": "wire-amendment-01/lane-a/V03.json",
+      "amended_sha256": "0bc6e6f55255ef8d064329a0d765b3dba23d959f7b10246805b28d3965e7efca",
+      "changes": []
+    },
+    {
+      "lane": "lane-a",
+      "slot_id": "V04",
+      "original_path": "lane-a/assembled/V04.json",
+      "original_sha256": "d41e6fc692f03c277ad438c17d4807f5142842065b1b6f5edb695ce6e35e59a6",
+      "amended_path": "wire-amendment-01/lane-a/V04.json",
+      "amended_sha256": "d41e6fc692f03c277ad438c17d4807f5142842065b1b6f5edb695ce6e35e59a6",
+      "changes": []
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P01",
+      "original_path": "lane-b/assembled/P01.json",
+      "original_sha256": "150e59a6676e3807af4270e9223ca26f9f04d453f31056a7789e41901394ce7f",
+      "amended_path": "wire-amendment-01/lane-b/P01.json",
+      "amended_sha256": "ae14e0a4dae88cd539d38e195adc8afdf46877c0ca92fc3be7ebd3a1db7f83ce",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Bis-Aminopropyl Diglycol Dimaleate",
+          "after": "bis-aminopropyl diglycol dimaleate"
+        }
+      ]
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P02",
+      "original_path": "lane-b/assembled/P02.json",
+      "original_sha256": "3f28781f19a7c51fe0e0c30421981b7612b35ed1cff67eded4d6d9a16119a0b2",
+      "amended_path": "wire-amendment-01/lane-b/P02.json",
+      "amended_sha256": "2edba339cbb9e0d1a87e5e30f1ac71b948c8be055b08a5e2ae05a2ecc962724a",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "sh-Oligopeptide-78",
+          "after": "sh-oligopeptide-78"
+        }
+      ]
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P03",
+      "original_path": "lane-b/assembled/P03.json",
+      "original_sha256": "cd08b426317a169bb0c784628305a27f41635880bb59f18e22d41ff3989f1538",
+      "amended_path": "wire-amendment-01/lane-b/P03.json",
+      "amended_sha256": "6f8a479dfd4fc8a974f851f254288c7c8cb2e075d06ae35115503fc04dad3df4",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Diethylhexyl Maleate",
+          "after": "diethylhexyl maleate"
+        }
+      ]
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P04",
+      "original_path": "lane-b/assembled/P04.json",
+      "original_sha256": "19cfa8453b98af099e5dfdfcb89bcda91002470289395015fdeabe2565527b9c",
+      "amended_path": "wire-amendment-01/lane-b/P04.json",
+      "amended_sha256": "5444cb94402f3c7ed02bfd4b9a84e6bd520de924da2b4b9e35ca74aa7e6a7336",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Citric Acid",
+          "after": "citric acid"
+        }
+      ]
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P05",
+      "original_path": "lane-b/assembled/P05.json",
+      "original_sha256": "c14ea59b27ed4d0846b05362ce05f3facb4098e1628c6d9e4910fd86d3928b98",
+      "amended_path": "wire-amendment-01/lane-b/P05.json",
+      "amended_sha256": "f018860c626d88df6e32275c8c2e1236b5a8e2a920ef64d6ecbc986a7a945b6c",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Citric Acid",
+          "after": "citric acid"
+        }
+      ]
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P06",
+      "original_path": "lane-b/assembled/P06.json",
+      "original_sha256": "9588a64f096f6e0fa27f59f1fece8e7c0648327c5208af99e306706538c65c0c",
+      "amended_path": "wire-amendment-01/lane-b/P06.json",
+      "amended_sha256": "1d04a79f78807f0227fc8d3124ce8479baa459677d70e89c0d6d80301ad472af",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Hydroxypropylgluconamide",
+          "after": "hydroxypropylgluconamide"
+        },
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Hydroxypropylammonium Gluconate",
+          "after": "hydroxypropylammonium gluconate"
+        }
+      ]
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P07",
+      "original_path": "lane-b/assembled/P07.json",
+      "original_sha256": "cadf6f5ba75428b26ab2cd0c1e3ff8ffa3ad4f9c94c551940dec8049b7eb8c67",
+      "amended_path": "wire-amendment-01/lane-b/P07.json",
+      "amended_sha256": "7b8102bafd0b8d9b11033db821abd42c1ba81338e074eaf1384dab5b9e026d44",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Hydroxypropylgluconamide",
+          "after": "hydroxypropylgluconamide"
+        },
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Hydroxypropylammonium Gluconate",
+          "after": "hydroxypropylammonium gluconate"
+        }
+      ]
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "P08",
+      "original_path": "lane-b/assembled/P08.json",
+      "original_sha256": "ae300e84ddf8fe51b69f9c41ec1846f27d17e6f7617b986620b0c8457baac9b9",
+      "amended_path": "wire-amendment-01/lane-b/P08.json",
+      "amended_sha256": "314ef49c95b88c1365f5596cf98099dfdb49d3235630e85a3304d92d101a7792",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Citric Acid",
+          "after": "citric acid"
+        }
+      ]
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "V01",
+      "original_path": "lane-b/assembled/V01.json",
+      "original_sha256": "4150e0dd8e35ca5a70424d8a30c0814cd118f2c020324a96ca8af7aace998e73",
+      "amended_path": "wire-amendment-01/lane-b/V01.json",
+      "amended_sha256": "21df40202b3a4f2f38dd2473d234c89ff6a3284b053669ff3a837637924b5395",
+      "changes": [
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Hydroxypropylgluconamide",
+          "after": "hydroxypropylgluconamide"
+        },
+        {
+          "path": "profile.technology_reference.shared_markers",
+          "before": "Hydroxypropylammonium Gluconate",
+          "after": "hydroxypropylammonium gluconate"
+        }
+      ]
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "V02",
+      "original_path": "lane-b/assembled/V02.json",
+      "original_sha256": "308496faf45c2e2e1ba07c4bc53f9d46631cb6b8e0dc7ffaeced937d588c2886",
+      "amended_path": "wire-amendment-01/lane-b/V02.json",
+      "amended_sha256": "308496faf45c2e2e1ba07c4bc53f9d46631cb6b8e0dc7ffaeced937d588c2886",
+      "changes": []
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "V03",
+      "original_path": "lane-b/assembled/V03.json",
+      "original_sha256": "6358d5f50cd36048fda36e2cbe9fc0b0af855307a1e054bbe4b60694c4e02fa8",
+      "amended_path": "wire-amendment-01/lane-b/V03.json",
+      "amended_sha256": "6358d5f50cd36048fda36e2cbe9fc0b0af855307a1e054bbe4b60694c4e02fa8",
+      "changes": []
+    },
+    {
+      "lane": "lane-b",
+      "slot_id": "V04",
+      "original_path": "lane-b/assembled/V04.json",
+      "original_sha256": "78c050aacf1f3e9c909c12f51fd3b5dcc0778c13d1f631403c7809aaef3aae88",
+      "amended_path": "wire-amendment-01/lane-b/V04.json",
+      "amended_sha256": "78c050aacf1f3e9c909c12f51fd3b5dcc0778c13d1f631403c7809aaef3aae88",
+      "changes": []
+    }
+  ],
+  "projection_replay": {
+    "total": 24,
+    "projected": 16,
+    "refused": 8,
+    "outcomes": [
+      {
+        "lane": "lane-a",
+        "slot_id": "P01",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-a",
+        "slot_id": "P02",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-a",
+        "slot_id": "P03",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-a",
+        "slot_id": "P04",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-a",
+        "slot_id": "P05",
+        "exit_code": 1,
+        "status": "refused",
+        "readiness": {
+          "property_lane_ready": false,
+          "property_projection_ready": false,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": [
+          "specialized_treatment_boundary_evidence_missing"
+        ]
+      },
+      {
+        "lane": "lane-a",
+        "slot_id": "P06",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-a",
+        "slot_id": "P07",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-a",
+        "slot_id": "P08",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-a",
+        "slot_id": "V01",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-a",
+        "slot_id": "V02",
+        "exit_code": 1,
+        "status": "refused",
+        "readiness": {
+          "property_lane_ready": false,
+          "property_projection_ready": false,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": [
+          "boundary_not_resolved_in_scope",
+          "unverified_owner_grade: new identities require low owner_default",
+          "claim_trust_held",
+          "specialized_treatment_boundary_evidence_missing"
+        ]
+      },
+      {
+        "lane": "lane-a",
+        "slot_id": "V03",
+        "exit_code": 1,
+        "status": "refused",
+        "readiness": {
+          "property_lane_ready": false,
+          "property_projection_ready": false,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": [
+          "boundary_not_resolved_in_scope",
+          "unverified_owner_grade: new identities require low owner_default",
+          "claim_trust_held",
+          "specialized_treatment_boundary_evidence_missing"
+        ]
+      },
+      {
+        "lane": "lane-a",
+        "slot_id": "V04",
+        "exit_code": 1,
+        "status": "refused",
+        "readiness": {
+          "property_lane_ready": false,
+          "property_projection_ready": false,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": [
+          "identity_or_formula_unresolved",
+          "boundary_not_resolved_in_scope",
+          "unverified_owner_grade: new identities require low owner_default",
+          "claim_trust_held",
+          "specialized_treatment_boundary_evidence_missing"
+        ]
+      },
+      {
+        "lane": "lane-b",
+        "slot_id": "P01",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-b",
+        "slot_id": "P02",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-b",
+        "slot_id": "P03",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-b",
+        "slot_id": "P04",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-b",
+        "slot_id": "P05",
+        "exit_code": 1,
+        "status": "refused",
+        "readiness": {
+          "property_lane_ready": false,
+          "property_projection_ready": false,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": [
+          "specialized_treatment_boundary_evidence_missing"
+        ]
+      },
+      {
+        "lane": "lane-b",
+        "slot_id": "P06",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-b",
+        "slot_id": "P07",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-b",
+        "slot_id": "P08",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-b",
+        "slot_id": "V01",
+        "exit_code": 0,
+        "status": "projected",
+        "readiness": {
+          "property_lane_ready": true,
+          "property_projection_ready": true,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": []
+      },
+      {
+        "lane": "lane-b",
+        "slot_id": "V02",
+        "exit_code": 1,
+        "status": "refused",
+        "readiness": {
+          "property_lane_ready": false,
+          "property_projection_ready": false,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": [
+          "boundary_not_resolved_in_scope",
+          "unverified_owner_grade: new identities require low owner_default",
+          "specialized_treatment_boundary_evidence_missing"
+        ]
+      },
+      {
+        "lane": "lane-b",
+        "slot_id": "V03",
+        "exit_code": 1,
+        "status": "refused",
+        "readiness": {
+          "property_lane_ready": false,
+          "property_projection_ready": false,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": [
+          "boundary_not_resolved_in_scope",
+          "unverified_owner_grade: new identities require low owner_default",
+          "specialized_treatment_boundary_evidence_missing"
+        ]
+      },
+      {
+        "lane": "lane-b",
+        "slot_id": "V04",
+        "exit_code": 1,
+        "status": "refused",
+        "readiness": {
+          "property_lane_ready": false,
+          "property_projection_ready": false,
+          "protocol_projection_ready": false,
+          "curated_research_candidate": false,
+          "catalog_intake_ready": false,
+          "global_recommendation_ready": false,
+          "publish_ready": false
+        },
+        "errors": [
+          "identity_or_formula_unresolved",
+          "boundary_not_resolved_in_scope",
+          "unverified_owner_grade: new identities require low owner_default",
+          "claim_trust_held",
+          "specialized_treatment_boundary_evidence_missing"
+        ]
+      }
+    ]
+  }
+}

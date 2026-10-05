@@ -69,6 +69,8 @@ import { applyConditionerResearchAdapter } from "@/lib/product-intake/conditione
 import { conditionerResearchPromptContract } from "@/lib/product-intake/conditioner-research-prompt-contract"
 import { applyLeaveInResearchAdapter } from "@/lib/product-intake/leave-in-research-adapter"
 import { leaveInResearchPromptContract } from "@/lib/product-intake/leave-in-research-prompt-contract"
+import { applyBondbuilderResearchAdapterForWorker } from "@/lib/product-intake/bondbuilder-research-adapter"
+import { bondbuilderResearchPromptContract } from "@/lib/product-intake/bondbuilder-research-prompt-contract"
 import {
   createRetailerEnrichmentWarningReporter,
   parseRetailerEnrichmentPacket,
@@ -1801,6 +1803,19 @@ function deepCleansingShampooApprovalContract(): JsonRecord {
 }
 
 function bondbuilderApprovalContract(): JsonRecord {
+  const researchContract = bondbuilderResearchPromptContract()
+  if (researchContract.enabled) {
+    return {
+      category_key: "bondbuilder",
+      instruction:
+        "Complete the full Bondbuilder research profile first. Emit it only as property_synthesis.bondbuilder_research_envelope; the deterministic adapter owns the derived database projection. Research exact producer application directions separately.",
+      bondbuilder_research: researchContract,
+      product_application_protocols: applicationProtocolResearchContract("bondbuilder", [
+        "specialized_bond_treatment",
+      ]),
+    }
+  }
+
   return {
     category_key: "bondbuilder",
     instruction:
@@ -1818,6 +1833,9 @@ function bondbuilderApprovalContract(): JsonRecord {
     product_application_protocols: applicationProtocolResearchContract("bondbuilder", [
       "specialized_bond_treatment",
     ]),
+    // Preparation metadata only. The inactive lane retains the exact legacy
+    // output contract above until the server-owned method lock is installed.
+    future_research_engine_contract: researchContract,
   }
 }
 
@@ -1939,6 +1957,18 @@ function normalizeResearchOutputForCategory(
       final,
       artifacts: output.artifacts,
       expectedResearchId,
+    })
+    blockers.push(...adapterResult.blockers)
+  }
+
+  // Server-owned routing is enforced after model output. Enabled Bondbuilder
+  // intake requires a complete, current, exact-submission research envelope;
+  // model-authored flags and legacy-only specs cannot bypass validation.
+  if (categoryKey === "bondbuilder" && final) {
+    const adapterResult = applyBondbuilderResearchAdapterForWorker({
+      final,
+      artifacts: output.artifacts,
+      expectedSubmissionId: expectedResearchId,
     })
     blockers.push(...adapterResult.blockers)
   }

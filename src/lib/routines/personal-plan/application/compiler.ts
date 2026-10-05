@@ -82,6 +82,14 @@ type ConditionerRelationship = NonNullable<
   ApplicationGuidanceProtocolV1["protocolFacts"]["conditionerRelationship"]
 >
 
+function effectiveConditionerRelationship(protocol: ApplicationGuidanceProtocolV1) {
+  const sequence = protocol.protocolFacts.conditionerSequence
+  if (sequence?.after === "required") return "conditioner_after" as const
+  if (sequence?.after === "optional" || sequence?.after === "recommended")
+    return "conditioner_optional_after" as const
+  return protocol.protocolFacts.conditionerRelationship
+}
+
 const anchorOrder = [
   "pre_wash",
   "wet_cleanse",
@@ -108,7 +116,11 @@ function sortResolved(
     const rightIsConditioner = right.item.role === "condition"
     if (leftIsConditioner !== rightIsConditioner) {
       if (conditionerRelationship === "conditioner_before") return leftIsConditioner ? -1 : 1
-      if (conditionerRelationship === "conditioner_after") return leftIsConditioner ? 1 : -1
+      if (
+        conditionerRelationship === "conditioner_after" ||
+        conditionerRelationship === "conditioner_optional_after"
+      )
+        return leftIsConditioner ? 1 : -1
     }
     const before = left.item.productId.localeCompare(right.item.productId)
     return before || left.item.itemId.localeCompare(right.item.itemId)
@@ -228,7 +240,7 @@ function orderAnchors(
     .filter(
       ({ item, protocol }) =>
         item.role !== "condition" &&
-        protocol.protocolFacts.conditionerRelationship === conditionerRelationship,
+        effectiveConditionerRelationship(protocol) === conditionerRelationship,
     )
     .map(({ protocol }) => protocol.sequence.anchor)
   const conditionerAnchors = items
@@ -236,7 +248,8 @@ function orderAnchors(
     .map(({ protocol }) => protocol.sequence.anchor)
   if (
     conditionerRelationship === "conditioner_before" ||
-    conditionerRelationship === "conditioner_after"
+    conditionerRelationship === "conditioner_after" ||
+    conditionerRelationship === "conditioner_optional_after"
   ) {
     for (const treatmentAnchor of treatmentAnchors) {
       for (const conditionerAnchor of conditionerAnchors) {
@@ -388,7 +401,7 @@ function compileDay(
   }
   const relationships = new Set(
     resolved
-      .map(({ protocol }) => protocol.protocolFacts.conditionerRelationship)
+      .map(({ protocol }) => effectiveConditionerRelationship(protocol))
       .filter(
         (relationship): relationship is ConditionerRelationship =>
           relationship !== null && relationship !== "not_applicable",
@@ -396,7 +409,7 @@ function compileDay(
   )
   if (relationships.size > 1) {
     const conflicting = resolved.filter(({ protocol }) => {
-      const relationship = protocol.protocolFacts.conditionerRelationship
+      const relationship = effectiveConditionerRelationship(protocol)
       return relationship !== null && relationship !== "not_applicable"
     })
     for (const { item } of conflicting) addUnresolvedPosition(unresolvedRelevantItems, item)
@@ -422,8 +435,8 @@ function compileDay(
   ) {
     const imposing = resolved.filter(
       ({ protocol }) =>
-        protocol.protocolFacts.conditionerRelationship === "conditioner_before" ||
-        protocol.protocolFacts.conditionerRelationship === "conditioner_after",
+        effectiveConditionerRelationship(protocol) === "conditioner_before" ||
+        effectiveConditionerRelationship(protocol) === "conditioner_after",
     )
     for (const { item } of imposing) addUnresolvedPosition(unresolvedRelevantItems, item)
     const imposingIds = new Set(imposing.map(({ item }) => item.itemId))
@@ -575,6 +588,26 @@ function compileDay(
     })
   }
   let internalProductBlocks = [...blocks.values()]
+  const shampooLayeredOnTreatment = resolved.some(
+    ({ protocol }) => protocol.protocolFacts.shampooAfterTreatment === "layer_without_rinsing",
+  )
+  if (shampooLayeredOnTreatment) {
+    internalProductBlocks = internalProductBlocks.map((block) =>
+      block.roles.includes("cleanse")
+        ? {
+            ...block,
+            steps: [
+              {
+                stepKey: "wet",
+                action: "section" as const,
+                copyDe: "Das Shampoo direkt auf die noch nicht ausgespülte Behandlung auftragen.",
+              },
+              ...block.steps.filter((step) => step.stepKey !== "wet"),
+            ],
+          }
+        : block,
+    )
+  }
   if (key === "refresh_day" || key === "between_wash_care_day") {
     const betweenWashFamilies = new Set(["between_wash_dry_care", "between_wash_damp_refresh"])
     const grouped = new Map<string, typeof internalProductBlocks>()

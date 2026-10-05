@@ -1,0 +1,26 @@
+{
+  "status": "refused",
+  "readiness": {
+    "property_lane_ready": false,
+    "property_projection_ready": false,
+    "protocol_projection_ready": false,
+    "curated_research_candidate": false,
+    "catalog_intake_ready": false,
+    "global_recommendation_ready": false,
+    "publish_ready": false
+  },
+  "productionProjection": null,
+  "propertyCoverage": {
+    "version": "bondbuilder-property-coverage-v1",
+    "properties": []
+  },
+  "warnings": [
+    "provisional_method_not_locked_or_intake_active"
+  ],
+  "errors": [
+    "technology_reference_binding_mismatch"
+  ],
+  "requiredProtocolRoles": [
+    "specialized_bond_treatment"
+  ]
+}

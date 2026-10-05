@@ -6,17 +6,22 @@ import type {
   ProductBondTreatmentMode,
   ProductBondUsageProtocol,
 } from "@/lib/product-specs/constants"
+import type { BondbuilderResearchProfile } from "@/lib/bondbuilder-research/contracts"
 
 export const BONDBUILDER_DB_CATEGORIES = ["Bondbuilder", "Bond Builder"] as const
 
 export interface ProductBondbuilderSpecs {
   product_id: string
-  bond_repair_intensity: ProductBondRepairIntensity
-  application_mode: ProductBondApplicationMode
-  bond_repair_axis: ProductBondRepairAxis
-  treatment_mode: ProductBondTreatmentMode
-  product_format: ProductBondProductFormat
-  usage_protocol: ProductBondUsageProtocol
+  bond_repair_intensity: ProductBondRepairIntensity | null
+  application_mode: ProductBondApplicationMode | null
+  bond_repair_axis: ProductBondRepairAxis | null
+  treatment_mode: ProductBondTreatmentMode | null
+  product_format: ProductBondProductFormat | null
+  usage_protocol: ProductBondUsageProtocol | null
+  technology_family?: BondbuilderResearchProfile["assessment"]["technology_family"]
+  claim_trust_level?: BondbuilderResearchProfile["assessment"]["claim_trust_level"]
+  trust_basis?: BondbuilderResearchProfile["assessment"]["trust_basis"]
+  research_profile?: BondbuilderResearchProfile | null
   created_at?: string
   updated_at?: string
 }

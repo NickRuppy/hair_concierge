@@ -1,0 +1,203 @@
+{
+  "schema_version": "bondbuilder-root-adjudication-v0.1",
+  "prepared_date": "2026-09-30",
+  "status": "provisional_for_Nick_review",
+  "scope": "Source-version research only. Initial packet unresolved; not a production projection.",
+  "readiness_scope": "False readiness/authorization values mean this pilot grants nothing; they are not findings that existing live products are ineligible and must never overwrite live lifecycle/recommendation flags.",
+  "authority": "Root reviews raw lanes; records serialization adjudication separately. No frozen lane is overwritten.",
+  "rules": {
+    "boundary": "A trust hold alone does not erase established source-version category/technology compatibility. Exact category identity/formula gaps retain research_hold.",
+    "trust": "Retain shared provisional low-support epres finding; seven grades null pending specified evidence/applicability resolution.",
+    "admission": "No provisional pilot result grants curated admission.",
+    "engine_lock": false,
+    "public_rating_authorized": false
+  },
+  "records": [
+    {
+      "slot_id": "A01",
+      "pilot_id": "P07",
+      "boundary_status": "in_scope",
+      "technology_family": "gluconamide_gluconate",
+      "claim_trust_level": null,
+      "classification_confidence": "low",
+      "assessment_state": "needs_research",
+      "research_admission_candidacy": false,
+      "category_identity_hold": false,
+      "trust_hold": true,
+      "fit_status": "unassessed",
+      "global_recommendation_ready": false,
+      "public_rating_authorized": false,
+      "changed_from_lane_a": {
+        "boundary": true,
+        "technology": true,
+        "trust": false
+      },
+      "source_detail_reference": "lane-b/records.json#A01",
+      "alternate_detail_reference": "lane-a/records.json#A01",
+      "evidence_packet_reference": "evidence-packet.v0.1.json#A01"
+    },
+    {
+      "slot_id": "A02",
+      "pilot_id": "P03",
+      "boundary_status": "in_scope",
+      "technology_family": "maleate_ester",
+      "claim_trust_level": "low",
+      "classification_confidence": "moderate",
+      "assessment_state": "provisional_scoped_low_support",
+      "research_admission_candidacy": false,
+      "category_identity_hold": false,
+      "trust_hold": false,
+      "fit_status": "unassessed",
+      "global_recommendation_ready": false,
+      "public_rating_authorized": false,
+      "changed_from_lane_a": {
+        "boundary": false,
+        "technology": false,
+        "trust": false
+      },
+      "source_detail_reference": "lane-b/records.json#A02",
+      "alternate_detail_reference": "lane-a/records.json#A02",
+      "evidence_packet_reference": "evidence-packet.v0.1.json#A02"
+    },
+    {
+      "slot_id": "A03",
+      "pilot_id": "P05",
+      "boundary_status": "research_hold",
+      "technology_family": null,
+      "claim_trust_level": null,
+      "classification_confidence": "low",
+      "assessment_state": "needs_research",
+      "research_admission_candidacy": false,
+      "category_identity_hold": true,
+      "trust_hold": true,
+      "fit_status": "unassessed",
+      "global_recommendation_ready": false,
+      "public_rating_authorized": false,
+      "changed_from_lane_a": {
+        "boundary": false,
+        "technology": false,
+        "trust": false
+      },
+      "source_detail_reference": "lane-b/records.json#A03",
+      "alternate_detail_reference": "lane-a/records.json#A03",
+      "evidence_packet_reference": "evidence-packet.v0.1.json#A03"
+    },
+    {
+      "slot_id": "A04",
+      "pilot_id": "P02",
+      "boundary_status": "in_scope",
+      "technology_family": "designed_peptide",
+      "claim_trust_level": null,
+      "classification_confidence": "low",
+      "assessment_state": "needs_research",
+      "research_admission_candidacy": false,
+      "category_identity_hold": false,
+      "trust_hold": true,
+      "fit_status": "unassessed",
+      "global_recommendation_ready": false,
+      "public_rating_authorized": false,
+      "changed_from_lane_a": {
+        "boundary": true,
+        "technology": true,
+        "trust": false
+      },
+      "source_detail_reference": "lane-b/records.json#A04",
+      "alternate_detail_reference": "lane-a/records.json#A04",
+      "evidence_packet_reference": "evidence-packet.v0.1.json#A04"
+    },
+    {
+      "slot_id": "A05",
+      "pilot_id": "P08",
+      "boundary_status": "research_hold",
+      "technology_family": null,
+      "claim_trust_level": null,
+      "classification_confidence": "low",
+      "assessment_state": "needs_research",
+      "research_admission_candidacy": false,
+      "category_identity_hold": true,
+      "trust_hold": true,
+      "fit_status": "unassessed",
+      "global_recommendation_ready": false,
+      "public_rating_authorized": false,
+      "changed_from_lane_a": {
+        "boundary": false,
+        "technology": false,
+        "trust": false
+      },
+      "source_detail_reference": "lane-b/records.json#A05",
+      "alternate_detail_reference": "lane-a/records.json#A05",
+      "evidence_packet_reference": "evidence-packet.v0.1.json#A05"
+    },
+    {
+      "slot_id": "A06",
+      "pilot_id": "P04",
+      "boundary_status": "in_scope",
+      "technology_family": "acid_calcium_management",
+      "claim_trust_level": null,
+      "classification_confidence": "low",
+      "assessment_state": "needs_research",
+      "research_admission_candidacy": false,
+      "category_identity_hold": false,
+      "trust_hold": true,
+      "fit_status": "unassessed",
+      "global_recommendation_ready": false,
+      "public_rating_authorized": false,
+      "changed_from_lane_a": {
+        "boundary": true,
+        "technology": true,
+        "trust": false
+      },
+      "source_detail_reference": "lane-b/records.json#A06",
+      "alternate_detail_reference": "lane-a/records.json#A06",
+      "evidence_packet_reference": "evidence-packet.v0.1.json#A06"
+    },
+    {
+      "slot_id": "A07",
+      "pilot_id": "P01",
+      "boundary_status": "in_scope",
+      "technology_family": "sulfur_targeting_dimaleate",
+      "claim_trust_level": null,
+      "classification_confidence": "low",
+      "assessment_state": "needs_research",
+      "research_admission_candidacy": false,
+      "category_identity_hold": false,
+      "trust_hold": true,
+      "fit_status": "unassessed",
+      "global_recommendation_ready": false,
+      "public_rating_authorized": false,
+      "changed_from_lane_a": {
+        "boundary": true,
+        "technology": true,
+        "trust": false
+      },
+      "source_detail_reference": "lane-b/records.json#A07",
+      "alternate_detail_reference": "lane-a/records.json#A07",
+      "evidence_packet_reference": "evidence-packet.v0.1.json#A07"
+    },
+    {
+      "slot_id": "A08",
+      "pilot_id": "P06",
+      "boundary_status": "research_hold",
+      "technology_family": null,
+      "claim_trust_level": null,
+      "classification_confidence": "low",
+      "assessment_state": "needs_research",
+      "research_admission_candidacy": false,
+      "category_identity_hold": true,
+      "trust_hold": true,
+      "fit_status": "unassessed",
+      "global_recommendation_ready": false,
+      "public_rating_authorized": false,
+      "changed_from_lane_a": {
+        "boundary": false,
+        "technology": false,
+        "trust": false
+      },
+      "source_detail_reference": "lane-b/records.json#A08",
+      "alternate_detail_reference": "lane-a/records.json#A08",
+      "evidence_packet_reference": "evidence-packet.v0.1.json#A08"
+    }
+  ],
+  "decision_ledger_reference": "../../../../../plans/bondbuilder-research-engine/pilot-findings.md",
+  "next": "Nick review, versioned method/source amendment and affected-row replay; then unused holdout before lock."
+}

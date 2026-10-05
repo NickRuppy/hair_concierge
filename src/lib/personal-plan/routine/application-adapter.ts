@@ -98,17 +98,7 @@ function factsFor(category: string, row: ProductRow) {
       : { facts: {}, provenance: {} }
   }
   if (category === "bondbuilder") {
-    const spec = first<{
-      application_mode: "pre_shampoo" | "post_wash_leave_in"
-      treatment_mode: "rinse_out" | "leave_in"
-      product_format: "cream_treatment" | "primer_treatment" | "leave_in_mask" | "spray_treatment"
-      usage_protocol:
-        | "olaplex_3plus"
-        | "olaplex_0_booster"
-        | "olaplex_3_legacy"
-        | "k18_leave_in"
-        | "epres_spray"
-    }>(row.product_bondbuilder_specs)
+    const spec = first<import("@/lib/bondbuilder/constants").ProductBondbuilderSpecs>(row.product_bondbuilder_specs)
     return spec
       ? adaptCatalogApplicationFacts({ category: "bondbuilder", spec })
       : { facts: {}, provenance: {} }

@@ -122,6 +122,48 @@ const GERMAN_MARKERS = [
   "Kopfhaut",
 ]
 
+const LOCAL_NEGATORS = new Set(["nicht", "niemals", "keinesfalls"])
+const WORD_PATTERN = /\p{L}+/gu
+const CLAUSE_BOUNDARY_PATTERN = /[.!?;,:]/gu
+
+function escapePattern(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&")
+}
+
+function hasForbiddenClaim(content: string, claim: string): boolean {
+  const normalizedContent = content.toLowerCase().replace(/\s+/gu, " ").trim()
+  const normalizedClaim = claim.toLowerCase().replace(/\s+/gu, " ").trim()
+  const claimPattern = escapePattern(normalizedClaim).replace(/ /gu, "\\s+")
+  const matcher = new RegExp(`(?<![\\p{L}\\p{N}_])${claimPattern}(?![\\p{L}\\p{N}_])`, "gu")
+
+  for (const match of normalizedContent.matchAll(matcher)) {
+    const index = match.index ?? 0
+    const claimEnd = index + match[0].length
+    const precedingContent = normalizedContent.slice(0, index)
+    const previousBoundary = [...precedingContent.matchAll(CLAUSE_BOUNDARY_PATTERN)].at(-1)
+    const clauseStart = (previousBoundary?.index ?? -1) + 1
+    const followingBoundary = normalizedContent.slice(claimEnd).search(CLAUSE_BOUNDARY_PATTERN)
+    const clauseEnd =
+      followingBoundary === -1 ? normalizedContent.length : claimEnd + followingBoundary
+    const precedingWords = normalizedContent.slice(clauseStart, index).match(WORD_PATTERN) ?? []
+    const followingWords = normalizedContent.slice(claimEnd, clauseEnd).match(WORD_PATTERN) ?? []
+    const precedingNegators = precedingWords.slice(-3).filter((word) => LOCAL_NEGATORS.has(word))
+    const followingNegators = followingWords.slice(0, 3).filter((word) => LOCAL_NEGATORS.has(word))
+    const previousWord = precedingWords.at(-1)
+    const nextWord = followingWords[0]
+    const negatedBefore = LOCAL_NEGATORS.has(previousWord ?? "") && precedingNegators.length === 1
+    const negatedAfter = LOCAL_NEGATORS.has(nextWord ?? "") && followingNegators.length === 1
+    const hasRepeatedNegator = precedingNegators.length + followingNegators.length > 1
+    const negationExtendsToOnly = negatedAfter && followingWords[1] === "nur"
+
+    if ((!negatedBefore && !negatedAfter) || hasRepeatedNegator || negationExtendsToOnly) {
+      return true
+    }
+  }
+
+  return false
+}
+
 export function runContentAssertions(
   sse: SSEResult,
   expected: ContentHeuristics,
@@ -162,6 +204,17 @@ export function runContentAssertions(
       name: "forbidden_keywords",
       passed: found.length === 0,
       expected: `none of: ${expected.forbidden_keywords.join(", ")}`,
+      actual: found.length === 0 ? "none found" : `found: ${found.join(", ")}`,
+    })
+  }
+
+  if (expected.forbidden_claims) {
+    const found = expected.forbidden_claims.filter((claim) => hasForbiddenClaim(content, claim))
+    results.push({
+      tier: "content",
+      name: "forbidden_claims",
+      passed: found.length === 0,
+      expected: `none of: ${expected.forbidden_claims.join(", ")}`,
       actual: found.length === 0 ? "none found" : `found: ${found.join(", ")}`,
     })
   }

@@ -1,0 +1,416 @@
+{
+  "standard_version": "bondbuilder-inci-v0.3",
+  "lane_id": "lane-b",
+  "stage": "A",
+  "input_receipt": [
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/bondbuilder-classification-standard.v0.1.md",
+      "sha256": "712e629f0d92f4d9bafdf3f5fcce151628feb0819b777eb329ec3870c62a2968"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/bondbuilder-classification-standard.v0.3.md",
+      "sha256": "76bd8118b5d1c9485fff8b90bc1c77b7fadc98e5896892d0bb62aa888fa63e06"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/researcher-prompt.v0.3.md",
+      "sha256": "8edb2d0a5a5e6db98d9baf24122550a8bcc62d4477230360dba636d2ffc4c5fe"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/blind-packet.v0.1.json",
+      "sha256": "8bf4726eaa5a96723ac9243369cbd1c93a713945cc103964c6a0add8bccd1c40"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/blind-packet.v0.3.json",
+      "sha256": "855dd8a8c6f574bf76063b192c99e6ca3764da6370578342d28a8740ee88838e"
+    }
+  ],
+  "no_web": true,
+  "recognition_incidents": [
+    {
+      "slot_id": "A04",
+      "trigger": "sh-oligopeptide-78",
+      "recognized_association": "Possible K18 brand association from the distinctive marker.",
+      "handling": "Association logged only; no remembered product identity, protocol, evidence, category or trust applied."
+    },
+    {
+      "slot_id": "A07",
+      "trigger": "bis-aminopropyl diglycol dimaleate",
+      "recognized_association": "Possible OLAPLEX brand association from the distinctive marker; the authorized overlay also names that brand.",
+      "handling": "Association logged only; exact product/anchor membership is not inferred and no prior benefit or trust knowledge is applied."
+    }
+  ],
+  "records": [
+    {
+      "slot_id": "A01",
+      "markers": [
+        "hydroxypropylgluconamide",
+        "hydroxypropylammonium gluconate"
+      ],
+      "technology_candidates": [
+        "gluconamide_gluconate"
+      ],
+      "formula_status": "source_version_resolved",
+      "flags": [
+        "supplied_pack_not_verified"
+      ],
+      "classification_confidence": "high",
+      "limitations": [
+        "Both required pair members occur separately in the supplied complete source-version list. Fatty alcohol, lipids and conditioning agents provide formula context, not evidence of structural repair.",
+        "High confidence concerns the unambiguous pair and compatible formula candidate at source-version level; it does not verify the supplied pack.",
+        "Own original-input and amended-input observations are equal: ordered normalized formula, formula_status, flags and alternative capture match. The original packet has no identity_status field; the amended metadata adds one, so full packet bytes are not equal. This reused observation is not an independent experiment.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    },
+    {
+      "slot_id": "A02",
+      "markers": [
+        "diethylhexyl maleate"
+      ],
+      "technology_candidates": [
+        "maleate_ester"
+      ],
+      "formula_status": "source_version_resolved",
+      "flags": [
+        "concentrate_not_diluted_formula",
+        "catalog_binding_not_verified"
+      ],
+      "classification_confidence": "high",
+      "limitations": [
+        "The four-ingredient capture contains the distinct maleate ester marker in an alcohol-containing concentrate. It is not the sulfur-targeting dimaleate marker.",
+        "Concentrate composition cannot establish the diluted use formula or application dose; catalog binding is unverified.",
+        "Fresh amended-input observation: formula equals the original, but its dilution_quantity_gap flag is absent here. No directions or dilution amount are inferred from that flag removal.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    },
+    {
+      "slot_id": "A03",
+      "markers": [
+        "sodium citrate",
+        "citric acid"
+      ],
+      "technology_candidates": [
+        "acid_calcium_management"
+      ],
+      "formula_status": "conflict_hold",
+      "flags": [
+        "material_same_market_formula_conflict"
+      ],
+      "classification_confidence": "low",
+      "limitations": [
+        "Both provided complete captures contain sodium citrate and citric acid, but their ingredient orders and remaining compositions differ. The marker array follows the primary capture order and does not splice the two lists.",
+        "The unresolved same-market conflict concerns capture authority for the target formula, not absence of either marker. Ingredient extraction is clear; target-formula architecture confidence remains low.",
+        "Citric acid is a nonspecific lexicon clue. The acid_calcium_management candidate requires targeted architecture/use evidence after unblinding; its inclusion does not assert calcium removal or an additional efficacy.",
+        "Own original-input and amended-input observations are equal: ordered normalized formula, formula_status, flags and alternative capture match. The original packet has no identity_status field; the amended metadata adds one, so full packet bytes are not equal. This reused observation is not an independent experiment.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    },
+    {
+      "slot_id": "A04",
+      "markers": [
+        "sh-oligopeptide-78",
+        "citric acid"
+      ],
+      "technology_candidates": [
+        "designed_peptide",
+        "acid_calcium_management"
+      ],
+      "formula_status": "source_version_resolved",
+      "flags": [
+        "foreign_variant_differs",
+        "catalog_binding_not_verified"
+      ],
+      "classification_confidence": "high",
+      "limitations": [
+        "The specific designed-peptide clue is present within a solvent/fatty-alcohol/conditioning formula. Hydrolyzed wheat protein and starch are not additional designed-peptide markers.",
+        "High confidence concerns the specific peptide candidate in this source version. The foreign variant and catalog binding flags remain; no cross-market equality is assumed.",
+        "Citric acid is a nonspecific lexicon clue. The acid_calcium_management candidate requires targeted architecture/use evidence after unblinding; its inclusion does not assert calcium removal or an additional efficacy.",
+        "Own original-input and amended-input observations are equal: ordered normalized formula, formula_status, flags and alternative capture match. The original packet has no identity_status field; the amended metadata adds one, so full packet bytes are not equal. This reused observation is not an independent experiment.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    },
+    {
+      "slot_id": "A05",
+      "markers": [
+        "glycine",
+        "citric acid"
+      ],
+      "technology_candidates": [
+        "acid_calcium_management"
+      ],
+      "formula_status": "source_version_resolved",
+      "flags": [
+        "supplied_pack_not_verified",
+        "mismatched_capture_displaced_with_reason"
+      ],
+      "classification_confidence": "moderate",
+      "limitations": [
+        "Fresh amended-input observation: glycine and citric acid appear in an aqueous humectant/conditioning capture. Generic hydrolyzed protein does not identify another recognized family.",
+        "The ordered normalized formula equals the original, but formula_status and flags changed and the raw-capture hash differs. The supplied amended source-version resolution is retained without opening the displacement rationale; it does not verify the supplied pack.",
+        "Citric acid is a nonspecific lexicon clue. The acid_calcium_management candidate requires targeted architecture/use evidence after unblinding; its inclusion does not assert calcium removal or an additional efficacy.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    },
+    {
+      "slot_id": "A06",
+      "markers": [
+        "citric acid",
+        "arginine",
+        "betaine"
+      ],
+      "technology_candidates": [
+        "acid_calcium_management"
+      ],
+      "formula_status": "source_version_resolved",
+      "flags": [
+        "old_new_claim_copy_conflict",
+        "supplied_pack_not_verified"
+      ],
+      "classification_confidence": "moderate",
+      "limitations": [
+        "Citric acid with the listed supporting arginine and betaine occurs in a fatty-alcohol/cationic-conditioning formula. EDTA and conditioning silicones are contextual constituents, not separate lexicon-family markers.",
+        "The old/new claim-copy flag remains. A resolved source-version formula does not settle that claim conflict or supplied-pack correspondence.",
+        "Citric acid is a nonspecific lexicon clue. The acid_calcium_management candidate requires targeted architecture/use evidence after unblinding; its inclusion does not assert calcium removal or an additional efficacy.",
+        "Own original-input and amended-input observations are equal: ordered normalized formula, formula_status, flags and alternative capture match. The original packet has no identity_status field; the amended metadata adds one, so full packet bytes are not equal. This reused observation is not an independent experiment.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    },
+    {
+      "slot_id": "A07",
+      "markers": [
+        "bis-aminopropyl diglycol dimaleate",
+        "citric acid"
+      ],
+      "technology_candidates": [
+        "sulfur_targeting_dimaleate",
+        "acid_calcium_management"
+      ],
+      "formula_status": "source_version_resolved",
+      "flags": [
+        "foreign_variant_differs",
+        "catalog_binding_not_verified"
+      ],
+      "classification_confidence": "high",
+      "limitations": [
+        "The specific dimaleate marker occurs in a fatty-alcohol/cationic-conditioning and lipid-containing formula. No efficacy is transferred from other maleate ingredients.",
+        "High confidence concerns specific marker extraction and the source-version candidate. Foreign-variant differences and unverified catalog binding remain.",
+        "Citric acid is a nonspecific lexicon clue. The acid_calcium_management candidate requires targeted architecture/use evidence after unblinding; its inclusion does not assert calcium removal or an additional efficacy.",
+        "Own original-input and amended-input observations are equal: ordered normalized formula, formula_status, flags and alternative capture match. The original packet has no identity_status field; the amended metadata adds one, so full packet bytes are not equal. This reused observation is not an independent experiment.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    },
+    {
+      "slot_id": "A08",
+      "markers": [
+        "hydroxypropylgluconamide",
+        "hydroxypropylammonium gluconate",
+        "arginine",
+        "citric acid"
+      ],
+      "technology_candidates": [
+        "gluconamide_gluconate",
+        "acid_calcium_management"
+      ],
+      "formula_status": "source_version_resolved",
+      "flags": [
+        "retailer_translation_and_punctuation_repairs",
+        "supplied_pack_not_verified"
+      ],
+      "classification_confidence": "moderate",
+      "limitations": [
+        "Fresh amended-input observation: both required pair members are present; arginine and citric acid are secondary lexicon clues. Wheat protein and hydrolyzed keratin do not establish a designed-peptide family.",
+        "The amended normalized list changes water/fragrance aliases and camelia to camellia relative to the original. Marker identities remain unchanged, but formula fingerprint, source status and flags differ.",
+        "Normalization repairs are supplied preparation facts, not independently source-audited here. They and unverified supplied-pack correspondence limit the record confidence despite clear pair extraction.",
+        "Citric acid is a nonspecific lexicon clue. The acid_calcium_management candidate requires targeted architecture/use evidence after unblinding; its inclusion does not assert calcium removal or an additional efficacy.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    }
+  ],
+  "control_records": [
+    {
+      "slot_id": "A01",
+      "markers": [
+        "hydroxypropylgluconamide",
+        "hydroxypropylammonium gluconate"
+      ],
+      "technology_candidates": [
+        "gluconamide_gluconate"
+      ],
+      "formula_status": "source_version_resolved",
+      "flags": [
+        "supplied_pack_not_verified"
+      ],
+      "classification_confidence": "high",
+      "limitations": [
+        "Both required pair members occur separately in the supplied complete source-version list. Fatty alcohol, lipids and conditioning agents provide formula context, not evidence of structural repair.",
+        "High confidence concerns the unambiguous pair and compatible formula candidate at source-version level; it does not verify the supplied pack.",
+        "Own original-input and amended-input observations are equal: ordered normalized formula, formula_status, flags and alternative capture match. The original packet has no identity_status field; the amended metadata adds one, so full packet bytes are not equal. This reused observation is not an independent experiment.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    },
+    {
+      "slot_id": "A02",
+      "markers": [
+        "diethylhexyl maleate"
+      ],
+      "technology_candidates": [
+        "maleate_ester"
+      ],
+      "formula_status": "source_version_resolved",
+      "flags": [
+        "concentrate_not_diluted_formula",
+        "dilution_quantity_gap",
+        "catalog_binding_not_verified"
+      ],
+      "classification_confidence": "high",
+      "limitations": [
+        "Fresh original-input observation: the four-ingredient capture contains the specific maleate ester marker and is explicitly the concentrate, not the diluted use formula.",
+        "High confidence concerns the source-version marker candidate only. The original dilution_quantity_gap is retained; dose, dilution and catalog binding are not resolved.",
+        "The normalized formula equals the amended input, but flags differ, so this is not copied from the amended observation.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    },
+    {
+      "slot_id": "A03",
+      "markers": [
+        "sodium citrate",
+        "citric acid"
+      ],
+      "technology_candidates": [
+        "acid_calcium_management"
+      ],
+      "formula_status": "conflict_hold",
+      "flags": [
+        "material_same_market_formula_conflict"
+      ],
+      "classification_confidence": "low",
+      "limitations": [
+        "Both provided complete captures contain sodium citrate and citric acid, but their ingredient orders and remaining compositions differ. The marker array follows the primary capture order and does not splice the two lists.",
+        "The unresolved same-market conflict concerns capture authority for the target formula, not absence of either marker. Ingredient extraction is clear; target-formula architecture confidence remains low.",
+        "Citric acid is a nonspecific lexicon clue. The acid_calcium_management candidate requires targeted architecture/use evidence after unblinding; its inclusion does not assert calcium removal or an additional efficacy.",
+        "Own original-input and amended-input observations are equal: ordered normalized formula, formula_status, flags and alternative capture match. The original packet has no identity_status field; the amended metadata adds one, so full packet bytes are not equal. This reused observation is not an independent experiment.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    },
+    {
+      "slot_id": "A04",
+      "markers": [
+        "sh-oligopeptide-78",
+        "citric acid"
+      ],
+      "technology_candidates": [
+        "designed_peptide",
+        "acid_calcium_management"
+      ],
+      "formula_status": "source_version_resolved",
+      "flags": [
+        "foreign_variant_differs",
+        "catalog_binding_not_verified"
+      ],
+      "classification_confidence": "high",
+      "limitations": [
+        "The specific designed-peptide clue is present within a solvent/fatty-alcohol/conditioning formula. Hydrolyzed wheat protein and starch are not additional designed-peptide markers.",
+        "High confidence concerns the specific peptide candidate in this source version. The foreign variant and catalog binding flags remain; no cross-market equality is assumed.",
+        "Citric acid is a nonspecific lexicon clue. The acid_calcium_management candidate requires targeted architecture/use evidence after unblinding; its inclusion does not assert calcium removal or an additional efficacy.",
+        "Own original-input and amended-input observations are equal: ordered normalized formula, formula_status, flags and alternative capture match. The original packet has no identity_status field; the amended metadata adds one, so full packet bytes are not equal. This reused observation is not an independent experiment.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    },
+    {
+      "slot_id": "A05",
+      "markers": [
+        "glycine",
+        "citric acid"
+      ],
+      "technology_candidates": [
+        "acid_calcium_management"
+      ],
+      "formula_status": "identity_formula_hold",
+      "flags": [
+        "wrong_size_capture",
+        "manufacturer_block_mismatch",
+        "target_formula_unresolved"
+      ],
+      "classification_confidence": "low",
+      "limitations": [
+        "Fresh original-input observation: the provided capture contains glycine and citric acid in an aqueous humectant/conditioning context.",
+        "The wrong-size capture, manufacturer-block mismatch and unresolved target formula concern source applicability. They do not negate marker presence in the provided capture.",
+        "The normalized formula equals the amended list, but original source status and flags remain unresolved. Amended resolution is not imported into this control.",
+        "Citric acid is a nonspecific lexicon clue. The acid_calcium_management candidate requires targeted architecture/use evidence after unblinding; its inclusion does not assert calcium removal or an additional efficacy.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    },
+    {
+      "slot_id": "A06",
+      "markers": [
+        "citric acid",
+        "arginine",
+        "betaine"
+      ],
+      "technology_candidates": [
+        "acid_calcium_management"
+      ],
+      "formula_status": "source_version_resolved",
+      "flags": [
+        "old_new_claim_copy_conflict",
+        "supplied_pack_not_verified"
+      ],
+      "classification_confidence": "moderate",
+      "limitations": [
+        "Citric acid with the listed supporting arginine and betaine occurs in a fatty-alcohol/cationic-conditioning formula. EDTA and conditioning silicones are contextual constituents, not separate lexicon-family markers.",
+        "The old/new claim-copy flag remains. A resolved source-version formula does not settle that claim conflict or supplied-pack correspondence.",
+        "Citric acid is a nonspecific lexicon clue. The acid_calcium_management candidate requires targeted architecture/use evidence after unblinding; its inclusion does not assert calcium removal or an additional efficacy.",
+        "Own original-input and amended-input observations are equal: ordered normalized formula, formula_status, flags and alternative capture match. The original packet has no identity_status field; the amended metadata adds one, so full packet bytes are not equal. This reused observation is not an independent experiment.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    },
+    {
+      "slot_id": "A07",
+      "markers": [
+        "bis-aminopropyl diglycol dimaleate",
+        "citric acid"
+      ],
+      "technology_candidates": [
+        "sulfur_targeting_dimaleate",
+        "acid_calcium_management"
+      ],
+      "formula_status": "source_version_resolved",
+      "flags": [
+        "foreign_variant_differs",
+        "catalog_binding_not_verified"
+      ],
+      "classification_confidence": "high",
+      "limitations": [
+        "The specific dimaleate marker occurs in a fatty-alcohol/cationic-conditioning and lipid-containing formula. No efficacy is transferred from other maleate ingredients.",
+        "High confidence concerns specific marker extraction and the source-version candidate. Foreign-variant differences and unverified catalog binding remain.",
+        "Citric acid is a nonspecific lexicon clue. The acid_calcium_management candidate requires targeted architecture/use evidence after unblinding; its inclusion does not assert calcium removal or an additional efficacy.",
+        "Own original-input and amended-input observations are equal: ordered normalized formula, formula_status, flags and alternative capture match. The original packet has no identity_status field; the amended metadata adds one, so full packet bytes are not equal. This reused observation is not an independent experiment.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    },
+    {
+      "slot_id": "A08",
+      "markers": [
+        "hydroxypropylgluconamide",
+        "hydroxypropylammonium gluconate",
+        "arginine",
+        "citric acid"
+      ],
+      "technology_candidates": [
+        "gluconamide_gluconate",
+        "acid_calcium_management"
+      ],
+      "formula_status": "market_hold",
+      "flags": [
+        "target_market_formula_not_verified"
+      ],
+      "classification_confidence": "low",
+      "limitations": [
+        "Fresh original-input observation: both gluconamide/gluconate pair members are explicitly listed, with arginine and citric acid as secondary lexicon clues. Generic proteins do not identify the designed-peptide family.",
+        "The original target-market hold concerns whether this captured formula represents the target market, not absence or uncertainty of the observed ingredient pair.",
+        "The original normalized formula differs from the amended input in aliases and one botanical spelling; retain its own market status and flags without importing later source resolution.",
+        "Citric acid is a nonspecific lexicon clue. The acid_calcium_management candidate requires targeted architecture/use evidence after unblinding; its inclusion does not assert calcium removal or an additional efficacy.",
+        "Stage A observation only: ingredient presence does not establish targeted treatment role, effective concentration, pH, mechanism, benefit, final category or trust."
+      ]
+    }
+  ]
+}

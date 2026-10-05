@@ -329,12 +329,42 @@ function trimMigration(path: string, sql: string): string {
   return sql
 }
 
-async function migratedDatabase(t: { after: (fn: () => Promise<void>) => void }): Promise<PGlite> {
+export async function migratedDatabase(t: {
+  after: (fn: () => Promise<void>) => void
+}): Promise<PGlite> {
   const pg = new PGlite()
   t.after(async () => {
     await pg.close()
   })
   await pg.exec(STUB_PREREQUISITES)
+  // Bondbuilder storage tests share this real approval chain. Replay its actual
+  // table owner too, so nullable/domain compatibility is not proven by a stub.
+  await pg.exec("DROP TABLE public.product_bondbuilder_specs")
+  const bondbuilderBase = await readFile(
+    new URL("supabase/migrations/20260416121500_add_support_category_fit_tables.sql", ROOT),
+    "utf8",
+  )
+  await pg.exec(
+    bondbuilderBase.slice(
+      0,
+      bondbuilderBase.indexOf(
+        "CREATE TABLE IF NOT EXISTS public.product_deep_cleansing_shampoo_specs",
+      ),
+    ),
+  )
+  const bondbuilderLegacy = await readFile(
+    new URL(
+      "supabase/migrations/20260503123000_add_product_lifecycle_and_bondbuilder_specs.sql",
+      ROOT,
+    ),
+    "utf8",
+  )
+  await pg.exec(
+    bondbuilderLegacy.slice(
+      bondbuilderLegacy.indexOf("ALTER TABLE public.product_bondbuilder_specs\n  ADD COLUMN"),
+      bondbuilderLegacy.indexOf("DROP FUNCTION IF EXISTS public.match_products"),
+    ),
+  )
   for (const migration of MIGRATIONS) {
     const sql = (await readFile(new URL(migration, ROOT), "utf8")).replace(
       "CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;",

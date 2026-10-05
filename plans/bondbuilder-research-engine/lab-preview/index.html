@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; img-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Bondbuilder Research Lab · Batch 1</title>
+  <style>
+    :root{color-scheme:light;--bg:#f5eee5;--ink:#292524;--muted:#68615a;--line:#e7e2db;--paper:#fff;--high:#166449;--medium:#84620e;--low:#6b5960;--shadow:0 0 0 1px #0000000f,0 1px 2px -1px #0000000f,0 2px 4px #0000000a}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1280px;margin:auto;padding:32px 28px 60px}h1,h2,h3,p{margin:0}h1{font-size:30px;letter-spacing:-.7px;font-weight:650}h2{font-size:23px;letter-spacing:-.4px}h3{font-size:15px}a{color:inherit;text-underline-offset:3px}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #3f6657;outline-offset:3px}button,summary{min-height:44px}.eyebrow{font-size:11px;font-weight:650;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}.muted{color:var(--muted)}.intro{margin-top:8px;max-width:810px}.header{display:flex;align-items:end;justify-content:space-between;gap:22px;margin:6px 0 20px}.counts{display:flex;gap:18px;white-space:nowrap;font-size:13px}.counts strong{font-size:20px;display:block}.note{border-left:3px solid #bca68b;padding:10px 14px;background:#fff8;margin-bottom:24px;font-size:12px;color:var(--muted)}.layout{display:grid;grid-template-columns:276px minmax(0,1fr);gap:24px;align-items:start}.sidebar h2{font-size:15px;margin-bottom:12px}.product-list{display:grid;gap:8px}.product{display:block;text-align:left;background:white;width:100%;padding:13px 14px;border:1px solid transparent;border-radius:6px;box-shadow:var(--shadow)}.product[aria-pressed=true]{border-color:#292524;box-shadow:0 0 0 1px #292524}.product-top{display:flex;justify-content:space-between;align-items:center;gap:8px}.product-name{font-weight:650;font-size:13px}.product small{display:block;margin-top:5px;color:var(--muted);font-size:12px}.pill{display:inline-block;flex-shrink:0;border-radius:4px;padding:2px 7px;font-size:11px;font-weight:650;background:#f5f5f4;color:var(--muted)}.high{background:#e8f4ee;color:var(--high)}.medium{background:#f7f0da;color:var(--medium)}.low{background:#f0ebed;color:var(--low)}.open{background:#fff3dc;color:#885b0b}.panel{border-radius:6px;background:var(--paper);box-shadow:var(--shadow);min-width:0}.panel-head{padding:22px 24px 18px;border-bottom:1px solid var(--line)}.identity{margin-top:5px;font-size:12px;color:var(--muted)}.product-header{display:flex;align-items:start;justify-content:space-between;gap:16px}.body{padding:0 24px 24px}.group{padding-top:21px}.group h3{margin-bottom:10px}.property{display:grid;grid-template-columns:140px minmax(0,1fr);gap:18px;padding:12px 0;border-top:1px solid var(--line)}.label{font-size:12px;color:var(--muted)}.value{font-size:13px;font-weight:550;overflow-wrap:anywhere}.reason{font-size:12px;font-weight:400;color:var(--muted);margin-top:5px}.reason a{font-weight:500}.timeline{display:flex;flex-wrap:wrap;gap:7px;margin:13px 0 4px}.step{background:#f7f4ef;padding:6px 9px;border-radius:4px;font-size:12px}.step:not(:last-child)::after{content:' →';color:#a69d91}.flag{background:#fff8eb;padding:12px 14px;margin-top:17px;border-left:3px solid #d9b36c;font-size:12px}.flag ul{margin:7px 0 0;padding-left:16px}.flag li+li{margin-top:5px}details{border-top:1px solid var(--line);margin-top:18px}summary{padding:11px 0;font-size:13px;font-weight:600;cursor:pointer}details p{font-size:12px;margin:6px 0 12px}.source-list{display:grid;gap:8px;list-style:none;padding:0;margin:8px 0}.source-list li{padding:8px 0;border-bottom:1px solid var(--line);font-size:12px}.source-list small{display:block;color:var(--muted);margin-top:3px}.inci{font-size:12px;font-family:inherit;white-space:pre-wrap;overflow-wrap:anywhere;background:#f7f4ef;padding:12px;border-radius:4px}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:12px;text-align:left}th{font-size:11px;color:var(--muted);font-weight:600}th,td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}th:first-child,td:first-child{padding-left:0}.comparison{margin-top:24px;padding:6px 20px 16px}.comparison summary{font-size:14px}.error{padding:25px;border-left:3px solid #b97754;background:#fff}.error button{padding:8px 14px;margin-top:14px}.hidden,[hidden]{display:none!important}.footer{margin-top:22px;color:var(--muted);font-size:11px}.skip{position:absolute;left:16px;top:-80px;background:white;padding:10px}.skip:focus{top:10px}noscript{display:block;padding:16px;background:white}
+    @media(max-width:800px){main{padding:22px 16px 40px}.header{display:block}.counts{margin-top:16px;gap:24px}.layout{grid-template-columns:minmax(0,1fr);gap:18px}.sidebar{min-width:0}.product-list{display:flex;overflow-x:auto;padding:2px 2px 10px}.product{min-width:230px;max-width:230px}.sidebar h2{margin-bottom:8px}.panel-head{padding:18px}.body{padding:0 18px 20px}.property{grid-template-columns:108px minmax(0,1fr);gap:12px}.note{margin-bottom:18px}h1{font-size:26px}h2{font-size:21px}.comparison{padding:6px 14px 14px}}
+    @media(max-width:420px){.property{grid-template-columns:1fr;gap:3px}.product-header{display:block}.product-header>.pill{margin-top:8px}.counts{gap:18px}}
+      code{font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}.db-values{margin-top:10px}.db-values .property{grid-template-columns:190px minmax(0,1fr);padding:8px 0}.payload{white-space:pre-wrap;overflow-wrap:anywhere;background:#f7f4ef;padding:12px;border-radius:4px;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}.db-intro{font-size:12px;color:var(--muted);margin:5px 0 12px}.proposal-head{display:flex;align-items:center;gap:10px}.unknown{color:var(--muted)}@media(max-width:600px){.db-values .property{grid-template-columns:1fr;gap:3px}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#audit">Skip to product audit</a>
+  <main>
+    <p class="eyebrow">Internal English review · read-only · no production database</p>
+    <header class="header">
+      <div><h1>Bondbuilder Research Lab</h1><p class="intro muted">Batch 1 · product properties, application facts and proposed database values.</p></div>
+      <div class="counts" aria-label="Trust levels"><span><strong>8</strong>reviewed</span><span><strong>3</strong>high</span><span><strong>3</strong>medium</span><span><strong>2</strong>low</span></div>
+    </header>
+    <p class="note">Display updated: 01 Oct 2026 · Base sources: 30 Sep · Application follow-up: 01 Oct · <strong>Consolidated review snapshot</strong>, not a new engine run. Existing trust tiers stay owner-agreed. New submissions default to low trust and not Chaarlie-recommended; only Nick can promote them. Database values below are proposals, not saved rows or executable protocols.</p>
+    <div id="loading" role="status">Loading research snapshot …</div>
+    <div id="error" class="error" role="alert" hidden><h2>Research snapshot unavailable</h2><p>The local snapshot or English review file could not be loaded. Open this view through the local preview server; there is no database fallback.</p><button id="retry" type="button">Retry</button></div>
+    <noscript>Enable JavaScript to view this local preview. The research snapshot and English review values are stored alongside the HTML. No decisions are saved.</noscript>
+    <div id="content" hidden>
+      <div class="layout">
+        <aside class="sidebar"><h2>First product batch</h2><nav class="product-list" id="products" aria-label="Select product"></nav><p class="footer">Six products meet the trust floor for initial additions. This is not catalog or recommendation approval.</p></aside>
+        <section class="panel" id="audit" aria-label="Product audit" tabindex="-1"></section>
+      </div>
+      <details class="comparison panel"><summary>Compare all eight products</summary><div class="table-wrap"><table><caption class="hidden">Trust, technology, routine placement, format and contact time</caption><thead><tr><th scope="col">Product</th><th scope="col">Trust</th><th scope="col">Technology</th><th scope="col">Placement</th><th scope="col">Format</th><th scope="col">Time</th></tr></thead><tbody id="compare"></tbody></table></div></details>
+      <p class="footer">v0.4 draft synchronized with final owner rulings · Last executed run: v0.3. Frozen research artifacts remain unchanged. No approval, migration or database write occurs in this view.</p>
+    </div>
+  </main>
+  <script>
+    const labels={high:'High',medium:'Medium',low:'Low'};
+    const escapeHtml=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const allowedUrl=url=>{try{const u=new URL(url);return u.protocol==='https:'?escapeHtml(u.href):'#'}catch{return '#'}};
+    let data;
+    const pill=(text,tone='')=>`<span class="pill ${tone}">${escapeHtml(text)}</span>`;
+    const link=(url,label)=>`<a href="${allowedUrl(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)} ↗</a>`;
+    function row(label,value,note='',tone=''){
+      return `<div class="property"><div class="label">${escapeHtml(label)}</div><div><div class="value">${escapeHtml(value)}${tone?' '+pill(tone==='open'?'Open':'Complementary advice','open'):''}</div>${note?`<div class="reason">${note}</div>`:''}</div></div>`;
+    }
+    function proposedSpecs(p){
+      return {technology_family:p.technology,claim_trust_level:p.trust,trust_basis:p.basis,...p.databaseValues};
+    }
+    function databaseSection(p){
+      const specs=proposedSpecs(p);
+      const payload={proposal_version:'bondbuilder-lab-draft-2',status:'review_only_not_persisted',product_bondbuilder_specs:specs,...(p.physicalFormatProposal?{proposed_physical_format:p.physicalFormatProposal}:{}),...(p.manufacturerFit?{manufacturer_positioning:p.manufacturerFit}:{}),product_application_protocols:{cadence:p.cadenceProposal,...(p.protocolProposal?{application_facts:p.protocolProposal}:{application_facts:null})}};
+      return `<section class="group"><div class="proposal-head"><h3>Proposed database values</h3>${pill('Draft · not saved','open')}</div>
+        <p class="db-intro">Target: <code>product_bondbuilder_specs</code>. English codes below; guidance and evidence stay separate. Existing enums are reused where supported. Technology / trust fields require the planned schema extension; nulls are unresolved, not SQL-ready.</p>
+        <div class="db-values">${Object.entries(specs).map(([key,value])=>`<div class="property"><div class="label"><code>${escapeHtml(key)}</code></div><div class="value"><code class="${value===null?'unknown':''}">${escapeHtml(value===null?'null':value)}</code></div></div>`).join('')}</div>
+        <p class="reason">${escapeHtml(p.databaseNote||'No intensity property. Research facts, recommendation approval and personal scheduling remain separate.')}</p>
+        <details><summary>Structured application & frequency proposal</summary>
+          <p>Target: <code>product_application_protocols</code>. These are illustrative review shapes, not the current accepted runtime payload. Cadence uses wash counts, weekly counts or conditional branches only when sourced. Unknown local frequency stays null; cross-market advice remains in notes. Physical-format and manufacturer-positioning examples are separate proposals, not implemented spec columns.</p>
+          <p>${p.protocolProposal?'Detailed application example included for this product. Sequence, starting doses, minimum time and conditional conditioner rules still need contract / compiler support.':'Application details are not projected here; see the researched guidance below. No missing facts are filled in automatically.'} Personal scheduling remains routine-owned; this does not add washes.</p>
+          <pre class="payload">${escapeHtml(JSON.stringify(payload,null,2))}</pre>
+        </details>
+      </section>`;
+    }
+    function select(id){
+      const p=data.products.find(x=>x.id===id)||data.products[0];
+      const formulaSource=link(p.formula.url,'Formula / product source');
+      const sources=p.sources.map(id=>data.sources.find(s=>s.id===id)).filter(Boolean);
+      const cadenceExtra=p.id==='P05'?escapeHtml(p.cadenceNote)+' '+link('https://www.redken.com.au/products/haircare/acidic-bonding-concentrate/acidic-bonding-concentrate-intensive-treatment','AU manufacturer'):p.id==='P08'?escapeHtml(p.cadenceNote)+' '+link('https://www.kerastase-usa.com/collections/premiere/concentre-decalcifiant-repairing-pre-shampoo.html','US brand professional'):p.id==='P04'?'No dependable interval for this exact Plus version.':p.id==='P02'?'Selected DE source version. Global directions remain separate; do not combine courses.':p.id==='P03'?'Manufacturer guidance; do not force extra washes.':escapeHtml(p.cadenceNote||'');
+      document.querySelectorAll('.product').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.id===p.id)));
+      document.getElementById('audit').innerHTML=`
+        <header class="panel-head"><p class="eyebrow">${escapeHtml(p.id)} · Product audit</p><div class="product-header"><div><h2>${escapeHtml(p.shortName)}</h2><p class="identity">${escapeHtml(p.size)} · ${escapeHtml(p.formula.market)}</p></div>${pill(labels[p.trust],p.trust)}</div></header>
+        <div class="body">
+          <section class="group"><h3>Technology & trust</h3>
+            ${row('Category','Targeted bondbuilder treatment','Formula clue + specialized treatment role; not repair branding alone.')}
+            ${row('Technology',p.technologyLabel,escapeHtml(p.marker)+' · '+formulaSource)}
+            ${row('Assessed benefit',p.benefit)}
+            ${row('Claim trust',labels[p.trust]+' · agreed with Nick',escapeHtml(p.trustReason))}
+            <details><summary>Research & expert experience</summary><p><strong>Research support.</strong> ${escapeHtml(p.science)}</p><p><strong>Practice / experts.</strong> ${escapeHtml(p.practice)}</p><p class="muted">The tier is ${p.basis==='owner_anchor'?'a chosen high-trust reference':'an owner-agreed pilot grade'}, not an independently validated research finding. Classification confidence and certainty of efficacy are different.</p></details>
+          </section>
+          ${databaseSection(p)}
+          <section class="group"><h3>Application in the routine</h3><div class="timeline" aria-label="Application sequence">${p.sequence.map(s=>`<span class="step">${escapeHtml(s)}</span>`).join('')}</div>
+            ${row('Placement / format',p.position+' · '+p.format)}
+            ${row('Hair state / area',p.state+' · '+p.area)}
+            ${row('Contact / wait time',p.time)}
+            ${row('Rinse / ordering',p.rinse)}
+            ${row('Conditioner',p.conditioner,p.id==='P02'?'Keep the usual conditioner after the wait, or skip if not needed. A rinse-out conditioner may be rinsed as usual; this is not a standalone K18 rinse.':'')}
+            ${row('Amount / dilution',p.amount,p.id==='P08'?link('https://www.kerastase.de/produktlinien/produktlinien/premiere/concentre-decalcifiant-ultra-reparateur/KER_00277.html','Complementary DE FAQ'):p.id==='P03'?'Fill to 150 ml finished mixture in the intended bottle, not 150 ml additional water.':'')}
+            ${row('Frequency',p.cadence,cadenceExtra,p.cadenceState==='open'?'open':'')}
+            <p class="reason">Directions: ${formulaSource}${p.id==='P03'?' · '+link('https://epres.com/products/bond-repair-concentrate-refill-pack','Dilution / refill'):''}${(p.additionalSources||[]).map(id=>data.sources.find(s=>s.id===id)).filter(Boolean).map(s=>' · '+link(s.url,s.id+' · Application follow-up, 01 Oct')).join('')}. Captured source instructions, not an executable personalized schedule.</p>
+          </section>
+          <section class="group"><h3>Suitability & open points</h3>
+            ${row('Hair diameter',p.fit,p.fitState==='inherited'?'Existing internal product decision; not a new blanket inference from all-hair-types positioning.':'An unfinished assignment does not mean unsuitable.',p.fitState==='open'?'open':'')}
+            ${row('Weight / heaviness',p.weight)}
+            ${row('Treatment role',p.role)}
+            ${row('Catalog status','Not checked in this view','No live catalog reconciliation, database connection or recommendation activation.')}
+            <div class="flag"><strong>Missing facts / limitations</strong><ul>${p.gaps.map(g=>`<li>${escapeHtml(g)}</li>`).join('')}</ul></div>
+          </section>
+          <details><summary>INCI & exact source version</summary><p><strong>${escapeHtml(p.fullName)}</strong> · ${escapeHtml(p.size)} · ${escapeHtml(p.formula.market)}</p><p>Verbatim source-bound formula, not a verified physical-pack scan. Local and global formulas are not merged. Ingredient text and official product names remain in their original language.</p><pre class="inci">${escapeHtml(p.formula.rawInci)}</pre><p>${formulaSource}${p.id==='P05'?' · Explicitly selected Douglas formula. The different manufacturer version remains in the historical record.':''}</p></details>
+          <details><summary>Open sources (${sources.length})</summary><ul class="source-list">${sources.map(s=>`<li>${link(s.url,s.id+' · '+new URL(s.url).hostname)}<small>${escapeHtml(s.kind+' · '+s.scope)}</small><small>${escapeHtml('Access: '+s.access)}</small>${s.limits?`<small>${escapeHtml('Limits: '+s.limits)}</small>`:''}</li>`).join('')}${p.id==='P07'?`<li>${link('https://juut.com/blog/damaged-hair-repair/','JUUT · complementary stylist experience')}<small>Commercial Aveda affiliation; sensory experience, not a structural test.</small></li>`:''}</ul></details>
+          <details><summary>History: unchanged v0.3 classification confidence</summary><p>Historical values, <strong>not current v0.4 confidence</strong>. Owner rulings and later source corrections were not written back into that run. A new consolidated confidence run remains outstanding.</p><div class="table-wrap"><table><thead><tr><th>Property</th><th>Historical confidence</th></tr></thead><tbody>${Object.entries(p.historicalConfidence||{}).map(([k,v])=>`<tr><td><code>${escapeHtml(k)}</code></td><td>${escapeHtml(v)}</td></tr>`).join('')}</tbody></table></div></details>
+        </div>`;
+    }
+    async function load(){
+      document.getElementById('loading').hidden=false;document.getElementById('error').hidden=true;document.getElementById('content').hidden=true;data=undefined;
+      try{
+        const [snapshotResponse,reviewResponse]=await Promise.all([fetch('snapshot.json',{cache:'no-store'}),fetch('review-values.en.json',{cache:'no-store'})]);
+        if(!snapshotResponse.ok||!reviewResponse.ok)throw new Error('snapshot unavailable');
+        const snapshot=await snapshotResponse.json(),review=await reviewResponse.json();
+        if(snapshot.schemaVersion!==1||snapshot.catalogConnected!==false||snapshot.products.length!==8||review.schemaVersion!==1||review.locale!=='en'||review.status!=='review_proposal_not_persisted'||review.products.length!==8)throw new Error('invalid snapshot');
+        if(new Set(snapshot.products.map(p=>p.id)).size!==8||new Set(review.products.map(p=>p.id)).size!==8)throw new Error('duplicate identity');
+        data={...snapshot,sources:[...snapshot.sources,...(review.followupSources||[])],products:snapshot.products.map(p=>{
+          const english=review.products.find(r=>r.id===p.id);
+          if(!english||!labels[p.trust]||!english.databaseValues||!english.cadenceProposal||['benefit','trustReason','science','practice','format','position','state','area','time','rinse','conditioner','amount','cadence','fit','weight','role'].some(k=>typeof english[k]!=='string')||!Array.isArray(english.gaps)||!Array.isArray(english.sequence))throw new Error('incomplete English review');
+          return {...p,...english,formula:p.formula,trust:p.trust,basis:p.basis,technology:p.technology,sources:[...p.sources,...(english.additionalSources||[])],historicalConfidence:p.historicalConfidence};
+        })};
+        document.getElementById('products').innerHTML=data.products.map(p=>`<button type="button" class="product" data-id="${escapeHtml(p.id)}" aria-pressed="false" aria-controls="audit"><span class="product-top"><span class="product-name">${escapeHtml(p.shortName)}</span>${pill(labels[p.trust],p.trust)}</span><small>${escapeHtml(p.position)} · ${escapeHtml(p.time)}</small></button>`).join('');
+        document.querySelectorAll('.product').forEach(b=>b.addEventListener('click',()=>{history.replaceState(null,'','#'+b.dataset.id);select(b.dataset.id)}));
+        document.getElementById('compare').innerHTML=data.products.map(p=>`<tr><th scope="row">${escapeHtml(p.shortName)}</th><td>${pill(labels[p.trust],p.trust)}</td><td>${escapeHtml(p.technologyLabel)}</td><td>${escapeHtml(p.position)}</td><td>${escapeHtml(p.format)}</td><td>${escapeHtml(p.time)}</td></tr>`).join('');
+        select(location.hash.slice(1));document.getElementById('content').hidden=false;
+      }catch{data=undefined;document.getElementById('error').hidden=false}finally{document.getElementById('loading').hidden=true}
+    }
+    document.getElementById('retry').addEventListener('click',load);window.addEventListener('hashchange',()=>{if(data)select(location.hash.slice(1))});load();
+  </script>
+</body>
+</html>

@@ -11,6 +11,13 @@ import {
   semanticRoleSchema,
   type ApplicationFamily,
   type PersonalPlanCategory,
+  exactContactTimeSchema,
+  exactNumericAmountSchema,
+  exactStartingDoseSchema,
+  exactDilutionSchema,
+  exactConditionerSequenceSchema,
+  shampooAfterTreatmentSchema,
+  BONDBUILDER_APPLICATION_FAMILIES,
 } from "./contracts"
 
 export {
@@ -62,11 +69,15 @@ const FAMILY_CATEGORIES = {
 } as const satisfies Record<ApplicationFamily, readonly PersonalPlanCategory[]>
 
 const EXACT_WORKFLOW_FAMILIES = {
-  swiss_o_par_tea_tree_two_pass: "targeted_treatment_shampoo",
-  epres_bond_repair: "pre_shampoo_single_treatment",
-  k18_leave_in_molecular_repair: "post_shampoo_timed_leave_in",
-  olaplex_no3plus_complete_repair: "pre_shampoo_single_treatment",
-} as const satisfies Record<(typeof EXACT_APPLICATION_WORKFLOW_IDS_V2)[number], ApplicationFamily>
+  swiss_o_par_tea_tree_two_pass: ["targeted_treatment_shampoo"],
+  epres_bond_repair: ["pre_shampoo_single_treatment"],
+  k18_leave_in_molecular_repair: ["post_shampoo_timed_leave_in"],
+  olaplex_no3plus_complete_repair: ["pre_shampoo_single_treatment"],
+  bondbuilder_verified_product: BONDBUILDER_APPLICATION_FAMILIES,
+} as const satisfies Record<
+  (typeof EXACT_APPLICATION_WORKFLOW_IDS_V2)[number],
+  readonly ApplicationFamily[]
+>
 
 const evidenceSchema = z
   .object({
@@ -154,25 +165,12 @@ export const applicationFamilyTemplateV2Schema = z
     }
   })
 
-const contactTimeSchema = z.discriminatedUnion("kind", [
-  z.object({ kind: z.literal("seconds"), seconds: z.number().int().positive() }).strict(),
-  z
-    .object({
-      kind: z.literal("range_seconds"),
-      minimumSeconds: z.number().int().positive(),
-      maximumSeconds: z.number().int().positive(),
-    })
-    .strict()
-    .refine((value) => value.maximumSeconds >= value.minimumSeconds, {
-      message: "Contact-time range must be ordered",
-    }),
-  z
-    .object({ kind: z.literal("maximum_seconds"), maximumSeconds: z.number().int().positive() })
-    .strict(),
-  z.object({ kind: z.literal("label_directed") }).strict(),
-])
+const contactTimeSchema = exactContactTimeSchema
 
 const amountSchema = z.discriminatedUnion("kind", [
+  exactNumericAmountSchema,
+  exactStartingDoseSchema,
+  z.object({ kind: z.literal("source_instruction"), copyDe: z.string().min(1).max(1000) }).strict(),
   z
     .object({
       kind: z.literal("qualitative"),
@@ -217,11 +215,16 @@ const productFactsSchema = z
     contactTime: contactTimeSchema.nullable(),
     amount: amountSchema.nullable(),
     heat: heatFactsSchema.nullable(),
+    dilution: exactDilutionSchema.optional(),
+    overnightAllowed: z.boolean().optional(),
+    conditionerSequence: exactConditionerSequenceSchema.optional(),
+    shampooAfterTreatment: shampooAfterTreatmentSchema.optional(),
     conditionerPolicy: z.enum([
       "not_applicable",
       "replaces_conditioner",
       "conditioner_before",
       "conditioner_after",
+      "conditioner_optional_after",
       "no_conditioner",
       "conditioner_optional",
       "conditioner_required",
@@ -282,11 +285,102 @@ export const productApplicationPointerV2Schema = z
           path: ["exactSteps"],
         })
       }
-      if (EXACT_WORKFLOW_FAMILIES[value.workflowId] !== value.applicationFamily) {
+      if (
+        !(EXACT_WORKFLOW_FAMILIES[value.workflowId] as readonly string[]).includes(
+          value.applicationFamily,
+        )
+      ) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
           message: "Exact workflow is incompatible with its application family",
           path: ["workflowId"],
+        })
+      }
+    }
+    if (value.workflowId === "bondbuilder_verified_product") {
+      if (
+        value.evidence.some((source) => !["manufacturer", "retailer"].includes(source.sourceType))
+      ) {
+        context.addIssue({
+          code: "custom",
+          path: ["evidence"],
+          message: "Verified product directions require producer or retailer evidence",
+        })
+      }
+      if (
+        value.scope.category !== "bondbuilder" ||
+        value.role !== "bond_repair" ||
+        value.sourceRole !== "specialized_bond_treatment"
+      ) {
+        context.addIssue({
+          code: "custom",
+          path: ["role"],
+          message: "Verified Bondbuilder workflow requires exact Bondbuilder role",
+        })
+      }
+      if (!value.exactSteps.some((s) => s.action === "apply_product")) {
+        context.addIssue({
+          code: "custom",
+          path: ["exactSteps"],
+          message: "Verified treatment requires an application",
+        })
+      }
+      const applyIndex = value.exactSteps.findIndex((s) => s.action === "apply_product")
+      if (
+        value.exactSteps.filter((s) => s.action === "apply_product").length !== 1 ||
+        value.exactSteps.some(
+          (s, i) => (s.action === "wait" || s.action === "rinse") && i < applyIndex,
+        )
+      ) {
+        context.addIssue({
+          code: "custom",
+          path: ["exactSteps"],
+          message: "Treatment requires one application before wait and rinse",
+        })
+      }
+      if (
+        value.facts.shampooAfterTreatment === "layer_without_rinsing" &&
+        value.exactSteps.some((s) => s.action === "rinse")
+      ) {
+        context.addIssue({
+          code: "custom",
+          path: ["exactSteps"],
+          message: "Layered shampoo cannot follow a standalone treatment rinse",
+        })
+      }
+      if (value.facts.contactTime && !value.exactSteps.some((s) => s.action === "wait")) {
+        context.addIssue({
+          code: "custom",
+          path: ["exactSteps"],
+          message: "Timed treatment requires an explicit wait",
+        })
+      }
+      if (
+        value.applicationFamily === "post_shampoo_timed_leave_in" &&
+        (value.facts.rinse !== "leave_in" || value.exactSteps.some((s) => s.action === "rinse"))
+      ) {
+        context.addIssue({
+          code: "custom",
+          path: ["facts", "rinse"],
+          message: "Leave-in treatment cannot have a standalone rinse",
+        })
+      }
+      if (value.facts.shampooAfterTreatment && !value.applicationFamily.startsWith("pre_shampoo")) {
+        context.addIssue({
+          code: "custom",
+          path: ["facts", "shampooAfterTreatment"],
+          message: "Shampoo-after instruction requires pre-shampoo placement",
+        })
+      }
+      const wait = value.facts.conditionerSequence?.minimumWaitSeconds
+      if (
+        wait &&
+        (value.facts.contactTime?.kind !== "seconds" || value.facts.contactTime.seconds < wait)
+      ) {
+        context.addIssue({
+          code: "custom",
+          path: ["facts", "conditionerSequence"],
+          message: "Conditioner wait must be preserved by the treatment timing",
         })
       }
     }
