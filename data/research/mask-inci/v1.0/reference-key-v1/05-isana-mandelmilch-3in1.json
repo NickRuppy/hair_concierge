@@ -11,8 +11,8 @@
     "market": "DE (Rossmann own brand)",
     "formulaSource": "codecheck.info ean_4305615609775 (codecheck tier), accessed 2026-09-04",
     "rawInciSha256": "12053a7e706c4c1092fb14cea15a9f5415a6d87614a70ca1053084c3259ecc3a",
-    "identityState": "provisional_identity_conflict",
-    "identityStateReason": "The source page marks the product 'Älteres Produkt, ggf. nicht mehr erhältlich'. The research unit is the exact market product, pack/formula version; a possibly-withdrawn SKU is a material identity gap under §2.3, so confidence is capped even though the formula list itself is complete."
+    "identityState": "discontinued_confirmed_calibration_only",
+    "identityStateReason": "The source page marks the product 'Älteres Produkt, ggf. nicht mehr erhältlich'. The research unit is the exact market product, pack/formula version; a possibly-withdrawn SKU is a material identity gap under §2.3, so confidence is capped even though the formula list itself is complete. CONFIRMED 2026-10-05 (Nick's review question; live rossmann.de check via in-app browser): the Mandelmilch 3in1 no longer exists in the Isana range. The nearest current product, 'ISANA 3in1 Haarmaske Feuchtigkeit' (GTIN 4068134187123), carries a completely different verbatim INCI (coconut/shea/panthenol/niacinamide; no milk protein, no almond, no cocoa butter) — a successor, not a rename. Ruled by Nick 2026-10-05: this record stays in the calibration cohort for rule-exercise value only and must NEVER project toward the catalog; the successor joins the freeze-gate unseen set."
   },
   "g0": {
     "value": "in_category",
@@ -421,6 +421,7 @@
     "conditioningLevel"
   ],
   "assumptionNotes": [
+    "2026-10-05: identity resolved — product confirmed discontinued (live Rossmann check); record is calibration-only by Nick's ruling. Successor 'ISANA 3in1 Haarmaske Feuchtigkeit' (GTIN 4068134187123) captured for the freeze-gate unseen set (plans/mask-inci/freeze-gate-candidates.md).",
     "Re-derived under v0.2 (R6 two-readings rule; R3/R4 re-checked; R5 and R7 checked and not reached; R8 `hinweise`; R2 plausibility prong; R9 echo markers), not patched.",
     "Fields whose value moved: careDirection (balanced → protein, R6). conditioningLevel `high` survives R3 (cationics at ranks 5 and 13; the tail_index − 1 species is CITRIC ACID @15, which carries no signal). weightPotential `high` survives R4 on a heavy-lipid core (coconut @7, cacao butter @12) plus a dense fatty base (cetearyl @2), now without any cationic condition.",
     "Review triggers under v0.2 — FIRED: `protein_payload_review` (D4, unchanged), `specialist_damage_fit` (unchanged). NOT fired: `bond_claim_review`, `tail_marker_anomaly`, `tail_marker_unresolved`, `weight_high_conflict`.",
