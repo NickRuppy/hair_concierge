@@ -396,6 +396,29 @@ function loadReferenceRecord(productId: string): MaskReferenceRecord | null {
   }
 }
 
+// Curated German one-line reviewer summaries (display layer only, never part of the
+// frozen research record): { productId: { g0 | <profileKey>: sentence } }.
+const REVIEW_SUMMARY_FILES = ["review-summaries.part1.json", "review-summaries.part2.json"]
+const reviewSummarySchema = z.record(z.string(), z.record(z.string(), z.string()))
+
+function loadReviewSummaries(): Record<string, Record<string, string>> {
+  const merged: Record<string, Record<string, string>> = {}
+  for (const file of REVIEW_SUMMARY_FILES) {
+    const filePath = join(ARTIFACT_DIRECTORY, REFERENCE_KEY_DIR, file)
+    if (!existsSync(filePath)) continue
+    try {
+      const parsed = reviewSummarySchema.parse(JSON.parse(readFileSync(filePath, "utf8")))
+      for (const [productId, fields] of Object.entries(parsed)) {
+        merged[productId] = { ...merged[productId], ...fields }
+      }
+    } catch {
+      // A malformed summary file must never break the lab — rows fall back to the
+      // record's own first rationale sentence.
+    }
+  }
+  return merged
+}
+
 function loadAgreement(): MaskAgreement | null {
   const filePath = join(ARTIFACT_DIRECTORY, AGREEMENT_FILE)
   if (!existsSync(filePath)) return null
@@ -627,6 +650,7 @@ function buildProperties(
 ): MaskProperty[] {
   const statusFor = (path: string): MaskPropertyReviewStatus =>
     !staleReview && stored ? (stored.propertyStatuses[path] ?? "unreviewed") : "unreviewed"
+  const summaries = loadReviewSummaries()[productId] ?? {}
 
   const properties: MaskProperty[] = [
     {
@@ -638,7 +662,7 @@ function buildProperties(
       evidenceLevel: null,
       evidenceScope: null,
       rationale: record.g0.rationale ?? null,
-      reasoningShort: shortReasoning(record.g0.rationale),
+      reasoningShort: summaries["g0"] ?? shortReasoning(record.g0.rationale),
       evidenceSignals: record.g0.evidenceSignals,
       derivation: null,
       thresholdReasoning: [],
@@ -667,7 +691,7 @@ function buildProperties(
         evidenceLevel: field.evidenceLevel ?? null,
         evidenceScope: field.evidenceScope ?? null,
         rationale: field.rationale ?? null,
-        reasoningShort: shortReasoning(field.rationale),
+        reasoningShort: summaries[key] ?? shortReasoning(field.rationale),
         evidenceSignals: field.evidenceSignals,
         derivation: field.derivation ?? null,
         thresholdReasoning: field.thresholdReasoning,

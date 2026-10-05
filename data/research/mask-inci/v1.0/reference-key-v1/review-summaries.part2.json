@@ -1,0 +1,50 @@
+{
+  "08-sante-intense-hydration": {
+    "g0": "Anwendung laut Packung: in die feuchten Längen, 1 Minute einwirken, ausspülen – eine Ausspül-Kur mit nur einem Modus ⇒ in der Kategorie. Kurze Einwirkzeit ist kein Ausschlussgrund.",
+    "conditioningLevel": "Cetearyl-Fettalkohol auf Position 2 trägt, aber nur ein Kationik-Tensid und nur ein Öl (Sonnenblume, weit hinten) ⇒ strukturell mittel = moderate. Proteine und Feuchthaltemittel zählen hier bewusst nicht.",
+    "weightPotential": "Kein schweres Lipid (nur Sonnenblumenöl ganz hinten), kein Silikon, nur ein Kationik-Tensid – auf der ganzen Liste ⇒ low. Hohe Konfidenz: Herstellerliste, fast alles vor der Konservierer-Grenze lesbar.",
+    "careDirection": "Drei Proteine direkt hintereinander (Mais, Weizen, Soja auf 7–9) und fünf Feuchthaltemittel im lesbaren Teil – beide Seiten substanziell ⇒ balanced. Konfidenz moderat, weil die hohe Proteinlast gegensteuert.",
+    "repairSupportLevel": "Drei hydrolysierte Proteine auf Position 7–9 bilden eine echte Proteinroute; kein Bond-Wirkstoff ⇒ medium, nicht high.",
+    "primaryFocus": "Fünf Feuchthaltemittel (Glycerin auf 3, Betain, Natriumlactat, Hyaluron, Aloe), kein schweres Lipid; die Proteinroute trägt auch, Gleichstand entscheidet der Name „Intense Hydration“ ⇒ moisture; Konfidenz moderat.",
+    "secondaryFocus": "Drei Proteine auf Position 7–9 sind eine eigenständige Proteinroute neben dem Feuchtigkeitscluster ⇒ repair als Zweitfokus."
+  },
+  "09-balea-professional-aqua-hyaluron": {
+    "g0": "Drei Anwendungen auf der Packung; nur „Als Haarmaske: 3 Minuten einwirken, ausspülen“ erfüllt die Kur-Definition ⇒ in der Kategorie, Profil gilt nur für den Masken-Modus. Leave-in und Over-Night bleiben außen vor.",
+    "conditioningLevel": "Cetearyl-Fettalkohol auf Position 2 trägt; nur ein Kationik-Tensid vor der Parfum-Marke (die zwei weiteren stehen dahinter) und nur ein Öl ⇒ moderate.",
+    "weightPotential": "Kein schweres Lipid, kein Silikon – aber drei Kationik-Tenside auf der ganzen Liste (Position 4, 11, 12) ⇒ nicht strukturell leicht, daher moderate statt low; Konfidenz moderat, weil die Liste nur von einer Händlerquelle stammt.",
+    "careDirection": "Kein Protein an irgendeiner Stelle; Basis aus Fettalkohol, Kationik-Tensid und Sonnenblumenöl plus vier Feuchthaltemittel ⇒ moisture, unabhängig davon, wie man die Liste liest.",
+    "repairSupportLevel": "Kein Protein, kein Bond-Wirkstoff; Panthenol zählt nicht als Reparatur ⇒ low.",
+    "primaryFocus": "Vier Feuchthaltemittel vor der Parfum-Marke (Glycerin 3, Panthenol 5, Aloe 6, Hyaluron 7), keine Konkurrenz durch Protein, Silikon oder schweres Lipid ⇒ moisture, hohe Konfidenz.",
+    "secondaryFocus": "Kein zweiter Weg: kein Protein, kein Bond-Wirkstoff, kein Silikon oder Polymer, nur ein Öl ⇒ kein Zweitfokus."
+  },
+  "10-bali-curls-deep-repair-mask": {
+    "g0": "Anwendung vollständig angegeben: ins gewaschene, handtuchtrockene Haar, Längen und Spitzen, 2–3 Minuten, gründlich ausspülen ⇒ eindeutig in der Kategorie.",
+    "conditioningLevel": "Zwei Kationik-Tenside (Position 8 und 10), Cetearyl-Fettalkohol auf 2 und vier Öle/Butter am Stück (Shea, Kokos, Soja, Avocado auf 4–7) ⇒ alle drei Strukturzeichen erfüllt = high.",
+    "weightPotential": "Sheabutter auf 4 und Kokosöl auf 5 – zwei schwere Lipide weit vorn – plus Fettalkohol auf 2 ⇒ high. Die Packung („tiefenpflegend“, Shea/Kokos/Avocado) passt dazu.",
+    "careDirection": "Kein Protein an irgendeiner Stelle; Butter-/Öl-Basis mit Glycerin, Betain und Panthenol als Feuchthaltemitteln ⇒ moisture.",
+    "repairSupportLevel": "Trotz Name „Deep Repair“ weder Protein noch Bond-Wirkstoff; Butter, Öle und Kationik-Tenside zählen nicht als Reparatur ⇒ low.",
+    "primaryFocus": "Drei Feuchthaltemittel sind da, aber Shea auf 4 und Kokosöl auf 5 machen die Formel lipidgeführt ⇒ keine Feuchtigkeits-Headline; Reparatur, Glanz und Glättung tragen auch nicht = general.",
+    "secondaryFocus": "Glycerin, Betain und Panthenol – drei Feuchthaltemittel vor der Konservierer-Grenze ⇒ moisture als Zweitfokus; Konfidenz moderat, weil Panthenol direkt an der Grenze steht und das nötige dritte Glied ist."
+  },
+  "11-elvital-glycolic-gloss": {
+    "g0": "Auf feuchtes Haar, 5 Minuten einwirken, ausspülen; Gloss-/Laminierungs-Kuren zum Ausspülen sind ausdrücklich eingeschlossen ⇒ in der Kategorie. Auftrag ab dem Ansatz weicht vom Standard ab, schließt aber nicht aus.",
+    "conditioningLevel": "Nur Cetearyl auf Position 2 trägt; ein Kationik-Tensid vorn, kein gesichertes Öl ⇒ moderate. Ein Duftallergen steht unplausibel weit vor Parfum (letzte Stelle), daher ohnehin auf moderate gedeckelt.",
+    "weightPotential": "Konservativ moderate: Kokosöl auf Position 9 zählt nur, wenn man der Liste traut – ein Duftallergen steht unplausibel weit vor Parfum (letzte Stelle). Mit Kokosöl wäre es high; die Original-INCI der Packung würde es klären.",
+    "careDirection": "Kein Protein an irgendeiner Stelle; Basis aus Cetearyl, einem Kationik-Tensid und Amodimethicon, die Glykolsäure steht vorletzt und zählt nicht ⇒ moisture; Konfidenz moderat, weil die Liste nicht sicher lesbar ist.",
+    "repairSupportLevel": "Kein Protein, kein Bond-Wirkstoff; Glykolsäure und Amino-Silikon zählen nicht als Reparatur ⇒ low, egal wie man die Liste liest.",
+    "primaryFocus": "Konservativ shine: Amino-Silikon auf Position 6 auf dünner Basis, kein schweres Lipid gesichert; Gloss-Werbung bestätigt nur. Zählte Kokosöl auf 9, wäre es smoothing; die Original-INCI der Packung würde es klären.",
+    "secondaryFocus": "Einziger Kandidat smoothing würde dasselbe Silikon doppelt zählen, und nur ein Feuchthaltemittel ist vorhanden ⇒ kein Zweitfokus."
+  },
+  "12-guhl-panthenol-reparatur-2in1": {
+    "g0": "Zwei getrennte Modi: „Als Spülung“ (30 Sekunden) ist Conditioner, „Als Kur“ (2–3 Minuten, ausspülen) ist Maske ⇒ in der Kategorie, Profil gilt nur für den Kur-Modus.",
+    "conditioningLevel": "Cetearyl auf Position 2 trägt; nur ein Kationik-Tensid in der ganzen Formel und nur ein Lipid (Cetylester) vor dem Chelator auf 7, Haferöl steht dahinter ⇒ moderate.",
+    "weightPotential": "Kein schweres Lipid, kein Silikon, nur ein Kationik-Tensid in der ganzen Formel ⇒ strukturell leicht = low. Konfidenz moderat, weil die Liste nur von einer Händlerquelle stammt.",
+    "careDirection": "Kein Protein an irgendeiner Stelle (Glycin ist nur eine freie Aminosäure); Basis aus Fettalkohol, Kationik-Tensid, Cetylester plus Dipropylenglykol und Panthenol ⇒ moisture.",
+    "repairSupportLevel": "Trotz „Reparatur“ im Namen weder Protein noch Bond-Wirkstoff; Panthenol und Glycin zählen nicht ⇒ low.",
+    "primaryFocus": "Keine Route trägt: kein Protein oder Bond-Wirkstoff, kein Silikon, nur zwei Feuchthaltemittel statt drei ⇒ general. Konfidenz moderat – ein drittes Feuchthaltemittel ergäbe moisture.",
+    "secondaryFocus": "Nur zwei Feuchthaltemittel statt der nötigen drei, sonst nur Grundpflege ⇒ kein Zweitfokus."
+  },
+  "13-olaplex-no3-hair-perfector": {
+    "g0": "Wird ins ungewaschene Haar vor dem Shampoo gegeben, Kur und Conditioner folgen erst danach; zudem Bond-Builder mit Spezialprotokoll ⇒ ausgeschlossen, kein Profil. Jeder der beiden Gründe reicht allein."
+  }
+}
