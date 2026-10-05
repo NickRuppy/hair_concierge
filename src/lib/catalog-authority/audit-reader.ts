@@ -9,6 +9,7 @@ import {
   type PersonalPlanCategory,
 } from "./contracts"
 import { deriveShampooProtocolRoles } from "@/lib/product-intake/shampoo-protocol-roles"
+import { readBondbuilderResearchProfile } from "@/lib/bondbuilder/research-facts"
 
 type Row = Record<string, unknown>
 
@@ -337,8 +338,14 @@ function factComplete(table: (typeof FACT_TABLES)[number], row: Row): boolean {
       )
     case "product_dry_shampoo_specs":
       return present(row, "primary_effect", "hair_color_fit", "scalp_sensitivity_fit", "format")
-    case "product_bondbuilder_specs":
+    case "product_bondbuilder_specs": {
+      if (row.research_profile != null) {
+        const profile = readBondbuilderResearchProfile(row)
+        return profile !== null && profile.assessment.claim_trust_level !== "low" &&
+          profile.assessment.trust_basis !== "owner_default" && profile.holds.protocol.length === 0
+      }
       return present(row, "application_mode", "treatment_mode", "product_format", "usage_protocol")
+    }
     case "product_deep_cleansing_shampoo_specs":
       return (
         ["product_sebum_buildup", "metal_mineral_hard_water", "broad_spectrum_detox"].includes(

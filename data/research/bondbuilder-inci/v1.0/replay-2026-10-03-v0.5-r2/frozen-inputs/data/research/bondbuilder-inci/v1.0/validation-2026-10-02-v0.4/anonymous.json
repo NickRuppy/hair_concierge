@@ -1,0 +1,157 @@
+{
+  "packet_version": "bondbuilder-validation-input-v0.4",
+  "normalization": "Remove terminal full stop and organic footnote stars; split ingredient delimiters only; preserve order, spelling, aliases and case. No ingredient inference.",
+  "records": [
+    {
+      "slot_id": "V01",
+      "raw_inci": "Water (Aqua / Eau), Cetearyl Alcohol, Salvia Hispanica Seed Extract, Creatine, Polyquaternium-10, Stearamidopropyl Dimethylamine, Prunus Amygdalus (Sweet Almond) Oil, Psidium Guajava Fruit Extract, Brassica Oleracea Acephala Leaf Extract, Lentinus Edodes (Shiitake Mushroom) Extract*, Cucurbita Pepo (Pumpkin) Seed Extract*, Leuconostoc/Radish Root Ferment Filtrate, Glycerin, Opuntia Tuna Fruit Extract, Ribes Nigrum (Black Currant) Fruit Extract, Behentrimonium Chloride, Isopropyl Alcohol, Ethylhexylglycerin, Tocopherol, Polyquaternium-37, Hydroxypropylgluconamide, Hydroxypropylammonium Gluconate, Tartaric Acid, Citric Acid, Phenoxyethanol, Benzyl Alcohol, Sodium Benzoate, Potassium Sorbate, Fragrance (Parfum), Limonene, Linalool, Geraniol, Anethole, Dimethyl Phenethyl Acetate, Geranyl Acetate, Linalyl Acetate, Citrus Aurantium Peel Oil, Pinene.",
+      "normalized_inci": [
+        "Water (Aqua / Eau)",
+        "Cetearyl Alcohol",
+        "Salvia Hispanica Seed Extract",
+        "Creatine",
+        "Polyquaternium-10",
+        "Stearamidopropyl Dimethylamine",
+        "Prunus Amygdalus (Sweet Almond) Oil",
+        "Psidium Guajava Fruit Extract",
+        "Brassica Oleracea Acephala Leaf Extract",
+        "Lentinus Edodes (Shiitake Mushroom) Extract",
+        "Cucurbita Pepo (Pumpkin) Seed Extract",
+        "Leuconostoc/Radish Root Ferment Filtrate",
+        "Glycerin",
+        "Opuntia Tuna Fruit Extract",
+        "Ribes Nigrum (Black Currant) Fruit Extract",
+        "Behentrimonium Chloride",
+        "Isopropyl Alcohol",
+        "Ethylhexylglycerin",
+        "Tocopherol",
+        "Polyquaternium-37",
+        "Hydroxypropylgluconamide",
+        "Hydroxypropylammonium Gluconate",
+        "Tartaric Acid",
+        "Citric Acid",
+        "Phenoxyethanol",
+        "Benzyl Alcohol",
+        "Sodium Benzoate",
+        "Potassium Sorbate",
+        "Fragrance (Parfum)",
+        "Limonene",
+        "Linalool",
+        "Geraniol",
+        "Anethole",
+        "Dimethyl Phenethyl Acetate",
+        "Geranyl Acetate",
+        "Linalyl Acetate",
+        "Citrus Aurantium Peel Oil",
+        "Pinene"
+      ],
+      "formula_status": "complete",
+      "input_flags": [
+        "source_version_not_actual_pack"
+      ]
+    },
+    {
+      "slot_id": "V02",
+      "raw_inci": "AQUA, CETEARYL ALCOHOL, STEARAMIDOPROPYL DIMETHYLAMINE, LACTIC ACID, GLYCERIN, GLYCINE SOJA OIL, HYDROLYZED KERATIN, KAOLIN, HYDROLYZED WHEAT PROTEIN, HYDROLYZED SOY PROTEIN, HYDROLYZED CORN PROTEIN, PANTHENOL, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, CETRIMONIUM CHLORIDE, C14-22 ALCOHOLS, C12-20 ALKYL GLUCOSIDE, TRISODIUM ETHYLENEDIAMINE DISUCCINATE, PARFUM, SODIUM BENZOATE, PHENOXYETHANOL.",
+      "normalized_inci": [
+        "AQUA",
+        "CETEARYL ALCOHOL",
+        "STEARAMIDOPROPYL DIMETHYLAMINE",
+        "LACTIC ACID",
+        "GLYCERIN",
+        "GLYCINE SOJA OIL",
+        "HYDROLYZED KERATIN",
+        "KAOLIN",
+        "HYDROLYZED WHEAT PROTEIN",
+        "HYDROLYZED SOY PROTEIN",
+        "HYDROLYZED CORN PROTEIN",
+        "PANTHENOL",
+        "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+        "CETRIMONIUM CHLORIDE",
+        "C14-22 ALCOHOLS",
+        "C12-20 ALKYL GLUCOSIDE",
+        "TRISODIUM ETHYLENEDIAMINE DISUCCINATE",
+        "PARFUM",
+        "SODIUM BENZOATE",
+        "PHENOXYETHANOL"
+      ],
+      "formula_status": "complete",
+      "input_flags": [
+        "source_version_not_actual_pack"
+      ]
+    },
+    {
+      "slot_id": "V03",
+      "raw_inci": "AQUA / WATER • CETEARYL ALCOHOL • BEHENTRIMONIUM CHLORIDE • CITRIC ACID • CETYL ESTERS • GLYCERIN • GLYCINE • SCLEROCARYA BIRREA SEED OIL • BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER • STEARETH-100 • POTASSIUM HYDROXIDE • SORBITAN OLEATE • ISODODECANE • PPG-1 TRIDECETH-6 • PEG-150/DECYL ALCOHOL/SMDI COPOLYMER • AMINOPROPYL DIMETHICONE • ISOPROPYL ALCOHOL • PROPYLENE GLYCOL • PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE • HYDROLYZED CORN PROTEIN • HYDROLYZED SOY PROTEIN • HYDROLYZED WHEAT PROTEIN • HYDROXYPROPYL GUAR • BIS(C13-15 ALKOXY) PG-AMODIMETHICONE • POLYQUATERNIUM-37 • PHENOXYETHANOL • CHLORHEXIDINE DIGLUCONATE • LINALOOL • COUMARIN • LIMONENE • PARFUM / FRAGRANCE",
+      "normalized_inci": [
+        "AQUA / WATER",
+        "CETEARYL ALCOHOL",
+        "BEHENTRIMONIUM CHLORIDE",
+        "CITRIC ACID",
+        "CETYL ESTERS",
+        "GLYCERIN",
+        "GLYCINE",
+        "SCLEROCARYA BIRREA SEED OIL",
+        "BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER",
+        "STEARETH-100",
+        "POTASSIUM HYDROXIDE",
+        "SORBITAN OLEATE",
+        "ISODODECANE",
+        "PPG-1 TRIDECETH-6",
+        "PEG-150/DECYL ALCOHOL/SMDI COPOLYMER",
+        "AMINOPROPYL DIMETHICONE",
+        "ISOPROPYL ALCOHOL",
+        "PROPYLENE GLYCOL",
+        "PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE",
+        "HYDROLYZED CORN PROTEIN",
+        "HYDROLYZED SOY PROTEIN",
+        "HYDROLYZED WHEAT PROTEIN",
+        "HYDROXYPROPYL GUAR",
+        "BIS(C13-15 ALKOXY) PG-AMODIMETHICONE",
+        "POLYQUATERNIUM-37",
+        "PHENOXYETHANOL",
+        "CHLORHEXIDINE DIGLUCONATE",
+        "LINALOOL",
+        "COUMARIN",
+        "LIMONENE",
+        "PARFUM / FRAGRANCE"
+      ],
+      "formula_status": "complete",
+      "input_flags": [
+        "source_version_not_actual_pack"
+      ]
+    },
+    {
+      "slot_id": "V04",
+      "raw_inci": "Aqua / Water / Eau, Glycerin, Propylene Glycol, Glycine, Citric Acid, Parfum / Fragrance, Peg-40 Hydrogenated Castor Oil, Hydroxypropyltrimonium Hydrolyzed Wheat Protein, Cetrimonium Chloride, Polysorbate 20, Polysorbate 80, Phenoxyethanol, Sodium Hydroxide, Glutamic Acid, Quaternium-80, Arginine, Hydroxypropyl Guar, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Serine, Linalool, Tyrosine",
+      "normalized_inci": [
+        "Aqua / Water / Eau",
+        "Glycerin",
+        "Propylene Glycol",
+        "Glycine",
+        "Citric Acid",
+        "Parfum / Fragrance",
+        "Peg-40 Hydrogenated Castor Oil",
+        "Hydroxypropyltrimonium Hydrolyzed Wheat Protein",
+        "Cetrimonium Chloride",
+        "Polysorbate 20",
+        "Polysorbate 80",
+        "Phenoxyethanol",
+        "Sodium Hydroxide",
+        "Glutamic Acid",
+        "Quaternium-80",
+        "Arginine",
+        "Hydroxypropyl Guar",
+        "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "Serine",
+        "Linalool",
+        "Tyrosine"
+      ],
+      "formula_status": "complete",
+      "input_flags": [
+        "source_version_not_actual_pack"
+      ]
+    }
+  ]
+}
+

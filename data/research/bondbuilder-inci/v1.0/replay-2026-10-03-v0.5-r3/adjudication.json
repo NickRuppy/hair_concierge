@@ -1,0 +1,54 @@
+{
+  "version": "bondbuilder-method-replay-adjudication-v1",
+  "date": "2026-10-03",
+  "scope": "Known-product candidate regression and separately recorded serialization/source amendments, not a method lock or live approval.",
+  "cohort": {
+    "calibration_products": 8,
+    "calibration_positive_families": 5,
+    "previously_researched_products": 4,
+    "genuinely_unseen_products_in_this_run": 0,
+    "independent_category_pairs": 11,
+    "category_agreement_pairs": 11,
+    "excluded_from_independent_agreement": ["V04"]
+  },
+  "rulings": [
+    {
+      "code": "known_product_regression",
+      "decision": "Useful compatibility and policy regression; do not describe these products as unseen holdouts or the tiers as efficacy guarantees. Owner/default grades remain unchanged."
+    },
+    {
+      "code": "S13_prior_verdict_contamination",
+      "decision": "Both lanes recognized and disregarded the old researcher verdict embedded in S13 limits. V04 is descriptive only and excluded from both numerator and denominator. Future packet preparation removes that metadata with a receipt; historical named packets and lane outputs remain unchanged."
+    },
+    {
+      "code": "comparison_report_correction",
+      "decision": "comparison.json wrongly counted envelopes rather than slot pairs and included reasoning prose in category equality. Preserve it; comparison-correction-01.json supersedes those report calculations. These report defects are not classification disagreements."
+    },
+    {
+      "code": "reference_marker_wire_failure",
+      "decision": "All 24 initial real CLI projections refused. Eighteen used display-case shared markers rather than exact normalized literals. Preserve the failures; wire-amendment-01 changes only canonical marker casing and dual self hashes, yielding 16 projected and eight refused. Adapter binding is not relaxed. Current prepared prompt now states normalized reference digest and literal encoding explicitly."
+    },
+    {
+      "code": "source_preparation_completeness",
+      "decision": "The named packet retained abbreviated directions, leaving many genuine source-packet gaps. The producer complement is separate inspected evidence, not retrospective blind validation. Its typed patch preserves DE/international variants, unknown formats and fits, epres bottle precision, and the selected Premiere wet-hair source. Five dependent application reasoning fields and matching unknown holds must be reconciled transparently."
+    },
+    {
+      "code": "source_amendment_correction",
+      "decision": "source-amendment-01 projected all 16 pilot profiles but omitted a new P06 unknown-placement hold and complete dependent-reasoning change logs; its Lane B same-fact preimage guard was incomplete. Preserve that run. source-amendment-02 is the corrected create-only overlay with explicit preimage/capture checks, hold/log reconciliation and summarized outcomes."
+    },
+    {
+      "code": "independent_reasoning_differences",
+      "decision": "P07, P08, V01 and V03 have classification-confidence differences. Application wrapper prose, sequence notes, partner details and source variants also differ; these are visible in the corrected comparison and do not count as known-value or category agreement. No single merged confidence score or majority-vote efficacy rule is invented. Source overlays are main-adjudicated shared amendments, not two new independent opinions."
+    },
+    {
+      "code": "historical_snapshot_verification",
+      "decision": "Frozen r3 method and full-prompt bytes are unchanged. The prepared runtime prompt was clarified after the observed wire failure. --frozen-only verifies historical snapshot provenance and reports current source drift explicitly; it does not prove the current prompt was what those researchers saw. Current runtime behavior has separate packet and adapter regression tests."
+    }
+  ],
+  "method_locked": false,
+  "coverage_decision": "Owner acceptance of bounded known-product regression remains pending; no full unseen-positive family coverage claim.",
+  "intake_active": false,
+  "database_writes": 0,
+  "catalogue_apply_approved": false,
+  "recommendation_promotions": 0
+}

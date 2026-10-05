@@ -1,0 +1,1392 @@
+{
+  "schema_version": "bondbuilder-lane-records-v0.1",
+  "standard_version": "bondbuilder-inci-v0.1",
+  "lexicon_version": "bondbuilder-lexicon-v0.1",
+  "lane_id": "lane-a",
+  "stage": "B",
+  "sealed": true,
+  "seal_date": "2026-09-30",
+  "input_receipt": [
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/bondbuilder-classification-standard.v0.1.md",
+      "sha256": "712e629f0d92f4d9bafdf3f5fcce151628feb0819b777eb329ec3870c62a2968"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/evidence-packet.v0.1.json",
+      "sha256": "d550115248bf129fd90ac6a9ed2f5fcb50039318e6f0ed1528fc466094aacd35"
+    }
+  ],
+  "assessment_scope": "Provisional calibration of frozen source-version research targets. Packet research was bounded, not a systematic evidence-of-absence review. No source was independently browsed by this lane.",
+  "hold_serialization": "Any unresolved finalization hold uses boundary_status research_hold and null final technology/trust. A separate boundary_candidate preserves category-compatible intent/architecture; evidence holds do not claim that the formula or role is outside the category.",
+  "common_limits": [
+    "No source reputation, price, clinical slogan or marker alone supplies efficacy.",
+    "Missing full text does not automatically imply low; identified pivotal access/applicability gaps remain holds.",
+    "No scientific effect size, active concentration, supplier identity or all-thickness fit was inferred.",
+    "Source version research eligibility is separate from supplied pack, catalog and recommendation readiness.",
+    "Stage A files remain unchanged; markers and architecture observations are frozen. Stage B adds identity, role, protocol, evidence and interpretation only."
+  ],
+  "open_leads_disposition": "The packet's 2026 Saccharomyces/commercial-mask link was not accessed and is explicitly not grade-bearing; no result or applicability was inferred.",
+  "records": [
+    {
+      "slot_id": "A01",
+      "pilot_id": "P07",
+      "name": "Aveda Botanical Repair Bond-Building Pre-Shampoo Treatment",
+      "boundary_status": "research_hold",
+      "technology_family": null,
+      "claim_trust_level": null,
+      "classification_confidence": "low",
+      "research_admission_candidacy": false,
+      "source_scope": {
+        "target_market": "DE",
+        "size": "150 ml",
+        "source": {
+          "id": "R04",
+          "url": "https://www.aveda.de/product/botanical-repair-bond-building-pre-shampoo-treatment",
+          "market": "DE",
+          "tier": "manufacturer_local",
+          "note": "Local source 150ml; ILN53057 metadata removed from INCI without changing ingredient facts."
+        },
+        "formula_status": "source_version_resolved",
+        "identity_status": "research_source_target_only",
+        "raw_inci_sha256": "3f6d3873570520d1ebaa558db7991cec7b05171a333737e6c5a471953455b0ab",
+        "formula_fingerprint_sha256": "13715e76da3df36492e021fe9068510b02afb71873d2ce7ea0b2adafbd9527e1"
+      },
+      "flags": [
+        "supplied_pack_not_verified"
+      ],
+      "packet_limitations": [
+        "Three-times-stronger footnote compares curly hair with shampoo without conditioner.",
+        "Conditioning/deposition contributions are not isolated by that comparator.",
+        "Marker pair does not verify supplier identity or finished-product dose."
+      ],
+      "recognized_family_candidate": "gluconamide_gluconate",
+      "retained_stage_a_candidate_families": [
+        "gluconamide_gluconate"
+      ],
+      "retained_stage_a_markers": [
+        "hydroxypropylgluconamide",
+        "hydroxypropylammonium gluconate"
+      ],
+      "role": "targeted pre-shampoo gel-cream treatment",
+      "boundary_candidate": "in_scope",
+      "boundary_candidate_scope": "Resolved source-version formula and targeted role are category-compatible; this is independent of trust and catalog readiness.",
+      "field_confidence": {
+        "marker_presence": {
+          "value": "high",
+          "limiting_factor": "Exact ingredients were observed in the frozen capture; no marker observation changed after unblinding."
+        },
+        "source_version_identity": {
+          "value": "high",
+          "limiting_factor": "Confidence concerns only the frozen named source version, not supplied-pack or live-catalog equality."
+        },
+        "targeted_role": {
+          "value": "high",
+          "limiting_factor": "Named packet explicitly identifies specialized at-home use; effectiveness is a separate question."
+        },
+        "technology_candidate": {
+          "value": "high",
+          "limiting_factor": "Specific marker/compatible architecture and targeted intent only; no mechanism or efficacy inference."
+        },
+        "boundary_status": {
+          "value": "moderate",
+          "limiting_factor": "Category-compatible source target is retained separately; scalar research_hold also records unresolved pivotal trust evidence."
+        },
+        "claim_trust_level": {
+          "value": "low",
+          "limiting_factor": "A pivotal evidence/applicability gap or low/medium ambiguity prevents a dependable grade."
+        },
+        "application_facts": {
+          "value": "high",
+          "limiting_factor": "Exact packet directions are preserved as source statements, including gaps; this is not validation for target pack or recommendation."
+        },
+        "supported_outcome": {
+          "value": "moderate",
+          "limiting_factor": "Source-bounded descriptions only, with no numerical chart inference or retail extrapolation."
+        },
+        "fit_assessment": {
+          "value": "low",
+          "limiting_factor": "No fit assessment was performed; hair diameter, texture and individual suitability are unassessed."
+        }
+      },
+      "record_limiting_factor": "Pivotal supplier fatigue-test results are only partially accessible; E06 graphs/results cannot be inspected through this packet. No defensible retail dose/protocol bridge from the supplier experiment to this dry-hair 5–10-minute treatment is supplied. Retail curly-hair comparator does not distinguish conditioning contributions; low versus medium remains unresolved.",
+      "research_hold_reasons": [
+        "Pivotal supplier fatigue-test results are only partially accessible; E06 graphs/results cannot be inspected through this packet.",
+        "No defensible retail dose/protocol bridge from the supplier experiment to this dry-hair 5–10-minute treatment is supplied.",
+        "Retail curly-hair comparator does not distinguish conditioning contributions; low versus medium remains unresolved."
+      ],
+      "benefit_assessed": "Reinforcement of damaged hair or reduced breakage under the specified dry pre-shampoo use.",
+      "supported_outcome": {
+        "text": "R04 attributes three-times-stronger hair to a comparison on curly hair against shampoo without conditioner. This is an attributed product-test claim, not an audited effect size or an isolated bond-building result. E06 describes fatigue-test methods, but the packet does not expose the result graphs needed to evaluate that support.",
+        "scope": "Packet-described evidence and attributed claims; no universal or personal outcome guaranteed.",
+        "source_ids": [
+          "E02",
+          "E06",
+          "R04"
+        ]
+      },
+      "stronger_unproved_claims": "New bond formation, native-disulfide restoration, a universal threefold strength increase, and an isolated active-specific mechanism are not demonstrated.",
+      "evidence_profile": {
+        "schema_version": "bondbuilder-evidence-profile-v0.1",
+        "supporting_source_ids": [
+          "E02",
+          "E06",
+          "R04"
+        ],
+        "applicability": "Exact local source formula has the required pair and a targeted role. E02 supports model-chemistry plausibility; E06 concerns supplier formulations, including a spectroscopic 1% active/pH4/30-minute/rinse experiment. Supplier identity, dose and protocol equivalence to Aveda are unknown.",
+        "methods_and_comparators": "R04: curly hair versus shampoo without conditioner, with conditioning/deposition unseparated. E06: bleached/untreated and formulation comparisons, n=50 fibres, but accessible text is partial; its spectroscopic protocol must not be called the retail fatigue protocol.",
+        "contrary_evidence": "E02 explicitly says the full strengthening mechanism is unknown. Comparator confounding is an attribution limit, not proof of no benefit.",
+        "missing_information": [
+          "Full E06 poster results and methods",
+          "Exact retail applicability bridge",
+          "Inspectable R04 test methods, comparator details and endpoint definitions"
+        ],
+        "neighboring_grade_rationale": "High is excluded by unisolated conditioning and absent current test methods. Medium would require a defensible empirical/applicability bridge; low would prematurely treat inaccessible pivotal supplier results as completed negative evidence. Hold is the defensible current result.",
+        "source_access_and_affiliations": [
+          {
+            "source_id": "E02",
+            "access": "indexed primary abstract/introduction; direct PMC browser check and ACS 403 blocked full audit",
+            "affiliation": "Durham authors plus Ashland coauthor; supplier involvement disclosed.",
+            "limits": "Not an exact OGX/Aveda trial or direct retail molecular efficacy demonstration."
+          },
+          {
+            "source_id": "E06",
+            "access": "indexed primary poster text; direct PDF timeout, graphs not inspected",
+            "affiliation": "Ashland supplier-owned material; not independent retail testing.",
+            "limits": "Indexed text is partial; no numerical graph interpretation. Retail supplier identity, concentration and protocol equivalence not known. Claimed mechanism remains proposed; obtain full poster before treating an inaccessible result as pivotal."
+          },
+          {
+            "source_id": "R04",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          }
+        ]
+      },
+      "application_facts": {
+        "hair_state": "dry",
+        "phase": "before shampoo",
+        "wait_minutes_range": [
+          5,
+          10
+        ],
+        "rinse_before_shampoo": true,
+        "cadence": "source recommends alongside weekly intensive masque day; no universal researched cadence inferred",
+        "source_id": "R04"
+      },
+      "fit_assessment": {
+        "status": "unassessed",
+        "packet_status": "unassessed; no global recommendation readiness granted",
+        "all_thickness_fit": null
+      },
+      "readiness": {
+        "supplied_pack_verified": false,
+        "catalog_binding_verified": false,
+        "global_recommendation_ready": false,
+        "production_authorized": false,
+        "remaining_input_flags": [
+          "supplied_pack_not_verified"
+        ]
+      },
+      "explanation_de": {
+        "short": "Die Formel enthält das passende Wirkstoffpaar. Wie gut die konkrete Anwendung das Haar festigt, bleibt mit den vorliegenden Unterlagen offen.",
+        "deep": "Die lokale Quelle beschreibt eine gezielte Vorbehandlung. Der beworbene Festigkeitsvergleich betrifft lockiges Haar und Shampoo ohne Conditioner; Pflegeeffekte sind dabei nicht getrennt. Zur Wirkstofftechnologie liegen nur teilweise zugängliche Prüfdaten vor. Deshalb vergeben wir vorläufig keine Vertrauensstufe und leiten keine dreifache Wirkung für die individuelle Anwendung ab."
+      },
+      "stage_a_to_b_delta": "Named R04 establishes targeted gel-cream pre-shampoo role and exact dry-hair directions; pair and architecture remain unchanged. Evidence introduces a trust hold without changing the source-resolved formula status."
+    },
+    {
+      "slot_id": "A02",
+      "pilot_id": "P03",
+      "name": "epres Bond Repair Treatment",
+      "boundary_status": "in_scope",
+      "technology_family": "maleate_ester",
+      "claim_trust_level": "low",
+      "classification_confidence": "moderate",
+      "research_admission_candidacy": false,
+      "source_scope": {
+        "target_market": "DE/EU",
+        "size": "15 ml concentrate vial; starter/refill presentation not catalog-reconciled",
+        "source": {
+          "id": "R07",
+          "url": "https://epres.com/products/bond-repair-treatment",
+          "market": "global",
+          "tier": "manufacturer",
+          "note": "Four-ingredient concentrate corroborated by local refill source; not the diluted solution. Exact water quantity remains unresolved."
+        },
+        "formula_status": "source_version_resolved",
+        "identity_status": "research_source_target_only",
+        "raw_inci_sha256": "df67885977548ed909d06b732de76166b43b2514cff64b1240c5f73d77641106",
+        "formula_fingerprint_sha256": "e921881bd4f21bb59f731c7f0fc1de697028bd6519cfa271a4aca1ccb75db0d2"
+      },
+      "flags": [
+        "concentrate_not_diluted_formula",
+        "dilution_quantity_gap",
+        "catalog_binding_not_verified"
+      ],
+      "packet_limitations": [
+        "Concentrate formula is not the final diluted formula.",
+        "Patent examples are inventor-supported qualitative tests with different conditioning companions; retail efficacy/dose equivalence and molecular endpoint not demonstrated.",
+        "No inspectable retail disulfide-repair test report located in the bounded search; not proof none exists."
+      ],
+      "recognized_family_candidate": "maleate_ester",
+      "retained_stage_a_candidate_families": [
+        "maleate_ester"
+      ],
+      "retained_stage_a_markers": [
+        "diethylhexyl maleate"
+      ],
+      "role": "targeted dilute-and-spray at-home treatment",
+      "boundary_candidate": "in_scope",
+      "boundary_candidate_scope": "Resolved source-version formula and targeted role are category-compatible; this is independent of trust and catalog readiness.",
+      "field_confidence": {
+        "marker_presence": {
+          "value": "high",
+          "limiting_factor": "Exact ingredients were observed in the frozen capture; no marker observation changed after unblinding."
+        },
+        "source_version_identity": {
+          "value": "high",
+          "limiting_factor": "Confidence concerns only the frozen named source version, not supplied-pack or live-catalog equality."
+        },
+        "targeted_role": {
+          "value": "high",
+          "limiting_factor": "Named packet explicitly identifies specialized at-home use; effectiveness is a separate question."
+        },
+        "technology_candidate": {
+          "value": "high",
+          "limiting_factor": "Specific marker/compatible architecture and targeted intent only; no mechanism or efficacy inference."
+        },
+        "boundary_status": {
+          "value": "moderate",
+          "limiting_factor": "Category-compatible source target is retained separately; scalar research_hold also records unresolved pivotal trust evidence."
+        },
+        "claim_trust_level": {
+          "value": "moderate",
+          "limiting_factor": "Low is the best-supported bounded-search judgment for reinforcement; future retail evidence could change it."
+        },
+        "application_facts": {
+          "value": "high",
+          "limiting_factor": "Exact packet directions are preserved as source statements, including gaps; this is not validation for target pack or recommendation."
+        },
+        "supported_outcome": {
+          "value": "moderate",
+          "limiting_factor": "Source-bounded descriptions only, with no numerical chart inference or retail extrapolation."
+        },
+        "fit_assessment": {
+          "value": "low",
+          "limiting_factor": "No fit assessment was performed; hair diameter, texture and individual suitability are unassessed."
+        }
+      },
+      "record_limiting_factor": "Low trust follows insufficient relevant reinforcement support in the completed bounded packet search; exact dilution and catalog binding remain unresolved separate readiness limits.",
+      "research_hold_reasons": [],
+      "benefit_assessed": "Reinforcement of damaged hair, such as improved mechanical resistance or reduced breakage, beyond the patent's reported cosmetic feel/appearance.",
+      "supported_outcome": {
+        "text": "E07 reports qualitative shine, softness, combability and frizz observations for patent formulations against untreated/bleach controls. Those observations are not a quantitative mechanical-reinforcement result and are not a demonstrated outcome of the current diluted retail treatment.",
+        "scope": "Packet-described evidence and attributed claims; no universal or personal outcome guaranteed.",
+        "source_ids": [
+          "E07",
+          "R07",
+          "R13"
+        ]
+      },
+      "stronger_unproved_claims": "Retail disulfide repair and continuing molecular repair after drying are not established by inspected methods.",
+      "evidence_profile": {
+        "schema_version": "bondbuilder-evidence-profile-v0.1",
+        "supporting_source_ids": [
+          "E07",
+          "R07",
+          "R13"
+        ],
+        "applicability": "R07 and R13 agree on the four-ingredient concentrate; targeted at-home use is explicit. The patent post-bleach formula uses water, the maleate and behentrimonium chloride, unlike the retail concentrate's companions. Quantitative dilution and retail equivalence are unresolved.",
+        "methods_and_comparators": "Inventor examples use untreated or bleach controls and qualitative observations/images; different conditioning companions and salon-mixture examples do not isolate the current retail formulation's repair contribution.",
+        "contrary_evidence": "No applicable strong contrary retail study is identified. The low grade concerns insufficient support in this bounded packet, not demonstrated inefficacy.",
+        "missing_information": [
+          "Quantitative mechanical/structural retail testing",
+          "Retail dilution water volume",
+          "Study-to-retail dose and companion-ingredient equivalence"
+        ],
+        "neighboring_grade_rationale": "Low is supported for this narrow reinforcement claim because the scoped search yielded inspected qualitative patent examples and unsupported retail assertions, with no identified inaccessible pivotal test to await. Medium would require relevant empirical reinforcement evidence plus a defensible retail bridge; cosmetic patent observations do not supply it. The dilution gap separately blocks use-readiness and is not the reason for low. This is not a universal claim that no evidence exists.",
+        "source_access_and_affiliations": [
+          {
+            "source_id": "E07",
+            "access": "description/examples inspected",
+            "affiliation": "Inventor/patent-holder evidence, not independent validation.",
+            "limits": "Different companions from retail concentrate; qualitative observations/images, not inspected quantitative structural/tensile evidence. Patent claim ranges and grant are not proof of retail repair efficacy."
+          },
+          {
+            "source_id": "R07",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          },
+          {
+            "source_id": "R13",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          }
+        ]
+      },
+      "application_facts": {
+        "hair_state": "dry, unwashed",
+        "phase": "before eventual cleansing; optional extended wear",
+        "wait_minutes_min": 10,
+        "rinse": "cleanse/style as usual after treatment; manufacturer permits leave-in until later wash",
+        "cadence": "1–2 times weekly",
+        "dilution": "one concentrate vial in the intended spray bottle; exact water volume unresolved",
+        "source_id": "R07"
+      },
+      "fit_assessment": {
+        "status": "unassessed",
+        "packet_status": "unassessed; no global recommendation readiness granted",
+        "all_thickness_fit": null
+      },
+      "readiness": {
+        "supplied_pack_verified": false,
+        "catalog_binding_verified": false,
+        "global_recommendation_ready": false,
+        "production_authorized": false,
+        "remaining_input_flags": [
+          "concentrate_not_diluted_formula",
+          "dilution_quantity_gap",
+          "catalog_binding_not_verified"
+        ]
+      },
+      "explanation_de": {
+        "short": "Für eine festigende Reparaturwirkung reichen die hier gefundenen Belege nicht aus. Die vorläufige Vertrauensstufe ist niedrig.",
+        "deep": "Der spezifische Maleat-Inhaltsstoff und die gezielte Anwendung sind belegt. Die geprüften Patentbeispiele beschreiben vor allem Glanz, Geschmeidigkeit und Kämmbarkeit bei anderen Begleitstoffen. Sie zeigen keine belastbare mechanische Reparatur der heutigen verdünnten Rezeptur. Das bedeutet nicht, dass das Produkt wirkungslos ist. Die genaue Wassermenge für die Verdünnung bleibt zusätzlich offen."
+      },
+      "stage_a_to_b_delta": "R07/R13 confirm a targeted at-home diluted treatment; specific maleate marker remains unchanged. Completed bounded packet assessment yields low trust for narrower reinforcement, not just rejection of the strongest molecular slogan. Exact dilution remains unresolved."
+    },
+    {
+      "slot_id": "A03",
+      "pilot_id": "P05",
+      "name": "Redken Acidic Bonding Concentrate Intensive Treatment",
+      "boundary_status": "research_hold",
+      "technology_family": null,
+      "claim_trust_level": null,
+      "classification_confidence": "low",
+      "research_admission_candidacy": false,
+      "source_scope": {
+        "target_market": "DE",
+        "size": "190 ml",
+        "source": {
+          "id": "R02",
+          "url": "https://www.redken.eu/de-de/produkte/haarpflege/acidic-bonding-concentrate/acidic-bonding-intensive-treatment",
+          "market": "DE",
+          "tier": "manufacturer_local",
+          "note": "Material local retailer formula conflict unresolved; source formula code 1218307RK50 / F.I.L. Y70018233/1 is not a GTIN."
+        },
+        "formula_status": "conflict_hold",
+        "identity_status": "research_hold",
+        "raw_inci_sha256": "5974d3798fc1e9db35e32cb1ecd9d666e3f08baa9e9cabd7173067ba7184cb92",
+        "formula_fingerprint_sha256": "33cdd458146668090375159d54ee4afd69c688627dd2b920bbb34596a083cfd5",
+        "alternative_capture": {
+          "source_id": "R09",
+          "url": "https://www.douglas.de/de/p/5011495045",
+          "market": "DE",
+          "raw_inci_sha256": "1b7dde77c6067231ce009b330c2474d7f677edd08688471092589e94fd390c0b",
+          "formula_fingerprint_sha256": "4a18ed3c6c724f3a79124871d2be9a576e5037ece1a8e90ad6cb5dbdf86c66cf"
+        }
+      },
+      "flags": [
+        "material_same_market_formula_conflict"
+      ],
+      "packet_limitations": [
+        "Two materially different same-market INCI lists remain unresolved; no canonical formula chosen.",
+        "Formula codes are not product barcodes."
+      ],
+      "recognized_family_candidate": "acid_calcium_management",
+      "retained_stage_a_candidate_families": [
+        "acid_calcium_management"
+      ],
+      "retained_stage_a_markers": [
+        "citric acid",
+        "sodium citrate"
+      ],
+      "role": "targeted acid pre-shampoo treatment",
+      "boundary_candidate": "in_scope",
+      "boundary_candidate_scope": "Named role and captured candidate architecture only; exact target formula/market remains unresolved.",
+      "field_confidence": {
+        "marker_presence": {
+          "value": "high",
+          "limiting_factor": "Exact ingredients were observed in the frozen capture; no marker observation changed after unblinding."
+        },
+        "source_version_identity": {
+          "value": "low",
+          "limiting_factor": "Explicit formula/identity/market hold is unresolved."
+        },
+        "targeted_role": {
+          "value": "high",
+          "limiting_factor": "Named packet explicitly identifies specialized at-home use; effectiveness is a separate question."
+        },
+        "technology_candidate": {
+          "value": "low",
+          "limiting_factor": "Specific marker/compatible architecture and targeted intent only; no mechanism or efficacy inference."
+        },
+        "boundary_status": {
+          "value": "low",
+          "limiting_factor": "Target identity conflict prevents final category assignment."
+        },
+        "claim_trust_level": {
+          "value": "low",
+          "limiting_factor": "A pivotal evidence/applicability gap or low/medium ambiguity prevents a dependable grade."
+        },
+        "application_facts": {
+          "value": "high",
+          "limiting_factor": "Exact packet directions are preserved as source statements, including gaps; this is not validation for target pack or recommendation."
+        },
+        "supported_outcome": {
+          "value": "moderate",
+          "limiting_factor": "Source-bounded descriptions only, with no numerical chart inference or retail extrapolation."
+        },
+        "fit_assessment": {
+          "value": "low",
+          "limiting_factor": "No fit assessment was performed; hair diameter, texture and individual suitability are unassessed."
+        }
+      },
+      "record_limiting_factor": "Material same-market manufacturer/retailer formula conflict remains unresolved. No canonical target formula can be paired with R09 directions or E01 technology evidence. E01 dose/formulation/protocol bridge to either candidate formula is not established.",
+      "research_hold_reasons": [
+        "Material same-market manufacturer/retailer formula conflict remains unresolved.",
+        "No canonical target formula can be paired with R09 directions or E01 technology evidence.",
+        "E01 dose/formulation/protocol bridge to either candidate formula is not established."
+      ],
+      "benefit_assessed": "Reinforcement of chemically damaged hair under the target pre-shampoo protocol.",
+      "supported_outcome": {
+        "text": "E01 reports reinforcement and calcium reduction in chemically treated hair using thermal, tensile/fatigue, diffraction and elemental methods. It identifies no Redken pilot bottle and supplies no transferable retail effect size. R02/R09 describe acid-based strengthening.",
+        "scope": "Packet-described evidence and attributed claims; no universal or personal outcome guaranteed.",
+        "source_ids": [
+          "E01",
+          "R02",
+          "R09"
+        ]
+      },
+      "stronger_unproved_claims": "Target-bottle calcium removal, native-bond restoration and a product-specific strength increase are not demonstrated.",
+      "evidence_profile": {
+        "schema_version": "bondbuilder-evidence-profile-v0.1",
+        "supporting_source_ids": [
+          "E01",
+          "R02",
+          "R09"
+        ],
+        "applicability": "Both captures contain citric acid and sodium citrate and named sources establish targeted intent; materially different formulas remain unresolved. Technology-level empirical support cannot select the correct target formula.",
+        "methods_and_comparators": "E01 abstract does not expose full comparator/dose/protocol details; R02/R09 do not supply an inspectable exact-product reinforcement test.",
+        "contrary_evidence": "The formula conflict contradicts a single authoritative identity, not acid-technology efficacy. Ordinary conditioning remains an alternative contributor.",
+        "missing_information": [
+          "Resolution of R02 versus R09 formula lineage and exact pack",
+          "Applicable product-specific evidence or a defensible technology bridge",
+          "Full relevant E01 methods"
+        ],
+        "neighboring_grade_rationale": "No trust grade is dependable before formula resolution. Medium cannot be assigned from shared acid markers, high lacks product-level validation, and low would mislabel an identity/evidence hold as poor efficacy.",
+        "source_access_and_affiliations": [
+          {
+            "source_id": "E01",
+            "access": "publisher abstract and affiliations; full methods not audited",
+            "affiliation": "Authors L’Oréal Research & Innovation; declared no conflict in article.",
+            "limits": "Exact dose/formulation/full protocol unavailable in inspected abstract; no retail effect-size transfer."
+          },
+          {
+            "source_id": "R02",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          },
+          {
+            "source_id": "R09",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          }
+        ]
+      },
+      "application_facts": {
+        "hair_state": "damp",
+        "phase": "before shampoo",
+        "wait_minutes_range": [
+          5,
+          10
+        ],
+        "rinse_before_shampoo": true,
+        "cadence": null,
+        "source_id": "R09"
+      },
+      "fit_assessment": {
+        "status": "unassessed",
+        "packet_status": "unassessed; no global recommendation readiness granted",
+        "all_thickness_fit": null
+      },
+      "readiness": {
+        "supplied_pack_verified": false,
+        "catalog_binding_verified": false,
+        "global_recommendation_ready": false,
+        "production_authorized": false,
+        "remaining_input_flags": [
+          "material_same_market_formula_conflict"
+        ]
+      },
+      "explanation_de": {
+        "short": "Die Quellen zeigen zwei unterschiedliche Rezepturen. Die Bewertung bleibt offen, bis die konkrete Formel geklärt ist.",
+        "deep": "Beide Listen enthalten Zitronensäure und Natriumcitrat und passen grundsätzlich zur beschriebenen Vorbehandlung. Das löst den Widerspruch der Rezepturen nicht. Die Forschung zur Säuretechnologie belegt keine Wirkung dieser konkreten Flasche. Auch die Händler-Anwendung wird deshalb nur als Quellenangabe übernommen."
+      },
+      "stage_a_to_b_delta": "Targeted acid pre-shampoo intent is established, but A03's two marker-identical captures remain distinct and on conflict_hold. No source was chosen or merged."
+    },
+    {
+      "slot_id": "A04",
+      "pilot_id": "P02",
+      "name": "K18 Leave-In Molecular Repair Hair Mask",
+      "boundary_status": "research_hold",
+      "technology_family": null,
+      "claim_trust_level": null,
+      "classification_confidence": "low",
+      "research_admission_candidacy": false,
+      "source_scope": {
+        "target_market": "DE",
+        "size": "50 ml",
+        "source": {
+          "id": "R11",
+          "url": "https://k18-hair.de/k18-hair/k18-oil/Leave-In-Molecular-Repair-Hair-Mask-50ml.aspx",
+          "market": "DE",
+          "tier": "local_brand_distributor",
+          "note": "DE-listed 21-ingredient formula; global listing adds fragrance ingredients. Treat as a source-version research target, not worldwide equivalence."
+        },
+        "formula_status": "source_version_resolved",
+        "identity_status": "research_source_target_only",
+        "raw_inci_sha256": "b5e8142fcd8f54ce4e23ca5d9204667d3df9ebeeacc51d3e32fd49c7f7ede9bc",
+        "formula_fingerprint_sha256": "fb3bb64f17eaa4f63be6d86900a913c2f7f2a6775c4854eb5c5e40b397692773"
+      },
+      "flags": [
+        "foreign_variant_differs",
+        "catalog_binding_not_verified"
+      ],
+      "packet_limitations": [
+        "Local source variant has 21 ingredients; current global page adds fragrance ingredients.",
+        "2024 study's listed mask formula matches the captured local ingredient list, but dose/handling is not a replicated ordinary consumer protocol.",
+        "Generic peptide microarray study does not test the exact mask or molecular chain reconstruction."
+      ],
+      "recognized_family_candidate": "designed_peptide",
+      "retained_stage_a_candidate_families": [
+        "designed_peptide",
+        "acid_calcium_management"
+      ],
+      "retained_stage_a_markers": [
+        "sh-oligopeptide-78",
+        "citric acid"
+      ],
+      "role": "targeted post-shampoo leave-in mask",
+      "boundary_candidate": "in_scope",
+      "boundary_candidate_scope": "Resolved source-version formula and targeted role are category-compatible; this is independent of trust and catalog readiness.",
+      "field_confidence": {
+        "marker_presence": {
+          "value": "high",
+          "limiting_factor": "Exact ingredients were observed in the frozen capture; no marker observation changed after unblinding."
+        },
+        "source_version_identity": {
+          "value": "high",
+          "limiting_factor": "Confidence concerns only the frozen named source version, not supplied-pack or live-catalog equality."
+        },
+        "targeted_role": {
+          "value": "high",
+          "limiting_factor": "Named packet explicitly identifies specialized at-home use; effectiveness is a separate question."
+        },
+        "technology_candidate": {
+          "value": "high",
+          "limiting_factor": "Specific marker/compatible architecture and targeted intent only; no mechanism or efficacy inference."
+        },
+        "boundary_status": {
+          "value": "moderate",
+          "limiting_factor": "Category-compatible source target is retained separately; scalar research_hold also records unresolved pivotal trust evidence."
+        },
+        "claim_trust_level": {
+          "value": "low",
+          "limiting_factor": "A pivotal evidence/applicability gap or low/medium ambiguity prevents a dependable grade."
+        },
+        "application_facts": {
+          "value": "high",
+          "limiting_factor": "Exact packet directions are preserved as source statements, including gaps; this is not validation for target pack or recommendation."
+        },
+        "supported_outcome": {
+          "value": "moderate",
+          "limiting_factor": "Source-bounded descriptions only, with no numerical chart inference or retail extrapolation."
+        },
+        "fit_assessment": {
+          "value": "low",
+          "limiting_factor": "No fit assessment was performed; hair diameter, texture and individual suitability are unassessed."
+        }
+      },
+      "record_limiting_factor": "E05's K18 tensile increase is not clearly significant in the inspected text; the packet names other measurements without specifying a positive K18 endpoint sufficient for a narrower benefit judgment. Dose/handling in E05 do not replicate the ordinary consumer protocol, and no vehicle/active-isolation comparator is present. Whether exact-formula but limited empirical evidence crosses low/medium for reinforcement remains unresolved.",
+      "research_hold_reasons": [
+        "E05's K18 tensile increase is not clearly significant in the inspected text; the packet names other measurements without specifying a positive K18 endpoint sufficient for a narrower benefit judgment.",
+        "Dose/handling in E05 do not replicate the ordinary consumer protocol, and no vehicle/active-isolation comparator is present.",
+        "Whether exact-formula but limited empirical evidence crosses low/medium for reinforcement remains unresolved."
+      ],
+      "benefit_assessed": "A narrower improvement in the physical integrity or mechanical strength of bleached hair, without a claim of reconstructed keratin chains.",
+      "supported_outcome": {
+        "text": "E05 tested a formula matching the captured 21-ingredient local mask on twice-bleached purchased Caucasian tresses. It reports a tensile increase for K18 whose significance is not clear in the inspected text. Surface/structural measurements were made, but this packet does not specify their positive product-specific results. These facts establish testing, not a dependable quantified K18 benefit.",
+        "scope": "Packet-described evidence and attributed claims; no universal or personal outcome guaranteed.",
+        "source_ids": [
+          "E04",
+          "E05",
+          "R06",
+          "R11"
+        ]
+      },
+      "stronger_unproved_claims": "Polypeptide-backbone reconstruction, native molecular restoration and clinically proven personal strengthening are not established.",
+      "evidence_profile": {
+        "schema_version": "bondbuilder-evidence-profile-v0.1",
+        "supporting_source_ids": [
+          "E04",
+          "E05",
+          "R06",
+          "R11"
+        ],
+        "applicability": "The listed E05 formula matches R11, providing a direct local-formula bridge stronger than generic peptide research. Study use was 10% product/hair mass, one-minute massage, four-minute reaction, brushing and 48-hour conditioning. Matching four-minute timing alone does not establish equivalence to ordinary consumer dose/handling. R06's differing global fragrance variant is not merged.",
+        "methods_and_comparators": "Three tresses per condition and mechanical testing on 25 fibres in a small ex-vivo study; no vehicle or active-isolation comparator. The packet does not specify further group details, so none are invented.",
+        "contrary_evidence": "A non-clearly-significant tensile increase is not proof of no effect. E04 tests keratin binding on glass arrays, not this mask or fibre repair; it cannot fill the outcome gap.",
+        "missing_information": [
+          "Endpoint-specific E05 K18 results/statistical interpretation sufficient to identify a supported narrower benefit",
+          "Consumer-protocol applicability reasoning or testing",
+          "Inspectable current clinical/molecular report behind R06 claims"
+        ],
+        "neighboring_grade_rationale": "High is not defensible given significance, comparator and protocol limits. Medium has a plausible direct-formula empirical basis but the packet does not establish the relevant positive endpoint robustly enough; low would overread uncertain significance as a completed lack-of-benefit judgment. Balanced low/medium requires hold.",
+        "source_access_and_affiliations": [
+          {
+            "source_id": "E04",
+            "access": "indexed publisher/PubMed abstract inspected; direct publisher 403",
+            "affiliation": "University of Minho; funding/COI not independently audited here.",
+            "limits": "No exact sh-Oligopeptide-78 mask, damaged-fibre efficacy or reconstructed polypeptide backbone tested by this abstract."
+          },
+          {
+            "source_id": "E05",
+            "access": "full institutional PDF; methods/results/funding inspected; no numerical chart inference",
+            "affiliation": "University authors; ERDF/POCI project with Amyris Bio Products Portugal support; declared no known competing interests.",
+            "limits": "Small ex-vivo study; no vehicle/active-isolation comparator; nonstandard dosage/handling. Does not test No.3PLUS. Authors' bond/core interpretations are not independent proof of native molecular reconstruction."
+          },
+          {
+            "source_id": "R06",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          },
+          {
+            "source_id": "R11",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          }
+        ]
+      },
+      "application_facts": {
+        "hair_state": "towel-dried",
+        "phase": "after shampoo",
+        "conditioner_before": false,
+        "wait_minutes": 4,
+        "rinse": false,
+        "conditioner_after": "local source describes optional conditioner after wait, then rinsing conditioner",
+        "cadence": null,
+        "source_id": "R11"
+      },
+      "fit_assessment": {
+        "status": "unassessed",
+        "packet_status": "unassessed; no global recommendation readiness granted",
+        "all_thickness_fit": null
+      },
+      "readiness": {
+        "supplied_pack_verified": false,
+        "catalog_binding_verified": false,
+        "global_recommendation_ready": false,
+        "production_authorized": false,
+        "remaining_input_flags": [
+          "foreign_variant_differs",
+          "catalog_binding_not_verified"
+        ]
+      },
+      "explanation_de": {
+        "short": "Die untersuchte Formel passt zur lokalen Rezeptur. Ob die Daten eine festigende Wirkung ausreichend stützen, bleibt vorläufig offen.",
+        "deep": "Eine kleine Untersuchung an gebleichten Haarsträhnen erfasste die passende Maskenformel. Der berichtete Festigkeitsanstieg ist in den vorliegenden Angaben jedoch nicht eindeutig statistisch abgesichert; weitere Messungen werden ohne ausreichende Ergebnisdetails genannt. Dosierung und Behandlung weichen außerdem von der üblichen Anwendung ab. Das begründet eine offene Bewertung, weder ein Wirkversprechen noch einen Nachweis fehlender Wirkung."
+      },
+      "stage_a_to_b_delta": "R11 establishes leave-in role and optional-conditioner sequence. E05 adds exact local-formula testing, improving applicability evidence but leaving a low/medium outcome ambiguity. Markers and secondary acid clue are unchanged; acid is not assigned as a second technology."
+    },
+    {
+      "slot_id": "A05",
+      "pilot_id": "P08",
+      "name": "Kérastase Première Concentré Décalcifiant Ultra-Réparateur",
+      "boundary_status": "research_hold",
+      "technology_family": null,
+      "claim_trust_level": null,
+      "classification_confidence": "low",
+      "research_admission_candidacy": false,
+      "source_scope": {
+        "target_market": "DE",
+        "size": "250 ml research target; captured retail INCI is 45 ml",
+        "source": {
+          "id": "R10",
+          "url": "https://en.zalando.de/kerastase-concentre-decalcifiant-ultra-reparateur-system-0-keh31h01a-s11.html",
+          "market": "DE",
+          "tier": "retailer",
+          "note": "Capture is 45ml, not pilot 250ml. Treatment-style list does not resolve local manufacturer mismatch or exact 250ml pack."
+        },
+        "formula_status": "identity_formula_hold",
+        "identity_status": "research_hold",
+        "raw_inci_sha256": "0c4c919a9fcd08e8ff0a5fa4b259a3c7c5340022de56270f5e9f1e3d8a58fb9c",
+        "formula_fingerprint_sha256": "ce2a560edbe517a3a4a2580f04d8b1ae6813176639525dac8bc2cee76b2fff6f"
+      },
+      "flags": [
+        "wrong_size_capture",
+        "manufacturer_block_mismatch",
+        "target_formula_unresolved"
+      ],
+      "packet_limitations": [
+        "250ml target formula not resolved: manufacturer treatment page shows a shampoo-style block; retailer treatment-style list captured only on 45ml product.",
+        "Routine evidence cannot be attributed to the isolated treatment.",
+        "Foreign gift-set list and travel-size identifier do not verify 250ml DE pack."
+      ],
+      "recognized_family_candidate": "acid_calcium_management",
+      "retained_stage_a_candidate_families": [
+        "acid_calcium_management"
+      ],
+      "retained_stage_a_markers": [
+        "citric acid",
+        "glycine"
+      ],
+      "role": "targeted acid/calcium pre-shampoo treatment",
+      "boundary_candidate": "in_scope",
+      "boundary_candidate_scope": "Named role and captured candidate architecture only; exact target formula/market remains unresolved.",
+      "field_confidence": {
+        "marker_presence": {
+          "value": "high",
+          "limiting_factor": "Exact ingredients were observed in the frozen capture; no marker observation changed after unblinding."
+        },
+        "source_version_identity": {
+          "value": "low",
+          "limiting_factor": "Explicit formula/identity/market hold is unresolved."
+        },
+        "targeted_role": {
+          "value": "high",
+          "limiting_factor": "Named packet explicitly identifies specialized at-home use; effectiveness is a separate question."
+        },
+        "technology_candidate": {
+          "value": "low",
+          "limiting_factor": "Specific marker/compatible architecture and targeted intent only; no mechanism or efficacy inference."
+        },
+        "boundary_status": {
+          "value": "low",
+          "limiting_factor": "Target identity conflict prevents final category assignment."
+        },
+        "claim_trust_level": {
+          "value": "low",
+          "limiting_factor": "A pivotal evidence/applicability gap or low/medium ambiguity prevents a dependable grade."
+        },
+        "application_facts": {
+          "value": "high",
+          "limiting_factor": "Exact packet directions are preserved as source statements, including gaps; this is not validation for target pack or recommendation."
+        },
+        "supported_outcome": {
+          "value": "moderate",
+          "limiting_factor": "Source-bounded descriptions only, with no numerical chart inference or retail extrapolation."
+        },
+        "fit_assessment": {
+          "value": "low",
+          "limiting_factor": "No fit assessment was performed; hair diameter, texture and individual suitability are unassessed."
+        }
+      },
+      "record_limiting_factor": "The target is 250 ml but R10 captures 45 ml; no same-formula proof verifies the target. R15 manufacturer treatment page contains a shampoo-style formula block; target formula remains unresolved. Routine-level evidence cannot isolate the pre-shampoo treatment; E01 provides no exact target-formula/protocol bridge.",
+      "research_hold_reasons": [
+        "The target is 250 ml but R10 captures 45 ml; no same-formula proof verifies the target.",
+        "R15 manufacturer treatment page contains a shampoo-style formula block; target formula remains unresolved.",
+        "Routine-level evidence cannot isolate the pre-shampoo treatment; E01 provides no exact target-formula/protocol bridge."
+      ],
+      "benefit_assessed": "Calcium-management-associated reinforcement of damaged hair under the specified treatment-plus-shampoo sequence.",
+      "supported_outcome": {
+        "text": "E01 reports acid-technology reinforcement/calcium reduction in chemically treated hair, not the 250 ml bottle. Manufacturer claims in this packet refer to multi-product routines; no isolated treatment outcome can be assigned.",
+        "scope": "Packet-described evidence and attributed claims; no universal or personal outcome guaranteed.",
+        "source_ids": [
+          "E01",
+          "R10",
+          "R15"
+        ]
+      },
+      "stronger_unproved_claims": "Independent repair by this treatment alone, a quantified target-product calcium-removal effect and native-bond restoration remain unproved.",
+      "evidence_profile": {
+        "schema_version": "bondbuilder-evidence-profile-v0.1",
+        "supporting_source_ids": [
+          "E01",
+          "R10",
+          "R15"
+        ],
+        "applicability": "The wrong-size treatment-style capture has citric acid and glycine, compatible with named targeted intent, but cannot be substituted for the unresolved 250 ml target. The required no-rinse shampoo layering is a protocol dependency, not a claim that the treatment alone achieves the routine result.",
+        "methods_and_comparators": "Routine/system footnotes do not isolate this treatment. E01's full dose, formulation and comparator details are not exposed.",
+        "contrary_evidence": "Mismatched manufacturer content and wrong-size capture undermine identity authority; neither is evidence against the technology itself.",
+        "missing_information": [
+          "Authoritative exact 250 ml DE formula",
+          "Resolved manufacturer block and same-formula identity evidence",
+          "Routine comparator details and isolated attribution/applicability evidence"
+        ],
+        "neighboring_grade_rationale": "Identity/formula hold precedes grading. Neither medium from a chemically compatible travel-size list nor low from unresolved identity is justified; high also lacks isolated finished-product support.",
+        "source_access_and_affiliations": [
+          {
+            "source_id": "E01",
+            "access": "publisher abstract and affiliations; full methods not audited",
+            "affiliation": "Authors L’Oréal Research & Innovation; declared no conflict in article.",
+            "limits": "Exact dose/formulation/full protocol unavailable in inspected abstract; no retail effect-size transfer."
+          },
+          {
+            "source_id": "R10",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          },
+          {
+            "source_id": "R15",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          }
+        ]
+      },
+      "application_facts": {
+        "hair_state": "wet",
+        "phase": "before shampoo",
+        "wait_minutes": 5,
+        "rinse_before_shampoo": false,
+        "required_sequence": "layer specified Première shampoo directly over treatment, then rinse",
+        "cadence": null,
+        "source_id": "R15"
+      },
+      "fit_assessment": {
+        "status": "unassessed",
+        "packet_status": "unassessed; no global recommendation readiness granted",
+        "all_thickness_fit": null
+      },
+      "readiness": {
+        "supplied_pack_verified": false,
+        "catalog_binding_verified": false,
+        "global_recommendation_ready": false,
+        "production_authorized": false,
+        "remaining_input_flags": [
+          "wrong_size_capture",
+          "manufacturer_block_mismatch",
+          "target_formula_unresolved"
+        ]
+      },
+      "explanation_de": {
+        "short": "Die 250-ml-Rezeptur ist noch nicht verlässlich belegt. Eine Wirksamkeitsbewertung bleibt deshalb offen.",
+        "deep": "Die erfasste Inhaltsstoffliste stammt von 45 ml; die Herstellerseite enthält zugleich einen unpassenden Shampoo-Block. Beides verifiziert die gesuchte 250-ml-Variante nicht. Die Anwendung sieht ausdrücklich Shampoo direkt über der nicht ausgespülten Vorbehandlung vor. Aussagen über die gesamte Routine dürfen nicht der Vorbehandlung allein zugeschrieben werden."
+      },
+      "stage_a_to_b_delta": "Named intent and mandatory shampoo layering are added; wrong-size captured markers remain only capture observations. identity_formula_hold and all flags are unchanged."
+    },
+    {
+      "slot_id": "A06",
+      "pilot_id": "P04",
+      "name": "Elvital Bond Repair Plus Keratin-Festigendes Pre-Shampoo",
+      "boundary_status": "research_hold",
+      "technology_family": null,
+      "claim_trust_level": null,
+      "classification_confidence": "low",
+      "research_admission_candidacy": false,
+      "source_scope": {
+        "target_market": "DE",
+        "size": "200 ml",
+        "source": {
+          "id": "R01",
+          "url": "https://www.loreal-paris.de/elvital/bond-repair/rescue-pre-shampoo",
+          "market": "DE",
+          "tier": "manufacturer_local",
+          "note": "Plus formula corroborated by dm; retailer old 12% copy conflicts with current 22% complex copy. Formula is not inferred from either percentage."
+        },
+        "formula_status": "source_version_resolved",
+        "identity_status": "research_source_target_only",
+        "raw_inci_sha256": "482b3e1c0a5317613e0202b8156fdc00058e90d1366c83232fd3c286fc341c36",
+        "formula_fingerprint_sha256": "e5e9b5e7c3d8882f12622bda11a67ace0ef1aeb37b9660bf881231966815ae00"
+      },
+      "flags": [
+        "old_new_claim_copy_conflict",
+        "supplied_pack_not_verified"
+      ],
+      "packet_limitations": [
+        "Manufacturer and dm INCI converge after typography normalization, but retailer's old 12% copy differs from Plus 22% complex copy.",
+        "Complex percentage is not citric-acid concentration.",
+        "No study dose/effect size may be transferred from the acid research to this bottle."
+      ],
+      "recognized_family_candidate": "acid_calcium_management",
+      "retained_stage_a_candidate_families": [
+        "acid_calcium_management"
+      ],
+      "retained_stage_a_markers": [
+        "citric acid",
+        "arginine",
+        "betaine"
+      ],
+      "role": "targeted acid pre-shampoo treatment",
+      "boundary_candidate": "in_scope",
+      "boundary_candidate_scope": "Resolved source-version formula and targeted role are category-compatible; this is independent of trust and catalog readiness.",
+      "field_confidence": {
+        "marker_presence": {
+          "value": "high",
+          "limiting_factor": "Exact ingredients were observed in the frozen capture; no marker observation changed after unblinding."
+        },
+        "source_version_identity": {
+          "value": "high",
+          "limiting_factor": "Confidence concerns only the frozen named source version, not supplied-pack or live-catalog equality."
+        },
+        "targeted_role": {
+          "value": "high",
+          "limiting_factor": "Named packet explicitly identifies specialized at-home use; effectiveness is a separate question."
+        },
+        "technology_candidate": {
+          "value": "moderate",
+          "limiting_factor": "Specific marker/compatible architecture and targeted intent only; no mechanism or efficacy inference."
+        },
+        "boundary_status": {
+          "value": "moderate",
+          "limiting_factor": "Category-compatible source target is retained separately; scalar research_hold also records unresolved pivotal trust evidence."
+        },
+        "claim_trust_level": {
+          "value": "low",
+          "limiting_factor": "A pivotal evidence/applicability gap or low/medium ambiguity prevents a dependable grade."
+        },
+        "application_facts": {
+          "value": "high",
+          "limiting_factor": "Exact packet directions are preserved as source statements, including gaps; this is not validation for target pack or recommendation."
+        },
+        "supported_outcome": {
+          "value": "moderate",
+          "limiting_factor": "Source-bounded descriptions only, with no numerical chart inference or retail extrapolation."
+        },
+        "fit_assessment": {
+          "value": "low",
+          "limiting_factor": "No fit assessment was performed; hair diameter, texture and individual suitability are unassessed."
+        }
+      },
+      "record_limiting_factor": "E01 supplies relevant acid-technology findings but not the dose/formulation/protocol needed to defend their applicability to this exact five-minute Plus product. The manufacturer six-application footnote has no inspectable isolated-product methods/comparator in the packet. The remaining low/medium applicability question is material; current 22% complex wording cannot resolve it or the retained old/new claim-copy conflict.",
+      "research_hold_reasons": [
+        "E01 supplies relevant acid-technology findings but not the dose/formulation/protocol needed to defend their applicability to this exact five-minute Plus product.",
+        "The manufacturer six-application footnote has no inspectable isolated-product methods/comparator in the packet.",
+        "The remaining low/medium applicability question is material; current 22% complex wording cannot resolve it or the retained old/new claim-copy conflict."
+      ],
+      "benefit_assessed": "Reinforcement of damaged hair from the source-resolved acid/amino-acid pre-shampoo formulation.",
+      "supported_outcome": {
+        "text": "E01 reports reinforcement and calcium reduction in chemically treated hair. R01 attributes broad repair to this Plus product and refers to instrument testing after six applications, but the packet does not expose its methods or isolated-product comparator. No study effect size is assigned to this bottle.",
+        "scope": "Packet-described evidence and attributed claims; no universal or personal outcome guaranteed.",
+        "source_ids": [
+          "E01",
+          "R01",
+          "R08"
+        ]
+      },
+      "stronger_unproved_claims": "A specified percentage of damage repair, demonstrated retail calcium removal, active acid concentration derived from 22%, and native-bond restoration are not established.",
+      "evidence_profile": {
+        "schema_version": "bondbuilder-evidence-profile-v0.1",
+        "supporting_source_ids": [
+          "E01",
+          "R01",
+          "R08"
+        ],
+        "applicability": "R01/R08 normalized INCI converge and targeted five-minute use makes the acid/arginine/betaine candidate more specific than generic acid presence. This resolves the research source formula, not the empirical dose/protocol bridge from E01. Retailer 12% and current 22% complex claims are retained as a conflict and neither is used as active concentration.",
+        "methods_and_comparators": "E01 abstract omits full comparator details; the six-application retail footnote lacks accessible comparator/method detail. Conditioning contribution is not separated.",
+        "contrary_evidence": "Old/new copy conflicts with claim-version equivalence, not necessarily the corroborated formula. No applicable strong contrary study is supplied.",
+        "missing_information": [
+          "A defensible E01-to-Plus formula and five-minute protocol bridge",
+          "Current isolated-product test report and comparator details",
+          "Resolution of claim-version applicability and supplied-pack verification"
+        ],
+        "neighboring_grade_rationale": "Medium is plausible because relevant empirical acid research and targeted architecture exist, but a marker-plus-intent bridge alone is insufficient here when effective test conditions are unknown. Low would discard potentially pivotal uninspected study/test details; high lacks exact-product validation. Hold records the unresolved low/medium boundary.",
+        "source_access_and_affiliations": [
+          {
+            "source_id": "E01",
+            "access": "publisher abstract and affiliations; full methods not audited",
+            "affiliation": "Authors L’Oréal Research & Innovation; declared no conflict in article.",
+            "limits": "Exact dose/formulation/full protocol unavailable in inspected abstract; no retail effect-size transfer."
+          },
+          {
+            "source_id": "R01",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          },
+          {
+            "source_id": "R08",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          }
+        ]
+      },
+      "application_facts": {
+        "hair_state": "damp",
+        "phase": "before shampoo",
+        "wait_minutes": 5,
+        "rinse_before_shampoo": true,
+        "cadence": null,
+        "source_id": "R01"
+      },
+      "fit_assessment": {
+        "status": "unassessed",
+        "packet_status": "unassessed; no global recommendation readiness granted",
+        "all_thickness_fit": null
+      },
+      "readiness": {
+        "supplied_pack_verified": false,
+        "catalog_binding_verified": false,
+        "global_recommendation_ready": false,
+        "production_authorized": false,
+        "remaining_input_flags": [
+          "old_new_claim_copy_conflict",
+          "supplied_pack_not_verified"
+        ]
+      },
+      "explanation_de": {
+        "short": "Die lokale Plus-Rezeptur ist gut zugeordnet. Die vorhandene Forschung lässt sich noch nicht belastbar auf ihre konkrete Wirkung übertragen.",
+        "deep": "Zitronensäure, Arginin und Betain passen zur gezielten Vorbehandlung. Die Forschung beschreibt eine Festigung chemisch behandelter Haare, liefert im Paket aber nicht die Bedingungen für eine belastbare Übertragung auf diese Fünf-Minuten-Anwendung. Auch zum Produkttest nach sechs Anwendungen fehlen die Methoden. Die Angaben 12 % und 22 % bezeichnen unterschiedliche Produkttexte beziehungsweise Komplexe, keine gesicherte Säurekonzentration."
+      },
+      "stage_a_to_b_delta": "R01/R08 support the frozen source-resolved formula and targeted role; acid candidate is retained. Old/new copy is not used to infer concentration. Empirical bridge remains insufficient to choose low or medium."
+    },
+    {
+      "slot_id": "A07",
+      "pilot_id": "P01",
+      "name": "OLAPLEX No.3PLUS Complete Repair Treatment",
+      "boundary_status": "research_hold",
+      "technology_family": null,
+      "claim_trust_level": null,
+      "classification_confidence": "low",
+      "research_admission_candidacy": false,
+      "source_scope": {
+        "target_market": "DE",
+        "size": "100 ml source lead",
+        "source": {
+          "id": "R12",
+          "url": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
+          "market": "DE",
+          "tier": "local_brand_distributor",
+          "note": "DE-listed variant; differs from global list. Do not merge markets or assert live catalog formula equality."
+        },
+        "formula_status": "source_version_resolved",
+        "identity_status": "research_source_target_only",
+        "raw_inci_sha256": "9e801dd87d1033ebb223727270ae1dfd3d3c570df830ffee0d02a9e502bb08e4",
+        "formula_fingerprint_sha256": "f46416be72085b4f7022400daacf8d4d298de519fd9ef1ad008adc9dcd685dce"
+      },
+      "flags": [
+        "foreign_variant_differs",
+        "catalog_binding_not_verified"
+      ],
+      "packet_limitations": [
+        "DE and global INCI differ. Assess the captured DE source variant, not an invented combined formula.",
+        "The empirical 2024 OLAPLEX product is No.0, not No.3PLUS.",
+        "Current-page claims expose footnotes but not a detailed current-formula test report."
+      ],
+      "recognized_family_candidate": "sulfur_targeting_dimaleate",
+      "retained_stage_a_candidate_families": [
+        "sulfur_targeting_dimaleate",
+        "acid_calcium_management"
+      ],
+      "retained_stage_a_markers": [
+        "bis-aminopropyl diglycol dimaleate",
+        "citric acid"
+      ],
+      "role": "targeted pre-shampoo treatment",
+      "boundary_candidate": "in_scope",
+      "boundary_candidate_scope": "Resolved source-version formula and targeted role are category-compatible; this is independent of trust and catalog readiness.",
+      "field_confidence": {
+        "marker_presence": {
+          "value": "high",
+          "limiting_factor": "Exact ingredients were observed in the frozen capture; no marker observation changed after unblinding."
+        },
+        "source_version_identity": {
+          "value": "high",
+          "limiting_factor": "Confidence concerns only the frozen named source version, not supplied-pack or live-catalog equality."
+        },
+        "targeted_role": {
+          "value": "high",
+          "limiting_factor": "Named packet explicitly identifies specialized at-home use; effectiveness is a separate question."
+        },
+        "technology_candidate": {
+          "value": "high",
+          "limiting_factor": "Specific marker/compatible architecture and targeted intent only; no mechanism or efficacy inference."
+        },
+        "boundary_status": {
+          "value": "moderate",
+          "limiting_factor": "Category-compatible source target is retained separately; scalar research_hold also records unresolved pivotal trust evidence."
+        },
+        "claim_trust_level": {
+          "value": "low",
+          "limiting_factor": "A pivotal evidence/applicability gap or low/medium ambiguity prevents a dependable grade."
+        },
+        "application_facts": {
+          "value": "high",
+          "limiting_factor": "Exact packet directions are preserved as source statements, including gaps; this is not validation for target pack or recommendation."
+        },
+        "supported_outcome": {
+          "value": "moderate",
+          "limiting_factor": "Source-bounded descriptions only, with no numerical chart inference or retail extrapolation."
+        },
+        "fit_assessment": {
+          "value": "low",
+          "limiting_factor": "No fit assessment was performed; hair diameter, texture and individual suitability are unassessed."
+        }
+      },
+      "record_limiting_factor": "The positive E05 tensile result belongs to No.0, not the current No.3PLUS source formula. No defensible current-formula/dose/three-minute-protocol bridge or inspectable current detailed test report is supplied. E03 full applicability remains unaudited and cannot settle the low/medium interpretation for current No.3PLUS.",
+      "research_hold_reasons": [
+        "The positive E05 tensile result belongs to No.0, not the current No.3PLUS source formula.",
+        "No defensible current-formula/dose/three-minute-protocol bridge or inspectable current detailed test report is supplied.",
+        "E03 full applicability remains unaudited and cannot settle the low/medium interpretation for current No.3PLUS."
+      ],
+      "benefit_assessed": "Reinforcement or increased mechanical resistance of bleached hair with the current DE No.3PLUS pre-shampoo treatment.",
+      "supported_outcome": {
+        "text": "E05 reports a clearly significant tensile improvement for OLAPLEX No.0 in its small ex-vivo test. That is not a No.3PLUS outcome. E03 reports surface/structural effects in maleate/commercial-agent work but no cortex disulfide increase or direct sulfa-Michael evidence in its abstract. R05/R12 attribute strengthening/softness to current No.3PLUS without an inspectable detailed test report.",
+        "scope": "Packet-described evidence and attributed claims; no universal or personal outcome guaranteed.",
+        "source_ids": [
+          "E03",
+          "E05",
+          "R05",
+          "R12"
+        ]
+      },
+      "stronger_unproved_claims": "Current No.3PLUS native-disulfide restoration, reconstruction of damaged hair to its original state, and transfer of No.0's measured effect are not established.",
+      "evidence_profile": {
+        "schema_version": "bondbuilder-evidence-profile-v0.1",
+        "supporting_source_ids": [
+          "E03",
+          "E05",
+          "R05",
+          "R12"
+        ],
+        "applicability": "The specific dimaleate marker and targeted role are compatible. No.0's four-ingredient formula differs substantially from current No.3PLUS's lipid/cationic formulation. R12 local DE source also differs from R05 global formula; no synthetic combined formulation or old/new efficacy equivalence is assumed.",
+        "methods_and_comparators": "E05: twice-bleached purchased Caucasian tresses, 10% product/hair mass, one-minute massage, four-minute reaction, brushing and 48-hour conditioning; three tresses per condition, 25 fibres, no vehicle/active-isolation comparator. Not the current three-minute product protocol. E03 full comparator/commercial-agent applicability is unavailable.",
+        "contrary_evidence": "E03 challenges broad direct crosslinking/disulfide explanations under its tested conditions but uses a dimethyl maleate model not identical to the dimaleate ingredient and unresolved commercial agents. It is contextual, not blanket evidence of no current-product benefit.",
+        "missing_information": [
+          "Current DE No.3PLUS inspectable test methods/results",
+          "No.0-to-No.3PLUS applicability bridge if legacy evidence is retained",
+          "Full E03 commercial identities/protocol audit",
+          "Local/global formula reconciliation for any shared claim evidence"
+        ],
+        "neighboring_grade_rationale": "Medium is plausible at the technology level from No.0, but lacks a defensible exact current product bridge; high is unsupported. Low is also not dependable while meaningful related empirical findings and unresolved applicability could support a narrower benefit. The balanced low/medium question requires hold, without importing reputation.",
+        "source_access_and_affiliations": [
+          {
+            "source_id": "E03",
+            "access": "author-repository abstract inspected; full manuscript not audited",
+            "affiliation": "University authors; funding/COI unavailable in inspected abstract.",
+            "limits": "Dimethyl maleate model is not Bis-Aminopropyl Diglycol Dimaleate. Exact commercial identities/protocol applicability need full-text audit; not a blanket demonstration of no benefit."
+          },
+          {
+            "source_id": "E05",
+            "access": "full institutional PDF; methods/results/funding inspected; no numerical chart inference",
+            "affiliation": "University authors; ERDF/POCI project with Amyris Bio Products Portugal support; declared no known competing interests.",
+            "limits": "Small ex-vivo study; no vehicle/active-isolation comparator; nonstandard dosage/handling. Does not test No.3PLUS. Authors' bond/core interpretations are not independent proof of native molecular reconstruction."
+          },
+          {
+            "source_id": "R05",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          },
+          {
+            "source_id": "R12",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          }
+        ]
+      },
+      "application_facts": {
+        "hair_state": "wet",
+        "phase": "before shampoo",
+        "wait_minutes": 3,
+        "rinse_before_shampoo": true,
+        "cadence": "every 1–3 washes per local page",
+        "source_id": "R12"
+      },
+      "fit_assessment": {
+        "status": "unassessed",
+        "packet_status": "unassessed; no global recommendation readiness granted",
+        "all_thickness_fit": null
+      },
+      "readiness": {
+        "supplied_pack_verified": false,
+        "catalog_binding_verified": false,
+        "global_recommendation_ready": false,
+        "production_authorized": false,
+        "remaining_input_flags": [
+          "foreign_variant_differs",
+          "catalog_binding_not_verified"
+        ]
+      },
+      "explanation_de": {
+        "short": "Die passenden Inhaltsstoffe sind vorhanden. Die stärksten vorliegenden Messdaten stammen jedoch von No.0, nicht von dieser No.3PLUS-Rezeptur.",
+        "deep": "Die aktuelle lokale Vorbehandlung bleibt von anderen Varianten getrennt. Ein positiver Festigkeitstest mit No.0 lässt sich wegen der anderen Rezeptur und Anwendung nicht automatisch übertragen. Ältere Strukturuntersuchungen begrenzen außerdem starke Bindungsversprechen, beweisen aber keine Wirkungslosigkeit von No.3PLUS. Für eine belastbare Vertrauensstufe fehlen passende aktuelle Prüfdaten."
+      },
+      "stage_a_to_b_delta": "R12 establishes current DE product and three-minute protocol. Positive legacy No.0 testing is explicitly separated; specific dimaleate observation is unchanged. Secondary acid clue stays secondary."
+    },
+    {
+      "slot_id": "A08",
+      "pilot_id": "P06",
+      "name": "OGX Bond Protein Repair Sealing Serum",
+      "boundary_status": "research_hold",
+      "technology_family": null,
+      "claim_trust_level": null,
+      "classification_confidence": "low",
+      "research_admission_candidacy": false,
+      "source_scope": {
+        "target_market": "DE/EU",
+        "size": "50 ml",
+        "source": {
+          "id": "R03",
+          "url": "https://www.ogxbeauty.co.uk/products/bond-protein-repair-sealing-serum",
+          "market": "UK",
+          "tier": "manufacturer_foreign",
+          "note": "Complete UK formula only; actual supplied DE/EU formula not verified."
+        },
+        "formula_status": "market_hold",
+        "identity_status": "research_hold",
+        "raw_inci_sha256": "4afb4135d8c1f4e39df722bc9ddb26c0f5515d0a1b1749abae21bc9ed2f2b331",
+        "formula_fingerprint_sha256": "3f98a1b13f2ae27c4532436df745de868e4bb2b835f3ac09b3daf2237d7bddbd"
+      },
+      "flags": [
+        "target_market_formula_not_verified"
+      ],
+      "packet_limitations": [
+        "The complete formula and protocol are UK source facts, not verified supplied DE/EU pack facts.",
+        "Five-wash benefit is shampoo + conditioner + serum system versus non-conditioning shampoo, not serum alone.",
+        "Local supply/currency and fit remain separate unresolved intake questions."
+      ],
+      "recognized_family_candidate": "gluconamide_gluconate",
+      "retained_stage_a_candidate_families": [
+        "gluconamide_gluconate",
+        "acid_calcium_management"
+      ],
+      "retained_stage_a_markers": [
+        "hydroxypropylgluconamide",
+        "hydroxypropylammonium gluconate",
+        "citric acid",
+        "arginine"
+      ],
+      "role": "targeted overnight leave-in serum",
+      "boundary_candidate": "in_scope",
+      "boundary_candidate_scope": "Named role and captured candidate architecture only; exact target formula/market remains unresolved.",
+      "field_confidence": {
+        "marker_presence": {
+          "value": "high",
+          "limiting_factor": "Exact ingredients were observed in the frozen capture; no marker observation changed after unblinding."
+        },
+        "source_version_identity": {
+          "value": "low",
+          "limiting_factor": "Explicit formula/identity/market hold is unresolved."
+        },
+        "targeted_role": {
+          "value": "high",
+          "limiting_factor": "Named packet explicitly identifies specialized at-home use; effectiveness is a separate question."
+        },
+        "technology_candidate": {
+          "value": "low",
+          "limiting_factor": "Specific marker/compatible architecture and targeted intent only; no mechanism or efficacy inference."
+        },
+        "boundary_status": {
+          "value": "low",
+          "limiting_factor": "Target identity conflict prevents final category assignment."
+        },
+        "claim_trust_level": {
+          "value": "low",
+          "limiting_factor": "A pivotal evidence/applicability gap or low/medium ambiguity prevents a dependable grade."
+        },
+        "application_facts": {
+          "value": "high",
+          "limiting_factor": "Exact packet directions are preserved as source statements, including gaps; this is not validation for target pack or recommendation."
+        },
+        "supported_outcome": {
+          "value": "moderate",
+          "limiting_factor": "Source-bounded descriptions only, with no numerical chart inference or retail extrapolation."
+        },
+        "fit_assessment": {
+          "value": "low",
+          "limiting_factor": "No fit assessment was performed; hair diameter, texture and individual suitability are unassessed."
+        }
+      },
+      "record_limiting_factor": "UK formula/protocol do not verify the target DE/EU product; market_hold is retained. Five-wash claim is for shampoo + conditioner + serum versus non-conditioning shampoo, not serum alone. E06 pivotal paired-marker test results are partially inaccessible and lack a retail dose/overnight-protocol bridge.",
+      "research_hold_reasons": [
+        "UK formula/protocol do not verify the target DE/EU product; market_hold is retained.",
+        "Five-wash claim is for shampoo + conditioner + serum versus non-conditioning shampoo, not serum alone.",
+        "E06 pivotal paired-marker test results are partially inaccessible and lack a retail dose/overnight-protocol bridge."
+      ],
+      "benefit_assessed": "Reinforcement or reduced breakage from the target serum under overnight leave-in use.",
+      "supported_outcome": {
+        "text": "R03 attributes smoother/stronger hair and a five-wash benefit to a shampoo-plus-conditioner-plus-serum system compared with non-conditioning shampoo. No isolated serum result or target-DE/EU result is established. E02 is model chemistry and E06 is partially accessible supplier technology testing.",
+        "scope": "Packet-described evidence and attributed claims; no universal or personal outcome guaranteed.",
+        "source_ids": [
+          "E02",
+          "E06",
+          "R03",
+          "R14"
+        ]
+      },
+      "stronger_unproved_claims": "Serum-alone five-wash repair, native-bond restoration and verified DE/EU bottle efficacy are not established.",
+      "evidence_profile": {
+        "schema_version": "bondbuilder-evidence-profile-v0.1",
+        "supporting_source_ids": [
+          "E02",
+          "E06",
+          "R03",
+          "R14"
+        ],
+        "applicability": "UK source contains the required pair and an overnight treatment role; supplier identity/concentration is unknown and E06's aqueous 30-minute/rinse spectroscopy conditions cannot be equated to overnight retail use. DE-language listing R14 does not resolve target-market formula.",
+        "methods_and_comparators": "Entire three-product routine versus non-conditioning shampoo; conditioner and other components confound attribution. E06 supplier graphs are unavailable and E02 is not a retail comparator study.",
+        "contrary_evidence": "The system comparator limits serum attribution but does not prove absence of serum benefit. E02 describes the full mechanism as unknown.",
+        "missing_information": [
+          "Authoritative target-market formula/pack",
+          "Isolated serum evidence or defensible attribution bridge",
+          "Complete relevant supplier test results",
+          "Overnight-protocol compatibility and separate fit assessment"
+        ],
+        "neighboring_grade_rationale": "Identity/market hold already prevents final grading. Even for the UK source, system confounding and pivotal partial supplier evidence leave low/medium unresolved; neither automatic low nor medium is justified, and high is unsupported.",
+        "source_access_and_affiliations": [
+          {
+            "source_id": "E02",
+            "access": "indexed primary abstract/introduction; direct PMC browser check and ACS 403 blocked full audit",
+            "affiliation": "Durham authors plus Ashland coauthor; supplier involvement disclosed.",
+            "limits": "Not an exact OGX/Aveda trial or direct retail molecular efficacy demonstration."
+          },
+          {
+            "source_id": "E06",
+            "access": "indexed primary poster text; direct PDF timeout, graphs not inspected",
+            "affiliation": "Ashland supplier-owned material; not independent retail testing.",
+            "limits": "Indexed text is partial; no numerical graph interpretation. Retail supplier identity, concentration and protocol equivalence not known. Claimed mechanism remains proposed; obtain full poster before treating an inaccessible result as pivotal."
+          },
+          {
+            "source_id": "R03",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          },
+          {
+            "source_id": "R14",
+            "access": "web text inspected",
+            "affiliation": "Not specified in packet beyond the source's commercial identity.",
+            "limits": "Source-listed product statements; detailed efficacy test report not supplied unless separately described."
+          }
+        ]
+      },
+      "application_facts": {
+        "hair_state": "damp or dry",
+        "phase": "before bed",
+        "wait": "overnight",
+        "rinse": false,
+        "cadence": "1–2 times weekly",
+        "source_id": "R03"
+      },
+      "fit_assessment": {
+        "status": "unassessed",
+        "packet_status": "unassessed; no global recommendation readiness granted",
+        "all_thickness_fit": null
+      },
+      "readiness": {
+        "supplied_pack_verified": false,
+        "catalog_binding_verified": false,
+        "global_recommendation_ready": false,
+        "production_authorized": false,
+        "remaining_input_flags": [
+          "target_market_formula_not_verified"
+        ]
+      },
+      "explanation_de": {
+        "short": "Die vorliegende Formel gilt für die britische Quelle. Die DE/EU-Variante und der eigenständige Nutzen des Serums bleiben ungeklärt.",
+        "deep": "Das passende Wirkstoffpaar ist in der britischen Liste enthalten. Die Fünf-Wäschen-Aussage betrifft jedoch Shampoo, Conditioner und Serum gemeinsam gegenüber Shampoo ohne Conditioner. Sie belegt keinen entsprechenden Effekt des Serums allein. Die nächtliche Anwendung wird nur als britische Quellenangabe übernommen; sie ersetzt keine Prüfung der lokalen Variante oder der individuellen Eignung."
+      },
+      "stage_a_to_b_delta": "UK name and overnight protocol unblind the targeted serum role; market_hold and capture-only marker facts remain unchanged. System-level claim is not reassigned to serum."
+    }
+  ]
+}

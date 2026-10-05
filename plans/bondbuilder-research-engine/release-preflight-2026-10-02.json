@@ -1,0 +1,912 @@
+{
+  "version": "bondbuilder-owner-release-preflight-v1",
+  "checked_date": "2026-10-02",
+  "project_id": "pqdkhefxsxkyeqelqegq",
+  "read_only": true,
+  "production_writes": 0,
+  "scope": "Read-only release/catalogue preflight, not the executable guarded database dry-run.",
+  "migrations": [
+    {
+      "version": "20260929230000",
+      "name": "expansion_protocol_binding_repair",
+      "applied": false
+    },
+    {
+      "version": "20261002132306",
+      "name": "bondbuilder_research_profile_storage",
+      "applied": false
+    }
+  ],
+  "shared_guidance_binder_present": false,
+  "items": [
+    {
+      "research_key": "P01",
+      "envelope": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P01.json",
+      "claim_trust_level": "high",
+      "catalogue_candidate_id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+      "candidate_is_a_verified_binding": false,
+      "proposed_operation": "held_profile_only_enrichment",
+      "existing_recommendation_preserved": true,
+      "catalog_intake_ready": false,
+      "global_recommendation_ready": false,
+      "apply_ready": false,
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "candidate_existing_row_not_authorized_for_update",
+        "new_research_fit_not_established",
+        "required_migration_chain_unapplied"
+      ],
+      "candidate_snapshot": {
+        "specs": {
+          "created_at": "2026-05-03T12:15:53.368321+00:00",
+          "product_id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+          "updated_at": "2026-05-03T13:39:06.641807+00:00",
+          "category_key": "bondbuilder",
+          "product_format": "cream_treatment",
+          "treatment_mode": "rinse_out",
+          "usage_protocol": "olaplex_3plus",
+          "application_mode": "pre_shampoo",
+          "bond_repair_axis": "disulfide_crosslink",
+          "bond_repair_intensity": "intensive"
+        },
+        "product": {
+          "id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+          "name": "OLAPLEX No.3PLUS Complete Repair Treatment",
+          "tags": [
+            "bondbuilder",
+            "crosslink",
+            "olaplex",
+            "repair"
+          ],
+          "brand": "OLAPLEX",
+          "origin": "curated",
+          "brand_id": "1fbf8e21-0988-48c1-b6a0-493f575b44f0",
+          "category": "Bondbuilder",
+          "currency": "EUR",
+          "tom_take": null,
+          "embedding": "[0.030670166,0.014892578,-0.0390625,0.103149414,0.035949707,0.026046753,0.00982666,0.05517578,0.03161621,0.078430176,0.08013916,-0.009803772,-0.021514893,-0.057861328,0.021652222,-0.006958008,-0.06359863,0.02607727,-0.018966675,-0.0715332,-0.050689697,-0.07751465,-0.019454956,0.0670166,0.04171753,0.010505676,0.029708862,0.010810852,-0.02609253,0.019699097,0.029373169,-0.034240723,-0.024429321,0.02961731,0.03390503,-0.02381897,0.013137817,-0.038146973,0.06762695,0.039916992,-0.054901123,0.031707764,-0.015594482,-0.032226562,0.109436035,-0.03656006,0.11968994,0.009010315,-0.052368164,-0.026123047,-0.011962891,-0.05722046,0.016693115,-0.012107849,0.0067214966,0.044647217,0.087524414,0.29418945,0.028274536,0.05102539,0.01550293,-0.08996582,-0.025817871,0.078308105,-0.0033092499,0.06137085,0.00033569336,0.01373291,0.010192871,0.06072998,-0.070373535,0.006500244,0.039123535,0.014930725,-0.039733887,-0.0037574768,0.03062439,0.043823242,0.03186035,-0.029067993,0.053985596,0.09674072,-0.056152344,0.021942139,-0.016815186,-0.048461914,-0.056915283,-0.14501953,0.08728027,-0.035247803,-0.0914917,0.027770996,0.07324219,0.01637268,-0.06451416,0.013320923,0.011184692,0.014839172,-0.07269287,-0.0022258759,-0.01247406,-0.01309967,-0.05987549,0.05038452,0.097229004,0.09210205,0.004436493,0.061920166,0.020568848,-0.03262329,-0.035614014,0.02180481,-0.060302734,0.0010538101,0.0770874,0.024246216,-0.033416748,0.017120361,-0.033569336,0.06842041,0.07678223,0.037322998,0.025680542,6.347895e-05,-0.013053894,0.020706177,-0.056427002,0.034423828,0.019165039,0.05117798,-0.08959961,0.0042686462,-0.031555176,0.0038909912,-0.024810791,0.04840088,0.07220459,-0.049621582,-0.034698486,-0.0067214966,-0.009544373,-0.015899658,0.019943237,0.05596924,0.044647217,-0.02822876,0.03765869,0.055358887,-0.0074310303,0.061706543,0.04071045,0.0026817322,-0.055023193,-0.07434082,-0.057373047,-0.06939697,0.05316162,-0.0045700073,-0.0758667,-0.011390686,0.06561279,0.040130615,0.038909912,0.10247803,0.013771057,-0.016708374,0.06982422,0.016586304,0.003004074,0.043151855,0.07861328,0.01878357,0.056854248,-0.050628662,0.023391724,0.05645752,0.08795166,-0.014518738,0.06939697,-0.052215576,-0.00083732605,0.08483887,0.008026123,-0.015281677,0.04840088,0.006549835,0.013694763,0.027740479,0.04638672,-0.06939697,-0.011657715,-0.03363037,0.045898438,0.03741455,0.047027588,-0.0051956177,-0.0496521,0.017547607,0.12414551,-0.0076446533,-0.0022201538,-0.03100586,0.016586304,-0.020477295,0.036865234,0.054382324,0.04449463,0.08013916,0.041259766,-0.038085938,0.04208374,0.025741577,-0.03378296,0.111694336,0.016921997,0.019424438,-0.0546875,0.0023441315,-0.008262634,0.025756836,-0.010169983,-0.03111267,0.016174316,-0.009521484,0.04559326,0.035247803,-0.0014371872,-0.06072998,0.02407837,0.018035889,-0.041900635,0.0016088486,0.010948181,-0.020874023,-0.03463745,-0.010177612,-0.025650024,-0.14355469,-0.0009293556,0.0049934387,-0.014633179,0.08001709,-0.0029563904,-0.011985779,-0.06939697,0.061645508,0.03753662,0.13195801,0.058929443,-0.030639648,0.017044067,0.0064582825,-0.002462387,0.124572754,-0.0033092499,0.11633301,0.04623413,-0.021118164,-0.07751465,-0.041229248,-0.028274536,-0.05154419,-0.058807373,-0.020339966,0.006755829,0.028457642,0.031051636,-0.0038280487,-0.022033691,0.03414917,0.052947998,0.04537964,0.0037269592,0.01612854,-0.014129639,0.0071258545,0.1027832,-0.04006958,0.00248909,-0.027374268,-0.006290436,-0.0501709,0.038269043,-0.024383545,0.068847656,-0.053344727,-0.0619812,0.008224487,0.056671143,-0.00894928,-0.028305054,0.040618896,0.002002716,-0.04385376,0.0013380051,0.010063171,0.13232422,-0.014419556,-0.015548706,0.038879395,-0.024536133,-0.016983032,-0.017974854,-0.05340576,-0.12805176,0.13659668,0.061767578,0.009399414,-0.07836914,0.0066337585,0.08502197,-0.029907227,0.009475708,0.0070152283,-0.0066108704,0.046875,-0.047668457,-0.062438965,-0.038513184,-0.0423584,-0.034362793,0.0925293,-0.09222412,-0.015686035,0.05142212,0.046203613,0.019927979,-0.062561035,0.039215088,0.006023407,-0.046447754,-0.0051231384,0.017623901,0.01876831,-0.03555298,-0.06817627,-0.022247314,0.023483276,-0.07788086,-0.040863037,0.0010328293,-0.014816284,0.04006958,0.078125,0.04724121,-0.01600647,0.07849121,-0.097351074,-0.01965332,0.02973938,0.0015058517,-0.073791504,-0.04638672,0.034088135,0.026473999,-0.053100586,0.05291748,0.040222168,-0.00055360794,0.0680542,-0.03366089,-0.056121826,-0.006603241,-0.019210815,0.015014648,-0.0077209473,0.057922363,-0.03817749,0.010932922,-0.014045715,-0.04586792,0.042114258,0.047027588,0.036346436,-0.074157715,-0.057373047,0.07067871,-0.005256653,0.032714844,0.06781006,0.0030899048,-0.08648682,0.10089111,0.023956299]",
+          "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/3dc24d67-e6c0-4239-a273-058a87d13553/20-3dc24d67-e6c0-4239-a273-058a87d13553-olaplex-olaplex-no-3plus-complete-repair-treatment-654f51a2bea9.webp",
+          "is_active": true,
+          "price_eur": 34,
+          "created_at": "2026-05-03T12:15:53.238255+00:00",
+          "sort_order": 0,
+          "updated_at": "2026-09-30T17:22:44.564271+00:00",
+          "description": "Aktuelle OLAPLEX-Heimbehandlung fuer intensive strukturelle Repair-Unterstuetzung im Disulfid-/Crosslink-Lane.",
+          "category_key": "bondbuilder",
+          "affiliate_link": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
+          "product_line_id": null,
+          "lifecycle_status": "active",
+          "net_content_unit": null,
+          "price_checked_at": "2026-09-30T17:22:44.47+00:00",
+          "net_content_value": null,
+          "short_description": null,
+          "suitable_concerns": [
+            "repair"
+          ],
+          "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/654f51a2bea9fb176c1551ef40fd0f758223a32987c4bde6a0dfce1413e2b364.webp",
+          "purchase_link_status": "available",
+          "suitable_thicknesses": [
+            "fine",
+            "normal",
+            "coarse"
+          ],
+          "is_chaarlie_recommended": true,
+          "purchase_link_checked_at": "2026-06-09T00:00:00+00:00"
+        },
+        "protocols": [
+          {
+            "id": "dba61e48-5a7f-4b1f-bbfc-08d063df1dc3",
+            "role": "specialized_bond_treatment",
+            "cadence": {
+              "kind": "label_schedule",
+              "copy_de": "Alle ein bis drei Haarwäschen anwenden."
+            },
+            "category": "bondbuilder",
+            "placement": "all_hair",
+            "created_at": "2026-08-12T06:17:06.719771+00:00",
+            "product_id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+            "source_url": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
+            "updated_at": "2026-08-14T19:18:43.438335+00:00",
+            "source_text": "Exact source evidence for OLAPLEX No.3PLUS Complete Repair Treatment: specialized bond treatment protocol; whole-hair application; rinse-out use with a 3-minute contact time; conditioner relationship conditioner_after.",
+            "category_key": "bondbuilder",
+            "rinse_action": "rinse_out",
+            "source_label": "Herstelleranleitung",
+            "reapplication": "not_stated",
+            "guidance_payload": {
+              "role": "bond_repair",
+              "scope": {
+                "kind": "product",
+                "category": "bondbuilder",
+                "productId": "3dc24d67-e6c0-4239-a273-058a87d13553"
+              },
+              "steps": [
+                {
+                  "action": "apply_product",
+                  "stepKey": "apply-olaplex-3plus",
+                  "copyTemplateDe": "Unter der Dusche großzügig auf nasses Haar vom Ansatz bis in die Spitzen auftragen."
+                },
+                {
+                  "action": "wait",
+                  "stepKey": "wait-olaplex-3plus",
+                  "copyTemplateDe": "3 Minuten einwirken lassen."
+                },
+                {
+                  "action": "rinse",
+                  "stepKey": "rinse-olaplex-3plus",
+                  "copyTemplateDe": "Ausspülen und anschließend Shampoo und Conditioner verwenden."
+                }
+              ],
+              "locale": "de",
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-10",
+                  "sourceUrl": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
+                  "sourceType": "manufacturer"
+                }
+              ],
+              "sequence": {
+                "after": [],
+                "anchor": "pre_wash",
+                "before": [
+                  "wet_cleanse"
+                ],
+                "conflictsWith": []
+              },
+              "guidanceKey": "product-bondbuilder-3dc24d67-e6c0-4239-a273-058a87d13553",
+              "requirements": {
+                "requiredCatalogFacts": [],
+                "requiredProfileFacts": [],
+                "requiredProtocolFacts": []
+              },
+              "protocolFacts": {
+                "rinse": "rinse_out",
+                "amount": null,
+                "cautions": [],
+                "workflowId": "olaplex_no3plus_complete_repair",
+                "reapplication": "none",
+                "applicationArea": "all_hair",
+                "contactTimeSeconds": 180,
+                "conditionerRelationship": "conditioner_after"
+              },
+              "schemaVersion": 1,
+              "protocolVersion": 1,
+              "applicationFamily": "pre_shampoo_single_treatment",
+              "compatibleDayTypes": [
+                "bond_repair_day"
+              ],
+              "exactGuidanceRequired": true
+            },
+            "application_stage": "pre_wash",
+            "application_state": null,
+            "application_family": "pre_shampoo_single_treatment",
+            "guidance_payload_v2": {
+              "role": "bond_repair",
+              "facts": {
+                "heat": null,
+                "rinse": "rinse_out",
+                "amount": null,
+                "contactTime": {
+                  "kind": "seconds",
+                  "seconds": 180
+                },
+                "applicationArea": "hair_lengths_ends",
+                "applicationState": "pre_wash_dry_hair",
+                "conditionerPolicy": "conditioner_after"
+              },
+              "scope": {
+                "kind": "product",
+                "category": "bondbuilder",
+                "productId": "3dc24d67-e6c0-4239-a273-058a87d13553"
+              },
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-10",
+                  "sourceUrl": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
+                  "sourceType": "manufacturer"
+                }
+              ],
+              "exactSteps": [
+                {
+                  "action": "apply_product",
+                  "copyDe": "Unter der Dusche großzügig auf nasses Haar vom Ansatz bis in die Spitzen auftragen.",
+                  "stepKey": "apply-olaplex-3plus"
+                },
+                {
+                  "action": "wait",
+                  "copyDe": "3 Minuten einwirken lassen.",
+                  "stepKey": "wait-olaplex-3plus"
+                },
+                {
+                  "action": "rinse",
+                  "copyDe": "Ausspülen und anschließend Shampoo und Conditioner verwenden.",
+                  "stepKey": "rinse-olaplex-3plus"
+                }
+              ],
+              "sourceRole": "specialized_bond_treatment",
+              "workflowId": "olaplex_no3plus_complete_repair",
+              "cautionCodes": [],
+              "contractKind": "product_pointer",
+              "schemaVersion": 2,
+              "applicationFamily": "pre_shampoo_single_treatment",
+              "runtimeBlockerCode": null,
+              "requiredCompanionProductId": null
+            },
+            "contact_time_seconds": 180,
+            "instruction_modifiers": []
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "2a04fc88-522f-4e4b-8711-db617bef5d86",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:43:05.287777+00:00",
+            "product_id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+            "updated_at": "2026-08-28T08:43:05.287777+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "00810177860273",
+            "identifier_value": "810177860273",
+            "normalized_identifier_value": "810177860273"
+          },
+          {
+            "id": "f0e85a6f-b3a8-45d4-bae8-51e9e65474bf",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:43:05.287777+00:00",
+            "product_id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+            "updated_at": "2026-08-28T08:43:05.287777+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "00810177860266",
+            "identifier_value": "810177860266",
+            "normalized_identifier_value": "810177860266"
+          }
+        ]
+      }
+    },
+    {
+      "research_key": "P02",
+      "envelope": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P02.json",
+      "claim_trust_level": "high",
+      "catalogue_candidate_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "candidate_is_a_verified_binding": false,
+      "proposed_operation": "held_profile_only_enrichment",
+      "existing_recommendation_preserved": true,
+      "catalog_intake_ready": false,
+      "global_recommendation_ready": false,
+      "apply_ready": false,
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "candidate_existing_row_not_authorized_for_update",
+        "missing_exact_application_facts",
+        "new_research_fit_not_established",
+        "required_migration_chain_unapplied"
+      ],
+      "candidate_snapshot": {
+        "specs": {
+          "created_at": "2026-05-03T12:15:54.095301+00:00",
+          "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+          "updated_at": "2026-05-03T13:39:08.760932+00:00",
+          "category_key": "bondbuilder",
+          "product_format": "leave_in_mask",
+          "treatment_mode": "leave_in",
+          "usage_protocol": "k18_leave_in",
+          "application_mode": "post_wash_leave_in",
+          "bond_repair_axis": "peptide_chain",
+          "bond_repair_intensity": "intensive"
+        },
+        "product": {
+          "id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+          "name": "K18 Leave-In Molecular Repair Hair Mask",
+          "tags": [
+            "bondbuilder",
+            "k18",
+            "peptide",
+            "repair"
+          ],
+          "brand": "K18",
+          "origin": "curated",
+          "brand_id": "bcf2477b-3c59-4c8e-96f8-eaf9ed43ed40",
+          "category": "Bondbuilder",
+          "currency": "EUR",
+          "tom_take": null,
+          "embedding": "[0.0099105835,0.007896423,-0.015914917,0.061401367,0.0635376,-0.10064697,-0.007507324,0.026382446,0.027816772,0.109802246,-0.0027599335,-0.0031433105,0.0020961761,-0.071777344,-0.012145996,-0.011207581,-0.047851562,-0.045532227,-0.04284668,0.0011863708,-0.073791504,-0.09539795,-0.029373169,-0.005332947,0.0016040802,0.020690918,-0.0317688,0.027175903,-0.044677734,0.008529663,-0.027770996,-0.01902771,0.0038661957,0.039367676,0.0015029907,0.013389587,-0.02671814,-0.010131836,0.107177734,-0.040100098,-0.023101807,0.00011718273,-0.059417725,-0.03277588,0.074645996,0.0128479,0.046905518,0.014266968,-0.0062828064,0.012260437,0.015525818,-0.051361084,-0.062805176,-0.011734009,0.061523438,0.09051514,0.04837036,0.33642578,0.03149414,0.0014829636,-0.015792847,-0.027328491,-0.07684326,0.054870605,0.016036987,0.005218506,0.011276245,0.005958557,-0.037841797,0.10131836,-0.019577026,-0.01940918,-0.023330688,0.014305115,0.029846191,0.015205383,-0.0007157326,0.06640625,0.11303711,0.049102783,0.015205383,0.12634277,-0.01260376,-0.03665161,0.01852417,-0.055541992,-0.011711121,-0.12463379,0.0859375,-0.040252686,-0.021636963,0.08898926,-0.018035889,-0.038635254,-0.12310791,0.07879639,-0.051696777,0.015960693,-0.030761719,0.012374878,-0.027496338,0.001294136,-0.044952393,0.040222168,0.04901123,0.061798096,0.045318604,0.103515625,0.001241684,-0.012008667,-0.1005249,-0.020309448,0.004573822,0.0071372986,0.039123535,0.019180298,-0.049804688,0.032226562,-0.042816162,0.0073776245,0.12780762,0.008079529,-0.007774353,0.016784668,-0.015594482,0.09637451,-0.033172607,-0.009086609,-0.010955811,0.032684326,-0.021713257,0.029586792,0.0026855469,-0.013771057,-0.00010329485,0.023742676,0.04058838,0.053253174,-0.013046265,0.005130768,0.038146973,0.012641907,0.033843994,0.0076026917,0.07110596,-0.08190918,0.057617188,0.04220581,-0.023162842,0.11798096,0.0068893433,0.03302002,-0.016403198,-0.041168213,-0.0138168335,-0.014022827,0.04296875,-0.06341553,-0.068603516,0.0078048706,-0.034301758,0.04827881,0.049621582,0.07080078,-0.0095825195,0.005844116,0.030517578,0.0006070137,0.038879395,0.048919678,0.026184082,0.0970459,0.04348755,-0.06347656,-0.013153076,0.032196045,0.032043457,0.027191162,0.060272217,-0.023254395,-0.020874023,0.109802246,-0.015670776,0.0041236877,0.04522705,0.05291748,0.027633667,0.044799805,0.12646484,-0.079589844,0.011123657,-0.009666443,0.0791626,0.038482666,0.06286621,0.034454346,-0.07849121,0.047912598,0.11395264,-0.0013618469,-0.022277832,-0.10015869,-0.022125244,-0.008575439,0.022567749,0.02999878,-0.0027980804,-0.0022964478,0.022018433,-0.04660034,-0.045288086,-0.014099121,-0.015670776,0.0569458,0.050109863,-0.024887085,-0.093444824,-0.07702637,-0.0033187866,0.06185913,-0.0043258667,-0.055419922,0.06768799,-0.030059814,0.004386902,-0.015365601,0.0056114197,-0.07446289,0.042541504,0.0026245117,-0.037963867,-0.0035324097,0.055725098,-0.08099365,-0.03677368,0.024551392,0.013069153,-0.12658691,0.017196655,-0.038513184,0.058288574,0.06088257,-0.07080078,-0.0072250366,0.05230713,0.011787415,-0.0058784485,0.07330322,0.0047798157,-0.03515625,-0.009681702,0.01789856,0.03765869,0.058807373,0.06311035,0.08605957,0.08276367,-0.022262573,-0.060516357,0.047729492,0.021896362,0.005344391,-0.06210327,-0.04031372,0.039520264,-0.015174866,-0.017089844,0.026672363,-0.0087890625,0.025161743,0.0023727417,0.00051498413,0.08251953,0.06402588,0.031677246,-0.01486969,0.010185242,0.053710938,0.07324219,-0.0060920715,-0.017562866,-0.015731812,0.02053833,0.0061416626,0.10229492,-0.04510498,-0.006603241,-0.008888245,-0.00043201447,0.003063202,0.024230957,0.05404663,0.039611816,0.014099121,0.022201538,0.01675415,0.07434082,0.020355225,-0.017105103,0.06210327,-0.07763672,-0.028137207,-0.023803711,-0.07244873,-0.033843994,0.053619385,0.07312012,0.021850586,-0.05307007,0.017456055,0.08868408,-0.0052337646,-0.0082092285,0.08294678,0.016555786,0.077697754,-0.04046631,-0.059814453,-0.014480591,-0.058441162,-0.008293152,0.05682373,-0.103515625,-0.012573242,0.0041999817,0.0050086975,-0.0049705505,0.015434265,0.093322754,-0.0107040405,-0.050994873,-0.018341064,0.049041748,-0.04324341,-0.015808105,-0.017242432,-0.048675537,0.037628174,-0.091430664,-0.014968872,-0.03164673,-0.042114258,0.048095703,0.036621094,0.012214661,-0.063964844,0.011817932,-0.05432129,0.05960083,0.04837036,0.0014972687,-0.052001953,-0.052215576,0.03744507,0.012008667,-0.057006836,0.004085541,0.008682251,-0.078552246,0.103149414,0.020401001,-0.02947998,0.035247803,-0.06604004,0.09289551,-0.0124053955,-0.020431519,-0.07745361,0.0066337585,0.039520264,-0.00617218,0.031097412,0.057434082,0.09069824,-0.041137695,-0.07489014,0.0140686035,-0.014083862,0.054504395,0.044036865,0.013763428,-0.077819824,0.03741455,-0.029907227]",
+          "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/38dace91-0fba-49ee-a93f-ac36e488fe4b/17-38dace91-0fba-49ee-a93f-ac36e488fe4b-k18-k18-leave-in-molecular-repair-hair-mask-8595971dcd08.webp",
+          "is_active": true,
+          "price_eur": 56.25,
+          "created_at": "2026-05-03T12:15:54.037757+00:00",
+          "sort_order": 0,
+          "updated_at": "2026-10-01T08:43:50.443239+00:00",
+          "description": "Leave-in-Bondbuilder im Peptid-/Laengsstruktur-Lane fuer intensive strukturelle Repair-Unterstuetzung.",
+          "category_key": "bondbuilder",
+          "affiliate_link": "https://www.flaconi.de/haare/k18/leave-in-molecular/k18-leave-in-molecular-repair-hair-mask-haarkur.html?variant=80074805-50",
+          "product_line_id": null,
+          "lifecycle_status": "active",
+          "net_content_unit": "ml",
+          "price_checked_at": "2026-10-01T08:43:50.443239+00:00",
+          "net_content_value": 50,
+          "short_description": null,
+          "suitable_concerns": [
+            "repair"
+          ],
+          "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/8595971dcd084dbce39694facf5882b39bc5dbc43600b30fa75c8fe499b5ce3d.webp",
+          "purchase_link_status": "available",
+          "suitable_thicknesses": [
+            "fine",
+            "normal",
+            "coarse"
+          ],
+          "is_chaarlie_recommended": true,
+          "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+        },
+        "protocols": [
+          {
+            "id": "ef3f1639-cab4-4a1b-bbcc-54b8e436af39",
+            "role": "specialized_bond_treatment",
+            "cadence": {
+              "kind": "label_course",
+              "copy_de": "Nach einer Salonbehandlung vier bis sechs Haarwäschen hintereinander, danach nach Bedarf."
+            },
+            "category": "bondbuilder",
+            "placement": "lengths_ends",
+            "created_at": "2026-08-12T06:17:06.719771+00:00",
+            "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+            "source_url": "https://www.k18hair.com/products/jumbo-leave-in-molecular-repair-hair-mask-100ml/",
+            "updated_at": "2026-08-14T19:18:43.438335+00:00",
+            "source_text": "Exact source evidence for K18 Leave-In Molecular Repair Hair Mask: specialized bond treatment protocol; lengths-and-ends application; leave-in use without rinsing with a 4-minute contact time.",
+            "category_key": "bondbuilder",
+            "rinse_action": "leave_in",
+            "source_label": "Herstelleranleitung",
+            "reapplication": "not_stated",
+            "guidance_payload": {
+              "role": "bond_repair",
+              "scope": {
+                "kind": "product",
+                "category": "bondbuilder",
+                "productId": "38dace91-0fba-49ee-a93f-ac36e488fe4b"
+              },
+              "steps": [
+                {
+                  "action": "apply_product",
+                  "stepKey": "prepare-k18",
+                  "copyTemplateDe": "Shampoonieren, keinen Conditioner davor verwenden und das Haar handtuchtrocknen."
+                },
+                {
+                  "action": "apply_product",
+                  "stepKey": "apply-k18",
+                  "copyTemplateDe": "1–3 Pumpstöße für das gesamte Haar verwenden und von den Spitzen nach oben gleichmäßig einarbeiten."
+                },
+                {
+                  "action": "wait",
+                  "stepKey": "wait-k18",
+                  "copyTemplateDe": "4 Minuten warten; in dieser Zeit nicht kämmen und nicht ausspülen."
+                },
+                {
+                  "action": "apply_product",
+                  "stepKey": "finish-k18",
+                  "copyTemplateDe": "Danach bei Bedarf weitere Pflege- oder Stylingprodukte verwenden."
+                }
+              ],
+              "locale": "de",
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-10",
+                  "sourceUrl": "https://www.k18hair.com/products/jumbo-leave-in-molecular-repair-hair-mask-100ml/",
+                  "sourceType": "manufacturer"
+                }
+              ],
+              "sequence": {
+                "after": [
+                  "wet_cleanse",
+                  "post_rinse_towel_dry"
+                ],
+                "anchor": "timed_treatment",
+                "before": [
+                  "damp_leave_on"
+                ],
+                "conflictsWith": []
+              },
+              "guidanceKey": "product-bondbuilder-38dace91-0fba-49ee-a93f-ac36e488fe4b",
+              "requirements": {
+                "requiredCatalogFacts": [],
+                "requiredProfileFacts": [],
+                "requiredProtocolFacts": []
+              },
+              "protocolFacts": {
+                "rinse": "leave_in",
+                "amount": {
+                  "kind": "pumps",
+                  "maximum": 3,
+                  "minimum": 1
+                },
+                "cautions": [],
+                "workflowId": "k18_leave_in_molecular_repair",
+                "reapplication": "none",
+                "applicationArea": "lengths_ends",
+                "contactTimeSeconds": 240,
+                "conditionerRelationship": null
+              },
+              "schemaVersion": 1,
+              "protocolVersion": 1,
+              "applicationFamily": "post_shampoo_timed_leave_in",
+              "compatibleDayTypes": [
+                "bond_repair_day"
+              ],
+              "exactGuidanceRequired": true
+            },
+            "application_stage": "timed_treatment",
+            "application_state": null,
+            "application_family": "post_shampoo_timed_leave_in",
+            "guidance_payload_v2": {
+              "role": "bond_repair",
+              "facts": {
+                "heat": null,
+                "rinse": "leave_in",
+                "amount": {
+                  "kind": "pumps",
+                  "maximum": 3,
+                  "minimum": 1
+                },
+                "contactTime": {
+                  "kind": "seconds",
+                  "seconds": 240
+                },
+                "applicationArea": "hair_lengths_ends",
+                "applicationState": "damp_hair",
+                "conditionerPolicy": "not_applicable"
+              },
+              "scope": {
+                "kind": "product",
+                "category": "bondbuilder",
+                "productId": "38dace91-0fba-49ee-a93f-ac36e488fe4b"
+              },
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-10",
+                  "sourceUrl": "https://www.k18hair.com/products/jumbo-leave-in-molecular-repair-hair-mask-100ml/",
+                  "sourceType": "manufacturer"
+                }
+              ],
+              "exactSteps": [
+                {
+                  "action": "apply_product",
+                  "copyDe": "Shampoonieren, keinen Conditioner davor verwenden und das Haar handtuchtrocknen.",
+                  "stepKey": "prepare-k18"
+                },
+                {
+                  "action": "apply_product",
+                  "copyDe": "1–3 Pumpstöße für das gesamte Haar verwenden und von den Spitzen nach oben gleichmäßig einarbeiten.",
+                  "stepKey": "apply-k18"
+                },
+                {
+                  "action": "wait",
+                  "copyDe": "4 Minuten warten; in dieser Zeit nicht kämmen und nicht ausspülen.",
+                  "stepKey": "wait-k18"
+                },
+                {
+                  "action": "apply_product",
+                  "copyDe": "Danach bei Bedarf weitere Pflege- oder Stylingprodukte verwenden.",
+                  "stepKey": "finish-k18"
+                }
+              ],
+              "sourceRole": "specialized_bond_treatment",
+              "workflowId": "k18_leave_in_molecular_repair",
+              "cautionCodes": [],
+              "contractKind": "product_pointer",
+              "schemaVersion": 2,
+              "applicationFamily": "post_shampoo_timed_leave_in",
+              "runtimeBlockerCode": null,
+              "requiredCompanionProductId": null
+            },
+            "contact_time_seconds": 240,
+            "instruction_modifiers": []
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "673a89c1-fe9a-4ae7-b530-cc44080d917d",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:20:40.420726+00:00",
+            "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+            "updated_at": "2026-08-28T08:20:40.420726+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "00858511001128",
+            "identifier_value": "858511001128",
+            "normalized_identifier_value": "858511001128"
+          }
+        ]
+      }
+    },
+    {
+      "research_key": "P03",
+      "envelope": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P03.json",
+      "claim_trust_level": "high",
+      "catalogue_candidate_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "candidate_is_a_verified_binding": false,
+      "proposed_operation": "held_profile_only_enrichment",
+      "existing_recommendation_preserved": true,
+      "catalog_intake_ready": false,
+      "global_recommendation_ready": false,
+      "apply_ready": false,
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "candidate_existing_row_not_authorized_for_update",
+        "new_research_fit_not_established",
+        "required_migration_chain_unapplied",
+        "exact_case_sensitive_source_catalogue_name_and_brand_binding_unresolved"
+      ],
+      "candidate_snapshot": {
+        "specs": {
+          "created_at": "2026-05-03T12:15:54.280299+00:00",
+          "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+          "updated_at": "2026-05-03T13:39:09.073237+00:00",
+          "category_key": "bondbuilder",
+          "product_format": "spray_treatment",
+          "treatment_mode": "rinse_out",
+          "usage_protocol": "epres_spray",
+          "application_mode": "pre_shampoo",
+          "bond_repair_axis": "disulfide_crosslink",
+          "bond_repair_intensity": "intensive"
+        },
+        "product": {
+          "id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+          "name": "Epres Bond Repair Treatment",
+          "tags": [
+            "bondbuilder",
+            "crosslink",
+            "epres",
+            "repair",
+            "spray"
+          ],
+          "brand": "Epres",
+          "origin": "curated",
+          "brand_id": "99d5b88b-163a-498d-9c32-c1bad1de1334",
+          "category": "Bondbuilder",
+          "currency": "EUR",
+          "tom_take": null,
+          "embedding": "[-0.012062073,-0.010719299,-0.033081055,0.025497437,0.055114746,0.023773193,-0.0027160645,0.0065994263,0.0007176399,0.12286377,0.042388916,-0.018127441,-0.04232788,-0.04888916,-0.018432617,0.032684326,-0.02142334,-0.039794922,-0.02784729,-0.049316406,-0.03942871,-0.053863525,-0.054656982,-0.02041626,0.016204834,0.008842468,-0.037963867,0.007160187,-0.058166504,0.045043945,0.0056648254,-0.05328369,-0.035217285,0.034729004,0.032958984,0.0018262863,0.0015182495,-0.06695557,0.07537842,-0.005382538,-0.032989502,0.030029297,-0.05026245,-0.020339966,0.036132812,-0.0015573502,0.0770874,0.02999878,0.011528015,-0.02330017,-0.022537231,-0.046325684,-0.05645752,-0.020904541,0.010932922,0.09277344,-0.031280518,0.3227539,0.029769897,0.028320312,-0.0023651123,-0.05819702,-0.04925537,0.06628418,0.038909912,0.060302734,0.040161133,-0.035247803,0.005252838,0.066101074,-0.0848999,-0.0063934326,-0.010749817,0.071899414,-0.04071045,0.026123047,0.041870117,0.044769287,0.032287598,0.00894928,0.025924683,0.08544922,-0.0016336441,-0.05026245,0.006958008,-0.11303711,-0.023895264,-0.1418457,0.097229004,-0.021469116,-0.059936523,0.0062179565,0.03643799,-0.0044021606,-0.068115234,0.052001953,0.0131073,-0.007003784,-0.039031982,-0.0552063,-0.03665161,0.012687683,-0.045806885,0.030578613,0.09008789,0.09051514,0.017120361,0.11694336,0.021377563,0.01689148,-0.07421875,0.05316162,-0.026901245,0.01096344,0.052764893,0.011184692,-0.054504395,0.024108887,-0.023101807,0.05078125,0.043670654,-0.024261475,0.029067993,0.030380249,0.03741455,0.015792847,-0.026550293,0.00749588,0.012557983,0.045043945,-0.08514404,0.0030174255,-0.011894226,-0.029464722,-0.009361267,0.019012451,0.066833496,0.011177063,-0.0519104,0.021224976,0.008308411,-0.04852295,0.03768921,0.03817749,0.07092285,-0.070617676,0.037322998,0.00573349,-0.029266357,0.06964111,0.04421997,-0.037963867,-0.018966675,-0.056549072,-0.059265137,-0.049591064,-0.013809204,-0.096191406,-0.08630371,0.008979797,-0.0034160614,0.027191162,0.034118652,0.070373535,-0.048950195,-0.014480591,0.07385254,-0.031463623,-0.016662598,0.04727173,0.06072998,0.02659607,0.031921387,-0.04989624,0.014320374,0.08569336,0.10681152,-0.0011301041,0.03793335,-0.042541504,0.011940002,0.107055664,0.033294678,-0.050598145,0.066711426,0.034057617,0.040039062,0.002029419,0.045959473,-0.03253174,-0.021438599,0.0018367767,0.08703613,0.053375244,0.075683594,0.006919861,-0.06640625,-0.024230957,0.10229492,-0.025421143,-0.025177002,-0.04763794,0.002204895,-0.05328369,0.05218506,0.08081055,0.093688965,0.029541016,0.049804688,-0.051361084,0.025238037,-0.026855469,0.0043182373,0.072143555,0.013931274,-0.04083252,-0.048828125,-0.036254883,-0.032714844,0.059539795,0.03479004,-0.04611206,0.03866577,-0.011222839,0.056396484,0.0061302185,-0.07244873,-0.051635742,0.021850586,0.042419434,0.00085639954,0.038330078,0.053100586,-0.11431885,-0.072021484,0.04309082,-0.009933472,-0.14880371,-0.024551392,0.028686523,-0.018600464,0.11175537,-0.028900146,0.0035934448,-0.052642822,-0.014778137,0.0140686035,0.062438965,0.037506104,-0.015571594,-0.040618896,0.015007019,0.021972656,0.06774902,0.03326416,0.1005249,0.07788086,-0.08093262,-0.05569458,-0.026504517,0.027160645,-0.06756592,-0.062469482,-0.029373169,0.076293945,0.010955811,-0.004463196,-0.011672974,-0.05987549,0.035461426,0.0637207,-0.024551392,0.054840088,0.047851562,0.095581055,0.02130127,0.05645752,0.03274536,0.021499634,-0.02432251,-0.005607605,-0.05596924,0.02330017,0.04196167,0.066589355,-0.037231445,-0.038848877,0.008384705,0.07952881,-0.048309326,-0.026489258,0.022964478,0.0340271,0.024490356,0.048461914,0.04574585,0.04949951,-0.035705566,-0.028808594,-0.00868988,-0.04046631,-0.015731812,-0.029525757,-0.072143555,-0.09411621,0.08215332,0.024429321,0.026443481,-0.036102295,-0.047546387,0.0602417,-0.029327393,0.010665894,0.045440674,0.07525635,0.04107666,0.014434814,-0.0435791,0.011917114,-0.062469482,0.007736206,0.056854248,-0.14208984,0.0067100525,0.089782715,0.048217773,-0.020614624,-0.028518677,0.08666992,-0.032684326,-0.014778137,-0.036621094,0.024841309,0.019515991,-0.025222778,-0.022537231,-0.04522705,0.04425049,-0.08782959,-0.051361084,-0.037200928,-0.053100586,0.024841309,0.06347656,0.01096344,-0.06121826,0.010383606,-0.07171631,-0.007637024,-0.07122803,0.0016450882,-0.09118652,0.01776123,0.0051651,0.012916565,-0.04434204,0.040924072,0.010437012,-0.020477295,0.08355713,-0.01663208,-0.02999878,0.020187378,-0.022262573,0.043823242,0.027740479,0.0071792603,-0.078186035,-0.019180298,0.0040397644,-0.05947876,0.037384033,0.041046143,0.029678345,-0.056427002,-0.06744385,0.03652954,-0.0041770935,-0.03515625,0.09680176,0.04473877,-0.05670166,-0.01927185,0.01637268]",
+          "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/f8a63590-9d80-454a-8008-e2a56321e64c/16-f8a63590-9d80-454a-8008-e2a56321e64c-epres-epres-bond-repair-treatment-ccbf3c8c1b98.webp",
+          "is_active": true,
+          "price_eur": 48,
+          "created_at": "2026-05-03T12:15:54.214062+00:00",
+          "sort_order": 0,
+          "updated_at": "2026-09-30T19:57:10.771326+00:00",
+          "description": "Spray-Bondbuilder im Disulfid-/Crosslink-Lane; unkompliziertere Anwendung, mit Eric-Pressly-/OLAPLEX-Entwicklerlinie, aber weniger etabliert als OLAPLEX/K18.",
+          "category_key": "bondbuilder",
+          "affiliate_link": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+          "product_line_id": null,
+          "lifecycle_status": "active",
+          "net_content_unit": null,
+          "price_checked_at": "2026-09-30T19:57:10.564+00:00",
+          "net_content_value": null,
+          "short_description": null,
+          "suitable_concerns": [
+            "repair"
+          ],
+          "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/ccbf3c8c1b9810bf6efb01f562252c26b892c4b2c790f274daedeab9ebfcf63c.webp",
+          "purchase_link_status": "available",
+          "suitable_thicknesses": [
+            "fine",
+            "normal",
+            "coarse"
+          ],
+          "is_chaarlie_recommended": true,
+          "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+        },
+        "protocols": [
+          {
+            "id": "0787dfe2-20fc-4b5f-90df-a3abd32b1d37",
+            "role": "specialized_bond_treatment",
+            "cadence": {
+              "kind": "label_schedule",
+              "copy_de": "Ein- bis zweimal pro Woche anwenden."
+            },
+            "category": "bondbuilder",
+            "placement": "all_hair",
+            "created_at": "2026-08-12T06:17:06.719771+00:00",
+            "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+            "source_url": "https://epres.com/de/products/bond-repair-treatment",
+            "updated_at": "2026-08-14T19:18:43.438335+00:00",
+            "source_text": "Exact source evidence for Epres Bond Repair Treatment: specialized bond treatment protocol; whole-hair application; rinse state recorded in the exact protocol with a 10-minute contact time; conditioner relationship conditioner_after.",
+            "category_key": "bondbuilder",
+            "rinse_action": null,
+            "source_label": "Herstelleranleitung",
+            "reapplication": "not_stated",
+            "guidance_payload": {
+              "role": "bond_repair",
+              "scope": {
+                "kind": "product",
+                "category": "bondbuilder",
+                "productId": "f8a63590-9d80-454a-8008-e2a56321e64c"
+              },
+              "steps": [
+                {
+                  "action": "apply_product",
+                  "stepKey": "prepare-epres",
+                  "copyTemplateDe": "Konzentrat nach Herstellerangabe in der Sprühflasche mit Wasser mischen und gut schütteln."
+                },
+                {
+                  "action": "apply_product",
+                  "stepKey": "apply-epres",
+                  "copyTemplateDe": "Auf trockenes, ungewaschenes Haar sprühen, bis es vollständig benetzt ist."
+                },
+                {
+                  "action": "wait",
+                  "stepKey": "wait-epres",
+                  "copyTemplateDe": "Mindestens 10 Minuten einwirken lassen."
+                },
+                {
+                  "action": "rinse",
+                  "stepKey": "cleanse-epres",
+                  "copyTemplateDe": "Anschließend wie gewohnt shampoonieren und Conditioner verwenden."
+                }
+              ],
+              "locale": "de",
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-10",
+                  "sourceUrl": "https://epres.com/de/products/bond-repair-treatment",
+                  "sourceType": "manufacturer"
+                }
+              ],
+              "sequence": {
+                "after": [],
+                "anchor": "pre_wash",
+                "before": [
+                  "wet_cleanse"
+                ],
+                "conflictsWith": []
+              },
+              "guidanceKey": "product-bondbuilder-f8a63590-9d80-454a-8008-e2a56321e64c",
+              "requirements": {
+                "requiredCatalogFacts": [],
+                "requiredProfileFacts": [],
+                "requiredProtocolFacts": []
+              },
+              "protocolFacts": {
+                "rinse": null,
+                "amount": null,
+                "cautions": [],
+                "workflowId": "epres_bond_repair",
+                "reapplication": "none",
+                "applicationArea": "all_hair",
+                "contactTimeSeconds": 600,
+                "conditionerRelationship": "conditioner_after"
+              },
+              "schemaVersion": 1,
+              "protocolVersion": 1,
+              "applicationFamily": "pre_shampoo_single_treatment",
+              "compatibleDayTypes": [
+                "bond_repair_day"
+              ],
+              "exactGuidanceRequired": true
+            },
+            "application_stage": "pre_wash",
+            "application_state": null,
+            "application_family": "pre_shampoo_single_treatment",
+            "guidance_payload_v2": {
+              "role": "bond_repair",
+              "facts": {
+                "heat": null,
+                "rinse": "follow_with_shampoo",
+                "amount": null,
+                "contactTime": {
+                  "kind": "seconds",
+                  "seconds": 600
+                },
+                "applicationArea": "hair_lengths_ends",
+                "applicationState": "pre_wash_dry_hair",
+                "conditionerPolicy": "conditioner_after"
+              },
+              "scope": {
+                "kind": "product",
+                "category": "bondbuilder",
+                "productId": "f8a63590-9d80-454a-8008-e2a56321e64c"
+              },
+              "evidence": [
+                {
+                  "checkedAt": "2026-08-10",
+                  "sourceUrl": "https://epres.com/de/products/bond-repair-treatment",
+                  "sourceType": "manufacturer"
+                }
+              ],
+              "exactSteps": [
+                {
+                  "action": "apply_product",
+                  "copyDe": "Konzentrat nach Herstellerangabe in der Sprühflasche mit Wasser mischen und gut schütteln.",
+                  "stepKey": "prepare-epres"
+                },
+                {
+                  "action": "apply_product",
+                  "copyDe": "Auf trockenes, ungewaschenes Haar sprühen, bis es vollständig benetzt ist.",
+                  "stepKey": "apply-epres"
+                },
+                {
+                  "action": "wait",
+                  "copyDe": "Mindestens 10 Minuten einwirken lassen.",
+                  "stepKey": "wait-epres"
+                },
+                {
+                  "action": "rinse",
+                  "copyDe": "Anschließend wie gewohnt shampoonieren und Conditioner verwenden.",
+                  "stepKey": "cleanse-epres"
+                }
+              ],
+              "sourceRole": "specialized_bond_treatment",
+              "workflowId": "epres_bond_repair",
+              "cautionCodes": [],
+              "contractKind": "product_pointer",
+              "schemaVersion": 2,
+              "applicationFamily": "pre_shampoo_single_treatment",
+              "runtimeBlockerCode": null,
+              "requiredCompanionProductId": null
+            },
+            "contact_time_seconds": 600,
+            "instruction_modifiers": []
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "f4fc5ce7-34fc-4958-b436-753a80158190",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:43:38.229099+00:00",
+            "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+            "updated_at": "2026-08-28T08:43:38.229099+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "00850040615500",
+            "identifier_value": "0850040615500",
+            "normalized_identifier_value": "0850040615500"
+          }
+        ]
+      }
+    },
+    {
+      "research_key": "P04",
+      "envelope": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P04.json",
+      "claim_trust_level": "medium",
+      "catalogue_candidate_id": null,
+      "candidate_is_a_verified_binding": false,
+      "proposed_operation": "held_new_product_intake",
+      "existing_recommendation_preserved": null,
+      "catalog_intake_ready": false,
+      "global_recommendation_ready": false,
+      "apply_ready": false,
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "selected_local_cadence_unestablished",
+        "no_existing_row_found_in_bounded_snapshot",
+        "new_row_origin_and_publication_mode_require_review",
+        "no_reconciled_catalogue_product_id",
+        "new_research_fit_not_established",
+        "required_migration_chain_unapplied",
+        "complete_new_product_image_commercial_identity_payload_unprepared"
+      ],
+      "candidate_snapshot": null
+    },
+    {
+      "research_key": "P05",
+      "envelope": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P05.json",
+      "claim_trust_level": "medium",
+      "catalogue_candidate_id": null,
+      "candidate_is_a_verified_binding": false,
+      "proposed_operation": "held_new_product_intake",
+      "existing_recommendation_preserved": null,
+      "catalog_intake_ready": false,
+      "global_recommendation_ready": false,
+      "apply_ready": false,
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "selected_local_cadence_unestablished",
+        "no_existing_row_found_in_bounded_snapshot",
+        "new_row_origin_and_publication_mode_require_review",
+        "no_reconciled_catalogue_product_id",
+        "new_research_fit_not_established",
+        "required_migration_chain_unapplied",
+        "complete_new_product_image_commercial_identity_payload_unprepared"
+      ],
+      "candidate_snapshot": null
+    },
+    {
+      "research_key": "P06",
+      "envelope": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P06.json",
+      "claim_trust_level": "low",
+      "catalogue_candidate_id": null,
+      "candidate_is_a_verified_binding": false,
+      "proposed_operation": "held_new_product_intake",
+      "existing_recommendation_preserved": null,
+      "catalog_intake_ready": false,
+      "global_recommendation_ready": false,
+      "apply_ready": false,
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "uk_directions_de_pack_unverified",
+        "no_existing_row_found_in_bounded_snapshot",
+        "new_row_origin_and_publication_mode_require_review",
+        "no_reconciled_catalogue_product_id",
+        "owner_low_not_curated_promotion_candidate",
+        "new_research_fit_not_established",
+        "required_migration_chain_unapplied",
+        "complete_new_product_image_commercial_identity_payload_unprepared"
+      ],
+      "candidate_snapshot": null
+    },
+    {
+      "research_key": "P07",
+      "envelope": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P07.json",
+      "claim_trust_level": "low",
+      "catalogue_candidate_id": null,
+      "candidate_is_a_verified_binding": false,
+      "proposed_operation": "held_new_product_intake",
+      "existing_recommendation_preserved": null,
+      "catalog_intake_ready": false,
+      "global_recommendation_ready": false,
+      "apply_ready": false,
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "conditional_cadence_has_no_universal_default",
+        "no_existing_row_found_in_bounded_snapshot",
+        "new_row_origin_and_publication_mode_require_review",
+        "no_reconciled_catalogue_product_id",
+        "owner_low_not_curated_promotion_candidate",
+        "new_research_fit_not_established",
+        "required_migration_chain_unapplied",
+        "complete_new_product_image_commercial_identity_payload_unprepared"
+      ],
+      "candidate_snapshot": null
+    },
+    {
+      "research_key": "P08",
+      "envelope": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P08.json",
+      "claim_trust_level": "medium",
+      "catalogue_candidate_id": null,
+      "candidate_is_a_verified_binding": false,
+      "proposed_operation": "held_new_product_intake",
+      "existing_recommendation_preserved": null,
+      "catalog_intake_ready": false,
+      "global_recommendation_ready": false,
+      "apply_ready": false,
+      "blockers": [
+        "provisional_method_not_locked",
+        "physical_pack_formula_binding_unverified",
+        "reviewed_preimage_and_guarded_apply_not_approved",
+        "german_lab_explanations_require_customer_copy_review",
+        "selected_local_cadence_unestablished",
+        "no_existing_row_found_in_bounded_snapshot",
+        "new_row_origin_and_publication_mode_require_review",
+        "no_reconciled_catalogue_product_id",
+        "new_research_fit_not_established",
+        "required_migration_chain_unapplied",
+        "complete_new_product_image_commercial_identity_payload_unprepared"
+      ],
+      "candidate_snapshot": null
+    }
+  ],
+  "draft_publication_authorized": true,
+  "merge_ready": false,
+  "engine_active": false,
+  "method_locked": false,
+  "verification_limits": [
+    "no Docker setup authorized or attempted",
+    "single-connection PGlite does not prove true two-session races",
+    "authenticated admin/browser/chat evaluation unavailable without an isolated Auth/database target; production seeding not authorized"
+  ],
+  "apply_authorized": false
+}

@@ -137,6 +137,7 @@ interface ProductForm {
   leave_in_specs: LeaveInSpecForm | null
   mask_specs: MaskSpecForm | null
   bondbuilder_specs: BondbuilderSpecForm | null
+  bondbuilder_research_managed?: boolean
   deep_cleansing_shampoo_specs: DeepCleansingShampooSpecForm | null
   dry_shampoo_specs: DryShampooSpecForm | null
   peeling_specs: PeelingSpecForm | null
@@ -308,12 +309,12 @@ export default function AdminProductsPage() {
 
     const bondbuilderSpecs = product.bondbuilder_specs
       ? {
-          bond_repair_intensity: product.bondbuilder_specs.bond_repair_intensity,
-          application_mode: product.bondbuilder_specs.application_mode,
-          bond_repair_axis: product.bondbuilder_specs.bond_repair_axis,
-          treatment_mode: product.bondbuilder_specs.treatment_mode,
-          product_format: product.bondbuilder_specs.product_format,
-          usage_protocol: product.bondbuilder_specs.usage_protocol,
+          bond_repair_intensity: product.bondbuilder_specs.bond_repair_intensity ?? "",
+          application_mode: product.bondbuilder_specs.application_mode ?? "",
+          bond_repair_axis: product.bondbuilder_specs.bond_repair_axis ?? "",
+          treatment_mode: product.bondbuilder_specs.treatment_mode ?? "",
+          product_format: product.bondbuilder_specs.product_format ?? "",
+          usage_protocol: product.bondbuilder_specs.usage_protocol ?? "",
         }
       : isBondbuilderCategory(product.category || "")
         ? { ...emptyBondbuilderSpecs }
@@ -370,6 +371,7 @@ export default function AdminProductsPage() {
       leave_in_specs: leaveInSpecs,
       mask_specs: maskSpecs,
       bondbuilder_specs: bondbuilderSpecs,
+      bondbuilder_research_managed: product.bondbuilder_specs?.research_profile != null,
       deep_cleansing_shampoo_specs: deepCleansingShampooSpecs,
       dry_shampoo_specs: dryShampooSpecs,
       peeling_specs: peelingSpecs,
@@ -566,7 +568,7 @@ export default function AdminProductsPage() {
               }
             : null,
         bondbuilder_specs:
-          bondbuilderEnabled && form.bondbuilder_specs
+          bondbuilderEnabled && form.bondbuilder_specs && !form.bondbuilder_research_managed
             ? {
                 bond_repair_intensity: form.bondbuilder_specs.bond_repair_intensity,
                 application_mode: form.bondbuilder_specs.application_mode,
@@ -1272,7 +1274,12 @@ export default function AdminProductsPage() {
               </div>
             )}
 
-            {isBondbuilderCategory(form.category) && form.bondbuilder_specs && (
+            {isBondbuilderCategory(form.category) && form.bondbuilder_research_managed && (
+              <p className="text-xs text-muted-foreground">
+                Die geprüften Bondbuilder-Forschungsdaten bleiben bei Änderungen der Produktdaten unverändert. Forschungsänderungen werden separat geprüft.
+              </p>
+            )}
+            {isBondbuilderCategory(form.category) && form.bondbuilder_specs && !form.bondbuilder_research_managed && (
               <div className="rounded-lg border border-input/70 bg-muted/20 p-4 space-y-4">
                 <div>
                   <h3 className="text-sm font-semibold text-foreground">

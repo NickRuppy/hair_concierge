@@ -1,0 +1,39 @@
+{
+  "standard_version": "bondbuilder-inci-v0.4",
+  "lane_id": "lane-a",
+  "amendment_id": "source-amendment-01",
+  "slot_id": "V04",
+  "input_receipt": [
+    {
+      "path": "/Users/nick/.codex/worktrees/bondbuilder-research-engine/hair_conscierge/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/source-amendment-01.json",
+      "sha256": "fa9232355a32c00e37b80a99f4fdf18a0a65b0d9551cc89b1477a9c33bae9fa9"
+    },
+    {
+      "path": "/Users/nick/.codex/worktrees/bondbuilder-research-engine/hair_conscierge/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-a/records.json",
+      "sha256": "77b69830cd4385b468f9557ae0045321a80ec19430558608efe32de4c6495253"
+    }
+  ],
+  "no_web": true,
+  "classification_unchanged": true,
+  "aftercare_facts": [
+    {
+      "action": "Use the Metal DX mask for optional intensive care.",
+      "requirement": "optional",
+      "placement": "After the serum treatment has been thoroughly rinsed out.",
+      "source_ids": ["S13"]
+    },
+    {
+      "action": "Use the matching Absolut Repair Molecular leave-in as the producer's recommendation for best results.",
+      "requirement": "recommended",
+      "placement": "Afterward in the aftercare sequence, following the optional Metal DX mask step when that step is used.",
+      "source_ids": ["S13"]
+    }
+  ],
+  "retained_limits": [
+    "S13 supplies aftercare order only. It does not supply mask dose, dwell or mask-rinse instructions; none is inferred.",
+    "S13's optional mask and recommended leave-in are not mandatory purchases, proven molecular-effect dependencies or evidence of exclusive brand dependence.",
+    "Cadence remains unstated and diameter fit unknown. The sealed category_review classification, null technology family and null trust assessment are unchanged.",
+    "The original Stage B uncertainty about the order of these two named aftercare products is supplemented only by S13; this does not resolve every general Conditioner permission or protocol detail.",
+    "S13 concerns the same current DE source-page version as S05, not a verified scanned pack. This is a bounded source-preparation correction, not a complete replay or runtime-readiness finding."
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "checked_date": "2026-10-02",
+  "project_id": "pqdkhefxsxkyeqelqegq",
+  "access": "read_only",
+  "query_scope": "All bondbuilder rows plus bounded name/brand candidate search; no returned new-target rows.",
+  "rows": [
+    {
+      "id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "name": "Epres Bond Repair Treatment",
+      "brand": "Epres",
+      "category_key": "bondbuilder",
+      "origin": "curated",
+      "is_active": true,
+      "lifecycle_status": "active",
+      "is_chaarlie_recommended": true,
+      "net_content_value": null,
+      "net_content_unit": null,
+      "price_eur": "48.00",
+      "affiliate_link": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/f8a63590-9d80-454a-8008-e2a56321e64c/16-f8a63590-9d80-454a-8008-e2a56321e64c-epres-epres-bond-repair-treatment-ccbf3c8c1b98.webp",
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "bondbuilder_specs": {
+        "created_at": "2026-05-03T12:15:54.280299+00:00",
+        "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+        "updated_at": "2026-05-03T13:39:09.073237+00:00",
+        "category_key": "bondbuilder",
+        "product_format": "spray_treatment",
+        "treatment_mode": "rinse_out",
+        "usage_protocol": "epres_spray",
+        "application_mode": "pre_shampoo",
+        "bond_repair_axis": "disulfide_crosslink",
+        "bond_repair_intensity": "intensive"
+      }
+    },
+    {
+      "id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "name": "K18 Leave-In Molecular Repair Hair Mask",
+      "brand": "K18",
+      "category_key": "bondbuilder",
+      "origin": "curated",
+      "is_active": true,
+      "lifecycle_status": "active",
+      "is_chaarlie_recommended": true,
+      "net_content_value": "50",
+      "net_content_unit": "ml",
+      "price_eur": "56.25",
+      "affiliate_link": "https://www.flaconi.de/haare/k18/leave-in-molecular/k18-leave-in-molecular-repair-hair-mask-haarkur.html?variant=80074805-50",
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/38dace91-0fba-49ee-a93f-ac36e488fe4b/17-38dace91-0fba-49ee-a93f-ac36e488fe4b-k18-k18-leave-in-molecular-repair-hair-mask-8595971dcd08.webp",
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "bondbuilder_specs": {
+        "created_at": "2026-05-03T12:15:54.095301+00:00",
+        "product_id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+        "updated_at": "2026-05-03T13:39:08.760932+00:00",
+        "category_key": "bondbuilder",
+        "product_format": "leave_in_mask",
+        "treatment_mode": "leave_in",
+        "usage_protocol": "k18_leave_in",
+        "application_mode": "post_wash_leave_in",
+        "bond_repair_axis": "peptide_chain",
+        "bond_repair_intensity": "intensive"
+      }
+    },
+    {
+      "id": "aadbbab5-bcf5-4b46-b38a-5533648bcb1d",
+      "name": "OLAPLEX No.0 Intensive Bond Building Treatment",
+      "brand": "OLAPLEX",
+      "category_key": "bondbuilder",
+      "origin": "curated",
+      "is_active": false,
+      "lifecycle_status": "discontinued",
+      "is_chaarlie_recommended": false,
+      "net_content_value": null,
+      "net_content_unit": null,
+      "price_eur": "30.00",
+      "affiliate_link": "https://olaplex.de/products/olaplex-no-0-intensive-bond-building-hair-treatment",
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/aadbbab5-bcf5-4b46-b38a-5533648bcb1d/18-aadbbab5-bcf5-4b46-b38a-5533648bcb1d-olaplex-olaplex-no-0-intensive-bond-building-treatment-cd9c3ed38dd2.webp",
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "bondbuilder_specs": {
+        "created_at": "2026-05-03T12:15:53.653294+00:00",
+        "product_id": "aadbbab5-bcf5-4b46-b38a-5533648bcb1d",
+        "updated_at": "2026-05-03T13:39:07.191295+00:00",
+        "category_key": "bondbuilder",
+        "product_format": "primer_treatment",
+        "treatment_mode": "rinse_out",
+        "usage_protocol": "olaplex_0_booster",
+        "application_mode": "pre_shampoo",
+        "bond_repair_axis": "disulfide_crosslink",
+        "bond_repair_intensity": "intensive"
+      }
+    },
+    {
+      "id": "917786d2-cf02-43d4-8a9f-7f872528d581",
+      "name": "OLAPLEX No.3 Hair Perfector",
+      "brand": "OLAPLEX",
+      "category_key": "bondbuilder",
+      "origin": "curated",
+      "is_active": false,
+      "lifecycle_status": "discontinued",
+      "is_chaarlie_recommended": false,
+      "net_content_value": null,
+      "net_content_unit": null,
+      "price_eur": "30.00",
+      "affiliate_link": "https://www.douglas.de/de/p/5011245021",
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/917786d2-cf02-43d4-8a9f-7f872528d581/19-917786d2-cf02-43d4-8a9f-7f872528d581-olaplex-olaplex-no-3-hair-perfector-507b148f5421.webp",
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "bondbuilder_specs": {
+        "created_at": "2026-05-03T12:15:53.839106+00:00",
+        "product_id": "917786d2-cf02-43d4-8a9f-7f872528d581",
+        "updated_at": "2026-05-03T13:39:08.351653+00:00",
+        "category_key": "bondbuilder",
+        "product_format": "cream_treatment",
+        "treatment_mode": "rinse_out",
+        "usage_protocol": "olaplex_3_legacy",
+        "application_mode": "pre_shampoo",
+        "bond_repair_axis": "disulfide_crosslink",
+        "bond_repair_intensity": "intensive"
+      }
+    },
+    {
+      "id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+      "name": "OLAPLEX No.3PLUS Complete Repair Treatment",
+      "brand": "OLAPLEX",
+      "category_key": "bondbuilder",
+      "origin": "curated",
+      "is_active": true,
+      "lifecycle_status": "active",
+      "is_chaarlie_recommended": true,
+      "net_content_value": null,
+      "net_content_unit": null,
+      "price_eur": "34.00",
+      "affiliate_link": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/3dc24d67-e6c0-4239-a273-058a87d13553/20-3dc24d67-e6c0-4239-a273-058a87d13553-olaplex-olaplex-no-3plus-complete-repair-treatment-654f51a2bea9.webp",
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "bondbuilder_specs": {
+        "created_at": "2026-05-03T12:15:53.368321+00:00",
+        "product_id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+        "updated_at": "2026-05-03T13:39:06.641807+00:00",
+        "category_key": "bondbuilder",
+        "product_format": "cream_treatment",
+        "treatment_mode": "rinse_out",
+        "usage_protocol": "olaplex_3plus",
+        "application_mode": "pre_shampoo",
+        "bond_repair_axis": "disulfide_crosslink",
+        "bond_repair_intensity": "intensive"
+      }
+    }
+  ]
+}

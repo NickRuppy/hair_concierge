@@ -4,6 +4,8 @@ export const BONDBUILDER_CLEAN_BASE_GUIDANCE =
   "Bondbuilder funktionieren am besten ohne starke Rückstände. Wenn viel Styling, Öl, Silikon, Maske oder Leave-in im Haar liegt, vorher sanft reinigen oder gelegentlich tiefenreinigen."
 
 const BONDBUILDER_USAGE_HINTS = {
+  verified_product_protocol:
+    "Verwende die geprüfte Anwendung dieses Produkts und beachte seine Herstellerangaben.",
   olaplex_3plus:
     "Wenn viel Styling, Öl, Silikon oder Maskenfilm im Haar ist, vorher sanft shampoonieren oder gelegentlich tiefenreinigen. Danach No.3PLUS ins nasse Haar geben, 3 Minuten einwirken lassen, ausspülen und anschließend shampoonieren und Conditioner verwenden. Bei Bedarf etwa alle 1-3 Haarwäschen.",
   olaplex_0_booster:

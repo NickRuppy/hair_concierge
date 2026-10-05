@@ -1,0 +1,232 @@
+{
+  "files": [
+    {
+      "path": "lane-a/records.json",
+      "sha256": "b38cddcdb5dbaa508a5d8efb5a12f518dc4942829d5c9b5929c4ee3ee23128ce"
+    },
+    {
+      "path": "lane-a/notes.md",
+      "sha256": "4886a9616c4771c42b8b463e7d45443c252fbecc11e8b7a2a83e1a452e352d32"
+    },
+    {
+      "path": "lane-b/records.json",
+      "sha256": "97441e0b452d2eae4f27e23cd166929a7bc5918f67f4a8e0d4a747bc4346069c"
+    },
+    {
+      "path": "lane-b/notes.md",
+      "sha256": "8ce49efe5c332c1d991d414e76674b040e73b0058116b842e3987abda8021e78"
+    }
+  ],
+  "metrics": {
+    "boundary_status": {
+      "matched": 4,
+      "total": 8
+    },
+    "technology_family": {
+      "matched": 4,
+      "total": 8
+    },
+    "claim_trust_level": {
+      "matched": 8,
+      "total": 8
+    },
+    "classification_confidence": {
+      "matched": 8,
+      "total": 8
+    },
+    "research_admission_candidacy": {
+      "matched": 8,
+      "total": 8
+    },
+    "recognized_family_candidate": {
+      "matched": 8,
+      "total": 8
+    }
+  },
+  "joint_trust": {
+    "matched": 1,
+    "total": 1,
+    "ids": [
+      "P03"
+    ]
+  },
+  "excluded_from_joint_trust": [
+    "P07",
+    "P05",
+    "P02",
+    "P08",
+    "P04",
+    "P01",
+    "P06"
+  ],
+  "deterministic_facts": {
+    "primary_capture_marker_sets": "8/8",
+    "protocols": "8/8",
+    "flags": "8/8"
+  },
+  "rows": [
+    {
+      "slot_id": "A01",
+      "pilot_id": "P07",
+      "lane_a": {
+        "boundary": "research_hold",
+        "technology": null,
+        "trust": null,
+        "confidence": "low",
+        "admission": false
+      },
+      "lane_b": {
+        "boundary": "in_scope",
+        "technology": "gluconamide_gluconate",
+        "trust": null,
+        "confidence": "low",
+        "admission": false
+      }
+    },
+    {
+      "slot_id": "A02",
+      "pilot_id": "P03",
+      "lane_a": {
+        "boundary": "in_scope",
+        "technology": "maleate_ester",
+        "trust": "low",
+        "confidence": "moderate",
+        "admission": false
+      },
+      "lane_b": {
+        "boundary": "in_scope",
+        "technology": "maleate_ester",
+        "trust": "low",
+        "confidence": "moderate",
+        "admission": false
+      }
+    },
+    {
+      "slot_id": "A03",
+      "pilot_id": "P05",
+      "lane_a": {
+        "boundary": "research_hold",
+        "technology": null,
+        "trust": null,
+        "confidence": "low",
+        "admission": false
+      },
+      "lane_b": {
+        "boundary": "research_hold",
+        "technology": null,
+        "trust": null,
+        "confidence": "low",
+        "admission": false
+      }
+    },
+    {
+      "slot_id": "A04",
+      "pilot_id": "P02",
+      "lane_a": {
+        "boundary": "research_hold",
+        "technology": null,
+        "trust": null,
+        "confidence": "low",
+        "admission": false
+      },
+      "lane_b": {
+        "boundary": "in_scope",
+        "technology": "designed_peptide",
+        "trust": null,
+        "confidence": "low",
+        "admission": false
+      }
+    },
+    {
+      "slot_id": "A05",
+      "pilot_id": "P08",
+      "lane_a": {
+        "boundary": "research_hold",
+        "technology": null,
+        "trust": null,
+        "confidence": "low",
+        "admission": false
+      },
+      "lane_b": {
+        "boundary": "research_hold",
+        "technology": null,
+        "trust": null,
+        "confidence": "low",
+        "admission": false
+      }
+    },
+    {
+      "slot_id": "A06",
+      "pilot_id": "P04",
+      "lane_a": {
+        "boundary": "research_hold",
+        "technology": null,
+        "trust": null,
+        "confidence": "low",
+        "admission": false
+      },
+      "lane_b": {
+        "boundary": "in_scope",
+        "technology": "acid_calcium_management",
+        "trust": null,
+        "confidence": "low",
+        "admission": false
+      }
+    },
+    {
+      "slot_id": "A07",
+      "pilot_id": "P01",
+      "lane_a": {
+        "boundary": "research_hold",
+        "technology": null,
+        "trust": null,
+        "confidence": "low",
+        "admission": false
+      },
+      "lane_b": {
+        "boundary": "in_scope",
+        "technology": "sulfur_targeting_dimaleate",
+        "trust": null,
+        "confidence": "low",
+        "admission": false
+      }
+    },
+    {
+      "slot_id": "A08",
+      "pilot_id": "P06",
+      "lane_a": {
+        "boundary": "research_hold",
+        "technology": null,
+        "trust": null,
+        "confidence": "low",
+        "admission": false
+      },
+      "lane_b": {
+        "boundary": "research_hold",
+        "technology": null,
+        "trust": null,
+        "confidence": "low",
+        "admission": false
+      }
+    }
+  ],
+  "receipt_version": "bondbuilder-pilot-comparison-v0.1",
+  "compared_date": "2026-09-30",
+  "scope": "Raw initial lane outputs, not an efficacy accuracy estimate or engine-lock acceptance.",
+  "prevalence": {
+    "each_lane": {
+      "low": 1,
+      "medium": 0,
+      "high": 0,
+      "null_hold": 7
+    },
+    "admission_positive": 0
+  },
+  "interpretation": {
+    "trust_overall": "8/8 includes seven shared nulls; must not be called eight independently agreed efficacy ratings.",
+    "joint_trust": "1/1, entirely low. Medium/high and neighboring-grade repeatability not exercised.",
+    "boundary_and_technology": "Four differences arise from hold serialization; root adjudication is separate and does not overwrite raw agreement.",
+    "chance_corrected": "Not informative: tiny, degenerate jointly assessable trust sample.",
+    "holdout": "Not reserved or run; this is calibration only."
+  }
+}

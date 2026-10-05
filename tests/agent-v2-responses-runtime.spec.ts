@@ -4851,57 +4851,155 @@ test("AgentV2 short confirmation authorizes matching pending routine mutation", 
   })
 })
 
-test("AgentV2 runtime blocks repair-triggered routine rebuild for pure active routine summaries", async () => {
-  const client = fakeResponsesClientWithOutputs([
-    guidanceCall("call_1", {
-      answer_mode_hint: "routine",
-      categories: ["leave_in"],
-      routine_layer: "basics",
-    }),
-    terminalCall("call_2", {
-      ...terminalGeneralAdviceArguments(),
-      answer_mode: "routine",
-      interpreted_intent:
-        "User asks for a short recap, but the model incorrectly mutates routine state.",
-      request_interpretation: requestInterpretation({
-        primary_intent: "routine_mutation",
-        product_request_kind: "none",
-        routine_intent: "modify",
-        care_category: "leave_in",
-        requested_product_count: null,
-        count_policy: "none",
-        evidence_quote: "fass mir das bitte kurz zusammen",
+for (const missingSummaryGuidance of [false, true]) {
+  test(`AgentV2 runtime repairs pure active routine summaries without requesting a rebuild (${missingSummaryGuidance ? "loads missing guidance" : "guidance loaded"})`, async () => {
+    const client = fakeResponsesClientWithOutputs([
+      guidanceCall("call_1", {
+        answer_mode_hint: "routine",
+        categories: ["leave_in"],
+        routine_layer: "basics",
       }),
-      extracted_constraints: {
-        ...emptyExtractedConstraints(),
-        product_categories: ["leave_in"],
-        routine_layer: "basics",
-        raw_constraints: ["fass mir das bitte kurz zusammen"],
-      },
-      tool_grounding: {
-        ...terminalGeneralAdviceArguments().tool_grounding,
-        used_guidance_package_ids: requiredGuidanceForAnswer("routine", "leave_in"),
-        used_product_tool: false,
-        used_routine_tool: true,
-        product_ids: [],
-        routine_step_ids: ["step_shampoo", "step_conditioner", "step_leave_in"],
-      },
-      routine_context: {
+      terminalCall("call_2", {
+        ...terminalGeneralAdviceArguments(),
+        answer_mode: "routine",
+        interpreted_intent:
+          "User asks for a short recap, but the model incorrectly mutates routine state.",
+        request_interpretation: requestInterpretation({
+          primary_intent: "routine_mutation",
+          product_request_kind: "none",
+          routine_intent: "modify",
+          care_category: "leave_in",
+          requested_product_count: null,
+          count_policy: "none",
+          evidence_quote: "fass mir das bitte kurz zusammen",
+        }),
+        extracted_constraints: {
+          ...emptyExtractedConstraints(),
+          product_categories: ["leave_in"],
+          routine_layer: "basics",
+          raw_constraints: ["fass mir das bitte kurz zusammen"],
+        },
+        tool_grounding: {
+          ...terminalGeneralAdviceArguments().tool_grounding,
+          used_guidance_package_ids: requiredGuidanceForAnswer("routine", "leave_in"),
+          used_product_tool: false,
+          used_routine_tool: true,
+          product_ids: [],
+          routine_step_ids: ["step_shampoo", "step_conditioner", "step_leave_in"],
+        },
+        routine_context: {
+          active: true,
+          routine_layer: "basics",
+          step_id: "step_leave_in",
+          category: "leave_in",
+          return_path: ["routine"],
+        },
+        payload: {
+          user_facing_answer_de:
+            "Ich habe deine Routine neu gesetzt: Shampoo, Conditioner und leichter Leave-in.",
+          routine_layer: "basics",
+          visible_steps: [
+            {
+              step_id: "step_shampoo",
+              label_de: "Shampoo",
+              action_de: "Kopfhaut reinigen.",
+              frequency_de: "nach Bedarf",
+              reason_de: "Basis der Routine.",
+            },
+            {
+              step_id: "step_conditioner",
+              label_de: "Conditioner",
+              action_de: "In Längen und Spitzen geben.",
+              frequency_de: "nach jeder Wäsche",
+              reason_de: "Basis für Längenpflege.",
+            },
+            {
+              step_id: "step_leave_in",
+              label_de: "Leichter Leave-in",
+              action_de: "Sparsam in Längen und Spitzen geben.",
+              frequency_de: "nach jeder Wäsche",
+              reason_de: "Zusatz gegen Trockenheit und Frizz.",
+            },
+          ],
+          next_layer_options: ["goals"],
+          next_step_offer_de: null,
+        },
+      }),
+      ...(missingSummaryGuidance
+        ? [
+            guidanceCall("call_summary_guidance", {
+              answer_mode_hint: "general_advice",
+              categories: [],
+              routine_layer: "basics",
+            }),
+          ]
+        : []),
+      terminalCall("call_3", {
+        ...terminalGeneralAdviceArguments(),
+        interpreted_intent: "User asks for a short recap of the active routine.",
+        request_interpretation: requestInterpretation({
+          primary_intent: "routine_explanation",
+          product_request_kind: "none",
+          routine_intent: "none",
+          care_category: "none",
+          requested_product_count: null,
+          count_policy: "none",
+          evidence_quote: "fass mir das bitte kurz zusammen",
+        }),
+        tool_grounding: {
+          ...terminalGeneralAdviceArguments().tool_grounding,
+          used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "none"),
+          used_product_tool: false,
+          used_routine_tool: false,
+          product_ids: [],
+          routine_step_ids: [],
+        },
+        routine_context: {
+          active: true,
+          routine_layer: "basics",
+          step_id: null,
+          category: null,
+          return_path: ["routine"],
+        },
+        payload: {
+          user_facing_answer_de:
+            "Kurz zusammengefasst: Deine Basis bleibt Shampoo und Conditioner; als erster Zusatz hilft ein leichter Leave-in gegen Trockenheit und Frizz.",
+          category_or_topic: "routine_summary",
+          key_points_de: [
+            "Basis: Shampoo und Conditioner beibehalten.",
+            "Erster Zusatz: leichter Leave-in gegen Trockenheit und Frizz.",
+          ],
+          next_step_offer_de: null,
+        },
+      }),
+    ])
+    let buildRoutineCalled = false
+    let summaryGuidanceCalls = 0
+
+    const result = await runAgentV2ResponsesTurn({
+      client,
+      message: "Fass mir das bitte kurz zusammen.",
+      recentMessages: [
+        {
+          role: "assistant",
+          content:
+            "Deine Basis bleibt Shampoo und Conditioner. Als ersten Zusatz würde ich ein leichtes Leave-in nehmen.",
+        },
+      ],
+      userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
+      routineThreadContext: {
         active: true,
-        routine_layer: "basics",
-        step_id: "step_leave_in",
-        category: "leave_in",
-        return_path: ["routine"],
-      },
-      payload: {
-        user_facing_answer_de:
-          "Ich habe deine Routine neu gesetzt: Shampoo, Conditioner und leichter Leave-in.",
-        routine_layer: "basics",
+        current_layer: "basics",
+        last_answer_mode: "routine",
+        last_routine_categories: ["shampoo", "conditioner", "leave_in"],
+        last_user_goal: "Meine Haare sind trocken und frizzig. Was soll ich aendern?",
+        summary_de:
+          "Basisroutine bleibt Shampoo und Conditioner; ein leichter Leave-in ist der erste Zusatz gegen Trockenheit und Frizz.",
         visible_steps: [
           {
             step_id: "step_shampoo",
-            label_de: "Shampoo",
-            action_de: "Kopfhaut reinigen.",
+            label_de: "Mildes Shampoo",
+            action_de: "Kopfhaut sanft reinigen.",
             frequency_de: "nach Bedarf",
             reason_de: "Basis der Routine.",
           },
@@ -4915,139 +5013,60 @@ test("AgentV2 runtime blocks repair-triggered routine rebuild for pure active ro
           {
             step_id: "step_leave_in",
             label_de: "Leichter Leave-in",
-            action_de: "Sparsam in Längen und Spitzen geben.",
+            action_de: "Nach dem Waschen sparsam in Längen und Spitzen geben.",
             frequency_de: "nach jeder Wäsche",
-            reason_de: "Zusatz gegen Trockenheit und Frizz.",
+            reason_de: "Erster Zusatz gegen Trockenheit und Frizz.",
           },
         ],
-        next_layer_options: ["goals"],
-        next_step_offer_de: null,
       },
-    }),
-    functionCall("call_3", "build_or_fix_routine", {
-      objective: "fix_routine",
-      requested_layer: "basics",
-      requested_category: "leave_in",
-      reason: "Repair tries to satisfy routine_tool_required after a pure summary.",
-      routine_intent: "modify",
-      mutation_kind: "simplify",
-      evidence_quote: "fass mir das bitte kurz zusammen",
-    }),
-    terminalCall("call_4", {
-      ...terminalGeneralAdviceArguments(),
-      interpreted_intent: "User asks for a short recap of the active routine.",
-      request_interpretation: requestInterpretation({
-        primary_intent: "routine_explanation",
-        product_request_kind: "none",
-        routine_intent: "none",
-        care_category: "none",
-        requested_product_count: null,
-        count_policy: "none",
-        evidence_quote: "fass mir das bitte kurz zusammen",
-      }),
-      tool_grounding: {
-        ...terminalGeneralAdviceArguments().tool_grounding,
-        used_guidance_package_ids: requiredGuidanceForAnswer("general_advice", "none"),
-        used_product_tool: false,
-        used_routine_tool: false,
-        product_ids: [],
-        routine_step_ids: [],
+      currentRoutineLayer: "basics",
+      tools: {
+        ...fakeAgentV2Tools(),
+        load_advisor_guidance: async (input) => {
+          const output = await fakeAgentV2Tools().load_advisor_guidance(input)
+          summaryGuidanceCalls += 1
+          return missingSummaryGuidance && summaryGuidanceCalls === 1
+            ? {
+                ...output,
+                loaded_package_ids: output.loaded_package_ids.filter(
+                  (id) => !["base.general_advice.v1", "base.routine_building.v1"].includes(id),
+                ),
+              }
+            : output
+        },
+        build_or_fix_routine: async () => {
+          buildRoutineCalled = true
+          return { visible_steps: [] }
+        },
       },
-      routine_context: {
-        active: true,
-        routine_layer: "basics",
-        step_id: null,
-        category: null,
-        return_path: ["routine"],
-      },
-      payload: {
-        user_facing_answer_de:
-          "Kurz zusammengefasst: Deine Basis bleibt Shampoo und Conditioner; als erster Zusatz hilft ein leichter Leave-in gegen Trockenheit und Frizz.",
-        category_or_topic: "routine_summary",
-        key_points_de: [
-          "Basis: Shampoo und Conditioner beibehalten.",
-          "Erster Zusatz: leichter Leave-in gegen Trockenheit und Frizz.",
-        ],
-        next_step_offer_de: null,
-      },
-    }),
-  ])
-  let buildRoutineCalled = false
+    })
 
-  const result = await runAgentV2ResponsesTurn({
-    client,
-    message: "Fass mir das bitte kurz zusammen.",
-    recentMessages: [
-      {
-        role: "assistant",
-        content:
-          "Deine Basis bleibt Shampoo und Conditioner. Als ersten Zusatz würde ich ein leichtes Leave-in nehmen.",
-      },
-    ],
-    userContext: { hairProfile: null, routineInventory: [], sessionMemory: [] },
-    routineThreadContext: {
-      active: true,
-      current_layer: "basics",
-      last_answer_mode: "routine",
-      last_routine_categories: ["shampoo", "conditioner", "leave_in"],
-      last_user_goal: "Meine Haare sind trocken und frizzig. Was soll ich aendern?",
-      summary_de:
-        "Basisroutine bleibt Shampoo und Conditioner; ein leichter Leave-in ist der erste Zusatz gegen Trockenheit und Frizz.",
-      visible_steps: [
-        {
-          step_id: "step_shampoo",
-          label_de: "Mildes Shampoo",
-          action_de: "Kopfhaut sanft reinigen.",
-          frequency_de: "nach Bedarf",
-          reason_de: "Basis der Routine.",
-        },
-        {
-          step_id: "step_conditioner",
-          label_de: "Conditioner",
-          action_de: "In Längen und Spitzen geben.",
-          frequency_de: "nach jeder Wäsche",
-          reason_de: "Basis für Längenpflege.",
-        },
-        {
-          step_id: "step_leave_in",
-          label_de: "Leichter Leave-in",
-          action_de: "Nach dem Waschen sparsam in Längen und Spitzen geben.",
-          frequency_de: "nach jeder Wäsche",
-          reason_de: "Erster Zusatz gegen Trockenheit und Frizz.",
-        },
-      ],
-    },
-    currentRoutineLayer: "basics",
-    tools: {
-      ...fakeAgentV2Tools(),
-      build_or_fix_routine: async () => {
-        buildRoutineCalled = true
-        return { visible_steps: [] }
-      },
-    },
+    assert.equal(buildRoutineCalled, false)
+    assert.equal(
+      result.trace.bounded_repair_kind,
+      missingSummaryGuidance ? "missing_guidance_or_tools" : "terminal_only",
+    )
+    assert.equal(summaryGuidanceCalls, missingSummaryGuidance ? 2 : 1)
+    assert.deepEqual(result.trace.blocked_tool_calls, [])
+    assert.equal(
+      result.trace.tool_calls.some((call) => call.name === "build_or_fix_routine"),
+      false,
+    )
+    assert.equal(
+      result.trace.failure_stage,
+      null,
+      JSON.stringify(result.trace.validation_errors, null, 2),
+    )
+    assert.equal(result.final_answer.answer_mode, "general_advice")
+    assert.equal(result.final_answer.request_interpretation.routine_intent, "none")
+    assert.equal(result.final_answer.routine_context.active, true)
+    assert.equal(
+      result.trace.validation_errors.length,
+      0,
+      JSON.stringify(result.trace.validation_errors, null, 2),
+    )
   })
-
-  assert.equal(buildRoutineCalled, false)
-  assert.equal(result.trace.blocked_tool_calls[0]?.name, "build_or_fix_routine")
-  assert.equal(result.trace.blocked_tool_calls[0]?.reason, "routine_summary_rebuild_not_requested")
-  assert.equal(
-    result.trace.tool_calls.some((call) => call.name === "build_or_fix_routine"),
-    false,
-  )
-  assert.equal(
-    result.trace.failure_stage,
-    null,
-    JSON.stringify(result.trace.validation_errors, null, 2),
-  )
-  assert.equal(result.final_answer.answer_mode, "general_advice")
-  assert.equal(result.final_answer.request_interpretation.routine_intent, "none")
-  assert.equal(result.final_answer.routine_context.active, true)
-  assert.equal(
-    result.trace.validation_errors.length,
-    0,
-    JSON.stringify(result.trace.validation_errors, null, 2),
-  )
-})
+}
 
 test("AgentV2 runtime allows explicit product integration requests inside active routines", async () => {
   const client = fakeResponsesClientWithOutputs([
