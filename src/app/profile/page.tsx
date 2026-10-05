@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
+import { PlanInviteBanner } from "@/components/layout/plan-invite-banner"
 import { HaarCheckEditControl } from "@/components/profile/haar-check-edit-control"
 import { HairProfileSection } from "@/components/profile/hair-profile-section"
 import { TrialMembership } from "@/components/profile/trial-membership"
@@ -1076,6 +1077,8 @@ export default function ProfilePage() {
             Mein Profil
           </h1>
         </div>
+
+        <PlanInviteBanner className="mb-10" />
 
         {/* T15: a free user never has `hasRoutineAccess` (only a real Personal Plan owner
             does, and that owner is always premium — see `hasRoutineTabAccess`'s doc
