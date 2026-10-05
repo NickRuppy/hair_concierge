@@ -7,7 +7,10 @@ import {
   loadAuthenticatedAppNavigationAccess,
   schedulePersonalPlanNavSurfaceVisit,
 } from "@/lib/personal-plan/navigation-access"
-import { loadProfileHasPersonalPlan } from "@/lib/personal-plan/profile-plan-ownership"
+import {
+  loadProfileHasPersonalPlan,
+  loadProfilePlanMigrationAvailable,
+} from "@/lib/personal-plan/profile-plan-ownership"
 import { AppRouteProviders } from "@/providers/route-providers"
 import { PRIVATE_PAGE_METADATA } from "@/lib/seo/site-identity"
 
@@ -31,12 +34,14 @@ export default async function ProfileLayout({ children }: { children: React.Reac
     loadProfileHasPersonalPlan(navigation),
     schedulePersonalPlanNavSurfaceVisit(navigation, "profile"),
   ])
+  const planMigrationAvailable = await loadProfilePlanMigrationAvailable(hasPersonalPlan)
   return (
     <AppRouteProviders>
       <AuthenticatedAppShell navigation={navigation}>
         <ProfileRoutineAccessProvider
           hasRoutineAccess={hasRoutineTabAccess(navigation)}
           hasPersonalPlan={hasPersonalPlan}
+          planMigrationAvailable={planMigrationAvailable}
         >
           <ProfilePageTierProvider tier={tier}>{children}</ProfilePageTierProvider>
         </ProfileRoutineAccessProvider>

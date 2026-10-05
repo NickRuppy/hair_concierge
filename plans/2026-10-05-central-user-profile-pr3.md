@@ -1,6 +1,6 @@
 # Central user profile — PR3: profile surfaces and translator retirement
 
-Rev. 3 — 2026-10-05. Worktree `.worktrees/central-profile-pr3`, branch `codex/central-profile-pr3`, base `origin/main` = `9eac2085`.
+Rev. 4 — 2026-10-05. Worktree `.worktrees/central-profile-pr3`, branch `codex/central-profile-pr3`, base `origin/main` = `9eac2085`.
 
 ## 1. Outcome and source context
 
@@ -64,6 +64,8 @@ Status: **confirmed**.
 - Plan products render in the existing plan-product card format (already live for owners without legacy rows).
 - `getProductCompletionLabel` loses its `onboardingCompleted` parameter; empty → „Noch leer“.
 
+- 2026-10-05, dead-end review with production counts (51 active subscribers without a plan: 38 migration candidates, 2 already enrolled, 11 not recognised as currently paying; 16 of 51 signed in or chatted in the last 30 days): no edit controls without a plan stays as built; instead the Profil tab points eligible members at the existing migration with one card (§6 actor B step 4). Nick: „yes build it, then merge when green“.
+
 **Open consequential assumptions:** none.
 
 Undiscussed consequential assumptions affecting this handoff: none.
@@ -84,6 +86,7 @@ Actor B — **user without a plan**:
 1. Styling / Alltag: descriptions „Hitzetools, Häufigkeit und Hitzeschutz.“ / „Handtuch, Trocknen, Bürste/Kamm und Nachtschutz.“; no header button; value cards are not interactive; an empty value shows „Noch offen“ (without „tippen zum Ergänzen“).
 2. Produkte: description „Welche Produkte du aktuell nutzt.“; no header button; legacy rows are static (no button semantics); no „Details ergänzen“ card; no rows: „Noch keine Produktangaben“ / „Hier ist noch nichts gespeichert.“ without a button.
 3. Old Routine page empty state: only „Im Chat starten“.
+4. **Pointer to the plan (Rev. 4, confirmed 2026-10-05).** A member without a plan whom the existing migration check accepts (`resolvePersonalPlanMigrationAdmission` status `candidate`, `pending_source` or `ready`; a `candidate` only while `PERSONAL_PLAN_LEGACY_MIGRATION_ENABLED` is on) sees one card directly above the Produkte section: „Dein persönlicher Plan fehlt noch“ / „Mit deinem Plan kannst du Styling, Alltag und Produkte hier anpassen.“ / button „Plan erstellen“ → `/plan-bereit`, where the migration chosen on 2026-08-28 („migrate existing paid users when they next visit“) already runs. After it they own a plan and are Actor A. Members the check rejects see no card.
 
 Both: no user-visible string in these files contains „Onboarding“. Loading: a plan owner's Produkte section shows the skeleton until the plan-products fetch settles (no legacy→plan flicker); a non-owner renders legacy rows immediately.
 
@@ -152,3 +155,5 @@ Whole-branch review (Claude-side, independent Opus reviewer, read-only): verdict
 | W4  | tradeoff               | `descriptionWithoutPlan` is optional, page falls back to an empty string                                                            | rejected                                                  | none                                                                                                                         | three sections define it; tests assert the strings                                   |
 
 Verification on the final tree: `npm run test:node` 10,861 pass / 0 fail / 15 skipped; `npm run test:personal-plan:nested` exit 0; `npm run ci:verify` exit 0 (typecheck, lint 0 errors, build) — run before the test-only fix round; after it: `npm run typecheck` clean, `npm run lint` 0 errors, the seven affected profile/guard test files 64/64, prettier clean on all changed files. Browser (dev login = user without a plan, 390 px): Produkte / Styling / Alltag show values and the §6 descriptions, no edit button and no interactive element inside the three sections, Haar-Check and Ziele editing unchanged, no console errors. Not observable locally: the plan-owner journey (Nick, production, after deploy), an empty value card and the old Routine empty state (dev account has values and products).
+
+Rev. 4 addition (after the first review): the migration pointer card (§6 actor B step 4) — `loadProfilePlanMigrationAvailable` in `profile-plan-ownership.ts` (one read-only RPC, only for viewers without a plan, fail-closed), a third profile context, the card in `page.tsx`, tests in `tests/profile-plan-migration-prompt.test.tsx`. Built by one Codex worker run, diff read and re-verified by the main session.

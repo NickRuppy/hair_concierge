@@ -19,19 +19,25 @@ const ProfileRoutineAccessContext = createContext(false)
  */
 const ProfileHasPersonalPlanContext = createContext(false)
 
+const ProfilePlanMigrationAvailableContext = createContext(false)
+
 export function ProfileRoutineAccessProvider({
   hasRoutineAccess,
   hasPersonalPlan = false,
+  planMigrationAvailable = false,
   children,
 }: {
   hasRoutineAccess: boolean
   hasPersonalPlan?: boolean
+  planMigrationAvailable?: boolean
   children: ReactNode
 }) {
   return (
     <ProfileRoutineAccessContext.Provider value={hasRoutineAccess}>
       <ProfileHasPersonalPlanContext.Provider value={hasPersonalPlan}>
-        {children}
+        <ProfilePlanMigrationAvailableContext.Provider value={planMigrationAvailable}>
+          {children}
+        </ProfilePlanMigrationAvailableContext.Provider>
       </ProfileHasPersonalPlanContext.Provider>
     </ProfileRoutineAccessContext.Provider>
   )
@@ -43,4 +49,8 @@ export function useProfileRoutineAccess(): boolean {
 
 export function useProfileHasPersonalPlan(): boolean {
   return useContext(ProfileHasPersonalPlanContext)
+}
+
+export function useProfilePlanMigrationAvailable(): boolean {
+  return useContext(ProfilePlanMigrationAvailableContext)
 }
