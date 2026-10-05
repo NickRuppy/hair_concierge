@@ -1241,7 +1241,6 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /commercial_source_contract/)
   assert.match(workerScript, /Official brand\/manufacturer product page/)
   assert.match(workerScript, /dm > Rossmann > Müller > brand-direct > Amazon DE/)
-  assert.match(workerScript, /brand-direct > Amazon DE > dm > Rossmann/)
   assert.match(workerScript, /targeted_preferred_retailer_searches/)
   assert.match(workerScript, /site:dm\.de/)
   assert.match(workerScript, /site:rossmann\.de/)

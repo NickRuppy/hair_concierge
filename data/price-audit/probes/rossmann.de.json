@@ -1,0 +1,64 @@
+{
+  "host": "rossmann.de",
+  "probedAt": "2026-09-30T16:01:13.432Z",
+  "enabledForAutoWrite": false,
+  "reviewedBy": null,
+  "reviewedAt": null,
+  "samples": [
+    {
+      "productId": "2b2161a2-6c09-435f-adbb-49da44d434ae",
+      "storedPriceEur": 3.99,
+      "observation": {
+        "kind": "mismatch",
+        "reason": "no_price_found",
+        "evidenceUrl": "https://www.rossmann.de/de/pflege-und-duft-got2b-trockenshampoo-trocken-waesche-extra-volumen/p/4015100800227",
+        "observedName": null,
+        "observedPriceEur": null
+      }
+    },
+    {
+      "productId": "5dc2fae3-a0ca-4e6c-9c30-02dd192772f0",
+      "storedPriceEur": 4.49,
+      "observation": {
+        "kind": "mismatch",
+        "reason": "no_price_found",
+        "evidenceUrl": "https://www.rossmann.de/de/pflege-und-duft-gliss-ultimate-repair-express-repair-spuelung/p/4015100813494",
+        "observedName": null,
+        "observedPriceEur": null
+      }
+    },
+    {
+      "productId": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+      "storedPriceEur": 2.49,
+      "observation": {
+        "kind": "mismatch",
+        "reason": "no_price_found",
+        "evidenceUrl": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-leave-in-conditioner-hyaluron-und-care/p/4305615946733",
+        "observedName": null,
+        "observedPriceEur": null
+      }
+    },
+    {
+      "productId": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+      "storedPriceEur": 2.79,
+      "observation": {
+        "kind": "mismatch",
+        "reason": "no_price_found",
+        "evidenceUrl": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122",
+        "observedName": null,
+        "observedPriceEur": null
+      }
+    },
+    {
+      "productId": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+      "storedPriceEur": 2.79,
+      "observation": {
+        "kind": "mismatch",
+        "reason": "no_price_found",
+        "evidenceUrl": "https://www.rossmann.de/de/pflege-und-duft-bali-curls-total-repair-sos-protein-treatment/p/4262391991114",
+        "observedName": null,
+        "observedPriceEur": null
+      }
+    }
+  ]
+}

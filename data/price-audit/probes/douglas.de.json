@@ -1,0 +1,49 @@
+{
+  "host": "douglas.de",
+  "probedAt": "2026-09-30T16:01:41.122Z",
+  "enabledForAutoWrite": false,
+  "reviewedBy": null,
+  "reviewedAt": null,
+  "samples": [
+    {
+      "productId": "0756a919-5fab-4b6c-a5da-8cb810869b6f",
+      "storedPriceEur": 25,
+      "observation": {
+        "kind": "failed",
+        "reason": "bot_wall"
+      }
+    },
+    {
+      "productId": "0d5a4af5-d046-4378-b608-515c9d1d66ec",
+      "storedPriceEur": 24.44,
+      "observation": {
+        "kind": "failed",
+        "reason": "bot_wall"
+      }
+    },
+    {
+      "productId": "118ebae1-b7a9-4a89-a2ff-6c31df28c4dc",
+      "storedPriceEur": 23.94,
+      "observation": {
+        "kind": "failed",
+        "reason": "bot_wall"
+      }
+    },
+    {
+      "productId": "11a099f7-eabe-4bdb-bfd3-995f35cb6ee4",
+      "storedPriceEur": 26.6,
+      "observation": {
+        "kind": "failed",
+        "reason": "bot_wall"
+      }
+    },
+    {
+      "productId": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "storedPriceEur": 23.15,
+      "observation": {
+        "kind": "failed",
+        "reason": "bot_wall"
+      }
+    }
+  ]
+}

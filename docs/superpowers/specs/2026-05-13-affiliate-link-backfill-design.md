@@ -84,15 +84,12 @@ The crucial property: subagents auto-classify but **never write to the DB**. The
 
 For each slice, invokes `Agent` with `subagent_type: "general-purpose"` and a prompt of the form below. All fanout agents (~15) go out in a single message → run in parallel.
 
-**Per-category preference orders:**
+**Purchase source preference:**
 
-| Category | Preference order |
-|---|---|
-| Shampoo | DM > Rossmann > Müller > brand-direct > Amazon DE |
-| Conditioner (Drogerie) | DM > Rossmann > Müller > brand-direct > Amazon DE |
-| Maske | DM > Rossmann > Müller > brand-direct > Amazon DE |
-| Leave-in | DM > brand-direct > Rossmann > Amazon DE |
-| Öle | brand-direct > Amazon DE > DM > Rossmann |
+The [canonical research runbook](../../product-intake-research-ops.md#source-and-purchase-url-priority)
+owns the current purchase source order. Nick's 2026-10-03 clarification applies
+the same order to every category and supersedes this design's former leave-in
+and oil exceptions.
 
 **Host allowlist** (auto-approved at the aggregation gate):
 
