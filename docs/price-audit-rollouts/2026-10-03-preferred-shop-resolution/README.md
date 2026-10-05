@@ -1,5 +1,7 @@
 # Preferred purchasable offers: NEQI and Cacay
 
+> **Superseded shop order (note added 2026-10-05):** the oil order quoted below (brand-direct first) was replaced by Nick's universal order for every category, oils included: dm > Rossmann > Müller > brand-direct > Amazon DE > reputable German/EU specialists. Current rule: [Source And Purchase URL Priority](../../product-intake-research-ops.md#source-and-purchase-url-priority). This receipt is kept as the historical record of what was applied on 2026-10-03.
+
 Nick clarified the two pending choices: prioritize preferred shops, then accept the exact product's available package size and whole-package price, provided the product is purchasable. This settles the earlier supplier/size questions within the authorized catalog pricing pass. Different formulas remain separate product decisions.
 
 The source order remains the [canonical intake contract](../../product-intake-research-ops.md): masks use dm > Rossmann > Müller > brand-direct > Amazon DE; oils use brand-direct > Amazon DE > dm > Rossmann. Package size or lower price does not outrank an available preferred source.

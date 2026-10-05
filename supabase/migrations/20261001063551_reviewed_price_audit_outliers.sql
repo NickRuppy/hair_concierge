@@ -20,6 +20,8 @@ BEGIN
      3.99::numeric, 6.45::numeric)
   ) AS reviewed(id, name, brand, link, old_price, new_price)
   LOOP
+    -- Replay on a database without these catalog rows (fresh/preview branch): nothing to correct.
+    CONTINUE WHEN NOT EXISTS (SELECT 1 FROM public.products p WHERE p.id = target.id);
     UPDATE public.products p
     SET price_eur = target.new_price,
         price_checked_at = '2026-09-30T19:40:00Z'::timestamptz
