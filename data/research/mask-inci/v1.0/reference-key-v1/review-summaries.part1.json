@@ -3,7 +3,7 @@
     "g0": "Nach der Haarwäsche einmassieren, bis zu 10 Minuten einwirken lassen, gründlich ausspülen — klare Ausspül-Kur ohne zweiten Anwendungsmodus ⇒ in_category.",
     "conditioningLevel": "Zwei Kationik-Tenside (Cetrimonium Chloride, Quaternium-18) und Cetearyl Alcohol an Position 2, alles vor der Parfum-Marke ⇒ high; Konfidenz moderat, weil Quaternium-18 direkt vor dem Parfum steht und der Wert an ihm hängt.",
     "weightPotential": "Lanolin an Position 3 als schweres Lipid vor der Parfum-Marke, dazu Cetearyl Alcohol ganz vorne als dichte Fettbasis ⇒ high; Konfidenz moderat, weil die INCI nur aus einer Ersatzquelle stammt.",
-    "careDirection": "Vor der Parfum-Marke nur Fettalkohol, Lanolin und zwei Kationik-Tenside; alle fünf Proteine stehen dahinter ⇒ keine Proteinroute ⇒ moisture. Konfidenz moderat, weil das Parfum sehr früh steht (Position 6).",
+    "careDirection": "Vor der Parfum-Marke nur Fettalkohol, Lanolin und zwei Kationik-Tenside; alle fünf Proteine stehen dahinter ⇒ keine Proteinroute ⇒ moisture; als Tail-Protein-Cocktail geflaggt und zur Prüfung geroutet.",
     "repairSupportLevel": "Kein Bond-Wirkstoff in der Liste; Kollagen, Keratin und Sojaprotein stehen alle hinter der Parfum-Marke ⇒ keine Proteinroute ⇒ low.",
     "primaryFocus": "Reichhaltige Standardbasis ohne Silikon, Polymer, Feuchthaltemittel oder Protein vor der Parfum-Marke — kein Spezialfokus erreicht seine Schwelle ⇒ general.",
     "secondaryFocus": "Kein Kandidat erreicht die Schwelle; jeder würde nur dieselbe Lanolin-/Kationik-Basis doppelt zählen ⇒ kein Sekundärfokus."

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "mask-research-record-v0.1",
   "lane": "reference_key",
-  "standardVersion": "mask-inci-v0.3",
+  "standardVersion": "mask-inci-v0.5",
   "productId": "01-hask-argan-oil-sachet",
   "identity": {
     "brand": "HASK",
@@ -191,7 +191,7 @@
       ],
       "limitations": [
         "INCI discloses no molecular weight, so even a credited hydrolysed protein could only support 'a protein film route is present'.",
-        "D4 protein-payload counter-signal did NOT fire here despite five protein species, because its detection threshold is above-tail-gated (AP-D4-BLINDSPOT)."
+        "D4 protein-payload counter-signal is above-tail-gated and did not fire; the gap is closed by E12 (2026-10-05): the tail_protein_cluster flag now carries the doubt deterministically (confidence cap + review trigger)."
       ],
       "balancedReading": null
     },
@@ -414,9 +414,9 @@
         "note": "conditioning_level `high` hinges on a boundary-position ingredient: S1 fires only because QUATERNIUM-18 @5 is counted as the second distinct cationic, and it sits at tail_index − 1. Without it the value would be `moderate`. Under E1 (2026-09-14) the species counts in full — relative order above the marker is reliable, only the invisible 1 % line is not — and the uncertainty is carried here and as the field's `moderate` confidence cap. This note moves no value. No other field on this record hinges on it: weight_potential rests on LANOLIN @3 and care_direction on the absence of any above-tail R5 species."
       },
       {
-        "flag": "protein_tail_only",
+        "flag": "tail_protein_cluster",
         "value": "HYDROXYPROPYLTRIMONIUM HYDROLYZED ORYZA SATIVA PROTEIN/SILOXYSILICATE @8, HYDROLYZED COLLAGEN @10, HYDROLYZED KERATIN @11, HYDROLYZED SOY PROTEIN @13 (tail_index 6)",
-        "note": "Four protein species, plus SILK AMINO ACIDS @12 and SODIUM LAUROYL OAT AMINO ACIDS @14, are declared at or after the tail marker. The payload is present and carries zero classification credit (§3.1, §13.1 rule 3): it contributes nothing to care_direction, repair_support_level, damage_fit or the repair focus, and it is not a D4 payload either, since D4 counts above-tail species. Recorded so a reviewer who sees the proteins on the pack and in the list can see that the engine saw them too, and why they earned nothing. This flag caps no confidence and moves no value."
+        "note": "E12 (2026-10-05): four distinct hydrolyzed-protein species sit behind PARFUM @6 — a tail protein cluster, not a single hero tail. The payload still carries zero classification credit (§3.1; below the marker the order is arbitrary and the dose unprovable), but per §13.1 rule 4 this flag caps care_direction confidence at moderate and fires tail_protein_cluster_review: a cluster this size is either label pixie dust or a real formula identity, and a human weighs the pack against the list. SILK AMINO ACIDS @12 and SODIUM LAUROYL OAT AMINO ACIDS @14 remain non-qualifying (free amino acids). Supersedes the protein_tail_only note; closes the AP-D4-BLINDSPOT limitation on this record."
       },
       {
         "flag": "claim_formula_mismatch",
