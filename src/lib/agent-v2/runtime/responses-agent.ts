@@ -744,6 +744,9 @@ export async function runAgentV2ResponsesTurn(params: {
         pendingFollowupAction,
         isShortFollowupConfirmation,
       })
+      if (routineToolPolicy.hardDenyReason) {
+        repairAllowedExecutableTools.delete("build_or_fix_routine")
+      }
       repairState = buildRepairState(validation.errors, repairAllowedExecutableTools, {
         requireProductFactsForTrustedAssessment: shouldRepairTrustedAssessmentWithProductFacts({
           errors: validation.errors,
@@ -779,7 +782,7 @@ export async function runAgentV2ResponsesTurn(params: {
         validation_errors: validation.errors,
       })
       inputItems.push(buildTerminalValidationOutput(terminalCalls[0].call_id, validation.errors))
-      inputItems.push(buildRepairInstruction(validation.errors, repairState))
+      inputItems.push(buildRepairInstruction(validation.errors, repairState, routineToolPolicy))
       continue
     }
 
@@ -1519,6 +1522,7 @@ function compactRepairValue(value: unknown): unknown {
 function buildRepairInstruction(
   errors: AgentV2ValidationError[],
   repairState: AgentV2RepairState,
+  routineToolPolicy: RoutineToolPolicy,
 ): Record<string, unknown> {
   const requiredTools = repairState.requiredTools.join(" -> ")
   const repairPolicy =
@@ -1535,12 +1539,16 @@ function buildRepairInstruction(
   )
     ? " For visible_payload_not_rendered: the structured payload can be valid while the German visible prose failed to render required elements. Recompose payload.user_facing_answer_de as natural, concise German prose from the existing payload only. Include the exact required payload elements named by the validation error, such as product names, assessed product, visible routine step labels, concrete blocker, clarification question/options, or confirmable offer. Do not invent claims, products, product facts, routine steps, or side effects."
     : ""
+  const summaryRepairPolicy =
+    routineToolPolicy.hardDenyReason === "routine_summary_rebuild_not_requested"
+      ? " The latest user asks only for a recap of the existing routine. Correct the terminal semantics: answer_mode general_advice, primary_intent routine_explanation, routine_intent none, used_routine_tool false, and empty routine_step_ids. Summarize only the active routine context already supplied; retain its active routine_context without adding, removing or changing steps. Do not call build_or_fix_routine or claim a routine mutation."
+      : ""
 
   return {
     role: "system",
     content: `Repair the AgentV2 terminal answer. Validation failed with: ${JSON.stringify(
       errors.map((error) => compactValidationErrorForRepair(error)),
-    )}. ${repairPolicy}${followupRepairPolicy}${compositionRepairPolicy} When a validation error includes suggested_value, use it exactly unless it conflicts with the latest user message or returned tool outputs. When repair_hint is present, follow it before changing unrelated fields. Keep all product/routine claims grounded in returned tool outputs. Match payload fields to answer_mode exactly.\n\n${buildTerminalPayloadFieldGuidance()}`,
+    )}. ${repairPolicy}${followupRepairPolicy}${compositionRepairPolicy}${summaryRepairPolicy} When a validation error includes suggested_value, use it exactly unless it conflicts with the latest user message or returned tool outputs. When repair_hint is present, follow it before changing unrelated fields. Keep all product/routine claims grounded in returned tool outputs or supplied active routine context. Match payload fields to answer_mode exactly.\n\n${buildTerminalPayloadFieldGuidance()}`,
   }
 }
 
