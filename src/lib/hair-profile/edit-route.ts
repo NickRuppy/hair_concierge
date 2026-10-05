@@ -2,6 +2,8 @@ import "server-only"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
+import type { SyncPlanWithFacts } from "@/lib/personal-plan/facts-recompute/types"
+import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 import { hasCompletedQuizDiagnostics } from "@/lib/quiz/completion"
 import { ProfileEditError, publishProfileEdit } from "@/lib/scan/profile-edit"
 import { prepareScannerContext } from "@/lib/scan/scanner-context"
@@ -30,21 +32,108 @@ export type ProfileEditRouteDeps = {
   randomUUID: () => string
 }
 
+/** The client-visible plan outcome of a save — no reasons or retryability (as in the stage-2 route). */
+export type ProfilePlanOutcome = { outcome: "applied" | "unchanged" | "unavailable" }
+
 export type ProfileAnswersSaveDeps = ProfileEditRouteDeps & {
   saveUserFacts: typeof saveUserFacts
   /** The row after a direct door save (the route answers with the saved profile). */
   loadProfileRow: (admin: SupabaseClient, userId: string) => Promise<Record<string, unknown> | null>
   now: () => string
+  /**
+   * Central profile PR2: after a save that changed a value, moves the user's existing plan to the
+   * new facts. Absent = today's behaviour (no plan field). Never expected to throw, but the save
+   * wraps it anyway: a plan problem must never fail a profile save.
+   */
+  syncPlanWithFacts?: SyncPlanWithFacts
+  /**
+   * Recomputes the active routine on the refined version the rebase produced. Only called when the
+   * lane rebased a plan that has an active routine and a refined version. Same never-fail contract.
+   */
+  recomputeRoutine?: (input: {
+    userId: string
+    personalPlanId: string
+    refinedVersionId: string
+  }) => Promise<{ status: "applied" | "unchanged" | "unavailable"; reason?: string }>
 }
 
 export type ProfileAnswersSaveResult =
-  | { kind: "saved"; profile: Record<string, unknown> | null }
+  | { kind: "saved"; profile: Record<string, unknown> | null; plan?: ProfilePlanOutcome }
   | {
       kind: "published"
       profile: Record<string, unknown>
       profileRevision: string
       contextRevision: string
+      plan?: ProfilePlanOutcome
     }
+
+/**
+ * Runs the plan lane after a successful save and reports a client outcome (plan §4a "Profile
+ * route response"). `undefined` = omit the field: no dep, or the user has no plan. Everything
+ * else is `applied` / `unchanged` / `unavailable`; a throw from either dep is `unavailable`, so
+ * this function never throws and the save response stays a 200 with the saved profile. Reasons
+ * stay server-side (timing + log line, same idiom as the stage-2 route's habits recompute).
+ */
+async function syncPlanAfterSave(
+  deps: ProfileAnswersSaveDeps,
+  userId: string,
+): Promise<ProfilePlanOutcome | undefined> {
+  if (!deps.syncPlanWithFacts) return undefined
+  const started = performance.now()
+  let outcome: ProfilePlanOutcome["outcome"] | undefined
+  let lane = "unexpected_error"
+  let laneReason: string | undefined
+  let routine: string | undefined
+  let routineReason: string | undefined
+  let cause: unknown
+  try {
+    const result = await deps.syncPlanWithFacts({ userId })
+    lane = result.status
+    if (result.status === "no_plan") {
+      outcome = undefined
+    } else if (result.status === "unchanged") {
+      outcome = "unchanged"
+    } else if (result.status === "unavailable") {
+      outcome = "unavailable"
+      laneReason = result.reason
+    } else if (!result.refinedVersionId || !result.activeRoutineVersionId) {
+      // Rebased, but nothing to recompute: no refined version was projected or no routine runs.
+      outcome = "applied"
+    } else if (!deps.recomputeRoutine) {
+      outcome = "unavailable"
+      routine = "not_wired"
+    } else {
+      const recomputed = await deps.recomputeRoutine({
+        userId,
+        personalPlanId: result.personalPlanId,
+        refinedVersionId: result.refinedVersionId,
+      })
+      routine = recomputed.status
+      routineReason = recomputed.reason
+      outcome = recomputed.status
+    }
+  } catch (error) {
+    outcome = "unavailable"
+    cause = error
+  }
+  reportPersonalPlanTransitionTiming({
+    layer: "server",
+    operation: "profile_answers_plan_sync",
+    outcome: outcome ?? "no_plan",
+    durationMs: performance.now() - started,
+  })
+  console.info("profile_answers_api", {
+    event: "plan_sync",
+    lane,
+    ...(laneReason ? { laneReason } : {}),
+    ...(routine ? { routine } : {}),
+    ...(routineReason ? { routineReason } : {}),
+    ...(outcome ? { outcome } : {}),
+    // The class only: error messages from the plan lane's readers can carry the user id.
+    ...(cause !== undefined ? { cause: cause instanceof Error ? cause.name : typeof cause } : {}),
+  })
+  return outcome ? { outcome } : undefined
+}
 
 /**
  * `POST /api/profile/answers` (clean-switch task 5): the web editors' save. Every fact reaches
@@ -86,11 +175,13 @@ export async function saveProfileAnswers(
       requestId: deps.randomUUID(),
       profileAnswers: answers,
     })
+    const plan = await syncPlanAfterSave(deps, userId)
     return {
       kind: "published",
       profile: result.profile,
       profileRevision: result.profileRevision,
       contextRevision: result.contextRevision,
+      ...(plan ? { plan } : {}),
     }
   }
 
@@ -108,11 +199,14 @@ export async function saveProfileAnswers(
   }
   if (saved.status === "revision_conflict") throw new ProfileEditError("profile_conflict")
   if (saved.status !== "ok") throw new ProfileEditError("temporarily_unavailable")
+  let profile
   try {
-    return { kind: "saved", profile: await deps.loadProfileRow(admin, userId) }
+    profile = await deps.loadProfileRow(admin, userId)
   } catch {
     throw new ProfileEditError("temporarily_unavailable")
   }
+  const plan = await syncPlanAfterSave(deps, userId)
+  return { kind: "saved", profile, ...(plan ? { plan } : {}) }
 }
 
 const NO_STORE = { "Cache-Control": "no-store" }
@@ -143,11 +237,13 @@ export function createProfileAnswersPost(deps: {
 
     try {
       const result = await deps.save(userId, parsed.data)
-      if (result.kind === "saved") return respond({ hairProfile: result.profile })
+      const plan = result.plan ? { plan: result.plan } : {}
+      if (result.kind === "saved") return respond({ hairProfile: result.profile, ...plan })
       return respond({
         hairProfile: result.profile,
         profileRevision: result.profileRevision,
         contextRevision: result.contextRevision,
+        ...plan,
       })
     } catch (error) {
       if (error instanceof ProfileEditError) {

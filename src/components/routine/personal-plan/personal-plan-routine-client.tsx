@@ -29,9 +29,12 @@ import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transiti
 import { markPersonalPlanStageNavigation } from "@/lib/personal-plan/stage-navigation-intent"
 import type { PortfolioPresentation } from "@/lib/personal-plan/routine/portfolio-presentation"
 import {
+  consumeRoutinePlanUpdatedPending,
   hasRoutinePlanUpdatedSignal,
   withoutRoutinePlanUpdatedSignal,
 } from "@/lib/personal-plan/routine/plan-updated-signal"
+
+import { useAuth } from "@/providers/auth-provider"
 
 import { requestRoutineAttentionRefresh } from "./routine-attention-indicator"
 import { RoutineEditor, type RoutineProductOption } from "./routine-editor"
@@ -264,6 +267,7 @@ export function PersonalPlanRoutineClient({
   const [showPlanUpdatedToast, setShowPlanUpdatedToast] = React.useState(() =>
     hasRoutinePlanUpdatedSignal(searchParams),
   )
+  const arrivedWithPlanUpdatedSignal = React.useRef(showPlanUpdatedToast)
   const planUpdatedSignalConsumed = React.useRef(false)
   React.useEffect(() => {
     if (planUpdatedSignalConsumed.current) return
@@ -277,6 +281,21 @@ export function PersonalPlanRoutineClient({
     // a later searchParams/pathname change must never re-arm it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  // The profile editors leave a one-shot sessionStorage mark bound to the user who saved (they
+  // never navigate here with the URL param). Read in an effect, never during render, so the
+  // server and first client render agree — and only once the auth session has resolved, since
+  // the user id is not known at first mount. A mark that belongs to another account is discarded.
+  const { user, loading: authLoading } = useAuth()
+  const authUserId = user?.id ?? null
+  const pendingMarkConsumed = React.useRef(false)
+  React.useEffect(() => {
+    if (pendingMarkConsumed.current || authLoading || !authUserId) return
+    pendingMarkConsumed.current = true
+    // Always clear the mark; but when the arrival URL already carried the signal, this visit has
+    // shown its toast (and may have dismissed it before auth resolved) — never show a second one.
+    const pending = consumeRoutinePlanUpdatedPending(authUserId)
+    if (pending && !arrivedWithPlanUpdatedSignal.current) setShowPlanUpdatedToast(true)
+  }, [authLoading, authUserId])
   const dismissPlanUpdatedToast = React.useCallback(() => setShowPlanUpdatedToast(false), [])
   const [mode, setMode] = React.useState<Mode>("overview")
   // A successor proposal is intentionally non-blocking during the current

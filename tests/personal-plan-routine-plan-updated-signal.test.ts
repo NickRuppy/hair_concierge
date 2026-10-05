@@ -3,7 +3,9 @@ import test from "node:test"
 
 import {
   ROUTINE_PLAN_UPDATED_PARAM,
+  consumeRoutinePlanUpdatedPending,
   hasRoutinePlanUpdatedSignal,
+  markRoutinePlanUpdatedPending,
   withoutRoutinePlanUpdatedSignal,
   withRoutinePlanUpdatedSignal,
 } from "../src/lib/personal-plan/routine/plan-updated-signal"
@@ -53,4 +55,122 @@ test("consume-once: reading the signal, stripping it, then reading again from th
   const [, query = ""] = strippedHref.split("?")
   const afterReload = new URLSearchParams(query)
   assert.equal(hasRoutinePlanUpdatedSignal(afterReload), false)
+})
+
+// --- one-shot pending mark (sessionStorage; Haar-Check editor -> Routine tab) ---
+
+type WindowStub = { sessionStorage: Storage }
+
+function memoryStorage(): Storage {
+  const values = new Map<string, string>()
+  return {
+    getItem: (key: string) => values.get(key) ?? null,
+    setItem: (key: string, value: string) => void values.set(key, value),
+    removeItem: (key: string) => void values.delete(key),
+    clear: () => values.clear(),
+    key: (index: number) => [...values.keys()][index] ?? null,
+    get length() {
+      return values.size
+    },
+  } as Storage
+}
+
+function withWindow<T>(windowValue: WindowStub | undefined, run: () => T): T {
+  const globals = globalThis as unknown as { window?: WindowStub }
+  const previous = globals.window
+  if (windowValue === undefined) delete globals.window
+  else globals.window = windowValue
+  try {
+    return run()
+  } finally {
+    if (previous === undefined) delete globals.window
+    else globals.window = previous
+  }
+}
+
+const PENDING_KEY = "chaarlie_plan_updated_pending"
+
+test("pending mark: mark(A) then consume(A) returns true once, then false", () => {
+  const sessionStorage = memoryStorage()
+  withWindow({ sessionStorage }, () => {
+    markRoutinePlanUpdatedPending("user-a")
+    assert.equal(sessionStorage.getItem(PENDING_KEY), "user-a")
+    assert.equal(consumeRoutinePlanUpdatedPending("user-a"), true)
+    assert.equal(sessionStorage.getItem(PENDING_KEY), null)
+    assert.equal(consumeRoutinePlanUpdatedPending("user-a"), false)
+  })
+})
+
+test("pending mark: a marker set by A is discarded, not shown, for B (and gone for A afterwards)", () => {
+  const sessionStorage = memoryStorage()
+  withWindow({ sessionStorage }, () => {
+    markRoutinePlanUpdatedPending("user-a")
+    assert.equal(consumeRoutinePlanUpdatedPending("user-b"), false)
+    assert.equal(sessionStorage.getItem(PENDING_KEY), null)
+    assert.equal(consumeRoutinePlanUpdatedPending("user-a"), false)
+  })
+})
+
+test('pending mark: a legacy unbound "1" marker is discarded and yields false', () => {
+  const sessionStorage = memoryStorage()
+  sessionStorage.setItem(PENDING_KEY, "1")
+  withWindow({ sessionStorage }, () => {
+    assert.equal(consumeRoutinePlanUpdatedPending("user-a"), false)
+    assert.equal(sessionStorage.getItem(PENDING_KEY), null)
+    assert.equal(consumeRoutinePlanUpdatedPending("user-a"), false)
+  })
+})
+
+test("pending mark: consume without a mark is false", () => {
+  withWindow({ sessionStorage: memoryStorage() }, () => {
+    assert.equal(consumeRoutinePlanUpdatedPending("user-a"), false)
+  })
+})
+
+test("pending mark: marking twice is still one signal; the latest owner wins", () => {
+  const sessionStorage = memoryStorage()
+  withWindow({ sessionStorage }, () => {
+    markRoutinePlanUpdatedPending("user-a")
+    markRoutinePlanUpdatedPending("user-a")
+    assert.equal(consumeRoutinePlanUpdatedPending("user-a"), true)
+    assert.equal(consumeRoutinePlanUpdatedPending("user-a"), false)
+
+    markRoutinePlanUpdatedPending("user-a")
+    markRoutinePlanUpdatedPending("user-b")
+    assert.equal(consumeRoutinePlanUpdatedPending("user-a"), false)
+  })
+})
+
+test("pending mark: an empty user id never marks", () => {
+  const sessionStorage = memoryStorage()
+  withWindow({ sessionStorage }, () => {
+    markRoutinePlanUpdatedPending("")
+    assert.equal(sessionStorage.getItem(PENDING_KEY), null)
+    assert.equal(consumeRoutinePlanUpdatedPending(""), false)
+  })
+})
+
+test("pending mark: safe without a window (server render)", () => {
+  withWindow(undefined, () => {
+    assert.doesNotThrow(() => markRoutinePlanUpdatedPending("user-a"))
+    assert.equal(consumeRoutinePlanUpdatedPending("user-a"), false)
+  })
+})
+
+test("pending mark: safe when sessionStorage throws (blocked storage)", () => {
+  const throwing = {
+    getItem: () => {
+      throw new Error("blocked")
+    },
+    setItem: () => {
+      throw new Error("blocked")
+    },
+    removeItem: () => {
+      throw new Error("blocked")
+    },
+  } as unknown as Storage
+  withWindow({ sessionStorage: throwing }, () => {
+    assert.doesNotThrow(() => markRoutinePlanUpdatedPending("user-a"))
+    assert.equal(consumeRoutinePlanUpdatedPending("user-a"), false)
+  })
 })

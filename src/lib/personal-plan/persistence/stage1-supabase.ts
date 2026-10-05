@@ -1,9 +1,13 @@
+import type { SupabaseClient } from "@supabase/supabase-js"
+
 import {
   getPersonalPlanNewBuyerCohortCutoff,
   isPersonalPlanAppV1Enabled,
 } from "@/lib/personal-plan/release"
 import { findPersonalPlanEnrollmentForUser } from "@/lib/personal-plan/enrollment"
+import { createProductionSyncPlanWithFacts } from "@/lib/personal-plan/facts-recompute"
 import { isPersonalPlanLegacyMigrationEnabled } from "@/lib/personal-plan/migration-admission"
+import { loadUserFacts } from "@/lib/user-facts/read"
 
 import type {
   CreateInitialNeedRequest,
@@ -132,6 +136,50 @@ export function createStage1SupabaseDependencies(
       if (typeof row.id !== "string") return null
       return { id: row.id, quizAnswers: row.quiz_answers }
     },
+    loadFacts: (userId) => loadUserFacts(admin as unknown as SupabaseClient, userId),
+    async loadExistingPlan(userId) {
+      const reader = admin as unknown as { from(table: string): LegacyLeadQuery }
+      const { data, error } = await reader
+        .from("personal_plans")
+        .select("id,current_initial_need_version_id")
+        .eq("user_id", userId)
+        .maybeSingle()
+      if (error) throw error
+      const plan = data as { id?: string; current_initial_need_version_id?: string } | null
+      if (!plan?.id || !plan.current_initial_need_version_id) return null
+      const { data: needData, error: needError } = await reader
+        .from("personal_plan_need_versions")
+        .select("id,input_hash,output_snapshot")
+        .eq("id", plan.current_initial_need_version_id)
+        .eq("user_id", userId)
+        .eq("personal_plan_id", plan.id)
+        .eq("kind", "initial")
+        .maybeSingle()
+      if (needError) throw needError
+      const need = needData as {
+        id?: string
+        input_hash?: unknown
+        output_snapshot?: unknown
+      } | null
+      if (
+        !need?.id ||
+        typeof need.input_hash !== "string" ||
+        !need.output_snapshot ||
+        typeof need.output_snapshot !== "object" ||
+        Array.isArray(need.output_snapshot)
+      ) {
+        throw new Error("plan_initial_need_unavailable")
+      }
+      return {
+        personalPlanId: plan.id,
+        currentInitial: {
+          needVersionId: need.id,
+          inputHash: need.input_hash,
+          outputSnapshot: need.output_snapshot as never,
+        },
+      }
+    },
+    syncPlanWithFacts: createProductionSyncPlanWithFacts(admin as unknown as SupabaseClient),
     createOrReuseInitialNeed: (request) => callCreateInitialNeed(admin, request),
   }
 }
