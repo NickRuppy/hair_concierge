@@ -1961,9 +1961,9 @@ function normalizeResearchOutputForCategory(
     blockers.push(...adapterResult.blockers)
   }
 
-  // The method-lock gate is server-owned and enforced after model output.
-  // Neither an unsolicited envelope nor direct profile fields can activate it.
-  // Legacy output is unchanged; explicit offline projection stays available.
+  // Server-owned routing is enforced after model output. Enabled Bondbuilder
+  // intake requires a complete, current, exact-submission research envelope;
+  // model-authored flags and legacy-only specs cannot bypass validation.
   if (categoryKey === "bondbuilder" && final) {
     const adapterResult = applyBondbuilderResearchAdapterForWorker({
       final,

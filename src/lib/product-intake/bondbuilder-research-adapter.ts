@@ -67,13 +67,19 @@ export function applyBondbuilderResearchAdapter(input: {
 
   if (input.expectedMethodVersion) {
     const profile = (envelope as MutableRecord).profile
-    const method = profile && typeof profile === "object" && !Array.isArray(profile)
-      ? (profile as MutableRecord).method : null
-    const version = method && typeof method === "object" && !Array.isArray(method)
-      ? (method as MutableRecord).method_version : null
+    const method =
+      profile && typeof profile === "object" && !Array.isArray(profile)
+        ? (profile as MutableRecord).method
+        : null
+    const version =
+      method && typeof method === "object" && !Array.isArray(method)
+        ? (method as MutableRecord).method_version
+        : null
     if (version !== input.expectedMethodVersion) {
       return {
-        blockers: [`bondbuilder research adapter: method_version must match ${input.expectedMethodVersion}`],
+        blockers: [
+          `bondbuilder research adapter: method_version must match ${input.expectedMethodVersion}`,
+        ],
         warnings: [],
       }
     }
@@ -99,9 +105,7 @@ export function applyBondbuilderResearchAdapter(input: {
 
   // Keep the original envelope byte-for-byte as provided. Projection and
   // coverage are adjacent receipts, never substitutes for full research.
-  artifact.payload.bondbuilder_production_projection = structuredClone(
-    outcome.productionProjection,
-  )
+  artifact.payload.bondbuilder_production_projection = structuredClone(outcome.productionProjection)
   artifact.payload.bondbuilder_property_coverage = structuredClone(outcome.propertyCoverage)
   artifact.payload.adapter_warnings = [...outcome.warnings]
   artifact.payload.required_protocol_roles = [...outcome.requiredProtocolRoles]
@@ -114,22 +118,33 @@ export function applyBondbuilderResearchAdapter(input: {
 export function applyBondbuilderResearchAdapterForWorker(
   input: Parameters<typeof applyBondbuilderResearchAdapter>[0],
 ): { blockers: string[]; warnings: string[] } {
-  const categorySpecs = input.final.category_specs
-  const specs = categorySpecs && typeof categorySpecs === "object" && !Array.isArray(categorySpecs)
-    ? (categorySpecs as MutableRecord).product_bondbuilder_specs : null
-  const hasResearch = input.artifacts.some(artifact =>
-    artifact.kind === "property_synthesis" && artifact.payload.bondbuilder_research_envelope != null,
-  ) || (specs != null && typeof specs === "object" && !Array.isArray(specs) &&
-    ["technology_family", "claim_trust_level", "trust_basis", "research_profile"].some(key =>
-      Object.prototype.hasOwnProperty.call(specs, key),
-    ))
-  if (!hasResearch) return { blockers: [], warnings: [] }
-  // The lock policy is enforced here after model output, not by prompt wording.
-  if (!BONDBUILDER_RESEARCH_ENGINE_ENABLED) {
-    return { blockers: ["bondbuilder research engine routing is disabled until the method is owner-locked"], warnings: [] }
+  // Enabled intake must research every submission completely. In particular,
+  // legacy-only model output cannot bypass envelope validation.
+  if (BONDBUILDER_RESEARCH_ENGINE_ENABLED) {
+    return applyBondbuilderResearchAdapter({
+      ...input,
+      expectedMethodVersion: BOND_CURRENT_METHOD_PINS.method_version,
+    })
   }
-  return applyBondbuilderResearchAdapter({
-    ...input,
-    expectedMethodVersion: BOND_CURRENT_METHOD_PINS.method_version,
-  })
+  const categorySpecs = input.final.category_specs
+  const specs =
+    categorySpecs && typeof categorySpecs === "object" && !Array.isArray(categorySpecs)
+      ? (categorySpecs as MutableRecord).product_bondbuilder_specs
+      : null
+  const hasResearch =
+    input.artifacts.some(
+      (artifact) =>
+        artifact.kind === "property_synthesis" &&
+        artifact.payload.bondbuilder_research_envelope != null,
+    ) ||
+    (specs != null &&
+      typeof specs === "object" &&
+      !Array.isArray(specs) &&
+      ["technology_family", "claim_trust_level", "trust_basis", "research_profile"].some((key) =>
+        Object.prototype.hasOwnProperty.call(specs, key),
+      ))
+  if (!hasResearch) return { blockers: [], warnings: [] }
+  // A rollback to disabled routing still holds unsolicited new research while
+  // retaining the older intake contract. Model-authored flags have no authority.
+  return { blockers: ["bondbuilder research engine routing is disabled"], warnings: [] }
 }

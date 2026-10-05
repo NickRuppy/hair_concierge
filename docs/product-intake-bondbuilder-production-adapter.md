@@ -1,13 +1,13 @@
 # Bondbuilder Production Adapter v1
 
-Status: **implemented local projection and applied database storage; eight approved pilot profiles stored; exact historical v0.4/current candidate v0.5 pins; automatic routing disabled**. Adapter validity alone is not method lock, catalogue approval or production-write authority.
+Status: **v0.5 bounded owner-locked; eight approved pilot profiles stored; full-profile research routing code enabled**. Running-release deployment is verified separately. Adapter validity alone is not catalogue approval or production-write authority; historical v0.4 remains readable.
 
 ## Authority and location
 
 | Layer                                                  | Owning location                                                                                                     |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
 | Category index, versions and research status           | [Bondbuilder engine](research/bondbuilder-inci/README.md)                                                           |
-| Current candidate method                               | `docs/research/bondbuilder-inci/v0.5/` — frozen and replayed, coverage/owner lock pending                           |
+| Current method                                         | `docs/research/bondbuilder-inci/v0.5/` — frozen and replayed; [bounded owner lock](research/bondbuilder-inci/lock-2026-10-05.md) |
 | Frozen calibration/validation provenance               | `data/research/bondbuilder-inci/v1.0/`                                                                              |
 | Canonical eight reviewed envelopes                     | [Owner consolidation manifest](../data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/manifest.json) |
 | Strict profile/envelope and registry authority         | `src/lib/bondbuilder-research/{contracts,registry,production-adapter}.ts`                                           |
@@ -50,7 +50,7 @@ Writes `research-envelope.json` and `production-projection.json` (complete outco
 
 `property_projection_ready` is not protocol readiness, catalogue intake readiness, global recommendation readiness or publish approval. All eight canonical envelopes are unbound research inputs, not apply payloads.
 
-The worker enforces its server-owned disabled gate after model output, including unsolicited envelopes and direct new fields. Ordinary Product Intake remains authoritative. Activation requires a separately locked/validated method with matching pins, exact source-market/product bindings, migration prerequisites, verified consumers and an explicit activation decision. Do not flip the flag merely because offline fixtures pass.
+The server-owned switch is enabled after the separate [bounded lock and explicit activation](research/bondbuilder-inci/lock-2026-10-05.md). Enabled output must include the full current exact-submission envelope; legacy-only or direct specs cannot bypass it. Ordinary Product Intake remains authoritative for manual publication. Verify the running release separately; a previously running watcher does not automatically pick up code changes.
 
 Applied 2026-10-04 after explicit production and cross-program repair approval: `20260929230000_expansion_protocol_binding_repair.sql`, `20261002132306_bondbuilder_research_profile_storage.sql`, and `20261003141320_bondbuilder_internal_catalogue_admission.sql`. Canonical history and raw function/permission checks passed. The [production handoff](../plans/bondbuilder-research-engine/production-handoff-2026-10-04.md) records research-only enrichment of three existing anchors and five inactive/non-recommended new rows. Do not run a blind database push. Migration, catalogue apply, promotion and deployment are separate approvals. The historical [implementation receipt](../plans/bondbuilder-research-engine/implementation-receipt-2026-10-02.md) remains unchanged.
 

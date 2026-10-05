@@ -129,7 +129,7 @@ const REVIEW_CATEGORY_KEYS: ProductIntakeReviewCategoryKey[] = [
   "scalp_care",
 ]
 
-test("Bondbuilder prompt packet carries the prepared full-profile contract while inactive routing leaves legacy output available", (t) => {
+test("Bondbuilder worker prompt requires current full research instead of legacy intensity specs", (t) => {
   const path = writePromptPacket(
     {
       id: "bondbuilder-prompt-contract-job",
@@ -180,25 +180,36 @@ test("Bondbuilder prompt packet carries the prepared full-profile contract while
 
   const packet = JSON.parse(readFileSync(path, "utf8")) as {
     category_contract: {
-      product_bondbuilder_specs: Record<string, unknown>
-      future_research_engine_contract: Record<string, unknown>
+      bondbuilder_research: Record<string, unknown>
     }
   }
-  const prepared = packet.category_contract.future_research_engine_contract
+  const prepared = packet.category_contract.bondbuilder_research
 
-  assert.equal(prepared.enabled, false)
-  assert.equal((prepared.required_artifact as { payload_key: string }).payload_key, "bondbuilder_research_envelope")
-  assert.deepEqual(
-    ((prepared.profile as { required_roots: string[] }).required_roots),
-    ["method", "identity", "formula", "assessment", "technology_reference", "application", "evidence", "explanations_de", "sources", "fit", "holds", "review"],
+  assert.ok(prepared, "real worker packet must use the active research contract")
+  assert.equal(prepared.enabled, true)
+  assert.equal(
+    (prepared.required_artifact as { payload_key: string }).payload_key,
+    "bondbuilder_research_envelope",
   )
-  assert.deepEqual(
-    (packet.category_contract.product_bondbuilder_specs as Record<string, unknown>).bond_repair_intensity,
-    ["maintenance", "intensive"],
-  )
+  assert.deepEqual((prepared.profile as { required_roots: string[] }).required_roots, [
+    "method",
+    "identity",
+    "formula",
+    "assessment",
+    "technology_reference",
+    "application",
+    "evidence",
+    "explanations_de",
+    "sources",
+    "fit",
+    "holds",
+    "review",
+  ])
+  assert.doesNotMatch(JSON.stringify(packet.category_contract), /bond_repair_intensity/)
   assert.match(JSON.stringify(prepared), /owner_default/)
   assert.doesNotMatch(JSON.stringify(prepared), /bond_repair_intensity/)
-  const reference = (prepared.profile as { technology_reference: Record<string, unknown> }).technology_reference
+  const reference = (prepared.profile as { technology_reference: Record<string, unknown> })
+    .technology_reference
   assert.equal(reference.formula_digest, "normalized_sha256")
   assert.equal(reference.marker_encoding, "exact_normalized_literal")
 })
