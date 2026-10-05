@@ -354,3 +354,9 @@ test-screenshots*/
 !/data/scanner-catalog-coverage/2026-08-26/retailer-core-research.md
 !/data/scanner-catalog-coverage/2026-08-26/retailer-specialist-candidates.json
 !plans/scanner-funnel/evidence/**/*.png
+
+# Reviewed recurring price-audit probe evidence (run artifacts remain ignored).
+!/data/price-audit/
+/data/price-audit/*
+!/data/price-audit/probes/
+!/data/price-audit/probes/*.json

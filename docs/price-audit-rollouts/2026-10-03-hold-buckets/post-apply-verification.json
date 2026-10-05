@@ -1,0 +1,13 @@
+{
+  "readback_at": "2026-10-03T15:37:51.253492+00:00",
+  "passed": true,
+  "products_compared": 371,
+  "updated_rows": 16,
+  "already_paused_rows": 2,
+  "identifiers_unchanged": true,
+  "protected_fields_unchanged": true,
+  "untargeted_rows_unchanged": 355,
+  "active_products": 347,
+  "recommended_products": 222,
+  "issues": []
+}

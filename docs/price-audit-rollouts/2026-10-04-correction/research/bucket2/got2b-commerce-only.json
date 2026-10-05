@@ -1,0 +1,84 @@
+{
+  "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+  "purpose": "commerce-only price audit maintenance under existing scope; independent protocol proposal excluded",
+  "observed_at": "2026-10-04T08:09:34.503Z",
+  "source_url": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+  "verified_current_gtin": "4015100894141",
+  "verified_dm_dan": "1267310",
+  "identity_rationale": "Existing catalog already binds stable dm DAN1267310 and exact same named 200ml Schutzengel product. Fresh current manufacturer/dm facts independently support heat_protectant spray/true. This is a same-product retail association, not a chemical-continuity claim.",
+  "allowed_fields": [
+    "affiliate_link",
+    "net_content_value",
+    "net_content_unit",
+    "currency",
+    "price_eur",
+    "purchase_link_status",
+    "price_checked_at",
+    "purchase_link_checked_at"
+  ],
+  "expected_before": {
+    "affiliate_link": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+    "net_content_value": null,
+    "net_content_unit": null,
+    "currency": "EUR",
+    "price_eur": 4.95,
+    "purchase_link_status": "available",
+    "price_checked_at": "2026-08-09T09:23:08+00:00",
+    "purchase_link_checked_at": "2026-08-09T09:23:08+00:00"
+  },
+  "expected_before_fingerprint": {
+    "algorithm": "sha256",
+    "serialization": "UTF-8 JSON, keys sorted, separators comma/colon, ensure_ascii=false",
+    "value": "338742c3492b1efef1054fcf3f9a0a3ad29f69aa2f825cf5c765ec35e59ea94c",
+    "serialized_value": "{\"affiliate_link\":\"https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel\",\"currency\":\"EUR\",\"net_content_unit\":null,\"net_content_value\":null,\"price_checked_at\":\"2026-08-09T09:23:08+00:00\",\"price_eur\":4.95,\"purchase_link_checked_at\":\"2026-08-09T09:23:08+00:00\",\"purchase_link_status\":\"available\"}"
+  },
+  "proposed_values": {
+    "affiliate_link": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+    "net_content_value": 200,
+    "net_content_unit": "ml",
+    "currency": "EUR",
+    "price_eur": 4.95,
+    "purchase_link_status": "available",
+    "price_checked_at": "2026-10-04T08:09:34.503Z",
+    "purchase_link_checked_at": "2026-10-04T08:09:34.503Z"
+  },
+  "changed_fields": [
+    {
+      "field": "net_content_value",
+      "before": null,
+      "proposed": 200
+    },
+    {
+      "field": "net_content_unit",
+      "before": null,
+      "proposed": "ml"
+    },
+    {
+      "field": "price_checked_at",
+      "before": "2026-08-09T09:23:08+00:00",
+      "proposed": "2026-10-04T08:09:34.503Z"
+    },
+    {
+      "field": "purchase_link_checked_at",
+      "before": "2026-08-09T09:23:08+00:00",
+      "proposed": "2026-10-04T08:09:34.503Z"
+    }
+  ],
+  "must_remain_unchanged": [
+    "all identifiers",
+    "all category specs",
+    "all application protocol columns/payloads",
+    "is_active",
+    "lifecycle_status",
+    "is_chaarlie_recommended",
+    "origin",
+    "image_url",
+    "thumbnail_image_url",
+    "name",
+    "brand",
+    "category_key",
+    "suitable_thicknesses"
+  ],
+  "protected_before_sha256": "f25c883def313ab47028d1610417d57cd7bc49a727390e1a287c1bff3735df72",
+  "prewrite_gate": "Parent must re-read expected-before and protected facts and verify identical before any authorized write. This file is a proposal, not execution or a fresh authorization."
+}

@@ -1,0 +1,338 @@
+{
+  "checked_at": "2026-10-03T15:21:47.320Z",
+  "project_id": "pqdkhefxsxkyeqelqegq",
+  "records": [
+    {
+      "id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "product": {
+        "id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+        "name": "Langhaarmädchen Beautiful Curls Shampoo",
+        "tags": [
+          "shampoo"
+        ],
+        "brand": "Langhaarmädchen",
+        "origin": "curated",
+        "brand_id": "6ed96032-6722-46ca-94a6-ae4d5fe8bb1e",
+        "category": "Shampoo",
+        "currency": "EUR",
+        "tom_take": null,
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-04/1623a993-3ff4-43be-82c1-95a1ee57ec52/19-1623a993-3ff4-43be-82c1-95a1ee57ec52-langhaarmadchen-langhaarmadchen-beautiful-curls-shampoo-2d2218ab9a2e.webp",
+        "is_active": true,
+        "price_eur": 4.95,
+        "created_at": "2026-03-03T12:35:01.792239+00:00",
+        "sort_order": 213,
+        "updated_at": "2026-09-30T19:59:37.176471+00:00",
+        "description": "Laghaarmädchen Beautiful Curls ist ein Shampoo von Laghaarmädchen, empfohlen für dickes Haar bei normale Pflege.",
+        "category_key": "shampoo",
+        "affiliate_link": "https://www.dm.de/langhaarmaedchen-shampoo-beautiful-curls-p4067796150735.html",
+        "product_line_id": null,
+        "lifecycle_status": "active",
+        "net_content_unit": null,
+        "price_checked_at": "2026-09-30T19:59:37.066+00:00",
+        "net_content_value": null,
+        "short_description": null,
+        "suitable_concerns": [
+          "normal"
+        ],
+        "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/2d2218ab9a2eaafcf30acddbb06d7e21ee79f5908501502b5cc032e6df4ab046.webp",
+        "purchase_link_status": "available",
+        "suitable_thicknesses": [
+          "coarse"
+        ],
+        "is_chaarlie_recommended": true,
+        "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+      },
+      "shampoo": [
+        {
+          "thickness": "coarse",
+          "product_id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+          "scalp_route": "balanced",
+          "category_key": "shampoo",
+          "shampoo_bucket": "normal",
+          "cleansing_intensity": "gentle"
+        }
+      ],
+      "conditioner": null,
+      "conditioner_rerank": null,
+      "mask": null,
+      "identifiers": [
+        {
+          "id": "e9329e27-cf5d-4cea-9f99-1c7da7555e8b",
+          "source": "scanner-catalog-coverage-2026-08-26",
+          "product_id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+          "identifier_type": "ean",
+          "canonical_gtin14": "04067796150735",
+          "identifier_value": "4067796150735",
+          "normalized_identifier_value": "4067796150735"
+        }
+      ],
+      "protocols": [
+        {
+          "role": "shampoo_everyday",
+          "source_url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+          "guidance_payload_v2": {
+            "role": "cleanse",
+            "facts": {
+              "heat": null,
+              "rinse": "rinse_out",
+              "amount": null,
+              "contactTime": {
+                "kind": "label_directed"
+              },
+              "applicationArea": "scalp_roots",
+              "applicationState": "wet_hair",
+              "conditionerPolicy": "not_applicable"
+            },
+            "scope": {
+              "kind": "product",
+              "category": "shampoo",
+              "productId": "1623a993-3ff4-43be-82c1-95a1ee57ec52"
+            },
+            "evidence": [
+              {
+                "checkedAt": "2026-08-11",
+                "sourceUrl": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+                "sourceType": "retailer"
+              }
+            ],
+            "exactSteps": [],
+            "sourceRole": "shampoo_everyday",
+            "workflowId": null,
+            "cautionCodes": [],
+            "contractKind": "product_pointer",
+            "schemaVersion": 2,
+            "applicationFamily": "targeted_treatment_shampoo",
+            "runtimeBlockerCode": null,
+            "requiredCompanionProductId": null
+          },
+          "contact_time_seconds": null
+        }
+      ]
+    },
+    {
+      "id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+      "product": {
+        "id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+        "name": "Schaebens Argan-Öl Haarmaske",
+        "tags": [
+          "maske"
+        ],
+        "brand": "Schaebens",
+        "origin": "curated",
+        "brand_id": "cafd122c-9dea-4339-80c9-20436bf23d24",
+        "category": "Maske",
+        "currency": "EUR",
+        "tom_take": null,
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-2026-06-10-03/3ce9a9da-4d58-4a66-a424-f8818960b5dc/44-3ce9a9da-4d58-4a66-a424-f8818960b5dc-schaebens-schaebens-argan-ol-haarmaske-bdd835a609d0.webp",
+        "is_active": true,
+        "price_eur": 1.49,
+        "created_at": "2026-03-03T12:34:20.857962+00:00",
+        "sort_order": 99,
+        "updated_at": "2026-08-15T07:46:42.024664+00:00",
+        "description": "Schaebens Argan-Öl Haarmaske ist ein Maske von Schaebens, empfohlen für feines Haar bei Performance-Pflege.",
+        "category_key": "mask",
+        "affiliate_link": "https://www.dm.de/schaebens-haarmaske-arganoel-p4003573025018.html",
+        "product_line_id": null,
+        "lifecycle_status": "active",
+        "net_content_unit": null,
+        "price_checked_at": "2026-06-10T00:00:00+00:00",
+        "net_content_value": null,
+        "short_description": null,
+        "suitable_concerns": [
+          "performance"
+        ],
+        "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/bdd835a609d0a23a6c5282a95156164dfa055d12e06e06998dd99c9672185a0c.webp",
+        "purchase_link_status": "available",
+        "suitable_thicknesses": [
+          "fine"
+        ],
+        "is_chaarlie_recommended": true,
+        "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+      },
+      "shampoo": null,
+      "conditioner": null,
+      "conditioner_rerank": null,
+      "mask": [
+        {
+          "weight": "medium",
+          "product_id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+          "category_key": "mask",
+          "concentration": "medium",
+          "ingredient_flags": [],
+          "balance_direction": "balanced",
+          "functional_benefits": [
+            "shine",
+            "smoothing_frizz_control"
+          ],
+          "repair_support_level": "low"
+        }
+      ],
+      "identifiers": [
+        {
+          "id": "a343203d-65b8-44b7-aebe-823e842604ab",
+          "source": "scanner-catalog-coverage-2026-08-26",
+          "product_id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+          "identifier_type": "ean",
+          "canonical_gtin14": "04003573025018",
+          "identifier_value": "4003573025018",
+          "normalized_identifier_value": "4003573025018"
+        }
+      ],
+      "protocols": [
+        {
+          "role": "intensive_conditioning_mask",
+          "source_url": "https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel",
+          "guidance_payload_v2": {
+            "role": "intensive_care",
+            "facts": {
+              "heat": null,
+              "rinse": "rinse_out",
+              "amount": null,
+              "contactTime": {
+                "kind": "seconds",
+                "seconds": 300
+              },
+              "applicationArea": "hair_lengths_ends",
+              "applicationState": "wet_hair",
+              "conditionerPolicy": "replaces_conditioner"
+            },
+            "scope": {
+              "kind": "product",
+              "category": "mask",
+              "productId": "3ce9a9da-4d58-4a66-a424-f8818960b5dc"
+            },
+            "evidence": [
+              {
+                "checkedAt": "2026-08-10",
+                "sourceUrl": "https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel",
+                "sourceType": "retailer"
+              }
+            ],
+            "exactSteps": [],
+            "sourceRole": "intensive_conditioning_mask",
+            "workflowId": null,
+            "cautionCodes": [],
+            "contractKind": "product_pointer",
+            "schemaVersion": 2,
+            "applicationFamily": "post_shampoo_rinse_out_mask",
+            "runtimeBlockerCode": null,
+            "requiredCompanionProductId": null
+          },
+          "contact_time_seconds": 300
+        }
+      ]
+    },
+    {
+      "id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "product": {
+        "id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+        "name": "Alverde Conditioner Glanz",
+        "tags": [
+          "conditioner (drogerie)"
+        ],
+        "brand": "Alverde",
+        "origin": "curated",
+        "brand_id": "59ecb4ba-6747-4f59-afa9-39dab85e9d6b",
+        "category": "Conditioner",
+        "currency": "EUR",
+        "tom_take": null,
+        "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/79ce764e-7acf-48ba-b0be-c6d977a81cd0/03-79ce764e-7acf-48ba-b0be-c6d977a81cd0-alverde-alverde-glanz-adef825a89e5.webp",
+        "is_active": true,
+        "price_eur": 1.35,
+        "created_at": "2026-03-03T12:33:52.44529+00:00",
+        "sort_order": 14,
+        "updated_at": "2026-08-15T07:47:54.590858+00:00",
+        "description": "Alverde Glanz ist ein Conditioner (Drogerie) von Alverde, empfohlen für feines Haar bei Performance-Pflege.",
+        "category_key": "conditioner",
+        "affiliate_link": "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz-rosenbluetenwasser-und-pflanzlichem-protein",
+        "product_line_id": null,
+        "lifecycle_status": "active",
+        "net_content_unit": null,
+        "price_checked_at": "2026-06-11T00:00:00+00:00",
+        "net_content_value": null,
+        "short_description": null,
+        "suitable_concerns": [
+          "performance"
+        ],
+        "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/adef825a89e5ff214d32429659f448802e1f59de7bab6bccfa1b2263c8ede11c.webp",
+        "purchase_link_status": "available",
+        "suitable_thicknesses": [
+          "fine"
+        ],
+        "is_chaarlie_recommended": true,
+        "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+      },
+      "shampoo": null,
+      "conditioner": [
+        {
+          "thickness": "fine",
+          "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "conditioner_rerank": [
+        {
+          "weight": "light",
+          "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+          "category_key": "conditioner",
+          "repair_level": "low",
+          "ingredient_flags": [],
+          "balance_direction": "balanced"
+        }
+      ],
+      "mask": null,
+      "identifiers": [
+        {
+          "id": "92fab279-5fc4-4fc6-b1ef-1eaa9655e74d",
+          "source": "scanner-catalog-coverage-2026-08-26",
+          "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+          "identifier_type": "ean",
+          "canonical_gtin14": "04066447592085",
+          "identifier_value": "4066447592085",
+          "normalized_identifier_value": "4066447592085"
+        }
+      ],
+      "protocols": [
+        {
+          "role": "conditioner_rinse_out",
+          "source_url": "https://www.dm.at/p/d/1714048/alverde-naturkosmetik-conditioner-glanz",
+          "guidance_payload_v2": {
+            "role": "condition",
+            "facts": {
+              "heat": null,
+              "rinse": "rinse_out",
+              "amount": null,
+              "contactTime": null,
+              "applicationArea": "hair_lengths_ends",
+              "applicationState": "wet_hair",
+              "conditionerPolicy": "not_applicable"
+            },
+            "scope": {
+              "kind": "product",
+              "category": "conditioner",
+              "productId": "79ce764e-7acf-48ba-b0be-c6d977a81cd0"
+            },
+            "evidence": [
+              {
+                "checkedAt": "2026-08-11",
+                "sourceUrl": "https://www.dm.at/p/d/1714048/alverde-naturkosmetik-conditioner-glanz",
+                "sourceType": "retailer"
+              }
+            ],
+            "exactSteps": [],
+            "sourceRole": "conditioner_rinse_out",
+            "workflowId": null,
+            "cautionCodes": [],
+            "contractKind": "product_pointer",
+            "schemaVersion": 2,
+            "applicationFamily": "standard_rinse_out_conditioning",
+            "runtimeBlockerCode": null,
+            "requiredCompanionProductId": null
+          },
+          "contact_time_seconds": null
+        }
+      ]
+    }
+  ]
+}

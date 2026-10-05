@@ -1,0 +1,15 @@
+{
+  "candidate": "F4",
+  "original_raw_inci": "Ingredients: Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Hydrolyzed Keratin, Helianthus Annuus Hybrid Oil, Ricinus Communis Seed Oil, Argania Spinosa Kernel Oil, Orbignya Oleifera Seed Oil, Sclerocarya Birrea Seed Oil, Parfum, Isopropyl Alcohol, Sodium Benzoate, Potassium Sorbate, Tetramethyl Acetyloctahydronaphthalenes, Citric Acid",
+  "original_raw_sha256": "2521758cfaea3fb8daed408a4aff023e4697ab81f789356622a5fdefe6918f2d",
+  "original_supplied_fingerprint": "50affa768a3a3bc754f9eb833a5029fb121f53e912c9bb5fecfc28b64c7c23ee",
+  "adapter_raw_inci": "AQUA, GLYCERIN, CETEARYL ALCOHOL, ISOPROPYL PALMITATE, BEHENTRIMONIUM CHLORIDE, PANTHENOL, HYDROLYZED KERATIN, HELIANTHUS ANNUUS HYBRID OIL, RICINUS COMMUNIS SEED OIL, ARGANIA SPINOSA KERNEL OIL, ORBIGNYA OLEIFERA SEED OIL, SCLEROCARYA BIRREA SEED OIL, PARFUM, ISOPROPYL ALCOHOL, SODIUM BENZOATE, POTASSIUM SORBATE, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, CITRIC ACID",
+  "adapter_raw_sha256": "0dc4ff2fbf577993f64b5c6facd491e4aac0cadb20d9777875518a9ecb020476",
+  "adapter_formula_fingerprint": "4abdeaebe4941e4143545e1d6edf0d70986ca1bc60958f1f8fdb9fc3dbdde5b0",
+  "normalization_trace": [
+    "Removed non-ingredient heading Ingredients:",
+    "Serialized supplied ordered normalized ingredients without changing ingredient identity or order",
+    "Capitalization follows supplied uppercase normalized packet."
+  ],
+  "status": "derived adapter serialization; original source bytes preserved, source binding pending"
+}

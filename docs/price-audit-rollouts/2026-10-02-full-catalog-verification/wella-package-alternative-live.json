@@ -1,0 +1,61 @@
+{
+  "method": "Preferred-shop replacement candidate; not a verified 140 ml offer. Package/identifier review remains required.",
+  "records": [
+    {
+      "id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+      "name": "Wella Ultimate Repair Protective Leave-In",
+      "requested_url": "https://www.hagel-shop.de/wella-wp-ultimate-repair-leave-in-treatment-95-ml.html",
+      "checked_at": "2026-10-03T10:33:49.214821+00:00",
+      "proposed_price_eur": null,
+      "proposed_package_value": 140,
+      "proposed_package_unit": "ml",
+      "status": 200,
+      "final_url": "https://www.hagel-shop.de/wella-wp-ultimate-repair-leave-in-treatment-95-ml.html",
+      "structured_products": [
+        {
+          "@type": "Product",
+          "name": "Wella Ultimate Repair Leave-In Treatment 95 ml",
+          "offers": {
+            "@type": "http://schema.org/Offer",
+            "price": 19.38,
+            "url": "https://www.hagel-shop.de/wella-wp-ultimate-repair-leave-in-treatment-95-ml.html",
+            "priceCurrency": "EUR",
+            "availability": "http://schema.org/InStock",
+            "shippingDetails": {
+              "deliveryTime": {
+                "businessDays": {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    ""
+                  ]
+                },
+                "@type": "ShippingDeliveryTime"
+              },
+              "@type": "OfferShippingDetails"
+            }
+          }
+        }
+      ],
+      "page_title": "Wella Ultimate Repair Leave-In Treatment 95 ml günstig kaufen | HAGEL Online Shop",
+      "microdata_prices": [],
+      "visible_price_contexts": [
+        ", der dieses Produkt bewertet Artikelnummer 12131876 Intensive Pflege & Schutz in einem Schritt Sonderangebot 19,38 € Normalpreis 32,30 € 204,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Me",
+        " bewertet Artikelnummer 12131876 Intensive Pflege & Schutz in einem Schritt Sonderangebot 19,38 € Normalpreis 32,30 € 204,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen ",
+        "t Artikelnummer 12131876 Intensive Pflege & Schutz in einem Schritt Sonderangebot 19,38 € Normalpreis 32,30 € 204,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle ",
+        "ive Pflege & Schutz in einem Schritt Sonderangebot 19,38 € Normalpreis 32,30 € 204,00 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle Lieferung Kostenlose Lieferung ab",
+        " Verwendung geschulten Personals entwickelt wurde. Alle Preise inkl. MwSt. | Versandkostenfrei ab 39 €, sonst 4,99 €. Geschenkgutscheine: ohne MwSt. & ohne Versandkosten. * Für alle Rabattcodes gilt: Nicht gültig für Produkte der Marken Dyson, Beneganic, Urban Alchemy, INSIGHT sowie fü"
+      ],
+      "identity_contexts": [
+        " Wella Ultimate Repair Leave-In Treatment 95 ml günstig kaufen | HAGEL Online Shop The store will not work correctly when cookies are disabled. JavaScript scheint in d",
+        "aschen & Pflegen Conditioner Wella Ultimate Repair Leave-In Treatment 95 ml Gratis Versand ab 39€ 60 Tage Rückgaberecht Echte Friseure - echte Experten Schnelle Lieferung mit DHL Navigation umsch",
+        "g der Bildergalerie springen Wella Ultimate Repair Leave-In Treatment 95 ml Sei der erste, der dieses Produkt bewertet Artikelnummer 12131876 Intensive Pflege & Schutz in einem Schritt Sonderange",
+        "/genutzt haben. Beschreibung Wella Ultimate Repair Leave-In Treatment 95 ml Beschreibung Das Wella Ultimate Repair Leave In Treatment ist der perfekte Abschluss deiner Haarpflegeroutine. Es schüt",
+        "ck zum Produkt Eigenschaften Wella Ultimate Repair Leave-In Treatment 95 ml Eigenschaften Mehr Informationen Menge 95 ml Marke Wella Produkttyp Haar-Serum Haartyp alle Haartypen Wirkung Anti-Friz",
+        "epair Leave-In Treatment 95 ml Eigenschaften Mehr Informationen Menge 95 ml Marke Wella Produkttyp Haar-Serum Haartyp alle Haartypen Wirkung Anti-Frizz, Anti-Spliss, Feuchtigkeitsspendend, Geschm",
+        "sche-Telekom-Allee 9, 64295 Darmstadt, DE, bestellservice@cotyinc.com EAN 4068359081183 Zurück zum Produkt Herstellerinformationen Herstellerinformationen Die Produktinformationen werden gelade",
+        "e Produkte RefectoCil Augenbrauen & Wimpernfarbe Goldwell Elumen Lock 250ml Olaplex Pflegeduo No. 4+ No. 5 Wella EIMI Pearl Styler XXL K18 Leave-In Repair Mask Moroccanoil Arganöl Panasonic Haars"
+      ],
+      "challenge_or_shell": false
+    }
+  ]
+}

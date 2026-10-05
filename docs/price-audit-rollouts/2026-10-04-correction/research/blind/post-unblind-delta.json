@@ -1,0 +1,31 @@
+{
+  "unblinded_at_utc": "2026-10-04T08:11:17.006270+00:00",
+  "source_binding_path": "/tmp/chaarlie-buckets-2026-10-04/root/post-blind-source-binding.json",
+  "source_binding_sha256": "4398e7e69dac1f46c82fff25b33f453457043fe25ea0fff2111ae2db0668b2f0",
+  "blind_receipt": "blind-properties-freeze-receipt.json",
+  "blind_integrity": "Frozen first; subsequently only root exact current source binding and narrow ingredient-supplier chemistry pages revealed. No legacy/current catalog labels, prior dossiers or projections read.",
+  "deltas": {
+    "F1": [
+      "Identity/source bound, canonical raw-string SHA recomputed",
+      "Claim-gated general headline retained; secondary shine added; regular retained; scalp not_targeted/ordinary resolved",
+      "Low cleansing/moderate conditioning/low weight and thickness priors unchanged; no color-treatment suitability claim"
+    ],
+    "F2": [
+      "Identity/source bound and cleaned derivative hashes verified",
+      "Non-quat amino-lipid terminology correction; profile enums unchanged",
+      "Glanz name not used to override specialist R5 threshold; primary focus remains uncertain"
+    ],
+    "F3": [
+      "Identity bound; exact-source claims corroborate optional functional-benefit proposal",
+      "No calibrated weight/concentration/balance/fit/repair bands assigned",
+      "Source punctuation conflicts preserved"
+    ],
+    "F4": [
+      "Identity/source bound",
+      "Conflict-tagged blind higher direct weight retained; lean profile high -> moderate under §10.1 based on explicit non-weighing intended finish",
+      "Thickness medium/coarse -> fine/medium/coarse; texture wavy/curly/coily -> straight/wavy/curly",
+      "High conditioning, balanced care, medium repair and specialist damage set retained",
+      "Percentage breakage claim not promoted to tested evidence without methodology"
+    ]
+  }
+}

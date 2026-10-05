@@ -1,0 +1,2101 @@
+{
+  "records": [
+    {
+      "session_id": "01a0f6ac-c7b7-7a81-b12e-f9a13471c0e1",
+      "timestamp": "2026-10-01T08:55:13.599Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Nivea",
+        "Name": "Nivea Volumen & Kraft",
+        "GTIN/EAN": "04005900918031",
+        "Stored shop link": "https://www.dm.de/nivea-conditioner-volumen-und-kraft-p4005900918031.html",
+        "Last known price": "2.25 EUR"
+      },
+      "answer": {
+        "found": false,
+        "price_eur": null,
+        "buyable_at_stored_link": null,
+        "evidence_url": null,
+        "observed_name": null,
+        "notes": "Der gespeicherte dm-Produktlink war nicht abrufbar, und die Suche fand keine passende dm-Produktdetailseite mit aktuellem Preis oder Online-Verf\u00fcgbarkeit. Die exakte Produktidentit\u00e4t (EAN 4005900918031, 200 ml) lie\u00df sich best\u00e4tigen, aber gefundene Preisangebote waren nicht von einem deutschen H\u00e4ndler und erlauben daher keine verl\u00e4ssliche Angabe des aktuellen deutschen Einzelhandelspreises."
+      }
+    },
+    {
+      "session_id": "01a0f6ad-217f-72f0-a63b-6ec45191bc82",
+      "timestamp": "2026-10-01T08:55:36.583Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Jean&Len",
+        "Name": "Jean&Len Repair Keratin & Mandel",
+        "GTIN/EAN": "04262401733253",
+        "Stored shop link": "https://www.dm.de/jean-und-len-haaroel-repair-keratin-und-mandel-p4262401733253.html",
+        "Last known price": "6.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 5.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1455746/jean-und-len-haaroel-repair-keratin-und-mandel",
+        "observed_name": "Jean&Len Haar\u00f6l Repair Keratin & Mandel, 100 ml",
+        "notes": "dm lists the exact GTIN 4262401733253 at 5.95 EUR. The page says \u201cNicht lieferbar\u201d and \u201cPaketversand f\u00fcr das Produkt nicht m\u00f6glich,\u201d so it is not currently available to buy online."
+      }
+    },
+    {
+      "session_id": "01a0f6ad-52b5-76e3-9007-2cacba6dbc89",
+      "timestamp": "2026-10-01T08:55:49.189Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Neqi",
+        "Name": "Neqi Peptide Power",
+        "GTIN/EAN": "04063528086297",
+        "Stored shop link": "https://www.dm.de/neqi-haarkur-treatment-treasures-peptide-power-p4063528086297.html",
+        "Last known price": "9.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 5.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/2973205/neqi-haarkur-treatment-treasures-peptide-power",
+        "observed_name": "NEQI Haarkur Treatment Treasures Peptide Power, 100 ml",
+        "notes": "dm lists the current price as \u20ac5.95 and confirms GTIN 4063528086297. The page says \u201cNicht lieferbar,\u201d so it is not currently online-buyable."
+      }
+    },
+    {
+      "session_id": "01a0f6ad-86b7-7490-aa25-0885204a7599",
+      "timestamp": "2026-10-01T08:56:02.493Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Schaebens",
+        "Name": "Schaebens Argan-\u00d6l Haarmaske",
+        "GTIN/EAN": "04003573025018",
+        "Stored shop link": "https://www.dm.de/schaebens-haarmaske-arganoel-p4003573025018.html",
+        "Last known price": "1.49 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 1.45,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel",
+        "observed_name": "Schaebens Haarmaske Argan\u00f6l, 20 ml",
+        "notes": "dm-Seite best\u00e4tigt die GTIN 4003573025018 und zeigt den regul\u00e4ren Preis von 1,45 \u20ac. Die Seite meldet \u201eNicht lieferbar\u201c."
+      }
+    },
+    {
+      "session_id": "01a0f6ad-b662-7843-906f-87b649dae05d",
+      "timestamp": "2026-10-01T08:56:14.696Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Balea",
+        "Name": "Trockenshampoo Kopfhaut Sensitive",
+        "GTIN/EAN": "04066447438789, 04067796171334",
+        "Stored shop link": "https://www.dm.de/balea-trockenshampoo-kopfhaut-sensitive-p4066447438789.html",
+        "Last known price": "1.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 1.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1711758/balea-trockenshampoo-kopfhaut-sensitive",
+        "observed_name": "Balea Trockenshampoo Kopfhaut Sensitive, 200 ml",
+        "notes": "dm nennt 1,95 \u20ac als Dauerpreis. Die Produktseite weist GTIN 4066447438789 aus; sie meldet aktuell \u201eMomentan nicht lieferbar\u201c, daher ist das Produkt dort derzeit nicht online kaufbar."
+      }
+    },
+    {
+      "session_id": "01a0f6ad-e175-7353-a422-77d03fb7631e",
+      "timestamp": "2026-10-01T08:56:25.753Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Balea Aqua",
+        "Name": "Balea Aqua Hyaluron 3 in 1",
+        "GTIN/EAN": "04066447668315",
+        "Stored shop link": "https://www.dm.de/balea-professional-haarmaske-3in1-aqua-hyaluron-p4066447668315.html",
+        "Last known price": "2.75 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.75,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1417521/balea-professional-haarmaske-3in1-aqua-hyaluron",
+        "observed_name": "Balea PROFESSIONAL Haarmaske 3in1 Aqua Hyaluron, 150 ml",
+        "notes": "dm product page confirms GTIN 4066447668315 and lists the regular price as 2.75 EUR. The page says \u201cNicht lieferbar,\u201d so it is not currently online-buyable."
+      }
+    },
+    {
+      "session_id": "01a0f6ae-0d58-7bc0-8e14-4748732587df",
+      "timestamp": "2026-10-01T08:56:36.958Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Batiste",
+        "Name": "Trockenshampoo Original",
+        "GTIN/EAN": "05010724527481",
+        "Stored shop link": "https://www.dm.de/batiste-trockenshampoo-original-p5010724527481.html",
+        "Last known price": "3.75 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 3.75,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1551780/batiste-trockenshampoo-original",
+        "observed_name": "Batiste Trockenshampoo Original, 200 ml",
+        "notes": "dm product page confirms GTIN 5010724527481 and lists the regular price as 3.75 EUR. The page says \u201cMomentan nicht lieferbar,\u201d so it is not currently available to buy online."
+      }
+    },
+    {
+      "session_id": "01a0f6ae-369f-7b93-bc31-799f21344baa",
+      "timestamp": "2026-10-01T08:56:47.530Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Garnier",
+        "Name": "Garnier Hair Food Macadamia",
+        "GTIN/EAN": "03600542511612",
+        "Stored shop link": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+        "Last known price": "5.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 5.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+        "observed_name": "GARNIER FRUCTIS Haarkur Macadamia Hair Food 3in1 Maske, 400 ml",
+        "notes": "dm-Seite best\u00e4tigt GTIN 3600542511612 und den regul\u00e4ren Preis von 5,95 \u20ac. Das Produkt ist online derzeit als \u201eNicht lieferbar\u201c gekennzeichnet."
+      }
+    },
+    {
+      "session_id": "01a0f6ae-6546-7731-85d9-16bd74b572be",
+      "timestamp": "2026-10-01T08:56:59.472Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "OGX",
+        "Name": "OGX Argan weightless \u00d6l",
+        "GTIN/EAN": "03574661563350",
+        "Stored shop link": "https://www.dm.de/ogx-haaroel-moroccan-argan-oil-weightless-dry-out-oil-p22796976208.html",
+        "Last known price": "8.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 8.95,
+        "buyable_at_stored_link": null,
+        "evidence_url": "https://www.hagel-shop.de/ogx-renewing-argan-oil-of-morocco-oil-weightless-reviving-dry-oil-118-ml.html",
+        "observed_name": "OGX Renewing Argan Oil of Morocco Oil Weightless Reviving Dry Oil 118 ml",
+        "notes": "Exact product confirmed by matching EAN 3574661563350. Hagel lists 8.95 EUR and shows delivery in 1\u20133 working days with an add-to-cart option. The stored dm page could not be accessed, so its current online-buyability could not be established."
+      }
+    },
+    {
+      "session_id": "01a0f6ae-ad34-7180-942c-f78b6d37e8fa",
+      "timestamp": "2026-10-01T08:57:17.884Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Neqi",
+        "Name": "Neqi Build Boost",
+        "GTIN/EAN": "04063528086303",
+        "Stored shop link": "https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost",
+        "Last known price": "9.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 9.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost",
+        "observed_name": "NEQI Haarkur Treatment Treasures Build Boost, 100 ml",
+        "notes": "dm product page confirms GTIN 4063528086303 and lists the regular price as 9.95 EUR. The page says \u201eNicht lieferbar\u201c."
+      }
+    },
+    {
+      "session_id": "01a0f6ae-dba0-75f3-a8d2-d43f9bcbcd67",
+      "timestamp": "2026-10-01T08:57:29.768Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Balea Aqua",
+        "Name": "Balea Aqua Hyaluron 3in1",
+        "Stored shop link": "https://www.dm.de/balea-professional-haarmaske-3in1-aqua-hyaluron-p4066447668315.html",
+        "Last known price": "2.75 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.75,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1417521/balea-professional-haarmaske-3in1-aqua-hyaluron",
+        "observed_name": "Balea PROFESSIONAL Haarmaske 3in1 Aqua Hyaluron, 150 ml",
+        "notes": "dm-Produktseite best\u00e4tigt Produkt und GTIN 4066447668315. Aktueller regul\u00e4rer Preis: 2,75 \u20ac. Die Seite zeigt \u201eNicht lieferbar\u201c."
+      }
+    },
+    {
+      "session_id": "01a0f6af-0dd9-7552-869f-eb777c6041f3",
+      "timestamp": "2026-10-01T08:57:42.623Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Syoss",
+        "Name": "Syoss Haarkur Lamination Intense Glaze",
+        "GTIN/EAN": "04015100867213",
+        "Stored shop link": "https://www.dm.de/syoss-haarkur-lamination-intense-glaze-p4015100867213.html",
+        "Last known price": "7.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/3119223/syoss-haarkur-lamination-intense-glaze",
+        "observed_name": "syoss Haarkur Lamination Intense Glaze, 200 ml",
+        "notes": "dm product page confirms GTIN 4015100867213 and lists the current price as 2.95 EUR. The page says \u201cNicht lieferbar,\u201d so it is not currently available to buy online."
+      }
+    },
+    {
+      "session_id": "01a0f6af-38b4-79c0-b86f-fd81ecd2a037",
+      "timestamp": "2026-10-01T08:57:53.596Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Garnier",
+        "Name": "Garnier Wahre Sch\u00e4tze Curl Revival \u00d6l",
+        "GTIN/EAN": "03600542624336",
+        "Stored shop link": "https://www.dm.de/wahre-schaetze-haaroel-curl-revival-elixir-p3600542624336.html",
+        "Last known price": "6.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 6.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/3042328/wahre-schaetze-haaroel-curl-revival-elixir",
+        "observed_name": "Wahre Sch\u00e4tze Haar\u00f6l Curl Revival Elixir, 120 ml",
+        "notes": "dm product page lists the regular price as 6.95 EUR and confirms GTIN 3600542624336. The page currently says \u201cNicht lieferbar\u201d."
+      }
+    },
+    {
+      "session_id": "01a0f6af-6825-7003-9ac6-5f1e68957ace",
+      "timestamp": "2026-10-01T08:58:05.759Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Balea",
+        "Name": "Balea Natural Beauty 3in1 Locken",
+        "Stored shop link": "https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken",
+        "Last known price": "2.45 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.45,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken",
+        "observed_name": "Balea Haarmaske 3in1 Natural Beauty Locken, 250 ml",
+        "notes": "dm product page confirms the exact product and regular price of \u20ac2.45. It currently says \u201cNicht lieferbar,\u201d so it is not online-buyable."
+      }
+    },
+    {
+      "session_id": "01a0f6af-98aa-7e80-bd5e-fa3227738ba3",
+      "timestamp": "2026-10-01T08:58:18.177Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Redken",
+        "Name": "Redken All Soft Mega Curls Leave-In",
+        "GTIN/EAN": "03474637135638",
+        "Stored shop link": "https://www.douglas.de/de/p/5010905038",
+        "Last known price": "24.44 EUR"
+      },
+      "answer": {
+        "found": false,
+        "price_eur": null,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.douglas.de/de/p/5010905038",
+        "observed_name": "Redken All Soft Mega Curls Hydramelt Treatment, 150 ml",
+        "notes": "Die gespeicherte Douglas-Seite bietet das Produkt online auf Lager f\u00fcr 25,99 \u20ac an, aber sie f\u00fchrt es als Hydramelt Treatment/Haarkur, nicht als das angefragte Leave-In. Daher kann ich den Preis nicht verl\u00e4sslich dem exakten Produkt mit EAN 03474637135638 zuordnen."
+      }
+    },
+    {
+      "session_id": "01a0f6af-c4b4-70f3-a4ab-c47aa6926808",
+      "timestamp": "2026-10-01T08:58:29.459Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Curlsmith",
+        "Name": "Curlsmith Multitasking Conditioner 3 in 1",
+        "GTIN/EAN": "00850005417804, 00850005417781",
+        "Stored shop link": "https://www.douglas.de/de/p/5011693052",
+        "Last known price": "20.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 21.99,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.douglas.de/de/p/5011693052",
+        "observed_name": "Curlsmith Conditioner Multi-Tasking",
+        "notes": "Douglas lists the 237 ml size at \u20ac21.99 and marks it \u201cOnline: auf Lager\u201d with an \u201cIn den Warenkorb\u201d option. The page also lists 59 ml and 946 ml sizes; \u20ac21.99 is the standard 237 ml size."
+      }
+    },
+    {
+      "session_id": "01a0f6af-f4f9-7393-a06b-b821c2eeb7a4",
+      "timestamp": "2026-10-01T08:58:41.797Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "K18",
+        "Name": "K18 Hair Professional Molecular Repair Hair Mist",
+        "GTIN/EAN": "00858511001463",
+        "Stored shop link": "https://www.douglas.de/de/p/m001995632",
+        "Last known price": "33.17 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 62.95,
+        "buyable_at_stored_link": null,
+        "evidence_url": "https://www.look-beautiful.de/professional-molecular-repair-hair-mist-sw13531",
+        "observed_name": "K18 Professional Molecular Repair Hair Mist, 150 ml",
+        "notes": "German retailer product-detail page lists the exact 150 ml Professional Molecular Repair Hair Mist at \u20ac62.95 and says it is immediately available. The stored Douglas page could not be accessed, so its current online-buyability could not be established. EAN was not independently verified on the retailer page."
+      }
+    },
+    {
+      "session_id": "01a0f6b0-49df-7d82-a1e8-f87084724e83",
+      "timestamp": "2026-10-01T08:59:03.527Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "OUAI",
+        "Name": "OUAI Leave In Conditioner",
+        "GTIN/EAN": "00815402023119",
+        "Stored shop link": "https://www.douglas.de/de/p/5002560059",
+        "Last known price": "25.25 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 25.45,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.sephora.de/p/leave-in-conditioner-P3282012.html",
+        "observed_name": "OUAI Leave in Conditioner, 140 ml",
+        "notes": "Sephora Deutschland f\u00fchrt die 140-ml-Gr\u00f6\u00dfe f\u00fcr 25,45 \u20ac statt des ausgewiesenen Originalpreises von 31,95 \u20ac; sie ist als verf\u00fcgbar und \u201eIn den Warenkorb\u201c gelistet. Die gespeicherte Douglas-Seite lieferte 404, daher ist sie derzeit nicht als online-kaufbar best\u00e4tigt. Der EAN lie\u00df sich auf der H\u00e4ndlerseite nicht separat verifizieren."
+      }
+    },
+    {
+      "session_id": "01a0f6b0-a321-7962-af21-e2f5baa70c63",
+      "timestamp": "2026-10-01T08:59:26.416Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Alterra",
+        "Name": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+        "GTIN/EAN": "04068134014122",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122",
+        "Last known price": "2.79 EUR"
+      },
+      "answer": {
+        "found": false,
+        "price_eur": null,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122",
+        "observed_name": "Haarmaske",
+        "notes": "Rossmann-Produktdetailseite beschreibt die Alterra Intensiv Repair Haarmaske Feuchtigkeit, 20 ml, passend zum angefragten Produkt. Die Seite kennzeichnet sie als \u201eNur in der Filiale verf\u00fcgbar\u201c und zeigt keinen aktuellen Preis; ein regul\u00e4rer Preis l\u00e4sst sich daher nicht best\u00e4tigen."
+      }
+    },
+    {
+      "session_id": "01a0f6b0-e9f4-70c0-81ba-e15314960b6d",
+      "timestamp": "2026-10-01T08:59:44.518Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Isana",
+        "Name": "Isana 3in1 Milchprotein & Mandel",
+        "GTIN/EAN": "04305615627441",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-isana-isana-haarmaske-3in1-mandelmilch-milchprotein-und-mandel/p/4305615627441",
+        "Last known price": "0.69 EUR"
+      },
+      "answer": {
+        "found": false,
+        "price_eur": null,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127?info=text.product.notAvailable.error",
+        "observed_name": "Isana Haarmaske 3in1 Mandelmilch, Milchprotein & Mandel",
+        "notes": "Rossmann leitet die gespeicherte Produktseite mit dem Hinweis weiter, dass der Artikel nicht mehr im Sortiment ist. Daher ist er dort nicht online kaufbar; eine aktuelle regul\u00e4re Produktdetailseite eines zul\u00e4ssigen deutschen H\u00e4ndlers mit best\u00e4tigtem Preis konnte ich nicht finden. Der zuletzt gemeldete Preis von 0,69 \u20ac ist nicht als aktuell best\u00e4tigt."
+      }
+    },
+    {
+      "session_id": "01a0f6b1-32cb-7c02-a6cc-62910e6a865f",
+      "timestamp": "2026-10-01T09:00:03.159Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Gliss",
+        "Name": "Gliss Aqua Revive",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-gliss-aqua-revive-feuchtigkeit-4-in-1-bonding-haarmaske/p/4015100813555",
+        "Last known price": "4.75 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 13.89,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.douglas.de/de/p/m003070896",
+        "observed_name": "Schwarzkopf GLISS AQUA REVIVE Maske, 400 ml",
+        "notes": "Douglas product page lists the 400 ml Aqua Revive 4-in-1 hair mask for 13.89 EUR and shows it in stock online. The stored Rossmann link redirects to a category page and says the item is no longer in its assortment."
+      }
+    },
+    {
+      "session_id": "01a0f6b1-8a07-76c3-99e5-99ffe0ca8ef5",
+      "timestamp": "2026-10-01T09:00:25.498Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Sante",
+        "Name": "Sante Intense Hydration",
+        "GTIN/EAN": "04055297220682",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-sante-intense-hydration-haarmaske/p/4025089005896",
+        "Last known price": "6.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 6.99,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.ecco-verde.at/sante-naturally/intense-hydration-maske",
+        "observed_name": "Sant\u00e9 \u2013 naturally. Intense Hydration Maske, 150 ml",
+        "notes": "Exact product confirmed by EAN 4055297220682; the 150 ml retail price is \u20ac6.99 and the page shows it in stock with an add-to-cart button. The stored Rossmann link redirects to a category page and says the item is no longer in its assortment."
+      }
+    },
+    {
+      "session_id": "01a0f6b1-e965-7643-8747-499b89dd2fa0",
+      "timestamp": "2026-10-01T09:00:49.911Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Maria Nila",
+        "Name": "Maria Nila Coils & Curls Oil in Cream",
+        "GTIN/EAN": "07391681403741",
+        "Stored shop link": "https://www.flaconi.de/haare/maria-nila/coils-and-curls/maria-nila-coils-and-curls-oil-in-cream-leave-in-treatment.html",
+        "Last known price": "31 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 31,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://marianila.eu/products/coils-curls-oil-in-cream",
+        "observed_name": "Coils & Curls Oil In Cream",
+        "notes": "Brand product page confirms the exact 100 ml product and current regular price of \u20ac31,00. Flaconi\u2019s listing shows the 100 ml product at \u20ac22,50 with a 25% discount, so that is not the regular price; the stored detail page returned 403 during lookup, so online buyability there could not be confirmed."
+      }
+    },
+    {
+      "session_id": "01a0f6b2-43f7-7b80-8508-e9e9dd56d951",
+      "timestamp": "2026-10-01T09:01:13.088Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Shiseido Fino",
+        "Name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+        "GTIN/EAN": "04550516493590",
+        "Stored shop link": "https://www.amazon.de/Fino-Premium-Touch-Penetrating-Essence/dp/B0GVFQP34X",
+        "Last known price": "11 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 9.99,
+        "buyable_at_stored_link": null,
+        "evidence_url": "https://www.glowup.de/products/shiseido-fino-premium-touch-penetration-essence-haarol",
+        "observed_name": "Shiseido Fino Premium Touch Penetration Essence Haar\u00f6l",
+        "notes": "German retailer product page lists the 70 ml product at \u20ac9.99 and offers an add-to-cart option. The stored Amazon page returned a 503 error, so its current price and online-buyability could not be verified."
+      }
+    },
+    {
+      "session_id": "01a0f6b2-80b4-7fa0-b254-f2e20e215ece",
+      "timestamp": "2026-10-01T09:01:28.636Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "OGX",
+        "Name": "OGX Bond Protein Repair",
+        "GTIN/EAN": "03574661818481",
+        "Stored shop link": "https://www.amazon.de/OGX-Spr%C3%BChnebel-besch%C3%A4digtes-Technology-Dual-Action-Reparaturtechnologie/dp/B0DQLHGGYJ",
+        "Last known price": "8.95 EUR"
+      },
+      "answer": {
+        "found": false,
+        "price_eur": null,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.amazon.de/OGX-Spr%C3%BChnebel-besch%C3%A4digtes-Technology-Dual-Action-Reparaturtechnologie/dp/B0DQLHGGYJ",
+        "observed_name": "OGX Bond Protein Repair 3-in-1 Oil Mist, 50 ml",
+        "notes": "Die Produktseite best\u00e4tigt den exakten GTIN 03574661818481 und das 50-ml-Produkt. Aktuell wird kein Preis angezeigt (\u201eKeine Sonderangebote verf\u00fcgbar\u201c); daher lie\u00df sich kein aktueller regul\u00e4rer Preis feststellen. Die Seite zeigt zwar einen Warenkorb-Button, aber keine verf\u00fcgbare Kaufoption. (Abgerufen am 01.10.2026.)"
+      }
+    },
+    {
+      "session_id": "01a0f6b2-db9e-74f1-b17d-51f200d75e77",
+      "timestamp": "2026-10-01T09:01:51.910Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Wella Professionals",
+        "Name": "Wella Ultimate Repair Protective Leave-In",
+        "GTIN/EAN": "04064666580098",
+        "Stored shop link": "https://www.wella.com/professional/de-DE/products/haarpflege/ultimate-repair/ultimate-repair-protective-leave-in",
+        "Last known price": "18.51 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 21.72,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.shop-apotheke.com/beauty/upmFKXM79/wella-ultimate-repair-protective-leave-in.htm",
+        "observed_name": "Wella Ultimate Repair Protective Leave-In, 95 ml",
+        "notes": "Aktueller regul\u00e4rer Produktpreis bei Shop Apotheke: 21,72 \u20ac. Produktidentit\u00e4t durch EAN 4064666580098 best\u00e4tigt. Die verlinkte Wella-Produktseite zeigt \u201eJetzt kaufen\u201c, bietet aber selbst keinen Online-Kaufabschluss; daher buyable_at_stored_link=false."
+      }
+    },
+    {
+      "session_id": "01a0f6b3-6571-7102-bf70-69c1043b2448",
+      "timestamp": "2026-10-01T09:02:27.191Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "HASK",
+        "Name": "HASK Argan Oil Repairing Shine Oil",
+        "GTIN/EAN": "00071164029855",
+        "Stored shop link": "https://www.hagel-shop.de/hask-argan-oil-repairing-shine-oil-18-ml-5815315.html",
+        "Last known price": "2.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.hagel-shop.de/hask-argan-oil-repairing-shine-oil-18-ml-5815315.html",
+        "observed_name": "Hask Argan Oil Repairing Shine Oil 18 ml",
+        "notes": "Die Hagel-Shop-Produktseite nennt 2,95 \u20ac inkl. MwSt. und f\u00fchrt den Artikel als \u201eMomentan nicht lieferbar\u201c. Produktname, 18-ml-Gr\u00f6\u00dfe und EAN 71164029855 stimmen \u00fcberein."
+      }
+    },
+    {
+      "session_id": "01a0f6b3-a8f5-7963-8990-e1801229b281",
+      "timestamp": "2026-10-01T09:02:44.492Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Guhl",
+        "Name": "Guhl Panthenol + Reparatur 2in1 Kur & Sp\u00fclung",
+        "Stored shop link": "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/",
+        "Last known price": "4.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 4.99,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://produkte.globus.de/koerperpflege-gesundheit-kosmetik/haarpflege/shampoo-spuelung-kur/4072600703403/spuelung-kur-2in1-panthenol-reparatur",
+        "observed_name": "Guhl Panthenol + Reparatur 2IN1 Kur & Sp\u00fclung 200ml",
+        "notes": "Exaktes Produkt und Standardgr\u00f6\u00dfe 200 ml auf der GLOBUS-Produktdetailseite best\u00e4tigt; regul\u00e4rer Preis ab 4,99 \u20ac. Die gespeicherte M\u00fcller-Seite liefert 404, daher ist sie derzeit nicht online kaufbar."
+      }
+    },
+    {
+      "session_id": "01a0f6b4-079e-7112-8a55-878fdd7beec6",
+      "timestamp": "2026-10-01T09:03:08.712Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Balea",
+        "Name": "Balea Natural Beauty Hibiskus",
+        "GTIN/EAN": "04066447238952",
+        "Stored shop link": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-hibiskus-extrakt-und-kokosmilch",
+        "Last known price": "1.45 EUR"
+      },
+      "answer": {
+        "found": false,
+        "price_eur": null,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-bio-hibiskus-extrakt-und-cocosmilch",
+        "observed_name": "Balea Conditioner Natural Beauty Bio-Hibiskus-Extrakt und Cocosmilch, 350 ml",
+        "notes": "Die dm-Seite f\u00fchrt aktuell 1,45 \u20ac als regul\u00e4ren Preis und meldet \u201eNicht lieferbar\u201c. Die angegebene EAN 4066447238952 stimmt nicht mit der auf der Produktseite angegebenen GTIN 4058172926181 \u00fcberein; daher ist das exakte Produkt anhand der EAN nicht mit ausreichender Sicherheit best\u00e4tigt."
+      }
+    },
+    {
+      "session_id": "01a0f6b4-35f2-7b60-ae10-c3dea43096a2",
+      "timestamp": "2026-10-01T09:03:20.568Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Sante",
+        "Name": "SANTE Deep Repair Conditioner",
+        "GTIN/EAN": "04055297220088",
+        "Stored shop link": "https://www.dm.de/p/d/1335946/sante-naturally-conditioner-deep-repair",
+        "Last known price": "3.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 4.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1335946/sante-naturally-conditioner-deep-repair",
+        "observed_name": "Sant\u00e9 naturally. Conditioner Deep Repair, 150 ml",
+        "notes": "dm confirms GTIN 4055297220088 and lists the regular price as 4.95 EUR. The page says \u201cNicht lieferbar,\u201d so it is not currently online-buyable."
+      }
+    },
+    {
+      "session_id": "01a0f6b4-6c85-75e3-9a32-b5af8702ea3e",
+      "timestamp": "2026-10-01T09:03:34.570Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Wahre Sch\u00e4tze",
+        "Name": "Wahre Sch\u00e4tze Sanfte Hafermilch",
+        "GTIN/EAN": "03600542461658",
+        "Stored shop link": "https://www.dm.de/wahre-schaetze-shampoo-sanfte-hafermilch-p3600542461658.html",
+        "Last known price": "2.29 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.75,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1670195/wahre-schaetze-shampoo-sanfte-hafermilch",
+        "observed_name": "Wahre Sch\u00e4tze Shampoo Sanfte Hafermilch, 300 ml",
+        "notes": "dm product page confirms GTIN 3600542461658 and lists the regular price as 2.75 EUR. The page says \u201cNicht lieferbar,\u201d so it is not currently online-buyable."
+      }
+    },
+    {
+      "session_id": "01a0f6b4-9ab6-7cc0-9f14-765bdf054016",
+      "timestamp": "2026-10-01T09:03:46.366Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Guhl",
+        "Name": "Guhl Hyaluron+",
+        "GTIN/EAN": "04072600720219",
+        "Stored shop link": "https://www.dm.de/guhl-shampoo-hyaluron-pflege-p4072600720219.html",
+        "Last known price": "3.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 3.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1688644/guhl-shampoo-hyaluron-pflege",
+        "observed_name": "GUHL Shampoo Hyaluron+ Pflege",
+        "notes": "dm-Produktseite best\u00e4tigt GTIN 4072600720219 und die Standardgr\u00f6\u00dfe 250 ml. Aktueller Preis: 3,95 \u20ac. Die Seite zeigt \u201eNicht lieferbar\u201c, daher derzeit nicht online kaufbar."
+      }
+    },
+    {
+      "session_id": "01a0f6b4-c680-7ec2-8e98-8abe81c74a42",
+      "timestamp": "2026-10-01T09:03:57.575Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Hask",
+        "Name": "Hask Shampoo Argan Oil",
+        "GTIN/EAN": "00071164343166",
+        "Stored shop link": "https://www.dm.de/hask-shampoo-argan-oil-p71164343166.html",
+        "Last known price": "6.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 6.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1475016/hask-shampoo-argan-oil",
+        "observed_name": "HASK Shampoo Argan Oil, 355 ml",
+        "notes": "dm product page matches GTIN 071164343166 and lists the regular price as 6.95 EUR. The page currently says \u201cNicht lieferbar.\u201d"
+      }
+    },
+    {
+      "session_id": "01a0f6b4-ed4e-70f2-9f4d-a4ccf29209e7",
+      "timestamp": "2026-10-01T09:04:07.511Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Dejan Garz",
+        "Name": "Dejan Garz Shampoo",
+        "GTIN/EAN": "04270004570106",
+        "Stored shop link": "https://www.dm.de/dejan-garz-shampoo-the-foundation-p4270004570106.html",
+        "Last known price": "9.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 9.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/3063729/dejan-garz-shampoo-the-foundation",
+        "observed_name": "DEJAN GARZ Shampoo The Foundation, 300 ml",
+        "notes": "dm-Produktdetailseite best\u00e4tigt GTIN 4270004570106 und den regul\u00e4ren Preis von 9,95 \u20ac. Die Seite zeigt \u201eMomentan nicht lieferbar\u201c."
+      }
+    },
+    {
+      "session_id": "01a0f6b5-197d-77d0-8745-126aaad0884e",
+      "timestamp": "2026-10-01T09:04:18.848Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Hask",
+        "Name": "Hask Curl Care Conditioner",
+        "GTIN/EAN": "00071164304211",
+        "Stored shop link": "https://www.dm.de/p/d/1622385/hask-conditioner-curl-care",
+        "Last known price": "6.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 6.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1622385/hask-conditioner-curl-care",
+        "observed_name": "HASK Conditioner Curl Care, 355 ml",
+        "notes": "dm lists the regular price as 6.95 EUR and identifies the product by matching GTIN 071164304211. The page currently says \u201cNicht lieferbar.\u201d"
+      }
+    },
+    {
+      "session_id": "01a0f6b5-40d0-7d23-8b1b-6e35ea6c2c67",
+      "timestamp": "2026-10-01T09:04:28.909Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Hair Biology",
+        "Name": "Hair Biology Full & Shining Conditioner",
+        "GTIN/EAN": "08001841216997",
+        "Stored shop link": "https://www.dm.de/p/d/1585350/hair-biology-conditioner-full-und-shining",
+        "Last known price": "4.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 4.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1585350/hair-biology-conditioner-full-und-shining",
+        "observed_name": "hair biology Conditioner Full & Shining, 160 ml",
+        "notes": "dm lists the exact product by matching article number 1585350 and GTIN 8001841216997 at a regular price of 4.95 EUR. The page says \u201cNicht lieferbar,\u201d so it is currently not online-buyable."
+      }
+    },
+    {
+      "session_id": "01a0f6b5-7058-7780-aadd-3730471cc2f6",
+      "timestamp": "2026-10-01T09:04:41.081Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Syoss",
+        "Name": "Syoss Intense Curls",
+        "GTIN/EAN": "04015100860504",
+        "Stored shop link": "https://www.dm.de/syoss-shampoo-intense-curls-p4015100860504.html",
+        "Last known price": "4.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 4.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/3047029/syoss-shampoo-intense-curls",
+        "observed_name": "syoss Shampoo Intense Curls, 440 ml",
+        "notes": "dm listet den regul\u00e4ren Preis mit 4,95 \u20ac. GTIN 4015100860504 stimmt \u00fcberein. Die Seite zeigt \u201eNicht lieferbar\u201c."
+      }
+    },
+    {
+      "session_id": "01a0f6b5-9e0a-72c2-8056-0a0646e98baf",
+      "timestamp": "2026-10-01T09:04:52.754Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Garnier",
+        "Name": "Garnier Hair Food Macadamia",
+        "Stored shop link": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+        "Last known price": "5.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 5.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+        "observed_name": "GARNIER FRUCTIS Haarkur Macadamia Hair Food 3in1 Maske, 400 ml",
+        "notes": "dm-Produktdetailseite nennt den regul\u00e4ren Preis von 5,95 \u20ac; GTIN 3600542511612 best\u00e4tigt das exakte Produkt. Die Seite zeigt \u201eNicht lieferbar\u201c."
+      }
+    },
+    {
+      "session_id": "01a0f6b5-cf33-7d80-928a-5e94af55fa47",
+      "timestamp": "2026-10-01T09:05:05.347Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Herbal Essences",
+        "Name": "Herbal Essences Aloe Vera Conditioner",
+        "GTIN/EAN": "08700216211598",
+        "Stored shop link": "https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera",
+        "Last known price": "3.95 EUR"
+      },
+      "answer": {
+        "found": false,
+        "price_eur": null,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera",
+        "observed_name": "Herbal Essences Conditioner Feuchtigkeit Aloe Vera, 250 ml",
+        "notes": "dm lists the product at 3.95 EUR and shows it as available for delivery, but its GTIN (8700216210546) does not match the requested GTIN (08700216211598). Exact product identity could not be established."
+      }
+    },
+    {
+      "session_id": "01a0f6b6-0114-72d0-b18b-b8cefd463e42",
+      "timestamp": "2026-10-01T09:05:18.108Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Sante",
+        "Name": "Sante Sensitive Care",
+        "GTIN/EAN": "04055297221467",
+        "Stored shop link": "https://www.dm.de/sante-naturkosmetik-shampoo-sensitive-care-p4055297221467.html",
+        "Last known price": "4.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 3.99,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-sante-sensitive-care-shampoo/p/4055297221467",
+        "observed_name": "Sant\u00e9 Sensitive Care Shampoo, 250 ml",
+        "notes": "Exaktes Produkt anhand der EAN 4055297221467 best\u00e4tigt. Rossmann listet 3,99 \u20ac als Artikelpreis und zeigt Online-Lieferung an. Der gespeicherte dm-Link liefert 404; dort ist das Produkt online nicht kaufbar."
+      }
+    },
+    {
+      "session_id": "01a0f6b6-5ab9-7b01-9a29-d16396f79845",
+      "timestamp": "2026-10-01T09:05:41.055Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Pantene",
+        "Name": "Pantene Pro-V Volumen Pur",
+        "GTIN/EAN": "08700216558471",
+        "Stored shop link": "https://www.dm.de/pantene-pro-v-shampoo-volumen-pur-p8700216885768.html",
+        "Last known price": "4.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.75,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/3058599/pantene-pro-v-shampoo-volumen-pur",
+        "observed_name": "PANTENE PRO-V Shampoo Volumen Pur, 200 ml",
+        "notes": "dm product page confirms the product and GTIN 8700216885768. Current regular price is \u20ac2.75; the page says \u201cNicht lieferbar.\u201d"
+      }
+    },
+    {
+      "session_id": "01a0f6b6-8a57-70d2-8feb-e1138b5e361f",
+      "timestamp": "2026-10-01T09:05:53.264Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Pantene",
+        "Name": "Pantene Pro-V Miracles Bond Repair Conditioner",
+        "GTIN/EAN": "08700216151535",
+        "Stored shop link": "https://www.dm.de/p/d/1336165/pantene-pro-v-conditioner-miracles-bond-repair",
+        "Last known price": "5.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 5.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1336165/pantene-pro-v-conditioner-miracles-bond-repair",
+        "observed_name": "PANTENE PRO-V Conditioner miracles Bond Repair, 160 ml",
+        "notes": "dm-Produktseite nennt 5,95 \u20ac und best\u00e4tigt die GTIN 8700216151535 sowie Artikelnummer 1336165. Online aktuell als \u201eNicht lieferbar\u201c gekennzeichnet."
+      }
+    },
+    {
+      "session_id": "01a0f6b6-c0e3-7b63-b1df-84647228f567",
+      "timestamp": "2026-10-01T09:06:07.221Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Alverde",
+        "Name": "Alverde Conditioner Glanz",
+        "GTIN/EAN": "04066447592085",
+        "Stored shop link": "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz-rosenbluetenwasser-und-pflanzlichem-protein",
+        "Last known price": "1.35 EUR"
+      },
+      "answer": {
+        "found": false,
+        "price_eur": null,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz",
+        "observed_name": "alverde NATURKOSMETIK Conditioner Glanz, 200 ml",
+        "notes": "dm lists the product at 1.25 EUR and says it is not deliverable online. However, the page\u2019s GTIN is 4066447919202, which does not match the supplied EAN 04066447592085, so the exact product could not be confirmed."
+      }
+    },
+    {
+      "session_id": "01a0f6b6-ec67-7cc3-b78c-fb95c71c9c7f",
+      "timestamp": "2026-10-01T09:06:18.350Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Hair Biology",
+        "Name": "Hair Biology Revitalize & Soothe",
+        "GTIN/EAN": "08006540153963",
+        "Stored shop link": "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+        "Last known price": "4.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 4.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+        "observed_name": "hair biology Shampoo Revitalize & Soothe, 250 ml",
+        "notes": "dm-Produktseite best\u00e4tigt GTIN 8006540153963. Aktueller regul\u00e4rer Preis: 4,95 \u20ac. Die Seite zeigt \u201eNicht lieferbar\u201c."
+      }
+    },
+    {
+      "session_id": "01a0f6b7-1733-7660-8731-3633efb33b09",
+      "timestamp": "2026-10-01T09:06:29.319Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Syoss",
+        "Name": "Syoss Intense Curls Conditioner",
+        "GTIN/EAN": "04015100860887",
+        "Stored shop link": "https://www.dm.de/p/d/1666690/syoss-conditioner-intense-curls",
+        "Last known price": "3.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/3047028/syoss-conditioner-intense-curls",
+        "observed_name": "syoss Conditioner Intense Curls, 250 ml",
+        "notes": "dm product details show GTIN 4015100860887, matching the supplied EAN with leading zero omitted. Current listed price is \u20ac2.95; the page says \u201cMomentan nicht lieferbar,\u201d so it is not online-buyable. The stored link appears outdated; the matching current dm product page uses article number 3047028."
+      }
+    },
+    {
+      "session_id": "01a0f6b7-5d9e-7892-88b7-ecf098e566c0",
+      "timestamp": "2026-10-01T09:06:47.332Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Hask",
+        "Name": "Hask Argan Oil Repairing Conditioner",
+        "GTIN/EAN": "00071164343265",
+        "Stored shop link": "https://www.dm.de/p/d/1475001/hask-conditioner-repairing-argan-oil",
+        "Last known price": "6.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 6.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1475001/hask-conditioner-repairing-argan-oil",
+        "observed_name": "HASK Conditioner Repairing Argan Oil, 355 ml",
+        "notes": "dm lists the regular price as 6.95 EUR and shows \u201cNicht lieferbar.\u201d The product page GTIN 071164343265 matches the provided EAN 00071164343265."
+      }
+    },
+    {
+      "session_id": "01a0f6b7-8a52-7f42-9959-c39af5d00633",
+      "timestamp": "2026-10-01T09:06:58.778Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "OGX",
+        "Name": "Keratin Oil Shampoo",
+        "GTIN/EAN": "03574661798448",
+        "Stored shop link": "https://www.dm.de/ogx-shampoo-strenght-und-lenght-keratin-oil-p3574661798448.html",
+        "Last known price": "5.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 6.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1443762/ogx-shampoo-strenght-und-lenght-keratin-oil",
+        "observed_name": "OGX Shampoo strenght & lenght, Keratin Oil",
+        "notes": "dm product page confirms GTIN 3574661798448 and 385 ml. Current regular price is 6.95 EUR; page says \u201cNicht lieferbar,\u201d so it is not currently online-buyable."
+      }
+    },
+    {
+      "session_id": "01a0f6b7-bd1c-7d11-87fd-b52570f4f365",
+      "timestamp": "2026-10-01T09:07:11.801Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Hask",
+        "Name": "Hask Curl Care Shampoo",
+        "GTIN/EAN": "00071164304112",
+        "Stored shop link": "https://www.dm.de/hask-shampoo-curl-care-p71164304112.html",
+        "Last known price": "6.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 6.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1622384/hask-shampoo-curl-care",
+        "observed_name": "HASK Shampoo Curl Care, 355 ml",
+        "notes": "dm product page confirms the exact GTIN (071164304112; same digits as 00071164304112) and lists the regular price as \u20ac6.95. The page says \u201cNicht lieferbar,\u201d so it is not currently available to buy online."
+      }
+    },
+    {
+      "session_id": "01a0f6b7-e2bc-7881-bff9-f74a391459db",
+      "timestamp": "2026-10-01T09:07:21.412Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "L'Or\u00e9al Paris",
+        "Name": "Anti-Haarverlust Sp\u00fclung",
+        "GTIN/EAN": "03600524189983",
+        "Stored shop link": "https://www.dm.de/p/d/2976313/l-oreal-paris-elvital-conditioner-fiber-booster-anti-haarverlust",
+        "Last known price": "6.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 6.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/2976313/l-oreal-paris-elvital-conditioner-fiber-booster-anti-haarverlust",
+        "observed_name": "L'OR\u00c9AL PARiS ELVITAL Conditioner Fiber Booster, Anti-Haarverlust, 150 ml",
+        "notes": "dm lists the regular price as 6.95 EUR and says it is available for delivery. The product page\u2019s GTIN (3600524189983) matches the supplied EAN."
+      }
+    },
+    {
+      "session_id": "01a0f6b8-0e71-7612-9320-a795ba50762b",
+      "timestamp": "2026-10-01T09:07:32.621Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Balea",
+        "Name": "Balea Professional Ultimate Volume",
+        "GTIN/EAN": "04067796075021",
+        "Stored shop link": "https://www.dm.de/balea-professional-shampoo-ultimate-volume-p4067796075021.html",
+        "Last known price": "1.25 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 1.25,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1703262/balea-professional-shampoo-ultimate-volume",
+        "observed_name": "Balea PROFESSIONAL Shampoo Ultimate Volume, 250 ml",
+        "notes": "dm product page confirms GTIN 4067796075021 and lists the regular price as 1.25 EUR. The page says \u201cMomentan nicht lieferbar,\u201d so it is not currently available to buy online."
+      }
+    },
+    {
+      "session_id": "01a0f6b8-48f5-7f00-95dc-5493e1354f94",
+      "timestamp": "2026-10-01T09:07:47.584Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Sante",
+        "Name": "Sante Intense Hydration Conditioner",
+        "GTIN/EAN": "04055297220866",
+        "Stored shop link": "https://www.dm.de/p/d/1334054/sante-naturally-conditioner-intense-hydration",
+        "Last known price": "3.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 3.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1334054/sante-naturally-conditioner-intense-hydration",
+        "observed_name": "Sant\u00e9 naturally. Conditioner Intense Hydration, 150 ml",
+        "notes": "dm-Produktseite nennt 3,95 \u20ac; EAN 4055297220866 stimmt mit der angegebenen GTIN \u00fcberein. Als lieferbar gekennzeichnet, mit \u201eIn den Warenkorb\u201c und Standardversand in 2\u20133 Werktagen."
+      }
+    },
+    {
+      "session_id": "01a0f6b8-7eab-76c3-ba53-7d7bd1c5bdd1",
+      "timestamp": "2026-10-01T09:08:01.350Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Cantu",
+        "Name": "Cantu Conditioner Cream",
+        "GTIN/EAN": "00810006945478",
+        "Stored shop link": "https://www.dm.de/p/d/1675021/cantu-conditioner-cream",
+        "Last known price": "6.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 6.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1675021/cantu-conditioner-cream",
+        "observed_name": "cantu Conditioner Cream, 400 ml",
+        "notes": "dm product page shows \u20ac6.95, says \u201cLieferbar\u201d with standard delivery in 2\u20133 business days, and lists GTIN 810006945478, matching the supplied EAN."
+      }
+    },
+    {
+      "session_id": "01a0f6b8-a71c-76c1-b97b-10a080e3e0aa",
+      "timestamp": "2026-10-01T09:08:11.683Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Jean&Len",
+        "Name": "Jean&Len Conditioner Keratin/Mandel",
+        "GTIN/EAN": "04262500781575",
+        "Stored shop link": "https://www.dm.de/p/d/1551254/jean-und-len-conditioner-keratin-mandel",
+        "Last known price": "3.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 3.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1551254/jean-und-len-conditioner-repair-keratin-mandel",
+        "observed_name": "Jean&Len Conditioner Repair Keratin Mandel, 300 ml",
+        "notes": "dm-Produktseite weist 3,95 \u20ac als Preis aus und zeigt \u201eLieferbar\u201c mit Standardversand in 2\u20133 Werktagen. GTIN 4262500781575 stimmt mit der gesuchten EAN \u00fcberein."
+      }
+    },
+    {
+      "session_id": "01a0f6b8-d2ad-74b3-8e2d-a83722e6c972",
+      "timestamp": "2026-10-01T09:08:22.854Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Langhaarm\u00e4dchen",
+        "Name": "Langhaarm\u00e4dchen Lovely Long",
+        "GTIN/EAN": "04067796002621",
+        "Stored shop link": "https://www.dm.de/langhaarmaedchen-shampoo-lovely-long-p4067796002621.html",
+        "Last known price": "4.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 4.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+        "observed_name": "LANGHAARM\u00c4DCHEN Shampoo Lovely Long, 300 ml",
+        "notes": "dm-Produktseite best\u00e4tigt GTIN 4067796002621. Aktueller dm-Dauerpreis: 4,95 \u20ac; als \u201eLieferbar\u201c mit Standardversand 2\u20133 Werktage angegeben."
+      }
+    },
+    {
+      "session_id": "01a0f6b9-087a-7ad2-adcd-5f5ece992986",
+      "timestamp": "2026-10-01T09:08:36.618Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Balea",
+        "Name": "Balea Professional Oil Repair Intensiv Sp\u00fclung",
+        "GTIN/EAN": "04066447365443",
+        "Stored shop link": "https://www.dm.de/balea-professional-spuelung-oil-repair-intensiv-p4066447365443.html",
+        "Last known price": "1.25 EUR"
+      },
+      "answer": {
+        "found": false,
+        "price_eur": null,
+        "buyable_at_stored_link": null,
+        "evidence_url": "https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv",
+        "observed_name": "Balea PROFESSIONAL Conditioner Oil Repair Intensiv, 200 ml",
+        "notes": "The current dm page lists \u20ac1.25 and says the product is available for delivery, but its GTIN is 4070765001402, not the requested 4066447365443. The stored link returns 404, so I can\u2019t confirm the exact product\u2019s current price or whether that stored page is online-buyable."
+      }
+    },
+    {
+      "session_id": "01a0f6b9-53a3-78d3-a738-8b925860ce57",
+      "timestamp": "2026-10-01T09:08:55.861Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Balea",
+        "Name": "Balea Aqua Hyaluron",
+        "GTIN/EAN": "04070765001648",
+        "Stored shop link": "https://www.dm.de/p/d/1675524/balea-professional-shampoo-aqua-hyaluron",
+        "Last known price": "1.25 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 1.25,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1675524/balea-professional-shampoo-aqua-hyaluron",
+        "observed_name": "Balea PROFESSIONAL Shampoo Aqua Hyaluron, 250 ml",
+        "notes": "dm-Produktseite best\u00e4tigt GTIN 4070765001648 (entspricht 04070765001648), regul\u00e4ren Preis 1,25 \u20ac und Online-Lieferbarkeit (\u201eLieferbar\u201c, Standardversand 2\u20133 Werktage)."
+      }
+    },
+    {
+      "session_id": "01a0f6b9-7f1b-7381-8b27-b40c87ecf561",
+      "timestamp": "2026-10-01T09:09:06.981Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Balea",
+        "Name": "Balea Kopfhaut Sensitive Shampoo",
+        "GTIN/EAN": "04070765001044",
+        "Stored shop link": "https://www.dm.de/p/d/1701109/balea-professional-shampoo-kopfhaut-sensitive",
+        "Last known price": "1.25 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 1.25,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1701109/balea-professional-shampoo-kopfhaut-sensitive",
+        "observed_name": "Balea PROFESSIONAL Shampoo Kopfhaut Sensitive, 250 ml",
+        "notes": "dm product page shows the regular price as 1.25 EUR and marks it available for delivery. The GTIN matches."
+      }
+    },
+    {
+      "session_id": "01a0f6b9-c415-7d73-8118-6d0d2a8b5e88",
+      "timestamp": "2026-10-01T09:09:24.646Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Syoss",
+        "Name": "Syoss Intense Keratin Conditioner",
+        "GTIN/EAN": "04015100860467",
+        "Stored shop link": "https://www.dm.de/p/d/1666649/syoss-conditioner-intense-keratin",
+        "Last known price": "3.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 3.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/3047026/syoss-conditioner-intense-keratin",
+        "observed_name": "syoss Conditioner Intense Keratin, 250 ml",
+        "notes": "dm product page identifies GTIN 4015100860467, matching the supplied EAN 04015100860467. Regular price is \u20ac3.95; page says \u201cLieferbar\u201d and offers \u201cIn den Warenkorb.\u201d The stored URL was inaccessible, so buyability is confirmed on dm\u2019s current product page for the matching item."
+      }
+    },
+    {
+      "session_id": "01a0f6ba-0e96-7d03-9be2-28e4d0e22e0d",
+      "timestamp": "2026-10-01T09:09:43.708Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Nivea",
+        "Name": "Nivea Shampoo&Conditioner 2in1",
+        "GTIN/EAN": "04006000193991",
+        "Stored shop link": "https://www.dm.de/nivea-shampoo-und-conditioner-express-2in1-p4006000193991.html",
+        "Last known price": "2.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 3.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1620922/nivea-shampoo-und-conditioner-express-2in1",
+        "observed_name": "NIVEA Shampoo & Conditioner Express 2in1, 400 ml",
+        "notes": "dm-Produktseite best\u00e4tigt GTIN 4006000193991. Regul\u00e4rer dm-Dauerpreis: 3,95 \u20ac; als \u201eLieferbar\u201c ausgewiesen, mit Warenkorb-Option."
+      }
+    },
+    {
+      "session_id": "01a0f6ba-3adf-7c72-8276-c291047fe324",
+      "timestamp": "2026-10-01T09:09:55.046Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Balea Med",
+        "Name": "Balea Med Anti Schuppen",
+        "GTIN/EAN": "04066447972528, 04066447785425",
+        "Stored shop link": "https://www.dm.de/balea-med-shampoo-anti-schuppen-ultra-sensitive-p4066447785425.html",
+        "Last known price": "2.65 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.45,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/2968885/balea-med-shampoo-anti-schuppen-ultra-sensitive",
+        "observed_name": "Balea med Shampoo Anti-Schuppen Ultra Sensitive, 250 ml",
+        "notes": "dm f\u00fchrt den regul\u00e4ren Preis mit 2,45 \u20ac und zeigt \u201eLieferbar\u201c sowie \u201eIn den Warenkorb\u201c. Die Produktseite nennt GTIN 4066447972528, passend zu einer der angegebenen EANs."
+      }
+    },
+    {
+      "session_id": "01a0f6ba-69a4-7591-8465-bb2c8d88e6f7",
+      "timestamp": "2026-10-01T09:10:07.024Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Pantene",
+        "Name": "Pantene Hydra Glow Shampoo",
+        "GTIN/EAN": "08700216170345",
+        "Stored shop link": "https://www.dm.de/pantene-pro-v-shampoo-miracles-hydra-glow-p8700216170345.html",
+        "Last known price": "3.49 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 3.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1647567/pantene-pro-v-shampoo-miracles-hydra-glow",
+        "observed_name": "PANTENE PRO-V Shampoo miracles Hydra Glow, 250 ml",
+        "notes": "dm product page lists the regular price as 3.95 EUR and says \u201cLieferbar.\u201d The page\u2019s GTIN 8700216170345 matches the supplied EAN, with leading zero omitted."
+      }
+    },
+    {
+      "session_id": "01a0f6ba-9f6a-79f2-bcf1-88bc826ee8f3",
+      "timestamp": "2026-10-01T09:10:20.784Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Monday",
+        "Name": "Monday Moisture Conditioner",
+        "GTIN/EAN": "04897097266404",
+        "Stored shop link": "https://www.dm.de/p/d/1893701/monday-conditioner-moisture-feuchtigkeit",
+        "Last known price": "5.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 5.75,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1893701/monday-conditioner-moisture-feuchtigkeit",
+        "observed_name": "MONDAY Conditioner Moisture Feuchtigkeit, 354 ml",
+        "notes": "dm lists the regular price as 5.75 EUR and marks it as available for delivery. The product page GTIN 4897097266404 matches the supplied EAN (leading zero omitted)."
+      }
+    },
+    {
+      "session_id": "01a0f6ba-d30d-70e3-91b8-2c2b64682c59",
+      "timestamp": "2026-10-01T09:10:34.005Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Salthouse",
+        "Name": "Salthouse Anti Fett",
+        "GTIN/EAN": "04008890006467",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-therapie-anti-fett-shampoo/p/4008890006467",
+        "Last known price": "3.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 3.99,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-therapie-anti-fett-shampoo/p/4008890006467",
+        "observed_name": "Salthouse Totes Meer Therapie Anti-Fett Shampoo",
+        "notes": "Rossmann-Produktdetailseite nennt 3,99 \u20ac f\u00fcr 250 ml und zeigt eine Lieferzeit sowie kostenlose Lieferung in die Wunschfiliale. Produkt stimmt mit der angegebenen EAN im gespeicherten Link \u00fcberein."
+      }
+    },
+    {
+      "session_id": "01a0f6bb-1a71-7f00-8ab6-52fe935f949e",
+      "timestamp": "2026-10-01T09:10:52.281Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Salthouse",
+        "Name": "Salthouse Anti Juckreiz",
+        "GTIN/EAN": "04008890006405",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-therapie-shampoo-anti-juckreiz/p/4008890006405",
+        "Last known price": "3.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 3.99,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-therapie-shampoo-anti-juckreiz/p/4008890006405",
+        "observed_name": "Salthouse Totes Meer Therapie Shampoo Anti-Juckreiz",
+        "notes": "Rossmann product page lists the 250 ml size at 3.99 EUR and shows a delivery estimate, indicating online availability. The product detail page is at the stored link, whose EAN matches the requested GTIN."
+      }
+    },
+    {
+      "session_id": "01a0f6bb-5232-7c53-8f8b-cbbc7f393d35",
+      "timestamp": "2026-10-01T09:11:06.566Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Pom\u00e9lo+Co",
+        "Name": "Pom\u00e9lo+Co Shine Therapy Conditioner",
+        "GTIN/EAN": "04260625261989",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-pomeloco-shine-therapy-conditioner/p/4260625261989",
+        "Last known price": "8.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 8.99,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-pomeloco-shine-therapy-conditioner/p/4260625261989",
+        "observed_name": "Pom\u00e9lo+Co Shine Therapy Conditioner",
+        "notes": "Rossmann-Produktseite: 8,99 \u20ac f\u00fcr 200 ml. Die Seite zeigt eine Lieferzeit vom 05.10.2026 bis 06.10.2026 und Filiallieferung; das Produkt ist online kaufbar."
+      }
+    },
+    {
+      "session_id": "01a0f6bb-9ee3-79b0-921f-7c167079055f",
+      "timestamp": "2026-10-01T09:11:26.188Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Salthouse",
+        "Name": "Salthouse Anti Schuppen",
+        "GTIN/EAN": "04008890006429",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-mildes-anti-schuppen-shampoo/p/4008890006429",
+        "Last known price": "3.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 3.99,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-mildes-anti-schuppen-shampoo/p/4008890006429",
+        "observed_name": "Salthouse Totes Meer Mildes Anti-Schuppen Shampoo",
+        "notes": "Rossmann product page lists the 250 ml product at the regular price of 3.99 EUR and shows a delivery date and free delivery to a chosen store, indicating it is currently online-buyable. The page matches the stored product and EAN-linked URL."
+      }
+    },
+    {
+      "session_id": "01a0f6bb-f5df-7412-a212-615e912a608d",
+      "timestamp": "2026-10-01T09:11:48.494Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "OGX",
+        "Name": "OGX Renewing + Argan Oil of Morocco Shampoo",
+        "GTIN/EAN": "00022796976116, 03574661799438",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-ogx-renewing-argan-oil-of-morocco-shampoo/p/3574661799438",
+        "Last known price": "6.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 6.99,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-ogx-renewing-argan-oil-of-morocco-shampoo/p/3574661799438",
+        "observed_name": "OGX renewing+ Argan Oil of Morocco Shampoo, 385 ml",
+        "notes": "Rossmann product detail page lists the 385 ml shampoo at 6,99 \u20ac and shows delivery dates and store delivery, indicating it is currently online-buyable."
+      }
+    },
+    {
+      "session_id": "01a0f6bc-2ef1-7d81-96a2-9fa3c0f71c83",
+      "timestamp": "2026-10-01T09:12:03.065Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Garnier Fructis",
+        "Name": "Garnier Fructis Hair Food Aloe Vera Feuchtigkeits-Sp\u00fclung",
+        "GTIN/EAN": "03600542398022",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-feuchtigkeits-aloe-vera-hair-food-spuelung/p/3600542398022",
+        "Last known price": "3.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 3.99,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-feuchtigkeits-aloe-vera-hair-food-spuelung/p/3600542398022",
+        "observed_name": "Garnier Fructis Feuchtigkeits Aloe Vera Hair Food Sp\u00fclung",
+        "notes": "Rossmann product page lists 400 ml for 3.99 EUR and shows delivery dates and free delivery to a preferred store, indicating it is currently online-buyable."
+      }
+    },
+    {
+      "session_id": "01a0f6bc-6e0b-77b2-a76e-3c8db48fc3db",
+      "timestamp": "2026-10-01T09:12:19.231Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Neqi",
+        "Name": "Neqi Volume Victory",
+        "GTIN/EAN": "04063528078377",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-neqi-volume-victory-shampoo/p/4063528078377",
+        "Last known price": "9.95 EUR"
+      },
+      "answer": {
+        "found": false,
+        "price_eur": null,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-neqi-volume-victory-shampoo/p/4063528078377",
+        "observed_name": null,
+        "notes": "Der Rossmann-Link leitet zur Kategorie weiter und meldet, dass der Artikel nicht mehr im Sortiment ist. Daher ist er dort aktuell nicht online kaufbar; ein aktueller regul\u00e4rer Preis f\u00fcr das exakte Produkt lie\u00df sich nicht best\u00e4tigen."
+      }
+    },
+    {
+      "session_id": "01a0f6bc-ab17-7541-88e9-1ca0c5ec64f6",
+      "timestamp": "2026-10-01T09:12:34.848Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Isana",
+        "Name": "Isana Professional Argan\u00f6l & Pflege Sp\u00fclung",
+        "GTIN/EAN": "04305615624945",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-arganoel-und-pflege/p/4305615624945",
+        "Last known price": "1.39 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 1.29,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-arganoel-und-pflege/p/4305615624945",
+        "observed_name": "ISANA PROFESSIONAL Sp\u00fclung Argan\u00f6l & Pflege",
+        "notes": "Rossmann-Produktdetailseite zeigt 1,29 \u20ac f\u00fcr 200 ml und eine Lieferzeitangabe sowie die Option \u201eKostenlos lieferbar in deine Wunschfiliale\u201c. Die Produktseite stimmt mit dem angegebenen EAN im Link \u00fcberein."
+      }
+    },
+    {
+      "session_id": "01a0f6bc-da3b-7752-aa58-f67f7f22b6dc",
+      "timestamp": "2026-10-01T09:12:46.925Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "OGX",
+        "Name": "Rosemary Mint Shampoo",
+        "GTIN/EAN": "03574661805931",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-ogx-rosemary-mint-shampoo/p/3574661805931",
+        "Last known price": "6.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 7.99,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-ogx-rosemary-mint-shampoo/p/3574661805931",
+        "observed_name": "ogx Rosemary Mint Shampoo, 385 ml",
+        "notes": "Rossmann-Produktdetailseite nennt 7,99 \u20ac (20,75 \u20ac/l) und zeigt eine Lieferangabe f\u00fcr den 05.\u201306.10.2026 sowie die Filiallieferung. Produktname und gespeicherte EAN im Produktlink stimmen \u00fcberein."
+      }
+    },
+    {
+      "session_id": "01a0f6bd-08b2-7013-9ebe-3f2727f51c46",
+      "timestamp": "2026-10-01T09:12:58.808Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Garnier Wahre Sch\u00e4tze",
+        "Name": "Garnier Wahre Sch\u00e4tze Kokosmilch & Macadamia N\u00e4hrende Sp\u00fclung",
+        "GTIN/EAN": "03600542462839",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-spuelung-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462327",
+        "Last known price": "2.49 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.49,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-spuelung-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462327",
+        "observed_name": "Garnier Wahre Sch\u00e4tze Sp\u00fclung Kokosmilch & Macadamia Normales & Trockenes Haar, 200 ml",
+        "notes": "Rossmann-Produktdetailseite zeigt 2,49 \u20ac und eine Lieferzeitangabe f\u00fcr den Onlinekauf. Name und Variante stimmen mit dem gesuchten Produkt \u00fcberein; die gespeicherte Seiten-ID weicht von der angegebenen EAN ab."
+      }
+    },
+    {
+      "session_id": "01a0f6bd-6058-7af1-82c5-f62181d254f4",
+      "timestamp": "2026-10-01T09:13:21.265Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Neqi",
+        "Name": "Neqi Volume Victory Conditioner",
+        "GTIN/EAN": "04063528078407",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-neqi-nq-volume-victory-conditioner-250ml/p/4063528078407",
+        "Last known price": "9.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 9.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://neqi-hair.com/products/volume-victory-conditioner",
+        "observed_name": "Volume Victory Conditioner",
+        "notes": "The brand\u2019s product page lists the 250 ml conditioner for \u20ac9.95 and offers an add-to-cart option. The stored Rossmann link redirects to a category page stating the item is no longer in its assortment. The brand page confirms the product and size, but does not display the EAN."
+      }
+    },
+    {
+      "session_id": "01a0f6bd-a548-7702-bdf5-55831c321bcb",
+      "timestamp": "2026-10-01T09:13:38.895Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Neqi",
+        "Name": "Neqi Moisture Mystery Conditioner",
+        "GTIN/EAN": "04063528078315",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-neqi-moisture-mystery-conditioner/p/4063528078315",
+        "Last known price": "9.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 8.99,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-neqi-moisture-mystery-conditioner/p/4063528078315",
+        "observed_name": "NEQI Moisture Mystery Conditioner",
+        "notes": "Rossmann product detail page lists the 250 ml conditioner for 8.99 EUR and shows delivery information and quantity selection, indicating it is currently available to buy online."
+      }
+    },
+    {
+      "session_id": "01a0f6bd-de23-7bb3-a5b6-f3bebb008bf7",
+      "timestamp": "2026-10-01T09:13:53.450Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Garnier Wahre Sch\u00e4tze",
+        "Name": "Garnier Wahre Sch\u00e4tze Argan-Mandelcreme Sp\u00fclung",
+        "GTIN/EAN": "03600542462594",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-reichhaltige-creme-spuelung-argan-mandelcreme/p/3600542462594",
+        "Last known price": "2.49 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.49,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-reichhaltige-creme-spuelung-argan-mandelcreme/p/3600542462594",
+        "observed_name": "Garnier Wahre Sch\u00e4tze Reichhaltige Creme-Sp\u00fclung Argan-Mandelcreme, 200 ml",
+        "notes": "Rossmann product-detail page lists the regular price as 2.49 EUR and shows delivery availability, so it is currently online-buyable."
+      }
+    },
+    {
+      "session_id": "01a0f6be-221f-71e1-8af6-3e16872b7fbe",
+      "timestamp": "2026-10-01T09:14:10.866Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Head & Shoulders",
+        "Name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+        "GTIN/EAN": "08700216496032",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-dermaxpro-haarshampoo-sensitive-pflege/p/8700216496032",
+        "Last known price": "4.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 4.49,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-dermaxpro-haarshampoo-sensitive-pflege/p/8700216496032",
+        "observed_name": "head & shoulders DERMAXPRO Haarshampoo Sensitive Pflege, 250 ml",
+        "notes": "Rossmann product page lists the regular price as 4.49 EUR. The page identifies the requested product and shows \u201cOnline momentan nicht verf\u00fcgbar,\u201d so it is not currently online-buyable at the stored link."
+      }
+    },
+    {
+      "session_id": "01a0f6be-6152-7073-9365-3328697912ad",
+      "timestamp": "2026-10-01T09:14:27.066Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Sebamed",
+        "Name": "Sebamed Every-Day Shampoo",
+        "GTIN/EAN": "04103040051752",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-sebamed-every-day-shampoo/p/4103040051752",
+        "Last known price": "3.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 3.99,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-sebamed-every-day-shampoo/p/4103040051752",
+        "observed_name": "sebamed Every-Day Shampoo, 200 ml",
+        "notes": "Rossmann product detail page lists 3,99 \u20ac and delivery availability; exact product name and 200 ml size match."
+      }
+    },
+    {
+      "session_id": "01a0f6be-c0c3-7e02-a20a-df212a510cf1",
+      "timestamp": "2026-10-01T09:14:51.465Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Monday Haircare",
+        "Name": "Monday Haircare Volume Kraft & F\u00fclle Shampoo",
+        "GTIN/EAN": "04897097266343",
+        "Stored shop link": "https://www.flaconi.de/haare/monday-haircare/volume/monday-haircare-volume-kraft-and-fuelle-haarshampoo.html",
+        "Last known price": "8.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 5.6,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.flaconi.de/haare/monday-haircare/volume/monday-haircare-volume-kraft-and-fuelle-haarshampoo.html",
+        "observed_name": "MONDAY Haircare Volume Kraft & F\u00fclle Haarshampoo, 350 ml",
+        "notes": "Flaconi product detail page shows 5,60 \u20ac regular retail price, 350 ml, and \u201cAuf Lager\u201d with an \u201cIn den Warenkorb\u201d option. EAN 4897097266343 matches the requested product. The listed 8,95 \u20ac is the UVP, not the current price."
+      }
+    },
+    {
+      "session_id": "01a0f6bf-0199-7d33-832e-b19d7e6cc123",
+      "timestamp": "2026-10-01T09:15:08.066Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Guhl",
+        "Name": "Guhl Bond+ Reparatur Sp\u00fclung",
+        "GTIN/EAN": "04072600701218",
+        "Stored shop link": "https://www.amazon.de/Guhl-BOND-REPARATUR-Sp%C3%BClung-Rotalgenextrakt/dp/B0CWJHVKV5",
+        "Last known price": "5.99 EUR"
+      },
+      "answer": {
+        "found": false,
+        "price_eur": null,
+        "buyable_at_stored_link": null,
+        "evidence_url": "https://www.amazon.de/Guhl-BOND-REPARATUR-Sp%C3%BClung-Rotalgenextrakt/dp/B0CWJHVKV5",
+        "observed_name": "Guhl Bond+ Reparatur Sp\u00fclung",
+        "notes": "Die Produktidentit\u00e4t ist durch die Guhl-Produktseite best\u00e4tigt (200 ml), aber f\u00fcr den gespeicherten Amazon-Link lie\u00df sich kein aktueller Preis oder Online-Kaufstatus feststellen. Die gefundene Rusta-Seite zeigt 1,99 \u20ac als Aktionspreis und nur Filialverf\u00fcgbarkeit, daher erf\u00fcllt sie die Preisvorgaben nicht."
+      }
+    },
+    {
+      "session_id": "01a0f6bf-7529-7113-ad81-f682957ab816",
+      "timestamp": "2026-10-01T09:15:37.650Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Guhl",
+        "Name": "Guhl Panthenol + Reparatur 2in1 Kur & Sp\u00fclung",
+        "GTIN/EAN": "04072600703403",
+        "Stored shop link": "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/",
+        "Last known price": "4.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 4.99,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.hagel-shop.de/guhl-panthenol-reparatur-2-in-1-kur-spulung-200-ml.html",
+        "observed_name": "Guhl Panthenol + Reparatur 2 in 1 Kur & Sp\u00fclung 200 ml",
+        "notes": "Der aktuelle regul\u00e4re Preis bei HAGEL betr\u00e4gt 4,99 \u20ac; Produktseite nennt EAN 4072600703403 und Lieferzeit 1\u20133 Werktage. Die gespeicherte M\u00fcller-Seite liefert 404 und bietet dort aktuell keinen Onlinekauf."
+      }
+    },
+    {
+      "session_id": "01a0f6bf-c98b-7ed0-aa36-06b6c04ee190",
+      "timestamp": "2026-10-01T09:15:59.274Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Garnier Wahre Sch\u00e4tze",
+        "Name": "Garnier Wahre Sch\u00e4tze Haarmaske Aktivkohle",
+        "GTIN/EAN": "03600542510271",
+        "Stored shop link": "https://www.dm.de/p/d/1679241/wahre-schaetze-haarkur-1-minute-aktivkohle-fettige-kopfhaut",
+        "Last known price": "4.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 4.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/1679241/wahre-schaetze-haarkur-1-minute-aktivkohle-fettige-kopfhaut",
+        "observed_name": "Wahre Sch\u00e4tze Haarkur 1-Minute Aktivkohle, fettige Kopfhaut, 340 ml",
+        "notes": "dm listet den regul\u00e4ren Preis mit 4,95 \u20ac. Die Seite best\u00e4tigt die GTIN 3600542510271 und zeigt \u201eNicht lieferbar\u201c."
+      }
+    },
+    {
+      "session_id": "01a0f6bf-f9dd-7e21-9498-15fbea69f49d",
+      "timestamp": "2026-10-01T09:16:11.666Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Syoss",
+        "Name": "Syoss Intense Curls Haarmaske",
+        "GTIN/EAN": "04015100866100",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-syoss-haarmaske-intense-curls/p/4015100866100",
+        "Last known price": "4.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 4.99,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-haarmaske-intense-curls/p/4015100866100",
+        "observed_name": "Syoss Haarmaske Intense Curls",
+        "notes": "Rossmann lists the 400 ml product for 4.99 EUR, with delivery dates shown and free delivery to a preferred store. The page identifies the exact product and matches the stored link."
+      }
+    },
+    {
+      "session_id": "01a0f6c0-3a64-7b53-b523-9cbe7bd57f43",
+      "timestamp": "2026-10-01T09:16:28.161Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Gliss",
+        "Name": "Gliss Ultimate Repair Sp\u00fclung",
+        "GTIN/EAN": "04015100812237",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-gliss-ultimate-repair-spuelung/p/4015100812237",
+        "Last known price": "2.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.99,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-ultimate-repair-spuelung/p/4015100812237",
+        "observed_name": "Gliss Ultimate Repair Sp\u00fclung, 200 ml",
+        "notes": "Rossmann product page lists the regular price as 2,99 \u20ac and shows delivery availability, so it is currently online-buyable."
+      }
+    },
+    {
+      "session_id": "01a0f6c0-7053-7f12-ab0d-bf890957a2dc",
+      "timestamp": "2026-10-01T09:16:41.955Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Neqi",
+        "Name": "Leave-In Moisturizing Mist",
+        "GTIN/EAN": "04063528103222",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-neqi-leave-in-mist/p/4063528103222",
+        "Last known price": "12.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 11.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-neqi-leave-in-mist/p/4063528103222",
+        "observed_name": "NEQI Leave in Mist, 180 ml",
+        "notes": "Rossmann-Produktdetailseite nennt 11,95 \u20ac (66,39 \u20ac/l) und zeigt eine Lieferzeit sowie die Option, das Produkt in eine Wunschfiliale liefern zu lassen. EAN in der Produkt-URL stimmt mit der angegebenen EAN \u00fcberein."
+      }
+    },
+    {
+      "session_id": "01a0f6c0-b40c-7c10-ac04-8c8f0a05f475",
+      "timestamp": "2026-10-01T09:16:59.283Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Gliss",
+        "Name": "Tiefenreinigungs-Shampoo",
+        "GTIN/EAN": "04015100893007",
+        "Stored shop link": "https://www.dm.de/p/d/3119217/schwarzkopf-gliss-shampoo-scalp-balance-tiefenreinigung",
+        "Last known price": "5.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 5.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/3119217/schwarzkopf-gliss-shampoo-scalp-balance-tiefenreinigung",
+        "observed_name": "Schwarzkopf GLISS Shampoo scalp balance Tiefenreinigung, 200 ml",
+        "notes": "dm product page lists the regular price as 5.95 EUR and shows the item as available for delivery. The page\u2019s GTIN (4015100893007) matches the supplied EAN."
+      }
+    },
+    {
+      "session_id": "01a0f6c0-ea57-7802-a8f4-4f06c02e0acd",
+      "timestamp": "2026-10-01T09:17:13.192Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Balea",
+        "Name": "Shampoo Tiefenreinigung",
+        "GTIN/EAN": "04070765001020",
+        "Stored shop link": "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung",
+        "Last known price": "1.25 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 1.25,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung",
+        "observed_name": "Balea PROFESSIONAL Shampoo Tiefenreinigung, 250 ml",
+        "notes": "dm lists the regular price as 1.25 EUR and says the product is available for delivery (\"Lieferbar\"). The page's GTIN 4070765001020 matches the supplied EAN with its leading zero."
+      }
+    },
+    {
+      "session_id": "01a0f6c1-1d94-73c2-b22f-b461537b2f6e",
+      "timestamp": "2026-10-01T09:17:26.359Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Swiss-O-Par",
+        "Name": "Tiefenreinigung Shampoo",
+        "GTIN/EAN": "04104260073500",
+        "Stored shop link": "https://www.dm.de/p/d/2555198/swiss-o-par-shampoo-tiefenreinigung",
+        "Last known price": "2.45 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.45,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/2555198/swiss-o-par-shampoo-tiefenreinigung",
+        "observed_name": "Swiss-o-Par Shampoo Tiefenreinigung, 250 ml",
+        "notes": "dm listet 2,45 \u20ac als aktuellen Preis. Produktseite best\u00e4tigt GTIN 4104260073500 (entspricht 04104260073500) und zeigt \u201eIn den Warenkorb\u201c sowie \u201eLieferbar\u201c."
+      }
+    },
+    {
+      "session_id": "01a0f6c1-525a-7c01-9eb1-0b5e386dd71b",
+      "timestamp": "2026-10-01T09:17:39.821Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "NEQI",
+        "Name": "Deep Cleansing Shampoo",
+        "GTIN/EAN": "04063528103192",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-neqi-deep-cleansing-shampoo/p/4063528103192",
+        "Last known price": "12.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 11.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-neqi-deep-cleansing-shampoo/p/4063528103192",
+        "observed_name": "NEQI Deep Cleansing Shampoo, 330 ml",
+        "notes": "Rossmann product page lists the regular price as 11.95 EUR (36.21 EUR/L) and shows home delivery and delivery to a preferred store. Exact product matches the requested name and EAN in the product URL."
+      }
+    },
+    {
+      "session_id": "01a0f6c1-b661-7cf3-9385-c856f2ea10f5",
+      "timestamp": "2026-10-01T09:18:05.414Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "ISANA",
+        "Name": "Professional Shampoo Tiefenreinigung",
+        "GTIN/EAN": "04068134135490",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-shampoo-tiefenreinigung/p/4068134135490",
+        "Last known price": "1.29 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 1.29,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-shampoo-tiefenreinigung/p/4068134135490",
+        "observed_name": "ISANA PROFESSIONAL Shampoo Tiefenreinigung, 250 ml",
+        "notes": "Rossmann product page lists the regular price as 1.29 EUR (1 L = 5.16 EUR) and shows delivery availability, so it is online-buyable. The product name and stored product URL match."
+      }
+    },
+    {
+      "session_id": "01a0f6c1-f22a-72f0-ac1d-9dc9fff07638",
+      "timestamp": "2026-10-01T09:18:20.722Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Balea",
+        "Name": "Kopfhautpflege Serum Sensitive",
+        "GTIN/EAN": "04066447679007",
+        "Stored shop link": "https://www.dm.de/p/d/1459196/balea-professional-kopfhautpflege-serum-sensitive",
+        "Last known price": "2.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1459196/balea-professional-kopfhautpflege-serum-sensitive",
+        "observed_name": "Balea PROFESSIONAL Kopfhautpflege Serum Sensitive, 150 ml",
+        "notes": "dm listet den regul\u00e4ren Preis mit 2,95 \u20ac; die Produktseite weist \u201eLieferbar\u201c aus. GTIN 4066447679007 stimmt mit der angegebenen EAN \u00fcberein."
+      }
+    },
+    {
+      "session_id": "01a0f6c2-1d67-75c2-8b01-94f40eee423a",
+      "timestamp": "2026-10-01T09:18:31.803Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "L'Or\u00e9al Paris",
+        "Name": "Anti-Haarverlust Serum",
+        "GTIN/EAN": "03600524189921",
+        "Stored shop link": "https://www.dm.de/p/d/2976343/l-oreal-paris-elvital-haarserum-fiber-booster-anti-haarverlust",
+        "Last known price": "13.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 13.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/2976343/l-oreal-paris-elvital-haarserum-fiber-booster-anti-haarverlust",
+        "observed_name": "L'OR\u00c9AL PARiS ELVITAL Haarserum Fiber Booster, Anti-Haarverlust, 102 ml",
+        "notes": "dm f\u00fchrt den regul\u00e4ren Preis mit 13,95 \u20ac; die Produktseite nennt GTIN 3600524189921 (entspricht 03600524189921) und Artikelnummer 2976343. Online lieferbar; Warenkorb-Option vorhanden."
+      }
+    },
+    {
+      "session_id": "01a0f6c2-55d6-7093-9317-e06d4ad4de5d",
+      "timestamp": "2026-10-01T09:18:46.241Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Gliss",
+        "Name": "Kl\u00e4rendes Serum",
+        "GTIN/EAN": "04015100892963",
+        "Stored shop link": "https://www.dm.de/p/d/3119228/schwarzkopf-gliss-haarserum-scalp-balance-klaerend",
+        "Last known price": "8.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 8.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/3119228/schwarzkopf-gliss-haarserum-scalp-balance-klaerend",
+        "observed_name": "Schwarzkopf GLISS Haarserum scalp balance, kl\u00e4rend, 100 ml",
+        "notes": "dm f\u00fchrt 8,95 \u20ac als Preis und zeigt das Produkt als lieferbar. Produktname, dm-Artikelnummer 3119228 und GTIN 4015100892963 stimmen \u00fcberein."
+      }
+    },
+    {
+      "session_id": "01a0f6c2-8884-70e1-ba1c-57e5d30dccf3",
+      "timestamp": "2026-10-01T09:18:59.230Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Head & Shoulders",
+        "Name": "Kopfhaut-Feuchtigkeitspflege Leave-In Serum",
+        "GTIN/EAN": "08700216495981",
+        "Stored shop link": "https://www.dm.de/p/d/2482723/head-und-shoulders-leave-in-serum-derma-x-pro-kopfhaut-feuchtigkeitspflege",
+        "Last known price": "5.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 5.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/2482723/head-und-shoulders-leave-in-serum-derma-x-pro-kopfhaut-feuchtigkeitspflege",
+        "observed_name": "head&shoulders Leave-In Serum Derma x Pro Kopfhaut Feuchtigkeitspflege, 145 ml",
+        "notes": "dm product page lists the regular price as 5.95 EUR and says it is deliverable by standard shipping. The page\u2019s GTIN is 8006530455787, which differs from the supplied EAN 08700216495981."
+      }
+    },
+    {
+      "session_id": "01a0f6c2-b56e-74e1-8eaa-fc6a011d9b71",
+      "timestamp": "2026-10-01T09:19:10.734Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Eucerin",
+        "Name": "Kopfhautberuhigendes Intensiv-Tonikum",
+        "GTIN/EAN": "04005800036620",
+        "Stored shop link": "https://www.dm.de/p/d/3086968/eucerin-eucerin-dermo-capillaire-5-prozent-urea-kopfhautberuhigendes-intensiv-tonikum",
+        "Last known price": "16.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 16.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/3086968/eucerin-eucerin-dermo-capillaire-5-prozent-urea-kopfhautberuhigendes-intensiv-tonikum",
+        "observed_name": "Eucerin Dermo Capillaire 5% Urea kopfhautberuhigendes Intensiv-Tonikum, 100 ml",
+        "notes": "dm-med product page lists the regular price as 16.95 EUR and says \u201cLieferbar\u201d with an \u201cIn den Warenkorb\u201d option. The page\u2019s GTIN (4005800036620) matches the provided EAN."
+      }
+    },
+    {
+      "session_id": "01a0f6c2-e8fe-7893-92df-2791fae2cc29",
+      "timestamp": "2026-10-01T09:19:23.930Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Balea",
+        "Name": "Kopfhautpflege Peeling Tiefenreinigung",
+        "GTIN/EAN": "04066447467536",
+        "Stored shop link": "https://www.dm.de/p/d/1700670/balea-professional-kopfhautpflege-peeling-tiefenreinigung",
+        "Last known price": "2.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1700670/balea-professional-kopfhautpflege-peeling-tiefenreinigung",
+        "observed_name": "Balea PROFESSIONAL Kopfhautpflege Peeling Tiefenreinigung, 150 ml",
+        "notes": "dm product page lists 2.95 EUR and says \u201cLieferbar.\u201d GTIN 4066447467536 matches the requested EAN."
+      }
+    },
+    {
+      "session_id": "01a0f6c3-2402-7ca3-9ae5-f4147c2474c2",
+      "timestamp": "2026-10-01T09:19:39.016Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Isana",
+        "Name": "Kopfhautpeeling Tiefenreinigung",
+        "GTIN/EAN": "04068134100023",
+        "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-kopfhautpeeling-tiefenreinigung/p/4068134100023",
+        "Last known price": "2.99 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.99,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-kopfhautpeeling-tiefenreinigung/p/4068134100023",
+        "observed_name": "ISANA PROFESSIONAL Kopfhautpeeling Tiefenreinigung",
+        "notes": "Rossmann product page lists the 150 ml size at 2.99 EUR, with delivery dates shown and free delivery to a selected store."
+      }
+    },
+    {
+      "session_id": "01a0f6c3-5e26-79c3-b2e8-579f94893563",
+      "timestamp": "2026-10-01T09:19:53.901Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "L'Or\u00e9al Paris",
+        "Name": "Defeat the Heat Hitzeschutzspray",
+        "GTIN/EAN": "03600523966714",
+        "Stored shop link": "https://www.dm.de/p/d/1571140/l-oreal-paris-elvital-hitzeschutzspray-dream-length-langes-und-glattes-haar",
+        "Last known price": "4.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 4.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1571140/l-oreal-paris-elvital-hitzeschutzspray-dream-length-langes-und-glattes-haar",
+        "observed_name": "L'OR\u00c9AL PARiS ELVITAL Hitzeschutzspray Dream Length, langes & glattes Haar, 150 ml",
+        "notes": "dm listet 4,95 \u20ac als regul\u00e4ren Preis. Produktbeschreibung nennt \u201eDefeat the Heat\u201c; GTIN 3600523966714 stimmt \u00fcberein. Online als lieferbar angezeigt."
+      }
+    },
+    {
+      "session_id": "01a0f6c3-9941-76d2-9266-17be95d917a8",
+      "timestamp": "2026-10-01T09:20:09.032Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "got2b",
+        "Name": "Hitzeschutzspray Schutzengel",
+        "GTIN/EAN": "04015100800128",
+        "Stored shop link": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+        "Last known price": "4.95 EUR"
+      },
+      "answer": {
+        "found": false,
+        "price_eur": null,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+        "observed_name": "got2b Hitzeschutzspray Schutzengel, 200 ml",
+        "notes": "dm listet 4,95 \u20ac und zeigt das Produkt als lieferbar. Die Seite nennt jedoch GTIN 4015100894141, die von der angefragten GTIN 4015100800128 abweicht; daher ist der Preis f\u00fcr den exakten Artikel nicht best\u00e4tigt."
+      }
+    },
+    {
+      "session_id": "01a0f6c3-c63e-7c50-b566-0f6e42999dd2",
+      "timestamp": "2026-10-01T09:20:20.610Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Balea",
+        "Name": "Hitzeschutzspray Ultralight",
+        "GTIN/EAN": "04066447909562",
+        "Stored shop link": "https://www.dm.de/p/d/3101587/balea-hitzeschutzspray-ultralight",
+        "Last known price": "2.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 2.95,
+        "buyable_at_stored_link": false,
+        "evidence_url": "https://www.dm.de/p/d/3101587/balea-hitzeschutzspray-ultralight",
+        "observed_name": "Balea Hitzeschutzspray Ultralight, 200 ml",
+        "notes": "Produkt und GTIN stimmen mit den angegebenen Daten \u00fcberein. Die dm-Produktseite nennt 2,95 \u20ac als Preis und zeigt \u201eMomentan nicht lieferbar\u201c."
+      }
+    },
+    {
+      "session_id": "01a0f6c3-f28c-77a1-bc8a-b6647a5547d7",
+      "timestamp": "2026-10-01T09:20:31.907Z",
+      "model": "gpt-6-luna",
+      "effort": "low",
+      "candidate": {
+        "Brand": "Schwarzkopf taft",
+        "Name": "Hitzeschutzspray",
+        "GTIN/EAN": "04015100810400",
+        "Stored shop link": "https://www.dm.de/p/d/1681631/schwarzkopf-taft-hitzeschutzspray-taft-x-gliss-lovely-long",
+        "Last known price": "3.95 EUR"
+      },
+      "answer": {
+        "found": true,
+        "price_eur": 3.95,
+        "buyable_at_stored_link": true,
+        "evidence_url": "https://www.dm.de/p/d/1681631/schwarzkopf-taft-hitzeschutzspray-taft-x-gliss-lovely-long",
+        "observed_name": "Schwarzkopf taft Hitzeschutzspray taft x Gliss Lovely Long, 150 ml",
+        "notes": "dm-Produktseite nennt 3,95 \u20ac als Preis, best\u00e4tigt GTIN 4015100810400 und zeigt \u201eIn den Warenkorb\u201c sowie \u201eLieferbar\u201c."
+      }
+    }
+  ],
+  "started": 100,
+  "completed": 100
+}

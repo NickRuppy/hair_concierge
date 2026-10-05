@@ -1,0 +1,20 @@
+{
+  "method": "Fresh direct Hagel PDP GET; selected active 30 ml variant only. No identity transition.",
+  "checked_at": "2026-10-03T13:17:53.719Z",
+  "url": "https://www.hagel-shop.de/olaplex-no-7-bonding-oil-30-ml.html",
+  "status": 200,
+  "gtin": "850045076085",
+  "name": "Olaplex No. 7 Bonding Oil",
+  "package_value": 30,
+  "package_unit": "ml",
+  "whole_pack_price_eur": 20.95,
+  "stock": "in_stock; Lieferzeit 2-4 Werktage; add-to-cart form present",
+  "raw_html_path": "/tmp/olaplex-hagel.html",
+  "inci": "Dimethicone, Isohexadecane, C13-14 Isoparaffin, Coco-Cprylate, Phenyl Trimethicone, Bis-Aminopropyl Diglycol Dimaleate, Propanediol, Zea Mays (Corn) Oil, Beta-Carotene, Helianthus Annuus (Sunflower) Seed Oil, Moringa Citrifolia Fruit Powder, Fragrance (Parfum), Hexyl Cinnamal, Eclipta Prostrata Extract, Ethylhexyl Methoxycinnamate, Limonene, Tocopherol, Citral, Linalool, Melia Azadirachta LEaf Extract, Citronellol, Pseudozyma Epicola, Camellia Sinensis Seed Oil Ferment Extract Filtrate",
+  "evidence": {
+    "exact_ean_present": true,
+    "active_30ml_variant": true,
+    "in_stock": true,
+    "cart_form": true
+  }
+}

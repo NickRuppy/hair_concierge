@@ -1,0 +1,12 @@
+{
+  "frozen_at_utc": "2026-10-04T08:01:37.995297+00:00",
+  "before_F4_research": true,
+  "blind_integrity": "Anonymous F4 formula and source attestation only; no exact identity, claims or old labels.",
+  "packet": {
+    "candidate": "F4",
+    "source_file_sha256": "49c2864d3e31f87f497ac92792587c42fd25d9117e853b0cba396256d1901d05",
+    "supplied_formula_fingerprint": "50affa768a3a3bc754f9eb833a5029fb121f53e912c9bb5fecfc28b64c7c23ee",
+    "ordered_inci_sha256_json_compact": "50affa768a3a3bc754f9eb833a5029fb121f53e912c9bb5fecfc28b64c7c23ee",
+    "count": 18
+  }
+}

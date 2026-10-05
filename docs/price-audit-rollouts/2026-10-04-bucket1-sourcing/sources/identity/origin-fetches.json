@@ -1,0 +1,46 @@
+[
+  {
+    "key": "glow_de",
+    "url": "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine-laminier-kur",
+    "final_url": "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine-laminier-kur",
+    "status": 200,
+    "at": "2026-10-04T08:38:42.111480+00:00",
+    "bytes": 11376
+  },
+  {
+    "key": "hibiskus_de",
+    "url": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-bio-hibiskus-extrakt-und-cocosmilch",
+    "final_url": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-bio-hibiskus-extrakt-und-cocosmilch",
+    "status": 200,
+    "at": "2026-10-04T08:38:42.113091+00:00",
+    "bytes": 11376
+  },
+  {
+    "key": "macadamia_de",
+    "url": "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+    "final_url": "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+    "status": 200,
+    "at": "2026-10-04T08:38:42.113017+00:00",
+    "bytes": 11376
+  },
+  {
+    "key": "macadamia_douglas",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "key": "glow_pl",
+    "url": "https://www.dm.pl/p/d/3050111/balea-professional-kuracja-do-w-osow-glow-shine",
+    "final_url": "https://www.dm.pl/p/d/3050111/balea-professional-kuracja-do-w-osow-glow-shine",
+    "status": 200,
+    "at": "2026-10-04T08:38:42.113125+00:00",
+    "bytes": 11378
+  },
+  {
+    "key": "hibiskus_pl",
+    "url": "https://www.dm.pl/p/d/1625969/balea-odzywka-do-w-osow-suchych-i-zniszczonych-hibiskus-i-mleko-kokosowe",
+    "final_url": "https://www.dm.pl/p/d/1625969/balea-odzywka-do-w-osow-suchych-i-zniszczonych-hibiskus-i-mleko-kokosowe",
+    "status": 200,
+    "at": "2026-10-04T08:38:42.112966+00:00",
+    "bytes": 11378
+  }
+]

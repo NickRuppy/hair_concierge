@@ -1,0 +1,17 @@
+{
+  ".agents/skills/product-research-engine/SKILL.md": "77b253aa01f7490c7cc14a01e59c957cdd1da1a03c47f71f7128c4100ea8eb4b",
+  "docs/research/README.md": "71a280dd80323d89a8c9f5c49442bce52182f4382e0e34da1c16fe0d2dd4155b",
+  "docs/research/shampoo-inci/README.md": "af8b4eb75199315372d2cf6e16da30266a946a5b23c86c6646923febe0a322ac",
+  "docs/research/shampoo-inci/v1.4/classification-standard.md": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+  "docs/research/shampoo-inci/v1.4/new-product-research-runbook.md": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d",
+  "docs/product-intake-shampoo-production-light.md": "8bce80655f763c70a6d462235e4d39e0d5e607fe9d929f031c316ecfbcd86f0a",
+  "docs/research/conditioner-inci/README.md": "59d22c56a41591637915966913f6007583e8a07ad9ab8dc72202221b077762ce",
+  "docs/research/conditioner-inci/v1.0/conditioner-classification-standard.md": "688ca25ca534f98789d0b300fbc5f3008a5c0652fe63af276dfda6ced79f3135",
+  "docs/research/conditioner-inci/v1.0/runbook.md": "6a66780ef23a7595cfbeab07fe9f671a92a58d177b92c734a8d6f736833165e8",
+  "docs/product-intake-conditioner-production-adapter.md": "267e8e76568c975a297067cd586f50b720eff99b80970b1c785e9a5b68be6b86",
+  "docs/product-intake-research-ops.md": "1923fdd7d0597b3d7b12e88369a20945b0ad9b28ba69f176f5b702329032eab6",
+  "src/lib/shampoo/production-light-adapter.ts": "572488e2b368a7f60d6f82db9fd10fee95aa050b960f31e97cc06caa62ad45ae",
+  "src/lib/conditioner-research/production-adapter.ts": "596b1489b4d2eb9c260f1026c2ce6d371e3beb41b2087360a1abc39955ed44c4",
+  "scripts/shampoo-research/project-production-light.ts": "f44cfe78c564d3d9bc23be3227588dfeb6bdc54952027f7d3b32adc11828d6b8",
+  "scripts/conditioner-research/project-production-adapter.ts": "07b08d850c566a3f97ebdc706ad636505aaf1aa7b95be148e564f6837f8cab58"
+}

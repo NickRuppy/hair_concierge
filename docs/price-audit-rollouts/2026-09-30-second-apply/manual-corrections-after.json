@@ -1,0 +1,20 @@
+[
+  {
+    "id": "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+    "name": "nedura Schwarzkümmelöl ungefiltert",
+    "price_eur": "17.95",
+    "price_checked_at": "2026-09-30 19:40:00+00",
+    "affiliate_link": "https://www.dm.de/nedura-schwarzkuemmeloel-ungefiltert-p4262490410776.html",
+    "purchase_link_status": "available",
+    "purchase_link_checked_at": "2026-06-10 00:00:00+00"
+  },
+  {
+    "id": "a17d3783-2854-4911-bbfa-b2f3ef7f95a8",
+    "name": "Pantene Hydra Glow",
+    "price_eur": "6.45",
+    "price_checked_at": "2026-09-30 19:40:00+00",
+    "affiliate_link": "https://www.dm.de/pantene-pro-v-haarmaske-miracles-hydra-glow-deep-hydration-p8700216173261.html",
+    "purchase_link_status": "available",
+    "purchase_link_checked_at": "2026-06-10 00:00:00+00"
+  }
+]

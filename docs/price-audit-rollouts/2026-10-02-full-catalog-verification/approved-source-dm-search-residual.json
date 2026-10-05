@@ -1,0 +1,1308 @@
+{
+  "method": "Read-only serialized official dm MCP search. Fresh client per request; product name from exact direct GTIN identity where available; exact selected DAN or GTIN required. Eucerin dm-med intentionally excluded because this ordinary dm API does not cover that distinct storefront.",
+  "checked_at": "2026-10-03T11:38:58.050Z",
+  "total": 15,
+  "summary": {
+    "matched": 8,
+    "matched_with_flags": 0,
+    "unresolved": 7,
+    "failed": 0
+  },
+  "records": [
+    {
+      "id": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5",
+      "name": "Pantene Pro-V Coconut Oil",
+      "checked_at": "2026-10-03T11:38:52.596Z",
+      "query": "Haaröl Coconut Infused Oil, 100 ml",
+      "expected": {
+        "dan": "1612745",
+        "gtins": [
+          "8001841890012"
+        ],
+        "price_eur": 4.95,
+        "package_value": 100,
+        "package_unit": "ml"
+      },
+      "observed": {
+        "gtin": "8001841890012",
+        "dan": "1612745",
+        "title": "Haaröl Coconut Infused Oil, 100 ml",
+        "price": "4,95 €",
+        "appLink": "https://www.dm.de/applink/p/d/1612745/pantene-pro-v-haaroel-coconut-infused-oil?appPageType=productdetails&appProductId=1612745&wt_mc=dm-mcp",
+        "purchasable": "true",
+        "sellout": "false",
+        "package_value": 100,
+        "package_unit": "ml"
+      },
+      "status": "matched",
+      "flags": []
+    },
+    {
+      "id": "303b4c0c-53a4-46de-883d-c29e448ee590",
+      "name": "Sebamed Anti Schuppen",
+      "checked_at": "2026-10-03T11:38:53.249Z",
+      "query": "Shampoo Anti-Schuppen, 200 ml",
+      "expected": {
+        "dan": "1023236",
+        "gtins": [
+          "4103040051691"
+        ],
+        "price_eur": 4.95,
+        "package_value": 200,
+        "package_unit": "ml"
+      },
+      "observed": {
+        "gtin": "4103040051691",
+        "dan": "1023236",
+        "title": "Shampoo Anti-Schuppen, 200 ml",
+        "price": "4,95 €",
+        "appLink": "https://www.dm.de/applink/p/d/1023236/sebamed-shampoo-anti-schuppen?appPageType=productdetails&appProductId=1023236&wt_mc=dm-mcp",
+        "purchasable": "true",
+        "sellout": "false",
+        "package_value": 200,
+        "package_unit": "ml"
+      },
+      "status": "matched",
+      "flags": []
+    },
+    {
+      "id": "35d2cc66-6d5a-49c1-9a9f-c03bf6942ab0",
+      "name": "Kopfhautpflege Serum Sensitive",
+      "checked_at": "2026-10-03T11:38:53.584Z",
+      "query": "Kopfhautpflege Serum Sensitive, 150 ml",
+      "expected": {
+        "dan": "1459196",
+        "gtins": [
+          "4066447679007"
+        ],
+        "price_eur": 2.95,
+        "package_value": 150,
+        "package_unit": "ml"
+      },
+      "observed": {
+        "gtin": "4066447679007",
+        "dan": "1459196",
+        "title": "Kopfhautpflege Serum Sensitive, 150 ml",
+        "price": "2,95 €",
+        "appLink": "https://www.dm.de/applink/p/d/1459196/balea-professional-kopfhautpflege-serum-sensitive?appPageType=productdetails&appProductId=1459196&wt_mc=dm-mcp",
+        "purchasable": "true",
+        "sellout": "false",
+        "package_value": 150,
+        "package_unit": "ml"
+      },
+      "status": "matched",
+      "flags": []
+    },
+    {
+      "id": "380fec2b-6ecd-499d-987e-d273ad3085b1",
+      "name": "Afrolocke Leave-In Haarkur, für lockiges Haar",
+      "checked_at": "2026-10-03T11:38:53.945Z",
+      "query": "Leave-In Haarkur, für lockiges Haar, 250 ml",
+      "expected": {
+        "dan": "1573037",
+        "gtins": [
+          "4270000814433"
+        ],
+        "price_eur": 16.95,
+        "package_value": 250,
+        "package_unit": "ml"
+      },
+      "status": "unresolved_no_exact_search_match",
+      "rows": [
+        {
+          "gtin": "3600542657044",
+          "dan": "3115736",
+          "title": "Leave-In Creme Locken Methode Air Dry, 260 ml",
+          "price": "5,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3115736/garnier-fructis-leave-in-creme-locken-methode-air-dry?appPageType=productdetails&appProductId=3115736&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542657884",
+          "dan": "3115740",
+          "title": "Leave-In Haarkur Honig, 200 ml",
+          "price": "2,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3115740/wahre-schaetze-leave-in-haarkur-honig?appPageType=productdetails&appProductId=3115740&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542639200",
+          "dan": "2976366",
+          "title": "Leave-In Haarkur Avocado, 200 ml",
+          "price": "2,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado?appPageType=productdetails&appProductId=2976366&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4262391991732",
+          "dan": "3120011",
+          "title": "Leave-In Cream Bonding Repair, 150 ml",
+          "price": "9,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3120011/bali-curls-leave-in-cream-bonding-repair?appPageType=productdetails&appProductId=3120011&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4066447910148",
+          "dan": "3106685",
+          "title": "Leave-In Haarmaske Molecular Care, 50 ml",
+          "price": "2,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3106685/balea-professional-leave-in-haarmaske-molecular-care?appPageType=productdetails&appProductId=3106685&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4262500780288",
+          "dan": "3086348",
+          "title": "Leave-In Haarmaske Peptide Intense Repair, 100 ml",
+          "price": "5,25 €",
+          "appLink": "https://www.dm.de/applink/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair?appPageType=productdetails&appProductId=3086348&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "8700216939768",
+          "dan": "3088304",
+          "title": "Leave-In Moisture Boost HEAT&GLOW, 135 ml",
+          "price": "8,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3088304/pantene-pro-v-leave-in-moisture-boost-heat-und-glow?appPageType=productdetails&appProductId=3088304&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4070765006322",
+          "dan": "1674699",
+          "title": "Leave-In Serum Plex Care, 50 ml",
+          "price": "2,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1674699/balea-professional-leave-in-serum-plex-care?appPageType=productdetails&appProductId=1674699&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4015100897531",
+          "dan": "3153741",
+          "title": "Leave-In Spray Volume & Collagen, 200 ml",
+          "price": "2,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3153741/schauma-leave-in-spray-volume-und-collagen?appPageType=productdetails&appProductId=3153741&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4067796183511",
+          "dan": "1564140",
+          "title": "Haarmilch Winter Protect, 150 ml",
+          "price": "2,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1564140/balea-professional-haarmilch-winter-protect?appPageType=productdetails&appProductId=1564140&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4015100897494",
+          "dan": "3153422",
+          "title": "Leave-In Serum Intense Keratin, 100 ml",
+          "price": "6,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3153422/syoss-leave-in-serum-intense-keratin?appPageType=productdetails&appProductId=3153422&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4070765002065",
+          "dan": "1412923",
+          "title": "Keratin Repair Over Night Fluid, 100 ml",
+          "price": "2,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1412923/balea-professional-keratin-repair-over-night-fluid?appPageType=productdetails&appProductId=1412923&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4070765027518",
+          "dan": "3062765",
+          "title": "Leave-In Serum Brilliant Blond Hair Sealer, 100 ml",
+          "price": "2,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer?appPageType=productdetails&appProductId=3062765&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "8700216637374",
+          "dan": "3057700",
+          "title": "Miracles Molecular Bond Repair Wunder Haarcreme, Leave-In, 9",
+          "price": "9,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3057700/pantene-pro-v-miracles-molecular-bond-repair-wunder-haarcreme-leave-in?appPageType=productdetails&appProductId=3057700&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4270004570120",
+          "dan": "3063678",
+          "title": "Leave-In Cream The Foundation, 100 ml",
+          "price": "9,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3063678/dejan-garz-leave-in-cream-the-foundation?appPageType=productdetails&appProductId=3063678&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        }
+      ]
+    },
+    {
+      "id": "3901b2cf-6888-4363-9d5b-a695c0b3170b",
+      "name": "Dejan Garz The Foundation Conditioner",
+      "checked_at": "2026-10-03T11:38:54.285Z",
+      "query": "Conditioner The Foundation, 300 ml",
+      "expected": {
+        "dan": "3063725",
+        "gtins": [
+          "4270004570113"
+        ],
+        "price_eur": 9.95,
+        "package_value": 300,
+        "package_unit": "ml"
+      },
+      "status": "unresolved_no_exact_search_match",
+      "rows": [
+        {
+          "gtin": "3600524258146",
+          "dan": "3108732",
+          "title": "Foundation Infaillible 24H Fresh Wear Cushion 300 Cool, 11 g",
+          "price": "17,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3108732/l-oreal-paris-foundation-infaillible-24h-fresh-wear-cushion-300-cool?appPageType=productdetails&appProductId=3108732&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4059729583710",
+          "dan": "3116594",
+          "title": "Foundation Silky Blur Hydrating Longwear 155, 30 ml",
+          "price": "5,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/3116594/essence-foundation-silky-blur-hydrating-longwear-155?appPageType=productdetails&appProductId=3116594&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4059729583925",
+          "dan": "3117804",
+          "title": "Foundation Silky Blur Hydrating Longwear 158, 30 ml",
+          "price": "5,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/3117804/essence-foundation-silky-blur-hydrating-longwear-158?appPageType=productdetails&appProductId=3117804&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4059729583987",
+          "dan": "3117805",
+          "title": "Foundation Silky Blur Hydrating Longwear 185, 30 ml",
+          "price": "5,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/3117805/essence-foundation-silky-blur-hydrating-longwear-185?appPageType=productdetails&appProductId=3117805&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4059729419316",
+          "dan": "1700964",
+          "title": "Foundation Soft Glam Filter Fluid 030 Medium, 30 ml",
+          "price": "7,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1700964/catrice-foundation-soft-glam-filter-fluid-030-medium?appPageType=productdetails&appProductId=1700964&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4059729583680",
+          "dan": "3116549",
+          "title": "Foundation Silky Blur Hydrating Longwear 120, 30 ml",
+          "price": "5,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/3116549/essence-foundation-silky-blur-hydrating-longwear-120?appPageType=productdetails&appProductId=3116549&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4059729587503",
+          "dan": "3145280",
+          "title": "Foundation Skin Like Luminous 032W, 30 ml",
+          "price": "6,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3145280/catrice-foundation-skin-like-luminous-032w?appPageType=productdetails&appProductId=3145280&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4059729583970",
+          "dan": "3116619",
+          "title": "Foundation Silky Blur Hydrating Longwear 178, 30 ml",
+          "price": "5,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/3116619/essence-foundation-silky-blur-hydrating-longwear-178?appPageType=productdetails&appProductId=3116619&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4059729583734",
+          "dan": "3116602",
+          "title": "Foundation Silky Blur Hydrating Longwear 170, 30 ml",
+          "price": "5,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/3116602/essence-foundation-silky-blur-hydrating-longwear-170?appPageType=productdetails&appProductId=3116602&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4059729587770",
+          "dan": "3111537",
+          "title": "Foundation Skin Like Tinted Moisturizer LSF 30, 027C, 28 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3111537/catrice-foundation-skin-like-tinted-moisturizer-lsf-30-027c?appPageType=productdetails&appProductId=3111537&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4059729034359",
+          "dan": "1621103",
+          "title": "Foundation Liquid HD Coverage Waterproof 002 Porcelain Beige",
+          "price": "7,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1621103/catrice-foundation-liquid-hd-coverage-waterproof-002-porcelain-beige?appPageType=productdetails&appProductId=1621103&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4059729587718",
+          "dan": "3111538",
+          "title": "Foundation Skin Like Tinted Moisturizer LSF 30, 030N, 28 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3111538/catrice-foundation-skin-like-tinted-moisturizer-lsf-30-030n?appPageType=productdetails&appProductId=3111538&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4059729583611",
+          "dan": "3116581",
+          "title": "Foundation Silky Blur Hydrating Longwear 110, 30 ml",
+          "price": "5,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/3116581/essence-foundation-silky-blur-hydrating-longwear-110?appPageType=productdetails&appProductId=3116581&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4059729034380",
+          "dan": "1493323",
+          "title": "Foundation Liquid HD Coverage Waterproof 032 Nude Beige, 30 ",
+          "price": "7,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1493323/catrice-foundation-liquid-hd-coverage-waterproof-032-nude-beige?appPageType=productdetails&appProductId=1493323&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4059729587541",
+          "dan": "3145281",
+          "title": "Foundation Skin Like Luminous 042C, 30 ml",
+          "price": "6,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3145281/catrice-foundation-skin-like-luminous-042c?appPageType=productdetails&appProductId=3145281&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        }
+      ]
+    },
+    {
+      "id": "67d95443-490d-47fb-876e-8d9eecf015ae",
+      "name": "Jean&Len Leave-In Haarmaske Peptide Intense Repair",
+      "checked_at": "2026-10-03T11:38:54.759Z",
+      "query": "Leave-In Haarmaske Peptide Intense Repair, 100 ml",
+      "expected": {
+        "dan": "3086348",
+        "gtins": [
+          "4262500780288"
+        ],
+        "price_eur": 5.25,
+        "package_value": 100,
+        "package_unit": "ml"
+      },
+      "status": "unresolved_no_exact_search_match",
+      "rows": [
+        {
+          "gtin": "4015100813517",
+          "dan": "1431891",
+          "title": "Haarmaske 4in1 Total Repair, 400 ml",
+          "price": "5,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1431891/schwarzkopf-gliss-haarmaske-4in1-total-repair?appPageType=productdetails&appProductId=1431891&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4066447982817",
+          "dan": "1671219",
+          "title": "Haarmaske Intensivpflege 3in1, 300 ml",
+          "price": "1,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1671219/balea-haarmaske-intensivpflege-3in1?appPageType=productdetails&appProductId=1671219&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4070765006346",
+          "dan": "1690411",
+          "title": "Haarmaske 2in1 Plex Care, 250 ml",
+          "price": "2,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1690411/balea-professional-haarmaske-2in1-plex-care?appPageType=productdetails&appProductId=1690411&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600524245849",
+          "dan": "3122676",
+          "title": "Haarmaske Hydra Hyaluronic, 300 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic?appPageType=productdetails&appProductId=3122676&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4015100813913",
+          "dan": "1431893",
+          "title": "Haarmaske 4in1 Liquid Silk, 400 ml",
+          "price": "5,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1431893/schwarzkopf-gliss-haarmaske-4in1-liquid-silk?appPageType=productdetails&appProductId=1431893&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "8700216173476",
+          "dan": "1336162",
+          "title": "Haarkur miracles Bond Repair Intensive Haarmaske, 300 ml",
+          "price": "7,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1336162/pantene-pro-v-haarkur-miracles-bond-repair-intensive-haarmaske?appPageType=productdetails&appProductId=1336162&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "8700216502672",
+          "dan": "1523350",
+          "title": "Haarmaske Keratin Repair & Care, 300 ml",
+          "price": "4,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/1523350/pantene-pro-v-haarmaske-keratin-repair-und-care?appPageType=productdetails&appProductId=1523350&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600524246549",
+          "dan": "3122677",
+          "title": "Haarmaske Full Resist, 300 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3122677/l-oreal-paris-elvital-haarmaske-full-resist?appPageType=productdetails&appProductId=3122677&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "8006530424080",
+          "dan": "3153498",
+          "title": "Leave-In Spray Glowtox, 200 ml",
+          "price": "8,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3153498/pantene-pro-v-leave-in-spray-glowtox?appPageType=productdetails&appProductId=3153498&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542511070",
+          "dan": "1676324",
+          "title": "Haarkur Banana Hair Food 3in1 Maske, 400 ml",
+          "price": "5,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske?appPageType=productdetails&appProductId=1676324&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600524245870",
+          "dan": "3125166",
+          "title": "Haarmaske Total Repair 5, 300 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3125166/l-oreal-paris-elvital-haarmaske-total-repair-5?appPageType=productdetails&appProductId=3125166&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4015100813319",
+          "dan": "1581143",
+          "title": "Haarkur 7sec Express-Repair, Ultimate Repair, 200 ml",
+          "price": "6,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair?appPageType=productdetails&appProductId=1581143&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542511100",
+          "dan": "1676330",
+          "title": "Haarkur Papaya Hair Food 3in1 Maske, 400 ml",
+          "price": "5,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1676330/garnier-fructis-haarkur-papaya-hair-food-3in1-maske?appPageType=productdetails&appProductId=1676330&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600524030865",
+          "dan": "1633046",
+          "title": "Haarserum Hydra Hyaluronic, feuchtigkeitsspendend, 150 ml",
+          "price": "6,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1633046/l-oreal-paris-elvital-haarserum-hydra-hyaluronic-feuchtigkeitsspendend?appPageType=productdetails&appProductId=1633046&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542511049",
+          "dan": "1676340",
+          "title": "Haarmaske Aloe Vera Hair Food 3in1, trockenes Haar, 400 ml",
+          "price": "5,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar?appPageType=productdetails&appProductId=1676340&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        }
+      ]
+    },
+    {
+      "id": "76f3611b-2dda-4a90-bd3c-c9b1577ec5aa",
+      "name": "Balea Professional Leave-In Haarmaske Molecular Care",
+      "checked_at": "2026-10-03T11:38:55.129Z",
+      "query": "Leave-In Haarmaske Molecular Care, 50 ml",
+      "expected": {
+        "dan": "3106685",
+        "gtins": [
+          "4066447910148"
+        ],
+        "price_eur": 2.95,
+        "package_value": 50,
+        "package_unit": "ml"
+      },
+      "observed": {
+        "gtin": "4066447910148",
+        "dan": "3106685",
+        "title": "Leave-In Haarmaske Molecular Care, 50 ml",
+        "price": "2,95 €",
+        "appLink": "https://www.dm.de/applink/p/d/3106685/balea-professional-leave-in-haarmaske-molecular-care?appPageType=productdetails&appProductId=3106685&wt_mc=dm-mcp",
+        "purchasable": "true",
+        "sellout": "false",
+        "package_value": 50,
+        "package_unit": "ml"
+      },
+      "status": "matched",
+      "flags": []
+    },
+    {
+      "id": "8df49303-e1c9-4519-9a5f-4f9bc276ab5a",
+      "name": "Pomélo+Co Shine Therapy",
+      "checked_at": "2026-10-03T11:38:55.459Z",
+      "query": "Haarmaske Shine Therapy, 100 ml",
+      "expected": {
+        "dan": "3110549",
+        "gtins": [
+          "4260625261996"
+        ],
+        "price_eur": 9.95,
+        "package_value": 100,
+        "package_unit": "ml"
+      },
+      "status": "unresolved_no_exact_search_match",
+      "rows": [
+        {
+          "gtin": "3600524245849",
+          "dan": "3122676",
+          "title": "Haarmaske Hydra Hyaluronic, 300 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic?appPageType=productdetails&appProductId=3122676&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4015100813517",
+          "dan": "1431891",
+          "title": "Haarmaske 4in1 Total Repair, 400 ml",
+          "price": "5,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1431891/schwarzkopf-gliss-haarmaske-4in1-total-repair?appPageType=productdetails&appProductId=1431891&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4015100813913",
+          "dan": "1431893",
+          "title": "Haarmaske 4in1 Liquid Silk, 400 ml",
+          "price": "5,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1431893/schwarzkopf-gliss-haarmaske-4in1-liquid-silk?appPageType=productdetails&appProductId=1431893&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "8700216173476",
+          "dan": "1336162",
+          "title": "Haarkur miracles Bond Repair Intensive Haarmaske, 300 ml",
+          "price": "7,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1336162/pantene-pro-v-haarkur-miracles-bond-repair-intensive-haarmaske?appPageType=productdetails&appProductId=1336162&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600524245696",
+          "dan": "3122685",
+          "title": "Haarmaske Dream Length, 300 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3122685/l-oreal-paris-elvital-haarmaske-dream-length?appPageType=productdetails&appProductId=3122685&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "8700216502672",
+          "dan": "1523350",
+          "title": "Haarmaske Keratin Repair & Care, 300 ml",
+          "price": "4,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/1523350/pantene-pro-v-haarmaske-keratin-repair-und-care?appPageType=productdetails&appProductId=1523350&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542656191",
+          "dan": "3115711",
+          "title": "Haarkur 1-Minute Traube, 340 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube?appPageType=productdetails&appProductId=3115711&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4066447982817",
+          "dan": "1671219",
+          "title": "Haarmaske Intensivpflege 3in1, 300 ml",
+          "price": "1,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1671219/balea-haarmaske-intensivpflege-3in1?appPageType=productdetails&appProductId=1671219&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4067796183535",
+          "dan": "1453999",
+          "title": "Haarbalsam Winter Protect, 300 ml",
+          "price": "2,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1453999/balea-professional-haarbalsam-winter-protect?appPageType=productdetails&appProductId=1453999&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "8700216940108",
+          "dan": "3088184",
+          "title": "Haarmaske Moisture Boost Keratin Protect, 300 ml",
+          "price": "4,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/3088184/pantene-pro-v-haarmaske-moisture-boost-keratin-protect?appPageType=productdetails&appProductId=3088184&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "8006530423151",
+          "dan": "3153507",
+          "title": "Haarkur Glowtox, 300 ml",
+          "price": "6,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/3153507/pantene-pro-v-haarkur-glowtox?appPageType=productdetails&appProductId=3153507&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542511070",
+          "dan": "1676324",
+          "title": "Haarkur Banana Hair Food 3in1 Maske, 400 ml",
+          "price": "5,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske?appPageType=productdetails&appProductId=1676324&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "8700216173261",
+          "dan": "1343858",
+          "title": "Haarmaske miracles Hydra Glow Deep Hydration, 300 ml",
+          "price": "6,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/1343858/pantene-pro-v-haarmaske-miracles-hydra-glow-deep-hydration?appPageType=productdetails&appProductId=1343858&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600524245870",
+          "dan": "3125166",
+          "title": "Haarmaske Total Repair 5, 300 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3125166/l-oreal-paris-elvital-haarmaske-total-repair-5?appPageType=productdetails&appProductId=3125166&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600524246563",
+          "dan": "3122569",
+          "title": "Haarmaske Fiber Dream Length, 300 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3122569/l-oreal-paris-elvital-haarmaske-fiber-dream-length?appPageType=productdetails&appProductId=3122569&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        }
+      ]
+    },
+    {
+      "id": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "name": "dmBio natives Olivenöl extra",
+      "checked_at": "2026-10-03T11:38:55.777Z",
+      "query": "Natives Olivenöl extra, 750 ml",
+      "expected": {
+        "dan": "1459848",
+        "gtins": [
+          "4066447918687"
+        ],
+        "price_eur": 6.95,
+        "package_value": 750,
+        "package_unit": "ml"
+      },
+      "observed": {
+        "gtin": "4066447918687",
+        "dan": "1459848",
+        "title": "Natives Olivenöl extra, 750 ml",
+        "price": "6,95 €",
+        "appLink": "https://www.dm.de/applink/p/d/1459848/dmbio-natives-olivenoel-extra?appPageType=productdetails&appProductId=1459848&wt_mc=dm-mcp",
+        "purchasable": "true",
+        "sellout": "false",
+        "package_value": 750,
+        "package_unit": "ml"
+      },
+      "status": "matched",
+      "flags": []
+    },
+    {
+      "id": "a9fc4fb5-0152-40dd-9a01-6ecf0155709f",
+      "name": "Garnier Fructis Leave-In Creme Aloe Air Dry",
+      "checked_at": "2026-10-03T11:38:56.097Z",
+      "query": "Leave-In Creme Aloe Air Dry, 400 ml",
+      "expected": {
+        "dan": "1538389",
+        "gtins": [
+          "3600542117593"
+        ],
+        "price_eur": 5.95,
+        "package_value": 400,
+        "package_unit": "ml"
+      },
+      "observed": {
+        "gtin": "3600542117593",
+        "dan": "1538389",
+        "title": "Leave-In Creme Aloe Air Dry, 400 ml",
+        "price": "5,95 €",
+        "appLink": "https://www.dm.de/applink/p/d/1538389/garnier-fructis-leave-in-creme-aloe-air-dry?appPageType=productdetails&appProductId=1538389&wt_mc=dm-mcp",
+        "purchasable": "true",
+        "sellout": "false",
+        "package_value": 400,
+        "package_unit": "ml"
+      },
+      "status": "matched",
+      "flags": []
+    },
+    {
+      "id": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+      "name": "dmBio Kokosöl nativ",
+      "checked_at": "2026-10-03T11:38:56.441Z",
+      "query": "Kokosöl, nativ, 300 ml",
+      "expected": {
+        "dan": "1544928",
+        "gtins": [
+          "4058172504969"
+        ],
+        "price_eur": 2.85,
+        "package_value": 300,
+        "package_unit": "ml"
+      },
+      "observed": {
+        "gtin": "4058172504969",
+        "dan": "1544928",
+        "title": "Kokosöl, nativ, 300 ml",
+        "price": "2,85 €",
+        "appLink": "https://www.dm.de/applink/p/d/1544928/dmbio-kokosoel-nativ?appPageType=productdetails&appProductId=1544928&wt_mc=dm-mcp",
+        "purchasable": "true",
+        "sellout": "false",
+        "package_value": 300,
+        "package_unit": "ml"
+      },
+      "status": "matched",
+      "flags": []
+    },
+    {
+      "id": "d840b368-3416-4104-9ccb-0e5a656a4929",
+      "name": "Schwarzkopf Gliss Haarkur Night Elixier Ultimate Repair",
+      "checked_at": "2026-10-03T11:38:56.758Z",
+      "query": "Haarkur Night Elixier Ultimate Repair, 100 ml",
+      "expected": {
+        "dan": "1681632",
+        "gtins": [
+          "4015100813951"
+        ],
+        "price_eur": 7.45,
+        "package_value": 100,
+        "package_unit": "ml"
+      },
+      "status": "unresolved_no_exact_search_match",
+      "rows": [
+        {
+          "gtin": "4070765002065",
+          "dan": "1412923",
+          "title": "Keratin Repair Over Night Fluid, 100 ml",
+          "price": "2,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1412923/balea-professional-keratin-repair-over-night-fluid?appPageType=productdetails&appProductId=1412923&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4015100813319",
+          "dan": "1581143",
+          "title": "Haarkur 7sec Express-Repair, Ultimate Repair, 200 ml",
+          "price": "6,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair?appPageType=productdetails&appProductId=1581143&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4015100894349",
+          "dan": "3153403",
+          "title": "Sprühkur Bonding Micro Repair, 150 ml",
+          "price": "5,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3153403/schwarzkopf-gliss-spruehkur-bonding-micro-repair?appPageType=productdetails&appProductId=3153403&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4015100814095",
+          "dan": "1534911",
+          "title": "Haarkur Total Repair 1 Min Express-Kur, 200 ml",
+          "price": "3,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/1534911/schwarzkopf-gliss-haarkur-total-repair-1-min-express-kur?appPageType=productdetails&appProductId=1534911&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4015100813517",
+          "dan": "1431891",
+          "title": "Haarmaske 4in1 Total Repair, 400 ml",
+          "price": "5,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1431891/schwarzkopf-gliss-haarmaske-4in1-total-repair?appPageType=productdetails&appProductId=1431891&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4067796183535",
+          "dan": "1453999",
+          "title": "Haarbalsam Winter Protect, 300 ml",
+          "price": "2,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1453999/balea-professional-haarbalsam-winter-protect?appPageType=productdetails&appProductId=1453999&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4070765002027",
+          "dan": "1696984",
+          "title": "Haaröl Repair Intensiv, 300 ml",
+          "price": "2,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1696984/balea-professional-haaroel-repair-intensiv?appPageType=productdetails&appProductId=1696984&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "8700216173476",
+          "dan": "1336162",
+          "title": "Haarkur miracles Bond Repair Intensive Haarmaske, 300 ml",
+          "price": "7,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1336162/pantene-pro-v-haarkur-miracles-bond-repair-intensive-haarmaske?appPageType=productdetails&appProductId=1336162&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600524245870",
+          "dan": "3125166",
+          "title": "Haarmaske Total Repair 5, 300 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3125166/l-oreal-paris-elvital-haarmaske-total-repair-5?appPageType=productdetails&appProductId=3125166&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542509428",
+          "dan": "1679237",
+          "title": "Haarkur 1-Minute Honig Schätze, 340 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1679237/wahre-schaetze-haarkur-1-minute-honig-schaetze?appPageType=productdetails&appProductId=1679237&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600524246549",
+          "dan": "3122677",
+          "title": "Haarmaske Full Resist, 300 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3122677/l-oreal-paris-elvital-haarmaske-full-resist?appPageType=productdetails&appProductId=3122677&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542656191",
+          "dan": "3115711",
+          "title": "Haarkur 1-Minute Traube, 340 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube?appPageType=productdetails&appProductId=3115711&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4015100814118",
+          "dan": "1535822",
+          "title": "Haarspitzenfluid Total Repair, 50 ml",
+          "price": "5,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1535822/schwarzkopf-gliss-haarspitzenfluid-total-repair?appPageType=productdetails&appProductId=1535822&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600523709946",
+          "dan": "1379848",
+          "title": "Haarkur Dream Length Rapid Reviver, 180 ml",
+          "price": "3,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1379848/l-oreal-paris-elvital-haarkur-dream-length-rapid-reviver?appPageType=productdetails&appProductId=1379848&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542511148",
+          "dan": "1676321",
+          "title": "Haarkur Kakao Butter Hair Food 3in1 Maske, 400 ml",
+          "price": "5,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1676321/garnier-fructis-haarkur-kakao-butter-hair-food-3in1-maske?appPageType=productdetails&appProductId=1676321&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        }
+      ]
+    },
+    {
+      "id": "dc9f6662-b51b-4011-91ae-494c2d254f11",
+      "name": "Wahre Schätze Leave-In Haarkur Avocado",
+      "checked_at": "2026-10-03T11:38:57.058Z",
+      "query": "Leave-In Haarkur Avocado, 200 ml",
+      "expected": {
+        "dan": "2976366",
+        "gtins": [
+          "3600542639200"
+        ],
+        "price_eur": 2.95,
+        "package_value": 200,
+        "package_unit": "ml"
+      },
+      "status": "unresolved_no_exact_search_match",
+      "rows": [
+        {
+          "gtin": "3600542510127",
+          "dan": "1679236",
+          "title": "Haarkur 1-Minute Avocado-Öl & Sheabutter, 340 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1679236/wahre-schaetze-haarkur-1-minute-avocado-oel-und-sheabutter?appPageType=productdetails&appProductId=1679236&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542511070",
+          "dan": "1676324",
+          "title": "Haarkur Banana Hair Food 3in1 Maske, 400 ml",
+          "price": "5,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske?appPageType=productdetails&appProductId=1676324&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4066447982817",
+          "dan": "1671219",
+          "title": "Haarmaske Intensivpflege 3in1, 300 ml",
+          "price": "1,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1671219/balea-haarmaske-intensivpflege-3in1?appPageType=productdetails&appProductId=1671219&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600524246549",
+          "dan": "3122677",
+          "title": "Haarmaske Full Resist, 300 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3122677/l-oreal-paris-elvital-haarmaske-full-resist?appPageType=productdetails&appProductId=3122677&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542511049",
+          "dan": "1676340",
+          "title": "Haarmaske Aloe Vera Hair Food 3in1, trockenes Haar, 400 ml",
+          "price": "5,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1676340/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar?appPageType=productdetails&appProductId=1676340&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542509350",
+          "dan": "1679234",
+          "title": "Haarkur 1-Minute Kokosmilch & Macadamia, 340 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1679234/wahre-schaetze-haarkur-1-minute-kokosmilch-und-macadamia?appPageType=productdetails&appProductId=1679234&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4070765053357",
+          "dan": "1674120",
+          "title": "Haarkur reparierend beauty essentials, 300 ml",
+          "price": "2,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/1674120/balea-haarkur-reparierend-beauty-essentials?appPageType=productdetails&appProductId=1674120&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542511100",
+          "dan": "1676330",
+          "title": "Haarkur Papaya Hair Food 3in1 Maske, 400 ml",
+          "price": "5,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1676330/garnier-fructis-haarkur-papaya-hair-food-3in1-maske?appPageType=productdetails&appProductId=1676330&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542500333",
+          "dan": "1681614",
+          "title": "Haarkur Ananas Hair Food 3in1 Maske, 400 ml",
+          "price": "5,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1681614/garnier-fructis-haarkur-ananas-hair-food-3in1-maske?appPageType=productdetails&appProductId=1681614&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4015100813517",
+          "dan": "1431891",
+          "title": "Haarmaske 4in1 Total Repair, 400 ml",
+          "price": "5,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1431891/schwarzkopf-gliss-haarmaske-4in1-total-repair?appPageType=productdetails&appProductId=1431891&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542169950",
+          "dan": "1538035",
+          "title": "Haarkur Aufbauende Pflegekur, 60 ml",
+          "price": "1,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1538035/garnier-nutrisse-haarkur-aufbauende-pflegekur?appPageType=productdetails&appProductId=1538035&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542638951",
+          "dan": "3042310",
+          "title": "Haarmaske Keratin Sleek, Anti-Frizz Kur, 370 ml",
+          "price": "5,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3042310/garnier-fructis-haarmaske-keratin-sleek-anti-frizz-kur?appPageType=productdetails&appProductId=3042310&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542656191",
+          "dan": "3115711",
+          "title": "Haarkur 1-Minute Traube, 340 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube?appPageType=productdetails&appProductId=3115711&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4072600720097",
+          "dan": "1649554",
+          "title": "Haarkur 30_sek Feuchtigkeit, 100 ml",
+          "price": "3,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/1649554/guhl-haarkur-30-sek-feuchtigkeit?appPageType=productdetails&appProductId=1649554&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4070765006346",
+          "dan": "1690411",
+          "title": "Haarmaske 2in1 Plex Care, 250 ml",
+          "price": "2,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1690411/balea-professional-haarmaske-2in1-plex-care?appPageType=productdetails&appProductId=1690411&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        }
+      ]
+    },
+    {
+      "id": "e6896862-523b-42b3-967d-41cbd16acf64",
+      "name": "Neqi Moisture Mystery",
+      "checked_at": "2026-10-03T11:38:57.415Z",
+      "query": "Leave-In Creme Moisture Mystery, 200 ml",
+      "expected": {
+        "dan": "1455206",
+        "gtins": [
+          "4063528078346"
+        ],
+        "price_eur": 9.95,
+        "package_value": 200,
+        "package_unit": "ml"
+      },
+      "observed": {
+        "gtin": "4063528078346",
+        "dan": "1455206",
+        "title": "Leave-In Creme Moisture Mystery, 200 ml",
+        "price": "9,95 €",
+        "appLink": "https://www.dm.de/applink/p/d/1455206/neqi-leave-in-creme-moisture-mystery?appPageType=productdetails&appProductId=1455206&wt_mc=dm-mcp",
+        "purchasable": "true",
+        "sellout": "false",
+        "package_value": 200,
+        "package_unit": "ml"
+      },
+      "status": "matched",
+      "flags": []
+    },
+    {
+      "id": "f0168972-dcd4-4593-aeb5-38d12343468a",
+      "name": "Pantene Pro-V Haarkur Glatt & Seidig Arganöl Argan Infused Oil",
+      "checked_at": "2026-10-03T11:38:57.736Z",
+      "query": "Haarkur Glatt & Seidig Arganöl Argan Infused Oil, 100 ml",
+      "expected": {
+        "dan": "1523357",
+        "gtins": [
+          "4084500085350"
+        ],
+        "price_eur": 4.95,
+        "package_value": 100,
+        "package_unit": "ml"
+      },
+      "status": "unresolved_no_exact_search_match",
+      "rows": [
+        {
+          "gtin": "3600542509572",
+          "dan": "1679238",
+          "title": "Haarkur 1-Minute Argan & Camelia-Öl, 340 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1679238/wahre-schaetze-haarkur-1-minute-argan-und-camelia-oel?appPageType=productdetails&appProductId=1679238&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3574661563312",
+          "dan": "1442285",
+          "title": "Haaröl Moroccan Argan Penetrating Oil, 100 ml",
+          "price": "7,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1442285/ogx-haaroel-moroccan-argan-penetrating-oil?appPageType=productdetails&appProductId=1442285&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4003573125015",
+          "dan": "3132757",
+          "title": "Haarmaske Arganöl (2x7 ml), 14 ml",
+          "price": "0,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3132757/schaebens-haarmaske-arganoel-2x7-ml?appPageType=productdetails&appProductId=3132757&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "42071389",
+          "dan": "1348465",
+          "title": "Haarkurkissen Arganöl, Reisegröße, 25 ml",
+          "price": "0,65 €",
+          "appLink": "https://www.dm.de/applink/p/d/1348465/swiss-o-par-haarkurkissen-arganoel-reisegroesse?appPageType=productdetails&appProductId=1348465&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "8700216547857",
+          "dan": "1523361",
+          "title": "Haarmaske Keratin Protect, Glatt & Seidig, 300 ml",
+          "price": "4,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/1523361/pantene-pro-v-haarmaske-keratin-protect-glatt-und-seidig?appPageType=productdetails&appProductId=1523361&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542169950",
+          "dan": "1538035",
+          "title": "Haarkur Aufbauende Pflegekur, 60 ml",
+          "price": "1,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1538035/garnier-nutrisse-haarkur-aufbauende-pflegekur?appPageType=productdetails&appProductId=1538035&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542571586",
+          "dan": "1324786",
+          "title": "Haarkur 1-Minute Reiswasser Ritual & Stärke, 340 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1324786/wahre-schaetze-haarkur-1-minute-reiswasser-ritual-und-staerke?appPageType=productdetails&appProductId=1324786&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "8006540532867",
+          "dan": "1674792",
+          "title": "Haarkur Rescue Shots Glatt & Seidig (3 x 15ml), 45 ml",
+          "price": "3,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1674792/pantene-pro-v-haarkur-rescue-shots-glatt-und-seidig-3-x-15ml?appPageType=productdetails&appProductId=1674792&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4072600720097",
+          "dan": "1649554",
+          "title": "Haarkur 30_sek Feuchtigkeit, 100 ml",
+          "price": "3,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/1649554/guhl-haarkur-30-sek-feuchtigkeit?appPageType=productdetails&appProductId=1649554&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542638951",
+          "dan": "3042310",
+          "title": "Haarmaske Keratin Sleek, Anti-Frizz Kur, 370 ml",
+          "price": "5,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3042310/garnier-fructis-haarmaske-keratin-sleek-anti-frizz-kur?appPageType=productdetails&appProductId=3042310&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4070765002027",
+          "dan": "1696984",
+          "title": "Haaröl Repair Intensiv, 300 ml",
+          "price": "2,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1696984/balea-professional-haaroel-repair-intensiv?appPageType=productdetails&appProductId=1696984&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "3600542510127",
+          "dan": "1679236",
+          "title": "Haarkur 1-Minute Avocado-Öl & Sheabutter, 340 ml",
+          "price": "4,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/1679236/wahre-schaetze-haarkur-1-minute-avocado-oel-und-sheabutter?appPageType=productdetails&appProductId=1679236&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4072600720080",
+          "dan": "1649553",
+          "title": "Haarkur 30_sek Reparatur, 100 ml",
+          "price": "3,45 €",
+          "appLink": "https://www.dm.de/applink/p/d/1649553/guhl-haarkur-30-sek-reparatur?appPageType=productdetails&appProductId=1649553&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4063528107015",
+          "dan": "3133758",
+          "title": "Leave-In Sebum Spray The Sensitive, 150 ml",
+          "price": "12,95 €",
+          "appLink": "https://www.dm.de/applink/p/d/3133758/dejan-garz-leave-in-sebum-spray-the-sensitive?appPageType=productdetails&appProductId=3133758&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        },
+        {
+          "gtin": "4070765002003",
+          "dan": "1688653",
+          "title": "Haarkur Keratin Repair, 300 ml",
+          "price": "2,75 €",
+          "appLink": "https://www.dm.de/applink/p/d/1688653/balea-professional-haarkur-keratin-repair?appPageType=productdetails&appProductId=1688653&wt_mc=dm-mcp",
+          "purchasable": "true",
+          "sellout": "false"
+        }
+      ]
+    }
+  ]
+}

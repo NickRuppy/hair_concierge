@@ -1,0 +1,582 @@
+{
+  "records": [
+    {
+      "id": "07895098-a301-4137-b5c6-9061589b1800",
+      "name": "Deep Cleansing Shampoo",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-neqi-deep-cleansing-shampoo/p/4063528103192",
+      "price_eur": 11.95,
+      "package_value": 330.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "4063528103192"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:09:37.311Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "b5b595d2-9ba3-4c99-8f99-b2b79d29eb56",
+      "name": "Trockenshampoo Jedes Haar",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-isana-trockenshampoo-jedes-haar-langanhaltende-frische-und-volumen-anti-fett-formel-200-ml-online-kaufen/p/4305615554532",
+      "price_eur": 1.99,
+      "package_value": 200.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "4305615554532"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:09:38.473Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "5516009a-eecb-42dd-87f6-07c560161136",
+      "name": "Garnier Fructis Hair Food Aloe Vera Feuchtigkeits-Spülung",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-feuchtigkeits-aloe-vera-hair-food-spuelung/p/3600542398022",
+      "price_eur": 3.99,
+      "package_value": 400.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        [
+          "3600542398022"
+        ]
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:09:39.969Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "99de5b38-3e80-4360-889c-2505f46a7243",
+      "name": "Garnier Wahre Schätze Argan-Mandelcreme Spülung",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-reichhaltige-creme-spuelung-argan-mandelcreme/p/3600542462594",
+      "price_eur": 2.49,
+      "package_value": 200.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        [
+          "3600542462594"
+        ]
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:09:42.594Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "82f9dcba-0422-4932-a879-c2bec0113e55",
+      "name": "Gliss Ultimate Repair Spülung",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-ultimate-repair-spuelung/p/4015100812237",
+      "price_eur": 2.99,
+      "package_value": 200.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        [
+          "4015100812237"
+        ]
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:10:30.240Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "7964b930-7e88-4f93-89d3-fa437f8e753c",
+      "name": "Isana Professional Arganöl & Pflege Spülung",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-arganoel-und-pflege/p/4305615624945",
+      "price_eur": 1.29,
+      "package_value": 200.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        [
+          "4305615624945"
+        ]
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:10:31.461Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "cfeab4b2-fdd6-4348-bf2b-aca58e686869",
+      "name": "Being Curl Power Locken Conditioner",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-conditioner/p/4895248005940",
+      "price_eur": 6.79,
+      "package_value": 354.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        [
+          "4895248005940"
+        ]
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:10:33.103Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "d81e8069-82aa-4ac4-a719-4614640a45df",
+      "name": "ISANA Spülung Feuchtigkeit",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-feuchtigkeit/p/4068134071149",
+      "price_eur": 0.65,
+      "package_value": 300.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        [
+          "4068134071149"
+        ]
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:10:33.974Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "0585c8b1-159b-43d3-8432-a91b9973c7b6",
+      "name": "ISANA Spülung Oil Repair Marulaöl",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-oil-repair-marulaoel/p/4068134071125",
+      "price_eur": 0.65,
+      "package_value": 300.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        [
+          "4068134071125"
+        ]
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:10:34.876Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "2be1a34f-5c80-4b14-a0f5-b56bebe861a8",
+      "name": "ISANA Spülung Seidenglanz",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-isana-spuelung-seidenglanz/p/4305615566207",
+      "price_eur": 0.65,
+      "package_value": 300.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        [
+          "4305615566207"
+        ]
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:17:01Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "4c9bde95-3594-4ce7-bb02-29394ab7ed08",
+      "name": "ISANA PROFESSIONAL Plex Spülung",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-spuelung/p/4305615975924",
+      "price_eur": 1.99,
+      "package_value": 250.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        [
+          "4305615975924"
+        ]
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:10:56.102Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "d6cde507-1c34-4dea-8239-abd097d50818",
+      "name": "ISANA PROFESSIONAL Spülung Keratin & Repair",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-keratin-und-repair/p/4305615830957",
+      "price_eur": 1.29,
+      "package_value": 200.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        [
+          "4305615830957"
+        ]
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:10:57.734Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "90e10088-8226-4e07-b197-3eab6b61d7a2",
+      "name": "ISANA PROFESSIONAL Spülung Locken Traum",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-spuelung-locken-traum/p/4305615846958",
+      "price_eur": 1.29,
+      "package_value": 200.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        [
+          "4305615846958"
+        ]
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:10:58.684Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "169be6d1-bd8c-4902-ba1d-3db349cb4854",
+      "name": "John Frieda Go Blonder Conditioner",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-go-blonder-go-blonder-conditioner/p/5037156296204",
+      "price_eur": 17.99,
+      "package_value": 500.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        [
+          "5037156296204"
+        ]
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:11:00.025Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "f042a36c-88d5-41ae-87fe-a816ea608bc6",
+      "name": "Nivea Hairmilk Shine Glanzspülung",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-nivea-hairmilk-shine-glanzspuelung/p/4006000192673",
+      "price_eur": 2.99,
+      "package_value": 200.0,
+      "package_unit": "ml",
+      "observed_barcodes": [],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:11:01.632Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+      "name": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122",
+      "price_eur": null,
+      "package_value": null,
+      "package_unit": null,
+      "observed_barcodes": [],
+      "availability": "store_only; no public price",
+      "checked_at": "2026-10-02T15:12:05.663Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "not_verified",
+      "reason": "Only physical-store availability displayed; no exact online price to publish."
+    },
+    {
+      "id": "22d41784-5fc6-40bb-a4dc-92841322f933",
+      "name": "Neqi Peptide Power",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-neqi-intensive-haarkur-peptide-power/p/4063528086297",
+      "price_eur": 8.99,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "4063528086297"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:12:06.936Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+      "name": "Syoss Intense Curls Haarmaske",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-haarmaske-intense-curls/p/4015100866100",
+      "price_eur": 4.99,
+      "package_value": 400.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "4015100866100"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:17:01Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "3f3542c0-e82b-4306-a9e0-85df313a78cf",
+      "name": "Anti-Haarverlust Serum",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-fiber-booster-anti-haarverlust-serum/p/3600524189921",
+      "price_eur": 13.99,
+      "package_value": 102.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "3600524189921"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:12:09.277Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "106aaea7-cbdf-400c-bf3c-7cf7ce268577",
+      "name": "Being (by ZURU) Mega Shine Haarmaske",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-being-mega-shine-haarmaske/p/4895248006015",
+      "price_eur": 6.79,
+      "package_value": 354.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "4895248006015"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:12:10.833Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "315ae9f5-ad1a-4159-b307-2413338c8052",
+      "name": "Herbal Essences Haarmaske Blütensanft",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+      "price_eur": 3.99,
+      "package_value": 300.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "8700216212724"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:12:11.849Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "25359379-8a85-4f2f-a338-2a7361b747a7",
+      "name": "Isana Professional Haarmaske Locken Traum",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haarmaske-locken-traum/p/4305615846965",
+      "price_eur": 2.79,
+      "package_value": 250.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "4305615846965"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:12:13.564Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "f8f3b51d-8e64-487d-bad5-4a47c58862ed",
+      "name": "Pantene Pro-V Miracles 7in1 Haaröl Spray",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-miracles-schwereloses-7in1-haaroel-spray/p/8700216178402",
+      "price_eur": 8.99,
+      "package_value": 145.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "8700216178402"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:14:19.272Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "c574ee6f-ad22-45c0-b936-57b847d93433",
+      "name": "Garnier Fructis Sleek & Stay Heat-Activated Serum",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-sleek-und-stay-heat-activated-serum/p/3600542638852",
+      "price_eur": 7.99,
+      "package_value": 50.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "3600542638852"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:14:20.660Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+      "name": "Garnier Wahre Schätze Curl Revival Öl",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-curl-revival-elixir-intensiv-naehrendes-haaroel/p/3600542624336",
+      "price_eur": 6.99,
+      "package_value": 120.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "3600542624336"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:14:22.060Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "b916efff-8b80-47d4-82cf-d8148d1eff53",
+      "name": "HASK Argan Oil Repairing Shine Oil",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-hask-argan-shine-oil/p/0071164029855",
+      "price_eur": 2.59,
+      "package_value": 18.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "0071164029855"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:14:23.324Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "ff13bc3a-8bc6-49df-85a0-7a67add26926",
+      "name": "NANOIL Avocadoöl",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-nanoil-avocadooel/p/5905669547130",
+      "price_eur": 12.99,
+      "package_value": 50.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "5905669547130"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:14:23.981Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "c9ded02d-0bd8-4dc2-a7cc-c98f36dfe076",
+      "name": "Isana Professional Haaröl Arganöl & Pflege",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+      "price_eur": 2.79,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "4068134024947"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:14:26.131Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "0b21f996-bb42-4b10-89bd-4881c4346d53",
+      "name": "ISANA PROFESSIONAL Leave-In Conditioner Hyaluron & Panthenol",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-leave-in-conditioner-hyaluron-und-care/p/4305615946733",
+      "price_eur": 2.49,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "4305615946733"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:14:27.677Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "cb228f9d-4e46-4302-9a6f-92c393eda1bd",
+      "name": "Hydra Protect Hitzeschutzspray",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-schwarzkopf-taft-hitzeschutz-spray-aloe-boost/p/4015100893403",
+      "price_eur": 3.99,
+      "package_value": 150.0,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "4015100893403"
+      ],
+      "availability": "online delivery 06-07 October 2026; purchase control enabled",
+      "checked_at": "2026-10-02T15:14:29.357Z",
+      "source_method": "live browser exact Rossmann PDP, selected package, article price and delivery component; cookie modal dismissed and incomplete captures rechecked after hydration",
+      "classification": "verified_exact",
+      "reason": "Whole-package public EUR price, exact PDP identity, package and current October delivery."
+    },
+    {
+      "id": "67d95443-490d-47fb-876e-8d9eecf015ae",
+      "name": "Jean&Len Leave-In Haarmaske Peptide Intense Repair",
+      "proposed_url": "https://www.dm.de/p/d/3086348/jean-und-len-leave-in-haarmaske-peptide-intense-repair",
+      "price_eur": 5.25,
+      "package_value": 100,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "4262500780288"
+      ],
+      "availability": "Lieferbar Standardversand 2-3 Werktage; cart enabled after hydration",
+      "checked_at": "2026-10-02T15:16:10.615Z",
+      "source_method": "live dm browser PDP, hydrated purchase component, visible GTIN and exact package",
+      "classification": "verified_exact",
+      "reason": "Initial disabled loading button was not used as availability evidence; loaded page confirms buyability."
+    },
+    {
+      "id": "d840b368-3416-4104-9ccb-0e5a656a4929",
+      "name": "Schwarzkopf Gliss Haarkur Night Elixier Ultimate Repair",
+      "proposed_url": "https://www.dm.de/p/d/1681632/schwarzkopf-gliss-haarkur-night-elixier-ultimate-repair",
+      "price_eur": 7.45,
+      "package_value": 100,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "4015100813951"
+      ],
+      "availability": "Lieferbar Standardversand 2-3 Werktage; cart enabled after hydration",
+      "checked_at": "2026-10-02T15:16:10.615Z",
+      "source_method": "live dm browser PDP, hydrated purchase component, visible GTIN and exact package",
+      "classification": "verified_exact",
+      "reason": "Initial disabled loading button was not used as availability evidence; loaded page confirms buyability."
+    },
+    {
+      "id": "dc9f6662-b51b-4011-91ae-494c2d254f11",
+      "name": "Wahre Schätze Leave-In Haarkur Avocado",
+      "proposed_url": "https://www.dm.de/p/d/2976366/wahre-schaetze-leave-in-haarkur-avocado",
+      "price_eur": 2.95,
+      "package_value": 200,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "3600542639200"
+      ],
+      "availability": "Lieferbar Standardversand 2-3 Werktage; cart enabled after hydration",
+      "checked_at": "2026-10-02T15:16:10.615Z",
+      "source_method": "live dm browser PDP, hydrated purchase component, visible GTIN and exact package",
+      "classification": "verified_exact",
+      "reason": "Initial disabled loading button was not used as availability evidence; loaded page confirms buyability."
+    },
+    {
+      "id": "7a3d1d99-2ff4-49b9-b021-d5ec2bdb0fe6",
+      "name": "Moroccanoil All In One Leave In Conditioner",
+      "proposed_url": "https://www.douglas.de/de/p/5011481841",
+      "price_eur": 16,
+      "package_value": 50,
+      "package_unit": "ml",
+      "observed_barcodes": [],
+      "availability": "Online auf Lager; delivery 05-07 October 2026; cart enabled",
+      "checked_at": "2026-10-02T15:19:49.278443+00:00",
+      "source_method": "live Douglas selected 50ml mini browser DOM, public16EURprice and purchase component",
+      "classification": "verified_same_product_package",
+      "reason": "Preserve approved50mlbase and preferredDouglas retailer.14.40NumberOne exact50ml remains secondary offer;160mlproposal rejected."
+    },
+    {
+      "id": "d28643c8-c340-4514-826a-6c1ac8419fe9",
+      "name": "Trockenshampoo Bruenett",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-batiste-trockenshampoo-bruenette-farbauffrischend-keine-weissen-rueckstaende-200-ml-online-kaufen/p/5010724527474",
+      "price_eur": 3.29,
+      "package_value": 200,
+      "package_unit": "ml",
+      "observed_barcodes": [
+        "5010724527474"
+      ],
+      "availability": "online delivery06-07October2026;cartenabled",
+      "checked_at": "2026-10-02T15:25:44.267Z",
+      "source_method": "liveRossmann hydratedbrowserselected200mlPDP",
+      "reason": "Two-day-old indexed delivery rejected; current DOM confirms3.29EUR/200mlandOctober06-07delivery."
+    }
+  ]
+}

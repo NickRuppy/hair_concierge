@@ -1,0 +1,203 @@
+{
+  "checked_at": "2026-10-02T00:00:00.000Z",
+  "scope": "Independent supplemental primary-offer research for five unresolved oil cases. No catalog, GTIN, or commercial evidence file was changed.",
+  "records": [
+    {
+      "id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "product": "BioGourmet Distelöl",
+      "registered_gtin": "4039057414863",
+      "recommended_package": {
+        "value": 250,
+        "unit": "ml"
+      },
+      "preferred_searches": [
+        {
+          "host": "mueller.de",
+          "outcome": "Existing canonical Müller PDP remains a lead but was observed out of stock in live urllib evidence supplied in the task."
+        },
+        {
+          "host": "brand-direct",
+          "outcome": "BioGourmet manufacturer catalogue confirms Distelöl nativ, 250 ml, GTIN 4039057414863; no direct public retail checkout offer was found."
+        },
+        {
+          "host": "dm.de, rossmann.de, douglas.de, hagel-shop.de, flaconi.de, notino.de, otto.de, amazon.de",
+          "outcome": "No preferred-host current exact 250 ml/GTIN offer surfaced in the bounded exact-GTIN/name searches."
+        }
+      ],
+      "proposed_offer": {
+        "url": "https://www.greenist.de/biogourmet-bio-disteloel-250ml.html?c=41",
+        "method": "German retailer PDP exact GTIN/name/package web search",
+        "price_eur": 6.29,
+        "package": {
+          "value": 250,
+          "unit": "ml"
+        },
+        "observed_gtin": "4039057414863",
+        "availability": "available",
+        "primary_excerpt": "BioGourmet Bio Distelöl, 250 ml; EAN 4039057414863; €6,29; sofort versandfertig, Lieferzeit 1-3 Werktage; In den Warenkorb."
+      },
+      "confidence": "high_exact_identity_nonpreferred_shop",
+      "change_needing_nick": "Use Greenist as an exception to the preferred-shop order, or retain the unavailable Müller link pending a preferred source.",
+      "checked_at": "2026-10-02T00:00:00.000Z"
+    },
+    {
+      "id": "78e6f1b2-7262-46af-b689-a92af6702739",
+      "product": "NUTREEOIL Cacay Öl",
+      "registered_gtin": "4260541540014",
+      "recommended_package": {
+        "value": 30,
+        "unit": "ml"
+      },
+      "preferred_searches": [
+        {
+          "host": "nutreeoil.com",
+          "outcome": "Official product/collection pages identify the 30 ml product at €34,99, but task-supplied live check says the 30 ml registered-GTIN variant is out of stock."
+        },
+        {
+          "host": "dm.de, rossmann.de, mueller.de, douglas.de, hagel-shop.de, flaconi.de, notino.de, otto.de, amazon.de",
+          "outcome": "No current exact 30 ml/GTIN purchase offer surfaced in bounded exact-GTIN/name searches."
+        }
+      ],
+      "proposed_offer": {
+        "url": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml",
+        "method": "official brand product-page check",
+        "price_eur": 34.99,
+        "package": {
+          "value": 30,
+          "unit": "ml"
+        },
+        "observed_gtin": "4260541540014",
+        "availability": "out_of_stock",
+        "primary_excerpt": "Official NUTREEOIL Cacay Oil 30 ml price €34,99; supplied live check records this exact 30 ml registered-GTIN variant as out of stock."
+      },
+      "alternative_not_selected": {
+        "package": {
+          "value": 15,
+          "unit": "ml"
+        },
+        "price_eur": 24.99,
+        "availability": "available",
+        "reason": "Different package variant; it must not replace the registered 30 ml offer without an explicit size decision."
+      },
+      "confidence": "high_hold_exact_package_unavailable",
+      "change_needing_nick": "Only select the available 15 ml variant after an explicit recommended-package decision; otherwise hold the 30 ml offer.",
+      "checked_at": "2026-10-02T00:00:00.000Z"
+    },
+    {
+      "id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "product": "OGX Bond Protein Repair",
+      "registered_gtin": "3574661818481",
+      "recommended_package": {
+        "value": 50,
+        "unit": "ml"
+      },
+      "preferred_searches": [
+        {
+          "host": "amazon.de",
+          "outcome": "Existing Amazon link was challenged; no directly inspectable Amazon PDP was used as proof."
+        },
+        {
+          "host": "dm.de, rossmann.de, mueller.de, douglas.de, hagel-shop.de, flaconi.de, notino.de, otto.de",
+          "outcome": "No preferred-host current exact GTIN purchase offer surfaced in bounded exact-GTIN/name searches."
+        }
+      ],
+      "proposed_offer": {
+        "url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+        "method": "German retailer PDP exact GTIN/name/package web search",
+        "price_eur": 21.17,
+        "package": {
+          "value": 50,
+          "unit": "ml"
+        },
+        "observed_gtin": "3574661818481",
+        "availability": "available",
+        "primary_excerpt": "Boozt DE: OGX Bond Repair 3-in-1 Oil Mist 50 ml; article 231199513; GTIN 3574661818481; €21,17; In den Warenkorb; 2-5 Werktage DHL."
+      },
+      "confidence": "high_exact_identity_nonpreferred_shop",
+      "change_needing_nick": "Use Boozt DE as a stable non-preferred exact fallback, or retain the challenged Amazon offer pending direct re-check.",
+      "checked_at": "2026-10-02T00:00:00.000Z"
+    },
+    {
+      "id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "product": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+      "registered_gtin": "4550516493590",
+      "recommended_package": {
+        "value": 70,
+        "unit": "ml"
+      },
+      "preferred_searches": [
+        {
+          "host": "otto.de",
+          "outcome": "Task-supplied exact Otto marketplace offer is sold out."
+        },
+        {
+          "host": "amazon.de",
+          "outcome": "Existing Amazon link was not independently inspectable."
+        },
+        {
+          "host": "dm.de, rossmann.de, mueller.de, douglas.de, hagel-shop.de, flaconi.de, notino.de",
+          "outcome": "No preferred-host current exact GTIN purchase offer surfaced in bounded exact-GTIN/name searches."
+        }
+      ],
+      "proposed_offer": {
+        "url": "https://nalda.de/products/4550516493590",
+        "method": "German retailer PDP exact GTIN/name/package web search",
+        "price_eur": 16.92,
+        "package": {
+          "value": 70,
+          "unit": "ml"
+        },
+        "observed_gtin": "4550516493590",
+        "availability": "available_long_lead",
+        "primary_excerpt": "Nalda DE: Fino Premium Touch Penetration Essence Hair Oil 70 ml; product 4550516493590; €16,92; In den Warenkorb; delivery within 42 days; sold by Nalda EU GmbH."
+      },
+      "rejected_alternative": {
+        "shop": "Glow Up",
+        "price_eur": 9.99,
+        "package": {
+          "value": 70,
+          "unit": "ml"
+        },
+        "observed_gtin": "4901872471997",
+        "reason": "Different barcode; not selected for the registered 4550516493590 package."
+      },
+      "confidence": "medium_exact_identity_long_lead",
+      "change_needing_nick": "Accept Nalda DE despite the 42-day lead time, or keep the item held for a normal-lead preferred-source offer.",
+      "checked_at": "2026-10-02T00:00:00.000Z"
+    },
+    {
+      "id": "4eddfc54-3704-4a3e-a9b7-0cff91538863",
+      "product": "Garnier Fructis Hitzeschutzspray Wunderöl, stark geschädigtes Haar",
+      "registered_gtin": "3600542020060",
+      "recommended_package": {
+        "value": 150,
+        "unit": "ml"
+      },
+      "preferred_searches": [
+        {
+          "host": "dm.de",
+          "outcome": "Exact current product PDP found and buyable."
+        },
+        {
+          "host": "brand-direct, rossmann.de, mueller.de, douglas.de, hagel-shop.de, flaconi.de, notino.de, otto.de, amazon.de",
+          "outcome": "Not needed after preferred dm exact offer verification."
+        }
+      ],
+      "proposed_offer": {
+        "url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+        "method": "public dm exact GTIN/name PDP web search",
+        "price_eur": 5.95,
+        "package": {
+          "value": 150,
+          "unit": "ml"
+        },
+        "observed_gtin": "3600542020060",
+        "availability": "available",
+        "primary_excerpt": "dm: Garnier Fructis Hitzeschutzspray Wunderöl, stark geschädigtes Haar, 150 ml; GTIN 3600542020060; €5,95; Lieferbar; Standardversand 2-3 Werktage."
+      },
+      "confidence": "high_exact_preferred",
+      "change_needing_nick": null,
+      "checked_at": "2026-10-02T00:00:00.000Z"
+    }
+  ]
+}
