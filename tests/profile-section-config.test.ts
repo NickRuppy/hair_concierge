@@ -48,8 +48,8 @@ test("profile shows no towel technique as an answered editable value", () => {
 
   assert.ok(towelTechniqueField)
   assert.deepEqual(towelTechniqueField.editTarget, {
-    kind: "onboarding",
-    step: "towel_technique",
+    kind: "refine",
+    module: "habits",
   })
   assert.equal(
     towelTechniqueField.getValue(

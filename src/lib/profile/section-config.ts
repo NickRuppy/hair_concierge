@@ -9,7 +9,6 @@ import {
 } from "@/components/personal-plan-quiz/quiz-data"
 import { TEXTURE_OPTIONS } from "@/components/personal-plan-quiz/texture-question"
 import { readProfileDiagnostics } from "@/lib/user-facts/profile-diagnostics"
-import type { OnboardingStep } from "@/lib/onboarding/store"
 import {
   BRUSH_TYPE_LABELS,
   DRYING_METHOD_LABELS,
@@ -21,6 +20,7 @@ import type {
   AdditionalHeatTool,
   DryingRoute,
   PersonalPlanRefinementAnswersV1,
+  Stage2Module,
 } from "@/lib/personal-plan/refinement/types"
 
 const PLAN_DRYING_ROUTE_LABELS: Record<DryingRoute, string> = {
@@ -48,7 +48,8 @@ export type ProfileFieldValue = string | string[] | null
 
 export type ProfileEditTarget =
   | { kind: "quiz" }
-  | { kind: "onboarding"; step: OnboardingStep }
+  | { kind: "refine"; module: Stage2Module }
+  | { kind: "onboarding-step"; step: "brush_type" }
   | { kind: "profile-edit-goals" }
 
 export type ProfileFieldConfig = {
@@ -66,6 +67,7 @@ export type ProfileSectionMeta = {
   key: ProfileJourneySectionKey
   title: string
   description: string
+  descriptionWithoutPlan?: string
 }
 
 function optionLabel(
@@ -192,17 +194,21 @@ export const PROFILE_SECTION_META: ProfileSectionMeta[] = [
   {
     key: "products",
     title: "Produkte",
-    description: "Welche Produkte du im Onboarding ausgewählt und genauer beschrieben hast.",
+    description:
+      "Welche Produktkategorien du aktuell nutzt und welche Produkte in deinem Plan stehen.",
+    descriptionWithoutPlan: "Welche Produkte du aktuell nutzt.",
   },
   {
     key: "styling",
     title: "Styling",
-    description: "Hitzetools, Frequenz und Hitzeschutz aus dem Styling-Teil des Onboardings.",
+    description: "Hitzetools, Häufigkeit und Hitzeschutz aus deinem Feinschliff.",
+    descriptionWithoutPlan: "Hitzetools, Häufigkeit und Hitzeschutz.",
   },
   {
     key: "routine",
     title: "Alltag",
-    description: "Trocknen, Bürste/Kamm und Nachtschutz aus dem Alltagsteil deines Onboardings.",
+    description: "Handtuch, Trocknen, Bürste/Kamm und Nachtschutz aus deinem Feinschliff.",
+    descriptionWithoutPlan: "Handtuch, Trocknen, Bürste/Kamm und Nachtschutz.",
   },
   {
     key: "goals",
@@ -300,7 +306,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "styling_tools",
     label: "Hitzetools",
     sectionKey: "styling",
-    editTarget: { kind: "onboarding", step: "heat_tools" },
+    editTarget: { kind: "refine", module: "habits" },
     getValue: (profile, plan) => {
       if (profile?.styling_tools?.length) {
         return optionLabels(profile.styling_tools, PROFILE_STYLING_TOOL_LABELS)
@@ -322,14 +328,14 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "heat_styling",
     label: "Styling-Frequenz",
     sectionKey: "styling",
-    editTarget: { kind: "onboarding", step: "heat_frequency" },
+    editTarget: { kind: "refine", module: "habits" },
     getValue: (profile) => optionLabel(profile?.heat_styling, HEAT_STYLING_OPTIONS),
   },
   {
     key: "uses_heat_protection",
     label: "Hitzeschutz",
     sectionKey: "styling",
-    editTarget: { kind: "onboarding", step: "heat_protection" },
+    editTarget: { kind: "refine", module: "habits" },
     getValue: (profile) =>
       profile?.uses_heat_protection != null ? (profile.uses_heat_protection ? "Ja" : "Nein") : null,
   },
@@ -337,21 +343,21 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "towel_material",
     label: "Handtuch-Material",
     sectionKey: "routine",
-    editTarget: { kind: "onboarding", step: "towel_material" },
+    editTarget: { kind: "refine", module: "habits" },
     getValue: (profile, plan) => resolveTowelSource(profile, plan).material,
   },
   {
     key: "towel_technique",
     label: "Trocknungstechnik",
     sectionKey: "routine",
-    editTarget: { kind: "onboarding", step: "towel_technique" },
+    editTarget: { kind: "refine", module: "habits" },
     getValue: (profile, plan) => resolveTowelSource(profile, plan).technique,
   },
   {
     key: "drying_method",
     label: "Trocknungsmethode",
     sectionKey: "routine",
-    editTarget: { kind: "onboarding", step: "drying_method" },
+    editTarget: { kind: "refine", module: "habits" },
     getValue: (profile, plan) => {
       if (profile?.drying_method) {
         return DRYING_METHOD_LABELS[profile.drying_method] ?? profile.drying_method
@@ -369,7 +375,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "brush_type",
     label: "Bürste / Kamm",
     sectionKey: "routine",
-    editTarget: { kind: "onboarding", step: "brush_type" },
+    editTarget: { kind: "onboarding-step", step: "brush_type" },
     getValue: (profile) => {
       if (profile?.brush_type?.length) {
         return optionLabels(profile.brush_type, BRUSH_TYPE_LABELS)
@@ -386,7 +392,7 @@ export const PROFILE_FIELD_CONFIG: ProfileFieldConfig[] = [
     key: "night_protection",
     label: "Nachtschutz",
     sectionKey: "routine",
-    editTarget: { kind: "onboarding", step: "night_protection" },
+    editTarget: { kind: "refine", module: "habits" },
     getValue: (profile, plan) => {
       if (profile?.night_protection?.length) {
         return optionLabels(profile.night_protection, NIGHT_PROTECTION_LABELS)

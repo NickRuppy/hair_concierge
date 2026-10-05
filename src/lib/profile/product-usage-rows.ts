@@ -180,9 +180,15 @@ export function createProductRows(rows: UserProductUsageRow[]): ProductDetailRow
     })
 }
 
-export function getProductCompletionLabel(rows: ProductDetailRow[], onboardingCompleted: boolean) {
+/** A plan owner's Produkte section shows the active routine's products whenever there are any;
+ * null (no active routine) or an empty list falls back to the legacy usage rows. */
+export function selectPlanProductRows<T>(routineProducts: T[] | null): T[] | null {
+  return routineProducts?.length ? routineProducts : null
+}
+
+export function getProductCompletionLabel(rows: ProductDetailRow[]) {
   if (rows.length === 0) {
-    return onboardingCompleted ? "Noch leer" : "Offen"
+    return "Noch leer"
   }
 
   const completeCount = rows.filter((row) => row.isComplete).length
