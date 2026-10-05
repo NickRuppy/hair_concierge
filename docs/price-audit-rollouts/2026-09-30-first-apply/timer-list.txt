@@ -1,0 +1,4 @@
+NEXT                          LEFT LAST PASSED UNIT                       ACTIVATES
+Mon 2026-10-05 02:31:12 UTC 4 days -         - chaarlie-price-audit.timer chaarlie-price-audit.service
+
+1 timers listed.

@@ -1,0 +1,6 @@
+docs/price-audit-rollouts/2026-10-03-universal-shop-order/cacay-preferred-shop-recheck.json	923db32d091294a07b3e622552ee1674ac7ca2aa58078d99c3f0e14cffa89aca
+docs/product-intake-research-ops.md	2db31cd3b81d3270484b7610f7be3ec2cd8c8baba032c304f96e680819a59668
+docs/superpowers/specs/2026-05-13-affiliate-link-backfill-design.md	93d398e77c080ae560bce2caa3d75e65458f133ee7f4ffacfd59171dbf8e7740
+scripts/product-intake/codex-research-worker.ts	f281c9f4e25a0acb3f0b121f33c14e03ab36c3782f8d274a46deb3fe42e353d9
+tests/product-intake-research-jobs.test.ts	cfba36b4e4435487e848fff30426c73c03a39e165b947095df143089fe772138
+tests/product-intake-research-worker-name-only-seam.test.ts	596abdce433a1723866dc2a45ab69bca3e1878abe5771c414d2fc5a3ee8d05e8

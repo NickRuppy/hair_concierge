@@ -174,6 +174,47 @@ function fakeBrandResolutionContext(): BrandResolutionPromptContext {
   }
 }
 
+test("writePromptPacket uses the shared purchase-shop order for every product category", async (t) => {
+  const categories = [
+    "shampoo",
+    "conditioner",
+    "mask",
+    "leave_in",
+    "oil",
+    "bondbuilder",
+    "heat_protectant",
+    "dry_shampoo",
+    "scalp_care",
+    "deep_cleansing_shampoo",
+    undefined,
+  ]
+
+  for (const category of categories) {
+    await t.test(category ?? "unresolved category", (t) => {
+      const path = writePromptPacket(
+        fakeJob(`packet-shop-order-${category ?? "unresolved"}`),
+        "worker-test",
+        fakeSubmissionDetail({ category }),
+        fakeBrandResolutionContext(),
+        null,
+      )
+      t.after(() => rmSync(path, { force: true }))
+
+      const packet = JSON.parse(readFileSync(path, "utf8"))
+      const expectedOrder = "dm > Rossmann > Müller > brand-direct > Amazon DE"
+      assert.equal(packet.commercial_source_contract.purchase_url_preference, expectedOrder)
+      assert.equal(
+        packet.output_contract.commercial_source_contract.purchase_url_preference,
+        expectedOrder,
+      )
+      assert.equal(
+        packet.commercial_source_contract.source_priority[0],
+        "Official brand/manufacturer product page",
+      )
+    })
+  }
+})
+
 test("writePromptPacket: a null-identifier submission's packet carries the brand/name texts and no identifier field", (t) => {
   const job = fakeJob("packet-name-only-1")
   const path = writePromptPacket(

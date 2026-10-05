@@ -1,0 +1,84 @@
+{
+  "records": [
+    {
+      "id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+      "before_product_fingerprint": "cc5d7a6280aaee692cfc070e6f574bcb",
+      "before_identifier_fingerprint": "eeb4c651b2ca968f2619f94e5a644c43",
+      "proposed": {
+        "price_eur": 1.45,
+        "price_checked_at": "2026-10-03T13:47:19.545Z",
+        "affiliate_link": "https://www.dm.de/p/d/2974661/balea-trockenshampoo-schaum-kopfhaut-sensitive",
+        "net_content_value": 150,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": {
+        "type": "ean",
+        "value": "4066447989540",
+        "canonical_gtin14": "04066447989540",
+        "source": "price-audit-approved-2026-10-03-identity"
+      }
+    },
+    {
+      "id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "before_product_fingerprint": "6c163aef0cae1c20db6c33d8532b4e33",
+      "before_identifier_fingerprint": "8314a38a3fc7964fd56df1e7f277980f",
+      "proposed": {
+        "price_eur": 1.25,
+        "price_checked_at": "2026-10-03T13:47:21.503Z",
+        "affiliate_link": "https://www.dm.de/p/d/1675522/balea-professional-conditioner-aqua-hyaluron",
+        "net_content_value": 200,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": {
+        "type": "ean",
+        "value": "4070765001662",
+        "canonical_gtin14": "04070765001662",
+        "source": "price-audit-approved-2026-10-03-identity"
+      }
+    },
+    {
+      "id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "before_product_fingerprint": "cc81194fb70deea86b901e001e1ecaeb",
+      "before_identifier_fingerprint": "ae549fdf0bf6c0e68cbdbeff54a3b86f",
+      "proposed": {
+        "price_eur": 5.45,
+        "price_checked_at": "2026-10-03T13:47:23.673Z",
+        "affiliate_link": "https://www.dm.de/p/d/3133400/lavera-naturkosmetik-shampoo-basis-sensitive-hydrate-und-care",
+        "net_content_value": 250,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+      "before_product_fingerprint": "be22d6709e5ed50009013207d48252bb",
+      "before_identifier_fingerprint": "921ed1e758f33c0e6810d4418e1e5d22",
+      "proposed": {
+        "price_eur": 7.99,
+        "price_checked_at": "2026-10-03T13:48:16.042418+00:00",
+        "affiliate_link": "https://www.jeanlen.de/haarmaske-feuchtigkeit-rosemary-ginger",
+        "net_content_value": 200,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": {
+        "type": "ean",
+        "value": "4262401735639",
+        "canonical_gtin14": "04262401735639",
+        "source": "price-audit-approved-2026-10-03-identity"
+      }
+    },
+    {
+      "id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "before_product_fingerprint": "cf323a52e5f366ab0316c5f2b2c7f772",
+      "before_identifier_fingerprint": "11b6b9bc93a7472c50df819b5363092e",
+      "proposed": {
+        "price_eur": 12.37,
+        "price_checked_at": "2026-10-03T14:03:38Z",
+        "affiliate_link": "https://www.moriveda.com/product-page/moringa-oel-premium-schonendgepresst-100ml",
+        "net_content_value": 100,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    }
+  ]
+}

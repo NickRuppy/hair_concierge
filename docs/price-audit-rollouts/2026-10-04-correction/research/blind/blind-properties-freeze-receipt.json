@@ -1,0 +1,27 @@
+{
+  "frozen_at_utc": "2026-10-04T08:07:23.500723+00:00",
+  "phase": "blind_formula_properties_frozen_before_identity_or_claims",
+  "files": {
+    "F1-full-research.json": "c6d3816dbfd43865f9ac14bb28026757cae323d7bf5413e06aad80625f066ad0",
+    "F1-proposed-mapping-NOT-adapter-output.json": "e20bdae6fd1bbdef264b6848762f4420344582fc00df21fb8aef89d0fc6c1b42",
+    "F1-shampoo-envelope-IDENTITY-INCOMPLETE.json": "c6beb0ec52c6b638a31bf32c327e2c37262e8cfb0ddff3a318c700ccc146c182",
+    "F2-conditioner-envelope.json": "06d5de6e95ed4637ddb2237cc47ebec6bbbe92de91e87f64a3a17c58ab930f4f",
+    "F2-direct-property-trace.json": "1c8fc1b1719c63ae44f142f2baba8ff867f536f2f02b7ca599102b59a6d99657",
+    "F2-normalization-trace.json": "29cc261d5759b4aab90e3ee96af254cefcb42838ce7418c7049d3781919a718c",
+    "F2-proposed-mapping-NOT-adapter-output.json": "1da65944b70af976aa72c829d65ee1f877949ca1394aaf38e70e9e33cf805fbf",
+    "F3-mask-ordinary-intake-research.json": "bc733ad498e76309a4bf411fd79ed3e6685a6e4eed9a4cf129bf3635e9572c00",
+    "F4-conditioner-envelope.json": "fb1dbbfc0f8f50c49d1b7d7967593aac384b59851974f1f4b78d027fcf3db616",
+    "F4-direct-property-trace.json": "3b62213fed650267c39e7783b5fe3159a8891802928568243b144fa542f5a10a",
+    "F4-normalization-trace.json": "40f9cd82b12e98aaef7348d1013cfa56723df86323e7f4a01157376e2fb72d9c",
+    "F4-proposed-mapping-NOT-adapter-output.json": "902dfbbe04d02d6710cd413f8487752a7ff73471cdc761d8db8668c465c57afb",
+    "authority-sha256.json": "aa2656dac771b588f5f337a990405478e1954ee5e56c4a622f550494b74142ff",
+    "blind-freeze-F4-receipt.json": "edc2e709d1990c79162b8a7f93a18d6e4a22ac9a173883b4dd8530e093f80381",
+    "blind-freeze-receipt.json": "4caee4d887848b648d9407d0ede5a8b30bdf3b57ff1aab4e77157393aa0102b3",
+    "frozen-F1.json": "e8567e2588b14e66e700b49a85dbc982f6b564dac1b8a3890f99b4eaa6d9b999",
+    "frozen-F2.json": "967edbc2fc5584bd8f95b37f1b21dacf556ec2f676fa266366f87840aacb140b",
+    "frozen-F3.json": "a905d3ede511c771e0507b5608cf02f84141294094ab1bcee66d6b7c90f0fb13",
+    "frozen-F4.json": "49c2864d3e31f87f497ac92792587c42fd25d9117e853b0cba396256d1901d05"
+  },
+  "blind_integrity": "All four anonymous packets only; exact names, source pages, prior dossier labels, catalog labels and claims not read.",
+  "scope": "Single blind research lane; independent repeatability not assessed; no adapter success asserted."
+}

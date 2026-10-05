@@ -1,0 +1,236 @@
+{
+  "version": "conditioner-research-envelope-v1.6",
+  "researchMethod": {
+    "policyId": "conditioner-classification-v1.6",
+    "modelVersion": "conditioner-inci-v1.6",
+    "policySha256": "688ca25ca534f98789d0b300fbc5f3008a5c0652fe63af276dfda6ced79f3135",
+    "runbookSha256": "6a66780ef23a7595cfbeab07fe9f671a92a58d177b92c734a8d6f736833165e8"
+  },
+  "identity": {
+    "researchId": "bucket2-e7cde77e-current-de-4070765001402-2026-10-03",
+    "market": "DE/EU",
+    "exactProductName": "Balea PROFESSIONAL Conditioner Oil Repair Intensiv, 200 ml; GTIN 4070765001402",
+    "categoryBoundaryStatus": "eligible",
+    "confidence": "high",
+    "sourceIds": [
+      "dm-current-conditioner"
+    ]
+  },
+  "formula": {
+    "status": "verified",
+    "rawInci": "Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Hydrolyzed Keratin, Helianthus Annuus Hybrid Oil, Ricinus Communis Seed Oil, Argania Spinosa Kernel Oil, Orbignya Oleifera Seed Oil, Sclerocarya Birrea Seed Oil, Parfum, Isopropyl Alcohol, Sodium Benzoate, Potassium Sorbate, Tetramethyl Acetyloctahydronaphthalenes, Citric Acid",
+    "normalizedIngredients": [
+      "Aqua",
+      "Glycerin",
+      "Cetearyl Alcohol",
+      "Isopropyl Palmitate",
+      "Behentrimonium Chloride",
+      "Panthenol",
+      "Hydrolyzed Keratin",
+      "Helianthus Annuus Hybrid Oil",
+      "Ricinus Communis Seed Oil",
+      "Argania Spinosa Kernel Oil",
+      "Orbignya Oleifera Seed Oil",
+      "Sclerocarya Birrea Seed Oil",
+      "Parfum",
+      "Isopropyl Alcohol",
+      "Sodium Benzoate",
+      "Potassium Sorbate",
+      "Tetramethyl Acetyloctahydronaphthalenes",
+      "Citric Acid"
+    ],
+    "formulaFingerprintSha256": "4abdeaebe4941e4143545e1d6edf0d70986ca1bc60958f1f8fdb9fc3dbdde5b0",
+    "rawInciSha256": "b4cf09a2071ad33b1168d37aa291465bc788921605add83791cd7cbdb0802105",
+    "sourceIds": [
+      "dm-current-conditioner"
+    ]
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "The coherent rinse-out cationic base supports substantive conditioning potential; ester and oils extend lubrication but remain correlated M1 signals.",
+      "evidenceSignals": [
+        "Cetearyl Alcohol + Behentrimonium Chloride form R1 candidate",
+        "Isopropyl Palmitate and five declared oils extend M1 lubrication",
+        "Hydrolyzed Keratin gives R5 candidate"
+      ],
+      "derivation": "Conditioner Standard v1.6; observed formula -> route-level E2 potential -> comparison profile. No catalog inheritance.",
+      "thresholdReasoning": [
+        "Above low because a complete conventional cationic/fatty-alcohol base is present with added emollients.",
+        "High is not established by counting oils or a keratin label: no exact-product deposition or combing study was recovered."
+      ],
+      "limitations": [
+        "Formula-only E2: unknown dose, deposition, sensory weight and efficacy."
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "A conventional substantive base with ester and oil support is plausibly depositing; no measured finish establishes a high-weight boundary.",
+      "evidenceSignals": [
+        "Cetearyl Alcohol rank3",
+        "Isopropyl Palmitate rank4",
+        "Behentrimonium Chloride rank5",
+        "Oil declarations at ranks8-12"
+      ],
+      "derivation": "Conditioner Standard v1.6; observed formula -> route-level E2 potential -> comparison profile. No catalog inheritance.",
+      "thresholdReasoning": [
+        "Low would underrepresent the base plus explicit ester/emollient architecture.",
+        "High is not justified by a list of oils in an unknown-concentration region; no sensory or repeated-use test resolves richness."
+      ],
+      "limitations": [
+        "Formula-only E2: unknown dose, deposition, sensory weight and efficacy."
+      ]
+    },
+    "careDirection": {
+      "value": "balanced",
+      "confidence": "moderate",
+      "rationale": "Both coherent humectant/emollient conditioning and a distinct hydrolyzed-keratin temporary fibre-film route are visible; balanced is a mixed-architecture decision, not a missing-evidence default.",
+      "evidenceSignals": [
+        "Glycerin rank2 and Panthenol rank6",
+        "R1 cationic/fatty-alcohol base with ester and oils",
+        "Hydrolyzed Keratin rank7 supplies a distinct R5 candidate"
+      ],
+      "derivation": "Conditioner Standard v1.6; observed formula -> route-level E2 potential -> comparison profile. No catalog inheritance.",
+      "thresholdReasoning": [
+        "Moisture alone omits the identifiable R5 protein-film candidate in a substantive rinse-out delivery context.",
+        "Protein dominance is not established by moving keratin earlier in a declaration; robust nonprotein conditioning remains the larger architecture."
+      ],
+      "limitations": [
+        "Formula-only E2: unknown dose, deposition, sensory weight and efficacy."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "medium",
+      "confidence": "high",
+      "rationale": "The reviewed keratin route supports comparative temporary film support beyond ordinary lubrication.",
+      "evidenceSignals": [
+        "Hydrolyzed Keratin in cationic rinse-out conditioner",
+        "No named bond chemistry in complete current INCI"
+      ],
+      "derivation": "Conditioner Standard v1.6; observed formula -> route-level E2 potential -> comparison profile. No catalog inheritance.",
+      "thresholdReasoning": [
+        "Low is ordinary conditioning only; hydrolyzed keratin adds the distinct R5 candidate required by v1.6.",
+        "High needs a materially stronger named bond route; none is declared and the product name/80-percent claim cannot create one."
+      ],
+      "limitations": [
+        "Formula-only E2: unknown dose, deposition, sensory weight and efficacy."
+      ]
+    },
+    "primaryFocus": {
+      "value": "smoothing",
+      "confidence": "moderate",
+      "rationale": "Surface lubrication beyond the ordinary base is the clearest formula-supported differentiator. This is potential, not humidity-tested frizz control.",
+      "evidenceSignals": [
+        "Isopropyl Palmitate beyond R1 base",
+        "Ricinus Communis Seed Oil plus other emollients within M1",
+        "Hydrolyzed Keratin distinct but dose unresolved"
+      ],
+      "derivation": "Conditioner Standard v1.6; observed formula -> route-level E2 potential -> comparison profile. No catalog inheritance.",
+      "thresholdReasoning": [
+        "General would omit ester/lipid architecture extending the conventional base.",
+        "Repair remains plausible as an alternative headline; no measured damage endpoint or dominant R5 dose resolves it, so primary focus stays uncertain."
+      ],
+      "limitations": [
+        "Formula-only E2: unknown dose, deposition, sensory weight and efficacy."
+      ]
+    },
+    "secondaryFocus": {
+      "value": [
+        "repair"
+      ],
+      "confidence": "moderate",
+      "rationale": "Temporary protein-film support adds a distinct endpoint to the primary lubrication focus.",
+      "evidenceSignals": [
+        "Distinct R5 hydrolyzed-keratin route",
+        "Primary smoothing already uses M1 lubrication"
+      ],
+      "derivation": "Conditioner Standard v1.6; observed formula -> route-level E2 potential -> comparison profile. No catalog inheritance.",
+      "thresholdReasoning": [
+        "One secondary route is supported beyond smoothing.",
+        "Do not add shine or detangling by counting the same M1 lubrication again; no separate endpoint substantiation."
+      ],
+      "limitations": [
+        "Formula-only E2: unknown dose, deposition, sensory weight and efficacy."
+      ]
+    },
+    "hairThicknessFit": {
+      "value": [
+        "fine",
+        "medium",
+        "coarse"
+      ],
+      "confidence": "moderate",
+      "rationale": "Moderate weight maps to all three broad thickness priors under v1.6 section10.4.",
+      "evidenceSignals": [
+        "Derived from weightPotential=moderate",
+        "Short-contact rinse-out application"
+      ],
+      "derivation": "Conditioner Standard v1.6; observed formula -> route-level E2 potential -> comparison profile. No catalog inheritance.",
+      "thresholdReasoning": [
+        "Coarse-only would inherit an obsolete catalog restriction and is not the v1.6 mapping.",
+        "Fine remains included with ordinary dose/finish adjustment because high weight is not established."
+      ],
+      "limitations": [
+        "Derived broad prior, not tested suitability or a universal exclusion. Upstream weight uncertainty propagates."
+      ]
+    },
+    "damageFit": {
+      "value": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "confidence": "moderate",
+      "rationale": "Moderate conditioning maps to healthy plus moderately damaged under the exact-set rule.",
+      "evidenceSignals": [
+        "Derived conditioningLevel=moderate",
+        "R5 exists but high conditioning threshold not established"
+      ],
+      "derivation": "Conditioner Standard v1.6; observed formula -> route-level E2 potential -> comparison profile. No catalog inheritance.",
+      "thresholdReasoning": [
+        "Healthy-only applies to low conditioning and understates the coherent base.",
+        "Highly damaged specialist set requires high conditioning plus qualifying route; R5 presence alone does not satisfy both conditions."
+      ],
+      "limitations": [
+        "Broad profile prior, not repair efficacy; upstream conditioning uncertainty propagates."
+      ]
+    },
+    "textureFit": {
+      "value": [
+        "straight",
+        "wavy",
+        "curly"
+      ],
+      "confidence": "moderate",
+      "rationale": "Balanced behavior supports straight, wavy and curly profiles by the v1.6 mapping.",
+      "evidenceSignals": [
+        "Moderate conditioning and moderate weight",
+        "No high-slip/high-deposition architecture established"
+      ],
+      "derivation": "Conditioner Standard v1.6; observed formula -> route-level E2 potential -> comparison profile. No catalog inheritance.",
+      "thresholdReasoning": [
+        "Straight/wavy-only is the low-weight lightness case, which does not match the substantive base.",
+        "Coily set requires high slip plus high deposition; neither is independently established."
+      ],
+      "limitations": [
+        "Derived comparative prior; individual results, dose and drying context remain unknown."
+      ]
+    },
+    "uncertainFields": [
+      "conditioning_level",
+      "weight_potential",
+      "care_direction",
+      "primary_focus",
+      "hair_thickness_fit",
+      "damage_fit",
+      "texture_fit"
+    ],
+    "assumptionNotes": [
+      "Current DE GTIN4070765001402 is the research unit. Mapping it to the old catalog identity remains a separately reviewed decision.",
+      "Old regional declarations are preserved only as conflicts/comparisons, not as formula continuity proof.",
+      "Manufacturer positioning and live catalog values did not determine the formula profile. No exact finished-product E3/E4 test protocol was recovered.",
+      "This is an E2 single-researcher proposal and not human-approved classification."
+    ]
+  }
+}

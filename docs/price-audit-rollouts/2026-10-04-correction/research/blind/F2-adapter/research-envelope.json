@@ -1,0 +1,239 @@
+{
+  "formula": {
+    "formulaFingerprintSha256": "68b89fd169f86f6187fa474e2baeed77d0e0591145114da6a0bcb84b73dfa393",
+    "normalizedIngredients": [
+      "Aqua",
+      "Cetearyl Alcohol",
+      "Helianthus Annuus Hybrid Oil",
+      "Glycerin",
+      "Betaine",
+      "Arginine",
+      "Hydrolyzed Wheat Protein",
+      "Rosa Damascena Flower Water",
+      "Parfum",
+      "Pelargonium Graveolens Flower Oil",
+      "Brassica Alcohol",
+      "Sodium Levulinate",
+      "Cetearyl Glucoside",
+      "Alcohol",
+      "Levulinic Acid",
+      "Glyceryl Caprylate",
+      "p-Anisic Acid",
+      "Brassicyl Isoleucinate Esylate",
+      "Citric Acid",
+      "Sodium Hydroxide"
+    ],
+    "rawInci": "Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil, Glycerin, Betaine, Arginine, Hydrolyzed Wheat Protein, Rosa Damascena Flower Water, Parfum, Pelargonium Graveolens Flower Oil, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Alcohol, Levulinic Acid, Glyceryl Caprylate, p-Anisic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide",
+    "rawInciSha256": "707321ae53e142aaad2327a4c2491df81f825797b8f60de96feb6cf5d93320eb",
+    "sourceIds": [
+      "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz",
+      "blind:F2-normalization-trace.json"
+    ],
+    "status": "verified"
+  },
+  "identity": {
+    "categoryBoundaryStatus": "eligible",
+    "confidence": "high",
+    "exactProductName": "alverde NATURKOSMETIK Conditioner Glanz, 200 ml",
+    "market": "DE/EU",
+    "researchId": "F2",
+    "sourceIds": [
+      "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz"
+    ]
+  },
+  "profile": {
+    "assumptionNotes": [
+      "Exact current DE identity and raw INCI freshly rechecked by root at 2026-10-04T08:03:57.725Z; no historical alias continuity asserted.",
+      "Original source bytes preserved in frozen packet; cleaned adapter derivative and hashes documented separately.",
+      "INCI-only E2; no measured performance, concentration, final pH or repeated-use evidence.",
+      "Blind profile was frozen before source/claims revealed; post-unblind changes are explicit in post-unblind-delta.json.",
+      "One blind assessor; independent repeatability has not been measured."
+    ],
+    "careDirection": {
+      "confidence": "moderate",
+      "derivation": "Section 10.2: substantive R5 plus substantive humectant/emollient architecture; E2.",
+      "evidenceSignals": [
+        "#3 Helianthus Annuus Hybrid Oil",
+        "#4 Glycerin",
+        "#5 Betaine",
+        "#7 Hydrolyzed Wheat Protein"
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ],
+      "rationale": "Balanced is the best comparative prior: a distinct hydrolyzed wheat protein route sits alongside an early oil plus glycerin/betaine moisture-softness architecture.",
+      "thresholdReasoning": [
+        "Moisture alone loses the plausible distinct R5 route at #7 in a rinse-out deposition context.",
+        "Protein alone overstates dominance over oil #3 and humectants #4/#5; the protein percentage and substantivity remain unknown."
+      ],
+      "value": "balanced"
+    },
+    "conditioningLevel": {
+      "confidence": "moderate",
+      "derivation": "R1/R4 -> conditioning_deposition_potential moderate -> moderate; shared M1 counted once.",
+      "evidenceSignals": [
+        "#2 Cetearyl Alcohol",
+        "#3 Helianthus Annuus Hybrid Oil",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate"
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ],
+      "rationale": "Moderate conditioning potential: the fatty-alcohol/oil base supports relubrication, with a candidate non-quat cationic amino lipid conditioning route; strong cationic delivery is less clearly established than in an early-quat chassis.",
+      "thresholdReasoning": [
+        "Above low because fatty-alcohol/oil architecture is substantive, not a tail-only additive.",
+        "High is not established: late non-quat cationic amino lipid rank and absence of a stronger independently supported deposition chassis leave actual slip/deposition uncertain."
+      ],
+      "value": "moderate"
+    },
+    "damageFit": {
+      "confidence": "moderate",
+      "derivation": "Section 10.4 moderate conditioning -> healthy + moderately_damaged.",
+      "evidenceSignals": [
+        "derived: conditioningLevel=moderate",
+        "derived: repairSupportLevel=medium"
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ],
+      "rationale": "Healthy and moderately damaged are the exact broad damage prior for moderate conditioning, despite the separate R5 route.",
+      "thresholdReasoning": [
+        "Healthy-only is the low-conditioning set and would discard the oil/base conditioning prior.",
+        "Highly damaged requires high conditioning plus a qualifying specialist route; R5 alone does not satisfy both conditions."
+      ],
+      "value": [
+        "healthy",
+        "moderately_damaged"
+      ]
+    },
+    "hairThicknessFit": {
+      "confidence": "moderate",
+      "derivation": "Section 10.4 moderate weight -> fine + medium + coarse; not a guarantee.",
+      "evidenceSignals": [
+        "derived: weightPotential=moderate"
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ],
+      "rationale": "Broad fit prior includes all three diameters because the selected weight prior is moderate.",
+      "thresholdReasoning": [
+        "Fine is retained because high persistent deposition is not established.",
+        "Coarse is included by the moderate-weight policy; restricting to fine/medium would apply the low-weight rule incorrectly."
+      ],
+      "value": [
+        "fine",
+        "medium",
+        "coarse"
+      ]
+    },
+    "primaryFocus": {
+      "confidence": "moderate",
+      "derivation": "Section 10.3 checks special-purpose R5 before generic smoothing; no repair-efficacy claim.",
+      "evidenceSignals": [
+        "#7 Hydrolyzed Wheat Protein",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data.",
+        "Primary repair versus smoothing remains a comparative research-headline uncertainty; marketed shine is not independently measured."
+      ],
+      "rationale": "Repair is the provisional differentiator because the hydrolyzed protein supplies a distinct temporary fibre-film route beyond baseline oil conditioning; smoothing remains a plausible competing headline. The revealed Glanz positioning is a claim, not an independent optical endpoint; it does not displace the distinct R5 threshold by name alone.",
+      "thresholdReasoning": [
+        "General omits the identifiable specialist R5 candidate; baseline detangling is not distinctive enough.",
+        "Smoothing could become primary if exact-product corroboration shows the oil/softness route dominates; no such positioning is visible in this blind pass."
+      ],
+      "value": "repair"
+    },
+    "repairSupportLevel": {
+      "confidence": "moderate",
+      "derivation": "Section 10.2: distinct R5 supports medium; M2 separate from ordinary M1 lubrication.",
+      "evidenceSignals": [
+        "#7 Hydrolyzed Wheat Protein",
+        "#2 Cetearyl Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate"
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ],
+      "rationale": "Medium temporary damage-support potential from the distinct hydrolyzed wheat protein film route in a conditioning emulsion. This is not structural repair.",
+      "thresholdReasoning": [
+        "Low misses a named hydrolyzed-protein film candidate beyond baseline lubrication.",
+        "High requires a materially stronger named bond route, absent in this packet."
+      ],
+      "value": "medium"
+    },
+    "secondaryFocus": {
+      "confidence": "moderate",
+      "derivation": "Section 10.3 permits a useful secondary endpoint; M1 not recounted as repair.",
+      "evidenceSignals": [
+        "#3 Helianthus Annuus Hybrid Oil",
+        "#2 Cetearyl Alcohol"
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data.",
+        "Official shine/softness wording corroborates the surface route but is not a separate measured optical mechanism."
+      ],
+      "rationale": "Smoothing adds the dry lubrication/softness endpoint of early sunflower oil beyond the fatty-alcohol base, distinct from the temporary protein-film primary.",
+      "thresholdReasoning": [
+        "An empty set would omit a credible early-oil dry-surface-control route beyond R1 alone.",
+        "Shine would recycle the same lubrication mechanism without an independent optical endpoint; detangling is baseline."
+      ],
+      "value": [
+        "smoothing"
+      ]
+    },
+    "textureFit": {
+      "confidence": "moderate",
+      "derivation": "Section 10.4 balanced architecture -> straight + wavy + curly.",
+      "evidenceSignals": [
+        "derived: weightPotential=moderate",
+        "derived: conditioningLevel=moderate"
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ],
+      "rationale": "Straight, wavy and curly form the broad prior for the balanced/moderate deposition architecture.",
+      "thresholdReasoning": [
+        "Straight/wavy only would imply the low-weight/lightness architecture not selected here.",
+        "Coily is not added without the high-slip/high-deposition architecture required for that profile."
+      ],
+      "value": [
+        "straight",
+        "wavy",
+        "curly"
+      ]
+    },
+    "uncertainFields": [
+      "primary_focus",
+      "secondary_focus",
+      "care_direction"
+    ],
+    "weightPotential": {
+      "confidence": "moderate",
+      "derivation": "Whole R1/R4 payload architecture -> weight_deposition_potential moderate -> moderate.",
+      "evidenceSignals": [
+        "#2 Cetearyl Alcohol",
+        "#3 Helianthus Annuus Hybrid Oil",
+        "#7 Hydrolyzed Wheat Protein",
+        "#18 Brassicyl Isoleucinate Esylate"
+      ],
+      "limitations": [
+        "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data."
+      ],
+      "rationale": "Moderate deposition/weight potential from early fatty alcohol and nonvolatile sunflower oil; protein adds a possible film but does not prove heavy or persistent residue.",
+      "thresholdReasoning": [
+        "Low understates the early nonvolatile oil accompanying the fatty base.",
+        "High would overstate persistence/delivery: no silicone film or clearly dominant early cationic deposition system; multiple lipid names are not separate technologies."
+      ],
+      "value": "moderate"
+    }
+  },
+  "researchMethod": {
+    "modelVersion": "conditioner-inci-v1.6",
+    "policyId": "conditioner-classification-v1.6",
+    "policySha256": "688ca25ca534f98789d0b300fbc5f3008a5c0652fe63af276dfda6ced79f3135",
+    "runbookSha256": "6a66780ef23a7595cfbeab07fe9f671a92a58d177b92c734a8d6f736833165e8"
+  },
+  "version": "conditioner-research-envelope-v1.6"
+}

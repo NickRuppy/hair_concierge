@@ -1,0 +1,196 @@
+{
+  "records": [
+    {
+      "url": "https://www.flaconi.de/haare/olaplex/no-7/olaplex-no-7-bonding-oil-haaroel.html",
+      "checked_at": "2026-10-02T14:52:10.595941+00:00",
+      "error": "HTTPError",
+      "status": 403
+    },
+    {
+      "url": "https://www.greenist.de/biogourmet-bio-disteloel-250ml.html",
+      "checked_at": "2026-10-02T14:52:10.596547+00:00",
+      "status": 200,
+      "final_url": "https://www.greenist.de/biogourmet-bio-disteloel-250ml.html",
+      "raw_path": "/tmp/chaarlie-oils-secondary-www.greenist.de.html",
+      "json_ld": [],
+      "title": "Distelöl nativ kaltgepresst, Bio-Speiseöl | BioGourmet",
+      "commerce_context": [
+        "Sofort versandfertig, Lieferzeit 1-3 Werktage",
+        "6,29 €",
+        " 4039057414863 ",
+        " Lieferzeit 1-3 Werktage ",
+        " Lieferzeit 1-3 Werktage ",
+        " Lieferzeit 1-3 Werktage ",
+        " Lieferzeit 1-3 Werktage ",
+        " Lieferzeit 1-3 Werktage ",
+        " Lieferzeit 1-3 Werktage ",
+        " Lieferzeit 1-3 Werktage "
+      ]
+    },
+    {
+      "url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+      "checked_at": "2026-10-02T14:52:10.596750+00:00",
+      "status": 200,
+      "final_url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+      "raw_path": "/tmp/chaarlie-oils-secondary-www.boozt.com.html",
+      "json_ld": [
+        {
+          "@context": "https://schema.org/",
+          "@type": "MerchantReturnPolicy",
+          "@id": "#return_policy",
+          "applicableCountry": "DE",
+          "merchantReturnDays": 30,
+          "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+          "returnMethod": "https://schema.org/ReturnByMail",
+          "returnFees": "https://schema.org/FreeReturn"
+        },
+        {
+          "@context": "https://schema.org/",
+          "@type": "OfferShippingDetails",
+          "@id": "#shipping_policy",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": 9,
+            "currency": "EUR"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "DE"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 2,
+              "maxValue": 4,
+              "unitCode": "DAY"
+            }
+          }
+        },
+        {
+          "name": "Bond Repair 3-in-1 Oil Mist 50 ml",
+          "url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841",
+          "brand": {
+            "name": "Ogx",
+            "@type": "Brand"
+          },
+          "description": "Give your hair a radiant shine and a silky finish with OGX Bond Protein Repair Multi-Benefit Oil – a 3-in-1 oil mist that strengthens, combats frizz and preserves shine for healthier, more resilient hair.\n\nThis nourishing oil protects and smooths dry, damaged hair for up to 24 hours while helping to strengthen hair. Its innovative multi-layered formula makes it easy to combine with your favorite OGX products or with the entire OGX Bond Protein Repair series for a complete hair care routine.\n\nShake the bottle well before use and spray a small amount on damp or dry hair as needed.\n• 3-in-1 oil mist that strengthens and protects damaged hair\n• Anti-frizz and gives a silky finish\n• Maintains shine for up to 24 hours\n• Light and weightless formula that does not weigh down hair\n• Easy to use on both damp and dry hair",
+          "productGroupID": "OGX360746",
+          "variesBy": [
+            "https://schema.org/color"
+          ],
+          "hasVariant": [
+            {
+              "sku": "ogx360746_231199513",
+              "gtin13": "3574661818481",
+              "image": "https://image-resizing.booztcdn.com/ogx/ogx360746_cclear_10.webp?has_webp=1&version=927c77d0e8967c1824e95c799a79fdb0&size=w1300",
+              "name": "Bond Repair 3-in-1 Oil Mist 50 ml - CLEAR",
+              "description": "Give your hair a radiant shine and a silky finish with OGX Bond Protein Repair Multi-Benefit Oil – a 3-in-1 oil mist that strengthens, combats frizz and preserves shine for healthier, more resilient hair.\n\nThis nourishing oil protects and smooths dry, damaged hair for up to 24 hours while helping to strengthen hair. Its innovative multi-layered formula makes it easy to combine with your favorite OGX products or with the entire OGX Bond Protein Repair series for a complete hair care routine.\n\nShake the bottle well before use and spray a small amount on damp or dry hair as needed.\n• 3-in-1 oil mist that strengthens and protects damaged hair\n• Anti-frizz and gives a silky finish\n• Maintains shine for up to 24 hours\n• Light and weightless formula that does not weigh down hair\n• Easy to use on both damp and dry hair",
+              "color": "CLEAR",
+              "offers": {
+                "itemCondition": "https://schema.org/NewCondition",
+                "availability": "https://schema.org/InStock",
+                "@type": "Offer",
+                "url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+                "priceSpecification": [
+                  {
+                    "priceCurrency": "EUR",
+                    "price": "21.17",
+                    "@type": "UnitPriceSpecification"
+                  },
+                  {
+                    "priceCurrency": "EUR",
+                    "price": "24.90",
+                    "priceType": "https://schema.org/StrikethroughPrice",
+                    "@type": "UnitPriceSpecification"
+                  }
+                ],
+                "shippingDetails": {
+                  "@id": "#shipping_policy"
+                },
+                "hasMerchantReturnPolicy": {
+                  "@id": "#return_policy"
+                }
+              },
+              "@type": "Product"
+            }
+          ],
+          "@context": "https://schema.org/",
+          "@type": "ProductGroup"
+        }
+      ],
+      "title": "Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear) - 21.17 € | Boozt.com",
+      "commerce_context": [
+        "             Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear) - 21.17 € | Boozt.com ",
+        "         Ogx      Bond Repair 3-in-1 Oil Mist 50 ml - Haaröl          21.17 €      24.90 €    -15%    Deal                   "
+      ]
+    },
+    {
+      "url": "https://nalda.de/products/4550516493590",
+      "checked_at": "2026-10-02T14:52:10.857289+00:00",
+      "status": 200,
+      "final_url": "https://nalda.de/products/4550516493590",
+      "raw_path": "/tmp/chaarlie-oils-secondary-nalda.de.html",
+      "json_ld": [
+        {
+          "@context": "https://schema.org/",
+          "@type": "Product",
+          "name": "Fino Premium Touch Penetration Essence Hair Oil 70ml",
+          "image": [
+            "https://static.prod.qogita.com/files/images/variants/PGF6UbmkgewCxqnDqKEyGH.jpg"
+          ],
+          "description": "4550516493590 | Preis: 12.41 EUR | Zustand: Neu | Bestpreis-Garantie | Pro Artikel wird ein Baum gepflanzt",
+          "sku": "4550516493590",
+          "gtin13": "4550516493590",
+          "offers": {
+            "@type": "Offer",
+            "url": "/products/4550516493590",
+            "priceCurrency": "EUR",
+            "price": "12.41",
+            "itemCondition": "https://schema.org/NewCondition",
+            "availability": "https://schema.org/InStock",
+            "shippingDetails": {
+              "@type": "OfferShippingDetails",
+              "deliveryTime": {
+                "@type": "ShippingDeliveryTime",
+                "handlingTime": {
+                  "@type": "QuantitativeValue",
+                  "minValue": 0,
+                  "maxValue": 1,
+                  "unitCode": "DAY"
+                },
+                "transitTime": {
+                  "@type": "QuantitativeValue",
+                  "minValue": 1,
+                  "maxValue": 9,
+                  "unitCode": "DAY"
+                }
+              }
+            },
+            "hasMerchantReturnPolicy": {
+              "@type": "MerchantReturnPolicy",
+              "applicableCountry": "DE",
+              "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+              "merchantReturnDays": 14
+            }
+          },
+          "brand": {
+            "@type": "Brand",
+            "name": "Fino"
+          }
+        }
+      ],
+      "title": "Fino Premium Touch Penetration Essence Hair Oil 70ml von Fino | Artikel kaufen | Nalda",
+      "commerce_context": [
+        "Fino Premium Touch Penetration Essence Hair Oil 70ml       Fino  |    4550516493590                    12,41 €               local_shipping   Innert 9 Tagen",
+        "Fino Premium Touch Penetration Essence Hair Oil 70ml       Fino  |    4550516493590 |                                   local_shipping   Innert 9 Tagen geli"
+      ]
+    }
+  ]
+}

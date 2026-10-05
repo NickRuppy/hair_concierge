@@ -1,0 +1,1122 @@
+{
+  "snapshot_at": "2026-10-02T14:26:08.770Z",
+  "products": [
+    {
+      "id": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "name": "Allgäuer Ölmühle Bio Traubenkernöl",
+      "brand": "Allgäuer Ölmühle",
+      "gtins": [
+        {
+          "value": "4260389030401",
+          "canonical_gtin14": "04260389030401"
+        }
+      ],
+      "price_eur": 7.99,
+      "category_key": "oil",
+      "affiliate_link": "https://www.mueller.de/p/allgaeuer-oelmuehle-bio-traubenkernoel-223549/",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "unavailable",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-09-30T17:21:14.506+00:00"
+    },
+    {
+      "id": "fd83b493-f7be-4071-9642-3d5b92e30dc2",
+      "name": "Balea Traumlocken Öl",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4070765002089",
+          "canonical_gtin14": "04070765002089"
+        }
+      ],
+      "price_eur": 2.75,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/1635760/balea-professional-haaroel-traumlocken",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:35:53.578+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "1c43bc07-e3c6-4b8a-9b62-943147052e07",
+      "name": "Haaröl Oil Repair Intensiv",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4066447888195",
+          "canonical_gtin14": "04066447888195"
+        }
+      ],
+      "price_eur": 2.75,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/1700841/balea-professional-haaroel-oil-repair-intensiv",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-30T17:24:06.872+00:00",
+      "net_content_value": 100,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+      "name": "benecos BIO Körperöl Aprikosenkernöl",
+      "brand": "benecos",
+      "gtins": [
+        {
+          "value": "4260198097541",
+          "canonical_gtin14": "04260198097541"
+        }
+      ],
+      "price_eur": 6.99,
+      "category_key": "oil",
+      "affiliate_link": "https://www.mueller.de/p/benecos-bio-koerperoel-aprikosenkernoel-IPN2878067/",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:45:54.461+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-09-30T19:45:54.461+00:00"
+    },
+    {
+      "id": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "name": "benecos BIO Körperöl Macadamianussöl",
+      "brand": "benecos",
+      "gtins": [
+        {
+          "value": "4260198097596",
+          "canonical_gtin14": "04260198097596"
+        }
+      ],
+      "price_eur": 8.99,
+      "category_key": "oil",
+      "affiliate_link": "https://www.mueller.de/p/benecos-bio-koerperoel-macadamianussoel-IPN2878442/",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:45:42.97+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-09-30T19:45:42.97+00:00"
+    },
+    {
+      "id": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+      "name": "benecos BIO Körperöl Mandelöl",
+      "brand": "benecos",
+      "gtins": [
+        {
+          "value": "4260198097572",
+          "canonical_gtin14": "04260198097572"
+        }
+      ],
+      "price_eur": 8.99,
+      "category_key": "oil",
+      "affiliate_link": "https://www.mueller.de/p/benecos-bio-koerperoel-mandeloel-IPN2878446/",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:45:56.926+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-09-30T19:45:56.926+00:00"
+    },
+    {
+      "id": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+      "name": "benecos BIO Körperöl Wunderbaumsamenöl",
+      "brand": "benecos",
+      "gtins": [
+        {
+          "value": "4260198097534",
+          "canonical_gtin14": "04260198097534"
+        }
+      ],
+      "price_eur": 4.99,
+      "category_key": "oil",
+      "affiliate_link": "https://www.mueller.de/p/benecos-bio-koerperoel-wunderbaumsamenoel-IPN2878448/",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:45:47.603+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-09-30T19:45:47.603+00:00"
+    },
+    {
+      "id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "name": "BioGourmet Distelöl",
+      "brand": "BioGourmet",
+      "gtins": [
+        {
+          "value": "4039057414863",
+          "canonical_gtin14": "04039057414863"
+        }
+      ],
+      "price_eur": 5.99,
+      "category_key": "oil",
+      "affiliate_link": "https://www.mueller.de/p/biogourmet-disteloel-2529149/",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "unavailable",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-09-30T17:21:09.326+00:00"
+    },
+    {
+      "id": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+      "name": "dmBio Kokosöl nativ",
+      "brand": "dmBio",
+      "gtins": [
+        {
+          "value": "4058172504969",
+          "canonical_gtin14": "04058172504969"
+        }
+      ],
+      "price_eur": 2.85,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/1544928/dmbio-kokosoel-nativ",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:30:49.206+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "name": "dmBio natives Olivenöl extra",
+      "brand": "dmBio",
+      "gtins": [
+        {
+          "value": "4066447918687",
+          "canonical_gtin14": "04066447918687"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/1459848/dmbio-natives-olivenoel-extra",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-10-01T07:58:06.119913+00:00",
+      "net_content_value": 750,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+      "name": "Dr. Scheller Jojobaöl",
+      "brand": "Dr. Scheller",
+      "gtins": [
+        {
+          "value": "4051424570248",
+          "canonical_gtin14": "04051424570248"
+        }
+      ],
+      "price_eur": 8.45,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/1675203/dr-scheller-koerperoel-jojoba",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:27:06.006+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "70ea52bc-2194-4bb3-82a8-3f4a2aede041",
+      "name": "Dr. Scheller Reines Arganöl",
+      "brand": "Dr. Scheller",
+      "gtins": [
+        {
+          "value": "4051424570040",
+          "canonical_gtin14": "04051424570040"
+        }
+      ],
+      "price_eur": 8.45,
+      "category_key": "oil",
+      "affiliate_link": "https://www.mueller.de/p/dr-scheller-reines-arganoel-2859166/",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:45:52.157+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-09-30T19:45:52.157+00:00"
+    },
+    {
+      "id": "c574ee6f-ad22-45c0-b936-57b847d93433",
+      "name": "Garnier Fructis Sleek & Stay Heat-Activated Serum",
+      "brand": "Garnier",
+      "gtins": [
+        {
+          "value": "3600542638852",
+          "canonical_gtin14": "03600542638852"
+        }
+      ],
+      "price_eur": 7.99,
+      "category_key": "oil",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-sleek-und-stay-heat-activated-serum/p/3600542638852",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:39:08.924+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1",
+      "name": "Garnier Fructis Wunderöl",
+      "brand": "Garnier",
+      "gtins": [
+        {
+          "value": "3600542020053",
+          "canonical_gtin14": "03600542020053"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/1499815/garnier-fructis-haaroel-oil-repair-wunder-oel",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:33:42.438+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+      "name": "Garnier Wahre Schätze Curl Revival Öl",
+      "brand": "Garnier",
+      "gtins": [
+        {
+          "value": "3600542624336",
+          "canonical_gtin14": "03600542624336"
+        }
+      ],
+      "price_eur": 6.99,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/wahre-schaetze-haaroel-curl-revival-elixir-p3600542624336.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "b916efff-8b80-47d4-82cf-d8148d1eff53",
+      "name": "HASK Argan Oil Repairing Shine Oil",
+      "brand": "HASK",
+      "gtins": [
+        {
+          "value": "0071164029855",
+          "canonical_gtin14": "00071164029855"
+        }
+      ],
+      "price_eur": 2.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.hagel-shop.de/hask-argan-oil-repairing-shine-oil-18-ml-5815315.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "name": "Innersense Harmonic Treatment Oil",
+      "brand": "Innersense",
+      "gtins": [
+        {
+          "value": "850006575039",
+          "canonical_gtin14": "00850006575039"
+        }
+      ],
+      "price_eur": 29.99,
+      "category_key": "oil",
+      "affiliate_link": "https://www.douglas.de/de/p/m001643012",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:42:57.377+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "05e68c32-f096-457f-8b88-5cd3c0934873",
+      "name": "Jean&Len Repair Keratin & Mandel",
+      "brand": "Jean&Len",
+      "gtins": [
+        {
+          "value": "4262401733253",
+          "canonical_gtin14": "04262401733253"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/jean-und-len-haaroel-repair-keratin-und-mandel-p4262401733253.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+      "name": "Kevin Murphy Young Again",
+      "brand": "Kevin Murphy",
+      "gtins": [
+        {
+          "value": "9339341020356",
+          "canonical_gtin14": "09339341020356"
+        }
+      ],
+      "price_eur": 43,
+      "category_key": "oil",
+      "affiliate_link": "https://www.hagel-shop.de/kevin-murphy-young-again-leave-in-treatment-100-ml.html",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-30T17:45:07.855+00:00",
+      "net_content_value": 100,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+      "name": "KoRo MCT Öl",
+      "brand": "KoRo",
+      "gtins": [
+        {
+          "value": "4260718296232",
+          "canonical_gtin14": "04260718296232"
+        }
+      ],
+      "price_eur": 16.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/koro-mct-oel-p4260718296232.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:26:43.938+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "c05773dd-9656-4381-a0ab-8e9fc310c520",
+      "name": "L’Oréal Elvital Öl Magique Jojoba",
+      "brand": "L’Oréal",
+      "gtins": [
+        {
+          "value": "3600523749188",
+          "canonical_gtin14": "03600523749188"
+        }
+      ],
+      "price_eur": 6.99,
+      "category_key": "oil",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-oel-magique-jojoba-haaroel/p/3600523749188",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:38:52.955+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "21a94166-3813-4c0f-8912-508fb8f704f1",
+      "name": "L’Oréal Öl Magique Midnight Serum",
+      "brand": "L’Oréal",
+      "gtins": [
+        {
+          "value": "3600524135805",
+          "canonical_gtin14": "03600524135805"
+        }
+      ],
+      "price_eur": 7.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/l-oreal-paris-elvital-haarserum-oel-magique-midnight-serum-p3600524135805.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:24:59.114+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+      "name": "Maria Nila True Soft Argan Oil",
+      "brand": "Maria Nila",
+      "gtins": [
+        {
+          "value": "7391681036376",
+          "canonical_gtin14": "07391681036376"
+        }
+      ],
+      "price_eur": 37,
+      "category_key": "oil",
+      "affiliate_link": "https://www.hagel-shop.de/maria-nila-true-soft-argan-oil-100-ml.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:45:22.97+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "name": "MoriVeda Premium Moringaöl",
+      "brand": "MoriVeda",
+      "gtins": [
+        {
+          "value": "4251762160037",
+          "canonical_gtin14": "04251762160037"
+        }
+      ],
+      "price_eur": 16.99,
+      "category_key": "oil",
+      "affiliate_link": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:44:07.609+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "ff13bc3a-8bc6-49df-85a0-7a67add26926",
+      "name": "NANOIL Avocadoöl",
+      "brand": "NANOIL",
+      "gtins": [
+        {
+          "value": "5905669547130",
+          "canonical_gtin14": "05905669547130"
+        }
+      ],
+      "price_eur": 12.99,
+      "category_key": "oil",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-nanoil-avocadooel/p/5905669547130",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:39:51.672+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+      "name": "nedura Schwarzkümmelöl ungefiltert",
+      "brand": "nedura",
+      "gtins": [
+        {
+          "value": "4262490410776",
+          "canonical_gtin14": "04262490410776"
+        }
+      ],
+      "price_eur": 17.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/nedura-schwarzkuemmeloel-ungefiltert-p4262490410776.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:40:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "27a2dd61-6e54-4746-8e24-a698dbafbf91",
+      "name": "Neqi Opulent Oil",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528078520",
+          "canonical_gtin14": "04063528078520"
+        }
+      ],
+      "price_eur": 7.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/neqi-haarserum-opulent-oil-p4063528078520.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:25:22.532+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "78e6f1b2-7262-46af-b689-a92af6702739",
+      "name": "NUTREEOIL Cacay Öl",
+      "brand": "NUTREEOIL",
+      "gtins": [
+        {
+          "value": "4260541540014",
+          "canonical_gtin14": "04260541540014"
+        }
+      ],
+      "price_eur": 34.99,
+      "category_key": "oil",
+      "affiliate_link": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:56:10.154+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "5767f7a6-757c-40fa-b990-8e0a1abaea17",
+      "name": "Nuxe Huile Prodigieuse Öl",
+      "brand": "Nuxe",
+      "gtins": [
+        {
+          "value": "3264680009754",
+          "canonical_gtin14": "03264680009754"
+        },
+        {
+          "value": "3264680009761",
+          "canonical_gtin14": "03264680009761"
+        }
+      ],
+      "price_eur": 38.9,
+      "category_key": "oil",
+      "affiliate_link": "https://de.nuxe.com/products/wichtiger-ol%C2%AE-1",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:54:38.313+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "name": "OGX Argan weightless Öl",
+      "brand": "OGX",
+      "gtins": [
+        {
+          "value": "3574661563350",
+          "canonical_gtin14": "03574661563350"
+        }
+      ],
+      "price_eur": 8.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.hagel-shop.de/ogx-renewing-argan-oil-of-morocco-oil-weightless-reviving-dry-oil-118-ml.html",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-10-02T13:36:01.722+00:00",
+      "net_content_value": 118,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-10-02T13:36:01.722+00:00"
+    },
+    {
+      "id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "name": "OGX Bond Protein Repair",
+      "brand": "OGX",
+      "gtins": [
+        {
+          "value": "3574661818481",
+          "canonical_gtin14": "03574661818481"
+        }
+      ],
+      "price_eur": 8.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.amazon.de/OGX-Spr%C3%BChnebel-besch%C3%A4digtes-Technology-Dual-Action-Reparaturtechnologie/dp/B0DQLHGGYJ",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+      "name": "OGX Haaröl Moroccan Argan Penetrating Oil",
+      "brand": "OGX",
+      "gtins": [
+        {
+          "value": "3574661563312",
+          "canonical_gtin14": "03574661563312"
+        }
+      ],
+      "price_eur": 7.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/ogx-haaroel-moroccan-argan-penetrating-oil-p3574661563312.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:24:18.882+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "2858a8b6-018b-4949-ae58-eedc348d20b4",
+      "name": "OGX Miracle Coconut Oil",
+      "brand": "OGX",
+      "gtins": [
+        {
+          "value": "3574661563398",
+          "canonical_gtin14": "03574661563398"
+        }
+      ],
+      "price_eur": 7.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/ogx-haaroel-coconut-miracle-oil-p3574661563398.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:25:47.935+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+      "name": "Olaplex No.7 Bonding Oil",
+      "brand": "Olaplex",
+      "gtins": [
+        {
+          "value": "0850045076085",
+          "canonical_gtin14": "00850045076085"
+        }
+      ],
+      "price_eur": 32,
+      "category_key": "oil",
+      "affiliate_link": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:40:04.087+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5",
+      "name": "Pantene Pro-V Coconut Oil",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "8001841890012",
+          "canonical_gtin14": "08001841890012"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/1612745/pantene-pro-v-haaroel-coconut-infused-oil",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:23:55.519+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "fe974387-b487-470e-9799-69bb4249070b",
+      "name": "Pantene Pro-V Keratin Protect Öl",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "4084500084971",
+          "canonical_gtin14": "04084500084971"
+        }
+      ],
+      "price_eur": 3.99,
+      "category_key": "oil",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-repair-und-care-keratin-protect-oel/p/4084500084971",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:39:37.944+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "5827a3b9-a488-4c74-b13a-4d655f94f1c3",
+      "name": "Pantene Pro-V Miracles 7in1 Öl-Spray",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "8700216178402",
+          "canonical_gtin14": "08700216178402"
+        }
+      ],
+      "price_eur": 8.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.mueller.de/p/pantene-pro-v-miracles-oel-spray-7-in-1-IPN2992303/",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:45:49.913+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-09-30T19:45:49.913+00:00"
+    },
+    {
+      "id": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "name": "Primavera Calendulaöl Bio",
+      "brand": "Primavera",
+      "gtins": [
+        {
+          "value": "4086900743540",
+          "canonical_gtin14": "04086900743540"
+        }
+      ],
+      "price_eur": 15.9,
+      "category_key": "oil",
+      "affiliate_link": "https://www.mueller.de/p/primavera-calendulaoel-bio-IPN2893577/",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:45:45.279+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-09-30T19:45:45.279+00:00"
+    },
+    {
+      "id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+      "brand": "Shiseido Fino",
+      "gtins": [
+        {
+          "value": "4550516493590",
+          "canonical_gtin14": "04550516493590"
+        }
+      ],
+      "price_eur": 11,
+      "category_key": "oil",
+      "affiliate_link": "https://www.amazon.de/Fino-Premium-Touch-Penetrating-Essence/dp/B0GVFQP34X",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a",
+      "name": "Urban Alchemy Smooth Supreme Öl Serum",
+      "brand": "Urban Alchemy",
+      "gtins": [
+        {
+          "value": "4063528079978",
+          "canonical_gtin14": "04063528079978"
+        }
+      ],
+      "price_eur": 22.9,
+      "category_key": "oil",
+      "affiliate_link": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:53:43.383+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+      "name": "Weleda Hydra Shine Gloss Drops Alpen-Lein",
+      "brand": "Weleda",
+      "gtins": [
+        {
+          "value": "4001638590839",
+          "canonical_gtin14": "04001638590839"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.mueller.de/p/weleda-hydrashine-gloss-drops-haaroel-alpen-lein-PPN3138905/",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:45:40.65+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-09-30T19:45:40.65+00:00"
+    },
+    {
+      "id": "55c39339-bac0-4899-9499-ee96fa0bdad8",
+      "name": "Balea Professional Haaröl Plex Care",
+      "brand": "Balea Professional",
+      "gtins": [
+        {
+          "value": "4066447888218",
+          "canonical_gtin14": "04066447888218"
+        }
+      ],
+      "price_eur": 2.75,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 50,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "8a1f6818-84c7-4ed8-929a-221f0352b971",
+      "name": "Bali Curls Haaröl Bonding Oil",
+      "brand": "Bali Curls",
+      "gtins": [
+        {
+          "value": "4262391990513",
+          "canonical_gtin14": "04262391990513"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/3093558/bali-curls-haaroel-bonding-oil",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 30,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "7dcde56c-40e7-4e84-86b7-f6ac3d407a9d",
+      "name": "Dejan Garz Haaröl Violet Hair Oil The Britney",
+      "brand": "Dejan Garz",
+      "gtins": [
+        {
+          "value": "4063528101808",
+          "canonical_gtin14": "04063528101808"
+        }
+      ],
+      "price_eur": 8.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 50,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "4eddfc54-3704-4a3e-a9b7-0cff91538863",
+      "name": "Garnier Fructis Hitzeschutzspray Wunderöl, stark geschädigtes Haar",
+      "brand": "Garnier Fructis",
+      "gtins": [
+        {
+          "value": "3600542020060",
+          "canonical_gtin14": "03600542020060"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 150,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "770ee16b-154e-4c60-adf8-e9831718f6da",
+      "name": "Herbal Essences Haaröl Arganöl Elixir, Tiefenreparatur",
+      "brand": "Herbal Essences",
+      "gtins": [
+        {
+          "value": "8006530075718",
+          "canonical_gtin14": "08006530075718"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 95,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "c9ded02d-0bd8-4dc2-a7cc-c98f36dfe076",
+      "name": "Isana Professional Haaröl Arganöl & Pflege",
+      "brand": "Isana Professional",
+      "gtins": [
+        {
+          "value": "4068134024947",
+          "canonical_gtin14": "04068134024947"
+        }
+      ],
+      "price_eur": 2.79,
+      "category_key": "oil",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-02T00:00:00+00:00",
+      "net_content_value": 100,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-02T00:00:00+00:00"
+    },
+    {
+      "id": "f7f28e1c-e177-4505-906d-c59f4291ba6b",
+      "name": "L'Oréal Paris Elvital Haaröl Öl Magique, für alle Haartypen",
+      "brand": "L'Oréal Paris Elvital",
+      "gtins": [
+        {
+          "value": "3600523734955",
+          "canonical_gtin14": "03600523734955"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-02T00:00:00+00:00",
+      "net_content_value": 100,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-02T00:00:00+00:00"
+    },
+    {
+      "id": "f89c1edc-cb71-4ec6-ac86-dc27c515568e",
+      "name": "Langhaarmädchen Haaröl Intense Repair",
+      "brand": "Langhaarmädchen",
+      "gtins": [
+        {
+          "value": "4066447864793",
+          "canonical_gtin14": "04066447864793"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 150,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "010cf825-4892-4f78-bf20-26ad72122c60",
+      "name": "Neqi Smooth Strength Smooth Strength Rosemary Oil",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528086280",
+          "canonical_gtin14": "04063528086280"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.cosmeterie.at/neqi/smooth-strength-rosemary-oil",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-07-03T08:12:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-07-03T08:12:00+00:00"
+    },
+    {
+      "id": "f0168972-dcd4-4593-aeb5-38d12343468a",
+      "name": "Pantene Pro-V Haarkur Glatt & Seidig Arganöl Argan Infused Oil",
+      "brand": "Pantene Pro-V",
+      "gtins": [
+        {
+          "value": "4084500085350",
+          "canonical_gtin14": "04084500085350"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 100,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "e93d522b-6a07-42c8-8858-75a830d809b9",
+      "name": "Schwarzkopf Gliss Haaröl Tägliches Öl Elixier",
+      "brand": "Schwarzkopf Gliss",
+      "gtins": [
+        {
+          "value": "4015100813791",
+          "canonical_gtin14": "04015100813791"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-02T00:00:00+00:00",
+      "net_content_value": 75,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-02T00:00:00+00:00"
+    },
+    {
+      "id": "6c51a883-85ae-4778-bb17-2f1318e3c969",
+      "name": "Weleda Haaröl Rosmarin",
+      "brand": "Weleda",
+      "gtins": [
+        {
+          "value": "4001638093620",
+          "canonical_gtin14": "04001638093620"
+        }
+      ],
+      "price_eur": 11.95,
+      "category_key": "oil",
+      "affiliate_link": "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 50,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    }
+  ]
+}

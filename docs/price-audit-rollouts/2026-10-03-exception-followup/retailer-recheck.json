@@ -1,0 +1,930 @@
+{
+  "method": "Fresh unauthenticated GET of each approved exception primary URL. Exact matching relies on product-specific page data; generic group/variant minimum prices are not sufficient.",
+  "generated_at": "2026-10-03T13:14:19.856589+00:00",
+  "records": [
+    {
+      "id": "05e68c32-f096-457f-8b88-5cd3c0934873",
+      "name": "Jean&Len Repair Keratin & Mandel",
+      "category_key": "oil",
+      "registered_gtins": [
+        "4262401733253"
+      ],
+      "primary_url": "https://www.jeanlen.de/keratin-haaroel",
+      "expected": {
+        "price_eur": 3.99,
+        "package_value": 100,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4262401733253"
+        ]
+      },
+      "checked_at": "2026-10-03T13:13:44.650312+00:00",
+      "http_status": 200,
+      "final_url": "https://www.jeanlen.de/keratin-haaroel",
+      "content_type": "text/html; charset=UTF-8",
+      "structured_products": [
+        {
+          "@type": "Product",
+          "name": "Haaröl Keratin, 100 ml",
+          "sku": "2800101104",
+          "gtin13": "4262401733253",
+          "offers": {
+            "@type": "Offer",
+            "url": "https://www.jeanlen.de/keratin-haaroel",
+            "priceCurrency": "EUR",
+            "price": 3.99,
+            "availability": "https://schema.org/InStock",
+            "itemCondition": "https://schema.org/NewCondition",
+            "seller": {
+              "@type": "Organization",
+              "@id": "https://www.jeanlen.de/#organization",
+              "name": "Jean&Len"
+            },
+            "shippingDetails": {
+              "@type": "OfferShippingDetails",
+              "deliveryTime": {
+                "@type": "ShippingDeliveryTime",
+                "handlingTime": {
+                  "@type": "QuantitativeValue",
+                  "minValue": 3,
+                  "maxValue": 5,
+                  "unitCode": "DAY"
+                }
+              }
+            },
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "priceType": "https://schema.org/StrikethroughPrice",
+              "price": 5.99,
+              "priceCurrency": "EUR"
+            }
+          }
+        }
+      ],
+      "title": "Keratin Haaröl | Jean&Len",
+      "expected_price_mentions": {
+        "3,99": [
+          "        \n            \n    <p class=\"me-4 product-detail-price with-list-price\" data-elb-product=\"price:3.99;name:Haaröl Keratin, 100 ml;sku:2800101104\">        3,99 €    </p>\n\n            \n                            <span class=\"list-price-badge\" style=\"width: unset; padding: 0 0.25rem\">-33 &#37;</span>\n            \n                        \n                            <span class=\"product-detail-list",
+          "                               Verkaufspreis:\n                            </span>\n\n            <p class=\"product-detail-price with-list-price\">\n                3,99 €\n            </p>\n\n                                                                        <span class=\"list-price-badge\">&#37;</span>\n                    \n                                                            \n                     "
+        ],
+        "3.99": [
+          "    \n            <meta property=\"product:brand\"\n              content=\"Jean&amp;Len\">\n    \n            <meta property=\"product:price:amount\"\n          content=\"3.99\">\n    <meta property=\"product:price:currency\"\n          content=\"EUR\">\n    <meta property=\"product:product_link\"\n          content=\"https://www.jeanlen.de/keratin-haaroel\">\n\n    <meta name=\"twitter:card\"\n          content=\"product\">\n    <m",
+          "n-haaroel\",\n    \"offers\": {\n        \"@type\": \"Offer\",\n        \"url\": \"https://www.jeanlen.de/keratin-haaroel\",\n        \"priceCurrency\": \"EUR\",\n        \"price\": 3.99,\n        \"availability\": \"https://schema.org/InStock\",\n        \"itemCondition\": \"https://schema.org/NewCondition\",\n        \"seller\": {\n            \"@type\": \"Organization\",\n            \"@id\": \"https://www.jeanlen.de/#organization\",\n        ",
+          "ow.wgs_extra.pv = {\n\tid: '0193f3349716718fa24da0310da8a82d',\n\tsku: '2800101104',\n\tbrand: 'Jean&amp;Len',\n\tquantity: 1,\n\tname: 'Haaröl Keratin, 100 ml',\n\tprice: 3.99,\n\tcurrency: '',\n};\n\t\t</script>\n\n\t\t<script>\n\t\t\tfunction __wgs_ssn_api(uid, on) {\n\t\t\t\tconst ss_script_url = \"https://www.jeanlen.de/storefront/script/wgsssn\";\n\t\t\t\tconst parms = {};\n\t\t\t\tif (uid) {\n\t\t\t\t\tparms[\"mbssn\"] = uid;\n\t\t\t\t}\n\t\t\t\tif (on) ",
+          "                                       \n        \n                \n            \n    <p class=\"me-4 product-detail-price with-list-price\" data-elb-product=\"price:3.99;name:Haaröl Keratin, 100 ml;sku:2800101104\">        3,99 €    </p>\n\n            \n                            <span class=\"list-price-badge\" style=\"width: unset; padding: 0 0.25rem\">-33 &#37;</span>\n            \n                        \n   "
+        ]
+      },
+      "expected_package_mentions": {
+        "100ml": [],
+        "100 ml": [
+          "org\",\n    \"@type\": \"Product\",\n    \"@id\": \"https://www.jeanlen.de/keratin-haaroel#product\",\n    \"name\": \"Haaröl Keratin, 100 ml\",\n    \"sku\": \"2800101104\",\n    \"productID\": \"0193f3349716718fa24da0310da8a82d\",\n    \"url\": \"https://www.jeanlen.de/keratin-haaroel\",\n    \"offers\": {\n        \"@type\": \"Offer\",\n    ",
+          ": '0193f3349716718fa24da0310da8a82d',\n\tsku: '2800101104',\n\tbrand: 'Jean&amp;Len',\n\tquantity: 1,\n\tname: 'Haaröl Keratin, 100 ml',\n\tprice: 3.99,\n\tcurrency: '',\n};\n\t\t</script>\n\n\t\t<script>\n\t\t\tfunction __wgs_ssn_api(uid, on) {\n\t\t\t\tconst ss_script_url = \"https://www.jeanlen.de/storefront/script/wgsssn\";\n\t\t\t\tcon",
+          "-elbaction=\"load:view\" data-elbcontext=\"shopping:consideration\">         <meta itemprop=\"name\" content=\"Haaröl Keratin, 100 ml\" />\n        <div class=\"d-none\"></div>\n                    \n        <div class=\"cms-sections\">\n                                            \n            \n            \n            \n",
+          "                       <h1 class=\"product-detail-name d-none\" itemprop=\"name\" >\n                        Haaröl Keratin, 100 ml\n                    </h1>\n                                                    </div>\n                    </div>\n    \n                <div class=\"col-md-auto product-heading-manufa",
+          "            \n                              <h1 class=\"product-detail-h1-name h2\" data-elb-product=\"name:Haaröl Keratin, 100 ml\">Haaröl Keratin, 100 ml</h1>\n                            <h2 class=\"product-detail-h2-name\">Veganes Keratin Haaröl für trockenes und strukturgeschädigtes Haar</h2>\n               ",
+          "                   <h1 class=\"product-detail-h1-name h2\" data-elb-product=\"name:Haaröl Keratin, 100 ml\">Haaröl Keratin, 100 ml</h1>\n                            <h2 class=\"product-detail-h2-name\">Veganes Keratin Haaröl für trockenes und strukturgeschädigtes Haar</h2>\n                  \t\t\t                  "
+        ],
+        "100 Milliliter": []
+      },
+      "positive_purchase_marker": true,
+      "challenge": false
+    },
+    {
+      "id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "category_key": "conditioner",
+      "registered_gtins": [
+        "4072600703403"
+      ],
+      "primary_url": "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+      "expected": {
+        "price_eur": 2.8,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4072600703403"
+        ]
+      },
+      "checked_at": "2026-10-03T13:13:43.472045+00:00",
+      "fetch_error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "name": "BioGourmet Distelöl",
+      "category_key": "oil",
+      "registered_gtins": [
+        "4039057414863"
+      ],
+      "primary_url": "https://www.greenist.de/biogourmet-bio-disteloel-250ml.html",
+      "expected": {
+        "price_eur": 6.29,
+        "package_value": 250,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4039057414863"
+        ]
+      },
+      "checked_at": "2026-10-03T13:13:44.560893+00:00",
+      "http_status": 200,
+      "final_url": "https://www.greenist.de/biogourmet-bio-disteloel-250ml.html",
+      "content_type": "text/html; charset=UTF-8",
+      "structured_products": [],
+      "title": "Distelöl nativ kaltgepresst, Bio-Speiseöl | BioGourmet",
+      "expected_price_mentions": {
+        "6,29": [
+          "elo-l.png\" />\n<meta itemprop=\"og:availability\" href=\"instock\" />\n<meta property=\"product:brand\" content=\"BioGourmet\" />\n<meta property=\"product:price\" content=\"6,29\" />\n<meta itemprop=\"product:price:currency\" content=\"EUR\"/>\n<meta property=\"product:product_link\" content=\"https://www.greenist.de/biogourmet-bio-disteloel-250ml.html\" />\n<meta name=\"twitter:card\" content=\"product\" />\n<meta name=\"twitter:s",
+          "ner-data\">\n<div class=\"product--price price--default\">\n<div class=\"price--content content--default\">\n<div class=\"price\">\n<meta itemprop=\"price\" content=\"6.29\">\n6,29&nbsp;&#8364;\n</div>\n</div>\n<p class=\"product--tax showMe\" data-content=\"\" data-modalbox=\"true\" data-targetSelector=\"a\" data-mode=\"ajax\">\n25,16&nbsp;&#8364;/1 L •\ninkl. MwSt. <a title=\"Versandkosten\" href=\"https://www.greenist.de/versandbed",
+          "www.greenist.de\\/media\\/image\\/7a\\/18\\/ed\\/Gourmet-Diestelo-l_400x400.webp\"}],\"supplier\":\"BioGourmet\",\"baseprice\":\"0.25 L (25,16&nbsp;&#8364; *\\/1 L)\",\"price\":\"6,29&nbsp;&#8364;\"}};\nvar csrfConfig = csrfConfig || {\"generateUrl\":\"\\/csrftoken\",\"basePath\":\"\\/\",\"shopId\":1};\nvar statisticDevices = [\n{ device: 'mobile', enter: 0, exit: 767 },\n{ device: 'tablet', enter: 768, exit: 1259 },\n{ device: 'desktop'"
+        ],
+        "6.29": [
+          "-container-data\">\n<div class=\"product--price price--default\">\n<div class=\"price--content content--default\">\n<div class=\"price\">\n<meta itemprop=\"price\" content=\"6.29\">\n6,29&nbsp;&#8364;\n</div>\n</div>\n<p class=\"product--tax showMe\" data-content=\"\" data-modalbox=\"true\" data-targetSelector=\"a\" data-mode=\"ajax\">\n25,16&nbsp;&#8364;/1 L •\ninkl. MwSt. <a title=\"Versandkosten\" href=\"https://www.greenist.de/ver"
+        ]
+      },
+      "expected_package_mentions": {
+        "250 ml": [
+          "-250-ml.html\">\n<div class=\"product--title\">\n<span class=\"manufacturer\">Bio Planète</span>\nBio Olivenöl &amp; Balsamico, 250 ml\n</div>\n<div class=\"product--rating-container\">\n<span class=\"product--rating\">\n<span class=\"rating--average\">\n5.0\n</span>\n<i class=\"icon--star\"></i>\n<i class=\"icon--star\"></i>\n<i c",
+          "\n<a href=\"https://www.greenist.de/bio-planete-bio-olivenoel-balsamico-250-ml.html\" title=\"Bio Olivenöl &amp; Balsamico, 250 ml\" class=\"product--image\" >\n<div class=\"image--element\">\n<span class=\"image--media\">\n<picture>\n<source srcset=\"https://www.greenist.de/media/image/b2/92/2b/Planete-Zitronen-l-11_200",
+          "/www.greenist.de/media/image/05/3e/c4/Planete-Zitronen-l-11_200x200.png\" alt=\"Bio Planète Bio Olivenöl &amp; Balsamico, 250 ml\" title=\"Bio Planète Bio Olivenöl &amp; Balsamico, 250 ml\" />\n</picture>\n</span>\n</div>\n</a>\n<div class=\"product--bottom\">\n<div class=\"product--price-info\">\n<div class=\"product--pr",
+          "11_200x200.png\" alt=\"Bio Planète Bio Olivenöl &amp; Balsamico, 250 ml\" title=\"Bio Planète Bio Olivenöl &amp; Balsamico, 250 ml\" />\n</picture>\n</span>\n</div>\n</a>\n<div class=\"product--bottom\">\n<div class=\"product--price-info\">\n<div class=\"product--price\">\n<div class=\"price--default is--nowrap\">\n<div class="
+        ],
+        "250 Milliliter": [
+          "lliert ökologischer Erzeugung</p>\n</div>\n<div class=\"nutrition--title\">\nInhalt\n</div>\n<div class=\"nutrition--value\">\n<p>250 Milliliter (ml)\n</p>\n</div>\n<div class=\"nutrition--title\">\nUrsprung der Rohstoffe\n</div>\n<div class=\"nutrition--value\">\n<p>Diverse</p>\n</div>\n<div class=\"nutrition--title\">\nInverkehrbringer\n"
+        ],
+        "250ml": [
+          "yer.push({\"ecommerce\":{\"detail\":{\"actionField\":{\"list\":\"Samen &amp;amp; Kerne\"},\"products\":[{\"name\":\"Bio Distel\\u00f6l, 250ml\",\"id\":\"BGT-OEDI\",\"price\":\"5.8785046728972\",\"brand\":\"BioGourmet\",\"category\":\"Samen &amp;amp; Kerne\",\"variant\":\"\"}]},\"currencyCode\":\"EUR\"},\"google_tag_params\":{\"ecomm_pagetype\":\"pro",
+          "tent=\"greenist.de - natürlich gut\" />\n<meta property=\"og:url\" content=\"https://www.greenist.de/biogourmet-bio-disteloel-250ml.html\" />\n<meta property=\"og:title\" content=\"Bio Distelöl, 250ml\" />\n<meta property=\"og:description\" content=\" Das native Distelöl von  BioGourmet  wird schonend kaltgepresst und b",
+          "ntent=\"https://www.greenist.de/biogourmet-bio-disteloel-250ml.html\" />\n<meta property=\"og:title\" content=\"Bio Distelöl, 250ml\" />\n<meta property=\"og:description\" content=\" Das native Distelöl von  BioGourmet  wird schonend kaltgepresst und behält so sein mild-nussiges Aroma. Ein feines Bio-Speiseöl, das ",
+          "rrency\" content=\"EUR\"/>\n<meta property=\"product:product_link\" content=\"https://www.greenist.de/biogourmet-bio-disteloel-250ml.html\" />\n<meta name=\"twitter:card\" content=\"product\" />\n<meta name=\"twitter:site\" content=\"greenist.de - natürlich gut\" />\n<meta name=\"twitter:title\" content=\"Bio Distelöl, 250ml\"",
+          "/>\n<meta name=\"twitter:site\" content=\"greenist.de - natürlich gut\" />\n<meta name=\"twitter:title\" content=\"Bio Distelöl, 250ml\" />\n<meta name=\"twitter:description\" content=\" Das native Distelöl von  BioGourmet  wird schonend kaltgepresst und behält so sein mild-nussiges Aroma. Ein feines Bio-Speiseöl, das",
+          "ta name=\"theme-color\" content=\"#94b022\" />\n<link rel=\"canonical\" href=\"https://www.greenist.de/biogourmet-bio-disteloel-250ml.html\" />\n<title itemprop=\"name\">Distelöl nativ kaltgepresst, Bio-Speiseöl | BioGourmet</title>\n<link rel=\"preload\" as=\"font\" crossorigin=\"crossorigin\" type=\"font/woff2\" href=\"/the"
+        ]
+      },
+      "positive_purchase_marker": true,
+      "challenge": false
+    },
+    {
+      "id": "315ae9f5-ad1a-4159-b307-2413338c8052",
+      "name": "Herbal Essences Haarmaske Blütensanft",
+      "category_key": "mask",
+      "registered_gtins": [
+        "8700216212724"
+      ],
+      "primary_url": "https://www.office-partner.de/herbal-essences-rose-haarmaske-300-ml-n2000020455",
+      "expected": {
+        "price_eur": 5.58,
+        "package_value": 300,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "8700216212724"
+        ]
+      },
+      "checked_at": "2026-10-03T13:13:43.953766+00:00",
+      "http_status": 200,
+      "final_url": "https://www.office-partner.de/herbal-essences-rose-haarmaske-300-ml-n2000020455",
+      "content_type": "text/html; charset=UTF-8",
+      "structured_products": [],
+      "title": "Herbal Essences Rose Haarmaske 300 ml | office-partner.de",
+      "expected_price_mentions": {
+        "5.58": [],
+        "5,58": [
+          "             \n            <div class=\"discount percent-list-badge\">\n    -11%\n  </div>\n                <del class=\"list-prices-max-price\">\n          Einzelkauf: 5,58 €\n        </del>\n      </div>\n        <div class=\"price-widget__inner\">      <div itemprop=\"priceSpecification\" itemscope itemtype=\"http://schema.org/UnitPriceSpecification\">\n      <meta itemprop=\"price\" content=\"4.99\">\n      <meta itempro",
+          "    <div class=\"price-list__row\">\n        <div class=\"price-list__item\">\n                      1\n                  </div>\n        <div class=\"price-list__item\">5,58 €*</div>\n                  <div class=\"price-list__item price-list__item--base-price\">18,60 € je 1 l</div>\n              </div>\n          <div class=\"price-list__row\">\n        <div class=\"price-list__item\">\n                      ab\n       ",
+          "ull\" data-vue-component=\"AddedToCartModal\" data-vue-props='{\"productNumber\":\"n2000020455\",\"productName\":\"Herbal Essences Rose Haarmaske 300 ml\",\"productPrice\":\"5,58\",\"categoryPath\":\"\",\"goToCartPath\":\"/cart/\",\"formActionPath\":\"/ajax/cart/add?productId=323989\",\"reloadPageOnClose\":false}'>\n\n    <button class=\"add-to-cart__button btn--full\" type=\"button\"\n            data-form-submit-btn    tabindex=\"\" >\n ",
+          "nner\">  \n  \n  \n  <div class=\"price-widget__unit-label\">\n    Je Stück nur:\n  </div>\n\n<div class=\"price text-brand-accent  \"\n     id=\"product-323947-price\" >\n    5,58 €\n</div>\n</div>  </div>\n  </div>\n</div>\n\n<div class=\"price-widget__price-info  price-widget__price-info--tiered\">\n\n      \n      inkl. MwSt. zzgl.\n    <a class=\"link\" title=\"Versandkosten\"\n       href=\"/versandinformationen\">Versand</a>\n   ",
+          "dToCartModal\" data-vue-props='{\"productNumber\":\"n2000013049\",\"productName\":\"head\\u0026shoulders\\u00ae DERMAXPRO BERUHIGEND Sp\\u00fclung 220 ml\",\"productPrice\":\"5,58\",\"categoryPath\":\"\",\"goToCartPath\":\"/cart/\",\"formActionPath\":\"/ajax/cart/add?productId=323947\",\"reloadPageOnClose\":false}'>\n\n    <button class=\"add-to-cart__button \" type=\"button\"\n            data-form-submit-btn    tabindex=\"\" >\n        <s",
+          "div class=\"price-widget__unit-label\">\n    Je Stück nur:\n  </div>\n\n<div class=\"price text-brand-accent pds-summary__price \"\n     id=\"product-323989-price\" >\n    5,58 €\n</div>\n        <div class=\"pds-summary__price-info \">\n                  \n              inkl. MwSt. zzgl.\n        <a class=\"link\" title=\"Versandkosten\" href=\"/versandinformationen\" tabindex=\"-1\">\n          Versand\n        </a>\n        ab\n",
+          "s=\"\" data-vue-component=\"AddedToCartModal\" data-vue-props='{\"productNumber\":\"n2000020455\",\"productName\":\"Herbal Essences Rose Haarmaske 300 ml\",\"productPrice\":\"5,58\",\"categoryPath\":\"\",\"goToCartPath\":\"/cart/\",\"formActionPath\":\"/ajax/cart/add?productId=323989\",\"reloadPageOnClose\":false}'>\n\n    <button class=\"add-to-cart__button \" type=\"button\"\n            data-form-submit-btn    tabindex=\"-1\" >\n        "
+        ]
+      },
+      "expected_package_mentions": {
+        "300ml": [
+          "-management/products/assets/n2000020455/product_image/n2000020455_procter_and_gamble_8700216212724he_mask_des_rose_soft_300ml_dachc1n1.jpeg\">\n  <meta name=\"twitter:card\" content=\"summary_large_image\">\n<meta name=\"twitter:site\" content=\"@Office_Partner\">\n\n    <meta name=\"twitter:title\" content=\"Herbal Ess",
+          "-management/products/assets/n2000020455/product_image/n2000020455_procter_and_gamble_8700216212724he_mask_des_rose_soft_300ml_dachc1n1.jpeg\">\n\n            <link rel=\"stylesheet\" href=\"https://www.office-partner.de/build/op-theme/vendors.1689a1fb.css\"><link rel=\"stylesheet\" href=\"https://www.office-partne",
+          "t%2Fproducts%2Fassets%2Fn2000020455%2Fproduct_image%2Fn2000020455_procter_and_gamble_8700216212724he_mask_des_rose_soft_300ml_dachc1n1.jpeg\\u0026description=Herbal%20Essences%20Rose%20Haarmaske%20300%20ml\",\"attrs\":{\"target\":\"_blank\",\"rel\":\"nofollow noopener\",\"title\":\"Pinterest\"}}],\"ariaLabel\":\"Produkt te",
+          "-management/products/assets/n2000020455/product_image/n2000020455_procter_and_gamble_8700216212724he_mask_des_rose_soft_300ml_dachc1n1.jpeg?\">\n        <a tabindex=\"-1\" class=\"fancybox\" href=\"https://cdn-media.office-partner.de/product-management/products/assets/n2000020455/product_image/n2000020455_proct",
+          "-management/products/assets/n2000020455/product_image/n2000020455_procter_and_gamble_8700216212724he_mask_des_rose_soft_300ml_dachc1n1.jpeg?\"\n           data-fancybox=\"productgallery\"\n           data-thumb-src=\"https://cdn-media.office-partner.de/product-management/products/assets/n2000020455/product_ima",
+          "-management/products/assets/n2000020455/product_image/n2000020455_procter_and_gamble_8700216212724he_mask_des_rose_soft_300ml_dachc1n1.jpeg?\">\n          <img class=\"product-img\" src=\"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7\"\n               data-lazy-src=\"https://cdn-"
+        ],
+        "300 ml": [
+          "heme-color\" content=\"#ffffff\" media=\"(prefers-color-scheme: light)\">\n    <title>\n        Herbal Essences Rose Haarmaske 300 ml | office-partner.de    </title>\n\n        <meta itemprop=\"name\" content=\"Herbal Essences Rose Haarmaske 300 ml\">\n\n    \n          <meta name=\"title\" content=\"Herbal Essences Rose Ha",
+          "Haarmaske 300 ml | office-partner.de    </title>\n\n        <meta itemprop=\"name\" content=\"Herbal Essences Rose Haarmaske 300 ml\">\n\n    \n          <meta name=\"title\" content=\"Herbal Essences Rose Haarmaske 300 ml\">\n\n                <meta name=\"description\" content=\"Inhalt:  300 ml. Herbal Essences Rose Haar",
+          "ent=\"Herbal Essences Rose Haarmaske 300 ml\">\n\n    \n          <meta name=\"title\" content=\"Herbal Essences Rose Haarmaske 300 ml\">\n\n                <meta name=\"description\" content=\"Inhalt:  300 ml. Herbal Essences Rose Haarmaske 300 ml Die Herbal Essences Rose Haarmaske ist speziell für Frauen mit trockene",
+          "me=\"title\" content=\"Herbal Essences Rose Haarmaske 300 ml\">\n\n                <meta name=\"description\" content=\"Inhalt:  300 ml. Herbal Essences Rose Haarmaske 300 ml Die Herbal Essences Rose Haarmaske ist speziell für Frauen mit trockenem Haar entw… n2000020455\">\n  <meta property=\"og:url\" content=\"https:/",
+          "e Haarmaske 300 ml\">\n\n                <meta name=\"description\" content=\"Inhalt:  300 ml. Herbal Essences Rose Haarmaske 300 ml Die Herbal Essences Rose Haarmaske ist speziell für Frauen mit trockenem Haar entw… n2000020455\">\n  <meta property=\"og:url\" content=\"https://www.office-partner.de/herbal-essences-",
+          "erty=\"og:site_name\" content=\"office-partner.de\">\n\n    <meta property=\"og:title\" content=\"Herbal Essences Rose Haarmaske 300 ml\">\n\n                <meta property=\"og:description\" content=\"Inhalt:  300 ml. Herbal Essences Rose Haarmaske 300 ml Die Herbal Essences Rose Haarmaske ist speziell für Frauen mit t"
+        ],
+        "300 Milliliter": []
+      },
+      "positive_purchase_marker": true,
+      "challenge": false
+    },
+    {
+      "id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "name": "MoriVeda Premium Moringaöl",
+      "category_key": "oil",
+      "registered_gtins": [
+        "4251762160037"
+      ],
+      "primary_url": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+      "expected": {
+        "price_eur": 16.99,
+        "package_value": 100,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4251762160037"
+        ]
+      },
+      "checked_at": "2026-10-03T13:13:44.732059+00:00",
+      "fetch_error": "<urlopen error _ssl.c:1112: The handshake operation timed out>"
+    },
+    {
+      "id": "4506954b-128a-473c-866f-54a300ff23f4",
+      "name": "Hair Biology Full & Shining Conditioner",
+      "category_key": "conditioner",
+      "registered_gtins": [
+        "8001841216997"
+      ],
+      "primary_url": "https://www.galaxus.de/de/s6/product/hair-biology-haarspuelung-full-shining-160-ml-160-ml-conditioner-13128066",
+      "expected": {
+        "price_eur": 5.24,
+        "package_value": 160,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "8001841216997"
+        ]
+      },
+      "checked_at": "2026-10-03T13:13:43.626633+00:00",
+      "fetch_error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+      "category_key": "oil",
+      "registered_gtins": [
+        "4550516493590"
+      ],
+      "primary_url": "https://nalda.de/products/4550516493590",
+      "expected": {
+        "price_eur": 14.63,
+        "package_value": 70,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4550516493590"
+        ]
+      },
+      "checked_at": "2026-10-03T13:13:45.149103+00:00",
+      "http_status": 200,
+      "final_url": "https://nalda.de/products/4550516493590",
+      "content_type": "text/html; charset=utf-8",
+      "structured_products": [
+        {
+          "@type": "Product",
+          "name": "Fino Premium Touch Penetration Essence Hair Oil 70ml",
+          "sku": "4550516493590",
+          "gtin13": "4550516493590",
+          "offers": {
+            "@type": "Offer",
+            "url": "/products/4550516493590",
+            "priceCurrency": "EUR",
+            "price": "14.63",
+            "itemCondition": "https://schema.org/NewCondition",
+            "availability": "https://schema.org/InStock",
+            "shippingDetails": {
+              "@type": "OfferShippingDetails",
+              "deliveryTime": {
+                "@type": "ShippingDeliveryTime",
+                "handlingTime": {
+                  "@type": "QuantitativeValue",
+                  "minValue": 0,
+                  "maxValue": 1,
+                  "unitCode": "DAY"
+                },
+                "transitTime": {
+                  "@type": "QuantitativeValue",
+                  "minValue": 1,
+                  "maxValue": 9,
+                  "unitCode": "DAY"
+                }
+              }
+            },
+            "hasMerchantReturnPolicy": {
+              "@type": "MerchantReturnPolicy",
+              "applicableCountry": "DE",
+              "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+              "merchantReturnDays": 14
+            }
+          }
+        }
+      ],
+      "title": "Fino Premium Touch Penetration Essence Hair Oil 70ml von Fino | Artikel kaufen | Nalda",
+      "expected_price_mentions": {
+        "14.63": [
+          "859864]   button[_ngcontent-ng-c456859864]{width:100%;font-size:initial;min-width:fit-content}}</style><meta name=\"description\" content=\"4550516493590 | Preis: 14.63 EUR | Zustand: Neu | Bestpreis-Garantie | Pro Artikel wird ein Baum gepflanzt\"><meta name=\"name\" content=\"Fino Premium Touch Penetration Essence Hair Oil 70ml von Fino | Artikel kaufen | Nalda\"><meta property=\"og:type\" content=\"article\"><m",
+          "mage\" content=\"https://static.prod.qogita.com/files/images/variants/PGF6UbmkgewCxqnDqKEyGH.jpg\"><meta property=\"og:description\" content=\"4550516493590 | Preis: 14.63 EUR | Zustand: Neu | Bestpreis-Garantie | Pro Artikel wird ein Baum gepflanzt\"><meta property=\"article:author\" content=\"Fino\"><script type=\"application/ld+json\">{\"@context\":\"https://schema.org/\",\"@type\":\"Product\",\"name\":\"Fino Premium Touch",
+          "ration Essence Hair Oil 70ml\",\"image\":[\"https://static.prod.qogita.com/files/images/variants/PGF6UbmkgewCxqnDqKEyGH.jpg\"],\"description\":\"4550516493590 | Preis: 14.63 EUR | Zustand: Neu | Bestpreis-Garantie | Pro Artikel wird ein Baum gepflanzt\",\"sku\":\"4550516493590\",\"gtin13\":\"4550516493590\",\"offers\":{\"@type\":\"Offer\",\"url\":\"/products/4550516493590\",\"priceCurrency\":\"EUR\",\"price\":\"14.63\",\"itemCondition\":\"",
+          "ird ein Baum gepflanzt\",\"sku\":\"4550516493590\",\"gtin13\":\"4550516493590\",\"offers\":{\"@type\":\"Offer\",\"url\":\"/products/4550516493590\",\"priceCurrency\":\"EUR\",\"price\":\"14.63\",\"itemCondition\":\"https://schema.org/NewCondition\",\"availability\":\"https://schema.org/InStock\",\"shippingDetails\":{\"@type\":\"OfferShippingDetails\",\"deliveryTime\":{\"@type\":\"ShippingDeliveryTime\",\"handlingTime\":{\"@type\":\"QuantitativeValue\",\"mi",
+          "ps://static.prod.qogita.com/files/images/variants/PGF6UbmkgewCxqnDqKEyGH.jpg\",\"description\":null,\"category\":\"2.1.1.9\",\"country\":\"DE\",\"condition\":\"new\",\"price\":\"14.63\",\"currency\":\"EUR\",\"deliveryDays\":9,\"stock\":2880,\"returnDays\":14,\"image2Url\":null,\"image3Url\":null,\"image4Url\":null,\"image5Url\":null,\"attributes\":{\"brand\":\"Fino\",\"weight_g\":149,\"width_mm\":40,\"height_mm\":83,\"length_mm\":96,\"seller_category\":\""
+        ],
+        "14,63": [
+          "ntent-ng-c456859864 ngh=\"7\"><div class=\"flex flex-col\"><div class=\"h-2 md:h-16\"><!----></div><div class=\"hidden md:block font-bold text-[26px] lg:text-[32px]\"> 14,63&nbsp;€ </div><!----><!----></div></app-product-variants></div></div><div _ngcontent-ng-c456859864 class=\"price-details-container lg:text-[27px] md:text-[18px] mt-[2%]\"><div _ngcontent-ng-c456859864 class=\"mt-[20px]\"><app-product-features _",
+          "action=\"click:;\">×</span><span class=\"ng-value-label\"><div class=\"flex flex-row gap-2 justify-between w-full\"><!----><!----><div class=\"font-bold text-[26px]\"> 14,63&nbsp;€ </div></div></span><!----></div><!----><!----><!----><div class=\"ng-input\"><input aria-autocomplete=\"list\" role=\"combobox\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" autocomplete=\"off\" readonly value aria-expanded=\"false\" di"
+        ]
+      },
+      "expected_package_mentions": {
+        "70 ml": [],
+        "70 Milliliter": [],
+        "70ml": [
+          "n\" data-beasties-container><head>\n    <meta charset=\"utf-8\">\n    <title>Fino Premium Touch Penetration Essence Hair Oil 70ml von Fino | Artikel kaufen | Nalda</title>\n    <base href=\"/\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1.0\">\n    <link rel=\"icon\" type",
+          "antie | Pro Artikel wird ein Baum gepflanzt\"><meta name=\"name\" content=\"Fino Premium Touch Penetration Essence Hair Oil 70ml von Fino | Artikel kaufen | Nalda\"><meta property=\"og:type\" content=\"article\"><meta property=\"og:title\" content=\"Fino Premium Touch Penetration Essence Hair Oil 70ml von Fino | Ar",
+          "property=\"og:type\" content=\"article\"><meta property=\"og:title\" content=\"Fino Premium Touch Penetration Essence Hair Oil 70ml von Fino | Artikel kaufen | Nalda\"><meta property=\"og:image\" content=\"https://static.prod.qogita.com/files/images/variants/PGF6UbmkgewCxqnDqKEyGH.jpg\"><meta property=\"og:descripti",
+          "on/ld+json\">{\"@context\":\"https://schema.org/\",\"@type\":\"Product\",\"name\":\"Fino Premium Touch Penetration Essence Hair Oil 70ml\",\"image\":[\"https://static.prod.qogita.com/files/images/variants/PGF6UbmkgewCxqnDqKEyGH.jpg\"],\"description\":\"4550516493590 | Preis: 14.63 EUR | Zustand: Neu | Bestpreis-Garantie | ",
+          "iner\"><h1 _ngcontent-ng-c456859864 class=\"!text-[26px] lg:!text-[35px]\">Fino Premium Touch Penetration Essence Hair Oil 70ml</h1></div><div _ngcontent-ng-c456859864 class=\"details\"><div _ngcontent-ng-c456859864 class=\"subheader-container leading-normal text-xl\"><!----><span _ngcontent-ng-c456859864 clas",
+          "ass=\"title-container\"><h1 _ngcontent-ng-c456859864 class=\"!text-[26px]\">Fino Premium Touch Penetration Essence Hair Oil 70ml</h1></div><div _ngcontent-ng-c456859864 class=\"details\"><div _ngcontent-ng-c456859864 class=\"subheader-container text-sm\"><!----><span _ngcontent-ng-c456859864 class=\"author\"><a _"
+        ]
+      },
+      "positive_purchase_marker": true,
+      "challenge": false
+    },
+    {
+      "id": "695414e1-3435-4304-943b-76677408980c",
+      "name": "Maria Nila Structure Repair Leave-In",
+      "category_key": "leave_in",
+      "registered_gtins": [
+        "7391681036079"
+      ],
+      "primary_url": "https://www.cosmeterie.de/maria-nila/structure-repair-leave-in-cream-1",
+      "expected": {
+        "price_eur": 32.0,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "7391681036079"
+        ]
+      },
+      "checked_at": "2026-10-03T13:13:43.957451+00:00",
+      "http_status": 200,
+      "final_url": "https://www.cosmeterie.de/maria-nila/structure-repair-leave-in-cream-1",
+      "content_type": "text/html; charset=UTF-8",
+      "structured_products": [
+        {
+          "@type": "Product",
+          "name": "Maria Nila Structure Repair Leave-In Cream, 200 ml",
+          "sku": "NF-MN-3607",
+          "gtin13": "7391681036079",
+          "offers": {
+            "@context": "https://schema.org",
+            "@type": "Offer",
+            "price": "32.00",
+            "url": "https://www.cosmeterie.de/maria-nila/structure-repair-leave-in-cream-1",
+            "priceCurrency": "EUR",
+            "itemCondition": "https://schema.org/NewCondition",
+            "availability": "https://schema.org/InStock",
+            "hasMerchantReturnPolicy": {
+              "@type": "MerchantReturnPolicy",
+              "applicableCountry": "DE",
+              "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+              "merchantReturnDays": 30,
+              "returnMethod": "https://schema.org/ReturnByMail",
+              "returnFees": "https://schema.org/FreeReturn"
+            },
+            "shippingDetails": {
+              "@type": "OfferShippingDetails",
+              "shippingRate": {
+                "@type": "MonetaryAmount",
+                "value": 5.29,
+                "currency": "EUR"
+              },
+              "shippingDestination": {
+                "@type": "DefinedRegion",
+                "addressCountry": "DE"
+              },
+              "deliveryTime": {
+                "@type": "ShippingDeliveryTime",
+                "businessDays": {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    "https://schema.org/Monday",
+                    "https://schema.org/Tuesday",
+                    "https://schema.org/Wednesday",
+                    "https://schema.org/Thursday",
+                    "https://schema.org/Friday"
+                  ]
+                },
+                "cutoffTime": "23:59:00Z",
+                "handlingTime": {
+                  "@type": "QuantitativeValue",
+                  "minValue": 2,
+                  "maxValue": 2,
+                  "unitCode": "d"
+                },
+                "transitTime": {
+                  "@type": "QuantitativeValue",
+                  "minValue": 5,
+                  "maxValue": 5,
+                  "unitCode": "d"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": "Maria Nila Structure Repair Leave-In Cream, 200 ml - Cosmeterie",
+      "expected_price_mentions": {
+        "32.0": [],
+        "32.00": [
+          "ty=\"og:type\" content=\"og:product\"> <meta property=\"og:title\" content=\"Structure Repair Leave-In Cream 200 ml\" /> <meta property=\"product:price:amount\" content=\"32.00\"> <meta property=\"product:price:currency\" content=\"EUR\">       <meta property=\"og:image\" content=\"https://co.nice-cdn.com/upload/image/product/large/default/maria-nila-structure-repair-leave-in-cream-200-ml-789487-de.png\">    <meta propert",
+          "\"EAN:7391681036079\",\"gtin13\":\"7391681036079\",\"brand\":{\"@type\":\"Brand\",\"name\":\"Maria Nila\"},\"offers\":{\"@context\":\"https:\\/\\/schema.org\",\"@type\":\"Offer\",\"price\":\"32.00\",\"url\":\"https:\\/\\/www.cosmeterie.de\\/maria-nila\\/structure-repair-leave-in-cream-1\",\"priceCurrency\":\"EUR\",\"itemCondition\":\"https:\\/\\/schema.org\\/NewCondition\",\"availability\":\"https:\\/\\/schema.org\\/InStock\",\"hasMerchantReturnPolicy\":{\"@type"
+        ],
+        "32": [
+          "ice-cdn.com/static/opensearch/9f5ec2742c74189a3d1fb46f6a1c3d7a_3349900452_DE_de\"><meta name=\"description\" content=\"Restrukturierende Leave-in Haarcreme. Preis: 32,00 €. Inhalt: 200 ml. Kostenlose Lieferung ab 42,90 €. Lieferung in 2 Tagen.\"><link rel=\"alternate\" href=\"https://www.cosmeterie.at/maria-nila/structure-repair-leave-in-cream-1\" hreflang=\"de-AT\"><link rel=\"alternate\" href=\"https://www.cosm",
+          "\"apple-touch-icon\" sizes=\"180x180\" href=\"https://co.nice-cdn.com/apple-touch-icon.png\"> <link rel=\"icon\" type=\"image/png\" href=\"https://co.nice-cdn.com/favicon-32x32.png\" sizes=\"16x16\"> <link rel=\"icon\" type=\"image/png\" href=\"https://co.nice-cdn.com/favicon-16x16.png\" sizes=\"32x32\"> <link rel=\"manifest\" href=\"/feed/manifest_json\" crossorigin=\"use-credentials\"> <link rel=\"mask-icon\" href=\"https://co.",
+          "ple-touch-icon\" sizes=\"180x180\" href=\"https://co.nice-cdn.com/apple-touch-icon.png\"> <link rel=\"icon\" type=\"image/png\" href=\"https://co.nice-cdn.com/favicon-32x32.png\" sizes=\"16x16\"> <link rel=\"icon\" type=\"image/png\" href=\"https://co.nice-cdn.com/favicon-16x16.png\" sizes=\"32x32\"> <link rel=\"manifest\" href=\"/feed/manifest_json\" crossorigin=\"use-credentials\"> <link rel=\"mask-icon\" href=\"https://co.nic",
+          "/png\" href=\"https://co.nice-cdn.com/favicon-32x32.png\" sizes=\"16x16\"> <link rel=\"icon\" type=\"image/png\" href=\"https://co.nice-cdn.com/favicon-16x16.png\" sizes=\"32x32\"> <link rel=\"manifest\" href=\"/feed/manifest_json\" crossorigin=\"use-credentials\"> <link rel=\"mask-icon\" href=\"https://co.nice-cdn.com/safari-pinned-tab.svg\" color=\"#0fb2b3\"> <link rel=\"shortcut icon\" href=\"https://co.nice-cdn.com/favicon",
+          "g\" href=\"https://co.nice-cdn.com/favicon-32x32.png\" sizes=\"16x16\"> <link rel=\"icon\" type=\"image/png\" href=\"https://co.nice-cdn.com/favicon-16x16.png\" sizes=\"32x32\"> <link rel=\"manifest\" href=\"/feed/manifest_json\" crossorigin=\"use-credentials\"> <link rel=\"mask-icon\" href=\"https://co.nice-cdn.com/safari-pinned-tab.svg\" color=\"#0fb2b3\"> <link rel=\"shortcut icon\" href=\"https://co.nice-cdn.com/favicon.ic",
+          "ty=\"og:type\" content=\"og:product\"> <meta property=\"og:title\" content=\"Structure Repair Leave-In Cream 200 ml\" /> <meta property=\"product:price:amount\" content=\"32.00\"> <meta property=\"product:price:currency\" content=\"EUR\">       <meta property=\"og:image\" content=\"https://co.nice-cdn.com/upload/image/product/large/default/maria-nila-structure-repair-leave-in-cream-200-ml-789487-de.png\">    <meta prop",
+          "ttps://www.cosmeterie.de/maria-nila/structure-repair-leave-in-cream-1\" /> <meta property=\"og:description\" content=\"Restrukturierende Leave-in Haarcreme. Preis: 32,00 €. Inhalt: 200 ml. Kostenlose Lieferung ab 42,90 €. Lieferung in 2 Tagen. \">    <script>\n    var w = window;\n        document.documentElement.className = document.documentElement.className.replace(/\\bno-js\\b/g, '') + ' js ';\n    w.appen",
+          ".57-4.95 2.546-10.95 2.546-5.976 0-9.945-1.98-10.958-2.553-.1-.497-.142-1.36-.13-1.92 0-.05.006-.098.006-.154.044-1.416.205-2.963 1.652-3.48 3.094-.794 7.333-4.32 7.438-4.388a.838.838 0 0 0-.962-1.373c-.024.02-4.108 3.433-6.922 4.147a.782.782 0 0 0-.062.02C.13 20.046.05 22.92.012 24.145c0 .056 0 .106-.006.155v.02c-.006.323-.012 1.98.317 2.814.062.16.174.298.323.39.186.125 4.652 2.97 12.124 2.97s11.9"
+        ],
+        "32,00": [
+          "ice-cdn.com/static/opensearch/9f5ec2742c74189a3d1fb46f6a1c3d7a_3349900452_DE_de\"><meta name=\"description\" content=\"Restrukturierende Leave-in Haarcreme. Preis: 32,00 €. Inhalt: 200 ml. Kostenlose Lieferung ab 42,90 €. Lieferung in 2 Tagen.\"><link rel=\"alternate\" href=\"https://www.cosmeterie.at/maria-nila/structure-repair-leave-in-cream-1\" hreflang=\"de-AT\"><link rel=\"alternate\" href=\"https://www.cosmete",
+          "ttps://www.cosmeterie.de/maria-nila/structure-repair-leave-in-cream-1\" /> <meta property=\"og:description\" content=\"Restrukturierende Leave-in Haarcreme. Preis: 32,00 €. Inhalt: 200 ml. Kostenlose Lieferung ab 42,90 €. Lieferung in 2 Tagen. \">    <script>\n    var w = window;\n        document.documentElement.className = document.documentElement.className.replace(/\\bno-js\\b/g, '') + ' js ';\n    w.appendSc",
+          "class=\"swiper-button-next swiper-button-disabled\"></div> </div> </div> </div>   <div class=\"p-price\">   <p class=\"p-price__main\"> <span class=\"p-price__retail\">32,00&nbsp;€</span> </p> <p class=\"p-price__info\">\n        (<span class=\"p-price__perunit\">160,00&nbsp;€&nbsp;/&nbsp;l</span>,  inkl. 19% MwSt. <shop-dialog-trigger iframe>- <a class=\"p-price__info__link\" href=\"/info/versand-und-lieferung\">zzgl.",
+          "selector=\".product-page\" count=\"0\" limit=\"999\" article-item-id=\"17047\" path=\"/ajax/product-cart-action\"\n        cart-path=\"/warenkorb\"\n        price-formatted=\"32,00&nbsp;€\" product-title=\"Structure Repair Leave-In Cream\"\n         unit-price=\"(160,00&nbsp;€&nbsp;/&nbsp;l)\"  content-label=\"Inhalt:\" content-value=\"200 ml\" tracking-meta-data=\"{&quot;freeDelivery&quot;:&quot;false&quot;}\"> </sticky-add-to-",
+          "ble class=\"p-offer__itemList\"> <tr> <th class=\"p-offer__itemName\">Maria Nila Structure Repair Leave-In Cream, 200 ml</th> <td class=\"p-offer__itemPrice\"> <span>32,00&nbsp;€</span> <span class='p-offer__unitPrice'>(160,00 € / l)</span></td> </tr> <tr> <th class=\"p-offer__itemName\"> <a is=\"trackable-link\" class=\"p-offer__itemLink\" href=\"/innersense-organic-beauty/pure-harmony-hairbath?sai=7813\" event-nam"
+        ]
+      },
+      "expected_package_mentions": {
+        "200ml": [],
+        "200 ml": [
+          "//co.nice-cdn.com/disco/build/shop/product.1d4d0e33.css\">            <title>Maria Nila Structure Repair Leave-In Cream, 200 ml - Cosmeterie </title><meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"canonical",
+          "c3d7a_3349900452_DE_de\"><meta name=\"description\" content=\"Restrukturierende Leave-in Haarcreme. Preis: 32,00 €. Inhalt: 200 ml. Kostenlose Lieferung ab 42,90 €. Lieferung in 2 Tagen.\"><link rel=\"alternate\" href=\"https://www.cosmeterie.at/maria-nila/structure-repair-leave-in-cream-1\" hreflang=\"de-AT\"><link",
+          "\">    <meta property=\"og:type\" content=\"og:product\"> <meta property=\"og:title\" content=\"Structure Repair Leave-In Cream 200 ml\" /> <meta property=\"product:price:amount\" content=\"32.00\"> <meta property=\"product:price:currency\" content=\"EUR\">       <meta property=\"og:image\" content=\"https://co.nice-cdn.com/",
+          "e-in-cream-1\" /> <meta property=\"og:description\" content=\"Restrukturierende Leave-in Haarcreme. Preis: 32,00 €. Inhalt: 200 ml. Kostenlose Lieferung ab 42,90 €. Lieferung in 2 Tagen. \">    <script>\n    var w = window;\n        document.documentElement.className = document.documentElement.className.replace(",
+          "  <h1 class=\"p-heading\"> <a class=\"p-heading__brand\" href=\"/maria-nila\">Maria Nila</a> Structure Repair Leave-In Cream, 200 ml </h1> <h2 class=\"p-subheading\">Restrukturierende Leave-in Haarcreme</h2>   </div> <div class=\"p-rating\">    <div class=\"p-badge\">  </div> </div>  <div class=\"p-gallery\"> <div clas",
+          "=\"eager\"\n         class=\"product__image\"         fetchpriority=\"high\" alt=\"Maria Nila Structure Repair Leave-In Cream - 200 ml\" >   </a> </li>  <li class=\"swiper-slide  \"\n     >  <a href=\"https://co.nice-cdn.com/upload/image/product/large/default/maria-nila-structure-repair-leave-in-cream-200-ml-789481-de"
+        ],
+        "200 Milliliter": []
+      },
+      "positive_purchase_marker": true,
+      "challenge": false
+    },
+    {
+      "id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+      "category_key": "shampoo",
+      "registered_gtins": [
+        "4897097266343"
+      ],
+      "primary_url": "https://www.hagel-shop.de/monday-haircare-volume-shampoo-350-ml.html",
+      "expected": {
+        "price_eur": 7.95,
+        "package_value": 350,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4897097266343"
+        ]
+      },
+      "checked_at": "2026-10-03T13:13:43.221511+00:00",
+      "http_status": 200,
+      "final_url": "https://www.hagel-shop.de/monday-haircare-volume-shampoo-350-ml.html",
+      "content_type": "text/html; charset=UTF-8",
+      "structured_products": [
+        {
+          "@type": "Product",
+          "name": "MONDAY Haircare Volume Shampoo 350 ml",
+          "offers": {
+            "@type": "http://schema.org/Offer",
+            "price": 7.95,
+            "url": "https://www.hagel-shop.de/monday-haircare-volume-shampoo-350-ml.html",
+            "priceCurrency": "EUR",
+            "availability": "http://schema.org/InStock",
+            "shippingDetails": {
+              "deliveryTime": {
+                "businessDays": {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    ""
+                  ]
+                },
+                "@type": "ShippingDeliveryTime"
+              },
+              "@type": "OfferShippingDetails"
+            }
+          }
+        }
+      ],
+      "title": "MONDAY Haircare Volume Shampoo 350 ml günstig kaufen | HAGEL Online Shop",
+      "expected_price_mentions": {
+        "7.95": [
+          "/>\n<meta property=\"og:url\" content=\"https://www.hagel-shop.de/monday-haircare-volume-shampoo-350-ml.html\" />\n    <meta property=\"product:price:amount\" content=\"7.95\"/>\n    <meta property=\"product:price:currency\"\n      content=\"EUR\"/>\n    <meta property=\"og:updated_time\" content=\"2026-03-12T13:33:39+00:00\">\n                        \n                </head>\n    <body data-container=\"body\"\n          data-",
+          "\n    \n\n<span class=\"price-container price-final_price&#x20;tax&#x20;weee\"\n        >\n        <span  id=\"product-price-5830761\"                data-price-amount=\"7.95\"\n        data-price-type=\"finalPrice\"\n        class=\"price-wrapper \"\n    ><span class=\"price\">7,95 €</span></span>\n        </span>\n\n</div>    <div class=\"base-price-detail\">\n                    <span class=\"czbp-detail-price-1\">22,71 €</sp",
+          "catalog\\/product\\/1\\/2\\/12105839.jpg?quality=80&bg-color=255,255,255&fit=bounds&height=&width=&canvas=:\",\"offers\":{\"@type\":\"http:\\/\\/schema.org\\/Offer\",\"price\":7.95,\"url\":\"https:\\/\\/www.hagel-shop.de\\/monday-haircare-volume-shampoo-350-ml.html\",\"priceCurrency\":\"EUR\",\"availability\":\"http:\\/\\/schema.org\\/InStock\",\"shippingDetails\":{\"deliveryTime\":{\"businessDays\":{\"@type\":\"OpeningHoursSpecification\",\"day",
+          "30761\",\"Name\":\"MONDAY Haircare Volume Shampoo 350 ml\",\"SKU\":\"12105839\",\"URL\":\"https:\\/\\/www.hagel-shop.de\\/monday-haircare-volume-shampoo-350-ml.html\",\"Price\":\"7.95\",\"FinalPrice\":\"7.95\",\"Categories\":[\"Haarpflege\",\"Nature\",\"Waschen & Pflegen\",\"Hagel Nature\",\"Haarpflege\",\"MONDAY Haircare\",\"Haare F\\u00e4rben\",\"Shampoo\"],\"StoreId\":\"1\",\"$value\":\"7.95\",\"ImageURL\":\"https:\\/\\/www.hagel-shop.de\\/media\\/catalog",
+          "Y Haircare Volume Shampoo 350 ml\",\"SKU\":\"12105839\",\"URL\":\"https:\\/\\/www.hagel-shop.de\\/monday-haircare-volume-shampoo-350-ml.html\",\"Price\":\"7.95\",\"FinalPrice\":\"7.95\",\"Categories\":[\"Haarpflege\",\"Nature\",\"Waschen & Pflegen\",\"Hagel Nature\",\"Haarpflege\",\"MONDAY Haircare\",\"Haare F\\u00e4rben\",\"Shampoo\"],\"StoreId\":\"1\",\"$value\":\"7.95\",\"ImageURL\":\"https:\\/\\/www.hagel-shop.de\\/media\\/catalog\\/product\\/1\\/2\\/121",
+          "5\",\"Categories\":[\"Haarpflege\",\"Nature\",\"Waschen & Pflegen\",\"Hagel Nature\",\"Haarpflege\",\"MONDAY Haircare\",\"Haare F\\u00e4rben\",\"Shampoo\"],\"StoreId\":\"1\",\"$value\":\"7.95\",\"ImageURL\":\"https:\\/\\/www.hagel-shop.de\\/media\\/catalog\\/product\\/1\\/2\\/12105839.jpg?width=265&height=265&canvas=265,265&quality=80&bg-color=255,255,255&fit=bounds\"}]);\n      klaviyo.push(['trackViewedItem', {\"Title\":\"MONDAY Haircare Volu",
+          "html\",\"Categories\":[\"Haarpflege\",\"Nature\",\"Waschen & Pflegen\",\"Hagel Nature\",\"Haarpflege\",\"MONDAY Haircare\",\"Haare F\\u00e4rben\",\"Shampoo\"],\"Metadata\":{\"Price\":\"7.95\"},\"StoreId\":\"1\",\"ImageURL\":\"https:\\/\\/www.hagel-shop.de\\/media\\/catalog\\/product\\/1\\/2\\/12105839.jpg?width=265&height=265&canvas=265,265&quality=80&bg-color=255,255,255&fit=bounds\"}]);\n  });\n</script>\n<script type=\"text/x-magento-init\">\n  ",
+          "d3cuaGFnZWwtc2hvcC5kZS9tb25kYXktaGFpcmNhcmUtdm9sdW1lLXNoYW1wb28tMzUwLW1sLmh0bWw~\\\"}}\",\"required_options\":null,\"__disableTmpl\":true},\"price_info\":{\"final_price\":7.95,\"max_price\":7.95,\"max_regular_price\":7.95,\"minimal_regular_price\":7.95,\"special_price\":null,\"minimal_price\":7.95,\"regular_price\":7.95,\"formatted_prices\":{\"final_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<span cla"
+        ],
+        "7,95": [
+          "id=\"product-price-5830761\"                data-price-amount=\"7.95\"\n        data-price-type=\"finalPrice\"\n        class=\"price-wrapper \"\n    ><span class=\"price\">7,95 €</span></span>\n        </span>\n\n</div>    <div class=\"base-price-detail\">\n                    <span class=\"czbp-detail-price-1\">22,71 €</span> / <span class=\"czbp-detail-unit-1\">1 Liter</span>\n                            inkl. MwSt.    </",
+          "rice\":7.95,\"minimal_regular_price\":7.95,\"special_price\":null,\"minimal_price\":7.95,\"regular_price\":7.95,\"formatted_prices\":{\"final_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"minimal_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"max_regular_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"minimal_regular_price\"",
+          "\"minimal_price\":7.95,\"regular_price\":7.95,\"formatted_prices\":{\"final_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"minimal_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"max_regular_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"minimal_regular_price\":null,\"special_price\":null,\"regular_price\":\"<span class=\\\"pri",
+          "nal_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"max_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"minimal_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"max_regular_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"minimal_regular_price\":null,\"special_price\":null,\"regular_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"__disableTmpl\":true},\"extension_a",
+          "e\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"minimal_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"max_regular_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"minimal_regular_price\":null,\"special_price\":null,\"regular_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"__disableTmpl\":true},\"extension_attributes\":{\"msrp\":{\"msrp_price\":\"<span class=\\\"price\\\">0,00\\u00a0\\u2",
+          "\",\"max_regular_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"minimal_regular_price\":null,\"special_price\":null,\"regular_price\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"__disableTmpl\":true},\"extension_attributes\":{\"msrp\":{\"msrp_price\":\"<span class=\\\"price\\\">0,00\\u00a0\\u20ac<\\/span>\",\"is_applicable\":\"\",\"is_shown_price_on_gesture\":\"\",\"msrp_message\":\"\",\"explanation_message\":\"Our price i",
+          "ice\":\"<span class=\\\"price\\\">6,68\\u00a0\\u20ac<\\/span>\",\"__disableTmpl\":true},\"__disableTmpl\":true},\"weee_attributes\":[],\"weee_adjustment\":\"<span class=\\\"price\\\">7,95\\u00a0\\u20ac<\\/span>\",\"baseprice_html\":\"<div class=\\\"czbp-detail-0\\\"><span class=\\\"czbp-detail-price-0\\\">22,71\\u00a0\\u20ac<\\/span> \\/ <span class=\\\"czbp-detail-unit-0\\\">1 Liter<\\/span><\\/div>\",\"__disableTmpl\":true},\"__disableTmpl\":true},\"im"
+        ]
+      },
+      "expected_package_mentions": {
+        "350 Milliliter": [],
+        "350 ml": [
+          ",G,vt,Et,Y,Oe,_t,It,Rt],loaderType:\"spa\"})})()})();</script>\n<meta name=\"title\" content=\"MONDAY Haircare Volume Shampoo 350 ml günstig kaufen | HAGEL Online Shop\"/>\n<meta name=\"description\" content=\"MONDAY Haircare Volume Shampoo 350 ml ➤ günstig im Online Shop kaufen. ✓ Schnelle Lieferung ✓ Kostenlose Be",
+          "e Shampoo 350 ml günstig kaufen | HAGEL Online Shop\"/>\n<meta name=\"description\" content=\"MONDAY Haircare Volume Shampoo 350 ml ➤ günstig im Online Shop kaufen. ✓ Schnelle Lieferung ✓ Kostenlose Beratung ★ Jetzt bei HAGEL sparen!\"/>\n<meta name=\"robots\" content=\"INDEX,FOLLOW\"/>\n<meta name=\"viewport\" content",
+          "-width, initial-scale=1\"/>\n<meta name=\"format-detection\" content=\"telephone=no\"/>\n<title>MONDAY Haircare Volume Shampoo 350 ml günstig kaufen | HAGEL Online Shop</title>\n<link  rel=\"stylesheet\" type=\"text/css\"  media=\"all\" href=\"https://www.hagel-shop.de/static/version1790052548/frontend/Hagel/base/de_DE/",
+          "           <li class=\"item product\">\n                                            <strong>MONDAY Haircare Volume Shampoo 350 ml</strong>\n                                    </li>\n                    </ul>\n    </div>\n<div class=\"header-wrapper\"><header class=\"page-header\"><div class=\"header-info-bar\"><style",
+          "            >\n        <span class=\"base\" data-ui-id=\"page-title-wrapper\" itemprop=\"name\">MONDAY Haircare Volume Shampoo 350 ml</span>    </h1>\n    </div>\n        <div class=\"product-reviews-summary\"  \n         >\n                    <div class=\"rating-summary\">\n                <div class=\"rating-result\" ti",
+          "                                       <strong class=\"colon\">Beschreibung</strong> <span>MONDAY Haircare Volume Shampoo 350 ml</span>\n                                            </span>\n                </div>\n                <div class=\"data item content \"\n                     aria-labelledby=\"tab-label-d"
+        ],
+        "350ml": []
+      },
+      "positive_purchase_marker": true,
+      "challenge": false
+    },
+    {
+      "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "name": "Gliss Aqua Revive",
+      "category_key": "mask",
+      "registered_gtins": [],
+      "primary_url": "https://www.douglas.de/de/p/m003070896",
+      "expected": {
+        "price_eur": 12.98,
+        "package_value": 400,
+        "package_unit": "ml",
+        "observed_gtin": []
+      },
+      "checked_at": "2026-10-03T13:13:43.703809+00:00",
+      "fetch_error": "HTTP Error 400: Bad Request"
+    },
+    {
+      "id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "category_key": "mask",
+      "registered_gtins": [],
+      "primary_url": "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+      "expected": {
+        "price_eur": 2.8,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_gtin": []
+      },
+      "checked_at": "2026-10-03T13:13:43.804045+00:00",
+      "fetch_error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "name": "OUAI Leave In Conditioner",
+      "category_key": "leave_in",
+      "registered_gtins": [
+        "815402023119"
+      ],
+      "primary_url": "https://www.sephora.de/p/leave-in-conditioner-426531.html",
+      "expected": {
+        "price_eur": 30.45,
+        "package_value": 140,
+        "package_unit": "ml",
+        "observed_gtin": []
+      },
+      "checked_at": "2026-10-03T13:13:44.442267+00:00",
+      "fetch_error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "name": "Guhl Bond+ Reparatur Spülung",
+      "category_key": "conditioner",
+      "registered_gtins": [
+        "4072600701218"
+      ],
+      "primary_url": "https://m.drogeriedepot.de/neue-produkte/guhl-conditioner-bond-reparatur-p-75039.html?active_tab=def&offset_def=96&offset_new=696",
+      "expected": {
+        "price_eur": 5.99,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_gtin": []
+      },
+      "checked_at": "2026-10-03T13:13:43.221863+00:00",
+      "http_status": 200,
+      "final_url": "https://m.drogeriedepot.de/neue-produkte/guhl-conditioner-bond-reparatur-p-75039.html?active_tab=def&offset_def=96&offset_new=696",
+      "content_type": "text/html; charset=utf-8",
+      "structured_products": [
+        {
+          "@type": "Product",
+          "name": "Guhl Conditioner  Bond+ Reparatur 200ml",
+          "sku": "75039",
+          "gtin": "4072600701218",
+          "offers": {
+            "@type": "Offer",
+            "url": "https://m.drogeriedepot.de/product_info.php",
+            "priceCurrency": "EUR",
+            "price": 5.99,
+            "itemCondition": "https://schema.org/NewCondition",
+            "availability": "https://schema.org/InStock"
+          }
+        }
+      ],
+      "title": "Spülung - Guhl Drogeriedepot.de",
+      "expected_price_mentions": {
+        "5.99": [
+          "0701218\",\"brand\":{\"@type\":\"Thing\",\"name\":\"Guhl\"},\"offers\":{\"@type\":\"Offer\",\"url\":\"https:\\/\\/m.drogeriedepot.de\\/product_info.php\",\"priceCurrency\":\"EUR\",\"price\":5.99,\"itemCondition\":\"https:\\/\\/schema.org\\/NewCondition\",\"availability\":\"https:\\/\\/schema.org\\/InStock\"},\"image\":[\"https:\\/\\/m.drogeriedepot.de\\/products_images\\/4072600701218_sto_1718361437.png\"]}</script>            <style>\n            /*  B",
+          "   ecomm_pagetype : 'product',\n                    ecomm_category : 'Spülung',\n                    ecomm_prodid : 75039,\n                    ecomm_totalvalue : 5.99,\n                }\n            );\n            </script>\n            <!-- END Global site tag (gtag.js) - Google Analytics / Google AdWords --></div>        <ul class=\"tab product-slider-tab\">\n            <li>\n                <p>\n          "
+        ],
+        "5,99": [
+          "ce--add-segment--item cart-qty-interface--add-segment--item-price\"><div class=\"product-details-view--price-stack\"><div class=\"product-details-view--main-price\">5,99€<span class=\"product-details-view--price-asterisk\">*</span>\n            </div><div class=\"product-details-view--base-price\">€ 29,95 /l</div></div></div><div class=\"cart-qty-interface--add-segment--item cart-qty-interface--add-segment--item"
+        ]
+      },
+      "expected_package_mentions": {
+        "200ml": [
+          "=\"application/ld+json\">{\"@context\":\"https:\\/\\/schema.org\\/\",\"@type\":\"Product\",\"name\":\"Guhl Conditioner  Bond+ Reparatur 200ml\",\"sku\":\"75039\",\"gtin\":\"4072600701218\",\"mpn\":\"4072600701218\",\"brand\":{\"@type\":\"Thing\",\"name\":\"Guhl\"},\"offers\":{\"@type\":\"Offer\",\"url\":\"https:\\/\\/m.drogeriedepot.de\\/product_info.php",
+          "brand\">Wahre Schätze</div>\n                        <div class=\"product-listing-cell--product-name\">Spülung Argan/Mandel 200ml</div></div>\n                    <div class=\"product-listing-cell--price-and-traffic-light\"><div class=\"product-listing-cell--price-stack\"><div class=\"product-listing-cell--main-pr",
+          "lders</div>\n                        <div class=\"product-listing-cell--product-name\">Conditioner Derma x Pro, Beruhigend 200ml</div></div>\n                    <div class=\"product-listing-cell--price-and-traffic-light\"><div class=\"product-listing-cell--price-stack\"><div class=\"product-listing-cell--main-pr",
+          "        <div class=\"product-listing-cell--product-name\">Regenerierende Feuchtigkeitsspendende Spülung Traube Hydraboost 200ml</div></div>\n                    <div class=\"product-listing-cell--price-and-traffic-light\"><div class=\"product-listing-cell--price-stack\"><div class=\"product-listing-cell--main-pr",
+          "\">Nivea</div>\n                        <div class=\"product-listing-cell--product-name\">Conditioner Length Wonder, 200 ml 200ml</div></div>\n                    <div class=\"product-listing-cell--price-and-traffic-light\"><div class=\"product-listing-cell--price-stack\"><div class=\"product-listing-cell--main-pr",
+          "brand\">Garnier Fructis</div>\n                        <div class=\"product-listing-cell--product-name\">Spülung Coco Water 200ml</div></div>\n                    <div class=\"product-listing-cell--price-and-traffic-light\"><div class=\"product-listing-cell--price-stack\"><div class=\"product-listing-cell--main-pr"
+        ],
+        "200 ml": [
+          "n.drogeriedepot.de/products_images/products_images/4006000192918_.jpg\" border=\"0\" alt=\"Nivea Conditioner Length Wonder, 200 ml\" title=\" Nivea Conditioner Length Wonder, 200 ml \" width=\"150\" height=\"150\" itemprop=\"image\"></div>\n                </div>\n                <div class=\"product-listing-cell--info-c",
+          "s/4006000192918_.jpg\" border=\"0\" alt=\"Nivea Conditioner Length Wonder, 200 ml\" title=\" Nivea Conditioner Length Wonder, 200 ml \" width=\"150\" height=\"150\" itemprop=\"image\"></div>\n                </div>\n                <div class=\"product-listing-cell--info-column group\">\n                    <div class=\"pro",
+          "--brand\">Nivea</div>\n                        <div class=\"product-listing-cell--product-name\">Conditioner Length Wonder, 200 ml 200ml</div></div>\n                    <div class=\"product-listing-cell--price-and-traffic-light\"><div class=\"product-listing-cell--price-stack\"><div class=\"product-listing-cell--m"
+        ],
+        "200 Milliliter": []
+      },
+      "positive_purchase_marker": true,
+      "challenge": false
+    },
+    {
+      "id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "name": "OGX Bond Protein Repair",
+      "category_key": "oil",
+      "registered_gtins": [
+        "3574661818481"
+      ],
+      "primary_url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+      "expected": {
+        "price_eur": 18.68,
+        "package_value": 50,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "3574661818481"
+        ]
+      },
+      "checked_at": "2026-10-03T13:13:45.117224+00:00",
+      "http_status": 200,
+      "final_url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+      "content_type": "text/html; charset=utf-8",
+      "structured_products": [
+        {
+          "@type": "ProductGroup",
+          "name": "Bond Repair 3-in-1 Oil Mist 50 ml",
+          "hasVariant": [
+            {
+              "sku": "ogx360746_231199513",
+              "gtin13": "3574661818481",
+              "image": "https://image-resizing.booztcdn.com/ogx/ogx360746_cclear_10.webp?has_webp=1&version=927c77d0e8967c1824e95c799a79fdb0&size=w1300",
+              "name": "Bond Repair 3-in-1 Oil Mist 50 ml - CLEAR",
+              "description": "Give your hair a radiant shine and a silky finish with OGX Bond Protein Repair Multi-Benefit Oil – a 3-in-1 oil mist that strengthens, combats frizz and preserves shine for healthier, more resilient hair.\n\nThis nourishing oil protects and smooths dry, damaged hair for up to 24 hours while helping to strengthen hair. Its innovative multi-layered formula makes it easy to combine with your favorite OGX products or with the entire OGX Bond Protein Repair series for a complete hair care routine.\n\nShake the bottle well before use and spray a small amount on damp or dry hair as needed.\n• 3-in-1 oil mist that strengthens and protects damaged hair\n• Anti-frizz and gives a silky finish\n• Maintains shine for up to 24 hours\n• Light and weightless formula that does not weigh down hair\n• Easy to use on both damp and dry hair",
+              "color": "CLEAR",
+              "offers": {
+                "itemCondition": "https://schema.org/NewCondition",
+                "availability": "https://schema.org/InStock",
+                "@type": "Offer",
+                "url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+                "priceSpecification": [
+                  {
+                    "priceCurrency": "EUR",
+                    "price": "18.68",
+                    "@type": "UnitPriceSpecification"
+                  },
+                  {
+                    "priceCurrency": "EUR",
+                    "price": "24.90",
+                    "priceType": "https://schema.org/StrikethroughPrice",
+                    "@type": "UnitPriceSpecification"
+                  }
+                ],
+                "shippingDetails": {
+                  "@id": "#shipping_policy"
+                },
+                "hasMerchantReturnPolicy": {
+                  "@id": "#return_policy"
+                }
+              },
+              "@type": "Product"
+            }
+          ]
+        },
+        {
+          "@type": "Product",
+          "name": "Bond Repair 3-in-1 Oil Mist 50 ml - CLEAR",
+          "sku": "ogx360746_231199513",
+          "gtin13": "3574661818481",
+          "offers": {
+            "itemCondition": "https://schema.org/NewCondition",
+            "availability": "https://schema.org/InStock",
+            "@type": "Offer",
+            "url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+            "priceSpecification": [
+              {
+                "priceCurrency": "EUR",
+                "price": "18.68",
+                "@type": "UnitPriceSpecification"
+              },
+              {
+                "priceCurrency": "EUR",
+                "price": "24.90",
+                "priceType": "https://schema.org/StrikethroughPrice",
+                "@type": "UnitPriceSpecification"
+              }
+            ],
+            "shippingDetails": {
+              "@id": "#shipping_policy"
+            },
+            "hasMerchantReturnPolicy": {
+              "@id": "#return_policy"
+            }
+          }
+        }
+      ],
+      "title": "Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear) - 18.68 € | Boozt.com",
+      "expected_price_mentions": {
+        "18.68": [
+          "Before(j,f);\n\t\t})(window,document,'script','dataLayer');</script>\n    <meta charset=\"UTF-8\">\n            <title>Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear) - 18.68 € | Boozt.com</title>\n                    <meta name=\"description\" content=\"Entdecken Sie Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear/Nude) für 18.68 €. Online einkaufen - Schnelle Lieferung und einfache Rückgaben nur bei Boozt.com\" />\n  ",
+          "Clear) - 18.68 € | Boozt.com</title>\n                    <meta name=\"description\" content=\"Entdecken Sie Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear/Nude) für 18.68 €. Online einkaufen - Schnelle Lieferung und einfache Rückgaben nur bei Boozt.com\" />\n                <meta name=\"viewport\" content=\"width=device-width\">\n        <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"format-",
+          "ype\":\"Offer\",\"url\":\"https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513\",\"priceSpecification\":[{\"priceCurrency\":\"EUR\",\"price\":\"18.68\",\"@type\":\"UnitPriceSpecification\"},{\"priceCurrency\":\"EUR\",\"price\":\"24.90\",\"priceType\":\"https://schema.org/StrikethroughPrice\",\"@type\":\"UnitPriceSpecification\"}],\"shippingDetails\":{\"@id\":\"#shipping_policy\"},\"hasMerchantReturnPolicy\":{\"@id\":",
+          "Product\"}],\"@context\":\"https://schema.org/\",\"@type\":\"ProductGroup\"}</script>\n<meta property=\"og:title\" content=\"Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear) - 18.68 € | Boozt.com\" />\n<meta property=\"og:description\" content=\"Entdecken Sie Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear/Nude) für 18.68 €. Online einkaufen - Schnelle Lieferung und einfache Rückgaben nur bei Boozt.com\" />\n<meta property=\"og:",
+          " Oil Mist 50 Ml (Clear) - 18.68 € | Boozt.com\" />\n<meta property=\"og:description\" content=\"Entdecken Sie Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear/Nude) für 18.68 €. Online einkaufen - Schnelle Lieferung und einfache Rückgaben nur bei Boozt.com\" />\n<meta property=\"og:image\" content=\"https://image-resizing.booztcdn.com/ogx/ogx360746_cclear_10.webp?has_webp=1&version=927c77d0e8967c1824e95c799a79fdb0&s",
+          "-resizing.booztcdn.com/ogx/ogx360746_cclear_10.webp?has_webp=1&version=927c77d0e8967c1824e95c799a79fdb0&size=w400\" />\n<meta property=\"og:price:amount\" content=\"18.68\" />\n<meta property=\"og:price:currency\" content=\"EUR\" />\n<meta property=\"og:availability\" content=\"instock\" />\n<meta name=\"twitter:card\" content=\"product\" />\n<meta name=\"twitter:site\" content=\"@Boozt\" />\n<meta name=\"twitter:domain\" content=",
+          "site\" content=\"@Boozt\" />\n<meta name=\"twitter:domain\" content=\"Boozt.com\">\n<meta name=\"twitter:creator\" content=\"@Boozt\" />\n<meta name=\"twitter:data1\" content=\"18.68 €\">\n<meta name=\"twitter:label1\" content=\"Preis\">\n<meta name=\"twitter:data2\" content=\"\">\n<meta name=\"twitter:label2\" content=\"Farbe\">\n<meta name=\"twitter:image\" content=\"https://image-resizing.booztcdn.com/ogx/ogx360746_cclear_10.webp?has_w",
+          "[{\"value\":\"24.90 \\u20ac\",\"background_color\":null,\"foreground_color\":\"#212121\",\"strike_through\":false,\"text_size\":\"EXTRA_LARGE\",\"has_padding\":false}],[{\"value\":\"18.68 \\u20ac mit Deal\",\"background_color\":\"#eae4dc\",\"foreground_color\":\"#121212\",\"strike_through\":false,\"text_size\":\"SMALL\",\"has_padding\":true}]],\"mdv_prices\":[[{\"value\":\"18.68 \\u20ac\",\"background_color\":null,\"foreground_color\":\"#D90225\",\"strike"
+        ],
+        "18,68": []
+      },
+      "expected_package_mentions": {
+        "50 ml": [
+          ",document,'script','dataLayer');</script>\n    <meta charset=\"UTF-8\">\n            <title>Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear) - 18.68 € | Boozt.com</title>\n                    <meta name=\"description\" content=\"Entdecken Sie Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear/Nude) für 18.68 €. Online ei",
+          "| Boozt.com</title>\n                    <meta name=\"description\" content=\"Entdecken Sie Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear/Nude) für 18.68 €. Online einkaufen - Schnelle Lieferung und einfache Rückgaben nur bei Boozt.com\" />\n                <meta name=\"viewport\" content=\"width=device-width\">\n  ",
+          "lue\":2,\"maxValue\":4,\"unitCode\":\"DAY\"}}}</script><script type=\"application/ld+json\">{\"name\":\"Bond Repair 3-in-1 Oil Mist 50 ml\",\"url\":\"https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841\",\"brand\":{\"name\":\"Ogx\",\"@type\":\"Brand\"},\"description\":\"Give your hair a radiant shine and a silk",
+          "0746_cclear_10.webp?has_webp=1&version=927c77d0e8967c1824e95c799a79fdb0&size=w1300\",\"name\":\"Bond Repair 3-in-1 Oil Mist 50 ml - CLEAR\",\"description\":\"Give your hair a radiant shine and a silky finish with OGX Bond Protein Repair Multi-Benefit Oil – a 3-in-1 oil mist that strengthens, combats frizz and pr",
+          "ttps://schema.org/\",\"@type\":\"ProductGroup\"}</script>\n<meta property=\"og:title\" content=\"Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear) - 18.68 € | Boozt.com\" />\n<meta property=\"og:description\" content=\"Entdecken Sie Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear/Nude) für 18.68 €. Online einkaufen - Schnell",
+          "Clear) - 18.68 € | Boozt.com\" />\n<meta property=\"og:description\" content=\"Entdecken Sie Ogx Bond Repair 3-in-1 Oil Mist 50 Ml (Clear/Nude) für 18.68 €. Online einkaufen - Schnelle Lieferung und einfache Rückgaben nur bei Boozt.com\" />\n<meta property=\"og:image\" content=\"https://image-resizing.booztcdn.com"
+        ],
+        "50 Milliliter": [],
+        "50ml": []
+      },
+      "positive_purchase_marker": true,
+      "challenge": false
+    },
+    {
+      "id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "name": "Syoss Haarkur Lamination Intense Glaze",
+      "category_key": "mask",
+      "registered_gtins": [
+        "4015100867213"
+      ],
+      "primary_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-haar-laminierungs-kur-intense-glaze/p/4015100867213",
+      "expected": {
+        "price_eur": 4.99,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4015100867213"
+        ]
+      },
+      "checked_at": "2026-10-03T13:13:43.936185+00:00",
+      "http_status": 200,
+      "final_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-haar-laminierungs-kur-intense-glaze/p/4015100867213",
+      "content_type": "text/html; charset=utf-8",
+      "structured_products": [],
+      "title": "Client Challenge",
+      "expected_price_mentions": {
+        "4.99": [],
+        "4,99": []
+      },
+      "expected_package_mentions": {
+        "200ml": [],
+        "200 ml": [],
+        "200 Milliliter": []
+      },
+      "positive_purchase_marker": false,
+      "challenge": false
+    },
+    {
+      "id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+      "category_key": "shampoo",
+      "registered_gtins": [
+        "8700216496032"
+      ],
+      "primary_url": "https://www.drogeriedepot.de/haarpflege-farben/haar-shampoo/head-shoulders-shampoo-derma-x-pro-sensitive-pflege-pr-077537/",
+      "expected": {
+        "price_eur": 5.59,
+        "package_value": 250,
+        "package_unit": "ml",
+        "observed_gtin": "8700216496032"
+      },
+      "checked_at": "2026-10-03T13:13:43.221021+00:00",
+      "http_status": 200,
+      "final_url": "https://www.drogeriedepot.de/haarpflege-farben/haar-shampoo/head-shoulders-shampoo-derma-x-pro-sensitive-pflege-pr-077537/",
+      "content_type": "text/html; charset=utf-8",
+      "structured_products": [],
+      "title": "Head & Shoulders Shampoo Derma x Pro Sensitive Pflege | 77537 von Procter & Gamble GmbH",
+      "expected_price_mentions": {
+        "5.59": [
+          "1753445560/8700216496032_.jpg?ts=1753445560\"><meta property=\"product:brand\" content=\" Procter &amp; Gamble GmbH\"><meta property=\"product:price:amount\" content=\"5.59\"><meta property=\"product:price:currency\" content=\"EUR\"><meta property=\"product:product_link\" content=\"https://www.drogeriedepot.de/haarpflege-farben/haar-shampoo/head-shoulders-shampoo-derma-x-pro-sensitive-pflege-pr-077537/\"><meta name=\"t",
+          "ommerce':{'google_business_vertical':window.bilobaAdGoogleGtagsjs.googleBusinessVertical,'currency':window.bilobaAdGoogleGtagsjs.contextCurrencyIsoCode,'value':5.59,'items':[{'item_id':'77537','item_variant':'01956652dfaa736f92e0a173a20c7cf9','item_name':'Shampoo Derma x Pro Sensitive Pflege','index':0,'item_brand':'  Procter &amp; Gamble GmbH','price':5.59,'quantity':1}]}};if(window.dataLayer){dataLa",
+          "tem_variant':'01956652dfaa736f92e0a173a20c7cf9','item_name':'Shampoo Derma x Pro Sensitive Pflege','index':0,'item_brand':'  Procter &amp; Gamble GmbH','price':5.59,'quantity':1}]}};if(window.dataLayer){dataLayer.push({ecommerce:null});data.event='view_item';window.dataLayer.push(data);};</script> <script src=\"https://dev.drogeriedepot.de/theme/947538bab1ce9892cd9535870ba52b7a/js/storefront/storefront",
+          "ountry\" content=\"DE\"><div class=\"container\"><div class=\"row\"><div class=\"col-5 p-0\"><div class=\"product-detail-price-container\"><meta itemprop=\"price\" content=\"5.59\"><p class=\"product-detail-price\"> 5,59 €* </p><div class=\"product-detail-price-unit\"> <span class=\"price-unit-reference-content\"> (22,36 €* / 1 l) </span> </div></div><div class=\"product-detail-tax-container\"><p class=\"product-detail-tax m",
+          "r &amp; Gamble GmbH\"/><input type=\"hidden\" name=\"bit-gtag-name\" value=\"Shampoo Derma x Pro Sensitive Pflege\"/><input type=\"hidden\" name=\"bit-gtag-price\" value=\"5.59\"/><input type=\"hidden\" name=\"bit-gtag-unit_price\" value=\"5.59\"/><div class=\"d-grid\" style=\"position: relative;\"> <button class=\"btn btn-primary btn-buy fs-6\" style=\"position: relative;\"> In den Warenkorb </button> </div></div></div></form>",
+          "\" value=\"Shampoo Derma x Pro Sensitive Pflege\"/><input type=\"hidden\" name=\"bit-gtag-price\" value=\"5.59\"/><input type=\"hidden\" name=\"bit-gtag-unit_price\" value=\"5.59\"/><div class=\"d-grid\" style=\"position: relative;\"> <button class=\"btn btn-primary btn-buy fs-6\" style=\"position: relative;\"> In den Warenkorb </button> </div></div></div></form><div class=\"flashbags container mt-2 px-0 d-none\"><div role=\"a"
+        ],
+        "5,59": [
+          "ner\"><div class=\"row\"><div class=\"col-5 p-0\"><div class=\"product-detail-price-container\"><meta itemprop=\"price\" content=\"5.59\"><p class=\"product-detail-price\"> 5,59 €* </p><div class=\"product-detail-price-unit\"> <span class=\"price-unit-reference-content\"> (22,36 €* / 1 l) </span> </div></div><div class=\"product-detail-tax-container\"><p class=\"product-detail-tax m-0\">inkl. MwSt. zzgl. <a class=\"product"
+        ]
+      },
+      "expected_package_mentions": {
+        "250 ml": [],
+        "250 Milliliter": [],
+        "250ml": [
+          "/span><br> <span class=\"product-detail-name\" itemprop=\"name\"> Shampoo Derma x Pro Sensitive Pflege <span class=\"pMenge\">250ml</span> </span> </div></div><div class=\"col-md-auto product-heading-manufacturer-logo-container\" data-cms-element-id=\"018b1b1d7de171d19e4cdf503c32eab7\"><div class=\"cms-element-imag",
+          "pan>Marke:</span> <span> Head &amp; Shoulders </span> </div><div class=\"rhweb-buybox-addon\"> <span>Menge:</span> <span> 250ml </span> </div><div><a title=\"Mehr von Head &amp; Shoulders\" href=\"https://www.drogeriedepot.de/c/Markenwelt/?properties=018b15cc3fa073cd9dc0b91e4f5a0cba\"> Mehr Produkte von <b>Hea"
+        ]
+      },
+      "positive_purchase_marker": true,
+      "challenge": false
+    },
+    {
+      "id": "e859d6e0-e991-4081-84b5-b81862c82475",
+      "name": "Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo",
+      "category_key": "shampoo",
+      "registered_gtins": [
+        "4015100895025"
+      ],
+      "primary_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025/",
+      "expected": {
+        "price_eur": 4.99,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4015100895025"
+        ]
+      },
+      "checked_at": "2026-10-03T13:13:43.221717+00:00",
+      "http_status": 200,
+      "final_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025/",
+      "content_type": "text/html; charset=utf-8",
+      "structured_products": [],
+      "title": "Client Challenge",
+      "expected_price_mentions": {
+        "4.99": [],
+        "4,99": []
+      },
+      "expected_package_mentions": {
+        "200ml": [],
+        "200 ml": [],
+        "200 Milliliter": []
+      },
+      "positive_purchase_marker": false,
+      "challenge": false
+    },
+    {
+      "id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+      "name": "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+      "category_key": "leave_in",
+      "registered_gtins": [],
+      "primary_url": "https://www.dm.de/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer",
+      "expected": {
+        "price_eur": 2.75,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "observed_gtin": [
+          "4070765027518"
+        ]
+      },
+      "checked_at": "2026-10-03T13:13:44.481104+00:00",
+      "http_status": 200,
+      "final_url": "https://www.dm.de/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer",
+      "content_type": "text/html; charset=utf-8",
+      "structured_products": [],
+      "title": "dm-drogerie markt - dauerhaft günstig online kaufen",
+      "expected_price_mentions": {
+        "2.75": [],
+        "2,75": []
+      },
+      "expected_package_mentions": {
+        "100ml": [],
+        "100 ml": [],
+        "100 Milliliter": []
+      },
+      "positive_purchase_marker": false,
+      "challenge": false
+    }
+  ]
+}

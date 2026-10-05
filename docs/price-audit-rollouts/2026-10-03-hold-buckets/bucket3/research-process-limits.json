@@ -1,0 +1,9 @@
+{
+  "captured_at": "2026-10-03T15:25:37.616792+00:00",
+  "blind_certified": false,
+  "reason": "This assigned comparison task exposed identity, claims and stored values before a blind receipt; no clean blind-first provenance can be claimed. Candidate labels are provisional formula-context judgments, not an approved engine run.",
+  "independent_review_completed": false,
+  "adapter_replay_purpose": "Show exact deterministic DB consequences if the provisional candidate is accepted; machine projection status is not research-method approval.",
+  "production_writes": false,
+  "formula_continuity_assumed": false
+}

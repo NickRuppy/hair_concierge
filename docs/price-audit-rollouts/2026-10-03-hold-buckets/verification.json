@@ -1,0 +1,6 @@
+{
+  "tests": "node --import ./tests/server-only-register.cjs --import tsx --test tests/personal-plan-legacy-cutover-eligibility.test.ts tests/personal-plan-stage5-application-adapter.test.ts",
+  "passed": 30,
+  "failed": 0,
+  "proof": "Existing recommendation eligibility pauses curated shopping choices while active identifiers/owned assessment remain; real SQL dry run rolled back all16 updates; full371-row readbacks verified protected state."
+}

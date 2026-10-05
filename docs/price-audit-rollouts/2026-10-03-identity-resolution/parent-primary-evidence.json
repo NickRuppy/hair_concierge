@@ -1,0 +1,84 @@
+{
+  "method": "Fresh bounded primary PDP identity, ingredient and selected offer excerpts; consumer reviews omitted.",
+  "records": [
+    {
+      "key": "foam-old",
+      "requested_url": "https://www.dm-drogeriemarkt.it/p/d/2974661/balea-shampoo-secco-in-schiuma-sensitive",
+      "checked_at": "2026-10-03T14:00:16.494387+00:00",
+      "http_status": 200,
+      "final_url": "https://www.dm-drogeriemarkt.it/p/d/2974661/balea-shampoo-secco-in-schiuma-sensitive",
+      "gtin_contexts": [],
+      "inci_contexts": [],
+      "structured_products": [],
+      "title": "dm Italia | dm drogerie markt Italia"
+    },
+    {
+      "key": "aqua-old",
+      "requested_url": "https://www.dm-drogeriemarkt.it/p/d/1675522/balea-professional-balsamo-per-capelli-secchi-aqua-hyaluron",
+      "checked_at": "2026-10-03T14:00:16.495000+00:00",
+      "http_status": 200,
+      "final_url": "https://www.dm-drogeriemarkt.it/p/d/1675522/balea-professional-balsamo-per-capelli-secchi-aqua-hyaluron",
+      "gtin_contexts": [],
+      "inci_contexts": [],
+      "structured_products": [],
+      "title": "dm Italia | dm drogerie markt Italia"
+    },
+    {
+      "key": "lovely-long-conflict",
+      "requested_url": "https://www.dm-drogeriemarkt.it/p/d/1559584/langhaarmadchen-shampoo-lovely-long",
+      "checked_at": "2026-10-03T14:00:16.495229+00:00",
+      "http_status": 200,
+      "final_url": "https://www.dm-drogeriemarkt.it/p/d/1559584/langhaarmadchen-shampoo-lovely-long",
+      "gtin_contexts": [],
+      "inci_contexts": [],
+      "structured_products": [],
+      "title": "dm Italia | dm drogerie markt Italia"
+    },
+    {
+      "key": "jeanlen-current",
+      "requested_url": "https://www.jeanlen.de/en/haarmaske-feuchtigkeit-rosemary-ginger",
+      "checked_at": "2026-10-03T14:00:16.495370+00:00",
+      "http_status": 200,
+      "final_url": "https://www.jeanlen.de/en/haarmaske-feuchtigkeit-rosemary-ginger",
+      "gtin_contexts": [],
+      "inci_contexts": [
+        "Ingredients\nProduct information \"Hair Mask Hydration Rosemary/Ginger, 200 ml\"\nLooking for the missing piece of the puzzle in your hair routine? Our Moisturizing Hair Mask with a herbal-fresh scent of rosemary and ginger is the little upgrade to your hair care routine that you've been looking for. Whether you're already using our matching shampoo and conditioner or you simply need a rescue for your dry hair, the moisturizing mask is here to help!\nThis intensively nourishing hair mask is exactly what dry, brittle and dull hair needs. With a deeply moisturizing complex of vegetable glycerin, betaine, panthenol and black oat extract, your hair is pampered and supplied with plenty of moisture right down to the ends. Your hair will then shine with new radiance and be incredibly supple.\nApplication is very simple: after washing, massage the moisturizing hair mask generously into the lengths of your hair, leave in and then rinse thoroughly. Your hair will thank you for the extra care with improved combability and a silky-soft feel.\nTry the matching hair care with our bestselling Rosmary/Ginger fragrance and discover shampoo, conditioner and refill sachets to match your new favorite hair mask.\nCategory:\nExtrapflege\nHair type:\nDamaged hair, Damaged hair, Dry hair, Normal hair\nScent direction:\nHerbaceous, Spicy, Tart\nProduct number: 2900101127\nAverage rating of 4.92 out of 5 stars\n4.92 out of 5 stars\nLeave a review!\nShare your experiences with other customers.\nWrite review\nShow reviews\nLogin\nReviews can only be submitted while being logged in. Please enter your login details below.\nNew customer?\nYour email address\nYour password\nI have forgotten my password.\nLog in\nCancel\nDisplay rev",
+        "Ingredients\naqua, cetearyl alcohol, glycerin, isopropyl palmitate, parfum, cetrimonium chloride, helianthus annuus seed oil, hydrolyzed rice protein, behentrimonium methosulfate, glyceryl stearate se, avena strigosa seed extract, lecithin, glycine soja oil, phenoxyethanol, sodium benzoate, tetramethyl acetyloctahydronaphthalenes, glucomannan, potassium sorbate, limonene, tetrasodium iminodisuccinate, lactic acid, linalyl acetate, citrus limon peel oil, linalool, pinene, citric acid, pogostemon cablin oil, juniperus virginiana oil, citrus aurantium peel oil, benzoic acid, methyl benzoate, bht.\nFree shipping from 49€\nwithin Germany\nSSL encrypted\nContact us\nNewsletter\nAbout\nStory\nTeam\nFlagshipstore\nBlog\nKarriere\nInformation\nHelpdesk/FAQ\nReturn & Replacement\nContact\nContest Rules\nPress & Trade\nDetermine voucher value\nB2B Registration\nJ&L für Hotels\nWiderrufsformular\nImprint\nShipping & Payment Terms\nImprint\nGeneral terms and conditions\nRevocation policy\nData Protection Declaration\nAuthenticity of customer reviews\nBarrierefreiheitserklärung\nPrivacy Settings\nSecure payment\nLegal guarantee\nYour rights when purchasing goods in the EU.\nLearn more →\nFollow us:\nJean&Len\nBack"
+      ],
+      "structured_products": [
+        {
+          "name": "Hair Mask Hydration Rosemary/Ginger, 200 ml",
+          "sku": "2900101127",
+          "gtin13": "4262401735639",
+          "url": "https://www.jeanlen.de/en/haarmaske-feuchtigkeit-rosemary-ginger",
+          "offers": {
+            "@type": "Offer",
+            "url": "https://www.jeanlen.de/en/haarmaske-feuchtigkeit-rosemary-ginger",
+            "priceCurrency": "EUR",
+            "price": 7.99,
+            "availability": "https://schema.org/InStock",
+            "itemCondition": "https://schema.org/NewCondition",
+            "seller": {
+              "@type": "Organization",
+              "@id": "https://www.jeanlen.de/#organization",
+              "name": "Jean&Len"
+            },
+            "shippingDetails": {
+              "@type": "OfferShippingDetails",
+              "deliveryTime": {
+                "@type": "ShippingDeliveryTime",
+                "handlingTime": {
+                  "@type": "QuantitativeValue",
+                  "minValue": 3,
+                  "maxValue": 5,
+                  "unitCode": "DAY"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "fetch_error": "'NoneType' object has no attribute 'group'"
+    }
+  ]
+}

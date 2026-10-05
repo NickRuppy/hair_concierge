@@ -1,0 +1,31 @@
+{
+  "frozen_at_utc": "2026-10-04T07:59:31.700230+00:00",
+  "before_research": true,
+  "blind_integrity": "Only anonymous formula packets read; no identities, labels, claims, dossiers, provisional projections or formula receipts read.",
+  "packets": [
+    {
+      "candidate": "F1",
+      "source_path": "docs/price-audit-rollouts/2026-10-03-hold-buckets/bucket3/blind-input-1.json",
+      "source_file_sha256": "e8567e2588b14e66e700b49a85dbc982f6b564dac1b8a3890f99b4eaa6d9b999",
+      "supplied_formula_fingerprint": "859d5357fc56e09fe7d35719d60a5e15aebbbbd49f344dad19bbced125141d73",
+      "ordered_inci_sha256_json_compact": "bfe3ade41120a46932a0cf3e0de331150dc2d628d99c36340017a0ea631244be",
+      "count": 33
+    },
+    {
+      "candidate": "F2",
+      "source_path": "docs/price-audit-rollouts/2026-10-03-hold-buckets/bucket3/blind-input-2.json",
+      "source_file_sha256": "967edbc2fc5584bd8f95b37f1b21dacf556ec2f676fa266366f87840aacb140b",
+      "supplied_formula_fingerprint": "ca52f423b555b7c648a1456dbc52fe47811a0e1261df2cffdba6fe0c19471e0f",
+      "ordered_inci_sha256_json_compact": "bb5f6ac92267982b9d3f5745f882441f9988a77565f677e3c8beefcbbc582101",
+      "count": 20
+    },
+    {
+      "candidate": "F3",
+      "source_path": "docs/price-audit-rollouts/2026-10-03-hold-buckets/bucket3/blind-input-3.json",
+      "source_file_sha256": "a905d3ede511c771e0507b5608cf02f84141294094ab1bcee66d6b7c90f0fb13",
+      "supplied_formula_fingerprint": "1934c5192cc62964abec8332180b597c6386fc3fca36d243ae7216e0bafef133",
+      "ordered_inci_sha256_json_compact": "863b9c18ceabd88c346270ec5d91fe541c096845a268d89459b873a4a5608f5e",
+      "count": 39
+    }
+  ]
+}

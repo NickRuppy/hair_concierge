@@ -1,0 +1,83 @@
+id,name,old_price_eur,new_price_eur,old_purchase_link_status,new_purchase_link_status,price_checked_at,purchase_link_checked_at,applied,note
+0307c903-84f9-46b4-8f1f-a51c2b1f38ff,Garnier Hair Food Aloe Vera,5.95,5.95,available,,2026-09-30T17:23:25.471Z,,true,source:llm_research
+1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5,Pantene Pro-V Coconut Oil,4.95,4.95,available,,2026-09-30T17:23:55.519Z,,true,source:llm_research
+1c43bc07-e3c6-4b8a-9b62-943147052e07,Haaröl Oil Repair Intensiv,2.75,2.75,available,,2026-09-30T17:24:06.872Z,,true,source:llm_research
+1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf,OGX Haaröl Moroccan Argan Penetrating Oil,8.95,7.95,available,,2026-09-30T17:24:18.882Z,,true,source:llm_research
+21a94166-3813-4c0f-8912-508fb8f704f1,L’Oréal Öl Magique Midnight Serum,7.99,7.95,available,,2026-09-30T17:24:59.114Z,,true,source:llm_research
+27a2dd61-6e54-4746-8e24-a698dbafbf91,Neqi Opulent Oil,9.95,7.95,available,,2026-09-30T17:25:22.532Z,,true,source:llm_research
+2858a8b6-018b-4949-ae58-eedc348d20b4,OGX Miracle Coconut Oil,8.95,7.95,available,,2026-09-30T17:25:47.935Z,,true,source:llm_research
+35a372b6-c7ef-45cb-be0b-99cef476f247,Pantene Bonding Leave-In,9.99,9.95,available,,2026-09-30T17:26:20.317Z,,true,source:llm_research
+3eb198a5-9aab-4f28-9df1-c4869c6a12db,KoRo MCT Öl,16.95,16.95,available,,2026-09-30T17:26:43.938Z,,true,source:llm_research
+4a95e1de-54e9-4fcd-b227-72a5824d13c1,Dr. Scheller Jojobaöl,8.95,8.45,available,,2026-09-30T17:27:06.006Z,,true,source:llm_research
+52264c47-f339-49db-9fb2-207d1ad3b470,Fructis Hair Food Aloe Vera,5.95,5.95,available,,2026-09-30T17:27:21.339Z,,true,source:llm_research
+57ec7a8e-aa1b-4260-81d6-7ec3dbc899b8,Trockenshampoo Sensible Kopfhaut,3.95,3.95,available,,2026-09-30T17:27:47.664Z,,true,source:llm_research
+6a1116a0-731f-46bb-9dd6-a0db89de5a13,Trockenshampoo dunkel,3.95,3.95,available,,2026-09-30T17:28:02.497Z,,true,source:llm_research
+6b01025d-9e72-4514-b42e-bbb6065fbe1c,Midnight Serum,7.99,7.95,available,,2026-09-30T17:28:14.845Z,,true,source:llm_research
+7c1f2f42-3729-49fe-9f0d-e007b93a05c8,Pantene Bond Repair,9.25,7.95,available,,2026-09-30T17:28:39.455Z,,true,source:llm_research
+8df49303-e1c9-4519-9a5f-4f9bc276ab5a,Pomélo+Co Shine Therapy,9.99,9.95,available,,2026-09-30T17:28:51.156Z,,true,source:llm_research
+961e3935-f823-44e7-8601-900c62855d3d,Syoss Intense Keratin,4.49,4.95,available,,2026-09-30T17:29:03.564Z,,true,source:llm_research
+9d7141bf-bb7e-41e8-a206-38ee5c42fdc6,Balea Professional Plex Care 2in1,2.75,2.75,available,,2026-09-30T17:29:28.910Z,,true,source:llm_research
+9e1442c9-4ab8-4819-a851-66859a98ed80,Fructis Hair Food Papaya,5.95,5.95,available,,2026-09-30T17:29:41.812Z,,true,source:llm_research
+acf9d5cd-76e4-49c7-9c04-0af1f20506ad,dmBio Kokosöl nativ,2.85,2.85,available,,2026-09-30T17:30:49.206Z,,true,source:llm_research
+b281d528-b312-4e44-98be-3e01f7e56644,Neqi Gloss Glaze,9.99,9.95,available,,2026-09-30T17:31:03.877Z,,true,source:llm_research
+c7326c6b-6175-4ec2-865f-68baf476c986,Guhl 30 sec. Feuchtigkeit,2.95,3.45,available,,2026-09-30T17:31:37.358Z,,true,source:llm_research
+d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4,Bali Curls Deep Repair Mask,8.99,8.95,available,,2026-09-30T17:31:59.602Z,,true,source:llm_research
+d28643c8-c340-4514-826a-6c1ac8419fe9,Trockenshampoo Bruenett,3.95,3.95,available,,2026-09-30T17:32:09.900Z,,true,source:llm_research
+d33543b0-6011-45f1-9bb2-125289ac849a,Neqi Repair Reveal,9.99,9.95,available,,2026-09-30T17:32:21.519Z,,true,source:llm_research
+d5d67009-7aac-4299-938b-7218b8635a0c,Balea 3 in 1 Intensivmaske,1.95,1.95,available,,2026-09-30T17:32:32.080Z,,true,source:llm_research
+d9825ad6-f549-4b02-a62a-eaa3bf917936,Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske,5.75,5.75,available,,2026-09-30T17:32:42.413Z,,true,source:llm_research
+dc8b8d4a-8ca9-452c-8d04-03b785b63275,Trockenshampoo Liquid to Dry,3.95,3.95,unavailable,,2026-09-30T17:32:56.941Z,,true,source:llm_research
+e3c4b607-8f81-462c-8a2b-e45c8b3a2976,Cantu Leave-In Repair Cream,6.95,6.95,available,,2026-09-30T17:33:15.592Z,,true,source:llm_research
+e6896862-523b-42b3-967d-41cbd16acf64,Neqi Moisture Mystery,9.95,9.95,available,,2026-09-30T17:33:26.598Z,,true,source:llm_research
+e6b87909-6104-4a9a-a3ef-e1c64a1b15b1,Garnier Fructis Wunderöl,5.95,5.95,available,,2026-09-30T17:33:42.438Z,,true,source:llm_research
+e781ca9e-886d-40a1-bfe1-48177cfbf381,Pantene Pro-V Leave-In Moisture Boost HEAT&GLOW,8.95,8.95,available,,2026-09-30T17:33:54.416Z,,true,source:llm_research
+ea353b65-544d-48a8-a057-c3e733b66326,Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl,4.95,4.95,available,,2026-09-30T17:35:07.228Z,,true,source:llm_research
+f9595d2c-d86d-4bdb-9758-c98d1e213f3c,alverde Leave-In Sprühkur Express 7in1,2.95,2.75,available,,2026-09-30T17:35:42.259Z,,true,source:llm_research
+fd83b493-f7be-4071-9642-3d5b92e30dc2,Balea Traumlocken Öl,2.75,2.75,available,,2026-09-30T17:35:53.578Z,,true,source:llm_research
+ff309c8a-ecd5-415c-9016-1b726c9fb3a4,Trockenshampoo Blond,3.95,3.95,available,,2026-09-30T17:36:05.343Z,,true,source:llm_research
+2b2161a2-6c09-435f-adbb-49da44d434ae,Trockenshampoo Extra Volumen,3.99,3.99,available,,2026-09-30T17:22:16.066Z,,true,source:llm_research
+5dc2fae3-a0ca-4e6c-9c30-02dd192772f0,Gliss Ultimate Repair Sprüh-Conditioner,4.49,4.99,available,,2026-09-30T17:22:34.104Z,,true,source:llm_research
+0b21f996-bb42-4b10-89bd-4881c4346d53,ISANA PROFESSIONAL Leave-In Conditioner Hyaluron & Panthenol,2.49,2.49,available,,2026-09-30T17:36:17.074Z,,true,source:llm_research
+43232fe6-28b6-4f45-a09f-b1354e47b0be,Bali Curls SOS Protein Treatment,2.79,2.79,available,,2026-09-30T17:36:51.678Z,,true,source:llm_research
+a7ff335a-7e81-4cf4-9c20-9209bff4386b,Neqi Moisture Mystery,8.99,8.99,available,,2026-09-30T17:38:06.299Z,,true,source:llm_research
+b3932c84-d6e1-453d-b52e-bed1df190fed,Jean&Len Tiefenreparatur Haarkur,6.99,5.49,available,,2026-09-30T17:38:22.753Z,,true,source:llm_research
+b5b595d2-9ba3-4c99-8f99-b2b79d29eb56,Trockenshampoo Jedes Haar,1.99,1.99,available,,2026-09-30T17:38:35.319Z,,true,source:llm_research
+c05773dd-9656-4381-a0ab-8e9fc310c520,L’Oréal Elvital Öl Magique Jojoba,6.95,6.99,available,,2026-09-30T17:38:52.955Z,,true,source:llm_research
+c574ee6f-ad22-45c0-b936-57b847d93433,Garnier Fructis Sleek & Stay Heat-Activated Serum,7.99,7.99,available,,2026-09-30T17:39:08.924Z,,true,source:llm_research
+f8f3b51d-8e64-487d-bad5-4a47c58862ed,Pantene Pro-V Miracles 7in1 Haaröl Spray,8.99,8.99,available,,2026-09-30T17:39:21.264Z,,true,source:llm_research
+fe974387-b487-470e-9799-69bb4249070b,Pantene Pro-V Keratin Protect Öl,4.95,3.99,available,,2026-09-30T17:39:37.944Z,,true,source:llm_research
+ff13bc3a-8bc6-49df-85a0-7a67add26926,NANOIL Avocadoöl,12.99,12.99,available,,2026-09-30T17:39:51.672Z,,true,source:llm_research
+3dc24d67-e6c0-4239-a273-058a87d13553,OLAPLEX No.3PLUS Complete Repair Treatment,34,34,available,,2026-09-30T17:22:44.470Z,,true,source:llm_research
+4827c174-92e9-4121-ab70-843d5c037ad0,Olaplex No.5 Leave-In,34,34,available,,2026-09-30T17:22:57.933Z,,true,source:llm_research
+4e99706a-2232-4ee6-ba1b-9ca1029a7364,Olaplex No.6 Bond Smoother,32,32,available,,2026-09-30T17:23:09.521Z,,true,source:llm_research
+7d8c0150-778d-4cb9-abf5-bfc16ad93b12,Olaplex No.7 Bonding Oil,32,32,available,,2026-09-30T17:40:04.087Z,,true,source:llm_research
+0756a919-5fab-4b6c-a5da-8cb810869b6f,Living Proof Restore Repair Leave-In,25,27.99,available,,2026-09-30T17:40:15.745Z,,true,source:llm_research
+118ebae1-b7a9-4a89-a2ff-6c31df28c4dc,EVO Head Mistress,23.94,24.92,available,,2026-09-30T17:40:55.590Z,,true,source:llm_research
+11a099f7-eabe-4bdb-bfd3-995f35cb6ee4,Color WOW Money Mist,26.6,31.99,available,,2026-09-30T17:41:07.687Z,,true,source:llm_research
+2b7db7e3-2058-4178-8a03-7d05f4a1d447,Redken Extreme Anti-Snap,23.15,25.99,available,,2026-09-30T17:41:19.818Z,,true,source:llm_research
+39ec1b2d-4aa0-4c4e-b581-9b6d5efea530,Redken One United,20.45,21.99,available,,2026-09-30T17:42:04.151Z,,true,source:llm_research
+42b9eba7-d0e3-4d02-ae2b-7a1612a561fe,EVO Happy Campers,23.31,24.92,available,,2026-09-30T17:42:34.492Z,,true,source:llm_research
+7f5207e6-d281-416e-922c-3135dd9a8cc8,Innersense Harmonic Treatment Oil,29.99,29.99,available,,2026-09-30T17:42:57.377Z,,true,source:llm_research
+a3b21686-fe35-46f1-b560-b8a563dc96ae,Redken Acidic Color Gloss Leave-In,29.4,26.99,available,,2026-09-30T17:43:54.560Z,,true,source:llm_research
+38886b62-2c45-4b34-9a24-7d831e97946e,MoriVeda Premium Moringaöl,16.99,16.99,available,,2026-09-30T17:44:07.609Z,,true,source:llm_research
+43cb9fbf-4b04-4554-a86a-7cb168536233,Authentic Beauty Concept Hydrate Spray,36.6,38.6,available,,2026-09-30T17:44:19.155Z,,true,source:llm_research
+5a9f4b7b-69d9-4e9a-8bbd-2dfbae9a5df3,HASK Keratin 5-in-1 Spray,7.95,7.95,available,,2026-09-30T17:44:32.847Z,,true,source:llm_research
+696401be-16b5-4261-836f-28b57c1ecd59,It’s a 10 Miracle Leave-In,44,44,available,,2026-09-30T17:44:50.510Z,,true,source:llm_research
+6ad82861-d68e-4e70-a976-78c0f35d087b,Kevin Murphy Young Again,43,43,available,,2026-09-30T17:45:07.855Z,,true,source:llm_research
+7b5ff358-1b3b-411d-9220-5e6d30543235,Maria Nila True Soft Argan Oil,37,37,available,,2026-09-30T17:45:22.970Z,,true,source:llm_research
+7c057f58-3e9b-4347-b4c1-f04cc4213f94,HASK Argan Conditioning Treatment Haarkur,2.95,2.95,available,,2026-09-30T17:45:37.394Z,,true,source:llm_research
+7d65ed50-898c-40c3-8865-ebe5688774c8,It’s a 10 Miracle Leave-In Lite,23,23,available,,2026-09-30T17:45:48.977Z,,true,source:llm_research
+915aa362-6479-41f2-bb59-0260493b3d58,Paul Mitchell Full Circle Leave-In,26.45,26.45,available,,2026-09-30T17:46:01.705Z,,true,source:llm_research
+9b664b11-fd11-47e3-9b7e-76e34736b43e,Alcina Hyaluron 2.0,14.9,14.9,available,,2026-09-30T17:46:17.532Z,,true,source:llm_research
+b139d4e8-6f26-4096-a1b9-d9efcb02d2ec,EVO Day of Grace Leave-In,28,28,available,,2026-09-30T17:46:28.746Z,,true,source:llm_research
+07120c73-0171-4a2a-9d07-facd9ce90d8c,Weleda Hydra Shine Gloss Drops Alpen-Lein,9.59,9.95,available,available,2026-09-30T17:21:02.374Z,2026-09-30T17:21:02.374Z,true,
+19aea9c4-4b90-4ec4-8cb6-90cb270010f7,benecos BIO Körperöl Macadamianussöl,8.99,8.99,available,available,2026-09-30T17:21:04.726Z,2026-09-30T17:21:04.726Z,true,
+1dce2c18-6a45-4017-a748-e3a7f1cba36f,Primavera Calendulaöl Bio,15.9,15.9,available,available,2026-09-30T17:21:07.005Z,2026-09-30T17:21:07.005Z,true,
+29e36443-93ff-4b62-9cf0-55ad9f89f530,BioGourmet Distelöl,5.99,,available,unavailable,,2026-09-30T17:21:09.326Z,true,
+3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b,benecos BIO Körperöl Wunderbaumsamenöl,4.99,4.99,available,available,2026-09-30T17:21:12.260Z,2026-09-30T17:21:12.260Z,true,
+517dca50-5d55-4038-ba1d-f9b745708327,Allgäuer Ölmühle Bio Traubenkernöl,7.99,,available,unavailable,,2026-09-30T17:21:14.506Z,true,
+5827a3b9-a488-4c74-b13a-4d655f94f1c3,Pantene Pro-V Miracles 7in1 Öl-Spray,8.95,8.95,available,available,2026-09-30T17:21:16.786Z,2026-09-30T17:21:16.786Z,true,
+70ea52bc-2194-4bb3-82a8-3f4a2aede041,Dr. Scheller Reines Arganöl,8.95,8.45,available,available,2026-09-30T17:21:21.412Z,2026-09-30T17:21:21.412Z,true,
+a11855eb-64e5-438f-8880-1d3573efa9fa,benecos BIO Körperöl Aprikosenkernöl,6.99,6.99,available,available,2026-09-30T17:21:27.207Z,2026-09-30T17:21:27.207Z,true,
+ca4ae209-79d2-4f4d-8e44-46e586cec62d,benecos BIO Körperöl Mandelöl,8.99,8.99,available,available,2026-09-30T17:21:29.870Z,2026-09-30T17:21:29.870Z,true,
+931892fb-cc29-4e50-b402-6aae0a494389,Pantene Pro-V Moisture Boost Pflegespülung,8.95,8.95,available,available,2026-09-30T17:21:34.669Z,2026-09-30T17:21:34.669Z,true,

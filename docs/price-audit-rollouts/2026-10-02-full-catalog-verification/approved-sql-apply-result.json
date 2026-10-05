@@ -1,0 +1,16 @@
+{
+  "result": [
+    {
+      "receipt": {
+        "mode": "apply",
+        "checked_at": "2026-10-03T11:48:40.535916+00:00",
+        "rows_verified": 292,
+        "identifier_writes": 0,
+        "noncommercial_changes": 0,
+        "committed_product_writes": 292
+      }
+    }
+  ],
+  "approval": "Nick: Sounds good. Is there anything I should be reviewing first? I think you can apply otherwise.",
+  "method": "Atomic292-row guarded catalog correction; allowed commercial fields only; no identifier/schema/worker/timer changes"
+}

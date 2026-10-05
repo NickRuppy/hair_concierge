@@ -1,0 +1,175 @@
+{
+  "scope": "approved bucket1 purchase pauses",
+  "authorization": "Nick approved proposed bucket handling on2026-10-03; pauses retain barcode/owned use, distinct replacements require review",
+  "baseline_readback_at": "2026-10-03T15:30:18.170157+00:00",
+  "rows_to_pause": [
+    {
+      "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "name": "Gliss Aqua Revive",
+      "category_key": "mask",
+      "before_product_fingerprint": "9266b7ef9ac05018b0f9b18e8d00f261",
+      "before_identifier_fingerprint": "d751713988987e9331980363e24189ce",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "41e09958-5a1f-4997-b99b-f8384b7a8c0c",
+      "name": "Trockenshampoo Kopfhaut Sensitive",
+      "category_key": "dry_shampoo",
+      "before_product_fingerprint": "cff7d2c9b25698a3b76f40b8fd64b1ee",
+      "before_identifier_fingerprint": "d5f08b33628be5241f91ad3b0c501e6e",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "name": "Balea Professional Ultimate Volume",
+      "category_key": "shampoo",
+      "before_product_fingerprint": "b8f715229a58d1c45cca309e65cdb584",
+      "before_identifier_fingerprint": "ae2c9d19bf8f3575bbd95dd83d9dbf4d",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "name": "Hair Biology Revitalize & Soothe",
+      "category_key": "shampoo",
+      "before_product_fingerprint": "e279d4c68ddf0d43a95a1b6afeb88857",
+      "before_identifier_fingerprint": "a6d2c9ed2c68a34b13e079a780e7aa67",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "name": "Balea Natural Beauty Hibiskus",
+      "category_key": "conditioner",
+      "before_product_fingerprint": "d714b538015845a39a823b4b06b3971c",
+      "before_identifier_fingerprint": "c214855261cfb80e70c834768de553d7",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "name": "Garnier Hair Food Macadamia",
+      "category_key": "conditioner",
+      "before_product_fingerprint": "c55b4addc2726f624431f756580bfb27",
+      "before_identifier_fingerprint": "d751713988987e9331980363e24189ce",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "name": "Nivea Volumen & Kraft",
+      "category_key": "conditioner",
+      "before_product_fingerprint": "210cb1d33e2544db6fd3a59c17e8cc22",
+      "before_identifier_fingerprint": "e9f580f94c060bbfdda11deb9ad2ea5b",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+      "name": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+      "category_key": "mask",
+      "before_product_fingerprint": "8fce8f46d694ba77cc699f80b90e34e2",
+      "before_identifier_fingerprint": "186bc48370dfd24166e1d06a70a228d2",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+      "name": "Balea Natural Beauty 3in1 Locken",
+      "category_key": "mask",
+      "before_product_fingerprint": "fbd45478bc2d2ae4b32a499cb4a417a6",
+      "before_identifier_fingerprint": "d751713988987e9331980363e24189ce",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "name": "Balea Professional Glow & Shine",
+      "category_key": "mask",
+      "before_product_fingerprint": "c2d2062ff0f07d0ff53406ee8c8307d6",
+      "before_identifier_fingerprint": "067df1adb58f914b7404e990057adea5",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "name": "Balea Aqua Hyaluron 3 in 1",
+      "category_key": "mask",
+      "before_product_fingerprint": "d0e4b371dee7819a8508ba9d5faf82ef",
+      "before_identifier_fingerprint": "7f0a733ebe47e33b0c18b242fae58236",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "17c50884-3c17-479a-848a-10447464e086",
+      "name": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+      "category_key": "mask",
+      "before_product_fingerprint": "c5b69ff507a1e1a673e35c9d8532e20c",
+      "before_identifier_fingerprint": "02e6d00b2e164cba70dc3c8231609b06",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "name": "Isana 3in1 Milchprotein & Mandel",
+      "category_key": "mask",
+      "before_product_fingerprint": "b8f11d7b709504108abb08ba989f79b4",
+      "before_identifier_fingerprint": "65d9546581882f31c7ebbdae7d3fdeaa",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "869abd97-a499-4f39-97e5-2722773e46ae",
+      "name": "Sante Intense Hydration",
+      "category_key": "mask",
+      "before_product_fingerprint": "6057be2f860f6c9fe14ec4ab469affa7",
+      "before_identifier_fingerprint": "8e10407423f2aeb1310ab1f4dc4aab3f",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "name": "Balea Aqua Hyaluron 3in1",
+      "category_key": "leave_in",
+      "before_product_fingerprint": "27282e891a14d6d13728a8295c97195f",
+      "before_identifier_fingerprint": "d751713988987e9331980363e24189ce",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "name": "Garnier Hair Food Macadamia",
+      "category_key": "leave_in",
+      "before_product_fingerprint": "328262dd738a84b07bbd4a8140f089c1",
+      "before_identifier_fingerprint": "9c32fcb01c41dfe1b2232db855741205",
+      "before_recommended": true,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    }
+  ],
+  "already_not_recommended": [
+    {
+      "id": "e3571e45-1126-4431-bef8-43153ef64c20",
+      "name": "alverde NATURKOSMETIK Haarkur 4in1 Repair & Care Wunderkur",
+      "category_key": "mask",
+      "before_product_fingerprint": "98e3314f5159edc88abe3f7c53360645",
+      "before_identifier_fingerprint": "be815fd3335d6d1d6eb5407a01e4b007",
+      "before_recommended": false,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    },
+    {
+      "id": "96f4cf13-7a71-4924-b44e-9d5612d55d32",
+      "name": "alverde NATURKOSMETIK Haarmaske Hydro Feuchtigkeit",
+      "category_key": "mask",
+      "before_product_fingerprint": "53a8bc6bae885ec0315fca57a658d085",
+      "before_identifier_fingerprint": "5656c843e54d151d17c060cd96eb228b",
+      "before_recommended": false,
+      "reason": "No verified acceptable exact purchase offer; keep recognition and owned use; availability not inferred from blocking."
+    }
+  ],
+  "protected_fields": "all other product fields except updated_at; all identifiers unchanged",
+  "formula_activation": false,
+  "price_updates": 0,
+  "availability_updates": 0
+}

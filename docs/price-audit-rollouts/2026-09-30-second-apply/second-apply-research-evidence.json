@@ -1,0 +1,1602 @@
+[
+  {
+    "candidate": {
+      "Brand": "Nivea",
+      "Name": "Nivea Volumen & Kraft",
+      "Stored shop link": "https://www.dm.de/nivea-conditioner-volumen-und-kraft-p4005900918031.html",
+      "Last known price": "2.25 EUR"
+    },
+    "answer": {
+      "found": false,
+      "price_eur": null,
+      "evidence_url": "https://www.dm.de/nivea-conditioner-volumen-und-kraft-p4005900918031.html",
+      "observed_name": "NIVEA Conditioner Volumen & Kraft, 200 ml",
+      "buyable_at_stored_link": null,
+      "notes": "Die gespeicherte dm-Produktseite war nicht abrufbar. Das EAN identifiziert den 200-ml-Conditioner, aber ich konnte keinen aktuellen regulären Preis auf einer zulässigen deutschen Händler-Produktseite belegen. Daher kann ich weder den letzten bekannten Preis bestätigen noch die Online-Kaufbarkeit bei dm feststellen."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Jean&Len",
+      "Name": "Jean&Len Repair Keratin & Mandel",
+      "Stored shop link": "https://www.dm.de/jean-und-len-haaroel-repair-keratin-und-mandel-p4262401733253.html",
+      "Last known price": "6.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 5.95,
+      "evidence_url": "https://www.dm.de/p/d/1455746/jean-und-len-haaroel-repair-keratin-und-mandel",
+      "observed_name": "Jean&Len Haaröl Repair Keratin & Mandel, 100 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm-Produktseite bestätigt GTIN 4262401733253 und den regulären Preis von 5,95 €. Die Seite zeigt „Nicht lieferbar“ und „Paketversand für das Produkt nicht möglich“."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Balea",
+      "Name": "Balea Professional Glow & Shine",
+      "Stored shop link": "https://www.dm.de/balea-professional-haarkur-glow-und-shine-p4067796166453.html",
+      "Last known price": "2.75 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 2.75,
+      "evidence_url": "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine",
+      "observed_name": "Balea PROFESSIONAL Haarkur Glow & Shine, 200 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm Deutschland führt die Haarkur für 2,75 € und zeigt sie als „Lieferbar“ mit „In den Warenkorb“. Die gespeicherte URL liefert 404; die aktuelle dm-Produktdetailseite bestätigt das exakte Produkt über die GTIN 4067796166453."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Neqi",
+      "Name": "Neqi Peptide Power",
+      "Stored shop link": "https://www.dm.de/neqi-haarkur-treatment-treasures-peptide-power-p4063528086297.html",
+      "Last known price": "9.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 5.95,
+      "evidence_url": "https://www.dm.de/p/d/2973205/neqi-haarkur-treatment-treasures-peptide-power",
+      "observed_name": "NEQI Haarkur Treatment Treasures Peptide Power, 100 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm product page confirms the exact product by GTIN 4063528086297. Current displayed price is €5.95; the page says “Nicht lieferbar,” so it is not currently available to buy online."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Balea",
+      "Name": "Trockenshampoo Schaum Kopfhaut Sensitive",
+      "Stored shop link": "https://www.dm.de/balea-trockenshampoo-schaum-kopfhaut-sensitive-p4067796069556.html",
+      "Last known price": "1.45 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 1.45,
+      "evidence_url": "https://www.dm.de/p/d/2974661/balea-trockenshampoo-schaum-kopfhaut-sensitive",
+      "observed_name": "Balea Trockenshampoo Schaum Kopfhaut Sensitive, 150 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm zeigt 1,45 € und den Status „Lieferbar“ mit „In den Warenkorb“. Die Produktseite nennt jedoch GTIN 4066447989540, abweichend von der angegebenen EAN 04067796069556; die exakte EAN ist daher nicht bestätigt."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "nedura",
+      "Name": "nedura Schwarzkümmelöl ungefiltert",
+      "Stored shop link": "https://www.dm.de/nedura-schwarzkuemmeloel-ungefiltert-p4262490410776.html",
+      "Last known price": "12.49 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 17.95,
+      "evidence_url": "https://www.dm.de/p/d/3098859/nedura-schwarzkuemmeloel-ungefiltert",
+      "observed_name": "nedura Schwarzkümmelöl ungefiltert, 500 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm product page confirms GTIN 4262490410776, lists the regular price as 17.95 EUR, and shows “Lieferbar” with an “In den Warenkorb” option."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Schaebens",
+      "Name": "Schaebens Argan-Öl Haarmaske",
+      "Stored shop link": "https://www.dm.de/schaebens-haarmaske-arganoel-p4003573025018.html",
+      "Last known price": "1.49 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 1.45,
+      "evidence_url": "https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel",
+      "observed_name": "Schaebens Haarmaske Arganöl, 20 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm-Seite bestätigt GTIN 4003573025018 und den regulären Preis von 1,45 €. Der Artikel ist online als „Nicht lieferbar“ gekennzeichnet."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Balea",
+      "Name": "Trockenshampoo Kopfhaut Sensitive",
+      "Stored shop link": "https://www.dm.de/balea-trockenshampoo-kopfhaut-sensitive-p4066447438789.html",
+      "Last known price": "1.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 1.95,
+      "evidence_url": "https://www.dm.de/p/d/1711758/balea-trockenshampoo-kopfhaut-sensitive",
+      "observed_name": "Balea Trockenshampoo Kopfhaut Sensitive, 200 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm führt den regulären Preis mit 1,95 €. Produktname und GTIN 4066447438789 stimmen überein. Die Seite meldet „Momentan nicht lieferbar“."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Balea Aqua",
+      "Name": "Balea Aqua Hyaluron 3 in 1",
+      "Stored shop link": "https://www.dm.de/balea-professional-haarmaske-3in1-aqua-hyaluron-p4066447668315.html",
+      "Last known price": "2.75 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 2.75,
+      "evidence_url": "https://www.dm.de/p/d/1417521/balea-professional-haarmaske-3in1-aqua-hyaluron",
+      "observed_name": "Balea PROFESSIONAL Haarmaske 3in1 Aqua Hyaluron, 150 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm product page lists 2.75 EUR and confirms GTIN 4066447668315. The page says „Nicht lieferbar“, so it is currently not available to buy online."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Batiste",
+      "Name": "Trockenshampoo Original",
+      "Stored shop link": "https://www.dm.de/batiste-trockenshampoo-original-p5010724527481.html",
+      "Last known price": "3.75 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 3.75,
+      "evidence_url": "https://www.dm.de/p/d/1551780/batiste-trockenshampoo-original",
+      "observed_name": "Batiste Trockenshampoo Original, 200 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm lists the regular price as 3.75 EUR and confirms GTIN 5010724527481. The page says “Momentan nicht lieferbar,” so it is not currently available to buy online."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "dmBio",
+      "Name": "dmBio natives Olivenöl extra",
+      "Stored shop link": "https://www.dm.de/dmbio-natives-olivenoel-extra-p4066447423761.html",
+      "Last known price": "3.75 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 6.95,
+      "evidence_url": "https://www.dm.de/p/d/1459848/dmbio-natives-olivenoel-extra",
+      "observed_name": "dmBio Natives Olivenöl extra, 750 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm-Seite bestätigt GTIN 4066447918687. Aktueller regulärer Preis: 6,95 €; online lieferbar (Standardversand 2–3 Werktage)."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Pantene",
+      "Name": "Pantene Hydra Glow",
+      "Stored shop link": "https://www.dm.de/pantene-pro-v-haarmaske-miracles-hydra-glow-deep-hydration-p8700216173261.html",
+      "Last known price": "3.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 6.45,
+      "evidence_url": "https://www.dm.de/p/d/1343858/pantene-pro-v-haarmaske-miracles-hydra-glow-deep-hydration",
+      "observed_name": "PANTENE PRO-V Haarmaske miracles Hydra Glow Deep Hydration, 300 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm-Produktseite nennt GTIN 8700216173261 und den regulären Preis 6,45 €. Online als „Lieferbar“ ausgewiesen."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Garnier",
+      "Name": "Garnier Hair Food Macadamia",
+      "Stored shop link": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+      "Last known price": "5.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 5.95,
+      "evidence_url": "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+      "observed_name": "GARNIER FRUCTIS Haarkur Macadamia Hair Food 3in1 Maske, 400 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm-Produktseite bestätigt GTIN 3600542511612 und zeigt den regulären Preis von 5,95 €. Die Seite meldet „Nicht lieferbar“."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "OGX",
+      "Name": "OGX Argan weightless Öl",
+      "Stored shop link": "https://www.dm.de/ogx-haaroel-moroccan-argan-oil-weightless-dry-out-oil-p22796976208.html",
+      "Last known price": "8.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 15.73,
+      "evidence_url": "https://www.boozt.com/de/de/ogx/argan-reviving-dry-oil-118-ml_30595984/224722169",
+      "observed_name": "Ogx Argan Reviving Dry Oil 118 ml - Haaröl",
+      "buyable_at_stored_link": false,
+      "notes": "Boozt lists the exact EAN 3574661563350 and 118 ml at 15.73 € (regular price shown as 18.50 €, with a 15% deal); since the requested price must be regular, the current regular price is 18.50 €. The stored dm link could not be accessed, and dm's current Argan oil page is a different product (GTIN 3574661563312), so online availability at the stored link could not be established."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Neqi",
+      "Name": "Neqi Build Boost",
+      "Stored shop link": "https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost",
+      "Last known price": "9.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 9.95,
+      "evidence_url": "https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost",
+      "observed_name": "NEQI Haarkur Treatment Treasures Build Boost, 100 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm lists the regular price as 9.95 EUR. The GTIN matches. The page says the product is not available for delivery, so it is not currently online-buyable."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Balea Aqua",
+      "Name": "Balea Aqua Hyaluron 3in1",
+      "Stored shop link": "https://www.dm.de/balea-professional-haarmaske-3in1-aqua-hyaluron-p4066447668315.html",
+      "Last known price": "2.75 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 2.75,
+      "evidence_url": "https://www.dm.de/p/d/1417521/balea-professional-haarmaske-3in1-aqua-hyaluron",
+      "observed_name": "Balea PROFESSIONAL Haarmaske 3in1 Aqua Hyaluron, 150 ml",
+      "buyable_at_stored_link": false,
+      "notes": "Exact product confirmed by GTIN 4066447668315. dm lists the regular price as 2.75 EUR, but the page says “Nicht lieferbar.”"
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Syoss",
+      "Name": "Syoss Haarkur Lamination Intense Glaze",
+      "Stored shop link": "https://www.dm.de/syoss-haarkur-lamination-intense-glaze-p4015100867213.html",
+      "Last known price": "7.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 2.95,
+      "evidence_url": "https://www.dm.de/p/d/3119223/syoss-haarkur-lamination-intense-glaze",
+      "observed_name": "syoss Haarkur Lamination Intense Glaze, 200 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm product page confirms GTIN 4015100867213 and lists the current price as €2.95. The page says “Nicht lieferbar,” so it is not currently available to buy online."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Garnier",
+      "Name": "Garnier Wahre Schätze Curl Revival Öl",
+      "Stored shop link": "https://www.dm.de/wahre-schaetze-haaroel-curl-revival-elixir-p3600542624336.html",
+      "Last known price": "6.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 6.95,
+      "evidence_url": "https://www.dm.de/p/d/3042328/wahre-schaetze-haaroel-curl-revival-elixir",
+      "observed_name": "Wahre Schätze Haaröl Curl Revival Elixir, 120 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm bestätigt GTIN 3600542624336 und listet den regulären Preis mit 6,95 €. Die Seite zeigt „Nicht lieferbar“, daher derzeit nicht online kaufbar."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Balea",
+      "Name": "Balea Natural Beauty 3in1 Locken",
+      "Stored shop link": "https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken",
+      "Last known price": "2.45 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 2.45,
+      "evidence_url": "https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken",
+      "observed_name": "Balea Haarmaske 3in1 Natural Beauty Locken, 250 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm product page confirms the exact product (item 1457506), 250 ml, at the regular price of 2.45 EUR. The page says “Nicht lieferbar,” so it is not currently available to buy online."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Redken",
+      "Name": "Redken All Soft Mega Curls Leave-In",
+      "Stored shop link": "https://www.douglas.de/de/p/5010905038",
+      "Last known price": "24.44 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 31.85,
+      "evidence_url": "https://www.hair24.de/Redken-All-Soft-Mega-Curls-Hydramelt-150-ml",
+      "observed_name": "Redken All Soft Mega Curls Hydramelt, 150 ml",
+      "buyable_at_stored_link": true,
+      "notes": "Hair24 lists the exact EAN 3474637135638 at €31.85, with the 150 ml product available to add to cart. The stored Douglas page is online-buyable, but it is for the different product “All Soft Mega Curls Hydramelt Treatment” and does not establish the exact GTIN; its listed price is €25.99. Therefore the exact-product price is from Hair24."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Curlsmith",
+      "Name": "Curlsmith Multitasking Conditioner 3 in 1",
+      "Stored shop link": "https://www.douglas.de/de/p/5011693052",
+      "Last known price": "20.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 21.0,
+      "evidence_url": "https://www.douglas.de/de/p/5011693052",
+      "observed_name": "Curlsmith Conditioner Multi-Tasking, 237 ml",
+      "buyable_at_stored_link": false,
+      "notes": "Douglas product page identifies the exact Multi-Tasking Conditioner and lists the standard 237 ml size at €19.59, with UVP €21.00. The current regular price is €21.00; Douglas’s listed price is discounted. The page says “Demnächst wieder lieferbar,” so it is not currently online-buyable."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "K18",
+      "Name": "K18 Leave-In Molecular Repair Hair Mask",
+      "Stored shop link": "https://www.douglas.de/de/p/5010334127",
+      "Last known price": "75 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 49.99,
+      "evidence_url": "https://www.douglas.de/de/p/5010334127",
+      "observed_name": "K18 Leave-In Molecular Repair Hair Mask 50 ml",
+      "buyable_at_stored_link": true,
+      "notes": "Douglas’s product listing identifies the matching 50 ml product and shows 49.99 € (regular price; UVP 75.00 €). The page is marked online-buyable. The product-detail URL returned a fetch error when checked, so this relies on Douglas’s currently indexed listing."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Moroccanoil",
+      "Name": "Moroccanoil All In One Leave In Conditioner",
+      "Stored shop link": "https://www.douglas.de/de/p/5011481841",
+      "Last known price": "28.8 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 16.0,
+      "evidence_url": "https://www.douglas.de/de/p/5011481841",
+      "observed_name": "Moroccanoil Leave-In-Conditioner Hydration All in One, 50 ml - Mini",
+      "buyable_at_stored_link": true,
+      "notes": "Douglas zeigt 16,00 € inklusive MwSt. und „Online: auf Lager“ mit Warenkorboption. Die gespeicherte Produktseite führt aktuell die 50-ml-Minigöße; der reguläre Verbraucherstandard von 160 ml wird separat angeboten und ist auf der Douglas-Seite mit 25,99 € gelistet, dort aber „Demnächst wieder lieferbar“."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "K18",
+      "Name": "K18 Hair Professional Molecular Repair Hair Mist",
+      "Stored shop link": "https://www.douglas.de/de/p/m001995632",
+      "Last known price": "33.17 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 62.95,
+      "evidence_url": "https://www.look-beautiful.de/professional-molecular-repair-hair-mist-sw13531",
+      "observed_name": "K18 Professional Molecular Repair Hair Mist, 150 ml",
+      "buyable_at_stored_link": false,
+      "notes": "Exakter Produktname und Standardgröße 150 ml stimmen überein; aktueller regulärer Produktdetailseitenpreis bei Look Beautiful Products: 62,95 €. Die gespeicherte Douglas-Seite war nicht erreichbar, und das Produkt ist nicht im aktuellen Douglas-K18-Sortiment gelistet; daher ist Online-Kaufbarkeit am gespeicherten Link nicht feststellbar."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "OUAI",
+      "Name": "OUAI Leave In Conditioner",
+      "Stored shop link": "https://www.douglas.de/de/p/5002560059",
+      "Last known price": "25.25 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 25.45,
+      "evidence_url": "https://www.sephora.de/p/leave-in-conditioner-P3282012.html",
+      "observed_name": "OUAI Leave in Conditioner, 140 ml",
+      "buyable_at_stored_link": false,
+      "notes": "Sephora Deutschland zeigt 25,45 € für 140 ml und „In den Warenkorb“; die Seite nennt außerdem 31,95 € als ursprünglichen Preis, daher ist 25,45 € ein reduzierter statt regulärer Preis. Die gespeicherte Douglas-URL liefert 404. Das passende Standardprodukt ist bei Sephora kaufbar, aber ein aktueller regulärer Preis ließ sich nicht bestätigen."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Alterra",
+      "Name": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+      "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122",
+      "Last known price": "2.79 EUR"
+    },
+    "answer": {
+      "found": false,
+      "price_eur": null,
+      "evidence_url": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122",
+      "observed_name": "Alterra Haarmaske",
+      "buyable_at_stored_link": false,
+      "notes": "Rossmann product page identifies the product description as Alterra Intensiv Repair Haarmaske Feuchtigkeit, 20 ml, but marks it “Nur in der Filiale verfügbar.” No current price is shown on the page, so I can’t establish a current regular online retail price."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Isana",
+      "Name": "Isana 3in1 Milchprotein & Mandel",
+      "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-isana-isana-haarmaske-3in1-mandelmilch-milchprotein-und-mandel/p/4305615627441",
+      "Last known price": "0.69 EUR"
+    },
+    "answer": {
+      "found": false,
+      "price_eur": null,
+      "evidence_url": "https://www.rossmann.de/de/pflege-und-duft/haarpflege/haarkur/c/olcat3_4133127?info=text.product.notAvailable.error",
+      "observed_name": null,
+      "buyable_at_stored_link": false,
+      "notes": "Rossmann redirects the stored product URL to the hair-treatment category and says the item is no longer in its assortment. I could not establish a current regular price for the exact product from an eligible German retailer or brand product page."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Gliss",
+      "Name": "Gliss Aqua Revive",
+      "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-gliss-aqua-revive-feuchtigkeit-4-in-1-bonding-haarmaske/p/4015100813555",
+      "Last known price": "4.75 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 13.89,
+      "evidence_url": "https://www.douglas.de/de/p/m003070896",
+      "observed_name": "Schwarzkopf Haarmaske GLISS AQUA REVIVE Maske, 400 ml",
+      "buyable_at_stored_link": false,
+      "notes": "Rossmann leitet die gespeicherte Produktseite mit dem Hinweis weiter, dass der Artikel nicht mehr im Sortiment ist. Douglas führt die passende 400-ml-Aqua-Revive-4-in-1-Haarmaske für 13,89 € und weist sie als online auf Lager aus. Die Douglas-Seite nennt Versand durch einen Douglas-Partner."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Sante",
+      "Name": "Sante Intense Hydration",
+      "Stored shop link": "https://www.rossmann.de/de/pflege-und-duft-sante-intense-hydration-haarmaske/p/4025089005896",
+      "Last known price": "6.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 6.99,
+      "evidence_url": "https://www.sante.de/intense-hydration-maske-hyaluron-3-fach-protein-komplex/40628",
+      "observed_name": "Intense Hydration Maske Hyaluron + 3-Fach Protein Komplex, 150 ml",
+      "buyable_at_stored_link": false,
+      "notes": "Die Produktseite des Herstellers nennt 6,99 EUR für 150 ml; die Shopseite meldet „In Kürze wieder verfügbar“. EAN 4055297220682 wird auf Händlerseiten diesem 150-ml-Produkt zugeordnet. Der gespeicherte Rossmann-Link leitet auf eine Kategorieseite weiter und meldet, der Artikel sei nicht mehr im Sortiment."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Urban Alchemy",
+      "Name": "Urban Alchemy Repair & Revive Leave-In Spray",
+      "Stored shop link": "https://urban-alchemy.com/products/repair-revive-leave-in-spray-150-ml",
+      "Last known price": "22.9 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 22.9,
+      "evidence_url": "https://urban-alchemy.com/products/repair-revive-leave-in-spray-150-ml",
+      "observed_name": "Repair Revive Leave-in Spray, 150 ml",
+      "buyable_at_stored_link": true,
+      "notes": "Produktseite des offiziellen Urban Alchemy Shops nennt 22,90 € inklusive Steuern. Als „Auf Lager“ markiert und „In den Warenkorb legen“ verfügbar. Produktname und 150-ml-Größe stimmen überein."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Urban Alchemy",
+      "Name": "Urban Alchemy Smooth Supreme Öl Serum",
+      "Stored shop link": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+      "Last known price": "22.9 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 22.9,
+      "evidence_url": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+      "observed_name": "Smooth Supreme Öl Serum",
+      "buyable_at_stored_link": true,
+      "notes": "Offizieller Urban Alchemy Shop: 22,90 € inklusive Steuern. Die 75-ml-Produktseite zeigt „Auf Lager“ und „In den Warenkorb legen“; damit ist das Produkt online kaufbar."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Maria Nila",
+      "Name": "Maria Nila Coils & Curls Oil in Cream",
+      "Stored shop link": "https://www.flaconi.de/haare/maria-nila/coils-and-curls/maria-nila-coils-and-curls-oil-in-cream-leave-in-treatment.html",
+      "Last known price": "31 EUR"
+    },
+    "answer": {
+      "found": false,
+      "price_eur": null,
+      "evidence_url": "https://www.flaconi.de/haare/maria-nila/coils-and-curls/maria-nila-coils-and-curls-oil-in-cream-leave-in-treatment.html",
+      "observed_name": "Maria Nila Coils & Curls Oil In Cream, 100 ml",
+      "buyable_at_stored_link": null,
+      "notes": "Das exakte Produkt und die Standardgröße 100 ml sind durch den Hersteller und den Abgleich der GTIN 7391681403741 bestätigt. Flaconi blockiert den Seitenabruf (403); daher konnte ich weder den aktuellen regulären EUR-Preis noch die Online-Kaufbarkeit dort feststellen. Keine Schätzung."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Maria Nila",
+      "Name": "Maria Nila Structure Repair Leave-In",
+      "Stored shop link": "https://www.flaconi.de/haare/maria-nila/structure-repair/maria-nila-structure-repair-leave-in-treatment.html",
+      "Last known price": "32 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 23.25,
+      "evidence_url": "https://www.flaconi.de/haare/maria-nila/structure-repair/maria-nila-structure-repair-leave-in-treatment.html",
+      "observed_name": "Maria Nila Structure Repair Leave-in-Treatment, 200 ml",
+      "buyable_at_stored_link": true,
+      "notes": "Flaconi lists the 200 ml product at 23.25 € (UVP 31.00 €) and marks it as in stock with an add-to-cart option. This is the current displayed price; the EAN search result associates the product with the same 200 ml variant."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Nuxe",
+      "Name": "Nuxe Huile Prodigieuse Öl",
+      "Stored shop link": "https://de.nuxe.com/products/wichtiger-ol%C2%AE-1",
+      "Last known price": "38.9 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 38.9,
+      "evidence_url": "https://de.nuxe.com/products/wichtiger-ol%C2%AE-1",
+      "observed_name": "Huile Prodigieuse® 100ml - Trockenöl Gesicht, Körper, Haare",
+      "buyable_at_stored_link": true,
+      "notes": "Die deutsche NUXE-Produktseite zeigt das 100-ml-Format für 38,90 € und eine „In den Warenkorb“-Option. Die Seite bezeichnet den Preis als Angebot; ein regulärer Preis ist dort nicht separat ausgewiesen."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Curlsmith",
+      "Name": "Curlsmith Hydrate & Plump Leave-In",
+      "Stored shop link": "https://eu.curlsmith.com/products/hydrate-plump-leave-in",
+      "Last known price": "25 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 21.0,
+      "evidence_url": "https://eu.curlsmith.com/products/hydrate-plump-leave-in",
+      "observed_name": "Hydrate & Plump Leave-In",
+      "buyable_at_stored_link": true,
+      "notes": "Curlsmith’s own product page currently lists the regular price as €21.00 and shows a quantity selector for the product, indicating it is online-buyable. Exact product name matches; page does not expose the size in the available listing."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Curlsmith",
+      "Name": "Curlsmith Weightless Air Dry Cream",
+      "Stored shop link": "https://eu.curlsmith.com/products/weightless-air-dry-cream",
+      "Last known price": "25 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 21.0,
+      "evidence_url": "https://eu.curlsmith.com/products/weightless-air-dry-cream",
+      "observed_name": "Weightless Air Dry Cream",
+      "buyable_at_stored_link": true,
+      "notes": "The brand page lists the full 237 ml size at €21.00 and shows quantity selection and an add-to-bag control, indicating it is online-buyable. The page identifies the exact product; the GTIN is not displayed."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Shiseido Fino",
+      "Name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+      "Stored shop link": "https://www.amazon.de/Fino-Premium-Touch-Penetrating-Essence/dp/B0GVFQP34X",
+      "Last known price": "11 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 12.41,
+      "evidence_url": "https://nalda.de/products/4550516493590",
+      "observed_name": "Fino Premium Touch Penetration Essence Hair Oil 70ml",
+      "buyable_at_stored_link": null,
+      "notes": "EAN 4550516493590 und 70-ml-Größe stimmen überein; Produktseite zeigt 12,41 € und „Jetzt bestellen/In den Warenkorb“. Die gespeicherte Amazon-Seite ließ sich nicht abrufen (503), daher ist ihre Online-Kaufbarkeit nicht feststellbar."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "OGX",
+      "Name": "OGX Bond Protein Repair",
+      "Stored shop link": "https://www.amazon.de/OGX-Spr%C3%BChnebel-besch%C3%A4digtes-Technology-Dual-Action-Reparaturtechnologie/dp/B0DQLHGGYJ",
+      "Last known price": "8.95 EUR"
+    },
+    "answer": {
+      "found": false,
+      "price_eur": null,
+      "evidence_url": "https://www.amazon.de/OGX-Spr%C3%BChnebel-besch%C3%A4digtes-Technology-Dual-Action-Reparaturtechnologie/dp/B0DQLHGGYJ",
+      "observed_name": "OGX Bond Protein Repair 3-in-1 Oil Mist, 50 ml",
+      "buyable_at_stored_link": false,
+      "notes": "Die Amazon-Seite bestätigt das Produkt und die Größe, zeigt aktuell aber keinen Preis und kein verfügbares Kaufangebot; sie meldet „Keine Sonderangebote verfügbar“. Daher konnte ich keinen aktuellen regulären Preis belegen. Die gefundene EAN stimmt mit dem Produkt überein, aber Suchtreffer dazu stammen nicht von einem zulässigen deutschen Händler."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "NUTREEOIL",
+      "Name": "NUTREEOIL Cacay Öl",
+      "Stored shop link": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml",
+      "Last known price": "34.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 34.99,
+      "evidence_url": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml",
+      "observed_name": "NUTREEOIL Cacay Öl, 30ml",
+      "buyable_at_stored_link": true,
+      "notes": "Die Produktseite nennt 34,99 € inkl. MwSt., Lieferzeit 2–3 Werktage und bietet „Zum Warenkorb hinzufügen“ an. Die Seite stimmt mit dem gespeicherten Produktlink und der Standardgröße 30 ml überein."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Wella Professionals",
+      "Name": "Wella Ultimate Repair Protective Leave-In",
+      "Stored shop link": "https://www.wella.com/professional/de-DE/products/haarpflege/ultimate-repair/ultimate-repair-protective-leave-in",
+      "Last known price": "18.51 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 21.72,
+      "evidence_url": "https://www.shop-apotheke.com/beauty/upmFKXM79/wella-ultimate-repair-protective-leave-in.htm",
+      "observed_name": "Wella Ultimate Repair Protective Leave-In, 95 ml",
+      "buyable_at_stored_link": false,
+      "notes": "EAN 4064666580098 stimmt überein. Die deutsche Produktdetailseite nennt 21,72 € und Lieferung in 1–2 Werktagen. Der gespeicherte Wella-Link zeigt das Produkt und „Jetzt kaufen“, führt aber zu keiner erkennbaren Online-Kaufoption auf dieser Seite; Kaufbarkeit dort daher mit false bewertet."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Neqi",
+      "Name": "Neqi Build Boost Leave-In Balm",
+      "Stored shop link": "https://neqi-hair.com/products/build-boost-balm",
+      "Last known price": "9.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 9.95,
+      "evidence_url": "https://neqi-hair.com/products/build-boost-balm",
+      "observed_name": "Build Boost Leave-In Balm",
+      "buyable_at_stored_link": true,
+      "notes": "Die Produktdetailseite des NEQI-Onlineshops zeigt 9,95 € und 75 ml. Die Seite bietet „In den Warenkorb legen“ an. GTIN auf der Seite nicht ausgewiesen; Name und Produkt stimmen mit der Anfrage überein."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "HASK",
+      "Name": "HASK Argan Oil Repairing Shine Oil",
+      "Stored shop link": "https://www.hagel-shop.de/hask-argan-oil-repairing-shine-oil-18-ml-5815315.html",
+      "Last known price": "2.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 2.95,
+      "evidence_url": "https://www.hagel-shop.de/hask-argan-oil-repairing-shine-oil-18-ml-5815315.html",
+      "observed_name": "Hask Argan Oil Repairing Shine Oil 18 ml",
+      "buyable_at_stored_link": false,
+      "notes": "Die HAGEL-Produktseite nennt 2,95 € und führt EAN 71164029855 (entspricht der angegebenen GTIN mit führenden Nullen). Der Artikel ist momentan nicht lieferbar."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Epres",
+      "Name": "Epres Bond Repair Treatment",
+      "Stored shop link": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+      "Last known price": "48 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 48.0,
+      "evidence_url": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+      "observed_name": "Starterkit für die Bond-Repair-Behandlung mit Sprühflasche",
+      "buyable_at_stored_link": true,
+      "notes": "Die Marken-Shop-Seite führt das Epres Bond Repair Treatment Starterkit für 48,00 € inklusive MwSt. als verfügbar und nennt eine Lieferung in 2–3 Werktagen."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Guhl",
+      "Name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "Stored shop link": "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/",
+      "Last known price": "4.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 4.99,
+      "evidence_url": "https://www.budni.de/sortiment/produkte/6435184007",
+      "observed_name": "Panthenol + Reparatur Spülung",
+      "buyable_at_stored_link": false,
+      "notes": "Exakter Produktmatch über EAN 4072600703403; 200 ml. Regulärer Preis bei Budni: 4,99 €. Der gespeicherte Müller-Link liefert 404 und die dortige Produktseite ist nicht online kaufbar."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Balea",
+      "Name": "Balea Natural Beauty Hibiskus",
+      "Stored shop link": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-hibiskus-extrakt-und-kokosmilch",
+      "Last known price": "1.45 EUR"
+    },
+    "answer": {
+      "found": false,
+      "price_eur": null,
+      "evidence_url": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-bio-hibiskus-extrakt-und-cocosmilch",
+      "observed_name": "Balea Conditioner Natural Beauty Bio-Hibiskus-Extrakt und Cocosmilch, 350 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm listet den Standardpreis mit 1,45 € und meldet „Nicht lieferbar“. Die Produktseite weist jedoch GTIN 4058172926181 aus, nicht die angegebene EAN 04066447238952. Daher kann ich den Preis nicht mit ausreichender Sicherheit dem exakt angegebenen Produkt zuordnen."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Sante",
+      "Name": "SANTE Deep Repair Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/1335946/sante-naturally-conditioner-deep-repair",
+      "Last known price": "3.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 4.95,
+      "evidence_url": "https://www.dm.de/p/d/1335946/sante-naturally-conditioner-deep-repair",
+      "observed_name": "Santé naturally. Conditioner Deep Repair, 150 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm bestätigt GTIN 4055297220088. Aktueller regulärer Preis: 4,95 €. Die Seite meldet „Momentan nicht lieferbar“, daher derzeit nicht online kaufbar."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Gliss",
+      "Name": "Gliss Kur Aqua Revive Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/1633094/schwarzkopf-gliss-conditioner-aqua-revive",
+      "Last known price": "2.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 2.95,
+      "evidence_url": "https://www.dm.de/p/d/1430767/schwarzkopf-gliss-conditioner-aqua-revive",
+      "observed_name": "Schwarzkopf GLISS Conditioner Aqua Revive, 200 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm listet den Conditioner für 2,95 € und als „Lieferbar“ mit „In den Warenkorb“. Der gespeicherte Link war nicht erreichbar; die aktuelle dm-Produktseite hat eine andere Produkt-ID. Die exakte EAN 4015100812336 wird bei budni.de für Gliss Spülung Aqua Revive bestätigt."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Guhl",
+      "Name": "Guhl Kopfhaut Sensitive",
+      "Stored shop link": "https://www.dm.de/guhl-shampoo-kopfhaut-sensitiv-p4072600283172.html",
+      "Last known price": "3.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 3.95,
+      "evidence_url": "https://www.dm.de/p/d/1446989/guhl-shampoo-kopfhaut-sensitiv",
+      "observed_name": "GUHL Shampoo Kopfhaut Sensitiv, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm-Produktseite nennt den regulären Preis von 3,95 €, bestätigt die GTIN 4072600283172 und zeigt „Lieferbar“ sowie „In den Warenkorb“."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Head & Shoulders",
+      "Name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+      "Stored shop link": "https://www.dm.de/p/d/1343250/head-und-shoulders-shampoo-derma-x-pro-beruhigende-pflege",
+      "Last known price": "4.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 4.95,
+      "evidence_url": "https://www.dm.de/p/d/1343250/head-und-shoulders-shampoo-derma-x-pro-beruhigende-pflege",
+      "observed_name": "head&shoulders Shampoo Derma x Pro Beruhigende Pflege, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm listet 4,95 € als Dauerpreis. Produktidentität bestätigt durch dm-Artikelnummer 1343250 und GTIN 8700216328661; die Seite zeigt „In den Warenkorb“ und „Lieferbar“."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Wahre Schätze",
+      "Name": "Wahre Schätze Sanfte Hafermilch",
+      "Stored shop link": "https://www.dm.de/wahre-schaetze-shampoo-sanfte-hafermilch-p3600542461658.html",
+      "Last known price": "2.29 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 2.75,
+      "evidence_url": "https://www.dm.de/p/d/1670195/wahre-schaetze-shampoo-sanfte-hafermilch",
+      "observed_name": "Wahre Schätze Shampoo Sanfte Hafermilch, 300 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm product page confirms GTIN 3600542461658 and lists the regular price as 2.75 EUR. The page says “Nicht lieferbar” and “Paketversand für das Produkt nicht möglich,” so it is not currently online-buyable."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Balea",
+      "Name": "Balea Tiefenreinigung",
+      "Stored shop link": "https://www.dm.de/balea-professional-shampoo-tiefenreinigung-p4010355426239.html",
+      "Last known price": "1.25 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 1.25,
+      "evidence_url": "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung",
+      "observed_name": "Balea PROFESSIONAL Shampoo Tiefenreinigung, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm product page lists the regular price as 1,25 € and says “Lieferbar” with standard delivery in 2–3 business days."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Langhaarmädchen",
+      "Name": "Langhaarmädchen Beautiful Curls Shampoo",
+      "Stored shop link": "https://www.dm.de/langhaarmaedchen-shampoo-beautiful-curls-p4067796150735.html",
+      "Last known price": "4.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 4.95,
+      "evidence_url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+      "observed_name": "LANGHAARMÄDCHEN Shampoo Beautiful Curls, 300 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm zeigt den regulären Preis von 4,95 € und den Status „Lieferbar“. Der Produktname und die Größe stimmen überein, aber die angegebene EAN 04067796150735 weicht von der auf der Produktseite genannten GTIN 4070765004649 ab; die exakte Übereinstimmung anhand der EAN ist daher nicht bestätigt."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Guhl",
+      "Name": "Guhl Hyaluron+",
+      "Stored shop link": "https://www.dm.de/guhl-shampoo-hyaluron-pflege-p4072600720219.html",
+      "Last known price": "3.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 3.95,
+      "evidence_url": "https://www.dm.de/p/d/1688644/guhl-shampoo-hyaluron-pflege",
+      "observed_name": "GUHL Shampoo Hyaluron+ Pflege",
+      "buyable_at_stored_link": false,
+      "notes": "dm-Seite bestätigt GTIN 4072600720219 und die Standardgröße 250 ml. Angezeigter regulärer Preis: 3,95 €; die Seite meldet „Nicht lieferbar“."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Hask",
+      "Name": "Hask Shampoo Argan Oil",
+      "Stored shop link": "https://www.dm.de/hask-shampoo-argan-oil-p71164343166.html",
+      "Last known price": "6.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 6.95,
+      "evidence_url": "https://www.dm.de/p/d/1475016/hask-shampoo-argan-oil",
+      "observed_name": "HASK Shampoo Argan Oil, 355 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm listet 6,95 € als regulären Preis. Die Produktseite bestätigt GTIN 071164343166 (entspricht 00071164343166); online derzeit nicht lieferbar."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "OGX",
+      "Name": "OGX Bond Protein Repair Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/3068101/ogx-conditioner-bond-protein-repair",
+      "Last known price": "6.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 6.95,
+      "evidence_url": "https://www.dm.de/p/d/3068101/ogx-conditioner-bond-protein-repair",
+      "observed_name": "OGX Conditioner Bond Protein Repair, 385 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm listet den regulären Preis mit 6,95 € und zeigt das Produkt als „Lieferbar“ mit Warenkorb-Option. GTIN 3574661818467 stimmt überein."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Dejan Garz",
+      "Name": "Dejan Garz Shampoo",
+      "Stored shop link": "https://www.dm.de/dejan-garz-shampoo-the-foundation-p4270004570106.html",
+      "Last known price": "9.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 9.95,
+      "evidence_url": "https://www.dm.de/p/d/3063729/dejan-garz-shampoo-the-foundation",
+      "observed_name": "DEJAN GARZ Shampoo The Foundation, 300 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm product page confirms the exact GTIN (4270004570106) and lists the regular price as €9.95. The page says “Momentan nicht lieferbar.”"
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Nivea",
+      "Name": "Nivea Power Repair Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/1620990/nivea-conditioner-power-repair",
+      "Last known price": "2.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 2.95,
+      "evidence_url": "https://www.dm.de/p/d/1620990/nivea-conditioner-power-repair",
+      "observed_name": "NIVEA Conditioner Power Repair, 200 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm lists the regular price as 2.95 EUR and marks the product „Lieferbar“ for standard delivery. The product page GTIN 4006000192598 matches the supplied EAN."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Langhaarmädchen",
+      "Name": "Langhaarmädchen Lovely Long Conditioner",
+      "Stored shop link": "https://www.dm.de/langhaarmaedchen-conditioner-lovely-long-p4058172702136.html",
+      "Last known price": "4.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 4.95,
+      "evidence_url": "https://www.dm.de/p/d/1559585/langhaarmaedchen-conditioner-lovely-long",
+      "observed_name": "LANGHAARMÄDCHEN Conditioner Lovely Long, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm nennt 4,95 € als Preis und zeigt das Produkt als „Lieferbar“ mit „In den Warenkorb“. Die Produktseite bestätigt GTIN 4066447864717, passend zur angegebenen EAN."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Sebamed",
+      "Name": "Sebamed Anti Schuppen",
+      "Stored shop link": "https://www.dm.de/sebamed-shampoo-anti-schuppen-p4103040051691.html",
+      "Last known price": "3.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 4.95,
+      "evidence_url": "https://www.dm.de/p/d/1023236/sebamed-shampoo-anti-schuppen",
+      "observed_name": "sebamed Shampoo Anti-Schuppen, 200 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm-Produktseite bestätigt GTIN 4103040051691 und zeigt den regulären Preis von 4,95 €; als „Lieferbar“ mit Versand in 2–3 Werktagen gekennzeichnet. Die angegebene zweite GTIN 4103040051714 ist auf der Seite nicht bestätigt."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Neqi",
+      "Name": "Neqi Repair Reveal Conditioner",
+      "Stored shop link": "https://www.dm.de/neqi-conditioner-repair-reveal-p4063528078223.html",
+      "Last known price": "9.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 9.95,
+      "evidence_url": "https://www.dm.de/p/d/1455210/neqi-conditioner-repair-reveal",
+      "observed_name": "NEQI Conditioner Repair Reveal, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm führt den Conditioner für 9,95 €; die Produktseite nennt GTIN 4063528078223 und zeigt „Lieferbar“ sowie „In den Warenkorb“."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Langhaarmädchen",
+      "Name": "Langhaarmädchen Beautiful Curls Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls",
+      "Last known price": "4.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 4.95,
+      "evidence_url": "https://www.dm.de/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls",
+      "observed_name": "LANGHAARMÄDCHEN Conditioner Beautiful Curls, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm-Produktseite bestätigt den Produktnamen, 250-ml-Größe und GTIN 4070765004663. Aktueller regulärer Preis: 4,95 €. Als „Lieferbar“ gekennzeichnet; „In den Warenkorb“ ist verfügbar."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Hask",
+      "Name": "Hask Curl Care Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/1622385/hask-conditioner-curl-care",
+      "Last known price": "6.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 6.95,
+      "evidence_url": "https://www.dm.de/p/d/1622385/hask-conditioner-curl-care",
+      "observed_name": "HASK Conditioner Curl Care, 355 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm product page confirms the product name, 355 ml size, and GTIN 071164304211 (matching the supplied EAN with leading zeros). Current regular price is 6.95 EUR. The page says “Nicht lieferbar,” so it is not currently online-buyable."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Dejan Garz",
+      "Name": "Dejan Garz The Foundation Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/3063725/dejan-garz-conditioner-the-foundation",
+      "Last known price": "9.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 9.95,
+      "evidence_url": "https://www.dm.de/p/d/3063725/dejan-garz-conditioner-the-foundation",
+      "observed_name": "DEJAN GARZ Conditioner The Foundation, 300 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm product page lists the regular price as 9.95 EUR and says it is available for delivery. The page’s GTIN (4270004570113) matches the supplied EAN when leading zeroes are ignored."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Lavera",
+      "Name": "Lavera Basis Sensitiv",
+      "Stored shop link": "https://www.dm.de/lavera-shampoo-basis-sensitiv-feuchtigkeit-und-pflege-p4021457655120.html",
+      "Last known price": "4.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 4.95,
+      "evidence_url": "https://www.dm.de/p/d/1648850/lavera-naturkosmetik-shampoo-basis-sensitiv-feuchtigkeit-und-pflege",
+      "observed_name": "lavera NATURKOSMETIK Shampoo Basis Sensitiv Feuchtigkeit & Pflege, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm-Produktdetailseite nennt 4,95 € inkl. MwSt. und zeigt „Lieferbar“ sowie „In den Warenkorb“. Die Seite führt GTIN 4021457655120; die führende Null der angegebenen EAN entspricht der Prüfziffernauffüllung."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "OGX",
+      "Name": "Biotin & Collagen Shampoo",
+      "Stored shop link": "https://www.dm.de/ogx-shampoo-thick-und-full-biotin-und-collagen-p3574661800202.html",
+      "Last known price": "6.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 6.95,
+      "evidence_url": "https://www.dm.de/p/d/1443641/ogx-shampoo-thick-und-full-biotin-und-collagen",
+      "observed_name": "OGX Shampoo thick & full, Biotin & Collagen, 385 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm product page matches GTIN 3574661800202 and lists the regular price as 6.95 EUR. It is marked “Lieferbar” and can be added to the cart."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Hair Biology",
+      "Name": "Hair Biology Full & Shining Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/1585350/hair-biology-conditioner-full-und-shining",
+      "Last known price": "4.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 4.95,
+      "evidence_url": "https://www.dm.de/p/d/1585350/hair-biology-conditioner-full-und-shining",
+      "observed_name": "hair biology Conditioner Full & Shining, 160 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm-Produktseite bestätigt den exakten Artikel und GTIN 8001841216997. Angezeigter regulärer Preis: 4,95 €. Die Seite meldet „Momentan nicht lieferbar“ und „Nicht verfügbar in dm-Märkten“."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Balea",
+      "Name": "Balea Med Ultra Sensitive Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/1587731/balea-med-conditioner-ultra-sensitive",
+      "Last known price": "1.75 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 1.75,
+      "evidence_url": "https://www.dm.de/p/d/1587731/balea-med-conditioner-ultra-sensitive",
+      "observed_name": "Balea med Conditioner Ultra Sensitive, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm lists the regular price as 1.75 EUR and the item as available for delivery (Lieferbar; standard shipping 2–3 business days). The page’s GTIN 4066447966022 matches the supplied EAN."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Syoss",
+      "Name": "Syoss Intense Curls",
+      "Stored shop link": "https://www.dm.de/syoss-shampoo-intense-curls-p4015100860504.html",
+      "Last known price": "4.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 4.95,
+      "evidence_url": "https://www.dm.de/p/d/3047029/syoss-shampoo-intense-curls",
+      "observed_name": "syoss Shampoo Intense Curls, 440 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm product page matches GTIN 4015100860504 and lists the regular price as 4.95 EUR. The page says „Momentan nicht lieferbar“."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Garnier",
+      "Name": "Garnier Hair Food Macadamia",
+      "Stored shop link": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+      "Last known price": "5.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 5.95,
+      "evidence_url": "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+      "observed_name": "GARNIER FRUCTIS Haarkur Macadamia Hair Food 3in1 Maske, 400 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm listet den regulären Preis mit 5,95 € (14,88 €/l). Die Produktseite bestätigt die GTIN 3600542511612. Online derzeit nicht lieferbar."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Herbal Essences",
+      "Name": "Herbal Essences Aloe Vera Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera",
+      "Last known price": "3.95 EUR"
+    },
+    "answer": {
+      "found": false,
+      "price_eur": null,
+      "evidence_url": "https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera",
+      "observed_name": "Herbal Essences Conditioner Feuchtigkeit Aloe Vera, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm listet 3,95 € und zeigt „Lieferbar“ mit „In den Warenkorb“. Die Produktseite nennt jedoch GTIN 8700216210546, nicht die angegebene 08700216211598. Daher ist der aktuelle Preis für das exakte Produkt anhand dieser Seite nicht sicher bestätigt."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "OGX",
+      "Name": "OGX Biotin & Collagen Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/1443632/ogx-conditioner-thick-und-full-biotin-und-collagen",
+      "Last known price": "6.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 6.95,
+      "evidence_url": "https://www.dm.de/p/d/1443632/ogx-conditioner-thick-und-full-biotin-und-collagen",
+      "observed_name": "OGX Conditioner thick & full, Biotin & Collagen, 385 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm product page lists 6.95 EUR and says “Lieferbar” with standard shipping in 2–3 working days. GTIN 3574661799506 matches the requested EAN."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Swiss-O-Par",
+      "Name": "Swiss-O-Par Teebaumöl",
+      "Stored shop link": "https://www.dm.de/swiss-o-par-shampoo-teebaumoel-p4104260076501.html",
+      "Last known price": "2.35 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 2.45,
+      "evidence_url": "https://www.dm.de/p/d/1028618/swiss-o-par-shampoo-teebaumoel",
+      "observed_name": "Swiss-o-Par Shampoo Teebaumöl, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm lists the regular price as 2.45 EUR and shows the product as available for delivery. The product page confirms GTIN 4104260076501, matching the supplied EAN with its leading zero."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Sebamed",
+      "Name": "Sebamed Urea 5%",
+      "Stored shop link": "https://www.dm.de/sebamed-shampoo-trockene-haut-5-prozent-urea-akut-p4103040019349.html",
+      "Last known price": "4.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 5.95,
+      "evidence_url": "https://sebamed.de/de/p/anti-juckreiz-akut-shampoo-urea-5/",
+      "observed_name": "Anti-Juckreiz Akut Shampoo Urea 5% 200 ml",
+      "buyable_at_stored_link": null,
+      "notes": "Die EAN 4103040048448 stimmt exakt mit dem Produkt auf der Herstellerseite überein; dort kostet die 200-ml-Standardgröße regulär 5,95 €. Die gespeicherte dm-Seite lieferte keine auslesbaren Produkt- oder Verfügbarkeitsdaten, daher ist die Online-Kaufbarkeit dort nicht feststellbar."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Sante",
+      "Name": "Sante Glossy Shine",
+      "Stored shop link": "https://www.dm.de/sante-naturkosmetik-shampoo-glossy-shine-p4055297220262.html",
+      "Last known price": "4.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 3.95,
+      "evidence_url": "https://www.dm.de/p/d/1334046/sante-naturally-shampoo-glossy-shine",
+      "observed_name": "Santé naturally. Shampoo Glossy Shine, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm-Produktseite nennt 3,95 € inkl. MwSt. und zeigt „Lieferbar“ sowie „In den Warenkorb“. GTIN 4055297220262 stimmt überein."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Pantene",
+      "Name": "Pantene Anti Schuppen",
+      "Stored shop link": "https://www.dm.de/pantene-pro-v-shampoo-anti-schuppen-active-nutri-plex-p8700216558037.html",
+      "Last known price": "3.49 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 3.95,
+      "evidence_url": "https://www.dm.de/p/d/1561902/pantene-pro-v-shampoo-anti-schuppen-active-nutri-plex",
+      "observed_name": "PANTENE PRO-V Shampoo Anti Schuppen Active Nutri-Plex, 300 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm-Produktdetailseite nennt 3,95 € als Preis und zeigt „Lieferbar“ sowie „In den Warenkorb“. GTIN 8700216558037 stimmt mit der angegebenen EAN überein."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Bali Curls",
+      "Name": "Bali Curls Moisturising Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/3070316/bali-curls-conditioner-moisturising",
+      "Last known price": "8.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 8.95,
+      "evidence_url": "https://www.dm.de/p/d/3070316/bali-curls-conditioner-moisturising",
+      "observed_name": "BALI CURLS Conditioner Moisturising, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm-Produktseite bestätigt GTIN 4262391990056. Regulärer Preis: 8,95 €; online als „Lieferbar“ mit Warenkorboption."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Sante",
+      "Name": "Sante Sensitive Care",
+      "Stored shop link": "https://www.dm.de/sante-naturkosmetik-shampoo-sensitive-care-p4055297221467.html",
+      "Last known price": "4.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 4.95,
+      "evidence_url": "https://www.dm.de/p/d/1335957/sante-naturally-shampoo-sensitive-care",
+      "observed_name": "Santé naturally. Shampoo Sensitive Care, 250 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm lists the regular price as 4.95 EUR and confirms GTIN 4055297221467. The page says “Momentan nicht lieferbar,” so it is currently not available to buy online."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Pantene",
+      "Name": "Pantene Pro-V Volumen Pur",
+      "Stored shop link": "https://www.dm.de/pantene-pro-v-shampoo-volumen-pur-p8700216885768.html",
+      "Last known price": "4.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 2.75,
+      "evidence_url": "https://www.dm.de/p/d/3058599/pantene-pro-v-shampoo-volumen-pur",
+      "observed_name": "PANTENE PRO-V Shampoo Volumen Pur, 200 ml",
+      "buyable_at_stored_link": false,
+      "notes": "Die dm-Produktseite bestätigt den GTIN 8700216885768 und nennt 2,75 € als Preis. Das Produkt ist online derzeit nicht lieferbar; Paketversand ist nicht möglich."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Head & Shoulders",
+      "Name": "Head & Shoulders Anti Schuppen Sensitive",
+      "Stored shop link": "https://www.dm.de/p/d/3115868/head-und-shoulders-shampoo-anti-schuppen-sensitive-kopfhaut",
+      "Last known price": "3.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 3.95,
+      "evidence_url": "https://www.dm.de/p/d/3115868/head-und-shoulders-shampoo-anti-schuppen-sensitive-kopfhaut",
+      "observed_name": "head&shoulders Shampoo Anti-Schuppen sensitive Kopfhaut, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm lists the 250 ml product at €3.95 and marks it “Lieferbar” with an “In den Warenkorb” option. The page’s GTIN 8006530222037 matches the provided EAN."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Pantene",
+      "Name": "Pantene Pro-V Miracles Bond Repair Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/1336165/pantene-pro-v-conditioner-miracles-bond-repair",
+      "Last known price": "5.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 5.95,
+      "evidence_url": "https://www.dm.de/p/d/1336165/pantene-pro-v-conditioner-miracles-bond-repair",
+      "observed_name": "PANTENE PRO-V Conditioner miracles Bond Repair, 160 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm listet den regulären Preis mit 5,95 €; Produktseite bestätigt GTIN 8700216151535. Die Seite zeigt „Nicht lieferbar“, daher aktuell online nicht kaufbar."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Wahre Schätze",
+      "Name": "Wahre Schätze Aktivkohle",
+      "Stored shop link": "https://www.dm.de/wahre-schaetze-shampoo-aktivkohle-fettige-kopfhaut-p3600542512466.html",
+      "Last known price": "2.49 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 2.75,
+      "evidence_url": "https://www.dm.de/p/d/1679240/wahre-schaetze-shampoo-aktivkohle-fettige-kopfhaut",
+      "observed_name": "Wahre Schätze Shampoo Aktivkohle, fettige Kopfhaut, 300 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm lists the regular price as 2.75 EUR and shows the item as available for delivery. The product page confirms GTIN 3600542512466."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Pantene",
+      "Name": "Pantene Grow Abundance",
+      "Stored shop link": "https://www.dm.de/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust-p8006530060042.html",
+      "Last known price": "7.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 7.95,
+      "evidence_url": "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+      "observed_name": "PANTENE PRO-V Shampoo Grow Abundant Anti-Haarverlust, 290 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm-Produktseite bestätigt GTIN 8006530060042 und zeigt den regulären Preis von 7,95 € sowie „Lieferbar“ und „In den Warenkorb“. Die gespeicherte URL liefert 404; die aktuelle dm-Produktseite für denselben Artikel bestätigt die Online-Kaufbarkeit."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Guhl",
+      "Name": "Guhl Anti Schuppen",
+      "Stored shop link": "https://www.dm.de/guhl-shampoo-anti-schuppen-p4072600282205.html",
+      "Last known price": "3.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 3.95,
+      "evidence_url": "https://www.dm.de/p/d/1446893/guhl-shampoo-anti-schuppen",
+      "observed_name": "GUHL Shampoo Anti-Schuppen, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm product page lists the regular price as 3.95 EUR and says “Lieferbar” with standard delivery in 2–3 working days. GTIN 4072600282205 matches the supplied EAN."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Alverde",
+      "Name": "Alverde Conditioner Glanz",
+      "Stored shop link": "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz-rosenbluetenwasser-und-pflanzlichem-protein",
+      "Last known price": "1.35 EUR"
+    },
+    "answer": {
+      "found": false,
+      "price_eur": null,
+      "evidence_url": "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz",
+      "observed_name": "alverde NATURKOSMETIK Conditioner Glanz, 200 ml",
+      "buyable_at_stored_link": false,
+      "notes": "Die dm-Seite zeigt 1,25 € und „Nicht lieferbar“; Paketversand ist nicht möglich. Die Produktseite nennt GTIN 4066447919202, nicht die angegebene 04066447592085. Daher ist die exakte Produktidentität nicht bestätigt und der Preis wurde nicht übernommen."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Sebamed",
+      "Name": "Sebamed Anti Schuppen Plus",
+      "Stored shop link": "https://www.dm.de/sebamed-shampoo-anti-schuppen-plus-p4103040048868.html",
+      "Last known price": "3.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 4.95,
+      "evidence_url": "https://www.dm.de/p/d/1585729/sebamed-shampoo-anti-schuppen-plus",
+      "observed_name": "sebamed Shampoo Anti-Schuppen Plus, 200 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm-Produktseite bestätigt GTIN 4103040051677 und zeigt den regulären Preis von 4,95 €. Online lieferbar; die gespeicherte URL führt inzwischen auf eine nicht mehr verfügbare Seite, aber dm listet dasselbe Produkt unter der aktuellen Produktseite."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Pomélo+Co",
+      "Name": "Pomélo+Co Molecular Repair Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/2971600/pomelo-co-conditioner-molecular-repair",
+      "Last known price": "9.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 9.95,
+      "evidence_url": "https://www.dm.de/p/d/2971600/pomelo-co-conditioner-molecular-repair",
+      "observed_name": "Pomélo + Co. Conditioner Molecular Repair, 200 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm lists the regular price as €9.95 and marks the product “Lieferbar” for standard online delivery. The page’s GTIN 4260625262832 matches the supplied EAN."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Pantene",
+      "Name": "Pantene Pro-V Miracles Hydra Glow Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/1647565/pantene-pro-v-conditioner-miracles-hydra-glow",
+      "Last known price": "3.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 3.95,
+      "evidence_url": "https://www.dm.de/p/d/1647565/pantene-pro-v-conditioner-miracles-hydra-glow",
+      "observed_name": "PANTENE PRO-V Conditioner miracles Hydra Glow, 160 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm lists the regular price as 3.95 EUR and shows the product as available for delivery. The page's GTIN (8700216151412) matches the requested EAN."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Guhl",
+      "Name": "Guhl Kraft & Fülle",
+      "Stored shop link": "https://www.dm.de/p/d/3043222/guhl-shampoo-kraft-und-fuelle",
+      "Last known price": "4.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 4.95,
+      "evidence_url": "https://www.dm.de/p/d/3043222/guhl-shampoo-kraft-und-fuelle",
+      "observed_name": "GUHL Shampoo Kraft & Fülle, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm lists the regular price as 4.95 EUR and shows the product as Lieferbar. The page's GTIN 4072600703502 matches the supplied EAN with its leading zero omitted."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Schauma",
+      "Name": "Schauma Anti Schuppen",
+      "Stored shop link": "https://www.dm.de/schauma-shampoo-anti-schuppen-classic-p4015100864977.html",
+      "Last known price": "1.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 1.95,
+      "evidence_url": "https://www.dm.de/p/d/1588728/schauma-shampoo-anti-schuppen-classic",
+      "observed_name": "schauma Shampoo Anti-Schuppen Classic, 400 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm lists the regular price as 1.95 EUR and the item as “Lieferbar” for standard shipping. The product page identifies GTIN 4015100890730, matching one of the supplied EANs."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Hair Biology",
+      "Name": "Hair Biology Revitalize & Soothe",
+      "Stored shop link": "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+      "Last known price": "4.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 4.95,
+      "evidence_url": "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+      "observed_name": "hair biology Shampoo Revitalize & Soothe, 250 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm listet den regulären Preis mit 4,95 € (250 ml). Produktidentität durch dm-Artikelnummer 1588828 und GTIN 8006540153963 bestätigt. Die Seite zeigt „Nicht lieferbar“."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Cantu",
+      "Name": "Cantu Shampoo Locken Pflege",
+      "Stored shop link": "https://www.dm.de/cantu-shampoo-locken-pflege-p810006943450.html",
+      "Last known price": "4.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 6.95,
+      "evidence_url": "https://www.dm.de/p/d/1675020/cantu-shampoo-cream-cleanse",
+      "observed_name": "Cantu Shampoo Cream Cleanse, 400 ml",
+      "buyable_at_stored_link": true,
+      "notes": "Die gespeicherte dm-Seite leitet auf diese Produktseite weiter. Sie weist 6,95 € aus und nennt GTIN 810006945461, passend zur angegebenen EAN 00810006945461. Als online lieferbar ausgewiesen."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Syoss",
+      "Name": "Syoss Intense Curls Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/1666690/syoss-conditioner-intense-curls",
+      "Last known price": "3.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 2.95,
+      "evidence_url": "https://www.dm.de/p/d/3047028/syoss-conditioner-intense-curls",
+      "observed_name": "syoss Conditioner Intense Curls, 250 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm’s current product page lists the exact GTIN 4015100860887 at €2.95. The stored link’s page could not be accessed, but dm’s matching product page says “Momentan nicht lieferbar,” so it is not currently available to buy online."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Balea",
+      "Name": "Balea Professional Aqua Hyaluron Conditioner",
+      "Stored shop link": "https://www.dm.de/balea-professional-conditioner-aqua-hyaluron-p4066447342055.html",
+      "Last known price": "1.25 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 1.25,
+      "evidence_url": "https://www.dm.de/p/d/1675522/balea-professional-conditioner-aqua-hyaluron",
+      "observed_name": "Balea PROFESSIONAL Conditioner Aqua Hyaluron, 200 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm product detail page identifies GTIN 4066447342055, lists the regular price as 1.25 EUR, and shows “Lieferbar” with an “In den Warenkorb” button. The stored link returned 404; dm’s current product detail page confirms the exact product."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Balea",
+      "Name": "Balea Ultra Sensitive",
+      "Stored shop link": "https://www.dm.de/balea-med-shampoo-ultra-sensitive-p4066447966008.html",
+      "Last known price": "1.75 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 1.75,
+      "evidence_url": "https://www.dm.de/p/d/1569035/balea-med-shampoo-ultra-sensitive",
+      "observed_name": "Balea med Shampoo Ultra Sensitive, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm-Produktseite bestätigt GTIN 4066447966008. Regulärer Preis: 1,75 €. Als „Lieferbar“ ausgewiesen; Versand in 2–3 Werktagen."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Balea",
+      "Name": "Balea 2 in 1 Urea 5%",
+      "Stored shop link": "https://www.dm.de/balea-med-duschgel-5-prozent-urea-2in1-dusche-shampoo-p4058172738272.html",
+      "Last known price": "1.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 1.75,
+      "evidence_url": "https://www.dm.de/p/d/1376376/balea-med-duschgel-und-shampoo-5-prozent-urea-2in1",
+      "observed_name": "Balea med Duschgel & Shampoo 5% Urea 2in1, 300 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm listet 1,75 € als Preis und das Produkt als „Lieferbar“, Versand 2–3 Werktage. Die Produktseite nennt GTIN 4066447965414, entsprechend der angegebenen EAN 04066447965414."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Hask",
+      "Name": "Hask Argan Oil Repairing Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/1475001/hask-conditioner-repairing-argan-oil",
+      "Last known price": "6.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 6.95,
+      "evidence_url": "https://www.dm.de/p/d/1475001/hask-conditioner-repairing-argan-oil",
+      "observed_name": "HASK Conditioner Repairing Argan Oil, 355 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm listet 6,95 € als Preis und bestätigt die passende GTIN 071164343265. Die Produktseite zeigt „Nicht lieferbar“, daher aktuell nicht online kaufbar."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "OGX",
+      "Name": "Keratin Oil Shampoo",
+      "Stored shop link": "https://www.dm.de/ogx-shampoo-strenght-und-lenght-keratin-oil-p3574661798448.html",
+      "Last known price": "5.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 6.95,
+      "evidence_url": "https://www.dm.de/p/d/1443762/ogx-shampoo-strenght-und-lenght-keratin-oil",
+      "observed_name": "OGX Shampoo strenght & lenght, Keratin Oil",
+      "buyable_at_stored_link": false,
+      "notes": "dm-Produktseite bestätigt GTIN 3574661798448 und die Standardgröße 0,385 l. Aktueller regulärer Preis: 6,95 €. Die Seite zeigt „Nicht lieferbar“."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Hask",
+      "Name": "Hask Curl Care Shampoo",
+      "Stored shop link": "https://www.dm.de/hask-shampoo-curl-care-p71164304112.html",
+      "Last known price": "6.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 6.95,
+      "evidence_url": "https://www.dm.de/p/d/1622384/hask-shampoo-curl-care",
+      "observed_name": "HASK Shampoo Curl Care, 355 ml",
+      "buyable_at_stored_link": false,
+      "notes": "dm-Produktdetailseite nennt 6,95 € als Preis und bestätigt GTIN 071164304112, passend zur angegebenen EAN mit führenden Nullen. Standardgröße: 355 ml. Online derzeit nicht kaufbar: Die Seite zeigt „Momentan nicht lieferbar“."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "OGX",
+      "Name": "OGX Renewing Argan Oil of Morocco Conditioner",
+      "Stored shop link": "https://www.dm.de/p/d/1442294/ogx-conditioner-renewing-argan-oil-of-marocco",
+      "Last known price": "6.95 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 6.95,
+      "evidence_url": "https://www.dm.de/p/d/1442294/ogx-conditioner-renewing-argan-oil-of-marocco",
+      "observed_name": "OGX Conditioner renewing, Argan Oil of marocco, 385 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm listet den Artikel für 6,95 € und als „Lieferbar“ mit Standardversand in 2–3 Werktagen. Produktseite bestätigt GTIN 3574661799162, passend zur angegebenen EAN 03574661799162."
+    }
+  },
+  {
+    "candidate": {
+      "Brand": "Guhl",
+      "Name": "Guhl Frische und Leichtigkeit",
+      "Stored shop link": "https://www.dm.de/guhl-shampoo-frische-und-leichtigkeit-anti-fett-p4072600282274.html",
+      "Last known price": "3.99 EUR"
+    },
+    "answer": {
+      "found": true,
+      "price_eur": 3.95,
+      "evidence_url": "https://www.dm.de/p/d/1446883/guhl-shampoo-frische-und-leichtigkeit-anti-fett",
+      "observed_name": "GUHL Shampoo Frische & Leichtigkeit Anti Fett, 250 ml",
+      "buyable_at_stored_link": true,
+      "notes": "dm-Produktdetailseite weist 3,95 € als dm-Dauerpreis aus und zeigt „Lieferbar“ sowie „In den Warenkorb“. Die GTIN 4072600282274 stimmt mit der gesuchten EAN überein."
+    }
+  }
+]

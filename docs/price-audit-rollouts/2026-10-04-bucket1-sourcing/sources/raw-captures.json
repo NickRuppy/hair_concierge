@@ -1,0 +1,84 @@
+{
+  "archive": "raw-browser-captures.zip",
+  "note": "Original HTML fetches and raw browser text snapshots archived byte-for-byte; unhydrated HTML shells are not product evidence. Structured primary PDP evidence remains separately readable. Hashes below refer to original uncompressed captures.",
+  "entries": [
+    {
+      "archive_member": "brands/guhl.html",
+      "original_relative_path": "sources/brands/guhl.html",
+      "sha256_uncompressed": "a9dbbd8f66cca56be8eeacdacb6dd79224e467b1089accc193e6941742fe28e0",
+      "bytes_uncompressed": 11376
+    },
+    {
+      "archive_member": "identity/glow-live-state.txt",
+      "original_relative_path": "sources/identity/glow-live-state.txt",
+      "sha256_uncompressed": "da2821ab2425e538c4a86338c4cb20f73b42071cf6c6a49ef42aece666c20fb2",
+      "bytes_uncompressed": 51550
+    },
+    {
+      "archive_member": "identity/glow_de.html",
+      "original_relative_path": "sources/identity/glow_de.html",
+      "sha256_uncompressed": "a9dbbd8f66cca56be8eeacdacb6dd79224e467b1089accc193e6941742fe28e0",
+      "bytes_uncompressed": 11376
+    },
+    {
+      "archive_member": "identity/glow_pl.html",
+      "original_relative_path": "sources/identity/glow_pl.html",
+      "sha256_uncompressed": "1fa2945e437aebdc2c80a630c252664248dfccfee0d1f7da4e4f159a5b701fae",
+      "bytes_uncompressed": 11378
+    },
+    {
+      "archive_member": "identity/hibiskus-live-state.txt",
+      "original_relative_path": "sources/identity/hibiskus-live-state.txt",
+      "sha256_uncompressed": "c64c6875a56b1a9b035f2dad5574bde60d2c9efba8c800d17001ac264643e145",
+      "bytes_uncompressed": 52368
+    },
+    {
+      "archive_member": "identity/hibiskus_de.html",
+      "original_relative_path": "sources/identity/hibiskus_de.html",
+      "sha256_uncompressed": "a9dbbd8f66cca56be8eeacdacb6dd79224e467b1089accc193e6941742fe28e0",
+      "bytes_uncompressed": 11376
+    },
+    {
+      "archive_member": "identity/hibiskus_pl.html",
+      "original_relative_path": "sources/identity/hibiskus_pl.html",
+      "sha256_uncompressed": "1fa2945e437aebdc2c80a630c252664248dfccfee0d1f7da4e4f159a5b701fae",
+      "bytes_uncompressed": 11378
+    },
+    {
+      "archive_member": "identity/macadamia-amazon-state.txt",
+      "original_relative_path": "sources/identity/macadamia-amazon-state.txt",
+      "sha256_uncompressed": "602bd34be9d27ae8e5e3a0bff8e9aa0c0c53b1f81a282e9a8054a4a8f0522bc2",
+      "bytes_uncompressed": 82812
+    },
+    {
+      "archive_member": "identity/macadamia-brand-buy-now.txt",
+      "original_relative_path": "sources/identity/macadamia-brand-buy-now.txt",
+      "sha256_uncompressed": "8720ff0d3266b7e36bf5453c9c546a4b44e58373ba78f0ce2cf40ff361b05b0d",
+      "bytes_uncompressed": 1324
+    },
+    {
+      "archive_member": "identity/macadamia-brand-linked-amazon.txt",
+      "original_relative_path": "sources/identity/macadamia-brand-linked-amazon.txt",
+      "sha256_uncompressed": "d31d8a515ab4a0d4b2bd69ee44405c08cec77c0e21d04a3c80e2dbd6e9ea56af",
+      "bytes_uncompressed": 82712
+    },
+    {
+      "archive_member": "identity/macadamia-brand-state.txt",
+      "original_relative_path": "sources/identity/macadamia-brand-state.txt",
+      "sha256_uncompressed": "bc779a5666452018cc8aa4a3211d86f025c8c1fef9735b87840982876cca82e2",
+      "bytes_uncompressed": 10747
+    },
+    {
+      "archive_member": "identity/macadamia-dm-state.txt",
+      "original_relative_path": "sources/identity/macadamia-dm-state.txt",
+      "sha256_uncompressed": "605897765dcdbaa09f694678df6284d1f038cc861a1913e9bbe0d984ddf0f41d",
+      "bytes_uncompressed": 52139
+    },
+    {
+      "archive_member": "identity/macadamia_de.html",
+      "original_relative_path": "sources/identity/macadamia_de.html",
+      "sha256_uncompressed": "a9dbbd8f66cca56be8eeacdacb6dd79224e467b1089accc193e6941742fe28e0",
+      "bytes_uncompressed": 11376
+    }
+  ]
+}

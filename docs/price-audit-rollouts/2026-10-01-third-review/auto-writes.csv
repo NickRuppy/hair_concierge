@@ -1,0 +1,55 @@
+id,name,old_price_eur,new_price_eur,old_purchase_link_status,new_purchase_link_status,price_checked_at,purchase_link_checked_at,applied,note
+aa349c07-1add-44d4-9161-d99190182e5c,OGX Argan weightless Öl,8.95,8.95,available,,2026-10-01T08:57:17.598Z,,false,source:llm_research
+d0180955-c3a0-4f53-8744-fbeb2c241688,Anti-Haarverlust Spülung,6.95,6.95,available,,2026-10-01T09:07:32.364Z,,false,source:llm_research
+d2bb79a8-add1-4b74-9d4f-c03449175147,Sante Intense Hydration Conditioner,3.95,3.95,available,,2026-10-01T09:08:01.094Z,,false,source:llm_research
+d8ac8909-91a1-46b3-9fa6-2ff66b78fb66,Cantu Conditioner Cream,6.95,6.95,available,,2026-10-01T09:08:11.444Z,,false,source:llm_research
+e1ad37be-9330-49b4-8add-872a30324122,Jean&Len Conditioner Keratin/Mandel,3.95,3.95,available,,2026-10-01T09:08:22.586Z,,false,source:llm_research
+e76e0ed4-bd20-40cd-84ae-e93030610d40,Langhaarmädchen Lovely Long,4.95,4.95,available,,2026-10-01T09:08:36.375Z,,false,source:llm_research
+ead1333b-6839-464d-b272-673d39bb95a4,Balea Aqua Hyaluron,1.25,1.25,available,,2026-10-01T09:09:06.738Z,,false,source:llm_research
+eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d,Balea Kopfhaut Sensitive Shampoo,1.25,1.25,available,,2026-10-01T09:09:24.389Z,,false,source:llm_research
+ed382d40-6166-4d39-be2d-eab5a24793a6,Syoss Intense Keratin Conditioner,3.99,3.95,available,,2026-10-01T09:09:43.401Z,,false,source:llm_research
+f184aef4-d8f9-4956-bcd6-ba1bf1ebeace,Balea Med Anti Schuppen,2.65,2.45,available,,2026-10-01T09:10:06.775Z,,false,source:llm_research
+fcbc469f-93c8-4be5-85db-e789b09189c7,Pantene Hydra Glow Shampoo,3.49,3.95,available,,2026-10-01T09:10:20.568Z,,false,source:llm_research
+ffd37427-0cb6-4d6a-8b83-ea904bf2b1d7,Monday Moisture Conditioner,5.95,5.75,available,,2026-10-01T09:10:33.783Z,,false,source:llm_research
+05753f93-907f-427d-a4dc-0a690ff3a76d,Tiefenreinigungs-Shampoo,5.95,5.95,available,,2026-10-01T09:17:12.893Z,,false,source:llm_research
+375ee7a0-3262-4b99-8e48-4f327c6e09aa,Shampoo Tiefenreinigung,1.25,1.25,available,,2026-10-01T09:17:26.079Z,,false,source:llm_research
+898a5a1e-1cf1-4812-8f9e-f14563a740ca,Tiefenreinigung Shampoo,2.45,2.45,available,,2026-10-01T09:17:39.547Z,,false,source:llm_research
+35d2cc66-6d5a-49c1-9a9f-c03bf6942ab0,Kopfhautpflege Serum Sensitive,2.95,2.95,available,,2026-10-01T09:18:31.547Z,,false,source:llm_research
+3f3542c0-e82b-4306-a9e0-85df313a78cf,Anti-Haarverlust Serum,13.95,13.95,available,,2026-10-01T09:18:45.953Z,,false,source:llm_research
+945ecca3-c4f0-4426-9af5-a5a8482b3b27,Klärendes Serum,8.95,8.95,available,,2026-10-01T09:18:58.958Z,,false,source:llm_research
+c9b231ee-77b5-45b7-8127-7a85d3ae7dd0,Kopfhaut-Feuchtigkeitspflege Leave-In Serum,5.95,5.95,available,,2026-10-01T09:19:10.487Z,,false,source:llm_research
+cd76afea-d332-4b1d-b44b-7de5bef9034f,Kopfhautberuhigendes Intensiv-Tonikum,16.95,16.95,available,,2026-10-01T09:19:23.628Z,,false,source:llm_research
+e51cfce0-fd76-4873-a868-cc3ca0301cbc,Kopfhautpflege Peeling Tiefenreinigung,2.95,2.95,available,,2026-10-01T09:19:38.761Z,,false,source:llm_research
+71302fae-decd-4b10-80ea-148d5998e2fa,Defeat the Heat Hitzeschutzspray,4.95,4.95,available,,2026-10-01T09:20:08.777Z,,false,source:llm_research
+f8c47bf8-a075-4568-a9ab-aa336b7ae50a,Hitzeschutzspray,3.95,3.95,available,,2026-10-01T09:20:42.572Z,,false,source:llm_research
+2bafeb7e-6610-4efc-a8e8-a402071b2ed9,Curlsmith Multitasking Conditioner 3 in 1,20.95,21.99,available,,2026-10-01T08:58:41.538Z,,false,source:llm_research
+03b847e5-01b9-40e5-950a-98efc73abb3a,Salthouse Anti Fett,3.99,3.99,available,,2026-10-01T09:10:52.017Z,,false,source:llm_research
+1ef2be82-259c-4a1f-af2e-3ac3403f9731,Salthouse Anti Juckreiz,3.99,3.99,available,,2026-10-01T09:11:06.274Z,,false,source:llm_research
+25931499-63ac-4076-b88c-8c23a38f0fa5,Pomélo+Co Shine Therapy Conditioner,8.99,8.99,available,,2026-10-01T09:11:25.935Z,,false,source:llm_research
+261e5c9f-d312-4206-82da-fbd0ab6f3614,Salthouse Anti Schuppen,3.99,3.99,available,,2026-10-01T09:11:48.156Z,,false,source:llm_research
+2ecd3c9d-90f6-45a3-a72c-daefed50be10,OGX Renewing + Argan Oil of Morocco Shampoo,6.99,6.99,available,,2026-10-01T09:12:02.787Z,,false,source:llm_research
+5516009a-eecb-42dd-87f6-07c560161136,Garnier Fructis Hair Food Aloe Vera Feuchtigkeits-Spülung,3.99,3.99,available,,2026-10-01T09:12:18.944Z,,false,source:llm_research
+7964b930-7e88-4f93-89d3-fa437f8e753c,Isana Professional Arganöl & Pflege Spülung,1.39,1.29,available,,2026-10-01T09:12:46.610Z,,false,source:llm_research
+7b5ec424-d21f-4eb8-999e-7aed98e94b86,Rosemary Mint Shampoo,6.99,7.99,available,,2026-10-01T09:12:58.559Z,,false,source:llm_research
+8c3eda97-5009-40bb-959b-1a7d90f48b09,Garnier Wahre Schätze Kokosmilch & Macadamia Nährende Spülung,2.49,2.49,available,,2026-10-01T09:13:20.973Z,,false,source:llm_research
+95e47992-b45b-4847-ba87-b8c3e608fc63,Neqi Moisture Mystery Conditioner,9.95,8.99,available,,2026-10-01T09:13:53.165Z,,false,source:llm_research
+99de5b38-3e80-4360-889c-2505f46a7243,Garnier Wahre Schätze Argan-Mandelcreme Spülung,2.49,2.49,available,,2026-10-01T09:14:10.598Z,,false,source:llm_research
+e7bfd306-b128-4735-a9f8-0eeacdbd5013,Sebamed Every-Day Shampoo,3.99,3.99,available,,2026-10-01T09:14:51.194Z,,false,source:llm_research
+4f6dc4e4-d163-405d-9c68-3b2467090078,Syoss Intense Curls Haarmaske,4.99,4.99,available,,2026-10-01T09:16:27.863Z,,false,source:llm_research
+82f9dcba-0422-4932-a879-c2bec0113e55,Gliss Ultimate Repair Spülung,2.99,2.99,available,,2026-10-01T09:16:41.673Z,,false,source:llm_research
+bbfd8b03-d219-48bb-9ab3-b7c14bcae3dd,Leave-In Moisturizing Mist,12.99,11.95,available,,2026-10-01T09:16:59.039Z,,false,source:llm_research
+07895098-a301-4137-b5c6-9061589b1800,Deep Cleansing Shampoo,12.99,11.95,available,,2026-10-01T09:18:05.166Z,,false,source:llm_research
+ae0e9d21-1e16-4c03-9792-773dbdc2fd18,Professional Shampoo Tiefenreinigung,1.29,1.29,available,,2026-10-01T09:18:20.449Z,,false,source:llm_research
+2544de60-e295-47ec-98a1-6b4ca58ce4be,Kopfhautpeeling Tiefenreinigung,2.99,2.99,available,,2026-10-01T09:19:53.647Z,,false,source:llm_research
+50951ef2-e16a-4a51-85c5-a709aa64c03a,Maria Nila Coils & Curls Oil in Cream,31,31,available,,2026-10-01T09:01:12.888Z,,false,source:llm_research
+29e36443-93ff-4b62-9cf0-55ad9f89f530,BioGourmet Distelöl,5.99,,unavailable,unavailable,,2026-10-01T08:54:42.126Z,false,noop_unchanged_status
+517dca50-5d55-4038-ba1d-f9b745708327,Allgäuer Ölmühle Bio Traubenkernöl,7.99,,unavailable,unavailable,,2026-10-01T08:54:44.293Z,false,noop_unchanged_status
+07120c73-0171-4a2a-9d07-facd9ce90d8c,Weleda Hydra Shine Gloss Drops Alpen-Lein,9.95,9.95,available,available,2026-10-01T08:54:51.001Z,2026-10-01T08:54:51.001Z,false,
+19aea9c4-4b90-4ec4-8cb6-90cb270010f7,benecos BIO Körperöl Macadamianussöl,8.99,8.99,available,available,2026-10-01T08:54:53.282Z,2026-10-01T08:54:53.282Z,false,
+1dce2c18-6a45-4017-a748-e3a7f1cba36f,Primavera Calendulaöl Bio,15.9,15.9,available,available,2026-10-01T08:54:55.605Z,2026-10-01T08:54:55.605Z,false,
+3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b,benecos BIO Körperöl Wunderbaumsamenöl,4.99,4.99,available,available,2026-10-01T08:54:58.010Z,2026-10-01T08:54:58.010Z,false,
+5827a3b9-a488-4c74-b13a-4d655f94f1c3,Pantene Pro-V Miracles 7in1 Öl-Spray,8.95,8.95,available,available,2026-10-01T08:55:00.186Z,2026-10-01T08:55:00.186Z,false,
+70ea52bc-2194-4bb3-82a8-3f4a2aede041,Dr. Scheller Reines Arganöl,8.45,8.45,available,available,2026-10-01T08:55:02.327Z,2026-10-01T08:55:02.327Z,false,
+a11855eb-64e5-438f-8880-1d3573efa9fa,benecos BIO Körperöl Aprikosenkernöl,6.99,6.99,available,available,2026-10-01T08:55:04.832Z,2026-10-01T08:55:04.832Z,false,
+ca4ae209-79d2-4f4d-8e44-46e586cec62d,benecos BIO Körperöl Mandelöl,8.99,8.99,available,available,2026-10-01T08:55:07.460Z,2026-10-01T08:55:07.460Z,false,
+931892fb-cc29-4e50-b402-6aae0a494389,Pantene Pro-V Moisture Boost Pflegespülung,8.95,8.95,available,available,2026-10-01T08:55:09.714Z,2026-10-01T08:55:09.714Z,false,

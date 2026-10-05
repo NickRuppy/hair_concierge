@@ -1,0 +1,184 @@
+{
+  "candidate": "F1",
+  "status": "blind_provisional",
+  "researchMethod": {
+    "policyId": "shampoo-classification-v1.4",
+    "modelVersion": "shampoo-inci-v1.4",
+    "policySha256": "0f9f6a6d4ae789be0febaf66ed178c4247776553a1ed9839255fcc6971928f24",
+    "runbookSha256": "a7d80414831777bc3a0ef5f81686552b3c419fe71550d2eac0d0bbb817016c9d"
+  },
+  "formula_packet": "frozen-F1.json",
+  "properties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low is favored by CAPB #3 plus mild anionic SCI #4 and late nonionic Coco-Glucoside #19, with Glyceryl Oleate #11 refatting. Moderate is the nearest alternative because surfactant actives are unknown; neither sulfate-free naming nor Aloe #2 alone determines mildness.",
+      "evidenceRefs": [
+        "blind:frozen-F1.json",
+        "blind:F1-full-research.json"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate rinse-off care from Glyceryl Oleate #11 with cationic guar #17 and supporting emollient esters #16/#21. Above low because refatting plus substantive polymer form a coherent system; below high without rich fatty-alcohol/quat/silicone or 2-in-1 architecture. Amino acids do not prove repair.",
+      "evidenceRefs": [
+        "blind:frozen-F1.json",
+        "blind:F1-full-research.json"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low whole-formula weight potential: bounded refatting and one cationic guar route, without a rich nonvolatile oil/fatty-alcohol/silicone load. Moderate remains possible with unusually efficient guar deposition, but polymer presence and weak reset alone do not create a moderate floor.",
+      "evidenceRefs": [
+        "blind:frozen-F1.json",
+        "blind:F1-full-research.json"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "rationale": "Blind default only. Exact product intent is hidden; formula suggests mild cleansing/care but v1.4 claims must select and formula must gate the final focus.",
+      "evidenceRefs": [
+        "blind:frozen-F1.json",
+        "blind:F1-full-research.json"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "rationale": "Empty provisional default; no distinct exact-product secondary claims are visible. This is not a final no-claim finding.",
+      "evidenceRefs": [
+        "blind:frozen-F1.json",
+        "blind:F1-full-research.json"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "rationale": "Regular is the v1.4 default pending exact directions/positioning. Frequent cannot be inferred merely from low cleansing.",
+      "evidenceRefs": [
+        "blind:frozen-F1.json",
+        "blind:F1-full-research.json"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "unknown",
+      "confidence": "low",
+      "rationale": "Formula supports a possible mild/refatting context but Parfum #9 is an exposure counter-signal, and scalp intent is hidden. Root must resolve the claim-gated targeted/not_targeted choice.",
+      "evidenceRefs": [
+        "blind:frozen-F1.json",
+        "blind:F1-full-research.json"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole occurs in the complete supplied 33-ingredient sequence. Aloe/amino acids/humectants do not establish cosmetic anti-dandruff support.",
+      "evidenceRefs": [
+        "blind:frozen-F1.json",
+        "blind:F1-full-research.json"
+      ]
+    }
+  },
+  "architecture": {
+    "surfactants": [
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "role": "amphoteric primary context"
+      },
+      {
+        "ingredient": "Sodium Cocoyl Isethionate",
+        "position": 4,
+        "role": "mild anionic cleansing context"
+      },
+      {
+        "ingredient": "Coco-Glucoside",
+        "position": 19,
+        "role": "nonionic secondary context"
+      }
+    ],
+    "care": [
+      {
+        "ingredient": "Glyceryl Oleate",
+        "position": 11,
+        "role": "refatting"
+      },
+      {
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "position": 17,
+        "role": "cationic polymer candidate"
+      },
+      {
+        "ingredient": "Glyceryl Stearate",
+        "position": 21,
+        "role": "emollient/emulsion context"
+      }
+    ],
+    "false_signal_notes": [
+      "Sodium Isethionate #18 is not counted as another strong anionic cleansing surfactant.",
+      "Glycol Distearate #16 supports emulsion/pearlescence context, not an independent repair technology.",
+      "Free amino acids are not hydrolyzed protein or proof of structural repair."
+    ]
+  },
+  "weightAssessment": {
+    "depositionLoad": "light",
+    "persistence": "low",
+    "resetCapacity": "weak",
+    "evidencePositions": [
+      11,
+      16,
+      17,
+      21
+    ],
+    "counterEvidence": "Mild reset does not remove all residue, and cationic guar can deposit; realistic supplier/formulation differences could move adjacent band.",
+    "unresolvedFacts": [
+      "polymer grade and charge density",
+      "surfactant active matter",
+      "actual refatter delivery",
+      "repeated-use residue"
+    ],
+    "whyThisBand": "Limited nonvolatile payload and no demonstrated persistent film favor low after full architecture assessment.",
+    "whyNotNeighborBand": "Moderate requires meaningfully persistent interacting material; one guar plus bounded refatter is not sufficient evidence by route count."
+  },
+  "thicknessAssessments": [
+    {
+      "thickness": "fine",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "Low weight plus bounded conditioning supports a broad fine-hair prior; not a guarantee of root lift.",
+      "evidenceRefs": [
+        "blind:F1-full-research.json"
+      ]
+    },
+    {
+      "thickness": "normal",
+      "fit": "ideal",
+      "confidence": "moderate",
+      "rationale": "Low cleansing and moderate conditioning support ordinary normal-diameter use; scalp loading still governs suitability.",
+      "evidenceRefs": [
+        "blind:F1-full-research.json"
+      ]
+    },
+    {
+      "thickness": "coarse",
+      "fit": "conditional",
+      "confidence": "moderate",
+      "rationale": "Limited high-deposition care leaves coarse/high-care needs conditional; formula-only evidence does not establish ideal fit across those needs.",
+      "evidenceRefs": [
+        "blind:F1-full-research.json"
+      ]
+    }
+  ],
+  "scalpTarget": "unresolved_until_positioning",
+  "formula_only_evidence_ceiling": "E2",
+  "unblinded": false,
+  "independent_second_lane": "not_performed",
+  "limitations": [
+    "INCI-only E2 potential; ranks are literal order, not concentrations. No finished-product deposition, performance, pH, molecular-weight or repeated-use data.",
+    "Exact identity and current primary-source binding are held by root and remain hidden from this assessor. No catalog or prior labels used.",
+    "No claim of suitability for color-treated hair or protocol inferred."
+  ]
+}

@@ -1,0 +1,299 @@
+{
+  "prepared_at": "2026-10-04T08:46:44.387586+00:00",
+  "scope": "3 physical identity cases / 4 catalog rows; read-only research with temp artifacts only",
+  "historical_pause_dispositions": "revoked; not applied or repeated",
+  "contract_source": "active worktree docs/product-intake-research-ops.md",
+  "records": [
+    {
+      "physical_product": "Balea Natural Beauty Hibiskus-Extrakt & Kokosmilch",
+      "catalog_rows": [
+        {
+          "id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+          "category_key": "conditioner"
+        }
+      ],
+      "disposition": "identity association resolved; German exact offer not verified; distinct dm replacement ready for decision",
+      "identity": {
+        "registered_gtin": "4066447238952",
+        "additional_gtin_proposal": "4058172926181",
+        "article_number": "1625969",
+        "package_value": 350,
+        "package_unit": "ml",
+        "proof": [
+          "Live dm DE and PL: same article number, Hibiskus/Kokosmilch variant and 350 ml rinse-out conditioner",
+          "Full INCI declarations match exactly after whitespace/empty punctuation normalization",
+          "Front images both depict pale-blue capped Natural Beauty Feuchtigkeitsspendende Spuelung, Hibiskus/Cocosmilch; no package chronology inferred"
+        ],
+        "sources": [
+          "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-bio-hibiskus-extrakt-und-cocosmilch",
+          "https://www.dm.pl/p/d/1625969/balea-odzywka-do-w-osow-suchych-i-zniszczonych-hibiskus-i-mleko-kokosowe"
+        ],
+        "inci_registered": "AQUA, CETEARYL ALCOHOL, GLYCERYL STEARATE, COCO-CAPRYLATE/CAPRATE, COCOS NUCIFERA OIL, GLYCERIN, PANTHENOL, HYDROLYZED RICE PROTEIN,  , COCOS NUCIFERA FRUIT EXTRACT, HIBISCUS SABDARIFFA FLOWER EXTRACT, BEHENTRIMONIUM CHLORIDE, STEARAMIDOPROPYL DIMETHYLAMINE, LAURYL ALCOHOL, DICAPRYLYL ETHER, TOCOPHEROL, ISOPROPYL ALCOHOL, PARFUM, HEXYL CINNAMAL, LINALOOL, ETHYLHEXYLGLYCERIN, CITRIC ACID, PHENOXYETHANOL, SODIUM BENZOATE, POTASSIUM SORBATE.",
+        "inci_current": "AQUA, CETEARYL ALCOHOL, GLYCERYL STEARATE, COCO-CAPRYLATE/CAPRATE, COCOS NUCIFERA OIL, GLYCERIN, PANTHENOL, HYDROLYZED RICE PROTEIN,  , COCOS NUCIFERA FRUIT EXTRACT, HIBISCUS SABDARIFFA FLOWER EXTRACT, BEHENTRIMONIUM CHLORIDE, STEARAMIDOPROPYL DIMETHYLAMINE, LAURYL ALCOHOL, DICAPRYLYL ETHER, TOCOPHEROL, ISOPROPYL ALCOHOL, PARFUM, HEXYL CINNAMAL, LINALOOL, ETHYLHEXYLGLYCERIN, CITRIC ACID, PHENOXYETHANOL, SODIUM BENZOATE, POTASSIUM SORBATE.",
+        "directions": "ANWENDUNG: Nach der Haarwäsche in das feuchte Haar einmassieren und kurz einwirken lassen. Gründlich ausspülen. HAUTVERTRÄGLICHKEIT:  Dermatologisch bestätigt, pH-hautneutral.",
+        "remaining_limit": "Multi-barcode recognition association, not a claim about identical concentrations, manufacturing chronology, or all historic batches."
+      },
+      "exact_offer": null,
+      "unavailable_dm_offer": {
+        "url": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-bio-hibiskus-extrakt-und-cocosmilch",
+        "size_ml": 350,
+        "displayed_price_eur": 1.45,
+        "stock": "Nicht lieferbar",
+        "buy_enabled": false,
+        "checked_at": "2026-10-04T08:40:13.692Z"
+      },
+      "preferred_shop_checks": [
+        {
+          "shop": "dm / brand-direct",
+          "status": "exact unavailable in Germany; disabled buy control, not a search inference",
+          "url": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-bio-hibiskus-extrakt-und-cocosmilch",
+          "checked_at": "2026-10-04T08:40:13.692Z"
+        },
+        {
+          "shop": "Rossmann",
+          "status": "focused exact-name search returned zero indexed results; not proof of absence"
+        },
+        {
+          "shop": "Mueller",
+          "status": "focused exact-name search returned zero indexed results; not proof of absence"
+        },
+        {
+          "shop": "Amazon DE",
+          "status": "exact name and both GTIN searches returned zero indexed exact offers; not proof of absence"
+        },
+        {
+          "shop": "Douglas/Hagel/Flaconi/Notino/Otto",
+          "status": "site-filtered exact-name search returned no exact offer"
+        },
+        {
+          "shop": "dm Poland",
+          "status": "registered barcode identity source, not a verified delivery-to-Germany offer",
+          "url": "https://www.dm.pl/p/d/1625969/balea-odzywka-do-w-osow-suchych-i-zniszczonych-hibiskus-i-mleko-kokosowe"
+        },
+        {
+          "shop": "eBay / EveryMarket",
+          "status": "disallowed marketplace/non-German-market purchase evidence; not chosen"
+        }
+      ],
+      "replacement_candidate": {
+        "brand": "Balea",
+        "line": "Beauty Essentials",
+        "name": "Feuchtigkeitsspendende Spuelung mit Aloe Vera & Kokosmilch",
+        "category_key": "conditioner",
+        "gtin": "4070765053326",
+        "retailer_sku": "3155215",
+        "size_ml": 350,
+        "price_eur": 1.45,
+        "currency": "EUR",
+        "url": "https://www.dm.de/p/d/3155215/balea-conditioner-feuchtigkeitsspendend-beauty-essentials",
+        "seller": "dm",
+        "stock": "Lieferbar; Standardversand 2-3 Werktage",
+        "buy_enabled": true,
+        "checked_at": "2026-10-04T08:40:42.248Z",
+        "inci": "INGREDIENTS: AQUA • CETEARYL ALCOHOL • ISOPROPYL PALMITATE • STEARAMIDOPROPYL DIMETHYLAMINE • STEARYL ALCOHOL • HELIANTHUS ANNUUS HYBRID  OIL • PANTHENOL • ALOE BARBADENSIS LEAF JUICE POWDER • COCOS NUCIFERA FRUIT EXTRACT • COCOS NUCIFERA OIL • GLYCERIN • CETRIMONIUM CHLORIDE • POTASSIUM SORBATE • GLYCERYL OLEATE • COCO-GLUCOSIDE • TOCOPHEROL • PARFUM • HYDROGENATED PALM GLYCERIDES CITRATE • CITRIC ACID • BENZOIC ACID.",
+        "directions": "versorgt das Haar mit einer Extraportion Feuchtigkeit und verbessert die Kämmbarkeit, ohne zu beschweren. Nach der Haarwäsche in die feuchten Haarlängen einmassieren und kurz einwirken lassen. Gründlich ausspülen.",
+        "front_image_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_440,w_500/v1783590316/assets/pas/images/2cd564f5-c3ec-466c-aa51-b07953fefd76/balea-conditioner-feuchtigkeitsspendend-beauty-essentials",
+        "front_image_file": "hibiskus-replacement-live-front.img",
+        "identity_difference": "Distinct Beauty Essentials Aloe Vera & Kokosmilch variant, not Hibiskus Natural Beauty. Different article and barcode.",
+        "formula_difference": "New declaration has isopropyl palmitate, stearyl alcohol, sunflower hybrid oil and aloe; old has glyceryl stearate, coco-caprylate/caprate, hydrolyzed rice protein and hibiscus. Not a barcode alias and not a proven successor.",
+        "decision_needed": "Select this distinct product as a preferred-shop replacement through the root reviewed maintenance path; do not overwrite original identity/identifiers or silently inherit category facts."
+      },
+      "preserve": [
+        "is_chaarlie_recommended",
+        "is_active",
+        "lifecycle_status",
+        "existing_identifiers",
+        "category facts",
+        "application protocols",
+        "owned-product support"
+      ],
+      "writes_performed": false,
+      "catalog_intake_ready": "not assessed; existing catalog rows only",
+      "global_recommendation_ready": "not reassessed; existing flags preserved"
+    },
+    {
+      "physical_product": "Balea Professional Glow & Shine Laminier-Kur",
+      "catalog_rows": [
+        {
+          "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+          "category_key": "mask"
+        }
+      ],
+      "disposition": "exact dm offer ready with current barcode addition proposal",
+      "identity": {
+        "registered_gtin": "4067796166453",
+        "additional_gtin_proposal": "4070765006483",
+        "article_number": "3050111",
+        "package_value": 200,
+        "package_unit": "ml",
+        "proof": [
+          "Same official dm article 3050111, named Glow & Shine Laminier-Kur, 200 ml",
+          "Both front images identify the same Glykol-Glossing/Glykolsaeure-und-Keratin treatment, black-cap bottle; current pink versus older lilac colour",
+          "Full ingredient sequence matches after removing current declaration Limonene; registered list has no other missing/added ingredient",
+          "Exact directions agree: after conditioner, damp hair from roots to ends, 5 minutes then rinse"
+        ],
+        "sources": [
+          "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine-laminier-kur",
+          "https://www.dm.pl/p/d/3050111/balea-professional-kuracja-do-w-osow-glow-shine"
+        ],
+        "inci_registered": "Ingredients: Aqua, Glycerin, Cetearyl Alcohol, Distearoylethyl Hydroxyethylmonium Methosulfate, Panthenol, Glycolic Acid, Parfum, Isoamyl Laurate, Polyglyceryl-3 Caprate, Behentrimonium Chloride, Quaternium-87, Silicone Quaternium-22, Cetrimonium Chloride, Isopropyl Alcohol, Propylene Glycol, Dipropylene Glycol, Hydrolyzed Keratin, Cocamidopropyl Betaine, Palmitamidopropyltrimonium Chloride, Sodium Benzoate, Tetramethyl Acetyloctahydronaphthalenes, Hexyl Cinnamal, Linalool, Sodium Hydroxide, Synthetic Fluorphlogopite, Citric Acid, Tin Oxide, Mica, CI 77891, CI 45100",
+        "inci_current": "Ingredients: Aqua, Glycerin, Cetearyl Alcohol, Distearoylethyl Hydroxyethylmonium Methosulfate, Panthenol, Glycolic Acid, Parfum, Isoamyl Laurate, Polyglyceryl-3 Caprate, Behentrimonium Chloride, Quaternium-87, Silicone Quaternium-22, Cetrimonium Chloride, Isopropyl Alcohol, Propylene Glycol, Dipropylene Glycol, Hydrolyzed Keratin, Cocamidopropyl Betaine, Palmitamidopropyltrimonium Chloride, Sodium Benzoate, Tetramethyl Acetyloctahydronaphthalenes, Hexyl Cinnamal, Linalool, Limonene, Sodium Hydroxide, Synthetic Fluorphlogopite, Citric Acid, Tin Oxide, Mica, CI 77891, CI 45100",
+        "directions": "Nach Anwendung der Spülung auf das feuchte Haar vom Ansatz bis in die Spitzen auftragen. 5 Minuten einwirken lassen und danach gründlich ausspülen.",
+        "remaining_limit": "Limonene-only fragrance declaration difference does not establish reformulation. Same marketed product association supported; no concentration or chronology claim. Do not add historically mentioned 4066447883039 without its own verified bridge."
+      },
+      "exact_offer": {
+        "url": "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine-laminier-kur",
+        "size_ml": 200,
+        "price_eur": 2.75,
+        "currency": "EUR",
+        "seller": "dm",
+        "gtin": "4070765006483",
+        "stock": "Lieferbar; Standardversand 2-3 Werktage",
+        "buy_enabled": true,
+        "checked_at": "2026-10-04T08:44:40.711Z",
+        "front_image_url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_440,w_500/v1787433850/assets/pas/images/75870000-a7bd-4fa7-b963-9af86626a59b/balea-professional-haarkur-glow-und-shine-laminier-kur",
+        "front_image_file": "glow-live-front.img"
+      },
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "status": "highest-priority exact buyable offer; no lower-ranked search needed"
+        }
+      ],
+      "remaining_decisions": [],
+      "preserve": [
+        "is_chaarlie_recommended",
+        "is_active",
+        "lifecycle_status",
+        "existing_identifiers",
+        "category facts",
+        "application protocols",
+        "owned-product support"
+      ],
+      "writes_performed": false,
+      "catalog_intake_ready": "not assessed; existing catalog rows only",
+      "global_recommendation_ready": "not reassessed; existing flags preserved"
+    },
+    {
+      "physical_product": "Garnier Fructis Baendigendes Macadamia Hair Food 3in1 Maske",
+      "catalog_rows": [
+        {
+          "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+          "category_key": "conditioner"
+        },
+        {
+          "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+          "category_key": "leave_in"
+        }
+      ],
+      "disposition": "manufacturer-linked exact Amazon DE offer ready for both existing category rows; source INCI discrepancy retained",
+      "identity": {
+        "registered_gtin": "3600542511612",
+        "additional_gtin_proposal": null,
+        "size_ml": 400,
+        "physical_format": "400 ml 3in1 mask jar; expressly supports conditioner AND leave-in use",
+        "excluded_format": "Separate 350 ml rinse-out-only Hair Food conditioner bottle",
+        "proof": [
+          "Live official Garnier page is 400 ml 3in1 Macadamia; complete brand directions cover conditioner, mask and leave-in",
+          "Brand front-image URL embeds registered GTIN 3600542511612; filename is observed source metadata, not standalone barcode certification",
+          "Actual official German buy-now widget Amazon.de link resolves to B0BH7ZW2T4 with direct Amazon seller id A3JWKAKR8XB7XF",
+          "Amazon and manufacturer publish the same complete formula identifier F.I.L. Z70014475/2 and ingredient declaration (Amazon English display has transcription/translation typos)",
+          "Visually inspected dm GTIN-linked front and Amazon front depict same brown 3in1 Macadamia + Vitamine C,E jar/97% natural-origin label; Amazon gallery also advertises Shea/vitamins/lipid complex"
+        ],
+        "sources": [
+          "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+          "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/3in1-maske-fuer-trockenes-haar-angereichert-mit-macadamia",
+          "https://www.amazon.de/dp/B0BH7ZW2T4"
+        ],
+        "inci_dm": "INGREDIENTS: AQUA / WATER • CETEARYL ALCOHOL • STEARAMIDOPROPYL DIMETHYLAMINE • ISOPROPYL MYRISTATE • CETYL ESTERS • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • BUTYROSPERMUM PARKII BUTTER / SHEA BUTTER • MACADAMIA INTEGRIFOLIA SEED OIL • GLYCINE SOJA OIL / SOYBEAN OIL • COCOS NUCIFERA OIL / COCONUT OIL • GLYCERYL LINOLEATE • GLYCERYL LINOLENATE • GLYCERYL OLEATE • ASCORBYL GLUCOSIDE • CAPRYLYL GLYCOL • TARTARIC ACID • TOCOPHEROL • SALICYLIC ACID • CARAMEL • LINALOOL • LINALYL ACETATE • GERANIOL • GERANYL ACETATE • VANILLIN • COUMARIN • LIMONENE • CITRAL • TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES • CITRONELLOL • CITRUS AURANTIUM PEEL OIL • CARVONE • BENZALDEHYDE • BENZYL ALCOHOL • BENZYL CINNAMATE • PARFUM / FRAGRANCE",
+        "inci_brand": " Inhaltsstoffe      Close subpanel 1267709 C - INGREDIENTS: AQUA / WATER • CETEARYL ALCOHOL • GLYCERIN • ISOPROPYL MYRISTATE • STEARAMIDOPROPYL DIMETHYLAMINE • GLYCINE SOJA OIL / SOYBEAN OIL • MACADAMIA INTEGRIFOLIA SEED OIL • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • PRUNUS AMYGDALUS DULCIS OIL / SWEET ALMOND OIL • COCOS NUCIFERA OIL / COCONUT OIL • COCO-CAPRYLATE/CAPRATE • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CAPRYLYL GLYCOL • TARTARIC ACID • CETYL ESTERS • SALICYLIC ACID • CARAMEL • LINALOOL • GERANIOL • COUMARIN • LIMONENE • CITRAL • CITRONELLOL • BENZYL ALCOHOL • BENZYL CINNAMATE • PARFUM / FRAGRANCE (F.I.L. Z70014475/2). ",
+        "inci_amazon": "Important information\nIngredients:\n\n1267709 C – Ingredients: Aqua/Water • CETEARYL ALCOHOL • GLYCERINE • ISOPROPYL MYRISTATE • STEARAMIDOPROPYL DIMETHYLAMINE • GLYCINE SOY OIL / SOYBEAN OIL • Macadamia Inte. GRIGRIFOLIA SEED OIL • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • PRUNUS AMYGDALUS DULCIS OIL / SWEET ALMOND OIL • COCOS NUCIFERA OIL / COCONUT OIL • COCO CAPRYLATE / CAPRATE • HYDROXYPROPYL GUAR DROXYYPROPYLTRIMONIUM CHLORIDE • CAPRYLYL GLYCOL • TARTARIC ACID • CETYL ESTERS • SALICYLIC ACID • CARAMEL • LINALOOL • GERANIOL • COUMARIN • LIMONENE • CITRAL • CITRONELLOL • BENZ. YLALCOHOHO L • Benzyl Cinnamate • Perfume / FRAGRANCE (F.I.L. Z70014475/2).\n\nDirections:\n\nAs a conditioner: Apply to wet hair and rinse thoroughly to instantly tame and detangle hair - without weighing it down. As a mask: apply to wet hair, 3 minutes. Leave to work and rinse thoroughly to completely nourish the hair and tame unruly hair. As a leave-in: apply on damp or dry hair. Add a small amount to the lengths to smooth the hair and counteract frizz",
+        "source_conflict": "dm lists a Shea/glyceryl fatty ester/ascorbyl glucoside/tocopherol declaration; brand and Amazon text list glycerin/almond/guar formula Z70014475/2. This is broader than ingredient reorder or fragrance. No claim that the declarations are chemically identical. Exact product association rests on primary manufacturer-to-ASIN bridge, registered-GTIN-linked primary image, same variant/pack and directions. Current imagery across Amazon/dm supports the same marketed jar. Which declaration describes a delivered batch cannot be guaranteed from these web pages.",
+        "directions": " Anwendung      Close subpanel Drei Anwendungen – ein Produkt:  \nAls Spülung: Das Garnier Fructis Bändigendes Macadamia Hair Food auf das nasse Haar auftragen und gründlich ausspülen. Das entwirrt das Haar und pflegt, ohne es zu beschweren. \nAls Maske: Die Creme auf das nasse Haar auftragen, 3 Minuten einwirken lassen und gründlich ausspülen. \nAls Leave-In: Auf feuchtem oder trockenem Haar anwenden. Dafür eine kleine Menge in die Längen geben, um das Haar zu pflegen. So ist es länger weich und geschmeidig. ",
+        "brand_front_image_url": "https://www.garnier.de/-/media/project/loreal/brand-sites/garnier/emea/de/de-de/prd-haarpflege/haarpflege_fructis/haarpflege_fructis_hairfood/macadamia/maske/21092026-3600542511612-garnier-fructis_macadamia_hair_food_3in1_maske-01-haarmaske_front.jpg?w=500&rev=81e8066cf42a4d0a875b7940ebc05ba0&hash=22EA957EE458B77A1453E86F2E3D09DD",
+        "barcode_note": "No new barcode established by Amazon, so retain registered identifier. Do not add a duplicate globally-owned GTIN to conditioner row without root collision/protocol review."
+      },
+      "exact_offer": {
+        "url": "https://www.amazon.de/dp/B0BH7ZW2T4",
+        "observed_brand_redirect_url": "https://www.amazon.de/dp/B0BH7ZW2T4?tag=psuni-de-1011-0-1-21&linkCode=ogi&th=1&smid=A3JWKAKR8XB7XF",
+        "size_ml": 400,
+        "price_eur": 5.95,
+        "currency": "EUR",
+        "seller": "Amazon",
+        "shipper": "Amazon",
+        "seller_id": "A3JWKAKR8XB7XF",
+        "asin": "B0BH7ZW2T4",
+        "quantity": 1,
+        "purchase_type": "one-time purchase, not subscription or 2-pack",
+        "stock": "In stock",
+        "delivery": "Wednesday 7 October; faster Tuesday 6 October shown for current German destination",
+        "buy_enabled": true,
+        "checked_at": "2026-10-04T08:44:12.402Z",
+        "front_image_url": "https://m.media-amazon.com/images/I/81CngmQHGYL._SL1500_.jpg",
+        "front_image_file": "macadamia-amazon-front.jpg"
+      },
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "status": "exact 400 ml GTIN 3600542511612; disabled buy control/Nicht lieferbar",
+          "url": "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+          "checked_at": "2026-10-04T08:41:21.556Z"
+        },
+        {
+          "shop": "Rossmann",
+          "status": "exact GTIN and canonical-name site search returned zero exact indexed offers; not proof of absence"
+        },
+        {
+          "shop": "Mueller",
+          "status": "exact GTIN/canonical-name site searches returned no exact PDP; category pages surfaced other Hair Food variants, not Macadamia"
+        },
+        {
+          "shop": "brand-direct",
+          "status": "official primary product page has no own checkout; German buy-now widget links to exact Amazon ASIN B0BH7ZW2T4",
+          "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/3in1-maske-fuer-trockenes-haar-angereichert-mit-macadamia",
+          "checked_at": "2026-10-04T08:42:55.383Z"
+        },
+        {
+          "shop": "Amazon DE",
+          "status": "selected direct Amazon seller/shipper, one-time 400 ml single unit, EUR 5.95, In stock, enabled Add to basket",
+          "url": "https://www.amazon.de/dp/B0BH7ZW2T4",
+          "checked_at": "2026-10-04T08:44:12.402Z"
+        },
+        {
+          "shop": "Douglas / parfumdreams",
+          "status": "not selected; below verified Amazon in preference order, and third formula declaration C215665/1 differs from primary brand declaration"
+        }
+      ],
+      "remaining_decisions": [],
+      "remaining_uncertainty": "Batch-specific ingredient declaration remains unresolved. No formula reclassification, category rewrite, identifier replacement, recommendation change or claimed manufacturer transition is proposed. If exact shipped-batch INCI certainty is a required gate, obtain a rear-label photo rather than treating the current primary-to-retailer bridge as absent.",
+      "preserve": [
+        "is_chaarlie_recommended",
+        "is_active",
+        "lifecycle_status",
+        "existing_identifiers",
+        "category facts",
+        "application protocols",
+        "owned-product support"
+      ],
+      "writes_performed": false,
+      "catalog_intake_ready": "not assessed; existing catalog rows only",
+      "global_recommendation_ready": "not reassessed; existing flags preserved"
+    }
+  ],
+  "summary": {
+    "rows_covered": 4,
+    "physical_cases": 3,
+    "exact_offer_ready_rows": 3,
+    "identifier_addition_proposals": 2,
+    "distinct_replacement_candidates": 1,
+    "production_writes": 0,
+    "repo_changes": 0
+  },
+  "verification": {
+    "method": "Fresh Chrome hydrated PDP/DOM evidence and source-linked images; web search used for host discovery only",
+    "no_cart_mutation": "Add-to-cart enabled state inspected, no basket or order created",
+    "ingredient_comparison": "ingredient-comparisons.json asserts Hibiskus full ordered equality and Glow equality after removing Limonene",
+    "image_inspection": "Downloaded and visually inspected old/current Glow/Hibiskus fronts, Hibiskus replacement front, dm/Amazon Macadamia fronts and Amazon formula graphic",
+    "origin_fetch_limit": "Initial urllib dm HTTP 200 bodies were uniform JS/security shells, not product evidence; Douglas HTTP 403. Fresh browser evidence supersedes shell fetches."
+  }
+}

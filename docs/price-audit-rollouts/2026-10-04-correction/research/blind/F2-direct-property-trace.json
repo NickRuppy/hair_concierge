@@ -1,0 +1,500 @@
+{
+  "candidate": "F2",
+  "standard_version": "conditioner-classification-v1.6",
+  "properties": {
+    "conditioning_deposition_potential": {
+      "value": "moderate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Moderate conditioning potential: the fatty-alcohol/oil base supports relubrication, with a candidate esterquat conditioning route; strong cationic delivery is less clearly established than in an early-quat chassis.",
+      "formula_observations": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "product_inferences": [
+        "Moderate conditioning potential: the fatty-alcohol/oil base supports relubrication, with a candidate esterquat conditioning route; strong cationic delivery is less clearly established than in an early-quat chassis."
+      ],
+      "supporting_signals": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "counter_signals": [
+        "High is not established: late esterquat rank and absence of a stronger independently supported deposition chassis leave actual slip/deposition uncertain."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "wet_slip_detangling_potential": {
+      "value": "moderate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Moderate wet-slip potential from the fatty/emollient base with a later esterquat candidate.",
+      "formula_observations": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "product_inferences": [
+        "Moderate wet-slip potential from the fatty/emollient base with a later esterquat candidate."
+      ],
+      "supporting_signals": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "counter_signals": [
+        "No wet-tress force endpoint or delivered cationic dose. All M1 observations describe one family, not several independent technologies."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "dry_combability_potential": {
+      "value": "moderate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Moderate dry-combability potential from coherent retained-film/lubrication routes; not inferred from wet-combing data.",
+      "formula_observations": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "product_inferences": [
+        "Moderate dry-combability potential from coherent retained-film/lubrication routes; not inferred from wet-combing data."
+      ],
+      "supporting_signals": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "counter_signals": [
+        "No dry-tress endpoint; unknown retention limits a higher endpoint-specific conclusion."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "surface_lubrication_softness_potential": {
+      "value": "moderate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Moderate surface lubrication/softness potential from nonvolatile emollients in a conditioning base.",
+      "formula_observations": [
+        "#3 Helianthus Annuus Hybrid Oil",
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate"
+      ],
+      "product_inferences": [
+        "Moderate surface lubrication/softness potential from nonvolatile emollients in a conditioning base."
+      ],
+      "supporting_signals": [
+        "#3 Helianthus Annuus Hybrid Oil",
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate"
+      ],
+      "counter_signals": [
+        "Actual friction and perceived softness are separate, unmeasured endpoints; early order does not prove sensory intensity."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "smoothing_frizz_control_potential": {
+      "value": "moderate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Moderate surface-control potential from a coherent emollient/conditioning route beyond baseline fatty alcohol alone.",
+      "formula_observations": [
+        "#3 Helianthus Annuus Hybrid Oil",
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate"
+      ],
+      "product_inferences": [
+        "Moderate surface-control potential from a coherent emollient/conditioning route beyond baseline fatty alcohol alone."
+      ],
+      "supporting_signals": [
+        "#3 Helianthus Annuus Hybrid Oil",
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate"
+      ],
+      "counter_signals": [
+        "No humidity protocol or proof of weatherproof frizz control; not upgraded independently from general conditioning."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "shine_potential": {
+      "value": "moderate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Possible moderate alignment/film shine route, sharing the emollient surface mechanism.",
+      "formula_observations": [
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "product_inferences": [
+        "Possible moderate alignment/film shine route, sharing the emollient surface mechanism."
+      ],
+      "supporting_signals": [
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "counter_signals": [
+        "No distinct optical test; this route is not counted again as a secondary shine focus."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "M3_OPTICAL_ALIGNMENT_FILM"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "weight_deposition_potential": {
+      "value": "moderate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Moderate deposition/weight potential from early fatty alcohol and nonvolatile sunflower oil; protein adds a possible film but does not prove heavy or persistent residue.",
+      "formula_observations": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "product_inferences": [
+        "Moderate deposition/weight potential from early fatty alcohol and nonvolatile sunflower oil; protein adds a possible film but does not prove heavy or persistent residue."
+      ],
+      "supporting_signals": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "counter_signals": [
+        "High would overstate persistence/delivery: no silicone film or clearly dominant early cationic deposition system; multiple lipid names are not separate technologies."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "rinse_behavior": {
+      "value": "unknown",
+      "decision_type": "abstention",
+      "confidence": "high",
+      "evidence_level": "E0",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Unknown: no exact finished-product rinse protocol or endpoint.",
+      "formula_observations": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "product_inferences": [],
+      "supporting_signals": [],
+      "counter_signals": [
+        "INCI cannot establish quick, balanced or tenacious rinsing."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "cumulative_residue_risk": {
+      "value": "indeterminate",
+      "decision_type": "abstention",
+      "confidence": "high",
+      "evidence_level": "E0",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Indeterminate: a candidate one-use deposit does not prove cumulative buildup.",
+      "formula_observations": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "product_inferences": [],
+      "supporting_signals": [],
+      "counter_signals": [
+        "No repeated apply/rinse/wash/removal arm."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "body_lightness_potential": {
+      "value": "balanced",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Balanced provisional body prior from moderate weight; fine-hair lift is not guaranteed.",
+      "formula_observations": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "product_inferences": [
+        "Balanced provisional body prior from moderate weight; fine-hair lift is not guaranteed."
+      ],
+      "supporting_signals": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "counter_signals": [
+        "Unknown dosage and retained mass; revisit with weight uncertainty, never from packaging or silicone absence."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "repair_lubrication_protection": {
+      "value": "candidate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Candidate lubrication-mediated manageability/breakage-protection route only.",
+      "formula_observations": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "product_inferences": [
+        "Candidate lubrication-mediated manageability/breakage-protection route only."
+      ],
+      "supporting_signals": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "counter_signals": [
+        "No repeated-combing breakage endpoint and no structural repair claim."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "repair_surface_film": {
+      "value": "candidate",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Distinct temporary protein fibre-film candidate in a plausible conditioning delivery context.",
+      "formula_observations": [
+        "#7 Hydrolyzed Wheat Protein",
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate"
+      ],
+      "product_inferences": [
+        "Distinct temporary protein fibre-film candidate in a plausible conditioning delivery context."
+      ],
+      "supporting_signals": [
+        "#7 Hydrolyzed Wheat Protein",
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate"
+      ],
+      "counter_signals": [
+        "Protein grade, substantivity and film continuity unknown; no penetration or cortex restoration inferred."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "M2_TEMPORARY_FILM_SUPPORT"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "bond_specific_support": {
+      "value": "unknown",
+      "decision_type": "abstention",
+      "confidence": "high",
+      "evidence_level": "E0",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "No recognized named bond chemistry or exact-product bond substantiation visible.",
+      "formula_observations": [
+        "#7 Hydrolyzed Wheat Protein"
+      ],
+      "product_inferences": [],
+      "supporting_signals": [],
+      "counter_signals": [
+        "Neither protein naming nor ordinary acids establish bond repair; claims hidden."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "M4_CLAIM_ONLY_PROPRIETARY"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "color_chemical_damage_protection": {
+      "value": "general_conditioning",
+      "decision_type": "formula_potential",
+      "confidence": "moderate",
+      "evidence_level": "E2",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Only general conditioning support for fibres; no color-specific protection conclusion.",
+      "formula_observations": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "product_inferences": [
+        "Only general conditioning support for fibres; no color-specific protection conclusion."
+      ],
+      "supporting_signals": [
+        "#2 Cetearyl Alcohol",
+        "#11 Brassica Alcohol",
+        "#18 Brassicyl Isoleucinate Esylate",
+        "#3 Helianthus Annuus Hybrid Oil"
+      ],
+      "counter_signals": [
+        "No exact color endpoint or anti-fade evidence; acid context does not create one."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "M1_DEPOSITION_SURFACE_LUBRICATION"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    },
+    "fragrance_scalp_exposure": {
+      "value": "fragrance_declared",
+      "decision_type": "formula_potential",
+      "confidence": "high",
+      "evidence_level": "E1",
+      "evidence_scope": "anonymous exact ordered INCI packet; formula only",
+      "rationale": "Fragrance exposure is explicitly listed; F2 also lists aromatic essential oil.",
+      "formula_observations": [
+        "#9 Parfum",
+        "#10 Pelargonium Graveolens Flower Oil"
+      ],
+      "product_inferences": [],
+      "supporting_signals": [
+        "#9 Parfum",
+        "#10 Pelargonium Graveolens Flower Oil"
+      ],
+      "counter_signals": [
+        "Exposure is not an irritation diagnosis, allergy guarantee, or scalp-placement instruction."
+      ],
+      "derived_from": [],
+      "profile_fact_ids": [],
+      "source_ids": [
+        "blind:frozen-F2.json"
+      ],
+      "shared_mechanism_ids": [
+        "R8_EXPOSURE"
+      ],
+      "review_status": "blind_provisional_not_human_approved"
+    }
+  },
+  "profile_source": "F2-conditioner-envelope.json",
+  "anti_double_counting": "M1 supplies related candidate endpoints but does not count as separate technologies or independently compound a score. None of these endpoints is measured.",
+  "concentration": "unknown",
+  "rinse_behavior": "unknown",
+  "cumulative_residue_risk": "indeterminate"
+}

@@ -1,0 +1,32 @@
+{
+  "checked_at": "2026-10-04T08:15:13.993044+00:00",
+  "product_count": 371,
+  "updated": 2,
+  "differences": [
+    {
+      "id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+      "name": "Herbal Essences Aloe Vera Conditioner",
+      "fields": [
+        "updated_at",
+        "net_content_unit",
+        "price_checked_at",
+        "net_content_value",
+        "purchase_link_checked_at"
+      ]
+    },
+    {
+      "id": "efaff579-e411-41eb-972a-2734a8517356",
+      "name": "Hitzeschutzspray Schutzengel",
+      "fields": [
+        "updated_at",
+        "net_content_unit",
+        "price_checked_at",
+        "net_content_value",
+        "purchase_link_checked_at"
+      ]
+    }
+  ],
+  "errors": [],
+  "passed": true
+}
+

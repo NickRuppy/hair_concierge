@@ -1,0 +1,56 @@
+{
+  "applied": true,
+  "approved_by": "Nick in this chat",
+  "receipt_stamp": "2026-10-01T09:36:33.748Z",
+  "updates": [
+    {
+      "id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+      "price_eur": "5.40",
+      "price_checked_at": "2026-10-01 09:36:33.748+00",
+      "affiliate_link": "https://www.flaconi.de/haare/monday-haircare/volume/monday-haircare-volume-kraft-and-fuelle-haarshampoo.html",
+      "net_content_value": null,
+      "net_content_unit": null,
+      "purchase_link_status": "available",
+      "purchase_link_checked_at": "2026-06-11 00:00:00+00",
+      "gtins": [
+        "04897097266343"
+      ]
+    },
+    {
+      "id": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "name": "Nivea Shampoo&Conditioner 2in1",
+      "price_eur": "3.95",
+      "price_checked_at": "2026-10-01 09:36:33.748+00",
+      "affiliate_link": "https://www.dm.de/nivea-shampoo-und-conditioner-express-2in1-p4006000193991.html",
+      "net_content_value": null,
+      "net_content_unit": null,
+      "purchase_link_status": "available",
+      "purchase_link_checked_at": "2026-06-11 00:00:00+00",
+      "gtins": [
+        "04006000193991"
+      ]
+    }
+  ],
+  "counts": {
+    "active": 347,
+    "fresh_active": 173,
+    "stale_active": 174,
+    "recommended": 238,
+    "fresh_recommended": 172,
+    "stale_recommended": 66
+  },
+  "latest_batch": {
+    "research_calls": 100,
+    "price_confirmations": 41,
+    "numeric_changes": 12,
+    "unchanged_prices_confirmed": 29,
+    "no_write": 59,
+    "no_write_reasons": {
+      "reported_unavailable_or_broken_stored_link": 41,
+      "no_reliable_exact_match_or_price": 12,
+      "held_package_barcode_or_source_issue": 6
+    }
+  },
+  "validation": "2-row PGlite success/preservation/replay/atomic drift refusal; independent production SQL verified exact prices, stamps, links, package fields and identifiers."
+}

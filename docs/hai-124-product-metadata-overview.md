@@ -32,7 +32,7 @@ The immediate fixes should be id-based updates for the known product rows. The r
 - Treat missing `image_url` as product-metadata health, but leave image backfill/UI handling to HAI-125.
 - Move the Gliss Ultimate Repair spray conditioner case into `Leave-in` instead of keeping it as a rinse-out `Conditioner (Drogerie)` row.
 
-Shop policy:
+Shop policy (**superseded 2026-10-05** — current rule: one order for every category, dm > Rossmann > Müller > brand-direct > Amazon DE > reputable German/EU specialists; shop and purchasability outrank package size and price. See [Source And Purchase URL Priority](product-intake-research-ops.md#source-and-purchase-url-priority). Kept below as the original HAI-124 text):
 
 - Product identity wins first: exact SKU, correct category/use type, correct default size, and current canonical product page.
 - Use allowed retailers only; deny aggregators, marketplace search pages, and generic price-comparison pages.
