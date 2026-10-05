@@ -1,0 +1,2324 @@
+{
+ "schema": "shampoo-v16-track-b-inventory-v1",
+ "generated": "2026-10-05",
+ "scope": "Paused remainder of the 52-product scan-expansion shampoo wave (admin batches 01-04) not among the 14 live products",
+ "summary": {
+  "total_paused": 38,
+  "ready": 18,
+  "partial": 18,
+  "blocked": 1,
+  "duplicate": 1,
+  "duplicates_vs_live": 1,
+  "cells": 8,
+  "researchable_products_in_cells": 36,
+  "deviations_total": 8,
+  "deviations_numeric": 4,
+  "deviations_non_numeric": 4,
+  "inci_on_file": 18,
+  "price_missing": 1,
+  "medical_language_flagged": 10,
+  "ean_verified_all": 38,
+  "images_present": 38
+ },
+ "cells": [
+  {
+   "cell": "C3",
+   "archetype": "Repair / protein / Plex-bond / keratin",
+   "size": 5,
+   "avg_readiness_score": 96.0,
+   "ready": 5,
+   "partial": 0,
+   "members": [
+    "b02-i03",
+    "b03-i09",
+    "b04-i01",
+    "b04-i02",
+    "b04-i03"
+   ],
+   "order": 1
+  },
+  {
+   "cell": "C1",
+   "archetype": "Scalp-condition (dandruff + sensitive-scalp targeted); D5 says list first for Nick",
+   "size": 5,
+   "avg_readiness_score": 91.8,
+   "ready": 4,
+   "partial": 1,
+   "members": [
+    "b02-i09",
+    "b02-i11",
+    "b02-i12",
+    "b03-i01",
+    "b04-i00"
+   ],
+   "order": 2
+  },
+  {
+   "cell": "C5",
+   "archetype": "Color / blonde / shine",
+   "size": 4,
+   "avg_readiness_score": 87.2,
+   "ready": 3,
+   "partial": 1,
+   "members": [
+    "b02-i02",
+    "b02-i08",
+    "b02-i14",
+    "b04-i06"
+   ],
+   "order": 3
+  },
+  {
+   "cell": "C6",
+   "archetype": "Moisture / hydration / oil-nourish",
+   "size": 5,
+   "avg_readiness_score": 85.8,
+   "ready": 3,
+   "partial": 2,
+   "members": [
+    "b02-i05",
+    "b02-i10",
+    "b02-i13",
+    "b03-i02",
+    "b03-i06"
+   ],
+   "order": 4
+  },
+  {
+   "cell": "C2",
+   "archetype": "Koffein / Wurzel / Men (hair-loss-adjacent language, keep cosmetic)",
+   "size": 5,
+   "avg_readiness_score": 81.4,
+   "ready": 2,
+   "partial": 3,
+   "members": [
+    "b02-i01",
+    "b03-i00",
+    "b03-i07",
+    "b03-i12",
+    "b04-i04"
+   ],
+   "order": 5
+  },
+  {
+   "cell": "C4",
+   "archetype": "Mainstream silicone repair / length / sleek",
+   "size": 4,
+   "avg_readiness_score": 79.0,
+   "ready": 1,
+   "partial": 3,
+   "members": [
+    "b01-i12",
+    "b01-i14",
+    "b02-i04",
+    "b03-i08"
+   ],
+   "order": 6
+  },
+  {
+   "cell": "C7",
+   "archetype": "Curl / frizz / Being brand set",
+   "size": 4,
+   "avg_readiness_score": 71.2,
+   "ready": 0,
+   "partial": 4,
+   "members": [
+    "b03-i03",
+    "b03-i04",
+    "b03-i05",
+    "b04-i07"
+   ],
+   "order": 7
+  },
+  {
+   "cell": "C8",
+   "archetype": "Mild everyday / natural-claim",
+   "size": 4,
+   "avg_readiness_score": 69.8,
+   "ready": 0,
+   "partial": 4,
+   "members": [
+    "b01-i13",
+    "b03-i10",
+    "b03-i13",
+    "b04-i05"
+   ],
+   "order": 8
+  }
+ ],
+ "products": [
+  {
+   "id": "b02-i03",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-02.json",
+   "source_product_index": 3,
+   "slug": "syoss-intense-repair",
+   "brand": "Syoss",
+   "name": "Intense Repair Deep Caring Shampoo",
+   "size": "440 ml",
+   "eans": [
+    {
+     "value": "4015100860382",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 3
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 3.49,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/155/MAM_15571884/MAM_15571884_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-repair/p/4015100860382"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Sanft im nassen Haar verteilen und ausspülen.",
+   "protocol_source_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-repair/p/4015100860382",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-repair/p/4015100860382",
+    "https://www.dm.de/p/d/3047031/syoss-shampoo-intense-repair",
+    "https://www.brack.ch/syoss-shampoo-intense-repair-440-ml-1835533",
+    "https://www.syoss.net/care/shampoo/syoss-intense-repair-deep-caring-shampoo.html"
+   ],
+   "source_url_count": 4,
+   "inci_on_file": true,
+   "inci_location": "admin-evidence (batch-02 product.formula.inci) ; also data/research/shampoo-inci/holdout-v3/products/syoss-intense-repair/formula-source.json",
+   "claims": [
+    "Repair shampoo for dry/damaged hair with protein-care complex; claims repair across hair-fiber levels and damage protection."
+   ],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "Same EAN 4015100860382 is already a v1.4 calibration holdout (data/research/shampoo-inci/holdout-v3/products/syoss-intense-repair, captured 2026-09-01). Seen product for calibration/unseen-set purposes; formula-source file exists."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": true,
+   "readiness_bucket": "ready",
+   "readiness_score": 99,
+   "cell": "C3"
+  },
+  {
+   "id": "b04-i01",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-04.json",
+   "source_product_index": 1,
+   "slug": "balea-professional-plex-care",
+   "brand": "Balea PROFESSIONAL",
+   "name": "Shampoo Plex Care",
+   "size": "250 ml",
+   "eans": [
+    {
+     "value": "4070765006285",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 1.95,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_4000%2Cw_4000/v1775776337/assets/pas/images/33578266-4a80-465c-aa22-40a430b240f9/balea-professional-shampoo-plex-care",
+    "source_page": "https://www.dm.de/p/d/1674700/balea-professional-shampoo-plex-care"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Sanft ins nasse Haar einmassieren und sorgfältig mit lauwarmem Wasser ausspülen.",
+   "protocol_source_url": "https://www.dm.de/p/d/1674700/balea-professional-shampoo-plex-care",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.dm.de/p/d/1674700/balea-professional-shampoo-plex-care",
+    "https://www.dm.ro/p/d/1674700/balea-professional-sampon-plex-care"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": true,
+   "inci_location": "draft-manifest authority_facts (classification-derived file; text is source INCI)",
+   "claims": [
+    "Für chemisch behandeltes und geschädigtes Haar; Intense-Repair-Technologie, 3-fach-Protein-Komplex und Aminosäuren; reinigt sanft."
+   ],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "Official dm packshot re-requested at 985x4000 and visually verified (notes-04)."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 97,
+   "cell": "C3"
+  },
+  {
+   "id": "b04-i03",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-04.json",
+   "source_product_index": 3,
+   "slug": "isana-professional-plex",
+   "brand": "ISANA PROFESSIONAL",
+   "name": "Plex Shampoo",
+   "size": "250 ml",
+   "eans": [
+    {
+     "value": "4305615975917",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 1.99,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/159/MAM_15957163/MAM_15957163_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-shampoo/p/4305615975917"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Sanft auf die feuchte Kopfhaut einmassieren und sorgfältig ausspülen.",
+   "protocol_source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-shampoo/p/4305615975917",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-shampoo/p/4305615975917",
+    "https://www.rossmann.com.tr/isana-professional-plex-sampuan-250-ml-p-sr23110228"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": true,
+   "inci_location": "draft-manifest authority_facts (classification-derived file; text is source INCI) ; also data/research/shampoo-inci/holdout-v2/products/isana-professional-plex/formula-source.json",
+   "claims": [
+    "Reinigt das Haar sanft; Phytoprotein-Komplex aus Reis, Soja und Weizen repariert die geschädigte Haarstruktur, bändigt Spliss und reduziert Haarbruch."
+   ],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "Same EAN 4305615975917 is a v1.4 calibration holdout (holdout-v2/isana-professional-plex, official source, captured 2026-08-26)."
+    },
+    {
+     "kind": "info",
+     "text": "DE shop showed price but product was online-unavailable (notes-04)."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": true,
+   "readiness_bucket": "ready",
+   "readiness_score": 97,
+   "cell": "C3"
+  },
+  {
+   "id": "b04-i02",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-04.json",
+   "source_product_index": 2,
+   "slug": "isana-professional-keratin-repair",
+   "brand": "ISANA PROFESSIONAL",
+   "name": "Shampoo Keratin & Repair",
+   "size": "250 ml",
+   "eans": [
+    {
+     "value": "4305615830940",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 1.29,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/185/MAM_18582916/MAM_18582916_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.de/de/de/pflege-und-duft-isana-professional-shampoo-keratin-und-repair/p/4305615830940"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Für die tägliche Haarwäsche geeignet.",
+   "protocol_source_url": "https://www.rossmann.de/de/de/pflege-und-duft-isana-professional-shampoo-keratin-und-repair/p/4305615830940",
+   "protocol_deviation": {
+    "reason": "Die exakte Produktanweisung verlangt eine nicht numerisch bestimmte Einwirkzeit; die Standardvorlage bleibt sonst unverändert.",
+    "packaging_text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Für die tägliche Haarwäsche geeignet."
+   },
+   "protocol_deviation_kind": "non_numeric_wait",
+   "source_urls": [
+    "https://www.rossmann.de/de/de/pflege-und-duft-isana-professional-shampoo-keratin-und-repair/p/4305615830940",
+    "https://shop.rossmann.hu/termek/isana-hair-professional-anti-haarbruch-sampon-250-ml"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": true,
+   "inci_location": "draft-manifest authority_facts (classification-derived file; text is source INCI)",
+   "claims": [
+    "Für stark geschädigtes und brüchiges Haar; mit Keratin und kaltgepresstem Marulaöl; ohne Silikone."
+   ],
+   "flags": [
+    {
+     "kind": "decision",
+     "text": "Recorded deviation is NON-numeric 'kurz einwirken lassen' (notes-04 called it 'genuine' pre-ruling); Nick's 2026-09-04 ruling makes it ordinary STD - needs confirmation."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 94,
+   "cell": "C3"
+  },
+  {
+   "id": "b03-i09",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+   "source_product_index": 9,
+   "slug": "elvital-bond-repair",
+   "brand": "L’Oréal Paris Elvital",
+   "name": "Bond Repair Shampoo Anti-Haarschäden",
+   "size": "200 ml",
+   "eans": [
+    {
+     "value": "3600524074654",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 6.95,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/160/MAM_16016282/MAM_16016282_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=85&width=1200",
+    "source_page": "https://www.dm.de/p/d/1678575/l-oreal-paris-elvital-shampoo-bond-repair-anti-haarschaeden"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Für optimale Ergebnisse auf das nasse Haar auftragen, einmassieren und ausspülen.",
+   "protocol_source_url": "https://www.dm.de/p/d/1678575/l-oreal-paris-elvital-shampoo-bond-repair-anti-haarschaeden",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.dm.de/p/d/1678575/l-oreal-paris-elvital-shampoo-bond-repair-anti-haarschaeden",
+    "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-shampoo-bond-repair-anti-haarschaeden/p/3600524074654",
+    "https://www.loreal-paris.de/haarpflege/elvital/bond-repair"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": true,
+   "inci_location": "calibration holdout formula-source only: data/research/shampoo-inci/holdout-v1/products/loreal-elvital-bond-repair-plus/formula-source.json",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "Same EAN 3600524074654 is a v1.4 calibration holdout (holdout-v1/loreal-elvital-bond-repair-plus, captured 2026-08-26, official source, INCI on file there). Rossmann shows a shorter formula (non-blocking)."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": true,
+   "readiness_bucket": "ready",
+   "readiness_score": 93,
+   "cell": "C3"
+  },
+  {
+   "id": "b02-i09",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-02.json",
+   "source_product_index": 9,
+   "slug": "isana-anti-schuppen",
+   "brand": "ISANA",
+   "name": "Shampoo Anti-Schuppen Wasserminze & Grüner Tee",
+   "size": "300 ml",
+   "eans": [
+    {
+     "value": "4305615566146",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 0.65,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.dk/media-neu/557/MAM_55715296/MAM_55715296_SHOP_IMAGE_1.4.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.dk/da/pleje-og-duft-isana-anti-skaelshampoo-vandmynte-og-gron-te/p/4305615566146"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-DANDRUFF",
+   "protocol_usage_text": "Masseres ind i fugtigt hår. Skylles grundigt ud.",
+   "protocol_source_url": "https://www.rossmann.dk/da/pleje-og-duft-isana-anti-skaelshampoo-vandmynte-og-gron-te/p/4305615566146",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-anti-schuppen-wasserminze-und-gruener-tee/p/4305615566146",
+    "https://www.rossmann.dk/da/pleje-og-duft-isana-anti-skaelshampoo-vandmynte-og-gron-te/p/4305615566146"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": true,
+   "inci_location": "admin-evidence (batch-02 product.formula.inci)",
+   "claims": [
+    "Anti-dandruff shampoo with water mint and green tea for dry hair and flaky scalp; claims gentle removal of dandruff and prevention of new dandruff formation; silicone-free, dermatologically confirmed and pH-neutral."
+   ],
+   "flags": [
+    {
+     "kind": "medical",
+     "text": "Anti-dandruff (Piroctone Olamine), TPL-SHAMPOO-DANDRUFF, cosmetic framing only (D5 scalp-condition)."
+    },
+    {
+     "kind": "info",
+     "text": "Candidate image and INCI come from Rossmann.dk exact-EAN page; German PDP has less INCI visibility (notes-02)."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": true,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 97,
+   "cell": "C1"
+  },
+  {
+   "id": "b02-i11",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-02.json",
+   "source_product_index": 11,
+   "slug": "isana-med-jeden-tag-ultra-sensitiv",
+   "brand": "ISANA MED",
+   "name": "Shampoo Jeden Tag (Ultra Sensitiv)",
+   "size": "200 ml",
+   "eans": [
+    {
+     "value": "4305615629223",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 1.79,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/567/MAM_56764056/MAM_56764056_SHOP_IMAGE_1.4.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-jeden-tag-ultra-sensitiv/p/4305615629223"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-TARGETED",
+   "protocol_usage_text": "Yeterli miktardaki ürünü tüm saçınızın arındığından emin olana kadar köpürterek hafif masaj hareketleriyle uygulayınız ve suyla durulayınız. Gerektiğinde işlemi tekrarlayınız.",
+   "protocol_source_url": "https://www.rossmann.com.tr/isana-med-sampuan-ultra-hassas-200-ml-p-sr20080398",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-jeden-tag-ultra-sensitiv/p/4305615629223",
+    "https://www.rossmann.com.tr/isana-med-sampuan-ultra-hassas-200-ml-p-sr20080398"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": true,
+   "inci_location": "admin-evidence (batch-02 product.formula.inci)",
+   "claims": [
+    "Das ISANA Med Shampoo berücksichtigt die besonderen Bedürfnisse sehr sensibler und empfindlicher Kopfhaut."
+   ],
+   "flags": [
+    {
+     "kind": "medical",
+     "text": "Sensitive-scalp positioning, TPL-SHAMPOO-TARGETED, cosmetic only (D5 scalp-condition)."
+    },
+    {
+     "kind": "info",
+     "text": "German PDP exposes no directions; protocol cites exact-EAN Rossmann Turkey page (non-DE fallback)."
+    },
+    {
+     "kind": "info",
+     "text": "Near-name sibling in v1.4 holdout-v1: 'ISANA MED Shampoo Jeden Tag' EAN 4305615629216 (urea formula). Different EAN and slug; do NOT merge (inferred: separate SKU)."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": true,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 97,
+   "cell": "C1"
+  },
+  {
+   "id": "b04-i00",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-04.json",
+   "source_product_index": 0,
+   "slug": "isana-med-totes-meer",
+   "brand": "ISANA MED",
+   "name": "Shampoo Totes Meer",
+   "size": "200 ml",
+   "eans": [
+    {
+     "value": "4305615629230",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 0.99,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/567/MAM_56763628/MAM_56763628_SHOP_IMAGE_1.4.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-totes-meer/p/4305615629230"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-TARGETED",
+   "protocol_usage_text": "Normal rinse-off directions were not exposed on the currently opened German PDP; corroborating Rossmann HU page states use on wet hair and rinse.",
+   "protocol_source_url": "https://shop.rossmann.hu/termek/isana-med-holt-tengeri-sampon-200-ml?q=isana+sensitive&suggestionType=0-res-product",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-totes-meer/p/4305615629230",
+    "https://shop.rossmann.hu/termek/isana-med-holt-tengeri-sampon-200-ml?q=isana+sensitive&suggestionType=0-res-product"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": true,
+   "inci_location": "draft-manifest authority_facts (classification-derived file; text is source INCI)",
+   "claims": [
+    "Spezialentwicklung, die empfindliche und juckende Kopfhaut beruhigt; Schutz vor Austrocknung für Kopfhaut & Haar; pH hautneutral."
+   ],
+   "flags": [
+    {
+     "kind": "medical",
+     "text": "Sensitive/itchy-scalp positioning, TPL-SHAMPOO-TARGETED, cosmetic only (D5 scalp-condition)."
+    },
+    {
+     "kind": "info",
+     "text": "German PDP exposes no directions; protocol cites Rossmann Hungary wet-hair/rinse fallback (non-DE)."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": true,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 97,
+   "cell": "C1"
+  },
+  {
+   "id": "b02-i12",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-02.json",
+   "source_product_index": 12,
+   "slug": "isana-med-ph55-hautneutral",
+   "brand": "ISANA MED",
+   "name": "Shampoo pH 5,5 hautneutral",
+   "size": "400 ml",
+   "eans": [
+    {
+     "value": "4068134039743",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 1.69,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/145/MAM_14522428/MAM_14522428_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-ph-55-hautneutral/p/4068134039743"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-TARGETED",
+   "protocol_usage_text": "Легкими масажними рухами нанесіть на вологе волосся, залиште на короткий час і ретельно змийте.",
+   "protocol_source_url": "https://hmarka.ua/uk/product/15694-shampun-isana-med-z-nejtralnym-ph-dlya-shkiry-golovy-z-3-sechovynoyu-400-ml/",
+   "protocol_deviation": {
+    "reason": "Die exakte Produktanweisung verlangt eine kurze, nicht numerisch spezifizierte Einwirkzeit; dies weicht von der Standardvorlage ohne Wartezeit ab.",
+    "packaging_text": "Легкими масажними рухами нанесіть на вологе волосся, залиште на короткий час і ретельно змийте."
+   },
+   "protocol_deviation_kind": "non_numeric_wait",
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-ph-55-hautneutral/p/4068134039743",
+    "https://www.rossmann.com.tr/isana-med-sampuan-ultra-hassas-400-ml-p-sr24090131",
+    "https://hmarka.ua/uk/product/15694-shampun-isana-med-z-nejtralnym-ph-dlya-shkiry-golovy-z-3-sechovynoyu-400-ml/"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": true,
+   "inci_location": "admin-evidence (batch-02 product.formula.inci)",
+   "claims": [
+    "Die pH-hautneutrale Formel hilft den Säureschutzmantel der Haut zu stabilisieren und die natürliche Schutzfunktion aufrecht zu erhalten. Das ISANA MED SHAMPOO ist eine Spezialentwicklung für sensible Kopfhaut."
+   ],
+   "flags": [
+    {
+     "kind": "medical",
+     "text": "Sensitive-scalp / pH-skin-neutral, TPL-SHAMPOO-TARGETED (D5 scalp-condition)."
+    },
+    {
+     "kind": "decision",
+     "text": "Recorded protocol deviation is a NON-numeric wait ('kurz einwirken lassen'); Nick's 2026-09-04 ruling treats that as ordinary STD use (plan says remainder not reopened) - needs confirmation."
+    },
+    {
+     "kind": "info",
+     "text": "Directions come from a Ukrainian retailer (Hmarka); DE + first-party TR Rossmann corroborate EAN. No German directions on file."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": true,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 95,
+   "cell": "C1"
+  },
+  {
+   "id": "b03-i01",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+   "source_product_index": 1,
+   "slug": "head-shoulders-apple-fresh",
+   "brand": "head&shoulders",
+   "name": "Anti-Schuppen Shampoo Apple Fresh",
+   "size": "500 ml",
+   "eans": [
+    {
+     "value": "8001090896049",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 6.95,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://images.ctfassets.net/ee6cq8u2y2es/5EaDxdGqglkZ6exC0GHMFq/d0f8d6b8f24425e6235501d7caec2711/0__80861057__8001090896049_C1N1.png?fm=webp&w=1200&q=80",
+    "source_page": "https://www.dm.de/p/d/1493053/head-und-shoulders-shampoo-anti-schuppen-apple-fresh"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-DANDRUFF",
+   "protocol_usage_text": "Dieses Anti-Schuppen-Shampoo ist dermatologisch getestet und ideal für die tägliche Anwendung.",
+   "protocol_source_url": "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/anti-schuppen-shampoo/apple-fresh/",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.dm.de/p/d/1493053/head-und-shoulders-shampoo-anti-schuppen-apple-fresh",
+    "https://www.dm.at/p/d/1493053/head-und-shoulders-shampoo-anti-schuppen-apple-fresh",
+    "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/anti-schuppen-shampoo/apple-fresh/"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "medical",
+     "text": "Anti-dandruff, TPL-SHAMPOO-DANDRUFF, cosmetic framing only (D5 scalp-condition)."
+    },
+    {
+     "kind": "info",
+     "text": "Current GTIN 8001090896049 (500 ml); historical 8700216219907 deliberately not attached (notes-03)."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": true,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 73,
+   "cell": "C1"
+  },
+  {
+   "id": "b02-i02",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-02.json",
+   "source_product_index": 2,
+   "slug": "syoss-intense-color",
+   "brand": "Syoss",
+   "name": "Intense Color Deep Caring Shampoo",
+   "size": "440 ml",
+   "eans": [
+    {
+     "value": "4015100860368",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 3.49,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/155/MAM_15546193/MAM_15546193_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-color/p/4015100860368"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Apply thoroughly to wet hair and rinse.",
+   "protocol_source_url": "https://www.syoss.net/care/shampoo/syoss-intense-color-deep-caring-shampoo.html",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-color/p/4015100860368",
+    "https://www.brack.ch/syoss-shampoo-intense-color-440-ml-1835536",
+    "https://www.syoss.net/care/shampoo/syoss-intense-color-deep-caring-shampoo.html"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": true,
+   "inci_location": "admin-evidence (batch-02 product.formula.inci)",
+   "claims": [
+    "For colored/highlighted hair; antioxidant-shine complex; gentle cleansing and color protection; up to 12 weeks color intensity claim."
+   ],
+   "flags": [],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 98,
+   "cell": "C5"
+  },
+  {
+   "id": "b02-i08",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-02.json",
+   "source_product_index": 8,
+   "slug": "isana-seidenglanz",
+   "brand": "ISANA",
+   "name": "Shampoo Seidenglanz Magnolie & Lotus",
+   "size": "300 ml",
+   "eans": [
+    {
+     "value": "4305615566160",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 0.65,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/565/MAM_56576558/MAM_56576558_SHOP_IMAGE_1.4.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-seidenglanz/p/4305615566160"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "In das nasse Haar einmassieren und gründlich ausspülen.",
+   "protocol_source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-seidenglanz/p/4305615566160",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-seidenglanz/p/4305615566160",
+    "https://www.drogas.lv/lv/matiem/matu-kopsana/sampuni/isana-seidenglanz-sampuns-nespodriem-un-sausiem-matiem-300ml/p/BP_334955",
+    "https://www.drogas.lv/lv/matiem/matu-kopsana/sampuni/isana-seidenglanz-sampuns-nespodriem-und-sausiem-matiem-300ml/p/BP_334955"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": true,
+   "inci_location": "admin-evidence (batch-02 product.formula.inci)",
+   "claims": [
+    "Seidenglanz shampoo with magnolia and lotus for dull and dry hair; claims intensive care, silky shine and balanced moisture, silicone-free, dermatologically confirmed and pH-neutral."
+   ],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "Full INCI from exact-barcode Drogas retailer page, not German Rossmann (notes-02)."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 98,
+   "cell": "C5"
+  },
+  {
+   "id": "b02-i14",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-02.json",
+   "source_product_index": 14,
+   "slug": "john-frieda-violet-crush-silber",
+   "brand": "JOHN FRIEDA",
+   "name": "Intensiv Silbershampoo",
+   "size": "250 ml",
+   "eans": [
+    {
+     "value": "5037156297133",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 9.99,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/533/MAM_53314299/MAM_53314299_SHOP_IMAGE_1.4.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-john-frieda-violet-crush-violet-crush-intensiv-silber-shampoo/p/5037156297133"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Sanft in nasses Haar einmassieren, aufschäumen und 1–3 Minuten einwirken lassen. Gründlich ausspülen.",
+   "protocol_source_url": "https://www.johnfrieda.com/de-de/produkte/blonde/violet-crush/intensiv-silber-shampoo/",
+   "protocol_deviation": {
+    "reason": "Die Herstelleranweisung schreibt eine Einwirkzeit von 1–3 Minuten vor; das weicht von der Standard-Shampoo-Vorlage ohne Wartezeit ab.",
+    "packaging_text": "Sanft in nasses Haar einmassieren, aufschäumen und 1–3 Minuten einwirken lassen. Gründlich ausspülen."
+   },
+   "protocol_deviation_kind": "numeric_contact_time",
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-john-frieda-violet-crush-violet-crush-intensiv-silber-shampoo/p/5037156297133",
+    "https://www.dm.de/p/d/3123430/john-frieda-shampoo-violet-crush-intensiv-silber",
+    "https://www.johnfrieda.com/de-de/produkte/blonde/violet-crush/intensiv-silber-shampoo/"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": true,
+   "inci_location": "admin-evidence (batch-02 product.formula.inci)",
+   "claims": [
+    "Dieses Intensiv Silbershampoo neutralisiert Gelbstich für kühles Blond in nur einer Anwendung*. Mit violetten Pigmenten und Provitamin B5 wirkt die reichhaltige Formel besonders schnell."
+   ],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "Genuine numeric deviation: '1-3 Minuten einwirken lassen' (stays a deviation under the 2026-09-04 ruling)."
+    },
+    {
+     "kind": "info",
+     "text": "Older/other-retailer formula variant documented, not merged (notes-02)."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 98,
+   "cell": "C5"
+  },
+  {
+   "id": "b04-i06",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-04.json",
+   "source_product_index": 6,
+   "slug": "john-frieda-sheer-blonde-refresh-shine",
+   "brand": "John Frieda Sheer Blonde",
+   "name": "Sheer Blonde Refresh & Shine Shampoo",
+   "size": "250 ml",
+   "eans": [
+    {
+     "value": "5037156296105",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 3
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": null,
+   "price_present": false,
+   "candidate_image": {
+    "present": true,
+    "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_2800,w_2800/v1770853700/assets/pas/images/72f9e796-edbb-479c-b814-cc68ee3a191a/john-frieda-shampoo-sheer-blonde",
+    "source_page": "https://www.dm.de/p/d/3122567/john-frieda-shampoo-sheer-blonde"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Anwendung: Sanft ins nasse Haar einmassieren, aufschäumen und gründlich ausspülen. Anschließend Go Blonder Conditioner verwenden.",
+   "protocol_source_url": "https://www.dm.de/p/d/3122567/john-frieda-shampoo-sheer-blonde",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.dm.de/p/d/3122567/john-frieda-shampoo-sheer-blonde",
+    "https://www.johnfrieda.com/de-ch/produkte/blonde/sheer-blonde/refresh-shine-shampoo/",
+    "https://www.rossmann.dk/da/pleje-og-duft-john-frieda-sheer-blonde-sheer-blonde-refresh-og-shine-shampoo/p/5037156296105"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [
+    "Belebt blondes Haar, verstärkt den Glanz und entfernt stumpf machende Rückstände leicht klärend."
+   ],
+   "flags": [
+    {
+     "kind": "source_gap",
+     "text": "No price captured (price_eur absent; schema allows it, apply lane/price-audit should fill)."
+    },
+    {
+     "kind": "info",
+     "text": "Older same-EAN formula on Rossmann DK recorded as version conflict; dm DE + manufacturer formula is the current one (notes-04)."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)",
+    "price_eur",
+    "No price captured (price_eur absent; schema allows it, apply lane/price-audit should fill)."
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 55,
+   "cell": "C5"
+  },
+  {
+   "id": "b02-i05",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-02.json",
+   "source_product_index": 5,
+   "slug": "jean-len-hydration-pfirsich-chia",
+   "brand": "Jean&Len",
+   "name": "Hydration Shampoo Pfirsich Chia",
+   "size": "300 ml",
+   "eans": [
+    {
+     "value": "4262401738968",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 4.29,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://jlcdn.cstatic.com/media/cf/03/6a/1777881811/hydration-shampoo-pfirsich-chiasamen-10p-13dd41.png?ts=1777881811",
+    "source_page": "https://www.jeanlen.de/shampoo-fuer-trockenes-haar-pfirsich-chiasamen"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Sanft in das nasse Haar einmassieren und gründlich ausspülen.",
+   "protocol_source_url": "https://www.jeanlen.de/shampoo-fuer-trockenes-haar-pfirsich-chiasamen",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.jeanlen.de/shampoo-fuer-trockenes-haar-pfirsich-chiasamen",
+    "https://www.dm.de/p/d/3100658/jean-und-len-shampoo-hydration-pfirsich-chia"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": true,
+   "inci_location": "admin-evidence (batch-02 product.formula.inci)",
+   "claims": [
+    "Hydration shampoo with peach and chia; claims up to 72h moisture, dry and brittle hair, vegan and silicone-free."
+   ],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "Manufacturer INCI ends with Genistein, dm omits it (formula-tail conflict, notes-02); INCI on file is the manufacturer version."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 97,
+   "cell": "C6"
+  },
+  {
+   "id": "b02-i10",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-02.json",
+   "source_product_index": 10,
+   "slug": "isana-oil-repair-marula",
+   "brand": "ISANA",
+   "name": "Shampoo Oil Repair Marulaöl",
+   "size": "300 ml",
+   "eans": [
+    {
+     "value": "4068134071118",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 0.65,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/557/MAM_55790470/MAM_55790470_SHOP_IMAGE_1.4.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-oil-repair-marulaoel/p/4068134071118"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Masszírozza a nedves hajba, majd alaposan öblítse ki.",
+   "protocol_source_url": "https://shop.rossmann.hu/termek/isana-hair-oil-repair-sampon-300-ml?source=hs",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-oil-repair-marulaoel/p/4068134071118",
+    "https://shop.rossmann.hu/termek/isana-hair-oil-repair-sampon-300-ml?source=hs"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": true,
+   "inci_location": "admin-evidence (batch-02 product.formula.inci)",
+   "claims": [
+    "Das ISANA Shampoo Oil Repair mit pflegendem Marulaöl, Vitamin B3 und Panthenol macht trockenes und brüchiges Haar bis in die Spitzen heil und strahlend."
+   ],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "Directions from exact-EAN Rossmann Hungary first-party page (non-DE) (notes-02)."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 97,
+   "cell": "C6"
+  },
+  {
+   "id": "b02-i13",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-02.json",
+   "source_product_index": 13,
+   "slug": "isana-feuchtigkeit",
+   "brand": "ISANA",
+   "name": "Shampoo Feuchtigkeit",
+   "size": "300 ml",
+   "eans": [
+    {
+     "value": "4068134071132",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 0.65,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/557/MAM_55787270/MAM_55787270_SHOP_IMAGE_1.4.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-feuchtigkeit/p/4068134071132"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "In das feuchte Haar einmassieren. Gründlich ausspülen.",
+   "protocol_source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-feuchtigkeit/p/4068134071132",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-feuchtigkeit/p/4068134071132",
+    "https://www.drogas.lv/lv/matiem/matu-kopsana/sampuni/isana-feuchtigkeit-mitrinoss-sampuns-sausiem-un-bojatiem-matiem-300ml/p/BP_502724"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": true,
+   "inci_location": "admin-evidence (batch-02 product.formula.inci)",
+   "claims": [
+    "Das ISANA SHAMPOO FEUCHTIGKEIT mit Kokoswasser reinigt das Haar besonders mild. Die besondere Pflegeformel mit Panthenol und Vitamin B3 hilft, den Feuchtigkeitshaushalt von Kopfhaut und Haar zu bewahren."
+   ],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "EAN 4068134071132 was recovered 2026-09-03 via Rossmann + Drogas; cross-source true (receipt.json)."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 97,
+   "cell": "C6"
+  },
+  {
+   "id": "b03-i06",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+   "source_product_index": 6,
+   "slug": "ida-warg-moisture",
+   "brand": "IDA WARG Beauty",
+   "name": "Moisture Shampoo",
+   "size": "250 ml",
+   "eans": [
+    {
+     "value": "7340074775217",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 12.99,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/559/MAM_55946331/MAM_55946331_SHOP_IMAGE_1.4.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=85&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-moisture-shampoo/p/7340074775217"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Auf das nasse Haar auftragen. Aufschäumen, ausspülen.",
+   "protocol_source_url": "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-moisture-shampoo/p/7340074775217",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-ida-warg-beauty-moisture-shampoo/p/7340074775217",
+    "https://www.apotea.se/ida-warg-moisture-shampoo-250-ml-1",
+    "https://idawargbeauty.com/products/moisture-shampoo-pro-size-500-ml"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "Rossmann is identity/price/image source; formula via brand pro-size 500 ml page + Apotea (notes-03)."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 73,
+   "cell": "C6"
+  },
+  {
+   "id": "b03-i02",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+   "source_product_index": 2,
+   "slug": "being-max-moisture",
+   "brand": "Being",
+   "name": "Max Moisture Shampoo",
+   "size": "354 ml",
+   "eans": [
+    {
+     "value": "4895248005902",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 6.79,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/174/MAM_17491008/MAM_17491008_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=85&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-being-max-moisture-shampoo/p/4895248005902"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Apply to wet hair, lather and rinse well.",
+   "protocol_source_url": "https://www.rossmann.de/de/pflege-und-duft-being-max-moisture-shampoo/p/4895248005902",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-being-max-moisture-shampoo/p/4895248005902",
+    "https://www.superdrug.com/hair/shampoo/being-shampoo-max-moisture-354ml/p/847877",
+    "https://beinghaircare.com/product/max-moisture-intense-moisturizing-shampoo/"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "source_gap",
+     "text": "Formula authority provisional: Rossmann hides INCI; formula from manufacturer + Superdrug (non-DE) (notes-03)."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)",
+    "Formula authority provisional: Rossmann hides INCI; formula from manufacturer + Superdrug (non-DE) (notes-03)."
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 65,
+   "cell": "C6"
+  },
+  {
+   "id": "b02-i01",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-02.json",
+   "source_product_index": 1,
+   "slug": "syoss-men-intense-power",
+   "brand": "Syoss",
+   "name": "Men Intense Power Deep Caring Shampoo",
+   "size": "440 ml",
+   "eans": [
+    {
+     "value": "4015100860443",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 3.49,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/155/MAM_15571862/MAM_15571862_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-men-intense-power/p/4015100860443"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Sanft im nassen Haar verteilen und ausspülen.",
+   "protocol_source_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-men-intense-power/p/4015100860443",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-men-intense-power/p/4015100860443",
+    "https://www.rossmann.dk/da/personlig-pleje-syoss-shampoo-men-intense-power/p/4015100860443",
+    "https://www.syoss.net/care/shampoo/syoss-men-intense-power-deep-caring-shampoo.html"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": true,
+   "inci_location": "admin-evidence (batch-02 product.formula.inci)",
+   "claims": [
+    "Men Intense Power shampoo for normal hair with caffeine-energy complex; claims cleansing/refreshing and hair-root/growth-factor activation."
+   ],
+   "flags": [
+    {
+     "kind": "medical",
+     "text": "Growth-factor/caffeine 'energy' marketing: keep cosmetic, never hair-loss efficacy (notes-02)."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": true,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 98,
+   "cell": "C2"
+  },
+  {
+   "id": "b04-i04",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-04.json",
+   "source_product_index": 4,
+   "slug": "isana-men-energy-power",
+   "brand": "ISANA MEN",
+   "name": "Shampoo Energy Power",
+   "size": "300 ml",
+   "eans": [
+    {
+     "value": "4305615633428",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 0.65,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/565/MAM_56579592/MAM_56579592_SHOP_IMAGE_2.3.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-isana-men-shampoo-energy-effect/p/4305615633428"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Bei Bedarf die Anwendung wiederholen. Für die tägliche Anwendung geeignet.",
+   "protocol_source_url": "https://www.rossmann.de/de/pflege-und-duft-isana-men-shampoo-energy-effect/p/4305615633428",
+   "protocol_deviation": {
+    "reason": "Die exakte Produktanweisung verlangt eine nicht numerisch bestimmte Einwirkzeit; die Standardvorlage bleibt sonst unverändert.",
+    "packaging_text": "Sanft ins feuchte Haar einmassieren, kurz einwirken lassen und sorgfältig ausspülen. Bei Bedarf die Anwendung wiederholen. Für die tägliche Anwendung geeignet."
+   },
+   "protocol_deviation_kind": "non_numeric_wait",
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-isana-men-shampoo-energy-effect/p/4305615633428",
+    "https://allegro.pl/produkt/isana-men-energy-power-szampon-kofeina-keratyna-7bb9abb8-31ff-4fbe-9ceb-700e88588c73?fromInactiveOffer=archived"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": true,
+   "inci_location": "draft-manifest authority_facts (classification-derived file; text is source INCI)",
+   "claims": [
+    "Energy Power mit leistungsstarker Pflegeformel für feines & energieloses Haar."
+   ],
+   "flags": [
+    {
+     "kind": "decision",
+     "text": "Name correction: frozen selection said 'Energy Effect', current exact-EAN pack/PDP says 'Energy Power' (admin snapshot already uses Energy Power)."
+    },
+    {
+     "kind": "decision",
+     "text": "Recorded deviation is NON-numeric 'kurz einwirken lassen' - same ruling confirmation as above."
+    },
+    {
+     "kind": "medical",
+     "text": "Caffeine/keratin 'energy' language: cosmetic only (low)."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": true,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 91,
+   "cell": "C2"
+  },
+  {
+   "id": "b03-i00",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+   "source_product_index": 0,
+   "slug": "plantur-dmg-clinical",
+   "brand": "Dr. Wolff Plantur",
+   "name": "DMG Clinical Shampoo",
+   "size": "250 ml",
+   "eans": [
+    {
+     "value": "4008666770004",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 19.95,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_4000,w_4000/v1755036815/assets/pas/images/2389094d-844e-4fd1-aea6-8adf2c460d1a/plantur-shampoo-dmg-clinical",
+    "source_page": "https://www.dm.de/p/d/3098879/plantur-shampoo-dmg-clinical"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "2 Minuten einwirken lassen • Bei jeder Haarwäsche verwenden • Für optimale Ergebnisse dauerhaft anwenden",
+   "protocol_source_url": "https://www.dm.de/p/d/3098879/plantur-shampoo-dmg-clinical",
+   "protocol_deviation": {
+    "reason": "Die Packungsanweisung schreibt eine konkrete zweiminütige Einwirkzeit vor; das STD-Template hat keine Wartezeit.",
+    "packaging_text": "2 Minuten einwirken lassen"
+   },
+   "protocol_deviation_kind": "numeric_contact_time",
+   "source_urls": [
+    "https://www.dm.de/p/d/3098879/plantur-shampoo-dmg-clinical",
+    "https://www.rossmann.de/de/pflege-und-duft-dr-wolff-plantur-dmg-clinical-shampoo/p/4008666770004",
+    "https://www.plantur39.com/de-de/kaufen"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "medical",
+     "text": "'Clinical'/root marketing is medically adjacent (hair-loss-adjacent); keep cosmetic, flag in notes."
+    },
+    {
+     "kind": "info",
+     "text": "Genuine numeric deviation: '2 Minuten einwirken lassen'. Highest price in set (19.95 EUR). Image was 'recovered' product-only dm asset (notes-03)."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": true,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 73,
+   "cell": "C2"
+  },
+  {
+   "id": "b03-i07",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+   "source_product_index": 7,
+   "slug": "bali-gents-coffein-activator",
+   "brand": "Bali Gents",
+   "name": "Coffein Activator Shampoo",
+   "size": "200 ml",
+   "eans": [
+    {
+     "value": "4262391993507",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 6.99,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/569/MAM_56919406/MAM_56919406_SHOP_IMAGE_1.4.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=85&width=1200",
+    "source_page": "https://www.galaxus.ch/de/s6/product/bali-gents-coffein-activator-shampoo-fluessiges-shampoo-shampoo-71758537"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Beim Waschen auf die Kopfhaut einmassieren und für 2 Minuten einwirken lassen. Dann ausspülen.",
+   "protocol_source_url": "https://www.galaxus.ch/de/s6/product/bali-gents-coffein-activator-shampoo-fluessiges-shampoo-shampoo-71758537",
+   "protocol_deviation": {
+    "reason": "Die Packungsanweisung nennt 2 Minuten Einwirkzeit; Koffein-/Wurzelmarketing ist keine scalp-condition für das TARGETED-Template.",
+    "packaging_text": "für 2 Minuten einwirken lassen"
+   },
+   "protocol_deviation_kind": "numeric_contact_time",
+   "source_urls": [
+    "https://www.galaxus.ch/de/s6/product/bali-gents-coffein-activator-shampoo-fluessiges-shampoo-shampoo-71758537",
+    "https://www.ohfeliz.com/bali-curls/bali-gents-coffein-activator-shampoo",
+    "https://www.rossmann.de/de/pflege-und-duft-bali-gents-coffein-activator-shampoo/p/4262391993507"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "medical",
+     "text": "Caffeine/AnaGain/root language: cosmetic only, not a scalp-condition claim."
+    },
+    {
+     "kind": "info",
+     "text": "Genuine numeric deviation: '2 Minuten einwirken lassen'."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": true,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 73,
+   "cell": "C2"
+  },
+  {
+   "id": "b03-i12",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+   "source_product_index": 12,
+   "slug": "plantur-21-nutri-coffein",
+   "brand": "Plantur 21",
+   "name": "Nutri-Coffein Shampoo #langehaare",
+   "size": "200 ml",
+   "eans": [
+    {
+     "value": "4008666755520",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 7.95,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1752477804/assets/pas/images/f586dcab-4166-4833-a5e7-b0ed983a1e97/plantur-21-shampoo-nutri-coffein-langehaare",
+    "source_page": "https://www.dm.de/p/d/1605610/plantur-21-shampoo-nutri-coffein-langehaare"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Plantur 21 mit seinem Nutri-Coffein-Complex bei jeder Haarwäsche anwenden. Und Achtung: mindestens 2 Minuten einwirken lassen.",
+   "protocol_source_url": "https://www.dm.de/p/d/1605610/plantur-21-shampoo-nutri-coffein-langehaare",
+   "protocol_deviation": {
+    "reason": "Die exakte Anweisung schreibt mindestens 2 Minuten Kontaktzeit vor; Koffein-/Wurzelmarketing ist keine scalp-condition für das TARGETED-Template.",
+    "packaging_text": "mindestens 2 Minuten einwirken lassen"
+   },
+   "protocol_deviation_kind": "numeric_contact_time",
+   "source_urls": [
+    "https://www.dm.de/p/d/1605610/plantur-21-shampoo-nutri-coffein-langehaare",
+    "https://www.rossmann.de/de/pflege-und-duft-dr-wolff-plantur-21-nutri-coffein-shampoo/p/4008666755520"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "medical",
+     "text": "Caffeine/root language: cosmetic only."
+    },
+    {
+     "kind": "info",
+     "text": "Genuine numeric deviation: 'mindestens 2 Minuten einwirken lassen'."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": true,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 72,
+   "cell": "C2"
+  },
+  {
+   "id": "b02-i04",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-02.json",
+   "source_product_index": 4,
+   "slug": "elvital-color-glanz",
+   "brand": "L’Oréal Paris Elvital",
+   "name": "Color Glanz Pflege Farbschutz Shampoo",
+   "size": "400 ml",
+   "eans": [
+    {
+     "value": "3600524137731",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 4.79,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/160/MAM_16016834/MAM_16016834_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=90&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-color-glanz-pflege-farbschutz-shampoo/p/3600524137731"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Die Pflegeroutine mit der Elvital Color Glanz Intensivkur vervollständigen.",
+   "protocol_source_url": "https://www.loreal-paris.de/elvital/color-glanz/pflege-shampoo-400ml",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.loreal-paris.de/elvital/color-glanz/pflege-shampoo-400ml",
+    "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-color-glanz-pflege-farbschutz-shampoo/p/3600524137731",
+    "https://www.dm.de/p/d/1458657/l-oreal-paris-elvital-shampoo-color-glanz"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": true,
+   "inci_location": "admin-evidence (batch-02 product.formula.inci)",
+   "claims": [
+    "Vitamin Cg + UVB filter; preserves color shine until the next coloration and protects from urban environmental damage."
+   ],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "Exact 400 ml formula differs from the 1000 ml formula/GTIN; never merge. Directions are generic-rinse-out policy ('guessed-conservative' protocol confidence, notes-02)."
+    }
+   ],
+   "missing_for_research_start": [],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "ready",
+   "readiness_score": 98,
+   "cell": "C4"
+  },
+  {
+   "id": "b01-i12",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-01.json",
+   "source_product_index": 12,
+   "slug": "elvital-dream-length",
+   "brand": "L'Oréal Paris Elvital",
+   "name": "Dream Length Super Aufbau Shampoo",
+   "size": "1000 ml",
+   "eans": [
+    {
+     "value": "3600524062637",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 9.95,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_2400%2Cw_2400/v1747569458/assets/pas/images/aa051a64-3d20-4054-ba15-f405764a3944/l-oreal-paris-elvital-shampoo-dream-length",
+    "source_page": "https://www.dm.de/p/d/1458658/l-oreal-paris-elvital-shampoo-dream-length"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Auf das nasse Haar auftragen, sanft einmassieren und anschließend gründlich ausspülen.",
+   "protocol_source_url": "https://www.loreal-paris.de/elvital/dream-length/super-aufbau-shampoo-1000ml",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.dm.de/p/d/1458658/l-oreal-paris-elvital-shampoo-dream-length",
+    "https://www.loreal-paris.de/elvital/dream-length/super-aufbau-shampoo-1000ml",
+    "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-dream-length-super-aufbau-shampoo/p/3600524062637"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "1000 ml pack only; no 300 ml alias (notes-01)."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 73,
+   "cell": "C4"
+  },
+  {
+   "id": "b03-i08",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+   "source_product_index": 8,
+   "slug": "gliss-full-hair-magic",
+   "brand": "Schwarzkopf Gliss",
+   "name": "Full Hair Magic Fülle-Shampoo",
+   "size": "250 ml",
+   "eans": [
+    {
+     "value": "4015100861723",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 2.99,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/156/MAM_15663505/MAM_15663505_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&fit=bounds&format=webply&height=1200&quality=85&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-gliss-full-hair-magic-fuelle-shampoo/p/4015100861723"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden.",
+   "protocol_source_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-full-hair-magic-fuelle-shampoo/p/4015100861723",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-gliss-full-hair-magic-fuelle-shampoo/p/4015100861723",
+    "https://www.budni.de/sortiment/produkte/6536528005",
+    "https://www.schwarzkopf.de/marken/haarpflege/gliss/full-hair-magic/fuelle-shampoo.html"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "Minor late-formula difference visible between sources (notes-03)."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 73,
+   "cell": "C4"
+  },
+  {
+   "id": "b01-i14",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-01.json",
+   "source_product_index": 14,
+   "slug": "pantene-repair-care-xxl",
+   "brand": "Pantene Pro-V",
+   "name": "Repair & Care XXL Shampoo",
+   "size": "500 ml",
+   "eans": [
+    {
+     "value": "8700216422413",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 5.95,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_2800,w_2800/v1747529817/assets/pas/images/31c7c870-f44c-40f8-abed-6e61a2959807/pantene-pro-v-shampoo-repair-und-care-xxl",
+    "source_page": "https://www.dm.de/p/d/1561837/pantene-pro-v-shampoo-repair-und-care-xxl"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen.",
+   "protocol_source_url": "https://www.dm.de/p/d/1561837/pantene-pro-v-shampoo-repair-und-care-xxl",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.dm.de/p/d/1561837/pantene-pro-v-shampoo-repair-und-care-xxl",
+    "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-haarshampoo-repair-care/p/8700216422413"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "500 ml frozen; never infer 1000/300 ml aliases. EAN corroborated by dm DE+AT and Rossmann exact-EAN (notes-01)."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 72,
+   "cell": "C4"
+  },
+  {
+   "id": "b03-i03",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+   "source_product_index": 3,
+   "slug": "being-bye-bye-anti-frizz",
+   "brand": "Being",
+   "name": "Bye Bye Anti-Frizz Shampoo",
+   "size": "354 ml",
+   "eans": [
+    {
+     "value": "4895248005889",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 6.79,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://beinghaircare.com/wp-content/uploads/2024/06/BYE-BYE-FRIZZ-SHAMPOO-CAROUSEL-4.jpg",
+    "source_page": "https://beinghaircare.com/es/product/bye-bye-frizz-smoothing-shampoo/"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Apply to wet hair, lather and rinse well.",
+   "protocol_source_url": "https://beinghaircare.com/es/product/bye-bye-frizz-smoothing-shampoo/",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://beinghaircare.com/es/product/bye-bye-frizz-smoothing-shampoo/",
+    "https://www.auchan.fr/being-bye-bye-frizz-shampoing-lissant-huile-de-jojoba-et-amande/pr-C1845912",
+    "https://www.rossmann.de/de/pflege-und-duft-being-bye-bye-anti-frizz-shampoo/p/4895248005889",
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "source_url_count": 4,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "Formula from Being ES page; candidate image is a brand-site 'CAROUSEL' JPG - re-check product-only/front-facing bar (notes-03; inferred risk)."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 74,
+   "cell": "C7"
+  },
+  {
+   "id": "b03-i04",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+   "source_product_index": 4,
+   "slug": "being-curl-power",
+   "brand": "Being",
+   "name": "Curl Power Locken Shampoo",
+   "size": "354 ml",
+   "eans": [
+    {
+     "value": "4895248005896",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 6.79,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/174/MAM_17492646/MAM_17492646_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=85&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-shampoo/p/4895248005896"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Apply to wet hair, lather and rinse well.",
+   "protocol_source_url": "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-shampoo/p/4895248005896",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-being-curl-power-locken-shampoo/p/4895248005896",
+    "https://www.dm.de/p/d/3118561/being-shampoo-curl-power",
+    "https://beinghaircare.com/product/curl-power-curl-defining-shampoo/",
+    "https://www.rossmann.de/de/alle-marken/being/c/online-dachmarke_17485181"
+   ],
+   "source_url_count": 4,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "Formula from Being brand page (non-DE manufacturer)."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 74,
+   "cell": "C7"
+  },
+  {
+   "id": "b04-i07",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-04.json",
+   "source_product_index": 7,
+   "slug": "aussie-bouncy-curls",
+   "brand": "AUSSIE",
+   "name": "Shampoo Bouncy Curls",
+   "size": "300 ml",
+   "eans": [
+    {
+     "value": "8006530325530",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 4.95,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_2800%2Cw_2800/v1778026207/assets/pas/images/180d7727-7157-427e-880a-178a61653209/aussie-shampoo-bouncy-curls",
+    "source_page": "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Schritt 1: Haare anfeuchten, einmassieren und ausspülen",
+   "protocol_source_url": "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.dm.de/p/d/3135993/aussie-shampoo-bouncy-curls",
+    "https://www.for-me-online.de/teilnahmebedingungen-aktion/aussie-shampoo-50prozent"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [
+    "Für lockiges Haar; curl/moisture marketing bleibt ohne zusätzliche shipped focus enum."
+   ],
+   "flags": [
+    {
+     "kind": "info",
+     "text": "EAN corroborated by official P&G/for-me record that labels it 'Aussie Shampoo Curls'; GTIN is the identity bridge (receipt.json ean_recoveries)."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 72,
+   "cell": "C7"
+  },
+  {
+   "id": "b03-i05",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+   "source_product_index": 5,
+   "slug": "being-nourish-shine-daily-clean",
+   "brand": "Being",
+   "name": "NOURISH + SHINE Daily Clean Shampoo",
+   "size": "354 ml",
+   "eans": [
+    {
+     "value": "4895248005865",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 7.95,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://beinghaircare.com/wp-content/uploads/2024/06/NOURISH-SHINE-SHAMPOO-CAROUSEL-4.jpg",
+    "source_page": "https://beinghaircare.com/product/nourish-shine-daily-clean-shampoo/"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Apply to wet hair, lather and rinse well.",
+   "protocol_source_url": "https://beinghaircare.com/product/nourish-shine-daily-clean-shampoo/",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://beinghaircare.com/product/nourish-shine-daily-clean-shampoo/",
+    "https://www.apotea.se/being-shampoo-nourish-shine-354ml",
+    "https://www.hagel-shop.de/being-nourish-shine-shampoo-354-ml-12133561.html"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "source_gap",
+     "text": "Formula authority provisional: global-English formula + minor later-order difference; identity/EAN confidence 'inferred' in notes-03."
+    },
+    {
+     "kind": "info",
+     "text": "Candidate image is a brand-site JPG; re-check product-only bar (inferred risk)."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)",
+    "Formula authority provisional: global-English formula + minor later-order difference; identity/EAN confidence 'inferred' in notes-03."
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 65,
+   "cell": "C7"
+  },
+  {
+   "id": "b03-i13",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+   "source_product_index": 13,
+   "slug": "fructis-keratin-sleek",
+   "brand": "Garnier Fructis",
+   "name": "Keratin Sleek Shampoo",
+   "size": "200 ml",
+   "eans": [
+    {
+     "value": "3600542638777",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 3.95,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.garnier.de/-/media/project/loreal/brand-sites/garnier/emea/de/de-de/prd-haarpflege/haarpflege_fructis/keratin-sleek/shampoo/241213_garnier_keratin-sleek_sh_pack.png?rev=f67858d6b60643a6ade9cbea86617fae",
+    "source_page": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/shampoo"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Das Shampoo in die Handflächen geben und anschließend auf das angefeuchtete Haar auftragen. Dort mithilfe der Fingerspitzen an der Kopfhaut sanft einmassieren und damit zum Aufschäumen bringen. Anschließend gründlich unter klarem Wasser ausspülen.",
+   "protocol_source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/shampoo",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/keratin-sleek/shampoo",
+    "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-keratin-sleek-shampoo/p/3600542638777",
+    "https://www.dm.de/p/d/3042319/garnier-fructis-shampoo-keratin-sleek"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 73,
+   "cell": "C8"
+  },
+  {
+   "id": "b04-i05",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-04.json",
+   "source_product_index": 5,
+   "slug": "wahre-schaetze-kokosmilch-macadamia",
+   "brand": "Garnier Wahre Schätze",
+   "name": "Shampoo Kokosmilch & Macadamia Normales & Trockenes Haar",
+   "size": "250 ml",
+   "eans": [
+    {
+     "value": "3600542462402",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 2.49,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://www.rossmann.de/media-neu/899/MAM_8998657/MAM_8998657_SHOP_IMAGE_2.0.png?auto=webp&canvas=1200%2C1200&dpr=1&fit=bounds&format=webply&height=1200&quality=85&width=1200",
+    "source_page": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462402"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Für gesund aussehendes, strahlend schönes Haar das Garnier Wahre Schätze Shampoo Kokosmilch & Macadamia sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen.",
+   "protocol_source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462402",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-kokosmilch-und-macadamia-normales-und-trockenes-haar/p/3600542462402",
+    "https://www.budni.de/sortiment/produkte/5399571009"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [
+    "Für normales und trockenes Haar; Kokosmilch & Macadamia; das Haar wird seidig glänzend."
+   ],
+   "flags": [],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 72,
+   "cell": "C8"
+  },
+  {
+   "id": "b03-i10",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+   "source_product_index": 10,
+   "slug": "schauma-for-men",
+   "brand": "schauma",
+   "name": "Shampoo For Men",
+   "size": "400 ml",
+   "eans": [
+    {
+     "value": "4015100890792",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 1.95,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1781187820/assets/pas/images/0c78d631-45b7-4197-9c74-e364fda710d5/schauma-shampoo-for-men",
+    "source_page": "https://www.dm.de/p/d/1588723/schauma-shampoo-for-men"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen.",
+   "protocol_source_url": "https://www.dm.de/p/d/1588723/schauma-shampoo-for-men",
+   "protocol_deviation": {
+    "reason": "Die Quelle enthält eine Warteanweisung ohne Dauer; das STD-Template enthält keinen Wait-Schritt.",
+    "packaging_text": "kurz einwirken lassen"
+   },
+   "protocol_deviation_kind": "non_numeric_wait",
+   "source_urls": [
+    "https://www.dm.de/p/d/1588723/schauma-shampoo-for-men",
+    "https://www.rossmann.de/de/pflege-und-duft-schauma-shampoo-for-men/p/4015100890792"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "decision",
+     "text": "Draft recorded a deviation for NON-numeric 'kurz einwirken lassen'; Nick's 2026-09-04 ruling treats that as ordinary STD (plan: remainder not reopened) - needs confirmation."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 69,
+   "cell": "C8"
+  },
+  {
+   "id": "b01-i13",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-01.json",
+   "source_product_index": 13,
+   "slug": "herbal-essences-bluetensanft",
+   "brand": "Herbal Essences",
+   "name": "Blütensanft Rosenduft Shampoo",
+   "size": "350 ml",
+   "eans": [
+    {
+     "value": "8700216212748",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 3.95,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://products.dm-static.com/images/f_auto%2Cq_auto%2Cc_fit%2Ch_2400%2Cw_2400/v1754985082/assets/pas/images/95a07fc6-e0eb-4aa7-b969-a9dd0ddc6ce0/herbal-essences-shampoo-bluetensanft-rosenduft",
+    "source_page": "https://www.dm.de/p/d/1409611/herbal-essences-shampoo-bluetensanft-rosenduft"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Großzügig auf das nasse Haar auftragen, aufschäumen und gründlich ausspülen.",
+   "protocol_source_url": "https://www.dm.de/p/d/1409611/herbal-essences-shampoo-bluetensanft-rosenduft",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.dm.de/p/d/1409611/herbal-essences-shampoo-bluetensanft-rosenduft",
+    "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-bluetensanft/p/8700216212748",
+    "https://www.shop-apotheke.com/beauty/CH01124495/herbal-essences-rosenwasser-shampoo.htm"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "source_gap",
+     "text": "Exact-EAN formula conflict between dm DE and Shop Apotheke; dm DE formula selected; draft specs were 'guessed-conservative' (notes-01)."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)",
+    "Exact-EAN formula conflict between dm DE and Shop Apotheke; dm DE formula selected; draft specs were 'guessed-conservative' (notes-01)."
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "partial",
+   "readiness_score": 65,
+   "cell": "C8"
+  },
+  {
+   "id": "b01-i04",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-01.json",
+   "source_product_index": 4,
+   "slug": "fructis-coco-water",
+   "brand": "Garnier Fructis",
+   "name": "Shampoo Coco Water, fettiger Ansatz & trockene Spitzen",
+   "size": "400 ml",
+   "eans": [
+    {
+     "value": "3600541970533",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 3.45,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_2800,w_2800/v1774993493/assets/pas/images/dbaf1f61-81b2-48dd-8059-4ecf3214fc03/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen",
+    "source_page": "https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Garnier Fructis Coco Water Kräftigendes Shampoo auf das nasse Haar auftragen und sanft auf der gesamten Kopfhaut einmassieren. Anschließend gründlich ausspülen.",
+   "protocol_source_url": "https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.dm.de/p/d/1516737/garnier-fructis-shampoo-coco-water-fettiger-ansatz-und-trockene-spitzen",
+    "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-coco-water-klaerendes-shampoo/p/3600541970533",
+    "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/coco-water/kraeftigendes-shampoo"
+   ],
+   "source_url_count": 3,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "blocker",
+     "text": "Material formula conflict: dm exact-GTIN formula vs Garnier manufacturer formula disagree; wave-02/blocked-products.json status material_formula_conflict. Needs exact-pack manufacturer asset or independent exact-GTIN corroboration (or a physical pack read)."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "none (no brand+name or EAN match in prod snapshot 2026-10-05; see inventory.md for near-name siblings)",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "blocked",
+   "readiness_score": null,
+   "cell": "held"
+  },
+  {
+   "id": "b03-i11",
+   "admin_batch": "plans/scan-db-expansion/research/shampoo-v14/admin/batch-03.json",
+   "source_product_index": 11,
+   "slug": "pantene-grow-abundant",
+   "brand": "Pantene Pro-V",
+   "name": "Grow Abundant Shampoo Anti-Haarverlust",
+   "size": "290 ml",
+   "eans": [
+    {
+     "value": "8006530060042",
+     "cross_source_verified": true,
+     "excluded_from_apply": false,
+     "source_count": 2
+    }
+   ],
+   "eans_all_cross_source_verified": true,
+   "price_eur": 7.95,
+   "price_present": true,
+   "candidate_image": {
+    "present": true,
+    "url": "https://products.dm-static.com/images/f_auto,q_auto,c_fit,h_1200,w_1200/v1770334746/assets/pas/images/ccc7901e-c5d8-4e37-b31a-d2ad0bc75cd3/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+    "source_page": "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust"
+   },
+   "image_present": true,
+   "protocol_template": "TPL-SHAMPOO-STD",
+   "protocol_usage_text": "Ins nasse Haar einmassieren. Ausspülen.",
+   "protocol_source_url": "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+   "protocol_deviation": null,
+   "protocol_deviation_kind": null,
+   "source_urls": [
+    "https://www.dm.de/p/d/3115706/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust",
+    "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-haarshampoo-grow-abundant-anti-haarverlust/p/8006530060042"
+   ],
+   "source_url_count": 2,
+   "inci_on_file": false,
+   "inci_location": "none",
+   "claims": [],
+   "flags": [
+    {
+     "kind": "duplicate",
+     "text": "ALREADY IN CATALOG as 'Pantene Grow Abundance' (prod id 7373656d-5fd7-46e8-81a3-2ef29e3c4c18, cohort C50, rec=true). Identical EAN 8006530060042 / 290 ml sits in data/scanner-catalog-coverage/2026-08-26/phase1-existing-identifier-backfill-e5-v1.json for that exact product id. Must NOT be created as new; at most an existing_product_updates no-op."
+    }
+   ],
+   "missing_for_research_start": [
+    "INCI text not stored in repo (re-freeze from live source required)"
+   ],
+   "live_catalog_overlap": "DUPLICATE: prod 7373656d-5fd7-46e8-81a3-2ef29e3c4c18 Pantene Grow Abundance",
+   "medical_language_flag": false,
+   "calibration_holdout_overlap": false,
+   "readiness_bucket": "duplicate",
+   "readiness_score": null,
+   "cell": "none (duplicate)"
+  }
+ ],
+ "ancillary_existing_product_updates": [
+  {
+   "product_id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+   "action": "rename 'Ultimate Shampoo' -> 'Elvital Glycolic Gloss Shampoo'",
+   "source": "admin/batch-01.json existing_product_updates",
+   "status_in_prod_snapshot_2026_10_05": "NOT applied: prod snapshot still shows name 'Ultimate Shampoo' (fact)."
+  },
+  {
+   "product_id": "05753f93-907f-427d-a4dc-0a690ff3a76d",
+   "action": "add EAN 4015100893007 to existing deep-cleansing product Gliss Scalp Balance Tiefenreinigung",
+   "source": "admin/batch-03.json existing_product_updates",
+   "status_in_prod_snapshot_2026_10_05": "Unknown: product not in the shampoo-specs snapshot (no product_shampoo_specs rows); verify in prod before including."
+  }
+ ]
+}
