@@ -1,0 +1,14 @@
+{
+  "scope": "Bounded read-only21offer SQL review",
+  "model": "claude-opus-4-8",
+  "effort": "high",
+  "timeout_seconds": 180,
+  "result": "timeout_without_verdict",
+  "approval_claimed": false,
+  "api_key_billing_configured": false,
+  "review_output": "Transient output remains outside repository; no completed findings available",
+  "sql_sha256": {
+    "approved-dry-run.sql": "5ccc9e7cfba9e220e56fb51ce8abafb8ac2026e44cf6cde876df256d87491ac8",
+    "approved-apply.sql": "7df1a216f3b170b0a03e233673c2ad3c0099aaa0bce55b2cf6770bab8ed3cf86"
+  }
+}

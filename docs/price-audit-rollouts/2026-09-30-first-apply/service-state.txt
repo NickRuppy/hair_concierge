@@ -1,0 +1,9 @@
+TimeoutStartUSec=3h
+ExecStart={ path=/usr/local/bin/npm ; argv[]=/usr/local/bin/npm run price-audit -- --apply --llm-budget 100 ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+MemoryMax=1073741824
+EnvironmentFiles=/opt/chaarlie/price-audit/shared/worker.env (ignore_errors=no)
+UMask=0027
+WorkingDirectory=/opt/chaarlie/price-audit/current
+Nice=10
+User=nick
+Group=nick

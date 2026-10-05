@@ -27,6 +27,12 @@ export function adaptReviewedProductApplicationPointersV2(
       const parsed = productApplicationPointerV2Schema.safeParse(row.guidance_payload_v2)
       if (!parsed.success) return []
       const pointer = parsed.data
+      if (
+        pointer.workflowId === "bondbuilder_verified_product" &&
+        (!row.source_text?.trim() ||
+          !pointer.evidence.some((source) => source.sourceUrl === row.source_url))
+      )
+        return []
       return pointer.scope.productId === row.product_id &&
         pointer.scope.category === row.category &&
         pointer.sourceRole === row.role
@@ -49,6 +55,14 @@ export function adaptReviewedProductApplicationProtocols(
     const canonical = applicationGuidanceProtocolSchema.safeParse(row.guidance_payload)
     if (canonical.success) {
       const payload = canonical.data
+      if (
+        payload.protocolFacts.workflowId === "bondbuilder_verified_product" &&
+        (row.role !== "specialized_bond_treatment" ||
+          payload.role !== "bond_repair" ||
+          !row.source_text?.trim() ||
+          !payload.evidence.some((source) => source.sourceUrl === row.source_url))
+      )
+        continue
       if (
         payload.scope.kind === "product" &&
         payload.scope.productId === row.product_id &&

@@ -1,0 +1,1783 @@
+{
+  "snapshot_at": "2026-10-02T14:26:08.770Z",
+  "products": [
+    {
+      "id": "375ee7a0-3262-4b99-8e48-4f327c6e09aa",
+      "name": "Shampoo Tiefenreinigung",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4070765001020",
+          "canonical_gtin14": "04070765001020"
+        }
+      ],
+      "price_eur": 1.25,
+      "category_key": "deep_cleansing_shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/1536339/balea-professional-shampoo-tiefenreinigung",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-07-03T00:00:00+00:00"
+    },
+    {
+      "id": "05753f93-907f-427d-a4dc-0a690ff3a76d",
+      "name": "Tiefenreinigungs-Shampoo",
+      "brand": "Gliss",
+      "gtins": [
+        {
+          "value": "4015100893007",
+          "canonical_gtin14": "04015100893007"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "deep_cleansing_shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/3119217/schwarzkopf-gliss-shampoo-scalp-balance-tiefenreinigung",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-07-03T00:00:00+00:00"
+    },
+    {
+      "id": "ae0e9d21-1e16-4c03-9792-773dbdc2fd18",
+      "name": "Professional Shampoo Tiefenreinigung",
+      "brand": "ISANA",
+      "gtins": [
+        {
+          "value": "4068134135490",
+          "canonical_gtin14": "04068134135490"
+        }
+      ],
+      "price_eur": 1.29,
+      "category_key": "deep_cleansing_shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-shampoo-tiefenreinigung/p/4068134135490",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-07-03T00:00:00+00:00"
+    },
+    {
+      "id": "07895098-a301-4137-b5c6-9061589b1800",
+      "name": "Deep Cleansing Shampoo",
+      "brand": "NEQI",
+      "gtins": [
+        {
+          "value": "4063528103192",
+          "canonical_gtin14": "04063528103192"
+        }
+      ],
+      "price_eur": 11.95,
+      "category_key": "deep_cleansing_shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-neqi-deep-cleansing-shampoo/p/4063528103192",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-07-03T00:00:00+00:00"
+    },
+    {
+      "id": "898a5a1e-1cf1-4812-8f9e-f14563a740ca",
+      "name": "Tiefenreinigung Shampoo",
+      "brand": "Swiss-O-Par",
+      "gtins": [
+        {
+          "value": "4104260073500",
+          "canonical_gtin14": "04104260073500"
+        }
+      ],
+      "price_eur": 2.45,
+      "category_key": "deep_cleansing_shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/2555198/swiss-o-par-shampoo-tiefenreinigung",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-07-03T00:00:00+00:00"
+    },
+    {
+      "id": "41e09958-5a1f-4997-b99b-f8384b7a8c0c",
+      "name": "Trockenshampoo Kopfhaut Sensitive",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4066447438789",
+          "canonical_gtin14": "04066447438789"
+        },
+        {
+          "value": "4067796171334",
+          "canonical_gtin14": "04067796171334"
+        }
+      ],
+      "price_eur": 1.95,
+      "category_key": "dry_shampoo",
+      "affiliate_link": "https://www.dm.de/balea-trockenshampoo-kopfhaut-sensitive-p4066447438789.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+      "name": "Trockenshampoo Schaum Kopfhaut Sensitive",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4067796069556",
+          "canonical_gtin14": "04067796069556"
+        }
+      ],
+      "price_eur": 1.45,
+      "category_key": "dry_shampoo",
+      "affiliate_link": "https://www.dm.de/balea-trockenshampoo-schaum-kopfhaut-sensitive-p4067796069556.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:47:17.299+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "ff309c8a-ecd5-415c-9016-1b726c9fb3a4",
+      "name": "Trockenshampoo Blond",
+      "brand": "Batiste",
+      "gtins": [
+        {
+          "value": "5010724527467",
+          "canonical_gtin14": "05010724527467"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "dry_shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/1435894/batiste-trockenshampoo-blond",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:36:05.343+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "d28643c8-c340-4514-826a-6c1ac8419fe9",
+      "name": "Trockenshampoo Bruenett",
+      "brand": "Batiste",
+      "gtins": [
+        {
+          "value": "5010724527474",
+          "canonical_gtin14": "05010724527474"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "dry_shampoo",
+      "affiliate_link": "https://www.dm.de/batiste-trockenshampoo-bruenett-p5010724527474.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:32:09.9+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "6a1116a0-731f-46bb-9dd6-a0db89de5a13",
+      "name": "Trockenshampoo dunkel",
+      "brand": "Batiste",
+      "gtins": [
+        {
+          "value": "5010724527443",
+          "canonical_gtin14": "05010724527443"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "dry_shampoo",
+      "affiliate_link": "https://www.dm.de/batiste-trockenshampoo-dunkel-p5010724527443.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:28:02.497+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "786a1396-914e-4739-a32c-1c3ead39a3d1",
+      "name": "Trockenshampoo Original",
+      "brand": "Batiste",
+      "gtins": [
+        {
+          "value": "5010724527481",
+          "canonical_gtin14": "05010724527481"
+        }
+      ],
+      "price_eur": 3.75,
+      "category_key": "dry_shampoo",
+      "affiliate_link": "https://www.dm.de/batiste-trockenshampoo-original-p5010724527481.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "57ec7a8e-aa1b-4260-81d6-7ec3dbc899b8",
+      "name": "Trockenshampoo Sensible Kopfhaut",
+      "brand": "Batiste",
+      "gtins": [
+        {
+          "value": "5010724003824",
+          "canonical_gtin14": "05010724003824"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "dry_shampoo",
+      "affiliate_link": "https://www.dm.de/batiste-trockenshampoo-sensible-kopfhaut-leichter-duft-p5010724004777.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:27:47.664+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "2b2161a2-6c09-435f-adbb-49da44d434ae",
+      "name": "Trockenshampoo Extra Volumen",
+      "brand": "got2b",
+      "gtins": [
+        {
+          "value": "4015100800227",
+          "canonical_gtin14": "04015100800227"
+        }
+      ],
+      "price_eur": 3.99,
+      "category_key": "dry_shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-got2b-trockenshampoo-trocken-waesche-extra-volumen/p/4015100800227",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:22:16.066+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-09T00:00:00+00:00"
+    },
+    {
+      "id": "dc8b8d4a-8ca9-452c-8d04-03b785b63275",
+      "name": "Trockenshampoo Liquid to Dry",
+      "brand": "got2b",
+      "gtins": [
+        {
+          "value": "4015100815788",
+          "canonical_gtin14": "04015100815788"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "dry_shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/2476987/got2b-trockenshampoo-liquid-to-dry",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:32:56.941+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "unavailable",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "b5b595d2-9ba3-4c99-8f99-b2b79d29eb56",
+      "name": "Trockenshampoo Jedes Haar",
+      "brand": "ISANA",
+      "gtins": [
+        {
+          "value": "4305615554532",
+          "canonical_gtin14": "04305615554532"
+        }
+      ],
+      "price_eur": 1.99,
+      "category_key": "dry_shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-trockenshampoo-jedes-haar/p/4305615554532",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:38:35.319+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "name": "Balea 2 in 1 Urea 5%",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4058172738272",
+          "canonical_gtin14": "04058172738272"
+        },
+        {
+          "value": "4066447591644",
+          "canonical_gtin14": "04066447591644"
+        },
+        {
+          "value": "4066447965414",
+          "canonical_gtin14": "04066447965414"
+        }
+      ],
+      "price_eur": 1.75,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/balea-med-duschgel-5-prozent-urea-2in1-dusche-shampoo-p4058172738272.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:09:20.072+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "ead1333b-6839-464d-b272-673d39bb95a4",
+      "name": "Balea Aqua Hyaluron",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4070765001648",
+          "canonical_gtin14": "04070765001648"
+        }
+      ],
+      "price_eur": 1.25,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/1675524/balea-professional-shampoo-aqua-hyaluron",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+      "name": "Balea Kopfhaut Sensitive Shampoo",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4070765001044",
+          "canonical_gtin14": "04070765001044"
+        }
+      ],
+      "price_eur": 1.25,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/1701109/balea-professional-shampoo-kopfhaut-sensitive",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "name": "Balea Professional Ultimate Volume",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4067796075021",
+          "canonical_gtin14": "04067796075021"
+        }
+      ],
+      "price_eur": 1.25,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/balea-professional-shampoo-ultimate-volume-p4067796075021.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+      "name": "Balea Tiefenreinigung",
+      "brand": "Balea",
+      "gtins": [],
+      "price_eur": 1.25,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/balea-professional-shampoo-tiefenreinigung-p4010355426239.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:59:25.096+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+      "name": "Balea Ultra Sensitive",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4066447966008",
+          "canonical_gtin14": "04066447966008"
+        }
+      ],
+      "price_eur": 1.75,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/balea-med-shampoo-ultra-sensitive-p4066447966008.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:09:07.909+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+      "name": "Balea Med Anti Schuppen",
+      "brand": "Balea Med",
+      "gtins": [
+        {
+          "value": "4066447785425",
+          "canonical_gtin14": "04066447785425"
+        },
+        {
+          "value": "4066447972528",
+          "canonical_gtin14": "04066447972528"
+        }
+      ],
+      "price_eur": 2.45,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/balea-med-shampoo-anti-schuppen-ultra-sensitive-p4066447785425.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+      "name": "Cantu Shampoo Locken Pflege",
+      "brand": "Cantu",
+      "gtins": [
+        {
+          "value": "810006945461",
+          "canonical_gtin14": "00810006945461"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/1675020/cantu-shampoo-cream-cleanse",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-10-01T08:53:41.89225+00:00",
+      "net_content_value": 400,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+      "name": "Dejan Garz Shampoo",
+      "brand": "Dejan Garz",
+      "gtins": [
+        {
+          "value": "4270004570106",
+          "canonical_gtin14": "04270004570106"
+        }
+      ],
+      "price_eur": 9.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/dejan-garz-shampoo-the-foundation-p4270004570106.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "744de604-d266-453b-a56b-eea92c5ca565",
+      "name": "Guhl Anti Schuppen",
+      "brand": "Guhl",
+      "gtins": [
+        {
+          "value": "4072600282205",
+          "canonical_gtin14": "04072600282205"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/guhl-shampoo-anti-schuppen-p4072600282205.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:06:25.843+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "name": "Guhl Frische und Leichtigkeit",
+      "brand": "Guhl",
+      "gtins": [
+        {
+          "value": "4072600282274",
+          "canonical_gtin14": "04072600282274"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/guhl-shampoo-frische-und-leichtigkeit-anti-fett-p4072600282274.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:10:22.85+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+      "name": "Guhl Hyaluron+",
+      "brand": "Guhl",
+      "gtins": [
+        {
+          "value": "4072600720219",
+          "canonical_gtin14": "04072600720219"
+        }
+      ],
+      "price_eur": 3.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/guhl-shampoo-hyaluron-pflege-p4072600720219.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+      "name": "Guhl Kopfhaut Sensitive",
+      "brand": "Guhl",
+      "gtins": [
+        {
+          "value": "4072600283172",
+          "canonical_gtin14": "04072600283172"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/guhl-shampoo-kopfhaut-sensitiv-p4072600283172.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:58:51.404+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+      "name": "Guhl Kraft & Fülle",
+      "brand": "Guhl",
+      "gtins": [
+        {
+          "value": "4072600703502",
+          "canonical_gtin14": "04072600703502"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/3043222/guhl-shampoo-kraft-und-fuelle",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:07:35.087+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "name": "Hair Biology Revitalize & Soothe",
+      "brand": "Hair Biology",
+      "gtins": [
+        {
+          "value": "8006540153963",
+          "canonical_gtin14": "08006540153963"
+        }
+      ],
+      "price_eur": 4.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+      "name": "Hask Curl Care Shampoo",
+      "brand": "Hask",
+      "gtins": [
+        {
+          "value": "071164304112",
+          "canonical_gtin14": "00071164304112"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/hask-shampoo-curl-care-p71164304112.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+      "name": "Hask Shampoo Argan Oil",
+      "brand": "Hask",
+      "gtins": [
+        {
+          "value": "071164343166",
+          "canonical_gtin14": "00071164343166"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/hask-shampoo-argan-oil-p71164343166.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+      "name": "Head & Shoulders Anti Schuppen Sensitive",
+      "brand": "Head & Shoulders",
+      "gtins": [
+        {
+          "value": "8006530222037",
+          "canonical_gtin14": "08006530222037"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/3115868/head-und-shoulders-shampoo-anti-schuppen-sensitive-kopfhaut",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:05:21.274+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+      "brand": "Head & Shoulders",
+      "gtins": [
+        {
+          "value": "8700216496032",
+          "canonical_gtin14": "08700216496032"
+        }
+      ],
+      "price_eur": 4.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-dermaxpro-haarshampoo-sensitive-pflege/p/8700216496032",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+      "name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+      "brand": "Head & Shoulders",
+      "gtins": [
+        {
+          "value": "8700216328661",
+          "canonical_gtin14": "08700216328661"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/1343250/head-und-shoulders-shampoo-derma-x-pro-beruhigende-pflege",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:59:03.958+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "name": "Langhaarmädchen Beautiful Curls Shampoo",
+      "brand": "Langhaarmädchen",
+      "gtins": [
+        {
+          "value": "4067796150735",
+          "canonical_gtin14": "04067796150735"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/langhaarmaedchen-shampoo-beautiful-curls-p4067796150735.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:59:37.066+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "name": "Langhaarmädchen Lovely Long",
+      "brand": "Langhaarmädchen",
+      "gtins": [
+        {
+          "value": "4067796002621",
+          "canonical_gtin14": "04067796002621"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/langhaarmaedchen-shampoo-lovely-long-p4067796002621.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "name": "Lavera Basis Sensitiv",
+      "brand": "Lavera",
+      "gtins": [
+        {
+          "value": "4021457666768",
+          "canonical_gtin14": "04021457666768"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/lavera-shampoo-basis-sensitiv-feuchtigkeit-und-pflege-p4021457655120.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:02:10.389+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+      "brand": "Monday Haircare",
+      "gtins": [
+        {
+          "value": "4897097266343",
+          "canonical_gtin14": "04897097266343"
+        }
+      ],
+      "price_eur": 5.4,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.flaconi.de/haare/monday-haircare/volume/monday-haircare-volume-kraft-and-fuelle-haarshampoo.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:36:33.748+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+      "name": "Neqi Moisture Mystery",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528078285",
+          "canonical_gtin14": "04063528078285"
+        }
+      ],
+      "price_eur": 8.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-neqi-moisture-mystery-shampoo/p/4063528078285",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:38:06.299+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+      "name": "Neqi Volume Victory",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528078377",
+          "canonical_gtin14": "04063528078377"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-neqi-volume-victory-shampoo/p/4063528078377",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "f033afbe-281a-419e-a245-3ad83d721bd0",
+      "name": "Nivea Shampoo&Conditioner 2in1",
+      "brand": "Nivea",
+      "gtins": [
+        {
+          "value": "4006000193991",
+          "canonical_gtin14": "04006000193991"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/nivea-shampoo-und-conditioner-express-2in1-p4006000193991.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:36:33.748+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+      "name": "Biotin & Collagen Shampoo",
+      "brand": "OGX",
+      "gtins": [
+        {
+          "value": "3574661800202",
+          "canonical_gtin14": "03574661800202"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/ogx-shampoo-thick-und-full-biotin-und-collagen-p3574661800202.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:02:21.861+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "name": "Keratin Oil Shampoo",
+      "brand": "OGX",
+      "gtins": [
+        {
+          "value": "3574661798448",
+          "canonical_gtin14": "03574661798448"
+        }
+      ],
+      "price_eur": 5.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/ogx-shampoo-strenght-und-lenght-keratin-oil-p3574661798448.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+      "name": "OGX Renewing + Argan Oil of Morocco Shampoo",
+      "brand": "OGX",
+      "gtins": [
+        {
+          "value": "022796976116",
+          "canonical_gtin14": "00022796976116"
+        },
+        {
+          "value": "3574661799438",
+          "canonical_gtin14": "03574661799438"
+        }
+      ],
+      "price_eur": 6.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-ogx-renewing-argan-oil-of-morocco-shampoo/p/3574661799438",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+      "name": "Rosemary Mint Shampoo",
+      "brand": "OGX",
+      "gtins": [
+        {
+          "value": "3574661805931",
+          "canonical_gtin14": "03574661805931"
+        }
+      ],
+      "price_eur": 7.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-ogx-rosemary-mint-shampoo/p/3574661805931",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "5effc311-25d7-44dd-8c16-b93c182068d3",
+      "name": "Pantene Anti Schuppen",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "8700216558037",
+          "canonical_gtin14": "08700216558037"
+        },
+        {
+          "value": "8700216558730",
+          "canonical_gtin14": "08700216558730"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/pantene-pro-v-shampoo-anti-schuppen-active-nutri-plex-p8700216558037.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:04:32.323+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+      "name": "Pantene Grow Abundance",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "8006530060042",
+          "canonical_gtin14": "08006530060042"
+        }
+      ],
+      "price_eur": 7.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/pantene-pro-v-shampoo-grow-abundant-anti-haarverlust-p8006530060042.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:06:14.627+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+      "name": "Pantene Hydra Glow Shampoo",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "8700216170345",
+          "canonical_gtin14": "08700216170345"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/pantene-pro-v-shampoo-miracles-hydra-glow-p8700216170345.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+      "name": "Pantene Pro-V Volumen Pur",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "8700216558471",
+          "canonical_gtin14": "08700216558471"
+        }
+      ],
+      "price_eur": 4.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/pantene-pro-v-shampoo-volumen-pur-p8700216885768.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+      "name": "Salthouse Anti Fett",
+      "brand": "Salthouse",
+      "gtins": [
+        {
+          "value": "4008890006467",
+          "canonical_gtin14": "04008890006467"
+        }
+      ],
+      "price_eur": 3.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-therapie-anti-fett-shampoo/p/4008890006467",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+      "name": "Salthouse Anti Juckreiz",
+      "brand": "Salthouse",
+      "gtins": [
+        {
+          "value": "4008890006405",
+          "canonical_gtin14": "04008890006405"
+        }
+      ],
+      "price_eur": 3.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-therapie-shampoo-anti-juckreiz/p/4008890006405",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+      "name": "Salthouse Anti Schuppen",
+      "brand": "Salthouse",
+      "gtins": [
+        {
+          "value": "4008890006429",
+          "canonical_gtin14": "04008890006429"
+        }
+      ],
+      "price_eur": 3.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-salthouse-totes-meer-mildes-anti-schuppen-shampoo/p/4008890006429",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+      "name": "Sante Glossy Shine",
+      "brand": "Sante",
+      "gtins": [
+        {
+          "value": "4055297220262",
+          "canonical_gtin14": "04055297220262"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/sante-naturkosmetik-shampoo-glossy-shine-p4055297220262.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:04:16.179+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+      "name": "Sante Sensitive Care",
+      "brand": "Sante",
+      "gtins": [
+        {
+          "value": "4055297221467",
+          "canonical_gtin14": "04055297221467"
+        }
+      ],
+      "price_eur": 4.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/sante-naturkosmetik-shampoo-sensitive-care-p4055297221467.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+      "name": "Schauma Anti Schuppen",
+      "brand": "Schauma",
+      "gtins": [
+        {
+          "value": "4015100864977",
+          "canonical_gtin14": "04015100864977"
+        },
+        {
+          "value": "4015100890730",
+          "canonical_gtin14": "04015100890730"
+        }
+      ],
+      "price_eur": 1.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/schauma-shampoo-anti-schuppen-classic-p4015100864977.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:07:47.399+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "303b4c0c-53a4-46de-883d-c29e448ee590",
+      "name": "Sebamed Anti Schuppen",
+      "brand": "Sebamed",
+      "gtins": [
+        {
+          "value": "4103040051691",
+          "canonical_gtin14": "04103040051691"
+        },
+        {
+          "value": "4103040051714",
+          "canonical_gtin14": "04103040051714"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/sebamed-shampoo-anti-schuppen-p4103040051691.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:00:59.311+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+      "name": "Sebamed Anti Schuppen Plus",
+      "brand": "Sebamed",
+      "gtins": [
+        {
+          "value": "4103040051677",
+          "canonical_gtin14": "04103040051677"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/sebamed-shampoo-anti-schuppen-plus-p4103040048868.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:06:59.184+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+      "name": "Sebamed Every-Day Shampoo",
+      "brand": "Sebamed",
+      "gtins": [
+        {
+          "value": "4103040051752",
+          "canonical_gtin14": "04103040051752"
+        }
+      ],
+      "price_eur": 3.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-sebamed-every-day-shampoo/p/4103040051752",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "51a0b647-2794-49a3-96e1-e7695432561e",
+      "name": "Sebamed Urea 5%",
+      "brand": "Sebamed",
+      "gtins": [
+        {
+          "value": "4103040048448",
+          "canonical_gtin14": "04103040048448"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/sebamed-shampoo-trockene-haut-5-prozent-urea-akut-p4103040019349.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:04:05.357+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+      "name": "Swiss-O-Par Teebaumöl",
+      "brand": "Swiss-O-Par",
+      "gtins": [
+        {
+          "value": "4104260076501",
+          "canonical_gtin14": "04104260076501"
+        }
+      ],
+      "price_eur": 2.45,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/swiss-o-par-shampoo-teebaumoel-p4104260076501.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:03:45.964+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+      "name": "Syoss Intense Curls",
+      "brand": "Syoss",
+      "gtins": [
+        {
+          "value": "4015100860504",
+          "canonical_gtin14": "04015100860504"
+        }
+      ],
+      "price_eur": 4.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/syoss-shampoo-intense-curls-p4015100860504.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "7200bb0b-7463-433b-86c8-744f5c1431de",
+      "name": "Wahre Schätze Aktivkohle",
+      "brand": "Wahre Schätze",
+      "gtins": [
+        {
+          "value": "3600542512466",
+          "canonical_gtin14": "03600542512466"
+        }
+      ],
+      "price_eur": 2.75,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/wahre-schaetze-shampoo-aktivkohle-fettige-kopfhaut-p3600542512466.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T20:05:48.301+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+      "name": "Wahre Schätze Sanfte Hafermilch",
+      "brand": "Wahre Schätze",
+      "gtins": [
+        {
+          "value": "3600542461658",
+          "canonical_gtin14": "03600542461658"
+        }
+      ],
+      "price_eur": 2.29,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/wahre-schaetze-shampoo-sanfte-hafermilch-p3600542461658.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    {
+      "id": "4a45948b-53a6-48ac-9c02-20718c1d19c4",
+      "name": "Being Big Hair Shampoo",
+      "brand": "Being",
+      "gtins": [
+        {
+          "value": "4895248005872",
+          "canonical_gtin14": "04895248005872"
+        }
+      ],
+      "price_eur": 6.79,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-being-big-hair-shampoo/p/4895248005872",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T12:00:00+00:00",
+      "net_content_value": 354,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T12:00:00+00:00"
+    },
+    {
+      "id": "286071ba-9c9a-4c60-979c-7e51df949fbf",
+      "name": "Garnier Fructis Locken Methode Feuchtigkeits-Shampoo",
+      "brand": "Garnier Fructis",
+      "gtins": [
+        {
+          "value": "3600542571739",
+          "canonical_gtin14": "03600542571739"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/1324798/garnier-fructis-shampoo-locken-methode-feuchtigkeit",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T12:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T12:00:00+00:00"
+    },
+    {
+      "id": "0017381a-84ba-46dd-9b6e-7ef457e8b5b4",
+      "name": "Garnier Wahre Schätze Shampoo Honig Schätze",
+      "brand": "Garnier Wahre Schätze",
+      "gtins": [
+        {
+          "value": "3600542461030",
+          "canonical_gtin14": "03600542461030"
+        },
+        {
+          "value": "3600542461511",
+          "canonical_gtin14": "03600542461511"
+        },
+        {
+          "value": "3600542462228",
+          "canonical_gtin14": "03600542462228"
+        }
+      ],
+      "price_eur": 3.45,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T12:00:00+00:00",
+      "net_content_value": 400,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T12:00:00+00:00"
+    },
+    {
+      "id": "1e61a644-94b0-4356-ab55-f58572fa1e18",
+      "name": "head&shoulders Anti-Schuppen Shampoo Classic Clean",
+      "brand": "head&shoulders",
+      "gtins": [
+        {
+          "value": "8001090896315",
+          "canonical_gtin14": "08001090896315"
+        }
+      ],
+      "price_eur": 6.29,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-anti-schuppen-shampoo-classic-clean/p/8001090896315",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T12:00:00+00:00",
+      "net_content_value": 500,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T12:00:00+00:00"
+    },
+    {
+      "id": "2e887538-3b92-4344-9bbd-1761383ba4a6",
+      "name": "Herbal Essences Shampoo Fiji",
+      "brand": "Herbal Essences",
+      "gtins": [
+        {
+          "value": "8006530290012",
+          "canonical_gtin14": "08006530290012"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/3130636/herbal-essences-shampoo-fiji",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T12:00:00+00:00",
+      "net_content_value": 350,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T12:00:00+00:00"
+    },
+    {
+      "id": "41b99629-5a1c-402f-a486-d41780e89e66",
+      "name": "Herbal Essences Tiefenreinigung & Glanz Shampoo Limettenduft",
+      "brand": "Herbal Essences",
+      "gtins": [
+        {
+          "value": "8006530123556",
+          "canonical_gtin14": "08006530123556"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/3115708/herbal-essences-shampoo-limettenduft-tiefenreinigung-und-glanz",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-08-21T11:34:24+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-08-21T11:34:24+00:00"
+    },
+    {
+      "id": "22f95dcb-12de-4d62-b206-f03dbd6e94a0",
+      "name": "ISANA Shampoo & Spülung 2 in 1 Volumen Malve & Acai",
+      "brand": "ISANA",
+      "gtins": [
+        {
+          "value": "4305615566115",
+          "canonical_gtin14": "04305615566115"
+        }
+      ],
+      "price_eur": 0.65,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-shampoo-und-spuelung-2in1-volumen/p/4305615566115",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T12:00:00+00:00",
+      "net_content_value": 300,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T12:00:00+00:00"
+    },
+    {
+      "id": "86f44889-b2c9-40a1-9190-58d7f738b6ca",
+      "name": "ISANA Shampoo Sensitiv Baumwoll- & Kornblume",
+      "brand": "ISANA",
+      "gtins": [
+        {
+          "value": "4305615566184",
+          "canonical_gtin14": "04305615566184"
+        }
+      ],
+      "price_eur": 0.65,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.dk/da/pleje-og-duft-isana-shampoo-sensitiv/p/4305615566184",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T12:00:00+00:00",
+      "net_content_value": 300,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T12:00:00+00:00"
+    },
+    {
+      "id": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+      "name": "Ultimate Shampoo",
+      "brand": "L'Oréal Paris",
+      "gtins": [
+        {
+          "value": "3600524128005",
+          "canonical_gtin14": "03600524128005"
+        }
+      ],
+      "price_eur": 6.99,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-glycolic-gloss-shampoo/p/3600524128005",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-07-03T14:06:48.213+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-07-03T14:06:48.213+00:00"
+    },
+    {
+      "id": "cc9318d2-13af-4c83-8b5e-7effb687c92f",
+      "name": "L'Oréal Paris Elvital Hydra Hyaluronic 72H Feuchtigkeit-Auffüllendes Shampoo",
+      "brand": "L'Oréal Paris Elvital",
+      "gtins": [
+        {
+          "value": "3600524099299",
+          "canonical_gtin14": "03600524099299"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/1455496/l-oreal-paris-elvital-shampoo-hydra-hyaluronic-feuchtigkeitsspendend",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T12:00:00+00:00",
+      "net_content_value": 1000,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T12:00:00+00:00"
+    },
+    {
+      "id": "eb99d805-20d4-4dbb-9651-17c9e954a769",
+      "name": "NIVEA Power Repair Reparatur Shampoo",
+      "brand": "NIVEA",
+      "gtins": [
+        {
+          "value": "4006000192543",
+          "canonical_gtin14": "04006000192543"
+        }
+      ],
+      "price_eur": 2.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.nivea.de/produkte/power-repair-reparatur-shampoo-250ml-40060001925430001.html",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T12:00:00+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T12:00:00+00:00"
+    },
+    {
+      "id": "0d341836-96b3-4364-9319-a7f0884b3da9",
+      "name": "Plantur Plantur 39 Phyto-Coffein-Shampoo für feines, brüchiges Haar",
+      "brand": "Plantur",
+      "gtins": [
+        {
+          "value": "4008666705082",
+          "canonical_gtin14": "04008666705082"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/1158986/plantur-39-shampoo-phyto-coffein-feines-haar",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-08-21T10:44:10+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-08-21T10:44:10+00:00"
+    },
+    {
+      "id": "e4e4fd05-33fd-4048-9553-76815bff5d43",
+      "name": "schauma Shampoo Repair & Pflege",
+      "brand": "schauma",
+      "gtins": [
+        {
+          "value": "4015100890372",
+          "canonical_gtin14": "04015100890372"
+        }
+      ],
+      "price_eur": 1.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T12:00:00+00:00",
+      "net_content_value": 400,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T12:00:00+00:00"
+    },
+    {
+      "id": "e859d6e0-e991-4081-84b5-b81862c82475",
+      "name": "Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo",
+      "brand": "Schwarzkopf GLISS",
+      "gtins": [
+        {
+          "value": "4015100895025",
+          "canonical_gtin14": "04015100895025"
+        }
+      ],
+      "price_eur": 3.49,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T12:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T12:00:00+00:00"
+    },
+    {
+      "id": "3405f33b-ae5f-4185-b72b-68c9a87f7c06",
+      "name": "Schwarzkopf GLISS Shampoo Liquid Silk",
+      "brand": "Schwarzkopf GLISS",
+      "gtins": [
+        {
+          "value": "4015100813111",
+          "canonical_gtin14": "04015100813111"
+        }
+      ],
+      "price_eur": 2.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/1430803/schwarzkopf-gliss-shampoo-liquid-silk",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T12:00:00+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T12:00:00+00:00"
+    },
+    {
+      "id": "bb1b029f-a8fa-4276-8268-f6ce418128c7",
+      "name": "Schwarzkopf GLISS Shampoo Total Repair",
+      "brand": "Schwarzkopf GLISS",
+      "gtins": [
+        {
+          "value": "4015100812435",
+          "canonical_gtin14": "04015100812435"
+        }
+      ],
+      "price_eur": 2.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T12:00:00+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T12:00:00+00:00"
+    },
+    {
+      "id": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+      "name": "Syoss Intense Fullness Shampoo",
+      "brand": "Syoss",
+      "gtins": [
+        {
+          "value": "4015100860429",
+          "canonical_gtin14": "04015100860429"
+        }
+      ],
+      "price_eur": 4.49,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-fullness/p/4015100860429",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-29T13:18:07+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-06-29T13:18:07+00:00"
+    },
+    {
+      "id": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+      "name": "Syoss Intense Volume Shampoo",
+      "brand": "Syoss",
+      "gtins": [
+        {
+          "value": "4015100860481",
+          "canonical_gtin14": "04015100860481"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/3047032/syoss-shampoo-intense-volume",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-27T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-06-27T00:00:00+00:00"
+    },
+    {
+      "id": "0ab645f9-d46d-4cf2-96a5-b5e00f74cae2",
+      "name": "Syoss Shampoo Intense Keratin",
+      "brand": "Syoss",
+      "gtins": [
+        {
+          "value": "4015100860344",
+          "canonical_gtin14": "04015100860344"
+        }
+      ],
+      "price_eur": 3.95,
+      "category_key": "shampoo",
+      "affiliate_link": "https://www.dm.de/p/d/3047030/syoss-shampoo-intense-keratin",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T12:00:00+00:00",
+      "net_content_value": 440,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T12:00:00+00:00"
+    }
+  ]
+}

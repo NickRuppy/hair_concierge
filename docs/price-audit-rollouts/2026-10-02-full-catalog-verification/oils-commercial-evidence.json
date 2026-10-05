@@ -1,0 +1,2262 @@
+{
+  "records": [
+    {
+      "id": "517dca50-5d55-4038-ba1d-f9b745708327",
+      "name": "Allgäuer Ölmühle Bio Traubenkernöl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.mueller.de/p/allgaeuer-oelmuehle-bio-traubenkernoel-223549/",
+      "current_price_eur": 7.99,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "4260389030401",
+      "availability": "https://schema.org/InStock",
+      "checked_at": "2026-10-02T14:32:08.965870+00:00",
+      "source_method": "retailer live HTML JSON-LD Product/Offer plus package label",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Allgäuer Ölmühle Allgäuer Ölmühle Bio Traubenkernöl",
+          "result": "malformed"
+        },
+        {
+          "shop": "www.mueller.de",
+          "url": "https://www.mueller.de/p/allgaeuer-oelmuehle-bio-traubenkernoel-223549/",
+          "result": "Allgäuer Ölmühle Bio Traubenkernöl online bestellen | MÜLLER"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.mueller.de/p/allgaeuer-oelmuehle-bio-traubenkernoel-223549/",
+          "fields": {
+            "name": "Allgäuer Ölmühle Bio Traubenkernöl",
+            "gtin": "4260389030401",
+            "price": 7.99,
+            "currency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "package": [
+              100.0,
+              "ml"
+            ]
+          }
+        }
+      ],
+      "reason": "Registered GTIN, exact package and live buyable retailer offer"
+    },
+    {
+      "id": "fd83b493-f7be-4071-9642-3d5b92e30dc2",
+      "name": "Balea Traumlocken Öl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1635760/balea-professional-haaroel-traumlocken",
+      "current_price_eur": 2.75,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "4070765002089",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:28:53.291Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Balea Balea Traumlocken Öl",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/1635760/balea-professional-haaroel-traumlocken",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "Balea PROFESSIONAL",
+            "title": "Haaröl Traumlocken, 100 ml",
+            "gtin": "4070765002089",
+            "price": "2,75 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1635760/balea-professional-haaroel-traumlocken?appPageType=productdetails&appProductId=1635760&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "1c43bc07-e3c6-4b8a-9b62-943147052e07",
+      "name": "Haaröl Oil Repair Intensiv",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1700841/balea-professional-haaroel-oil-repair-intensiv",
+      "current_price_eur": 2.75,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "4066447888195",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:28:53.901Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Balea Haaröl Oil Repair Intensiv",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/1700841/balea-professional-haaroel-oil-repair-intensiv",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "Balea PROFESSIONAL",
+            "title": "Haaröl Oil Repair Intensiv, 100 ml",
+            "gtin": "4066447888195",
+            "price": "2,75 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1700841/balea-professional-haaroel-oil-repair-intensiv?appPageType=productdetails&appProductId=1700841&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "a11855eb-64e5-438f-8880-1d3573efa9fa",
+      "name": "benecos BIO Körperöl Aprikosenkernöl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.mueller.de/p/benecos-bio-koerperoel-aprikosenkernoel-IPN2878067/",
+      "current_price_eur": 6.99,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "4260198097541",
+      "availability": "https://schema.org/InStock",
+      "checked_at": "2026-10-02T14:32:09.205239+00:00",
+      "source_method": "retailer live HTML JSON-LD Product/Offer plus package label",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "benecos benecos BIO Körperöl Aprikosenkernöl",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.mueller.de",
+          "url": "https://www.mueller.de/p/benecos-bio-koerperoel-aprikosenkernoel-IPN2878067/",
+          "result": "benecos BIO Körperöl Aprikosenkernöl online bestellen | MÜLLER"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.mueller.de/p/benecos-bio-koerperoel-aprikosenkernoel-IPN2878067/",
+          "fields": {
+            "name": "benecos BIO Körperöl Aprikosenkernöl",
+            "gtin": "4260198097541",
+            "price": 6.99,
+            "currency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "package": [
+              100.0,
+              "ml"
+            ]
+          }
+        }
+      ],
+      "reason": "Registered GTIN, exact package and live buyable retailer offer"
+    },
+    {
+      "id": "19aea9c4-4b90-4ec4-8cb6-90cb270010f7",
+      "name": "benecos BIO Körperöl Macadamianussöl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.mueller.de/p/benecos-bio-koerperoel-macadamianussoel-IPN2878442/",
+      "current_price_eur": 8.99,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "4260198097596",
+      "availability": "https://schema.org/LimitedAvailability",
+      "checked_at": "2026-10-02T14:32:09.225804+00:00",
+      "source_method": "retailer live HTML JSON-LD Product/Offer plus package label",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "benecos benecos BIO Körperöl Macadamianussöl",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.mueller.de",
+          "url": "https://www.mueller.de/p/benecos-bio-koerperoel-macadamianussoel-IPN2878442/",
+          "result": "benecos BIO Körperöl Macadamianussöl online bestellen | MÜLLER"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.mueller.de/p/benecos-bio-koerperoel-macadamianussoel-IPN2878442/",
+          "fields": {
+            "name": "benecos BIO Körperöl Macadamianussöl",
+            "gtin": "4260198097596",
+            "price": 8.99,
+            "currency": "EUR",
+            "availability": "https://schema.org/LimitedAvailability",
+            "package": [
+              100.0,
+              "ml"
+            ]
+          }
+        }
+      ],
+      "reason": "Registered GTIN, exact package and live buyable retailer offer"
+    },
+    {
+      "id": "ca4ae209-79d2-4f4d-8e44-46e586cec62d",
+      "name": "benecos BIO Körperöl Mandelöl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.mueller.de/p/benecos-bio-koerperoel-mandeloel-IPN2878446/",
+      "current_price_eur": 8.99,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "4260198097572",
+      "availability": "https://schema.org/InStock",
+      "checked_at": "2026-10-02T14:32:09.877820+00:00",
+      "source_method": "retailer live HTML JSON-LD Product/Offer plus package label",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "benecos benecos BIO Körperöl Mandelöl",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.mueller.de",
+          "url": "https://www.mueller.de/p/benecos-bio-koerperoel-mandeloel-IPN2878446/",
+          "result": "benecos BIO Körperöl Mandelöl online bestellen | MÜLLER"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.mueller.de/p/benecos-bio-koerperoel-mandeloel-IPN2878446/",
+          "fields": {
+            "name": "benecos BIO Körperöl Mandelöl",
+            "gtin": "4260198097572",
+            "price": 8.99,
+            "currency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "package": [
+              100.0,
+              "ml"
+            ]
+          }
+        }
+      ],
+      "reason": "Registered GTIN, exact package and live buyable retailer offer"
+    },
+    {
+      "id": "3acd3c18-0a4b-45f8-9178-5bd2f4e0a38b",
+      "name": "benecos BIO Körperöl Wunderbaumsamenöl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.mueller.de/p/benecos-bio-koerperoel-wunderbaumsamenoel-IPN2878448/",
+      "current_price_eur": 4.99,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "4260198097534",
+      "availability": "https://schema.org/InStock",
+      "checked_at": "2026-10-02T14:32:10.538132+00:00",
+      "source_method": "retailer live HTML JSON-LD Product/Offer plus package label",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "benecos benecos BIO Körperöl Wunderbaumsamenöl",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.mueller.de",
+          "url": "https://www.mueller.de/p/benecos-bio-koerperoel-wunderbaumsamenoel-IPN2878448/",
+          "result": "benecos BIO Körperöl Wunderbaumsamenöl online bestellen | MÜLLER"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.mueller.de/p/benecos-bio-koerperoel-wunderbaumsamenoel-IPN2878448/",
+          "fields": {
+            "name": "benecos BIO Körperöl Wunderbaumsamenöl",
+            "gtin": "4260198097534",
+            "price": 4.99,
+            "currency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "package": [
+              100.0,
+              "ml"
+            ]
+          }
+        }
+      ],
+      "reason": "Registered GTIN, exact package and live buyable retailer offer"
+    },
+    {
+      "id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "name": "BioGourmet Distelöl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.greenist.de/biogourmet-bio-disteloel-250ml.html",
+      "current_price_eur": 6.29,
+      "package_value": 250,
+      "package_unit": "ml",
+      "observed_barcode": "4039057414863",
+      "availability": "available",
+      "checked_at": "2026-10-02T14:59:35.014328+00:00",
+      "source_method": "live retailer public HTML/JSON-LD with exact identity and package; primary web corroboration",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "BioGourmet BioGourmet Distelöl",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.mueller.de",
+          "url": "https://www.mueller.de/p/biogourmet-disteloel-2529149/",
+          "result": "BioGourmet Distelöl online bestellen | MÜLLER"
+        },
+        {
+          "url": "https://www.greenist.de/biogourmet-bio-disteloel-250ml.html",
+          "result": "available",
+          "checked_at": "2026-10-02T14:59:35.014328+00:00"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.greenist.de/biogourmet-bio-disteloel-250ml.html",
+          "fields": {
+            "price_eur": 6.29,
+            "package_value": 250,
+            "package_unit": "ml",
+            "gtin": "4039057414863",
+            "availability": "available"
+          },
+          "live_artifact": "oils-secondary-live-pages.json"
+        }
+      ],
+      "reason": "Live Greenist HTML verifies exact GTIN/250ml/price and sofort versandfertig. Müller fresh JSONLD OutOfStock overrules stale indexed availability. German specialist fallback after preferred-source checks.",
+      "retailer_review_required": true
+    },
+    {
+      "id": "acf9d5cd-76e4-49c7-9c04-0af1f20506ad",
+      "name": "dmBio Kokosöl nativ",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1544928/dmbio-kokosoel-nativ",
+      "current_price_eur": 2.85,
+      "package_value": 300.0,
+      "package_unit": "ml",
+      "observed_barcode": "4058172504969",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:28:54.967Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "dmBio dmBio Kokosöl nativ",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/1544928/dmbio-kokosoel-nativ",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "dmBio",
+            "title": "Kokosöl, nativ, 300 ml",
+            "gtin": "4058172504969",
+            "price": "2,85 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1544928/dmbio-kokosoel-nativ?appPageType=productdetails&appProductId=1544928&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "name": "dmBio natives Olivenöl extra",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1459848/dmbio-natives-olivenoel-extra",
+      "current_price_eur": 6.95,
+      "package_value": 750,
+      "package_unit": "ml",
+      "observed_barcode": "4066447918687",
+      "availability": "Lieferbar",
+      "checked_at": "2026-10-02 14:49:28 UTC",
+      "source_method": "Primary retailer PDP via web; structured HTML corroboration for brand direct",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "dmBio dmBio natives Olivenöl extra",
+          "result": "malformed"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/1459848/dmbio-natives-olivenoel-extra",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        },
+        {
+          "url": "https://www.dm.de/p/d/1459848/dmbio-natives-olivenoel-extra",
+          "result": "Lieferbar"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.dm.de/p/d/1459848/dmbio-natives-olivenoel-extra",
+          "fields": {
+            "title": "Natives Olivenöl extra, 750 ml",
+            "price": "6,95 €",
+            "GTIN": "4066447918687",
+            "availability": "Lieferbar"
+          }
+        }
+      ],
+      "reason": "Exact current product/package and registered GTIN via primary retailer PDP"
+    },
+    {
+      "id": "4a95e1de-54e9-4fcd-b227-72a5824d13c1",
+      "name": "Dr. Scheller Jojobaöl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1675203/dr-scheller-koerperoel-jojoba",
+      "current_price_eur": 8.45,
+      "package_value": 30.0,
+      "package_unit": "ml",
+      "observed_barcode": "4051424570248",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:28:55.230Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Dr. Scheller Dr. Scheller Jojobaöl",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/1675203/dr-scheller-koerperoel-jojoba",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "Dr. Scheller",
+            "title": "Körperöl Jojoba, 30 ml",
+            "gtin": "4051424570248",
+            "price": "8,45 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1675203/dr-scheller-koerperoel-jojoba?appPageType=productdetails&appProductId=1675203&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "70ea52bc-2194-4bb3-82a8-3f4a2aede041",
+      "name": "Dr. Scheller Reines Arganöl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.mueller.de/p/dr-scheller-reines-arganoel-2859166/",
+      "current_price_eur": 8.45,
+      "package_value": 30.0,
+      "package_unit": "ml",
+      "observed_barcode": "4051424570040",
+      "availability": "https://schema.org/InStock",
+      "checked_at": "2026-10-02T14:32:13.486267+00:00",
+      "source_method": "retailer live HTML JSON-LD Product/Offer plus package label",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Dr. Scheller Dr. Scheller Reines Arganöl",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.mueller.de",
+          "url": "https://www.mueller.de/p/dr-scheller-reines-arganoel-2859166/",
+          "result": "DR.SCHELLER Reines Arganöl online bestellen | MÜLLER"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.mueller.de/p/dr-scheller-reines-arganoel-2859166/",
+          "fields": {
+            "name": "DR.SCHELLER Reines Arganöl",
+            "gtin": "4051424570040",
+            "price": 8.45,
+            "currency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "package": [
+              30.0,
+              "ml"
+            ]
+          }
+        }
+      ],
+      "reason": "Registered GTIN, exact package and live buyable retailer offer"
+    },
+    {
+      "id": "c574ee6f-ad22-45c0-b936-57b847d93433",
+      "name": "Garnier Fructis Sleek & Stay Heat-Activated Serum",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-sleek-und-stay-heat-activated-serum/p/3600542638852",
+      "current_price_eur": 7.99,
+      "package_value": 50,
+      "package_unit": "ml",
+      "observed_barcode": "3600542638852",
+      "availability": "Delivery 06–07 October 2026",
+      "checked_at": "2026-10-02 14:49:28 UTC",
+      "source_method": "Primary retailer PDP via web; structured HTML corroboration for brand direct",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Garnier Garnier Fructis Sleek & Stay Heat-Activated Serum",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.rossmann.de",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-sleek-und-stay-heat-activated-serum/p/3600542638852",
+          "result": "Client Challenge"
+        },
+        {
+          "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-sleek-und-stay-heat-activated-serum/p/3600542638852",
+          "result": "Delivery 06–07 October 2026"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-sleek-und-stay-heat-activated-serum/p/3600542638852",
+          "fields": {
+            "title": "Sleek & Stay Heat-Activated Serum",
+            "package": "50 ml",
+            "price": "7,99 €",
+            "delivery": "06–07.10.2026",
+            "sku": "179684"
+          }
+        }
+      ],
+      "reason": "Exact current product/package and registered GTIN via primary retailer PDP"
+    },
+    {
+      "id": "e6b87909-6104-4a9a-a3ef-e1c64a1b15b1",
+      "name": "Garnier Fructis Wunderöl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1499815/garnier-fructis-haaroel-oil-repair-wunder-oel",
+      "current_price_eur": 5.95,
+      "package_value": 150.0,
+      "package_unit": "ml",
+      "observed_barcode": "3600542020053",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:28:55.927Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Garnier Garnier Fructis Wunderöl",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/1499815/garnier-fructis-haaroel-oil-repair-wunder-oel",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "GARNIER FRUCTIS",
+            "title": "Haaröl Oil Repair Wunder-Öl, 150 ml",
+            "gtin": "3600542020053",
+            "price": "5,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1499815/garnier-fructis-haaroel-oil-repair-wunder-oel?appPageType=productdetails&appProductId=1499815&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+      "name": "Garnier Wahre Schätze Curl Revival Öl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-curl-revival-elixir-intensiv-naehrendes-haaroel/p/3600542624336",
+      "current_price_eur": 6.99,
+      "package_value": 120,
+      "package_unit": "ml",
+      "observed_barcode": "3600542624336",
+      "availability": "delivery offered",
+      "checked_at": "2026-10-02 14:49:28 UTC",
+      "source_method": "Primary retailer PDP via web; structured HTML corroboration for brand direct",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Garnier Garnier Wahre Schätze Curl Revival Öl",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/wahre-schaetze-haaroel-curl-revival-elixir-p3600542624336.html",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        },
+        {
+          "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-curl-revival-elixir-intensiv-naehrendes-haaroel/p/3600542624336",
+          "result": "delivery offered"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-curl-revival-elixir-intensiv-naehrendes-haaroel/p/3600542624336",
+          "fields": {
+            "title": "Curl Revival Elixir Intensiv Nährendes Haaröl",
+            "package": "120 ml",
+            "price": "6,99 €",
+            "delivery": "Lieferung"
+          }
+        }
+      ],
+      "reason": "dm exact120ml €6.95 is Nicht lieferbar; selected same GTIN buyable Rossmann offer"
+    },
+    {
+      "id": "b916efff-8b80-47d4-82cf-d8148d1eff53",
+      "name": "HASK Argan Oil Repairing Shine Oil",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-hask-argan-shine-oil/p/0071164029855",
+      "current_price_eur": 2.59,
+      "package_value": 18,
+      "package_unit": "ml",
+      "observed_barcode": "0071164029855",
+      "availability": "delivery offered",
+      "checked_at": "2026-10-02 14:49:28 UTC",
+      "source_method": "Primary retailer PDP via web; structured HTML corroboration for brand direct",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "HASK HASK Argan Oil Repairing Shine Oil",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.hagel-shop.de",
+          "url": "https://www.hagel-shop.de/hask-argan-oil-repairing-shine-oil-18-ml-5815315.html",
+          "result": "http_error"
+        },
+        {
+          "url": "https://www.rossmann.de/de/pflege-und-duft-hask-argan-shine-oil/p/0071164029855",
+          "result": "delivery offered"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.rossmann.de/de/pflege-und-duft-hask-argan-shine-oil/p/0071164029855",
+          "fields": {
+            "title": "HASK Argan Shine Oil",
+            "package": "18 ml",
+            "price": "2,59 €",
+            "delivery": "Lieferung"
+          }
+        }
+      ],
+      "reason": "Exact current product/package and registered GTIN via primary retailer PDP"
+    },
+    {
+      "id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "name": "Innersense Harmonic Treatment Oil",
+      "classification": "needs_package_decision",
+      "proposed_url": "https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html",
+      "current_price_eur": 29,
+      "package_value": 29,
+      "package_unit": "ml",
+      "observed_barcode": "852415001833",
+      "availability": "delivery offered",
+      "checked_at": "2026-10-02 14:49:28 UTC",
+      "source_method": "Primary retailer PDP via web; structured HTML corroboration for brand direct",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Innersense Innersense Harmonic Treatment Oil",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.douglas.de",
+          "url": "https://www.douglas.de/de/p/m001643012",
+          "result": "http_error"
+        },
+        {
+          "url": "https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html",
+          "result": "delivery offered"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html",
+          "fields": {
+            "title": "INNERSENSE Harmonic Treatment Oil 29 ml",
+            "price": "29,00 €",
+            "EAN": "852415001833",
+            "delivery": "Lieferzeit 2–4 Werktage"
+          }
+        }
+      ],
+      "reason": "RegisteredGTIN850006575039 identifies118ml. Exact118ml €79 at Belladonna is available;29ml preferred Hagel changes basepackage/adds recognitionbarcode. Nick question pending."
+    },
+    {
+      "id": "05e68c32-f096-457f-8b88-5cd3c0934873",
+      "name": "Jean&Len Repair Keratin & Mandel",
+      "classification": "verified_same_product_package",
+      "proposed_url": "https://www.jeanlen.de/keratin-haaroel",
+      "current_price_eur": 3.99,
+      "package_value": 100,
+      "package_unit": "ml",
+      "observed_barcode": null,
+      "availability": "https://schema.org/InStock",
+      "checked_at": "2026-10-02 14:49:28 UTC",
+      "source_method": "Primary retailer PDP via web; structured HTML corroboration for brand direct",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Jean&Len Jean&Len Repair Keratin & Mandel",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/jean-und-len-haaroel-repair-keratin-und-mandel-p4262401733253.html",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        },
+        {
+          "url": "https://www.jeanlen.de/keratin-haaroel",
+          "result": "https://schema.org/InStock"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.jeanlen.de/keratin-haaroel",
+          "fields": {
+            "title": "Haaröl Keratin, 100 ml",
+            "sku": "2800101104",
+            "price": 3.99,
+            "currency": "EUR",
+            "availability": "https://schema.org/InStock"
+          }
+        }
+      ],
+      "reason": "Brand official same named Keratin/Mandel100ml oil; no GTIN displayed. Current dm same registeredGTIN100ml offer€5.95 is not deliverable. Price drop exceeds30% and retained for human review."
+    },
+    {
+      "id": "6ad82861-d68e-4e70-a976-78c0f35d087b",
+      "name": "Kevin Murphy Young Again",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.hagel-shop.de/kevin-murphy-young-again-leave-in-treatment-100-ml.html",
+      "current_price_eur": 43.0,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "9339341020356",
+      "availability": "http://schema.org/InStock",
+      "checked_at": "2026-10-02T14:32:14.659186+00:00",
+      "source_method": "retailer live HTML JSON-LD Product/Offer plus package label",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Kevin Murphy Kevin Murphy Young Again",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.hagel-shop.de",
+          "url": "https://www.hagel-shop.de/kevin-murphy-young-again-leave-in-treatment-100-ml.html",
+          "result": "Kevin.Murphy Young.Again. Leave-In Treatment 100 ml günstig kaufen | HAGEL Online Shop"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.hagel-shop.de/kevin-murphy-young-again-leave-in-treatment-100-ml.html",
+          "fields": {
+            "name": "Kevin.Murphy Young.Again. Leave-In Treatment 100 ml",
+            "gtin": "9339341020356",
+            "price": 43,
+            "currency": "EUR",
+            "availability": "http://schema.org/InStock",
+            "package": [
+              100.0,
+              "ml"
+            ]
+          }
+        }
+      ],
+      "reason": "Registered GTIN, exact package and live buyable retailer offer"
+    },
+    {
+      "id": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+      "name": "KoRo MCT Öl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.korodrogerie.de/bio-mct-oel-500-ml",
+      "current_price_eur": 17.5,
+      "package_value": 500,
+      "package_unit": "ml",
+      "observed_barcode": "4260718296232",
+      "availability": "Sofort verfügbar",
+      "checked_at": "2026-10-02 14:49:28 UTC",
+      "source_method": "Primary retailer PDP via web; structured HTML corroboration for brand direct",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "KoRo KoRo MCT Öl",
+          "result": "malformed"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/koro-mct-oel-p4260718296232.html",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        },
+        {
+          "url": "https://www.korodrogerie.de/bio-mct-oel-500-ml",
+          "result": "Sofort verfügbar"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.korodrogerie.de/bio-mct-oel-500-ml",
+          "fields": {
+            "title": "Bio MCT Öl 500 ml",
+            "price": "17,50 €",
+            "GTIN": "4260718296232",
+            "availability": "Sofort verfügbar"
+          }
+        }
+      ],
+      "reason": "Exact current product/package and registered GTIN via primary retailer PDP"
+    },
+    {
+      "id": "c05773dd-9656-4381-a0ab-8e9fc310c520",
+      "name": "L’Oréal Elvital Öl Magique Jojoba",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1621825/l-oreal-paris-elvital-haaroel-oel-magique-jojoba",
+      "current_price_eur": 6.95,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "3600523749188",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:28:56.931Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "L’Oréal L’Oréal Elvital Öl Magique Jojoba",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.rossmann.de",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-loreal-paris-elvital-oel-magique-jojoba-haaroel/p/3600523749188",
+          "result": "Client Challenge"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "L'ORÉAL PARiS ELVITAL",
+            "title": "Haaröl Öl Magique Jojoba, 100 ml",
+            "gtin": "3600523749188",
+            "price": "6,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1621825/l-oreal-paris-elvital-haaroel-oel-magique-jojoba?appPageType=productdetails&appProductId=1621825&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "21a94166-3813-4c0f-8912-508fb8f704f1",
+      "name": "L’Oréal Öl Magique Midnight Serum",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1333706/l-oreal-paris-elvital-haarserum-oel-magique-midnight-serum",
+      "current_price_eur": 7.95,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "3600524135805",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:28:57.184Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "L’Oréal L’Oréal Öl Magique Midnight Serum",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/l-oreal-paris-elvital-haarserum-oel-magique-midnight-serum-p3600524135805.html",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "L'ORÉAL PARiS ELVITAL",
+            "title": "Haarserum Öl Magique Midnight Serum, 100 ml",
+            "gtin": "3600524135805",
+            "price": "7,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1333706/l-oreal-paris-elvital-haarserum-oel-magique-midnight-serum?appPageType=productdetails&appProductId=1333706&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "7b5ff358-1b3b-411d-9220-5e6d30543235",
+      "name": "Maria Nila True Soft Argan Oil",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.hagel-shop.de/maria-nila-true-soft-argan-oil-100-ml.html",
+      "current_price_eur": 27.75,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "7391681036376",
+      "availability": "http://schema.org/InStock",
+      "checked_at": "2026-10-02T14:32:15.724147+00:00",
+      "source_method": "retailer live HTML JSON-LD Product/Offer plus package label",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Maria Nila Maria Nila True Soft Argan Oil",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.hagel-shop.de",
+          "url": "https://www.hagel-shop.de/maria-nila-true-soft-argan-oil-100-ml.html",
+          "result": "Maria Nila True Soft Argan Oil 100 ml günstig kaufen | HAGEL Online Shop"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.hagel-shop.de/maria-nila-true-soft-argan-oil-100-ml.html",
+          "fields": {
+            "name": "Maria Nila True Soft Argan Oil 100 ml",
+            "gtin": "7391681036376",
+            "price": 27.75,
+            "currency": "EUR",
+            "availability": "http://schema.org/InStock",
+            "package": [
+              100.0,
+              "ml"
+            ]
+          }
+        }
+      ],
+      "reason": "Registered GTIN, exact package and live buyable retailer offer"
+    },
+    {
+      "id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "name": "MoriVeda Premium Moringaöl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+      "current_price_eur": 16.99,
+      "package_value": 100,
+      "package_unit": "ml",
+      "observed_barcode": "4251762160037",
+      "availability": "available from manufacturer AMTEC Trading",
+      "checked_at": "2026-10-02T14:59:35.014328+00:00",
+      "source_method": "live retailer public HTML/JSON-LD with exact identity and package; primary web corroboration",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "MoriVeda MoriVeda Premium Moringaöl",
+          "result": "malformed"
+        },
+        {
+          "shop": "www.shop-apotheke.com",
+          "url": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+          "result": "Moriveda Moringa Öl Premium, Erstpressung aus geschälten Oleifera Samen & Schoten 100 ml - Shop Apotheke"
+        },
+        {
+          "url": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+          "result": "available from manufacturer AMTEC Trading",
+          "checked_at": "2026-10-02T14:59:35.014328+00:00"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+          "fields": {
+            "price_eur": 16.99,
+            "package_value": 100,
+            "package_unit": "ml",
+            "gtin": "4251762160037",
+            "availability": "available from manufacturer AMTEC Trading"
+          },
+          "live_artifact": "oils-stored-page-evidence.json"
+        }
+      ],
+      "reason": "Existing exact100ml offer; live JSONLD registeredGTIN16.99InStock; PDP sellerAMTECTrading is manufacturer. Marketplace channel needs explicit retailer eligibility review.",
+      "retailer_review_required": true
+    },
+    {
+      "id": "ff13bc3a-8bc6-49df-85a0-7a67add26926",
+      "name": "NANOIL Avocadoöl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-nanoil-avocadooel/p/5905669547130",
+      "current_price_eur": 12.99,
+      "package_value": 50,
+      "package_unit": "ml",
+      "observed_barcode": "5905669547130",
+      "availability": "delivery offered",
+      "checked_at": "2026-10-02 14:49:28 UTC",
+      "source_method": "Primary retailer PDP via web; structured HTML corroboration for brand direct",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "NANOIL NANOIL Avocadoöl",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.rossmann.de",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-nanoil-avocadooel/p/5905669547130",
+          "result": "Client Challenge"
+        },
+        {
+          "url": "https://www.rossmann.de/de/pflege-und-duft-nanoil-avocadooel/p/5905669547130",
+          "result": "delivery offered"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.rossmann.de/de/pflege-und-duft-nanoil-avocadooel/p/5905669547130",
+          "fields": {
+            "title": "NANOIL Avocadoöl",
+            "package": "50 ml",
+            "price": "12,99 €",
+            "delivery": "Lieferung",
+            "sku": "089117"
+          }
+        }
+      ],
+      "reason": "Exact current product/package and registered GTIN via primary retailer PDP"
+    },
+    {
+      "id": "2ffeae68-c625-4df5-be02-0c1b620aa0fc",
+      "name": "nedura Schwarzkümmelöl ungefiltert",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/3098859/nedura-schwarzkuemmeloel-ungefiltert",
+      "current_price_eur": 17.95,
+      "package_value": 500.0,
+      "package_unit": "ml",
+      "observed_barcode": "4262490410776",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:28:57.843Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "nedura nedura Schwarzkümmelöl ungefiltert",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/nedura-schwarzkuemmeloel-ungefiltert-p4262490410776.html",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "nedura",
+            "title": "Schwarzkümmelöl ungefiltert, 500 ml",
+            "gtin": "4262490410776",
+            "price": "17,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/3098859/nedura-schwarzkuemmeloel-ungefiltert?appPageType=productdetails&appProductId=3098859&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "27a2dd61-6e54-4746-8e24-a698dbafbf91",
+      "name": "Neqi Opulent Oil",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1455216/neqi-haarserum-opulent-oil",
+      "current_price_eur": 7.95,
+      "package_value": 75.0,
+      "package_unit": "ml",
+      "observed_barcode": "4063528078520",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:28:57.931Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Neqi Neqi Opulent Oil",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/neqi-haarserum-opulent-oil-p4063528078520.html",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "NEQI",
+            "title": "Haarserum Opulent Oil, 75 ml",
+            "gtin": "4063528078520",
+            "price": "7,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1455216/neqi-haarserum-opulent-oil?appPageType=productdetails&appProductId=1455216&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "78e6f1b2-7262-46af-b689-a92af6702739",
+      "name": "NUTREEOIL Cacay Öl",
+      "classification": "unavailable_verified",
+      "proposed_url": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml",
+      "current_price_eur": 34.99,
+      "package_value": 30,
+      "package_unit": "ml",
+      "observed_barcode": "4260541540014",
+      "availability": "out_of_stock",
+      "checked_at": "2026-10-02T14:59:35.014328+00:00",
+      "source_method": "live retailer public HTML/JSON-LD with exact identity and package; primary web corroboration",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "NUTREEOIL NUTREEOIL Cacay Öl",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.nutreeoil.com",
+          "url": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml",
+          "result": "Jetzt entdecken | NUTREEOIL Cacay Öl 30ml"
+        },
+        {
+          "url": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml",
+          "result": "out_of_stock",
+          "checked_at": "2026-10-02T14:59:35.014328+00:00"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml",
+          "fields": {
+            "price_eur": 34.99,
+            "package_value": 30,
+            "package_unit": "ml",
+            "gtin": "4260541540014",
+            "availability": "out_of_stock"
+          },
+          "live_artifact": "oils-stored-page-evidence.json"
+        }
+      ],
+      "reason": "Official30ml registeredvariant out of stock;15ml€24.99 available separatevariant, not selected."
+    },
+    {
+      "id": "5767f7a6-757c-40fa-b990-8e0a1abaea17",
+      "name": "Nuxe Huile Prodigieuse Öl",
+      "classification": "verified_exact",
+      "proposed_url": "https://de.nuxe.com/products/wichtiger-ol%c2%ae-1",
+      "current_price_eur": 38.9,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "3264680009754",
+      "availability": "https://schema.org/InStock",
+      "checked_at": "2026-10-02T14:32:16.942162+00:00",
+      "source_method": "retailer live HTML JSON-LD Product/Offer plus package label",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Nuxe Nuxe Huile Prodigieuse Öl",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "de.nuxe.com",
+          "url": "https://de.nuxe.com/products/wichtiger-ol%C2%AE-1",
+          "result": "Multifunktionales Trockenöl - Huile Prodigieuse®.\n      |\n      NUXE"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://de.nuxe.com/products/wichtiger-ol%C2%AE-1",
+          "fields": {
+            "name": "Huile Prodigieuse® 100ml - Trockenöl Gesicht, Körper, Haare",
+            "gtin": "3264680009754",
+            "price": 38.9,
+            "currency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "package": [
+              100.0,
+              "ml"
+            ]
+          }
+        }
+      ],
+      "reason": "Registered GTIN, exact package and live buyable retailer offer"
+    },
+    {
+      "id": "aa349c07-1add-44d4-9161-d99190182e5c",
+      "name": "OGX Argan weightless Öl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.hagel-shop.de/ogx-renewing-argan-oil-of-morocco-oil-weightless-reviving-dry-oil-118-ml.html",
+      "current_price_eur": 8.95,
+      "package_value": 118.0,
+      "package_unit": "ml",
+      "observed_barcode": "3574661563350",
+      "availability": "http://schema.org/InStock",
+      "checked_at": "2026-10-02T14:32:18.297570+00:00",
+      "source_method": "retailer live HTML JSON-LD Product/Offer plus package label",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "OGX OGX Argan weightless Öl",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.hagel-shop.de",
+          "url": "https://www.hagel-shop.de/ogx-renewing-argan-oil-of-morocco-oil-weightless-reviving-dry-oil-118-ml.html",
+          "result": "OGX Renewing Argan Oil of Morocco Oil Weightless Reviving Dry Oil 118 ml günstig kaufen | HAGEL Online Shop"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.hagel-shop.de/ogx-renewing-argan-oil-of-morocco-oil-weightless-reviving-dry-oil-118-ml.html",
+          "fields": {
+            "name": "OGX Renewing Argan Oil of Morocco Oil Weightless Reviving Dry Oil 118 ml",
+            "gtin": "3574661563350",
+            "price": 8.95,
+            "currency": "EUR",
+            "availability": "http://schema.org/InStock",
+            "package": [
+              118.0,
+              "ml"
+            ]
+          }
+        }
+      ],
+      "reason": "Registered GTIN, exact package and live buyable retailer offer"
+    },
+    {
+      "id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "name": "OGX Bond Protein Repair",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+      "current_price_eur": 21.17,
+      "package_value": 50,
+      "package_unit": "ml",
+      "observed_barcode": "3574661818481",
+      "availability": "available",
+      "checked_at": "2026-10-02T14:59:35.014328+00:00",
+      "source_method": "live retailer public HTML/JSON-LD with exact identity and package; primary web corroboration",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "OGX OGX Bond Protein Repair",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.amazon.de",
+          "url": "https://www.amazon.de/OGX-Spr%C3%BChnebel-besch%C3%A4digtes-Technology-Dual-Action-Reparaturtechnologie/dp/B0DQLHGGYJ",
+          "result": "Amazon.de"
+        },
+        {
+          "url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+          "result": "available",
+          "checked_at": "2026-10-02T14:59:35.014328+00:00"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+          "fields": {
+            "price_eur": 21.17,
+            "package_value": 50,
+            "package_unit": "ml",
+            "gtin": "3574661818481",
+            "availability": "available"
+          },
+          "live_artifact": "oils-secondary-live-pages.json"
+        }
+      ],
+      "reason": "Live Boozt HTML/PDP confirms 50ml exact registeredGTIN offer. Price rise exceeds30%; hold for Nick despite source verification.",
+      "retailer_review_required": true
+    },
+    {
+      "id": "1ed63e8e-4840-49ec-a49e-2b9f19f8bfbf",
+      "name": "OGX Haaröl Moroccan Argan Penetrating Oil",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1442285/ogx-haaroel-moroccan-argan-penetrating-oil",
+      "current_price_eur": 7.95,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "3574661563312",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:28:58.715Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "OGX OGX Haaröl Moroccan Argan Penetrating Oil",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/ogx-haaroel-moroccan-argan-penetrating-oil-p3574661563312.html",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "OGX",
+            "title": "Haaröl Moroccan Argan Penetrating Oil, 100 ml",
+            "gtin": "3574661563312",
+            "price": "7,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1442285/ogx-haaroel-moroccan-argan-penetrating-oil?appPageType=productdetails&appProductId=1442285&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "2858a8b6-018b-4949-ae58-eedc348d20b4",
+      "name": "OGX Miracle Coconut Oil",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/2322377/ogx-haaroel-coconut-miracle-oil",
+      "current_price_eur": 7.95,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "3574661563398",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:28:58.986Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "OGX OGX Miracle Coconut Oil",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/ogx-haaroel-coconut-miracle-oil-p3574661563398.html",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "OGX",
+            "title": "Haaröl Coconut Miracle Oil, 100 ml",
+            "gtin": "3574661563398",
+            "price": "7,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/2322377/ogx-haaroel-coconut-miracle-oil?appPageType=productdetails&appProductId=2322377&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+      "name": "Olaplex No.7 Bonding Oil",
+      "classification": "needs_barcode_review",
+      "proposed_url": "https://olaplex.de/products/olaplex-no-7-bonding-oil?variant=45098439213322",
+      "current_price_eur": 32,
+      "package_value": 30,
+      "package_unit": "ml",
+      "observed_barcode": "850018802895",
+      "availability": "InStock",
+      "checked_at": "2026-10-02T14:59:35.014328+00:00",
+      "source_method": "live retailer public HTML/JSON-LD with exact identity and package; primary web corroboration",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Olaplex Olaplex No.7 Bonding Oil",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "olaplex.de",
+          "url": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+          "result": "Original OLAPLEX® N°7 Bonding Oil"
+        },
+        {
+          "url": "https://olaplex.de/products/olaplex-no-7-bonding-oil?variant=45098439213322",
+          "result": "InStock",
+          "checked_at": "2026-10-02T14:59:35.014328+00:00"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://olaplex.de/products/olaplex-no-7-bonding-oil?variant=45098439213322",
+          "fields": {
+            "price_eur": 32,
+            "package_value": 30,
+            "package_unit": "ml",
+            "gtin": "850018802895",
+            "availability": "InStock"
+          },
+          "live_artifact": "oils-stored-page-evidence.json"
+        }
+      ],
+      "reason": "Official30ml32EUR variant publishes differentGTIN than registered850045076085. Registeredcode corroborated as30ml byFlaconi; preserve existing barcode and propose adding current30mlalias after Nick review. IndexedFlaconi20.48 failslive403 and is not used as currentprice."
+    },
+    {
+      "id": "1a6d62c7-c5e5-45aa-a45f-2cfba4aeccb5",
+      "name": "Pantene Pro-V Coconut Oil",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1612745/pantene-pro-v-haaroel-coconut-infused-oil",
+      "current_price_eur": 4.95,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "8001841890012",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:28:59.406Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Pantene Pantene Pro-V Coconut Oil",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/1612745/pantene-pro-v-haaroel-coconut-infused-oil",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "PANTENE PRO-V",
+            "title": "Haaröl Coconut Infused Oil, 100 ml",
+            "gtin": "8001841890012",
+            "price": "4,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1612745/pantene-pro-v-haaroel-coconut-infused-oil?appPageType=productdetails&appProductId=1612745&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "fe974387-b487-470e-9799-69bb4249070b",
+      "name": "Pantene Pro-V Keratin Protect Öl",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1395948/pantene-pro-v-trocken-oel-mit-vitamin-e-keratin-protect-oil-repair-und-care",
+      "current_price_eur": 4.95,
+      "package_value": 100,
+      "package_unit": "ml",
+      "observed_barcode": "4084500084971",
+      "availability": "purchasable=true in dm MCP",
+      "checked_at": "2026-10-02 14:49:28 UTC",
+      "source_method": "Primary retailer PDP via web; structured HTML corroboration for brand direct",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Pantene Pantene Pro-V Keratin Protect Öl",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.rossmann.de",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-repair-und-care-keratin-protect-oel/p/4084500084971",
+          "result": "Client Challenge"
+        },
+        {
+          "url": "https://www.dm.de/p/d/1395948/pantene-pro-v-trocken-oel-mit-vitamin-e-keratin-protect-oil-repair-und-care",
+          "result": "purchasable=true in dm MCP"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.dm.de/p/d/1395948/pantene-pro-v-trocken-oel-mit-vitamin-e-keratin-protect-oil-repair-und-care",
+          "fields": {
+            "title": "Trocken Öl mit Vitamin E Keratin Protect Oil Repair & Care, 100 ml",
+            "price": "4,95 €",
+            "GTIN": "4084500084971",
+            "availability": "Lieferbar"
+          }
+        }
+      ],
+      "reason": "Exact current product/package and registered GTIN via primary retailer PDP"
+    },
+    {
+      "id": "5827a3b9-a488-4c74-b13a-4d655f94f1c3",
+      "name": "Pantene Pro-V Miracles 7in1 Öl-Spray",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.mueller.de/p/pantene-pro-v-miracles-oel-spray-7-in-1-IPN2992303/",
+      "current_price_eur": 8.95,
+      "package_value": 145.0,
+      "package_unit": "ml",
+      "observed_barcode": "8700216178402",
+      "availability": "https://schema.org/InStock",
+      "checked_at": "2026-10-02T14:32:21.130770+00:00",
+      "source_method": "retailer live HTML JSON-LD Product/Offer plus package label",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Pantene Pantene Pro-V Miracles 7in1 Öl-Spray",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.mueller.de",
+          "url": "https://www.mueller.de/p/pantene-pro-v-miracles-oel-spray-7-in-1-IPN2992303/",
+          "result": "Pantene Pro-V miracles Öl-Spray 7 in 1 online bestellen | MÜLLER"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.mueller.de/p/pantene-pro-v-miracles-oel-spray-7-in-1-IPN2992303/",
+          "fields": {
+            "name": "Pantene Pro-V miracles Öl-Spray 7 in 1",
+            "gtin": "8700216178402",
+            "price": 8.95,
+            "currency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "package": [
+              145.0,
+              "ml"
+            ]
+          }
+        }
+      ],
+      "reason": "Registered GTIN, exact package and live buyable retailer offer"
+    },
+    {
+      "id": "1dce2c18-6a45-4017-a748-e3a7f1cba36f",
+      "name": "Primavera Calendulaöl Bio",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.mueller.de/p/primavera-calendulaoel-bio-IPN2893577/",
+      "current_price_eur": 15.9,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "4086900743540",
+      "availability": "https://schema.org/InStock",
+      "checked_at": "2026-10-02T14:32:21.138579+00:00",
+      "source_method": "retailer live HTML JSON-LD Product/Offer plus package label",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Primavera Primavera Calendulaöl Bio",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.mueller.de",
+          "url": "https://www.mueller.de/p/primavera-calendulaoel-bio-IPN2893577/",
+          "result": "Primavera Calendulaöl bio online bestellen | MÜLLER"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.mueller.de/p/primavera-calendulaoel-bio-IPN2893577/",
+          "fields": {
+            "name": "Primavera Calendulaöl bio",
+            "gtin": "4086900743540",
+            "price": 15.9,
+            "currency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "package": [
+              100.0,
+              "ml"
+            ]
+          }
+        }
+      ],
+      "reason": "Registered GTIN, exact package and live buyable retailer offer"
+    },
+    {
+      "id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+      "classification": "verified_exact",
+      "proposed_url": "https://nalda.de/products/4550516493590",
+      "current_price_eur": 12.41,
+      "package_value": 70,
+      "package_unit": "ml",
+      "observed_barcode": "4550516493590",
+      "availability": "delivery within 9 days",
+      "checked_at": "2026-10-02T14:59:35.014328+00:00",
+      "source_method": "live retailer public HTML/JSON-LD with exact identity and package; primary web corroboration",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Shiseido Fino Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.amazon.de",
+          "url": "https://www.amazon.de/Fino-Premium-Touch-Penetrating-Essence/dp/B0GVFQP34X",
+          "result": "Amazon.de"
+        },
+        {
+          "url": "https://nalda.de/products/4550516493590",
+          "result": "delivery within 9 days",
+          "checked_at": "2026-10-02T14:59:35.014328+00:00"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://nalda.de/products/4550516493590",
+          "fields": {
+            "price_eur": 12.41,
+            "package_value": 70,
+            "package_unit": "ml",
+            "gtin": "4550516493590",
+            "availability": "delivery within 9 days"
+          },
+          "live_artifact": "oils-secondary-live-pages.json"
+        }
+      ],
+      "reason": "Live Nalda HTML12.41/9days replaces stale indexed16.92/42days. Exact registeredGTIN70ml. German fallback source requires retailer-quality review; no GlowUpbarcode substitution.",
+      "retailer_review_required": true
+    },
+    {
+      "id": "5ad6c978-fd27-469e-9f26-ff3f05b9f67a",
+      "name": "Urban Alchemy Smooth Supreme Öl Serum",
+      "classification": "verified_exact",
+      "proposed_url": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+      "current_price_eur": 22.9,
+      "package_value": 75.0,
+      "package_unit": "ml",
+      "observed_barcode": "4063528079978",
+      "availability": "http://schema.org/InStock",
+      "checked_at": "2026-10-02T14:32:22.494794+00:00",
+      "source_method": "retailer live HTML JSON-LD Product/Offer plus package label",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Urban Alchemy Urban Alchemy Smooth Supreme Öl Serum",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "urban-alchemy.com",
+          "url": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+          "result": "Smooth Supreme Öl Serum 75ml | Offizieller Urban Alchemy Online Shop"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://urban-alchemy.com/products/smooth-supreme-ol-serum-75ml",
+          "fields": {
+            "name": "Smooth Supreme Öl Serum",
+            "gtin": "4063528079978",
+            "price": "22.90",
+            "currency": "EUR",
+            "availability": "http://schema.org/InStock",
+            "package": [
+              75.0,
+              "ml"
+            ]
+          }
+        }
+      ],
+      "reason": "Registered GTIN, exact package and live buyable retailer offer"
+    },
+    {
+      "id": "07120c73-0171-4a2a-9d07-facd9ce90d8c",
+      "name": "Weleda Hydra Shine Gloss Drops Alpen-Lein",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/3090516/weleda-haaroel-hydro-shine",
+      "current_price_eur": 9.95,
+      "package_value": 30.0,
+      "package_unit": "ml",
+      "observed_barcode": "4001638590839",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:29:00.348Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Weleda Weleda Hydra Shine Gloss Drops Alpen-Lein",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.mueller.de",
+          "url": "https://www.mueller.de/p/weleda-hydrashine-gloss-drops-haaroel-alpen-lein-PPN3138905/",
+          "result": "WELEDA HydraShine Gloss Drops Haaröl Alpen-Lein online bestellen | MÜLLER"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "WELEDA",
+            "title": "Haaröl Hydro Shine, 30 ml",
+            "gtin": "4001638590839",
+            "price": "9,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/3090516/weleda-haaroel-hydro-shine?appPageType=productdetails&appProductId=3090516&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "55c39339-bac0-4899-9499-ee96fa0bdad8",
+      "name": "Balea Professional Haaröl Plex Care",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care",
+      "current_price_eur": 2.75,
+      "package_value": 50.0,
+      "package_unit": "ml",
+      "observed_barcode": "4066447888218",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:29:00.474Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Balea Professional Balea Professional Haaröl Plex Care",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/1343983/balea-professional-haaroel-plex-care",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "Balea PROFESSIONAL",
+            "title": "Haaröl Plex Care, 50 ml",
+            "gtin": "4066447888218",
+            "price": "2,75 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1343983/balea-professional-haaroel-plex-care?appPageType=productdetails&appProductId=1343983&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "8a1f6818-84c7-4ed8-929a-221f0352b971",
+      "name": "Bali Curls Haaröl Bonding Oil",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/3093558/bali-curls-haaroel-bonding-oil",
+      "current_price_eur": 9.95,
+      "package_value": 30.0,
+      "package_unit": "ml",
+      "observed_barcode": "4262391990513",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:29:00.761Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Bali Curls Bali Curls Haaröl Bonding Oil",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/3093558/bali-curls-haaroel-bonding-oil",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "BALI CURLS",
+            "title": "Haaröl Bonding Oil, 30 ml",
+            "gtin": "4262391990513",
+            "price": "9,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/3093558/bali-curls-haaroel-bonding-oil?appPageType=productdetails&appProductId=3093558&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "7dcde56c-40e7-4e84-86b7-f6ac3d407a9d",
+      "name": "Dejan Garz Haaröl Violet Hair Oil The Britney",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
+      "current_price_eur": 8.95,
+      "package_value": 50.0,
+      "package_unit": "ml",
+      "observed_barcode": "4063528101808",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:29:00.779Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Dejan Garz Dejan Garz Haaröl Violet Hair Oil The Britney",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "DEJAN GARZ",
+            "title": "Haaröl Violet Hair Oil The Britney, 50 ml",
+            "gtin": "4063528101808",
+            "price": "8,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/3110122/dejan-garz-haaroel-violet-hair-oil-the-britney?appPageType=productdetails&appProductId=3110122&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "4eddfc54-3704-4a3e-a9b7-0cff91538863",
+      "name": "Garnier Fructis Hitzeschutzspray Wunderöl, stark geschädigtes Haar",
+      "classification": "unavailable_verified",
+      "proposed_url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+      "current_price_eur": 5.95,
+      "package_value": 150.0,
+      "package_unit": "ml",
+      "observed_barcode": "3600542020060",
+      "availability": {
+        "purchasable": "false",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:29:01.083Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Garnier Fructis Garnier Fructis Hitzeschutzspray Wunderöl, stark geschädigtes Haar",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "GARNIER FRUCTIS",
+            "title": "Hitzeschutzspray Wunderöl, stark geschädigtes Haar, 150 ml",
+            "gtin": "3600542020060",
+            "price": "5,95 €",
+            "purchasable": "false",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar?appPageType=productdetails&appProductId=1499834&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact dm offer is not online purchasable; seek alternate preferred shop"
+    },
+    {
+      "id": "770ee16b-154e-4c60-adf8-e9831718f6da",
+      "name": "Herbal Essences Haaröl Arganöl Elixir, Tiefenreparatur",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur",
+      "current_price_eur": 5.95,
+      "package_value": 95.0,
+      "package_unit": "ml",
+      "observed_barcode": "8006530075718",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:29:01.092Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Herbal Essences Herbal Essences Haaröl Arganöl Elixir, Tiefenreparatur",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "Herbal Essences",
+            "title": "Haaröl Arganöl Elixir, Tiefenreparatur, 95 ml",
+            "gtin": "8006530075718",
+            "price": "5,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/3115710/herbal-essences-haaroel-arganoel-elixir-tiefenreparatur?appPageType=productdetails&appProductId=3115710&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "c9ded02d-0bd8-4dc2-a7cc-c98f36dfe076",
+      "name": "Isana Professional Haaröl Arganöl & Pflege",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+      "current_price_eur": 2.79,
+      "package_value": 100,
+      "package_unit": "ml",
+      "observed_barcode": "4068134024947",
+      "availability": "Delivery 06–07 October 2026",
+      "checked_at": "2026-10-02 14:49:28 UTC",
+      "source_method": "Primary retailer PDP via web; structured HTML corroboration for brand direct",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Isana Professional Isana Professional Haaröl Arganöl & Pflege",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.rossmann.de",
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+          "result": "Client Challenge"
+        },
+        {
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+          "result": "Delivery 06–07 October 2026"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+          "fields": {
+            "title": "ISANA PROFESSIONAL Haaröl Arganöl & Pflege",
+            "package": "100 ml",
+            "price": "2,79 €",
+            "delivery": "06–07.10.2026",
+            "sku": "147329"
+          }
+        }
+      ],
+      "reason": "Exact current product/package and registered GTIN via primary retailer PDP"
+    },
+    {
+      "id": "f7f28e1c-e177-4505-906d-c59f4291ba6b",
+      "name": "L'Oréal Paris Elvital Haaröl Öl Magique, für alle Haartypen",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+      "current_price_eur": 6.95,
+      "package_value": 100.0,
+      "package_unit": "ml",
+      "observed_barcode": "3600523734955",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:29:01.493Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "L'Oréal Paris Elvital L'Oréal Paris Elvital Haaröl Öl Magique, für alle Haartypen",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "L'ORÉAL PARiS ELVITAL",
+            "title": "Haaröl Öl Magique, für alle Haartypen, 100 ml",
+            "gtin": "3600523734955",
+            "price": "6,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1621820/l-oreal-paris-elvital-haaroel-oel-magique-fuer-alle-haartypen?appPageType=productdetails&appProductId=1621820&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "f89c1edc-cb71-4ec6-ac86-dc27c515568e",
+      "name": "Langhaarmädchen Haaröl Intense Repair",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair",
+      "current_price_eur": 4.95,
+      "package_value": 150.0,
+      "package_unit": "ml",
+      "observed_barcode": "4066447864793",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:29:01.773Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Langhaarmädchen Langhaarmädchen Haaröl Intense Repair",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/1539520/langhaarmaedchen-haaroel-intense-repair",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "LANGHAARMÄDCHEN",
+            "title": "Haaröl Intense Repair, 150 ml",
+            "gtin": "4066447864793",
+            "price": "4,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1539520/langhaarmaedchen-haaroel-intense-repair?appPageType=productdetails&appProductId=1539520&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "010cf825-4892-4f78-bf20-26ad72122c60",
+      "name": "Neqi Smooth Strength Smooth Strength Rosemary Oil",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/2972764/neqi-rosmarin-oel-smooth-strength",
+      "current_price_eur": 9.95,
+      "package_value": 75.0,
+      "package_unit": "ml",
+      "observed_barcode": "4063528086280",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:29:01.785Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Neqi Neqi Smooth Strength Smooth Strength Rosemary Oil",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.cosmeterie.at",
+          "url": "https://www.cosmeterie.at/neqi/smooth-strength-rosemary-oil",
+          "result": "NEQI Smooth Strength Rosemary Oil, 75 ml - Cosmeterie"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "NEQI",
+            "title": "Rosmarin Öl Smooth Strength, 75 ml",
+            "gtin": "4063528086280",
+            "price": "9,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/2972764/neqi-rosmarin-oel-smooth-strength?appPageType=productdetails&appProductId=2972764&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "f0168972-dcd4-4593-aeb5-38d12343468a",
+      "name": "Pantene Pro-V Haarkur Glatt & Seidig Arganöl Argan Infused Oil",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+      "current_price_eur": 4.95,
+      "package_value": 100,
+      "package_unit": "ml",
+      "observed_barcode": "4084500085350",
+      "availability": "Lieferbar",
+      "checked_at": "2026-10-02 14:49:28 UTC",
+      "source_method": "Primary retailer PDP via web; structured HTML corroboration for brand direct",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Pantene Pro-V Pantene Pro-V Haarkur Glatt & Seidig Arganöl Argan Infused Oil",
+          "result": "no registered GTIN returned"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        },
+        {
+          "url": "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+          "result": "Lieferbar"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+          "fields": {
+            "title": "Haarkur Glatt & Seidig Arganöl Argan Infused Oil, 100 ml",
+            "price": "4,95 €",
+            "GTIN": "4084500085350",
+            "availability": "Lieferbar"
+          }
+        }
+      ],
+      "reason": "Exact current product/package and registered GTIN via primary retailer PDP"
+    },
+    {
+      "id": "e93d522b-6a07-42c8-8858-75a830d809b9",
+      "name": "Schwarzkopf Gliss Haaröl Tägliches Öl Elixier",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+      "current_price_eur": 5.95,
+      "package_value": 75.0,
+      "package_unit": "ml",
+      "observed_barcode": "4015100813791",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:29:02.130Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Schwarzkopf Gliss Schwarzkopf Gliss Haaröl Tägliches Öl Elixier",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "Schwarzkopf GLISS",
+            "title": "Haaröl Tägliches Öl Elixier, 75 ml",
+            "gtin": "4015100813791",
+            "price": "5,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1534910/schwarzkopf-gliss-haaroel-taegliches-oel-elixier?appPageType=productdetails&appProductId=1534910&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    },
+    {
+      "id": "6c51a883-85ae-4778-bb17-2f1318e3c969",
+      "name": "Weleda Haaröl Rosmarin",
+      "classification": "verified_exact",
+      "proposed_url": "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin",
+      "current_price_eur": 11.95,
+      "package_value": 50.0,
+      "package_unit": "ml",
+      "observed_barcode": "4001638093620",
+      "availability": {
+        "purchasable": "true",
+        "sellout": "false"
+      },
+      "checked_at": "2026-10-02T14:29:02.453Z",
+      "source_method": "official dm MCP searchProducts",
+      "preferred_shop_checks": [
+        {
+          "shop": "dm",
+          "query": "Weleda Weleda Haaröl Rosmarin",
+          "result": "registered GTIN match"
+        },
+        {
+          "shop": "www.dm.de",
+          "url": "https://www.dm.de/p/d/1342502/weleda-haaroel-rosmarin",
+          "result": "dm-drogerie markt - dauerhaft günstig online kaufen"
+        }
+      ],
+      "primary_evidence": [
+        {
+          "url": "https://mcp.dm.de/mcp",
+          "fields": {
+            "brand": "WELEDA",
+            "title": "Haaröl Rosmarin, 50 ml",
+            "gtin": "4001638093620",
+            "price": "11,95 €",
+            "purchasable": "true",
+            "sellout": "false",
+            "appLink": "https://www.dm.de/applink/p/d/1342502/weleda-haaroel-rosmarin?appPageType=productdetails&appProductId=1342502&wt_mc=dm-mcp"
+          }
+        }
+      ],
+      "reason": "Exact registered GTIN and live buyable package offer from dm"
+    }
+  ]
+}

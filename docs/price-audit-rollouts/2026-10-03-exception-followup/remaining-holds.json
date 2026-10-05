@@ -1,0 +1,488 @@
+{
+  "generated_at": "2026-10-03T13:22:53.666109+00:00",
+  "scope": "34remaining active catalog rows after21approved exception offers; no production changes to these rows",
+  "counts": {
+    "marketplace": 2,
+    "stock_or_missing_exact_offer": 16,
+    "identity_or_formula": 16
+  },
+  "records": [
+    {
+      "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "name": "Gliss Aqua Revive",
+      "category_key": "mask",
+      "prior_classification": "verified_exact",
+      "prior_review_reasons": [
+        "price_change_over_30pct",
+        "retailer_exception"
+      ],
+      "production_changes": 0,
+      "hold_group": "marketplace",
+      "reason": "approved_recommendation_keep_held",
+      "evidence_file": "retailer-recheck-summary.json",
+      "detail": "No normal direct preferred exact offer recovered; retain original marketplace hold."
+    },
+    {
+      "id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "name": "MoriVeda Premium Moringaöl",
+      "category_key": "oil",
+      "prior_classification": "verified_exact",
+      "prior_review_reasons": [
+        "retailer_exception"
+      ],
+      "production_changes": 0,
+      "hold_group": "marketplace",
+      "reason": "approved_recommendation_keep_held",
+      "evidence_file": "retailer-recheck-summary.json",
+      "detail": "No normal direct preferred exact offer recovered; retain original marketplace hold."
+    },
+    {
+      "id": "41e09958-5a1f-4997-b99b-f8384b7a8c0c",
+      "name": "Trockenshampoo Kopfhaut Sensitive",
+      "category_key": "dry_shampoo",
+      "prior_classification": "unavailable_verified",
+      "prior_review_reasons": [
+        "unavailable_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_UNAVAILABLE",
+      "evidence_file": "stock-recheck.json",
+      "detail": "Momentan nicht lieferbar"
+    },
+    {
+      "id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+      "name": "Trockenshampoo Schaum Kopfhaut Sensitive",
+      "category_key": "dry_shampoo",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "uncertain",
+      "evidence_file": "identity-recheck.json",
+      "detail": "dm historical search tied old 4067796069556 to the same named 150 ml foam; current 4066447989540 is exact current dm article DAN 2974661. No preserved old INCI exists for comparison."
+    },
+    {
+      "id": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "name": "Balea Professional Ultimate Volume",
+      "category_key": "shampoo",
+      "prior_classification": "unavailable_verified",
+      "prior_review_reasons": [
+        "unavailable_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_UNAVAILABLE",
+      "evidence_file": "stock-recheck.json",
+      "detail": "Nicht lieferbar"
+    },
+    {
+      "id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "name": "Hair Biology Revitalize & Soothe",
+      "category_key": "shampoo",
+      "prior_classification": "unavailable_verified",
+      "prior_review_reasons": [
+        "unavailable_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_UNAVAILABLE",
+      "evidence_file": "stock-recheck.json",
+      "detail": "Nicht lieferbar"
+    },
+    {
+      "id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "name": "Langhaarmädchen Lovely Long",
+      "category_key": "shampoo",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "uncertain",
+      "evidence_file": "identity-recheck.json",
+      "detail": "Old-GTIN dm URL redirected on 2026-10-02 to current article DAN 1559584; current 4066447864694 is Lovely Long 300 ml with INCI. This is retailer article lineage, not an old-versus-new INCI comparison."
+    },
+    {
+      "id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "name": "Langhaarmädchen Beautiful Curls Shampoo",
+      "category_key": "shampoo",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "uncertain",
+      "evidence_file": "identity-recheck.json",
+      "detail": "Old-GTIN dm URL redirected on 2026-10-02 to current article DAN 1678985; current 4070765004649 is Beautiful Curls Shampoo 300 ml with INCI. Formula continuity is not proven."
+    },
+    {
+      "id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "name": "Lavera Basis Sensitiv",
+      "category_key": "shampoo",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "unavailable",
+      "evidence_file": "identity-recheck.json",
+      "detail": "The only old GTIN 4021457666768 still resolves to a Basis Sensitive Hydrate & Care shampoo; the 15 proposed candidate GTINs resolve to unrelated lavera/alverde products. No candidate exists."
+    },
+    {
+      "id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "name": "Alverde Conditioner Glanz",
+      "category_key": "conditioner",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "uncertain",
+      "evidence_file": "identity-recheck.json",
+      "detail": "Current 4066447919202 is Conditioner Glanz 200 ml with INCI; old 4066447592085 is retired and no old formula or retailer redirect bridge is preserved."
+    },
+    {
+      "id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "name": "Balea Natural Beauty Hibiskus",
+      "category_key": "conditioner",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "unavailable",
+      "evidence_file": "identity-recheck.json",
+      "detail": "Both old 4066447238952 and proposed 4058172926181 return not found from dm direct GTIN details. No live candidate is established."
+    },
+    {
+      "id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "name": "Balea Professional Aqua Hyaluron Conditioner",
+      "category_key": "conditioner",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "uncertain",
+      "evidence_file": "identity-recheck.json",
+      "detail": "Old-GTIN dm slug 4066447342055 redirected to current DAN 1675522; current 4070765001662 is Aqua Hyaluron 200 ml with INCI. This proves retailer article lineage only."
+    },
+    {
+      "id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "name": "Balea Professional Oil Repair Intensiv Spülung",
+      "category_key": "conditioner",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "uncertain",
+      "evidence_file": "identity-recheck.json",
+      "detail": "Current 4070765001402 is Oil Repair Intensiv 200 ml with INCI; retired old 4066447365443 has no retained formula/redirect bridge."
+    },
+    {
+      "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "name": "Garnier Hair Food Macadamia",
+      "category_key": "conditioner",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "different_formula",
+      "evidence_file": "identity-recheck.json",
+      "detail": "The Douglas 400 ml candidate publishes an INCI that conflicts with the dm identity; neither this category record nor its paired Macadamia record may absorb that offer."
+    },
+    {
+      "id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+      "name": "Herbal Essences Aloe Vera Conditioner",
+      "category_key": "conditioner",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "uncertain",
+      "evidence_file": "identity-recheck.json",
+      "detail": "Current 8700216210546 is Herbal Essences Aloe Vera 250 ml with INCI; old 8700216211598 is retired and lacks a comparison formula or official transition statement."
+    },
+    {
+      "id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "name": "Nivea Volumen & Kraft",
+      "category_key": "conditioner",
+      "prior_classification": "not_verified",
+      "prior_review_reasons": [
+        "not_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_NOT_VERIFIED",
+      "evidence_file": "stock-recheck.json",
+      "detail": "zero results"
+    },
+    {
+      "id": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+      "name": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+      "category_key": "mask",
+      "prior_classification": "not_verified",
+      "prior_review_reasons": [
+        "not_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_NOT_VERIFIED_STORE_ONLY",
+      "evidence_file": "stock-recheck.json",
+      "detail": "Nur in der Filiale verfügbar; no online price"
+    },
+    {
+      "id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+      "name": "Balea Natural Beauty 3in1 Locken",
+      "category_key": "mask",
+      "prior_classification": "unavailable_verified",
+      "prior_review_reasons": [
+        "unavailable_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_UNAVAILABLE",
+      "evidence_file": "stock-recheck.json",
+      "detail": "Nicht lieferbar"
+    },
+    {
+      "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "name": "Balea Professional Glow & Shine",
+      "category_key": "mask",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "unavailable",
+      "evidence_file": "identity-recheck.json",
+      "detail": "Both old 4067796166453 and proposed 4066447883039 are not found in current dm direct details."
+    },
+    {
+      "id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "name": "Balea Aqua Hyaluron 3 in 1",
+      "category_key": "mask",
+      "prior_classification": "unavailable_verified",
+      "prior_review_reasons": [
+        "unavailable_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_UNAVAILABLE",
+      "evidence_file": "stock-recheck.json",
+      "detail": "Nicht lieferbar"
+    },
+    {
+      "id": "17c50884-3c17-479a-848a-10447464e086",
+      "name": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+      "category_key": "mask",
+      "prior_classification": "unavailable_verified",
+      "prior_review_reasons": [
+        "unavailable_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_UNAVAILABLE",
+      "evidence_file": "stock-recheck.json",
+      "detail": "Nicht lieferbar"
+    },
+    {
+      "id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "name": "Isana 3in1 Milchprotein & Mandel",
+      "category_key": "mask",
+      "prior_classification": "unavailable_verified",
+      "prior_review_reasons": [
+        "unavailable_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_UNAVAILABLE",
+      "evidence_file": "stock-recheck.json",
+      "detail": "zero results"
+    },
+    {
+      "id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+      "name": "Neqi Build Boost",
+      "category_key": "mask",
+      "prior_classification": "needs_availability_decision",
+      "prior_review_reasons": [
+        "needs_availability_decision"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_NEEDS_AVAILABILITY_DECISION",
+      "evidence_file": "stock-recheck.json",
+      "detail": "beim Lieferanten (3-5 Tage)"
+    },
+    {
+      "id": "869abd97-a499-4f39-97e5-2722773e46ae",
+      "name": "Sante Intense Hydration",
+      "category_key": "mask",
+      "prior_classification": "unavailable_verified",
+      "prior_review_reasons": [
+        "unavailable_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_UNAVAILABLE",
+      "evidence_file": "stock-recheck.json",
+      "detail": "shop route 404"
+    },
+    {
+      "id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+      "name": "Schaebens Argan-Öl Haarmaske",
+      "category_key": "mask",
+      "prior_classification": "unavailable_verified",
+      "prior_review_reasons": [
+        "unavailable_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_UNAVAILABLE",
+      "evidence_file": "stock-recheck.json",
+      "detail": "Nicht lieferbar; dm market/express only note"
+    },
+    {
+      "id": "e3571e45-1126-4431-bef8-43153ef64c20",
+      "name": "alverde NATURKOSMETIK Haarkur 4in1 Repair & Care Wunderkur",
+      "category_key": "mask",
+      "prior_classification": "unavailable_verified",
+      "prior_review_reasons": [
+        "unavailable_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_UNAVAILABLE",
+      "evidence_file": "stock-recheck.json",
+      "detail": "Nicht lieferbar; dm market/express only note"
+    },
+    {
+      "id": "96f4cf13-7a71-4924-b44e-9d5612d55d32",
+      "name": "alverde NATURKOSMETIK Haarmaske Hydro Feuchtigkeit",
+      "category_key": "mask",
+      "prior_classification": "unavailable_verified",
+      "prior_review_reasons": [
+        "unavailable_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_UNAVAILABLE",
+      "evidence_file": "stock-recheck.json",
+      "detail": "Nicht lieferbar; Paketversand nicht möglich"
+    },
+    {
+      "id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+      "name": "Jean&Len Rosemary/Ginger Hair Mask Hydration Rosemary/Ginger",
+      "category_key": "mask",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "uncertain",
+      "evidence_file": "identity-recheck.json",
+      "detail": "Brand PDP gives current 4262401735639 and 200 ml/€7.99, but catalog has no old GTIN and no retained older formula bridge."
+    },
+    {
+      "id": "efaff579-e411-41eb-972a-2734a8517356",
+      "name": "Hitzeschutzspray Schutzengel",
+      "category_key": "heat_protectant",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "uncertain",
+      "evidence_file": "identity-recheck.json",
+      "detail": "Current 4015100894141 is Schutzengel 200 ml on the same dm DAN 1267310; old 4015100800128 is retired. Same retail article/name/package is insufficient to establish formula continuity."
+    },
+    {
+      "id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "name": "Balea Aqua Hyaluron 3in1",
+      "category_key": "leave_in",
+      "prior_classification": "unavailable_verified",
+      "prior_review_reasons": [
+        "unavailable_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_UNAVAILABLE",
+      "evidence_file": "stock-recheck.json",
+      "detail": "Nicht lieferbar"
+    },
+    {
+      "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "name": "Garnier Hair Food Macadamia",
+      "category_key": "leave_in",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "different_formula",
+      "evidence_file": "identity-recheck.json",
+      "detail": "Paired Macadamia record: dm identity and Douglas candidate have conflicting INCI. Hold; no GTIN is to be added."
+    },
+    {
+      "id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+      "name": "Hitzeschutzspray 2-Phasen",
+      "category_key": "heat_protectant",
+      "prior_classification": "needs_barcode_review",
+      "prior_review_reasons": [
+        "needs_barcode_review"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "uncertain",
+      "evidence_file": "identity-recheck.json",
+      "detail": "Current 4070765016758 is Balea Hitzeschutzspray 200 ml with INCI; old 4070765073546 is retired and no formula/official transition bridge was found."
+    },
+    {
+      "id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "name": "Innersense Harmonic Treatment Oil",
+      "category_key": "oil",
+      "prior_classification": "needs_package_decision",
+      "prior_review_reasons": [
+        "needs_package_decision"
+      ],
+      "production_changes": 0,
+      "hold_group": "identity_or_formula",
+      "reason": "fresh_ingredient_lists_conflict",
+      "evidence_file": "package-identity-evidence.json",
+      "detail": "Hagel29ml and registered118ml share its older safflower/eveningprimrose INCI, while manufacturer and exactregistered118mlBelladonna list sunflower/camellia. The approved29ml offer is real, but formula continuity across the observed current evidence is not settled. No29mlalias added, no price/package/link change."
+    },
+    {
+      "id": "78e6f1b2-7262-46af-b689-a92af6702739",
+      "name": "NUTREEOIL Cacay Öl",
+      "category_key": "oil",
+      "prior_classification": "unavailable_verified",
+      "prior_review_reasons": [
+        "unavailable_verified"
+      ],
+      "production_changes": 0,
+      "hold_group": "stock_or_missing_exact_offer",
+      "reason": "REMAIN_UNAVAILABLE_DIFFERENT_SIZE_EXCLUDED",
+      "evidence_file": "stock-recheck.json",
+      "detail": "add-to-cart shown for 15 ml only"
+    }
+  ]
+}

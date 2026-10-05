@@ -1,0 +1,205 @@
+{
+  "method": "Read-only old-vs-current identity/formula audit. Exact old GTIN primary dm country pages and fresh current dm DE direct/search rows are required; name, package or DAN alone are not treated as continuity. Correction: identical displayed ingredient sets are declared-INCI continuity only; order changes can matter. Differing fragrance/allergen declarations are not treated as proof of chemical reformulation.",
+  "checked_at": "2026-10-03T13:51:59.004Z",
+  "counts": {
+    "same_declared_inci_strong_continuity": 2,
+    "inci_declaration_difference": 2,
+    "inci_order_difference": 1,
+    "registered_gtin_current": 1,
+    "no_current_candidate": 2
+  },
+  "records": [
+    {
+      "id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+      "name": "Balea Sensitive foam",
+      "old_gtin": "4067796069556",
+      "candidate_gtin": "4066447989540",
+      "verdict": "same_declared_inci_strong_continuity",
+      "comparison": "Old and current INCI are identical: Aqua, Alcohol Denat., Butane, Oryza Sativa Starch, Propane, Coco-Glucoside, Cocamidopropyl Betaine, Phenoxyethanol, Xanthan Gum, Panthenol, Cetrimonium Chloride. This supports continuity of the declared ingredient list; it cannot prove chemically identical production batches.",
+      "old_primary": {
+        "url": "https://www.dm-drogeriemarkt.it/p/d/2974661/balea-shampoo-secco-in-schiuma-sensitive",
+        "checked_at": "2026-10-03",
+        "source": "current primary dm country PDP / exact GTIN search result"
+      },
+      "current_dm": {
+        "url": "https://www.dm.de/p/d/2974661/balea-trockenshampoo-schaum-kopfhaut-sensitive",
+        "price_eur": 1.45,
+        "whole_package": ", 150 ml",
+        "purchasable": "true",
+        "sellout": "false",
+        "checked_at": "2026-10-03T13:47:19.545Z",
+        "gtin": "4066447989540",
+        "inci": "Ingredients: AQUA, ALCOHOL DENAT., BUTANE, ORYZA SATIVA STARCH, PROPANE, COCO-GLUCOSIDE, COCAMIDOPROPYL BETAINE, PHENOXYETHANOL, XANTHAN GUM, PANTHENOL, CETRIMONIUM CHLORIDE."
+      },
+      "recommended_next_action": "Candidate can be presented for human approval as a high-confidence identity bridge; do not call it chemically proven unchanged."
+    },
+    {
+      "id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "name": "Alverde Glanz conditioner",
+      "old_gtin": "4066447592085",
+      "candidate_gtin": "4066447919202",
+      "verdict": "inci_declaration_difference",
+      "comparison": "Old list: Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil, Glycerin, Betaine, Arginine, Rosa Damascena Flower Water, Levulinic Acid, Parfum, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Hydrolyzed Wheat Protein, Alcohol, Glyceryl Caprylate, p-Anisic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide. Current list additionally declares Pelargonium Graveolens Flower Oil and changes ingredient order. This is not a same-list result.",
+      "old_primary": {
+        "url": "https://www.dm.ro/p/d/1714048/alverde-naturkosmetik-balsam-de-par-pentru-stralucire",
+        "checked_at": "2026-10-03",
+        "source": "current primary dm country PDP / exact GTIN search result"
+      },
+      "current_dm": {
+        "url": null,
+        "price_eur": null,
+        "whole_package": null,
+        "purchasable": null,
+        "sellout": null,
+        "checked_at": "2026-10-03T13:47:20.727Z",
+        "gtin": "4066447919202",
+        "inci": "Ingredients: Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil1, Glycerin, Betaine, Arginine, Hydrolyzed Wheat Protein, Rosa Damascena Flower Water 1, Parfum, Pelargonium Graveolens Flower Oil, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Alcohol, Levulinic Acid, Glyceryl Caprylate, p-Anisic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide"
+      },
+      "recommended_next_action": "Hold candidate pending manufacturer transition/formula statement; no alias or commerce update."
+    },
+    {
+      "id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "name": "Balea Natural Beauty Hibiskus conditioner",
+      "old_gtin": "4066447238952",
+      "candidate_gtin": "4058172926181",
+      "verdict": "no_current_candidate",
+      "comparison": "Old GTIN has a primary dm country page and INCI, but proposed candidate remains not found. No formula comparison is possible.",
+      "old_primary": {
+        "url": "https://www.dm.rs/p/d/1625969/balea-natural-beauty-balzam-za-kosu",
+        "checked_at": "2026-10-03",
+        "source": "current primary dm country PDP / exact GTIN search result"
+      },
+      "current_dm": {
+        "url": null,
+        "price_eur": null,
+        "whole_package": null,
+        "purchasable": null,
+        "sellout": null,
+        "checked_at": null,
+        "gtin": "4058172926181",
+        "inci": null
+      },
+      "recommended_next_action": "Keep unavailable hold; do not add 4058172926181 or change commerce."
+    },
+    {
+      "id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "name": "Balea Professional Aqua Hyaluron conditioner",
+      "old_gtin": "4066447342055",
+      "candidate_gtin": "4070765001662",
+      "verdict": "same_declared_inci_strong_continuity",
+      "comparison": "Old dm IT/RS and current DE list identical 13-item INCI under same article 1675522. This supports continuity of the declared ingredient list; it cannot prove chemically identical production batches.",
+      "old_primary": {
+        "url": "https://www.dm-drogeriemarkt.it/p/d/1675522/balea-professional-balsamo-per-capelli-secchi-aqua-hyaluron",
+        "checked_at": "2026-10-03",
+        "source": "current primary dm country PDP / exact GTIN search result"
+      },
+      "current_dm": {
+        "url": "https://www.dm.de/p/d/1675522/balea-professional-conditioner-aqua-hyaluron",
+        "price_eur": 1.25,
+        "whole_package": ", 200 ml",
+        "purchasable": "true",
+        "sellout": "false",
+        "checked_at": "2026-10-03T13:47:21.503Z",
+        "gtin": "4070765001662",
+        "inci": "AQUA, CETEARYL ALCOHOL, STEARAMIDOPROPYL DIMETHYLAMINE, GLYCERIN, LACTIC ACID, SODIUM CETEARYL SULFATE, PARFUM, SODIUM BENZOATE, ALOE BARBADENSIS LEAF JUICE POWDER, POTASSIUM SORBATE, SODIUM HYALURONATE, DISODIUM PHOSPHATE, POTASSIUM PHOSPHATE."
+      },
+      "recommended_next_action": "Candidate can be presented for human approval as a high-confidence identity bridge; do not call it chemically proven unchanged."
+    },
+    {
+      "id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "name": "Balea Professional Oil Repair Intensiv conditioner",
+      "old_gtin": "4066447365443",
+      "candidate_gtin": "4070765001402",
+      "verdict": "inci_order_difference",
+      "comparison": "Old and current disclose the same ingredient set, but Hydrolyzed Keratin moves from after Isopropyl Alcohol to before the oil complex. INCI order can reflect concentration ordering; this is continuity evidence, not proof of an unchanged formula. Parent has not independently established the complete old list; hold applies regardless.",
+      "old_primary": {
+        "url": "https://www.dm-drogeriemarkt.it/balea-professional-balsamo-ristrutturante-oil-repair-con-cheratina-p4066447365443.html",
+        "checked_at": "2026-10-03",
+        "source": "current primary dm country PDP / exact GTIN search result"
+      },
+      "current_dm": {
+        "url": "https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv",
+        "price_eur": 1.25,
+        "whole_package": ", 200 ml",
+        "purchasable": "true",
+        "sellout": "false",
+        "checked_at": "2026-10-03T13:47:22.266Z",
+        "gtin": "4070765001402",
+        "inci": "Ingredients: Aqua, Glycerin, Cetearyl Alcohol, Isopropyl Palmitate, Behentrimonium Chloride, Panthenol, Hydrolyzed Keratin, Helianthus Annuus Hybrid Oil, Ricinus Communis Seed Oil, Argania Spinosa Kernel Oil, Orbignya Oleifera Seed Oil, Sclerocarya Birrea Seed Oil, Parfum, Isopropyl Alcohol, Sodium Benzoate, Potassium Sorbate, Tetramethyl Acetyloctahydronaphthalenes, Citric Acid"
+      },
+      "recommended_next_action": "Hold candidate pending manufacturer confirmation; do not auto-add alias despite same set."
+    },
+    {
+      "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "name": "Balea Professional Glow & Shine treatment",
+      "old_gtin": "4067796166453",
+      "candidate_gtin": "4066447883039",
+      "verdict": "no_current_candidate",
+      "comparison": "Historical old-GTIN product/200ml evidence exists, but candidate is not found and no current formula was established.",
+      "old_primary": {
+        "url": "https://www.gooloo.de/2025/09/balea-professional-glow-shine-laminier-kur.html",
+        "checked_at": "2026-10-03",
+        "source": "secondary historical blog; not primary identity or formula proof"
+      },
+      "current_dm": {
+        "url": null,
+        "price_eur": null,
+        "whole_package": null,
+        "purchasable": null,
+        "sellout": null,
+        "checked_at": null,
+        "gtin": "4066447883039",
+        "inci": null
+      },
+      "recommended_next_action": "Keep unavailable hold; no identifier or commerce update."
+    },
+    {
+      "id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+      "name": "Balea 2-Phasen heat protectant",
+      "old_gtin": "4070765073546",
+      "candidate_gtin": "4070765016758",
+      "verdict": "inci_declaration_difference_continuity_unproven",
+      "comparison": "Old declared INCI: AQUA, ISODODECANE, ALCOHOL DENAT., POLYQUATERNIUM-68, PANTHENOL, UNDECANE, CITRIC ACID, GLYCERYL CAPRATE, TRIDECANE, ETHYLHEXYLGLYCERIN, CETRIMONIUM CHLORIDE, PARFUM, HYDROLYZED RICE PROTEIN, AMMONIA, PHENOXYETHANOL, LINALYL ACETATE, LIMONENE, LINALOOL, SODIUM BENZOATE, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES, CITRUS AURANTIUM PEEL OIL, GERANIOL, PINENE, TOCOPHEROL, HELIANTHUS ANNUUS SEED OIL. Current declared INCI: AQUA, ISODODECANE, ALCOHOL DENAT., POLYQUATERNIUM-68, PANTHENOL, UNDECANE, CITRIC ACID, GLYCERYL CAPRATE, TRIDECANE, ETHYLHEXYLGLYCERIN, CETRIMONIUM CHLORIDE, PARFUM, HYDROLYZED RICE PROTEIN, AMMONIA, PHENOXYETHANOL, LIMONENE, LINALOOL, SODIUM BENZOATE, GERANIOL, CITRAL, TOCOPHEROL, HELIANTHUS ANNUUS SEED OIL. Difference: old declares Linalyl Acetate, Tetramethyl Acetyloctahydronaphthalenes, Citrus Aurantium Peel Oil and Pinene; current declares Citral. This may be a fragrance-allergen/declaration change or a reformulation; it does not prove either.",
+      "old_primary": {
+        "url": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+        "checked_at": "2026-10-03",
+        "source": "current primary dm country PDP / exact GTIN search result"
+      },
+      "current_dm": {
+        "url": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+        "price_eur": 1.95,
+        "whole_package": ", 200 ml",
+        "purchasable": "true",
+        "sellout": "false",
+        "checked_at": "2026-10-03T13:47:23.005Z",
+        "gtin": "4070765016758",
+        "inci": "AQUA, ISODODECANE, ALCOHOL DENAT., POLYQUATERNIUM-68, PANTHENOL, UNDECANE, CITRIC ACID, GLYCERYL CAPRATE, TRIDECANE, ETHYLHEXYLGLYCERIN, CETRIMONIUM CHLORIDE, PARFUM, HYDROLYZED RICE PROTEIN, AMMONIA, PHENOXYETHANOL, LIMONENE, LINALOOL, SODIUM BENZOATE, GERANIOL, CITRAL, TOCOPHEROL, HELIANTHUS ANNUUS SEED OIL."
+      },
+      "recommended_next_action": "The registered GTIN has no fresh dm DE offer: direct details found=false and fresh exact-GTIN search returned no match. Keep it and the candidate separate until manufacturer proof; do not move commerce."
+    },
+    {
+      "id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "name": "Lavera Basis Sensitive Hydrate & Care shampoo",
+      "old_gtin": "4021457666768",
+      "candidate_gtin": null,
+      "verdict": "registered_gtin_current",
+      "comparison": "Registered GTIN is itself a current dm DE article 3133400; prior candidate set was unrelated products. Current primary INCI is available under registered code.",
+      "old_primary": {
+        "url": "https://www.dm.de/p/d/3133400/lavera-naturkosmetik-shampoo-basis-sensitive-hydrate-und-care",
+        "checked_at": "2026-10-03",
+        "source": "current primary dm country PDP / exact GTIN search result"
+      },
+      "current_dm": {
+        "url": "https://www.dm.de/p/d/3133400/lavera-naturkosmetik-shampoo-basis-sensitive-hydrate-und-care",
+        "price_eur": 5.45,
+        "whole_package": ", 250 ml",
+        "purchasable": "true",
+        "sellout": "false",
+        "checked_at": "2026-10-03T13:47:23.673Z",
+        "gtin": "4021457666768",
+        "inci": "Ingredients: Water (Aqua), Aloe Barbadensis Leaf Juice*, Sodium Coco-Sulfate, Glycerin, Cocamidopropyl Betaine, Lauryl Glucoside, Citric Acid, Cucumis Sativus (Cucumber) Fruit Extract*, Melissa Officinalis (Lemon Balm) Leaf Extract*, Sodium Hyaluronate, Helianthus Annuus (Sunflower) Seed Oil, Tocopherol, Sea Salt (Maris Sal), Levulinic Acid, Cetearyl Alcohol, PCA Glyceryl Oleate, Betaine, Sodium Levulinate, Sodium Cetearyl Sulfate, Sodium Anisate, Guar Hydroxypropyltrimonium Chloride, Arginine, Tridecane, Coco-Glucoside, Undecane, Sodium Sulfate, Sodium Chloride, Fragrance (Parfum)**, Limonene**, Citrus Aurantium Peel Oil**, Linalool**, Citrus Limon (Lemon) Peel Oil**, Linalyl Acetate**, Pinene**, Citronellol**, Citrus Aurantium Bergamia (Bergamot) Peel Oil**, Geraniol**, Citral**, Lavandula Oil/Extract** \n\n* aus kontrolliert biologischem Anbau\n** natürlichen Ursprungs"
+      },
+      "recommended_next_action": "Recover commerce using registered GTIN only; add no identifier."
+    }
+  ]
+}

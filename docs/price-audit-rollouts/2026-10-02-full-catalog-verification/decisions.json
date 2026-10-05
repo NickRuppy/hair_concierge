@@ -1,0 +1,1947 @@
+{
+  "generated_at": "2026-10-03T11:26:09.675994+00:00",
+  "scope": "55 excluded catalog rows:18 alignment+37 held",
+  "production_writes_executed": 0,
+  "records": [
+    {
+      "id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+      "category_key": "shampoo",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "retailer_exception"
+      ],
+      "registered_gtins": [
+        "8700216496032"
+      ],
+      "candidate": {
+        "url": "https://www.drogeriedepot.de/haarpflege-farben/haar-shampoo/head-shoulders-shampoo-derma-x-pro-sensitive-pflege-pr-077537/",
+        "retailer": "Drogeriedepot",
+        "price_eur": 5.59,
+        "package_value": 250,
+        "package_unit": "ml",
+        "observed_gtin": "8700216496032",
+        "availability": "InStock",
+        "delivery": "Verfügbar1–2Werktage",
+        "checked_at": "2026-10-02T15:11:52.817672+00:00",
+        "price_valid_until": "2026-11-01"
+      },
+      "baseline": {
+        "baseline_price_eur": 4.99,
+        "baseline_url": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-dermaxpro-haarshampoo-sensitive-pflege/p/8700216496032",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Fresh exact offer at retailer outside the explicitly named set; user retailer decision required.",
+      "recommendation": "Accept this exact direct-retailer fallback if preferred-source stock remains unavailable at apply; preserve the selected package and identifiers. Refresh this offer before apply.",
+      "source_file": "shampoos-recovery-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+      "category_key": "shampoo",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "price_change_over_30pct"
+      ],
+      "registered_gtins": [
+        "4897097266343"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.hagel-shop.de/monday-haircare-volume-shampoo-350-ml.html",
+        "price_eur": 7.95,
+        "package_value": 350,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4897097266343"
+        ],
+        "availability": "http://schema.org/InStock",
+        "checked_at": "2026-10-03T10:38:54.187667+00:00",
+        "source_file": "retailer-final-price-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 5.4,
+        "baseline_url": "https://www.flaconi.de/haare/monday-haircare/volume/monday-haircare-volume-kraft-and-fuelle-haarshampoo.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Live primary PDP Product/Offer markup and product fields verify matching GTIN, size, unconditional item price and InStock availability.",
+      "recommendation": "Accept the verified exact whole-package offer after reviewing this price exception; keep all identifiers and product properties.",
+      "source_file": "retailer-final-price-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "e859d6e0-e991-4081-84b5-b81862c82475",
+      "name": "Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo",
+      "category_key": "shampoo",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "price_change_over_30pct"
+      ],
+      "registered_gtins": [
+        "4015100895025"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025/",
+        "price_eur": 4.99,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4015100895025"
+        ],
+        "availability": "available",
+        "checked_at": "2026-10-03T10:39:31.787Z",
+        "source_file": "rossmann-final-browser-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 3.49,
+        "baseline_url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html",
+        "baseline_package_value": 200,
+        "baseline_package_unit": "ml"
+      },
+      "reason": "Oct 3 live exact Rossmann whole-pack offer and online delivery confirmed.",
+      "recommendation": "Accept the verified exact whole-package offer after reviewing this price exception; keep all identifiers and product properties.",
+      "source_file": "rossmann-final-browser-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "name": "Guhl Bond+ Reparatur Spülung",
+      "category_key": "conditioner",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "retailer_exception"
+      ],
+      "registered_gtins": [
+        "4072600701218"
+      ],
+      "candidate": {
+        "proposed_url": "https://m.drogeriedepot.de/neue-produkte/guhl-conditioner-bond-reparatur-p-75039.html?active_tab=def&offset_def=96&offset_new=696",
+        "price_eur": 5.99,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcodes": [],
+        "availability": "available",
+        "checked_at": "2026-10-02T15:05:33.927287+00:00",
+        "source_file": "live-retailer-fetch-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 5.99,
+        "baseline_url": "https://www.amazon.de/Guhl-BOND-REPARATUR-Sp%C3%BClung-Rotalgenextrakt/dp/B0CWJHVKV5",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Indexed2.17 price rejected; live exact200ml page5.99.",
+      "recommendation": "Accept this exact direct-retailer fallback if preferred-source stock remains unavailable at apply; preserve the selected package and identifiers. Refresh this offer before apply.",
+      "source_file": "live-retailer-fetch-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "category_key": "conditioner",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "price_change_over_30pct",
+        "retailer_exception"
+      ],
+      "registered_gtins": [
+        "4072600703403"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+        "price_eur": 2.8,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4072600703403"
+        ],
+        "availability": "In stock; live purchase control; 1–2 days.",
+        "checked_at": "2026-10-02T15:27:48.312Z",
+        "source_file": "care-last-unavailable-recovery.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 4.95,
+        "baseline_url": "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Exact original GTIN and 200 ml single-pack recovered from live German merchant PDP. Merchant outside named preferred/specialist set, so retain for parent/human retailer approval.",
+      "recommendation": "Accept this exact direct-retailer fallback if preferred-source stock remains unavailable at apply; preserve the selected package and identifiers. Refresh this offer before apply.",
+      "source_file": "care-last-unavailable-recovery.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "4506954b-128a-473c-866f-54a300ff23f4",
+      "name": "Hair Biology Full & Shining Conditioner",
+      "category_key": "conditioner",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "retailer_exception"
+      ],
+      "registered_gtins": [
+        "8001841216997"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.galaxus.de/de/s6/product/hair-biology-haarspuelung-full-shining-160-ml-160-ml-conditioner-13128066",
+        "price_eur": 5.24,
+        "package_value": 160,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "8001841216997"
+        ],
+        "availability": "More than10 units in stock; delivery Wednesday2026-10-07; enabled single-unit purchase control.",
+        "checked_at": "2026-10-02T15:27:48.312Z",
+        "source_file": "care-last-unavailable-recovery.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 4.99,
+        "baseline_url": "https://www.dm.de/p/d/1585350/hair-biology-conditioner-full-und-shining",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Live selected one-pack offer and embedded Product JSON-LD both confirm €5.24 and exact GTIN. Galaxus is outside named preferred/specialist set and requires retailer review.",
+      "recommendation": "Accept this exact direct-retailer fallback if preferred-source stock remains unavailable at apply; preserve the selected package and identifiers. Refresh this offer before apply.",
+      "source_file": "care-last-unavailable-recovery.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "name": "Gliss Aqua Revive",
+      "category_key": "mask",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "price_change_over_30pct",
+        "retailer_exception"
+      ],
+      "registered_gtins": [],
+      "candidate": {
+        "proposed_url": "https://www.douglas.de/de/p/m003070896",
+        "price_eur": 12.98,
+        "package_value": 400,
+        "package_unit": "ml",
+        "observed_barcodes": [],
+        "availability": "Verfügbar; Online auf Lager; IN DEN WARENKORB shown; delivery window Di., 06.10.2026 to Do., 08.10.2026.",
+        "checked_at": "2026-10-02T15:08:53.940Z",
+        "source_file": "masks-live-corrections.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 4.75,
+        "baseline_url": "https://www.rossmann.de/de/pflege-und-duft-gliss-aqua-revive-feuchtigkeit-4-in-1-bonding-haarmaske/p/4015100813555",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "current_buyable_single_pack_offer_confirmed_at_douglas_but_price_not_4_75",
+      "recommendation": "Hold this marketplace seller offer. Keep current catalog values; use a preferred direct offer when one can be verified.",
+      "source_file": "masks-live-corrections.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "category_key": "mask",
+      "review_status": "needs_alignment",
+      "classification": "verified_same_product_package",
+      "review_reasons": [
+        "price_change_over_30pct",
+        "retailer_exception"
+      ],
+      "registered_gtins": [],
+      "candidate": {
+        "proposed_url": "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+        "price_eur": 2.8,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcodes": [],
+        "availability": "In stock; live purchase control; 1–2 days.",
+        "checked_at": "2026-10-02T15:27:48.312Z",
+        "source_file": "care-last-unavailable-recovery.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 4.95,
+        "baseline_url": "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Mask duplicate has exact same stored name and Müller IPN3052207 URL as conditioner, but no registered GTIN. Candidate is associated by that shared catalog identity; cannot claim a registered-GTIN match for this row.",
+      "recommendation": "Accept this exact direct-retailer fallback if preferred-source stock remains unavailable at apply; preserve the selected package and identifiers. Refresh this offer before apply.",
+      "source_file": "care-last-unavailable-recovery.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "name": "Syoss Haarkur Lamination Intense Glaze",
+      "category_key": "mask",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "price_change_over_30pct"
+      ],
+      "registered_gtins": [
+        "4015100867213"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-syoss-haar-laminierungs-kur-intense-glaze/p/4015100867213",
+        "price_eur": 4.99,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4015100867213"
+        ],
+        "availability": "available",
+        "checked_at": "2026-10-03T10:40:32.988Z",
+        "source_file": "rossmann-final-browser-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 7.95,
+        "baseline_url": "https://www.dm.de/syoss-haarkur-lamination-intense-glaze-p4015100867213.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Oct 3 live exact Rossmann whole-pack offer and online delivery confirmed.",
+      "recommendation": "Accept the verified exact whole-package offer after reviewing this price exception; keep all identifiers and product properties.",
+      "source_file": "rossmann-final-browser-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "315ae9f5-ad1a-4159-b307-2413338c8052",
+      "name": "Herbal Essences Haarmaske Blütensanft",
+      "category_key": "mask",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "price_change_over_30pct",
+        "retailer_exception"
+      ],
+      "registered_gtins": [
+        "8700216212724"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.office-partner.de/herbal-essences-rose-haarmaske-300-ml-n2000020455",
+        "price_eur": 5.58,
+        "package_value": 300,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "8700216212724"
+        ],
+        "availability": "in stock; delivery1-2businessdays",
+        "checked_at": "2026-10-03T10:55:44.056826+00:00",
+        "source_file": "final-alternate-offer-fetch.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 3.99,
+        "baseline_url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+        "baseline_package_value": 300,
+        "baseline_package_unit": "ml"
+      },
+      "reason": "dm/Rossmann unavailable; exact German direct retailer fallback verified. Prefer holding preferred link unless Nick accepts Office Partner exception.",
+      "recommendation": "Accept this exact direct-retailer fallback if preferred-source stock remains unavailable at apply; preserve the selected package and identifiers. Refresh this offer before apply.",
+      "source_file": "final-alternate-offer-fetch.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "695414e1-3435-4304-943b-76677408980c",
+      "name": "Maria Nila Structure Repair Leave-In",
+      "category_key": "leave_in",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "price_change_over_30pct"
+      ],
+      "registered_gtins": [
+        "7391681036079"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.cosmeterie.de/maria-nila/structure-repair-leave-in-cream-1",
+        "price_eur": 32.0,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "7391681036079"
+        ],
+        "availability": "https://schema.org/InStock",
+        "checked_at": "2026-10-03T10:39:02.629992+00:00",
+        "source_file": "retailer-final-price-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 23.25,
+        "baseline_url": "https://www.flaconi.de/haare/maria-nila/structure-repair/maria-nila-structure-repair-leave-in-treatment.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Ordinary whole-package price only; shipping excluded.",
+      "recommendation": "Accept the verified exact whole-package offer after reviewing this price exception; keep all identifiers and product properties.",
+      "source_file": "retailer-final-price-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "name": "OUAI Leave In Conditioner",
+      "category_key": "leave_in",
+      "review_status": "needs_alignment",
+      "classification": "verified_same_product_package",
+      "review_reasons": [
+        "retailer_exception"
+      ],
+      "registered_gtins": [
+        "815402023119"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.sephora.de/p/leave-in-conditioner-426531.html",
+        "price_eur": 30.45,
+        "package_value": 140,
+        "package_unit": "ml",
+        "observed_barcodes": [],
+        "availability": "in_stock",
+        "checked_at": "2026-10-02T15:30:54Z",
+        "source_file": "leaveins-last-two-recovery.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 25.25,
+        "baseline_url": "https://www.douglas.de/de/p/5002560059",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "The current PDP directly identifies the same OUAI Leave In Conditioner in the exact 140 ml package, and the price-per-litre display corroborates that volume. Sephora did not expose the EAN in the hydrated page source, so the registered GTIN is retained as catalog identity rather than claimed as newly observed; there was no conflicting barcode or package indication.",
+      "recommendation": "Accept this exact direct-retailer fallback if preferred-source stock remains unavailable at apply; preserve the selected package and identifiers. Refresh this offer before apply.",
+      "source_file": "leaveins-last-two-recovery.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+      "name": "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+      "category_key": "leave_in",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "price_change_over_30pct"
+      ],
+      "registered_gtins": [],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer",
+        "price_eur": 2.75,
+        "package_value": 100.0,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4070765027518"
+        ],
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:57.143Z",
+        "source_file": "dm-final-matched-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 5.59,
+        "baseline_url": "https://www.duitsevoordeeldrogist.nl/balea-professional-leave-in-serum-brilliant-blond.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Fresh official dm result matched selected DAN/GTIN, package and public price; purchasable=true.",
+      "recommendation": "Accept the verified exact whole-package offer after reviewing this price exception; keep all identifiers and product properties.",
+      "source_file": "dm-final-matched-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "name": "BioGourmet Distelöl",
+      "category_key": "oil",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "retailer_exception"
+      ],
+      "registered_gtins": [
+        "4039057414863"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.greenist.de/biogourmet-bio-disteloel-250ml.html",
+        "price_eur": 6.29,
+        "package_value": 250,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4039057414863"
+        ],
+        "availability": "available",
+        "checked_at": "2026-10-02T14:59:35.014328+00:00",
+        "source_file": "oils-commercial-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 5.99,
+        "baseline_url": "https://www.mueller.de/p/biogourmet-disteloel-2529149/",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Live Greenist HTML verifies exact GTIN/250ml/price and sofort versandfertig. Müller fresh JSONLD OutOfStock overrules stale indexed availability. German specialist fallback after preferred-source checks.",
+      "recommendation": "Accept this exact direct-retailer fallback if preferred-source stock remains unavailable at apply; preserve the selected package and identifiers. Refresh this offer before apply.",
+      "source_file": "oils-commercial-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "05e68c32-f096-457f-8b88-5cd3c0934873",
+      "name": "Jean&Len Repair Keratin & Mandel",
+      "category_key": "oil",
+      "review_status": "needs_alignment",
+      "classification": "verified_same_product_package",
+      "review_reasons": [
+        "price_change_over_30pct"
+      ],
+      "registered_gtins": [
+        "4262401733253"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.jeanlen.de/keratin-haaroel",
+        "price_eur": 3.99,
+        "package_value": 100,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4262401733253"
+        ],
+        "availability": "https://schema.org/InStock",
+        "checked_at": "2026-10-03T10:39:07.549982+00:00",
+        "source_file": "retailer-final-price-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 6.95,
+        "baseline_url": "https://www.dm.de/jean-und-len-haaroel-repair-keratin-und-mandel-p4262401733253.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "BrandJSONLD now explicitly supplies registered100mlGTIN.",
+      "recommendation": "Accept the verified exact whole-package offer after reviewing this price exception; keep all identifiers and product properties.",
+      "source_file": "retailer-final-price-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "38886b62-2c45-4b34-9a24-7d831e97946e",
+      "name": "MoriVeda Premium Moringaöl",
+      "category_key": "oil",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "retailer_exception"
+      ],
+      "registered_gtins": [
+        "4251762160037"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+        "price_eur": 16.99,
+        "package_value": 100,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4251762160037"
+        ],
+        "availability": "available from manufacturer AMTEC Trading",
+        "checked_at": "2026-10-02T14:59:35.014328+00:00",
+        "source_file": "oils-commercial-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 16.99,
+        "baseline_url": "https://www.shop-apotheke.com/ernaehrung/upmLDFZ4H/moriveda-moringa-oel-premium-erstpressung-aus-geschaelten-oleifera-samen-schoten.htm",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Existing exact100ml offer; live JSONLD registeredGTIN16.99InStock; PDP sellerAMTECTrading is manufacturer. Marketplace channel needs explicit retailer eligibility review.",
+      "recommendation": "Hold this marketplace seller offer. Keep current catalog values; use a preferred direct offer when one can be verified.",
+      "source_file": "oils-commercial-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "name": "OGX Bond Protein Repair",
+      "category_key": "oil",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "price_change_over_30pct",
+        "retailer_exception"
+      ],
+      "registered_gtins": [
+        "3574661818481"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+        "price_eur": 18.68,
+        "package_value": 50,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "3574661818481"
+        ],
+        "availability": "https://schema.org/InStock",
+        "checked_at": "2026-10-03T10:39:10.675195+00:00",
+        "source_file": "retailer-final-price-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 8.95,
+        "baseline_url": "https://www.amazon.de/OGX-Spr%C3%BChnebel-besch%C3%A4digtes-Technology-Dual-Action-Reparaturtechnologie/dp/B0DQLHGGYJ",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Live Boozt HTML/PDP confirms 50ml exact registeredGTIN offer. Price rise exceeds30%; hold for Nick despite source verification.",
+      "recommendation": "Accept this exact direct-retailer fallback if preferred-source stock remains unavailable at apply; preserve the selected package and identifiers. Refresh this offer before apply.",
+      "source_file": "retailer-final-price-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+      "category_key": "oil",
+      "review_status": "needs_alignment",
+      "classification": "verified_exact",
+      "review_reasons": [
+        "price_change_over_30pct",
+        "retailer_exception"
+      ],
+      "registered_gtins": [
+        "4550516493590"
+      ],
+      "candidate": {
+        "proposed_url": "https://nalda.de/products/4550516493590",
+        "price_eur": 14.63,
+        "package_value": 70,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4550516493590"
+        ],
+        "availability": "https://schema.org/InStock",
+        "checked_at": "2026-10-03T10:39:11.960869+00:00",
+        "source_file": "retailer-final-price-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 11,
+        "baseline_url": "https://www.amazon.de/Fino-Premium-Touch-Penetrating-Essence/dp/B0GVFQP34X",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Live Nalda HTML12.41/9days replaces stale indexed16.92/42days. Exact registeredGTIN70ml. German fallback source requires retailer-quality review; no GlowUpbarcode substitution.",
+      "recommendation": "Accept this exact direct-retailer fallback if preferred-source stock remains unavailable at apply; preserve the selected package and identifiers. Refresh this offer before apply.",
+      "source_file": "retailer-final-price-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "41e09958-5a1f-4997-b99b-f8384b7a8c0c",
+      "name": "Trockenshampoo Kopfhaut Sensitive",
+      "category_key": "dry_shampoo",
+      "review_status": "held",
+      "classification": "unavailable_verified",
+      "review_reasons": [
+        "unavailable_verified"
+      ],
+      "registered_gtins": [
+        "4066447438789",
+        "4067796171334"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1711758/balea-trockenshampoo-kopfhaut-sensitive",
+        "price_eur": 1.95,
+        "package_value": 200.0,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4066447438789"
+        ],
+        "availability": {
+          "purchasable": false,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:35.673Z",
+        "source_file": "dm-final-matched-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 1.95,
+        "baseline_url": "https://www.dm.de/balea-trockenshampoo-kopfhaut-sensitive-p4066447438789.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Fresh official dm result matched selected DAN/GTIN, package and public price; purchasable=false.",
+      "recommendation": "Keep historical catalog values and do not refresh the price stamp as a buyable offer. Recheck exact stock or prepare a separate equivalent replacement for review; this is not proof of global discontinuation.",
+      "source_file": "dm-final-matched-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "27fe4310-c1b8-4b02-a59e-cb9aa1f3314a",
+      "name": "Trockenshampoo Schaum Kopfhaut Sensitive",
+      "category_key": "dry_shampoo",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "4067796069556"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/2974661/balea-trockenshampoo-schaum-kopfhaut-sensitive",
+        "price_eur": 1.45,
+        "package_value": 150.0,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4066447989540"
+        ],
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:36.184Z",
+        "source_file": "dm-final-matched-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 1.45,
+        "baseline_url": "https://www.dm.de/balea-trockenshampoo-schaum-kopfhaut-sensitive-p4067796069556.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Same product/package evidence exists, but the current dm MCP GTIN differs from the catalog GTIN; hold for barcode lineage review.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "dm-final-matched-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+      "name": "Balea Professional Ultimate Volume",
+      "category_key": "shampoo",
+      "review_status": "held",
+      "classification": "unavailable_verified",
+      "review_reasons": [
+        "unavailable_verified"
+      ],
+      "registered_gtins": [
+        "4067796075021"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1703262/balea-professional-shampoo-ultimate-volume",
+        "price_eur": 1.25,
+        "package_value": 250,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4067796075021"
+        ],
+        "availability": "unavailable",
+        "checked_at": "2026-10-02",
+        "source_file": "shampoos-recovery-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 1.25,
+        "baseline_url": "https://www.dm.de/balea-professional-shampoo-ultimate-volume-p4067796075021.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "dm-exclusive Balea exact canonical product offer is not buyable. Per assigned scope, no reseller substitute selected.",
+      "recommendation": "Keep historical catalog values and do not refresh the price stamp as a buyable offer. Recheck exact stock or prepare a separate equivalent replacement for review; this is not proof of global discontinuation.",
+      "source_file": "shampoos-recovery-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+      "name": "Hair Biology Revitalize & Soothe",
+      "category_key": "shampoo",
+      "review_status": "held",
+      "classification": "unavailable_verified",
+      "review_reasons": [
+        "unavailable_verified"
+      ],
+      "registered_gtins": [
+        "8006540153963"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+        "price_eur": 4.95,
+        "package_value": 250,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "8006540153963"
+        ],
+        "availability": "unavailable",
+        "checked_at": "2026-10-02",
+        "source_file": "shampoos-recovery-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 4.99,
+        "baseline_url": "https://www.dm.de/p/d/1588828/hair-biology-shampoo-revitalize-und-soothe",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "dm exact product unavailable; substantive alternate discovery did not establish a current buyable preferred German offer. This does not establish market-wide unavailability.",
+      "recommendation": "Keep historical catalog values and do not refresh the price stamp as a buyable offer. Recheck exact stock or prepare a separate equivalent replacement for review; this is not proof of global discontinuation.",
+      "source_file": "shampoos-recovery-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+      "name": "Langhaarmädchen Lovely Long",
+      "category_key": "shampoo",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "4067796002621"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1559584/langhaarmaedchen-shampoo-lovely-long",
+        "price_eur": 4.95,
+        "package_value": 300.0,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4066447864694"
+        ],
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:39.312Z",
+        "source_file": "dm-final-matched-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 4.95,
+        "baseline_url": "https://www.dm.de/langhaarmaedchen-shampoo-lovely-long-p4067796002621.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Primary dm PDP confirms the exact named package and price but current GTIN differs from catalog; hold barcode lineage.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "dm-final-matched-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "name": "Langhaarmädchen Beautiful Curls Shampoo",
+      "category_key": "shampoo",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "4067796150735"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1678985/langhaarmaedchen-shampoo-beautiful-curls",
+        "price_eur": 4.95,
+        "package_value": 300.0,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4070765004649"
+        ],
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:39.319Z",
+        "source_file": "dm-final-matched-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 4.95,
+        "baseline_url": "https://www.dm.de/langhaarmaedchen-shampoo-beautiful-curls-p4067796150735.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Primary dm PDP confirms the exact named package and price but current GTIN differs from catalog; hold barcode lineage.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "dm-final-matched-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "3d94c017-9edb-4ba0-accd-4772e262f012",
+      "name": "Lavera Basis Sensitiv",
+      "category_key": "shampoo",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "4021457666768"
+      ],
+      "candidate": {
+        "proposed_url": null,
+        "price_eur": null,
+        "package_value": null,
+        "package_unit": null,
+        "observed_barcodes": [
+          "4021457637416",
+          "4021457649853",
+          "4021457649976",
+          "4021457650033",
+          "4021457648412",
+          "4021457638307",
+          "4021457650064",
+          "4021457664139",
+          "4021457665501",
+          "4021457638338",
+          "4021457638369",
+          "4021457645022",
+          "4021457613700",
+          "4021457638758",
+          "4067796274509"
+        ],
+        "availability": "not_verified",
+        "checked_at": "2026-10-02T14:54:36.623Z",
+        "source_file": "shampoos-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 4.95,
+        "baseline_url": "https://www.dm.de/lavera-shampoo-basis-sensitiv-feuchtigkeit-und-pflege-p4021457655120.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Stored dm URL is dead and embeds a different GTIN; package/GTIN lineage requires review before selecting a replacement offer.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "shampoos-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "name": "Alverde Conditioner Glanz",
+      "category_key": "conditioner",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "4066447592085"
+      ],
+      "candidate": {
+        "proposed_url": null,
+        "price_eur": null,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4066447919202"
+        ],
+        "availability": "unavailable",
+        "checked_at": "2026-10-02T00:00:00.000Z",
+        "source_file": "conditioners-price-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 1.35,
+        "baseline_url": "https://www.dm.de/p/d/1714048/alverde-naturkosmetik-conditioner-glanz-rosenbluetenwasser-und-pflanzlichem-protein",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "The current dm PDP has the same named 200 ml product but GTIN 4066447919202 conflicts with registered 4066447592085. Hold instead of replacing identity.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "conditioners-price-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "name": "Balea Natural Beauty Hibiskus",
+      "category_key": "conditioner",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "4066447238952"
+      ],
+      "candidate": {
+        "proposed_url": null,
+        "price_eur": null,
+        "package_value": 350,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4058172926181"
+        ],
+        "availability": "unavailable",
+        "checked_at": "2026-10-02T00:00:00.000Z",
+        "source_file": "conditioners-price-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 1.45,
+        "baseline_url": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-hibiskus-extrakt-und-kokosmilch",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Current dm PDP has matching named variant/package but GTIN 4058172926181 conflicts with registered 4066447238952; hold for barcode review.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "conditioners-price-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "a6730d6f-df2f-4ebf-8013-eb39162f15df",
+      "name": "Balea Professional Aqua Hyaluron Conditioner",
+      "category_key": "conditioner",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "4066447342055"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1675522/balea-professional-conditioner-aqua-hyaluron",
+        "price_eur": 1.25,
+        "package_value": 200.0,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4070765001662"
+        ],
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:43.509Z",
+        "source_file": "dm-final-matched-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 1.25,
+        "baseline_url": "https://www.dm.de/balea-professional-conditioner-aqua-hyaluron-p4066447342055.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Current preferred dm offer has a different published GTIN. Same dm article number 1675522 and name/200 ml are evidence for a potential identifier transition, not authorization to replace the registered product. Hold all catalog/identifier writes for exact human identity review.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "dm-final-matched-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "name": "Balea Professional Oil Repair Intensiv Spülung",
+      "category_key": "conditioner",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "4066447365443"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1703916/balea-professional-conditioner-oil-repair-intensiv",
+        "price_eur": 1.25,
+        "package_value": 200.0,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4070765001402"
+        ],
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:43.513Z",
+        "source_file": "dm-final-matched-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 1.25,
+        "baseline_url": "https://www.dm.de/balea-professional-spuelung-oil-repair-intensiv-p4066447365443.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Preferred dm publishes new GTIN 4070765001402 versus registered 4066447365443. Name and 200 ml match; the barcode conflict prevents automatic offer promotion.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "dm-final-matched-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "name": "Garnier Hair Food Macadamia",
+      "category_key": "conditioner",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [],
+      "candidate": {
+        "url": "https://www.douglas.de/de/p/5010035048",
+        "price_eur": 5.99,
+        "package_value": 400,
+        "package_unit": "ml",
+        "sku": "1063413",
+        "availability": "InStock, enabled purchase control; delivery2026-10-05to2026-10-07",
+        "barcode": null
+      },
+      "baseline": {
+        "baseline_price_eur": 5.95,
+        "baseline_url": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Same Douglas Macadamia candidate has conflicting INCI versus the dm identity; no GTIN published. Hold both catalog category records pending exact product/formula continuity review.",
+      "recommendation": "Hold both linked Macadamia rows: dm and Douglas ingredient lists conflict and Douglas does not publish a barcode. Resolve which exact formula/GTIN is shipped before replacing the offer; do not change category or formula.",
+      "source_file": "care-last-unavailable-recovery.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "4e9428b9-8cc9-4db2-89b1-cb272aa9a4d6",
+      "name": "Herbal Essences Aloe Vera Conditioner",
+      "category_key": "conditioner",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "8700216211598"
+      ],
+      "candidate": {
+        "proposed_url": null,
+        "price_eur": null,
+        "package_value": 250,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "8700216210546"
+        ],
+        "availability": "available",
+        "checked_at": "2026-10-02T00:00:00.000Z",
+        "source_file": "conditioners-price-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 3.95,
+        "baseline_url": "https://www.dm.de/p/d/1409620/herbal-essences-conditioner-feuchtigkeit-aloe-vera",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Current dm PDP has matching named variant/package but GTIN 8700216210546 conflicts with registered 8700216211598; hold for barcode review.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "conditioners-price-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+      "name": "Langhaarmädchen Beautiful Curls Conditioner",
+      "category_key": "conditioner",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "4070765004663"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls",
+        "price_eur": 4.95,
+        "package_value": 250.0,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4067796150643"
+        ],
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:44.546Z",
+        "source_file": "dm-final-matched-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 4.95,
+        "baseline_url": "https://www.dm.de/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Fresh official dm result matched selected DAN/GTIN, package and public price; purchasable=true.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "dm-final-matched-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "26985fdd-1b41-46e3-9c9a-94b98f92310a",
+      "name": "Nivea Volumen & Kraft",
+      "category_key": "conditioner",
+      "review_status": "held",
+      "classification": "not_verified",
+      "review_reasons": [
+        "not_verified"
+      ],
+      "registered_gtins": [
+        "4005900918031"
+      ],
+      "candidate": {
+        "proposed_url": null,
+        "price_eur": null,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcodes": [],
+        "availability": "not_verified",
+        "checked_at": "2026-10-02T15:03:54.969Z",
+        "source_file": "care-offers-recovery-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 2.25,
+        "baseline_url": "https://www.dm.de/nivea-conditioner-volumen-und-kraft-p4005900918031.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "No current acceptable German purchase offer for the registered conditioner was verified. Preferred shops mainly return Volume Wonder/Volumen & Kraft shampoo, which is a different product. Official NIVEA conditioner assortment lists five other products. Foreign exact-barcode candidate is stale and contradictory; live fetch redirects in a loop. Do not infer global discontinuation or replace with shampoo.",
+      "recommendation": "Retain catalog values until a qualifying exact offer can be verified. No current price is established; do not reuse recommendation-card prices or substitute a different product.",
+      "source_file": "care-offers-recovery-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "314d9881-4fcc-47b5-81e1-58e41779081e",
+      "name": "Garnier Wahre Schätze Conditioner Traube Hydraboost",
+      "category_key": "conditioner",
+      "review_status": "held",
+      "classification": "needs_package_decision",
+      "review_reasons": [
+        "needs_package_decision"
+      ],
+      "registered_gtins": [
+        "3600542656412"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.douglas.de/de/p/5012008156",
+        "price_eur": 2.89,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcodes": [],
+        "availability": "available",
+        "checked_at": "2026-10-02",
+        "source_file": "conditioners-price-evidence.json",
+        "timestamp_precision": "date",
+        "note": "Original primary-page observation Oct2; current primary offer must be refreshed before any approved apply. Oct3 search result is discovery only."
+      },
+      "baseline": {
+        "baseline_price_eur": 2.75,
+        "baseline_url": "https://www.dm.de/wahre-schaetze-conditioner-traube-hydraboost-p3600542656320.html",
+        "baseline_package_value": 250,
+        "baseline_package_unit": "ml"
+      },
+      "reason": "Current Douglas offer is the exact Traube Hydraboost conditioner at 200 ml/2,89 EUR, while the catalog base is 250 ml. Hold the changed package pending an explicit package decision.",
+      "recommendation": "Recommend Douglas 200 ml at €2.89 subject to the pending base-package decision and offer refresh; retain the catalog’s other-size recognition barcode.",
+      "source_file": "conditioners-price-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "name": "Epres Bond Repair Treatment",
+      "category_key": "bondbuilder",
+      "review_status": "held",
+      "classification": "needs_package_decision",
+      "review_reasons": [
+        "needs_package_decision"
+      ],
+      "registered_gtins": [
+        "0850040615500"
+      ],
+      "candidate": {
+        "proposed_url": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+        "price_eur": 48,
+        "package_value": null,
+        "package_unit": null,
+        "observed_barcodes": [],
+        "availability": true,
+        "checked_at": "2026-10-02T15:39:38.025333+00:00",
+        "source_file": "final-preferred-source-fetch.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 48,
+        "baseline_url": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Official starter kit48EUR contains spray bottle plus2x15mlconcentrate. Retain whole starter kit as base offer; decide exact kit display/storage before filling missing numeric net content.29EURwas shipping threshold;150mlmixedsolution is not sold content.",
+      "recommendation": "Keep the official €48 starter kit as the base: spray bottle plus two 15 ml concentrate bottles. Do not label the kit as 150 ml sold content. Resolve kit display/storage before filling numeric net content.",
+      "source_file": "final-preferred-source-fetch.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+      "name": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+      "category_key": "mask",
+      "review_status": "held",
+      "classification": "not_verified",
+      "review_reasons": [
+        "not_verified"
+      ],
+      "registered_gtins": [
+        "4068134014122"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122",
+        "price_eur": null,
+        "package_value": 20,
+        "package_unit": "ml",
+        "observed_barcodes": [],
+        "availability": "store_only",
+        "checked_at": "2026-10-03T10:40:30.055Z",
+        "source_file": "rossmann-final-browser-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 2.79,
+        "baseline_url": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Oct 3 final selected offer refresh; unavailable/store-only controls are not eligible online offers.",
+      "recommendation": "Retain catalog values until a qualifying exact offer can be verified. No current price is established; do not reuse recommendation-card prices or substitute a different product.",
+      "source_file": "rossmann-final-browser-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+      "name": "Balea Natural Beauty 3in1 Locken",
+      "category_key": "mask",
+      "review_status": "held",
+      "classification": "unavailable_verified",
+      "review_reasons": [
+        "unavailable_verified"
+      ],
+      "registered_gtins": [],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken",
+        "price_eur": 2.45,
+        "package_value": 250,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4066447704709"
+        ],
+        "availability": false,
+        "checked_at": "2026-10-02T14:57:01.941Z",
+        "source_file": "masks_treatments-commercial-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 2.45,
+        "baseline_url": "https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "The exact current German dm product, package, price, and GTIN are observed, but it is not currently deliverable. Catalog has no registered GTIN; retain catalog identifiers and do not make an identifier change from this evidence.",
+      "recommendation": "Keep historical catalog values and do not refresh the price stamp as a buyable offer. Recheck exact stock or prepare a separate equivalent replacement for review; this is not proof of global discontinuation.",
+      "source_file": "masks_treatments-commercial-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "name": "Balea Professional Glow & Shine",
+      "category_key": "mask",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "4067796166453"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine",
+        "price_eur": 2.75,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4066447883039"
+        ],
+        "availability": true,
+        "checked_at": "2026-10-02T14:32:06.443Z",
+        "source_file": "masks_treatments-commercial-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 2.75,
+        "baseline_url": "https://www.dm.de/balea-professional-haarkur-glow-und-shine-p4067796166453.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Current exact-name/package dm offer has different observed GTIN 4066447883039; do not replace the catalog identifier without review.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "masks_treatments-commercial-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "name": "Balea Aqua Hyaluron 3 in 1",
+      "category_key": "mask",
+      "review_status": "held",
+      "classification": "unavailable_verified",
+      "review_reasons": [
+        "unavailable_verified"
+      ],
+      "registered_gtins": [
+        "4066447668315"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1417521/balea-professional-haarmaske-3in1-aqua-hyaluron",
+        "price_eur": 2.75,
+        "package_value": 150,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4066447668315"
+        ],
+        "availability": "unavailable",
+        "checked_at": "2026-10-03T10:51:40Z",
+        "source_file": "dm-final-browser-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 2.75,
+        "baseline_url": "https://www.dm.de/balea-professional-haarmaske-3in1-aqua-hyaluron-p4066447668315.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Exact dm PDP price and identity confirmed, but purchase disabled and Nicht lieferbar after hydration. Do not publish as an available offer.",
+      "recommendation": "Keep historical catalog values and do not refresh the price stamp as a buyable offer. Recheck exact stock or prepare a separate equivalent replacement for review; this is not proof of global discontinuation.",
+      "source_file": "dm-final-browser-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "17c50884-3c17-479a-848a-10447464e086",
+      "name": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+      "category_key": "mask",
+      "review_status": "held",
+      "classification": "unavailable_verified",
+      "review_reasons": [
+        "unavailable_verified"
+      ],
+      "registered_gtins": [
+        "3600542510271"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1679241/wahre-schaetze-haarkur-1-minute-aktivkohle-fettige-kopfhaut",
+        "price_eur": 4.95,
+        "package_value": 340,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "3600542510271"
+        ],
+        "availability": "Nicht lieferbar; add-to-cart disabled; no dm-market availability displayed.",
+        "checked_at": "2026-10-02T15:08:53.941Z",
+        "source_file": "masks-live-corrections.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 4.95,
+        "baseline_url": "https://www.dm.de/p/d/1679241/wahre-schaetze-haarkur-1-minute-aktivkohle-fettige-kopfhaut",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "proposed_3_eur_not_qualifying_online_offer",
+      "recommendation": "Keep historical catalog values and do not refresh the price stamp as a buyable offer. Recheck exact stock or prepare a separate equivalent replacement for review; this is not proof of global discontinuation.",
+      "source_file": "masks-live-corrections.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "name": "Isana 3in1 Milchprotein & Mandel",
+      "category_key": "mask",
+      "review_status": "held",
+      "classification": "unavailable_verified",
+      "review_reasons": [
+        "unavailable_verified"
+      ],
+      "registered_gtins": [
+        "4305615627441"
+      ],
+      "candidate": {
+        "proposed_url": null,
+        "price_eur": null,
+        "package_value": 250,
+        "package_unit": "ml",
+        "observed_barcodes": [],
+        "availability": "unavailable_at_preferred_shop",
+        "checked_at": "2026-10-02T15:03:54.969Z",
+        "source_file": "care-offers-recovery-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 0.69,
+        "baseline_url": "https://www.rossmann.de/de/pflege-und-duft-isana-isana-haarmaske-3in1-mandelmilch-milchprotein-und-mandel/p/4305615627441",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Rossmann exact registered-barcode URL redirects to a category page with product.notAvailable.error. No current eligible alternate whole-pack EUR offer recovered. Old EUR 0.69 is expired comparison-site history, not a current price. This does not establish global unavailability.",
+      "recommendation": "Keep historical catalog values and do not refresh the price stamp as a buyable offer. Recheck exact stock or prepare a separate equivalent replacement for review; this is not proof of global discontinuation.",
+      "source_file": "care-offers-recovery-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+      "name": "Neqi Build Boost",
+      "category_key": "mask",
+      "review_status": "held",
+      "classification": "needs_availability_decision",
+      "review_reasons": [
+        "needs_availability_decision"
+      ],
+      "registered_gtins": [
+        "4063528086303"
+      ],
+      "candidate": {
+        "proposed_url": "https://mapeja.de/neqi-treatment-treasure-build-boost-100ml/",
+        "price_eur": 9.3,
+        "package_value": 100,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4063528086303"
+        ],
+        "availability": "Live rendered PDP says “auf Lager beim Lieferanten (3-5 Tage)” and exposes “ZUM WARENKORB HINZUFÜGEN”; its live JSON-LD Offer instead declares schema.org/PreOrder.",
+        "checked_at": "2026-10-02T15:31:32.618Z",
+        "source_file": "masks-neqi-final-recovery.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 9.99,
+        "baseline_url": "https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "needs_preorder_availability_decision",
+      "recommendation": "Hold for normal confirmed stock. The current €9.30 supplier-stock offer has 3–5-day lead time but structured data says PreOrder; accept that exception only if Nick wants supplier-stock offers.",
+      "source_file": "masks-neqi-final-recovery.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "869abd97-a499-4f39-97e5-2722773e46ae",
+      "name": "Sante Intense Hydration",
+      "category_key": "mask",
+      "review_status": "held",
+      "classification": "unavailable_verified",
+      "review_reasons": [
+        "unavailable_verified"
+      ],
+      "registered_gtins": [
+        "4055297220682"
+      ],
+      "candidate": {
+        "proposed_url": null,
+        "price_eur": null,
+        "package_value": 150,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4055297220682"
+        ],
+        "availability": "unavailable_at_verified_sources",
+        "checked_at": "2026-10-02T15:03:54.969Z",
+        "source_file": "care-offers-recovery-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 6.99,
+        "baseline_url": "https://www.rossmann.de/de/pflege-und-duft-sante-intense-hydration-haarmaske/p/4025089005896",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Exact registered 150 ml mask is OutOfStock in live manufacturer JSON-LD. Flaconi cached EUR 6.99/in-stock result is false-current: live browser page is not found. Ecco Verde current primary page says discontinued in its shop. Existing Rossmann URL refers to a different 20 ml GTIN and redirects unavailable. No current eligible purchasable offer verified.",
+      "recommendation": "Keep historical catalog values and do not refresh the price stamp as a buyable offer. Recheck exact stock or prepare a separate equivalent replacement for review; this is not proof of global discontinuation.",
+      "source_file": "care-offers-recovery-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+      "name": "Schaebens Argan-Öl Haarmaske",
+      "category_key": "mask",
+      "review_status": "held",
+      "classification": "unavailable_verified",
+      "review_reasons": [
+        "unavailable_verified"
+      ],
+      "registered_gtins": [
+        "4003573025018"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1688048/schaebens-haarmaske-arganoel",
+        "price_eur": 1.45,
+        "package_value": 20,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4003573025018"
+        ],
+        "availability": "unavailable",
+        "checked_at": "2026-10-03T10:54:59Z",
+        "source_file": "dm-final-browser-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 1.49,
+        "baseline_url": "https://www.dm.de/schaebens-haarmaske-arganoel-p4003573025018.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Exact dm PDP price and identity confirmed, but purchase disabled and Nicht lieferbar after hydration. Do not publish as an available offer.",
+      "recommendation": "Keep historical catalog values and do not refresh the price stamp as a buyable offer. Recheck exact stock or prepare a separate equivalent replacement for review; this is not proof of global discontinuation.",
+      "source_file": "dm-final-browser-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "e3571e45-1126-4431-bef8-43153ef64c20",
+      "name": "alverde NATURKOSMETIK Haarkur 4in1 Repair & Care Wunderkur",
+      "category_key": "mask",
+      "review_status": "held",
+      "classification": "unavailable_verified",
+      "review_reasons": [
+        "unavailable_verified"
+      ],
+      "registered_gtins": [
+        "4067796145861"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1412268/alverde-naturkosmetik-haarkur-4in1-repair-und-care-wunderkur",
+        "price_eur": 3.25,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4067796145861"
+        ],
+        "availability": "Current purchase component: Nicht lieferbar; add-to-cart disabled; Keine Anzeige für die Verfügbarkeit im dm-Markt möglich.",
+        "checked_at": "2026-10-02T15:08:53.941Z",
+        "source_file": "masks-live-corrections.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 3.25,
+        "baseline_url": "https://www.dm.de/alverde-naturkosmetik-haarkur-4in1-repair-wunderkur-p4066447523874.html",
+        "baseline_package_value": 200,
+        "baseline_package_unit": "ml"
+      },
+      "reason": "price_identity_confirmed_current_purchase_state_conflicted_and_not_online_buyable",
+      "recommendation": "Keep historical catalog values and do not refresh the price stamp as a buyable offer. Recheck exact stock or prepare a separate equivalent replacement for review; this is not proof of global discontinuation.",
+      "source_file": "masks-live-corrections.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "96f4cf13-7a71-4924-b44e-9d5612d55d32",
+      "name": "alverde NATURKOSMETIK Haarmaske Hydro Feuchtigkeit",
+      "category_key": "mask",
+      "review_status": "held",
+      "classification": "unavailable_verified",
+      "review_reasons": [
+        "unavailable_verified"
+      ],
+      "registered_gtins": [
+        "4066447918946"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1704280/alverde-naturkosmetik-haarmaske-hydro-feuchtigkeit",
+        "price_eur": 0.95,
+        "package_value": 20.0,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4066447918946"
+        ],
+        "availability": {
+          "purchasable": false,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:52.965Z",
+        "source_file": "dm-final-matched-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 0.95,
+        "baseline_url": "https://www.dm.de/alverde-naturkosmetik-haarmaske-feuchtigkeit-aloe-vera-und-hyaluron-p4066447331172.html",
+        "baseline_package_value": 20,
+        "baseline_package_unit": "ml"
+      },
+      "reason": "Fresh official dm result matched selected DAN/GTIN, package and public price; purchasable=false.",
+      "recommendation": "Keep historical catalog values and do not refresh the price stamp as a buyable offer. Recheck exact stock or prepare a separate equivalent replacement for review; this is not proof of global discontinuation.",
+      "source_file": "dm-final-matched-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+      "name": "Jean&Len Rosemary/Ginger Hair Mask Hydration Rosemary/Ginger",
+      "category_key": "mask",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [],
+      "candidate": {
+        "proposed_url": "https://www.jeanlen.de/en/haarmaske-feuchtigkeit-rosemary-ginger",
+        "price_eur": 7.99,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4262401735639"
+        ],
+        "availability": "https://schema.org/InStock",
+        "checked_at": "2026-10-03T10:38:57.825999+00:00",
+        "source_file": "retailer-final-price-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 7.99,
+        "baseline_url": "https://www.jeanlen.de/en/haarmaske-feuchtigkeit-rosemary-ginger",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Canonical PDP exposes a barcode not registered on the catalog product; do not replace or merge identifiers without review.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "retailer-final-price-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "efaff579-e411-41eb-972a-2734a8517356",
+      "name": "Hitzeschutzspray Schutzengel",
+      "category_key": "heat_protectant",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "4015100800128"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+        "price_eur": 4.95,
+        "package_value": 200,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4015100894141"
+        ],
+        "availability": "available",
+        "checked_at": "2026-10-03T10:52:29.424Z",
+        "source_file": "dm-final-browser-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 4.95,
+        "baseline_url": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Same named 200 ml dm article 1267310 now publishes GTIN 4015100894141, versus registered 4015100800128. Old legacy URL is dead. Hold for identifier/formula continuity review; retain old barcode.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "dm-final-browser-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "c6e80f39-20ba-401e-b041-6ee7c89a5996",
+      "name": "Balea Aqua Hyaluron 3in1",
+      "category_key": "leave_in",
+      "review_status": "held",
+      "classification": "unavailable_verified",
+      "review_reasons": [
+        "unavailable_verified"
+      ],
+      "registered_gtins": [],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1417521/balea-professional-haarmaske-3in1-aqua-hyaluron",
+        "price_eur": 2.75,
+        "package_value": 150,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4066447668315"
+        ],
+        "availability": "unavailable",
+        "checked_at": "2026-10-03T10:51:40Z",
+        "source_file": "dm-final-browser-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 2.75,
+        "baseline_url": "https://www.dm.de/balea-professional-haarmaske-3in1-aqua-hyaluron-p4066447668315.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Exact dm PDP price and identity confirmed, but purchase disabled and Nicht lieferbar after hydration. Do not publish as an available offer.",
+      "recommendation": "Keep historical catalog values and do not refresh the price stamp as a buyable offer. Recheck exact stock or prepare a separate equivalent replacement for review; this is not proof of global discontinuation.",
+      "source_file": "dm-final-browser-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "name": "Garnier Hair Food Macadamia",
+      "category_key": "leave_in",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "3600542511612"
+      ],
+      "candidate": {
+        "url": "https://www.douglas.de/de/p/5010035048",
+        "price_eur": 5.99,
+        "package_value": 400,
+        "package_unit": "ml",
+        "sku": "1063413",
+        "availability": "InStock, enabled purchase control; delivery2026-10-05to2026-10-07",
+        "barcode": null
+      },
+      "baseline": {
+        "baseline_price_eur": 5.95,
+        "baseline_url": "https://www.dm.de/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske-p3600542511612.html",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Live dm independently maps registeredGTIN3600542511612 to400ml. Douglas400ml offer omitsGTIN in Product JSON-LD and publishes a different INCI list. Name+size is insufficient to bridge this identity conflict.",
+      "recommendation": "Hold both linked Macadamia rows: dm and Douglas ingredient lists conflict and Douglas does not publish a barcode. Resolve which exact formula/GTIN is shipped before replacing the offer; do not change category or formula.",
+      "source_file": "care-last-unavailable-recovery.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+      "name": "Wella Ultimate Repair Protective Leave-In",
+      "category_key": "leave_in",
+      "review_status": "held",
+      "classification": "needs_package_decision",
+      "review_reasons": [
+        "needs_package_decision"
+      ],
+      "registered_gtins": [
+        "4064666580098"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.hagel-shop.de/wella-wp-ultimate-repair-leave-in-treatment-95-ml.html",
+        "price_eur": 19.38,
+        "package_value": 95,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4068359081183"
+        ],
+        "availability": "InStock;2-4businessdays",
+        "checked_at": "2026-10-03T10:33:49.214821+00:00",
+        "source_file": "wella-package-alternative-live.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 18.51,
+        "baseline_url": "https://www.wella.com/professional/de-DE/products/haarpflege/ultimate-repair/ultimate-repair-protective-leave-in",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Recommend95mlpreferred-shop candidate only after explicit package decision and product/formula continuity verification. Keep existing140mlrecognition identifier; no identifier changes authorized automatically.",
+      "recommendation": "Prepare Hagel 95 ml at €19.38 as the recommended candidate. Package decision and exact product/formula continuity remain pending; do not silently replace the catalog 140 ml offer.",
+      "source_file": "wella-package-alternative-live.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+      "name": "Hitzeschutzspray 2-Phasen",
+      "category_key": "heat_protectant",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "4070765073546"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+        "price_eur": 1.95,
+        "package_value": 200.0,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4070765016758"
+        ],
+        "availability": {
+          "purchasable": true,
+          "sellout": false
+        },
+        "checked_at": "2026-10-03T10:41:56.618Z",
+        "source_file": "dm-final-matched-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 1.95,
+        "baseline_url": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Fresh official dm result matched selected DAN/GTIN, package and public price; purchasable=true.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "dm-final-matched-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "name": "Innersense Harmonic Treatment Oil",
+      "category_key": "oil",
+      "review_status": "held",
+      "classification": "needs_package_decision",
+      "review_reasons": [
+        "needs_package_decision"
+      ],
+      "registered_gtins": [
+        "850006575039"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html",
+        "price_eur": 29,
+        "package_value": 29,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "852415001833"
+        ],
+        "availability": "http://schema.org/InStock",
+        "checked_at": "2026-10-03T10:39:07.322547+00:00",
+        "source_file": "retailer-final-price-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 29.99,
+        "baseline_url": "https://www.douglas.de/de/p/m001643012",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "RegisteredGTIN850006575039 identifies118ml. Exact118ml €79 at Belladonna is available;29ml preferred Hagel changes basepackage/adds recognitionbarcode. Nick question pending.",
+      "recommendation": "Recommend the preferred Hagel 29 ml bottle at €29 if Nick wants that base package; otherwise retain the registered 118 ml package with the verified €79 Belladonna candidate. Explicit package decision is pending.",
+      "source_file": "retailer-final-price-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "78e6f1b2-7262-46af-b689-a92af6702739",
+      "name": "NUTREEOIL Cacay Öl",
+      "category_key": "oil",
+      "review_status": "held",
+      "classification": "unavailable_verified",
+      "review_reasons": [
+        "unavailable_verified"
+      ],
+      "registered_gtins": [
+        "4260541540014"
+      ],
+      "candidate": {
+        "proposed_url": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml",
+        "price_eur": 34.99,
+        "package_value": 30,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "4260541540014"
+        ],
+        "availability": "out_of_stock",
+        "checked_at": "2026-10-02T14:59:35.014328+00:00",
+        "source_file": "oils-commercial-evidence.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 34.99,
+        "baseline_url": "https://www.nutreeoil.com/products/nutreeoil-cacay-ol-30ml",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Official30ml registeredvariant out of stock;15ml€24.99 available separatevariant, not selected.",
+      "recommendation": "Keep historical catalog values and do not refresh the price stamp as a buyable offer. Recheck exact stock or prepare a separate equivalent replacement for review; this is not proof of global discontinuation.",
+      "source_file": "oils-commercial-evidence.json",
+      "approval": "pending; excluded from ready manifest"
+    },
+    {
+      "id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+      "name": "Olaplex No.7 Bonding Oil",
+      "category_key": "oil",
+      "review_status": "held",
+      "classification": "needs_barcode_review",
+      "review_reasons": [
+        "needs_barcode_review"
+      ],
+      "registered_gtins": [
+        "0850045076085"
+      ],
+      "candidate": {
+        "proposed_url": "https://olaplex.de/products/olaplex-no-7-bonding-oil?variant=45098439213322",
+        "price_eur": 32,
+        "package_value": 30,
+        "package_unit": "ml",
+        "observed_barcodes": [
+          "850018802895"
+        ],
+        "availability": "http://schema.org/InStock",
+        "checked_at": "2026-10-03T10:39:10.731003+00:00",
+        "source_file": "retailer-final-price-refresh.json"
+      },
+      "baseline": {
+        "baseline_price_eur": 32,
+        "baseline_url": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+        "baseline_package_value": null,
+        "baseline_package_unit": null
+      },
+      "reason": "Official30ml32EUR variant publishes differentGTIN than registered850045076085. Registeredcode corroborated as30ml byFlaconi; preserve existing barcode and propose adding current30mlalias after Nick review. IndexedFlaconi20.48 failslive403 and is not used as currentprice.",
+      "recommendation": "Retain every existing recognition barcode. Resolve exact product/formula continuity first; then add the current barcode as an alias and align the chosen base offer. Do not ask Nick to infer identity from a matching name alone.",
+      "source_file": "retailer-final-price-refresh.json",
+      "approval": "pending; excluded from ready manifest"
+    }
+  ]
+}

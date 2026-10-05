@@ -1,0 +1,15 @@
+{
+  "result": [
+    {
+      "receipt": {
+        "mode": "rolled_back_dry_run",
+        "checked_at": "2026-10-03T11:46:40.060958+00:00",
+        "rows_verified": 292,
+        "identifier_writes": 0,
+        "noncommercial_changes": 0,
+        "committed_product_writes": 0
+      }
+    }
+  ],
+  "method": "Actual 292-row SQL update path and triggers exercised inside nested rollback; no permanent product or identifier writes"
+}

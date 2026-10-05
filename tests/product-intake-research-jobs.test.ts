@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { readFileSync } from "node:fs"
+import { readFileSync, rmSync } from "node:fs"
 import test from "node:test"
 
 import {
@@ -24,6 +24,7 @@ import {
   parseRetailerEnrichmentPacket,
   retailerEnrichmentPacketFromIntakeHistory,
 } from "../scripts/product-intake/retailer-enrichment-packet"
+import { writePromptPacket } from "../scripts/product-intake/codex-research-worker"
 
 const migration = readFileSync(
   "supabase/migrations/20260630120000_product_intake_research_jobs.sql",
@@ -127,6 +128,91 @@ const REVIEW_CATEGORY_KEYS: ProductIntakeReviewCategoryKey[] = [
   "heat_protectant",
   "scalp_care",
 ]
+
+test("Bondbuilder worker prompt requires current full research instead of legacy intensity specs", (t) => {
+  const path = writePromptPacket(
+    {
+      id: "bondbuilder-prompt-contract-job",
+      submission_id: "00000000-0000-4000-8000-000000000777",
+      status: "running",
+      stage: "source_research",
+      priority: 0,
+      attempt_count: 1,
+      max_attempts: 3,
+      locked_by: "worker-test",
+      locked_at: "2026-10-02T10:00:00.000Z",
+      started_at: "2026-10-02T10:00:00.000Z",
+      completed_at: null,
+      next_run_at: "2026-10-02T10:05:00.000Z",
+      last_error: null,
+      progress: {},
+      created_at: "2026-10-02T09:59:00.000Z",
+      updated_at: "2026-10-02T10:00:00.000Z",
+    },
+    "worker-test",
+    {
+      id: "00000000-0000-4000-8000-000000000777",
+      status: "researching",
+      category: "bondbuilder",
+      brand: "Example",
+      product_name: "Bond Treatment",
+      source: "manual",
+      payload: {},
+      created_at: "2026-10-02T09:59:00.000Z",
+      updated_at: "2026-10-02T10:00:00.000Z",
+      job: null,
+      artifacts: [],
+      decisions: [],
+    },
+    {
+      submitted_brand_text: "Example",
+      submitted_product_name_text: "Bond Treatment",
+      scanned_identifier: null,
+      lookup_text: "Example Bond Treatment",
+      resolved_brand: null,
+      nearby_brand_options: [],
+      catalog_summary: {},
+      rules: [],
+    },
+    null,
+  )
+  t.after(() => rmSync(path, { force: true }))
+
+  const packet = JSON.parse(readFileSync(path, "utf8")) as {
+    category_contract: {
+      bondbuilder_research: Record<string, unknown>
+    }
+  }
+  const prepared = packet.category_contract.bondbuilder_research
+
+  assert.ok(prepared, "real worker packet must use the active research contract")
+  assert.equal(prepared.enabled, true)
+  assert.equal(
+    (prepared.required_artifact as { payload_key: string }).payload_key,
+    "bondbuilder_research_envelope",
+  )
+  assert.deepEqual((prepared.profile as { required_roots: string[] }).required_roots, [
+    "method",
+    "identity",
+    "formula",
+    "assessment",
+    "technology_reference",
+    "application",
+    "evidence",
+    "explanations_de",
+    "sources",
+    "fit",
+    "holds",
+    "review",
+  ])
+  assert.doesNotMatch(JSON.stringify(packet.category_contract), /bond_repair_intensity/)
+  assert.match(JSON.stringify(prepared), /owner_default/)
+  assert.doesNotMatch(JSON.stringify(prepared), /bond_repair_intensity/)
+  const reference = (prepared.profile as { technology_reference: Record<string, unknown> })
+    .technology_reference
+  assert.equal(reference.formula_digest, "normalized_sha256")
+  assert.equal(reference.marker_encoding, "exact_normalized_literal")
+})
 
 test("worker packet keeps only exact-GTIN dm provenance and makes retailer images candidates", () => {
   const history = [
@@ -1243,7 +1329,6 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /commercial_source_contract/)
   assert.match(workerScript, /Official brand\/manufacturer product page/)
   assert.match(workerScript, /dm > Rossmann > Müller > brand-direct > Amazon DE/)
-  assert.match(workerScript, /brand-direct > Amazon DE > dm > Rossmann/)
   assert.match(workerScript, /targeted_preferred_retailer_searches/)
   assert.match(workerScript, /site:dm\.de/)
   assert.match(workerScript, /site:rossmann\.de/)

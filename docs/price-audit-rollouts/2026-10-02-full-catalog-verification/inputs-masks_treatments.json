@@ -1,0 +1,1383 @@
+{
+  "snapshot_at": "2026-10-02T14:26:08.770Z",
+  "products": [
+    {
+      "id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "name": "Epres Bond Repair Treatment",
+      "brand": "Epres",
+      "gtins": [
+        {
+          "value": "0850040615500",
+          "canonical_gtin14": "00850040615500"
+        }
+      ],
+      "price_eur": 48,
+      "category_key": "bondbuilder",
+      "affiliate_link": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:57:10.564+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "38dace91-0fba-49ee-a93f-ac36e488fe4b",
+      "name": "K18 Leave-In Molecular Repair Hair Mask",
+      "brand": "K18",
+      "gtins": [
+        {
+          "value": "858511001128",
+          "canonical_gtin14": "00858511001128"
+        }
+      ],
+      "price_eur": 56.25,
+      "category_key": "bondbuilder",
+      "affiliate_link": "https://www.flaconi.de/haare/k18/leave-in-molecular/k18-leave-in-molecular-repair-hair-mask-haarkur.html?variant=80074805-50",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-10-01T08:43:50.443239+00:00",
+      "net_content_value": 50,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "3dc24d67-e6c0-4239-a273-058a87d13553",
+      "name": "OLAPLEX No.3PLUS Complete Repair Treatment",
+      "brand": "OLAPLEX",
+      "gtins": [
+        {
+          "value": "810177860266",
+          "canonical_gtin14": "00810177860266"
+        },
+        {
+          "value": "810177860273",
+          "canonical_gtin14": "00810177860273"
+        }
+      ],
+      "price_eur": 34,
+      "category_key": "bondbuilder",
+      "affiliate_link": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:22:44.47+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-09T00:00:00+00:00"
+    },
+    {
+      "id": "1568b623-f411-4ed6-a89f-e797bb1b48f5",
+      "name": "Alterra Intensiv Repair Haarmaske Feuchtigkeit",
+      "brand": "Alterra",
+      "gtins": [
+        {
+          "value": "4068134014122",
+          "canonical_gtin14": "04068134014122"
+        }
+      ],
+      "price_eur": 2.79,
+      "category_key": "mask",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-alterra-haarmaske/p/4068134014122",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-11T13:06:14.055193+00:00"
+    },
+    {
+      "id": "d5d67009-7aac-4299-938b-7218b8635a0c",
+      "name": "Balea 3 in 1 Intensivmaske",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4066447237443",
+          "canonical_gtin14": "04066447237443"
+        },
+        {
+          "value": "4066447982817",
+          "canonical_gtin14": "04066447982817"
+        }
+      ],
+      "price_eur": 1.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/balea-haarmaske-3in1-intensivpflege-p4066447237443.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:32:32.08+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "29fc985e-3b7e-4567-b7bc-b416583139fe",
+      "name": "Balea Haarkur reparierend",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4070765053357",
+          "canonical_gtin14": "04070765053357"
+        }
+      ],
+      "price_eur": 2.45,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/1674120/balea-haarkur-reparierend",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-08-11T13:06:14.055193+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-11T13:06:14.055193+00:00"
+    },
+    {
+      "id": "f212a8ff-0a03-404a-aad5-773d5bb6f7c9",
+      "name": "Balea Natural Beauty 3in1 Locken",
+      "brand": "Balea",
+      "gtins": [],
+      "price_eur": 2.45,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/1457506/balea-haarmaske-3in1-natural-beauty-locken",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "name": "Balea Professional Glow & Shine",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4067796166453",
+          "canonical_gtin14": "04067796166453"
+        }
+      ],
+      "price_eur": 2.75,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/balea-professional-haarkur-glow-und-shine-p4067796166453.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:46:54.094+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "9d7141bf-bb7e-41e8-a206-38ee5c42fdc6",
+      "name": "Balea Professional Plex Care 2in1",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4070765006346",
+          "canonical_gtin14": "04070765006346"
+        }
+      ],
+      "price_eur": 2.75,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/1690411/balea-professional-haarmaske-plex-care-2in1",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:29:28.91+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "55727898-2a5e-4f01-ace1-bd91521d98ab",
+      "name": "Balea Aqua Hyaluron 3 in 1",
+      "brand": "Balea Aqua",
+      "gtins": [
+        {
+          "value": "4066447668315",
+          "canonical_gtin14": "04066447668315"
+        }
+      ],
+      "price_eur": 2.75,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/balea-professional-haarmaske-3in1-aqua-hyaluron-p4066447668315.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "d0e4bc78-2aeb-4e88-8abf-08aa28fbfba4",
+      "name": "Bali Curls Deep Repair Mask",
+      "brand": "Bali Curls",
+      "gtins": [
+        {
+          "value": "4262391990001",
+          "canonical_gtin14": "04262391990001"
+        }
+      ],
+      "price_eur": 8.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/3106327/bali-curls-haarmaske-deep-repair",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:31:59.602+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-11T13:06:14.055193+00:00"
+    },
+    {
+      "id": "43232fe6-28b6-4f45-a09f-b1354e47b0be",
+      "name": "Bali Curls SOS Protein Treatment",
+      "brand": "Bali Curls",
+      "gtins": [
+        {
+          "value": "4262391991114",
+          "canonical_gtin14": "04262391991114"
+        }
+      ],
+      "price_eur": 2.79,
+      "category_key": "mask",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-bali-curls-total-repair-sos-protein-treatment/p/4262391991114",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:36:51.678+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "52264c47-f339-49db-9fb2-207d1ad3b470",
+      "name": "Fructis Hair Food Aloe Vera",
+      "brand": "Fructis",
+      "gtins": [
+        {
+          "value": "3600542511049",
+          "canonical_gtin14": "03600542511049"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/garnier-fructis-haarmaske-aloe-vera-hair-food-3in1-trockenes-haar-p3600542511049.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:27:21.339+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "9e1442c9-4ab8-4819-a851-66859a98ed80",
+      "name": "Fructis Hair Food Papaya",
+      "brand": "Fructis",
+      "gtins": [
+        {
+          "value": "3600542511100",
+          "canonical_gtin14": "03600542511100"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/garnier-fructis-haarkur-papaya-hair-food-3in1-maske-p3600542511100.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:29:41.812+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "17c50884-3c17-479a-848a-10447464e086",
+      "name": "Garnier Wahre Schätze Haarmaske Aktivkohle",
+      "brand": "Garnier Wahre Schätze",
+      "gtins": [
+        {
+          "value": "3600542510271",
+          "canonical_gtin14": "03600542510271"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/1679241/wahre-schaetze-haarkur-1-minute-aktivkohle-fettige-kopfhaut",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-27T14:38:36.157+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "unavailable",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-27T14:38:36.157+00:00"
+    },
+    {
+      "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "name": "Gliss Aqua Revive",
+      "brand": "Gliss",
+      "gtins": [],
+      "price_eur": 4.75,
+      "category_key": "mask",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-gliss-aqua-revive-feuchtigkeit-4-in-1-bonding-haarmaske/p/4015100813555",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "unavailable",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "d9825ad6-f549-4b02-a62a-eaa3bf917936",
+      "name": "Gliss Liquid Silk Glanz 4-in-1 Bonding Haarmaske",
+      "brand": "Gliss",
+      "gtins": [
+        {
+          "value": "4015100813913",
+          "canonical_gtin14": "04015100813913"
+        }
+      ],
+      "price_eur": 5.75,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/1431893/schwarzkopf-gliss-haarmaske-4in1-liquid-silk",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:32:42.413+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "c7326c6b-6175-4ec2-865f-68baf476c986",
+      "name": "Guhl 30 sec. Feuchtigkeit",
+      "brand": "Guhl",
+      "gtins": [
+        {
+          "value": "4072600720097",
+          "canonical_gtin14": "04072600720097"
+        }
+      ],
+      "price_eur": 3.45,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/guhl-haarkur-30-sek-feuchtigkeit-p4072600720097.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:31:37.358+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "brand": "Guhl",
+      "gtins": [],
+      "price_eur": 4.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "7c057f58-3e9b-4347-b4c1-f04cc4213f94",
+      "name": "HASK Argan Conditioning Treatment Haarkur",
+      "brand": "Hask",
+      "gtins": [
+        {
+          "value": "071164333068",
+          "canonical_gtin14": "00071164333068"
+        }
+      ],
+      "price_eur": 2.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.hagel-shop.de/hask-argan-oil-repairing-deep-conditioner-sachet-50-ml.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:45:37.394+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "47795618-40e7-4ef6-8034-0fd8eb747575",
+      "name": "Isana 3in1 Milchprotein & Mandel",
+      "brand": "Isana",
+      "gtins": [
+        {
+          "value": "4305615627441",
+          "canonical_gtin14": "04305615627441"
+        }
+      ],
+      "price_eur": 0.69,
+      "category_key": "mask",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-isana-haarmaske-3in1-mandelmilch-milchprotein-und-mandel/p/4305615627441",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "unavailable",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "b3932c84-d6e1-453d-b52e-bed1df190fed",
+      "name": "Jean&Len Tiefenreparatur Haarkur",
+      "brand": "Jean&Len",
+      "gtins": [
+        {
+          "value": "4262401737824",
+          "canonical_gtin14": "04262401737824"
+        }
+      ],
+      "price_eur": 5.49,
+      "category_key": "mask",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-jeanundlen-tiefenreparatur-haarkur/p/4262401737824",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:38:22.753+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+      "name": "Neqi Build Boost",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528086303",
+          "canonical_gtin14": "04063528086303"
+        }
+      ],
+      "price_eur": 9.99,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "b281d528-b312-4e44-98be-3e01f7e56644",
+      "name": "Neqi Gloss Glaze",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528086327",
+          "canonical_gtin14": "04063528086327"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/neqi-haarkur-treatment-treasures-gloss-glaze-p4063528086327.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:31:03.877+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "22d41784-5fc6-40bb-a4dc-92841322f933",
+      "name": "Neqi Peptide Power",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528086297",
+          "canonical_gtin14": "04063528086297"
+        }
+      ],
+      "price_eur": 9.99,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/neqi-haarkur-treatment-treasures-peptide-power-p4063528086297.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "d33543b0-6011-45f1-9bb2-125289ac849a",
+      "name": "Neqi Repair Reveal",
+      "brand": "Neqi",
+      "gtins": [
+        {
+          "value": "4063528078254",
+          "canonical_gtin14": "04063528078254"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/neqi-haarkur-repair-reveal-p4063528078254.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:32:21.519+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "7c1f2f42-3729-49fe-9f0d-e007b93a05c8",
+      "name": "Pantene Bond Repair",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "8700216173476",
+          "canonical_gtin14": "08700216173476"
+        }
+      ],
+      "price_eur": 7.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/pantene-pro-v-haarkur-miracles-bond-repair-intensive-haarmaske-p8700216173476.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:28:39.455+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "a17d3783-2854-4911-bbfa-b2f3ef7f95a8",
+      "name": "Pantene Hydra Glow",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "8700216173261",
+          "canonical_gtin14": "08700216173261"
+        }
+      ],
+      "price_eur": 6.45,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/pantene-pro-v-haarmaske-miracles-hydra-glow-deep-hydration-p8700216173261.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T19:40:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "077a94ae-fede-4773-9435-17022c2b89c0",
+      "name": "PANTENE PRO-V Haarmaske Keratin Repair & Care",
+      "brand": "Pantene",
+      "gtins": [
+        {
+          "value": "8700216502672",
+          "canonical_gtin14": "08700216502672"
+        }
+      ],
+      "price_eur": 4.45,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/1523350/pantene-pro-v-haarmaske-keratin-repair-und-care",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-08-11T13:06:14.055193+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-11T13:06:14.055193+00:00"
+    },
+    {
+      "id": "8df49303-e1c9-4519-9a5f-4f9bc276ab5a",
+      "name": "Pomélo+Co Shine Therapy",
+      "brand": "Pomélo+Co",
+      "gtins": [
+        {
+          "value": "4260625261996",
+          "canonical_gtin14": "04260625261996"
+        }
+      ],
+      "price_eur": 9.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/3110549/pomelo-co-haarmaske-shine-therapy",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:28:51.156+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "869abd97-a499-4f39-97e5-2722773e46ae",
+      "name": "Sante Intense Hydration",
+      "brand": "Sante",
+      "gtins": [
+        {
+          "value": "4055297220682",
+          "canonical_gtin14": "04055297220682"
+        }
+      ],
+      "price_eur": 6.99,
+      "category_key": "mask",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-sante-intense-hydration-haarmaske/p/4025089005896",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "3ce9a9da-4d58-4a66-a424-f8818960b5dc",
+      "name": "Schaebens Argan-Öl Haarmaske",
+      "brand": "Schaebens",
+      "gtins": [
+        {
+          "value": "4003573025018",
+          "canonical_gtin14": "04003573025018"
+        }
+      ],
+      "price_eur": 1.49,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/schaebens-haarmaske-arganoel-p4003573025018.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "name": "Syoss Haarkur Lamination Intense Glaze",
+      "brand": "Syoss",
+      "gtins": [
+        {
+          "value": "4015100867213",
+          "canonical_gtin14": "04015100867213"
+        }
+      ],
+      "price_eur": 7.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/syoss-haarkur-lamination-intense-glaze-p4015100867213.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-10T00:00:00+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "4f6dc4e4-d163-405d-9c68-3b2467090078",
+      "name": "Syoss Intense Curls Haarmaske",
+      "brand": "Syoss",
+      "gtins": [
+        {
+          "value": "4015100866100",
+          "canonical_gtin14": "04015100866100"
+        }
+      ],
+      "price_eur": 4.99,
+      "category_key": "mask",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-syoss-haarmaske-intense-curls/p/4015100866100",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-27T14:38:36.157+00:00"
+    },
+    {
+      "id": "961e3935-f823-44e7-8601-900c62855d3d",
+      "name": "Syoss Intense Keratin",
+      "brand": "Syoss",
+      "gtins": [
+        {
+          "value": "4015100860863",
+          "canonical_gtin14": "04015100860863"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/syoss-haarmaske-intense-keratin-p4015100860863.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:29:03.564+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "ea353b65-544d-48a8-a057-c3e733b66326",
+      "name": "Wahre Schätze 1-Minute Haarkur Argan & Camelia Öl",
+      "brand": "Wahre Schätze",
+      "gtins": [
+        {
+          "value": "3600542509572",
+          "canonical_gtin14": "03600542509572"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/wahre-schaetze-haarkur-1-minute-argan-und-camelia-oel-p3600542509572.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-09-30T17:35:07.228+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-10T00:00:00+00:00"
+    },
+    {
+      "id": "b2e7e679-a6ba-4ba3-93d7-1fd35f6e6c75",
+      "name": "Wahre Schätze Haarkur 1-Minute Avocado-Öl & Sheabutter",
+      "brand": "Wahre Schätze",
+      "gtins": [
+        {
+          "value": "3600542510127",
+          "canonical_gtin14": "03600542510127"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/1679236/wahre-schaetze-haarkur-1-minute-avocado-oel-und-sheabutter",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-08-11T13:06:14.055193+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-11T13:06:14.055193+00:00"
+    },
+    {
+      "id": "e51cfce0-fd76-4873-a868-cc3ca0301cbc",
+      "name": "Kopfhautpflege Peeling Tiefenreinigung",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4066447467536",
+          "canonical_gtin14": "04066447467536"
+        }
+      ],
+      "price_eur": 2.95,
+      "category_key": "scalp_care",
+      "affiliate_link": "https://www.dm.de/p/d/1700670/balea-professional-kopfhautpflege-peeling-tiefenreinigung",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-09T09:19:32+00:00"
+    },
+    {
+      "id": "35d2cc66-6d5a-49c1-9a9f-c03bf6942ab0",
+      "name": "Kopfhautpflege Serum Sensitive",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4066447679007",
+          "canonical_gtin14": "04066447679007"
+        }
+      ],
+      "price_eur": 2.95,
+      "category_key": "scalp_care",
+      "affiliate_link": "https://www.dm.de/p/d/1459196/balea-professional-kopfhautpflege-serum-sensitive",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-09T09:19:32+00:00"
+    },
+    {
+      "id": "cd76afea-d332-4b1d-b44b-7de5bef9034f",
+      "name": "Kopfhautberuhigendes Intensiv-Tonikum",
+      "brand": "Eucerin",
+      "gtins": [
+        {
+          "value": "4005800036620",
+          "canonical_gtin14": "04005800036620"
+        }
+      ],
+      "price_eur": 16.95,
+      "category_key": "scalp_care",
+      "affiliate_link": "https://www.dm.de/p/d/3086968/eucerin-eucerin-dermo-capillaire-5-prozent-urea-kopfhautberuhigendes-intensiv-tonikum",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-09T09:19:32+00:00"
+    },
+    {
+      "id": "945ecca3-c4f0-4426-9af5-a5a8482b3b27",
+      "name": "Klärendes Serum",
+      "brand": "Gliss",
+      "gtins": [
+        {
+          "value": "4015100892963",
+          "canonical_gtin14": "04015100892963"
+        }
+      ],
+      "price_eur": 8.95,
+      "category_key": "scalp_care",
+      "affiliate_link": "https://www.dm.de/p/d/3119228/schwarzkopf-gliss-haarserum-scalp-balance-klaerend",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-09T09:19:32+00:00"
+    },
+    {
+      "id": "c9b231ee-77b5-45b7-8127-7a85d3ae7dd0",
+      "name": "Kopfhaut-Feuchtigkeitspflege Leave-In Serum",
+      "brand": "Head & Shoulders",
+      "gtins": [
+        {
+          "value": "8006530455787",
+          "canonical_gtin14": "08006530455787"
+        },
+        {
+          "value": "8700216495981",
+          "canonical_gtin14": "08700216495981"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "scalp_care",
+      "affiliate_link": "https://www.dm.de/p/d/2482723/head-und-shoulders-leave-in-serum-derma-x-pro-kopfhaut-feuchtigkeitspflege",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-10-02T13:22:47.792+00:00",
+      "net_content_value": 145,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-10-02T13:22:47.792+00:00"
+    },
+    {
+      "id": "2544de60-e295-47ec-98a1-6b4ca58ce4be",
+      "name": "Kopfhautpeeling Tiefenreinigung",
+      "brand": "Isana",
+      "gtins": [
+        {
+          "value": "4068134100023",
+          "canonical_gtin14": "04068134100023"
+        }
+      ],
+      "price_eur": 2.99,
+      "category_key": "scalp_care",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-kopfhautpeeling-tiefenreinigung/p/4068134100023",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-09T09:19:32+00:00"
+    },
+    {
+      "id": "3f3542c0-e82b-4306-a9e0-85df313a78cf",
+      "name": "Anti-Haarverlust Serum",
+      "brand": "L'Oréal Paris",
+      "gtins": [
+        {
+          "value": "3600524189921",
+          "canonical_gtin14": "03600524189921"
+        }
+      ],
+      "price_eur": 13.95,
+      "category_key": "scalp_care",
+      "affiliate_link": "https://www.dm.de/p/d/2976343/l-oreal-paris-elvital-haarserum-fiber-booster-anti-haarverlust",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-10-01T09:27:10.901+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-09T09:19:32+00:00"
+    },
+    {
+      "id": "58aa2f19-b23a-4e09-ab0f-68c359371c9e",
+      "name": "Multi-Peptide Serum for Hair Density",
+      "brand": "The Ordinary",
+      "gtins": [
+        {
+          "value": "769915195910",
+          "canonical_gtin14": "00769915195910"
+        }
+      ],
+      "price_eur": 26.5,
+      "category_key": "scalp_care",
+      "affiliate_link": "https://theordinary.com/de-de/multi-peptide-serum-for-hair-density-hair-scalp-treatment-100434.html",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-08-11T08:26:31+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-11T08:26:31+00:00"
+    },
+    {
+      "id": "e3571e45-1126-4431-bef8-43153ef64c20",
+      "name": "alverde NATURKOSMETIK Haarkur 4in1 Repair & Care Wunderkur",
+      "brand": "alverde NATURKOSMETIK",
+      "gtins": [
+        {
+          "value": "4067796145861",
+          "canonical_gtin14": "04067796145861"
+        }
+      ],
+      "price_eur": 3.25,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/alverde-naturkosmetik-haarkur-4in1-repair-wunderkur-p4066447523874.html",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "96f4cf13-7a71-4924-b44e-9d5612d55d32",
+      "name": "alverde NATURKOSMETIK Haarmaske Hydro Feuchtigkeit",
+      "brand": "alverde NATURKOSMETIK",
+      "gtins": [
+        {
+          "value": "4066447918946",
+          "canonical_gtin14": "04066447918946"
+        }
+      ],
+      "price_eur": 0.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/alverde-naturkosmetik-haarmaske-feuchtigkeit-aloe-vera-und-hyaluron-p4066447331172.html",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 20,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "e75b6978-d9ca-4601-b40a-8eb8cc974b45",
+      "name": "Balea Haarkur Feuchtigkeit",
+      "brand": "Balea",
+      "gtins": [
+        {
+          "value": "4066447154832",
+          "canonical_gtin14": "04066447154832"
+        }
+      ],
+      "price_eur": 0.55,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/1679500/balea-haarkur-feuchtigkeit",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 25,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "1bf36485-3fe8-4fe0-9a03-b2bf7b451f0c",
+      "name": "Being (by ZURU) Mega Moisture Haarmaske",
+      "brand": "Being (by ZURU)",
+      "gtins": [
+        {
+          "value": "4895248006008",
+          "canonical_gtin14": "04895248006008"
+        }
+      ],
+      "price_eur": 6.79,
+      "category_key": "mask",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-being-mega-moisture-haarmaske/p/4895248006008",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 354,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "106aaea7-cbdf-400c-bf3c-7cf7ce268577",
+      "name": "Being (by ZURU) Mega Shine Haarmaske",
+      "brand": "Being (by ZURU)",
+      "gtins": [
+        {
+          "value": "4895248006015",
+          "canonical_gtin14": "04895248006015"
+        }
+      ],
+      "price_eur": 6.79,
+      "category_key": "mask",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-being-mega-shine-haarmaske/p/4895248006015",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 354,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "4a7b5b38-ff8b-4e0a-aaa2-4f5031797ee3",
+      "name": "Garnier Fructis Haarkur Banana Hair Food 3in1 Maske",
+      "brand": "Garnier Fructis",
+      "gtins": [
+        {
+          "value": "3600542511070",
+          "canonical_gtin14": "03600542511070"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/1676324/garnier-fructis-haarkur-banana-hair-food-3in1-maske",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-02T00:00:00+00:00",
+      "net_content_value": 400,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-02T00:00:00+00:00"
+    },
+    {
+      "id": "488685e8-4718-4cb5-a826-9bcb75014b34",
+      "name": "Garnier Fructis Haarmaske Keratin Sleek, Anti-Frizz Kur",
+      "brand": "Garnier Fructis",
+      "gtins": [
+        {
+          "value": "3600542638951",
+          "canonical_gtin14": "03600542638951"
+        }
+      ],
+      "price_eur": 5.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/3042310/garnier-fructis-haarmaske-keratin-sleek-anti-frizz-kur",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 370,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "82a0d0bd-784f-4be0-aa6e-2d929b088912",
+      "name": "Guhl Haarkur 30_sek Reparatur",
+      "brand": "Guhl",
+      "gtins": [
+        {
+          "value": "4072600720080",
+          "canonical_gtin14": "04072600720080"
+        }
+      ],
+      "price_eur": 3.45,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/1649553/guhl-haarkur-30-sek-reparatur",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 100,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "315ae9f5-ad1a-4159-b307-2413338c8052",
+      "name": "Herbal Essences Haarmaske Blütensanft",
+      "brand": "Herbal Essences",
+      "gtins": [
+        {
+          "value": "8700216212724",
+          "canonical_gtin14": "08700216212724"
+        }
+      ],
+      "price_eur": 3.99,
+      "category_key": "mask",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-02T00:00:00+00:00",
+      "net_content_value": 300,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-02T00:00:00+00:00"
+    },
+    {
+      "id": "25359379-8a85-4f2f-a338-2a7361b747a7",
+      "name": "Isana Professional Haarmaske Locken Traum",
+      "brand": "Isana Professional",
+      "gtins": [
+        {
+          "value": "4305615846965",
+          "canonical_gtin14": "04305615846965"
+        }
+      ],
+      "price_eur": 2.79,
+      "category_key": "mask",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haarmaske-locken-traum/p/4305615846965",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "27fafbbd-9a89-4335-aed0-5cf5a081ef5c",
+      "name": "Isana Professional Plex Maske",
+      "brand": "Isana Professional",
+      "gtins": [
+        {
+          "value": "4305615975948",
+          "canonical_gtin14": "04305615975948"
+        }
+      ],
+      "price_eur": 2.49,
+      "category_key": "mask",
+      "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-plex-maske/p/4305615975948",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 125,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "e5cfad78-ea22-49a5-911a-cb1f3109fa1c",
+      "name": "Jean&Len Rosemary/Ginger Hair Mask Hydration Rosemary/Ginger",
+      "brand": "Jean&Len",
+      "gtins": [],
+      "price_eur": 7.99,
+      "category_key": "mask",
+      "affiliate_link": "https://www.jeanlen.de/en/haarmaske-feuchtigkeit-rosemary-ginger",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-07-02T09:26:04+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-07-02T09:26:04+00:00"
+    },
+    {
+      "id": "b1712c80-75a9-4d85-89c3-e12421f208e8",
+      "name": "John Frieda Frizz Ease Wunder-Reparatur Tiefenwirksame Wunder-Kur",
+      "brand": "John Frieda",
+      "gtins": [
+        {
+          "value": "5037156298789",
+          "canonical_gtin14": "05037156298789"
+        }
+      ],
+      "price_eur": 9.99,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/3123414/john-frieda-haarkur-frizz-ease-wunder-reparatur",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 250,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "e482e42a-bdac-4f5e-bd3b-489e702c0c4b",
+      "name": "L'Oréal Paris Elvital Haarmaske Hydra Hyaluronic",
+      "brand": "L'Oréal Paris",
+      "gtins": [
+        {
+          "value": "3600524245849",
+          "canonical_gtin14": "03600524245849"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/3122676/l-oreal-paris-elvital-haarmaske-hydra-hyaluronic",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-08-21T11:32:22+00:00",
+      "net_content_value": null,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-08-21T11:32:22+00:00"
+    },
+    {
+      "id": "13a1acb9-c824-4410-b4b6-ed358be30c37",
+      "name": "L'Oréal Paris Elvital Haarkur Glycolic Gloss, 5 Minuten Haar-Laminierung",
+      "brand": "L'Oréal Paris Elvital",
+      "gtins": [
+        {
+          "value": "3600524128500",
+          "canonical_gtin14": "03600524128500"
+        }
+      ],
+      "price_eur": 8.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/1343854/l-oreal-paris-elvital-haarkur-glycolic-gloss-5-minuten-haar-laminierung",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-02T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-02T00:00:00+00:00"
+    },
+    {
+      "id": "5122791e-6572-4ed0-b4c4-a7183912b7cf",
+      "name": "OGX Coconut Miracle Oil Haarmaske",
+      "brand": "OGX",
+      "gtins": [
+        {
+          "value": "3574661685168",
+          "canonical_gtin14": "03574661685168"
+        }
+      ],
+      "price_eur": 9.99,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/ogx-haarkur-coconut-miracle-oil-p3574661685168.html",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-04T00:00:00+00:00",
+      "net_content_value": 300,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-04T00:00:00+00:00"
+    },
+    {
+      "id": "3f75e6f8-7659-42ce-bcd9-3c21af5d2de4",
+      "name": "Pantene Pro-V Moisture BOOST Keratin Protect Haarmaske",
+      "brand": "Pantene Pro-V",
+      "gtins": [
+        {
+          "value": "8700216940108",
+          "canonical_gtin14": "08700216940108"
+        }
+      ],
+      "price_eur": 3.99,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/3088184/pantene-pro-v-haarmaske-moisture-boost-keratin-protect",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 300,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "d46c16fa-1ca6-45dd-bab4-af96217c5480",
+      "name": "Pantene Pro-V Pantene Pro-V Serum Shot mit Collagen Peptiden",
+      "brand": "Pantene Pro-V",
+      "gtins": [
+        {
+          "value": "4084500390089",
+          "canonical_gtin14": "04084500390089"
+        }
+      ],
+      "price_eur": 1.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/1383345/pantene-pro-v-haarkur-1-minute-wunder-ampulle-rescue-shots-repair-und-care",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 15,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "75a3dc03-a2d1-4a5a-aa66-50edff642c41",
+      "name": "Schwarzkopf Gliss Haarkur 7sec Express-Repair, Ultimate Repair",
+      "brand": "Schwarzkopf Gliss",
+      "gtins": [
+        {
+          "value": "4015100813319",
+          "canonical_gtin14": "04015100813319"
+        }
+      ],
+      "price_eur": 6.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/1581143/schwarzkopf-gliss-haarkur-7sec-express-repair-ultimate-repair",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-02T00:00:00+00:00",
+      "net_content_value": 200,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-02T00:00:00+00:00"
+    },
+    {
+      "id": "5a0b573e-bd4a-40a6-a328-9ceb8024109b",
+      "name": "Wahre Schätze Haarkur 1-Minute Honig Schätze",
+      "brand": "Wahre Schätze",
+      "gtins": [
+        {
+          "value": "3600542509428",
+          "canonical_gtin14": "03600542509428"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/1679237/wahre-schaetze-haarkur-1-minute-honig-schaetze",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 340,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    },
+    {
+      "id": "25a545c5-91c3-4338-baf9-63b3d5c155e3",
+      "name": "Wahre Schätze Haarkur 1-Minute Traube",
+      "brand": "Wahre Schätze",
+      "gtins": [
+        {
+          "value": "3600542656191",
+          "canonical_gtin14": "03600542656191"
+        }
+      ],
+      "price_eur": 4.95,
+      "category_key": "mask",
+      "affiliate_link": "https://www.dm.de/p/d/3115711/wahre-schaetze-haarkur-1-minute-traube",
+      "lifecycle_status": "active",
+      "net_content_unit": "ml",
+      "price_checked_at": "2026-09-03T00:00:00+00:00",
+      "net_content_value": 340,
+      "purchase_link_status": "available",
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-09-03T00:00:00+00:00"
+    }
+  ]
+}

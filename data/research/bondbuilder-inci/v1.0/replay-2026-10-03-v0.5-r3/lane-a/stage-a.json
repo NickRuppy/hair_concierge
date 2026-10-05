@@ -1,0 +1,189 @@
+{
+  "stage": "A",
+  "lane_id": "lane-a",
+  "input_receipt": [
+    {
+      "path": "method/researcher-prompt.md",
+      "sha256": "3019d9d4aa97167af1821f21609beaa414ea58e5f653b1dc3cc4e666191b2ec7"
+    },
+    {
+      "path": "method/blind-instructions.md",
+      "sha256": "4840b6d60efb00db856aa0de4f16cdb140ebcace7da561b5b6d567d2b1acdd41"
+    },
+    {
+      "path": "anonymous-packet.json",
+      "sha256": "6812dc31a13bb944cbcdc45ac5bbe12f62c5c35deac940b99b00f036eccc19f2"
+    }
+  ],
+  "records": [
+    {
+      "slot_id": "P01",
+      "observed_ingredients": ["Bis-Aminopropyl Diglycol Dimaleate", "Citric Acid"],
+      "candidate_families": ["sulfur_targeting_dimaleate", "acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Run-level preparation incident: r2 omitted the closed candidate family IDs, so no r2 Lane A output or seal was written. All three permitted r3 inputs were subsequently reread completely and hashed; r3 observations use the r3 vocabulary.",
+        "Complete describes the supplied canonical selected formula only; confidence describes literal candidate recognition within that formula.",
+        "Citric Acid is only a formula candidate; targeted-category use cannot be decided anonymously. No supporting Sodium Citrate, Glycine, Arginine or Betaine is listed."
+      ],
+      "recognition_incidents": [
+        "The distinctive Bis-Aminopropyl Diglycol Dimaleate chemistry was recognized; no identity was assigned or used."
+      ]
+    },
+    {
+      "slot_id": "P02",
+      "observed_ingredients": ["sh-Oligopeptide -78", "Citric Acid"],
+      "candidate_families": ["designed_peptide", "acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Complete describes the supplied canonical selected formula only; confidence describes literal candidate recognition within that formula.",
+        "The literal sh-Oligopeptide -78 spacing is normalized to the permitted sh-Oligopeptide-78 clue. Hydrolyzed Wheat Protein does not independently satisfy that clue.",
+        "Citric Acid is only a formula candidate; targeted-category use cannot be decided anonymously. No supporting Sodium Citrate, Glycine, Arginine or Betaine is listed."
+      ],
+      "recognition_incidents": [
+        "The distinctive numbered sh-Oligopeptide-78 chemistry was recognized despite spacing; no identity was assigned or used."
+      ]
+    },
+    {
+      "slot_id": "P03",
+      "observed_ingredients": ["Diethylhexyl Maleate"],
+      "candidate_families": ["maleate_ester"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Complete describes the supplied canonical selected four-ingredient formula only; its short length is not itself evidence of truncation.",
+        "Confidence describes the exact Diethylhexyl Maleate observation; it is not treated as Bis-Aminopropyl Diglycol Dimaleate."
+      ],
+      "recognition_incidents": [
+        "The distinctive Diethylhexyl Maleate clue was recognized; no identity was assigned or used."
+      ]
+    },
+    {
+      "slot_id": "P04",
+      "observed_ingredients": ["CITRIC ACID", "ARGININE", "BETAINE"],
+      "candidate_families": ["acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Complete describes the supplied canonical selected formula only; confidence describes literal candidate recognition within that formula.",
+        "Citric Acid with Arginine and Betaine remains only a formula candidate; targeted-category use cannot be decided anonymously.",
+        "Hydroxypropyl Guar and Chlorhexidine Digluconate are not the required Hydroxypropylgluconamide and Hydroxypropylammonium Gluconate pair."
+      ],
+      "recognition_incidents": []
+    },
+    {
+      "slot_id": "P05",
+      "observed_ingredients": ["CITRIC ACID", "SODIUM CITRATE"],
+      "candidate_families": ["acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Complete describes the supplied canonical selected formula only; confidence describes literal candidate recognition within that formula.",
+        "Differing source captures are reported but not supplied. They are not merged or resolved here; the caution alone does not establish an internal conflict in this selected list.",
+        "Citric Acid with Sodium Citrate remains only a formula candidate; targeted-category use cannot be decided anonymously."
+      ],
+      "recognition_incidents": []
+    },
+    {
+      "slot_id": "P06",
+      "observed_ingredients": ["Hydroxypropylgluconamide", "Hydroxypropylammonium Gluconate", "Arginine", "Citric Acid"],
+      "candidate_families": ["gluconamide_gluconate", "acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Complete describes the supplied canonical selected formula only; confidence describes literal candidate recognition within that formula.",
+        "Differing source captures are reported but not supplied. They are not merged or resolved here; the caution alone does not establish an internal conflict in this selected list.",
+        "Raw spelling and punctuation differences outside the candidate clues are visible in the normalized list; both required gluconamide/gluconate ingredients remain explicit in raw and normalized text.",
+        "Citric Acid with Arginine remains only a formula candidate; targeted-category use cannot be decided anonymously."
+      ],
+      "recognition_incidents": [
+        "The distinctive Hydroxypropylgluconamide and Hydroxypropylammonium Gluconate pair was recognized; no identity was assigned or used."
+      ]
+    },
+    {
+      "slot_id": "P07",
+      "observed_ingredients": ["Hydroxypropylgluconamide", "Hydroxypropylammonium Gluconate"],
+      "candidate_families": ["gluconamide_gluconate"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Complete describes the supplied canonical selected formula only; confidence describes literal candidate recognition within that formula.",
+        "Both required ingredients are present even though separated in the list.",
+        "Octyldodecyl Citrate Crosspolymer, Lactic Acid and Tartaric Acid do not substitute for the specified Citric Acid clue."
+      ],
+      "recognition_incidents": [
+        "The distinctive Hydroxypropylgluconamide and Hydroxypropylammonium Gluconate pair was recognized; no identity was assigned or used."
+      ]
+    },
+    {
+      "slot_id": "P08",
+      "observed_ingredients": ["GLYCINE", "CITRIC ACID"],
+      "candidate_families": ["acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "Complete describes the supplied canonical selected formula only; confidence describes literal candidate recognition within that formula.",
+        "Differing source captures are reported but not supplied. They are not merged or resolved here; the caution alone does not establish an internal conflict in this selected list.",
+        "Citric Acid with Glycine remains only a formula candidate; targeted-category use cannot be decided anonymously.",
+        "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol is not the specified sh-Oligopeptide-78 clue."
+      ],
+      "recognition_incidents": []
+    },
+    {
+      "slot_id": "V01",
+      "observed_ingredients": ["Hydroxypropylgluconamide", "Hydroxypropylammonium Gluconate", "Citric Acid"],
+      "candidate_families": ["gluconamide_gluconate", "acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "source_version_not_actual_pack: complete describes the supplied source-version list only; the actual pack formula is unknown. Confidence describes literal recognition within the supplied list.",
+        "Citric Acid is only a formula candidate; targeted-category use cannot be decided anonymously. No supporting Sodium Citrate, Glycine, Arginine or Betaine is listed.",
+        "Tartaric Acid and Creatine do not add a permitted candidate family."
+      ],
+      "recognition_incidents": [
+        "The distinctive Hydroxypropylgluconamide and Hydroxypropylammonium Gluconate pair was recognized; no identity was assigned or used."
+      ]
+    },
+    {
+      "slot_id": "V02",
+      "observed_ingredients": ["LACTIC ACID", "GLYCINE SOJA OIL", "HYDROLYZED KERATIN", "HYDROLYZED WHEAT PROTEIN", "HYDROLYZED SOY PROTEIN", "HYDROLYZED CORN PROTEIN"],
+      "candidate_families": [],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "source_version_not_actual_pack: complete describes the supplied source-version list only; the actual pack formula is unknown. Confidence describes the permitted-marker screen of this list only.",
+        "No permitted candidate clue is observed in the supplied list. This does not establish absence from an uninspected actual pack or another source version.",
+        "Glycine Soja Oil is not Glycine, Lactic Acid is not Citric Acid, and the listed hydrolyzed proteins are not sh-Oligopeptide-78."
+      ],
+      "recognition_incidents": []
+    },
+    {
+      "slot_id": "V03",
+      "observed_ingredients": ["CITRIC ACID", "GLYCINE"],
+      "candidate_families": ["acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "source_version_not_actual_pack: complete describes the supplied source-version list only; the actual pack formula is unknown. Confidence describes literal recognition within the supplied list.",
+        "Citric Acid with Glycine remains only a formula candidate; targeted-category use cannot be decided anonymously.",
+        "The listed hydrolyzed proteins do not satisfy sh-Oligopeptide-78; Hydroxypropyl Guar and Chlorhexidine Digluconate do not satisfy the required gluconamide/gluconate pair."
+      ],
+      "recognition_incidents": []
+    },
+    {
+      "slot_id": "V04",
+      "observed_ingredients": ["Glycine", "Citric Acid", "Arginine"],
+      "candidate_families": ["acid_calcium_management"],
+      "formula_state": "complete",
+      "confidence": "high",
+      "limitations": [
+        "source_version_not_actual_pack: complete describes the supplied source-version list only; the actual pack formula is unknown. Confidence describes literal recognition within the supplied list.",
+        "Citric Acid with Glycine and Arginine remains only a formula candidate; targeted-category use cannot be decided anonymously.",
+        "Hydroxypropyltrimonium Hydrolyzed Wheat Protein is not sh-Oligopeptide-78. Glutamic Acid, Serine and Tyrosine do not add a permitted candidate family."
+      ],
+      "recognition_incidents": []
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+{
+  "method": "Fresh direct primary retailer GET on 2026-10-02; supersedes prior alternate discovery",
+  "records": [
+    {
+      "id": "648ba537-5180-440e-81ad-2b310b447d87",
+      "name": "Curlsmith Hydrate & Plump Leave-In",
+      "requested_url": "https://www.hagel-shop.de/curlsmith-hydrate-plump-leave-in-237-ml-12135900.html",
+      "checked_at": "2026-10-02T15:39:38.024682+00:00",
+      "proposed_price_eur": 24.99,
+      "proposed_package_value": 237,
+      "proposed_package_unit": "ml",
+      "status": 200,
+      "final_url": "https://www.hagel-shop.de/curlsmith-hydrate-plump-leave-in-237-ml-12135900.html",
+      "structured_products": [
+        {
+          "@type": "Product",
+          "name": "CURLSMITH Hydrate & Plump Leave-in 237 ml",
+          "offers": {
+            "@type": "http://schema.org/Offer",
+            "price": 17.85,
+            "url": "https://www.hagel-shop.de/curlsmith-hydrate-plump-leave-in-237-ml-12135900.html",
+            "priceCurrency": "EUR",
+            "availability": "http://schema.org/InStock",
+            "shippingDetails": {
+              "deliveryTime": {
+                "businessDays": {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    ""
+                  ]
+                },
+                "@type": "ShippingDeliveryTime"
+              },
+              "@type": "OfferShippingDetails"
+            }
+          }
+        }
+      ],
+      "page_title": "CURLSMITH Hydrate & Plump Leave-in 237 ml günstig kaufen | HAGEL Online Shop",
+      "microdata_prices": [],
+      "visible_price_contexts": [
+        "kt bewertet Artikelnummer 12135900 Für kräftige, definierte & mit Feuchtigkeit versorgte Locken Sonderangebot 17,85 € Normalpreis 21,00 € 75,32 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Mer",
+        "ummer 12135900 Für kräftige, definierte & mit Feuchtigkeit versorgte Locken Sonderangebot 17,85 € Normalpreis 21,00 € 75,32 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen S",
+        "135900 Für kräftige, definierte & mit Feuchtigkeit versorgte Locken Sonderangebot 17,85 € Normalpreis 21,00 € 75,32 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle ",
+        "e & mit Feuchtigkeit versorgte Locken Sonderangebot 17,85 € Normalpreis 21,00 € 75,32 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle Lieferung Kostenlose Lieferung ab",
+        " Verwendung geschulten Personals entwickelt wurde. Alle Preise inkl. MwSt. | Versandkostenfrei ab 39 €, sonst 4,99 €. Geschenkgutscheine: ohne MwSt. & ohne Versandkosten. * Für alle Rabattcodes gilt: Nicht gültig für Produkte der Marken Dyson, Beneganic, Urban Alchemy, INSIGHT sowie fü"
+      ],
+      "identity_contexts": [
+        " CURLSMITH Hydrate & Plump Leave-in 237 ml günstig kaufen | HAGEL Online Shop The store will not work correctly when cookies are disabled. JavaScript scheint in d",
+        "lege Waschen & Pflegen Conditioner CURLSMITH Hydrate & Plump Leave-in 237 ml Gratis Versand ab 39€ 60 Tage Rückgaberecht Echte Friseure - echte Experten Schnelle Lieferung mit DHL Navigation umsch",
+        " Anfang der Bildergalerie springen CURLSMITH Hydrate & Plump Leave-in 237 ml Sei der erste, der dieses Produkt bewertet Artikelnummer 12135900 Für kräftige, definierte & mit Feuchtigkeit versorgte",
+        "worben/genutzt haben. Beschreibung CURLSMITH Hydrate & Plump Leave-in 237 ml Beschreibung Ein CURLSMITH Hydrate & Plump Leave-in mit Efeublatt, Jojobaöl und Brunnenkresse, angereichert mit unserem",
+        "e Zurück zum Produkt Eigenschaften CURLSMITH Hydrate & Plump Leave-in 237 ml Eigenschaften Mehr Informationen Menge 237 ml Marke CURLSMITH Produkttyp Leave-In Haarcreme Haartyp lockiges Haar Wirku",
+        "ydrate & Plump Leave-in 237 ml Eigenschaften Mehr Informationen Menge 237 ml Marke CURLSMITH Produkttyp Leave-In Haarcreme Haartyp lockiges Haar Wirkung Definition, Feuchtigkeitsspendend, Kräftige",
+        "ls & Styles GmbH, Im Brühl 1, 56288 Michelbach, DE, info@hot-tools.de EAN 850035298718 Zurück zum Produkt Herstellerinformationen Herstellerinformationen Die Produktinformationen werden geladen",
+        "e Produkte RefectoCil Augenbrauen & Wimpernfarbe Goldwell Elumen Lock 250ml Olaplex Pflegeduo No. 4+ No. 5 Wella EIMI Pearl Styler XXL K18 Leave-In Repair Mask Moroccanoil Arganöl Panasonic Haars"
+      ],
+      "challenge_or_shell": false
+    },
+    {
+      "id": "42b9eba7-d0e3-4d02-ae2b-7a1612a561fe",
+      "name": "EVO Happy Campers",
+      "requested_url": "https://www.hagel-shop.de/evo-happy-campers-wearable-treatment-200-ml-5826170.html",
+      "checked_at": "2026-10-02T15:39:38.025169+00:00",
+      "proposed_price_eur": 30,
+      "proposed_package_value": 200,
+      "proposed_package_unit": "ml",
+      "status": 200,
+      "final_url": "https://www.hagel-shop.de/evo-happy-campers-wearable-treatment-200-ml-5826170.html",
+      "structured_products": [
+        {
+          "@type": "Product",
+          "name": "evo Happy Campers Wearable Treatment 200 ml",
+          "offers": {
+            "@type": "http://schema.org/Offer",
+            "price": 24.92,
+            "url": "https://www.hagel-shop.de/evo-happy-campers-wearable-treatment-200-ml-5826170.html",
+            "priceCurrency": "EUR",
+            "availability": "http://schema.org/InStock",
+            "shippingDetails": {
+              "deliveryTime": {
+                "businessDays": {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    ""
+                  ]
+                },
+                "@type": "ShippingDeliveryTime"
+              },
+              "@type": "OfferShippingDetails"
+            }
+          }
+        }
+      ],
+      "page_title": "evo Happy Campers Wearable Treatment 200 ml günstig kaufen | HAGEL Online Shop",
+      "microdata_prices": [],
+      "visible_price_contexts": [
+        "es Produkt bewertet Artikelnummer 12101506 Feuchtigkeitsspendende Styling-Behandlung für Glanz & Schutz 50 ml Lieferzeit 2-4 Werktage Sonderangebot 8,90 € Normalpreis 10,00 € 178,00 € / 1 Liter 200 ml Lieferzeit 2-4 Werktage Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter Sond",
+        "1506 Feuchtigkeitsspendende Styling-Behandlung für Glanz & Schutz 50 ml Lieferzeit 2-4 Werktage Sonderangebot 8,90 € Normalpreis 10,00 € 178,00 € / 1 Liter 200 ml Lieferzeit 2-4 Werktage Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter Sonderangebot 24,92 € Normalpreis 28,0",
+        "pendende Styling-Behandlung für Glanz & Schutz 50 ml Lieferzeit 2-4 Werktage Sonderangebot 8,90 € Normalpreis 10,00 € 178,00 € / 1 Liter 200 ml Lieferzeit 2-4 Werktage Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Lit",
+        " Styling-Behandlung für Glanz & Schutz 50 ml Lieferzeit 2-4 Werktage Sonderangebot 8,90 € Normalpreis 10,00 € 178,00 € / 1 Liter 200 ml Lieferzeit 2-4 Werktage Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter inkl. ",
+        "anz & Schutz 50 ml Lieferzeit 2-4 Werktage Sonderangebot 8,90 € Normalpreis 10,00 € 178,00 € / 1 Liter 200 ml Lieferzeit 2-4 Werktage Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktag",
+        "tage Sonderangebot 8,90 € Normalpreis 10,00 € 178,00 € / 1 Liter 200 ml Lieferzeit 2-4 Werktage Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellge",
+        ",90 € Normalpreis 10,00 € 178,00 € / 1 Liter 200 ml Lieferzeit 2-4 Werktage Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this pr",
+        "rmalpreis 10,00 € 178,00 € / 1 Liter 200 ml Lieferzeit 2-4 Werktage Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Wha",
+        "ter 200 ml Lieferzeit 2-4 Werktage Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Me",
+        "t 2-4 Werktage Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen ",
+        "rktage Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle ",
+        "rmalpreis 28,00 € 124,60 € / 1 Liter Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle Lieferung Kostenlose Lieferung ab",
+        " Verwendung geschulten Personals entwickelt wurde. Alle Preise inkl. MwSt. | Versandkostenfrei ab 39 €, sonst 4,99 €. Geschenkgutscheine: ohne MwSt. & ohne Versandkosten. * Für alle Rabattcodes gilt: Nicht gültig für Produkte der Marken Dyson, Beneganic, Urban Alchemy, INSIGHT sowie fü"
+      ],
+      "identity_contexts": [
+        " evo Happy Campers Wearable Treatment 200 ml günstig kaufen | HAGEL Online Shop The store will not work correctly when cookies are disabled. JavaScript scheint in d",
+        "flege Stylen Styling-Gel & Creme evo Happy Campers Wearable Treatment 200 ml Gratis Versand ab 39€ 60 Tage Rückgaberecht Echte Friseure - echte Experten Schnelle Lieferung mit DHL Navigation umsch",
+        "nfang der Bildergalerie springen evo Happy Campers Wearable Treatment 200 ml Sei der erste, der dieses Produkt bewertet Artikelnummer 12101506 Feuchtigkeitsspendende Styling-Behandlung für Glanz &",
+        "12101506 Feuchtigkeitsspendende Styling-Behandlung für Glanz & Schutz 50 ml Lieferzeit 2-4 Werktage Sonderangebot 8,90 € Normalpreis 10,00 € 178,00 € / 1 Liter 200 ml Lieferzeit 2-4 Werktage Sond",
+        " Werktage Sonderangebot 8,90 € Normalpreis 10,00 € 178,00 € / 1 Liter 200 ml Lieferzeit 2-4 Werktage Sonderangebot 24,92 € Normalpreis 28,00 € 124,60 € / 1 Liter Sonderangebot 24,92 € Normalpreis ",
+        "rben/genutzt haben. Beschreibung evo Happy Campers Wearable Treatment 200 ml Beschreibung Das evo Happy Campers Wearable Treatment ist eine leichte, tägliche Styling-Behandlung, die Feuchtigkeit s",
+        "Zurück zum Produkt Eigenschaften evo Happy Campers Wearable Treatment 200 ml Eigenschaften Mehr Informationen Menge 200 ml Marke evo Produkttyp Styling-Spray Haartyp alle Haartypen Wirkung Anti-Fr",
+        "pers Wearable Treatment 200 ml Eigenschaften Mehr Informationen Menge 200 ml Marke evo Produkttyp Styling-Spray Haartyp alle Haartypen Wirkung Anti-Frizz, Feuchtigkeitsspendend, Fixierend, Geschme",
+        "d quinoa, pvp GPSR Hersteller ce.way, 13 Upper Baggot St, Dublin, IE, EAN 9349769009550 Zurück zum Produkt Herstellerinformationen Herstellerinformationen Die Produktinformationen werden gelade",
+        "e Produkte RefectoCil Augenbrauen & Wimpernfarbe Goldwell Elumen Lock 250ml Olaplex Pflegeduo No. 4+ No. 5 Wella EIMI Pearl Styler XXL K18 Leave-In Repair Mask Moroccanoil Arganöl Panasonic Haars"
+      ],
+      "challenge_or_shell": false
+    },
+    {
+      "id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "name": "Epres Bond Repair Treatment",
+      "requested_url": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+      "checked_at": "2026-10-02T15:39:38.025333+00:00",
+      "proposed_price_eur": 29,
+      "proposed_package_value": null,
+      "proposed_package_unit": null,
+      "status": 200,
+      "final_url": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+      "structured_products": [],
+      "page_title": "EPRES | Starterkit für die Bond-Repair-Behandlung mit Sprühflasche",
+      "microdata_prices": [],
+      "visible_price_contexts": [
+        "r technisch notwenige Cookies Alle akzeptieren Impressum | Datenschutzerklärung Ihr Warenkorb ist leer Gesamt 0,00 € Versandkostenfrei ab 29,00 € +49 (0) 761 76990766 shop@kevinmurphy.de Versandkostenfrei ab 29,00 € Für Professionals Suchen SHOP INNOVATION WER SIND WIR? Mein Konto Merk",
+        "s Alle akzeptieren Impressum | Datenschutzerklärung Ihr Warenkorb ist leer Gesamt 0,00 € Versandkostenfrei ab 29,00 € +49 (0) 761 76990766 shop@kevinmurphy.de Versandkostenfrei ab 29,00 € Für Professionals Suchen SHOP INNOVATION WER SIND WIR? Mein Konto Merkzettel Gutschein kaufen Waren",
+        "leer Gesamt 0,00 € Versandkostenfrei ab 29,00 € +49 (0) 761 76990766 shop@kevinmurphy.de Versandkostenfrei ab 29,00 € Für Professionals Suchen SHOP INNOVATION WER SIND WIR? Mein Konto Merkzettel Gutschein kaufen Warenkorb SHOP INNOVATION WER SIND WIR? Starterkit für die Bond-Repair-Beha",
+        "ein kaufen Warenkorb SHOP INNOVATION WER SIND WIR? Starterkit für die Bond-Repair-Behandlung mit Sprühflasche 48,00 € Verfügbar inkl. 19% MwSt. Vsl. Lieferung: in 2-3 Werktagen Kostenloser Versand: ab 29,00 € Kostenloser Rückversand: 14 Tage Rückgaberecht Zahlungsarten: Kreditkarte, Pay",
+        "en Warenkorb SHOP INNOVATION WER SIND WIR? Starterkit für die Bond-Repair-Behandlung mit Sprühflasche 48,00 € Verfügbar inkl. 19% MwSt. Vsl. Lieferung: in 2-3 Werktagen Kostenloser Versand: ab 29,00 € Kostenloser Rückversand: 14 Tage Rückgaberecht Zahlungsarten: Kreditkarte, PayPal, SEPA ",
+        "g mit Sprühflasche 48,00 € Verfügbar inkl. 19% MwSt. Vsl. Lieferung: in 2-3 Werktagen Kostenloser Versand: ab 29,00 € Kostenloser Rückversand: 14 Tage Rückgaberecht Zahlungsarten: Kreditkarte, PayPal, SEPA Lastschrift Produktdetails Unsere bahnbrechende Haarbehandlung sorgt in einem ein"
+      ],
+      "identity_contexts": [],
+      "challenge_or_shell": false
+    },
+    {
+      "id": "2b7db7e3-2058-4178-8a03-7d05f4a1d447",
+      "name": "Redken Extreme Anti-Snap",
+      "requested_url": "https://www.hagel-shop.de/redken-extreme-anti-snap-250-ml-5814965.html",
+      "checked_at": "2026-10-03T10:27:35.736027+00:00",
+      "proposed_price_eur": 30.49,
+      "proposed_package_value": 250,
+      "proposed_package_unit": "ml",
+      "status": 200,
+      "final_url": "https://www.hagel-shop.de/redken-extreme-anti-snap-250-ml-5814965.html",
+      "structured_products": [
+        {
+          "@type": "Product",
+          "name": "Redken Extreme Anti-Snap 250 ml",
+          "offers": {
+            "@type": "http://schema.org/Offer",
+            "price": 26.1,
+            "url": "https://www.hagel-shop.de/redken-extreme-anti-snap-250-ml-5814965.html",
+            "priceCurrency": "EUR",
+            "availability": "http://schema.org/InStock",
+            "shippingDetails": {
+              "deliveryTime": {
+                "businessDays": {
+                  "@type": "OpeningHoursSpecification",
+                  "dayOfWeek": [
+                    ""
+                  ]
+                },
+                "@type": "ShippingDeliveryTime"
+              },
+              "@type": "OfferShippingDetails"
+            }
+          }
+        }
+      ],
+      "page_title": "Redken Extreme Anti-Snap 250 ml günstig kaufen | HAGEL Online Shop",
+      "microdata_prices": [],
+      "visible_price_contexts": [
+        "Anti-Snap 250 ml 97 % of 100 54 Artikelnummer 12091603 Reduziert Haarbruch & bietet Hitzeschutz Sonderangebot 26,10 € Normalpreis 34,80 € 104,40 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Me",
+        "% of 100 54 Artikelnummer 12091603 Reduziert Haarbruch & bietet Hitzeschutz Sonderangebot 26,10 € Normalpreis 34,80 € 104,40 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen ",
+        " 54 Artikelnummer 12091603 Reduziert Haarbruch & bietet Hitzeschutz Sonderangebot 26,10 € Normalpreis 34,80 € 104,40 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle ",
+        "ziert Haarbruch & bietet Hitzeschutz Sonderangebot 26,10 € Normalpreis 34,80 € 104,40 € / 1 Liter inkl. MwSt. Lieferzeit 2-4 Werktage Anzahl In den Warenkorb Bestellgeschenk Share this product Whats App Pinterest Facebook Zum Merkzettel hinzufügen Schnelle Lieferung Kostenlose Lieferung ab",
+        " Verwendung geschulten Personals entwickelt wurde. Alle Preise inkl. MwSt. | Versandkostenfrei ab 39 €, sonst 4,99 €. Geschenkgutscheine: ohne MwSt. & ohne Versandkosten. * Für alle Rabattcodes gilt: Nicht gültig für Produkte der Marken Dyson, Beneganic, Urban Alchemy, INSIGHT sowie fü"
+      ],
+      "identity_contexts": [
+        " Redken Extreme Anti-Snap 250 ml günstig kaufen | HAGEL Online Shop The store will not work correctly when cookies are disabled. JavaScript scheint in d",
+        "e Alle Marken Redken Haarpflege Haare Färben Redken Extreme Anti-Snap 250 ml Gratis Versand ab 39€ 60 Tage Rückgaberecht Echte Friseure - echte Experten Schnelle Lieferung mit DHL Navigation umsch",
+        "n 25 % Zum Anfang der Bildergalerie springen Redken Extreme Anti-Snap 250 ml 97 % of 100 54 Artikelnummer 12091603 Reduziert Haarbruch & bietet Hitzeschutz Sonderangebot 26,10 € Normalpreis 34,80 ",
+        "r nicht erworben/genutzt haben. Beschreibung Redken Extreme Anti-Snap 250 ml Beschreibung Das Redken Extreme Anti-Snap ist ein kräftigendes Leave-in Treatment. Es stärkt und glättet die Schuppensc",
+        " ausspülen. Zurück zum Produkt Eigenschaften Redken Extreme Anti-Snap 250 ml Eigenschaften Mehr Informationen Menge 250 ml Marke Redken Produkttyp Leave-In Haarcreme Haartyp blondes Haar, chemisch",
+        "edken Extreme Anti-Snap 250 ml Eigenschaften Mehr Informationen Menge 250 ml Marke Redken Produkttyp Leave-In Haarcreme Haartyp blondes Haar, chemisch behandeltes Haar, coloriertes Haar, geschädig",
+        "ssionel, 277 rue Saint Honore, 75008 Paris, FR, rgranat@fr.loreal.com EAN 884486453402 Zurück zum Produkt Herstellerinformationen Herstellerinformationen Die Produktinformationen werden geladen",
+        "e Produkte RefectoCil Augenbrauen & Wimpernfarbe Goldwell Elumen Lock 250ml Olaplex Pflegeduo No. 4+ No. 5 Wella EIMI Pearl Styler XXL K18 Leave-In Repair Mask Moroccanoil Arganöl Panasonic Haars"
+      ],
+      "challenge_or_shell": false
+    }
+  ]
+}

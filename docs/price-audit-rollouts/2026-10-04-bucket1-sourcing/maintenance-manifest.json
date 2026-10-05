@@ -1,0 +1,90 @@
+{
+  "prepared_at": "2026-10-04T08:54Z",
+  "authorization": "Nick approved exact sourcing, preferred-shop commerce maintenance and verified additional barcodes; distinct replacements remain proposals; no classification or recommendation changes.",
+  "commerce_rows": 4,
+  "new_identifiers": 3,
+  "targets": [
+    {
+      "id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+      "name": "Balea Natural Beauty Hibiskus",
+      "before_product_fingerprint": "333868d23f5a457c728f387eeee48a40",
+      "before_identifier_fingerprint": "c214855261cfb80e70c834768de553d7",
+      "commerce": null,
+      "aliases": [
+        {
+          "id": "007a0b35-2372-4836-9aa5-fd089cd588d4",
+          "gtin": "4058172926181",
+          "source": "https://www.dm.de/p/d/1625969/balea-conditioner-natural-beauty-bio-hibiskus-extrakt-und-cocosmilch"
+        }
+      ]
+    },
+    {
+      "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+      "name": "Balea Professional Glow & Shine",
+      "before_product_fingerprint": "05dc63385baa5618acd88fb6045bdec5",
+      "before_identifier_fingerprint": "067df1adb58f914b7404e990057adea5",
+      "commerce": {
+        "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+        "url": "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine-laminier-kur",
+        "price": 2.75,
+        "size": 200,
+        "checked_at": "2026-10-04T08:44:40.711Z"
+      },
+      "aliases": [
+        {
+          "id": "1f3920fe-c91e-4298-a40e-99dccd13ea30",
+          "gtin": "4070765006483",
+          "source": "https://www.dm.de/p/d/3050111/balea-professional-haarkur-glow-und-shine-laminier-kur"
+        }
+      ]
+    },
+    {
+      "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+      "name": "Garnier Hair Food Macadamia",
+      "before_product_fingerprint": "4cad685263c0a10c28b89a7615bf1db0",
+      "before_identifier_fingerprint": "d751713988987e9331980363e24189ce",
+      "commerce": {
+        "id": "4c3e1a63-4696-406a-be67-f2aacc678b0c",
+        "url": "https://www.amazon.de/dp/B0BH7ZW2T4",
+        "price": 5.95,
+        "size": 400,
+        "checked_at": "2026-10-04T08:44:12.402Z"
+      },
+      "aliases": []
+    },
+    {
+      "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "name": "Garnier Hair Food Macadamia",
+      "before_product_fingerprint": "b6616363d402ea53854985cbd9de938d",
+      "before_identifier_fingerprint": "9c32fcb01c41dfe1b2232db855741205",
+      "commerce": {
+        "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+        "url": "https://www.amazon.de/dp/B0BH7ZW2T4",
+        "price": 5.95,
+        "size": 400,
+        "checked_at": "2026-10-04T08:44:12.402Z"
+      },
+      "aliases": []
+    },
+    {
+      "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+      "name": "Gliss Aqua Revive",
+      "before_product_fingerprint": "5d695b7881d86e9146fe88ac093abfe3",
+      "before_identifier_fingerprint": "d751713988987e9331980363e24189ce",
+      "commerce": {
+        "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+        "url": "https://www.nutritienda.com/de/gliss/gliss-aqua-revive-4-in-1-maske-400-ml",
+        "price": 4.5,
+        "size": 400,
+        "checked_at": "2026-10-04T08:47:43.291Z"
+      },
+      "aliases": [
+        {
+          "id": "7a1d7fe1-3240-4d6d-9c92-96a4bcf46ea9",
+          "gtin": "8410436457873",
+          "source": "https://www.nutritienda.com/de/gliss/gliss-aqua-revive-4-in-1-maske-400-ml"
+        }
+      ]
+    }
+  ]
+}

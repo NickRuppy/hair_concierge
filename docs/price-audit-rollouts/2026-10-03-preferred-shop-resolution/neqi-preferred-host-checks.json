@@ -1,0 +1,93 @@
+{
+  "collector_started_at": "2026-10-03T14:23:24Z",
+  "collector_finished_at": "2026-10-03T14:23:24Z",
+  "scope": "Read-only recovery for the exact active catalog mask. No catalog, formula, category, or price writes were made.",
+  "catalog_baseline": {
+    "catalog_id": "bc6ab308-7b6e-4d72-92aa-313a43c9c77d",
+    "name": "Neqi Build Boost",
+    "category": "mask",
+    "registered_gtin": "4063528086303",
+    "registered_size": "100 ml",
+    "existing_url": "https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost"
+  },
+  "documented_shop_order_checked": [
+    "dm",
+    "Rossmann",
+    "Müller",
+    "brand",
+    "Amazon.de",
+    "specialist fallback"
+  ],
+  "host_checks": [
+    {
+      "host": "dm.de",
+      "url": "https://www.dm.de/p/d/2972777/neqi-haarkur-treatment-treasures-build-boost",
+      "identity_evidence": "Exact existing PDP URL was requested. The returned client shell did not expose selected-price, stock, or cart state to this HTTP collector.",
+      "verdict": "not usable as fresh purchase evidence from this pass",
+      "checked_at": "2026-10-03T14:23:24Z"
+    },
+    {
+      "host": "rossmann.de",
+      "url": "https://www.rossmann.de/de/search?query=4063528086303",
+      "identity_evidence": "Exact-GTIN search request returned a Client Challenge page.",
+      "verdict": "not assessable; no bypass attempted",
+      "checked_at": "2026-10-03T14:23:24Z"
+    },
+    {
+      "host": "mueller.de",
+      "url": "https://www.mueller.de/search/?q=4063528086303",
+      "identity_evidence": "Rendered search response contains the exact query and 'keine Treffer'.",
+      "verdict": "no exact offer found",
+      "checked_at": "2026-10-03T14:23:24Z"
+    },
+    {
+      "host": "amazon.de",
+      "url": "https://www.amazon.de/s?k=4063528086303",
+      "identity_evidence": "Exact-GTIN search returned Amazon's technical-error page.",
+      "verdict": "not assessable; no bypass attempted",
+      "checked_at": "2026-10-03T14:23:24Z"
+    },
+    {
+      "host": "neqi-hair.com",
+      "url": "https://neqi-hair.com/products/treatment-treasure-build-boost",
+      "title": "Treatment Treasure Build Boost",
+      "seller": "NEQI – Professional haircare (brand direct)",
+      "selected_variant": {
+        "sku": "NQ-TT-BB-201",
+        "gtin": "4063528086303",
+        "size": "100 ml",
+        "whole_pack_price_eur": 9.95,
+        "requires_shipping": true,
+        "requires_selling_plan": false,
+        "available": true
+      },
+      "purchase_evidence": "Public Shopify product JSON returns available:true for the only variant; the hydrated product HTML has a POST /cart/add form and visible 'In den Warenkorb legen' submit text.",
+      "raw_bounded_json": "{\"title\":\"Treatment Treasure Build Boost\",\"price\":995,\"available\":true,\"variants\":[{\"sku\":\"NQ-TT-BB-201\",\"barcode\":\"4063528086303\",\"available\":true,\"price\":995,\"requires_shipping\":true,\"requires_selling_plan\":false}]}",
+      "verdict": "exact, direct, purchasable",
+      "checked_at": "2026-10-03T14:23:24Z"
+    },
+    {
+      "host": "mapeja.de",
+      "url": "https://mapeja.de/neqi-treatment-treasure-build-boost-100ml/",
+      "title": "NEQI Treatment Treasure Build Boost 100ml",
+      "identity_evidence": "PDP JSON-LD declares gtin13 4063528086303 and name includes 100ml.",
+      "whole_pack_price_eur": 8.8,
+      "availability_evidence": "PDP shows 'auf Lager beim Lieferanten (3-5 Tage)' and a visible 'Zum Warenkorb hinzufügen' button. JSON-LD marks availability PreOrder.",
+      "raw_bounded_json_ld": "{\"name\":\"NEQI Treatment Treasure Build Boost 100ml\",\"gtin13\":\"4063528086303\",\"offers\":{\"price\":\"8.8\",\"priceCurrency\":\"EUR\",\"availability\":\"http://schema.org/PreOrder\"}}",
+      "verdict": "exact specialist fallback; supplier lead time, not normal on-hand stock",
+      "checked_at": "2026-10-03T14:23:24Z"
+    }
+  ],
+  "chosen_offer": {
+    "host": "neqi-hair.com",
+    "url": "https://neqi-hair.com/products/treatment-treasure-build-boost",
+    "seller": "NEQI – Professional haircare",
+    "title": "Treatment Treasure Build Boost",
+    "gtin": "4063528086303",
+    "size": "100 ml",
+    "whole_pack_price_eur": 9.95,
+    "availability": "available, normal one-time purchase, cart form present",
+    "selection_reason": "The first fresh, direct, selected exact offer in the documented order that exposes identity, price, and purchasable state. It is preferred over the lower-priced Mapeja supplier/PreOrder fallback.",
+    "match_confidence": "high"
+  }
+}

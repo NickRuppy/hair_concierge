@@ -3,8 +3,31 @@ import test from "node:test"
 
 import {
   classifyBondbuilderRelationship,
+  loadScanProductFacts,
   stage3AuthorityFactFingerprint,
 } from "../../../src/lib/personal-plan/products/authority/catalog-facts"
+import { makeBondbuilderProfile } from "../../fixtures/bondbuilder-research/profile"
+
+test("scan fact loading retains validated new Bondbuilder research with nullable legacy discriminators", async () => {
+  const profile = makeBondbuilderProfile()
+  const row = { product_id: "catalog-epres", application_mode: null, treatment_mode: "rinse_out", product_format: null, usage_protocol: null,
+    technology_family: "maleate_ester", claim_trust_level: "high", trust_basis: "owner_anchor", research_profile: profile }
+  const client = { from(table: string) {
+    const data = table === "products" ? { id: row.product_id, name: "epres", category_key: "bondbuilder", is_active: true, lifecycle_status: "active", is_chaarlie_recommended: true, suitable_thicknesses: ["normal"] }
+      : table === "product_bondbuilder_specs" ? row : []
+    const result = { data, error: null }
+    const chain = { select: () => chain, eq: () => chain, order: () => chain, limit: () => chain, maybeSingle: async () => result,
+      then: (resolve: (value: typeof result) => unknown) => Promise.resolve(result).then(resolve) }
+    return chain
+  } }
+  const facts = await loadScanProductFacts(client as never, "bondbuilder", row.product_id, { hairThickness: "normal", role: "specialized_bond_treatment", shampooTarget: null, conditionerTarget: null })
+  assert.equal(facts?.category, "bondbuilder")
+  if (facts?.category !== "bondbuilder") return
+  assert.equal(facts.spec.applicationMode, null)
+  assert.equal(facts.spec.technologyFamily, "maleate_ester")
+  assert.deepEqual(facts.spec.researchProfile, profile)
+  assert.equal(facts.recommendable, true)
+})
 
 test("authority fact fingerprints ignore presentation-only image changes", () => {
   const common = {

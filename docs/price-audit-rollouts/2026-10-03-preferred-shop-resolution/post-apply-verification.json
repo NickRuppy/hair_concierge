@@ -1,0 +1,19 @@
+{
+  "verified_at": "2026-10-03T14:30:48.739269+00:00",
+  "mode": "apply",
+  "catalog_rows_checked": 371,
+  "protected_rows_unchanged": 371,
+  "target_rows_verified": 2,
+  "committed_product_writes": 2,
+  "new_identifiers": 0,
+  "existing_identifiers_preserved": true,
+  "untargeted_rows_unchanged": 369,
+  "all_checks_passed": true,
+  "active_catalog_total": 347,
+  "prior_verified_active": 318,
+  "verified_active_total": 320,
+  "remaining_holds": 27,
+  "numeric_price_changes": 2,
+  "package_fills": 2,
+  "link_changes": 2
+}

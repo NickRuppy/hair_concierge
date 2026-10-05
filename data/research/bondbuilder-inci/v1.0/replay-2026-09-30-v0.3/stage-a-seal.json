@@ -1,0 +1,22 @@
+{
+  "standard_version": "bondbuilder-inci-v0.3",
+  "stage": "A",
+  "sealed_before": "original named evidence / Stage B",
+  "rows_per_lane": 8,
+  "control_rows_per_lane": 8,
+  "no_web": true,
+  "root_checks": [
+    "input receipts verified",
+    "marker members exist in anonymous captures",
+    "formula statuses and flags preserved",
+    "no category/trust assignments",
+    "recognition incidents disclosed",
+    "candidate interpretation disagreement retained"
+  ],
+  "sha256": {
+    "lane-a/blind-records.json": "e548a7298caa286e913585cf88ee06a7c1ff6ad33a3620cf33435fd6497a5cc5",
+    "lane-a/blind-notes.md": "814794d0f53aa2e85ca2d54c4e1507b2dd47c9821c6f10b1afa6f44ffe183957",
+    "lane-b/blind-records.json": "ec741e04a6d8116e90d1cfb1bbe6a34f952580da7ea4d3bde9d98cb998c8e073",
+    "lane-b/blind-notes.md": "cfd826200adb5652f6b3b76c69c0feca45d42c1c077487ef2e846568cdf54a35"
+  }
+}

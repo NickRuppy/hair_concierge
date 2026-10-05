@@ -1,0 +1,538 @@
+{
+  "schemaVersion": 1,
+  "locale": "en",
+  "status": "review_proposal_not_persisted",
+  "followupCheckedAt": "2026-10-01",
+  "newSubmissionPolicy": {
+    "claim_trust_level": "low",
+    "trust_basis": "owner_default",
+    "is_chaarlie_recommended": false,
+    "promotion_authority": "Nick",
+    "scope": "New submissions only; existing owner-approved pilot grades remain unchanged. Category qualification and all other product facts must still be researched."
+  },
+  "followupSources": [
+    {
+      "id": "F01",
+      "url": "https://www.aveda.de/product/botanical-repair-bond-building-pre-shampoo-treatment",
+      "kind": "manufacturer",
+      "scope": "DE pre-shampoo: gel-cream, root-to-tip application, conditional frequency and manufacturer diameter positioning",
+      "access": "product description, directions and INCI inspected 2026-10-01",
+      "limits": "No quantitative dose found. Manufacturer suitability is not an independent weightlessness finding."
+    },
+    {
+      "id": "F02",
+      "url": "https://www.ogxbeauty.co.uk/products/bond-protein-repair-sealing-serum",
+      "kind": "manufacturer",
+      "scope": "UK 50 ml serum: qualitative dose, distribution, bedtime placement and frequency",
+      "access": "product description, directions and INCI inspected 2026-10-01",
+      "limits": "UK guidance; supplied DE pack remains unverified. No diameter-specific guidance found."
+    }
+  ],
+  "products": [
+    {
+      "id": "P01",
+      "size": "100 ml · source-listed version",
+      "technologyLabel": "Dimaleate technology",
+      "benefit": "Targeted repair / reinforcement of damaged hair fibres.",
+      "trustReason": "Chosen with Nick as the gold standard and a high-trust reference. Research support remains separate from this practical trust decision.",
+      "science": "Technology studies and manufacturer claims are available. Reviewed studies of predecessors or OLAPLEX No.0 do not directly demonstrate No.3PLUS efficacy.",
+      "practice": "Dejan Garz lists No.3PLUS among his favourites on the brand website. Tom Hannemann and Dejan are named ambassadors; this is not independent product testing.",
+      "format": "Cream treatment",
+      "position": "Before shampoo",
+      "state": "Wet",
+      "area": "Roots to ends",
+      "time": "3 min",
+      "rinse": "Rinse treatment, then shampoo",
+      "conditioner": "After shampoo",
+      "amount": "Generous coverage; no fixed ml dose",
+      "cadence": "Every 1–3 washes",
+      "sequence": [
+        "Wet hair",
+        "Apply treatment · 3 min",
+        "Rinse",
+        "Shampoo",
+        "Conditioner"
+      ],
+      "fit": "Fine · normal · coarse — retain existing internal approval",
+      "weight": "Weightlessness is not guaranteed; manufacturer also positions it for fine hair.",
+      "role": "Targeted restorative treatment; no intensity ranking.",
+      "gaps": [
+        "Reconcile the physical pack / catalog formula separately.",
+        "No new empirical finding supporting all hair diameters."
+      ],
+      "databaseValues": {
+        "application_mode": "pre_shampoo",
+        "product_format": "cream_treatment",
+        "treatment_mode": "rinse_out"
+      },
+      "protocolProposal": {
+        "source_id": "R12",
+        "source_market": "DE",
+        "applicationState": "wet_hair",
+        "applicationArea": "root_to_tip_hair",
+        "contactTime": {
+          "kind": "seconds",
+          "seconds": 180
+        },
+        "sequence": [
+          "apply_treatment",
+          "wait",
+          "rinse_treatment",
+          "shampoo",
+          "conditioner"
+        ],
+        "amount": {
+          "kind": "qualitative",
+          "value": "generous"
+        }
+      },
+      "cadenceProposal": {
+        "source_id": "R12",
+        "source_market": "DE",
+        "status": "source_stated",
+        "value": {
+          "kind": "every_n_washes",
+          "minimum_interval": 1,
+          "maximum_interval": 3
+        }
+      }
+    },
+    {
+      "id": "P02",
+      "size": "50 ml",
+      "technologyLabel": "Designed peptide",
+      "benefit": "Targeted repair / reinforcement of damaged hair fibres.",
+      "trustReason": "Nick chose high trust and included K18 in the three reference products. This is practical calibration, not newly established scientific certainty.",
+      "science": "A small ex-vivo study examines a listed K18 mask formula. The inspected text does not clearly describe its tensile-strength gain as significant; without a suitable control, the peptide's contribution is not isolated.",
+      "practice": "Abbey Yung's original video is recorded as a routine lead, but her exact experience was not verified. Missing access is not negative evidence.",
+      "format": "Leave-in mask",
+      "position": "After shampoo",
+      "state": "Thoroughly towel-dried",
+      "area": "Distribute evenly; adjust dose to length / density",
+      "time": "4 min before further care",
+      "rinse": "No standalone K18 rinse step",
+      "conditioner": "Not before; optional after the full 4 min",
+      "amount": "Start with 1 pump; add as needed (DE)",
+      "cadence": "First 4 washes → every 4th wash",
+      "sequence": [
+        "Shampoo · no conditioner yet",
+        "Towel-dry thoroughly",
+        "Apply K18 · wait 4 min",
+        "Optional: usual conditioner",
+        "Styling"
+      ],
+      "fit": "Fine · normal · coarse — retain existing internal approval",
+      "weight": "Manufacturer describes lightweight use; correct dose depends on length / density.",
+      "role": "Restorative treatment with initial and maintenance phases; not a potency ranking.",
+      "gaps": [
+        "Do not merge the DE course with the global 4–6 initial-wash course; check the supplied pack during intake.",
+        "The future application compiler must support optional conditioner after the wait."
+      ],
+      "databaseValues": {
+        "application_mode": "post_wash_leave_in",
+        "product_format": "leave_in_mask",
+        "treatment_mode": "leave_in"
+      },
+      "protocolProposal": {
+        "source_id": "R11",
+        "source_market": "DE",
+        "applicationState": "damp_hair",
+        "state_modifier": "thoroughly_towel_dried",
+        "applicationArea": null,
+        "contactTime": {
+          "kind": "seconds",
+          "seconds": 240
+        },
+        "timing_role": "wait_before_next_step",
+        "amount": {
+          "kind": "starting_dose",
+          "unit": "pump",
+          "value": 1,
+          "adjustment": "add_as_needed"
+        },
+        "conditioner": {
+          "before": "prohibited",
+          "after": "optional",
+          "minimum_wait_seconds": 240
+        },
+        "sequence": [
+          "shampoo",
+          "towel_dry",
+          "apply_treatment",
+          "wait",
+          "optional_conditioner",
+          "styling"
+        ],
+        "standalone_treatment_rinse": false
+      },
+      "cadenceProposal": {
+        "source_id": "R11",
+        "source_market": "DE",
+        "status": "source_stated",
+        "value": {
+          "initial": {
+            "kind": "consecutive_washes",
+            "count": 4
+          },
+          "maintenance": {
+            "kind": "every_n_washes",
+            "interval": 4
+          }
+        }
+      }
+    },
+    {
+      "id": "P03",
+      "size": "15 ml concentrate · starter / refill binding open",
+      "technologyLabel": "Maleate ester technology",
+      "benefit": "Targeted reinforcement of damaged fibres; no guaranteed disulfide reconstruction.",
+      "trustReason": "Chosen with Nick as the third high-trust reference. Less established evidence and proximity to medium remain explicit; there is no fourth tier.",
+      "science": "Patent examples mainly report shine, softness and combability with other accompanying formulations. No inspected quantitative structural / strength result for the exact retail treatment.",
+      "practice": "An original longer-use review reports months of weekly use, softer hair and easier application. Affiliate context and concurrent care are disclosed. Abbey's discount code is verified, not an exact efficacy verdict.",
+      "format": "Diluted spray treatment",
+      "position": "Before shampoo",
+      "state": "Dry, unwashed",
+      "area": "Fully saturate hair",
+      "time": "At least 10 min; overnight allowed",
+      "rinse": "Then wash and care as usual",
+      "conditioner": "Use afterwards according to manufacturer",
+      "amount": "1 vial → 150 ml finished mixture in the intended bottle",
+      "cadence": "1–2 times / week",
+      "sequence": [
+        "Dilute in intended bottle",
+        "Fully saturate dry hair",
+        "≥10 min · overnight optional",
+        "Shampoo",
+        "Conditioner"
+      ],
+      "fit": "Fine · normal · coarse — retain existing internal approval",
+      "weight": "Oil-based; extended wear / incomplete washing may weigh hair down according to the review.",
+      "role": "Targeted restorative treatment with recurring use.",
+      "gaps": [
+        "Bind the exact DE starter / refill kit and pack directions during intake.",
+        "Dilution and extended wear require a compatible application projection."
+      ],
+      "databaseValues": {
+        "application_mode": "pre_shampoo",
+        "product_format": "spray_treatment",
+        "treatment_mode": "rinse_out"
+      },
+      "protocolProposal": {
+        "source_id": "N05",
+        "source_market": "global",
+        "applicationState": "pre_wash_dry_hair",
+        "state_modifier": "unwashed",
+        "applicationArea": null,
+        "distribution": "fully_saturate_hair",
+        "contactTime": {
+          "kind": "minimum_seconds",
+          "minimumSeconds": 600
+        },
+        "overnight_allowed": true,
+        "dilution": {
+          "concentrate_vials": 1,
+          "finished_volume_ml": 150,
+          "container": "intended_epres_bottle",
+          "method": "fill_with_water_in_intended_bottle"
+        },
+        "sequence": [
+          "dilute",
+          "apply_treatment",
+          "wait",
+          "shampoo",
+          "conditioner"
+        ]
+      },
+      "cadenceProposal": {
+        "source_id": "N05",
+        "source_market": "global",
+        "status": "source_stated",
+        "value": {
+          "kind": "times_per_week",
+          "minimum": 1,
+          "maximum": 2
+        }
+      }
+    },
+    {
+      "id": "P04",
+      "size": "200 ml",
+      "technologyLabel": "Acid-based reinforcement",
+      "benefit": "Acid-based reinforcement of damaged hair fibres.",
+      "trustReason": "Medium confirmed with Nick: targeted acid technology with compatible formula / use. Technology evidence is not an exact-bottle trial or proof of the same effect as Redken.",
+      "science": "A technology study reports mechanical / thermal improvements and less calcium on chemically damaged hair. The abstract was inspected; exact dose and transfer to retail formulations remain limited.",
+      "practice": "No verified exact-product take from the starting creator panel. Neutral, not a negative finding.",
+      "format": "Pre-shampoo cream",
+      "position": "Before shampoo",
+      "state": "Damp",
+      "area": "Scalp / root region to ends per local directions",
+      "time": "5 min",
+      "rinse": "Rinse thoroughly, then shampoo",
+      "conditioner": "After shampoo; a mask may provide subsequent care",
+      "amount": "Generous coverage; no fixed ml dose",
+      "cadence": "Not established for the exact Plus version",
+      "sequence": [
+        "Apply to damp hair",
+        "Wait 5 min",
+        "Rinse thoroughly",
+        "Shampoo",
+        "Conditioner / care"
+      ],
+      "fit": "Fine / normal / coarse: not yet finalized",
+      "weight": "Manufacturer says all hair types; no verified blanket weightlessness finding.",
+      "role": "Restorative pre-shampoo treatment; no intensity ranking.",
+      "gaps": [
+        "Rescue editorials give different sequences / frequencies; do not transfer them to Plus without verification.",
+        "New diameter suitability remains open; generic all-hair-types positioning is not a weightlessness finding."
+      ],
+      "databaseValues": {
+        "application_mode": "pre_shampoo",
+        "product_format": "cream_treatment",
+        "treatment_mode": "rinse_out"
+      },
+      "cadenceProposal": {
+        "source_id": "R01",
+        "source_market": "DE",
+        "status": "not_established",
+        "value": null
+      }
+    },
+    {
+      "id": "P05",
+      "size": "190 ml · Douglas article 1192227",
+      "technologyLabel": "Acid-based reinforcement",
+      "benefit": "Acid-based reinforcement of damaged hair fibres.",
+      "trustReason": "Nick chose the Douglas DE formula and medium trust, consistent with the Elvital technology assessment. Not an automatic medium rule for any acidic care product.",
+      "science": "Relevant citric-acid technology research; no inspected isolated trial of this exact 190 ml bottle. NL / AU corroborate ingredient order, not identical concentrations across markets.",
+      "practice": "Abbey's own video list names the treatment; her detailed judgment was not inspected. Not a confirmed positive long-term verdict.",
+      "format": "Pre-shampoo cream",
+      "position": "Before shampoo",
+      "state": "Damp",
+      "area": "Mid-lengths and ends",
+      "time": "5–10 min",
+      "rinse": "Rinse, then shampoo",
+      "conditioner": "After shampoo; brand regimen recommended, exclusivity not established",
+      "amount": "No fixed dose in selected local directions",
+      "cadence": "DE frequency not established",
+      "cadenceNote": "AU manufacturer recommendation: 2–3 times / week. Complementary, not a binding DE schedule.",
+      "sequence": [
+        "Apply to damp lengths / ends",
+        "Wait 5–10 min",
+        "Rinse",
+        "Shampoo",
+        "Conditioner"
+      ],
+      "fit": "Fine / normal / coarse: not yet finalized",
+      "weight": "Broad brand positioning and some fine-hair experiences; no blanket weightlessness finding.",
+      "role": "Intensive restorative positioning; not an effect-strength ranking.",
+      "gaps": [
+        "AU frequency is complementary advice, not a binding DE pack schedule.",
+        "Retain the different German manufacturer formula separately; do not merge it into the chosen formula.",
+        "Diameter suitability and executable projection remain open."
+      ],
+      "databaseValues": {
+        "application_mode": "pre_shampoo",
+        "product_format": "cream_treatment",
+        "treatment_mode": "rinse_out"
+      },
+      "cadenceProposal": {
+        "source_id": "R09",
+        "source_market": "DE",
+        "status": "not_established",
+        "value": null
+      }
+    },
+    {
+      "id": "P08",
+      "size": "250 ml · Concentré Décalcifiant",
+      "technologyLabel": "Acid / calcium management",
+      "benefit": "Targeted treatment of damaged hair and calcium deposits.",
+      "trustReason": "Medium confirmed with Nick. Related acid / calcium technology; system claims and brand advice do not prove equivalent effects with arbitrary partner products.",
+      "science": "Citric-acid research supports plausibility. Whole-line claims are not read as an isolated effect of this concentrate.",
+      "practice": "A named US Kérastase education manager recommends weekly use. Commercially affiliated professional advice, not independent efficacy testing.",
+      "format": "Pre-shampoo concentrate",
+      "position": "Before shampoo",
+      "state": "Retailer: wet · manufacturer: damp",
+      "area": "Lengths; massage in",
+      "time": "5 min before layering shampoo",
+      "rinse": "Do not rinse first; layer shampoo, then rinse together",
+      "conditioner": "Conditioner or mask afterwards",
+      "amount": "15–25 ml in complementary DE FAQ; pack binding open",
+      "cadence": "DE frequency not established",
+      "cadenceNote": "US brand professional recommends once / week. Complementary advice, not a verified DE pack schedule.",
+      "sequence": [
+        "Apply to wet / damp lengths",
+        "Wait 5 min",
+        "Layer shampoo · do NOT rinse first",
+        "Rinse together",
+        "Conditioner / mask"
+      ],
+      "fit": "Fine / normal / coarse: not yet finalized",
+      "weight": "No new blanket diameter or weightlessness assignment.",
+      "role": "Restorative calcium / damage treatment; no intensity ranking.",
+      "gaps": [
+        "15–25 ml and weekly advice are complements, not verified DE pack directions.",
+        "Executable shampoo layering and diameter suitability remain open.",
+        "Première shampoo recommended; exclusive necessity or equivalence of alternatives not established."
+      ],
+      "databaseValues": {
+        "application_mode": "pre_shampoo",
+        "product_format": null,
+        "treatment_mode": "rinse_out"
+      },
+      "databaseNote": "Concentrate format remains null pending a defensible existing-enum mapping. Shampoo layering must not be collapsed into rinse-before-shampoo.",
+      "cadenceProposal": {
+        "source_id": "N01",
+        "source_market": "DE",
+        "status": "not_established",
+        "value": null
+      }
+    },
+    {
+      "id": "P06",
+      "size": "50 ml · DE storefront source version",
+      "technologyLabel": "Gluconamide / gluconate",
+      "benefit": "Assessed claim: targeted reinforcement / reduced fragility of damaged hair.",
+      "trustReason": "Nick rejected medium as too generous and chose low. The technology clue is plausible; the exact serum has weak medium-tier support. Low does not mean ineffective.",
+      "science": "Supplier material and model chemistry address the paired ingredients. The brand strength multiplier covers the shampoo / conditioner / serum system versus non-conditioning shampoo, not serum alone.",
+      "practice": "No verified exact-serum take from the starting panel. Abbey's OGX kit contains other products; no serum endorsement is inferred.",
+      "format": "Leave-in serum",
+      "position": "Evening / overnight",
+      "state": "Damp or dry",
+      "area": "Spread evenly from ends upward (UK)",
+      "time": "Overnight; no numeric duration",
+      "rinse": "Leave-in; no standalone rinse step",
+      "conditioner": "Brand routine places serum after cleansing / conditioning; bedtime use also allows dry hair",
+      "amount": "Small amount; rub between hands first (UK)",
+      "cadence": "1–2 times / week",
+      "cadenceNote": "UK producer directions. No extra wash is required just to use the serum at bedtime.",
+      "additionalSources": ["F02"],
+      "physicalFormatProposal": {
+        "source_id": "F02",
+        "source_market": "UK",
+        "status": "source_stated",
+        "value": "serum"
+      },
+      "sequence": [
+        "At bedtime · damp / dry hair",
+        "Rub a small amount between hands",
+        "Spread evenly from ends upward",
+        "Leave overnight"
+      ],
+      "fit": "Not finalized; outside initial curated additions",
+      "weight": "Not finalized; not inferred from technology.",
+      "role": "Overnight reinforcement claim; no intensity ranking.",
+      "gaps": [
+        "Low: outside initial curated additions; no existing catalog row is changed.",
+        "Physical DE pack and raw-INCI transcription cleanup are separate checks.",
+        "UK amount / distribution are now sourced; DE pack applicability and diameter suitability remain open."
+      ],
+      "databaseValues": {
+        "application_mode": null,
+        "product_format": null,
+        "treatment_mode": "leave_in"
+      },
+      "databaseNote": "Overnight use does not prove a post-wash placement. Leave-in serum is not in the existing bondbuilder format enum; retain null rather than mislabel it.",
+      "protocolProposal": {
+        "source_id": "F02",
+        "source_market": "UK",
+        "applicationState": "damp_or_dry_hair",
+        "applicationArea": "ends_upward_even_distribution",
+        "placement": "bedtime",
+        "contactTime": {"kind": "overnight"},
+        "amount": {"kind": "qualitative", "value": "small_amount"},
+        "preparation": "rub_between_hands",
+        "sequence": ["apply_treatment", "leave_overnight"],
+        "standalone_treatment_rinse": false,
+        "same_day_wash_required": false
+      },
+      "cadenceProposal": {
+        "source_id": "F02",
+        "source_market": "UK",
+        "status": "source_stated",
+        "value": {
+          "kind": "times_per_week",
+          "minimum": 1,
+          "maximum": 2
+        }
+      }
+    },
+    {
+      "id": "P07",
+      "size": "150 ml · pre-shampoo treatment",
+      "technologyLabel": "Gluconamide / gluconate",
+      "benefit": "Assessed claim: targeted reinforcement / reduced fragility of damaged hair.",
+      "trustReason": "Nick chose low instead of lower-medium after comparing technologies. Similar paired ingredients prove neither equal dose nor identical efficacy to OGX.",
+      "science": "Model chemistry / a partially inspected supplier poster support plausibility. A comparison against shampoo without conditioner does not isolate specific reinforcement from general conditioning.",
+      "practice": "JUUT reports styling / care experiences, including after two weeks. Aveda affiliation and sensory endpoints remain explicit; no measured structural repair is inferred.",
+      "format": "Gel-cream pre-shampoo treatment",
+      "position": "Before shampoo",
+      "state": "Dry",
+      "area": "Roots to ends (DE producer)",
+      "time": "5–10 min",
+      "rinse": "Rinse, then shampoo",
+      "conditioner": "After shampoo",
+      "amount": "No quantitative dose stated in inspected DE directions",
+      "cadence": "Weekly or every wash · depends on damage",
+      "cadenceState": "source",
+      "cadenceNote": "DE: mild–moderate damage → weekly; moderate–severe → every wash. The producer's branches overlap at moderate; this is not a universal schedule or a new damage classifier.",
+      "additionalSources": ["F01"],
+      "physicalFormatProposal": {
+        "source_id": "F01",
+        "source_market": "DE",
+        "status": "source_stated",
+        "value": "gel_cream"
+      },
+      "manufacturerFit": {
+        "source_id": "F01",
+        "source_market": "DE",
+        "suitable_thicknesses": ["fine", "normal", "coarse"],
+        "basis": "manufacturer_declared_not_independent_fit_assessment"
+      },
+      "sequence": [
+        "Apply to dry hair",
+        "Wait 5–10 min",
+        "Rinse",
+        "Shampoo",
+        "Conditioner"
+      ],
+      "fit": "Maker lists fine / normal / coarse; independent fit not finalized",
+      "weight": "Not finalized; shared technology does not establish weight.",
+      "role": "Targeted pre-shampoo reinforcement; no intensity ranking.",
+      "gaps": [
+        "Low: outside initial curated additions; does not mean no effect.",
+        "No quantitative dose found; manufacturer diameter positioning does not prove weightlessness.",
+        "Frequency is source-stated but conditional; overlapping moderate-damage branches require personalization rather than a universal interval."
+      ],
+      "databaseValues": {
+        "application_mode": "pre_shampoo",
+        "product_format": null,
+        "treatment_mode": "rinse_out"
+      },
+      "databaseNote": "Physical texture is now sourced as gel_cream. The existing format enum mixes texture and treatment role; its mapping remains a persistence-contract task, not a missing product fact.",
+      "protocolProposal": {
+        "source_id": "F01",
+        "source_market": "DE",
+        "applicationState": "dry_hair",
+        "applicationArea": "root_to_tip_hair",
+        "contactTime": {"kind": "range", "minimum_seconds": 300, "maximum_seconds": 600},
+        "amount": {"kind": "not_stated", "value": null},
+        "sequence": ["apply_treatment", "wait", "rinse_treatment", "shampoo", "conditioner"]
+      },
+      "cadenceProposal": {
+        "source_id": "F01",
+        "source_market": "DE",
+        "status": "source_stated_conditional",
+        "value": {
+          "kind": "conditional",
+          "branches": [
+            {"manufacturer_damage_label": "mild_to_moderate", "cadence": {"kind": "times_per_week", "count": 1}},
+            {"manufacturer_damage_label": "moderate_to_severe", "cadence": {"kind": "every_n_washes", "interval": 1}}
+          ],
+          "overlapping_damage_labels": true,
+          "universal_default": null
+        }
+      }
+    }
+  ]
+}

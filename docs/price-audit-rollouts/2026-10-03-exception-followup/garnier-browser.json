@@ -1,0 +1,15 @@
+{
+  "kind":"read-only exact offer verification",
+  "id":"c1914a86-05e5-4be2-bbb6-3d9d69b6f5aa",
+  "url":"https://www.douglas.de/de/p/5012008156",
+  "checked_at":"2026-10-03T13:15:35.896Z",
+  "product":"Garnier Wahre Schätze Traube Hydraboost Conditioner",
+  "douglas_sku":"1274094",
+  "package":"200 ml",
+  "price_eur":2.89,
+  "stock":"Online: auf Lager; IN DEN WARENKORB",
+  "delivery":"Di. 06.10.2026-Do. 08.10.2026",
+  "inci_visible":"AQUA / WATER, CETEARYL ALCOHOL, STEARAMIDOPROPYL DIMETHYLAMINE, ISOPROPYL MYRISTATE, CETYL ESTERS, HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL, VITIS VINIFERA FRUIT WATER / GRAPE FRUIT WATER, VITIS VINIFERA SEED OIL / GRAPE SEED OIL, ROSMARINUS OFFICINALIS EXTRACT / ROSEMARY EXTRACT ...",
+  "identity_note":"Registered GTIN 3600542656412 is separately corroborated at dm.at for the same 200 ml product; no alias addition is proposed.",
+  "result":"EXACT_MATCH"
+}

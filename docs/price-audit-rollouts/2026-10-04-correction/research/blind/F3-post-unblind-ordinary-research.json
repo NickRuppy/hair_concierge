@@ -1,0 +1,109 @@
+{
+  "candidate": "F3",
+  "status": "partial_formula_evidence_only",
+  "authority": "docs/product-intake-research-ops.md; no Mask engine exists",
+  "formula_packet": "frozen-F3.json",
+  "evidence_ceiling": "E1 observations / E2 plausible routes only",
+  "supported_properties": {
+    "ingredient_flags": [
+      "polymers",
+      "oils",
+      "proteins",
+      "humectants"
+    ]
+  },
+  "flag_evidence": {
+    "polymers": [
+      "#23 Guar Hydroxypropyltrimonium Chloride"
+    ],
+    "oils": [
+      "#5 Argania Spinosa Kernel Oil",
+      "#6 Macadamia Ternifolia Seed Oil",
+      "#16 Theobroma Cacao Seed Butter"
+    ],
+    "proteins": [
+      "#11 Hydrolyzed Rice Protein"
+    ],
+    "humectants": [
+      "#3 Glycerin",
+      "#8 Maltitol",
+      "#17 Anhydroxylitol",
+      "#35 Xylitol",
+      "#36 Xylitylglucoside"
+    ],
+    "no_listed_silicone": "No recognized silicone in the supplied complete sequence; silica/mica/metal oxides are not silicone polymers."
+  },
+  "potential_routes": [
+    {
+      "route": "conditioning/slip",
+      "observations": [
+        "#2 Cetearyl Alcohol",
+        "#4 Stearamidopropyl Dimethylamine",
+        "#18 Behentrimonium Chloride",
+        "#20 Cetrimonium Chloride"
+      ],
+      "inference": "Conventional candidate conditioning/slip architecture; acid presence does not prove final pH or amidoamine protonation."
+    },
+    {
+      "route": "surface lubrication",
+      "observations": [
+        "#5/#6 oils",
+        "#7 Coco-Caprylate/Caprate",
+        "#16 cocoa butter",
+        "#21 Cetyl Esters",
+        "#24 Isoamyl Laurate"
+      ],
+      "inference": "Coherent emollient payload; may support softness/smoothing but cannot quantify deposit or assign a calibrated Mask weight."
+    },
+    {
+      "route": "temporary film",
+      "observations": [
+        "#11 Hydrolyzed Rice Protein"
+      ],
+      "inference": "Named protein presence supports a candidate temporary film; concentration, delivery and finished-product repair remain unknown."
+    },
+    {
+      "route": "humectant",
+      "observations": [
+        "#3 Glycerin",
+        "#8 Maltitol",
+        "#17/#35/#36 sugar-polyol system"
+      ],
+      "inference": "Humectant ingredient route; cannot prove lasting fibre hydration after rinse."
+    }
+  ],
+  "unresolved_properties": {
+    "weight": null,
+    "concentration": null,
+    "balance_direction": null,
+    "repair_support_level": null,
+    "functional_benefits": "claim-backed proposal above; not independently measured",
+    "suitable_thicknesses": null,
+    "texture_fit": null
+  },
+  "reasons": [
+    "No Mask-specific normative formula-to-band thresholds: do not borrow Conditioner v1.6 or invent an engine.",
+    "Concentration cannot be reconstructed from ingredient rank, mask naming, or protein presence.",
+    "Both protein and humectant/emollient clues are present, but that does not establish a calibrated balanced compatibility direction.",
+    "Wet-slip/smoothing/shine are endpoint claims needing ordinary-intake exact-product corroboration; formula alone does not certify functional-benefit enums.",
+    "Biotin, niacinamide, salicylic/glycolic/malic/lactic/citric acids do not establish bond repair, medical scalp effect, final pH or peel potency.",
+    "Supplied normalization joins split Calcium Aluminum Borosilicate and Tetramethyl Acetyloctahydronaphthalenes; verify source punctuation during binding."
+  ],
+  "protocol": "Root lane only; none inferred",
+  "blind_integrity": "Exact identity and current primary-source binding are held by root and remain hidden from this assessor. No catalog or prior labels used.",
+  "exact_identity": "Schaebens Haarmaske Arganöl (2x7 ml), 14 ml",
+  "source_url": "https://www.dm.de/p/d/3132757/schaebens-haarmaske-arganoel-2x7-ml",
+  "source_checked_at": "2026-10-04T08:03:58.481Z",
+  "claim_corroboration": {
+    "functional_benefits_proposal": [
+      "smoothing_frizz_control",
+      "detangling_slip",
+      "shine"
+    ],
+    "basis": "Exact product description explicitly claims frizz control, easier combing and shine, compatible with the frozen cationic/emollient formula routes.",
+    "evidence_level": "Source-backed intended cosmetic benefits plus E2 mechanism compatibility; not E3/E4 endpoint verification.",
+    "adjudication": "Root owns ordinary-intake acceptance of these claim-backed enums; frozen formula-only output remains unchanged."
+  },
+  "source_punctuation_conflict": "Manufacturer source joins Calcium Aluminum Borosilicate as one ingredient whereas dm inserts a comma; both source lists retain Tetramethyl, Acetyloctahydronaphthalenes split. Preserve source conflict and do not silently infer corrected spelling.",
+  "post_unblind_limits": "Weight, concentration, balance_direction, repair band and fit remain unresolved. Marketing intensive/anti-breakage wording does not assign calibrated numeric/ordinal bands. No protocol derived here."
+}

@@ -914,6 +914,9 @@ function livePackageValidation(params: {
       params.packagePath.split(sep).at(-1) ??
       "",
     category,
+    user_id: submissionField(params.submission, "user_id"),
+    source: submissionField(params.submission, "source"),
+    status: submissionField(params.submission, "status"),
     researched_payload: params.payload,
   })
 }

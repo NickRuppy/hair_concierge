@@ -1,0 +1,526 @@
+{
+  "scope": "Final bounded recovery: six distinct products across seven requested catalog rows, plus explicit linked-row warning for prior Macadamia conditioner acceptance.",
+  "verification_window": {
+    "started_at": "2026-10-02T15:21:27.235Z",
+    "ended_at": "2026-10-02T15:27:48.312Z"
+  },
+  "checked_at_semantics": "Each row checked_at is evidence-review completion; browser observations occurred within this window. Exact direct-HTTP timestamps are recorded when captured.",
+  "generated_at": "2026-10-02T15:27:48.312Z",
+  "write_scope": "Only this new evidence file. No changes to existing cohort evidence, DB, app, formula/category/GTIN, Git state, production or servers.",
+  "counts": {
+    "catalog_rows": 7,
+    "distinct_products": 6,
+    "verified_exact_preferred": 3,
+    "verified_broader_retailer_candidates": 3,
+    "identity_review_required": 1
+  },
+  "records": [
+    {
+      "id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "registered_gtins": [
+        "4072600703403"
+      ],
+      "proposed_url": "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+      "price_eur": 2.8,
+      "package_value": 200,
+      "package_unit": "ml",
+      "observed_gtin": "4072600703403",
+      "availability": "In stock; live purchase control; 1–2 days.",
+      "classification": "verified_exact_broader_retailer_review",
+      "retailer": "IwonaTEC",
+      "retailer_review_required": true,
+      "reason": "Exact original GTIN and 200 ml single-pack recovered from live German merchant PDP. Merchant outside named preferred/specialist set, so retain for parent/human retailer approval.",
+      "source_evidence": [
+        {
+          "source_url": "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+          "source_method": "Live Chrome hydrated DOM via cua_repl",
+          "source_facts": "Title GUHL Haarkur & Conditioner 2in1 Panthenol + Reparatur - 200 ml; GTIN table 4072600703403; €2.80 incl.19%VAT; 1l=€14; enabled in den Warenkorb; vorrätig; 1–2 days; shipping from €4.95; German contact address. No purchase made.",
+          "cache_limit": "Search cache displayed net €2.35 and shipping from €24.95. Live gross €2.80 and shipping from €4.95 supersede those cached details. Public urllib403 was not treated as absence."
+        },
+        {
+          "source_url": "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/",
+          "source_method": "Direct origin urllib Mozilla/5.0",
+          "source_facts": "HTTP404 at existing affiliate URL. Not treated as product-wide absence.",
+          "cache_limit": "Live origin observation; no cached price or stock promoted."
+        },
+        {
+          "source_url": "https://www.guhl.com/produkt/panthenol-reparatur/",
+          "source_method": "Direct origin HTTP200, 2026-10-02T15:26:25.327056+00:00",
+          "source_facts": "Manufacturer retailer links are searches at dm, Rossmann, Müller, Amazon; no brand-direct offer.",
+          "cache_limit": "Live origin observation; no cached price or stock promoted."
+        },
+        {
+          "source_url": "https://www.budni.de/sortiment/produkte/6435184007",
+          "source_method": "Primary search discovery",
+          "source_facts": "Exact GTIN200ml cached €4.99; no verified online purchase component, not selected.",
+          "cache_limit": "Crawled last week; identity/discovery only."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "\"4072600703403\" kaufen",
+          "result": "Exact IwonaTEC200ml single pack found, then live verified. Budni exact product found, without verified online buyability."
+        },
+        {
+          "query": "Guhl Panthenol Reparatur 2in1 200 ml Rossmann Müller dm",
+          "result": "Manufacturer and other Guhl variants found; Rossmann search primarily returned Panthenol shampoo4072600703304 or new3in1 Reparatur4072600731505, not substitutes for original GTIN."
+        }
+      ],
+      "proposal": "Review IwonaTEC retailer eligibility; if accepted, proposed price/URL apply only to original200ml single pack. No GTIN or formula mutation.",
+      "checked_at": "2026-10-02T15:27:48.312Z",
+      "source_method": "Live origin/browser verification plus explicitly labeled cached discovery",
+      "source_urls": [
+        "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+        "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/",
+        "https://www.guhl.com/produkt/panthenol-reparatur/",
+        "https://www.budni.de/sortiment/produkte/6435184007"
+      ],
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false
+    },
+    {
+      "id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "registered_gtins": [],
+      "proposed_url": "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+      "price_eur": 2.8,
+      "package_value": 200,
+      "package_unit": "ml",
+      "observed_gtin": "4072600703403",
+      "availability": "In stock; live purchase control; 1–2 days.",
+      "classification": "verified_name_original_url_broader_retailer_review",
+      "retailer": "IwonaTEC",
+      "retailer_review_required": true,
+      "reason": "Mask duplicate has exact same stored name and Müller IPN3052207 URL as conditioner, but no registered GTIN. Candidate is associated by that shared catalog identity; cannot claim a registered-GTIN match for this row.",
+      "source_evidence": [
+        {
+          "source_url": "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+          "source_method": "Live Chrome hydrated DOM via cua_repl",
+          "source_facts": "Title GUHL Haarkur & Conditioner 2in1 Panthenol + Reparatur - 200 ml; GTIN table 4072600703403; €2.80 incl.19%VAT; 1l=€14; enabled in den Warenkorb; vorrätig; 1–2 days; shipping from €4.95; German contact address. No purchase made.",
+          "cache_limit": "Search cache displayed net €2.35 and shipping from €24.95. Live gross €2.80 and shipping from €4.95 supersede those cached details. Public urllib403 was not treated as absence."
+        },
+        {
+          "source_url": "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/",
+          "source_method": "Direct origin urllib Mozilla/5.0",
+          "source_facts": "HTTP404 at existing affiliate URL. Not treated as product-wide absence.",
+          "cache_limit": "Live origin observation; no cached price or stock promoted."
+        },
+        {
+          "source_url": "https://www.guhl.com/produkt/panthenol-reparatur/",
+          "source_method": "Direct origin HTTP200, 2026-10-02T15:26:25.327056+00:00",
+          "source_facts": "Manufacturer retailer links are searches at dm, Rossmann, Müller, Amazon; no brand-direct offer.",
+          "cache_limit": "Live origin observation; no cached price or stock promoted."
+        },
+        {
+          "source_url": "https://www.budni.de/sortiment/produkte/6435184007",
+          "source_method": "Primary search discovery",
+          "source_facts": "Exact GTIN200ml cached €4.99; no verified online purchase component, not selected.",
+          "cache_limit": "Crawled last week; identity/discovery only."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "\"4072600703403\" kaufen",
+          "result": "Exact IwonaTEC200ml single pack found, then live verified. Budni exact product found, without verified online buyability."
+        },
+        {
+          "query": "Guhl Panthenol Reparatur 2in1 200 ml Rossmann Müller dm",
+          "result": "Manufacturer and other Guhl variants found; Rossmann search primarily returned Panthenol shampoo4072600703304 or new3in1 Reparatur4072600731505, not substitutes for original GTIN."
+        }
+      ],
+      "proposal": "Parent may review same200ml IwonaTEC candidate for duplicate row using identical existing name+URL association. Do not silently register4072600703403 or merge rows.",
+      "checked_at": "2026-10-02T15:27:48.312Z",
+      "source_method": "Live origin/browser verification plus explicitly labeled cached discovery",
+      "source_urls": [
+        "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+        "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/",
+        "https://www.guhl.com/produkt/panthenol-reparatur/",
+        "https://www.budni.de/sortiment/produkte/6435184007"
+      ],
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false
+    },
+    {
+      "id": "4506954b-128a-473c-866f-54a300ff23f4",
+      "name": "Hair Biology Full & Shining Conditioner",
+      "registered_gtins": [
+        "8001841216997"
+      ],
+      "proposed_url": "https://www.galaxus.de/de/s6/product/hair-biology-haarspuelung-full-shining-160-ml-160-ml-conditioner-13128066",
+      "price_eur": 5.24,
+      "package_value": 160,
+      "package_unit": "ml",
+      "observed_gtin": "8001841216997",
+      "availability": "More than10 units in stock; delivery Wednesday2026-10-07; enabled single-unit purchase control.",
+      "classification": "verified_exact_broader_retailer_review",
+      "retailer": "Galaxus DE",
+      "retailer_review_required": true,
+      "reason": "Live selected one-pack offer and embedded Product JSON-LD both confirm €5.24 and exact GTIN. Galaxus is outside named preferred/specialist set and requires retailer review.",
+      "source_evidence": [
+        {
+          "source_url": "https://www.galaxus.de/de/s6/product/hair-biology-haarspuelung-full-shining-160-ml-160-ml-conditioner-13128066",
+          "source_method": "Live Chrome hydrated DOM and Product JSON-LD via cua_repl",
+          "source_facts": "160ml; Product gtin8001841216997; sku13128066; Offer EUR5.24 InStock eligibleQuantity1. Selected visible 1 Stück EUR5.24 pro Stück; main price then €5.24 and In den Warenkorb enabled. More than10 units; Oct7delivery.",
+          "cache_limit": "Default page initially foregrounded €4.80/unit for2units; not the one-pack price. Cached German page had€5.52 and Augdates, superseded by live page. Public urllib403 was bypassed by ordinary browser access, not interpreted as absence."
+        },
+        {
+          "source_url": "https://www.shop-apotheke.com/beauty/upmTDY3RU/hair-biology-pflegespuelung-full-shining.htm",
+          "source_method": "Primary search discovery",
+          "source_facts": "Exact GTIN160ml discovered; brand page had partner Di-Life€4.65.",
+          "cache_limit": "Cached lastweek/3weeks; no live offer verification, so not selected."
+        },
+        {
+          "source_url": "https://tribellium.de/drogerie/haare/haarpflege/19783/2-x-hair-biology-full-shining-pflegespuelung-duennes-haar-je-160ml",
+          "source_method": "Primary search discovery",
+          "source_facts": "2x160ml bundle, €4.99 cached; rejected as base-package change.",
+          "cache_limit": "Three-month cache; discovery only."
+        },
+        {
+          "source_url": "https://www.notino.de/pantene/hair-biology-full-vibrant-conditioner-fuer-feines-oder-schuetteres-haar/",
+          "source_method": "Primary web open",
+          "source_facts": "Full & Vibrant160ml says not in stock; variant wording differs and no exact GTIN bridge verified.",
+          "cache_limit": "Four-week cache; not current availability proof and not substituted."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "\"8001841216997\" kaufen",
+          "result": "Galaxus single pack, ShopApotheke partner, Tribellium2-pack discovered."
+        },
+        {
+          "query": "\"Hair Biology Full\" site:rossmann.de OR site:mueller.de OR site:flaconi.de OR site:notino.de OR site:amazon.de",
+          "result": "Only related Notino Full&Vibrant conditioner surfaced; no better exact registered-GTIN preferred offer found."
+        }
+      ],
+      "proposal": "Review Galaxus retailer eligibility; use €5.24 per1x160ml, never default €4.80 quantity-discount rate.",
+      "checked_at": "2026-10-02T15:27:48.312Z",
+      "source_method": "Live origin/browser verification plus explicitly labeled cached discovery",
+      "source_urls": [
+        "https://www.galaxus.de/de/s6/product/hair-biology-haarspuelung-full-shining-160-ml-160-ml-conditioner-13128066",
+        "https://www.shop-apotheke.com/beauty/upmTDY3RU/hair-biology-pflegespuelung-full-shining.htm",
+        "https://tribellium.de/drogerie/haare/haarpflege/19783/2-x-hair-biology-full-shining-pflegespuelung-duennes-haar-je-160ml",
+        "https://www.notino.de/pantene/hair-biology-full-vibrant-conditioner-fuer-feines-oder-schuetteres-haar/"
+      ],
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false
+    },
+    {
+      "id": "71d9bccb-74c7-499c-b5de-13ceef57ecde",
+      "name": "Pantene Pro-V Miracles Bond Repair Conditioner",
+      "registered_gtins": [
+        "8700216151535"
+      ],
+      "proposed_url": "https://www.mueller.de/p/pantene-pro-v-miracles-molecular-bond-repair-pflegespuelung-IPN2964988/",
+      "price_eur": 5.95,
+      "package_value": 160,
+      "package_unit": "ml",
+      "observed_gtin": "8700216151535",
+      "availability": "Live purchase control; delivery within Germany2–3working days.",
+      "classification": "verified_exact",
+      "retailer": "Müller",
+      "retailer_review_required": false,
+      "reason": "Exact original GTIN in live Product structured data, same160ml package in hydrated purchase UI.",
+      "source_evidence": [
+        {
+          "source_url": "https://www.mueller.de/p/pantene-pro-v-miracles-molecular-bond-repair-pflegespuelung-IPN2964988/",
+          "source_method": "Live origin urllib Product JSON-LD at2026-10-02T15:22:42.700326+00:00 plus live Chrome hydrated DOM",
+          "source_facts": "HTTP200; Product gtin8700216151535 sku2964988; Offer€5.95 EUR InStock; DEshipping. UI160ml €5.95, Lieferbar2–3Werktage, enabled In den Warenkorb.",
+          "cache_limit": "Live origin observation; no cached price or stock promoted."
+        },
+        {
+          "source_url": "https://www.dm.de/p/d/1336165/pantene-pro-v-conditioner-miracles-bond-repair",
+          "source_method": "Existing cohort plus primary discovery",
+          "source_facts": "Same GTIN160ml cached€5.95 but unavailable; parent had current unavailable finding.",
+          "cache_limit": "Three-week search cache not used to claim current dm stock."
+        },
+        {
+          "source_url": "https://de.primor.eu/de_de/pantene-pro-v-miracles-bond-repair-conditioner-92191.html",
+          "source_method": "Primary search discovery",
+          "source_facts": "160ml candidate found at cached€4.50; lower preferred priority and no exactGTIN verified. Not selected.",
+          "cache_limit": "Three-week cache."
+        },
+        {
+          "source_url": "https://www.rossmann.de/de/alle-marken/pantene-pro-v/c/online-dachmarke_4455579//",
+          "source_method": "Primary search discovery",
+          "source_facts": "Brand page mentions BondRepair range, but queries surfaced IntensiveHaarkur rather than concrete matching conditioner purchase offer.",
+          "cache_limit": "Three-month cache; not availability proof."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "\"8700216151535\" kaufen",
+          "result": "dm exact unavailable discovery."
+        },
+        {
+          "query": "\"Pantene\" \"Bond Repair\" site:mueller.de",
+          "result": "Exact160ml2964988 found and live verified."
+        },
+        {
+          "query": "\"Pantene\" \"Bond Repair\" \"Spülung\" site:rossmann.de",
+          "result": "No concrete exact conditioner PDP surfaced; brand page/intensive mask not substituted."
+        }
+      ],
+      "proposal": "Offer-only Müller URL/price/package proposal for existing GTIN; no identity/category/formula changes.",
+      "checked_at": "2026-10-02T15:27:48.312Z",
+      "source_method": "Live origin/browser verification plus explicitly labeled cached discovery",
+      "source_urls": [
+        "https://www.mueller.de/p/pantene-pro-v-miracles-molecular-bond-repair-pflegespuelung-IPN2964988/",
+        "https://www.dm.de/p/d/1336165/pantene-pro-v-conditioner-miracles-bond-repair",
+        "https://de.primor.eu/de_de/pantene-pro-v-miracles-bond-repair-conditioner-92191.html",
+        "https://www.rossmann.de/de/alle-marken/pantene-pro-v/c/online-dachmarke_4455579//"
+      ],
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false
+    },
+    {
+      "id": "01b11043-5c87-43d2-95b5-f1cabd845423",
+      "name": "SANTE Deep Repair Conditioner",
+      "registered_gtins": [
+        "4055297220088"
+      ],
+      "proposed_url": "https://www.mueller.de/p/sante-deep-repair-conditioner-IPN2994111/",
+      "price_eur": 3.95,
+      "package_value": 150,
+      "package_unit": "ml",
+      "observed_gtin": "4055297220088",
+      "availability": "Live purchase control; delivery within Germany2–3working days.",
+      "classification": "verified_exact",
+      "retailer": "Müller",
+      "retailer_review_required": false,
+      "reason": "ExactGTIN150ml preferred Müller live offer; brand-direct also recovered as exact alternate.",
+      "source_evidence": [
+        {
+          "source_url": "https://www.mueller.de/p/sante-deep-repair-conditioner-IPN2994111/",
+          "source_method": "Direct origin Product JSON-LD at2026-10-02T15:23:53.740505+00:00 and live Chrome hydrated DOM",
+          "source_facts": "HTTP200; gtin4055297220088 sku2994111; Offer EUR3.95 InStock; DEshipping. UI150ml €3.95, Lieferbar2–3Werktage, enabled In den Warenkorb.",
+          "cache_limit": "Live origin observation; no cached price or stock promoted."
+        },
+        {
+          "source_url": "https://www.sante.de/deep-repair-conditioner-squalan-3-fach-protein-komplex/4062701",
+          "source_method": "Direct origin Product JSON-LD at2026-10-02T15:23:53.958211+00:00",
+          "source_facts": "HTTP200; gtin13=4055297220088; sku4062701; OfferEUR4.29 InStock; handling1–3days. Exact150ml brand-direct alternative; Müller preferred.",
+          "cache_limit": "Live origin observation; no cached price or stock promoted."
+        },
+        {
+          "source_url": "https://www.alnatura.de/produkte/deep-repair-conditioner-240113",
+          "source_method": "Primary search discovery",
+          "source_facts": "Independent primary mapping GTIN4055297220088 to150ml.",
+          "cache_limit": "Crawled2days earlier; corroboration only."
+        },
+        {
+          "source_url": "https://taleoo.de/sante-deep-repair-conditioner-squalan-63229",
+          "source_method": "Primary search discovery",
+          "source_facts": "ExactGTIN150ml cached€4.74; unnecessary lower-priority alternate once Müller live verified.",
+          "cache_limit": "Four-month cache; not current price proof."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "\"4055297220088\" kaufen",
+          "result": "Taleoo/Auwald150ml discovery."
+        },
+        {
+          "query": "\"Sante Deep Repair\" site:mueller.de",
+          "result": "Exact2994111 recovered and live verified."
+        },
+        {
+          "query": "\"Sante Deep Repair Conditioner\" site:rossmann.de",
+          "result": "No concrete matching Rossmann PDP surfaced."
+        },
+        {
+          "query": "\"Deep Repair Conditioner\" \"sante.de/\"",
+          "result": "Brand-direct exactGTIN current offer recovered."
+        }
+      ],
+      "proposal": "Offer-only Müller€3.95/150ml. Preserve original registeredGTIN.",
+      "checked_at": "2026-10-02T15:27:48.312Z",
+      "source_method": "Live origin/browser verification plus explicitly labeled cached discovery",
+      "source_urls": [
+        "https://www.mueller.de/p/sante-deep-repair-conditioner-IPN2994111/",
+        "https://www.sante.de/deep-repair-conditioner-squalan-3-fach-protein-komplex/4062701",
+        "https://www.alnatura.de/produkte/deep-repair-conditioner-240113",
+        "https://taleoo.de/sante-deep-repair-conditioner-squalan-63229"
+      ],
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false
+    },
+    {
+      "id": "4eddfc54-3704-4a3e-a9b7-0cff91538863",
+      "name": "Garnier Fructis Hitzeschutzspray Wunderöl, stark geschädigtes Haar",
+      "registered_gtins": [
+        "3600542020060"
+      ],
+      "proposed_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-hitzeschutzspray-anti-spliss-wunder-oel-stark-stark-geschaedigtes-haar/p/3600542020060",
+      "price_eur": 5.99,
+      "package_value": 150,
+      "package_unit": "ml",
+      "observed_gtin": "3600542020060",
+      "availability": "Live enabled purchase control; delivery2026-10-06to2026-10-07.",
+      "classification": "verified_exact",
+      "retailer": "Rossmann",
+      "retailer_review_required": false,
+      "reason": "Exact registered barcode in canonical retailer PDP URL, exact severely damaged hair variant and150ml in live purchase UI.",
+      "source_evidence": [
+        {
+          "source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-hitzeschutzspray-anti-spliss-wunder-oel-stark-stark-geschaedigtes-haar/p/3600542020060",
+          "source_method": "Live Chrome hydrated accessibility/DOM via cua_repl",
+          "source_facts": "Hitzeschutzspray Anti-Spliss Wunder-Öl Stark Stark Geschädigtes Haar150ml; €5.99; article007499; enabled Zum Warenkorb hinzufügen; deliveryOct6–7; URLGTIN3600542020060.",
+          "cache_limit": "Live origin observation; no cached price or stock promoted."
+        },
+        {
+          "source_url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-haaroel-oil-repair-wunder-oel-trockenes-und-strapaziertes-haar/p/3600542020053",
+          "source_method": "Primary search discovery",
+          "source_facts": "DifferentGTIN3600542020053 and dry/strained-hair variant, rejected despite same150ml and similar name.",
+          "cache_limit": "Three-week cache; not selected."
+        },
+        {
+          "source_url": "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar",
+          "source_method": "Parent current oil-cohort evidence",
+          "source_facts": "Parent reports exact dm package currently not buyable; preserved existing150ml base package.",
+          "cache_limit": "Inherited same-pass current finding; not separately repeated."
+        }
+      ],
+      "query_checks": [
+        {
+          "query": "Garnier Wunderöl150 3600542020060 kaufen",
+          "result": "eBay exact candidate discovered, not needed after preferred recovery."
+        },
+        {
+          "query": "site.rossmann.de \"Wunder\" \"150\" \"Garnier\"",
+          "result": "Brand category exact severely-damaged-hair PDP link recovered and opened; initial dry-hair variant rejected."
+        }
+      ],
+      "proposal": "Replace unavailable dm offer with Rossmann€5.99/150ml offer; no base-package change.",
+      "checked_at": "2026-10-02T15:27:48.312Z",
+      "source_method": "Live origin/browser verification plus explicitly labeled cached discovery",
+      "source_urls": [
+        "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-hitzeschutzspray-anti-spliss-wunder-oel-stark-stark-geschaedigtes-haar/p/3600542020060",
+        "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-haaroel-oil-repair-wunder-oel-trockenes-und-strapaziertes-haar/p/3600542020053",
+        "https://www.dm.de/p/d/1499834/garnier-fructis-hitzeschutzspray-wunderoel-stark-geschaedigtes-haar"
+      ],
+      "currency": "EUR",
+      "whole_pack_price": true,
+      "production_write_authorized": false
+    },
+    {
+      "id": "a72d630d-547a-465f-9846-3006b38af0a2",
+      "name": "Garnier Hair Food Macadamia",
+      "registered_gtins": [
+        "3600542511612"
+      ],
+      "proposed_url": null,
+      "price_eur": null,
+      "package_value": 400,
+      "package_unit": "ml",
+      "observed_gtin": null,
+      "availability": "Douglas candidate live in stock, but exact registered identity unresolved.",
+      "classification": "identity_review_required",
+      "retailer": "Douglas candidate",
+      "retailer_review_required": false,
+      "reason": "Live dm independently maps registeredGTIN3600542511612 to400ml. Douglas400ml offer omitsGTIN in Product JSON-LD and publishes a different INCI list. Name+size is insufficient to bridge this identity conflict.",
+      "candidate_offer": {
+        "url": "https://www.douglas.de/de/p/5010035048",
+        "price_eur": 5.99,
+        "package_value": 400,
+        "package_unit": "ml",
+        "sku": "1063413",
+        "availability": "InStock, enabled purchase control; delivery2026-10-05to2026-10-07",
+        "barcode": null
+      },
+      "linked_catalog_ids": [
+        "a72d630d-547a-465f-9846-3006b38af0a2",
+        "4c3e1a63-4696-406a-be67-f2aacc678b0c"
+      ],
+      "source_evidence": [
+        {
+          "source_url": "https://www.douglas.de/de/p/5010035048",
+          "source_method": "Live Chrome hydrated DOM and Product JSON-LD",
+          "source_facts": "400ml; sku1063413; Product offerEUR5.99 InStock; noGTIN field; UI Online:aufLager, deliveryOct5–7, enabled In den Warenkorb. Product described3in1 mask/conditioner/leave-in.",
+          "cache_limit": "Live origin observation; no cached price or stock promoted."
+        },
+        {
+          "source_url": "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+          "source_method": "Live Chrome hydrated DOM and ingredient disclosure HTML",
+          "source_facts": "GTIN3600542511612;400ml;€5.95; Nicht lieferbar; purchase disabled. Read exact INCI from attached details[data-dmid=Inhaltsstoffe-container].",
+          "cache_limit": "Live origin observation; no cached price or stock promoted."
+        },
+        {
+          "source_url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/3in1-maske-fuer-trockenes-haar-angereichert-mit-macadamia",
+          "source_method": "Manufacturer primary search discovery",
+          "source_facts": "Bändigendes Macadamia HairFood400ml 3in1 product confirms family but no DouglasSKU-to-GTIN bridge.",
+          "cache_limit": "Cached3weeks; identity context only."
+        }
+      ],
+      "identity_conflict": {
+        "dm_inci_start": [
+          "Aqua / Water",
+          "Cetearyl Alcohol",
+          "Stearamidopropyl Dimethylamine",
+          "Isopropyl Myristate",
+          "Cetyl Esters",
+          "Helianthus Annuus Seed Oil / Sunflower Seed Oil",
+          "Butyrospermum Parkii Butter / Shea Butter"
+        ],
+        "douglas_inci_start": [
+          "Aqua / Water",
+          "Cetearyl Alcohol",
+          "Glycerin",
+          "Isopropyl Myristate",
+          "Stearamidopropyl Dimethylamine",
+          "Macadamia Integrifolia Seed Oil",
+          "Glycine Soja Oil / Soybean Oil"
+        ],
+        "dm_listed_absent_from_douglas": [
+          "Butyrospermum Parkii Butter / Shea Butter",
+          "Glyceryl Linoleate",
+          "Glyceryl Linolenate",
+          "Glyceryl Oleate",
+          "Ascorbyl Glucoside",
+          "Tocopherol"
+        ],
+        "douglas_listed_absent_from_dm": [
+          "Glycerin",
+          "Sodium Hydroxide",
+          "Simmondsia Chinensis Seed Oil / Jojoba Seed Oil",
+          "Prunus Amygdalus Dulcis Oil / Sweet Almond Oil",
+          "Coco-Caprylate/Caprate",
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "Citric Acid",
+          "Benzyl Salicylate"
+        ],
+        "interpretation": "Observed discrepancies may reflect stale retailer copy or a reformulation; evidence does not establish which formula or GTIN Douglas currently ships. No formula projection, category or identifier changes inferred."
+      },
+      "query_checks": [
+        {
+          "query": "\"3600542511612\" \"Douglas\" / \"1063413\" \"Garnier\"",
+          "result": "No explicit primary barcode bridge found. Douglas Product JSON-LD inspected directly; barcode absent."
+        },
+        {
+          "query": "\"3600542511612\" Garnier -site:dm.de",
+          "result": "dm.at also maps same400ml family, but does not prove DouglasSKU identity."
+        },
+        {
+          "query": "Garnier \"Macadamia\" \"400\" \"EAN\"",
+          "result": "Foreign400ml regional GTIN3600542513050 appeared, reinforcing that name+size alone is not an exact barcode match; not substituted."
+        }
+      ],
+      "proposal": "Hold Douglas mapping for both linked catalog rows. This supersedes the earlier care-offers-recovery-evidence.json name/variant/package acceptance for4c3e1a63-4696-406a-be67-f2aacc678b0c pending explicit identity choice. Earlier evidence file untouched. Resolve shipmentGTIN/formula identity before proposed link/price write.",
+      "checked_at": "2026-10-02T15:27:48.312Z",
+      "source_method": "Live origin/browser verification plus explicitly labeled cached discovery",
+      "source_urls": [
+        "https://www.douglas.de/de/p/5010035048",
+        "https://www.dm.de/p/d/1676326/garnier-fructis-haarkur-macadamia-hair-food-3in1-maske",
+        "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/3in1-maske-fuer-trockenes-haar-angereichert-mit-macadamia"
+      ],
+      "currency": "EUR",
+      "whole_pack_price": false,
+      "production_write_authorized": false
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "buy": "<button id=\"buynowID\" class=\"btn btn--iconable btn--iconable-right xrbutton\">\n    Jetzt kaufen\n  </button>",
+  "directions": " Anwendung      Close subpanel Drei Anwendungen – ein Produkt:  \nAls Spülung: Das Garnier Fructis Bändigendes Macadamia Hair Food auf das nasse Haar auftragen und gründlich ausspülen. Das entwirrt das Haar und pflegt, ohne es zu beschweren. \nAls Maske: Die Creme auf das nasse Haar auftragen, 3 Minuten einwirken lassen und gründlich ausspülen. \nAls Leave-In: Auf feuchtem oder trockenem Haar anwenden. Dafür eine kleine Menge in die Längen geben, um das Haar zu pflegen. So ist es länger weich und geschmeidig. ",
+  "images": [
+    {
+      "alt": "Fructis 3in1 Maske fuer trockenes Haar angereichert mit Macadamia - Produktabbildung",
+      "src": "https://www.garnier.de/-/media/project/loreal/brand-sites/garnier/emea/de/de-de/prd-haarpflege/haarpflege_fructis/haarpflege_fructis_hairfood/macadamia/maske/21092026-3600542511612-garnier-fructis_macadamia_hair_food_3in1_maske-01-haarmaske_front.jpg?w=500&rev=81e8066cf42a4d0a875b7940ebc05ba0&hash=22EA957EE458B77A1453E86F2E3D09DD"
+    }
+  ],
+  "ingredients": " Inhaltsstoffe      Close subpanel 1267709 C - INGREDIENTS: AQUA / WATER • CETEARYL ALCOHOL • GLYCERIN • ISOPROPYL MYRISTATE • STEARAMIDOPROPYL DIMETHYLAMINE • GLYCINE SOJA OIL / SOYBEAN OIL • MACADAMIA INTEGRIFOLIA SEED OIL • HELIANTHUS ANNUUS SEED OIL / SUNFLOWER SEED OIL • PRUNUS AMYGDALUS DULCIS OIL / SWEET ALMOND OIL • COCOS NUCIFERA OIL / COCONUT OIL • COCO-CAPRYLATE/CAPRATE • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CAPRYLYL GLYCOL • TARTARIC ACID • CETYL ESTERS • SALICYLIC ACID • CARAMEL • LINALOOL • GERANIOL • COUMARIN • LIMONENE • CITRAL • CITRONELLOL • BENZYL ALCOHOL • BENZYL CINNAMATE • PARFUM / FRAGRANCE (F.I.L. Z70014475/2). ",
+  "url": "https://www.garnier.de/haarpflege/haarpflege-marken/fructis/hair-food/3in1-maske-fuer-trockenes-haar-angereichert-mit-macadamia",
+  "checked_at": "2026-10-04T08:42:55.383Z"
+}

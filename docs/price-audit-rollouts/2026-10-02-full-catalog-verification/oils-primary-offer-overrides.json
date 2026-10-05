@@ -1,0 +1,168 @@
+{
+  "checked_at": "2026-10-02 14:49:28 UTC",
+  "offers": [
+    {
+      "id": "9bfe0a67-72ad-4951-bb99-9f2f5d5c724a",
+      "url": "https://www.dm.de/p/d/1459848/dmbio-natives-olivenoel-extra",
+      "price": 6.95,
+      "pack": 750,
+      "barcode": "4066447918687",
+      "availability": "Lieferbar",
+      "fields": {
+        "title": "Natives Olivenöl extra, 750 ml",
+        "price": "6,95 €",
+        "GTIN": "4066447918687",
+        "availability": "Lieferbar"
+      }
+    },
+    {
+      "id": "c574ee6f-ad22-45c0-b936-57b847d93433",
+      "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-fructis-sleek-und-stay-heat-activated-serum/p/3600542638852",
+      "price": 7.99,
+      "pack": 50,
+      "barcode": "3600542638852",
+      "availability": "Delivery 06–07 October 2026",
+      "fields": {
+        "title": "Sleek & Stay Heat-Activated Serum",
+        "package": "50 ml",
+        "price": "7,99 €",
+        "delivery": "06–07.10.2026",
+        "sku": "179684"
+      }
+    },
+    {
+      "id": "ff13bc3a-8bc6-49df-85a0-7a67add26926",
+      "url": "https://www.rossmann.de/de/pflege-und-duft-nanoil-avocadooel/p/5905669547130",
+      "price": 12.99,
+      "pack": 50,
+      "barcode": "5905669547130",
+      "availability": "delivery offered",
+      "fields": {
+        "title": "NANOIL Avocadoöl",
+        "package": "50 ml",
+        "price": "12,99 €",
+        "delivery": "Lieferung",
+        "sku": "089117"
+      }
+    },
+    {
+      "id": "c9ded02d-0bd8-4dc2-a7cc-c98f36dfe076",
+      "url": "https://www.rossmann.de/de/pflege-und-duft-isana-professional-haaroel-arganoel-und-pflege/p/4068134024947",
+      "price": 2.79,
+      "pack": 100,
+      "barcode": "4068134024947",
+      "availability": "Delivery 06–07 October 2026",
+      "fields": {
+        "title": "ISANA PROFESSIONAL Haaröl Arganöl & Pflege",
+        "package": "100 ml",
+        "price": "2,79 €",
+        "delivery": "06–07.10.2026",
+        "sku": "147329"
+      }
+    },
+    {
+      "id": "f0168972-dcd4-4593-aeb5-38d12343468a",
+      "url": "https://www.dm.de/p/d/1523357/pantene-pro-v-haarkur-glatt-und-seidig-arganoel-argan-infused-oil",
+      "price": 4.95,
+      "pack": 100,
+      "barcode": "4084500085350",
+      "availability": "Lieferbar",
+      "fields": {
+        "title": "Haarkur Glatt & Seidig Arganöl Argan Infused Oil, 100 ml",
+        "price": "4,95 €",
+        "GTIN": "4084500085350",
+        "availability": "Lieferbar"
+      }
+    },
+    {
+      "id": "fe974387-b487-470e-9799-69bb4249070b",
+      "url": "https://www.dm.de/p/d/1395948/pantene-pro-v-trocken-oel-mit-vitamin-e-keratin-protect-oil-repair-und-care",
+      "price": 4.95,
+      "pack": 100,
+      "barcode": "4084500084971",
+      "availability": "purchasable=true in dm MCP",
+      "fields": {
+        "title": "Trocken Öl mit Vitamin E Keratin Protect Oil Repair & Care, 100 ml",
+        "price": "4,95 €",
+        "GTIN": "4084500084971",
+        "availability": "Lieferbar"
+      }
+    },
+    {
+      "id": "3eb198a5-9aab-4f28-9df1-c4869c6a12db",
+      "url": "https://www.korodrogerie.de/bio-mct-oel-500-ml",
+      "price": 17.5,
+      "pack": 500,
+      "barcode": "4260718296232",
+      "availability": "Sofort verfügbar",
+      "fields": {
+        "title": "Bio MCT Öl 500 ml",
+        "price": "17,50 €",
+        "GTIN": "4260718296232",
+        "availability": "Sofort verfügbar"
+      }
+    },
+    {
+      "id": "b916efff-8b80-47d4-82cf-d8148d1eff53",
+      "url": "https://www.rossmann.de/de/pflege-und-duft-hask-argan-shine-oil/p/0071164029855",
+      "price": 2.59,
+      "pack": 18,
+      "barcode": "0071164029855",
+      "availability": "delivery offered",
+      "fields": {
+        "title": "HASK Argan Shine Oil",
+        "package": "18 ml",
+        "price": "2,59 €",
+        "delivery": "Lieferung"
+      }
+    },
+    {
+      "id": "ea9d38a1-25ce-4c01-868b-960cc5ee4397",
+      "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-curl-revival-elixir-intensiv-naehrendes-haaroel/p/3600542624336",
+      "price": 6.99,
+      "pack": 120,
+      "barcode": "3600542624336",
+      "availability": "delivery offered",
+      "fields": {
+        "title": "Curl Revival Elixir Intensiv Nährendes Haaröl",
+        "package": "120 ml",
+        "price": "6,99 €",
+        "delivery": "Lieferung"
+      },
+      "note": "dm exact120ml €6.95 is Nicht lieferbar; selected same GTIN buyable Rossmann offer"
+    },
+    {
+      "id": "05e68c32-f096-457f-8b88-5cd3c0934873",
+      "url": "https://www.jeanlen.de/keratin-haaroel",
+      "price": 3.99,
+      "pack": 100,
+      "barcode": null,
+      "availability": "https://schema.org/InStock",
+      "classification": "verified_same_product_package",
+      "fields": {
+        "title": "Haaröl Keratin, 100 ml",
+        "sku": "2800101104",
+        "price": 3.99,
+        "currency": "EUR",
+        "availability": "https://schema.org/InStock"
+      },
+      "note": "Brand official same named Keratin/Mandel100ml oil; no GTIN displayed. Current dm same registeredGTIN100ml offer€5.95 is not deliverable. Price drop exceeds30% and retained for human review."
+    },
+    {
+      "id": "7f5207e6-d281-416e-922c-3135dd9a8cc8",
+      "url": "https://www.hagel-shop.de/innersense-harmonic-treatment-oil-29-ml.html",
+      "price": 29,
+      "pack": 29,
+      "barcode": "852415001833",
+      "availability": "delivery offered",
+      "classification": "needs_package_decision",
+      "fields": {
+        "title": "INNERSENSE Harmonic Treatment Oil 29 ml",
+        "price": "29,00 €",
+        "EAN": "852415001833",
+        "delivery": "Lieferzeit 2–4 Werktage"
+      },
+      "note": "RegisteredGTIN850006575039 identifies118ml. Exact118ml €79 at Belladonna is available;29ml preferred Hagel changes basepackage/adds recognitionbarcode. Nick question pending."
+    }
+  ]
+}

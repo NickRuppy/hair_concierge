@@ -1,0 +1,50 @@
+{
+  "checked_at": "2026-10-02T15:30:54Z",
+  "scope": "Live recovery for the two remaining leave-in offers. Search-result snippets and HTTP 403 responses were not used as current availability proof.",
+  "records": [
+    {
+      "id": "9f94c225-61ec-455d-b303-f39e885e222a",
+      "product": "NEQI Build Boost Leave-In Balm",
+      "registered_gtin": "4063528097651",
+      "source_url": "https://neqi-hair.com/products/build-boost-balm?variant=52259787538778",
+      "source_method": "Direct retrieval of the official NEQI Shopify product page and its embedded product/variant data at the recorded UTC time.",
+      "price_eur": 9.95,
+      "package": {
+        "value": 75,
+        "unit": "ml"
+      },
+      "observed_barcode": "4063528097651",
+      "availability": "in_stock",
+      "source_quote": "Embedded variant data: name 'Build Boost Leave-In Balm', price 995, barcode '4063528097651'; product data: 'Inhalt: 75ml' and available:true. The rendered form includes 'In den Warenkorb legen'.",
+      "classification": "verified_exact",
+      "retailer_exception": null,
+      "reason": "Exact registered GTIN and 75 ml package on the brand-direct German product page; the whole-package price is €9.95 and the page reports the variant available. This replaces the Maquibeauty proposal whose live structured offer was out of stock."
+    },
+    {
+      "id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "product": "OUAI Leave In Conditioner",
+      "registered_gtin": "815402023119",
+      "source_url": "https://www.sephora.de/p/leave-in-conditioner-426531.html",
+      "source_method": "Fresh Chrome hydrated-DOM inspection of the Sephora DE PDP at the recorded UTC time; the active cart controls were read after the page finished loading, without adding an item.",
+      "price_eur": 30.45,
+      "package": {
+        "value": 140,
+        "unit": "ml"
+      },
+      "observed_barcode": null,
+      "availability": "in_stock",
+      "source_quote": "Hydrated PDP title 'Leave in Conditioner | OUAI ≡ SEPHORA'; product selection '140 ml 217,50 € / 1L'; price '30,45 €*'; delivery panel 'Standardversand', 'Ab 7 Oktober', 'Verfügbar'. Its 'In den Warenkorb' controls were enabled (disabled:false, aria-disabled:null).",
+      "classification": "verified_exact",
+      "retailer_exception": "Sephora DE is a trusted German beauty retailer but is outside the named leave-in source rank. It is retained as an exception because its exact 140 ml PDP was live and buyable; the catalog's old Douglas exact URL returned a live 404. No current Hagel/Flaconi/Douglas exact PDP was established in this bounded recovery.",
+      "reason": "The current PDP directly identifies the same OUAI Leave In Conditioner in the exact 140 ml package, and the price-per-litre display corroborates that volume. Sephora did not expose the EAN in the hydrated page source, so the registered GTIN is retained as catalog identity rather than claimed as newly observed; there was no conflicting barcode or package indication."
+    }
+  ],
+  "specific_primary_attempts": [
+    {
+      "product": "OUAI Leave In Conditioner 140 ml",
+      "source_url": "https://www.douglas.de/de/p/5002560059",
+      "method": "Fresh Chrome navigation",
+      "result": "Douglas returned its live 404 page for this former exact catalog URL. This is evidence only that this URL is no longer a current Douglas offer, not a global unavailable claim."
+    }
+  ]
+}

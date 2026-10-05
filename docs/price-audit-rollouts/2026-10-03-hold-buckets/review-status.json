@@ -1,0 +1,10 @@
+{
+  "type": "read-only local Claude plan review",
+  "effort": "high",
+  "timeout_seconds": 120,
+  "result": "timed_out",
+  "verdict_available": false,
+  "not_an_approval": true,
+  "billing_env_api_key_present": false,
+  "local_review": "Root inspected policy scope, exact SQL manifest, complete row/identifier guards, existing eligibility consumers, live triggers, actual rollback, and independent full catalog readback. No blocking local findings. Counterpart verdict remains unavailable before any future publication."
+}

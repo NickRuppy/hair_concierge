@@ -1,0 +1,1285 @@
+{
+  "prepared_at": "2026-10-03T13:22:53.666109+00:00",
+  "authorization": "Nick: go with your recco; do it for the other steps yes. Scope: approved exact direct offers/package choices; no formula/category changes,2marketplaceholdsretained.",
+  "records": [
+    {
+      "id": "05e68c32-f096-457f-8b88-5cd3c0934873",
+      "name": "Jean&Len Repair Keratin & Mandel",
+      "category_key": "oil",
+      "source_file": "retailer-recheck.json",
+      "source_checked_at": "2026-10-03T13:13:44.650312+00:00",
+      "verified_offer": {
+        "url": "https://www.jeanlen.de/keratin-haaroel",
+        "price_eur": 3.99,
+        "package_value": 100,
+        "package_unit": "ml"
+      },
+      "note": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "05e68c32-f096-457f-8b88-5cd3c0934873",
+        "name": "Jean&Len Repair Keratin & Mandel",
+        "brand": "Jean&Len",
+        "category_key": "oil",
+        "currency": "EUR",
+        "price_eur": "6.95",
+        "price_checked_at": "2026-06-10 00:00:00+00",
+        "affiliate_link": "https://www.dm.de/jean-und-len-haaroel-repair-keratin-und-mandel-p4262401733253.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-10 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "c804eedf89bc248267e403633ccb3dec",
+        "noncommercial_fingerprint": "2272ad04da45daeaec8dfa6e540867d6",
+        "gtins": [
+          {
+            "value": "4262401733253",
+            "canonical_gtin14": "04262401733253"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "78cf8bad-a31f-497d-add4-584ee4faa2de",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:03:21.858164+00:00",
+            "product_id": "05e68c32-f096-457f-8b88-5cd3c0934873",
+            "updated_at": "2026-08-28T08:03:21.858164+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04262401733253",
+            "identifier_value": "4262401733253",
+            "normalized_identifier_value": "4262401733253"
+          }
+        ],
+        "identifier_fingerprint": "a83edc6c5cfeb4517d69532e49ce7674"
+      },
+      "proposed": {
+        "price_eur": 3.99,
+        "price_checked_at": "2026-10-03T13:13:44.650312+00:00",
+        "affiliate_link": "https://www.jeanlen.de/keratin-haaroel",
+        "net_content_value": 100,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+      "name": "BioGourmet Distelöl",
+      "category_key": "oil",
+      "source_file": "retailer-recheck.json",
+      "source_checked_at": "2026-10-03T13:13:44.560893+00:00",
+      "verified_offer": {
+        "url": "https://www.greenist.de/biogourmet-bio-disteloel-250ml.html",
+        "price_eur": 6.29,
+        "package_value": 250,
+        "package_unit": "ml"
+      },
+      "note": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+        "name": "BioGourmet Distelöl",
+        "brand": "BioGourmet",
+        "category_key": "oil",
+        "currency": "EUR",
+        "price_eur": "5.99",
+        "price_checked_at": "2026-06-10 00:00:00+00",
+        "affiliate_link": "https://www.mueller.de/p/biogourmet-disteloel-2529149/",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "unavailable",
+        "purchase_link_checked_at": "2026-09-30 17:21:09.326+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "a82e673441f0c47916455eb2c94d4e47",
+        "noncommercial_fingerprint": "e39c65148622d9490f2849097f741eb7",
+        "gtins": [
+          {
+            "value": "4039057414863",
+            "canonical_gtin14": "04039057414863"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "cf63af49-7ffa-4a11-b1e4-613004785ee3",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-09-01T21:34:09.226794+00:00",
+            "product_id": "29e36443-93ff-4b62-9cf0-55ad9f89f530",
+            "updated_at": "2026-09-01T21:34:09.226794+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04039057414863",
+            "identifier_value": "4039057414863",
+            "normalized_identifier_value": "4039057414863"
+          }
+        ],
+        "identifier_fingerprint": "ad8c9f2569d920054cfbaf0f52a3d34f"
+      },
+      "proposed": {
+        "price_eur": 6.29,
+        "price_checked_at": "2026-10-03T13:13:44.560893+00:00",
+        "affiliate_link": "https://www.greenist.de/biogourmet-bio-disteloel-250ml.html",
+        "net_content_value": 250,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "315ae9f5-ad1a-4159-b307-2413338c8052",
+      "name": "Herbal Essences Haarmaske Blütensanft",
+      "category_key": "mask",
+      "source_file": "retailer-recheck.json",
+      "source_checked_at": "2026-10-03T13:13:43.953766+00:00",
+      "verified_offer": {
+        "url": "https://www.office-partner.de/herbal-essences-rose-haarmaske-300-ml-n2000020455",
+        "price_eur": 5.58,
+        "package_value": 300,
+        "package_unit": "ml"
+      },
+      "note": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "315ae9f5-ad1a-4159-b307-2413338c8052",
+        "name": "Herbal Essences Haarmaske Blütensanft",
+        "brand": "Herbal Essences",
+        "category_key": "mask",
+        "currency": "EUR",
+        "price_eur": "3.99",
+        "price_checked_at": "2026-09-02 00:00:00+00",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarmaske-bluetensanft/p/8700216212724",
+        "net_content_value": "300",
+        "net_content_unit": "ml",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-09-02 00:00:00+00",
+        "is_chaarlie_recommended": false,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "7eb2aabecaf5f770fc0c8e2427bd7d2e",
+        "noncommercial_fingerprint": "6d6668662e101890ec74c674b4201e8a",
+        "gtins": [
+          {
+            "value": "8700216212724",
+            "canonical_gtin14": "08700216212724"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "20808c95-3410-4bbf-920d-c3e2731a0ba5",
+            "source": "scan-db-expansion",
+            "created_at": "2026-09-03T07:09:51.55996+00:00",
+            "product_id": "315ae9f5-ad1a-4159-b307-2413338c8052",
+            "updated_at": "2026-09-03T07:09:51.55996+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "08700216212724",
+            "identifier_value": "8700216212724",
+            "normalized_identifier_value": "8700216212724"
+          }
+        ],
+        "identifier_fingerprint": "91a399bfd6c0956b075f06d15039277b"
+      },
+      "proposed": {
+        "price_eur": 5.58,
+        "price_checked_at": "2026-10-03T13:13:43.953766+00:00",
+        "affiliate_link": "https://www.office-partner.de/herbal-essences-rose-haarmaske-300-ml-n2000020455"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "663acf09-7090-40d8-9411-71154b9d60f3",
+      "name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+      "category_key": "oil",
+      "source_file": "retailer-recheck.json",
+      "source_checked_at": "2026-10-03T13:13:45.149103+00:00",
+      "verified_offer": {
+        "url": "https://nalda.de/products/4550516493590",
+        "price_eur": 14.63,
+        "package_value": 70,
+        "package_unit": "ml"
+      },
+      "note": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "663acf09-7090-40d8-9411-71154b9d60f3",
+        "name": "Shiseido Fino Premium Touch Penetrating Hair Oil Essence",
+        "brand": "Shiseido Fino",
+        "category_key": "oil",
+        "currency": "EUR",
+        "price_eur": "11.00",
+        "price_checked_at": "2026-06-10 00:00:00+00",
+        "affiliate_link": "https://www.amazon.de/Fino-Premium-Touch-Penetrating-Essence/dp/B0GVFQP34X",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-10 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "ab1b7e022fa64b1ba67faedcf5f4b545",
+        "noncommercial_fingerprint": "60e7842e936cafaa7ebb21140272dfeb",
+        "gtins": [
+          {
+            "value": "4550516493590",
+            "canonical_gtin14": "04550516493590"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "237d9cdf-9210-4a05-a3a2-415097ab3a98",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-09-01T11:48:34.781967+00:00",
+            "product_id": "663acf09-7090-40d8-9411-71154b9d60f3",
+            "updated_at": "2026-09-01T11:48:34.781967+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04550516493590",
+            "identifier_value": "4550516493590",
+            "normalized_identifier_value": "4550516493590"
+          }
+        ],
+        "identifier_fingerprint": "d450c0b2dce76c5ecf75021b32e50f58"
+      },
+      "proposed": {
+        "price_eur": 14.63,
+        "price_checked_at": "2026-10-03T13:13:45.149103+00:00",
+        "affiliate_link": "https://nalda.de/products/4550516493590",
+        "net_content_value": 70,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "695414e1-3435-4304-943b-76677408980c",
+      "name": "Maria Nila Structure Repair Leave-In",
+      "category_key": "leave_in",
+      "source_file": "retailer-recheck.json",
+      "source_checked_at": "2026-10-03T13:13:43.957451+00:00",
+      "verified_offer": {
+        "url": "https://www.cosmeterie.de/maria-nila/structure-repair-leave-in-cream-1",
+        "price_eur": 32.0,
+        "package_value": 200,
+        "package_unit": "ml"
+      },
+      "note": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "695414e1-3435-4304-943b-76677408980c",
+        "name": "Maria Nila Structure Repair Leave-In",
+        "brand": "Maria Nila",
+        "category_key": "leave_in",
+        "currency": "EUR",
+        "price_eur": "23.25",
+        "price_checked_at": "2026-09-30 19:54:23.743+00",
+        "affiliate_link": "https://www.flaconi.de/haare/maria-nila/structure-repair/maria-nila-structure-repair-leave-in-treatment.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-10 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "508c2734200b3f00aad96721e847109b",
+        "noncommercial_fingerprint": "f3ba3195760a0dbc7cf937a1ae749b39",
+        "gtins": [
+          {
+            "value": "7391681036079",
+            "canonical_gtin14": "07391681036079"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "bb03963e-7448-4472-81fc-853524c1b976",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:43:16.198493+00:00",
+            "product_id": "695414e1-3435-4304-943b-76677408980c",
+            "updated_at": "2026-08-28T08:43:16.198493+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "07391681036079",
+            "identifier_value": "7391681036079",
+            "normalized_identifier_value": "7391681036079"
+          }
+        ],
+        "identifier_fingerprint": "ad6b60702fe332eb5d378134e3ef1360"
+      },
+      "proposed": {
+        "price_eur": 32.0,
+        "price_checked_at": "2026-10-03T13:13:43.957451+00:00",
+        "affiliate_link": "https://www.cosmeterie.de/maria-nila/structure-repair-leave-in-cream-1",
+        "net_content_value": 200,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+      "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+      "category_key": "shampoo",
+      "source_file": "retailer-recheck.json",
+      "source_checked_at": "2026-10-03T13:13:43.221511+00:00",
+      "verified_offer": {
+        "url": "https://www.hagel-shop.de/monday-haircare-volume-shampoo-350-ml.html",
+        "price_eur": 7.95,
+        "package_value": 350,
+        "package_unit": "ml"
+      },
+      "note": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+        "name": "Monday Haircare Volume Kraft & Fülle Shampoo",
+        "brand": "Monday Haircare",
+        "category_key": "shampoo",
+        "currency": "EUR",
+        "price_eur": "5.40",
+        "price_checked_at": "2026-10-01 09:36:33.748+00",
+        "affiliate_link": "https://www.flaconi.de/haare/monday-haircare/volume/monday-haircare-volume-kraft-and-fuelle-haarshampoo.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-11 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "d0f2976389a3f4db654fdde1852f7cbb",
+        "noncommercial_fingerprint": "98c8a5fd03557ecef22b5f32a8f2b08d",
+        "gtins": [
+          {
+            "value": "4897097266343",
+            "canonical_gtin14": "04897097266343"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "ff1ab6ce-110d-4c53-a4fa-3550e2e2e95b",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:43:16.198493+00:00",
+            "product_id": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+            "updated_at": "2026-08-28T08:43:16.198493+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04897097266343",
+            "identifier_value": "4897097266343",
+            "normalized_identifier_value": "4897097266343"
+          }
+        ],
+        "identifier_fingerprint": "d54e167b7dbc50a71b84bbf48abd8fcf"
+      },
+      "proposed": {
+        "price_eur": 7.95,
+        "price_checked_at": "2026-10-03T13:13:43.221511+00:00",
+        "affiliate_link": "https://www.hagel-shop.de/monday-haircare-volume-shampoo-350-ml.html",
+        "net_content_value": 350,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+      "name": "Guhl Bond+ Reparatur Spülung",
+      "category_key": "conditioner",
+      "source_file": "retailer-recheck.json",
+      "source_checked_at": "2026-10-03T13:13:43.221863+00:00",
+      "verified_offer": {
+        "url": "https://m.drogeriedepot.de/neue-produkte/guhl-conditioner-bond-reparatur-p-75039.html?active_tab=def&offset_def=96&offset_new=696",
+        "price_eur": 5.99,
+        "package_value": 200,
+        "package_unit": "ml"
+      },
+      "note": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+        "name": "Guhl Bond+ Reparatur Spülung",
+        "brand": "Guhl",
+        "category_key": "conditioner",
+        "currency": "EUR",
+        "price_eur": "5.99",
+        "price_checked_at": "2026-06-11 00:00:00+00",
+        "affiliate_link": "https://www.amazon.de/Guhl-BOND-REPARATUR-Sp%C3%BClung-Rotalgenextrakt/dp/B0CWJHVKV5",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-11 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "c53511f610b8a7a3f0a7173e586ecd83",
+        "noncommercial_fingerprint": "e9983c8324bb4cc82902d3f762e42a88",
+        "gtins": [
+          {
+            "value": "4072600701218",
+            "canonical_gtin14": "04072600701218"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "46bca6b7-dee5-4642-9a84-0e64f5d7e767",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-09-01T06:33:35.923066+00:00",
+            "product_id": "9f8da740-87b6-45e0-ab86-d77d63f2e22b",
+            "updated_at": "2026-09-01T06:33:35.923066+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04072600701218",
+            "identifier_value": "4072600701218",
+            "normalized_identifier_value": "4072600701218"
+          }
+        ],
+        "identifier_fingerprint": "3821767d790f0cac83f33eec5fc9a749"
+      },
+      "proposed": {
+        "price_eur": 5.99,
+        "price_checked_at": "2026-10-03T13:13:43.221863+00:00",
+        "affiliate_link": "https://m.drogeriedepot.de/neue-produkte/guhl-conditioner-bond-reparatur-p-75039.html?active_tab=def&offset_def=96&offset_new=696",
+        "net_content_value": 200,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "c320750f-6a1e-420d-8594-409f04e05319",
+      "name": "OGX Bond Protein Repair",
+      "category_key": "oil",
+      "source_file": "retailer-recheck.json",
+      "source_checked_at": "2026-10-03T13:13:45.117224+00:00",
+      "verified_offer": {
+        "url": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+        "price_eur": 18.68,
+        "package_value": 50,
+        "package_unit": "ml"
+      },
+      "note": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "c320750f-6a1e-420d-8594-409f04e05319",
+        "name": "OGX Bond Protein Repair",
+        "brand": "OGX",
+        "category_key": "oil",
+        "currency": "EUR",
+        "price_eur": "8.95",
+        "price_checked_at": "2026-06-10 00:00:00+00",
+        "affiliate_link": "https://www.amazon.de/OGX-Spr%C3%BChnebel-besch%C3%A4digtes-Technology-Dual-Action-Reparaturtechnologie/dp/B0DQLHGGYJ",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-10 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "3c7c65ad445f965b27e6623c4d7eae5f",
+        "noncommercial_fingerprint": "be9728123d5041873e30f110377e4d4a",
+        "gtins": [
+          {
+            "value": "3574661818481",
+            "canonical_gtin14": "03574661818481"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "16ddc2f2-da6c-40b7-ab47-fd5aa110807b",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-09-01T06:33:35.923066+00:00",
+            "product_id": "c320750f-6a1e-420d-8594-409f04e05319",
+            "updated_at": "2026-09-01T06:33:35.923066+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "03574661818481",
+            "identifier_value": "3574661818481",
+            "normalized_identifier_value": "3574661818481"
+          }
+        ],
+        "identifier_fingerprint": "90cdd1de9a741f26ba04dc867779a421"
+      },
+      "proposed": {
+        "price_eur": 18.68,
+        "price_checked_at": "2026-10-03T13:13:45.117224+00:00",
+        "affiliate_link": "https://www.boozt.com/de/de/ogx/bond-repair-3-in-1-oil-mist-50-ml_32962841/231199513",
+        "net_content_value": 50,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+      "name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+      "category_key": "shampoo",
+      "source_file": "retailer-recheck.json",
+      "source_checked_at": "2026-10-03T13:13:43.221021+00:00",
+      "verified_offer": {
+        "url": "https://www.drogeriedepot.de/haarpflege-farben/haar-shampoo/head-shoulders-shampoo-derma-x-pro-sensitive-pflege-pr-077537/",
+        "price_eur": 5.59,
+        "package_value": 250,
+        "package_unit": "ml"
+      },
+      "note": "Fresh exact primary PDP recheck retained the selected single-package price; accepted fallback remains only where no buyable preferred exact offer was established.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+        "name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege",
+        "brand": "Head & Shoulders",
+        "category_key": "shampoo",
+        "currency": "EUR",
+        "price_eur": "4.99",
+        "price_checked_at": "2026-06-11 00:00:00+00",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-dermaxpro-haarshampoo-sensitive-pflege/p/8700216496032",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-11 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "a44b5e74fb92d97891ba64b2ad8b0b3a",
+        "noncommercial_fingerprint": "8971cfb20bd0aa12f4abe33fa8ebd61c",
+        "gtins": [
+          {
+            "value": "8700216496032",
+            "canonical_gtin14": "08700216496032"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "4f075082-3602-428e-b3ec-7b2338496449",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:43:38.229099+00:00",
+            "product_id": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+            "updated_at": "2026-08-28T08:43:38.229099+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "08700216496032",
+            "identifier_value": "8700216496032",
+            "normalized_identifier_value": "8700216496032"
+          }
+        ],
+        "identifier_fingerprint": "8057c63eba1538ddea05ffde003b91d6"
+      },
+      "proposed": {
+        "price_eur": 5.59,
+        "price_checked_at": "2026-10-03T13:13:43.221021+00:00",
+        "affiliate_link": "https://www.drogeriedepot.de/haarpflege-farben/haar-shampoo/head-shoulders-shampoo-derma-x-pro-sensitive-pflege-pr-077537/",
+        "net_content_value": 250,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "category_key": "conditioner",
+      "source_file": "browser-alignments.json",
+      "source_checked_at": "2026-10-03T13:15:56.683Z",
+      "verified_offer": {
+        "url": "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+        "price_eur": 2.8,
+        "package_value": 200,
+        "package_unit": "ml"
+      },
+      "note": "Exact selected primary PDP; accepted retailer/outlier recommendation; public single-unit price.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+        "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+        "brand": "Guhl",
+        "category_key": "conditioner",
+        "currency": "EUR",
+        "price_eur": "4.95",
+        "price_checked_at": "2026-06-11 00:00:00+00",
+        "affiliate_link": "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-11 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "cd45ebfc9dd8f1cf9f85b1992b66d4e8",
+        "noncommercial_fingerprint": "f57da497ded20ab1e5d328424576bc35",
+        "gtins": [
+          {
+            "value": "4072600703403",
+            "canonical_gtin14": "04072600703403"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "2dc824b5-6361-4604-82c2-44f4c0343a8d",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-09-01T07:50:05.182081+00:00",
+            "product_id": "11d42d9d-b8d8-42ae-a432-9a3d0f9d3504",
+            "updated_at": "2026-09-01T07:50:05.182081+00:00",
+            "identifier_type": "gtin",
+            "canonical_gtin14": "04072600703403",
+            "identifier_value": "4072600703403",
+            "normalized_identifier_value": "4072600703403"
+          }
+        ],
+        "identifier_fingerprint": "e7a4c2b220ee24703d3ec235d5ec5e77"
+      },
+      "proposed": {
+        "price_eur": 2.8,
+        "price_checked_at": "2026-10-03T13:15:56.683Z",
+        "affiliate_link": "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+        "net_content_value": 200,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+      "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+      "category_key": "mask",
+      "source_file": "browser-alignments.json",
+      "source_checked_at": "2026-10-03T13:15:56.683Z",
+      "verified_offer": {
+        "url": "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+        "price_eur": 2.8,
+        "package_value": 200,
+        "package_unit": "ml"
+      },
+      "note": "Exact selected primary PDP; accepted retailer/outlier recommendation; public single-unit price.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "8ef172f7-8e95-4ac7-a6a9-235ad760155b",
+        "name": "Guhl Panthenol + Reparatur 2in1 Kur & Spülung",
+        "brand": "Guhl",
+        "category_key": "mask",
+        "currency": "EUR",
+        "price_eur": "4.95",
+        "price_checked_at": "2026-06-10 00:00:00+00",
+        "affiliate_link": "https://www.mueller.de/p/guhl-panthenol-reparatur-2in1-kur-spuelung-IPN3052207/",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-10 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "a6325a1c5cc04917b9e645bdbe75f941",
+        "noncommercial_fingerprint": "5a6ce59d165a68883b850e0915f52412",
+        "gtins": [],
+        "identifiers": [],
+        "identifier_fingerprint": "d751713988987e9331980363e24189ce"
+      },
+      "proposed": {
+        "price_eur": 2.8,
+        "price_checked_at": "2026-10-03T13:15:56.683Z",
+        "affiliate_link": "https://www.iwonatec.com/de/product/%21/guhl-2-in-1-hair-treatment-conditioner-with-panthenol-repair-200-ml",
+        "net_content_value": 200,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "4506954b-128a-473c-866f-54a300ff23f4",
+      "name": "Hair Biology Full & Shining Conditioner",
+      "category_key": "conditioner",
+      "source_file": "browser-alignments.json",
+      "source_checked_at": "2026-10-03T13:16:02.749Z",
+      "verified_offer": {
+        "url": "https://www.galaxus.de/de/s6/product/hair-biology-haarspuelung-full-shining-160-ml-160-ml-conditioner-13128066",
+        "price_eur": 5.24,
+        "package_value": 160,
+        "package_unit": "ml"
+      },
+      "note": "Exact selected primary PDP; accepted retailer/outlier recommendation; public single-unit price.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "4506954b-128a-473c-866f-54a300ff23f4",
+        "name": "Hair Biology Full & Shining Conditioner",
+        "brand": "Hair Biology",
+        "category_key": "conditioner",
+        "currency": "EUR",
+        "price_eur": "4.99",
+        "price_checked_at": "2026-06-11 00:00:00+00",
+        "affiliate_link": "https://www.dm.de/p/d/1585350/hair-biology-conditioner-full-und-shining",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-11 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "eb3b8a8c6c6673e29e0790f23bfd6018",
+        "noncommercial_fingerprint": "40741a155e926b7eb86ed51fcb811b8d",
+        "gtins": [
+          {
+            "value": "8001841216997",
+            "canonical_gtin14": "08001841216997"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "c11d41de-a7e1-4770-b0e1-0c384069e15f",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:56:25.620343+00:00",
+            "product_id": "4506954b-128a-473c-866f-54a300ff23f4",
+            "updated_at": "2026-08-28T08:56:25.620343+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "08001841216997",
+            "identifier_value": "8001841216997",
+            "normalized_identifier_value": "8001841216997"
+          }
+        ],
+        "identifier_fingerprint": "6caf127b5933b1c7f455ddb0c8f6f884"
+      },
+      "proposed": {
+        "price_eur": 5.24,
+        "price_checked_at": "2026-10-03T13:16:02.749Z",
+        "affiliate_link": "https://www.galaxus.de/de/s6/product/hair-biology-haarspuelung-full-shining-160-ml-160-ml-conditioner-13128066",
+        "net_content_value": 160,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+      "name": "OUAI Leave In Conditioner",
+      "category_key": "leave_in",
+      "source_file": "browser-alignments.json",
+      "source_checked_at": "2026-10-03T13:16:21.200Z",
+      "verified_offer": {
+        "url": "https://www.sephora.de/p/leave-in-conditioner-426531.html",
+        "price_eur": 30.45,
+        "package_value": 140,
+        "package_unit": "ml"
+      },
+      "note": "Exact selected primary PDP; accepted retailer/outlier recommendation; public single-unit price.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+        "name": "OUAI Leave In Conditioner",
+        "brand": "OUAI",
+        "category_key": "leave_in",
+        "currency": "EUR",
+        "price_eur": "25.25",
+        "price_checked_at": "2026-06-10 00:00:00+00",
+        "affiliate_link": "https://www.douglas.de/de/p/5002560059",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-10 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "727d204e5aa0a4461143e1cce59fa4ca",
+        "noncommercial_fingerprint": "842a6ff8f48753d64d9ddd204ae36b4f",
+        "gtins": [
+          {
+            "value": "815402023119",
+            "canonical_gtin14": "00815402023119"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "1d2fc4fb-659d-4cac-aa2a-a668fdd53ed9",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:43:27.460433+00:00",
+            "product_id": "993f0e55-2450-4557-853d-e6e23ec0d1a9",
+            "updated_at": "2026-08-28T08:43:27.460433+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "00815402023119",
+            "identifier_value": "815402023119",
+            "normalized_identifier_value": "815402023119"
+          }
+        ],
+        "identifier_fingerprint": "deff4ef673394871307d3560a4c67428"
+      },
+      "proposed": {
+        "price_eur": 30.45,
+        "price_checked_at": "2026-10-03T13:16:21.200Z",
+        "affiliate_link": "https://www.sephora.de/p/leave-in-conditioner-426531.html",
+        "net_content_value": 140,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+      "name": "Syoss Haarkur Lamination Intense Glaze",
+      "category_key": "mask",
+      "source_file": "browser-alignments.json",
+      "source_checked_at": "2026-10-03T13:16:08.529Z",
+      "verified_offer": {
+        "url": "https://www.rossmann.de/de/pflege-und-duft-syoss-haar-laminierungs-kur-intense-glaze/p/4015100867213",
+        "price_eur": 4.99,
+        "package_value": 200,
+        "package_unit": "ml"
+      },
+      "note": "Exact selected primary PDP; accepted retailer/outlier recommendation; public single-unit price.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+        "name": "Syoss Haarkur Lamination Intense Glaze",
+        "brand": "Syoss",
+        "category_key": "mask",
+        "currency": "EUR",
+        "price_eur": "7.95",
+        "price_checked_at": "2026-06-10 00:00:00+00",
+        "affiliate_link": "https://www.dm.de/syoss-haarkur-lamination-intense-glaze-p4015100867213.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-10 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "1b1789c25b1add9073df73768aaac9fc",
+        "noncommercial_fingerprint": "abb9419d7679336ba244ceb2fdfe8294",
+        "gtins": [
+          {
+            "value": "4015100867213",
+            "canonical_gtin14": "04015100867213"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "e0842677-878c-42cf-a12b-6f676cc462f4",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-09-01T06:33:35.923066+00:00",
+            "product_id": "cce6346c-8c92-4a17-b39b-cc7f300e84de",
+            "updated_at": "2026-09-01T06:33:35.923066+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04015100867213",
+            "identifier_value": "4015100867213",
+            "normalized_identifier_value": "4015100867213"
+          }
+        ],
+        "identifier_fingerprint": "47b75d248af1191d7f7d242377e06751"
+      },
+      "proposed": {
+        "price_eur": 4.99,
+        "price_checked_at": "2026-10-03T13:16:08.529Z",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-syoss-haar-laminierungs-kur-intense-glaze/p/4015100867213",
+        "net_content_value": 200,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "e859d6e0-e991-4081-84b5-b81862c82475",
+      "name": "Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo",
+      "category_key": "shampoo",
+      "source_file": "gliss-ready.json",
+      "source_checked_at": "2026-10-03T13:19:18.354Z",
+      "verified_offer": {
+        "url": "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025",
+        "price_eur": 4.99,
+        "package_value": 200,
+        "package_unit": "ml"
+      },
+      "note": "Catalog is shampoo; earlier brief erroneously described conditioner. Fresh canonical shampoo 200ml/registeredGTIN4015100895025 confirmed at4.99 after hydration.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "e859d6e0-e991-4081-84b5-b81862c82475",
+        "name": "Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo",
+        "brand": "Schwarzkopf GLISS",
+        "category_key": "shampoo",
+        "currency": "EUR",
+        "price_eur": "3.49",
+        "price_checked_at": "2026-09-04 12:00:00+00",
+        "affiliate_link": "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html",
+        "net_content_value": "200",
+        "net_content_unit": "ml",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-09-04 12:00:00+00",
+        "is_chaarlie_recommended": false,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "11a83f8933317803fe74160b4460b2a0",
+        "noncommercial_fingerprint": "fdaa2f464479d7b1ae00fab99135c540",
+        "gtins": [
+          {
+            "value": "4015100895025",
+            "canonical_gtin14": "04015100895025"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "93bbfdc1-c4e7-4d74-bf6f-b6a572af41fb",
+            "source": "scan-db-expansion",
+            "created_at": "2026-09-04T09:45:07.166845+00:00",
+            "product_id": "e859d6e0-e991-4081-84b5-b81862c82475",
+            "updated_at": "2026-09-04T09:45:07.166845+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04015100895025",
+            "identifier_value": "4015100895025",
+            "normalized_identifier_value": "4015100895025"
+          }
+        ],
+        "identifier_fingerprint": "e208869f9cdfa524c48e52d0c421a448"
+      },
+      "proposed": {
+        "price_eur": 4.99,
+        "price_checked_at": "2026-10-03T13:19:18.354Z",
+        "affiliate_link": "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+      "name": "Langhaarmädchen Beautiful Curls Conditioner",
+      "category_key": "conditioner",
+      "source_file": "dm-ready.json",
+      "source_checked_at": "2026-10-03T13:16:39.025Z",
+      "verified_offer": {
+        "url": "https://www.dm.de/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls",
+        "price_eur": 4.95,
+        "package_value": 250,
+        "package_unit": "ml"
+      },
+      "note": "Exact current registered GTIN; no identity transition. Fresh selected DAN+GTIN public dm evidence.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+        "name": "Langhaarmädchen Beautiful Curls Conditioner",
+        "brand": "Langhaarmädchen",
+        "category_key": "conditioner",
+        "currency": "EUR",
+        "price_eur": "4.95",
+        "price_checked_at": "2026-09-30 20:01:30.85+00",
+        "affiliate_link": "https://www.dm.de/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-11 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "828373f54d76542f77f92d12d04e4044",
+        "noncommercial_fingerprint": "5bb8ab15da9f3f4d097bb4492b3f0f42",
+        "gtins": [
+          {
+            "value": "4070765004663",
+            "canonical_gtin14": "04070765004663"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "28b7ff5e-fe52-41b4-9a9f-3b8c1fa86406",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:20:40.420726+00:00",
+            "product_id": "35d81c4a-dbb0-474b-a068-2e1562adb0a8",
+            "updated_at": "2026-08-28T08:20:40.420726+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04070765004663",
+            "identifier_value": "4070765004663",
+            "normalized_identifier_value": "4070765004663"
+          }
+        ],
+        "identifier_fingerprint": "b06519d4a986193f9186f54b90a09372"
+      },
+      "proposed": {
+        "price_eur": 4.95,
+        "price_checked_at": "2026-10-03T13:16:39.025Z",
+        "affiliate_link": "https://www.dm.de/p/d/1678991/langhaarmaedchen-conditioner-beautiful-curls",
+        "net_content_value": 250,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+      "name": "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+      "category_key": "leave_in",
+      "source_file": "dm-ready.json",
+      "source_checked_at": "2026-10-03T13:16:40.223Z",
+      "verified_offer": {
+        "url": "https://www.dm.de/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer",
+        "price_eur": 2.75,
+        "package_value": 100,
+        "package_unit": "ml"
+      },
+      "note": "Exact current registered GTIN; no identity transition. Fresh selected DAN+GTIN public dm evidence.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+        "name": "Balea Professional Brilliant Blond Hair Sealer Leave-in Serum",
+        "brand": "Balea",
+        "category_key": "leave_in",
+        "currency": "EUR",
+        "price_eur": "5.59",
+        "price_checked_at": "2026-07-01 08:55:05.052+00",
+        "affiliate_link": "https://www.duitsevoordeeldrogist.nl/balea-professional-leave-in-serum-brilliant-blond.html",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-07-01 08:55:05.052+00",
+        "is_chaarlie_recommended": false,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "5b9f9d54cd5abcb5f0ef2933e1200cb3",
+        "noncommercial_fingerprint": "e51dfd964026764506e477fd0f67c4ca",
+        "gtins": [],
+        "identifiers": [
+          {
+            "id": "6667d900-5ce3-4456-8c48-9530a0a6b982",
+            "source": "Duitse Voordeel Drogist product page",
+            "created_at": "2026-07-01T09:25:16.661505+00:00",
+            "product_id": "ea88a333-b11c-45c3-bbda-c51f912ee56f",
+            "updated_at": "2026-07-01T09:25:16.661505+00:00",
+            "identifier_type": "retailer_url",
+            "canonical_gtin14": null,
+            "identifier_value": "https://www.duitsevoordeeldrogist.nl/balea-professional-leave-in-serum-brilliant-blond.html",
+            "normalized_identifier_value": "https://www.duitsevoordeeldrogist.nl/balea-professional-leave-in-serum-brilliant-blond.html"
+          }
+        ],
+        "identifier_fingerprint": "b28b972d05e3b40305cdfd61d0885563"
+      },
+      "proposed": {
+        "price_eur": 2.75,
+        "price_checked_at": "2026-10-03T13:16:40.223Z",
+        "affiliate_link": "https://www.dm.de/p/d/3062765/balea-professional-leave-in-serum-brilliant-blond-hair-sealer",
+        "net_content_value": 100,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+      "name": "Olaplex No.7 Bonding Oil",
+      "category_key": "oil",
+      "source_file": "olaplex-ready.json",
+      "source_checked_at": "2026-10-03T13:17:53.719Z",
+      "verified_offer": {
+        "url": "https://www.hagel-shop.de/olaplex-no-7-bonding-oil-30-ml.html",
+        "price_eur": 20.95,
+        "package_value": 30,
+        "package_unit": "ml"
+      },
+      "note": "Preferred specialist offer matches registered850045076085. No alias or formula transition; brand alternative code held.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+        "name": "Olaplex No.7 Bonding Oil",
+        "brand": "Olaplex",
+        "category_key": "oil",
+        "currency": "EUR",
+        "price_eur": "32.00",
+        "price_checked_at": "2026-09-30 17:40:04.087+00",
+        "affiliate_link": "https://olaplex.de/products/olaplex-no-7-bonding-oil",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-10 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "5e670a6480cbe2191b1090aedcd4f1ee",
+        "noncommercial_fingerprint": "b65adc5fcc7d13661a22a52805a0a27c",
+        "gtins": [
+          {
+            "value": "0850045076085",
+            "canonical_gtin14": "00850045076085"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "a3c83be4-7b41-4470-ac20-2cb999a37f45",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:56:25.620343+00:00",
+            "product_id": "7d8c0150-778d-4cb9-abf5-bfc16ad93b12",
+            "updated_at": "2026-08-28T08:56:25.620343+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "00850045076085",
+            "identifier_value": "0850045076085",
+            "normalized_identifier_value": "0850045076085"
+          }
+        ],
+        "identifier_fingerprint": "a2cdfd5c7454c235f84c7c5fa0eedfce"
+      },
+      "proposed": {
+        "price_eur": 20.95,
+        "price_checked_at": "2026-10-03T13:17:53.719Z",
+        "affiliate_link": "https://www.hagel-shop.de/olaplex-no-7-bonding-oil-30-ml.html",
+        "net_content_value": 30,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "314d9881-4fcc-47b5-81e1-58e41779081e",
+      "name": "Garnier Wahre Schätze Conditioner Traube Hydraboost",
+      "category_key": "conditioner",
+      "source_file": "garnier-browser.json",
+      "source_checked_at": "2026-10-03T13:15:35.896Z",
+      "verified_offer": {
+        "url": "https://www.douglas.de/de/p/5012008156",
+        "price_eur": 2.89,
+        "package_value": 200,
+        "package_unit": "ml"
+      },
+      "note": "Nick approved200mlbase. Parent maps verifiedURL5012008156/SKU1274094 to correctcatalogID; source receipt mistakenly carries unrelatedUUID and remains immutable. Registered3600542656412 itself identifies200ml atdm.at; noaliasneeded.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "314d9881-4fcc-47b5-81e1-58e41779081e",
+        "name": "Garnier Wahre Schätze Conditioner Traube Hydraboost",
+        "brand": "Garnier Wahre Schätze",
+        "category_key": "conditioner",
+        "currency": "EUR",
+        "price_eur": "2.75",
+        "price_checked_at": "2026-09-04 00:00:00+00",
+        "affiliate_link": "https://www.dm.de/wahre-schaetze-conditioner-traube-hydraboost-p3600542656320.html",
+        "net_content_value": "250",
+        "net_content_unit": "ml",
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-09-04 00:00:00+00",
+        "is_chaarlie_recommended": false,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "9be9a5d79b9f7ae0bb424944bd422774",
+        "noncommercial_fingerprint": "683ec42a779e8648a03c4a563cac4eec",
+        "gtins": [
+          {
+            "value": "3600542656412",
+            "canonical_gtin14": "03600542656412"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "cf2f69ae-3b6d-4189-b35d-1cee79b7adcd",
+            "source": "scan-db-expansion",
+            "created_at": "2026-09-04T12:39:11.696224+00:00",
+            "product_id": "314d9881-4fcc-47b5-81e1-58e41779081e",
+            "updated_at": "2026-09-04T12:39:11.696224+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "03600542656412",
+            "identifier_value": "3600542656412",
+            "normalized_identifier_value": "3600542656412"
+          }
+        ],
+        "identifier_fingerprint": "0ddac7d1b0209f624164639b6921c268"
+      },
+      "proposed": {
+        "price_eur": 2.89,
+        "price_checked_at": "2026-10-03T13:15:35.896Z",
+        "affiliate_link": "https://www.douglas.de/de/p/5012008156",
+        "net_content_value": 200,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": null
+    },
+    {
+      "id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+      "name": "Wella Ultimate Repair Protective Leave-In",
+      "category_key": "leave_in",
+      "source_file": "package-source-refresh.json",
+      "source_checked_at": "2026-10-03T13:14:31.294299+00:00",
+      "verified_offer": {
+        "url": "https://www.hagel-shop.de/wella-wp-ultimate-repair-leave-in-treatment-95-ml.html",
+        "price_eur": 19.38,
+        "package_value": 95,
+        "package_unit": "ml"
+      },
+      "note": "Nick approved95mlchange conditional on continuity. Wella manufacturer states new design,sameformula,now95ml; officialWellaStore confirms4068359081183. Retain140mlrecognitionalias4064666580098.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+        "name": "Wella Ultimate Repair Protective Leave-In",
+        "brand": "Wella Professionals",
+        "category_key": "leave_in",
+        "currency": "EUR",
+        "price_eur": "18.51",
+        "price_checked_at": "2026-06-10 00:00:00+00",
+        "affiliate_link": "https://www.wella.com/professional/de-DE/products/haarpflege/ultimate-repair/ultimate-repair-protective-leave-in",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-10 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "c6d429087ab25a318e881c825443c242",
+        "noncommercial_fingerprint": "6e46d3bf94e3f0827dedb1807a1d0238",
+        "gtins": [
+          {
+            "value": "4064666580098",
+            "canonical_gtin14": "04064666580098"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "47860dd5-6d1d-43a0-9d39-80b8b81cb1ba",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:43:27.460433+00:00",
+            "product_id": "94cf6959-a53b-421b-9f0f-05efc239171c",
+            "updated_at": "2026-08-28T08:43:27.460433+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "04064666580098",
+            "identifier_value": "4064666580098",
+            "normalized_identifier_value": "4064666580098"
+          }
+        ],
+        "identifier_fingerprint": "dc9efa47fad5d1b3ba3024f4cc1a8032"
+      },
+      "proposed": {
+        "price_eur": 19.38,
+        "price_checked_at": "2026-10-03T13:14:31.294299+00:00",
+        "affiliate_link": "https://www.hagel-shop.de/wella-wp-ultimate-repair-leave-in-treatment-95-ml.html",
+        "net_content_value": 95,
+        "net_content_unit": "ml"
+      },
+      "add_identifier": {
+        "type": "ean",
+        "value": "4068359081183",
+        "canonical_gtin14": "04068359081183",
+        "source": "price-audit-approved-2026-10-03"
+      }
+    },
+    {
+      "id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+      "name": "Epres Bond Repair Treatment",
+      "category_key": "bondbuilder",
+      "source_file": "package-source-refresh.json",
+      "source_checked_at": "2026-10-03T13:14:31.613829+00:00",
+      "verified_offer": {
+        "url": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+        "price_eur": 48,
+        "package_value": null,
+        "package_unit": null
+      },
+      "note": "Nick approved official48EURstarterkit; retainnumericpackageNULL because kit contains spraybottle+two15mlconcentrates, not150mlsoldcontent.",
+      "before": {
+        "readback_at": "2026-10-03 13:12:30.830296+00",
+        "id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+        "name": "Epres Bond Repair Treatment",
+        "brand": "Epres",
+        "category_key": "bondbuilder",
+        "currency": "EUR",
+        "price_eur": "48.00",
+        "price_checked_at": "2026-09-30 19:57:10.564+00",
+        "affiliate_link": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx",
+        "net_content_value": null,
+        "net_content_unit": null,
+        "purchase_link_status": "available",
+        "purchase_link_checked_at": "2026-06-10 00:00:00+00",
+        "is_chaarlie_recommended": true,
+        "is_active": true,
+        "lifecycle_status": "active",
+        "product_fingerprint": "db6c9cd392ca8eee63e99b9bc41118bd",
+        "noncommercial_fingerprint": "6a784b18ad4700d502fe784953d19801",
+        "gtins": [
+          {
+            "value": "0850040615500",
+            "canonical_gtin14": "00850040615500"
+          }
+        ],
+        "identifiers": [
+          {
+            "id": "f4fc5ce7-34fc-4958-b436-753a80158190",
+            "source": "scanner-catalog-coverage-2026-08-26",
+            "created_at": "2026-08-28T08:43:38.229099+00:00",
+            "product_id": "f8a63590-9d80-454a-8008-e2a56321e64c",
+            "updated_at": "2026-08-28T08:43:38.229099+00:00",
+            "identifier_type": "ean",
+            "canonical_gtin14": "00850040615500",
+            "identifier_value": "0850040615500",
+            "normalized_identifier_value": "0850040615500"
+          }
+        ],
+        "identifier_fingerprint": "342a83707b5e19a8db145bfe3de4517f"
+      },
+      "proposed": {
+        "price_eur": 48,
+        "price_checked_at": "2026-10-03T13:14:31.613829+00:00",
+        "affiliate_link": "https://epres-hair.de/artikeldetails/CONSUMERKIT.aspx"
+      },
+      "add_identifier": null
+    }
+  ]
+}

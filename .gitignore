@@ -216,6 +216,10 @@ test-screenshots*/
 !/data/research/leave-in-inci/**
 /data/research/leave-in-inci/**/lab-review-state.json
 /data/research/leave-in-inci/**/rework-queue.json
+!/data/research/bondbuilder-inci/
+!/data/research/bondbuilder-inci/**
+/data/research/bondbuilder-inci/**/lab-review-state.json
+/data/research/bondbuilder-inci/**/rework-queue.json
 !/docs/research/conditioner-inci/v1.0/conditioner-classification-standard.docx
 !/data/catalog-enrichment/
 /data/catalog-enrichment/*
@@ -350,3 +354,9 @@ test-screenshots*/
 !/data/scanner-catalog-coverage/2026-08-26/retailer-core-research.md
 !/data/scanner-catalog-coverage/2026-08-26/retailer-specialist-candidates.json
 !plans/scanner-funnel/evidence/**/*.png
+
+# Reviewed recurring price-audit probe evidence (run artifacts remain ignored).
+!/data/price-audit/
+/data/price-audit/*
+!/data/price-audit/probes/
+!/data/price-audit/probes/*.json

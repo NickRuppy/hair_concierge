@@ -109,6 +109,54 @@ test("conditioner timing is derived from reviewed V1 facts", () => {
   assert.deepEqual(pointer.facts.contactTime, { kind: "seconds", seconds: 180 })
 })
 
+test("generic exact Bondbuilder facts survive the published V1 to V2 pointer boundary", () => {
+  const pointer = buildProductApplicationPointerV2({
+    sourceRole: "specialized_bond_treatment",
+    guidancePayload: protocol({
+      scope: {
+        kind: "product",
+        category: "bondbuilder",
+        productId: "40000000-0000-4000-8000-000000000004",
+      },
+      role: "bond_repair",
+      applicationFamily: "post_shampoo_timed_leave_in",
+      compatibleDayTypes: ["bond_repair_day"],
+      sequence: { anchor: "timed_treatment", before: [], after: [], conflictsWith: [] },
+      protocolFacts: {
+        workflowId: "bondbuilder_verified_product",
+        applicationArea: "all_hair",
+        applicationState: "damp_hair",
+        rinse: "leave_in",
+        contactTimeSeconds: 240,
+        contactTime: { kind: "seconds", seconds: 240 },
+        amount: { kind: "starting_dose", quantity: 1, unit: "pump", addAsNeeded: true },
+        conditionerSequence: { before: "forbidden", after: "optional", minimumWaitSeconds: 240 },
+      },
+      steps: [
+        {
+          stepKey: "apply",
+          action: "apply_product",
+          copyTemplateDe: "Eine Pumpe einarbeiten; bei Bedarf mehr verwenden.",
+        },
+        { stepKey: "wait", action: "wait", copyTemplateDe: "Volle 4 Minuten warten." },
+      ],
+    }),
+  })
+  assert.equal(pointer.facts.applicationArea, "root_to_tip_hair")
+  assert.deepEqual(pointer.facts.amount, {
+    kind: "starting_dose",
+    quantity: 1,
+    unit: "pump",
+    addAsNeeded: true,
+  })
+  assert.deepEqual(pointer.facts.conditionerSequence, {
+    before: "forbidden",
+    after: "optional",
+    minimumWaitSeconds: 240,
+  })
+  assert.equal(pointer.workflowId, "bondbuilder_verified_product")
+})
+
 test("reviewed exact workflow, typed amount, caution codes, and exact copy survive derivation", () => {
   const pointer = buildProductApplicationPointerV2({
     sourceRole: "specialized_bond_treatment",

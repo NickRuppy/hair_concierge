@@ -1,0 +1,276 @@
+{
+  "scope": "Exact current-formula classification proposals, not applied. Missing old formula continuity is separately recorded.",
+  "records": [
+    {
+      "product_id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+      "candidate": "F1",
+      "name": "Langhaarmädchen Beautiful Curls Shampoo",
+      "current_suitable_thicknesses": [
+        "coarse"
+      ],
+      "current_shampoo_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-03-16T19:31:13.587192+00:00",
+          "product_id": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+          "updated_at": "2026-03-16T19:31:13.587192+00:00",
+          "scalp_route": "balanced",
+          "category_key": "shampoo",
+          "shampoo_bucket": "normal",
+          "cleansing_intensity": "gentle"
+        }
+      ],
+      "current_conditioner_specs": [],
+      "current_conditioner_rerank_specs": [],
+      "proposed_properties": {
+        "category_specs": {
+          "product_shampoo_specs": [
+            {
+              "cleansing_intensity": "gentle",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "fine"
+            },
+            {
+              "cleansing_intensity": "gentle",
+              "scalp_route": "balanced",
+              "shampoo_bucket": "normal",
+              "thickness": "normal"
+            }
+          ]
+        },
+        "required_protocol_roles": [
+          "shampoo_everyday"
+        ],
+        "suitable_thicknesses": [
+          "fine",
+          "normal"
+        ]
+      },
+      "research_values": {
+        "cleansingStrength": "low",
+        "conditioningLevel": "moderate",
+        "weightPotential": "low",
+        "focusPrimary": "general",
+        "focusSecondary": [
+          "shine"
+        ],
+        "usageRole": "regular",
+        "scalpComfortTarget": "not_targeted",
+        "dandruffSupport": "not_supported"
+      },
+      "warnings": [],
+      "applied": false,
+      "intake_ready": false,
+      "global_recommendation_ready": false,
+      "remaining_gates": [
+        "Exact property/version review",
+        "Relevant current protocol and image association review",
+        "Guarded publish/preflight if approved"
+      ]
+    },
+    {
+      "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+      "candidate": "F2",
+      "name": "Alverde Conditioner Glanz",
+      "current_suitable_thicknesses": [
+        "fine"
+      ],
+      "current_shampoo_specs": [],
+      "current_conditioner_specs": [
+        {
+          "thickness": "fine",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_bounces"
+        }
+      ],
+      "current_conditioner_rerank_specs": [
+        {
+          "weight": "light",
+          "created_at": "2026-04-15T18:20:39.745941+00:00",
+          "product_id": "79ce764e-7acf-48ba-b0be-c6d977a81cd0",
+          "updated_at": "2026-04-28T12:54:04.13078+00:00",
+          "category_key": "conditioner",
+          "repair_level": "low",
+          "ingredient_flags": [],
+          "balance_direction": "balanced"
+        }
+      ],
+      "proposed_properties": {
+        "category_specs": {
+          "product_conditioner_rerank_specs": {
+            "balance_direction": "balanced",
+            "ingredient_flags": [
+              "oils",
+              "proteins",
+              "humectants"
+            ],
+            "repair_level": "medium",
+            "weight": "medium"
+          },
+          "product_conditioner_specs": [
+            {
+              "protein_moisture_balance": "stretches_bounces",
+              "thickness": "fine"
+            },
+            {
+              "protein_moisture_balance": "stretches_bounces",
+              "thickness": "normal"
+            },
+            {
+              "protein_moisture_balance": "stretches_bounces",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "suitable_thicknesses": [
+          "fine",
+          "normal",
+          "coarse"
+        ]
+      },
+      "research_values": {
+        "conditioningLevel": "moderate",
+        "weightPotential": "moderate",
+        "careDirection": "balanced",
+        "repairSupportLevel": "medium",
+        "primaryFocus": "repair",
+        "secondaryFocus": [
+          "smoothing"
+        ],
+        "hairThicknessFit": [
+          "fine",
+          "medium",
+          "coarse"
+        ],
+        "damageFit": [
+          "healthy",
+          "moderately_damaged"
+        ],
+        "textureFit": [
+          "straight",
+          "wavy",
+          "curly"
+        ]
+      },
+      "warnings": [
+        "primary_focus is uncertain in a retained research-only field; it does not change the current production projection.",
+        "secondary_focus is uncertain in a retained research-only field; it does not change the current production projection.",
+        "care_direction is uncertain and affects a mapped production field; review the projection before approval."
+      ],
+      "applied": false,
+      "intake_ready": false,
+      "global_recommendation_ready": false,
+      "remaining_gates": [
+        "Exact property/version review",
+        "Relevant current protocol and image association review",
+        "Guarded publish/preflight if approved"
+      ]
+    },
+    {
+      "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "candidate": "F4",
+      "name": "Balea Professional Oil Repair Intensiv Spülung",
+      "current_suitable_thicknesses": [
+        "coarse"
+      ],
+      "current_shampoo_specs": [],
+      "current_conditioner_specs": [
+        {
+          "thickness": "coarse",
+          "created_at": "2026-07-06T13:56:43.305291+00:00",
+          "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+          "updated_at": "2026-07-06T13:56:43.305291+00:00",
+          "category_key": "conditioner",
+          "protein_moisture_balance": "stretches_stays"
+        }
+      ],
+      "current_conditioner_rerank_specs": [
+        {
+          "weight": "rich",
+          "created_at": "2026-04-15T18:20:39.745941+00:00",
+          "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+          "updated_at": "2026-04-28T12:54:04.13078+00:00",
+          "category_key": "conditioner",
+          "repair_level": "high",
+          "ingredient_flags": [],
+          "balance_direction": "protein"
+        }
+      ],
+      "proposed_properties": {
+        "category_specs": {
+          "product_conditioner_rerank_specs": {
+            "balance_direction": "balanced",
+            "ingredient_flags": [
+              "oils",
+              "proteins",
+              "humectants"
+            ],
+            "repair_level": "medium",
+            "weight": "medium"
+          },
+          "product_conditioner_specs": [
+            {
+              "protein_moisture_balance": "stretches_bounces",
+              "thickness": "fine"
+            },
+            {
+              "protein_moisture_balance": "stretches_bounces",
+              "thickness": "normal"
+            },
+            {
+              "protein_moisture_balance": "stretches_bounces",
+              "thickness": "coarse"
+            }
+          ]
+        },
+        "suitable_thicknesses": [
+          "fine",
+          "normal",
+          "coarse"
+        ]
+      },
+      "research_values": {
+        "conditioningLevel": "high",
+        "weightPotential": "moderate",
+        "careDirection": "balanced",
+        "repairSupportLevel": "medium",
+        "primaryFocus": "repair",
+        "secondaryFocus": [
+          "smoothing"
+        ],
+        "hairThicknessFit": [
+          "fine",
+          "medium",
+          "coarse"
+        ],
+        "damageFit": [
+          "moderately_damaged",
+          "highly_damaged"
+        ],
+        "textureFit": [
+          "straight",
+          "wavy",
+          "curly"
+        ]
+      },
+      "warnings": [
+        "weight_potential is uncertain and affects a mapped production field; review the projection before approval.",
+        "hair_thickness_fit is uncertain and affects a mapped production field; review the projection before approval.",
+        "texture_fit is uncertain in a retained research-only field; it does not change the current production projection.",
+        "care_direction is uncertain and affects a mapped production field; review the projection before approval."
+      ],
+      "applied": false,
+      "intake_ready": false,
+      "global_recommendation_ready": false,
+      "remaining_gates": [
+        "Exact property/version review",
+        "Relevant current protocol and image association review",
+        "Guarded publish/preflight if approved"
+      ]
+    }
+  ]
+}

@@ -74,6 +74,8 @@ import { applyConditionerResearchAdapter } from "@/lib/product-intake/conditione
 import { conditionerResearchPromptContract } from "@/lib/product-intake/conditioner-research-prompt-contract"
 import { applyLeaveInResearchAdapter } from "@/lib/product-intake/leave-in-research-adapter"
 import { leaveInResearchPromptContract } from "@/lib/product-intake/leave-in-research-prompt-contract"
+import { applyBondbuilderResearchAdapterForWorker } from "@/lib/product-intake/bondbuilder-research-adapter"
+import { bondbuilderResearchPromptContract } from "@/lib/product-intake/bondbuilder-research-prompt-contract"
 import {
   createRetailerEnrichmentWarningReporter,
   parseRetailerEnrichmentPacket,
@@ -1726,7 +1728,7 @@ export function writePromptPacket(
         recent_artifacts: detail?.artifacts.slice(0, 20) ?? [],
         category_contract: categoryApprovalContract(detail?.category),
         image_source_contract: imageSourceContract(),
-        commercial_source_contract: commercialSourceContract(detail?.category),
+        commercial_source_contract: commercialSourceContract(),
         output_contract: {
           summary: "short human-readable summary",
           researched_payload:
@@ -1737,7 +1739,7 @@ export function writePromptPacket(
             "array of strings; empty array only when ready for Nick review. Put review caveats in artifact payloads unless they block approval.",
           category_contract: categoryApprovalContract(detail?.category),
           image_source_contract: imageSourceContract(),
-          commercial_source_contract: commercialSourceContract(detail?.category),
+          commercial_source_contract: commercialSourceContract(),
         },
       },
       null,
@@ -1802,7 +1804,7 @@ function approvalPayloadContract(category: string | null | undefined): JsonRecor
       "Use only approval-safe identifier types: ean, gtin, barcode, retailer_sku, retailer_url.",
       "Do not put source URLs as final.product.sources; use final.sources.",
       "Do not use search, category, brand listing, or price-comparison pages as affiliate_link.",
-      "Choose affiliate_link and price_eur using commercial_source_contract, including category-specific purchase URL preference and denylisted hosts.",
+      "Choose affiliate_link and price_eur using commercial_source_contract, including the shared purchase URL preference for every category and denylisted hosts.",
       "Before blocking affiliate_link or price_eur, prove targeted_preferred_retailer_searches were attempted for the top preferred hosts.",
       "If any required final.product field cannot be researched, leave blockers non-empty and explain the missing field.",
       "The review cockpit shows final.product and final.category_specs exactly as they will be written to the database.",
@@ -1810,8 +1812,7 @@ function approvalPayloadContract(category: string | null | undefined): JsonRecor
   }
 }
 
-function commercialSourceContract(category: string | null | undefined): JsonRecord {
-  const categoryKey = normalizeCategoryKey(category)
+function commercialSourceContract(): JsonRecord {
   return {
     goal: "Choose the product URL and price source that should be reviewed and stored for this new product.",
     source_priority: [
@@ -1821,7 +1822,7 @@ function commercialSourceContract(category: string | null | undefined): JsonReco
       "Secondary listings only when primary sources are missing",
       "User photo/OCR only as identity evidence",
     ],
-    purchase_url_preference: purchaseUrlPreferenceForCategory(categoryKey),
+    purchase_url_preference: "dm > Rossmann > Müller > brand-direct > Amazon DE",
     host_allowlist: [
       "dm.de",
       "rossmann.de",
@@ -1836,9 +1837,10 @@ function commercialSourceContract(category: string | null | undefined): JsonReco
     targeted_preferred_retailer_searches: [
       "Before declaring no acceptable affiliate_link, run a mandatory search audit across the purchase_url_preference order and every host in host_allowlist using the submitted brand and submitted product name, then the researched canonical identity.",
       "Use explicit preferred-host queries including: site:dm.de <brand> <submitted product name>, site:rossmann.de <brand> <submitted product name>, site:mueller.de <brand> <submitted product name>, site:douglas.de <brand> <submitted product name>, site:hagel-shop.de <brand> <submitted product name>, site:flaconi.de <brand> <submitted product name>, site:notino.de <brand> <submitted product name>, site:otto.de <brand> <submitted product name>, site:amazon.de <brand> <submitted product name>.",
-      "Also search brand-direct/official manufacturer sources using the brand name plus product name; use official pages for identity/source evidence and a purchasable preferred retailer PDP for affiliate_link when the official page is not buyable.",
+      "Also search brand-direct/official manufacturer sources using the brand name plus product name. Use official pages for identity/source evidence; choose affiliate_link using purchase_url_preference even when the official page is buyable.",
       "Repeat the mandatory search audit with stable researched identity terms if the submitted wording differs from the researched canonical identity.",
-      "For leave_in and drogerie categories, a matching dm.de PDP with EUR price and purchasable availability beats international exact-identity sources for affiliate_link and price_eur.",
+      "For every category, choose a matching purchasable PDP in this order: dm, Rossmann, Müller, brand-direct, Amazon DE. Manufacturer-first identity evidence does not change this purchase URL order. Other reputable retailers are fallbacks after the preferred sources have been checked.",
+      "Record an inaccessible shop as unverified; do not treat a blocked page or search as evidence that the product is absent.",
       "If a preferred retailer has a matching PDP but the page is JavaScript-backed, use search-result snippets or page structured data as supporting evidence and include the PDP URL in final.sources.",
     ],
     host_denylist: [
@@ -1861,12 +1863,13 @@ function commercialSourceContract(category: string | null | undefined): JsonReco
     ],
     price_rules: [
       "Prefer price_eur from the same accepted purchasable PDP used as affiliate_link.",
+      "Package size and price do not outrank the purchase URL preference. Keep the chosen URL, package size, and price aligned to one verified purchasable variant of the same product.",
       "If the best identity source is official brand but not purchasable, use it in final.sources and choose the best purchasable retailer PDP for affiliate_link.",
       "Set purchase_link_status to available only when the chosen PDP is purchase-capable/in stock; otherwise unavailable.",
       "If only identity evidence exists and no acceptable purchasable PDP with price exists, add a blocker instead of inventing price_eur.",
     ],
     rationale_rules: [
-      "field_rationales.product.affiliate_link must name why this PDP beat lower-priority sources.",
+      "field_rationales.product.affiliate_link must explain the chosen shop's priority and the checks of any higher-priority shops, distinguishing unavailable offers from unverified shops.",
       "field_rationales.product.price_eur must name the exact source and availability state.",
       "final.sources should include the official/identity source and the chosen purchase/price source when they differ.",
     ],
@@ -1878,25 +1881,6 @@ function codexBinaryForWorker(): string {
   if (configured) return configured
   if (process.platform === "darwin" && existsSync(CODEX_APP_BINARY)) return CODEX_APP_BINARY
   return "codex"
-}
-
-function purchaseUrlPreferenceForCategory(categoryKey: CategoryContractKey | null): string {
-  switch (categoryKey) {
-    case "leave_in":
-      return "dm > brand-direct > Rossmann > Amazon DE"
-    case "oil":
-      return "brand-direct > Amazon DE > dm > Rossmann"
-    case "shampoo":
-    case "conditioner":
-    case "mask":
-    case "dry_shampoo":
-    case "deep_cleansing_shampoo":
-      return "dm > Rossmann > Müller > brand-direct > Amazon DE"
-    case "bondbuilder":
-      return "brand-direct or reputable specialist retailer can beat dm/Rossmann when that is the stable canonical PDP"
-    default:
-      return "Use source_priority first, then choose the most stable reputable German/EU product-detail page with price and availability."
-  }
 }
 
 function imageSourceContract(): JsonRecord {
@@ -2137,6 +2121,19 @@ function deepCleansingShampooApprovalContract(): JsonRecord {
 }
 
 function bondbuilderApprovalContract(): JsonRecord {
+  const researchContract = bondbuilderResearchPromptContract()
+  if (researchContract.enabled) {
+    return {
+      category_key: "bondbuilder",
+      instruction:
+        "Complete the full Bondbuilder research profile first. Emit it only as property_synthesis.bondbuilder_research_envelope; the deterministic adapter owns the derived database projection. Research exact producer application directions separately.",
+      bondbuilder_research: researchContract,
+      product_application_protocols: applicationProtocolResearchContract("bondbuilder", [
+        "specialized_bond_treatment",
+      ]),
+    }
+  }
+
   return {
     category_key: "bondbuilder",
     instruction:
@@ -2154,6 +2151,9 @@ function bondbuilderApprovalContract(): JsonRecord {
     product_application_protocols: applicationProtocolResearchContract("bondbuilder", [
       "specialized_bond_treatment",
     ]),
+    // Preparation metadata only. The inactive lane retains the exact legacy
+    // output contract above until the server-owned method lock is installed.
+    future_research_engine_contract: researchContract,
   }
 }
 
@@ -2275,6 +2275,18 @@ function normalizeResearchOutputForCategory(
       final,
       artifacts: output.artifacts,
       expectedResearchId,
+    })
+    blockers.push(...adapterResult.blockers)
+  }
+
+  // Server-owned routing is enforced after model output. Enabled Bondbuilder
+  // intake requires a complete, current, exact-submission research envelope;
+  // model-authored flags and legacy-only specs cannot bypass validation.
+  if (categoryKey === "bondbuilder" && final) {
+    const adapterResult = applyBondbuilderResearchAdapterForWorker({
+      final,
+      artifacts: output.artifacts,
+      expectedSubmissionId: expectedResearchId,
     })
     blockers.push(...adapterResult.blockers)
   }

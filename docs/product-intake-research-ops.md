@@ -156,8 +156,7 @@ Resolve identity before researching properties or images:
 
 ### Source And Purchase URL Priority
 
-Use this evidence order for product identity, property research, and commercial
-fields:
+Use this evidence order for product identity and property research:
 
 1. Official brand/manufacturer product page.
 2. Reputable German/EU retailer PDPs: dm, Rossmann, Müller/mueller.de, Douglas,
@@ -166,14 +165,28 @@ fields:
 4. Secondary listings only when primary sources are missing.
 5. User photo/OCR only as identity evidence.
 
-Purchase URL preference is category-specific:
+Purchase URL preference applies to **every category**, including oils, leave-ins,
+bondbuilders, and professional/high-end products:
 
-| Category                                                        | Preferred purchase URL order                                                                                    |
-| --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Shampoo, conditioner, mask, dry shampoo, deep cleansing shampoo | dm > Rossmann > Müller > brand-direct > Amazon DE                                                               |
-| Leave-in                                                        | dm > brand-direct > Rossmann > Amazon DE                                                                        |
-| Oil                                                             | brand-direct > Amazon DE > dm > Rossmann                                                                        |
-| Bondbuilder / pro / high-end products                           | brand-direct or reputable specialist retailer can beat dm/Rossmann when that PDP is the stable canonical source |
+**dm > Rossmann > Müller > brand-direct > Amazon DE**
+
+Choose a matching purchasable product-detail page in that order. Package size and
+price do not outrank shop preference; the stored URL, package size, and price must
+describe one verified purchasable variant of the same product. Manufacturer-first
+identity evidence does not give the manufacturer's shop purchase priority.
+Other reputable retailers are fallbacks after the preferred sources have been
+checked. Record an inaccessible shop as unverified rather than claiming the
+product is absent.
+
+For an existing catalog product with no verified acceptable exact purchase offer
+after this search audit, retain its current recommendation status, active
+identity, identifiers, category facts, and owned-product support. A missing or
+unverified purchase offer is a sourcing issue and does not authorize a change to
+`is_chaarlie_recommended`. Preserve current commercial metadata when its
+replacement is unverified; do not stamp a product unavailable merely because a
+search is blocked or its offer is store-only. Record the sourcing blocker and
+continue exact-product research. Research distinct replacements separately;
+recommendation, identity, or formula changes require their own reviewed decision.
 
 Before returning no `affiliate_link` or no `price_eur`, the worker or manual
 operator must search the preferred hosts with both the submitted name and the
@@ -268,7 +281,7 @@ Supported categories and required spec tables:
 | `oil`                    | `product_oil_specs`: `weight` (`light`, `medium`, `rich`), `role_support` (`pre_wash_fibre_treatment`, `leave_on_fibre_conditioning`, `dry_finish`), and independent binary `provides_heat_protection` (source-verified claim only; never a fourth role); plus `product_oil_eligibility[]`: `thickness`, `oil_subtype` (`natuerliches-oel`, `styling-oel`, `trocken-oel`), `oil_purpose` (`pre_wash_oiling`, `styling_finish`, `light_finish`, or `null`), `ingredient_flags` |
 | `dry_shampoo`            | `product_dry_shampoo_specs`: `primary_effect` (`classic_refresh`, `volume_texture`, `sensitive_refresh`), `hair_color_fit` (`universal`, `blonde_light`, `brown`, `dark`), `scalp_sensitivity_fit` (`sensitive_ok`, `normal_only`), `format` (`aerosol_spray`, `powder`, `foam_or_liquid`)                                                                                                                                                                                    |
 | `deep_cleansing_shampoo` | `product_deep_cleansing_shampoo_specs`: `scalp_type_focus` (`oily`, `balanced`, `dry`), `reset_intensity` (`gentle`, `medium`, `strong`), `reset_focus` (`product_sebum_buildup`, `metal_mineral_hard_water`, `broad_spectrum_detox`), `color_treated_suitability` (`suitable`, `unsuitable_or_unknown`)                                                                                                                                                                      |
-| `bondbuilder`            | `product_bondbuilder_specs`: `bond_repair_intensity` (`maintenance`, `intensive`), `application_mode` (`pre_shampoo`, `post_wash_leave_in`), `bond_repair_axis` (`disulfide_crosslink`, `peptide_chain`), `treatment_mode` (`rinse_out`, `leave_in`), `product_format` (`cream_treatment`, `primer_treatment`, `leave_in_mask`, `spray_treatment`), `usage_protocol` (`olaplex_3plus`, `olaplex_0_booster`, `olaplex_3_legacy`, `k18_leave_in`, `epres_spray`)                |
+| `bondbuilder`            | Full current `property_synthesis.bondbuilder_research_envelope`, exact submission ID and v0.5 pins; deterministic adapter produces `product_bondbuilder_specs` with `technology_family`, `claim_trust_level`, `trust_basis`, complete `research_profile` and any supported compatibility facts. Do not hand-author intensity/axis/protocol selectors or replace full research with legacy specs. See [Bondbuilder bridge](product-intake-bondbuilder-production-adapter.md). |
 | `heat_protectant`        | `product_heat_protectant_specs`: `format` (`spray`), `provides_heat_protection` (`true`, `false`, or `null` only while unresolved)                                                                                                                                                                                                                                                                                                                                            |
 | `scalp_care`             | `product_scalp_care_specs`: `primary_role` (`scalp_comfort`, `scalp_flake_oil_adjunct`, `density_claim_tonic`, `scalp_exfoliant`), `presentation_format` (`serum`, `tonic`, `lotion_or_fluid`, `oil`, `scrub`, `other`, `unknown`), `rinse_mode` (`leave_on`, `rinse_off`), exact `application_instructions`                                                                                                                                                                  |
 

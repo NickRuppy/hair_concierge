@@ -1,0 +1,238 @@
+{
+  "version": "conditioner-research-envelope-v1.6",
+  "researchMethod": {
+    "policyId": "conditioner-classification-v1.6",
+    "modelVersion": "conditioner-inci-v1.6",
+    "policySha256": "688ca25ca534f98789d0b300fbc5f3008a5c0652fe63af276dfda6ced79f3135",
+    "runbookSha256": "6a66780ef23a7595cfbeab07fe9f671a92a58d177b92c734a8d6f736833165e8"
+  },
+  "identity": {
+    "researchId": "bucket3-alverde-current-4066447919202",
+    "market": "DE/EU",
+    "exactProductName": "alverde NATURKOSMETIK Conditioner Glanz 200 ml",
+    "categoryBoundaryStatus": "eligible",
+    "confidence": "high",
+    "sourceIds": [
+      "current-de-inci"
+    ]
+  },
+  "formula": {
+    "status": "verified",
+    "rawInci": "Aqua, Cetearyl Alcohol, Helianthus Annuus Hybrid Oil1, Glycerin, Betaine, Arginine, Hydrolyzed Wheat Protein, Rosa Damascena Flower Water 1, Parfum, Pelargonium Graveolens Flower Oil, Brassica Alcohol, Sodium Levulinate, Cetearyl Glucoside, Alcohol, Levulinic Acid, Glyceryl Caprylate, p-Anisic Acid, Brassicyl Isoleucinate Esylate, Citric Acid, Sodium Hydroxide",
+    "normalizedIngredients": [
+      "Aqua",
+      "Cetearyl Alcohol",
+      "Helianthus Annuus Hybrid Oil1",
+      "Glycerin",
+      "Betaine",
+      "Arginine",
+      "Hydrolyzed Wheat Protein",
+      "Rosa Damascena Flower Water 1",
+      "Parfum",
+      "Pelargonium Graveolens Flower Oil",
+      "Brassica Alcohol",
+      "Sodium Levulinate",
+      "Cetearyl Glucoside",
+      "Alcohol",
+      "Levulinic Acid",
+      "Glyceryl Caprylate",
+      "p-Anisic Acid",
+      "Brassicyl Isoleucinate Esylate",
+      "Citric Acid",
+      "Sodium Hydroxide"
+    ],
+    "formulaFingerprintSha256": "2ddede573b699c268afdedb72619a6e3312c2fa3e7f46f801b3123439bf9efa0",
+    "rawInciSha256": "2e31e1e9d27934e33d331977090cdc6e2cecc0cf42bbbe04be6c87bf19caf624",
+    "sourceIds": [
+      "current-de-inci"
+    ]
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Conventional Brassica Alcohol/Brassicyl Isoleucinate Esylate conditioning context plus fatty alcohol and sunflower lipid supports ordinary substantive care.",
+      "evidenceSignals": [
+        "Cetearyl Alcohol #2",
+        "Helianthus Annuus Hybrid Oil #3",
+        "Brassica Alcohol #11",
+        "Brassicyl Isoleucinate Esylate #18"
+      ],
+      "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+      "thresholdReasoning": [
+        "More than low: coherent cationic/fatty-alcohol plus lipid conditioning architecture.",
+        "Not high: no measured endpoint or multiple independent deposition systems strong enough to substantiate a high band."
+      ],
+      "limitations": [
+        "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+        "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Early sunflower lipid and fatty alcohol base make bounded deposition plausible; silicone-free is not a low-weight guarantee.",
+      "evidenceSignals": [
+        "Cetearyl Alcohol #2",
+        "Helianthus Annuus Hybrid Oil #3",
+        "Glycerin #4",
+        "Brassicyl Isoleucinate Esylate #18"
+      ],
+      "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+      "thresholdReasoning": [
+        "Not low by default: meaningful lipid/base context goes beyond a minimal light rinse.",
+        "Not high: no convergent rich silicone/butter/high-slip architecture or finished-product deposition evidence."
+      ],
+      "limitations": [
+        "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+        "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+      ]
+    },
+    "careDirection": {
+      "value": "balanced",
+      "confidence": "moderate",
+      "rationale": "Substantive lipid/humectant softness architecture coexists with a plausible hydrolyzed-wheat-protein film route in the upper formula.",
+      "evidenceSignals": [
+        "Helianthus Annuus Hybrid Oil #3",
+        "Glycerin #4",
+        "Betaine #5",
+        "Hydrolyzed Wheat Protein #7"
+      ],
+      "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+      "thresholdReasoning": [
+        "Moisture-only would ignore the distinct plausible protein film route; this call is uncertain because dose and substantivity are unmeasured.",
+        "Protein dominance is unsupported alongside the prominent emollient/humectant architecture."
+      ],
+      "limitations": [
+        "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+        "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "medium",
+      "confidence": "moderate",
+      "rationale": "Hydrolyzed wheat protein in the conditioning context supplies a candidate temporary film route beyond routine lubrication.",
+      "evidenceSignals": [
+        "Hydrolyzed Wheat Protein #7",
+        "conditioning base #2/#11/#18"
+      ],
+      "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+      "thresholdReasoning": [
+        "Low remains the neighboring alternative if the protein is only label-level; provisional medium follows the distinct R5 route, not the claim of strength.",
+        "High requires named bond chemistry; none is visible."
+      ],
+      "limitations": [
+        "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+        "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+      ]
+    },
+    "primaryFocus": {
+      "value": "smoothing",
+      "confidence": "moderate",
+      "rationale": "Lipid relubrication beyond the ordinary base is the clearest supported dry-surface differentiator.",
+      "evidenceSignals": [
+        "Helianthus Annuus Hybrid Oil #3",
+        "Cetearyl Alcohol #2",
+        "Brassicyl Isoleucinate Esylate #18"
+      ],
+      "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+      "thresholdReasoning": [
+        "General is the alternative if the extra lipid route is not substantive.",
+        "Glanz naming alone does not establish distinct optical evidence; shine is not selected from brand copy."
+      ],
+      "limitations": [
+        "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+        "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "No second distinct endpoint clears the threshold without reusing the same surface-film evidence.",
+      "evidenceSignals": [
+        "Same M1/M3 surface-care architecture"
+      ],
+      "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+      "thresholdReasoning": [
+        "Empty is a complete value.",
+        "No separate optical, curl, color or repair positioning plus independently substantial specialist route."
+      ],
+      "limitations": [
+        "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+        "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+      ]
+    },
+    "hairThicknessFit": {
+      "value": [
+        "fine",
+        "medium",
+        "coarse"
+      ],
+      "confidence": "moderate",
+      "rationale": "Moderate weight yields the broad three-diameter prior; this is a dose/finish prior, not a universal guarantee.",
+      "evidenceSignals": [
+        "Upstream weightPotential=moderate"
+      ],
+      "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+      "thresholdReasoning": [
+        "Low weight would restrict the standard prior to fine/medium.",
+        "High weight would remove fine; high was not supported."
+      ],
+      "limitations": [
+        "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+        "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+      ]
+    },
+    "damageFit": {
+      "value": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "confidence": "moderate",
+      "rationale": "Moderate conditioning maps to the general two-state damage prior despite a candidate protein route.",
+      "evidenceSignals": [
+        "Upstream conditioningLevel=moderate"
+      ],
+      "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+      "thresholdReasoning": [
+        "Low conditioning would map to healthy only.",
+        "Specialist highly_damaged set additionally requires high conditioning; not established."
+      ],
+      "limitations": [
+        "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+        "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+      ]
+    },
+    "textureFit": {
+      "value": [
+        "straight",
+        "wavy",
+        "curly"
+      ],
+      "confidence": "moderate",
+      "rationale": "Balanced conditioning/deposition supports the standard broad texture prior.",
+      "evidenceSignals": [
+        "Moderate conditioning and moderate weight"
+      ],
+      "derivation": "Conditioner Standard v1.6, formula-only E1 observations to E2 potential; catalog values excluded as evidence.",
+      "thresholdReasoning": [
+        "Not the low-weight/lightness straight/wavy-only archetype.",
+        "Coily-inclusive high-slip/high-deposition architecture is not established."
+      ],
+      "limitations": [
+        "INCI rank is not concentration; no exact-product deposition, sensory, damage or repeated-use endpoint data.",
+        "Provisional non-blind desk assessment; fresh blinded confirmation remains required."
+      ]
+    },
+    "uncertainFields": [
+      "weight_potential",
+      "care_direction",
+      "repair_support_level",
+      "primary_focus"
+    ],
+    "assumptionNotes": [
+      "Current DE own-brand PDP is authority for new GTIN4066447919202; no continuity with old GTIN is assumed.",
+      "The raw source includes Oil1 / Water 1 organic-footnote artifacts; kept verbatim in adapter input so fingerprint integrity remains reproducible."
+    ]
+  }
+}

@@ -1,0 +1,626 @@
+[
+  {
+    "observed_at": "2026-10-03 15:19:40.490866+00",
+    "product": {
+      "id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+      "name": "Hitzeschutzspray 2-Phasen",
+      "tags": [],
+      "brand": "Balea",
+      "origin": "curated",
+      "brand_id": "58bcafd6-a884-4337-8c8d-8d8369f2117c",
+      "category": "heat_protectant",
+      "currency": "EUR",
+      "tom_take": null,
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-enrichment/personal-plan-launch-v1/heat/balea-two-phase-200ml/dm-packshot.webp",
+      "is_active": true,
+      "price_eur": 1.95,
+      "created_at": "2026-08-10T09:44:02.62441+00:00",
+      "sort_order": 0,
+      "updated_at": "2026-08-15T07:48:36.410502+00:00",
+      "description": null,
+      "category_key": "heat_protectant",
+      "affiliate_link": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+      "product_line_id": null,
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-08-09T09:23:08+00:00",
+      "net_content_value": null,
+      "short_description": null,
+      "suitable_concerns": [],
+      "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/424bd16456b920a9aeaf43d9f4b3148fb6704f89ed0d022e9fbc9a0488b0d6df.webp",
+      "purchase_link_status": "unavailable",
+      "suitable_thicknesses": [],
+      "is_chaarlie_recommended": false,
+      "purchase_link_checked_at": "2026-08-09T09:23:08+00:00"
+    },
+    "identifiers": [
+      {
+        "id": "ea0b0722-4758-44f2-9e07-1ddc1aa7a762",
+        "source": "dm",
+        "created_at": "2026-08-10T09:44:02.62441+00:00",
+        "product_id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+        "updated_at": "2026-08-10T09:44:02.62441+00:00",
+        "identifier_type": "ean",
+        "canonical_gtin14": "04070765073546",
+        "identifier_value": "4070765073546",
+        "normalized_identifier_value": "4070765073546"
+      },
+      {
+        "id": "b618019d-2df1-4cd9-a72f-1f6dfa712c87",
+        "source": "dm",
+        "created_at": "2026-08-10T09:44:02.62441+00:00",
+        "product_id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+        "updated_at": "2026-08-10T09:44:02.62441+00:00",
+        "identifier_type": "retailer_sku",
+        "canonical_gtin14": null,
+        "identifier_value": "dm:1460813",
+        "normalized_identifier_value": "dm:1460813"
+      },
+      {
+        "id": "a497d967-063b-464e-87ea-9bc85501e4fc",
+        "source": "dm",
+        "created_at": "2026-08-10T09:44:02.62441+00:00",
+        "product_id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+        "updated_at": "2026-08-10T09:44:02.62441+00:00",
+        "identifier_type": "retailer_url",
+        "canonical_gtin14": null,
+        "identifier_value": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+        "normalized_identifier_value": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray"
+      }
+    ],
+    "heat_specs": [
+      {
+        "format": "spray",
+        "created_at": "2026-08-10T09:44:02.62441+00:00",
+        "product_id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+        "updated_at": "2026-08-10T09:44:02.62441+00:00",
+        "category_key": "heat_protectant",
+        "provides_heat_protection": true
+      }
+    ],
+    "conditioner_specs": null,
+    "conditioner_rerank_specs": null,
+    "protocols": [
+      {
+        "id": "3a7cb27f-293a-4ac9-9c83-ef0719c800b3",
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "category": "heat_protectant",
+        "placement": "all_hair",
+        "created_at": "2026-08-10T09:44:02.62441+00:00",
+        "product_id": "a0cc0c36-b5ce-4a38-b224-64c666a83809",
+        "source_url": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+        "updated_at": "2026-08-13T06:58:13.851968+00:00",
+        "source_text": "Exact source evidence for Balea Hitzeschutzspray 2-Phasen: pre heat protection protocol; whole-hair application; leave-in use without rinsing and amount evidence (Aus etwa 15 cm Entfernung gleichmäßig aufsprühen.).",
+        "category_key": "heat_protectant",
+        "rinse_action": "leave_in",
+        "source_label": "dm Produktseite",
+        "reapplication": "required",
+        "guidance_payload": {
+          "role": "heat_protection",
+          "scope": {
+            "kind": "product",
+            "category": "heat_protectant",
+            "productId": "a0cc0c36-b5ce-4a38-b224-64c666a83809"
+          },
+          "steps": [
+            {
+              "action": "section",
+              "stepKey": "shake-balea-two-phase",
+              "copyTemplateDe": "Vor jeder Anwendung gut schütteln, damit sich die zwei Phasen vermischen."
+            },
+            {
+              "action": "apply_product",
+              "stepKey": "apply-balea-two-phase-damp",
+              "copyTemplateDe": "Vor dem Föhnen aus 15 cm Entfernung gleichmäßig auf das handtuchtrockene Haar sprühen."
+            },
+            {
+              "action": "apply_product",
+              "stepKey": "reapply-balea-two-phase-hot-tool",
+              "copyTemplateDe": "Vor Glätteisen oder Lockenstab nochmals auf trockene Partien auftragen."
+            }
+          ],
+          "locale": "de",
+          "evidence": [
+            {
+              "checkedAt": "2026-08-11",
+              "sourceUrl": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+              "sourceType": "retailer"
+            }
+          ],
+          "sequence": {
+            "after": [],
+            "anchor": "dry_pre_heat",
+            "before": [
+              "heat_tool"
+            ],
+            "conflictsWith": []
+          },
+          "guidanceKey": "product-heat-protectant-a0cc0c36-b5ce-4a38-b224-64c666a83809",
+          "requirements": {
+            "requiredCatalogFacts": [
+              "provides_heat_protection"
+            ],
+            "requiredProfileFacts": [],
+            "requiredProtocolFacts": [
+              "reapply_before_direct_heat"
+            ]
+          },
+          "protocolFacts": {
+            "rinse": "leave_in",
+            "amount": {
+              "kind": "qualitative",
+              "copyDe": "Aus etwa 15 cm Entfernung gleichmäßig aufsprühen."
+            },
+            "cautions": [],
+            "reapplication": "each_separate_heat_event",
+            "applicationArea": "all_hair",
+            "contactTimeSeconds": null,
+            "conditionerRelationship": "not_applicable"
+          },
+          "schemaVersion": 1,
+          "protocolVersion": 1,
+          "applicationFamily": "either_state_protection",
+          "compatibleDayTypes": [
+            "styling_day"
+          ],
+          "exactGuidanceRequired": true
+        },
+        "application_stage": "dry_pre_heat",
+        "application_state": "either",
+        "application_family": "either_state_protection",
+        "guidance_payload_v2": {
+          "role": "heat_protection",
+          "facts": {
+            "heat": {
+              "reapplication": "each_separate_heat_event",
+              "supportedStates": [
+                "damp_hair",
+                "dry_hair"
+              ],
+              "activationRequired": false,
+              "maximumClaimedTemperatureC": null
+            },
+            "rinse": "leave_in",
+            "amount": null,
+            "contactTime": null,
+            "applicationArea": "root_to_tip_hair",
+            "applicationState": "damp_or_dry_hair",
+            "conditionerPolicy": "not_applicable"
+          },
+          "scope": {
+            "kind": "product",
+            "category": "heat_protectant",
+            "productId": "a0cc0c36-b5ce-4a38-b224-64c666a83809"
+          },
+          "evidence": [
+            {
+              "checkedAt": "2026-08-11",
+              "sourceUrl": "https://www.dm.de/p/d/1460813/balea-hitzeschutzspray",
+              "sourceType": "retailer"
+            }
+          ],
+          "exactSteps": [],
+          "sourceRole": "pre_heat_protection",
+          "workflowId": null,
+          "cautionCodes": [],
+          "contractKind": "product_pointer",
+          "schemaVersion": 2,
+          "applicationFamily": "either_state_protection",
+          "runtimeBlockerCode": null,
+          "requiredCompanionProductId": null
+        },
+        "contact_time_seconds": null,
+        "instruction_modifiers": []
+      }
+    ]
+  },
+  {
+    "observed_at": "2026-10-03 15:19:40.490866+00",
+    "product": {
+      "id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+      "name": "Balea Professional Oil Repair Intensiv Spülung",
+      "tags": [
+        "conditioner (drogerie)"
+      ],
+      "brand": "Balea",
+      "origin": "curated",
+      "brand_id": "58bcafd6-a884-4337-8c8d-8d8369f2117c",
+      "category": "Conditioner",
+      "currency": "EUR",
+      "tom_take": null,
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/pilot-2026-06-10/e7cde77e-e9d5-4976-a8ed-830c8a30c62a/06-e7cde77e-e9d5-4976-a8ed-830c8a30c62a-balea-balea-oil-repair-662414bac91b.webp",
+      "is_active": true,
+      "price_eur": 1.25,
+      "created_at": "2026-03-03T12:33:58.311159+00:00",
+      "sort_order": 31,
+      "updated_at": "2026-08-15T07:49:44.692573+00:00",
+      "description": "Balea Oil Repair ist ein Conditioner (Drogerie) von Balea, empfohlen für dickes Haar bei Proteinbedarf.",
+      "category_key": "conditioner",
+      "affiliate_link": "https://www.dm.de/balea-professional-spuelung-oil-repair-intensiv-p4066447365443.html",
+      "product_line_id": "7acc1a31-fe34-4e3a-8ee9-634a0761943c",
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-06-11T00:00:00+00:00",
+      "net_content_value": null,
+      "short_description": null,
+      "suitable_concerns": [
+        "protein",
+        "hair_damage",
+        "breakage"
+      ],
+      "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/662414bac91b50271d7268ea7c326328734f0cf5566e180aab3a192555edfbcf.webp",
+      "purchase_link_status": "available",
+      "suitable_thicknesses": [
+        "coarse"
+      ],
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-06-11T00:00:00+00:00"
+    },
+    "identifiers": [
+      {
+        "id": "4c4fe6c8-ff53-4920-ae21-e42ce0afbff2",
+        "source": "scanner-catalog-coverage-2026-08-26",
+        "created_at": "2026-08-28T08:03:37.28665+00:00",
+        "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+        "updated_at": "2026-08-28T08:03:37.28665+00:00",
+        "identifier_type": "ean",
+        "canonical_gtin14": "04066447365443",
+        "identifier_value": "4066447365443",
+        "normalized_identifier_value": "4066447365443"
+      }
+    ],
+    "heat_specs": null,
+    "conditioner_specs": [
+      {
+        "thickness": "coarse",
+        "created_at": "2026-07-06T13:56:43.305291+00:00",
+        "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+        "updated_at": "2026-07-06T13:56:43.305291+00:00",
+        "category_key": "conditioner",
+        "protein_moisture_balance": "stretches_stays"
+      }
+    ],
+    "conditioner_rerank_specs": [
+      {
+        "weight": "rich",
+        "created_at": "2026-04-15T18:20:39.745941+00:00",
+        "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+        "updated_at": "2026-04-28T12:54:04.13078+00:00",
+        "category_key": "conditioner",
+        "repair_level": "high",
+        "ingredient_flags": [],
+        "balance_direction": "protein"
+      }
+    ],
+    "protocols": [
+      {
+        "id": "d6878b1c-aaa3-4b8c-81cd-6896de1d89b4",
+        "role": "conditioner_rinse_out",
+        "cadence": null,
+        "category": "conditioner",
+        "placement": "all_hair",
+        "created_at": "2026-08-12T06:17:18.071285+00:00",
+        "product_id": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+        "source_url": "https://vivavoss.com/products/conditioner-oil-repair-intensiv-200-ml",
+        "updated_at": "2026-08-13T06:58:13.851968+00:00",
+        "source_text": "Exact source evidence for Balea Professional Oil Repair Intensiv Spülung: conditioner rinse out protocol; whole-hair application; rinse-out use.",
+        "category_key": "conditioner",
+        "rinse_action": "rinse_out",
+        "source_label": "Händler-Produktseite",
+        "reapplication": "not_stated",
+        "guidance_payload": {
+          "role": "condition",
+          "scope": {
+            "kind": "product",
+            "category": "conditioner",
+            "productId": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a"
+          },
+          "steps": [
+            {
+              "action": "apply_product",
+              "stepKey": "apply-conditioner",
+              "copyTemplateDe": "Sanft in das nasse Haar einmassieren."
+            },
+            {
+              "action": "wait",
+              "stepKey": "wait-conditioner",
+              "copyTemplateDe": "Kurz einwirken lassen."
+            },
+            {
+              "action": "rinse",
+              "stepKey": "rinse-conditioner",
+              "copyTemplateDe": "Mit lauwarmem Wasser sorgfältig ausspülen."
+            }
+          ],
+          "locale": "de",
+          "evidence": [
+            {
+              "checkedAt": "2026-08-11",
+              "sourceUrl": "https://vivavoss.com/products/conditioner-oil-repair-intensiv-200-ml",
+              "sourceType": "retailer"
+            }
+          ],
+          "sequence": {
+            "after": [
+              "wet_cleanse"
+            ],
+            "anchor": "post_cleanse_rinse_off",
+            "before": [],
+            "conflictsWith": []
+          },
+          "guidanceKey": "product-conditioner-e7cde77e-e9d5-4976-a8ed-830c8a30c62a",
+          "requirements": {
+            "requiredCatalogFacts": [],
+            "requiredProfileFacts": [],
+            "requiredProtocolFacts": []
+          },
+          "protocolFacts": {
+            "rinse": "rinse_out",
+            "amount": null,
+            "cautions": [],
+            "reapplication": "none",
+            "applicationArea": "all_hair",
+            "contactTimeSeconds": null,
+            "conditionerRelationship": "not_applicable"
+          },
+          "schemaVersion": 1,
+          "protocolVersion": 1,
+          "applicationFamily": "standard_rinse_out_conditioning",
+          "compatibleDayTypes": [
+            "wash_day"
+          ],
+          "exactGuidanceRequired": true
+        },
+        "application_stage": "post_cleanse_rinse_off",
+        "application_state": null,
+        "application_family": "standard_rinse_out_conditioning",
+        "guidance_payload_v2": {
+          "role": "condition",
+          "facts": {
+            "heat": null,
+            "rinse": "rinse_out",
+            "amount": null,
+            "contactTime": null,
+            "applicationArea": "hair_lengths_ends",
+            "applicationState": "wet_hair",
+            "conditionerPolicy": "not_applicable"
+          },
+          "scope": {
+            "kind": "product",
+            "category": "conditioner",
+            "productId": "e7cde77e-e9d5-4976-a8ed-830c8a30c62a"
+          },
+          "evidence": [
+            {
+              "checkedAt": "2026-08-11",
+              "sourceUrl": "https://vivavoss.com/products/conditioner-oil-repair-intensiv-200-ml",
+              "sourceType": "retailer"
+            }
+          ],
+          "exactSteps": [],
+          "sourceRole": "conditioner_rinse_out",
+          "workflowId": null,
+          "cautionCodes": [],
+          "contractKind": "product_pointer",
+          "schemaVersion": 2,
+          "applicationFamily": "standard_rinse_out_conditioning",
+          "runtimeBlockerCode": null,
+          "requiredCompanionProductId": null
+        },
+        "contact_time_seconds": null,
+        "instruction_modifiers": []
+      }
+    ]
+  },
+  {
+    "observed_at": "2026-10-03 15:19:40.490866+00",
+    "product": {
+      "id": "efaff579-e411-41eb-972a-2734a8517356",
+      "name": "Hitzeschutzspray Schutzengel",
+      "tags": [],
+      "brand": "got2b",
+      "origin": "curated",
+      "brand_id": "a286e2c2-6b44-41f3-a37b-f57d4ed1e93c",
+      "category": "heat_protectant",
+      "currency": "EUR",
+      "tom_take": null,
+      "image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/catalog-enrichment/personal-plan-launch-v1/heat/got2b-schutzengel-200ml/dm-packshot.webp",
+      "is_active": true,
+      "price_eur": 4.95,
+      "created_at": "2026-08-10T09:44:02.62441+00:00",
+      "sort_order": 0,
+      "updated_at": "2026-08-15T07:49:54.652656+00:00",
+      "description": null,
+      "category_key": "heat_protectant",
+      "affiliate_link": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+      "product_line_id": null,
+      "lifecycle_status": "active",
+      "net_content_unit": null,
+      "price_checked_at": "2026-08-09T09:23:08+00:00",
+      "net_content_value": null,
+      "short_description": null,
+      "suitable_concerns": [],
+      "thumbnail_image_url": "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/thumbnails/search-v1/310a0cd0a0dde7789ba499fcc048e6acb218bc982d09da45794ce23270740765.webp",
+      "purchase_link_status": "available",
+      "suitable_thicknesses": [],
+      "is_chaarlie_recommended": true,
+      "purchase_link_checked_at": "2026-08-09T09:23:08+00:00"
+    },
+    "identifiers": [
+      {
+        "id": "dc295986-ce59-470f-87f7-a56cd7608c8e",
+        "source": "dm",
+        "created_at": "2026-08-10T09:44:02.62441+00:00",
+        "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+        "updated_at": "2026-08-10T09:44:02.62441+00:00",
+        "identifier_type": "ean",
+        "canonical_gtin14": "04015100800128",
+        "identifier_value": "4015100800128",
+        "normalized_identifier_value": "4015100800128"
+      },
+      {
+        "id": "9881d44f-1cdc-4804-bc74-58958bb20e95",
+        "source": "dm",
+        "created_at": "2026-08-10T09:44:02.62441+00:00",
+        "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+        "updated_at": "2026-08-10T09:44:02.62441+00:00",
+        "identifier_type": "retailer_sku",
+        "canonical_gtin14": null,
+        "identifier_value": "dm:1267310",
+        "normalized_identifier_value": "dm:1267310"
+      },
+      {
+        "id": "5149c84c-b9dd-4591-ba72-5dfe188ce1e9",
+        "source": "dm",
+        "created_at": "2026-08-10T09:44:02.62441+00:00",
+        "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+        "updated_at": "2026-08-10T09:44:02.62441+00:00",
+        "identifier_type": "retailer_url",
+        "canonical_gtin14": null,
+        "identifier_value": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+        "normalized_identifier_value": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel"
+      }
+    ],
+    "heat_specs": [
+      {
+        "format": "spray",
+        "created_at": "2026-08-10T09:44:02.62441+00:00",
+        "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+        "updated_at": "2026-08-10T09:44:02.62441+00:00",
+        "category_key": "heat_protectant",
+        "provides_heat_protection": true
+      }
+    ],
+    "conditioner_specs": null,
+    "conditioner_rerank_specs": null,
+    "protocols": [
+      {
+        "id": "47945afa-c546-4537-945a-151f3a7d5622",
+        "role": "pre_heat_protection",
+        "cadence": null,
+        "category": "heat_protectant",
+        "placement": "all_hair",
+        "created_at": "2026-08-10T09:44:02.62441+00:00",
+        "product_id": "efaff579-e411-41eb-972a-2734a8517356",
+        "source_url": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+        "updated_at": "2026-08-13T06:58:13.851968+00:00",
+        "source_text": "Exact source evidence for got2b Hitzeschutzspray Schutzengel: pre heat protection protocol; whole-hair application; leave-in use without rinsing and amount evidence (Großzügig aufsprühen.).",
+        "category_key": "heat_protectant",
+        "rinse_action": "leave_in",
+        "source_label": "dm Produktseite",
+        "reapplication": "not_stated",
+        "guidance_payload": {
+          "role": "heat_protection",
+          "scope": {
+            "kind": "product",
+            "category": "heat_protectant",
+            "productId": "efaff579-e411-41eb-972a-2734a8517356"
+          },
+          "steps": [
+            {
+              "action": "apply_product",
+              "stepKey": "apply-got2b-schutzengel",
+              "copyTemplateDe": "Großzügig ins handtuchtrockene Haar sprühen."
+            },
+            {
+              "action": "dry",
+              "stepKey": "dry-got2b-schutzengel",
+              "copyTemplateDe": "Das Haar wie gewohnt föhnen; Glätteisen oder Lockenstab erst auf trockenem Haar verwenden."
+            }
+          ],
+          "locale": "de",
+          "evidence": [
+            {
+              "checkedAt": "2026-08-11",
+              "sourceUrl": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+              "sourceType": "retailer"
+            }
+          ],
+          "sequence": {
+            "after": [
+              "post_rinse_towel_dry"
+            ],
+            "anchor": "damp_leave_on",
+            "before": [
+              "heat_tool"
+            ],
+            "conflictsWith": []
+          },
+          "guidanceKey": "product-heat-protectant-efaff579-e411-41eb-972a-2734a8517356",
+          "requirements": {
+            "requiredCatalogFacts": [
+              "provides_heat_protection"
+            ],
+            "requiredProfileFacts": [],
+            "requiredProtocolFacts": []
+          },
+          "protocolFacts": {
+            "rinse": "leave_in",
+            "amount": {
+              "kind": "qualitative",
+              "copyDe": "Großzügig aufsprühen."
+            },
+            "cautions": [],
+            "reapplication": "none",
+            "applicationArea": "all_hair",
+            "contactTimeSeconds": null,
+            "conditionerRelationship": "not_applicable"
+          },
+          "schemaVersion": 1,
+          "protocolVersion": 1,
+          "applicationFamily": "pre_heat_damp",
+          "compatibleDayTypes": [
+            "styling_day"
+          ],
+          "exactGuidanceRequired": true
+        },
+        "application_stage": "damp_leave_on",
+        "application_state": "damp",
+        "application_family": "pre_heat_damp",
+        "guidance_payload_v2": {
+          "role": "heat_protection",
+          "facts": {
+            "heat": {
+              "reapplication": "none",
+              "supportedStates": [
+                "damp_hair"
+              ],
+              "activationRequired": false,
+              "maximumClaimedTemperatureC": null
+            },
+            "rinse": "leave_in",
+            "amount": null,
+            "contactTime": null,
+            "applicationArea": "root_to_tip_hair",
+            "applicationState": "damp_hair",
+            "conditionerPolicy": "not_applicable"
+          },
+          "scope": {
+            "kind": "product",
+            "category": "heat_protectant",
+            "productId": "efaff579-e411-41eb-972a-2734a8517356"
+          },
+          "evidence": [
+            {
+              "checkedAt": "2026-08-11",
+              "sourceUrl": "https://www.dm.de/p/d/1267310/got2b-hitzeschutzspray-schutzengel",
+              "sourceType": "retailer"
+            }
+          ],
+          "exactSteps": [],
+          "sourceRole": "pre_heat_protection",
+          "workflowId": null,
+          "cautionCodes": [],
+          "contractKind": "product_pointer",
+          "schemaVersion": 2,
+          "applicationFamily": "pre_heat_damp",
+          "runtimeBlockerCode": null,
+          "requiredCompanionProductId": null
+        },
+        "contact_time_seconds": null,
+        "instruction_modifiers": []
+      }
+    ]
+  }
+]
