@@ -15,7 +15,7 @@ const review = JSON.parse(read(base + "review-values.en.json"));
 const issues = [];
 const check = (condition, reason) => { if (!condition) issues.push(reason); };
 
-new Script(read(base + "index.html").match(/<script>([\s\S]*?)<\/script>/)[1]);
+new Script(read(base + "index.html").match(/<script>([\s\S]*?)<\/script>/i)[1]);
 check(review.locale === "en" && review.status === "review_proposal_not_persisted", "review-only English status");
 check(snapshot.catalogConnected === false, "no catalog connection");
 check(review.products.length === 8 && new Set(review.products.map((p) => p.id)).size === 8, "eight unique review identities");
