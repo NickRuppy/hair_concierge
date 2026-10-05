@@ -1,0 +1,22 @@
+{
+  "standard_version": "bondbuilder-inci-v0.3",
+  "stage": "B",
+  "sealed_before": "amended named evidence / Stage C",
+  "rows_per_lane": 8,
+  "no_web": true,
+  "root_checks": [
+    "input receipts and Stage-A hashes verified",
+    "all source IDs in original packet",
+    "all application facts equal original protocols",
+    "five category findings and three source-identity holds",
+    "owner anchor separated from one empirical-route medium",
+    "catalog/pack limits do not invalidate source-version candidacy",
+    "counterevidence and neighboring-tier reasoning inspected"
+  ],
+  "sha256": {
+    "lane-a/control-records.json": "720028e61cd6e2a4f221591dd3d605305c420728829a28ef4fb1171689268112",
+    "lane-a/control-notes.md": "2024e22f32786efc0f2f05646a568b4b1fdeddf418f513214d59232d9ff4ed28",
+    "lane-b/control-records.json": "d09d18e67c0e1f65a668a512504a0d266488d68fb0023b486774dc83d43902ee",
+    "lane-b/control-notes.md": "d03b62b847db68d2255574a43217547e76ad923eef4d200dfd44b5eb4253288c"
+  }
+}

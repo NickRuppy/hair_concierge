@@ -216,6 +216,10 @@ test-screenshots*/
 !/data/research/leave-in-inci/**
 /data/research/leave-in-inci/**/lab-review-state.json
 /data/research/leave-in-inci/**/rework-queue.json
+!/data/research/bondbuilder-inci/
+!/data/research/bondbuilder-inci/**
+/data/research/bondbuilder-inci/**/lab-review-state.json
+/data/research/bondbuilder-inci/**/rework-queue.json
 !/docs/research/conditioner-inci/v1.0/conditioner-classification-standard.docx
 !/data/catalog-enrichment/
 /data/catalog-enrichment/*

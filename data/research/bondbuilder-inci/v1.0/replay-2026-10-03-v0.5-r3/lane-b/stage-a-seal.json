@@ -1,0 +1,7 @@
+{
+  "lane_id": "lane-b",
+  "stage": "A",
+  "sha256": {
+    "stage-a.json": "cf44883c10f6b0133764daa02623a4b465f3f7e46989d1435223eac320289b34"
+  }
+}

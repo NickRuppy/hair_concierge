@@ -1,0 +1,17 @@
+{
+  "stage": "A",
+  "products": 4,
+  "lanes": 2,
+  "all_complete_source_lists": true,
+  "marker_set_agreement": "4/4",
+  "candidate_family_set_agreement": "4/4",
+  "frozen_marker_oracle_agreement": "4/4 per lane",
+  "confidence_distribution": {
+    "high": 8,
+    "moderate": 0,
+    "low": 0
+  },
+  "recognition": "Both lanes logged possible formula associations for V01/V03/V04; no identities used according to read/limitations receipts.",
+  "boundary_trust_fit_protocol_finalization": false
+}
+

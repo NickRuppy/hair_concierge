@@ -1,0 +1,807 @@
+{
+  "standard_version": "bondbuilder-inci-v0.3",
+  "purpose": "calibration replay, not unseen validation or measured efficacy",
+  "input_sha256": {
+    "lane-a/blind-records.json": "e548a7298caa286e913585cf88ee06a7c1ff6ad33a3620cf33435fd6497a5cc5",
+    "lane-b/blind-records.json": "ec741e04a6d8116e90d1cfb1bbe6a34f952580da7ea4d3bde9d98cb998c8e073",
+    "lane-a/control-records.json": "720028e61cd6e2a4f221591dd3d605305c420728829a28ef4fb1171689268112",
+    "lane-b/control-records.json": "d09d18e67c0e1f65a668a512504a0d266488d68fb0023b486774dc83d43902ee",
+    "lane-a/records.json": "5b6d9221a7a76ac5daafe82db20809e2a6bb7f6667cf5e1068530b93e22f0149",
+    "lane-b/records.json": "7a77dee3258805698d0b66e1bda2149b49b433e3695a2918a450ad102e4a7a7d"
+  },
+  "stage_a": [
+    {
+      "slot_id": "A01",
+      "markers_equal": true,
+      "candidates_equal": true,
+      "flags_equal": true,
+      "formula_status_equal": true
+    },
+    {
+      "slot_id": "A02",
+      "markers_equal": true,
+      "candidates_equal": true,
+      "flags_equal": true,
+      "formula_status_equal": true
+    },
+    {
+      "slot_id": "A03",
+      "markers_equal": true,
+      "candidates_equal": true,
+      "flags_equal": true,
+      "formula_status_equal": true
+    },
+    {
+      "slot_id": "A04",
+      "markers_equal": true,
+      "candidates_equal": false,
+      "flags_equal": true,
+      "formula_status_equal": true
+    },
+    {
+      "slot_id": "A05",
+      "markers_equal": true,
+      "candidates_equal": true,
+      "flags_equal": true,
+      "formula_status_equal": true
+    },
+    {
+      "slot_id": "A06",
+      "markers_equal": true,
+      "candidates_equal": true,
+      "flags_equal": true,
+      "formula_status_equal": true
+    },
+    {
+      "slot_id": "A07",
+      "markers_equal": true,
+      "candidates_equal": false,
+      "flags_equal": true,
+      "formula_status_equal": true
+    },
+    {
+      "slot_id": "A08",
+      "markers_equal": true,
+      "candidates_equal": false,
+      "flags_equal": true,
+      "formula_status_equal": true
+    }
+  ],
+  "control": {
+    "exact_agreement_including_holds": {
+      "boundary_status": {
+        "agree": 8,
+        "n": 8
+      },
+      "technology_family": {
+        "agree": 8,
+        "n": 8
+      },
+      "claim_trust_level": {
+        "agree": 8,
+        "n": 8
+      },
+      "trust_basis": {
+        "agree": 8,
+        "n": 8
+      },
+      "classification_confidence": {
+        "agree": 8,
+        "n": 8
+      },
+      "research_admission_candidate": {
+        "agree": 8,
+        "n": 8
+      }
+    },
+    "jointly_assessed_trust": {
+      "agree": 2,
+      "n": 2,
+      "ids": [
+        "P04",
+        "P01"
+      ]
+    },
+    "owner_anchor_trust": {
+      "agree": 1,
+      "n": 1,
+      "ids": [
+        "P01"
+      ]
+    },
+    "researched_nonanchor_trust": {
+      "agree": 1,
+      "n": 1,
+      "ids": [
+        "P04"
+      ]
+    },
+    "excluded_trust_ids": [
+      "P07",
+      "P03",
+      "P05",
+      "P02",
+      "P08",
+      "P06"
+    ],
+    "prevalence": {
+      "a": {
+        "hold": 6,
+        "medium": 1,
+        "high": 1
+      },
+      "b": {
+        "hold": 6,
+        "medium": 1,
+        "high": 1
+      }
+    },
+    "disagreements": [],
+    "rows": [
+      {
+        "pilot_id": "P07",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "in_scope",
+          "technology_family": "gluconamide_gluconate",
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        },
+        "b": {
+          "boundary_status": "in_scope",
+          "technology_family": "gluconamide_gluconate",
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        }
+      },
+      {
+        "pilot_id": "P03",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "in_scope",
+          "technology_family": "maleate_ester",
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        },
+        "b": {
+          "boundary_status": "in_scope",
+          "technology_family": "maleate_ester",
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        }
+      },
+      {
+        "pilot_id": "P05",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "research_hold",
+          "technology_family": null,
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        },
+        "b": {
+          "boundary_status": "research_hold",
+          "technology_family": null,
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        }
+      },
+      {
+        "pilot_id": "P02",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "in_scope",
+          "technology_family": "designed_peptide",
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        },
+        "b": {
+          "boundary_status": "in_scope",
+          "technology_family": "designed_peptide",
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        }
+      },
+      {
+        "pilot_id": "P08",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "research_hold",
+          "technology_family": null,
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        },
+        "b": {
+          "boundary_status": "research_hold",
+          "technology_family": null,
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        }
+      },
+      {
+        "pilot_id": "P04",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "in_scope",
+          "technology_family": "acid_calcium_management",
+          "claim_trust_level": "medium",
+          "trust_basis": "research_judgment",
+          "classification_confidence": "moderate",
+          "research_admission_candidate": true
+        },
+        "b": {
+          "boundary_status": "in_scope",
+          "technology_family": "acid_calcium_management",
+          "claim_trust_level": "medium",
+          "trust_basis": "research_judgment",
+          "classification_confidence": "moderate",
+          "research_admission_candidate": true
+        }
+      },
+      {
+        "pilot_id": "P01",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "in_scope",
+          "technology_family": "sulfur_targeting_dimaleate",
+          "claim_trust_level": "high",
+          "trust_basis": "owner_anchor",
+          "classification_confidence": "moderate",
+          "research_admission_candidate": true
+        },
+        "b": {
+          "boundary_status": "in_scope",
+          "technology_family": "sulfur_targeting_dimaleate",
+          "claim_trust_level": "high",
+          "trust_basis": "owner_anchor",
+          "classification_confidence": "moderate",
+          "research_admission_candidate": true
+        }
+      },
+      {
+        "pilot_id": "P06",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "research_hold",
+          "technology_family": null,
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        },
+        "b": {
+          "boundary_status": "research_hold",
+          "technology_family": null,
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        }
+      }
+    ]
+  },
+  "amended": {
+    "exact_agreement_including_holds": {
+      "boundary_status": {
+        "agree": 8,
+        "n": 8
+      },
+      "technology_family": {
+        "agree": 8,
+        "n": 8
+      },
+      "claim_trust_level": {
+        "agree": 8,
+        "n": 8
+      },
+      "trust_basis": {
+        "agree": 8,
+        "n": 8
+      },
+      "classification_confidence": {
+        "agree": 8,
+        "n": 8
+      },
+      "research_admission_candidate": {
+        "agree": 8,
+        "n": 8
+      }
+    },
+    "jointly_assessed_trust": {
+      "agree": 3,
+      "n": 3,
+      "ids": [
+        "P08",
+        "P04",
+        "P01"
+      ]
+    },
+    "owner_anchor_trust": {
+      "agree": 1,
+      "n": 1,
+      "ids": [
+        "P01"
+      ]
+    },
+    "researched_nonanchor_trust": {
+      "agree": 2,
+      "n": 2,
+      "ids": [
+        "P08",
+        "P04"
+      ]
+    },
+    "excluded_trust_ids": [
+      "P07",
+      "P03",
+      "P05",
+      "P02",
+      "P06"
+    ],
+    "prevalence": {
+      "a": {
+        "hold": 5,
+        "medium": 2,
+        "high": 1
+      },
+      "b": {
+        "hold": 5,
+        "medium": 2,
+        "high": 1
+      }
+    },
+    "disagreements": [],
+    "rows": [
+      {
+        "pilot_id": "P07",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "in_scope",
+          "technology_family": "gluconamide_gluconate",
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        },
+        "b": {
+          "boundary_status": "in_scope",
+          "technology_family": "gluconamide_gluconate",
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        }
+      },
+      {
+        "pilot_id": "P03",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "in_scope",
+          "technology_family": "maleate_ester",
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        },
+        "b": {
+          "boundary_status": "in_scope",
+          "technology_family": "maleate_ester",
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        }
+      },
+      {
+        "pilot_id": "P05",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "research_hold",
+          "technology_family": null,
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        },
+        "b": {
+          "boundary_status": "research_hold",
+          "technology_family": null,
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        }
+      },
+      {
+        "pilot_id": "P02",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "in_scope",
+          "technology_family": "designed_peptide",
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        },
+        "b": {
+          "boundary_status": "in_scope",
+          "technology_family": "designed_peptide",
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        }
+      },
+      {
+        "pilot_id": "P08",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "in_scope",
+          "technology_family": "acid_calcium_management",
+          "claim_trust_level": "medium",
+          "trust_basis": "research_judgment",
+          "classification_confidence": "moderate",
+          "research_admission_candidate": true
+        },
+        "b": {
+          "boundary_status": "in_scope",
+          "technology_family": "acid_calcium_management",
+          "claim_trust_level": "medium",
+          "trust_basis": "research_judgment",
+          "classification_confidence": "moderate",
+          "research_admission_candidate": true
+        }
+      },
+      {
+        "pilot_id": "P04",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "in_scope",
+          "technology_family": "acid_calcium_management",
+          "claim_trust_level": "medium",
+          "trust_basis": "research_judgment",
+          "classification_confidence": "moderate",
+          "research_admission_candidate": true
+        },
+        "b": {
+          "boundary_status": "in_scope",
+          "technology_family": "acid_calcium_management",
+          "claim_trust_level": "medium",
+          "trust_basis": "research_judgment",
+          "classification_confidence": "moderate",
+          "research_admission_candidate": true
+        }
+      },
+      {
+        "pilot_id": "P01",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "in_scope",
+          "technology_family": "sulfur_targeting_dimaleate",
+          "claim_trust_level": "high",
+          "trust_basis": "owner_anchor",
+          "classification_confidence": "moderate",
+          "research_admission_candidate": true
+        },
+        "b": {
+          "boundary_status": "in_scope",
+          "technology_family": "sulfur_targeting_dimaleate",
+          "claim_trust_level": "high",
+          "trust_basis": "owner_anchor",
+          "classification_confidence": "moderate",
+          "research_admission_candidate": true
+        }
+      },
+      {
+        "pilot_id": "P06",
+        "equal": {
+          "boundary_status": true,
+          "technology_family": true,
+          "claim_trust_level": true,
+          "trust_basis": true,
+          "classification_confidence": true,
+          "research_admission_candidate": true
+        },
+        "a": {
+          "boundary_status": "in_scope",
+          "technology_family": "gluconamide_gluconate",
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        },
+        "b": {
+          "boundary_status": "in_scope",
+          "technology_family": "gluconamide_gluconate",
+          "claim_trust_level": null,
+          "trust_basis": null,
+          "classification_confidence": "low",
+          "research_admission_candidate": false
+        }
+      }
+    ]
+  },
+  "rule_only_reassessment_deltas_from_prior_adjudication": {
+    "a": [
+      {
+        "pilot_id": "P03",
+        "changes": {
+          "claim_trust_level": {
+            "from": "low",
+            "to": null
+          }
+        }
+      },
+      {
+        "pilot_id": "P04",
+        "changes": {
+          "claim_trust_level": {
+            "from": null,
+            "to": "medium"
+          },
+          "research_admission_candidate": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      {
+        "pilot_id": "P01",
+        "changes": {
+          "claim_trust_level": {
+            "from": null,
+            "to": "high"
+          },
+          "research_admission_candidate": {
+            "from": false,
+            "to": true
+          }
+        }
+      }
+    ],
+    "b": [
+      {
+        "pilot_id": "P03",
+        "changes": {
+          "claim_trust_level": {
+            "from": "low",
+            "to": null
+          }
+        }
+      },
+      {
+        "pilot_id": "P04",
+        "changes": {
+          "claim_trust_level": {
+            "from": null,
+            "to": "medium"
+          },
+          "research_admission_candidate": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      {
+        "pilot_id": "P01",
+        "changes": {
+          "claim_trust_level": {
+            "from": null,
+            "to": "high"
+          },
+          "research_admission_candidate": {
+            "from": false,
+            "to": true
+          }
+        }
+      }
+    ]
+  },
+  "source_only_deltas_under_same_rules": {
+    "a": [
+      {
+        "pilot_id": "P08",
+        "changes": {
+          "boundary_status": {
+            "from": "research_hold",
+            "to": "in_scope"
+          },
+          "technology_family": {
+            "from": null,
+            "to": "acid_calcium_management"
+          },
+          "claim_trust_level": {
+            "from": null,
+            "to": "medium"
+          },
+          "research_admission_candidate": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      {
+        "pilot_id": "P06",
+        "changes": {
+          "boundary_status": {
+            "from": "research_hold",
+            "to": "in_scope"
+          },
+          "technology_family": {
+            "from": null,
+            "to": "gluconamide_gluconate"
+          }
+        }
+      }
+    ],
+    "b": [
+      {
+        "pilot_id": "P08",
+        "changes": {
+          "boundary_status": {
+            "from": "research_hold",
+            "to": "in_scope"
+          },
+          "technology_family": {
+            "from": null,
+            "to": "acid_calcium_management"
+          },
+          "claim_trust_level": {
+            "from": null,
+            "to": "medium"
+          },
+          "research_admission_candidate": {
+            "from": false,
+            "to": true
+          }
+        }
+      },
+      {
+        "pilot_id": "P06",
+        "changes": {
+          "boundary_status": {
+            "from": "research_hold",
+            "to": "in_scope"
+          },
+          "technology_family": {
+            "from": null,
+            "to": "gluconamide_gluconate"
+          }
+        }
+      }
+    ]
+  },
+  "limitations": [
+    "Owner-anchor agreement is prescribed, not validation of empirical high-trust judgment.",
+    "Null/null agreement is reported separately from jointly assessed trust.",
+    "Prior adjudication vs fresh control changes are method reassessment plus potential rater variation, not experimental causal proof.",
+    "Small/nondegenerate counts may make chance-corrected diagnostics uninformative.",
+    "Protocol/fit/catalog readiness is not granted by research-source candidacy."
+  ],
+  "activation": false
+}

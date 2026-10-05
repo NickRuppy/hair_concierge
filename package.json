@@ -41,6 +41,8 @@
     "conditioner:research:rework-queue": "node --import ./tests/server-only-register.cjs --import tsx scripts/conditioner-research/rework-queue.ts",
     "research:conditioner:production-adapter": "tsx scripts/conditioner-research/project-production-adapter.ts",
     "research:leave-in:production-adapter": "tsx scripts/leave-in-research/project-production-adapter.ts",
+    "research:bondbuilder:production-adapter": "tsx scripts/bondbuilder-research/project-production-adapter.ts",
+    "products:intake:bondbuilder:prepare": "tsx scripts/product-intake/bondbuilder/prepare-internal-admission.ts",
     "test:comparelab:extract": "tsx scripts/extract-comparelab-prompts.ts",
     "test:qa": "playwright test qa-validation",
     "test:chat": "node --import ./tests/server-only-register.cjs --import tsx scripts/eval-chat/run.ts --skip-judge",

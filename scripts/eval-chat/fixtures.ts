@@ -564,7 +564,7 @@ export const SCENARIOS: EvalScenario[] = [
         content: {
           must_be_german: true,
           required_keywords: ["Bond", "Bruch"],
-          forbidden_keywords: ["wie neu", "dauerhaft reparieren", "heilt"],
+          forbidden_claims: ["wie neu", "dauerhaft reparieren", "heilt"],
         },
         judge: {
           expected_behavior:
@@ -672,7 +672,7 @@ export const SCENARIOS: EvalScenario[] = [
         message: "Meine Locken verknoten stark. Was hilft?",
         content: {
           must_be_german: true,
-          required_keywords: ["Sektionen"],
+          required_keywords: ["Sektionen", "Partien"],
           forbidden_keywords: ["Slip"],
         },
         judge: {

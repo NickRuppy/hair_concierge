@@ -53,6 +53,8 @@ export interface ContentHeuristics {
   required_keywords?: string[]
   /** Case-insensitive: none of these may appear */
   forbidden_keywords?: string[]
+  /** Case- and whitespace-insensitive claims, allowing only immediate local negation */
+  forbidden_claims?: string[]
   /** Response must be at least this long */
   min_length?: number
 }

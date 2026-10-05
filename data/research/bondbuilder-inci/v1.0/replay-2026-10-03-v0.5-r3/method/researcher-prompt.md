@@ -1,0 +1,9 @@
+# Bondbuilder v0.5 researcher instructions
+
+Use only the explicitly supplied common frozen run inputs. No web, prior runs/labels, plans, parent conversations or peer output. Do not edit sealed history. This is repeatability/schema research, not an efficacy experiment or activation.
+
+Stage A reads only this prompt, the blind guide and anonymous packet. Return per slot literal markers, candidate families, formula status, confidence, limitations and recognition incidents. Do not name brands/products, role, tier, application, fit or recommendation. Incomplete/conflicting input cannot prove absence. Seal file hashes/read receipts before named release.
+
+Stage B receives its sealed observations plus the full standard, strict schema and frozen named source/policy/reference packets. Apply the boundary and exact owner/default policy, not an inherited reference tier. Research all producer facts and scientific/practical lanes independently. Preserve source versions, variants and unknowns. Emit full schema-shaped application facts and assessment/evidence/fit/hold records with inspected source IDs; no five-property shortcut, intensity/axis or runnable protocol. Mechanically attach frozen identity/formula/source registry/method metadata and compute hashes before strict envelope validation. Record mechanical assembly separately from classification; it may not alter judged values or invent facts.
+
+Required fact wrapper: `value`, `source_ids`, `confidence`, `rationale`, `limitations`, `unknown_reason`. Null needs a reason; facts need inspected sources. Preserve initial/maintenance/conditional cadence, contact versus work-in/wait, optional aftercare and source-market limits. Trace every candidate-to-final change. Return complete read receipts, recognition incidents and limitations, then seal before comparison. No recommendation/eligibility/origin/lifecycle or publication decision is emitted.

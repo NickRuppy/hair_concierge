@@ -1,0 +1,33 @@
+{
+  "receipt_version": "bondbuilder-stage-b-seal-v0.1",
+  "sealed_date": "2026-09-30",
+  "input_standard_sha256": "712e629f0d92f4d9bafdf3f5fcce151628feb0819b777eb329ec3870c62a2968",
+  "input_packet_sha256": "d550115248bf129fd90ac6a9ed2f5fcb50039318e6f0ed1528fc466094aacd35",
+  "files": [
+    {
+      "path": "lane-a/records.json",
+      "sha256": "b38cddcdb5dbaa508a5d8efb5a12f518dc4942829d5c9b5929c4ee3ee23128ce"
+    },
+    {
+      "path": "lane-a/notes.md",
+      "sha256": "4886a9616c4771c42b8b463e7d45443c252fbecc11e8b7a2a83e1a452e352d32"
+    },
+    {
+      "path": "lane-b/records.json",
+      "sha256": "97441e0b452d2eae4f27e23cd166929a7bc5918f67f4a8e0d4a747bc4346069c"
+    },
+    {
+      "path": "lane-b/notes.md",
+      "sha256": "8ce49efe5c332c1d991d414e76674b040e73b0058116b842e3987abda8021e78"
+    }
+  ],
+  "verification": {
+    "eight_unique_slots_both_lanes": true,
+    "packet_flags_protocols_preserved": true,
+    "stage_a_unchanged": true,
+    "no_browsing_in_lanes": true,
+    "no_production_actions": true
+  },
+  "status": "Initial independent assessment pass complete; pilot review/recalibration and engine lock pending.",
+  "rule": "Retain exact lane outputs; adjudication, source amendments and replay are separate artifacts."
+}

@@ -190,7 +190,12 @@ function applicationArea(
     return "scalp_roots"
   }
   if (area === "ends") return "hair_ends"
-  if (area === "all_hair" && role === "heat_protection") return "root_to_tip_hair"
+  if (
+    area === "all_hair" &&
+    (role === "heat_protection" ||
+      protocol.protocolFacts.workflowId === "bondbuilder_verified_product")
+  )
+    return "root_to_tip_hair"
   return "hair_lengths_ends"
 }
 
@@ -198,6 +203,7 @@ function contactTime(
   protocol: ApplicationGuidanceProtocolV1,
   family: ApplicationFamily,
 ): ProductApplicationPointerV2["facts"]["contactTime"] {
+  if (protocol.protocolFacts.contactTime) return protocol.protocolFacts.contactTime
   if (protocol.scope.category === "shampoo" && family === "standard_rinse_out_cleanse") {
     return null
   }
@@ -239,6 +245,12 @@ function amount(
   protocol: ApplicationGuidanceProtocolV1,
 ): ProductApplicationPointerV2["facts"]["amount"] {
   const amountFact = protocol.protocolFacts.amount
+  if (amountFact?.kind === "starting_dose" || amountFact?.kind === "numeric") return amountFact
+  if (
+    protocol.protocolFacts.workflowId === "bondbuilder_verified_product" &&
+    amountFact?.kind === "qualitative"
+  )
+    return { kind: "source_instruction", copyDe: amountFact.copyDe }
   if (amountFact?.kind === "pumps") {
     return { kind: "pumps", minimum: amountFact.minimum, maximum: amountFact.maximum }
   }
@@ -312,18 +324,33 @@ export function buildProductApplicationPointerV2({
     role,
     applicationFamily: family,
     facts: {
-      applicationState: applicationState(family, guidancePayload.scope.category),
+      applicationState:
+        guidancePayload.protocolFacts.applicationState ??
+        applicationState(family, guidancePayload.scope.category),
       applicationArea: applicationArea(guidancePayload, role),
       rinse:
-        family === "pre_wash_lengths_treatment" || workflowId === "epres_bond_repair"
+        guidancePayload.protocolFacts.treatmentRinse ??
+        (family === "pre_wash_lengths_treatment" || workflowId === "epres_bond_repair"
           ? "follow_with_shampoo"
           : guidancePayload.protocolFacts.rinse === "leave_in"
             ? "leave_in"
-            : "rinse_out",
+            : "rinse_out"),
       contactTime: contactTime(guidancePayload, family),
       amount: amount(guidancePayload),
       heat: heatFacts(guidancePayload, family, role),
       conditionerPolicy: guidancePayload.protocolFacts.conditionerRelationship ?? "not_applicable",
+      ...(guidancePayload.protocolFacts.dilution
+        ? { dilution: guidancePayload.protocolFacts.dilution }
+        : {}),
+      ...(guidancePayload.protocolFacts.overnightAllowed !== undefined
+        ? { overnightAllowed: guidancePayload.protocolFacts.overnightAllowed }
+        : {}),
+      ...(guidancePayload.protocolFacts.conditionerSequence
+        ? { conditionerSequence: guidancePayload.protocolFacts.conditionerSequence }
+        : {}),
+      ...(guidancePayload.protocolFacts.shampooAfterTreatment
+        ? { shampooAfterTreatment: guidancePayload.protocolFacts.shampooAfterTreatment }
+        : {}),
     },
     workflowId,
     requiredCompanionProductId: null,

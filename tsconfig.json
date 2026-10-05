@@ -31,5 +31,8 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "scripts", "supabase/functions", "apps", "packages", "tmp"]
+  "exclude": [
+    "node_modules", "scripts", "supabase/functions", "apps", "packages", "tmp",
+    "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw"
+  ]
 }

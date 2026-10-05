@@ -1,0 +1,911 @@
+{
+  "base": "3abfe00a7843882f01009de701affa7b1dff697f",
+  "metadata_exclusions": [
+    "plans/bondbuilder-research-engine/canonical-content-manifest-2026-10-02.json",
+    "plans/bondbuilder-research-engine/implementation-receipt-2026-10-02.md",
+    "plans/bondbuilder-research-engine/release-readiness-2026-10-02.md"
+  ],
+  "fingerprint": "fbcb79c4c3ac39a0b23623f4e5b110edba380808be072fa2e60c3dbffb542678",
+  "manifest": [
+    {
+      "path": ".agents/skills/product-research-engine/SKILL.md",
+      "sha256": "3b4be2ca0a15a2aef2668a49894681f385d6c4ec0d962a2c3227d1d678a4e7a5"
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "a770fc3be276089fafd3f063beab08773e3c4e5ddfe5a131bd42b0b0cac8a0ac"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "dc48481fa3739cdee7f523229671d06ad61b6d9866153a29f78d942aec79b7ce"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P01.json",
+      "sha256": "00b3b5bfc9dd444ec6ba6112c3e0932b122842c5aac5e46032f80fbbfc5e32ae"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P02.json",
+      "sha256": "9a2b523764ea1318804e3edf9fd4eff32e82a671fa0a741db7693daec8638016"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P03.json",
+      "sha256": "f9351947ba0fa3ee62cb88a703d1e810a7049681429df331c06c9707e8af22e4"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P04.json",
+      "sha256": "133ab3dad75a1cba290b3a169390630bba5a763c1b7c51ed2700263dbd5de32a"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P05.json",
+      "sha256": "33cd1b45c6f88a246ed5da3226523119ee00a1d47deb341e3b06bc481d9a785c"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P06.json",
+      "sha256": "b7d3ff92b5c136a22801029493e0000a7cd35a610338840ab0d9f7d629acc7cd"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P07.json",
+      "sha256": "3aae82028365e7964feea42cd5bb7b85f69ec746e9e4323316411e74183032b8"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/P08.json",
+      "sha256": "0b887a31980771042ce2a56ea19ac0bd51b71bd20fe041e1fcf43bffa191f401"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/README.md",
+      "sha256": "41f1bb71abd29b7daadd0787df41cd979ce938c3b5d3f44cb820467fe9b3780c"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/owner-consolidation-2026-10-02/manifest.json",
+      "sha256": "3d6200b1eb6f131a57a7b865a48a793b83683166547310fab39b4efbc2bbbb38"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/adjudication.v0.1.json",
+      "sha256": "8b76c69f489b7cb0fbde104c115538a8f11052a4b0104a2eaccbbc0f1d43f637"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/blind-packet.v0.1.json",
+      "sha256": "8bf4726eaa5a96723ac9243369cbd1c93a713945cc103964c6a0add8bccd1c40"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/comparison.v0.1.json",
+      "sha256": "ed916769f5fdfeef7ac21dcd67a9e6318a416ee89b62cc62f9a545ced4c14c04"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/evidence-packet.v0.1.json",
+      "sha256": "d550115248bf129fd90ac6a9ed2f5fcb50039318e6f0ed1528fc466094aacd35"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/freeze-receipt.v0.1.json",
+      "sha256": "66853924674cc31536bc6e8c75a7a732bd416b89be685f218e2b708bc3c04fe6"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/lane-a/blind-notes.md",
+      "sha256": "df02caf1bf2ab0bf879088a64e2ad28edce191c6b830559ceb9e29b4801a7709"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/lane-a/blind-records.json",
+      "sha256": "f57ce35ae86bed74fe58a58ba7158bc8cdb470bb86315d37cd800652703b7b7f"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/lane-a/notes.md",
+      "sha256": "4886a9616c4771c42b8b463e7d45443c252fbecc11e8b7a2a83e1a452e352d32"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/lane-a/records.json",
+      "sha256": "b38cddcdb5dbaa508a5d8efb5a12f518dc4942829d5c9b5929c4ee3ee23128ce"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/lane-b/blind-notes.md",
+      "sha256": "1307b5591164c6cdbd118602b9f8e92b0014008f55973d10b80808ab7e5c58a1"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/lane-b/blind-records.json",
+      "sha256": "37b64ae290fb403d1835ec4c45e16e89a86dfd175102941454d39754fb7b2761"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/lane-b/notes.md",
+      "sha256": "8ce49efe5c332c1d991d414e76674b040e73b0058116b842e3987abda8021e78"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/lane-b/records.json",
+      "sha256": "97441e0b452d2eae4f27e23cd166929a7bc5918f67f4a8e0d4a747bc4346069c"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/post-freeze-source-followup.md",
+      "sha256": "40aa02404765dec45ed21ae89884a7e551eb3553f7d72e5f6d6ec1836154eee3"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/stage-a-seal.v0.1.json",
+      "sha256": "b9a41b357adbfbf4ef32f558b071e735680467b3c755180fcb465e218d5ee94c"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/stage-b-seal.v0.1.json",
+      "sha256": "2436f1a1fe360b04c0b50da7faef416f7d8174d1fba838aeb3cb2c98a8584fcd"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/pilot-2026-09-30/verification.md",
+      "sha256": "6a6af0fade73c9bc5f9eb8cc9b878871df31be435e0de29186a5bb403d869b2c"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.2/blind-packet.v0.2.json",
+      "sha256": "26dac4ece6980f93d092afef1f981eef80c685514e983c649beb469f6d05fea8"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.2/build-packets.mjs",
+      "sha256": "e1d9b466d5b86294a59c023807ecc98625db4144706a5962bc18fe4b73af4be7"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.2/evidence-packet.v0.2.json",
+      "sha256": "23ad2431598000f637bf92eff399fe793e4fdaa7d2d722907c59b79a325249ab"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.2/freeze-receipt.v0.2.json",
+      "sha256": "44897dae7396738865e35f69e367e2e5e89988f7db1e526e0da1f84a64ecf3d3"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.2/rule-only-control.json",
+      "sha256": "c5030ff04acd6a0ed2f2f9ce02feb3cab430b9ebc6341d5bfae5a774c0b986e7"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.2/source-amendments.json",
+      "sha256": "075bb732ddcaf660732b959ddc9221a9b20aab00d147f0f9ca01d263ec5575b1"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.2/verify.mjs",
+      "sha256": "86d1703bfa08f3ad08185ea2db75697175503aba775e457b80a778a9d2cd2f3b"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/adjudication.json",
+      "sha256": "a255dfc88e89af3f915fe9656ec1bb3a0554adcf20c454f35c2af65802272072"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/blind-packet.v0.3.json",
+      "sha256": "855dd8a8c6f574bf76063b192c99e6ca3764da6370578342d28a8740ee88838e"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/build-packets.mjs",
+      "sha256": "87958739897fb11d7b09c889f5db3d794d53c4dfcea9a1fb1dbbe6be8685b233"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/compare.mjs",
+      "sha256": "3a6eaa16869c6d48f68bc534a7aa3f286794da9bc04a6dc8b4ae05de951b29aa"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/comparison.json",
+      "sha256": "98cd94160f2afcb461cc018050cdef0b0da3af78b46f56d21c9a56a7e6ad72b9"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/evidence-packet.v0.3.json",
+      "sha256": "07a228339ec17cb9d1b6526057f42bfddecf87d6dcf96425a734c1b0991ffadd"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/final-seal.json",
+      "sha256": "f5e3d0c49d7c474a4871652da6512969c504b69226b864a3bf8d84059c2d34de"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/findings.md",
+      "sha256": "5e411527289308eab928e46c7061c46057381f5876765d7824bd118b30bc1a51"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/freeze-receipt.v0.3.json",
+      "sha256": "c0a682da382957a3d46af2a55f7389cd8f68a46217b9348a435b8e375fd002ab"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-a/blind-notes.md",
+      "sha256": "814794d0f53aa2e85ca2d54c4e1507b2dd47c9821c6f10b1afa6f44ffe183957"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-a/blind-records.json",
+      "sha256": "e548a7298caa286e913585cf88ee06a7c1ff6ad33a3620cf33435fd6497a5cc5"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-a/control-notes.md",
+      "sha256": "2024e22f32786efc0f2f05646a568b4b1fdeddf418f513214d59232d9ff4ed28"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-a/control-records.json",
+      "sha256": "720028e61cd6e2a4f221591dd3d605305c420728829a28ef4fb1171689268112"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-a/notes.md",
+      "sha256": "a6edae4d52c6bc8ecad7d07504d8d1977cd770ba23296bcd8769928f1edd1515"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-a/records.json",
+      "sha256": "5b6d9221a7a76ac5daafe82db20809e2a6bb7f6667cf5e1068530b93e22f0149"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-b/blind-notes.md",
+      "sha256": "cfd826200adb5652f6b3b76c69c0feca45d42c1c077487ef2e846568cdf54a35"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-b/blind-records.json",
+      "sha256": "ec741e04a6d8116e90d1cfb1bbe6a34f952580da7ea4d3bde9d98cb998c8e073"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-b/control-notes.md",
+      "sha256": "d03b62b847db68d2255574a43217547e76ad923eef4d200dfd44b5eb4253288c"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-b/control-records.json",
+      "sha256": "d09d18e67c0e1f65a668a512504a0d266488d68fb0023b486774dc83d43902ee"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-b/notes.md",
+      "sha256": "ef2117f271b7d6753aba45a54467ecdcbf4569e15041709779553e57363725c7"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-b/records.json",
+      "sha256": "7a77dee3258805698d0b66e1bda2149b49b433e3695a2918a450ad102e4a7a7d"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/rule-only-control.json",
+      "sha256": "9aa8d89d2352dce78a3d179af914819f193e2979866286436a05454c2f95eb16"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/stage-a-seal.json",
+      "sha256": "95f3bb00cee38bc0c7ee7362a9d0dd4a9b935d88f0afde16967f7f56b2b092d7"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/stage-b-seal.json",
+      "sha256": "1164e51961f7068c07881177b1c1b97459f86f8e85aae6b0236bcbdbc948f441"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/stage-c-seal.json",
+      "sha256": "111e6a14d100eee88f700c221c4e53513c1f7125c614b2e62fed0f9a746d1fb7"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/verify.mjs",
+      "sha256": "2eb370c57c27d8783f97b37f4ff8c5d5066c95702e3042229d0bffc8428966c7"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/adjudication.json",
+      "sha256": "739e60933c9e016ecbb47bca1562bfbc25a9252c46beb2f95be25f68391d1a9f"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/anonymous.json",
+      "sha256": "825a31bedaf12df4006547074645e0ef770a977c57e2a8940ed0ddf8a0f28599"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/final-seal.json",
+      "sha256": "5fe9496dfbf3b3e1477ecc493acfa94c6d29782cc6c4d71586bf802ec1fddcb6"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/findings.md",
+      "sha256": "80932e7ded49a8c406202f8950a478e92b5904126b47f99d4b8acd8ccf009a9d"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/freeze-receipt.json",
+      "sha256": "9b904922318034e2c45679dac15514c3b0e6e0a3cc89b7c2bca6057a80d475ee"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-a/blind-notes.md",
+      "sha256": "e2ac3c18a0c767b0419e1df2b6ee504026184e1880d2df0c9dbc8c581b6af590"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-a/blind-records.json",
+      "sha256": "6061cd19dcc74cea3d4d7b9db4ae300099007405110e221229ade6787db77451"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-a/notes.md",
+      "sha256": "255a773ce4c4bfb0af18959a7fc87d2113fd675a2f0a5dc58487aa05e1dc6731"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-a/records.json",
+      "sha256": "77b69830cd4385b468f9557ae0045321a80ec19430558608efe32de4c6495253"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-a/source-amendment-01.json",
+      "sha256": "a61dc8ff14260203b7e016e1be6790004e7d56b0c8958e42345ccbb937fd4890"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-b/blind-notes.md",
+      "sha256": "7f26d0c1bb174f6278f3a535d8a93cbffe49a19a9ef7073a461e35ac2c6d2101"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-b/blind-records.json",
+      "sha256": "b63f57d1219e7c6580c01f57d7dbd900ca87d8daa0424d1bad05f96d44c6b304"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-b/notes.md",
+      "sha256": "4e93c67a462b13ceda112da9c30bf65f68ae06651b30d1dc102768c3d4d9c6f2"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-b/records.json",
+      "sha256": "1270f34e813c3c60cf3bfe0a0c6ab42a074d1c9d8e33451dd37e221e743ce6da"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/lane-b/source-amendment-01.json",
+      "sha256": "4847b006b9a230b985ba09b590c6dca6c7e497ace2dc13f83afac81198c7f3ab"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/blind-instructions.md",
+      "sha256": "698ad9feec477547b82c5833ed8d3a17c4be57329ac05cdbbd4d07c02874d86e"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/researcher-prompt.md",
+      "sha256": "de657611b3d98b45cd2febc10850491bef2b77fa21009a03491baeeb1b8a0fa3"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/runbook.md",
+      "sha256": "fbd5c07af51861ae1904bc6f8acb6809878e95840e87180c52bb9f4b1c4fb6c5"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/standard.md",
+      "sha256": "031d32585ff0e2d5d1cdf77985d85188097fbf69354a4977eb93944ec2c93e10"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/named-evidence.json",
+      "sha256": "e2feb6e930fb8a5231dab3c753dce9aea52b2252301e37cc006fde386c4e5cb5"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/preregistration.json",
+      "sha256": "0344128af2524b5122cc9b8a91ed1de49acf91acafaa3e8f05f65a7ae11253db"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/source-amendment-01-freeze.json",
+      "sha256": "94d496d7ad756aecd2b84aa91c338a4e6e08992a9d782f19cd93a0f3643895ca"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/source-amendment-01-seal.json",
+      "sha256": "3495dcfda079693ced62ee6c442d159b0c0443593a0ce04c8b9b50e85987a4b3"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/source-amendment-01.json",
+      "sha256": "fa9232355a32c00e37b80a99f4fdf18a0a65b0d9551cc89b1477a9c33bae9fa9"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/source-preparation.md",
+      "sha256": "b96205cc3216b58e8b77adb8bff0affa36e8a61bad04c2ea18e333fd415d3e2b"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/stage-a-comparison.json",
+      "sha256": "24ece89fbe2ab38c46a4dc90e4357d3cfe34e78ecc4f99506c1989e5f3be6d89"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/stage-a-seal.json",
+      "sha256": "b11c2ed1d81e31eecc7a965ebefef14995e3d589212eed0530379de60b4142db"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/stage-b-seal.json",
+      "sha256": "2fb0a6c0db5cbb9730ac524219652e53ec3f77cdd1256a635554beb57f65c865"
+    },
+    {
+      "path": "data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/verify.mjs",
+      "sha256": "75ddd923eaeee00921c614c1797540cb9bf61a3edbb916b05391b53fb8d218bf"
+    },
+    {
+      "path": "docs/product-intake-bondbuilder-production-adapter.md",
+      "sha256": "a92ba0c9a12050a23f47405eb4949d410edf12d691bd9eb10953d48f6b4e93f9"
+    },
+    {
+      "path": "docs/research/README.md",
+      "sha256": "3f59e9ae0c1c185e5287b8e2a77c5b9f2b16aad8b276d1d4f5195c2c6c151e0f"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/README.md",
+      "sha256": "c6f6427e7689c26c5d6a23e8d60ebd66ecaaa982401d2948863577522c8c64eb"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/draft-v0.4/blind-instructions.md",
+      "sha256": "017abe330c19a8b5be6c4add49ea4e78631af416a70f105fdbde028c2666fd82"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/draft-v0.4/researcher-prompt.md",
+      "sha256": "1446cd975c36f04ac5f2858185ad649b30d7c68c61de5bfc3c43e2d760b242cf"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/draft-v0.4/runbook.md",
+      "sha256": "e209aa3566f9df6404f09e4250487142945cb6a1562663a2ae3158fd15c7f716"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/draft-v0.4/standard.md",
+      "sha256": "15539ed6d8f5142c15d644d3679c340cfe3fc5b9be4b9c2b3380412c84ecb951"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/draft-v0.5/blind-instructions.md",
+      "sha256": "d0bb074844d31823eecb87da3ce61a4e845286d5690e5aa71916eed6987fca84"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/draft-v0.5/researcher-prompt.md",
+      "sha256": "338b2346ecaf06407e818296cf8ca182ff45239f7ab543ea33e6eef5a8463856"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/draft-v0.5/runbook.md",
+      "sha256": "f4a23224c69b65f0b06ddb018daeca1f9ee203a211c0ec2746c39c4a29b7953b"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/draft-v0.5/standard.md",
+      "sha256": "9a70d5c155df0448085e08b960f2e9a1c4e8580264ef7d21f46bfb3eab07157f"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/bondbuilder-classification-standard.v0.1.md",
+      "sha256": "712e629f0d92f4d9bafdf3f5fcce151628feb0819b777eb329ec3870c62a2968"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/bondbuilder-classification-standard.v0.2.md",
+      "sha256": "9352dd42655d7703ed384cecb2954d6b23e7bbb59aea3f147390c1d54694baf4"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/bondbuilder-classification-standard.v0.3.md",
+      "sha256": "76bd8118b5d1c9485fff8b90bc1c77b7fadc98e5896892d0bb62aa888fa63e06"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/researcher-prompt.v0.1.md",
+      "sha256": "484e55045a218092c913bfa30551a710feb17f58a9caea8d1ec29edcb3aea125"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/researcher-prompt.v0.2.md",
+      "sha256": "3701400eacc0b034e0f2d836106fe41c4e6792dfe193a5b75d0b9551e47448e5"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/researcher-prompt.v0.3.md",
+      "sha256": "8edb2d0a5a5e6db98d9baf24122550a8bcc62d4477230360dba636d2ffc4c5fe"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/runbook.v0.1.md",
+      "sha256": "a67af12a53a8325d2deff1e0e0b99416b56fdf26c1a04f8321eb0aa129d085f2"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/runbook.v0.2.md",
+      "sha256": "299fe67b7def2c81ff8547fd5d5311df36fdc93e830f5cdc2fe3e6c28f9db960"
+    },
+    {
+      "path": "docs/research/bondbuilder-inci/v1.0/runbook.v0.3.md",
+      "sha256": "69e6817e008b03ec35e93cd8133bc92b5825375ed3bd1853e74e7f5e9ffa09cb"
+    },
+    {
+      "path": "package.json",
+      "sha256": "655d9775d3a35c1c4a309c6cb069c74fe21541db90ff57c495e4626b0c1c402b"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/adapter-grounding-2026-10-02.md",
+      "sha256": "f2cbc462ae3ce0ebf1ed0775889cc546d79fe0209b484d84f120d79966bd1080"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/application-followup-2026-10-01.md",
+      "sha256": "7d2102ef100b36d56b63fb0bc198bc3397298b7ac3e6d7ed4e65d0d8ad423a33"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/application-review-2026-09-30.md",
+      "sha256": "0ebc6fbde45672a05b8f73e4e46122ddc7025c1f5f07ec250dcd62e1c33f8be1"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/candidate-report-grounding.md",
+      "sha256": "67663760f2b69ae9233ce920364939b88d4e5922f92276c92ef793c5664a1cfe"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/creator-source-panel.md",
+      "sha256": "835b803d672ccb00f38a61f6457ce04d7b83de693a1d48ac2c58917eb595f108"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/implementation-plan-2026-10-02.md",
+      "sha256": "d39d850bdbd4a804abee8d916b650fa1573843ab0a93726e4b2c927ead8ae983"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/lab-preview/README.md",
+      "sha256": "1743be172a4c782b0e1cb2d441d173943baf2d358bebd8928da8e5419e62a489"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/lab-preview/index.html",
+      "sha256": "97e9a9eeedef1275e400f706faa8e42f071923f4d4adbce237953a1a089dceee"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/lab-preview/review-values.en.json",
+      "sha256": "f91180866ea9307a20b97475da56f81102801dc992cbb0a0fa1cac7eb133a903"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/lab-preview/snapshot.json",
+      "sha256": "7e0b976bfa9a5e511002b85bd06161f5ec62aeca60e11f9ad3e2cb7fc3a64fbc"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/live-catalog-reconciliation-2026-10-02.json",
+      "sha256": "72800c21c90df778baa7ea19e0151022b980054a9b24b0a2da0053361c3149d3"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/live-sql-lineage-2026-10-02.json",
+      "sha256": "84736bf288882ad6e710869f5932dd47f0bdea8508abfadd348d7f617cb8649c"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/method-consolidation-2026-09-30.md",
+      "sha256": "088a976194d7515fa061cdb5c77078d03192dd8ecc7f52f2f3cc650a05219b70"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/new-submission-validation-2026-10-02.md",
+      "sha256": "9e7edb89f0cb7c401086a45be20a8adea794bf16f294f7672a1235f3428a0916"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P01.json",
+      "sha256": "aff0ad5506da5b92953c728a5295e59f2315c92ff9518b19cb3d91af6f7a9564"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P02.json",
+      "sha256": "94c2aa4b35e959277311287170c9b0d538b18a235d7109fd6f5a1c1d2773154b"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P03.json",
+      "sha256": "12191d0b5d01e515360b2409b3d5253079761efefaaf3ff451c6719fd9382634"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P04.json",
+      "sha256": "9cecc4d15126eaf4e717266511739d631a9c3c2453b590805904859a9011edb3"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P05.json",
+      "sha256": "769c3aec6f529a8058cbfd68c89e387a31875223dc7f7f01c0f879842f941f68"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P06.json",
+      "sha256": "a76cf911d009ab020f94de430f841807d3281ab495554911c01d2ce5c50f0115"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P07.json",
+      "sha256": "6715760a607e2a0a4e460481ff605816a6b7a0d23a8ced2554a88de1f4ead732"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/P08.json",
+      "sha256": "1f93456408239b5a78d0af379989e92dfc9cdc716d555886852b37cc2ba66578"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/manifest.json",
+      "sha256": "dffc410147c8c0518b4ee597a51760c9f78935a832f3c54848ac2fb4923f42d7"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/adjudication.json",
+      "sha256": "a255dfc88e89af3f915fe9656ec1bb3a0554adcf20c454f35c2af65802272072"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/blind-packet.v0.3.json",
+      "sha256": "855dd8a8c6f574bf76063b192c99e6ca3764da6370578342d28a8740ee88838e"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/evidence-packet.v0.3.json",
+      "sha256": "07a228339ec17cb9d1b6526057f42bfddecf87d6dcf96425a734c1b0991ffadd"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/final-seal.json",
+      "sha256": "f5e3d0c49d7c474a4871652da6512969c504b69226b864a3bf8d84059c2d34de"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/freeze-receipt.v0.3.json",
+      "sha256": "c0a682da382957a3d46af2a55f7389cd8f68a46217b9348a435b8e375fd002ab"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-a/blind-records.json",
+      "sha256": "e548a7298caa286e913585cf88ee06a7c1ff6ad33a3620cf33435fd6497a5cc5"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-a/records.json",
+      "sha256": "5b6d9221a7a76ac5daafe82db20809e2a6bb7f6667cf5e1068530b93e22f0149"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-b/blind-records.json",
+      "sha256": "ec741e04a6d8116e90d1cfb1bbe6a34f952580da7ea4d3bde9d98cb998c8e073"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/data/research/bondbuilder-inci/v1.0/replay-2026-09-30-v0.3/lane-b/records.json",
+      "sha256": "7a77dee3258805698d0b66e1bda2149b49b433e3695a2918a450ad102e4a7a7d"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/freeze-receipt.json",
+      "sha256": "9b904922318034e2c45679dac15514c3b0e6e0a3cc89b7c2bca6057a80d475ee"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/blind-instructions.md",
+      "sha256": "698ad9feec477547b82c5833ed8d3a17c4be57329ac05cdbbd4d07c02874d86e"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/researcher-prompt.md",
+      "sha256": "de657611b3d98b45cd2febc10850491bef2b77fa21009a03491baeeb1b8a0fa3"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/runbook.md",
+      "sha256": "fbd5c07af51861ae1904bc6f8acb6809878e95840e87180c52bb9f4b1c4fb6c5"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/data/research/bondbuilder-inci/v1.0/validation-2026-10-02-v0.4/method/standard.md",
+      "sha256": "031d32585ff0e2d5d1cdf77985d85188097fbf69354a4977eb93944ec2c93e10"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/plans/bondbuilder-research-engine/application-followup-2026-10-01.md",
+      "sha256": "7d2102ef100b36d56b63fb0bc198bc3397298b7ac3e6d7ed4e65d0d8ad423a33"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/plans/bondbuilder-research-engine/application-review-2026-09-30.md",
+      "sha256": "0ebc6fbde45672a05b8f73e4e46122ddc7025c1f5f07ec250dcd62e1c33f8be1"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/plans/bondbuilder-research-engine/lab-preview/review-values.en.json",
+      "sha256": "f91180866ea9307a20b97475da56f81102801dc992cbb0a0fa1cac7eb133a903"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/plans/bondbuilder-research-engine/lab-preview/snapshot.json",
+      "sha256": "7e0b976bfa9a5e511002b85bd06161f5ec62aeca60e11f9ad3e2cb7fc3a64fbc"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/plans/bondbuilder-research-engine/live-catalog-reconciliation-2026-10-02.json",
+      "sha256": "72800c21c90df778baa7ea19e0151022b980054a9b24b0a2da0053361c3149d3"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/plans/bondbuilder-research-engine/owner-review-2026-09-30.md",
+      "sha256": "29cb3454cf11f734830900926aa8f4d2d6e271d7f86ad190a93fa9bd5f7f4d65"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/plans/bondbuilder-research-engine/remaining-facts-2026-09-30.md",
+      "sha256": "c0ef5741a4fac933d1bfb7a5d03834c9f3b78ce41236819b88be368a6e1eb0e7"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/scripts/bondbuilder-research/build-owner-batch.ts",
+      "sha256": "5ddd867effb921c30acbb1df76feeea4a81fa71d3a8f0e70797d2270ec486592"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-batch-2026-10-02/raw/src/lib/bondbuilder-research/registry.ts",
+      "sha256": "36096c140a792b7caceb489ca1d991a7910daa501b82e124087563bd3a1c595f"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/owner-review-2026-09-30.md",
+      "sha256": "29cb3454cf11f734830900926aa8f4d2d6e271d7f86ad190a93fa9bd5f7f4d65"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/phase-1-rulings.md",
+      "sha256": "1c94f1c364c57cb5528423dc40a29af8d7dc42d84d0b26c70f21c21a9060178d"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/pilot-cohort.md",
+      "sha256": "1ab0ce345736b4a004d4287583efe317180bce131d4ce728a9a3e6e335952ab4"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/pilot-findings.md",
+      "sha256": "7cf9053ef25bd04fb58fe1e97b242a4eafbeea3b39b99b65c74d2663aaac5c96"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/plan.md",
+      "sha256": "fedf7a89d0ce5d9125282083ce3a5ac59d3ed8c48746ff64f1f4cedb116cee47"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/recalibration-v0.2.md",
+      "sha256": "62390ecbf1cd6231fe7d80e8fea84a093a7ff128fd20ae0c5d555b06677756c3"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/release-preflight-2026-10-02.json",
+      "sha256": "0216b8a19db3028f1f914bd603127e1cb1fef78b7a099574cdcee490f98599bd"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/remaining-facts-2026-09-30.md",
+      "sha256": "c0ef5741a4fac933d1bfb7a5d03834c9f3b78ce41236819b88be368a6e1eb0e7"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/report-derived-pilot-seed.md",
+      "sha256": "6f07763bb4c353fb4bdf4c5bd2d4cfc8308d0b2b40878587d84b715b966841b1"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/storage-contract-proposal-2026-10-02.md",
+      "sha256": "4619839147e1afb02a37e02ec353bc5cf370f7b8bd865310a3d2b301b11ae307"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/storage-reapply-local.sql",
+      "sha256": "c1552fa006266144bd8149c58d275617a887b4974fe8575bf1ce8ac43d7d70a4"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/storage-rollback-local.sql",
+      "sha256": "c87cb509704eefb0eaee400f6b194a1ddf240a2e34a0754f84c5555117fdc5d4"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/validation-integration-handoff-2026-10-01.md",
+      "sha256": "5101058218f45553477d6dd1d1259930eed86da21449a7ed7927ba93f9abb344"
+    },
+    {
+      "path": "plans/bondbuilder-research-engine/verify-review-draft.mjs",
+      "sha256": "3293ef58184713cf61892435b1150589c54814143a4231bbb8a70d5d6dd679e9"
+    },
+    {
+      "path": "scripts/bondbuilder-research/build-owner-batch.ts",
+      "sha256": "5ddd867effb921c30acbb1df76feeea4a81fa71d3a8f0e70797d2270ec486592"
+    },
+    {
+      "path": "scripts/bondbuilder-research/project-production-adapter.ts",
+      "sha256": "30080c3c58d3c336853eaf51b1e6e91b5b94d04a8af7d09dcbd13e5ec1c535d1"
+    },
+    {
+      "path": "scripts/product-intake/codex-research-worker.ts",
+      "sha256": "6d7dea0348b352c7d12802196f0fb683d96a882365e27a46752e8b5125c53a3b"
+    },
+    {
+      "path": "scripts/product-intake/prepare-research.ts",
+      "sha256": "769949423a03ae6c95e28cb9b28fba8a0ef3d7bca4f26978ee5cc233d47ac942"
+    },
+    {
+      "path": "scripts/product-intake/review-actions.ts",
+      "sha256": "2b22964d9319b83d9bdbe2c4b3eab731b48725d4c029423bcb3b27a0e57c5e8e"
+    },
+    {
+      "path": "scripts/product-intake/review-app.ts",
+      "sha256": "77572037bd4174a3c6c2bde33eba9bf8bc51c924f89dd267f1c43aeffad1dde9"
+    },
+    {
+      "path": "src/app/admin/products/page.tsx",
+      "sha256": "d5de617ebaa550b2d39441ddeea48464ad95f759211958b6a54169e598fb4a7b"
+    },
+    {
+      "path": "src/app/api/admin/products/[id]/route.ts",
+      "sha256": "fec410307f4691e545fbd9ac7c7848cf0f7ff58bf2cfff4d0b11385b9de842df"
+    },
+    {
+      "path": "src/app/api/admin/products/route.ts",
+      "sha256": "339f162b2a9655f03947af0f87863e08b2f8416220b4e8aa5d93de2da9c738b9"
+    },
+    {
+      "path": "src/lib/agent-v2/tools/select-products-projection.ts",
+      "sha256": "6cfdccd394fb799beb507ab58bb4811d271ee6c4f796dc38e1585a59e184779d"
+    },
+    {
+      "path": "src/lib/agent/tools/select-products.ts",
+      "sha256": "66027a852cef104458ac8017a6684912735fb19e15247d19f346e73d65570bff"
+    },
+    {
+      "path": "src/lib/bondbuilder-research/cadence-projection.ts",
+      "sha256": "f45680214556bbbbcd6d071a3470c97bc63c6bd626575457ce9ecdd35d5ecf00"
+    },
+    {
+      "path": "src/lib/bondbuilder-research/contracts.ts",
+      "sha256": "f1ab8e92c50cc64af0231855cc225dd64722b9d2b6618c50af3fbaa56e1b1eab"
+    },
+    {
+      "path": "src/lib/bondbuilder-research/production-adapter.ts",
+      "sha256": "b2e31b1645e41539839655c8ef64d206fc6f31f7b5473ce31baa09ae4a7d05f1"
+    },
+    {
+      "path": "src/lib/bondbuilder-research/protocol-projection.ts",
+      "sha256": "6cbb166865796fbaaa87cbced4899c19ca3272f7e03d91e60cd2811e4c6c22e5"
+    },
+    {
+      "path": "src/lib/bondbuilder-research/registry.ts",
+      "sha256": "36096c140a792b7caceb489ca1d991a7910daa501b82e124087563bd3a1c595f"
+    },
+    {
+      "path": "src/lib/bondbuilder/constants.ts",
+      "sha256": "64ed009fca86d15cbfdb7187910d42c26eb89a532405080f14727f195d91f41d"
+    },
+    {
+      "path": "src/lib/bondbuilder/research-facts.ts",
+      "sha256": "1cef562a6da405b42b14378b8dcff1bc80d7ed1991dc2595717df9f4e8c7a61e"
+    },
+    {
+      "path": "src/lib/bondbuilder/usage-protocols.ts",
+      "sha256": "fe4c21cd93be673501e092f99f4ae446452f3df594e92afa7180a10aa8b59318"
+    },
+    {
+      "path": "src/lib/catalog-authority/audit-reader.ts",
+      "sha256": "b63e2b83026ae03a86fa7f4e4925d7a7829bbbd03596e0d3f0327736cc2f9645"
+    },
+    {
+      "path": "src/lib/personal-plan/products/authority/catalog-facts.ts",
+      "sha256": "6c3c7a2cfa354a1233398122382610a0a5ec4a176c8785559fc848b888daed5b"
+    },
+    {
+      "path": "src/lib/personal-plan/products/authority/contracts.ts",
+      "sha256": "ff00e2cbcb34e377b13ff49c96ac3c1f414d36b3fb4e76d39a92ffffbfee3e7c"
+    },
+    {
+      "path": "src/lib/personal-plan/routine/application-adapter.ts",
+      "sha256": "65cf27a3d25f0f6e6697776632032cddfa6a4853ea21b26fd9000d103a582fe1"
+    },
+    {
+      "path": "src/lib/product-intake/bondbuilder-research-adapter.ts",
+      "sha256": "62cbcbd77da3b36ae85ab96ef5aa83870f2c758920aa9cf0884181cf956a5cff"
+    },
+    {
+      "path": "src/lib/product-intake/bondbuilder-research-prompt-contract.ts",
+      "sha256": "85ba89957d87773310556480923cf2b9eb5643a4440d4823cfdc492c4cb74fb4"
+    },
+    {
+      "path": "src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+      "sha256": "c78253e27bc6beceb2a33e8835386fc5cead930fc82847643156bd6615ccc663"
+    },
+    {
+      "path": "src/lib/product-intake/category-validators.ts",
+      "sha256": "6631f28852c6dab85248df17294be54f6e615bcd882cb1c99e901cde40eb209d"
+    },
+    {
+      "path": "src/lib/product-intake/review-workflow.ts",
+      "sha256": "0606b0eb7e76a285b84e1a5eb52316bd783584f404269ec0a5a69718967d2d61"
+    },
+    {
+      "path": "src/lib/product-specs/constants.ts",
+      "sha256": "abb2034aff960760ed997ce896ca26d39ef98d0ff5c2a1d20b2f819c61444cea"
+    },
+    {
+      "path": "src/lib/routines/personal-plan/application/catalog-facts.ts",
+      "sha256": "e42cfdd30625763d5346293bedd6772c39a456fb678eb41dbe880e0d7e471d47"
+    },
+    {
+      "path": "src/lib/routines/personal-plan/application/compiler-v2.ts",
+      "sha256": "bc3ef508f56e6b3177daaaffb8bee909b19142b4bc12e3c99bf11fb8322eab84"
+    },
+    {
+      "path": "src/lib/routines/personal-plan/application/compiler.ts",
+      "sha256": "01326b664a4fce2a884713fc1004382efeb1fe66b92ebff8cc34f72239544801"
+    },
+    {
+      "path": "src/lib/routines/personal-plan/application/contracts-v2.ts",
+      "sha256": "f1c645a7af9b0f89cf8e33f2152aaeeecdc7ae8cb81aaf05313acea876bbe982"
+    },
+    {
+      "path": "src/lib/routines/personal-plan/application/contracts.ts",
+      "sha256": "f56e11c918995b6826774141ef55ceb764c94dabfa2026a274a04d9453b6eb1f"
+    },
+    {
+      "path": "src/lib/routines/personal-plan/application/product-protocol-adapter.ts",
+      "sha256": "8790a78bc10cb299e9c8c0f1bfc916ad2a442a3aa051720b9238b728c664c898"
+    },
+    {
+      "path": "src/lib/validators/index.ts",
+      "sha256": "39a11dfbaf09fe09392365b3b555509f4ad2799702c01074273a79e34be604f6"
+    },
+    {
+      "path": "supabase/migrations/20261002132306_bondbuilder_research_profile_storage.sql",
+      "sha256": "83c511daf7e97466cb0003a71e105ce7beb1bada7e09652915e8f26a10864bdf"
+    },
+    {
+      "path": "tests/admin-product-support-specs.test.ts",
+      "sha256": "e14d71e9d193e85dea2d8269e8a884e30e3bac1fc93a9b6f899720be29f52c75"
+    },
+    {
+      "path": "tests/agent-select-products-tool.spec.ts",
+      "sha256": "27dadd807538416d8c5c69b745800c45f693234c2395c439fdca1a9e66a39b9d"
+    },
+    {
+      "path": "tests/bondbuilder-owner-batch.test.ts",
+      "sha256": "60eff72ed51402ab2555e91663634ac4798371c9a69a0aece72f79218b59a187"
+    },
+    {
+      "path": "tests/bondbuilder-product-intake-adapter.test.ts",
+      "sha256": "1cef44db64dc520ec18245670d233456bce3c1dcaacb3191749e5e1a1a244534"
+    },
+    {
+      "path": "tests/bondbuilder-production-adapter.test.ts",
+      "sha256": "7e2b910b7470d1fb74851edf7d6caafbb67c180850e964f10388c7fcec8cb5f3"
+    },
+    {
+      "path": "tests/bondbuilder-protocol-projection.test.ts",
+      "sha256": "2dd1858dbabfeebba772cb2214fa5102f4914729b2ac372840c17147e224b6e6"
+    },
+    {
+      "path": "tests/bondbuilder-research-storage-postgres.test.ts",
+      "sha256": "c7e35f211af016938cac6a56d85848107401a93ab18198ba4c2105dfc68ecb37"
+    },
+    {
+      "path": "tests/fixtures/bondbuilder-research/profile.ts",
+      "sha256": "949e40b4589fbf71fb245d311b17c6d55d8a6ed3e87b2ad5204ba5845a1d45e8"
+    },
+    {
+      "path": "tests/personal-plan-routine-cadence.test.ts",
+      "sha256": "281e3c4bba97f3018bd837df0db8ad4ba8ff7b9b91ae60de897207cd67cc831e"
+    },
+    {
+      "path": "tests/personal-plan-stage5-compiler-v2.test.ts",
+      "sha256": "c222a08ca708475f378bfbcda4425e9b219ac5690d8b5278f6b9d06201c4fbf4"
+    },
+    {
+      "path": "tests/personal-plan-stage5-v2-builder.test.ts",
+      "sha256": "6b7c548eb62d7d1f47902b13c83317d14b4ad1b80028def1b59afa88b3c4f56a"
+    },
+    {
+      "path": "tests/personal-plan/products/stage3-catalog-facts.test.ts",
+      "sha256": "5efa4f64dd71ede221f742d6bc2131fc3268e30e461629d48cdba97ef3339ee2"
+    },
+    {
+      "path": "tests/product-intake-review-workflow.test.ts",
+      "sha256": "1aa771244ef55dce15acf2e4f075b67d103cde39a5a0e42f7b470b4212841999"
+    },
+    {
+      "path": "tests/scan-expansion-batch-postgres.test.ts",
+      "sha256": "e1742c9195c82e22ba2e6a797c72546f4cbb564a07ae541501c6a04908fd3767"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "903de5325cd4da3d726cd3e6072822cb535ffbad4e50c5a4cf65ff5f194dd5fe"
+    }
+  ]
+}

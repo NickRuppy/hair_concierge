@@ -1,0 +1,338 @@
+{
+  "schema_version": "producer-direction-source-complement-v1",
+  "created_date": "2026-10-03",
+  "scope": "Current producer application directions only, P01-P08; independent source supplement, no reclassification or efficacy assessment.",
+  "capture_method": "Official producer/brand-market pages and an identified DE brand-distributor article. Page text or explicitly labelled inspected search excerpt. Observations are paraphrases; no raw page copy retained.",
+  "boundary": "A source amendment for subsequent owner handling. No sealed replay history, formula selection, property assessment, catalog or production state was changed.",
+  "sources": [
+    {
+      "source_id": "C03-P01-1",
+      "slot_id": "P01",
+      "url": "https://olaplex.de/products/original-olaplex-n-3plus-complete-repair-treatment",
+      "publisher": "OLAPLEX DE",
+      "market": "DE",
+      "access": "full_text",
+      "sections": [
+        "Anwendung",
+        "FAQ: Pre-Shampoo / nach dem Shampoonieren / über Nacht"
+      ],
+      "observations": [
+        "Producer places No.3PLUS before shampoo, on wet hair in the shower.",
+        "Apply generously across roots through tips; retain for 3 minutes, then rinse.",
+        "Follow with OLAPLEX shampoo and conditioner; suggested frequency is once per 1–3 hair washes.",
+        "FAQ says overnight application is unnecessary and recommends the pre-shampoo sequence."
+      ],
+      "limitations": [
+        "Directions identify No.3PLUS; 100 ml was not exposed in the inspected page text.",
+        "No quantified dose or explicit physical texture was found in the inspected directions.",
+        "No actual bottle label inspected."
+      ],
+      "checked_date": "2026-10-03",
+      "accessed_date": "2026-10-03"
+    },
+    {
+      "source_id": "C03-P02-1",
+      "slot_id": "P02",
+      "url": "https://k18-hair.de/k18-hair/k18-oil/Leave-In-Molecular-Repair-Hair-Mask-50ml.aspx",
+      "publisher": "K18 German brand shop / Kevin Murphy GmbH",
+      "market": "DE",
+      "access": "full_text",
+      "sections": [
+        "Produktdetails",
+        "Merkmale & Nutzen",
+        "Anwendungsschritte / Hinweis"
+      ],
+      "observations": [
+        "Page identifies the 50 ml leave-in mask.",
+        "Wash with K18 Peptide Prep Detox Shampoo, omit conditioner at this stage, and towel-dry thoroughly.",
+        "Begin with one pump; increase if needed according to hair length, thickness and condition. Distribute evenly in sections across roots through tips.",
+        "Wait 4 minutes; do not rinse the mask at this step. Optional K18 Damage Shield Conditioner follows the mask and is then rinsed; style afterward.",
+        "German cadence: first four consecutive washes, then every fourth wash.",
+        "For regular use of rich oils, silicones or film-forming stylers, the page specifically recommends prior Detox Shampoo."
+      ],
+      "limitations": [
+        "No physical pack inspected. Physical texture is not explicitly specified in these DE directions.",
+        "The DE cadence and root-to-tip distribution wording are retained separately from international directions."
+      ],
+      "checked_date": "2026-10-03",
+      "accessed_date": "2026-10-03"
+    },
+    {
+      "source_id": "C03-P02-2",
+      "slot_id": "P02",
+      "url": "https://www.k18hair.com/products/leave-in-molecular-repair-hair-mask-50-ml",
+      "publisher": "K18",
+      "market": "US / international English",
+      "access": "full_text",
+      "sections": [
+        "dos and don'ts",
+        "more to know",
+        "how to use"
+      ],
+      "observations": [
+        "50 ml product page explicitly describes a cream format and leave-in treatment mask.",
+        "Shampoo without conditioner and thoroughly towel-dry; apply 1–3 pumps according to length and density, moving from ends toward roots.",
+        "Wait a full 4 minutes before combing, styling or adding products; do not rinse the mask.",
+        "Conditioner is permitted after the four-minute wait, but not before mask application.",
+        "Use for 4–6 consecutive shampoos; how-to section names 4–6 washes after salon service, then as needed.",
+        "Heavy product users are told to clarify beforehand; mineral or metal buildup is a separate stated reason for demineralizing."
+      ],
+      "limitations": [
+        "Cross-market complement only; not a replacement for DE directions or proof of DE-pack equality.",
+        "International dose, application direction and cadence differ in specificity from C03-P02-1."
+      ],
+      "checked_date": "2026-10-03",
+      "accessed_date": "2026-10-03"
+    },
+    {
+      "source_id": "C03-P02-3",
+      "slot_id": "P02",
+      "url": "https://k18-hair.gorgias.help/en-US/how-do-i-use-k18-conditioner-with-the-mask-373017",
+      "publisher": "K18 help center",
+      "market": "US / international English",
+      "access": "full_text",
+      "sections": [
+        "How do I use K18 conditioner with the mask?"
+      ],
+      "observations": [
+        "The official support answer permits K18 conditioner four minutes after application of the leave-in molecular repair mask."
+      ],
+      "limitations": [
+        "This brief FAQ supplies timing, not a complete washing or rinsing procedure.",
+        "The displayed update age is relative (8 months), not an exact publication date.",
+        "International supplement; does not independently establish German-pack directions."
+      ],
+      "checked_date": "2026-10-03",
+      "accessed_date": "2026-10-03"
+    },
+    {
+      "source_id": "C03-P02-4",
+      "slot_id": "P02",
+      "url": "https://www.k18hair.com/blogs/consumer/the-top-k18-mask-faqs",
+      "publisher": "K18",
+      "market": "US / international English",
+      "access": "full_text",
+      "sections": [
+        "How often should I use it?",
+        "My hair is really damaged",
+        "Should I skip conditioner after?"
+      ],
+      "observations": [
+        "FAQ generally suggests once or twice weekly, adjusted to repair needs; it allows more frequent initial use for very damaged or overprocessed hair and describes weekly maintenance.",
+        "For damaged hair, apply first to the most compromised sections, such as mid-lengths and ends, then work toward healthier sections.",
+        "Conditioner afterward is optional; for particularly dry hair, the article suggests a light leave-in conditioner or styling product."
+      ],
+      "limitations": [
+        "Article is dated 2024-12-08 and was accessed on the checked date; continued availability does not establish a newly issued protocol.",
+        "This weekly cadence is recorded as a separate producer variant, without normalizing it to DE every-fourth-wash or US 4–6-wash directions.",
+        "This article alone does not specify the conditioner waiting interval; C03-P02-3 does."
+      ],
+      "checked_date": "2026-10-03",
+      "accessed_date": "2026-10-03"
+    },
+    {
+      "source_id": "C03-P03-1",
+      "slot_id": "P03",
+      "url": "https://epres-hair.de/modal/CONSUMERKIT.aspx",
+      "publisher": "epres German brand shop",
+      "market": "DE",
+      "access": "full_text",
+      "sections": [
+        "Starterkit",
+        "Top 5 FAQs",
+        "Anwendung"
+      ],
+      "observations": [
+        "Starter-kit instructions specify an ampoule emptied into its accompanying epres spray bottle, filled with tap, distilled or mineral water, then fitted with the sprayer and shaken.",
+        "Spray dry, unwashed hair until fully saturated; retain at least 10 minutes, then shampoo and condition as usual.",
+        "Use 1–2 times weekly, with the FAQ tying frequency to damage severity.",
+        "FAQ also permits leaving the treatment in without immediately washing; subsequent normal shampoo and conditioner remain part of the stated routine.",
+        "Use the prepared mixture within two months."
+      ],
+      "limitations": [
+        "The inspected current starter-kit page does not quantify bottle capacity or water volume; no numerical dilution ratio inferred.",
+        "15 ml ampoule identity is complemented separately by C03-P03-3.",
+        "No actual starter-bottle label inspected."
+      ],
+      "checked_date": "2026-10-03",
+      "accessed_date": "2026-10-03"
+    },
+    {
+      "source_id": "C03-P03-2",
+      "slot_id": "P03",
+      "url": "https://epres.com/products/bond-repair-treatment",
+      "publisher": "epres",
+      "market": "US / international English",
+      "access": "full_text",
+      "sections": [
+        "Top FAQs",
+        "How To Use"
+      ],
+      "observations": [
+        "Empty one concentrate vial into the epres spray bottle, fill with water, attach sprayer and shake; tap, distilled or bottled water are allowed.",
+        "Spray enough onto dry, unwashed hair to saturate it fully; leave at least 10 minutes before cleansing and styling.",
+        "Overnight use is explicitly allowed; the FAQ separately permits use without immediate washout.",
+        "Producer recommends 1–2 weekly applications and using a mixed bottle within two months.",
+        "FAQ advises conditioner after use and names Healthy Hair Shampoo and Healthy Hair Conditioner."
+      ],
+      "limitations": [
+        "Cross-market complement; DE page names ordinary shampoo and conditioner instead of requiring these named US partners.",
+        "No numerical water volume or dilution ratio stated in the inspected instructions.",
+        "No numerical maximum contact time inferred from the overnight option."
+      ],
+      "checked_date": "2026-10-03",
+      "accessed_date": "2026-10-03"
+    },
+    {
+      "source_id": "C03-P03-3",
+      "slot_id": "P03",
+      "url": "https://kevinmurphy-germany.de/epres-die-revolution-der-haarpflege/",
+      "publisher": "Kevin Murphy Germany / epres German brand distributor",
+      "market": "DE",
+      "access": "full_text",
+      "sections": [
+        "Anwendung",
+        "Retail Kit / Refill presentation"
+      ],
+      "observations": [
+        "Distributor article identifies a retail kit containing the spray bottle and two 15 ml ampoules, and a refill presentation with two 15 ml ampoules.",
+        "Instructions use the contents of one ampoule in the epres bottle, topped up with water and shaken; saturate hair, retain at least 10 minutes, then wash and style. Suggested use is 1–2 times weekly."
+      ],
+      "limitations": [
+        "Article dated 2023-09-20; accessed now as pack/presentation context, not a newly issued product label.",
+        "Does not specify bottle capacity or exact added-water volume.",
+        "This article discusses salon services elsewhere; those statements are not imported into the home-treatment protocol."
+      ],
+      "checked_date": "2026-10-03",
+      "accessed_date": "2026-10-03"
+    },
+    {
+      "source_id": "C03-P04-1",
+      "slot_id": "P04",
+      "url": "https://www.loreal-paris.de/elvital/bond-repair/rescue-pre-shampoo",
+      "publisher": "L'Oréal Paris DE",
+      "market": "DE",
+      "access": "inspected_excerpt",
+      "sections": [
+        "Search-exposed producer Anwendung",
+        "Search-exposed FAQ"
+      ],
+      "observations": [
+        "Producer directions identify Bond Repair Plus Keratin-Festigendes Pre-Shampoo and place it before washing.",
+        "Apply a generous amount to damp hair across the scalp through the ends.",
+        "Retain for five minutes, then rinse thoroughly with clear water until residues are removed.",
+        "Continue with Bond Repair Plus shampoo, conditioner and leave-in serum.",
+        "The FAQ explicitly includes scalp, lengths and ends as application areas."
+      ],
+      "limitations": [
+        "Direct page open initially returned a page listing but follow-up page retrieval failed; producer directions were inspected in the search-engine excerpt, excluding customer reviews.",
+        "The inspected excerpt does not establish the 200 ml pack size, physical texture, dose volume or cadence.",
+        "Generic FAQ discussion of other pre-shampoos lasting 5–20 minutes is not treated as this product's instruction."
+      ],
+      "checked_date": "2026-10-03",
+      "accessed_date": "2026-10-03"
+    },
+    {
+      "source_id": "C03-P05-1",
+      "slot_id": "P05",
+      "url": "https://www.redken.eu/de-de/produkte/haarpflege/acidic-bonding-concentrate/acidic-bonding-intensive-treatment",
+      "publisher": "Redken Germany",
+      "market": "DE",
+      "access": "full_text",
+      "sections": [
+        "Artikelbeschreibung",
+        "Gebrauchsanweisung"
+      ],
+      "observations": [
+        "Producer positions Acidic Bonding Concentrate Intensive Treatment as a pretreatment before the line's shampoo and conditioner.",
+        "Apply to damp hair; retain for 5–10 minutes and rinse.",
+        "Continue with Redken Acidic Bonding Concentrate Shampoo and Conditioner."
+      ],
+      "limitations": [
+        "Protocol source only; no formula version selected or replaced.",
+        "190 ml pack size is not exposed in inspected page text.",
+        "No specific hair region, distribution method, quantity, texture or cadence is given in the inspected instructions."
+      ],
+      "checked_date": "2026-10-03",
+      "accessed_date": "2026-10-03"
+    },
+    {
+      "source_id": "C03-P06-1",
+      "slot_id": "P06",
+      "url": "https://www.ogxbeauty.co.uk/products/bond-protein-repair-sealing-serum",
+      "publisher": "OGX / Kenvue UK",
+      "market": "UK",
+      "access": "full_text",
+      "sections": [
+        "50 ml product heading",
+        "What You Do",
+        "Enhance Your Hair Care Routine"
+      ],
+      "observations": [
+        "Official UK page identifies the 50 ml Sealing Serum.",
+        "Before bed, spread a small amount between hands and distribute evenly through damp or dry hair, beginning at the ends and moving upward.",
+        "Leave in overnight; rinsing is not required. Suggested use is 1–2 times weekly.",
+        "The range routine says cleanse and condition first, then apply the Bond Protein Repair oil or serum."
+      ],
+      "limitations": [
+        "UK label-direction complement only. No official DE directions were located by the bounded searches; DE/EU pack equality is unresolved.",
+        "Serum is the explicit producer format label; no viscosity, spray format or dose in ml inferred.",
+        "Overnight is the stated use pattern, not a numeric minimum or maximum contact-time measurement."
+      ],
+      "checked_date": "2026-10-03",
+      "accessed_date": "2026-10-03"
+    },
+    {
+      "source_id": "C03-P07-1",
+      "slot_id": "P07",
+      "url": "https://www.aveda.de/product/botanical-repair-bond-building-pre-shampoo-treatment",
+      "publisher": "Aveda DE",
+      "market": "DE",
+      "access": "full_text",
+      "sections": [
+        "150 ml product listing",
+        "Produktdetails",
+        "Anwendung"
+      ],
+      "observations": [
+        "The 150 ml pre-shampoo treatment is explicitly described as a gel-cream.",
+        "Apply to dry hair across roots through tips before shampooing.",
+        "Retain 5–10 minutes, rinse, then use Botanical Repair Strengthening Shampoo and Conditioner.",
+        "For mild-to-moderate damage, use weekly; for moderate-to-severe damage, use each wash day."
+      ],
+      "limitations": [
+        "Producer damage bands overlap at moderate; no exclusive cutoff or independent damage assessment is inferred.",
+        "No quantified amount or distinct sectioning/distribution technique given.",
+        "No actual pack label inspected."
+      ],
+      "checked_date": "2026-10-03",
+      "accessed_date": "2026-10-03"
+    },
+    {
+      "source_id": "C03-P08-1",
+      "slot_id": "P08",
+      "url": "https://www.kerastase.de/produktlinien/produktlinien/premiere/concentre-decalcifiant-ultra-reparateur/3474637196684.html",
+      "publisher": "Kérastase DE",
+      "market": "DE",
+      "access": "full_text",
+      "sections": [
+        "Size selector (45 ml / 250 ml)",
+        "Anwendung"
+      ],
+      "observations": [
+        "Page offers 45 ml and 250 ml variants and describes the product as a pretreatment concentrate.",
+        "Before shampoo, apply generously to damp lengths and massage in.",
+        "Wait five minutes without rinsing; apply Bain Première shampoo directly over the treatment.",
+        "Rinse after the shampoo step, then use a Première conditioner or hair mask."
+      ],
+      "limitations": [
+        "Page title mentions travel format while its size selector also exposes 250 ml; the title alone is not used as pack proof.",
+        "Five minutes is the wait before layering shampoo, not total treatment contact time or a standalone rinse point.",
+        "No numerical dose, physical texture or cadence established in inspected instructions.",
+        "No actual 250 ml pack label inspected."
+      ],
+      "checked_date": "2026-10-03",
+      "accessed_date": "2026-10-03"
+    }
+  ]
+}
