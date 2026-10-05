@@ -18,6 +18,7 @@ import { de } from "date-fns/locale"
 import { ArrowDown, Menu } from "lucide-react"
 import { CombIcon } from "@/components/ui/comb-icon"
 import { Icon } from "@/components/ui/icon"
+import { PlanInviteBanner } from "@/components/layout/plan-invite-banner"
 import type { Product } from "@/lib/types"
 import { clearRoutineTriggerSeed, readRoutineTriggerSeed } from "@/lib/routines/chat-triggers"
 import { useRouter } from "next/navigation"
@@ -647,6 +648,10 @@ export function ChatContainer({
           <span className="type-body-sm font-medium">
             {currentConversationId ? "Chat" : "Neuer Chat"}
           </span>
+        </div>
+
+        <div className="shrink-0 px-3 pt-3 empty:hidden md:px-4">
+          <PlanInviteBanner className="mx-auto max-w-3xl" />
         </div>
 
         {/* Messages */}

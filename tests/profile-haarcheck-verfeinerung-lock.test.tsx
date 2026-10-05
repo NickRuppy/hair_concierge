@@ -310,10 +310,10 @@ test("the layout resolves tier server-side via the same route-agnostic loader /s
     layoutSource,
     /import \{ loadAuthenticatedAppPageTier \} from "@\/lib\/auth\/authenticated-app-route-access"/,
   )
-  assert.match(layoutSource, /const \[navigation, tier\] = await Promise\.all\(\[/)
+  assert.match(layoutSource, /const \[navigation, tier(?:, \w+)*\] = await Promise\.all\(\[/)
   assert.match(layoutSource, /loadAuthenticatedAppPageTier\(\)/)
   assert.match(
     layoutSource,
-    /<ProfilePageTierProvider tier=\{tier\}>\{children\}<\/ProfilePageTierProvider>/,
+    /<ProfilePageTierProvider tier=\{tier\}>[\s\S]*\{children\}[\s\S]*<\/ProfilePageTierProvider>/,
   )
 })

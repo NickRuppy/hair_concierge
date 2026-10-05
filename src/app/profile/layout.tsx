@@ -1,4 +1,5 @@
 import { AuthenticatedAppShell } from "@/components/layout/authenticated-app-shell"
+import { PlanInviteProvider } from "@/components/layout/plan-invite-banner"
 import { ProfilePageTierProvider } from "@/components/profile/profile-page-tier"
 import { ProfileRoutineAccessProvider } from "@/components/profile/profile-routine-access"
 import { loadAuthenticatedAppPageTier } from "@/lib/auth/authenticated-app-route-access"
@@ -7,6 +8,7 @@ import {
   loadAuthenticatedAppNavigationAccess,
   schedulePersonalPlanNavSurfaceVisit,
 } from "@/lib/personal-plan/navigation-access"
+import { loadPersonalPlanInvite } from "@/lib/personal-plan/plan-invite"
 import { loadProfileHasPersonalPlan } from "@/lib/personal-plan/profile-plan-ownership"
 import { AppRouteProviders } from "@/providers/route-providers"
 import { PRIVATE_PAGE_METADATA } from "@/lib/seo/site-identity"
@@ -20,9 +22,10 @@ export default async function ProfileLayout({ children }: { children: React.Reac
   // from `navigation.tier` (that value is deliberately looked up by user id only, correct
   // for the nav's purely cosmetic lock dots but wrong for anything that gates behavior — see
   // that loader's own doc comment). Independent of `navigation`, so read concurrently.
-  const [navigation, tier] = await Promise.all([
+  const [navigation, tier, showPlanInvite] = await Promise.all([
     loadAuthenticatedAppNavigationAccess(),
     loadAuthenticatedAppPageTier(),
+    loadPersonalPlanInvite(),
   ])
   // W05: "a plan row exists" must not depend on tier — the synthetic free-tier navigation
   // carries `hasPersonalPlan: false` without looking, so this helper reads the row for that
@@ -38,7 +41,9 @@ export default async function ProfileLayout({ children }: { children: React.Reac
           hasRoutineAccess={hasRoutineTabAccess(navigation)}
           hasPersonalPlan={hasPersonalPlan}
         >
-          <ProfilePageTierProvider tier={tier}>{children}</ProfilePageTierProvider>
+          <ProfilePageTierProvider tier={tier}>
+            <PlanInviteProvider show={showPlanInvite}>{children}</PlanInviteProvider>
+          </ProfilePageTierProvider>
         </ProfileRoutineAccessProvider>
       </AuthenticatedAppShell>
     </AppRouteProviders>
