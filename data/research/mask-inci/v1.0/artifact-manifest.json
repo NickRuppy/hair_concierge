@@ -1,0 +1,693 @@
+{
+  "schema_version": "mask-artifact-manifest.v1.0",
+  "created_at": "2026-10-06",
+  "updated_at": "2026-10-06",
+  "normative_source": {
+    "path": "docs/research/mask-inci/v1.0/mask-classification-standard.md",
+    "bytes": 213388,
+    "sha256": "d105ef3fdfc0e953591a54765004f59d107f049a9ea9007cf7c579dafa726ae0",
+    "verification": "Standard v1.0, promoted unchanged from the v0.6 draft at the 2026-10-06 freeze; differs from the reviewed rc1 snapshot only in the v1.0 header block and the added Version section"
+  },
+  "review_source_snapshot": {
+    "version": "1.0-rc1",
+    "path": "docs/research/mask-inci/v1.0/mask-classification-standard.v1.0-rc1.md",
+    "bytes": 208903,
+    "sha256": "880371cef180dc17e11f8a8a7ccc15d3536f1dc77cb7fc2204ab126a53270fa7",
+    "verification": "the v0.6 draft bytes at freeze (calibration closed under v0.6; round 2.5 ran against it); byte-identical to mask-classification-standard.v0.1.md, the historical draft path"
+  },
+  "historical_draft_path": {
+    "path": "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+    "bytes": 208903,
+    "sha256": "880371cef180dc17e11f8a8a7ccc15d3536f1dc77cb7fc2204ab126a53270fa7",
+    "verification": "filename retained from v0.1 through v0.6; holds the v0.6 text unchanged; no longer normative"
+  },
+  "superseded_v0_1_text": {
+    "path": "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1-archive.md",
+    "bytes": 91185,
+    "sha256": "19926ddd7322fcdce117cde031d355117d3fc4ce3e6b6de6213b7136f10ad838"
+  },
+  "evidence_lexicon": {
+    "path": "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+    "bytes": 67428,
+    "sha256": "3dcaf54f8a7e4844f44d2731f30ca28c4a8565f17082d8fd0b27376ca3167ada",
+    "verification": "pinned by the production adapter as `lexiconSha256` in place of a runbook (the mask engine has none yet)"
+  },
+  "category_charter": {
+    "path": "docs/research/mask-inci/v1.0/00_category_charter.md",
+    "bytes": 6866,
+    "sha256": "dfa005742598b294e2acb06f3b69e162aba9507302c20d7ca5285a0c98252930"
+  },
+  "property_set": {
+    "path": "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+    "bytes": 9483,
+    "sha256": "a2b9224c7afc1d4ae311ed47c6eeb036992fdd8ab5e9a7709d13c285a02b1c7c"
+  },
+  "planning_evidence": {
+    "path": "docs/research/mask-inci/v1.0/planning-evidence/2026-09-04-mask-formulation-evidence.md",
+    "bytes": 6871,
+    "sha256": "bb1cda9015234725f939fb1e15426ba7c734b2945f1b5c4b07ec09eef2e2fdd3"
+  },
+  "calibration_reports": [
+    {
+      "path": "docs/research/mask-inci/v1.0/calibration-round-1-report.md",
+      "bytes": 5891,
+      "sha256": "4b9a62519384b3025878f14f945eb187d30bf8889af2c220912a1393ff67ea63"
+    },
+    {
+      "path": "docs/research/mask-inci/v1.0/calibration-round-2-report.md",
+      "bytes": 10297,
+      "sha256": "82c105399348b9e34b30f6c5d25346ee856adf518baa5a5559ef5910914cb63a",
+      "verification": "freeze-gate evidence: §1 cohort gate 97/97, §5 round 2.5 6/6, §6 final status"
+    }
+  ],
+  "rule_change_ledger": {
+    "path": "plans/mask-inci/round1-rule-rulings.md",
+    "bytes": 16036,
+    "sha256": "5aa7c3fc8532b52375696764ea6244c87d6a9db65c31f1e170a5a9cb1d6a3d9c",
+    "verification": "Nick's binding rulings R1-R9, E1-E17 and the round-2 triage notes"
+  },
+  "readme": {
+    "path": "docs/research/mask-inci/README.md",
+    "bytes": 8894,
+    "sha256": "ae4368706dd0dcf7a327bd2d1773f3a846ab1c4cbb8405766630ef219bb149fc",
+    "verification": "landing index as at freeze; a living document, not re-verified by the pin test"
+  },
+  "logic_lock_receipt": {
+    "path": "data/research/mask-inci/v1.0/v1.0-logic-lock-receipt.json",
+    "bytes": 7784,
+    "sha256": "69c144d701fec6622d1c0be952b78317cb935d86f2f85fd6d8043311ac92f4e0",
+    "verification": "records the locked v1.0 scope, profile fields, freeze notes and the separate adapter, intake, catalog, database and publication gates"
+  },
+  "corpus": {
+    "root": "data/research/mask-inci/v1.0",
+    "excluded_from_freeze": {
+      "data/research/mask-inci/v1.0/lab-review-state.json": "mutable Lab review state, written by the review UI",
+      "data/research/mask-inci/v1.0/calibration-envelopes/": "derived adapter fixtures, rebuilt deterministically by scripts/mask-research/build-envelopes-from-key.mjs",
+      "data/research/mask-inci/v1.0/calibration-expected-projections.json": "derived adapter golden file, checked by tests/mask-production-adapter-calibration.test.ts"
+    },
+    "groups": {
+      "agreement": [
+        {
+          "path": "data/research/mask-inci/v1.0/agreement/agreement-v0.1-archive.json",
+          "bytes": 22665,
+          "sha256": "28be7b4fb12952b0be00e71e5095f52d0cec3b9c9579eb6d06b83c1b7b82d0e7"
+        }
+      ],
+      "blind-lane-v0": [
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v0/01-hask-argan-oil-sachet.json",
+          "bytes": 25892,
+          "sha256": "612da61a1dc89613231fe92d6021853996754e6f732ac068d50671b07084514e"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v0/02-gliss-7sekunden-express-repair.json",
+          "bytes": 23565,
+          "sha256": "0624335e29a6a930f0a439e016122f3616007041f6a4eb98f6a3353e8a2b0a8a"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v0/03-bali-curls-sos-protein-treatment.json",
+          "bytes": 20715,
+          "sha256": "8e46afbf0fbad8d490b9363e427f29c47e5875575972e349ed03d65dbe1804b2"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v0/04-gliss-liquid-silk-4in1.json",
+          "bytes": 25902,
+          "sha256": "6ed9c5a2ee8a34b2b12804e020ddf0ca1a313b9a93e99b9aaf2d3d667f537139"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v0/05-isana-mandelmilch-3in1.json",
+          "bytes": 22727,
+          "sha256": "ae46e00d7e4a7d9bc67d91c8252de928b75109c1f721dad02e78303b8243635b"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v0/06-monday-smooth-anti-frizz.json",
+          "bytes": 22644,
+          "sha256": "11d4ae5bbfdda72a5c13839e6f9d99f7156ef284634585d9344193128ef9eba1"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v0/07-pantene-molecular-bond-repair.json",
+          "bytes": 21628,
+          "sha256": "6a08bc09ddbb2e5c0a225149066ce3e4bbde2b16b5e651574c57d8af61cdf2f8"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v0/08-sante-intense-hydration.json",
+          "bytes": 24540,
+          "sha256": "e6fac5be7e076c93b3ee62795dee71b5be477b3a5d2ac85465df1ff740d954c5"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v0/09-balea-professional-aqua-hyaluron.json",
+          "bytes": 18667,
+          "sha256": "5442fa45e27a1e0ba711bcea6f1c1ebf90f94f8ffb212a333933427340aa3fe2"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v0/10-bali-curls-deep-repair-mask.json",
+          "bytes": 19814,
+          "sha256": "0c87c05cd12765e85bcefd047a44b032e174ad95d4e0c29b63fedd47c127f68d"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v0/11-elvital-glycolic-gloss.json",
+          "bytes": 22072,
+          "sha256": "678a558f07bf58e8c3d89d9f73f4a186d55748e0b58434f22d999d7dac91c31a"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v0/12-guhl-panthenol-reparatur-2in1.json",
+          "bytes": 6625,
+          "sha256": "2f90101eb51cd7f6468a21a50bf95e3aee5d6cca3a1013ffa98940a746cd593a"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v0/13-olaplex-no3-hair-perfector.json",
+          "bytes": 6440,
+          "sha256": "ea3c852ac5928137c98f769d0d8103f5afbb26e261fb4ddd3060f50a04db4425"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v0/blind-notes.md",
+          "bytes": 23075,
+          "sha256": "52c1d1688d84593471712776306865247fc4fee63af48d91f4026ed8eeb6daa0"
+        }
+      ],
+      "blind-lane-v1": [
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/01-hask-argan-oil-sachet.json",
+          "bytes": 7647,
+          "sha256": "0b178fb6ad39958e44310d23eaa11ecf4be495d38c623b7b94547bcdf81e2725"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/02-gliss-7sekunden-express-repair.json",
+          "bytes": 7960,
+          "sha256": "4dce62c4d7117514659cb75c2f005c6d5c779de80b68d8b67289c58737714a35"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/03-bali-curls-sos-protein-treatment.json",
+          "bytes": 7034,
+          "sha256": "81fdba99810f3d1a19d8b3323952723a66a69e1427bc9aaec679f1da13ce5fd2"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/04-gliss-liquid-silk-4in1.json",
+          "bytes": 7754,
+          "sha256": "edf878851da12b8a2b07ea1ae9a36f9c3d4cb0ea234db57895761724861e293e"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/05-isana-mandelmilch-3in1.json",
+          "bytes": 6429,
+          "sha256": "b4aa716396d247463793e799574d57f1fb455faf750f80279581fcdb7ecad417"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/06-monday-smooth-anti-frizz.json",
+          "bytes": 6195,
+          "sha256": "5796fa2798ef8223babdb130576a593c4232b7bc7c03e502d96138725216a76e"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/07-pantene-molecular-bond-repair.json",
+          "bytes": 5942,
+          "sha256": "3d05e82191539c882b5e7f54f5be173b903b332553912db60854eb7edfa0a15b"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/08-sante-intense-hydration.json",
+          "bytes": 6252,
+          "sha256": "1c9e975f70dd5deec0b9e44c7f6027c658f3235e8de241a2d3f8a5b22b52cf23"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/09-balea-professional-aqua-hyaluron.json",
+          "bytes": 5928,
+          "sha256": "1f93e9e5d76b8e453e26531e1c6affd9e5eb27f6d016e3109659c05b85ae34d0"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/10-bali-curls-deep-repair-mask.json",
+          "bytes": 6266,
+          "sha256": "abe7c2799ee08247ae671a84f9b6cdbd8b465c75887b5c92f87524a15ee35ca3"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/11-elvital-glycolic-gloss.json",
+          "bytes": 6988,
+          "sha256": "8b9ed283af23e86cbfeb47ff7fe35118e7fd87ce02f2adb8720e2459a8737f25"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/12-guhl-panthenol-reparatur-2in1.json",
+          "bytes": 5642,
+          "sha256": "cd2312fe405269082a6301c98f376a41cf351b841a47ed130dd86dda3ac88fb6"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/13-olaplex-no3-hair-perfector.json",
+          "bytes": 2285,
+          "sha256": "8a87de6543bff7b271776c980544ccefbb46d459beb0e2e096b61606df41f7e4"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/u1-balea-plex-care-2in1.json",
+          "bytes": 14397,
+          "sha256": "4ce862214dc93e1732e78b252f1d9914f687ded5688d118315424bba79505dce"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/u2-wahre-schaetze-1-minute-kur.json",
+          "bytes": 10893,
+          "sha256": "573bc3a2fdd04c953f7fef564f9e82ad3188fa339175d18bc6246fe91c897bb6"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/u3-john-frieda-wunder-kur.json",
+          "bytes": 11973,
+          "sha256": "0c10ca42cbfd4c8e4a7d1539d89622c94ee0cb074d1b0c6f9cb76d12582658c6"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/u4-isana-feuchtigkeit-3in1.json",
+          "bytes": 8886,
+          "sha256": "ba8cb5edf9a1ae84ff4e2fb822c903f408156df811d788dca2651d19ecae91f2"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/u5-olaplex-no3plus-prewash.json",
+          "bytes": 3255,
+          "sha256": "06fa1e661850cc148bcbcb168d23db060e27698385541bfa620dd4e3646487de"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v1/u6-balea-silberglanz-2in1.json",
+          "bytes": 3282,
+          "sha256": "2f509c6cba0d80fedccae8eb14c97bed56ca87491505769043a86f442f739398"
+        }
+      ],
+      "blind-lane-v2p5": [
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v2p5/q1-wahre-schaetze-avocado-shea.json",
+          "bytes": 8579,
+          "sha256": "9ff5cdc7aeec9baaab8466ee60bbd2c6babbf83c2a0336aa608cb21c9c9c9cde"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v2p5/q2-swiss-o-par-arganoel.json",
+          "bytes": 7850,
+          "sha256": "ae2bb45b7978a8c7162e26d87dc449aab35da86c09a3041c334ef6215314e0b5"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v2p5/q3-syoss-intense-repair.json",
+          "bytes": 4430,
+          "sha256": "09bf47ac783f1c128c56ec55a2c57f92e37e8aaf5d6d5cb05486e35565c3b02a"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v2p5/q4-fructis-keratin-sleek.json",
+          "bytes": 9208,
+          "sha256": "5677d152918822d47dd2c98f78eb66aa831a6e0d7644b20316549a1ea041a3c1"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v2p5/q5-balea-keratin-repair.json",
+          "bytes": 7857,
+          "sha256": "7ed6182723a4ab6fb4ba3c5e93723742bda3c4258706da902e4e16b992cc4b0a"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-lane-v2p5/q6-syoss-intense-keratin.json",
+          "bytes": 8673,
+          "sha256": "c5e53953200c620c58f2d61093453582dde256d5a401044999b664ce3ed24c66"
+        }
+      ],
+      "blind-packets": [
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets/01-hask-argan-oil-sachet.json",
+          "bytes": 2034,
+          "sha256": "0ebffee5732b78e09c10dc703e2eed0a1a710af2d9f8f0b51e9db5a59d340cfb"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets/02-gliss-7sekunden-express-repair.json",
+          "bytes": 1822,
+          "sha256": "52682b0771ce199ef53dde56638d8df7b0d4f51372e0c92322e4d95b5fb61e44"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets/03-bali-curls-sos-protein-treatment.json",
+          "bytes": 1622,
+          "sha256": "1e606a27f39b291b22fb6ea6addff2b5d4301fe0209d502a56999e61c6fc7a21"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets/04-gliss-liquid-silk-4in1.json",
+          "bytes": 1742,
+          "sha256": "e83c8be64e7fba15ba804b75d9e227eee81f5b74e5dd579d39f2754b4961e57b"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets/05-isana-mandelmilch-3in1.json",
+          "bytes": 1471,
+          "sha256": "28116072ee4de1ef2554f134d693c868e6d21935cbb2428f96e3eb6e202d4a1b"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets/06-monday-smooth-anti-frizz.json",
+          "bytes": 1511,
+          "sha256": "2c4ced71dcdb0278544fde1c46f3c8eb2b1019a40f6ec523f7c06b7a6a41b1af"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets/07-pantene-molecular-bond-repair.json",
+          "bytes": 1171,
+          "sha256": "02daacfbd5ebb5ad7ce446fedc8bdaad4e70f6f6a4b583423c5cbe75d2eadd80"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets/08-sante-intense-hydration.json",
+          "bytes": 1260,
+          "sha256": "ff8021154665b579fa796dcd05d4772cabe01e17dc1b22792defef2268a8a17b"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets/09-balea-professional-aqua-hyaluron.json",
+          "bytes": 1255,
+          "sha256": "ca8ec3fefe5147bbbdf58048cd7b170b8b50657541147b342aff75088f8b40aa"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets/10-bali-curls-deep-repair-mask.json",
+          "bytes": 1534,
+          "sha256": "4849a54ef5dd57305139dc649e9a12d3b8698f1d2f135dcde8f6b4d53a5190e3"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets/11-elvital-glycolic-gloss.json",
+          "bytes": 1583,
+          "sha256": "4c1e1e5dd9d15e6a312dfed2e92d507c931056b6b87e67ca3847dd2b008920ed"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets/12-guhl-panthenol-reparatur-2in1.json",
+          "bytes": 1477,
+          "sha256": "6cb64488ae99ecbdf686701d0fdcd7eb6ed1d81ecb2e497f70624da30d4fecfe"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets/13-olaplex-no3-hair-perfector.json",
+          "bytes": 2047,
+          "sha256": "785c419e1c095677fbe490588e2f05057cc3d5209bf4e562dc7751de179f4e0e"
+        }
+      ],
+      "blind-packets-round2": [
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets-round2/u1-balea-plex-care-2in1.json",
+          "bytes": 1455,
+          "sha256": "ec003271d615245ccbf1656d9391b493ec0fabface55369d5fbad61547b0d303"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets-round2/u2-wahre-schaetze-1-minute-kur.json",
+          "bytes": 1130,
+          "sha256": "553ba1069db30489e9862c34c06181277144f6e09b4dbaad82a6f288c6409747"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets-round2/u3-john-frieda-wunder-kur.json",
+          "bytes": 1132,
+          "sha256": "5d9686b9e678cc5273d3a2dd89a6ff2126920d93cadbfb3dca0fefa59ed56466"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets-round2/u4-isana-feuchtigkeit-3in1.json",
+          "bytes": 1068,
+          "sha256": "410f948b36a7f923e73712acb81b251c496a987f2c20c5315f9a45273c64aed9"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets-round2/u5-olaplex-no3plus-prewash.json",
+          "bytes": 1453,
+          "sha256": "465ff4c9474b03a94592c0cbeb75a9c7493e2658180f5a1c88ba1324d484c082"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets-round2/u6-balea-silberglanz-2in1.json",
+          "bytes": 1106,
+          "sha256": "0d0d83603765614c9e59ed272ce42ffaf4ee8b858a2d17d434f87e84c55d2615"
+        }
+      ],
+      "blind-packets-round2p5": [
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets-round2p5/q1-wahre-schaetze-avocado-shea.json",
+          "bytes": 914,
+          "sha256": "662682e141d10744b8d9a8fd6e2b1dd4b7175762e48f3d29bd7489d5e905b166"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets-round2p5/q2-swiss-o-par-arganoel.json",
+          "bytes": 975,
+          "sha256": "0b49cc78ac46820e421919e22aef039118bf47072c5afdfc37069b16e4a50af8"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets-round2p5/q3-syoss-intense-repair.json",
+          "bytes": 944,
+          "sha256": "170eb57e0745e5b9cd32056495d9b588fd824fcad318f1599384a74534a92842"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets-round2p5/q4-fructis-keratin-sleek.json",
+          "bytes": 1075,
+          "sha256": "5015e9f0707a79aa79239b1fa3ed315938ebdecc0f4c34e0da5ea3594e6839dc"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets-round2p5/q5-balea-keratin-repair.json",
+          "bytes": 855,
+          "sha256": "a9ccc6414faef56ea29102cb245e15363f2abe190d2b63fc34c59cec865c5bb1"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/blind-packets-round2p5/q6-syoss-intense-keratin.json",
+          "bytes": 985,
+          "sha256": "16aa77ada92b2cf8be030dd3afa8c2b7c42126d1fb16ae449112289eb8a4b343"
+        }
+      ],
+      "capture": [
+        {
+          "path": "data/research/mask-inci/v1.0/capture/01-hask-argan-oil-sachet.json",
+          "bytes": 4358,
+          "sha256": "32cbe16b4089e83d8b7284bb87655d2d4d0808587414173ebde7d04006dae229"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/02-gliss-7sekunden-express-repair.json",
+          "bytes": 4408,
+          "sha256": "9105d6bba86ee9aa4b8bdac0a3ffe90d0e1df3176cbb070f093039974a7c797c"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/03-bali-curls-sos-protein-treatment.json",
+          "bytes": 3495,
+          "sha256": "a8cdc020eb44b006d7f38c5135a883616cb8ff0acf40a03577785e62f59f2a2d"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/04-gliss-liquid-silk-4in1.json",
+          "bytes": 2954,
+          "sha256": "162a7616b958eda3cf38c485f60adc7c5af3f4966416b58a1a40aa46894f0f3d"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/05-isana-mandelmilch-3in1.json",
+          "bytes": 2671,
+          "sha256": "031127f2448897142f8ed4535fc63d88229db43178d2f4608208dfb995cffcd1"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/06-monday-smooth-anti-frizz.json",
+          "bytes": 4282,
+          "sha256": "2d4924b43401498b2b7de73aedf08f672d7cbb9d6b7b6d0c469ea49ad9b62347"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/07-pantene-molecular-bond-repair.json",
+          "bytes": 2990,
+          "sha256": "333382040b5b3310c00ca3fbbdcf19dcd152cf035dbf968f761b77deaaba8aa7"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/08-sante-intense-hydration.json",
+          "bytes": 2596,
+          "sha256": "8ce1166ec611e70a7efe47d573fe5e1dea48e85e01b3b945bef0dc4df6a3215e"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/09-balea-professional-aqua-hyaluron.json",
+          "bytes": 2381,
+          "sha256": "c81484fc0185f44e8de01d146ed323b9766c99ed992f103b6ee44c4c57a36c8c"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/10-bali-curls-deep-repair-mask.json",
+          "bytes": 4243,
+          "sha256": "2f9ed72d515ce2e05bf0b964a946f264dfedf5fc9bcf6c250e35a0cddbed85fb"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/11-elvital-glycolic-gloss.json",
+          "bytes": 2821,
+          "sha256": "2b888ca3bf13409f81db8d746d0ebd1a49f5313df8277331539f7feea726786a"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/12-guhl-panthenol-reparatur-2in1.json",
+          "bytes": 2662,
+          "sha256": "89b0e4ddd2d65273acd0365842c2fe7555ebd6cf47bbaab389e7ec2ff2875c94"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/13-olaplex-no3-hair-perfector.json",
+          "bytes": 3813,
+          "sha256": "2d8006b89e0abad56d3d659e97de058f91e17bdebcbe91ba4a0369a2579cb0e9"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/reserve-r2-balea-plex-care-2in1.json",
+          "bytes": 2647,
+          "sha256": "3d6f69195db0354fa0495e9e18c1600a672a7f10469c0ae3423124a4f0e3be8f"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/reserve-r3-wahre-schaetze-1-minute-kur.json",
+          "bytes": 2894,
+          "sha256": "5493ae141467835fb3f96ba09d1f857d9d9ff8d4993737975a6850ce866e9b70"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/reserve-r4-john-frieda-wunder-kur.json",
+          "bytes": 4519,
+          "sha256": "794199ff7e9c77b1ba51c0a0a23a01496b11aa76f61ed5541c039b2b6b2b6201"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/capture/verification-2026-09-04.json",
+          "bytes": 6077,
+          "sha256": "0e6b01a256e4125d95eb450fb53e19e7a4bb544ce21d03e721be3680afd4f92f"
+        }
+      ],
+      "reference-key-v0": [
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v0/01-hask-argan-oil-sachet.json",
+          "bytes": 30605,
+          "sha256": "69abcb3687b807384fe9aaa4074fc52c0edaa96bc34f411d3e84297f9b5f3906"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v0/02-gliss-7sekunden-express-repair.json",
+          "bytes": 34177,
+          "sha256": "ef38942847281e2e6b8d1cceeb5242b119e5cad3e9dde61db393fc856091994b"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v0/03-bali-curls-sos-protein-treatment.json",
+          "bytes": 27184,
+          "sha256": "771fa4be6101f9207a243d04fbd04388cd87986ca8c48519ae4e7ade7b7a8171"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v0/04-gliss-liquid-silk-4in1.json",
+          "bytes": 32436,
+          "sha256": "3807da25619f464ca88c955c016ef431b07a49ec96950f092c1d4a674e1b5eea"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v0/05-isana-mandelmilch-3in1.json",
+          "bytes": 27601,
+          "sha256": "7aa5ccc320fb338608186eed62b2fe210e1ece827d72931ec9d512213adb9308"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v0/06-monday-smooth-anti-frizz.json",
+          "bytes": 30792,
+          "sha256": "852ca937a5d384967659180e9e0ea3bde75f771ebc3e1e3b14c0f8d496135ba8"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v0/07-pantene-molecular-bond-repair.json",
+          "bytes": 31036,
+          "sha256": "b9a8afa016db0714f68bb322872435a340a8d20b1b5292eba87a4a8af0378a26"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v0/08-sante-intense-hydration.json",
+          "bytes": 35951,
+          "sha256": "de9fc81146335742dd35584b98ce2da9cc9219a04ca4d91239d5bfdf910c8fac"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v0/09-balea-professional-aqua-hyaluron.json",
+          "bytes": 26038,
+          "sha256": "609f09c78570b4305af6a77f37deb6c99eb5adcad5c94a97e8f138555f35ee62"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v0/10-bali-curls-deep-repair-mask.json",
+          "bytes": 27490,
+          "sha256": "504eebb4dfc61da50bcd5e2be9ff689947abcabbf947b556a41f507ef9c3bf74"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v0/11-elvital-glycolic-gloss.json",
+          "bytes": 33447,
+          "sha256": "8ec8c27b97eea3bfb0dc818b8c44ea273d59b3ca08227549192bba34170b17af"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v0/12-guhl-panthenol-reparatur-2in1.json",
+          "bytes": 34499,
+          "sha256": "03bfabd187155c03a426beef6aa0abcbe1f55c3e9d25d5603227b8e97df77d28"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v0/13-olaplex-no3-hair-perfector.json",
+          "bytes": 12509,
+          "sha256": "a654cad2a5ae6bf9ec29811e1eb65b741b522eeff41ff90a9b687cee250bd5f4"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v0/summary.md",
+          "bytes": 3748,
+          "sha256": "0e9b72aa7a6cc5c67c0ad0f2fc46d81089b3af7427f2a458dd011dcfbc383eff"
+        }
+      ],
+      "reference-key-v1": [
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/01-hask-argan-oil-sachet.json",
+          "bytes": 42119,
+          "sha256": "a66063346051fd33fbb29aa4f565f10db6e4daebcc36b656a82dc6f504ffe0c1"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/02-gliss-7sekunden-express-repair.json",
+          "bytes": 45945,
+          "sha256": "a3254e4c8a6d746e23707f09556c6a625477126cf0d141f9f2765f63695ce684"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/03-bali-curls-sos-protein-treatment.json",
+          "bytes": 38969,
+          "sha256": "f66650b4756d832186d89ef269591bb9dac19918cb0d71cdc0fce350478f78a0"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/04-gliss-liquid-silk-4in1.json",
+          "bytes": 42922,
+          "sha256": "491f5f5630239b8b0ef247ebbade5f53d1c089283d84a28ae0773f9db8c71528"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/05-isana-mandelmilch-3in1.json",
+          "bytes": 33474,
+          "sha256": "eb68d1f1deac2f60a0ce748f6b9b04e05521717a13a0499aec6f27f04c40a647"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/06-monday-smooth-anti-frizz.json",
+          "bytes": 34817,
+          "sha256": "b83db38b2a5ba05e296d60449ff3efb7b6df768fd84881b8017afb609b2efa58"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/07-pantene-molecular-bond-repair.json",
+          "bytes": 46867,
+          "sha256": "0682356c364e5634e16a15db0df6f21a63abe0ed3eb6521322acc2790bc72a26"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/08-sante-intense-hydration.json",
+          "bytes": 53524,
+          "sha256": "06f2c1c4d4f1c02c696e22c75ffc363c79444f2c1a5062be71d44b148fc5ee5c"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/09-balea-professional-aqua-hyaluron.json",
+          "bytes": 40468,
+          "sha256": "d9118037e71409e54af20e3a7c0e8e95094e17836fa42e8f7089152780704e57"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/10-bali-curls-deep-repair-mask.json",
+          "bytes": 36669,
+          "sha256": "b1b57cb3136486b2c02aca8107ad90e8c4126946c1f4e839243ebe4e5a1ea76b"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/11-elvital-glycolic-gloss.json",
+          "bytes": 59985,
+          "sha256": "ed0137f738a792273fb406585d8a277bc89e4a088ed841ccded0d05da6d437f3"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/12-guhl-panthenol-reparatur-2in1.json",
+          "bytes": 58456,
+          "sha256": "e94c970e4883e31076426cea3f99be75f19854c3cbdc223b6c93234861aff6ca"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/13-olaplex-no3-hair-perfector.json",
+          "bytes": 12582,
+          "sha256": "96c6733f644ac11f98406fc09356f5566ee586a4f892a2350708e4912daa03cc"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/changes-from-v0.md",
+          "bytes": 59145,
+          "sha256": "37496257f61ee1812e6a95f8eba1ee1c8775f1b9131ff16a970fa6fed7d137eb"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/review-summaries.part1.json",
+          "bytes": 9916,
+          "sha256": "7bb78f2d60fc3435fdbe05fc094da631bba00dc80f7bada79602703c00cc6e34"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/review-summaries.part2.json",
+          "bytes": 7504,
+          "sha256": "58e69d32ae1bdfbcae4dcd8cff39bd4f291d5b7c358036214ca58d659c2633d3"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/reference-key-v1/summary.md",
+          "bytes": 18659,
+          "sha256": "4f1af404aae9c79c2879f7d6e2927120e713d643580a7b2fb5ae5df4e0364359"
+        }
+      ],
+      "root": [
+        {
+          "path": "data/research/mask-inci/v1.0/cohort.json",
+          "bytes": 56042,
+          "sha256": "70e2462c4ab00018cb3f8d2c3d7c5a4703334dc6574fd3f1f698692faca6ac0e"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/round2p5-preregistered-expectations.md",
+          "bytes": 6501,
+          "sha256": "1fb27e2faa16cefa9016d9883371372fb7599eda10dfcd597f2744aa461131ea"
+        },
+        {
+          "path": "data/research/mask-inci/v1.0/source-manifest.json",
+          "bytes": 2039,
+          "sha256": "eefedb8c12abc768e0a0617c1a50603b3bac8504c0598bb37c76cfe90e743af7"
+        }
+      ]
+    }
+  }
+}
