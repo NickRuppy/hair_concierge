@@ -1,0 +1,138 @@
+{
+  "productId": "08-sante-intense-hydration",
+  "lane": "blind-v1",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets/01-hask-argan-oil-sachet.json",
+      "data/research/mask-inci/v1.0/blind-packets/02-gliss-7sekunden-express-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/03-bali-curls-sos-protein-treatment.json",
+      "data/research/mask-inci/v1.0/blind-packets/04-gliss-liquid-silk-4in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/05-isana-mandelmilch-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/06-monday-smooth-anti-frizz.json",
+      "data/research/mask-inci/v1.0/blind-packets/07-pantene-molecular-bond-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/08-sante-intense-hydration.json",
+      "data/research/mask-inci/v1.0/blind-packets/09-balea-professional-aqua-hyaluron.json",
+      "data/research/mask-inci/v1.0/blind-packets/10-bali-curls-deep-repair-mask.json",
+      "data/research/mask-inci/v1.0/blind-packets/11-elvital-glycolic-gloss.json",
+      "data/research/mask-inci/v1.0/blind-packets/12-guhl-panthenol-reparatur-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/13-olaplex-no3-hair-perfector.json"
+    ]
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": false,
+    "coveredMode": "post_shampoo_rinse_out_mask",
+    "rationale": "Directions (sante.de verbatim): distribute in damp lengths, 1 minute, rinse. Contact time and rinse stated; damp-hair rinse-out use read as post-cleansing.",
+    "evidenceSignals": [
+      "'feuchten Haarlängen'",
+      "1 min",
+      "'Ausspülen'"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "Leuconostoc/Radish Root Ferment Filtrate",
+    "index": 15,
+    "status": "plausible",
+    "note": "Earliest tail-class species is the ferment preservative @15 (R8 class). Base species (Cetearyl @2, Distearoylethyl Dimonium Chloride @4, Behenyl Alcohol @5) outrank it; Potassium Sorbate @18, Parfum @19 and allergens follow. Plausible. tail_index−1 = Aloe Juice Powder @14."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "S1: Distearoylethyl Dimonium Chloride @4 only → fails. S2: Cetearyl Alcohol @2. S3: no lipid above tail (Sunflower Oil @17 in tail). One signal → moderate.",
+      "evidenceSignals": [
+        "S2: Cetearyl @2"
+      ],
+      "counterSignals": [
+        "S1 not met",
+        "no above-tail lipids"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "Positive leanness test: no R4b above marker (Sunflower Oil @17 is in the tail), no silicone at all, exactly one cationic species on the full list (Distearoylethyl Dimonium Chloride @4). Plausible marker; no boundary dependence → low.",
+      "evidenceSignals": [
+        "no above-tail R4b",
+        "no silicone",
+        "single cationic on full list"
+      ],
+      "counterSignals": [
+        "Behenyl Alcohol @5 + Cetearyl @2 (fatty base not read by low after E4)"
+      ]
+    },
+    "careDirection": {
+      "value": "balanced",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Reading (a) both-substantive: material R5 route — Hydrolyzed Corn @7, Wheat @8, Soy @9 Protein above the tail — and a qualifying humectant cluster — Glycerin @3, Betaine @6, Sodium Lactate @12, Sodium Hyaluronate @13, Aloe Juice Powder @14 (≥3, ≥2 non-glycerin). D4 heavy payload (multiple R5 above tail) caps confidence at moderate. Arginine @11 is a free amino acid (excluded).",
+      "evidenceSignals": [
+        "R5: @7, @8, @9",
+        "humectants: @3, @6, @12, @13, @14"
+      ],
+      "counterSignals": [
+        "D4 protein payload"
+      ],
+      "balancedReading": "both_substantive"
+    },
+    "repairSupportLevel": {
+      "value": "medium",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Distinct temporary protein film route (three hydrolyzed proteins @7–9 above tail). No bond token → not high. Confidence follows care_direction.",
+      "evidenceSignals": [
+        "R5 @7–9"
+      ],
+      "counterSignals": [
+        "no bond chemistry"
+      ]
+    },
+    "primaryFocus": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Both the repair route (R5 @7–9) and the moisture guard clear: criterion 1 (5 humectants, Glycerin @3 in the first five), criterion 2 (no R4b at all → not lipid-led), criterion 3 tie only. focus_care_verdict: dual_supported; claim_role: tie_breaker — exact claim text 'Intense Hydration Maske Hyaluron + 3-Fach Protein Komplex' leads with hydration → moisture primary, repair secondary (R7 tie-break). Confidence moderate: a competing route exists.",
+      "evidenceSignals": [
+        "humectant cluster @3/@6/@12/@13/@14",
+        "R5 @7–9"
+      ],
+      "counterSignals": [
+        "competing focus repair (lost on tie-break, kept as secondary)"
+      ]
+    },
+    "secondaryFocus": {
+      "value": [
+        "repair"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Repair adds a distinct endpoint (protein film route @7–9) not shared with the humectant headline; it is the tie-break loser.",
+      "evidenceSignals": [
+        "R5 @7–9"
+      ],
+      "counterSignals": []
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "protein_payload",
+        "value": "Hydrolyzed Corn Protein @7, Hydrolyzed Wheat Protein @8, Hydrolyzed Soy Protein @9 (tail_index 15)",
+        "note": "D4 heavy protein payload: confidence cap on care_direction + review; not a diagnosis, moves no value."
+      }
+    ]
+  },
+  "reviewTriggers": [
+    "protein_payload_review"
+  ]
+}

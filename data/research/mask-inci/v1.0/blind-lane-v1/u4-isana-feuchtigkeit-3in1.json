@@ -1,0 +1,105 @@
+{
+  "productId": "u4-isana-feuchtigkeit-3in1",
+  "lane": "blind-v1-unseen",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u1-balea-plex-care-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u2-wahre-schaetze-1-minute-kur.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u3-john-frieda-wunder-kur.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u4-isana-feuchtigkeit-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u5-olaplex-no3plus-prewash.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u6-balea-silberglanz-2in1.json"
+    ]
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": true,
+    "coveredMode": "post_shampoo_rinse_out_mask (\"für intensive Pflege\": nasses Haar, 3-5 Minuten einwirken, mit warmem Wasser ausspülen)",
+    "uncoveredModes": ["leave_in (\"für leichte Kämmbarkeit\": handtuchtrockenes Haar, ohne Ausspülen)", "leave_in_styling (\"zum Bändigen\": trockenes Haar, ohne Ausspülen)"],
+    "identityState": "verified",
+    "rationale": "Three modes were tested one by one (§2.2). Only the 'intensive Pflege' mode is rinse-out, and it states wet hair, a 3-5 minute contact time and a rinse, so it clears the three conjuncts. The other two are leave-on modes. Exactly one mode qualifies, so the product is eligible mode-scoped. The charter lists Isana 3in1 among the multi-use products to be read as eligible and mode-scoped.",
+    "evidenceSignals": [
+      "directions: 'für intensive Pflege: in das nasse Haar einmassieren, 3-5 Minuten einwirken lassen und mit warmem Wasser ausspülen'",
+      "two further modes 'ohne Ausspülen' (leave-on, uncovered)",
+      "rossmann.de direct accordion extraction 2026-10-05 with GTIN"
+    ],
+    "notes": "'nasses Haar' is read as post-cleansing. Placement is unstated, so the P5 default applies. 'einmassieren' is not an explicit scalp/root direction."
+  },
+  "tailMarker": {
+    "ingredient": "Parfum",
+    "index": 6,
+    "status": "plausible",
+    "note": "Parfum @6 is the earliest tail-class species. Sodium Benzoate @9 and Potassium Sorbate @21 follow it, and the allergen Coumarin @18 comes after Parfum, so the class order is consistent and the E2 third limb does not fire. The base (Cetearyl Alcohol @2, Dicaprylyl Ether @3, Coco-Caprylate @4, Behentrimonium Chloride @5) outranks the marker. A second cationic (Stearamidopropyl Dimethylamine @12) and Butyrospermum Parkii Butter @10 sit in the tail. They are read as sub-1% secondary species, not as a base the marker precedes. tail_index-1 = Behentrimonium Chloride @5."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioning_level": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "S2 fires (Cetearyl Alcohol @2). S3 fires (Dicaprylyl Ether @3 and Coco-Caprylate @4, both R4a light emollients). S1 fails, because Behentrimonium Chloride @5 is the only above-tail cationic. S2+S3 without S1 is moderate (R3). BTAC @5 is at the boundary but not load-bearing, since S1 fails either way.",
+      "evidenceSignals": ["S2 Cetearyl Alcohol @2", "S3 Dicaprylyl Ether @3 + Coco-Caprylate @4"],
+      "counterSignals": ["single above-tail cationic", "shea butter @10 and coconut oil @14 are tail (no credit)"]
+    },
+    "weight_potential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "High is unavailable: no R4b lipid sits above Parfum @6 (Butyrospermum Parkii Butter @10 and Cocos Nucifera Oil @14 are tail). Low fails conjunct 3 (E7 full list), because two distinct cationic species are declared: Behentrimonium Chloride @5 and Stearamidopropyl Dimethylamine @12. The guar @16 is a polymer and is not counted. The value hinges on BTAC @5 at tail_index-1 in the §9.2 'single-cationic count' sense, so the boundary note fires and confidence is capped at moderate.",
+      "evidenceSignals": ["no R4b above tail", "no silicone above tail", "full-list cationics: BTAC @5, SAPDMA @12"],
+      "counterSignals": ["the leanness test fails only on a second cationic at @12 in the tail"]
+    },
+    "care_direction": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No R5 species appears anywhere on the list. The care result comes from a coherent fatty-alcohol/quat/light-ester emollient base, which is the moisture default. Reading (b) does not apply: there is no R2, R3 or R6a species above the tail, and an R4 stack is present. Every humectant (Glycerin @7, Panthenol @8, Propylene Glycol @11) is in the tail. Confidence is held at moderate rather than high because the marker plausibility rests on reading the tail cationic and butter as secondary.",
+      "evidenceSignals": ["emollient base: Cetearyl Alcohol @2, Dicaprylyl Ether @3, Coco-Caprylate @4, BTAC @5"],
+      "counterSignals": ["'Feuchtigkeit' naming with zero above-tail humectants (recorded, not decisive)"]
+    },
+    "repair_support_level": {
+      "value": "low",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No protein, peptide or bond token appears, so only ordinary conditioning and lubrication remain. Niacinamide @17 is a zero-credit vitamin token.",
+      "evidenceSignals": ["no R5 / R7 species"],
+      "counterSignals": []
+    },
+    "primary_focus": {
+      "value": "general",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Repair, curl and colour have no route. Moisture fails criterion 1 with zero humectants above the tail. Shine fails, with no above-tail silicone or polymer. Smoothing was considered on the two light esters @3-4 but rejected: they are part of the one M1 base observation (§6 rule 1), with no distinct silicone or polymer route. The verdict is nonspecific, which resolves to general. Claim role is not_applicable ('Feuchtigkeit' cannot create a route).",
+      "evidenceSignals": ["focus_care_verdict: nonspecific"],
+      "counterSignals": ["competing smoothing (light esters @3-4) lost: baseline M1 only"]
+    },
+    "secondary_focus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "The E10 moisture secondary is unavailable because the cluster fails criterion 1 (zero above-tail humectants). No other route clears.",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "echoFields": {
+    "hair_thickness_fit": ["fine", "normal", "coarse"],
+    "damage_fit": ["healthy", "moderately_damaged"],
+    "texture_fit": ["straight", "wavy", "curly"]
+  },
+  "hinweise": {
+    "fired": [
+      { "flag": "multi_use", "value": "covered: post_shampoo_rinse_out_mask; uncovered: [leave_in, leave_in_styling]", "note": "Profile describes only the 3-5 minute rinse-out 'intensive Pflege' mode." },
+      { "flag": "claim_formula_mismatch", "value": "'Feuchtigkeit' naming vs no qualifying humectant cluster (all humectants in the tail)", "note": "Claim recorded; moves no value." },
+      { "flag": "boundary_position_ingredient", "value": "Behentrimonium Chloride @5, tail_index 6 -> weight_potential moderate (would be low without it: single cationic SAPDMA)", "note": "weight_potential hinges on a boundary-position ingredient via the full-list single-cationic count; confidence capped at moderate, value unchanged." }
+    ]
+  },
+  "reviewTriggers": []
+}

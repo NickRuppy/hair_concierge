@@ -1,0 +1,48 @@
+{
+  "productId": "u6-balea-silberglanz-2in1",
+  "lane": "blind-v1-unseen",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u1-balea-plex-care-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u2-wahre-schaetze-1-minute-kur.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u3-john-frieda-wunder-kur.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u4-isana-feuchtigkeit-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u5-olaplex-no3plus-prewash.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u6-balea-silberglanz-2in1.json"
+    ]
+  },
+  "g0": {
+    "value": "excluded_color_depositing",
+    "modeScoped": false,
+    "coveredMode": "none",
+    "identityState": "excluded_product_form",
+    "rationale": "This is a silver/violet toning mask ('Silberglanz', 'Color Intense', 'Als Farbkorrektur') carrying the dye CI 60730 @17, so it is a colour-depositing product, which the charter excludes as a form. The 'Als Kur' mode (damp hair, ~2 minutes, rinse) would clear the three G0 conjuncts on its own terms. Mode scoping cannot rescue it, though: both modes apply the same pigment-bearing formula, so colour deposition is a property of the jar's chemistry, not of the use. The exclusion therefore governs the whole product. No profile is produced.",
+    "evidenceSignals": [
+      "product name: 'Haarkur Silberglanz 2in1 Color Intense Kur'",
+      "directions: 'Als Farbkorrektur: ... vom Ansatz bis in die Spitzen ... ca. 5-10 Minuten einwirken lassen'",
+      "directions: 'Als Kur: ... ca. 2 Minuten einwirken lassen. Sorgfältig ausspülen.' (would clear conjuncts, but same formula)",
+      "formula fact: CI 60730 @17 (violet acid dye; colourant, not marker-eligible)"
+    ],
+    "notes": "This is a mode-scoping seam: §2.2 tests modes against the three conjuncts, while the charter's colour-depositing exclusion is a product-form exclusion that the conjuncts do not test. Exclusion was chosen as the conservative reading (§1.1), because profiling the Kur mode would put a toning formula into mask matching. The Farbkorrektur mode also directs root application ('vom Ansatz')."
+  },
+  "tailMarker": {
+    "ingredient": null,
+    "index": null,
+    "status": "unresolved",
+    "note": "Not computed: excluded at G0 before formula analysis. For the record only, Parfum @9 would be the earliest marker. CI 60730 @17 is a colourant and never sets the marker."
+  },
+  "hinweise": {
+    "fired": []
+  },
+  "reviewTriggers": [
+    { "trigger": "product_form_ambiguity", "note": "A dual-mode colour-depositing product whose Kur mode clears the G0 conjuncts; human confirms the whole-product exclusion." },
+    { "trigger": "root_scalp_application", "note": "The Farbkorrektur mode directs application 'vom Ansatz bis in die Spitzen' (boundary evidence; product excluded)." }
+  ]
+}

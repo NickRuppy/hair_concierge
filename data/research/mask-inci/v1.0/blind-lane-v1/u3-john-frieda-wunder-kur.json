@@ -1,0 +1,147 @@
+{
+  "productId": "u3-john-frieda-wunder-kur",
+  "lane": "blind-v1-unseen",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u1-balea-plex-care-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u2-wahre-schaetze-1-minute-kur.json (original truncated version and replaced 2026-10-06 version)",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u3-john-frieda-wunder-kur.json (original unresolved version and replaced 2026-10-06 version)",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u4-isana-feuchtigkeit-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u5-olaplex-no3plus-prewash.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u6-balea-silberglanz-2in1.json"
+    ]
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": false,
+    "coveredMode": "post_shampoo_rinse_out_mask (single mode: nach Shampoo, nasses gewaschenes Haar, 3-5 Minuten, gründlich ausspülen)",
+    "identityState": "verified",
+    "rationale": "The directions state one mode: wash with shampoo, then work the Kur into wet, washed hair with emphasis on the ends, leave 3-5 minutes, and rinse thoroughly. All three G0 conjuncts are clear and the placement matches P5. Identity is resolved to one SKU: Frizz Ease Wunder-Reparatur Tiefenwirksame Wunder-Kur, 250 ml, Müller PPN3176126, with a dated direct-extraction INCI. There is no GTIN; the Müller PPN serves as the reliable identifier.",
+    "evidenceSignals": [
+      "directions: 'Haare mit Wunder-Reparatur Shampoo waschen. Wunder-Kur ins nasse, gewaschene Haar einmassieren, insbesondere in die Spitzen ... 3-5 Minuten einwirken lassen. Gründlich ausspülen.'",
+      "mueller.de PPN3176126 direct extraction 2026-10-06"
+    ],
+    "notes": "Replaces the earlier insufficient-information stop. GTIN is still absent; identity rests on the retailer PPN."
+  },
+  "tailMarker": {
+    "ingredient": "TETRASODIUM GLUTAMATE DIACETATE",
+    "index": 10,
+    "status": "plausible",
+    "note": "The earliest tail-class species is the trace chelator TETRASODIUM GLUTAMATE DIACETATE @10. MALIC ACID @11 and SODIUM HYDROXIDE @15 are not marker-eligible. The preservatives (MCI/MIT @20-21), FRAGRANCE @22 and the allergen HEXYL CINNAMAL @23 follow it in a consistent order, and the chelator is not printed beneath the preservatives anywhere else on the capture, so the E2 third limb does not fire. The base (CETEARYL ALCOHOL @2, DIMETHICONE @3, BEHENTRIMONIUM CHLORIDE @4, BEHENYL ALCOHOL @5, amodimethicone @7, DIMETHICONOL @8) outranks the marker. All three plant oils (COCONUT @12, OLIVE @13, CASTOR @14) sit below it and are read as sub-1% secondary lipids. tail_index-1 = PEG-45M @9, which is not load-bearing in any field."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioning_level": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Only S2 fires: CETEARYL ALCOHOL at rank 2, with BEHENYL ALCOHOL @5 also above the tail. S1 fails, because BEHENTRIMONIUM CHLORIDE @4 is the only cationic on the list. S3 fails: there is no non-fatty-alcohol lipid above the tail, and silicones are R2, not R4. One signal gives moderate.",
+      "evidenceSignals": [
+        "S2 CETEARYL ALCOHOL @2",
+        "single cationic BTAC @4"
+      ],
+      "counterSignals": [
+        "coconut/olive/castor oils @12-14 are tail (no credit)"
+      ]
+    },
+    "weight_potential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "High is unavailable: no R4b lipid sits above the chelator marker @10. Low fails conjunct 2: an occlusive silicone stack sits above the tail (DIMETHICONE @3, BIS(C13-15 ALKOXY) PG-AMODIMETHICONE @7, DIMETHICONOL @8, including a dimethicone/dimethiconol pair). Conjuncts 1 and 3 hold (no R4b above the marker, BTAC the only cationic on the full list). No boundary species is load-bearing.",
+      "evidenceSignals": [
+        "occlusive silicone stack @3/@7/@8 (blocks low)",
+        "no R4b above tail"
+      ],
+      "counterSignals": [
+        "three R4b-class oils (coconut, olive, castor) sit just below the marker; under a strict §3.1.1 reading they would be read on their own merits (see review note)"
+      ]
+    },
+    "care_direction": {
+      "value": "moisture",
+      "confidence": "low",
+      "evidenceLevel": "E2",
+      "rationale": "There is no R5 species, so no protein leg; ceramides are tail-only and are not R5. Balanced reading (b) was tested and fails on clause 4. Clauses 1-3 hold: no protein, a silicone system of three distinct R2 species above the tail (E9), and no humectant pair or S3 lipid stack above the tail. But the system cannot be established without AMODIMETHICONE @7 or DIMETHICONOL @8, and both rank below the candidate humectant DIPROPYLENE GLYCOL @6. So the value falls to the moisture default. The moisture-versus-neither_dominant call hinges on one glycol's rank and on whether that glycol is a humectant or a solvent, so confidence is stepped down to low and the field routed to review (§9.3 reading-(b) confidence rule).",
+      "evidenceSignals": [
+        "base: CETEARYL ALCOHOL @2, BTAC @4, BEHENYL ALCOHOL @5",
+        "candidate leg: DIPROPYLENE GLYCOL @6 (single humectant)"
+      ],
+      "counterSignals": [
+        "silicone system DIMETHICONE @3 / amodimethicone @7 / DIMETHICONOL @8 is film-led and nearly satisfies reading (b)",
+        "subordinate tail legs: COCONUT OIL @12, OLIVE OIL @13, CASTOR OIL @14"
+      ]
+    },
+    "repair_support_level": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "There is no protein, peptide or keratin film route and no named bond token. CERAMIDE NG @17 and CERAMIDE NP @18 are tail-only and are explicit non-upgraders. 'Wunder-Reparatur' naming is E0.",
+      "evidenceSignals": [
+        "no R5 / R7 species"
+      ],
+      "counterSignals": [
+        "repair positioning with no formula route (claim mismatch)"
+      ]
+    },
+    "primary_focus": {
+      "value": "smoothing",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Repair, curl, colour and moisture fail (no R5 or bond route; one above-tail humectant). Shine fails criterion 3: there is no Gloss/Glanz/Laminierung positioning, and the film is the smoothing film (criterion 2). Smoothing clears step 6, because the architecture extends materially beyond the ordinary R1 base through a distinct three-species silicone route above the tail (DIMETHICONE @3, amodimethicone @7, DIMETHICONOL @8). 'Frizz Ease' anti-frizz positioning corroborates it but did not create the route. focus_care_verdict: not_applicable; claim_role: corroborating.",
+      "evidenceSignals": [
+        "R2 silicone system @3/@7/@8",
+        "claim_role: corroborating (Frizz Ease)"
+      ],
+      "counterSignals": [
+        "competing detangling lost: slip is baseline and no distinct combability route",
+        "competing shine lost: no gloss claim, film already counted as smoothing (§6 rule 2)"
+      ]
+    },
+    "secondary_focus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No second endpoint clears. Shine fails corroboration and would reuse the smoothing film. Moisture fails criterion 1.",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "echoFields": {
+    "hair_thickness_fit": [
+      "fine",
+      "normal",
+      "coarse"
+    ],
+    "damage_fit": [
+      "healthy",
+      "moderately_damaged"
+    ],
+    "texture_fit": [
+      "straight",
+      "wavy",
+      "curly"
+    ]
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "claim_formula_mismatch",
+        "value": "'Wunder-Reparatur' / 'Tiefenwirksame' positioning vs repair_support_level low (no R5/R7 route; ceramides tail-only)",
+        "note": "Repair naming is E0; moves no value."
+      }
+    ]
+  },
+  "reviewTriggers": [
+    {
+      "trigger": "low_confidence_field",
+      "note": "care_direction at low confidence: moisture vs balanced/neither_dominant hinges on DIPROPYLENE GLYCOL @6 outranking two of the three silicone-system species (clause 4)."
+    }
+  ]
+}

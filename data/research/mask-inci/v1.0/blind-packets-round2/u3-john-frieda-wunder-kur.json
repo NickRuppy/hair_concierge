@@ -1,0 +1,13 @@
+{
+  "identity": {
+    "brand": "John Frieda",
+    "productName": "Frizz Ease Wunder-Reparatur Tiefenwirksame Wunder-Kur",
+    "packSize": "250 ml",
+    "gtinEan": null,
+    "market": "DE (Müller, PPN3176126)",
+    "formulaSource": "mueller.de product page, direct extraction, 2026-10-06"
+  },
+  "rawInci": "WATER/AQUA/EAU, CETEARYL ALCOHOL, DIMETHICONE, BEHENTRIMONIUM CHLORIDE, BEHENYL ALCOHOL, DIPROPYLENE GLYCOL, BIS(C13-15 ALKOXY) PG-AMODIMETHICONE, DIMETHICONOL, PEG-45M, TETRASODIUM GLUTAMATE DIACETATE, MALIC ACID, COCOS NUCIFERA (COCONUT) OIL, OLEA EUROPAEA (OLIVE) FRUIT OIL, RICINUS COMMUNIS (CASTOR) SEED OIL, SODIUM HYDROXIDE, SILICA, CERAMIDE NG, CERAMIDE NP, TOCOPHEROL, METHYLCHLOROISOTHIAZOLINONE, METHYLISOTHIAZOLINONE, FRAGRANCE/PARFUM, HEXYL CINNAMAL, TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES",
+  "directionsText": "Haare mit Wunder-Reparatur Shampoo waschen. Wunder-Kur ins nasse, gewaschene Haar einmassieren, insbesondere in die Spitzen einarbeiten. 3-5 Minuten einwirken lassen. Gründlich ausspülen.",
+  "source": "mueller.de PPN3176126, direct extraction 2026-10-06 (replaces unresolved reserve capture)"
+}
