@@ -1,0 +1,101 @@
+{
+  "productId": "q2-swiss-o-par-arganoel",
+  "lane": "blind-v2.5",
+  "standardVersion": "mask-inci-v0.6",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q1-wahre-schaetze-avocado-shea.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q2-swiss-o-par-arganoel.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q3-syoss-intense-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q4-fructis-keratin-sleek.json"
+    ]
+  },
+  "g0": {
+    "outcome": "in_category",
+    "conjuncts": {
+      "afterCleansing": "satisfied — 'Nach der Haarwäsche'",
+      "statedContactTime": "satisfied — 'ca. 2 Minuten einwirken lassen'",
+      "rinsedOut": "satisfied — 'mit lauwarmem Wasser ausspülen'"
+    },
+    "placement": "'gleichmäßig im Haar verteilen' — reads as whole-hair distribution, not the P5 canonical placement; recorded as a P5 deviation candidate (root/scalp review), never a G0 disqualifier and never a scalp property (§2.1 R8)",
+    "multiUse": false,
+    "protocolMetadata": { "contactTime": "ca. 2 Minuten", "source": "packet directionsText (rossmann.de, 2026-10-06)", "classificationCredit": "none" },
+    "note": "Single-mode rinse-out Kur; all three conjuncts stated."
+  },
+  "tailMarker": {
+    "ingredient": "Parfum",
+    "index": 9,
+    "status": "plausible",
+    "note": "Parfum @9 is the earliest tail-class species (Potassium Sorbate @10, Benzyl Alcohol @17, MCI @20, MI @24 follow; no declared allergens, no booster, no chelator). E13: every species establishing conditioning_level/weight_potential outranks it (Cetyl Alcohol @2, Cetrimonium Chloride @3, Paraffinum Liquidum @4, Cetearyl Ethylhexanoate @5, Stearyl Alcohol @6, Argan @7). Third limb: no allergen above Parfum, no booster/chelator ordering involving the marker — consistent. Aqueous O/W emulsion, so the low-water limb does not apply. Below-marker extras (Cetrimonium Bromide @14, Isopropyl Myristate @12, Caprylic/Capric Triglyceride @23) cannot make it implausible (E13)."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioning_level": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Above Parfum @9 the list runs a single long-chain cationic (Cetrimonium Chloride @3), so S1 fails and `high` is unavailable. S2 holds (Cetyl Alcohol @2) and S3 holds (Paraffinum Liquidum @4, Cetearyl Ethylhexanoate @5, Argania Spinosa Kernel Oil @7), giving S2+S3 without S1 = `moderate`. The second cationic Cetrimonium Bromide @14 sits below the plausible marker: it earns nothing, but crediting it would complete S1 and lift the value to `high`, so it fires candidate_below_tail and review (E13).",
+      "evidenceSignals": ["S2: Cetyl Alcohol @2", "S3: Paraffinum Liquidum @4, Cetearyl Ethylhexanoate @5, Argan @7", "R1 base: Cetrimonium Chloride @3 + Cetyl @2 / Stearyl @6"],
+      "counterSignals": ["S1 fails above the marker (one cationic)", "candidate_below_tail: Cetrimonium Bromide @14 would have completed S1"]
+    },
+    "weight_potential": {
+      "value": "high",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Paraffinum Liquidum @4 is an occlusive hydrocarbon, named by §5 R4's mask delta and E14's R4b band as heavy, so it forms the heavy-lipid core above the marker; Argan @7 is mid band and contributes nothing toward `high` (E14). The core is completed by a dense fatty-alcohol base — Cetyl Alcohol @2 and Stearyl Alcohol @6 (two distinct fatty alcohols above the tail, one in the top three). No positioning claims lightness and tail_index − 1 (Sodium Stearoyl Lactylate @8, an emulsifier) is not load-bearing; confidence is held at `moderate` because the lexicon files Paraffinum Liquidum under 'hydrocarbons' with a light/weight-neutral band, so the sole R4b core species carries a band-membership tension between the standard and the lexicon.",
+      "evidenceSignals": ["R4b core: Paraffinum Liquidum @4", "dense fatty base: Cetyl Alcohol @2 + Stearyl Alcohol @6", "mid band: Argania Spinosa Kernel Oil @7 (blocks low only)"],
+      "counterSignals": ["lexicon family 3 lists Paraffinum Liquidum among hydrocarbons and names 'light hydrocarbons' weight-neutral; the standard (§5 R4, §9.2) governs and names it heavy", "Cetearyl Ethylhexanoate @5 is R4a (no weight signal)"]
+    },
+    "care_direction": {
+      "value": "moisture",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "No R5 protein, peptide or keratin species at any rank, so `protein` and `balanced` (a) are unavailable; no silicone or cationic-polymer film exists, so reading (b) clause 2 fails. The cetyl/stearyl/cetrimonium base with a mineral-oil, ester and argan emollient leg above Parfum @9 is the coherent non-protein `moisture` direction. The marker is plausible and the route separation is unambiguous.",
+      "evidenceSignals": ["R1 base @2/@3/@6", "emollient leg Paraffinum Liquidum @4, Cetearyl Ethylhexanoate @5, Argan @7"],
+      "counterSignals": ["humectants only in the tail (Triethylene Glycol @16, Propylene Glycol @19) — subordinate, no direction"]
+    },
+    "repair_support_level": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "No qualifying R5 species and no bond-chemistry token anywhere on the list; Niacinamide @13 and the antioxidant vitamins are tail tokens with zero credit (lexicon 5c). Only ordinary R1/R4 conditioning is present, which §9.4 reads as `low`.",
+      "evidenceSignals": ["ordinary conditioning base only"],
+      "counterSignals": []
+    },
+    "primary_focus": {
+      "value": "general",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Step 3 routes (repair, curl_support, color_care) have no formula candidate. Step 4 fails at criterion 1 (no humectant above Parfum @9); step 5 fails criterion 1 (no silicone or polymer optical route). The mineral-oil/argan/ester lipid load is the rich M1 base that step 1 and §6 rule 1 exclude as a distinctive smoothing route, so the verdict is `nonspecific` → `general`; the 'Arganöl' name is positioning only.",
+      "evidenceSignals": ["focus_care_verdict: nonspecific", "claim_role: not_applicable"],
+      "counterSignals": []
+    },
+    "secondary_focus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No independent second route clears: no humectant cluster for a moisture slot, no optical architecture for shine, and the lipid film is already the M1 base. Adding smoothing would reuse the primary's shared mechanism (§6).",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "candidate_below_tail",
+        "value": "Cetrimonium Bromide @14 (marker Parfum @9)",
+        "note": "A second long-chain cationic at or below the plausible marker; credited above-tail it would complete S1 and move conditioning_level moderate → high (S1+S2). It earns nothing and caps nothing; a human weighs whether the tail order hides real architecture."
+      }
+    ]
+  },
+  "reviewTriggers": [
+    { "trigger": "candidate_below_tail_review", "fields": ["conditioning_level"] },
+    { "trigger": "root_scalp_application", "fields": [], "note": "'gleichmäßig im Haar verteilen' — possible whole-hair placement contradicting P5; protocol deviation only, creates no scalp property and moves no value" }
+  ]
+}

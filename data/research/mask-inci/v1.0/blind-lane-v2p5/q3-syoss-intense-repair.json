@@ -1,0 +1,53 @@
+{
+  "productId": "q3-syoss-intense-repair",
+  "lane": "blind-v2.5",
+  "standardVersion": "mask-inci-v0.6",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q1-wahre-schaetze-avocado-shea.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q2-swiss-o-par-arganoel.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q3-syoss-intense-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q4-fructis-keratin-sleek.json"
+    ]
+  },
+  "g0": {
+    "outcome": "insufficient_information",
+    "conjuncts": {
+      "afterCleansing": "satisfied — 'Nach dem Waschen ... auf das nasse Haar'",
+      "statedContactTime": "satisfied — '2-3 Minuten einwirken lassen'",
+      "rinsedOut": "NOT STATED — the authoritative directions text ends at the dwell and cadence ('1-2 Mal pro Woche anwenden'); no rinse-out is stated"
+    },
+    "placement": "unstated → P5 default",
+    "multiUse": false,
+    "protocolMetadata": { "contactTime": "2-3 Minuten", "source": "packet directionsText (rossmann.de, 2026-10-06)", "classificationCredit": "none" },
+    "note": "Eligibility is read from authoritative directions, never from the jar or the name (§2.1, §2.2 step 1). The 'rinsed out' conjunct is not carried by the directions, and §2.3 requires the directions text to carry mode, contact time AND rinse. Nothing positively places it on the leave-on side, so this is not a charter exclusion: it is an identity/evidence stop (`insufficient_information`, round-2 triage note), no profile, routed to evidence work (fresh exact-pack directions capture). The wet-hair note cannot rescue it — that note itself requires the directions to 'state a rinse-out'. Inferring the rinse from 'einwirken lassen' would fail toward inclusion on an evidence gap (§1.1)."
+  },
+  "tailMarker": {
+    "ingredient": "Parfum",
+    "index": 11,
+    "status": "plausible",
+    "note": "Recorded as an E1 formula observation only — classification stopped at G0, so no field reads it. Parfum @11 is earliest; allergens (Benzyl Salicylate @17, Hexyl Cinnamal @18, Citronellol @21, Limonene @23) and preservatives (Sodium Benzoate @15, Phenoxyethanol @25) all follow, so the class ordering is consistent; every establishing species (Cetearyl Alcohol @2, Behentrimonium Chloride @4, Distearoylethyl Hydroxyethylmonium Methosulfate @5, Isopropyl Myristate @8, Behenamidopropyl Dimethylamine @9) outranks it."
+  },
+  "hinweise": { "fired": [] },
+  "reviewTriggers": [
+    { "trigger": "product_form_ambiguity", "fields": [], "note": "G0 insufficient_information — directions do not state a rinse-out; needs a fresh exact-pack directions capture, not a boundary ruling" }
+  ],
+  "nonBindingShadowRead": {
+    "nonBinding": true,
+    "purpose": "Calibration aid only, NOT a profile: what the record would read if a fresh capture confirms a rinse-out. Not to be scored as this lane's classification.",
+    "bondRoute": "none",
+    "conditioning_level": "high (S1: Behentrimonium Chloride @4, Distearoylethyl Hydroxyethylmonium Methosulfate @5, Behenamidopropyl Dimethylamine @9; S2: Cetearyl Alcohol @2; no material counter-signal; confidence high)",
+    "weight_potential": "moderate (no R4b above Parfum @11 — Shea Butter @13 is tail; low blocked by three cationics on the full list) + candidate_below_tail for Shea @13 (would complete the high core with the dense base) and candidate_below_tail_review",
+    "care_direction": "protein (Hydrolyzed Keratin @6 + Hydrolyzed Soy Protein @7 above the marker; Glycerin @3 alone is no cluster) — confidence moderate under the D4 protein_payload cap; protein_payload_review",
+    "repair_support_level": "medium (same material-R5 test), confidence moderate",
+    "primary_focus": "repair (E16 gate: two distinct hydrolyzed-protein species above the marker; verdict repair_supported; claim corroborating only)",
+    "secondary_focus": "[] (Amodimethicone @12 is tail; no humectant cluster)",
+    "echo": "damage_fit would be moderately_damaged + highly_damaged → specialist_damage_fit"
+  }
+}

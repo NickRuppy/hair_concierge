@@ -66,3 +66,32 @@ to Nick.
   (E15 remains validated on u3 only — carried as a freeze note; no second natural candidate
   found on this shelf pass).
 - Any SURPRISE → to Nick before freeze.
+
+## Addendum (written before q5/q6 lane dispatch, after q1-q4 results)
+
+q3's G0 stop was correct conservative behavior — the Rossmann directions genuinely omit the rinse
+step (verified on the full page text), so the engine refused per §2.3; the E16-positive branch
+therefore moves to q5, and q6 becomes the negative control.
+
+## q5 Balea Professional Keratin Repair (E16 POSITIVE)
+
+- Marker PARFUM @18, ordinary position (preservatives @19-20 behind it do not disturb it; no
+  booster above it); establishing base @2-3 above → plausible (E13).
+- **E16 PASS side**: FOUR distinct hydrolysates @7/@9/@10/@11, all above the marker → repair
+  headline gate SATISFIED. Expected: care_direction protein, repair_support medium (no bond
+  chemistry), primary_focus repair. Withholding the headline here = E16 overshoot = SURPRISE.
+- E14: Glycine Soja @6 mid band → blocks low, no high alone; expected weight moderate.
+- bond none ("Keratin Repair" naming is not bond chemistry).
+
+## q6 Syoss Intense Keratin (E16 NEGATIVE control)
+
+- Marker PARFUM @11; base @2-5 above → plausible. Amodimethicone @10 sits ABOVE the marker.
+- **E16 FAIL side**: only ONE plain hydrolysate (Hydrolyzed Keratin @6, not quaternized) → repair
+  headline must NOT fire; expected primary_focus general or smoothing (one silicone above marker
+  is not an E9 system → smoothing focus likely unavailable → general), repair_support per its own
+  rules (protein route present → medium), care_direction protein or moisture per §9.3 legs.
+  A repair headline here = E16 negative branch broken = SURPRISE.
+- Directions: the Anwendungshinweis block omits the rinse, but the same page's product
+  description states it explicitly — packet carries both; G0 in_category expected. If the lane
+  stops anyway, that is an acceptable §1.1-conservative outcome, recorded not failed.
+- E13: Shea @12 below marker → candidate_below_tail + review.
