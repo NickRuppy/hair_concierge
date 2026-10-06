@@ -178,9 +178,17 @@ export const CATEGORY_RESEARCH_REGISTRY: Readonly<
   scalp_care: unavailable(scalpCareApprovalContract),
 }
 
+const CANONICAL_INCI_RESEARCH_CONTRACT = {
+  output_path: "researched_payload.draft.formula",
+  fields: { raw_inci: "string or null", source_url: "string or null" },
+  instruction:
+    "Research the canonical INCI list for the exact German-market product from its label or retailer. Copy the exact ingredient list and source URL into researched_payload.draft.formula = { raw_inci, source_url }; use null when not found and never invent ingredients. Keep formula out of researched_payload.final.",
+}
+
 function shampooApprovalContract(): JsonRecord {
   return {
     category_key: "shampoo",
+    canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
     instruction:
       "Research and emit only shampoo approval specs under researched_payload.final.category_specs.",
     required_category_specs: [...CATEGORY_SPEC_KEYS.shampoo],
@@ -210,6 +218,7 @@ function shampooApprovalContract(): JsonRecord {
 function conditionerApprovalContract(): JsonRecord {
   return {
     category_key: "conditioner",
+    canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
     instruction:
       "Complete the full Conditioner Standard v1.6 research envelope first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research only the exact rinse-out protocol separately.",
     conditioner_research: conditionerResearchPromptContract(),
@@ -235,6 +244,7 @@ function conditionerApprovalContract(): JsonRecord {
 function maskApprovalContract(): JsonRecord {
   return {
     category_key: "mask",
+    canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
     instruction:
       "Research and emit only mask approval specs under researched_payload.final.category_specs.",
     required_category_specs: [...CATEGORY_SPEC_KEYS.mask],
@@ -268,6 +278,7 @@ function maskApprovalContract(): JsonRecord {
 function leaveInApprovalContract(): JsonRecord {
   return {
     category_key: "leave_in",
+    canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
     instruction:
       "Complete the full Leave-In Standard v1.1 research envelope (Standard v1.0 plus the T20 care_direction overlay) first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research only the exact leave-in application protocol separately.",
     leave_in_research: leaveInResearchPromptContract(),
@@ -286,6 +297,7 @@ function leaveInApprovalContract(): JsonRecord {
 function oilApprovalContract(): JsonRecord {
   return {
     category_key: "oil",
+    canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
     instruction:
       "Research and emit only oil approval specs under researched_payload.final.category_specs.",
     required_category_specs: [...CATEGORY_SPEC_KEYS.oil],
@@ -314,6 +326,7 @@ function oilApprovalContract(): JsonRecord {
 function dryShampooApprovalContract(): JsonRecord {
   return {
     category_key: "dry_shampoo",
+    canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
     instruction:
       "Research and emit only dry-shampoo approval specs under researched_payload.final.category_specs.",
     required_category_specs: [...CATEGORY_SPEC_KEYS.dry_shampoo],
@@ -332,6 +345,7 @@ function dryShampooApprovalContract(): JsonRecord {
 function deepCleansingShampooApprovalContract(): JsonRecord {
   return {
     category_key: "deep_cleansing_shampoo",
+    canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
     instruction:
       "Research and emit only deep-cleansing-shampoo approval specs under researched_payload.final.category_specs.",
     required_category_specs: [...CATEGORY_SPEC_KEYS.deep_cleansing_shampoo],
@@ -354,6 +368,7 @@ function bondbuilderApprovalContract(): JsonRecord {
   if (researchContract.enabled) {
     return {
       category_key: "bondbuilder",
+      canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
       instruction:
         "Complete the full Bondbuilder research profile first. Emit it only as property_synthesis.bondbuilder_research_envelope; the deterministic adapter owns the derived database projection. Research exact producer application directions separately.",
       bondbuilder_research: researchContract,
@@ -365,6 +380,7 @@ function bondbuilderApprovalContract(): JsonRecord {
 
   return {
     category_key: "bondbuilder",
+    canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
     instruction:
       "Research and emit only bondbuilder approval specs under researched_payload.final.category_specs.",
     required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.bondbuilder],
@@ -417,6 +433,7 @@ function applicationProtocolResearchContract(
 function heatProtectantApprovalContract(): JsonRecord {
   return {
     category_key: "heat_protectant",
+    canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
     instruction:
       "Research only explicit finished-product heat-protection evidence and exact manufacturer application instructions. Do not infer heat protection from a name, format, ingredient, or adjacent care claim.",
     required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.heat_protectant],
@@ -438,6 +455,7 @@ function heatProtectantApprovalContract(): JsonRecord {
 function scalpCareApprovalContract(): JsonRecord {
   return {
     category_key: "scalp_care",
+    canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
     instruction:
       "Research only cosmetic scalp-care product facts and exact manufacturer instructions. Preserve medical boundaries: do not turn flake, oil, density, shedding, or comfort claims into diagnosis or treatment claims.",
     required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.scalp_care],

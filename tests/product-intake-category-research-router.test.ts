@@ -6,6 +6,7 @@ import * as Sentry from "@sentry/node"
 
 import {
   bindResearchJobEngine,
+  categoryApprovalContract,
   normalizeResearchOutputForCategory,
   researchFailureUpdate,
   type BrandResolutionPromptContext,
@@ -66,6 +67,8 @@ for (const [category, id, methodology, adapter] of [
       methodology,
       adapter,
       state: "active",
+      input_hash: null,
+      projection_hash: null,
     })
     assert.equal((result.researched_payload?.final as Record<string, unknown>).engine, undefined)
     assert.ok(result.blockers.some((reason) => reason.includes("research adapter:")))
@@ -424,20 +427,25 @@ test("an active engine leaves a provenance artifact when model output omitted pr
     [],
     "submission-1",
   )
-  assert.deepEqual(result.artifacts, [
-    {
-      kind: "property_synthesis",
-      status: "needs_research",
-      payload: {
-        engine: {
-          id: "conditioner-standard",
-          methodology: "v1.6",
-          adapter: "conditioner-production-adapter-v1",
-          state: "active",
+  assert.deepEqual(
+    result.artifacts.filter((artifact) => artifact.kind === "property_synthesis"),
+    [
+      {
+        kind: "property_synthesis",
+        status: "needs_research",
+        payload: {
+          engine: {
+            id: "conditioner-standard",
+            methodology: "v1.6",
+            adapter: "conditioner-production-adapter-v1",
+            state: "active",
+            input_hash: null,
+            projection_hash: null,
+          },
         },
       },
-    },
-  ])
+    ],
+  )
   assert.ok(
     result.blockers.some(
       (reason) =>
@@ -543,7 +551,25 @@ for (const [category, envelopeKey, envelope, researchId, specsKey, expected] of 
       summary: "Research",
       blockers: [],
       artifacts: [
-        { kind: "property_synthesis", payload: { [envelopeKey]: structuredClone(envelope) } },
+        {
+          kind: "property_synthesis",
+          payload: {
+            [envelopeKey]: structuredClone(envelope),
+            [`${category}_production_projection`]: {
+              research_input_sha256: "invented",
+              projection_sha256: "invented",
+            },
+          },
+        },
+        {
+          kind: "property_synthesis",
+          payload: {
+            [`${category}_production_projection`]: {
+              research_input_sha256: "unowned",
+              projection_sha256: "unowned",
+            },
+          },
+        },
       ],
       researched_payload: {
         final: {
@@ -577,6 +603,25 @@ for (const [category, envelopeKey, envelope, researchId, specsKey, expected] of 
         key.endsWith("production_projection"),
       ),
     )
+    assert.deepEqual(
+      [
+        (result.artifacts[1]!.payload.engine as Record<string, unknown>).input_hash,
+        (result.artifacts[1]!.payload.engine as Record<string, unknown>).projection_hash,
+      ],
+      [null, null],
+    )
+    const payload = result.artifacts[0]!.payload
+    const projection = payload[`${category}_production_projection`] as Record<string, unknown>
+    const provenance = payload.engine as Record<string, unknown>
+    if (category === "bondbuilder") {
+      assert.equal(provenance.input_hash, bondEnvelope.profile.method.output_sha256)
+      assert.equal(provenance.projection_hash, bondEnvelope.profile.review.profile_sha256)
+    } else {
+      assert.match(String(provenance.input_hash), /^[a-f0-9]{64}$/)
+      assert.match(String(provenance.projection_hash), /^[a-f0-9]{64}$/)
+      assert.equal(provenance.input_hash, projection.research_input_sha256)
+      assert.equal(provenance.projection_hash, projection.projection_sha256)
+    }
     assert.ok(Array.isArray(result.artifacts[0]!.payload.adapter_warnings))
     const refused = normalizeResearchOutputForCategory(
       structuredClone(input),
@@ -584,6 +629,13 @@ for (const [category, envelopeKey, envelope, researchId, specsKey, expected] of 
       brandContext,
       [],
       "different-submission",
+    )
+    assert.deepEqual(
+      [
+        (refused.artifacts[0]!.payload.engine as Record<string, unknown>).input_hash,
+        (refused.artifacts[0]!.payload.engine as Record<string, unknown>).projection_hash,
+      ],
+      [null, null],
     )
     assert.ok(
       refused.blockers.some((reason) => /must match Product Intake submission/.test(reason)),
@@ -594,5 +646,15 @@ for (const [category, envelopeKey, envelope, researchId, specsKey, expected] of 
       ],
       undefined,
     )
+  })
+}
+
+for (const category of Object.keys(CATEGORY_RESEARCH_REGISTRY)) {
+  test(`${category} requests exact German-market INCI outside strict final fields`, () => {
+    const contract = categoryApprovalContract(category)
+    const formula = contract.canonical_inci as Record<string, unknown>
+    assert.equal(formula.output_path, "researched_payload.draft.formula")
+    assert.deepEqual(formula.fields, { raw_inci: "string or null", source_url: "string or null" })
+    assert.match(String(formula.instruction), /never invent/i)
   })
 }

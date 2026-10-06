@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { readFileSync, rmSync } from "node:fs"
+import { readdirSync, readFileSync, rmSync } from "node:fs"
 import test from "node:test"
 
 import {
@@ -78,6 +78,10 @@ const eslintConfig = readFileSync("eslint.config.mjs", "utf8")
 const workerScript = [
   readFileSync("scripts/product-intake/codex-research-worker.ts", "utf8"),
   readFileSync("src/lib/product-intake/category-research-router.ts", "utf8"),
+  ...readdirSync("src/lib/product-intake/pipeline")
+    .filter((file) => file.endsWith(".ts"))
+    .sort()
+    .map((file) => readFileSync(`src/lib/product-intake/pipeline/${file}`, "utf8")),
 ].join("\n")
 const repositorySource = readFileSync("packages/product-intake-core/src/repository.ts", "utf8")
 const serviceClientSource = readFileSync(

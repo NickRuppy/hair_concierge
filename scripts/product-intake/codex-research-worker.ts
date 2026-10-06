@@ -12,14 +12,15 @@ import sharp from "sharp"
 import * as Sentry from "@sentry/node"
 
 import {
-  buildBrandResolutionCatalog,
-  resolveBrandFromText,
-  type BrandResolutionCatalogInput,
-  type ProductIdentityBrandAlias,
-  type ProductIdentityBrand,
-  type ProductIdentityProductLine,
-} from "@/lib/product-identity/brand-resolution"
-import { normalizeIdentityText } from "@/lib/product-identity/normalize"
+  loadBrandResolutionContext,
+  loadBrandResolutionCatalogForWorker,
+  applyIdentityStage,
+  approvedCanonicalBrandFromReview,
+  type BrandResolutionPromptContext,
+} from "@/lib/product-intake/pipeline/identity"
+import { applyInciStage, type InciStageOptions } from "@/lib/product-intake/pipeline/inci"
+import type { BrandResolutionCatalogInput } from "@/lib/product-identity/brand-resolution"
+export type { BrandResolutionPromptContext } from "@/lib/product-intake/pipeline/identity"
 import {
   checkResearchReadiness,
   type ResearchReadinessSelfCheck,
@@ -596,17 +597,6 @@ export class WorkerClaimGate {
   }
 }
 
-export type BrandResolutionPromptContext = {
-  submitted_brand_text: string | null
-  submitted_product_name_text: string | null
-  scanned_identifier: ScannedIdentifierPacketValue
-  lookup_text: string
-  resolved_brand: JsonRecord | null
-  nearby_brand_options: JsonRecord[]
-  catalog_summary: JsonRecord
-  rules: string[]
-}
-
 export type ScanIntakeSeed = {
   scannedIdentifier: ScannedIdentifierPacketValue
   retailerEnrichment: RetailerEnrichmentPacket | null
@@ -616,11 +606,6 @@ export type ScanIntakeSeed = {
 const reportRetailerEnrichmentWarning = createRetailerEnrichmentWarningReporter({
   emit: (message, fields) => console.warn("[product-intake]", message, fields),
 })
-
-type SupabaseQueryResult<T> = {
-  data: T | null
-  error: { message?: string } | null
-}
 
 const CODEX_RESEARCH_TIMEOUT_MS = 5 * 60_000
 const CODEX_APP_BINARY = "/Applications/Codex.app/Contents/Resources/codex"
@@ -974,6 +959,15 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
             brandResolutionContext,
             detail?.decisions ?? [],
             job.submission_id,
+            {
+              retailerPacket: scanIntakeSeed.retailerEnrichment,
+              inciRetryAttempted: leasedJob.progress.inci_retry_attempted === true,
+              brandCatalog:
+                !brandResolutionContext.resolved_brand &&
+                !approvedCanonicalBrandFromReview(detail?.decisions ?? [])
+                  ? await loadBrandResolutionCatalogForWorker(options.supabase)
+                  : undefined,
+            },
           )
           const updated = await completeResearchPass({
             supabase: options.supabase,
@@ -2120,27 +2114,49 @@ export function normalizeResearchOutputForCategory(
   brandResolutionContext: BrandResolutionPromptContext,
   reviewDecisions: ProductIntakeReviewDecisionRow[],
   expectedResearchId: string,
+  options: InciStageOptions & { brandCatalog?: BrandResolutionCatalogInput } = {},
 ): CodexResearchOutput {
   const categoryKey = normalizeCategoryKey(category)
   if (!categoryKey) return output
 
-  const researchedPayload = normalizeCategoryResearchedPayload(
-    output.researched_payload,
-    categoryKey,
-    output.artifacts,
-  )
+  const researchedPayload =
+    normalizeCategoryResearchedPayload(output.researched_payload, categoryKey, output.artifacts) ??
+    {}
   const artifacts = [...output.artifacts]
-  const blockers = [...output.blockers]
+  let blockers = output.blockers.filter(
+    (blocker) => !/^inci_(missing_first_pass|unavailable):/.test(blocker),
+  )
   const final = normalizeRecord(researchedPayload?.final)
-  applyApprovedCanonicalBrand(final, brandResolutionContext, reviewDecisions)
-  enforceCanonicalBrandResolution(final, brandResolutionContext)
-  applyApprovedProductIdentity(final, brandResolutionContext, reviewDecisions)
+  const identityBlocker = applyIdentityStage({
+    final,
+    context: brandResolutionContext,
+    reviewDecisions,
+    artifacts,
+    brandCatalog: options.brandCatalog,
+  })
+  if (identityBlocker) blockers.push(identityBlocker)
+  else if (
+    artifacts.some(
+      (artifact) => artifact.kind === "identity_candidate" && artifact.status === "resolved",
+    )
+  ) {
+    blockers = blockers.filter(
+      (blocker) => !blocker.startsWith("canonical brand table resolution missing for:"),
+    )
+  }
   const categorySpecs = normalizeRecord(final?.category_specs)
 
   const engine = CATEGORY_RESEARCH_REGISTRY[categoryKey]
+  let projected = false
+  const projectionArtifact = artifacts.find(
+    (artifact) =>
+      artifact.kind === "property_synthesis" &&
+      artifact.payload[`${categoryKey}_research_envelope`] != null,
+  )
   if (final) {
     const adapterResult = engine.apply({ final, artifacts, expectedResearchId })
     blockers.push(...adapterResult.blockers)
+    projected = adapterResult.blockers.length === 0
     // Model-authored provenance cannot override the running server registry.
     delete final.engine
     const draft = normalizeRecord(researchedPayload?.draft)
@@ -2166,11 +2182,27 @@ export function normalizeResearchOutputForCategory(
   for (const artifact of artifacts) {
     if (artifact.kind !== "property_synthesis") continue
     if (engine.state === "active" && final) {
+      const projection =
+        projected && artifact === projectionArtifact
+          ? normalizeRecord(artifact.payload[`${categoryKey}_production_projection`])
+          : null
+      const profile = normalizeRecord(
+        normalizeRecord(projection?.category_specs)?.product_bondbuilder_specs,
+      )
+      const researchProfile = normalizeRecord(profile?.research_profile)
       artifact.payload.engine = {
         id: engine.engineId,
         methodology: engine.methodology,
         adapter: engine.adapter,
         state: engine.state,
+        input_hash:
+          categoryKey === "bondbuilder"
+            ? stringValue(normalizeRecord(researchProfile?.method)?.output_sha256)
+            : stringValue(projection?.research_input_sha256),
+        projection_hash:
+          categoryKey === "bondbuilder"
+            ? stringValue(normalizeRecord(researchProfile?.review)?.profile_sha256)
+            : stringValue(projection?.projection_sha256),
       }
     } else delete artifact.payload.engine
   }
@@ -2205,12 +2237,8 @@ export function normalizeResearchOutputForCategory(
   if (missingFinalSections.length > 0) {
     blockers.push(`missing final payload sections: ${missingFinalSections.join(", ")}`)
   }
-  const missingBrandResolution = canonicalBrandResolutionBlocker(
-    final,
-    brandResolutionContext,
-    reviewDecisions,
-  )
-  if (missingBrandResolution) blockers.push(missingBrandResolution)
+  const inciBlocker = applyInciStage(researchedPayload, artifacts, engine, options)
+  if (inciBlocker) blockers.push(inciBlocker)
 
   return {
     ...output,
@@ -2221,15 +2249,6 @@ export function normalizeResearchOutputForCategory(
     })),
     blockers: dedupeStrings(blockers),
   }
-}
-
-async function loadBrandResolutionContext(
-  supabase: ReturnType<typeof createSupabaseClientFromEnv>,
-  detail: ProductIntakeSubmissionDetail | null,
-  scannedIdentifier: ScannedIdentifierPacketValue,
-): Promise<BrandResolutionPromptContext> {
-  const catalogInput = await loadBrandResolutionCatalogForWorker(supabase)
-  return buildBrandResolutionPromptContext(detail, catalogInput, scannedIdentifier)
 }
 
 /**
@@ -2266,262 +2285,6 @@ export async function loadScanIntakeSeedForSubmission(
     retailerEnrichment: retailerEnrichment.packet,
     retailerEnrichmentWarning: retailerEnrichment.warning,
   }
-}
-
-async function loadBrandResolutionCatalogForWorker(
-  supabase: ReturnType<typeof createSupabaseClientFromEnv>,
-): Promise<BrandResolutionCatalogInput> {
-  const [brandsResult, productLinesResult, brandAliasesResult] = await Promise.all([
-    supabase.from("brands").select("id, canonical_name, normalized_name"),
-    supabase.from("product_lines").select("id, brand_id, canonical_name, normalized_name"),
-    supabase.from("brand_aliases").select("brand_id, product_line_id, alias, normalized_alias"),
-  ])
-
-  return {
-    brands: requireSupabaseData<ProductIdentityBrand[]>(
-      brandsResult as unknown as SupabaseQueryResult<ProductIdentityBrand[]>,
-      "load brands for product-intake Codex worker",
-    ),
-    productLines: requireSupabaseData<ProductIdentityProductLine[]>(
-      productLinesResult as unknown as SupabaseQueryResult<ProductIdentityProductLine[]>,
-      "load product lines for product-intake Codex worker",
-    ),
-    brandAliases: requireSupabaseData<ProductIdentityBrandAlias[]>(
-      brandAliasesResult as unknown as SupabaseQueryResult<ProductIdentityBrandAlias[]>,
-      "load brand aliases for product-intake Codex worker",
-    ),
-  }
-}
-
-function requireSupabaseData<T>(result: SupabaseQueryResult<T>, label: string): T {
-  if (result.error) {
-    throw new Error(`${label}: ${result.error.message ?? "unknown Supabase error"}`)
-  }
-  if (result.data === null) {
-    throw new Error(`${label}: no data returned`)
-  }
-  return result.data
-}
-
-function buildBrandResolutionPromptContext(
-  detail: ProductIntakeSubmissionDetail | null,
-  catalogInput: BrandResolutionCatalogInput,
-  scannedIdentifier: ScannedIdentifierPacketValue,
-): BrandResolutionPromptContext {
-  const catalog = buildBrandResolutionCatalog(catalogInput)
-  const submittedBrand = detail?.brand ?? null
-  const submittedProductName = detail?.product_name ?? null
-  const lookupText = [submittedBrand, submittedProductName].filter(Boolean).join(" ").trim()
-  const resolution = lookupText ? resolveBrandFromText(lookupText, catalog) : null
-  const resolvedBrand =
-    resolution && resolution.match !== "none" && resolution.brand
-      ? {
-          match: resolution.match,
-          confidence: resolution.confidence,
-          reason: resolution.reason,
-          matched_text: resolution.matchedText,
-          canonical_brand_id: brandIdValue(resolution.brand),
-          canonical_brand: brandLabel(resolution.brand),
-          product_line_id: resolution.productLine
-            ? productLineIdValue(resolution.productLine)
-            : null,
-          product_line: resolution.productLine ? productLineLabel(resolution.productLine) : null,
-        }
-      : null
-
-  return {
-    submitted_brand_text: submittedBrand,
-    submitted_product_name_text: submittedProductName,
-    scanned_identifier: scannedIdentifier,
-    lookup_text: lookupText,
-    resolved_brand: resolvedBrand,
-    nearby_brand_options: resolvedBrand ? [] : nearbyBrandOptions(lookupText, catalogInput.brands),
-    catalog_summary: {
-      brand_count: catalogInput.brands.length,
-      product_line_count: catalogInput.productLines?.length ?? 0,
-      brand_alias_count: catalogInput.brandAliases?.length ?? 0,
-      alias_conflict_count: catalog.conflicts.length,
-    },
-    rules: [
-      "Use resolved_brand.canonical_brand exactly for final.product.canonical_brand when resolved_brand is present.",
-      "Use resolved_brand.product_line exactly for final.product.product_line when resolved_brand.product_line is present.",
-      "If resolved_brand is null and review_decisions includes an approved product.canonical_brand, use that reviewed DB-ready brand spelling exactly.",
-      "If review_decisions includes approved product.product_line or product.clean_name, use those reviewed DB-ready product identity fields exactly.",
-      "If resolved_brand is null, do not invent a canonical brand spelling. Add a blocker requesting canonical brand resolution or new-brand approval.",
-      "The review cockpit must show DB-ready brand values, not prose explanations.",
-    ],
-  }
-}
-
-function enforceCanonicalBrandResolution(
-  final: JsonRecord | null | undefined,
-  brandResolutionContext: BrandResolutionPromptContext,
-): void {
-  const product = normalizeRecord(final?.product)
-  const resolved = normalizeRecord(brandResolutionContext.resolved_brand)
-  const canonicalBrand = stringValue(resolved?.canonical_brand)
-  if (!product || !canonicalBrand) return
-
-  product.canonical_brand = canonicalBrand
-  const productLine = stringValue(resolved?.product_line)
-  if (productLine) product.product_line = productLine
-}
-
-function applyApprovedCanonicalBrand(
-  final: JsonRecord | null | undefined,
-  brandResolutionContext: BrandResolutionPromptContext,
-  reviewDecisions: ProductIntakeReviewDecisionRow[],
-): void {
-  if (normalizeRecord(brandResolutionContext.resolved_brand)) return
-  const product = normalizeRecord(final?.product)
-  if (!product) return
-
-  const approvedBrand = approvedCanonicalBrandFromReview(reviewDecisions)
-  if (!approvedBrand) return
-
-  product.canonical_brand = approvedBrand
-}
-
-function applyApprovedProductIdentity(
-  final: JsonRecord | null | undefined,
-  brandResolutionContext: BrandResolutionPromptContext,
-  reviewDecisions: ProductIntakeReviewDecisionRow[],
-): void {
-  const product = normalizeRecord(final?.product)
-  if (!product) return
-
-  const identity = approvedProductIdentityFromReview(reviewDecisions)
-  if (!normalizeRecord(brandResolutionContext.resolved_brand) && identity.canonicalBrand) {
-    product.canonical_brand = identity.canonicalBrand
-  }
-  if (identity.hasProductLine) {
-    product.product_line = identity.productLine
-  }
-  if (identity.cleanName) {
-    product.clean_name = identity.cleanName
-  }
-}
-
-function approvedCanonicalBrandFromReview(
-  reviewDecisions: ProductIntakeReviewDecisionRow[],
-): string | null {
-  for (const decision of reviewDecisions) {
-    if (decision.field_path !== "product.canonical_brand") continue
-    if (decision.decision !== "approved") continue
-
-    const reviewerValue = normalizeRecord(decision.reviewer_value)
-    const proposedValue = normalizeRecord(decision.proposed_value)
-    const approvedBrand =
-      stringValue(reviewerValue?.canonical_brand) ??
-      stringValue(reviewerValue?.canonicalName) ??
-      stringValue(proposedValue?.canonical_brand) ??
-      stringValue(proposedValue?.canonicalName)
-    if (approvedBrand) return approvedBrand
-  }
-
-  return null
-}
-
-function approvedProductIdentityFromReview(reviewDecisions: ProductIntakeReviewDecisionRow[]): {
-  canonicalBrand: string | null
-  hasProductLine: boolean
-  productLine: string | null
-  cleanName: string | null
-} {
-  const identity = {
-    canonicalBrand: null as string | null,
-    hasProductLine: false,
-    productLine: null as string | null,
-    cleanName: null as string | null,
-  }
-
-  for (const decision of reviewDecisions) {
-    if (decision.decision !== "approved") continue
-    const reviewerValue = normalizeRecord(decision.reviewer_value)
-    const proposedValue = normalizeRecord(decision.proposed_value)
-
-    if (decision.field_path === "product.canonical_brand") {
-      identity.canonicalBrand =
-        stringValue(reviewerValue?.canonical_brand) ??
-        stringValue(reviewerValue?.canonicalName) ??
-        stringValue(proposedValue?.canonical_brand) ??
-        stringValue(proposedValue?.canonicalName) ??
-        identity.canonicalBrand
-    }
-
-    if (decision.field_path === "product.product_line") {
-      identity.hasProductLine = true
-      identity.productLine =
-        stringValue(reviewerValue?.product_line) ?? stringValue(proposedValue?.product_line)
-    }
-
-    if (decision.field_path === "product.clean_name") {
-      identity.cleanName =
-        stringValue(reviewerValue?.clean_name) ??
-        stringValue(reviewerValue?.cleanName) ??
-        stringValue(proposedValue?.clean_name) ??
-        stringValue(proposedValue?.cleanName) ??
-        identity.cleanName
-    }
-  }
-
-  return identity
-}
-
-function canonicalBrandResolutionBlocker(
-  final: JsonRecord | null | undefined,
-  brandResolutionContext: BrandResolutionPromptContext,
-  reviewDecisions: ProductIntakeReviewDecisionRow[],
-): string | null {
-  const product = normalizeRecord(final?.product)
-  if (!product) return null
-  if (normalizeRecord(brandResolutionContext.resolved_brand)) return null
-  if (approvedCanonicalBrandFromReview(reviewDecisions)) return null
-  if (!brandResolutionContext.lookup_text) return null
-  return `canonical brand table resolution missing for: ${brandResolutionContext.lookup_text}`
-}
-
-function nearbyBrandOptions(
-  lookupText: string,
-  brands: readonly ProductIdentityBrand[],
-): JsonRecord[] {
-  const lookupTokens = new Set(
-    normalizeIdentityText(lookupText)
-      .split(" ")
-      .filter((token) => token.length >= 3),
-  )
-  if (lookupTokens.size === 0) return []
-
-  return brands
-    .map((brand) => {
-      const label = brandLabel(brand)
-      const normalized = normalizeIdentityText(label)
-      const score = normalized.split(" ").filter((token) => lookupTokens.has(token)).length
-      return { brand, label, score }
-    })
-    .filter((candidate) => candidate.score > 0)
-    .sort((left, right) => right.score - left.score || left.label.localeCompare(right.label))
-    .slice(0, 20)
-    .map((candidate) => ({
-      canonical_brand_id: brandIdValue(candidate.brand),
-      canonical_brand: candidate.label,
-    }))
-}
-
-function brandIdValue(brand: ProductIdentityBrand): string | null {
-  return brand.id ?? brand.key ?? brand.canonical_name ?? brand.canonicalName ?? brand.name ?? null
-}
-
-function productLineIdValue(line: ProductIdentityProductLine): string | null {
-  return line.id ?? line.key ?? line.canonical_name ?? line.canonicalName ?? line.name ?? null
-}
-
-function brandLabel(brand: ProductIdentityBrand): string {
-  return brand.canonical_name ?? brand.canonicalName ?? brand.name ?? brand.key ?? brand.id ?? ""
-}
-
-function productLineLabel(line: ProductIdentityProductLine): string {
-  return line.canonical_name ?? line.canonicalName ?? line.name ?? line.key ?? line.id ?? ""
 }
 
 function normalizeCategoryResearchedPayload(
