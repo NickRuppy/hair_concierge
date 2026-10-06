@@ -58,5 +58,9 @@ test("profile product rows keep pending products visible without treating them a
   assert.equal(rows[0]?.productName, "Unknown Brand Mystery Shampoo")
   assert.equal(rows[0]?.reviewStatusLabel, "In Prüfung")
   assert.equal(rows[0]?.isComplete, false)
-  assert.equal(getProductCompletionLabel(rows, true), "0/1 verifiziert")
+  assert.equal(getProductCompletionLabel(rows), "0/1 verifiziert")
+})
+
+test("empty profile product rows always show Noch leer", () => {
+  assert.equal(getProductCompletionLabel([]), "Noch leer")
 })

@@ -35,11 +35,11 @@ import type { PremiumSheetContext } from "@/lib/premium-sheet/context"
 import type { MembershipManagementState } from "@/lib/billing/types"
 import { formatBillingDate } from "@/lib/billing/display"
 import { intervalLabel } from "@/lib/billing/plan-change-client"
-import type { OnboardingStep } from "@/lib/onboarding/store"
 import {
   coerceUserProductUsageRows,
   createProductRows,
   getProductCompletionLabel,
+  selectPlanProductRows,
   USER_PRODUCT_USAGE_WITH_PRODUCT_SELECT,
   type UserProductUsageRow,
 } from "@/lib/profile/product-usage-rows"
@@ -74,7 +74,10 @@ import {
   parseHairProfileStatus,
 } from "@/lib/personal-plan/refinement/hair-profile-section"
 import type { RefinementStatusResponse } from "@/lib/personal-plan/refinement/refinement-status"
-import type { PersonalPlanRefinementAnswersV1 } from "@/lib/personal-plan/refinement/types"
+import type {
+  PersonalPlanRefinementAnswersV1,
+  Stage2Module,
+} from "@/lib/personal-plan/refinement/types"
 
 type MemoryApiResponse = {
   settings: { memory_enabled: boolean }
@@ -156,42 +159,8 @@ function draftFromProfile(profile: HairProfile | null): HaarCheckDraft {
   )
 }
 
-function buildOnboardingHref(
-  step: OnboardingStep,
-  options?: { category?: string | null; singleStep?: boolean },
-) {
-  const params = new URLSearchParams({
-    step,
-    returnTo: "/profile",
-  })
-
-  if (options?.category) {
-    params.set("category", options.category)
-  }
-
-  if (options?.singleStep) {
-    params.set("editMode", "single-step")
-  }
-
-  return `/onboarding?${params.toString()}`
-}
-
 function hasProfileFieldValue(value: ProfileFieldValue): boolean {
   return value !== null && (!Array.isArray(value) || value.length > 0)
-}
-
-// Exported for a direct unit test — the Produkte section only shows the Personal Plan
-// fallback when there are no legacy user_product_usage rows AND the active routine actually
-// has owned/planned products. A present-but-empty routineProducts array (active routine, zero
-// owned/planned items) must fall through to the normal "Noch keine Produktangaben" empty state
-// rather than showing the "Aus deinem Personal Plan" badge over nothing.
-export function selectPlanProductRows(
-  legacyProductRowCount: number,
-  routineProducts: RoutineProductFromPlan[] | null,
-): RoutineProductFromPlan[] | null {
-  if (legacyProductRowCount !== 0) return null
-  if (routineProducts === null || routineProducts.length === 0) return null
-  return routineProducts
 }
 
 function getCompletionLabel(filled: number, total: number) {
@@ -795,25 +764,19 @@ export default function ProfilePage() {
   const goalsFilled = goalsFields.filter((field) => hasProfileFieldValue(field.value))
   const selectedProductCategories = productRows.map((row) => row.categoryLabel)
   const incompleteProductRows = productRows.filter((row) => row.needsUserDetails)
-  // When there are no logged user_product_usage rows, fall back to the active Personal Plan
-  // routine's products instead of claiming "keine Angaben". Null when there is no active routine
-  // (or it's mid authority-repair), or when routineProducts is present but empty — see
-  // selectPlanProductRows above.
-  const planProductRows = selectPlanProductRows(productRows.length, routineProducts)
+  const planProductRows = hasPersonalPlan ? selectPlanProductRows(routineProducts) : null
+  const ProductRow = hasPersonalPlan ? "button" : "div"
 
   const quizStatus = profileLoading
     ? "Wird geladen"
     : getCompletionLabel(quizFilled.length, quizFields.length)
-  // Plan data only ever changes what's shown when there are no legacy rows to fall back on
-  // (see selectPlanProductRows above), so only wait on the refinement fetch in that case —
-  // legacy rows render immediately without waiting on the overlay to settle.
-  const productsAwaitingRefinement = refinementLoading && productRows.length === 0
+  const productsAwaitingRefinement = hasPersonalPlan && refinementLoading
   const productsStatus =
     productsLoading || productsAwaitingRefinement
       ? "Wird geladen"
       : planProductRows !== null
         ? "Aus deinem Personal Plan"
-        : getProductCompletionLabel(productRows, Boolean(profile?.onboarding_completed))
+        : getProductCompletionLabel(productRows)
   const stylingStatus =
     profileLoading || refinementLoading
       ? "Wird geladen"
@@ -890,6 +853,10 @@ export default function ProfilePage() {
     router.push(href)
   }
 
+  function refineHref(module: Stage2Module) {
+    return `/plan-start?refine=${module}`
+  }
+
   const quizInitialDraft = useMemo(() => draftFromProfile(hairProfile), [hairProfile])
   const quizSaveBlock = haarCheckSaveBlock(quizDraft, quizInitialDraft)
 
@@ -916,17 +883,29 @@ export default function ProfilePage() {
   ) {
     if (!target) return
 
-    if (target.kind === "quiz") {
-      startQuizEditing(fieldKey)
-      return
+    switch (target.kind) {
+      case "quiz":
+        startQuizEditing(fieldKey)
+        return
+      case "refine":
+        if (hasPersonalPlan) goToSectionStep(sectionKey, refineHref(target.module))
+        return
+      case "onboarding-step":
+        if (hasPersonalPlan) {
+          goToSectionStep(
+            sectionKey,
+            `/onboarding?step=${target.step}&returnTo=/profile&editMode=single-step`,
+          )
+        }
+        return
+      case "profile-edit-goals":
+        goToSectionStep("goals", "/profile/edit/goals")
+        return
+      default: {
+        const exhaustive: never = target
+        return exhaustive
+      }
     }
-
-    if (target.kind === "profile-edit-goals") {
-      goToSectionStep("goals", "/profile/edit/goals")
-      return
-    }
-
-    goToSectionStep(sectionKey, buildOnboardingHref(target.step, { singleStep: true }))
   }
 
   function resetQuizEditing() {
@@ -1223,22 +1202,24 @@ export default function ProfilePage() {
             <CardHeader className="pb-4">
               <SectionHeader
                 title={SECTION_META_BY_KEY.products.title}
-                description="Welche Produktkategorien du aktuell nutzt und welche Produktdetails im Onboarding festgehalten wurden."
+                description={
+                  hasPersonalPlan
+                    ? SECTION_META_BY_KEY.products.description
+                    : (SECTION_META_BY_KEY.products.descriptionWithoutPlan ?? "")
+                }
                 status={productsStatus}
                 isOpen
                 controls={
-                  <>
+                  hasPersonalPlan ? (
                     <Button
                       type="button"
                       variant="outline"
                       className="w-auto"
-                      onClick={() =>
-                        goToSectionStep("products", buildOnboardingHref("products_basics"))
-                      }
+                      onClick={() => goToSectionStep("products", refineHref("products"))}
                     >
                       Produkte bearbeiten
                     </Button>
-                  </>
+                  ) : undefined
                 }
               />
             </CardHeader>
@@ -1255,6 +1236,22 @@ export default function ProfilePage() {
                     </div>
                   </div>
                   <SectionGridSkeleton count={3} className="md:grid-cols-3" />
+                </div>
+              ) : planProductRows !== null ? (
+                <div className="space-y-2">
+                  {planProductRows.map((product, index) => (
+                    <div
+                      key={`${product.categoryLabel}-${product.name}-${index}`}
+                      className="rounded-xl border border-border/80 bg-card/80 p-4 shadow-sm"
+                    >
+                      <p className="text-sm font-semibold text-[var(--text-heading)]">
+                        {product.categoryLabel} · {product.name} · {product.purposeLabel}
+                      </p>
+                      {product.cadenceLabel ? (
+                        <p className="mt-2 text-xs text-muted-foreground">{product.cadenceLabel}</p>
+                      ) : null}
+                    </div>
+                  ))}
                 </div>
               ) : productRows.length > 0 ? (
                 <div className="space-y-4">
@@ -1290,25 +1287,24 @@ export default function ProfilePage() {
                     </div>
 
                     {productRows.map((row) => (
-                      <button
+                      <ProductRow
                         key={row.key}
-                        type="button"
-                        onClick={() =>
-                          goToSectionStep(
-                            "products",
-                            buildOnboardingHref("product_drilldown", {
-                              category: row.category,
-                              singleStep: true,
-                            }),
-                          )
+                        type={hasPersonalPlan ? "button" : undefined}
+                        onClick={
+                          hasPersonalPlan
+                            ? () => goToSectionStep("products", refineHref("products"))
+                            : undefined
                         }
-                        className="grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,0.9fr)] gap-4 border-t border-border/70 px-4 py-4 text-left transition-colors hover:bg-primary/[0.04]"
+                        className={cn(
+                          "grid w-full grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,0.9fr)] gap-4 border-t border-border/70 px-4 py-4 text-left transition-colors",
+                          hasPersonalPlan ? "hover:bg-primary/[0.04]" : "",
+                        )}
                       >
                         <div>
                           <p className="text-sm font-semibold text-[var(--text-heading)]">
                             {row.categoryLabel}
                           </p>
-                          {row.needsUserDetails ? (
+                          {hasPersonalPlan && row.needsUserDetails ? (
                             <p className="mt-1 text-xs text-muted-foreground">
                               Details fehlen noch
                             </p>
@@ -1335,25 +1331,24 @@ export default function ProfilePage() {
                         >
                           {row.frequencyLabel ?? "Noch offen"}
                         </p>
-                      </button>
+                      </ProductRow>
                     ))}
                   </div>
 
                   <div className="grid gap-3 md:hidden">
                     {productRows.map((row) => (
-                      <button
+                      <ProductRow
                         key={row.key}
-                        type="button"
-                        onClick={() =>
-                          goToSectionStep(
-                            "products",
-                            buildOnboardingHref("product_drilldown", {
-                              category: row.category,
-                              singleStep: true,
-                            }),
-                          )
+                        type={hasPersonalPlan ? "button" : undefined}
+                        onClick={
+                          hasPersonalPlan
+                            ? () => goToSectionStep("products", refineHref("products"))
+                            : undefined
                         }
-                        className="rounded-xl border border-border/80 bg-card/80 p-4 text-left shadow-sm transition-colors hover:bg-primary/[0.04]"
+                        className={cn(
+                          "rounded-xl border border-border/80 bg-card/80 p-4 text-left shadow-sm transition-colors",
+                          hasPersonalPlan ? "hover:bg-primary/[0.04]" : "",
+                        )}
                       >
                         <p className="text-sm font-semibold text-[var(--text-heading)]">
                           {row.categoryLabel}
@@ -1385,54 +1380,26 @@ export default function ProfilePage() {
                             </span>
                           </p>
                         </div>
-                      </button>
+                      </ProductRow>
                     ))}
                   </div>
                 </div>
-              ) : planProductRows !== null ? (
-                <div className="space-y-2">
-                  {planProductRows.map((product, index) => (
-                    <div
-                      key={`${product.categoryLabel}-${product.name}-${index}`}
-                      className="rounded-xl border border-border/80 bg-card/80 p-4 shadow-sm"
-                    >
-                      <p className="text-sm font-semibold text-[var(--text-heading)]">
-                        {product.categoryLabel} · {product.name} · {product.purposeLabel}
-                      </p>
-                      {product.cadenceLabel ? (
-                        <p className="mt-2 text-xs text-muted-foreground">{product.cadenceLabel}</p>
-                      ) : null}
-                    </div>
-                  ))}
-                </div>
               ) : (
                 <InlinePromptCard
-                  title={
-                    profile?.onboarding_completed
-                      ? "Noch keine Produkte ausgewählt"
-                      : "Noch keine Produktangaben vorhanden"
-                  }
+                  title={hasPersonalPlan ? "Noch keine Produkte" : "Noch keine Produktangaben"}
                   text={
-                    profile?.onboarding_completed
-                      ? "Im aktuellen Onboarding-Stand wurden noch keine Produktkategorien gespeichert."
-                      : "Sobald du den Produktteil im Onboarding durchläufst, erscheint hier eine klare Übersicht nach Kategorie, Produkt und Häufigkeit."
-                  }
-                  action={
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-auto"
-                      onClick={() =>
-                        goToSectionStep("products", buildOnboardingHref("products_basics"))
-                      }
-                    >
-                      Produktteil öffnen
-                    </Button>
+                    hasPersonalPlan
+                      ? "Im Feinschliff kannst du angeben, welche Produkte du schon nutzt."
+                      : "Hier ist noch nichts gespeichert."
                   }
                 />
               )}
 
-              {!productsLoading && incompleteProductRows.length > 0 ? (
+              {hasPersonalPlan &&
+              !productsLoading &&
+              !productsAwaitingRefinement &&
+              planProductRows === null &&
+              incompleteProductRows.length > 0 ? (
                 <InlinePromptCard
                   title={getOpenItemsTitle(
                     incompleteProductRows.length,
@@ -1445,14 +1412,7 @@ export default function ProfilePage() {
                       type="button"
                       variant="outline"
                       className="w-auto"
-                      onClick={() =>
-                        goToSectionStep(
-                          "products",
-                          buildOnboardingHref("product_drilldown", {
-                            category: incompleteProductRows[0]?.category ?? null,
-                          }),
-                        )
-                      }
+                      onClick={() => goToSectionStep("products", refineHref("products"))}
                     >
                       Details ergänzen
                     </Button>
@@ -1470,20 +1430,24 @@ export default function ProfilePage() {
             <CardHeader className="pb-4">
               <SectionHeader
                 title={SECTION_META_BY_KEY.styling.title}
-                description={SECTION_META_BY_KEY.styling.description}
+                description={
+                  hasPersonalPlan
+                    ? SECTION_META_BY_KEY.styling.description
+                    : (SECTION_META_BY_KEY.styling.descriptionWithoutPlan ?? "")
+                }
                 status={stylingStatus}
                 isOpen
                 controls={
-                  <>
+                  hasPersonalPlan ? (
                     <Button
                       type="button"
                       variant="outline"
                       className="w-auto"
-                      onClick={() => goToSectionStep("styling", buildOnboardingHref("heat_tools"))}
+                      onClick={() => goToSectionStep("styling", refineHref("habits"))}
                     >
                       Styling bearbeiten
                     </Button>
-                  </>
+                  ) : undefined
                 }
               />
             </CardHeader>
@@ -1498,14 +1462,22 @@ export default function ProfilePage() {
                       <ProfileFieldCard
                         key={field.key}
                         field={field}
-                        onClick={() => openTarget("styling", field.editTarget)}
-                        tone={isMissing ? "attention" : "default"}
-                        className={isMissing ? "md:col-span-2 xl:col-span-3" : undefined}
+                        onClick={
+                          hasPersonalPlan
+                            ? () => openTarget("styling", field.editTarget)
+                            : undefined
+                        }
+                        tone={isMissing && hasPersonalPlan ? "attention" : "default"}
+                        className={
+                          isMissing && hasPersonalPlan ? "md:col-span-2 xl:col-span-3" : undefined
+                        }
                       >
                         {isMissing ? (
                           <ProfileFieldValue
                             value={null}
-                            emptyLabel="Noch offen — tippen zum Ergänzen"
+                            emptyLabel={
+                              hasPersonalPlan ? "Noch offen — tippen zum Ergänzen" : "Noch offen"
+                            }
                           />
                         ) : undefined}
                       </ProfileFieldCard>
@@ -1523,22 +1495,24 @@ export default function ProfilePage() {
             <CardHeader className="pb-4">
               <SectionHeader
                 title={SECTION_META_BY_KEY.routine.title}
-                description={SECTION_META_BY_KEY.routine.description}
+                description={
+                  hasPersonalPlan
+                    ? SECTION_META_BY_KEY.routine.description
+                    : (SECTION_META_BY_KEY.routine.descriptionWithoutPlan ?? "")
+                }
                 status={routineStatus}
                 isOpen
                 controls={
-                  <>
+                  hasPersonalPlan ? (
                     <Button
                       type="button"
                       variant="outline"
                       className="w-auto"
-                      onClick={() =>
-                        goToSectionStep("routine", buildOnboardingHref("towel_material"))
-                      }
+                      onClick={() => goToSectionStep("routine", refineHref("habits"))}
                     >
                       Alltag bearbeiten
                     </Button>
-                  </>
+                  ) : undefined
                 }
               />
             </CardHeader>
@@ -1553,14 +1527,22 @@ export default function ProfilePage() {
                       <ProfileFieldCard
                         key={field.key}
                         field={field}
-                        onClick={() => openTarget("routine", field.editTarget)}
-                        tone={isMissing ? "attention" : "default"}
-                        className={isMissing ? "md:col-span-2 xl:col-span-3" : undefined}
+                        onClick={
+                          hasPersonalPlan
+                            ? () => openTarget("routine", field.editTarget)
+                            : undefined
+                        }
+                        tone={isMissing && hasPersonalPlan ? "attention" : "default"}
+                        className={
+                          isMissing && hasPersonalPlan ? "md:col-span-2 xl:col-span-3" : undefined
+                        }
                       >
                         {isMissing ? (
                           <ProfileFieldValue
                             value={null}
-                            emptyLabel="Noch offen — tippen zum Ergänzen"
+                            emptyLabel={
+                              hasPersonalPlan ? "Noch offen — tippen zum Ergänzen" : "Noch offen"
+                            }
                           />
                         ) : undefined}
                       </ProfileFieldCard>

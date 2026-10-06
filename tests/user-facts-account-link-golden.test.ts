@@ -6,7 +6,7 @@ import { deriveDiagnosticsColumns } from "../src/lib/user-facts/derive-legacy-co
 import {
   buildProfileDataFromPersonalPlanCanonicalProfile,
   buildProfileDataFromQuizAnswers,
-} from "../src/lib/quiz/link-to-profile"
+} from "../src/lib/quiz/legacy-profile-projection"
 import {
   normalizeStoredQuizAnswers,
   projectQuizAnswersToLegacyVocabulary,

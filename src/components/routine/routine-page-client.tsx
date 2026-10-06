@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { MessageCircle, RefreshCw, SlidersHorizontal } from "lucide-react"
+import { MessageCircle, RefreshCw } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/providers/toast-provider"
@@ -356,16 +356,6 @@ export function RoutinePageClient({
                 stabile Routine-Übersicht. Sicher, dass du noch nichts eingetragen hast?
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="w-auto"
-                  onClick={() => router.push("/onboarding")}
-                >
-                  <SlidersHorizontal className="h-4 w-4" />
-                  Onboarding anpassen
-                </Button>
                 <Button
                   type="button"
                   variant="outline"

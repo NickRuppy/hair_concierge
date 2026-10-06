@@ -14,7 +14,7 @@ import { resolveStatedPersonalPlanConcern } from "../src/lib/personal-plan-quiz/
 import { parsePersonalPlanQuizServerDraft } from "../src/lib/personal-plan-quiz/server-draft"
 import type { PersonalPlanQuizAnswers } from "../src/lib/personal-plan-quiz/types"
 import { parseSupportedPersonalPlanQuizEnvelope } from "../src/lib/personal-plan/input"
-import { buildProfileDataFromPersonalPlanCanonicalProfile } from "../src/lib/quiz/link-to-profile"
+import { buildProfileDataFromPersonalPlanCanonicalProfile } from "../src/lib/quiz/legacy-profile-projection"
 
 /**
  * F1 in the personal-plan quiz (plan Rev. 3 §1.1): the `current_problems` screen asks

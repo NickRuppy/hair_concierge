@@ -69,7 +69,7 @@ const TOWEL_MATERIAL_VALUES = new Set<string>(TOWEL_MATERIALS)
 function translateTowel(columns: LegacyCareHabitColumns): CareHabitsV1["towel"] | undefined {
   const material = columns.towel_material
   if (material === null || !TOWEL_MATERIAL_VALUES.has(material)) return undefined
-  // `no_towel` has no technique to record (the same rule `legacy-prefill.ts` applies).
+  // `no_towel` has no technique to record.
   if (material === "no_towel") return { material: material as TowelMaterial }
   const technique = normalizeTowelTechniqueValue(columns.towel_technique)
   return technique
