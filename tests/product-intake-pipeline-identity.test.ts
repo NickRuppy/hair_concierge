@@ -110,7 +110,7 @@ test("an approved brand decision wins over the model proposal", () => {
       decision: "approved",
       reviewer_value: { canonical_brand: "Reviewed Brand" },
       proposed_value: {},
-    } as ProductIntakeReviewDecisionRow,
+    } as unknown as ProductIntakeReviewDecisionRow,
   ])
   const brand = identity(result).payload.brand_resolution as Record<string, unknown>
   assert.equal(brand.source, "review_decision")
