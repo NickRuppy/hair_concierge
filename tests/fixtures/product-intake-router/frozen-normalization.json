@@ -1,0 +1,2309 @@
+{
+  "brand_context": {
+    "submitted_brand_text": "Characterization Brand",
+    "submitted_product_name_text": "Characterization Product",
+    "scanned_identifier": null,
+    "lookup_text": "Characterization Brand Characterization Product",
+    "resolved_brand": {
+      "canonical_brand_id": "11111111-1111-4111-8111-111111111111",
+      "canonical_brand": "Characterization Brand",
+      "product_line": null
+    },
+    "nearby_brand_options": [],
+    "catalog_summary": {
+      "brand_count": 1,
+      "product_line_count": 0,
+      "brand_alias_count": 0
+    },
+    "rules": []
+  },
+  "prompt_contract_sha256": {
+    "shampoo": "5f019c7fe8b4da5a1585085792d09b3e0c4fbb85dce751d3250e4423c06a35c7",
+    "conditioner": "88b88b5ffa10d87f8307bfbf88e71809d531914398a2ce35b3f4527b46efd3b2",
+    "mask": "5946d3816acce9eae94c26afe26fda0dd5b0de00d4913bc297c82aefe6e23a86",
+    "leave_in": "45ad860064ab0267862a0ea47d4a55a8164c410bf0e5b0d8998bd0ff1a1d73de",
+    "oil": "38a96a6732562878ece4bfce0b31538b7ab939c93185324f5b856cf0fc007786",
+    "dry_shampoo": "b65a6294f39f7a817d8c7bc6be14e7f1df47ea8f0b008f6b2b1ad8690bd1368d",
+    "deep_cleansing_shampoo": "8ca8bc6903d85be93f3be785c16f37a1f22b439b4e154c279b288b47bfebc879",
+    "bondbuilder": "ebacabc867c90677316dbd9758afc31a9c8b14c1fbfc2562844c3f50caa84925",
+    "heat_protectant": "6b73e74bdac1419658448d60869a4094d4014f5d876dd8108ef5d10def6b8e78",
+    "scalp_care": "02ffdc7e43d20314a94ca504f7709386518ea60c46d4b23ec9eae2506b4e88e4"
+  },
+  "cases": [
+    {
+      "submission_id": "a775eda1-dbcf-4fc0-91f4-6cd9f6251c50",
+      "category": "bondbuilder",
+      "category_specs": {},
+      "suitable_thicknesses": [],
+      "adapter_blockers": [
+        "bondbuilder research adapter: property_synthesis.bondbuilder_research_envelope is required"
+      ],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "fc06323a-2c0d-4bad-b3ec-28a34390546e",
+      "category": "bondbuilder",
+      "category_specs": {
+        "product_bondbuilder_specs": [
+          {
+            "product_format": "spray_treatment",
+            "treatment_mode": "rinse_out",
+            "usage_protocol": "epres_spray",
+            "application_mode": "post_wash_leave_in",
+            "bond_repair_axis": "peptide_chain",
+            "bond_repair_intensity": "intensive"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "specialized_bond_treatment",
+            "cadence": "Nicht vom Hersteller angegeben; ohne Frequenzbehauptung gemäß Herstelleranleitung verwenden.",
+            "placement": "2–3 Pumpstöße auf jede Partie von den Längen bis in die Spitzen verteilen; bei sehr stark geschädigtem Haar vom Ansatz bis in die Spitzen.",
+            "source_url": "https://fr.lorealpartnershop.com/fr/absolut-repair-molecular-serum-a-rincer/FR3474637153502.html",
+            "source_text": "Das offizielle Produktangebot bestätigt 250 ml und EAN 3474637153502. Auf nassem Haar anwenden, in zwei Partien teilen, 2–3 Pumpstöße pro Partie von den Längen bis in die Spitzen verteilen, 1–2 Minuten mit den Handflächen einarbeiten und gründlich ausspülen. Bei sehr trockenem Haar darf das Produkt vom Ansatz bis in die Spitzen aufgetragen werden. Das Serum ersetzt eine klassische Maske.",
+            "rinse_action": "Nach 1–2 Minuten gründlich ausspülen.",
+            "source_label": "L’Oréal Professionnel, Sérum réparateur à rincer 250 ml",
+            "reapplication": "Keine Anweisung zur erneuten Anwendung angegeben.",
+            "guidance_payload": {
+              "role": "specialized_bond_treatment",
+              "cadence": {
+                "type": "unspecified"
+              },
+              "category": "bondbuilder",
+              "modifiers": [
+                "Anstelle einer herkömmlichen ausspülbaren Haarmaske verwenden.",
+                "Bei sehr trockenem Haar erlaubt der Hersteller die Anwendung vom Ansatz bis in die Spitzen.",
+                "Der Hersteller empfiehlt anschließend das Absolut Repair Molecular Leave-In."
+              ],
+              "productId": "__PRODUCT_ID__",
+              "application": {
+                "stage": "after_shampoo",
+                "state": "wet_detangled_sectioned",
+                "amount": "2–3 Pumpstöße pro Partie; zwei Partien",
+                "placement": "lengths_to_ends",
+                "rinseAction": "rinse_thoroughly",
+                "contactTimeSeconds": 120
+              },
+              "reapplication": {
+                "type": "unspecified"
+              },
+              "schemaVersion": 1
+            },
+            "application_stage": "Nach dem Shampoo, anstelle einer ausspülbaren Haarmaske.",
+            "application_state": "Nasses, entwirrtes Haar, in zwei Partien geteilt.",
+            "contact_time_seconds": 120,
+            "instruction_modifiers": [
+              "Anstelle einer herkömmlichen ausspülbaren Haarmaske verwenden.",
+              "Der Hersteller empfiehlt anschließend das Absolut Repair Molecular Leave-In."
+            ]
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [
+        "bondbuilder research adapter: property_synthesis.bondbuilder_research_envelope is required"
+      ],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "1dae468a-bb38-469b-a996-1bb232d8a2c3",
+      "category": "conditioner",
+      "category_specs": {
+        "product_conditioner_specs": [],
+        "product_application_protocols": [],
+        "product_conditioner_rerank_specs": {}
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [
+        "conditioner research adapter: property_synthesis.conditioner_research_envelope is required"
+      ],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "24789377-f2f4-44a1-9a9e-933bed418ab4",
+      "category": "conditioner",
+      "category_specs": {
+        "product_conditioner_specs": [],
+        "product_application_protocols": [],
+        "product_conditioner_rerank_specs": {}
+      },
+      "suitable_thicknesses": [
+        "normal"
+      ],
+      "adapter_blockers": [
+        "conditioner research adapter: property_synthesis.conditioner_research_envelope is required"
+      ],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "351a11a3-073d-4b27-91ff-0baa6137a212",
+      "category": "conditioner",
+      "category_specs": {
+        "product_conditioner_specs": [],
+        "product_application_protocols": [
+          {
+            "role": "conditioner_rinse_out",
+            "cadence": null,
+            "category": "conditioner",
+            "placement": "lengths and ends",
+            "source_url": "https://www.wella.com/professional/de-DE/products/haarpflege/fusion/fusion-intense-repair-conditioner",
+            "source_text": "Nach dem Waschen auf sauberes, feuchtes Haar – vor allem Längen und Spitzen – auftragen, etwa 30 Sekunden einwirken lassen und gründlich ausspülen. Verwende ihn als Schritt 2 nach dem Fusion Intense Repair Shampoo.",
+            "rinse_action": "rinse thoroughly",
+            "source_label": "Wella Professionals DE product FAQ",
+            "reapplication": null,
+            "guidance_payload": null,
+            "application_stage": "after_washing",
+            "application_state": "clean, damp hair",
+            "contact_time_seconds": 30,
+            "instruction_modifiers": [
+              "Use as step 2 after Fusion Intense Repair Shampoo."
+            ]
+          }
+        ],
+        "product_conditioner_rerank_specs": {}
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [
+        "conditioner research adapter: profile: Invalid input: expected object, received null",
+        "conditioner research adapter: input: Unrecognized key: \"notes\""
+      ],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "82401b60-134a-40d4-b1ef-e1e47b90d4a0",
+      "category": "conditioner",
+      "category_specs": {
+        "product_conditioner_specs": [
+          {
+            "thickness": "fine",
+            "protein_moisture_balance": "stretches_bounces"
+          },
+          {
+            "thickness": "normal",
+            "protein_moisture_balance": "stretches_bounces"
+          },
+          {
+            "thickness": "coarse",
+            "protein_moisture_balance": "stretches_bounces"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "conditioner_rinse_out",
+            "cadence": "daily_use_suitable",
+            "category": "conditioner",
+            "placement": "lengths_and_ends",
+            "source_url": "https://www.evecurls.com/products/hydrating-curl-conditioner",
+            "source_text": "Apply to clean, wet hair after shampooing. Distribute evenly through the hair, using enough to cover lengths and ends. Leave for 1 to 5 minutes, then rinse. Suitable for daily use in the shower.",
+            "rinse_action": "rinse_out",
+            "source_label": "Eve Curls Hydrating Curl Conditioner product page",
+            "reapplication": "not_specified",
+            "guidance_payload": {
+              "role": "conditioner_rinse_out",
+              "cadence": "daily_use_suitable",
+              "category": "conditioner",
+              "placement": "lengths_and_ends",
+              "productId": "__PRODUCT_ID__",
+              "rinseAction": "rinse_out",
+              "reapplication": "not_specified",
+              "schemaVersion": 1,
+              "applicationStage": "after_shampoo",
+              "applicationState": "clean_wet_hair",
+              "contactTimeSeconds": {
+                "maximum": 300,
+                "minimum": 60
+              },
+              "instructionModifiers": [
+                "distribute_evenly",
+                "detangle_while_applied"
+              ]
+            },
+            "application_stage": "after_shampoo",
+            "application_state": "clean_wet_hair",
+            "contact_time_seconds": {
+              "maximum": 300,
+              "minimum": 60
+            },
+            "instruction_modifiers": [
+              "distribute_evenly",
+              "detangle_while_applied"
+            ]
+          }
+        ],
+        "product_conditioner_rerank_specs": {
+          "weight": "medium",
+          "repair_level": "low",
+          "ingredient_flags": [
+            "oils",
+            "humectants"
+          ],
+          "balance_direction": "moisture"
+        }
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [
+        "conditioner research adapter: property_synthesis.conditioner_research_envelope is required"
+      ],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "e9110c73-d095-42a4-89df-9ea38c1786c5",
+      "category": "conditioner",
+      "category_specs": {
+        "product_conditioner_specs": [],
+        "product_application_protocols": [],
+        "product_conditioner_rerank_specs": {}
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [
+        "conditioner research adapter: profile.conditioningLevel: Invalid input: expected object, received undefined",
+        "conditioner research adapter: profile.weightPotential: Invalid input: expected object, received undefined",
+        "conditioner research adapter: profile.careDirection: Invalid input: expected object, received undefined",
+        "conditioner research adapter: profile.repairSupportLevel: Invalid input: expected object, received undefined",
+        "conditioner research adapter: profile.primaryFocus: Invalid input: expected object, received undefined",
+        "conditioner research adapter: profile.secondaryFocus: Invalid input: expected object, received undefined",
+        "conditioner research adapter: profile.hairThicknessFit: Invalid input: expected object, received undefined",
+        "conditioner research adapter: profile.damageFit: Invalid input: expected object, received undefined",
+        "conditioner research adapter: profile.textureFit: Invalid input: expected object, received undefined"
+      ],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "1d04f9f5-fc62-444a-87a0-b697e6a9933e",
+      "category": "deep_cleansing_shampoo",
+      "category_specs": null,
+      "suitable_thicknesses": null,
+      "adapter_blockers": [],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "1ff6913c-9058-4d96-b9c3-45d9045ba2f6",
+      "category": "deep_cleansing_shampoo",
+      "category_specs": {
+        "product_application_protocols": [],
+        "product_deep_cleansing_shampoo_specs": []
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "ba9fecdd-189e-4d12-8eb5-f44a7bb15bd8",
+      "category": "deep_cleansing_shampoo",
+      "category_specs": {
+        "product_application_protocols": [],
+        "product_deep_cleansing_shampoo_specs": []
+      },
+      "suitable_thicknesses": [
+        "fine"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "80edc13c-f2c7-49b5-aba0-eecf8efcf8aa",
+      "category": "dry_shampoo",
+      "category_specs": {},
+      "suitable_thicknesses": null,
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "181476bb-9c35-486e-8586-821f4452dc91",
+      "category": "heat_protectant",
+      "category_specs": {
+        "product_application_protocols": [
+          {
+            "role": "pre_heat_protection",
+            "cadence": "before_styling",
+            "category": "heat_protectant",
+            "placement": "lengths_and_ends",
+            "source_url": "https://www.dm.de/p/d/1539968/langhaarmaedchen-hitzeschutzspray-glanz-und-glaette",
+            "source_text": "Vor dem Styling gut schütteln und gleichmäßig in die feuchten oder etwas weniger in die trockenen Längen und Spitzen sprühen. Danach wie gewohnt trocknen und stylen.",
+            "rinse_action": "leave_in",
+            "source_label": "dm.de Verwendungshinweise",
+            "reapplication": "not_stated",
+            "guidance_payload": {
+              "cadence": "before_styling",
+              "placement": "lengths_and_ends",
+              "rinse_action": "leave_in",
+              "reapplication": "not_stated",
+              "application_stage": "before_styling",
+              "application_state": "either",
+              "contact_time_seconds": null
+            },
+            "application_stage": "before_styling",
+            "application_state": "either",
+            "contact_time_seconds": null
+          }
+        ],
+        "product_heat_protectant_specs": {
+          "format": "spray",
+          "provides_heat_protection": true
+        }
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "7b2cfe69-c010-4b59-b844-55304477b900",
+      "category": "heat_protectant",
+      "category_specs": {
+        "product_application_protocols": [
+          {
+            "role": "pre_heat_protection",
+            "category": "heat_protectant",
+            "reapplication": "not_stated",
+            "application_state": "either"
+          }
+        ],
+        "product_heat_protectant_specs": {
+          "format": "spray",
+          "provides_heat_protection": true
+        }
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "7c7a5481-8075-4690-ae4d-9ae3c24fc063",
+      "category": "heat_protectant",
+      "category_specs": {
+        "product_application_protocols": [
+          {
+            "role": "pre_heat_protection",
+            "category": "heat_protectant",
+            "reapplication": "not_stated",
+            "application_state": "either"
+          }
+        ],
+        "product_heat_protectant_specs": [
+          {
+            "format": "spray",
+            "provides_heat_protection": true
+          }
+        ]
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "c3f26d5c-ef8f-47e5-9fe3-8a768a2af64d",
+      "category": "heat_protectant",
+      "category_specs": {
+        "product_application_protocols": [
+          {
+            "role": "pre_heat_protection",
+            "category": "heat_protectant",
+            "reapplication": "optional",
+            "application_state": "damp"
+          }
+        ],
+        "product_heat_protectant_specs": [
+          {
+            "format": "spray",
+            "provides_heat_protection": true
+          }
+        ]
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "10668e37-662e-4cee-8cf1-d82408862e7f",
+      "category": "leave_in",
+      "category_specs": {
+        "product_leave_in_specs": [],
+        "product_leave_in_fit_specs": [],
+        "product_leave_in_eligibility": [],
+        "product_application_protocols": []
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [
+        "leave-in research adapter: property_synthesis.leave_in_research_envelope is required"
+      ],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "3cb0477c-182f-427e-baa0-5e513184e3bc",
+      "category": "leave_in",
+      "category_specs": {
+        "product_leave_in_specs": [],
+        "product_leave_in_fit_specs": [],
+        "product_leave_in_eligibility": [],
+        "product_application_protocols": [
+          {
+            "role": "post_wash_leave_in",
+            "cadence": "Vor dem Schlafengehen; keine feste Wiederholungshäufigkeit angegeben.",
+            "placement": "Spitzen; Hersteller-FAQ nennt zusätzlich die Längen.",
+            "source_url": "https://www.kerastase.de/produktlinien/haartyp/lockiges-oder-krauses-haar/8h-magic-night-serum/KER_00258.html?dwvar_KER__00258_size=90ML",
+            "source_text": "Einen Pumpstoß in die Handflächen geben und gleichmäßig in die feuchten oder trockenen Spitzen verteilen. Vor dem Schlafengehen auftragen. Nach dem Aufstehen nicht ausspülen. FAQ: 2 bis 4 Pumpstöße zwischen den Handflächen verteilen und gleichmäßig auf die Längen auftragen.",
+            "rinse_action": "Nicht ausspülen; Hersteller sagt, morgens nicht auszuspülen.",
+            "source_label": "Kérastase Deutschland – 8h Magic Night Serum",
+            "reapplication": null,
+            "guidance_payload": {
+              "role": "post_wash_leave_in",
+              "cadence": "Vor dem Schlafengehen; keine feste Wiederholungshäufigkeit angegeben.",
+              "placement": "Spitzen; FAQ ergänzt Längen.",
+              "productId": "__PRODUCT_ID__",
+              "rinseAction": "Nicht ausspülen; morgens nicht ausspülen.",
+              "reapplication": null,
+              "schemaVersion": 1,
+              "applicationStage": [
+                "towel_dry",
+                "dry_hair"
+              ],
+              "applicationState": [
+                "feuchtes Haar",
+                "trockenes Haar"
+              ],
+              "contactTimeSeconds": null,
+              "instructionModifiers": [
+                "Herstelleranleitung nennt einen Pumpstoß für die Spitzen; die FAQ nennt 2–4 Pumpstöße für die Längen."
+              ]
+            },
+            "application_stage": [
+              "towel_dry",
+              "dry_hair"
+            ],
+            "application_state": [
+              "feuchtes Haar",
+              "trockenes Haar"
+            ],
+            "contact_time_seconds": null,
+            "instruction_modifiers": [
+              "Herstelleranleitung nennt einen Pumpstoß für die Spitzen; die FAQ nennt 2–4 Pumpstöße für die Längen."
+            ]
+          }
+        ]
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [
+        "leave-in research adapter: property_synthesis.leave_in_research_envelope is required"
+      ],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "436751c5-5054-4cdf-bc87-b5b02a3be43a",
+      "category": "leave_in",
+      "category_specs": {
+        "product_leave_in_specs": [],
+        "product_leave_in_fit_specs": [],
+        "product_leave_in_eligibility": [],
+        "product_application_protocols": []
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [
+        "leave-in research adapter: property_synthesis.leave_in_research_envelope is required"
+      ],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "4da6de22-71c8-475e-8666-d8e1a514a129",
+      "category": "leave_in",
+      "category_specs": {
+        "product_leave_in_specs": [],
+        "product_leave_in_fit_specs": [],
+        "product_leave_in_eligibility": [],
+        "product_application_protocols": [
+          {
+            "role": "post_wash_leave_in",
+            "cadence": "regularly; exact frequency not stated",
+            "category": "leave_in",
+            "placement": "dry lengths and ends; avoid roots",
+            "productId": "__PRODUCT_ID__",
+            "source_url": "https://www.wella.com/professional/de-DE/products/haarpflege/ultimate-color/ultimate-color-shine-spray",
+            "source_text": "Style dein Haar. Halte das Spray etwa eine Armlänge von deinem Haar entfernt. Sprühe es als Finish auf die trockenen Längen und Spitzen.",
+            "rinse_action": "leave_in",
+            "source_label": "Wella Professionals DE product directions",
+            "reapplication": null,
+            "guidance_payload": {
+              "role": "post_wash_leave_in",
+              "cadence": "regularly; exact frequency not stated",
+              "category": "leave_in",
+              "placement": "dry lengths and ends; avoid roots",
+              "productId": "__PRODUCT_ID__",
+              "sourceUrl": "https://www.wella.com/professional/de-DE/products/haarpflege/ultimate-color/ultimate-color-shine-spray",
+              "sourceText": "Style dein Haar. Halte das Spray etwa eine Armlänge von deinem Haar entfernt. Sprühe es als Finish auf die trockenen Längen und Spitzen.",
+              "rinseAction": "leave_in",
+              "sourceLabel": "Wella Professionals DE product directions",
+              "reapplication": null,
+              "schemaVersion": 1,
+              "applicationStage": "post_style",
+              "applicationState": "dry_hair",
+              "contactTimeSeconds": null,
+              "instructionModifiers": [
+                "Style hair first.",
+                "Hold spray about an arm's length away."
+              ]
+            },
+            "application_stage": "post_style",
+            "application_state": "dry_hair",
+            "contact_time_seconds": null,
+            "instruction_modifiers": [
+              "Style hair first.",
+              "Hold spray about an arm's length away."
+            ]
+          }
+        ]
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [
+        "leave-in research adapter: property_synthesis.leave_in_research_envelope is required"
+      ],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "4e1eb309-b1c9-4280-8c0f-7f2c8c48168c",
+      "category": "leave_in",
+      "category_specs": {
+        "product_leave_in_specs": [],
+        "product_leave_in_fit_specs": [],
+        "product_leave_in_eligibility": [],
+        "product_application_protocols": [
+          {
+            "role": "post_wash_leave_in",
+            "cadence": "After washing; manufacturer does not specify recurring frequency.",
+            "placement": "Apply 5–15 pumps and comb through gently.",
+            "source_url": "https://www.wella.com/professional/de-DE/products/haarpflege/ultimate-repair/ultimate-repair-miracle-hair-rescue-30",
+            "source_text": "5-15 Pumpstöße auf das handtuchtrockene, saubere Haar geben und sanft durchkämmen. Vor dem Stylen 90 Sekunden einwirken lassen. Nicht ausspülen, wie gewünscht stylen.",
+            "rinse_action": "do not rinse",
+            "source_label": "Wella Professionals Germany product page",
+            "reapplication": "not specified",
+            "guidance_payload": {
+              "role": "post_wash_leave_in",
+              "cadence": "after washing; manufacturer does not specify recurring frequency",
+              "category": "leave_in",
+              "placement": "Apply 5–15 pumps and comb through gently.",
+              "productId": "__PRODUCT_ID__",
+              "rinseAction": "do_not_rinse",
+              "reapplication": "not specified",
+              "schemaVersion": 1,
+              "applicationStage": "towel_dry",
+              "applicationState": "clean, towel-dried hair",
+              "contactTimeSeconds": 90,
+              "instructionModifiers": []
+            },
+            "application_stage": "towel_dry",
+            "application_state": "clean, towel-dried hair",
+            "contact_time_seconds": 90,
+            "instruction_modifiers": []
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [
+        "leave-in research adapter: formula.formulaFingerprintSha256: Invalid input: expected string, received null",
+        "leave-in research adapter: formula.rawInciSha256: Invalid input: expected string, received null",
+        "leave-in research adapter: profile.conditioningLevel: Invalid input: expected object, received undefined",
+        "leave-in research adapter: profile.weightPotential: Invalid input: expected object, received undefined",
+        "leave-in research adapter: profile.persistence: Invalid input: expected object, received undefined",
+        "leave-in research adapter: profile.holdSupport: Invalid input: expected object, received undefined",
+        "leave-in research adapter: profile.careDirection: Invalid input: expected object, received undefined",
+        "leave-in research adapter: profile.repairSupportLevel: Invalid input: expected object, received undefined",
+        "leave-in research adapter: profile.focus: Invalid input: expected object, received undefined",
+        "leave-in research adapter: profile.specialistFunctions: Invalid input: expected object, received undefined",
+        "leave-in research adapter: profile.smoothingRoute: Invalid input: expected object, received undefined",
+        "leave-in research adapter: profile.hairThicknessFit: Invalid input: expected object, received undefined",
+        "leave-in research adapter: profile.damageFit: Invalid input: expected object, received undefined",
+        "leave-in research adapter: profile.textureFit: Invalid input: expected object, received undefined",
+        "leave-in research adapter: profile.uncertainFields: Invalid input: expected array, received undefined",
+        "leave-in research adapter: profile.assumptionNotes: Invalid input: expected array, received undefined",
+        "leave-in research adapter: input: Unrecognized keys: \"assumptionNotes\", \"uncertainFields\""
+      ],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "95a0cbf1-e6ce-4e68-bf0d-76583848e0ca",
+      "category": "leave_in",
+      "category_specs": {
+        "product_leave_in_specs": null,
+        "product_leave_in_fit_specs": null,
+        "product_leave_in_eligibility": null,
+        "product_application_protocols": [
+          {
+            "role": "post_wash_leave_in",
+            "cadence": null,
+            "placement": "Distribute evenly through the hair and scrunch; exact hair section placement is not specified.",
+            "source_url": "https://www.evecurls.de/products/leave-in-conditioner",
+            "source_text": "Make sure your hair is thoroughly wet. Apply the Leave-In Conditioner to your wet hair and scrunch to shape your curls. After the Leave-In Conditioner, apply Curl Defining Cream.",
+            "category_key": "leave_in",
+            "rinse_action": "leave in; no rinse instruction is given",
+            "source_label": "Eve Curls product directions",
+            "reapplication": null,
+            "guidance_payload": null,
+            "application_stage": [
+              "towel_dry"
+            ],
+            "application_state": "thoroughly wet hair",
+            "contact_time_seconds": null,
+            "instruction_modifiers": [
+              "Use a small quantity."
+            ]
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [
+        "leave-in research adapter: property_synthesis.leave_in_research_envelope is required"
+      ],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "c3fcd12d-7d3c-4fbe-816d-034dbb506292",
+      "category": "leave_in",
+      "category_specs": {
+        "product_leave_in_specs": [],
+        "product_leave_in_fit_specs": [],
+        "product_leave_in_eligibility": [],
+        "product_application_protocols": []
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [
+        "leave-in research adapter: property_synthesis.leave_in_research_envelope is required"
+      ],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "cf65b2b7-e6d1-4098-a3e0-881e3ff78538",
+      "category": "leave_in",
+      "category_specs": {
+        "product_leave_in_specs": [],
+        "product_leave_in_fit_specs": [],
+        "product_leave_in_eligibility": [],
+        "product_application_protocols": []
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [
+        "leave-in research adapter: property_synthesis.leave_in_research_envelope is required"
+      ],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "154a186c-4ba4-4805-8521-18578a5eb4ad",
+      "category": "mask",
+      "category_specs": {
+        "product_mask_specs": [],
+        "product_application_protocols": [
+          {
+            "role": "intensive_conditioning_mask",
+            "cadence": "Einmal pro Woche bei sensibilisiertem Haar oder bei jeder Haarwäsche bei dickerem Haar.",
+            "category": "mask",
+            "placement": "Längen und Spitzen.",
+            "source_url": "https://www.kerastase.com/products/discipline/maskeratine",
+            "source_text": "Use once a week for sensitized hair or with every wash for thicker hair. Apply to washed and towel-dried hair. Massage onto lengths and ends. Leave in for 5 minutes. Emulsify and rinse thoroughly.",
+            "rinse_action": "Emulgieren und gründlich ausspülen.",
+            "source_label": "Kérastase Maskératine offizielle Produktseite",
+            "guidance_payload": {
+              "cadence": "Once weekly for sensitized hair; with every wash for thicker hair",
+              "placement": "lengths_and_ends",
+              "rinse_action": "emulsify_and_rinse_thoroughly",
+              "application_stage": "washed_towel_dried",
+              "contact_time_seconds": 300
+            },
+            "application_stage": "Nach der Haarwäsche auf handtuchtrockenes Haar.",
+            "contact_time_seconds": 300
+          }
+        ]
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "301c4f7b-6beb-43c4-80e0-0b70845ca9c1",
+      "category": "mask",
+      "category_specs": {
+        "product_mask_specs": [
+          {
+            "weight": "rich",
+            "concentration": "high",
+            "ingredient_flags": [
+              "polymers",
+              "oils",
+              "proteins",
+              "humectants"
+            ],
+            "balance_direction": "balanced",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "detangling_slip",
+              "shine"
+            ],
+            "repair_support_level": "medium"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "intensive_conditioning_mask",
+            "cadence": "Keine feste Anwendungshäufigkeit vom Hersteller angegeben.",
+            "category": "mask",
+            "placement": "Auf das Haar auftragen.",
+            "source_url": "https://shop.schwarzkopf-professional.de/de/c/CHROMA-ID/p/3050832",
+            "source_text": "Nach dem Shampoo auf das handtuchtrockene Haar auftragen. Die vom Hersteller empfohlene Einwirkzeit des gewünschten Services einhalten und gründlich ausspülen. Für eine Farbauffrischung 3–5 Minuten, für intensivere Farben 5–10 Minuten einwirken lassen.",
+            "rinse_action": "Gründlich ausspülen.",
+            "source_label": "Schwarzkopf Professional eShop Deutschland, Anwendung",
+            "guidance_payload": {
+              "role": "intensive_conditioning_mask",
+              "scope": "Nach dem Shampoo auf handtuchtrockenem Haar anwenden.",
+              "steps": [
+                "Bonding Color Mask auf das handtuchtrockene Haar auftragen.",
+                "Für eine Farbauffrischung 3–5 Minuten einwirken lassen; für intensivere Farben 5–10 Minuten.",
+                "Gründlich ausspülen."
+              ],
+              "locale": "de-DE",
+              "guidanceKey": "chroma_id_bonding_color_mask",
+              "protocolFacts": {
+                "rinse_action": "Gründlich ausspülen.",
+                "application_stage": "Nach dem Shampoo auf handt trockenem Haar.",
+                "contact_time_seconds": {
+                  "color_refresh": {
+                    "max": 300,
+                    "min": 180
+                  },
+                  "intensified_color": {
+                    "max": 600,
+                    "min": 300
+                  }
+                }
+              },
+              "protocolVersion": 1
+            },
+            "application_stage": "Nach dem Shampoo auf handtuchtrockenem Haar.",
+            "contact_time_seconds": 600
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "65d966ea-1409-487f-9b67-7e27e6fa532f",
+      "category": "mask",
+      "category_specs": {
+        "product_mask_specs": [
+          {
+            "weight": "rich",
+            "concentration": "medium",
+            "ingredient_flags": [
+              "oils",
+              "proteins",
+              "humectants"
+            ],
+            "balance_direction": "balanced",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "detangling_slip",
+              "shine"
+            ],
+            "repair_support_level": "medium"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "intensive_conditioning_mask",
+            "cadence": "Not specified by manufacturer.",
+            "category": "mask",
+            "placement": "Distribute evenly from lengths to ends.",
+            "source_url": "https://www.loreal-paris.de/elvital/dream-length/super-aufbau-maske-300ml",
+            "source_text": "Nasses Haar: Verteilen Sie die Elvital Dream Length Super Aufbau Maske gleichmäßig von den Längen bis in die Spitzen. Anschließend 2-3 Minuten einwirken lassen und zum Schluss ausspülen.",
+            "rinse_action": "Rinse out thoroughly.",
+            "source_label": "L’Oréal Paris Elvital Dream Length Super Spitzen Retter Maske product instructions",
+            "guidance_payload": {
+              "dry_hair_instruction": "Apply a small amount to the hair section for manageability and shine; no rinse needed.",
+              "mask_protocol_uses_wet_hair_rinse_out_instructions": true,
+              "manufacturer_also_allows_small_amount_on_dry_hair_without_rinsing": true
+            },
+            "application_stage": "After washing, on wet hair.",
+            "contact_time_seconds": 180
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "81f41097-daf0-4ace-9f63-4e9cf99d8896",
+      "category": "mask",
+      "category_specs": {
+        "product_mask_specs": [
+          {
+            "weight": "rich",
+            "concentration": "high",
+            "ingredient_flags": [
+              "silicones",
+              "oils",
+              "humectants"
+            ],
+            "balance_direction": "moisture",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "detangling_slip",
+              "shine"
+            ],
+            "repair_support_level": "medium"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "intensive_conditioning_mask",
+            "cadence": "1–2× pro Woche oder bei zusätzlichem Pflegebedarf; der Hersteller nennt auch Anwendung nach Styling/Hitzetools und nach Colorationen.",
+            "category": "mask",
+            "placement": "Längen und Spitzen; laut Hersteller bei trockener Kopfhaut eine kleine Menge am Ansatz möglich.",
+            "source_url": "https://www.dejangarz.com/products/hairmask",
+            "source_text": "Nach Shampoo eine kleine Menge in Längen und Spitzen verteilen, 5–10 Minuten einwirken lassen (intensiv: bis 30 Minuten maximal), gründlich ausspülen und mit Conditioner versiegeln. Alternativ als Pre-Treatment auf trockenem oder angefeuchtetem Haar vor dem Shampoo verwenden. 1–2× pro Woche anwenden.",
+            "rinse_action": "Gründlich ausspülen; nach regulärer Anwendung anschließend Conditioner verwenden. Beim Pre-Treatment mit Shampoo und Conditioner fortfahren.",
+            "source_label": "DEJAN GARZ – THE FOUNDATION Hair Treatment Mask",
+            "guidance_payload": {
+              "post_shampoo": {
+                "rinse_thoroughly": true,
+                "contact_time_seconds": 300,
+                "follow_with_conditioner": true,
+                "maximum_intensive_contact_time_seconds": 1800
+              },
+              "pre_treatment": {
+                "apply_to": "dry_or_damp_lengths_before_shampoo",
+                "continue_with": [
+                  "shampoo",
+                  "conditioner"
+                ],
+                "rinse_thoroughly": true,
+                "contact_time_seconds": 600
+              },
+              "cadence_per_week": {
+                "maximum": 2,
+                "minimum": 1
+              }
+            },
+            "application_stage": "Nach der Haarwäsche auftragen; alternativ als Pre-Treatment vor dem Shampoo auf trockenem oder angefeuchtetem Haar.",
+            "contact_time_seconds": 600
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "c701e5b6-a68d-4980-89ae-72cb5a4245da",
+      "category": "mask",
+      "category_specs": {
+        "product_mask_specs": [
+          {
+            "weight": "medium",
+            "concentration": "high",
+            "ingredient_flags": [
+              "silicones",
+              "proteins",
+              "humectants"
+            ],
+            "balance_direction": "balanced",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "detangling_slip",
+              "shine"
+            ],
+            "repair_support_level": "high"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "intensive_conditioning_mask",
+            "cadence": null,
+            "category": "mask",
+            "placement": "distribute evenly through lengths",
+            "source_url": "https://de.lorealpartnershop.com/default/absolut-repair-maske/DE3474636974252.html",
+            "source_text": "Apply evenly to washed, towel-dried hair, leave for 3–5 minutes, then rinse thoroughly. This product page does not specify a recurring usage cadence.",
+            "rinse_action": "rinse thoroughly",
+            "source_label": "L'Oréal Professionnel Partner Shop Deutschland",
+            "guidance_payload": {
+              "usage_frequency": null,
+              "source_cadence_specified": false
+            },
+            "application_stage": "after shampooing, on towel-dried hair",
+            "contact_time_seconds": {
+              "max": 300,
+              "min": 180
+            }
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "ed40c9a8-9562-418f-93e9-013e24ab5960",
+      "category": "mask",
+      "category_specs": {
+        "product_mask_specs": {
+          "weight": "light",
+          "concentration": "high",
+          "ingredient_flags": {
+            "oils": false,
+            "polymers": true,
+            "proteins": true,
+            "silicones": false,
+            "humectants": true
+          },
+          "balance_direction": "balanced",
+          "functional_benefits": [
+            "smoothing_frizz_control",
+            "detangling_slip",
+            "shine"
+          ],
+          "repair_support_level": "high"
+        },
+        "product_application_protocols": [
+          {
+            "role": "intensive_conditioning_mask",
+            "cadence": "Für die ersten 4–6 Haarwäschen nach einer Salonbehandlung, danach nach Bedarf.",
+            "category": "mask",
+            "placement": "1–3 Pumpstöße abhängig von Länge und Haardichte abschnittsweise von den Spitzen zum Ansatz einarbeiten.",
+            "source_url": "https://www.k18hair.com/products/leave-in-molecular-repair-hair-mask-50-ml?gdpid=6274f2387a98580001aaa353",
+            "source_text": "Shampoo, do not condition. Towel-dry thoroughly. Apply 1-3 pumps based on length and density, starting at the ends and working up towards the roots. Let sit for 4 minutes. Do not rinse out. Use for 4-6 washes post-salon service, then as needed.",
+            "rinse_action": "Nicht ausspülen; anschließend kämmen und wie gewohnt stylen.",
+            "source_label": "K18: Full-Size Leave-In Molecular Repair Hair Mask 50mL",
+            "guidance_payload": {
+              "dose": "1–3 Pumpstöße nach Länge und Haardichte",
+              "placement": "Von den Spitzen zum Ansatz",
+              "initial_cadence": "4–6 Haarwäschen nach einer Salonbehandlung, dann nach Bedarf"
+            },
+            "application_stage": "Nach dem Shampoonieren, ohne Conditioner, in gründlich handtuchtrockenem Haar.",
+            "contact_time_seconds": 240
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "ee7b29c6-f13c-49f9-a758-ded86222ba9e",
+      "category": "mask",
+      "category_specs": {
+        "product_mask_specs": [
+          {
+            "weight": "rich",
+            "concentration": "high",
+            "ingredient_flags": {
+              "oils": true,
+              "polymers": false,
+              "proteins": false,
+              "silicones": true,
+              "humectants": true
+            },
+            "balance_direction": "moisture",
+            "functional_benefits": [
+              "smoothing_frizz_control",
+              "detangling_slip",
+              "shine"
+            ],
+            "repair_support_level": "medium"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "intensive_conditioning_mask",
+            "cadence": "1–2× pro Woche",
+            "category": "mask",
+            "placement": "Kleine Menge in Längen und Spitzen verteilen",
+            "source_url": "https://www.dejangarz.com/products/hairmask",
+            "source_text": "Nach der Anwendung von Shampoo eine kleine Menge in Längen und Spitzen verteilen, 5–10 Min. einwirken (intensiv: bis 30 Min. maximal), gründlich ausspülen und mit Conditioner versiegeln. Die Hair Treatment Mask kann aber auch als Pre-Treatment auf dem trockenen oder angefeuchteten Haar vor der Reinigung mit Shampoo verwendet werden. Nutze die Maske, wenn dein Haar mehr braucht als Conditioner: 1–2× pro Woche.",
+            "rinse_action": "Gründlich ausspülen; nach Anwendung auf Shampoo anschließend mit Conditioner versiegeln",
+            "source_label": "Herstellerangaben zur Hair Treatment Mask",
+            "guidance_payload": {
+              "cadence": "1–2× pro Woche",
+              "placement": "Längen und Spitzen",
+              "rinse_action": "Gründlich ausspülen; anschließend Conditioner verwenden",
+              "application_stage": "Nach Shampoo auftragen; optional als Pre-Treatment vor Shampoo",
+              "contact_time_seconds": {
+                "maximum": 600,
+                "minimum": 300,
+                "intensive_maximum": 1800
+              }
+            },
+            "application_stage": "Nach Shampoo auftragen; alternativ als Pre-Treatment auf trockenem oder angefeuchtetem Haar vor dem Shampoo",
+            "contact_time_seconds": {
+              "maximum": 600,
+              "minimum": 300,
+              "intensive_maximum": 1800
+            }
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "98ac817a-e1e3-4552-a964-652d493eaa45",
+      "category": "oil",
+      "category_specs": {
+        "product_oil_specs": {
+          "weight": "light",
+          "role_support": [
+            "dry_finish"
+          ],
+          "provides_heat_protection": false
+        },
+        "product_oil_eligibility": [
+          {
+            "thickness": "normal",
+            "oil_purpose": "styling_finish",
+            "oil_subtype": "styling-oel",
+            "ingredient_flags": [
+              "silicones",
+              "oils"
+            ]
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "dry_finish",
+            "cadence": "daily as needed",
+            "category": "oil",
+            "placement": "lengths and ends",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-aussie-curls-oel/p/8006530321679",
+            "source_text": "Als letzten Schritt auf trockenem Haar anwenden, um den 'Crunch' zu beseitigen, Frizz zu reduzieren und einen tollen Glanz zu verleihen. Super! Jeden Tag wiederholen",
+            "rinse_action": "do not rinse",
+            "source_label": "Rossmann product page",
+            "reapplication": "May be repeated daily.",
+            "guidance_payload": {
+              "role": "dry_finish",
+              "cadence": "daily as needed",
+              "category": "oil",
+              "placement": "lengths and ends",
+              "productId": "__PRODUCT_ID__",
+              "sourceUrl": "https://www.rossmann.de/de/pflege-und-duft-aussie-curls-oel/p/8006530321679",
+              "sourceText": "Als letzten Schritt auf trockenem Haar anwenden, um den 'Crunch' zu beseitigen, Frizz zu reduzieren und einen tollen Glanz zu verleihen. Super! Jeden Tag wiederholen",
+              "rinseAction": "do not rinse",
+              "sourceLabel": "Rossmann product page",
+              "reapplication": "May be repeated daily.",
+              "schemaVersion": 1,
+              "applicationStage": "finishing step after styling, on dry hair",
+              "applicationState": "dry",
+              "contactTimeSeconds": null,
+              "instructionModifiers": [
+                "Use a few drops to break the styling cast, reduce frizz, and add shine."
+              ]
+            },
+            "application_stage": "finishing step after styling, on dry hair",
+            "application_state": "dry",
+            "contact_time_seconds": null,
+            "instruction_modifiers": [
+              "Use a few drops to break the styling cast, reduce frizz, and add shine."
+            ]
+          }
+        ]
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "bd871352-eedf-44d9-953a-6bf6bdcee60f",
+      "category": "oil",
+      "category_specs": {
+        "product_oil_specs": {
+          "weight": "medium",
+          "role_support": [
+            "leave_on_fibre_conditioning",
+            "dry_finish"
+          ],
+          "provides_heat_protection": true
+        },
+        "product_oil_eligibility": [
+          {
+            "thickness": "normal",
+            "oil_purpose": "styling_finish",
+            "oil_subtype": "styling-oel",
+            "ingredient_flags": [
+              "silicones",
+              "oils"
+            ]
+          },
+          {
+            "thickness": "coarse",
+            "oil_purpose": "styling_finish",
+            "oil_subtype": "styling-oel",
+            "ingredient_flags": [
+              "silicones",
+              "oils"
+            ]
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "leave_on_fibre_conditioning",
+            "cadence": "Use as needed after washing.",
+            "placement": "Apply a small amount from mid-lengths to ends.",
+            "source_url": "https://de.moroccanoil.com/products/moroccanoil-treatment-original",
+            "source_text": "Eine kleine Menge auf das saubere, handtuchtrockene Haar von der Mitte bis zu den Spitzen auftragen. Föhnen oder an der Luft trocknen lassen. Die Moroccanoil Behandlung ist ein Leave-in-Produkt und kann bei Bedarf bedenkenlos erneut aufgetragen werden.",
+            "rinse_action": "Leave in; do not rinse.",
+            "source_label": "Moroccanoil official German product page",
+            "reapplication": "May be reapplied as needed.",
+            "guidance_payload": {
+              "role": "leave_on_fibre_conditioning",
+              "scope": "product",
+              "steps": [
+                {
+                  "rinse": false,
+                  "stage": "after_washing_before_drying",
+                  "state": "clean_towel_dried_hair",
+                  "amount": "small_amount",
+                  "placement": "mid_lengths_to_ends"
+                }
+              ],
+              "locale": "de-DE",
+              "cadence": "as_needed_after_washing",
+              "category": "oil",
+              "placement": "mid_lengths_to_ends",
+              "productId": "__PRODUCT_ID__",
+              "guidanceKey": "leave_on_fibre_conditioning",
+              "rinse_action": "leave_in",
+              "reapplication": "as_needed",
+              "schemaVersion": 1,
+              "protocolVersion": 1,
+              "application_stage": "after_washing_before_drying",
+              "application_state": "clean_towel_dried_hair"
+            },
+            "application_stage": "After washing, before drying",
+            "application_state": "Clean, towel-dried hair",
+            "contact_time_seconds": null,
+            "instruction_modifiers": [
+              "Blow-dry or air-dry after application.",
+              "The manufacturer says it helps protect against heat damage but gives no temperature limit."
+            ]
+          },
+          {
+            "role": "dry_finish",
+            "cadence": "Use as needed on dry hair.",
+            "placement": "Apply to lengths and ends to smooth flyaways, condition split ends, and smooth hair.",
+            "source_url": "https://de.moroccanoil.com/products/moroccanoil-treatment-original",
+            "source_text": "Auf das trockene Haar auftragen, um Strähnen zu bändigen, Spliss zu pflegen und das Haar zu glätten. Die Moroccanoil Behandlung ist ein Leave-in-Produkt und kann bei Bedarf bedenkenlos erneut aufgetragen werden.",
+            "rinse_action": "Leave in; do not rinse.",
+            "source_label": "Moroccanoil official German product page",
+            "reapplication": "May be reapplied as needed.",
+            "guidance_payload": {
+              "role": "dry_finish",
+              "scope": "product",
+              "steps": [
+                {
+                  "rinse": false,
+                  "stage": "after_hair_is_dry",
+                  "state": "dry_hair",
+                  "purpose": [
+                    "smooth_flyaways",
+                    "condition_split_ends",
+                    "smooth_hair"
+                  ],
+                  "placement": "lengths_and_ends"
+                }
+              ],
+              "locale": "de-DE",
+              "cadence": "as_needed_on_dry_hair",
+              "category": "oil",
+              "placement": "lengths_and_ends",
+              "productId": "__PRODUCT_ID__",
+              "guidanceKey": "dry_finish",
+              "rinse_action": "leave_in",
+              "reapplication": "as_needed",
+              "schemaVersion": 1,
+              "protocolVersion": 1,
+              "application_stage": "after_hair_is_dry",
+              "application_state": "dry_hair"
+            },
+            "application_stage": "After hair is dry",
+            "application_state": "Dry hair",
+            "contact_time_seconds": null,
+            "instruction_modifiers": []
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "46a19599-625d-4086-aab9-2dc2162bf631",
+      "category": "scalp_care",
+      "category_specs": {
+        "product_scalp_care_specs": {
+          "rinse_mode": "leave_on",
+          "primary_role": "density_claim_tonic",
+          "presentation_format": "serum",
+          "application_instructions": "TÄGLICH ANWENDEN. Täglich auf feuchtem oder trockenem Haar anwenden. Das Haar in Abschnitte teilen. Scheitelweise einen vollen Tropfen entlang der Kopfhaut auftragen. In die Kopfhaut und die Haarwurzeln einmassieren. Wie gewohnt trocknen und stylen"
+        },
+        "product_application_protocols": [
+          {
+            "note": "Tägliche Leave-on Anwendung als Kopfhautserum für dichter aussehendes Haar; Herstellerhinweise als kosmetische Anwendung übernommen.",
+            "role": "density_claim_tonic",
+            "category": "scalp_care"
+          }
+        ]
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "8d501682-8180-4d75-9621-4f532d150c0a",
+      "category": "scalp_care",
+      "category_specs": {
+        "product_scalp_care_specs": [
+          {
+            "rinse_mode": "leave_on",
+            "primary_role": "density_claim_tonic",
+            "presentation_format": "tonic",
+            "application_instructions": "Zweimal täglich scheitelweise auf die Kopfhaut auftragen und einmassieren. Nicht ausspülen. Auf nassem oder trockenem Haar anwendbar."
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "density_claim_tonic",
+            "cadence": {
+              "frequency": "twice_daily"
+            },
+            "category": "scalp_care",
+            "placement": "scalp_roots",
+            "source_url": "https://www.guhl.com/produkt/kraft-fuelle/kraft-und-fuelle-kopfhaut-tonikum/",
+            "source_text": "Zweimal täglich scheitelweise auf die Kopfhaut auftragen und einmassieren. Nicht ausspülen. Auf nassem oder trockenem Haar anwendbar.",
+            "rinse_action": "leave_in",
+            "source_label": "Guhl Kraft und Fülle Kopfhaut Tonikum – Anwendung",
+            "reapplication": "not_stated",
+            "guidance_payload": {
+              "role": "scalp_care",
+              "scope": {
+                "kind": "product",
+                "category": "scalp_care",
+                "productId": "8d501682-8180-4d75-9621-4f532d150c0a"
+              },
+              "steps": [
+                {
+                  "action": "section",
+                  "stepKey": "section",
+                  "copyTemplateDe": "Scheitelweise abteilen."
+                },
+                {
+                  "action": "apply_product",
+                  "stepKey": "apply",
+                  "copyTemplateDe": "Das Tonikum zweimal täglich auf die Kopfhaut auftragen und einmassieren."
+                },
+                {
+                  "action": "apply_product",
+                  "stepKey": "leave_on",
+                  "copyTemplateDe": "Auf nassem oder trockenem Haar anwendbar. Nicht ausspülen."
+                }
+              ],
+              "locale": "de",
+              "evidence": [
+                {
+                  "checkedAt": "2026-10-05",
+                  "sourceUrl": "https://www.guhl.com/produkt/kraft-fuelle/kraft-und-fuelle-kopfhaut-tonikum/",
+                  "sourceType": "manufacturer"
+                }
+              ],
+              "sequence": {
+                "after": [],
+                "anchor": "damp_leave_on",
+                "before": [],
+                "conflictsWith": []
+              },
+              "guidanceKey": "guhl-kraft-fuelle-kopfhaut-tonikum-density-claim-tonic",
+              "requirements": {
+                "requiredCatalogFacts": [],
+                "requiredProfileFacts": [],
+                "requiredProtocolFacts": []
+              },
+              "protocolFacts": {
+                "rinse": "leave_in",
+                "amount": null,
+                "cautions": [],
+                "reapplication": null,
+                "applicationArea": "scalp_roots",
+                "applicationState": "clean_damp_or_dry_scalp",
+                "contactTimeSeconds": null,
+                "conditionerRelationship": "not_applicable"
+              },
+              "schemaVersion": 1,
+              "protocolVersion": 1,
+              "applicationFamily": "leave_on_scalp_care",
+              "compatibleDayTypes": [
+                "wash_day",
+                "intensive_care_day",
+                "between_wash_care_day"
+              ],
+              "exactGuidanceRequired": true
+            },
+            "application_stage": "leave_on_scalp_care",
+            "application_state": "either",
+            "contact_time_seconds": null
+          }
+        ]
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "e79d36b1-1736-4061-b54d-63cb19942250",
+      "category": "scalp_care",
+      "category_specs": {
+        "product_scalp_care_specs": [
+          {
+            "rinse_mode": "leave_on",
+            "primary_role": "density_claim_tonic",
+            "presentation_format": "serum",
+            "application_instructions": "Täglich auf feuchtem oder trockenem Haar anwenden. Das Haar in Abschnitte teilen, scheitelweise einen vollen Tropfen entlang der Kopfhaut auftragen und in die Kopfhaut sowie die Haarwurzeln einmassieren."
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "note": "Täglich auf feuchtem oder trockenem Haar anwenden. Das Haar in Abschnitte teilen, scheitelweise einen vollen Tropfen entlang der Kopfhaut auftragen und in die Kopfhaut sowie die Haarwurzeln einmassieren.",
+            "role": "density_claim_tonic",
+            "cadence": "daily",
+            "category": "scalp_care",
+            "placement": "Along scalp partings; massage into scalp and hair roots.",
+            "source_url": "https://s26.q4cdn.com/318214222/files/doc_news/2026/02/20/Pantene_Pressemitteilung_Grow-Abundant_AH_20260217_final_.pdf",
+            "source_text": "Anwendung: Täglich auf feuchtem oder trockenem Haar anwenden. Das Haar in Abschnitte teilen, scheitelweise einen vollen Tropfen entlang der Kopfhaut auftragen und in die Kopfhaut sowie die Haarwurzeln einmassieren. Die leichte Leave-On-Formel lässt sich nahtlos in die tägliche Pflegeroutine einfügen.",
+            "rinse_action": "do_not_rinse",
+            "source_label": "P&G Deutschland, Österreich Presse – Die Pantene Pro-V Grow Abundant Kollektion",
+            "reapplication": null,
+            "guidance_payload": {
+              "role": "density_claim_tonic",
+              "scope": "cosmetic_scalp_care",
+              "steps": [
+                "Täglich auf feuchtem oder trockenem Haar anwenden.",
+                "Das Haar in Abschnitte teilen.",
+                "Scheitelweise einen vollen Tropfen entlang der Kopfhaut auftragen.",
+                "In die Kopfhaut sowie die Haarwurzeln einmassieren."
+              ],
+              "locale": "de-DE",
+              "guidanceKey": "pantene-grow-abundant-scalp-serum",
+              "protocolFacts": {
+                "cadence": "daily",
+                "placement": "Along scalp partings; massage into scalp and hair roots.",
+                "rinseAction": "do_not_rinse",
+                "reapplication": null,
+                "applicationStage": "unspecified",
+                "applicationState": "wet_or_dry_hair",
+                "contactTimeSeconds": null
+              },
+              "protocolVersion": "1"
+            },
+            "application_stage": "unspecified",
+            "application_state": "wet_or_dry_hair",
+            "contact_time_seconds": null
+          }
+        ]
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "055faa3d-c157-4224-ab0c-6f90e239d698",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "irritated",
+            "shampoo_bucket": "irritationen",
+            "cleansing_intensity": "gentle"
+          },
+          {
+            "thickness": "normal",
+            "scalp_route": "irritated",
+            "shampoo_bucket": "irritationen",
+            "cleansing_intensity": "gentle"
+          },
+          {
+            "thickness": "coarse",
+            "scalp_route": "irritated",
+            "shampoo_bucket": "irritationen",
+            "cleansing_intensity": "gentle"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "shampoo_everyday",
+            "cadence": "daily or as needed",
+            "category": "shampoo",
+            "placement": "hair and scalp; focus on scalp",
+            "source_url": "https://www.dm.de/p/d/1569035/balea-med-shampoo-ultra-sensitive",
+            "source_text": "Massage into wet hair and leave briefly. Rinse thoroughly. Product description says suitable for daily hair washing on sensitive skin.",
+            "rinse_action": "rinse thoroughly",
+            "source_label": "dm product page",
+            "reapplication": "not specified",
+            "guidance_payload": {
+              "role": "shampoo_everyday",
+              "cadence": "daily or as needed",
+              "category": "shampoo",
+              "placement": "hair and scalp; focus on scalp",
+              "productId": "__PRODUCT_ID__",
+              "rinseAction": "rinse thoroughly",
+              "reapplication": "not specified",
+              "schemaVersion": 1,
+              "applicationStage": "wash",
+              "applicationState": "wet hair and scalp",
+              "contactTimeSeconds": null,
+              "instructionModifiers": []
+            },
+            "application_stage": "wash",
+            "application_state": "wet hair and scalp",
+            "contact_time_seconds": null,
+            "instruction_modifiers": []
+          }
+        ]
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "289a3873-2de9-4556-8496-f1ae2512cf5e",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [],
+        "product_application_protocols": []
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "28a961ae-655f-4f01-a548-255f6e81c1c2",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [],
+        "product_application_protocols": []
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "2ecb13db-0533-438f-b81b-2d955ba00f7b",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "oily",
+            "shampoo_bucket": "dehydriert-fettig",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "thickness": "normal",
+            "scalp_route": "oily",
+            "shampoo_bucket": "dehydriert-fettig",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "thickness": "coarse",
+            "scalp_route": "oily",
+            "shampoo_bucket": "dehydriert-fettig",
+            "cleansing_intensity": "regular"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "shampoo_everyday",
+            "cadence": null,
+            "category": "shampoo",
+            "placement": "distribute gently through damp hair",
+            "source_url": "https://www.dm.de/p/d/1588726/schauma-shampoo-7-kraeuter?bvstate=pg%3A2%2Fct%3Ar",
+            "source_text": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen.",
+            "rinse_action": "rinse thoroughly",
+            "source_label": "dm product page",
+            "reapplication": null,
+            "guidance_payload": {
+              "role": "shampoo_everyday",
+              "category": "shampoo",
+              "productId": "__PRODUCT_ID__",
+              "instructions": {
+                "cadence": null,
+                "placement": "distribute gently through damp hair",
+                "rinseAction": "rinse thoroughly",
+                "reapplication": null,
+                "applicationStage": "during_wash",
+                "applicationState": "wet_hair",
+                "contactTimeSeconds": null,
+                "instructionModifiers": [
+                  "briefly leave in before rinsing"
+                ]
+              },
+              "schemaVersion": 1
+            },
+            "application_stage": "during_wash",
+            "application_state": "wet_hair",
+            "contact_time_seconds": null,
+            "instruction_modifiers": [
+              "briefly leave in before rinsing"
+            ]
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "41e9950e-0da7-459d-b190-e56918242d20",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "gentle"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "shampoo_everyday",
+            "cadence": null,
+            "placement": "scalp_and_hair",
+            "source_url": "https://www.dm.de/p/d/3126236/balea-professional-shampoo-hydra-volume",
+            "source_text": "Sanft auf die Kopfhaut und ins nasse Haar einmassieren und sorgfältig mit lauwarmen Wasser ausspülen.",
+            "rinse_action": "rinse_thoroughly_with_lukewarm_water",
+            "source_label": "dm.de",
+            "reapplication": null,
+            "guidance_payload": {
+              "role": "shampoo_everyday",
+              "cadence": null,
+              "placement": "scalp_and_hair",
+              "productId": "__PRODUCT_ID__",
+              "rinseAction": "rinse_thoroughly_with_lukewarm_water",
+              "reapplication": null,
+              "schemaVersion": 1,
+              "applicationStage": "cleansing",
+              "applicationState": "wet",
+              "contactTimeSeconds": null,
+              "instructionModifiers": [
+                "massage_gently"
+              ]
+            },
+            "application_stage": "cleansing",
+            "application_state": "wet",
+            "contact_time_seconds": null,
+            "instruction_modifiers": [
+              "massage_gently"
+            ]
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "530e98fa-3b0a-4241-bca0-2d37a04c16eb",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "gentle"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "shampoo_everyday",
+            "cadence": "daily_or_as_needed",
+            "category": "shampoo",
+            "placement": "hair_and_scalp",
+            "source_url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-haarshampoo-volumen-pur/p/8700216557603",
+            "source_text": "Daily shampoo; massage into wet hair and lather, then rinse thoroughly.",
+            "rinse_action": "rinse_thoroughly",
+            "source_label": "Rossmann product page",
+            "reapplication": "not_specified",
+            "guidance_payload": {
+              "role": "shampoo_everyday",
+              "cadence": "daily_or_as_needed",
+              "category": "shampoo",
+              "productId": "__PRODUCT_ID__",
+              "application": {
+                "stage": "wash",
+                "state": "wet_hair",
+                "placement": "hair_and_scalp",
+                "contactTimeSeconds": 0
+              },
+              "rinseAction": "rinse_thoroughly",
+              "reapplication": "not_specified",
+              "schemaVersion": 1,
+              "instructionModifiers": []
+            },
+            "application_stage": "wash",
+            "application_state": "wet_hair",
+            "contact_time_seconds": 0,
+            "instruction_modifiers": []
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "56188ef1-70ba-4719-a38b-fdec78680ded",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [],
+        "product_application_protocols": []
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "6022a2c9-2ee3-47f1-baac-07d7cb48e26a",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "dry_flakes",
+            "shampoo_bucket": "schuppen",
+            "cleansing_intensity": "gentle"
+          },
+          {
+            "thickness": "normal",
+            "scalp_route": "dry_flakes",
+            "shampoo_bucket": "schuppen",
+            "cleansing_intensity": "gentle"
+          },
+          {
+            "thickness": "coarse",
+            "scalp_route": "dry_flakes",
+            "shampoo_bucket": "schuppen",
+            "cleansing_intensity": "gentle"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "shampoo_dandruff",
+            "cadence": null,
+            "category": "shampoo",
+            "placement": "scalp",
+            "source_url": "https://www.dm.de/p/d/3115758/head-und-shoulders-shampoo-dermaxpro-pure-hydration",
+            "source_text": "Trage das Shampoo auf die feuchte Kopfhaut auf, massiere es ein und spüle es gründlich aus.",
+            "rinse_action": "rinse thoroughly",
+            "source_label": "dm product instructions",
+            "reapplication": null,
+            "guidance_payload": {
+              "role": "shampoo_dandruff",
+              "cadence": null,
+              "category": "shampoo",
+              "placement": "scalp",
+              "productId": "__PRODUCT_ID__",
+              "rinseAction": "rinse_thoroughly",
+              "reapplication": null,
+              "schemaVersion": 1,
+              "applicationStage": "wash",
+              "applicationState": "wet",
+              "contactTimeSeconds": null,
+              "instructionModifiers": []
+            },
+            "application_stage": "wash",
+            "application_state": "wet",
+            "contact_time_seconds": null,
+            "instruction_modifiers": []
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "6238ba67-20e6-40eb-a42c-e74a674e4c06",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [],
+        "product_application_protocols": []
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "72db51a6-6f66-4147-81a3-872a653ac054",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "thickness": "normal",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "thickness": "coarse",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "shampoo_everyday",
+            "cadence": "Bei jeder Haarwäsche",
+            "category": "shampoo",
+            "placement": "Kopfhaut; Längen nur beim Abspülen mit Wasser reinigen",
+            "source_url": "https://www.dejangarz.com/products/shampoo",
+            "source_text": "Eine kleine Menge Shampoo in die Hand geben, aufschäumen, auf dem ganzen Kopf verteilen, sanft in die Kopfhaut einmassieren und gründlich ausspülen. Verwende das Shampoo bei jeder Haarwäsche.",
+            "rinse_action": "Gründlich ausspülen",
+            "source_label": "DEJAN GARZ – The Foundation Shampoo",
+            "reapplication": null,
+            "guidance_payload": {
+              "role": "shampoo_everyday",
+              "cadence": "Bei jeder Haarwäsche",
+              "category": "shampoo",
+              "placement": "Kopfhaut; Längen nur beim Abspülen mit Wasser reinigen",
+              "productId": "__PRODUCT_ID__",
+              "rinseAction": "Gründlich ausspülen",
+              "reapplication": null,
+              "schemaVersion": 1,
+              "applicationStage": "Waschen",
+              "applicationState": "Nasses Haar; kleine Menge in den Händen aufschäumen",
+              "contactTimeSeconds": null,
+              "instructionModifiers": [
+                "Sanft in kreisenden Bewegungen einmassieren",
+                "Anschließend Conditioner verwenden"
+              ]
+            },
+            "application_stage": "Waschen",
+            "application_state": "Nasses Haar; kleine Menge in den Händen aufschäumen",
+            "contact_time_seconds": null,
+            "instruction_modifiers": [
+              "Sanft in kreisenden Bewegungen einmassieren",
+              "Anschließend Conditioner verwenden"
+            ]
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "9655ddf8-537d-4b87-93e1-5714f98d5f1c",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "dandruff",
+            "shampoo_bucket": "schuppen",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "thickness": "normal",
+            "scalp_route": "dandruff",
+            "shampoo_bucket": "schuppen",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "thickness": "coarse",
+            "scalp_route": "dandruff",
+            "shampoo_bucket": "schuppen",
+            "cleansing_intensity": "regular"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "shampoo_dandruff",
+            "cadence": "regular",
+            "category": "shampoo",
+            "placement": "scalp",
+            "source_url": "https://www.jeanlen.de/anti-schuppen-shampoo-thymian-minze",
+            "source_text": "Sorgfältig ins nasse Haar einmassieren, kurz einwirken lassen und anschließend gründlich ausspülen. Geeignet für die tägliche Haarwäsche.",
+            "rinse_action": "rinse_thoroughly",
+            "source_label": "Jean&Len Anti-Schuppen Shampoo Thymian/Minze, 300 ml — Anwendung",
+            "reapplication": null,
+            "guidance_payload": {
+              "role": "shampoo_dandruff",
+              "cadence": "regular",
+              "category": "shampoo",
+              "placement": "scalp",
+              "productId": "__PRODUCT_ID__",
+              "rinseAction": "rinse_thoroughly",
+              "reapplication": null,
+              "schemaVersion": 1,
+              "applicationStage": "wash",
+              "applicationState": "wet",
+              "contactTimeSeconds": null,
+              "instructionModifiers": [
+                "Massage carefully into wet hair.",
+                "Leave on briefly."
+              ]
+            },
+            "application_stage": "wash",
+            "application_state": "wet",
+            "contact_time_seconds": null,
+            "instruction_modifiers": [
+              "Massage carefully into wet hair.",
+              "Leave on briefly."
+            ]
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "a545e4ac-b213-49e4-9edb-9eb492b48ffd",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "thickness": "normal",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "thickness": "coarse",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "shampoo_everyday",
+            "cadence": "as_needed",
+            "category": "shampoo",
+            "placement": "hair_and_scalp",
+            "source_url": "https://www.goldwell.com/fr-ca/education/product-knowledge-sheets/dualsenses/blondes-highlights/anti-yellow-shampoo/",
+            "source_text": "Work through wet hair. Lather and rinse thoroughly. For blonde and highlighted hair (colored and non-colored).",
+            "rinse_action": "rinse_thoroughly",
+            "source_label": "Goldwell Dualsenses Blondes & Highlights Anti-Yellow Shampoo product knowledge sheet",
+            "reapplication": "unspecified",
+            "guidance_payload": {
+              "role": "shampoo_everyday",
+              "cadence": "as_needed",
+              "category": "shampoo",
+              "placement": "hair_and_scalp",
+              "productId": "__PRODUCT_ID__",
+              "rinseAction": "rinse_thoroughly",
+              "reapplication": "unspecified",
+              "schemaVersion": 1,
+              "applicationStage": "shampoo",
+              "applicationState": "wet_hair",
+              "contactTimeSeconds": null,
+              "instructionModifiers": []
+            },
+            "application_stage": "shampoo",
+            "application_state": "wet_hair",
+            "contact_time_seconds": null,
+            "instruction_modifiers": []
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "c69712fa-8341-4fcd-a330-e1c0833748b1",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "gentle"
+          },
+          {
+            "thickness": "normal",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "gentle"
+          },
+          {
+            "thickness": "coarse",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "gentle"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "shampoo_everyday",
+            "cadence": null,
+            "category": "shampoo",
+            "placement": "hair",
+            "source_url": "https://www.dm.de/p/d/1714047/alverde-naturkosmetik-shampoo-glanz",
+            "source_text": "In das feuchte Haar einmassieren. Anschließend gründlich ausspülen.",
+            "rinse_action": "rinse_thoroughly",
+            "source_label": "dm Produktseite",
+            "reapplication": null,
+            "guidance_payload": {
+              "role": "shampoo_everyday",
+              "cadence": null,
+              "category": "shampoo",
+              "placement": "hair",
+              "productId": "__PRODUCT_ID__",
+              "rinseAction": "rinse_thoroughly",
+              "reapplication": null,
+              "schemaVersion": 1,
+              "applicationStage": "during_wash",
+              "applicationState": "wet_hair",
+              "contactTimeSeconds": null,
+              "instructionModifiers": []
+            },
+            "application_stage": "during_wash",
+            "application_state": "wet_hair",
+            "contact_time_seconds": null,
+            "instruction_modifiers": []
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "d8bae792-fb2f-4fc0-ac4d-abfe3bbbdce2",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "thickness": "normal",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          },
+          {
+            "thickness": "coarse",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "shampoo_everyday",
+            "cadence": null,
+            "category": "shampoo",
+            "placement": "scalp and roots",
+            "source_url": "https://www.dm.de/p/d/3134413/aussie-shampoo-miracle-moist",
+            "source_text": "Liebevoll auf die Kopfhaut und in die Haarwurzeln einmassieren, ausspülen und wiederholen.",
+            "rinse_action": "Rinse thoroughly.",
+            "source_label": "dm product instructions",
+            "reapplication": "Repeat once, as directed on the German dm product page.",
+            "guidance_payload": {
+              "role": "shampoo_everyday",
+              "cadence": null,
+              "category": "shampoo",
+              "placement": "scalp and roots",
+              "productId": "__PRODUCT_ID__",
+              "rinseAction": "Rinse thoroughly.",
+              "reapplication": "Repeat once, as directed on the German dm product page.",
+              "schemaVersion": 1,
+              "applicationStage": "wash",
+              "applicationState": "wet hair",
+              "contactTimeSeconds": null,
+              "instructionModifiers": []
+            },
+            "application_stage": "wash",
+            "application_state": "wet hair",
+            "contact_time_seconds": null,
+            "instruction_modifiers": []
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": [
+        {}
+      ]
+    },
+    {
+      "submission_id": "e618ca57-cd76-4bf4-8514-9704a2c986cf",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [],
+        "product_application_protocols": []
+      },
+      "suitable_thicknesses": [],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "fca985d8-e60a-4ca5-9663-7b936ff42020",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal",
+            "cleansing_intensity": "regular"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "shampoo_everyday",
+            "cadence": "daily",
+            "category": "shampoo",
+            "placement": "hair and scalp",
+            "source_url": "https://www.dm.de/p/d/3069464/herbal-essences-shampoo-dolce-vita",
+            "source_text": "Volumenshampoo für die tägliche Haarwäsche; Anwendung: Großzügig auftragen, aufschäumen und danach ausspülen.",
+            "rinse_action": "rinse thoroughly",
+            "source_label": "dm product page",
+            "reapplication": null,
+            "guidance_payload": {
+              "role": "shampoo_everyday",
+              "cadence": {
+                "kind": "daily"
+              },
+              "category": "shampoo",
+              "productId": "__PRODUCT_ID__",
+              "application": {
+                "stage": "wash",
+                "state": "wet hair",
+                "placement": "hair and scalp",
+                "rinseAction": "rinse thoroughly",
+                "reapplication": null,
+                "contactTimeSeconds": null,
+                "instructionModifiers": []
+              },
+              "schemaVersion": 1
+            },
+            "application_stage": "wash",
+            "application_state": "wet hair",
+            "contact_time_seconds": null,
+            "instruction_modifiers": []
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": []
+    },
+    {
+      "submission_id": "ff28f746-bff3-4376-957d-a0aa6b1ca40e",
+      "category": "shampoo",
+      "category_specs": {
+        "product_shampoo_specs": [
+          {
+            "thickness": "fine",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal"
+          },
+          {
+            "thickness": "normal",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal"
+          },
+          {
+            "thickness": "coarse",
+            "scalp_route": "balanced",
+            "shampoo_bucket": "normal"
+          }
+        ],
+        "product_application_protocols": [
+          {
+            "role": "shampoo_everyday",
+            "cadence": null,
+            "category": "shampoo",
+            "placement": "Auf nasses Haar und die Kopfhaut auftragen und sanft einmassieren.",
+            "source_url": "https://www.evecurls.de/pages/how-to-use",
+            "source_text": "Use a walnut-sized amount, adjust to hair thickness. Apply to wet hair and scalp, massage gently and rinse thoroughly.",
+            "rinse_action": "Gründlich mit Wasser ausspülen.",
+            "source_label": "Eve Curls — How to use",
+            "reapplication": null,
+            "guidance_payload": {
+              "role": "shampoo_everyday",
+              "cadence": null,
+              "category": "shampoo",
+              "placement": "Auf nasses Haar und die Kopfhaut auftragen und sanft einmassieren.",
+              "productId": "__PRODUCT_ID__",
+              "rinseAction": "Gründlich mit Wasser ausspülen.",
+              "reapplication": null,
+              "schemaVersion": 1,
+              "applicationStage": "wash",
+              "applicationState": "nasses Haar und Kopfhaut",
+              "contactTimeSeconds": null,
+              "instructionModifiers": [
+                "Eine walnussgroße Menge verwenden und die Menge an die Haardicke anpassen."
+              ]
+            },
+            "application_stage": "wash",
+            "application_state": "nasses Haar und Kopfhaut",
+            "contact_time_seconds": null,
+            "instruction_modifiers": [
+              "Eine walnussgroße Menge verwenden und die Menge an die Haardicke anpassen."
+            ]
+          }
+        ]
+      },
+      "suitable_thicknesses": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "adapter_blockers": [],
+      "engine_projection_metadata": [
+        {}
+      ]
+    }
+  ]
+}
