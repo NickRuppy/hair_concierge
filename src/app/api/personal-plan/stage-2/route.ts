@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
 
+import {
+  reportUnexpectedStage2Error,
+  type Stage2UnexpectedErrorRoute,
+} from "@/lib/observability/personal-plan-stage2"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createProductionSyncPlanWithFacts } from "@/lib/personal-plan/facts-recompute"
 import type { SyncPlanWithFacts } from "@/lib/personal-plan/facts-recompute/types"
@@ -49,6 +53,8 @@ export type Stage2RouteDeps = {
     userId: string
     refinedVersionId: string
   }) => Promise<Stage3RecomputeResult | null>
+  /** Logs + reports a failure the route answers with a generic 503. Defaults to Sentry. */
+  reportUnexpectedError?: (route: Stage2UnexpectedErrorRoute, error: unknown) => void
 }
 
 /** The client-visible shape added to `moduleCompletion.recompute` — no reasons or retryability. */
@@ -167,11 +173,16 @@ function serverTiming(phases: Record<string, number>) {
     .join(", ")
 }
 
-function errorResponse(error: unknown, started: number) {
+function errorResponse(
+  error: unknown,
+  started: number,
+  report: NonNullable<Stage2RouteDeps["reportUnexpectedError"]>,
+) {
   if (error instanceof Stage2InvalidRequestError) {
     return response({ error: "invalid_request" }, 400)
   }
   const code = error instanceof Stage2RefinementError ? error.code : "temporarily_unavailable"
+  if (!(error instanceof Stage2RefinementError)) report("stage2_load_or_save", error)
   const status =
     code === "revision_conflict"
       ? 409
@@ -191,6 +202,7 @@ function errorResponse(error: unknown, started: number) {
 class Stage2InvalidRequestError extends Error {}
 
 export function createStage2RouteHandlers(deps: Stage2RouteDeps) {
+  const report = deps.reportUnexpectedError ?? reportUnexpectedStage2Error
   const run = async (
     event: "load" | "save",
     operation: (gateway: Stage2RefinementGateway, userId: string) => Promise<unknown>,
@@ -208,7 +220,8 @@ export function createStage2RouteHandlers(deps: Stage2RouteDeps) {
         return response({ error: "stage_not_ready" }, 409)
       }
       phases.journey = Date.now() - phaseStarted
-    } catch {
+    } catch (error) {
+      report("stage2_access", error)
       return response({ error: "temporarily_unavailable" }, 503)
     }
     try {
@@ -229,7 +242,7 @@ export function createStage2RouteHandlers(deps: Stage2RouteDeps) {
       }
       return response(result, 200, { "Server-Timing": timing })
     } catch (error) {
-      return errorResponse(error, started)
+      return errorResponse(error, started, report)
     }
   }
   return {
@@ -290,6 +303,9 @@ export function createStage2RouteHandlers(deps: Stage2RouteDeps) {
           })
           return { session: savedSession, handoff }
         } catch (error) {
+          if (!(error instanceof Stage2RefinementError)) {
+            report("stage2_completion_after_save", error)
+          }
           const code =
             error instanceof Stage2RefinementError ? error.code : "temporarily_unavailable"
           const status =

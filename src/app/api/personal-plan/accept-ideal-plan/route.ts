@@ -37,6 +37,7 @@ import {
 } from "@/lib/rate-limit"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
+import { loadKnownCareAnswers } from "@/lib/user-facts/read"
 import { saveUserFacts } from "@/lib/user-facts/save"
 
 const rate: RateLimitConfig = {
@@ -151,6 +152,7 @@ export const POST = createAcceptIdealPlanRouteHandler({
         },
         refinementPersistence: createSupabaseStage2RefinementPersistence(admin),
         saveFacts: (factsInput) => saveUserFacts(admin, factsInput),
+        loadKnownCareAnswers: (id) => loadKnownCareAnswers(admin, id),
         planState: {
           async loadActiveRoutineVersionId({ personalPlanId }) {
             const { data, error } = await admin
@@ -161,6 +163,16 @@ export const POST = createAcceptIdealPlanRouteHandler({
               .maybeSingle()
             if (error || !data) throw new Error("direct_accept_plan_state_unavailable")
             return data.active_routine_version_id ? String(data.active_routine_version_id) : null
+          },
+          async isUnrefinedDirectAccept({ personalPlanId }) {
+            const { data, error } = await admin
+              .from("personal_plans")
+              .select("unrefined_direct_accept")
+              .eq("id", personalPlanId)
+              .eq("user_id", userId)
+              .maybeSingle()
+            if (error || !data) throw new Error("direct_accept_plan_state_unavailable")
+            return data.unrefined_direct_accept === true
           },
         },
         stage3Gateway: createProductionStage3ProductsGateway({

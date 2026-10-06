@@ -5,6 +5,7 @@ import {
   createStage2OptionalEntryRouteHandler,
   type Stage2OptionalEntryRouteDeps,
 } from "../src/app/api/personal-plan/stage-2/optional-entry/route"
+import { Stage2OptionalEntryError } from "../src/lib/personal-plan/persistence/stage2-optional-entry"
 import type { Stage2PersistedDraft } from "../src/lib/personal-plan/persistence/stage2-refinement-service"
 import { Stage2RefinementError } from "../src/lib/personal-plan/refinement/gateway"
 import type { PersonalPlanStage2Access } from "../src/lib/personal-plan/journey-access-loader"
@@ -115,4 +116,39 @@ test("optional Stage 2 entry maps conflict, validation and temporary failures", 
     )(request({ module: "products" }))
     assert.deepEqual([response.status, await response.json()], [status, { error: code }])
   }
+})
+
+test("an unexpected optional-entry failure stays a generic 503 but reports its real cause", async () => {
+  const reports: Array<{ route: string; error: unknown }> = []
+  const response = await createStage2OptionalEntryRouteHandler(
+    deps({
+      openOptionalRefinement: async () => {
+        throw new Stage2OptionalEntryError("stage2_legacy_profile_read_failed")
+      },
+      reportUnexpectedError: (route, error) => reports.push({ route, error }),
+    }),
+  )(request({ module: "habits" }))
+
+  assert.deepEqual(
+    [response.status, await response.json()],
+    [503, { error: "temporarily_unavailable" }],
+  )
+  assert.equal(reports.length, 1)
+  assert.equal(reports[0].route, "stage2_optional_entry")
+  assert.equal((reports[0].error as Error).message, "stage2_legacy_profile_read_failed")
+})
+
+test("an optional-entry access failure is reported too", async () => {
+  const reports: string[] = []
+  const response = await createStage2OptionalEntryRouteHandler(
+    deps({
+      loadStage2Access: async () => {
+        throw new Error("journey read failed")
+      },
+      reportUnexpectedError: (route) => reports.push(route),
+    }),
+  )(request({ module: "habits" }))
+
+  assert.equal(response.status, 503)
+  assert.deepEqual(reports, ["stage2_optional_entry_access"])
 })

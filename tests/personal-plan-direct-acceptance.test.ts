@@ -15,6 +15,7 @@ import {
   type SaveCareHabitsFacts,
 } from "../src/lib/personal-plan/direct-acceptance/accept"
 import type { SaveUserFactsResult } from "../src/lib/user-facts/save"
+import { knownCareAnswers, type KnownCareAnswers } from "../src/lib/user-facts/known-care-answers"
 import {
   DIRECT_ACCEPTANCE_WET_WASH_FREQUENCY,
   buildDirectAcceptanceStage2Defaults,
@@ -23,6 +24,7 @@ import {
 import { createPersistedStage2RefinementGateway } from "../src/lib/personal-plan/refinement/production-persistence-gateway"
 import { Stage2RefinementError } from "../src/lib/personal-plan/refinement/gateway"
 import { buildPlanRoutineContextFromCompletedRefinement } from "../src/lib/personal-plan/refinement/stage1-adapter"
+import { resolveAssumedAnswers } from "../src/lib/personal-plan/refinement/assumed-defaults"
 import { deriveStage2TriggerContext } from "../src/lib/personal-plan/refinement/stage1-adapter"
 import { resolveStage2RefinementContract } from "../src/lib/personal-plan/refinement/question-path"
 import type {
@@ -594,6 +596,8 @@ function createRefinementDb() {
     revision: number
     resultRefinedNeedVersionId: string | null
     updatedAt: number
+    /** Mirrors `direct_acceptance_owned`: undefined = predates the column (legacy row). */
+    directAcceptanceOwned?: boolean
   }
 
   const drafts: DraftRow[] = []
@@ -635,6 +639,7 @@ function createRefinementDb() {
       revision: row.revision,
       status: row.status,
       refinedVersionId: row.resultRefinedNeedVersionId,
+      directAcceptanceOwned: row.directAcceptanceOwned ?? null,
     }
   }
 
@@ -670,6 +675,8 @@ function createRefinementDb() {
           completedQuestionIds: [...draft.completedQuestionIds],
           answerProvenance: { ...draft.answerProvenance },
           revision: draft.revision,
+          // New rows default to false in the database.
+          directAcceptanceOwned: false,
         }),
       )
     },
@@ -682,6 +689,7 @@ function createRefinementDb() {
       row.answers = structuredClone(input.answers)
       row.completedQuestionIds = [...input.completedQuestionIds]
       row.answerProvenance = { ...input.answerProvenance }
+      row.directAcceptanceOwned = input.directAcceptance === true
       row.revision += 1
       row.updatedAt = clock += 1
       return { outcome: "saved", revision: row.revision }
@@ -836,7 +844,7 @@ type Stage3Call =
  */
 function createFakeStage3Gateway(options: {
   calls: Stage3Call[]
-  planState: { activeRoutineVersionId: string | null }
+  planState: { activeRoutineVersionId: string | null; unrefinedDirectAccept?: boolean }
   evaluations?: Stage3AuthorityEvaluation[]
   /** Mirrors an RPC-side provenance failure: the whole completion rolls back. */
   failProvenanceWrite?: boolean
@@ -877,6 +885,7 @@ function createFakeStage3Gateway(options: {
       }
       draft = { ...draft, status: "completed" }
       options.planState.activeRoutineVersionId = "routine-1"
+      if (input.markUnrefinedDirectAccept) options.planState.unrefinedDirectAccept = true
       return {
         status: "ready_for_routine",
         draft,
@@ -912,7 +921,7 @@ type Harness = {
   deps: AcceptIdealPlanDeps
   db: RefinementDb
   stage3Calls: Stage3Call[]
-  planState: { activeRoutineVersionId: string | null }
+  planState: { activeRoutineVersionId: string | null; unrefinedDirectAccept?: boolean }
   saveFactsCalls: SaveFactsInput[]
 }
 
@@ -925,11 +934,14 @@ function createHarness(
     failProvenanceWrite?: boolean
     saveFacts?: SaveCareHabitsFacts
     saveFactsResult?: SaveUserFactsResult
+    knownCareAnswers?: KnownCareAnswers
   } = {},
 ): Harness {
   const db = overrides.db ?? createRefinementDb()
   const stage3Calls: Stage3Call[] = []
-  const planState = { activeRoutineVersionId: overrides.activeRoutineVersionId ?? null }
+  const planState: { activeRoutineVersionId: string | null; unrefinedDirectAccept?: boolean } = {
+    activeRoutineVersionId: overrides.activeRoutineVersionId ?? null,
+  }
   const fakeSaveFacts = createFakeSaveFacts({ result: overrides.saveFactsResult })
 
   return {
@@ -942,9 +954,14 @@ function createHarness(
       flags: overrides.flags ?? { stage2Enabled: true, stage3Enabled: true, stage4Enabled: true },
       refinementPersistence: db.persistence,
       saveFacts: overrides.saveFacts ?? fakeSaveFacts.saveFacts,
+      loadKnownCareAnswers: async () =>
+        overrides.knownCareAnswers ?? { answers: {}, questionIds: [] },
       planState: {
         async loadActiveRoutineVersionId() {
           return planState.activeRoutineVersionId
+        },
+        async isUnrefinedDirectAccept() {
+          return planState.unrefinedDirectAccept === true
         },
       },
       stage3Gateway: createFakeStage3Gateway({
@@ -1243,6 +1260,8 @@ test("an interrupted synthetic save resumes instead of being treated as real wor
   assert.equal(result.status, "accepted")
   assert.equal(db.drafts.length, 1)
   assert.equal(db.drafts[0]!.status, "complete")
+  // A pre-provenance synthetic row resumes as what it is: assumptions, never "user".
+  assert.ok(Object.values(db.drafts[0]!.answerProvenance).every((value) => value === "assumed"))
 })
 
 test("an active Routine this flow did not create refuses the accept", async () => {
@@ -1648,4 +1667,285 @@ test("a non-facts revision conflict from persistence.complete propagates raw, no
   )
   // The facts write itself must have gone through fine — only the RPC failed.
   assert.equal(harness.saveFactsCalls.length, 1)
+})
+
+/* ── Stored care answers: an assumption only fills what she has not told us ── */
+
+/** Shape of a not-yet-migrated legacy member's care facts (prod, 2026-10-06). */
+const LEGACY_KNOWN = knownCareAnswers({
+  careHabits: {
+    towel: { material: "frottee", technique: "rough_rubbing" },
+    dryingRoutes: ["ordinary_blow_dry", "air_dry"],
+    additionalHeatTools: [],
+    nightProtection: ["silk_satin_bonnet"],
+    heatEvents: { "heat:ordinary_blow_dry": { frequency: "weekly_3_4x" } },
+    currentProductCategories: ["heat_protectant"],
+  },
+  fields: {
+    towel: "unknown_historical",
+    dryingRoutes: "unknown_historical",
+    additionalHeatTools: "unknown_historical",
+    nightProtection: "unknown_historical",
+    heatEvents: "unknown_historical",
+    currentProductCategories: "unknown_historical",
+  },
+})
+
+test("direct acceptance keeps a legacy member's stored care answers and assumes only the rest", async () => {
+  const harness = createHarness({ knownCareAnswers: LEGACY_KNOWN })
+
+  await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+
+  const row = harness.db.drafts[0]!
+  assert.deepEqual(row.answers.towel, { material: "frottee", technique: "rough_rubbing" })
+  assert.deepEqual(row.answers.dryingRoutes, ["air_dry", "ordinary_blow_dry"])
+  assert.deepEqual(row.answers.nightProtection, ["silk_satin_bonnet"])
+  assert.deepEqual(row.answers.heatEvents?.["heat:ordinary_blow_dry"], { frequency: "weekly_3_4x" })
+  for (const id of [
+    "towel_handling",
+    "drying_routes",
+    "night_protection",
+    "heat:ordinary_blow_dry",
+  ]) {
+    assert.equal(row.answerProvenance[id as keyof typeof row.answerProvenance], "user", id)
+  }
+  // The synthesised heat_protectant list and the empty tool list were not hers: assumed.
+  assert.equal(row.answerProvenance.current_product_categories, "assumed")
+  assert.equal(row.answerProvenance.additional_heat_tools, "assumed")
+
+  // Only the assumptions are published; her kept answers are already in her facts.
+  const call = harness.saveFactsCalls[0]!
+  const fields = call.provenance.fields ?? {}
+  assert.ok(Object.values(fields).every((value) => value === "assumed"))
+  assert.deepEqual(Object.keys(call.patch).sort(), Object.keys(fields).sort())
+  assert.equal("towel" in call.patch, false)
+  assert.equal("dryingRoutes" in call.patch, false)
+  assert.equal(fields.currentProductCategories, "assumed")
+})
+
+test("with no stored care answers the defaults are exactly today's all-assumed defaults", () => {
+  const legacy = resolveAssumedAnswersForTest()
+  const defaults = buildDirectAcceptanceStage2Defaults(labTriggerContext())
+  assert.deepEqual(defaults.answers, legacy.answers)
+  assert.deepEqual(defaults.completedQuestionIds, legacy.orderedQuestionIds)
+  assert.ok(Object.values(defaults.answerProvenance).every((value) => value === "assumed"))
+})
+
+test("an incomplete stored answer is not adopted: the question is assumed", () => {
+  // A towel without its technique is not a complete towel answer.
+  const defaults = buildDirectAcceptanceStage2Defaults(
+    labTriggerContext(),
+    knownCareAnswers({ careHabits: { towel: { material: "tshirt" } }, fields: { towel: "user" } }),
+  )
+  assert.equal(defaults.answerProvenance.towel_handling, "assumed")
+})
+
+test("a double accept with stored care answers stays idempotent", async () => {
+  const harness = createHarness({ knownCareAnswers: LEGACY_KNOWN })
+
+  const first = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+  const second = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+
+  assert.deepEqual(second, first)
+  assert.equal(harness.db.drafts.length, 1)
+})
+
+function resolveAssumedAnswersForTest() {
+  return resolveAssumedAnswers({ triggerContext: labTriggerContext(), answers: {} })
+}
+
+test("an unreadable facts row falls back to today's all-assumed defaults instead of failing", async () => {
+  const harness = createHarness()
+  harness.deps.loadKnownCareAnswers = async () => {
+    throw new Error("loadUserFacts: corrupt care_habits facts for user x")
+  }
+  const originalWarn = console.warn
+  console.warn = () => undefined
+  try {
+    await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+  } finally {
+    console.warn = originalWarn
+  }
+  const row = harness.db.drafts[0]!
+  assert.ok(Object.values(row.answerProvenance).every((value) => value === "assumed"))
+})
+
+test("a retry recognises its own draft even when the facts became readable in between", async () => {
+  const harness = createHarness({ knownCareAnswers: LEGACY_KNOWN })
+  let reads = 0
+  harness.deps.loadKnownCareAnswers = async () => {
+    reads += 1
+    if (reads === 1) throw new Error("transient")
+    return LEGACY_KNOWN
+  }
+  const originalWarn = console.warn
+  console.warn = () => undefined
+  try {
+    const first = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+    const second = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+    assert.deepEqual(second, first)
+  } finally {
+    console.warn = originalWarn
+  }
+  assert.equal(reads, 1, "facts are read only for an untouched draft")
+})
+
+test("an interrupted accept resumes its own snapshot even after the facts changed", async () => {
+  const db = createRefinementDb()
+  // A previous accept built on her stored answers, saved, and crashed before completing.
+  const snapshot = buildDirectAcceptanceStage2Defaults(labTriggerContext(), LEGACY_KNOWN)
+  db.insertDraft({
+    answers: snapshot.answers,
+    completedQuestionIds: snapshot.completedQuestionIds,
+    answerProvenance: snapshot.answerProvenance,
+    revision: 1,
+    directAcceptanceOwned: true,
+  })
+  // Her facts no longer match by the time of the retry.
+  const harness = createHarness({ db, knownCareAnswers: { answers: {}, questionIds: [] } })
+
+  const result = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+
+  assert.equal(result.status, "accepted")
+  assert.equal(db.drafts.length, 1)
+  assert.equal(db.drafts[0]!.status, "complete")
+  assert.deepEqual(db.drafts[0]!.answers, snapshot.answers)
+})
+
+test("an in-progress refinement she partly answered is still refused", async () => {
+  const db = createRefinementDb()
+  db.insertDraft({
+    answers: { towel: { material: "tshirt", technique: "gentle_press" } },
+    completedQuestionIds: ["towel_handling"],
+    answerProvenance: { towel_handling: "user" },
+    revision: 1,
+  })
+  const harness = createHarness({ db, knownCareAnswers: LEGACY_KNOWN })
+
+  await assert.rejects(
+    acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) =>
+      error instanceof DirectAcceptanceError && error.code === "refinement_in_progress",
+  )
+})
+
+test("a member-completed refinement with an active Routine is never relabelled a direct accept", async () => {
+  const harness = createHarness({ knownCareAnswers: LEGACY_KNOWN })
+  await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+  // Any later accepted Routine proposal (e.g. after her Feinschliff) clears the mark.
+  harness.planState.unrefinedDirectAccept = false
+
+  await assert.rejects(
+    acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) =>
+      error instanceof DirectAcceptanceError && error.code === "plan_already_accepted",
+  )
+})
+
+/** Every stored answer known: a direct accept that assumes nothing at all. */
+const FULLY_KNOWN = () => {
+  const all = buildDirectAcceptanceStage2Defaults(labTriggerContext())
+  return {
+    answers: { ...all.answers, wetWashFrequency: "weekly_1x" as const },
+    questionIds: [...all.completedQuestionIds],
+  }
+}
+
+test("Codex R1: an interrupted accept that assumed nothing resumes instead of being refused", async () => {
+  const db = createRefinementDb()
+  const known = FULLY_KNOWN()
+  const snapshot = buildDirectAcceptanceStage2Defaults(labTriggerContext(), known)
+  assert.ok(Object.values(snapshot.answerProvenance).every((value) => value === "user"))
+  db.insertDraft({
+    answers: snapshot.answers,
+    completedQuestionIds: snapshot.completedQuestionIds,
+    answerProvenance: snapshot.answerProvenance,
+    revision: 1,
+    directAcceptanceOwned: true,
+  })
+  const harness = createHarness({ db, knownCareAnswers: known })
+
+  const result = await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+
+  assert.equal(result.status, "accepted")
+  assert.equal(db.drafts[0]!.status, "complete")
+})
+
+test("Codex R2: a Feinschliff edit on an interrupted accept draft makes it hers — the accept refuses", async () => {
+  const db = createRefinementDb()
+  const snapshot = buildDirectAcceptanceStage2Defaults(labTriggerContext(), LEGACY_KNOWN)
+  db.insertDraft({
+    answers: snapshot.answers,
+    completedQuestionIds: snapshot.completedQuestionIds,
+    answerProvenance: snapshot.answerProvenance,
+    revision: 1,
+    directAcceptanceOwned: true,
+  })
+  // She changes her towel in the Feinschliff: an interactive save (no directAcceptance flag).
+  const draft = (await db.persistence.loadOrCreate(USER_ID)) as Stage2PersistedDraft
+  const saved = await db.persistence.save({
+    userId: USER_ID,
+    draft,
+    expectedRevision: draft.revision,
+    answers: { ...draft.answers, towel: { material: "tshirt", technique: "gentle_press" } },
+    completedQuestionIds: draft.completedQuestionIds,
+    answerProvenance: { ...draft.answerProvenance, towel_handling: "user" },
+  })
+  assert.equal(saved.outcome, "saved")
+  const harness = createHarness({ db, knownCareAnswers: LEGACY_KNOWN })
+
+  await assert.rejects(
+    acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) =>
+      error instanceof DirectAcceptanceError && error.code === "refinement_in_progress",
+  )
+  assert.deepEqual(db.drafts[0]!.answers.towel, { material: "tshirt", technique: "gentle_press" })
+})
+
+test("the accept marks the draft it saves as its own", async () => {
+  const harness = createHarness({ knownCareAnswers: LEGACY_KNOWN })
+  await acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() })
+  assert.equal(harness.db.drafts[0]!.directAcceptanceOwned, true)
+})
+
+test("Codex R3: confirming the defaults in the Feinschliff is her answer — the accept never re-claims it", async () => {
+  const db = createRefinementDb()
+  const plain = buildDirectAcceptanceStage2Defaults(labTriggerContext())
+  db.insertDraft({ directAcceptanceOwned: false })
+  // She confirms every pre-filled default interactively.
+  const draft = (await db.persistence.loadOrCreate(USER_ID)) as Stage2PersistedDraft
+  await db.persistence.save({
+    userId: USER_ID,
+    draft,
+    expectedRevision: draft.revision,
+    answers: plain.answers,
+    completedQuestionIds: plain.completedQuestionIds,
+    answerProvenance: Object.fromEntries(plain.completedQuestionIds.map((id) => [id, "user"])),
+  })
+  const harness = createHarness({ db })
+
+  await assert.rejects(
+    acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) =>
+      error instanceof DirectAcceptanceError && error.code === "refinement_in_progress",
+  )
+  assert.ok(Object.values(db.drafts[0]!.answerProvenance).every((value) => value === "user"))
+})
+
+test("a pre-column row holding the defaults but marked as her answers is not re-claimed", async () => {
+  const db = createRefinementDb()
+  const plain = buildDirectAcceptanceStage2Defaults(labTriggerContext())
+  db.insertDraft({
+    answers: plain.answers,
+    completedQuestionIds: plain.completedQuestionIds,
+    answerProvenance: Object.fromEntries(plain.completedQuestionIds.map((id) => [id, "user"])),
+    revision: 1,
+  })
+  const harness = createHarness({ db })
+
+  await assert.rejects(
+    acceptIdealPlan(harness.deps, { seenRoles: SEEN_ROLES() }),
+    (error: unknown) =>
+      error instanceof DirectAcceptanceError && error.code === "refinement_in_progress",
+  )
 })

@@ -91,6 +91,11 @@ const MIGRATIONS = [
   "supabase/migrations/20260929231100_user_facts_domains.sql",
   "supabase/migrations/20260929231200_personal_plan_facts_cursor.sql",
   "supabase/migrations/20260929231300_user_facts_save_v1.sql",
+  // care_habits precedence: an assumed field never replaces a stored real one. Only
+  // re-defines `user_facts_save_v1`, so it can follow it directly.
+  "supabase/migrations/20261006180000_user_facts_assumed_never_replaces_real.sql",
+  // Direct-acceptance draft ownership column + its save RPC; interactive saves clear it.
+  "supabase/migrations/20261006180100_personal_plan_direct_acceptance_draft_owner.sql",
 ] as const
 
 const STUB_PREREQUISITES = `

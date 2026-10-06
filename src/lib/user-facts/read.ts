@@ -16,6 +16,7 @@ import {
   type FactsProvenance,
   type QuizContextV1,
 } from "./schema"
+import { knownCareAnswers, type KnownCareAnswers } from "./known-care-answers"
 import { toStage1Source } from "./stage1-source"
 
 export { toStage1Source } from "./stage1-source"
@@ -140,6 +141,18 @@ export function toRefinementAnswers(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- destructured only to drop it
   const { brushesCombs, ...refinementAnswers } = facts.careHabits
   return refinementAnswers
+}
+
+/** The member's stored care answers an assumption must not replace (see `knownCareAnswers`). */
+export async function loadKnownCareAnswers(
+  admin: SupabaseClient,
+  userId: string,
+): Promise<KnownCareAnswers> {
+  const facts = await loadUserFacts(admin, userId)
+  return knownCareAnswers({
+    careHabits: facts?.careHabits ?? null,
+    fields: facts?.provenance.care_habits?.fields,
+  })
 }
 
 /** Re-emits the Stage-1 source for a loaded facts record (F26), delegating to Task-1's
