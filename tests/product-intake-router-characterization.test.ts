@@ -49,14 +49,20 @@ const categoryKeys = [
   "scalp_care",
 ]
 
-function adapterOwnedResult(capture: Capture) {
-  const result = normalizeResearchOutputForCategory(
+const templatedCategories = new Set(["shampoo", "conditioner", "mask", "leave_in", "oil"])
+
+function normalizeCapture(capture: Capture) {
+  return normalizeResearchOutputForCategory(
     structuredClone(capture.output),
     capture.category,
     structuredClone(brandContext),
     structuredClone(capture.review_decisions),
     capture.submission_id,
   )
+}
+
+function adapterOwnedResult(capture: Capture) {
+  const result = normalizeCapture(capture)
   const final = result.researched_payload?.final as Record<string, unknown> | undefined
   const product = final?.product as Record<string, unknown> | undefined
   return {
@@ -108,20 +114,54 @@ const frozen = JSON.parse(
   readFileSync(new URL("frozen-normalization.json", fixtureRoot), "utf8"),
 ) as ReturnType<typeof normalizationSnapshot>
 
-test("all 52 captured production outputs retain the pre-router adapter-owned results", () => {
+function withoutTemplatedProtocols(result: ReturnType<typeof adapterOwnedResult>) {
+  if (!templatedCategories.has(result.category) || !result.category_specs) return result
+  const { product_application_protocols: _protocols, ...category_specs } =
+    result.category_specs as Record<string, unknown>
+  return { ...result, category_specs }
+}
+
+test("all 52 captured production outputs retain adapter-owned results apart from templated protocols", () => {
   assert.equal(captures.cases.length, 52)
   assert.deepEqual(brandContext, frozen.brand_context)
-  assert.deepEqual(captures.cases.map(adapterOwnedResult), frozen.cases)
+  assert.deepEqual(
+    captures.cases.map(adapterOwnedResult).map(withoutTemplatedProtocols),
+    frozen.cases.map(withoutTemplatedProtocols),
+  )
+  for (const [index, capture] of captures.cases.entries()) {
+    const result = normalizeCapture(capture)
+    const stage = result.artifacts.find((artifact) => artifact.kind === "protocol_template")
+    assert.ok(stage, capture.submission_id)
+    if (templatedCategories.has(capture.category)) {
+      assert.ok(["templated", "blocked"].includes(stage.status!), capture.submission_id)
+      assert.equal(stage.payload.status, stage.status)
+      const blockers = stage.payload.blockers as string[]
+      assert.ok(Array.isArray(blockers))
+      assert.ok(blockers.every((blocker) => blocker.startsWith("protocol_")))
+      assert.deepEqual(
+        result.blockers.filter((blocker) => blocker.startsWith("protocol_")),
+        blockers,
+      )
+    } else {
+      assert.deepEqual(
+        (result.researched_payload?.final as Record<string, Record<string, unknown>>)
+          ?.category_specs?.product_application_protocols,
+        (frozen.cases[index]!.category_specs as Record<string, unknown> | null)
+          ?.product_application_protocols,
+        capture.submission_id,
+      )
+    }
+  }
 })
 
 test("every category retains its pre-router prompt contract byte for byte", () => {
   assert.deepEqual(normalizationSnapshot().prompt_contract_sha256, {
-    conditioner: "80e730060b72274e244c9932165e25cd9054fd1d3597fad9a8e9a3391ae50a41",
-    leave_in: "87a66e0d341aa044a7630d93ca12e85a23e84f9acbae7230f69a0b5c4fa4de62",
+    conditioner: "b9c9b5498d9a7e7ce9db3f79e70a1d61c557395e5fa4733ea4d087b9fa83b233",
+    leave_in: "5478fb16b9fb317d795314bb014da00d345dca7e055341c2c59bb7d024b475fb",
     bondbuilder: "f5e94f8ee0ea1e7b6010c43e912f5c29566537b46b3872b11e52d93acb7022f5",
-    shampoo: "fcaec2462f97163753ecff5410a0d9db75188a6daaf53ef572cfd70fdf930f78",
-    mask: "d5f706b24163d3342407c5844dcd100dbefa328ff0e2f0b8bf63d34bac90fef3",
-    oil: "791bcf5bb09027170468ca17020df242b5e3f38c40d82d57d6eca9d30fea0d54",
+    shampoo: "0193e2e745798175122b90933e3a46c0516304559e4a66b28dd834f64d56217b",
+    mask: "d90899dd5347ff846838989b765b21fab4539e9a43975fedb30e2ce98525705f",
+    oil: "a0f11cb3155ec156187dfc9acd53e9ca7316c053250c7c711d400996bc09d328",
     dry_shampoo: "b83adcdac65c1b5b90acf859b53cc3e592f8fb0364094cee9f53db816bdc583b",
     deep_cleansing_shampoo: "6f0b700d503ce13691120d1f15cd87a0c54fedf1221034d2978dc6742c047dcc",
     heat_protectant: "810273e00ce7332cbd26810eb29ceaef87072cbc84a487fa75312a5d63cd301b",

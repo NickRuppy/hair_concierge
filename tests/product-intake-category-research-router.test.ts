@@ -23,6 +23,7 @@ import {
   conditionerFormulaFingerprintSha256,
   type ConditionerResearchEnvelope,
 } from "../src/lib/conditioner-research/production-adapter"
+import { validateProductIntakeApprovalPayload } from "../src/lib/product-intake/category-validators"
 import { BOND_CURRENT_METHOD_PINS } from "../src/lib/bondbuilder-research/registry"
 import { makeBondbuilderEnvelope, sealProfile } from "./fixtures/bondbuilder-research/profile"
 
@@ -658,3 +659,140 @@ for (const category of Object.keys(CATEGORY_RESEARCH_REGISTRY)) {
     assert.match(String(formula.instruction), /never invent/i)
   })
 }
+
+const protocolEvidence = [
+  {
+    sourceUrl: "https://example.test/conditioner",
+    sourceType: "manufacturer",
+    checkedAt: "2026-10-06",
+  },
+]
+
+function protocolInput(category: string): ResearchOutput {
+  return {
+    summary: "Research",
+    blockers: [],
+    artifacts: [
+      {
+        kind: "property_synthesis",
+        payload: {
+          ...(category === "conditioner"
+            ? { conditioner_research_envelope: conditionerEnvelope() }
+            : {}),
+        },
+      },
+    ],
+    researched_payload: {
+      draft: { protocol: { evidence: protocolEvidence } },
+      final: {
+        product: { category_key: category },
+        category_specs: { product_application_protocols: [{ copy: "Model instructions" }] },
+        sources: [
+          {
+            url: protocolEvidence[0]!.sourceUrl,
+            title: "Hersteller",
+            evidence: "Ansatz behandeln.",
+          },
+        ],
+      },
+    },
+  }
+}
+
+test("worker replaces model conditioner protocols with TPL-CONDITIONER and a single template receipt", () => {
+  const input = protocolInput("conditioner")
+  input.artifacts.push({ kind: "protocol_template", status: "stale", payload: {} })
+  const result = normalizeResearchOutputForCategory(
+    input,
+    "conditioner",
+    brandContext,
+    [],
+    "submission-1",
+  )
+  const final = result.researched_payload!.final as Record<string, unknown>
+  const specs = final.category_specs as Record<string, unknown>
+  const rows = specs.product_application_protocols as Array<Record<string, unknown>>
+  assert.equal(rows.length, 1)
+  assert.equal(rows[0]!.role, "conditioner_rinse_out")
+  const guidance = rows[0]!.guidance_payload as {
+    protocolFacts: Record<string, unknown>
+    steps: Array<{ copyTemplateDe: string }>
+  }
+  assert.equal(guidance.protocolFacts.applicationArea, "lengths_ends")
+  assert.ok(guidance.steps.some((step) => step.copyTemplateDe.includes("Ansatz aussparen")))
+  const validation = validateProductIntakeApprovalPayload(result.researched_payload)
+  assert.deepEqual(
+    validation.missingFields.filter((field) => field.includes("product_application_protocols")),
+    [],
+  )
+  assert.deepEqual(
+    result.artifacts.filter((artifact) => artifact.kind === "protocol_template"),
+    [
+      {
+        kind: "protocol_template",
+        status: "templated",
+        payload: {
+          stage: "protocol",
+          status: "templated",
+          template_ids: ["TPL-CONDITIONER"],
+          blockers: [],
+        },
+      },
+    ],
+  )
+})
+
+test("worker reads projected leave-in heat specs and clears model protocols when the dry-use slot is missing", () => {
+  const input = protocolInput("leave_in")
+  // The projected specs replace this non-heat object; protocol must read the replacement.
+  const envelope = structuredClone(leaveInEnvelope)
+  const profile = envelope.profile as Record<string, Record<string, unknown>>
+  const specialistFunctions = profile.specialistFunctions!.value as Record<string, unknown>
+  specialistFunctions.providesHeatProtection = true
+  input.artifacts[0]!.payload.leave_in_research_envelope = envelope
+  const finalInput = input.researched_payload!.final as Record<string, Record<string, unknown>>
+  finalInput.category_specs!.product_leave_in_specs = { provides_heat_protection: false }
+  const result = normalizeResearchOutputForCategory(
+    input,
+    "leave_in",
+    brandContext,
+    [],
+    "leave-in-gold-set-slot-01",
+  )
+  const final = result.researched_payload!.final as Record<string, Record<string, unknown>>
+  assert.equal(
+    (final.category_specs!.product_leave_in_specs as Record<string, unknown>)
+      .provides_heat_protection,
+    true,
+  )
+  assert.deepEqual(final.category_specs!.product_application_protocols, [])
+  assert.ok(result.blockers.includes("protocol_slot_missing: heat_usable_on_dry_hair"))
+  assert.equal(
+    result.artifacts.find((artifact) => artifact.kind === "protocol_template")!.status,
+    "blocked",
+  )
+})
+
+test("worker keeps bondbuilder model protocols untouched and records the untemplated stage", () => {
+  const input = protocolInput("bondbuilder")
+  const before = structuredClone(
+    (input.researched_payload!.final as Record<string, Record<string, unknown>>).category_specs!
+      .product_application_protocols,
+  )
+  const result = normalizeResearchOutputForCategory(
+    input,
+    "bondbuilder",
+    brandContext,
+    [],
+    "submission-1",
+  )
+  assert.deepEqual(
+    (result.researched_payload!.final as Record<string, Record<string, unknown>>).category_specs!
+      .product_application_protocols,
+    before,
+  )
+  assert.equal(
+    result.artifacts.find((artifact) => artifact.kind === "protocol_template")!.status,
+    "not_templated",
+  )
+})

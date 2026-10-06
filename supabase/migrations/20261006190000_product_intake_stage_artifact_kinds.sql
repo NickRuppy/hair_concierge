@@ -19,6 +19,7 @@ ALTER TABLE public.product_intake_research_artifacts
       'model_run',
       'model_judgment',
       'formula',
-      'commerce_check'
+      'commerce_check',
+      'protocol_template'
     )
   );

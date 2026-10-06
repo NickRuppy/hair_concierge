@@ -1296,8 +1296,7 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /approval_payload_schema/)
   assert.match(workerScript, /approvalPayloadContract/)
   assert.match(workerScript, /categoryApprovalContract/)
-  assert.match(workerScript, /derive Shampoo protocol roles from the reviewed Shampoo buckets/i)
-  assert.match(workerScript, /A schuppen-only Shampoo is complete without shampoo_everyday/i)
+  // Protocol slot contracts and derived roles are covered by the router and stage suites.
   assert.match(workerScript, /loadBrandResolutionCatalogForWorker/)
   assert.match(workerScript, /retailer_enrichment/)
   assert.match(workerScript, /scanned_identifier_type, scanned_identifier_value, intake_history/)
@@ -1389,7 +1388,6 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /suitable_thicknesses/)
   assert.match(workerScript, /repair_support_level/)
   assert.match(workerScript, /functional_benefits/)
-  assert.match(workerScript, /intensive_conditioning_mask/)
   assert.match(workerScript, /product_oil_eligibility/)
   assert.match(
     workerScript,

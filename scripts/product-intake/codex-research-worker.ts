@@ -12,6 +12,16 @@ import {
   approvedCanonicalBrandFromReview,
   type BrandResolutionPromptContext,
 } from "@/lib/product-intake/pipeline/identity"
+import {
+  runProtocolStage,
+  type ProtocolResearchDraft,
+} from "@/lib/product-intake/pipeline/protocol"
+import {
+  runCommerceStage,
+  applyCommerceWrites,
+  type CommerceStageDeps,
+} from "@/lib/product-intake/pipeline/commerce"
+import { createDmMcpClient } from "@/lib/scan/enrichment/dm-mcp-client"
 import { applyInciStage, type InciStageOptions } from "@/lib/product-intake/pipeline/inci"
 import type { BrandResolutionCatalogInput } from "@/lib/product-identity/brand-resolution"
 export type { BrandResolutionPromptContext } from "@/lib/product-intake/pipeline/identity"
@@ -848,7 +858,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
             })
           }
 
-          const researchOutput = normalizeResearchOutputForCategory(
+          let researchOutput = normalizeResearchOutputForCategory(
             rawResearchOutput,
             detail?.category,
             brandResolutionContext,
@@ -864,6 +874,13 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
                   : undefined,
             },
           )
+          // Enabled by default; only the exact env value "false" disables commerce confirmation.
+          if (process.env.PRODUCT_INTAKE_COMMERCE_CHECK_ENABLED !== "false") {
+            researchOutput = await applyCommerceStage(researchOutput, job.submission_id, {
+              dmSearch: (query) => workerDmClient().searchProducts(query),
+              now: () => new Date(),
+            })
+          }
           const updated = await completeResearchPass({
             supabase: options.supabase,
             job: leasedJob,
@@ -1698,6 +1715,44 @@ export function categoryApprovalContract(category: string | null | undefined): J
   }
 }
 
+let dmCommerceClient: ReturnType<typeof createDmMcpClient> | undefined
+
+function workerDmClient(): ReturnType<typeof createDmMcpClient> {
+  dmCommerceClient ??= createDmMcpClient({ deadlineMs: 20_000 })
+  return dmCommerceClient
+}
+
+export async function applyCommerceStage(
+  output: CodexResearchOutput,
+  submissionId: string,
+  deps: CommerceStageDeps,
+): Promise<CodexResearchOutput> {
+  if (!hasFinalResearchPayload(output.researched_payload)) return output
+  const final = normalizeRecord(output.researched_payload.final)!
+  let artifact: CodexResearchArtifactOutput
+  let blockers: string[] = []
+  try {
+    const result = await runCommerceStage({ submissionId, final, deps })
+    applyCommerceWrites(final, result.writes)
+    artifact = result.artifact
+    blockers = result.blockers
+  } catch (error) {
+    artifact = {
+      kind: "commerce_check",
+      status: "unconfirmed",
+      payload: { stage: "commerce", error: errorMessage(error) },
+    }
+    await captureOptionalTelemetryFailure(async () => {
+      if (Sentry.isInitialized()) Sentry.captureException(error)
+    })
+  }
+  return {
+    ...output,
+    artifacts: [...output.artifacts.filter((entry) => entry.kind !== "commerce_check"), artifact],
+    blockers: dedupeStrings([...output.blockers, ...blockers]),
+  }
+}
+
 export function normalizeResearchOutputForCategory(
   output: CodexResearchOutput,
   category: string | null | undefined,
@@ -1734,8 +1789,6 @@ export function normalizeResearchOutputForCategory(
       (blocker) => !blocker.startsWith("canonical brand table resolution missing for:"),
     )
   }
-  const categorySpecs = normalizeRecord(final?.category_specs)
-
   const engine = CATEGORY_RESEARCH_REGISTRY[categoryKey]
   let projected = false
   const projectionArtifact = artifacts.find(
@@ -1806,6 +1859,7 @@ export function normalizeResearchOutputForCategory(
   // fully valid table. Re-reading here validates the object the adapter
   // actually produced, for both the envelope path and the legacy/non-envelope
   // path (where the adapter never ran and this is unchanged from before).
+  const categorySpecs = normalizeRecord(final?.category_specs)
   const leaveInSpecs = normalizeRecord(categorySpecs?.product_leave_in_specs)
 
   if (leaveInSpecs) {
@@ -1815,6 +1869,31 @@ export function normalizeResearchOutputForCategory(
       blockers.push("leave_in application_stage has no valid value")
     }
   }
+  const protocol = runProtocolStage({
+    categoryKey,
+    categorySpecs: categorySpecs ?? {},
+    draft:
+      (normalizeRecord(researchedPayload.draft)?.protocol as ProtocolResearchDraft | undefined) ??
+      null,
+    sources: final?.sources,
+  })
+  if (categorySpecs && protocol.status !== "not_templated") {
+    categorySpecs.product_application_protocols = protocol.rows
+  }
+  blockers.push(...protocol.blockers)
+  for (let index = artifacts.length - 1; index >= 0; index--) {
+    if (artifacts[index]!.kind === "protocol_template") artifacts.splice(index, 1)
+  }
+  artifacts.push({
+    kind: "protocol_template",
+    status: protocol.status,
+    payload: {
+      stage: "protocol",
+      status: protocol.status,
+      template_ids: protocol.templateIds,
+      blockers: protocol.blockers,
+    },
+  })
   const missingSpecTables = missingCategorySpecTables(categorySpecs, categoryKey)
   if (missingSpecTables.length > 0) {
     blockers.push(`missing category_specs for ${categoryKey}: ${missingSpecTables.join(", ")}`)

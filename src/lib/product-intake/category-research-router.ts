@@ -44,6 +44,7 @@ import {
   LEAVE_IN_PRODUCTION_ADAPTER_VERSION,
 } from "@/lib/leave-in-research/production-adapter"
 import { BOND_CURRENT_METHOD_PINS } from "@/lib/bondbuilder-research/registry"
+import { PROTOCOL_SLOT_RESEARCH_CONTRACT } from "./pipeline/protocol"
 
 export const CATEGORY_SPEC_KEYS = {
   shampoo: ["product_shampoo_specs", "product_application_protocols"],
@@ -207,11 +208,7 @@ function shampooApprovalContract(): JsonRecord {
       schuppen: "dandruff or dry_flakes",
       irritationen: "irritated",
     },
-    product_application_protocols: applicationProtocolResearchContract(
-      "shampoo",
-      ["shampoo_everyday", "shampoo_dandruff"],
-      "Derive Shampoo protocol roles from the reviewed Shampoo buckets: include shampoo_dandruff when any row uses schuppen, and include shampoo_everyday only when at least one source-supported row uses a non-schuppen bucket. A schuppen-only Shampoo is complete without shampoo_everyday. When an exact source supports ordinary or daily use, research the matching non-schuppen scalp-route facts before adding shampoo_everyday; daily-use wording alone must not invent a bucket or cadence.",
-    ),
+    protocol_slots: PROTOCOL_SLOT_RESEARCH_CONTRACT,
   }
 }
 
@@ -220,7 +217,7 @@ function conditionerApprovalContract(): JsonRecord {
     category_key: "conditioner",
     canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
     instruction:
-      "Complete the full Conditioner Standard v1.6 research envelope first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research only the exact rinse-out protocol separately.",
+      "Complete the full Conditioner Standard v1.6 research envelope first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research sourced protocol slots separately; Chaarlie stamps the normative protocol rows itself.",
     conditioner_research: conditionerResearchPromptContract(),
     required_category_specs: [...CATEGORY_SPEC_KEYS.conditioner],
     product_conditioner_specs:
@@ -235,9 +232,7 @@ function conditionerApprovalContract(): JsonRecord {
       balance_direction: [...PRODUCT_BALANCE_TARGETS, null],
       ingredient_flags: [...CONDITIONER_INGREDIENT_FLAGS],
     },
-    product_application_protocols: applicationProtocolResearchContract("conditioner", [
-      "conditioner_rinse_out",
-    ]),
+    protocol_slots: PROTOCOL_SLOT_RESEARCH_CONTRACT,
   }
 }
 
@@ -256,22 +251,7 @@ function maskApprovalContract(): JsonRecord {
       repair_support_level: ["low", "medium", "high"],
       functional_benefits: ["smoothing_frizz_control", "detangling_slip", "shine"],
     },
-    product_application_protocols: {
-      category: ["mask"],
-      role: ["intensive_conditioning_mask"],
-      required_fields: [
-        "cadence",
-        "application_stage",
-        "placement",
-        "contact_time_seconds",
-        "rinse_action",
-        "source_label",
-        "source_url",
-        "source_text",
-        "guidance_payload",
-      ],
-      note: "The exact manufacturer protocol must be complete enough to derive the Stage 5 product pointer.",
-    },
+    protocol_slots: PROTOCOL_SLOT_RESEARCH_CONTRACT,
   }
 }
 
@@ -280,18 +260,14 @@ function leaveInApprovalContract(): JsonRecord {
     category_key: "leave_in",
     canonical_inci: CANONICAL_INCI_RESEARCH_CONTRACT,
     instruction:
-      "Complete the full Leave-In Standard v1.1 research envelope (Standard v1.0 plus the T20 care_direction overlay) first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research only the exact leave-in application protocol separately.",
+      "Complete the full Leave-In Standard v1.1 research envelope (Standard v1.0 plus the T20 care_direction overlay) first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research sourced protocol slots separately; Chaarlie stamps the normative protocol rows itself.",
     leave_in_research: leaveInResearchPromptContract(),
     required_category_specs: [...CATEGORY_SPEC_KEYS.leave_in],
     aliases: {
       post_wash:
         "Do not use post_wash for leave-ins. If evidence says after washing, damp hair, no-rinse, or towel-dried hair, use towel_dry in identity.applicationStage.",
     },
-    product_application_protocols: applicationProtocolResearchContract(
-      "leave_in",
-      ["post_wash_leave_in", "pre_heat_protection"],
-      "Always include post_wash_leave_in; include pre_heat_protection only when the product claims heat protection.",
-    ),
+    protocol_slots: PROTOCOL_SLOT_RESEARCH_CONTRACT,
   }
 }
 function oilApprovalContract(): JsonRecord {
@@ -315,11 +291,7 @@ function oilApprovalContract(): JsonRecord {
       oil_purpose: [...OIL_PURPOSES, null],
       ingredient_flags: [...OIL_INGREDIENT_FLAGS],
     },
-    product_application_protocols: applicationProtocolResearchContract(
-      "oil",
-      ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
-      "Include one exact protocol for every role declared in product_oil_specs.role_support. Heat protection is not a role: set provides_heat_protection=true and include a sourced leave_on_fibre_conditioning protocol when the oil protects from heat.",
-    ),
+    protocol_slots: PROTOCOL_SLOT_RESEARCH_CONTRACT,
   }
 }
 
