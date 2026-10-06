@@ -70,3 +70,22 @@ general held cleanly. Recommendation: conditioning count is fix #1.
 
 Research artifacts only. No catalog value, recommendation, Product Intake rule, Supabase row,
 user-facing copy, or production matcher changes on this record's authority.
+
+
+## Round-1 human review sign-off (Nick, 2026-10-06)
+
+Reviewed in the Mask Research Lab under Standard v0.5, reference-key-v1:
+
+- **11 of 13 products approved** per-property by Nick (lab review state, 2026-10-05/06), including
+  #11 Glycolic Gloss on its finalized conservative values (AP-11 closed by the L'Oréal F.I.L.
+  re-fetch, 2026-10-06).
+- **#05 Isana Mandelmilch — review waived by Nick** ("I don't need to check. It's discontinued."):
+  the product is confirmed discontinued (live Rossmann check 2026-10-05) and ruled
+  calibration-only; its rule-exercise value is banked, it never projects to the catalog.
+- **#13 Olaplex No. 3 — review waived by Nick** ("not relevant"): deliberate G0 refuse-test with a
+  single gate row; the exclusion is the finding.
+- **Zero open adjudication points remain** (last one closed by evidence 2026-10-06).
+
+Round-1 review is therefore COMPLETE. Next phase: calibration round 2 under v0.5 — fresh
+zero-inheritance blind rerun of the 12 classified products plus the example-disjoint unseen
+adversarial set (candidates in `plans/mask-inci/freeze-gate-candidates.md`).
