@@ -39,6 +39,8 @@ const answer = {
 const json = JSON.stringify(answer)
 
 for (const [label, raw] of [
+  ["stray bracket after a prose marker", `Sources [] draft [notes\n${json}`],
+  ["stray bracket in prose", `Research [draft notes\n${json}`],
   ["trailing explanation", `${json}\nResearch complete. {not JSON}`],
   ["second JSON object", `${json}\n{"summary":"unrelated extra answer"}`],
   ["markdown fence", `\`\`\`json\n${json}\n\`\`\`\n{"summary":"trailing object"}`],
@@ -115,9 +117,7 @@ test("Codex ETIMEDOUT is classified and retried within the job attempt budget", 
 
 for (const [stream, message] of [
   ["stderr", "Not logged in. Please run codex login."],
-  ["stdout", "Login required to continue."],
   ["stderr", "unexpected status 401 Unauthorized"],
-  ["stdout", "Token expired. Please authenticate again."],
 ] as const) {
   test(`Codex classifies auth failure from ${stream}: ${message}`, async (t) => {
     const params = codexFixture(t, json)
@@ -266,4 +266,116 @@ test("rembg startup cleanup removes only prefixed container names, and continues
       throw new Error("Docker missing")
     }),
   )
+})
+
+for (const message of [
+  "Login required to continue.",
+  "Token expired. Please authenticate again.",
+]) {
+  test(`Codex ignores auth-like stdout in failed research: ${message}`, async (t) => {
+    const params = codexFixture(t, json)
+    await assert.rejects(
+      worker.runCodexJson(params, () => result({ status: 1, stdout: message })),
+      (error: unknown) => {
+        assert.ok(error instanceof Error)
+        assert.match(error.message, /Codex CLI failed/)
+        assert.doesNotMatch(error.message, /^infra_auth:/)
+        return true
+      },
+    )
+  })
+}
+
+test("Codex timeout takes precedence over auth-like stderr", async (t) => {
+  const params = codexFixture(t, json)
+  await assert.rejects(
+    worker.runCodexJson(params, () =>
+      result({
+        error: Object.assign(new Error("ETIMEDOUT"), { code: "ETIMEDOUT" }),
+        status: null,
+        stderr: "401 Unauthorized",
+      }),
+    ),
+    (error: unknown) => {
+      assert.equal((error as Error & { code: string }).code, "codex_timeout")
+      return true
+    },
+  )
+})
+
+for (const lane of ["challenger_medium", "judge", "image_judge"] as const) {
+  test(`${lane} timeout is recorded as the lane failure without failing the job`, async () => {
+    const measured = await worker.measureModelRun(
+      lane,
+      worker.codexResearchRuntimeConfig({}),
+      () => {
+        throw new Error("codex_timeout: optional run exceeded its budget")
+      },
+    )
+    assert.equal(measured.success, false)
+    if (measured.success) assert.fail("timed out optional lane succeeded")
+    assert.match(measured.error, /^codex_timeout:/)
+  })
+  test(`${lane} auth failures still escape to the worker pause`, async () => {
+    await assert.rejects(
+      worker.measureModelRun(lane, worker.codexResearchRuntimeConfig({}), () => {
+        throw new Error("infra_auth: Not logged in")
+      }),
+      /infra_auth:/,
+    )
+  })
+}
+
+test("optional evaluation persists a timeout and retains the production job", async () => {
+  const failures: string[] = []
+  const evaluated = await worker.runNonFatalModelEvaluation({
+    job,
+    targetSuccessfulJudgments: 10,
+    run: async () => {
+      throw new Error("codex_timeout: judge timed out")
+    },
+    persistFailure: async (message) => {
+      failures.push(message)
+    },
+  })
+  assert.equal(evaluated.job, job)
+  assert.equal(evaluated.result.status, "telemetry_failed")
+  assert.deepEqual(failures, ["codex_timeout: judge timed out"])
+})
+
+test("subprocess diagnostics are bounded in thrown errors and stored progress", async (t) => {
+  const params = codexFixture(t, json)
+  for (const stderr of [
+    "bad output: " + "x".repeat(20_000),
+    "401 Unauthorized " + "x".repeat(20_000),
+  ]) {
+    let failure: unknown
+    try {
+      await worker.runCodexJson(params, () => result({ status: 1, stderr }))
+    } catch (error) {
+      failure = error
+    }
+    assert.ok(failure instanceof Error)
+    assert.ok(failure.message.length <= 4_000)
+  }
+  const failure = new Error("codex_timeout: " + "x".repeat(20_000))
+  const update = worker.researchFailureUpdate({
+    job,
+    error: failure,
+    promptPacketPath: params.outputPath,
+    workerId: "worker-1",
+    executeCodex: true,
+  })
+  assert.ok(update.lastError.length <= 4_000)
+  assert.equal(update.progress.message, update.lastError)
+  const measured = await worker.measureModelRun(
+    "image_judge",
+    worker.codexResearchRuntimeConfig({}),
+    () => {
+      throw new Error("x".repeat(20_000))
+    },
+  )
+  assert.equal(measured.success, false)
+  if (measured.success) assert.fail("failed lane succeeded")
+  assert.ok(measured.error.length <= 4_000)
 })

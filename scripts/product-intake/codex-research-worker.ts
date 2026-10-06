@@ -105,12 +105,52 @@ export function runWorkerProcess(
     let error: Error | undefined
     let timer: ReturnType<typeof setTimeout> | undefined
     let killTimer: ReturnType<typeof setTimeout> | undefined
-    const child = spawn(command, args, { ...spawnOptions, stdio: ["ignore", "pipe", "pipe"] })
+    let settleTimer: ReturnType<typeof setTimeout> | undefined
+    let settled = false
+    let terminated = false
+    const child = spawn(command, args, {
+      ...spawnOptions,
+      detached: true,
+      stdio: ["ignore", "pipe", "pipe"],
+    })
+    const signalGroup = (signal: NodeJS.Signals) => {
+      try {
+        if (!child.pid) throw new Error("Child has no process group")
+        process.kill(-child.pid, signal)
+      } catch {
+        child.kill(signal)
+      }
+    }
+    const finish = (status: number | null, signal: NodeJS.Signals | null) => {
+      if (settled) return
+      settled = true
+      clearTimeout(timer)
+      clearTimeout(killTimer)
+      clearTimeout(settleTimer)
+      if (terminated) signalGroup("SIGKILL")
+      child.stdout?.destroy()
+      child.stderr?.destroy()
+      resolveResult({
+        pid: child.pid ?? 0,
+        output: [],
+        stdout: Buffer.concat(stdout).toString("utf8"),
+        stderr: Buffer.concat(stderr).toString("utf8"),
+        status,
+        signal,
+        error,
+      })
+    }
+    const settleAfterGrace = () => {
+      // Pipes can outlive the leader, even after a process-group kill. Bound that wait.
+      settleTimer ??= setTimeout(() => finish(child.exitCode, child.signalCode), 2_000)
+    }
     const terminate = (failure: Error) => {
       if (error) return
       error = failure
-      child.kill("SIGTERM")
-      killTimer = setTimeout(() => child.kill("SIGKILL"), 1_000)
+      terminated = true
+      signalGroup("SIGTERM")
+      killTimer = setTimeout(() => signalGroup("SIGKILL"), 1_000)
+      settleAfterGrace()
     }
     const collect = (stream: "stdout" | "stderr", chunk: Buffer) => {
       const size = stream === "stdout" ? stdoutSize : stderrSize
@@ -134,19 +174,10 @@ export function runWorkerProcess(
     child.on("error", (failure) => {
       error ??= failure
     })
-    child.on("close", (status, signal) => {
-      clearTimeout(timer)
-      clearTimeout(killTimer)
-      resolveResult({
-        pid: child.pid ?? 0,
-        output: [],
-        stdout: Buffer.concat(stdout).toString("utf8"),
-        stderr: Buffer.concat(stderr).toString("utf8"),
-        status,
-        signal,
-        error,
-      })
+    child.on("exit", () => {
+      if (error) settleAfterGrace()
     })
+    child.on("close", finish)
     if (timeout && timeout > 0) {
       timer = setTimeout(
         () => terminate(Object.assign(new Error(`${command} ETIMEDOUT`), { code: "ETIMEDOUT" })),
@@ -172,6 +203,15 @@ class WorkerLeaseLostError extends Error {
 export class WorkerJobLease {
   aborted = false
   private pending: Promise<unknown> = Promise.resolve()
+  private readonly startedAt = Date.now()
+  private readonly maxRuntimeMs = positiveDurationMs(
+    process.env.PRODUCT_INTAKE_JOB_MAX_RUNTIME_MS,
+    45 * 60_000,
+  )
+
+  private checkRuntime(): void {
+    if (Date.now() - this.startedAt > this.maxRuntimeMs) this.aborted = true
+  }
 
   constructor(
     readonly job: Pick<ProductIntakeResearchJob, "id" | "locked_by" | "locked_at">,
@@ -186,6 +226,7 @@ export class WorkerJobLease {
 
   renew(): Promise<void> {
     return this.serialize(async () => {
+      this.checkRuntime()
       if (this.aborted) return
       const { data, error } = await this.client.rpc("product_intake_renew_research_job_lease", {
         target_job_id: this.job.id,
@@ -200,6 +241,7 @@ export class WorkerJobLease {
 
   write<T>(operation: () => Promise<T>): Promise<T> {
     return this.serialize(async () => {
+      this.checkRuntime()
       if (this.aborted) throw new WorkerLeaseLostError(this.job.id)
       return operation()
     })
@@ -242,14 +284,14 @@ export function startWorkerHeartbeat(params: {
   intervalMs?: number
   leases: Map<string, WorkerJobLease>
   currentJobId: () => string | null
+  authPaused?: () => boolean
   onError?: (error: unknown) => void
   checkIn?: (status: "ok" | "error") => void
 }) {
   let stopped = false
   let inFlight: Promise<void> | undefined
-  let healthy = true
+  let heartbeatFailures = 0
   const report = (error: unknown) => {
-    healthy = false
     try {
       ;(params.onError ?? console.error)(error)
     } catch {
@@ -260,7 +302,6 @@ export function startWorkerHeartbeat(params: {
     if (stopped) return Promise.resolve()
     if (inFlight) return inFlight
     inFlight = (async () => {
-      healthy = true
       // Renew even when the separate liveness RPC fails.
       await Promise.all([...params.leases.values()].map((lease) => lease.renew().catch(report)))
       try {
@@ -272,12 +313,18 @@ export function startWorkerHeartbeat(params: {
           current_job_id: params.currentJobId(),
         })
         if (error) throw error
+        heartbeatFailures = 0
       } catch (error) {
+        heartbeatFailures++
         report(error)
       }
       try {
         params.checkIn?.(
-          healthy && ![...params.leases.values()].some((lease) => lease.aborted) ? "ok" : "error",
+          heartbeatFailures >= 2 ||
+            params.authPaused?.() ||
+            [...params.leases.values()].some((lease) => lease.aborted)
+            ? "error"
+            : "ok",
         )
       } catch (error) {
         report(error)
@@ -318,7 +365,7 @@ function workerSentryCheckIn(enabled: boolean, intervalMs: number, status: "ok" 
       { monitorSlug: "product-intake-worker", status: "in_progress" },
       {
         schedule: { type: "interval", value: Math.ceil(intervalMs / 60_000), unit: "minute" },
-        checkinMargin: 2,
+        checkinMargin: 10,
         maxRuntime: 1,
       },
     )
@@ -486,6 +533,38 @@ type WorkerOptions = {
   workerId: string
   supabase: ReturnType<typeof createSupabaseClientFromEnv>
   currentJobId?: string | null
+  claimGate: WorkerClaimGate
+}
+
+// Shared by the watch loop and its heartbeat, so infrastructure outages stop claims.
+export class WorkerClaimGate {
+  private pauseUntil = 0
+
+  get paused(): boolean {
+    return Date.now() < this.pauseUntil
+  }
+
+  handleFailure(error: unknown): void {
+    if (codexInfrastructureCode(error) !== "infra_auth") return
+    const pauseMs = positiveDurationMs(process.env.PRODUCT_INTAKE_AUTH_PAUSE_MS, 15 * 60_000)
+    this.pauseUntil = Date.now() + pauseMs
+    try {
+      console.error(
+        `INFRA_AUTH: worker claims PAUSED for ${pauseMs}ms until ${new Date(this.pauseUntil).toISOString()}: ${errorMessage(error)}`,
+      )
+    } catch {
+      /* Observability cannot prevent the pause. */
+    }
+    try {
+      if (Sentry.isInitialized()) Sentry.captureException(error)
+    } catch {
+      /* Sentry is best effort. */
+    }
+  }
+
+  claim(...args: Parameters<typeof claimResearchJobs>): ReturnType<typeof claimResearchJobs> {
+    return this.paused ? Promise.resolve([]) : claimResearchJobs(...args)
+  }
 }
 
 export type BrandResolutionPromptContext = {
@@ -606,6 +685,7 @@ async function main() {
     concurrency,
     workerId,
     supabase,
+    claimGate: new WorkerClaimGate(),
   }
 
   if (watch && !json) {
@@ -627,6 +707,7 @@ async function main() {
         intervalMs: heartbeatMs,
         leases: workerLeases,
         currentJobId: () => options.currentJobId ?? null,
+        authPaused: () => options.claimGate.paused,
         checkIn: (status) => workerSentryCheckIn(sentryEnabled, heartbeatMs, status),
       })
     : undefined
@@ -642,7 +723,7 @@ async function main() {
 }
 
 async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
-  const jobs = await claimResearchJobs(options.supabase, {
+  const jobs = await options.claimGate.claim(options.supabase, {
     workerId: options.workerId,
     limit: options.concurrency,
   })
@@ -735,6 +816,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
             })
             result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
           } catch (error) {
+            options.claimGate.handleFailure(error)
             if (lease.aborted || error instanceof WorkerLeaseLostError) continue
             const updated = await updateResearchJob(
               options.supabase,
@@ -870,6 +952,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
           })
           result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
         } catch (error) {
+          options.claimGate.handleFailure(error)
           if (lease.aborted || error instanceof WorkerLeaseLostError) continue
           const updated = await updateResearchJob(
             options.supabase,
@@ -884,6 +967,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
           result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
         }
       } catch (error) {
+        options.claimGate.handleFailure(error)
         if (!(error instanceof WorkerLeaseLostError) && !lease.aborted) throw error
         console.error(`Worker stopped writes after lease loss: ${job.id}`)
       } finally {
@@ -909,8 +993,9 @@ export function researchFailureUpdate(params: {
   workerId: string
   executeCodex: boolean
 }) {
-  const message =
-    params.error instanceof Error ? params.error.message : "Codex research worker failed."
+  const message = truncateDiagnostic(
+    params.error instanceof Error ? params.error.message : "Codex research worker failed.",
+  )
   const code = codexInfrastructureCode(params.error)
   const retryable = code === "codex_timeout"
   const retryExhausted = retryable && params.job.attempt_count >= params.job.max_attempts
@@ -973,13 +1058,18 @@ export async function measureModelRun<T>(
       output,
     }
   } catch (error) {
-    throwIfCodexInfrastructureError(error)
+    const code = codexInfrastructureCode(error)
+    if (code === "infra_auth" || (code === "codex_timeout" && lane === "production_low")) {
+      throw error
+    }
     return {
       success: false,
       lane,
       runtimeConfig,
       durationMs: Date.now() - startedAt,
-      error: error instanceof Error ? error.message : "Unknown Codex model-run failure.",
+      error: truncateDiagnostic(
+        error instanceof Error ? error.message : "Unknown Codex model-run failure.",
+      ),
     }
   }
 }
@@ -1058,7 +1148,7 @@ export async function runNonFatalModelEvaluation<TJob>(params: {
   try {
     return await params.run()
   } catch (error) {
-    throwIfCodexInfrastructureError(error)
+    if (codexInfrastructureCode(error) === "infra_auth") throw error
     await captureOptionalTelemetryFailure(() => params.persistFailure(errorMessage(error)))
     return {
       job: params.currentJob?.() ?? params.job,
@@ -1284,7 +1374,9 @@ function toJsonRecord(value: unknown): JsonRecord {
 }
 
 function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : "Unknown model evaluation failure."
+  return truncateDiagnostic(
+    error instanceof Error ? error.message : "Unknown model evaluation failure.",
+  )
 }
 
 async function processApprovedImageForReview(params: {
@@ -1584,8 +1676,9 @@ export function imageProcessingFailureUpdate(params: {
     })
     return { ...update, progress: { ...update.progress, mode: "local_image_processing" } }
   }
-  const message =
-    params.error instanceof Error ? params.error.message : "Image processing worker failed."
+  const message = truncateDiagnostic(
+    params.error instanceof Error ? params.error.message : "Image processing worker failed.",
+  )
   return {
     jobId: params.job.id,
     status: "failed" as const,
@@ -2984,7 +3077,7 @@ class CodexInfrastructureError extends Error {
     readonly code: CodexInfrastructureCode,
     detail: string,
   ) {
-    super(`${code}: ${detail}`)
+    super(truncateDiagnostic(`${code}: ${detail}`))
     this.name = "CodexInfrastructureError"
   }
 }
@@ -2996,8 +3089,13 @@ function codexInfrastructureCode(error: unknown): CodexInfrastructureCode | null
   return null
 }
 
-function throwIfCodexInfrastructureError(error: unknown): void {
-  if (codexInfrastructureCode(error)) throw error
+function truncateDiagnostic(message: string): string {
+  return message.length <= 4_000 ? message : `${message.slice(0, 3_997)}...`
+}
+
+function positiveDurationMs(raw: string | undefined, fallback: number): number {
+  const parsed = Number(raw)
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : fallback
 }
 
 export async function runCodexJson(
@@ -3030,39 +3128,44 @@ export async function runCodexJson(
     },
   )
 
-  const detail = [run.stderr, run.stdout].filter(Boolean).join("\n") || "no output"
-  if (
-    (run.error || run.signal || run.status !== 0) &&
-    /\bnot logged in\b|\blog[ -]?in required\b|\b401\b|\bunauthori[sz]ed\b|\btoken (?:has )?expired\b(?! or nearly expired)/i.test(
-      detail,
-    )
-  ) {
-    throw new CodexInfrastructureError(
-      "infra_auth",
-      `Codex CLI authentication failed (${codexBinary}): ${detail}`,
-    )
-  }
   if (run.error && "code" in run.error && run.error.code === "ETIMEDOUT") {
     throw new CodexInfrastructureError(
       "codex_timeout",
       `Codex CLI timed out after ${CODEX_RESEARCH_TIMEOUT_MS / 1000}s (${codexBinary}): ${run.error.message}`,
     )
   }
+  if (
+    (run.error || run.signal || run.status !== 0) &&
+    /\bnot logged in\b|\blog[ -]?in required\b|\b401\b|\bunauthori[sz]ed\b|\btoken (?:has )?expired\b(?! or nearly expired)/i.test(
+      run.stderr,
+    )
+  ) {
+    throw new CodexInfrastructureError(
+      "infra_auth",
+      `Codex CLI authentication failed (${codexBinary}): ${run.stderr || "no output"}`,
+    )
+  }
   if (run.error) {
-    throw new Error(`Codex CLI failed to start (${codexBinary}): ${run.error.message}`)
+    throw new Error(
+      truncateDiagnostic(`Codex CLI failed to start (${codexBinary}): ${run.error.message}`),
+    )
   }
   if (run.signal) {
     throw new Error(
-      `Codex CLI terminated by ${run.signal} after up to ${CODEX_RESEARCH_TIMEOUT_MS / 1000}s: ${
-        run.stderr || run.stdout || "no output"
-      }`,
+      truncateDiagnostic(
+        `Codex CLI terminated by ${run.signal} after up to ${CODEX_RESEARCH_TIMEOUT_MS / 1000}s: ${
+          run.stderr || run.stdout || "no output"
+        }`,
+      ),
     )
   }
   if (run.status !== 0) {
     throw new Error(
-      `Codex CLI failed (${codexBinary}, exit ${run.status}): ${
-        run.stderr || run.stdout || "no output"
-      }`,
+      truncateDiagnostic(
+        `Codex CLI failed (${codexBinary}, exit ${run.status}): ${
+          run.stderr || run.stdout || "no output"
+        }`,
+      ),
     )
   }
   if (!existsSync(params.outputPath)) {
@@ -3485,6 +3588,8 @@ function parseJsonObject(raw: string): JsonRecord {
   }
 
   const stack: string[] = []
+  const firstBrace = raw.indexOf("{")
+  let firstBraceInCompleteArray = false
   let start = -1
   let inString = false
   let escaped = false
@@ -3509,7 +3614,11 @@ function parseJsonObject(raw: string): JsonRecord {
     if ((char !== "}" && char !== "]") || stack.length === 0) continue
     const opening = stack.pop()
     if ((opening === "{" && char !== "}") || (opening === "[" && char !== "]")) break
-    if (stack.length > 0 || raw[start] !== "{") continue
+    if (stack.length > 0) continue
+    if (raw[start] !== "{") {
+      if (firstBrace >= start && firstBrace <= index) firstBraceInCompleteArray = true
+      continue
+    }
 
     try {
       const record = normalizeRecord(JSON.parse(raw.slice(start, index + 1)) as unknown)
@@ -3519,6 +3628,18 @@ function parseJsonObject(raw: string): JsonRecord {
     }
   }
 
+  // Preserve the slice fallback for stray prose delimiters, without extracting array elements.
+  if (!firstBraceInCompleteArray) {
+    const lastBrace = raw.lastIndexOf("}")
+    if (firstBrace >= 0 && lastBrace > firstBrace) {
+      try {
+        const record = normalizeRecord(JSON.parse(raw.slice(firstBrace, lastBrace + 1)) as unknown)
+        if (record) return record
+      } catch {
+        // The compatibility slice must also be a complete object.
+      }
+    }
+  }
   throw new Error("Codex output contained no complete top-level JSON object.")
 }
 

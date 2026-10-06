@@ -263,6 +263,26 @@ test("explicit rework continues to reset the attempt budget", async (t) => {
   assert.equal((await claim(pg))[0]!.attempt_count, 1)
 })
 
+test("retrying an exhausted failed job restores its attempt budget and makes it claimable", async (t) => {
+  const pg = await migratedDatabase(t)
+  const job = await queuedJob(pg)
+  await pg.query(
+    "UPDATE public.product_intake_research_jobs SET status = 'failed', attempt_count = max_attempts WHERE id = $1",
+    [job.id],
+  )
+
+  const { rows } = await pg.query<Job>(
+    "SELECT * FROM public.product_intake_retry_research_job($1)",
+    [job.id],
+  )
+  assert.equal(rows[0]!.status, "queued")
+  assert.equal(rows[0]!.attempt_count, 0)
+
+  const [claimed] = await claim(pg)
+  assert.equal(claimed!.id, job.id)
+  assert.equal(claimed!.attempt_count, 1)
+})
+
 test("worker heartbeat upserts liveness without resetting started_at", async (t) => {
   const pg = await migratedDatabase(t)
   const job = await queuedJob(pg)
