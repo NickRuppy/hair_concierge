@@ -13,6 +13,7 @@ const MIGRATIONS = [
   "20260701100000_product_intake_auto_enqueue.sql",
   "20261005190000_product_intake_job_attempt_hygiene.sql",
   "20261005190100_product_intake_worker_heartbeats.sql",
+  "20261006160000_product_intake_job_engine_binding.sql",
 ] as const
 const USER = "11111111-1111-4111-8111-111111111111"
 const PRODUCT = "22222222-2222-4222-8222-222222222222"
@@ -58,6 +59,9 @@ type Job = {
   locked_at: Date | null
   completed_at: Date | null
   last_error: string | null
+  engine_key: string | null
+  engine_version: string | null
+  progress: Record<string, unknown>
 }
 
 async function migratedDatabase(t: { after: (fn: () => Promise<void>) => void }) {
@@ -381,6 +385,128 @@ test("liveness table and RPCs are restricted to service_role with RLS and no pol
     )
     await assert.rejects(
       pg.query("SELECT public.product_intake_renew_research_job_lease(NULL, 'x')"),
+      /permission denied/,
+    )
+  }
+})
+
+test("engine binding is nullable, immutable across rework, and upgrades only with recorded boolean approval", async (t) => {
+  const pg = await migratedDatabase(t)
+  const job = await queuedJob(pg)
+  const initial = await pg.query(
+    "SELECT engine_key, engine_version FROM public.product_intake_research_jobs WHERE id = $1",
+    [job.id],
+  )
+  assert.deepEqual(initial.rows, [{ engine_key: null, engine_version: null }])
+  const [claimed] = await claim(pg)
+  const bind = async (key: string, version: string, lease = claimed!) =>
+    (
+      await pg.query<Job>(
+        "SELECT * FROM public.product_intake_bind_research_job_engine($1, $2, $3, $4, $5)",
+        [job.id, key, version, lease.locked_by, lease.locked_at],
+      )
+    ).rows[0]!
+
+  const first = await bind("conditioner-standard", "v1.6/conditioner-production-adapter-v1")
+  assert.equal(first.engine_key, "conditioner-standard")
+  assert.equal(first.engine_version, "v1.6/conditioner-production-adapter-v1")
+  assert.equal(first.locked_by, claimed!.locked_by)
+  assert.deepEqual(first.locked_at, claimed!.locked_at)
+  assert.deepEqual(await bind(first.engine_key!, first.engine_version!), first)
+  await assert.rejects(
+    bind("conditioner-standard", "v1.7/conditioner-production-adapter-v1"),
+    /engine_version_mismatch: v1.6\/conditioner-production-adapter-v1 != v1.7\/conditioner-production-adapter-v1/,
+  )
+  await assert.rejects(bind("leave-in-standard", first.engine_version!), /engine_key_mismatch:/)
+  assert.deepEqual(await storedJob(pg, job.id), first)
+
+  await pg.query(
+    "SELECT * FROM public.product_intake_update_research_job($1, 'blocked', 'rework')",
+    [job.id],
+  )
+  await pg.query("SELECT * FROM public.product_intake_request_rework_job($1, $2)", [
+    job.submission_id,
+    { engine_upgrade: "true" },
+  ])
+  const [reclaimed] = await claim(pg)
+  assert.equal(reclaimed!.engine_version, first.engine_version)
+  await assert.rejects(
+    bind("conditioner-standard", "v1.7/conditioner-production-adapter-v1", reclaimed!),
+    /engine_version_mismatch:/,
+  )
+  await pg.query("UPDATE public.product_intake_research_jobs SET progress = $2 WHERE id = $1", [
+    job.id,
+    { engine_upgrade: true, note: "explicit rework" },
+  ])
+  const upgraded = await bind(
+    "conditioner-standard",
+    "v1.7/conditioner-production-adapter-v1",
+    reclaimed!,
+  )
+  assert.equal(upgraded.engine_version, "v1.7/conditioner-production-adapter-v1")
+  assert.equal(upgraded.progress.engine_upgrade, false)
+  assert.equal(upgraded.progress.note, "explicit rework")
+  assert.deepEqual(upgraded.progress.engine_upgrade_receipt, {
+    previous_key: "conditioner-standard",
+    previous_version: "v1.6/conditioner-production-adapter-v1",
+    key: "conditioner-standard",
+    version: "v1.7/conditioner-production-adapter-v1",
+  })
+  await assert.rejects(
+    bind("conditioner-standard", "v1.8/conditioner-production-adapter-v1", reclaimed!),
+    /engine_version_mismatch:/,
+  )
+})
+
+test("engine binding rejects invalid tuples, stale leases, closed jobs, and unprivileged callers", async (t) => {
+  const pg = await migratedDatabase(t)
+  const job = await queuedJob(pg)
+  const [claimed] = await claim(pg)
+  const bind = (
+    key: string | null,
+    version: string | null,
+    owner: string | null,
+    lease: Date | null,
+  ) =>
+    pg.query("SELECT * FROM public.product_intake_bind_research_job_engine($1, $2, $3, $4, $5)", [
+      job.id,
+      key,
+      version,
+      owner,
+      lease,
+    ])
+  for (const [key, version] of [
+    [null, "v1"],
+    ["engine", null],
+    [" ", "v1"],
+    ["engine", " "],
+  ]) {
+    await assert.rejects(
+      bind(key!, version!, claimed!.locked_by, claimed!.locked_at),
+      /engine binding requires a non-empty key and version/,
+    )
+  }
+  for (const [owner, lease] of [
+    ["worker-b", claimed!.locked_at],
+    [null, claimed!.locked_at],
+    [claimed!.locked_by, null],
+    [claimed!.locked_by, new Date("2026-01-01")],
+  ] as const) {
+    await assert.rejects(bind("engine", "v1", owner, lease), /lock no longer matches/)
+  }
+  assert.equal((await storedJob(pg, job.id)).engine_key, null)
+  await pg.query(
+    "SELECT * FROM public.product_intake_update_research_job($1, 'blocked', 'rework')",
+    [job.id],
+  )
+  await assert.rejects(
+    bind("engine", "v1", claimed!.locked_by, claimed!.locked_at),
+    /lock no longer matches/,
+  )
+  for (const role of ["anon", "authenticated"]) {
+    await pg.exec(`RESET ROLE; SET ROLE ${role}`)
+    await assert.rejects(
+      bind("engine", "v1", claimed!.locked_by, claimed!.locked_at),
       /permission denied/,
     )
   }

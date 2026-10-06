@@ -21,34 +21,10 @@ import {
 } from "@/lib/product-identity/brand-resolution"
 import { normalizeIdentityText } from "@/lib/product-identity/normalize"
 import {
-  CONDITIONER_INGREDIENT_FLAGS,
-  CONDITIONER_REPAIR_LEVELS,
-  CONDITIONER_WEIGHTS,
-} from "@/lib/conditioner/constants"
-import {
-  DEEP_CLEANSING_COLOR_TREATED_SUITABILITIES,
-  DEEP_CLEANSING_RESET_FOCUSES,
-  DEEP_CLEANSING_RESET_INTENSITIES,
-} from "@/lib/deep-cleansing-shampoo/constants"
+  checkResearchReadiness,
+  type ResearchReadinessSelfCheck,
+} from "@/lib/product-intake/research-readiness-self-check"
 import { LEAVE_IN_APPLICATION_STAGES } from "@/lib/leave-in/constants"
-import { MASK_CONCENTRATIONS, MASK_INGREDIENT_FLAGS, MASK_WEIGHTS } from "@/lib/mask/constants"
-import { OIL_INGREDIENT_FLAGS, OIL_PURPOSES, OIL_SUBTYPES } from "@/lib/oil/constants"
-import {
-  DRY_SHAMPOO_FORMATS,
-  DRY_SHAMPOO_HAIR_COLOR_FITS,
-  DRY_SHAMPOO_PRIMARY_EFFECTS,
-  DRY_SHAMPOO_SCALP_SENSITIVITY_FITS,
-  PRODUCT_BALANCE_TARGETS,
-  PRODUCT_BOND_APPLICATION_MODES,
-  PRODUCT_BOND_PRODUCT_FORMATS,
-  PRODUCT_BOND_REPAIR_AXES,
-  PRODUCT_BOND_REPAIR_INTENSITIES,
-  PRODUCT_BOND_TREATMENT_MODES,
-  PRODUCT_BOND_USAGE_PROTOCOLS,
-  PRODUCT_SCALP_TYPE_FOCUSES,
-} from "@/lib/product-specs/constants"
-import { SHAMPOO_BUCKETS } from "@/lib/shampoo/constants"
-import { HAIR_THICKNESSES, PROTEIN_MOISTURE_LEVELS } from "@/lib/vocabulary"
 import {
   appendResearchArtifact as coreAppendResearchArtifact,
   claimResearchJobs,
@@ -70,12 +46,16 @@ import {
 
 import { createSupabaseClientFromEnv, flagBool, flagInt, parseArgs, printJson } from "./cli"
 import { finalizeProductImageAsset } from "./finalize-package-image"
-import { applyConditionerResearchAdapter } from "@/lib/product-intake/conditioner-research-adapter"
-import { conditionerResearchPromptContract } from "@/lib/product-intake/conditioner-research-prompt-contract"
-import { applyLeaveInResearchAdapter } from "@/lib/product-intake/leave-in-research-adapter"
-import { leaveInResearchPromptContract } from "@/lib/product-intake/leave-in-research-prompt-contract"
-import { applyBondbuilderResearchAdapterForWorker } from "@/lib/product-intake/bondbuilder-research-adapter"
-import { bondbuilderResearchPromptContract } from "@/lib/product-intake/bondbuilder-research-prompt-contract"
+import {
+  CATEGORY_RESEARCH_REGISTRY,
+  CATEGORY_SPEC_KEYS,
+  REQUIRED_CATEGORY_SPEC_KEYS,
+  normalizeCategoryKey,
+  researchEngineBindingMismatch,
+  researchEngineBindingVersion,
+  type ResearchJobEngineBinding,
+  type CategoryContractKey,
+} from "@/lib/product-intake/category-research-router"
 import {
   createRetailerEnrichmentWarningReporter,
   parseRetailerEnrichmentPacket,
@@ -272,6 +252,55 @@ function updateResearchJob(...[client, params]: Parameters<typeof coreUpdateRese
     if (lease) Object.assign(lease.job, updated)
     if (updated.status !== "running") workerLeases.delete(params.jobId)
     return lease ? (lease.job as ProductIntakeResearchJob) : updated
+  })
+}
+
+/** Called before the production research run; the RPC fences concurrent/stale owners. */
+export async function bindResearchJobEngine(
+  client: HeartbeatClient,
+  job: ProductIntakeResearchJob & ResearchJobEngineBinding,
+  category: string | null | undefined,
+): Promise<ProductIntakeResearchJob & ResearchJobEngineBinding> {
+  const key = normalizeCategoryKey(category)
+  if (!key) return job
+  const engine = CATEGORY_RESEARCH_REGISTRY[key]
+  if (engine.state !== "active") return job
+  return withJobLease(job.id, async () => {
+    const mismatch = researchEngineBindingMismatch(job, engine)
+    if (mismatch) throw new Error(mismatch)
+    const lease = workerLeases.get(job.id)
+    const { data, error } = await client.rpc("product_intake_bind_research_job_engine", {
+      target_job_id: job.id,
+      next_engine_key: engine.engineId,
+      next_engine_version: researchEngineBindingVersion(engine),
+      expected_locked_by: job.locked_by,
+      expected_locked_at: lease?.job.locked_at ?? job.locked_at,
+    })
+    if (error) {
+      const rpcError = normalizeRecord(error)
+      const message = stringValue(rpcError?.message) ?? "Engine binding RPC failed"
+      if (rpcError?.code === "PGRST202" || /Could not find the function/i.test(message)) {
+        const infrastructureError = new Error(
+          `INFRA_ENGINE_BINDING: product_intake_bind_research_job_engine unavailable; continuing without binding for job ${job.id}: ${message}`,
+        )
+        try {
+          console.error(infrastructureError.message)
+        } catch {
+          /* Observability must not gate research. */
+        }
+        try {
+          if (Sentry.isInitialized()) Sentry.captureException(infrastructureError)
+        } catch {
+          /* Sentry is best effort. */
+        }
+        return job
+      }
+      throw new Error(message)
+    }
+    const bound = normalizeRecord(data)
+    if (!bound) throw new Error("Engine binding RPC returned no job")
+    Object.assign(job, bound)
+    return job
   })
 }
 
@@ -593,31 +622,6 @@ type SupabaseQueryResult<T> = {
   error: { message?: string } | null
 }
 
-const CATEGORY_SPEC_KEYS = {
-  shampoo: ["product_shampoo_specs", "product_application_protocols"],
-  conditioner: [
-    "product_conditioner_specs",
-    "product_conditioner_rerank_specs",
-    "product_application_protocols",
-  ],
-  mask: ["product_mask_specs", "product_application_protocols"],
-  leave_in: [
-    "product_leave_in_specs",
-    "product_leave_in_fit_specs",
-    "product_leave_in_eligibility",
-    "product_application_protocols",
-  ],
-  oil: ["product_oil_specs", "product_oil_eligibility", "product_application_protocols"],
-  dry_shampoo: ["product_dry_shampoo_specs", "product_application_protocols"],
-  deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs", "product_application_protocols"],
-  bondbuilder: [
-    "product_bondbuilder_specs",
-    "product_relationships",
-    "product_application_protocols",
-  ],
-  heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
-  scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
-} as const
 const CODEX_RESEARCH_TIMEOUT_MS = 5 * 60_000
 const CODEX_APP_BINARY = "/Applications/Codex.app/Contents/Resources/codex"
 const MODEL_EVALUATION_EXPERIMENT_ID = "product_intake_research_effort_v1"
@@ -625,27 +629,6 @@ const REMBG_IMAGE =
   "danielgatis/rembg@sha256:98e72b790093dec3b21967e22c8eb75a0a67d458fdba7ef5fcc1900cad76396b"
 const REMBG_MODEL = "isnet-general-use" as const
 
-const REQUIRED_CATEGORY_SPEC_KEYS = {
-  shampoo: ["product_shampoo_specs", "product_application_protocols"],
-  conditioner: [
-    "product_conditioner_specs",
-    "product_conditioner_rerank_specs",
-    "product_application_protocols",
-  ],
-  mask: ["product_mask_specs", "product_application_protocols"],
-  leave_in: [
-    "product_leave_in_specs",
-    "product_leave_in_fit_specs",
-    "product_leave_in_eligibility",
-    "product_application_protocols",
-  ],
-  oil: ["product_oil_specs", "product_oil_eligibility", "product_application_protocols"],
-  dry_shampoo: ["product_dry_shampoo_specs", "product_application_protocols"],
-  deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs", "product_application_protocols"],
-  bondbuilder: ["product_bondbuilder_specs", "product_application_protocols"],
-  heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
-  scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
-} as const
 const ARRAY_CATEGORY_SPEC_TABLES = new Set<string>([
   "product_shampoo_specs",
   "product_conditioner_specs",
@@ -653,8 +636,6 @@ const ARRAY_CATEGORY_SPEC_TABLES = new Set<string>([
   "product_oil_eligibility",
   "product_application_protocols",
 ])
-
-type CategoryContractKey = keyof typeof CATEGORY_SPEC_KEYS
 
 async function main() {
   const args = parseArgs()
@@ -722,6 +703,117 @@ async function main() {
   }
 }
 
+/** Persist the production result before optional evaluation, then release it for review. */
+export async function completeResearchPass(params: {
+  supabase: ReturnType<typeof createSupabaseClientFromEnv>
+  job: ProductIntakeResearchJob
+  category: string | null | undefined
+  submission: Pick<ProductIntakeSubmissionDetail, "id" | "source" | "status"> | null
+  reworkRequest?: JsonRecord | null
+  workerId: string
+  promptPacketPath: string
+  researchOutput: CodexResearchOutput
+  researchModel: string
+  executeCodex: boolean
+  autoPrepareImages: boolean
+  beforeCompletion?: () => Promise<{
+    job: ProductIntakeResearchJob
+    modelEvaluation: ModelEvaluationResult
+  }>
+}) {
+  const { researchOutput, promptPacketPath } = params
+  const reworkRequest =
+    params.job.stage === "rework"
+      ? (params.reworkRequest ?? activeReworkRequestFromProgress(params.job.progress))
+      : null
+  const hasFinalPayload = hasFinalResearchPayload(researchOutput.researched_payload)
+  const blockers = researchOutput.blockers.filter(Boolean)
+  let submissionContext = params.submission
+    ? { ...params.submission, user_id: null as string | null }
+    : undefined
+  if (blockers.length === 0 && hasFinalPayload && submissionContext) {
+    // The shared detail loader omits ownership. Supplement it from the stored
+    // submission, never from model output or job progress.
+    const { data, error } = await params.supabase
+      .from("product_submissions")
+      .select("user_id")
+      .eq("id", submissionContext.id)
+      .maybeSingle()
+    if (error) throw new Error(`load product-intake readiness owner: ${error.message}`)
+    submissionContext = { ...submissionContext, user_id: stringValue(data?.user_id) }
+  }
+  const readiness =
+    blockers.length === 0 && hasFinalPayload
+      ? checkResearchReadiness(
+          researchOutput.researched_payload,
+          params.category,
+          submissionContext,
+        )
+      : null
+  const progress = await persistResearchOutput({ ...params, readiness })
+  const evaluated = await params.beforeCompletion?.()
+  const leasedJob = evaluated?.job ?? params.job
+  const evaluation = evaluated?.modelEvaluation ?? {
+    status: "disabled",
+    successfulJudgments: 0,
+    targetSuccessfulJudgments: 0,
+  }
+  const autoPrepareImage = shouldAutoPrepareImage({
+    enabled: params.autoPrepareImages && readiness?.ok === true,
+    researchOutput,
+  })
+  const nextStatus = autoPrepareImage
+    ? "queued"
+    : readiness?.ok === true
+      ? "waiting_for_review"
+      : "blocked"
+  const nextStage = autoPrepareImage
+    ? "image_judging"
+    : (researchOutput.next_stage ?? (hasFinalPayload ? "preview_build" : "source_research"))
+
+  const readinessError =
+    readiness && !readiness.ok
+      ? `Katalog-Prüfung: ${readiness.researchGaps.length} Pflichtfelder fehlen: ${readiness.researchGaps.slice(0, 5).join(", ")}${readiness.researchGaps.length > 5 ? "…" : ""}`
+      : null
+  // A new pass replaces the prior readiness verdict, including on model blockers.
+  const previousProgress = progressWithoutReadiness(leasedJob.progress)
+  if (reworkRequest) {
+    previousProgress.last_rework_request = reworkRequest
+    for (const key of ["requested_by", "requested_at", "rework_type", "message"])
+      delete previousProgress[key]
+  }
+  const updated = await updateResearchJob(params.supabase, {
+    jobId: leasedJob.id,
+    status: nextStatus,
+    stage: nextStage,
+    progress: {
+      ...previousProgress,
+      message: autoPrepareImage
+        ? "Research ist bereit. Bildverarbeitung und visueller Bildcheck sind eingereiht."
+        : nextStatus === "waiting_for_review"
+          ? "Research preview ist bereit fuer Nick."
+          : "Research braucht Aufmerksamkeit, bevor Nick final freigeben kann.",
+      prompt_packet_path: promptPacketPath,
+      worker_id: params.workerId,
+      mode: params.executeCodex ? "codex_cli" : "preview_only",
+      image_selection_mode: autoPrepareImage ? "agent_prepared" : null,
+      next_step: autoPrepareImage ? "process_image_for_combined_review" : null,
+      model_evaluation: evaluation,
+      ...progress,
+      ...(readiness
+        ? {
+            readiness_check: readiness.ok ? "passed" : "failed",
+            readiness_missing_fields: readiness.researchGaps,
+          }
+        : {}),
+    },
+    lastError: blockers.length > 0 ? blockers.join("; ") : readinessError,
+    expectedLockedBy: leasedJob.locked_by,
+    expectedLockedAt: leasedJob.locked_at,
+  })
+  return updated
+}
+
 async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
   const jobs = await options.claimGate.claim(options.supabase, {
     workerId: options.workerId,
@@ -741,6 +833,10 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
     for (const job of jobs) {
       options.currentJobId = job.id
       const lease = workerLeases.get(job.id)!
+      // Lease refreshes replace progress.message before completion; retain the
+      // reviewer instruction as it was when this rework pass was claimed.
+      const reworkRequest =
+        job.stage === "rework" ? activeReworkRequestFromProgress(job.progress) : null
       try {
         if (lease.aborted) continue
         const detail = await loadProductIntakeSubmissionDetail(options.supabase, job.submission_id)
@@ -844,6 +940,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
           let rawResearchOutput: CodexResearchOutput
 
           if (options.executeCodex) {
+            leasedJob = await bindResearchJobEngine(options.supabase, leasedJob, detail?.category)
             const productionRun = await measureModelRun(
               "production_low",
               researchRuntimeConfig,
@@ -878,77 +975,48 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
             detail?.decisions ?? [],
             job.submission_id,
           )
-          const progress = await persistResearchOutput({
+          const updated = await completeResearchPass({
             supabase: options.supabase,
             job: leasedJob,
+            category: detail?.category,
+            submission: detail,
+            reworkRequest,
             workerId: options.workerId,
             promptPacketPath,
             researchOutput,
             researchModel: options.executeCodex
               ? researchRuntimeConfig.model
               : "codex-worker-preview",
-          })
-          if (options.executeCodex) {
-            const evaluationRun = await runNonFatalModelEvaluation({
-              job: leasedJob,
-              currentJob: () => leasedJob,
-              targetSuccessfulJudgments: evaluationRuntimeConfig.targetSuccessfulJudgments,
-              run: () =>
-                runOptionalModelEvaluation({
-                  supabase: options.supabase,
-                  job: leasedJob,
-                  workerId: options.workerId,
-                  promptPacketPath,
-                  productionOutput: rawResearchOutput,
-                  config: evaluationRuntimeConfig,
-                  onLeaseRefresh: (refreshedJob) => {
-                    leasedJob = refreshedJob
-                  },
-                }),
-              persistFailure: (message) =>
-                persistModelJudgmentFailure(options.supabase, leasedJob, message),
-            })
-            leasedJob = evaluationRun.job
-            evaluation = evaluationRun.result
-          }
-          const hasFinalPayload = hasFinalResearchPayload(researchOutput.researched_payload)
-          const blockers = researchOutput.blockers.filter(Boolean)
-          const autoPrepareImage = shouldAutoPrepareImage({
-            enabled:
+            executeCodex: options.executeCodex,
+            autoPrepareImages:
               options.executeCodex &&
               process.env.PRODUCT_INTAKE_AUTO_PREPARE_IMAGES?.trim().toLowerCase() === "true",
-            researchOutput,
-          })
-          const nextStatus = autoPrepareImage
-            ? "queued"
-            : blockers.length === 0 && hasFinalPayload
-              ? "waiting_for_review"
-              : "blocked"
-          const nextStage = autoPrepareImage
-            ? "image_judging"
-            : (researchOutput.next_stage ?? (hasFinalPayload ? "preview_build" : "source_research"))
-
-          const updated = await updateResearchJob(options.supabase, {
-            jobId: job.id,
-            status: nextStatus,
-            stage: nextStage,
-            progress: {
-              message: autoPrepareImage
-                ? "Research ist bereit. Bildverarbeitung und visueller Bildcheck sind eingereiht."
-                : nextStatus === "waiting_for_review"
-                  ? "Research preview ist bereit fuer Nick."
-                  : "Research braucht Aufmerksamkeit, bevor Nick final freigeben kann.",
-              prompt_packet_path: promptPacketPath,
-              worker_id: options.workerId,
-              mode: options.executeCodex ? "codex_cli" : "preview_only",
-              image_selection_mode: autoPrepareImage ? "agent_prepared" : null,
-              next_step: autoPrepareImage ? "process_image_for_combined_review" : null,
-              model_evaluation: evaluation,
-              ...progress,
+            beforeCompletion: async () => {
+              if (options.executeCodex) {
+                const evaluationRun = await runNonFatalModelEvaluation({
+                  job: leasedJob,
+                  currentJob: () => leasedJob,
+                  targetSuccessfulJudgments: evaluationRuntimeConfig.targetSuccessfulJudgments,
+                  run: () =>
+                    runOptionalModelEvaluation({
+                      supabase: options.supabase,
+                      job: leasedJob,
+                      workerId: options.workerId,
+                      promptPacketPath,
+                      productionOutput: rawResearchOutput,
+                      config: evaluationRuntimeConfig,
+                      onLeaseRefresh: (refreshedJob) => {
+                        leasedJob = refreshedJob
+                      },
+                    }),
+                  persistFailure: (message) =>
+                    persistModelJudgmentFailure(options.supabase, leasedJob, message),
+                })
+                leasedJob = evaluationRun.job
+                evaluation = evaluationRun.result
+              }
+              return { job: leasedJob, modelEvaluation: evaluation }
             },
-            lastError: blockers.length > 0 ? blockers.join("; ") : null,
-            expectedLockedBy: leasedJob.locked_by,
-            expectedLockedAt: leasedJob.locked_at,
           })
           result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
         } catch (error) {
@@ -983,11 +1051,18 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
   return result
 }
 
+function progressWithoutReadiness(progress: JsonRecord | null | undefined): JsonRecord {
+  const next = { ...progress }
+  delete next.readiness_check
+  delete next.readiness_missing_fields
+  return next
+}
+
 export function researchFailureUpdate(params: {
   job: Pick<
     ProductIntakeResearchJob,
     "id" | "stage" | "locked_by" | "locked_at" | "attempt_count" | "max_attempts"
-  >
+  > & { progress?: JsonRecord }
   error: unknown
   promptPacketPath: string
   workerId: string
@@ -999,12 +1074,15 @@ export function researchFailureUpdate(params: {
   const code = codexInfrastructureCode(params.error)
   const retryable = code === "codex_timeout"
   const retryExhausted = retryable && params.job.attempt_count >= params.job.max_attempts
-  const status = retryable && !retryExhausted ? "queued" : code ? "blocked" : "failed"
+  const engineMismatch = /^engine_(version|key)_mismatch:/.test(message)
+  const status =
+    retryable && !retryExhausted ? "queued" : code || engineMismatch ? "blocked" : "failed"
   return {
     jobId: params.job.id,
     status: status as "queued" | "blocked" | "failed",
     stage: params.job.stage,
     progress: {
+      ...progressWithoutReadiness(params.job.progress),
       message,
       prompt_packet_path: params.promptPacketPath,
       worker_id: params.workerId,
@@ -1723,6 +1801,7 @@ async function persistResearchOutput(params: {
   promptPacketPath: string
   researchOutput: CodexResearchOutput
   researchModel: string
+  readiness: ResearchReadinessSelfCheck | null
 }) {
   const created = []
   for (const artifact of params.researchOutput.artifacts) {
@@ -1748,7 +1827,7 @@ async function persistResearchOutput(params: {
       saveSubmissionResearchPreview(params.supabase, {
         submissionId: params.job.submission_id,
         researchedPayload,
-        status: params.researchOutput.blockers.length === 0 ? "ready_for_review" : "researching",
+        status: params.readiness?.ok === true ? "ready_for_review" : "researching",
       }),
     )
     savedSubmissionStatus = updated.status
@@ -2025,314 +2104,17 @@ function imageSourceContract(): JsonRecord {
   }
 }
 
-function categoryApprovalContract(category: string | null | undefined): JsonRecord {
+export function categoryApprovalContract(category: string | null | undefined): JsonRecord {
   const categoryKey = normalizeCategoryKey(category)
-  if (!categoryKey) {
-    return {
-      category_key: category ?? null,
-      instruction:
-        "Research only the category_specs required by this product category's approval validator. Put them under researched_payload.final.category_specs, never inside researched_payload.final.product. Do not emit category_specs for other product categories.",
-    }
-  }
-
-  if (categoryKey === "shampoo") {
-    return {
-      category_key: "shampoo",
-      instruction:
-        "Research and emit only shampoo approval specs under researched_payload.final.category_specs.",
-      required_category_specs: [...CATEGORY_SPEC_KEYS.shampoo],
-      product_shampoo_specs:
-        "array with one row per relevant hair thickness; each row has thickness, shampoo_bucket, scalp_route, optional cleansing_intensity. shampoo_bucket is a scalp/route bucket, not a dry-hair or damaged-lengths claim. Use trocken only when sources support dry scalp; dry/damaged hair alone should usually stay normal + balanced unless another scalp claim is proven.",
-      allowed_product_shampoo_specs_values: {
-        thickness: [...HAIR_THICKNESSES],
-        shampoo_bucket: [...SHAMPOO_BUCKETS],
-        scalp_route: ["oily", "balanced", "dry", "dandruff", "dry_flakes", "irritated"],
-        cleansing_intensity: ["gentle", "regular", "clarifying", null],
-      },
-      shampoo_bucket_to_scalp_route_contract: {
-        normal: "balanced",
-        trocken: "dry",
-        "dehydriert-fettig": "oily",
-        schuppen: "dandruff or dry_flakes",
-        irritationen: "irritated",
-      },
-      product_application_protocols: applicationProtocolResearchContract(
-        "shampoo",
-        ["shampoo_everyday", "shampoo_dandruff"],
-        "Derive Shampoo protocol roles from the reviewed Shampoo buckets: include shampoo_dandruff when any row uses schuppen, and include shampoo_everyday only when at least one source-supported row uses a non-schuppen bucket. A schuppen-only Shampoo is complete without shampoo_everyday. When an exact source supports ordinary or daily use, research the matching non-schuppen scalp-route facts before adding shampoo_everyday; daily-use wording alone must not invent a bucket or cadence.",
-      ),
-    }
-  }
-
-  if (categoryKey === "conditioner") {
-    return {
-      category_key: "conditioner",
-      instruction:
-        "Complete the full Conditioner Standard v1.6 research envelope first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research only the exact rinse-out protocol separately.",
-      conditioner_research: conditionerResearchPromptContract(),
-      required_category_specs: [...CATEGORY_SPEC_KEYS.conditioner],
-      product_conditioner_specs:
-        "array with one row per relevant hair thickness; each row has thickness and protein_moisture_balance",
-      allowed_product_conditioner_specs_values: {
-        thickness: [...HAIR_THICKNESSES],
-        protein_moisture_balance: [...PROTEIN_MOISTURE_LEVELS],
-      },
-      product_conditioner_rerank_specs: {
-        weight: [...CONDITIONER_WEIGHTS],
-        repair_level: [...CONDITIONER_REPAIR_LEVELS],
-        balance_direction: [...PRODUCT_BALANCE_TARGETS, null],
-        ingredient_flags: [...CONDITIONER_INGREDIENT_FLAGS],
-      },
-      product_application_protocols: applicationProtocolResearchContract("conditioner", [
-        "conditioner_rinse_out",
-      ]),
-    }
-  }
-
-  if (categoryKey === "mask") {
-    return {
-      category_key: "mask",
-      instruction:
-        "Research and emit only mask approval specs under researched_payload.final.category_specs.",
-      required_category_specs: [...CATEGORY_SPEC_KEYS.mask],
-      product_mask_specs: {
-        weight: [...MASK_WEIGHTS],
-        concentration: [...MASK_CONCENTRATIONS],
-        balance_direction: [...PRODUCT_BALANCE_TARGETS, null],
-        ingredient_flags: [...MASK_INGREDIENT_FLAGS],
-        repair_support_level: ["low", "medium", "high"],
-        functional_benefits: ["smoothing_frizz_control", "detangling_slip", "shine"],
-      },
-      product_application_protocols: {
-        category: ["mask"],
-        role: ["intensive_conditioning_mask"],
-        required_fields: [
-          "cadence",
-          "application_stage",
-          "placement",
-          "contact_time_seconds",
-          "rinse_action",
-          "source_label",
-          "source_url",
-          "source_text",
-          "guidance_payload",
-        ],
-        note: "The exact manufacturer protocol must be complete enough to derive the Stage 5 product pointer.",
-      },
-    }
-  }
-
-  if (categoryKey === "oil") return oilApprovalContract()
-  if (categoryKey === "dry_shampoo") return dryShampooApprovalContract()
-  if (categoryKey === "deep_cleansing_shampoo") return deepCleansingShampooApprovalContract()
-  if (categoryKey === "bondbuilder") return bondbuilderApprovalContract()
-  if (categoryKey === "heat_protectant") return heatProtectantApprovalContract()
-  if (categoryKey === "scalp_care") return scalpCareApprovalContract()
-
+  if (categoryKey) return CATEGORY_RESEARCH_REGISTRY[categoryKey].promptContract()
   return {
-    category_key: "leave_in",
+    category_key: category ?? null,
     instruction:
-      "Complete the full Leave-In Standard v1.1 research envelope (Standard v1.0 plus the T20 care_direction overlay) first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research only the exact leave-in application protocol separately.",
-    leave_in_research: leaveInResearchPromptContract(),
-    required_category_specs: [...CATEGORY_SPEC_KEYS.leave_in],
-    aliases: {
-      post_wash:
-        "Do not use post_wash for leave-ins. If evidence says after washing, damp hair, no-rinse, or towel-dried hair, use towel_dry in identity.applicationStage.",
-    },
-    product_application_protocols: applicationProtocolResearchContract(
-      "leave_in",
-      ["post_wash_leave_in", "pre_heat_protection"],
-      "Always include post_wash_leave_in; include pre_heat_protection only when the product claims heat protection.",
-    ),
+      "Research only the category_specs required by this product category's approval validator. Put them under researched_payload.final.category_specs, never inside researched_payload.final.product. Do not emit category_specs for other product categories.",
   }
 }
 
-function oilApprovalContract(): JsonRecord {
-  return {
-    category_key: "oil",
-    instruction:
-      "Research and emit only oil approval specs under researched_payload.final.category_specs.",
-    required_category_specs: [...CATEGORY_SPEC_KEYS.oil],
-    product_oil_specs: {
-      weight: ["light", "medium", "rich"],
-      role_support: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
-      provides_heat_protection:
-        "boolean; true only when a product source explicitly claims heat protection; false only after the reviewed producer/shop sources have been checked and make no heat-protection claim",
-    },
-    product_oil_eligibility:
-      "array with one or more user-fit rows; each row has thickness, oil_subtype, oil_purpose, and ingredient_flags",
-    allowed_product_oil_eligibility_values: {
-      thickness: [...HAIR_THICKNESSES],
-      oil_subtype: [...OIL_SUBTYPES],
-      oil_purpose: [...OIL_PURPOSES, null],
-      ingredient_flags: [...OIL_INGREDIENT_FLAGS],
-    },
-    product_application_protocols: applicationProtocolResearchContract(
-      "oil",
-      ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
-      "Include one exact protocol for every role declared in product_oil_specs.role_support. Heat protection is not a role: set provides_heat_protection=true and include a sourced leave_on_fibre_conditioning protocol when the oil protects from heat.",
-    ),
-  }
-}
-
-function dryShampooApprovalContract(): JsonRecord {
-  return {
-    category_key: "dry_shampoo",
-    instruction:
-      "Research and emit only dry-shampoo approval specs under researched_payload.final.category_specs.",
-    required_category_specs: [...CATEGORY_SPEC_KEYS.dry_shampoo],
-    product_dry_shampoo_specs: {
-      primary_effect: [...DRY_SHAMPOO_PRIMARY_EFFECTS],
-      hair_color_fit: [...DRY_SHAMPOO_HAIR_COLOR_FITS],
-      scalp_sensitivity_fit: [...DRY_SHAMPOO_SCALP_SENSITIVITY_FITS],
-      format: [...DRY_SHAMPOO_FORMATS],
-    },
-    product_application_protocols: applicationProtocolResearchContract("dry_shampoo", [
-      "root_refresh_bridge",
-    ]),
-  }
-}
-
-function deepCleansingShampooApprovalContract(): JsonRecord {
-  return {
-    category_key: "deep_cleansing_shampoo",
-    instruction:
-      "Research and emit only deep-cleansing-shampoo approval specs under researched_payload.final.category_specs.",
-    required_category_specs: [...CATEGORY_SPEC_KEYS.deep_cleansing_shampoo],
-    product_deep_cleansing_shampoo_specs: {
-      scalp_type_focus: [...PRODUCT_SCALP_TYPE_FOCUSES],
-      reset_intensity: [...DEEP_CLEANSING_RESET_INTENSITIES],
-      reset_focus: [...DEEP_CLEANSING_RESET_FOCUSES],
-      color_treated_suitability: [...DEEP_CLEANSING_COLOR_TREATED_SUITABILITIES],
-    },
-    product_application_protocols: applicationProtocolResearchContract(
-      "deep_cleansing_shampoo",
-      ["residue_reset", "mineral_reset"],
-      "Use mineral_reset for metal_mineral_hard_water, residue_reset for product_sebum_buildup, and both for broad_spectrum_detox.",
-    ),
-  }
-}
-
-function bondbuilderApprovalContract(): JsonRecord {
-  const researchContract = bondbuilderResearchPromptContract()
-  if (researchContract.enabled) {
-    return {
-      category_key: "bondbuilder",
-      instruction:
-        "Complete the full Bondbuilder research profile first. Emit it only as property_synthesis.bondbuilder_research_envelope; the deterministic adapter owns the derived database projection. Research exact producer application directions separately.",
-      bondbuilder_research: researchContract,
-      product_application_protocols: applicationProtocolResearchContract("bondbuilder", [
-        "specialized_bond_treatment",
-      ]),
-    }
-  }
-
-  return {
-    category_key: "bondbuilder",
-    instruction:
-      "Research and emit only bondbuilder approval specs under researched_payload.final.category_specs.",
-    required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.bondbuilder],
-    product_bondbuilder_specs: {
-      bond_repair_intensity: [...PRODUCT_BOND_REPAIR_INTENSITIES],
-      application_mode: [...PRODUCT_BOND_APPLICATION_MODES],
-      bond_repair_axis: [...PRODUCT_BOND_REPAIR_AXES],
-      treatment_mode: [...PRODUCT_BOND_TREATMENT_MODES],
-      product_format: [...PRODUCT_BOND_PRODUCT_FORMATS],
-      usage_protocol: [...PRODUCT_BOND_USAGE_PROTOCOLS],
-    },
-    product_relationships: "optional; emit only when needed by the approval payload",
-    product_application_protocols: applicationProtocolResearchContract("bondbuilder", [
-      "specialized_bond_treatment",
-    ]),
-    // Preparation metadata only. The inactive lane retains the exact legacy
-    // output contract above until the server-owned method lock is installed.
-    future_research_engine_contract: researchContract,
-  }
-}
-
-function applicationProtocolResearchContract(
-  category: CategoryContractKey,
-  roles: readonly string[],
-  requiredRoleRule = "Include every listed role.",
-): JsonRecord {
-  return {
-    category: [category],
-    roles: [...roles],
-    required_role_rule: requiredRoleRule,
-    required_fields: [
-      "cadence",
-      "application_stage",
-      "application_state",
-      "placement",
-      "contact_time_seconds",
-      "rinse_action",
-      "reapplication",
-      "instruction_modifiers",
-      "source_label",
-      "source_url",
-      "source_text",
-      "guidance_payload",
-    ],
-    guidance_payload:
-      "Canonical schemaVersion 1 product-scoped guidance payload using productId __PRODUCT_ID__; it must be complete enough to derive the Stage 5 V2 product pointer.",
-  }
-}
-
-function heatProtectantApprovalContract(): JsonRecord {
-  return {
-    category_key: "heat_protectant",
-    instruction:
-      "Research only explicit finished-product heat-protection evidence and exact manufacturer application instructions. Do not infer heat protection from a name, format, ingredient, or adjacent care claim.",
-    required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.heat_protectant],
-    product_heat_protectant_specs: {
-      format: ["spray"],
-      provides_heat_protection:
-        "true, false, or null when the finished-product evidence is unresolved",
-    },
-    product_application_protocols: {
-      category: ["heat_protectant"],
-      role: ["pre_heat_protection"],
-      required_fields: ["application_state", "reapplication"],
-      application_state: ["damp", "dry", "either"],
-      reapplication: ["required", "optional", "not_stated"],
-    },
-  }
-}
-
-function scalpCareApprovalContract(): JsonRecord {
-  return {
-    category_key: "scalp_care",
-    instruction:
-      "Research only cosmetic scalp-care product facts and exact manufacturer instructions. Preserve medical boundaries: do not turn flake, oil, density, shedding, or comfort claims into diagnosis or treatment claims.",
-    required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.scalp_care],
-    product_scalp_care_specs: {
-      primary_role: [
-        "scalp_comfort",
-        "scalp_flake_oil_adjunct",
-        "density_claim_tonic",
-        "scalp_exfoliant",
-      ],
-      presentation_format: [
-        "serum",
-        "tonic",
-        "lotion_or_fluid",
-        "oil",
-        "scrub",
-        "other",
-        "unknown",
-      ],
-      rinse_mode: ["leave_on", "rinse_off"],
-      application_instructions: "exact reviewed manufacturer instruction text",
-    },
-    product_application_protocols: {
-      category: ["scalp_care"],
-      role: ["scalp_comfort", "scalp_flake_oil_adjunct", "density_claim_tonic", "scalp_exfoliant"],
-      note: "The protocol role must equal product_scalp_care_specs.primary_role.",
-    },
-  }
-}
-
-function normalizeResearchOutputForCategory(
+export function normalizeResearchOutputForCategory(
   output: CodexResearchOutput,
   category: string | null | undefined,
   brandResolutionContext: BrandResolutionPromptContext,
@@ -2347,6 +2129,7 @@ function normalizeResearchOutputForCategory(
     categoryKey,
     output.artifacts,
   )
+  const artifacts = [...output.artifacts]
   const blockers = [...output.blockers]
   const final = normalizeRecord(researchedPayload?.final)
   applyApprovedCanonicalBrand(final, brandResolutionContext, reviewDecisions)
@@ -2354,37 +2137,45 @@ function normalizeResearchOutputForCategory(
   applyApprovedProductIdentity(final, brandResolutionContext, reviewDecisions)
   const categorySpecs = normalizeRecord(final?.category_specs)
 
-  if (categoryKey === "conditioner" && final) {
-    const adapterResult = applyConditionerResearchAdapter({
-      final,
-      artifacts: output.artifacts,
-      expectedResearchId,
-    })
+  const engine = CATEGORY_RESEARCH_REGISTRY[categoryKey]
+  if (final) {
+    const adapterResult = engine.apply({ final, artifacts, expectedResearchId })
     blockers.push(...adapterResult.blockers)
+    // Model-authored provenance cannot override the running server registry.
+    delete final.engine
+    const draft = normalizeRecord(researchedPayload?.draft)
+    if (engine.state === "active") {
+      if (draft) delete draft.engine
+    } else if (researchedPayload) {
+      researchedPayload.draft = {
+        ...draft,
+        engine:
+          engine.state === "pending_lock"
+            ? { state: engine.state, id: engine.engineId, target: engine.methodology }
+            : { state: engine.state },
+      }
+    }
+  }
+  if (
+    engine.state === "active" &&
+    final &&
+    !artifacts.some((artifact) => artifact.kind === "property_synthesis")
+  ) {
+    artifacts.push({ kind: "property_synthesis", status: "needs_research", payload: {} })
+  }
+  for (const artifact of artifacts) {
+    if (artifact.kind !== "property_synthesis") continue
+    if (engine.state === "active" && final) {
+      artifact.payload.engine = {
+        id: engine.engineId,
+        methodology: engine.methodology,
+        adapter: engine.adapter,
+        state: engine.state,
+      }
+    } else delete artifact.payload.engine
   }
 
-  if (categoryKey === "leave_in" && final) {
-    const adapterResult = applyLeaveInResearchAdapter({
-      final,
-      artifacts: output.artifacts,
-      expectedResearchId,
-    })
-    blockers.push(...adapterResult.blockers)
-  }
-
-  // Server-owned routing is enforced after model output. Enabled Bondbuilder
-  // intake requires a complete, current, exact-submission research envelope;
-  // model-authored flags and legacy-only specs cannot bypass validation.
-  if (categoryKey === "bondbuilder" && final) {
-    const adapterResult = applyBondbuilderResearchAdapterForWorker({
-      final,
-      artifacts: output.artifacts,
-      expectedSubmissionId: expectedResearchId,
-    })
-    blockers.push(...adapterResult.blockers)
-  }
-
-  // Read AFTER the adapter branches: applyLeaveInResearchAdapter reassigns
+  // Read AFTER the category adapter: applyLeaveInResearchAdapter reassigns
   // `categorySpecs.product_leave_in_specs` to a brand-new projected object
   // (structuredClone) rather than mutating the original in place, so a
   // reference captured before it runs is stale — it still points at
@@ -2424,7 +2215,7 @@ function normalizeResearchOutputForCategory(
   return {
     ...output,
     researched_payload: researchedPayload,
-    artifacts: output.artifacts.map((artifact) => ({
+    artifacts: artifacts.map((artifact) => ({
       ...artifact,
       payload: normalizeCategoryArtifactPayload(artifact.payload, categoryKey),
     })),
@@ -2882,52 +2673,6 @@ function normalizeLeaveInApplicationStages(value: unknown): string[] {
       return allowed.has(mapped) ? [mapped] : []
     }),
   )
-}
-
-function normalizeCategoryKey(category: string | null | undefined): CategoryContractKey | null {
-  if (typeof category !== "string") return null
-  const normalized = category
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .replace(/[-\s]+/g, "_")
-
-  switch (normalized) {
-    case "shampoo":
-    case "shampoo_profi":
-      return "shampoo"
-    case "conditioner":
-    case "conditioner_profi":
-    case "conditioner_(drogerie)":
-      return "conditioner"
-    case "mask":
-    case "maske":
-      return "mask"
-    case "leave_in":
-      return "leave_in"
-    case "oil":
-    case "ole":
-    case "oele":
-      return "oil"
-    case "dry_shampoo":
-    case "trockenshampoo":
-      return "dry_shampoo"
-    case "deep_cleansing_shampoo":
-    case "tiefenreinigungsshampoo":
-      return "deep_cleansing_shampoo"
-    case "bondbuilder":
-    case "bond_builder":
-      return "bondbuilder"
-    case "heat_protectant":
-    case "hitzeschutz":
-      return "heat_protectant"
-    case "scalp_care":
-    case "kopfhautpflege":
-      return "scalp_care"
-    default:
-      return null
-  }
 }
 
 function cloneJsonRecord(value: JsonRecord): JsonRecord {
