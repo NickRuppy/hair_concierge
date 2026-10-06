@@ -188,8 +188,8 @@ test("careHabitsV1Schema rejects an unknown heatEvents key", () => {
 
 test("careHabitsV1Schema accepts towel material 'no_towel' with technique omitted", () => {
   // towel.technique is optional at the schema level; production callers omit it for
-  // material "no_towel" (see legacy-prefill.ts §10), but this schema does not itself enforce
-  // that pairing.
+  // material "no_towel" (see translateTowel in the care-habit backfill), but this schema
+  // does not itself enforce that pairing.
   const result = careHabitsV1Schema.safeParse({ towel: { material: "no_towel" } })
   assert.equal(result.success, true)
 })

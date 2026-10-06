@@ -17,7 +17,7 @@ import { createRefinedNeedSnapshot } from "../src/lib/personal-plan/refinement/p
 import { deriveStage2TriggerContext } from "../src/lib/personal-plan/refinement/stage1-adapter"
 import { resolveAssumedAnswers } from "../src/lib/personal-plan/refinement/assumed-defaults"
 import { adaptPersonalPlanAnswersForOffer } from "../src/lib/personal-plan-quiz/offer-adapter"
-import { buildProfileDataFromQuizAnswers } from "../src/lib/quiz/link-to-profile"
+import { buildProfileDataFromQuizAnswers } from "../src/lib/quiz/legacy-profile-projection"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 
 import {

@@ -12,7 +12,7 @@ import { deriveStage2TriggerContext } from "../src/lib/personal-plan/refinement/
 import { resolveAssumedAnswers } from "../src/lib/personal-plan/refinement/assumed-defaults"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 import { adaptPersonalPlanAnswersForOffer } from "../src/lib/personal-plan-quiz/offer-adapter"
-import { buildProfileDataFromQuizAnswers } from "../src/lib/quiz/link-to-profile"
+import { buildProfileDataFromQuizAnswers } from "../src/lib/quiz/legacy-profile-projection"
 import { getStage2ModulePathStates } from "../src/lib/personal-plan/refinement/question-path"
 
 export const legacyAnswers = {

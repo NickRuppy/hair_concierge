@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import { buildAppValueStackHeroCopy } from "../src/lib/quiz/app-value-stack-copy"
-import { buildProfilePrimaryConcern } from "../src/lib/quiz/link-to-profile"
+import { buildProfilePrimaryConcern } from "../src/lib/quiz/legacy-profile-projection"
 import { resolveQuizNeed } from "../src/lib/quiz/need-lane"
 import {
   canonicalizeQuizAnswers,

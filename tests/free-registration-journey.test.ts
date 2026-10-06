@@ -8,8 +8,8 @@ import { createAuthConfirmGetHandler } from "../src/app/auth/confirm/route"
 import { createFreeSnapshotService } from "../src/lib/personal-plan/persistence/free-snapshot-service"
 import { createFreeSnapshotSupabaseDependencies } from "../src/lib/personal-plan/persistence/free-snapshot-supabase"
 import { loadScanEvaluationContext } from "../src/lib/scan/profile-context"
+import { buildProfileDataFromPersonalPlanCanonicalProfile } from "../src/lib/quiz/legacy-profile-projection"
 import {
-  buildProfileDataFromPersonalPlanCanonicalProfile,
   canLinkDirectQuizLead,
   type LinkQuizToProfileOptions,
 } from "../src/lib/quiz/link-to-profile"
