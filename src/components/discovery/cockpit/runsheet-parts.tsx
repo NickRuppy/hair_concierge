@@ -149,11 +149,14 @@ export function RunsheetFrequencyChip({
   frequencies,
   washFrequency,
   allowedRange,
+  noVerdict = null,
 }: {
   cadenceLabel: string
   frequencies: ReadonlyArray<string | null | undefined>
   washFrequency: ProductFrequency | WashAnchor | null
   allowedRange: WashAllowedRange | null
+  /** Rendered instead when all her answers are known but the step yields no verdict. */
+  noVerdict?: ReactNode
 }) {
   const delta = deriveStepFrequencyDelta({
     cadenceLabel,
@@ -162,11 +165,50 @@ export function RunsheetFrequencyChip({
     allowedRange,
   })
   const known = frequencies.filter(isKnownProductFrequency)
-  if (!delta || known.length !== frequencies.length) return null
+  if (known.length !== frequencies.length) return null
+  if (!delta) return noVerdict
   return (
     <RunsheetChip tone={delta.status === "passt" ? "ok" : "pending"}>
       {runsheetFrequencyChipLabel(delta, known)}
     </RunsheetChip>
+  )
+}
+
+const FREQUENCY_ROW_LABEL = "Wie oft"
+const FREQUENCY_ROW_OWNED = "Angabe:"
+const FREQUENCY_ROW_IDEAL = "Idealplan:"
+const FREQUENCY_ROW_NOT_ASKED = "keine Angabe"
+export const FREQUENCY_ROW_NOT_COMPARABLE = "nicht vergleichbar"
+
+/**
+ * „Wie oft — Angabe: Täglich ⇄ Idealplan: nach Bedarf": her answer next to the step's
+ * rhythm on every product of hers, so the two are never hidden behind a missing verdict.
+ * `verdict` is the step chip (or nothing) — this row only places it.
+ */
+export function RunsheetFrequencyRow({
+  ownedFrequencyLabel,
+  idealFrequencyLabel,
+  verdict,
+}: {
+  ownedFrequencyLabel: string | null
+  idealFrequencyLabel: string
+  verdict: ReactNode
+}) {
+  return (
+    <span className="flex w-full flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-foreground">
+      <span className="text-xs text-muted-foreground">{FREQUENCY_ROW_LABEL}</span>
+      <span>
+        {FREQUENCY_ROW_OWNED}{" "}
+        <span className="font-bold">{ownedFrequencyLabel ?? FREQUENCY_ROW_NOT_ASKED}</span>
+      </span>
+      <span aria-hidden="true" className="text-muted-foreground">
+        ⇄
+      </span>
+      <span>
+        {FREQUENCY_ROW_IDEAL} <span className="font-bold">{idealFrequencyLabel}</span>
+      </span>
+      {verdict}
+    </span>
   )
 }
 
