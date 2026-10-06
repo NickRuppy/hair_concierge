@@ -1,0 +1,104 @@
+{
+  "productId": "q6-syoss-intense-keratin",
+  "lane": "blind-v2.5",
+  "standardVersion": "mask-inci-v0.6",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q1-wahre-schaetze-avocado-shea.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q2-swiss-o-par-arganoel.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q3-syoss-intense-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q4-fructis-keratin-sleek.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q5-balea-keratin-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q6-syoss-intense-keratin.json"
+    ]
+  },
+  "g0": {
+    "outcome": "in_category",
+    "conjuncts": {
+      "afterCleansing": "satisfied — 'Nach dem Waschen ... auf das nasse Haar'",
+      "statedContactTime": "satisfied — '2-3 Minuten einwirken lassen'",
+      "rinsedOut": "satisfied — from the same page's product description: 'Nach einer kurzen Einwirkzeit wird das Haar gründlich ausgespült.' The Anwendungshinweis block alone omits it"
+    },
+    "placement": "unstated → P5 default",
+    "multiUse": false,
+    "protocolMetadata": { "contactTime": "2-3 Minuten", "source": "packet directionsText, Anwendungshinweis (mueller.de, 2026-10-06)", "classificationCredit": "none" },
+    "note": "§2.3 requires the directions text to carry mode, contact time and rinse; §2.4 ranks sources, not paragraphs. The rinse sentence is a manufacturer-voice usage statement on the same exact-product retailer page (same source, same tier). It is not a marketing name, a claim about efficacy or an INCI inference, and it is consistent with the Anwendungshinweis (it rinses after 'einer kurzen Einwirkzeit'). Unlike q3, where no source in the packet states a rinse, the conjunct is therefore positively evidenced, and treating a paragraph boundary as an evidence gap would fail G0 on bookkeeping (the R8 rationale). It is accepted with a review note so a human confirms the directions basis. Identity: no GTIN, Müller PPN3077512 serves as the identifier (documented gap, not blocking)."
+  },
+  "tailMarker": {
+    "ingredient": "Parfum",
+    "index": 11,
+    "status": "plausible",
+    "note": "Parfum @11 is the earliest tail-class species; preservatives (Sodium Benzoate @14, Phenoxyethanol @22) and allergens (Linalool @19) all follow, so the class ordering is consistent. E13: every species establishing conditioning_level/weight_potential outranks it (Cetearyl Alcohol @2, Behentrimonium Chloride @4, Distearoylethyl Hydroxyethylmonium Methosulfate @5, Isopropyl Myristate @7, Behenamidopropyl Dimethylamine @8). tail_index − 1 = Amodimethicone @10, which is load-bearing for no value (see primary_focus). Shea Butter @12 is a below-marker extra (candidate_below_tail)."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioning_level": {
+      "value": "high",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "S1 holds with three distinct cationic species above Parfum @11: Behentrimonium Chloride @4, Distearoylethyl Hydroxyethylmonium Methosulfate @5 and Behenamidopropyl Dimethylamine @8. S2 holds (Cetearyl Alcohol @2), so S1 + S2 reaches `high`; S3 fails, since Isopropyl Myristate @7 is the only above-tail lipid. The marker is plausible, the INCI complete, no material counter-signal fires, and no fired signal rests on the tail_index − 1 species.",
+      "evidenceSignals": ["S1: BTAC @4, esterquat @5, BAPDMA @8", "S2: Cetearyl Alcohol @2"],
+      "counterSignals": ["Lactic Acid @9 is the amidoamine neutraliser (no credit)"]
+    },
+    "weight_potential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No R4b heavy lipid above Parfum @11. Shea Butter @12 is in the tail, so the `high` core is absent despite the dense fatty base (Cetearyl Alcohol @2). For `low`, conjuncts 1 and 2 hold (IPM @7 is R4a; one silicone is no occlusive stack), but conjunct 3 fails with three cationic species on the full list, so the value is `moderate`. Shea @12 would complete the `high` core if credited, which fires candidate_below_tail and review.",
+      "evidenceSignals": ["dense fatty base: Cetearyl Alcohol @2", "R4a only above the marker: Isopropyl Myristate @7"],
+      "counterSignals": ["candidate_below_tail: Butyrospermum Parkii Butter @12 would have completed the high core", "three cationics on the full list (low unavailable)"]
+    },
+    "care_direction": {
+      "value": "protein",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "A single qualifying R5 species, Hydrolyzed Keratin @6, sits within the first eight above-tail ranks, which meets §9.3's material-R5 test via its rank-8 limb. The humectant leg is Glycerin @3 alone, so reading (a) is unavailable and the protein leg leads. D4 does not fire: there is one species, and it is not in the top five ranks. Confidence is held at `moderate` because the call rests on the single-species rank-8 branch, the open judgment-call half of the test (§18.3).",
+      "evidenceSignals": ["R5: Hydrolyzed Keratin @6 (within the first eight above-tail ranks)"],
+      "counterSignals": ["single species only; Glycerin @3 is a base ingredient, not a leg"]
+    },
+    "repair_support_level": {
+      "value": "medium",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "§9.4 `medium` uses the §9.3 material-R5 test, which Hydrolyzed Keratin @6 meets. Amodimethicone @10 and the cationic stack are explicit non-upgraders, and no bond token exists, so `high` is unavailable. Confidence follows §9.3 (`moderate`).",
+      "evidenceSignals": ["material R5 route: Hydrolyzed Keratin @6"],
+      "counterSignals": ["amino silicone is never bond or repair evidence"]
+    },
+    "primary_focus": {
+      "value": "general",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Step 3 repair fails the E16 headline gate: one plain hydrolysate (Hydrolyzed Keratin @6), no second species, no quaternized protein and no bond token. The route keeps care_direction protein and repair medium, but the headline falls through (verdict `nonspecific`). Moisture fails criterion 1; shine fails criterion 3, since there is no gloss claim, and criterion 2, since the single amodimethicone is the smoothing film itself. Smoothing is the plausible competitor, but it rests on one amino silicone at tail_index − 1 (@10) behind the neutraliser, which is a single route rather than a materially distinct differentiator, so the conservative reading is `general`.",
+      "evidenceSignals": ["focus_care_verdict: nonspecific (single plain hydrolysate)", "claim_role: not_applicable"],
+      "counterSignals": ["competing focus smoothing (Amodimethicone @10, boundary position) — lost; 'Intense Keratin' positioning cannot upgrade nonspecific"]
+    },
+    "secondary_focus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No secondary route clears independently. Glycerin @3 alone is not a moisture cluster, and the single boundary-position amodimethicone does not support a distinct smoothing or shine endpoint beyond the M1 base. Repair cannot take a slot it failed as a headline under E16.",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "candidate_below_tail",
+        "value": "Butyrospermum Parkii (Shea) Butter @12 (marker Parfum @11)",
+        "note": "R4b butter one rank below the plausible marker. Credited above-tail it would complete the high core with Cetearyl Alcohol @2 and move weight_potential moderate → high. It earns nothing and caps nothing; a human weighs the tail order."
+      }
+    ]
+  },
+  "reviewTriggers": [
+    { "trigger": "candidate_below_tail_review", "fields": ["weight_potential"] },
+    { "trigger": "specialist_damage_fit", "fields": ["repair_support_level"], "note": "echo: conditioning_level high + repair medium → damage_fit moderately_damaged + highly_damaged" },
+    { "trigger": "product_form_ambiguity", "fields": [], "note": "G0 rinse conjunct taken from the same page's product description, not the Anwendungshinweis block; human confirms the directions basis" }
+  ]
+}

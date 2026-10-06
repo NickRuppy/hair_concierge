@@ -1,0 +1,103 @@
+{
+  "productId": "q5-balea-keratin-repair",
+  "lane": "blind-v2.5",
+  "standardVersion": "mask-inci-v0.6",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q1-wahre-schaetze-avocado-shea.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q2-swiss-o-par-arganoel.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q3-syoss-intense-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q4-fructis-keratin-sleek.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q5-balea-keratin-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q6-syoss-intense-keratin.json"
+    ]
+  },
+  "g0": {
+    "outcome": "in_category",
+    "conjuncts": {
+      "afterCleansing": "satisfied — 'in den feuchten Längen und Spitzen verteilen', rinse stated, no pre-wash positioning (§2.1 wet-hair operational note covers 'feuchtes Haar')",
+      "statedContactTime": "satisfied — '2-3 Minuten einwirken lassen'",
+      "rinsedOut": "satisfied — 'Sorgfältig ausspülen'"
+    },
+    "placement": "stated: Längen und Spitzen (matches P5)",
+    "multiUse": false,
+    "protocolMetadata": { "contactTime": "2-3 Minuten", "source": "packet directionsText (dm.de, 2026-10-06)", "classificationCredit": "none" },
+    "note": "Single-mode rinse-out Kur; all three conjuncts stated."
+  },
+  "tailMarker": {
+    "ingredient": "Trisodium Ethylenediamine Disuccinate",
+    "index": 17,
+    "status": "plausible",
+    "note": "The chelator @17 is the earliest marker-eligible species (Parfum @18, Sodium Benzoate @19, Phenoxyethanol @20 follow; no allergens declared). E13: every species establishing conditioning_level/weight_potential outranks it — Cetearyl Alcohol @2, Stearamidopropyl Dimethylamine @3, Glycine Soja Oil @6, Cetrimonium Chloride @14, C14-22 Alcohols @15. Third limb: no allergen above Parfum, no booster, and the chelator is not printed beneath the preservative block elsewhere on the capture — consistent. A chelator above Parfum is not a contradiction (it is not a fragrance constituent). tail_index − 1 is C12-20 Alkyl Glucoside @16, an emulsifier with no credit, so no boundary-position cap."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioning_level": {
+      "value": "high",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "S1 holds: two distinct long-chain cationic species above the chelator marker @17 — Stearamidopropyl Dimethylamine @3 and Cetrimonium Chloride @14 (Guar Hydroxypropyltrimonium Chloride @13 is a cationic polymer and not counted). S2 holds (Cetearyl Alcohol @2), so S1 + S2 reaches `high`; S3 fails (Glycine Soja Oil @6 is the only lipid; C14-22 Alcohols @15 is a fatty alcohol and Kaolin @8 is a filler). No material counter-signal fires, but confidence is held at `moderate` because S1 rests on a second cationic @14 that sits behind a run of protein, panthenol and guar entries under a late, trace-class chelator marker — a realistic unknown that could move the value to `moderate`.",
+      "evidenceSignals": ["S1: SAPDMA @3 + Cetrimonium Chloride @14", "S2: Cetearyl Alcohol @2", "C14-22 Alcohols @15 (second fatty alcohol)"],
+      "counterSignals": ["S1's second species @14 sits deep in the above-marker segment behind likely sub-1 % entries", "Lactic Acid @4 is the amidoamine neutraliser (no credit)", "Kaolin @8 opacifier/filler (no credit)"]
+    },
+    "weight_potential": {
+      "value": "moderate",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "No R4b heavy lipid appears anywhere on the list, so the `high` core is absent. `low` fails twice over: Glycine Soja Oil @6 is a mid-band oil above the marker (E14, defeats conjunct 1), and the full list carries two cationic species (conjunct 3, E7). No realistic boundary reading moves the value, so `moderate` is held at high confidence.",
+      "evidenceSignals": ["mid band: Glycine Soja Oil @6 (blocks low, cannot make high)", "dense fatty base present (Cetearyl Alcohol @2, C14-22 Alcohols @15) but no R4b core to complete"],
+      "counterSignals": ["two cationic species on the full list"]
+    },
+    "care_direction": {
+      "value": "protein",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Four distinct qualifying R5 species sit above the marker — Hydrolyzed Keratin @7, Hydrolyzed Wheat Protein @9, Hydrolyzed Soy Protein @10, Hydrolyzed Corn Protein @11 — a material protein route. The humectant leg is Glycerin @5 + Panthenol @12, only two species, short of the reading-(a) cluster (≥ 3, ≥ 2 non-glycerin), so `balanced` is unavailable and the protein leg leads. The D4 heavy-payload counter-signal fires (multiple above-tail R5 species), capping confidence at `moderate`.",
+      "evidenceSignals": ["R5: Hydrolyzed Keratin @7, Wheat @9, Soy @10, Corn @11"],
+      "counterSignals": ["D4 protein_payload (confidence cap)", "humectant pair Glycerin @5 + Panthenol @12 — not a qualifying cluster"]
+    },
+    "repair_support_level": {
+      "value": "medium",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "The same material-R5 test as §9.3 is met by four hydrolyzed proteins above the marker, which is a distinct temporary protein fibre-film route. No named bond-chemistry token exists, so `high` is unavailable; 'Repair' naming is E0. Confidence follows §9.3's protein-route confidence (`moderate`).",
+      "evidenceSignals": ["material R5 route @7/@9/@10/@11"],
+      "counterSignals": ["no bond token; panthenol and guar are explicit non-upgraders"]
+    },
+    "primary_focus": {
+      "value": "repair",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Step 3 repair clears the E16 headline gate: at least two distinct qualifying hydrolyzed-protein species above the marker (keratin @7, wheat @9, soy @10, corn @11), verdict `repair_supported`. 'Keratin Repair' positioning only corroborates. Moisture lost at criterion 1 (two humectants), shine/smoothing have no silicone and only one baseline polymer (guar @13).",
+      "evidenceSignals": ["focus_care_verdict: repair_supported", "claim_role: corroborating"],
+      "counterSignals": ["comparative formula potential only; no wash-persistent repair evidence for hydrolysates at rinse-off contact"]
+    },
+    "secondary_focus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No second route clears independently: the moisture slot needs §9.5.3 criterion 1 (≥ 3 humectants above the tail) and only Glycerin @5 and Panthenol @12 qualify. A single cationic guar @13 is baseline and does not open a detangling or smoothing slot.",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "protein_payload",
+        "value": "Hydrolyzed Keratin @7, Hydrolyzed Wheat Protein @9, Hydrolyzed Soy Protein @10, Hydrolyzed Corn Protein @11 (marker @17)",
+        "note": "Multiple distinct R5 species above the marker: trace counter-signal and care_direction confidence cap only. Not a diagnosis, not a warning, moves no value."
+      }
+    ]
+  },
+  "reviewTriggers": [
+    { "trigger": "protein_payload_review", "fields": ["care_direction"] },
+    { "trigger": "specialist_damage_fit", "fields": ["repair_support_level"], "note": "echo: conditioning_level high + repair medium → damage_fit moderately_damaged + highly_damaged" }
+  ]
+}

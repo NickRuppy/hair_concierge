@@ -103,3 +103,35 @@ tail) and its BTAC @5 boundary note is now informational (full-list conjunct); n
 value. u5/u6 unchanged. Cohort records with tail-side extras that would have qualified an anchor would likewise carry the E13 note and review routing when next regenerated (hinweise/review surface only). The cohort reference key is untouched by E13–E17 (no cohort value moves;
 the #08 marker-reading near-miss under E14 is noted in §3 S2 for a pre-freeze key check).
 **Freeze of v1.0 can proceed.**
+
+## 5. Round 2.5 — targeted validation of the round-3 rulings (2026-10-06)
+
+Purpose: E14/E15/E16 were value-moving rules validated on n=1 each; before freeze, six fresh
+products (q1–q6, `blind-packets-round2p5/`) tested them against expectations **pre-registered
+and committed before each lane dispatch** (`round2p5-preregistered-expectations.md`). Same
+zero-inheritance Opus lane protocol; records in `blind-lane-v2p5/`.
+
+| Product | Target | Outcome vs pre-registration |
+|---|---|---|
+| q1 WS Avocado+Shea | E14 heavy + E2 Parfum-last | PASS (conservative branch: booster-limb → marker unresolved → moderate+review; Parfum never used as marker) |
+| q2 Swiss-o-Par Arganöl | E14 mid | PASS (argan blocked low, did not make high; `high` carried by Paraffinum Liquidum under the standard's own occlusive-hydrocarbon heavy core) |
+| q3 Syoss Intense Repair | E16 positive (intended) | CORRECT G0 STOP — the Rossmann source genuinely omits the rinse step; §1.1/§2.3 refused to classify. E16-positive moved to q5. |
+| q4 Fructis "Keratin" Sleek | booster limb + claim mismatch + E16 under unresolved | PASS on all three (marker unresolved; claim_formula_mismatch for keratin-free "Keratin" naming; repair headline withheld) |
+| q5 Balea Keratin Repair | E16 POSITIVE | PASS — four hydrolysates above the marker → repair headline fired (protein / medium / repair) |
+| q6 Syoss Intense Keratin | E16 NEGATIVE control | PASS — single plain keratin → headline withheld (general), repair_support medium kept |
+
+**Verdict: all rule-level pre-registered expectations held.** E16 is validated on both branches;
+E14 on mid-blocks (q2, q5) and on the conservative heavy path (q1); the booster limb, E2
+convention, E13 flags and the G0 stop value all behaved. E15 remains validated on u3 only (no
+second natural reading-(b) candidate surfaced on this shelf pass) — carried as a freeze note.
+
+Round-2.5 triage codifications (no value changes): lexicon hydrocarbon-banding alignment
+(Paraffinum Liquidum/Petrolatum = heavy band, as the standard already stated); §2.1 operational
+note that rinse evidence counts from anywhere in the exact-product source (with
+`product_form_ambiguity` review), while a source with no rinse text stops at
+`insufficient_information`.
+
+## 6. Final status
+
+Cohort gate PASS (97/97) · unseen set final under v0.6 · round-2.5 targeted validation PASS
+(6/6 vs pre-registered expectations). **Calibration is closed; freeze of v1.0 may proceed.**

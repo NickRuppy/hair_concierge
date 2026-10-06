@@ -271,7 +271,12 @@ gel network that *is* the body of the mask.
     lanolin fraction, not a family-2 long-chain fatty alcohol** — it earns R4b heavy-lipid credit
     and must **not** be counted toward S2 or toward the dense/thin fatty-base tests;
   - *mid:* conventional plant triglycerides (argan, avocado, olive, soy, apricot kernel);
-  - *light / weight-neutral:* light esters and light hydrocarbons. Spreading-value data places
+  - *light / weight-neutral:* light esters and light hydrocarbons. **Hydrocarbon banding
+    (round-2.5 triage, 2026-10-06):** "light hydrocarbons" here means volatile/low-viscosity
+    species (isododecane, C13-14 isoparaffin and similar); `Paraffinum Liquidum` and `Petrolatum`
+    are **occlusive heavy-band** lipids and carry R4b heavy credit, exactly as the standard's
+    `high` core already states ("occlusive hydrocarbon — the heavy band only", E14). This note
+    aligns the lexicon's wording with that rule; it changes nothing. Spreading-value data places
     `Isoamyl Laurate` in the high-spreading class (~1000–1700 mm²/10 min) and
     `Isopropyl Myristate` in the medium class (~500–999 mm²/10 min). `[I-2]` These are formulation-
     tier figures for a *sensory* property; use them for band ordering only, never as a numeric input.
