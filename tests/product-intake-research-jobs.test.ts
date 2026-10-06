@@ -74,10 +74,11 @@ const appPackageJson = JSON.parse(
   scripts: Record<string, string>
 }
 const eslintConfig = readFileSync("eslint.config.mjs", "utf8")
-// Category contracts moved into the research router (Slice 1); text assertions cover both files.
+// Shared stages and category contracts are covered alongside the worker entry point.
 const workerScript = [
   readFileSync("scripts/product-intake/codex-research-worker.ts", "utf8"),
   readFileSync("src/lib/product-intake/category-research-router.ts", "utf8"),
+  readFileSync("src/lib/product-intake/pipeline/image.ts", "utf8"),
 ].join("\n")
 const repositorySource = readFileSync("packages/product-intake-core/src/repository.ts", "utf8")
 const serviceClientSource = readFileSync(
