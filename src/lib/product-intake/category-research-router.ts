@@ -220,6 +220,8 @@ function conditionerApprovalContract(): JsonRecord {
       "Complete the full Conditioner Standard v1.6 research envelope first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research sourced protocol slots separately; Chaarlie stamps the normative protocol rows itself.",
     conditioner_research: conditionerResearchPromptContract(),
     required_category_specs: [...CATEGORY_SPEC_KEYS.conditioner],
+    required_category_specs_note:
+      "Chaarlie stamps product_application_protocols from researched_payload.draft.protocol after research; never emit model-written protocol rows.",
     product_conditioner_specs:
       "array with one row per relevant hair thickness; each row has thickness and protein_moisture_balance",
     allowed_product_conditioner_specs_values: {
@@ -263,6 +265,8 @@ function leaveInApprovalContract(): JsonRecord {
       "Complete the full Leave-In Standard v1.1 research envelope (Standard v1.0 plus the T20 care_direction overlay) first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research sourced protocol slots separately; Chaarlie stamps the normative protocol rows itself.",
     leave_in_research: leaveInResearchPromptContract(),
     required_category_specs: [...CATEGORY_SPEC_KEYS.leave_in],
+    required_category_specs_note:
+      "Chaarlie stamps product_application_protocols from researched_payload.draft.protocol after research; never emit model-written protocol rows.",
     aliases: {
       post_wash:
         "Do not use post_wash for leave-ins. If evidence says after washing, damp hair, no-rinse, or towel-dried hair, use towel_dry in identity.applicationStage.",
@@ -282,6 +286,8 @@ function oilApprovalContract(): JsonRecord {
       role_support: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
       provides_heat_protection:
         "boolean; true only when a product source explicitly claims heat protection; false only after the reviewed producer/shop sources have been checked and make no heat-protection claim",
+      heat_protection_protocol:
+        "Heat protection is a capability on the ordinary leave-on purpose and requires sourced leave_on_fibre_conditioning role support; do not create an extra protocol role.",
     },
     product_oil_eligibility:
       "array with one or more user-fit rows; each row has thickness, oil_subtype, oil_purpose, and ingredient_flags",

@@ -85,7 +85,7 @@ function assertPriceOnly(result: CommerceStageResult) {
   assert.equal(result.artifact.payload.stage, "commerce")
 }
 
-test("commerce rejects missing, invalid and URL-gate-rejected links before fetching", async (t) => {
+test("commerce records missing, invalid and URL-gate-rejected links without blocking or fetching", async (t) => {
   for (const link of [
     null,
     "",
@@ -94,6 +94,7 @@ test("commerce rejects missing, invalid and URL-gate-rejected links before fetch
     "ftp://dm.de/product",
     "https://idealo.de/product",
     "https://untrusted.example/product",
+    "https://ogxbeauty.com/p",
   ]) {
     await t.test(String(link), async () => {
       let fetched = false
@@ -112,9 +113,10 @@ test("commerce rejects missing, invalid and URL-gate-rejected links before fetch
           return new Response("")
         },
       })
-      assert.equal(result.artifact.status, "rejected")
-      assert.equal(result.blockers.length, 1)
-      assert.match(result.blockers[0], /^commerce_link_rejected: /)
+      assert.equal(result.artifact.status, "unconfirmed")
+      assert.deepEqual(result.blockers, [])
+      assert.equal((result.artifact.payload.link_gate as JsonRecord).pass, false)
+      assert.equal(typeof (result.artifact.payload.link_gate as JsonRecord).reason, "string")
       assert.deepEqual(result.writes, {})
       assert.equal(result.artifact.payload.adapter_fetched, false)
       assert.equal(fetched, false)
@@ -125,7 +127,11 @@ test("commerce rejects missing, invalid and URL-gate-rejected links before fetch
 })
 
 test("commerce skips allowed and brand-direct hosts without adapters", async (t) => {
-  for (const link of ["https://amazon.de/dp/test", "https://gliss.example/product"]) {
+  for (const link of [
+    "https://amazon.de/dp/test",
+    "https://gliss.example/product",
+    "https://gliss-hair.com/product",
+  ]) {
     await t.test(link, async () => {
       let fetched = false
       const result = await run(final({ affiliate_link: link }), {

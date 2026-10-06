@@ -20,7 +20,7 @@ export type CommerceStageDeps = {
 export type CommerceStageResult = {
   artifact: {
     kind: "commerce_check"
-    status: "confirmed" | "unconfirmed" | "conflict" | "rejected"
+    status: "confirmed" | "unconfirmed" | "conflict"
     payload: JsonRecord
   }
   writes: {
@@ -85,17 +85,17 @@ export async function runCommerceStage(input: {
         },
         writes,
         model_price_delta_pct: modelPriceDeltaPct,
+        link_gate: gate,
       },
     },
     writes,
     blockers,
   })
 
-  // Reject unusable or disallowed links before any probe or adapter lookup.
+  // The affiliate gate is advisory for intake; retain model values on an unconfirmed link.
   const gate = urlGate({ chosen_url: candidate.affiliateLink, brand: candidate.brand })
   if (!gate.pass) {
-    blockers.push(`commerce_link_rejected: ${gate.reason}`)
-    return result("rejected")
+    return result("unconfirmed")
   }
 
   // Unsupported and unprobed hosts keep model values, without fetching or blocking.

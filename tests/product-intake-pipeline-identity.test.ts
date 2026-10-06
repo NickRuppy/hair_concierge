@@ -1,7 +1,11 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { buildBrandResolutionPromptContext } from "../src/lib/product-intake/pipeline/identity"
+import {
+  applyIdentityStage,
+  loadBrandResolutionContext,
+  buildBrandResolutionPromptContext,
+} from "../src/lib/product-intake/pipeline/identity"
 import { normalizeResearchOutputForCategory } from "../scripts/product-intake/codex-research-worker"
 import type { BrandResolutionCatalogInput } from "../src/lib/product-identity/brand-resolution"
 import type { ProductIntakeReviewDecisionRow } from "@chaarlie/product-intake-core"
@@ -141,4 +145,80 @@ test("a deterministic missing-resolution blocker is cleared when the catalog pro
     ),
   )
   assert.ok(result.blockers.includes("retain this unrelated blocker"))
+})
+
+for (const decision of ["change_requested", "rejected"]) {
+  test(`model brand proposal cannot override a ${decision} review decision`, () => {
+    const result = run("Expert", "", [
+      { field_path: "product.canonical_brand", decision } as ProductIntakeReviewDecisionRow,
+    ])
+    assert.equal(identity(result).status, "needs_review")
+    assert.ok(
+      result.blockers.some((reason) =>
+        reason.startsWith("canonical brand table resolution missing for:"),
+      ),
+    )
+  })
+}
+
+test("identity replaces its own marker and preserves model identity reasoning", () => {
+  const model = {
+    kind: "identity_candidate" as const,
+    payload: { identity_basis: "EAN and size reasoning" },
+  }
+  const artifacts: Parameters<typeof applyIdentityStage>[0]["artifacts"] = [
+    model,
+    { kind: "identity_candidate" as const, payload: { stage: "identity", stale: true } },
+  ]
+  applyIdentityStage({
+    final: { product: { canonical_brand: "Expert" } },
+    context: buildBrandResolutionPromptContext(null, catalog, null),
+    reviewDecisions: [],
+    artifacts,
+    brandCatalog: catalog,
+  })
+  assert.strictEqual(artifacts[0], model)
+  assert.equal(artifacts.length, 2)
+  assert.equal(artifacts[1].payload.stage, "identity")
+  assert.equal(artifacts[1].payload.stale, undefined)
+})
+
+test("brand context retains the loaded catalog for model resolution without a second read", async () => {
+  const reads: string[] = []
+  const data = {
+    brands: catalog.brands,
+    product_lines: catalog.productLines,
+    brand_aliases: catalog.brandAliases,
+  }
+  const client = {
+    from(table: keyof typeof data) {
+      reads.push(table)
+      return { select: async () => ({ data: data[table], error: null }) }
+    },
+  }
+  const loaded = await loadBrandResolutionContext(
+    client as unknown as Parameters<typeof loadBrandResolutionContext>[0],
+    null,
+    null,
+  )
+  assert.deepEqual(loaded.catalog, catalog)
+  const result = normalizeResearchOutputForCategory(
+    {
+      summary: "Research",
+      blockers: [],
+      artifacts: [],
+      researched_payload: { final: { product: { canonical_brand: "Expert" } } },
+    },
+    "mask",
+    loaded,
+    [],
+    "submission",
+    { brandCatalog: loaded.catalog },
+  )
+  assert.equal(
+    (result.researched_payload!.final as Record<string, Record<string, unknown>>).product
+      .canonical_brand,
+    "L'Oréal Professionnel",
+  )
+  assert.deepEqual(reads.sort(), ["brand_aliases", "brands", "product_lines"])
 })

@@ -156,12 +156,12 @@ test("all 52 captured production outputs retain adapter-owned results apart from
 
 test("every category retains its pre-router prompt contract byte for byte", () => {
   assert.deepEqual(normalizationSnapshot().prompt_contract_sha256, {
-    conditioner: "b9c9b5498d9a7e7ce9db3f79e70a1d61c557395e5fa4733ea4d087b9fa83b233",
-    leave_in: "5478fb16b9fb317d795314bb014da00d345dca7e055341c2c59bb7d024b475fb",
+    conditioner: "9d74593bf792adba92e8f789fabae02eddd2e013df1f680035508660cf80a3ae",
+    leave_in: "39f26cb7201439140c9273e2e16411f3cb5957729e3caf9b31250e16b462cda6",
     bondbuilder: "f5e94f8ee0ea1e7b6010c43e912f5c29566537b46b3872b11e52d93acb7022f5",
-    shampoo: "0193e2e745798175122b90933e3a46c0516304559e4a66b28dd834f64d56217b",
-    mask: "d90899dd5347ff846838989b765b21fab4539e9a43975fedb30e2ce98525705f",
-    oil: "a0f11cb3155ec156187dfc9acd53e9ca7316c053250c7c711d400996bc09d328",
+    shampoo: "dc511c24cb88c76fe66fbb60dadda2bbe52f246314bc582c7278af1ad97c99a7",
+    mask: "68c7c7ad750e70add3d28bf7333fcddaa1154234d8a2fe1b2351450e0c79fe0d",
+    oil: "b07faaf152f390227c6980959c89075f60f75e28403cd2546a050edba142be15",
     dry_shampoo: "b83adcdac65c1b5b90acf859b53cc3e592f8fb0364094cee9f53db816bdc583b",
     deep_cleansing_shampoo: "6f0b700d503ce13691120d1f15cd87a0c54fedf1221034d2978dc6742c047dcc",
     heat_protectant: "810273e00ce7332cbd26810eb29ceaef87072cbc84a487fa75312a5d63cd301b",

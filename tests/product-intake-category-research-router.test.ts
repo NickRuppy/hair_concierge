@@ -92,6 +92,39 @@ test("shampoo keeps its current research path and records the pending v1.6 lock"
   )
 })
 
+test("templated conditioner and leave-in prompts reserve protocol rows for Chaarlie", () => {
+  for (const category of ["conditioner", "leave_in"] as const) {
+    const contract = categoryApprovalContract(category)
+    assert.ok(
+      (contract.required_category_specs as string[]).includes("product_application_protocols"),
+    )
+    assert.equal(
+      (contract.protocol_slots as Record<string, unknown>).output_path,
+      "researched_payload.draft.protocol",
+    )
+    assert.match(
+      String(contract.required_category_specs_note),
+      /Chaarlie stamps.*product_application_protocols.*never emit model-written protocol rows/i,
+    )
+
+    const researchContract =
+      category === "conditioner" ? contract.conditioner_research : contract.leave_in_research
+    assert.match(
+      String((researchContract as { adapter: { protocol_rule: string } }).adapter.protocol_rule),
+      /draft\.protocol.*never write.*product_application_protocols.*Chaarlie stamps/i,
+    )
+  }
+})
+
+test("oil prompt treats heat protection as a leave-on capability", () => {
+  const contract = categoryApprovalContract("oil")
+  const oilSpecs = contract.product_oil_specs as Record<string, unknown>
+  assert.match(
+    String(oilSpecs.heat_protection_protocol),
+    /capability on the ordinary leave-on purpose.*leave_on_fibre_conditioning.*do not create an extra protocol role/i,
+  )
+})
+
 for (const category of [
   "mask",
   "oil",
@@ -699,7 +732,7 @@ function protocolInput(category: string): ResearchOutput {
   }
 }
 
-test("worker replaces model conditioner protocols with TPL-CONDITIONER and a single template receipt", () => {
+test("worker preserves unowned conditioner protocol artifacts and stamps TPL-CONDITIONER", () => {
   const input = protocolInput("conditioner")
   input.artifacts.push({ kind: "protocol_template", status: "stale", payload: {} })
   const result = normalizeResearchOutputForCategory(
@@ -728,6 +761,7 @@ test("worker replaces model conditioner protocols with TPL-CONDITIONER and a sin
   assert.deepEqual(
     result.artifacts.filter((artifact) => artifact.kind === "protocol_template"),
     [
+      { kind: "protocol_template", status: "stale", payload: {} },
       {
         kind: "protocol_template",
         status: "templated",
@@ -736,6 +770,7 @@ test("worker replaces model conditioner protocols with TPL-CONDITIONER and a sin
           status: "templated",
           template_ids: ["TPL-CONDITIONER"],
           blockers: [],
+          notes: [],
         },
       },
     ],

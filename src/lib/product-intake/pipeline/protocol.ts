@@ -17,9 +17,11 @@ export type ProtocolResearchDraft = {
   leave_in_explicit_dry_use_marketing?: boolean | null
   leave_in_post_style_finish?: boolean | null
   heat_usable_on_dry_hair?: boolean | null
+  oil_spray_format?: boolean | null
   structural_deviation?: { reason: string; packaging_text: string } | null
   evidence?: Array<{
     sourceUrl: string
+    sourceText: string
     sourceType: "manufacturer" | "retailer" | "professional_authority"
     checkedAt: string
   }>
@@ -30,6 +32,7 @@ export type ProtocolStageResult = {
   templateIds: string[]
   rows: unknown[]
   blockers: string[]
+  notes: string[]
 }
 
 export const PROTOCOL_SLOT_RESEARCH_CONTRACT: Record<string, unknown> = {
@@ -43,22 +46,24 @@ export const PROTOCOL_SLOT_RESEARCH_CONTRACT: Record<string, unknown> = {
     "P6: flag leave-in marketed as an after-styling finish; that family is parked for Nick.",
     "P9: heat_usable_on_dry_hair is required for heat-protecting leave-ins. True requires explicit dry-use authority, false means damp-only; unknown is null, never guessed.",
     "P3: scalp-condition claims include urea, sensitive/irritated or oily scalp; hair-fibre Repair, Volumen, Feuchtigkeit and Curl claims do not qualify.",
-    "R-E/O3/O5: oil role_support must be sourced from German/EU directions; only dry-use authority supports dry_finish. Heat protection is a separate sourced capability and never an extra oil role.",
-    "Provide evidence [{sourceUrl, sourceType: manufacturer|retailer|professional_authority, checkedAt: YYYY-MM-DD}]. Record the actual checked date, never infer it from the current date or a packaging date. final.sources alone has no typed source/date fields; prefer explicit draft evidence.",
+    "R-E/O3/O5: oil role_support must be sourced from German/EU directions; only dry-use authority supports dry_finish. Heat protection is a separate sourced capability on the ordinary leave-on oil purpose; provides_heat_protection=true requires sourced leave_on_fibre_conditioning role support and never an extra oil role.",
+    "Provide evidence [{sourceUrl, sourceText: exact quoted German source sentence about application, sourceType: manufacturer|retailer|professional_authority, checkedAt: YYYY-MM-DD}]. Record the actual checked date, never infer it from the current date or a packaging date. final.sources alone has no typed source/date fields; prefer explicit draft evidence.",
     "For all other categories keep the existing model-written exact protocol rows unchanged.",
   ],
   slots: {
     shampoo_scalp_condition_claim: "boolean|null — sourced scalp-condition claim (P3)",
     mask_contact_time_seconds:
-      "number|null — positive integer seconds for an exact packaging time; null for range/maximum or no time (P5)",
+      "number|null — positive integer seconds for an exact packaging time; null for range/maximum or no time (P5). Chaarlie derives exact seconds from a single-time wait copy if needed.",
     mask_wait_copy_de:
-      "string|null — matching German time: 3 Minuten, 30 Sekunden, 2–3 Minuten, Bis zu 10 Minuten (§2.5)",
+      "string|null — full German wait step: 3 Minuten einwirken lassen., 30 Sekunden einwirken lassen., 2–3 Minuten einwirken lassen., Bis zu 10 Minuten einwirken lassen. (§2.5)",
     leave_in_explicit_dry_use_marketing: "boolean|null — explicit dry-hair use (R-D)",
     leave_in_post_style_finish: "boolean|null — after-styling finish positioning (P6, parked)",
     heat_usable_on_dry_hair: "boolean|null — explicit dry-hair heat use (P9)",
+    oil_spray_format:
+      "boolean|null — sourced pump-spray oil format; true parks dosing pending X6 ruling",
     structural_deviation: "{reason: string, packaging_text: string}|null — structural only (R-C)",
     evidence:
-      "Array<{sourceUrl: string, sourceType: manufacturer|retailer|professional_authority, checkedAt: YYYY-MM-DD}>",
+      "Array<{sourceUrl: string, sourceText: string (exact quoted German application sentence), sourceType: manufacturer|retailer|professional_authority, checkedAt: YYYY-MM-DD}>",
   },
 }
 
@@ -79,7 +84,22 @@ function asRecord(value: unknown): Record<string, unknown> {
     : {}
 }
 
-function fallbackEvidence(sources: Record<string, unknown>[]): ExpansionProtocolEvidence[] {
+type ProtocolEvidence = ExpansionProtocolEvidence & { sourceText?: string }
+
+function normalizedSourceUrl(value: unknown): string | null {
+  if (typeof value !== "string") return null
+  try {
+    const url = new URL(value)
+    url.hostname = url.hostname.toLowerCase().replace(/^www\./, "")
+    url.hash = ""
+    url.pathname = url.pathname.replace(/\/+$/, "")
+    return url.toString().replace(/\/$/, "")
+  } catch {
+    return null
+  }
+}
+
+function fallbackEvidence(sources: Record<string, unknown>[]): ProtocolEvidence[] {
   return sources.flatMap((source) => {
     // §2.3: final.sources has only url/title/evidence; require explicit source kind and checked date.
     const label = typeof source.title === "string" ? source.title : ""
@@ -93,13 +113,14 @@ function fallbackEvidence(sources: Record<string, unknown>[]): ExpansionProtocol
       /(?:checked(?:\s+(?:at|on))?|geprüft(?:\s+am)?|abgerufen(?:\s+am)?)\s*:?\s*(\d{4}-\d{2}-\d{2})/i,
     )?.[1]
     if (!sourceType || !checkedAt || typeof source.url !== "string") return []
-    const entry = { sourceUrl: source.url, sourceType, checkedAt }
+    const entry = { sourceUrl: source.url, sourceType, checkedAt, sourceText: text }
     return evidenceSchema.safeParse([entry]).success ? [entry] : []
   })
 }
 
 function maskSlots(
   draft: ProtocolResearchDraft | null,
+  notes: string[],
 ): Pick<ExpansionTemplateSlots, "contactTimeSeconds" | "waitCopyDe"> {
   const seconds = draft?.mask_contact_time_seconds ?? null
   const copy = draft?.mask_wait_copy_de?.trim() ?? ""
@@ -109,6 +130,7 @@ function maskSlots(
   const exact = copy.match(/(\d+)\s*(Minuten?|Sekunden?)/i)
   if (seconds === null && !range && !maximum && !exact) {
     // W3: no parseable packaging time uses the ruled fallback (amends the older P5 no-default text).
+    notes.push("mask_wait_fallback_w3")
     return { contactTimeSeconds: null, waitCopyDe: "3–5 Minuten einwirken lassen." }
   }
   if (
@@ -119,7 +141,14 @@ function maskSlots(
   ) {
     throw new Error("TPL-MASK: contact time seconds and German wait copy disagree (§2.5)")
   }
-  return { contactTimeSeconds: seconds, waitCopyDe: copy }
+  return {
+    contactTimeSeconds:
+      seconds ??
+      (exact && !range && !maximum
+        ? Number(exact[1]) * (/^Minute/i.test(exact[2]) ? 60 : 1)
+        : null),
+    waitCopyDe: copy,
+  }
 }
 
 export function runProtocolStage(input: {
@@ -135,6 +164,7 @@ export function runProtocolStage(input: {
       status: "not_templated",
       templateIds: [],
       blockers: [],
+      notes: [],
       rows: Array.isArray(categorySpecs.product_application_protocols)
         ? categorySpecs.product_application_protocols
         : [],
@@ -143,6 +173,7 @@ export function runProtocolStage(input: {
 
   const templateIds: ExpansionTemplateId[] = []
   const blockers: string[] = []
+  const notes: string[] = []
   // R-C: only a researched structural mismatch pauses normative stamping.
   if (draft?.structural_deviation)
     blockers.push(`protocol_structural_deviation: ${draft.structural_deviation.reason}`)
@@ -152,8 +183,8 @@ export function runProtocolStage(input: {
       "protocol_parked_post_style: leave-in positioned as after-styling finish — needs Nick (P6)",
     )
   }
-  // X6: Oil has no canonical format column yet; park a spray format if research supplies it.
-  if (categoryKey === "oil" && asRecord(categorySpecs.product_oil_specs).format === "spray") {
+  // X6: pump-spray format is a sourced draft slot, not a canonical oil-spec column.
+  if (categoryKey === "oil" && draft?.oil_spray_format === true) {
     blockers.push("protocol_parked_spray_oil (X6)")
   }
 
@@ -163,6 +194,13 @@ export function runProtocolStage(input: {
 
   try {
     const roles = requiredProtocolRoles(categoryKey as ExpansionCategoryKey, categorySpecs)
+    if (
+      categoryKey === "oil" &&
+      asRecord(categorySpecs.product_oil_specs).provides_heat_protection === true &&
+      !roles?.includes("leave_on_fibre_conditioning")
+    ) {
+      blockers.push("protocol_oil_heat_without_leave_on")
+    }
     if (!Array.isArray(roles) || roles.length === 0) blockers.push("protocol_roles_missing")
     else {
       for (const role of new Set(roles)) {
@@ -221,10 +259,28 @@ export function runProtocolStage(input: {
         }
       }
     }
-    if (blockers.length) return { status: "blocked", templateIds, rows: [], blockers }
+    if (blockers.length) return { status: "blocked", templateIds, rows: [], blockers, notes }
     const checkedEvidence = evidenceSchema.parse(evidence)
     const chosen = checkedEvidence[0]
-    const source = sources.find((entry) => entry.url === chosen.sourceUrl)
+    const chosenUrl = normalizedSourceUrl(chosen.sourceUrl)
+    const source = sources.find(
+      (entry) => chosenUrl !== null && normalizedSourceUrl(entry.url) === chosenUrl,
+    )
+    const quotedText = evidence[0]?.sourceText
+    const sourceText =
+      typeof quotedText === "string" && quotedText.trim()
+        ? quotedText
+        : typeof source?.evidence === "string" && source.evidence.trim()
+          ? source.evidence
+          : null
+    if (!sourceText)
+      return {
+        status: "blocked",
+        templateIds,
+        rows: [],
+        blockers: ["protocol_source_text_missing"],
+        notes,
+      }
     const sourceLabels = {
       manufacturer: "Hersteller",
       retailer: "Händler",
@@ -235,25 +291,39 @@ export function runProtocolStage(input: {
         productId: input.productId ?? "__PRODUCT_ID__",
         evidence: checkedEvidence,
       }
-      if (templateId === "TPL-MASK") Object.assign(slots, maskSlots(draft))
+      if (templateId === "TPL-MASK") Object.assign(slots, maskSlots(draft, notes))
       if (templateId === "TPL-LEAVEIN-HEAT")
         slots.usableOnDryHair = draft!.heat_usable_on_dry_hair as boolean
+      const row = buildExpansionProtocolRow(templateId, slots)
+      // §2.4 / oil templates: the builder defaults to lengths_ends; rich weight is caller-owned.
+      if (categoryKey === "oil" && asRecord(categorySpecs.product_oil_specs).weight === "rich") {
+        row.placement = "ends"
+        const facts = asRecord(row.guidance_payload.protocolFacts)
+        facts.applicationArea = "ends"
+        if (templateId === "TPL-OIL-PREWASH") {
+          const dose =
+            "Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen."
+          asRecord(facts.amount).copyDe = dose
+          const steps = row.guidance_payload.steps as Record<string, unknown>[]
+          const doseStep = steps.find((step) => step.stepKey === "dose-pre-wash")!
+          doseStep.copyTemplateDe = dose
+        }
+      }
       return {
-        ...buildExpansionProtocolRow(templateId, slots),
+        ...row,
         source_label:
           typeof source?.title === "string" && source.title.trim()
             ? source.title
             : sourceLabels[chosen.sourceType],
         source_url: chosen.sourceUrl,
-        source_text:
-          typeof source?.evidence === "string" && source.evidence.trim() ? source.evidence : null,
+        source_text: sourceText,
       }
     })
-    return { status: "templated", templateIds, rows, blockers: [] }
+    return { status: "templated", templateIds, rows, blockers: [], notes }
   } catch (error) {
     blockers.push(
       `protocol_slot_invalid: ${error instanceof Error ? error.message : String(error)}`,
     )
-    return { status: "blocked", templateIds, rows: [], blockers }
+    return { status: "blocked", templateIds, rows: [], blockers, notes }
   }
 }

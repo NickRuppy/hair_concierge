@@ -551,6 +551,7 @@ test("persisted pending-lock Shampoo and unavailable Mask payloads pass the stri
       protocol: {
         evidence: [
           {
+            sourceText: "In die Längen geben und ausspülen.",
             sourceUrl: "https://example.test/product",
             sourceType: "manufacturer",
             checkedAt: "2026-10-05",

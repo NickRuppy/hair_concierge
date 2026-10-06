@@ -7,9 +7,7 @@ import * as Sentry from "@sentry/node"
 
 import {
   loadBrandResolutionContext,
-  loadBrandResolutionCatalogForWorker,
   applyIdentityStage,
-  approvedCanonicalBrandFromReview,
   type BrandResolutionPromptContext,
 } from "@/lib/product-intake/pipeline/identity"
 import {
@@ -724,11 +722,12 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
           job.submission_id,
         )
         reportRetailerEnrichmentWarning(scanIntakeSeed.retailerEnrichmentWarning)
-        const brandResolutionContext = await loadBrandResolutionContext(
-          options.supabase,
-          detail,
-          scanIntakeSeed.scannedIdentifier,
-        )
+        const { catalog: brandCatalog, ...brandResolutionContext } =
+          await loadBrandResolutionContext(
+            options.supabase,
+            detail,
+            scanIntakeSeed.scannedIdentifier,
+          )
         const promptPacketPath = writePromptPacket(
           job,
           options.workerId,
@@ -867,11 +866,7 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
             {
               retailerPacket: scanIntakeSeed.retailerEnrichment,
               inciRetryAttempted: leasedJob.progress.inci_retry_attempted === true,
-              brandCatalog:
-                !brandResolutionContext.resolved_brand &&
-                !approvedCanonicalBrandFromReview(detail?.decisions ?? [])
-                  ? await loadBrandResolutionCatalogForWorker(options.supabase)
-                  : undefined,
+              brandCatalog,
             },
           )
           // Enabled by default; only the exact env value "false" disables commerce confirmation.
@@ -1748,7 +1743,12 @@ export async function applyCommerceStage(
   }
   return {
     ...output,
-    artifacts: [...output.artifacts.filter((entry) => entry.kind !== "commerce_check"), artifact],
+    artifacts: [
+      ...output.artifacts.filter(
+        (entry) => entry.kind !== "commerce_check" || entry.payload.stage !== "commerce",
+      ),
+      artifact,
+    ],
     blockers: dedupeStrings([...output.blockers, ...blockers]),
   }
 }
@@ -1782,7 +1782,10 @@ export function normalizeResearchOutputForCategory(
   if (identityBlocker) blockers.push(identityBlocker)
   else if (
     artifacts.some(
-      (artifact) => artifact.kind === "identity_candidate" && artifact.status === "resolved",
+      (artifact) =>
+        artifact.kind === "identity_candidate" &&
+        artifact.payload.stage === "identity" &&
+        artifact.status === "resolved",
     )
   ) {
     blockers = blockers.filter(
@@ -1869,20 +1872,27 @@ export function normalizeResearchOutputForCategory(
       blockers.push("leave_in application_stage has no valid value")
     }
   }
-  const protocol = runProtocolStage({
-    categoryKey,
-    categorySpecs: categorySpecs ?? {},
-    draft:
-      (normalizeRecord(researchedPayload.draft)?.protocol as ProtocolResearchDraft | undefined) ??
-      null,
-    sources: final?.sources,
-  })
+  const protocol = final
+    ? runProtocolStage({
+        categoryKey,
+        categorySpecs: categorySpecs ?? {},
+        draft:
+          (normalizeRecord(researchedPayload.draft)?.protocol as
+            | ProtocolResearchDraft
+            | undefined) ?? null,
+        sources: final.sources,
+      })
+    : { status: "not_templated" as const, templateIds: [], rows: [], blockers: [], notes: [] }
   if (categorySpecs && protocol.status !== "not_templated") {
     categorySpecs.product_application_protocols = protocol.rows
   }
   blockers.push(...protocol.blockers)
   for (let index = artifacts.length - 1; index >= 0; index--) {
-    if (artifacts[index]!.kind === "protocol_template") artifacts.splice(index, 1)
+    if (
+      artifacts[index]!.kind === "protocol_template" &&
+      artifacts[index]!.payload.stage === "protocol"
+    )
+      artifacts.splice(index, 1)
   }
   artifacts.push({
     kind: "protocol_template",
@@ -1892,6 +1902,7 @@ export function normalizeResearchOutputForCategory(
       status: protocol.status,
       template_ids: protocol.templateIds,
       blockers: protocol.blockers,
+      notes: protocol.notes,
     },
   })
   const missingSpecTables = missingCategorySpecTables(categorySpecs, categoryKey)
@@ -2621,7 +2632,10 @@ export function isModelGeneratedArtifactKind(value: string): value is ProductInt
   return (
     PRODUCT_INTAKE_ARTIFACT_KINDS.includes(value as ProductIntakeArtifactKind) &&
     value !== "model_run" &&
-    value !== "model_judgment"
+    value !== "model_judgment" &&
+    value !== "formula" &&
+    value !== "commerce_check" &&
+    value !== "protocol_template"
   )
 }
 

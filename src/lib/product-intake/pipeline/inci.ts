@@ -98,10 +98,12 @@ export function applyInciStage(
   )
   if (payload) payload.draft = { ...draft, formula: { ...modelFormula, ...result } }
   for (let index = artifacts.length - 1; index >= 0; index--) {
-    if (artifacts[index]!.kind === "formula") artifacts.splice(index, 1)
+    if (artifacts[index]!.kind === "formula" && artifacts[index]!.payload.stage === "inci")
+      artifacts.splice(index, 1)
   }
   artifacts.push({ kind: "formula", status: result.status, payload: { stage: "inci", ...result } })
-  if (engine.state !== "active" || result.status === "present") return null
+  if (!record(payload?.final) || engine.state !== "active" || result.status === "present")
+    return null
   return options.inciRetryAttempted === true
     ? `inci_unavailable: canonical INCI not found after targeted retry for ${engine.engineId}`
     : `inci_missing_first_pass: canonical INCI missing for ${engine.engineId}`

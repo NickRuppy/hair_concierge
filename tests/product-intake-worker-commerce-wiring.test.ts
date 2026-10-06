@@ -22,7 +22,7 @@ function output(): ResearchOutput {
   return {
     summary: "Research",
     blockers: ["existing research blocker"],
-    artifacts: [{ kind: "commerce_check", status: "stale", payload: {} }],
+    artifacts: [{ kind: "commerce_check", status: "stale", payload: { stage: "commerce" } }],
     researched_payload: {
       draft: { notes: "Keep research" },
       final: {
@@ -156,4 +156,17 @@ test("without a final payload the worker returns unchanged and does not call com
     assert.equal(result, input)
     assert.deepEqual(result, before)
   }
+})
+
+test("worker commerce preserves non-stage evidence while replacing its own receipt", async () => {
+  const input = output()
+  const evidence = {
+    kind: "commerce_check" as const,
+    payload: { reasoning: "Legacy shop evidence" },
+  }
+  input.artifacts.unshift(evidence)
+  const result = await applyCommerceStage(input, "submission-1", deps())
+  assert.strictEqual(result.artifacts[0], evidence)
+  assert.equal(result.artifacts.length, 2)
+  assert.equal(result.artifacts[1].status, "confirmed")
 })

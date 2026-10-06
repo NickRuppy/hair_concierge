@@ -32,9 +32,12 @@ export async function loadBrandResolutionContext(
   supabase: SupabaseClient,
   detail: ProductIntakeSubmissionDetail | null,
   scannedIdentifier: ScannedIdentifierPacketValue,
-): Promise<BrandResolutionPromptContext> {
+): Promise<BrandResolutionPromptContext & { catalog: BrandResolutionCatalogInput }> {
   const catalogInput = await loadBrandResolutionCatalogForWorker(supabase)
-  return buildBrandResolutionPromptContext(detail, catalogInput, scannedIdentifier)
+  return {
+    ...buildBrandResolutionPromptContext(detail, catalogInput, scannedIdentifier),
+    catalog: catalogInput,
+  }
 }
 
 export async function loadBrandResolutionCatalogForWorker(
@@ -378,8 +381,12 @@ export function applyIdentityStage(input: {
   const proposed = stringValue(product?.canonical_brand)
   const reviewedBrand = approvedCanonicalBrandFromReview(reviewDecisions)
   const submitted = normalizeRecord(context.resolved_brand)
+  const brandReviewRequiresAction = reviewDecisions.some(
+    (decision) =>
+      decision.field_path === "product.canonical_brand" && decision.decision !== "approved",
+  )
   const modelResolution =
-    !submitted && !reviewedBrand && proposed && brandCatalog
+    !brandReviewRequiresAction && !submitted && !reviewedBrand && proposed && brandCatalog
       ? resolveModelProposal(proposed, brandCatalog)
       : null
   const effectiveContext = modelResolution
@@ -410,7 +417,11 @@ export function applyIdentityStage(input: {
     return gtin ? [gtin] : []
   })
   for (let index = artifacts.length - 1; index >= 0; index--) {
-    if (artifacts[index]!.kind === "identity_candidate") artifacts.splice(index, 1)
+    if (
+      artifacts[index]!.kind === "identity_candidate" &&
+      artifacts[index]!.payload.stage === "identity"
+    )
+      artifacts.splice(index, 1)
   }
   artifacts.push({
     kind: "identity_candidate",

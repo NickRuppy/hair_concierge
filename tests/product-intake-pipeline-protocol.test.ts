@@ -10,6 +10,7 @@ import {
   runProtocolStage,
   type ProtocolResearchDraft,
   type ProtocolStageResult,
+  PROTOCOL_SLOT_RESEARCH_CONTRACT,
 } from "../src/lib/product-intake/pipeline/protocol"
 
 const evidence = [
@@ -17,13 +18,14 @@ const evidence = [
     sourceUrl: "https://example.test/produkt",
     sourceType: "manufacturer" as const,
     checkedAt: "2026-10-06",
+    sourceText: "In die Längen geben und ausspülen.",
   },
 ]
 const sources = [
   {
     url: evidence[0].sourceUrl,
     title: "Hersteller",
-    evidence: "Anwendung geprüft am 2026-10-06.",
+    evidence: "In die Längen geben und ausspülen.",
   },
 ]
 
@@ -209,6 +211,8 @@ test("P2 conditioner stamps normative guidance despite model-written prose", () 
 
 for (const [name, seconds, copy, expectedSeconds, expectedCopy] of [
   ["exact minutes", 180, "3 Minuten einwirken lassen.", 180, "3 Minuten einwirken lassen."],
+  ["derived minutes", null, "3 Minuten einwirken lassen.", 180, "3 Minuten einwirken lassen."],
+  ["derived seconds", null, "30 Sekunden einwirken lassen.", 30, "30 Sekunden einwirken lassen."],
   ["exact seconds", 30, "30 Sekunden einwirken lassen.", 30, "30 Sekunden einwirken lassen."],
   ["range", null, "2–3 Minuten einwirken lassen.", null, "2–3 Minuten einwirken lassen."],
   [
@@ -230,6 +234,10 @@ for (const [name, seconds, copy, expectedSeconds, expectedCopy] of [
     })
     assert.deepEqual(result.templateIds, ["TPL-MASK"])
     const [row] = accepted("mask", input, result)
+    assert.deepEqual(
+      result.notes,
+      name === "missing" || name === "unparseable" ? ["mask_wait_fallback_w3"] : [],
+    )
     assert.equal(row.contact_time_seconds, expectedSeconds)
     assert.equal(
       row.guidance_payload.steps.find((step) => step.action === "wait")?.copyTemplateDe,
@@ -304,7 +312,7 @@ for (const role_support of [
     const input = specs("oil")
     Object.assign(input.product_oil_specs as object, {
       role_support,
-      provides_heat_protection: true,
+      provides_heat_protection: role_support.includes("leave_on_fibre_conditioning"),
     })
     const result = run("oil", input)
     const rows = accepted("oil", input, result)
@@ -376,12 +384,17 @@ test("evidence fallback respects source provenance and uses its actual source te
     categoryKey: "conditioner",
     categorySpecs: input,
     draft: null,
-    sources,
+    sources: [
+      { ...sources[0], evidence: "Geprüft am 2026-10-06: In die Längen geben und ausspülen." },
+    ],
   })
   const [row] = accepted("conditioner", input, result)
-  assert.deepEqual(row.guidance_payload.evidence, evidence)
+  assert.deepEqual(
+    row.guidance_payload.evidence,
+    evidence.map(({ sourceText, ...entry }) => entry),
+  )
   assert.equal(row.source_label, "Hersteller")
-  assert.equal(row.source_text, sources[0].evidence)
+  assert.equal(row.source_text, "Geprüft am 2026-10-06: In die Längen geben und ausspülen.")
 })
 
 test("draft evidence wins over fallback and binds a real product UUID", () => {
@@ -402,11 +415,14 @@ test("draft evidence wins over fallback and binds a real product UUID", () => {
     productId,
   })
   const [row] = accepted("conditioner", input, result)
-  assert.deepEqual(row.guidance_payload.evidence, ownEvidence)
+  assert.deepEqual(
+    row.guidance_payload.evidence,
+    ownEvidence.map(({ sourceText, ...entry }) => entry),
+  )
   assert.equal(row.guidance_payload.scope.productId, productId)
   assert.equal(row.guidance_payload.guidanceKey, `product-conditioner-${productId}`)
   assert.equal(row.source_url, ownEvidence[0].sourceUrl)
-  assert.equal(row.source_text, null)
+  assert.equal(row.source_text, ownEvidence[0].sourceText)
 })
 
 test("retailer fallback requires a checked date and rejects unqualified sources", () => {
@@ -426,7 +442,7 @@ test("retailer fallback requires a checked date and rejects unqualified sources"
   })
   const [row] = accepted("conditioner", input, result)
   assert.deepEqual(row.guidance_payload.evidence, [
-    { ...evidence[0], sourceUrl: retailerSources[0].url, sourceType: "retailer" },
+    { sourceUrl: retailerSources[0].url, sourceType: "retailer", checkedAt: "2026-10-06" },
   ])
   for (const fallback of [
     null,
@@ -450,7 +466,7 @@ test("structural deviations, parked uses and missing heat slots fail closed", ()
   const heatSpecs = specs("leave_in")
   Object.assign(heatSpecs.product_leave_in_specs as object, { provides_heat_protection: true })
   const oilSpecs = specs("oil")
-  Object.assign(oilSpecs.product_oil_specs as object, { format: "spray" })
+  // Spray is a sourced draft fact, not a canonical oil-spec column.
   for (const [category, input, draft, blocker] of [
     [
       "conditioner",
@@ -468,7 +484,7 @@ test("structural deviations, parked uses and missing heat slots fail closed", ()
       "protocol_parked_post_style: leave-in positioned as after-styling finish — needs Nick (P6)",
     ],
     ["leave_in", heatSpecs, { evidence }, "protocol_slot_missing: heat_usable_on_dry_hair"],
-    ["oil", oilSpecs, { evidence }, "protocol_parked_spray_oil (X6)"],
+    ["oil", oilSpecs, { evidence, oil_spray_format: true }, "protocol_parked_spray_oil (X6)"],
     ["oil", { product_oil_specs: { role_support: [] } }, { evidence }, "protocol_roles_missing"],
     ["shampoo", { product_shampoo_specs: [] }, { evidence }, "protocol_roles_missing"],
   ] as const) {
@@ -530,3 +546,92 @@ for (const category of [
     assert.deepEqual(result.blockers, [])
   })
 }
+
+test("protocol uses quoted draft source text and exact evidence URL for publication gates", () => {
+  const result = run("conditioner")
+  const [row] = accepted("conditioner", specs("conditioner"), result)
+  assert.equal(row.source_text, evidence[0].sourceText)
+  assert.ok(
+    (row.guidance_payload.evidence as Array<{ sourceUrl: string }>).some(
+      (entry) => entry.sourceUrl === row.source_url,
+    ),
+  )
+})
+
+test("protocol source-text fallback matches normalized URLs but keeps gate URL equality", () => {
+  const sourceUrl = "https://WWW.Example.test/produkt/#anwendung"
+  const result = runProtocolStage({
+    categoryKey: "conditioner",
+    categorySpecs: specs("conditioner"),
+    draft: { evidence: [{ ...evidence[0], sourceUrl, sourceText: " " }] },
+    sources,
+  })
+  const [row] = accepted("conditioner", specs("conditioner"), result)
+  assert.equal(row.source_text, sources[0].evidence)
+  assert.equal(row.source_url, sourceUrl)
+  assert.equal((row.guidance_payload.evidence[0] as { sourceUrl: string }).sourceUrl, sourceUrl)
+  const missing = run("conditioner", specs("conditioner"), {
+    evidence: [{ ...evidence[0], sourceText: " " }],
+  })
+  assert.equal(missing.status, "blocked")
+  assert.deepEqual(missing.blockers, ["protocol_source_text_missing"])
+})
+
+for (const weight of ["light", "medium", "rich"]) {
+  test(`oil ${weight} corrects placement and pre-wash dosing in column and payload`, () => {
+    const input = specs("oil")
+    Object.assign(input.product_oil_specs as object, {
+      weight,
+      role_support: ["dry_finish", "leave_on_fibre_conditioning", "pre_wash_fibre_treatment"],
+    })
+    const rows = accepted("oil", input, run("oil", input))
+    for (const row of rows) {
+      assert.equal(
+        (row as unknown as { placement: string }).placement,
+        weight === "rich" ? "ends" : "lengths_ends",
+      )
+      assert.equal(
+        row.guidance_payload.protocolFacts.applicationArea,
+        weight === "rich" ? "ends" : "lengths_ends",
+      )
+      if (row.role === "pre_wash_fibre_treatment") {
+        const copy =
+          weight === "rich"
+            ? "Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen."
+            : "Fein: mit 1 Tropfen starten; normal: 2 Tropfen; kräftig: 3 Tropfen. Nur so viel ergänzen, dass ein sehr dünner Film entsteht."
+        assert.equal((row.guidance_payload.protocolFacts.amount as { copyDe: string }).copyDe, copy)
+        assert.equal(
+          row.guidance_payload.steps.find(
+            (step) => (step as unknown as { stepKey: string }).stepKey === "dose-pre-wash",
+          )?.copyTemplateDe,
+          copy,
+        )
+      }
+    }
+  })
+}
+
+for (const role_support of [
+  ["dry_finish"],
+  ["pre_wash_fibre_treatment"],
+  ["dry_finish", "pre_wash_fibre_treatment"],
+]) {
+  test(`heat-protecting oil requires leave-on authority with roles ${role_support.join(",")}`, () => {
+    const input = specs("oil")
+    Object.assign(input.product_oil_specs as object, {
+      role_support,
+      provides_heat_protection: true,
+    })
+    const result = run("oil", input)
+    assert.deepEqual(result.blockers, ["protocol_oil_heat_without_leave_on"])
+    assert.deepEqual(result.rows, [])
+  })
+}
+
+test("mask research contract uses complete German wait steps accepted by stamping", () => {
+  const copySlot = (PROTOCOL_SLOT_RESEARCH_CONTRACT.slots as Record<string, string>)
+    .mask_wait_copy_de
+  assert.match(copySlot, /3 Minuten einwirken lassen\./)
+  assert.match(copySlot, /2–3 Minuten einwirken lassen\./)
+  assert.match(copySlot, /Bis zu 10 Minuten einwirken lassen\./)
+})

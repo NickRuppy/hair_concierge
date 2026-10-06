@@ -2,9 +2,10 @@ import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import test from "node:test"
 
-import { extractCanonicalInci } from "../src/lib/product-intake/pipeline/inci"
+import { applyInciStage, extractCanonicalInci } from "../src/lib/product-intake/pipeline/inci"
 import {
   normalizeResearchOutputForCategory,
+  isModelGeneratedArtifactKind,
   type BrandResolutionPromptContext,
 } from "../scripts/product-intake/codex-research-worker"
 
@@ -148,4 +149,93 @@ test("draft formula is canonicalized without leaking into strict final approval 
   assert.equal((result.researched_payload!.final as Record<string, unknown>).formula, undefined)
   assert.deepEqual(final, { product: {}, category_specs: {} })
   assert.ok(!result.blockers.some((reason) => reason.startsWith("inci_")))
+})
+
+test("INCI replaces only its marker and preserves existing formula evidence", () => {
+  const model = { kind: "formula" as const, payload: { raw_inci: "Aqua, Panthenol" } }
+  const artifacts: Parameters<typeof applyInciStage>[1] = [
+    model,
+    { kind: "formula" as const, payload: { stage: "inci", stale: true } },
+  ]
+  applyInciStage({ final: {} }, artifacts, { state: "active", engineId: "test" }, {})
+  assert.strictEqual(artifacts[0], model)
+  assert.equal(artifacts.length, 2)
+  assert.equal(artifacts[1].payload.stage, "inci")
+  assert.equal(artifacts[1].payload.stale, undefined)
+})
+
+test("models cannot emit formula, commerce or protocol stage artifacts", () => {
+  for (const kind of ["formula", "commerce_check", "protocol_template"])
+    assert.equal(isModelGeneratedArtifactKind(kind), false, kind)
+  assert.equal(isModelGeneratedArtifactKind("identity_candidate"), true)
+})
+
+for (const category of ["conditioner", "leave_in", "oil", "mask", "shampoo", "bondbuilder"]) {
+  test(`${category} draft-only passes write markers without INCI or protocol blockers`, () => {
+    const result = normalizeResearchOutputForCategory(
+      {
+        summary: "Waiting",
+        blockers: [],
+        artifacts: [],
+        researched_payload: { draft: { notes: "Need more evidence" } },
+      },
+      category,
+      context,
+      [],
+      "submission",
+    )
+    assert.deepEqual(
+      result.blockers.filter((reason) => /^(inci_|protocol_)/.test(reason)),
+      [],
+    )
+    assert.equal(
+      result.artifacts.find((artifact) => artifact.kind === "formula")?.status,
+      "missing",
+    )
+    const protocol = result.artifacts.find((artifact) => artifact.kind === "protocol_template")!
+    assert.ok(protocol)
+    assert.deepEqual(protocol.payload.blockers, [])
+  })
+}
+
+test("protocol stamping preserves legacy evidence, replaces its marker and records W3 fallback", () => {
+  const legacy = {
+    kind: "protocol_template" as const,
+    payload: { reasoning: "Legacy protocol evidence" },
+  }
+  const result = normalizeResearchOutputForCategory(
+    {
+      summary: "Research",
+      blockers: [],
+      artifacts: [
+        legacy,
+        { kind: "protocol_template", payload: { stage: "protocol", stale: true } },
+      ],
+      researched_payload: {
+        draft: {
+          protocol: {
+            evidence: [
+              {
+                sourceUrl: "https://example.test/product",
+                sourceType: "manufacturer",
+                checkedAt: "2026-10-06",
+                sourceText: "Ins feuchte Haar geben und danach ausspülen.",
+              },
+            ],
+          },
+        },
+        final: { product: {}, category_specs: { product_mask_specs: {} } },
+      },
+    },
+    "mask",
+    context,
+    [],
+    "submission",
+  )
+  const artifacts = result.artifacts.filter((artifact) => artifact.kind === "protocol_template")
+  assert.equal(artifacts.length, 2)
+  assert.deepEqual(artifacts[0].payload, legacy.payload)
+  assert.equal(artifacts[1].payload.stage, "protocol")
+  assert.deepEqual(artifacts[1].payload.notes, ["mask_wait_fallback_w3"])
+  assert.equal(artifacts[1].payload.stale, undefined)
 })
