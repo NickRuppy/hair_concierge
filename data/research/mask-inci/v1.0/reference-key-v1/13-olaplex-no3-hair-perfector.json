@@ -12,7 +12,7 @@
     "formulaSource": "hautschutzengel.de produkt/389484, accessed 2026-09-04",
     "rawInciSha256": "e44800d358fafdbc1ab451602a0793b73493d22c5267eb087a3c4c36a84e9a9d",
     "identityState": "excluded_product_form",
-    "identityStateReason": "§2.3's identity gates are not all satisfied (no confirmed GTIN, no pinned pack size), but that is not why this record has no profile. G0 refuses the product on its directions and its catalog category before formula analysis begins, and §2.3's gates were therefore never reached."
+    "identityStateReason": "§2.3's identity gates are not all satisfied (no confirmed GTIN, no pinned pack size), but that is not why this record has no profile. G0 refuses the product on its directions and its catalog category before formula analysis begins, and §2.3's gates were therefore never reached. RELAUNCH NOTED 2026-10-06: olaplex.com's No. 3 URL now redirects to 'N°.3PLUS Hair Repair Pre-Wash Treatment' (richer formula, maleate @4, still pre-wash). The refuse-test is unaffected — the exclusion rests on the pre-shampoo directions, which the successor shares; successor captured in plans/mask-inci/freeze-gate-candidates.md as an unseen-set refuse-test trap."
   },
   "g0": {
     "value": "excluded_product_form",
