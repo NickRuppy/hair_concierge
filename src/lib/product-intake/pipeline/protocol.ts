@@ -297,9 +297,12 @@ export function runProtocolStage(input: {
       const row = buildExpansionProtocolRow(templateId, slots)
       // §2.4 / oil templates: the builder defaults to lengths_ends; rich weight is caller-owned.
       if (categoryKey === "oil" && asRecord(categorySpecs.product_oil_specs).weight === "rich") {
-        row.placement = "ends"
         const facts = asRecord(row.guidance_payload.protocolFacts)
-        facts.applicationArea = "ends"
+        // Pre-wash keeps lengths_ends (its template table has no rich exception); only the dose swaps.
+        if (templateId !== "TPL-OIL-PREWASH") {
+          row.placement = "ends"
+          facts.applicationArea = "ends"
+        }
         if (templateId === "TPL-OIL-PREWASH") {
           const dose =
             "Fein: mit 1 Tropfen starten; normal: 1 Tropfen; kräftig: 2 Tropfen. Vollständig zwischen den Handflächen anwärmen und sehr dünn verteilen."

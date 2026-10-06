@@ -586,14 +586,11 @@ for (const weight of ["light", "medium", "rich"]) {
     })
     const rows = accepted("oil", input, run("oil", input))
     for (const row of rows) {
-      assert.equal(
-        (row as unknown as { placement: string }).placement,
-        weight === "rich" ? "ends" : "lengths_ends",
-      )
-      assert.equal(
-        row.guidance_payload.protocolFacts.applicationArea,
-        weight === "rich" ? "ends" : "lengths_ends",
-      )
+      // Pre-wash keeps lengths_ends for every weight; only dry-finish/leave-on move to ends.
+      const area =
+        weight === "rich" && row.role !== "pre_wash_fibre_treatment" ? "ends" : "lengths_ends"
+      assert.equal((row as unknown as { placement: string }).placement, area)
+      assert.equal(row.guidance_payload.protocolFacts.applicationArea, area)
       if (row.role === "pre_wash_fibre_treatment") {
         const copy =
           weight === "rich"
