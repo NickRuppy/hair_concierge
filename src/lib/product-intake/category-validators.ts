@@ -44,6 +44,7 @@ import { buildProductApplicationPointerV2 } from "@/lib/product-intake/catalog-e
 import { deriveShampooProtocolRoles } from "@/lib/product-intake/shampoo-protocol-roles"
 import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
 import { validateBondbuilderResearchProfile } from "@/lib/bondbuilder-research/production-adapter"
+import { PRODUCT_INTAKE_REQUIRED_SPEC_TABLES_BY_CATEGORY } from "@/lib/product-intake/spec-readiness"
 
 export const PRODUCT_INTAKE_PRODUCT_ID_PLACEHOLDER = "__PRODUCT_ID__" as const
 
@@ -485,6 +486,18 @@ function validateSpecs<T>(
   return { ok: true, specs: parsed.data }
 }
 
+function missingRequiredSpecTables(
+  categoryKey: ProductIntakeReviewCategoryKey,
+  categorySpecs: Record<string, unknown>,
+): string[] {
+  return PRODUCT_INTAKE_REQUIRED_SPEC_TABLES_BY_CATEGORY[categoryKey]
+    .filter((table) => {
+      const rows = categorySpecs[table]
+      return rows == null || (Array.isArray(rows) && rows.length === 0)
+    })
+    .map((table) => `final.category_specs.${table}`)
+}
+
 const scalpRouteSchema = z.enum(["oily", "balanced", "dry", "dandruff", "dry_flakes", "irritated"])
 const cleansingIntensitySchema = z.enum(["gentle", "regular", "clarifying"])
 
@@ -834,14 +847,27 @@ const applicationProtocolBaseSchema = z
   })
   .strict()
 
-const heatProtectantProtocolSchema = applicationProtocolBaseSchema
-  .extend({
-    category: z.literal("heat_protectant"),
-    role: z.literal("pre_heat_protection"),
-    application_state: z.enum(["damp", "dry", "either"]),
-    reapplication: z.enum(["required", "optional", "not_stated"]),
-  })
-  .strict()
+function applicationProtocolRowSchema(categoryKey: ProductIntakeReviewCategoryKey) {
+  return applicationProtocolBaseSchema
+    .extend({
+      category: z.literal(categoryKey),
+      role:
+        categoryKey === "heat_protectant"
+          ? z.literal("pre_heat_protection")
+          : categoryKey === "scalp_care"
+            ? scalpCareRoleSchema
+            : z.string(),
+      application_state:
+        categoryKey === "heat_protectant"
+          ? z.enum(["damp", "dry", "either"])
+          : applicationProtocolBaseSchema.shape.application_state,
+      reapplication:
+        categoryKey === "heat_protectant"
+          ? z.enum(["required", "optional", "not_stated"])
+          : applicationProtocolBaseSchema.shape.reapplication,
+    })
+    .strict()
+}
 
 const legacyHeatProtectantProtocolSchema = applicationProtocolBaseSchema
   .omit({ guidance_payload: true })
@@ -856,7 +882,7 @@ const legacyHeatProtectantProtocolSchema = applicationProtocolBaseSchema
 const heatProtectantSpecsSchema = z
   .object({
     product_heat_protectant_specs: heatProtectantSpecSchema,
-    product_application_protocols: z.array(heatProtectantProtocolSchema).min(1),
+    product_application_protocols: z.array(applicationProtocolRowSchema("heat_protectant")).min(1),
   })
   .strict()
 
@@ -884,13 +910,6 @@ const scalpCareSpecSchema = z
   })
   .strict()
 
-const scalpCareProtocolSchema = applicationProtocolBaseSchema
-  .extend({
-    category: z.literal("scalp_care"),
-    role: scalpCareRoleSchema,
-  })
-  .strict()
-
 const legacyScalpCareProtocolSchema = applicationProtocolBaseSchema
   .omit({ guidance_payload: true })
   .extend({
@@ -902,7 +921,7 @@ const legacyScalpCareProtocolSchema = applicationProtocolBaseSchema
 const scalpCareSpecsSchema = z
   .object({
     product_scalp_care_specs: scalpCareSpecSchema,
-    product_application_protocols: z.array(scalpCareProtocolSchema).min(1),
+    product_application_protocols: z.array(applicationProtocolRowSchema("scalp_care")).min(1),
   })
   .strict()
 
@@ -1102,19 +1121,11 @@ function validateLegacyScalpCare(
 function validateExactProtocol(
   categoryKey: ProductIntakeReviewCategoryKey,
   categorySpecs: unknown,
+  validateRoles = true,
 ): ProductIntakeCategorySpecsValidationResult {
-  const requiredRoles = requiredProtocolRoles(categoryKey, categorySpecs)
   const protocols = z
     .object({
-      product_application_protocols: z
-        .array(
-          applicationProtocolBaseSchema.extend({
-            category: z.literal(categoryKey),
-            role: z.string(),
-            guidance_payload: canonicalGuidancePayloadSchema,
-          }),
-        )
-        .min(1),
+      product_application_protocols: z.array(applicationProtocolRowSchema(categoryKey)).min(1),
     })
     .passthrough()
     .safeParse(categorySpecs)
@@ -1126,16 +1137,21 @@ function validateExactProtocol(
       targetSpecOperations: [],
     }
   }
-  const suppliedRoles = new Set(
-    protocols.data.product_application_protocols.map((protocol) => protocol.role),
-  )
-  const unsupportedShampooRole =
-    categoryKey === "shampoo" && [...suppliedRoles].some((role) => !requiredRoles.includes(role))
-  if (requiredRoles.some((role) => !suppliedRoles.has(role)) || unsupportedShampooRole) {
-    return {
-      ok: false,
-      missingFields: ["final.category_specs.product_application_protocols.role"],
-      targetSpecOperations: [],
+  // Derive executable roles only after the category rows have passed their
+  // structural validator. Malformed rows must not hide protocol shape errors.
+  if (validateRoles) {
+    const requiredRoles = requiredProtocolRoles(categoryKey, categorySpecs)
+    const suppliedRoles = new Set(
+      protocols.data.product_application_protocols.map((protocol) => protocol.role),
+    )
+    const unsupportedShampooRole =
+      categoryKey === "shampoo" && [...suppliedRoles].some((role) => !requiredRoles.includes(role))
+    if (requiredRoles.some((role) => !suppliedRoles.has(role)) || unsupportedShampooRole) {
+      return {
+        ok: false,
+        missingFields: ["final.category_specs.product_application_protocols.role"],
+        targetSpecOperations: [],
+      }
     }
   }
 
@@ -1297,8 +1313,6 @@ export function validateProductIntakeApprovalPayload(
                 },
           )
 
-  if (!categoryValidation.ok) return categoryValidation
-
   if (
     profile === "legacy_personal_plan_launch_v1" &&
     (categoryKey === "heat_protectant" || categoryKey === "scalp_care")
@@ -1308,15 +1322,18 @@ export function validateProductIntakeApprovalPayload(
     return categoryValidation
   }
 
-  const protocolValidation = validateExactProtocol(categoryKey, finalPayload.category_specs)
-  if (!protocolValidation.ok) {
-    return {
-      ok: false,
-      missingFields: protocolValidation.missingFields,
-      normalizedPayload: null,
-      targetSpecOperations: [],
-    }
-  }
+  const protocolValidation = validateExactProtocol(
+    categoryKey,
+    finalPayload.category_specs,
+    categoryValidation.ok,
+  )
+  const missingFields = [
+    ...missingRequiredSpecTables(categoryKey, finalPayload.category_specs),
+    ...categoryValidation.missingFields,
+    ...protocolValidation.missingFields,
+  ]
+  if (!categoryValidation.ok || !protocolValidation.ok || missingFields.length > 0)
+    return invalidCategoryResult(missingFields)
 
   return {
     ...categoryValidation,

@@ -936,11 +936,12 @@ test("cockpit: two products in one step, each with its own radio group, „Wegla
   assert.deepEqual(checkedKeep, [`decision-${SH}:${ids.itemA}`])
 })
 
-test("cockpit: a single-product step shows no „Weglassen“ and no frequency line", () => {
+test("cockpit: a single-product step shows no „Weglassen“ but still her frequency", () => {
   const markup = renderCockpit(modelOf(SINGLE_ITEMS, SINGLE_DECISIONS))
   // No „Weglassen" choice (the runsheet's bucket heading is not one).
   assert.ok(!markup.includes('value="drop"'))
-  assert.ok(!markup.includes("2× pro Woche"))
+  // The „Wie oft" row names her answer on every product, one per step or not.
+  assert.ok(markup.includes("2× pro Woche"))
 })
 
 test("cockpit: a dropped entry starts selected on „Weglassen“; the refusals read as write errors", () => {

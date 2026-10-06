@@ -1,10 +1,15 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { basename, dirname, join, resolve, sep } from "node:path"
 import { hostname } from "node:os"
-import { spawnSync } from "node:child_process"
+import {
+  spawn,
+  type SpawnSyncOptionsWithStringEncoding,
+  type SpawnSyncReturns,
+} from "node:child_process"
 import { createHash } from "node:crypto"
 import { pathToFileURL } from "node:url"
 import sharp from "sharp"
+import * as Sentry from "@sentry/node"
 
 import {
   buildBrandResolutionCatalog,
@@ -16,43 +21,19 @@ import {
 } from "@/lib/product-identity/brand-resolution"
 import { normalizeIdentityText } from "@/lib/product-identity/normalize"
 import {
-  CONDITIONER_INGREDIENT_FLAGS,
-  CONDITIONER_REPAIR_LEVELS,
-  CONDITIONER_WEIGHTS,
-} from "@/lib/conditioner/constants"
-import {
-  DEEP_CLEANSING_COLOR_TREATED_SUITABILITIES,
-  DEEP_CLEANSING_RESET_FOCUSES,
-  DEEP_CLEANSING_RESET_INTENSITIES,
-} from "@/lib/deep-cleansing-shampoo/constants"
+  checkResearchReadiness,
+  type ResearchReadinessSelfCheck,
+} from "@/lib/product-intake/research-readiness-self-check"
 import { LEAVE_IN_APPLICATION_STAGES } from "@/lib/leave-in/constants"
-import { MASK_CONCENTRATIONS, MASK_INGREDIENT_FLAGS, MASK_WEIGHTS } from "@/lib/mask/constants"
-import { OIL_INGREDIENT_FLAGS, OIL_PURPOSES, OIL_SUBTYPES } from "@/lib/oil/constants"
 import {
-  DRY_SHAMPOO_FORMATS,
-  DRY_SHAMPOO_HAIR_COLOR_FITS,
-  DRY_SHAMPOO_PRIMARY_EFFECTS,
-  DRY_SHAMPOO_SCALP_SENSITIVITY_FITS,
-  PRODUCT_BALANCE_TARGETS,
-  PRODUCT_BOND_APPLICATION_MODES,
-  PRODUCT_BOND_PRODUCT_FORMATS,
-  PRODUCT_BOND_REPAIR_AXES,
-  PRODUCT_BOND_REPAIR_INTENSITIES,
-  PRODUCT_BOND_TREATMENT_MODES,
-  PRODUCT_BOND_USAGE_PROTOCOLS,
-  PRODUCT_SCALP_TYPE_FOCUSES,
-} from "@/lib/product-specs/constants"
-import { SHAMPOO_BUCKETS } from "@/lib/shampoo/constants"
-import { HAIR_THICKNESSES, PROTEIN_MOISTURE_LEVELS } from "@/lib/vocabulary"
-import {
-  appendResearchArtifact,
+  appendResearchArtifact as coreAppendResearchArtifact,
   claimResearchJobs,
   countResearchArtifacts,
   loadProductIntakeSubmissionDetail,
   normalizeCodexConcurrency,
   resolveReviewDecisionsForSubmission,
   saveSubmissionResearchPreview,
-  updateResearchJob,
+  updateResearchJob as coreUpdateResearchJob,
   PRODUCT_INTAKE_ARTIFACT_KINDS,
   PRODUCT_INTAKE_JOB_STAGES,
   type JsonRecord,
@@ -65,18 +46,363 @@ import {
 
 import { createSupabaseClientFromEnv, flagBool, flagInt, parseArgs, printJson } from "./cli"
 import { finalizeProductImageAsset } from "./finalize-package-image"
-import { applyConditionerResearchAdapter } from "@/lib/product-intake/conditioner-research-adapter"
-import { conditionerResearchPromptContract } from "@/lib/product-intake/conditioner-research-prompt-contract"
-import { applyLeaveInResearchAdapter } from "@/lib/product-intake/leave-in-research-adapter"
-import { leaveInResearchPromptContract } from "@/lib/product-intake/leave-in-research-prompt-contract"
-import { applyBondbuilderResearchAdapterForWorker } from "@/lib/product-intake/bondbuilder-research-adapter"
-import { bondbuilderResearchPromptContract } from "@/lib/product-intake/bondbuilder-research-prompt-contract"
+import {
+  CATEGORY_RESEARCH_REGISTRY,
+  CATEGORY_SPEC_KEYS,
+  REQUIRED_CATEGORY_SPEC_KEYS,
+  normalizeCategoryKey,
+  researchEngineBindingMismatch,
+  researchEngineBindingVersion,
+  type ResearchJobEngineBinding,
+  type CategoryContractKey,
+} from "@/lib/product-intake/category-research-router"
 import {
   createRetailerEnrichmentWarningReporter,
   parseRetailerEnrichmentPacket,
   type RetailerEnrichmentPacket,
   type ScannedIdentifierPacketValue,
 } from "./retailer-enrichment-packet"
+
+type WorkerSpawn = (
+  command: string,
+  args: string[],
+  options: SpawnSyncOptionsWithStringEncoding,
+) => SpawnSyncReturns<string> | Promise<SpawnSyncReturns<string>>
+
+// Preserve the result/error contract of spawnSync without blocking heartbeats.
+export function runWorkerProcess(
+  command: string,
+  args: string[],
+  options: SpawnSyncOptionsWithStringEncoding,
+): Promise<SpawnSyncReturns<string>> {
+  return new Promise((resolveResult) => {
+    const { timeout, maxBuffer = 1024 * 1024, encoding: _encoding, ...spawnOptions } = options
+    void _encoding
+    const stdout: Buffer[] = []
+    const stderr: Buffer[] = []
+    let stdoutSize = 0
+    let stderrSize = 0
+    let error: Error | undefined
+    let timer: ReturnType<typeof setTimeout> | undefined
+    let killTimer: ReturnType<typeof setTimeout> | undefined
+    let settleTimer: ReturnType<typeof setTimeout> | undefined
+    let settled = false
+    let terminated = false
+    const child = spawn(command, args, {
+      ...spawnOptions,
+      detached: true,
+      stdio: ["ignore", "pipe", "pipe"],
+    })
+    const signalGroup = (signal: NodeJS.Signals) => {
+      try {
+        if (!child.pid) throw new Error("Child has no process group")
+        process.kill(-child.pid, signal)
+      } catch {
+        child.kill(signal)
+      }
+    }
+    const finish = (status: number | null, signal: NodeJS.Signals | null) => {
+      if (settled) return
+      settled = true
+      clearTimeout(timer)
+      clearTimeout(killTimer)
+      clearTimeout(settleTimer)
+      if (terminated) signalGroup("SIGKILL")
+      child.stdout?.destroy()
+      child.stderr?.destroy()
+      resolveResult({
+        pid: child.pid ?? 0,
+        output: [],
+        stdout: Buffer.concat(stdout).toString("utf8"),
+        stderr: Buffer.concat(stderr).toString("utf8"),
+        status,
+        signal,
+        error,
+      })
+    }
+    const settleAfterGrace = () => {
+      // Pipes can outlive the leader, even after a process-group kill. Bound that wait.
+      settleTimer ??= setTimeout(() => finish(child.exitCode, child.signalCode), 2_000)
+    }
+    const terminate = (failure: Error) => {
+      if (error) return
+      error = failure
+      terminated = true
+      signalGroup("SIGTERM")
+      killTimer = setTimeout(() => signalGroup("SIGKILL"), 1_000)
+      settleAfterGrace()
+    }
+    const collect = (stream: "stdout" | "stderr", chunk: Buffer) => {
+      const size = stream === "stdout" ? stdoutSize : stderrSize
+      const remaining = Math.max(0, maxBuffer - size)
+      const accepted = chunk.subarray(0, remaining)
+      if (stream === "stdout") {
+        if (accepted.length) stdout.push(accepted)
+        stdoutSize += accepted.length
+      } else {
+        if (accepted.length) stderr.push(accepted)
+        stderrSize += accepted.length
+      }
+      if (chunk.length > remaining) {
+        terminate(
+          Object.assign(new Error(`${command} output exceeded maxBuffer`), { code: "ENOBUFS" }),
+        )
+      }
+    }
+    child.stdout?.on("data", (chunk: Buffer) => collect("stdout", chunk))
+    child.stderr?.on("data", (chunk: Buffer) => collect("stderr", chunk))
+    child.on("error", (failure) => {
+      error ??= failure
+    })
+    child.on("exit", () => {
+      if (error) settleAfterGrace()
+    })
+    child.on("close", finish)
+    if (timeout && timeout > 0) {
+      timer = setTimeout(
+        () => terminate(Object.assign(new Error(`${command} ETIMEDOUT`), { code: "ETIMEDOUT" })),
+        timeout,
+      )
+    }
+  })
+}
+
+type HeartbeatClient = {
+  rpc: (
+    name: string,
+    args: Record<string, unknown>,
+  ) => PromiseLike<{ data: unknown; error: unknown }>
+}
+
+class WorkerLeaseLostError extends Error {
+  constructor(jobId: string) {
+    super(`Worker lease lost for ${jobId}`)
+  }
+}
+
+export class WorkerJobLease {
+  aborted = false
+  private pending: Promise<unknown> = Promise.resolve()
+  private readonly startedAt = Date.now()
+  private readonly maxRuntimeMs = positiveDurationMs(
+    process.env.PRODUCT_INTAKE_JOB_MAX_RUNTIME_MS,
+    45 * 60_000,
+  )
+
+  private checkRuntime(): void {
+    if (Date.now() - this.startedAt > this.maxRuntimeMs) this.aborted = true
+  }
+
+  constructor(
+    readonly job: Pick<ProductIntakeResearchJob, "id" | "locked_by" | "locked_at">,
+    private readonly client: HeartbeatClient,
+  ) {}
+
+  private serialize<T>(operation: () => Promise<T>): Promise<T> {
+    const result = this.pending.then(operation)
+    this.pending = result.catch(() => undefined)
+    return result
+  }
+
+  renew(): Promise<void> {
+    return this.serialize(async () => {
+      this.checkRuntime()
+      if (this.aborted) return
+      const { data, error } = await this.client.rpc("product_intake_renew_research_job_lease", {
+        target_job_id: this.job.id,
+        expected_locked_by: this.job.locked_by,
+      })
+      if (error) throw error
+      if (data === null) this.aborted = true
+      else if (typeof data === "string") this.job.locked_at = data
+      else throw new Error("Lease renewal returned an invalid timestamp")
+    })
+  }
+
+  write<T>(operation: () => Promise<T>): Promise<T> {
+    return this.serialize(async () => {
+      this.checkRuntime()
+      if (this.aborted) throw new WorkerLeaseLostError(this.job.id)
+      return operation()
+    })
+  }
+}
+
+const workerLeases = new Map<string, WorkerJobLease>()
+
+function withJobLease<T>(jobId: string | null | undefined, write: () => Promise<T>): Promise<T> {
+  const lease = jobId ? workerLeases.get(jobId) : undefined
+  return lease ? lease.write(write) : write()
+}
+
+function appendResearchArtifact(
+  ...[client, params]: Parameters<typeof coreAppendResearchArtifact>
+) {
+  return withJobLease(params.jobId, () => coreAppendResearchArtifact(client, params))
+}
+
+function updateResearchJob(...[client, params]: Parameters<typeof coreUpdateResearchJob>) {
+  return withJobLease(params.jobId, async () => {
+    const lease = workerLeases.get(params.jobId)
+    const updated = await coreUpdateResearchJob(client, {
+      ...params,
+      expectedLockedAt: lease?.job.locked_at ?? params.expectedLockedAt,
+    })
+    // All call-chain aliases share this object, including optional model lanes.
+    if (lease) Object.assign(lease.job, updated)
+    if (updated.status !== "running") workerLeases.delete(params.jobId)
+    return lease ? (lease.job as ProductIntakeResearchJob) : updated
+  })
+}
+
+/** Called before the production research run; the RPC fences concurrent/stale owners. */
+export async function bindResearchJobEngine(
+  client: HeartbeatClient,
+  job: ProductIntakeResearchJob & ResearchJobEngineBinding,
+  category: string | null | undefined,
+): Promise<ProductIntakeResearchJob & ResearchJobEngineBinding> {
+  const key = normalizeCategoryKey(category)
+  if (!key) return job
+  const engine = CATEGORY_RESEARCH_REGISTRY[key]
+  if (engine.state !== "active") return job
+  return withJobLease(job.id, async () => {
+    const mismatch = researchEngineBindingMismatch(job, engine)
+    if (mismatch) throw new Error(mismatch)
+    const lease = workerLeases.get(job.id)
+    const { data, error } = await client.rpc("product_intake_bind_research_job_engine", {
+      target_job_id: job.id,
+      next_engine_key: engine.engineId,
+      next_engine_version: researchEngineBindingVersion(engine),
+      expected_locked_by: job.locked_by,
+      expected_locked_at: lease?.job.locked_at ?? job.locked_at,
+    })
+    if (error) {
+      const rpcError = normalizeRecord(error)
+      const message = stringValue(rpcError?.message) ?? "Engine binding RPC failed"
+      if (rpcError?.code === "PGRST202" || /Could not find the function/i.test(message)) {
+        const infrastructureError = new Error(
+          `INFRA_ENGINE_BINDING: product_intake_bind_research_job_engine unavailable; continuing without binding for job ${job.id}: ${message}`,
+        )
+        try {
+          console.error(infrastructureError.message)
+        } catch {
+          /* Observability must not gate research. */
+        }
+        try {
+          if (Sentry.isInitialized()) Sentry.captureException(infrastructureError)
+        } catch {
+          /* Sentry is best effort. */
+        }
+        return job
+      }
+      throw new Error(message)
+    }
+    const bound = normalizeRecord(data)
+    if (!bound) throw new Error("Engine binding RPC returned no job")
+    Object.assign(job, bound)
+    return job
+  })
+}
+
+export function startWorkerHeartbeat(params: {
+  client: HeartbeatClient
+  workerId: string
+  host: string
+  pid: number
+  releaseSha?: string
+  intervalMs?: number
+  leases: Map<string, WorkerJobLease>
+  currentJobId: () => string | null
+  authPaused?: () => boolean
+  onError?: (error: unknown) => void
+  checkIn?: (status: "ok" | "error") => void
+}) {
+  let stopped = false
+  let inFlight: Promise<void> | undefined
+  let heartbeatFailures = 0
+  const report = (error: unknown) => {
+    try {
+      ;(params.onError ?? console.error)(error)
+    } catch {
+      /* Observability cannot crash work. */
+    }
+  }
+  const tick = (): Promise<void> => {
+    if (stopped) return Promise.resolve()
+    if (inFlight) return inFlight
+    inFlight = (async () => {
+      // Renew even when the separate liveness RPC fails.
+      await Promise.all([...params.leases.values()].map((lease) => lease.renew().catch(report)))
+      try {
+        const { error } = await params.client.rpc("product_intake_record_worker_heartbeat", {
+          worker_id: params.workerId,
+          host: params.host,
+          pid: params.pid,
+          release_sha: params.releaseSha ?? null,
+          current_job_id: params.currentJobId(),
+        })
+        if (error) throw error
+        heartbeatFailures = 0
+      } catch (error) {
+        heartbeatFailures++
+        report(error)
+      }
+      try {
+        params.checkIn?.(
+          heartbeatFailures >= 2 ||
+            params.authPaused?.() ||
+            [...params.leases.values()].some((lease) => lease.aborted)
+            ? "error"
+            : "ok",
+        )
+      } catch (error) {
+        report(error)
+      }
+    })().finally(() => {
+      inFlight = undefined
+    })
+    return inFlight
+  }
+  const timer = setInterval(() => {
+    void tick()
+  }, params.intervalMs ?? 60_000)
+  void tick()
+  return {
+    tick,
+    stop: () => {
+      stopped = true
+      clearInterval(timer)
+    },
+  }
+}
+
+function initWorkerSentry(): boolean {
+  const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN?.trim()
+  if (!dsn) return false
+  try {
+    Sentry.init({ dsn, environment: process.env.NODE_ENV ?? "production", sendDefaultPii: false })
+    return true
+  } catch {
+    return false
+  }
+}
+
+function workerSentryCheckIn(enabled: boolean, intervalMs: number, status: "ok" | "error"): void {
+  if (!enabled) return
+  try {
+    const checkInId = Sentry.captureCheckIn(
+      { monitorSlug: "product-intake-worker", status: "in_progress" },
+      {
+        schedule: { type: "interval", value: Math.ceil(intervalMs / 60_000), unit: "minute" },
+        checkinMargin: 10,
+        maxRuntime: 1,
+      },
+    )
+    Sentry.captureCheckIn({ monitorSlug: "product-intake-worker", status, checkInId })
+  } catch {
+    /* Match price-audit: Sentry is best effort. */
+  }
+}
 
 type WorkerResult = {
   worker_id: string
@@ -235,6 +561,39 @@ type WorkerOptions = {
   concurrency: number
   workerId: string
   supabase: ReturnType<typeof createSupabaseClientFromEnv>
+  currentJobId?: string | null
+  claimGate: WorkerClaimGate
+}
+
+// Shared by the watch loop and its heartbeat, so infrastructure outages stop claims.
+export class WorkerClaimGate {
+  private pauseUntil = 0
+
+  get paused(): boolean {
+    return Date.now() < this.pauseUntil
+  }
+
+  handleFailure(error: unknown): void {
+    if (codexInfrastructureCode(error) !== "infra_auth") return
+    const pauseMs = positiveDurationMs(process.env.PRODUCT_INTAKE_AUTH_PAUSE_MS, 15 * 60_000)
+    this.pauseUntil = Date.now() + pauseMs
+    try {
+      console.error(
+        `INFRA_AUTH: worker claims PAUSED for ${pauseMs}ms until ${new Date(this.pauseUntil).toISOString()}: ${errorMessage(error)}`,
+      )
+    } catch {
+      /* Observability cannot prevent the pause. */
+    }
+    try {
+      if (Sentry.isInitialized()) Sentry.captureException(error)
+    } catch {
+      /* Sentry is best effort. */
+    }
+  }
+
+  claim(...args: Parameters<typeof claimResearchJobs>): ReturnType<typeof claimResearchJobs> {
+    return this.paused ? Promise.resolve([]) : claimResearchJobs(...args)
+  }
 }
 
 export type BrandResolutionPromptContext = {
@@ -263,31 +622,6 @@ type SupabaseQueryResult<T> = {
   error: { message?: string } | null
 }
 
-const CATEGORY_SPEC_KEYS = {
-  shampoo: ["product_shampoo_specs", "product_application_protocols"],
-  conditioner: [
-    "product_conditioner_specs",
-    "product_conditioner_rerank_specs",
-    "product_application_protocols",
-  ],
-  mask: ["product_mask_specs", "product_application_protocols"],
-  leave_in: [
-    "product_leave_in_specs",
-    "product_leave_in_fit_specs",
-    "product_leave_in_eligibility",
-    "product_application_protocols",
-  ],
-  oil: ["product_oil_specs", "product_oil_eligibility", "product_application_protocols"],
-  dry_shampoo: ["product_dry_shampoo_specs", "product_application_protocols"],
-  deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs", "product_application_protocols"],
-  bondbuilder: [
-    "product_bondbuilder_specs",
-    "product_relationships",
-    "product_application_protocols",
-  ],
-  heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
-  scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
-} as const
 const CODEX_RESEARCH_TIMEOUT_MS = 5 * 60_000
 const CODEX_APP_BINARY = "/Applications/Codex.app/Contents/Resources/codex"
 const MODEL_EVALUATION_EXPERIMENT_ID = "product_intake_research_effort_v1"
@@ -295,27 +629,6 @@ const REMBG_IMAGE =
   "danielgatis/rembg@sha256:98e72b790093dec3b21967e22c8eb75a0a67d458fdba7ef5fcc1900cad76396b"
 const REMBG_MODEL = "isnet-general-use" as const
 
-const REQUIRED_CATEGORY_SPEC_KEYS = {
-  shampoo: ["product_shampoo_specs", "product_application_protocols"],
-  conditioner: [
-    "product_conditioner_specs",
-    "product_conditioner_rerank_specs",
-    "product_application_protocols",
-  ],
-  mask: ["product_mask_specs", "product_application_protocols"],
-  leave_in: [
-    "product_leave_in_specs",
-    "product_leave_in_fit_specs",
-    "product_leave_in_eligibility",
-    "product_application_protocols",
-  ],
-  oil: ["product_oil_specs", "product_oil_eligibility", "product_application_protocols"],
-  dry_shampoo: ["product_dry_shampoo_specs", "product_application_protocols"],
-  deep_cleansing_shampoo: ["product_deep_cleansing_shampoo_specs", "product_application_protocols"],
-  bondbuilder: ["product_bondbuilder_specs", "product_application_protocols"],
-  heat_protectant: ["product_heat_protectant_specs", "product_application_protocols"],
-  scalp_care: ["product_scalp_care_specs", "product_application_protocols"],
-} as const
 const ARRAY_CATEGORY_SPEC_TABLES = new Set<string>([
   "product_shampoo_specs",
   "product_conditioner_specs",
@@ -323,8 +636,6 @@ const ARRAY_CATEGORY_SPEC_TABLES = new Set<string>([
   "product_oil_eligibility",
   "product_application_protocols",
 ])
-
-type CategoryContractKey = keyof typeof CATEGORY_SPEC_KEYS
 
 async function main() {
   const args = parseArgs()
@@ -355,6 +666,7 @@ async function main() {
     concurrency,
     workerId,
     supabase,
+    claimGate: new WorkerClaimGate(),
   }
 
   if (watch && !json) {
@@ -364,18 +676,146 @@ async function main() {
     console.log("Press Ctrl-C to stop.")
   }
 
-  while (watch) {
-    printWorkerResult(await runWorkerBatch(options), options)
-    await sleep(pollMs)
-  }
-
-  if (!watch) {
-    printWorkerResult(await runWorkerBatch(options), options)
+  const heartbeatMs = normalizeWorkerPollMs(process.env.PRODUCT_INTAKE_WORKER_HEARTBEAT_MS, 60_000)
+  const sentryEnabled = initWorkerSentry()
+  const heartbeat = watch
+    ? startWorkerHeartbeat({
+        client: supabase,
+        workerId,
+        host: hostname(),
+        pid: process.pid,
+        releaseSha: process.env.PRODUCT_INTAKE_RELEASE_SHA?.trim() || undefined,
+        intervalMs: heartbeatMs,
+        leases: workerLeases,
+        currentJobId: () => options.currentJobId ?? null,
+        authPaused: () => options.claimGate.paused,
+        checkIn: (status) => workerSentryCheckIn(sentryEnabled, heartbeatMs, status),
+      })
+    : undefined
+  try {
+    if (watch) await cleanupStaleRembgContainers()
+    do {
+      printWorkerResult(await runWorkerBatch(options), options)
+      if (watch) await sleep(pollMs)
+    } while (watch)
+  } finally {
+    heartbeat?.stop()
   }
 }
 
+/** Persist the production result before optional evaluation, then release it for review. */
+export async function completeResearchPass(params: {
+  supabase: ReturnType<typeof createSupabaseClientFromEnv>
+  job: ProductIntakeResearchJob
+  category: string | null | undefined
+  submission: Pick<ProductIntakeSubmissionDetail, "id" | "source" | "status"> | null
+  reworkRequest?: JsonRecord | null
+  workerId: string
+  promptPacketPath: string
+  researchOutput: CodexResearchOutput
+  researchModel: string
+  executeCodex: boolean
+  autoPrepareImages: boolean
+  beforeCompletion?: () => Promise<{
+    job: ProductIntakeResearchJob
+    modelEvaluation: ModelEvaluationResult
+  }>
+}) {
+  const { researchOutput, promptPacketPath } = params
+  const reworkRequest =
+    params.job.stage === "rework"
+      ? (params.reworkRequest ?? activeReworkRequestFromProgress(params.job.progress))
+      : null
+  const hasFinalPayload = hasFinalResearchPayload(researchOutput.researched_payload)
+  const blockers = researchOutput.blockers.filter(Boolean)
+  let submissionContext = params.submission
+    ? { ...params.submission, user_id: null as string | null }
+    : undefined
+  if (blockers.length === 0 && hasFinalPayload && submissionContext) {
+    // The shared detail loader omits ownership. Supplement it from the stored
+    // submission, never from model output or job progress.
+    const { data, error } = await params.supabase
+      .from("product_submissions")
+      .select("user_id")
+      .eq("id", submissionContext.id)
+      .maybeSingle()
+    if (error) throw new Error(`load product-intake readiness owner: ${error.message}`)
+    submissionContext = { ...submissionContext, user_id: stringValue(data?.user_id) }
+  }
+  const readiness =
+    blockers.length === 0 && hasFinalPayload
+      ? checkResearchReadiness(
+          researchOutput.researched_payload,
+          params.category,
+          submissionContext,
+        )
+      : null
+  const progress = await persistResearchOutput({ ...params, readiness })
+  const evaluated = await params.beforeCompletion?.()
+  const leasedJob = evaluated?.job ?? params.job
+  const evaluation = evaluated?.modelEvaluation ?? {
+    status: "disabled",
+    successfulJudgments: 0,
+    targetSuccessfulJudgments: 0,
+  }
+  const autoPrepareImage = shouldAutoPrepareImage({
+    enabled: params.autoPrepareImages && readiness?.ok === true,
+    researchOutput,
+  })
+  const nextStatus = autoPrepareImage
+    ? "queued"
+    : readiness?.ok === true
+      ? "waiting_for_review"
+      : "blocked"
+  const nextStage = autoPrepareImage
+    ? "image_judging"
+    : (researchOutput.next_stage ?? (hasFinalPayload ? "preview_build" : "source_research"))
+
+  const readinessError =
+    readiness && !readiness.ok
+      ? `Katalog-Prüfung: ${readiness.researchGaps.length} Pflichtfelder fehlen: ${readiness.researchGaps.slice(0, 5).join(", ")}${readiness.researchGaps.length > 5 ? "…" : ""}`
+      : null
+  // A new pass replaces the prior readiness verdict, including on model blockers.
+  const previousProgress = progressWithoutReadiness(leasedJob.progress)
+  if (reworkRequest) {
+    previousProgress.last_rework_request = reworkRequest
+    for (const key of ["requested_by", "requested_at", "rework_type", "message"])
+      delete previousProgress[key]
+  }
+  const updated = await updateResearchJob(params.supabase, {
+    jobId: leasedJob.id,
+    status: nextStatus,
+    stage: nextStage,
+    progress: {
+      ...previousProgress,
+      message: autoPrepareImage
+        ? "Research ist bereit. Bildverarbeitung und visueller Bildcheck sind eingereiht."
+        : nextStatus === "waiting_for_review"
+          ? "Research preview ist bereit fuer Nick."
+          : "Research braucht Aufmerksamkeit, bevor Nick final freigeben kann.",
+      prompt_packet_path: promptPacketPath,
+      worker_id: params.workerId,
+      mode: params.executeCodex ? "codex_cli" : "preview_only",
+      image_selection_mode: autoPrepareImage ? "agent_prepared" : null,
+      next_step: autoPrepareImage ? "process_image_for_combined_review" : null,
+      model_evaluation: evaluation,
+      ...progress,
+      ...(readiness
+        ? {
+            readiness_check: readiness.ok ? "passed" : "failed",
+            readiness_missing_fields: readiness.researchGaps,
+          }
+        : {}),
+    },
+    lastError: blockers.length > 0 ? blockers.join("; ") : readinessError,
+    expectedLockedBy: leasedJob.locked_by,
+    expectedLockedAt: leasedJob.locked_at,
+  })
+  return updated
+}
+
 async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
-  const jobs = await claimResearchJobs(options.supabase, {
+  const jobs = await options.claimGate.claim(options.supabase, {
     workerId: options.workerId,
     limit: options.concurrency,
   })
@@ -388,229 +828,271 @@ async function runWorkerBatch(options: WorkerOptions): Promise<WorkerResult> {
     jobs: [],
   }
 
-  for (const job of jobs) {
-    const detail = await loadProductIntakeSubmissionDetail(options.supabase, job.submission_id)
-    const scanIntakeSeed = await loadScanIntakeSeedForSubmission(
-      options.supabase,
-      job.submission_id,
-    )
-    reportRetailerEnrichmentWarning(scanIntakeSeed.retailerEnrichmentWarning)
-    const brandResolutionContext = await loadBrandResolutionContext(
-      options.supabase,
-      detail,
-      scanIntakeSeed.scannedIdentifier,
-    )
-    const promptPacketPath = writePromptPacket(
-      job,
-      options.workerId,
-      detail,
-      brandResolutionContext,
-      scanIntakeSeed.retailerEnrichment,
-    )
-
-    if (options.failTest) {
-      const updated = await updateResearchJob(options.supabase, {
-        jobId: job.id,
-        status: "failed",
-        stage: job.stage,
-        progress: {
-          message: "Codex worker skeleton marked this job failed for UI testing.",
-          prompt_packet_path: promptPacketPath,
-          worker_id: options.workerId,
-          mode: options.executeCodex ? "codex_cli" : "preview_only",
-        },
-        lastError: "Phase 1 --fail-test requested",
-        expectedLockedBy: job.locked_by,
-        expectedLockedAt: job.locked_at,
-      })
-      result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
-      continue
-    }
-
-    if (options.noComplete) {
-      const updated = await updateResearchJob(options.supabase, {
-        jobId: job.id,
-        status: "running",
-        stage: job.stage,
-        progress: {
-          message: "Codex worker skeleton claimed this job and left it running for lock testing.",
-          prompt_packet_path: promptPacketPath,
-          worker_id: options.workerId,
-          mode: options.executeCodex ? "codex_cli" : "preview_only",
-        },
-        expectedLockedBy: job.locked_by,
-        expectedLockedAt: job.locked_at,
-      })
-      result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
-      continue
-    }
-
-    if (job.stage === "image_judging") {
-      let imageLeasedJob = job
+  for (const job of jobs) workerLeases.set(job.id, new WorkerJobLease(job, options.supabase))
+  try {
+    for (const job of jobs) {
+      options.currentJobId = job.id
+      const lease = workerLeases.get(job.id)!
+      // Lease refreshes replace progress.message before completion; retain the
+      // reviewer instruction as it was when this rework pass was claimed.
+      const reworkRequest =
+        job.stage === "rework" ? activeReworkRequestFromProgress(job.progress) : null
       try {
-        const updated = await processApprovedImageForReview({
-          supabase: options.supabase,
-          job,
-          detail,
-          workerId: options.workerId,
-          promptPacketPath,
-          executeCodex: options.executeCodex,
-          onLeaseRefresh: (refreshedJob) => {
-            imageLeasedJob = refreshedJob
-          },
-        })
-        result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
-      } catch (error) {
-        const updated = await updateResearchJob(
+        if (lease.aborted) continue
+        const detail = await loadProductIntakeSubmissionDetail(options.supabase, job.submission_id)
+        const scanIntakeSeed = await loadScanIntakeSeedForSubmission(
           options.supabase,
-          imageProcessingFailureUpdate({
-            job: imageLeasedJob,
-            error,
-            promptPacketPath,
-            workerId: options.workerId,
-          }),
+          job.submission_id,
         )
-        result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
-      }
-      continue
-    }
-
-    let leasedJob = job
-    try {
-      const researchRuntimeConfig = codexResearchRuntimeConfig(process.env)
-      const evaluationRuntimeConfig = modelEvaluationRuntimeConfig(process.env)
-      let evaluation: ModelEvaluationResult = {
-        status: "disabled",
-        successfulJudgments: 0,
-        targetSuccessfulJudgments: 0,
-      }
-      let rawResearchOutput: CodexResearchOutput
-
-      if (options.executeCodex) {
-        const productionRun = measureModelRun("production_low", researchRuntimeConfig, () =>
-          runCodexResearch(promptPacketPath, researchRuntimeConfig, "production_low"),
+        reportRetailerEnrichmentWarning(scanIntakeSeed.retailerEnrichmentWarning)
+        const brandResolutionContext = await loadBrandResolutionContext(
+          options.supabase,
+          detail,
+          scanIntakeSeed.scannedIdentifier,
         )
-        leasedJob = await refreshModelRunLease({
-          supabase: options.supabase,
-          job: leasedJob,
-          workerId: options.workerId,
-          promptPacketPath,
-          message: "Luna/low research returned; worker lease refreshed.",
-        })
-        await persistModelRunArtifact(options.supabase, leasedJob, productionRun)
-        if (!productionRun.success) throw new Error(productionRun.error)
+        const promptPacketPath = writePromptPacket(
+          job,
+          options.workerId,
+          detail,
+          brandResolutionContext,
+          scanIntakeSeed.retailerEnrichment,
+        )
 
-        rawResearchOutput = productionRun.output
-      } else {
-        rawResearchOutput = buildPreviewOnlyOutput(job, detail, promptPacketPath)
-        leasedJob = await refreshModelRunLease({
-          supabase: options.supabase,
-          job: leasedJob,
-          workerId: options.workerId,
-          promptPacketPath,
-          message: "Preview result returned; worker lease refreshed.",
-        })
-      }
+        if (options.failTest) {
+          const updated = await updateResearchJob(options.supabase, {
+            jobId: job.id,
+            status: "failed",
+            stage: job.stage,
+            progress: {
+              message: "Codex worker skeleton marked this job failed for UI testing.",
+              prompt_packet_path: promptPacketPath,
+              worker_id: options.workerId,
+              mode: options.executeCodex ? "codex_cli" : "preview_only",
+            },
+            lastError: "Phase 1 --fail-test requested",
+            expectedLockedBy: job.locked_by,
+            expectedLockedAt: job.locked_at,
+          })
+          result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+          continue
+        }
 
-      const researchOutput = normalizeResearchOutputForCategory(
-        rawResearchOutput,
-        detail?.category,
-        brandResolutionContext,
-        detail?.decisions ?? [],
-        job.submission_id,
-      )
-      const progress = await persistResearchOutput({
-        supabase: options.supabase,
-        job: leasedJob,
-        workerId: options.workerId,
-        promptPacketPath,
-        researchOutput,
-        researchModel: options.executeCodex ? researchRuntimeConfig.model : "codex-worker-preview",
-      })
-      if (options.executeCodex) {
-        const evaluationRun = await runNonFatalModelEvaluation({
-          job: leasedJob,
-          currentJob: () => leasedJob,
-          targetSuccessfulJudgments: evaluationRuntimeConfig.targetSuccessfulJudgments,
-          run: () =>
-            runOptionalModelEvaluation({
+        if (options.noComplete) {
+          const updated = await updateResearchJob(options.supabase, {
+            jobId: job.id,
+            status: "running",
+            stage: job.stage,
+            progress: {
+              message:
+                "Codex worker skeleton claimed this job and left it running for lock testing.",
+              prompt_packet_path: promptPacketPath,
+              worker_id: options.workerId,
+              mode: options.executeCodex ? "codex_cli" : "preview_only",
+            },
+            expectedLockedBy: job.locked_by,
+            expectedLockedAt: job.locked_at,
+          })
+          result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+          continue
+        }
+
+        if (job.stage === "image_judging") {
+          let imageLeasedJob = job
+          try {
+            const updated = await processApprovedImageForReview({
+              supabase: options.supabase,
+              job,
+              detail,
+              workerId: options.workerId,
+              promptPacketPath,
+              executeCodex: options.executeCodex,
+              onLeaseRefresh: (refreshedJob) => {
+                imageLeasedJob = refreshedJob
+              },
+            })
+            result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+          } catch (error) {
+            options.claimGate.handleFailure(error)
+            if (lease.aborted || error instanceof WorkerLeaseLostError) continue
+            const updated = await updateResearchJob(
+              options.supabase,
+              imageProcessingFailureUpdate({
+                job: imageLeasedJob,
+                error,
+                promptPacketPath,
+                workerId: options.workerId,
+              }),
+            )
+            result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+          }
+          continue
+        }
+
+        let leasedJob = job
+        try {
+          const researchRuntimeConfig = codexResearchRuntimeConfig(process.env)
+          const evaluationRuntimeConfig = modelEvaluationRuntimeConfig(process.env)
+          let evaluation: ModelEvaluationResult = {
+            status: "disabled",
+            successfulJudgments: 0,
+            targetSuccessfulJudgments: 0,
+          }
+          let rawResearchOutput: CodexResearchOutput
+
+          if (options.executeCodex) {
+            leasedJob = await bindResearchJobEngine(options.supabase, leasedJob, detail?.category)
+            const productionRun = await measureModelRun(
+              "production_low",
+              researchRuntimeConfig,
+              () => runCodexResearch(promptPacketPath, researchRuntimeConfig, "production_low"),
+            )
+            leasedJob = await refreshModelRunLease({
               supabase: options.supabase,
               job: leasedJob,
               workerId: options.workerId,
               promptPacketPath,
-              productionOutput: rawResearchOutput,
-              config: evaluationRuntimeConfig,
-              onLeaseRefresh: (refreshedJob) => {
-                leasedJob = refreshedJob
-              },
-            }),
-          persistFailure: (message) =>
-            persistModelJudgmentFailure(options.supabase, leasedJob, message),
-        })
-        leasedJob = evaluationRun.job
-        evaluation = evaluationRun.result
-      }
-      const hasFinalPayload = hasFinalResearchPayload(researchOutput.researched_payload)
-      const blockers = researchOutput.blockers.filter(Boolean)
-      const autoPrepareImage = shouldAutoPrepareImage({
-        enabled:
-          options.executeCodex &&
-          process.env.PRODUCT_INTAKE_AUTO_PREPARE_IMAGES?.trim().toLowerCase() === "true",
-        researchOutput,
-      })
-      const nextStatus = autoPrepareImage
-        ? "queued"
-        : blockers.length === 0 && hasFinalPayload
-          ? "waiting_for_review"
-          : "blocked"
-      const nextStage = autoPrepareImage
-        ? "image_judging"
-        : (researchOutput.next_stage ?? (hasFinalPayload ? "preview_build" : "source_research"))
+              message: "Luna/low research returned; worker lease refreshed.",
+            })
+            await persistModelRunArtifact(options.supabase, leasedJob, productionRun)
+            if (!productionRun.success) throw new Error(productionRun.error)
 
-      const updated = await updateResearchJob(options.supabase, {
-        jobId: job.id,
-        status: nextStatus,
-        stage: nextStage,
-        progress: {
-          message: autoPrepareImage
-            ? "Research ist bereit. Bildverarbeitung und visueller Bildcheck sind eingereiht."
-            : nextStatus === "waiting_for_review"
-              ? "Research preview ist bereit fuer Nick."
-              : "Research braucht Aufmerksamkeit, bevor Nick final freigeben kann.",
-          prompt_packet_path: promptPacketPath,
-          worker_id: options.workerId,
-          mode: options.executeCodex ? "codex_cli" : "preview_only",
-          image_selection_mode: autoPrepareImage ? "agent_prepared" : null,
-          next_step: autoPrepareImage ? "process_image_for_combined_review" : null,
-          model_evaluation: evaluation,
-          ...progress,
-        },
-        lastError: blockers.length > 0 ? blockers.join("; ") : null,
-        expectedLockedBy: leasedJob.locked_by,
-        expectedLockedAt: leasedJob.locked_at,
-      })
-      result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Codex research worker failed."
-      const updated = await updateResearchJob(options.supabase, {
-        jobId: job.id,
-        status: "failed",
-        stage: job.stage,
-        progress: {
-          message,
-          prompt_packet_path: promptPacketPath,
-          worker_id: options.workerId,
-          mode: options.executeCodex ? "codex_cli" : "preview_only",
-        },
-        lastError: message,
-        expectedLockedBy: leasedJob.locked_by,
-        expectedLockedAt: leasedJob.locked_at,
-      })
-      result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+            rawResearchOutput = productionRun.output
+          } else {
+            rawResearchOutput = buildPreviewOnlyOutput(job, detail, promptPacketPath)
+            leasedJob = await refreshModelRunLease({
+              supabase: options.supabase,
+              job: leasedJob,
+              workerId: options.workerId,
+              promptPacketPath,
+              message: "Preview result returned; worker lease refreshed.",
+            })
+          }
+
+          const researchOutput = normalizeResearchOutputForCategory(
+            rawResearchOutput,
+            detail?.category,
+            brandResolutionContext,
+            detail?.decisions ?? [],
+            job.submission_id,
+          )
+          const updated = await completeResearchPass({
+            supabase: options.supabase,
+            job: leasedJob,
+            category: detail?.category,
+            submission: detail,
+            reworkRequest,
+            workerId: options.workerId,
+            promptPacketPath,
+            researchOutput,
+            researchModel: options.executeCodex
+              ? researchRuntimeConfig.model
+              : "codex-worker-preview",
+            executeCodex: options.executeCodex,
+            autoPrepareImages:
+              options.executeCodex &&
+              process.env.PRODUCT_INTAKE_AUTO_PREPARE_IMAGES?.trim().toLowerCase() === "true",
+            beforeCompletion: async () => {
+              if (options.executeCodex) {
+                const evaluationRun = await runNonFatalModelEvaluation({
+                  job: leasedJob,
+                  currentJob: () => leasedJob,
+                  targetSuccessfulJudgments: evaluationRuntimeConfig.targetSuccessfulJudgments,
+                  run: () =>
+                    runOptionalModelEvaluation({
+                      supabase: options.supabase,
+                      job: leasedJob,
+                      workerId: options.workerId,
+                      promptPacketPath,
+                      productionOutput: rawResearchOutput,
+                      config: evaluationRuntimeConfig,
+                      onLeaseRefresh: (refreshedJob) => {
+                        leasedJob = refreshedJob
+                      },
+                    }),
+                  persistFailure: (message) =>
+                    persistModelJudgmentFailure(options.supabase, leasedJob, message),
+                })
+                leasedJob = evaluationRun.job
+                evaluation = evaluationRun.result
+              }
+              return { job: leasedJob, modelEvaluation: evaluation }
+            },
+          })
+          result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+        } catch (error) {
+          options.claimGate.handleFailure(error)
+          if (lease.aborted || error instanceof WorkerLeaseLostError) continue
+          const updated = await updateResearchJob(
+            options.supabase,
+            researchFailureUpdate({
+              job: leasedJob,
+              error,
+              promptPacketPath,
+              workerId: options.workerId,
+              executeCodex: options.executeCodex,
+            }),
+          )
+          result.jobs.push(projectJob(updated, promptPacketPath, options.executeCodex))
+        }
+      } catch (error) {
+        options.claimGate.handleFailure(error)
+        if (!(error instanceof WorkerLeaseLostError) && !lease.aborted) throw error
+        console.error(`Worker stopped writes after lease loss: ${job.id}`)
+      } finally {
+        workerLeases.delete(job.id)
+        options.currentJobId = null
+      }
     }
+  } finally {
+    for (const job of jobs) workerLeases.delete(job.id)
+    options.currentJobId = null
   }
 
   return result
+}
+
+function progressWithoutReadiness(progress: JsonRecord | null | undefined): JsonRecord {
+  const next = { ...progress }
+  delete next.readiness_check
+  delete next.readiness_missing_fields
+  return next
+}
+
+export function researchFailureUpdate(params: {
+  job: Pick<
+    ProductIntakeResearchJob,
+    "id" | "stage" | "locked_by" | "locked_at" | "attempt_count" | "max_attempts"
+  > & { progress?: JsonRecord }
+  error: unknown
+  promptPacketPath: string
+  workerId: string
+  executeCodex: boolean
+}) {
+  const message = truncateDiagnostic(
+    params.error instanceof Error ? params.error.message : "Codex research worker failed.",
+  )
+  const code = codexInfrastructureCode(params.error)
+  const retryable = code === "codex_timeout"
+  const retryExhausted = retryable && params.job.attempt_count >= params.job.max_attempts
+  const engineMismatch = /^engine_(version|key)_mismatch:/.test(message)
+  const status =
+    retryable && !retryExhausted ? "queued" : code || engineMismatch ? "blocked" : "failed"
+  return {
+    jobId: params.job.id,
+    status: status as "queued" | "blocked" | "failed",
+    stage: params.job.stage,
+    progress: {
+      ...progressWithoutReadiness(params.job.progress),
+      message,
+      prompt_packet_path: params.promptPacketPath,
+      worker_id: params.workerId,
+      mode: params.executeCodex ? "codex_cli" : "preview_only",
+      ...(code ? { error_code: code, retryable, retry_exhausted: retryExhausted } : {}),
+    },
+    lastError: message,
+    expectedLockedBy: params.job.locked_by,
+    expectedLockedAt: params.job.locked_at,
+  }
 }
 
 function printWorkerResult(result: WorkerResult, options: WorkerOptions) {
@@ -637,14 +1119,14 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-function measureModelRun<T>(
+export async function measureModelRun<T>(
   lane: ProductIntakeModelLane,
   runtimeConfig: CodexResearchRuntimeConfig,
-  execute: () => T,
-): MeasuredModelRun<T> {
+  execute: () => T | Promise<T>,
+): Promise<MeasuredModelRun<T>> {
   const startedAt = Date.now()
   try {
-    const output = execute()
+    const output = await execute()
     return {
       success: true,
       lane,
@@ -654,12 +1136,18 @@ function measureModelRun<T>(
       output,
     }
   } catch (error) {
+    const code = codexInfrastructureCode(error)
+    if (code === "infra_auth" || (code === "codex_timeout" && lane === "production_low")) {
+      throw error
+    }
     return {
       success: false,
       lane,
       runtimeConfig,
       durationMs: Date.now() - startedAt,
-      error: error instanceof Error ? error.message : "Unknown Codex model-run failure.",
+      error: truncateDiagnostic(
+        error instanceof Error ? error.message : "Unknown Codex model-run failure.",
+      ),
     }
   }
 }
@@ -738,6 +1226,7 @@ export async function runNonFatalModelEvaluation<TJob>(params: {
   try {
     return await params.run()
   } catch (error) {
+    if (codexInfrastructureCode(error) === "infra_auth") throw error
     await captureOptionalTelemetryFailure(() => params.persistFailure(errorMessage(error)))
     return {
       job: params.currentJob?.() ?? params.job,
@@ -803,7 +1292,7 @@ async function runOptionalModelEvaluation(params: {
     }
   }
 
-  const challengerRun = measureModelRun("challenger_medium", params.config.challenger, () =>
+  const challengerRun = await measureModelRun("challenger_medium", params.config.challenger, () =>
     runCodexResearch(params.promptPacketPath, params.config.challenger, "challenger_medium"),
   )
   leasedJob = await refreshModelRunLease({
@@ -849,7 +1338,7 @@ async function runOptionalModelEvaluation(params: {
     toJsonRecord(params.productionOutput),
     toJsonRecord(challengerRun.output),
   )
-  const judgeRun = measureModelRun("judge", params.config.judge, () =>
+  const judgeRun = await measureModelRun("judge", params.config.judge, () =>
     runCodexJudge(params.promptPacketPath, blindPacket, params.config.judge),
   )
   leasedJob = await refreshModelRunLease({
@@ -963,7 +1452,9 @@ function toJsonRecord(value: unknown): JsonRecord {
 }
 
 function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : "Unknown model evaluation failure."
+  return truncateDiagnostic(
+    error instanceof Error ? error.message : "Unknown model evaluation failure.",
+  )
 }
 
 async function processApprovedImageForReview(params: {
@@ -1014,7 +1505,7 @@ async function processApprovedImageForReview(params: {
 
   const preparedCutout = sourceAlreadyTransparent
     ? null
-    : runAutomaticBackgroundRemoval({
+    : await runAutomaticBackgroundRemoval({
         sourceFile,
         outputDir: cutoutDir,
         outputSlug: sourceSlug,
@@ -1099,7 +1590,7 @@ async function processApprovedImageForReview(params: {
     const referenceRoot =
       optionalNonBlankString(process.env.PRODUCT_INTAKE_IMAGE_QA_REFERENCE_ROOT) ??
       finalizedImageOutputRoot(process.env)
-    const visualRun = measureModelRun("image_judge", judgeConfig, () => {
+    const visualRun = await measureModelRun("image_judge", judgeConfig, () => {
       referenceSet = loadImageQualityReferenceSet({
         manifestPath,
         rootDir: referenceRoot,
@@ -1245,13 +1736,27 @@ async function processApprovedImageForReview(params: {
 }
 
 export function imageProcessingFailureUpdate(params: {
-  job: Pick<ProductIntakeResearchJob, "id" | "stage" | "locked_by" | "locked_at">
+  job: Pick<ProductIntakeResearchJob, "id" | "stage" | "locked_by" | "locked_at"> &
+    Partial<Pick<ProductIntakeResearchJob, "attempt_count" | "max_attempts">>
   error: unknown
   promptPacketPath: string
   workerId: string
 }) {
-  const message =
-    params.error instanceof Error ? params.error.message : "Image processing worker failed."
+  if (codexInfrastructureCode(params.error)) {
+    const update = researchFailureUpdate({
+      ...params,
+      job: {
+        ...params.job,
+        attempt_count: params.job.attempt_count ?? 1,
+        max_attempts: params.job.max_attempts ?? 1,
+      },
+      executeCodex: true,
+    })
+    return { ...update, progress: { ...update.progress, mode: "local_image_processing" } }
+  }
+  const message = truncateDiagnostic(
+    params.error instanceof Error ? params.error.message : "Image processing worker failed.",
+  )
   return {
     jobId: params.job.id,
     status: "failed" as const,
@@ -1296,6 +1801,7 @@ async function persistResearchOutput(params: {
   promptPacketPath: string
   researchOutput: CodexResearchOutput
   researchModel: string
+  readiness: ResearchReadinessSelfCheck | null
 }) {
   const created = []
   for (const artifact of params.researchOutput.artifacts) {
@@ -1315,17 +1821,19 @@ async function persistResearchOutput(params: {
 
   let savedSubmissionStatus: string | null = null
   let resolvedDecisionCount = 0
-  if (hasFinalResearchPayload(params.researchOutput.researched_payload)) {
-    const updated = await saveSubmissionResearchPreview(params.supabase, {
-      submissionId: params.job.submission_id,
-      researchedPayload: params.researchOutput.researched_payload,
-      status: params.researchOutput.blockers.length === 0 ? "ready_for_review" : "researching",
-    })
+  const researchedPayload = params.researchOutput.researched_payload
+  if (hasFinalResearchPayload(researchedPayload)) {
+    const updated = await withJobLease(params.job.id, () =>
+      saveSubmissionResearchPreview(params.supabase, {
+        submissionId: params.job.submission_id,
+        researchedPayload,
+        status: params.readiness?.ok === true ? "ready_for_review" : "researching",
+      }),
+    )
     savedSubmissionStatus = updated.status
     if (params.job.stage === "rework") {
-      resolvedDecisionCount = await resolveReviewDecisionsForSubmission(
-        params.supabase,
-        params.job.submission_id,
+      resolvedDecisionCount = await withJobLease(params.job.id, () =>
+        resolveReviewDecisionsForSubmission(params.supabase, params.job.submission_id),
       )
     }
   }
@@ -1596,314 +2104,17 @@ function imageSourceContract(): JsonRecord {
   }
 }
 
-function categoryApprovalContract(category: string | null | undefined): JsonRecord {
+export function categoryApprovalContract(category: string | null | undefined): JsonRecord {
   const categoryKey = normalizeCategoryKey(category)
-  if (!categoryKey) {
-    return {
-      category_key: category ?? null,
-      instruction:
-        "Research only the category_specs required by this product category's approval validator. Put them under researched_payload.final.category_specs, never inside researched_payload.final.product. Do not emit category_specs for other product categories.",
-    }
-  }
-
-  if (categoryKey === "shampoo") {
-    return {
-      category_key: "shampoo",
-      instruction:
-        "Research and emit only shampoo approval specs under researched_payload.final.category_specs.",
-      required_category_specs: [...CATEGORY_SPEC_KEYS.shampoo],
-      product_shampoo_specs:
-        "array with one row per relevant hair thickness; each row has thickness, shampoo_bucket, scalp_route, optional cleansing_intensity. shampoo_bucket is a scalp/route bucket, not a dry-hair or damaged-lengths claim. Use trocken only when sources support dry scalp; dry/damaged hair alone should usually stay normal + balanced unless another scalp claim is proven.",
-      allowed_product_shampoo_specs_values: {
-        thickness: [...HAIR_THICKNESSES],
-        shampoo_bucket: [...SHAMPOO_BUCKETS],
-        scalp_route: ["oily", "balanced", "dry", "dandruff", "dry_flakes", "irritated"],
-        cleansing_intensity: ["gentle", "regular", "clarifying", null],
-      },
-      shampoo_bucket_to_scalp_route_contract: {
-        normal: "balanced",
-        trocken: "dry",
-        "dehydriert-fettig": "oily",
-        schuppen: "dandruff or dry_flakes",
-        irritationen: "irritated",
-      },
-      product_application_protocols: applicationProtocolResearchContract(
-        "shampoo",
-        ["shampoo_everyday", "shampoo_dandruff"],
-        "Derive Shampoo protocol roles from the reviewed Shampoo buckets: include shampoo_dandruff when any row uses schuppen, and include shampoo_everyday only when at least one source-supported row uses a non-schuppen bucket. A schuppen-only Shampoo is complete without shampoo_everyday. When an exact source supports ordinary or daily use, research the matching non-schuppen scalp-route facts before adding shampoo_everyday; daily-use wording alone must not invent a bucket or cadence.",
-      ),
-    }
-  }
-
-  if (categoryKey === "conditioner") {
-    return {
-      category_key: "conditioner",
-      instruction:
-        "Complete the full Conditioner Standard v1.6 research envelope first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research only the exact rinse-out protocol separately.",
-      conditioner_research: conditionerResearchPromptContract(),
-      required_category_specs: [...CATEGORY_SPEC_KEYS.conditioner],
-      product_conditioner_specs:
-        "array with one row per relevant hair thickness; each row has thickness and protein_moisture_balance",
-      allowed_product_conditioner_specs_values: {
-        thickness: [...HAIR_THICKNESSES],
-        protein_moisture_balance: [...PROTEIN_MOISTURE_LEVELS],
-      },
-      product_conditioner_rerank_specs: {
-        weight: [...CONDITIONER_WEIGHTS],
-        repair_level: [...CONDITIONER_REPAIR_LEVELS],
-        balance_direction: [...PRODUCT_BALANCE_TARGETS, null],
-        ingredient_flags: [...CONDITIONER_INGREDIENT_FLAGS],
-      },
-      product_application_protocols: applicationProtocolResearchContract("conditioner", [
-        "conditioner_rinse_out",
-      ]),
-    }
-  }
-
-  if (categoryKey === "mask") {
-    return {
-      category_key: "mask",
-      instruction:
-        "Research and emit only mask approval specs under researched_payload.final.category_specs.",
-      required_category_specs: [...CATEGORY_SPEC_KEYS.mask],
-      product_mask_specs: {
-        weight: [...MASK_WEIGHTS],
-        concentration: [...MASK_CONCENTRATIONS],
-        balance_direction: [...PRODUCT_BALANCE_TARGETS, null],
-        ingredient_flags: [...MASK_INGREDIENT_FLAGS],
-        repair_support_level: ["low", "medium", "high"],
-        functional_benefits: ["smoothing_frizz_control", "detangling_slip", "shine"],
-      },
-      product_application_protocols: {
-        category: ["mask"],
-        role: ["intensive_conditioning_mask"],
-        required_fields: [
-          "cadence",
-          "application_stage",
-          "placement",
-          "contact_time_seconds",
-          "rinse_action",
-          "source_label",
-          "source_url",
-          "source_text",
-          "guidance_payload",
-        ],
-        note: "The exact manufacturer protocol must be complete enough to derive the Stage 5 product pointer.",
-      },
-    }
-  }
-
-  if (categoryKey === "oil") return oilApprovalContract()
-  if (categoryKey === "dry_shampoo") return dryShampooApprovalContract()
-  if (categoryKey === "deep_cleansing_shampoo") return deepCleansingShampooApprovalContract()
-  if (categoryKey === "bondbuilder") return bondbuilderApprovalContract()
-  if (categoryKey === "heat_protectant") return heatProtectantApprovalContract()
-  if (categoryKey === "scalp_care") return scalpCareApprovalContract()
-
+  if (categoryKey) return CATEGORY_RESEARCH_REGISTRY[categoryKey].promptContract()
   return {
-    category_key: "leave_in",
+    category_key: category ?? null,
     instruction:
-      "Complete the full Leave-In Standard v1.1 research envelope (Standard v1.0 plus the T20 care_direction overlay) first. Emit it under a property_synthesis artifact and let the deterministic adapter produce current database fields. Research only the exact leave-in application protocol separately.",
-    leave_in_research: leaveInResearchPromptContract(),
-    required_category_specs: [...CATEGORY_SPEC_KEYS.leave_in],
-    aliases: {
-      post_wash:
-        "Do not use post_wash for leave-ins. If evidence says after washing, damp hair, no-rinse, or towel-dried hair, use towel_dry in identity.applicationStage.",
-    },
-    product_application_protocols: applicationProtocolResearchContract(
-      "leave_in",
-      ["post_wash_leave_in", "pre_heat_protection"],
-      "Always include post_wash_leave_in; include pre_heat_protection only when the product claims heat protection.",
-    ),
+      "Research only the category_specs required by this product category's approval validator. Put them under researched_payload.final.category_specs, never inside researched_payload.final.product. Do not emit category_specs for other product categories.",
   }
 }
 
-function oilApprovalContract(): JsonRecord {
-  return {
-    category_key: "oil",
-    instruction:
-      "Research and emit only oil approval specs under researched_payload.final.category_specs.",
-    required_category_specs: [...CATEGORY_SPEC_KEYS.oil],
-    product_oil_specs: {
-      weight: ["light", "medium", "rich"],
-      role_support: ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
-      provides_heat_protection:
-        "boolean; true only when a product source explicitly claims heat protection; false only after the reviewed producer/shop sources have been checked and make no heat-protection claim",
-    },
-    product_oil_eligibility:
-      "array with one or more user-fit rows; each row has thickness, oil_subtype, oil_purpose, and ingredient_flags",
-    allowed_product_oil_eligibility_values: {
-      thickness: [...HAIR_THICKNESSES],
-      oil_subtype: [...OIL_SUBTYPES],
-      oil_purpose: [...OIL_PURPOSES, null],
-      ingredient_flags: [...OIL_INGREDIENT_FLAGS],
-    },
-    product_application_protocols: applicationProtocolResearchContract(
-      "oil",
-      ["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"],
-      "Include one exact protocol for every role declared in product_oil_specs.role_support. Heat protection is not a role: set provides_heat_protection=true and include a sourced leave_on_fibre_conditioning protocol when the oil protects from heat.",
-    ),
-  }
-}
-
-function dryShampooApprovalContract(): JsonRecord {
-  return {
-    category_key: "dry_shampoo",
-    instruction:
-      "Research and emit only dry-shampoo approval specs under researched_payload.final.category_specs.",
-    required_category_specs: [...CATEGORY_SPEC_KEYS.dry_shampoo],
-    product_dry_shampoo_specs: {
-      primary_effect: [...DRY_SHAMPOO_PRIMARY_EFFECTS],
-      hair_color_fit: [...DRY_SHAMPOO_HAIR_COLOR_FITS],
-      scalp_sensitivity_fit: [...DRY_SHAMPOO_SCALP_SENSITIVITY_FITS],
-      format: [...DRY_SHAMPOO_FORMATS],
-    },
-    product_application_protocols: applicationProtocolResearchContract("dry_shampoo", [
-      "root_refresh_bridge",
-    ]),
-  }
-}
-
-function deepCleansingShampooApprovalContract(): JsonRecord {
-  return {
-    category_key: "deep_cleansing_shampoo",
-    instruction:
-      "Research and emit only deep-cleansing-shampoo approval specs under researched_payload.final.category_specs.",
-    required_category_specs: [...CATEGORY_SPEC_KEYS.deep_cleansing_shampoo],
-    product_deep_cleansing_shampoo_specs: {
-      scalp_type_focus: [...PRODUCT_SCALP_TYPE_FOCUSES],
-      reset_intensity: [...DEEP_CLEANSING_RESET_INTENSITIES],
-      reset_focus: [...DEEP_CLEANSING_RESET_FOCUSES],
-      color_treated_suitability: [...DEEP_CLEANSING_COLOR_TREATED_SUITABILITIES],
-    },
-    product_application_protocols: applicationProtocolResearchContract(
-      "deep_cleansing_shampoo",
-      ["residue_reset", "mineral_reset"],
-      "Use mineral_reset for metal_mineral_hard_water, residue_reset for product_sebum_buildup, and both for broad_spectrum_detox.",
-    ),
-  }
-}
-
-function bondbuilderApprovalContract(): JsonRecord {
-  const researchContract = bondbuilderResearchPromptContract()
-  if (researchContract.enabled) {
-    return {
-      category_key: "bondbuilder",
-      instruction:
-        "Complete the full Bondbuilder research profile first. Emit it only as property_synthesis.bondbuilder_research_envelope; the deterministic adapter owns the derived database projection. Research exact producer application directions separately.",
-      bondbuilder_research: researchContract,
-      product_application_protocols: applicationProtocolResearchContract("bondbuilder", [
-        "specialized_bond_treatment",
-      ]),
-    }
-  }
-
-  return {
-    category_key: "bondbuilder",
-    instruction:
-      "Research and emit only bondbuilder approval specs under researched_payload.final.category_specs.",
-    required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.bondbuilder],
-    product_bondbuilder_specs: {
-      bond_repair_intensity: [...PRODUCT_BOND_REPAIR_INTENSITIES],
-      application_mode: [...PRODUCT_BOND_APPLICATION_MODES],
-      bond_repair_axis: [...PRODUCT_BOND_REPAIR_AXES],
-      treatment_mode: [...PRODUCT_BOND_TREATMENT_MODES],
-      product_format: [...PRODUCT_BOND_PRODUCT_FORMATS],
-      usage_protocol: [...PRODUCT_BOND_USAGE_PROTOCOLS],
-    },
-    product_relationships: "optional; emit only when needed by the approval payload",
-    product_application_protocols: applicationProtocolResearchContract("bondbuilder", [
-      "specialized_bond_treatment",
-    ]),
-    // Preparation metadata only. The inactive lane retains the exact legacy
-    // output contract above until the server-owned method lock is installed.
-    future_research_engine_contract: researchContract,
-  }
-}
-
-function applicationProtocolResearchContract(
-  category: CategoryContractKey,
-  roles: readonly string[],
-  requiredRoleRule = "Include every listed role.",
-): JsonRecord {
-  return {
-    category: [category],
-    roles: [...roles],
-    required_role_rule: requiredRoleRule,
-    required_fields: [
-      "cadence",
-      "application_stage",
-      "application_state",
-      "placement",
-      "contact_time_seconds",
-      "rinse_action",
-      "reapplication",
-      "instruction_modifiers",
-      "source_label",
-      "source_url",
-      "source_text",
-      "guidance_payload",
-    ],
-    guidance_payload:
-      "Canonical schemaVersion 1 product-scoped guidance payload using productId __PRODUCT_ID__; it must be complete enough to derive the Stage 5 V2 product pointer.",
-  }
-}
-
-function heatProtectantApprovalContract(): JsonRecord {
-  return {
-    category_key: "heat_protectant",
-    instruction:
-      "Research only explicit finished-product heat-protection evidence and exact manufacturer application instructions. Do not infer heat protection from a name, format, ingredient, or adjacent care claim.",
-    required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.heat_protectant],
-    product_heat_protectant_specs: {
-      format: ["spray"],
-      provides_heat_protection:
-        "true, false, or null when the finished-product evidence is unresolved",
-    },
-    product_application_protocols: {
-      category: ["heat_protectant"],
-      role: ["pre_heat_protection"],
-      required_fields: ["application_state", "reapplication"],
-      application_state: ["damp", "dry", "either"],
-      reapplication: ["required", "optional", "not_stated"],
-    },
-  }
-}
-
-function scalpCareApprovalContract(): JsonRecord {
-  return {
-    category_key: "scalp_care",
-    instruction:
-      "Research only cosmetic scalp-care product facts and exact manufacturer instructions. Preserve medical boundaries: do not turn flake, oil, density, shedding, or comfort claims into diagnosis or treatment claims.",
-    required_category_specs: [...REQUIRED_CATEGORY_SPEC_KEYS.scalp_care],
-    product_scalp_care_specs: {
-      primary_role: [
-        "scalp_comfort",
-        "scalp_flake_oil_adjunct",
-        "density_claim_tonic",
-        "scalp_exfoliant",
-      ],
-      presentation_format: [
-        "serum",
-        "tonic",
-        "lotion_or_fluid",
-        "oil",
-        "scrub",
-        "other",
-        "unknown",
-      ],
-      rinse_mode: ["leave_on", "rinse_off"],
-      application_instructions: "exact reviewed manufacturer instruction text",
-    },
-    product_application_protocols: {
-      category: ["scalp_care"],
-      role: ["scalp_comfort", "scalp_flake_oil_adjunct", "density_claim_tonic", "scalp_exfoliant"],
-      note: "The protocol role must equal product_scalp_care_specs.primary_role.",
-    },
-  }
-}
-
-function normalizeResearchOutputForCategory(
+export function normalizeResearchOutputForCategory(
   output: CodexResearchOutput,
   category: string | null | undefined,
   brandResolutionContext: BrandResolutionPromptContext,
@@ -1918,6 +2129,7 @@ function normalizeResearchOutputForCategory(
     categoryKey,
     output.artifacts,
   )
+  const artifacts = [...output.artifacts]
   const blockers = [...output.blockers]
   const final = normalizeRecord(researchedPayload?.final)
   applyApprovedCanonicalBrand(final, brandResolutionContext, reviewDecisions)
@@ -1925,37 +2137,45 @@ function normalizeResearchOutputForCategory(
   applyApprovedProductIdentity(final, brandResolutionContext, reviewDecisions)
   const categorySpecs = normalizeRecord(final?.category_specs)
 
-  if (categoryKey === "conditioner" && final) {
-    const adapterResult = applyConditionerResearchAdapter({
-      final,
-      artifacts: output.artifacts,
-      expectedResearchId,
-    })
+  const engine = CATEGORY_RESEARCH_REGISTRY[categoryKey]
+  if (final) {
+    const adapterResult = engine.apply({ final, artifacts, expectedResearchId })
     blockers.push(...adapterResult.blockers)
+    // Model-authored provenance cannot override the running server registry.
+    delete final.engine
+    const draft = normalizeRecord(researchedPayload?.draft)
+    if (engine.state === "active") {
+      if (draft) delete draft.engine
+    } else if (researchedPayload) {
+      researchedPayload.draft = {
+        ...draft,
+        engine:
+          engine.state === "pending_lock"
+            ? { state: engine.state, id: engine.engineId, target: engine.methodology }
+            : { state: engine.state },
+      }
+    }
+  }
+  if (
+    engine.state === "active" &&
+    final &&
+    !artifacts.some((artifact) => artifact.kind === "property_synthesis")
+  ) {
+    artifacts.push({ kind: "property_synthesis", status: "needs_research", payload: {} })
+  }
+  for (const artifact of artifacts) {
+    if (artifact.kind !== "property_synthesis") continue
+    if (engine.state === "active" && final) {
+      artifact.payload.engine = {
+        id: engine.engineId,
+        methodology: engine.methodology,
+        adapter: engine.adapter,
+        state: engine.state,
+      }
+    } else delete artifact.payload.engine
   }
 
-  if (categoryKey === "leave_in" && final) {
-    const adapterResult = applyLeaveInResearchAdapter({
-      final,
-      artifacts: output.artifacts,
-      expectedResearchId,
-    })
-    blockers.push(...adapterResult.blockers)
-  }
-
-  // Server-owned routing is enforced after model output. Enabled Bondbuilder
-  // intake requires a complete, current, exact-submission research envelope;
-  // model-authored flags and legacy-only specs cannot bypass validation.
-  if (categoryKey === "bondbuilder" && final) {
-    const adapterResult = applyBondbuilderResearchAdapterForWorker({
-      final,
-      artifacts: output.artifacts,
-      expectedSubmissionId: expectedResearchId,
-    })
-    blockers.push(...adapterResult.blockers)
-  }
-
-  // Read AFTER the adapter branches: applyLeaveInResearchAdapter reassigns
+  // Read AFTER the category adapter: applyLeaveInResearchAdapter reassigns
   // `categorySpecs.product_leave_in_specs` to a brand-new projected object
   // (structuredClone) rather than mutating the original in place, so a
   // reference captured before it runs is stale — it still points at
@@ -1995,7 +2215,7 @@ function normalizeResearchOutputForCategory(
   return {
     ...output,
     researched_payload: researchedPayload,
-    artifacts: output.artifacts.map((artifact) => ({
+    artifacts: artifacts.map((artifact) => ({
       ...artifact,
       payload: normalizeCategoryArtifactPayload(artifact.payload, categoryKey),
     })),
@@ -2455,52 +2675,6 @@ function normalizeLeaveInApplicationStages(value: unknown): string[] {
   )
 }
 
-function normalizeCategoryKey(category: string | null | undefined): CategoryContractKey | null {
-  if (typeof category !== "string") return null
-  const normalized = category
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .replace(/[-\s]+/g, "_")
-
-  switch (normalized) {
-    case "shampoo":
-    case "shampoo_profi":
-      return "shampoo"
-    case "conditioner":
-    case "conditioner_profi":
-    case "conditioner_(drogerie)":
-      return "conditioner"
-    case "mask":
-    case "maske":
-      return "mask"
-    case "leave_in":
-      return "leave_in"
-    case "oil":
-    case "ole":
-    case "oele":
-      return "oil"
-    case "dry_shampoo":
-    case "trockenshampoo":
-      return "dry_shampoo"
-    case "deep_cleansing_shampoo":
-    case "tiefenreinigungsshampoo":
-      return "deep_cleansing_shampoo"
-    case "bondbuilder":
-    case "bond_builder":
-      return "bondbuilder"
-    case "heat_protectant":
-    case "hitzeschutz":
-      return "heat_protectant"
-    case "scalp_care":
-    case "kopfhautpflege":
-      return "scalp_care"
-    default:
-      return null
-  }
-}
-
 function cloneJsonRecord(value: JsonRecord): JsonRecord {
   return JSON.parse(JSON.stringify(value)) as JsonRecord
 }
@@ -2569,11 +2743,11 @@ function buildPreviewOnlyOutput(
   }
 }
 
-function runCodexResearch(
+async function runCodexResearch(
   promptPacketPath: string,
   runtimeConfig: CodexResearchRuntimeConfig,
   lane: Extract<ProductIntakeModelLane, "production_low" | "challenger_medium">,
-): CodexResearchOutput {
+): Promise<CodexResearchOutput> {
   const prompt = [
     "You are researching one user-submitted hair product for Chaarlie's internal Product Intake Review Cockpit.",
     "Read the JSON prompt packet below. Do not edit repository files, do not write to databases, and do not approve or publish anything.",
@@ -2586,7 +2760,7 @@ function runCodexResearch(
   ].join("\n")
 
   return normalizeCodexOutput(
-    runCodexJson({
+    await runCodexJson({
       outputPath: outputPathForModelLane(promptPacketPath, lane),
       prompt,
       runtimeConfig,
@@ -2594,11 +2768,11 @@ function runCodexResearch(
   )
 }
 
-function runCodexJudge(
+async function runCodexJudge(
   promptPacketPath: string,
   blindPacket: BlindJudgePacket,
   runtimeConfig: CodexResearchRuntimeConfig,
-): ModelJudgeVerdict {
+): Promise<ModelJudgeVerdict> {
   const prompt = [
     "You are the read-only quality judge for two anonymized Product Intake research drafts.",
     "Do not research the product again, edit files, write databases, or approve publication.",
@@ -2613,7 +2787,7 @@ function runCodexJudge(
     JSON.stringify({ candidates: blindPacket.candidates }),
   ].join("\n")
 
-  const value = runCodexJson({
+  const value = await runCodexJson({
     outputPath: outputPathForModelLane(promptPacketPath, "judge"),
     prompt,
     runtimeConfig,
@@ -2622,13 +2796,13 @@ function runCodexJudge(
   return normalizeModelJudgeVerdict(value, blindPacket.laneByCandidate)
 }
 
-function runCodexImageQualityJudge(params: {
+async function runCodexImageQualityJudge(params: {
   promptPacketPath: string
   currentImagePaths: [string, string, string]
   runtimeConfig: CodexResearchRuntimeConfig
   referenceSet: ImageQualityReferenceSet
-}): ImageQualityVerdict {
-  const value = runCodexJson({
+}): Promise<ImageQualityVerdict> {
+  const value = await runCodexJson({
     outputPath: outputPathForModelLane(params.promptPacketPath, "image_judge"),
     prompt: buildImageQualityJudgePrompt({ referenceSet: params.referenceSet }),
     runtimeConfig: params.runtimeConfig,
@@ -2641,16 +2815,47 @@ function runCodexImageQualityJudge(params: {
   return normalizeImageQualityVerdict(value)
 }
 
-function runCodexJson(params: {
-  outputPath: string
-  prompt: string
-  runtimeConfig: CodexResearchRuntimeConfig
-  webSearch?: "disabled" | "live"
-  imagePaths?: string[]
-}): JsonRecord {
+type CodexInfrastructureCode = "codex_timeout" | "infra_auth"
+
+class CodexInfrastructureError extends Error {
+  constructor(
+    readonly code: CodexInfrastructureCode,
+    detail: string,
+  ) {
+    super(truncateDiagnostic(`${code}: ${detail}`))
+    this.name = "CodexInfrastructureError"
+  }
+}
+
+function codexInfrastructureCode(error: unknown): CodexInfrastructureCode | null {
+  if (!(error instanceof Error)) return null
+  if (error.message.startsWith("codex_timeout:")) return "codex_timeout"
+  if (error.message.startsWith("infra_auth:")) return "infra_auth"
+  return null
+}
+
+function truncateDiagnostic(message: string): string {
+  return message.length <= 4_000 ? message : `${message.slice(0, 3_997)}...`
+}
+
+function positiveDurationMs(raw: string | undefined, fallback: number): number {
+  const parsed = Number(raw)
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : fallback
+}
+
+export async function runCodexJson(
+  params: {
+    outputPath: string
+    prompt: string
+    runtimeConfig: CodexResearchRuntimeConfig
+    webSearch?: "disabled" | "live"
+    imagePaths?: string[]
+  },
+  spawn: WorkerSpawn = runWorkerProcess,
+): Promise<JsonRecord> {
   const codexBinary = codexBinaryForWorker()
 
-  const run = spawnSync(
+  const run = await spawn(
     codexBinary,
     codexResearchExecArgs({
       cwd: process.cwd(),
@@ -2662,26 +2867,50 @@ function runCodexJson(params: {
     }),
     {
       encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
       maxBuffer: 1024 * 1024 * 20,
       timeout: CODEX_RESEARCH_TIMEOUT_MS,
     },
   )
 
+  if (run.error && "code" in run.error && run.error.code === "ETIMEDOUT") {
+    throw new CodexInfrastructureError(
+      "codex_timeout",
+      `Codex CLI timed out after ${CODEX_RESEARCH_TIMEOUT_MS / 1000}s (${codexBinary}): ${run.error.message}`,
+    )
+  }
+  if (
+    (run.error || run.signal || run.status !== 0) &&
+    /\bnot logged in\b|\blog[ -]?in required\b|\b401\b|\bunauthori[sz]ed\b|\btoken (?:has )?expired\b(?! or nearly expired)/i.test(
+      run.stderr,
+    )
+  ) {
+    throw new CodexInfrastructureError(
+      "infra_auth",
+      `Codex CLI authentication failed (${codexBinary}): ${run.stderr || "no output"}`,
+    )
+  }
   if (run.error) {
-    throw new Error(`Codex CLI failed to start (${codexBinary}): ${run.error.message}`)
+    throw new Error(
+      truncateDiagnostic(`Codex CLI failed to start (${codexBinary}): ${run.error.message}`),
+    )
   }
   if (run.signal) {
     throw new Error(
-      `Codex CLI terminated by ${run.signal} after up to ${CODEX_RESEARCH_TIMEOUT_MS / 1000}s: ${
-        run.stderr || run.stdout || "no output"
-      }`,
+      truncateDiagnostic(
+        `Codex CLI terminated by ${run.signal} after up to ${CODEX_RESEARCH_TIMEOUT_MS / 1000}s: ${
+          run.stderr || run.stdout || "no output"
+        }`,
+      ),
     )
   }
   if (run.status !== 0) {
     throw new Error(
-      `Codex CLI failed (${codexBinary}, exit ${run.status}): ${
-        run.stderr || run.stdout || "no output"
-      }`,
+      truncateDiagnostic(
+        `Codex CLI failed (${codexBinary}, exit ${run.status}): ${
+          run.stderr || run.stdout || "no output"
+        }`,
+      ),
     )
   }
   if (!existsSync(params.outputPath)) {
@@ -3097,29 +3326,66 @@ function normalizeCodexOutput(value: JsonRecord): CodexResearchOutput {
 
 function parseJsonObject(raw: string): JsonRecord {
   try {
-    const parsed = JSON.parse(raw) as unknown
-    const record = normalizeRecord(parsed)
+    const record = normalizeRecord(JSON.parse(raw) as unknown)
     if (record) return record
   } catch {
-    // Fall through to fenced/object extraction.
+    // Fall through to scanning for the first complete top-level object.
   }
 
-  const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)```/)
-  if (fenced) {
-    const parsed = JSON.parse(fenced[1]) as unknown
-    const record = normalizeRecord(parsed)
-    if (record) return record
-  }
-
+  const stack: string[] = []
   const firstBrace = raw.indexOf("{")
-  const lastBrace = raw.lastIndexOf("}")
-  if (firstBrace >= 0 && lastBrace > firstBrace) {
-    const parsed = JSON.parse(raw.slice(firstBrace, lastBrace + 1)) as unknown
-    const record = normalizeRecord(parsed)
-    if (record) return record
+  let firstBraceInCompleteArray = false
+  let start = -1
+  let inString = false
+  let escaped = false
+
+  for (let index = 0; index < raw.length; index += 1) {
+    const char = raw[index]
+    if (inString) {
+      if (escaped) escaped = false
+      else if (char === "\\") escaped = true
+      else if (char === '"') inString = false
+      continue
+    }
+    if (char === '"') {
+      inString = true
+      continue
+    }
+    if (char === "{" || char === "[") {
+      if (stack.length === 0) start = index
+      stack.push(char)
+      continue
+    }
+    if ((char !== "}" && char !== "]") || stack.length === 0) continue
+    const opening = stack.pop()
+    if ((opening === "{" && char !== "}") || (opening === "[" && char !== "]")) break
+    if (stack.length > 0) continue
+    if (raw[start] !== "{") {
+      if (firstBrace >= start && firstBrace <= index) firstBraceInCompleteArray = true
+      continue
+    }
+
+    try {
+      const record = normalizeRecord(JSON.parse(raw.slice(start, index + 1)) as unknown)
+      if (record) return record
+    } catch {
+      // Skip malformed complete candidates, never promote their nested objects.
+    }
   }
 
-  throw new Error("Codex output was not a JSON object.")
+  // Preserve the slice fallback for stray prose delimiters, without extracting array elements.
+  if (!firstBraceInCompleteArray) {
+    const lastBrace = raw.lastIndexOf("}")
+    if (firstBrace >= 0 && lastBrace > firstBrace) {
+      try {
+        const record = normalizeRecord(JSON.parse(raw.slice(firstBrace, lastBrace + 1)) as unknown)
+        if (record) return record
+      } catch {
+        // The compatibility slice must also be a complete object.
+      }
+    }
+  }
+  throw new Error("Codex output contained no complete top-level JSON object.")
 }
 
 function projectJob(
@@ -3218,12 +3484,12 @@ function imageExtension(
   return "jpg"
 }
 
-function runVisionBackgroundRemoval(params: {
+async function runVisionBackgroundRemoval(params: {
   sourceFile: string
   outputDir: string
   outputSlug: string
-}): string | null {
-  const direct = spawnSync(
+}): Promise<string | null> {
+  const direct = await runWorkerProcess(
     "swift",
     ["scripts/product-images/removebg.swift", params.outputDir, params.sourceFile],
     {
@@ -3237,7 +3503,7 @@ function runVisionBackgroundRemoval(params: {
   if (!direct.error && direct.status === 0 && existsSync(directOutput)) return directOutput
 
   const paddedOutput = join(params.outputDir, `${params.outputSlug}-vision-padded.png`)
-  const padded = spawnSync(
+  const padded = await runWorkerProcess(
     "swift",
     ["scripts/product-images/removebg-padded.swift", params.sourceFile, paddedOutput],
     {
@@ -3251,17 +3517,17 @@ function runVisionBackgroundRemoval(params: {
   return null
 }
 
-function runAutomaticBackgroundRemoval(params: {
+async function runAutomaticBackgroundRemoval(params: {
   sourceFile: string
   outputDir: string
   outputSlug: string
-}): { file: string; method: "vision" | "rembg_isnet_general_use" } | null {
+}): Promise<{ file: string; method: "vision" | "rembg_isnet_general_use" } | null> {
   if (process.platform === "darwin") {
-    const visionFile = runVisionBackgroundRemoval(params)
+    const visionFile = await runVisionBackgroundRemoval(params)
     if (visionFile) return { file: visionFile, method: "vision" }
   }
 
-  const rembg = runRembgContainer({
+  const rembg = await runRembgContainer({
     sourceFile: params.sourceFile,
     outputFile: join(params.outputDir, `${params.outputSlug}-rembg-isnet.png`),
     config: rembgRuntimeConfig(process.env),
@@ -3316,6 +3582,8 @@ export function rembgContainerArgs(params: {
     "--cpus=2",
     "--pids-limit=256",
     "--read-only",
+    "--name",
+    rembgContainerName(params.outputFile),
     "--tmpfs=/tmp:rw,nosuid,nodev,size=256m",
     "--tmpfs=/root/.cache:rw,nosuid,nodev,size=128m",
     "--env",
@@ -3337,30 +3605,82 @@ export function rembgContainerArgs(params: {
   ]
 }
 
-function runRembgContainer(params: {
-  config: RembgRuntimeConfig
-  sourceFile: string
-  outputFile: string
-}): string | null {
+export async function runRembgContainer(
+  params: {
+    config: RembgRuntimeConfig
+    sourceFile: string
+    outputFile: string
+  },
+  spawn: WorkerSpawn = runWorkerProcess,
+): Promise<string | null> {
   if (!params.config.enabled) return null
   mkdirSync(dirname(params.outputFile), { recursive: true })
   mkdirSync(params.config.modelDir, { recursive: true })
 
-  const result = spawnSync(params.config.dockerBin, rembgContainerArgs(params), {
-    cwd: process.cwd(),
-    encoding: "utf8",
-    maxBuffer: 1024 * 1024 * 10,
-    timeout: params.config.timeoutMs,
-  })
-  if (!result.error && result.status === 0 && existsSync(params.outputFile)) {
-    return params.outputFile
+  const name = rembgContainerName(params.outputFile)
+  let detail = ""
+  try {
+    const result = await spawn(params.config.dockerBin, rembgContainerArgs(params), {
+      cwd: process.cwd(),
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+      maxBuffer: 1024 * 1024 * 10,
+      timeout: params.config.timeoutMs,
+    })
+    if (!result.error && result.status === 0 && existsSync(params.outputFile)) {
+      return params.outputFile
+    }
+    detail = [result.error?.message, result.stderr?.trim()]
+      .filter((value): value is string => Boolean(value))
+      .join("; ")
+  } catch (error) {
+    detail = errorMessage(error)
   }
-
-  const detail = [result.error?.message, result.stderr?.trim()]
-    .filter((value): value is string => Boolean(value))
-    .join("; ")
+  await removeRembgContainer(name, spawn, params.config.dockerBin)
   console.error(`rembg background removal failed${detail ? `: ${detail}` : "."}`)
   return null
+}
+
+function rembgContainerName(outputFile: string): string {
+  const id = createHash("sha256").update(resolve(outputFile)).digest("hex").slice(0, 24)
+  return `chaarlie-rembg-${id}`
+}
+
+async function removeRembgContainer(
+  name: string,
+  spawn: WorkerSpawn,
+  dockerBin: string,
+): Promise<void> {
+  try {
+    await spawn(dockerBin, ["rm", "-f", name], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+      timeout: 10_000,
+    })
+  } catch {
+    // Cleanup is best effort, including when Docker is unavailable.
+  }
+}
+
+export async function cleanupStaleRembgContainers(
+  spawn: WorkerSpawn = runWorkerProcess,
+  dockerBin = rembgRuntimeConfig(process.env).dockerBin,
+): Promise<void> {
+  try {
+    const containers = await spawn(
+      dockerBin,
+      ["ps", "-a", "--filter", "name=chaarlie-rembg-", "--format", "{{.Names}}"],
+      { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], timeout: 10_000 },
+    )
+    if (containers.error || containers.status !== 0) return
+    for (const name of containers.stdout.split(/\r?\n/).map((value) => value.trim())) {
+      if (/^chaarlie-rembg-[a-zA-Z0-9_.-]+$/.test(name)) {
+        await removeRembgContainer(name, spawn, dockerBin)
+      }
+    }
+  } catch {
+    // A missing Docker binary must not prevent the research worker from starting.
+  }
 }
 
 function normalizeResearchPayload(value: unknown): JsonRecord | null {

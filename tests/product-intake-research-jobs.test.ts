@@ -74,7 +74,11 @@ const appPackageJson = JSON.parse(
   scripts: Record<string, string>
 }
 const eslintConfig = readFileSync("eslint.config.mjs", "utf8")
-const workerScript = readFileSync("scripts/product-intake/codex-research-worker.ts", "utf8")
+// Category contracts moved into the research router (Slice 1); text assertions cover both files.
+const workerScript = [
+  readFileSync("scripts/product-intake/codex-research-worker.ts", "utf8"),
+  readFileSync("src/lib/product-intake/category-research-router.ts", "utf8"),
+].join("\n")
 const repositorySource = readFileSync("packages/product-intake-core/src/repository.ts", "utf8")
 const serviceClientSource = readFileSync(
   "apps/product-intake-review/app/api/_lib/service-client.ts",
@@ -1168,7 +1172,9 @@ test("shampoo approval specs require explicit scalp routes", () => {
   const validation = validateProductIntakeApprovalPayload(payload)
 
   assert.equal(validation.ok, false)
+  // Diagnostics are exhaustive since Slice 1 (1.4): the missing protocol rows are reported too.
   assert.deepEqual(validation.missingFields, [
+    "final.category_specs.product_application_protocols",
     "final.category_specs.product_shampoo_specs.0.scalp_route",
   ])
 })
@@ -1249,7 +1255,9 @@ test("codex worker can run preview-only or explicit codex cli mode and persists 
   assert.match(workerScript, /PRODUCT_INTAKE_CODEX_BIN/)
   assert.match(workerScript, /Codex\.app\/Contents\/Resources\/codex/)
   assert.match(workerScript, /codexBinaryForWorker/)
-  assert.match(workerScript, /spawnSync\(\s*codexBinary/)
+  assert.match(workerScript, /spawn\(\s*codexBinary/)
+  assert.match(workerScript, /spawn: WorkerSpawn = runWorkerProcess/)
+  assert.match(workerScript, /stdio: \["ignore", "pipe", "pipe"\]/)
   assert.match(workerScript, /Codex CLI terminated by/)
   assert.match(workerScript, /Codex CLI failed to start/)
   assert.match(workerScript, /worker lease refreshed/)
