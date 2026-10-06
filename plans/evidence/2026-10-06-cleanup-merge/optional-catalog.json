@@ -1,0 +1,36 @@
+[
+  {
+    "root": "/Users/nick/AI_work/hair_conscierge",
+    "optionalIgnoredCatalog": [
+      {
+        "path": "data/products-from-excel/conditioner-drogerie.json",
+        "sha256": "def6349a41106a7b34c103172cad93b3ffd584cca6a64579847231beda6bbdca",
+        "bytes": 13384
+      },
+      {
+        "path": "data/products-from-excel/leave-in.json",
+        "sha256": "a7a09036d8196ce8a6ecad4217a5199cdc1c3b77e4382cf2038b250af4ed6915",
+        "bytes": 12582
+      },
+      {
+        "path": "data/products-from-excel/maske.json",
+        "sha256": "11035901ed81c59712d8396dab961e350e2d69d1ead57cfc23602522ea9a228c",
+        "bytes": 10141
+      },
+      {
+        "path": "data/products-from-excel/oele.json",
+        "sha256": "7fc8bbf5d799105b0e41128093bea45dab101faef3a807e30eb1e1ebfcfb4612",
+        "bytes": 11341
+      },
+      {
+        "path": "data/products-from-excel/shampoo.json",
+        "sha256": "31e242f794eb2fabc57d5791d3a9df5c26f3e9487023604141e2d47f9769f977",
+        "bytes": 12241
+      }
+    ]
+  },
+  {
+    "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+    "optionalIgnoredCatalog": []
+  }
+]

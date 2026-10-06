@@ -496,3 +496,8 @@ cut with a unique unpreserved contract or coverage decline beyond 2pp.
 ## 2026-10-05 working598 after measured585
 
 Stripe5 and Partner8 complete original-assertion transfers and intended actual-owner fault proof; native163→158 and80→72 green. Current11294 AST sites,598 net removals and18678 net code lines. Coverage/CI remains the measured585 receipt until the next frozen full run. See [Stripe proof](evidence/2026-10-05-next590-stripe/focused-receipt.md) and [Partner proof](evidence/2026-10-05-next598-partner/focused-receipt.md). Target2379 leaves1781; ongoing discovery and conditional proposals have no credit.
+
+
+## 2026-10-06 authorized merge checkpoint
+
+Fresh-main reconciliation yields **672 net declarations removed (5.236%)** and **20,133 net code/test-support lines removed**. The historical 676 checkpoint remains historical; four declarations changed with newer main. Full native/c8 is closed and frozen; every aggregate metric meets the 2pp budget, including the conservative original-source denominator (worst loss 1.5470pp). Full CI verification and 212 browser contracts passed. Further pruning stays paused. See [fresh merge receipt](evidence/2026-10-06-cleanup-merge/receipt.md) for counts, baseline failures, per-file limitations and artifact disposition.
